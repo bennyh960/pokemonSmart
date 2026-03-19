@@ -51,7 +51,8 @@ export function drawText(
   options: TextOptions = {},
 ): void {
   const opts = { ...DEFAULT_TEXT_OPTIONS, ...options };
-n  // Auto-detect Hebrew text and switch font
+
+  // Auto-detect Hebrew text and switch font
   if (!options.font) {
     opts.font = fontFor(text);
   }
