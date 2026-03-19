@@ -8,7 +8,7 @@
 
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
-| math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ✅ הושלם | ⬜ |
+| math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ✅ הושלם | ✅ |
 | game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ⬜ לא התחיל | ⬜ |
 | asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ⬜ לא התחיל | ⬜ |
 | frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ⬜ לא התחיל | ⬜ |
