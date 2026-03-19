@@ -9,7 +9,7 @@
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
 | math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ✅ הושלם | ⬜ |
-| game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ⬜ לא התחיל | ⬜ |
+| game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ✅ הושלם | ⬜ |
 | asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ⬜ לא התחיל | ⬜ |
 | frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ⬜ לא התחיל | ⬜ |
 
@@ -66,29 +66,29 @@ movePowerToMathDifficulty(power: number): MathDifficulty
 בנה את מערכת ה-overworld: טעינת מפה מ-tilemap, תנועה grid-based של השחקן, collision detection, ומעברים בין אזורים.
 
 ### משימות
-- [ ] **2.1** יצירת `src/engine/tilemap.ts`:
+- [x] **2.1** יצירת `src/engine/tilemap.ts`:
   - טעינת tilemap מ-JSON (מבנה: layers, tilesets, collision)
   - רינדור שכבות tiles על ה-canvas
   - Collision layer (אילו tiles אפשר ללכת עליהם)
-- [ ] **2.2** יצירת `src/engine/camera.ts`:
+- [x] **2.2** יצירת `src/engine/camera.ts`:
   - מצלמה שעוקבת אחרי השחקן
   - גבולות מצלמה (לא יוצאת מהמפה)
   - Smooth scrolling
-- [ ] **2.3** עדכון `src/scenes/overworld.ts`:
+- [x] **2.3** עדכון `src/scenes/overworld.ts`:
   - Grid-based movement (16px steps, לא free movement)
   - אנימציית הליכה (4 כיוונים)
   - Collision detection עם ה-tilemap
   - NPC placeholder (עמידה במקום)
-- [ ] **2.4** יצירת `src/data/maps/test-map.json`:
+- [x] **2.4** יצירת `src/data/maps/test-map.json`:
   - מפת טסט 20×15 tiles
   - שכבת רצפה (דשא, שביל)
   - שכבת collision (עצים, מים, בניינים)
   - נקודת spawn לשחקן
-- [ ] **2.5** יצירת `src/engine/sprite-loader.ts`:
+- [x] **2.5** יצירת `src/engine/sprite-loader.ts`:
   - טעינת תמונות (sprites, tilesets) async
   - Cache למניעת טעינה כפולה
   - Placeholder sprite (מלבן צבעוני) כשהתמונה חסרה
-- [ ] **2.6** חיבור Title → Overworld:
+- [x] **2.6** חיבור Title → Overworld:
   - ENTER ב-title screen → מעבר ל-overworld scene
   - שחקן מופיע על המפה וניתן להזיזו עם חצים
 
