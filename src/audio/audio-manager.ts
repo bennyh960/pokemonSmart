@@ -28,28 +28,29 @@ const SFX_TRACKS: Record<string, string> = {
 const DEFAULT_CROSSFADE_MS = 500;
 
 export function createAudioManager() {
-  const musicCache = new Map<string, Howl>();
-  const sfxCache = new Map<string, Howl>();
+  /** The currently playing music Howl instance. */
+  let currentHowl: Howl | null = null;
   let currentTrack: string | null = null;
+
+  /** Cached SFX Howl instances. */
+  const sfxCache = new Map<string, Howl>();
+
   let musicVolume = 0.5;
   let sfxVolume = 0.7;
   let muted = false;
 
-  function getMusicHowl(key: string): Howl | null {
+  /** Create a fresh Howl for a music track (no caching — avoids stale state). */
+  function newMusicHowl(key: string): Howl | null {
     const src = MUSIC_TRACKS[key];
     if (!src) {
       console.warn(`[AudioManager] Unknown music track: "${key}"`);
       return null;
     }
-    if (!musicCache.has(key)) {
-      musicCache.set(key, new Howl({
-        src: [src],
-        loop: true,
-        volume: muted ? 0 : musicVolume,
-        html5: true,
-      }));
-    }
-    return musicCache.get(key)!;
+    return new Howl({
+      src: [src],
+      loop: true,
+      volume: muted ? 0 : musicVolume,
+    });
   }
 
   function getSfxHowl(key: string): Howl | null {
@@ -67,54 +68,37 @@ export function createAudioManager() {
     return sfxCache.get(key)!;
   }
 
-  function applyMusicVolume(): void {
-    if (currentTrack) {
-      const howl = musicCache.get(currentTrack);
-      if (howl) howl.volume(muted ? 0 : musicVolume);
-    }
-  }
-
-  function applySfxVolume(): void {
-    for (const howl of sfxCache.values()) {
-      howl.volume(muted ? 0 : sfxVolume);
-    }
-  }
-
   const manager = {
     playMusic(trackKey: string): void {
-      if (currentTrack === trackKey) {
-        // Already set as current — but check if it's actually still playing
-        const existing = musicCache.get(trackKey);
-        if (existing && !existing.playing()) {
-          existing.stop();
-          existing.volume(muted ? 0 : musicVolume);
-          existing.play();
-        }
-        return;
+      if (currentTrack === trackKey && currentHowl && currentHowl.playing()) {
+        return; // already playing this track
       }
-      if (currentTrack) {
-        manager.crossfade(currentTrack, trackKey, DEFAULT_CROSSFADE_MS);
-        return;
+
+      // Stop whatever is currently playing
+      if (currentHowl) {
+        currentHowl.stop();
+        currentHowl.unload();
+        currentHowl = null;
       }
-      const howl = getMusicHowl(trackKey);
+
+      const howl = newMusicHowl(trackKey);
       if (!howl) return;
-      howl.stop(); // ensure clean state
-      howl.volume(muted ? 0 : musicVolume);
-      howl.play();
+      currentHowl = howl;
       currentTrack = trackKey;
+      howl.play();
     },
 
     stopMusic(fadeMs = DEFAULT_CROSSFADE_MS): void {
-      if (!currentTrack) return;
-      const howl = musicCache.get(currentTrack);
-      if (howl) {
-        if (fadeMs > 0) {
-          howl.fade(howl.volume(), 0, fadeMs);
-          howl.once('fade', () => howl.stop());
-        } else {
-          howl.stop();
-        }
+      if (!currentHowl) return;
+      if (fadeMs > 0 && currentHowl.playing()) {
+        const h = currentHowl;
+        h.fade(h.volume(), 0, fadeMs);
+        h.once('fade', () => { h.stop(); h.unload(); });
+      } else {
+        currentHowl.stop();
+        currentHowl.unload();
       }
+      currentHowl = null;
       currentTrack = null;
     },
 
@@ -125,36 +109,40 @@ export function createAudioManager() {
       howl.play();
     },
 
-    crossfade(fromKey: string, toKey: string, durationMs = DEFAULT_CROSSFADE_MS): void {
-      const fromHowl = musicCache.get(fromKey);
-      const toHowl = getMusicHowl(toKey);
-      // Stop the old track (fade out if playing, otherwise just stop)
-      if (fromHowl) {
-        if (fromHowl.playing()) {
-          fromHowl.fade(fromHowl.volume(), 0, durationMs);
-          fromHowl.once('fade', () => fromHowl.stop());
-        } else {
-          fromHowl.stop();
-        }
+    crossfade(_fromTrack: string, toTrack: string, durationMs = DEFAULT_CROSSFADE_MS): void {
+      // Fade out old
+      if (currentHowl && currentHowl.playing()) {
+        const old = currentHowl;
+        old.fade(old.volume(), 0, durationMs);
+        old.once('fade', () => { old.stop(); old.unload(); });
+      } else if (currentHowl) {
+        currentHowl.stop();
+        currentHowl.unload();
       }
-      // Start and fade in the new track
-      if (toHowl) {
-        toHowl.stop(); // ensure clean state before playing
-        toHowl.volume(0);
-        toHowl.play();
-        toHowl.fade(0, muted ? 0 : musicVolume, durationMs);
+
+      // Create and fade in new
+      const howl = newMusicHowl(toTrack);
+      if (howl) {
+        howl.volume(0);
+        howl.play();
+        howl.fade(0, muted ? 0 : musicVolume, durationMs);
+        currentHowl = howl;
+      } else {
+        currentHowl = null;
       }
-      currentTrack = toKey;
+      currentTrack = toTrack;
     },
 
     setMusicVolume(volume: number): void {
       musicVolume = Math.max(0, Math.min(1, volume));
-      applyMusicVolume();
+      if (currentHowl) currentHowl.volume(muted ? 0 : musicVolume);
     },
 
     setSFXVolume(volume: number): void {
       sfxVolume = Math.max(0, Math.min(1, volume));
-      applySfxVolume();
+      for (const howl of sfxCache.values()) {
+        howl.volume(muted ? 0 : sfxVolume);
+      }
     },
 
     setMasterVolume(volume: number): void {
@@ -163,8 +151,10 @@ export function createAudioManager() {
 
     toggleMute(): boolean {
       muted = !muted;
-      applyMusicVolume();
-      applySfxVolume();
+      if (currentHowl) currentHowl.volume(muted ? 0 : musicVolume);
+      for (const howl of sfxCache.values()) {
+        howl.volume(muted ? 0 : sfxVolume);
+      }
       return muted;
     },
 
