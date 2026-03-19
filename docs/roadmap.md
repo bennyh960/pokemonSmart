@@ -1,25 +1,25 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 1 of 6
+## Overall Progress: Sprint 2 of 6
 
 ---
 
-## Sprint 1 — Foundation 🔄 IN PROGRESS
+## Sprint 1 — Foundation ✅ COMPLETE
 **Goal:** Core technical infrastructure
 
 | Task | Agent | Branch | Status |
 |------|-------|--------|--------|
-| Math engine (6 levels + adaptive) | math-engine-developer | `feature/math-engine` | 🔄 |
-| Overworld + grid movement | game-engine-developer | `feature/overworld` | 🔄 |
-| PokeAPI data pipeline (251 Pokemon) | asset-manager | `feature/pokeapi-pipeline` | 🔄 |
+| Math engine (6 levels + adaptive) | math-engine-developer | `feature/math-engine` | ✅ merged |
+| Overworld + grid movement | game-engine-developer | `feature/overworld` | ✅ merged |
+| PokeAPI data pipeline (251 Pokemon) | asset-manager | `feature/pokeapi-pipeline` | ✅ merged |
 | Battle UI + math input | frontend-developer | `feature/battle-ui` | ✅ merged |
 
 **Details:** `docs/sprint-1.md`
 
 ---
 
-## Sprint 2 — Integration 🔄 IN PROGRESS
-**Goal:** Connect all Sprint 1 pieces into a working battle
+## Sprint 2 — Integration & Visual Upgrade 🔄 IN PROGRESS
+**Goal:** Connect all Sprint 1 pieces into a working battle + audio/visuals
 
 | Task | Agent | Status |
 |------|-------|--------|
@@ -27,9 +27,9 @@
 | Connect math engine to battle UI (solve to attack) | frontend-developer + math-engine-developer | ✅ merged |
 | Real Pokemon sprites in battle (from PokeAPI) | asset-manager | ⬜ |
 | Wild encounter system (overworld → battle → back) | game-engine-developer | ✅ merged |
-| Save/load system (localStorage) | game-engine-developer | 🔄 |
+| Save/load system (localStorage) | game-engine-developer | ✅ merged |
 | Battle result: XP, level up, evolution check | game-engine-developer | ✅ merged |
-| Audio manager + background music | frontend-developer | 🔄 |
+| Audio manager + background music | frontend-developer | ✅ merged |
 
 ---
 
