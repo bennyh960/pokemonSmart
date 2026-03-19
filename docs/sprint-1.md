@@ -8,7 +8,7 @@
 
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
-| math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ⬜ לא התחיל | ⬜ |
+| math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ✅ הושלם | ⬜ |
 | game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ⬜ לא התחיל | ⬜ |
 | asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ⬜ לא התחיל | ⬜ |
 | frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ⬜ לא התחיל | ⬜ |
@@ -23,25 +23,25 @@
 בנה את מנוע ייצור התרגילים המלא עם כל 6 רמות הקושי, adaptive difficulty, ומיפוי לנזק קרב.
 
 ### משימות
-- [ ] **1.1** יצירת `src/math/math-engine.ts` עם פונקציית `generateProblem(difficulty: MathDifficulty)` שמייצרת תרגילים דינמיים
-- [ ] **1.2** רמה 1: חיבור וחיסור חד-ספרתי (0-9, ללא תוצאות שליליות)
-- [ ] **1.3** רמה 2: חיבור וחיסור דו-ספרתי (10-99)
-- [ ] **1.4** רמה 3: כפל חד-ספרתי (טבלאות 1-9)
-- [ ] **1.5** רמה 4: כפל וחילוק (עד 12×12, חילוק ללא שארית)
-- [ ] **1.6** רמה 5: פעולות מעורבות + סדר פעולות (כולל סוגריים)
-- [ ] **1.7** רמה 6: ביטויים מורכבים + שברים פשוטים (1/2, 1/4, 3/4)
-- [ ] **1.8** יצירת `src/math/adaptive-difficulty.ts` - מערכת קושי אדפטיבי:
+- [x] **1.1** יצירת `src/math/math-engine.ts` עם פונקציית `generateProblem(difficulty: MathDifficulty)` שמייצרת תרגילים דינמיים
+- [x] **1.2** רמה 1: חיבור וחיסור חד-ספרתי (0-9, ללא תוצאות שליליות)
+- [x] **1.3** רמה 2: חיבור וחיסור דו-ספרתי (10-99)
+- [x] **1.4** רמה 3: כפל חד-ספרתי (טבלאות 1-9)
+- [x] **1.5** רמה 4: כפל וחילוק (עד 12×12, חילוק ללא שארית)
+- [x] **1.6** רמה 5: פעולות מעורבות + סדר פעולות (כולל סוגריים)
+- [x] **1.7** רמה 6: ביטויים מורכבים + שברים פשוטים (1/2, 1/4, 3/4)
+- [x] **1.8** יצירת `src/math/adaptive-difficulty.ts` - מערכת קושי אדפטיבי:
   - 3 תשובות נכונות ברצף → הגדלת מורכבות
   - 2 שגויות ברצף → הקטנת מורכבות
   - מעקב אחר streak ו-success rate
-- [ ] **1.9** מיפוי `movePowerToMathDifficulty(power: number): MathDifficulty`:
+- [x] **1.9** מיפוי `movePowerToMathDifficulty(power: number): MathDifficulty`:
   - power 1-40 → difficulty 1
   - power 41-60 → difficulty 2
   - power 61-80 → difficulty 3
   - power 81-100 → difficulty 4
   - power 101-120 → difficulty 5
   - power 121+ → difficulty 6
-- [ ] **1.10** יצירת `src/math/math-engine.test.ts` - טסטים:
+- [x] **1.10** יצירת `src/math/math-engine.test.ts` - טסטים:
   - 100 תרגילים לכל רמה → כל התשובות נכונות
   - אין תוצאות שליליות ברמות 1-2
   - חילוק ללא שארית ברמה 4
