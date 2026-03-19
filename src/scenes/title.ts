@@ -38,7 +38,7 @@ function createStar(): Star {
 }
 
 /** Create the title screen scene. */
-export function createTitleScene(input: InputManager, _stateMachine: StateMachine): Scene {
+export function createTitleScene(input: InputManager, stateMachine: StateMachine): Scene {
   let stars: Star[] = [];
   let blinkTimer = 0;
   let showPrompt = true;
@@ -87,8 +87,7 @@ export function createTitleScene(input: InputManager, _stateMachine: StateMachin
       // Handle ENTER key press
       if (!entered && (input.isKeyPressed('Enter') || input.isTapped())) {
         entered = true;
-        console.log('Starting game...');
-        // TODO: stateMachine.change('OVERWORLD') once the scene is implemented
+        stateMachine.change('OVERWORLD');
       }
     },
 
