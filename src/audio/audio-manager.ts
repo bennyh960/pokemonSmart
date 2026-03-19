@@ -18,10 +18,10 @@ const MUSIC_TRACKS: Record<string, string> = {
 };
 
 const SFX_TRACKS: Record<string, string> = {
-  'menu-select': '/audio/sfx/menu-select.mp3',
-  'menu-cancel': '/audio/sfx/menu-cancel.mp3',
-  hit: '/audio/sfx/hit.mp3',
-  'text-blip': '/audio/sfx/text-blip.mp3',
+  'menu-select': '/audio/sfx/menu-select.wav',
+  'menu-cancel': '/audio/sfx/menu-cancel.wav',
+  hit: '/audio/sfx/hit.wav',
+  'text-blip': '/audio/sfx/text-blip.wav',
 };
 
 /** Default crossfade duration in ms. */
