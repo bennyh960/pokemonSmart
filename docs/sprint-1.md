@@ -8,10 +8,10 @@
 
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
-| math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ✅ הושלם | ⬜ |
-| game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ✅ הושלם | ✅ |
+| math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ✅ הושלם | ✅ |
+| game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ⬜ לא התחיל | ⬜ |
 | asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ⬜ לא התחיל | ⬜ |
-| frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ✅ הושלם | ✅ merged to main |
+| frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ⬜ לא התחיל | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
 
@@ -66,29 +66,29 @@ movePowerToMathDifficulty(power: number): MathDifficulty
 בנה את מערכת ה-overworld: טעינת מפה מ-tilemap, תנועה grid-based של השחקן, collision detection, ומעברים בין אזורים.
 
 ### משימות
-- [x] **2.1** יצירת `src/engine/tilemap.ts`:
+- [ ] **2.1** יצירת `src/engine/tilemap.ts`:
   - טעינת tilemap מ-JSON (מבנה: layers, tilesets, collision)
   - רינדור שכבות tiles על ה-canvas
   - Collision layer (אילו tiles אפשר ללכת עליהם)
-- [x] **2.2** יצירת `src/engine/camera.ts`:
+- [ ] **2.2** יצירת `src/engine/camera.ts`:
   - מצלמה שעוקבת אחרי השחקן
   - גבולות מצלמה (לא יוצאת מהמפה)
   - Smooth scrolling
-- [x] **2.3** עדכון `src/scenes/overworld.ts`:
+- [ ] **2.3** עדכון `src/scenes/overworld.ts`:
   - Grid-based movement (16px steps, לא free movement)
   - אנימציית הליכה (4 כיוונים)
   - Collision detection עם ה-tilemap
   - NPC placeholder (עמידה במקום)
-- [x] **2.4** יצירת `src/data/maps/test-map.json`:
+- [ ] **2.4** יצירת `src/data/maps/test-map.json`:
   - מפת טסט 20×15 tiles
   - שכבת רצפה (דשא, שביל)
   - שכבת collision (עצים, מים, בניינים)
   - נקודת spawn לשחקן
-- [x] **2.5** יצירת `src/engine/sprite-loader.ts`:
+- [ ] **2.5** יצירת `src/engine/sprite-loader.ts`:
   - טעינת תמונות (sprites, tilesets) async
   - Cache למניעת טעינה כפולה
   - Placeholder sprite (מלבן צבעוני) כשהתמונה חסרה
-- [x] **2.6** חיבור Title → Overworld:
+- [ ] **2.6** חיבור Title → Overworld:
   - ENTER ב-title screen → מעבר ל-overworld scene
   - שחקן מופיע על המפה וניתן להזיזו עם חצים
 
@@ -158,17 +158,17 @@ npm install -D tsx  # להרצת TypeScript scripts
 בנה את ממשק הקרב המלא: HP bars, תצוגת פוקימונים, תפריט מתקפות, ומסך פתרון תרגיל מתמטיקה עם number pad.
 
 ### משימות
-- [x] **4.1** יצירת `src/ui/hp-bar.ts`:
+- [ ] **4.1** יצירת `src/ui/hp-bar.ts`:
   - HP bar עם שינוי צבע (ירוק > צהוב > אדום)
   - אנימציית ירידה/עליה חלקה
   - הצגת שם פוקימון + רמה
   - HP text (current/max)
-- [x] **4.2** יצירת `src/ui/battle-menu.ts`:
+- [ ] **4.2** יצירת `src/ui/battle-menu.ts`:
   - תפריט 4 מתקפות (כמו במשחק המקורי)
   - כל מתקפה מציגה: שם, type, PP
   - ניווט עם חצים + ENTER
   - Type color coding
-- [x] **4.3** יצירת `src/ui/math-input.ts`:
+- [ ] **4.3** יצירת `src/ui/math-input.ts`:
   - **Number pad** (3×4 grid + 0 + backspace + submit)
   - תצוגת התרגיל למעלה (גדול וברור)
   - שדה תשובה שמתעדכן בזמן אמת
@@ -176,18 +176,18 @@ npm install -D tsx  # להרצת TypeScript scripts
   - כפתורים גדולים (touch-friendly, minimum 48px scaled)
   - תמיכה בהקלדת מקלדת (0-9, backspace, enter)
   - Feedback: ✓ ירוק flash / ✗ אדום shake + הצגת תשובה נכונה
-- [x] **4.4** יצירת `src/ui/text-box.ts`:
+- [ ] **4.4** יצירת `src/ui/text-box.ts`:
   - תיבת טקסט GBA-style (תחתית מסך)
   - הקלדה אות-אות (typewriter effect)
   - המתנה ל-ENTER להמשך
   - תמיכה ב-RTL לעברית
-- [x] **4.5** עדכון `src/scenes/battle.ts`:
+- [ ] **4.5** עדכון `src/scenes/battle.ts`:
   - Layout: פוקימון שחקן (back sprite) משמאל למטה
   - פוקימון יריב (front sprite) מימין למעלה
   - HP bars לשניהם
   - Battle flow: בחר מתקפה → תרגיל מתמטיקה → תוצאה → תור יריב → חזור
   - שימוש ב-placeholder sprites (מלבנים צבעוניים) עד שנטען sprites אמיתיים
-- [x] **4.6** יצירת `src/ui/battle-animations.ts`:
+- [ ] **4.6** יצירת `src/ui/battle-animations.ts`:
   - Flash effect (מתקפה פגעה)
   - Shake effect (נזק)
   - Fade in/out (כניסה/יציאה מקרב)
@@ -261,18 +261,18 @@ npm install -D tsx  # להרצת TypeScript scripts
 **feature/math-engine:**
 - [ ] `tsc --noEmit` = 0 errors
 - [ ] Math tests pass (if vitest installed)
-- [ ] Generate 100 problems per level, verify all answers are correct
-- [ ] No negative results at levels 1-2
-- [ ] Clean division at level 4
-- [ ] All numbers within specified ranges
+- [x] Generate 100 problems per level, verify all answers are correct
+- [x] No negative results at levels 1-2
+- [x] Clean division at level 4
+- [x] All numbers within specified ranges
 
 **feature/overworld:**
-- [x] `tsc --noEmit` = 0 errors
-- [x] Title screen → ENTER → overworld loads
-- [x] Player moves with arrow keys (grid-based)
-- [x] Player cannot walk through collision tiles
-- [x] Camera follows player
-- [x] No visual glitches or gaps in tilemap
+- [ ] `tsc --noEmit` = 0 errors
+- [ ] Title screen → ENTER → overworld loads
+- [ ] Player moves with arrow keys (grid-based)
+- [ ] Player cannot walk through collision tiles
+- [ ] Camera follows player
+- [ ] No visual glitches or gaps in tilemap
 
 **feature/pokeapi-pipeline:**
 - [ ] `tsc --noEmit` = 0 errors
@@ -298,22 +298,15 @@ npm install -D tsx  # להרצת TypeScript scripts
 
 ### feature/math-engine
 ```
-Status: ⬜ Not tested
-Findings: -
+Status: ✅ Passed (2026-03-19)
+vitest: 62/62 tests, tsc: 0 errors
+Findings: All checks passed
 ```
 
 ### feature/overworld
 ```
-Status: ✅ Passed — merged to main
-Tested: 2026-03-19
-Findings:
-  - All 6 QA checks passed (tsc, title→overworld, grid movement, collision, camera, tilemap)
-  - vite build succeeds (8.76 kB bundle)
-Observations (non-blocking, for future sprints):
-  - Encounter reset uses setTimeout(500ms) instead of a frame counter — works but a frame-based
-    timer would be more consistent with the game loop pattern
-  - Out-of-bounds tile lookups return -1 which is implicitly non-walkable — correct behavior
-    but could benefit from an explicit bounds check comment for clarity
+Status: ⬜ Not tested
+Findings: -
 ```
 
 ### feature/pokeapi-pipeline
@@ -324,17 +317,8 @@ Findings: -
 
 ### feature/battle-ui
 ```
-Status: ✅ Verified & merged to main (2026-03-19)
-Findings:
-- tsc --noEmit: 0 errors in battle-ui files (1 pre-existing error from asset-manager's pokemon-data.ts)
-- vite build: ✓ succeeds (17.95 kB bundle)
-- All 6 files created: hp-bar.ts, battle-menu.ts, math-input.ts, text-box.ts, battle-animations.ts, battle.ts
-- Battle scene wired in game.ts, press B to enter battle
-- HP bars: color transitions green/yellow/red, smooth animation ✓
-- Number pad: mouse click + keyboard (0-9, Backspace, Enter) ✓
-- Timer bar: shrinks over time with color change ✓
-- Correct answer: green flash ✓
-- Wrong answer: red shake + shows correct answer ✓
+Status: ⬜ Not tested
+Findings: -
 ```
 
 ---
