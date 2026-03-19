@@ -82,13 +82,23 @@ export function createAudioManager() {
 
   const manager = {
     playMusic(trackKey: string): void {
-      if (currentTrack === trackKey) return;
+      if (currentTrack === trackKey) {
+        // Already set as current — but check if it's actually still playing
+        const existing = musicCache.get(trackKey);
+        if (existing && !existing.playing()) {
+          existing.stop();
+          existing.volume(muted ? 0 : musicVolume);
+          existing.play();
+        }
+        return;
+      }
       if (currentTrack) {
         manager.crossfade(currentTrack, trackKey, DEFAULT_CROSSFADE_MS);
         return;
       }
       const howl = getMusicHowl(trackKey);
       if (!howl) return;
+      howl.stop(); // ensure clean state
       howl.volume(muted ? 0 : musicVolume);
       howl.play();
       currentTrack = trackKey;
@@ -118,11 +128,18 @@ export function createAudioManager() {
     crossfade(fromKey: string, toKey: string, durationMs = DEFAULT_CROSSFADE_MS): void {
       const fromHowl = musicCache.get(fromKey);
       const toHowl = getMusicHowl(toKey);
+      // Stop the old track (fade out if playing, otherwise just stop)
       if (fromHowl) {
-        fromHowl.fade(fromHowl.volume(), 0, durationMs);
-        fromHowl.once('fade', () => fromHowl.stop());
+        if (fromHowl.playing()) {
+          fromHowl.fade(fromHowl.volume(), 0, durationMs);
+          fromHowl.once('fade', () => fromHowl.stop());
+        } else {
+          fromHowl.stop();
+        }
       }
+      // Start and fade in the new track
       if (toHowl) {
+        toHowl.stop(); // ensure clean state before playing
         toHowl.volume(0);
         toHowl.play();
         toHowl.fade(0, muted ? 0 : musicVolume, durationMs);
