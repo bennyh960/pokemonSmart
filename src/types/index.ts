@@ -94,6 +94,16 @@ export interface MathResult {
   answer: number;
 }
 
+/** Adaptive difficulty state tracking. */
+export interface AdaptiveState {
+  currentDifficulty: MathDifficulty;
+  consecutiveCorrect: number;
+  consecutiveWrong: number;
+  totalCorrect: number;
+  totalAttempted: number;
+  streak: number;
+}
+
 /** Persistent player data (saved to localStorage). */
 export interface PlayerData {
   name: string;
