@@ -10,7 +10,7 @@
 |-------|--------|--------|--------|-----|
 | frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ⬜ | ⬜ |
 | asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ⬜ | ⬜ |
-| game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ⬜ | ⬜ |
+| game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ⬜ |
 | game-engine-developer | Save/Load system | `feature/save-system` | ⬜ | ⬜ |
 | frontend-developer | Audio manager + BGM | `feature/audio` | ⬜ | ⬜ |
 
@@ -85,28 +85,28 @@
 חיבור overworld → battle → חזרה. כשהשחקן דורך על tall grass ויש encounter, נכנסים לקרב אמיתי עם פוקימון אקראי, ובסיום חוזרים ל-overworld.
 
 ### משימות
-- [ ] **3.1** יצירת `src/systems/encounter.ts`:
+- [x] **3.1** יצירת `src/systems/encounter.ts`:
   - Encounter table per area (מאיזה פוקימונים ובאיזה levels)
   - פונקציה שמגרילה פוקימון פראי לפי האזור
   - שימוש בדאטה האמיתי מ-`pokemon.json`
-- [ ] **3.2** חיבור overworld → battle:
+- [x] **3.2** חיבור overworld → battle:
   - כשיש encounter ב-overworld → transition to battle scene
   - Battle scene מקבלת: פוקימון השחקן + פוקימון פראי
   - Fade to black transition
-- [ ] **3.3** חיבור battle → overworld:
+- [x] **3.3** חיבור battle → overworld:
   - ניצחון: XP + חזרה ל-overworld
   - הפסד: חזרה ל-Pokemon Center (לעת עתה חזרה ל-spawn)
   - בריחה: חזרה ל-overworld
-- [ ] **3.4** Battle עם נתונים אמיתיים:
+- [x] **3.4** Battle עם נתונים אמיתיים:
   - Math difficulty לפי power של ה-move (משתמש ב-movePowerToMathDifficulty)
   - Damage formula עם stats אמיתיים
   - Type effectiveness מ-type-chart.json
-- [ ] **3.5** XP & Level up:
+- [x] **3.5** XP & Level up:
   - XP gain after winning battle
   - Level up check (simple formula: need level*100 XP)
   - Stat increase on level up
   - Move learning placeholder (just log it for now)
-- [ ] **3.6** Starter Pokemon:
+- [x] **3.6** Starter Pokemon:
   - בתחילת המשחק (אחרי title) → בחירת starter: Cyndaquil / Totodile / Chikorita
   - UI פשוט: 3 אפשרויות עם שם + type + sprite
   - הפוקימון הנבחר נכנס ל-party של השחקן
