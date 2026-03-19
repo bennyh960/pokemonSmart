@@ -134,7 +134,7 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
 
       // Version tag
       drawText(ctx, 'v0.1.0', SCREEN_W - 4, SCREEN_H - 10, {
-        size: 6,
+        size: 8,
         color: '#444466',
         align: 'right',
       });
