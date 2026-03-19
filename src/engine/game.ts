@@ -10,6 +10,7 @@ import { createStateMachine } from './state-machine.js';
 import { createInputManager } from './input.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle.js';
+import { createOverworldScene } from '../scenes/overworld.js';
 
 /** Native GBA-style resolution. */
 const NATIVE_WIDTH = 240;
@@ -46,8 +47,10 @@ export function createGame(container: HTMLElement) {
   const battleScene = createBattleScene(input, stateMachine, canvas);
   stateMachine.register('BATTLE', battleScene);
 
+  const overworldScene = createOverworldScene(input, stateMachine);
+  stateMachine.register('OVERWORLD', overworldScene);
+
   // TODO: Register remaining scenes as they are implemented
-  // stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine));
   // stateMachine.register('DIALOGUE', createDialogueScene(input, stateMachine));
 
   // Game loop state
