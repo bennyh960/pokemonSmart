@@ -9,22 +9,21 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect, drawRect } from '../engine/renderer.js';
 import { createHPBar, updateHPBar, renderHPBar, setHP, isHPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
-import { createMathInput, updateMathInput, renderMathInput } from '../ui/math-input.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
   createFlash, updateFlash, renderFlash, createShake, updateShake, applyShake, resetShake,
   createFade, updateFade, renderFade, spawnDamageNumber, updatePopups, renderPopups, clearAllPopups,
 } from '../ui/battle-animations.js';
-import { generateProblem } from '../math/math-engine.js';
 import { getCombinedTypeEffectiveness } from '../services/pokemon-data.js';
 import { calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
+import { t, isRTL } from '../i18n/i18n.js';
 
 const SCREEN_W = 240;
 
-type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'MATH' | 'PLAYER_ATTACK'
+type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LOSE' | 'RUN';
 
 let pendingPlayer: Pokemon | null = null;
@@ -35,33 +34,31 @@ export function setBattleData(playerPokemon: Pokemon, enemyPokemon: Pokemon): vo
   pendingEnemy = enemyPokemon;
 }
 
-function calcDamage(atk: Pokemon, def: Pokemon, power: number, moveType: PokemonType, correct: boolean): number {
+function calcDamage(atk: Pokemon, def: Pokemon, power: number, moveType: PokemonType): number {
   if (power <= 0) return 0;
   const lf = ((2 * atk.level) / 5) + 2;
   const base = ((lf * power * (atk.attack / def.defense)) / 50) + 2;
   const eff = getCombinedTypeEffectiveness(moveType, def.types);
   const stab = atk.types.includes(moveType) ? 1.5 : 1;
   const rand = 0.85 + Math.random() * 0.15;
-  const mathMul = correct ? 1 : 0.3;
-  return Math.max(1, Math.floor(base * eff * stab * rand * mathMul));
+  return Math.max(1, Math.floor(base * eff * stab * rand));
 }
 
 function effText(mt: PokemonType, dt: PokemonType[]): string | null {
   const e = getCombinedTypeEffectiveness(mt, dt);
-  if (e >= 2) return "It's super effective!";
-  if (e > 0 && e < 1) return "It's not very effective...";
-  if (e === 0) return "It had no effect!";
+  if (e >= 2) return t('battle.superEffective');
+  if (e > 0 && e < 1) return t('battle.notVeryEffective');
+  if (e === 0) return t('battle.noEffect');
   return null;
 }
 
-export function createBattleScene(input: InputManager, stateMachine: StateMachine, canvas: HTMLCanvasElement, audio: AudioManager): Scene {
+export function createBattleScene(input: InputManager, stateMachine: StateMachine, _canvas: HTMLCanvasElement, audio: AudioManager): Scene {
   let phase: BattlePhase = 'INTRO';
   let player: Pokemon;
   let enemy: Pokemon;
   let playerHpBar: ReturnType<typeof createHPBar>;
   let enemyHpBar: ReturnType<typeof createHPBar>;
   let menu: ReturnType<typeof createBattleMenu>;
-  let mathInput: ReturnType<typeof createMathInput> | null = null;
   let textBox: ReturnType<typeof createTextBox> | null = null;
   let selMove = 0;
   let flash: ReturnType<typeof createFlash> | null = null;
@@ -81,7 +78,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 8, 80, true);
     enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 130, 8, false);
     menu = createBattleMenu(player.moves);
-    mathInput = null; textBox = null; flash = null; shake = null;
+    textBox = null; flash = null; shake = null;
     fade = createFade(true, 0.5); clearAllPopups();
     phase = 'INTRO'; phaseTimer = 0; xpGained = 0;
     // Preload Pokemon sprites
@@ -89,22 +86,22 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     loadImage(`/sprites/pokemon/back/${player.id}.png`).catch(() => {});
   }
 
-  function doAttack(correct: boolean): void {
+  function doAttack(): void {
     const m = player.moves[selMove];
     if (m.power > 0) {
-      const dmg = calcDamage(player, enemy, m.power, m.type, correct);
+      const dmg = calcDamage(player, enemy, m.power, m.type);
       enemy.hp = Math.max(0, enemy.hp - dmg);
       setHP(enemyHpBar, enemy.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
       spawnDamageNumber(`-${dmg}`, 185, 40, '#f84038');
       audio.playSFX('hit');
-      const msgs = [`${player.name} used ${m.name}!`];
-      if (!correct) msgs.push('The attack was weak...');
+      const rtl = isRTL();
+      const msgs = [t('battle.usedMove', { name: player.name, move: m.name })];
       const et = effText(m.type, enemy.types);
       if (et) msgs.push(et);
-      textBox = createTextBox(msgs);
+      textBox = createTextBox(msgs, rtl);
     } else {
-      textBox = createTextBox([`${player.name} used ${m.name}!`, 'But nothing happened...']);
+      textBox = createTextBox([t('battle.usedMove', { name: player.name, move: m.name }), t('battle.nothingHappened')], isRTL());
     }
     if (m.currentPp > 0) m.currentPp--;
     phase = 'PLAYER_ATTACK'; phaseTimer = 0;
@@ -113,19 +110,20 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function enemyTurn(): void {
     const mi = Math.floor(Math.random() * enemy.moves.length);
     const m = enemy.moves[mi];
+    const rtl = isRTL();
     if (m.power > 0) {
-      const dmg = calcDamage(enemy, player, m.power, m.type, true);
+      const dmg = calcDamage(enemy, player, m.power, m.type);
       player.hp = Math.max(0, player.hp - dmg);
       setHP(playerHpBar, player.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
       spawnDamageNumber(`-${dmg}`, 50, 80, '#f84038');
       audio.playSFX('hit');
-      const msgs = [`${enemy.name} used ${m.name}!`];
+      const msgs = [t('battle.usedMove', { name: enemy.name, move: m.name })];
       const et = effText(m.type, player.types);
       if (et) msgs.push(et);
-      textBox = createTextBox(msgs);
+      textBox = createTextBox(msgs, rtl);
     } else {
-      textBox = createTextBox([`${enemy.name} used ${m.name}!`]);
+      textBox = createTextBox([t('battle.usedMove', { name: enemy.name, move: m.name })], rtl);
     }
     phase = 'ENEMY_TURN'; phaseTimer = 0;
   }
@@ -143,7 +141,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   return {
-    enter(): void { init(); textBox = createTextBox([`A wild ${enemy.name} appeared!`]); phase = 'INTRO'; audio.playMusic('battle'); },
+    enter(): void { init(); textBox = createTextBox([t('battle.wildAppeared', { name: enemy.name })], isRTL()); phase = 'INTRO'; audio.playMusic('battle'); },
     exit(): void { clearAllPopups(); },
     update(dt: number): void {
       phaseTimer += dt;
@@ -162,8 +160,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (r?.type === 'main') {
             audio.playSFX('menu-select');
             if (r.choice === 'FIGHT') { phase = 'SELECT_MOVE'; showMoveMenu(menu); }
-            else if (r.choice === 'RUN') { textBox = createTextBox(['Got away safely!']); phase = 'RUN'; }
-            else { textBox = createTextBox(["Can't do that yet!"]); phase = 'INTRO'; }
+            else if (r.choice === 'RUN') { textBox = createTextBox([t('battle.gotAway')], isRTL()); phase = 'RUN'; }
+            else { textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO'; }
           }
           break;
         }
@@ -174,14 +172,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             else {
               selMove = r.index;
               const m = player.moves[selMove];
-              if (m.currentPp <= 0) { textBox = createTextBox(['No PP left!']); phase = 'INTRO'; }
-              else { mathInput = createMathInput(generateProblem(m.mathDifficulty)); input.clearNumberInput(); phase = 'MATH'; }
+              if (m.currentPp <= 0) { textBox = createTextBox([t('battle.noPP')], isRTL()); phase = 'INTRO'; }
+              else { doAttack(); }
             }
           }
-          break;
-        }
-        case 'MATH': {
-          if (mathInput) { const r = updateMathInput(mathInput, input, canvas, dt); if (r) { doAttack(r.correct); mathInput = null; } }
           break;
         }
         case 'PLAYER_ATTACK': {
@@ -192,27 +186,27 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'ENEMY_TURN': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
           if (!textBox && !isHPAnimating(playerHpBar)) {
-            if (player.hp <= 0) { textBox = createTextBox([`${player.name} fainted!`]); phase = 'LOSE'; }
+            if (player.hp <= 0) { textBox = createTextBox([t('battle.fainted', { name: player.name })], isRTL()); phase = 'LOSE'; }
             else { phase = 'SELECT_ACTION'; showMainMenu(menu); }
           }
           break;
         }
         case 'CHECK_WIN': {
-          if (enemy.hp <= 0) { textBox = createTextBox([`${enemy.name} fainted!`, 'You won!']); audio.playMusic('victory'); phase = 'WIN'; }
+          if (enemy.hp <= 0) { textBox = createTextBox([t('battle.fainted', { name: enemy.name }), t('battle.youWon')], isRTL()); audio.playMusic('victory'); phase = 'WIN'; }
           else enemyTurn();
           break;
         }
         case 'WIN': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null; xpGained = calculateXpGain(enemy); player.xp += xpGained;
-            textBox = createTextBox([`${player.name} gained ${xpGained} XP!`]); phase = 'XP_GAIN';
+            textBox = createTextBox([t('battle.gainedXP', { name: player.name, xp: xpGained })], isRTL()); phase = 'XP_GAIN';
           }
           break;
         }
         case 'XP_GAIN': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            if (checkAndApplyLevelUp(player)) { textBox = createTextBox([`${player.name} grew to level ${player.level}!`]); phase = 'LEVEL_UP'; }
+            if (checkAndApplyLevelUp(player)) { textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL()); phase = 'LEVEL_UP'; }
             else { fade = createFade(false, 0.5); phase = 'RUN'; }
           }
           break;
@@ -266,8 +260,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (shake) resetShake(ctx, shake);
       renderPopups(ctx);
       if (flash) renderFlash(ctx, flash);
-      if (phase === 'MATH' && mathInput) renderMathInput(ctx, mathInput);
-      else if (textBox) renderTextBox(ctx, textBox);
+      if (textBox) renderTextBox(ctx, textBox);
       else if (phase === 'SELECT_ACTION' || phase === 'SELECT_MOVE') renderBattleMenu(ctx, menu);
       if (fade) renderFade(ctx, fade);
     },
@@ -275,9 +268,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 }
 
 function fallbackPlayer(): Pokemon {
-  return { id: 155, name: 'Cyndaquil', level: 5, hp: 20, maxHp: 20, attack: 10, defense: 9, specialAttack: 11, specialDefense: 10, speed: 12, types: ['fire'], moves: [
+  return { id: 1, name: 'Bulbasaur', level: 5, hp: 21, maxHp: 21, attack: 9, defense: 9, specialAttack: 11, specialDefense: 11, speed: 9, types: ['grass', 'poison'], moves: [
     { id: 33, name: 'Tackle', type: 'normal', power: 40, accuracy: 100, pp: 35, currentPp: 35, mathDifficulty: 1 },
-    { id: 52, name: 'Ember', type: 'fire', power: 40, accuracy: 100, pp: 25, currentPp: 25, mathDifficulty: 1 },
+    { id: 22, name: 'Vine Whip', type: 'grass', power: 45, accuracy: 100, pp: 25, currentPp: 25, mathDifficulty: 2 },
   ], xp: 0, xpToNext: 500, isGlitched: false };
 }
 

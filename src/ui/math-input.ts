@@ -9,6 +9,7 @@
 import type { InputManager } from '../engine/input.js';
 import type { MathProblem } from '../types/index.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
+import { t } from '../i18n/i18n.js';
 
 const SCREEN_W = 240;
 const SCREEN_H = 160;
@@ -233,7 +234,7 @@ export function renderMathInput(ctx: CanvasRenderingContext2D, state: MathInputS
 
   // Show correct answer on wrong
   if (state.feedback === 'wrong') {
-    drawText(ctx, `Answer: ${state.correctAnswer}`, SCREEN_W / 2, boxY + 42, {
+    drawText(ctx, t('math.answer', { answer: state.correctAnswer }), SCREEN_W / 2, boxY + 42, {
       size: 8,
       color: '#f8c030',
       align: 'center',

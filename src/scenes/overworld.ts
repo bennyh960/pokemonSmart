@@ -10,6 +10,7 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
+import { t } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { generateWildEncounter } from '../systems/encounter.js';
 import { setBattleData } from './battle.js';
@@ -190,7 +191,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       if (hasActiveGame()) {
         const lead = getPlayerData().party[0];
-        if (lead) drawText(ctx, `${lead.name} Lv${lead.level}`, 4, 14, { size: 8, color: '#aaccff', font: 'monospace' });
+        if (lead) drawText(ctx, `${lead.name} ${t('hp.level', { level: lead.level })}`, 4, 14, { size: 8, color: '#aaccff', font: 'monospace' });
       }
 
       if (flashPhase === 'flash') {

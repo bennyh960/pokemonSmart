@@ -8,6 +8,7 @@
 import type { InputManager } from '../engine/input.js';
 import type { Move, PokemonType } from '../types/index.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
+import { t, isRTL } from '../i18n/i18n.js';
 
 const SCREEN_W = 240;
 const SCREEN_H = 160;
@@ -117,14 +118,26 @@ export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenu
   }
 }
 
+/** Translation keys for main menu labels. */
+const MAIN_LABEL_KEYS: Record<MainMenuChoice, string> = {
+  FIGHT: 'battle.menu.fight',
+  BAG: 'battle.menu.bag',
+  POKEMON: 'battle.menu.pokemon',
+  RUN: 'battle.menu.run',
+};
+
 function renderMainMenu(ctx: CanvasRenderingContext2D, cursor: number): void {
+  const rtl = isRTL();
   const startX = SCREEN_W - 110;
   const colW = 52;
   const rowH = 16;
 
-  // "What will you do?" on the left side
-  drawText(ctx, 'What will', 8, MENU_Y + 8, { size: 8, color: '#ffffff' });
-  drawText(ctx, 'you do?', 8, MENU_Y + 20, { size: 8, color: '#ffffff' });
+  // "What will you do?" prompt
+  const promptX = rtl ? SCREEN_W - 8 : 8;
+  const promptAlign = rtl ? 'right' as const : 'left' as const;
+  const promptDir = rtl ? 'rtl' as const : 'ltr' as const;
+  drawText(ctx, t('battle.menu.whatWillYouDo1'), promptX, MENU_Y + 8, { size: 8, color: '#ffffff', align: promptAlign, direction: promptDir });
+  drawText(ctx, t('battle.menu.whatWillYouDo2'), promptX, MENU_Y + 20, { size: 8, color: '#ffffff', align: promptAlign, direction: promptDir });
 
   // Menu box on right
   fillRect(ctx, startX - 4, MENU_Y + 2, 114, 36, '#202030');
@@ -140,7 +153,7 @@ function renderMainMenu(ctx: CanvasRenderingContext2D, cursor: number): void {
     if (selected) {
       drawText(ctx, '\u25b6', x, y, { size: 8, color: '#ffffff' });
     }
-    drawText(ctx, MAIN_LABELS[i], x + 10, y, {
+    drawText(ctx, t(MAIN_LABEL_KEYS[MAIN_LABELS[i]]), x + 10, y, {
       size: 8,
       color: selected ? '#f8f8f8' : '#a0a0a0',
     });
@@ -149,14 +162,18 @@ function renderMainMenu(ctx: CanvasRenderingContext2D, cursor: number): void {
 
 function renderMoveMenu(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
   const colW = 118;
-  const rowH = 18;
+  const rowH = 10;
+  const maxVisible = 8; // Show up to 8 moves in 2 columns × 4 rows
 
-  for (let i = 0; i < menu.moves.length; i++) {
+  // Scroll offset: keep cursor visible within the grid
+  const visibleCount = Math.min(menu.moves.length, maxVisible);
+
+  for (let i = 0; i < visibleCount; i++) {
     const move = menu.moves[i];
     const col = i % 2;
     const row = Math.floor(i / 2);
     const x = 4 + col * colW;
-    const y = MENU_Y + 3 + row * rowH;
+    const y = MENU_Y + 2 + row * rowH;
 
     const selected = i === menu.cursorIndex;
 
@@ -164,21 +181,19 @@ function renderMoveMenu(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
       drawText(ctx, '\u25b6', x, y, { size: 8, color: '#ffffff' });
     }
 
-    // Move name
-    drawText(ctx, move.name.toUpperCase(), x + 10, y, {
+    // Move name + type color dot
+    const typeColor = TYPE_COLORS[move.type] || '#a8a878';
+    fillRect(ctx, x + 10, y + 2, 4, 4, typeColor);
+    drawText(ctx, move.name.toUpperCase(), x + 16, y, {
       size: 8,
       color: selected ? '#f8f8f8' : '#a0a0a0',
     });
 
-    // Type + PP below name
-    const typeColor = TYPE_COLORS[move.type] || '#a8a878';
-    drawText(ctx, move.type.toUpperCase(), x + 10, y + 9, {
-      size: 8,
-      color: typeColor,
-    });
-    drawText(ctx, `PP ${move.currentPp}/${move.pp}`, x + 55, y + 9, {
+    // PP on the right
+    drawText(ctx, `${move.currentPp}/${move.pp}`, x + colW - 8, y, {
       size: 8,
       color: '#c0c0c0',
+      align: 'right',
     });
   }
 }

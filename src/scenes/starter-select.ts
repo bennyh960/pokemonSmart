@@ -1,7 +1,7 @@
 /**
  * StarterSelectScene - Choose your starter Pokemon.
  *
- * Presents Cyndaquil, Totodile, and Chikorita as options.
+ * Presents Bulbasaur, Charmander, and Squirtle as options.
  * The chosen Pokemon is added to the player's party.
  */
 
@@ -12,15 +12,17 @@ import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js
 import { getPokemon } from '../services/pokemon-data.js';
 import { createPokemonFromData } from '../systems/encounter.js';
 import { getPlayerData } from '../systems/game-state.js';
+import { t, isRTL } from '../i18n/i18n.js';
+import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 
 const SCREEN_W = 240;
 const SCREEN_H = 160;
 
-/** Starter definitions: ID, display name, type color, starting moves. */
+/** Starter definitions: Gen 1 starters with 8 moves each. */
 const STARTERS = [
-  { id: 155, name: 'Cyndaquil', type: 'fire', color: '#F08030', moveIds: [33, 52, 43, 108] },
-  { id: 158, name: 'Totodile', type: 'water', color: '#6890F0', moveIds: [10, 55, 43, 45] },
-  { id: 152, name: 'Chikorita', type: 'grass', color: '#78C850', moveIds: [33, 22, 45, 108] },
+  { id: 1, name: 'Bulbasaur', type: 'grass', color: '#78C850', moveIds: [33, 22, 45, 73, 77, 75, 72, 36] },
+  { id: 4, name: 'Charmander', type: 'fire', color: '#F08030', moveIds: [10, 52, 43, 108, 83, 163, 53, 82] },
+  { id: 7, name: 'Squirtle', type: 'water', color: '#6890F0', moveIds: [33, 55, 39, 110, 44, 229, 130, 196] },
 ] as const;
 
 const TYPE_COLORS: Record<string, string> = {
@@ -46,6 +48,10 @@ export function createStarterSelectScene(
       fadeAlpha = 1;
       fadeIn = true;
       fadeOut = false;
+      // Preload starter sprites
+      for (const s of STARTERS) {
+        loadImage(`/sprites/pokemon/front/${s.id}.png`).catch(() => {});
+      }
     },
 
     exit(): void {},
@@ -100,16 +106,19 @@ export function createStarterSelectScene(
       clearScreen(ctx, '#1a1a2e');
 
       // Title
-      drawText(ctx, 'Choose your partner!', SCREEN_W / 2, 16, {
+      const rtl = isRTL();
+      drawText(ctx, t('starter.title'), SCREEN_W / 2, 16, {
         size: 10,
         color: '#ffffff',
         align: 'center',
+        direction: rtl ? 'rtl' : 'ltr',
       });
 
-      drawText(ctx, 'Prof. Algorithma:', SCREEN_W / 2, 30, {
+      drawText(ctx, t('starter.professor'), SCREEN_W / 2, 30, {
         size: 8,
         color: '#aaaacc',
         align: 'center',
+        direction: rtl ? 'rtl' : 'ltr',
       });
 
       // Draw 3 starter cards
@@ -133,17 +142,17 @@ export function createStarterSelectScene(
         const borderColor = isSelected ? '#ffcb05' : '#444466';
         drawRect(ctx, x, cardY, cardW, cardH, borderColor, isSelected ? 2 : 1);
 
-        // Pokemon sprite placeholder (colored box)
+        // Pokemon sprite (real from PokeAPI)
         const cx = x + cardW / 2;
         const cy = cardY + 24;
-        fillRect(ctx, cx - 12, cy - 12, 24, 24, starter.color);
-        drawRect(ctx, cx - 12, cy - 12, 24, 24, '#ffffff44');
-
-        drawText(ctx, `#${starter.id}`, cx, cy - 2, {
-          size: 8,
-          color: '#ffffff',
-          align: 'center',
-        });
+        const sprite = getCachedImage(`/sprites/pokemon/front/${starter.id}.png`);
+        ctx.imageSmoothingEnabled = false;
+        if (sprite) {
+          ctx.drawImage(sprite, cx - 16, cy - 16, 32, 32);
+        } else {
+          fillRect(ctx, cx - 12, cy - 12, 24, 24, starter.color);
+          drawRect(ctx, cx - 12, cy - 12, 24, 24, '#ffffff44');
+        }
 
         // Name
         drawText(ctx, starter.name, cx, cardY + 46, {
@@ -172,17 +181,19 @@ export function createStarterSelectScene(
       }
 
       // Instructions
-      drawText(ctx, '\u25c0 \u25b6 to choose, ENTER to confirm', SCREEN_W / 2, 138, {
+      drawText(ctx, t('starter.instructions'), SCREEN_W / 2, 138, {
         size: 8,
         color: '#888888',
         align: 'center',
+        direction: rtl ? 'rtl' : 'ltr',
       });
 
       const selected = STARTERS[selectedIndex];
-      drawText(ctx, `"I choose ${selected.name}!"`, SCREEN_W / 2, 150, {
+      drawText(ctx, t('starter.chosen', { name: selected.name }), SCREEN_W / 2, 150, {
         size: 8,
         color: '#ffcb05',
         align: 'center',
+        direction: rtl ? 'rtl' : 'ltr',
       });
 
       // Fade overlay

@@ -6,6 +6,7 @@
  */
 
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
+import { t } from '../i18n/i18n.js';
 
 const BAR_WIDTH = 48;
 const BAR_HEIGHT = 3;
@@ -71,14 +72,14 @@ export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): voi
 
   // Name and level
   drawText(ctx, name, x, y, { size: 8, color: '#ffffff' });
-  drawText(ctx, `Lv${level}`, x + BAR_WIDTH + 14, y, {
+  drawText(ctx, t('hp.level', { level }), x + BAR_WIDTH + 14, y, {
     size: 8,
     color: '#ffffff',
     align: 'right',
   });
 
   // HP label
-  drawText(ctx, 'HP', x, y + 10, { size: 8, color: '#f8c030' });
+  drawText(ctx, t('hp.label'), x, y + 10, { size: 8, color: '#f8c030' });
 
   // Bar background
   const barX = x + 14;

@@ -1,0 +1,40 @@
+{
+  "title.pokemon": "POKEMON",
+  "title.subtitle": "Math Adventure",
+  "title.hebrewSubtitle": "הרפתקה בנומריה",
+  "title.pressEnter": "Press ENTER",
+  "title.continue": "Continue",
+  "title.newGame": "New Game",
+
+  "starter.title": "Choose your partner!",
+  "starter.professor": "Prof. Algorithma:",
+  "starter.instructions": "\u25c0 \u25b6 to choose, ENTER to confirm",
+  "starter.chosen": "\"I choose {name}!\"",
+
+  "battle.wildAppeared": "A wild {name} appeared!",
+  "battle.usedMove": "{name} used {move}!",
+  "battle.weakAttack": "The attack was weak...",
+  "battle.superEffective": "It's super effective!",
+  "battle.notVeryEffective": "It's not very effective...",
+  "battle.noEffect": "It had no effect!",
+  "battle.nothingHappened": "But nothing happened...",
+  "battle.gotAway": "Got away safely!",
+  "battle.cantDoThat": "Can't do that yet!",
+  "battle.noPP": "No PP left!",
+  "battle.fainted": "{name} fainted!",
+  "battle.youWon": "You won!",
+  "battle.gainedXP": "{name} gained {xp} XP!",
+  "battle.levelUp": "{name} grew to level {level}!",
+
+  "battle.menu.fight": "FIGHT",
+  "battle.menu.bag": "BAG",
+  "battle.menu.pokemon": "POKEMON",
+  "battle.menu.run": "RUN",
+  "battle.menu.whatWillYouDo1": "What will",
+  "battle.menu.whatWillYouDo2": "you do?",
+
+  "hp.label": "HP",
+  "hp.level": "Lv{level}",
+
+  "math.answer": "Answer: {answer}"
+}

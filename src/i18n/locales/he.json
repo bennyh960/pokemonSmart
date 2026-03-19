@@ -1,0 +1,40 @@
+{
+  "title.pokemon": "פוקימון",
+  "title.subtitle": "הרפתקת מתמטיקה",
+  "title.hebrewSubtitle": "הרפתקה בנומריה",
+  "title.pressEnter": "לחץ ENTER",
+  "title.continue": "המשך",
+  "title.newGame": "משחק חדש",
+
+  "starter.title": "!בחר את השותף שלך",
+  "starter.professor": ":פרופ' אלגוריתמה",
+  "starter.instructions": "ENTER לאישור ,\u25c0 \u25b6 לבחירה",
+  "starter.chosen": "\"!{name} אני בוחר ב\"",
+
+  "battle.wildAppeared": "!הופיע {name} פראי",
+  "battle.usedMove": "!{move} השתמש ב {name}",
+  "battle.weakAttack": "...ההתקפה הייתה חלשה",
+  "battle.superEffective": "!זה סופר אפקטיבי",
+  "battle.notVeryEffective": "...זה לא מאוד אפקטיבי",
+  "battle.noEffect": "!אין אפקט",
+  "battle.nothingHappened": "...אבל שום דבר לא קרה",
+  "battle.gotAway": "!ברחת בהצלחה",
+  "battle.cantDoThat": "!עדיין לא אפשרי",
+  "battle.noPP": "!אין PP",
+  "battle.fainted": "!התעלף {name}",
+  "battle.youWon": "!ניצחת",
+  "battle.gainedXP": "!XP {xp} קיבל {name}",
+  "battle.levelUp": "!{level} עלה לרמה {name}",
+
+  "battle.menu.fight": "לחימה",
+  "battle.menu.bag": "תיק",
+  "battle.menu.pokemon": "פוקימון",
+  "battle.menu.run": "בריחה",
+  "battle.menu.whatWillYouDo1": "מה תרצה",
+  "battle.menu.whatWillYouDo2": "?לעשות",
+
+  "hp.label": "HP",
+  "hp.level": "{level} רמ'",
+
+  "math.answer": "{answer} :תשובה"
+}
