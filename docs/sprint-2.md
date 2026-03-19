@@ -11,7 +11,7 @@
 | frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ✅ | ✅ |
 | asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ⬜ | ⬜ |
 | game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ⬜ |
-| game-engine-developer | Save/Load system | `feature/save-system` | ⬜ | ⬜ |
+| game-engine-developer | Save/Load system | `feature/save-system` | ✅ | ⬜ |
 | frontend-developer | Audio manager + BGM | `feature/audio` | ⬜ | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
@@ -125,19 +125,19 @@
 שמירה וטעינה של מצב המשחק ב-localStorage.
 
 ### משימות
-- [ ] **4.1** עדכון `src/systems/save.ts`:
+- [x] **4.1** עדכון `src/systems/save.ts`:
   - `saveGame(state: PlayerData): void` — serialize to JSON, save to localStorage
   - `loadGame(): PlayerData | null` — load from localStorage, deserialize
   - `hasSavedGame(): boolean`
   - `deleteSave(): void`
-- [ ] **4.2** Auto-save triggers:
+- [x] **4.2** Auto-save triggers:
   - שמירה אחרי כל קרב שנגמר
   - שמירה בכניסה לעיר/אזור חדש
-- [ ] **4.3** Title screen integration:
+- [x] **4.3** Title screen integration:
   - אם יש save → הצג "Continue" + "New Game"
   - אם אין save → הצג רק "New Game"
   - Continue → טען save → overworld במיקום האחרון
-- [ ] **4.4** PlayerData includes:
+- [x] **4.4** PlayerData includes:
   - Party (Pokemon array)
   - Position (map + x,y)
   - Badges, serum parts, money
@@ -145,8 +145,8 @@
   - Playtime
 
 ### Acceptance Criteria
-- [ ] שחקן יכול לסגור ולפתוח מחדש - המשחק ממשיך מאיפה שהפסיק
-- [ ] Title screen מציג Continue כשיש save
+- [x] שחקן יכול לסגור ולפתוח מחדש - המשחק ממשיך מאיפה שהפסיק
+- [x] Title screen מציג Continue כשיש save
 
 ---
 

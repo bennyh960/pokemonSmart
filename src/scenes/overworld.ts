@@ -78,6 +78,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       const cx = player.pixelX + TILE_SIZE / 2;
       const cy = player.pixelY + TILE_SIZE / 2;
       camera.snapTo(cx, cy, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
+
+      // Auto-save on area entry
+      if (hasActiveGame()) {
+        const pd = getPlayerData();
+        pd.position.x = player.gridX;
+        pd.position.y = player.gridY;
+        pd.position.mapId = 'test-map';
+        autoSave();
+      }
     },
 
     exit(): void {
@@ -91,6 +100,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     },
 
     update(dt: number): void {
+      // Track playtime
+      if (hasActiveGame()) getPlayerData().playtime += dt;
+
       if (encounterTriggered) {
         flashTimer += dt;
         if (flashPhase === 'flash' && flashTimer >= 0.4) { flashPhase = 'black'; flashTimer = 0; }

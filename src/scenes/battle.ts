@@ -17,7 +17,7 @@ import {
 import { generateProblem } from '../math/math-engine.js';
 import { getCombinedTypeEffectiveness } from '../services/pokemon-data.js';
 import { calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
-import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
+import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 
 const SCREEN_W = 240;
 
@@ -122,7 +122,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     phase = 'ENEMY_TURN'; phaseTimer = 0;
   }
 
-  function goBack(): void { stateMachine.change('OVERWORLD'); }
+  function goBack(): void { autoSave(); stateMachine.change('OVERWORLD'); }
 
   function handleLoss(): void {
     if (hasActiveGame()) {
@@ -130,7 +130,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       for (const p of pd.party) { p.hp = p.maxHp; for (const mv of p.moves) mv.currentPp = mv.pp; }
       pd.position.x = 0; pd.position.y = 0;
     }
-    goBack();
+    autoSave();
+    stateMachine.change('OVERWORLD');
   }
 
   return {
