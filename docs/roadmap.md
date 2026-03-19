@@ -12,7 +12,7 @@
 | Math engine (6 levels + adaptive) | math-engine-developer | `feature/math-engine` | 🔄 |
 | Overworld + grid movement | game-engine-developer | `feature/overworld` | 🔄 |
 | PokeAPI data pipeline (251 Pokemon) | asset-manager | `feature/pokeapi-pipeline` | 🔄 |
-| Battle UI + math input | frontend-developer | `feature/battle-ui` | 🔄 |
+| Battle UI + math input | frontend-developer | `feature/battle-ui` | ✅ merged |
 
 **Details:** `docs/sprint-1.md`
 

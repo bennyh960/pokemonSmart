@@ -11,7 +11,7 @@
 | math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ⬜ לא התחיל | ⬜ |
 | game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ⬜ לא התחיל | ⬜ |
 | asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ⬜ לא התחיל | ⬜ |
-| frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ✅ הושלם | ⬜ |
+| frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ✅ הושלם | ✅ merged to main |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
 
@@ -316,8 +316,17 @@ Findings: -
 
 ### feature/battle-ui
 ```
-Status: ⬜ Not tested
-Findings: -
+Status: ✅ Verified & merged to main (2026-03-19)
+Findings:
+- tsc --noEmit: 0 errors in battle-ui files (1 pre-existing error from asset-manager's pokemon-data.ts)
+- vite build: ✓ succeeds (17.95 kB bundle)
+- All 6 files created: hp-bar.ts, battle-menu.ts, math-input.ts, text-box.ts, battle-animations.ts, battle.ts
+- Battle scene wired in game.ts, press B to enter battle
+- HP bars: color transitions green/yellow/red, smooth animation ✓
+- Number pad: mouse click + keyboard (0-9, Backspace, Enter) ✓
+- Timer bar: shrinks over time with color change ✓
+- Correct answer: green flash ✓
+- Wrong answer: red shake + shows correct answer ✓
 ```
 
 ---
