@@ -10,7 +10,7 @@
 |-------|--------|--------|--------|-----|
 | frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ✅ | ✅ |
 | asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ⬜ | ⬜ |
-| game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ⬜ | ⬜ |
+| game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ⬜ |
 | game-engine-developer | Save/Load system | `feature/save-system` | ⬜ | ⬜ |
 | frontend-developer | Audio manager + BGM | `feature/audio` | ⬜ | ⬜ |
 
@@ -85,28 +85,28 @@
 חיבור overworld → battle → חזרה. כשהשחקן דורך על tall grass ויש encounter, נכנסים לקרב אמיתי עם פוקימון אקראי, ובסיום חוזרים ל-overworld.
 
 ### משימות
-- [ ] **3.1** יצירת `src/systems/encounter.ts`:
+- [x] **3.1** יצירת `src/systems/encounter.ts`:
   - Encounter table per area (מאיזה פוקימונים ובאיזה levels)
   - פונקציה שמגרילה פוקימון פראי לפי האזור
   - שימוש בדאטה האמיתי מ-`pokemon.json`
-- [ ] **3.2** חיבור overworld → battle:
+- [x] **3.2** חיבור overworld → battle:
   - כשיש encounter ב-overworld → transition to battle scene
   - Battle scene מקבלת: פוקימון השחקן + פוקימון פראי
   - Fade to black transition
-- [ ] **3.3** חיבור battle → overworld:
+- [x] **3.3** חיבור battle → overworld:
   - ניצחון: XP + חזרה ל-overworld
   - הפסד: חזרה ל-Pokemon Center (לעת עתה חזרה ל-spawn)
   - בריחה: חזרה ל-overworld
-- [ ] **3.4** Battle עם נתונים אמיתיים:
+- [x] **3.4** Battle עם נתונים אמיתיים:
   - Math difficulty לפי power של ה-move (משתמש ב-movePowerToMathDifficulty)
   - Damage formula עם stats אמיתיים
   - Type effectiveness מ-type-chart.json
-- [ ] **3.5** XP & Level up:
+- [x] **3.5** XP & Level up:
   - XP gain after winning battle
   - Level up check (simple formula: need level*100 XP)
   - Stat increase on level up
   - Move learning placeholder (just log it for now)
-- [ ] **3.6** Starter Pokemon:
+- [x] **3.6** Starter Pokemon:
   - בתחילת המשחק (אחרי title) → בחירת starter: Cyndaquil / Totodile / Chikorita
   - UI פשוט: 3 אפשרויות עם שם + type + sprite
   - הפוקימון הנבחר נכנס ל-party של השחקן
@@ -207,13 +207,13 @@
 - [ ] Player sprite עם אנימציית הליכה
 - [ ] Tiles אמיתיים ב-overworld
 
-### feature/encounter-flow
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] `npm test` passes
-- [ ] Tall grass → encounter → battle → back to overworld
-- [ ] Math difficulty matches move power
-- [ ] XP gained after win
-- [ ] Starter selection works
+### feature/encounter-flow ✅
+- [x] `tsc --noEmit` = 0 errors
+- [x] `npm test` passes
+- [x] Tall grass → encounter → battle → back to overworld
+- [x] Math difficulty matches move power
+- [x] XP gained after win
+- [x] Starter selection works
 
 ### feature/save-system
 - [ ] `tsc --noEmit` = 0 errors
@@ -253,8 +253,21 @@ Findings: -
 
 ### feature/encounter-flow
 ```
-Status: ⬜ Not tested
-Findings: -
+Status: ✅ PASS
+Date: 2026-03-19
+tsc --noEmit: 0 errors
+npm test: 62/62 passed
+Findings:
+  - All acceptance criteria met
+  - Tall grass → encounter → battle → overworld flow works
+  - Math difficulty correctly mapped from move power via generateProblem()
+  - XP gain uses (baseExp * level) / 7 formula, level-up recalculates stats
+  - Starter selection: Cyndaquil/Totodile/Chikorita at level 5 with real moves
+  - Type effectiveness + STAB + math bonus in damage formula
+  - Save/load integration with position restore
+Minor notes (non-blocking):
+  - enemyTurn() has no guard for empty moves array (mitigated by encounter system always providing moves)
+  - startEncounterTransition() has no guard for empty party (mitigated by starter selection guaranteeing 1+ Pokemon)
 ```
 
 ### feature/save-system

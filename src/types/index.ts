@@ -12,7 +12,7 @@ export interface Scene {
 }
 
 /** Scene identifiers used by the state machine. */
-export type SceneId = 'TITLE' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE';
+export type SceneId = 'TITLE' | 'STARTER_SELECT' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE';
 
 /** Top-level game state snapshot. */
 export interface GameState {

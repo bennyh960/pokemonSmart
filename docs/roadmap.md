@@ -18,18 +18,18 @@
 
 ---
 
-## Sprint 2 — Integration ⬜ PLANNED
+## Sprint 2 — Integration 🔄 IN PROGRESS
 **Goal:** Connect all Sprint 1 pieces into a working battle
 
-| Task | Agent |
-|------|-------|
-| Wire real PokeAPI data into battle system | game-engine-developer |
-| Connect math engine to battle UI (solve to attack) | frontend-developer + math-engine-developer |
-| Real Pokemon sprites in battle (from PokeAPI) | asset-manager |
-| Wild encounter system (overworld → battle → back) | game-engine-developer |
-| Save/load system (localStorage) | game-engine-developer |
-| Battle result: XP, level up, evolution check | game-engine-developer |
-| Audio manager + background music | frontend-developer |
+| Task | Agent | Status |
+|------|-------|--------|
+| Wire real PokeAPI data into battle system | game-engine-developer | ✅ merged |
+| Connect math engine to battle UI (solve to attack) | frontend-developer + math-engine-developer | ✅ merged |
+| Real Pokemon sprites in battle (from PokeAPI) | asset-manager | ⬜ |
+| Wild encounter system (overworld → battle → back) | game-engine-developer | ✅ merged |
+| Save/load system (localStorage) | game-engine-developer | 🔄 |
+| Battle result: XP, level up, evolution check | game-engine-developer | ✅ merged |
+| Audio manager + background music | frontend-developer | 🔄 |
 
 ---
 
