@@ -1,0 +1,2306 @@
+[
+  {
+    "chainId": 1,
+    "stages": [
+      {
+        "id": 1,
+        "name": "bulbasaur",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 2,
+        "name": "ivysaur",
+        "minLevel": 16,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 3,
+        "name": "venusaur",
+        "minLevel": 32,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 2,
+    "stages": [
+      {
+        "id": 4,
+        "name": "charmander",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 5,
+        "name": "charmeleon",
+        "minLevel": 16,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 6,
+        "name": "charizard",
+        "minLevel": 36,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 3,
+    "stages": [
+      {
+        "id": 7,
+        "name": "squirtle",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 8,
+        "name": "wartortle",
+        "minLevel": 16,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 9,
+        "name": "blastoise",
+        "minLevel": 36,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 4,
+    "stages": [
+      {
+        "id": 10,
+        "name": "caterpie",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 11,
+        "name": "metapod",
+        "minLevel": 7,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 12,
+        "name": "butterfree",
+        "minLevel": 10,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 5,
+    "stages": [
+      {
+        "id": 13,
+        "name": "weedle",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 14,
+        "name": "kakuna",
+        "minLevel": 7,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 15,
+        "name": "beedrill",
+        "minLevel": 10,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 6,
+    "stages": [
+      {
+        "id": 16,
+        "name": "pidgey",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 17,
+        "name": "pidgeotto",
+        "minLevel": 18,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 18,
+        "name": "pidgeot",
+        "minLevel": 36,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 7,
+    "stages": [
+      {
+        "id": 19,
+        "name": "rattata",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 20,
+        "name": "raticate",
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 8,
+    "stages": [
+      {
+        "id": 21,
+        "name": "spearow",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 22,
+        "name": "fearow",
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 9,
+    "stages": [
+      {
+        "id": 23,
+        "name": "ekans",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 24,
+        "name": "arbok",
+        "minLevel": 22,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 10,
+    "stages": [
+      {
+        "id": 172,
+        "name": "pichu",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 25,
+        "name": "pikachu",
+        "minLevel": null,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 26,
+        "name": "raichu",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "thunder-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 11,
+    "stages": [
+      {
+        "id": 27,
+        "name": "sandshrew",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 28,
+        "name": "sandslash",
+        "minLevel": 22,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 12,
+    "stages": [
+      {
+        "id": 29,
+        "name": "nidoran-f",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 30,
+        "name": "nidorina",
+        "minLevel": 16,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 31,
+        "name": "nidoqueen",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "moon-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 13,
+    "stages": [
+      {
+        "id": 32,
+        "name": "nidoran-m",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 33,
+        "name": "nidorino",
+        "minLevel": 16,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 34,
+        "name": "nidoking",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "moon-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 14,
+    "stages": [
+      {
+        "id": 173,
+        "name": "cleffa",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 35,
+        "name": "clefairy",
+        "minLevel": null,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 36,
+        "name": "clefable",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "moon-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 15,
+    "stages": [
+      {
+        "id": 37,
+        "name": "vulpix",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 38,
+        "name": "ninetales",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "fire-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 16,
+    "stages": [
+      {
+        "id": 174,
+        "name": "igglybuff",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 39,
+        "name": "jigglypuff",
+        "minLevel": null,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 40,
+        "name": "wigglytuff",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "moon-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 17,
+    "stages": [
+      {
+        "id": 41,
+        "name": "zubat",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 42,
+        "name": "golbat",
+        "minLevel": 22,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 169,
+        "name": "crobat",
+        "minLevel": null,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 18,
+    "stages": [
+      {
+        "id": 43,
+        "name": "oddish",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 44,
+        "name": "gloom",
+        "minLevel": 21,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 45,
+        "name": "vileplume",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "leaf-stone"
+      },
+      {
+        "id": 182,
+        "name": "bellossom",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "sun-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 19,
+    "stages": [
+      {
+        "id": 46,
+        "name": "paras",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 47,
+        "name": "parasect",
+        "minLevel": 24,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 20,
+    "stages": [
+      {
+        "id": 48,
+        "name": "venonat",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 49,
+        "name": "venomoth",
+        "minLevel": 31,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 21,
+    "stages": [
+      {
+        "id": 50,
+        "name": "diglett",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 51,
+        "name": "dugtrio",
+        "minLevel": 26,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 22,
+    "stages": [
+      {
+        "id": 52,
+        "name": "meowth",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 53,
+        "name": "persian",
+        "minLevel": 28,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 23,
+    "stages": [
+      {
+        "id": 54,
+        "name": "psyduck",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 55,
+        "name": "golduck",
+        "minLevel": 33,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 24,
+    "stages": [
+      {
+        "id": 56,
+        "name": "mankey",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 57,
+        "name": "primeape",
+        "minLevel": 28,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 25,
+    "stages": [
+      {
+        "id": 58,
+        "name": "growlithe",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 59,
+        "name": "arcanine",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "fire-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 26,
+    "stages": [
+      {
+        "id": 60,
+        "name": "poliwag",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 61,
+        "name": "poliwhirl",
+        "minLevel": 25,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 62,
+        "name": "poliwrath",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "water-stone"
+      },
+      {
+        "id": 186,
+        "name": "politoed",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 27,
+    "stages": [
+      {
+        "id": 63,
+        "name": "abra",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 64,
+        "name": "kadabra",
+        "minLevel": 16,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 65,
+        "name": "alakazam",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 28,
+    "stages": [
+      {
+        "id": 66,
+        "name": "machop",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 67,
+        "name": "machoke",
+        "minLevel": 28,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 68,
+        "name": "machamp",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 29,
+    "stages": [
+      {
+        "id": 69,
+        "name": "bellsprout",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 70,
+        "name": "weepinbell",
+        "minLevel": 21,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 71,
+        "name": "victreebel",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "leaf-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 30,
+    "stages": [
+      {
+        "id": 72,
+        "name": "tentacool",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 73,
+        "name": "tentacruel",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 31,
+    "stages": [
+      {
+        "id": 74,
+        "name": "geodude",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 75,
+        "name": "graveler",
+        "minLevel": 25,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 76,
+        "name": "golem",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 32,
+    "stages": [
+      {
+        "id": 77,
+        "name": "ponyta",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 78,
+        "name": "rapidash",
+        "minLevel": 40,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 33,
+    "stages": [
+      {
+        "id": 79,
+        "name": "slowpoke",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 80,
+        "name": "slowbro",
+        "minLevel": 37,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 199,
+        "name": "slowking",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 34,
+    "stages": [
+      {
+        "id": 81,
+        "name": "magnemite",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 82,
+        "name": "magneton",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 35,
+    "stages": [
+      {
+        "id": 83,
+        "name": "farfetchd",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 36,
+    "stages": [
+      {
+        "id": 84,
+        "name": "doduo",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 85,
+        "name": "dodrio",
+        "minLevel": 31,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 37,
+    "stages": [
+      {
+        "id": 86,
+        "name": "seel",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 87,
+        "name": "dewgong",
+        "minLevel": 34,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 38,
+    "stages": [
+      {
+        "id": 88,
+        "name": "grimer",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 89,
+        "name": "muk",
+        "minLevel": 38,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 39,
+    "stages": [
+      {
+        "id": 90,
+        "name": "shellder",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 91,
+        "name": "cloyster",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "water-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 40,
+    "stages": [
+      {
+        "id": 92,
+        "name": "gastly",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 93,
+        "name": "haunter",
+        "minLevel": 25,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 94,
+        "name": "gengar",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 41,
+    "stages": [
+      {
+        "id": 95,
+        "name": "onix",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 208,
+        "name": "steelix",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 42,
+    "stages": [
+      {
+        "id": 96,
+        "name": "drowzee",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 97,
+        "name": "hypno",
+        "minLevel": 26,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 43,
+    "stages": [
+      {
+        "id": 98,
+        "name": "krabby",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 99,
+        "name": "kingler",
+        "minLevel": 28,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 44,
+    "stages": [
+      {
+        "id": 100,
+        "name": "voltorb",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 101,
+        "name": "electrode",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 45,
+    "stages": [
+      {
+        "id": 102,
+        "name": "exeggcute",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 103,
+        "name": "exeggutor",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "leaf-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 46,
+    "stages": [
+      {
+        "id": 104,
+        "name": "cubone",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 105,
+        "name": "marowak",
+        "minLevel": 28,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 47,
+    "stages": [
+      {
+        "id": 236,
+        "name": "tyrogue",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 106,
+        "name": "hitmonlee",
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 107,
+        "name": "hitmonchan",
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 237,
+        "name": "hitmontop",
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 48,
+    "stages": [
+      {
+        "id": 108,
+        "name": "lickitung",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 49,
+    "stages": [
+      {
+        "id": 109,
+        "name": "koffing",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 110,
+        "name": "weezing",
+        "minLevel": 35,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 50,
+    "stages": [
+      {
+        "id": 111,
+        "name": "rhyhorn",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 112,
+        "name": "rhydon",
+        "minLevel": 42,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 52,
+    "stages": [
+      {
+        "id": 114,
+        "name": "tangela",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 53,
+    "stages": [
+      {
+        "id": 115,
+        "name": "kangaskhan",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 54,
+    "stages": [
+      {
+        "id": 116,
+        "name": "horsea",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 117,
+        "name": "seadra",
+        "minLevel": 32,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 230,
+        "name": "kingdra",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 55,
+    "stages": [
+      {
+        "id": 118,
+        "name": "goldeen",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 119,
+        "name": "seaking",
+        "minLevel": 33,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 56,
+    "stages": [
+      {
+        "id": 120,
+        "name": "staryu",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 121,
+        "name": "starmie",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "water-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 58,
+    "stages": [
+      {
+        "id": 123,
+        "name": "scyther",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 212,
+        "name": "scizor",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 59,
+    "stages": [
+      {
+        "id": 238,
+        "name": "smoochum",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 124,
+        "name": "jynx",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 60,
+    "stages": [
+      {
+        "id": 239,
+        "name": "elekid",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 125,
+        "name": "electabuzz",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 61,
+    "stages": [
+      {
+        "id": 240,
+        "name": "magby",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 126,
+        "name": "magmar",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 62,
+    "stages": [
+      {
+        "id": 127,
+        "name": "pinsir",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 63,
+    "stages": [
+      {
+        "id": 128,
+        "name": "tauros",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 64,
+    "stages": [
+      {
+        "id": 129,
+        "name": "magikarp",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 130,
+        "name": "gyarados",
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 65,
+    "stages": [
+      {
+        "id": 131,
+        "name": "lapras",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 66,
+    "stages": [
+      {
+        "id": 132,
+        "name": "ditto",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 67,
+    "stages": [
+      {
+        "id": 133,
+        "name": "eevee",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 134,
+        "name": "vaporeon",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "water-stone"
+      },
+      {
+        "id": 135,
+        "name": "jolteon",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "thunder-stone"
+      },
+      {
+        "id": 136,
+        "name": "flareon",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "fire-stone"
+      },
+      {
+        "id": 196,
+        "name": "espeon",
+        "minLevel": null,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 197,
+        "name": "umbreon",
+        "minLevel": null,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 68,
+    "stages": [
+      {
+        "id": 137,
+        "name": "porygon",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 233,
+        "name": "porygon2",
+        "minLevel": null,
+        "trigger": "trade",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 69,
+    "stages": [
+      {
+        "id": 138,
+        "name": "omanyte",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 139,
+        "name": "omastar",
+        "minLevel": 40,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 70,
+    "stages": [
+      {
+        "id": 140,
+        "name": "kabuto",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 141,
+        "name": "kabutops",
+        "minLevel": 40,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 71,
+    "stages": [
+      {
+        "id": 142,
+        "name": "aerodactyl",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 73,
+    "stages": [
+      {
+        "id": 144,
+        "name": "articuno",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 74,
+    "stages": [
+      {
+        "id": 145,
+        "name": "zapdos",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 75,
+    "stages": [
+      {
+        "id": 146,
+        "name": "moltres",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 76,
+    "stages": [
+      {
+        "id": 147,
+        "name": "dratini",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 148,
+        "name": "dragonair",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 149,
+        "name": "dragonite",
+        "minLevel": 55,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 77,
+    "stages": [
+      {
+        "id": 150,
+        "name": "mewtwo",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 78,
+    "stages": [
+      {
+        "id": 151,
+        "name": "mew",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 79,
+    "stages": [
+      {
+        "id": 152,
+        "name": "chikorita",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 153,
+        "name": "bayleef",
+        "minLevel": 16,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 154,
+        "name": "meganium",
+        "minLevel": 32,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 80,
+    "stages": [
+      {
+        "id": 155,
+        "name": "cyndaquil",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 156,
+        "name": "quilava",
+        "minLevel": 14,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 157,
+        "name": "typhlosion",
+        "minLevel": 36,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 81,
+    "stages": [
+      {
+        "id": 158,
+        "name": "totodile",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 159,
+        "name": "croconaw",
+        "minLevel": 18,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 160,
+        "name": "feraligatr",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 82,
+    "stages": [
+      {
+        "id": 161,
+        "name": "sentret",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 162,
+        "name": "furret",
+        "minLevel": 15,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 83,
+    "stages": [
+      {
+        "id": 163,
+        "name": "hoothoot",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 164,
+        "name": "noctowl",
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 84,
+    "stages": [
+      {
+        "id": 165,
+        "name": "ledyba",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 166,
+        "name": "ledian",
+        "minLevel": 18,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 85,
+    "stages": [
+      {
+        "id": 167,
+        "name": "spinarak",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 168,
+        "name": "ariados",
+        "minLevel": 22,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 86,
+    "stages": [
+      {
+        "id": 170,
+        "name": "chinchou",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 171,
+        "name": "lanturn",
+        "minLevel": 27,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 87,
+    "stages": [
+      {
+        "id": 175,
+        "name": "togepi",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 176,
+        "name": "togetic",
+        "minLevel": null,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 88,
+    "stages": [
+      {
+        "id": 177,
+        "name": "natu",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 178,
+        "name": "xatu",
+        "minLevel": 25,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 89,
+    "stages": [
+      {
+        "id": 179,
+        "name": "mareep",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 180,
+        "name": "flaaffy",
+        "minLevel": 15,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 181,
+        "name": "ampharos",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 92,
+    "stages": [
+      {
+        "id": 187,
+        "name": "hoppip",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 188,
+        "name": "skiploom",
+        "minLevel": 18,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 189,
+        "name": "jumpluff",
+        "minLevel": 27,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 93,
+    "stages": [
+      {
+        "id": 190,
+        "name": "aipom",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 94,
+    "stages": [
+      {
+        "id": 191,
+        "name": "sunkern",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 192,
+        "name": "sunflora",
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "sun-stone"
+      }
+    ]
+  },
+  {
+    "chainId": 95,
+    "stages": [
+      {
+        "id": 193,
+        "name": "yanma",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 96,
+    "stages": [
+      {
+        "id": 194,
+        "name": "wooper",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 195,
+        "name": "quagsire",
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 97,
+    "stages": [
+      {
+        "id": 198,
+        "name": "murkrow",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 98,
+    "stages": [
+      {
+        "id": 200,
+        "name": "misdreavus",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 99,
+    "stages": [
+      {
+        "id": 201,
+        "name": "unown",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 101,
+    "stages": [
+      {
+        "id": 203,
+        "name": "girafarig",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 102,
+    "stages": [
+      {
+        "id": 204,
+        "name": "pineco",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 205,
+        "name": "forretress",
+        "minLevel": 31,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 103,
+    "stages": [
+      {
+        "id": 206,
+        "name": "dunsparce",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 104,
+    "stages": [
+      {
+        "id": 207,
+        "name": "gligar",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 105,
+    "stages": [
+      {
+        "id": 209,
+        "name": "snubbull",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 210,
+        "name": "granbull",
+        "minLevel": 23,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 106,
+    "stages": [
+      {
+        "id": 211,
+        "name": "qwilfish",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 107,
+    "stages": [
+      {
+        "id": 213,
+        "name": "shuckle",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 108,
+    "stages": [
+      {
+        "id": 214,
+        "name": "heracross",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 109,
+    "stages": [
+      {
+        "id": 215,
+        "name": "sneasel",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 110,
+    "stages": [
+      {
+        "id": 216,
+        "name": "teddiursa",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 217,
+        "name": "ursaring",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 111,
+    "stages": [
+      {
+        "id": 218,
+        "name": "slugma",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 219,
+        "name": "magcargo",
+        "minLevel": 38,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 112,
+    "stages": [
+      {
+        "id": 220,
+        "name": "swinub",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 221,
+        "name": "piloswine",
+        "minLevel": 33,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 113,
+    "stages": [
+      {
+        "id": 222,
+        "name": "corsola",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 114,
+    "stages": [
+      {
+        "id": 223,
+        "name": "remoraid",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 224,
+        "name": "octillery",
+        "minLevel": 25,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 115,
+    "stages": [
+      {
+        "id": 225,
+        "name": "delibird",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 117,
+    "stages": [
+      {
+        "id": 227,
+        "name": "skarmory",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 118,
+    "stages": [
+      {
+        "id": 228,
+        "name": "houndour",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 229,
+        "name": "houndoom",
+        "minLevel": 24,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 119,
+    "stages": [
+      {
+        "id": 231,
+        "name": "phanpy",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 232,
+        "name": "donphan",
+        "minLevel": 25,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 120,
+    "stages": [
+      {
+        "id": 234,
+        "name": "stantler",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 121,
+    "stages": [
+      {
+        "id": 235,
+        "name": "smeargle",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 122,
+    "stages": [
+      {
+        "id": 241,
+        "name": "miltank",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 123,
+    "stages": [
+      {
+        "id": 243,
+        "name": "raikou",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 124,
+    "stages": [
+      {
+        "id": 244,
+        "name": "entei",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 125,
+    "stages": [
+      {
+        "id": 245,
+        "name": "suicune",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 126,
+    "stages": [
+      {
+        "id": 246,
+        "name": "larvitar",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 247,
+        "name": "pupitar",
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 248,
+        "name": "tyranitar",
+        "minLevel": 55,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 127,
+    "stages": [
+      {
+        "id": 249,
+        "name": "lugia",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 128,
+    "stages": [
+      {
+        "id": 250,
+        "name": "ho-oh",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 129,
+    "stages": [
+      {
+        "id": 251,
+        "name": "celebi",
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  }
+]
