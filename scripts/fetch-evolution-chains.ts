@@ -1,0 +1,92 @@
+/**
+ * Fetches evolution chain data for Gen 1-2 Pokemon from PokeAPI.
+ * Saves to src/data/evolution-chains.json
+ */
+
+const API_BASE = 'https://pokeapi.co/api/v2';
+const RATE_LIMIT_MS = 100;
+const TOTAL_POKEMON = 251;
+
+export interface EvolutionStep {
+  id: number;
+  name: string;
+  minLevel: number | null;
+  trigger: string | null;
+  item: string | null;
+}
+
+export interface EvolutionChain {
+  chainId: number;
+  stages: EvolutionStep[];
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function extractIdFromUrl(url: string): number {
+  const parts = url.replace(/\/$/, '').split('/');
+  return parseInt(parts[parts.length - 1], 10);
+}
+
+function flattenChain(node: any, stages: EvolutionStep[]): void {
+  const speciesId = extractIdFromUrl(node.species.url);
+  if (speciesId > TOTAL_POKEMON) return;
+
+  const detail = node.evolution_details[0];
+  stages.push({
+    id: speciesId,
+    name: node.species.name,
+    minLevel: detail?.min_level ?? null,
+    trigger: detail?.trigger?.name ?? null,
+    item: detail?.item?.name ?? null,
+  });
+
+  for (const child of node.evolves_to) {
+    flattenChain(child, stages);
+  }
+}
+
+export async function fetchEvolutionChains(): Promise<EvolutionChain[]> {
+  const chainUrls = new Set<string>();
+
+  console.log('  Collecting evolution chain URLs from species...');
+  for (let id = 1; id <= TOTAL_POKEMON; id++) {
+    const res = await fetch(`${API_BASE}/pokemon-species/${id}`);
+    if (!res.ok) throw new Error(`Failed to fetch species ${id}: ${res.status}`);
+    const data = await res.json();
+    chainUrls.add(data.evolution_chain.url);
+
+    if (id % 50 === 0 || id === TOTAL_POKEMON) {
+      console.log(`  Species: ${id}/${TOTAL_POKEMON} (${chainUrls.size} unique chains)`);
+    }
+    await sleep(RATE_LIMIT_MS);
+  }
+
+  const chains: EvolutionChain[] = [];
+  const urls = [...chainUrls];
+  let count = 0;
+
+  console.log(`  Fetching ${urls.length} evolution chains...`);
+  for (const url of urls) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch chain ${url}: ${res.status}`);
+    const data = await res.json();
+
+    const stages: EvolutionStep[] = [];
+    flattenChain(data.chain, stages);
+
+    if (stages.length > 0) {
+      chains.push({ chainId: data.id, stages });
+    }
+
+    count++;
+    if (count % 25 === 0 || count === urls.length) {
+      console.log(`  Chains: ${count}/${urls.length}`);
+    }
+    await sleep(RATE_LIMIT_MS);
+  }
+
+  chains.sort((a, b) => a.chainId - b.chainId);
+  return chains;
+}
