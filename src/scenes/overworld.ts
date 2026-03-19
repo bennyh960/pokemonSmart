@@ -6,6 +6,7 @@
 import type { Scene, Pokemon } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
+import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
@@ -31,7 +32,7 @@ interface PlayerState {
   startPixelX: number; startPixelY: number; moveProgress: number; facing: string;
 }
 
-export function createOverworldScene(input: InputManager, stateMachine: StateMachine): Scene {
+export function createOverworldScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
   let tileMap: TileMap;
   let camera: Camera;
   let player: PlayerState;
@@ -64,6 +65,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       encounterTriggered = false;
       flashPhase = 'none';
       flashTimer = 0;
+      audio.playMusic('town');
 
       let spawnX = tileMap.spawn.x;
       let spawnY = tileMap.spawn.y;

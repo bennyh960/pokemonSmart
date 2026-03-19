@@ -12,7 +12,7 @@
 | asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ⬜ | ⬜ |
 | game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ⬜ |
 | game-engine-developer | Save/Load system | `feature/save-system` | ✅ | ✅ |
-| frontend-developer | Audio manager + BGM | `feature/audio` | ⬜ | ⬜ |
+| frontend-developer | Audio manager + BGM | `feature/audio` | ✅ | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
 
@@ -156,32 +156,32 @@
 מוזיקת רקע ואפקטי סאונד בסיסיים עם Howler.js.
 
 ### משימות
-- [ ] **5.1** יצירת `src/audio/audio-manager.ts` מלא:
+- [x] **5.1** יצירת `src/audio/audio-manager.ts` מלא:
   - `playMusic(trackName)` — play + loop
   - `stopMusic(fade?)` — stop with optional fade
   - `playSfx(sfxName)` — one-shot sound effect
   - `setVolume(category, level)` — music/sfx/master
   - `crossfade(fromTrack, toTrack, duration)` — smooth transition
-- [ ] **5.2** הורד 3-5 טראקים חיוניים מ-Khinsider Gold/Silver OST:
+- [x] **5.2** הורד 3-5 טראקים חיוניים מ-Khinsider Gold/Silver OST:
   - Title screen music
   - Town/overworld music (New Bark Town)
   - Route/wild area music (Route 29)
   - Wild battle music
   - Victory fanfare
   - שמור ב-`public/audio/music/`
-- [ ] **5.3** הורד SFX בסיסיים מ-Pokemon Showdown:
+- [x] **5.3** הורד SFX בסיסיים מ-Pokemon Showdown:
   - Menu select beep
   - Menu cancel
   - Hit/damage
   - Text scroll blip
   - שמור ב-`public/audio/sfx/`
-- [ ] **5.4** שלב audio ב-scenes:
+- [x] **5.4** שלב audio ב-scenes:
   - Title: play title music
   - Overworld: play town/route music
   - Battle: crossfade to battle music
   - Victory: play victory fanfare
   - Scene transition: stop/crossfade
-- [ ] **5.5** Volume control:
+- [x] **5.5** Volume control:
   - Default: music 50%, sfx 70%
   - Mute button (M key)
 

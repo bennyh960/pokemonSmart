@@ -8,6 +8,7 @@
 
 import { createStateMachine } from './state-machine.js';
 import { createInputManager } from './input.js';
+import { createAudioManager } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle.js';
 import { createOverworldScene } from '../scenes/overworld.js';
@@ -35,10 +36,11 @@ export function createGame(container: HTMLElement) {
 
   const input = createInputManager(canvas);
   const stateMachine = createStateMachine();
+  const audio = createAudioManager();
 
-  stateMachine.register('TITLE', createTitleScene(input, stateMachine));
-  stateMachine.register('BATTLE', createBattleScene(input, stateMachine, canvas));
-  stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine));
+  stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio));
+  stateMachine.register('BATTLE', createBattleScene(input, stateMachine, canvas, audio));
+  stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine, audio));
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
 
   let lastTime = 0;
@@ -49,6 +51,11 @@ export function createGame(container: HTMLElement) {
 
     const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
     lastTime = timestamp;
+
+    // Mute toggle: M key
+    if (input.isKeyPressed('m') || input.isKeyPressed('M')) {
+      audio.toggleMute();
+    }
 
     // Debug: Press B to enter battle from any scene
     if (input.isKeyPressed('b') || input.isKeyPressed('B')) {

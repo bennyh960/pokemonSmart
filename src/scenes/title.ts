@@ -5,6 +5,7 @@
 import type { Scene } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
+import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, drawText, fillRect } from '../engine/renderer.js';
 import { hasSavedGame, startNewGame, loadSavedGame } from '../systems/game-state.js';
 
@@ -22,7 +23,7 @@ function createStar(): Star {
   };
 }
 
-export function createTitleScene(input: InputManager, stateMachine: StateMachine): Scene {
+export function createTitleScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
   let stars: Star[] = [];
   let blinkTimer = 0;
   let titleY = -20;
@@ -46,6 +47,7 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
       stars = Array.from({ length: STAR_COUNT }, createStar);
       blinkTimer = 0; showPrompt = true; titleY = -20; entered = false;
       buildMenu();
+      audio.playMusic('title');
     },
     exit(): void {},
     update(dt: number): void {

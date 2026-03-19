@@ -5,6 +5,7 @@
 import type { Scene, Pokemon, PokemonType } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
+import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { createHPBar, updateHPBar, renderHPBar, setHP, isHPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
@@ -51,7 +52,7 @@ function effText(mt: PokemonType, dt: PokemonType[]): string | null {
   return null;
 }
 
-export function createBattleScene(input: InputManager, stateMachine: StateMachine, canvas: HTMLCanvasElement): Scene {
+export function createBattleScene(input: InputManager, stateMachine: StateMachine, canvas: HTMLCanvasElement, audio: AudioManager): Scene {
   let phase: BattlePhase = 'INTRO';
   let player: Pokemon;
   let enemy: Pokemon;
@@ -91,6 +92,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       setHP(enemyHpBar, enemy.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
       spawnDamageNumber(`-${dmg}`, 185, 40, '#f84038');
+      audio.playSFX('hit');
       const msgs = [`${player.name} used ${m.name}!`];
       if (!correct) msgs.push('The attack was weak...');
       const et = effText(m.type, enemy.types);
@@ -112,6 +114,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       setHP(playerHpBar, player.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
       spawnDamageNumber(`-${dmg}`, 50, 80, '#f84038');
+      audio.playSFX('hit');
       const msgs = [`${enemy.name} used ${m.name}!`];
       const et = effText(m.type, player.types);
       if (et) msgs.push(et);
@@ -135,7 +138,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   return {
-    enter(): void { init(); textBox = createTextBox([`A wild ${enemy.name} appeared!`]); phase = 'INTRO'; },
+    enter(): void { init(); textBox = createTextBox([`A wild ${enemy.name} appeared!`]); phase = 'INTRO'; audio.playMusic('battle'); },
     exit(): void { clearAllPopups(); },
     update(dt: number): void {
       phaseTimer += dt;
@@ -152,6 +155,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'SELECT_ACTION': {
           const r = updateBattleMenu(menu, input);
           if (r?.type === 'main') {
+            audio.playSFX('menu-select');
             if (r.choice === 'FIGHT') { phase = 'SELECT_MOVE'; showMoveMenu(menu); }
             else if (r.choice === 'RUN') { textBox = createTextBox(['Got away safely!']); phase = 'RUN'; }
             else { textBox = createTextBox(["Can't do that yet!"]); phase = 'INTRO'; }
@@ -189,7 +193,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'CHECK_WIN': {
-          if (enemy.hp <= 0) { textBox = createTextBox([`${enemy.name} fainted!`, 'You won!']); phase = 'WIN'; }
+          if (enemy.hp <= 0) { textBox = createTextBox([`${enemy.name} fainted!`, 'You won!']); audio.playMusic('victory'); phase = 'WIN'; }
           else enemyTurn();
           break;
         }
