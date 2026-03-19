@@ -24,17 +24,17 @@
 תיקון הגופן - נראות טובה יותר, תמיכה בעברית קריאה. זה דחוף כי כרגע הטקסט כמעט לא קריא.
 
 ### משימות
-- [ ] **1.1** מצא/הורד pixel font שתומך בעברית + אנגלית:
+- [x] **1.1** מצא/הורד pixel font שתומך בעברית + אנגלית:
   - Option A: Google Fonts - "Press Start 2P" (אנגלית) + "Rubik" / "Assistant" (עברית, נראה טוב בגודל קטן)
   - Option B: מצא bitmap font שתומך Unicode Hebrew range
   - Option C: ייצר bitmap font atlas מ-system font בגודל pixel
-- [ ] **1.2** עדכן `src/engine/renderer.ts` - שימוש בגופן החדש בכל drawText
-- [ ] **1.3** ודא שעברית RTL עובדת נכון בכל מקום:
+- [x] **1.2** עדכן `src/engine/renderer.ts` - שימוש בגופן החדש בכל drawText
+- [x] **1.3** ודא שעברית RTL עובדת נכון בכל מקום:
   - Title screen subtitle
   - Text box dialogues
   - Battle messages
-- [ ] **1.4** תקן גודל פונט - minimum 8px ב-native resolution (24px בתצוגה 3x)
-- [ ] **1.5** הוסף font loading ב-game.ts - שהפונט נטען לפני שהמשחק מתחיל (prevent FOUT)
+- [x] **1.4** תקן גודל פונט - minimum 8px ב-native resolution (24px בתצוגה 3x)
+- [x] **1.5** הוסף font loading ב-game.ts - שהפונט נטען לפני שהמשחק מתחיל (prevent FOUT)
 
 ### Acceptance Criteria
 - [ ] טקסט אנגלי קריא וברור בסגנון פיקסל

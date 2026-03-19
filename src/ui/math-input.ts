@@ -234,7 +234,7 @@ export function renderMathInput(ctx: CanvasRenderingContext2D, state: MathInputS
   // Show correct answer on wrong
   if (state.feedback === 'wrong') {
     drawText(ctx, `Answer: ${state.correctAnswer}`, SCREEN_W / 2, boxY + 42, {
-      size: 7,
+      size: 8,
       color: '#f8c030',
       align: 'center',
     });

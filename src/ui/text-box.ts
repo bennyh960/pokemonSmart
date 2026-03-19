@@ -89,12 +89,12 @@ export function renderTextBox(ctx: CanvasRenderingContext2D, state: TextBoxState
   const visible = line.slice(0, state.revealedChars);
 
   drawText(ctx, visible, state.isRtl ? SCREEN_W - TEXT_X : TEXT_X, TEXT_Y, {
-    size: 7,
+    size: 8,
     color: '#f8f8f8',
     direction: state.isRtl ? 'rtl' : 'ltr',
     align: state.isRtl ? 'right' : 'left',
     maxWidth: SCREEN_W - TEXT_X * 2,
-    lineHeight: 10,
+    lineHeight: 12,
   });
 
   // Blinking continue arrow
@@ -102,7 +102,7 @@ export function renderTextBox(ctx: CanvasRenderingContext2D, state: TextBoxState
     const blink = Math.floor(Date.now() / 400) % 2 === 0;
     if (blink) {
       drawText(ctx, '\u25bc', SCREEN_W - 12, BOX_Y + BOX_H - 10, {
-        size: 6,
+        size: 8,
         color: '#f8f8f8',
       });
     }

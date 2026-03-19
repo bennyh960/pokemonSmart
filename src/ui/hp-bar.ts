@@ -70,19 +70,19 @@ export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): voi
   const { x, y, name, level, displayHp, maxHp, showNumbers } = bar;
 
   // Name and level
-  drawText(ctx, name, x, y, { size: 7, color: '#ffffff' });
+  drawText(ctx, name, x, y, { size: 8, color: '#ffffff' });
   drawText(ctx, `Lv${level}`, x + BAR_WIDTH + 14, y, {
-    size: 7,
+    size: 8,
     color: '#ffffff',
     align: 'right',
   });
 
   // HP label
-  drawText(ctx, 'HP', x, y + 9, { size: 6, color: '#f8c030' });
+  drawText(ctx, 'HP', x, y + 10, { size: 8, color: '#f8c030' });
 
   // Bar background
-  const barX = x + 12;
-  const barY = y + 9;
+  const barX = x + 14;
+  const barY = y + 10;
   fillRect(ctx, barX, barY, BAR_WIDTH, BAR_HEIGHT, '#303030');
   drawRect(ctx, barX - 1, barY - 1, BAR_WIDTH + 2, BAR_HEIGHT + 2, '#484848');
 
@@ -99,8 +99,8 @@ export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): voi
       ctx,
       `${Math.floor(displayHp)}/${maxHp}`,
       x + BAR_WIDTH + 14,
-      y + 9,
-      { size: 6, color: '#ffffff', align: 'right' },
+      y + 10,
+      { size: 8, color: '#ffffff', align: 'right' },
     );
   }
 }

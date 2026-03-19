@@ -9,6 +9,7 @@
 import type { Scene } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
+import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
@@ -178,7 +179,6 @@ export function createOverworldScene(input: InputManager, _stateMachine: StateMa
       drawText(ctx, tileMap.name, 4, 4, {
         size: 8,
         color: '#ffffff',
-        font: 'monospace',
       });
 
       // Encounter flash effect

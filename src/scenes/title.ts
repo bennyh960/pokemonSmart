@@ -104,26 +104,23 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
 
       // Title text
       drawText(ctx, 'POKEMON', SCREEN_W / 2, Math.floor(titleY), {
-        size: 16,
+        size: 14,
         color: '#ffcb05',
         align: 'center',
-        font: 'monospace',
       });
 
       drawText(ctx, 'Math Adventure', SCREEN_W / 2, Math.floor(titleY) + 20, {
-        size: 10,
+        size: 8,
         color: '#3b5ca8',
         align: 'center',
-        font: 'monospace',
       });
 
       // Hebrew subtitle
       drawText(ctx, '\u05d4\u05e8\u05e4\u05ea\u05e7\u05d4 \u05d1\u05e0\u05d5\u05de\u05e8\u05d9\u05d4', SCREEN_W / 2, Math.floor(titleY) + 36, {
-        size: 8,
+        size: 10,
         color: '#88aaff',
         align: 'center',
         direction: 'rtl',
-        font: 'monospace',
       });
 
       // Blinking prompt
@@ -132,7 +129,6 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
           size: 8,
           color: '#ffffff',
           align: 'center',
-          font: 'monospace',
         });
       }
 
@@ -141,7 +137,6 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
         size: 6,
         color: '#444466',
         align: 'right',
-        font: 'monospace',
       });
     },
   };

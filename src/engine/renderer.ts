@@ -6,6 +6,7 @@
  */
 
 import type { TextOptions } from '../types/index.js';
+import { FONT_EN, fontFor } from './fonts.js';
 
 /** Default text rendering options. */
 const DEFAULT_TEXT_OPTIONS: Required<TextOptions> = {
@@ -13,7 +14,7 @@ const DEFAULT_TEXT_OPTIONS: Required<TextOptions> = {
   color: '#ffffff',
   align: 'left',
   baseline: 'top',
-  font: 'monospace',
+  font: FONT_EN,
   direction: 'ltr',
   maxWidth: 0,
   lineHeight: 10,
@@ -50,6 +51,10 @@ export function drawText(
   options: TextOptions = {},
 ): void {
   const opts = { ...DEFAULT_TEXT_OPTIONS, ...options };
+n  // Auto-detect Hebrew text and switch font
+  if (!options.font) {
+    opts.font = fontFor(text);
+  }
 
   ctx.save();
   ctx.font = `${opts.size}px ${opts.font}`;

@@ -123,8 +123,8 @@ function renderMainMenu(ctx: CanvasRenderingContext2D, cursor: number): void {
   const rowH = 16;
 
   // "What will you do?" on the left side
-  drawText(ctx, 'What will', 8, MENU_Y + 8, { size: 7, color: '#ffffff' });
-  drawText(ctx, 'you do?', 8, MENU_Y + 20, { size: 7, color: '#ffffff' });
+  drawText(ctx, 'What will', 8, MENU_Y + 8, { size: 8, color: '#ffffff' });
+  drawText(ctx, 'you do?', 8, MENU_Y + 20, { size: 8, color: '#ffffff' });
 
   // Menu box on right
   fillRect(ctx, startX - 4, MENU_Y + 2, 114, 36, '#202030');
@@ -138,10 +138,10 @@ function renderMainMenu(ctx: CanvasRenderingContext2D, cursor: number): void {
 
     const selected = i === cursor;
     if (selected) {
-      drawText(ctx, '\u25b6', x, y, { size: 7, color: '#ffffff' });
+      drawText(ctx, '\u25b6', x, y, { size: 8, color: '#ffffff' });
     }
     drawText(ctx, MAIN_LABELS[i], x + 10, y, {
-      size: 7,
+      size: 8,
       color: selected ? '#f8f8f8' : '#a0a0a0',
     });
   }
@@ -161,23 +161,23 @@ function renderMoveMenu(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
     const selected = i === menu.cursorIndex;
 
     if (selected) {
-      drawText(ctx, '\u25b6', x, y, { size: 7, color: '#ffffff' });
+      drawText(ctx, '\u25b6', x, y, { size: 8, color: '#ffffff' });
     }
 
     // Move name
     drawText(ctx, move.name.toUpperCase(), x + 10, y, {
-      size: 7,
+      size: 8,
       color: selected ? '#f8f8f8' : '#a0a0a0',
     });
 
     // Type + PP below name
     const typeColor = TYPE_COLORS[move.type] || '#a8a878';
     drawText(ctx, move.type.toUpperCase(), x + 10, y + 9, {
-      size: 5,
+      size: 8,
       color: typeColor,
     });
     drawText(ctx, `PP ${move.currentPp}/${move.pp}`, x + 55, y + 9, {
-      size: 5,
+      size: 8,
       color: '#c0c0c0',
     });
   }

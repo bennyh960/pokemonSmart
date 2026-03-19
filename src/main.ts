@@ -4,6 +4,7 @@
  */
 
 import { createGame } from './engine/game.js';
+import { loadFonts } from './engine/fonts.js';
 import './style.css';
 
 const app = document.getElementById('app');
@@ -11,5 +12,9 @@ if (!app) {
   throw new Error('Could not find #app container element.');
 }
 
-const game = createGame(app);
-game.start();
+
+// Load fonts before starting the game to prevent FOUT
+loadFonts().then(() => {
+  const game = createGame(app!);
+  game.start();
+});

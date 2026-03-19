@@ -395,7 +395,7 @@ export function createBattleScene(
       fillRect(ctx, 165, 20, 32, 32, '#b0a0a0');
       drawRect(ctx, 165, 20, 32, 32, '#888888');
       drawText(ctx, enemy.name.slice(0, 3).toUpperCase(), 172, 30, {
-        size: 7,
+        size: 8,
         color: '#404040',
         align: 'center',
       });
@@ -404,7 +404,7 @@ export function createBattleScene(
       fillRect(ctx, 35, 60, 40, 36, '#f08030');
       drawRect(ctx, 35, 60, 40, 36, '#c06020');
       drawText(ctx, player.name.slice(0, 3).toUpperCase(), 48, 72, {
-        size: 7,
+        size: 8,
         color: '#802010',
         align: 'center',
       });
