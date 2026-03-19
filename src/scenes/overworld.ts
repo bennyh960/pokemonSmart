@@ -13,6 +13,7 @@ import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { generateWildEncounter } from '../systems/encounter.js';
 import { setBattleData } from './battle.js';
+import { getPlayerSpriteSheet } from '../engine/asset-generator.js';
 import testMapData from '../data/maps/test-map.json';
 
 const SCREEN_W = 240;
@@ -26,10 +27,15 @@ const DIR_VECTORS: Record<string, { dx: number; dy: number }> = {
   ArrowLeft: { dx: -1, dy: 0 }, ArrowRight: { dx: 1, dy: 0 },
 };
 
+const DIR_TO_ROW: Record<string, number> = {
+  ArrowDown: 0, ArrowUp: 1, ArrowLeft: 2, ArrowRight: 3,
+};
+
 interface PlayerState {
   gridX: number; gridY: number; pixelX: number; pixelY: number;
   moving: boolean; targetGridX: number; targetGridY: number;
   startPixelX: number; startPixelY: number; moveProgress: number; facing: string;
+  walkFrame: number; walkTimer: number;
 }
 
 export function createOverworldScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
@@ -46,6 +52,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       moving: false, targetGridX: sx, targetGridY: sy,
       startPixelX: sx * TILE_SIZE, startPixelY: sy * TILE_SIZE,
       moveProgress: 0, facing: 'ArrowDown',
+      walkFrame: 0, walkTimer: 0,
     };
   }
 
@@ -117,6 +124,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       if (player.moving) {
         player.moveProgress += dt / MOVE_DURATION;
+        // Walk animation
+        player.walkTimer += dt;
+        if (player.walkTimer >= 0.1) { player.walkTimer = 0; player.walkFrame = player.walkFrame === 1 ? 2 : 1; }
         if (player.moveProgress >= 1) {
           player.moveProgress = 1;
           player.gridX = player.targetGridX;
@@ -124,6 +134,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           player.pixelX = player.gridX * TILE_SIZE;
           player.pixelY = player.gridY * TILE_SIZE;
           player.moving = false;
+          player.walkFrame = 0;
 
           if (tileMap.isTallGrass(player.gridX, player.gridY)) {
             if (Math.random() < ENCOUNTER_CHANCE) {
@@ -148,6 +159,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               player.targetGridX = nx; player.targetGridY = ny;
               player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
               player.moveProgress = 0;
+              player.walkTimer = 0; player.walkFrame = 1;
             }
             break;
           }
@@ -163,18 +175,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       clearScreen(ctx, '#000000');
       tileMap.render(ctx, camera.x, camera.y);
 
-      const px = Math.floor(player.pixelX - camera.x);
-      const py = Math.floor(player.pixelY - camera.y);
-      fillRect(ctx, px, py, TILE_SIZE, TILE_SIZE, '#4488FF');
-
-      const sz = 4;
-      let ix = px + TILE_SIZE / 2 - sz / 2;
-      let iy = py + TILE_SIZE / 2 - sz / 2;
-      if (player.facing === 'ArrowUp') iy = py + 1;
-      else if (player.facing === 'ArrowDown') iy = py + TILE_SIZE - sz - 1;
-      else if (player.facing === 'ArrowLeft') ix = px + 1;
-      else if (player.facing === 'ArrowRight') ix = px + TILE_SIZE - sz - 1;
-      fillRect(ctx, ix, iy, sz, sz, '#AACCFF');
+      const psx = Math.floor(player.pixelX - camera.x);
+      const psy = Math.floor(player.pixelY - camera.y);
+      const spriteSheet = getPlayerSpriteSheet();
+      if (spriteSheet.complete && spriteSheet.naturalWidth > 0) {
+        const row = DIR_TO_ROW[player.facing] ?? 0;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(spriteSheet, player.walkFrame * 16, row * 16, 16, 16, psx, psy, 16, 16);
+      } else {
+        fillRect(ctx, psx, psy, TILE_SIZE, TILE_SIZE, '#4488FF');
+      }
 
       drawText(ctx, tileMap.name, 4, 4, { size: 8, color: '#ffffff', font: 'monospace' });
 

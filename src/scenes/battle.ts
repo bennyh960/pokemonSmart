@@ -6,7 +6,7 @@ import type { Scene, Pokemon, PokemonType } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
-import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
+import { clearScreen, fillRect, drawRect } from '../engine/renderer.js';
 import { createHPBar, updateHPBar, renderHPBar, setHP, isHPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import { createMathInput, updateMathInput, renderMathInput } from '../ui/math-input.js';
@@ -19,6 +19,8 @@ import { generateProblem } from '../math/math-engine.js';
 import { getCombinedTypeEffectiveness } from '../services/pokemon-data.js';
 import { calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
+import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
+import { getBattleBackground } from '../engine/asset-generator.js';
 
 const SCREEN_W = 240;
 
@@ -82,6 +84,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     mathInput = null; textBox = null; flash = null; shake = null;
     fade = createFade(true, 0.5); clearAllPopups();
     phase = 'INTRO'; phaseTimer = 0; xpGained = 0;
+    // Preload Pokemon sprites
+    loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
+    loadImage(`/sprites/pokemon/back/${player.id}.png`).catch(() => {});
   }
 
   function doAttack(correct: boolean): void {
@@ -231,14 +236,32 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     render(ctx: CanvasRenderingContext2D): void {
       clearScreen(ctx, '#78c850');
       if (shake) applyShake(ctx, shake);
-      fillRect(ctx, 0, 0, SCREEN_W, 70, '#98d8a8');
-      fillRect(ctx, 0, 70, SCREEN_W, 50, '#78c850');
+      // Battle background
+      const bgImg = getBattleBackground();
+      ctx.imageSmoothingEnabled = false;
+      if (bgImg.complete && bgImg.naturalWidth > 0) {
+        ctx.drawImage(bgImg, 0, 0, 240, 120);
+      } else {
+        fillRect(ctx, 0, 0, SCREEN_W, 70, '#98d8a8');
+        fillRect(ctx, 0, 70, SCREEN_W, 50, '#78c850');
+      }
+      // Platforms
       fillRect(ctx, 140, 55, 80, 8, '#c8b870'); drawRect(ctx, 140, 55, 80, 8, '#a89850');
       fillRect(ctx, 20, 95, 80, 8, '#c8b870'); drawRect(ctx, 20, 95, 80, 8, '#a89850');
-      fillRect(ctx, 165, 20, 32, 32, '#b0a0a0'); drawRect(ctx, 165, 20, 32, 32, '#888888');
-      drawText(ctx, enemy.name.slice(0, 3).toUpperCase(), 172, 30, { size: 8, color: '#404040', align: 'center' });
-      fillRect(ctx, 35, 60, 40, 36, '#f08030'); drawRect(ctx, 35, 60, 40, 36, '#c06020');
-      drawText(ctx, player.name.slice(0, 3).toUpperCase(), 48, 72, { size: 8, color: '#802010', align: 'center' });
+      // Enemy Pokemon sprite (front)
+      const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
+      if (enemySprite) {
+        ctx.drawImage(enemySprite, 157, 8, 48, 48);
+      } else {
+        fillRect(ctx, 165, 20, 32, 32, '#b0a0a0'); drawRect(ctx, 165, 20, 32, 32, '#888888');
+      }
+      // Player Pokemon sprite (back)
+      const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
+      if (playerSprite) {
+        ctx.drawImage(playerSprite, 25, 48, 56, 56);
+      } else {
+        fillRect(ctx, 35, 60, 40, 36, '#f08030'); drawRect(ctx, 35, 60, 40, 36, '#c06020');
+      }
       renderHPBar(ctx, enemyHpBar); renderHPBar(ctx, playerHpBar);
       if (shake) resetShake(ctx, shake);
       renderPopups(ctx);

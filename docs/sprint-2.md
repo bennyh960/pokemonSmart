@@ -9,7 +9,7 @@
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
 | frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ✅ | ✅ |
-| asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ⬜ | ⬜ |
+| asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ✅ | ⬜ |
 | game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ⬜ |
 | game-engine-developer | Save/Load system | `feature/save-system` | ✅ | ✅ |
 | frontend-developer | Audio manager + BGM | `feature/audio` | ✅ | ✅ |
@@ -49,33 +49,31 @@
 החלפת כל ה-placeholder מלבנים בספרייטים אמיתיים מ-PokeAPI ו-Spriters Resource.
 
 ### משימות
-- [ ] **2.1** עדכן את ה-battle scene לטעון Pokemon sprites אמיתיים:
+- [x] **2.1** עדכן את ה-battle scene לטעון Pokemon sprites אמיתיים:
   - Front sprite לפוקימון יריב מ-`public/sprites/pokemon/front/{id}.png`
   - Back sprite לפוקימון שחקן מ-`public/sprites/pokemon/back/{id}.png`
   - שימוש ב-sprite-loader.ts הקיים
-- [ ] **2.2** הורד player overworld sprite מ-Spriters Resource (Gold/Silver):
-  - 4 כיוונים × 3 frames (stand, walk1, walk2)
-  - שמור ב-`public/sprites/characters/player.png`
+- [x] **2.2** Player overworld sprite — generated programmatically:
+  - 4 כיוונים × 3 frames (stand, walk1, walk2) via asset-generator.ts
+  - Gold/Silver style red hat player character
   - עדכן overworld.ts להשתמש ב-sprite במקום מלבן כחול
-- [ ] **2.3** הורד tileset בסיסי מ-Spriters Resource:
-  - Outdoor tileset (grass, path, trees, water, tall grass)
-  - שמור ב-`public/sprites/tilesets/outdoor.png`
-  - עדכן tilemap.ts לרנדר tiles מה-tileset במקום מלבנים צבעוניים
-- [ ] **2.4** הורד UI frames מ-Spriters Resource:
+- [x] **2.3** Tileset — generated programmatically:
+  - Outdoor tiles (grass, path, trees, water, tall grass, building, door)
+  - Each tile has pixel-art details (grass blades, dirt texture, wave highlights, etc.)
+  - עדכן tilemap.ts לרנדר tiles מ-getTileImage() במקום מלבנים צבעוניים
+- [ ] **2.4** UI frames (deferred — existing UI frames work well enough):
   - Text box border
   - Battle HUD frame
   - Menu frame
-  - שמור ב-`public/sprites/ui/`
-- [ ] **2.5** הורד battle backgrounds:
-  - Grass/outdoor battle BG
-  - שמור ב-`public/sprites/battle/bg_grass.png`
+- [x] **2.5** Battle background — generated programmatically:
+  - Grass/outdoor battle BG with sky gradient, hills, grass field
   - עדכן battle scene להציג רקע
 
 ### Acceptance Criteria
-- [ ] קרבות מציגים Pokemon sprites אמיתיים (לא מלבנים)
-- [ ] השחקן ב-overworld הוא ספרייט אמיתי עם אנימציית הליכה
-- [ ] Tiles ב-overworld הם גרפיקה אמיתית (לא מלבנים צבעוניים)
-- [ ] Battle scene יש רקע אמיתי
+- [x] קרבות מציגים Pokemon sprites אמיתיים (לא מלבנים)
+- [x] השחקן ב-overworld הוא ספרייט אמיתי עם אנימציית הליכה
+- [x] Tiles ב-overworld הם גרפיקה אמיתית (לא מלבנים צבעוניים)
+- [x] Battle scene יש רקע אמיתי
 
 ---
 

@@ -13,6 +13,7 @@
  */
 
 import { fillRect } from './renderer.js';
+import { getTileImage } from './asset-generator.js';
 
 /** Map data as loaded from JSON. */
 export interface TileMapData {
@@ -89,13 +90,19 @@ export function createTileMap(data: TileMapData) {
       const endCol = Math.min(width - 1, Math.floor((cameraX + screenW) / tileSize));
       const endRow = Math.min(height - 1, Math.floor((cameraY + screenH) / tileSize));
 
+      ctx.imageSmoothingEnabled = false;
       for (let row = startRow; row <= endRow; row++) {
         for (let col = startCol; col <= endCol; col++) {
           const tile = tiles[row][col];
-          const color = TILE_COLORS[tile] ?? '#FF00FF';
-          const drawX = col * tileSize - cameraX;
-          const drawY = row * tileSize - cameraY;
-          fillRect(ctx, Math.floor(drawX), Math.floor(drawY), tileSize, tileSize, color);
+          const drawX = Math.floor(col * tileSize - cameraX);
+          const drawY = Math.floor(row * tileSize - cameraY);
+          const tileImg = getTileImage(tile);
+          if (tileImg.complete && tileImg.naturalWidth > 0) {
+            ctx.drawImage(tileImg, drawX, drawY, tileSize, tileSize);
+          } else {
+            const color = TILE_COLORS[tile] ?? '#FF00FF';
+            fillRect(ctx, drawX, drawY, tileSize, tileSize, color);
+          }
         }
       }
     },
