@@ -207,13 +207,13 @@
 - [ ] Player sprite עם אנימציית הליכה
 - [ ] Tiles אמיתיים ב-overworld
 
-### feature/encounter-flow
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] `npm test` passes
-- [ ] Tall grass → encounter → battle → back to overworld
-- [ ] Math difficulty matches move power
-- [ ] XP gained after win
-- [ ] Starter selection works
+### feature/encounter-flow ✅
+- [x] `tsc --noEmit` = 0 errors
+- [x] `npm test` passes
+- [x] Tall grass → encounter → battle → back to overworld
+- [x] Math difficulty matches move power
+- [x] XP gained after win
+- [x] Starter selection works
 
 ### feature/save-system
 - [ ] `tsc --noEmit` = 0 errors
@@ -244,8 +244,21 @@ Findings: -
 
 ### feature/encounter-flow
 ```
-Status: ⬜ Not tested
-Findings: -
+Status: ✅ PASS
+Date: 2026-03-19
+tsc --noEmit: 0 errors
+npm test: 62/62 passed
+Findings:
+  - All acceptance criteria met
+  - Tall grass → encounter → battle → overworld flow works
+  - Math difficulty correctly mapped from move power via generateProblem()
+  - XP gain uses (baseExp * level) / 7 formula, level-up recalculates stats
+  - Starter selection: Cyndaquil/Totodile/Chikorita at level 5 with real moves
+  - Type effectiveness + STAB + math bonus in damage formula
+  - Save/load integration with position restore
+Minor notes (non-blocking):
+  - enemyTurn() has no guard for empty moves array (mitigated by encounter system always providing moves)
+  - startEncounterTransition() has no guard for empty party (mitigated by starter selection guaranteeing 1+ Pokemon)
 ```
 
 ### feature/save-system
