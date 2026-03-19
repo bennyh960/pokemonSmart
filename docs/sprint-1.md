@@ -9,7 +9,7 @@
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
 | math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ✅ הושלם | ⬜ |
-| game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ✅ הושלם | ⬜ |
+| game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ✅ הושלם | ✅ |
 | asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ⬜ לא התחיל | ⬜ |
 | frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ⬜ לא התחיל | ⬜ |
 
@@ -267,12 +267,12 @@ npm install -D tsx  # להרצת TypeScript scripts
 - [ ] All numbers within specified ranges
 
 **feature/overworld:**
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] Title screen → ENTER → overworld loads
-- [ ] Player moves with arrow keys (grid-based)
-- [ ] Player cannot walk through collision tiles
-- [ ] Camera follows player
-- [ ] No visual glitches or gaps in tilemap
+- [x] `tsc --noEmit` = 0 errors
+- [x] Title screen → ENTER → overworld loads
+- [x] Player moves with arrow keys (grid-based)
+- [x] Player cannot walk through collision tiles
+- [x] Camera follows player
+- [x] No visual glitches or gaps in tilemap
 
 **feature/pokeapi-pipeline:**
 - [ ] `tsc --noEmit` = 0 errors
@@ -304,8 +304,16 @@ Findings: -
 
 ### feature/overworld
 ```
-Status: ⬜ Not tested
-Findings: -
+Status: ✅ Passed — merged to main
+Tested: 2026-03-19
+Findings:
+  - All 6 QA checks passed (tsc, title→overworld, grid movement, collision, camera, tilemap)
+  - vite build succeeds (8.76 kB bundle)
+Observations (non-blocking, for future sprints):
+  - Encounter reset uses setTimeout(500ms) instead of a frame counter — works but a frame-based
+    timer would be more consistent with the game loop pattern
+  - Out-of-bounds tile lookups return -1 which is implicitly non-walkable — correct behavior
+    but could benefit from an explicit bounds check comment for clarity
 ```
 
 ### feature/pokeapi-pipeline
