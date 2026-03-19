@@ -12,7 +12,7 @@
 | asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ⬜ | ⬜ |
 | game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ⬜ |
 | game-engine-developer | Save/Load system | `feature/save-system` | ✅ | ✅ |
-| frontend-developer | Audio manager + BGM | `feature/audio` | ✅ | ⬜ |
+| frontend-developer | Audio manager + BGM | `feature/audio` | ✅ | ✅ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
 
@@ -221,10 +221,10 @@
 - [ ] New Game works when save exists
 
 ### feature/audio
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] Music plays on title + overworld + battle
-- [ ] Crossfade between scenes
-- [ ] M key mutes/unmutes
+- [x] `tsc --noEmit` = 0 errors
+- [x] Music plays on title + overworld + battle
+- [x] Crossfade between scenes
+- [x] M key mutes/unmutes
 
 ---
 
@@ -292,6 +292,21 @@ Minor notes (non-blocking):
 
 ### feature/audio
 ```
-Status: ⬜ Not tested
-Findings: -
+Status: ✅ PASS
+Date: 2026-03-19
+tsc --noEmit: 0 errors
+npm test: 62/62 passed
+vite build: success (33 modules, 207 kB gzipped 42 kB)
+Findings:
+  - Full Howler.js audio-manager: playMusic, stopMusic, playSFX, crossfade, toggleMute
+  - Scene wiring: title→'title', overworld→'town', battle→'battle', win→'victory'
+  - playMusic() auto-crossfades (500ms) when switching tracks between scenes
+  - Hit SFX on player & enemy attacks, menu-select SFX on action choice
+  - M key global mute toggle in game loop, defaults: music 50%, SFX 70%
+  - public/audio/ gitignored (placeholder silent MP3s, replace with real tracks)
+  - Howler html5 mode for music streaming, standard mode for SFX
+Minor notes (non-blocking):
+  - Audio files are silent placeholders — need real Gold/Silver OST MP3s for actual sound
+  - menu-cancel and text-blip SFX defined but not yet wired to any scene event
+  - No visual mute indicator shown on screen (player has no feedback that mute is active)
 ```
