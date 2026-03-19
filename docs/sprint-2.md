@@ -1,5 +1,5 @@
-# Sprint 2 - Integration & Visual Upgrade
-**תאריך:** 2026-03-19
+# Sprint 2 - Integration & Visual Upgrade ✅ COMPLETE
+**תאריך:** 2026-03-19 — 2026-03-20
 **מטרה:** חיבור כל חלקי Sprint 1 למשחק עובד + שדרוג ויזואלי ותיקון גופנים
 
 ---
@@ -10,7 +10,7 @@
 |-------|--------|--------|--------|-----|
 | frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ✅ | ✅ |
 | asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ✅ | ✅ |
-| game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ⬜ |
+| game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ✅ |
 | game-engine-developer | Save/Load system | `feature/save-system` | ✅ | ✅ |
 | frontend-developer | Audio manager + BGM | `feature/audio` | ✅ | ✅ |
 
@@ -105,7 +105,7 @@
   - Stat increase on level up
   - Move learning placeholder (just log it for now)
 - [x] **3.6** Starter Pokemon:
-  - בתחילת המשחק (אחרי title) → בחירת starter: Cyndaquil / Totodile / Chikorita
+  - בתחילת המשחק (אחרי title) → בחירת starter: Bulbasaur / Charmander / Squirtle
   - UI פשוט: 3 אפשרויות עם שם + type + sprite
   - הפוקימון הנבחר נכנס ל-party של השחקן
 
@@ -325,3 +325,46 @@ Minor notes (non-blocking):
   - menu-cancel and text-blip SFX defined but not yet wired to any scene event
   - No visual mute indicator shown on screen (player has no feedback that mute is active)
 ```
+
+---
+
+## שינויים אחרי הדמו (2026-03-20)
+
+השינויים הבאים בוצעו ישירות על main אחרי דמו מוצלח של Sprint 2:
+
+### 1. Starters → דור ראשון
+- **לפני:** Cyndaquil (155), Totodile (158), Chikorita (152)
+- **אחרי:** Bulbasaur (1), Charmander (4), Squirtle (7)
+- **קבצים:** `starter-select.ts`, `battle.ts` (fallback)
+
+### 2. 8 מתקפות לכל פוקימון (במקום 4)
+- Bulbasaur: Tackle, Vine Whip, Growl, Leech Seed, Poison Powder, Razor Leaf, Mega Drain, Take Down
+- Charmander: Scratch, Ember, Leer, Smokescreen, Fire Spin, Slash, Flamethrower, Dragon Rage
+- Squirtle: Tackle, Water Gun, Tail Whip, Withdraw, Bite, Rapid Spin, Skull Bash, Icy Wind
+- תפריט המתקפות עודכן ל-2 עמודות × 4 שורות (מקוצר: שם + נקודת צבע type + PP)
+- **קבצים:** `starter-select.ts`, `battle-menu.ts`
+
+### 3. ביטול תרגילי מתמטיקה בקרב
+- הוסר ה-MATH phase מלוגיקת הקרב — בחירת מתקפה → התקפה ישירה
+- הוסר math multiplier מנוסחת הנזק (100% damage תמיד)
+- הוסרו imports: `createMathInput`, `generateProblem`, `renderMathInput`
+- **סיבה:** תרגיל בכל מתקפה מציק — נחשוב על מוטיבציה אחרת למתמטיקה
+- **קבצים:** `battle.ts`
+
+### 4. מערכת i18n (עברית + אנגלית)
+- **קבצים חדשים:** `src/i18n/i18n.ts`, `src/i18n/locales/en.json`, `src/i18n/locales/he.json`
+- ~25 מחרוזות מתורגמות: title, starter select, battle, menus, HP bar
+- ברירת מחדל: **עברית** — כל הטקסטים RTL
+- מקש **L** ב-title screen מחליף שפה (נשמר ב-localStorage)
+- פונקציית `t(key, params)` עם interpolation
+- TextBox עובר כ-RTL כשהשפה עברית
+- **קבצים שעודכנו:** `main.ts`, `title.ts`, `starter-select.ts`, `battle.ts`, `battle-menu.ts`, `hp-bar.ts`, `overworld.ts`, `math-input.ts`
+
+### 5. Sprites שקופים — אין שינוי נדרש
+- אומת: כל ה-PNGs מ-PokeAPI (front + back) כבר שקופים (alpha channel תקין)
+- מסך בחירת starter עודכן להציג sprites אמיתיים (במקום מלבנים צבעוניים)
+
+### TODOs שנשארו
+- [ ] Turn order לפי speed stat + move priority (כרגע השחקן תמיד ראשון)
+- [ ] להחליף placeholder audio ב-MP3 אמיתיים
+- [ ] לחשוב על מכניקת מתמטיקה חדשה (לא בכל מתקפה)

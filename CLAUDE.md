@@ -5,7 +5,7 @@ A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (�
 
 ## Key Files
 - **Full game spec:** `docs/game-spec.md` — THE reference for everything (story, world, mechanics, Pokemon, gym leaders)
-- **Current sprint:** `docs/sprint-1.md` — Active tasks, who's doing what, QA status
+- **Current sprint:** `docs/sprint-2.md` — Active tasks, who's doing what, QA status
 - **Roadmap:** `docs/roadmap.md` — All sprints planned, what's done vs pending
 - **Agent definitions:** `.claude/agents/*.md` — 7 agents with detailed roles
 - **Agent prompts:** `.claude/prompts/*.md` — Ready-to-run instructions for parallel execution
@@ -24,9 +24,12 @@ A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (�
 ## Tech Stack
 - **Runtime:** Vite + TypeScript + HTML5 Canvas (240×160 scaled 3x)
 - **Audio:** Howler.js
+- **i18n:** Custom `src/i18n/i18n.ts` — Hebrew (default) + English, `t(key, params)`, L key toggles
 - **Data:** PokeAPI (fetched at build time → static JSON)
 - **Pokemon:** Real Gen 1-2 (251 Pokemon, real types/moves/evolutions)
-- **Sprites:** PokeAPI Gen 2 Gold + Spriters Resource for tilesets/trainers
+- **Starters:** Gen 1 — Bulbasaur, Charmander, Squirtle (8 moves each)
+- **Sprites:** PokeAPI Gen 2 Gold (transparent PNGs) + procedural tilesets/player
+- **Math in battle:** Currently disabled — will be rethought for a less intrusive mechanic
 
 ## How to Work
 1. Read `docs/roadmap.md` to see overall progress

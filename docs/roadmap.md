@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 2 of 6
+## Overall Progress: Sprint 2 ✅ COMPLETE (Sprint 3 next)
 
 ---
 
@@ -18,18 +18,31 @@
 
 ---
 
-## Sprint 2 — Integration & Visual Upgrade 🔄 IN PROGRESS
+## Sprint 2 — Integration & Visual Upgrade ✅ COMPLETE
 **Goal:** Connect all Sprint 1 pieces into a working battle + audio/visuals
 
 | Task | Agent | Status |
 |------|-------|--------|
 | Wire real PokeAPI data into battle system | game-engine-developer | ✅ merged |
 | Connect math engine to battle UI (solve to attack) | frontend-developer + math-engine-developer | ✅ merged |
-| Real Pokemon sprites in battle (from PokeAPI) | asset-manager | ⬜ |
+| Real Pokemon sprites in battle (from PokeAPI) | asset-manager | ✅ merged |
 | Wild encounter system (overworld → battle → back) | game-engine-developer | ✅ merged |
 | Save/load system (localStorage) | game-engine-developer | ✅ merged |
 | Battle result: XP, level up, evolution check | game-engine-developer | ✅ merged |
 | Audio manager + background music | frontend-developer | ✅ merged |
+
+### Post-Sprint 2 Changes (2026-03-20)
+| Change | Description |
+|--------|-------------|
+| Starters → Gen 1 | Bulbasaur / Charmander / Squirtle (were Gen 2) |
+| i18n system | Hebrew (default) + English, toggle with L key on title screen |
+| 8 moves per Pokemon | Up from 4 — battle menu updated to 2×4 grid |
+| Math removed from battle | Math problems disabled during attacks — will rethink motivation mechanic |
+| Sprites already transparent | Verified: PokeAPI Gen 2 Gold PNGs have proper alpha channel |
+
+### Known TODOs
+- Battle turn order: speed stat + move priority not implemented (player always first)
+- Audio files are silent placeholders — need real Gold/Silver OST MP3s
 
 ---
 
@@ -104,7 +117,7 @@
 - Multiplayer math battles
 - Leaderboard (server-side)
 - More Pokemon generations
-- Hebrew localization for all text
+- ~~Hebrew localization for all text~~ ✅ Done (Sprint 2 post-demo)
 - Achievement system
 - Daily math challenges
 - Parent dashboard (learning progress tracking)
