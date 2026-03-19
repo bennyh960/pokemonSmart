@@ -9,6 +9,7 @@
 import { createStateMachine } from './state-machine.js';
 import { createInputManager } from './input.js';
 import { createTitleScene } from '../scenes/title.js';
+import { createBattleScene } from '../scenes/battle.js';
 
 /** Native GBA-style resolution. */
 const NATIVE_WIDTH = 240;
@@ -42,9 +43,11 @@ export function createGame(container: HTMLElement) {
   const titleScene = createTitleScene(input, stateMachine);
   stateMachine.register('TITLE', titleScene);
 
+  const battleScene = createBattleScene(input, stateMachine, canvas);
+  stateMachine.register('BATTLE', battleScene);
+
   // TODO: Register remaining scenes as they are implemented
   // stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine));
-  // stateMachine.register('BATTLE', createBattleScene(input, stateMachine));
   // stateMachine.register('DIALOGUE', createDialogueScene(input, stateMachine));
 
   // Game loop state
@@ -57,6 +60,13 @@ export function createGame(container: HTMLElement) {
     // Calculate delta time in seconds, capped at 100ms to avoid spiral of death
     const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
     lastTime = timestamp;
+
+    // Debug: Press B to enter battle from any scene
+    if (input.isKeyPressed('b') || input.isKeyPressed('B')) {
+      if (stateMachine.currentId() !== 'BATTLE') {
+        stateMachine.change('BATTLE');
+      }
+    }
 
     // Update
     stateMachine.update(dt);

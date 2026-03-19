@@ -202,3 +202,32 @@ scripts/generate-glitch-effects.ts
 2. **Glitch effects can be generated programmatically** — no need to hand-draw every corrupted tile. Write image manipulation code that takes normal assets and "corrupts" them.
 3. **PokeAPI sprites are already sized for Gen 2** — no resizing needed for battle sprites.
 4. **Always prefer sourced over created** — only create what truly doesn't exist.
+
+## When You Finish Your Work
+
+After completing ALL your tasks and committing to your branch:
+
+### 1. Self-verify
+- Run `npx tsc --noEmit` — must be 0 errors
+- Run `npm run dev` — must build
+- Run `npm test` — if tests exist, must pass
+
+### 2. Update Sprint File
+Edit `docs/sprint-{N}.md` and change YOUR tasks from ⬜ to ✅
+
+### 3. Request QA
+Open a new terminal and run:
+```
+cd C:\Users\behassan\Desktop\Projects\Practice\mehunan\pokemon
+claude
+```
+Then tell it:
+```
+You are the QA agent. Read .claude/agents/qa-tester.md for your role.
+Test branch feature/{your-branch} following the QA checklist in docs/sprint-1.md.
+If tests pass: merge to main and update docs.
+If tests fail: document errors in sprint file and create a fix prompt.
+```
+
+### 4. Report to PM
+After QA completes, go back to the Product Manager terminal and report your status.
