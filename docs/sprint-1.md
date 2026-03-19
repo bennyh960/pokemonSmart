@@ -10,7 +10,7 @@
 |-------|--------|--------|--------|-----|
 | math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ⬜ לא התחיל | ⬜ |
 | game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ⬜ לא התחיל | ⬜ |
-| asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ⬜ לא התחיל | ⬜ |
+| asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ✅ הושלם | ⬜ |
 | frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ⬜ לא התחיל | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
@@ -108,23 +108,23 @@ movePowerToMathDifficulty(power: number): MathDifficulty
 בנה סקריפט אוטומטי שמוריד את כל הדאטה מ-PokeAPI (251 פוקימונים Gen 1+2) ושומר כ-JSON + sprites מקומיים.
 
 ### משימות
-- [ ] **3.1** יצירת `scripts/fetch-pokemon-data.ts`:
+- [x] **3.1** יצירת `scripts/fetch-pokemon-data.ts`:
   - שליפת כל 251 פוקימונים (GET /api/v2/pokemon/{1..251})
   - שמירת: id, name, types, stats (hp, attack, defense, sp.atk, sp.def, speed), base_experience
   - שמירה ל-`src/data/pokemon.json`
-- [ ] **3.2** יצירת `scripts/fetch-moves-data.ts`:
+- [x] **3.2** יצירת `scripts/fetch-moves-data.ts`:
   - שליפת כל ה-moves שפוקימוני Gen 1-2 לומדים
   - שמירת: id, name, type, power, accuracy, pp, effect_chance
   - חישוב mathDifficulty לכל move (לפי power)
   - שמירה ל-`src/data/moves.json`
-- [ ] **3.3** יצירת `scripts/fetch-type-chart.ts`:
+- [x] **3.3** יצירת `scripts/fetch-type-chart.ts`:
   - שליפת damage_relations לכל 17 טייפים (+glitch)
   - יצירת טבלת effectiveness מלאה
   - שמירה ל-`src/data/type-chart.json`
-- [ ] **3.4** יצירת `scripts/fetch-evolution-chains.ts`:
+- [x] **3.4** יצירת `scripts/fetch-evolution-chains.ts`:
   - שליפת שרשראות אבולוציה לכל פוקימון Gen 1-2
   - שמירה ל-`src/data/evolution-chains.json`
-- [ ] **3.5** יצירת `scripts/fetch-sprites.ts`:
+- [x] **3.5** יצירת `scripts/fetch-sprites.ts`:
   - הורדת sprites מ-PokeAPI: front_default, back_default (Gen 2 gold style)
   - שמירה ל-`public/sprites/pokemon/front/{id}.png` ו-`back/{id}.png`
   - שמירת icons ל-`public/sprites/pokemon/icons/{id}.png`
@@ -132,12 +132,12 @@ movePowerToMathDifficulty(power: number): MathDifficulty
   - הורדת קולות פוקימונים מ-PokeAPI/cries GitHub repo
   - רק Gen 1-2 (IDs 1-251)
   - שמירה ל-`public/audio/cries/{id}.ogg`
-- [ ] **3.7** יצירת `scripts/run-all.ts`:
+- [x] **3.7** יצירת `scripts/run-all.ts`:
   - מריץ את כל הסקריפטים ברצף
   - Progress bar
   - Retry on failure
   - npm script: `"fetch-data": "tsx scripts/run-all.ts"`
-- [ ] **3.8** יצירת `src/services/pokemon-data.ts`:
+- [x] **3.8** יצירת `src/services/pokemon-data.ts`:
   - Service layer שקורא את ה-JSON הסטטי
   - `getPokemon(id)`, `getMove(id)`, `getTypeEffectiveness(attacker, defender)`
   - `getEvolutionChain(pokemonId)`
