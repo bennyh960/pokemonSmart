@@ -11,7 +11,7 @@
 | frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ✅ | ✅ |
 | asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ⬜ | ⬜ |
 | game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ⬜ |
-| game-engine-developer | Save/Load system | `feature/save-system` | ✅ | ⬜ |
+| game-engine-developer | Save/Load system | `feature/save-system` | ✅ | ✅ |
 | frontend-developer | Audio manager + BGM | `feature/audio` | ⬜ | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
@@ -272,8 +272,22 @@ Minor notes (non-blocking):
 
 ### feature/save-system
 ```
-Status: ⬜ Not tested
-Findings: -
+Status: ✅ PASS
+Date: 2026-03-19
+tsc --noEmit: 0 errors
+npm test: 62/62 passed
+vite build: success (31 modules, 169 kB gzipped 31 kB)
+Findings:
+  - save.ts exports saveGame/loadGame/hasSave/deleteSave (low-level localStorage API)
+  - game-state.ts wraps save.ts with hasSavedGame/autoSave/loadSavedGame/startNewGame (high-level API)
+  - Title screen: hasSavedGame() gates "Continue" option; "New Game" always shown
+  - Auto-save triggers: after battle win (goBack), after battle loss (handleLoss), on overworld enter/exit
+  - PlayerData includes: party, position (mapId+x,y), badges, serumParts, money, pokedex, playtime
+  - Playtime tracked in overworld update() via getPlayerData().playtime += dt
+  - All acceptance criteria met
+Minor notes (non-blocking):
+  - save.ts uses slot-based API (SAVE_KEY_PREFIX + slot) but only slot 0 is used currently
+  - No save data versioning/migration yet (noted as TODO in save.ts)
 ```
 
 ### feature/audio
