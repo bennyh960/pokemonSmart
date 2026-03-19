@@ -8,7 +8,7 @@
 
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
-| frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ⬜ | ⬜ |
+| frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ✅ | ✅ |
 | asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ⬜ | ⬜ |
 | game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ⬜ | ⬜ |
 | game-engine-developer | Save/Load system | `feature/save-system` | ⬜ | ⬜ |
@@ -196,10 +196,10 @@
 ## QA Checklist
 
 ### feature/pixel-font
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] טקסט אנגלי קריא
-- [ ] טקסט עברי קריא + RTL
-- [ ] פונט נטען לפני תחילת משחק
+- [x] `tsc --noEmit` = 0 errors
+- [x] טקסט אנגלי קריא (Press Start 2P pixel font)
+- [x] טקסט עברי קריא + RTL (Rubik font, auto-detected)
+- [x] פונט נטען לפני תחילת משחק (loadFonts() in main.ts)
 
 ### feature/real-assets
 - [ ] `tsc --noEmit` = 0 errors
@@ -232,8 +232,17 @@
 
 ### feature/pixel-font
 ```
-Status: ⬜ Not tested
-Findings: -
+Status: ✅ Passed
+Tested: 2026-03-19
+Findings:
+  - tsc --noEmit: 0 errors
+  - npm test: 124/124 passed
+  - All font sizes >= 8px (verified via grep on committed files)
+  - No hardcoded 'monospace' in any scene/UI file
+  - Google Fonts loaded via <link> with display=block
+  - loadFonts() awaited before game.start() — prevents FOUT
+  - Hebrew auto-detection via fontFor() in renderer
+  - Merged to main (fast-forward)
 ```
 
 ### feature/real-assets
