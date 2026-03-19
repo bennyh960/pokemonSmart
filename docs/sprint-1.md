@@ -11,7 +11,7 @@
 | math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ⬜ לא התחיל | ⬜ |
 | game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ⬜ לא התחיל | ⬜ |
 | asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ⬜ לא התחיל | ⬜ |
-| frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ⬜ לא התחיל | ⬜ |
+| frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ✅ הושלם | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
 
@@ -158,17 +158,17 @@ npm install -D tsx  # להרצת TypeScript scripts
 בנה את ממשק הקרב המלא: HP bars, תצוגת פוקימונים, תפריט מתקפות, ומסך פתרון תרגיל מתמטיקה עם number pad.
 
 ### משימות
-- [ ] **4.1** יצירת `src/ui/hp-bar.ts`:
+- [x] **4.1** יצירת `src/ui/hp-bar.ts`:
   - HP bar עם שינוי צבע (ירוק > צהוב > אדום)
   - אנימציית ירידה/עליה חלקה
   - הצגת שם פוקימון + רמה
   - HP text (current/max)
-- [ ] **4.2** יצירת `src/ui/battle-menu.ts`:
+- [x] **4.2** יצירת `src/ui/battle-menu.ts`:
   - תפריט 4 מתקפות (כמו במשחק המקורי)
   - כל מתקפה מציגה: שם, type, PP
   - ניווט עם חצים + ENTER
   - Type color coding
-- [ ] **4.3** יצירת `src/ui/math-input.ts`:
+- [x] **4.3** יצירת `src/ui/math-input.ts`:
   - **Number pad** (3×4 grid + 0 + backspace + submit)
   - תצוגת התרגיל למעלה (גדול וברור)
   - שדה תשובה שמתעדכן בזמן אמת
@@ -176,18 +176,18 @@ npm install -D tsx  # להרצת TypeScript scripts
   - כפתורים גדולים (touch-friendly, minimum 48px scaled)
   - תמיכה בהקלדת מקלדת (0-9, backspace, enter)
   - Feedback: ✓ ירוק flash / ✗ אדום shake + הצגת תשובה נכונה
-- [ ] **4.4** יצירת `src/ui/text-box.ts`:
+- [x] **4.4** יצירת `src/ui/text-box.ts`:
   - תיבת טקסט GBA-style (תחתית מסך)
   - הקלדה אות-אות (typewriter effect)
   - המתנה ל-ENTER להמשך
   - תמיכה ב-RTL לעברית
-- [ ] **4.5** עדכון `src/scenes/battle.ts`:
+- [x] **4.5** עדכון `src/scenes/battle.ts`:
   - Layout: פוקימון שחקן (back sprite) משמאל למטה
   - פוקימון יריב (front sprite) מימין למעלה
   - HP bars לשניהם
   - Battle flow: בחר מתקפה → תרגיל מתמטיקה → תוצאה → תור יריב → חזור
   - שימוש ב-placeholder sprites (מלבנים צבעוניים) עד שנטען sprites אמיתיים
-- [ ] **4.6** יצירת `src/ui/battle-animations.ts`:
+- [x] **4.6** יצירת `src/ui/battle-animations.ts`:
   - Flash effect (מתקפה פגעה)
   - Shake effect (נזק)
   - Fade in/out (כניסה/יציאה מקרב)
