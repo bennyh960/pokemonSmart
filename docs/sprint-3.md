@@ -9,7 +9,7 @@
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
 | game-engine-developer | מערכת מפות + מעברים | `feature/map-system` | ✅ | ⬜ |
-| asset-manager | מפות ערים ונתיבים (JSON) | `feature/city-maps` | ⬜ | ⬜ |
+| asset-manager | מפות ערים ונתיבים (JSON) | `feature/city-maps` | ✅ | ✅ |
 | frontend-developer | תפריט קבוצה | `feature/party-ui` | ⬜ | ⬜ |
 | frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ⬜ |
 | game-engine-developer | מערכת NPCs | `feature/npc-system` | ⬜ | ⬜ |
@@ -394,7 +394,21 @@ Status: ⬜
 
 ### feature/city-maps
 ```
-Status: ⬜
+Status: ✅ Passed
+Date: 2026-03-20
+Findings:
+- All 12 JSON maps valid and match TileMapData interface
+- 5 main maps: zeroville (30x20), route-1 (40x15), sumville (30x20), pokecenter-interior (10x8), mart-interior (10x8)
+- 7 skeleton maps: all 20x15, correct format
+- Tile values all in range 0-8, dimensions match declared width/height
+- Encounter table for route-1: 5 Pokemon (Pidgey, Rattata, Sentret, Caterpie, Weedle), weights sum to 100
+- tsc --noEmit: 0 errors
+- npm test: 62 tests passed
+- npm run build: success
+- Bidirectional transitions: mostly consistent
+  - Minor: pokecenter-interior only returns to zeroville, but sumville also leads there.
+    Entering Pokemon Center from Sumville will exit to Zeroville.
+    Acceptable for now — needs source-map tracking logic in a future sprint.
 ```
 
 ### feature/party-ui
