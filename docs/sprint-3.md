@@ -14,7 +14,7 @@
 | frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ✅ |
 | game-engine-developer | מערכת NPCs | `feature/npc-system` | ✅ | ✅ |
 | frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ✅ | ✅ |
-| game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ✅ | ⬜ |
+| game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ✅ | ✅ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל — דורש תיקון
 
@@ -506,7 +506,33 @@ Already on main (bundled with NPC system merge): 2026-03-20
 
 ### feature/trainer-battles
 ```
-Status: ⬜
+Status: ✅ Passed
+Date: 2026-03-20
+Findings:
+- tsc --noEmit: 0 errors
+- npm test: 62/62 passed
+- npm run build: success
+- src/systems/npc.ts: checkTrainerLineOfSight correctly iterates trainers, skips defeated
+  (via flags), checks facing direction * range tiles. Clean implementation using FACING_VECTORS.
+- src/scenes/overworld.ts: TrainerApproachState with 3 phases (exclamation/walking/battle-start).
+  "!" bubble rendered as white rect + red text. Trainer walks tile-by-tile toward player (lerp
+  animation at 4 tiles/sec). LOS checked after every player step. Defeated trainers show
+  alternate dialogue via trainer.defeated.dialogue i18n key.
+- src/scenes/battle.ts: TrainerBattleData interface with party array of Pokemon. RUN blocked
+  with "Can't run from a trainer battle!" message. Sequential Pokemon via TRAINER_NEXT_POKEMON
+  phase — fainted enemy awards XP then next Pokemon sent out. TRAINER_REWARD phase awards money
+  and sets defeat flag. Auto-saves after trainer defeat.
+- src/types/index.ts: flags: Record<string, boolean> added to PlayerData
+- src/systems/save.ts: migration adds empty flags object for old saves
+- src/systems/game-state.ts + player.ts: flags: {} in createNewPlayerData/createNewPlayer
+- src/data/maps/route-1.json: 3 trainers added (Bug Catcher Ben lv4 Caterpie+Weedle,
+  Youngster Joey lv5 Rattata, Lass Sally lv4 Pidgey + lv5 Sentret). LOS ranges 3-4.
+- src/i18n/locales: 5 new keys in both en.json and he.json (trainerWantsBattle, trainerSentOut,
+  cantRunTrainer, trainerReward, trainer.defeated.dialogue)
+- Minor: in TRAINER_NEXT_POKEMON phase, level-up message between sequential Pokemon is computed
+  (checkAndApplyLevelUp called) but never displayed — the level-up still applies mechanically,
+  only the notification text is lost. Cosmetic, not a blocker.
+Merged to main: 2026-03-20
 ```
 
 ---
