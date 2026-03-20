@@ -251,6 +251,143 @@ export function getTileImage(tileType: number): HTMLImageElement {
   return img;
 }
 
+// ─── NPC Sprites ─────────────────────────────────────────────────
+
+function drawNPCMale(ctx: CanvasRenderingContext2D): void {
+  // Brown hair
+  rect(ctx, 5, 0, 6, 3, '#6B4226');
+  // Face
+  rect(ctx, 5, 3, 6, 4, SKIN);
+  px(ctx, 6, 4, OUTLINE); px(ctx, 9, 4, OUTLINE); // eyes
+  px(ctx, 7, 6, OUTLINE); px(ctx, 8, 6, OUTLINE); // mouth
+  // Blue shirt
+  rect(ctx, 4, 7, 8, 4, '#3058a8');
+  rect(ctx, 3, 8, 1, 3, SKIN); rect(ctx, 12, 8, 1, 3, SKIN); // arms
+  // Pants & shoes
+  rect(ctx, 5, 11, 3, 3, '#404060');
+  rect(ctx, 8, 11, 3, 3, '#404060');
+  rect(ctx, 5, 14, 3, 2, SHOES);
+  rect(ctx, 8, 14, 3, 2, SHOES);
+}
+
+function drawNPCFemale(ctx: CanvasRenderingContext2D): void {
+  // Long brown hair
+  rect(ctx, 4, 0, 8, 3, '#8B5E3C');
+  rect(ctx, 3, 2, 2, 5, '#8B5E3C'); rect(ctx, 11, 2, 2, 5, '#8B5E3C'); // side hair
+  // Face
+  rect(ctx, 5, 3, 6, 4, SKIN);
+  px(ctx, 6, 4, OUTLINE); px(ctx, 9, 4, OUTLINE);
+  px(ctx, 7, 6, OUTLINE); px(ctx, 8, 6, OUTLINE);
+  // Pink top
+  rect(ctx, 4, 7, 8, 4, '#E87088');
+  rect(ctx, 3, 8, 1, 3, SKIN); rect(ctx, 12, 8, 1, 3, SKIN);
+  // Skirt & shoes
+  rect(ctx, 4, 11, 8, 2, '#E87088');
+  rect(ctx, 5, 13, 3, 1, SKIN); rect(ctx, 8, 13, 3, 1, SKIN);
+  rect(ctx, 5, 14, 3, 2, '#C04060');
+  rect(ctx, 8, 14, 3, 2, '#C04060');
+}
+
+function drawNurse(ctx: CanvasRenderingContext2D): void {
+  // Pink hair with nurse cap
+  rect(ctx, 5, 0, 6, 2, '#F08090');
+  rect(ctx, 6, 0, 4, 1, '#F8F8F8'); // white cap
+  px(ctx, 7, 0, '#E04060'); px(ctx, 8, 0, '#E04060'); // red cross
+  rect(ctx, 4, 2, 8, 1, '#F08090');
+  // Face
+  rect(ctx, 5, 3, 6, 4, SKIN);
+  px(ctx, 6, 4, OUTLINE); px(ctx, 9, 4, OUTLINE);
+  px(ctx, 7, 6, OUTLINE); px(ctx, 8, 6, OUTLINE);
+  // White outfit
+  rect(ctx, 4, 7, 8, 5, '#F8F8F8');
+  rect(ctx, 5, 7, 6, 1, '#E0E0E0');
+  rect(ctx, 3, 8, 1, 3, SKIN); rect(ctx, 12, 8, 1, 3, SKIN);
+  // Shoes
+  rect(ctx, 5, 14, 3, 2, '#F8F8F8');
+  rect(ctx, 8, 14, 3, 2, '#F8F8F8');
+  rect(ctx, 5, 12, 3, 2, '#E0E0E0');
+  rect(ctx, 8, 12, 3, 2, '#E0E0E0');
+}
+
+function drawShopkeeper(ctx: CanvasRenderingContext2D): void {
+  // Short hair / bald
+  rect(ctx, 5, 0, 6, 3, '#A08060');
+  // Face
+  rect(ctx, 5, 3, 6, 4, SKIN);
+  px(ctx, 6, 4, OUTLINE); px(ctx, 9, 4, OUTLINE);
+  px(ctx, 7, 6, OUTLINE); px(ctx, 8, 6, OUTLINE);
+  // Green apron over shirt
+  rect(ctx, 4, 7, 8, 4, '#40A040');
+  rect(ctx, 5, 7, 6, 1, '#308030');
+  rect(ctx, 3, 8, 1, 3, SKIN); rect(ctx, 12, 8, 1, 3, SKIN);
+  // Pants & shoes
+  rect(ctx, 5, 11, 3, 3, '#404040');
+  rect(ctx, 8, 11, 3, 3, '#404040');
+  rect(ctx, 5, 14, 3, 2, '#603020');
+  rect(ctx, 8, 14, 3, 2, '#603020');
+}
+
+function drawTrainerM(ctx: CanvasRenderingContext2D): void {
+  // Red cap
+  rect(ctx, 5, 0, 6, 2, HAT);
+  rect(ctx, 4, 2, 8, 1, HAT_DARK);
+  // Face
+  rect(ctx, 5, 3, 6, 4, SKIN);
+  px(ctx, 6, 4, OUTLINE); px(ctx, 9, 4, OUTLINE);
+  px(ctx, 7, 6, OUTLINE); px(ctx, 8, 6, OUTLINE);
+  // Red jacket
+  rect(ctx, 4, 7, 8, 4, '#C03030');
+  rect(ctx, 5, 7, 6, 1, '#A02020');
+  rect(ctx, 3, 8, 1, 3, SKIN); rect(ctx, 12, 8, 1, 3, SKIN);
+  // Pants & shoes
+  rect(ctx, 5, 11, 3, 3, PANTS);
+  rect(ctx, 8, 11, 3, 3, PANTS);
+  rect(ctx, 5, 14, 3, 2, SHOES);
+  rect(ctx, 8, 14, 3, 2, SHOES);
+}
+
+function drawTrainerF(ctx: CanvasRenderingContext2D): void {
+  // Blue headband + ponytail
+  rect(ctx, 5, 0, 6, 1, '#6B4226');
+  rect(ctx, 4, 1, 8, 1, '#3060C0'); // headband
+  rect(ctx, 11, 0, 2, 4, '#6B4226'); // ponytail
+  rect(ctx, 5, 2, 6, 1, '#6B4226');
+  // Face
+  rect(ctx, 5, 3, 6, 4, SKIN);
+  px(ctx, 6, 4, OUTLINE); px(ctx, 9, 4, OUTLINE);
+  px(ctx, 7, 6, OUTLINE); px(ctx, 8, 6, OUTLINE);
+  // Blue outfit
+  rect(ctx, 4, 7, 8, 4, '#3060C0');
+  rect(ctx, 5, 7, 6, 1, '#2050A0');
+  rect(ctx, 3, 8, 1, 3, SKIN); rect(ctx, 12, 8, 1, 3, SKIN);
+  // Skirt & shoes
+  rect(ctx, 4, 11, 8, 2, '#3060C0');
+  rect(ctx, 5, 13, 3, 1, SKIN); rect(ctx, 8, 13, 3, 1, SKIN);
+  rect(ctx, 5, 14, 3, 2, '#2050A0');
+  rect(ctx, 8, 14, 3, 2, '#2050A0');
+}
+
+const NPC_DRAW_FNS: Record<string, (ctx: CanvasRenderingContext2D) => void> = {
+  'npc-male': drawNPCMale,
+  'npc-female': drawNPCFemale,
+  'nurse': drawNurse,
+  'shopkeeper': drawShopkeeper,
+  'trainer-m': drawTrainerM,
+  'trainer-f': drawTrainerF,
+};
+
+/** Generate a 16x16 NPC sprite by sprite type. */
+export function getNPCSpriteImage(spriteType: string): HTMLImageElement {
+  const key = `npc-${spriteType}`;
+  const cached = generatedCache.get(key);
+  if (cached) return cached;
+
+  const drawFn = NPC_DRAW_FNS[spriteType] ?? drawNPCMale;
+  const img = canvasToImage(16, 16, drawFn);
+  generatedCache.set(key, img);
+  return img;
+}
+
 // ─── Battle Background ──────────────────────────────────────────
 
 /** Generate a grass battle background (240×120). */

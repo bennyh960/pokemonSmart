@@ -53,5 +53,25 @@
   "party.stats.spDef": "הג. מיוחדת",
   "party.stats.speed": "מהירות",
   "party.xp": "ניסיון: {current}/{next}",
-  "party.swap": "בחר פוקימון להחלפה"
+  "party.swap": "בחר פוקימון להחלפה",
+
+  "npc.choice.yes": "כן",
+  "npc.choice.no": "לא",
+  "npc.nurse.heal": "!אני ארפא את הפוקימונים שלך",
+  "npc.nurse.done": "!הפוקימונים שלך רופאו במלואם",
+  "npc.shopkeeper.welcome": "?ברוכים הבאים! מה אפשר להביא לך",
+
+  "shop.title": "חנות פוקימון",
+  "shop.money": "כסף: ${money}",
+  "shop.buy": "קנה",
+  "shop.owned": "ברשותך: {count}",
+  "shop.cantAfford": "!אין מספיק כסף",
+  "shop.bought": "!קנית {item}",
+  "item.potion.name": "שיקוי",
+  "item.potion.desc": "משחזר 20 HP",
+  "item.superPotion.name": "שיקוי על",
+  "item.superPotion.desc": "משחזר 50 HP",
+  "battle.noItems": "!אין פריטים",
+  "battle.usedItem": "!{name} השתמשת ב{item} על",
+  "heal.done": "!הפוקימונים שלך רופאו במלואם"
 }

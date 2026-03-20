@@ -1,7 +1,7 @@
 /**
  * OverworldScene - Top-down world exploration with grid-based movement.
  * Encounter triggers on tall grass tiles (10% chance per step).
- * Supports dynamic map loading and transitions between maps.
+ * Supports dynamic map loading, transitions, NPC interaction, shop and heal.
  */
 
 import type { Scene, Pokemon } from '../types/index.js';
@@ -11,12 +11,15 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
-import { t } from '../i18n/i18n.js';
-import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
+import { t, isRTL } from '../i18n/i18n.js';
+import { getPlayerData, hasActiveGame, autoSave, healParty } from '../systems/game-state.js';
 import { generateWildEncounter } from '../systems/encounter.js';
 import { setBattleData } from './battle.js';
-import { getPlayerSpriteSheet } from '../engine/asset-generator.js';
+import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
+import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
+import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
+import { createNPCManager, type NPCData, type NPCManager } from '../systems/npc.js';
 
 const SCREEN_W = 240;
 const SCREEN_H = 160;
@@ -41,6 +44,12 @@ interface PlayerState {
   walkFrame: number; walkTimer: number;
 }
 
+interface ChoiceState {
+  options: string[];
+  selected: number;
+  callback: (idx: number) => void;
+}
+
 export function createOverworldScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
   let tileMap: TileMap | null = null;
   let currentMapData: TileMapData | null = null;
@@ -55,6 +64,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let transitionTarget: { mapId: string; x: number; y: number } | null = null;
   let transitionTimer = 0;
   let mapLoading = false;
+
+  // Shop overlay state
+  let shop: ShopState = createShopState();
+
+  // Heal text overlay
+  let healTextBox: ReturnType<typeof createTextBox> | null = null;
+
+  // NPC state
+  let npcManager: NPCManager | null = null;
+
+  // Dialogue state
+  let activeTextBox: ReturnType<typeof createTextBox> | null = null;
+  let interactingNPC: NPCData | null = null;
+
+  // Choice prompt state
+  let choiceState: ChoiceState | null = null;
 
   function initPlayer(sx: number, sy: number): PlayerState {
     return {
@@ -89,12 +114,53 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     return false;
   }
 
+  /** Show a Yes/No choice prompt. */
+  function showChoice(callback: (idx: number) => void): void {
+    choiceState = {
+      options: [t('npc.choice.yes'), t('npc.choice.no')],
+      selected: 0,
+      callback,
+    };
+  }
+
+  /** Handle NPC post-dialogue actions. */
+  function onDialogueEnd(): void {
+    if (!interactingNPC) return;
+
+    if (interactingNPC.type === 'healer') {
+      showChoice((idx) => {
+        if (idx === 0) {
+          healParty();
+          autoSave();
+          activeTextBox = createTextBox([t('npc.nurse.done')], isRTL());
+          interactingNPC = null;
+        } else {
+          interactingNPC = null;
+        }
+      });
+    } else if (interactingNPC.type === 'shopkeeper') {
+      showChoice((idx) => {
+        if (idx === 0) {
+          openShop(shop);
+          interactingNPC = null;
+        } else {
+          interactingNPC = null;
+        }
+      });
+    } else {
+      interactingNPC = null;
+    }
+  }
+
   /** Load a map and set up the scene. */
   async function loadAndSetMap(mapId: string, spawnX: number, spawnY: number): Promise<void> {
     const data = await loadMap(mapId);
     currentMapData = data;
     tileMap = createTileMap(data as TileMapData);
     setCurrentMapId(mapId);
+
+    // Load NPCs from map data
+    npcManager = createNPCManager((data.npcs as NPCData[]) || []);
 
     player = initPlayer(spawnX, spawnY);
     camera = createCamera(SCREEN_W, SCREEN_H);
@@ -104,6 +170,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     // Play map music
     audio.playMusic(currentMapData.music || 'town');
+
+    // Reset interaction state
+    activeTextBox = null;
+    interactingNPC = null;
+    choiceState = null;
+    healTextBox = null;
 
     // Auto-save on area entry
     if (hasActiveGame()) {
@@ -124,6 +196,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       transitionTarget = null;
       tileMap = null;
       currentMapData = null;
+      npcManager = null;
+      activeTextBox = null;
+      interactingNPC = null;
+      choiceState = null;
+      healTextBox = null;
       mapLoading = true;
 
       // Determine which map to load
@@ -161,6 +238,51 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     update(dt: number): void {
       // While map is loading, do nothing
       if (mapLoading || !tileMap) return;
+
+      // Shop overlay takes priority
+      if (shop.open) {
+        updateShop(shop, input, dt);
+        return;
+      }
+
+      // Heal text overlay
+      if (healTextBox) {
+        if (updateTextBox(healTextBox, input, dt)) {
+          healTextBox = null;
+        }
+        return;
+      }
+
+      // Handle choice prompt
+      if (choiceState) {
+        if (input.isKeyPressed('ArrowLeft')) {
+          choiceState.selected = 0;
+        } else if (input.isKeyPressed('ArrowRight')) {
+          choiceState.selected = 1;
+        } else if (input.isKeyPressed('Enter') || input.isKeyPressed(' ')) {
+          const cb = choiceState.callback;
+          const sel = choiceState.selected;
+          choiceState = null;
+          cb(sel);
+        } else if (input.isKeyPressed('Escape')) {
+          const cb = choiceState.callback;
+          choiceState = null;
+          cb(1); // "No" on escape
+        }
+        return;
+      }
+
+      // Handle NPC dialogue
+      if (activeTextBox) {
+        const done = updateTextBox(activeTextBox, input, dt);
+        if (done) {
+          activeTextBox = null;
+          if (interactingNPC) {
+            onDialogueEnd();
+          }
+        }
+        return;
+      }
 
       // Track playtime
       if (hasActiveGame()) getPlayerData().playtime += dt;
@@ -232,6 +354,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
 
+      // NPC interaction: Enter/Space when not moving
+      if (!player.moving && (input.isKeyPressed('Enter') || input.isKeyPressed(' '))) {
+        if (npcManager) {
+          const npc = npcManager.getFacingNPC(player.gridX, player.gridY, player.facing);
+          if (npc && npc.dialogue.length > 0) {
+            activeTextBox = createTextBox(npc.dialogue, isRTL());
+            interactingNPC = npc;
+            return;
+          }
+        }
+      }
+
       // P key → Party
       if (input.isKeyPressed('p') || input.isKeyPressed('P')) {
         stateMachine.push('PARTY');
@@ -244,13 +378,31 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // N key → Shop (temporary hotkey until NPC interaction wires it)
+      if (input.isKeyPressed('n') || input.isKeyPressed('N')) {
+        if (hasActiveGame()) {
+          openShop(shop);
+          return;
+        }
+      }
+
+      // H key → Heal party (temporary hotkey until NPC interaction wires it)
+      if (input.isKeyPressed('h') || input.isKeyPressed('H')) {
+        if (hasActiveGame()) {
+          healParty();
+          autoSave();
+          healTextBox = createTextBox([t('heal.done')], isRTL());
+          return;
+        }
+      }
+
       if (!player.moving) {
         for (const [key, dir] of Object.entries(DIR_VECTORS)) {
           if (input.isKeyDown(key)) {
             player.facing = key;
             const nx = player.gridX + dir.dx;
             const ny = player.gridY + dir.dy;
-            if (tileMap.isWalkable(nx, ny)) {
+            if (tileMap.isWalkable(nx, ny) && !(npcManager?.isNPCAt(nx, ny))) {
               player.moving = true;
               player.targetGridX = nx; player.targetGridY = ny;
               player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
@@ -275,23 +427,89 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       tileMap.render(ctx, camera.x, camera.y);
 
+      // Collect renderables for Y-sorting (player + NPCs)
+      interface Renderable { y: number; render: () => void; }
+      const renderables: Renderable[] = [];
+
+      // Player
       const psx = Math.floor(player.pixelX - camera.x);
       const psy = Math.floor(player.pixelY - camera.y);
-      const spriteSheet = getPlayerSpriteSheet();
-      if (spriteSheet.complete && spriteSheet.naturalWidth > 0) {
-        const row = DIR_TO_ROW[player.facing] ?? 0;
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(spriteSheet, player.walkFrame * 16, row * 16, 16, 16, psx, psy, 16, 16);
-      } else {
-        fillRect(ctx, psx, psy, TILE_SIZE, TILE_SIZE, '#4488FF');
+      renderables.push({
+        y: player.pixelY,
+        render: () => {
+          const spriteSheet = getPlayerSpriteSheet();
+          if (spriteSheet.complete && spriteSheet.naturalWidth > 0) {
+            const row = DIR_TO_ROW[player.facing] ?? 0;
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(spriteSheet, player.walkFrame * 16, row * 16, 16, 16, psx, psy, 16, 16);
+          } else {
+            fillRect(ctx, psx, psy, TILE_SIZE, TILE_SIZE, '#4488FF');
+          }
+        },
+      });
+
+      // NPCs
+      if (npcManager) {
+        for (const npc of npcManager.getNPCs()) {
+          const nx = Math.floor(npc.x * TILE_SIZE - camera.x);
+          const ny = Math.floor(npc.y * TILE_SIZE - camera.y);
+          renderables.push({
+            y: npc.y * TILE_SIZE,
+            render: () => {
+              const sprite = getNPCSpriteImage(npc.spriteType);
+              ctx.imageSmoothingEnabled = false;
+              if (sprite.complete && sprite.naturalWidth > 0) {
+                ctx.drawImage(sprite, nx, ny, TILE_SIZE, TILE_SIZE);
+              } else {
+                fillRect(ctx, nx, ny, TILE_SIZE, TILE_SIZE, '#FF8800');
+              }
+            },
+          });
+        }
       }
 
+      // Sort by Y and render
+      renderables.sort((a, b) => a.y - b.y);
+      for (const r of renderables) r.render();
+
+      // HUD
       const mapName = currentMapData?.name || '';
       drawText(ctx, mapName, 4, 4, { size: 8, color: '#ffffff', font: 'monospace' });
 
       if (hasActiveGame()) {
         const lead = getPlayerData().party[0];
         if (lead) drawText(ctx, `${lead.name} ${t('hp.level', { level: lead.level })}`, 4, 14, { size: 8, color: '#aaccff', font: 'monospace' });
+      }
+
+      // NPC dialogue text box
+      if (activeTextBox) {
+        renderTextBox(ctx, activeTextBox);
+      }
+
+      // Choice prompt
+      if (choiceState) {
+        const boxW = 100;
+        const boxH = 24;
+        const boxX = (SCREEN_W - boxW) / 2;
+        const boxY = SCREEN_H - 70;
+
+        fillRect(ctx, boxX, boxY, boxW, boxH, '#181820');
+        ctx.strokeStyle = '#585858';
+        ctx.strokeRect(boxX + 1, boxY + 1, boxW - 2, boxH - 2);
+
+        for (let i = 0; i < choiceState.options.length; i++) {
+          const optX = boxX + 10 + i * 50;
+          const optY = boxY + 8;
+          const selected = i === choiceState.selected;
+          if (selected) {
+            fillRect(ctx, optX - 2, optY - 2, 44, 14, '#384088');
+          }
+          drawText(ctx, choiceState.options[i], optX, optY, {
+            size: 8,
+            color: selected ? '#f8f8f8' : '#a0a0a0',
+            font: 'monospace',
+          });
+        }
       }
 
       // Encounter flash overlay
@@ -313,6 +531,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
         ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
       }
+
+      // Shop overlay
+      renderShop(ctx, shop);
+
+      // Heal text overlay
+      if (healTextBox) renderTextBox(ctx, healTextBox);
     },
   };
 }

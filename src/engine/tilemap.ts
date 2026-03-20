@@ -14,6 +14,7 @@
 
 import { fillRect } from './renderer.js';
 import { getTileImage } from './asset-generator.js';
+import type { NPCData } from '../systems/npc.js';
 
 /** Map transition definition — stepping on (fromX, fromY) warps to another map. */
 export interface MapTransition {
@@ -34,7 +35,7 @@ export interface TileMapData {
   tiles: number[][];
   id?: string;
   transitions?: MapTransition[];
-  npcs?: unknown[];
+  npcs?: NPCData[];
   music?: string;
   encounterTableId?: string | null;
 }

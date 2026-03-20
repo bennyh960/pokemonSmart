@@ -12,8 +12,8 @@
 | asset-manager | מפות ערים ונתיבים (JSON) | `feature/city-maps` | ✅ | ✅ |
 | frontend-developer | תפריט קבוצה | `feature/party-ui` | ✅ | ✅ |
 | frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ✅ |
-| game-engine-developer | מערכת NPCs | `feature/npc-system` | ⬜ | ⬜ |
-| frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ⬜ | ⬜ |
+| game-engine-developer | מערכת NPCs | `feature/npc-system` | ✅ | ⬜ |
+| frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ✅ | ⬜ |
 | game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ⬜ | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל — דורש תיקון
@@ -90,21 +90,21 @@ Phase 3 (after Branch 2 merges):
 מערכת NPCs — דמויות במפה עם דיאלוג, חסימת מעבר, ורינדור Y-sorted עם השחקן.
 
 ### משימות
-- [ ] **2.1** חדש `src/systems/npc.ts`:
+- [x] **2.1** חדש `src/systems/npc.ts`:
   - `NPCData` interface: `{ id, name, x, y, facing, type: 'dialogue'|'trainer'|'shopkeeper'|'healer', dialogue: string[], spriteType: string }`
   - `TrainerData` extends NPCData: `{ party: {pokemonId, level}[], defeated: boolean, reward: number, lineOfSight: number }`
   - `createNPCManager(npcs: NPCData[])`: load NPCs from map data
   - `isNPCAt(x, y)` — collision check for blocking
   - `getNPCFacing(playerX, playerY, facing)` — get NPC player is facing
   - `renderNPCs(ctx, cameraX, cameraY, playerY)` — Y-sorted rendering
-- [ ] **2.2** 6 sprite variations ב-`asset-generator.ts`:
+- [x] **2.2** 6 sprite variations ב-`asset-generator.ts`:
   - `npc-male`, `npc-female`, `nurse`, `shopkeeper`, `trainer-m`, `trainer-f`
   - כל אחד 16x16 pixels, פשוט כיוון אחד (down)
   - פונקציה `getNPCSpriteImage(type: string): HTMLImageElement`
-- [ ] **2.3** Interaction ב-overworld:
+- [x] **2.3** Interaction ב-overworld:
   - Enter/Space כשהשחקן פונה ל-NPC → דיאלוג overlay (שימוש ב-textBox הקיים)
   - NPC חוסם תנועה (isWalkable צריך לבדוק גם NPCs)
-- [ ] **2.4** Choice prompts (Yes/No):
+- [x] **2.4** Choice prompts (Yes/No):
   - כשה-NPC הוא healer או shopkeeper → אחרי דיאלוג → Yes/No
   - UI פשוט: שני כפתורים עם חיצים
 
@@ -209,29 +209,29 @@ Phase 3 (after Branch 2 merges):
 מרכז פוקימון (ריפוי) + חנות (קנייה + שימוש בפריטים).
 
 ### משימות
-- [ ] **4.1** `healParty()` ב-`game-state.ts`:
+- [x] **4.1** `healParty()` ב-`game-state.ts`:
   - שחזור HP + PP לכל הפוקימונים בקבוצה
-- [ ] **4.2** הוספת items ל-PlayerData ב-`types/index.ts`:
+- [x] **4.2** הוספת items ל-PlayerData ב-`types/index.ts`:
   - `items: Record<string, number>` — שם פריט → כמות
   - ב-`game-state.ts`: `createNewPlayerData()` מחזיר `items: {}`
   - ב-save.ts: migration — אם `items` חסר בsave ישן, ברירת מחדל `{}`
-- [ ] **4.3** Item definitions — `src/data/items.ts` (new):
+- [x] **4.3** Item definitions — `src/data/items.ts` (new):
   - `Potion`: HP +20, מחיר $300
   - `Super Potion`: HP +50, מחיר $700
   - Interface: `{ id, name, description, price, effect: { type, amount } }`
-- [ ] **4.4** Shop UI — `src/ui/shop.ts` (new):
+- [x] **4.4** Shop UI — `src/ui/shop.ts` (new):
   - רשימת פריטים עם מחיר
   - כסף נוכחי בפינה
   - חיצים לבחור, Enter לקנות, Escape לצאת
   - הפחת כסף, הוסף ל-items
-- [ ] **4.5** Wire NPC interactions:
+- [x] **4.5** Wire NPC interactions:
   - Nurse NPC → "Want me to heal?" → Yes → `healParty()` → "Done!"
   - Shopkeeper NPC → open shop overlay
-- [ ] **4.6** BAG option in battle — `battle-menu.ts` + `battle.ts`:
+- [x] **4.6** BAG option in battle — `battle-menu.ts` + `battle.ts`:
   - BAG → item list overlay (Potions only)
   - Choose item → choose Pokemon → apply heal → enemy turn
   - חדש BattlePhase: `'SELECT_ITEM' | 'USE_ITEM'`
-- [ ] **4.7** i18n keys for all new text (both en.json and he.json)
+- [x] **4.7** i18n keys for all new text (both en.json and he.json)
 
 ### Files
 `src/systems/game-state.ts`, `src/ui/shop.ts` (new), `src/data/items.ts` (new), `src/types/index.ts`, `src/scenes/battle.ts`, `src/ui/battle-menu.ts`, `src/i18n/locales/en.json`, `src/i18n/locales/he.json`

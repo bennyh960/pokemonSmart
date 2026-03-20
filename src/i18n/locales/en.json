@@ -53,5 +53,25 @@
   "party.stats.spDef": "Sp.Def",
   "party.stats.speed": "Speed",
   "party.xp": "XP: {current}/{next}",
-  "party.swap": "Select Pokemon to swap"
+  "party.swap": "Select Pokemon to swap",
+
+  "npc.choice.yes": "Yes",
+  "npc.choice.no": "No",
+  "npc.nurse.heal": "I'll heal your Pokemon!",
+  "npc.nurse.done": "Your Pokemon are fully healed!",
+  "npc.shopkeeper.welcome": "Welcome! What can I get you?",
+
+  "shop.title": "POKE MART",
+  "shop.money": "Money: ${money}",
+  "shop.buy": "Buy",
+  "shop.owned": "Owned: {count}",
+  "shop.cantAfford": "Not enough money!",
+  "shop.bought": "Bought {item}!",
+  "item.potion.name": "Potion",
+  "item.potion.desc": "Restores 20 HP",
+  "item.superPotion.name": "Super Potion",
+  "item.superPotion.desc": "Restores 50 HP",
+  "battle.noItems": "No items!",
+  "battle.usedItem": "Used {item} on {name}!",
+  "heal.done": "Your Pokemon are fully healed!"
 }
