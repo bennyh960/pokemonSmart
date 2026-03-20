@@ -1,0 +1,26 @@
+{
+  "id": "pokecenter-interior",
+  "name": "Pokemon Center",
+  "width": 10,
+  "height": 8,
+  "tileSize": 16,
+  "spawn": { "x": 5, "y": 6 },
+  "transitions": [
+    { "fromX": 5, "fromY": 7, "toMapId": "zeroville", "toX": 14, "toY": 4 }
+  ],
+  "npcs": [
+    { "id": "nurse", "x": 5, "y": 1, "type": "healer", "facing": "down", "spriteType": "nurse", "dialogue": ["Welcome to the Pokemon Center!", "I'll heal your Pokemon."] }
+  ],
+  "music": "town",
+  "encounterTableId": null,
+  "tiles": [
+    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+    [5, 2, 2, 5, 5, 2, 5, 5, 2, 5],
+    [5, 2, 2, 2, 2, 2, 2, 2, 2, 5],
+    [5, 2, 2, 2, 2, 2, 2, 2, 2, 5],
+    [5, 2, 2, 2, 2, 2, 2, 2, 2, 5],
+    [5, 2, 2, 2, 2, 2, 2, 2, 2, 5],
+    [5, 2, 2, 2, 2, 2, 2, 2, 2, 5],
+    [5, 5, 5, 5, 5, 6, 5, 5, 5, 5]
+  ]
+}

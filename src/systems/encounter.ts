@@ -34,6 +34,15 @@ const encounterTables: Record<string, EncounterTable> = {
       { pokemonId: 10, minLevel: 2, maxLevel: 4, weight: 10 },   // Caterpie
     ],
   },
+  'route-1': {
+    entries: [
+      { pokemonId: 16, minLevel: 3, maxLevel: 6, weight: 25 },   // Pidgey
+      { pokemonId: 19, minLevel: 3, maxLevel: 5, weight: 25 },   // Rattata
+      { pokemonId: 161, minLevel: 3, maxLevel: 5, weight: 20 },  // Sentret
+      { pokemonId: 10, minLevel: 2, maxLevel: 4, weight: 15 },   // Caterpie
+      { pokemonId: 13, minLevel: 2, maxLevel: 4, weight: 15 },   // Weedle
+    ],
+  },
   'route-29': {
     entries: [
       { pokemonId: 16, minLevel: 3, maxLevel: 6, weight: 25 },   // Pidgey
