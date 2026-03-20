@@ -13,7 +13,7 @@
 | frontend-developer | תפריט קבוצה | `feature/party-ui` | ✅ | ✅ |
 | frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ✅ |
 | game-engine-developer | מערכת NPCs | `feature/npc-system` | ✅ | ✅ |
-| frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ✅ | ⬜ |
+| frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ✅ | ✅ |
 | game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ⬜ | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל — דורש תיקון
@@ -485,7 +485,23 @@ Findings:
 
 ### feature/pokemon-center-mart
 ```
-Status: ⬜
+Status: ✅ Passed
+Date: 2026-03-20
+Findings:
+- tsc --noEmit = 0 errors
+- npm test = 62/62 passed
+- npm run build = success
+- healParty() in game-state.ts: restores HP + PP for all party Pokemon
+- items field in PlayerData + save migration in save.ts for old saves
+- Item definitions: Potion ($300/+20HP), Super Potion ($700/+50HP)
+- Shop UI: overlay with buy logic, money display, cursor nav, Escape close
+- NPC wiring: healer → healParty + confirmation, shopkeeper → openShop
+- BAG in battle: SELECT_ITEM/USE_ITEM phases, heals lead Pokemon, enemy turn after
+- i18n: 13 new keys in both en.json and he.json
+- Minor: shop help bar text not i18n'd (cosmetic)
+- Minor: battle bag shows max 2 items — fine for current items, needs scroll if more added
+- Minor: heal.done key duplicates npc.nurse.done (harmless)
+Already on main (bundled with NPC system merge): 2026-03-20
 ```
 
 ### feature/trainer-battles
