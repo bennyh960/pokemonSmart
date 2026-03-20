@@ -13,13 +13,14 @@ import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty } from '../systems/game-state.js';
-import { generateWildEncounter } from '../systems/encounter.js';
-import { setBattleData } from './battle.js';
+import { generateWildEncounter, createPokemonFromData } from '../systems/encounter.js';
+import { getPokemon } from '../services/pokemon-data.js';
+import { setBattleData, setTrainerBattleData, type TrainerBattleData } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
-import { createNPCManager, type NPCData, type NPCManager } from '../systems/npc.js';
+import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight } from '../systems/npc.js';
 
 const SCREEN_W = 240;
 const SCREEN_H = 160;
@@ -80,6 +81,24 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Choice prompt state
   let choiceState: ChoiceState | null = null;
+
+  // Trainer approach state
+  interface TrainerApproachState {
+    trainer: TrainerData;
+    phase: 'exclamation' | 'walking' | 'battle-start';
+    timer: number;
+    trainerPixelX: number;
+    trainerPixelY: number;
+    trainerStartX: number;
+    trainerStartY: number;
+    trainerTargetX: number;
+    trainerTargetY: number;
+    walkProgress: number;
+    stepsRemaining: number;
+    originalX: number;
+    originalY: number;
+  }
+  let trainerApproach: TrainerApproachState | null = null;
 
   function initPlayer(sx: number, sy: number): PlayerState {
     return {
@@ -152,6 +171,48 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
   }
 
+  /** Start trainer approach: "!" bubble → walk toward player → battle. */
+  function startTrainerApproach(trainer: TrainerData): void {
+    // Calculate direction from trainer to player
+    const dx = player.gridX - trainer.x;
+    const dy = player.gridY - trainer.y;
+    // Number of tiles to walk (stop 1 tile away from player)
+    const dist = Math.max(Math.abs(dx), Math.abs(dy));
+    const stepsToTake = dist - 1;
+
+    trainerApproach = {
+      trainer,
+      phase: 'exclamation',
+      timer: 0,
+      trainerPixelX: trainer.x * TILE_SIZE,
+      trainerPixelY: trainer.y * TILE_SIZE,
+      trainerStartX: trainer.x * TILE_SIZE,
+      trainerStartY: trainer.y * TILE_SIZE,
+      trainerTargetX: trainer.x * TILE_SIZE,
+      trainerTargetY: trainer.y * TILE_SIZE,
+      walkProgress: 0,
+      stepsRemaining: Math.max(0, stepsToTake),
+      originalX: trainer.x,
+      originalY: trainer.y,
+    };
+  }
+
+  /** Build TrainerBattleData from a TrainerData NPC. */
+  function buildTrainerBattleData(trainer: TrainerData): TrainerBattleData {
+    const party = trainer.party.map(p => {
+      const data = getPokemon(p.pokemonId);
+      if (data) return createPokemonFromData(data, p.level);
+      // Fallback: simple Rattata
+      return createPokemonFromData(getPokemon(19)!, p.level);
+    });
+    return {
+      trainerName: trainer.name || trainer.id,
+      trainerId: trainer.id,
+      party,
+      reward: trainer.reward,
+    };
+  }
+
   /** Load a map and set up the scene. */
   async function loadAndSetMap(mapId: string, spawnX: number, spawnY: number): Promise<void> {
     const data = await loadMap(mapId);
@@ -176,6 +237,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     interactingNPC = null;
     choiceState = null;
     healTextBox = null;
+    trainerApproach = null;
 
     // Auto-save on area entry
     if (hasActiveGame()) {
@@ -201,6 +263,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       interactingNPC = null;
       choiceState = null;
       healTextBox = null;
+      trainerApproach = null;
       mapLoading = true;
 
       // Determine which map to load
@@ -324,6 +387,76 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // Trainer approach animation
+      if (trainerApproach) {
+        const ta = trainerApproach;
+        ta.timer += dt;
+
+        if (ta.phase === 'exclamation') {
+          // Show "!" for 0.8 seconds
+          if (ta.timer >= 0.8) {
+            ta.phase = 'walking';
+            ta.timer = 0;
+            // Start first step
+            if (ta.stepsRemaining > 0) {
+              const dirX = Math.sign(player.gridX - ta.trainer.x);
+              const dirY = Math.sign(player.gridY - ta.trainer.y);
+              ta.trainerStartX = ta.trainerPixelX;
+              ta.trainerStartY = ta.trainerPixelY;
+              ta.trainerTargetX = ta.trainerPixelX + dirX * TILE_SIZE;
+              ta.trainerTargetY = ta.trainerPixelY + dirY * TILE_SIZE;
+              ta.walkProgress = 0;
+            } else {
+              ta.phase = 'battle-start';
+              ta.timer = 0;
+            }
+          }
+        } else if (ta.phase === 'walking') {
+          ta.walkProgress += dt / MOVE_DURATION;
+          if (ta.walkProgress >= 1) {
+            ta.trainerPixelX = ta.trainerTargetX;
+            ta.trainerPixelY = ta.trainerTargetY;
+            // Update NPC grid position
+            ta.trainer.x = Math.round(ta.trainerPixelX / TILE_SIZE);
+            ta.trainer.y = Math.round(ta.trainerPixelY / TILE_SIZE);
+            ta.stepsRemaining--;
+            if (ta.stepsRemaining > 0) {
+              const dirX = Math.sign(player.gridX - ta.trainer.x);
+              const dirY = Math.sign(player.gridY - ta.trainer.y);
+              ta.trainerStartX = ta.trainerPixelX;
+              ta.trainerStartY = ta.trainerPixelY;
+              ta.trainerTargetX = ta.trainerPixelX + dirX * TILE_SIZE;
+              ta.trainerTargetY = ta.trainerPixelY + dirY * TILE_SIZE;
+              ta.walkProgress = 0;
+            } else {
+              ta.phase = 'battle-start';
+              ta.timer = 0;
+            }
+          } else {
+            ta.trainerPixelX = ta.trainerStartX + (ta.trainerTargetX - ta.trainerStartX) * ta.walkProgress;
+            ta.trainerPixelY = ta.trainerStartY + (ta.trainerTargetY - ta.trainerStartY) * ta.walkProgress;
+          }
+        } else if (ta.phase === 'battle-start') {
+          // Start the battle
+          const trainerBattleData = buildTrainerBattleData(ta.trainer);
+          const playerData = getPlayerData();
+          const playerPokemon = playerData.party[0];
+          if (playerPokemon) {
+            setTrainerBattleData(playerPokemon, trainerBattleData);
+            // Reset trainer position back after battle
+            ta.trainer.x = ta.originalX;
+            ta.trainer.y = ta.originalY;
+            trainerApproach = null;
+            encounterTriggered = true;
+            flashTimer = 0;
+            flashPhase = 'flash';
+          } else {
+            trainerApproach = null;
+          }
+        }
+        return;
+      }
+
       if (player.moving) {
         player.moveProgress += dt / MOVE_DURATION;
         // Walk animation
@@ -348,6 +481,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               if (wild) { startEncounterTransition(wild); return; }
             }
           }
+
+          // Check trainer line-of-sight after each step
+          if (npcManager && hasActiveGame()) {
+            const trainers = npcManager.getTrainers();
+            const flags = getPlayerData().flags;
+            const spotter = checkTrainerLineOfSight(trainers, player.gridX, player.gridY, flags);
+            if (spotter) {
+              startTrainerApproach(spotter);
+              return;
+            }
+          }
         } else {
           player.pixelX = player.startPixelX + (player.targetGridX * TILE_SIZE - player.startPixelX) * player.moveProgress;
           player.pixelY = player.startPixelY + (player.targetGridY * TILE_SIZE - player.startPixelY) * player.moveProgress;
@@ -359,6 +503,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (npcManager) {
           const npc = npcManager.getFacingNPC(player.gridX, player.gridY, player.facing);
           if (npc && npc.dialogue.length > 0) {
+            // Defeated trainers show different dialogue
+            if (npc.type === 'trainer' && hasActiveGame()) {
+              const flags = getPlayerData().flags;
+              if (flags[`trainer-${npc.id}-defeated`]) {
+                activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL());
+                interactingNPC = null;
+                return;
+              }
+            }
             activeTextBox = createTextBox(npc.dialogue, isRTL());
             interactingNPC = npc;
             return;
@@ -451,10 +604,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // NPCs
       if (npcManager) {
         for (const npc of npcManager.getNPCs()) {
-          const nx = Math.floor(npc.x * TILE_SIZE - camera.x);
-          const ny = Math.floor(npc.y * TILE_SIZE - camera.y);
+          // If this NPC is the approaching trainer, use animated position
+          let npcPixelX = npc.x * TILE_SIZE;
+          let npcPixelY = npc.y * TILE_SIZE;
+          if (trainerApproach && trainerApproach.trainer === npc) {
+            npcPixelX = trainerApproach.trainerPixelX;
+            npcPixelY = trainerApproach.trainerPixelY;
+          }
+          const nx = Math.floor(npcPixelX - camera.x);
+          const ny = Math.floor(npcPixelY - camera.y);
+          const renderY = npcPixelY;
           renderables.push({
-            y: npc.y * TILE_SIZE,
+            y: renderY,
             render: () => {
               const sprite = getNPCSpriteImage(npc.spriteType);
               ctx.imageSmoothingEnabled = false;
@@ -462,6 +623,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 ctx.drawImage(sprite, nx, ny, TILE_SIZE, TILE_SIZE);
               } else {
                 fillRect(ctx, nx, ny, TILE_SIZE, TILE_SIZE, '#FF8800');
+              }
+              // Draw "!" exclamation bubble during approach
+              if (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') {
+                fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
+                drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
               }
             },
           });

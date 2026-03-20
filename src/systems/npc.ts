@@ -72,5 +72,34 @@ export function createNPCManager(npcs: NPCData[]) {
   };
 }
 
+/**
+ * Check if any trainer NPC has line-of-sight to the player.
+ * Returns the first trainer that can see the player, or null.
+ */
+export function checkTrainerLineOfSight(
+  trainers: TrainerData[],
+  playerX: number,
+  playerY: number,
+  defeatedFlags: Record<string, boolean>,
+): TrainerData | null {
+  for (const trainer of trainers) {
+    // Skip already-defeated trainers
+    if (defeatedFlags[`trainer-${trainer.id}-defeated`]) continue;
+
+    const vec = FACING_VECTORS[trainer.facing];
+    if (!vec) continue;
+
+    const range = trainer.lineOfSight || 3;
+    for (let d = 1; d <= range; d++) {
+      const checkX = trainer.x + vec.dx * d;
+      const checkY = trainer.y + vec.dy * d;
+      if (checkX === playerX && checkY === playerY) {
+        return trainer;
+      }
+    }
+  }
+  return null;
+}
+
 /** Return type for use in type annotations. */
 export type NPCManager = ReturnType<typeof createNPCManager>;

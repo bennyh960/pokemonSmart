@@ -21,6 +21,7 @@ export function createNewPlayerData(): PlayerData {
     money: 3000,
     pokedex: {},
     items: {},
+    flags: {},
     position: { mapId: 'zeroville', x: 15, y: 12 },
     playtime: 0,
   };

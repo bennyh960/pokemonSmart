@@ -27,6 +27,7 @@ export function createNewPlayer(name: string): PlayerData {
     money: 3000,
     pokedex: {},
     items: {},
+    flags: {},
     position: { mapId: 'lab', x: 5, y: 5 },
     playtime: 0,
   };

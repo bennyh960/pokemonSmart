@@ -26,14 +26,29 @@ const SCREEN_W = 240;
 
 type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LOSE' | 'RUN'
-  | 'SELECT_ITEM' | 'USE_ITEM';
+  | 'SELECT_ITEM' | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_REWARD';
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
+let pendingTrainerBattle: TrainerBattleData | null = null;
+
+export interface TrainerBattleData {
+  trainerName: string;
+  trainerId: string;
+  party: Pokemon[];
+  reward: number;
+}
 
 export function setBattleData(playerPokemon: Pokemon, enemyPokemon: Pokemon): void {
   pendingPlayer = playerPokemon;
   pendingEnemy = enemyPokemon;
+  pendingTrainerBattle = null;
+}
+
+export function setTrainerBattleData(playerPokemon: Pokemon, trainerData: TrainerBattleData): void {
+  pendingPlayer = playerPokemon;
+  pendingEnemy = trainerData.party[0];
+  pendingTrainerBattle = trainerData;
 }
 
 function calcDamage(atk: Pokemon, def: Pokemon, power: number, moveType: PokemonType): number {
@@ -70,6 +85,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let xpGained = 0;
   let bagItems: { id: string; def: ItemDef; qty: number }[] = [];
   let bagCursor = 0;
+  let isTrainerBattle = false;
+  let trainerData: TrainerBattleData | null = null;
+  let trainerPartyIndex = 0;
 
   function getBattleItems(): { id: string; def: ItemDef; qty: number }[] {
     if (!hasActiveGame()) return [];
@@ -99,6 +117,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function init(): void {
+    isTrainerBattle = false;
+    trainerData = null;
+    trainerPartyIndex = 0;
+
+    if (pendingTrainerBattle) {
+      isTrainerBattle = true;
+      trainerData = pendingTrainerBattle;
+      trainerPartyIndex = 0;
+      pendingTrainerBattle = null;
+    }
+
     if (pendingPlayer && pendingEnemy) {
       player = pendingPlayer; enemy = pendingEnemy;
       pendingPlayer = null; pendingEnemy = null;
@@ -178,7 +207,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (hasActiveGame()) {
         getPlayerData().pokedex[enemy.id] = true;
       }
-      textBox = createTextBox([t('battle.wildAppeared', { name: enemy.name })], isRTL());
+      if (isTrainerBattle && trainerData) {
+        textBox = createTextBox([
+          t('battle.trainerWantsBattle', { name: trainerData.trainerName }),
+          t('battle.trainerSentOut', { name: enemy.name }),
+        ], isRTL());
+      } else {
+        textBox = createTextBox([t('battle.wildAppeared', { name: enemy.name })], isRTL());
+      }
       phase = 'INTRO';
       audio.playMusic('battle');
     },
@@ -208,7 +244,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
                 bagCursor = 0; phase = 'SELECT_ITEM';
               }
             }
-            else if (r.choice === 'RUN') { textBox = createTextBox([t('battle.gotAway')], isRTL()); phase = 'RUN'; }
+            else if (r.choice === 'RUN') {
+              if (isTrainerBattle) {
+                textBox = createTextBox([t('battle.cantRunTrainer')], isRTL()); phase = 'INTRO';
+              } else {
+                textBox = createTextBox([t('battle.gotAway')], isRTL()); phase = 'RUN';
+              }
+            }
             else { textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO'; }
           }
           break;
@@ -240,14 +282,76 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'CHECK_WIN': {
-          if (enemy.hp <= 0) { textBox = createTextBox([t('battle.fainted', { name: enemy.name }), t('battle.youWon')], isRTL()); audio.playMusic('victory'); phase = 'WIN'; }
+          if (enemy.hp <= 0) {
+            if (isTrainerBattle && trainerData && trainerPartyIndex + 1 < trainerData.party.length) {
+              // Trainer has more Pokemon
+              textBox = createTextBox([t('battle.fainted', { name: enemy.name })], isRTL());
+              phase = 'TRAINER_NEXT_POKEMON';
+            } else {
+              // Wild win or trainer's last Pokemon fainted
+              const msgs = [t('battle.fainted', { name: enemy.name }), t('battle.youWon')];
+              textBox = createTextBox(msgs, isRTL());
+              audio.playMusic('victory');
+              phase = 'WIN';
+            }
+          }
           else enemyTurn();
+          break;
+        }
+        case 'TRAINER_NEXT_POKEMON': {
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+            // XP for the fainted Pokemon first
+            xpGained = calculateXpGain(enemy);
+            player.xp += xpGained;
+            textBox = createTextBox([t('battle.gainedXP', { name: player.name, xp: xpGained })], isRTL());
+            // Check level up inline
+            if (checkAndApplyLevelUp(player)) {
+              // Will show level up after XP text
+            }
+          }
+          if (!textBox) {
+            // Send out next Pokemon
+            trainerPartyIndex++;
+            enemy = trainerData!.party[trainerPartyIndex];
+            enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 130, 8, false);
+            loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
+            if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
+            textBox = createTextBox([t('battle.trainerSentOut', { name: enemy.name })], isRTL());
+            phase = 'INTRO';
+          }
           break;
         }
         case 'WIN': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null; xpGained = calculateXpGain(enemy); player.xp += xpGained;
-            textBox = createTextBox([t('battle.gainedXP', { name: player.name, xp: xpGained })], isRTL()); phase = 'XP_GAIN';
+            textBox = createTextBox([t('battle.gainedXP', { name: player.name, xp: xpGained })], isRTL());
+            if (isTrainerBattle && trainerData) {
+              phase = 'TRAINER_REWARD';
+            } else {
+              phase = 'XP_GAIN';
+            }
+          }
+          break;
+        }
+        case 'TRAINER_REWARD': {
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+            if (checkAndApplyLevelUp(player)) {
+              textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL());
+            }
+          }
+          if (!textBox) {
+            // Award money and set defeat flag
+            if (hasActiveGame() && trainerData) {
+              const pd = getPlayerData();
+              pd.money += trainerData.reward;
+              pd.flags[`trainer-${trainerData.trainerId}-defeated`] = true;
+              autoSave();
+            }
+            textBox = createTextBox([t('battle.trainerReward', { money: trainerData!.reward })], isRTL());
+            phase = 'XP_GAIN';
+            trainerData = null;
           }
           break;
         }

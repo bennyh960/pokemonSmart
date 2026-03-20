@@ -14,7 +14,7 @@
 | frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ✅ |
 | game-engine-developer | מערכת NPCs | `feature/npc-system` | ✅ | ✅ |
 | frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ✅ | ✅ |
-| game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ⬜ | ⬜ |
+| game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ✅ | ⬜ |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל — דורש תיקון
 
@@ -250,22 +250,22 @@ Phase 3 (after Branch 2 merges):
 מאמנים שמאתרים את השחקן ויוזמים קרב כפוי.
 
 ### משימות
-- [ ] **5.1** Line-of-sight detection ב-`npc.ts`:
+- [x] **5.1** Line-of-sight detection ב-`npc.ts`:
   - Trainer NPCs: check if player is in facing direction, 1-5 tiles away
   - `checkTrainerLineOfSight(trainers, playerX, playerY)` → returns trainer or null
-- [ ] **5.2** Trainer approach animation ב-overworld:
+- [x] **5.2** Trainer approach animation ב-overworld:
   - "!" bubble above trainer → trainer walks toward player → battle starts
   - Use existing walk animation system
-- [ ] **5.3** Battle scene trainer mode:
+- [x] **5.3** Battle scene trainer mode:
   - חדש flag: `isTrainerBattle: boolean`
   - Intro text: "Trainer X wants to battle!"
   - No RUN option (אפשר להסתיר או להציג הודעה "Can't run from trainer!")
   - Sequential Pokemon: trainer may have 2-3 Pokemon
   - Money reward on win
-- [ ] **5.4** Defeat flags:
+- [x] **5.4** Defeat flags:
   - `gameState.flags['trainer-{id}-defeated'] = true`
   - Defeated trainers: different dialogue, no re-battle
-- [ ] **5.5** Test content:
+- [x] **5.5** Test content:
   - 2-3 trainers on Route 1 (simple teams: lv 4-6 Pokemon)
   - Add their NPCData to route-1 map JSON
 

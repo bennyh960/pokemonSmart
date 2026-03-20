@@ -73,5 +73,10 @@
   "item.superPotion.desc": "משחזר 50 HP",
   "battle.noItems": "!אין פריטים",
   "battle.usedItem": "!{name} השתמשת ב{item} על",
+  "battle.trainerWantsBattle": "!רוצה להילחם {name}",
+  "battle.trainerSentOut": "!שלח את {name}",
+  "battle.cantRunTrainer": "!אי אפשר לברוח מקרב מאמנים",
+  "battle.trainerReward": "!קיבלת ${money} על הניצחון",
+  "trainer.defeated.dialogue": "...אתה די חזק",
   "heal.done": "!הפוקימונים שלך רופאו במלואם"
 }

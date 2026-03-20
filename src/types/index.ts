@@ -113,6 +113,7 @@ export interface PlayerData {
   money: number;
   pokedex: Record<number, boolean>;
   items: Record<string, number>;  // item id → quantity
+  flags: Record<string, boolean>; // e.g. 'trainer-bug1-defeated'
   position: { mapId: string; x: number; y: number };
   playtime: number;
 }
