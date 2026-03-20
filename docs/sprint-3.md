@@ -10,7 +10,7 @@
 |-------|--------|--------|--------|-----|
 | game-engine-developer | מערכת מפות + מעברים | `feature/map-system` | ✅ | ⬜ |
 | asset-manager | מפות ערים ונתיבים (JSON) | `feature/city-maps` | ✅ | ✅ |
-| frontend-developer | תפריט קבוצה | `feature/party-ui` | ⬜ | ⬜ |
+| frontend-developer | תפריט קבוצה | `feature/party-ui` | ✅ | ⬜ |
 | frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ⬜ |
 | game-engine-developer | מערכת NPCs | `feature/npc-system` | ⬜ | ⬜ |
 | frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ⬜ | ⬜ |
@@ -286,21 +286,21 @@ Phase 3 (after Branch 2 merges):
 תפריט צפייה בקבוצת הפוקימונים — P key בoverworld.
 
 ### משימות
-- [ ] **6.1** חדש `src/scenes/party.ts` — Scene interface:
+- [x] **6.1** חדש `src/scenes/party.ts` — Scene interface:
   - רשימה אנכית של עד 6 slots
   - כל slot: sprite (מ-front/{id}.png), שם, רמה, HP bar, types
   - חיצים לנווט, Enter לפירוט, Escape לסגור
-- [ ] **6.2** Detail view:
+- [x] **6.2** Detail view:
   - כל הstats: HP, Attack, Defense, Sp.Atk, Sp.Def, Speed
   - רשימת moves עם type + PP
   - XP progress bar
-- [ ] **6.3** Swap:
+- [x] **6.3** Swap:
   - בחר פוקימון A → בחר פוקימון B → swap positions in party array
-- [ ] **6.4** Wire to game:
+- [x] **6.4** Wire to game:
   - P key ב-overworld → `stateMachine.push('PARTY')`
   - Escape → `stateMachine.pop()`
   - Register scene in `game.ts`
-- [ ] **6.5** i18n keys for all text (both en.json and he.json)
+- [x] **6.5** i18n keys for all text (both en.json and he.json)
 
 ### Files
 `src/scenes/party.ts` (new), `src/engine/game.ts`, `src/scenes/overworld.ts`, `src/i18n/locales/en.json`, `src/i18n/locales/he.json`
