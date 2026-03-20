@@ -20,6 +20,7 @@ export function createNewPlayerData(): PlayerData {
     serumParts: 0,
     money: 3000,
     pokedex: {},
+    items: {},
     position: { mapId: 'zeroville', x: 15, y: 12 },
     playtime: 0,
   };
@@ -59,6 +60,17 @@ export function loadSavedGame(): PlayerData | null {
     currentPlayerData = data;
   }
   return data;
+}
+
+/** Heal all Pokemon in the party: restore HP and PP. */
+export function healParty(): void {
+  const pd = getPlayerData();
+  for (const pokemon of pd.party) {
+    pokemon.hp = pokemon.maxHp;
+    for (const move of pokemon.moves) {
+      move.currentPp = move.pp;
+    }
+  }
 }
 
 /** Auto-save the current game state. No-op if no active game. */

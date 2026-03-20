@@ -112,6 +112,7 @@ export interface PlayerData {
   serumParts: number;
   money: number;
   pokedex: Record<number, boolean>;
+  items: Record<string, number>;  // item id → quantity
   position: { mapId: string; x: number; y: number };
   playtime: number;
 }

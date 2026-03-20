@@ -6,7 +6,7 @@ import type { Scene, Pokemon, PokemonType } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
-import { clearScreen, fillRect, drawRect } from '../engine/renderer.js';
+import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js';
 import { createHPBar, updateHPBar, renderHPBar, setHP, isHPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
@@ -20,11 +20,13 @@ import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
 import { t, isRTL } from '../i18n/i18n.js';
+import { getItem, type ItemDef } from '../data/items.js';
 
 const SCREEN_W = 240;
 
 type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
-  | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LOSE' | 'RUN';
+  | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LOSE' | 'RUN'
+  | 'SELECT_ITEM' | 'USE_ITEM';
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
@@ -66,6 +68,35 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let fade: ReturnType<typeof createFade> | null = null;
   let phaseTimer = 0;
   let xpGained = 0;
+  let bagItems: { id: string; def: ItemDef; qty: number }[] = [];
+  let bagCursor = 0;
+
+  function getBattleItems(): { id: string; def: ItemDef; qty: number }[] {
+    if (!hasActiveGame()) return [];
+    const pd = getPlayerData();
+    const items: { id: string; def: ItemDef; qty: number }[] = [];
+    for (const [id, qty] of Object.entries(pd.items)) {
+      if (qty <= 0) continue;
+      const def = getItem(id);
+      if (def && def.usableInBattle) items.push({ id, def, qty });
+    }
+    return items;
+  }
+
+  function useItem(itemId: string): void {
+    const pd = getPlayerData();
+    const def = getItem(itemId);
+    if (!def) return;
+    if (def.effect.type === 'heal') {
+      player.hp = Math.min(player.maxHp, player.hp + def.effect.amount);
+      setHP(playerHpBar, player.hp);
+    }
+    pd.items[itemId]--;
+    if (pd.items[itemId] <= 0) delete pd.items[itemId];
+    textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: player.name })], isRTL());
+    phase = 'USE_ITEM';
+    phaseTimer = 0;
+  }
 
   function init(): void {
     if (pendingPlayer && pendingEnemy) {
@@ -169,6 +200,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (r?.type === 'main') {
             audio.playSFX('menu-select');
             if (r.choice === 'FIGHT') { phase = 'SELECT_MOVE'; showMoveMenu(menu); }
+            else if (r.choice === 'BAG') {
+              bagItems = getBattleItems();
+              if (bagItems.length === 0) {
+                textBox = createTextBox([t('battle.noItems')], isRTL()); phase = 'INTRO';
+              } else {
+                bagCursor = 0; phase = 'SELECT_ITEM';
+              }
+            }
             else if (r.choice === 'RUN') { textBox = createTextBox([t('battle.gotAway')], isRTL()); phase = 'RUN'; }
             else { textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO'; }
           }
@@ -234,6 +273,23 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (!textBox && fade && !fade.active) handleLoss();
           break;
         }
+        case 'SELECT_ITEM': {
+          if (input.isKeyPressed('Escape') || input.isKeyPressed('Backspace')) {
+            phase = 'SELECT_ACTION'; showMainMenu(menu);
+          } else if (input.isKeyPressed('ArrowUp') && bagCursor > 0) {
+            bagCursor--;
+          } else if (input.isKeyPressed('ArrowDown') && bagCursor < bagItems.length - 1) {
+            bagCursor++;
+          } else if (input.isKeyPressed('Enter') && bagItems.length > 0) {
+            useItem(bagItems[bagCursor].id);
+          }
+          break;
+        }
+        case 'USE_ITEM': {
+          if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
+          if (!textBox && !isHPAnimating(playerHpBar)) enemyTurn();
+          break;
+        }
       }
     },
     render(ctx: CanvasRenderingContext2D): void {
@@ -271,9 +327,35 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (flash) renderFlash(ctx, flash);
       if (textBox) renderTextBox(ctx, textBox);
       else if (phase === 'SELECT_ACTION' || phase === 'SELECT_MOVE') renderBattleMenu(ctx, menu);
+      else if (phase === 'SELECT_ITEM') renderBagMenu(ctx);
       if (fade) renderFade(ctx, fade);
     },
   };
+
+  function renderBagMenu(ctx: CanvasRenderingContext2D): void {
+    const MENU_Y = 120;
+    const MENU_H = 40;
+    fillRect(ctx, 0, MENU_Y, SCREEN_W, MENU_H, '#181820');
+    drawRect(ctx, 0, MENU_Y, SCREEN_W, MENU_H, '#585858');
+
+    drawText(ctx, t('battle.menu.bag'), 4, MENU_Y + 2, { size: 8, color: '#f8d030', font: 'monospace' });
+
+    const maxVisible = 2;
+    const startIdx = Math.max(0, bagCursor - maxVisible + 1);
+    for (let i = 0; i < maxVisible && startIdx + i < bagItems.length; i++) {
+      const item = bagItems[startIdx + i];
+      const y = MENU_Y + 12 + i * 12;
+      const selected = startIdx + i === bagCursor;
+
+      const prefix = selected ? '\u25b6 ' : '  ';
+      drawText(ctx, `${prefix}${t(item.def.nameKey)} x${item.qty}`, 8, y, {
+        size: 8, color: selected ? '#ffffff' : '#a0a0a0', font: 'monospace',
+      });
+      drawText(ctx, t(item.def.descriptionKey), SCREEN_W - 8, y, {
+        size: 7, color: '#88aa88', font: 'monospace', align: 'right',
+      });
+    }
+  }
 }
 
 function fallbackPlayer(): Pokemon {

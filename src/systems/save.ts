@@ -31,7 +31,10 @@ export function loadGame(slot: number): PlayerData | null {
   if (!raw) return null;
 
   try {
-    return JSON.parse(raw) as PlayerData;
+    const data = JSON.parse(raw) as PlayerData;
+    // Migration: add items field if missing from old saves
+    if (!data.items) data.items = {};
+    return data;
   } catch {
     console.warn(`Failed to parse save data for slot ${slot}.`);
     return null;
