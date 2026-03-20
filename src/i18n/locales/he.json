@@ -36,5 +36,22 @@
   "hp.label": "HP",
   "hp.level": "{level} רמ'",
 
-  "math.answer": "{answer} :תשובה"
+  "math.answer": "{answer} :תשובה",
+
+  "pokedex.title": "פוקדקס",
+  "pokedex.unknown": "???",
+  "pokedex.noData": "אין מידע",
+  "pokedex.seen": "נראו: {count}",
+  "pokedex.number": "#{number}",
+
+  "party.title": "קבוצה",
+  "party.empty": "---",
+  "party.stats.hp": "HP",
+  "party.stats.attack": "התקפה",
+  "party.stats.defense": "הגנה",
+  "party.stats.spAtk": "הת. מיוחדת",
+  "party.stats.spDef": "הג. מיוחדת",
+  "party.stats.speed": "מהירות",
+  "party.xp": "ניסיון: {current}/{next}",
+  "party.swap": "בחר פוקימון להחלפה"
 }

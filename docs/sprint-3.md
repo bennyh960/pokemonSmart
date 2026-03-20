@@ -11,7 +11,7 @@
 | game-engine-developer | מערכת מפות + מעברים | `feature/map-system` | ✅ | ⬜ |
 | asset-manager | מפות ערים ונתיבים (JSON) | `feature/city-maps` | ⬜ | ⬜ |
 | frontend-developer | תפריט קבוצה | `feature/party-ui` | ⬜ | ⬜ |
-| frontend-developer | פוקדקס | `feature/pokedex-ui` | ⬜ | ⬜ |
+| frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ⬜ |
 | game-engine-developer | מערכת NPCs | `feature/npc-system` | ⬜ | ⬜ |
 | frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ⬜ | ⬜ |
 | game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ⬜ | ⬜ |
@@ -320,22 +320,22 @@ Phase 3 (after Branch 2 merges):
 פוקדקס — רשימה של כל 251 פוקימונים, seen/unseen.
 
 ### משימות
-- [ ] **7.1** חדש `src/scenes/pokedex.ts` — Scene interface:
+- [x] **7.1** חדש `src/scenes/pokedex.ts` — Scene interface:
   - רשימה scrollable: #001-#251
   - Seen = שם + sprite קטן
   - Unseen = "???" + silhouette
   - חיצים לנווט, Enter לפירוט, Escape לסגור
-- [ ] **7.2** Detail view:
+- [x] **7.2** Detail view:
   - Sprite גדול, types, base stats
   - רק אם seen
-- [ ] **7.3** Mark as seen:
+- [x] **7.3** Mark as seen:
   - בbattle.ts enter(): `pokedex[enemy.id] = true`
   - כבר קיים ב-PlayerData: `pokedex: Record<number, boolean>`
-- [ ] **7.4** Wire to game:
+- [x] **7.4** Wire to game:
   - D key ב-overworld → `stateMachine.push('POKEDEX')`
   - גם accessible מ-party menu
   - Register scene in `game.ts`
-- [ ] **7.5** i18n keys (both en.json and he.json)
+- [x] **7.5** i18n keys (both en.json and he.json)
 
 ### Files
 `src/scenes/pokedex.ts` (new), `src/engine/game.ts`, `src/scenes/overworld.ts`, `src/scenes/battle.ts`, `src/i18n/locales/en.json`, `src/i18n/locales/he.json`

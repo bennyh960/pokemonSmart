@@ -141,7 +141,16 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   return {
-    enter(): void { init(); textBox = createTextBox([t('battle.wildAppeared', { name: enemy.name })], isRTL()); phase = 'INTRO'; audio.playMusic('battle'); },
+    enter(): void {
+      init();
+      // Mark enemy Pokemon as seen in Pokedex
+      if (hasActiveGame()) {
+        getPlayerData().pokedex[enemy.id] = true;
+      }
+      textBox = createTextBox([t('battle.wildAppeared', { name: enemy.name })], isRTL());
+      phase = 'INTRO';
+      audio.playMusic('battle');
+    },
     exit(): void { clearAllPopups(); },
     update(dt: number): void {
       phaseTimer += dt;

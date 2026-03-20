@@ -36,5 +36,22 @@
   "hp.label": "HP",
   "hp.level": "Lv{level}",
 
-  "math.answer": "Answer: {answer}"
+  "math.answer": "Answer: {answer}",
+
+  "pokedex.title": "POKEDEX",
+  "pokedex.unknown": "???",
+  "pokedex.noData": "No data",
+  "pokedex.seen": "Seen: {count}",
+  "pokedex.number": "#{number}",
+
+  "party.title": "PARTY",
+  "party.empty": "---",
+  "party.stats.hp": "HP",
+  "party.stats.attack": "Attack",
+  "party.stats.defense": "Defense",
+  "party.stats.spAtk": "Sp.Atk",
+  "party.stats.spDef": "Sp.Def",
+  "party.stats.speed": "Speed",
+  "party.xp": "XP: {current}/{next}",
+  "party.swap": "Select Pokemon to swap"
 }
