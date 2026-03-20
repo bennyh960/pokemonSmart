@@ -213,6 +213,20 @@ function drawTallGrassTile(ctx: CanvasRenderingContext2D): void {
   }
 }
 
+function drawRouteExitTile(ctx: CanvasRenderingContext2D): void {
+  // Path-colored tile with arrow to indicate exit
+  rect(ctx, 0, 0, 16, 16, '#D8B870');
+  const spots = [[3, 2], [8, 5], [13, 3], [2, 10], [7, 13], [12, 11]];
+  for (const [sx, sy] of spots) { px(ctx, sx, sy, '#C8A860'); }
+  // Arrow pointing right (generic direction indicator)
+  const arrowColor = '#806030';
+  rect(ctx, 4, 7, 6, 2, arrowColor);  // shaft
+  px(ctx, 10, 6, arrowColor);
+  px(ctx, 10, 9, arrowColor);
+  px(ctx, 11, 7, arrowColor);
+  px(ctx, 11, 8, arrowColor);
+}
+
 /** Generate a single 16×16 tile image by tile type ID. */
 export function getTileImage(tileType: number): HTMLImageElement {
   const key = `tile-${tileType}`;
@@ -228,6 +242,7 @@ export function getTileImage(tileType: number): HTMLImageElement {
     5: drawBuildingTile,
     6: drawDoorTile,
     7: drawTallGrassTile,
+    8: drawRouteExitTile,
   };
 
   const drawFn = drawFns[tileType] ?? ((ctx: CanvasRenderingContext2D) => rect(ctx, 0, 0, 16, 16, '#FF00FF'));

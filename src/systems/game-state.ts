@@ -20,7 +20,7 @@ export function createNewPlayerData(): PlayerData {
     serumParts: 0,
     money: 3000,
     pokedex: {},
-    position: { mapId: 'test-map', x: 0, y: 0 },
+    position: { mapId: 'zeroville', x: 15, y: 12 },
     playtime: 0,
   };
 }
