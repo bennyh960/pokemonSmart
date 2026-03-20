@@ -26,7 +26,8 @@ const SCREEN_W = 240;
 
 type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LOSE' | 'RUN'
-  | 'SELECT_ITEM' | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_REWARD';
+  | 'SELECT_ITEM' | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_NEXT_XP'
+  | 'TRAINER_NEXT_LEVEL_UP' | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP';
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
@@ -114,6 +115,28 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: player.name })], isRTL());
     phase = 'USE_ITEM';
     phaseTimer = 0;
+  }
+
+  function sendOutNextTrainerPokemon(): void {
+    trainerPartyIndex++;
+    enemy = trainerData!.party[trainerPartyIndex];
+    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 130, 8, false);
+    loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
+    if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
+    textBox = createTextBox([t('battle.trainerSentOut', { name: enemy.name })], isRTL());
+    phase = 'INTRO';
+  }
+
+  function awardTrainerReward(): void {
+    if (hasActiveGame() && trainerData) {
+      const pd = getPlayerData();
+      pd.money += trainerData.reward;
+      pd.flags[`trainer-${trainerData.trainerId}-defeated`] = true;
+      autoSave();
+    }
+    textBox = createTextBox([t('battle.trainerReward', { money: trainerData!.reward })], isRTL());
+    phase = 'XP_GAIN';
+    trainerData = null;
   }
 
   function init(): void {
@@ -299,26 +322,34 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'TRAINER_NEXT_POKEMON': {
+          // Shows "fainted" text, then transitions to XP phase
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            // XP for the fainted Pokemon first
             xpGained = calculateXpGain(enemy);
             player.xp += xpGained;
             textBox = createTextBox([t('battle.gainedXP', { name: player.name, xp: xpGained })], isRTL());
-            // Check level up inline
+            phase = 'TRAINER_NEXT_XP';
+          }
+          break;
+        }
+        case 'TRAINER_NEXT_XP': {
+          // Shows XP gained text, then checks for level up or sends next Pokemon
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
             if (checkAndApplyLevelUp(player)) {
-              // Will show level up after XP text
+              textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL());
+              phase = 'TRAINER_NEXT_LEVEL_UP';
+            } else {
+              sendOutNextTrainerPokemon();
             }
           }
-          if (!textBox) {
-            // Send out next Pokemon
-            trainerPartyIndex++;
-            enemy = trainerData!.party[trainerPartyIndex];
-            enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 130, 8, false);
-            loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
-            if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
-            textBox = createTextBox([t('battle.trainerSentOut', { name: enemy.name })], isRTL());
-            phase = 'INTRO';
+          break;
+        }
+        case 'TRAINER_NEXT_LEVEL_UP': {
+          // Shows level-up text, then sends out next Pokemon
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+            sendOutNextTrainerPokemon();
           }
           break;
         }
@@ -335,23 +366,23 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'TRAINER_REWARD': {
+          // Shows XP gained text (from WIN phase), then checks level up
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (checkAndApplyLevelUp(player)) {
               textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL());
+              phase = 'TRAINER_REWARD_LEVEL_UP';
+            } else {
+              awardTrainerReward();
             }
           }
-          if (!textBox) {
-            // Award money and set defeat flag
-            if (hasActiveGame() && trainerData) {
-              const pd = getPlayerData();
-              pd.money += trainerData.reward;
-              pd.flags[`trainer-${trainerData.trainerId}-defeated`] = true;
-              autoSave();
-            }
-            textBox = createTextBox([t('battle.trainerReward', { money: trainerData!.reward })], isRTL());
-            phase = 'XP_GAIN';
-            trainerData = null;
+          break;
+        }
+        case 'TRAINER_REWARD_LEVEL_UP': {
+          // Shows level-up text, then awards trainer reward
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+            awardTrainerReward();
           }
           break;
         }
