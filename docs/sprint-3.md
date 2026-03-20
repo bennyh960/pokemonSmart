@@ -10,7 +10,7 @@
 |-------|--------|--------|--------|-----|
 | game-engine-developer | מערכת מפות + מעברים | `feature/map-system` | ✅ | ⬜ |
 | asset-manager | מפות ערים ונתיבים (JSON) | `feature/city-maps` | ✅ | ✅ |
-| frontend-developer | תפריט קבוצה | `feature/party-ui` | ✅ | ⬜ |
+| frontend-developer | תפריט קבוצה | `feature/party-ui` | ✅ | ✅ |
 | frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ⬜ |
 | game-engine-developer | מערכת NPCs | `feature/npc-system` | ⬜ | ⬜ |
 | frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ⬜ | ⬜ |
@@ -364,8 +364,8 @@ Phase 3 (after Branch 2 merges):
 - [ ] Maps render with correct tiles
 
 ### feature/party-ui
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] P → party list → stats → swap → Escape
+- [x] `tsc --noEmit` = 0 errors
+- [x] P → party list → stats → swap → Escape
 
 ### feature/pokedex-ui
 - [ ] `tsc --noEmit` = 0 errors
@@ -426,7 +426,15 @@ Findings:
 
 ### feature/party-ui
 ```
-Status: ⬜
+Status: ✅ Passed
+- tsc --noEmit = 0 errors
+- npm test = 62/62 passed
+- npm run build = success
+- P key → party list, Enter → detail view, S → swap mode, Escape → back
+- i18n: 10 keys in EN + HE
+- Minor: hint text not i18n'd (cosmetic)
+- Minor: detail view moves list clips if >5 moves (off-screen at 160px)
+Merged to main: 2026-03-20
 ```
 
 ### feature/pokedex-ui
