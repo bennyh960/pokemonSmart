@@ -389,7 +389,20 @@ Phase 3 (after Branch 2 merges):
 
 ### feature/map-system
 ```
-Status: ⬜
+Status: ✅ Passed
+Date: 2026-03-20
+Findings:
+- tsc --noEmit: 0 errors
+- npm test: 62/62 passed
+- npm run build: success
+- TileMapData extended with id, transitions, npcs, music, encounterTableId
+- map-manager.ts: lazy-loading registry with 6 maps registered
+- TILE_ROUTE_EXIT (8) added with arrow sprite
+- Overworld refactored: async map loading + fade transitions
+- SceneId extended with PARTY, POKEDEX, SHOP
+- Save/load works with dynamic mapId
+- 5 stub map JSONs added for tsc resolution (to be replaced by city-maps)
+- Initial QA found missing JSON stubs causing TS2307 — fixed and re-verified
 ```
 
 ### feature/city-maps
