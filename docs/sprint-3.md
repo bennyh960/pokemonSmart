@@ -8,10 +8,10 @@
 
 | סוכן | משימה | בראנצ' | סטטוס | QA |
 |-------|--------|--------|--------|-----|
-| game-engine-developer | מערכת מפות + מעברים | `feature/map-system` | ✅ | ⬜ |
+| game-engine-developer | מערכת מפות + מעברים | `feature/map-system` | ✅ | ✅ |
 | asset-manager | מפות ערים ונתיבים (JSON) | `feature/city-maps` | ✅ | ✅ |
 | frontend-developer | תפריט קבוצה | `feature/party-ui` | ✅ | ✅ |
-| frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ⬜ |
+| frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ✅ |
 | game-engine-developer | מערכת NPCs | `feature/npc-system` | ⬜ | ⬜ |
 | frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ⬜ | ⬜ |
 | game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ⬜ | ⬜ |
@@ -439,7 +439,22 @@ Merged to main: 2026-03-20
 
 ### feature/pokedex-ui
 ```
-Status: ⬜
+Status: ✅ Passed
+Date: 2026-03-20
+Findings:
+- tsc --noEmit = 0 errors
+- npm test = 62/62 passed
+- npm run build = success
+- D key → pokedex list, ArrowUp/Down scroll, Enter → detail view, Escape → back
+- Scrollable list: 251 entries, 6 visible at a time, scroll indicators
+- Seen Pokemon: name + 16x16 sprite + type color dots
+- Unseen Pokemon: "???" + dark placeholder
+- Detail view: 48x48 sprite, type badges, 6 stat bars with values
+- Battle enter() marks enemy as seen in pokedex
+- i18n: 5 keys in EN + HE
+- Minor: hint text in list view not i18n'd (cosmetic, same as party-ui)
+- Minor: measureText on line 179 called without ctx font set — mitigated by Math.max fallback
+Already on main (merged with map-system at 219fe70): 2026-03-20
 ```
 
 ### feature/npc-system
