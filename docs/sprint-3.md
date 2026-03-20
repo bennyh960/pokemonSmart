@@ -12,7 +12,7 @@
 | asset-manager | מפות ערים ונתיבים (JSON) | `feature/city-maps` | ✅ | ✅ |
 | frontend-developer | תפריט קבוצה | `feature/party-ui` | ✅ | ✅ |
 | frontend-developer | פוקדקס | `feature/pokedex-ui` | ✅ | ✅ |
-| game-engine-developer | מערכת NPCs | `feature/npc-system` | ✅ | ⬜ |
+| game-engine-developer | מערכת NPCs | `feature/npc-system` | ✅ | ✅ |
 | frontend-developer | מרכז פוקימון + חנות | `feature/pokemon-center-mart` | ✅ | ⬜ |
 | game-engine-developer | קרבות מאמנים | `feature/trainer-battles` | ⬜ | ⬜ |
 
@@ -372,8 +372,8 @@ Phase 3 (after Branch 2 merges):
 - [ ] D → Pokedex → scroll → seen/unseen correct
 
 ### feature/npc-system
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] NPCs visible, block movement, respond to Enter
+- [x] `tsc --noEmit` = 0 errors
+- [x] NPCs visible, block movement, respond to Enter
 
 ### feature/pokemon-center-mart
 - [ ] `tsc --noEmit` = 0 errors
@@ -459,7 +459,28 @@ Already on main (merged with map-system at 219fe70): 2026-03-20
 
 ### feature/npc-system
 ```
-Status: ⬜
+Status: ✅ Passed
+Date: 2026-03-20
+Findings:
+- tsc --noEmit = 0 errors
+- npm test = 62/62 passed
+- npm run build = success
+- src/systems/npc.ts: NPCData and TrainerData interfaces exported, createNPCManager factory with
+  isNPCAt, getNPCAt, getFacingNPC, getTrainers — clean, well-typed, NPCManager type alias exported
+- 6 procedural NPC sprites in asset-generator.ts: npc-male, npc-female, nurse, shopkeeper,
+  trainer-m, trainer-f — all 16x16, cached via generatedCache
+- Overworld integration: Y-sorted rendering (player + NPCs sorted by pixelY), NPC collision
+  blocking via isNPCAt check in movement logic, Enter/Space interaction triggers dialogue
+- Choice prompt (Yes/No) after healer/shopkeeper dialogue: ArrowLeft/Right + Enter, Escape = No
+  - Healer → healParty + autoSave + confirmation text
+  - Shopkeeper → openShop overlay
+- TileMapData.npcs typed from unknown[] to NPCData[]
+- i18n: 6 NPC keys + 10 shop/item keys in both en.json and he.json
+- Note: branch also includes pokemon-center-mart work (items.ts, shop.ts, battle bag,
+  healParty, save migration for items field, PlayerData.items) — these are bundled together
+  and all pass type checks
+- Minor: FACING_VECTORS maps both cardinal names (up/down/left/right) AND ArrowKey names —
+  redundant but harmless, provides flexibility
 ```
 
 ### feature/pokemon-center-mart
