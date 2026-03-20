@@ -13,6 +13,8 @@ import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle.js';
 import { createOverworldScene } from '../scenes/overworld.js';
 import { createStarterSelectScene } from '../scenes/starter-select.js';
+import { createPartyScene } from '../scenes/party.js';
+import { createPokedexScene } from '../scenes/pokedex.js';
 
 /** Native GBA-style resolution. */
 const NATIVE_WIDTH = 240;
@@ -42,6 +44,8 @@ export function createGame(container: HTMLElement) {
   stateMachine.register('BATTLE', createBattleScene(input, stateMachine, canvas, audio));
   stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine, audio));
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
+  stateMachine.register('PARTY', createPartyScene(input, stateMachine));
+  stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
 
   let lastTime = 0;
   let running = false;

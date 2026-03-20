@@ -15,6 +15,15 @@
 import { fillRect } from './renderer.js';
 import { getTileImage } from './asset-generator.js';
 
+/** Map transition definition — stepping on (fromX, fromY) warps to another map. */
+export interface MapTransition {
+  fromX: number;
+  fromY: number;
+  toMapId: string;
+  toX: number;
+  toY: number;
+}
+
 /** Map data as loaded from JSON. */
 export interface TileMapData {
   name: string;
@@ -23,6 +32,11 @@ export interface TileMapData {
   tileSize: number;
   spawn: { x: number; y: number };
   tiles: number[][];
+  id?: string;
+  transitions?: MapTransition[];
+  npcs?: unknown[];
+  music?: string;
+  encounterTableId?: string | null;
 }
 
 /** Tile type constants. */
@@ -34,6 +48,7 @@ export const TILE_TREE = 4;
 export const TILE_BUILDING = 5;
 export const TILE_DOOR = 6;
 export const TILE_TALL_GRASS = 7;
+export const TILE_ROUTE_EXIT = 8;
 
 /** Colors for each tile type (indexed by tile ID). */
 const TILE_COLORS: Record<number, string> = {
@@ -45,6 +60,7 @@ const TILE_COLORS: Record<number, string> = {
   [TILE_BUILDING]: '#808080',
   [TILE_DOOR]: '#8B4513',
   [TILE_TALL_GRASS]: '#68C048',
+  [TILE_ROUTE_EXIT]: '#D8B870',
 };
 
 /** Blocked tiles that the player cannot walk on. */
