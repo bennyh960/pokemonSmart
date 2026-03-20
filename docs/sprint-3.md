@@ -535,6 +535,32 @@ Findings:
 Merged to main: 2026-03-20
 ```
 
+### feature/map-transitions
+```
+Status: ✅ Passed
+Date: 2026-03-20
+Findings:
+- tsc --noEmit: 0 errors
+- npm test: 62/62 passed
+- npm run build: success
+- Zeroville: transitions to pokecenter-interior (4,4), mart-interior (14,4), route-1 east edge
+  (x=19, rows 6-8). Tile 8 placed correctly at east edge.
+- Route 1: west transitions (x=0, rows 6-8) → zeroville (x=18), east transitions (x=19,
+  rows 6-8) → sumville (x=1). Tile 8 at both edges. 3 trainer NPCs present.
+- Sumville: west transitions (x=0, rows 6-8) → route-1 (x=18), door (3,4) → pokecenter-interior.
+  Tile 8 at west edge.
+- pokecenter-interior: door (5,7) → zeroville (4,5). Nurse Joy healer at (5,2). Correct.
+- mart-interior: door (5,7) → zeroville (14,5). Shopkeeper at (5,2). Correct.
+- Bidirectional consistency verified for all route connections.
+- TILE_ROUTE_EXIT (8) not in BLOCKED_TILES — walkable as expected.
+- Minor asymmetry: zeroville→route-1 sends all 3 exit rows to single spawn (1,7), while
+  route-1→zeroville preserves per-row mapping (18,6), (18,7), (18,8). Functionally fine,
+  player lands on correct map regardless.
+- Note: pokecenter-interior still only returns to zeroville (known from city-maps QA —
+  needs source-map tracking in future sprint).
+Merged to main: 2026-03-20
+```
+
 ---
 
 ## Playable Slice (Definition of Done)
