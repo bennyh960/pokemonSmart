@@ -13,6 +13,7 @@ import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
   createFlash, updateFlash, renderFlash, createShake, updateShake, applyShake, resetShake,
   createFade, updateFade, renderFade, spawnDamageNumber, updatePopups, renderPopups, clearAllPopups,
+  createLevelUpEffect, updateLevelUpEffect, renderLevelUpEffect,
 } from '../ui/battle-animations.js';
 import { getCombinedTypeEffectiveness } from '../services/pokemon-data.js';
 import { calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
@@ -89,6 +90,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let fade: ReturnType<typeof createFade> | null = null;
   let phaseTimer = 0;
   let xpGained = 0;
+  let levelUpFx: ReturnType<typeof createLevelUpEffect> | null = null;
   let bagItems: { id: string; def: ItemDef; qty: number }[] = [];
   let bagCursor = 0;
   let isTrainerBattle = false;
@@ -178,7 +180,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 148, 2, false);
     playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 4, 32, true, player.xp, player.xpToNext);
     menu = createBattleMenu(player.moves);
-    textBox = null; flash = null; shake = null;
+    textBox = null; flash = null; shake = null; levelUpFx = null;
     fade = createFade(true, 0.5); clearAllPopups();
     phase = 'INTRO'; phaseTimer = 0; xpGained = 0;
     // Preload Pokemon sprites
@@ -189,6 +191,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     loadImage(`/sprites/backgrounds/bg-${battleContext}.jpg`).then(img => {
       bgImage = img;
     }).catch(() => { bgImage = null; });
+  }
+
+  /** Trigger level-up sparkle + jingle. XP bar origin: x=4+3+18+2=27, y varies by panel. */
+  function triggerLevelUpFx(): void {
+    const barX = playerHpBar.x + 3 + 18 + 2; // PAD + PCT_W + PCT_GAP
+    const barY = playerHpBar.y + 16; // approximate XP bar Y within panel
+    levelUpFx = createLevelUpEffect(barX, barY);
+    audio.playLevelUp();
   }
 
   function doAttack(): void {
@@ -276,6 +286,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (flash) updateFlash(flash, dt);
       if (shake) updateShake(shake, dt);
       if (fade) updateFade(fade, dt);
+      if (levelUpFx) updateLevelUpEffect(levelUpFx, dt);
       updateHPBar(playerHpBar, dt); updateHPBar(enemyHpBar, dt); updatePopups(dt);
 
       switch (phase) {
@@ -366,6 +377,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (checkAndApplyLevelUp(player)) {
+              triggerLevelUpFx();
               textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL());
               phase = 'TRAINER_NEXT_LEVEL_UP';
             } else {
@@ -399,6 +411,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (checkAndApplyLevelUp(player)) {
+              triggerLevelUpFx();
               textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL());
               phase = 'TRAINER_REWARD_LEVEL_UP';
             } else {
@@ -418,7 +431,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'XP_GAIN': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            if (checkAndApplyLevelUp(player)) { textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL()); phase = 'LEVEL_UP'; }
+            if (checkAndApplyLevelUp(player)) { triggerLevelUpFx(); textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL()); phase = 'LEVEL_UP'; }
             else { fade = createFade(false, 0.5); phase = 'RUN'; }
           }
           break;
@@ -514,6 +527,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       // ── Party indicators ──
       renderPartyIndicators(ctx);
 
+      if (levelUpFx) renderLevelUpEffect(ctx, levelUpFx);
       if (shake) resetShake(ctx, shake);
       renderPopups(ctx);
       if (flash) renderFlash(ctx, flash);

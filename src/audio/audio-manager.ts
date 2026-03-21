@@ -68,6 +68,50 @@ export function createAudioManager() {
     return sfxCache.get(key)!;
   }
 
+  /** Play a synthesized level-up jingle (ascending arpeggio) via Web Audio API. */
+  function playLevelUpJingle(): void {
+    if (muted) return;
+    try {
+      const actx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const vol = actx.createGain();
+      vol.gain.value = sfxVolume * 0.4;
+      vol.connect(actx.destination);
+
+      // Ascending notes: C5 → E5 → G5 → C6 (classic level-up feel)
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      const noteLen = 0.12;
+      notes.forEach((freq, i) => {
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.6, actx.currentTime + i * noteLen);
+        env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + i * noteLen + noteLen * 0.9);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(actx.currentTime + i * noteLen);
+        osc.stop(actx.currentTime + i * noteLen + noteLen);
+      });
+
+      // Final sustained chord
+      const chordTime = notes.length * noteLen;
+      [523.25, 783.99, 1046.50].forEach(freq => {
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.4, actx.currentTime + chordTime);
+        env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + chordTime + 0.4);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(actx.currentTime + chordTime);
+        osc.stop(actx.currentTime + chordTime + 0.5);
+      });
+    } catch {
+      // Web Audio not available — silent fallback
+    }
+  }
+
   const manager = {
     playMusic(trackKey: string): void {
       if (currentTrack === trackKey && currentHowl && currentHowl.playing()) {
@@ -156,6 +200,10 @@ export function createAudioManager() {
         howl.volume(muted ? 0 : sfxVolume);
       }
       return muted;
+    },
+
+    playLevelUp(): void {
+      playLevelUpJingle();
     },
 
     isMuted(): boolean {

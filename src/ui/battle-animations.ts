@@ -152,6 +152,101 @@ export function renderPopups(ctx: CanvasRenderingContext2D): void {
   }
 }
 
+// --- Level-Up Sparkle Effect ---
+
+interface Sparkle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  maxLife: number;
+  size: number;
+  color: string;
+}
+
+interface LevelUpEffect {
+  active: boolean;
+  timer: number;
+  duration: number;
+  sparkles: Sparkle[];
+  glowAlpha: number;
+  originX: number;
+  originY: number;
+}
+
+const SPARKLE_COLORS = ['#ffd700', '#fff176', '#ffab00', '#ffffff', '#ffe082'];
+
+export function createLevelUpEffect(xBarX: number, xBarY: number): LevelUpEffect {
+  const sparkles: Sparkle[] = [];
+  // Burst of sparkles from XP bar area
+  for (let i = 0; i < 24; i++) {
+    const angle = (Math.PI * 2 * i) / 24 + (Math.random() - 0.5) * 0.5;
+    const speed = 15 + Math.random() * 30;
+    sparkles.push({
+      x: xBarX + Math.random() * 54, // spread across bar width
+      y: xBarY,
+      vx: Math.cos(angle) * speed * 0.4,
+      vy: -Math.abs(Math.sin(angle)) * speed - 5, // bias upward
+      life: 0.6 + Math.random() * 0.5,
+      maxLife: 0.6 + Math.random() * 0.5,
+      size: 1 + Math.random() * 1.5,
+      color: SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)],
+    });
+  }
+  return { active: true, timer: 0, duration: 1.2, sparkles, glowAlpha: 1, originX: xBarX, originY: xBarY };
+}
+
+export function updateLevelUpEffect(effect: LevelUpEffect, dt: number): void {
+  if (!effect.active) return;
+  effect.timer += dt;
+  if (effect.timer >= effect.duration) { effect.active = false; return; }
+
+  effect.glowAlpha = Math.max(0, 1 - effect.timer / 0.4); // glow fades in first 0.4s
+
+  for (const s of effect.sparkles) {
+    s.x += s.vx * dt;
+    s.y += s.vy * dt;
+    s.vy += 20 * dt; // gentle gravity
+    s.life -= dt;
+  }
+}
+
+export function renderLevelUpEffect(ctx: CanvasRenderingContext2D, effect: LevelUpEffect): void {
+  if (!effect.active) return;
+
+  // Golden glow over XP bar area
+  if (effect.glowAlpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = effect.glowAlpha * 0.35;
+    fillRect(ctx, effect.originX - 2, effect.originY - 8, 60, 14, '#ffd700');
+    ctx.globalAlpha = effect.glowAlpha * 0.15;
+    fillRect(ctx, effect.originX - 6, effect.originY - 14, 68, 24, '#fff176');
+    ctx.restore();
+  }
+
+  // Sparkle particles
+  for (const s of effect.sparkles) {
+    if (s.life <= 0) continue;
+    const alpha = Math.min(1, s.life / (s.maxLife * 0.3)); // fade out in last 30%
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    // Diamond/star shape
+    const sz = s.size * (0.5 + 0.5 * (s.life / s.maxLife));
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y - sz);
+    ctx.lineTo(s.x + sz * 0.6, s.y);
+    ctx.lineTo(s.x, s.y + sz);
+    ctx.lineTo(s.x - sz * 0.6, s.y);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
+
 // --- Convenience: Clear all effects ---
 
 export function clearAllPopups(): void {
