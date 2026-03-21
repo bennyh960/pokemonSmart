@@ -3,13 +3,16 @@
  *
  * Green when >50%, yellow when 25-50%, red when <25%.
  * Smooth animation when HP changes. Shows name, level, and HP text.
+ * Optionally renders an XP bar (player side) and panel backgrounds.
  */
 
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
 
-const BAR_WIDTH = 48;
-const BAR_HEIGHT = 3;
+const BAR_WIDTH = 64;
+const BAR_HEIGHT = 4;
+const XP_BAR_WIDTH = 64;
+const XP_BAR_HEIGHT = 2;
 
 interface HPBarState {
   currentHp: number;
@@ -21,6 +24,10 @@ interface HPBarState {
   y: number;
   /** If true, shows HP numbers (player side). */
   showNumbers: boolean;
+  /** Current XP (player side only). */
+  xp: number;
+  /** XP needed for next level (player side only). */
+  xpToNext: number;
 }
 
 /** Get HP bar color based on percentage. */
@@ -28,6 +35,20 @@ function getHpColor(ratio: number): string {
   if (ratio > 0.5) return '#20d860'; // green
   if (ratio > 0.25) return '#f8c030'; // yellow
   return '#f84038'; // red
+}
+
+/** Draw a panel background (dark box with light border). */
+export function drawPanelBackground(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+): void {
+  fillRect(ctx, x, y, w, h, '#181820');
+  drawRect(ctx, x, y, w, h, '#585858');
+  // Inner highlight
+  drawRect(ctx, x + 1, y + 1, w - 2, h - 2, '#383840');
 }
 
 /** Create an HP bar instance. */
@@ -39,13 +60,21 @@ export function createHPBar(
   x: number,
   y: number,
   showNumbers = true,
+  xp = 0,
+  xpToNext = 0,
 ): HPBarState {
-  return { currentHp: hp, maxHp, displayHp: hp, name, level, x, y, showNumbers };
+  return { currentHp: hp, maxHp, displayHp: hp, name, level, x, y, showNumbers, xp, xpToNext };
 }
 
 /** Set HP and animate towards it. */
 export function setHP(bar: HPBarState, newHp: number): void {
   bar.currentHp = Math.max(0, Math.min(newHp, bar.maxHp));
+}
+
+/** Update XP values on the bar (player side). */
+export function setXP(bar: HPBarState, xp: number, xpToNext: number): void {
+  bar.xp = xp;
+  bar.xpToNext = xpToNext;
 }
 
 /** Update the smooth animation. */
@@ -68,7 +97,7 @@ export function isHPAnimating(bar: HPBarState): boolean {
 
 /** Render the HP bar. */
 export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
-  const { x, y, name, level, displayHp, maxHp, showNumbers } = bar;
+  const { x, y, name, level, displayHp, maxHp, showNumbers, xp, xpToNext } = bar;
 
   // Name and level
   drawText(ctx, name, x, y, { size: 8, color: '#ffffff' });
@@ -103,5 +132,17 @@ export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): voi
       y + 10,
       { size: 8, color: '#ffffff', align: 'right' },
     );
+  }
+
+  // XP bar (player side only)
+  if (showNumbers && xpToNext > 0) {
+    const xpBarX = barX;
+    const xpBarY = barY + BAR_HEIGHT + 4;
+    fillRect(ctx, xpBarX, xpBarY, XP_BAR_WIDTH, XP_BAR_HEIGHT, '#303030');
+    const xpRatio = xpToNext > 0 ? Math.min(xp / xpToNext, 1) : 0;
+    const xpFillWidth = Math.floor(XP_BAR_WIDTH * xpRatio);
+    if (xpFillWidth > 0) {
+      fillRect(ctx, xpBarX, xpBarY, xpFillWidth, XP_BAR_HEIGHT, '#48a0f8');
+    }
   }
 }

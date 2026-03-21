@@ -7,7 +7,7 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js';
-import { createHPBar, updateHPBar, renderHPBar, setHP, isHPAnimating } from '../ui/hp-bar.js';
+import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, isHPAnimating, drawPanelBackground } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
@@ -23,6 +23,8 @@ import { t, isRTL } from '../i18n/i18n.js';
 import { getItem, type ItemDef } from '../data/items.js';
 import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 
+export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
+
 type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LOSE' | 'RUN'
   | 'SELECT_ITEM' | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_NEXT_XP'
@@ -31,6 +33,7 @@ type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
 let pendingTrainerBattle: TrainerBattleData | null = null;
+let pendingBattleContext: BattleContext = 'grass';
 
 export interface TrainerBattleData {
   trainerName: string;
@@ -39,16 +42,18 @@ export interface TrainerBattleData {
   reward: number;
 }
 
-export function setBattleData(playerPokemon: Pokemon, enemyPokemon: Pokemon): void {
+export function setBattleData(playerPokemon: Pokemon, enemyPokemon: Pokemon, context: BattleContext = 'grass'): void {
   pendingPlayer = playerPokemon;
   pendingEnemy = enemyPokemon;
   pendingTrainerBattle = null;
+  pendingBattleContext = context;
 }
 
-export function setTrainerBattleData(playerPokemon: Pokemon, trainerData: TrainerBattleData): void {
+export function setTrainerBattleData(playerPokemon: Pokemon, trainerData: TrainerBattleData, context: BattleContext = 'grass'): void {
   pendingPlayer = playerPokemon;
   pendingEnemy = trainerData.party[0];
   pendingTrainerBattle = trainerData;
+  pendingBattleContext = context;
 }
 
 function calcDamage(atk: Pokemon, def: Pokemon, power: number, moveType: PokemonType): number {
@@ -88,6 +93,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let isTrainerBattle = false;
   let trainerData: TrainerBattleData | null = null;
   let trainerPartyIndex = 0;
+  let battleContext: BattleContext = 'grass';
+  let bgImage: HTMLImageElement | null = null;
 
   function getBattleItems(): { id: string; def: ItemDef; qty: number }[] {
     if (!hasActiveGame()) return [];
@@ -119,7 +126,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function sendOutNextTrainerPokemon(): void {
     trainerPartyIndex++;
     enemy = trainerData!.party[trainerPartyIndex];
-    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 130, 8, false);
+    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 8, 4, false);
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
     textBox = createTextBox([t('battle.trainerSentOut', { name: enemy.name })], isRTL());
@@ -157,8 +164,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       player = (hasActiveGame() && getPlayerData().party[0]) || fallbackPlayer();
       enemy = fallbackEnemy();
     }
-    playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 8, 80, true);
-    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 130, 8, false);
+    battleContext = pendingBattleContext;
+    pendingBattleContext = 'grass';
+    playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 124, 76, true, player.xp, player.xpToNext);
+    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 8, 4, false);
     menu = createBattleMenu(player.moves);
     textBox = null; flash = null; shake = null;
     fade = createFade(true, 0.5); clearAllPopups();
@@ -166,6 +175,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     // Preload Pokemon sprites
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     loadImage(`/sprites/pokemon/back/${player.id}.png`).catch(() => {});
+    // Try to load context-specific background image
+    bgImage = null;
+    loadImage(`/sprites/backgrounds/bg-${battleContext}.jpg`).then(img => {
+      bgImage = img;
+    }).catch(() => { bgImage = null; });
   }
 
   function doAttack(): void {
@@ -175,7 +189,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       enemy.hp = Math.max(0, enemy.hp - dmg);
       setHP(enemyHpBar, enemy.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
-      spawnDamageNumber(`-${dmg}`, 185, 40, '#f84038');
+      spawnDamageNumber(`-${dmg}`, 186, 30, '#f84038');
       audio.playSFX('hit');
       const rtl = isRTL();
       const msgs = [t('battle.usedMove', { name: player.name, move: m.name })];
@@ -198,7 +212,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       player.hp = Math.max(0, player.hp - dmg);
       setHP(playerHpBar, player.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
-      spawnDamageNumber(`-${dmg}`, 50, 80, '#f84038');
+      spawnDamageNumber(`-${dmg}`, 56, 60, '#f84038');
       audio.playSFX('hit');
       const msgs = [t('battle.usedMove', { name: enemy.name, move: m.name })];
       const et = effText(m.type, player.types);
@@ -437,31 +451,43 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       clearScreen(ctx, '#78c850');
       if (shake) applyShake(ctx, shake);
       // Battle background
-      const bgImg = getBattleBackground();
       ctx.imageSmoothingEnabled = false;
-      if (bgImg.complete && bgImg.naturalWidth > 0) {
-        ctx.drawImage(bgImg, 0, 0, 240, 120);
+      if (bgImage && bgImage.complete && bgImage.naturalWidth > 0) {
+        ctx.drawImage(bgImage, 0, 0, 240, 120);
       } else {
-        fillRect(ctx, 0, 0, SCREEN_W, 70, '#98d8a8');
-        fillRect(ctx, 0, 70, SCREEN_W, 50, '#78c850');
+        const bgImg = getBattleBackground();
+        if (bgImg.complete && bgImg.naturalWidth > 0) {
+          ctx.drawImage(bgImg, 0, 0, 240, 120);
+        } else {
+          fillRect(ctx, 0, 0, SCREEN_W, 70, '#98d8a8');
+          fillRect(ctx, 0, 70, SCREEN_W, 50, '#78c850');
+        }
       }
-      // Platforms
-      fillRect(ctx, 140, 55, 80, 8, '#c8b870'); drawRect(ctx, 140, 55, 80, 8, '#a89850');
-      fillRect(ctx, 20, 95, 80, 8, '#c8b870'); drawRect(ctx, 20, 95, 80, 8, '#a89850');
-      // Enemy Pokemon sprite (front)
+      // Enemy platform (right side)
+      fillRect(ctx, 140, 68, 90, 8, '#c8b870'); drawRect(ctx, 140, 68, 90, 8, '#a89850');
+      // Player platform (left side)
+      fillRect(ctx, 8, 100, 90, 8, '#c8b870'); drawRect(ctx, 8, 100, 90, 8, '#a89850');
+      // Enemy Pokemon sprite (front, top-right)
       const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
       if (enemySprite) {
-        ctx.drawImage(enemySprite, 145, -4, 72, 72);
+        ctx.drawImage(enemySprite, 152, 2, 68, 68);
       } else {
-        fillRect(ctx, 165, 20, 32, 32, '#b0a0a0'); drawRect(ctx, 165, 20, 32, 32, '#888888');
+        fillRect(ctx, 168, 18, 36, 36, '#b0a0a0'); drawRect(ctx, 168, 18, 36, 36, '#888888');
       }
-      // Player Pokemon sprite (back)
+      // Player Pokemon sprite (back, bottom-left)
       const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
       if (playerSprite) {
-        ctx.drawImage(playerSprite, 13, 36, 100, 80);
+        ctx.drawImage(playerSprite, 16, 34, 80, 72);
       } else {
-        fillRect(ctx, 35, 60, 40, 36, '#f08030'); drawRect(ctx, 35, 60, 40, 36, '#c06020');
+        fillRect(ctx, 32, 50, 48, 44, '#f08030'); drawRect(ctx, 32, 50, 48, 44, '#c06020');
       }
+      // Info panels — opposite corners from sprites
+      // Enemy info panel (top-left)
+      drawPanelBackground(ctx, 4, 2, 112, 26);
+      // Player info panel (bottom-right)
+      drawPanelBackground(ctx, 120, 74, 116, 40);
+      // Update XP on player bar
+      setXP(playerHpBar, player.xp, player.xpToNext);
       renderHPBar(ctx, enemyHpBar); renderHPBar(ctx, playerHpBar);
       if (shake) resetShake(ctx, shake);
       renderPopups(ctx);

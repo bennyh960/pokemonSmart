@@ -15,7 +15,7 @@ import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
 import { generateWildEncounter, createPokemonFromData } from '../systems/encounter.js';
 import { getPokemon } from '../services/pokemon-data.js';
-import { setBattleData, setTrainerBattleData, type TrainerBattleData } from './battle.js';
+import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
@@ -110,13 +110,26 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
   }
 
+  /** Derive a BattleContext from the current map properties. */
+  function deriveBattleContext(): BattleContext {
+    if (!currentMapData) return 'grass';
+    const tableId = (currentMapData.encounterTableId ?? currentMapData.id ?? '').toLowerCase();
+    if (tableId.includes('cave') || tableId.includes('tunnel')) return 'cave';
+    if (tableId.includes('water') || tableId.includes('sea') || tableId.includes('lake')) return 'water';
+    if (tableId.includes('gym')) return 'gym';
+    if (tableId.includes('elite') || tableId.includes('league')) return 'elite';
+    if (tableId.includes('city') || tableId.includes('town')) return 'city';
+    if (tableId.includes('route') || tableId.includes('path')) return 'route';
+    return 'grass';
+  }
+
   function startEncounterTransition(wildPokemon: Pokemon): void {
     encounterTriggered = true;
     flashTimer = 0;
     flashPhase = 'flash';
     const playerData = getPlayerData();
     const playerPokemon = playerData.party[0];
-    if (playerPokemon) setBattleData(playerPokemon, wildPokemon);
+    if (playerPokemon) setBattleData(playerPokemon, wildPokemon, deriveBattleContext());
   }
 
   /** Check if the player's current tile triggers a map transition. */
@@ -458,7 +471,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const playerData = getPlayerData();
           const playerPokemon = playerData.party[0];
           if (playerPokemon) {
-            setTrainerBattleData(playerPokemon, trainerBattleData);
+            setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext());
             // Reset trainer position back after battle
             ta.trainer.x = ta.originalX;
             ta.trainer.y = ta.originalY;
