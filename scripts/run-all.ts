@@ -81,9 +81,18 @@ async function runWithRetry(task: Task, maxRetries = 2): Promise<void> {
   }
 }
 
-async function main(): Promise<void> {
+async function main(name?: Task["name"]): Promise<void> {
   console.log('=== Pokemon Math Adventure - Data Pipeline ===\n');
   const startTime = Date.now();
+
+  if (name !== undefined) {
+    const task = tasks.find(t => t.name === name);
+    if (task) {
+      console.log(`\n[${tasks.indexOf(task) + 1}/${tasks.length}] ${task.name}...`);
+      await runWithRetry(task);
+      return;
+    }
+  }
 
   for (let i = 0; i < tasks.length; i++) {
     const task = tasks[i];

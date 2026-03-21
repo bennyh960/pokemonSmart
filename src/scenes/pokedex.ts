@@ -15,8 +15,8 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 const SCREEN_W = 240;
 const SCREEN_H = 160;
 const BG_COLOR = '#301818';
-const ENTRY_HEIGHT = 20;
-const VISIBLE_ENTRIES = 6;
+const ENTRY_HEIGHT = 26;
+const VISIBLE_ENTRIES = 5;
 const TOTAL_POKEMON = 251;
 
 const TYPE_COLORS: Record<string, string> = {
@@ -58,6 +58,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       const id = i + 1;
       if (pdex[id]) {
         loadImage(`/sprites/pokemon/front/${id}.png`).catch(() => {});
+        loadImage(`/sprites/pokemon/icons/${id}.png`).catch(() => {});
       }
     }
   }
@@ -163,8 +164,10 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         // Small sprite
         const sprite = getCachedImage(`/sprites/pokemon/front/${id}.png`);
         if (sprite) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(sprite, 24, y - 8, 40, 40);
           ctx.imageSmoothingEnabled = false;
-          ctx.drawImage(sprite, 34, y + 1, 16, 16);
         } else {
           fillRect(ctx, 34, y + 1, 16, 16, '#584040');
         }
@@ -234,9 +237,9 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
     // Large sprite
     const sprite = getCachedImage(`/sprites/pokemon/front/${id}.png`);
-    const spriteX = 8;
-    const spriteY = 22;
-    const spriteSize = 48;
+    const spriteX = 0;
+    const spriteY = 14;
+    const spriteSize = 64;
     fillRect(ctx, spriteX - 1, spriteY - 1, spriteSize + 2, spriteSize + 2, '#402020');
     if (sprite) {
       ctx.imageSmoothingEnabled = false;

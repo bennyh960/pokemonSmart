@@ -445,14 +445,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       // Enemy Pokemon sprite (front)
       const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
       if (enemySprite) {
-        ctx.drawImage(enemySprite, 157, 8, 48, 48);
+        ctx.drawImage(enemySprite, 145, -4, 72, 72);
       } else {
         fillRect(ctx, 165, 20, 32, 32, '#b0a0a0'); drawRect(ctx, 165, 20, 32, 32, '#888888');
       }
       // Player Pokemon sprite (back)
       const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
       if (playerSprite) {
-        ctx.drawImage(playerSprite, 25, 48, 56, 56);
+        ctx.drawImage(playerSprite, 13, 36, 100, 80);
       } else {
         fillRect(ctx, 35, 60, 40, 36, '#f08030'); drawRect(ctx, 35, 60, 40, 36, '#c06020');
       }

@@ -148,7 +148,7 @@ export function createStarterSelectScene(
         const sprite = getCachedImage(`/sprites/pokemon/front/${starter.id}.png`);
         ctx.imageSmoothingEnabled = false;
         if (sprite) {
-          ctx.drawImage(sprite, cx - 16, cy - 16, 32, 32);
+          ctx.drawImage(sprite, cx - 24, cy - 24, 48, 48);
         } else {
           fillRect(ctx, cx - 12, cy - 12, 24, 24, starter.color);
           drawRect(ctx, cx - 12, cy - 12, 24, 24, '#ffffff44');

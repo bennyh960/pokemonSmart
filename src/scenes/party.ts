@@ -58,10 +58,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   function loadPartySprites(): void {
     const party = getParty();
     for (const pokemon of party) {
-      const url = `/sprites/pokemon/front/${pokemon.id}.png`;
-      if (!getCachedImage(url)) {
-        loadImage(url).catch(() => {});
-      }
+      const frontUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
+      const iconUrl = `/sprites/pokemon/icons/${pokemon.id}.png`;
+      if (!getCachedImage(frontUrl)) loadImage(frontUrl).catch(() => {});
+      if (!getCachedImage(iconUrl)) loadImage(iconUrl).catch(() => {});
     }
   }
 
@@ -86,12 +86,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       return;
     }
 
-    // Sprite (24x24 scaled down to fit slot)
+    // Sprite (front sprite scaled for party list)
     const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
     const sprite = getCachedImage(spriteUrl);
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(sprite, SLOT_X - 8, y - 10, 40, 40);
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(sprite, SLOT_X + 2, y - 1, 20, 20);
     } else {
       fillRect(ctx, SLOT_X + 2, y + 1, 18, 18, '#445566');
     }
@@ -153,7 +155,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const sprite = getCachedImage(spriteUrl);
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(sprite, 8, 8, 48, 48);
+      ctx.drawImage(sprite, 0, 0, 64, 64);
     } else {
       fillRect(ctx, 8, 8, 48, 48, '#445566');
     }

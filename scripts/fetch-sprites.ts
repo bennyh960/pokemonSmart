@@ -52,21 +52,16 @@ export async function fetchSprites(spritesDir: string): Promise<{ front: number;
       continue;
     }
 
-    const res = await fetch(`${API_BASE}/pokemon/${id}`);
-    if (!res.ok) throw new Error(`Failed to fetch pokemon ${id}: ${res.status}`);
-    const data = await res.json();
-
-    const gen2 = data.sprites?.versions?.['generation-ii']?.['gold'];
-    const frontUrl = gen2?.front_default ?? data.sprites?.front_default;
-    const backUrl = gen2?.back_default ?? data.sprites?.back_default;
-    const iconUrl = data.sprites?.versions?.['generation-vii']?.['icons']?.front_default
-      ?? data.sprites?.front_default;
+    
+    const frontUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+    const backUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`;
+    const iconUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/${id}.png`;
 
     if (frontUrl && await downloadImage(frontUrl, frontPath)) frontCount++;
     await sleep(50);
     if (backUrl && await downloadImage(backUrl, backPath)) backCount++;
     await sleep(50);
-    if (iconUrl && await downloadImage(iconUrl, iconPath)) iconCount++;
+    // if (iconUrl && await downloadImage(iconUrl, iconPath)) iconCount++;
 
     if (id % 25 === 0 || id === TOTAL_POKEMON) {
       console.log(`  Sprites: ${id}/${TOTAL_POKEMON} (front: ${frontCount}, back: ${backCount}, icons: ${iconCount})`);

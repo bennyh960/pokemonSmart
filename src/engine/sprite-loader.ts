@@ -55,7 +55,7 @@ export async function loadImage(url: string): Promise<HTMLImageElement> {
     loading.add(url);
     const img = new Image();
     img.onload = () => {
-      const final = isSprite ? removeWhiteBackground(img) : img;
+      const final = img;
       imageCache.set(url, final);
       loading.delete(url);
       pending.delete(url);

@@ -8,6 +8,9 @@ import { loadFonts } from './engine/fonts.js';
 import { initLocale } from './i18n/i18n.js';
 import './style.css';
 
+
+
+
 const app = document.getElementById('app');
 if (!app) {
   throw new Error('Could not find #app container element.');
