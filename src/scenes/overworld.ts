@@ -226,6 +226,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
   }
 
+  /** Map NPC spriteType to Showdown trainer sprite name. */
+  const NPC_TO_TRAINER_SPRITE: Record<string, string> = {
+    'trainer-m': 'youngster',
+    'trainer-f': 'lass',
+  };
+
   /** Build TrainerBattleData from a TrainerData NPC. */
   function buildTrainerBattleData(trainer: TrainerData): TrainerBattleData {
     const party = trainer.party.map(p => {
@@ -239,6 +245,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       trainerId: trainer.id,
       party,
       reward: trainer.reward,
+      trainerSprite: NPC_TO_TRAINER_SPRITE[trainer.spriteType],
     };
   }
 

@@ -40,6 +40,7 @@ export interface TrainerBattleData {
   trainerId: string;
   party: Pokemon[];
   reward: number;
+  trainerSprite?: string;  // e.g., 'youngster', 'lass'
 }
 
 export function setBattleData(playerPokemon: Pokemon, enemyPokemon: Pokemon, context: BattleContext = 'grass'): void {
@@ -95,6 +96,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let trainerPartyIndex = 0;
   let battleContext: BattleContext = 'grass';
   let bgImage: HTMLImageElement | null = null;
+  let showTrainerSprite = false;  // Show trainer sprite during intro
 
   function getBattleItems(): { id: string; def: ItemDef; qty: number }[] {
     if (!hasActiveGame()) return [];
@@ -149,12 +151,18 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     isTrainerBattle = false;
     trainerData = null;
     trainerPartyIndex = 0;
+    showTrainerSprite = false;
 
     if (pendingTrainerBattle) {
       isTrainerBattle = true;
       trainerData = pendingTrainerBattle;
       trainerPartyIndex = 0;
+      showTrainerSprite = true;  // Show trainer sprite during initial intro
       pendingTrainerBattle = null;
+      // Preload trainer sprite if available
+      if (trainerData.trainerSprite) {
+        loadImage(`/sprites/trainers/${trainerData.trainerSprite}.png`).catch(() => {});
+      }
     }
 
     if (pendingPlayer && pendingEnemy) {
@@ -271,7 +279,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
       switch (phase) {
         case 'INTRO': {
-          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; phase = 'SELECT_ACTION'; showMainMenu(menu); }
+          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; showTrainerSprite = false; phase = 'SELECT_ACTION'; showMainMenu(menu); }
           break;
         }
         case 'SELECT_ACTION': {
@@ -467,12 +475,25 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       fillRect(ctx, 140, 68, 90, 8, '#c8b870'); drawRect(ctx, 140, 68, 90, 8, '#a89850');
       // Player platform (left side)
       fillRect(ctx, 8, 100, 90, 8, '#c8b870'); drawRect(ctx, 8, 100, 90, 8, '#a89850');
-      // Enemy Pokemon sprite (front, top-right)
-      const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
-      if (enemySprite) {
-        ctx.drawImage(enemySprite, 152, 2, 68, 68);
-      } else {
-        fillRect(ctx, 168, 18, 36, 36, '#b0a0a0'); drawRect(ctx, 168, 18, 36, 36, '#888888');
+      // Trainer sprite during INTRO phase (replaces enemy Pokemon sprite)
+      const showingTrainer = showTrainerSprite && isTrainerBattle && trainerData?.trainerSprite;
+      if (showingTrainer) {
+        const trainerSpriteImg = getCachedImage(`/sprites/trainers/${trainerData!.trainerSprite!}.png`);
+        if (trainerSpriteImg) {
+          ctx.drawImage(trainerSpriteImg, 170, 10, 40, 80);
+        } else {
+          // Fallback: simple silhouette rectangle
+          fillRect(ctx, 175, 15, 30, 60, '#404040');
+        }
+      }
+      // Enemy Pokemon sprite (front, top-right) — hidden when trainer sprite is showing
+      if (!showingTrainer) {
+        const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
+        if (enemySprite) {
+          ctx.drawImage(enemySprite, 152, 2, 68, 68);
+        } else {
+          fillRect(ctx, 168, 18, 36, 36, '#b0a0a0'); drawRect(ctx, 168, 18, 36, 36, '#888888');
+        }
       }
       // Player Pokemon sprite (back, bottom-left)
       const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
@@ -489,6 +510,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       // Update XP on player bar
       setXP(playerHpBar, player.xp, player.xpToNext);
       renderHPBar(ctx, enemyHpBar); renderHPBar(ctx, playerHpBar);
+      // Party Pokeball indicators
+      renderPartyIndicators(ctx);
       if (shake) resetShake(ctx, shake);
       renderPopups(ctx);
       if (flash) renderFlash(ctx, flash);
@@ -498,6 +521,48 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (fade) renderFade(ctx, fade);
     },
   };
+
+  function renderPartyIndicators(ctx: CanvasRenderingContext2D): void {
+    const DOT_SIZE = 4;
+    const DOT_GAP = 2;
+    const ALIVE_COLOR = '#f83838';
+    const FAINTED_COLOR = '#888888';
+
+    // Player party indicators (always shown) — near player info panel
+    if (hasActiveGame()) {
+      const pd = getPlayerData();
+      const partySize = pd.party.length;
+      const playerDotsX = 134;
+      const playerDotsY = 108;
+      for (let i = 0; i < Math.min(partySize, 6); i++) {
+        const pokemon = pd.party[i];
+        const color = pokemon.hp > 0 ? ALIVE_COLOR : FAINTED_COLOR;
+        const cx = playerDotsX + i * (DOT_SIZE + DOT_GAP) + DOT_SIZE / 2;
+        const cy = playerDotsY + DOT_SIZE / 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, DOT_SIZE / 2, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+    }
+
+    // Enemy/trainer party indicators — only for trainer battles, near enemy info panel
+    if (isTrainerBattle && trainerData) {
+      const enemyDotsX = 18;
+      const enemyDotsY = 24;
+      const trainerParty = trainerData.party;
+      for (let i = 0; i < Math.min(trainerParty.length, 6); i++) {
+        const pokemon = trainerParty[i];
+        const color = pokemon.hp > 0 ? ALIVE_COLOR : FAINTED_COLOR;
+        const cx = enemyDotsX + i * (DOT_SIZE + DOT_GAP) + DOT_SIZE / 2;
+        const cy = enemyDotsY + DOT_SIZE / 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, DOT_SIZE / 2, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+    }
+  }
 
   function renderBagMenu(ctx: CanvasRenderingContext2D): void {
     const MENU_Y = 120;
