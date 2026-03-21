@@ -9,7 +9,7 @@ import type { Scene } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
-import { getPokemon } from '../services/pokemon-data.js';
+import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { createPokemonFromData } from '../systems/encounter.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { t, isRTL } from '../i18n/i18n.js';
@@ -18,9 +18,9 @@ import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine
 
 /** Starter definitions: Gen 1 starters with 8 moves each. */
 const STARTERS = [
-  { id: 1, name: 'Bulbasaur', type: 'grass', color: '#78C850', moveIds: [33, 22, 45, 73, 77, 75, 72, 36] },
-  { id: 4, name: 'Charmander', type: 'fire', color: '#F08030', moveIds: [10, 52, 43, 108, 83, 163, 53, 82] },
-  { id: 7, name: 'Squirtle', type: 'water', color: '#6890F0', moveIds: [33, 55, 39, 110, 44, 229, 130, 196] },
+  { id: 1, type: 'grass', color: '#78C850', moveIds: [33, 22, 45, 73, 77, 75, 72, 36] },
+  { id: 4, type: 'fire', color: '#F08030', moveIds: [10, 52, 43, 108, 83, 163, 53, 82] },
+  { id: 7, type: 'water', color: '#6890F0', moveIds: [33, 55, 39, 110, 44, 229, 130, 196] },
 ] as const;
 
 const TYPE_COLORS: Record<string, string> = {
@@ -153,7 +153,7 @@ export function createStarterSelectScene(
         }
 
         // Name
-        drawText(ctx, starter.name, cx, cardY + 46, {
+        drawText(ctx, getPokemonDisplayName(starter.id), cx, cardY + 46, {
           size: 8,
           color: '#ffffff',
           align: 'center',
@@ -187,7 +187,7 @@ export function createStarterSelectScene(
       });
 
       const selected = STARTERS[selectedIndex];
-      drawText(ctx, t('starter.chosen', { name: selected.name }), SCREEN_W / 2, 150, {
+      drawText(ctx, t('starter.chosen', { name: getPokemonDisplayName(selected.id) }), SCREEN_W / 2, 150, {
         size: 8,
         color: '#ffcb05',
         align: 'center',

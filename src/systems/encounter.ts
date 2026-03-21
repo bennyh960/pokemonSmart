@@ -7,7 +7,7 @@
  */
 
 import type { Pokemon, Move, PokemonType, MathDifficulty } from '../types/index.js';
-import { getPokemon, getMove, movePowerToMathDifficulty } from '../services/pokemon-data.js';
+import { getPokemon, getMove, movePowerToMathDifficulty, getPokemonDisplayName } from '../services/pokemon-data.js';
 import type { PokemonData, MoveData } from '../services/pokemon-data.js';
 
 /** A single entry in an encounter table. */
@@ -120,7 +120,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
 
   return {
     id: data.id,
-    name: data.name.charAt(0).toUpperCase() + data.name.slice(1),
+    name: getPokemonDisplayName(data.id),
     level,
     hp,
     maxHp: hp,

@@ -4,6 +4,7 @@
  */
 
 import type { PokemonType, MathDifficulty } from '../types/index.ts';
+import { getLocale } from '../i18n/i18n.ts';
 import pokemonData from '../data/pokemon.json';
 import movesData from '../data/moves.json';
 import typeChartData from '../data/type-chart.json';
@@ -11,9 +12,14 @@ import evolutionData from '../data/evolution-chains.json';
 
 // --- Types matching the JSON shapes ---
 
+export interface LocalizedName {
+  en: string;
+  he: string;
+}
+
 export interface PokemonData {
   id: number;
-  name: string;
+  name: LocalizedName;
   types: string[];
   stats: {
     hp: number;
@@ -44,7 +50,7 @@ export interface TypeChartData {
 
 export interface EvolutionStep {
   id: number;
-  name: string;
+  name: LocalizedName;
   minLevel: number | null;
   trigger: string | null;
   item: string | null;
@@ -59,9 +65,9 @@ export interface EvolutionChainData {
 
 const pokemonById = new Map<number, PokemonData>();
 const pokemonByName = new Map<string, PokemonData>();
-for (const p of pokemonData as PokemonData[]) {
+for (const p of pokemonData as unknown as PokemonData[]) {
   pokemonById.set(p.id, p);
-  pokemonByName.set(p.name.toLowerCase(), p);
+  pokemonByName.set(p.name.en.toLowerCase(), p);
 }
 
 const moveById = new Map<number, MoveData>();
@@ -74,13 +80,25 @@ for (const m of movesData as MoveData[]) {
 const typeChart = typeChartData as TypeChartData;
 
 const evolutionByPokemonId = new Map<number, EvolutionChainData>();
-for (const chain of evolutionData as EvolutionChainData[]) {
+for (const chain of evolutionData as unknown as EvolutionChainData[]) {
   for (const stage of chain.stages) {
     evolutionByPokemonId.set(stage.id, chain);
   }
 }
 
 // --- Public API ---
+
+/** Get localized display name for a Pokemon by ID. Uses current locale. */
+export function getPokemonDisplayName(id: number): string {
+  const data = pokemonById.get(id);
+  if (!data) return 'MissingNo';
+  return data.name[getLocale()];
+}
+
+/** Resolve a LocalizedName to a string using current locale. */
+export function getLocalizedName(name: LocalizedName): string {
+  return name[getLocale()];
+}
 
 export function getPokemon(id: number): PokemonData | undefined {
   return pokemonById.get(id);

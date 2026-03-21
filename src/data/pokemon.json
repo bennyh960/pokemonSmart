@@ -1,7 +1,10 @@
 [
   {
     "id": 1,
-    "name": "bulbasaur",
+    "name": {
+      "en": "Bulbasaur",
+      "he": "בולבזאור"
+    },
     "types": [
       "grass",
       "poison"
@@ -18,7 +21,10 @@
   },
   {
     "id": 2,
-    "name": "ivysaur",
+    "name": {
+      "en": "Ivysaur",
+      "he": "איוויזאור"
+    },
     "types": [
       "grass",
       "poison"
@@ -35,7 +41,10 @@
   },
   {
     "id": 3,
-    "name": "venusaur",
+    "name": {
+      "en": "Venusaur",
+      "he": "ונוזאור"
+    },
     "types": [
       "grass",
       "poison"
@@ -52,7 +61,10 @@
   },
   {
     "id": 4,
-    "name": "charmander",
+    "name": {
+      "en": "Charmander",
+      "he": "צ'רמנדר"
+    },
     "types": [
       "fire"
     ],
@@ -68,7 +80,10 @@
   },
   {
     "id": 5,
-    "name": "charmeleon",
+    "name": {
+      "en": "Charmeleon",
+      "he": "צ'רמיליון"
+    },
     "types": [
       "fire"
     ],
@@ -84,7 +99,10 @@
   },
   {
     "id": 6,
-    "name": "charizard",
+    "name": {
+      "en": "Charizard",
+      "he": "צ'ריזארד"
+    },
     "types": [
       "fire",
       "flying"
@@ -101,7 +119,10 @@
   },
   {
     "id": 7,
-    "name": "squirtle",
+    "name": {
+      "en": "Squirtle",
+      "he": "סקווירטל"
+    },
     "types": [
       "water"
     ],
@@ -117,7 +138,10 @@
   },
   {
     "id": 8,
-    "name": "wartortle",
+    "name": {
+      "en": "Wartortle",
+      "he": "וורטורטל"
+    },
     "types": [
       "water"
     ],
@@ -133,7 +157,10 @@
   },
   {
     "id": 9,
-    "name": "blastoise",
+    "name": {
+      "en": "Blastoise",
+      "he": "בלסטויז"
+    },
     "types": [
       "water"
     ],
@@ -149,7 +176,10 @@
   },
   {
     "id": 10,
-    "name": "caterpie",
+    "name": {
+      "en": "Caterpie",
+      "he": "קטרפי"
+    },
     "types": [
       "bug"
     ],
@@ -165,7 +195,10 @@
   },
   {
     "id": 11,
-    "name": "metapod",
+    "name": {
+      "en": "Metapod",
+      "he": "מטאפוד"
+    },
     "types": [
       "bug"
     ],
@@ -181,7 +214,10 @@
   },
   {
     "id": 12,
-    "name": "butterfree",
+    "name": {
+      "en": "Butterfree",
+      "he": "באטרפרי"
+    },
     "types": [
       "bug",
       "flying"
@@ -198,7 +234,10 @@
   },
   {
     "id": 13,
-    "name": "weedle",
+    "name": {
+      "en": "Weedle",
+      "he": "וידל"
+    },
     "types": [
       "bug",
       "poison"
@@ -215,7 +254,10 @@
   },
   {
     "id": 14,
-    "name": "kakuna",
+    "name": {
+      "en": "Kakuna",
+      "he": "קאקונה"
+    },
     "types": [
       "bug",
       "poison"
@@ -232,7 +274,10 @@
   },
   {
     "id": 15,
-    "name": "beedrill",
+    "name": {
+      "en": "Beedrill",
+      "he": "בידריל"
+    },
     "types": [
       "bug",
       "poison"
@@ -249,7 +294,10 @@
   },
   {
     "id": 16,
-    "name": "pidgey",
+    "name": {
+      "en": "Pidgey",
+      "he": "פידג'י"
+    },
     "types": [
       "normal",
       "flying"
@@ -266,7 +314,10 @@
   },
   {
     "id": 17,
-    "name": "pidgeotto",
+    "name": {
+      "en": "Pidgeotto",
+      "he": "פידג'אוטו"
+    },
     "types": [
       "normal",
       "flying"
@@ -283,7 +334,10 @@
   },
   {
     "id": 18,
-    "name": "pidgeot",
+    "name": {
+      "en": "Pidgeot",
+      "he": "פידג'ט"
+    },
     "types": [
       "normal",
       "flying"
@@ -300,7 +354,10 @@
   },
   {
     "id": 19,
-    "name": "rattata",
+    "name": {
+      "en": "Rattata",
+      "he": "ראטאטה"
+    },
     "types": [
       "normal"
     ],
@@ -316,7 +373,10 @@
   },
   {
     "id": 20,
-    "name": "raticate",
+    "name": {
+      "en": "Raticate",
+      "he": "ראטיקייט"
+    },
     "types": [
       "normal"
     ],
@@ -332,7 +392,10 @@
   },
   {
     "id": 21,
-    "name": "spearow",
+    "name": {
+      "en": "Spearow",
+      "he": "ספירו"
+    },
     "types": [
       "normal",
       "flying"
@@ -349,7 +412,10 @@
   },
   {
     "id": 22,
-    "name": "fearow",
+    "name": {
+      "en": "Fearow",
+      "he": "פירו"
+    },
     "types": [
       "normal",
       "flying"
@@ -366,7 +432,10 @@
   },
   {
     "id": 23,
-    "name": "ekans",
+    "name": {
+      "en": "Ekans",
+      "he": "אקנס"
+    },
     "types": [
       "poison"
     ],
@@ -382,7 +451,10 @@
   },
   {
     "id": 24,
-    "name": "arbok",
+    "name": {
+      "en": "Arbok",
+      "he": "ארבוק"
+    },
     "types": [
       "poison"
     ],
@@ -398,7 +470,10 @@
   },
   {
     "id": 25,
-    "name": "pikachu",
+    "name": {
+      "en": "Pikachu",
+      "he": "פיקאצ'ו"
+    },
     "types": [
       "electric"
     ],
@@ -414,7 +489,10 @@
   },
   {
     "id": 26,
-    "name": "raichu",
+    "name": {
+      "en": "Raichu",
+      "he": "ראיצ'ו"
+    },
     "types": [
       "electric"
     ],
@@ -430,7 +508,10 @@
   },
   {
     "id": 27,
-    "name": "sandshrew",
+    "name": {
+      "en": "Sandshrew",
+      "he": "סנדשרו"
+    },
     "types": [
       "ground"
     ],
@@ -446,7 +527,10 @@
   },
   {
     "id": 28,
-    "name": "sandslash",
+    "name": {
+      "en": "Sandslash",
+      "he": "סנדסלאש"
+    },
     "types": [
       "ground"
     ],
@@ -462,7 +546,10 @@
   },
   {
     "id": 29,
-    "name": "nidoran-f",
+    "name": {
+      "en": "Nidoran-f",
+      "he": "נידוראן"
+    },
     "types": [
       "poison"
     ],
@@ -478,7 +565,10 @@
   },
   {
     "id": 30,
-    "name": "nidorina",
+    "name": {
+      "en": "Nidorina",
+      "he": "נידורינה"
+    },
     "types": [
       "poison"
     ],
@@ -494,7 +584,10 @@
   },
   {
     "id": 31,
-    "name": "nidoqueen",
+    "name": {
+      "en": "Nidoqueen",
+      "he": "נידוקווין"
+    },
     "types": [
       "poison",
       "ground"
@@ -511,7 +604,10 @@
   },
   {
     "id": 32,
-    "name": "nidoran-m",
+    "name": {
+      "en": "Nidoran-m",
+      "he": "נידוראן"
+    },
     "types": [
       "poison"
     ],
@@ -527,7 +623,10 @@
   },
   {
     "id": 33,
-    "name": "nidorino",
+    "name": {
+      "en": "Nidorino",
+      "he": "נידורינו"
+    },
     "types": [
       "poison"
     ],
@@ -543,7 +642,10 @@
   },
   {
     "id": 34,
-    "name": "nidoking",
+    "name": {
+      "en": "Nidoking",
+      "he": "נידוקינג"
+    },
     "types": [
       "poison",
       "ground"
@@ -560,7 +662,10 @@
   },
   {
     "id": 35,
-    "name": "clefairy",
+    "name": {
+      "en": "Clefairy",
+      "he": "קלפיירי"
+    },
     "types": [
       "fairy"
     ],
@@ -576,7 +681,10 @@
   },
   {
     "id": 36,
-    "name": "clefable",
+    "name": {
+      "en": "Clefable",
+      "he": "קלפייבל"
+    },
     "types": [
       "fairy"
     ],
@@ -592,7 +700,10 @@
   },
   {
     "id": 37,
-    "name": "vulpix",
+    "name": {
+      "en": "Vulpix",
+      "he": "וולפיקס"
+    },
     "types": [
       "fire"
     ],
@@ -608,7 +719,10 @@
   },
   {
     "id": 38,
-    "name": "ninetales",
+    "name": {
+      "en": "Ninetales",
+      "he": "ניינטיילס"
+    },
     "types": [
       "fire"
     ],
@@ -624,7 +738,10 @@
   },
   {
     "id": 39,
-    "name": "jigglypuff",
+    "name": {
+      "en": "Jigglypuff",
+      "he": "ג'יגליפאף"
+    },
     "types": [
       "normal",
       "fairy"
@@ -641,7 +758,10 @@
   },
   {
     "id": 40,
-    "name": "wigglytuff",
+    "name": {
+      "en": "Wigglytuff",
+      "he": "וויגליטאף"
+    },
     "types": [
       "normal",
       "fairy"
@@ -658,7 +778,10 @@
   },
   {
     "id": 41,
-    "name": "zubat",
+    "name": {
+      "en": "Zubat",
+      "he": "זובאט"
+    },
     "types": [
       "poison",
       "flying"
@@ -675,7 +798,10 @@
   },
   {
     "id": 42,
-    "name": "golbat",
+    "name": {
+      "en": "Golbat",
+      "he": "גולבאט"
+    },
     "types": [
       "poison",
       "flying"
@@ -692,7 +818,10 @@
   },
   {
     "id": 43,
-    "name": "oddish",
+    "name": {
+      "en": "Oddish",
+      "he": "אודיש"
+    },
     "types": [
       "grass",
       "poison"
@@ -709,7 +838,10 @@
   },
   {
     "id": 44,
-    "name": "gloom",
+    "name": {
+      "en": "Gloom",
+      "he": "גלום"
+    },
     "types": [
       "grass",
       "poison"
@@ -726,7 +858,10 @@
   },
   {
     "id": 45,
-    "name": "vileplume",
+    "name": {
+      "en": "Vileplume",
+      "he": "ויילפלום"
+    },
     "types": [
       "grass",
       "poison"
@@ -743,7 +878,10 @@
   },
   {
     "id": 46,
-    "name": "paras",
+    "name": {
+      "en": "Paras",
+      "he": "פאראס"
+    },
     "types": [
       "bug",
       "grass"
@@ -760,7 +898,10 @@
   },
   {
     "id": 47,
-    "name": "parasect",
+    "name": {
+      "en": "Parasect",
+      "he": "פאראסקט"
+    },
     "types": [
       "bug",
       "grass"
@@ -777,7 +918,10 @@
   },
   {
     "id": 48,
-    "name": "venonat",
+    "name": {
+      "en": "Venonat",
+      "he": "ונונאט"
+    },
     "types": [
       "bug",
       "poison"
@@ -794,7 +938,10 @@
   },
   {
     "id": 49,
-    "name": "venomoth",
+    "name": {
+      "en": "Venomoth",
+      "he": "ונומות'"
+    },
     "types": [
       "bug",
       "poison"
@@ -811,7 +958,10 @@
   },
   {
     "id": 50,
-    "name": "diglett",
+    "name": {
+      "en": "Diglett",
+      "he": "דיגלט"
+    },
     "types": [
       "ground"
     ],
@@ -827,7 +977,10 @@
   },
   {
     "id": 51,
-    "name": "dugtrio",
+    "name": {
+      "en": "Dugtrio",
+      "he": "דאגטריו"
+    },
     "types": [
       "ground"
     ],
@@ -843,7 +996,10 @@
   },
   {
     "id": 52,
-    "name": "meowth",
+    "name": {
+      "en": "Meowth",
+      "he": "מיאות'"
+    },
     "types": [
       "normal"
     ],
@@ -859,7 +1015,10 @@
   },
   {
     "id": 53,
-    "name": "persian",
+    "name": {
+      "en": "Persian",
+      "he": "פרשיאן"
+    },
     "types": [
       "normal"
     ],
@@ -875,7 +1034,10 @@
   },
   {
     "id": 54,
-    "name": "psyduck",
+    "name": {
+      "en": "Psyduck",
+      "he": "סיידאק"
+    },
     "types": [
       "water"
     ],
@@ -891,7 +1053,10 @@
   },
   {
     "id": 55,
-    "name": "golduck",
+    "name": {
+      "en": "Golduck",
+      "he": "גולדאק"
+    },
     "types": [
       "water"
     ],
@@ -907,7 +1072,10 @@
   },
   {
     "id": 56,
-    "name": "mankey",
+    "name": {
+      "en": "Mankey",
+      "he": "מאנקי"
+    },
     "types": [
       "fighting"
     ],
@@ -923,7 +1091,10 @@
   },
   {
     "id": 57,
-    "name": "primeape",
+    "name": {
+      "en": "Primeape",
+      "he": "פריימייפ"
+    },
     "types": [
       "fighting"
     ],
@@ -939,7 +1110,10 @@
   },
   {
     "id": 58,
-    "name": "growlithe",
+    "name": {
+      "en": "Growlithe",
+      "he": "גראוליט'"
+    },
     "types": [
       "fire"
     ],
@@ -955,7 +1129,10 @@
   },
   {
     "id": 59,
-    "name": "arcanine",
+    "name": {
+      "en": "Arcanine",
+      "he": "ארקניין"
+    },
     "types": [
       "fire"
     ],
@@ -971,7 +1148,10 @@
   },
   {
     "id": 60,
-    "name": "poliwag",
+    "name": {
+      "en": "Poliwag",
+      "he": "פוליוואג"
+    },
     "types": [
       "water"
     ],
@@ -987,7 +1167,10 @@
   },
   {
     "id": 61,
-    "name": "poliwhirl",
+    "name": {
+      "en": "Poliwhirl",
+      "he": "פוליווירל"
+    },
     "types": [
       "water"
     ],
@@ -1003,7 +1186,10 @@
   },
   {
     "id": 62,
-    "name": "poliwrath",
+    "name": {
+      "en": "Poliwrath",
+      "he": "פוליראט'"
+    },
     "types": [
       "water",
       "fighting"
@@ -1020,7 +1206,10 @@
   },
   {
     "id": 63,
-    "name": "abra",
+    "name": {
+      "en": "Abra",
+      "he": "אברה"
+    },
     "types": [
       "psychic"
     ],
@@ -1036,7 +1225,10 @@
   },
   {
     "id": 64,
-    "name": "kadabra",
+    "name": {
+      "en": "Kadabra",
+      "he": "קדברה"
+    },
     "types": [
       "psychic"
     ],
@@ -1052,7 +1244,10 @@
   },
   {
     "id": 65,
-    "name": "alakazam",
+    "name": {
+      "en": "Alakazam",
+      "he": "אלקזם"
+    },
     "types": [
       "psychic"
     ],
@@ -1068,7 +1263,10 @@
   },
   {
     "id": 66,
-    "name": "machop",
+    "name": {
+      "en": "Machop",
+      "he": "מאצ'ופ"
+    },
     "types": [
       "fighting"
     ],
@@ -1084,7 +1282,10 @@
   },
   {
     "id": 67,
-    "name": "machoke",
+    "name": {
+      "en": "Machoke",
+      "he": "מאצ'וק"
+    },
     "types": [
       "fighting"
     ],
@@ -1100,7 +1301,10 @@
   },
   {
     "id": 68,
-    "name": "machamp",
+    "name": {
+      "en": "Machamp",
+      "he": "מאצ'אמפ"
+    },
     "types": [
       "fighting"
     ],
@@ -1116,7 +1320,10 @@
   },
   {
     "id": 69,
-    "name": "bellsprout",
+    "name": {
+      "en": "Bellsprout",
+      "he": "בלספראוט"
+    },
     "types": [
       "grass",
       "poison"
@@ -1133,7 +1340,10 @@
   },
   {
     "id": 70,
-    "name": "weepinbell",
+    "name": {
+      "en": "Weepinbell",
+      "he": "וויפינבל"
+    },
     "types": [
       "grass",
       "poison"
@@ -1150,7 +1360,10 @@
   },
   {
     "id": 71,
-    "name": "victreebel",
+    "name": {
+      "en": "Victreebel",
+      "he": "ויקטריבל"
+    },
     "types": [
       "grass",
       "poison"
@@ -1167,7 +1380,10 @@
   },
   {
     "id": 72,
-    "name": "tentacool",
+    "name": {
+      "en": "Tentacool",
+      "he": "טנטאקול"
+    },
     "types": [
       "water",
       "poison"
@@ -1184,7 +1400,10 @@
   },
   {
     "id": 73,
-    "name": "tentacruel",
+    "name": {
+      "en": "Tentacruel",
+      "he": "טנטאקרואל"
+    },
     "types": [
       "water",
       "poison"
@@ -1201,7 +1420,10 @@
   },
   {
     "id": 74,
-    "name": "geodude",
+    "name": {
+      "en": "Geodude",
+      "he": "ג'יאודוד"
+    },
     "types": [
       "rock",
       "ground"
@@ -1218,7 +1440,10 @@
   },
   {
     "id": 75,
-    "name": "graveler",
+    "name": {
+      "en": "Graveler",
+      "he": "גרוולר"
+    },
     "types": [
       "rock",
       "ground"
@@ -1235,7 +1460,10 @@
   },
   {
     "id": 76,
-    "name": "golem",
+    "name": {
+      "en": "Golem",
+      "he": "גולם"
+    },
     "types": [
       "rock",
       "ground"
@@ -1252,7 +1480,10 @@
   },
   {
     "id": 77,
-    "name": "ponyta",
+    "name": {
+      "en": "Ponyta",
+      "he": "פוניטה"
+    },
     "types": [
       "fire"
     ],
@@ -1268,7 +1499,10 @@
   },
   {
     "id": 78,
-    "name": "rapidash",
+    "name": {
+      "en": "Rapidash",
+      "he": "רפידאש"
+    },
     "types": [
       "fire"
     ],
@@ -1284,7 +1518,10 @@
   },
   {
     "id": 79,
-    "name": "slowpoke",
+    "name": {
+      "en": "Slowpoke",
+      "he": "סלופוק"
+    },
     "types": [
       "water",
       "psychic"
@@ -1301,7 +1538,10 @@
   },
   {
     "id": 80,
-    "name": "slowbro",
+    "name": {
+      "en": "Slowbro",
+      "he": "סלוברו"
+    },
     "types": [
       "water",
       "psychic"
@@ -1318,7 +1558,10 @@
   },
   {
     "id": 81,
-    "name": "magnemite",
+    "name": {
+      "en": "Magnemite",
+      "he": "מגנמייט"
+    },
     "types": [
       "electric",
       "steel"
@@ -1335,7 +1578,10 @@
   },
   {
     "id": 82,
-    "name": "magneton",
+    "name": {
+      "en": "Magneton",
+      "he": "מגנטון"
+    },
     "types": [
       "electric",
       "steel"
@@ -1352,7 +1598,10 @@
   },
   {
     "id": 83,
-    "name": "farfetchd",
+    "name": {
+      "en": "Farfetchd",
+      "he": "פארפצ'ד"
+    },
     "types": [
       "normal",
       "flying"
@@ -1369,7 +1618,10 @@
   },
   {
     "id": 84,
-    "name": "doduo",
+    "name": {
+      "en": "Doduo",
+      "he": "דודואו"
+    },
     "types": [
       "normal",
       "flying"
@@ -1386,7 +1638,10 @@
   },
   {
     "id": 85,
-    "name": "dodrio",
+    "name": {
+      "en": "Dodrio",
+      "he": "דודריו"
+    },
     "types": [
       "normal",
       "flying"
@@ -1403,7 +1658,10 @@
   },
   {
     "id": 86,
-    "name": "seel",
+    "name": {
+      "en": "Seel",
+      "he": "סיל"
+    },
     "types": [
       "water"
     ],
@@ -1419,7 +1677,10 @@
   },
   {
     "id": 87,
-    "name": "dewgong",
+    "name": {
+      "en": "Dewgong",
+      "he": "דיוגונג"
+    },
     "types": [
       "water",
       "ice"
@@ -1436,7 +1697,10 @@
   },
   {
     "id": 88,
-    "name": "grimer",
+    "name": {
+      "en": "Grimer",
+      "he": "גריימר"
+    },
     "types": [
       "poison"
     ],
@@ -1452,7 +1716,10 @@
   },
   {
     "id": 89,
-    "name": "muk",
+    "name": {
+      "en": "Muk",
+      "he": "מאק"
+    },
     "types": [
       "poison"
     ],
@@ -1468,7 +1735,10 @@
   },
   {
     "id": 90,
-    "name": "shellder",
+    "name": {
+      "en": "Shellder",
+      "he": "שלדר"
+    },
     "types": [
       "water"
     ],
@@ -1484,7 +1754,10 @@
   },
   {
     "id": 91,
-    "name": "cloyster",
+    "name": {
+      "en": "Cloyster",
+      "he": "קלויסטר"
+    },
     "types": [
       "water",
       "ice"
@@ -1501,7 +1774,10 @@
   },
   {
     "id": 92,
-    "name": "gastly",
+    "name": {
+      "en": "Gastly",
+      "he": "גאסטלי"
+    },
     "types": [
       "ghost",
       "poison"
@@ -1518,7 +1794,10 @@
   },
   {
     "id": 93,
-    "name": "haunter",
+    "name": {
+      "en": "Haunter",
+      "he": "האנטר"
+    },
     "types": [
       "ghost",
       "poison"
@@ -1535,7 +1814,10 @@
   },
   {
     "id": 94,
-    "name": "gengar",
+    "name": {
+      "en": "Gengar",
+      "he": "גנגאר"
+    },
     "types": [
       "ghost",
       "poison"
@@ -1552,7 +1834,10 @@
   },
   {
     "id": 95,
-    "name": "onix",
+    "name": {
+      "en": "Onix",
+      "he": "אוניקס"
+    },
     "types": [
       "rock",
       "ground"
@@ -1569,7 +1854,10 @@
   },
   {
     "id": 96,
-    "name": "drowzee",
+    "name": {
+      "en": "Drowzee",
+      "he": "דראוזי"
+    },
     "types": [
       "psychic"
     ],
@@ -1585,7 +1873,10 @@
   },
   {
     "id": 97,
-    "name": "hypno",
+    "name": {
+      "en": "Hypno",
+      "he": "היפנו"
+    },
     "types": [
       "psychic"
     ],
@@ -1601,7 +1892,10 @@
   },
   {
     "id": 98,
-    "name": "krabby",
+    "name": {
+      "en": "Krabby",
+      "he": "קראבי"
+    },
     "types": [
       "water"
     ],
@@ -1617,7 +1911,10 @@
   },
   {
     "id": 99,
-    "name": "kingler",
+    "name": {
+      "en": "Kingler",
+      "he": "קינגלר"
+    },
     "types": [
       "water"
     ],
@@ -1633,7 +1930,10 @@
   },
   {
     "id": 100,
-    "name": "voltorb",
+    "name": {
+      "en": "Voltorb",
+      "he": "וולטורב"
+    },
     "types": [
       "electric"
     ],
@@ -1649,7 +1949,10 @@
   },
   {
     "id": 101,
-    "name": "electrode",
+    "name": {
+      "en": "Electrode",
+      "he": "אלקטרוד"
+    },
     "types": [
       "electric"
     ],
@@ -1665,7 +1968,10 @@
   },
   {
     "id": 102,
-    "name": "exeggcute",
+    "name": {
+      "en": "Exeggcute",
+      "he": "אקסגקיוט"
+    },
     "types": [
       "grass",
       "psychic"
@@ -1682,7 +1988,10 @@
   },
   {
     "id": 103,
-    "name": "exeggutor",
+    "name": {
+      "en": "Exeggutor",
+      "he": "אקסגיוטור"
+    },
     "types": [
       "grass",
       "psychic"
@@ -1699,7 +2008,10 @@
   },
   {
     "id": 104,
-    "name": "cubone",
+    "name": {
+      "en": "Cubone",
+      "he": "קיובון"
+    },
     "types": [
       "ground"
     ],
@@ -1715,7 +2027,10 @@
   },
   {
     "id": 105,
-    "name": "marowak",
+    "name": {
+      "en": "Marowak",
+      "he": "מארוואק"
+    },
     "types": [
       "ground"
     ],
@@ -1731,7 +2046,10 @@
   },
   {
     "id": 106,
-    "name": "hitmonlee",
+    "name": {
+      "en": "Hitmonlee",
+      "he": "היטמונלי"
+    },
     "types": [
       "fighting"
     ],
@@ -1747,7 +2065,10 @@
   },
   {
     "id": 107,
-    "name": "hitmonchan",
+    "name": {
+      "en": "Hitmonchan",
+      "he": "היטמונצ'אן"
+    },
     "types": [
       "fighting"
     ],
@@ -1763,7 +2084,10 @@
   },
   {
     "id": 108,
-    "name": "lickitung",
+    "name": {
+      "en": "Lickitung",
+      "he": "ליקיטאנג"
+    },
     "types": [
       "normal"
     ],
@@ -1779,7 +2103,10 @@
   },
   {
     "id": 109,
-    "name": "koffing",
+    "name": {
+      "en": "Koffing",
+      "he": "קופינג"
+    },
     "types": [
       "poison"
     ],
@@ -1795,7 +2122,10 @@
   },
   {
     "id": 110,
-    "name": "weezing",
+    "name": {
+      "en": "Weezing",
+      "he": "וויזינג"
+    },
     "types": [
       "poison"
     ],
@@ -1811,7 +2141,10 @@
   },
   {
     "id": 111,
-    "name": "rhyhorn",
+    "name": {
+      "en": "Rhyhorn",
+      "he": "ריהורן"
+    },
     "types": [
       "ground",
       "rock"
@@ -1828,7 +2161,10 @@
   },
   {
     "id": 112,
-    "name": "rhydon",
+    "name": {
+      "en": "Rhydon",
+      "he": "ריידון"
+    },
     "types": [
       "ground",
       "rock"
@@ -1845,7 +2181,10 @@
   },
   {
     "id": 113,
-    "name": "chansey",
+    "name": {
+      "en": "Chansey",
+      "he": "צ'נסי"
+    },
     "types": [
       "normal"
     ],
@@ -1861,7 +2200,10 @@
   },
   {
     "id": 114,
-    "name": "tangela",
+    "name": {
+      "en": "Tangela",
+      "he": "טנג'לה"
+    },
     "types": [
       "grass"
     ],
@@ -1877,7 +2219,10 @@
   },
   {
     "id": 115,
-    "name": "kangaskhan",
+    "name": {
+      "en": "Kangaskhan",
+      "he": "קנגסקאן"
+    },
     "types": [
       "normal"
     ],
@@ -1893,7 +2238,10 @@
   },
   {
     "id": 116,
-    "name": "horsea",
+    "name": {
+      "en": "Horsea",
+      "he": "הורסי"
+    },
     "types": [
       "water"
     ],
@@ -1909,7 +2257,10 @@
   },
   {
     "id": 117,
-    "name": "seadra",
+    "name": {
+      "en": "Seadra",
+      "he": "סידרה"
+    },
     "types": [
       "water"
     ],
@@ -1925,7 +2276,10 @@
   },
   {
     "id": 118,
-    "name": "goldeen",
+    "name": {
+      "en": "Goldeen",
+      "he": "גולדין"
+    },
     "types": [
       "water"
     ],
@@ -1941,7 +2295,10 @@
   },
   {
     "id": 119,
-    "name": "seaking",
+    "name": {
+      "en": "Seaking",
+      "he": "סיקינג"
+    },
     "types": [
       "water"
     ],
@@ -1957,7 +2314,10 @@
   },
   {
     "id": 120,
-    "name": "staryu",
+    "name": {
+      "en": "Staryu",
+      "he": "סטארו"
+    },
     "types": [
       "water"
     ],
@@ -1973,7 +2333,10 @@
   },
   {
     "id": 121,
-    "name": "starmie",
+    "name": {
+      "en": "Starmie",
+      "he": "סטארמי"
+    },
     "types": [
       "water",
       "psychic"
@@ -1990,7 +2353,10 @@
   },
   {
     "id": 122,
-    "name": "mr-mime",
+    "name": {
+      "en": "Mr-mime",
+      "he": "מר מיים"
+    },
     "types": [
       "psychic",
       "fairy"
@@ -2007,7 +2373,10 @@
   },
   {
     "id": 123,
-    "name": "scyther",
+    "name": {
+      "en": "Scyther",
+      "he": "סייט'ר"
+    },
     "types": [
       "bug",
       "flying"
@@ -2024,7 +2393,10 @@
   },
   {
     "id": 124,
-    "name": "jynx",
+    "name": {
+      "en": "Jynx",
+      "he": "ג'ינקס"
+    },
     "types": [
       "ice",
       "psychic"
@@ -2041,7 +2413,10 @@
   },
   {
     "id": 125,
-    "name": "electabuzz",
+    "name": {
+      "en": "Electabuzz",
+      "he": "אלקטבאז"
+    },
     "types": [
       "electric"
     ],
@@ -2057,7 +2432,10 @@
   },
   {
     "id": 126,
-    "name": "magmar",
+    "name": {
+      "en": "Magmar",
+      "he": "מגמר"
+    },
     "types": [
       "fire"
     ],
@@ -2073,7 +2451,10 @@
   },
   {
     "id": 127,
-    "name": "pinsir",
+    "name": {
+      "en": "Pinsir",
+      "he": "פינסיר"
+    },
     "types": [
       "bug"
     ],
@@ -2089,7 +2470,10 @@
   },
   {
     "id": 128,
-    "name": "tauros",
+    "name": {
+      "en": "Tauros",
+      "he": "טאורוס"
+    },
     "types": [
       "normal"
     ],
@@ -2105,7 +2489,10 @@
   },
   {
     "id": 129,
-    "name": "magikarp",
+    "name": {
+      "en": "Magikarp",
+      "he": "מג'יקארפ"
+    },
     "types": [
       "water"
     ],
@@ -2121,7 +2508,10 @@
   },
   {
     "id": 130,
-    "name": "gyarados",
+    "name": {
+      "en": "Gyarados",
+      "he": "גיאראדוס"
+    },
     "types": [
       "water",
       "flying"
@@ -2138,7 +2528,10 @@
   },
   {
     "id": 131,
-    "name": "lapras",
+    "name": {
+      "en": "Lapras",
+      "he": "לפראס"
+    },
     "types": [
       "water",
       "ice"
@@ -2155,7 +2548,10 @@
   },
   {
     "id": 132,
-    "name": "ditto",
+    "name": {
+      "en": "Ditto",
+      "he": "דיטו"
+    },
     "types": [
       "normal"
     ],
@@ -2171,7 +2567,10 @@
   },
   {
     "id": 133,
-    "name": "eevee",
+    "name": {
+      "en": "Eevee",
+      "he": "איווי"
+    },
     "types": [
       "normal"
     ],
@@ -2187,7 +2586,10 @@
   },
   {
     "id": 134,
-    "name": "vaporeon",
+    "name": {
+      "en": "Vaporeon",
+      "he": "ואפוריאון"
+    },
     "types": [
       "water"
     ],
@@ -2203,7 +2605,10 @@
   },
   {
     "id": 135,
-    "name": "jolteon",
+    "name": {
+      "en": "Jolteon",
+      "he": "ג'ולטיאון"
+    },
     "types": [
       "electric"
     ],
@@ -2219,7 +2624,10 @@
   },
   {
     "id": 136,
-    "name": "flareon",
+    "name": {
+      "en": "Flareon",
+      "he": "פלאריאון"
+    },
     "types": [
       "fire"
     ],
@@ -2235,7 +2643,10 @@
   },
   {
     "id": 137,
-    "name": "porygon",
+    "name": {
+      "en": "Porygon",
+      "he": "פוריגון"
+    },
     "types": [
       "normal"
     ],
@@ -2251,7 +2662,10 @@
   },
   {
     "id": 138,
-    "name": "omanyte",
+    "name": {
+      "en": "Omanyte",
+      "he": "אומנייט"
+    },
     "types": [
       "rock",
       "water"
@@ -2268,7 +2682,10 @@
   },
   {
     "id": 139,
-    "name": "omastar",
+    "name": {
+      "en": "Omastar",
+      "he": "אומסטאר"
+    },
     "types": [
       "rock",
       "water"
@@ -2285,7 +2702,10 @@
   },
   {
     "id": 140,
-    "name": "kabuto",
+    "name": {
+      "en": "Kabuto",
+      "he": "קבוטו"
+    },
     "types": [
       "rock",
       "water"
@@ -2302,7 +2722,10 @@
   },
   {
     "id": 141,
-    "name": "kabutops",
+    "name": {
+      "en": "Kabutops",
+      "he": "קבוטופס"
+    },
     "types": [
       "rock",
       "water"
@@ -2319,7 +2742,10 @@
   },
   {
     "id": 142,
-    "name": "aerodactyl",
+    "name": {
+      "en": "Aerodactyl",
+      "he": "אירודקטיל"
+    },
     "types": [
       "rock",
       "flying"
@@ -2336,7 +2762,10 @@
   },
   {
     "id": 143,
-    "name": "snorlax",
+    "name": {
+      "en": "Snorlax",
+      "he": "סנורלקס"
+    },
     "types": [
       "normal"
     ],
@@ -2352,7 +2781,10 @@
   },
   {
     "id": 144,
-    "name": "articuno",
+    "name": {
+      "en": "Articuno",
+      "he": "ארטיקונו"
+    },
     "types": [
       "ice",
       "flying"
@@ -2369,7 +2801,10 @@
   },
   {
     "id": 145,
-    "name": "zapdos",
+    "name": {
+      "en": "Zapdos",
+      "he": "זאפדוס"
+    },
     "types": [
       "electric",
       "flying"
@@ -2386,7 +2821,10 @@
   },
   {
     "id": 146,
-    "name": "moltres",
+    "name": {
+      "en": "Moltres",
+      "he": "מולטרס"
+    },
     "types": [
       "fire",
       "flying"
@@ -2403,7 +2841,10 @@
   },
   {
     "id": 147,
-    "name": "dratini",
+    "name": {
+      "en": "Dratini",
+      "he": "דרטיני"
+    },
     "types": [
       "dragon"
     ],
@@ -2419,7 +2860,10 @@
   },
   {
     "id": 148,
-    "name": "dragonair",
+    "name": {
+      "en": "Dragonair",
+      "he": "דרגונאייר"
+    },
     "types": [
       "dragon"
     ],
@@ -2435,7 +2879,10 @@
   },
   {
     "id": 149,
-    "name": "dragonite",
+    "name": {
+      "en": "Dragonite",
+      "he": "דרגונייט"
+    },
     "types": [
       "dragon",
       "flying"
@@ -2452,7 +2899,10 @@
   },
   {
     "id": 150,
-    "name": "mewtwo",
+    "name": {
+      "en": "Mewtwo",
+      "he": "מיוטו"
+    },
     "types": [
       "psychic"
     ],
@@ -2468,7 +2918,10 @@
   },
   {
     "id": 151,
-    "name": "mew",
+    "name": {
+      "en": "Mew",
+      "he": "מיו"
+    },
     "types": [
       "psychic"
     ],
@@ -2484,7 +2937,10 @@
   },
   {
     "id": 152,
-    "name": "chikorita",
+    "name": {
+      "en": "Chikorita",
+      "he": "צ'יקוריטה"
+    },
     "types": [
       "grass"
     ],
@@ -2500,7 +2956,10 @@
   },
   {
     "id": 153,
-    "name": "bayleef",
+    "name": {
+      "en": "Bayleef",
+      "he": "ביילף"
+    },
     "types": [
       "grass"
     ],
@@ -2516,7 +2975,10 @@
   },
   {
     "id": 154,
-    "name": "meganium",
+    "name": {
+      "en": "Meganium",
+      "he": "מגניום"
+    },
     "types": [
       "grass"
     ],
@@ -2532,7 +2994,10 @@
   },
   {
     "id": 155,
-    "name": "cyndaquil",
+    "name": {
+      "en": "Cyndaquil",
+      "he": "סינדקוויל"
+    },
     "types": [
       "fire"
     ],
@@ -2548,7 +3013,10 @@
   },
   {
     "id": 156,
-    "name": "quilava",
+    "name": {
+      "en": "Quilava",
+      "he": "קווילאווה"
+    },
     "types": [
       "fire"
     ],
@@ -2564,7 +3032,10 @@
   },
   {
     "id": 157,
-    "name": "typhlosion",
+    "name": {
+      "en": "Typhlosion",
+      "he": "טייפלוז'ן"
+    },
     "types": [
       "fire"
     ],
@@ -2580,7 +3051,10 @@
   },
   {
     "id": 158,
-    "name": "totodile",
+    "name": {
+      "en": "Totodile",
+      "he": "טוטודייל"
+    },
     "types": [
       "water"
     ],
@@ -2596,7 +3070,10 @@
   },
   {
     "id": 159,
-    "name": "croconaw",
+    "name": {
+      "en": "Croconaw",
+      "he": "קרוקונאו"
+    },
     "types": [
       "water"
     ],
@@ -2612,7 +3089,10 @@
   },
   {
     "id": 160,
-    "name": "feraligatr",
+    "name": {
+      "en": "Feraligatr",
+      "he": "פראליגייטר"
+    },
     "types": [
       "water"
     ],
@@ -2628,7 +3108,10 @@
   },
   {
     "id": 161,
-    "name": "sentret",
+    "name": {
+      "en": "Sentret",
+      "he": "סנטרט"
+    },
     "types": [
       "normal"
     ],
@@ -2644,7 +3127,10 @@
   },
   {
     "id": 162,
-    "name": "furret",
+    "name": {
+      "en": "Furret",
+      "he": "פארט"
+    },
     "types": [
       "normal"
     ],
@@ -2660,7 +3146,10 @@
   },
   {
     "id": 163,
-    "name": "hoothoot",
+    "name": {
+      "en": "Hoothoot",
+      "he": "הותהוט"
+    },
     "types": [
       "normal",
       "flying"
@@ -2677,7 +3166,10 @@
   },
   {
     "id": 164,
-    "name": "noctowl",
+    "name": {
+      "en": "Noctowl",
+      "he": "נוקטאול"
+    },
     "types": [
       "normal",
       "flying"
@@ -2694,7 +3186,10 @@
   },
   {
     "id": 165,
-    "name": "ledyba",
+    "name": {
+      "en": "Ledyba",
+      "he": "לדיבה"
+    },
     "types": [
       "bug",
       "flying"
@@ -2711,7 +3206,10 @@
   },
   {
     "id": 166,
-    "name": "ledian",
+    "name": {
+      "en": "Ledian",
+      "he": "לדיאן"
+    },
     "types": [
       "bug",
       "flying"
@@ -2728,7 +3226,10 @@
   },
   {
     "id": 167,
-    "name": "spinarak",
+    "name": {
+      "en": "Spinarak",
+      "he": "ספינארק"
+    },
     "types": [
       "bug",
       "poison"
@@ -2745,7 +3246,10 @@
   },
   {
     "id": 168,
-    "name": "ariados",
+    "name": {
+      "en": "Ariados",
+      "he": "אריאדוס"
+    },
     "types": [
       "bug",
       "poison"
@@ -2762,7 +3266,10 @@
   },
   {
     "id": 169,
-    "name": "crobat",
+    "name": {
+      "en": "Crobat",
+      "he": "קרובאט"
+    },
     "types": [
       "poison",
       "flying"
@@ -2779,7 +3286,10 @@
   },
   {
     "id": 170,
-    "name": "chinchou",
+    "name": {
+      "en": "Chinchou",
+      "he": "צ'ינצ'או"
+    },
     "types": [
       "water",
       "electric"
@@ -2796,7 +3306,10 @@
   },
   {
     "id": 171,
-    "name": "lanturn",
+    "name": {
+      "en": "Lanturn",
+      "he": "לנטורן"
+    },
     "types": [
       "water",
       "electric"
@@ -2813,7 +3326,10 @@
   },
   {
     "id": 172,
-    "name": "pichu",
+    "name": {
+      "en": "Pichu",
+      "he": "פיצ'ו"
+    },
     "types": [
       "electric"
     ],
@@ -2829,7 +3345,10 @@
   },
   {
     "id": 173,
-    "name": "cleffa",
+    "name": {
+      "en": "Cleffa",
+      "he": "קלפה"
+    },
     "types": [
       "fairy"
     ],
@@ -2845,7 +3364,10 @@
   },
   {
     "id": 174,
-    "name": "igglybuff",
+    "name": {
+      "en": "Igglybuff",
+      "he": "איגליבאף"
+    },
     "types": [
       "normal",
       "fairy"
@@ -2862,7 +3384,10 @@
   },
   {
     "id": 175,
-    "name": "togepi",
+    "name": {
+      "en": "Togepi",
+      "he": "טוגפי"
+    },
     "types": [
       "fairy"
     ],
@@ -2878,7 +3403,10 @@
   },
   {
     "id": 176,
-    "name": "togetic",
+    "name": {
+      "en": "Togetic",
+      "he": "טוגטיק"
+    },
     "types": [
       "fairy",
       "flying"
@@ -2895,7 +3423,10 @@
   },
   {
     "id": 177,
-    "name": "natu",
+    "name": {
+      "en": "Natu",
+      "he": "נאטו"
+    },
     "types": [
       "psychic",
       "flying"
@@ -2912,7 +3443,10 @@
   },
   {
     "id": 178,
-    "name": "xatu",
+    "name": {
+      "en": "Xatu",
+      "he": "זאטו"
+    },
     "types": [
       "psychic",
       "flying"
@@ -2929,7 +3463,10 @@
   },
   {
     "id": 179,
-    "name": "mareep",
+    "name": {
+      "en": "Mareep",
+      "he": "מריפ"
+    },
     "types": [
       "electric"
     ],
@@ -2945,7 +3482,10 @@
   },
   {
     "id": 180,
-    "name": "flaaffy",
+    "name": {
+      "en": "Flaaffy",
+      "he": "פלאפי"
+    },
     "types": [
       "electric"
     ],
@@ -2961,7 +3501,10 @@
   },
   {
     "id": 181,
-    "name": "ampharos",
+    "name": {
+      "en": "Ampharos",
+      "he": "אמפארוס"
+    },
     "types": [
       "electric"
     ],
@@ -2977,7 +3520,10 @@
   },
   {
     "id": 182,
-    "name": "bellossom",
+    "name": {
+      "en": "Bellossom",
+      "he": "בלוסום"
+    },
     "types": [
       "grass"
     ],
@@ -2993,7 +3539,10 @@
   },
   {
     "id": 183,
-    "name": "marill",
+    "name": {
+      "en": "Marill",
+      "he": "מריל"
+    },
     "types": [
       "water",
       "fairy"
@@ -3010,7 +3559,10 @@
   },
   {
     "id": 184,
-    "name": "azumarill",
+    "name": {
+      "en": "Azumarill",
+      "he": "אזומריל"
+    },
     "types": [
       "water",
       "fairy"
@@ -3027,7 +3579,10 @@
   },
   {
     "id": 185,
-    "name": "sudowoodo",
+    "name": {
+      "en": "Sudowoodo",
+      "he": "סודווודו"
+    },
     "types": [
       "rock"
     ],
@@ -3043,7 +3598,10 @@
   },
   {
     "id": 186,
-    "name": "politoed",
+    "name": {
+      "en": "Politoed",
+      "he": "פוליטואד"
+    },
     "types": [
       "water"
     ],
@@ -3059,7 +3617,10 @@
   },
   {
     "id": 187,
-    "name": "hoppip",
+    "name": {
+      "en": "Hoppip",
+      "he": "הופיפ"
+    },
     "types": [
       "grass",
       "flying"
@@ -3076,7 +3637,10 @@
   },
   {
     "id": 188,
-    "name": "skiploom",
+    "name": {
+      "en": "Skiploom",
+      "he": "סקיפלום"
+    },
     "types": [
       "grass",
       "flying"
@@ -3093,7 +3657,10 @@
   },
   {
     "id": 189,
-    "name": "jumpluff",
+    "name": {
+      "en": "Jumpluff",
+      "he": "ג'אמפלאף"
+    },
     "types": [
       "grass",
       "flying"
@@ -3110,7 +3677,10 @@
   },
   {
     "id": 190,
-    "name": "aipom",
+    "name": {
+      "en": "Aipom",
+      "he": "אייפום"
+    },
     "types": [
       "normal"
     ],
@@ -3126,7 +3696,10 @@
   },
   {
     "id": 191,
-    "name": "sunkern",
+    "name": {
+      "en": "Sunkern",
+      "he": "סאנקרן"
+    },
     "types": [
       "grass"
     ],
@@ -3142,7 +3715,10 @@
   },
   {
     "id": 192,
-    "name": "sunflora",
+    "name": {
+      "en": "Sunflora",
+      "he": "סנפלורה"
+    },
     "types": [
       "grass"
     ],
@@ -3158,7 +3734,10 @@
   },
   {
     "id": 193,
-    "name": "yanma",
+    "name": {
+      "en": "Yanma",
+      "he": "יאנמה"
+    },
     "types": [
       "bug",
       "flying"
@@ -3175,7 +3754,10 @@
   },
   {
     "id": 194,
-    "name": "wooper",
+    "name": {
+      "en": "Wooper",
+      "he": "ווופר"
+    },
     "types": [
       "water",
       "ground"
@@ -3192,7 +3774,10 @@
   },
   {
     "id": 195,
-    "name": "quagsire",
+    "name": {
+      "en": "Quagsire",
+      "he": "קוואגסייר"
+    },
     "types": [
       "water",
       "ground"
@@ -3209,7 +3794,10 @@
   },
   {
     "id": 196,
-    "name": "espeon",
+    "name": {
+      "en": "Espeon",
+      "he": "אספיאון"
+    },
     "types": [
       "psychic"
     ],
@@ -3225,7 +3813,10 @@
   },
   {
     "id": 197,
-    "name": "umbreon",
+    "name": {
+      "en": "Umbreon",
+      "he": "אמבריאון"
+    },
     "types": [
       "dark"
     ],
@@ -3241,7 +3832,10 @@
   },
   {
     "id": 198,
-    "name": "murkrow",
+    "name": {
+      "en": "Murkrow",
+      "he": "מרקרו"
+    },
     "types": [
       "dark",
       "flying"
@@ -3258,7 +3852,10 @@
   },
   {
     "id": 199,
-    "name": "slowking",
+    "name": {
+      "en": "Slowking",
+      "he": "סלוקינג"
+    },
     "types": [
       "water",
       "psychic"
@@ -3275,7 +3872,10 @@
   },
   {
     "id": 200,
-    "name": "misdreavus",
+    "name": {
+      "en": "Misdreavus",
+      "he": "מיסדרוס"
+    },
     "types": [
       "ghost"
     ],
@@ -3291,7 +3891,10 @@
   },
   {
     "id": 201,
-    "name": "unown",
+    "name": {
+      "en": "Unown",
+      "he": "אנואון"
+    },
     "types": [
       "psychic"
     ],
@@ -3307,7 +3910,10 @@
   },
   {
     "id": 202,
-    "name": "wobbuffet",
+    "name": {
+      "en": "Wobbuffet",
+      "he": "ווובאפט"
+    },
     "types": [
       "psychic"
     ],
@@ -3323,7 +3929,10 @@
   },
   {
     "id": 203,
-    "name": "girafarig",
+    "name": {
+      "en": "Girafarig",
+      "he": "ג'יראפריג"
+    },
     "types": [
       "normal",
       "psychic"
@@ -3340,7 +3949,10 @@
   },
   {
     "id": 204,
-    "name": "pineco",
+    "name": {
+      "en": "Pineco",
+      "he": "פינקו"
+    },
     "types": [
       "bug"
     ],
@@ -3356,7 +3968,10 @@
   },
   {
     "id": 205,
-    "name": "forretress",
+    "name": {
+      "en": "Forretress",
+      "he": "פורטרס"
+    },
     "types": [
       "bug",
       "steel"
@@ -3373,7 +3988,10 @@
   },
   {
     "id": 206,
-    "name": "dunsparce",
+    "name": {
+      "en": "Dunsparce",
+      "he": "דאנספארס"
+    },
     "types": [
       "normal"
     ],
@@ -3389,7 +4007,10 @@
   },
   {
     "id": 207,
-    "name": "gligar",
+    "name": {
+      "en": "Gligar",
+      "he": "גלייגר"
+    },
     "types": [
       "ground",
       "flying"
@@ -3406,7 +4027,10 @@
   },
   {
     "id": 208,
-    "name": "steelix",
+    "name": {
+      "en": "Steelix",
+      "he": "סטיליקס"
+    },
     "types": [
       "steel",
       "ground"
@@ -3423,7 +4047,10 @@
   },
   {
     "id": 209,
-    "name": "snubbull",
+    "name": {
+      "en": "Snubbull",
+      "he": "סנאבול"
+    },
     "types": [
       "fairy"
     ],
@@ -3439,7 +4066,10 @@
   },
   {
     "id": 210,
-    "name": "granbull",
+    "name": {
+      "en": "Granbull",
+      "he": "גרנבול"
+    },
     "types": [
       "fairy"
     ],
@@ -3455,7 +4085,10 @@
   },
   {
     "id": 211,
-    "name": "qwilfish",
+    "name": {
+      "en": "Qwilfish",
+      "he": "קווילפיש"
+    },
     "types": [
       "water",
       "poison"
@@ -3472,7 +4105,10 @@
   },
   {
     "id": 212,
-    "name": "scizor",
+    "name": {
+      "en": "Scizor",
+      "he": "סיזור"
+    },
     "types": [
       "bug",
       "steel"
@@ -3489,7 +4125,10 @@
   },
   {
     "id": 213,
-    "name": "shuckle",
+    "name": {
+      "en": "Shuckle",
+      "he": "שאקל"
+    },
     "types": [
       "bug",
       "rock"
@@ -3506,7 +4145,10 @@
   },
   {
     "id": 214,
-    "name": "heracross",
+    "name": {
+      "en": "Heracross",
+      "he": "הראקרוס"
+    },
     "types": [
       "bug",
       "fighting"
@@ -3523,7 +4165,10 @@
   },
   {
     "id": 215,
-    "name": "sneasel",
+    "name": {
+      "en": "Sneasel",
+      "he": "סניזל"
+    },
     "types": [
       "dark",
       "ice"
@@ -3540,7 +4185,10 @@
   },
   {
     "id": 216,
-    "name": "teddiursa",
+    "name": {
+      "en": "Teddiursa",
+      "he": "טדיאורסה"
+    },
     "types": [
       "normal"
     ],
@@ -3556,7 +4204,10 @@
   },
   {
     "id": 217,
-    "name": "ursaring",
+    "name": {
+      "en": "Ursaring",
+      "he": "אורסרינג"
+    },
     "types": [
       "normal"
     ],
@@ -3572,7 +4223,10 @@
   },
   {
     "id": 218,
-    "name": "slugma",
+    "name": {
+      "en": "Slugma",
+      "he": "סלאגמה"
+    },
     "types": [
       "fire"
     ],
@@ -3588,7 +4242,10 @@
   },
   {
     "id": 219,
-    "name": "magcargo",
+    "name": {
+      "en": "Magcargo",
+      "he": "מגקארגו"
+    },
     "types": [
       "fire",
       "rock"
@@ -3605,7 +4262,10 @@
   },
   {
     "id": 220,
-    "name": "swinub",
+    "name": {
+      "en": "Swinub",
+      "he": "סווינאב"
+    },
     "types": [
       "ice",
       "ground"
@@ -3622,7 +4282,10 @@
   },
   {
     "id": 221,
-    "name": "piloswine",
+    "name": {
+      "en": "Piloswine",
+      "he": "פילוסוויין"
+    },
     "types": [
       "ice",
       "ground"
@@ -3639,7 +4302,10 @@
   },
   {
     "id": 222,
-    "name": "corsola",
+    "name": {
+      "en": "Corsola",
+      "he": "קורסולה"
+    },
     "types": [
       "water",
       "rock"
@@ -3656,7 +4322,10 @@
   },
   {
     "id": 223,
-    "name": "remoraid",
+    "name": {
+      "en": "Remoraid",
+      "he": "רמוריד"
+    },
     "types": [
       "water"
     ],
@@ -3672,7 +4341,10 @@
   },
   {
     "id": 224,
-    "name": "octillery",
+    "name": {
+      "en": "Octillery",
+      "he": "אוקטילרי"
+    },
     "types": [
       "water"
     ],
@@ -3688,7 +4360,10 @@
   },
   {
     "id": 225,
-    "name": "delibird",
+    "name": {
+      "en": "Delibird",
+      "he": "דליבירד"
+    },
     "types": [
       "ice",
       "flying"
@@ -3705,7 +4380,10 @@
   },
   {
     "id": 226,
-    "name": "mantine",
+    "name": {
+      "en": "Mantine",
+      "he": "מנטיין"
+    },
     "types": [
       "water",
       "flying"
@@ -3722,7 +4400,10 @@
   },
   {
     "id": 227,
-    "name": "skarmory",
+    "name": {
+      "en": "Skarmory",
+      "he": "סקארמורי"
+    },
     "types": [
       "steel",
       "flying"
@@ -3739,7 +4420,10 @@
   },
   {
     "id": 228,
-    "name": "houndour",
+    "name": {
+      "en": "Houndour",
+      "he": "האונדור"
+    },
     "types": [
       "dark",
       "fire"
@@ -3756,7 +4440,10 @@
   },
   {
     "id": 229,
-    "name": "houndoom",
+    "name": {
+      "en": "Houndoom",
+      "he": "האונדום"
+    },
     "types": [
       "dark",
       "fire"
@@ -3773,7 +4460,10 @@
   },
   {
     "id": 230,
-    "name": "kingdra",
+    "name": {
+      "en": "Kingdra",
+      "he": "קינגדרה"
+    },
     "types": [
       "water",
       "dragon"
@@ -3790,7 +4480,10 @@
   },
   {
     "id": 231,
-    "name": "phanpy",
+    "name": {
+      "en": "Phanpy",
+      "he": "פנפי"
+    },
     "types": [
       "ground"
     ],
@@ -3806,7 +4499,10 @@
   },
   {
     "id": 232,
-    "name": "donphan",
+    "name": {
+      "en": "Donphan",
+      "he": "דונפן"
+    },
     "types": [
       "ground"
     ],
@@ -3822,7 +4518,10 @@
   },
   {
     "id": 233,
-    "name": "porygon2",
+    "name": {
+      "en": "Porygon2",
+      "he": "פוריגון2"
+    },
     "types": [
       "normal"
     ],
@@ -3838,7 +4537,10 @@
   },
   {
     "id": 234,
-    "name": "stantler",
+    "name": {
+      "en": "Stantler",
+      "he": "סטנטלר"
+    },
     "types": [
       "normal"
     ],
@@ -3854,7 +4556,10 @@
   },
   {
     "id": 235,
-    "name": "smeargle",
+    "name": {
+      "en": "Smeargle",
+      "he": "סמירגל"
+    },
     "types": [
       "normal"
     ],
@@ -3870,7 +4575,10 @@
   },
   {
     "id": 236,
-    "name": "tyrogue",
+    "name": {
+      "en": "Tyrogue",
+      "he": "טיירוג"
+    },
     "types": [
       "fighting"
     ],
@@ -3886,7 +4594,10 @@
   },
   {
     "id": 237,
-    "name": "hitmontop",
+    "name": {
+      "en": "Hitmontop",
+      "he": "היטמונטופ"
+    },
     "types": [
       "fighting"
     ],
@@ -3902,7 +4613,10 @@
   },
   {
     "id": 238,
-    "name": "smoochum",
+    "name": {
+      "en": "Smoochum",
+      "he": "סמוצ'ום"
+    },
     "types": [
       "ice",
       "psychic"
@@ -3919,7 +4633,10 @@
   },
   {
     "id": 239,
-    "name": "elekid",
+    "name": {
+      "en": "Elekid",
+      "he": "אלקיד"
+    },
     "types": [
       "electric"
     ],
@@ -3935,7 +4652,10 @@
   },
   {
     "id": 240,
-    "name": "magby",
+    "name": {
+      "en": "Magby",
+      "he": "מגבי"
+    },
     "types": [
       "fire"
     ],
@@ -3951,7 +4671,10 @@
   },
   {
     "id": 241,
-    "name": "miltank",
+    "name": {
+      "en": "Miltank",
+      "he": "מילטנק"
+    },
     "types": [
       "normal"
     ],
@@ -3967,7 +4690,10 @@
   },
   {
     "id": 242,
-    "name": "blissey",
+    "name": {
+      "en": "Blissey",
+      "he": "בליסי"
+    },
     "types": [
       "normal"
     ],
@@ -3983,7 +4709,10 @@
   },
   {
     "id": 243,
-    "name": "raikou",
+    "name": {
+      "en": "Raikou",
+      "he": "ראיקו"
+    },
     "types": [
       "electric"
     ],
@@ -3999,7 +4728,10 @@
   },
   {
     "id": 244,
-    "name": "entei",
+    "name": {
+      "en": "Entei",
+      "he": "אנטיי"
+    },
     "types": [
       "fire"
     ],
@@ -4015,7 +4747,10 @@
   },
   {
     "id": 245,
-    "name": "suicune",
+    "name": {
+      "en": "Suicune",
+      "he": "סויקון"
+    },
     "types": [
       "water"
     ],
@@ -4031,7 +4766,10 @@
   },
   {
     "id": 246,
-    "name": "larvitar",
+    "name": {
+      "en": "Larvitar",
+      "he": "לרוויטאר"
+    },
     "types": [
       "rock",
       "ground"
@@ -4048,7 +4786,10 @@
   },
   {
     "id": 247,
-    "name": "pupitar",
+    "name": {
+      "en": "Pupitar",
+      "he": "פיופיטאר"
+    },
     "types": [
       "rock",
       "ground"
@@ -4065,7 +4806,10 @@
   },
   {
     "id": 248,
-    "name": "tyranitar",
+    "name": {
+      "en": "Tyranitar",
+      "he": "טירניטאר"
+    },
     "types": [
       "rock",
       "dark"
@@ -4082,7 +4826,10 @@
   },
   {
     "id": 249,
-    "name": "lugia",
+    "name": {
+      "en": "Lugia",
+      "he": "לוגיאה"
+    },
     "types": [
       "psychic",
       "flying"
@@ -4099,7 +4846,10 @@
   },
   {
     "id": 250,
-    "name": "ho-oh",
+    "name": {
+      "en": "Ho-oh",
+      "he": "הו-או"
+    },
     "types": [
       "fire",
       "flying"
@@ -4116,7 +4866,10 @@
   },
   {
     "id": 251,
-    "name": "celebi",
+    "name": {
+      "en": "Celebi",
+      "he": "סלבי"
+    },
     "types": [
       "psychic",
       "grass"

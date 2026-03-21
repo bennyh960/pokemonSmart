@@ -20,7 +20,8 @@
       "Bash(git fetch:*)",
       "Bash(grep:*)",
       "Bash(echo \"exit: $?\")",
-      "Bash(find /c/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon/public -type f \\\\\\(-name *.mp3 -o -name *.wav -o -name *.ogg \\\\\\))"
+      "Bash(find /c/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon/public -type f \\\\\\(-name *.mp3 -o -name *.wav -o -name *.ogg \\\\\\))",
+      "WebSearch"
     ]
   }
 }

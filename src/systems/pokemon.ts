@@ -16,12 +16,13 @@
  */
 
 import type { Pokemon } from '../types/index.js';
+import { getPokemonDisplayName } from '../services/pokemon-data.js';
 
 /** Create an empty/default Pokemon (placeholder). */
 export function createDefaultPokemon(): Pokemon {
   return {
     id: 0,
-    name: 'MissingNo',
+    name: getPokemonDisplayName(0), // Returns 'MissingNo' for unknown IDs
     level: 1,
     hp: 10,
     maxHp: 10,

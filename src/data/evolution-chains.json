@@ -4,21 +4,30 @@
     "stages": [
       {
         "id": 1,
-        "name": "bulbasaur",
+        "name": {
+          "en": "Bulbasaur",
+          "he": "בולבזאור"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 2,
-        "name": "ivysaur",
+        "name": {
+          "en": "Ivysaur",
+          "he": "איוויזאור"
+        },
         "minLevel": 16,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 3,
-        "name": "venusaur",
+        "name": {
+          "en": "Venusaur",
+          "he": "ונוזאור"
+        },
         "minLevel": 32,
         "trigger": "level-up",
         "item": null
@@ -30,21 +39,30 @@
     "stages": [
       {
         "id": 4,
-        "name": "charmander",
+        "name": {
+          "en": "Charmander",
+          "he": "צ'רמנדר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 5,
-        "name": "charmeleon",
+        "name": {
+          "en": "Charmeleon",
+          "he": "צ'רמיליון"
+        },
         "minLevel": 16,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 6,
-        "name": "charizard",
+        "name": {
+          "en": "Charizard",
+          "he": "צ'ריזארד"
+        },
         "minLevel": 36,
         "trigger": "level-up",
         "item": null
@@ -56,21 +74,30 @@
     "stages": [
       {
         "id": 7,
-        "name": "squirtle",
+        "name": {
+          "en": "Squirtle",
+          "he": "סקווירטל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 8,
-        "name": "wartortle",
+        "name": {
+          "en": "Wartortle",
+          "he": "וורטורטל"
+        },
         "minLevel": 16,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 9,
-        "name": "blastoise",
+        "name": {
+          "en": "Blastoise",
+          "he": "בלסטויז"
+        },
         "minLevel": 36,
         "trigger": "level-up",
         "item": null
@@ -82,21 +109,30 @@
     "stages": [
       {
         "id": 10,
-        "name": "caterpie",
+        "name": {
+          "en": "Caterpie",
+          "he": "קטרפי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 11,
-        "name": "metapod",
+        "name": {
+          "en": "Metapod",
+          "he": "מטאפוד"
+        },
         "minLevel": 7,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 12,
-        "name": "butterfree",
+        "name": {
+          "en": "Butterfree",
+          "he": "באטרפרי"
+        },
         "minLevel": 10,
         "trigger": "level-up",
         "item": null
@@ -108,21 +144,30 @@
     "stages": [
       {
         "id": 13,
-        "name": "weedle",
+        "name": {
+          "en": "Weedle",
+          "he": "וידל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 14,
-        "name": "kakuna",
+        "name": {
+          "en": "Kakuna",
+          "he": "קאקונה"
+        },
         "minLevel": 7,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 15,
-        "name": "beedrill",
+        "name": {
+          "en": "Beedrill",
+          "he": "בידריל"
+        },
         "minLevel": 10,
         "trigger": "level-up",
         "item": null
@@ -134,21 +179,30 @@
     "stages": [
       {
         "id": 16,
-        "name": "pidgey",
+        "name": {
+          "en": "Pidgey",
+          "he": "פידג'י"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 17,
-        "name": "pidgeotto",
+        "name": {
+          "en": "Pidgeotto",
+          "he": "פידג'אוטו"
+        },
         "minLevel": 18,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 18,
-        "name": "pidgeot",
+        "name": {
+          "en": "Pidgeot",
+          "he": "פידג'ט"
+        },
         "minLevel": 36,
         "trigger": "level-up",
         "item": null
@@ -160,14 +214,20 @@
     "stages": [
       {
         "id": 19,
-        "name": "rattata",
+        "name": {
+          "en": "Rattata",
+          "he": "ראטאטה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 20,
-        "name": "raticate",
+        "name": {
+          "en": "Raticate",
+          "he": "ראטיקייט"
+        },
         "minLevel": 20,
         "trigger": "level-up",
         "item": null
@@ -179,14 +239,20 @@
     "stages": [
       {
         "id": 21,
-        "name": "spearow",
+        "name": {
+          "en": "Spearow",
+          "he": "ספירו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 22,
-        "name": "fearow",
+        "name": {
+          "en": "Fearow",
+          "he": "פירו"
+        },
         "minLevel": 20,
         "trigger": "level-up",
         "item": null
@@ -198,14 +264,20 @@
     "stages": [
       {
         "id": 23,
-        "name": "ekans",
+        "name": {
+          "en": "Ekans",
+          "he": "אקנס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 24,
-        "name": "arbok",
+        "name": {
+          "en": "Arbok",
+          "he": "ארבוק"
+        },
         "minLevel": 22,
         "trigger": "level-up",
         "item": null
@@ -217,21 +289,30 @@
     "stages": [
       {
         "id": 172,
-        "name": "pichu",
+        "name": {
+          "en": "Pichu",
+          "he": "פיצ'ו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 25,
-        "name": "pikachu",
+        "name": {
+          "en": "Pikachu",
+          "he": "פיקאצ'ו"
+        },
         "minLevel": null,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 26,
-        "name": "raichu",
+        "name": {
+          "en": "Raichu",
+          "he": "ראיצ'ו"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "thunder-stone"
@@ -243,14 +324,20 @@
     "stages": [
       {
         "id": 27,
-        "name": "sandshrew",
+        "name": {
+          "en": "Sandshrew",
+          "he": "סנדשרו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 28,
-        "name": "sandslash",
+        "name": {
+          "en": "Sandslash",
+          "he": "סנדסלאש"
+        },
         "minLevel": 22,
         "trigger": "level-up",
         "item": null
@@ -262,21 +349,30 @@
     "stages": [
       {
         "id": 29,
-        "name": "nidoran-f",
+        "name": {
+          "en": "Nidoran-f",
+          "he": "נידוראן"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 30,
-        "name": "nidorina",
+        "name": {
+          "en": "Nidorina",
+          "he": "נידורינה"
+        },
         "minLevel": 16,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 31,
-        "name": "nidoqueen",
+        "name": {
+          "en": "Nidoqueen",
+          "he": "נידוקווין"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "moon-stone"
@@ -288,21 +384,30 @@
     "stages": [
       {
         "id": 32,
-        "name": "nidoran-m",
+        "name": {
+          "en": "Nidoran-m",
+          "he": "נידוראן"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 33,
-        "name": "nidorino",
+        "name": {
+          "en": "Nidorino",
+          "he": "נידורינו"
+        },
         "minLevel": 16,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 34,
-        "name": "nidoking",
+        "name": {
+          "en": "Nidoking",
+          "he": "נידוקינג"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "moon-stone"
@@ -314,21 +419,30 @@
     "stages": [
       {
         "id": 173,
-        "name": "cleffa",
+        "name": {
+          "en": "Cleffa",
+          "he": "קלפה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 35,
-        "name": "clefairy",
+        "name": {
+          "en": "Clefairy",
+          "he": "קלפיירי"
+        },
         "minLevel": null,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 36,
-        "name": "clefable",
+        "name": {
+          "en": "Clefable",
+          "he": "קלפייבל"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "moon-stone"
@@ -340,14 +454,20 @@
     "stages": [
       {
         "id": 37,
-        "name": "vulpix",
+        "name": {
+          "en": "Vulpix",
+          "he": "וולפיקס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 38,
-        "name": "ninetales",
+        "name": {
+          "en": "Ninetales",
+          "he": "ניינטיילס"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "fire-stone"
@@ -359,21 +479,30 @@
     "stages": [
       {
         "id": 174,
-        "name": "igglybuff",
+        "name": {
+          "en": "Igglybuff",
+          "he": "איגליבאף"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 39,
-        "name": "jigglypuff",
+        "name": {
+          "en": "Jigglypuff",
+          "he": "ג'יגליפאף"
+        },
         "minLevel": null,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 40,
-        "name": "wigglytuff",
+        "name": {
+          "en": "Wigglytuff",
+          "he": "וויגליטאף"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "moon-stone"
@@ -385,21 +514,30 @@
     "stages": [
       {
         "id": 41,
-        "name": "zubat",
+        "name": {
+          "en": "Zubat",
+          "he": "זובאט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 42,
-        "name": "golbat",
+        "name": {
+          "en": "Golbat",
+          "he": "גולבאט"
+        },
         "minLevel": 22,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 169,
-        "name": "crobat",
+        "name": {
+          "en": "Crobat",
+          "he": "קרובאט"
+        },
         "minLevel": null,
         "trigger": "level-up",
         "item": null
@@ -411,28 +549,40 @@
     "stages": [
       {
         "id": 43,
-        "name": "oddish",
+        "name": {
+          "en": "Oddish",
+          "he": "אודיש"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 44,
-        "name": "gloom",
+        "name": {
+          "en": "Gloom",
+          "he": "גלום"
+        },
         "minLevel": 21,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 45,
-        "name": "vileplume",
+        "name": {
+          "en": "Vileplume",
+          "he": "ויילפלום"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "leaf-stone"
       },
       {
         "id": 182,
-        "name": "bellossom",
+        "name": {
+          "en": "Bellossom",
+          "he": "בלוסום"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "sun-stone"
@@ -444,14 +594,20 @@
     "stages": [
       {
         "id": 46,
-        "name": "paras",
+        "name": {
+          "en": "Paras",
+          "he": "פאראס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 47,
-        "name": "parasect",
+        "name": {
+          "en": "Parasect",
+          "he": "פאראסקט"
+        },
         "minLevel": 24,
         "trigger": "level-up",
         "item": null
@@ -463,14 +619,20 @@
     "stages": [
       {
         "id": 48,
-        "name": "venonat",
+        "name": {
+          "en": "Venonat",
+          "he": "ונונאט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 49,
-        "name": "venomoth",
+        "name": {
+          "en": "Venomoth",
+          "he": "ונומות'"
+        },
         "minLevel": 31,
         "trigger": "level-up",
         "item": null
@@ -482,14 +644,20 @@
     "stages": [
       {
         "id": 50,
-        "name": "diglett",
+        "name": {
+          "en": "Diglett",
+          "he": "דיגלט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 51,
-        "name": "dugtrio",
+        "name": {
+          "en": "Dugtrio",
+          "he": "דאגטריו"
+        },
         "minLevel": 26,
         "trigger": "level-up",
         "item": null
@@ -501,14 +669,20 @@
     "stages": [
       {
         "id": 52,
-        "name": "meowth",
+        "name": {
+          "en": "Meowth",
+          "he": "מיאות'"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 53,
-        "name": "persian",
+        "name": {
+          "en": "Persian",
+          "he": "פרשיאן"
+        },
         "minLevel": 28,
         "trigger": "level-up",
         "item": null
@@ -520,14 +694,20 @@
     "stages": [
       {
         "id": 54,
-        "name": "psyduck",
+        "name": {
+          "en": "Psyduck",
+          "he": "סיידאק"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 55,
-        "name": "golduck",
+        "name": {
+          "en": "Golduck",
+          "he": "גולדאק"
+        },
         "minLevel": 33,
         "trigger": "level-up",
         "item": null
@@ -539,14 +719,20 @@
     "stages": [
       {
         "id": 56,
-        "name": "mankey",
+        "name": {
+          "en": "Mankey",
+          "he": "מאנקי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 57,
-        "name": "primeape",
+        "name": {
+          "en": "Primeape",
+          "he": "פריימייפ"
+        },
         "minLevel": 28,
         "trigger": "level-up",
         "item": null
@@ -558,14 +744,20 @@
     "stages": [
       {
         "id": 58,
-        "name": "growlithe",
+        "name": {
+          "en": "Growlithe",
+          "he": "גראוליט'"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 59,
-        "name": "arcanine",
+        "name": {
+          "en": "Arcanine",
+          "he": "ארקניין"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "fire-stone"
@@ -577,28 +769,40 @@
     "stages": [
       {
         "id": 60,
-        "name": "poliwag",
+        "name": {
+          "en": "Poliwag",
+          "he": "פוליוואג"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 61,
-        "name": "poliwhirl",
+        "name": {
+          "en": "Poliwhirl",
+          "he": "פוליווירל"
+        },
         "minLevel": 25,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 62,
-        "name": "poliwrath",
+        "name": {
+          "en": "Poliwrath",
+          "he": "פוליראט'"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "water-stone"
       },
       {
         "id": 186,
-        "name": "politoed",
+        "name": {
+          "en": "Politoed",
+          "he": "פוליטואד"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -610,21 +814,30 @@
     "stages": [
       {
         "id": 63,
-        "name": "abra",
+        "name": {
+          "en": "Abra",
+          "he": "אברה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 64,
-        "name": "kadabra",
+        "name": {
+          "en": "Kadabra",
+          "he": "קדברה"
+        },
         "minLevel": 16,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 65,
-        "name": "alakazam",
+        "name": {
+          "en": "Alakazam",
+          "he": "אלקזם"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -636,21 +849,30 @@
     "stages": [
       {
         "id": 66,
-        "name": "machop",
+        "name": {
+          "en": "Machop",
+          "he": "מאצ'ופ"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 67,
-        "name": "machoke",
+        "name": {
+          "en": "Machoke",
+          "he": "מאצ'וק"
+        },
         "minLevel": 28,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 68,
-        "name": "machamp",
+        "name": {
+          "en": "Machamp",
+          "he": "מאצ'אמפ"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -662,21 +884,30 @@
     "stages": [
       {
         "id": 69,
-        "name": "bellsprout",
+        "name": {
+          "en": "Bellsprout",
+          "he": "בלספראוט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 70,
-        "name": "weepinbell",
+        "name": {
+          "en": "Weepinbell",
+          "he": "וויפינבל"
+        },
         "minLevel": 21,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 71,
-        "name": "victreebel",
+        "name": {
+          "en": "Victreebel",
+          "he": "ויקטריבל"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "leaf-stone"
@@ -688,14 +919,20 @@
     "stages": [
       {
         "id": 72,
-        "name": "tentacool",
+        "name": {
+          "en": "Tentacool",
+          "he": "טנטאקול"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 73,
-        "name": "tentacruel",
+        "name": {
+          "en": "Tentacruel",
+          "he": "טנטאקרואל"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -707,21 +944,30 @@
     "stages": [
       {
         "id": 74,
-        "name": "geodude",
+        "name": {
+          "en": "Geodude",
+          "he": "ג'יאודוד"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 75,
-        "name": "graveler",
+        "name": {
+          "en": "Graveler",
+          "he": "גרוולר"
+        },
         "minLevel": 25,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 76,
-        "name": "golem",
+        "name": {
+          "en": "Golem",
+          "he": "גולם"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -733,14 +979,20 @@
     "stages": [
       {
         "id": 77,
-        "name": "ponyta",
+        "name": {
+          "en": "Ponyta",
+          "he": "פוניטה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 78,
-        "name": "rapidash",
+        "name": {
+          "en": "Rapidash",
+          "he": "רפידאש"
+        },
         "minLevel": 40,
         "trigger": "level-up",
         "item": null
@@ -752,21 +1004,30 @@
     "stages": [
       {
         "id": 79,
-        "name": "slowpoke",
+        "name": {
+          "en": "Slowpoke",
+          "he": "סלופוק"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 80,
-        "name": "slowbro",
+        "name": {
+          "en": "Slowbro",
+          "he": "סלוברו"
+        },
         "minLevel": 37,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 199,
-        "name": "slowking",
+        "name": {
+          "en": "Slowking",
+          "he": "סלוקינג"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -778,14 +1039,20 @@
     "stages": [
       {
         "id": 81,
-        "name": "magnemite",
+        "name": {
+          "en": "Magnemite",
+          "he": "מגנמייט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 82,
-        "name": "magneton",
+        "name": {
+          "en": "Magneton",
+          "he": "מגנטון"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -797,7 +1064,10 @@
     "stages": [
       {
         "id": 83,
-        "name": "farfetchd",
+        "name": {
+          "en": "Farfetchd",
+          "he": "פארפצ'ד"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -809,14 +1079,20 @@
     "stages": [
       {
         "id": 84,
-        "name": "doduo",
+        "name": {
+          "en": "Doduo",
+          "he": "דודואו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 85,
-        "name": "dodrio",
+        "name": {
+          "en": "Dodrio",
+          "he": "דודריו"
+        },
         "minLevel": 31,
         "trigger": "level-up",
         "item": null
@@ -828,14 +1104,20 @@
     "stages": [
       {
         "id": 86,
-        "name": "seel",
+        "name": {
+          "en": "Seel",
+          "he": "סיל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 87,
-        "name": "dewgong",
+        "name": {
+          "en": "Dewgong",
+          "he": "דיוגונג"
+        },
         "minLevel": 34,
         "trigger": "level-up",
         "item": null
@@ -847,14 +1129,20 @@
     "stages": [
       {
         "id": 88,
-        "name": "grimer",
+        "name": {
+          "en": "Grimer",
+          "he": "גריימר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 89,
-        "name": "muk",
+        "name": {
+          "en": "Muk",
+          "he": "מאק"
+        },
         "minLevel": 38,
         "trigger": "level-up",
         "item": null
@@ -866,14 +1154,20 @@
     "stages": [
       {
         "id": 90,
-        "name": "shellder",
+        "name": {
+          "en": "Shellder",
+          "he": "שלדר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 91,
-        "name": "cloyster",
+        "name": {
+          "en": "Cloyster",
+          "he": "קלויסטר"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "water-stone"
@@ -885,21 +1179,30 @@
     "stages": [
       {
         "id": 92,
-        "name": "gastly",
+        "name": {
+          "en": "Gastly",
+          "he": "גאסטלי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 93,
-        "name": "haunter",
+        "name": {
+          "en": "Haunter",
+          "he": "האנטר"
+        },
         "minLevel": 25,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 94,
-        "name": "gengar",
+        "name": {
+          "en": "Gengar",
+          "he": "גנגאר"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -911,14 +1214,20 @@
     "stages": [
       {
         "id": 95,
-        "name": "onix",
+        "name": {
+          "en": "Onix",
+          "he": "אוניקס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 208,
-        "name": "steelix",
+        "name": {
+          "en": "Steelix",
+          "he": "סטיליקס"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -930,14 +1239,20 @@
     "stages": [
       {
         "id": 96,
-        "name": "drowzee",
+        "name": {
+          "en": "Drowzee",
+          "he": "דראוזי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 97,
-        "name": "hypno",
+        "name": {
+          "en": "Hypno",
+          "he": "היפנו"
+        },
         "minLevel": 26,
         "trigger": "level-up",
         "item": null
@@ -949,14 +1264,20 @@
     "stages": [
       {
         "id": 98,
-        "name": "krabby",
+        "name": {
+          "en": "Krabby",
+          "he": "קראבי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 99,
-        "name": "kingler",
+        "name": {
+          "en": "Kingler",
+          "he": "קינגלר"
+        },
         "minLevel": 28,
         "trigger": "level-up",
         "item": null
@@ -968,14 +1289,20 @@
     "stages": [
       {
         "id": 100,
-        "name": "voltorb",
+        "name": {
+          "en": "Voltorb",
+          "he": "וולטורב"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 101,
-        "name": "electrode",
+        "name": {
+          "en": "Electrode",
+          "he": "אלקטרוד"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -987,14 +1314,20 @@
     "stages": [
       {
         "id": 102,
-        "name": "exeggcute",
+        "name": {
+          "en": "Exeggcute",
+          "he": "אקסגקיוט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 103,
-        "name": "exeggutor",
+        "name": {
+          "en": "Exeggutor",
+          "he": "אקסגיוטור"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "leaf-stone"
@@ -1006,14 +1339,20 @@
     "stages": [
       {
         "id": 104,
-        "name": "cubone",
+        "name": {
+          "en": "Cubone",
+          "he": "קיובון"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 105,
-        "name": "marowak",
+        "name": {
+          "en": "Marowak",
+          "he": "מארוואק"
+        },
         "minLevel": 28,
         "trigger": "level-up",
         "item": null
@@ -1025,28 +1364,40 @@
     "stages": [
       {
         "id": 236,
-        "name": "tyrogue",
+        "name": {
+          "en": "Tyrogue",
+          "he": "טיירוג"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 106,
-        "name": "hitmonlee",
+        "name": {
+          "en": "Hitmonlee",
+          "he": "היטמונלי"
+        },
         "minLevel": 20,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 107,
-        "name": "hitmonchan",
+        "name": {
+          "en": "Hitmonchan",
+          "he": "היטמונצ'אן"
+        },
         "minLevel": 20,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 237,
-        "name": "hitmontop",
+        "name": {
+          "en": "Hitmontop",
+          "he": "היטמונטופ"
+        },
         "minLevel": 20,
         "trigger": "level-up",
         "item": null
@@ -1058,7 +1409,10 @@
     "stages": [
       {
         "id": 108,
-        "name": "lickitung",
+        "name": {
+          "en": "Lickitung",
+          "he": "ליקיטאנג"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1070,14 +1424,20 @@
     "stages": [
       {
         "id": 109,
-        "name": "koffing",
+        "name": {
+          "en": "Koffing",
+          "he": "קופינג"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 110,
-        "name": "weezing",
+        "name": {
+          "en": "Weezing",
+          "he": "וויזינג"
+        },
         "minLevel": 35,
         "trigger": "level-up",
         "item": null
@@ -1089,14 +1449,20 @@
     "stages": [
       {
         "id": 111,
-        "name": "rhyhorn",
+        "name": {
+          "en": "Rhyhorn",
+          "he": "ריהורן"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 112,
-        "name": "rhydon",
+        "name": {
+          "en": "Rhydon",
+          "he": "ריידון"
+        },
         "minLevel": 42,
         "trigger": "level-up",
         "item": null
@@ -1108,7 +1474,10 @@
     "stages": [
       {
         "id": 114,
-        "name": "tangela",
+        "name": {
+          "en": "Tangela",
+          "he": "טנג'לה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1120,7 +1489,10 @@
     "stages": [
       {
         "id": 115,
-        "name": "kangaskhan",
+        "name": {
+          "en": "Kangaskhan",
+          "he": "קנגסקאן"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1132,21 +1504,30 @@
     "stages": [
       {
         "id": 116,
-        "name": "horsea",
+        "name": {
+          "en": "Horsea",
+          "he": "הורסי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 117,
-        "name": "seadra",
+        "name": {
+          "en": "Seadra",
+          "he": "סידרה"
+        },
         "minLevel": 32,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 230,
-        "name": "kingdra",
+        "name": {
+          "en": "Kingdra",
+          "he": "קינגדרה"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -1158,14 +1539,20 @@
     "stages": [
       {
         "id": 118,
-        "name": "goldeen",
+        "name": {
+          "en": "Goldeen",
+          "he": "גולדין"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 119,
-        "name": "seaking",
+        "name": {
+          "en": "Seaking",
+          "he": "סיקינג"
+        },
         "minLevel": 33,
         "trigger": "level-up",
         "item": null
@@ -1177,14 +1564,20 @@
     "stages": [
       {
         "id": 120,
-        "name": "staryu",
+        "name": {
+          "en": "Staryu",
+          "he": "סטארו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 121,
-        "name": "starmie",
+        "name": {
+          "en": "Starmie",
+          "he": "סטארמי"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "water-stone"
@@ -1196,14 +1589,20 @@
     "stages": [
       {
         "id": 123,
-        "name": "scyther",
+        "name": {
+          "en": "Scyther",
+          "he": "סייט'ר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 212,
-        "name": "scizor",
+        "name": {
+          "en": "Scizor",
+          "he": "סיזור"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -1215,14 +1614,20 @@
     "stages": [
       {
         "id": 238,
-        "name": "smoochum",
+        "name": {
+          "en": "Smoochum",
+          "he": "סמוצ'ום"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 124,
-        "name": "jynx",
+        "name": {
+          "en": "Jynx",
+          "he": "ג'ינקס"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -1234,14 +1639,20 @@
     "stages": [
       {
         "id": 239,
-        "name": "elekid",
+        "name": {
+          "en": "Elekid",
+          "he": "אלקיד"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 125,
-        "name": "electabuzz",
+        "name": {
+          "en": "Electabuzz",
+          "he": "אלקטבאז"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -1253,14 +1664,20 @@
     "stages": [
       {
         "id": 240,
-        "name": "magby",
+        "name": {
+          "en": "Magby",
+          "he": "מגבי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 126,
-        "name": "magmar",
+        "name": {
+          "en": "Magmar",
+          "he": "מגמר"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -1272,7 +1689,10 @@
     "stages": [
       {
         "id": 127,
-        "name": "pinsir",
+        "name": {
+          "en": "Pinsir",
+          "he": "פינסיר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1284,7 +1704,10 @@
     "stages": [
       {
         "id": 128,
-        "name": "tauros",
+        "name": {
+          "en": "Tauros",
+          "he": "טאורוס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1296,14 +1719,20 @@
     "stages": [
       {
         "id": 129,
-        "name": "magikarp",
+        "name": {
+          "en": "Magikarp",
+          "he": "מג'יקארפ"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 130,
-        "name": "gyarados",
+        "name": {
+          "en": "Gyarados",
+          "he": "גיאראדוס"
+        },
         "minLevel": 20,
         "trigger": "level-up",
         "item": null
@@ -1315,7 +1744,10 @@
     "stages": [
       {
         "id": 131,
-        "name": "lapras",
+        "name": {
+          "en": "Lapras",
+          "he": "לפראס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1327,7 +1759,10 @@
     "stages": [
       {
         "id": 132,
-        "name": "ditto",
+        "name": {
+          "en": "Ditto",
+          "he": "דיטו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1339,42 +1774,60 @@
     "stages": [
       {
         "id": 133,
-        "name": "eevee",
+        "name": {
+          "en": "Eevee",
+          "he": "איווי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 134,
-        "name": "vaporeon",
+        "name": {
+          "en": "Vaporeon",
+          "he": "ואפוריאון"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "water-stone"
       },
       {
         "id": 135,
-        "name": "jolteon",
+        "name": {
+          "en": "Jolteon",
+          "he": "ג'ולטיאון"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "thunder-stone"
       },
       {
         "id": 136,
-        "name": "flareon",
+        "name": {
+          "en": "Flareon",
+          "he": "פלאריאון"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "fire-stone"
       },
       {
         "id": 196,
-        "name": "espeon",
+        "name": {
+          "en": "Espeon",
+          "he": "אספיאון"
+        },
         "minLevel": null,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 197,
-        "name": "umbreon",
+        "name": {
+          "en": "Umbreon",
+          "he": "אמבריאון"
+        },
         "minLevel": null,
         "trigger": "level-up",
         "item": null
@@ -1386,14 +1839,20 @@
     "stages": [
       {
         "id": 137,
-        "name": "porygon",
+        "name": {
+          "en": "Porygon",
+          "he": "פוריגון"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 233,
-        "name": "porygon2",
+        "name": {
+          "en": "Porygon2",
+          "he": "פוריגון2"
+        },
         "minLevel": null,
         "trigger": "trade",
         "item": null
@@ -1405,14 +1864,20 @@
     "stages": [
       {
         "id": 138,
-        "name": "omanyte",
+        "name": {
+          "en": "Omanyte",
+          "he": "אומנייט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 139,
-        "name": "omastar",
+        "name": {
+          "en": "Omastar",
+          "he": "אומסטאר"
+        },
         "minLevel": 40,
         "trigger": "level-up",
         "item": null
@@ -1424,14 +1889,20 @@
     "stages": [
       {
         "id": 140,
-        "name": "kabuto",
+        "name": {
+          "en": "Kabuto",
+          "he": "קבוטו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 141,
-        "name": "kabutops",
+        "name": {
+          "en": "Kabutops",
+          "he": "קבוטופס"
+        },
         "minLevel": 40,
         "trigger": "level-up",
         "item": null
@@ -1443,7 +1914,10 @@
     "stages": [
       {
         "id": 142,
-        "name": "aerodactyl",
+        "name": {
+          "en": "Aerodactyl",
+          "he": "אירודקטיל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1455,7 +1929,10 @@
     "stages": [
       {
         "id": 144,
-        "name": "articuno",
+        "name": {
+          "en": "Articuno",
+          "he": "ארטיקונו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1467,7 +1944,10 @@
     "stages": [
       {
         "id": 145,
-        "name": "zapdos",
+        "name": {
+          "en": "Zapdos",
+          "he": "זאפדוס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1479,7 +1959,10 @@
     "stages": [
       {
         "id": 146,
-        "name": "moltres",
+        "name": {
+          "en": "Moltres",
+          "he": "מולטרס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1491,21 +1974,30 @@
     "stages": [
       {
         "id": 147,
-        "name": "dratini",
+        "name": {
+          "en": "Dratini",
+          "he": "דרטיני"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 148,
-        "name": "dragonair",
+        "name": {
+          "en": "Dragonair",
+          "he": "דרגונאייר"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 149,
-        "name": "dragonite",
+        "name": {
+          "en": "Dragonite",
+          "he": "דרגונייט"
+        },
         "minLevel": 55,
         "trigger": "level-up",
         "item": null
@@ -1517,7 +2009,10 @@
     "stages": [
       {
         "id": 150,
-        "name": "mewtwo",
+        "name": {
+          "en": "Mewtwo",
+          "he": "מיוטו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1529,7 +2024,10 @@
     "stages": [
       {
         "id": 151,
-        "name": "mew",
+        "name": {
+          "en": "Mew",
+          "he": "מיו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1541,21 +2039,30 @@
     "stages": [
       {
         "id": 152,
-        "name": "chikorita",
+        "name": {
+          "en": "Chikorita",
+          "he": "צ'יקוריטה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 153,
-        "name": "bayleef",
+        "name": {
+          "en": "Bayleef",
+          "he": "ביילף"
+        },
         "minLevel": 16,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 154,
-        "name": "meganium",
+        "name": {
+          "en": "Meganium",
+          "he": "מגניום"
+        },
         "minLevel": 32,
         "trigger": "level-up",
         "item": null
@@ -1567,21 +2074,30 @@
     "stages": [
       {
         "id": 155,
-        "name": "cyndaquil",
+        "name": {
+          "en": "Cyndaquil",
+          "he": "סינדקוויל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 156,
-        "name": "quilava",
+        "name": {
+          "en": "Quilava",
+          "he": "קווילאווה"
+        },
         "minLevel": 14,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 157,
-        "name": "typhlosion",
+        "name": {
+          "en": "Typhlosion",
+          "he": "טייפלוז'ן"
+        },
         "minLevel": 36,
         "trigger": "level-up",
         "item": null
@@ -1593,21 +2109,30 @@
     "stages": [
       {
         "id": 158,
-        "name": "totodile",
+        "name": {
+          "en": "Totodile",
+          "he": "טוטודייל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 159,
-        "name": "croconaw",
+        "name": {
+          "en": "Croconaw",
+          "he": "קרוקונאו"
+        },
         "minLevel": 18,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 160,
-        "name": "feraligatr",
+        "name": {
+          "en": "Feraligatr",
+          "he": "פראליגייטר"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -1619,14 +2144,20 @@
     "stages": [
       {
         "id": 161,
-        "name": "sentret",
+        "name": {
+          "en": "Sentret",
+          "he": "סנטרט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 162,
-        "name": "furret",
+        "name": {
+          "en": "Furret",
+          "he": "פארט"
+        },
         "minLevel": 15,
         "trigger": "level-up",
         "item": null
@@ -1638,14 +2169,20 @@
     "stages": [
       {
         "id": 163,
-        "name": "hoothoot",
+        "name": {
+          "en": "Hoothoot",
+          "he": "הותהוט"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 164,
-        "name": "noctowl",
+        "name": {
+          "en": "Noctowl",
+          "he": "נוקטאול"
+        },
         "minLevel": 20,
         "trigger": "level-up",
         "item": null
@@ -1657,14 +2194,20 @@
     "stages": [
       {
         "id": 165,
-        "name": "ledyba",
+        "name": {
+          "en": "Ledyba",
+          "he": "לדיבה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 166,
-        "name": "ledian",
+        "name": {
+          "en": "Ledian",
+          "he": "לדיאן"
+        },
         "minLevel": 18,
         "trigger": "level-up",
         "item": null
@@ -1676,14 +2219,20 @@
     "stages": [
       {
         "id": 167,
-        "name": "spinarak",
+        "name": {
+          "en": "Spinarak",
+          "he": "ספינארק"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 168,
-        "name": "ariados",
+        "name": {
+          "en": "Ariados",
+          "he": "אריאדוס"
+        },
         "minLevel": 22,
         "trigger": "level-up",
         "item": null
@@ -1695,14 +2244,20 @@
     "stages": [
       {
         "id": 170,
-        "name": "chinchou",
+        "name": {
+          "en": "Chinchou",
+          "he": "צ'ינצ'או"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 171,
-        "name": "lanturn",
+        "name": {
+          "en": "Lanturn",
+          "he": "לנטורן"
+        },
         "minLevel": 27,
         "trigger": "level-up",
         "item": null
@@ -1714,14 +2269,20 @@
     "stages": [
       {
         "id": 175,
-        "name": "togepi",
+        "name": {
+          "en": "Togepi",
+          "he": "טוגפי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 176,
-        "name": "togetic",
+        "name": {
+          "en": "Togetic",
+          "he": "טוגטיק"
+        },
         "minLevel": null,
         "trigger": "level-up",
         "item": null
@@ -1733,14 +2294,20 @@
     "stages": [
       {
         "id": 177,
-        "name": "natu",
+        "name": {
+          "en": "Natu",
+          "he": "נאטו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 178,
-        "name": "xatu",
+        "name": {
+          "en": "Xatu",
+          "he": "זאטו"
+        },
         "minLevel": 25,
         "trigger": "level-up",
         "item": null
@@ -1752,21 +2319,30 @@
     "stages": [
       {
         "id": 179,
-        "name": "mareep",
+        "name": {
+          "en": "Mareep",
+          "he": "מריפ"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 180,
-        "name": "flaaffy",
+        "name": {
+          "en": "Flaaffy",
+          "he": "פלאפי"
+        },
         "minLevel": 15,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 181,
-        "name": "ampharos",
+        "name": {
+          "en": "Ampharos",
+          "he": "אמפארוס"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -1778,21 +2354,30 @@
     "stages": [
       {
         "id": 187,
-        "name": "hoppip",
+        "name": {
+          "en": "Hoppip",
+          "he": "הופיפ"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 188,
-        "name": "skiploom",
+        "name": {
+          "en": "Skiploom",
+          "he": "סקיפלום"
+        },
         "minLevel": 18,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 189,
-        "name": "jumpluff",
+        "name": {
+          "en": "Jumpluff",
+          "he": "ג'אמפלאף"
+        },
         "minLevel": 27,
         "trigger": "level-up",
         "item": null
@@ -1804,7 +2389,10 @@
     "stages": [
       {
         "id": 190,
-        "name": "aipom",
+        "name": {
+          "en": "Aipom",
+          "he": "אייפום"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1816,14 +2404,20 @@
     "stages": [
       {
         "id": 191,
-        "name": "sunkern",
+        "name": {
+          "en": "Sunkern",
+          "he": "סאנקרן"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 192,
-        "name": "sunflora",
+        "name": {
+          "en": "Sunflora",
+          "he": "סנפלורה"
+        },
         "minLevel": null,
         "trigger": "use-item",
         "item": "sun-stone"
@@ -1835,7 +2429,10 @@
     "stages": [
       {
         "id": 193,
-        "name": "yanma",
+        "name": {
+          "en": "Yanma",
+          "he": "יאנמה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1847,14 +2444,20 @@
     "stages": [
       {
         "id": 194,
-        "name": "wooper",
+        "name": {
+          "en": "Wooper",
+          "he": "ווופר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 195,
-        "name": "quagsire",
+        "name": {
+          "en": "Quagsire",
+          "he": "קוואגסייר"
+        },
         "minLevel": 20,
         "trigger": "level-up",
         "item": null
@@ -1866,7 +2469,10 @@
     "stages": [
       {
         "id": 198,
-        "name": "murkrow",
+        "name": {
+          "en": "Murkrow",
+          "he": "מרקרו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1878,7 +2484,10 @@
     "stages": [
       {
         "id": 200,
-        "name": "misdreavus",
+        "name": {
+          "en": "Misdreavus",
+          "he": "מיסדרוס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1890,7 +2499,10 @@
     "stages": [
       {
         "id": 201,
-        "name": "unown",
+        "name": {
+          "en": "Unown",
+          "he": "אנואון"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1902,7 +2514,10 @@
     "stages": [
       {
         "id": 203,
-        "name": "girafarig",
+        "name": {
+          "en": "Girafarig",
+          "he": "ג'יראפריג"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1914,14 +2529,20 @@
     "stages": [
       {
         "id": 204,
-        "name": "pineco",
+        "name": {
+          "en": "Pineco",
+          "he": "פינקו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 205,
-        "name": "forretress",
+        "name": {
+          "en": "Forretress",
+          "he": "פורטרס"
+        },
         "minLevel": 31,
         "trigger": "level-up",
         "item": null
@@ -1933,7 +2554,10 @@
     "stages": [
       {
         "id": 206,
-        "name": "dunsparce",
+        "name": {
+          "en": "Dunsparce",
+          "he": "דאנספארס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1945,7 +2569,10 @@
     "stages": [
       {
         "id": 207,
-        "name": "gligar",
+        "name": {
+          "en": "Gligar",
+          "he": "גלייגר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1957,14 +2584,20 @@
     "stages": [
       {
         "id": 209,
-        "name": "snubbull",
+        "name": {
+          "en": "Snubbull",
+          "he": "סנאבול"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 210,
-        "name": "granbull",
+        "name": {
+          "en": "Granbull",
+          "he": "גרנבול"
+        },
         "minLevel": 23,
         "trigger": "level-up",
         "item": null
@@ -1976,7 +2609,10 @@
     "stages": [
       {
         "id": 211,
-        "name": "qwilfish",
+        "name": {
+          "en": "Qwilfish",
+          "he": "קווילפיש"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -1988,7 +2624,10 @@
     "stages": [
       {
         "id": 213,
-        "name": "shuckle",
+        "name": {
+          "en": "Shuckle",
+          "he": "שאקל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2000,7 +2639,10 @@
     "stages": [
       {
         "id": 214,
-        "name": "heracross",
+        "name": {
+          "en": "Heracross",
+          "he": "הראקרוס"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2012,7 +2654,10 @@
     "stages": [
       {
         "id": 215,
-        "name": "sneasel",
+        "name": {
+          "en": "Sneasel",
+          "he": "סניזל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2024,14 +2669,20 @@
     "stages": [
       {
         "id": 216,
-        "name": "teddiursa",
+        "name": {
+          "en": "Teddiursa",
+          "he": "טדיאורסה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 217,
-        "name": "ursaring",
+        "name": {
+          "en": "Ursaring",
+          "he": "אורסרינג"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
@@ -2043,14 +2694,20 @@
     "stages": [
       {
         "id": 218,
-        "name": "slugma",
+        "name": {
+          "en": "Slugma",
+          "he": "סלאגמה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 219,
-        "name": "magcargo",
+        "name": {
+          "en": "Magcargo",
+          "he": "מגקארגו"
+        },
         "minLevel": 38,
         "trigger": "level-up",
         "item": null
@@ -2062,14 +2719,20 @@
     "stages": [
       {
         "id": 220,
-        "name": "swinub",
+        "name": {
+          "en": "Swinub",
+          "he": "סווינאב"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 221,
-        "name": "piloswine",
+        "name": {
+          "en": "Piloswine",
+          "he": "פילוסוויין"
+        },
         "minLevel": 33,
         "trigger": "level-up",
         "item": null
@@ -2081,7 +2744,10 @@
     "stages": [
       {
         "id": 222,
-        "name": "corsola",
+        "name": {
+          "en": "Corsola",
+          "he": "קורסולה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2093,14 +2759,20 @@
     "stages": [
       {
         "id": 223,
-        "name": "remoraid",
+        "name": {
+          "en": "Remoraid",
+          "he": "רמוריד"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 224,
-        "name": "octillery",
+        "name": {
+          "en": "Octillery",
+          "he": "אוקטילרי"
+        },
         "minLevel": 25,
         "trigger": "level-up",
         "item": null
@@ -2112,7 +2784,10 @@
     "stages": [
       {
         "id": 225,
-        "name": "delibird",
+        "name": {
+          "en": "Delibird",
+          "he": "דליבירד"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2124,7 +2799,10 @@
     "stages": [
       {
         "id": 227,
-        "name": "skarmory",
+        "name": {
+          "en": "Skarmory",
+          "he": "סקארמורי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2136,14 +2814,20 @@
     "stages": [
       {
         "id": 228,
-        "name": "houndour",
+        "name": {
+          "en": "Houndour",
+          "he": "האונדור"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 229,
-        "name": "houndoom",
+        "name": {
+          "en": "Houndoom",
+          "he": "האונדום"
+        },
         "minLevel": 24,
         "trigger": "level-up",
         "item": null
@@ -2155,14 +2839,20 @@
     "stages": [
       {
         "id": 231,
-        "name": "phanpy",
+        "name": {
+          "en": "Phanpy",
+          "he": "פנפי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 232,
-        "name": "donphan",
+        "name": {
+          "en": "Donphan",
+          "he": "דונפן"
+        },
         "minLevel": 25,
         "trigger": "level-up",
         "item": null
@@ -2174,7 +2864,10 @@
     "stages": [
       {
         "id": 234,
-        "name": "stantler",
+        "name": {
+          "en": "Stantler",
+          "he": "סטנטלר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2186,7 +2879,10 @@
     "stages": [
       {
         "id": 235,
-        "name": "smeargle",
+        "name": {
+          "en": "Smeargle",
+          "he": "סמירגל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2198,7 +2894,10 @@
     "stages": [
       {
         "id": 241,
-        "name": "miltank",
+        "name": {
+          "en": "Miltank",
+          "he": "מילטנק"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2210,7 +2909,10 @@
     "stages": [
       {
         "id": 243,
-        "name": "raikou",
+        "name": {
+          "en": "Raikou",
+          "he": "ראיקו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2222,7 +2924,10 @@
     "stages": [
       {
         "id": 244,
-        "name": "entei",
+        "name": {
+          "en": "Entei",
+          "he": "אנטיי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2234,7 +2939,10 @@
     "stages": [
       {
         "id": 245,
-        "name": "suicune",
+        "name": {
+          "en": "Suicune",
+          "he": "סויקון"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2246,21 +2954,30 @@
     "stages": [
       {
         "id": 246,
-        "name": "larvitar",
+        "name": {
+          "en": "Larvitar",
+          "he": "לרוויטאר"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 247,
-        "name": "pupitar",
+        "name": {
+          "en": "Pupitar",
+          "he": "פיופיטאר"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 248,
-        "name": "tyranitar",
+        "name": {
+          "en": "Tyranitar",
+          "he": "טירניטאר"
+        },
         "minLevel": 55,
         "trigger": "level-up",
         "item": null
@@ -2272,7 +2989,10 @@
     "stages": [
       {
         "id": 249,
-        "name": "lugia",
+        "name": {
+          "en": "Lugia",
+          "he": "לוגיאה"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2284,7 +3004,10 @@
     "stages": [
       {
         "id": 250,
-        "name": "ho-oh",
+        "name": {
+          "en": "Ho-oh",
+          "he": "הו-או"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -2296,7 +3019,10 @@
     "stages": [
       {
         "id": 251,
-        "name": "celebi",
+        "name": {
+          "en": "Celebi",
+          "he": "סלבי"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null

@@ -9,7 +9,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
-import { getPokemon } from '../services/pokemon-data.js';
+import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const BG_COLOR = '#301818';
@@ -172,7 +172,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
         // Name
         const data = getPokemon(id);
-        const name = data?.name ?? `Pokemon ${id}`;
+        const name = data ? getPokemonDisplayName(id) : `Pokemon ${id}`;
         drawText(ctx, name, 54, y + 3, { size: 8, color: '#ffffff', font: 'monospace' });
 
         // Type dots
@@ -231,7 +231,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     }
 
     // Name
-    drawText(ctx, data.name, 40, 3, { size: 8, color: '#ffffff', font: 'monospace' });
+    drawText(ctx, getPokemonDisplayName(id), 40, 3, { size: 8, color: '#ffffff', font: 'monospace' });
 
     // Large sprite
     const sprite = getCachedImage(`/sprites/pokemon/front/${id}.png`);

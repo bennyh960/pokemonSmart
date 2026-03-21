@@ -7,9 +7,14 @@ const API_BASE = 'https://pokeapi.co/api/v2';
 const RATE_LIMIT_MS = 100;
 const TOTAL_POKEMON = 251;
 
+export interface LocalizedName {
+  en: string;
+  he: string;
+}
+
 export interface EvolutionStep {
   id: number;
-  name: string;
+  name: LocalizedName;
   minLevel: number | null;
   trigger: string | null;
   item: string | null;
@@ -34,9 +39,10 @@ function flattenChain(node: any, stages: EvolutionStep[]): void {
   if (speciesId > TOTAL_POKEMON) return;
 
   const detail = node.evolution_details[0];
+  const enName = node.species.name.charAt(0).toUpperCase() + node.species.name.slice(1);
   stages.push({
     id: speciesId,
-    name: node.species.name,
+    name: { en: enName, he: enName }, // Hebrew added by add-hebrew-names.ts
     minLevel: detail?.min_level ?? null,
     trigger: detail?.trigger?.name ?? null,
     item: detail?.item?.name ?? null,

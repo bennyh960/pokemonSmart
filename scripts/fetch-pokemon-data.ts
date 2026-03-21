@@ -1,15 +1,23 @@
 /**
  * Fetches data for all 251 Gen 1+2 Pokemon from PokeAPI.
  * Saves to src/data/pokemon.json
+ *
+ * NOTE: After fetching, run `npx tsx scripts/add-hebrew-names.ts`
+ * to add Hebrew translations (PokeAPI only provides English names).
  */
 
 const TOTAL_POKEMON = 251;
 const API_BASE = 'https://pokeapi.co/api/v2';
 const RATE_LIMIT_MS = 100;
 
+export interface LocalizedName {
+  en: string;
+  he: string;
+}
+
 export interface PokemonEntry {
   id: number;
-  name: string;
+  name: LocalizedName;
   types: string[];
   stats: {
     hp: number;
@@ -39,9 +47,10 @@ export async function fetchPokemonData(): Promise<PokemonEntry[]> {
       statsMap[s.stat.name] = s.base_stat;
     }
 
+    const enName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
     pokemon.push({
       id: data.id,
-      name: data.name,
+      name: { en: enName, he: enName }, // Hebrew added by add-hebrew-names.ts
       types: data.types.map((t: { type: { name: string } }) => t.type.name),
       stats: {
         hp: statsMap['hp'] ?? 0,
