@@ -10,10 +10,14 @@ import { fetchMovesData } from './fetch-moves-data.js';
 import { fetchTypeChart } from './fetch-type-chart.js';
 import { fetchEvolutionChains } from './fetch-evolution-chains.js';
 import { fetchSprites } from './fetch-sprites.js';
+import { fetchBattleBackgrounds } from './fetch-battle-backgrounds.js';
+import { fetchTrainerSprites } from './fetch-trainer-sprites.js';
 
 const ROOT = process.cwd();
 const DATA_DIR = join(ROOT, 'src', 'data');
 const SPRITES_DIR = join(ROOT, 'public', 'sprites', 'pokemon');
+const BACKGROUNDS_DIR = join(ROOT, 'public', 'sprites', 'backgrounds');
+const TRAINERS_DIR = join(ROOT, 'public', 'sprites', 'trainers');
 
 interface Task {
   name: string;
@@ -64,6 +68,23 @@ const tasks: Task[] = [
     async run() {
       const counts = await fetchSprites(SPRITES_DIR);
       console.log(`  ✓ Downloaded sprites - Front: ${counts.front}, Back: ${counts.back}, Icons: ${counts.icons}`);
+    },
+  },
+  {
+    name: 'Battle Backgrounds',
+    async run() {
+      const count = await fetchBattleBackgrounds(BACKGROUNDS_DIR);
+      console.log(`  ✓ Downloaded ${count} battle backgrounds`);
+    },
+  },
+  {
+    name: 'Trainer Sprites',
+    async run() {
+      const { downloaded, skipped } = await fetchTrainerSprites(TRAINERS_DIR);
+      console.log(`  ✓ Downloaded ${downloaded} trainer sprites`);
+      if (skipped.length > 0) {
+        console.log(`  ⚠ Skipped: ${skipped.join(', ')}`);
+      }
     },
   },
 ];
