@@ -128,7 +128,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function sendOutNextTrainerPokemon(): void {
     trainerPartyIndex++;
     enemy = trainerData!.party[trainerPartyIndex];
-    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 118, 4, false);
+    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 148, 2, false);
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
     textBox = createTextBox([t('battle.trainerSentOut', { name: enemy.name })], isRTL());
@@ -174,9 +174,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
     battleContext = pendingBattleContext;
     pendingBattleContext = 'grass';
-    // Info positioned above each Pokemon sprite
-    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 118, 4, false);
-    playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 8, 36, true, player.xp, player.xpToNext);
+    // Panels above each Pokemon — enemy right, player left
+    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 148, 2, false);
+    playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 4, 32, true, player.xp, player.xpToNext);
     menu = createBattleMenu(player.moves);
     textBox = null; flash = null; shake = null;
     fade = createFade(true, 0.5); clearAllPopups();
@@ -198,7 +198,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       enemy.hp = Math.max(0, enemy.hp - dmg);
       setHP(enemyHpBar, enemy.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
-      spawnDamageNumber(`-${dmg}`, 186, 44, '#f84038');
+      spawnDamageNumber(`-${dmg}`, 190, 42, '#f84038');
       audio.playSFX('hit');
       const rtl = isRTL();
       const msgs = [t('battle.usedMove', { name: player.name, move: m.name })];
@@ -221,7 +221,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       player.hp = Math.max(0, player.hp - dmg);
       setHP(playerHpBar, player.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
-      spawnDamageNumber(`-${dmg}`, 54, 76, '#f84038');
+      spawnDamageNumber(`-${dmg}`, 46, 80, '#f84038');
       audio.playSFX('hit');
       const msgs = [t('battle.usedMove', { name: enemy.name, move: m.name })];
       const et = effText(m.type, player.types);
@@ -492,18 +492,18 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
       }
 
-      // ── Enemy Pokemon sprite (right side, Y=20) ──
+      // ── Enemy Pokemon sprite (right side, tighter to panel) ──
       if (!showingTrainer) {
         const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
         if (enemySprite) {
-          ctx.drawImage(enemySprite, 158, 20, 56, 56);
+          ctx.drawImage(enemySprite, 164, 18, 54, 54);
         }
       }
 
-      // ── Player Pokemon sprite (left side, Y=50) ──
+      // ── Player Pokemon sprite (left side, tighter to panel) ──
       const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
       if (playerSprite) {
-        ctx.drawImage(playerSprite, 22, 50, 64, 64);
+        ctx.drawImage(playerSprite, 16, 54, 62, 62);
       }
 
       // ── Floating info — no panels, just text + bars above each Pokemon ──
@@ -534,11 +534,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     const FAINTED = '#484848';
     const UNKNOWN = '#606060'; // unrevealed in trainer battles
 
-    // Player party — below player info text (above sprite)
+    // Player party — below player panel
     if (hasActiveGame()) {
       const pd = getPlayerData();
-      const startX = 8;
-      const dotY = 50;
+      const startX = 6;
+      const dotY = 54;
       for (let i = 0; i < Math.min(pd.party.length, 6); i++) {
         const alive = pd.party[i].hp > 0;
         const cx = startX + i * GAP + DOT_R;
@@ -557,8 +557,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     // Enemy party — below enemy info panel (trainer battles only)
     if (isTrainerBattle && trainerData) {
-      const startX = 118;
-      const dotY = 16;
+      const startX = 150;
+      const dotY = 18;
       for (let i = 0; i < Math.min(trainerData.party.length, 6); i++) {
         const pkmn = trainerData.party[i];
         const cx = startX + i * GAP + DOT_R;

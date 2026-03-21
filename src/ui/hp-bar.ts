@@ -1,23 +1,34 @@
 /**
- * HPBar — Showdown-style floating info: name, level, HP bar, XP bar.
- * No panel backgrounds — text floats directly over the battle scene.
+ * HPBar — Showdown-style dark rounded info panel.
+ *
+ * Layout per reference:
+ *   ┌─────────────────────────────┐
+ *   │    Name   ♀  L82           │  ← centered name, gender colored, level right
+ *   │ 100% [═══════HP BAR══════] │  ← enemy: % left, bar right
+ *   │ [═══════HP BAR══════] 45%  │  ← player: bar left, % right
+ *   │ 25%  [═══════XP BAR═════]  │  ← player only: % left, bar right (blue)
+ *   │ [BRN] [0.4×Def] [2×SpA]   │  ← status + stat changes
+ *   └─────────────────────────────┘
  */
 
 import { fillRect, drawText } from '../engine/renderer.js';
 
-const HP_BAR_W = 50;
-const HP_BAR_H = 2;
-const HP_OFFSET = 12; // space for "HP" label before bar
-const XP_BAR_W = 50;
-const XP_BAR_H = 1;
+// Panel & bar dimensions (logical pixels)
+const PANEL_W = 82;
+const PAD = 3;
+const BAR_W = 54;
+const HP_BAR_H = 3;
+const XP_BAR_H = 2;
+const PCT_W = 18;   // space reserved for percentage text
+const PCT_GAP = 2;  // gap between percentage and bar
 
 const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
-  brn: { bg: '#f08030', fg: '#fff' },
-  par: { bg: '#f8d030', fg: '#222' },
+  brn: { bg: '#e86830', fg: '#fff' },
+  par: { bg: '#e8c830', fg: '#222' },
   psn: { bg: '#a040a0', fg: '#fff' },
   tox: { bg: '#a040a0', fg: '#fff' },
   slp: { bg: '#a8a878', fg: '#fff' },
-  frz: { bg: '#98d8d8', fg: '#222' },
+  frz: { bg: '#80d0d0', fg: '#222' },
 };
 
 export interface HPBarState {
@@ -26,13 +37,15 @@ export interface HPBarState {
   displayHp: number;
   name: string;
   level: number;
-  x: number;
-  y: number;
+  x: number;  // panel top-left X
+  y: number;  // panel top-left Y
+  /** true = player side (% right for HP, XP bar shown). false = enemy (% left). */
   showNumbers: boolean;
   xp: number;
   xpToNext: number;
   status: string;
   gender: string;
+  statChanges: { stat: string; stages: number }[];
 }
 
 function getHpColor(ratio: number): string {
@@ -41,13 +54,48 @@ function getHpColor(ratio: number): string {
   return '#f84038';
 }
 
-/** Keep export for compatibility — now a no-op since we removed panel backgrounds. */
-export function drawPanelBackground(
-  _ctx: CanvasRenderingContext2D,
-  _x: number, _y: number, _w: number, _h: number,
-): void {
-  // No-op: Showdown style has no panel backgrounds
+/** Draw a dark rounded panel background (pixel-art approximation). */
+function drawRoundedPanel(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
+  ctx.save();
+  ctx.globalAlpha = 0.88;
+  const c = '#1a1a1a';
+  fillRect(ctx, x + 2, y, w - 4, h, c);
+  fillRect(ctx, x + 1, y + 1, w - 2, h - 2, c);
+  fillRect(ctx, x, y + 2, w, h - 4, c);
+  ctx.globalAlpha = 1;
+  ctx.restore();
 }
+
+/** Draw an HP/XP bar with light track, colored fill, and subtle highlight. */
+function drawBar(ctx: CanvasRenderingContext2D, bx: number, by: number, bw: number, bh: number, ratio: number, color: string): void {
+  // Outer border
+  fillRect(ctx, bx - 1, by - 1, bw + 2, bh + 2, '#282828');
+  // Light track
+  fillRect(ctx, bx, by, bw, bh, '#c8c8c8');
+  // Colored fill
+  const fw = Math.floor(bw * Math.max(0, Math.min(1, ratio)));
+  if (fw > 0) {
+    fillRect(ctx, bx, by, fw, bh, color);
+    // Top highlight
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    fillRect(ctx, bx, by, fw, 1, '#ffffff');
+    ctx.restore();
+  }
+}
+
+/** Get total panel height based on what's visible. */
+export function getPanelHeight(bar: HPBarState): number {
+  let h = 16; // name row (8px) + HP bar row (8px)
+  if (bar.showNumbers && bar.xpToNext > 0) h += 6; // XP bar row
+  if (bar.status || bar.statChanges.length > 0) h += 8; // status row
+  return h;
+}
+
+/** No-op kept for backward compatibility. Panel is drawn by renderHPBar. */
+export function drawPanelBackground(
+  _ctx: CanvasRenderingContext2D, _x: number, _y: number, _w: number, _h: number,
+): void {}
 
 export function createHPBar(
   name: string, level: number, hp: number, maxHp: number,
@@ -55,7 +103,7 @@ export function createHPBar(
 ): HPBarState {
   return {
     currentHp: hp, maxHp, displayHp: hp, name, level,
-    x, y, showNumbers, xp, xpToNext, status: '', gender: '',
+    x, y, showNumbers, xp, xpToNext, status: '', gender: '', statChanges: [],
   };
 }
 
@@ -92,59 +140,76 @@ export function isHPAnimating(bar: HPBarState): boolean {
   return Math.abs(bar.displayHp - bar.currentHp) > 0.5;
 }
 
-/** Render floating info: name + level, HP bar, XP bar (player). */
+/** Render the complete info panel: background, name, HP bar, XP bar, status. */
 export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
-  const { x, y, name, level, displayHp, maxHp, showNumbers, xp, xpToNext, status, gender } = bar;
-  const rightEdge = x + HP_OFFSET + HP_BAR_W;
+  const { x, y, name, level, displayHp, maxHp, showNumbers: isPlayer, xp, xpToNext, status, gender, statChanges } = bar;
 
-  // ── Line 1: Name + gender + Level ──
-  let displayName = name;
-  if (gender) displayName += ` ${gender}`;
-  drawText(ctx, displayName, x, y, { size: 7, color: '#ffffff' });
-  drawText(ctx, `Lv${level}`, rightEdge, y, { size: 6, color: '#d0d0d0', align: 'right' });
+  // ── Panel background ──
+  const panelH = getPanelHeight(bar);
+  drawRoundedPanel(ctx, x, y, PANEL_W, panelH);
 
-  // Status badge next to level
+  // ── Row 1: Name + Gender + Level ──
+  const nameY = y + 2;
+  drawText(ctx, name, x + PAD, nameY, { size: 6, color: '#ffffff' });
+
+  // Level on right
+  drawText(ctx, `L${level}`, x + PANEL_W - PAD, nameY, { size: 5, color: '#c8c8c8', align: 'right' });
+
+  // Gender icon just before level
+  if (gender) {
+    const genderColor = gender === '♂' ? '#3890f0' : '#f06080';
+    const lvW = (`L${level}`).length * 3 + 1;
+    drawText(ctx, gender, x + PANEL_W - PAD - lvW - 1, nameY, { size: 5, color: genderColor, align: 'right' });
+  }
+
+  // ── Row 2: HP bar ──
+  const hpY = y + 10;
+  const hpRatio = maxHp > 0 ? displayHp / maxHp : 0;
+  const hpPct = maxHp > 0 ? Math.ceil(hpRatio * 100) : 0;
+
+  if (isPlayer) {
+    // Player: [bar] pct%  — bar on left, percentage on right
+    const barX = x + PAD;
+    drawBar(ctx, barX, hpY, BAR_W, HP_BAR_H, hpRatio, getHpColor(hpRatio));
+    drawText(ctx, `${hpPct}%`, x + PAD + BAR_W + PCT_GAP, hpY - 1, { size: 5, color: '#e0e0e0' });
+  } else {
+    // Enemy: pct% [bar]  — percentage on left, bar on right
+    drawText(ctx, `${hpPct}%`, x + PAD + PCT_W - 1, hpY - 1, { size: 5, color: '#e0e0e0', align: 'right' });
+    const barX = x + PAD + PCT_W + PCT_GAP;
+    drawBar(ctx, barX, hpY, BAR_W, HP_BAR_H, hpRatio, getHpColor(hpRatio));
+  }
+
+  let nextY = hpY + HP_BAR_H + 3;
+
+  // ── Row 3: XP bar (player only) — pct% [bar] (percentage on left, opposite from HP) ──
+  if (isPlayer && xpToNext > 0) {
+    const xpRatio = xpToNext > 0 ? Math.min(xp / xpToNext, 1) : 0;
+    const xpPct = Math.floor(xpRatio * 100);
+    drawText(ctx, `${xpPct}%`, x + PAD + PCT_W - 1, nextY - 1, { size: 5, color: '#80b0e0', align: 'right' });
+    const barX = x + PAD + PCT_W + PCT_GAP;
+    drawBar(ctx, barX, nextY, BAR_W, XP_BAR_H, xpRatio, '#48a0f8');
+    nextY += XP_BAR_H + 3;
+  }
+
+  // ── Row 4: Status badge + Stat changes ──
+  let badgeX = x + PAD;
+
   if (status && STATUS_COLORS[status]) {
     const sc = STATUS_COLORS[status];
-    fillRect(ctx, rightEdge + 2, y + 1, 12, 6, sc.bg);
-    drawText(ctx, status.toUpperCase(), rightEdge + 3, y + 1, { size: 5, color: sc.fg });
+    fillRect(ctx, badgeX, nextY, 14, 6, sc.bg);
+    drawText(ctx, status.toUpperCase(), badgeX + 1, nextY, { size: 4, color: sc.fg });
+    badgeX += 16;
   }
 
-  // ── Line 2: HP bar (y+9) ──
-  const barY = y + 9;
-  drawText(ctx, 'HP', x, barY, { size: 6, color: '#f8c030' });
-
-  // Bar track
-  fillRect(ctx, x + HP_OFFSET, barY, HP_BAR_W, HP_BAR_H, '#404040');
-
-  // Bar fill
-  const ratio = maxHp > 0 ? displayHp / maxHp : 0;
-  const fillW = Math.floor(HP_BAR_W * Math.max(0, Math.min(1, ratio)));
-  if (fillW > 0) {
-    fillRect(ctx, x + HP_OFFSET, barY, fillW, HP_BAR_H, getHpColor(ratio));
-  }
-
-  // HP text — numbers for player, percentage for enemy
-  if (showNumbers) {
-    drawText(ctx, `${Math.floor(displayHp)}/${maxHp}`, rightEdge, barY, {
-      size: 6, color: '#ffffff', align: 'right',
-    });
-  } else {
-    const pct = maxHp > 0 ? Math.ceil(ratio * 100) : 0;
-    drawText(ctx, `${pct}%`, rightEdge, barY, {
-      size: 6, color: '#c0c0c0', align: 'right',
-    });
-  }
-
-  // ── Line 3: XP bar (player only, y+14) ──
-  if (showNumbers && xpToNext > 0) {
-    const xpY = barY + HP_BAR_H + 2;
-    drawText(ctx, 'EXP', x, xpY, { size: 5, color: '#58b0f8' });
-    fillRect(ctx, x + HP_OFFSET, xpY, XP_BAR_W, XP_BAR_H, '#303050');
-    const xpRatio = xpToNext > 0 ? Math.min(xp / xpToNext, 1) : 0;
-    const xpFillW = Math.floor(XP_BAR_W * xpRatio);
-    if (xpFillW > 0) {
-      fillRect(ctx, x + HP_OFFSET, xpY, xpFillW, XP_BAR_H, '#48a0f8');
-    }
+  for (const change of statChanges) {
+    const isUp = change.stages > 0;
+    const color = isUp ? '#30c030' : '#e04040';
+    const bg = isUp ? '#1a3a1a' : '#3a1a1a';
+    const mult = Math.abs(change.stages) === 1 ? '' : `${Math.pow(2, Math.abs(change.stages) - 1)}×`;
+    const label = `${mult}${change.stat}`;
+    const badgeW = label.length * 3 + 4;
+    fillRect(ctx, badgeX, nextY, badgeW, 6, bg);
+    drawText(ctx, label, badgeX + 2, nextY, { size: 4, color });
+    badgeX += badgeW + 2;
   }
 }
