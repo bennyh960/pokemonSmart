@@ -97,7 +97,7 @@ export function drawRect(
   y: number,
   w: number,
   h: number,
-  color = '#ffffff',
+  color = 'red',
   lineWidth = 1,
 ): void {
   ctx.strokeStyle = color;
@@ -112,7 +112,7 @@ export function fillRect(
   y: number,
   w: number,
   h: number,
-  color = '#ffffff',
+  color = 'red',
 ): void {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, w, h);

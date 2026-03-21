@@ -23,6 +23,7 @@ const SCALE = 3;
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement) {
+  
   const canvas = document.createElement('canvas');
   canvas.width = NATIVE_WIDTH;
   canvas.height = NATIVE_HEIGHT;
