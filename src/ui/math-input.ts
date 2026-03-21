@@ -10,9 +10,7 @@ import type { InputManager } from '../engine/input.js';
 import type { MathProblem } from '../types/index.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, RES_SCALE } from '../engine/config.js';
 
 /** Pad button layout: rows of [label, value]. */
 const PAD_LAYOUT: string[][] = [
@@ -76,8 +74,8 @@ function canvasToNative(
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
   return {
-    x: (tapPos.x - rect.left) * scaleX,
-    y: (tapPos.y - rect.top) * scaleY,
+    x: (tapPos.x - rect.left) * scaleX / RES_SCALE,
+    y: (tapPos.y - rect.top) * scaleY / RES_SCALE,
   };
 }
 

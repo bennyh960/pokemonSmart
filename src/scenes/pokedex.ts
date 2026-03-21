@@ -11,9 +11,7 @@ import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import { getPokemon } from '../services/pokemon-data.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const BG_COLOR = '#301818';
 const ENTRY_HEIGHT = 26;
 const VISIBLE_ENTRIES = 5;

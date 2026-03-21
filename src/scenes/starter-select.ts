@@ -14,9 +14,7 @@ import { createPokemonFromData } from '../systems/encounter.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 
 /** Starter definitions: Gen 1 starters with 8 moves each. */
 const STARTERS = [

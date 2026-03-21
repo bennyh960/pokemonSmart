@@ -8,9 +8,7 @@ import { t } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { getShopItems, getItem, type ItemDef } from '../data/items.js';
 import type { InputManager } from '../engine/input.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 
 export interface ShopState {
   open: boolean;

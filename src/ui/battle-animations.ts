@@ -3,9 +3,7 @@
  */
 
 import { fillRect, drawText } from '../engine/renderer.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 
 // --- Flash Effect ---
 

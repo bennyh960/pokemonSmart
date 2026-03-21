@@ -22,7 +22,7 @@ A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (�
 | qa-tester | `.claude/agents/qa-tester.md` | Testing + documentation |
 
 ## Tech Stack
-- **Runtime:** Vite + TypeScript + HTML5 Canvas (240×160 scaled 3x)
+- **Runtime:** Vite + TypeScript + HTML5 Canvas (240×160 logical coords, 720×480 physical via `ctx.scale(RES_SCALE=3)` in `src/engine/config.ts`, responsive display)
 - **Audio:** Howler.js
 - **i18n:** Custom `src/i18n/i18n.ts` — Hebrew (default) + English, `t(key, params)`, L key toggles
 - **Data:** PokeAPI (fetched at build time → static JSON)

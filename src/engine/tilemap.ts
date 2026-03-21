@@ -14,6 +14,7 @@
 
 import { fillRect } from './renderer.js';
 import { getTileImage } from './asset-generator.js';
+import { LOGICAL_WIDTH, LOGICAL_HEIGHT } from './config.js';
 import type { NPCData } from '../systems/npc.js';
 
 /** Map transition definition — stepping on (fromX, fromY) warps to another map. */
@@ -99,8 +100,8 @@ export function createTileMap(data: TileMapData) {
 
     /** Render visible tiles to the canvas, offset by camera. */
     render(ctx: CanvasRenderingContext2D, cameraX: number, cameraY: number): void {
-      const screenW = ctx.canvas.width;
-      const screenH = ctx.canvas.height;
+      const screenW = LOGICAL_WIDTH;
+      const screenH = LOGICAL_HEIGHT;
 
       // Calculate visible tile range
       const startCol = Math.max(0, Math.floor(cameraX / tileSize));

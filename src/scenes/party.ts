@@ -13,9 +13,7 @@ import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js
 import { t } from '../i18n/i18n.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const MAX_PARTY = 6;
 const SLOT_HEIGHT = 22;
 const SLOT_START_Y = 16;

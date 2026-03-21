@@ -1528,7 +1528,7 @@ Credits ──► Title Screen (New Game+ unlocked)
 ## נספח ג': Technical Notes למפתחים
 
 - **Engine:** Vite + TypeScript + HTML5 Canvas
-- **רזולוציה:** 240×160 native (GBA) scaled 3x → 720×480 display (responsive)
+- **רזולוציה:** 240×160 logical coordinate system, physical canvas 720×480 via `ctx.scale(RES_SCALE=3)`. All game code uses logical coords; sprites render at full physical resolution for quality. Responsive CSS auto-fits to viewport. Config: `src/engine/config.ts`
 - **Minimum Pokemon per battle:** 1 לכל צד
 - **Maximum Pokemon in party:** 6
 - **Maximum Pokemon in storage:** 30 (MVP)

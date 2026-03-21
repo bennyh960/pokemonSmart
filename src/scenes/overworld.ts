@@ -21,10 +21,7 @@ import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight } from '../systems/npc.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
-const TILE_SIZE = 16;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE } from '../engine/config.js';
 const MOVE_DURATION = 0.2;
 const ENCOUNTER_CHANCE = 0.10;
 const TRANSITION_FADE_TIME = 0.3;

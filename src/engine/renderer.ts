@@ -7,6 +7,7 @@
 
 import type { TextOptions } from '../types/index.js';
 import { FONT_EN, fontFor } from './fonts.js';
+import { LOGICAL_WIDTH, LOGICAL_HEIGHT } from './config.js';
 
 /** Default text rendering options. */
 const DEFAULT_TEXT_OPTIONS: Required<TextOptions> = {
@@ -23,7 +24,7 @@ const DEFAULT_TEXT_OPTIONS: Required<TextOptions> = {
 /** Clear the entire canvas with a solid color. */
 export function clearScreen(ctx: CanvasRenderingContext2D, color = '#000000'): void {
   ctx.fillStyle = color;
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 }
 
 /** Draw a sub-region of a sprite sheet to the canvas. */

@@ -9,9 +9,7 @@ import type { InputManager } from '../engine/input.js';
 import type { Move, PokemonType } from '../types/index.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const MENU_Y = SCREEN_H - 40;
 const MENU_H = 40;
 

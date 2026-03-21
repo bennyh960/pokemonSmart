@@ -7,9 +7,7 @@
 
 import type { InputManager } from '../engine/input.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const BOX_H = 36;
 const BOX_Y = SCREEN_H - BOX_H;
 const TEXT_X = 8;

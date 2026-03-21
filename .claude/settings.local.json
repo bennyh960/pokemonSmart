@@ -17,7 +17,9 @@
       "Bash(git branch:*)",
       "Bash(npm run:*)",
       "Bash(git pull:*)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(grep:*)",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }

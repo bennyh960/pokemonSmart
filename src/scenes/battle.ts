@@ -21,8 +21,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getItem, type ItemDef } from '../data/items.js';
-
-const SCREEN_W = 240;
+import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 
 type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LOSE' | 'RUN'

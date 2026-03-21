@@ -1,9 +1,11 @@
 /**
  * Game - Main game engine.
  *
- * Creates the canvas element (240x160 native, scaled 3x to 720x480),
- * runs the game loop with delta-time, and coordinates the state machine
- * and input systems.
+ * Creates the canvas element at physical resolution (720x480) with a logical
+ * coordinate system of 240x160 applied via ctx.scale(). Runs the game loop
+ * with delta-time, and coordinates the state machine and input systems.
+ * A responsive resize handler keeps the canvas pixel-perfect at the largest
+ * integer scale that fits the viewport.
  */
 
 import { createStateMachine } from './state-machine.js';
@@ -15,20 +17,20 @@ import { createOverworldScene } from '../scenes/overworld.js';
 import { createStarterSelectScene } from '../scenes/starter-select.js';
 import { createPartyScene } from '../scenes/party.js';
 import { createPokedexScene } from '../scenes/pokedex.js';
-
-/** Native GBA-style resolution. */
-const NATIVE_WIDTH = 240;
-const NATIVE_HEIGHT = 160;
-const SCALE = 3;
+import {
+  LOGICAL_WIDTH,
+  LOGICAL_HEIGHT,
+  RES_SCALE,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+} from './config.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement) {
-  
+
   const canvas = document.createElement('canvas');
-  canvas.width = NATIVE_WIDTH;
-  canvas.height = NATIVE_HEIGHT;
-  canvas.style.width = `${NATIVE_WIDTH * SCALE}px`;
-  canvas.style.height = `${NATIVE_HEIGHT * SCALE}px`;
+  canvas.width = CANVAS_WIDTH;
+  canvas.height = CANVAS_HEIGHT;
   canvas.style.imageRendering = 'pixelated';
   container.appendChild(canvas);
 
@@ -47,6 +49,20 @@ export function createGame(container: HTMLElement) {
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
   stateMachine.register('PARTY', createPartyScene(input, stateMachine));
   stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
+
+  /** Compute the largest integer scale that fits the viewport and set canvas CSS size. */
+  function handleResize(): void {
+    const maxW = window.innerWidth;
+    const maxH = window.innerHeight;
+    const scaleX = Math.floor(maxW / LOGICAL_WIDTH);
+    const scaleY = Math.floor(maxH / LOGICAL_HEIGHT);
+    const fitScale = Math.max(1, Math.min(scaleX, scaleY));
+    canvas.style.width = `${LOGICAL_WIDTH * fitScale}px`;
+    canvas.style.height = `${LOGICAL_HEIGHT * fitScale}px`;
+  }
+
+  window.addEventListener('resize', handleResize);
+  handleResize();
 
   let lastTime = 0;
   let running = false;
@@ -70,8 +86,14 @@ export function createGame(container: HTMLElement) {
     }
 
     stateMachine.update(dt);
+
+    // Wrap scene rendering in ctx.scale so all drawing uses logical coords
+    ctx.save();
+    ctx.scale(RES_SCALE, RES_SCALE);
     ctx.imageSmoothingEnabled = false;
     stateMachine.render(ctx);
+    ctx.restore();
+
     input.endFrame();
     requestAnimationFrame(loop);
   }
@@ -85,6 +107,11 @@ export function createGame(container: HTMLElement) {
       requestAnimationFrame(loop);
     },
     stop(): void { running = false; },
-    destroy(): void { running = false; input.destroy(); container.removeChild(canvas); },
+    destroy(): void {
+      running = false;
+      window.removeEventListener('resize', handleResize);
+      input.destroy();
+      container.removeChild(canvas);
+    },
   };
 }

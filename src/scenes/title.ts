@@ -9,9 +9,7 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, drawText, fillRect } from '../engine/renderer.js';
 import { hasSavedGame, startNewGame, loadSavedGame } from '../systems/game-state.js';
 import { t, isRTL, getLocale, setLocale, type Locale } from '../i18n/i18n.js';
-
-const SCREEN_W = 240;
-const SCREEN_H = 160;
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const STAR_COUNT = 60;
 
 interface Star { x: number; y: number; speed: number; brightness: number; size: number; }

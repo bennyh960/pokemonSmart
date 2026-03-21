@@ -1,6 +1,6 @@
-# Sprint 3 — Bug Fix Progress (2026-03-20)
+# Sprint 3 — Bug Fix Progress (2026-03-21)
 
-Resume from here tomorrow. Tasks 1-2 done, 3-6 remaining + new bug #10.
+Resume from here. Tasks 1-3 done, 4-7 remaining.
 
 ---
 
@@ -15,29 +15,14 @@ Resume from here tomorrow. Tasks 1-2 done, 3-6 remaining + new bug #10.
 - **Branch:** feature/fix-pokecenter-exit (merged to main)
 - **Bug #9:** Pokemon Center always exits to Zeroville — fixed with source-map tracking
 
+### Task 3 — frontend-developer — Bugs #4 + #5 ✅
+- **Branch:** feature/fix-sprite-transparency (merged to main)
+- **Bug #4 (high):** Pokemon sprites white background — fixed
+- **Bug #5 (medium):** Tile sprites white background — fixed
+
 ---
 
 ## Remaining Tasks
-
-### Task 3 — frontend-developer — Bugs #4 + #5
-```
-You are the frontend-developer agent. Read .claude/agents/game-engine-developer.md for context on the engine, but your role is frontend/UI.
-
-Branch from main: feature/fix-sprite-transparency
-
-Fix two related sprite transparency bugs:
-
-BUG #4 (high): Pokemon sprites render with white background instead of transparent in battle. Check src/scenes/battle.ts and src/engine/sprite-loader.ts — the sprites from PokeAPI should have alpha transparency. The issue may be in how the canvas compositing works, or the battle background being drawn over/under sprites incorrectly. Verify ctx.imageSmoothingEnabled and globalCompositeOperation settings.
-
-BUG #5 (medium): Tile sprites in the overworld render with white background instead of transparent. Check src/engine/asset-generator.ts — the procedural tile generation functions may not be preserving transparency properly when creating tile images via canvasToImage(). The canvas context may need clearRect before drawing, or the PNG export may be losing alpha.
-
-After fixing:
-1. Run npx tsc --noEmit — must be 0 errors
-2. Run npm test — must pass
-3. Run npm run build — must succeed
-4. Update docs/bugs.md: change bugs #4 and #5 status to "fixed"
-5. Commit and request QA merge to main
-```
 
 ### Task 4 — frontend-developer — Bug #3
 ```
@@ -61,7 +46,7 @@ After fixing:
 1. Run npx tsc --noEmit — must be 0 errors
 2. Run npm test — must pass
 3. Run npm run build — must succeed
-4. Update docs/bugs.md: change bug #3 status to "fixed"
+4. Update docs/bugs.md: change bug #3 status to "closed"
 5. Commit and request QA merge to main
 ```
 
@@ -83,7 +68,7 @@ After fixing:
 1. Run npx tsc --noEmit — must be 0 errors
 2. Run npm test — must pass
 3. Run npm run build — must succeed
-4. Update docs/bugs.md: change bugs #1 and #2 status to "fixed"
+4. Update docs/bugs.md: change bugs #1 and #2 status to "closed"
 5. Commit and request QA merge to main
 ```
 
@@ -111,11 +96,11 @@ After implementing:
 1. Run npx tsc --noEmit — must be 0 errors
 2. Run npm test — must pass
 3. Run npm run build — must succeed
-4. Update docs/bugs.md: change bug #8 status to "fixed"
+4. Update docs/bugs.md: change bug #8 status to "closed"
 5. Commit and request QA merge to main
 ```
 
-### Task 7 — game-engine-developer — Bug #10 (NEW)
+### Task 7 — game-engine-developer — Bug #10
 ```
 You are the game-engine-developer agent. Read .claude/agents/game-engine-developer.md for your role.
 
@@ -140,7 +125,7 @@ After fixing:
 1. Run npx tsc --noEmit — must be 0 errors
 2. Run npm test — must pass
 3. Run npm run build — must succeed
-4. Update docs/bugs.md: change bug #10 status to "fixed"
+4. Update docs/bugs.md: change bug #10 status to "closed"
 5. Commit and request QA merge to main
 ```
 
@@ -148,15 +133,23 @@ After fixing:
 
 ## Execution Order
 
-3 → 4 → 5 → 6 → 7
+4 → 5 → 6 → 7
 
-All frontend-developer tasks first (3-6), then game-engine-developer task (7).
 After all tasks done — run full QA on main, then Sprint 3 is complete.
 
 ---
 
+## Open Bugs Summary (from bugs.md)
+| # | Description | Severity | Agent |
+|---|-------------|----------|-------|
+| 1 | Hebrew font barely readable | high | frontend-developer |
+| 2 | RTL text alignment inconsistent | medium | frontend-developer |
+| 3 | Battle move grid too tight for 8 moves | high | frontend-developer |
+| 8 | Trainer VS intro scene missing | low | frontend-developer |
+| 10 | Loss teleports to (0,0) — stuck on tree tile | high | game-engine-developer |
+
 ## Notes
 - No remote repo — all work is local git only
 - Each task: pull from main → new branch → fix → tsc/test/build → QA merge
-- Bug #9 fixed with source-map tracking (task 2)
-- Bugs #6, #7 fixed with battle phase refactor (task 1)
+- bugs.md is the source of truth for bug status
+- This file is temporary — delete after Sprint 3 is complete
