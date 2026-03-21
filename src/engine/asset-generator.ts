@@ -16,11 +16,12 @@ function canvasToImage(width: number, height: number, draw: (ctx: CanvasRenderin
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d', { alpha: true })!;
   ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, width, height);
   draw(ctx);
   const img = new Image();
-  img.src = canvas.toDataURL();
+  img.src = canvas.toDataURL('image/png');
   return img;
 }
 

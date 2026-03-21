@@ -9,8 +9,8 @@ Open bugs must be resolved before starting a new sprint. See PM agent for triage
 | 1 | Hebrew font barely readable — Pokemon-style pixel font doesn't render well for Hebrew characters | high | i18n | 2026-03-20 | frontend-developer | open |
 | 2 | RTL text alignment inconsistent — Hebrew text not properly right-aligned across UI | medium | i18n | 2026-03-20 | frontend-developer | open |
 | 3 | Battle move grid spacing too tight for 8 moves — text overflows/overlaps | high | battle | 2026-03-20 | frontend-developer | open |
-| 4 | Pokemon sprites render with white background instead of transparent | high | battle | 2026-03-20 | frontend-developer | open |
-| 5 | Tile sprites render with white background instead of transparent | medium | overworld | 2026-03-20 | asset-manager | open |
+| ~~4~~ | ~~Pokemon sprites render with white background instead of transparent~~ | ~~high~~ | ~~battle~~ | ~~2026-03-20~~ | ~~frontend-developer~~ | **closed** |
+| ~~5~~ | ~~Tile sprites render with white background instead of transparent~~ | ~~medium~~ | ~~overworld~~ | ~~2026-03-20~~ | ~~asset-manager~~ | **closed** |
 | ~~6~~ | ~~Trainer battle: level-up message not displayed between sequential Pokemon~~ | ~~low~~ | ~~battle~~ | ~~2026-03-20~~ | ~~game-engine-developer~~ | **closed** |
 | ~~7~~ | ~~Trainer battle: XP gained text loops infinitely after defeating trainer~~ | ~~critical~~ | ~~battle~~ | ~~2026-03-20~~ | ~~game-engine-developer~~ | **closed** |
 | 8 | Feature: Trainer encounter should show a "VS" intro scene (trainer sprite + name) before battle starts — currently goes straight to Pokemon battle screen after approach animation | low | battle | 2026-03-20 | frontend-developer | open |
@@ -24,6 +24,8 @@ Open bugs must be resolved before starting a new sprint. See PM agent for triage
 | 6 | Trainer battle: level-up message not displayed between sequential Pokemon | low | battle | 2026-03-21 | `feature/fix-trainer-battle-loop` |
 | 7 | Trainer battle: XP gained text loops infinitely after defeating trainer | critical | battle | 2026-03-21 | `feature/fix-trainer-battle-loop` |
 | 9 | Pokemon Center interior always exits back to Zeroville regardless of entry city | medium | overworld | 2026-03-21 | `feature/fix-pokecenter-exit` |
+| 4 | Pokemon sprites render with white background instead of transparent | high | battle | 2026-03-21 | `feature/fix-sprite-transparency` |
+| 5 | Tile sprites render with white background instead of transparent | medium | overworld | 2026-03-21 | `feature/fix-sprite-transparency` |
 
 ---
 
