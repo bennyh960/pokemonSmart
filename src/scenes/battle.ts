@@ -7,7 +7,7 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js';
-import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, isHPAnimating, drawPanelBackground } from '../ui/hp-bar.js';
+import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, isHPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
@@ -128,7 +128,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function sendOutNextTrainerPokemon(): void {
     trainerPartyIndex++;
     enemy = trainerData!.party[trainerPartyIndex];
-    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 8, 4, false);
+    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 118, 4, false);
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
     textBox = createTextBox([t('battle.trainerSentOut', { name: enemy.name })], isRTL());
@@ -174,8 +174,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
     battleContext = pendingBattleContext;
     pendingBattleContext = 'grass';
-    playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 124, 76, true, player.xp, player.xpToNext);
-    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 8, 4, false);
+    // Info positioned above each Pokemon sprite
+    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 118, 4, false);
+    playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 8, 36, true, player.xp, player.xpToNext);
     menu = createBattleMenu(player.moves);
     textBox = null; flash = null; shake = null;
     fade = createFade(true, 0.5); clearAllPopups();
@@ -197,7 +198,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       enemy.hp = Math.max(0, enemy.hp - dmg);
       setHP(enemyHpBar, enemy.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
-      spawnDamageNumber(`-${dmg}`, 186, 30, '#f84038');
+      spawnDamageNumber(`-${dmg}`, 186, 44, '#f84038');
       audio.playSFX('hit');
       const rtl = isRTL();
       const msgs = [t('battle.usedMove', { name: player.name, move: m.name })];
@@ -220,7 +221,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       player.hp = Math.max(0, player.hp - dmg);
       setHP(playerHpBar, player.hp);
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
-      spawnDamageNumber(`-${dmg}`, 56, 60, '#f84038');
+      spawnDamageNumber(`-${dmg}`, 54, 76, '#f84038');
       audio.playSFX('hit');
       const msgs = [t('battle.usedMove', { name: enemy.name, move: m.name })];
       const et = effText(m.type, player.types);
@@ -456,10 +457,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
     },
     render(ctx: CanvasRenderingContext2D): void {
-      clearScreen(ctx, '#78c850');
+      clearScreen(ctx, '#1a1a2e');
       if (shake) applyShake(ctx, shake);
-      // Battle background
       ctx.imageSmoothingEnabled = false;
+
+      // ── Background (fills battle area 0-120) ──
       if (bgImage && bgImage.complete && bgImage.naturalWidth > 0) {
         ctx.drawImage(bgImage, 0, 0, 240, 120);
       } else {
@@ -467,54 +469,56 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         if (bgImg.complete && bgImg.naturalWidth > 0) {
           ctx.drawImage(bgImg, 0, 0, 240, 120);
         } else {
-          fillRect(ctx, 0, 0, SCREEN_W, 70, '#98d8a8');
-          fillRect(ctx, 0, 70, SCREEN_W, 50, '#78c850');
+          fillRect(ctx, 0, 0, 240, 50, '#88c8e8');
+          fillRect(ctx, 0, 50, 240, 10, '#70b8d8');
+          fillRect(ctx, 0, 60, 240, 30, '#68b848');
+          fillRect(ctx, 0, 90, 240, 30, '#58a838');
         }
       }
-      // Enemy platform (right side)
-      fillRect(ctx, 140, 68, 90, 8, '#c8b870'); drawRect(ctx, 140, 68, 90, 8, '#a89850');
-      // Player platform (left side)
-      fillRect(ctx, 8, 100, 90, 8, '#c8b870'); drawRect(ctx, 8, 100, 90, 8, '#a89850');
-      // Trainer sprite during INTRO phase (replaces enemy Pokemon sprite)
+
+      // ── Trainer sprites on sides (trainer battles) ──
       const showingTrainer = showTrainerSprite && isTrainerBattle && trainerData?.trainerSprite;
-      if (showingTrainer) {
-        const trainerSpriteImg = getCachedImage(`/sprites/trainers/${trainerData!.trainerSprite!}.png`);
-        if (trainerSpriteImg) {
-          ctx.drawImage(trainerSpriteImg, 170, 10, 40, 80);
-        } else {
-          // Fallback: simple silhouette rectangle
-          fillRect(ctx, 175, 15, 30, 60, '#404040');
+      if (isTrainerBattle && trainerData?.trainerSprite) {
+        const tImg = getCachedImage(`/sprites/trainers/${trainerData.trainerSprite}.png`);
+        if (tImg) {
+          if (showingTrainer) {
+            ctx.drawImage(tImg, 160, 4, 48, 68);
+          } else {
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            ctx.drawImage(tImg, 222, 28, 16, 32);
+            ctx.restore();
+          }
         }
       }
-      // Enemy Pokemon sprite (front, top-right) — hidden when trainer sprite is showing
+
+      // ── Enemy Pokemon sprite (right side, Y=20) ──
       if (!showingTrainer) {
         const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
         if (enemySprite) {
-          ctx.drawImage(enemySprite, 152, 2, 68, 68);
-        } else {
-          fillRect(ctx, 168, 18, 36, 36, '#b0a0a0'); drawRect(ctx, 168, 18, 36, 36, '#888888');
+          ctx.drawImage(enemySprite, 158, 20, 56, 56);
         }
       }
-      // Player Pokemon sprite (back, bottom-left)
+
+      // ── Player Pokemon sprite (left side, Y=50) ──
       const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
       if (playerSprite) {
-        ctx.drawImage(playerSprite, 16, 34, 80, 72);
-      } else {
-        fillRect(ctx, 32, 50, 48, 44, '#f08030'); drawRect(ctx, 32, 50, 48, 44, '#c06020');
+        ctx.drawImage(playerSprite, 22, 50, 64, 64);
       }
-      // Info panels — opposite corners from sprites
-      // Enemy info panel (top-left)
-      drawPanelBackground(ctx, 4, 2, 112, 26);
-      // Player info panel (bottom-right)
-      drawPanelBackground(ctx, 120, 74, 116, 40);
-      // Update XP on player bar
+
+      // ── Floating info — no panels, just text + bars above each Pokemon ──
       setXP(playerHpBar, player.xp, player.xpToNext);
-      renderHPBar(ctx, enemyHpBar); renderHPBar(ctx, playerHpBar);
-      // Party Pokeball indicators
+      renderHPBar(ctx, enemyHpBar);   // above enemy sprite
+      renderHPBar(ctx, playerHpBar);   // above player sprite
+
+      // ── Party indicators ──
       renderPartyIndicators(ctx);
+
       if (shake) resetShake(ctx, shake);
       renderPopups(ctx);
       if (flash) renderFlash(ctx, flash);
+
+      // ── Menu / text area (Y=120-160) ──
       if (textBox) renderTextBox(ctx, textBox);
       else if (phase === 'SELECT_ACTION' || phase === 'SELECT_MOVE') renderBattleMenu(ctx, menu);
       else if (phase === 'SELECT_ITEM') renderBagMenu(ctx);
@@ -522,43 +526,56 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     },
   };
 
+  /** Render party Pokeball indicators near info text. */
   function renderPartyIndicators(ctx: CanvasRenderingContext2D): void {
-    const DOT_SIZE = 4;
-    const DOT_GAP = 2;
-    const ALIVE_COLOR = '#f83838';
-    const FAINTED_COLOR = '#888888';
+    const DOT_R = 2;   // radius
+    const GAP = 5;      // center-to-center spacing
+    const ALIVE = '#f83838';
+    const FAINTED = '#484848';
+    const UNKNOWN = '#606060'; // unrevealed in trainer battles
 
-    // Player party indicators (always shown) — near player info panel
+    // Player party — below player info text (above sprite)
     if (hasActiveGame()) {
       const pd = getPlayerData();
-      const partySize = pd.party.length;
-      const playerDotsX = 134;
-      const playerDotsY = 108;
-      for (let i = 0; i < Math.min(partySize, 6); i++) {
-        const pokemon = pd.party[i];
-        const color = pokemon.hp > 0 ? ALIVE_COLOR : FAINTED_COLOR;
-        const cx = playerDotsX + i * (DOT_SIZE + DOT_GAP) + DOT_SIZE / 2;
-        const cy = playerDotsY + DOT_SIZE / 2;
+      const startX = 8;
+      const dotY = 50;
+      for (let i = 0; i < Math.min(pd.party.length, 6); i++) {
+        const alive = pd.party[i].hp > 0;
+        const cx = startX + i * GAP + DOT_R;
+        // Pokeball-style: top half colored, bottom half white/dark
         ctx.beginPath();
-        ctx.arc(cx, cy, DOT_SIZE / 2, 0, Math.PI * 2);
-        ctx.fillStyle = color;
+        ctx.arc(cx, dotY, DOT_R, 0, Math.PI * 2);
+        ctx.fillStyle = alive ? ALIVE : FAINTED;
+        ctx.fill();
+        // Tiny center dot
+        ctx.beginPath();
+        ctx.arc(cx, dotY, 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
         ctx.fill();
       }
     }
 
-    // Enemy/trainer party indicators — only for trainer battles, near enemy info panel
+    // Enemy party — below enemy info panel (trainer battles only)
     if (isTrainerBattle && trainerData) {
-      const enemyDotsX = 18;
-      const enemyDotsY = 24;
-      const trainerParty = trainerData.party;
-      for (let i = 0; i < Math.min(trainerParty.length, 6); i++) {
-        const pokemon = trainerParty[i];
-        const color = pokemon.hp > 0 ? ALIVE_COLOR : FAINTED_COLOR;
-        const cx = enemyDotsX + i * (DOT_SIZE + DOT_GAP) + DOT_SIZE / 2;
-        const cy = enemyDotsY + DOT_SIZE / 2;
+      const startX = 118;
+      const dotY = 16;
+      for (let i = 0; i < Math.min(trainerData.party.length, 6); i++) {
+        const pkmn = trainerData.party[i];
+        const cx = startX + i * GAP + DOT_R;
+        // Revealed if it's been sent out (index <= trainerPartyIndex)
+        const revealed = i <= trainerPartyIndex;
+        const alive = pkmn.hp > 0;
+        let color: string;
+        if (!revealed) color = UNKNOWN;
+        else if (alive) color = ALIVE;
+        else color = FAINTED;
         ctx.beginPath();
-        ctx.arc(cx, cy, DOT_SIZE / 2, 0, Math.PI * 2);
+        ctx.arc(cx, dotY, DOT_R, 0, Math.PI * 2);
         ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx, dotY, 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
         ctx.fill();
       }
     }
