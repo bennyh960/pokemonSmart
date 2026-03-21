@@ -23,6 +23,7 @@ export interface MapTransition {
   toMapId: string;
   toX: number;
   toY: number;
+  returnToPrevious?: boolean;
 }
 
 /** Map data as loaded from JSON. */

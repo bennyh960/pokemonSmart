@@ -66,6 +66,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let transitionTimer = 0;
   let mapLoading = false;
 
+  // Tracks where to return when exiting an interior map (e.g. Pokemon Center)
+  let previousMapReturn: { mapId: string; x: number; y: number } | null = null;
+
   // Shop overlay state
   let shop: ShopState = createShopState();
 
@@ -126,7 +129,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (tr.fromX === player.gridX && tr.fromY === player.gridY) {
         transitionState = 'fade-out';
         transitionTimer = 0;
-        transitionTarget = { mapId: tr.toMapId, x: tr.toX, y: tr.toY };
+        if (tr.returnToPrevious && previousMapReturn) {
+          // Use saved return destination (e.g. exiting Pokemon Center)
+          transitionTarget = { ...previousMapReturn };
+        } else {
+          // Save current position as return point before transitioning
+          if (currentMapData.id) {
+            previousMapReturn = { mapId: currentMapData.id, x: player.gridX, y: player.gridY + 1 };
+          }
+          transitionTarget = { mapId: tr.toMapId, x: tr.toX, y: tr.toY };
+        }
         return true;
       }
     }
