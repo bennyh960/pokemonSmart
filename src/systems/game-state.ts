@@ -23,6 +23,7 @@ export function createNewPlayerData(): PlayerData {
     items: {},
     flags: {},
     position: { mapId: 'zeroville', x: 15, y: 12 },
+    lastPokemonCenter: { mapId: 'zeroville', x: 4, y: 5 },
     playtime: 0,
   };
 }
@@ -72,6 +73,12 @@ export function healParty(): void {
       move.currentPp = move.pp;
     }
   }
+}
+
+/** Record the current location as the last Pokemon Center visited. */
+export function updateLastPokemonCenter(mapId: string, x: number, y: number): void {
+  const pd = getPlayerData();
+  pd.lastPokemonCenter = { mapId, x, y };
 }
 
 /** Auto-save the current game state. No-op if no active game. */

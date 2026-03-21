@@ -215,8 +215,15 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function handleLoss(): void {
     if (hasActiveGame()) {
       const pd = getPlayerData();
+      // Heal entire party
       for (const p of pd.party) { p.hp = p.maxHp; for (const mv of p.moves) mv.currentPp = mv.pp; }
-      pd.position.x = 0; pd.position.y = 0;
+      // Lose half money
+      pd.money = Math.floor(pd.money / 2);
+      // Teleport to last visited Pokemon Center
+      const center = pd.lastPokemonCenter;
+      pd.position.mapId = center.mapId;
+      pd.position.x = center.x;
+      pd.position.y = center.y;
     }
     autoSave();
     stateMachine.change('OVERWORLD');

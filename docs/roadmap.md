@@ -113,11 +113,28 @@
 
 ---
 
+## Story: Hebrew Translation of PokeAPI Data ⬜ PLANNED
+**Goal:** Translate all Pokemon names, move names, item names, and type names fetched from PokeAPI into Hebrew.
+
+**Why:** The i18n system supports Hebrew UI strings, but data fetched from PokeAPI (Pokemon names, moves, items) remains in English. This creates a mixed-language experience. Bug #2 (RTL alignment) is blocked on this — once all displayed text is in Hebrew, RTL alignment issues become testable and fixable.
+
+**Approach:**
+- PokeAPI provides localized names via `names` array on each resource (Pokemon, moves, items, types)
+- Hebrew translations may not be available in PokeAPI — may need manual translation table
+- Create `src/i18n/pokemon-names-he.ts`, `src/i18n/move-names-he.ts`, `src/i18n/item-names-he.ts`
+- All display code that shows Pokemon/move/item names should go through `t()` or a lookup function
+- Fallback to English if Hebrew translation is missing
+
+**Unblocks:** Bug #2 (RTL text alignment)
+
+---
+
 ## Feature Backlog (Post-Launch)
 - Multiplayer math battles
 - Leaderboard (server-side)
 - More Pokemon generations
-- ~~Hebrew localization for all text~~ ✅ Done (Sprint 2 post-demo)
+- ~~Hebrew localization for all text~~ ✅ Done (Sprint 2 post-demo — UI only, PokeAPI data still English)
+- Hebrew translation of PokeAPI data (Pokemon names, moves, items) — see story above
 - Achievement system
 - Daily math challenges
 - Parent dashboard (learning progress tracking)

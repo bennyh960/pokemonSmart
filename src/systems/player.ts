@@ -29,6 +29,7 @@ export function createNewPlayer(name: string): PlayerData {
     items: {},
     flags: {},
     position: { mapId: 'lab', x: 5, y: 5 },
+    lastPokemonCenter: { mapId: 'zeroville', x: 4, y: 5 },
     playtime: 0,
   };
 }

@@ -32,9 +32,10 @@ export function loadGame(slot: number): PlayerData | null {
 
   try {
     const data = JSON.parse(raw) as PlayerData;
-    // Migration: add items/flags fields if missing from old saves
+    // Migration: add fields if missing from old saves
     if (!data.items) data.items = {};
     if (!data.flags) data.flags = {};
+    if (!data.lastPokemonCenter) data.lastPokemonCenter = { mapId: 'zeroville', x: 4, y: 5 };
     return data;
   } catch {
     console.warn(`Failed to parse save data for slot ${slot}.`);

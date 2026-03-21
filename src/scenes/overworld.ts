@@ -12,7 +12,7 @@ import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
-import { getPlayerData, hasActiveGame, autoSave, healParty } from '../systems/game-state.js';
+import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
 import { generateWildEncounter, createPokemonFromData } from '../systems/encounter.js';
 import { getPokemon } from '../services/pokemon-data.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData } from './battle.js';
@@ -159,6 +159,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       showChoice((idx) => {
         if (idx === 0) {
           healParty();
+          // Record this Pokemon Center as the respawn point
+          if (previousMapReturn) {
+            updateLastPokemonCenter(previousMapReturn.mapId, previousMapReturn.x, previousMapReturn.y);
+          } else if (currentMapData?.id) {
+            // Fallback: use current map position
+            updateLastPokemonCenter(currentMapData.id, player.gridX, player.gridY);
+          }
           autoSave();
           activeTextBox = createTextBox([t('npc.nurse.done')], isRTL());
           interactingNPC = null;
