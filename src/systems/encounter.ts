@@ -7,7 +7,7 @@
  */
 
 import type { Pokemon, Move, PokemonType, MathDifficulty } from '../types/index.js';
-import { getPokemon, getMove, movePowerToMathDifficulty, getPokemonDisplayName } from '../services/pokemon-data.js';
+import { getPokemon, getMove, movePowerToMathDifficulty } from '../services/pokemon-data.js';
 import type { PokemonData, MoveData } from '../services/pokemon-data.js';
 
 /** A single entry in an encounter table. */
@@ -71,7 +71,7 @@ function randInt(min: number, max: number): number {
 function moveDataToMove(md: MoveData): Move {
   return {
     id: md.id,
-    name: md.name,
+    name: md.name.en,
     type: md.type as PokemonType,
     power: md.power ?? 0,
     accuracy: md.accuracy ?? 100,
@@ -120,7 +120,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
 
   return {
     id: data.id,
-    name: getPokemonDisplayName(data.id),
+    name: data.name.en,
     level,
     hp,
     maxHp: hp,

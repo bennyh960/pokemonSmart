@@ -34,7 +34,7 @@ export interface PokemonData {
 
 export interface MoveData {
   id: number;
-  name: string;
+  name: LocalizedName;
   type: string;
   power: number | null;
   accuracy: number | null;
@@ -72,9 +72,9 @@ for (const p of pokemonData as unknown as PokemonData[]) {
 
 const moveById = new Map<number, MoveData>();
 const moveByName = new Map<string, MoveData>();
-for (const m of movesData as MoveData[]) {
+for (const m of movesData as unknown as MoveData[]) {
   moveById.set(m.id, m);
-  moveByName.set(m.name.toLowerCase(), m);
+  moveByName.set(m.name.en.toLowerCase(), m);
 }
 
 const typeChart = typeChartData as TypeChartData;
@@ -92,6 +92,13 @@ for (const chain of evolutionData as unknown as EvolutionChainData[]) {
 export function getPokemonDisplayName(id: number): string {
   const data = pokemonById.get(id);
   if (!data) return 'MissingNo';
+  return data.name[getLocale()];
+}
+
+/** Get localized display name for a move by ID. Uses current locale. */
+export function getMoveDisplayName(id: number): string {
+  const data = moveById.get(id);
+  if (!data) return '???';
   return data.name[getLocale()];
 }
 

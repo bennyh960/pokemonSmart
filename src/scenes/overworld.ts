@@ -14,7 +14,7 @@ import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
 import { generateWildEncounter, createPokemonFromData } from '../systems/encounter.js';
-import { getPokemon } from '../services/pokemon-data.js';
+import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
@@ -680,7 +680,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       if (hasActiveGame()) {
         const lead = getPlayerData().party[0];
-        if (lead) drawText(ctx, `${lead.name} ${t('hp.level', { level: lead.level })}`, 4, 14, { size: 8, color: '#aaccff', font: 'monospace' });
+        if (lead) drawText(ctx, `${getPokemonDisplayName(lead.id)} ${t('hp.level', { level: lead.level })}`, 4, 14, { size: 8, color: '#aaccff', font: 'monospace' });
       }
 
       // NPC dialogue text box

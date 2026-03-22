@@ -11,6 +11,7 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
+import { getPokemonDisplayName, getMoveDisplayName } from '../services/pokemon-data.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
@@ -97,7 +98,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     }
 
     // Name + Level
-    const nameText = `${pokemon.name} Lv.${pokemon.level}`;
+    const nameText = `${getPokemonDisplayName(pokemon.id)} Lv.${pokemon.level}`;
     drawText(ctx, nameText, SLOT_X + 24, y + 1, { size: 8, color: '#ffffff' });
 
     // HP bar
@@ -159,7 +160,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     }
 
     // Name + Level
-    drawText(ctx, `${pokemon.name}  Lv.${pokemon.level}`, 62, 8, { size: 8, color: '#ffffff' });
+    drawText(ctx, `${getPokemonDisplayName(pokemon.id)}  Lv.${pokemon.level}`, 62, 8, { size: 8, color: '#ffffff' });
 
     // Types
     let typeX = 62;
@@ -217,7 +218,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     for (const move of pokemon.moves) {
       const moveColor = TYPE_COLORS[move.type] || '#888888';
       fillRect(ctx, 8, moveY, 4, 8, moveColor);
-      drawText(ctx, `${move.name}`, 14, moveY, { size: 7, color: '#ddddff' });
+      drawText(ctx, `${getMoveDisplayName(move.id)}`, 14, moveY, { size: 7, color: '#ddddff' });
       drawText(ctx, `PP ${move.currentPp}/${move.pp}`, 120, moveY, { size: 7, color: '#aaaacc' });
       moveY += 10;
     }

@@ -15,7 +15,7 @@ import {
   createFade, updateFade, renderFade, spawnDamageNumber, updatePopups, renderPopups, clearAllPopups,
   createLevelUpEffect, updateLevelUpEffect, renderLevelUpEffect,
 } from '../ui/battle-animations.js';
-import { getCombinedTypeEffectiveness } from '../services/pokemon-data.js';
+import { getCombinedTypeEffectiveness, getPokemonDisplayName, getMoveDisplayName } from '../services/pokemon-data.js';
 import { calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
@@ -122,7 +122,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
     pd.items[itemId]--;
     if (pd.items[itemId] <= 0) delete pd.items[itemId];
-    textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: player.name })], isRTL());
+    textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: getPokemonDisplayName(player.id) })], isRTL());
     phase = 'USE_ITEM';
     phaseTimer = 0;
   }
@@ -130,10 +130,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function sendOutNextTrainerPokemon(): void {
     trainerPartyIndex++;
     enemy = trainerData!.party[trainerPartyIndex];
-    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 148, 2, false);
+    enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, 148, 2, false);
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
-    textBox = createTextBox([t('battle.trainerSentOut', { name: enemy.name })], isRTL());
+    textBox = createTextBox([t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) })], isRTL());
     phase = 'INTRO';
   }
 
@@ -177,8 +177,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     battleContext = pendingBattleContext;
     pendingBattleContext = 'grass';
     // Panels above each Pokemon — enemy right, player left
-    enemyHpBar = createHPBar(enemy.name, enemy.level, enemy.hp, enemy.maxHp, 148, 2, false);
-    playerHpBar = createHPBar(player.name, player.level, player.hp, player.maxHp, 4, 32, true, player.xp, player.xpToNext);
+    enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, 148, 2, false);
+    playerHpBar = createHPBar(player.id, player.level, player.hp, player.maxHp, 4, 32, true, player.xp, player.xpToNext);
     menu = createBattleMenu(player.moves);
     textBox = null; flash = null; shake = null; levelUpFx = null;
     fade = createFade(true, 0.5); clearAllPopups();
@@ -211,12 +211,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       spawnDamageNumber(`-${dmg}`, 190, 42, '#f84038');
       audio.playSFX('hit');
       const rtl = isRTL();
-      const msgs = [t('battle.usedMove', { name: player.name, move: m.name })];
+      const msgs = [t('battle.usedMove', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) })];
       const et = effText(m.type, enemy.types);
       if (et) msgs.push(et);
       textBox = createTextBox(msgs, rtl);
     } else {
-      textBox = createTextBox([t('battle.usedMove', { name: player.name, move: m.name }), t('battle.nothingHappened')], isRTL());
+      textBox = createTextBox([t('battle.usedMove', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) }), t('battle.nothingHappened')], isRTL());
     }
     if (m.currentPp > 0) m.currentPp--;
     phase = 'PLAYER_ATTACK'; phaseTimer = 0;
@@ -233,12 +233,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
       spawnDamageNumber(`-${dmg}`, 46, 80, '#f84038');
       audio.playSFX('hit');
-      const msgs = [t('battle.usedMove', { name: enemy.name, move: m.name })];
+      const msgs = [t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })];
       const et = effText(m.type, player.types);
       if (et) msgs.push(et);
       textBox = createTextBox(msgs, rtl);
     } else {
-      textBox = createTextBox([t('battle.usedMove', { name: enemy.name, move: m.name })], rtl);
+      textBox = createTextBox([t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })], rtl);
     }
     phase = 'ENEMY_TURN'; phaseTimer = 0;
   }
@@ -272,10 +272,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (isTrainerBattle && trainerData) {
         textBox = createTextBox([
           t('battle.trainerWantsBattle', { name: trainerData.trainerName }),
-          t('battle.trainerSentOut', { name: enemy.name }),
+          t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
         ], isRTL());
       } else {
-        textBox = createTextBox([t('battle.wildAppeared', { name: enemy.name })], isRTL());
+        textBox = createTextBox([t('battle.wildAppeared', { name: getPokemonDisplayName(enemy.id) })], isRTL());
       }
       phase = 'INTRO';
       audio.playMusic('battle');
@@ -339,7 +339,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'ENEMY_TURN': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
           if (!textBox && !isHPAnimating(playerHpBar)) {
-            if (player.hp <= 0) { textBox = createTextBox([t('battle.fainted', { name: player.name })], isRTL()); phase = 'LOSE'; }
+            if (player.hp <= 0) { textBox = createTextBox([t('battle.fainted', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'LOSE'; }
             else { phase = 'SELECT_ACTION'; showMainMenu(menu); }
           }
           break;
@@ -348,11 +348,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (enemy.hp <= 0) {
             if (isTrainerBattle && trainerData && trainerPartyIndex + 1 < trainerData.party.length) {
               // Trainer has more Pokemon
-              textBox = createTextBox([t('battle.fainted', { name: enemy.name })], isRTL());
+              textBox = createTextBox([t('battle.fainted', { name: getPokemonDisplayName(enemy.id) })], isRTL());
               phase = 'TRAINER_NEXT_POKEMON';
             } else {
               // Wild win or trainer's last Pokemon fainted
-              const msgs = [t('battle.fainted', { name: enemy.name }), t('battle.youWon')];
+              const msgs = [t('battle.fainted', { name: getPokemonDisplayName(enemy.id) }), t('battle.youWon')];
               textBox = createTextBox(msgs, isRTL());
               audio.playMusic('victory');
               phase = 'WIN';
@@ -367,7 +367,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             textBox = null;
             xpGained = calculateXpGain(enemy);
             player.xp += xpGained;
-            textBox = createTextBox([t('battle.gainedXP', { name: player.name, xp: xpGained })], isRTL());
+            textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
             phase = 'TRAINER_NEXT_XP';
           }
           break;
@@ -378,7 +378,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             textBox = null;
             if (checkAndApplyLevelUp(player)) {
               triggerLevelUpFx();
-              textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL());
+              textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
               phase = 'TRAINER_NEXT_LEVEL_UP';
             } else {
               sendOutNextTrainerPokemon();
@@ -397,7 +397,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'WIN': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null; xpGained = calculateXpGain(enemy); player.xp += xpGained;
-            textBox = createTextBox([t('battle.gainedXP', { name: player.name, xp: xpGained })], isRTL());
+            textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
             if (isTrainerBattle && trainerData) {
               phase = 'TRAINER_REWARD';
             } else {
@@ -412,7 +412,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             textBox = null;
             if (checkAndApplyLevelUp(player)) {
               triggerLevelUpFx();
-              textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL());
+              textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
               phase = 'TRAINER_REWARD_LEVEL_UP';
             } else {
               awardTrainerReward();
@@ -431,7 +431,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'XP_GAIN': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            if (checkAndApplyLevelUp(player)) { triggerLevelUpFx(); textBox = createTextBox([t('battle.levelUp', { name: player.name, level: player.level })], isRTL()); phase = 'LEVEL_UP'; }
+            if (checkAndApplyLevelUp(player)) { triggerLevelUpFx(); textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL()); phase = 'LEVEL_UP'; }
             else { fade = createFade(false, 0.5); phase = 'RUN'; }
           }
           break;

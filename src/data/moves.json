@@ -1,7 +1,10 @@
 [
   {
     "id": 1,
-    "name": "pound",
+    "name": {
+      "en": "Pound",
+      "he": "חבטה"
+    },
     "type": "normal",
     "power": 40,
     "accuracy": 100,
@@ -11,7 +14,10 @@
   },
   {
     "id": 2,
-    "name": "karate-chop",
+    "name": {
+      "en": "Karate Chop",
+      "he": "מכת קראטה"
+    },
     "type": "fighting",
     "power": 50,
     "accuracy": 100,
@@ -21,7 +27,10 @@
   },
   {
     "id": 3,
-    "name": "double-slap",
+    "name": {
+      "en": "Double Slap",
+      "he": "סטירה כפולה"
+    },
     "type": "normal",
     "power": 15,
     "accuracy": 85,
@@ -31,7 +40,10 @@
   },
   {
     "id": 4,
-    "name": "comet-punch",
+    "name": {
+      "en": "Comet Punch",
+      "he": "אגרוף שביט"
+    },
     "type": "normal",
     "power": 18,
     "accuracy": 85,
@@ -41,7 +53,10 @@
   },
   {
     "id": 5,
-    "name": "mega-punch",
+    "name": {
+      "en": "Mega Punch",
+      "he": "אגרוף מגה"
+    },
     "type": "normal",
     "power": 80,
     "accuracy": 85,
@@ -51,7 +66,10 @@
   },
   {
     "id": 6,
-    "name": "pay-day",
+    "name": {
+      "en": "Pay Day",
+      "he": "יום משכורת"
+    },
     "type": "normal",
     "power": 40,
     "accuracy": 100,
@@ -61,7 +79,10 @@
   },
   {
     "id": 7,
-    "name": "fire-punch",
+    "name": {
+      "en": "Fire Punch",
+      "he": "אגרוף אש"
+    },
     "type": "fire",
     "power": 75,
     "accuracy": 100,
@@ -71,7 +92,10 @@
   },
   {
     "id": 8,
-    "name": "ice-punch",
+    "name": {
+      "en": "Ice Punch",
+      "he": "אגרוף קרח"
+    },
     "type": "ice",
     "power": 75,
     "accuracy": 100,
@@ -81,7 +105,10 @@
   },
   {
     "id": 9,
-    "name": "thunder-punch",
+    "name": {
+      "en": "Thunder Punch",
+      "he": "אגרוף רעם"
+    },
     "type": "electric",
     "power": 75,
     "accuracy": 100,
@@ -91,7 +118,10 @@
   },
   {
     "id": 10,
-    "name": "scratch",
+    "name": {
+      "en": "Scratch",
+      "he": "שריטה"
+    },
     "type": "normal",
     "power": 40,
     "accuracy": 100,
@@ -101,7 +131,10 @@
   },
   {
     "id": 11,
-    "name": "vice-grip",
+    "name": {
+      "en": "Vice Grip",
+      "he": "אחיזת מלחציים"
+    },
     "type": "normal",
     "power": 55,
     "accuracy": 100,
@@ -111,7 +144,10 @@
   },
   {
     "id": 12,
-    "name": "guillotine",
+    "name": {
+      "en": "Guillotine",
+      "he": "גיליוטינה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 30,
@@ -121,7 +157,10 @@
   },
   {
     "id": 13,
-    "name": "razor-wind",
+    "name": {
+      "en": "Razor Wind",
+      "he": "רוח תער"
+    },
     "type": "normal",
     "power": 80,
     "accuracy": 100,
@@ -131,7 +170,10 @@
   },
   {
     "id": 14,
-    "name": "swords-dance",
+    "name": {
+      "en": "Swords Dance",
+      "he": "ריקוד חרבות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -141,7 +183,10 @@
   },
   {
     "id": 15,
-    "name": "cut",
+    "name": {
+      "en": "Cut",
+      "he": "חיתוך"
+    },
     "type": "normal",
     "power": 50,
     "accuracy": 95,
@@ -151,7 +196,10 @@
   },
   {
     "id": 16,
-    "name": "gust",
+    "name": {
+      "en": "Gust",
+      "he": "משב רוח"
+    },
     "type": "flying",
     "power": 40,
     "accuracy": 100,
@@ -161,7 +209,10 @@
   },
   {
     "id": 17,
-    "name": "wing-attack",
+    "name": {
+      "en": "Wing Attack",
+      "he": "מתקפת כנף"
+    },
     "type": "flying",
     "power": 60,
     "accuracy": 100,
@@ -171,7 +222,10 @@
   },
   {
     "id": 18,
-    "name": "whirlwind",
+    "name": {
+      "en": "Whirlwind",
+      "he": "סופת רוח"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -181,7 +235,10 @@
   },
   {
     "id": 19,
-    "name": "fly",
+    "name": {
+      "en": "Fly",
+      "he": "תעופה"
+    },
     "type": "flying",
     "power": 90,
     "accuracy": 95,
@@ -191,7 +248,10 @@
   },
   {
     "id": 20,
-    "name": "bind",
+    "name": {
+      "en": "Bind",
+      "he": "כבילה"
+    },
     "type": "normal",
     "power": 15,
     "accuracy": 85,
@@ -201,7 +261,10 @@
   },
   {
     "id": 21,
-    "name": "slam",
+    "name": {
+      "en": "Slam",
+      "he": "טריקה"
+    },
     "type": "normal",
     "power": 80,
     "accuracy": 75,
@@ -211,7 +274,10 @@
   },
   {
     "id": 22,
-    "name": "vine-whip",
+    "name": {
+      "en": "Vine Whip",
+      "he": "מכת גפן"
+    },
     "type": "grass",
     "power": 45,
     "accuracy": 100,
@@ -221,7 +287,10 @@
   },
   {
     "id": 23,
-    "name": "stomp",
+    "name": {
+      "en": "Stomp",
+      "he": "דריכה"
+    },
     "type": "normal",
     "power": 65,
     "accuracy": 100,
@@ -231,7 +300,10 @@
   },
   {
     "id": 24,
-    "name": "double-kick",
+    "name": {
+      "en": "Double Kick",
+      "he": "בעיטה כפולה"
+    },
     "type": "fighting",
     "power": 30,
     "accuracy": 100,
@@ -241,7 +313,10 @@
   },
   {
     "id": 25,
-    "name": "mega-kick",
+    "name": {
+      "en": "Mega Kick",
+      "he": "בעיטת מגה"
+    },
     "type": "normal",
     "power": 120,
     "accuracy": 75,
@@ -251,7 +326,10 @@
   },
   {
     "id": 26,
-    "name": "jump-kick",
+    "name": {
+      "en": "Jump Kick",
+      "he": "בעיטת קפיצה"
+    },
     "type": "fighting",
     "power": 100,
     "accuracy": 95,
@@ -261,7 +339,10 @@
   },
   {
     "id": 27,
-    "name": "rolling-kick",
+    "name": {
+      "en": "Rolling Kick",
+      "he": "בעיטה מתגלגלת"
+    },
     "type": "fighting",
     "power": 60,
     "accuracy": 85,
@@ -271,7 +352,10 @@
   },
   {
     "id": 28,
-    "name": "sand-attack",
+    "name": {
+      "en": "Sand Attack",
+      "he": "התקפת חול"
+    },
     "type": "ground",
     "power": null,
     "accuracy": 100,
@@ -281,7 +365,10 @@
   },
   {
     "id": 29,
-    "name": "headbutt",
+    "name": {
+      "en": "Headbutt",
+      "he": "נגיחה"
+    },
     "type": "normal",
     "power": 70,
     "accuracy": 100,
@@ -291,7 +378,10 @@
   },
   {
     "id": 30,
-    "name": "horn-attack",
+    "name": {
+      "en": "Horn Attack",
+      "he": "מתקפת קרן"
+    },
     "type": "normal",
     "power": 65,
     "accuracy": 100,
@@ -301,7 +391,10 @@
   },
   {
     "id": 31,
-    "name": "fury-attack",
+    "name": {
+      "en": "Fury Attack",
+      "he": "מתקפת זעם"
+    },
     "type": "normal",
     "power": 15,
     "accuracy": 85,
@@ -311,7 +404,10 @@
   },
   {
     "id": 32,
-    "name": "horn-drill",
+    "name": {
+      "en": "Horn Drill",
+      "he": "מקדח קרן"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 30,
@@ -321,7 +417,10 @@
   },
   {
     "id": 33,
-    "name": "tackle",
+    "name": {
+      "en": "Tackle",
+      "he": "התנגשות"
+    },
     "type": "normal",
     "power": 40,
     "accuracy": 100,
@@ -331,7 +430,10 @@
   },
   {
     "id": 34,
-    "name": "body-slam",
+    "name": {
+      "en": "Body Slam",
+      "he": "טריקת גוף"
+    },
     "type": "normal",
     "power": 85,
     "accuracy": 100,
@@ -341,7 +443,10 @@
   },
   {
     "id": 35,
-    "name": "wrap",
+    "name": {
+      "en": "Wrap",
+      "he": "עטיפה"
+    },
     "type": "normal",
     "power": 15,
     "accuracy": 90,
@@ -351,7 +456,10 @@
   },
   {
     "id": 36,
-    "name": "take-down",
+    "name": {
+      "en": "Take Down",
+      "he": "הסתערות"
+    },
     "type": "normal",
     "power": 90,
     "accuracy": 85,
@@ -361,7 +469,10 @@
   },
   {
     "id": 37,
-    "name": "thrash",
+    "name": {
+      "en": "Thrash",
+      "he": "התפרעות"
+    },
     "type": "normal",
     "power": 120,
     "accuracy": 100,
@@ -371,7 +482,10 @@
   },
   {
     "id": 38,
-    "name": "double-edge",
+    "name": {
+      "en": "Double Edge",
+      "he": "להב כפול"
+    },
     "type": "normal",
     "power": 120,
     "accuracy": 100,
@@ -381,7 +495,10 @@
   },
   {
     "id": 39,
-    "name": "tail-whip",
+    "name": {
+      "en": "Tail Whip",
+      "he": "הנפת זנב"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -391,7 +508,10 @@
   },
   {
     "id": 40,
-    "name": "poison-sting",
+    "name": {
+      "en": "Poison Sting",
+      "he": "עקיצת רעל"
+    },
     "type": "poison",
     "power": 15,
     "accuracy": 100,
@@ -401,7 +521,10 @@
   },
   {
     "id": 41,
-    "name": "twineedle",
+    "name": {
+      "en": "Twineedle",
+      "he": "מחט כפולה"
+    },
     "type": "bug",
     "power": 25,
     "accuracy": 100,
@@ -411,7 +534,10 @@
   },
   {
     "id": 42,
-    "name": "pin-missile",
+    "name": {
+      "en": "Pin Missile",
+      "he": "טיל סיכה"
+    },
     "type": "bug",
     "power": 25,
     "accuracy": 95,
@@ -421,7 +547,10 @@
   },
   {
     "id": 43,
-    "name": "leer",
+    "name": {
+      "en": "Leer",
+      "he": "מבט מאיים"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -431,7 +560,10 @@
   },
   {
     "id": 44,
-    "name": "bite",
+    "name": {
+      "en": "Bite",
+      "he": "נשיכה"
+    },
     "type": "dark",
     "power": 60,
     "accuracy": 100,
@@ -441,7 +573,10 @@
   },
   {
     "id": 45,
-    "name": "growl",
+    "name": {
+      "en": "Growl",
+      "he": "נהמה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -451,7 +586,10 @@
   },
   {
     "id": 46,
-    "name": "roar",
+    "name": {
+      "en": "Roar",
+      "he": "שאגה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -461,7 +599,10 @@
   },
   {
     "id": 47,
-    "name": "sing",
+    "name": {
+      "en": "Sing",
+      "he": "שירה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 55,
@@ -471,7 +612,10 @@
   },
   {
     "id": 48,
-    "name": "supersonic",
+    "name": {
+      "en": "Supersonic",
+      "he": "על-קולי"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 55,
@@ -481,7 +625,10 @@
   },
   {
     "id": 49,
-    "name": "sonic-boom",
+    "name": {
+      "en": "Sonic Boom",
+      "he": "הדף קולי"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 90,
@@ -491,7 +638,10 @@
   },
   {
     "id": 50,
-    "name": "disable",
+    "name": {
+      "en": "Disable",
+      "he": "השבתה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -501,7 +651,10 @@
   },
   {
     "id": 51,
-    "name": "acid",
+    "name": {
+      "en": "Acid",
+      "he": "חומצה"
+    },
     "type": "poison",
     "power": 40,
     "accuracy": 100,
@@ -511,7 +664,10 @@
   },
   {
     "id": 52,
-    "name": "ember",
+    "name": {
+      "en": "Ember",
+      "he": "גחלת"
+    },
     "type": "fire",
     "power": 40,
     "accuracy": 100,
@@ -521,7 +677,10 @@
   },
   {
     "id": 53,
-    "name": "flamethrower",
+    "name": {
+      "en": "Flamethrower",
+      "he": "להבה"
+    },
     "type": "fire",
     "power": 90,
     "accuracy": 100,
@@ -531,7 +690,10 @@
   },
   {
     "id": 54,
-    "name": "mist",
+    "name": {
+      "en": "Mist",
+      "he": "ערפל"
+    },
     "type": "ice",
     "power": null,
     "accuracy": null,
@@ -541,7 +703,10 @@
   },
   {
     "id": 55,
-    "name": "water-gun",
+    "name": {
+      "en": "Water Gun",
+      "he": "אקדח מים"
+    },
     "type": "water",
     "power": 40,
     "accuracy": 100,
@@ -551,7 +716,10 @@
   },
   {
     "id": 56,
-    "name": "hydro-pump",
+    "name": {
+      "en": "Hydro Pump",
+      "he": "משאבת מים"
+    },
     "type": "water",
     "power": 110,
     "accuracy": 80,
@@ -561,7 +729,10 @@
   },
   {
     "id": 57,
-    "name": "surf",
+    "name": {
+      "en": "Surf",
+      "he": "גלישה"
+    },
     "type": "water",
     "power": 90,
     "accuracy": 100,
@@ -571,7 +742,10 @@
   },
   {
     "id": 58,
-    "name": "ice-beam",
+    "name": {
+      "en": "Ice Beam",
+      "he": "קרן קרח"
+    },
     "type": "ice",
     "power": 90,
     "accuracy": 100,
@@ -581,7 +755,10 @@
   },
   {
     "id": 59,
-    "name": "blizzard",
+    "name": {
+      "en": "Blizzard",
+      "he": "סופת שלג"
+    },
     "type": "ice",
     "power": 110,
     "accuracy": 70,
@@ -591,7 +768,10 @@
   },
   {
     "id": 60,
-    "name": "psybeam",
+    "name": {
+      "en": "Psybeam",
+      "he": "קרן פסי"
+    },
     "type": "psychic",
     "power": 65,
     "accuracy": 100,
@@ -601,7 +781,10 @@
   },
   {
     "id": 61,
-    "name": "bubble-beam",
+    "name": {
+      "en": "Bubble Beam",
+      "he": "קרן בועות"
+    },
     "type": "water",
     "power": 65,
     "accuracy": 100,
@@ -611,7 +794,10 @@
   },
   {
     "id": 62,
-    "name": "aurora-beam",
+    "name": {
+      "en": "Aurora Beam",
+      "he": "קרן זוהר"
+    },
     "type": "ice",
     "power": 65,
     "accuracy": 100,
@@ -621,7 +807,10 @@
   },
   {
     "id": 63,
-    "name": "hyper-beam",
+    "name": {
+      "en": "Hyper Beam",
+      "he": "קרן היפר"
+    },
     "type": "normal",
     "power": 150,
     "accuracy": 90,
@@ -631,7 +820,10 @@
   },
   {
     "id": 64,
-    "name": "peck",
+    "name": {
+      "en": "Peck",
+      "he": "ניקור"
+    },
     "type": "flying",
     "power": 35,
     "accuracy": 100,
@@ -641,7 +833,10 @@
   },
   {
     "id": 65,
-    "name": "drill-peck",
+    "name": {
+      "en": "Drill Peck",
+      "he": "ניקור מקדח"
+    },
     "type": "flying",
     "power": 80,
     "accuracy": 100,
@@ -651,7 +846,10 @@
   },
   {
     "id": 66,
-    "name": "submission",
+    "name": {
+      "en": "Submission",
+      "he": "כניעה"
+    },
     "type": "fighting",
     "power": 80,
     "accuracy": 80,
@@ -661,7 +859,10 @@
   },
   {
     "id": 67,
-    "name": "low-kick",
+    "name": {
+      "en": "Low Kick",
+      "he": "בעיטה נמוכה"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": 100,
@@ -671,7 +872,10 @@
   },
   {
     "id": 68,
-    "name": "counter",
+    "name": {
+      "en": "Counter",
+      "he": "נגדית"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": 100,
@@ -681,7 +885,10 @@
   },
   {
     "id": 69,
-    "name": "seismic-toss",
+    "name": {
+      "en": "Seismic Toss",
+      "he": "זריקה סייסמית"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": 100,
@@ -691,7 +898,10 @@
   },
   {
     "id": 70,
-    "name": "strength",
+    "name": {
+      "en": "Strength",
+      "he": "כוח"
+    },
     "type": "normal",
     "power": 80,
     "accuracy": 100,
@@ -701,7 +911,10 @@
   },
   {
     "id": 71,
-    "name": "absorb",
+    "name": {
+      "en": "Absorb",
+      "he": "ספיגה"
+    },
     "type": "grass",
     "power": 20,
     "accuracy": 100,
@@ -711,7 +924,10 @@
   },
   {
     "id": 72,
-    "name": "mega-drain",
+    "name": {
+      "en": "Mega Drain",
+      "he": "ניקוז מגה"
+    },
     "type": "grass",
     "power": 40,
     "accuracy": 100,
@@ -721,7 +937,10 @@
   },
   {
     "id": 73,
-    "name": "leech-seed",
+    "name": {
+      "en": "Leech Seed",
+      "he": "שאיבת זרע"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 90,
@@ -731,7 +950,10 @@
   },
   {
     "id": 74,
-    "name": "growth",
+    "name": {
+      "en": "Growth",
+      "he": "צמיחה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -741,7 +963,10 @@
   },
   {
     "id": 75,
-    "name": "razor-leaf",
+    "name": {
+      "en": "Razor Leaf",
+      "he": "עלה תער"
+    },
     "type": "grass",
     "power": 55,
     "accuracy": 95,
@@ -751,7 +976,10 @@
   },
   {
     "id": 76,
-    "name": "solar-beam",
+    "name": {
+      "en": "Solar Beam",
+      "he": "קרן שמש"
+    },
     "type": "grass",
     "power": 120,
     "accuracy": 100,
@@ -761,7 +989,10 @@
   },
   {
     "id": 77,
-    "name": "poison-powder",
+    "name": {
+      "en": "Poison Powder",
+      "he": "אבקת רעל"
+    },
     "type": "poison",
     "power": null,
     "accuracy": 75,
@@ -771,7 +1002,10 @@
   },
   {
     "id": 78,
-    "name": "stun-spore",
+    "name": {
+      "en": "Stun Spore",
+      "he": "נבג שיתוק"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 75,
@@ -781,7 +1015,10 @@
   },
   {
     "id": 79,
-    "name": "sleep-powder",
+    "name": {
+      "en": "Sleep Powder",
+      "he": "אבקת שינה"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 75,
@@ -791,7 +1028,10 @@
   },
   {
     "id": 80,
-    "name": "petal-dance",
+    "name": {
+      "en": "Petal Dance",
+      "he": "ריקוד עלי כותרת"
+    },
     "type": "grass",
     "power": 120,
     "accuracy": 100,
@@ -801,7 +1041,10 @@
   },
   {
     "id": 81,
-    "name": "string-shot",
+    "name": {
+      "en": "String Shot",
+      "he": "יריית חוט"
+    },
     "type": "bug",
     "power": null,
     "accuracy": 95,
@@ -811,7 +1054,10 @@
   },
   {
     "id": 82,
-    "name": "dragon-rage",
+    "name": {
+      "en": "Dragon Rage",
+      "he": "זעם דרקון"
+    },
     "type": "dragon",
     "power": null,
     "accuracy": 100,
@@ -821,7 +1067,10 @@
   },
   {
     "id": 83,
-    "name": "fire-spin",
+    "name": {
+      "en": "Fire Spin",
+      "he": "סחרור אש"
+    },
     "type": "fire",
     "power": 35,
     "accuracy": 85,
@@ -831,7 +1080,10 @@
   },
   {
     "id": 84,
-    "name": "thunder-shock",
+    "name": {
+      "en": "Thunder Shock",
+      "he": "הלם רעם"
+    },
     "type": "electric",
     "power": 40,
     "accuracy": 100,
@@ -841,7 +1093,10 @@
   },
   {
     "id": 85,
-    "name": "thunderbolt",
+    "name": {
+      "en": "Thunderbolt",
+      "he": "רעם"
+    },
     "type": "electric",
     "power": 90,
     "accuracy": 100,
@@ -851,7 +1106,10 @@
   },
   {
     "id": 86,
-    "name": "thunder-wave",
+    "name": {
+      "en": "Thunder Wave",
+      "he": "גל רעם"
+    },
     "type": "electric",
     "power": null,
     "accuracy": 90,
@@ -861,7 +1119,10 @@
   },
   {
     "id": 87,
-    "name": "thunder",
+    "name": {
+      "en": "Thunder",
+      "he": "סערת רעמים"
+    },
     "type": "electric",
     "power": 110,
     "accuracy": 70,
@@ -871,7 +1132,10 @@
   },
   {
     "id": 88,
-    "name": "rock-throw",
+    "name": {
+      "en": "Rock Throw",
+      "he": "זריקת סלע"
+    },
     "type": "rock",
     "power": 50,
     "accuracy": 90,
@@ -881,7 +1145,10 @@
   },
   {
     "id": 89,
-    "name": "earthquake",
+    "name": {
+      "en": "Earthquake",
+      "he": "רעידת אדמה"
+    },
     "type": "ground",
     "power": 100,
     "accuracy": 100,
@@ -891,7 +1158,10 @@
   },
   {
     "id": 90,
-    "name": "fissure",
+    "name": {
+      "en": "Fissure",
+      "he": "בקע"
+    },
     "type": "ground",
     "power": null,
     "accuracy": 30,
@@ -901,7 +1171,10 @@
   },
   {
     "id": 91,
-    "name": "dig",
+    "name": {
+      "en": "Dig",
+      "he": "חפירה"
+    },
     "type": "ground",
     "power": 80,
     "accuracy": 100,
@@ -911,7 +1184,10 @@
   },
   {
     "id": 92,
-    "name": "toxic",
+    "name": {
+      "en": "Toxic",
+      "he": "רעלן"
+    },
     "type": "poison",
     "power": null,
     "accuracy": 90,
@@ -921,7 +1197,10 @@
   },
   {
     "id": 93,
-    "name": "confusion",
+    "name": {
+      "en": "Confusion",
+      "he": "בלבול"
+    },
     "type": "psychic",
     "power": 50,
     "accuracy": 100,
@@ -931,7 +1210,10 @@
   },
   {
     "id": 94,
-    "name": "psychic",
+    "name": {
+      "en": "Psychic",
+      "he": "פסיכי"
+    },
     "type": "psychic",
     "power": 90,
     "accuracy": 100,
@@ -941,7 +1223,10 @@
   },
   {
     "id": 95,
-    "name": "hypnosis",
+    "name": {
+      "en": "Hypnosis",
+      "he": "היפנוזה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": 60,
@@ -951,7 +1236,10 @@
   },
   {
     "id": 96,
-    "name": "meditate",
+    "name": {
+      "en": "Meditate",
+      "he": "מדיטציה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -961,7 +1249,10 @@
   },
   {
     "id": 97,
-    "name": "agility",
+    "name": {
+      "en": "Agility",
+      "he": "זריזות"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -971,7 +1262,10 @@
   },
   {
     "id": 98,
-    "name": "quick-attack",
+    "name": {
+      "en": "Quick Attack",
+      "he": "מתקפה מהירה"
+    },
     "type": "normal",
     "power": 40,
     "accuracy": 100,
@@ -981,7 +1275,10 @@
   },
   {
     "id": 99,
-    "name": "rage",
+    "name": {
+      "en": "Rage",
+      "he": "זעם"
+    },
     "type": "normal",
     "power": 20,
     "accuracy": 100,
@@ -991,7 +1288,10 @@
   },
   {
     "id": 100,
-    "name": "teleport",
+    "name": {
+      "en": "Teleport",
+      "he": "שיגור"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -1001,7 +1301,10 @@
   },
   {
     "id": 101,
-    "name": "night-shade",
+    "name": {
+      "en": "Night Shade",
+      "he": "צל לילה"
+    },
     "type": "ghost",
     "power": null,
     "accuracy": 100,
@@ -1011,7 +1314,10 @@
   },
   {
     "id": 102,
-    "name": "mimic",
+    "name": {
+      "en": "Mimic",
+      "he": "חיקוי"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1021,7 +1327,10 @@
   },
   {
     "id": 103,
-    "name": "screech",
+    "name": {
+      "en": "Screech",
+      "he": "צרחה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 85,
@@ -1031,7 +1340,10 @@
   },
   {
     "id": 104,
-    "name": "double-team",
+    "name": {
+      "en": "Double Team",
+      "he": "צוות כפול"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1041,7 +1353,10 @@
   },
   {
     "id": 105,
-    "name": "recover",
+    "name": {
+      "en": "Recover",
+      "he": "התאוששות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1051,7 +1366,10 @@
   },
   {
     "id": 106,
-    "name": "harden",
+    "name": {
+      "en": "Harden",
+      "he": "הקשחה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1061,7 +1379,10 @@
   },
   {
     "id": 107,
-    "name": "minimize",
+    "name": {
+      "en": "Minimize",
+      "he": "מזעור"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1071,7 +1392,10 @@
   },
   {
     "id": 108,
-    "name": "smokescreen",
+    "name": {
+      "en": "Smokescreen",
+      "he": "מסך עשן"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -1081,7 +1405,10 @@
   },
   {
     "id": 109,
-    "name": "confuse-ray",
+    "name": {
+      "en": "Confuse Ray",
+      "he": "קרן בלבול"
+    },
     "type": "ghost",
     "power": null,
     "accuracy": 100,
@@ -1091,7 +1418,10 @@
   },
   {
     "id": 110,
-    "name": "withdraw",
+    "name": {
+      "en": "Withdraw",
+      "he": "נסיגה"
+    },
     "type": "water",
     "power": null,
     "accuracy": null,
@@ -1101,7 +1431,10 @@
   },
   {
     "id": 111,
-    "name": "defense-curl",
+    "name": {
+      "en": "Defense Curl",
+      "he": "כריכת הגנה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1111,7 +1444,10 @@
   },
   {
     "id": 112,
-    "name": "barrier",
+    "name": {
+      "en": "Barrier",
+      "he": "מחסום"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -1121,7 +1457,10 @@
   },
   {
     "id": 113,
-    "name": "light-screen",
+    "name": {
+      "en": "Light Screen",
+      "he": "מסך אור"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -1131,7 +1470,10 @@
   },
   {
     "id": 114,
-    "name": "haze",
+    "name": {
+      "en": "Haze",
+      "he": "ערפל"
+    },
     "type": "ice",
     "power": null,
     "accuracy": null,
@@ -1141,7 +1483,10 @@
   },
   {
     "id": 115,
-    "name": "reflect",
+    "name": {
+      "en": "Reflect",
+      "he": "השתקפות"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -1151,7 +1496,10 @@
   },
   {
     "id": 116,
-    "name": "focus-energy",
+    "name": {
+      "en": "Focus Energy",
+      "he": "ריכוז אנרגיה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1161,7 +1509,10 @@
   },
   {
     "id": 117,
-    "name": "bide",
+    "name": {
+      "en": "Bide",
+      "he": "המתנה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1171,7 +1522,10 @@
   },
   {
     "id": 118,
-    "name": "metronome",
+    "name": {
+      "en": "Metronome",
+      "he": "מטרונום"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1181,7 +1535,10 @@
   },
   {
     "id": 119,
-    "name": "mirror-move",
+    "name": {
+      "en": "Mirror Move",
+      "he": "מראה-מהלך"
+    },
     "type": "flying",
     "power": null,
     "accuracy": null,
@@ -1191,7 +1548,10 @@
   },
   {
     "id": 120,
-    "name": "self-destruct",
+    "name": {
+      "en": "Self Destruct",
+      "he": "השמדה עצמית"
+    },
     "type": "normal",
     "power": 200,
     "accuracy": 100,
@@ -1201,7 +1561,10 @@
   },
   {
     "id": 121,
-    "name": "egg-bomb",
+    "name": {
+      "en": "Egg Bomb",
+      "he": "פצצת ביצה"
+    },
     "type": "normal",
     "power": 100,
     "accuracy": 75,
@@ -1211,7 +1574,10 @@
   },
   {
     "id": 122,
-    "name": "lick",
+    "name": {
+      "en": "Lick",
+      "he": "ליקוק"
+    },
     "type": "ghost",
     "power": 30,
     "accuracy": 100,
@@ -1221,7 +1587,10 @@
   },
   {
     "id": 123,
-    "name": "smog",
+    "name": {
+      "en": "Smog",
+      "he": "ערפיח"
+    },
     "type": "poison",
     "power": 30,
     "accuracy": 70,
@@ -1231,7 +1600,10 @@
   },
   {
     "id": 124,
-    "name": "sludge",
+    "name": {
+      "en": "Sludge",
+      "he": "בוץ"
+    },
     "type": "poison",
     "power": 65,
     "accuracy": 100,
@@ -1241,7 +1613,10 @@
   },
   {
     "id": 125,
-    "name": "bone-club",
+    "name": {
+      "en": "Bone Club",
+      "he": "מועדון עצם"
+    },
     "type": "ground",
     "power": 65,
     "accuracy": 85,
@@ -1251,7 +1626,10 @@
   },
   {
     "id": 126,
-    "name": "fire-blast",
+    "name": {
+      "en": "Fire Blast",
+      "he": "פיצוץ אש"
+    },
     "type": "fire",
     "power": 110,
     "accuracy": 85,
@@ -1261,7 +1639,10 @@
   },
   {
     "id": 127,
-    "name": "waterfall",
+    "name": {
+      "en": "Waterfall",
+      "he": "מפל מים"
+    },
     "type": "water",
     "power": 80,
     "accuracy": 100,
@@ -1271,7 +1652,10 @@
   },
   {
     "id": 128,
-    "name": "clamp",
+    "name": {
+      "en": "Clamp",
+      "he": "מלחציים"
+    },
     "type": "water",
     "power": 35,
     "accuracy": 85,
@@ -1281,7 +1665,10 @@
   },
   {
     "id": 129,
-    "name": "swift",
+    "name": {
+      "en": "Swift",
+      "he": "זריז"
+    },
     "type": "normal",
     "power": 60,
     "accuracy": null,
@@ -1291,7 +1678,10 @@
   },
   {
     "id": 130,
-    "name": "skull-bash",
+    "name": {
+      "en": "Skull Bash",
+      "he": "נגיחת גולגולת"
+    },
     "type": "normal",
     "power": 130,
     "accuracy": 100,
@@ -1301,7 +1691,10 @@
   },
   {
     "id": 131,
-    "name": "spike-cannon",
+    "name": {
+      "en": "Spike Cannon",
+      "he": "תותח קוצים"
+    },
     "type": "normal",
     "power": 20,
     "accuracy": 100,
@@ -1311,7 +1704,10 @@
   },
   {
     "id": 132,
-    "name": "constrict",
+    "name": {
+      "en": "Constrict",
+      "he": "לחיצה"
+    },
     "type": "normal",
     "power": 10,
     "accuracy": 100,
@@ -1321,7 +1717,10 @@
   },
   {
     "id": 133,
-    "name": "amnesia",
+    "name": {
+      "en": "Amnesia",
+      "he": "אמנזיה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -1331,7 +1730,10 @@
   },
   {
     "id": 134,
-    "name": "kinesis",
+    "name": {
+      "en": "Kinesis",
+      "he": "טלקינזיס"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": 80,
@@ -1341,7 +1743,10 @@
   },
   {
     "id": 135,
-    "name": "soft-boiled",
+    "name": {
+      "en": "Soft Boiled",
+      "he": "ביצה רכה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1351,7 +1756,10 @@
   },
   {
     "id": 136,
-    "name": "high-jump-kick",
+    "name": {
+      "en": "High Jump Kick",
+      "he": "בעיטת קפיצה גבוהה"
+    },
     "type": "fighting",
     "power": 130,
     "accuracy": 90,
@@ -1361,7 +1769,10 @@
   },
   {
     "id": 137,
-    "name": "glare",
+    "name": {
+      "en": "Glare",
+      "he": "מבט מאיים"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -1371,7 +1782,10 @@
   },
   {
     "id": 138,
-    "name": "dream-eater",
+    "name": {
+      "en": "Dream Eater",
+      "he": "אוכל חלומות"
+    },
     "type": "psychic",
     "power": 100,
     "accuracy": 100,
@@ -1381,7 +1795,10 @@
   },
   {
     "id": 139,
-    "name": "poison-gas",
+    "name": {
+      "en": "Poison Gas",
+      "he": "גז רעל"
+    },
     "type": "poison",
     "power": null,
     "accuracy": 90,
@@ -1391,7 +1808,10 @@
   },
   {
     "id": 140,
-    "name": "barrage",
+    "name": {
+      "en": "Barrage",
+      "he": "מטח"
+    },
     "type": "normal",
     "power": 15,
     "accuracy": 85,
@@ -1401,7 +1821,10 @@
   },
   {
     "id": 141,
-    "name": "leech-life",
+    "name": {
+      "en": "Leech Life",
+      "he": "עלוקת חיים"
+    },
     "type": "bug",
     "power": 80,
     "accuracy": 100,
@@ -1411,7 +1834,10 @@
   },
   {
     "id": 142,
-    "name": "lovely-kiss",
+    "name": {
+      "en": "Lovely Kiss",
+      "he": "נשיקה מקסימה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 75,
@@ -1421,7 +1847,10 @@
   },
   {
     "id": 143,
-    "name": "sky-attack",
+    "name": {
+      "en": "Sky Attack",
+      "he": "מתקפת שמיים"
+    },
     "type": "flying",
     "power": 140,
     "accuracy": 90,
@@ -1431,7 +1860,10 @@
   },
   {
     "id": 144,
-    "name": "transform",
+    "name": {
+      "en": "Transform",
+      "he": "שינוי צורה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1441,7 +1873,10 @@
   },
   {
     "id": 145,
-    "name": "bubble",
+    "name": {
+      "en": "Bubble",
+      "he": "בועה"
+    },
     "type": "water",
     "power": 40,
     "accuracy": 100,
@@ -1451,7 +1886,10 @@
   },
   {
     "id": 146,
-    "name": "dizzy-punch",
+    "name": {
+      "en": "Dizzy Punch",
+      "he": "אגרוף מסחרר"
+    },
     "type": "normal",
     "power": 70,
     "accuracy": 100,
@@ -1461,7 +1899,10 @@
   },
   {
     "id": 147,
-    "name": "spore",
+    "name": {
+      "en": "Spore",
+      "he": "נבג"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 100,
@@ -1471,7 +1912,10 @@
   },
   {
     "id": 148,
-    "name": "flash",
+    "name": {
+      "en": "Flash",
+      "he": "הבזק"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -1481,7 +1925,10 @@
   },
   {
     "id": 149,
-    "name": "psywave",
+    "name": {
+      "en": "Psywave",
+      "he": "גל פסי"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": 100,
@@ -1491,7 +1938,10 @@
   },
   {
     "id": 150,
-    "name": "splash",
+    "name": {
+      "en": "Splash",
+      "he": "התזה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1501,7 +1951,10 @@
   },
   {
     "id": 151,
-    "name": "acid-armor",
+    "name": {
+      "en": "Acid Armor",
+      "he": "שריון חומצה"
+    },
     "type": "poison",
     "power": null,
     "accuracy": null,
@@ -1511,7 +1964,10 @@
   },
   {
     "id": 152,
-    "name": "crabhammer",
+    "name": {
+      "en": "Crabhammer",
+      "he": "פטיש סרטן"
+    },
     "type": "water",
     "power": 100,
     "accuracy": 90,
@@ -1521,7 +1977,10 @@
   },
   {
     "id": 153,
-    "name": "explosion",
+    "name": {
+      "en": "Explosion",
+      "he": "פיצוץ"
+    },
     "type": "normal",
     "power": 250,
     "accuracy": 100,
@@ -1531,7 +1990,10 @@
   },
   {
     "id": 154,
-    "name": "fury-swipes",
+    "name": {
+      "en": "Fury Swipes",
+      "he": "מכות זעם"
+    },
     "type": "normal",
     "power": 18,
     "accuracy": 80,
@@ -1541,7 +2003,10 @@
   },
   {
     "id": 155,
-    "name": "bonemerang",
+    "name": {
+      "en": "Bonemerang",
+      "he": "בומרנג עצם"
+    },
     "type": "ground",
     "power": 50,
     "accuracy": 90,
@@ -1551,7 +2016,10 @@
   },
   {
     "id": 156,
-    "name": "rest",
+    "name": {
+      "en": "Rest",
+      "he": "מנוחה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -1561,7 +2029,10 @@
   },
   {
     "id": 157,
-    "name": "rock-slide",
+    "name": {
+      "en": "Rock Slide",
+      "he": "מפולת סלעים"
+    },
     "type": "rock",
     "power": 75,
     "accuracy": 90,
@@ -1571,7 +2042,10 @@
   },
   {
     "id": 158,
-    "name": "hyper-fang",
+    "name": {
+      "en": "Hyper Fang",
+      "he": "ניב היפר"
+    },
     "type": "normal",
     "power": 80,
     "accuracy": 90,
@@ -1581,7 +2055,10 @@
   },
   {
     "id": 159,
-    "name": "sharpen",
+    "name": {
+      "en": "Sharpen",
+      "he": "חידוד"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1591,7 +2068,10 @@
   },
   {
     "id": 160,
-    "name": "conversion",
+    "name": {
+      "en": "Conversion",
+      "he": "המרה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1601,7 +2081,10 @@
   },
   {
     "id": 161,
-    "name": "tri-attack",
+    "name": {
+      "en": "Tri Attack",
+      "he": "מתקפה משולשת"
+    },
     "type": "normal",
     "power": 80,
     "accuracy": 100,
@@ -1611,7 +2094,10 @@
   },
   {
     "id": 162,
-    "name": "super-fang",
+    "name": {
+      "en": "Super Fang",
+      "he": "ניב על"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 90,
@@ -1621,7 +2107,10 @@
   },
   {
     "id": 163,
-    "name": "slash",
+    "name": {
+      "en": "Slash",
+      "he": "חיתוך"
+    },
     "type": "normal",
     "power": 70,
     "accuracy": 100,
@@ -1631,7 +2120,10 @@
   },
   {
     "id": 164,
-    "name": "substitute",
+    "name": {
+      "en": "Substitute",
+      "he": "תחליף"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1641,7 +2133,10 @@
   },
   {
     "id": 166,
-    "name": "sketch",
+    "name": {
+      "en": "Sketch",
+      "he": "סקיצה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1651,7 +2146,10 @@
   },
   {
     "id": 167,
-    "name": "triple-kick",
+    "name": {
+      "en": "Triple Kick",
+      "he": "בעיטה משולשת"
+    },
     "type": "fighting",
     "power": 10,
     "accuracy": 90,
@@ -1661,7 +2159,10 @@
   },
   {
     "id": 168,
-    "name": "thief",
+    "name": {
+      "en": "Thief",
+      "he": "גנב"
+    },
     "type": "dark",
     "power": 60,
     "accuracy": 100,
@@ -1671,7 +2172,10 @@
   },
   {
     "id": 169,
-    "name": "spider-web",
+    "name": {
+      "en": "Spider Web",
+      "he": "רשת עכביש"
+    },
     "type": "bug",
     "power": null,
     "accuracy": null,
@@ -1681,7 +2185,10 @@
   },
   {
     "id": 170,
-    "name": "mind-reader",
+    "name": {
+      "en": "Mind Reader",
+      "he": "קורא מחשבות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1691,7 +2198,10 @@
   },
   {
     "id": 171,
-    "name": "nightmare",
+    "name": {
+      "en": "Nightmare",
+      "he": "סיוט"
+    },
     "type": "ghost",
     "power": null,
     "accuracy": 100,
@@ -1701,7 +2211,10 @@
   },
   {
     "id": 172,
-    "name": "flame-wheel",
+    "name": {
+      "en": "Flame Wheel",
+      "he": "גלגל אש"
+    },
     "type": "fire",
     "power": 60,
     "accuracy": 100,
@@ -1711,7 +2224,10 @@
   },
   {
     "id": 173,
-    "name": "snore",
+    "name": {
+      "en": "Snore",
+      "he": "נחירות"
+    },
     "type": "normal",
     "power": 50,
     "accuracy": 100,
@@ -1721,7 +2237,10 @@
   },
   {
     "id": 174,
-    "name": "curse",
+    "name": {
+      "en": "Curse",
+      "he": "קללה"
+    },
     "type": "ghost",
     "power": null,
     "accuracy": null,
@@ -1731,7 +2250,10 @@
   },
   {
     "id": 175,
-    "name": "flail",
+    "name": {
+      "en": "Flail",
+      "he": "התפרצות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -1741,7 +2263,10 @@
   },
   {
     "id": 176,
-    "name": "conversion-2",
+    "name": {
+      "en": "Conversion 2",
+      "he": "המרה 2"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1751,7 +2276,10 @@
   },
   {
     "id": 177,
-    "name": "aeroblast",
+    "name": {
+      "en": "Aeroblast",
+      "he": "פיצוץ אוויר"
+    },
     "type": "flying",
     "power": 100,
     "accuracy": 95,
@@ -1761,7 +2289,10 @@
   },
   {
     "id": 178,
-    "name": "cotton-spore",
+    "name": {
+      "en": "Cotton Spore",
+      "he": "נבג כותנה"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 100,
@@ -1771,7 +2302,10 @@
   },
   {
     "id": 179,
-    "name": "reversal",
+    "name": {
+      "en": "Reversal",
+      "he": "היפוך"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": 100,
@@ -1781,7 +2315,10 @@
   },
   {
     "id": 180,
-    "name": "spite",
+    "name": {
+      "en": "Spite",
+      "he": "טינה"
+    },
     "type": "ghost",
     "power": null,
     "accuracy": 100,
@@ -1791,7 +2328,10 @@
   },
   {
     "id": 181,
-    "name": "powder-snow",
+    "name": {
+      "en": "Powder Snow",
+      "he": "אבקת שלג"
+    },
     "type": "ice",
     "power": 40,
     "accuracy": 100,
@@ -1801,7 +2341,10 @@
   },
   {
     "id": 182,
-    "name": "protect",
+    "name": {
+      "en": "Protect",
+      "he": "הגנה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1811,7 +2354,10 @@
   },
   {
     "id": 183,
-    "name": "mach-punch",
+    "name": {
+      "en": "Mach Punch",
+      "he": "אגרוף מאך"
+    },
     "type": "fighting",
     "power": 40,
     "accuracy": 100,
@@ -1821,7 +2367,10 @@
   },
   {
     "id": 184,
-    "name": "scary-face",
+    "name": {
+      "en": "Scary Face",
+      "he": "פנים מפחידות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -1831,7 +2380,10 @@
   },
   {
     "id": 185,
-    "name": "feint-attack",
+    "name": {
+      "en": "Feint Attack",
+      "he": "מתקפת הטעיה"
+    },
     "type": "dark",
     "power": 60,
     "accuracy": null,
@@ -1841,7 +2393,10 @@
   },
   {
     "id": 186,
-    "name": "sweet-kiss",
+    "name": {
+      "en": "Sweet Kiss",
+      "he": "נשיקה מתוקה"
+    },
     "type": "fairy",
     "power": null,
     "accuracy": 75,
@@ -1851,7 +2406,10 @@
   },
   {
     "id": 187,
-    "name": "belly-drum",
+    "name": {
+      "en": "Belly Drum",
+      "he": "תוף בטן"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1861,7 +2419,10 @@
   },
   {
     "id": 188,
-    "name": "sludge-bomb",
+    "name": {
+      "en": "Sludge Bomb",
+      "he": "פצצת בוץ"
+    },
     "type": "poison",
     "power": 90,
     "accuracy": 100,
@@ -1871,7 +2432,10 @@
   },
   {
     "id": 189,
-    "name": "mud-slap",
+    "name": {
+      "en": "Mud Slap",
+      "he": "סטירת בוץ"
+    },
     "type": "ground",
     "power": 20,
     "accuracy": 100,
@@ -1881,7 +2445,10 @@
   },
   {
     "id": 190,
-    "name": "octazooka",
+    "name": {
+      "en": "Octazooka",
+      "he": "תותחן תמנון"
+    },
     "type": "water",
     "power": 65,
     "accuracy": 85,
@@ -1891,7 +2458,10 @@
   },
   {
     "id": 191,
-    "name": "spikes",
+    "name": {
+      "en": "Spikes",
+      "he": "קוצים"
+    },
     "type": "ground",
     "power": null,
     "accuracy": null,
@@ -1901,7 +2471,10 @@
   },
   {
     "id": 192,
-    "name": "zap-cannon",
+    "name": {
+      "en": "Zap Cannon",
+      "he": "תותח זאפ"
+    },
     "type": "electric",
     "power": 120,
     "accuracy": 50,
@@ -1911,7 +2484,10 @@
   },
   {
     "id": 193,
-    "name": "foresight",
+    "name": {
+      "en": "Foresight",
+      "he": "ראיית עתיד"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1921,7 +2497,10 @@
   },
   {
     "id": 194,
-    "name": "destiny-bond",
+    "name": {
+      "en": "Destiny Bond",
+      "he": "קשר גורל"
+    },
     "type": "ghost",
     "power": null,
     "accuracy": null,
@@ -1931,7 +2510,10 @@
   },
   {
     "id": 195,
-    "name": "perish-song",
+    "name": {
+      "en": "Perish Song",
+      "he": "שיר אבדון"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1941,7 +2523,10 @@
   },
   {
     "id": 196,
-    "name": "icy-wind",
+    "name": {
+      "en": "Icy Wind",
+      "he": "רוח קפואה"
+    },
     "type": "ice",
     "power": 55,
     "accuracy": 95,
@@ -1951,7 +2536,10 @@
   },
   {
     "id": 197,
-    "name": "detect",
+    "name": {
+      "en": "Detect",
+      "he": "זיהוי"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": null,
@@ -1961,7 +2549,10 @@
   },
   {
     "id": 198,
-    "name": "bone-rush",
+    "name": {
+      "en": "Bone Rush",
+      "he": "מטח עצמות"
+    },
     "type": "ground",
     "power": 25,
     "accuracy": 90,
@@ -1971,7 +2562,10 @@
   },
   {
     "id": 199,
-    "name": "lock-on",
+    "name": {
+      "en": "Lock On",
+      "he": "נעילה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -1981,7 +2575,10 @@
   },
   {
     "id": 200,
-    "name": "outrage",
+    "name": {
+      "en": "Outrage",
+      "he": "זעם"
+    },
     "type": "dragon",
     "power": 120,
     "accuracy": 100,
@@ -1991,7 +2588,10 @@
   },
   {
     "id": 201,
-    "name": "sandstorm",
+    "name": {
+      "en": "Sandstorm",
+      "he": "סופת חול"
+    },
     "type": "rock",
     "power": null,
     "accuracy": null,
@@ -2001,7 +2601,10 @@
   },
   {
     "id": 202,
-    "name": "giga-drain",
+    "name": {
+      "en": "Giga Drain",
+      "he": "ניקוז גיגה"
+    },
     "type": "grass",
     "power": 75,
     "accuracy": 100,
@@ -2011,7 +2614,10 @@
   },
   {
     "id": 203,
-    "name": "endure",
+    "name": {
+      "en": "Endure",
+      "he": "עמידות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2021,7 +2627,10 @@
   },
   {
     "id": 204,
-    "name": "charm",
+    "name": {
+      "en": "Charm",
+      "he": "קסם"
+    },
     "type": "fairy",
     "power": null,
     "accuracy": 100,
@@ -2031,7 +2640,10 @@
   },
   {
     "id": 205,
-    "name": "rollout",
+    "name": {
+      "en": "Rollout",
+      "he": "גלגול"
+    },
     "type": "rock",
     "power": 30,
     "accuracy": 90,
@@ -2041,7 +2653,10 @@
   },
   {
     "id": 206,
-    "name": "false-swipe",
+    "name": {
+      "en": "False Swipe",
+      "he": "חיתוך שווא"
+    },
     "type": "normal",
     "power": 40,
     "accuracy": 100,
@@ -2051,7 +2666,10 @@
   },
   {
     "id": 207,
-    "name": "swagger",
+    "name": {
+      "en": "Swagger",
+      "he": "יהירות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 85,
@@ -2061,7 +2679,10 @@
   },
   {
     "id": 208,
-    "name": "milk-drink",
+    "name": {
+      "en": "Milk Drink",
+      "he": "שתיית חלב"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2071,7 +2692,10 @@
   },
   {
     "id": 209,
-    "name": "spark",
+    "name": {
+      "en": "Spark",
+      "he": "ניצוץ"
+    },
     "type": "electric",
     "power": 65,
     "accuracy": 100,
@@ -2081,7 +2705,10 @@
   },
   {
     "id": 210,
-    "name": "fury-cutter",
+    "name": {
+      "en": "Fury Cutter",
+      "he": "חותך זעם"
+    },
     "type": "bug",
     "power": 40,
     "accuracy": 95,
@@ -2091,7 +2718,10 @@
   },
   {
     "id": 211,
-    "name": "steel-wing",
+    "name": {
+      "en": "Steel Wing",
+      "he": "כנף פלדה"
+    },
     "type": "steel",
     "power": 70,
     "accuracy": 90,
@@ -2101,7 +2731,10 @@
   },
   {
     "id": 212,
-    "name": "mean-look",
+    "name": {
+      "en": "Mean Look",
+      "he": "מבט מאיים"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2111,7 +2744,10 @@
   },
   {
     "id": 213,
-    "name": "attract",
+    "name": {
+      "en": "Attract",
+      "he": "משיכה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -2121,7 +2757,10 @@
   },
   {
     "id": 214,
-    "name": "sleep-talk",
+    "name": {
+      "en": "Sleep Talk",
+      "he": "דיבור בשינה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2131,7 +2770,10 @@
   },
   {
     "id": 215,
-    "name": "heal-bell",
+    "name": {
+      "en": "Heal Bell",
+      "he": "פעמון ריפוי"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2141,7 +2783,10 @@
   },
   {
     "id": 216,
-    "name": "return",
+    "name": {
+      "en": "Return",
+      "he": "חזרה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -2151,7 +2796,10 @@
   },
   {
     "id": 217,
-    "name": "present",
+    "name": {
+      "en": "Present",
+      "he": "מתנה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 90,
@@ -2161,7 +2809,10 @@
   },
   {
     "id": 218,
-    "name": "frustration",
+    "name": {
+      "en": "Frustration",
+      "he": "תסכול"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -2171,7 +2822,10 @@
   },
   {
     "id": 219,
-    "name": "safeguard",
+    "name": {
+      "en": "Safeguard",
+      "he": "שמירה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2181,7 +2835,10 @@
   },
   {
     "id": 220,
-    "name": "pain-split",
+    "name": {
+      "en": "Pain Split",
+      "he": "חלוקת כאב"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2191,7 +2848,10 @@
   },
   {
     "id": 221,
-    "name": "sacred-fire",
+    "name": {
+      "en": "Sacred Fire",
+      "he": "אש קדושה"
+    },
     "type": "fire",
     "power": 100,
     "accuracy": 95,
@@ -2201,7 +2861,10 @@
   },
   {
     "id": 222,
-    "name": "magnitude",
+    "name": {
+      "en": "Magnitude",
+      "he": "עוצמה"
+    },
     "type": "ground",
     "power": null,
     "accuracy": 100,
@@ -2211,7 +2874,10 @@
   },
   {
     "id": 223,
-    "name": "dynamic-punch",
+    "name": {
+      "en": "Dynamic Punch",
+      "he": "אגרוף דינמי"
+    },
     "type": "fighting",
     "power": 100,
     "accuracy": 50,
@@ -2221,7 +2887,10 @@
   },
   {
     "id": 224,
-    "name": "megahorn",
+    "name": {
+      "en": "Megahorn",
+      "he": "קרן מגה"
+    },
     "type": "bug",
     "power": 120,
     "accuracy": 85,
@@ -2231,7 +2900,10 @@
   },
   {
     "id": 225,
-    "name": "dragon-breath",
+    "name": {
+      "en": "Dragon Breath",
+      "he": "נשימת דרקון"
+    },
     "type": "dragon",
     "power": 60,
     "accuracy": 100,
@@ -2241,7 +2913,10 @@
   },
   {
     "id": 226,
-    "name": "baton-pass",
+    "name": {
+      "en": "Baton Pass",
+      "he": "מסירת שרביט"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2251,7 +2926,10 @@
   },
   {
     "id": 227,
-    "name": "encore",
+    "name": {
+      "en": "Encore",
+      "he": "הדרן"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -2261,7 +2939,10 @@
   },
   {
     "id": 228,
-    "name": "pursuit",
+    "name": {
+      "en": "Pursuit",
+      "he": "מרדף"
+    },
     "type": "dark",
     "power": 40,
     "accuracy": 100,
@@ -2271,7 +2952,10 @@
   },
   {
     "id": 229,
-    "name": "rapid-spin",
+    "name": {
+      "en": "Rapid Spin",
+      "he": "סיבוב מהיר"
+    },
     "type": "normal",
     "power": 50,
     "accuracy": 100,
@@ -2281,7 +2965,10 @@
   },
   {
     "id": 230,
-    "name": "sweet-scent",
+    "name": {
+      "en": "Sweet Scent",
+      "he": "ריח מתוק"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -2291,7 +2978,10 @@
   },
   {
     "id": 231,
-    "name": "iron-tail",
+    "name": {
+      "en": "Iron Tail",
+      "he": "זנב ברזל"
+    },
     "type": "steel",
     "power": 100,
     "accuracy": 75,
@@ -2301,7 +2991,10 @@
   },
   {
     "id": 232,
-    "name": "metal-claw",
+    "name": {
+      "en": "Metal Claw",
+      "he": "טופר מתכת"
+    },
     "type": "steel",
     "power": 50,
     "accuracy": 95,
@@ -2311,7 +3004,10 @@
   },
   {
     "id": 233,
-    "name": "vital-throw",
+    "name": {
+      "en": "Vital Throw",
+      "he": "זריקה חיונית"
+    },
     "type": "fighting",
     "power": 70,
     "accuracy": null,
@@ -2321,7 +3017,10 @@
   },
   {
     "id": 234,
-    "name": "morning-sun",
+    "name": {
+      "en": "Morning Sun",
+      "he": "שמש בוקר"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2331,7 +3030,10 @@
   },
   {
     "id": 235,
-    "name": "synthesis",
+    "name": {
+      "en": "Synthesis",
+      "he": "סינתזה"
+    },
     "type": "grass",
     "power": null,
     "accuracy": null,
@@ -2341,7 +3043,10 @@
   },
   {
     "id": 236,
-    "name": "moonlight",
+    "name": {
+      "en": "Moonlight",
+      "he": "אור ירח"
+    },
     "type": "fairy",
     "power": null,
     "accuracy": null,
@@ -2351,7 +3056,10 @@
   },
   {
     "id": 237,
-    "name": "hidden-power",
+    "name": {
+      "en": "Hidden Power",
+      "he": "כוח נסתר"
+    },
     "type": "normal",
     "power": 60,
     "accuracy": 100,
@@ -2361,7 +3069,10 @@
   },
   {
     "id": 238,
-    "name": "cross-chop",
+    "name": {
+      "en": "Cross Chop",
+      "he": "מכה צולבת"
+    },
     "type": "fighting",
     "power": 100,
     "accuracy": 80,
@@ -2371,7 +3082,10 @@
   },
   {
     "id": 239,
-    "name": "twister",
+    "name": {
+      "en": "Twister",
+      "he": "סחרור"
+    },
     "type": "dragon",
     "power": 40,
     "accuracy": 100,
@@ -2381,7 +3095,10 @@
   },
   {
     "id": 240,
-    "name": "rain-dance",
+    "name": {
+      "en": "Rain Dance",
+      "he": "ריקוד גשם"
+    },
     "type": "water",
     "power": null,
     "accuracy": null,
@@ -2391,7 +3108,10 @@
   },
   {
     "id": 241,
-    "name": "sunny-day",
+    "name": {
+      "en": "Sunny Day",
+      "he": "יום שמש"
+    },
     "type": "fire",
     "power": null,
     "accuracy": null,
@@ -2401,7 +3121,10 @@
   },
   {
     "id": 242,
-    "name": "crunch",
+    "name": {
+      "en": "Crunch",
+      "he": "כתישה"
+    },
     "type": "dark",
     "power": 80,
     "accuracy": 100,
@@ -2411,7 +3134,10 @@
   },
   {
     "id": 243,
-    "name": "mirror-coat",
+    "name": {
+      "en": "Mirror Coat",
+      "he": "מעיל מראה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": 100,
@@ -2421,7 +3147,10 @@
   },
   {
     "id": 244,
-    "name": "psych-up",
+    "name": {
+      "en": "Psych Up",
+      "he": "התעלות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2431,7 +3160,10 @@
   },
   {
     "id": 245,
-    "name": "extreme-speed",
+    "name": {
+      "en": "Extreme Speed",
+      "he": "מהירות קיצונית"
+    },
     "type": "normal",
     "power": 80,
     "accuracy": 100,
@@ -2441,7 +3173,10 @@
   },
   {
     "id": 246,
-    "name": "ancient-power",
+    "name": {
+      "en": "Ancient Power",
+      "he": "כוח עתיק"
+    },
     "type": "rock",
     "power": 60,
     "accuracy": 100,
@@ -2451,7 +3186,10 @@
   },
   {
     "id": 247,
-    "name": "shadow-ball",
+    "name": {
+      "en": "Shadow Ball",
+      "he": "כדור צל"
+    },
     "type": "ghost",
     "power": 80,
     "accuracy": 100,
@@ -2461,7 +3199,10 @@
   },
   {
     "id": 248,
-    "name": "future-sight",
+    "name": {
+      "en": "Future Sight",
+      "he": "ראיית עתיד"
+    },
     "type": "psychic",
     "power": 120,
     "accuracy": 100,
@@ -2471,7 +3212,10 @@
   },
   {
     "id": 249,
-    "name": "rock-smash",
+    "name": {
+      "en": "Rock Smash",
+      "he": "ריסוק סלע"
+    },
     "type": "fighting",
     "power": 40,
     "accuracy": 100,
@@ -2481,7 +3225,10 @@
   },
   {
     "id": 250,
-    "name": "whirlpool",
+    "name": {
+      "en": "Whirlpool",
+      "he": "מערבולת"
+    },
     "type": "water",
     "power": 35,
     "accuracy": 85,
@@ -2491,7 +3238,10 @@
   },
   {
     "id": 251,
-    "name": "beat-up",
+    "name": {
+      "en": "Beat Up",
+      "he": "מכות רבות"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -2501,7 +3251,10 @@
   },
   {
     "id": 252,
-    "name": "fake-out",
+    "name": {
+      "en": "Fake Out",
+      "he": "הפתעה"
+    },
     "type": "normal",
     "power": 40,
     "accuracy": 100,
@@ -2511,7 +3264,10 @@
   },
   {
     "id": 253,
-    "name": "uproar",
+    "name": {
+      "en": "Uproar",
+      "he": "מהומה"
+    },
     "type": "normal",
     "power": 90,
     "accuracy": 100,
@@ -2521,7 +3277,10 @@
   },
   {
     "id": 254,
-    "name": "stockpile",
+    "name": {
+      "en": "Stockpile",
+      "he": "אגירה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2531,7 +3290,10 @@
   },
   {
     "id": 255,
-    "name": "spit-up",
+    "name": {
+      "en": "Spit Up",
+      "he": "פליטה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -2541,7 +3303,10 @@
   },
   {
     "id": 256,
-    "name": "swallow",
+    "name": {
+      "en": "Swallow",
+      "he": "בליעה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2551,7 +3316,10 @@
   },
   {
     "id": 257,
-    "name": "heat-wave",
+    "name": {
+      "en": "Heat Wave",
+      "he": "גל חום"
+    },
     "type": "fire",
     "power": 95,
     "accuracy": 90,
@@ -2561,7 +3329,10 @@
   },
   {
     "id": 258,
-    "name": "hail",
+    "name": {
+      "en": "Hail",
+      "he": "ברד"
+    },
     "type": "ice",
     "power": null,
     "accuracy": null,
@@ -2571,7 +3342,10 @@
   },
   {
     "id": 259,
-    "name": "torment",
+    "name": {
+      "en": "Torment",
+      "he": "עינוי"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -2581,7 +3355,10 @@
   },
   {
     "id": 260,
-    "name": "flatter",
+    "name": {
+      "en": "Flatter",
+      "he": "חנופה"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -2591,7 +3368,10 @@
   },
   {
     "id": 261,
-    "name": "will-o-wisp",
+    "name": {
+      "en": "Will O Wisp",
+      "he": "אש רפאים"
+    },
     "type": "fire",
     "power": null,
     "accuracy": 85,
@@ -2601,7 +3381,10 @@
   },
   {
     "id": 262,
-    "name": "memento",
+    "name": {
+      "en": "Memento",
+      "he": "זיכרון"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -2611,7 +3394,10 @@
   },
   {
     "id": 263,
-    "name": "facade",
+    "name": {
+      "en": "Facade",
+      "he": "חזית"
+    },
     "type": "normal",
     "power": 70,
     "accuracy": 100,
@@ -2621,7 +3407,10 @@
   },
   {
     "id": 264,
-    "name": "focus-punch",
+    "name": {
+      "en": "Focus Punch",
+      "he": "אגרוף ממוקד"
+    },
     "type": "fighting",
     "power": 150,
     "accuracy": 100,
@@ -2631,7 +3420,10 @@
   },
   {
     "id": 265,
-    "name": "smelling-salts",
+    "name": {
+      "en": "Smelling Salts",
+      "he": "מלחי הרחה"
+    },
     "type": "normal",
     "power": 70,
     "accuracy": 100,
@@ -2641,7 +3433,10 @@
   },
   {
     "id": 266,
-    "name": "follow-me",
+    "name": {
+      "en": "Follow Me",
+      "he": "לכו אחרי"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2651,7 +3446,10 @@
   },
   {
     "id": 267,
-    "name": "nature-power",
+    "name": {
+      "en": "Nature Power",
+      "he": "כוח טבע"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2661,7 +3459,10 @@
   },
   {
     "id": 268,
-    "name": "charge",
+    "name": {
+      "en": "Charge",
+      "he": "טעינה"
+    },
     "type": "electric",
     "power": null,
     "accuracy": null,
@@ -2671,7 +3472,10 @@
   },
   {
     "id": 269,
-    "name": "taunt",
+    "name": {
+      "en": "Taunt",
+      "he": "ליגלוג"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -2681,7 +3485,10 @@
   },
   {
     "id": 270,
-    "name": "helping-hand",
+    "name": {
+      "en": "Helping Hand",
+      "he": "יד עוזרת"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2691,7 +3498,10 @@
   },
   {
     "id": 271,
-    "name": "trick",
+    "name": {
+      "en": "Trick",
+      "he": "תעלול"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": 100,
@@ -2701,7 +3511,10 @@
   },
   {
     "id": 272,
-    "name": "role-play",
+    "name": {
+      "en": "Role Play",
+      "he": "משחק תפקידים"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -2711,7 +3524,10 @@
   },
   {
     "id": 273,
-    "name": "wish",
+    "name": {
+      "en": "Wish",
+      "he": "משאלה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2721,7 +3537,10 @@
   },
   {
     "id": 274,
-    "name": "assist",
+    "name": {
+      "en": "Assist",
+      "he": "סיוע"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2731,7 +3550,10 @@
   },
   {
     "id": 275,
-    "name": "ingrain",
+    "name": {
+      "en": "Ingrain",
+      "he": "השרשה"
+    },
     "type": "grass",
     "power": null,
     "accuracy": null,
@@ -2741,7 +3563,10 @@
   },
   {
     "id": 276,
-    "name": "superpower",
+    "name": {
+      "en": "Superpower",
+      "he": "כוח על"
+    },
     "type": "fighting",
     "power": 120,
     "accuracy": 100,
@@ -2751,7 +3576,10 @@
   },
   {
     "id": 277,
-    "name": "magic-coat",
+    "name": {
+      "en": "Magic Coat",
+      "he": "מעיל קסם"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -2761,7 +3589,10 @@
   },
   {
     "id": 278,
-    "name": "recycle",
+    "name": {
+      "en": "Recycle",
+      "he": "מיחזור"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2771,7 +3602,10 @@
   },
   {
     "id": 279,
-    "name": "revenge",
+    "name": {
+      "en": "Revenge",
+      "he": "נקמה"
+    },
     "type": "fighting",
     "power": 60,
     "accuracy": 100,
@@ -2781,7 +3615,10 @@
   },
   {
     "id": 280,
-    "name": "brick-break",
+    "name": {
+      "en": "Brick Break",
+      "he": "שבירת לבנה"
+    },
     "type": "fighting",
     "power": 75,
     "accuracy": 100,
@@ -2791,7 +3628,10 @@
   },
   {
     "id": 281,
-    "name": "yawn",
+    "name": {
+      "en": "Yawn",
+      "he": "פיהוק"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2801,7 +3641,10 @@
   },
   {
     "id": 282,
-    "name": "knock-off",
+    "name": {
+      "en": "Knock Off",
+      "he": "הפלה"
+    },
     "type": "dark",
     "power": 65,
     "accuracy": 100,
@@ -2811,7 +3654,10 @@
   },
   {
     "id": 283,
-    "name": "endeavor",
+    "name": {
+      "en": "Endeavor",
+      "he": "מאמץ"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -2821,7 +3667,10 @@
   },
   {
     "id": 284,
-    "name": "eruption",
+    "name": {
+      "en": "Eruption",
+      "he": "התפרצות"
+    },
     "type": "fire",
     "power": 150,
     "accuracy": 100,
@@ -2831,7 +3680,10 @@
   },
   {
     "id": 285,
-    "name": "skill-swap",
+    "name": {
+      "en": "Skill Swap",
+      "he": "החלפת כישורים"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -2841,7 +3693,10 @@
   },
   {
     "id": 286,
-    "name": "imprison",
+    "name": {
+      "en": "Imprison",
+      "he": "כליאה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -2851,7 +3706,10 @@
   },
   {
     "id": 287,
-    "name": "refresh",
+    "name": {
+      "en": "Refresh",
+      "he": "רענון"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2861,7 +3719,10 @@
   },
   {
     "id": 288,
-    "name": "grudge",
+    "name": {
+      "en": "Grudge",
+      "he": "טינה"
+    },
     "type": "ghost",
     "power": null,
     "accuracy": null,
@@ -2871,7 +3732,10 @@
   },
   {
     "id": 289,
-    "name": "snatch",
+    "name": {
+      "en": "Snatch",
+      "he": "חטיפה"
+    },
     "type": "dark",
     "power": null,
     "accuracy": null,
@@ -2881,7 +3745,10 @@
   },
   {
     "id": 290,
-    "name": "secret-power",
+    "name": {
+      "en": "Secret Power",
+      "he": "כוח סודי"
+    },
     "type": "normal",
     "power": 70,
     "accuracy": 100,
@@ -2891,7 +3758,10 @@
   },
   {
     "id": 291,
-    "name": "dive",
+    "name": {
+      "en": "Dive",
+      "he": "צלילה"
+    },
     "type": "water",
     "power": 80,
     "accuracy": 100,
@@ -2901,7 +3771,10 @@
   },
   {
     "id": 292,
-    "name": "arm-thrust",
+    "name": {
+      "en": "Arm Thrust",
+      "he": "דחיפת זרוע"
+    },
     "type": "fighting",
     "power": 15,
     "accuracy": 100,
@@ -2911,7 +3784,10 @@
   },
   {
     "id": 293,
-    "name": "camouflage",
+    "name": {
+      "en": "Camouflage",
+      "he": "הסוואה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2921,7 +3797,10 @@
   },
   {
     "id": 297,
-    "name": "feather-dance",
+    "name": {
+      "en": "Feather Dance",
+      "he": "ריקוד נוצה"
+    },
     "type": "flying",
     "power": null,
     "accuracy": 100,
@@ -2931,7 +3810,10 @@
   },
   {
     "id": 298,
-    "name": "teeter-dance",
+    "name": {
+      "en": "Teeter Dance",
+      "he": "ריקוד מתנדנד"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -2941,7 +3823,10 @@
   },
   {
     "id": 299,
-    "name": "blaze-kick",
+    "name": {
+      "en": "Blaze Kick",
+      "he": "בעיטת להבה"
+    },
     "type": "fire",
     "power": 85,
     "accuracy": 90,
@@ -2951,7 +3836,10 @@
   },
   {
     "id": 300,
-    "name": "mud-sport",
+    "name": {
+      "en": "Mud Sport",
+      "he": "ספורט בוץ"
+    },
     "type": "ground",
     "power": null,
     "accuracy": null,
@@ -2961,7 +3849,10 @@
   },
   {
     "id": 301,
-    "name": "ice-ball",
+    "name": {
+      "en": "Ice Ball",
+      "he": "כדור קרח"
+    },
     "type": "ice",
     "power": 30,
     "accuracy": 90,
@@ -2971,7 +3862,10 @@
   },
   {
     "id": 303,
-    "name": "slack-off",
+    "name": {
+      "en": "Slack Off",
+      "he": "מנוחת עצלן"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -2981,7 +3875,10 @@
   },
   {
     "id": 304,
-    "name": "hyper-voice",
+    "name": {
+      "en": "Hyper Voice",
+      "he": "קול היפר"
+    },
     "type": "normal",
     "power": 90,
     "accuracy": 100,
@@ -2991,7 +3888,10 @@
   },
   {
     "id": 305,
-    "name": "poison-fang",
+    "name": {
+      "en": "Poison Fang",
+      "he": "ניב רעל"
+    },
     "type": "poison",
     "power": 50,
     "accuracy": 100,
@@ -3001,7 +3901,10 @@
   },
   {
     "id": 306,
-    "name": "crush-claw",
+    "name": {
+      "en": "Crush Claw",
+      "he": "טופר מוחץ"
+    },
     "type": "normal",
     "power": 75,
     "accuracy": 95,
@@ -3011,7 +3914,10 @@
   },
   {
     "id": 307,
-    "name": "blast-burn",
+    "name": {
+      "en": "Blast Burn",
+      "he": "שריפת פיצוץ"
+    },
     "type": "fire",
     "power": 150,
     "accuracy": 90,
@@ -3021,7 +3927,10 @@
   },
   {
     "id": 308,
-    "name": "hydro-cannon",
+    "name": {
+      "en": "Hydro Cannon",
+      "he": "תותח מים"
+    },
     "type": "water",
     "power": 150,
     "accuracy": 90,
@@ -3031,7 +3940,10 @@
   },
   {
     "id": 309,
-    "name": "meteor-mash",
+    "name": {
+      "en": "Meteor Mash",
+      "he": "פגיעת מטאור"
+    },
     "type": "steel",
     "power": 90,
     "accuracy": 90,
@@ -3041,7 +3953,10 @@
   },
   {
     "id": 310,
-    "name": "astonish",
+    "name": {
+      "en": "Astonish",
+      "he": "הפתעה"
+    },
     "type": "ghost",
     "power": 30,
     "accuracy": 100,
@@ -3051,7 +3966,10 @@
   },
   {
     "id": 311,
-    "name": "weather-ball",
+    "name": {
+      "en": "Weather Ball",
+      "he": "כדור מזג אוויר"
+    },
     "type": "normal",
     "power": 50,
     "accuracy": 100,
@@ -3061,7 +3979,10 @@
   },
   {
     "id": 312,
-    "name": "aromatherapy",
+    "name": {
+      "en": "Aromatherapy",
+      "he": "ארומתרפיה"
+    },
     "type": "grass",
     "power": null,
     "accuracy": null,
@@ -3071,7 +3992,10 @@
   },
   {
     "id": 313,
-    "name": "fake-tears",
+    "name": {
+      "en": "Fake Tears",
+      "he": "דמעות מזויפות"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -3081,7 +4005,10 @@
   },
   {
     "id": 314,
-    "name": "air-cutter",
+    "name": {
+      "en": "Air Cutter",
+      "he": "חותך אוויר"
+    },
     "type": "flying",
     "power": 60,
     "accuracy": 95,
@@ -3091,7 +4018,10 @@
   },
   {
     "id": 315,
-    "name": "overheat",
+    "name": {
+      "en": "Overheat",
+      "he": "התחממות יתר"
+    },
     "type": "fire",
     "power": 130,
     "accuracy": 90,
@@ -3101,7 +4031,10 @@
   },
   {
     "id": 316,
-    "name": "odor-sleuth",
+    "name": {
+      "en": "Odor Sleuth",
+      "he": "עוקב ריח"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -3111,7 +4044,10 @@
   },
   {
     "id": 317,
-    "name": "rock-tomb",
+    "name": {
+      "en": "Rock Tomb",
+      "he": "קבר סלע"
+    },
     "type": "rock",
     "power": 60,
     "accuracy": 95,
@@ -3121,7 +4057,10 @@
   },
   {
     "id": 318,
-    "name": "silver-wind",
+    "name": {
+      "en": "Silver Wind",
+      "he": "רוח כסף"
+    },
     "type": "bug",
     "power": 60,
     "accuracy": 100,
@@ -3131,7 +4070,10 @@
   },
   {
     "id": 319,
-    "name": "metal-sound",
+    "name": {
+      "en": "Metal Sound",
+      "he": "צליל מתכת"
+    },
     "type": "steel",
     "power": null,
     "accuracy": 85,
@@ -3141,7 +4083,10 @@
   },
   {
     "id": 320,
-    "name": "grass-whistle",
+    "name": {
+      "en": "Grass Whistle",
+      "he": "שריקת עשב"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 55,
@@ -3151,7 +4096,10 @@
   },
   {
     "id": 321,
-    "name": "tickle",
+    "name": {
+      "en": "Tickle",
+      "he": "דגדוג"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -3161,7 +4109,10 @@
   },
   {
     "id": 322,
-    "name": "cosmic-power",
+    "name": {
+      "en": "Cosmic Power",
+      "he": "כוח קוסמי"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -3171,7 +4122,10 @@
   },
   {
     "id": 323,
-    "name": "water-spout",
+    "name": {
+      "en": "Water Spout",
+      "he": "פרץ מים"
+    },
     "type": "water",
     "power": 150,
     "accuracy": 100,
@@ -3181,7 +4135,10 @@
   },
   {
     "id": 324,
-    "name": "signal-beam",
+    "name": {
+      "en": "Signal Beam",
+      "he": "קרן אות"
+    },
     "type": "bug",
     "power": 75,
     "accuracy": 100,
@@ -3191,7 +4148,10 @@
   },
   {
     "id": 325,
-    "name": "shadow-punch",
+    "name": {
+      "en": "Shadow Punch",
+      "he": "אגרוף צל"
+    },
     "type": "ghost",
     "power": 60,
     "accuracy": null,
@@ -3201,7 +4161,10 @@
   },
   {
     "id": 326,
-    "name": "extrasensory",
+    "name": {
+      "en": "Extrasensory",
+      "he": "חוש שישי"
+    },
     "type": "psychic",
     "power": 80,
     "accuracy": 100,
@@ -3211,7 +4174,10 @@
   },
   {
     "id": 327,
-    "name": "sky-uppercut",
+    "name": {
+      "en": "Sky Uppercut",
+      "he": "אפרקט שמיים"
+    },
     "type": "fighting",
     "power": 85,
     "accuracy": 90,
@@ -3221,7 +4187,10 @@
   },
   {
     "id": 328,
-    "name": "sand-tomb",
+    "name": {
+      "en": "Sand Tomb",
+      "he": "קבר חול"
+    },
     "type": "ground",
     "power": 35,
     "accuracy": 85,
@@ -3231,7 +4200,10 @@
   },
   {
     "id": 329,
-    "name": "sheer-cold",
+    "name": {
+      "en": "Sheer Cold",
+      "he": "קור קיצוני"
+    },
     "type": "ice",
     "power": null,
     "accuracy": 30,
@@ -3241,7 +4213,10 @@
   },
   {
     "id": 330,
-    "name": "muddy-water",
+    "name": {
+      "en": "Muddy Water",
+      "he": "מים עכורים"
+    },
     "type": "water",
     "power": 90,
     "accuracy": 85,
@@ -3251,7 +4226,10 @@
   },
   {
     "id": 331,
-    "name": "bullet-seed",
+    "name": {
+      "en": "Bullet Seed",
+      "he": "זרע רובה"
+    },
     "type": "grass",
     "power": 25,
     "accuracy": 100,
@@ -3261,7 +4239,10 @@
   },
   {
     "id": 332,
-    "name": "aerial-ace",
+    "name": {
+      "en": "Aerial Ace",
+      "he": "אס אווירי"
+    },
     "type": "flying",
     "power": 60,
     "accuracy": null,
@@ -3271,7 +4252,10 @@
   },
   {
     "id": 333,
-    "name": "icicle-spear",
+    "name": {
+      "en": "Icicle Spear",
+      "he": "חנית קרח"
+    },
     "type": "ice",
     "power": 25,
     "accuracy": 100,
@@ -3281,7 +4265,10 @@
   },
   {
     "id": 334,
-    "name": "iron-defense",
+    "name": {
+      "en": "Iron Defense",
+      "he": "הגנת ברזל"
+    },
     "type": "steel",
     "power": null,
     "accuracy": null,
@@ -3291,7 +4278,10 @@
   },
   {
     "id": 335,
-    "name": "block",
+    "name": {
+      "en": "Block",
+      "he": "חסימה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -3301,7 +4291,10 @@
   },
   {
     "id": 336,
-    "name": "howl",
+    "name": {
+      "en": "Howl",
+      "he": "יללה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -3311,7 +4304,10 @@
   },
   {
     "id": 337,
-    "name": "dragon-claw",
+    "name": {
+      "en": "Dragon Claw",
+      "he": "טופר דרקון"
+    },
     "type": "dragon",
     "power": 80,
     "accuracy": 100,
@@ -3321,7 +4317,10 @@
   },
   {
     "id": 338,
-    "name": "frenzy-plant",
+    "name": {
+      "en": "Frenzy Plant",
+      "he": "צמח טירוף"
+    },
     "type": "grass",
     "power": 150,
     "accuracy": 90,
@@ -3331,7 +4330,10 @@
   },
   {
     "id": 339,
-    "name": "bulk-up",
+    "name": {
+      "en": "Bulk Up",
+      "he": "בניית גוף"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": null,
@@ -3341,7 +4343,10 @@
   },
   {
     "id": 340,
-    "name": "bounce",
+    "name": {
+      "en": "Bounce",
+      "he": "קפיצה"
+    },
     "type": "flying",
     "power": 85,
     "accuracy": 85,
@@ -3351,7 +4356,10 @@
   },
   {
     "id": 341,
-    "name": "mud-shot",
+    "name": {
+      "en": "Mud Shot",
+      "he": "יריית בוץ"
+    },
     "type": "ground",
     "power": 55,
     "accuracy": 95,
@@ -3361,7 +4369,10 @@
   },
   {
     "id": 342,
-    "name": "poison-tail",
+    "name": {
+      "en": "Poison Tail",
+      "he": "זנב רעל"
+    },
     "type": "poison",
     "power": 50,
     "accuracy": 100,
@@ -3371,7 +4382,10 @@
   },
   {
     "id": 343,
-    "name": "covet",
+    "name": {
+      "en": "Covet",
+      "he": "חמדנות"
+    },
     "type": "normal",
     "power": 60,
     "accuracy": 100,
@@ -3381,7 +4395,10 @@
   },
   {
     "id": 344,
-    "name": "volt-tackle",
+    "name": {
+      "en": "Volt Tackle",
+      "he": "וולט התנגשות"
+    },
     "type": "electric",
     "power": 120,
     "accuracy": 100,
@@ -3391,7 +4408,10 @@
   },
   {
     "id": 345,
-    "name": "magical-leaf",
+    "name": {
+      "en": "Magical Leaf",
+      "he": "עלה קסום"
+    },
     "type": "grass",
     "power": 60,
     "accuracy": null,
@@ -3401,7 +4421,10 @@
   },
   {
     "id": 346,
-    "name": "water-sport",
+    "name": {
+      "en": "Water Sport",
+      "he": "ספורט מים"
+    },
     "type": "water",
     "power": null,
     "accuracy": null,
@@ -3411,7 +4434,10 @@
   },
   {
     "id": 347,
-    "name": "calm-mind",
+    "name": {
+      "en": "Calm Mind",
+      "he": "מנוחת נפש"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -3421,7 +4447,10 @@
   },
   {
     "id": 348,
-    "name": "leaf-blade",
+    "name": {
+      "en": "Leaf Blade",
+      "he": "להב עלה"
+    },
     "type": "grass",
     "power": 90,
     "accuracy": 100,
@@ -3431,7 +4460,10 @@
   },
   {
     "id": 349,
-    "name": "dragon-dance",
+    "name": {
+      "en": "Dragon Dance",
+      "he": "ריקוד דרקון"
+    },
     "type": "dragon",
     "power": null,
     "accuracy": null,
@@ -3441,7 +4473,10 @@
   },
   {
     "id": 350,
-    "name": "rock-blast",
+    "name": {
+      "en": "Rock Blast",
+      "he": "פיצוץ סלע"
+    },
     "type": "rock",
     "power": 25,
     "accuracy": 90,
@@ -3451,7 +4486,10 @@
   },
   {
     "id": 351,
-    "name": "shock-wave",
+    "name": {
+      "en": "Shock Wave",
+      "he": "גל הלם"
+    },
     "type": "electric",
     "power": 60,
     "accuracy": null,
@@ -3461,7 +4499,10 @@
   },
   {
     "id": 352,
-    "name": "water-pulse",
+    "name": {
+      "en": "Water Pulse",
+      "he": "פולס מים"
+    },
     "type": "water",
     "power": 60,
     "accuracy": 100,
@@ -3471,7 +4512,10 @@
   },
   {
     "id": 354,
-    "name": "psycho-boost",
+    "name": {
+      "en": "Psycho Boost",
+      "he": "דחיפת פסיכו"
+    },
     "type": "psychic",
     "power": 140,
     "accuracy": 90,
@@ -3481,7 +4525,10 @@
   },
   {
     "id": 355,
-    "name": "roost",
+    "name": {
+      "en": "Roost",
+      "he": "נחיתה"
+    },
     "type": "flying",
     "power": null,
     "accuracy": null,
@@ -3491,7 +4538,10 @@
   },
   {
     "id": 356,
-    "name": "gravity",
+    "name": {
+      "en": "Gravity",
+      "he": "כבידה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -3501,7 +4551,10 @@
   },
   {
     "id": 357,
-    "name": "miracle-eye",
+    "name": {
+      "en": "Miracle Eye",
+      "he": "עין נס"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -3511,7 +4564,10 @@
   },
   {
     "id": 358,
-    "name": "wake-up-slap",
+    "name": {
+      "en": "Wake Up Slap",
+      "he": "סטירת השכמה"
+    },
     "type": "fighting",
     "power": 70,
     "accuracy": 100,
@@ -3521,7 +4577,10 @@
   },
   {
     "id": 359,
-    "name": "hammer-arm",
+    "name": {
+      "en": "Hammer Arm",
+      "he": "זרוע פטיש"
+    },
     "type": "fighting",
     "power": 100,
     "accuracy": 90,
@@ -3531,7 +4590,10 @@
   },
   {
     "id": 360,
-    "name": "gyro-ball",
+    "name": {
+      "en": "Gyro Ball",
+      "he": "כדור גירו"
+    },
     "type": "steel",
     "power": null,
     "accuracy": 100,
@@ -3541,7 +4603,10 @@
   },
   {
     "id": 361,
-    "name": "healing-wish",
+    "name": {
+      "en": "Healing Wish",
+      "he": "משאלת ריפוי"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -3551,7 +4616,10 @@
   },
   {
     "id": 362,
-    "name": "brine",
+    "name": {
+      "en": "Brine",
+      "he": "מי מלח"
+    },
     "type": "water",
     "power": 65,
     "accuracy": 100,
@@ -3561,7 +4629,10 @@
   },
   {
     "id": 363,
-    "name": "natural-gift",
+    "name": {
+      "en": "Natural Gift",
+      "he": "מתנת טבע"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -3571,7 +4642,10 @@
   },
   {
     "id": 364,
-    "name": "feint",
+    "name": {
+      "en": "Feint",
+      "he": "העמדת פנים"
+    },
     "type": "normal",
     "power": 30,
     "accuracy": 100,
@@ -3581,7 +4655,10 @@
   },
   {
     "id": 365,
-    "name": "pluck",
+    "name": {
+      "en": "Pluck",
+      "he": "קטיפה"
+    },
     "type": "flying",
     "power": 60,
     "accuracy": 100,
@@ -3591,7 +4668,10 @@
   },
   {
     "id": 366,
-    "name": "tailwind",
+    "name": {
+      "en": "Tailwind",
+      "he": "רוח גב"
+    },
     "type": "flying",
     "power": null,
     "accuracy": null,
@@ -3601,7 +4681,10 @@
   },
   {
     "id": 367,
-    "name": "acupressure",
+    "name": {
+      "en": "Acupressure",
+      "he": "דיקור"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -3611,7 +4694,10 @@
   },
   {
     "id": 368,
-    "name": "metal-burst",
+    "name": {
+      "en": "Metal Burst",
+      "he": "פרץ מתכת"
+    },
     "type": "steel",
     "power": null,
     "accuracy": 100,
@@ -3621,7 +4707,10 @@
   },
   {
     "id": 369,
-    "name": "u-turn",
+    "name": {
+      "en": "U Turn",
+      "he": "סיבוב-חזרה"
+    },
     "type": "bug",
     "power": 70,
     "accuracy": 100,
@@ -3631,7 +4720,10 @@
   },
   {
     "id": 370,
-    "name": "close-combat",
+    "name": {
+      "en": "Close Combat",
+      "he": "קרב מגע"
+    },
     "type": "fighting",
     "power": 120,
     "accuracy": 100,
@@ -3641,7 +4733,10 @@
   },
   {
     "id": 371,
-    "name": "payback",
+    "name": {
+      "en": "Payback",
+      "he": "תשלום"
+    },
     "type": "dark",
     "power": 50,
     "accuracy": 100,
@@ -3651,7 +4746,10 @@
   },
   {
     "id": 372,
-    "name": "assurance",
+    "name": {
+      "en": "Assurance",
+      "he": "ביטחון"
+    },
     "type": "dark",
     "power": 60,
     "accuracy": 100,
@@ -3661,7 +4759,10 @@
   },
   {
     "id": 373,
-    "name": "embargo",
+    "name": {
+      "en": "Embargo",
+      "he": "אמברגו"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -3671,7 +4772,10 @@
   },
   {
     "id": 374,
-    "name": "fling",
+    "name": {
+      "en": "Fling",
+      "he": "זריקה"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -3681,7 +4785,10 @@
   },
   {
     "id": 375,
-    "name": "psycho-shift",
+    "name": {
+      "en": "Psycho Shift",
+      "he": "שינוי פסיכו"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": 100,
@@ -3691,7 +4798,10 @@
   },
   {
     "id": 376,
-    "name": "trump-card",
+    "name": {
+      "en": "Trump Card",
+      "he": "קלף מנצח"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -3701,7 +4811,10 @@
   },
   {
     "id": 377,
-    "name": "heal-block",
+    "name": {
+      "en": "Heal Block",
+      "he": "חסימת ריפוי"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": 100,
@@ -3711,7 +4824,10 @@
   },
   {
     "id": 378,
-    "name": "wring-out",
+    "name": {
+      "en": "Wring Out",
+      "he": "סחיטה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -3721,7 +4837,10 @@
   },
   {
     "id": 379,
-    "name": "power-trick",
+    "name": {
+      "en": "Power Trick",
+      "he": "תעלול כוח"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -3731,7 +4850,10 @@
   },
   {
     "id": 380,
-    "name": "gastro-acid",
+    "name": {
+      "en": "Gastro Acid",
+      "he": "חומצת קיבה"
+    },
     "type": "poison",
     "power": null,
     "accuracy": 100,
@@ -3741,7 +4863,10 @@
   },
   {
     "id": 381,
-    "name": "lucky-chant",
+    "name": {
+      "en": "Lucky Chant",
+      "he": "שיר מזל"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -3751,7 +4876,10 @@
   },
   {
     "id": 382,
-    "name": "me-first",
+    "name": {
+      "en": "Me First",
+      "he": "אני קודם"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -3761,7 +4889,10 @@
   },
   {
     "id": 383,
-    "name": "copycat",
+    "name": {
+      "en": "Copycat",
+      "he": "חיקוי חתול"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -3771,7 +4902,10 @@
   },
   {
     "id": 384,
-    "name": "power-swap",
+    "name": {
+      "en": "Power Swap",
+      "he": "החלפת כוח"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -3781,7 +4915,10 @@
   },
   {
     "id": 385,
-    "name": "guard-swap",
+    "name": {
+      "en": "Guard Swap",
+      "he": "החלפת הגנה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -3791,7 +4928,10 @@
   },
   {
     "id": 386,
-    "name": "punishment",
+    "name": {
+      "en": "Punishment",
+      "he": "עונש"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -3801,7 +4941,10 @@
   },
   {
     "id": 387,
-    "name": "last-resort",
+    "name": {
+      "en": "Last Resort",
+      "he": "מוצא אחרון"
+    },
     "type": "normal",
     "power": 140,
     "accuracy": 100,
@@ -3811,7 +4954,10 @@
   },
   {
     "id": 388,
-    "name": "worry-seed",
+    "name": {
+      "en": "Worry Seed",
+      "he": "זרע דאגה"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 100,
@@ -3821,7 +4967,10 @@
   },
   {
     "id": 389,
-    "name": "sucker-punch",
+    "name": {
+      "en": "Sucker Punch",
+      "he": "אגרוף ערמומי"
+    },
     "type": "dark",
     "power": 70,
     "accuracy": 100,
@@ -3831,7 +4980,10 @@
   },
   {
     "id": 390,
-    "name": "toxic-spikes",
+    "name": {
+      "en": "Toxic Spikes",
+      "he": "קוצי רעל"
+    },
     "type": "poison",
     "power": null,
     "accuracy": null,
@@ -3841,7 +4993,10 @@
   },
   {
     "id": 392,
-    "name": "aqua-ring",
+    "name": {
+      "en": "Aqua Ring",
+      "he": "טבעת מים"
+    },
     "type": "water",
     "power": null,
     "accuracy": null,
@@ -3851,7 +5006,10 @@
   },
   {
     "id": 393,
-    "name": "magnet-rise",
+    "name": {
+      "en": "Magnet Rise",
+      "he": "עלייה מגנטית"
+    },
     "type": "electric",
     "power": null,
     "accuracy": null,
@@ -3861,7 +5019,10 @@
   },
   {
     "id": 394,
-    "name": "flare-blitz",
+    "name": {
+      "en": "Flare Blitz",
+      "he": "להט פרץ"
+    },
     "type": "fire",
     "power": 120,
     "accuracy": 100,
@@ -3871,7 +5032,10 @@
   },
   {
     "id": 396,
-    "name": "aura-sphere",
+    "name": {
+      "en": "Aura Sphere",
+      "he": "כדור הילה"
+    },
     "type": "fighting",
     "power": 80,
     "accuracy": null,
@@ -3881,7 +5045,10 @@
   },
   {
     "id": 397,
-    "name": "rock-polish",
+    "name": {
+      "en": "Rock Polish",
+      "he": "ליטוש סלע"
+    },
     "type": "rock",
     "power": null,
     "accuracy": null,
@@ -3891,7 +5058,10 @@
   },
   {
     "id": 398,
-    "name": "poison-jab",
+    "name": {
+      "en": "Poison Jab",
+      "he": "דקירת רעל"
+    },
     "type": "poison",
     "power": 80,
     "accuracy": 100,
@@ -3901,7 +5071,10 @@
   },
   {
     "id": 399,
-    "name": "dark-pulse",
+    "name": {
+      "en": "Dark Pulse",
+      "he": "פולס אופל"
+    },
     "type": "dark",
     "power": 80,
     "accuracy": 100,
@@ -3911,7 +5084,10 @@
   },
   {
     "id": 400,
-    "name": "night-slash",
+    "name": {
+      "en": "Night Slash",
+      "he": "חיתוך לילה"
+    },
     "type": "dark",
     "power": 70,
     "accuracy": 100,
@@ -3921,7 +5097,10 @@
   },
   {
     "id": 401,
-    "name": "aqua-tail",
+    "name": {
+      "en": "Aqua Tail",
+      "he": "זנב מים"
+    },
     "type": "water",
     "power": 90,
     "accuracy": 90,
@@ -3931,7 +5110,10 @@
   },
   {
     "id": 402,
-    "name": "seed-bomb",
+    "name": {
+      "en": "Seed Bomb",
+      "he": "פצצת זרע"
+    },
     "type": "grass",
     "power": 80,
     "accuracy": 100,
@@ -3941,7 +5123,10 @@
   },
   {
     "id": 403,
-    "name": "air-slash",
+    "name": {
+      "en": "Air Slash",
+      "he": "חיתוך אוויר"
+    },
     "type": "flying",
     "power": 75,
     "accuracy": 95,
@@ -3951,7 +5136,10 @@
   },
   {
     "id": 404,
-    "name": "x-scissor",
+    "name": {
+      "en": "X Scissor",
+      "he": "מספריים-X"
+    },
     "type": "bug",
     "power": 80,
     "accuracy": 100,
@@ -3961,7 +5149,10 @@
   },
   {
     "id": 405,
-    "name": "bug-buzz",
+    "name": {
+      "en": "Bug Buzz",
+      "he": "זמזום חרק"
+    },
     "type": "bug",
     "power": 90,
     "accuracy": 100,
@@ -3971,7 +5162,10 @@
   },
   {
     "id": 406,
-    "name": "dragon-pulse",
+    "name": {
+      "en": "Dragon Pulse",
+      "he": "פולס דרקון"
+    },
     "type": "dragon",
     "power": 85,
     "accuracy": 100,
@@ -3981,7 +5175,10 @@
   },
   {
     "id": 407,
-    "name": "dragon-rush",
+    "name": {
+      "en": "Dragon Rush",
+      "he": "דריסת דרקון"
+    },
     "type": "dragon",
     "power": 100,
     "accuracy": 75,
@@ -3991,7 +5188,10 @@
   },
   {
     "id": 408,
-    "name": "power-gem",
+    "name": {
+      "en": "Power Gem",
+      "he": "אבן חן כוח"
+    },
     "type": "rock",
     "power": 80,
     "accuracy": 100,
@@ -4001,7 +5201,10 @@
   },
   {
     "id": 409,
-    "name": "drain-punch",
+    "name": {
+      "en": "Drain Punch",
+      "he": "אגרוף מנקז"
+    },
     "type": "fighting",
     "power": 75,
     "accuracy": 100,
@@ -4011,7 +5214,10 @@
   },
   {
     "id": 410,
-    "name": "vacuum-wave",
+    "name": {
+      "en": "Vacuum Wave",
+      "he": "גל ואקום"
+    },
     "type": "fighting",
     "power": 40,
     "accuracy": 100,
@@ -4021,7 +5227,10 @@
   },
   {
     "id": 411,
-    "name": "focus-blast",
+    "name": {
+      "en": "Focus Blast",
+      "he": "פיצוץ מיקוד"
+    },
     "type": "fighting",
     "power": 120,
     "accuracy": 70,
@@ -4031,7 +5240,10 @@
   },
   {
     "id": 412,
-    "name": "energy-ball",
+    "name": {
+      "en": "Energy Ball",
+      "he": "כדור אנרגיה"
+    },
     "type": "grass",
     "power": 90,
     "accuracy": 100,
@@ -4041,7 +5253,10 @@
   },
   {
     "id": 413,
-    "name": "brave-bird",
+    "name": {
+      "en": "Brave Bird",
+      "he": "ציפור אמיצה"
+    },
     "type": "flying",
     "power": 120,
     "accuracy": 100,
@@ -4051,7 +5266,10 @@
   },
   {
     "id": 414,
-    "name": "earth-power",
+    "name": {
+      "en": "Earth Power",
+      "he": "כוח אדמה"
+    },
     "type": "ground",
     "power": 90,
     "accuracy": 100,
@@ -4061,7 +5279,10 @@
   },
   {
     "id": 415,
-    "name": "switcheroo",
+    "name": {
+      "en": "Switcheroo",
+      "he": "החלפה"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -4071,7 +5292,10 @@
   },
   {
     "id": 416,
-    "name": "giga-impact",
+    "name": {
+      "en": "Giga Impact",
+      "he": "פגיעת גיגה"
+    },
     "type": "normal",
     "power": 150,
     "accuracy": 90,
@@ -4081,7 +5305,10 @@
   },
   {
     "id": 417,
-    "name": "nasty-plot",
+    "name": {
+      "en": "Nasty Plot",
+      "he": "מזימה מרושעת"
+    },
     "type": "dark",
     "power": null,
     "accuracy": null,
@@ -4091,7 +5318,10 @@
   },
   {
     "id": 418,
-    "name": "bullet-punch",
+    "name": {
+      "en": "Bullet Punch",
+      "he": "אגרוף רובה"
+    },
     "type": "steel",
     "power": 40,
     "accuracy": 100,
@@ -4101,7 +5331,10 @@
   },
   {
     "id": 419,
-    "name": "avalanche",
+    "name": {
+      "en": "Avalanche",
+      "he": "מפולת שלג"
+    },
     "type": "ice",
     "power": 60,
     "accuracy": 100,
@@ -4111,7 +5344,10 @@
   },
   {
     "id": 420,
-    "name": "ice-shard",
+    "name": {
+      "en": "Ice Shard",
+      "he": "רסיס קרח"
+    },
     "type": "ice",
     "power": 40,
     "accuracy": 100,
@@ -4121,7 +5357,10 @@
   },
   {
     "id": 421,
-    "name": "shadow-claw",
+    "name": {
+      "en": "Shadow Claw",
+      "he": "טופר צל"
+    },
     "type": "ghost",
     "power": 70,
     "accuracy": 100,
@@ -4131,7 +5370,10 @@
   },
   {
     "id": 422,
-    "name": "thunder-fang",
+    "name": {
+      "en": "Thunder Fang",
+      "he": "ניב רעם"
+    },
     "type": "electric",
     "power": 65,
     "accuracy": 95,
@@ -4141,7 +5383,10 @@
   },
   {
     "id": 423,
-    "name": "ice-fang",
+    "name": {
+      "en": "Ice Fang",
+      "he": "ניב קרח"
+    },
     "type": "ice",
     "power": 65,
     "accuracy": 95,
@@ -4151,7 +5396,10 @@
   },
   {
     "id": 424,
-    "name": "fire-fang",
+    "name": {
+      "en": "Fire Fang",
+      "he": "ניב אש"
+    },
     "type": "fire",
     "power": 65,
     "accuracy": 95,
@@ -4161,7 +5409,10 @@
   },
   {
     "id": 425,
-    "name": "shadow-sneak",
+    "name": {
+      "en": "Shadow Sneak",
+      "he": "התגנבות צל"
+    },
     "type": "ghost",
     "power": 40,
     "accuracy": 100,
@@ -4171,7 +5422,10 @@
   },
   {
     "id": 426,
-    "name": "mud-bomb",
+    "name": {
+      "en": "Mud Bomb",
+      "he": "פצצת בוץ"
+    },
     "type": "ground",
     "power": 65,
     "accuracy": 85,
@@ -4181,7 +5435,10 @@
   },
   {
     "id": 427,
-    "name": "psycho-cut",
+    "name": {
+      "en": "Psycho Cut",
+      "he": "חיתוך פסיכו"
+    },
     "type": "psychic",
     "power": 70,
     "accuracy": 100,
@@ -4191,7 +5448,10 @@
   },
   {
     "id": 428,
-    "name": "zen-headbutt",
+    "name": {
+      "en": "Zen Headbutt",
+      "he": "נגיחת זן"
+    },
     "type": "psychic",
     "power": 80,
     "accuracy": 90,
@@ -4201,7 +5461,10 @@
   },
   {
     "id": 429,
-    "name": "mirror-shot",
+    "name": {
+      "en": "Mirror Shot",
+      "he": "יריית מראה"
+    },
     "type": "steel",
     "power": 65,
     "accuracy": 85,
@@ -4211,7 +5474,10 @@
   },
   {
     "id": 430,
-    "name": "flash-cannon",
+    "name": {
+      "en": "Flash Cannon",
+      "he": "תותח הבזק"
+    },
     "type": "steel",
     "power": 80,
     "accuracy": 100,
@@ -4221,7 +5487,10 @@
   },
   {
     "id": 431,
-    "name": "rock-climb",
+    "name": {
+      "en": "Rock Climb",
+      "he": "טיפוס סלע"
+    },
     "type": "normal",
     "power": 90,
     "accuracy": 85,
@@ -4231,7 +5500,10 @@
   },
   {
     "id": 432,
-    "name": "defog",
+    "name": {
+      "en": "Defog",
+      "he": "פיזור ערפל"
+    },
     "type": "flying",
     "power": null,
     "accuracy": null,
@@ -4241,7 +5513,10 @@
   },
   {
     "id": 433,
-    "name": "trick-room",
+    "name": {
+      "en": "Trick Room",
+      "he": "חדר תעלול"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -4251,7 +5526,10 @@
   },
   {
     "id": 434,
-    "name": "draco-meteor",
+    "name": {
+      "en": "Draco Meteor",
+      "he": "מטאור דרקו"
+    },
     "type": "dragon",
     "power": 130,
     "accuracy": 90,
@@ -4261,7 +5539,10 @@
   },
   {
     "id": 435,
-    "name": "discharge",
+    "name": {
+      "en": "Discharge",
+      "he": "פריקה"
+    },
     "type": "electric",
     "power": 80,
     "accuracy": 100,
@@ -4271,7 +5552,10 @@
   },
   {
     "id": 436,
-    "name": "lava-plume",
+    "name": {
+      "en": "Lava Plume",
+      "he": "פרץ לבה"
+    },
     "type": "fire",
     "power": 80,
     "accuracy": 100,
@@ -4281,7 +5565,10 @@
   },
   {
     "id": 437,
-    "name": "leaf-storm",
+    "name": {
+      "en": "Leaf Storm",
+      "he": "סופת עלים"
+    },
     "type": "grass",
     "power": 130,
     "accuracy": 90,
@@ -4291,7 +5578,10 @@
   },
   {
     "id": 438,
-    "name": "power-whip",
+    "name": {
+      "en": "Power Whip",
+      "he": "שוט כוח"
+    },
     "type": "grass",
     "power": 120,
     "accuracy": 85,
@@ -4301,7 +5591,10 @@
   },
   {
     "id": 440,
-    "name": "cross-poison",
+    "name": {
+      "en": "Cross Poison",
+      "he": "רעל צולב"
+    },
     "type": "poison",
     "power": 70,
     "accuracy": 100,
@@ -4311,7 +5604,10 @@
   },
   {
     "id": 441,
-    "name": "gunk-shot",
+    "name": {
+      "en": "Gunk Shot",
+      "he": "יריית פסולת"
+    },
     "type": "poison",
     "power": 120,
     "accuracy": 80,
@@ -4321,7 +5617,10 @@
   },
   {
     "id": 442,
-    "name": "iron-head",
+    "name": {
+      "en": "Iron Head",
+      "he": "ראש ברזל"
+    },
     "type": "steel",
     "power": 80,
     "accuracy": 100,
@@ -4331,7 +5630,10 @@
   },
   {
     "id": 443,
-    "name": "magnet-bomb",
+    "name": {
+      "en": "Magnet Bomb",
+      "he": "פצצת מגנט"
+    },
     "type": "steel",
     "power": 60,
     "accuracy": null,
@@ -4341,7 +5643,10 @@
   },
   {
     "id": 444,
-    "name": "stone-edge",
+    "name": {
+      "en": "Stone Edge",
+      "he": "להב אבן"
+    },
     "type": "rock",
     "power": 100,
     "accuracy": 80,
@@ -4351,7 +5656,10 @@
   },
   {
     "id": 445,
-    "name": "captivate",
+    "name": {
+      "en": "Captivate",
+      "he": "שבייה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -4361,7 +5669,10 @@
   },
   {
     "id": 446,
-    "name": "stealth-rock",
+    "name": {
+      "en": "Stealth Rock",
+      "he": "סלע התגנבות"
+    },
     "type": "rock",
     "power": null,
     "accuracy": null,
@@ -4371,7 +5682,10 @@
   },
   {
     "id": 447,
-    "name": "grass-knot",
+    "name": {
+      "en": "Grass Knot",
+      "he": "קשר עשב"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 100,
@@ -4381,7 +5695,10 @@
   },
   {
     "id": 450,
-    "name": "bug-bite",
+    "name": {
+      "en": "Bug Bite",
+      "he": "נשיכת חרק"
+    },
     "type": "bug",
     "power": 60,
     "accuracy": 100,
@@ -4391,7 +5708,10 @@
   },
   {
     "id": 451,
-    "name": "charge-beam",
+    "name": {
+      "en": "Charge Beam",
+      "he": "קרן טעינה"
+    },
     "type": "electric",
     "power": 50,
     "accuracy": 90,
@@ -4401,7 +5721,10 @@
   },
   {
     "id": 452,
-    "name": "wood-hammer",
+    "name": {
+      "en": "Wood Hammer",
+      "he": "פטיש עץ"
+    },
     "type": "grass",
     "power": 120,
     "accuracy": 100,
@@ -4411,7 +5734,10 @@
   },
   {
     "id": 453,
-    "name": "aqua-jet",
+    "name": {
+      "en": "Aqua Jet",
+      "he": "סילון מים"
+    },
     "type": "water",
     "power": 40,
     "accuracy": 100,
@@ -4421,7 +5747,10 @@
   },
   {
     "id": 457,
-    "name": "head-smash",
+    "name": {
+      "en": "Head Smash",
+      "he": "נגיחת ראש"
+    },
     "type": "rock",
     "power": 150,
     "accuracy": 80,
@@ -4431,7 +5760,10 @@
   },
   {
     "id": 458,
-    "name": "double-hit",
+    "name": {
+      "en": "Double Hit",
+      "he": "מכה כפולה"
+    },
     "type": "normal",
     "power": 35,
     "accuracy": 90,
@@ -4441,7 +5773,10 @@
   },
   {
     "id": 466,
-    "name": "ominous-wind",
+    "name": {
+      "en": "Ominous Wind",
+      "he": "רוח מבשרת רעות"
+    },
     "type": "ghost",
     "power": 60,
     "accuracy": 100,
@@ -4451,7 +5786,10 @@
   },
   {
     "id": 468,
-    "name": "hone-claws",
+    "name": {
+      "en": "Hone Claws",
+      "he": "חידוד טפרים"
+    },
     "type": "dark",
     "power": null,
     "accuracy": null,
@@ -4461,7 +5799,10 @@
   },
   {
     "id": 469,
-    "name": "wide-guard",
+    "name": {
+      "en": "Wide Guard",
+      "he": "הגנה רחבה"
+    },
     "type": "rock",
     "power": null,
     "accuracy": null,
@@ -4471,7 +5812,10 @@
   },
   {
     "id": 470,
-    "name": "guard-split",
+    "name": {
+      "en": "Guard Split",
+      "he": "פיצול הגנה"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -4481,7 +5825,10 @@
   },
   {
     "id": 471,
-    "name": "power-split",
+    "name": {
+      "en": "Power Split",
+      "he": "פיצול כוח"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -4491,7 +5838,10 @@
   },
   {
     "id": 472,
-    "name": "wonder-room",
+    "name": {
+      "en": "Wonder Room",
+      "he": "חדר פלא"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -4501,7 +5851,10 @@
   },
   {
     "id": 473,
-    "name": "psyshock",
+    "name": {
+      "en": "Psyshock",
+      "he": "הלם פסיכו"
+    },
     "type": "psychic",
     "power": 80,
     "accuracy": 100,
@@ -4511,7 +5864,10 @@
   },
   {
     "id": 474,
-    "name": "venoshock",
+    "name": {
+      "en": "Venoshock",
+      "he": "הלם רעל"
+    },
     "type": "poison",
     "power": 65,
     "accuracy": 100,
@@ -4521,7 +5877,10 @@
   },
   {
     "id": 475,
-    "name": "autotomize",
+    "name": {
+      "en": "Autotomize",
+      "he": "אוטומציה"
+    },
     "type": "steel",
     "power": null,
     "accuracy": null,
@@ -4531,7 +5890,10 @@
   },
   {
     "id": 476,
-    "name": "rage-powder",
+    "name": {
+      "en": "Rage Powder",
+      "he": "אבקת זעם"
+    },
     "type": "bug",
     "power": null,
     "accuracy": null,
@@ -4541,7 +5903,10 @@
   },
   {
     "id": 477,
-    "name": "telekinesis",
+    "name": {
+      "en": "Telekinesis",
+      "he": "טלקינזיס"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -4551,7 +5916,10 @@
   },
   {
     "id": 478,
-    "name": "magic-room",
+    "name": {
+      "en": "Magic Room",
+      "he": "חדר קסם"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -4561,7 +5929,10 @@
   },
   {
     "id": 479,
-    "name": "smack-down",
+    "name": {
+      "en": "Smack Down",
+      "he": "הפלה"
+    },
     "type": "rock",
     "power": 50,
     "accuracy": 100,
@@ -4571,7 +5942,10 @@
   },
   {
     "id": 480,
-    "name": "storm-throw",
+    "name": {
+      "en": "Storm Throw",
+      "he": "זריקת סערה"
+    },
     "type": "fighting",
     "power": 60,
     "accuracy": 100,
@@ -4581,7 +5955,10 @@
   },
   {
     "id": 481,
-    "name": "flame-burst",
+    "name": {
+      "en": "Flame Burst",
+      "he": "פרץ להבה"
+    },
     "type": "fire",
     "power": 70,
     "accuracy": 100,
@@ -4591,7 +5968,10 @@
   },
   {
     "id": 482,
-    "name": "sludge-wave",
+    "name": {
+      "en": "Sludge Wave",
+      "he": "גל בוץ"
+    },
     "type": "poison",
     "power": 95,
     "accuracy": 100,
@@ -4601,7 +5981,10 @@
   },
   {
     "id": 483,
-    "name": "quiver-dance",
+    "name": {
+      "en": "Quiver Dance",
+      "he": "ריקוד רעידה"
+    },
     "type": "bug",
     "power": null,
     "accuracy": null,
@@ -4611,7 +5994,10 @@
   },
   {
     "id": 484,
-    "name": "heavy-slam",
+    "name": {
+      "en": "Heavy Slam",
+      "he": "טריקה כבדה"
+    },
     "type": "steel",
     "power": null,
     "accuracy": 100,
@@ -4621,7 +6007,10 @@
   },
   {
     "id": 485,
-    "name": "synchronoise",
+    "name": {
+      "en": "Synchronoise",
+      "he": "סינכרו-רעש"
+    },
     "type": "psychic",
     "power": 120,
     "accuracy": 100,
@@ -4631,7 +6020,10 @@
   },
   {
     "id": 486,
-    "name": "electro-ball",
+    "name": {
+      "en": "Electro Ball",
+      "he": "כדור חשמל"
+    },
     "type": "electric",
     "power": null,
     "accuracy": 100,
@@ -4641,7 +6033,10 @@
   },
   {
     "id": 487,
-    "name": "soak",
+    "name": {
+      "en": "Soak",
+      "he": "ספיגה"
+    },
     "type": "water",
     "power": null,
     "accuracy": 100,
@@ -4651,7 +6046,10 @@
   },
   {
     "id": 488,
-    "name": "flame-charge",
+    "name": {
+      "en": "Flame Charge",
+      "he": "מטען להבה"
+    },
     "type": "fire",
     "power": 50,
     "accuracy": 100,
@@ -4661,7 +6059,10 @@
   },
   {
     "id": 489,
-    "name": "coil",
+    "name": {
+      "en": "Coil",
+      "he": "סליל"
+    },
     "type": "poison",
     "power": null,
     "accuracy": null,
@@ -4671,7 +6072,10 @@
   },
   {
     "id": 490,
-    "name": "low-sweep",
+    "name": {
+      "en": "Low Sweep",
+      "he": "סחיפה נמוכה"
+    },
     "type": "fighting",
     "power": 65,
     "accuracy": 100,
@@ -4681,7 +6085,10 @@
   },
   {
     "id": 491,
-    "name": "acid-spray",
+    "name": {
+      "en": "Acid Spray",
+      "he": "ריסוס חומצה"
+    },
     "type": "poison",
     "power": 40,
     "accuracy": 100,
@@ -4691,7 +6098,10 @@
   },
   {
     "id": 492,
-    "name": "foul-play",
+    "name": {
+      "en": "Foul Play",
+      "he": "משחק מלוכלך"
+    },
     "type": "dark",
     "power": 95,
     "accuracy": 100,
@@ -4701,7 +6111,10 @@
   },
   {
     "id": 493,
-    "name": "simple-beam",
+    "name": {
+      "en": "Simple Beam",
+      "he": "קרן פשוטה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -4711,7 +6124,10 @@
   },
   {
     "id": 494,
-    "name": "entrainment",
+    "name": {
+      "en": "Entrainment",
+      "he": "הסחפות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": 100,
@@ -4721,7 +6137,10 @@
   },
   {
     "id": 495,
-    "name": "after-you",
+    "name": {
+      "en": "After You",
+      "he": "אחריך"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -4731,7 +6150,10 @@
   },
   {
     "id": 496,
-    "name": "round",
+    "name": {
+      "en": "Round",
+      "he": "סיבוב"
+    },
     "type": "normal",
     "power": 60,
     "accuracy": 100,
@@ -4741,7 +6163,10 @@
   },
   {
     "id": 497,
-    "name": "echoed-voice",
+    "name": {
+      "en": "Echoed Voice",
+      "he": "קול מהדהד"
+    },
     "type": "normal",
     "power": 40,
     "accuracy": 100,
@@ -4751,7 +6176,10 @@
   },
   {
     "id": 498,
-    "name": "chip-away",
+    "name": {
+      "en": "Chip Away",
+      "he": "ניפוץ"
+    },
     "type": "normal",
     "power": 70,
     "accuracy": 100,
@@ -4761,7 +6189,10 @@
   },
   {
     "id": 499,
-    "name": "clear-smog",
+    "name": {
+      "en": "Clear Smog",
+      "he": "ערפיח נקי"
+    },
     "type": "poison",
     "power": 50,
     "accuracy": null,
@@ -4771,7 +6202,10 @@
   },
   {
     "id": 500,
-    "name": "stored-power",
+    "name": {
+      "en": "Stored Power",
+      "he": "כוח מאוחסן"
+    },
     "type": "psychic",
     "power": 20,
     "accuracy": 100,
@@ -4781,7 +6215,10 @@
   },
   {
     "id": 501,
-    "name": "quick-guard",
+    "name": {
+      "en": "Quick Guard",
+      "he": "שמירה מהירה"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": null,
@@ -4791,7 +6228,10 @@
   },
   {
     "id": 502,
-    "name": "ally-switch",
+    "name": {
+      "en": "Ally Switch",
+      "he": "החלפת בן ברית"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -4801,7 +6241,10 @@
   },
   {
     "id": 503,
-    "name": "scald",
+    "name": {
+      "en": "Scald",
+      "he": "רתיחה"
+    },
     "type": "water",
     "power": 80,
     "accuracy": 100,
@@ -4811,7 +6254,10 @@
   },
   {
     "id": 504,
-    "name": "shell-smash",
+    "name": {
+      "en": "Shell Smash",
+      "he": "ניפוץ שריון"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -4821,7 +6267,10 @@
   },
   {
     "id": 505,
-    "name": "heal-pulse",
+    "name": {
+      "en": "Heal Pulse",
+      "he": "פולס ריפוי"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -4831,7 +6280,10 @@
   },
   {
     "id": 506,
-    "name": "hex",
+    "name": {
+      "en": "Hex",
+      "he": "כישוף"
+    },
     "type": "ghost",
     "power": 65,
     "accuracy": 100,
@@ -4841,7 +6293,10 @@
   },
   {
     "id": 507,
-    "name": "sky-drop",
+    "name": {
+      "en": "Sky Drop",
+      "he": "הפלה מהשמיים"
+    },
     "type": "flying",
     "power": 60,
     "accuracy": 100,
@@ -4851,7 +6306,10 @@
   },
   {
     "id": 509,
-    "name": "circle-throw",
+    "name": {
+      "en": "Circle Throw",
+      "he": "זריקת מעגל"
+    },
     "type": "fighting",
     "power": 60,
     "accuracy": 90,
@@ -4861,7 +6319,10 @@
   },
   {
     "id": 510,
-    "name": "incinerate",
+    "name": {
+      "en": "Incinerate",
+      "he": "שריפה"
+    },
     "type": "fire",
     "power": 60,
     "accuracy": 100,
@@ -4871,7 +6332,10 @@
   },
   {
     "id": 511,
-    "name": "quash",
+    "name": {
+      "en": "Quash",
+      "he": "השתקה"
+    },
     "type": "dark",
     "power": null,
     "accuracy": 100,
@@ -4881,7 +6345,10 @@
   },
   {
     "id": 512,
-    "name": "acrobatics",
+    "name": {
+      "en": "Acrobatics",
+      "he": "אקרובטיקה"
+    },
     "type": "flying",
     "power": 55,
     "accuracy": 100,
@@ -4891,7 +6358,10 @@
   },
   {
     "id": 513,
-    "name": "reflect-type",
+    "name": {
+      "en": "Reflect Type",
+      "he": "השתקפות סוג"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -4901,7 +6371,10 @@
   },
   {
     "id": 514,
-    "name": "retaliate",
+    "name": {
+      "en": "Retaliate",
+      "he": "תגמול"
+    },
     "type": "normal",
     "power": 70,
     "accuracy": 100,
@@ -4911,7 +6384,10 @@
   },
   {
     "id": 515,
-    "name": "final-gambit",
+    "name": {
+      "en": "Final Gambit",
+      "he": "הימור אחרון"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": 100,
@@ -4921,7 +6397,10 @@
   },
   {
     "id": 516,
-    "name": "bestow",
+    "name": {
+      "en": "Bestow",
+      "he": "הענקה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -4931,7 +6410,10 @@
   },
   {
     "id": 517,
-    "name": "inferno",
+    "name": {
+      "en": "Inferno",
+      "he": "גיהנום"
+    },
     "type": "fire",
     "power": 100,
     "accuracy": 50,
@@ -4941,7 +6423,10 @@
   },
   {
     "id": 518,
-    "name": "water-pledge",
+    "name": {
+      "en": "Water Pledge",
+      "he": "שבועת מים"
+    },
     "type": "water",
     "power": 80,
     "accuracy": 100,
@@ -4951,7 +6436,10 @@
   },
   {
     "id": 519,
-    "name": "fire-pledge",
+    "name": {
+      "en": "Fire Pledge",
+      "he": "שבועת אש"
+    },
     "type": "fire",
     "power": 80,
     "accuracy": 100,
@@ -4961,7 +6449,10 @@
   },
   {
     "id": 520,
-    "name": "grass-pledge",
+    "name": {
+      "en": "Grass Pledge",
+      "he": "שבועת עשב"
+    },
     "type": "grass",
     "power": 80,
     "accuracy": 100,
@@ -4971,7 +6462,10 @@
   },
   {
     "id": 521,
-    "name": "volt-switch",
+    "name": {
+      "en": "Volt Switch",
+      "he": "מתג וולט"
+    },
     "type": "electric",
     "power": 70,
     "accuracy": 100,
@@ -4981,7 +6475,10 @@
   },
   {
     "id": 522,
-    "name": "struggle-bug",
+    "name": {
+      "en": "Struggle Bug",
+      "he": "חרק נאבק"
+    },
     "type": "bug",
     "power": 50,
     "accuracy": 100,
@@ -4991,7 +6488,10 @@
   },
   {
     "id": 523,
-    "name": "bulldoze",
+    "name": {
+      "en": "Bulldoze",
+      "he": "דחפור"
+    },
     "type": "ground",
     "power": 60,
     "accuracy": 100,
@@ -5001,7 +6501,10 @@
   },
   {
     "id": 524,
-    "name": "frost-breath",
+    "name": {
+      "en": "Frost Breath",
+      "he": "נשימת כפור"
+    },
     "type": "ice",
     "power": 60,
     "accuracy": 90,
@@ -5011,7 +6514,10 @@
   },
   {
     "id": 525,
-    "name": "dragon-tail",
+    "name": {
+      "en": "Dragon Tail",
+      "he": "זנב דרקון"
+    },
     "type": "dragon",
     "power": 60,
     "accuracy": 90,
@@ -5021,7 +6527,10 @@
   },
   {
     "id": 526,
-    "name": "work-up",
+    "name": {
+      "en": "Work Up",
+      "he": "עבודה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -5031,7 +6540,10 @@
   },
   {
     "id": 527,
-    "name": "electroweb",
+    "name": {
+      "en": "Electroweb",
+      "he": "רשת חשמל"
+    },
     "type": "electric",
     "power": 55,
     "accuracy": 95,
@@ -5041,7 +6553,10 @@
   },
   {
     "id": 528,
-    "name": "wild-charge",
+    "name": {
+      "en": "Wild Charge",
+      "he": "מטען פראי"
+    },
     "type": "electric",
     "power": 90,
     "accuracy": 100,
@@ -5051,7 +6566,10 @@
   },
   {
     "id": 529,
-    "name": "drill-run",
+    "name": {
+      "en": "Drill Run",
+      "he": "ריצת מקדח"
+    },
     "type": "ground",
     "power": 80,
     "accuracy": 95,
@@ -5061,7 +6579,10 @@
   },
   {
     "id": 530,
-    "name": "dual-chop",
+    "name": {
+      "en": "Dual Chop",
+      "he": "חיתוך כפול"
+    },
     "type": "dragon",
     "power": 40,
     "accuracy": 90,
@@ -5071,7 +6592,10 @@
   },
   {
     "id": 531,
-    "name": "heart-stamp",
+    "name": {
+      "en": "Heart Stamp",
+      "he": "חותמת לב"
+    },
     "type": "psychic",
     "power": 60,
     "accuracy": 100,
@@ -5081,7 +6605,10 @@
   },
   {
     "id": 534,
-    "name": "razor-shell",
+    "name": {
+      "en": "Razor Shell",
+      "he": "שריון תער"
+    },
     "type": "water",
     "power": 75,
     "accuracy": 95,
@@ -5091,7 +6618,10 @@
   },
   {
     "id": 535,
-    "name": "heat-crash",
+    "name": {
+      "en": "Heat Crash",
+      "he": "התרסקות חום"
+    },
     "type": "fire",
     "power": null,
     "accuracy": 100,
@@ -5101,7 +6631,10 @@
   },
   {
     "id": 536,
-    "name": "leaf-tornado",
+    "name": {
+      "en": "Leaf Tornado",
+      "he": "טורנדו עלים"
+    },
     "type": "grass",
     "power": 65,
     "accuracy": 90,
@@ -5111,7 +6644,10 @@
   },
   {
     "id": 537,
-    "name": "steamroller",
+    "name": {
+      "en": "Steamroller",
+      "he": "מכבש קיטור"
+    },
     "type": "bug",
     "power": 65,
     "accuracy": 100,
@@ -5121,7 +6657,10 @@
   },
   {
     "id": 538,
-    "name": "cotton-guard",
+    "name": {
+      "en": "Cotton Guard",
+      "he": "שמירת כותנה"
+    },
     "type": "grass",
     "power": null,
     "accuracy": null,
@@ -5131,7 +6670,10 @@
   },
   {
     "id": 540,
-    "name": "psystrike",
+    "name": {
+      "en": "Psystrike",
+      "he": "מכת פסיכו"
+    },
     "type": "psychic",
     "power": 100,
     "accuracy": 100,
@@ -5141,7 +6683,10 @@
   },
   {
     "id": 541,
-    "name": "tail-slap",
+    "name": {
+      "en": "Tail Slap",
+      "he": "סטירת זנב"
+    },
     "type": "normal",
     "power": 25,
     "accuracy": 85,
@@ -5151,7 +6696,10 @@
   },
   {
     "id": 542,
-    "name": "hurricane",
+    "name": {
+      "en": "Hurricane",
+      "he": "הוריקן"
+    },
     "type": "flying",
     "power": 110,
     "accuracy": 70,
@@ -5161,7 +6709,10 @@
   },
   {
     "id": 555,
-    "name": "snarl",
+    "name": {
+      "en": "Snarl",
+      "he": "נהמה"
+    },
     "type": "dark",
     "power": 55,
     "accuracy": 95,
@@ -5171,7 +6722,10 @@
   },
   {
     "id": 556,
-    "name": "icicle-crash",
+    "name": {
+      "en": "Icicle Crash",
+      "he": "התרסקות קרח"
+    },
     "type": "ice",
     "power": 85,
     "accuracy": 90,
@@ -5181,7 +6735,10 @@
   },
   {
     "id": 562,
-    "name": "belch",
+    "name": {
+      "en": "Belch",
+      "he": "גיהוק"
+    },
     "type": "poison",
     "power": 120,
     "accuracy": 90,
@@ -5191,7 +6748,10 @@
   },
   {
     "id": 563,
-    "name": "rototiller",
+    "name": {
+      "en": "Rototiller",
+      "he": "חריש"
+    },
     "type": "ground",
     "power": null,
     "accuracy": null,
@@ -5201,7 +6761,10 @@
   },
   {
     "id": 564,
-    "name": "sticky-web",
+    "name": {
+      "en": "Sticky Web",
+      "he": "רשת דביקה"
+    },
     "type": "bug",
     "power": null,
     "accuracy": null,
@@ -5211,7 +6774,10 @@
   },
   {
     "id": 565,
-    "name": "fell-stinger",
+    "name": {
+      "en": "Fell Stinger",
+      "he": "עוקץ הפלה"
+    },
     "type": "bug",
     "power": 50,
     "accuracy": 100,
@@ -5221,7 +6787,10 @@
   },
   {
     "id": 566,
-    "name": "phantom-force",
+    "name": {
+      "en": "Phantom Force",
+      "he": "כוח רפאים"
+    },
     "type": "ghost",
     "power": 90,
     "accuracy": 100,
@@ -5231,7 +6800,10 @@
   },
   {
     "id": 569,
-    "name": "ion-deluge",
+    "name": {
+      "en": "Ion Deluge",
+      "he": "סערת יונים"
+    },
     "type": "electric",
     "power": null,
     "accuracy": null,
@@ -5241,7 +6813,10 @@
   },
   {
     "id": 572,
-    "name": "petal-blizzard",
+    "name": {
+      "en": "Petal Blizzard",
+      "he": "סופת עלי כותרת"
+    },
     "type": "grass",
     "power": 90,
     "accuracy": 100,
@@ -5251,7 +6826,10 @@
   },
   {
     "id": 573,
-    "name": "freeze-dry",
+    "name": {
+      "en": "Freeze Dry",
+      "he": "הקפאה יבשה"
+    },
     "type": "ice",
     "power": 70,
     "accuracy": 100,
@@ -5261,7 +6839,10 @@
   },
   {
     "id": 574,
-    "name": "disarming-voice",
+    "name": {
+      "en": "Disarming Voice",
+      "he": "קול מפרק נשק"
+    },
     "type": "fairy",
     "power": 40,
     "accuracy": null,
@@ -5271,7 +6852,10 @@
   },
   {
     "id": 577,
-    "name": "draining-kiss",
+    "name": {
+      "en": "Draining Kiss",
+      "he": "נשיקה מנקזת"
+    },
     "type": "fairy",
     "power": 50,
     "accuracy": 100,
@@ -5281,7 +6865,10 @@
   },
   {
     "id": 579,
-    "name": "flower-shield",
+    "name": {
+      "en": "Flower Shield",
+      "he": "מגן פרחים"
+    },
     "type": "fairy",
     "power": null,
     "accuracy": null,
@@ -5291,7 +6878,10 @@
   },
   {
     "id": 580,
-    "name": "grassy-terrain",
+    "name": {
+      "en": "Grassy Terrain",
+      "he": "שטח עשב"
+    },
     "type": "grass",
     "power": null,
     "accuracy": null,
@@ -5301,7 +6891,10 @@
   },
   {
     "id": 581,
-    "name": "misty-terrain",
+    "name": {
+      "en": "Misty Terrain",
+      "he": "שטח ערפל"
+    },
     "type": "fairy",
     "power": null,
     "accuracy": null,
@@ -5311,7 +6904,10 @@
   },
   {
     "id": 583,
-    "name": "play-rough",
+    "name": {
+      "en": "Play Rough",
+      "he": "משחק גס"
+    },
     "type": "fairy",
     "power": 90,
     "accuracy": 90,
@@ -5321,7 +6917,10 @@
   },
   {
     "id": 584,
-    "name": "fairy-wind",
+    "name": {
+      "en": "Fairy Wind",
+      "he": "רוח פיות"
+    },
     "type": "fairy",
     "power": 40,
     "accuracy": 100,
@@ -5331,7 +6930,10 @@
   },
   {
     "id": 585,
-    "name": "moonblast",
+    "name": {
+      "en": "Moonblast",
+      "he": "קרן ירח"
+    },
     "type": "fairy",
     "power": 95,
     "accuracy": 100,
@@ -5341,7 +6943,10 @@
   },
   {
     "id": 589,
-    "name": "play-nice",
+    "name": {
+      "en": "Play Nice",
+      "he": "שחק יפה"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -5351,7 +6956,10 @@
   },
   {
     "id": 590,
-    "name": "confide",
+    "name": {
+      "en": "Confide",
+      "he": "סודות"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -5361,7 +6969,10 @@
   },
   {
     "id": 595,
-    "name": "mystical-fire",
+    "name": {
+      "en": "Mystical Fire",
+      "he": "אש מיסטית"
+    },
     "type": "fire",
     "power": 75,
     "accuracy": 100,
@@ -5371,7 +6982,10 @@
   },
   {
     "id": 598,
-    "name": "eerie-impulse",
+    "name": {
+      "en": "Eerie Impulse",
+      "he": "דחף מוזר"
+    },
     "type": "electric",
     "power": null,
     "accuracy": 100,
@@ -5381,7 +6995,10 @@
   },
   {
     "id": 599,
-    "name": "venom-drench",
+    "name": {
+      "en": "Venom Drench",
+      "he": "ניקוז ארס"
+    },
     "type": "poison",
     "power": null,
     "accuracy": 100,
@@ -5391,7 +7008,10 @@
   },
   {
     "id": 602,
-    "name": "magnetic-flux",
+    "name": {
+      "en": "Magnetic Flux",
+      "he": "שטף מגנטי"
+    },
     "type": "electric",
     "power": null,
     "accuracy": null,
@@ -5401,7 +7021,10 @@
   },
   {
     "id": 604,
-    "name": "electric-terrain",
+    "name": {
+      "en": "Electric Terrain",
+      "he": "שטח חשמלי"
+    },
     "type": "electric",
     "power": null,
     "accuracy": null,
@@ -5411,7 +7034,10 @@
   },
   {
     "id": 605,
-    "name": "dazzling-gleam",
+    "name": {
+      "en": "Dazzling Gleam",
+      "he": "ברק מסנוור"
+    },
     "type": "fairy",
     "power": 80,
     "accuracy": 100,
@@ -5421,7 +7047,10 @@
   },
   {
     "id": 608,
-    "name": "baby-doll-eyes",
+    "name": {
+      "en": "Baby Doll Eyes",
+      "he": "עיני בובה"
+    },
     "type": "fairy",
     "power": null,
     "accuracy": 100,
@@ -5431,7 +7060,10 @@
   },
   {
     "id": 609,
-    "name": "nuzzle",
+    "name": {
+      "en": "Nuzzle",
+      "he": "חיבוק חשמלי"
+    },
     "type": "electric",
     "power": 20,
     "accuracy": 100,
@@ -5441,7 +7073,10 @@
   },
   {
     "id": 611,
-    "name": "infestation",
+    "name": {
+      "en": "Infestation",
+      "he": "נגיעות"
+    },
     "type": "bug",
     "power": 20,
     "accuracy": 100,
@@ -5451,7 +7086,10 @@
   },
   {
     "id": 612,
-    "name": "power-up-punch",
+    "name": {
+      "en": "Power Up Punch",
+      "he": "אגרוף התעצמות"
+    },
     "type": "fighting",
     "power": 40,
     "accuracy": 100,
@@ -5461,7 +7099,10 @@
   },
   {
     "id": 660,
-    "name": "first-impression",
+    "name": {
+      "en": "First Impression",
+      "he": "רושם ראשון"
+    },
     "type": "bug",
     "power": 90,
     "accuracy": 100,
@@ -5471,7 +7112,10 @@
   },
   {
     "id": 663,
-    "name": "darkest-lariat",
+    "name": {
+      "en": "Darkest Lariat",
+      "he": "לריאט אפל"
+    },
     "type": "dark",
     "power": 85,
     "accuracy": 100,
@@ -5481,7 +7125,10 @@
   },
   {
     "id": 664,
-    "name": "sparkling-aria",
+    "name": {
+      "en": "Sparkling Aria",
+      "he": "אריה נוצצת"
+    },
     "type": "water",
     "power": 90,
     "accuracy": 100,
@@ -5491,7 +7138,10 @@
   },
   {
     "id": 667,
-    "name": "high-horsepower",
+    "name": {
+      "en": "High Horsepower",
+      "he": "כוח סוס גבוה"
+    },
     "type": "ground",
     "power": 95,
     "accuracy": 95,
@@ -5501,7 +7151,10 @@
   },
   {
     "id": 668,
-    "name": "strength-sap",
+    "name": {
+      "en": "Strength Sap",
+      "he": "ספיגת כוח"
+    },
     "type": "grass",
     "power": null,
     "accuracy": 100,
@@ -5511,7 +7164,10 @@
   },
   {
     "id": 669,
-    "name": "solar-blade",
+    "name": {
+      "en": "Solar Blade",
+      "he": "להב שמש"
+    },
     "type": "grass",
     "power": 125,
     "accuracy": 100,
@@ -5521,7 +7177,10 @@
   },
   {
     "id": 671,
-    "name": "spotlight",
+    "name": {
+      "en": "Spotlight",
+      "he": "זרקור"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -5531,7 +7190,10 @@
   },
   {
     "id": 672,
-    "name": "toxic-thread",
+    "name": {
+      "en": "Toxic Thread",
+      "he": "חוט רעיל"
+    },
     "type": "poison",
     "power": null,
     "accuracy": 100,
@@ -5541,7 +7203,10 @@
   },
   {
     "id": 673,
-    "name": "laser-focus",
+    "name": {
+      "en": "Laser Focus",
+      "he": "מיקוד לייזר"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -5551,7 +7216,10 @@
   },
   {
     "id": 675,
-    "name": "throat-chop",
+    "name": {
+      "en": "Throat Chop",
+      "he": "מכת גרון"
+    },
     "type": "dark",
     "power": 80,
     "accuracy": 100,
@@ -5561,7 +7229,10 @@
   },
   {
     "id": 676,
-    "name": "pollen-puff",
+    "name": {
+      "en": "Pollen Puff",
+      "he": "פולן גלולה"
+    },
     "type": "bug",
     "power": 90,
     "accuracy": 100,
@@ -5571,7 +7242,10 @@
   },
   {
     "id": 678,
-    "name": "psychic-terrain",
+    "name": {
+      "en": "Psychic Terrain",
+      "he": "שטח פסיכי"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -5581,7 +7255,10 @@
   },
   {
     "id": 679,
-    "name": "lunge",
+    "name": {
+      "en": "Lunge",
+      "he": "זינוק"
+    },
     "type": "bug",
     "power": 80,
     "accuracy": 100,
@@ -5591,7 +7268,10 @@
   },
   {
     "id": 681,
-    "name": "power-trip",
+    "name": {
+      "en": "Power Trip",
+      "he": "מסע כוח"
+    },
     "type": "dark",
     "power": 20,
     "accuracy": 100,
@@ -5601,7 +7281,10 @@
   },
   {
     "id": 682,
-    "name": "burn-up",
+    "name": {
+      "en": "Burn Up",
+      "he": "שריפה מוחלטת"
+    },
     "type": "fire",
     "power": 130,
     "accuracy": 100,
@@ -5611,7 +7294,10 @@
   },
   {
     "id": 683,
-    "name": "speed-swap",
+    "name": {
+      "en": "Speed Swap",
+      "he": "החלפת מהירות"
+    },
     "type": "psychic",
     "power": null,
     "accuracy": null,
@@ -5621,7 +7307,10 @@
   },
   {
     "id": 684,
-    "name": "smart-strike",
+    "name": {
+      "en": "Smart Strike",
+      "he": "מכה חכמה"
+    },
     "type": "steel",
     "power": 70,
     "accuracy": null,
@@ -5631,7 +7320,10 @@
   },
   {
     "id": 693,
-    "name": "brutal-swing",
+    "name": {
+      "en": "Brutal Swing",
+      "he": "נדנוד אכזרי"
+    },
     "type": "dark",
     "power": 60,
     "accuracy": 100,
@@ -5641,7 +7333,10 @@
   },
   {
     "id": 694,
-    "name": "aurora-veil",
+    "name": {
+      "en": "Aurora Veil",
+      "he": "רעלה אורורה"
+    },
     "type": "ice",
     "power": null,
     "accuracy": null,
@@ -5651,7 +7346,10 @@
   },
   {
     "id": 706,
-    "name": "psychic-fangs",
+    "name": {
+      "en": "Psychic Fangs",
+      "he": "ניבי פסיכו"
+    },
     "type": "psychic",
     "power": 85,
     "accuracy": 100,
@@ -5661,7 +7359,10 @@
   },
   {
     "id": 707,
-    "name": "stomping-tantrum",
+    "name": {
+      "en": "Stomping Tantrum",
+      "he": "זעם דורס"
+    },
     "type": "ground",
     "power": 75,
     "accuracy": 100,
@@ -5671,7 +7372,10 @@
   },
   {
     "id": 710,
-    "name": "liquidation",
+    "name": {
+      "en": "Liquidation",
+      "he": "נזלה"
+    },
     "type": "water",
     "power": 85,
     "accuracy": 100,
@@ -5681,7 +7385,10 @@
   },
   {
     "id": 715,
-    "name": "tearful-look",
+    "name": {
+      "en": "Tearful Look",
+      "he": "מבט דומע"
+    },
     "type": "normal",
     "power": null,
     "accuracy": null,
@@ -5691,7 +7398,10 @@
   },
   {
     "id": 776,
-    "name": "body-press",
+    "name": {
+      "en": "Body Press",
+      "he": "לחיצת גוף"
+    },
     "type": "fighting",
     "power": 80,
     "accuracy": 100,
@@ -5701,7 +7411,10 @@
   },
   {
     "id": 784,
-    "name": "breaking-swipe",
+    "name": {
+      "en": "Breaking Swipe",
+      "he": "חיתוך פורץ"
+    },
     "type": "dragon",
     "power": 60,
     "accuracy": 100,
@@ -5711,7 +7424,10 @@
   },
   {
     "id": 791,
-    "name": "life-dew",
+    "name": {
+      "en": "Life Dew",
+      "he": "טל חיים"
+    },
     "type": "water",
     "power": null,
     "accuracy": null,
@@ -5721,7 +7437,10 @@
   },
   {
     "id": 796,
-    "name": "steel-beam",
+    "name": {
+      "en": "Steel Beam",
+      "he": "קרן פלדה"
+    },
     "type": "steel",
     "power": 140,
     "accuracy": 95,
@@ -5731,7 +7450,10 @@
   },
   {
     "id": 797,
-    "name": "expanding-force",
+    "name": {
+      "en": "Expanding Force",
+      "he": "כוח מתפשט"
+    },
     "type": "psychic",
     "power": 80,
     "accuracy": 100,
@@ -5741,7 +7463,10 @@
   },
   {
     "id": 798,
-    "name": "steel-roller",
+    "name": {
+      "en": "Steel Roller",
+      "he": "גלגל פלדה"
+    },
     "type": "steel",
     "power": 130,
     "accuracy": 100,
@@ -5751,7 +7476,10 @@
   },
   {
     "id": 799,
-    "name": "scale-shot",
+    "name": {
+      "en": "Scale Shot",
+      "he": "יריית קשקשים"
+    },
     "type": "dragon",
     "power": 25,
     "accuracy": 90,
@@ -5761,7 +7489,10 @@
   },
   {
     "id": 800,
-    "name": "meteor-beam",
+    "name": {
+      "en": "Meteor Beam",
+      "he": "קרן מטאור"
+    },
     "type": "rock",
     "power": 120,
     "accuracy": 90,
@@ -5771,7 +7502,10 @@
   },
   {
     "id": 802,
-    "name": "misty-explosion",
+    "name": {
+      "en": "Misty Explosion",
+      "he": "פיצוץ ערפל"
+    },
     "type": "fairy",
     "power": 100,
     "accuracy": 100,
@@ -5781,7 +7515,10 @@
   },
   {
     "id": 803,
-    "name": "grassy-glide",
+    "name": {
+      "en": "Grassy Glide",
+      "he": "החלקת עשב"
+    },
     "type": "grass",
     "power": 55,
     "accuracy": 100,
@@ -5791,7 +7528,10 @@
   },
   {
     "id": 804,
-    "name": "rising-voltage",
+    "name": {
+      "en": "Rising Voltage",
+      "he": "מתח עולה"
+    },
     "type": "electric",
     "power": 70,
     "accuracy": 100,
@@ -5801,7 +7541,10 @@
   },
   {
     "id": 805,
-    "name": "terrain-pulse",
+    "name": {
+      "en": "Terrain Pulse",
+      "he": "פולס שטח"
+    },
     "type": "normal",
     "power": 50,
     "accuracy": 100,
@@ -5811,7 +7554,10 @@
   },
   {
     "id": 806,
-    "name": "skitter-smack",
+    "name": {
+      "en": "Skitter Smack",
+      "he": "מכת זינוק"
+    },
     "type": "bug",
     "power": 70,
     "accuracy": 90,
@@ -5821,7 +7567,10 @@
   },
   {
     "id": 807,
-    "name": "burning-jealousy",
+    "name": {
+      "en": "Burning Jealousy",
+      "he": "קנאה בוערת"
+    },
     "type": "fire",
     "power": 70,
     "accuracy": 100,
@@ -5831,7 +7580,10 @@
   },
   {
     "id": 808,
-    "name": "lash-out",
+    "name": {
+      "en": "Lash Out",
+      "he": "התפרצות"
+    },
     "type": "dark",
     "power": 75,
     "accuracy": 100,
@@ -5841,7 +7593,10 @@
   },
   {
     "id": 809,
-    "name": "poltergeist",
+    "name": {
+      "en": "Poltergeist",
+      "he": "פולטרגייסט"
+    },
     "type": "ghost",
     "power": 110,
     "accuracy": 90,
@@ -5851,7 +7606,10 @@
   },
   {
     "id": 810,
-    "name": "corrosive-gas",
+    "name": {
+      "en": "Corrosive Gas",
+      "he": "גז מאכל"
+    },
     "type": "poison",
     "power": null,
     "accuracy": 100,
@@ -5861,7 +7619,10 @@
   },
   {
     "id": 811,
-    "name": "coaching",
+    "name": {
+      "en": "Coaching",
+      "he": "אימון"
+    },
     "type": "fighting",
     "power": null,
     "accuracy": null,
@@ -5871,7 +7632,10 @@
   },
   {
     "id": 812,
-    "name": "flip-turn",
+    "name": {
+      "en": "Flip Turn",
+      "he": "סיבוב חזרה"
+    },
     "type": "water",
     "power": 60,
     "accuracy": 100,
@@ -5881,7 +7645,10 @@
   },
   {
     "id": 813,
-    "name": "triple-axel",
+    "name": {
+      "en": "Triple Axel",
+      "he": "גרזן משולש"
+    },
     "type": "ice",
     "power": 20,
     "accuracy": 90,
@@ -5891,7 +7658,10 @@
   },
   {
     "id": 814,
-    "name": "dual-wingbeat",
+    "name": {
+      "en": "Dual Wingbeat",
+      "he": "כנף כפולה"
+    },
     "type": "flying",
     "power": 40,
     "accuracy": 90,
@@ -5901,7 +7671,10 @@
   },
   {
     "id": 815,
-    "name": "scorching-sands",
+    "name": {
+      "en": "Scorching Sands",
+      "he": "חולות לוהטים"
+    },
     "type": "ground",
     "power": 70,
     "accuracy": 100,
@@ -5911,7 +7684,10 @@
   },
   {
     "id": 828,
-    "name": "psyshield-bash",
+    "name": {
+      "en": "Psyshield Bash",
+      "he": "נגיחת מגן פסיכו"
+    },
     "type": "psychic",
     "power": 70,
     "accuracy": 90,
@@ -5921,7 +7697,10 @@
   },
   {
     "id": 833,
-    "name": "raging-fury",
+    "name": {
+      "en": "Raging Fury",
+      "he": "זעם משתולל"
+    },
     "type": "fire",
     "power": 120,
     "accuracy": 100,
@@ -5931,7 +7710,10 @@
   },
   {
     "id": 834,
-    "name": "wave-crash",
+    "name": {
+      "en": "Wave Crash",
+      "he": "התרסקות גל"
+    },
     "type": "water",
     "power": 120,
     "accuracy": 100,
@@ -5941,7 +7723,10 @@
   },
   {
     "id": 839,
-    "name": "barb-barrage",
+    "name": {
+      "en": "Barb Barrage",
+      "he": "מטח קוצים"
+    },
     "type": "poison",
     "power": 60,
     "accuracy": 100,
@@ -5951,7 +7736,10 @@
   },
   {
     "id": 851,
-    "name": "tera-blast",
+    "name": {
+      "en": "Tera Blast",
+      "he": "פיצוץ טרה"
+    },
     "type": "normal",
     "power": 80,
     "accuracy": 100,
@@ -5961,7 +7749,10 @@
   },
   {
     "id": 853,
-    "name": "axe-kick",
+    "name": {
+      "en": "Axe Kick",
+      "he": "בעיטת גרזן"
+    },
     "type": "fighting",
     "power": 120,
     "accuracy": 90,
@@ -5971,7 +7762,10 @@
   },
   {
     "id": 861,
-    "name": "ice-spinner",
+    "name": {
+      "en": "Ice Spinner",
+      "he": "סחרור קרח"
+    },
     "type": "ice",
     "power": 80,
     "accuracy": 100,
@@ -5981,7 +7775,10 @@
   },
   {
     "id": 873,
-    "name": "raging-bull",
+    "name": {
+      "en": "Raging Bull",
+      "he": "שור זועם"
+    },
     "type": "normal",
     "power": 90,
     "accuracy": 100,
@@ -5991,7 +7788,10 @@
   },
   {
     "id": 881,
-    "name": "chilly-reception",
+    "name": {
+      "en": "Chilly Reception",
+      "he": "קבלת פנים קרירה"
+    },
     "type": "ice",
     "power": 0,
     "accuracy": null,
@@ -6001,7 +7801,10 @@
   },
   {
     "id": 882,
-    "name": "tidy-up",
+    "name": {
+      "en": "Tidy Up",
+      "he": "סידור"
+    },
     "type": "normal",
     "power": 0,
     "accuracy": null,
@@ -6011,7 +7814,10 @@
   },
   {
     "id": 883,
-    "name": "snowscape",
+    "name": {
+      "en": "Snowscape",
+      "he": "נוף שלג"
+    },
     "type": "ice",
     "power": 0,
     "accuracy": null,
@@ -6021,7 +7827,10 @@
   },
   {
     "id": 884,
-    "name": "pounce",
+    "name": {
+      "en": "Pounce",
+      "he": "זינוק"
+    },
     "type": "bug",
     "power": 50,
     "accuracy": 100,
@@ -6031,7 +7840,10 @@
   },
   {
     "id": 885,
-    "name": "trailblaze",
+    "name": {
+      "en": "Trailblaze",
+      "he": "פריצת דרך"
+    },
     "type": "grass",
     "power": 50,
     "accuracy": 100,
@@ -6041,7 +7853,10 @@
   },
   {
     "id": 886,
-    "name": "chilling-water",
+    "name": {
+      "en": "Chilling Water",
+      "he": "מים מצננים"
+    },
     "type": "water",
     "power": 50,
     "accuracy": 100,
@@ -6051,7 +7866,10 @@
   },
   {
     "id": 887,
-    "name": "hyper-drill",
+    "name": {
+      "en": "Hyper Drill",
+      "he": "מקדח היפר"
+    },
     "type": "normal",
     "power": 100,
     "accuracy": 100,
@@ -6061,7 +7879,10 @@
   },
   {
     "id": 888,
-    "name": "twin-beam",
+    "name": {
+      "en": "Twin Beam",
+      "he": "קרן כפולה"
+    },
     "type": "psychic",
     "power": 40,
     "accuracy": 100,
@@ -6071,7 +7892,10 @@
   },
   {
     "id": 889,
-    "name": "rage-fist",
+    "name": {
+      "en": "Rage Fist",
+      "he": "אגרוף זעם"
+    },
     "type": "ghost",
     "power": 50,
     "accuracy": 100,
@@ -6081,7 +7905,10 @@
   },
   {
     "id": 894,
-    "name": "comeuppance",
+    "name": {
+      "en": "Comeuppance",
+      "he": "גמול"
+    },
     "type": "dark",
     "power": 1,
     "accuracy": 100,
@@ -6091,7 +7918,10 @@
   },
   {
     "id": 912,
-    "name": "hard-press",
+    "name": {
+      "en": "Hard Press",
+      "he": "לחיצה קשה"
+    },
     "type": "steel",
     "power": 0,
     "accuracy": 100,
@@ -6101,7 +7931,10 @@
   },
   {
     "id": 913,
-    "name": "dragon-cheer",
+    "name": {
+      "en": "Dragon Cheer",
+      "he": "עידוד דרקון"
+    },
     "type": "dragon",
     "power": 0,
     "accuracy": 0,
@@ -6111,7 +7944,10 @@
   },
   {
     "id": 914,
-    "name": "alluring-voice",
+    "name": {
+      "en": "Alluring Voice",
+      "he": "קול מפתה"
+    },
     "type": "fairy",
     "power": 80,
     "accuracy": 100,
@@ -6121,7 +7957,10 @@
   },
   {
     "id": 915,
-    "name": "temper-flare",
+    "name": {
+      "en": "Temper Flare",
+      "he": "להבת עצבים"
+    },
     "type": "fire",
     "power": 75,
     "accuracy": 100,
@@ -6131,7 +7970,10 @@
   },
   {
     "id": 916,
-    "name": "supercell-slam",
+    "name": {
+      "en": "Supercell Slam",
+      "he": "טריקת סופר-תא"
+    },
     "type": "electric",
     "power": 100,
     "accuracy": 95,
@@ -6141,7 +7983,10 @@
   },
   {
     "id": 917,
-    "name": "psychic-noise",
+    "name": {
+      "en": "Psychic Noise",
+      "he": "רעש פסיכי"
+    },
     "type": "psychic",
     "power": 75,
     "accuracy": 100,
@@ -6151,7 +7996,10 @@
   },
   {
     "id": 918,
-    "name": "upper-hand",
+    "name": {
+      "en": "Upper Hand",
+      "he": "יד עליונה"
+    },
     "type": "fighting",
     "power": 65,
     "accuracy": 100,

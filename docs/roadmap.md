@@ -113,19 +113,21 @@
 
 ---
 
-## Story: Hebrew Translation of PokeAPI Data ⬜ PLANNED
-**Goal:** Translate all Pokemon names, move names, item names, and type names fetched from PokeAPI into Hebrew.
+## Story: Hebrew Translation of PokeAPI Data ✅ COMPLETE (2026-03-22)
+**Goal:** Translate all Pokemon names and move names fetched from PokeAPI into Hebrew.
 
-**Why:** The i18n system supports Hebrew UI strings, but data fetched from PokeAPI (Pokemon names, moves, items) remains in English. This creates a mixed-language experience. Bug #2 (RTL alignment) is blocked on this — once all displayed text is in Hebrew, RTL alignment issues become testable and fixable.
+**What was done:**
+- `pokemon.json` and `evolution-chains.json`: `name` changed from `string` to `{ en: "Bulbasaur", he: "בולבזאור" }` — all 251 Pokemon translated
+- `moves.json`: same format — all 616 moves translated to Hebrew
+- `src/services/pokemon-data.ts`: added `LocalizedName` type, `getPokemonDisplayName(id)`, `getMoveDisplayName(id)` helpers that resolve based on current locale
+- All rendering sites (battle, party, pokedex, overworld HUD, HP bar, battle menu, starter select) use the helpers at render time — language switch updates names immediately
+- Hebrew locale strings (`he.json`) rewritten from reversed visual order to correct logical order for proper RTL rendering
+- Transform scripts: `scripts/add-hebrew-names.ts`, `scripts/add-hebrew-move-names.ts`
+- Fetch scripts updated to output `{ en, he }` format
 
-**Approach:**
-- PokeAPI provides localized names via `names` array on each resource (Pokemon, moves, items, types)
-- Hebrew translations may not be available in PokeAPI — may need manual translation table
-- Create `src/i18n/pokemon-names-he.ts`, `src/i18n/move-names-he.ts`, `src/i18n/item-names-he.ts`
-- All display code that shows Pokemon/move/item names should go through `t()` or a lookup function
-- Fallback to English if Hebrew translation is missing
+**Also fixed:** Bug #2 (RTL text alignment) — Hebrew strings rewritten in correct logical order
 
-**Unblocks:** Bug #2 (RTL text alignment)
+**Tech debt:** Pokemon names are duplicated in `pokemon.json` and `evolution-chains.json` (both store `{ en, he }` name objects). Move names also embed the localized name in `moves.json`. A cleaner approach would be a single `pokemon-names.json` and `move-names.json` keyed by ID, with the data files only referencing IDs. Low priority — ~13KB redundant data, compresses well with gzip.
 
 ---
 
@@ -134,7 +136,8 @@
 - Leaderboard (server-side)
 - More Pokemon generations
 - ~~Hebrew localization for all text~~ ✅ Done (Sprint 2 post-demo — UI only, PokeAPI data still English)
-- Hebrew translation of PokeAPI data (Pokemon names, moves, items) — see story above
+- ~~Hebrew translation of PokeAPI data (Pokemon names, moves)~~ ✅ Done (2026-03-22) — see story above
+- Deduplicate localized names into separate name files (tech debt, low priority)
 - Achievement system
 - Daily math challenges
 - Parent dashboard (learning progress tracking)

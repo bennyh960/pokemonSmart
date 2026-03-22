@@ -2,15 +2,23 @@
  * Fetches moves data for Gen 1-2 Pokemon from PokeAPI.
  * Calculates mathDifficulty from power.
  * Saves to src/data/moves.json
+ *
+ * NOTE: After fetching, run `npx tsx scripts/add-hebrew-move-names.ts`
+ * to add Hebrew translations (PokeAPI only provides English names).
  */
 
 const API_BASE = 'https://pokeapi.co/api/v2';
 const RATE_LIMIT_MS = 100;
 const TOTAL_POKEMON = 251;
 
+export interface LocalizedName {
+  en: string;
+  he: string;
+}
+
 export interface MoveEntry {
   id: number;
-  name: string;
+  name: LocalizedName;
   type: string;
   power: number | null;
   accuracy: number | null;
@@ -64,9 +72,10 @@ export async function fetchMovesData(): Promise<MoveEntry[]> {
     if (!res.ok) throw new Error(`Failed to fetch move ${url}: ${res.status}`);
     const data = await res.json();
 
+    const enName = data.name.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     moves.push({
       id: data.id,
-      name: data.name,
+      name: { en: enName, he: enName }, // Hebrew added by add-hebrew-move-names.ts
       type: data.type.name,
       power: data.power,
       accuracy: data.accuracy,

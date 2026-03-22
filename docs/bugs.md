@@ -7,7 +7,7 @@ Open bugs must be resolved before starting a new sprint. See PM agent for triage
 | # | Description | Severity | Area | Reported | Assigned To | Status |
 |---|-------------|----------|------|----------|-------------|--------|
 | ~~1~~ | ~~Hebrew font barely readable — Pokemon-style pixel font doesn't render well for Hebrew characters~~ | ~~high~~ | ~~i18n~~ | ~~2026-03-20~~ | ~~frontend-developer~~ | **closed** |
-| 2 | RTL text alignment inconsistent — Hebrew text not properly right-aligned across UI. Blocked on Hebrew translation story (translate Pokemon names, moves, items fetched from PokeAPI into Hebrew). See roadmap for i18n translation story. | medium | i18n | 2026-03-20 | frontend-developer | open |
+| ~~2~~ | ~~RTL text alignment inconsistent — Hebrew text not properly right-aligned across UI. Blocked on Hebrew translation story.~~ | ~~medium~~ | ~~i18n~~ | ~~2026-03-20~~ | ~~frontend-developer~~ | **closed** |
 | ~~3~~ | ~~Battle move grid spacing too tight for 8 moves — text overflows/overlaps~~ | ~~high~~ | ~~battle~~ | ~~2026-03-20~~ | ~~frontend-developer~~ | **removed** |
 | ~~4~~ | ~~Pokemon sprites render with white background instead of transparent~~ | ~~high~~ | ~~battle~~ | ~~2026-03-20~~ | ~~frontend-developer~~ | **closed** |
 | ~~5~~ | ~~Tile sprites render with white background instead of transparent~~ | ~~medium~~ | ~~overworld~~ | ~~2026-03-20~~ | ~~asset-manager~~ | **closed** |
@@ -29,6 +29,7 @@ Open bugs must be resolved before starting a new sprint. See PM agent for triage
 | 4 | Pokemon sprites render with white background instead of transparent | high | battle | 2026-03-21 | `feature/fix-sprite-transparency` |
 | 5 | Tile sprites render with white background instead of transparent | medium | overworld | 2026-03-21 | `feature/fix-sprite-transparency` |
 | 10 | Loss teleports to (0,0) — now teleports to last Pokemon Center, heals party, halves money | high | battle | 2026-03-21 | bug #10 fix |
+| 2 | RTL text alignment — Hebrew locale strings rewritten in correct logical order, Pokemon/move names localized to Hebrew | medium | i18n | 2026-03-22 | Hebrew translation story |
 
 ---
 

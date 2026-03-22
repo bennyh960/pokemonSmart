@@ -9,6 +9,7 @@ import type { InputManager } from '../engine/input.js';
 import type { Move, PokemonType } from '../types/index.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
+import { getMoveDisplayName } from '../services/pokemon-data.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const MENU_Y = SCREEN_H - 40;
 const MENU_H = 40;
@@ -182,7 +183,7 @@ function renderMoveMenu(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
     // Move name + type color dot
     const typeColor = TYPE_COLORS[move.type] || '#a8a878';
     fillRect(ctx, x + 10, y + 2, 4, 4, typeColor);
-    drawText(ctx, move.name.toUpperCase(), x + 16, y, {
+    drawText(ctx, getMoveDisplayName(move.id).toUpperCase(), x + 16, y, {
       size: 8,
       color: selected ? '#f8f8f8' : '#a0a0a0',
     });

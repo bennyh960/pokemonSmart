@@ -12,6 +12,7 @@
  */
 
 import { fillRect, drawText } from '../engine/renderer.js';
+import { getPokemonDisplayName } from '../services/pokemon-data.js';
 
 // Panel & bar dimensions (logical pixels)
 const PANEL_W = 82;
@@ -35,7 +36,7 @@ export interface HPBarState {
   currentHp: number;
   maxHp: number;
   displayHp: number;
-  name: string;
+  pokemonId: number;
   level: number;
   x: number;  // panel top-left X
   y: number;  // panel top-left Y
@@ -98,11 +99,11 @@ export function drawPanelBackground(
 ): void {}
 
 export function createHPBar(
-  name: string, level: number, hp: number, maxHp: number,
+  pokemonId: number, level: number, hp: number, maxHp: number,
   x: number, y: number, showNumbers = true, xp = 0, xpToNext = 0,
 ): HPBarState {
   return {
-    currentHp: hp, maxHp, displayHp: hp, name, level,
+    currentHp: hp, maxHp, displayHp: hp, pokemonId, level,
     x, y, showNumbers, xp, xpToNext, status: '', gender: '', statChanges: [],
   };
 }
@@ -142,7 +143,7 @@ export function isHPAnimating(bar: HPBarState): boolean {
 
 /** Render the complete info panel: background, name, HP bar, XP bar, status. */
 export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
-  const { x, y, name, level, displayHp, maxHp, showNumbers: isPlayer, xp, xpToNext, status, gender, statChanges } = bar;
+  const { x, y, pokemonId, level, displayHp, maxHp, showNumbers: isPlayer, xp, xpToNext, status, gender, statChanges } = bar;
 
   // ── Panel background ──
   const panelH = getPanelHeight(bar);
@@ -150,7 +151,8 @@ export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): voi
 
   // ── Row 1: Name + Gender + Level ──
   const nameY = y + 2;
-  drawText(ctx, name, x + PAD, nameY, { size: 6, color: '#ffffff' });
+  const displayName = getPokemonDisplayName(pokemonId);
+  drawText(ctx, displayName, x + PAD, nameY, { size: 6, color: '#ffffff' });
 
   // Level on right
   drawText(ctx, `L${level}`, x + PANEL_W - PAD, nameY, { size: 5, color: '#c8c8c8', align: 'right' });

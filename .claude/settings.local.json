@@ -21,7 +21,31 @@
       "Bash(grep:*)",
       "Bash(echo \"exit: $?\")",
       "Bash(find /c/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon/public -type f \\\\\\(-name *.mp3 -o -name *.wav -o -name *.ogg \\\\\\))",
-      "WebSearch"
+      "WebSearch",
+      "Bash(node:*)",
+      "Bash(curl -L -o /tmp/opengameart_assets.zip \"https://opengameart.org/sites/default/files/meta_data_assets_files_1.zip\")",
+      "Bash(curl --ssl-no-revoke -L -o /tmp/opengameart_assets.zip \"https://opengameart.org/sites/default/files/meta_data_assets_files_1.zip\")",
+      "Read(//tmp/**)",
+      "Bash(unzip -l /tmp/opengameart_assets.zip)",
+      "Read(//c/tmp/**)",
+      "Bash(unzip -o opengameart_assets.zip \"Meta data assets files/Visuals/CHARACTERS/*\" \"Meta data assets files/Visuals/ENVIRONMENT/tilesets/tileset-world.png\" -d extracted_assets)",
+      "Bash(unzip -o opengameart_assets.zip \"Meta data assets files/Visuals/CHARACTERS/*\" -d extracted_assets)",
+      "Bash(unzip -o opengameart_assets.zip -d extracted_assets)",
+      "Bash(cp \"/tmp/extracted_assets/Meta data assets files/Visuals/CHARACTERS/player/hero1.png\" /tmp/hero1.png)",
+      "Bash(cp \"/tmp/extracted_assets/Meta data assets files/Visuals/ENVIRONMENT/tilesets/tileset-world.png\" /tmp/tileset-world.png)",
+      "Bash(cp \"/tmp/extracted_assets/Meta data assets files/Visuals/CHARACTERS/npc/Girl/1.png\" /tmp/npc-girl.png)",
+      "Bash(cp \"/tmp/extracted_assets/Meta data assets files/Visuals/CHARACTERS/npc/cap/1.png\" /tmp/npc-cap.png)",
+      "Bash(cp \"/tmp/extracted_assets/Meta data assets files/Visuals/CHARACTERS/npc/Sage/1.png\" /tmp/npc-sage.png)",
+      "Bash(PROJ=\"C:/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon\")",
+      "Bash(cp \"/tmp/extracted_assets/Meta data assets files/Visuals/CHARACTERS/player/hero1.png\" \"$PROJ/public/sprites/overworld/hero1_preview.png\")",
+      "Bash(cp \"/tmp/extracted_assets/Meta data assets files/Visuals/ENVIRONMENT/tilesets/tileset-world.png\" \"$PROJ/public/sprites/overworld/tileset-world-preview.png\")",
+      "Bash(PROJ=\"C:/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon/public/sprites/overworld\")",
+      "Bash(SRC=\"/tmp/extracted_assets/Meta data assets files/Visuals/CHARACTERS\")",
+      "Bash(npm ls:*)",
+      "WebFetch(domain:opengameart.org)",
+      "Bash(curl --ssl-no-revoke -sL -o \"$PROJ/tmp-pokemon-sprites.png\" \"https://opengameart.org/sites/default/files/SpriteSheet_5.png\")",
+      "Bash(rm -f \"$PROJ\"/tmp-*.png)",
+      "Read(//c/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon/**)"
     ]
   }
 }
