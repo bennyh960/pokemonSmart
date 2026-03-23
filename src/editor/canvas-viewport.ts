@@ -1,0 +1,404 @@
+import type { EditorState } from './editor-state.js';
+import type { TileDef } from './types.js';
+import type { ToolSystem } from './tool-system.js';
+
+/**
+ * CanvasViewport — renders the map on a <canvas> and handles mouse interaction.
+ * Pan with middle-click or Space+drag. Zoom with Ctrl+wheel.
+ */
+export class CanvasViewport {
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
+  private state: EditorState;
+  private tilesetImage: HTMLImageElement;
+  private tiles: Map<string, TileDef>;
+  private toolSystem: ToolSystem;
+  private dirty = true;
+  private rafId = 0;
+
+  // Mouse state
+  private mouseDown = false;
+  private panning = false;
+  private panStartX = 0;
+  private panStartY = 0;
+  private panScrollStartX = 0;
+  private panScrollStartY = 0;
+  private spaceHeld = false;
+
+  // Object dragging state
+  private draggingObjIdx = -1;
+
+  constructor(
+    container: HTMLElement,
+    state: EditorState,
+    tilesetImage: HTMLImageElement,
+    tiles: Map<string, TileDef>,
+    toolSystem: ToolSystem,
+  ) {
+    this.state = state;
+    this.tilesetImage = tilesetImage;
+    this.tiles = tiles;
+    this.toolSystem = toolSystem;
+
+    this.canvas = document.createElement('canvas');
+    this.canvas.style.display = 'block';
+    this.canvas.style.width = '100%';
+    this.canvas.style.height = '100%';
+    this.canvas.style.cursor = 'crosshair';
+    container.appendChild(this.canvas);
+    this.ctx = this.canvas.getContext('2d')!;
+
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+
+    // Subscribe to state changes
+    for (const evt of ['map-loaded', 'map-modified', 'viewport-changed', 'cursor-moved', 'selection-changed', 'tool-changed', 'layer-changed'] as const) {
+      state.on(evt, () => this.markDirty());
+    }
+
+    // Mouse events
+    this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
+    this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+    this.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
+    this.canvas.addEventListener('mouseleave', () => { this.mouseDown = false; this.panning = false; });
+    this.canvas.addEventListener('wheel', (e) => this.onWheel(e), { passive: false });
+    this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Drag & drop from palette onto canvas
+    this.canvas.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+      const rect = this.canvas.getBoundingClientRect();
+      const { gx, gy } = this.pixelToGrid(e.clientX - rect.left, e.clientY - rect.top);
+      state.setCursor(gx, gy);
+    });
+    this.canvas.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const tileId = e.dataTransfer?.getData('text/tile-id');
+      if (!tileId) return;
+      const rect = this.canvas.getBoundingClientRect();
+      const { gx, gy } = this.pixelToGrid(e.clientX - rect.left, e.clientY - rect.top);
+      const def = this.tiles.get(tileId);
+      if (def && (def.w > 16 || def.h > 16 || def.above)) {
+        state.addPlacedObject(tileId, gx, gy);
+      } else {
+        state.setGroundTile(gx, gy, tileId);
+      }
+    });
+
+    // Space key for panning
+    document.addEventListener('keydown', (e) => { if (e.code === 'Space' && !e.repeat) { this.spaceHeld = true; this.canvas.style.cursor = 'grab'; } });
+    document.addEventListener('keyup', (e) => { if (e.code === 'Space') { this.spaceHeld = false; this.canvas.style.cursor = 'crosshair'; } });
+
+    // Start render loop
+    this.renderLoop();
+  }
+
+  private resize(): void {
+    const rect = this.canvas.parentElement!.getBoundingClientRect();
+    this.canvas.width = rect.width;
+    this.canvas.height = rect.height;
+    this.markDirty();
+  }
+
+  markDirty(): void { this.dirty = true; }
+
+  private pixelToGrid(px: number, py: number): { gx: number; gy: number } {
+    const tilePixels = 16 * this.state.zoom;
+    return {
+      gx: Math.floor((px + this.state.scrollX) / tilePixels),
+      gy: Math.floor((py + this.state.scrollY) / tilePixels),
+    };
+  }
+
+  // ── Mouse handlers ──
+
+  private onMouseDown(e: MouseEvent): void {
+    const rect = this.canvas.getBoundingClientRect();
+    const px = e.clientX - rect.left;
+    const py = e.clientY - rect.top;
+
+    // Middle click or space+left click = pan
+    if (e.button === 1 || (e.button === 0 && this.spaceHeld)) {
+      this.panning = true;
+      this.panStartX = e.clientX;
+      this.panStartY = e.clientY;
+      this.panScrollStartX = this.state.scrollX;
+      this.panScrollStartY = this.state.scrollY;
+      this.canvas.style.cursor = 'grabbing';
+      e.preventDefault();
+      return;
+    }
+
+    if (e.button === 0) {
+      this.mouseDown = true;
+      const { gx, gy } = this.pixelToGrid(px, py);
+
+      // Check if clicking on a placed object (for dragging)
+      if (this.state.activeTool === 'select' && this.state.mapData.objects) {
+        const objIdx = this.findObjectAt(gx, gy);
+        if (objIdx >= 0) {
+          this.draggingObjIdx = objIdx;
+          this.canvas.style.cursor = 'move';
+          return;
+        }
+      }
+
+      this.toolSystem.handleMouseDown(gx, gy);
+    }
+  }
+
+  /** Find a placed object whose bounds contain (gx, gy). Returns index or -1. */
+  private findObjectAt(gx: number, gy: number): number {
+    const objs = this.state.mapData.objects;
+    if (!objs) return -1;
+    // Search in reverse so topmost objects are found first
+    for (let i = objs.length - 1; i >= 0; i--) {
+      const o = objs[i];
+      const def = this.tiles.get(o.key);
+      if (!def) continue;
+      const gw = Math.max(1, Math.round(def.w / 16));
+      const gh = Math.max(1, Math.round(def.h / 16));
+      if (gx >= o.x && gx < o.x + gw && gy >= o.y && gy < o.y + gh) return i;
+    }
+    return -1;
+  }
+
+  private onMouseMove(e: MouseEvent): void {
+    const rect = this.canvas.getBoundingClientRect();
+    const px = e.clientX - rect.left;
+    const py = e.clientY - rect.top;
+
+    if (this.panning) {
+      const dx = e.clientX - this.panStartX;
+      const dy = e.clientY - this.panStartY;
+      this.state.setScroll(this.panScrollStartX - dx, this.panScrollStartY - dy);
+      return;
+    }
+
+    const { gx, gy } = this.pixelToGrid(px, py);
+    this.state.setCursor(gx, gy);
+
+    // Dragging an object
+    if (this.draggingObjIdx >= 0 && this.state.mapData.objects) {
+      const obj = this.state.mapData.objects[this.draggingObjIdx];
+      if (obj && (obj.x !== gx || obj.y !== gy)) {
+        obj.x = gx;
+        obj.y = gy;
+        this.state.emit('map-modified');
+      }
+      return;
+    }
+
+    this.toolSystem.handleMouseMove(gx, gy, this.mouseDown);
+  }
+
+  private onMouseUp(e: MouseEvent): void {
+    // Finish object drag
+    if (this.draggingObjIdx >= 0) {
+      this.draggingObjIdx = -1;
+      this.canvas.style.cursor = 'crosshair';
+      this.state.emit('map-modified');
+      return;
+    }
+
+    if (this.panning) {
+      this.panning = false;
+      this.canvas.style.cursor = this.spaceHeld ? 'grab' : 'crosshair';
+      return;
+    }
+
+    if (e.button === 0) {
+      this.mouseDown = false;
+      const rect = this.canvas.getBoundingClientRect();
+      const { gx, gy } = this.pixelToGrid(e.clientX - rect.left, e.clientY - rect.top);
+      this.toolSystem.handleMouseUp(gx, gy);
+    }
+  }
+
+  private onWheel(e: WheelEvent): void {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.5 : 0.5;
+      this.state.setZoom(this.state.zoom + delta);
+    } else {
+      this.state.setScroll(
+        this.state.scrollX + e.deltaX,
+        this.state.scrollY + e.deltaY,
+      );
+    }
+  }
+
+  // ── Render loop ──
+
+  private renderLoop(): void {
+    this.rafId = requestAnimationFrame(() => this.renderLoop());
+    if (!this.dirty) return;
+    this.dirty = false;
+    this.render();
+  }
+
+  private render(): void {
+    const ctx = this.ctx;
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    const zoom = this.state.zoom;
+    const tilePixels = 16 * zoom;
+    const { scrollX, scrollY } = this.state;
+    const mapW = this.state.mapData.width;
+    const mapH = this.state.mapData.height;
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.imageSmoothingEnabled = false;
+
+    // Dark background
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fillRect(0, 0, w, h);
+
+    // Visible tile range
+    const startCol = Math.max(0, Math.floor(scrollX / tilePixels));
+    const startRow = Math.max(0, Math.floor(scrollY / tilePixels));
+    const endCol = Math.min(mapW - 1, Math.floor((scrollX + w) / tilePixels));
+    const endRow = Math.min(mapH - 1, Math.floor((scrollY + h) / tilePixels));
+
+    // ── Ground layer ──
+    for (let row = startRow; row <= endRow; row++) {
+      for (let col = startCol; col <= endCol; col++) {
+        const tile = this.state.getGroundTile(col, row);
+        const drawX = Math.floor(col * tilePixels - scrollX);
+        const drawY = Math.floor(row * tilePixels - scrollY);
+
+        if (typeof tile === 'string') {
+          const def = this.tiles.get(tile);
+          if (def) {
+            ctx.drawImage(this.tilesetImage, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w * zoom, def.h * zoom);
+          } else {
+            ctx.fillStyle = '#ff00ff';
+            ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+          }
+        } else {
+          ctx.fillStyle = '#333';
+          ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+        }
+      }
+    }
+
+    // ── Placed objects (above layer) ──
+    if (this.state.mapData.objects) {
+      for (const obj of this.state.mapData.objects) {
+        const def = this.tiles.get(obj.key);
+        if (!def) continue;
+        const drawX = Math.floor(obj.x * tilePixels - scrollX);
+        const drawY = Math.floor(obj.y * tilePixels - scrollY);
+        ctx.drawImage(this.tilesetImage, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w * zoom, def.h * zoom);
+      }
+    }
+    // ── Legacy object layer (deprecated) ──
+    if (this.state.mapData.objectLayer) {
+      for (let row = startRow; row <= endRow; row++) {
+        for (let col = startCol; col <= endCol; col++) {
+          const tile = this.state.getObjectTile(col, row);
+          if (!tile) continue;
+          const def = this.tiles.get(tile);
+          if (!def) continue;
+          const drawX = Math.floor(col * tilePixels - scrollX);
+          const drawY = Math.floor(row * tilePixels - scrollY);
+          ctx.drawImage(this.tilesetImage, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w * zoom, def.h * zoom);
+        }
+      }
+    }
+
+    // ── Walkability overlay ──
+    if (this.state.showWalkability) {
+      for (let row = startRow; row <= endRow; row++) {
+        for (let col = startCol; col <= endCol; col++) {
+          const tile = this.state.getGroundTile(col, row);
+          const def = typeof tile === 'string' ? this.tiles.get(tile) : null;
+          const walkable = def ? def.walkable : false;
+          const drawX = Math.floor(col * tilePixels - scrollX);
+          const drawY = Math.floor(row * tilePixels - scrollY);
+          ctx.fillStyle = walkable ? 'rgba(0, 200, 0, 0.2)' : 'rgba(200, 0, 0, 0.2)';
+          ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+        }
+      }
+    }
+
+    // ── Transition markers ──
+    if (this.state.showTransitions && this.state.mapData.transitions) {
+      ctx.fillStyle = 'rgba(50, 100, 255, 0.35)';
+      for (const t of this.state.mapData.transitions) {
+        const drawX = Math.floor(t.fromX * tilePixels - scrollX);
+        const drawY = Math.floor(t.fromY * tilePixels - scrollY);
+        ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+        ctx.fillStyle = '#fff';
+        ctx.font = `${Math.max(8, tilePixels * 0.3)}px Inter`;
+        ctx.fillText('T', drawX + 2, drawY + tilePixels * 0.5);
+        ctx.fillStyle = 'rgba(50, 100, 255, 0.35)';
+      }
+    }
+
+    // ── NPC markers ──
+    if (this.state.mapData.npcs) {
+      for (const npc of this.state.mapData.npcs) {
+        const drawX = Math.floor(npc.x * tilePixels - scrollX);
+        const drawY = Math.floor(npc.y * tilePixels - scrollY);
+        ctx.fillStyle = 'rgba(255, 150, 0, 0.5)';
+        ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${Math.max(8, tilePixels * 0.3)}px Inter`;
+        ctx.fillText(npc.type[0].toUpperCase(), drawX + 2, drawY + tilePixels * 0.5);
+      }
+    }
+
+    // ── Spawn marker ──
+    const sx = this.state.mapData.spawn;
+    {
+      const drawX = Math.floor(sx.x * tilePixels - scrollX);
+      const drawY = Math.floor(sx.y * tilePixels - scrollY);
+      ctx.strokeStyle = '#00ff00';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(drawX + 1, drawY + 1, tilePixels - 2, tilePixels - 2);
+      ctx.fillStyle = '#00ff00';
+      ctx.font = `bold ${Math.max(8, tilePixels * 0.25)}px Inter`;
+      ctx.fillText('SP', drawX + 2, drawY + tilePixels - 3);
+    }
+
+    // ── Grid overlay ──
+    if (this.state.showGrid) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 1;
+      for (let col = startCol; col <= endCol + 1; col++) {
+        const x = Math.floor(col * tilePixels - scrollX) + 0.5;
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      }
+      for (let row = startRow; row <= endRow + 1; row++) {
+        const y = Math.floor(row * tilePixels - scrollY) + 0.5;
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+    }
+
+    // ── Cursor highlight ──
+    const { cursorGridX: cgx, cursorGridY: cgy } = this.state;
+    if (cgx >= 0 && cgx < mapW && cgy >= 0 && cgy < mapH) {
+      const drawX = Math.floor(cgx * tilePixels - scrollX);
+      const drawY = Math.floor(cgy * tilePixels - scrollY);
+      ctx.strokeStyle = 'rgba(255, 255, 0, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(drawX, drawY, tilePixels, tilePixels);
+    }
+
+    // ── Selection highlight ──
+    const { selectedCellX, selectedCellY } = this.state;
+    if (selectedCellX !== null && selectedCellY !== null) {
+      const drawX = Math.floor(selectedCellX * tilePixels - scrollX);
+      const drawY = Math.floor(selectedCellY * tilePixels - scrollY);
+      ctx.strokeStyle = 'rgba(0, 150, 255, 0.9)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(drawX, drawY, tilePixels, tilePixels);
+    }
+  }
+
+  destroy(): void {
+    cancelAnimationFrame(this.rafId);
+  }
+}

@@ -7,7 +7,7 @@ A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (�
 - **Full game spec:** `docs/game-spec.md` — THE reference for everything (story, world, mechanics, Pokemon, gym leaders)
 - **Current sprint:** `docs/sprint-2.md` — Active tasks, who's doing what, QA status
 - **Roadmap:** `docs/roadmap.md` — All sprints planned, what's done vs pending
-- **Agent definitions:** `.claude/agents/*.md` — 7 agents with detailed roles
+- **Agent definitions:** `.claude/agents/*.md` — 8 agents with detailed roles
 - **Agent prompts:** `.claude/prompts/*.md` — Ready-to-run instructions for parallel execution
 
 ## Agents
@@ -19,6 +19,7 @@ A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (�
 | game-engine-developer | `.claude/agents/game-engine-developer.md` | Core game loop, overworld, tilemap |
 | frontend-developer | `.claude/agents/frontend-developer.md` | UI, battle screens, audio integration |
 | asset-manager | `.claude/agents/pixel-artist.md` | Sourcing sprites/tiles/sounds from APIs |
+| world-map-builder | `.claude/agents/world-map-builder.md` | Tileset extraction + map design |
 | qa-tester | `.claude/agents/qa-tester.md` | Testing + documentation |
 
 ## Tech Stack
