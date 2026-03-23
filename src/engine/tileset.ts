@@ -15,6 +15,7 @@ export interface TileDef {
   walkable: boolean;
   encounter: boolean;
   above: boolean;
+  overlay: boolean; // true = renders on top of player (e.g. tall grass); false = flat ground decoration
   destroy: null | 'cut' | 'strength';
   category?: string;
 }
@@ -38,6 +39,7 @@ interface TileEntryRaw {
   encounter: boolean;
   destroy: null | 'cut' | 'strength';
   above: boolean;
+  overlay?: boolean;
   category?: string;
 }
 
@@ -80,6 +82,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
         walkable: raw.walkable ?? true,
         encounter: raw.encounter ?? false,
         above: raw.above ?? false,
+        overlay: raw.overlay ?? false,
         destroy: raw.destroy ?? null,
         category: raw.category,
       });
@@ -97,6 +100,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
         walkable: (raw.walkable as boolean) ?? true,
         encounter: (raw.encounter as boolean) ?? false,
         above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false,
+        overlay: (raw.overlay as boolean) ?? false,
         destroy: (raw.destroy as TileDef['destroy']) ?? null,
         category: raw.category as string | undefined,
       });

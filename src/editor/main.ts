@@ -22,14 +22,14 @@ async function init() {
   // 2. Parse tiles from manifest (supports both array and Record formats)
   const tiles: Record<string, TileDef> = {};
   if (Array.isArray(dppManifest.tiles)) {
-    for (const raw of dppManifest.tiles as Array<{ key: string; sx: number; sy: number; w?: number; h?: number; tileSize?: number; walkable: boolean; encounter: boolean; above?: boolean; destroy?: null | string; category?: string }>) {
+    for (const raw of dppManifest.tiles as Array<{ key: string; sx: number; sy: number; w?: number; h?: number; tileSize?: number; walkable: boolean; encounter: boolean; above?: boolean; overlay?: boolean; destroy?: null | string; category?: string }>) {
       const size = raw.tileSize ?? 16;
-      tiles[raw.key] = { sx: raw.sx, sy: raw.sy, w: raw.w ?? size, h: raw.h ?? size, walkable: raw.walkable, encounter: raw.encounter, above: raw.above ?? false, destroy: (raw.destroy as TileDef['destroy']) ?? null, category: raw.category };
+      tiles[raw.key] = { sx: raw.sx, sy: raw.sy, w: raw.w ?? size, h: raw.h ?? size, walkable: raw.walkable, encounter: raw.encounter, above: raw.above ?? false, overlay: raw.overlay ?? false, destroy: (raw.destroy as TileDef['destroy']) ?? null, category: raw.category };
     }
   } else {
     const baseTileSize = (dppManifest as Record<string, unknown>).tileSize as number ?? 16;
     for (const [id, raw] of Object.entries(dppManifest.tiles as Record<string, Record<string, unknown>>)) {
-      tiles[id] = { sx: raw.sx as number, sy: raw.sy as number, w: (raw.w as number) ?? baseTileSize, h: (raw.h as number) ?? baseTileSize, walkable: raw.walkable as boolean, encounter: raw.encounter as boolean, above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false, destroy: null };
+      tiles[id] = { sx: raw.sx as number, sy: raw.sy as number, w: (raw.w as number) ?? baseTileSize, h: (raw.h as number) ?? baseTileSize, walkable: raw.walkable as boolean, encounter: raw.encounter as boolean, above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false, overlay: (raw.overlay as boolean) ?? false, destroy: null };
     }
   }
   const categories = categorizeTiles(tiles);

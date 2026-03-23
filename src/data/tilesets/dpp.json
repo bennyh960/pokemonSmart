@@ -83,6 +83,7 @@
       "encounter": true,
       "destroy": null,
       "above": true,
+      "overlay": true,
       "description": "grass for encounter"
     },
     {
@@ -95,6 +96,7 @@
       "encounter": true,
       "destroy": null,
       "above": true,
+      "overlay": true,
       "category": "grass",
       "description": "grass for encounter"
     },
@@ -108,6 +110,7 @@
       "encounter": false,
       "destroy": null,
       "above": true,
+      "overlay": true,
       "category": "grass",
       "description": "grass with flower"
     },
@@ -666,6 +669,7 @@
       "encounter": true,
       "destroy": null,
       "above": true,
+      "overlay": true,
       "category": "grass",
       "description": "grass pink should be next pink tree"
     },
@@ -679,6 +683,7 @@
       "encounter": true,
       "destroy": null,
       "above": true,
+      "overlay": true,
       "category": "grass",
       "description": "grass pink next pink tree smaller"
     },
@@ -692,6 +697,7 @@
       "encounter": true,
       "destroy": null,
       "above": true,
+      "overlay": true,
       "description": "grass pink should be next pink tree"
     },
     {

@@ -622,8 +622,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       interface Renderable { y: number; render: () => void; }
       const renderables: Renderable[] = [];
 
-      // Placed objects (body rows participate in Y-sort, above rows drawn later)
+      // Placed objects split into ground/body/above passes
       const objRenderables = tileMap.getObjectRenderables(ctx, camera.x, camera.y);
+      // Ground-level objects (carpet, sand edges) render right after ground tiles
+      for (const r of objRenderables.ground) r.render();
+      // Body objects (trees, buildings) participate in Y-sort
       renderables.push(...objRenderables.body);
 
       // Player

@@ -162,14 +162,20 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
       }
     },
 
-    /** Get renderables for placed objects (for Y-sorting with player/NPCs). */
+    /** Get renderables for placed objects, split into three render passes:
+     *  - ground: flat walkable decorations (carpet, sand edges) — drawn with ground layer
+     *  - body: tall objects (trees, buildings) — Y-sorted with player/NPCs
+     *  - above: overlay tiles (tall grass) — drawn on top of all sprites
+     */
     getObjectRenderables(ctx: CanvasRenderingContext2D, cameraX: number, cameraY: number): {
+      ground: Renderable[];
       body: Renderable[];
       above: Renderable[];
     } {
+      const ground: Renderable[] = [];
       const body: Renderable[] = [];
       const above: Renderable[] = [];
-      if (!tileset) return { body, above };
+      if (!tileset) return { ground, body, above };
 
       ctx.imageSmoothingEnabled = false;
 
@@ -182,18 +188,26 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
         const drawY = Math.floor(pixelY - cameraY);
         const gridH = Math.max(1, Math.round(def.h / BASE));
 
-        // Y-sort key: bottom edge of the object
-        const sortY = (obj.y + gridH - 1) * BASE;
-
-        body.push({
-          y: sortY,
+        const renderable: Renderable = {
+          y: (obj.y + gridH - 1) * BASE,
           render: () => {
             ctx.drawImage(tileset!.image, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w, def.h);
           },
-        });
+        };
+
+        if (def.overlay) {
+          // Overlay tiles (tall grass): always render on top of sprites
+          above.push(renderable);
+        } else if (def.walkable) {
+          // Flat walkable decorations (carpet, sand): render with ground layer
+          ground.push(renderable);
+        } else {
+          // Tall solid objects (trees, buildings): Y-sort with player/NPCs
+          body.push(renderable);
+        }
       }
 
-      return { body, above };
+      return { ground, body, above };
     },
 
     /** Render legacy objectLayer (deprecated). */

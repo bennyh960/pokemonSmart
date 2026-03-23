@@ -9,6 +9,7 @@ export interface TileEntry {
   encounter: boolean;
   destroy: null | 'cut' | 'strength';
   above: boolean;
+  overlay?: boolean; // true = renders on top of player (tall grass); false/absent = flat ground
   category?: string;
   description?: string;
 }

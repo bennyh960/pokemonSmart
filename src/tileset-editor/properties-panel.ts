@@ -54,6 +54,7 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Walkable:</label><input id="add-walk" type="checkbox" checked /></div>
       <div class="prop-row"><label>Encounter:</label><input id="add-enc" type="checkbox" /></div>
       <div class="prop-row"><label>Above (2nd layer):</label><input id="add-above" type="checkbox" /></div>
+      <div class="prop-row"><label>Overlay (on top of player):</label><input id="add-overlay" type="checkbox" /></div>
       <div class="prop-row"><label>Description:</label><input id="add-desc" type="text" placeholder="optional note" /></div>
     `;
 
@@ -77,6 +78,7 @@ export class PropertiesPanel {
         encounter: (section.querySelector('#add-enc') as HTMLInputElement).checked,
         destroy: null,
         above: (section.querySelector('#add-above') as HTMLInputElement).checked,
+        overlay: (section.querySelector('#add-overlay') as HTMLInputElement).checked || undefined,
         category: catVal || undefined,
         description: (section.querySelector('#add-desc') as HTMLInputElement).value.trim() || undefined,
       };
@@ -125,6 +127,10 @@ export class PropertiesPanel {
         <input id="edit-above" type="checkbox" ${t.above ? 'checked' : ''} />
       </div>
       <div class="prop-row">
+        <label>Overlay (on top of player):</label>
+        <input id="edit-overlay" type="checkbox" ${t.overlay ? 'checked' : ''} />
+      </div>
+      <div class="prop-row">
         <label>Destroy:</label>
         <select id="edit-destroy">
           <option value="" ${t.destroy === null ? 'selected' : ''}>None</option>
@@ -155,6 +161,7 @@ export class PropertiesPanel {
     wire('#edit-walk', 'walkable', 'check');
     wire('#edit-enc', 'encounter', 'check');
     wire('#edit-above', 'above', 'check');
+    wire('#edit-overlay', 'overlay', 'check');
     wire('#edit-destroy', 'destroy', 'select');
     // Description: empty → undefined so it's omitted from JSON export
     const descEl = section.querySelector('#edit-desc') as HTMLInputElement;
