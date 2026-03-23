@@ -1,23 +1,20 @@
 /**
  * Tilemap - Load and render tile-based maps from JSON.
  *
- * Tile types:
- *   0 = empty (black)
- *   1 = grass (#48A030, walkable)
- *   2 = path (#C8A870, walkable)
- *   3 = water (#3080D0, blocked)
- *   4 = tree (#206020, blocked)
- *   5 = building (#808080, blocked)
- *   6 = door (#8B4513, walkable)
- *   7 = tall grass (#68C048, walkable + encounters)
+ * Supports:
+ *   - Legacy numeric tile IDs (0-8, procedurally generated)
+ *   - String tile IDs (looked up in tileset spritesheet)
+ *   - Variable-size tiles (tileSize per tile, e.g. 32x32 buildings)
+ *   - Two layers: ground tiles + above tiles (placed objects)
  */
 
 import { fillRect } from './renderer.js';
 import { getTileImage } from './asset-generator.js';
 import { LOGICAL_WIDTH, LOGICAL_HEIGHT } from './config.js';
 import type { NPCData } from '../systems/npc.js';
+import type { Tileset } from './tileset.js';
 
-/** Map transition definition — stepping on (fromX, fromY) warps to another map. */
+/** Map transition definition. */
 export interface MapTransition {
   fromX: number;
   fromY: number;
@@ -27,14 +24,24 @@ export interface MapTransition {
   returnToPrevious?: boolean;
 }
 
+/** A placed above-layer tile on the map. */
+export interface PlacedObject {
+  key: string;   // references TileDef with above=true in tileset
+  x: number;     // grid column (16px grid)
+  y: number;     // grid row (16px grid)
+}
+
 /** Map data as loaded from JSON. */
 export interface TileMapData {
   name: string;
   width: number;
   height: number;
-  tileSize: number;
+  tileSize: number;         // base grid size (always 16)
   spawn: { x: number; y: number };
-  tiles: number[][];
+  tiles: (number | string)[][];
+  objects?: PlacedObject[];
+  objectLayer?: (string | null)[][];  // deprecated
+  tileset?: string;
   id?: string;
   transitions?: MapTransition[];
   npcs?: NPCData[];
@@ -42,7 +49,7 @@ export interface TileMapData {
   encounterTableId?: string | null;
 }
 
-/** Tile type constants. */
+/** Tile type constants (legacy). */
 export const TILE_EMPTY = 0;
 export const TILE_GRASS = 1;
 export const TILE_PATH = 2;
@@ -53,80 +60,167 @@ export const TILE_DOOR = 6;
 export const TILE_TALL_GRASS = 7;
 export const TILE_ROUTE_EXIT = 8;
 
-/** Colors for each tile type (indexed by tile ID). */
 const TILE_COLORS: Record<number, string> = {
-  [TILE_EMPTY]: '#000000',
-  [TILE_GRASS]: '#48A030',
-  [TILE_PATH]: '#C8A870',
-  [TILE_WATER]: '#3080D0',
-  [TILE_TREE]: '#206020',
-  [TILE_BUILDING]: '#808080',
-  [TILE_DOOR]: '#8B4513',
-  [TILE_TALL_GRASS]: '#68C048',
-  [TILE_ROUTE_EXIT]: '#D8B870',
+  [TILE_EMPTY]: '#000000', [TILE_GRASS]: '#48A030', [TILE_PATH]: '#C8A870',
+  [TILE_WATER]: '#3080D0', [TILE_TREE]: '#206020', [TILE_BUILDING]: '#808080',
+  [TILE_DOOR]: '#8B4513', [TILE_TALL_GRASS]: '#68C048', [TILE_ROUTE_EXIT]: '#D8B870',
 };
 
-/** Blocked tiles that the player cannot walk on. */
 const BLOCKED_TILES = new Set([TILE_WATER, TILE_TREE, TILE_BUILDING]);
 
+/** Renderable for Y-sorting. */
+export interface Renderable { y: number; render: () => void; }
+
 /** Create a tilemap from loaded JSON data. */
-export function createTileMap(data: TileMapData) {
+export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
   const { width, height, tileSize, tiles, spawn, name } = data;
+  const objectLayer = data.objectLayer ?? null;
+  const placedObjects = data.objects ?? [];
+  const BASE = 16; // base grid unit
 
   return {
-    name,
-    width,
-    height,
-    tileSize,
-    spawn,
+    name, width, height, tileSize, spawn,
 
-    /** Get the tile type at grid position (gx, gy). Returns -1 if out of bounds. */
-    getTile(gx: number, gy: number): number {
+    getTile(gx: number, gy: number): number | string {
       if (gx < 0 || gx >= width || gy < 0 || gy >= height) return -1;
       return tiles[gy][gx];
     },
 
-    /** Check if a grid position is walkable. */
+    /** Check if a placed object blocks a grid cell. */
+    isObjectBlocking(gx: number, gy: number): boolean {
+      if (!tileset) return false;
+      for (const obj of placedObjects) {
+        const def = tileset.getTile(obj.key);
+        if (!def) continue;
+        const gridW = Math.max(1, Math.round(def.w / BASE));
+        const gridH = Math.max(1, Math.round(def.h / BASE));
+        const lx = gx - obj.x;
+        const ly = gy - obj.y;
+        if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
+          if (!def.walkable) return true;
+        }
+      }
+      return false;
+    },
+
     isWalkable(gx: number, gy: number): boolean {
       const tile = this.getTile(gx, gy);
       if (tile === -1) return false;
-      return !BLOCKED_TILES.has(tile);
+      let groundOk = false;
+      if (typeof tile === 'string' && tileset) {
+        const def = tileset.getTile(tile);
+        groundOk = def ? def.walkable : false;
+      } else if (typeof tile === 'number') {
+        groundOk = !BLOCKED_TILES.has(tile);
+      }
+      if (!groundOk) return false;
+      if (this.isObjectBlocking(gx, gy)) return false;
+      return true;
     },
 
-    /** Check if a grid position is tall grass (triggers encounters). */
     isTallGrass(gx: number, gy: number): boolean {
-      return this.getTile(gx, gy) === TILE_TALL_GRASS;
+      const tile = this.getTile(gx, gy);
+      if (typeof tile === 'string' && tileset) {
+        const def = tileset.getTile(tile);
+        return def ? def.encounter : false;
+      }
+      return tile === TILE_TALL_GRASS;
     },
 
-    /** Render visible tiles to the canvas, offset by camera. */
+    /** Render ground layer. */
     render(ctx: CanvasRenderingContext2D, cameraX: number, cameraY: number): void {
       const screenW = LOGICAL_WIDTH;
       const screenH = LOGICAL_HEIGHT;
-
-      // Calculate visible tile range
-      const startCol = Math.max(0, Math.floor(cameraX / tileSize));
-      const startRow = Math.max(0, Math.floor(cameraY / tileSize));
-      const endCol = Math.min(width - 1, Math.floor((cameraX + screenW) / tileSize));
-      const endRow = Math.min(height - 1, Math.floor((cameraY + screenH) / tileSize));
+      const startCol = Math.max(0, Math.floor(cameraX / BASE));
+      const startRow = Math.max(0, Math.floor(cameraY / BASE));
+      const endCol = Math.min(width - 1, Math.floor((cameraX + screenW) / BASE));
+      const endRow = Math.min(height - 1, Math.floor((cameraY + screenH) / BASE));
 
       ctx.imageSmoothingEnabled = false;
       for (let row = startRow; row <= endRow; row++) {
         for (let col = startCol; col <= endCol; col++) {
           const tile = tiles[row][col];
-          const drawX = Math.floor(col * tileSize - cameraX);
-          const drawY = Math.floor(row * tileSize - cameraY);
-          const tileImg = getTileImage(tile);
-          if (tileImg.complete && tileImg.naturalWidth > 0) {
-            ctx.drawImage(tileImg, drawX, drawY, tileSize, tileSize);
-          } else {
-            const color = TILE_COLORS[tile] ?? '#FF00FF';
-            fillRect(ctx, drawX, drawY, tileSize, tileSize, color);
+          const drawX = Math.floor(col * BASE - cameraX);
+          const drawY = Math.floor(row * BASE - cameraY);
+
+          if (typeof tile === 'string' && tileset) {
+            const def = tileset.getTile(tile);
+            if (def) {
+              ctx.drawImage(tileset.image, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w, def.h);
+            } else {
+              fillRect(ctx, drawX, drawY, BASE, BASE, '#FF00FF');
+            }
+          } else if (typeof tile === 'number') {
+            const tileImg = getTileImage(tile);
+            if (tileImg.complete && tileImg.naturalWidth > 0) {
+              ctx.drawImage(tileImg, drawX, drawY, BASE, BASE);
+            } else {
+              fillRect(ctx, drawX, drawY, BASE, BASE, TILE_COLORS[tile] ?? '#FF00FF');
+            }
           }
+        }
+      }
+    },
+
+    /** Get renderables for placed objects (for Y-sorting with player/NPCs). */
+    getObjectRenderables(ctx: CanvasRenderingContext2D, cameraX: number, cameraY: number): {
+      body: Renderable[];
+      above: Renderable[];
+    } {
+      const body: Renderable[] = [];
+      const above: Renderable[] = [];
+      if (!tileset) return { body, above };
+
+      ctx.imageSmoothingEnabled = false;
+
+      for (const obj of placedObjects) {
+        const def = tileset.getTile(obj.key);
+        if (!def) continue;
+        const pixelX = obj.x * BASE;
+        const pixelY = obj.y * BASE;
+        const drawX = Math.floor(pixelX - cameraX);
+        const drawY = Math.floor(pixelY - cameraY);
+        const gridH = Math.max(1, Math.round(def.h / BASE));
+
+        // Y-sort key: bottom edge of the object
+        const sortY = (obj.y + gridH - 1) * BASE;
+
+        body.push({
+          y: sortY,
+          render: () => {
+            ctx.drawImage(tileset!.image, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w, def.h);
+          },
+        });
+      }
+
+      return { body, above };
+    },
+
+    /** Render legacy objectLayer (deprecated). */
+    renderAbove(ctx: CanvasRenderingContext2D, cameraX: number, cameraY: number): void {
+      if (!objectLayer || !tileset) return;
+      const screenW = LOGICAL_WIDTH;
+      const screenH = LOGICAL_HEIGHT;
+      const startCol = Math.max(0, Math.floor(cameraX / BASE));
+      const startRow = Math.max(0, Math.floor(cameraY / BASE));
+      const endCol = Math.min(width - 1, Math.floor((cameraX + screenW) / BASE));
+      const endRow = Math.min(height - 1, Math.floor((cameraY + screenH) / BASE));
+
+      ctx.imageSmoothingEnabled = false;
+      for (let row = startRow; row <= endRow; row++) {
+        if (!objectLayer[row]) continue;
+        for (let col = startCol; col <= endCol; col++) {
+          const tile = objectLayer[row][col];
+          if (!tile) continue;
+          const def = tileset.getTile(tile);
+          if (!def) continue;
+          const drawX = Math.floor(col * BASE - cameraX);
+          const drawY = Math.floor(row * BASE - cameraY);
+          ctx.drawImage(tileset.image, def.sx, def.sy, def.w, def.h, drawX, drawY, BASE, BASE);
         }
       }
     },
   };
 }
 
-/** The return type of createTileMap, for use in type annotations. */
 export type TileMap = ReturnType<typeof createTileMap>;

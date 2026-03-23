@@ -1,0 +1,96 @@
+import type { TileMapData } from './types.js';
+
+/** Known map IDs available in the project. */
+export function getKnownMapIds(): string[] {
+  return [
+    'zeroville', 'route-1', 'sumville', 'algebria', 'divideburg',
+    'fractalis', 'infinity-plateau', 'logica-heights', 'multitown',
+    'prime-city', 'mart-interior', 'pokecenter-interior', 'test-map',
+  ];
+}
+
+/** Load a map JSON from the project's data directory. */
+export async function loadMapFromProject(mapId: string): Promise<TileMapData> {
+  const module = await import(`../data/maps/${mapId}.json`);
+  return module.default as TileMapData;
+}
+
+/** Load a map from a user-picked File. */
+export async function loadMapFromFile(file: File): Promise<TileMapData> {
+  const text = await file.text();
+  return JSON.parse(text) as TileMapData;
+}
+
+/** Export map data as formatted JSON string. */
+export function exportMapJSON(data: TileMapData): string {
+  // Custom serializer: put tile rows on single lines for compact output
+  const clone = { ...data };
+  const tiles = clone.tiles;
+  const objects = clone.objects;
+  const objLayer = clone.objectLayer;
+
+  // Temporarily remove arrays for base serialization
+  delete (clone as Record<string, unknown>).tiles;
+  delete (clone as Record<string, unknown>).objects;
+  delete (clone as Record<string, unknown>).objectLayer;
+
+  // Serialize metadata
+  let json = JSON.stringify(clone, null, 2);
+
+  // Insert tiles array with compact rows
+  const tileRows = tiles.map(row => '    ' + JSON.stringify(row));
+  const tilesStr = '  "tiles": [\n' + tileRows.join(',\n') + '\n  ]';
+  json = json.slice(0, -1) + ',\n' + tilesStr;
+
+  // Insert placed objects
+  if (objects && objects.length > 0) {
+    json += ',\n  "objects": ' + JSON.stringify(objects, null, 2).split('\n').map((l, i) => i === 0 ? l : '  ' + l).join('\n');
+  }
+
+  // Legacy objectLayer (deprecated)
+  if (objLayer) {
+    const objRows = objLayer.map(row => '    ' + JSON.stringify(row));
+    json += ',\n  "objectLayer": [\n' + objRows.join(',\n') + '\n  ]';
+  }
+
+  json += '\n}';
+  return json;
+}
+
+/** Download map as .json file. */
+export function downloadMap(data: TileMapData): void {
+  const json = exportMapJSON(data);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${data.id ?? data.name ?? 'map'}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/** Copy map JSON to clipboard. */
+export async function copyMapToClipboard(data: TileMapData): Promise<void> {
+  await navigator.clipboard.writeText(exportMapJSON(data));
+}
+
+/** Create a blank map. */
+export function createBlankMap(width: number, height: number): TileMapData {
+  return {
+    id: 'new-map',
+    name: 'New Map',
+    tileset: 'dpp',
+    width,
+    height,
+    tileSize: 16,
+    spawn: { x: Math.floor(width / 2), y: Math.floor(height / 2) },
+    transitions: [],
+    npcs: [],
+    music: 'town',
+    encounterTableId: null,
+    tiles: Array.from({ length: height }, () => Array(width).fill('grass')),
+    objectLayer: Array.from({ length: height }, () => Array(width).fill(null)),
+  };
+}

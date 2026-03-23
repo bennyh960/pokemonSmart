@@ -18,6 +18,7 @@ import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
+import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight } from '../systems/npc.js';
@@ -253,7 +254,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   async function loadAndSetMap(mapId: string, spawnX: number, spawnY: number): Promise<void> {
     const data = await loadMap(mapId);
     currentMapData = data;
-    tileMap = createTileMap(data as TileMapData);
+    const tileset = data.tileset ? getTileset(data.tileset) : null;
+    tileMap = createTileMap(data as TileMapData, tileset);
     setCurrentMapId(mapId);
 
     // Load NPCs from map data
@@ -616,9 +618,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       tileMap.render(ctx, camera.x, camera.y);
 
-      // Collect renderables for Y-sorting (player + NPCs)
+      // Collect renderables for Y-sorting (player + NPCs + placed objects)
       interface Renderable { y: number; render: () => void; }
       const renderables: Renderable[] = [];
+
+      // Placed objects (body rows participate in Y-sort, above rows drawn later)
+      const objRenderables = tileMap.getObjectRenderables(ctx, camera.x, camera.y);
+      renderables.push(...objRenderables.body);
 
       // Player
       const psx = Math.floor(player.pixelX - camera.x);
@@ -673,6 +679,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Sort by Y and render
       renderables.sort((a, b) => a.y - b.y);
       for (const r of renderables) r.render();
+
+      // Render above layer (tree canopies, roof overhangs) on top of sprites
+      tileMap.renderAbove(ctx, camera.x, camera.y);
+      // Render placed object above rows (e.g. roof overhangs)
+      for (const r of objRenderables.above) r.render();
 
       // HUD
       const mapName = currentMapData?.name || '';

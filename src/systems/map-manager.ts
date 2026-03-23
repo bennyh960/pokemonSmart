@@ -6,6 +6,7 @@
  */
 
 import type { TileMapData } from '../engine/tilemap.js';
+import { loadTileset } from '../engine/tileset.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MapLoader = () => Promise<{ default: any }>;
@@ -40,6 +41,10 @@ export async function loadMap(id: string): Promise<TileMapData> {
   if (!data.id) {
     data.id = id;
   }
+  // Pre-load tileset if the map declares one
+  if (data.tileset) {
+    await loadTileset(data.tileset);
+  }
   mapCache.set(id, data);
   return data;
 }
@@ -56,7 +61,6 @@ export function setCurrentMapId(id: string): void {
 
 // ─── Register all known maps ────────────────────────────────────
 
-registerMap('test-map', () => import('../data/maps/test-map.json'));
 registerMap('zeroville', () => import('../data/maps/zeroville.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route-1', () => import('../data/maps/route-1.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('sumville', () => import('../data/maps/sumville.json').catch(() => import('../data/maps/test-map.json')));
