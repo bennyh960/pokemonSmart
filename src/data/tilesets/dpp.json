@@ -779,19 +779,6 @@
       "description": "deck for in house"
     },
     {
-      "key": "ca1",
-      "sx": 64,
-      "sy": 2112,
-      "w": 32,
-      "h": 32,
-      "walkable": true,
-      "encounter": false,
-      "destroy": null,
-      "above": false,
-      "category": "floor",
-      "description": "carpenter for in house"
-    },
-    {
       "key": "fh1",
       "sx": 0,
       "sy": 2096,
@@ -1319,6 +1306,110 @@
       "above": true,
       "category": "decoration",
       "description": "library in house"
+    },
+    {
+      "key": "ca1tl",
+      "sx": 64,
+      "sy": 2112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpenter 1 for in house top left"
+    },
+    {
+      "key": "ca1t",
+      "sx": 96,
+      "sy": 2112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpenter 1 for in house top"
+    },
+    {
+      "key": "ca1tr",
+      "sx": 80,
+      "sy": 2112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpenter 1 for in house top right"
+    },
+    {
+      "key": "ca1bl",
+      "sx": 64,
+      "sy": 2128,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpenter 1 for in house bottm left"
+    },
+    {
+      "key": "ca1b",
+      "sx": 96,
+      "sy": 2128,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpenter 1 for in house bottom"
+    },
+    {
+      "key": "ca1br",
+      "sx": 80,
+      "sy": 2128,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpenter 1 for in house bottom right"
+    },
+    {
+      "key": "ca1l",
+      "sx": 64,
+      "sy": 2144,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpenter 1 for in house left"
+    },
+    {
+      "key": "ca1r",
+      "sx": 80,
+      "sy": 2144,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpenter 1 for in house right"
     }
   ]
 }

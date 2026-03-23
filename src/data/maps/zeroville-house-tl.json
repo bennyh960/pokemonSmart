@@ -5,28 +5,44 @@
   "width": 8,
   "height": 7,
   "tileSize": 16,
-  "spawn": { "x": 4, "y": 3 },
+  "spawn": {
+    "x": 4,
+    "y": 3
+  },
   "transitions": [
-    { "fromX": 3, "fromY": 6, "toMapId": "zeroville", "toX": 3, "toY": 7 },
-    { "fromX": 4, "fromY": 6, "toMapId": "zeroville", "toX": 4, "toY": 7 },
-    { "fromX": 5, "fromY": 6, "toMapId": "zeroville", "toX": 5, "toY": 7 }
+    {
+      "fromX": 4,
+      "fromY": 6,
+      "toMapId": "zeroville",
+      "toX": 4,
+      "toY": 7
+    },
+    {
+      "fromX": 3,
+      "fromY": 6,
+      "toMapId": "zeroville",
+      "toX": 5,
+      "toY": 7
+    }
   ],
   "npcs": [],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": null
+,
   "tiles": [
-    [5, 5, 5, 5, 5, 5, 5, 5],
-    [5, "fh1", "fh2", "fh1", "fh2", "fh1", "fh2", 5],
-    [5, "fh2", "fh1", "fh2", "fh1", "fh2", "fh1", 5],
-    [5, "fh1", "fh2", "fh1", "fh2", "fh1", "fh2", 5],
-    [5, "fh2", "fh1", "fh2", "fh1", "fh2", "fh1", 5],
-    [5, "fh1", "fh2", "fh1", "fh2", "fh1", "fh2", 5],
-    [5, "fh2", "fh1", 6, 6, 6, "fh2", 5]
+    ["d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d"],
+    ["d","d","ca1tl","ca1t","ca1tr","d","d","d"],
+    ["d","d","d","d","d","d","d","d"],
+    ["d","d","ca1bl","ca1b","ca1br","d","d","d"],
+    ["d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d"]
   ],
   "objects": [
-    { "key": "ctc", "x": 2, "y": 1 },
-    { "key": "ca1", "x": 3, "y": 3 },
-    { "key": "tr1", "x": 1, "y": 1 },
-    { "key": "ch2", "x": 6, "y": 2 }
+    {
+      "key": "ca1",
+      "x": 3,
+      "y": 3
+    }
   ]
 }
