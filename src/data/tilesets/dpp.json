@@ -559,10 +559,10 @@
       "sy": 1072,
       "w": 80,
       "h": 64,
-      "walkable": true,
+      "walkable": false,
       "encounter": false,
       "destroy": null,
-      "above": false,
+      "above": true,
       "category": "building",
       "description": "modern house"
     },
