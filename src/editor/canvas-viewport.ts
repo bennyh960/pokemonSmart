@@ -25,8 +25,10 @@ export class CanvasViewport {
   private panScrollStartY = 0;
   private spaceHeld = false;
 
-  // Object dragging state
+  // Dragging state
   private draggingObjIdx = -1;
+  private draggingTransitionIdx = -1;
+  private draggingSpawn = false;
 
   constructor(
     container: HTMLElement,
@@ -60,7 +62,7 @@ export class CanvasViewport {
     this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
     this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
     this.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
-    this.canvas.addEventListener('mouseleave', () => { this.mouseDown = false; this.panning = false; });
+    this.canvas.addEventListener('mouseleave', () => { this.mouseDown = false; this.panning = false; this.draggingObjIdx = -1; this.draggingTransitionIdx = -1; this.draggingSpawn = false; });
     this.canvas.addEventListener('wheel', (e) => this.onWheel(e), { passive: false });
     this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
@@ -134,13 +136,36 @@ export class CanvasViewport {
       this.mouseDown = true;
       const { gx, gy } = this.pixelToGrid(px, py);
 
-      // Check if clicking on a placed object (for dragging)
-      if (this.state.activeTool === 'select' && this.state.mapData.objects) {
-        const objIdx = this.findObjectAt(gx, gy);
-        if (objIdx >= 0) {
-          this.draggingObjIdx = objIdx;
+      // Check if clicking on draggable entities (select tool)
+      if (this.state.activeTool === 'select') {
+        // Spawn marker
+        const sp = this.state.mapData.spawn;
+        if (sp.x === gx && sp.y === gy) {
+          this.draggingSpawn = true;
           this.canvas.style.cursor = 'move';
           return;
+        }
+
+        // Transition markers
+        const transitions = this.state.mapData.transitions;
+        if (transitions) {
+          const tIdx = transitions.findIndex(t => t.fromX === gx && t.fromY === gy);
+          if (tIdx >= 0) {
+            this.draggingTransitionIdx = tIdx;
+            this.state.selectTransition(tIdx);
+            this.canvas.style.cursor = 'move';
+            return;
+          }
+        }
+
+        // Placed objects
+        if (this.state.mapData.objects) {
+          const objIdx = this.findObjectAt(gx, gy);
+          if (objIdx >= 0) {
+            this.draggingObjIdx = objIdx;
+            this.canvas.style.cursor = 'move';
+            return;
+          }
         }
       }
 
@@ -179,6 +204,28 @@ export class CanvasViewport {
     const { gx, gy } = this.pixelToGrid(px, py);
     this.state.setCursor(gx, gy);
 
+    // Dragging spawn
+    if (this.draggingSpawn) {
+      const sp = this.state.mapData.spawn;
+      if (sp.x !== gx || sp.y !== gy) {
+        sp.x = gx;
+        sp.y = gy;
+        this.state.emit('map-modified');
+      }
+      return;
+    }
+
+    // Dragging a transition
+    if (this.draggingTransitionIdx >= 0 && this.state.mapData.transitions) {
+      const t = this.state.mapData.transitions[this.draggingTransitionIdx];
+      if (t && (t.fromX !== gx || t.fromY !== gy)) {
+        t.fromX = gx;
+        t.fromY = gy;
+        this.state.emit('map-modified');
+      }
+      return;
+    }
+
     // Dragging an object
     if (this.draggingObjIdx >= 0 && this.state.mapData.objects) {
       const obj = this.state.mapData.objects[this.draggingObjIdx];
@@ -194,8 +241,10 @@ export class CanvasViewport {
   }
 
   private onMouseUp(e: MouseEvent): void {
-    // Finish object drag
-    if (this.draggingObjIdx >= 0) {
+    // Finish entity drag
+    if (this.draggingSpawn || this.draggingTransitionIdx >= 0 || this.draggingObjIdx >= 0) {
+      this.draggingSpawn = false;
+      this.draggingTransitionIdx = -1;
       this.draggingObjIdx = -1;
       this.canvas.style.cursor = 'crosshair';
       this.state.emit('map-modified');
