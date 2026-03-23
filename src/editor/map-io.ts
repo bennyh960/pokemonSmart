@@ -1,9 +1,10 @@
 import type { TileMapData } from './types.js';
+import { hasFSAccess, saveToDirectory } from './fs-save.js';
 
 /** Known map IDs available in the project. */
 export function getKnownMapIds(): string[] {
   return [
-    'zeroville', 'route-1', 'sumville', 'algebria', 'divideburg',
+    'zeroville','zeroville-house-tl', 'route-1', 'sumville', 'algebria', 'divideburg',
     'fractalis', 'infinity-plateau', 'logica-heights', 'multitown',
     'prime-city', 'mart-interior', 'pokecenter-interior', 'test-map',
   ];
@@ -57,14 +58,26 @@ export function exportMapJSON(data: TileMapData): string {
   return json;
 }
 
-/** Download map as .json file. */
-export function downloadMap(data: TileMapData): void {
+/**
+ * Save map to disk.
+ * Uses File System Access API if available (picks folder once, then direct writes with backup).
+ * Falls back to browser download otherwise.
+ */
+export async function saveMap(data: TileMapData): Promise<void> {
+  const fileName = `${data.id ?? data.name ?? 'map'}.json`;
   const json = exportMapJSON(data);
+
+  if (hasFSAccess()) {
+    await saveToDirectory('map', fileName, json);
+    return;
+  }
+
+  // Fallback: browser download
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${data.id ?? data.name ?? 'map'}.json`;
+  a.download = fileName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

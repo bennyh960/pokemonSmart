@@ -5,7 +5,7 @@ import { CanvasViewport } from './canvas-viewport.js';
 import { TilePalette, categorizeTiles } from './tile-palette.js';
 import { Toolbar } from './toolbar.js';
 import { PropertiesPanel } from './properties-panel.js';
-import { createBlankMap, downloadMap } from './map-io.js';
+import { createBlankMap, saveMap } from './map-io.js';
 import dppManifest from '../data/tilesets/dpp.json';
 import type { TileDef, NPCData, MapTransition } from './types.js';
 import './style.css';
@@ -153,7 +153,7 @@ async function init() {
     if (e.ctrlKey || e.metaKey) {
       if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); history.undo(); }
       else if ((e.key === 'z' && e.shiftKey) || e.key === 'y') { e.preventDefault(); history.redo(); }
-      else if (e.key === 's') { e.preventDefault(); downloadMap(state.mapData); }
+      else if (e.key === 's') { e.preventDefault(); saveMap(state.mapData); }
       else if (e.key === 'g') { e.preventDefault(); state.showGrid = !state.showGrid; state.emit('viewport-changed'); }
       return;
     }

@@ -78,13 +78,27 @@ Consider:
 
 Write to `src/data/maps/{id}.json`.
 
-### Step 4: Verify
+### Step 4: Register the Map
+
+After creating a new map, you MUST register it in these files:
+
+1. **`src/systems/map-manager.ts`** — Add a `registerMap` call:
+   ```ts
+   registerMap('{id}', () => import('../data/maps/{id}.json').catch(() => import('../data/maps/test-map.json')));
+   ```
+2. **`src/editor/map-io.ts`** — Add the map ID to the `getKnownMapIds()` array so the map editor can load it.
+
+Without these registrations, map transitions will fail silently (falling back to test-map).
+
+### Step 5: Verify
 
 - Tile count matches width × height — every row has exactly `width` entries, exactly `height` rows
 - All transitions are bidirectional — update adjacent maps if needed
 - Buildings are in `objects` (not `tiles`), base tile under buildings is grass (`g1`)
 - Transition coordinates land on walkable tiles
 - NPCs don't block critical paths
+- **Exit transitions must NOT land on entry transition tiles** — if map A transitions to map B at tile (x, y), map B's exit must return to a DIFFERENT tile (e.g., y+1) to avoid re-entry loops
+- **Spawn point should be away from exit transitions** — at least 2 tiles away to prevent movement momentum from triggering the exit
 
 ---
 

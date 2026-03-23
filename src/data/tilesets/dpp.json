@@ -1280,6 +1280,45 @@
       "above": true,
       "category": "ground",
       "description": "mountain 1 bottom right"
+    },
+    {
+      "key": "dt1",
+      "sx": 0,
+      "sy": 2176,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "encounter": false,
+      "destroy": null,
+      "above": true,
+      "category": "decoration",
+      "description": "desk table in house"
+    },
+    {
+      "key": "df1",
+      "sx": 0,
+      "sy": 2192,
+      "w": 32,
+      "h": 32,
+      "walkable": false,
+      "encounter": false,
+      "destroy": null,
+      "above": true,
+      "category": "decoration",
+      "description": "decorative furtniture in house"
+    },
+    {
+      "key": "library1",
+      "sx": 32,
+      "sy": 2176,
+      "w": 32,
+      "h": 32,
+      "walkable": false,
+      "encounter": false,
+      "destroy": null,
+      "above": true,
+      "category": "decoration",
+      "description": "library in house"
     }
   ]
 }

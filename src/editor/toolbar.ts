@@ -2,7 +2,7 @@ import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { ToolType } from './types.js';
 import { categorizeTiles } from './tile-palette.js';
-import { getKnownMapIds, loadMapFromProject, loadMapFromFile, downloadMap, copyMapToClipboard, createBlankMap } from './map-io.js';
+import { getKnownMapIds, loadMapFromProject, loadMapFromFile, saveMap, copyMapToClipboard, createBlankMap } from './map-io.js';
 
 export class Toolbar {
   constructor(container: HTMLElement, state: EditorState, history: HistoryManager, tileManifest: Record<string, unknown>) {
@@ -97,7 +97,15 @@ export class Toolbar {
       }
     });
 
-    container.querySelector('#btn-save')!.addEventListener('click', () => downloadMap(state.mapData));
+    container.querySelector('#btn-save')!.addEventListener('click', async () => {
+      try {
+        await saveMap(state.mapData);
+      } catch (err) {
+        if ((err as DOMException).name !== 'AbortError') {
+          console.error('Save failed:', err);
+        }
+      }
+    });
     container.querySelector('#btn-copy')!.addEventListener('click', async () => {
       await copyMapToClipboard(state.mapData);
       alert('Map JSON copied to clipboard!');
