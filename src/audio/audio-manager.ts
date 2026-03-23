@@ -37,7 +37,7 @@ export function createAudioManager() {
 
   let musicVolume = 0.5;
   let sfxVolume = 0.7;
-  let muted = false;
+  let muted = true;
 
   /** Create a fresh Howl for a music track (no caching — avoids stale state). */
   function newMusicHowl(key: string): Howl | null {

@@ -54,6 +54,7 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Walkable:</label><input id="add-walk" type="checkbox" checked /></div>
       <div class="prop-row"><label>Encounter:</label><input id="add-enc" type="checkbox" /></div>
       <div class="prop-row"><label>Above (2nd layer):</label><input id="add-above" type="checkbox" /></div>
+      <div class="prop-row"><label>Description:</label><input id="add-desc" type="text" placeholder="optional note" /></div>
     `;
 
     this.addPreview(section, sx, sy, w, h);
@@ -77,6 +78,7 @@ export class PropertiesPanel {
         destroy: null,
         above: (section.querySelector('#add-above') as HTMLInputElement).checked,
         category: catVal || undefined,
+        description: (section.querySelector('#add-desc') as HTMLInputElement).value.trim() || undefined,
       };
       this.state.addTile(entry);
     });
@@ -130,6 +132,10 @@ export class PropertiesPanel {
           <option value="strength" ${t.destroy === 'strength' ? 'selected' : ''}>Strength</option>
         </select>
       </div>
+      <div class="prop-row">
+        <label>Description:</label>
+        <input id="edit-desc" type="text" value="${t.description ?? ''}" placeholder="optional note" />
+      </div>
     `;
 
     // Wire up live editing
@@ -150,6 +156,11 @@ export class PropertiesPanel {
     wire('#edit-enc', 'encounter', 'check');
     wire('#edit-above', 'above', 'check');
     wire('#edit-destroy', 'destroy', 'select');
+    // Description: empty → undefined so it's omitted from JSON export
+    const descEl = section.querySelector('#edit-desc') as HTMLInputElement;
+    descEl.addEventListener('change', () => {
+      this.state.updateTile(index, { description: descEl.value.trim() || undefined });
+    });
 
     this.addPreview(section, t.sx, t.sy, t.w, t.h);
 

@@ -10,6 +10,7 @@ export interface TileEntry {
   destroy: null | 'cut' | 'strength';
   above: boolean;
   category?: string;
+  description?: string;
 }
 
 /** The final manifest JSON output. */

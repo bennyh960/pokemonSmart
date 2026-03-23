@@ -51,6 +51,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         destroy: t.destroy ?? null,
         above: t.above ?? false,
         category: t.category,
+        description: t.description,
       });
     }
   }
