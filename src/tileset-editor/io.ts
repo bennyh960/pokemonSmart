@@ -1,5 +1,6 @@
 import type { TilesetEditorState } from './editor-state.js';
 import type { TileEntry, TileManifest } from './types.js';
+import { hasFSAccess, saveToDirectory } from '../editor/fs-save.js';
 
 /** Export tiles as the manifest JSON. */
 export function exportManifest(state: TilesetEditorState): string {
@@ -10,14 +11,24 @@ export function exportManifest(state: TilesetEditorState): string {
   return JSON.stringify(manifest, null, 2);
 }
 
-/** Download manifest as JSON file. */
-export function downloadManifest(state: TilesetEditorState): void {
+/**
+ * Save tileset manifest.
+ * Uses File System Access API if available, falls back to browser download.
+ */
+export async function saveManifest(state: TilesetEditorState, fileName = 'dpp.json'): Promise<void> {
   const json = exportManifest(state);
+
+  if (hasFSAccess()) {
+    await saveToDirectory('tileset', fileName, json);
+    return;
+  }
+
+  // Fallback: browser download
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'tileset-manifest.json';
+  a.download = fileName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

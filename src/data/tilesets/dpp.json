@@ -1410,6 +1410,19 @@
       "above": false,
       "category": "decoration",
       "description": "carpenter 1 for in house right"
+    },
+    {
+      "key": "ca1c",
+      "sx": 112,
+      "sy": 2112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounter": false,
+      "destroy": null,
+      "above": false,
+      "category": "decoration",
+      "description": "carpener 1 center in hosue"
     }
   ]
 }

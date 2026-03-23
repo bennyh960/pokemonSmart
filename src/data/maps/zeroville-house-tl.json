@@ -25,24 +25,68 @@
       "toY": 7
     }
   ],
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-1774305358586",
+      "x": 1,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        "Hello!",
+        "One day I will be pokemon trainer!"
+      ],
+      "spriteType": "npc-male",
+      "name": "Tom"
+    }
+  ],
   "music": "town",
   "encounterTableId": null
 ,
   "tiles": [
     ["d","d","d","d","d","d","d","d"],
     ["d","d","d","d","d","d","d","d"],
-    ["d","d","ca1tl","ca1t","ca1tr","d","d","d"],
     ["d","d","d","d","d","d","d","d"],
-    ["d","d","ca1bl","ca1b","ca1br","d","d","d"],
-    ["d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","ca1tl","ca1t","ca1t","ca1tr"],
+    ["d","d","d","d","ca1l","ca1c","ca1c","ca1r"],
+    ["d","d","d","d","ca1bl","ca1b","ca1b","ca1br"],
     ["d","d","d","d","d","d","d","d"]
   ],
   "objects": [
     {
-      "key": "ca1",
-      "x": 3,
-      "y": 3
+      "key": "tr2",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "df1",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "library1",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "dt1",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "tr1",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "ctc",
+      "x": 5,
+      "y": 4
+    },
+    {
+      "key": "ch2",
+      "x": 5,
+      "y": 1
     }
   ]
 }

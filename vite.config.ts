@@ -6,9 +6,13 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        editor: resolve(__dirname, 'editor.html'),
-        'tileset-editor': resolve(__dirname, 'tileset-editor.html'),
       },
+      external: [/\/backup\//],
+    },
+  },
+  server: {
+    watch: {
+      ignored: ['**/backup/**'],
     },
   },
 });

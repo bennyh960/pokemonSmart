@@ -2,7 +2,7 @@ import { TilesetEditorState } from './editor-state.js';
 import { SpritesheetViewport } from './spritesheet-viewport.js';
 import { TileList } from './tile-list.js';
 import { PropertiesPanel } from './properties-panel.js';
-import { downloadManifest, copyManifest, loadManifestFromFile, loadManifest } from './io.js';
+import { saveManifest, copyManifest, loadManifestFromFile, loadManifest } from './io.js';
 import './style.css';
 
 // Load existing dpp.json to pre-populate
@@ -88,7 +88,10 @@ async function init() {
     });
     input.click();
   });
-  toolbarEl.querySelector('#btn-save')!.addEventListener('click', () => downloadManifest(state));
+  toolbarEl.querySelector('#btn-save')!.addEventListener('click', async () => {
+    try { await saveManifest(state); }
+    catch (err) { if ((err as DOMException).name !== 'AbortError') console.error('Save failed:', err); }
+  });
   toolbarEl.querySelector('#btn-copy')!.addEventListener('click', async () => {
     await copyManifest(state);
     alert('Copied to clipboard!');
@@ -147,7 +150,7 @@ async function init() {
 
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
       e.preventDefault();
-      downloadManifest(state);
+      saveManifest(state);
     }
     if (e.key === 'Delete' && state.selectedIndex >= 0) {
       state.removeTile(state.selectedIndex);

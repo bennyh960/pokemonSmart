@@ -6,6 +6,8 @@ export class TileList {
   private state: TilesetEditorState;
   private filterText = '';
   private filterType: 'all' | 'tiles' | 'above' = 'all';
+  private filterCategory = '';
+  private catSelect!: HTMLSelectElement;
 
   constructor(container: HTMLElement, state: TilesetEditorState) {
     this.container = container;
@@ -36,14 +38,44 @@ export class TileList {
     });
     container.appendChild(filters);
 
+    // Category filter dropdown
+    this.catSelect = document.createElement('select');
+    this.catSelect.className = 'ts-search';
+    this.catSelect.addEventListener('change', () => { this.filterCategory = this.catSelect.value; this.build(); });
+    container.appendChild(this.catSelect);
+
     // List container
     const listEl = document.createElement('div');
     listEl.className = 'ts-tile-list';
     container.appendChild(listEl);
 
-    state.on('items-changed', () => this.build());
+    state.on('items-changed', () => { this.rebuildCategoryOptions(); this.build(); });
     state.on('item-selected', () => this.updateHighlight());
+    this.rebuildCategoryOptions();
     this.build();
+  }
+
+  private rebuildCategoryOptions(): void {
+    const cats = new Set<string>();
+    for (const t of this.state.tiles) {
+      if (t.category) cats.add(t.category);
+    }
+    const sorted = [...cats].sort();
+    const prev = this.catSelect.value;
+    this.catSelect.innerHTML = '<option value="">All categories</option>';
+    for (const cat of sorted) {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      this.catSelect.appendChild(opt);
+    }
+    // Preserve selection if still valid
+    if (sorted.includes(prev)) {
+      this.catSelect.value = prev;
+      this.filterCategory = prev;
+    } else {
+      this.filterCategory = '';
+    }
   }
 
   private build(): void {
@@ -54,6 +86,7 @@ export class TileList {
       if (this.filterText && !t.key.toLowerCase().includes(this.filterText)) return false;
       if (this.filterType === 'tiles' && t.above) return false;
       if (this.filterType === 'above' && !t.above) return false;
+      if (this.filterCategory && t.category !== this.filterCategory) return false;
       return true;
     });
 
