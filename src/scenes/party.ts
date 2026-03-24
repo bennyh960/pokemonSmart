@@ -335,27 +335,99 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       if (ppFillW > 0) fillRect(ctx, 4 + 8, cy + 10, ppFillW, 2, C.BAR_PP);
     }
 
-    // ── Action menu overlay ──
+    // ── Action menu overlay with move info ──
     if (moveActionMenuOpen) {
-      const menuW = 70;
-      const menuH = MOVE_ACTIONS.length * 12 + 6;
-      const menuX = SCREEN_W / 2 - menuW / 2;
-      const menuY = SCREEN_H / 2 - menuH / 2;
+      const move = pokemon.moves[moveCursor];
+      const moveData = move ? getMove(move.id) : undefined;
+      const dc = moveData?.damageClass || (move?.power > 0 ? 'physical' : 'status');
+      const dcInfo = getDamageClassLabel(dc);
 
-      fillRect(ctx, menuX - 1, menuY - 1, menuW + 2, menuH + 2, '#000000aa');
-      fillRect(ctx, menuX, menuY, menuW, menuH, C.BG);
-      drawRect(ctx, menuX, menuY, menuW, menuH, '#2a6a40');
+      // Full-width modal covering content area
+      const mx = 8, my = 20, mw = 224, mh = 126;
+      // Dark overlay behind
+      fillRect(ctx, 0, 14, 240, 136, '#000000aa');
+      // Modal background
+      fillRect(ctx, mx, my, mw, mh, C.BG);
+      drawRect(ctx, mx, my, mw, mh, '#2a6a40');
 
+      if (move) {
+        // ── Move name (large) + damage class dot ──
+        const moveName = getMoveDisplayName(move.id);
+        drawText(ctx, moveName, mx + mw - 6, my + 4, { size: 8, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+        // Class dot next to name
+        ctx.beginPath();
+        ctx.arc(mx + mw - 8 - moveName.length * 5, my + 8, 3, 0, Math.PI * 2);
+        ctx.fillStyle = dcInfo.color;
+        ctx.fill();
+
+        // ── Type badge ──
+        const typeLabel = getTypeName(move.type as PokemonType);
+        const typeColor = TYPE_COLORS[move.type] || '#888888';
+        fillRect(ctx, mx + 6, my + 4, 26, 9, typeColor);
+        drawText(ctx, typeLabel, mx + 6 + 13, my + 5, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+
+        // ── Stats row: Class | Power | Accuracy | PP ──
+        const statsY = my + 18;
+        fillRect(ctx, mx + 4, statsY, mw - 8, 1, C.SEP);
+        const ry = statsY + 3;
+        // Class label
+        drawText(ctx, dcInfo.label, mx + mw - 6, ry, { size: 6, color: dcInfo.color, font: 'monospace', align: 'right' });
+        // Power
+        const powVal = move.power > 0 ? `${move.power}` : '0';
+        drawText(ctx, `${t('party.moves.header.pow')}: ${powVal}`, mx + mw - 60, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
+        // Accuracy
+        const accVal = move.accuracy > 0 ? move.accuracy : 100;
+        drawText(ctx, `${t('party.moves.header.acc')}: ${accVal}%`, mx + mw - 110, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
+        // PP
+        drawText(ctx, `PP: ${move.currentPp}/${move.pp}`, mx + 6, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
+
+        // ── Description (word-wrapped, English from API) ──
+        const descY = statsY + 14;
+        fillRect(ctx, mx + 4, descY - 2, mw - 8, 1, C.SEP);
+        const desc = moveData?.description || '';
+        if (desc) {
+          const maxChars = 38;
+          const words = desc.split(' ');
+          let line = '';
+          let dy = descY + 2;
+          for (const word of words) {
+            const test = line ? line + ' ' + word : word;
+            if (test.length > maxChars && line) {
+              drawText(ctx, line, mx + 6, dy, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+              dy += 8;
+              line = word;
+            } else {
+              line = test;
+            }
+          }
+          if (line) {
+            drawText(ctx, line, mx + 6, dy, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+          }
+        }
+      }
+
+      // ── Action buttons at bottom of modal ──
+      const btnY = my + mh - 16;
+      fillRect(ctx, mx + 4, btnY - 2, mw - 8, 1, C.SEP);
+      const btnW = Math.floor((mw - 16) / MOVE_ACTIONS.length);
       for (let i = 0; i < MOVE_ACTIONS.length; i++) {
         const action = MOVE_ACTIONS[i];
         const isSel = i === moveActionCursor;
-        const ay = menuY + 4 + i * 12;
-        if (isSel) fillRect(ctx, menuX + 2, ay - 1, menuW - 4, 11, C.CARD_SEL);
+        const bx = mx + 6 + i * btnW;
+
+        if (isSel) {
+          fillRect(ctx, bx, btnY, btnW - 4, 12, C.CARD_SEL);
+          drawRect(ctx, bx, btnY, btnW - 4, 12, '#2a6a40');
+        }
+
         let label: string;
         if (action === 'swap') label = t('party.moves.swap');
         else if (action === 'delete') label = t('party.moves.delete');
         else label = t('party.moves.cancel');
-        drawText(ctx, label, menuX + menuW / 2, ay + 1, { size: 7, color: isSel ? C.TEXT_PRI : C.TEXT_MUT, align: 'center' });
+
+        drawText(ctx, label, bx + (btnW - 4) / 2, btnY + 2, {
+          size: 7, color: isSel ? C.TEXT_PRI : C.TEXT_MUT, font: 'monospace', align: 'center',
+        });
       }
     }
 
