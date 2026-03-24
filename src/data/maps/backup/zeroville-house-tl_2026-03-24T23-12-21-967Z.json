@@ -6,10 +6,17 @@
   "height": 7,
   "tileSize": 16,
   "spawn": {
-    "x": 3,
-    "y": 6
+    "x": 4,
+    "y": 3
   },
   "transitions": [
+    {
+      "fromX": 4,
+      "fromY": 6,
+      "toMapId": "zeroville",
+      "toX": 4,
+      "toY": 7
+    },
     {
       "fromX": 3,
       "fromY": 6,

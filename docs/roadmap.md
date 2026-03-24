@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 3.5 ✅ COMPLETE (Sprint 4 next)
+## Overall Progress: Sprint 3.5 ✅ COMPLETE (Sprint 3.5 open items → Sprint 4 next)
 
 ---
 
@@ -77,12 +77,87 @@
 
 ---
 
-## Sprint 4 — Puzzle & Cipher System ⬜ PLANNED
+## Sprint 3.5 — Open Items ⬜ IN PROGRESS
+**Goal:** Finish remaining work from Sprint 3.5
+
+| Task | Status |
+|------|--------|
+| Bag item use — wire actual item effects to Pokemon (heal, revive, PP restore, rare candy) | ⬜ |
+| Move system — learnset-based wild/NPC Pokemon moves (Story 2+3 from `docs/stories/move-system.md`) | ⬜ |
+| Move system — level-up move learning with UI (Story 6) | ⬜ |
+| Pokedex "Can Learn (TM)" tab — populate with TM/HM data from PokeAPI | ⬜ |
+| Battle speed stat — turn order based on speed (currently always player-first) | ⬜ |
+| NPC item rewards — NPCs can give items on dialogue/quest completion (like trainer battle rewards) | ⬜ |
+
+---
+
+## Sprint 4 — Data Refactor (Epic) ⬜ PLANNED
+**Goal:** Centralize all game data, remove hardcoded values, leverage PokeAPI fully
+
+This is a foundation sprint — must be done before design/content sprints.
+
+| Task | Agent | Notes |
+|------|-------|-------|
+| Centralize data folder — single `src/data/` with clear structure | game-engine-developer | Move scattered constants into data modules |
+| Remove all hardcoded Pokemon/move values from scene files | game-engine-developer | Everything reads from data layer |
+| Fetch additional PokeAPI data: abilities, natures, held items, TM compatibility | asset-manager | Enrich existing JSON files |
+| Deduplicate localized names (pokemon.json + evolution-chains.json share names) | game-engine-developer | Tech debt from Hebrew translation story |
+| Items data — fetch full item list from PokeAPI, map to our ItemDef structure | asset-manager | Learn from API structure, extend our items |
+| Items data — berry system, held items, TMs as items | game-engine-developer | New item categories |
+| Save/load migration — handle schema changes when data model evolves | game-engine-developer | Version saved games |
+
+---
+
+## Sprint 5 — Items & Functionality ⬜ PLANNED
+**Goal:** Make all items functional, findable on maps, reusable across screens
+
+| Task | Agent |
+|------|-------|
+| Item pickup system — find items on maps (overworld item balls) | game-engine-developer |
+| Healing items — full implementation (HP, PP, status, revive) | game-engine-developer |
+| Pokeball items — catching wild Pokemon (see Sprint 6) | game-engine-developer |
+| Stat boost items (X Attack, etc.) — apply in battle | game-engine-developer |
+| Rare Candy — level up with move learning | game-engine-developer |
+| Item reuse across screens (bag, battle, shop, map pickup) | frontend-developer |
+| Shop screen redesign using coordinate system | frontend-developer + asset-manager |
+
+---
+
+## Sprint 6 — Battle System ⬜ PLANNED
+**Goal:** Realistic Pokemon battle mechanics
+
+| Task | Agent |
+|------|-------|
+| Turn order based on speed stat + move priority | game-engine-developer |
+| Physical vs Special damage split (use damageClass from data) | game-engine-developer |
+| Status effects (poison, burn, sleep, paralysis, freeze) | game-engine-developer |
+| Dodge/accuracy mechanics | game-engine-developer |
+| Critical hits | game-engine-developer |
+| Stat stages (raise/lower attack, defense, etc.) | game-engine-developer |
+| Wild Pokemon catching — pokeball mechanics, catch rate formula | game-engine-developer |
+| Trainer AI improvements (smart move selection) | game-engine-developer |
+| Battle UI polish — animations, status icons | frontend-developer |
+
+---
+
+## Sprint 7 — Player & Story ⬜ PLANNED
+**Goal:** Player customization, story mode, cutscenes
+
+| Task | Agent |
+|------|-------|
+| Player sprite selection screen (choose character) | frontend-developer |
+| Story mode intro — cutscene system | frontend-developer |
+| Prof. Algorithma dialogues + story events | game-designer |
+| Remainder (rival) encounters + story arc | game-designer |
+| Cutscene engine (scripted sequences, camera, text) | game-engine-developer + frontend-developer |
+
+---
+
+## Sprint 8 — Puzzle & Cipher System ⬜ PLANNED
 **Goal:** Build the non-math puzzle mechanics
 
 | Task | Agent |
 |------|-------|
-| Battle turn order (speed stat + move priority) | game-engine-developer |
 | Caesar cipher puzzle system | math-engine-developer |
 | Substitution cipher with decoder UI | frontend-developer |
 | Logic puzzles (if-then, who's lying) | math-engine-developer |
@@ -94,7 +169,7 @@
 
 ---
 
-## Sprint 5 — Story & Content ⬜ PLANNED
+## Sprint 9 — Story & Content ⬜ PLANNED
 **Goal:** Full game content — gyms, NPCs, story events
 
 | Task | Agent |
@@ -102,23 +177,19 @@
 | 8 Gym Leader teams + battle mechanics | game-designer |
 | Gym interior puzzles (per gym) | game-designer + game-engine-developer |
 | Elite Four + NULL-X final boss (3 phases) | game-designer + game-engine-developer |
-| Remainder (rival) encounters + story arc | game-designer |
-| Prof. Algorithma dialogues + story events | game-designer |
-| Cutscene system (story moments) | frontend-developer |
 | Custom sprites: gym leaders, rival, professor, NULL-X | asset-manager |
 | Glitch visual effects (tile corruption, sprite distortion) | asset-manager + frontend-developer |
 | Glitch audio distortion (Web Audio API) | frontend-developer |
 
 ---
 
-## Sprint 6 — Polish & Launch ⬜ PLANNED
+## Sprint 10 — Polish & Launch ⬜ PLANNED
 **Goal:** Complete, tested, playable game
 
 | Task | Agent |
 |------|-------|
 | Full playthrough testing (start → end) | qa-tester |
 | Difficulty balance testing | qa-tester + game-designer |
-| Math correctness verification (all levels) | qa-tester |
 | Cross-browser testing (Chrome, Firefox, Safari) | qa-tester |
 | Touch/mobile testing | qa-tester + frontend-developer |
 | Settings screen (volume, difficulty override) | frontend-developer |
