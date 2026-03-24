@@ -188,6 +188,8 @@
   "bag.cantUseHere": "Can't use this here!",
   "bag.selectPokemon": "Select a Pokemon to use on",
   "bag.hint": "ESC:Back  ENTER:Use  \u25c0\u25b6:Navigate",
+  "bag.hint.use": "Use",
+  "bag.hint.navigate": "Nav",
   "bag.category.medicine": "Medicine",
   "bag.category.balls": "Balls",
   "bag.category.battle": "Battle",

@@ -237,6 +237,52 @@ const ITEM_ICONS: Record<string, (ctx: CanvasRenderingContext2D, x: number, y: n
 };
 
 /**
+ * Icon box style per item — background tint and stroke color for bag card icons.
+ * Reusable anywhere an item needs a colored icon indicator.
+ */
+export const ITEM_ICON_STYLE: Record<string, { bg: string; stroke: string }> = {
+  // Healing
+  'potion':       { bg: 'rgba(224,48,48,0.15)',    stroke: '#e03030' },
+  'super-potion': { bg: 'rgba(224,128,32,0.15)',   stroke: '#e08020' },
+  'hyper-potion': { bg: 'rgba(224,96,160,0.15)',   stroke: '#e060a0' },
+  'max-potion':   { bg: 'rgba(128,64,192,0.15)',   stroke: '#8040c0' },
+  'full-restore': { bg: 'rgba(208,160,32,0.15)',   stroke: '#d0a020' },
+  'fresh-water':  { bg: 'rgba(48,144,224,0.15)',   stroke: '#3090e0' },
+  'soda-pop':     { bg: 'rgba(64,176,96,0.15)',    stroke: '#40b060' },
+  'lemonade':     { bg: 'rgba(224,208,64,0.15)',   stroke: '#e0d040' },
+  'moomoo-milk':  { bg: 'rgba(240,240,240,0.1)',   stroke: '#cccccc' },
+  // Status cures
+  'antidote':      { bg: 'rgba(248,208,48,0.15)',  stroke: '#f8d030' },
+  'burn-heal':     { bg: 'rgba(224,96,64,0.15)',   stroke: '#e06040' },
+  'ice-heal':      { bg: 'rgba(96,192,224,0.15)',  stroke: '#60c0e0' },
+  'awakening':     { bg: 'rgba(64,192,64,0.15)',   stroke: '#40c040' },
+  'paralyze-heal': { bg: 'rgba(224,192,64,0.15)',  stroke: '#e0c040' },
+  'full-heal':     { bg: 'rgba(32,216,96,0.15)',   stroke: '#20d860' },
+  // Revival
+  'revive':     { bg: 'rgba(240,128,48,0.15)',     stroke: '#f08030' },
+  'max-revive': { bg: 'rgba(160,80,224,0.15)',     stroke: '#a050e0' },
+  // Pokeballs
+  'poke-ball':  { bg: 'rgba(224,48,48,0.15)',      stroke: '#e03030' },
+  'great-ball': { bg: 'rgba(48,96,224,0.15)',      stroke: '#3060e0' },
+  'ultra-ball': { bg: 'rgba(224,192,32,0.15)',     stroke: '#e0c020' },
+  // Battle boosts
+  'x-attack':  { bg: 'rgba(224,64,64,0.15)',       stroke: '#e04040' },
+  'x-defense': { bg: 'rgba(64,96,224,0.15)',       stroke: '#4060e0' },
+  'x-speed':   { bg: 'rgba(64,192,64,0.15)',       stroke: '#40c040' },
+  'x-special': { bg: 'rgba(160,64,224,0.15)',      stroke: '#a040e0' },
+  // Vitamins
+  'rare-candy': { bg: 'rgba(224,112,176,0.15)',    stroke: '#e070b0' },
+  // PP recovery
+  'ether':  { bg: 'rgba(64,128,224,0.15)',         stroke: '#4080e0' },
+  'elixir': { bg: 'rgba(64,192,96,0.15)',          stroke: '#40c060' },
+};
+
+/** Get icon style for an item. Falls back to gray. */
+export function getItemIconStyle(itemId: string): { bg: string; stroke: string } {
+  return ITEM_ICON_STYLE[itemId] || { bg: 'rgba(102,102,136,0.15)', stroke: '#666688' };
+}
+
+/**
  * Draw a programmatic icon for the given item at (x, y) with the given size.
  * Falls back to a generic colored square if the item has no specific icon.
  */

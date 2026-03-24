@@ -184,6 +184,8 @@
   "bag.cantUseHere": "אי אפשר להשתמש כאן!",
   "bag.selectPokemon": "בחר פוקימון להשתמש עליו",
   "bag.hint": "ESC:חזרה  ENTER:שימוש  ◀▶:ניווט",
+  "bag.hint.use": "שימוש",
+  "bag.hint.navigate": "ניווט",
   "bag.category.medicine": "תרופות",
   "bag.category.balls": "כדורים",
   "bag.category.battle": "קרב",
