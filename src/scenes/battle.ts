@@ -22,6 +22,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getItem, type ItemDef } from '../data/items.js';
+import type { TrainerReward } from '../systems/npc.js';
 import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
@@ -40,7 +41,7 @@ export interface TrainerBattleData {
   trainerName: string;
   trainerId: string;
   party: Pokemon[];
-  reward: number;
+  reward: TrainerReward;
   trainerSprite?: string;  // e.g., 'youngster', 'lass'
 }
 
@@ -140,11 +141,27 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function awardTrainerReward(): void {
     if (hasActiveGame() && trainerData) {
       const pd = getPlayerData();
-      pd.money += trainerData.reward;
+      const reward = trainerData.reward;
+      pd.money += reward.money;
+      // Award items if any
+      if (reward.items) {
+        for (const ri of reward.items) {
+          pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
+        }
+      }
       pd.flags[`trainer-${trainerData.trainerId}-defeated`] = true;
       autoSave();
     }
-    textBox = createTextBox([t('battle.trainerReward', { money: trainerData!.reward })], isRTL());
+    const lines: string[] = [t('battle.trainerReward', { money: trainerData!.reward.money })];
+    // Show item rewards
+    if (trainerData!.reward.items) {
+      for (const ri of trainerData!.reward.items) {
+        const itemDef = getItem(ri.itemId);
+        const itemName = itemDef ? t(itemDef.nameKey) : ri.itemId;
+        lines.push(t('battle.trainerRewardItem', { item: itemName, qty: ri.quantity }));
+      }
+    }
+    textBox = createTextBox(lines, isRTL());
     phase = 'XP_GAIN';
     trainerData = null;
   }

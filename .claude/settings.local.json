@@ -52,7 +52,9 @@
       "Bash(python -c \"from PIL import Image; img = Image.open\\(''C:/Users/behassan/Downloads/dpp_style_sinnoh_overworld_tileset_v_2_by_alchemybats_djxr2la.png''\\); print\\(f''Size: {img.size}, Mode: {img.mode}''\\)\")",
       "Bash(identify \"C:/Users/behassan/Downloads/dpp_style_sinnoh_overworld_tileset_v_2_by_alchemybats_djxr2la.png\")",
       "Bash(tasklist)",
-      "Bash(netstat -ano)"
+      "Bash(netstat -ano)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:pokeapi.co)"
     ]
   }
 }

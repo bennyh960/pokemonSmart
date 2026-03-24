@@ -30,13 +30,32 @@ export interface NPCData {
   autoWalk?: AutoWalkConfig | null;
 }
 
+/** Reward item given after defeating a trainer. */
+export interface RewardItem {
+  itemId: string;
+  quantity: number;
+}
+
+/** Trainer reward — money plus optional items. */
+export interface TrainerReward {
+  money: number;
+  items?: RewardItem[];
+}
+
 /** Trainer NPC with party and battle data. */
 export interface TrainerData extends NPCData {
   type: 'trainer';
-  party: { pokemonId: number; level: number }[];
+  party: { pokemonId: number; level: number; moves?: number[] }[];
   defeated?: boolean;
-  reward: number;
+  reward: TrainerReward;
   lineOfSight: number;
+}
+
+/** Normalize a reward field that may be a legacy plain number. */
+export function normalizeReward(reward: TrainerReward | number | undefined): TrainerReward {
+  if (typeof reward === 'number') return { money: reward };
+  if (!reward) return { money: 0 };
+  return reward;
 }
 
 /** Direction vectors for NPC facing. */

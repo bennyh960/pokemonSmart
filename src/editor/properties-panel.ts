@@ -2,6 +2,23 @@ import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { TileDef, NPCData, MapTransition } from './types.js';
 import { getCharacterList } from '../engine/character-sprites.js';
+import { getAllPokemon, type PokemonData } from '../services/pokemon-data.js';
+import { getAllItems, type ItemDef } from '../data/items.js';
+import { normalizeReward, type TrainerData, type TrainerReward } from '../systems/npc.js';
+
+/** Cached pokemon list (id + english name) for dropdowns. */
+let cachedPokemonList: PokemonData[] | null = null;
+function getPokemonList(): PokemonData[] {
+  if (!cachedPokemonList) cachedPokemonList = getAllPokemon();
+  return cachedPokemonList;
+}
+
+/** Cached items list for dropdowns. */
+let cachedItemList: ItemDef[] | null = null;
+function getItemList(): ItemDef[] {
+  if (!cachedItemList) cachedItemList = getAllItems();
+  return cachedItemList;
+}
 
 export class PropertiesPanel {
   private container: HTMLElement;
@@ -162,6 +179,11 @@ export class PropertiesPanel {
     // ── Auto Walk ──
     this.renderAutoWalkUI(section, npc);
 
+    // ── Trainer-specific fields ──
+    if (npc.type === 'trainer') {
+      this.renderTrainerUI(section, npc as unknown as TrainerData);
+    }
+
     // Delete
     const delBtn = document.createElement('button');
     delBtn.className = 'btn-danger';
@@ -175,6 +197,329 @@ export class PropertiesPanel {
     });
     section.appendChild(delBtn);
     this.container.appendChild(section);
+  }
+
+  // ── Trainer: Line of Sight, Reward, Party ──
+  private renderTrainerUI(section: HTMLElement, trainer: TrainerData): void {
+    const emit = () => this.state.emit('map-modified');
+    const trainerAny = trainer as unknown as Record<string, unknown>;
+
+    // Ensure trainer fields exist with defaults
+    if (!trainer.party) trainer.party = [];
+    if (trainer.lineOfSight == null) trainerAny['lineOfSight'] = 3;
+
+    // Normalize reward (handles legacy number format)
+    const reward: TrainerReward = normalizeReward(trainer.reward);
+    trainerAny['reward'] = reward;
+
+    // ── Line of Sight ──
+    const losRow = document.createElement('div');
+    losRow.className = 'prop-row';
+    losRow.innerHTML = '<label>Line of Sight:</label>';
+    const losInput = document.createElement('input');
+    losInput.type = 'number';
+    losInput.min = '1';
+    losInput.max = '10';
+    losInput.value = String(trainer.lineOfSight || 3);
+    losInput.addEventListener('change', () => {
+      trainerAny['lineOfSight'] = parseInt(losInput.value, 10) || 3;
+      emit();
+    });
+    losRow.appendChild(losInput);
+    section.appendChild(losRow);
+
+    // ── Reward: Money ──
+    const moneyRow = document.createElement('div');
+    moneyRow.className = 'prop-row';
+    moneyRow.innerHTML = '<label>Reward $:</label>';
+    const moneyInput = document.createElement('input');
+    moneyInput.type = 'number';
+    moneyInput.min = '0';
+    moneyInput.step = '10';
+    moneyInput.value = String(reward.money);
+    moneyInput.addEventListener('change', () => {
+      reward.money = parseInt(moneyInput.value, 10) || 0;
+      emit();
+    });
+    moneyRow.appendChild(moneyInput);
+    section.appendChild(moneyRow);
+
+    // ── Reward: Items ──
+    this.renderRewardItemsUI(section, reward, emit);
+
+    // ── Party ──
+    this.renderPartyUI(section, trainer, emit);
+  }
+
+  // ── Reward Items editor ──
+  private renderRewardItemsUI(section: HTMLElement, reward: TrainerReward, emit: () => void): void {
+    const header = document.createElement('div');
+    header.className = 'trainer-subsection-header';
+    header.innerHTML = '<span>Reward Items</span>';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-small btn-add';
+    addBtn.textContent = '+ Item';
+    addBtn.addEventListener('click', () => {
+      if (!reward.items) reward.items = [];
+      reward.items.push({ itemId: 'potion', quantity: 1 });
+      emit();
+    });
+    header.appendChild(addBtn);
+    section.appendChild(header);
+
+    const items = reward.items || [];
+    if (items.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'prop-empty';
+      empty.textContent = 'No item rewards';
+      section.appendChild(empty);
+    }
+
+    const allItems = getItemList();
+    for (let i = 0; i < items.length; i++) {
+      const ri = items[i];
+      const row = document.createElement('div');
+      row.className = 'trainer-slot';
+
+      // Item select
+      const itemSel = document.createElement('select');
+      itemSel.className = 'trainer-slot-select';
+      for (const item of allItems) {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = `${item.id}`;
+        if (item.id === ri.itemId) opt.selected = true;
+        itemSel.appendChild(opt);
+      }
+      itemSel.addEventListener('change', () => { ri.itemId = itemSel.value; emit(); });
+      row.appendChild(itemSel);
+
+      // Quantity
+      const qtyInput = document.createElement('input');
+      qtyInput.type = 'number';
+      qtyInput.min = '1';
+      qtyInput.value = String(ri.quantity);
+      qtyInput.className = 'trainer-slot-qty';
+      qtyInput.title = 'Quantity';
+      qtyInput.addEventListener('change', () => { ri.quantity = parseInt(qtyInput.value, 10) || 1; emit(); });
+      row.appendChild(qtyInput);
+
+      // Remove
+      const rmBtn = document.createElement('button');
+      rmBtn.className = 'btn-small btn-remove';
+      rmBtn.textContent = 'x';
+      rmBtn.title = 'Remove item';
+      rmBtn.addEventListener('click', () => {
+        items.splice(i, 1);
+        if (items.length === 0) delete (reward as unknown as Record<string, unknown>)['items'];
+        emit();
+      });
+      row.appendChild(rmBtn);
+      section.appendChild(row);
+    }
+  }
+
+  // ── Party editor ──
+  private renderPartyUI(section: HTMLElement, trainer: TrainerData, emit: () => void): void {
+    const header = document.createElement('div');
+    header.className = 'trainer-subsection-header';
+    header.innerHTML = '<span>Party</span>';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-small btn-add';
+    addBtn.textContent = '+ Pokemon';
+    addBtn.addEventListener('click', () => {
+      if (trainer.party.length >= 6) return;
+      trainer.party.push({ pokemonId: 1, level: 5 });
+      emit();
+    });
+    header.appendChild(addBtn);
+    section.appendChild(header);
+
+    if (trainer.party.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'prop-empty';
+      empty.textContent = 'No Pokemon in party';
+      section.appendChild(empty);
+    }
+
+    const pokemonList = getPokemonList();
+
+    for (let i = 0; i < trainer.party.length; i++) {
+      const member = trainer.party[i];
+      const slot = document.createElement('div');
+      slot.className = 'trainer-slot party-slot';
+
+      // Pokemon selector with search
+      const pkmnWrapper = document.createElement('div');
+      pkmnWrapper.className = 'pokemon-search-wrapper';
+
+      const pkmnInput = document.createElement('input');
+      pkmnInput.type = 'text';
+      pkmnInput.className = 'pokemon-search-input';
+      pkmnInput.placeholder = 'Search Pokemon...';
+      const currentPkmn = pokemonList.find(p => p.id === member.pokemonId);
+      pkmnInput.value = currentPkmn ? `#${currentPkmn.id} ${currentPkmn.name.en}` : `#${member.pokemonId}`;
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'pokemon-dropdown';
+      dropdown.style.display = 'none';
+
+      const renderDropdownItems = (filter: string) => {
+        dropdown.innerHTML = '';
+        const lowerFilter = filter.toLowerCase();
+        const matches = pokemonList.filter(p =>
+          p.name.en.toLowerCase().includes(lowerFilter) ||
+          String(p.id).includes(lowerFilter)
+        ).slice(0, 30); // Limit for performance
+
+        for (const p of matches) {
+          const item = document.createElement('div');
+          item.className = 'pokemon-dropdown-item';
+          item.textContent = `#${p.id} ${p.name.en}`;
+          item.addEventListener('mousedown', (e) => {
+            e.preventDefault(); // Prevent blur
+            member.pokemonId = p.id;
+            pkmnInput.value = `#${p.id} ${p.name.en}`;
+            dropdown.style.display = 'none';
+            emit();
+          });
+          dropdown.appendChild(item);
+        }
+        if (matches.length === 0) {
+          dropdown.innerHTML = '<div class="pokemon-dropdown-empty">No matches</div>';
+        }
+      };
+
+      pkmnInput.addEventListener('focus', () => {
+        pkmnInput.select();
+        renderDropdownItems(pkmnInput.value.replace(/^#\d+\s*/, ''));
+        dropdown.style.display = 'block';
+      });
+      pkmnInput.addEventListener('input', () => {
+        renderDropdownItems(pkmnInput.value);
+        dropdown.style.display = 'block';
+      });
+      pkmnInput.addEventListener('blur', () => {
+        // Delay to allow mousedown on dropdown item
+        setTimeout(() => { dropdown.style.display = 'none'; }, 150);
+      });
+
+      pkmnWrapper.appendChild(pkmnInput);
+      pkmnWrapper.appendChild(dropdown);
+      slot.appendChild(pkmnWrapper);
+
+      // Level input
+      const lvlInput = document.createElement('input');
+      lvlInput.type = 'number';
+      lvlInput.min = '1';
+      lvlInput.max = '100';
+      lvlInput.value = String(member.level);
+      lvlInput.className = 'trainer-slot-level';
+      lvlInput.title = 'Level';
+      lvlInput.addEventListener('change', () => {
+        member.level = Math.max(1, Math.min(100, parseInt(lvlInput.value, 10) || 5));
+        emit();
+      });
+      slot.appendChild(lvlInput);
+
+      // Remove button
+      const rmBtn = document.createElement('button');
+      rmBtn.className = 'btn-small btn-remove';
+      rmBtn.textContent = 'x';
+      rmBtn.title = 'Remove Pokemon';
+      rmBtn.addEventListener('click', () => {
+        trainer.party.splice(i, 1);
+        emit();
+      });
+      slot.appendChild(rmBtn);
+
+      section.appendChild(slot);
+
+      // Moves (optional, collapsible)
+      this.renderPartyMoveUI(section, member, i, emit);
+    }
+  }
+
+  // ── Optional moves override per party member ──
+  private renderPartyMoveUI(section: HTMLElement, member: { pokemonId: number; level: number; moves?: number[] }, _index: number, emit: () => void): void {
+    const movesRow = document.createElement('div');
+    movesRow.className = 'party-moves';
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'btn-small btn-moves-toggle';
+    const hasMoves = member.moves && member.moves.length > 0;
+    toggleBtn.textContent = hasMoves ? `Moves (${member.moves!.length})` : 'Custom Moves';
+    toggleBtn.title = 'Override default moves (leave empty for auto)';
+
+    const movesContainer = document.createElement('div');
+    movesContainer.className = 'party-moves-list';
+    movesContainer.style.display = 'none';
+
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = movesContainer.style.display !== 'none';
+      movesContainer.style.display = isOpen ? 'none' : 'block';
+    });
+
+    movesRow.appendChild(toggleBtn);
+    section.appendChild(movesRow);
+
+    // Moves content
+    if (!member.moves) member.moves = [];
+    const moves = member.moves;
+
+    const renderMoves = () => {
+      movesContainer.innerHTML = '';
+
+      for (let mi = 0; mi < moves.length; mi++) {
+        const mRow = document.createElement('div');
+        mRow.className = 'prop-row';
+        const mInput = document.createElement('input');
+        mInput.type = 'number';
+        mInput.min = '1';
+        mInput.value = String(moves[mi]);
+        mInput.placeholder = 'Move ID';
+        mInput.className = 'trainer-slot-move';
+        mInput.addEventListener('change', () => {
+          moves[mi] = parseInt(mInput.value, 10) || 1;
+          emit();
+        });
+        mRow.appendChild(mInput);
+
+        const rmBtn = document.createElement('button');
+        rmBtn.className = 'btn-small btn-remove';
+        rmBtn.textContent = 'x';
+        rmBtn.addEventListener('click', () => {
+          moves.splice(mi, 1);
+          if (moves.length === 0) delete member.moves;
+          toggleBtn.textContent = moves.length > 0 ? `Moves (${moves.length})` : 'Custom Moves';
+          renderMoves();
+          emit();
+        });
+        mRow.appendChild(rmBtn);
+        movesContainer.appendChild(mRow);
+      }
+
+      if (moves.length < 4) {
+        const addMoveBtn = document.createElement('button');
+        addMoveBtn.className = 'btn-small btn-add';
+        addMoveBtn.textContent = '+ Move';
+        addMoveBtn.addEventListener('click', () => {
+          moves.push(33); // Default: Tackle
+          toggleBtn.textContent = `Moves (${moves.length})`;
+          renderMoves();
+          emit();
+        });
+        movesContainer.appendChild(addMoveBtn);
+      }
+
+      const hint = document.createElement('div');
+      hint.className = 'prop-empty';
+      hint.textContent = moves.length === 0 ? 'Empty = auto moves for level' : 'Move IDs (empty = auto)';
+      movesContainer.appendChild(hint);
+    };
+
+    renderMoves();
+    section.appendChild(movesContainer);
   }
 
   private renderAutoWalkUI(section: HTMLElement, npc: NPCData): void {

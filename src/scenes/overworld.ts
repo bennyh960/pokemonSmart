@@ -22,7 +22,7 @@ import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
-import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight } from '../systems/npc.js';
+import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward } from '../systems/npc.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE } from '../engine/config.js';
 const MOVE_DURATION = 0.2;
 const ENCOUNTER_CHANCE = 0.10;
@@ -236,6 +236,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           interactingNPC = null;
         }
       });
+    } else if (interactingNPC.type === 'trainer') {
+      // After dialogue, start battle if trainer not yet defeated
+      const trainer = interactingNPC as unknown as TrainerData;
+      interactingNPC = null;
+      if (hasActiveGame()) {
+        const flags = getPlayerData().flags;
+        if (!flags[`trainer-${trainer.id}-defeated`]) {
+          const trainerBattleData = buildTrainerBattleData(trainer);
+          const playerData = getPlayerData();
+          const playerPokemon = playerData.party[0];
+          if (playerPokemon) {
+            setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext());
+            stateMachine.push('BATTLE');
+          }
+        }
+      }
     } else {
       interactingNPC = null;
     }
@@ -277,15 +293,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   function buildTrainerBattleData(trainer: TrainerData): TrainerBattleData {
     const party = trainer.party.map(p => {
       const data = getPokemon(p.pokemonId);
-      if (data) return createPokemonFromData(data, p.level);
-      // Fallback: simple Rattata
-      return createPokemonFromData(getPokemon(19)!, p.level);
+      const pokemon = data
+        ? createPokemonFromData(data, p.level, p.moves)
+        : createPokemonFromData(getPokemon(19)!, p.level);
+      return pokemon;
     });
     return {
       trainerName: trainer.name || trainer.id,
       trainerId: trainer.id,
       party,
-      reward: trainer.reward,
+      reward: normalizeReward(trainer.reward),
       trainerSprite: NPC_TO_TRAINER_SPRITE[trainer.spriteType],
     };
   }

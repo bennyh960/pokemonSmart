@@ -207,6 +207,133 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
 }
 .btn-danger:hover { background: #aa3344; }
 
+/* ── Trainer editor: subsection headers ── */
+.trainer-subsection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  padding: 3px 0;
+  border-top: 1px solid #2a2a44;
+}
+.trainer-subsection-header span {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8899bb;
+}
+
+/* ── Small buttons (add/remove) ── */
+.btn-small {
+  padding: 2px 6px;
+  font-size: 11px;
+  border-radius: 3px;
+  border: 1px solid #444;
+  cursor: pointer;
+  background: #2a2a44;
+  color: #ccc;
+}
+.btn-small:hover { background: #3a3a55; }
+.btn-add { color: #6c6; border-color: #4a6a4a; }
+.btn-add:hover { background: #2a4a2a; }
+.btn-remove { color: #c66; border-color: #6a4a4a; min-width: 18px; }
+.btn-remove:hover { background: #4a2a2a; }
+
+/* ── Trainer slot row (party member / reward item) ── */
+.trainer-slot {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 3px;
+  padding: 3px 4px;
+  background: #1a1a30;
+  border: 1px solid #2a2a44;
+  border-radius: 3px;
+}
+.trainer-slot-select {
+  flex: 1;
+  background: #2a2a44;
+  color: #ddd;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 11px;
+}
+.trainer-slot-qty {
+  width: 42px !important;
+  flex: 0 0 42px;
+}
+.trainer-slot-level {
+  width: 42px !important;
+  flex: 0 0 42px;
+}
+.trainer-slot-move {
+  flex: 1;
+}
+
+/* ── Pokemon search dropdown ── */
+.pokemon-search-wrapper {
+  flex: 1;
+  position: relative;
+}
+.pokemon-search-input {
+  width: 100%;
+  background: #2a2a44;
+  color: #ddd;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-family: inherit;
+}
+.pokemon-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 160px;
+  overflow-y: auto;
+  background: #1e1e32;
+  border: 1px solid #555;
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+  z-index: 50;
+}
+.pokemon-dropdown-item {
+  padding: 3px 6px;
+  font-size: 11px;
+  color: #ccc;
+  cursor: pointer;
+}
+.pokemon-dropdown-item:hover { background: #3355aa; color: #fff; }
+.pokemon-dropdown-empty {
+  padding: 4px 6px;
+  font-size: 11px;
+  color: #555;
+  font-style: italic;
+}
+
+/* ── Party moves toggle ── */
+.party-moves {
+  margin-bottom: 2px;
+  padding-left: 8px;
+}
+.btn-moves-toggle {
+  padding: 1px 6px;
+  font-size: 10px;
+  border-radius: 3px;
+  border: 1px solid #444;
+  cursor: pointer;
+  background: #2a2a44;
+  color: #99aacc;
+}
+.btn-moves-toggle:hover { background: #3a3a55; }
+.party-moves-list {
+  padding: 4px 0 4px 8px;
+  border-left: 1px solid #2a2a44;
+  margin-left: 4px;
+}
+
 /* ── Status bar ── */
 .editor-status {
   grid-area: status;

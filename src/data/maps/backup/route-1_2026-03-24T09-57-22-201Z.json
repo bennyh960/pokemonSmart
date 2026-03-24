@@ -87,17 +87,12 @@
         "items": [
           {
             "itemId": "potion",
-            "quantity": 3
+            "quantity": 1
           }
         ]
       },
       "lineOfSight": 3,
-      "autoWalk": {
-        "vertical": {
-          "steps": 2,
-          "delay": 2.5
-        }
-      }
+      "autoWalk": null
     },
     {
       "id": "youngster-1",
