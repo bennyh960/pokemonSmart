@@ -232,18 +232,18 @@ export function getLearnset(pokemonId: number): { moveId: number; levelLearned: 
 
 // --- Pokemon metadata helpers ---
 
-/** Get Pokemon height in meters (data is in decimeters). */
+/** Get Pokemon height in meters (data is in decimeters). Returns just the number string, or '?' if missing. */
 export function getPokemonHeight(id: number): string {
   const data = pokemonById.get(id);
   if (!data?.height) return '?';
-  return (data.height / 10).toFixed(1) + 'm';
+  return (data.height / 10).toFixed(1);
 }
 
-/** Get Pokemon weight in kg (data is in hectograms). */
+/** Get Pokemon weight in kg (data is in hectograms). Returns just the number string, or '?' if missing. */
 export function getPokemonWeight(id: number): string {
   const data = pokemonById.get(id);
   if (!data?.weight) return '?';
-  return (data.weight / 10).toFixed(1) + 'kg';
+  return (data.weight / 10).toFixed(1);
 }
 
 /** Get Pokemon category/species text. */

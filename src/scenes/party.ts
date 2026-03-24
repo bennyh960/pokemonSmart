@@ -13,7 +13,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
 import { getPokemonDisplayName, getMoveDisplayName, getMove, getPokemonHeight, getPokemonWeight } from '../services/pokemon-data.js';
-import { getDamageClassLabel } from '../data/type-constants.js';
+import { getDamageClassLabel, getTypeName } from '../data/type-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
@@ -46,14 +46,6 @@ const TYPE_COLORS: Record<PokemonType, string> = {
   glitch: '#ff00ff',
 };
 
-/** 3-letter English abbreviation for each type (always English, not localized). */
-const TYPE_ABBREV: Record<string, string> = {
-  normal: 'NRM', fire: 'FIR', water: 'WTR', grass: 'GRS',
-  electric: 'ELC', ice: 'ICE', fighting: 'FGT', poison: 'PSN',
-  ground: 'GND', flying: 'FLY', psychic: 'PSY', bug: 'BUG',
-  rock: 'RCK', ghost: 'GHO', dragon: 'DRG', dark: 'DRK',
-  steel: 'STL', glitch: 'GLT',
-};
 
 type ViewMode = 'list' | 'detail' | 'swap';
 type DetailTab = 'stats' | 'moves';
@@ -186,165 +178,266 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawText(ctx, 'ESC:Back  ENTER:Detail/Swap', SLOT_X, SCREEN_H - 10, { size: 7, color: '#666688' });
   }
 
+  // ═══════════════════════════════════════════════════════════════════
+  // LAYOUT CONSTANTS — tweak these to pixel-perfect the detail views
+  // Screen is 240×160. Tab bar = 14px top, hint bar = 14px bottom.
+  // Content area: y=14..146 (132px tall)
+  // ═══════════════════════════════════════════════════════════════════
+  const L = {
+    // Shared
+    pad: 8,                    // left/right padding from screen edge
+    tabBarH: 14,               // tab bar height
+    hintBarH: 14,              // bottom hint bar height
+    contentY: 14,              // first usable Y after tab bar
+
+    // Colors
+    bg: '#0d1a14',
+    cardBg: '#0f2a1a',
+    cardBgSel: '#1a3a2a',
+    border: '#1a4a30',
+    borderSel: '#f8c030',
+    accent: '#1a5a35',
+    sep: '#1a3a2a',
+    textPrimary: '#ffffff',
+    textSecondary: '#aaccaa',
+    textMuted: '#667766',
+    textDim: '#445544',
+    hpColor: '#20d860',
+    xpColor: '#5080ff',
+    ppColor: '#20a0d8',
+
+    // Stats tab
+    spriteSize: 40,            // sprite width/height
+    spriteMargin: 2,           // glow border around sprite
+    nameY: 18,                 // name text Y (from contentY)
+    nameFontSize: 10,
+    levelYOff: 12,             // level offset below name
+    levelFontSize: 7,
+    badgesYOff: 26,            // type badges offset below contentY
+    badgeH: 10,
+    badgePadX: 5,
+    badgeCharW: 5,             // approx width per character
+    badgeGap: 4,
+    hwYOff: 40,                // height/weight Y offset below contentY
+    hwFontSize: 6,
+    sepYOff: 50,               // first separator Y offset below contentY
+    hpYOff: 54,                // HP label Y offset below contentY
+    hpFontSize: 7,
+    hpValueFontSize: 10,
+    hpBarH: 3,
+    hpBarYOff: 65,             // HP bar Y offset below contentY
+    xpYOff: 71,                // XP row Y offset below contentY
+    xpFontSize: 6,
+    sep2YOff: 79,              // second separator Y offset below contentY
+    statsHeaderYOff: 83,       // "base stats" header Y offset below contentY
+    statsStartYOff: 93,        // first stat row Y offset below contentY
+    statRowH: 10,              // height per stat row
+    statBarW: 70,              // stat bar max width
+    statBarH: 3,
+    statMax: 150,              // max stat value for scaling bars
+    statValueXOff: 78,         // value X offset from left pad (after bar)
+
+    // Moves tab
+    movesSubHeaderYOff: 2,     // sub-header Y offset below contentY
+    movesStartYOff: 12,        // first card Y offset below contentY
+    cardH: 16,                 // move card height
+    cardGap: 2,                // gap between cards
+    ppBarW: 30,                // PP bar width
+    ppBarH: 2,
+    dcIconR: 3,                // damage class circle radius
+
+    // Tab bar
+    tabTotalW: 150,
+    tabPillH: 10,
+    tabFontSize: 7,
+
+    // Hint bar
+    hintKeyW: 20,
+    hintKeyH: 9,
+    hintFontSize: 6,
+  };
+
   function renderDetailStatsTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
-    // Sprite (larger)
+    const P = L.pad;
+    const R = SCREEN_W - P;
+    const W = SCREEN_W - P * 2;
+    let y = L.contentY;
+
+    // ── Pokemon name + Sprite ──
+    const name = getPokemonDisplayName(pokemon.id);
+    const spriteX = R - L.spriteSize;
+    const nameAreaCX = spriteX / 2; // center X for name/level/badges (left of sprite)
+
+    // Sprite with glow border
+    const sm = L.spriteMargin;
+    fillRect(ctx, spriteX - sm, y + L.nameY - sm - 4, L.spriteSize + sm * 2, L.spriteSize + sm * 2, '#0a2a1a');
+    drawRect(ctx, spriteX - sm, y + L.nameY - sm - 4, L.spriteSize + sm * 2, L.spriteSize + sm * 2, L.border);
     const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
     const sprite = getCachedImage(spriteUrl);
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(sprite, 0, 0, 64, 64);
-    } else {
-      fillRect(ctx, 8, 8, 48, 48, '#445566');
+      ctx.drawImage(sprite, spriteX, y + L.nameY - 4, L.spriteSize, L.spriteSize);
     }
 
-    // Name + Level
-    drawText(ctx, `${getPokemonDisplayName(pokemon.id)}  Lv.${pokemon.level}`, 62, 8, { size: 8, color: '#ffffff' });
+    // Name — large, centered in left area
+    drawText(ctx, name, nameAreaCX, y + L.nameY, { size: L.nameFontSize, color: L.textPrimary, font: 'monospace', align: 'center' });
 
-    // Types
-    let typeX = 62;
-    for (const pType of pokemon.types) {
-      const color = TYPE_COLORS[pType] || '#888888';
-      fillRect(ctx, typeX, 19, 34, 9, color);
-      drawText(ctx, pType.toUpperCase(), typeX + 2, 20, { size: 7, color: '#ffffff' });
-      typeX += 36;
+    // Level
+    drawText(ctx, `${t('party.stats.level')} ${pokemon.level}`, nameAreaCX, y + L.nameY + L.levelYOff, { size: L.levelFontSize, color: L.textMuted, font: 'monospace', align: 'center' });
+
+    // ── Type badges (centered in left area) ──
+    const badgesY = y + L.badgesYOff;
+    const typeLabels = pokemon.types.map(pt => ({ type: pt, label: getTypeName(pt) }));
+    let totalBadgeW = 0;
+    for (const tl of typeLabels) totalBadgeW += tl.label.length * L.badgeCharW + L.badgePadX * 2;
+    totalBadgeW += (typeLabels.length - 1) * L.badgeGap;
+    let bx = Math.floor(nameAreaCX - totalBadgeW / 2);
+    for (const tl of typeLabels) {
+      const color = TYPE_COLORS[tl.type] || '#888888';
+      const bw = tl.label.length * L.badgeCharW + L.badgePadX * 2;
+      fillRect(ctx, bx, badgesY, bw, L.badgeH, color);
+      drawRect(ctx, bx, badgesY, bw, L.badgeH, '#00000033');
+      drawText(ctx, tl.label, bx + L.badgePadX, badgesY + 1, { size: L.levelFontSize, color: L.textPrimary, font: 'monospace' });
+      bx += bw + L.badgeGap;
     }
 
-    // Height / Weight (after type badges)
-    const height = getPokemonHeight(pokemon.id);
-    const weight = getPokemonWeight(pokemon.id);
-    if (height !== '?' || weight !== '?') {
-      let hwY = 30;
-      if (height !== '?') {
-        drawText(ctx, t('party.height', { value: height }), 62, hwY, { size: 7, color: '#aaccdd' });
-        hwY += 9;
-      }
-      if (weight !== '?') {
-        drawText(ctx, t('party.weight', { value: weight }), 62, hwY, { size: 7, color: '#aaccdd' });
-        hwY += 9;
-      }
+    // ── Height / Weight ──
+    const hwY = y + L.hwYOff;
+    const hVal = getPokemonHeight(pokemon.id);
+    const wVal = getPokemonWeight(pokemon.id);
+    const hStr = hVal !== '?' ? t('party.height', { value: hVal, unit: t('party.unit.meter') }) : '';
+    const wStr = wVal !== '?' ? t('party.weight', { value: wVal, unit: t('party.unit.kg') }) : '';
+    const hwLine = [hStr, wStr].filter(Boolean).join('    ');
+    if (hwLine) {
+      drawText(ctx, hwLine, SCREEN_W / 2, hwY, { size: L.hwFontSize, color: L.textMuted, font: 'monospace', align: 'center' });
     }
 
-    // Stats
-    const statsX = 62;
-    let statsY = 50;
-    const statLabels: [string, number][] = [
-      [t('party.stats.hp'), pokemon.maxHp],
-      [t('party.stats.attack'), pokemon.attack],
-      [t('party.stats.defense'), pokemon.defense],
-      [t('party.stats.spAtk'), pokemon.specialAttack],
-      [t('party.stats.spDef'), pokemon.specialDefense],
-      [t('party.stats.speed'), pokemon.speed],
-    ];
-    for (const [label, value] of statLabels) {
-      drawText(ctx, `${label}: ${value}`, statsX, statsY, { size: 7, color: '#ccccee' });
-      statsY += 10;
-    }
+    // ── Separator ──
+    fillRect(ctx, P, y + L.sepYOff, W, 1, L.sep);
 
-    // HP bar
-    drawText(ctx, `${t('party.stats.hp')}: ${pokemon.hp}/${pokemon.maxHp}`, 8, 68, { size: 7, color: '#aaccff' });
-    const hpBarX = 8;
-    const hpBarY = 78;
-    const hpBarW = 50;
-    fillRect(ctx, hpBarX, hpBarY, hpBarW, 3, '#303030');
+    // ── HP section ──
+    const hpLabelY = y + L.hpYOff;
+    drawText(ctx, 'HP', P, hpLabelY, { size: L.hpFontSize, color: L.textSecondary, font: 'monospace' });
+    drawText(ctx, `${pokemon.hp}`, R - 24, hpLabelY - 2, { size: L.hpValueFontSize, color: L.textPrimary, font: 'monospace', align: 'right' });
+    drawText(ctx, `/ ${pokemon.maxHp}`, R, hpLabelY + 1, { size: L.hpFontSize, color: L.textMuted, font: 'monospace', align: 'right' });
+    const hpBarY = y + L.hpBarYOff;
+    fillRect(ctx, P, hpBarY, W, L.hpBarH, L.sep);
     const hpRatio = pokemon.maxHp > 0 ? pokemon.hp / pokemon.maxHp : 0;
-    const hpFillW = Math.floor(hpBarW * Math.max(0, Math.min(1, hpRatio)));
-    if (hpFillW > 0) {
-      fillRect(ctx, hpBarX, hpBarY, hpFillW, 3, getHpColor(hpRatio));
-    }
+    const hpFillW = Math.floor(W * Math.max(0, Math.min(1, hpRatio)));
+    if (hpFillW > 0) fillRect(ctx, P, hpBarY, hpFillW, L.hpBarH, L.hpColor);
 
-    // XP bar
-    const xpText = t('party.xp', { current: pokemon.xp, next: pokemon.xpToNext });
-    drawText(ctx, xpText, 8, 86, { size: 7, color: '#88aaff' });
-    const xpBarX = 8;
-    const xpBarY = 96;
-    const xpBarW = 50;
-    fillRect(ctx, xpBarX, xpBarY, xpBarW, 3, '#303030');
-    const xpRatio = pokemon.xpToNext > 0 ? pokemon.xp / pokemon.xpToNext : 0;
-    const xpFillW = Math.floor(xpBarW * Math.max(0, Math.min(1, xpRatio)));
-    if (xpFillW > 0) {
-      fillRect(ctx, xpBarX, xpBarY, xpFillW, 3, '#5080ff');
+    // ── XP row ──
+    const xpY = y + L.xpYOff;
+    drawText(ctx, t('party.xpLabel'), P, xpY, { size: L.xpFontSize, color: L.textDim, font: 'monospace' });
+    drawText(ctx, `${pokemon.xp} / ${pokemon.xpToNext}`, R, xpY, { size: L.xpFontSize, color: L.textDim, font: 'monospace', align: 'right' });
+
+    // ── Separator ──
+    fillRect(ctx, P, y + L.sep2YOff, W, 1, L.sep);
+
+    // ── Base Stats section ──
+    drawText(ctx, t('party.baseStats'), R, y + L.statsHeaderYOff, { size: L.levelFontSize, color: L.textMuted, font: 'monospace', align: 'right' });
+
+    const statEntries: [string, number, string][] = [
+      [t('party.stats.hp'), pokemon.maxHp, '#20d860'],
+      [t('party.stats.attack'), pokemon.attack, '#f08030'],
+      [t('party.stats.defense'), pokemon.defense, '#6890f0'],
+      [t('party.stats.spAtk'), pokemon.specialAttack, '#a040a0'],
+      [t('party.stats.spDef'), pokemon.specialDefense, '#f8d030'],
+      [t('party.stats.speed'), pokemon.speed, '#f85888'],
+    ];
+
+    let sy = y + L.statsStartYOff;
+    for (const [label, value, color] of statEntries) {
+      fillRect(ctx, P, sy + 2, L.statBarW, L.statBarH, L.sep);
+      const fill = Math.max(2, Math.floor((value / L.statMax) * L.statBarW));
+      fillRect(ctx, P, sy + 2, fill, L.statBarH, color);
+      drawText(ctx, String(value), P + L.statValueXOff, sy, { size: L.levelFontSize, color: L.textPrimary, font: 'monospace' });
+      drawText(ctx, label, R, sy, { size: L.levelFontSize, color: L.textSecondary, font: 'monospace', align: 'right' });
+      sy += L.statRowH;
     }
   }
 
   function renderDetailMovesTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
-    // Column layout constants
-    const tableX = 4;
-    const tableY = 18;
-    const rowH = 10;
-    const colNum = tableX;
-    const colName = tableX + 12;
-    const colClass = tableX + 92;
-    const colType = tableX + 108;
-    const colAcc = tableX + 132;
-    const colPow = tableX + 156;
-    const colPP = tableX + 180;
+    const P = L.pad;
+    const R = SCREEN_W - P;
+    const W = SCREEN_W - P * 2;
 
-    // Sticky header row
-    fillRect(ctx, tableX, tableY, SCREEN_W - 8, rowH, '#2a2a50');
-    const headerColor = '#88aaff';
-    drawText(ctx, t('party.moves.header.num'), colNum, tableY + 2, { size: 6, color: headerColor, font: 'monospace' });
-    drawText(ctx, t('party.moves.header.move'), colName, tableY + 2, { size: 6, color: headerColor, font: 'monospace' });
-    drawText(ctx, t('party.moves.header.class'), colClass, tableY + 2, { size: 6, color: headerColor, font: 'monospace' });
-    drawText(ctx, t('party.moves.header.type'), colType, tableY + 2, { size: 6, color: headerColor, font: 'monospace' });
-    drawText(ctx, t('party.moves.header.acc'), colAcc, tableY + 2, { size: 6, color: headerColor, font: 'monospace' });
-    drawText(ctx, t('party.moves.header.pow'), colPow, tableY + 2, { size: 6, color: headerColor, font: 'monospace' });
-    drawText(ctx, t('party.moves.header.pp'), colPP, tableY + 2, { size: 6, color: headerColor, font: 'monospace' });
+    // ── Sub-header ──
+    const subY = L.contentY + L.movesSubHeaderYOff;
+    drawText(ctx, t('party.moves.battleMoves'), R, subY, { size: L.levelFontSize, color: L.textMuted, font: 'monospace', align: 'right' });
+    drawText(ctx, `${pokemon.moves.length} ${t('party.moves.title')}`, P, subY, { size: L.hwFontSize, color: L.textDim, font: 'monospace' });
 
-    // Move rows
-    for (let i = 0; i < pokemon.moves.length; i++) {
+    // ── Move cards ──
+    const startY = L.contentY + L.movesStartYOff;
+    const maxVisible = Math.min(pokemon.moves.length, 8);
+
+    for (let i = 0; i < maxVisible; i++) {
       const move = pokemon.moves[i];
-      const rowY = tableY + rowH + i * rowH;
+      const cy = startY + i * (L.cardH + L.cardGap);
       const isSelected = i === moveCursor;
       const isSwapSource = i === moveSwapFrom;
 
-      // Row background
-      if (isSelected) {
-        fillRect(ctx, tableX, rowY, SCREEN_W - 8, rowH, '#303060');
-      }
-      if (isSwapSource) {
-        drawRect(ctx, tableX, rowY, SCREEN_W - 8, rowH, '#f8c030', 1);
-      }
+      // Card background
+      fillRect(ctx, P, cy, W, L.cardH, isSelected ? L.cardBgSel : L.cardBg);
+      drawRect(ctx, P, cy, W, L.cardH, isSwapSource ? L.borderSel : L.border);
 
-      const rowColor = isSelected ? '#ffffff' : '#ddddff';
+      // ── Right side: move number ──
+      drawText(ctx, `${i + 1}`, R - 4, cy + 2, { size: 7, color: '#445544', font: 'monospace', align: 'right' });
 
-      // Slot number
-      drawText(ctx, `${i + 1}`, colNum, rowY + 2, { size: 6, color: '#888899', font: 'monospace' });
-
-      // Move name (localized)
-      drawText(ctx, getMoveDisplayName(move.id), colName, rowY + 2, { size: 6, color: rowColor, font: 'monospace' });
-
-      // Damage class symbol
+      // ── Damage class icon (colored circle) ──
       const moveData = getMove(move.id);
       const dc = moveData?.damageClass || (move.power > 0 ? 'physical' : 'status');
       const dcInfo = getDamageClassLabel(dc);
-      drawText(ctx, dcInfo.symbol, colClass + 4, rowY + 2, { size: 6, color: '#ccccee', font: 'monospace' });
+      const dcColors: Record<string, string> = { physical: '#f08030', special: '#6890f0', status: '#a040a0' };
+      const iconX = R - 16;
+      // Small circle
+      ctx.beginPath();
+      ctx.arc(iconX, cy + 5, 3, 0, Math.PI * 2);
+      ctx.fillStyle = dcColors[dc] || '#888888';
+      ctx.fill();
+      drawText(ctx, dcInfo.symbol, iconX - 1, cy + 2, { size: 5, color: '#ffffff', font: 'monospace' });
 
-      // Type abbreviation (always English)
-      const typeAbbr = TYPE_ABBREV[move.type] || move.type.slice(0, 3).toUpperCase();
+      // ── Move name (bold, right of center) ──
+      const moveName = getMoveDisplayName(move.id);
+      drawText(ctx, moveName, R - 24, cy + 1, { size: 7, color: '#ffffff', font: 'monospace', align: 'right' });
+
+      // ── Type badge (small, next to name) ──
+      const typeLabel = getTypeName(move.type as PokemonType);
       const typeColor = TYPE_COLORS[move.type] || '#888888';
-      drawText(ctx, typeAbbr, colType, rowY + 2, { size: 6, color: typeColor, font: 'monospace' });
+      const tbW = typeLabel.length * 4 + 6;
+      const tbX = R - 26 - moveName.length * 5 - tbW;
+      fillRect(ctx, Math.max(P + 50, tbX), cy + 1, tbW, 8, typeColor);
+      drawText(ctx, typeLabel, Math.max(P + 53, tbX + 3), cy + 2, { size: 5, color: '#ffffff', font: 'monospace' });
 
-      // Accuracy
-      const acc = move.accuracy > 0 ? `${move.accuracy}` : '\u2014';
-      drawText(ctx, acc, colAcc, rowY + 2, { size: 6, color: rowColor, font: 'monospace' });
+      // ── Second line: accuracy + power (below name, right-aligned) ──
+      const accStr = move.accuracy > 0 ? `${move.accuracy}` : '\u2014';
+      const powStr = move.power > 0 ? `${move.power}` : '\u2014';
+      drawText(ctx, `${t('party.moves.header.acc')}: ${accStr}   ${t('party.moves.header.pow')}: ${powStr}`, R - 24, cy + 9, { size: 5, color: '#556655', font: 'monospace', align: 'right' });
 
-      // Power
-      const pow = move.power > 0 ? `${move.power}` : '\u2014';
-      drawText(ctx, pow, colPow, rowY + 2, { size: 6, color: rowColor, font: 'monospace' });
-
-      // PP
-      drawText(ctx, `${move.currentPp}/${move.pp}`, colPP, rowY + 2, { size: 6, color: '#aaaacc', font: 'monospace' });
+      // ── Left side: PP fraction + PP bar ──
+      drawText(ctx, `${move.currentPp}/${move.pp}`, P + 2, cy + 2, { size: 7, color: '#aaccaa', font: 'monospace' });
+      // PP bar
+      const ppBarX = P + 2;
+      const ppBarY = cy + 11;
+      const ppBarW = 30;
+      fillRect(ctx, ppBarX, ppBarY, ppBarW, 2, '#1a3a2a');
+      const ppRatio = move.pp > 0 ? move.currentPp / move.pp : 0;
+      const ppFillW = Math.floor(ppBarW * Math.max(0, Math.min(1, ppRatio)));
+      if (ppFillW > 0) {
+        fillRect(ctx, ppBarX, ppBarY, ppFillW, 2, '#20a0d8');
+      }
     }
 
-    // Action menu overlay
+    // ── Action menu overlay ──
     if (moveActionMenuOpen) {
-      const menuW = 60;
-      const menuH = MOVE_ACTIONS.length * 12 + 4;
+      const menuW = 70;
+      const menuH = MOVE_ACTIONS.length * 12 + 6;
       const menuX = SCREEN_W / 2 - menuW / 2;
       const menuY = SCREEN_H / 2 - menuH / 2;
 
-      fillRect(ctx, menuX, menuY, menuW, menuH, '#1a1a30');
-      drawRect(ctx, menuX, menuY, menuW, menuH, '#8888cc', 1);
+      fillRect(ctx, menuX - 1, menuY - 1, menuW + 2, menuH + 2, '#000000aa');
+      fillRect(ctx, menuX, menuY, menuW, menuH, '#0d1a14');
+      drawRect(ctx, menuX, menuY, menuW, menuH, '#2a6a40');
 
       for (let i = 0; i < MOVE_ACTIONS.length; i++) {
         const action = MOVE_ACTIONS[i];
@@ -352,7 +445,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         const ay = menuY + 4 + i * 12;
 
         if (isSel) {
-          fillRect(ctx, menuX + 2, ay - 1, menuW - 4, 11, '#303060');
+          fillRect(ctx, menuX + 2, ay - 1, menuW - 4, 11, '#1a4a30');
         }
 
         let label: string;
@@ -360,13 +453,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         else if (action === 'delete') label = t('party.moves.delete');
         else label = t('party.moves.cancel');
 
-        drawText(ctx, label, menuX + 6, ay + 1, { size: 7, color: isSel ? '#ffffff' : '#aaaacc' });
+        drawText(ctx, label, menuX + menuW / 2, ay + 1, { size: 7, color: isSel ? '#ffffff' : '#667766', align: 'center' });
       }
     }
 
-    // Temporary message (e.g. "Can't delete last move!")
+    // ── Temporary message ──
     if (moveMessage && moveMessageTimer > 0) {
-      drawText(ctx, moveMessage, SCREEN_W / 2, SCREEN_H - 22, { size: 7, color: '#ff6666', align: 'center' });
+      fillRect(ctx, P, SCREEN_H - 24, W, 10, '#3a1a1a');
+      drawText(ctx, moveMessage, SCREEN_W / 2, SCREEN_H - 23, { size: 7, color: '#ff6666', align: 'center' });
     }
   }
 
@@ -375,20 +469,30 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const pokemon = party[cursor];
     if (!pokemon) return;
 
-    // Tab bar at top
-    const tabW = SCREEN_W / 2;
+    // Tab bar at top — centered pill-style matching Figma
+    // Order: סטטיסטיקות (stats) RIGHT, מהלכים (moves) LEFT (RTL visual order)
     const tabs: { key: DetailTab; label: string }[] = [
-      { key: 'stats', label: 'STATS' },
+      { key: 'stats', label: t('party.baseStats') },
       { key: 'moves', label: t('party.moves.title') },
     ];
+    fillRect(ctx, 0, 0, SCREEN_W, 14, '#0d1a14');
+    const tabTotalW = 150;
+    const tabStartX = (SCREEN_W - tabTotalW) / 2;
+    // Draw rounded pill background
+    fillRect(ctx, tabStartX, 2, tabTotalW, 10, '#0a2a1a');
+    drawRect(ctx, tabStartX, 2, tabTotalW, 10, '#1a4a30');
+    const singleTabW = tabTotalW / tabs.length;
     for (let i = 0; i < tabs.length; i++) {
-      const tx = i * tabW;
+      const tx = tabStartX + i * singleTabW;
       const isActive = tabs[i].key === detailTab;
-      fillRect(ctx, tx, 0, tabW, 12, isActive ? '#303060' : '#1a1a30');
-      drawText(ctx, tabs[i].label, tx + tabW / 2, 2, {
+      if (isActive) {
+        fillRect(ctx, tx + 1, 3, singleTabW - 2, 8, '#1a5a35');
+      }
+      drawText(ctx, tabs[i].label, tx + singleTabW / 2, 3, {
         size: 7,
-        color: isActive ? '#ffffff' : '#666688',
+        color: isActive ? '#ffffff' : '#445544',
         align: 'center',
+        font: 'monospace',
       });
     }
 
@@ -399,11 +503,32 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       renderDetailMovesTab(ctx, pokemon);
     }
 
-    // Controls hint
-    const hint = detailTab === 'moves'
-      ? 'ESC:Back  \u2190\u2192:Tab  ENTER:Action  D:Delete'
-      : 'ESC:Back  \u2190\u2192:Tab';
-    drawText(ctx, hint, SLOT_X, SCREEN_H - 10, { size: 7, color: '#666688' });
+    // Bottom hint bar matching Figma — key pills + labels
+    fillRect(ctx, 0, SCREEN_H - 14, SCREEN_W, 14, '#0d1a14');
+    fillRect(ctx, 0, SCREEN_H - 14, SCREEN_W, 1, '#1a3a2a');
+    let hx = 6;
+    // ESC pill
+    fillRect(ctx, hx, SCREEN_H - 12, 20, 9, '#1a3a2a');
+    drawRect(ctx, hx, SCREEN_H - 12, 20, 9, '#2a5a3a');
+    drawText(ctx, 'ESC', hx + 2, SCREEN_H - 11, { size: 6, color: '#88aa88', font: 'monospace' });
+    hx += 22;
+    drawText(ctx, t('party.hint.back'), hx, SCREEN_H - 11, { size: 6, color: '#556655', font: 'monospace' });
+    hx += 30;
+    // Tab pill
+    fillRect(ctx, hx, SCREEN_H - 12, 20, 9, '#1a3a2a');
+    drawRect(ctx, hx, SCREEN_H - 12, 20, 9, '#2a5a3a');
+    drawText(ctx, 'Tab', hx + 2, SCREEN_H - 11, { size: 6, color: '#88aa88', font: 'monospace' });
+    hx += 22;
+    drawText(ctx, t('party.hint.switchTab'), hx, SCREEN_H - 11, { size: 6, color: '#556655', font: 'monospace' });
+    // Enter pill (only on moves tab)
+    if (detailTab === 'moves') {
+      hx += 30;
+      fillRect(ctx, hx, SCREEN_H - 12, 28, 9, '#1a3a2a');
+      drawRect(ctx, hx, SCREEN_H - 12, 28, 9, '#2a5a3a');
+      drawText(ctx, 'Enter', hx + 2, SCREEN_H - 11, { size: 6, color: '#88aa88', font: 'monospace' });
+      hx += 30;
+      drawText(ctx, t('party.hint.action') || 'Action', hx, SCREEN_H - 11, { size: 6, color: '#556655', font: 'monospace' });
+    }
   }
 
   function updateDetailView(dt: number): void {
@@ -472,7 +597,13 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       return;
     }
 
-    // Tab switching with left/right
+    // Tab switching with left/right or Tab key
+    if (input.isKeyPressed('Tab')) {
+      detailTab = detailTab === 'stats' ? 'moves' : 'stats';
+      moveCursor = 0;
+      moveSwapFrom = -1;
+      return;
+    }
     if (input.isKeyPressed('ArrowLeft')) {
       if (detailTab === 'moves') {
         detailTab = 'stats';
@@ -617,7 +748,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     },
 
     render(ctx: CanvasRenderingContext2D): void {
-      clearScreen(ctx, '#181830');
+      clearScreen(ctx, viewMode === 'detail' ? '#0d1a14' : '#181830');
 
       if (viewMode === 'detail') {
         renderDetailView(ctx);
