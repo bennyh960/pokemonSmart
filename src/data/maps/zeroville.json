@@ -38,8 +38,14 @@
       "toMapId": "zeroville-house-tl",
       "toX": 4,
       "toY": 3
+    },
+    {
+      "fromX": 21,
+      "fromY": 6,
+      "toMapId": "zeroville-house-tr",
+      "toX": 4,
+      "toY": 3
     }
-    
   ],
   "npcs": [
     {

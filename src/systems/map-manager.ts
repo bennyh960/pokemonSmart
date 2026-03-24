@@ -63,6 +63,7 @@ export function setCurrentMapId(id: string): void {
 
 registerMap('zeroville', () => import('../data/maps/zeroville.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('zeroville-house-tl', () => import('../data/maps/zeroville-house-tl.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('zeroville-house-tr', () => import('../data/maps/zeroville-house-tr.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route-1', () => import('../data/maps/route-1.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('sumville', () => import('../data/maps/sumville.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('pokecenter-interior', () => import('../data/maps/pokecenter-interior.json').catch(() => import('../data/maps/test-map.json')));

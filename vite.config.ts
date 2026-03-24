@@ -6,6 +6,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        'sprite-editor': resolve(__dirname, 'sprite-editor.html'),
       },
       external: [/\/backup\//],
     },

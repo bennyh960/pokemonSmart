@@ -1,0 +1,93 @@
+{
+  "id": "zeroville-house-tr",
+  "name": "Zeroville House 2",
+  "tileset": "dpp",
+  "width": 8,
+  "height": 7,
+  "tileSize": 16,
+  "spawn": {
+    "x": 4,
+    "y": 3
+  },
+  "transitions": [
+    {
+      "fromX": 4,
+      "fromY": 6,
+      "toMapId": "zeroville",
+      "toX": 21,
+      "toY": 7
+    },
+    {
+      "fromX": 3,
+      "fromY": 6,
+      "toMapId": "zeroville",
+      "toX": 22,
+      "toY": 7
+    }
+  ],
+  "npcs": [
+    {
+      "id": "zeroville-house2-npc",
+      "x": 1,
+      "y": 3,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        "The professor says zero is the foundation of all numbers.",
+        "Without zero, there would be no place value system!",
+        "I heard strange things are happening outside Zeroville..."
+      ],
+      "spriteType": "npc-f",
+      "name": "Sara"
+    }
+  ],
+  "music": "town",
+  "encounterTableId": null
+,
+  "tiles": [
+    ["wall","wall","tv1","wall","wall","pic1","wall","wall"],
+    ["wall","wall","wall","wall","wall","wall","wall","wall"],
+    ["d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d"],
+    ["ca1tl","ca1t","ca1t","ca1tr","d","d","d","d"],
+    ["ca1l","ca1c","ca1c","ca1r","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d"]
+  ],
+  "objects": [
+    {
+      "key": "df1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "library1",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "dt1",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "tr1",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "key": "tr2",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "ctc",
+      "x": 1,
+      "y": 4
+    },
+    {
+      "key": "ch1",
+      "x": 5,
+      "y": 1
+    }
+  ]
+}
