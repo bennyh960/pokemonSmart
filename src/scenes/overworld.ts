@@ -17,7 +17,7 @@ import { generateWildEncounter, createPokemonFromData } from '../systems/encount
 import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
-import { loadCharacterSprites, getCharacterFrame, hasCharacter, getCharacterFrameSize } from '../engine/character-sprites.js';
+import { loadCharacterSprites, getCharacterFrame, hasCharacter } from '../engine/character-sprites.js';
 import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
@@ -804,25 +804,21 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             : null;
 
           if (charFrame) {
-            // Character sprite (may be 32x32 or any size)
-            const frameSize = getCharacterFrameSize(npc.spriteType);
-            const fw = frameSize?.w ?? TILE_SIZE;
-            const fh = frameSize?.h ?? TILE_SIZE;
-            // Center larger sprites on the tile, align bottom
-            const offsetX = (fw - TILE_SIZE) / 2;
-            const offsetY = fh - TILE_SIZE;
-            const nx = Math.floor(npcPixelX - camera.x - offsetX);
-            const ny = Math.floor(npcPixelY - camera.y - offsetY);
+            // Source frames may be any size (e.g. 32×32) but are always
+            // rendered at TILE_SIZE×TILE_SIZE (16×16) in the game world.
+            // drawImage scales the source rect down to the destination rect.
+            const nx = Math.floor(npcPixelX - camera.x);
+            const ny = Math.floor(npcPixelY - camera.y);
 
             renderables.push({
               y: renderY,
               render: () => {
                 ctx.imageSmoothingEnabled = false;
-                ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, nx, ny, fw, fh);
+                ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, nx, ny, TILE_SIZE, TILE_SIZE);
                 // "!" exclamation during trainer approach
                 if (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') {
-                  fillRect(ctx, nx + fw / 2 - 4, ny - 12, 8, 10, '#ffffff');
-                  drawText(ctx, '!', nx + fw / 2 - 3, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
+                  fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
+                  drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
                 }
               },
             });

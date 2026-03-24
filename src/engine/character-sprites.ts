@@ -2,10 +2,17 @@
  * Character Sprites — loads the character spritesheet manifest (characters.json)
  * and provides frame lookups for the overworld renderer.
  *
+ * IMPORTANT — Scaling convention:
+ * Source frames in the spritesheet can be any size (e.g. 32×32 for higher detail).
+ * The game ALWAYS renders them at TILE_SIZE×TILE_SIZE (16×16 logical pixels).
+ * The browser's drawImage() handles the downscale automatically.
+ * The sprite editor works in source pixels (32×32), the game works in tile pixels (16×16).
+ *
  * Usage:
  *   await loadCharacterSprites();
  *   const frame = getCharacterFrame('dani', 'down', 'stand');
- *   // frame = { image, sx, sy, w, h } or null
+ *   // frame = { image, sx, sy, w, h } — w,h are SOURCE size (32×32)
+ *   // Render with: ctx.drawImage(img, sx, sy, w, h, dx, dy, TILE_SIZE, TILE_SIZE)
  */
 
 import charactersManifest from '../data/sprites/characters.json';
