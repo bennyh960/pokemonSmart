@@ -51,10 +51,10 @@ export const TYPE_NAMES: Record<PokemonType, { en: string; he: string }> = {
 };
 
 /** Labels and symbols for move damage classes. */
-export const DAMAGE_CLASS_LABELS: Record<string, { en: string; he: string; symbol: string }> = {
-  physical: { en: 'Physical', he: 'פיזי', symbol: '⚔' },
-  special: { en: 'Special', he: 'מיוחד', symbol: '◆' },
-  status: { en: 'Status', he: 'סטטוס', symbol: '☆' },
+export const DAMAGE_CLASS_LABELS: Record<string, { en: string; he: string; symbol: string; color: string }> = {
+  physical: { en: 'Physical', he: 'פיזי', symbol: '⚔', color: '#f08030' },
+  special:  { en: 'Special',  he: 'מיוחד', symbol: '◆', color: '#6890f0' },
+  status:   { en: 'Status',   he: 'סטטוס', symbol: '☆', color: '#a040a0' },
 };
 
 /** Returns the localized display name for a Pokemon type. */
@@ -64,9 +64,9 @@ export function getTypeName(type: PokemonType): string {
   return entry[getLocale()];
 }
 
-/** Returns the localized label and symbol for a move damage class. */
-export function getDamageClassLabel(damageClass: string): { label: string; symbol: string } {
+/** Returns the localized label, symbol, and color for a move damage class. */
+export function getDamageClassLabel(damageClass: string): { label: string; symbol: string; color: string } {
   const entry = DAMAGE_CLASS_LABELS[damageClass];
-  if (!entry) return { label: damageClass, symbol: '' };
-  return { label: entry[getLocale()], symbol: entry.symbol };
+  if (!entry) return { label: damageClass, symbol: '', color: '#888888' };
+  return { label: entry[getLocale()], symbol: entry.symbol, color: entry.color };
 }

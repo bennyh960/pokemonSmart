@@ -13,7 +13,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
 import { getPokemonDisplayName, getMoveDisplayName, getMove, getPokemonHeight, getPokemonWeight } from '../services/pokemon-data.js';
-import { getTypeName } from '../data/type-constants.js';
+import { getTypeName, getDamageClassLabel } from '../data/type-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
@@ -191,9 +191,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     BORDER_SEL: '#f8c030',
   };
 
-  const CLASS_DOT: Record<string, string> = {
-    physical: '#f08030', status: '#6890f0', special: '#a040a0',
-  };
+  // Damage class colors/symbols come from getDamageClassLabel() in type-constants.ts
 
   function renderDetailStatsTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
     // ── Sprite container (right side) ──
@@ -299,29 +297,33 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       fillRect(ctx, 4, cy, 232, 14, isSelected ? C.CARD_SEL : C.CARD_BG);
       drawRect(ctx, 4, cy, 232, 14, isSwapSource ? C.BORDER_SEL : C.BORDER);
 
-      // ── Damage class dot (relX=217, relY=+4, 5x5) ──
+      // ── Damage class dot (moved 15px right from original, now at relX=232) ──
       const moveData = getMove(move.id);
       const dc = moveData?.damageClass || (move.power > 0 ? 'physical' : 'status');
-      const dotColor = CLASS_DOT[dc] || '#888888';
+      const dcInfo = getDamageClassLabel(dc);
       ctx.beginPath();
-      ctx.arc(4 + 217 + 2, cy + 4 + 2, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = dotColor;
+      ctx.arc(230, cy + 4 + 2, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = dcInfo.color;
       ctx.fill();
 
-      // ── Move name (relX=120, relY=+1, w=98, align=right) ──
+      // ── Move name (relX=120, relY=+1, w=83, align=right — narrower to avoid dot overlap) ──
       const moveName = getMoveDisplayName(move.id);
-      drawText(ctx, moveName, 4 + 120 + 98, cy + 1, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+      drawText(ctx, moveName, 225, cy + 1, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
 
       // ── Type badge (relX=93, relY=+2, w=22, h=7) ──
       const typeLabel = getTypeName(move.type as PokemonType);
       const typeColor = TYPE_COLORS[move.type] || '#888888';
       fillRect(ctx, 4 + 93, cy + 2, 22, 7, typeColor);
-      drawText(ctx, typeLabel, 4 + 93 + 11, cy + 2, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      drawText(ctx, typeLabel, 4 + 93 + 11, cy + 4, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
-      // ── Sub-stats (relX=120, relY=+9, w=98, align=right) ──
-      const accStr = move.accuracy > 0 ? `${move.accuracy}` : '\u2014';
-      const powStr = move.power > 0 ? `${move.power}` : '\u2014';
-      drawText(ctx, `${t('party.moves.header.acc')}: ${accStr}  ${t('party.moves.header.pow')}: ${powStr}`, 4 + 120 + 98, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
+      // ── Sub-stats: fixed-width columns for acc% and pow (relY=+9, align=right) ──
+      const accVal = move.accuracy > 0 ? move.accuracy : 100;
+      const powVal = move.power > 0 ? move.power : 0;
+      const accStr = `${accVal}%`;
+      const powStr = `${powVal}%`;
+      // Render as two fixed-width fields with labels, right-aligned
+      drawText(ctx, `${t('party.moves.header.acc')}: ${accStr}`, 185, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
+      drawText(ctx, `${t('party.moves.header.pow')}: ${powStr}`, 225, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
 
       // ── PP text (relX=8, relY=+2) ──
       drawText(ctx, `${move.currentPp}/${move.pp}`, 4 + 8, cy + 2, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
