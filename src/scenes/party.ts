@@ -13,7 +13,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
 import { getPokemonDisplayName, getMoveDisplayName, getMove, getPokemonHeight, getPokemonWeight } from '../services/pokemon-data.js';
-import { getDamageClassLabel, getTypeName } from '../data/type-constants.js';
+import { getTypeName } from '../data/type-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
@@ -179,253 +179,158 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // LAYOUT CONSTANTS — tweak these to pixel-perfect the detail views
-  // Screen is 240×160. Tab bar = 14px top, hint bar = 14px bottom.
-  // Content area: y=14..146 (132px tall)
+  // COLORS — from canvas_coordinates.md
   // ═══════════════════════════════════════════════════════════════════
-  const L = {
-    // Shared
-    pad: 8,                    // left/right padding from screen edge
-    tabBarH: 14,               // tab bar height
-    hintBarH: 14,              // bottom hint bar height
-    contentY: 14,              // first usable Y after tab bar
+  const C = {
+    BG: '#0d1a14', CARD_BG: '#0f2a1a', CARD_SEL: '#1a3a2a',
+    BORDER: '#1a4a30', SEP: '#1a3a2a', TEXT_PRI: '#ffffff',
+    TEXT_SEC: '#aaccaa', TEXT_MUT: '#667766', TEXT_DIM: '#445544',
+    BAR_HP: '#20d860', BAR_TRACK: '#1a3a2a', BAR_XP: '#5080ff',
+    BAR_PP: '#20a0d8', TAB_BG: '#0a2a1a', TAB_ACT: '#1a5a35',
+    BTM_BG: '#0a1a10', KEY_BG: '#1a3a2a', KEY_BRD: '#2a5a3a',
+    BORDER_SEL: '#f8c030',
+  };
 
-    // Colors
-    bg: '#0d1a14',
-    cardBg: '#0f2a1a',
-    cardBgSel: '#1a3a2a',
-    border: '#1a4a30',
-    borderSel: '#f8c030',
-    accent: '#1a5a35',
-    sep: '#1a3a2a',
-    textPrimary: '#ffffff',
-    textSecondary: '#aaccaa',
-    textMuted: '#667766',
-    textDim: '#445544',
-    hpColor: '#20d860',
-    xpColor: '#5080ff',
-    ppColor: '#20a0d8',
-
-    // Stats tab
-    spriteSize: 40,            // sprite width/height
-    spriteMargin: 2,           // glow border around sprite
-    nameY: 18,                 // name text Y (from contentY)
-    nameFontSize: 10,
-    levelYOff: 12,             // level offset below name
-    levelFontSize: 7,
-    badgesYOff: 26,            // type badges offset below contentY
-    badgeH: 10,
-    badgePadX: 5,
-    badgeCharW: 5,             // approx width per character
-    badgeGap: 4,
-    hwYOff: 40,                // height/weight Y offset below contentY
-    hwFontSize: 6,
-    sepYOff: 50,               // first separator Y offset below contentY
-    hpYOff: 54,                // HP label Y offset below contentY
-    hpFontSize: 7,
-    hpValueFontSize: 10,
-    hpBarH: 3,
-    hpBarYOff: 65,             // HP bar Y offset below contentY
-    xpYOff: 71,                // XP row Y offset below contentY
-    xpFontSize: 6,
-    sep2YOff: 79,              // second separator Y offset below contentY
-    statsHeaderYOff: 83,       // "base stats" header Y offset below contentY
-    statsStartYOff: 93,        // first stat row Y offset below contentY
-    statRowH: 10,              // height per stat row
-    statBarW: 70,              // stat bar max width
-    statBarH: 3,
-    statMax: 150,              // max stat value for scaling bars
-    statValueXOff: 78,         // value X offset from left pad (after bar)
-
-    // Moves tab
-    movesSubHeaderYOff: 2,     // sub-header Y offset below contentY
-    movesStartYOff: 12,        // first card Y offset below contentY
-    cardH: 16,                 // move card height
-    cardGap: 2,                // gap between cards
-    ppBarW: 30,                // PP bar width
-    ppBarH: 2,
-    dcIconR: 3,                // damage class circle radius
-
-    // Tab bar
-    tabTotalW: 150,
-    tabPillH: 10,
-    tabFontSize: 7,
-
-    // Hint bar
-    hintKeyW: 20,
-    hintKeyH: 9,
-    hintFontSize: 6,
+  const CLASS_DOT: Record<string, string> = {
+    physical: '#f08030', status: '#6890f0', special: '#a040a0',
   };
 
   function renderDetailStatsTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
-    const P = L.pad;
-    const R = SCREEN_W - P;
-    const W = SCREEN_W - P * 2;
-    let y = L.contentY;
-
-    // ── Pokemon name + Sprite ──
-    const name = getPokemonDisplayName(pokemon.id);
-    const spriteX = R - L.spriteSize;
-    const nameAreaCX = spriteX / 2; // center X for name/level/badges (left of sprite)
-
-    // Sprite with glow border
-    const sm = L.spriteMargin;
-    fillRect(ctx, spriteX - sm, y + L.nameY - sm - 4, L.spriteSize + sm * 2, L.spriteSize + sm * 2, '#0a2a1a');
-    drawRect(ctx, spriteX - sm, y + L.nameY - sm - 4, L.spriteSize + sm * 2, L.spriteSize + sm * 2, L.border);
+    // ── Sprite container (right side) ──
+    fillRect(ctx, 184, 18, 44, 44, '#0a2a1a');
+    drawRect(ctx, 184, 18, 44, 44, C.BORDER);
     const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
     const sprite = getCachedImage(spriteUrl);
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(sprite, spriteX, y + L.nameY - 4, L.spriteSize, L.spriteSize);
+      ctx.drawImage(sprite, 186, 20, 40, 40);
     }
 
-    // Name — large, centered in left area
-    drawText(ctx, name, nameAreaCX, y + L.nameY, { size: L.nameFontSize, color: L.textPrimary, font: 'monospace', align: 'center' });
+    // ── Name (centered in left 168px area) ──
+    drawText(ctx, getPokemonDisplayName(pokemon.id), 96, 22, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
-    // Level
-    drawText(ctx, `${t('party.stats.level')} ${pokemon.level}`, nameAreaCX, y + L.nameY + L.levelYOff, { size: L.levelFontSize, color: L.textMuted, font: 'monospace', align: 'center' });
+    // ── Level ──
+    drawText(ctx, `${t('party.stats.level')} ${pokemon.level}`, 96, 34, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
 
-    // ── Type badges (centered in left area) ──
-    const badgesY = y + L.badgesYOff;
+    // ── Type badges (centered, y=44) ──
     const typeLabels = pokemon.types.map(pt => ({ type: pt, label: getTypeName(pt) }));
-    let totalBadgeW = 0;
-    for (const tl of typeLabels) totalBadgeW += tl.label.length * L.badgeCharW + L.badgePadX * 2;
-    totalBadgeW += (typeLabels.length - 1) * L.badgeGap;
-    let bx = Math.floor(nameAreaCX - totalBadgeW / 2);
+    // Each badge is 28px wide, 4px gap between them
+    const badgeW = 28;
+    const badgeGap = 4;
+    const totalW = typeLabels.length * badgeW + (typeLabels.length - 1) * badgeGap;
+    let bx = Math.floor(96 - totalW / 2);
     for (const tl of typeLabels) {
       const color = TYPE_COLORS[tl.type] || '#888888';
-      const bw = tl.label.length * L.badgeCharW + L.badgePadX * 2;
-      fillRect(ctx, bx, badgesY, bw, L.badgeH, color);
-      drawRect(ctx, bx, badgesY, bw, L.badgeH, '#00000033');
-      drawText(ctx, tl.label, bx + L.badgePadX, badgesY + 1, { size: L.levelFontSize, color: L.textPrimary, font: 'monospace' });
-      bx += bw + L.badgeGap;
+      fillRect(ctx, bx, 44, badgeW, 9, color);
+      drawText(ctx, tl.label, bx + badgeW / 2, 45, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      bx += badgeW + badgeGap;
     }
 
-    // ── Height / Weight ──
-    const hwY = y + L.hwYOff;
+    // ── Height / Weight (centered, y=56) ──
     const hVal = getPokemonHeight(pokemon.id);
     const wVal = getPokemonWeight(pokemon.id);
     const hStr = hVal !== '?' ? t('party.height', { value: hVal, unit: t('party.unit.meter') }) : '';
     const wStr = wVal !== '?' ? t('party.weight', { value: wVal, unit: t('party.unit.kg') }) : '';
-    const hwLine = [hStr, wStr].filter(Boolean).join('    ');
+    const hwLine = [hStr, wStr].filter(Boolean).join('  ·  ');
     if (hwLine) {
-      drawText(ctx, hwLine, SCREEN_W / 2, hwY, { size: L.hwFontSize, color: L.textMuted, font: 'monospace', align: 'center' });
+      drawText(ctx, hwLine, 96, 56, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
     }
 
-    // ── Separator ──
-    fillRect(ctx, P, y + L.sepYOff, W, 1, L.sep);
+    // ── Separator 1 ──
+    fillRect(ctx, 8, 64, 224, 1, C.SEP);
 
     // ── HP section ──
-    const hpLabelY = y + L.hpYOff;
-    drawText(ctx, 'HP', P, hpLabelY, { size: L.hpFontSize, color: L.textSecondary, font: 'monospace' });
-    drawText(ctx, `${pokemon.hp}`, R - 24, hpLabelY - 2, { size: L.hpValueFontSize, color: L.textPrimary, font: 'monospace', align: 'right' });
-    drawText(ctx, `/ ${pokemon.maxHp}`, R, hpLabelY + 1, { size: L.hpFontSize, color: L.textMuted, font: 'monospace', align: 'right' });
-    const hpBarY = y + L.hpBarYOff;
-    fillRect(ctx, P, hpBarY, W, L.hpBarH, L.sep);
+    drawText(ctx, 'HP', 228, 68, { size: 7, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
+    drawText(ctx, `${pokemon.hp}`, 12, 67, { size: 10, color: C.TEXT_PRI, font: 'monospace' });
+    drawText(ctx, `/ ${pokemon.maxHp}`, 30, 69, { size: 7, color: C.TEXT_MUT, font: 'monospace' });
+    // HP bar
+    fillRect(ctx, 12, 78, 216, 3, C.BAR_TRACK);
     const hpRatio = pokemon.maxHp > 0 ? pokemon.hp / pokemon.maxHp : 0;
-    const hpFillW = Math.floor(W * Math.max(0, Math.min(1, hpRatio)));
-    if (hpFillW > 0) fillRect(ctx, P, hpBarY, hpFillW, L.hpBarH, L.hpColor);
+    const hpFillW = Math.round(216 * Math.max(0, Math.min(1, hpRatio)));
+    if (hpFillW > 0) fillRect(ctx, 12, 78, hpFillW, 3, C.BAR_HP);
 
     // ── XP row ──
-    const xpY = y + L.xpYOff;
-    drawText(ctx, t('party.xpLabel'), P, xpY, { size: L.xpFontSize, color: L.textDim, font: 'monospace' });
-    drawText(ctx, `${pokemon.xp} / ${pokemon.xpToNext}`, R, xpY, { size: L.xpFontSize, color: L.textDim, font: 'monospace', align: 'right' });
+    drawText(ctx, t('party.xpLabel'), 228, 84, { size: 6, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
+    drawText(ctx, `${pokemon.xp} / ${pokemon.xpToNext}`, 12, 84, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
 
-    // ── Separator ──
-    fillRect(ctx, P, y + L.sep2YOff, W, 1, L.sep);
+    // ── Separator 2 ──
+    fillRect(ctx, 8, 91, 224, 1, C.SEP);
 
-    // ── Base Stats section ──
-    drawText(ctx, t('party.baseStats'), R, y + L.statsHeaderYOff, { size: L.levelFontSize, color: L.textMuted, font: 'monospace', align: 'right' });
+    // ── Base Stats header ──
+    drawText(ctx, t('party.baseStats'), 228, 94, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
 
-    const statEntries: [string, number, string][] = [
-      [t('party.stats.hp'), pokemon.maxHp, '#20d860'],
-      [t('party.stats.attack'), pokemon.attack, '#f08030'],
-      [t('party.stats.defense'), pokemon.defense, '#6890f0'],
-      [t('party.stats.spAtk'), pokemon.specialAttack, '#a040a0'],
-      [t('party.stats.spDef'), pokemon.specialDefense, '#f8d030'],
-      [t('party.stats.speed'), pokemon.speed, '#f85888'],
+    // ── Stat rows ──
+    const statRows: [string, number, string, number][] = [
+      [t('party.stats.hp'),      pokemon.maxHp,           '#20d860', 103],
+      [t('party.stats.attack'),  pokemon.attack,          '#f08030', 111],
+      [t('party.stats.defense'), pokemon.defense,         '#6890f0', 119],
+      [t('party.stats.spAtk'),   pokemon.specialAttack,   '#a040a0', 127],
+      [t('party.stats.spDef'),   pokemon.specialDefense,  '#f8d030', 135],
+      [t('party.stats.speed'),   pokemon.speed,           '#f85888', 143],
     ];
 
-    let sy = y + L.statsStartYOff;
-    for (const [label, value, color] of statEntries) {
-      fillRect(ctx, P, sy + 2, L.statBarW, L.statBarH, L.sep);
-      const fill = Math.max(2, Math.floor((value / L.statMax) * L.statBarW));
-      fillRect(ctx, P, sy + 2, fill, L.statBarH, color);
-      drawText(ctx, String(value), P + L.statValueXOff, sy, { size: L.levelFontSize, color: L.textPrimary, font: 'monospace' });
-      drawText(ctx, label, R, sy, { size: L.levelFontSize, color: L.textSecondary, font: 'monospace', align: 'right' });
-      sy += L.statRowH;
+    for (const [label, value, color, rowY] of statRows) {
+      // Bar track + fill
+      fillRect(ctx, 12, rowY + 2, 124, 3, C.BAR_TRACK);
+      const fill = Math.max(1, Math.round((value / 150) * 124));
+      fillRect(ctx, 12, rowY + 2, fill, 3, color);
+      // Value (centered at x=154)
+      drawText(ctx, String(value), 154, rowY, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      // Label (right-aligned at x=228)
+      drawText(ctx, label, 228, rowY, { size: 7, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
     }
   }
 
   function renderDetailMovesTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
-    const P = L.pad;
-    const R = SCREEN_W - P;
-    const W = SCREEN_W - P * 2;
-
     // ── Sub-header ──
-    const subY = L.contentY + L.movesSubHeaderYOff;
-    drawText(ctx, t('party.moves.battleMoves'), R, subY, { size: L.levelFontSize, color: L.textMuted, font: 'monospace', align: 'right' });
-    drawText(ctx, `${pokemon.moves.length} ${t('party.moves.title')}`, P, subY, { size: L.hwFontSize, color: L.textDim, font: 'monospace' });
+    drawText(ctx, t('party.moves.battleMoves'), 228, 16, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
+    drawText(ctx, `${pokemon.moves.length} ${t('party.moves.title')}`, 12, 16, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
 
-    // ── Move cards ──
-    const startY = L.contentY + L.movesStartYOff;
+    // ── Move cards: each 14px tall, 1px gap, starting at y=26 ──
     const maxVisible = Math.min(pokemon.moves.length, 8);
 
     for (let i = 0; i < maxVisible; i++) {
       const move = pokemon.moves[i];
-      const cy = startY + i * (L.cardH + L.cardGap);
+      const cy = 26 + i * 15; // cardY = 26 + i*15 (14px card + 1px gap)
       const isSelected = i === moveCursor;
       const isSwapSource = i === moveSwapFrom;
 
-      // Card background
-      fillRect(ctx, P, cy, W, L.cardH, isSelected ? L.cardBgSel : L.cardBg);
-      drawRect(ctx, P, cy, W, L.cardH, isSwapSource ? L.borderSel : L.border);
+      // Card background (x=4, w=232, h=14)
+      fillRect(ctx, 4, cy, 232, 14, isSelected ? C.CARD_SEL : C.CARD_BG);
+      drawRect(ctx, 4, cy, 232, 14, isSwapSource ? C.BORDER_SEL : C.BORDER);
 
-      // ── Right side: move number ──
-      drawText(ctx, `${i + 1}`, R - 4, cy + 2, { size: 7, color: '#445544', font: 'monospace', align: 'right' });
-
-      // ── Damage class icon (colored circle) ──
+      // ── Damage class dot (relX=217, relY=+4, 5x5) ──
       const moveData = getMove(move.id);
       const dc = moveData?.damageClass || (move.power > 0 ? 'physical' : 'status');
-      const dcInfo = getDamageClassLabel(dc);
-      const dcColors: Record<string, string> = { physical: '#f08030', special: '#6890f0', status: '#a040a0' };
-      const iconX = R - 16;
-      // Small circle
+      const dotColor = CLASS_DOT[dc] || '#888888';
       ctx.beginPath();
-      ctx.arc(iconX, cy + 5, 3, 0, Math.PI * 2);
-      ctx.fillStyle = dcColors[dc] || '#888888';
+      ctx.arc(4 + 217 + 2, cy + 4 + 2, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = dotColor;
       ctx.fill();
-      drawText(ctx, dcInfo.symbol, iconX - 1, cy + 2, { size: 5, color: '#ffffff', font: 'monospace' });
 
-      // ── Move name (bold, right of center) ──
+      // ── Move name (relX=120, relY=+1, w=98, align=right) ──
       const moveName = getMoveDisplayName(move.id);
-      drawText(ctx, moveName, R - 24, cy + 1, { size: 7, color: '#ffffff', font: 'monospace', align: 'right' });
+      drawText(ctx, moveName, 4 + 120 + 98, cy + 1, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
 
-      // ── Type badge (small, next to name) ──
+      // ── Type badge (relX=93, relY=+2, w=22, h=7) ──
       const typeLabel = getTypeName(move.type as PokemonType);
       const typeColor = TYPE_COLORS[move.type] || '#888888';
-      const tbW = typeLabel.length * 4 + 6;
-      const tbX = R - 26 - moveName.length * 5 - tbW;
-      fillRect(ctx, Math.max(P + 50, tbX), cy + 1, tbW, 8, typeColor);
-      drawText(ctx, typeLabel, Math.max(P + 53, tbX + 3), cy + 2, { size: 5, color: '#ffffff', font: 'monospace' });
+      fillRect(ctx, 4 + 93, cy + 2, 22, 7, typeColor);
+      drawText(ctx, typeLabel, 4 + 93 + 11, cy + 2, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
-      // ── Second line: accuracy + power (below name, right-aligned) ──
+      // ── Sub-stats (relX=120, relY=+9, w=98, align=right) ──
       const accStr = move.accuracy > 0 ? `${move.accuracy}` : '\u2014';
       const powStr = move.power > 0 ? `${move.power}` : '\u2014';
-      drawText(ctx, `${t('party.moves.header.acc')}: ${accStr}   ${t('party.moves.header.pow')}: ${powStr}`, R - 24, cy + 9, { size: 5, color: '#556655', font: 'monospace', align: 'right' });
+      drawText(ctx, `${t('party.moves.header.acc')}: ${accStr}  ${t('party.moves.header.pow')}: ${powStr}`, 4 + 120 + 98, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
 
-      // ── Left side: PP fraction + PP bar ──
-      drawText(ctx, `${move.currentPp}/${move.pp}`, P + 2, cy + 2, { size: 7, color: '#aaccaa', font: 'monospace' });
-      // PP bar
-      const ppBarX = P + 2;
-      const ppBarY = cy + 11;
-      const ppBarW = 30;
-      fillRect(ctx, ppBarX, ppBarY, ppBarW, 2, '#1a3a2a');
+      // ── PP text (relX=8, relY=+2) ──
+      drawText(ctx, `${move.currentPp}/${move.pp}`, 4 + 8, cy + 2, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
+
+      // ── PP bar (relX=8, relY=+10, w=30, h=2) ──
+      fillRect(ctx, 4 + 8, cy + 10, 30, 2, C.BAR_TRACK);
       const ppRatio = move.pp > 0 ? move.currentPp / move.pp : 0;
-      const ppFillW = Math.floor(ppBarW * Math.max(0, Math.min(1, ppRatio)));
-      if (ppFillW > 0) {
-        fillRect(ctx, ppBarX, ppBarY, ppFillW, 2, '#20a0d8');
-      }
+      const ppFillW = Math.round(30 * Math.max(0, Math.min(1, ppRatio)));
+      if (ppFillW > 0) fillRect(ctx, 4 + 8, cy + 10, ppFillW, 2, C.BAR_PP);
     }
 
     // ── Action menu overlay ──
@@ -436,31 +341,26 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const menuY = SCREEN_H / 2 - menuH / 2;
 
       fillRect(ctx, menuX - 1, menuY - 1, menuW + 2, menuH + 2, '#000000aa');
-      fillRect(ctx, menuX, menuY, menuW, menuH, '#0d1a14');
+      fillRect(ctx, menuX, menuY, menuW, menuH, C.BG);
       drawRect(ctx, menuX, menuY, menuW, menuH, '#2a6a40');
 
       for (let i = 0; i < MOVE_ACTIONS.length; i++) {
         const action = MOVE_ACTIONS[i];
         const isSel = i === moveActionCursor;
         const ay = menuY + 4 + i * 12;
-
-        if (isSel) {
-          fillRect(ctx, menuX + 2, ay - 1, menuW - 4, 11, '#1a4a30');
-        }
-
+        if (isSel) fillRect(ctx, menuX + 2, ay - 1, menuW - 4, 11, C.CARD_SEL);
         let label: string;
         if (action === 'swap') label = t('party.moves.swap');
         else if (action === 'delete') label = t('party.moves.delete');
         else label = t('party.moves.cancel');
-
-        drawText(ctx, label, menuX + menuW / 2, ay + 1, { size: 7, color: isSel ? '#ffffff' : '#667766', align: 'center' });
+        drawText(ctx, label, menuX + menuW / 2, ay + 1, { size: 7, color: isSel ? C.TEXT_PRI : C.TEXT_MUT, align: 'center' });
       }
     }
 
     // ── Temporary message ──
     if (moveMessage && moveMessageTimer > 0) {
-      fillRect(ctx, P, SCREEN_H - 24, W, 10, '#3a1a1a');
-      drawText(ctx, moveMessage, SCREEN_W / 2, SCREEN_H - 23, { size: 7, color: '#ff6666', align: 'center' });
+      fillRect(ctx, 8, 136, 224, 10, '#3a1a1a');
+      drawText(ctx, moveMessage, 120, 137, { size: 7, color: '#ff6666', align: 'center' });
     }
   }
 
@@ -469,31 +369,18 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const pokemon = party[cursor];
     if (!pokemon) return;
 
-    // Tab bar at top — centered pill-style matching Figma
-    // Order: סטטיסטיקות (stats) RIGHT, מהלכים (moves) LEFT (RTL visual order)
-    const tabs: { key: DetailTab; label: string }[] = [
-      { key: 'stats', label: t('party.baseStats') },
-      { key: 'moves', label: t('party.moves.title') },
-    ];
-    fillRect(ctx, 0, 0, SCREEN_W, 14, '#0d1a14');
-    const tabTotalW = 150;
-    const tabStartX = (SCREEN_W - tabTotalW) / 2;
-    // Draw rounded pill background
-    fillRect(ctx, tabStartX, 2, tabTotalW, 10, '#0a2a1a');
-    drawRect(ctx, tabStartX, 2, tabTotalW, 10, '#1a4a30');
-    const singleTabW = tabTotalW / tabs.length;
-    for (let i = 0; i < tabs.length; i++) {
-      const tx = tabStartX + i * singleTabW;
-      const isActive = tabs[i].key === detailTab;
-      if (isActive) {
-        fillRect(ctx, tx + 1, 3, singleTabW - 2, 8, '#1a5a35');
-      }
-      drawText(ctx, tabs[i].label, tx + singleTabW / 2, 3, {
-        size: 7,
-        color: isActive ? '#ffffff' : '#445544',
-        align: 'center',
-        font: 'monospace',
-      });
+    // Tab bar — exact from canvas_coordinates.md
+    fillRect(ctx, 0, 0, 240, 14, C.BG);
+    fillRect(ctx, 44, 2, 152, 10, C.TAB_BG);
+    drawRect(ctx, 44, 2, 152, 10, C.BORDER);
+    if (detailTab === 'stats') {
+      fillRect(ctx, 118, 2, 76, 10, C.TAB_ACT);
+      drawText(ctx, t('party.baseStats'), 156, 3, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      drawText(ctx, t('party.moves.title'), 81, 3, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
+    } else {
+      fillRect(ctx, 46, 2, 70, 10, C.TAB_ACT);
+      drawText(ctx, t('party.moves.title'), 81, 3, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      drawText(ctx, t('party.baseStats'), 156, 3, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
     }
 
     // Tab content
@@ -503,31 +390,24 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       renderDetailMovesTab(ctx, pokemon);
     }
 
-    // Bottom hint bar matching Figma — key pills + labels
-    fillRect(ctx, 0, SCREEN_H - 14, SCREEN_W, 14, '#0d1a14');
-    fillRect(ctx, 0, SCREEN_H - 14, SCREEN_W, 1, '#1a3a2a');
-    let hx = 6;
+    // Bottom hint bar — exact from canvas_coordinates.md
+    fillRect(ctx, 0, 150, 240, 10, C.BTM_BG);
     // ESC pill
-    fillRect(ctx, hx, SCREEN_H - 12, 20, 9, '#1a3a2a');
-    drawRect(ctx, hx, SCREEN_H - 12, 20, 9, '#2a5a3a');
-    drawText(ctx, 'ESC', hx + 2, SCREEN_H - 11, { size: 6, color: '#88aa88', font: 'monospace' });
-    hx += 22;
-    drawText(ctx, t('party.hint.back'), hx, SCREEN_H - 11, { size: 6, color: '#556655', font: 'monospace' });
-    hx += 30;
+    fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
+    drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
+    drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     // Tab pill
-    fillRect(ctx, hx, SCREEN_H - 12, 20, 9, '#1a3a2a');
-    drawRect(ctx, hx, SCREEN_H - 12, 20, 9, '#2a5a3a');
-    drawText(ctx, 'Tab', hx + 2, SCREEN_H - 11, { size: 6, color: '#88aa88', font: 'monospace' });
-    hx += 22;
-    drawText(ctx, t('party.hint.switchTab'), hx, SCREEN_H - 11, { size: 6, color: '#556655', font: 'monospace' });
+    fillRect(ctx, 62, 151, 18, 8, C.KEY_BG);
+    drawRect(ctx, 62, 151, 18, 8, C.KEY_BRD);
+    drawText(ctx, 'Tab', 71, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, t('party.hint.switchTab'), 82, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     // Enter pill (only on moves tab)
     if (detailTab === 'moves') {
-      hx += 30;
-      fillRect(ctx, hx, SCREEN_H - 12, 28, 9, '#1a3a2a');
-      drawRect(ctx, hx, SCREEN_H - 12, 28, 9, '#2a5a3a');
-      drawText(ctx, 'Enter', hx + 2, SCREEN_H - 11, { size: 6, color: '#88aa88', font: 'monospace' });
-      hx += 30;
-      drawText(ctx, t('party.hint.action') || 'Action', hx, SCREEN_H - 11, { size: 6, color: '#556655', font: 'monospace' });
+      fillRect(ctx, 114, 151, 26, 8, C.KEY_BG);
+      drawRect(ctx, 114, 151, 26, 8, C.KEY_BRD);
+      drawText(ctx, 'Enter', 127, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+      drawText(ctx, t('party.hint.action'), 142, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     }
   }
 
