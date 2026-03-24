@@ -76,6 +76,7 @@
   "party.hint.switchTab": "Switch",
   "party.hint.action": "Action",
   "party.hint.details": "Details",
+  "party.hint.reorder": "Swap",
   "party.stats.level": "Lv.",
   "party.hint.overworld": "ESC:Back  ENTER:Detail  S:Swap",
   "party.hint.battle": "ESC:Back  ENTER:Switch in",

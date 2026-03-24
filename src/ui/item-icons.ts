@@ -283,6 +283,27 @@ export function getItemIconStyle(itemId: string): { bg: string; stroke: string }
 }
 
 /**
+ * Draw a pokeball icon by ball ID (e.g. 'poke-ball', 'great-ball').
+ * Uses the pokeball registry for the top color, falls back to red.
+ */
+export function drawPokeballIcon(
+  ctx: CanvasRenderingContext2D,
+  ballId: string | undefined,
+  x: number,
+  y: number,
+  size: number,
+): void {
+  const BALL_COLORS: Record<string, string> = {
+    'poke-ball': '#e03030',
+    'great-ball': '#3060e0',
+    'ultra-ball': '#e0c020',
+    'master-ball': '#8040c0',
+  };
+  const topColor = BALL_COLORS[ballId || 'poke-ball'] || '#e03030';
+  drawPokeball(ctx, x, y, size, topColor);
+}
+
+/**
  * Draw a programmatic icon for the given item at (x, y) with the given size.
  * Falls back to a generic colored square if the item has no specific icon.
  */

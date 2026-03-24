@@ -38,6 +38,7 @@ export interface Pokemon {
   xp: number;
   xpToNext: number;
   isGlitched: boolean;     // Infected by NULL-X virus
+  caughtBall?: string;     // Item ID of the pokeball used to catch (e.g. 'poke-ball', 'great-ball')
 }
 
 /** Pokemon elemental types (real Gen 2 types + Glitch). */

@@ -13,6 +13,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
 import { getPokemonDisplayName, getMoveDisplayName, getMove, getPokemonHeight, getPokemonWeight } from '../services/pokemon-data.js';
+import { drawPokeballIcon } from '../ui/item-icons.js';
 import { getTypeName, getDamageClassLabel } from '../data/type-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
@@ -110,18 +111,17 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     return '#d84040';
   }
 
-  function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, slotNum: number, sy: number, isSel: boolean, isSwap: boolean): void {
+  function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, _slotNum: number, sy: number, isSel: boolean, isSwap: boolean): void {
     // Card bg
     fillRect(ctx, 4, sy, 232, 24, isSel ? C.CARD_SEL : C.CARD_BG);
     drawRect(ctx, 4, sy, 232, 24, isSwap ? C.BORDER_SEL : (isSel ? '#2a6a40' : C.BORDER));
     // Selection indicator
     if (isSel) fillRect(ctx, 4, sy, 2, 24, '#20d860');
 
-    // Slot number box
-    fillRect(ctx, 222, sy + 1, 10, 10, isSel ? 'rgba(32,216,96,0.15)' : 'rgba(255,255,255,0.03)');
-    drawText(ctx, `${slotNum}`, 227, sy + 2, { size: 6, color: isSel ? '#20d860' : '#2a3a2a', font: 'monospace', align: 'center' });
+    // Pokeball icon (replacing slot number box) — centered in 10×10 area
+    drawPokeballIcon(ctx, pokemon.caughtBall, 222, sy + 7, 10);
 
-    // Sprite box
+    // Sprite box (22×22, sprite fills ~66% = 20×20 with 1px padding)
     fillRect(ctx, 194, sy + 1, 22, 22, C.CARD_BG);
     drawRect(ctx, 194, sy + 1, 22, 22, C.BORDER);
     const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
@@ -129,7 +129,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(sprite, 196, sy + 3, 18, 18);
+      ctx.drawImage(sprite, 186, sy - 8, 40, 40);
       ctx.imageSmoothingEnabled = false;
     }
 
@@ -142,13 +142,13 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const types = pokemon.types;
     if (types.length >= 1) {
       const color1 = TYPE_COLORS[types[0]] || '#888888';
-      fillRect(ctx, 162, sy + 12, 18, 7, color1);
-      drawText(ctx, getTypeName(types[0]), 171, sy + 12, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      fillRect(ctx, 172, sy + 12, 18, 7, color1);
+      drawText(ctx, getTypeName(types[0]), 181, sy + 13, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
     }
     if (types.length >= 2) {
       const color2 = TYPE_COLORS[types[1]] || '#888888';
-      fillRect(ctx, 142, sy + 12, 18, 7, color2);
-      drawText(ctx, getTypeName(types[1]), 151, sy + 12, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      fillRect(ctx, 152, sy + 12, 18, 7, color2);
+      drawText(ctx, getTypeName(types[1]), 161, sy + 13, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
     }
 
     // HP label
@@ -212,6 +212,13 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawRect(ctx, 126, 151, 18, 8, C.KEY_BRD);
     drawText(ctx, '\u25b2\u25bc', 135, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('bag.hint.navigate') || 'Nav', 146, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    // Space (reorder) — only if party > 1
+    if (party.length > 1) {
+      fillRect(ctx, 178, 151, 28, 8, C.KEY_BG);
+      drawRect(ctx, 178, 151, 28, 8, C.KEY_BRD);
+      drawText(ctx, 'Space', 192, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+      drawText(ctx, t('party.hint.reorder') || 'Swap', 208, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -713,7 +720,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       }
 
       // S key to start swap mode
-      if (input.isKeyPressed('s') || input.isKeyPressed('S')) {
+      if (input.isKeyPressed('s') || input.isKeyPressed('S') || input.isKeyPressed(' ')) {
         if (partyLen > 1 && cursor < partyLen) {
           if (viewMode === 'list') {
             viewMode = 'swap';

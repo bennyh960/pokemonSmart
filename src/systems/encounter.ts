@@ -118,6 +118,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     xp: 0,
     xpToNext: level * 100,
     isGlitched: false,
+    caughtBall: 'poke-ball',
   };
 }
 
