@@ -10,7 +10,7 @@ You build everything the player **sees and interacts with** outside of the core 
 
 1. **UI Screens** — Title screen, main menu, settings, Pokemon party screen, Pokedex, bag/inventory
 2. **Battle UI** — HP bars, math problem display, answer input (number pad + keyboard), move selection, damage numbers
-3. **Dialogue System** — GBA-style scrolling text boxes with character portraits
+3. **Dialogue System** — RPG-style scrolling text boxes with character portraits
 4. **Responsive Design** — Playable on desktop and tablets (primary kid devices)
 5. **Sound Integration** — Background music and SFX using Web Audio API or Howler.js
 
@@ -84,14 +84,15 @@ Lightweight Web Audio API wrapper — handles cross-browser, mobile autoplay, sp
 6. **Mobile autoplay:** Use Howler.js unlock on first touch event
 7. **Looping:** All background music loops seamlessly
 
-## GBA UI Style Guide
+## UI Style Guide (Modern Pixel Art)
 
-- **Text boxes:** Bottom of screen, dark border, white/cream background, pixel font
+- **Text boxes:** Bottom of screen, styled borders, clean background — modern pixel-art look (not restricted to GBC aesthetics)
 - **Menus:** Right-aligned selection lists with arrow cursor
 - **HP bars:** Colored gradient (green → yellow → red)
 - **Transitions:** Quick fade-to-black between scenes
 - **Font:** Monospace pixel font, ~8px base size (scaled up)
-- **Colors:** Limited palette per screen, high contrast for readability
+- **Colors:** Full color palettes, high contrast for readability — no GBC palette restrictions
+- **Visual style:** Clean, polished modern pixel art. Think DS-era Pokemon or indie games like Eastward/CrossCode, not retro GBC
 
 ## Math Input Design (Critical UX)
 

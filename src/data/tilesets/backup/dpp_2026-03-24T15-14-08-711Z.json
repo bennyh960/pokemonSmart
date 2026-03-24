@@ -1687,13 +1687,14 @@
     {
       "key": "bottom-dev",
       "sx": 0,
-      "sy": 6176,
+      "sy": 6016,
       "w": 16,
       "h": 16,
       "walkable": true,
       "encounter": false,
       "destroy": null,
-      "above": false
+      "above": false,
+      "category": "other"
     }
   ]
 }

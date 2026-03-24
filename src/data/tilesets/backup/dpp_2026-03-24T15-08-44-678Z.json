@@ -1683,17 +1683,6 @@
       "above": true,
       "category": "decoration",
       "description": "water fountain  decoration for town decor"
-    },
-    {
-      "key": "bottom-dev",
-      "sx": 0,
-      "sy": 6176,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "encounter": false,
-      "destroy": null,
-      "above": false
     }
   ]
 }

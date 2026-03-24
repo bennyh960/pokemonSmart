@@ -19,7 +19,7 @@ A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (�
 | game-engine-developer | `.claude/agents/game-engine-developer.md` | Core game loop, overworld, tilemap |
 | frontend-developer | `.claude/agents/frontend-developer.md` | UI, battle screens, audio integration |
 | asset-manager | `.claude/agents/pixel-artist.md` | Sourcing sprites/tiles/sounds from APIs |
-| world-map-builder | `.claude/agents/world-map-builder.md` | Tileset extraction + map design |
+| world-map-builder | `.claude/agents/world-map-builder.md` | Map design using tileset JSON manifests |
 | qa-tester | `.claude/agents/qa-tester.md` | Testing + documentation |
 
 ## Tech Stack
@@ -29,7 +29,9 @@ A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (�
 - **Data:** PokeAPI (fetched at build time → static JSON)
 - **Pokemon:** Real Gen 1-2 (251 Pokemon, real types/moves/evolutions)
 - **Starters:** Gen 1 — Bulbasaur, Charmander, Squirtle (8 moves each)
-- **Sprites:** PokeAPI Gen 2 Gold (transparent PNGs) + procedural tilesets/player
+- **Sprites:** PokeAPI (best quality available) for Pokemon battle sprites + DPP-style tileset PNG with JSON manifest (`src/data/tilesets/dpp.json`) for overworld tiles + custom character spritesheets (`src/data/sprites/characters.json`)
+- **Maps:** JSON files in `src/data/maps/` — tile grid + objects layer + NPCs + transitions. Registered in `src/systems/map-manager.ts`
+- **Visual style:** Modern pixel art (not restricted to GBC/retro aesthetics) — full color palettes, clean sprites, performance-first
 - **Math in battle:** Currently disabled — will be rethought for a less intrusive mechanic
 
 ## How to Work

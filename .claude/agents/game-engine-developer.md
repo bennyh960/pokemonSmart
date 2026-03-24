@@ -17,13 +17,13 @@ You are the **technical architect**. You build the game loop, state management, 
 ## Key Decisions You Own
 
 - **Technical architecture:** Game loop pattern, state machine design, scene structure
-- **Rendering approach:** Canvas 2D (recommended for GBA feel) or lightweight framework (Phaser.js)
+- **Rendering approach:** Canvas 2D with modern pixel-art style (no retro GBC restrictions)
 - **Data model:** Player state, party, progress flags, encounter tables
 - **Performance:** Keep it smooth in browser, efficient sprite rendering
 
 ## Recommended Tech Stack
 
-- **Rendering:** HTML5 Canvas 2D (authentic GBA feel, full control)
+- **Rendering:** HTML5 Canvas 2D (modern pixel-art style, full control)
 - **Language:** TypeScript (type safety for complex game state)
 - **Build:** Vite (fast dev server, simple config)
 - **State:** Custom state machine (no heavy frameworks needed)
@@ -34,36 +34,70 @@ You are the **technical architect**. You build the game loop, state management, 
 ```
 src/
 ├── engine/
-│   ├── game.ts          # Main game loop, canvas setup
-│   ├── state-machine.ts # Scene/state management
-│   ├── input.ts         # Keyboard & touch input handler
-│   └── renderer.ts      # Sprite & tile rendering
+│   ├── game.ts              # Main game loop, canvas setup
+│   ├── config.ts            # LOGICAL_WIDTH=240, LOGICAL_HEIGHT=160, RES_SCALE=3
+│   ├── state-machine.ts     # Scene/state management
+│   ├── input.ts             # Keyboard & touch input handler
+│   ├── renderer.ts          # Canvas 2D rendering utilities
+│   ├── tileset.ts           # Tileset loader — reads JSON manifest + PNG spritesheet
+│   ├── tilemap.ts           # Tile grid rendering, objects layer, walkability, Y-sorting
+│   ├── camera.ts            # Camera follow player, map bounds, viewport culling
+│   ├── sprite-loader.ts     # Async image loading with per-URL cache
+│   └── character-sprites.ts # Character sprite manifest loader (frames, poses, directions)
 ├── scenes/
-│   ├── title.ts         # Title screen
-│   ├── overworld.ts     # Top-down world exploration
-│   ├── battle.ts        # Battle scene
-│   ├── menu.ts          # Pause menu, party, pokedex
-│   └── dialogue.ts      # NPC dialogue system
+│   ├── title.ts             # Title screen
+│   ├── overworld.ts         # Overworld scene (movement, NPCs, rendering, Y-sort pipeline)
+│   ├── battle.ts            # Battle scene
+│   ├── menu.ts              # Pause menu, party, pokedex
+│   └── dialogue.ts          # NPC dialogue system
 ├── systems/
-│   ├── battle-system.ts # Battle logic, turn management
-│   ├── encounter.ts     # Wild/trainer encounter logic
-│   ├── pokemon.ts       # Pokemon data, leveling, evolution
-│   ├── player.ts        # Player state, inventory, badges
-│   └── save.ts          # Save/load to localStorage
+│   ├── map-manager.ts       # Map registration & dynamic loading (registerMap per map)
+│   ├── npc.ts               # NPC logic, trainer line-of-sight, auto-walk
+│   ├── battle-system.ts     # Battle logic, turn management
+│   ├── encounter.ts         # Wild/trainer encounter logic
+│   ├── pokemon.ts           # Pokemon data, leveling, evolution
+│   ├── player.ts            # Player state, inventory, badges
+│   └── save.ts              # Save/load to localStorage
 ├── math/
-│   └── math-engine.ts   # Math problem generation (math-engine-developer)
+│   └── math-engine.ts       # Math problem generation
 ├── data/
-│   ├── pokemon.json     # Pokemon roster data
-│   ├── maps.json        # Map/route definitions
-│   ├── trainers.json    # NPC trainer data
-│   └── gym-leaders.json # Gym leader configurations
-├── assets/
-│   ├── sprites/         # Pokemon & character sprites
-│   ├── tiles/           # Map tilesets
-│   ├── ui/              # UI elements
-│   └── audio/           # Music & SFX
-└── index.ts             # Entry point
+│   ├── tilesets/dpp.json    # Tileset manifest — tile keys, coords, properties, categories
+│   ├── maps/*.json          # Map JSONs — tile grid, objects, NPCs, transitions
+│   ├── sprites/characters.json # Character sprite manifest — frames, poses per character
+│   └── pokemon/             # Pokemon roster data (from PokeAPI)
+├── i18n/
+│   └── i18n.ts              # Hebrew (default) + English, t(key, params), L key toggles
+└── index.ts                 # Entry point
 ```
+
+### Tileset & Map System (How It Works)
+
+The game uses a **JSON manifest + PNG spritesheet** approach for tiles:
+
+1. **Tileset manifest** (`src/data/tilesets/dpp.json`) — array of tile definitions with:
+   - `key` — unique ID used in map tile grids (e.g., "g1", "t1", "pc1")
+   - `sx`, `sy` — source pixel coordinates on the PNG spritesheet
+   - `w`, `h` — tile dimensions (16×16 standard; buildings can be 64×64+)
+   - `walkable`, `encounter`, `above`, `destroy`, `category`, `description`
+
+2. **Tileset PNG** (`public/sprites/overworld/dpp-tileset.png`) — single spritesheet containing all tiles
+
+3. **Map JSON** (`src/data/maps/{id}.json`) — defines:
+   - `tiles` — 2D array of tile keys (base ground layer)
+   - `objects` — array of above-layer items (buildings, signs, decorations) with `{key, x, y}`
+   - `npcs` — NPCs with position, dialogue, spriteType, optional trainer data
+   - `transitions` — map-to-map connections (bidirectional, 3 tiles wide)
+
+4. **Rendering pipeline** in `overworld.ts`:
+   - Ground tiles → ground objects → Y-sorted body sprites (player, NPCs, buildings) → above overlays
+
+### Character Sprite System
+
+Character sprites use a separate manifest (`src/data/sprites/characters.json`):
+- Each character ID (e.g., "dani", "npc-m") has `frameWidth`, `frameHeight`, and `frames` array
+- `frames` maps to `{sx, sy}` on the character spritesheet PNG
+- A `dict` maps pose names ("down-stand", "left-walk-1") to frame indices
+- Engine always renders at TILE_SIZE×TILE_SIZE (16×16 logical), downscaling from source
 
 ## Game State Machine
 
@@ -81,7 +115,7 @@ TITLE → OVERWORLD ↔ MENU
 
 - **← game-designer:** Receive mechanic specs for implementation
 - **← math-engine-developer:** Integrate math problem API into battle/catch
-- **→ pixel-artist:** Define asset format requirements (sprite sheet specs, tile sizes)
+- **→ pixel-artist:** Asset format is defined — JSON manifest + PNG spritesheet (tileset: `dpp.json` + `dpp-tileset.png`, characters: `characters.json` + `characters_overworld.png`)
 - **→ frontend-developer:** Provide scene/state system for UI overlay integration
 - **← qa-tester:** Fix reported bugs
 

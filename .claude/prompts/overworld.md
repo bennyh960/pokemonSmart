@@ -1,21 +1,36 @@
-Read the sprint file at docs/sprint-1.md section 2 and your agent spec at .claude/agents/game-engine-developer.md.
+Read the sprint file at docs/sprint-{N}.md and your agent spec at .claude/agents/game-engine-developer.md.
 
-Run these git commands first:
-```
+```bash
 git checkout -b feature/overworld
 ```
 
-Then implement ALL tasks 2.1-2.6:
+## Current Overworld System
 
-1. `src/engine/tilemap.ts` - Load tilemap from JSON, render colored rect tiles (16×16), collision. Tile types: 0=empty, 1=grass(#48A030), 2=path(#C8A870), 3=water(#3080D0,blocked), 4=tree(#206020,blocked), 5=building(#808080,blocked), 6=door(#8B4513,walkable), 7=tall grass(#68C048,walkable+encounters)
-2. `src/engine/camera.ts` - Follow player, map bounds, smooth lerp
-3. `src/scenes/overworld.ts` - Grid-based movement (16px steps), arrow keys, ~200ms per tile, collision, player as blue 16×16 rect, 10% encounter on tall grass
-4. `src/data/maps/test-map.json` - 20×15 tile map with grass, paths, trees, building, tall grass, water, spawn point
-5. `src/engine/sprite-loader.ts` - Async image loading with cache
-6. Wire Title→Overworld in `src/engine/game.ts`
+The overworld is already built with:
 
-IMPORTANT: Grid-based movement like real Pokemon. All placeholders as colored rectangles.
+### Tileset System
+- `src/engine/tileset.ts` — loads JSON manifest (`src/data/tilesets/dpp.json`) + PNG spritesheet (`public/sprites/overworld/dpp-tileset.png`)
+- Each tile: key, sx, sy, w, h, walkable, encounter, above, destroy, category
 
-When done: run `tsc --noEmit` and `npm run dev` to verify. Then commit all changes to the branch.
+### Map System
+- `src/data/maps/*.json` — 13+ maps with `tiles` (2D grid), `objects` (above-layer), `npcs`, `transitions`
+- `src/systems/map-manager.ts` — map registration and dynamic loading
+- `src/engine/tilemap.ts` — rendering with ground → objects → Y-sorted body sprites → above overlays
 
-After commit, update docs/sprint-1.md - change your tasks status from ⬜ to ✅.
+### Character Sprites
+- `src/data/sprites/characters.json` — manifest with frame coordinates per character
+- `src/engine/character-sprites.ts` — frame lookup by character ID, facing, pose
+
+### Rendering Pipeline (in `src/scenes/overworld.ts`)
+1. Ground tiles (camera-culled from tileset)
+2. Ground objects (walkable decorations)
+3. Y-sorted body renderables (player, NPCs, buildings, trees)
+4. Above overlays (tall grass, roof overhangs)
+5. HUD + UI overlays
+
+### Movement
+- Grid-based (16px tiles), smooth ~200ms transitions
+- `src/engine/camera.ts` — follows player, map bounds
+- Canvas: 240×160 logical, 720×480 physical (3x scale)
+
+Implement tasks from the sprint file. When done: run `tsc --noEmit` and `npm run dev` to verify, then commit.
