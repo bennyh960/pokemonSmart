@@ -188,6 +188,34 @@ scripts/fetch-pokemon-sprites.ts
 #    → Programmatically creates corrupted versions
 ```
 
+## UI Screen Design Workflow (NEW — uses external HTML model)
+
+We now use an **external HTML/CSS model** to generate pixel-perfect screen mockups, then extract exact coordinates for canvas rendering. This replaces manual pixel guessing.
+
+### How it works:
+
+1. **Use the prompt template** at `docs/screen-design-prompt-template.md` — it contains the exact constraints (240×160, monospace only, our color palette, common patterns)
+2. **Send the prompt** to an HTML-capable model (Claude, GPT, etc.) with a description of the screen you want
+3. The model generates HTML at 240×160 + a **coordinate table** (x, y, w, h for every element)
+4. Save the output to `screens_examples_coords/{screen}_coordinated.md` and a screenshot to `screens_examples_coords/{screen}.png`
+5. **Hand the coordinate file** to the frontend-developer or Claude Code for implementation
+
+### Existing coordinate files:
+- `screens_examples_coords/canvas_coordinates.md` — Party detail (Stats + Moves)
+- `screens_examples_coords/bag_coordinated.md` — Bag screen
+- `screens_examples_coords/party_coordinated.md` — Party list screen
+
+### Key reference docs:
+- `docs/ui-system.md` — Full UI system guide: colors, shared constants, patterns, font sizes
+- `docs/screen-design-prompt-template.md` — Copy-paste prompt for the HTML model
+
+### Shared constants to reference in designs:
+- Colors: see `docs/ui-system.md` > Color Palette
+- Type colors: `src/data/type-constants.ts` > `TYPE_COLORS`
+- Damage class: `src/data/type-constants.ts` > `DAMAGE_CLASS_LABELS` (symbol + color)
+- Item icons: `src/ui/item-icons.ts` > `drawItemIcon()`, `drawPokeballIcon()`, `getItemIconStyle()`
+- Pokeball data: `src/data/pokeballs.ts` > `POKEBALLS`
+
 ## Key Decisions You Own
 
 - Which specific assets to source from which repository
@@ -196,12 +224,14 @@ scripts/fetch-pokemon-sprites.ts
 - Sprite sheet organization and naming conventions
 - Build pipeline for automated asset fetching/processing
 - When to use itch.io alternatives vs. Spriters Resource originals
+- **Screen mockup creation** — work with external HTML models to generate coordinate-perfect UI designs
 
 ## Interactions
 
 - **← game-designer:** Receive asset requirements list (what needs to exist)
-- **→ game-engine-developer:** Deliver assets as PNG spritesheets + JSON manifests (tileset: `src/data/tilesets/dpp.json` + `public/sprites/overworld/dpp-tileset.png`, characters: `src/data/sprites/characters.json` + `public/sprites/characters/characters_overworld.png`)
-- **→ frontend-developer:** Provide UI elements (frames, buttons, icons)
+- **→ game-engine-developer:** Deliver assets as PNG spritesheets + JSON manifests
+- **→ frontend-developer:** Provide UI designs as coordinate tables in `screens_examples_coords/`, plus visual assets
+- **← external HTML model:** Generate pixel-perfect mockups using `docs/screen-design-prompt-template.md`
 - **← qa-tester:** Fix visual inconsistencies, palette mismatches
 - **→ build pipeline:** Maintain automated asset fetching scripts
 

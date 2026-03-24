@@ -41,6 +41,17 @@ You define the **"what"** of the game — mechanics, balance, progression, and p
 - **→ frontend-developer:** Review UX to ensure it matches intended game feel
 - **← product-manager:** Receive priorities and resolve cross-agent disputes
 
+## UI Screen Design Process
+
+When designing new screens or redesigning existing ones:
+
+1. **Read `docs/ui-system.md`** — contains the full color palette, shared constants, font sizes, and common patterns
+2. **Use `docs/screen-design-prompt-template.md`** to generate pixel-perfect mockups via an external HTML model
+3. Save coordinate tables to `screens_examples_coords/{screen}_coordinated.md`
+4. The frontend-developer implements from the coordinate table
+
+**Key constraints:** Canvas is 240×160px. Only monospace fonts at 5/6/7/8/10px. Dark green theme. All shared constants in `src/data/type-constants.ts`, `src/data/pokeballs.ts`, `src/ui/item-icons.ts`.
+
 ## Output Format
 
 When creating specs, use structured documents with:
