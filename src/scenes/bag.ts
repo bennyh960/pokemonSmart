@@ -1,173 +1,84 @@
 /**
- * BagScene - Full-screen item bag with category tabs and scrollable item list.
+ * BagScene - Item inventory screen with category tabs.
  *
- * Layout (240x160 logical pixels):
- * - Top bar (y=0-14): "BAG" title + category name
- * - Left sidebar (x=0-50, y=14-146): Category tabs vertically stacked
- * - Right panel (x=52-238, y=14-146): Scrollable item list
- * - Bottom bar (y=146-160): Controls hint + item description
+ * Shows items grouped into categories (Medicine, Balls, Battle, Vitamins, Key Items).
+ * Supports full RTL layout for Hebrew and LTR for English.
+ * Categories sidebar is 60px wide; the remainder shows the item list.
  *
- * Supports overworld and battle modes. B key in overworld pushes this scene;
- * Escape pops back.
+ * Controls:
+ *   Up/Down  - navigate items or categories
+ *   Left/Right - switch between categories panel and items panel (flipped in RTL)
+ *   Enter    - use/select item
+ *   Escape   - go back
  */
 
 import type { Scene } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
-import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js';
-import { t } from '../i18n/i18n.js';
+import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
+import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData } from '../systems/game-state.js';
-import { getItem, type ItemDef, type ItemCategory } from '../data/items.js';
+import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
-import { drawItemIcon } from '../ui/item-icons.js';
 
-// ── Layout constants ──
-const TOP_BAR_H = 14;
-const BOTTOM_BAR_Y = 146;
-const SIDEBAR_W = 50;
-const PANEL_X = 52;
-const PANEL_W = SCREEN_W - PANEL_X - 2;
-const PANEL_Y = TOP_BAR_H;
-const PANEL_H = BOTTOM_BAR_Y - TOP_BAR_H;
-const TAB_H = 18;
-const ROW_H = 18;
-const VISIBLE_ROWS = Math.floor(PANEL_H / ROW_H);
+/* ── Battle integration exports ────────────────────────────────────── */
 
-// ── Colors ──
-const COL_BG = '#181830';
-const COL_PANEL = '#202040';
-const COL_SELECTED = '#303060';
-const COL_TEXT = '#ffffff';
-const COL_TEXT2 = '#aaaacc';
-const COL_HINT = '#666688';
-const COL_GOLD = '#f8d030';
-const COL_BORDER = '#585858';
+type BagMode = 'overworld' | 'battle';
+let bagMode: BagMode = 'overworld';
 
-// ── Category definitions ──
-interface BagCategory {
-  id: string;
-  label: string;
-  /** Item categories from items.ts that belong to this bag tab. */
-  itemCategories: ItemCategory[];
-  color: string;
-}
+export let pendingItem: { itemId: string; def: ItemDef } | null = null;
 
-const BAG_CATEGORIES: BagCategory[] = [
-  { id: 'medicine', label: 'Medicine',   itemCategories: ['healing', 'status-cure', 'revival'], color: '#e05050' },
-  { id: 'balls',    label: 'Balls',      itemCategories: ['pokeball'],                          color: '#e0e0e0' },
-  { id: 'battle',   label: 'Battle',     itemCategories: ['battle'],                            color: '#50a0e0' },
-  { id: 'vitamins', label: 'Vitamins',   itemCategories: ['vitamin'],                           color: '#50e050' },
-  { id: 'key',      label: 'Key Items',  itemCategories: ['key'],                               color: '#e0c050' },
-];
-
-// ── Bag mode (overworld vs battle) ──
-let bagMode: 'overworld' | 'battle' = 'overworld';
-
-/** Set the bag mode before pushing the BAG scene. */
-export function setBagMode(mode: 'overworld' | 'battle'): void {
+export function setBagMode(mode: BagMode): void {
   bagMode = mode;
 }
 
-/** Pending item for use-on-Pokemon flow (read by party scene integration). */
-export let pendingItem: ItemDef | null = null;
-
-/** Clear the pending item after it has been consumed. */
 export function clearPendingItem(): void {
   pendingItem = null;
 }
 
-// ── Helpers ──
-
-interface BagItem {
-  def: ItemDef;
-  qty: number;
+/** Bag tab definition — each tab groups one or more ItemCategory values. */
+interface BagTab {
+  labelKey: string;
+  categories: ItemCategory[];
 }
 
-/** Get items for the given bag category, filtered by mode and player inventory. */
-function getCategoryItems(cat: BagCategory): BagItem[] {
-  const playerItems = getPlayerData().items;
-  const results: BagItem[] = [];
+const BAG_TABS: BagTab[] = [
+  { labelKey: 'bag.category.medicine', categories: ['healing', 'status-cure', 'revival'] },
+  { labelKey: 'bag.category.balls',    categories: ['pokeball'] },
+  { labelKey: 'bag.category.battle',   categories: ['battle'] },
+  { labelKey: 'bag.category.vitamins', categories: ['vitamin'] },
+  { labelKey: 'bag.category.key',      categories: ['key'] },
+];
 
-  for (const [itemId, qty] of Object.entries(playerItems)) {
-    if (qty <= 0) continue;
-    const def = getItem(itemId);
-    if (!def) continue;
-    if (!cat.itemCategories.includes(def.category)) continue;
+const SIDEBAR_W = 60;
+const TITLE_H = 14;
+const TAB_H = 14;
+const ITEM_H = 14;
+const HINT_H = 12;
 
-    // In battle mode, only show battle-usable items
-    if (bagMode === 'battle' && !def.usableInBattle) continue;
-
-    results.push({ def, qty });
-  }
-
-  return results;
-}
-
-/** Draw a small category icon shape in the sidebar tab. */
-function drawCategoryIcon(ctx: CanvasRenderingContext2D, catId: string, x: number, y: number): void {
-  switch (catId) {
-    case 'medicine':
-      // Small cross/plus
-      ctx.fillStyle = '#e05050';
-      ctx.fillRect(x + 3, y + 1, 2, 8);
-      ctx.fillRect(x + 1, y + 3, 6, 2);
-      break;
-    case 'balls':
-      // Small circle
-      ctx.fillStyle = '#e03030';
-      ctx.beginPath();
-      ctx.arc(x + 4, y + 4, 3, Math.PI, 0);
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(x + 4, y + 4, 3, 0, Math.PI);
-      ctx.fill();
-      break;
-    case 'battle':
-      // Small sword/arrow
-      ctx.fillStyle = '#50a0e0';
-      ctx.fillRect(x + 3, y + 1, 2, 6);
-      ctx.fillRect(x + 1, y + 4, 6, 2);
-      break;
-    case 'vitamins':
-      // Small star shape (simplified)
-      ctx.fillStyle = '#50e050';
-      ctx.fillRect(x + 2, y + 2, 4, 4);
-      ctx.fillRect(x + 3, y + 1, 2, 6);
-      break;
-    case 'key':
-      // Small key shape
-      ctx.fillStyle = '#e0c050';
-      ctx.beginPath();
-      ctx.arc(x + 3, y + 3, 2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillRect(x + 4, y + 2, 4, 2);
-      break;
-  }
-}
-
-// ── Scene factory ──
+type Focus = 'categories' | 'items';
 
 export function createBagScene(input: InputManager, stateMachine: StateMachine): Scene {
-  let catIndex = 0;
-  let itemCursor = 0;
-  let scrollOffset = 0;
-  let focus: 'categories' | 'items' = 'categories';
-  let message: string | null = null;
+  let tabIndex = 0;
+  let itemIndex = 0;
+  let focus: Focus = 'categories';
+  let message = '';
   let messageTimer = 0;
 
-  /** Clamp item cursor after switching category or scrolling. */
-  function clampItemCursor(items: BagItem[]): void {
-    if (items.length === 0) {
-      itemCursor = 0;
-      scrollOffset = 0;
-      return;
+  /** Get items for the currently selected tab that the player owns. */
+  function getTabItems(): { def: ItemDef; qty: number }[] {
+    const player = getPlayerData();
+    const tab = BAG_TABS[tabIndex];
+    const result: { def: ItemDef; qty: number }[] = [];
+    for (const [id, qty] of Object.entries(player.items)) {
+      if (qty <= 0) continue;
+      const def = ITEMS[id];
+      if (!def) continue;
+      if (!tab.categories.includes(def.category)) continue;
+      if (bagMode === 'battle' && !def.usableInBattle) continue;
+      result.push({ def, qty });
     }
-    if (itemCursor >= items.length) itemCursor = items.length - 1;
-    if (itemCursor < 0) itemCursor = 0;
-    // Keep cursor in visible range
-    if (itemCursor < scrollOffset) scrollOffset = itemCursor;
-    if (itemCursor >= scrollOffset + VISIBLE_ROWS) scrollOffset = itemCursor - VISIBLE_ROWS + 1;
+    return result;
   }
 
   function showMessage(msg: string): void {
@@ -175,254 +86,231 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     messageTimer = 1.5;
   }
 
-  // ── Render helpers ──
+  // ── Rendering ────────────────────────────────────────────────
 
-  function renderTopBar(ctx: CanvasRenderingContext2D): void {
-    fillRect(ctx, 0, 0, SCREEN_W, TOP_BAR_H, COL_PANEL);
-    drawText(ctx, t('bag.title'), 4, 3, { size: 8, color: COL_TEXT });
+  function renderCategories(ctx: CanvasRenderingContext2D, sideX: number): void {
+    // Sidebar background
+    fillRect(ctx, sideX, TITLE_H, SIDEBAR_W, SCREEN_H - TITLE_H - HINT_H, '#1a1a3a');
 
-    const cat = BAG_CATEGORIES[catIndex];
-    drawText(ctx, cat.label, SCREEN_W - 4, 3, { size: 8, color: COL_GOLD, align: 'right' });
+    for (let i = 0; i < BAG_TABS.length; i++) {
+      const y = TITLE_H + i * TAB_H;
+      const isSelected = i === tabIndex;
+      const isFocused = isSelected && focus === 'categories';
 
-    // Separator line
-    fillRect(ctx, 0, TOP_BAR_H - 1, SCREEN_W, 1, COL_BORDER);
-  }
-
-  function renderSidebar(ctx: CanvasRenderingContext2D): void {
-    fillRect(ctx, 0, PANEL_Y, SIDEBAR_W, PANEL_H, COL_PANEL);
-
-    for (let i = 0; i < BAG_CATEGORIES.length; i++) {
-      const cat = BAG_CATEGORIES[i];
-      const ty = PANEL_Y + i * TAB_H;
-
-      const isActive = i === catIndex;
-      const isFocused = isActive && focus === 'categories';
+      const bgColor = isFocused ? '#4040a0' : isSelected ? '#303060' : '#1a1a3a';
+      fillRect(ctx, sideX, y, SIDEBAR_W, TAB_H - 1, bgColor);
 
       if (isFocused) {
-        fillRect(ctx, 0, ty, SIDEBAR_W, TAB_H - 1, COL_SELECTED);
-        drawRect(ctx, 0, ty, SIDEBAR_W, TAB_H - 1, COL_GOLD, 1);
-      } else if (isActive) {
-        fillRect(ctx, 0, ty, SIDEBAR_W, TAB_H - 1, COL_SELECTED);
+        drawRect(ctx, sideX, y, SIDEBAR_W, TAB_H - 1, '#8888ff', 1);
       }
 
-      // Icon
-      drawCategoryIcon(ctx, cat.id, 2, ty + 4);
-
-      // Label
-      const labelColor = isActive ? COL_GOLD : COL_TEXT2;
-      drawText(ctx, cat.label, 12, ty + 5, { size: 7, color: labelColor });
+      const label = t(BAG_TABS[i].labelKey);
+      const rtl = isRTL();
+      const textX = rtl ? sideX + SIDEBAR_W - 4 : sideX + 4;
+      const textAlign: CanvasTextAlign = rtl ? 'right' : 'left';
+      drawText(ctx, label, textX, y + 3, { size: 7, color: isSelected ? '#ffffff' : '#8888aa', align: textAlign });
     }
-
-    // Vertical separator
-    fillRect(ctx, SIDEBAR_W, PANEL_Y, 1, PANEL_H, COL_BORDER);
   }
 
-  function renderItemList(ctx: CanvasRenderingContext2D): void {
-    const cat = BAG_CATEGORIES[catIndex];
-    const items = getCategoryItems(cat);
+  function renderItems(ctx: CanvasRenderingContext2D, panelX: number, panelW: number): void {
+    // Items panel background
+    fillRect(ctx, panelX, TITLE_H, panelW, SCREEN_H - TITLE_H - HINT_H, '#181830');
 
-    // Panel background
-    fillRect(ctx, PANEL_X, PANEL_Y, PANEL_W, PANEL_H, COL_BG);
+    const items = getTabItems();
 
     if (items.length === 0) {
-      drawText(ctx, t('bag.noItems'), PANEL_X + PANEL_W / 2, PANEL_Y + PANEL_H / 2 - 4, {
-        size: 8, color: COL_HINT, align: 'center',
+      const emptyText = t('bag.noItems');
+      drawText(ctx, emptyText, panelX + panelW / 2, TITLE_H + 20, {
+        size: 8,
+        color: '#666688',
+        align: 'center',
       });
       return;
     }
 
-    clampItemCursor(items);
+    const rtl = isRTL();
+    const maxVisible = Math.floor((SCREEN_H - TITLE_H - HINT_H) / ITEM_H);
+    const scrollOffset = Math.max(0, itemIndex - maxVisible + 1);
 
-    // Draw visible rows
-    for (let vi = 0; vi < VISIBLE_ROWS; vi++) {
-      const idx = scrollOffset + vi;
-      if (idx >= items.length) break;
+    for (let i = scrollOffset; i < Math.min(items.length, scrollOffset + maxVisible); i++) {
+      const item = items[i];
+      const drawY = TITLE_H + (i - scrollOffset) * ITEM_H;
+      const isSelected = i === itemIndex && focus === 'items';
 
-      const item = items[idx];
-      const ry = PANEL_Y + vi * ROW_H;
-      const isSelected = idx === itemCursor && focus === 'items';
+      const bgColor = isSelected ? '#303060' : '#181830';
+      fillRect(ctx, panelX, drawY, panelW, ITEM_H - 1, bgColor);
 
       if (isSelected) {
-        fillRect(ctx, PANEL_X, ry, PANEL_W, ROW_H - 1, COL_SELECTED);
+        drawRect(ctx, panelX, drawY, panelW, ITEM_H - 1, '#8888ff', 1);
       }
 
-      // Item icon
-      drawItemIcon(ctx, item.def.id, PANEL_X + 2, ry + 1, 14);
-
       // Item name
-      const nameColor = isSelected ? COL_TEXT : COL_TEXT2;
-      drawText(ctx, t(item.def.nameKey), PANEL_X + 18, ry + 4, { size: 7, color: nameColor });
+      const nameText = t(item.def.nameKey);
+      const qtyText = `x${item.qty}`;
 
-      // Quantity right-aligned
-      drawText(ctx, `x${item.qty}`, PANEL_X + PANEL_W - 4, ry + 4, {
-        size: 7, color: COL_TEXT2, align: 'right',
-      });
+      if (rtl) {
+        // RTL: name on right, qty on left
+        drawText(ctx, nameText, panelX + panelW - 4, drawY + 2, {
+          size: 7,
+          color: '#ffffff',
+          align: 'right',
+        });
+        drawText(ctx, qtyText, panelX + 4, drawY + 2, {
+          size: 7,
+          color: '#aaaacc',
+          align: 'left',
+        });
+      } else {
+        // LTR: name on left, qty on right
+        drawText(ctx, nameText, panelX + 4, drawY + 2, {
+          size: 7,
+          color: '#ffffff',
+          align: 'left',
+        });
+        drawText(ctx, qtyText, panelX + panelW - 4, drawY + 2, {
+          size: 7,
+          color: '#aaaacc',
+          align: 'right',
+        });
+      }
     }
 
-    // Scroll indicators
-    if (scrollOffset > 0) {
-      drawText(ctx, '\u25b2', PANEL_X + PANEL_W / 2, PANEL_Y - 1, {
-        size: 6, color: COL_HINT, align: 'center',
-      });
-    }
-    if (scrollOffset + VISIBLE_ROWS < items.length) {
-      drawText(ctx, '\u25bc', PANEL_X + PANEL_W / 2, PANEL_Y + PANEL_H - 7, {
-        size: 6, color: COL_HINT, align: 'center',
-      });
+    // Description of selected item at bottom of items panel
+    if (focus === 'items' && itemIndex < items.length) {
+      const desc = t(items[itemIndex].def.descriptionKey);
+      const descY = SCREEN_H - HINT_H - 12;
+      fillRect(ctx, panelX, descY - 2, panelW, 12, '#202050');
+      const descX = rtl ? panelX + panelW - 4 : panelX + 4;
+      const descAlign: CanvasTextAlign = rtl ? 'right' : 'left';
+      drawText(ctx, desc, descX, descY, { size: 7, color: '#ccccee', align: descAlign });
     }
   }
 
-  function renderBottomBar(ctx: CanvasRenderingContext2D): void {
-    fillRect(ctx, 0, BOTTOM_BAR_Y, SCREEN_W, SCREEN_H - BOTTOM_BAR_Y, COL_PANEL);
-    fillRect(ctx, 0, BOTTOM_BAR_Y, SCREEN_W, 1, COL_BORDER);
+  function render(ctx: CanvasRenderingContext2D): void {
+    clearScreen(ctx, '#181830');
 
-    if (message) {
-      drawText(ctx, message, SCREEN_W / 2, BOTTOM_BAR_Y + 3, {
-        size: 7, color: COL_GOLD, align: 'center',
+    // Title bar
+    const title = t('bag.title');
+    drawText(ctx, title, SCREEN_W / 2, 3, { size: 8, color: '#ffffff', align: 'center' });
+
+    const rtl = isRTL();
+    const panelW = SCREEN_W - SIDEBAR_W;
+
+    if (rtl) {
+      // RTL: items on left, categories on right
+      renderItems(ctx, 0, panelW);
+      renderCategories(ctx, panelW);
+    } else {
+      // LTR: categories on left, items on right
+      renderCategories(ctx, 0);
+      renderItems(ctx, SIDEBAR_W, panelW);
+    }
+
+    // Message overlay
+    if (messageTimer > 0) {
+      fillRect(ctx, 20, SCREEN_H / 2 - 10, SCREEN_W - 40, 20, '#202050');
+      drawRect(ctx, 20, SCREEN_H / 2 - 10, SCREEN_W - 40, 20, '#8888ff', 1);
+      drawText(ctx, message, SCREEN_W / 2, SCREEN_H / 2 - 5, {
+        size: 8,
+        color: '#ffffff',
+        align: 'center',
       });
-      return;
     }
 
-    // Show description of selected item if focused on items
-    if (focus === 'items') {
-      const cat = BAG_CATEGORIES[catIndex];
-      const items = getCategoryItems(cat);
-      if (items.length > 0 && itemCursor < items.length) {
-        const item = items[itemCursor];
-        drawText(ctx, t(item.def.descriptionKey), 4, BOTTOM_BAR_Y + 2, {
-          size: 7, color: COL_TEXT, maxWidth: SCREEN_W - 8, lineHeight: 8,
-        });
-        return;
-      }
-    }
-
-    // Controls hint
-    drawText(ctx, 'ESC:Back  ENTER:Use  \u2190\u2191\u2193\u2192:Navigate', 4, BOTTOM_BAR_Y + 3, {
-      size: 6, color: COL_HINT,
+    // Hints at bottom
+    const hintY = SCREEN_H - HINT_H + 2;
+    fillRect(ctx, 0, SCREEN_H - HINT_H, SCREEN_W, HINT_H, '#101028');
+    drawText(ctx, t('bag.hint'), SCREEN_W / 2, hintY, {
+      size: 7,
+      color: '#666688',
+      align: 'center',
     });
   }
 
-  // ── Scene interface ──
+  // ── Input ────────────────────────────────────────────────────
+
+  function update(dt: number): void {
+    if (messageTimer > 0) {
+      messageTimer -= dt;
+      if (messageTimer <= 0) {
+        message = '';
+      }
+      return;
+    }
+
+    if (input.isKeyPressed('Escape')) {
+      stateMachine.pop();
+      return;
+    }
+
+    const rtl = isRTL();
+    const items = getTabItems();
+
+    if (focus === 'categories') {
+      if (input.isKeyPressed('ArrowUp')) {
+        tabIndex = tabIndex > 0 ? tabIndex - 1 : BAG_TABS.length - 1;
+        itemIndex = 0;
+      }
+      if (input.isKeyPressed('ArrowDown')) {
+        tabIndex = tabIndex < BAG_TABS.length - 1 ? tabIndex + 1 : 0;
+        itemIndex = 0;
+      }
+
+      // Move to items panel: in LTR press Right, in RTL press Left
+      const toItemsKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+      if (input.isKeyPressed(toItemsKey) || input.isKeyPressed('Enter')) {
+        if (items.length > 0) {
+          focus = 'items';
+          itemIndex = 0;
+        }
+      }
+    } else {
+      // focus === 'items'
+      if (input.isKeyPressed('ArrowUp')) {
+        itemIndex = itemIndex > 0 ? itemIndex - 1 : items.length - 1;
+      }
+      if (input.isKeyPressed('ArrowDown')) {
+        itemIndex = itemIndex < items.length - 1 ? itemIndex + 1 : 0;
+      }
+
+      // Move back to categories: in LTR press Left, in RTL press Right
+      const toCatsKey = rtl ? 'ArrowRight' : 'ArrowLeft';
+      if (input.isKeyPressed(toCatsKey)) {
+        focus = 'categories';
+      }
+
+      if (input.isKeyPressed('Enter')) {
+        if (itemIndex < items.length) {
+          const item = items[itemIndex];
+          if (item.def.usableInOverworld) {
+            // Item use would be handled by a callback / scene push
+            // For now show a message that this is a bag-only view
+            showMessage(t('bag.selectPokemon'));
+          } else {
+            showMessage(t('bag.cantUseHere'));
+          }
+        }
+      }
+    }
+  }
 
   return {
     enter(): void {
-      catIndex = 0;
-      itemCursor = 0;
-      scrollOffset = 0;
+      tabIndex = 0;
+      itemIndex = 0;
       focus = 'categories';
-      message = null;
+      message = '';
       messageTimer = 0;
-      pendingItem = null;
     },
 
-    exit(): void {
-      // Nothing to clean up
-    },
+    exit(): void {},
 
     update(dt: number): void {
-      // Message timer
-      if (message && messageTimer > 0) {
-        messageTimer -= dt;
-        if (messageTimer <= 0) {
-          message = null;
-          messageTimer = 0;
-        }
-      }
-
-      // Escape → back
-      if (input.isKeyPressed('Escape')) {
-        stateMachine.pop();
-        return;
-      }
-
-      const cat = BAG_CATEGORIES[catIndex];
-      const items = getCategoryItems(cat);
-
-      if (focus === 'categories') {
-        // Navigate categories
-        if (input.isKeyPressed('ArrowUp')) {
-          catIndex = catIndex > 0 ? catIndex - 1 : BAG_CATEGORIES.length - 1;
-          itemCursor = 0;
-          scrollOffset = 0;
-        }
-        if (input.isKeyPressed('ArrowDown')) {
-          catIndex = catIndex < BAG_CATEGORIES.length - 1 ? catIndex + 1 : 0;
-          itemCursor = 0;
-          scrollOffset = 0;
-        }
-        // Move focus to item list
-        if (input.isKeyPressed('ArrowRight') || input.isKeyPressed('Enter')) {
-          if (items.length > 0) {
-            focus = 'items';
-            itemCursor = 0;
-            scrollOffset = 0;
-          }
-        }
-      } else {
-        // Navigate items
-        if (input.isKeyPressed('ArrowUp')) {
-          if (itemCursor > 0) {
-            itemCursor--;
-          } else {
-            itemCursor = items.length - 1;
-          }
-          clampItemCursor(items);
-        }
-        if (input.isKeyPressed('ArrowDown')) {
-          if (itemCursor < items.length - 1) {
-            itemCursor++;
-          } else {
-            itemCursor = 0;
-          }
-          clampItemCursor(items);
-        }
-        // Move focus back to categories
-        if (input.isKeyPressed('ArrowLeft')) {
-          focus = 'categories';
-        }
-
-        // Use item
-        if (input.isKeyPressed('Enter') && items.length > 0 && itemCursor < items.length) {
-          const item = items[itemCursor];
-          const canUse = bagMode === 'battle' ? item.def.usableInBattle : item.def.usableInOverworld;
-
-          if (!canUse) {
-            showMessage(t('bag.cantUseHere'));
-            return;
-          }
-
-          // Items that need a target Pokemon
-          const effectType = item.def.effect.type;
-          const needsTarget = effectType === 'heal' || effectType === 'heal-full'
-            || effectType === 'revive' || effectType === 'status-cure'
-            || effectType === 'pp-restore' || effectType === 'rare-candy';
-
-          if (needsTarget) {
-            pendingItem = item.def;
-            showMessage(t('bag.selectPokemon'));
-            // Push PARTY scene for target selection (will be wired in a later task)
-            // For now show the message; integration with party scene comes in Task 4/5
-            return;
-          }
-
-          // Non-target items (pokeballs, stat boosts) — handled by battle scene
-          if (bagMode === 'battle') {
-            pendingItem = item.def;
-            stateMachine.pop();
-            return;
-          }
-
-          showMessage(t('bag.cantUseHere'));
-        }
-      }
+      update(dt);
     },
 
     render(ctx: CanvasRenderingContext2D): void {
-      clearScreen(ctx, COL_BG);
-      renderTopBar(ctx);
-      renderSidebar(ctx);
-      renderItemList(ctx);
-      renderBottomBar(ctx);
+      render(ctx);
     },
   };
 }

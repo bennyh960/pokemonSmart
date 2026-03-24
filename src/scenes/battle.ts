@@ -486,8 +486,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             // An item was selected in the bag
             const itemDef = bagPendingItem;
             clearPendingItem();
-            if (itemDef.id) {
-              useItem(itemDef.id);
+            if (itemDef.itemId) {
+              useItem(itemDef.itemId);
             } else {
               phase = 'SELECT_ACTION'; showMainMenu(menu);
             }

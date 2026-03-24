@@ -1,13 +1,9 @@
 /**
- * PokedexScene - Scrollable list of all 251 Pokemon with tabbed detail view.
+ * PokedexScene - Scrollable list of all 251 Pokemon with detail view.
  * D key in overworld opens this. Shows seen/unseen status from PlayerData.pokedex.
  *
- * Detail view tabs:
- *   0 = INFO (sprite, types, stats)
- *   1 = EVOLUTION (chain visualization)
- *   2 = TYPE MATCHUPS (weaknesses, resistances, immunities, strengths)
- *   3 = MOVES (learnset — placeholder until data available)
- *   4 = LOCATIONS (spawn areas from encounter tables)
+ * Detail view has three tabs: INFO, TYPE, MOVES
+ * MOVES tab has two sub-tabs: BY LEVEL, CAN LEARN (TM)
  */
 
 import type { Scene } from '../types/index.js';
@@ -17,43 +13,48 @@ import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import {
-  getPokemon,
-  getPokemonDisplayName,
-  getMoveDisplayName,
-  getEvolutionChain,
-  getTypeEffectiveness,
-  getAllTypes,
-  getSpawnLocations,
-  getLearnset,
-  getMove,
-  getPokemonHeight,
-  getPokemonWeight,
-  getPokemonCategory,
-  getPokemonDescription,
+  getPokemon, getPokemonDisplayName, getMove, getMoveDisplayName,
+  getLearnset, getTypeEffectiveness, getAllTypes,
 } from '../services/pokemon-data.js';
+import type { PokemonType } from '../types/index.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
-import { TYPE_COLORS, getDamageClassLabel } from '../data/type-constants.js';
-import { drawTypeBadge } from '../ui/type-badge.js';
-import type { PokemonType } from '../types/index.js';
 
 const BG_COLOR = '#301818';
 const ENTRY_HEIGHT = 26;
 const VISIBLE_ENTRIES = 5;
 const TOTAL_POKEMON = 251;
-const TAB_COUNT = 5;
 
-const TAB_LABELS = ['INFO', 'EVO', 'TYPE', 'MOVES', 'AREA'];
+const TYPE_COLORS: Record<string, string> = {
+  normal: '#a8a878', fire: '#f08030', water: '#6890f0', grass: '#78c850',
+  electric: '#f8d030', ice: '#98d8d8', fighting: '#c03028', poison: '#a040a0',
+  ground: '#e0c068', flying: '#a890f0', psychic: '#f85888', bug: '#a8b820',
+  rock: '#b8a038', ghost: '#705898', dragon: '#7038f8', dark: '#705848',
+  steel: '#b8b8d0', glitch: '#00ff88',
+};
+
+/** 3-letter English abbreviations for types */
+const TYPE_ABBREV: Record<string, string> = {
+  normal: 'NRM', fire: 'FIR', water: 'WTR', grass: 'GRS',
+  electric: 'ELC', ice: 'ICE', fighting: 'FGT', poison: 'PSN',
+  ground: 'GND', flying: 'FLY', psychic: 'PSY', bug: 'BUG',
+  rock: 'RCK', ghost: 'GHO', dragon: 'DRG', dark: 'DRK',
+  steel: 'STL', glitch: 'GLT',
+};
 
 type PokedexView = 'list' | 'detail';
+type DetailTab = 'info' | 'type' | 'moves';
+type MovesSubTab = 'byLevel' | 'canLearn';
+
+const DETAIL_TABS: DetailTab[] = ['info', 'type', 'moves'];
 
 export function createPokedexScene(input: InputManager, stateMachine: StateMachine): Scene {
   let cursor = 0;
   let scrollOffset = 0;
   let view: PokedexView = 'list';
-  let detailTab = 0;
-  let moveScrollOffset = 0;
-  let locationScrollOffset = 0;
+  let detailTab: DetailTab = 'info';
+  let movesSubTab: MovesSubTab = 'byLevel';
+  let movesScrollOffset = 0;
 
   function getPokedex(): Record<number, boolean> {
     if (hasActiveGame()) return getPlayerData().pokedex;
@@ -88,28 +89,14 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     return '#' + String(id).padStart(3, '0');
   }
 
-  /** Format a mapId like "route-1" into "Route 1" for display. */
-  function formatMapName(mapId: string): string {
-    const key = `map.${mapId}.name`;
-    const translated = t(key);
-    // If t() returned the key itself, it means no translation exists — format manually
-    if (translated === key) {
-      return mapId
-        .split('-')
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(' ');
-    }
-    return translated;
-  }
-
   return {
     enter(): void {
       cursor = 0;
       scrollOffset = 0;
       view = 'list';
-      detailTab = 0;
-      moveScrollOffset = 0;
-      locationScrollOffset = 0;
+      detailTab = 'info';
+      movesSubTab = 'byLevel';
+      movesScrollOffset = 0;
       preloadVisibleSprites();
     },
 
@@ -121,31 +108,39 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           view = 'list';
           return;
         }
+
+        // Left/Right switches main tabs (unless on moves sub-tab switching)
         if (input.isKeyPressed('ArrowLeft')) {
-          detailTab = (detailTab - 1 + TAB_COUNT) % TAB_COUNT;
-          moveScrollOffset = 0;
-          locationScrollOffset = 0;
+          const idx = DETAIL_TABS.indexOf(detailTab);
+          if (idx > 0) {
+            detailTab = DETAIL_TABS[idx - 1];
+            movesScrollOffset = 0;
+          }
         }
         if (input.isKeyPressed('ArrowRight')) {
-          detailTab = (detailTab + 1) % TAB_COUNT;
-          moveScrollOffset = 0;
-          locationScrollOffset = 0;
-        }
-        // Scrolling within scrollable tabs
-        if (input.isKeyPressed('ArrowUp')) {
-          if (detailTab === 3) {
-            moveScrollOffset = Math.max(0, moveScrollOffset - 1);
-          } else if (detailTab === 4) {
-            locationScrollOffset = Math.max(0, locationScrollOffset - 1);
+          const idx = DETAIL_TABS.indexOf(detailTab);
+          if (idx < DETAIL_TABS.length - 1) {
+            detailTab = DETAIL_TABS[idx + 1];
+            movesScrollOffset = 0;
           }
         }
-        if (input.isKeyPressed('ArrowDown')) {
-          if (detailTab === 3) {
-            moveScrollOffset++;
-          } else if (detailTab === 4) {
-            locationScrollOffset++;
+
+        // Tab key switches moves sub-tabs when on MOVES tab
+        if (detailTab === 'moves' && input.isKeyPressed('Tab')) {
+          movesSubTab = movesSubTab === 'byLevel' ? 'canLearn' : 'byLevel';
+          movesScrollOffset = 0;
+        }
+
+        // Up/Down scrolls moves list when on MOVES tab
+        if (detailTab === 'moves') {
+          if (input.isKeyPressed('ArrowUp') && movesScrollOffset > 0) {
+            movesScrollOffset--;
+          }
+          if (input.isKeyPressed('ArrowDown')) {
+            movesScrollOffset++;
           }
         }
+
         return;
       }
 
@@ -179,17 +174,10 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         const id = cursor + 1;
         if (isSeen(id)) {
           view = 'detail';
-          detailTab = 0;
-          moveScrollOffset = 0;
-          locationScrollOffset = 0;
+          detailTab = 'info';
+          movesSubTab = 'byLevel';
+          movesScrollOffset = 0;
           loadImage(`/sprites/pokemon/front/${id}.png`).catch(() => {});
-          // Preload evolution chain sprites
-          const chain = getEvolutionChain(id);
-          if (chain) {
-            for (const stage of chain.stages) {
-              loadImage(`/sprites/pokemon/front/${stage.id}.png`).catch(() => {});
-            }
-          }
         }
       }
     },
@@ -257,7 +245,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           // measureText won't work without setting font, so use fixed offset
           tx = Math.max(tx, 140);
           for (const type of data.types) {
-            const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
+            const color = TYPE_COLORS[type] || '#a8a878';
             fillRect(ctx, tx, y + 5, 6, 6, color);
             drawRect(ctx, tx, y + 5, 6, 6, '#00000044');
             tx += 9;
@@ -288,8 +276,6 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     drawText(ctx, helpText, 4, SCREEN_H - 11, { size: 7, color: '#cccccc', font: 'monospace' });
   }
 
-  // ─── Detail View (tabbed) ────────────────────────────────────────────
-
   function renderDetailView(ctx: CanvasRenderingContext2D, id: number): void {
     const seen = isSeen(id);
     const data = getPokemon(id);
@@ -310,50 +296,58 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     // Name in title bar
     drawText(ctx, getPokemonDisplayName(id), 40, 3, { size: 8, color: '#ffffff', font: 'monospace' });
 
-    // Tab indicators (y=16..28)
-    renderTabBar(ctx);
+    // Tab bar
+    const tabY = 16;
+    const tabH = 12;
+    fillRect(ctx, 0, tabY, SCREEN_W, tabH, '#402020');
+    const tabLabels: [DetailTab, string][] = [
+      ['info', t('pokedex.tab.info')],
+      ['type', t('pokedex.tab.type')],
+      ['moves', t('pokedex.tab.moves')],
+    ];
+    const tabW = Math.floor(SCREEN_W / tabLabels.length);
+    for (let i = 0; i < tabLabels.length; i++) {
+      const [tab, label] = tabLabels[i];
+      const tx = i * tabW;
+      if (tab === detailTab) {
+        fillRect(ctx, tx, tabY, tabW, tabH, '#582828');
+        drawRect(ctx, tx, tabY, tabW, tabH, '#f8a878');
+      }
+      drawText(ctx, label, tx + tabW / 2, tabY + 2, {
+        size: 7, color: tab === detailTab ? '#f8a878' : '#999999', font: 'monospace', align: 'center',
+      });
+    }
 
-    // Tab content area starts at y=30, ends at y=SCREEN_H-14
-    const contentY = 30;
-    switch (detailTab) {
-      case 0: renderTabInfo(ctx, id, data, contentY); break;
-      case 1: renderTabEvolution(ctx, id, contentY); break;
-      case 2: renderTabTypeMatchups(ctx, data, contentY); break;
-      case 3: renderTabMoves(ctx, id, contentY); break;
-      case 4: renderTabLocations(ctx, id, contentY); break;
+    // Content area
+    const contentY = tabY + tabH + 2;
+    const contentH = SCREEN_H - contentY - 14;
+
+    if (detailTab === 'info') {
+      renderInfoTab(ctx, id, data, contentY);
+    } else if (detailTab === 'type') {
+      renderTypeTab(ctx, data, contentY, contentH);
+    } else if (detailTab === 'moves') {
+      renderMovesTab(ctx, id, contentY, contentH);
     }
 
     // Bottom bar
     fillRect(ctx, 0, SCREEN_H - 14, SCREEN_W, 14, '#481818');
-    const helpParts: string[] = [];
-    helpParts.push('\u25c0\u25b6 Tab');
-    if (detailTab === 3 || detailTab === 4) {
-      helpParts.push('\u25b2\u25bc Scroll');
+    const rtl = isRTL();
+    let helpText: string;
+    if (detailTab === 'moves') {
+      helpText = rtl ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1 / Tab \u05ea\u05ea-\u05d8\u05d0\u05d1 / \u2191\u2193 \u05d2\u05dc\u05d9\u05dc\u05d4' : 'Esc:Back  L/R:Tab  Tab:Sub  Up/Dn:Scroll';
+    } else {
+      helpText = rtl ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1' : 'Esc: Back  Left/Right: Switch Tab';
     }
-    helpParts.push('Esc: Back');
-    drawText(ctx, helpParts.join('  '), 4, SCREEN_H - 11, { size: 7, color: '#cccccc', font: 'monospace' });
+    drawText(ctx, helpText, 4, SCREEN_H - 11, { size: 7, color: '#cccccc', font: 'monospace' });
   }
 
-  function renderTabBar(ctx: CanvasRenderingContext2D): void {
-    fillRect(ctx, 0, 16, SCREEN_W, 13, '#401818');
-    const tabWidth = SCREEN_W / TAB_COUNT;
-    for (let i = 0; i < TAB_COUNT; i++) {
-      const x = Math.floor(i * tabWidth);
-      const w = Math.floor(tabWidth);
-      const isActive = i === detailTab;
-      if (isActive) {
-        fillRect(ctx, x, 16, w, 13, '#582828');
-        fillRect(ctx, x, 27, w, 2, '#f8a878');
-      }
-      const labelColor = isActive ? '#f8a878' : '#806060';
-      const labelX = x + Math.floor(w / 2);
-      drawText(ctx, TAB_LABELS[i], labelX, 19, { size: 7, color: labelColor, font: 'monospace', align: 'center' });
-    }
-  }
-
-  // ─── Tab 0: INFO ─────────────────────────────────────────────────────
-
-  function renderTabInfo(ctx: CanvasRenderingContext2D, id: number, data: NonNullable<ReturnType<typeof getPokemon>>, contentY: number): void {
+  function renderInfoTab(
+    ctx: CanvasRenderingContext2D,
+    id: number,
+    data: NonNullable<ReturnType<typeof getPokemon>>,
+    contentY: number,
+  ): void {
     // Large sprite
     const sprite = getCachedImage(`/sprites/pokemon/front/${id}.png`);
     const spriteX = 0;
@@ -367,57 +361,22 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       fillRect(ctx, spriteX, spriteY, spriteSize, spriteSize, '#584040');
     }
 
-    // Type badges below sprite (localized, full mode)
+    // Type badges below sprite
     let badgeX = spriteX;
     const badgeY = spriteY + spriteSize + 4;
     for (const type of data.types) {
-      const badgeW = drawTypeBadge(ctx, type as PokemonType, badgeX, badgeY, 'full');
+      const color = TYPE_COLORS[type] || '#a8a878';
+      const label = type.toUpperCase();
+      const badgeW = label.length * 5 + 6;
+      fillRect(ctx, badgeX, badgeY, badgeW, 10, color);
+      drawRect(ctx, badgeX, badgeY, badgeW, 10, '#00000044');
+      drawText(ctx, label, badgeX + 3, badgeY + 1, { size: 7, color: '#ffffff', font: 'monospace' });
       badgeX += badgeW + 3;
     }
 
-    // Height / Weight below type badges
-    let metaY = badgeY + 14;
-    const height = getPokemonHeight(id);
-    const weight = getPokemonWeight(id);
-    if (height !== '?' || weight !== '?') {
-      const parts: string[] = [];
-      if (height !== '?') parts.push(`Height: ${height}`);
-      if (weight !== '?') parts.push(`Weight: ${weight}`);
-      drawText(ctx, parts.join('  '), spriteX, metaY, { size: 6, color: '#cccccc', font: 'monospace' });
-      metaY += 10;
-    }
-
-    // Category
-    const category = getPokemonCategory(id);
-    if (category) {
-      drawText(ctx, category, spriteX, metaY, { size: 6, color: '#a08080', font: 'monospace' });
-      metaY += 10;
-    }
-
-    // Pokedex description / flavor text (word-wrapped)
-    const description = getPokemonDescription(id);
-    if (description) {
-      const maxLineChars = 30;
-      const words = description.split(' ');
-      let line = '';
-      for (const word of words) {
-        const test = line ? line + ' ' + word : word;
-        if (test.length > maxLineChars && line) {
-          drawText(ctx, line, spriteX, metaY, { size: 6, color: '#a8a8a8', font: 'monospace' });
-          metaY += 9;
-          line = word;
-        } else {
-          line = test;
-        }
-      }
-      if (line) {
-        drawText(ctx, line, spriteX, metaY, { size: 6, color: '#a8a8a8', font: 'monospace' });
-      }
-    }
-
-    // Stats panel
+    // Stats panel — starts at contentY + 8 (just below name), 13px row spacing
     const statsX = 66;
-    const statsY = contentY + 4;
+    const statsY = contentY + 8;
     const statNames = ['HP', 'ATK', 'DEF', 'SP.A', 'SP.D', 'SPD'];
     const statValues = [
       data.stats.hp, data.stats.attack, data.stats.defense,
@@ -426,290 +385,230 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     const statColors = ['#f85888', '#f08030', '#f8d030', '#6890f0', '#78c850', '#f85888'];
     const maxStat = 255;
     const barMaxW = 80;
+    const statRowH = 13;
 
     for (let i = 0; i < statNames.length; i++) {
-      const sy = statsY + i * 16;
+      const sy = statsY + i * statRowH;
       drawText(ctx, statNames[i], statsX, sy, { size: 7, color: '#cccccc', font: 'monospace' });
       drawText(ctx, String(statValues[i]), statsX + 32, sy, { size: 7, color: '#ffffff', font: 'monospace' });
 
+      // Stat bar
       const barX = statsX + 50;
       fillRect(ctx, barX, sy + 2, barMaxW, 5, '#402020');
       const barW = Math.floor((statValues[i] / maxStat) * barMaxW);
       fillRect(ctx, barX, sy + 2, barW, 5, statColors[i]);
     }
+
+    // Height/Weight right after last stat row
+    const totalStat = statValues.reduce((a, b) => a + b, 0);
+    const afterStatsY = statsY + statNames.length * statRowH + 2;
+    drawText(ctx, `BST: ${totalStat}`, statsX, afterStatsY, { size: 6, color: '#aaaaaa', font: 'monospace' });
   }
 
-  // ─── Tab 1: EVOLUTION ────────────────────────────────────────────────
+  function renderTypeTab(
+    ctx: CanvasRenderingContext2D,
+    data: NonNullable<ReturnType<typeof getPokemon>>,
+    contentY: number,
+    _contentH: number,
+  ): void {
+    const pokemonTypes = data.types as PokemonType[];
+    const allTypes = getAllTypes() as PokemonType[];
 
-  function renderTabEvolution(ctx: CanvasRenderingContext2D, id: number, contentY: number): void {
-    const chain = getEvolutionChain(id);
-
-    if (!chain || chain.stages.length <= 1) {
-      drawText(ctx, 'Does not evolve', SCREEN_W / 2, contentY + 40, {
-        size: 8, color: '#807070', font: 'monospace', align: 'center',
-      });
-      return;
-    }
-
-    const stages = chain.stages;
-    const spriteSize = 32;
-    const arrowSpace = 30;
-    const stageWidth = spriteSize + arrowSpace;
-    const totalWidth = stages.length * spriteSize + (stages.length - 1) * arrowSpace;
-    const startX = Math.max(4, Math.floor((SCREEN_W - totalWidth) / 2));
-    const centerY = contentY + 20;
-
-    for (let i = 0; i < stages.length; i++) {
-      const stage = stages[i];
-      const x = startX + i * stageWidth;
-      const isCurrent = stage.id === id;
-
-      // Background highlight for current stage
-      if (isCurrent) {
-        fillRect(ctx, x - 2, centerY - 2, spriteSize + 4, spriteSize + 4, '#582828');
-        drawRect(ctx, x - 2, centerY - 2, spriteSize + 4, spriteSize + 4, '#f8a878');
-      } else {
-        fillRect(ctx, x - 1, centerY - 1, spriteSize + 2, spriteSize + 2, '#402020');
-      }
-
-      // Sprite
-      const sprite = getCachedImage(`/sprites/pokemon/front/${stage.id}.png`);
-      if (sprite) {
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(sprite, x, centerY, spriteSize, spriteSize);
-        ctx.imageSmoothingEnabled = false;
-      } else {
-        fillRect(ctx, x, centerY, spriteSize, spriteSize, '#584040');
-      }
-
-      // Name below sprite
-      const name = getPokemonDisplayName(stage.id);
-      const nameColor = isCurrent ? '#f8a878' : '#cccccc';
-      drawText(ctx, name, x + spriteSize / 2, centerY + spriteSize + 4, {
-        size: 6, color: nameColor, font: 'monospace', align: 'center',
-      });
-
-      // Arrow and evolution info between stages
-      if (i < stages.length - 1) {
-        const nextStage = stages[i + 1];
-        const arrowX = x + spriteSize + 2;
-        const arrowY = centerY + spriteSize / 2 - 4;
-
-        drawText(ctx, '\u2192', arrowX + 4, arrowY, { size: 8, color: '#f8a878', font: 'monospace' });
-
-        // Evolution method text
-        let evoText = '';
-        if (nextStage.minLevel) {
-          evoText = `Lv.${nextStage.minLevel}`;
-        } else if (nextStage.item) {
-          evoText = nextStage.item;
-        } else if (nextStage.trigger) {
-          evoText = nextStage.trigger;
-        }
-        if (evoText) {
-          drawText(ctx, evoText, arrowX + 4, arrowY + 10, {
-            size: 5, color: '#a08080', font: 'monospace',
-          });
-        }
-      }
-    }
-  }
-
-  // ─── Tab 2: TYPE MATCHUPS ────────────────────────────────────────────
-
-  function renderTabTypeMatchups(ctx: CanvasRenderingContext2D, data: NonNullable<ReturnType<typeof getPokemon>>, contentY: number): void {
-    const allTypes = getAllTypes();
-    const pokemonTypes = data.types;
-
-    // Compute defensive matchups
+    // Calculate type matchups
     const weakTo: string[] = [];
-    const resistantTo: string[] = [];
-    const immuneTo: string[] = [];
+    const resists: string[] = [];
+    const immune: string[] = [];
+    const strongVs: string[] = [];
 
     for (const atkType of allTypes) {
-      let multiplier = 1;
+      let mult = 1;
       for (const defType of pokemonTypes) {
-        multiplier *= getTypeEffectiveness(atkType as any, defType as any);
+        mult *= getTypeEffectiveness(atkType, defType);
       }
-      if (multiplier === 0) {
-        immuneTo.push(atkType);
-      } else if (multiplier >= 2) {
-        weakTo.push(atkType);
-      } else if (multiplier > 0 && multiplier <= 0.5) {
-        resistantTo.push(atkType);
-      }
+      if (mult >= 2) weakTo.push(atkType);
+      else if (mult > 0 && mult < 1) resists.push(atkType);
+      else if (mult === 0) immune.push(atkType);
     }
 
-    // Compute offensive matchups (STAB super-effective)
-    const strongAgainst: string[] = [];
-    for (const stabType of pokemonTypes) {
+    // Strong vs: types this Pokemon's types are super effective against
+    for (const myType of pokemonTypes) {
       for (const defType of allTypes) {
-        const eff = getTypeEffectiveness(stabType as any, defType as any);
-        if (eff >= 2 && !strongAgainst.includes(defType)) {
-          strongAgainst.push(defType);
+        const eff = getTypeEffectiveness(myType, defType);
+        if (eff >= 2 && !strongVs.includes(defType)) {
+          strongVs.push(defType);
         }
       }
     }
 
     let y = contentY;
-    const sectionGap = 2;
 
-    y = renderTypeSection(ctx, 'WEAK TO:', weakTo, y);
-    y += sectionGap;
-    y = renderTypeSection(ctx, 'RESISTS:', resistantTo, y);
-    y += sectionGap;
-    if (immuneTo.length > 0) {
-      y = renderTypeSection(ctx, 'IMMUNE:', immuneTo, y);
-      y += sectionGap;
-    }
-    renderTypeSection(ctx, 'STRONG VS:', strongAgainst, y);
-  }
+    function drawTypeMatchupSection(label: string, types: string[]): void {
+      if (types.length === 0) return;
+      drawText(ctx, label, 4, y, { size: 7, color: '#f8a878', font: 'monospace' });
+      y += 11;
 
-  function renderTypeSection(ctx: CanvasRenderingContext2D, header: string, types: string[], startY: number): number {
-    let y = startY;
-    drawText(ctx, header, 4, y, { size: 7, color: '#f8a878', font: 'monospace' });
-    y += 10;
+      let x = 4;
+      for (const type of types) {
+        const color = TYPE_COLORS[type] || '#a8a878';
+        const badgeLabel = type.toUpperCase();
+        const badgeW = badgeLabel.length * 5 + 6;
 
-    if (types.length === 0) {
-      drawText(ctx, '\u2014', 8, y, { size: 7, color: '#584040', font: 'monospace' });
-      y += 10;
-      return y;
-    }
+        // Wrap to next line if needed
+        if (x + badgeW > SCREEN_W - 4) {
+          x = 4;
+          y += 12;
+        }
 
-    let x = 4;
-    for (const type of types) {
-      // Estimate badge width for wrapping check
-      const estW = 30;
-      if (x + estW > SCREEN_W - 4) {
-        x = 4;
-        y += 12;
+        fillRect(ctx, x, y, badgeW, 9, color);
+        drawRect(ctx, x, y, badgeW, 9, '#00000044');
+        drawText(ctx, badgeLabel, x + 3, y + 1, { size: 6, color: '#ffffff', font: 'monospace' });
+        x += badgeW + 3;
       }
-
-      const badgeW = drawTypeBadge(ctx, type as PokemonType, x, y, 'short');
-      x += badgeW + 3;
+      y += 14;
     }
-    y += 12;
-    return y;
+
+    drawTypeMatchupSection(t('pokedex.type.weakTo'), weakTo);
+    drawTypeMatchupSection(t('pokedex.type.resists'), resists);
+    drawTypeMatchupSection(t('pokedex.type.immune'), immune);
+    drawTypeMatchupSection(t('pokedex.type.strongVs'), strongVs);
   }
 
-  // ─── Tab 3: MOVES ───────────────────────────────────────────────────
+  function renderMovesTab(
+    ctx: CanvasRenderingContext2D,
+    pokemonId: number,
+    contentY: number,
+    contentH: number,
+  ): void {
+    // Sub-tab labels
+    const subTabY = contentY;
+    const subTabW = 80;
+    const subTabs: [MovesSubTab, string][] = [
+      ['byLevel', t('pokedex.moves.byLevel')],
+      ['canLearn', t('pokedex.moves.canLearn')],
+    ];
 
-  function renderTabMoves(ctx: CanvasRenderingContext2D, id: number, contentY: number): void {
-    const learnset = getLearnset(id);
-
-    if (learnset.length === 0) {
-      drawText(ctx, 'No data available', SCREEN_W / 2, contentY + 40, {
-        size: 8, color: '#807070', font: 'monospace', align: 'center',
+    for (let i = 0; i < subTabs.length; i++) {
+      const [tab, label] = subTabs[i];
+      const sx = 4 + i * (subTabW + 4);
+      const active = tab === movesSubTab;
+      if (active) {
+        fillRect(ctx, sx, subTabY, subTabW, 10, '#582828');
+        drawRect(ctx, sx, subTabY, subTabW, 10, '#f8a878');
+      } else {
+        fillRect(ctx, sx, subTabY, subTabW, 10, '#402020');
+      }
+      drawText(ctx, label, sx + subTabW / 2, subTabY + 1, {
+        size: 6, color: active ? '#f8a878' : '#777777', font: 'monospace', align: 'center',
       });
-      return;
     }
 
-    const maxVisible = 9;
-    const maxScroll = Math.max(0, learnset.length - maxVisible);
-    if (moveScrollOffset > maxScroll) moveScrollOffset = maxScroll;
+    const tableY = subTabY + 14;
+    const rowH = 10;
+    const maxVisibleRows = Math.floor((contentH - 14 - rowH) / rowH);
 
-    drawText(ctx, t('pokedex.moves.byLevel'), 4, contentY, { size: 7, color: '#f8a878', font: 'monospace' });
+    // Column positions
+    const colLv = 4;
+    const colName = 28;
+    const colClass = 118;
+    const colType = 138;
+    const colAcc = 168;
+    const colPow = 196;
 
-    const rowH = 12;
-    const startY = contentY + 12;
+    // Header row
+    const headerColor = '#f8a878';
+    const isLevelTab = movesSubTab === 'byLevel';
+    drawText(ctx, isLevelTab ? t('pokedex.moves.header.lv') : t('pokedex.moves.header.tm'), colLv, tableY, { size: 6, color: headerColor, font: 'monospace' });
+    drawText(ctx, t('pokedex.moves.header.move'), colName, tableY, { size: 6, color: headerColor, font: 'monospace' });
+    drawText(ctx, t('pokedex.moves.header.class'), colClass, tableY, { size: 6, color: headerColor, font: 'monospace' });
+    drawText(ctx, t('pokedex.moves.header.type'), colType, tableY, { size: 6, color: headerColor, font: 'monospace' });
+    drawText(ctx, t('pokedex.moves.header.acc'), colAcc, tableY, { size: 6, color: headerColor, font: 'monospace' });
+    drawText(ctx, t('pokedex.moves.header.pow'), colPow, tableY, { size: 6, color: headerColor, font: 'monospace' });
 
-    for (let i = 0; i < maxVisible; i++) {
-      const idx = moveScrollOffset + i;
-      if (idx >= learnset.length) break;
+    // Divider line
+    fillRect(ctx, 4, tableY + 8, SCREEN_W - 8, 1, '#584040');
 
-      const entry = learnset[idx];
-      const moveData = getMove(entry.moveId);
-      const y = startY + i * rowH;
+    const dataY = tableY + rowH + 2;
 
-      // Level
-      const lvText = entry.levelLearned === 0 ? '  -' : `Lv${String(entry.levelLearned).padStart(2, ' ')}`;
-      drawText(ctx, lvText, 4, y, { size: 6, color: '#a08080', font: 'monospace' });
+    if (movesSubTab === 'byLevel') {
+      const learnset = getLearnset(pokemonId);
 
-      // Type color bar
-      if (moveData) {
-        const typeColor = TYPE_COLORS[moveData.type as PokemonType] || '#a8a878';
-        fillRect(ctx, 30, y + 1, 4, 6, typeColor);
+      if (learnset.length === 0) {
+        drawText(ctx, t('pokedex.moves.noData'), SCREEN_W / 2, dataY + 10, {
+          size: 7, color: '#807070', font: 'monospace', align: 'center',
+        });
+        return;
       }
 
-      // Move name (English from API)
-      const moveName = moveData ? getMoveDisplayName(entry.moveId) : `Move #${entry.moveId}`;
-      drawText(ctx, moveName, 37, y, { size: 6, color: '#ffffff', font: 'monospace' });
+      // Sort by level
+      const sorted = [...learnset].sort((a, b) => a.levelLearned - b.levelLearned);
 
-      // Power
-      const power = moveData?.power ? String(moveData.power) : '\u2014';
-      drawText(ctx, power, 160, y, { size: 6, color: '#cccccc', font: 'monospace' });
+      // Clamp scroll offset
+      const maxScroll = Math.max(0, sorted.length - maxVisibleRows);
+      if (movesScrollOffset > maxScroll) movesScrollOffset = maxScroll;
 
-      // PP
-      if (moveData) {
-        drawText(ctx, `PP${moveData.pp}`, 185, y, { size: 6, color: '#aaaacc', font: 'monospace' });
+      for (let i = 0; i < maxVisibleRows; i++) {
+        const idx = movesScrollOffset + i;
+        if (idx >= sorted.length) break;
+
+        const entry = sorted[idx];
+        const move = getMove(entry.moveId);
+        const ry = dataY + i * rowH;
+
+        // Alternating row background
+        if (i % 2 === 0) {
+          fillRect(ctx, 2, ry - 1, SCREEN_W - 4, rowH, '#381818');
+        }
+
+        // Level
+        drawText(ctx, String(entry.levelLearned), colLv, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+
+        // Move name (localized)
+        const moveName = getMoveDisplayName(entry.moveId);
+        drawText(ctx, moveName, colName, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+
+        if (move) {
+          // Damage class symbol (infer from power: null/0 = status, else physical/special based on type pre-gen4)
+          const classSymbol = getDamageClassSymbol(move.power, move.type);
+          drawText(ctx, classSymbol, colClass, ry, { size: 6, color: '#cccccc', font: 'monospace' });
+
+          // Type (3-letter English abbreviation, always English)
+          const typeAbbr = TYPE_ABBREV[move.type] || move.type.substring(0, 3).toUpperCase();
+          const typeColor = TYPE_COLORS[move.type] || '#a8a878';
+          drawText(ctx, typeAbbr, colType, ry, { size: 6, color: typeColor, font: 'monospace' });
+
+          // Accuracy
+          drawText(ctx, move.accuracy !== null ? String(move.accuracy) : '\u2014', colAcc, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+
+          // Power
+          drawText(ctx, move.power !== null && move.power > 0 ? String(move.power) : '\u2014', colPow, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+        }
       }
 
-      // Damage class symbol
-      if (moveData?.damageClass) {
-        const dcLabel = getDamageClassLabel(moveData.damageClass);
-        drawText(ctx, dcLabel.symbol, 218, y, { size: 6, color: '#cccccc', font: 'monospace' });
+      // Scroll indicators
+      if (movesScrollOffset > 0) {
+        drawText(ctx, '\u25b2', SCREEN_W - 10, dataY - 2, { size: 6, color: '#f8a878', font: 'monospace' });
       }
-    }
-
-    // Scroll indicators
-    if (moveScrollOffset > 0) {
-      drawText(ctx, '\u25b2', SCREEN_W - 10, startY - 2, { size: 7, color: '#f8a878', font: 'monospace' });
-    }
-    if (moveScrollOffset + maxVisible < learnset.length) {
-      drawText(ctx, '\u25bc', SCREEN_W - 10, startY + maxVisible * rowH, { size: 7, color: '#f8a878', font: 'monospace' });
-    }
-
-    // Learnable moves section (TM/HM/egg — TODO: Add TM/HM/egg move data from PokeAPI)
-    if (moveScrollOffset + maxVisible >= learnset.length) {
-      const sectionY = startY + Math.min(learnset.length - moveScrollOffset, maxVisible) * rowH + 4;
-      drawText(ctx, t('pokedex.moves.learnable'), 4, sectionY, { size: 7, color: '#f8a878', font: 'monospace' });
-      drawText(ctx, t('pokedex.moves.noData'), 8, sectionY + 12, { size: 6, color: '#807070', font: 'monospace' });
-    }
-  }
-
-  // ─── Tab 4: LOCATIONS ────────────────────────────────────────────────
-
-  function renderTabLocations(ctx: CanvasRenderingContext2D, id: number, contentY: number): void {
-    const locations = getSpawnLocations(id);
-
-    if (locations.length === 0) {
-      drawText(ctx, 'Location unknown', SCREEN_W / 2, contentY + 40, {
-        size: 8, color: '#807070', font: 'monospace', align: 'center',
+      if (movesScrollOffset + maxVisibleRows < sorted.length) {
+        drawText(ctx, '\u25bc', SCREEN_W - 10, dataY + maxVisibleRows * rowH, { size: 6, color: '#f8a878', font: 'monospace' });
+      }
+    } else {
+      // TODO: Fetch TM/HM compatibility from PokeAPI
+      drawText(ctx, t('pokedex.moves.noData'), SCREEN_W / 2, dataY + 10, {
+        size: 7, color: '#807070', font: 'monospace', align: 'center',
       });
-      return;
-    }
-
-    // Clamp scroll offset
-    const maxVisible = 9;
-    const maxScroll = Math.max(0, locations.length - maxVisible);
-    if (locationScrollOffset > maxScroll) locationScrollOffset = maxScroll;
-
-    // Header
-    drawText(ctx, 'FOUND IN:', 4, contentY, { size: 7, color: '#f8a878', font: 'monospace' });
-
-    const rowH = 12;
-    const startY = contentY + 12;
-
-    for (let i = 0; i < maxVisible; i++) {
-      const idx = locationScrollOffset + i;
-      if (idx >= locations.length) break;
-
-      const loc = locations[idx];
-      const y = startY + i * rowH;
-      const mapName = formatMapName(loc.mapId);
-      const levelRange = `Lv.${loc.minLevel}-${loc.maxLevel}`;
-
-      drawText(ctx, mapName, 8, y, { size: 7, color: '#ffffff', font: 'monospace' });
-      drawText(ctx, levelRange, SCREEN_W - 8, y, { size: 7, color: '#cccccc', font: 'monospace', align: 'right' });
-    }
-
-    // Scroll indicators
-    if (locationScrollOffset > 0) {
-      drawText(ctx, '\u25b2', SCREEN_W - 10, startY - 2, { size: 7, color: '#f8a878', font: 'monospace' });
-    }
-    if (locationScrollOffset + maxVisible < locations.length) {
-      drawText(ctx, '\u25bc', SCREEN_W - 10, startY + maxVisible * rowH, { size: 7, color: '#f8a878', font: 'monospace' });
     }
   }
+}
+
+/**
+ * Infer damage class from move power and type.
+ * Pre-Gen 4 split: physical types vs special types.
+ * Returns symbol: ⚔ PHY / ◆ SPC / ☆ STA
+ */
+const PHYSICAL_TYPES = new Set(['normal', 'fighting', 'poison', 'ground', 'flying', 'bug', 'rock', 'ghost', 'steel']);
+
+function getDamageClassSymbol(power: number | null, type: string): string {
+  if (power === null || power === 0) return '\u2606'; // ☆ Status
+  if (PHYSICAL_TYPES.has(type)) return '\u2694'; // ⚔ Physical
+  return '\u25c6'; // ◆ Special
 }
