@@ -17,6 +17,7 @@ import { createOverworldScene } from '../scenes/overworld.js';
 import { createStarterSelectScene } from '../scenes/starter-select.js';
 import { createPartyScene } from '../scenes/party.js';
 import { createPokedexScene } from '../scenes/pokedex.js';
+import { createBagScene } from '../scenes/bag.js';
 import {
   LOGICAL_WIDTH,
   LOGICAL_HEIGHT,
@@ -49,6 +50,7 @@ export function createGame(container: HTMLElement) {
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
   stateMachine.register('PARTY', createPartyScene(input, stateMachine));
   stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
+  stateMachine.register('BAG', createBagScene(input, stateMachine));
 
   /** Compute the largest integer scale that fits the viewport and set canvas CSS size. */
   function handleResize(): void {
@@ -76,13 +78,6 @@ export function createGame(container: HTMLElement) {
     // Mute toggle: M key
     if (input.isKeyPressed('m') || input.isKeyPressed('M')) {
       audio.toggleMute();
-    }
-
-    // Debug: Press B to enter battle from any scene
-    if (input.isKeyPressed('b') || input.isKeyPressed('B')) {
-      if (stateMachine.currentId() !== 'BATTLE') {
-        stateMachine.change('BATTLE');
-      }
     }
 
     stateMachine.update(dt);

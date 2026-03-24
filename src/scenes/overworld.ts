@@ -717,6 +717,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // B key → Bag
+      if (input.isKeyPressed('b') || input.isKeyPressed('B')) {
+        stateMachine.push('BAG');
+        return;
+      }
+
       // N key → Shop (temporary hotkey until NPC interaction wires it)
       if (input.isKeyPressed('n') || input.isKeyPressed('N')) {
         if (hasActiveGame()) {

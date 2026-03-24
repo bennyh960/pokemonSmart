@@ -54,6 +54,20 @@
   "party.stats.speed": "מהירות",
   "party.xp": "ניסיון: {current}/{next}",
   "party.swap": "בחר פוקימון להחלפה",
+  "party.hint.overworld": "ESC:חזור  ENTER:פרטים  S:החלף",
+  "party.hint.battle": "ESC:חזור  ENTER:שלח לקרב",
+  "party.hint.selectTarget": "ESC:חזור  ENTER:השתמש בפריט",
+  "party.hint.swapMode": "ENTER:החלף כאן  ESC:ביטול",
+  "party.hint.detailNav": "שמאל/ימין:לשונית  ESC:חזור",
+  "party.hint.moves": "ENTER:אפשרויות  D:מחק",
+  "party.moves.battleMoves": "מהלכי קרב",
+  "party.moves.noMoves": "אין מהלכים",
+  "party.moves.swap": "החלף",
+  "party.moves.delete": "מחק",
+  "party.moves.cancel": "ביטול",
+  "party.moves.forgetConfirm": "לשכוח את {move}?",
+  "party.moves.swapSelect": "בחר מהלך להחלפה",
+  "party.info.pokedexHint": "ENTER: צפה בפוקדקס",
 
   "npc.choice.yes": "כן",
   "npc.choice.no": "לא",
@@ -126,5 +140,16 @@
   "item.ether.name": "אתר",
   "item.ether.desc": "משחזר 10 PP למהלך",
   "item.elixir.name": "אליקסיר",
-  "item.elixir.desc": "משחזר את כל ה-PP של כל המהלכים"
+  "item.elixir.desc": "משחזר את כל ה-PP של כל המהלכים",
+
+  "bag.title": "תיק",
+  "bag.noItems": "אין פריטים",
+  "bag.cantUseHere": "אי אפשר להשתמש כאן!",
+  "bag.selectPokemon": "בחר פוקימון לשימוש",
+
+  "battle.goName": "קדימה, {name}!",
+  "battle.comeBack": "חזור, {name}!",
+  "battle.alreadyActive": "הפוקימון הזה כבר בקרב!",
+  "battle.pokemonFainted": "הפוקימון הזה התעלף!",
+  "battle.noOtherPokemon": "אין פוקימון אחר זמין!"
 }

@@ -10,7 +10,9 @@
     "accuracy": 100,
     "pp": 35,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Pounds with fore­ legs or tail."
   },
   {
     "id": 2,
@@ -23,7 +25,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Has a high criti­ cal hit ratio."
   },
   {
     "id": 3,
@@ -36,7 +40,9 @@
     "accuracy": 85,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Repeatedly slaps 2-5 times."
   },
   {
     "id": 4,
@@ -49,7 +55,9 @@
     "accuracy": 85,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Repeatedly punches 2-5 times."
   },
   {
     "id": 5,
@@ -62,7 +70,9 @@
     "accuracy": 85,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "A powerful punch thrown very hard."
   },
   {
     "id": 6,
@@ -75,7 +85,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Throws coins. Gets them back later."
   },
   {
     "id": 7,
@@ -88,7 +100,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "A fiery punch. May cause a burn."
   },
   {
     "id": 8,
@@ -101,7 +115,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An icy punch. May cause freezing."
   },
   {
     "id": 9,
@@ -114,7 +130,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An electric punch. It may paralyze."
   },
   {
     "id": 10,
@@ -127,7 +145,9 @@
     "accuracy": 100,
     "pp": 35,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Scratches with sharp claws."
   },
   {
     "id": 11,
@@ -140,7 +160,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Grips with power­ ful pincers."
   },
   {
     "id": 12,
@@ -153,7 +175,9 @@
     "accuracy": 30,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A one-hit KO, pincer attack."
   },
   {
     "id": 13,
@@ -166,7 +190,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "1st turn: Prepare 2nd turn: Attack"
   },
   {
     "id": 14,
@@ -179,7 +205,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A dance that in­ creases ATTACK."
   },
   {
     "id": 15,
@@ -192,7 +220,9 @@
     "accuracy": 95,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Cuts using claws, scythes, etc."
   },
   {
     "id": 16,
@@ -205,7 +235,9 @@
     "accuracy": 100,
     "pp": 35,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Whips up a strong gust of wind."
   },
   {
     "id": 17,
@@ -218,7 +250,9 @@
     "accuracy": 100,
     "pp": 35,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Strikes the target with wings."
   },
   {
     "id": 18,
@@ -231,7 +265,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Blows away the foe & ends battle."
   },
   {
     "id": 19,
@@ -244,7 +280,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "1st turn: Fly 2nd turn: Attack"
   },
   {
     "id": 20,
@@ -257,7 +295,9 @@
     "accuracy": 85,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Binds the target for 2-5 turns."
   },
   {
     "id": 21,
@@ -270,7 +310,9 @@
     "accuracy": 75,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Slams the foe with a tail, vine, etc."
   },
   {
     "id": 22,
@@ -283,7 +325,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Whips the foe with slender vines."
   },
   {
     "id": 23,
@@ -296,7 +340,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that may cause flinching."
   },
   {
     "id": 24,
@@ -309,7 +355,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A double kicking attack."
   },
   {
     "id": 25,
@@ -322,7 +370,9 @@
     "accuracy": 75,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "A powerful kicking attack."
   },
   {
     "id": 26,
@@ -335,7 +385,9 @@
     "accuracy": 95,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "May miss, damaging the user."
   },
   {
     "id": 27,
@@ -348,7 +400,9 @@
     "accuracy": 85,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "A fast, spinning kick."
   },
   {
     "id": 28,
@@ -361,7 +415,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Reduces accuracy by throwing sand."
   },
   {
     "id": 29,
@@ -374,7 +430,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that may make foe flinch."
   },
   {
     "id": 30,
@@ -387,7 +445,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack using a horn to jab."
   },
   {
     "id": 31,
@@ -400,7 +460,9 @@
     "accuracy": 85,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Jabs the target 2-5 times."
   },
   {
     "id": 32,
@@ -413,7 +475,9 @@
     "accuracy": 30,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A one-hit KO, drill attack."
   },
   {
     "id": 33,
@@ -426,7 +490,9 @@
     "accuracy": 100,
     "pp": 35,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A full-body charge attack."
   },
   {
     "id": 34,
@@ -439,7 +505,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "An attack that may cause paralysis."
   },
   {
     "id": 35,
@@ -452,7 +520,9 @@
     "accuracy": 90,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Squeezes the foe for 2-5 turns."
   },
   {
     "id": 36,
@@ -465,7 +535,9 @@
     "accuracy": 85,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "A tackle that also hurts the user."
   },
   {
     "id": 37,
@@ -478,7 +550,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "Works 2-3 turns and confuses user."
   },
   {
     "id": 38,
@@ -491,7 +565,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "A tackle that also hurts the user."
   },
   {
     "id": 39,
@@ -504,7 +580,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Lowers the foe's DEFENSE."
   },
   {
     "id": 40,
@@ -517,7 +595,9 @@
     "accuracy": 100,
     "pp": 35,
     "effectChance": 30,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that may poison the target."
   },
   {
     "id": 41,
@@ -530,7 +610,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 20,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Jabs the foe twice using stingers."
   },
   {
     "id": 42,
@@ -543,7 +625,9 @@
     "accuracy": 95,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Fires pins that strike 2-5 times."
   },
   {
     "id": 43,
@@ -556,7 +640,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Reduces the foe's DEFENSE."
   },
   {
     "id": 44,
@@ -569,7 +655,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": 30,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An attack that may cause flinching."
   },
   {
     "id": 45,
@@ -582,7 +670,9 @@
     "accuracy": 100,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Reduces the foe's ATTACK."
   },
   {
     "id": 46,
@@ -595,7 +685,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Scares wild foes to end battle."
   },
   {
     "id": 47,
@@ -608,7 +700,9 @@
     "accuracy": 55,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "May cause the foe to fall asleep."
   },
   {
     "id": 48,
@@ -621,7 +715,9 @@
     "accuracy": 55,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sound waves that cause confusion."
   },
   {
     "id": 49,
@@ -634,7 +730,9 @@
     "accuracy": 90,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Always inflicts 20HP damage."
   },
   {
     "id": 50,
@@ -647,7 +745,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Disables the foe's most recent move."
   },
   {
     "id": 51,
@@ -660,7 +760,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": 10,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "An attack that may lower DEFENSE."
   },
   {
     "id": 52,
@@ -673,7 +775,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": 10,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "An attack that may inflict a burn."
   },
   {
     "id": 53,
@@ -686,7 +790,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "An attack that may inflict a burn."
   },
   {
     "id": 54,
@@ -699,7 +805,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Prevents stat reduction."
   },
   {
     "id": 55,
@@ -712,7 +820,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Squirts water to attack."
   },
   {
     "id": 56,
@@ -725,7 +835,9 @@
     "accuracy": 80,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "A powerful water- type attack."
   },
   {
     "id": 57,
@@ -738,7 +850,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "A strong water- type attack."
   },
   {
     "id": 58,
@@ -751,7 +865,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "An attack that may freeze the foe."
   },
   {
     "id": 59,
@@ -764,7 +880,9 @@
     "accuracy": 70,
     "pp": 5,
     "effectChance": 10,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "An attack that may freeze the foe."
   },
   {
     "id": 60,
@@ -777,7 +895,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "An attack that may confuse the foe."
   },
   {
     "id": 61,
@@ -790,7 +910,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "An attack that may lower SPEED."
   },
   {
     "id": 62,
@@ -803,7 +925,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "An attack that may lower ATTACK."
   },
   {
     "id": 63,
@@ -816,7 +940,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "1st turn: Attack 2nd turn: Rest"
   },
   {
     "id": 64,
@@ -829,7 +955,9 @@
     "accuracy": 100,
     "pp": 35,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Jabs the foe with a beak, etc."
   },
   {
     "id": 65,
@@ -842,7 +970,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "A strong, spin­ ning-peck attack."
   },
   {
     "id": 66,
@@ -855,7 +985,9 @@
     "accuracy": 80,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that al­ so hurts the user."
   },
   {
     "id": 67,
@@ -868,7 +1000,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that may cause flinching."
   },
   {
     "id": 68,
@@ -881,7 +1015,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Returns a physical blow double."
   },
   {
     "id": 69,
@@ -894,7 +1030,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user's level equals damage HP."
   },
   {
     "id": 70,
@@ -907,7 +1045,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "A powerful physi­ cal attack."
   },
   {
     "id": 71,
@@ -920,7 +1060,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Steals 1/2 of the damage inflicted."
   },
   {
     "id": 72,
@@ -933,7 +1075,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Steals 1/2 of the damage inflicted."
   },
   {
     "id": 73,
@@ -946,7 +1090,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Steals HP from the foe on every turn."
   },
   {
     "id": 74,
@@ -959,7 +1105,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Raises the SPCL. ATK rating."
   },
   {
     "id": 75,
@@ -972,7 +1120,9 @@
     "accuracy": 95,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Has a high criti­ cal hit ratio."
   },
   {
     "id": 76,
@@ -985,7 +1135,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "1st turn: Prepare 2nd turn: Attack"
   },
   {
     "id": 77,
@@ -998,7 +1150,9 @@
     "accuracy": 75,
     "pp": 35,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that may poison the foe."
   },
   {
     "id": 78,
@@ -1011,7 +1165,9 @@
     "accuracy": 75,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that may paralyze the foe."
   },
   {
     "id": 79,
@@ -1024,7 +1180,9 @@
     "accuracy": 75,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "May cause the foe to fall asleep."
   },
   {
     "id": 80,
@@ -1037,7 +1195,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "Works 2-3 turns and confuses user."
   },
   {
     "id": 81,
@@ -1050,7 +1210,9 @@
     "accuracy": 95,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that lowers the foe's SPEED."
   },
   {
     "id": 82,
@@ -1063,7 +1225,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Always inflicts 40HP damage."
   },
   {
     "id": 83,
@@ -1076,7 +1240,9 @@
     "accuracy": 85,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Traps foe in fire for 2-5 turns."
   },
   {
     "id": 84,
@@ -1089,7 +1255,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": 10,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "An attack that may cause paralysis."
   },
   {
     "id": 85,
@@ -1102,7 +1270,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "An attack that may cause paralysis."
   },
   {
     "id": 86,
@@ -1115,7 +1285,9 @@
     "accuracy": 90,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that may cause paralysis."
   },
   {
     "id": 87,
@@ -1128,7 +1300,9 @@
     "accuracy": 70,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "An attack that may cause paralysis."
   },
   {
     "id": 88,
@@ -1141,7 +1315,9 @@
     "accuracy": 90,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Drops rocks on the enemy."
   },
   {
     "id": 89,
@@ -1154,7 +1330,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "Tough but useless vs. flying foes."
   },
   {
     "id": 90,
@@ -1167,7 +1345,9 @@
     "accuracy": 30,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A ground-type, one-hit KO attack."
   },
   {
     "id": 91,
@@ -1180,7 +1360,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "1st turn: Burrow 2nd turn: Attack"
   },
   {
     "id": 92,
@@ -1193,7 +1375,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A poison move with increasing damage."
   },
   {
     "id": 93,
@@ -1206,7 +1390,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": 10,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "An attack that may cause confusion."
   },
   {
     "id": 94,
@@ -1219,7 +1405,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "An attack that may lower SPCL.DEF."
   },
   {
     "id": 95,
@@ -1232,7 +1420,9 @@
     "accuracy": 60,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "May put the foe to sleep."
   },
   {
     "id": 96,
@@ -1245,7 +1435,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Raises the user's ATTACK."
   },
   {
     "id": 97,
@@ -1258,7 +1450,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sharply increases the user's SPEED."
   },
   {
     "id": 98,
@@ -1271,7 +1465,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Lets the user get in the first hit."
   },
   {
     "id": 99,
@@ -1284,7 +1480,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Raises ATTACK if the user is hit."
   },
   {
     "id": 100,
@@ -1297,7 +1495,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move for fleeing from battle."
   },
   {
     "id": 101,
@@ -1310,7 +1510,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user's level equals damage HP."
   },
   {
     "id": 102,
@@ -1323,7 +1525,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Copies a move used by the foe."
   },
   {
     "id": 103,
@@ -1336,7 +1540,9 @@
     "accuracy": 85,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sharply reduces the foe's DEFENSE."
   },
   {
     "id": 104,
@@ -1349,7 +1555,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Heightens evasive­ ness."
   },
   {
     "id": 105,
@@ -1362,7 +1570,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Restores HP by 1/2 the max HP."
   },
   {
     "id": 106,
@@ -1375,7 +1585,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Raises the user's DEFENSE."
   },
   {
     "id": 107,
@@ -1388,7 +1600,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Heightens evasive­ ness."
   },
   {
     "id": 108,
@@ -1401,7 +1615,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Lowers the foe's accuracy."
   },
   {
     "id": 109,
@@ -1414,7 +1630,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that causes confusion."
   },
   {
     "id": 110,
@@ -1427,7 +1645,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Heightens the user's DEFENSE."
   },
   {
     "id": 111,
@@ -1440,7 +1660,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Heightens the user's DEFENSE."
   },
   {
     "id": 112,
@@ -1453,7 +1675,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sharply increases user's DEFENSE."
   },
   {
     "id": 113,
@@ -1466,7 +1690,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Ups SPCL.DEF with a wall of light."
   },
   {
     "id": 114,
@@ -1479,7 +1705,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Eliminates all stat changes."
   },
   {
     "id": 115,
@@ -1492,7 +1720,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Raises DEFENSE with a barrier."
   },
   {
     "id": 116,
@@ -1505,7 +1735,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Raises the criti­ cal hit ratio."
   },
   {
     "id": 117,
@@ -1518,7 +1750,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Waits 2-3 turns & hits back double."
   },
   {
     "id": 118,
@@ -1531,7 +1765,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Randomly uses any POKéMON move."
   },
   {
     "id": 119,
@@ -1544,7 +1780,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Counters with the same move."
   },
   {
     "id": 120,
@@ -1557,7 +1795,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "Powerful but makes the user faint."
   },
   {
     "id": 121,
@@ -1570,7 +1810,9 @@
     "accuracy": 75,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "Eggs are hurled at the foe."
   },
   {
     "id": 122,
@@ -1583,7 +1825,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": 30,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that may cause paralysis."
   },
   {
     "id": 123,
@@ -1596,7 +1840,9 @@
     "accuracy": 70,
     "pp": 20,
     "effectChance": 40,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "An attack that may poison the foe."
   },
   {
     "id": 124,
@@ -1609,7 +1855,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "An attack that may poison the foe."
   },
   {
     "id": 125,
@@ -1622,7 +1870,9 @@
     "accuracy": 85,
     "pp": 20,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that may cause flinching."
   },
   {
     "id": 126,
@@ -1635,7 +1885,9 @@
     "accuracy": 85,
     "pp": 5,
     "effectChance": 10,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "An attack that may cause a burn."
   },
   {
     "id": 127,
@@ -1648,7 +1900,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 20,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An aquatic charge attack."
   },
   {
     "id": 128,
@@ -1661,7 +1915,9 @@
     "accuracy": 85,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Traps the foe for 2-5 turns."
   },
   {
     "id": 129,
@@ -1674,7 +1930,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "An attack that never misses."
   },
   {
     "id": 130,
@@ -1687,7 +1945,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "1st turn: Prepare 2nd turn: Attack"
   },
   {
     "id": 131,
@@ -1700,7 +1960,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Fires spikes to hit 2-5 times."
   },
   {
     "id": 132,
@@ -1713,7 +1975,9 @@
     "accuracy": 100,
     "pp": 35,
     "effectChance": 10,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that may lower SPEED."
   },
   {
     "id": 133,
@@ -1726,7 +1990,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sharply raises the user's SPCL.DEF."
   },
   {
     "id": 134,
@@ -1739,7 +2005,9 @@
     "accuracy": 80,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Reduces the foe's accuracy."
   },
   {
     "id": 135,
@@ -1752,7 +2020,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Restores HP by 1/2 the user's max HP."
   },
   {
     "id": 136,
@@ -1765,7 +2035,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "May miss and hurt the user."
   },
   {
     "id": 137,
@@ -1778,7 +2050,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that may cause paralysis."
   },
   {
     "id": 138,
@@ -1791,7 +2065,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "Steals HP from a sleeping victim."
   },
   {
     "id": 139,
@@ -1804,7 +2080,9 @@
     "accuracy": 90,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that may poison the foe."
   },
   {
     "id": 140,
@@ -1817,7 +2095,9 @@
     "accuracy": 85,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Throws orbs to hit 2-5 times."
   },
   {
     "id": 141,
@@ -1830,7 +2110,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Steals 1/2 of the damage inflicted."
   },
   {
     "id": 142,
@@ -1843,7 +2125,9 @@
     "accuracy": 75,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "May cause the foe to fall asleep."
   },
   {
     "id": 143,
@@ -1856,7 +2140,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": 30,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "1st turn: Prepare 2nd turn: Attack"
   },
   {
     "id": 144,
@@ -1869,7 +2155,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user assumes the foe's guise."
   },
   {
     "id": 145,
@@ -1882,7 +2170,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": 10,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "An attack that may reduce SPEED."
   },
   {
     "id": 146,
@@ -1895,7 +2185,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 20,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that may cause confusion."
   },
   {
     "id": 147,
@@ -1908,7 +2200,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that induces sleep."
   },
   {
     "id": 148,
@@ -1921,7 +2215,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Blinds the foe to reduce accuracy."
   },
   {
     "id": 149,
@@ -1934,7 +2230,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "An attack with variable power."
   },
   {
     "id": 150,
@@ -1947,7 +2245,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Has no effect whatsoever."
   },
   {
     "id": 151,
@@ -1960,7 +2260,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sharply raises the user's DEFENSE."
   },
   {
     "id": 152,
@@ -1973,7 +2275,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "Has a high criti­ cal hit ratio."
   },
   {
     "id": 153,
@@ -1986,7 +2290,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "Very powerful but makes user faint."
   },
   {
     "id": 154,
@@ -1999,7 +2305,9 @@
     "accuracy": 80,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Quickly scratches 2-5 times."
   },
   {
     "id": 155,
@@ -2012,7 +2320,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An attack that strikes twice."
   },
   {
     "id": 156,
@@ -2025,7 +2335,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sleep for 2 turns to fully recover."
   },
   {
     "id": 157,
@@ -2038,7 +2350,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that may cause flinching."
   },
   {
     "id": 158,
@@ -2051,7 +2365,9 @@
     "accuracy": 90,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that may cause flinching."
   },
   {
     "id": 159,
@@ -2064,7 +2380,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that raises the user's ATTACK."
   },
   {
     "id": 160,
@@ -2077,7 +2395,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Change user's type to a move's type."
   },
   {
     "id": 161,
@@ -2090,7 +2410,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 20,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "Fires three kinds of beams at once."
   },
   {
     "id": 162,
@@ -2103,7 +2425,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Cuts the foe's HP by 1/2."
   },
   {
     "id": 163,
@@ -2116,7 +2440,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Has a high criti­ cal hit ratio."
   },
   {
     "id": 164,
@@ -2129,7 +2455,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Makes a decoy with 1/4 user's max HP."
   },
   {
     "id": 166,
@@ -2142,7 +2470,9 @@
     "accuracy": null,
     "pp": 1,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Copies the foe's move permanently."
   },
   {
     "id": 167,
@@ -2155,7 +2485,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Hits three times with rising power."
   },
   {
     "id": 168,
@@ -2168,7 +2500,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An attack that may steal a held item."
   },
   {
     "id": 169,
@@ -2181,7 +2515,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Prevents fleeing or switching."
   },
   {
     "id": 170,
@@ -2194,7 +2530,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Ensures the next attack will hit."
   },
   {
     "id": 171,
@@ -2207,7 +2545,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A sleeper loses 1/4 HP every turn."
   },
   {
     "id": 172,
@@ -2220,7 +2560,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": 10,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An attack that may cause a burn."
   },
   {
     "id": 173,
@@ -2233,7 +2575,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "An attack useable only while asleep."
   },
   {
     "id": 174,
@@ -2246,7 +2590,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Works differently for ghost-types."
   },
   {
     "id": 175,
@@ -2259,7 +2605,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Stronger if the user's HP is low."
   },
   {
     "id": 176,
@@ -2272,7 +2620,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user's type is made resistant."
   },
   {
     "id": 177,
@@ -2285,7 +2635,9 @@
     "accuracy": 95,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "Has a high criti­ cal hit ratio."
   },
   {
     "id": 178,
@@ -2298,7 +2650,9 @@
     "accuracy": 100,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sharply reduces the foe's SPEED."
   },
   {
     "id": 179,
@@ -2311,7 +2665,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Stronger if the user's HP is low."
   },
   {
     "id": 180,
@@ -2324,7 +2680,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Cuts the PP of the foe's last move."
   },
   {
     "id": 181,
@@ -2337,7 +2695,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": 10,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "An attack that may cause freezing."
   },
   {
     "id": 182,
@@ -2350,7 +2710,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Foils attack that turn. It may fail."
   },
   {
     "id": 183,
@@ -2363,7 +2725,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A fast punch that lands first."
   },
   {
     "id": 184,
@@ -2376,7 +2740,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sharply reduces the foe's SPEED."
   },
   {
     "id": 185,
@@ -2389,7 +2755,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An attack that never misses."
   },
   {
     "id": 186,
@@ -2402,7 +2770,9 @@
     "accuracy": 75,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that causes confusion."
   },
   {
     "id": 187,
@@ -2415,7 +2785,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Reduces own HP to maximize ATTACK."
   },
   {
     "id": 188,
@@ -2428,7 +2800,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "An attack that may poison the foe."
   },
   {
     "id": 189,
@@ -2441,7 +2815,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Reduces the foe's accuracy."
   },
   {
     "id": 190,
@@ -2454,7 +2830,9 @@
     "accuracy": 85,
     "pp": 10,
     "effectChance": 50,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "An attack that may reduce accuracy."
   },
   {
     "id": 191,
@@ -2467,7 +2845,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Hurts foes when they switch out."
   },
   {
     "id": 192,
@@ -2480,7 +2860,9 @@
     "accuracy": 50,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "An attack that always paralyzes."
   },
   {
     "id": 193,
@@ -2493,7 +2875,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Negates accuracy reduction moves."
   },
   {
     "id": 194,
@@ -2506,7 +2890,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The foe faints if the user does."
   },
   {
     "id": 195,
@@ -2519,7 +2905,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Both user and foe faint in 3 turns."
   },
   {
     "id": 196,
@@ -2532,7 +2920,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "An icy attack that lowers SPEED."
   },
   {
     "id": 197,
@@ -2545,7 +2935,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Evades attack that turn. It may fail."
   },
   {
     "id": 198,
@@ -2558,7 +2950,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that hits 2-5 times."
   },
   {
     "id": 199,
@@ -2571,7 +2965,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Ensures the next attack will hit."
   },
   {
     "id": 200,
@@ -2584,7 +2980,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "Works 2-3 turns and confuses user."
   },
   {
     "id": 201,
@@ -2597,7 +2995,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Inflicts damage every turn."
   },
   {
     "id": 202,
@@ -2610,7 +3010,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "Steals 1/2 of the damage inflicted."
   },
   {
     "id": 203,
@@ -2623,7 +3025,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Always leaves at least 1HP."
   },
   {
     "id": 204,
@@ -2636,7 +3040,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Sharply lowers the foe's ATTACK."
   },
   {
     "id": 205,
@@ -2649,7 +3055,9 @@
     "accuracy": 90,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Attacks 5 turns with rising power."
   },
   {
     "id": 206,
@@ -2662,7 +3070,9 @@
     "accuracy": 100,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Leaves the foe with at least 1HP."
   },
   {
     "id": 207,
@@ -2675,7 +3085,9 @@
     "accuracy": 85,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Causes confusion and raises ATTACK."
   },
   {
     "id": 208,
@@ -2688,7 +3100,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Restores HP by 1/2 the max HP."
   },
   {
     "id": 209,
@@ -2701,7 +3115,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that may cause paralysis."
   },
   {
     "id": 210,
@@ -2714,7 +3130,9 @@
     "accuracy": 95,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Successive hits raise power."
   },
   {
     "id": 211,
@@ -2727,7 +3145,9 @@
     "accuracy": 90,
     "pp": 25,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Stiff wings strike the foe."
   },
   {
     "id": 212,
@@ -2740,7 +3160,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Prevents fleeing or switching."
   },
   {
     "id": 213,
@@ -2753,7 +3175,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Makes the opposite gender infatuated."
   },
   {
     "id": 214,
@@ -2766,7 +3190,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Randomly attacks while asleep."
   },
   {
     "id": 215,
@@ -2779,7 +3205,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Eliminates all status problems."
   },
   {
     "id": 216,
@@ -2792,7 +3220,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that is based on loyalty."
   },
   {
     "id": 217,
@@ -2805,7 +3235,9 @@
     "accuracy": 90,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A bomb that may restore HP."
   },
   {
     "id": 218,
@@ -2818,7 +3250,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack based on lack of loyalty."
   },
   {
     "id": 219,
@@ -2831,7 +3265,9 @@
     "accuracy": null,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Prevents all status problems."
   },
   {
     "id": 220,
@@ -2844,7 +3280,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Adds user & foe's HPs. Shares total."
   },
   {
     "id": 221,
@@ -2857,7 +3295,9 @@
     "accuracy": 95,
     "pp": 5,
     "effectChance": 50,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "An attack that may inflict a burn."
   },
   {
     "id": 222,
@@ -2870,7 +3310,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A ground attack with random power."
   },
   {
     "id": 223,
@@ -2883,7 +3325,9 @@
     "accuracy": 50,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "An attack that always confuses."
   },
   {
     "id": 224,
@@ -2896,7 +3340,9 @@
     "accuracy": 85,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "A powerful charge attack."
   },
   {
     "id": 225,
@@ -2909,7 +3355,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 30,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "A strong breath attack."
   },
   {
     "id": 226,
@@ -2922,7 +3370,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Switches while keeping effects."
   },
   {
     "id": 227,
@@ -2935,7 +3385,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Makes the foe re­ peat 2-6 times."
   },
   {
     "id": 228,
@@ -2948,7 +3400,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Heavily strikes switching POKéMON."
   },
   {
     "id": 229,
@@ -2961,7 +3415,9 @@
     "accuracy": 100,
     "pp": 40,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "A high-speed spinning attack."
   },
   {
     "id": 230,
@@ -2974,7 +3430,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Reduces the foe's evasiveness."
   },
   {
     "id": 231,
@@ -2987,7 +3445,9 @@
     "accuracy": 75,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "An attack that may reduce DEFENSE."
   },
   {
     "id": 232,
@@ -3000,7 +3460,9 @@
     "accuracy": 95,
     "pp": 35,
     "effectChance": 10,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An attack that may up user's ATTACK."
   },
   {
     "id": 233,
@@ -3013,7 +3475,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "A 2nd-strike move that never misses."
   },
   {
     "id": 234,
@@ -3026,7 +3490,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Restores HP (varies by time)."
   },
   {
     "id": 235,
@@ -3039,7 +3505,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Restores HP (varies by time)."
   },
   {
     "id": 236,
@@ -3052,7 +3520,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Restores HP (varies by time)."
   },
   {
     "id": 237,
@@ -3065,7 +3535,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The power varies with the POKéMON."
   },
   {
     "id": 238,
@@ -3078,7 +3550,9 @@
     "accuracy": 80,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "Has a high criti­ cal hit ratio."
   },
   {
     "id": 239,
@@ -3091,7 +3565,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 20,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Whips up a tornado to attack."
   },
   {
     "id": 240,
@@ -3104,7 +3580,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Boosts water-type moves for 5 turns."
   },
   {
     "id": 241,
@@ -3117,7 +3595,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Boosts fire-type moves for 5 turns."
   },
   {
     "id": 242,
@@ -3130,7 +3610,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 20,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack that may lower SPCL.DEF."
   },
   {
     "id": 243,
@@ -3143,7 +3625,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Counters a SPCL. ATK. move double."
   },
   {
     "id": 244,
@@ -3156,7 +3640,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Copies the foe's stat changes."
   },
   {
     "id": 245,
@@ -3169,7 +3655,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "A powerful first- strike move."
   },
   {
     "id": 246,
@@ -3182,7 +3670,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": 10,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "An attack that may raise all stats."
   },
   {
     "id": 247,
@@ -3195,7 +3685,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 20,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "An attack that may lower SPCL.DEF."
   },
   {
     "id": 248,
@@ -3208,7 +3700,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "An attack that hits on 3rd turn."
   },
   {
     "id": 249,
@@ -3221,7 +3715,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 50,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that may lower DEFENSE."
   },
   {
     "id": 250,
@@ -3234,7 +3730,9 @@
     "accuracy": 85,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Traps the foe for 2-5 turns."
   },
   {
     "id": 251,
@@ -3247,7 +3745,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Party POKéMON join in the attack. "
   },
   {
     "id": 252,
@@ -3260,7 +3760,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A 1st-turn, 1st-strike move that causes flinching."
   },
   {
     "id": 253,
@@ -3273,7 +3775,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "Causes an uproar for 2 to 5 turns and prevents sleep."
   },
   {
     "id": 254,
@@ -3286,7 +3790,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Charges up power for up to 3 turns."
   },
   {
     "id": 255,
@@ -3299,7 +3805,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Releases stockpiled power (the more the better)."
   },
   {
     "id": 256,
@@ -3312,7 +3820,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Absorbs stockpiled power and restores HP."
   },
   {
     "id": 257,
@@ -3325,7 +3835,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "Exhales a hot breath on the foe. May inflict a burn."
   },
   {
     "id": 258,
@@ -3338,7 +3850,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Summons a hailstorm that strikes every turn."
   },
   {
     "id": 259,
@@ -3351,7 +3865,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Torments the foe and stops successive use of a move."
   },
   {
     "id": 260,
@@ -3364,7 +3880,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Confuses the foe, but raises its SP. ATK."
   },
   {
     "id": 261,
@@ -3377,7 +3895,9 @@
     "accuracy": 85,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Inflicts a burn on the foe with intense fire."
   },
   {
     "id": 262,
@@ -3390,7 +3910,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user faints and lowers the foe’s abilities."
   },
   {
     "id": 263,
@@ -3403,7 +3925,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Boosts ATTACK when burned, paralyzed, or poisoned."
   },
   {
     "id": 264,
@@ -3416,7 +3940,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "A powerful loyalty attack. The user flinches if hit."
   },
   {
     "id": 265,
@@ -3429,7 +3955,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Powerful against paralyzed foes, but also heals them."
   },
   {
     "id": 266,
@@ -3442,7 +3970,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Draws attention to make foes attack only the user."
   },
   {
     "id": 267,
@@ -3455,7 +3985,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The type of attack varies depending on the location."
   },
   {
     "id": 268,
@@ -3468,7 +4000,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Charges power to boost the electric move used next."
   },
   {
     "id": 269,
@@ -3481,7 +4015,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Taunts the foe into only using attack moves."
   },
   {
     "id": 270,
@@ -3494,7 +4030,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A move that boosts the power of the ally’s attack in a Double Battle. "
   },
   {
     "id": 271,
@@ -3507,7 +4045,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Tricks the foe into trading held items."
   },
   {
     "id": 272,
@@ -3520,7 +4060,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Mimics the target and copies its special ability."
   },
   {
     "id": 273,
@@ -3533,7 +4075,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A wish that restores HP. It takes time to work."
   },
   {
     "id": 274,
@@ -3546,7 +4090,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Attacks randomly with one of the partner’s moves."
   },
   {
     "id": 275,
@@ -3559,7 +4105,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Lays roots that restore HP. The user can’t switch out."
   },
   {
     "id": 276,
@@ -3572,7 +4120,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "Boosts strength sharply, but lowers abilities."
   },
   {
     "id": 277,
@@ -3585,7 +4135,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Reflects special effects back to the attacker."
   },
   {
     "id": 278,
@@ -3598,7 +4150,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Recycles a used item for one more use."
   },
   {
     "id": 279,
@@ -3611,7 +4165,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An attack that gains power if injured by the foe."
   },
   {
     "id": 280,
@@ -3624,7 +4180,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Destroys barriers such as REFLECT and causes damage."
   },
   {
     "id": 281,
@@ -3637,7 +4195,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Lulls the foe into yawning, then sleeping next turn."
   },
   {
     "id": 282,
@@ -3650,7 +4210,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Knocks down the foe’s held item to prevent its use."
   },
   {
     "id": 283,
@@ -3663,7 +4225,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Gains power if the user’s HP is lower than the foe’s HP."
   },
   {
     "id": 284,
@@ -3676,7 +4240,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "The higher the user’s HP, the more damage caused."
   },
   {
     "id": 285,
@@ -3689,7 +4255,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user swaps special abilities with the target."
   },
   {
     "id": 286,
@@ -3702,7 +4270,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Prevents foes from using moves known by the user."
   },
   {
     "id": 287,
@@ -3715,7 +4285,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Heals poisoning, paralysis, or a burn."
   },
   {
     "id": 288,
@@ -3728,7 +4300,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "If the user faints, deletes the PP of the final move."
   },
   {
     "id": 289,
@@ -3741,7 +4315,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Steals the effects of the move the foe uses next."
   },
   {
     "id": 290,
@@ -3754,7 +4330,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An attack with effects that vary by location."
   },
   {
     "id": 291,
@@ -3767,7 +4345,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Dives underwater the first turn and strikes next turn."
   },
   {
     "id": 292,
@@ -3780,7 +4360,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Straight-arm punches that strike the foe 2 to 5 times."
   },
   {
     "id": 293,
@@ -3793,7 +4375,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Alters the POKéMON’s type depending on the location."
   },
   {
     "id": 297,
@@ -3806,7 +4390,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Envelops the foe with down to sharply reduce ATTACK."
   },
   {
     "id": 298,
@@ -3819,7 +4405,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Confuses all POKéMON on the scene."
   },
   {
     "id": 299,
@@ -3832,7 +4420,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "A kick with a high critical- hit ratio. May cause a burn."
   },
   {
     "id": 300,
@@ -3845,7 +4435,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Covers the user in mud to raise electrical resistance."
   },
   {
     "id": 301,
@@ -3858,7 +4450,9 @@
     "accuracy": 90,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A 5-turn attack that gains power on successive hits."
   },
   {
     "id": 303,
@@ -3871,7 +4465,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Slacks off and restores half the maximum HP."
   },
   {
     "id": 304,
@@ -3884,7 +4480,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "A loud attack that uses sound waves to injure."
   },
   {
     "id": 305,
@@ -3897,7 +4495,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 50,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "A sharp-fanged attack. May badly poison the foe."
   },
   {
     "id": 306,
@@ -3910,7 +4510,9 @@
     "accuracy": 95,
     "pp": 10,
     "effectChance": 50,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Tears at the foe with sharp claws. May lower DEFENSE."
   },
   {
     "id": 307,
@@ -3923,7 +4525,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "Powerful, but leaves the user immobile the next turn."
   },
   {
     "id": 308,
@@ -3936,7 +4540,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "Powerful, but leaves the user immobile the next turn."
   },
   {
     "id": 309,
@@ -3949,7 +4555,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 20,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "Fires a meteor-like punch. May raise ATTACK."
   },
   {
     "id": 310,
@@ -3962,7 +4570,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that may shock the foe into flinching."
   },
   {
     "id": 311,
@@ -3975,7 +4585,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The move’s type and power change with the weather."
   },
   {
     "id": 312,
@@ -3988,7 +4600,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Heals all status problems with a soothing scent."
   },
   {
     "id": 313,
@@ -4001,7 +4615,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Feigns crying to sharply lower the foe’s SP. DEF."
   },
   {
     "id": 314,
@@ -4014,7 +4630,9 @@
     "accuracy": 95,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "Hacks with razorlike wind. High critical-hit ratio."
   },
   {
     "id": 315,
@@ -4027,7 +4645,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "Allows a full-power attack, but sharply lowers SP. ATK."
   },
   {
     "id": 316,
@@ -4040,7 +4660,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Negates the foe’s efforts to heighten evasiveness."
   },
   {
     "id": 317,
@@ -4053,7 +4675,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Stops the foe from moving with rocks and cuts SPEED."
   },
   {
     "id": 318,
@@ -4066,7 +4690,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": 10,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "A powdery attack that may raise abilities."
   },
   {
     "id": 319,
@@ -4079,7 +4705,9 @@
     "accuracy": 85,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Emits a horrible screech that sharply lowers SP. DEF."
   },
   {
     "id": 320,
@@ -4092,7 +4720,9 @@
     "accuracy": 55,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Lulls the foe into sleep with a pleasant melody."
   },
   {
     "id": 321,
@@ -4105,7 +4735,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Makes the foe laugh to lower ATTACK and DEFENSE."
   },
   {
     "id": 322,
@@ -4118,7 +4750,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Raises DEFENSE and SP. DEF with a mystic power."
   },
   {
     "id": 323,
@@ -4131,7 +4765,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "Inflicts more damage if the user’s HP is high."
   },
   {
     "id": 324,
@@ -4144,7 +4780,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "A strange beam attack that may confuse the foe."
   },
   {
     "id": 325,
@@ -4157,7 +4795,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An unavoidable punch that is thrown from shadows."
   },
   {
     "id": 326,
@@ -4170,7 +4810,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "Attacks with a peculiar power. May cause flinching."
   },
   {
     "id": 327,
@@ -4183,7 +4825,9 @@
     "accuracy": 90,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "An uppercut thrown as if leaping into the sky."
   },
   {
     "id": 328,
@@ -4196,7 +4840,9 @@
     "accuracy": 85,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Traps and hurts the foe in quicksand for 2 to 5 turns."
   },
   {
     "id": 329,
@@ -4209,7 +4855,9 @@
     "accuracy": 30,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "A chilling attack that causes fainting if it hits."
   },
   {
     "id": 330,
@@ -4222,7 +4870,9 @@
     "accuracy": 85,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "Attacks with muddy water. May lower accuracy."
   },
   {
     "id": 331,
@@ -4235,7 +4885,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Shoots 2 to 5 seeds in a row to strike the foe."
   },
   {
     "id": 332,
@@ -4248,7 +4900,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An extremely speedy and unavoidable attack."
   },
   {
     "id": 333,
@@ -4261,7 +4915,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Attacks the foe by firing 2 to 5 icicles in a row."
   },
   {
     "id": 334,
@@ -4274,7 +4930,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Hardens the body’s surface to sharply raise DEFENSE."
   },
   {
     "id": 335,
@@ -4287,7 +4945,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Blocks the foe’s way to prevent escape."
   },
   {
     "id": 336,
@@ -4300,7 +4960,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Howls to raise the spirit and boosts ATTACK."
   },
   {
     "id": 337,
@@ -4313,7 +4975,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Slashes the foe with sharp claws."
   },
   {
     "id": 338,
@@ -4326,7 +4990,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "Powerful, but leaves the user immobile the next turn."
   },
   {
     "id": 339,
@@ -4339,7 +5005,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Bulks up the body to boost both ATTACK and DEFENSE."
   },
   {
     "id": 340,
@@ -4352,7 +5020,9 @@
     "accuracy": 85,
     "pp": 5,
     "effectChance": 30,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "Bounces up, then down the next turn. May paralyze."
   },
   {
     "id": 341,
@@ -4365,7 +5035,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "Hurls mud at the foe and reduces SPEED."
   },
   {
     "id": 342,
@@ -4378,7 +5050,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": 10,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Has a high critical-hit ratio. May also poison."
   },
   {
     "id": 343,
@@ -4391,7 +5065,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Cutely begs to obtain an item held by the foe."
   },
   {
     "id": 344,
@@ -4404,7 +5080,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "A life-risking tackle that slightly hurts the user."
   },
   {
     "id": 345,
@@ -4417,7 +5095,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "Attacks with a strange leaf that cannot be evaded."
   },
   {
     "id": 346,
@@ -4430,7 +5110,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user becomes soaked to raise resistance to fire."
   },
   {
     "id": 347,
@@ -4443,7 +5125,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Raises SP. ATK and SP. DEF by focusing the mind."
   },
   {
     "id": 348,
@@ -4456,7 +5140,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "Slashes with a sharp leaf. High critical-hit ratio."
   },
   {
     "id": 349,
@@ -4469,7 +5155,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A mystical dance that ups ATTACK and SPEED."
   },
   {
     "id": 350,
@@ -4482,7 +5170,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Hurls boulders at the foe 2 to 5 times in a row."
   },
   {
     "id": 351,
@@ -4495,7 +5185,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "A fast and unavoidable electric attack."
   },
   {
     "id": 352,
@@ -4508,7 +5200,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 20,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "Attacks with ultrasonic waves. May confuse the foe"
   },
   {
     "id": 354,
@@ -4521,7 +5215,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "Allows a full-power attack, but sharply lowers SP. ATK."
   },
   {
     "id": 355,
@@ -4534,7 +5230,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user lands and rests its body. It restores the user’s HP by up to half of its max HP."
   },
   {
     "id": 356,
@@ -4547,7 +5245,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Gravity is intensified for five turns, making moves involving flying unusable and negating Levitation."
   },
   {
     "id": 357,
@@ -4560,7 +5260,9 @@
     "accuracy": null,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Enables a Dark-type target to be hit by Psychic-type attacks. This also enables an evasive target to be hit."
   },
   {
     "id": 358,
@@ -4573,7 +5275,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "This attack inflicts high damage on a sleeping foe. It also wakes the foe up, however."
   },
   {
     "id": 359,
@@ -4586,7 +5290,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user swings and hits with its strong and heavy fist. It lowers the user’s Speed, however."
   },
   {
     "id": 360,
@@ -4599,7 +5305,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user tackles the foe with a high-speed spin. The slower the user, the greater the damage."
   },
   {
     "id": 361,
@@ -4612,7 +5320,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user faints. In return, the Pokémon taking its place will have its HP restored and status cured."
   },
   {
     "id": 362,
@@ -4625,7 +5335,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "If the foe’s HP is down to about half, this attack will hit with double the power."
   },
   {
     "id": 363,
@@ -4638,7 +5350,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user draws power to attack by using its held Berry. The Berry determines its type and power."
   },
   {
     "id": 364,
@@ -4651,7 +5365,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "An attack that hits a foe using Protect or Detect. It also lifts the effects of those moves."
   },
   {
     "id": 365,
@@ -4664,7 +5380,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user pecks the foe. If the foe is holding a Berry, the user plucks it and gains its effect."
   },
   {
     "id": 366,
@@ -4677,7 +5395,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user whips up a turbulent whirlwind that ups the Speed of all party Pokémon for three turns."
   },
   {
     "id": 367,
@@ -4690,7 +5410,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user applies pressure to stress points, sharply boosting one of its stats."
   },
   {
     "id": 368,
@@ -4703,7 +5425,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user retaliates against the foe that last inflicted damage on it with much greater power."
   },
   {
     "id": 369,
@@ -4716,7 +5440,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "After making its attack, the user rushes back to switch places with a party Pokémon in waiting."
   },
   {
     "id": 370,
@@ -4729,7 +5455,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user fights the foe in close without guarding itself. It also cuts the user’s Defense and Sp. Def."
   },
   {
     "id": 371,
@@ -4742,7 +5470,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "If the user can use this attack after the foe attacks, its power is doubled. "
   },
   {
     "id": 372,
@@ -4755,7 +5485,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "If the foe has already taken some damage in the same turn, this attack’s power is doubled."
   },
   {
     "id": 373,
@@ -4768,7 +5500,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "It prevents the foe from using its held item. Its Trainer is also prevented from using items on it."
   },
   {
     "id": 374,
@@ -4781,7 +5515,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user flings its held item at the foe to attack. Its power and effects depend on the item."
   },
   {
     "id": 375,
@@ -4794,7 +5530,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Using its psychic power of suggestion, the user transfers its status problems to the target."
   },
   {
     "id": 376,
@@ -4807,7 +5545,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The fewer PP this move has, the more power it has for attack. "
   },
   {
     "id": 377,
@@ -4820,7 +5560,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user prevents the foe from using any HP-recovery moves for five turns. "
   },
   {
     "id": 378,
@@ -4833,7 +5575,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user powerfully wrings the foe. The more HP the foe has, the greater this attack’s power."
   },
   {
     "id": 379,
@@ -4846,7 +5590,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user employs its psychic power to switch its Attack stat with its Defense stat."
   },
   {
     "id": 380,
@@ -4859,7 +5605,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user hurls up its stomach acids on the foe. The fluid eliminates the effect of the foe’s ability."
   },
   {
     "id": 381,
@@ -4872,7 +5620,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user chants an incantation toward the sky, preventing the foe from landing critical hits."
   },
   {
     "id": 382,
@@ -4885,7 +5635,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user tries to cut ahead of the foe to steal and use the foe’s intended move with greater power."
   },
   {
     "id": 383,
@@ -4898,7 +5650,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user mimics the move used immediately before it. The move fails if no other move has been used yet."
   },
   {
     "id": 384,
@@ -4911,7 +5665,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user employs its psychic power to switch changes to its Attack and Sp. Atk with the foe."
   },
   {
     "id": 385,
@@ -4924,7 +5680,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user employs its psychic power to switch changes to its Defense and Sp. Def with the foe."
   },
   {
     "id": 386,
@@ -4937,7 +5695,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "This attack’s power increases the more the foe has powered up with stat changes. "
   },
   {
     "id": 387,
@@ -4950,7 +5710,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "This move can be used only after the user has used all the other moves it knows in the battle."
   },
   {
     "id": 388,
@@ -4963,7 +5725,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "A seed that causes worry is planted on the foe. It prevents sleep by making its ability Insomnia."
   },
   {
     "id": 389,
@@ -4976,7 +5740,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "This move enables the user to attack first. It fails if the foe is not readying an attack, however."
   },
   {
     "id": 390,
@@ -4989,7 +5755,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user lays a trap of poison spikes at the foe’s feet. They poison foes that switch into battle."
   },
   {
     "id": 392,
@@ -5002,7 +5770,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user envelops itself in a veil made of water. It regains some HP on every turn."
   },
   {
     "id": 393,
@@ -5015,7 +5785,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user levitates using electrically generated magnetism for five turns."
   },
   {
     "id": 394,
@@ -5028,7 +5800,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user cloaks itself in fire and charges at the foe. The user sustains serious damage, too."
   },
   {
     "id": 396,
@@ -5041,7 +5815,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user looses a blast of aura power from deep within its body. This move is certain to hit."
   },
   {
     "id": 397,
@@ -5054,7 +5830,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user polishes its body to reduce drag. It can sharply raise the Speed stat. "
   },
   {
     "id": 398,
@@ -5067,7 +5845,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The foe is stabbed with a tentacle or arm steeped in poison. It may also poison the foe."
   },
   {
     "id": 399,
@@ -5080,7 +5860,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 20,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user releases a horrible aura imbued with dark thoughts. It may also make the target flinch."
   },
   {
     "id": 400,
@@ -5093,7 +5875,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user slashes the foe the instant an opportunity arises. It has a high critical-hit ratio."
   },
   {
     "id": 401,
@@ -5106,7 +5890,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user attacks by swinging its tail as if it were a vicious wave in a raging storm. "
   },
   {
     "id": 402,
@@ -5119,7 +5905,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user slams a barrage of hard- shelled seeds down on the foe from above."
   },
   {
     "id": 403,
@@ -5132,7 +5920,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks with a blade of air that slices even the sky. It may also make the target flinch."
   },
   {
     "id": 404,
@@ -5145,7 +5935,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user slashes at the foe by crossing its scythes or claws as if they were a pair of scissors."
   },
   {
     "id": 405,
@@ -5158,7 +5950,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The user vibrates its wings to generate a damaging sound wave. It may also lower the foe’s Sp. Def stat."
   },
   {
     "id": 406,
@@ -5171,7 +5965,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The foe is attacked with a shock wave generated by the user’s gaping mouth. "
   },
   {
     "id": 407,
@@ -5184,7 +5980,9 @@
     "accuracy": 75,
     "pp": 10,
     "effectChance": 20,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user tackles the foe while exhibiting overwhelming menace. It may also make the target flinch."
   },
   {
     "id": 408,
@@ -5197,7 +5995,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks with a ray of light that sparkles as if it were made of gemstones. "
   },
   {
     "id": 409,
@@ -5210,7 +6010,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "An energy-draining punch. The user’s HP is restored by half the damage taken by the target."
   },
   {
     "id": 410,
@@ -5223,7 +6025,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user whirls its fists to send a wave of pure vacuum at the foe. This move always goes first."
   },
   {
     "id": 411,
@@ -5236,7 +6040,9 @@
     "accuracy": 70,
     "pp": 5,
     "effectChance": 10,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "The user heightens its mental focus and unleashes its power. It may also lower the target’s Sp. Def."
   },
   {
     "id": 412,
@@ -5249,7 +6055,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The user draws power from nature and fires it at the foe. It may also lower the target’s Sp. Def."
   },
   {
     "id": 413,
@@ -5262,7 +6070,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user tucks in its wings and charges from a low altitude. The user also takes serious damage."
   },
   {
     "id": 414,
@@ -5275,7 +6085,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The user makes the ground under the foe erupt with power. It may also lower the target’s Sp. Def."
   },
   {
     "id": 415,
@@ -5288,7 +6100,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user trades held items with the foe faster than the eye can follow. "
   },
   {
     "id": 416,
@@ -5301,7 +6115,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "The user charges at the foe using every bit of its power. The user must rest on the next turn."
   },
   {
     "id": 417,
@@ -5314,7 +6130,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user stimulates its brain by thinking bad thoughts. It sharply raises the user’s Sp. Atk."
   },
   {
     "id": 418,
@@ -5327,7 +6145,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user strikes with a tough punch as fast as a bullet. This move always goes first."
   },
   {
     "id": 419,
@@ -5340,7 +6160,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "An attack move that inflicts double the damage if the user has been hurt by the foe in the same turn."
   },
   {
     "id": 420,
@@ -5353,7 +6175,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user flash freezes chunks of ice and hurls them. This move always goes first."
   },
   {
     "id": 421,
@@ -5366,7 +6190,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user slashes with a sharp claw made from shadows. It has a high critical-hit ratio."
   },
   {
     "id": 422,
@@ -5379,7 +6205,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user bites with electrified fangs. It may also make the foe flinch or become paralyzed."
   },
   {
     "id": 423,
@@ -5392,7 +6220,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user bites with cold-infused fangs. It may also make the foe flinch or freeze. "
   },
   {
     "id": 424,
@@ -5405,7 +6235,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user bites with flame-cloaked fangs. It may also make the foe flinch or sustain a burn."
   },
   {
     "id": 425,
@@ -5418,7 +6250,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user extends its shadow and attacks the foe from behind. This move always goes first."
   },
   {
     "id": 426,
@@ -5431,7 +6265,9 @@
     "accuracy": 85,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user launches a hard-packed mud ball to attack. It may also lower the target’s accuracy."
   },
   {
     "id": 427,
@@ -5444,7 +6280,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user tears at the foe with blades formed by psychic power. It has a high critical-hit ratio."
   },
   {
     "id": 428,
@@ -5457,7 +6295,9 @@
     "accuracy": 90,
     "pp": 15,
     "effectChance": 20,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user focuses its willpower to its head and rams the foe. It may also make the target flinch."
   },
   {
     "id": 429,
@@ -5470,7 +6310,9 @@
     "accuracy": 85,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user looses a flash of energy from its polished body. It may also lower the target’s accuracy."
   },
   {
     "id": 430,
@@ -5483,7 +6325,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user gathers all its light energy and releases it at once. It may also lower the foe’s Sp. Def stat."
   },
   {
     "id": 431,
@@ -5496,7 +6340,9 @@
     "accuracy": 85,
     "pp": 20,
     "effectChance": 20,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "A charging attack that may also leave the foe confused. It can also be used to scale rocky walls."
   },
   {
     "id": 432,
@@ -5509,7 +6355,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Obstacles are moved, reducing the foe’s evasion stat. It can also be used to clear deep fog, etc."
   },
   {
     "id": 433,
@@ -5522,7 +6370,9 @@
     "accuracy": null,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user creates a bizarre area in which slower Pokémon get to move first for five turns."
   },
   {
     "id": 434,
@@ -5535,7 +6385,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "Comets are summoned down from the sky. The attack’s recoil sharply reduces the user’s Sp. Atk stat."
   },
   {
     "id": 435,
@@ -5548,7 +6400,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "A flare of electricity is loosed to strike all Pokémon in battle. It may also cause paralysis."
   },
   {
     "id": 436,
@@ -5561,7 +6415,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "An inferno of scarlet flames washes over all Pokémon in battle. It may also inflict burns."
   },
   {
     "id": 437,
@@ -5574,7 +6430,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "A storm of sharp leaves is whipped up. The attack’s recoil sharply reduces the user’s Sp. Atk stat."
   },
   {
     "id": 438,
@@ -5587,7 +6445,9 @@
     "accuracy": 85,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user violently whirls its vines or tentacles to harshly lash the foe. "
   },
   {
     "id": 440,
@@ -5600,7 +6460,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "A slashing attack that may also leave the target poisoned. It has a high critical-hit ratio."
   },
   {
     "id": 441,
@@ -5613,7 +6475,9 @@
     "accuracy": 80,
     "pp": 5,
     "effectChance": 30,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user shoots filthy garbage at the foe to attack. It may also poison the target."
   },
   {
     "id": 442,
@@ -5626,7 +6490,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The foe slams the target with its steel-hard head. It may also make the target flinch."
   },
   {
     "id": 443,
@@ -5639,7 +6505,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user launches a steel bomb that sticks to the target. This attack will not miss."
   },
   {
     "id": 444,
@@ -5652,7 +6520,9 @@
     "accuracy": 80,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user stabs the foe with a sharpened stone. It has a high critical-hit ratio. "
   },
   {
     "id": 445,
@@ -5665,7 +6535,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "If it is the opposite gender of the user, the foe is charmed into sharply lowering its Sp. Atk stat."
   },
   {
     "id": 446,
@@ -5678,7 +6550,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user lays a trap of levitating stones around the foe. The trap hurts foes that switch into battle."
   },
   {
     "id": 447,
@@ -5691,7 +6565,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user snares the foe with grass and trips it. The heavier the foe, the greater the damage."
   },
   {
     "id": 450,
@@ -5704,7 +6580,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user bites the foe. If the foe is holding a Berry, the user eats it and gains its effect."
   },
   {
     "id": 451,
@@ -5717,7 +6595,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 70,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user fires a concentrated bundle of electricity. It may also raise the user’s Sp. Atk stat."
   },
   {
     "id": 452,
@@ -5730,7 +6610,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user slams its rugged body into the foe to attack. The user also sustains serious damage."
   },
   {
     "id": 453,
@@ -5743,7 +6625,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user lunges at the foe at a speed that makes it almost invisible. It is sure to strike first."
   },
   {
     "id": 457,
@@ -5756,7 +6640,9 @@
     "accuracy": 80,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "The user delivers a life-endangering head butt at full power. The user also takes terrible damage."
   },
   {
     "id": 458,
@@ -5769,7 +6655,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user slams the foe with a tail, etc. The target is hit twice in a row. "
   },
   {
     "id": 466,
@@ -5782,7 +6670,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": 10,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user creates a gust of repulsive wind. It may also raise all the user’s stats at once."
   },
   {
     "id": 468,
@@ -5795,7 +6685,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user sharpens its claws to boost its Attack stat and accuracy."
   },
   {
     "id": 469,
@@ -5808,7 +6700,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user and its allies are protected from wide-ranging attacks for one turn. If used in succession, its chance of failing rises."
   },
   {
     "id": 470,
@@ -5821,7 +6715,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user employs its psychic power to average its Defense and Sp. Def stats with those of its target’s."
   },
   {
     "id": 471,
@@ -5834,7 +6730,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user employs its psychic power to average its Attack and Sp. Atk stats with those of the target’s."
   },
   {
     "id": 472,
@@ -5847,7 +6745,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user creates a bizarre area in which Pokémon’s Defense and Sp. Def stats are swapped for five turns."
   },
   {
     "id": 473,
@@ -5860,7 +6760,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user materializes an odd psychic wave to attack the target. This attack does physical damage."
   },
   {
     "id": 474,
@@ -5873,7 +6775,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user drenches the target in a special poisonous liquid. Its power is doubled if the target is poisoned."
   },
   {
     "id": 475,
@@ -5886,7 +6790,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user sheds part of its body to make itself lighter and sharply raise its Speed stat."
   },
   {
     "id": 476,
@@ -5899,7 +6805,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user scatters a cloud of irritating powder to draw attention to itself. Opponents aim only at the user."
   },
   {
     "id": 477,
@@ -5912,7 +6820,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user makes the target float with its psychic power. The target is easier to hit for three turns."
   },
   {
     "id": 478,
@@ -5925,7 +6835,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user creates a bizarre area in which Pokémon’s held items lose their effects for five turns."
   },
   {
     "id": 479,
@@ -5938,7 +6850,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user throws a stone or projectile to attack an opponent. A flying Pokémon will fall to the ground when hit."
   },
   {
     "id": 480,
@@ -5951,7 +6865,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user strikes the target with a fierce blow. This attack always results in a critical hit."
   },
   {
     "id": 481,
@@ -5964,7 +6880,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks the target with a bursting flame. The bursting flame damages Pokémon next to the target as well."
   },
   {
     "id": 482,
@@ -5977,7 +6895,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "It swamps the area around the user with a giant sludge wave. It may also poison those hit."
   },
   {
     "id": 483,
@@ -5990,7 +6910,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user lightly performs a beautiful, mystic dance. It boosts the user’s Sp. Atk, Sp. Def, and Speed stats."
   },
   {
     "id": 484,
@@ -6003,7 +6925,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user slams into the target with its heavy body. The more the user outweighs the target, the greater its damage."
   },
   {
     "id": 485,
@@ -6016,7 +6940,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "Using an odd shock wave, the user inflicts damage on any Pokémon of the same type in the area around it."
   },
   {
     "id": 486,
@@ -6029,7 +6955,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user hurls an electric orb at the target. The faster the user is than the target, the greater the damage."
   },
   {
     "id": 487,
@@ -6042,7 +6970,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user shoots a torrent of water at the target and changes the target’s type to Water."
   },
   {
     "id": 488,
@@ -6055,7 +6985,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user cloaks itself with flame and attacks. Building up more power, it raises the user’s Speed stat."
   },
   {
     "id": 489,
@@ -6068,7 +7000,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user coils up and concentrates. This raises its Attack and Defense stats as well as its accuracy."
   },
   {
     "id": 490,
@@ -6081,7 +7015,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user attacks the target’s legs swiftly, reducing the target’s Speed stat."
   },
   {
     "id": 491,
@@ -6094,7 +7030,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user spits fluid that works to melt the target. This harshly reduces the target’s Sp. Def stat."
   },
   {
     "id": 492,
@@ -6107,7 +7045,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user turns the target’s power against it. The higher the target’s Attack stat, the greater the damage."
   },
   {
     "id": 493,
@@ -6120,7 +7060,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user’s mysterious psychic wave changes the target’s Ability to Simple."
   },
   {
     "id": 494,
@@ -6133,7 +7075,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user dances with an odd rhythm that compels the target to mimic it, making the target’s Ability the same as the user’s."
   },
   {
     "id": 495,
@@ -6146,7 +7090,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user helps the target and makes it use its move right after the user."
   },
   {
     "id": 496,
@@ -6159,7 +7105,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user attacks the target with a song. Others can join in the Round and make the attack do greater damage."
   },
   {
     "id": 497,
@@ -6172,7 +7120,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user attacks the target with an echoing voice. If this move is used every turn, it does greater damage."
   },
   {
     "id": 498,
@@ -6185,7 +7135,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Looking for an opening, the user strikes continually. The target’s stat changes don’t affect this attack’s damage."
   },
   {
     "id": 499,
@@ -6198,7 +7150,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user attacks by throwing a clump of special mud. All status changes are returned to normal."
   },
   {
     "id": 500,
@@ -6211,7 +7165,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user attacks the target with stored power. The more the user’s stats are raised, the greater the damage."
   },
   {
     "id": 501,
@@ -6224,7 +7180,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user protects itself and its allies from priority moves. If used in succession, its chance of failing rises."
   },
   {
     "id": 502,
@@ -6237,7 +7195,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user teleports using a strange power and switches its place with one of its allies."
   },
   {
     "id": 503,
@@ -6250,7 +7210,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user shoots boiling hot water at its target. It may also leave the target with a burn."
   },
   {
     "id": 504,
@@ -6263,7 +7225,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user breaks its shell, lowering its Defense and Sp. Def stats but sharply raising Attack, Sp. Atk, and Speed stats."
   },
   {
     "id": 505,
@@ -6276,7 +7240,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user emits a healing pulse which restores the target’s HP by up to half of its max HP."
   },
   {
     "id": 506,
@@ -6289,7 +7255,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "This relentless attack does massive damage to a target affected by status problems."
   },
   {
     "id": 507,
@@ -6302,7 +7270,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user takes the target into the sky, then drops it during the next turn. The target cannot attack while in the sky."
   },
   {
     "id": 509,
@@ -6315,7 +7285,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user throws the target and drags out another Pokémon in its party. In the wild, the battle ends."
   },
   {
     "id": 510,
@@ -6328,7 +7300,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user attacks the target with fire. If the target is holding a Berry, the Berry becomes burnt up and unusable."
   },
   {
     "id": 511,
@@ -6341,7 +7315,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user suppresses the target and makes its move go last."
   },
   {
     "id": 512,
@@ -6354,7 +7330,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user nimbly strikes the target. If the user is not holding an item, this attack inflicts massive damage."
   },
   {
     "id": 513,
@@ -6367,7 +7345,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user reflects the target’s type, making it the same type as the target."
   },
   {
     "id": 514,
@@ -6380,7 +7360,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user gets revenge for a fainted ally. If an ally fainted in the previous turn, this attack’s damage increases."
   },
   {
     "id": 515,
@@ -6393,7 +7375,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user risks everything to attack its target. The user faints but does damage equal to the user’s HP."
   },
   {
     "id": 516,
@@ -6406,7 +7390,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user passes its held item to the target when the target isn’t holding an item."
   },
   {
     "id": 517,
@@ -6419,7 +7405,9 @@
     "accuracy": 50,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The user attacks by engulfing the target in an intense fire. It leaves the target with a burn."
   },
   {
     "id": 518,
@@ -6432,7 +7420,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "A column of water strikes the target. When combined with its fire equivalent, the damage increases and a rainbow appears."
   },
   {
     "id": 519,
@@ -6445,7 +7435,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "A column of fire hits opposing Pokémon. When used with its Grass equivalent, its damage increases into a vast sea of fire."
   },
   {
     "id": 520,
@@ -6458,7 +7450,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "A column of grass hits opposing Pokémon. When used with its water equivalent, its damage increases into a vast swamp."
   },
   {
     "id": 521,
@@ -6471,7 +7465,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "After making its attack, the user rushes back to switch places with a party Pokémon in waiting."
   },
   {
     "id": 522,
@@ -6484,7 +7480,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "While resisting, the user attacks the opposing Pokémon. The targets’ Sp. Atk stat is reduced."
   },
   {
     "id": 523,
@@ -6497,7 +7495,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user stomps down on the ground and attacks everything in the area. Hit Pokémon’s Speed stat is reduced."
   },
   {
     "id": 524,
@@ -6510,7 +7510,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user blows a cold breath on the target. This attack always results in a critical hit."
   },
   {
     "id": 525,
@@ -6523,7 +7525,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user knocks away the target and drags out another Pokémon in its party. In the wild, the battle ends."
   },
   {
     "id": 526,
@@ -6536,7 +7540,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user is roused, and its Attack and Sp. Atk stats increase."
   },
   {
     "id": 527,
@@ -6549,7 +7555,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user captures and attacks opposing Pokémon by using an electric net. It reduces the targets’ Speed stat."
   },
   {
     "id": 528,
@@ -6562,7 +7570,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user shrouds itself in electricity and smashes into its target. It also damages the user a little."
   },
   {
     "id": 529,
@@ -6575,7 +7585,9 @@
     "accuracy": 95,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user crashes into its target while rotating its body like a drill. Critical hits land more easily."
   },
   {
     "id": 530,
@@ -6588,7 +7600,9 @@
     "accuracy": 90,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user attacks its target by hitting it with brutal strikes. The target is hit twice in a row."
   },
   {
     "id": 531,
@@ -6601,7 +7615,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": 30,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user unleashes a vicious blow after its cute act makes the target less wary. It may also make the target flinch."
   },
   {
     "id": 534,
@@ -6614,7 +7630,9 @@
     "accuracy": 95,
     "pp": 10,
     "effectChance": 50,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user cuts its target with sharp shells. This attack may also lower the target’s Defense stat."
   },
   {
     "id": 535,
@@ -6627,7 +7645,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user slams its target with its flame- covered body. The more the user outweighs the target, the greater the damage."
   },
   {
     "id": 536,
@@ -6640,7 +7660,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 50,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks its target by encircling it in sharp leaves. This attack may also lower the target’s accuracy."
   },
   {
     "id": 537,
@@ -6653,7 +7675,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user crushes its targets by rolling over them with its rolled-up body. This attack may make the target flinch."
   },
   {
     "id": 538,
@@ -6666,7 +7690,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user protects itself by wrapping its body in soft cotton, drastically raising the user’s Defense stat."
   },
   {
     "id": 540,
@@ -6679,7 +7705,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The user materializes an odd psychic wave to attack the target. This attack does physical damage."
   },
   {
     "id": 541,
@@ -6692,7 +7720,9 @@
     "accuracy": 85,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user attacks by striking the target with its hard tail. It hits the target two to five times in a row."
   },
   {
     "id": 542,
@@ -6705,7 +7735,9 @@
     "accuracy": 70,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "The user attacks by wrapping its opponent in a fierce wind that flies up into the sky. It may also confuse the target."
   },
   {
     "id": 555,
@@ -6718,7 +7750,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user yells as if it is ranting about something, making the target’s Sp. Atk stat decrease."
   },
   {
     "id": 556,
@@ -6731,7 +7765,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user attacks by harshly dropping an icicle onto the target. It may also make the target flinch."
   },
   {
     "id": 562,
@@ -6744,7 +7780,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "The user lets out a damaging belch at the target. The user must eat a held Berry to use this move."
   },
   {
     "id": 563,
@@ -6757,7 +7795,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Tilling the soil, the user makes it easier for plants to grow. This raises the Attack and Sp. Atk stats of Grass-type Pokémon."
   },
   {
     "id": 564,
@@ -6770,7 +7810,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user weaves a sticky net around the opposing team, which lowers their Speed stat upon switching into battle."
   },
   {
     "id": 565,
@@ -6783,7 +7825,9 @@
     "accuracy": 100,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "When the user knocks out a target with this move, the user’s Attack stat rises sharply."
   },
   {
     "id": 566,
@@ -6796,7 +7840,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user vanishes somewhere, then strikes the target on the next turn. This move hits even if the target protects itself."
   },
   {
     "id": 569,
@@ -6809,7 +7855,9 @@
     "accuracy": null,
     "pp": 25,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user disperses electrically charged particles, which changes Normal-type moves to Electric-type moves."
   },
   {
     "id": 572,
@@ -6822,7 +7870,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user stirs up a violent petal blizzard and attacks everything around it."
   },
   {
     "id": 573,
@@ -6835,7 +7885,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 10,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user rapidly cools the target. This may also leave the target frozen. This move is super effective on Water types."
   },
   {
     "id": 574,
@@ -6848,7 +7900,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "Letting out a charming cry, the user does emotional damage to opposing Pokémon. This attack never misses."
   },
   {
     "id": 577,
@@ -6861,7 +7915,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user steals the target’s energy with a kiss. The user’s HP is restored by over half of the damage taken by the target."
   },
   {
     "id": 579,
@@ -6874,7 +7930,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user raises the Defense stat of all Grass-type Pokémon in battle with a mysterious power."
   },
   {
     "id": 580,
@@ -6887,7 +7945,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user turns the ground under everyone’s feet to grass for five turns. This restores the HP of Pokémon on the ground a little every turn."
   },
   {
     "id": 581,
@@ -6900,7 +7960,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user covers the ground under everyone’s feet with mist for five turns. This protects Pokémon on the ground from status conditions."
   },
   {
     "id": 583,
@@ -6913,7 +7975,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 10,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user plays rough with the target and attacks it. This may also lower the target’s Attack stat."
   },
   {
     "id": 584,
@@ -6926,7 +7990,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user stirs up a fairy wind and strikes the target with it."
   },
   {
     "id": 585,
@@ -6939,7 +8005,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 30,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "Borrowing the power of the moon, the user attacks the target. This may also lower the target’s Sp. Atk stat."
   },
   {
     "id": 589,
@@ -6952,7 +8020,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user and the target become friends, and the target loses its will to fight. This lowers the target’s Attack stat."
   },
   {
     "id": 590,
@@ -6965,7 +8035,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user tells the target a secret, and the target loses its ability to concentrate. This lowers the target’s Sp. Atk stat."
   },
   {
     "id": 595,
@@ -6978,7 +8050,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks by breathing a special, hot fire. This also lowers the target’s Sp. Atk stat."
   },
   {
     "id": 598,
@@ -6991,7 +8065,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user’s body generates an eerie impulse. Exposing the target to it harshly lowers the target’s Sp. Atk stat."
   },
   {
     "id": 599,
@@ -7004,7 +8080,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "Opposing Pokémon are drenched in an odd poisonous liquid. This lowers the Attack, Sp. Atk, and Speed stats of a poisoned target."
   },
   {
     "id": 602,
@@ -7017,7 +8095,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user manipulates magnetic fields, which raises the Defense and Sp. Def stats of ally Pokémon with the Plus or Minus Ability."
   },
   {
     "id": 604,
@@ -7030,7 +8110,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user electrifies the ground under everyone’s feet for five turns. Pokémon on the ground no longer fall asleep."
   },
   {
     "id": 605,
@@ -7043,7 +8125,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user damages opposing Pokémon by emitting a powerful flash."
   },
   {
     "id": 608,
@@ -7056,7 +8140,9 @@
     "accuracy": 100,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user stares at the target with its baby-doll eyes, which lowers its Attack stat. This move always goes first."
   },
   {
     "id": 609,
@@ -7069,7 +8155,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user attacks by nuzzling its electrified cheeks against the target. This also leaves the target with paralysis."
   },
   {
     "id": 611,
@@ -7082,7 +8170,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The target is infested and attacked for four to five turns. The target can’t flee during this time."
   },
   {
     "id": 612,
@@ -7095,7 +8185,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "Striking opponents over and over makes the user’s fists harder. Hitting a target raises the Attack stat."
   },
   {
     "id": 660,
@@ -7108,7 +8200,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "Although this move has great power, it only works the first turn the user is in battle."
   },
   {
     "id": 663,
@@ -7121,7 +8215,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user swings both arms and hits the target. The target’s stat changes don’t affect this attack’s damage."
   },
   {
     "id": 664,
@@ -7134,7 +8230,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The user bursts into song, emitting many bubbles. Any Pokémon suffering from a burn will be healed by the touch of these bubbles."
   },
   {
     "id": 667,
@@ -7147,7 +8245,9 @@
     "accuracy": 95,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user fiercely attacks the target using its entire body."
   },
   {
     "id": 668,
@@ -7160,7 +8260,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user restores its HP by the same amount as the target’s Attack stat. It also lowers the target’s Attack stat."
   },
   {
     "id": 669,
@@ -7173,7 +8275,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "In this two-turn attack, the user gathers light and fills a blade with the light’s energy, attacking the target on the next turn."
   },
   {
     "id": 671,
@@ -7186,7 +8290,9 @@
     "accuracy": null,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user shines a spotlight on the target so that only the target will be attacked during the turn."
   },
   {
     "id": 672,
@@ -7199,7 +8305,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user shoots poisonous threads to poison the target and lower the target’s Speed stat."
   },
   {
     "id": 673,
@@ -7212,7 +8320,9 @@
     "accuracy": null,
     "pp": 30,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user concentrates intensely. The attack on the next turn always results in a critical hit."
   },
   {
     "id": 675,
@@ -7225,7 +8335,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user attacks the target’s throat, and the resultant suffering prevents the target from using moves that emit sound for two turns."
   },
   {
     "id": 676,
@@ -7238,7 +8350,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The user attacks the enemy with a pollen puff that explodes. If the target is an ally, it gives the ally a pollen puff that restores its HP instead."
   },
   {
     "id": 678,
@@ -7251,7 +8365,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "This protects Pokémon on the ground from priority moves and powers up Psychic-type moves for five turns."
   },
   {
     "id": 679,
@@ -7264,7 +8380,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user makes a lunge at the target, attacking with full force. This also lowers the target’s Attack stat."
   },
   {
     "id": 681,
@@ -7277,7 +8395,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user boasts its strength and attacks the target. The more the user’s stats are raised, the greater the move’s power."
   },
   {
     "id": 682,
@@ -7290,7 +8410,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "To inflict massive damage, the user burns itself out. After using this move, the user will no longer be Fire type."
   },
   {
     "id": 683,
@@ -7303,7 +8425,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user exchanges Speed stats with the target."
   },
   {
     "id": 684,
@@ -7316,7 +8440,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user stabs the target with a sharp horn. This attack never misses."
   },
   {
     "id": 693,
@@ -7329,7 +8455,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user swings its body around violently to inflict damage on everything in its vicinity."
   },
   {
     "id": 694,
@@ -7342,7 +8470,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "This move reduces damage from physical and special moves for five turns. This can be used only in a hailstorm."
   },
   {
     "id": 706,
@@ -7355,7 +8485,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user bites the target with its psychic capabilities. This can also destroy Light Screen and Reflect."
   },
   {
     "id": 707,
@@ -7368,7 +8500,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Driven by frustration, the user attacks the target. If the user’s previous move has failed, the power of this move doubles."
   },
   {
     "id": 710,
@@ -7381,7 +8515,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 20,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user slams into the target using a full-force blast of water. This may also lower the target’s Defense stat."
   },
   {
     "id": 715,
@@ -7394,7 +8530,9 @@
     "accuracy": null,
     "pp": 20,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user gets teary eyed to make the target lose its combative spirit. This lowers the target’s Attack and Sp. Atk stats."
   },
   {
     "id": 776,
@@ -7407,7 +8545,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user attacks by slamming its body into the target. The higher the user’s Defense, the more damage it can inflict on the target."
   },
   {
     "id": 784,
@@ -7420,7 +8560,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": 100,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user swings its tough tail wildly and attacks opposing Pokémon. This also lowers their Attack stats."
   },
   {
     "id": 791,
@@ -7433,7 +8575,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user scatters mysterious water around and restores the HP of itself and its ally Pokémon in the battle."
   },
   {
     "id": 796,
@@ -7446,7 +8590,9 @@
     "accuracy": 95,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "special",
+    "description": "The user fires a beam of steel that it collected from its entire body. This also damages the user."
   },
   {
     "id": 797,
@@ -7459,7 +8605,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks the target with its psychic power. This move’s power goes up and damages all opposing Pokémon on Psychic Terrain."
   },
   {
     "id": 798,
@@ -7472,7 +8620,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 6
+    "mathDifficulty": 6,
+    "damageClass": "physical",
+    "description": "The user attacks while destroying the terrain. This move fails when the ground hasn’t turned into a terrain."
   },
   {
     "id": 799,
@@ -7485,7 +8635,9 @@
     "accuracy": 90,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user attacks by shooting scales two to five times in a row. This move boosts the user’s Speed stat but lowers its Defense stat."
   },
   {
     "id": 800,
@@ -7498,7 +8650,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "special",
+    "description": "In this two-turn attack, the user gathers space power and boosts its Sp. Atk stat, then attacks the target on the next turn."
   },
   {
     "id": 802,
@@ -7511,7 +8665,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": "The user attacks everything around it and faints upon using this move. This move’s power is increased on Misty Terrain."
   },
   {
     "id": 803,
@@ -7524,7 +8680,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "Gliding on the ground, the user attacks the target. This move always goes first on Grassy Terrain."
   },
   {
     "id": 804,
@@ -7537,7 +8695,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks with electric voltage rising from the ground. This move’s power doubles when the target is on Electric Terrain."
   },
   {
     "id": 805,
@@ -7550,7 +8710,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user utilizes the power of the terrain to attack. This move’s type and power changes depending on the terrain when it’s used."
   },
   {
     "id": 806,
@@ -7563,7 +8725,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user skitters behind the target to attack. This also lowers the target’s Sp. Atk stat."
   },
   {
     "id": 807,
@@ -7576,7 +8740,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": 100,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks with energy from jealousy. This leaves all opposing Pokémon that have had their stats boosted during the turn with a burn."
   },
   {
     "id": 808,
@@ -7589,7 +8755,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user lashes out to vent its frustration toward the target. If the user’s stats were lowered during this turn, the power of this move is doubled."
   },
   {
     "id": 809,
@@ -7602,7 +8770,9 @@
     "accuracy": 90,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user attacks the target by controlling the target’s item. The move fails if the target doesn’t have an item."
   },
   {
     "id": 810,
@@ -7615,7 +8785,9 @@
     "accuracy": 100,
     "pp": 40,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user surrounds everything around it with highly acidic gas and melts away items they hold."
   },
   {
     "id": 811,
@@ -7628,7 +8800,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": 100,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user properly coaches its ally Pokémon, boosting their Attack and Defense stats."
   },
   {
     "id": 812,
@@ -7641,7 +8815,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "After making its attack, the user rushes back to switch places with a party Pokémon in waiting."
   },
   {
     "id": 813,
@@ -7654,7 +8830,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "A consecutive three-kick attack that becomes more powerful with each successful hit."
   },
   {
     "id": 814,
@@ -7667,7 +8845,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user slams the target with its wings. The target is hit twice in a row."
   },
   {
     "id": 815,
@@ -7680,7 +8860,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": 30,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user throws scorching sand at the target to attack. This may also leave the target with a burn."
   },
   {
     "id": 828,
@@ -7693,7 +8875,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Cloaking itself in psychic energy, the user slams into the target. This may also raise the user’s defensive stats."
   },
   {
     "id": 833,
@@ -7706,7 +8890,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user rampages and spews vicious flames to inflict damage on the target, then becomes fixated on using this move."
   },
   {
     "id": 834,
@@ -7719,7 +8905,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user shrouds itself in water and slams into the target with its whole body to inflict damage. This also damages the user and raises the user’s action speed."
   },
   {
     "id": 839,
@@ -7732,7 +8920,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user launches countless toxic barbs to inflict damage. This may also poison the target. This move’s power is doubled if the target has a status condition."
   },
   {
     "id": 851,
@@ -7745,7 +8935,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "If the user has Terastallized, it unleashes energy of its Tera Type. This move inflicts damage using the Attack or Sp. Atk stat—whichever is higher for the user."
   },
   {
     "id": 853,
@@ -7758,7 +8950,9 @@
     "accuracy": 90,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 5
+    "mathDifficulty": 5,
+    "damageClass": "physical",
+    "description": "The user attacks by kicking up into the air and slamming its heel down upon the target. This may also confuse the target. If it misses, the user takes damage instead."
   },
   {
     "id": 861,
@@ -7771,7 +8965,9 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user covers its feet in thin ice and twirls around, slamming into the target. This move's spinning motion also destroys the terrain."
   },
   {
     "id": 873,
@@ -7784,7 +8980,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user performs a tackle like a raging bull. This move's type depends on the user's form. It can also break barriers, such as Light Screen and Reflect."
   },
   {
     "id": 881,
@@ -7797,7 +8995,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user tells a chillingly bad joke before switching places with a party Pokémon in waiting. This summons a snowstorm lasting five turns."
   },
   {
     "id": 882,
@@ -7810,7 +9010,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user tidies up and removes the effects of Spikes, Stealth Rock, Sticky Web, Toxic Spikes, and Substitute. This also boosts the user’s Attack and Speed stats."
   },
   {
     "id": 883,
@@ -7823,7 +9025,9 @@
     "accuracy": null,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user summons a snowstorm lasting five turns. This boosts the Defense stats of Ice types."
   },
   {
     "id": 884,
@@ -7836,7 +9040,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user attacks by pouncing on the target. This also lowers the target's Speed stat."
   },
   {
     "id": 885,
@@ -7849,7 +9055,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user attacks suddenly as if leaping out from tall grass. The user's nimble footwork boosts its Speed stat."
   },
   {
     "id": 886,
@@ -7862,7 +9070,9 @@
     "accuracy": 100,
     "pp": 20,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "special",
+    "description": "The user attacks the target by showering it with water that's so cold it saps the target's power. This also lowers the target's Attack stat."
   },
   {
     "id": 887,
@@ -7875,7 +9085,9 @@
     "accuracy": 100,
     "pp": 5,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user spins the pointed part of its body at high speed to pierce the target. This attack can hit a target using a move such as Protect or Detect."
   },
   {
     "id": 888,
@@ -7888,7 +9100,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "special",
+    "description": "The user shoots mystical beams from its eyes to inflict damage. The target is hit twice in a row."
   },
   {
     "id": 889,
@@ -7901,7 +9115,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 2
+    "mathDifficulty": 2,
+    "damageClass": "physical",
+    "description": "The user converts its rage into energy to attack. The more times the user has been hit by attacks, the greater the move's power."
   },
   {
     "id": 894,
@@ -7914,7 +9130,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The user retaliates with much greater force against the opponent that last inflicted damage on it."
   },
   {
     "id": 912,
@@ -7927,7 +9145,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "physical",
+    "description": "The target is crushed with an arm, a claw, or the like to inflict damage. The more HP the target has left, the greater the move's power."
   },
   {
     "id": 913,
@@ -7940,7 +9160,9 @@
     "accuracy": 0,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 1
+    "mathDifficulty": 1,
+    "damageClass": "status",
+    "description": "The user raises its allies’ morale with a draconic cry so that their future attacks have a heightened chance of landing critical hits. This rouses Dragon types more."
   },
   {
     "id": 914,
@@ -7953,7 +9175,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks the target using its angelic voice. This also confuses the target if its stats have been boosted during the turn."
   },
   {
     "id": 915,
@@ -7966,7 +9190,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "Spurred by desperation, the user attacks the target. This move's power is doubled if the user's previous move failed."
   },
   {
     "id": 916,
@@ -7979,7 +9205,9 @@
     "accuracy": 95,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 4
+    "mathDifficulty": 4,
+    "damageClass": "physical",
+    "description": "The user electrifies its body and drops onto the target to inflict damage. If this move misses, the user takes damage instead."
   },
   {
     "id": 917,
@@ -7992,7 +9220,9 @@
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "special",
+    "description": "The user attacks the target with unpleasant sound waves. For two turns, the target is prevented from recovering HP through moves, Abilities, or held items."
   },
   {
     "id": 918,
@@ -8005,6 +9235,8 @@
     "accuracy": 100,
     "pp": 15,
     "effectChance": null,
-    "mathDifficulty": 3
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": "The user reacts to the target's movement and strikes with the heel of its palm, making the target flinch. This move fails if the target is not readying a priority move."
   }
 ]

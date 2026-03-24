@@ -12,7 +12,7 @@ export interface Scene {
 }
 
 /** Scene identifiers used by the state machine. */
-export type SceneId = 'TITLE' | 'STARTER_SELECT' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE' | 'PARTY' | 'POKEDEX' | 'SHOP';
+export type SceneId = 'TITLE' | 'STARTER_SELECT' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE' | 'PARTY' | 'POKEDEX' | 'SHOP' | 'BAG';
 
 /** Top-level game state snapshot. */
 export interface GameState {

@@ -9,6 +9,8 @@ import pokemonData from '../data/pokemon.json';
 import movesData from '../data/moves.json';
 import typeChartData from '../data/type-chart.json';
 import evolutionData from '../data/evolution-chains.json';
+import encounterData from '../data/encounter-tables.json';
+import learnsetData from '../data/learnsets.json';
 
 // --- Types matching the JSON shapes ---
 
@@ -41,6 +43,8 @@ export interface MoveData {
   pp: number;
   effectChance: number | null;
   mathDifficulty: number;
+  damageClass: string;
+  description: string;
 }
 
 export interface TypeChartData {
@@ -59,6 +63,26 @@ export interface EvolutionStep {
 export interface EvolutionChainData {
   chainId: number;
   stages: EvolutionStep[];
+}
+
+// --- Encounter types ---
+
+interface EncounterEntry {
+  pokemonId: number;
+  minLevel: number;
+  maxLevel: number;
+  weight: number;
+}
+
+interface EncounterTable {
+  encounterRate: number;
+  entries: EncounterEntry[];
+}
+
+export interface SpawnLocation {
+  mapId: string;
+  minLevel: number;
+  maxLevel: number;
 }
 
 // --- Indexed lookups ---
@@ -83,6 +107,22 @@ const evolutionByPokemonId = new Map<number, EvolutionChainData>();
 for (const chain of evolutionData as unknown as EvolutionChainData[]) {
   for (const stage of chain.stages) {
     evolutionByPokemonId.set(stage.id, chain);
+  }
+}
+
+// Build reverse index: pokemonId → spawn locations
+const spawnIndex: Record<number, SpawnLocation[]> = {};
+const encounters = encounterData as Record<string, EncounterTable>;
+for (const [mapId, table] of Object.entries(encounters)) {
+  for (const entry of table.entries) {
+    if (!spawnIndex[entry.pokemonId]) {
+      spawnIndex[entry.pokemonId] = [];
+    }
+    spawnIndex[entry.pokemonId].push({
+      mapId,
+      minLevel: entry.minLevel,
+      maxLevel: entry.maxLevel,
+    });
   }
 }
 
@@ -170,4 +210,18 @@ export function movePowerToMathDifficulty(power: number | null): MathDifficulty 
   if (power <= 100) return 4;
   if (power <= 120) return 5;
   return 6;
+}
+
+/** Get locations where a Pokemon can be encountered. */
+export function getSpawnLocations(pokemonId: number): SpawnLocation[] {
+  return spawnIndex[pokemonId] || [];
+}
+
+// --- Learnset data ---
+
+const learnsets = learnsetData as Record<string, { moveId: number; levelLearned: number }[]>;
+
+/** Get the learnset for a Pokemon (moves learned by level-up). */
+export function getLearnset(pokemonId: number): { moveId: number; levelLearned: number }[] {
+  return learnsets[String(pokemonId)] || [];
 }

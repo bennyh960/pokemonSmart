@@ -54,6 +54,20 @@
   "party.stats.speed": "Speed",
   "party.xp": "XP: {current}/{next}",
   "party.swap": "Select Pokemon to swap",
+  "party.hint.overworld": "ESC:Back  ENTER:Detail  S:Swap",
+  "party.hint.battle": "ESC:Back  ENTER:Switch in",
+  "party.hint.selectTarget": "ESC:Back  ENTER:Use item",
+  "party.hint.swapMode": "ENTER:Swap here  ESC:Cancel",
+  "party.hint.detailNav": "L/R:Tab  ESC:Back",
+  "party.hint.moves": "ENTER:Options  D:Delete",
+  "party.moves.battleMoves": "BATTLE MOVES",
+  "party.moves.noMoves": "No moves learned",
+  "party.moves.swap": "SWAP",
+  "party.moves.delete": "DELETE",
+  "party.moves.cancel": "CANCEL",
+  "party.moves.forgetConfirm": "Forget {move}?",
+  "party.moves.swapSelect": "Select move to swap with",
+  "party.info.pokedexHint": "ENTER: View in Pokedex",
 
   "npc.choice.yes": "Yes",
   "npc.choice.no": "No",
@@ -130,5 +144,16 @@
   "item.ether.name": "Ether",
   "item.ether.desc": "Restores 10 PP of a move",
   "item.elixir.name": "Elixir",
-  "item.elixir.desc": "Restores all PP of all moves"
+  "item.elixir.desc": "Restores all PP of all moves",
+
+  "bag.title": "BAG",
+  "bag.noItems": "No items",
+  "bag.cantUseHere": "Can't use that here!",
+  "bag.selectPokemon": "Select a Pokemon to use this on",
+
+  "battle.goName": "Go, {name}!",
+  "battle.comeBack": "Come back, {name}!",
+  "battle.alreadyActive": "That Pokemon is already out!",
+  "battle.pokemonFainted": "That Pokemon has fainted!",
+  "battle.noOtherPokemon": "No other Pokemon available!"
 }

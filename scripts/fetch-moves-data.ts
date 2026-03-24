@@ -25,6 +25,8 @@ export interface MoveEntry {
   pp: number;
   effectChance: number | null;
   mathDifficulty: number;
+  damageClass: string;      // "physical" | "special" | "status"
+  description: string;      // English flavor text
 }
 
 function sleep(ms: number): Promise<void> {
@@ -73,6 +75,15 @@ export async function fetchMovesData(): Promise<MoveEntry[]> {
     const data = await res.json();
 
     const enName = data.name.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    // Extract damage class
+    const damageClass: string = data.damage_class?.name ?? 'status';
+
+    // Extract English flavor text, preferring gold-silver version group
+    const flavorEntries = data.flavor_text_entries ?? [];
+    const englishEntries = flavorEntries.filter((e: any) => e.language.name === 'en');
+    const gsEntry = englishEntries.find((e: any) => e.version_group.name === 'gold-silver');
+    const flavorText = (gsEntry ?? englishEntries[0])?.flavor_text?.replace(/\n/g, ' ') ?? '';
+
     moves.push({
       id: data.id,
       name: { en: enName, he: enName }, // Hebrew added by add-hebrew-move-names.ts
@@ -82,6 +93,8 @@ export async function fetchMovesData(): Promise<MoveEntry[]> {
       pp: data.pp,
       effectChance: data.effect_chance,
       mathDifficulty: powerToMathDifficulty(data.power),
+      damageClass,
+      description: flavorText,
     });
 
     count++;
