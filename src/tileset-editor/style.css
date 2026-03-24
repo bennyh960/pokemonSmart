@@ -32,6 +32,7 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
 }
 .toolbar-group button:hover { background: #3a3a55; }
 .toolbar-group button.active { background: #4466aa; color: #fff; border-color: #5577bb; }
+.toolbar-group button#btn-crop.active { background: #aa6622; border-color: #cc8833; }
 .toolbar-label { color: #888; font-size: 12px; padding: 0 4px; min-width: 30px; text-align: center; }
 
 /* ── Tile List (left) ── */

@@ -42,6 +42,7 @@ async function init() {
       <span class="toolbar-label" id="zoom-label">2x</span>
       <button id="btn-zoom-in">+</button>
       <button id="btn-grid" class="active">Grid</button>
+      <button id="btn-crop">Crop</button>
     </div>
     <div class="toolbar-group">
       <span class="toolbar-label" id="tile-count">${state.tiles.length} tiles</span>
@@ -116,6 +117,14 @@ async function init() {
     state.showGrid = !state.showGrid;
     btnGrid.classList.toggle('active', state.showGrid);
     state.emit('viewport-changed');
+  });
+
+  // Crop mode toggle
+  const btnCrop = toolbarEl.querySelector('#btn-crop') as HTMLElement;
+  btnCrop.addEventListener('click', () => {
+    state.cropMode = !state.cropMode;
+    btnCrop.classList.toggle('active', state.cropMode);
+    state.emit('crop-mode-changed');
   });
 
   // Tile count

@@ -1,6 +1,6 @@
 import type { TilesetEditorState } from './editor-state.js';
 import type { TileEntry, TileManifest } from './types.js';
-import { hasFSAccess, saveToDirectory } from '../editor/fs-save.js';
+import { hasFSAccess, saveToDirectory, saveBlobToDirectory } from '../editor/fs-save.js';
 
 /** Export tiles as the manifest JSON. */
 export function exportManifest(state: TilesetEditorState): string {
@@ -87,6 +87,63 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
 
   state.selectedIndex = -1;
   state.emit('items-changed');
+}
+
+/**
+ * Apply a crop (scale-in-place) to a region of the tileset image.
+ * Scales the source region (sx, sy, sw, sh) into the target size (tw, th)
+ * at the target position (targetSx, targetSy).
+ * Clears the original source area, then draws the scaled content.
+ * Rest of the image is completely untouched.
+ * Returns a PNG blob of the modified image.
+ */
+export async function applyCrop(
+  image: HTMLImageElement,
+  sx: number, sy: number, sw: number, sh: number,
+  tw: number, th: number,
+  targetSx: number, targetSy: number,
+): Promise<Blob> {
+  const canvas = document.createElement('canvas');
+  canvas.width = image.naturalWidth;
+  canvas.height = image.naturalHeight;
+  const ctx = canvas.getContext('2d')!;
+  ctx.imageSmoothingEnabled = false;
+
+  // Draw the full original image
+  ctx.drawImage(image, 0, 0);
+
+  // Clear the source region (make it transparent)
+  ctx.clearRect(sx, sy, sw, sh);
+
+  // Draw the source region scaled to target size at target position
+  ctx.drawImage(image, sx, sy, sw, sh, targetSx, targetSy, tw, th);
+
+  // Convert to blob
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/png');
+  });
+
+  return blob;
+}
+
+/**
+ * Save the modified tileset image to disk.
+ */
+export async function saveTilesetImage(blob: Blob, fileName = 'dpp-tileset.png'): Promise<void> {
+  if (hasFSAccess()) {
+    await saveBlobToDirectory('tileset-image', fileName, blob);
+    return;
+  }
+
+  // Fallback: browser download
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /** Load manifest from a File. */

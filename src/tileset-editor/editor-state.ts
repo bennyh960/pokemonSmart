@@ -22,6 +22,25 @@ export class TilesetEditorState {
   cursorCol = -1;
   cursorRow = -1;
 
+  // Crop mode
+  cropMode = false;
+  cropLocked = false;
+  // Pixel-level selection for crop (independent of grid selection)
+  cropSelX = -1;
+  cropSelY = -1;
+  cropSelW = 0;
+  cropSelH = 0;
+  // Source region (frozen when locked)
+  cropSrcX = 0;
+  cropSrcY = 0;
+  cropSrcW = 0;
+  cropSrcH = 0;
+  // Target region (draggable/resizable)
+  cropTargetX = 0;
+  cropTargetY = 0;
+  cropTargetW = 16;
+  cropTargetH = 16;
+
   // Image
   imageSrc = '/sprites/overworld/dpp-tileset.png';
   imageWidth = 256;
@@ -66,6 +85,39 @@ export class TilesetEditorState {
   get selRows(): number { return this.selEndRow - this.selStartRow + 1; }
   get selPixelW(): number { return this.selCols * 16; }
   get selPixelH(): number { return this.selRows * 16; }
+
+  // ── Crop lock ──
+
+  get cropSelValid(): boolean {
+    return this.cropSelX >= 0 && this.cropSelY >= 0 && this.cropSelW > 0 && this.cropSelH > 0;
+  }
+
+  setCropSel(x1: number, y1: number, x2: number, y2: number): void {
+    this.cropSelX = Math.max(0, Math.min(x1, x2));
+    this.cropSelY = Math.max(0, Math.min(y1, y2));
+    this.cropSelW = Math.abs(x2 - x1);
+    this.cropSelH = Math.abs(y2 - y1);
+    this.emit('selection-changed');
+  }
+
+  lockCrop(): void {
+    if (!this.cropSelValid) return;
+    this.cropSrcX = this.cropSelX;
+    this.cropSrcY = this.cropSelY;
+    this.cropSrcW = this.cropSelW;
+    this.cropSrcH = this.cropSelH;
+    this.cropTargetX = this.cropSrcX;
+    this.cropTargetY = this.cropSrcY;
+    this.cropTargetW = this.cropSrcW;
+    this.cropTargetH = this.cropSrcH;
+    this.cropLocked = true;
+    this.emit('crop-mode-changed');
+  }
+
+  unlockCrop(): void {
+    this.cropLocked = false;
+    this.emit('crop-mode-changed');
+  }
 
   // ── Item management ──
 

@@ -24,7 +24,9 @@ export type TsEditorEvent =
   | 'selection-changed'
   | 'item-selected'
   | 'items-changed'
-  | 'viewport-changed';
+  | 'viewport-changed'
+  | 'crop-mode-changed'
+  | 'crop-target-changed';
 
 /** Preset categories for the dropdown. */
 export const TILE_CATEGORIES = [

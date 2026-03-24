@@ -59,7 +59,7 @@
         "Every great adventure starts from zero.",
         "Choose your partner Pokemon and explore Numeria!"
       ],
-      "spriteType": "char_962c1b"
+      "spriteType": "npc-f"
     },
     {
       "id": "elder-zero",
@@ -93,7 +93,7 @@
         "Did you know zero is the most important number?",
         "Without zero, we'd have no place value system!"
       ],
-      "spriteType": "char_0502ea"
+      "spriteType": "npc-m"
     },
     {
       "id": "shop-helper",
@@ -106,7 +106,7 @@
         "Welcome! The Mart has everything a new trainer needs.",
         "Stock up on Potions before heading to Route 1!"
       ],
-      "spriteType": "char_524b56"
+      "spriteType": "npc-f"
     }
   ],
   "music": "town",
@@ -117,7 +117,7 @@
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g2tl","g2tr","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","grass","g2bl","g2br","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g2bl","g2br","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
     ["g1","g1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],

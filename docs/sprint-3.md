@@ -1,4 +1,4 @@
-# Sprint 3 — World Building
+# Sprint 3 — World Building ✅ COMPLETE
 **תאריך:** 2026-03-20
 **מטרה:** תשתית עולם — מעבר בין מפות, NPCs, חנות/ריפוי, קרבות מאמנים, תפריט קבוצה ופוקדקס
 
@@ -77,10 +77,10 @@ Phase 3 (after Branch 2 merges):
 `src/engine/tilemap.ts`, `src/systems/map-manager.ts` (new), `src/scenes/overworld.ts`, `src/types/index.ts`, `src/engine/asset-generator.ts`
 
 ### Acceptance Criteria
-- [ ] מפות נטענות דינמית לפי mapId
-- [ ] מעבר דרך דלת → fade → מפה חדשה → fade in
-- [ ] save/load שומר מיקום נכון על מפה דינמית
-- [ ] `tsc --noEmit` = 0 errors
+- [x] מפות נטענות דינמית לפי mapId
+- [x] מעבר דרך דלת → fade → מפה חדשה → fade in
+- [x] save/load שומר מיקום נכון על מפה דינמית
+- [x] `tsc --noEmit` = 0 errors
 
 ---
 
@@ -112,10 +112,10 @@ Phase 3 (after Branch 2 merges):
 `src/systems/npc.ts` (new), `src/scenes/overworld.ts`, `src/engine/asset-generator.ts`, `src/ui/text-box.ts`
 
 ### Acceptance Criteria
-- [ ] NPCs נראים במפה ומסתירים/נחסמים כראוי
-- [ ] Enter/Space מול NPC פותח דיאלוג
-- [ ] דיאלוג typewriter + dismiss
-- [ ] `tsc --noEmit` = 0 errors
+- [x] NPCs נראים במפה ומסתירים/נחסמים כראוי
+- [x] Enter/Space מול NPC פותח דיאלוג
+- [x] דיאלוג typewriter + dismiss
+- [x] `tsc --noEmit` = 0 errors
 
 ---
 
@@ -125,7 +125,7 @@ Phase 3 (after Branch 2 merges):
 יצירת 5 מפות JSON אמיתיות + encounter table + skeleton מפות לעתיד.
 
 ### משימות
-- [ ] **3.1** Zeroville — `src/data/maps/zeroville.json` (30×20):
+- [x] **3.1** Zeroville — `src/data/maps/zeroville.json` (30×20):
   - מעבדת פרופ' אלגוריתמה (בניין + דלת)
   - Pokemon Center (בניין + דלת → pokecenter-interior)
   - Poke Mart (בניין + דלת → mart-interior)
@@ -134,30 +134,30 @@ Phase 3 (after Branch 2 merges):
   - יציאה ימינה → route-1 (TILE_ROUTE_EXIT = 8)
   - spawn: ליד המעבדה
   - transitions: [דלת PC → pokecenter-interior, דלת Mart → mart-interior, קצה ימין → route-1]
-- [ ] **3.2** Route 1 — Counting Path — `src/data/maps/route-1.json` (40×15):
+- [x] **3.2** Route 1 — Counting Path — `src/data/maps/route-1.json` (40×15):
   - tall grass patches
   - עצים בצדדים
   - שביל מפותל
   - יציאה שמאלה → zeroville, ימינה → sumville
   - encounterTableId: 'route-1'
   - music: 'route'
-- [ ] **3.3** Sumville — `src/data/maps/sumville.json` (30×20):
+- [x] **3.3** Sumville — `src/data/maps/sumville.json` (30×20):
   - Gym building (בניין גדול, דלת — לא פעיל עדיין)
   - Pokemon Center (דלת → pokecenter-interior)
   - בתים
   - יציאה שמאלה → route-1
-- [ ] **3.4** Pokemon Center Interior — `src/data/maps/pokecenter-interior.json` (10×8):
+- [x] **3.4** Pokemon Center Interior — `src/data/maps/pokecenter-interior.json` (10×8):
   - רצפה (path tiles)
   - דלפק עליון (building tiles)
   - מיקום NPC nurse (x, y)
   - דלת למטה → חזרה לעיר (transitions כפול: אחד ל-zeroville, אחד ל-sumville — לפי mapId מקור)
-- [ ] **3.5** Poke Mart Interior — `src/data/maps/mart-interior.json` (10×8):
+- [x] **3.5** Poke Mart Interior — `src/data/maps/mart-interior.json` (10×8):
   - רצפה + מדפים (building tiles)
   - מיקום NPC shopkeeper
   - דלת → חזרה לעיר
-- [ ] **3.6** Encounter table ל-Route 1 ב-`src/systems/encounter.ts`:
+- [x] **3.6** Encounter table ל-Route 1 ב-`src/systems/encounter.ts`:
   - Pidgey (lv 3-6, 25%), Rattata (lv 3-5, 25%), Sentret (lv 3-5, 20%), Caterpie (lv 2-4, 15%), Weedle (lv 2-4, 15%)
-- [ ] **3.7** Skeleton maps (basic layouts — will be filled in later sprints):
+- [x] **3.7** Skeleton maps (basic layouts — will be filled in later sprints):
   - `src/data/maps/divideburg.json`, `multitown.json`, `fractalis.json`, `algebria.json`, `logica-heights.json`, `prime-city.json`, `infinity-plateau.json`
   - כל אחד: name, 20×15, tileSize 16, spawn, tiles = grass border with path
 
@@ -197,9 +197,9 @@ Phase 3 (after Branch 2 merges):
 `src/data/maps/*.json`, `src/systems/encounter.ts`
 
 ### Acceptance Criteria
-- [ ] 5 JSON maps match TileMapData format
-- [ ] Maps render correctly with existing tilemap.ts
-- [ ] Transitions defined consistently (door A → interior spawn, interior door → city)
+- [x] 5 JSON maps match TileMapData format
+- [x] Maps render correctly with existing tilemap.ts
+- [x] Transitions defined consistently (door A → interior spawn, interior door → city)
 
 ---
 
@@ -237,10 +237,10 @@ Phase 3 (after Branch 2 merges):
 `src/systems/game-state.ts`, `src/ui/shop.ts` (new), `src/data/items.ts` (new), `src/types/index.ts`, `src/scenes/battle.ts`, `src/ui/battle-menu.ts`, `src/i18n/locales/en.json`, `src/i18n/locales/he.json`
 
 ### Acceptance Criteria
-- [ ] כניסה לPokemon Center → דיבור עם nurse → ריפוי
-- [ ] כניסה לMart → קנייה → פריט נוסף ל-inventory
-- [ ] BAG בקרב → שימוש ב-Potion → ריפוי
-- [ ] `tsc --noEmit` = 0 errors
+- [x] כניסה לPokemon Center → דיבור עם nurse → ריפוי
+- [x] כניסה לMart → קנייה → פריט נוסף ל-inventory
+- [x] BAG בקרב → שימוש ב-Potion → ריפוי
+- [x] `tsc --noEmit` = 0 errors
 
 ---
 
@@ -273,10 +273,10 @@ Phase 3 (after Branch 2 merges):
 `src/systems/npc.ts`, `src/scenes/overworld.ts`, `src/scenes/battle.ts`, `src/data/maps/route-1.json`
 
 ### Acceptance Criteria
-- [ ] Trainer spots player → "!" → approaches → forced battle
-- [ ] Can't run from trainer battle
-- [ ] Trainer defeated → flag set → different dialogue
-- [ ] `tsc --noEmit` = 0 errors
+- [x] Trainer spots player → "!" → approaches → forced battle
+- [x] Can't run from trainer battle
+- [x] Trainer defeated → flag set → different dialogue
+- [x] `tsc --noEmit` = 0 errors
 
 ---
 
@@ -306,11 +306,11 @@ Phase 3 (after Branch 2 merges):
 `src/scenes/party.ts` (new), `src/engine/game.ts`, `src/scenes/overworld.ts`, `src/i18n/locales/en.json`, `src/i18n/locales/he.json`
 
 ### Acceptance Criteria
-- [ ] P key → party screen → list of Pokemon
-- [ ] Detail view: stats, moves, XP
-- [ ] Swap two Pokemon
-- [ ] Escape → back to overworld
-- [ ] `tsc --noEmit` = 0 errors
+- [x] P key → party screen → list of Pokemon
+- [x] Detail view: stats, moves, XP
+- [x] Swap two Pokemon
+- [x] Escape → back to overworld
+- [x] `tsc --noEmit` = 0 errors
 
 ---
 
@@ -341,47 +341,47 @@ Phase 3 (after Branch 2 merges):
 `src/scenes/pokedex.ts` (new), `src/engine/game.ts`, `src/scenes/overworld.ts`, `src/scenes/battle.ts`, `src/i18n/locales/en.json`, `src/i18n/locales/he.json`
 
 ### Acceptance Criteria
-- [ ] D key → Pokedex screen → scrollable list
-- [ ] Seen Pokemon show name + sprite
-- [ ] Unseen show "???"
-- [ ] Battle encounter marks Pokemon as seen
-- [ ] `tsc --noEmit` = 0 errors
+- [x] D key → Pokedex screen → scrollable list
+- [x] Seen Pokemon show name + sprite
+- [x] Unseen show "???"
+- [x] Battle encounter marks Pokemon as seen
+- [x] `tsc --noEmit` = 0 errors
 
 ---
 
 ## QA Checklist
 
 ### feature/map-system
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] `npm test` passes
-- [ ] Maps load dynamically by ID
-- [ ] Door transition: fade → new map → fade in
-- [ ] Save/load preserves mapId + position
+- [x] `tsc --noEmit` = 0 errors
+- [x] `npm test` passes
+- [x] Maps load dynamically by ID
+- [x] Door transition: fade → new map → fade in
+- [x] Save/load preserves mapId + position
 
 ### feature/city-maps
-- [ ] JSON files valid and match TileMapData
-- [ ] All transitions consistent (A→B and B→A)
-- [ ] Maps render with correct tiles
+- [x] JSON files valid and match TileMapData
+- [x] All transitions consistent (A→B and B→A)
+- [x] Maps render with correct tiles
 
 ### feature/party-ui
 - [x] `tsc --noEmit` = 0 errors
 - [x] P → party list → stats → swap → Escape
 
 ### feature/pokedex-ui
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] D → Pokedex → scroll → seen/unseen correct
+- [x] `tsc --noEmit` = 0 errors
+- [x] D → Pokedex → scroll → seen/unseen correct
 
 ### feature/npc-system
 - [x] `tsc --noEmit` = 0 errors
 - [x] NPCs visible, block movement, respond to Enter
 
 ### feature/pokemon-center-mart
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] Heal works, shop works, BAG in battle works
+- [x] `tsc --noEmit` = 0 errors
+- [x] Heal works, shop works, BAG in battle works
 
 ### feature/trainer-battles
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] Trainer LOS → approach → forced battle → defeat flag
+- [x] `tsc --noEmit` = 0 errors
+- [x] Trainer LOS → approach → forced battle → defeat flag
 
 ---
 

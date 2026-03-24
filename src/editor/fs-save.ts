@@ -51,6 +51,33 @@ async function getDirHandle(type: string): Promise<FileSystemDirectoryHandle> {
  * @param fileName - Target filename, e.g. 'zeroville.json'
  * @param content  - The JSON string to write
  */
+export async function saveBlobToDirectory(type: string, fileName: string, blob: Blob): Promise<void> {
+  const dirHandle = await getDirHandle(type);
+
+  // Backup existing file if it exists
+  try {
+    const existingFile = await dirHandle.getFileHandle(fileName);
+    const existingData = await (await existingFile.getFile()).arrayBuffer();
+
+    const backupDir = await dirHandle.getDirectoryHandle('backup', { create: true });
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const ext = fileName.substring(fileName.lastIndexOf('.'));
+    const baseName = fileName.substring(0, fileName.lastIndexOf('.'));
+    const backupFile = await backupDir.getFileHandle(`${baseName}_${timestamp}${ext}`, { create: true });
+
+    const backupWriter = await backupFile.createWritable();
+    await backupWriter.write(existingData);
+    await backupWriter.close();
+  } catch {
+    // File doesn't exist yet — no backup needed
+  }
+
+  const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
+  const writable = await fileHandle.createWritable();
+  await writable.write(blob);
+  await writable.close();
+}
+
 export async function saveToDirectory(type: string, fileName: string, content: string): Promise<void> {
   const dirHandle = await getDirHandle(type);
 

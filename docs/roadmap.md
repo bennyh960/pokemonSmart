@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 2 ✅ COMPLETE (Sprint 3 next)
+## Overall Progress: Sprint 3 ✅ COMPLETE (Sprint 4 next)
 
 ---
 
@@ -41,12 +41,11 @@
 | Sprites already transparent | Verified: PokeAPI Gen 2 Gold PNGs have proper alpha channel |
 
 ### Known TODOs
-- Battle turn order: speed stat + move priority not implemented (player always first)
-- Audio files are silent placeholders — need real Gold/Silver OST MP3s
+- (none — all resolved or moved to sprint backlog)
 
 ---
 
-## Sprint 3 — World Building ⬜ PLANNED
+## Sprint 3 — World Building ✅ COMPLETE
 **Goal:** Build the actual game world of Numeria
 
 | Task | Agent |
@@ -67,6 +66,7 @@
 
 | Task | Agent |
 |------|-------|
+| Battle turn order (speed stat + move priority) | game-engine-developer |
 | Caesar cipher puzzle system | math-engine-developer |
 | Substitution cipher with decoder UI | frontend-developer |
 | Logic puzzles (if-then, who's lying) | math-engine-developer |

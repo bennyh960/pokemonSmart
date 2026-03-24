@@ -37,9 +37,9 @@
 - [x] **1.5** הוסף font loading ב-game.ts - שהפונט נטען לפני שהמשחק מתחיל (prevent FOUT)
 
 ### Acceptance Criteria
-- [ ] טקסט אנגלי קריא וברור בסגנון פיקסל
-- [ ] טקסט עברי קריא וברור, RTL תקין
-- [ ] כל הטקסט במשחק משתמש בפונט החדש
+- [x] טקסט אנגלי קריא וברור בסגנון פיקסל
+- [x] טקסט עברי קריא וברור, RTL תקין
+- [x] כל הטקסט במשחק משתמש בפונט החדש
 
 ---
 
@@ -110,10 +110,10 @@
   - הפוקימון הנבחר נכנס ל-party של השחקן
 
 ### Acceptance Criteria
-- [ ] הליכה על tall grass → encounter → קרב אמיתי
-- [ ] קרב עם math problems לפי רמת ה-move
-- [ ] ניצחון נותן XP, הפסד מחזיר ל-spawn
-- [ ] בחירת starter בתחילת המשחק
+- [x] הליכה על tall grass → encounter → קרב אמיתי
+- [x] קרב עם math problems לפי רמת ה-move
+- [x] ניצחון נותן XP, הפסד מחזיר ל-spawn
+- [x] בחירת starter בתחילת המשחק
 
 ---
 
@@ -184,10 +184,10 @@
   - Mute button (M key)
 
 ### Acceptance Criteria
-- [ ] מוזיקה מתנגנת ב-title screen
-- [ ] מוזיקה משתנה בין overworld ו-battle
-- [ ] SFX בסיסיים עובדים (menu, hit)
-- [ ] M = mute/unmute
+- [x] מוזיקה מתנגנת ב-title screen
+- [x] מוזיקה משתנה בין overworld ו-battle
+- [x] SFX בסיסיים עובדים (menu, hit)
+- [x] M = mute/unmute
 
 ---
 
@@ -214,9 +214,9 @@
 - [x] Starter selection works
 
 ### feature/save-system
-- [ ] `tsc --noEmit` = 0 errors
-- [ ] Save → close → reopen → Continue → same position
-- [ ] New Game works when save exists
+- [x] `tsc --noEmit` = 0 errors
+- [x] Save → close → reopen → Continue → same position
+- [x] New Game works when save exists
 
 ### feature/audio
 - [x] `tsc --noEmit` = 0 errors
@@ -365,6 +365,6 @@ Minor notes (non-blocking):
 - מסך בחירת starter עודכן להציג sprites אמיתיים (במקום מלבנים צבעוניים)
 
 ### TODOs שנשארו
-- [ ] Turn order לפי speed stat + move priority (כרגע השחקן תמיד ראשון)
-- [ ] להחליף placeholder audio ב-MP3 אמיתיים
-- [ ] לחשוב על מכניקת מתמטיקה חדשה (לא בכל מתקפה)
+- [x] Turn order לפי speed stat + move priority → moved to Sprint 4 backlog
+- [x] להחליף placeholder audio ב-MP3 אמיתיים → done
+- [x] לחשוב על מכניקת מתמטיקה חדשה → will be planned as part of story mode (Sprint 5)
