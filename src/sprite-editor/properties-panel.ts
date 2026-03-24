@@ -1,6 +1,7 @@
 import type { SpriteEditorState } from './editor-state.js';
 import type { SpriteEntry, FramePos } from './types.js';
-import { SPRITE_CATEGORIES, FRAME_DICT_REVERSE, FRAME_DICT } from './types.js';
+import { FRAME_DICT_REVERSE, FRAME_DICT, generateSpriteId } from './types.js';
+import { createNamePicker } from '../ui/name-picker.js';
 
 /** Direction arrows for visual grouping. */
 const DIR_ARROWS: Record<string, string> = {
@@ -126,6 +127,8 @@ export class PropertiesPanel {
     const section = document.createElement('div');
     section.className = 'props-section';
 
+    const autoId = generateSpriteId();
+    let pendingName = { en: '', he: '' };
     section.innerHTML = `
       <h3>New Sprite</h3>
       <div class="prop-row"><label>Origin:</label><span>(${sx}, ${sy})</span></div>
@@ -136,10 +139,16 @@ export class PropertiesPanel {
         <input id="add-fh" type="number" value="${gs}" min="1" style="width:50px" />
         <span style="color:#666">px</span>
       </div>
-      <div class="prop-row"><label>ID:</label><input id="add-id" type="text" placeholder="e.g. dani" /></div>
-      <div class="prop-row"><label>Name:</label><input id="add-name" type="text" placeholder="e.g. Dani" /></div>
-      <div class="prop-row"><label>Category:</label><select id="add-cat"><option value="">None</option>${SPRITE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
+      <div class="prop-row"><label>ID:</label><span class="val-highlight">${autoId}</span></div>
     `;
+    // Name picker
+    const nameLabel = document.createElement('div');
+    nameLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
+    nameLabel.textContent = 'Name';
+    section.appendChild(nameLabel);
+    section.appendChild(createNamePicker({
+      onChange: (name) => { pendingName = name; },
+    }));
 
     const fwInput = section.querySelector('#add-fw') as HTMLInputElement;
     const fhInput = section.querySelector('#add-fh') as HTMLInputElement;
@@ -238,11 +247,6 @@ export class PropertiesPanel {
     addBtn.className = 'primary';
     addBtn.textContent = '+ Add Sprite';
     addBtn.addEventListener('click', () => {
-      const idInput = section.querySelector('#add-id') as HTMLInputElement;
-      const id = idInput.value.trim();
-      if (!id) { idInput.focus(); idInput.style.borderColor = '#cc3333'; return; }
-      if (this.state.sprites.some(s => s.id === id)) { alert(`ID "${id}" already exists`); return; }
-
       const fw = parseInt(fwInput.value) || gs;
       const fh = parseInt(fhInput.value) || gs;
 
@@ -251,9 +255,8 @@ export class PropertiesPanel {
       const frames: FramePos[] = pendingFrames.map(f => f ?? { sx: -1, sy: -1 });
 
       const entry: SpriteEntry = {
-        id,
-        name: (section.querySelector('#add-name') as HTMLInputElement).value.trim() || id,
-        category: (section.querySelector('#add-cat') as HTMLSelectElement).value || 'other',
+        id: autoId,
+        name: { ...pendingName },
         frameWidth: fw,
         frameHeight: fh,
         frames,
@@ -262,9 +265,13 @@ export class PropertiesPanel {
     });
     section.appendChild(addBtn);
 
-    section.querySelector('#add-id')!.addEventListener('keydown', (e) => {
-      if ((e as KeyboardEvent).key === 'Enter') addBtn.click();
-    });
+    // Enter on search input triggers add
+    const searchIn = section.querySelector('.name-picker-search');
+    if (searchIn) {
+      searchIn.addEventListener('keydown', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter') addBtn.click();
+      });
+    }
 
     this.container.appendChild(section);
   }
@@ -276,17 +283,10 @@ export class PropertiesPanel {
     const section = document.createElement('div');
     section.className = 'props-section';
 
+    const displayName = s.name.en || s.name.he || s.id;
     section.innerHTML = `
-      <h3>Edit: ${s.name || s.id}</h3>
-      <div class="prop-row"><label>ID:</label><input id="edit-id" type="text" value="${s.id}" /></div>
-      <div class="prop-row"><label>Name:</label><input id="edit-name" type="text" value="${s.name}" /></div>
-      <div class="prop-row">
-        <label>Category:</label>
-        <select id="edit-cat">
-          <option value="">None</option>
-          ${SPRITE_CATEGORIES.map(c => `<option value="${c}" ${s.category === c ? 'selected' : ''}>${c}</option>`).join('')}
-        </select>
-      </div>
+      <h3>Edit: ${displayName}</h3>
+      <div class="prop-row"><label>ID:</label><span class="val-highlight">${s.id}</span></div>
       <div class="prop-row"><label>Sprite size:</label>
         <span class="val-highlight">${s.frameWidth}\u00d7${s.frameHeight}px</span>
       </div>
@@ -295,16 +295,18 @@ export class PropertiesPanel {
       </div>
     `;
 
-    // Wire up live editing
-    (section.querySelector('#edit-id') as HTMLInputElement).addEventListener('change', (e) => {
-      this.state.updateSprite(index, { id: (e.target as HTMLInputElement).value.trim() });
-    });
-    (section.querySelector('#edit-name') as HTMLInputElement).addEventListener('change', (e) => {
-      this.state.updateSprite(index, { name: (e.target as HTMLInputElement).value.trim() });
-    });
-    (section.querySelector('#edit-cat') as HTMLSelectElement).addEventListener('change', (e) => {
-      this.state.updateSprite(index, { category: (e.target as HTMLSelectElement).value || 'other' });
-    });
+    // Name picker with current values
+    const nameLabel = document.createElement('div');
+    nameLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
+    nameLabel.textContent = 'Name';
+    section.appendChild(nameLabel);
+    section.appendChild(createNamePicker({
+      initialEn: s.name.en,
+      initialHe: s.name.he,
+      onChange: (name) => {
+        this.state.updateSprite(index, { name: { en: name.en, he: name.he } });
+      },
+    }));
 
     // Frames with direction grouping + drag-and-drop
     const framesSection = document.createElement('div');

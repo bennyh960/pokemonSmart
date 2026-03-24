@@ -1,8 +1,8 @@
 /**
  * Sprite Editor types.
  *
- * Generic sprite definition system — works for NPCs, trainers, Pokemon,
- * or any sprite sheet with directional / animated frames.
+ * Generic sprite definition system — works for any sprite sheet
+ * with directional / animated frames.
  *
  * Each character is a list of frames with explicit (sx, sy) positions.
  * The array index IS the frame identity — a global dictionary maps
@@ -15,9 +15,15 @@ export interface FramePos {
   sy: number;
 }
 
+/** Bilingual name (English + Hebrew). */
+export interface BilingualName {
+  en: string;
+  he: string;
+}
+
 /** A character definition — all frames share the same size. */
 export interface SpriteCharacter {
-  name: string;
+  name?: BilingualName;
   frameWidth: number;
   frameHeight: number;
   frames: (FramePos | null)[];  // null = empty slot (no sprite for this frame)
@@ -25,20 +31,20 @@ export interface SpriteCharacter {
 
 /**
  * The manifest JSON output.
- * Grouped by category: trainers, npcs, pokemon, etc.
- * Each category is a Record<id, SpriteCharacter>.
+ * All characters live under a single "characters" key.
  */
 export interface SpriteManifest {
   image: string;
   dict: Record<string, number>;
-  [category: string]: Record<string, SpriteCharacter> | string | Record<string, number>;
+  characters: Record<string, SpriteCharacter>;
+  // Legacy support: old grouped keys like "npcs", "trainers"
+  [key: string]: Record<string, SpriteCharacter> | string | Record<string, number>;
 }
 
 /** Internal flat representation for the editor. */
 export interface SpriteEntry {
   id: string;
-  name: string;
-  category: string;
+  name: BilingualName;
   frameWidth: number;
   frameHeight: number;
   frames: FramePos[];
@@ -50,10 +56,11 @@ export type SpriteEditorEvent =
   | 'items-changed'
   | 'viewport-changed';
 
-/** Preset categories for the dropdown. */
-export const SPRITE_CATEGORIES = [
-  'npc', 'trainer', 'pokemon', 'player', 'gym-leader', 'elite-four', 'other',
-] as const;
+/** Generate a short random ID for new sprites. */
+export function generateSpriteId(): string {
+  const hex = Math.random().toString(16).slice(2, 8);
+  return `char_${hex}`;
+}
 
 /**
  * Global frame dictionary — maps label → array index.

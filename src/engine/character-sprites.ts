@@ -27,8 +27,14 @@ export interface SpriteFrame {
   h: number;
 }
 
+/** Bilingual name used in character definitions. */
+export interface CharacterName {
+  en: string;
+  he: string;
+}
+
 interface CharacterDef {
-  name: string;
+  name?: CharacterName | string;  // string for legacy compat
   frameWidth: number;
   frameHeight: number;
   frames: ({ sx: number; sy: number } | null)[];
@@ -39,7 +45,7 @@ interface CharacterDef {
 const manifest = charactersManifest as {
   image: string;
   dict: Record<string, number>;
-  [category: string]: unknown;
+  [key: string]: unknown;
 };
 
 /** All characters flattened: id → CharacterDef */
@@ -49,13 +55,17 @@ const characters = new Map<string, CharacterDef>();
 let sheetImage: HTMLImageElement | null = null;
 let loaded = false;
 
-// ── Init ──
+/** Parse a name field that may be a string (legacy) or {en, he}. */
+function parseCharName(raw: unknown): CharacterName {
+  if (!raw) return { en: '', he: '' };
+  if (typeof raw === 'string') return { en: raw, he: '' };
+  const obj = raw as Record<string, string>;
+  return { en: obj.en || '', he: obj.he || '' };
+}
 
-/** Load the spritesheet image and index all characters. */
-export async function loadCharacterSprites(): Promise<void> {
-  if (loaded) return;
-
-  // Index characters from all categories
+// ── Index characters immediately from manifest (sync) ──
+// This ensures getCharacterList() works even without loadCharacterSprites()
+{
   const reserved = new Set(['image', 'dict']);
   for (const [key, value] of Object.entries(manifest)) {
     if (reserved.has(key)) continue;
@@ -65,6 +75,13 @@ export async function loadCharacterSprites(): Promise<void> {
       characters.set(id, charDef);
     }
   }
+}
+
+// ── Init ──
+
+/** Load the spritesheet image and index all characters. */
+export async function loadCharacterSprites(): Promise<void> {
+  if (loaded) return;
 
   // Load the spritesheet image
   sheetImage = new Image();
@@ -118,27 +135,28 @@ export function hasCharacter(id: string): boolean {
   return characters.has(id);
 }
 
+/** Character info returned by getCharacterList. */
+export interface CharacterInfo {
+  id: string;
+  name: CharacterName;
+}
+
 /**
- * Get all character ids grouped by category.
- * Returns Map<category, {id, name}[]>
+ * Get all characters as a flat list with bilingual names.
  */
-export function getCharacterList(): Map<string, { id: string; name: string }[]> {
-  const result = new Map<string, { id: string; name: string }[]>();
-  const reserved = new Set(['image', 'dict']);
-
-  for (const [key, value] of Object.entries(manifest)) {
-    if (reserved.has(key)) continue;
-    if (typeof value !== 'object' || value === null || Array.isArray(value)) continue;
-
-    const group = value as Record<string, CharacterDef>;
-    const items: { id: string; name: string }[] = [];
-    for (const [id, charDef] of Object.entries(group)) {
-      items.push({ id, name: charDef.name });
-    }
-    if (items.length > 0) result.set(key, items);
+export function getCharacterList(): CharacterInfo[] {
+  const result: CharacterInfo[] = [];
+  for (const [id, charDef] of characters) {
+    result.push({ id, name: parseCharName(charDef.name) });
   }
-
   return result;
+}
+
+/** Get character info by ID. */
+export function getCharacterInfo(id: string): CharacterInfo | undefined {
+  const charDef = characters.get(id);
+  if (!charDef) return undefined;
+  return { id, name: parseCharName(charDef.name) };
 }
 
 /** Get the frame size for a character. */

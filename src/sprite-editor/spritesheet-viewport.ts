@@ -158,7 +158,7 @@ export class SpritesheetViewport {
     for (let i = 0; i < this.state.sprites.length; i++) {
       const s = this.state.sprites[i];
       const isSelected = i === this.state.selectedIndex;
-      const catColor = this.getCategoryColor(s.category);
+      const catColor = { fill: 'rgba(100, 180, 255, 0.12)', stroke: '#6699ff' };
 
       for (const f of s.frames) {
         if (f.sx < 0 || f.sy < 0) continue; // skip null frames
@@ -232,17 +232,6 @@ export class SpritesheetViewport {
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.lineWidth = 1;
       ctx.strokeRect(cx, cy, cell, cell);
-    }
-  }
-
-  private getCategoryColor(cat: string): { fill: string; stroke: string } {
-    switch (cat) {
-      case 'npc':        return { fill: 'rgba(0, 200, 100, 0.12)', stroke: '#33cc66' };
-      case 'trainer':    return { fill: 'rgba(200, 50, 50, 0.12)', stroke: '#cc5533' };
-      case 'pokemon':    return { fill: 'rgba(100, 150, 255, 0.15)', stroke: '#6699ff' };
-      case 'player':     return { fill: 'rgba(255, 200, 0, 0.12)', stroke: '#ffaa00' };
-      case 'gym-leader': return { fill: 'rgba(200, 50, 200, 0.12)', stroke: '#cc55cc' };
-      default:           return { fill: 'rgba(150, 150, 150, 0.1)', stroke: '#888888' };
     }
   }
 

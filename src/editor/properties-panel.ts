@@ -1,7 +1,8 @@
 import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { TileDef, NPCData, MapTransition } from './types.js';
-import { getCharacterList } from '../engine/character-sprites.js';
+import { getCharacterList, getCharacterInfo } from '../engine/character-sprites.js';
+import { createNamePicker } from '../ui/name-picker.js';
 import { getAllPokemon, type PokemonData } from '../services/pokemon-data.js';
 import { getAllItems, type ItemDef } from '../data/items.js';
 import { normalizeReward, type TrainerData, type TrainerReward } from '../systems/npc.js';
@@ -125,7 +126,6 @@ export class PropertiesPanel {
 
     // Basic fields
     addInput('ID', 'id', npc.id);
-    addInput('Name', 'name', npc.name || '');
     addInput('X', 'x', String(npc.x), 'number');
     addInput('Y', 'y', String(npc.y), 'number');
     addSelect('Facing', 'facing', ['up', 'down', 'left', 'right'], npc.facing);
@@ -136,20 +136,15 @@ export class PropertiesPanel {
     spriteRow.className = 'prop-row';
     spriteRow.innerHTML = '<label>Sprite:</label>';
     const spriteSel = document.createElement('select');
-    // Add current value as fallback option if not in character list
     const charList = getCharacterList();
     let foundCurrent = false;
-    for (const [category, chars] of charList) {
-      const group = document.createElement('optgroup');
-      group.label = category;
-      for (const c of chars) {
-        const opt = document.createElement('option');
-        opt.value = c.id;
-        opt.textContent = `${c.name} (${c.id})`;
-        if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
-        group.appendChild(opt);
-      }
-      spriteSel.appendChild(group);
+    for (const c of charList) {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      const displayName = c.name.en || c.name.he || c.id;
+      opt.textContent = `${displayName} (${c.id})`;
+      if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
+      spriteSel.appendChild(opt);
     }
     if (!foundCurrent) {
       const opt = document.createElement('option');
@@ -161,6 +156,24 @@ export class PropertiesPanel {
     spriteSel.addEventListener('change', () => { npc.spriteType = spriteSel.value; emit(); });
     spriteRow.appendChild(spriteSel);
     section.appendChild(spriteRow);
+
+    // ── Name picker — initial value from character's name if defined ──
+    const charInfo = getCharacterInfo(npc.spriteType);
+    const initialEn = npc.name || charInfo?.name.en || '';
+    const initialHe = (npcAny['nameHe'] as string) || charInfo?.name.he || '';
+    const nameLabel = document.createElement('div');
+    nameLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
+    nameLabel.textContent = 'Name';
+    section.appendChild(nameLabel);
+    section.appendChild(createNamePicker({
+      initialEn,
+      initialHe,
+      onChange: (name) => {
+        npcAny['name'] = name.en;
+        npcAny['nameHe'] = name.he;
+        emit();
+      },
+    }));
 
     // Dialogue
     const diaRow = document.createElement('div');
