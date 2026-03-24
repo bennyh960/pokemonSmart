@@ -1,7 +1,7 @@
 # Pokemon Math Adventure - Project Context
 
 ## What is this?
-A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (נומריה), players solve math to attack, decode ciphers to find antidotes, and stop a rogue AI called NULL-X.
+A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in "Numeria" (נומריה), players solve math and logic puzzles to attack, decode ciphers to find antidotes, and stop a rogue AI called NULL-X.
 
 ## Key Files
 - **Full game spec:** `docs/game-spec.md` — THE reference for everything (story, world, mechanics, Pokemon, gym leaders)
@@ -15,7 +15,7 @@ A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (�
 |-------|------|------|
 | product-manager | Built-in (you) | Sprint planning, coordination, roadmap |
 | game-designer | `.claude/agents/game-designer.md` | Mechanics, balance, progression |
-| math-engine-developer | `.claude/agents/math-engine-developer.md` | Math problem generation |
+| math-engine-developer | `.claude/agents/math-engine-developer.md` | Math & logic problem generation |
 | game-engine-developer | `.claude/agents/game-engine-developer.md` | Core game loop, overworld, tilemap |
 | frontend-developer | `.claude/agents/frontend-developer.md` | UI, battle screens, audio integration |
 | asset-manager | `.claude/agents/pixel-artist.md` | Sourcing sprites/tiles/sounds from APIs |

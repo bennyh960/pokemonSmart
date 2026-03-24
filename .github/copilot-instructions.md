@@ -1,9 +1,9 @@
 # Pokemon Math Adventure — Copilot Skills & Instructions
 
 ## Project Overview
-A Pokemon Silver-style RPG where math problems drive combat. Set in "Numeria" (נומריה).  
-**Tech:** Vite + TypeScript + HTML5 Canvas (240×160 scaled 3x) + Howler.js  
-**Target:** Kids ages 8-14, educational math game  
+A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in "Numeria" (נומריה).
+**Tech:** Vite + TypeScript + HTML5 Canvas (240×160 scaled 3x) + Howler.js
+**Target:** Kids ages 8-14, educational math & logic game  
 **Reference docs:** `docs/game-spec.md` (full spec), `docs/roadmap.md`, `docs/sprint-1.md`
 
 ---

@@ -9,7 +9,7 @@ You build everything the player **sees and interacts with** outside of the core 
 ## Core Responsibilities
 
 1. **UI Screens** — Title screen, main menu, settings, Pokemon party screen, Pokedex, bag/inventory
-2. **Battle UI** — HP bars, math problem display, answer input (number pad + keyboard), move selection, damage numbers
+2. **Battle UI** — HP bars, math/logic problem display, answer input (number pad + keyboard), move selection, damage numbers
 3. **Dialogue System** — RPG-style scrolling text boxes with character portraits
 4. **Responsive Design** — Playable on desktop and tablets (primary kid devices)
 5. **Sound Integration** — Background music and SFX using Web Audio API or Howler.js
