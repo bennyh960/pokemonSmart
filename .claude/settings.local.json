@@ -54,7 +54,11 @@
       "Bash(tasklist)",
       "Bash(netstat -ano)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:pokeapi.co)"
+      "WebFetch(domain:pokeapi.co)",
+      "Bash(cp \".claude/worktrees/agent-ab608718/src/data/type-constants.ts\" \"src/data/type-constants.ts\")",
+      "Bash(cp \".claude/worktrees/agent-ab608718/src/scenes/party.ts\" \"src/scenes/party.ts\")",
+      "Bash(cp \".claude/worktrees/agent-ab608718/src/scenes/pokedex.ts\" \"src/scenes/pokedex.ts\")",
+      "Bash(cd:*)"
     ]
   }
 }

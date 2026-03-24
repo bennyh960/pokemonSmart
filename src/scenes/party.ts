@@ -397,10 +397,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
     drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-    // Tab pill
+    // Arrows pill
     fillRect(ctx, 62, 151, 18, 8, C.KEY_BG);
     drawRect(ctx, 62, 151, 18, 8, C.KEY_BRD);
-    drawText(ctx, 'Tab', 71, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, '\u25c0\u25b6', 71, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('party.hint.switchTab'), 82, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     // Enter pill (only on moves tab)
     if (detailTab === 'moves') {
@@ -477,26 +477,12 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       return;
     }
 
-    // Tab switching with left/right or Tab key
-    if (input.isKeyPressed('Tab')) {
+    // Tab switching with Left/Right arrows (not affected by RTL — always physical direction)
+    if (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowRight')) {
+      // Toggle between stats and moves regardless of direction
       detailTab = detailTab === 'stats' ? 'moves' : 'stats';
       moveCursor = 0;
       moveSwapFrom = -1;
-      return;
-    }
-    if (input.isKeyPressed('ArrowLeft')) {
-      if (detailTab === 'moves') {
-        detailTab = 'stats';
-        moveCursor = 0;
-        moveSwapFrom = -1;
-      }
-      return;
-    }
-    if (input.isKeyPressed('ArrowRight')) {
-      if (detailTab === 'stats') {
-        detailTab = 'moves';
-        moveCursor = 0;
-      }
       return;
     }
 
