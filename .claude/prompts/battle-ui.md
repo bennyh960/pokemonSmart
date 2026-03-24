@@ -14,7 +14,7 @@ Then implement ALL tasks 4.1-4.6:
    - Number pad: [7][8][9] / [4][5][6] / [1][2][3] / [⌫][0][✓]
    - Works with BOTH mouse clicks AND keyboard
    - Green flash correct, red shake + show answer for wrong
-4. `src/ui/text-box.ts` - GBA-style text box, typewriter, RTL Hebrew support
+4. `src/ui/text-box.ts` - Text box with typewriter effect, RTL Hebrew support
 5. `src/scenes/battle.ts` - Full battle scene with flow: INTRO→SELECT_MOVE→MATH→ATTACK→ENEMY_TURN→CHECK_WIN. Hardcoded Cyndaquil vs Pidgey with Tackle+Ember. Colored rect placeholders.
 6. `src/ui/battle-animations.ts` - flash, shake, fade, damage numbers
 

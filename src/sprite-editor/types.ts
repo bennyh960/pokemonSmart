@@ -54,7 +54,9 @@ export type SpriteEditorEvent =
   | 'selection-changed'
   | 'item-selected'
   | 'items-changed'
-  | 'viewport-changed';
+  | 'viewport-changed'
+  | 'crop-mode-changed'
+  | 'crop-target-changed';
 
 /** Generate a short random ID for new sprites. */
 export function generateSpriteId(): string {

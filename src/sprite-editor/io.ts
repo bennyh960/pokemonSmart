@@ -1,7 +1,7 @@
 import type { SpriteEditorState } from './editor-state.js';
 import type { SpriteCharacter, FramePos, BilingualName } from './types.js';
 import { FRAME_DICT } from './types.js';
-import { hasFSAccess, saveToDirectory } from '../editor/fs-save.js';
+import { hasFSAccess, saveToDirectory, saveBlobToDirectory } from '../editor/fs-save.js';
 
 /**
  * Export sprites as a flat manifest JSON.
@@ -125,6 +125,48 @@ export function loadManifest(state: SpriteEditorState, json: string): void {
 
   state.selectedIndex = -1;
   state.emit('items-changed');
+}
+
+/**
+ * Apply a crop (scale-in-place) to a region of the spritesheet image.
+ */
+export async function applyCrop(
+  image: HTMLImageElement,
+  sx: number, sy: number, sw: number, sh: number,
+  tw: number, th: number,
+  targetSx: number, targetSy: number,
+): Promise<Blob> {
+  const canvas = document.createElement('canvas');
+  canvas.width = image.naturalWidth;
+  canvas.height = image.naturalHeight;
+  const ctx = canvas.getContext('2d')!;
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(image, 0, 0);
+  ctx.clearRect(sx, sy, sw, sh);
+  ctx.drawImage(image, sx, sy, sw, sh, targetSx, targetSy, tw, th);
+
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/png');
+  });
+  return blob;
+}
+
+/**
+ * Save the modified spritesheet image to disk.
+ */
+export async function saveSpriteImage(blob: Blob, fileName = 'characters_overworld.png'): Promise<void> {
+  if (hasFSAccess()) {
+    await saveBlobToDirectory('sprite-image', fileName, blob);
+    return;
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /** Load manifest from a File. */

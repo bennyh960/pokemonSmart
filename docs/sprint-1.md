@@ -177,7 +177,7 @@ npm install -D tsx  # להרצת TypeScript scripts
   - תמיכה בהקלדת מקלדת (0-9, backspace, enter)
   - Feedback: ✓ ירוק flash / ✗ אדום shake + הצגת תשובה נכונה
 - [ ] **4.4** יצירת `src/ui/text-box.ts`:
-  - תיבת טקסט GBA-style (תחתית מסך)
+  - תיבת טקסט (תחתית מסך)
   - הקלדה אות-אות (typewriter effect)
   - המתנה ל-ENTER להמשך
   - תמיכה ב-RTL לעברית
