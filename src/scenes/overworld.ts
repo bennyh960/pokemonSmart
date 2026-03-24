@@ -17,6 +17,7 @@ import { generateWildEncounter, createPokemonFromData } from '../systems/encount
 import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
+import { loadCharacterSprites, getCharacterFrame, hasCharacter, getCharacterFrameSize } from '../engine/character-sprites.js';
 import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
@@ -100,6 +101,45 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     originalY: number;
   }
   let trainerApproach: TrainerApproachState | null = null;
+
+  // NPC animation + auto-walk runtime state (keyed by NPC id)
+  interface NPCRuntimeState {
+    walkFrame: number;    // 0=stand, 1=walk-1, 2=walk-2
+    walkTimer: number;
+    moving: boolean;
+    pixelX: number;
+    pixelY: number;
+    startPixelX: number;
+    startPixelY: number;
+    targetPixelX: number;
+    targetPixelY: number;
+    moveProgress: number;
+    facing: string;
+    // Auto-walk state
+    autoWalkTimer: number;
+    autoWalkSteps: number;    // steps taken in current direction
+    autoWalkDir: number;      // 1 = forward, -1 = return
+    autoWalkAxis: 'horizontal' | 'vertical' | null;
+    autoWalkWaiting: boolean;
+  }
+  const npcStates = new Map<string, NPCRuntimeState>();
+
+  function getNpcState(npc: NPCData): NPCRuntimeState {
+    let st = npcStates.get(npc.id);
+    if (!st) {
+      st = {
+        walkFrame: 0, walkTimer: 0, moving: false,
+        pixelX: npc.x * TILE_SIZE, pixelY: npc.y * TILE_SIZE,
+        startPixelX: npc.x * TILE_SIZE, startPixelY: npc.y * TILE_SIZE,
+        targetPixelX: npc.x * TILE_SIZE, targetPixelY: npc.y * TILE_SIZE,
+        moveProgress: 0, facing: npc.facing,
+        autoWalkTimer: 0, autoWalkSteps: 0, autoWalkDir: 1,
+        autoWalkAxis: null, autoWalkWaiting: false,
+      };
+      npcStates.set(npc.id, st);
+    }
+    return st;
+  }
 
   function initPlayer(sx: number, sy: number): PlayerState {
     return {
@@ -258,8 +298,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     tileMap = createTileMap(data as TileMapData, tileset);
     setCurrentMapId(mapId);
 
+    // Load character spritesheets
+    await loadCharacterSprites();
+
     // Load NPCs from map data
     npcManager = createNPCManager((data.npcs as NPCData[]) || []);
+    npcStates.clear(); // reset runtime states for new map
 
     player = initPlayer(spawnX, spawnY);
     camera = createCamera(SCREEN_W, SCREEN_H);
@@ -536,6 +580,93 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
 
+      // ── NPC auto-walk + animation update ──
+      if (npcManager) {
+        for (const npc of npcManager.getNPCs()) {
+          const st = getNpcState(npc);
+
+          // Update walk animation
+          if (st.moving) {
+            st.moveProgress += dt / MOVE_DURATION;
+            st.walkTimer += dt;
+            if (st.walkTimer >= 0.1) { st.walkTimer = 0; st.walkFrame = st.walkFrame === 1 ? 2 : 1; }
+
+            if (st.moveProgress >= 1) {
+              st.moveProgress = 1;
+              st.pixelX = st.targetPixelX;
+              st.pixelY = st.targetPixelY;
+              npc.x = Math.round(st.pixelX / TILE_SIZE);
+              npc.y = Math.round(st.pixelY / TILE_SIZE);
+              st.moving = false;
+              st.walkFrame = 0;
+            } else {
+              st.pixelX = st.startPixelX + (st.targetPixelX - st.startPixelX) * st.moveProgress;
+              st.pixelY = st.startPixelY + (st.targetPixelY - st.startPixelY) * st.moveProgress;
+            }
+          }
+
+          // Auto-walk logic
+          const aw = npc.autoWalk;
+          if (aw && !st.moving && !trainerApproach) {
+            // Pick an axis to walk
+            if (!st.autoWalkAxis) {
+              if (aw.horizontal) st.autoWalkAxis = 'horizontal';
+              else if (aw.vertical) st.autoWalkAxis = 'vertical';
+            }
+
+            const axis = st.autoWalkAxis;
+            const cfg = axis === 'horizontal' ? aw.horizontal : axis === 'vertical' ? aw.vertical : null;
+            if (cfg) {
+              if (st.autoWalkWaiting) {
+                st.autoWalkTimer += dt;
+                if (st.autoWalkTimer >= cfg.delay) {
+                  st.autoWalkWaiting = false;
+                  st.autoWalkTimer = 0;
+                }
+              } else {
+                // Determine next step direction
+                let dx = 0, dy = 0;
+                if (axis === 'horizontal') dx = st.autoWalkDir;
+                else dy = st.autoWalkDir;
+
+                const nextX = npc.x + dx;
+                const nextY = npc.y + dy;
+
+                // Don't walk into player or other NPCs
+                const blocked = (nextX === player.gridX && nextY === player.gridY) ||
+                  npcManager!.isNPCAt(nextX, nextY);
+
+                if (!blocked && tileMap && tileMap.isWalkable(nextX, nextY)) {
+                  // Start moving
+                  st.startPixelX = st.pixelX;
+                  st.startPixelY = st.pixelY;
+                  st.targetPixelX = nextX * TILE_SIZE;
+                  st.targetPixelY = nextY * TILE_SIZE;
+                  st.moveProgress = 0;
+                  st.moving = true;
+                  st.facing = dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : 'up';
+                  npc.facing = st.facing as NPCData['facing'];
+                  st.autoWalkSteps++;
+
+                  if (st.autoWalkSteps >= cfg.steps) {
+                    // Reverse direction, wait
+                    st.autoWalkDir *= -1;
+                    st.autoWalkSteps = 0;
+                    st.autoWalkWaiting = true;
+                    st.autoWalkTimer = 0;
+
+                    // Switch axis if both are configured
+                    if (aw.horizontal && aw.vertical) {
+                      st.autoWalkAxis = axis === 'horizontal' ? 'vertical' : 'horizontal';
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
       // NPC interaction: Enter/Space when not moving
       if (!player.moving && (input.isKeyPressed('Enter') || input.isKeyPressed(' '))) {
         if (npcManager) {
@@ -649,33 +780,73 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // NPCs
       if (npcManager) {
         for (const npc of npcManager.getNPCs()) {
-          // If this NPC is the approaching trainer, use animated position
-          let npcPixelX = npc.x * TILE_SIZE;
-          let npcPixelY = npc.y * TILE_SIZE;
+          const npcSt = getNpcState(npc);
+
+          // Use runtime pixel position (supports auto-walk + trainer approach)
+          let npcPixelX = npcSt.pixelX;
+          let npcPixelY = npcSt.pixelY;
           if (trainerApproach && trainerApproach.trainer === npc) {
             npcPixelX = trainerApproach.trainerPixelX;
             npcPixelY = trainerApproach.trainerPixelY;
           }
-          const nx = Math.floor(npcPixelX - camera.x);
-          const ny = Math.floor(npcPixelY - camera.y);
+
           const renderY = npcPixelY;
-          renderables.push({
-            y: renderY,
-            render: () => {
-              const sprite = getNPCSpriteImage(npc.spriteType);
-              ctx.imageSmoothingEnabled = false;
-              if (sprite.complete && sprite.naturalWidth > 0) {
-                ctx.drawImage(sprite, nx, ny, TILE_SIZE, TILE_SIZE);
-              } else {
-                fillRect(ctx, nx, ny, TILE_SIZE, TILE_SIZE, '#FF8800');
-              }
-              // Draw "!" exclamation bubble during approach
-              if (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') {
-                fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
-                drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
-              }
-            },
-          });
+          // Determine facing for rendering (convert from Arrow* format if needed)
+          const facingDir = npcSt.facing.replace('Arrow', '').toLowerCase();
+
+          // Determine walk pose
+          const poses = ['stand', 'walk-1', 'walk-2'];
+          const pose = poses[npcSt.walkFrame % poses.length] || 'stand';
+
+          // Try character sprite system first
+          const charFrame = hasCharacter(npc.spriteType)
+            ? getCharacterFrame(npc.spriteType, facingDir, pose)
+            : null;
+
+          if (charFrame) {
+            // Character sprite (may be 32x32 or any size)
+            const frameSize = getCharacterFrameSize(npc.spriteType);
+            const fw = frameSize?.w ?? TILE_SIZE;
+            const fh = frameSize?.h ?? TILE_SIZE;
+            // Center larger sprites on the tile, align bottom
+            const offsetX = (fw - TILE_SIZE) / 2;
+            const offsetY = fh - TILE_SIZE;
+            const nx = Math.floor(npcPixelX - camera.x - offsetX);
+            const ny = Math.floor(npcPixelY - camera.y - offsetY);
+
+            renderables.push({
+              y: renderY,
+              render: () => {
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, nx, ny, fw, fh);
+                // "!" exclamation during trainer approach
+                if (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') {
+                  fillRect(ctx, nx + fw / 2 - 4, ny - 12, 8, 10, '#ffffff');
+                  drawText(ctx, '!', nx + fw / 2 - 3, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
+                }
+              },
+            });
+          } else {
+            // Fallback: old procedural 16x16 sprite
+            const nx = Math.floor(npcPixelX - camera.x);
+            const ny = Math.floor(npcPixelY - camera.y);
+            renderables.push({
+              y: renderY,
+              render: () => {
+                const sprite = getNPCSpriteImage(npc.spriteType);
+                ctx.imageSmoothingEnabled = false;
+                if (sprite.complete && sprite.naturalWidth > 0) {
+                  ctx.drawImage(sprite, nx, ny, TILE_SIZE, TILE_SIZE);
+                } else {
+                  fillRect(ctx, nx, ny, TILE_SIZE, TILE_SIZE, '#FF8800');
+                }
+                if (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') {
+                  fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
+                  drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
+                }
+              },
+            });
+          }
         }
       }
 

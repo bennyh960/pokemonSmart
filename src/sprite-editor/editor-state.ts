@@ -79,11 +79,13 @@ export class SpriteEditorState {
       if (s.frames.length > 0) {
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         for (const f of s.frames) {
+          if (f.sx < 0 || f.sy < 0) continue; // skip null frames
           minX = Math.min(minX, f.sx);
           minY = Math.min(minY, f.sy);
           maxX = Math.max(maxX, f.sx + s.frameWidth);
           maxY = Math.max(maxY, f.sy + s.frameHeight);
         }
+        if (minX === Infinity) return; // all frames are null
         const startCol = Math.floor(minX / this.gridSize);
         const startRow = Math.floor(minY / this.gridSize);
         const endCol = Math.ceil(maxX / this.gridSize) - 1;
@@ -132,6 +134,7 @@ export class SpriteEditorState {
     for (let i = 0; i < this.sprites.length; i++) {
       const s = this.sprites[i];
       for (const f of s.frames) {
+        if (f.sx < 0 || f.sy < 0) continue;
         if (px >= f.sx && px < f.sx + s.frameWidth && py >= f.sy && py < f.sy + s.frameHeight) {
           return i;
         }

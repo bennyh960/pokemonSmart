@@ -1,6 +1,7 @@
 import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { TileDef, NPCData, MapTransition } from './types.js';
+import { getCharacterList } from '../engine/character-sprites.js';
 
 export class PropertiesPanel {
   private container: HTMLElement;
@@ -69,67 +70,99 @@ export class PropertiesPanel {
 
   private renderNpcProps(npc: NPCData): void {
     const section = this.makeSection(`NPC: ${npc.id}`);
+    const npcAny = npc as unknown as Record<string, unknown>;
+    const emit = () => this.state.emit('map-modified');
 
-    const fields = [
-      { label: 'ID', key: 'id', value: npc.id },
-      { label: 'Name', key: 'name', value: npc.name || '' },
-      { label: 'X', key: 'x', value: String(npc.x), type: 'number' },
-      { label: 'Y', key: 'y', value: String(npc.y), type: 'number' },
-      { label: 'Facing', key: 'facing', value: npc.facing },
-      { label: 'Type', key: 'type', value: npc.type },
-      { label: 'Sprite', key: 'spriteType', value: npc.spriteType },
-      { label: 'Dialogue', key: 'dialogue', value: npc.dialogue.join('\n'), textarea: true },
-    ];
-
-    for (const f of fields) {
+    // Helper: add a text/number input row
+    const addInput = (label: string, key: string, value: string, type = 'text') => {
       const row = document.createElement('div');
       row.className = 'prop-row';
-      const label = document.createElement('label');
-      label.textContent = f.label + ':';
-      row.appendChild(label);
-
-      if (f.textarea) {
-        const ta = document.createElement('textarea');
-        ta.value = f.value;
-        ta.rows = 3;
-        ta.addEventListener('change', () => {
-          (npc as unknown as Record<string, unknown>)[f.key] = ta.value.split('\n').filter(l => l.trim());
-          this.state.emit('map-modified');
-        });
-        row.appendChild(ta);
-      } else if (f.key === 'facing') {
-        const sel = document.createElement('select');
-        for (const dir of ['up', 'down', 'left', 'right']) {
-          const opt = document.createElement('option');
-          opt.value = dir; opt.textContent = dir;
-          if (dir === f.value) opt.selected = true;
-          sel.appendChild(opt);
-        }
-        sel.addEventListener('change', () => { (npc as unknown as Record<string, unknown>).facing = sel.value; this.state.emit('map-modified'); });
-        row.appendChild(sel);
-      } else if (f.key === 'type') {
-        const sel = document.createElement('select');
-        for (const t of ['dialogue', 'trainer', 'shopkeeper', 'healer']) {
-          const opt = document.createElement('option');
-          opt.value = t; opt.textContent = t;
-          if (t === f.value) opt.selected = true;
-          sel.appendChild(opt);
-        }
-        sel.addEventListener('change', () => { (npc as unknown as Record<string, unknown>).type = sel.value; this.state.emit('map-modified'); });
-        row.appendChild(sel);
-      } else {
-        const input = document.createElement('input');
-        input.type = f.type || 'text';
-        input.value = f.value;
-        input.addEventListener('change', () => {
-          (npc as unknown as Record<string, unknown>)[f.key] = f.type === 'number' ? parseInt(input.value, 10) : input.value;
-          this.state.emit('map-modified');
-        });
-        row.appendChild(input);
-      }
+      row.innerHTML = `<label>${label}:</label>`;
+      const input = document.createElement('input');
+      input.type = type;
+      input.value = value;
+      input.addEventListener('change', () => {
+        npcAny[key] = type === 'number' ? parseInt(input.value, 10) : input.value;
+        emit();
+      });
+      row.appendChild(input);
       section.appendChild(row);
-    }
+    };
 
+    // Helper: add a select row
+    const addSelect = (label: string, key: string, options: string[], current: string) => {
+      const row = document.createElement('div');
+      row.className = 'prop-row';
+      row.innerHTML = `<label>${label}:</label>`;
+      const sel = document.createElement('select');
+      for (const o of options) {
+        const opt = document.createElement('option');
+        opt.value = o; opt.textContent = o;
+        if (o === current) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      sel.addEventListener('change', () => { npcAny[key] = sel.value; emit(); });
+      row.appendChild(sel);
+      section.appendChild(row);
+    };
+
+    // Basic fields
+    addInput('ID', 'id', npc.id);
+    addInput('Name', 'name', npc.name || '');
+    addInput('X', 'x', String(npc.x), 'number');
+    addInput('Y', 'y', String(npc.y), 'number');
+    addSelect('Facing', 'facing', ['up', 'down', 'left', 'right'], npc.facing);
+    addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer'], npc.type);
+
+    // ── Sprite dropdown (from characters.json) ──
+    const spriteRow = document.createElement('div');
+    spriteRow.className = 'prop-row';
+    spriteRow.innerHTML = '<label>Sprite:</label>';
+    const spriteSel = document.createElement('select');
+    // Add current value as fallback option if not in character list
+    const charList = getCharacterList();
+    let foundCurrent = false;
+    for (const [category, chars] of charList) {
+      const group = document.createElement('optgroup');
+      group.label = category;
+      for (const c of chars) {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.name} (${c.id})`;
+        if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
+        group.appendChild(opt);
+      }
+      spriteSel.appendChild(group);
+    }
+    if (!foundCurrent) {
+      const opt = document.createElement('option');
+      opt.value = npc.spriteType;
+      opt.textContent = `${npc.spriteType} (legacy)`;
+      opt.selected = true;
+      spriteSel.prepend(opt);
+    }
+    spriteSel.addEventListener('change', () => { npc.spriteType = spriteSel.value; emit(); });
+    spriteRow.appendChild(spriteSel);
+    section.appendChild(spriteRow);
+
+    // Dialogue
+    const diaRow = document.createElement('div');
+    diaRow.className = 'prop-row';
+    diaRow.innerHTML = '<label>Dialogue:</label>';
+    const ta = document.createElement('textarea');
+    ta.value = npc.dialogue.join('\n');
+    ta.rows = 3;
+    ta.addEventListener('change', () => {
+      npc.dialogue = ta.value.split('\n').filter(l => l.trim());
+      emit();
+    });
+    diaRow.appendChild(ta);
+    section.appendChild(diaRow);
+
+    // ── Auto Walk ──
+    this.renderAutoWalkUI(section, npc);
+
+    // Delete
     const delBtn = document.createElement('button');
     delBtn.className = 'btn-danger';
     delBtn.textContent = 'Delete NPC';
@@ -138,10 +171,95 @@ export class PropertiesPanel {
       const idx = npcs.indexOf(npc);
       if (idx >= 0) npcs.splice(idx, 1);
       this.state.selectNpc(null);
-      this.state.emit('map-modified');
+      emit();
     });
     section.appendChild(delBtn);
     this.container.appendChild(section);
+  }
+
+  private renderAutoWalkUI(section: HTMLElement, npc: NPCData): void {
+    const emit = () => this.state.emit('map-modified');
+    const aw = npc.autoWalk;
+
+    // Enable checkbox
+    const enableRow = document.createElement('div');
+    enableRow.className = 'prop-row';
+    enableRow.innerHTML = '<label>Auto Walk:</label>';
+    const enableCb = document.createElement('input');
+    enableCb.type = 'checkbox';
+    enableCb.checked = !!aw;
+    enableCb.addEventListener('change', () => {
+      if (enableCb.checked) {
+        npc.autoWalk = {};
+      } else {
+        npc.autoWalk = null;
+      }
+      emit();
+    });
+    enableRow.appendChild(enableCb);
+    section.appendChild(enableRow);
+
+    if (!aw) return;
+
+    // Horizontal axis
+    const hRow = document.createElement('div');
+    hRow.className = 'prop-row';
+    hRow.innerHTML = '<label>Horizontal:</label>';
+    const hCb = document.createElement('input');
+    hCb.type = 'checkbox';
+    hCb.checked = !!aw.horizontal;
+    hCb.style.width = 'auto';
+    hRow.appendChild(hCb);
+    if (aw.horizontal) {
+      const stepsIn = document.createElement('input');
+      stepsIn.type = 'number'; stepsIn.value = String(aw.horizontal.steps); stepsIn.min = '1';
+      stepsIn.style.width = '40px'; stepsIn.placeholder = 'steps';
+      stepsIn.title = 'Steps';
+      const delayIn = document.createElement('input');
+      delayIn.type = 'number'; delayIn.value = String(aw.horizontal.delay); delayIn.min = '0'; delayIn.step = '0.5';
+      delayIn.style.width = '40px'; delayIn.placeholder = 'delay';
+      delayIn.title = 'Delay (s)';
+      hRow.appendChild(stepsIn);
+      hRow.appendChild(delayIn);
+      stepsIn.addEventListener('change', () => { aw.horizontal!.steps = parseInt(stepsIn.value) || 1; emit(); });
+      delayIn.addEventListener('change', () => { aw.horizontal!.delay = parseFloat(delayIn.value) || 0; emit(); });
+    }
+    hCb.addEventListener('change', () => {
+      if (hCb.checked) { aw.horizontal = { steps: 2, delay: 1 }; }
+      else { delete aw.horizontal; }
+      emit();
+    });
+    section.appendChild(hRow);
+
+    // Vertical axis
+    const vRow = document.createElement('div');
+    vRow.className = 'prop-row';
+    vRow.innerHTML = '<label>Vertical:</label>';
+    const vCb = document.createElement('input');
+    vCb.type = 'checkbox';
+    vCb.checked = !!aw.vertical;
+    vCb.style.width = 'auto';
+    vRow.appendChild(vCb);
+    if (aw.vertical) {
+      const stepsIn = document.createElement('input');
+      stepsIn.type = 'number'; stepsIn.value = String(aw.vertical.steps); stepsIn.min = '1';
+      stepsIn.style.width = '40px'; stepsIn.placeholder = 'steps';
+      stepsIn.title = 'Steps';
+      const delayIn = document.createElement('input');
+      delayIn.type = 'number'; delayIn.value = String(aw.vertical.delay); delayIn.min = '0'; delayIn.step = '0.5';
+      delayIn.style.width = '40px'; delayIn.placeholder = 'delay';
+      delayIn.title = 'Delay (s)';
+      vRow.appendChild(stepsIn);
+      vRow.appendChild(delayIn);
+      stepsIn.addEventListener('change', () => { aw.vertical!.steps = parseInt(stepsIn.value) || 1; emit(); });
+      delayIn.addEventListener('change', () => { aw.vertical!.delay = parseFloat(delayIn.value) || 0; emit(); });
+    }
+    vCb.addEventListener('change', () => {
+      if (vCb.checked) { aw.vertical = { steps: 2, delay: 1 }; }
+      else { delete aw.vertical; }
+      emit();
+    });
+    section.appendChild(vRow);
   }
 
   private renderTransitionProps(tr: MapTransition, index: number): void {

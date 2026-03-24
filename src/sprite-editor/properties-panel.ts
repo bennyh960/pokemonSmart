@@ -64,6 +64,11 @@ function buildDirectionGrid(frameCount: number): Map<string, FrameSlot[]> {
 /** Reverse lookup: label string → dict index (same as FRAME_DICT). */
 const FRAME_DICT_REVERSE_BY_LABEL = FRAME_DICT;
 
+/** Check if a frame is a null/empty placeholder. */
+function isNullFrame(f: FramePos | null | undefined): boolean {
+  return !f || f.sx < 0 || f.sy < 0;
+}
+
 /** Right sidebar: properties for current selection or selected sprite. */
 export class PropertiesPanel {
   private container: HTMLElement;
@@ -499,9 +504,10 @@ export class PropertiesPanel {
     section.className = 'props-section';
     section.innerHTML = '<h3>Animation Preview</h3>';
 
-    // Group by direction
+    // Group by direction — skip null frames
     const directions = new Map<string, { index: number; label: string }[]>();
     for (let i = 0; i < s.frames.length; i++) {
+      if (isNullFrame(s.frames[i])) continue;
       const label = FRAME_DICT_REVERSE[i];
       if (!label) continue;
       const dir = label.split('-')[0];
@@ -510,7 +516,11 @@ export class PropertiesPanel {
     }
 
     if (directions.size === 0) {
-      directions.set('all', s.frames.map((_, i) => ({ index: i, label: `frame ${i}` })));
+      const validFrames = s.frames
+        .map((f, i) => ({ f, i }))
+        .filter(({ f }) => !isNullFrame(f));
+      if (validFrames.length === 0) return; // nothing to animate
+      directions.set('all', validFrames.map(({ i }) => ({ index: i, label: `frame ${i}` })));
     }
 
     // Direction selector with arrows
@@ -551,7 +561,7 @@ export class PropertiesPanel {
 
       const info = dirFrames[this.animFrame % dirFrames.length];
       const f = s.frames[info.index];
-      if (!f) return;
+      if (isNullFrame(f)) return;
 
       const pctx = previewCanvas.getContext('2d')!;
       pctx.imageSmoothingEnabled = false;

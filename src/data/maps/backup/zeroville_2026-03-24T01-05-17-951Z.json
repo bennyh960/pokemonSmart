@@ -31,6 +31,7 @@
       "toX": 1,
       "toY": 8
     },
+    
     {
       "fromX": 4,
       "fromY": 6,
@@ -64,7 +65,7 @@
     {
       "id": "elder-zero",
       "name": "Elder Zero",
-      "x": 18,
+      "x": 20,
       "y": 7,
       "facing": "left",
       "type": "npc",
@@ -73,13 +74,7 @@
         "The professor's shield keeps the glitch at bay.",
         "Route 1 lies to the east — be careful out there!"
       ],
-      "spriteType": "dani",
-      "autoWalk": {
-        "horizontal": {
-          "steps": 4,
-          "delay": 1
-        }
-      }
+      "spriteType": "npc-m"
     },
     {
       "id": "kid-origin",

@@ -29,7 +29,7 @@ export function exportManifest(state: SpriteEditorState): string {
       name: s.name,
       frameWidth: s.frameWidth,
       frameHeight: s.frameHeight,
-      frames: s.frames.map(f => ({ sx: f.sx, sy: f.sy })),
+      frames: s.frames.map(f => (f.sx < 0 || f.sy < 0) ? null : { sx: f.sx, sy: f.sy }),
     };
   }
 
@@ -113,8 +113,15 @@ export function loadManifest(state: SpriteEditorState, json: string): void {
 
       const frames: FramePos[] = [];
       if (Array.isArray(c.frames)) {
-        for (const f of c.frames as Record<string, unknown>[]) {
-          frames.push({ sx: (f.sx as number) ?? 0, sy: (f.sy as number) ?? 0 });
+        for (const f of c.frames) {
+          if (f === null || f === undefined) {
+            frames.push({ sx: -1, sy: -1 }); // null → internal sentinel
+          } else {
+            const fo = f as Record<string, unknown>;
+            const fsx = (fo.sx as number) ?? -1;
+            const fsy = (fo.sy as number) ?? -1;
+            frames.push({ sx: fsx, sy: fsy });
+          }
         }
       }
 

@@ -20,7 +20,7 @@ export interface SpriteCharacter {
   name: string;
   frameWidth: number;
   frameHeight: number;
-  frames: FramePos[];
+  frames: (FramePos | null)[];  // null = empty slot (no sprite for this frame)
 }
 
 /**

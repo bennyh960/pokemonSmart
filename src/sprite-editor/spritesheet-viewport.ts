@@ -161,6 +161,7 @@ export class SpritesheetViewport {
       const catColor = this.getCategoryColor(s.category);
 
       for (const f of s.frames) {
+        if (f.sx < 0 || f.sy < 0) continue; // skip null frames
         const x = f.sx * zoom - scrollX;
         const y = f.sy * zoom - scrollY;
         const fw = s.frameWidth * zoom;

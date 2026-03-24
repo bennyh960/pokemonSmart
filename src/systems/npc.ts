@@ -5,6 +5,18 @@
  * type (dialogue/trainer/shopkeeper/healer), dialogue lines, and sprite type.
  */
 
+/** Auto-walk configuration for one axis. */
+export interface AutoWalkAxis {
+  steps: number;   // how many tiles to walk
+  delay: number;   // seconds to wait before walking back
+}
+
+/** Auto-walk configuration — NPC patrols automatically. */
+export interface AutoWalkConfig {
+  horizontal?: AutoWalkAxis;  // walk left/right
+  vertical?: AutoWalkAxis;    // walk up/down
+}
+
 /** NPC data as stored in map JSON. */
 export interface NPCData {
   id: string;
@@ -15,6 +27,7 @@ export interface NPCData {
   type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer';
   dialogue: string[];
   spriteType: string;
+  autoWalk?: AutoWalkConfig | null;
 }
 
 /** Trainer NPC with party and battle data. */
