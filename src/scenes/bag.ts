@@ -10,9 +10,12 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
-import { getPlayerData } from '../systems/game-state.js';
+import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
+import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
+import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
+import { getPokemonDisplayName } from '../services/pokemon-data.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 
 /* ── Battle integration exports ────────────────────────────────────── */
@@ -64,6 +67,8 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
   let itemIndex = 0;
   let message = '';
   let messageTimer = 0;
+  let waitingForPartyTarget = false;
+  let pendingOverworldItemId: string | null = null;
 
   function getTabItems(): { id: string; def: ItemDef; qty: number }[] {
     const player = getPlayerData();
@@ -213,6 +218,31 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
   }
 
   function update(dt: number): void {
+    // Handle return from party target selection
+    if (waitingForPartyTarget && pendingOverworldItemId) {
+      waitingForPartyTarget = false;
+      const chosenIndex = selectedPartyIndex;
+      clearSelectedPartyIndex();
+      if (chosenIndex >= 0) {
+        const pd = getPlayerData();
+        const target = pd.party[chosenIndex];
+        if (target) {
+          const result = applyItemEffect(pendingOverworldItemId, target);
+          if (result.success) {
+            consumeItem(pd.items, pendingOverworldItemId);
+            autoSave();
+            const pokeName = getPokemonDisplayName(target.id);
+            message = `${pokeName}: ${result.message}`;
+          } else {
+            message = result.message;
+          }
+          messageTimer = 2.0;
+        }
+      }
+      pendingOverworldItemId = null;
+      return;
+    }
+
     if (messageTimer > 0) {
       messageTimer -= dt;
       if (messageTimer <= 0) message = '';
@@ -258,8 +288,20 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           pendingItem = { itemId: item.id, def: item.def };
           stateMachine.pop();
         } else if (item.def.usableInOverworld) {
-          message = t('bag.selectPokemon');
-          messageTimer = 1.5;
+          // Items that target a Pokemon: push PARTY scene in select-target mode
+          const targetCategories: string[] = ['healing', 'status-cure', 'revival', 'vitamin'];
+          const needsTarget = targetCategories.includes(item.def.category) ||
+            item.def.effect.type === 'pp-restore';
+          if (needsTarget) {
+            pendingOverworldItemId = item.id;
+            waitingForPartyTarget = true;
+            setPartyMode('select-target');
+            stateMachine.push('PARTY');
+          } else {
+            // Non-target items (shouldn't happen for current item set, but handle gracefully)
+            message = t('bag.cantUseHere');
+            messageTimer = 1.5;
+          }
         } else {
           message = t('bag.cantUseHere');
           messageTimer = 1.5;
@@ -275,6 +317,8 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       message = '';
       messageTimer = 0;
       pendingItem = null;
+      waitingForPartyTarget = false;
+      pendingOverworldItemId = null;
     },
     exit(): void {},
     update(dt: number): void { update(dt); },

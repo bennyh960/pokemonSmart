@@ -108,6 +108,9 @@
   "party.moves.swapSelect": "Select move to swap with",
   "party.info.pokedexHint": "ENTER: View in Pokedex",
 
+  "npc.reward.item": "Received {item} ×{qty}!",
+  "npc.reward.money": "Received {money}₽!",
+
   "npc.choice.yes": "Yes",
   "npc.choice.no": "No",
   "npc.nurse.heal": "I'll heal your Pokemon!",
@@ -202,5 +205,11 @@
   "battle.comeBack": "Come back, {name}!",
   "battle.alreadyActive": "That Pokemon is already out!",
   "battle.pokemonFainted": "That Pokemon has fainted!",
-  "battle.noOtherPokemon": "No other Pokemon available!"
+  "battle.noOtherPokemon": "No other Pokemon available!",
+  "battle.enemyFaster": "Enemy {name} is faster!",
+  "battle.statWontGoHigher": "Stat won't go any higher!",
+  "battle.cantCatchTrainer": "Can't catch a trainer's Pokemon!",
+  "battle.caught": "Caught {name}!",
+  "battle.brokeFreeBall": "{name} broke free!",
+  "battle.learnedMove": "{name} learned {move}!"
 }

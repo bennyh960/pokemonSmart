@@ -107,6 +107,27 @@
         "Stock up on Potions before heading to Route 1!"
       ],
       "spriteType": "char_524b56"
+    },
+    {
+      "id": "helpful-npc-1",
+      "name": "Kind Kara",
+      "x": 12,
+      "y": 10,
+      "facing": "down",
+      "type": "npc",
+      "dialogue": [
+        "Hey there, new trainer!",
+        "Take these supplies — you'll need them on Route 1."
+      ],
+      "spriteType": "char_0502ea",
+      "reward": {
+        "items": [
+          { "itemId": "potion", "quantity": 3 },
+          { "itemId": "poke-ball", "quantity": 5 }
+        ],
+        "money": 100,
+        "flag": "npc-helpful-1-rewarded"
+      }
     }
   ],
   "music": "town",

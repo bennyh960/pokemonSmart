@@ -17,6 +17,13 @@ export interface AutoWalkConfig {
   vertical?: AutoWalkAxis;    // walk up/down
 }
 
+/** Reward given by a dialogue NPC on first interaction. */
+export interface DialogueReward {
+  items?: RewardItem[];
+  money?: number;
+  flag?: string;  // Flag to set after giving reward (prevents re-giving)
+}
+
 /** NPC data as stored in map JSON. */
 export interface NPCData {
   id: string;
@@ -28,6 +35,7 @@ export interface NPCData {
   dialogue: string[];
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
+  reward?: DialogueReward;  // Optional reward on first interaction (dialogue/npc type)
 }
 
 /** Reward item given after defeating a trainer. */

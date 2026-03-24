@@ -108,6 +108,9 @@
   "party.moves.swapSelect": "בחר מהלך להחלפה",
   "party.info.pokedexHint": "ENTER: צפה בפוקדקס",
 
+  "npc.reward.item": "קיבלת {item} ×{qty}!",
+  "npc.reward.money": "קיבלת {money}₽!",
+
   "npc.choice.yes": "כן",
   "npc.choice.no": "לא",
   "npc.nurse.heal": "אני ארפא את הפוקימונים שלך!",
@@ -198,5 +201,11 @@
   "battle.comeBack": "חזור, {name}!",
   "battle.alreadyActive": "הפוקימון הזה כבר בקרב!",
   "battle.pokemonFainted": "הפוקימון הזה התעלף!",
-  "battle.noOtherPokemon": "אין פוקימון אחר זמין!"
+  "battle.noOtherPokemon": "אין פוקימון אחר זמין!",
+  "battle.enemyFaster": "{name} היריב מהיר יותר!",
+  "battle.statWontGoHigher": "הסטטיסטיקה לא תעלה יותר!",
+  "battle.cantCatchTrainer": "אי אפשר לתפוס פוקימון של מאמן!",
+  "battle.caught": "נתפס {name}!",
+  "battle.brokeFreeBall": "{name} השתחרר!",
+  "battle.learnedMove": "{name} למד {move}!"
 }

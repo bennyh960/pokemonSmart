@@ -22,6 +22,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getItem } from '../data/items.js';
+import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
 import type { TrainerReward } from '../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../scenes/bag.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
@@ -29,9 +30,10 @@ import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../sc
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
 type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
-  | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LOSE' | 'RUN'
+  | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LEVEL_UP_MOVES' | 'LOSE' | 'RUN'
   | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_NEXT_XP'
-  | 'TRAINER_NEXT_LEVEL_UP' | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP'
+  | 'TRAINER_NEXT_LEVEL_UP' | 'TRAINER_NEXT_LEVEL_UP_MOVES'
+  | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP' | 'TRAINER_REWARD_LEVEL_UP_MOVES'
   | 'WAITING_BAG' | 'WAITING_PARTY' | 'SWITCH_POKEMON';
 
 let pendingPlayer: Pokemon | null = null;
@@ -94,6 +96,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let phaseTimer = 0;
   let xpGained = 0;
   let levelUpFx: ReturnType<typeof createLevelUpEffect> | null = null;
+  let pendingNewMoves: number[] = [];  // moveIds learned on level-up, shown one by one
   let waitingForBag = false;
   let waitingForParty = false;
   let previousLeadId: number | null = null;
@@ -103,20 +106,64 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let battleContext: BattleContext = 'grass';
   let bgImage: HTMLImageElement | null = null;
   let showTrainerSprite = false;  // Show trainer sprite during intro
+  let enemyGoesFirst = false;
+  let enemyAlreadyAttacked = false;
+  let playerStatStages: Record<string, number> = {};
 
   function useItem(itemId: string): void {
     const pd = getPlayerData();
     const def = getItem(itemId);
     if (!def) return;
-    if (def.effect.type === 'heal') {
-      player.hp = Math.min(player.maxHp, player.hp + def.effect.amount);
+
+    // Stat-boost items: modify temporary battle stages
+    if (def.effect.type === 'stat-boost') {
+      const stat = def.effect.stat;
+      const current = playerStatStages[stat] || 0;
+      if (current >= 6) {
+        textBox = createTextBox([t('battle.statWontGoHigher')], isRTL());
+        phase = 'USE_ITEM'; phaseTimer = 0;
+        return;
+      }
+      playerStatStages[stat] = Math.min(6, current + def.effect.stages);
+      consumeItem(pd.items, itemId);
+      textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: getPokemonDisplayName(player.id) })], isRTL());
+      phase = 'USE_ITEM'; phaseTimer = 0;
+      return;
+    }
+
+    // Capture items (pokeballs)
+    if (def.effect.type === 'capture') {
+      if (isTrainerBattle) {
+        textBox = createTextBox([t('battle.cantCatchTrainer')], isRTL());
+        phase = 'USE_ITEM'; phaseTimer = 0;
+        return;
+      }
+      consumeItem(pd.items, itemId);
+      const hpFactor = 1 - (enemy.hp / enemy.maxHp) * 0.5;
+      if (Math.random() < def.effect.rate * hpFactor * 0.3) {
+        enemy.caughtBall = itemId;
+        if (pd.party.length < 6) pd.party.push({ ...enemy });
+        pd.pokedex[enemy.id] = true;
+        autoSave();
+        textBox = createTextBox([t('battle.caught', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+        audio.playMusic('victory');
+        phase = 'RUN';
+      } else {
+        textBox = createTextBox([t('battle.brokeFreeBall', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+        phase = 'USE_ITEM';
+      }
+      phaseTimer = 0;
+      return;
+    }
+
+    // All other items: centralized effect system
+    const result = applyItemEffect(itemId, player);
+    if (result.success) {
+      consumeItem(pd.items, itemId);
       setHP(playerHpBar, player.hp);
     }
-    pd.items[itemId]--;
-    if (pd.items[itemId] <= 0) delete pd.items[itemId];
     textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: getPokemonDisplayName(player.id) })], isRTL());
-    phase = 'USE_ITEM';
-    phaseTimer = 0;
+    phase = 'USE_ITEM'; phaseTimer = 0;
   }
 
   function sendOutNextTrainerPokemon(): void {
@@ -190,6 +237,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     menu = createBattleMenu(player.moves);
     textBox = null; flash = null; shake = null; levelUpFx = null;
     waitingForBag = false; waitingForParty = false; previousLeadId = null;
+    enemyGoesFirst = false; enemyAlreadyAttacked = false; playerStatStages = {};
     fade = createFade(true, 0.5); clearAllPopups();
     phase = 'INTRO'; phaseTimer = 0; xpGained = 0;
     // Preload Pokemon sprites
@@ -208,6 +256,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     const barY = playerHpBar.y + 16; // approximate XP bar Y within panel
     levelUpFx = createLevelUpEffect(barX, barY);
     audio.playLevelUp();
+  }
+
+  /** Show the next "learned move" text box from pendingNewMoves. Returns true if a message was shown. */
+  function showNextLearnedMove(movesPhase: BattlePhase): boolean {
+    if (pendingNewMoves.length === 0) return false;
+    const moveId = pendingNewMoves.shift()!;
+    const moveName = getMoveDisplayName(moveId);
+    const pokeName = getPokemonDisplayName(player.id);
+    textBox = createTextBox([`${pokeName} learned ${moveName}!`], isRTL());
+    phase = movesPhase;
+    return true;
   }
 
   function doAttack(): void {
@@ -231,10 +290,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     phase = 'PLAYER_ATTACK'; phaseTimer = 0;
   }
 
-  function enemyTurn(): void {
+  function enemyTurn(showFasterMsg = false): void {
     const mi = Math.floor(Math.random() * enemy.moves.length);
     const m = enemy.moves[mi];
     const rtl = isRTL();
+    const prefix: string[] = showFasterMsg
+      ? [t('battle.enemyFaster', { name: getPokemonDisplayName(enemy.id) })]
+      : [];
     if (m.power > 0) {
       const dmg = calcDamage(enemy, player, m.power, m.type);
       player.hp = Math.max(0, player.hp - dmg);
@@ -242,12 +304,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
       spawnDamageNumber(`-${dmg}`, 46, 80, '#f84038');
       audio.playSFX('hit');
-      const msgs = [t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })];
+      const msgs = [...prefix, t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })];
       const et = effText(m.type, player.types);
       if (et) msgs.push(et);
       textBox = createTextBox(msgs, rtl);
     } else {
-      textBox = createTextBox([t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })], rtl);
+      textBox = createTextBox([...prefix, t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })], rtl);
     }
     phase = 'ENEMY_TURN'; phaseTimer = 0;
   }
@@ -353,7 +415,16 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               selMove = r.index;
               const m = player.moves[selMove];
               if (m.currentPp <= 0) { textBox = createTextBox([t('battle.noPP')], isRTL()); phase = 'INTRO'; }
-              else { doAttack(); }
+              else {
+                // Speed-based turn order
+                enemyGoesFirst = player.speed < enemy.speed ||
+                  (player.speed === enemy.speed && Math.random() >= 0.5);
+                if (enemyGoesFirst) {
+                  enemyTurn(true);
+                } else {
+                  doAttack();
+                }
+              }
             }
           }
           break;
@@ -366,8 +437,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'ENEMY_TURN': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
           if (!textBox && !isHPAnimating(playerHpBar)) {
-            if (player.hp <= 0) { textBox = createTextBox([t('battle.fainted', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'LOSE'; }
-            else { phase = 'SELECT_ACTION'; showMainMenu(menu); }
+            if (player.hp <= 0) {
+              enemyGoesFirst = false;
+              textBox = createTextBox([t('battle.fainted', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'LOSE';
+            } else if (enemyGoesFirst) {
+              // Enemy went first, now player attacks with pre-selected move
+              enemyGoesFirst = false;
+              enemyAlreadyAttacked = true;
+              doAttack();
+            } else {
+              phase = 'SELECT_ACTION'; showMainMenu(menu);
+            }
           }
           break;
         }
@@ -384,6 +464,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               audio.playMusic('victory');
               phase = 'WIN';
             }
+          }
+          else if (enemyAlreadyAttacked) {
+            // Enemy already attacked this turn (speed-based)
+            enemyAlreadyAttacked = false;
+            phase = 'SELECT_ACTION'; showMainMenu(menu);
           }
           else enemyTurn();
           break;
@@ -403,8 +488,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           // Shows XP gained text, then checks for level up or sends next Pokemon
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            if (checkAndApplyLevelUp(player)) {
+            const result = checkAndApplyLevelUp(player);
+            if (result.leveledUp) {
               triggerLevelUpFx();
+              pendingNewMoves = result.newMoves || [];
               textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
               phase = 'TRAINER_NEXT_LEVEL_UP';
             } else {
@@ -414,10 +501,22 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'TRAINER_NEXT_LEVEL_UP': {
-          // Shows level-up text, then sends out next Pokemon
+          // Shows level-up text, then shows learned moves or sends next Pokemon
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            sendOutNextTrainerPokemon();
+            if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
+              sendOutNextTrainerPokemon();
+            }
+          }
+          break;
+        }
+        case 'TRAINER_NEXT_LEVEL_UP_MOVES': {
+          // Shows "learned move" text one by one, then sends next Pokemon
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+            if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
+              sendOutNextTrainerPokemon();
+            }
           }
           break;
         }
@@ -437,8 +536,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           // Shows XP gained text (from WIN phase), then checks level up
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            if (checkAndApplyLevelUp(player)) {
+            const result = checkAndApplyLevelUp(player);
+            if (result.leveledUp) {
               triggerLevelUpFx();
+              pendingNewMoves = result.newMoves || [];
               textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
               phase = 'TRAINER_REWARD_LEVEL_UP';
             } else {
@@ -448,23 +549,56 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'TRAINER_REWARD_LEVEL_UP': {
-          // Shows level-up text, then awards trainer reward
+          // Shows level-up text, then shows learned moves or awards trainer reward
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            awardTrainerReward();
+            if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
+              awardTrainerReward();
+            }
+          }
+          break;
+        }
+        case 'TRAINER_REWARD_LEVEL_UP_MOVES': {
+          // Shows "learned move" text one by one, then awards trainer reward
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+            if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
+              awardTrainerReward();
+            }
           }
           break;
         }
         case 'XP_GAIN': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
-            if (checkAndApplyLevelUp(player)) { triggerLevelUpFx(); textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL()); phase = 'LEVEL_UP'; }
-            else { fade = createFade(false, 0.5); phase = 'RUN'; }
+            const result = checkAndApplyLevelUp(player);
+            if (result.leveledUp) {
+              triggerLevelUpFx();
+              pendingNewMoves = result.newMoves || [];
+              textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
+              phase = 'LEVEL_UP';
+            } else {
+              fade = createFade(false, 0.5); phase = 'RUN';
+            }
           }
           break;
         }
         case 'LEVEL_UP': {
-          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; fade = createFade(false, 0.5); phase = 'RUN'; }
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+            if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
+              fade = createFade(false, 0.5); phase = 'RUN';
+            }
+          }
+          break;
+        }
+        case 'LEVEL_UP_MOVES': {
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+            if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
+              fade = createFade(false, 0.5); phase = 'RUN';
+            }
+          }
           break;
         }
         case 'RUN': {

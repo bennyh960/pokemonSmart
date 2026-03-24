@@ -22,7 +22,8 @@ import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
-import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward } from '../systems/npc.js';
+import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, type DialogueReward } from '../systems/npc.js';
+import { getItem } from '../data/items.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE } from '../engine/config.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
@@ -253,7 +254,49 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
     } else {
+      // Dialogue / generic NPC — check for item/money reward
+      const npc = interactingNPC;
       interactingNPC = null;
+      if (npc.reward && hasActiveGame()) {
+        giveNPCReward(npc, npc.reward);
+      }
+    }
+  }
+
+  /** Deliver an NPC reward (items + money) if not already given. */
+  function giveNPCReward(npc: NPCData, reward: DialogueReward): void {
+    const pd = getPlayerData();
+    const flagKey = reward.flag || `npc-${npc.id}-rewarded`;
+
+    // Already given — skip
+    if (pd.flags[flagKey]) return;
+
+    // Build reward message lines
+    const lines: string[] = [];
+
+    // Give items
+    if (reward.items) {
+      for (const ri of reward.items) {
+        pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
+        const itemDef = getItem(ri.itemId);
+        const displayName = itemDef ? t(itemDef.nameKey) : ri.itemId;
+        lines.push(t('npc.reward.item', { item: displayName, qty: ri.quantity }));
+      }
+    }
+
+    // Give money
+    if (reward.money && reward.money > 0) {
+      pd.money += reward.money;
+      lines.push(t('npc.reward.money', { money: reward.money }));
+    }
+
+    // Mark as given
+    pd.flags[flagKey] = true;
+    autoSave();
+
+    // Show reward message
+    if (lines.length > 0) {
+      activeTextBox = createTextBox(lines, isRTL());
     }
   }
 

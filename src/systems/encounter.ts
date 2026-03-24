@@ -8,7 +8,7 @@
  */
 
 import type { Pokemon, Move, PokemonType, MathDifficulty } from '../types/index.js';
-import { getPokemon, getMove, movePowerToMathDifficulty } from '../services/pokemon-data.js';
+import { getPokemon, getMove, getLearnset, movePowerToMathDifficulty } from '../services/pokemon-data.js';
 import type { PokemonData, MoveData } from '../services/pokemon-data.js';
 import encounterTablesJson from '../data/encounter-tables.json';
 
@@ -80,13 +80,26 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
   // Build move list
   const moves: Move[] = [];
   if (moveIds) {
+    // Explicit moves provided (e.g. trainer Pokemon) — use them directly
     for (const id of moveIds) {
       const md = getMove(id);
       if (md) moves.push(moveDataToMove(md));
     }
   }
 
-  // If no moves provided, use defaults based on primary type
+  // If no explicit moves, derive from learnset
+  if (moves.length === 0) {
+    const learnset = getLearnset(data.id);
+    const eligible = learnset.filter(entry => entry.levelLearned <= level);
+    // Take the last 4 moves (most recently learned by level) for wild/NPC Pokemon
+    const selected = eligible.slice(-4);
+    for (const entry of selected) {
+      const md = getMove(entry.moveId);
+      if (md) moves.push(moveDataToMove(md));
+    }
+  }
+
+  // Fallback: use defaults based on primary type if learnset yielded nothing
   if (moves.length === 0) {
     const primaryType = data.types[0] || 'normal';
     const ids = defaultMovesByType[primaryType] || defaultMovesByType['normal'];
@@ -160,9 +173,16 @@ export function calculateXpGain(defeatedPokemon: Pokemon): number {
   return Math.floor((baseExp * defeatedPokemon.level) / 7);
 }
 
-/** Check if a Pokemon should level up, and apply level-up if so. Returns true if leveled. */
-export function checkAndApplyLevelUp(pokemon: Pokemon): boolean {
-  if (pokemon.xp < pokemon.xpToNext) return false;
+/** Result of a level-up check. */
+export interface LevelUpResult {
+  leveledUp: boolean;
+  newLevel?: number;
+  newMoves?: number[];  // moveIds of newly learned moves
+}
+
+/** Check if a Pokemon should level up, and apply level-up if so. */
+export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
+  if (pokemon.xp < pokemon.xpToNext) return { leveledUp: false };
 
   pokemon.xp -= pokemon.xpToNext;
   pokemon.level++;
@@ -181,8 +201,29 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): boolean {
     pokemon.speed = calcStat(data.stats.speed, pokemon.level, false);
   }
 
-  // TODO: Move learning placeholder
-  console.log(`${pokemon.name} grew to level ${pokemon.level}!`);
+  // Check learnset for new moves at this level
+  const newMoves: number[] = [];
+  const learnset = getLearnset(pokemon.id);
+  const movesAtLevel = learnset.filter(entry => entry.levelLearned === pokemon.level);
 
-  return true;
+  for (const entry of movesAtLevel) {
+    // Skip if already knows this move
+    if (pokemon.moves.some(m => m.id === entry.moveId)) continue;
+
+    if (pokemon.moves.length < 8) {
+      const md = getMove(entry.moveId);
+      if (md) {
+        pokemon.moves.push(moveDataToMove(md));
+        newMoves.push(entry.moveId);
+      }
+    }
+    // If moves.length >= 8, move goes unlearned for now (TODO: prompt player to forget a move)
+  }
+
+  console.log(`${pokemon.name} grew to level ${pokemon.level}!`);
+  if (newMoves.length > 0) {
+    console.log(`Learned move(s): ${newMoves.join(', ')}`);
+  }
+
+  return { leveledUp: true, newLevel: pokemon.level, newMoves };
 }
