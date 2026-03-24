@@ -13,7 +13,7 @@ import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
-import { generateWildEncounter, createPokemonFromData } from '../systems/encounter.js';
+import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
 import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
@@ -25,7 +25,7 @@ import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward } from '../systems/npc.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE } from '../engine/config.js';
 const MOVE_DURATION = 0.2;
-const ENCOUNTER_CHANCE = 0.10;
+// Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
 
 const DIR_VECTORS: Record<string, { dx: number; dy: number }> = {
@@ -573,9 +573,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Check for map transition first
           if (checkTransition()) return;
 
-          if (tileMap.isTallGrass(player.gridX, player.gridY)) {
-            if (Math.random() < ENCOUNTER_CHANCE) {
-              const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || 'test-map';
+          if (tileMap.isEncounterTile(player.gridX, player.gridY)) {
+            const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || 'test-map';
+            if (Math.random() < getEncounterRate(encounterId)) {
               const wild = generateWildEncounter(encounterId);
               if (wild) { startEncounterTransition(wild); return; }
             }

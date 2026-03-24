@@ -1,17 +1,19 @@
 /**
  * Encounter System - Wild Pokemon encounter tables and generation.
  *
- * Each area has an encounter table mapping Pokemon IDs to level ranges
- * and encounter weights. When the player steps on tall grass, a random
- * Pokemon is selected from the current area's table.
+ * Encounter tables are loaded from src/data/encounter-tables.json.
+ * Each area has entries mapping Pokemon IDs to level ranges and spawn weights.
+ * When the player steps on an encounter tile, a random Pokemon is selected
+ * from the current area's table.
  */
 
 import type { Pokemon, Move, PokemonType, MathDifficulty } from '../types/index.js';
 import { getPokemon, getMove, movePowerToMathDifficulty } from '../services/pokemon-data.js';
 import type { PokemonData, MoveData } from '../services/pokemon-data.js';
+import encounterTablesJson from '../data/encounter-tables.json';
 
 /** A single entry in an encounter table. */
-interface EncounterEntry {
+export interface EncounterEntry {
   pokemonId: number;
   minLevel: number;
   maxLevel: number;
@@ -19,48 +21,22 @@ interface EncounterEntry {
 }
 
 /** Encounter table for an area. */
-interface EncounterTable {
+export interface EncounterTable {
+  encounterRate: number; // 0-1, chance per step on encounter tile
   entries: EncounterEntry[];
 }
 
-/** All encounter tables keyed by area/map ID. */
-const encounterTables: Record<string, EncounterTable> = {
-  'test-map': {
-    entries: [
-      { pokemonId: 16, minLevel: 2, maxLevel: 5, weight: 30 },   // Pidgey
-      { pokemonId: 19, minLevel: 2, maxLevel: 4, weight: 30 },   // Rattata
-      { pokemonId: 161, minLevel: 2, maxLevel: 5, weight: 20 },  // Sentret
-      { pokemonId: 163, minLevel: 3, maxLevel: 5, weight: 10 },  // Hoothoot
-      { pokemonId: 10, minLevel: 2, maxLevel: 4, weight: 10 },   // Caterpie
-    ],
-  },
-  'route-1': {
-    entries: [
-      { pokemonId: 16, minLevel: 3, maxLevel: 6, weight: 25 },   // Pidgey
-      { pokemonId: 19, minLevel: 3, maxLevel: 5, weight: 25 },   // Rattata
-      { pokemonId: 161, minLevel: 3, maxLevel: 5, weight: 20 },  // Sentret
-      { pokemonId: 10, minLevel: 2, maxLevel: 4, weight: 15 },   // Caterpie
-      { pokemonId: 13, minLevel: 2, maxLevel: 4, weight: 15 },   // Weedle
-    ],
-  },
-  'route-29': {
-    entries: [
-      { pokemonId: 16, minLevel: 3, maxLevel: 6, weight: 25 },   // Pidgey
-      { pokemonId: 19, minLevel: 3, maxLevel: 5, weight: 25 },   // Rattata
-      { pokemonId: 161, minLevel: 3, maxLevel: 6, weight: 20 },  // Sentret
-      { pokemonId: 165, minLevel: 3, maxLevel: 5, weight: 15 },  // Ledyba
-      { pokemonId: 167, minLevel: 3, maxLevel: 5, weight: 15 },  // Spinarak
-    ],
-  },
-};
+const DEFAULT_ENCOUNTER_RATE = 0.10;
 
-/** Default moves assigned to wild Pokemon by type. */
-const defaultMovesByType: Record<string, number[]> = {
-  normal:  [33, 98],   // Tackle, Quick Attack
-  flying:  [33, 16],   // Tackle, Gust
-  bug:     [33, 81],   // Tackle, String Shot
-  poison:  [33, 40],   // Tackle, Poison Sting
-};
+/** All encounter tables keyed by area/map ID, loaded from JSON. */
+const encounterTables: Record<string, EncounterTable> = encounterTablesJson as Record<string, EncounterTable>;
+
+/** Get the encounter rate for a given map. */
+export function getEncounterRate(mapId: string): number {
+  const table = encounterTables[mapId];
+  if (table?.encounterRate != null) return table.encounterRate;
+  return DEFAULT_ENCOUNTER_RATE;
+}
 
 /** Pick a random integer between min and max (inclusive). */
 function randInt(min: number, max: number): number {
@@ -88,6 +64,14 @@ function calcStat(baseStat: number, level: number, isHp: boolean): number {
   }
   return Math.floor(((2 * baseStat) * level) / 100) + 5;
 }
+
+/** Default moves assigned to wild Pokemon by type (fallback only). */
+const defaultMovesByType: Record<string, number[]> = {
+  normal:  [33, 98],   // Tackle, Quick Attack
+  flying:  [33, 16],   // Tackle, Gust
+  bug:     [33, 81],   // Tackle, String Shot
+  poison:  [33, 40],   // Tackle, Poison Sting
+};
 
 /** Create a Pokemon instance from base data at a given level. */
 export function createPokemonFromData(data: PokemonData, level: number, moveIds?: number[]): Pokemon {

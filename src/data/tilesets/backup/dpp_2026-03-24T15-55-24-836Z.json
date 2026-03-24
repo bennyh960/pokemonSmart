@@ -84,7 +84,6 @@
       "destroy": null,
       "above": true,
       "overlay": true,
-      "category": "grass",
       "description": "grass for encounter"
     },
     {

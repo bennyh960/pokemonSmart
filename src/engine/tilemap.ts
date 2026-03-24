@@ -118,13 +118,28 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
       return true;
     },
 
-    isTallGrass(gx: number, gy: number): boolean {
+    isEncounterTile(gx: number, gy: number): boolean {
+      // Check base tile layer
       const tile = this.getTile(gx, gy);
       if (typeof tile === 'string' && tileset) {
         const def = tileset.getTile(tile);
-        return def ? def.encounter : false;
+        if (def?.encounter) return true;
+      } else if (tile === TILE_TALL_GRASS) {
+        return true;
       }
-      return tile === TILE_TALL_GRASS;
+      // Check placed objects layer (encounter grass has above: true)
+      if (tileset) {
+        for (const obj of placedObjects) {
+          const def = tileset.getTile(obj.key);
+          if (!def || !def.encounter) continue;
+          const gridW = Math.max(1, Math.round(def.w / BASE));
+          const gridH = Math.max(1, Math.round(def.h / BASE));
+          const lx = gx - obj.x;
+          const ly = gy - obj.y;
+          if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) return true;
+        }
+      }
+      return false;
     },
 
     /** Render ground layer. */
