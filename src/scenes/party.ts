@@ -6,7 +6,7 @@
  * Supports overworld, battle, and select-target modes.
  */
 
-import type { Scene, Pokemon, PokemonType } from '../types/index.js';
+import type { Scene, Pokemon } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
@@ -15,6 +15,8 @@ import { getPokemonDisplayName, getMoveDisplayName, getMove } from '../services/
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+import { TYPE_COLORS } from '../data/type-constants.js';
+import { drawTypeBadge } from '../ui/type-badge.js';
 
 /* ── Constants ─────────────────────────────────────────────────────── */
 
@@ -23,28 +25,6 @@ const SLOT_HEIGHT = 22;
 const SLOT_START_Y = 16;
 const SLOT_X = 4;
 const SLOT_W = SCREEN_W - 8;
-
-/** Type badge color palette. */
-const TYPE_COLORS: Record<PokemonType, string> = {
-  normal: '#a8a878',
-  fire: '#f08030',
-  water: '#6890f0',
-  grass: '#78c850',
-  electric: '#f8d030',
-  ice: '#98d8d8',
-  fighting: '#c03028',
-  poison: '#a040a0',
-  ground: '#e0c068',
-  flying: '#a890f0',
-  psychic: '#f85888',
-  bug: '#a8b820',
-  rock: '#b8a038',
-  ghost: '#705898',
-  dragon: '#7038f8',
-  dark: '#705848',
-  steel: '#b8b8d0',
-  glitch: '#ff00ff',
-};
 
 /** Stat bar max value (used to scale bars). */
 const STAT_BAR_MAX = 200;
@@ -187,13 +167,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     // HP numbers
     drawText(ctx, `${pokemon.hp}/${pokemon.maxHp}`, hpBarX + hpBarW + 2, hpBarY - 2, { size: 7, color: '#aaaacc' });
 
-    // Type badges
+    // Type badges (localized, short mode for list)
     let typeX = SLOT_X + 160;
     for (const pType of pokemon.types) {
-      const color = TYPE_COLORS[pType] || '#888888';
-      const badgeW = 30;
-      fillRect(ctx, typeX, y + 2, badgeW, 8, color);
-      drawText(ctx, pType.toUpperCase().slice(0, 4), typeX + 1, y + 2, { size: 7, color: COL_TEXT });
+      const badgeW = drawTypeBadge(ctx, pType, typeX, y + 2, 'short');
       typeX += badgeW + 2;
     }
   }
@@ -265,13 +242,11 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     // Name + Level
     drawText(ctx, `${getPokemonDisplayName(pokemon.id)}  Lv.${pokemon.level}`, 72, topY + 2, { size: 8, color: COL_TEXT });
 
-    // Types
+    // Types (localized, full mode for detail)
     let typeX = 72;
     for (const pType of pokemon.types) {
-      const color = TYPE_COLORS[pType] || '#888888';
-      fillRect(ctx, typeX, topY + 14, 34, 9, color);
-      drawText(ctx, pType.toUpperCase(), typeX + 2, topY + 15, { size: 7, color: COL_TEXT });
-      typeX += 36;
+      const badgeW = drawTypeBadge(ctx, pType, typeX, topY + 14, 'full');
+      typeX += badgeW + 2;
     }
 
     // Stats with colored bars

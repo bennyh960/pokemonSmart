@@ -19,16 +19,22 @@ import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import {
   getPokemon,
   getPokemonDisplayName,
+  getMoveDisplayName,
   getEvolutionChain,
   getTypeEffectiveness,
   getAllTypes,
   getSpawnLocations,
   getLearnset,
   getMove,
+  getPokemonHeight,
+  getPokemonWeight,
+  getPokemonCategory,
+  getPokemonDescription,
 } from '../services/pokemon-data.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 import { TYPE_COLORS, getDamageClassLabel } from '../data/type-constants.js';
+import { drawTypeBadge } from '../ui/type-badge.js';
 import type { PokemonType } from '../types/index.js';
 
 const BG_COLOR = '#301818';
@@ -361,17 +367,52 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       fillRect(ctx, spriteX, spriteY, spriteSize, spriteSize, '#584040');
     }
 
-    // Type badges below sprite
+    // Type badges below sprite (localized, full mode)
     let badgeX = spriteX;
     const badgeY = spriteY + spriteSize + 4;
     for (const type of data.types) {
-      const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
-      const label = type.toUpperCase();
-      const badgeW = label.length * 5 + 6;
-      fillRect(ctx, badgeX, badgeY, badgeW, 10, color);
-      drawRect(ctx, badgeX, badgeY, badgeW, 10, '#00000044');
-      drawText(ctx, label, badgeX + 3, badgeY + 1, { size: 7, color: '#ffffff', font: 'monospace' });
+      const badgeW = drawTypeBadge(ctx, type as PokemonType, badgeX, badgeY, 'full');
       badgeX += badgeW + 3;
+    }
+
+    // Height / Weight below type badges
+    let metaY = badgeY + 14;
+    const height = getPokemonHeight(id);
+    const weight = getPokemonWeight(id);
+    if (height !== '?' || weight !== '?') {
+      const parts: string[] = [];
+      if (height !== '?') parts.push(`Height: ${height}`);
+      if (weight !== '?') parts.push(`Weight: ${weight}`);
+      drawText(ctx, parts.join('  '), spriteX, metaY, { size: 6, color: '#cccccc', font: 'monospace' });
+      metaY += 10;
+    }
+
+    // Category
+    const category = getPokemonCategory(id);
+    if (category) {
+      drawText(ctx, category, spriteX, metaY, { size: 6, color: '#a08080', font: 'monospace' });
+      metaY += 10;
+    }
+
+    // Pokedex description / flavor text (word-wrapped)
+    const description = getPokemonDescription(id);
+    if (description) {
+      const maxLineChars = 30;
+      const words = description.split(' ');
+      let line = '';
+      for (const word of words) {
+        const test = line ? line + ' ' + word : word;
+        if (test.length > maxLineChars && line) {
+          drawText(ctx, line, spriteX, metaY, { size: 6, color: '#a8a8a8', font: 'monospace' });
+          metaY += 9;
+          line = word;
+        } else {
+          line = test;
+        }
+      }
+      if (line) {
+        drawText(ctx, line, spriteX, metaY, { size: 6, color: '#a8a8a8', font: 'monospace' });
+      }
     }
 
     // Stats panel
@@ -538,19 +579,14 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
     let x = 4;
     for (const type of types) {
-      const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
-      const label = type.toUpperCase();
-      const badgeW = label.length * 5 + 6;
-
-      // Wrap to next row if needed
-      if (x + badgeW > SCREEN_W - 4) {
+      // Estimate badge width for wrapping check
+      const estW = 30;
+      if (x + estW > SCREEN_W - 4) {
         x = 4;
         y += 12;
       }
 
-      fillRect(ctx, x, y, badgeW, 9, color);
-      drawRect(ctx, x, y, badgeW, 9, '#00000044');
-      drawText(ctx, label, x + 3, y + 1, { size: 6, color: '#ffffff', font: 'monospace' });
+      const badgeW = drawTypeBadge(ctx, type as PokemonType, x, y, 'short');
       x += badgeW + 3;
     }
     y += 12;
@@ -573,7 +609,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     const maxScroll = Math.max(0, learnset.length - maxVisible);
     if (moveScrollOffset > maxScroll) moveScrollOffset = maxScroll;
 
-    drawText(ctx, 'LEARNSET:', 4, contentY, { size: 7, color: '#f8a878', font: 'monospace' });
+    drawText(ctx, t('pokedex.moves.byLevel'), 4, contentY, { size: 7, color: '#f8a878', font: 'monospace' });
 
     const rowH = 12;
     const startY = contentY + 12;
@@ -597,7 +633,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       }
 
       // Move name (English from API)
-      const moveName = moveData?.name.en ?? `Move #${entry.moveId}`;
+      const moveName = moveData ? getMoveDisplayName(entry.moveId) : `Move #${entry.moveId}`;
       drawText(ctx, moveName, 37, y, { size: 6, color: '#ffffff', font: 'monospace' });
 
       // Power
@@ -622,6 +658,13 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     }
     if (moveScrollOffset + maxVisible < learnset.length) {
       drawText(ctx, '\u25bc', SCREEN_W - 10, startY + maxVisible * rowH, { size: 7, color: '#f8a878', font: 'monospace' });
+    }
+
+    // Learnable moves section (TM/HM/egg — TODO: Add TM/HM/egg move data from PokeAPI)
+    if (moveScrollOffset + maxVisible >= learnset.length) {
+      const sectionY = startY + Math.min(learnset.length - moveScrollOffset, maxVisible) * rowH + 4;
+      drawText(ctx, t('pokedex.moves.learnable'), 4, sectionY, { size: 7, color: '#f8a878', font: 'monospace' });
+      drawText(ctx, t('pokedex.moves.noData'), 8, sectionY + 12, { size: 6, color: '#807070', font: 'monospace' });
     }
   }
 

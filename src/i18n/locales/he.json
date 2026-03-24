@@ -41,6 +41,9 @@
   "pokedex.title": "פוקדקס",
   "pokedex.unknown": "???",
   "pokedex.noData": "אין מידע",
+  "pokedex.moves.byLevel": "מהלכים לפי רמה",
+  "pokedex.moves.learnable": "מהלכים נוספים",
+  "pokedex.moves.noData": "אין מידע זמין",
   "pokedex.seen": "נראו: {count}",
   "pokedex.number": "#{number}",
 

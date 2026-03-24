@@ -32,6 +32,10 @@ export interface PokemonData {
     speed: number;
   };
   baseExperience: number;
+  height?: number;        // in decimeters (from PokeAPI) — TODO: populate via scripts/enrich-pokemon-metadata.ts
+  weight?: number;        // in hectograms (from PokeAPI) — TODO: populate via scripts/enrich-pokemon-metadata.ts
+  category?: string;      // e.g. "Seed Pokémon" — English only, TODO: fetch from PokeAPI species
+  description?: string;   // Pokedex flavor text — English only, TODO: fetch from PokeAPI species
 }
 
 export interface MoveData {
@@ -224,4 +228,30 @@ const learnsets = learnsetData as Record<string, { moveId: number; levelLearned:
 /** Get the learnset for a Pokemon (moves learned by level-up). */
 export function getLearnset(pokemonId: number): { moveId: number; levelLearned: number }[] {
   return learnsets[String(pokemonId)] || [];
+}
+
+// --- Pokemon metadata helpers ---
+
+/** Get Pokemon height in meters (data is in decimeters). */
+export function getPokemonHeight(id: number): string {
+  const data = pokemonById.get(id);
+  if (!data?.height) return '?';
+  return (data.height / 10).toFixed(1) + 'm';
+}
+
+/** Get Pokemon weight in kg (data is in hectograms). */
+export function getPokemonWeight(id: number): string {
+  const data = pokemonById.get(id);
+  if (!data?.weight) return '?';
+  return (data.weight / 10).toFixed(1) + 'kg';
+}
+
+/** Get Pokemon category/species text. */
+export function getPokemonCategory(id: number): string {
+  return pokemonById.get(id)?.category ?? '';
+}
+
+/** Get Pokemon Pokedex description/flavor text. */
+export function getPokemonDescription(id: number): string {
+  return pokemonById.get(id)?.description ?? '';
 }

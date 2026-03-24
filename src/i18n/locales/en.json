@@ -41,6 +41,9 @@
   "pokedex.title": "POKEDEX",
   "pokedex.unknown": "???",
   "pokedex.noData": "No data",
+  "pokedex.moves.byLevel": "Moves by Level",
+  "pokedex.moves.learnable": "Learnable Moves",
+  "pokedex.moves.noData": "No data available",
   "pokedex.seen": "Seen: {count}",
   "pokedex.number": "#{number}",
 

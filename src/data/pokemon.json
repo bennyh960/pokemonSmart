@@ -17,7 +17,11 @@
       "specialDefense": 65,
       "speed": 45
     },
-    "baseExperience": 64
+    "baseExperience": 64,
+    "height": 7,
+    "weight": 69,
+    "category": "Seed Pokémon",
+    "description": "The seed on its back is filled with nutrients. The seed grows steadily larger as its body grows."
   },
   {
     "id": 2,
@@ -37,7 +41,11 @@
       "specialDefense": 80,
       "speed": 60
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 10,
+    "weight": 130,
+    "category": "Seed Pokémon",
+    "description": "Exposure to sun­ light adds to its strength. Sunlight also makes the bud on its back grow larger."
   },
   {
     "id": 3,
@@ -57,7 +65,11 @@
       "specialDefense": 100,
       "speed": 80
     },
-    "baseExperience": 236
+    "baseExperience": 236,
+    "height": 20,
+    "weight": 1000,
+    "category": "Seed Pokémon",
+    "description": "By spreading the broad petals of its flower and catching the sun's rays, it fills its body with power."
   },
   {
     "id": 4,
@@ -76,7 +88,11 @@
       "specialDefense": 50,
       "speed": 65
     },
-    "baseExperience": 62
+    "baseExperience": 62,
+    "height": 6,
+    "weight": 85,
+    "category": "Lizard Pokémon",
+    "description": "The flame on its tail shows the strength of its life force. If it is weak, the flame also burns weakly."
   },
   {
     "id": 5,
@@ -95,7 +111,11 @@
       "specialDefense": 65,
       "speed": 80
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 11,
+    "weight": 190,
+    "category": "Flame Pokémon",
+    "description": "It is very hot­ headed by nature, so it constantly seeks opponents. It calms down only when it wins."
   },
   {
     "id": 6,
@@ -115,7 +135,11 @@
       "specialDefense": 85,
       "speed": 100
     },
-    "baseExperience": 240
+    "baseExperience": 240,
+    "height": 17,
+    "weight": 905,
+    "category": "Flame Pokémon",
+    "description": "If CHARIZARD be­ comes furious, the flame at the tip of its tail flares up in a whitish- blue color."
   },
   {
     "id": 7,
@@ -134,7 +158,11 @@
       "specialDefense": 64,
       "speed": 43
     },
-    "baseExperience": 63
+    "baseExperience": 63,
+    "height": 5,
+    "weight": 90,
+    "category": "Tiny Turtle Pokémon",
+    "description": "The shell is soft when it is born. It soon becomes so resilient, prod­ ding fingers will bounce off it."
   },
   {
     "id": 8,
@@ -153,7 +181,11 @@
       "specialDefense": 80,
       "speed": 58
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 10,
+    "weight": 225,
+    "category": "Turtle Pokémon",
+    "description": "It is recognized as a symbol of longevity. If its shell has algae on it, that WARTORTLE is very old."
   },
   {
     "id": 9,
@@ -172,7 +204,11 @@
       "specialDefense": 105,
       "speed": 78
     },
-    "baseExperience": 239
+    "baseExperience": 239,
+    "height": 16,
+    "weight": 855,
+    "category": "Shellfish Pokémon",
+    "description": "It deliberately makes itself heavy so it can with­ stand the recoil of the water jets it fires."
   },
   {
     "id": 10,
@@ -191,7 +227,11 @@
       "specialDefense": 20,
       "speed": 45
     },
-    "baseExperience": 39
+    "baseExperience": 39,
+    "height": 3,
+    "weight": 29,
+    "category": "Worm Pokémon",
+    "description": "For protection, it releases a horri­ ble stench from the antenna on its head to drive away enemies."
   },
   {
     "id": 11,
@@ -210,7 +250,11 @@
       "specialDefense": 25,
       "speed": 30
     },
-    "baseExperience": 72
+    "baseExperience": 72,
+    "height": 7,
+    "weight": 99,
+    "category": "Cocoon Pokémon",
+    "description": "Inside the shell, it is soft and weak as it pre­ pares to evolve. It stays motion­ less in the shell."
   },
   {
     "id": 12,
@@ -230,7 +274,11 @@
       "specialDefense": 80,
       "speed": 70
     },
-    "baseExperience": 178
+    "baseExperience": 178,
+    "height": 11,
+    "weight": 320,
+    "category": "Butterfly Pokémon",
+    "description": "It collects honey every day. It rubs honey onto the hairs on its legs to carry it back to its nest."
   },
   {
     "id": 13,
@@ -250,7 +298,11 @@
       "specialDefense": 20,
       "speed": 50
     },
-    "baseExperience": 39
+    "baseExperience": 39,
+    "height": 3,
+    "weight": 32,
+    "category": "Hairy Bug Pokémon",
+    "description": "Its poison stinger is very powerful. Its bright-colored body is intended to warn off its enemies."
   },
   {
     "id": 14,
@@ -270,7 +322,11 @@
       "specialDefense": 25,
       "speed": 35
     },
-    "baseExperience": 72
+    "baseExperience": 72,
+    "height": 6,
+    "weight": 100,
+    "category": "Cocoon Pokémon",
+    "description": "Although it is a cocoon, it can move a little. It can extend its poison barb if it is attacked."
   },
   {
     "id": 15,
@@ -290,7 +346,11 @@
       "specialDefense": 80,
       "speed": 75
     },
-    "baseExperience": 178
+    "baseExperience": 178,
+    "height": 10,
+    "weight": 295,
+    "category": "Poison Bee Pokémon",
+    "description": "It can take down any opponent with its powerful poi­ son stingers. It sometimes attacks in swarms."
   },
   {
     "id": 16,
@@ -310,7 +370,11 @@
       "specialDefense": 35,
       "speed": 56
     },
-    "baseExperience": 50
+    "baseExperience": 50,
+    "height": 3,
+    "weight": 18,
+    "category": "Tiny Bird Pokémon",
+    "description": "It usually hides in tall grass. Be­ cause it dislikes fighting, it pro­ tects itself by kicking up sand."
   },
   {
     "id": 17,
@@ -330,7 +394,11 @@
       "specialDefense": 50,
       "speed": 71
     },
-    "baseExperience": 122
+    "baseExperience": 122,
+    "height": 11,
+    "weight": 300,
+    "category": "Bird Pokémon",
+    "description": "It has outstanding vision. However high it flies, it is able to distin­ guish the move­ ments of its prey."
   },
   {
     "id": 18,
@@ -350,7 +418,11 @@
       "specialDefense": 70,
       "speed": 101
     },
-    "baseExperience": 216
+    "baseExperience": 216,
+    "height": 15,
+    "weight": 395,
+    "category": "Bird Pokémon",
+    "description": "Its well-developed chest muscles make it strong enough to whip up a gusty windstorm with just a few flaps."
   },
   {
     "id": 19,
@@ -369,7 +441,11 @@
       "specialDefense": 35,
       "speed": 72
     },
-    "baseExperience": 51
+    "baseExperience": 51,
+    "height": 3,
+    "weight": 35,
+    "category": "Mouse Pokémon",
+    "description": "It eats anything. Wherever food is available, it will settle down and produce offspring continuously."
   },
   {
     "id": 20,
@@ -388,7 +464,11 @@
       "specialDefense": 70,
       "speed": 97
     },
-    "baseExperience": 145
+    "baseExperience": 145,
+    "height": 7,
+    "weight": 185,
+    "category": "Mouse Pokémon",
+    "description": "Gnaws on anything with its tough fangs. It can even topple concrete buildings by gnaw­ ing on them."
   },
   {
     "id": 21,
@@ -408,7 +488,11 @@
       "specialDefense": 31,
       "speed": 70
     },
-    "baseExperience": 52
+    "baseExperience": 52,
+    "height": 3,
+    "weight": 20,
+    "category": "Tiny Bird Pokémon",
+    "description": "It flaps its short wings to flush out insects from tall grass. It then plucks them with its stubby beak."
   },
   {
     "id": 22,
@@ -428,7 +512,11 @@
       "specialDefense": 61,
       "speed": 100
     },
-    "baseExperience": 155
+    "baseExperience": 155,
+    "height": 12,
+    "weight": 380,
+    "category": "Beak Pokémon",
+    "description": "It shoots itself suddenly high into the sky, then plummets down in one fell swoop to strike its prey."
   },
   {
     "id": 23,
@@ -447,7 +535,11 @@
       "specialDefense": 54,
       "speed": 55
     },
-    "baseExperience": 58
+    "baseExperience": 58,
+    "height": 20,
+    "weight": 69,
+    "category": "Snake Pokémon",
+    "description": "It can freely de­ tach its jaw to swallow large prey whole. It can be­ come too heavy to move, however."
   },
   {
     "id": 24,
@@ -466,7 +558,11 @@
       "specialDefense": 79,
       "speed": 80
     },
-    "baseExperience": 157
+    "baseExperience": 157,
+    "height": 35,
+    "weight": 650,
+    "category": "Cobra Pokémon",
+    "description": "Transfixing prey with the face-like pattern on its belly, it binds and poisons the frightened victim."
   },
   {
     "id": 25,
@@ -485,7 +581,11 @@
       "specialDefense": 50,
       "speed": 90
     },
-    "baseExperience": 112
+    "baseExperience": 112,
+    "height": 4,
+    "weight": 60,
+    "category": "Mouse Pokémon",
+    "description": "This intelligent POKéMON roasts hard BERRIES with electricity to make them tender enough to eat."
   },
   {
     "id": 26,
@@ -504,7 +604,11 @@
       "specialDefense": 80,
       "speed": 110
     },
-    "baseExperience": 218
+    "baseExperience": 218,
+    "height": 8,
+    "weight": 300,
+    "category": "Mouse Pokémon",
+    "description": "When its electric­ ity builds, its muscles are stimu­ lated, and it be­ comes more aggres­ sive than usual."
   },
   {
     "id": 27,
@@ -523,7 +627,11 @@
       "specialDefense": 30,
       "speed": 40
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 6,
+    "weight": 120,
+    "category": "Mouse Pokémon",
+    "description": "If it fell from a great height, this POKéMON could save itself by rolling into a ball and bouncing."
   },
   {
     "id": 28,
@@ -542,7 +650,11 @@
       "specialDefense": 55,
       "speed": 65
     },
-    "baseExperience": 158
+    "baseExperience": 158,
+    "height": 10,
+    "weight": 295,
+    "category": "Mouse Pokémon",
+    "description": "In an attempt to hide itself, it will run around at top speed to kick up a blinding dust storm."
   },
   {
     "id": 29,
@@ -561,7 +673,11 @@
       "specialDefense": 40,
       "speed": 41
     },
-    "baseExperience": 55
+    "baseExperience": 55,
+    "height": 4,
+    "weight": 70,
+    "category": "Poison Pin Pokémon",
+    "description": "The poison hidden in its small horn is extremely po­ tent. Even a tiny scratch can have fatal results."
   },
   {
     "id": 30,
@@ -580,7 +696,11 @@
       "specialDefense": 55,
       "speed": 56
     },
-    "baseExperience": 128
+    "baseExperience": 128,
+    "height": 8,
+    "weight": 200,
+    "category": "Poison Pin Pokémon",
+    "description": "When feeding its young, it first chews and tender­ izes the food, then spits it out for the offspring."
   },
   {
     "id": 31,
@@ -600,7 +720,11 @@
       "specialDefense": 85,
       "speed": 76
     },
-    "baseExperience": 227
+    "baseExperience": 227,
+    "height": 13,
+    "weight": 600,
+    "category": "Drill Pokémon",
+    "description": "Its body is cover­ ed with needle- like scales. It never shows signs of shrinking from any attack."
   },
   {
     "id": 32,
@@ -619,7 +743,11 @@
       "specialDefense": 40,
       "speed": 50
     },
-    "baseExperience": 55
+    "baseExperience": 55,
+    "height": 5,
+    "weight": 90,
+    "category": "Poison Pin Pokémon",
+    "description": "It is small, but its horn is filled with poison. It charges then stabs with the horn to inject poison."
   },
   {
     "id": 33,
@@ -638,7 +766,11 @@
       "specialDefense": 55,
       "speed": 65
     },
-    "baseExperience": 128
+    "baseExperience": 128,
+    "height": 9,
+    "weight": 195,
+    "category": "Poison Pin Pokémon",
+    "description": "It raises its big ears to check its surroundings. If it senses any­ thing, it attacks immediately."
   },
   {
     "id": 34,
@@ -658,7 +790,11 @@
       "specialDefense": 75,
       "speed": 85
     },
-    "baseExperience": 227
+    "baseExperience": 227,
+    "height": 14,
+    "weight": 620,
+    "category": "Drill Pokémon",
+    "description": "It swings its big tail around during battle. If its foe flinches, it will charge with its sturdy body."
   },
   {
     "id": 35,
@@ -677,7 +813,11 @@
       "specialDefense": 65,
       "speed": 35
     },
-    "baseExperience": 113
+    "baseExperience": 113,
+    "height": 6,
+    "weight": 75,
+    "category": "Fairy Pokémon",
+    "description": "The moonlight that it stores in the wings on its back apparently gives it the ability to float in midair."
   },
   {
     "id": 36,
@@ -696,7 +836,11 @@
       "specialDefense": 90,
       "speed": 60
     },
-    "baseExperience": 217
+    "baseExperience": 217,
+    "height": 13,
+    "weight": 400,
+    "category": "Fairy Pokémon",
+    "description": "With its acute hearing, it can pick up sounds from far away. It usually hides in quiet places."
   },
   {
     "id": 37,
@@ -715,7 +859,11 @@
       "specialDefense": 65,
       "speed": 65
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 6,
+    "weight": 99,
+    "category": "Fox Pokémon",
+    "description": "As it develops,  its single white tail gains color and splits into six. It is quite warm and cuddly."
   },
   {
     "id": 38,
@@ -734,7 +882,11 @@
       "specialDefense": 100,
       "speed": 100
     },
-    "baseExperience": 177
+    "baseExperience": 177,
+    "height": 11,
+    "weight": 199,
+    "category": "Fox Pokémon",
+    "description": "Some legends claim that each of its nine tails has its own unique type of special mystical power."
   },
   {
     "id": 39,
@@ -754,7 +906,11 @@
       "specialDefense": 25,
       "speed": 20
     },
-    "baseExperience": 95
+    "baseExperience": 95,
+    "height": 5,
+    "weight": 55,
+    "category": "Balloon Pokémon",
+    "description": "If it inflates to SING a lullaby, it can perform longer and cause sure drowsiness in its audience."
   },
   {
     "id": 40,
@@ -774,7 +930,11 @@
       "specialDefense": 50,
       "speed": 45
     },
-    "baseExperience": 196
+    "baseExperience": 196,
+    "height": 10,
+    "weight": 120,
+    "category": "Balloon Pokémon",
+    "description": "Their fur feels so good that if two of them snuggle together, they won't want to be separated."
   },
   {
     "id": 41,
@@ -794,7 +954,11 @@
       "specialDefense": 40,
       "speed": 55
     },
-    "baseExperience": 49
+    "baseExperience": 49,
+    "height": 8,
+    "weight": 75,
+    "category": "Bat Pokémon",
+    "description": "While flying, it constantly emits ultrasonic waves from its mouth to check its sur­ roundings."
   },
   {
     "id": 42,
@@ -814,7 +978,11 @@
       "specialDefense": 75,
       "speed": 90
     },
-    "baseExperience": 159
+    "baseExperience": 159,
+    "height": 16,
+    "weight": 550,
+    "category": "Bat Pokémon",
+    "description": "However hard its victim's hide may be, it punctures with sharp fangs and gorges itself with blood."
   },
   {
     "id": 43,
@@ -834,7 +1002,11 @@
       "specialDefense": 65,
       "speed": 30
     },
-    "baseExperience": 64
+    "baseExperience": 64,
+    "height": 5,
+    "weight": 54,
+    "category": "Weed Pokémon",
+    "description": "Awakened by moon­ light, it roams  actively at night. In the day, it stays quietly underground."
   },
   {
     "id": 44,
@@ -854,7 +1026,11 @@
       "specialDefense": 75,
       "speed": 40
     },
-    "baseExperience": 138
+    "baseExperience": 138,
+    "height": 8,
+    "weight": 86,
+    "category": "Weed Pokémon",
+    "description": "What appears to be drool is actually sweet honey. It is very sticky and clings stubbornly if touched."
   },
   {
     "id": 45,
@@ -874,7 +1050,11 @@
       "specialDefense": 90,
       "speed": 50
     },
-    "baseExperience": 221
+    "baseExperience": 221,
+    "height": 12,
+    "weight": 186,
+    "category": "Flower Pokémon",
+    "description": "It has the world's largest petals. With every step, the petals shake out heavy clouds of toxic pollen."
   },
   {
     "id": 46,
@@ -894,7 +1074,11 @@
       "specialDefense": 55,
       "speed": 25
     },
-    "baseExperience": 57
+    "baseExperience": 57,
+    "height": 3,
+    "weight": 54,
+    "category": "Mushroom Pokémon",
+    "description": "It is doused with mushroom spores when it is born. As its body grows, mushrooms sprout from its back."
   },
   {
     "id": 47,
@@ -914,7 +1098,11 @@
       "specialDefense": 80,
       "speed": 30
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 10,
+    "weight": 295,
+    "category": "Mushroom Pokémon",
+    "description": "It stays mostly in dark, damp places, the preference not of the bug, but of the big mush­ rooms on its back."
   },
   {
     "id": 48,
@@ -934,7 +1122,11 @@
       "specialDefense": 55,
       "speed": 45
     },
-    "baseExperience": 61
+    "baseExperience": 61,
+    "height": 10,
+    "weight": 300,
+    "category": "Insect Pokémon",
+    "description": "Its eyes also function as radar units. It catches and eats small bugs that hide in darkness."
   },
   {
     "id": 49,
@@ -954,7 +1146,11 @@
       "specialDefense": 75,
       "speed": 90
     },
-    "baseExperience": 158
+    "baseExperience": 158,
+    "height": 15,
+    "weight": 125,
+    "category": "Poison Moth Pokémon",
+    "description": "When it attacks, it flaps its large wings violently to scatter its poi­ sonous powder all around."
   },
   {
     "id": 50,
@@ -973,7 +1169,11 @@
       "specialDefense": 45,
       "speed": 95
     },
-    "baseExperience": 53
+    "baseExperience": 53,
+    "height": 2,
+    "weight": 8,
+    "category": "Mole Pokémon",
+    "description": "Its skin is very thin. If it is exposed to light, its blood heats up, causing it to grow weak."
   },
   {
     "id": 51,
@@ -992,7 +1192,11 @@
       "specialDefense": 70,
       "speed": 120
     },
-    "baseExperience": 149
+    "baseExperience": 149,
+    "height": 7,
+    "weight": 333,
+    "category": "Mole Pokémon",
+    "description": "Its three heads bob separately up and down to loosen the soil nearby, making it easier for it to burrow."
   },
   {
     "id": 52,
@@ -1011,7 +1215,11 @@
       "specialDefense": 40,
       "speed": 90
     },
-    "baseExperience": 58
+    "baseExperience": 58,
+    "height": 4,
+    "weight": 42,
+    "category": "Scratch Cat Pokémon",
+    "description": "It is fascinated by round objects. It can't stop playing with them until it tires and falls asleep."
   },
   {
     "id": 53,
@@ -1030,7 +1238,11 @@
       "specialDefense": 65,
       "speed": 115
     },
-    "baseExperience": 154
+    "baseExperience": 154,
+    "height": 10,
+    "weight": 320,
+    "category": "Classy Cat Pokémon",
+    "description": "Many adore it for its sophisticated air. However, it will lash out and scratch for little reason."
   },
   {
     "id": 54,
@@ -1049,7 +1261,11 @@
       "specialDefense": 50,
       "speed": 55
     },
-    "baseExperience": 64
+    "baseExperience": 64,
+    "height": 8,
+    "weight": 196,
+    "category": "Duck Pokémon",
+    "description": "It has mystical powers but doesn't recall that it has used them. That is why it always looks puzzled."
   },
   {
     "id": 55,
@@ -1068,7 +1284,11 @@
       "specialDefense": 80,
       "speed": 85
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 17,
+    "weight": 766,
+    "category": "Duck Pokémon",
+    "description": "When it swims at full speed using its long, webbed limbs, its fore­ head somehow be­ gins to glow."
   },
   {
     "id": 56,
@@ -1087,7 +1307,11 @@
       "specialDefense": 45,
       "speed": 70
     },
-    "baseExperience": 61
+    "baseExperience": 61,
+    "height": 5,
+    "weight": 280,
+    "category": "Pig Monkey Pokémon",
+    "description": "It is extremely ill-tempered. Groups of them will attack any handy target for no reason."
   },
   {
     "id": 57,
@@ -1106,7 +1330,11 @@
       "specialDefense": 70,
       "speed": 95
     },
-    "baseExperience": 159
+    "baseExperience": 159,
+    "height": 10,
+    "weight": 320,
+    "category": "Pig Monkey Pokémon",
+    "description": "If approached while asleep, it may awaken and angrily give chase in a groggy state of semi-sleep."
   },
   {
     "id": 58,
@@ -1125,7 +1353,11 @@
       "specialDefense": 50,
       "speed": 60
     },
-    "baseExperience": 70
+    "baseExperience": 70,
+    "height": 7,
+    "weight": 190,
+    "category": "Puppy Pokémon",
+    "description": "It has a brave and trustworthy na­ ture. It fear­ lessly stands up to bigger and stronger foes."
   },
   {
     "id": 59,
@@ -1144,7 +1376,11 @@
       "specialDefense": 80,
       "speed": 95
     },
-    "baseExperience": 194
+    "baseExperience": 194,
+    "height": 19,
+    "weight": 1550,
+    "category": "Legendary Pokémon",
+    "description": "This legendary Chinese POKEMON is considered magnif­ icent. Many people are enchanted by its grand mane."
   },
   {
     "id": 60,
@@ -1163,7 +1399,11 @@
       "specialDefense": 40,
       "speed": 90
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 6,
+    "weight": 124,
+    "category": "Tadpole Pokémon",
+    "description": "Because it is in­ ept at walking on its newly grown legs, it always  swims around in water."
   },
   {
     "id": 61,
@@ -1182,7 +1422,11 @@
       "specialDefense": 50,
       "speed": 90
     },
-    "baseExperience": 135
+    "baseExperience": 135,
+    "height": 10,
+    "weight": 200,
+    "category": "Tadpole Pokémon",
+    "description": "The swirl on its belly subtly un­ dulates. Staring at it may gradual­ ly cause drowsi­ ness."
   },
   {
     "id": 62,
@@ -1202,7 +1446,11 @@
       "specialDefense": 90,
       "speed": 70
     },
-    "baseExperience": 230
+    "baseExperience": 230,
+    "height": 13,
+    "weight": 540,
+    "category": "Tadpole Pokémon",
+    "description": "This strong and skilled swimmer is even capable of crossing the Pacific Ocean just by kicking."
   },
   {
     "id": 63,
@@ -1221,7 +1469,11 @@
       "specialDefense": 55,
       "speed": 90
     },
-    "baseExperience": 62
+    "baseExperience": 62,
+    "height": 9,
+    "weight": 195,
+    "category": "Psi Pokémon",
+    "description": "It senses impend­ ing attacks and TELEPORTS away to safety before the actual attacks can strike."
   },
   {
     "id": 64,
@@ -1240,7 +1492,11 @@
       "specialDefense": 70,
       "speed": 105
     },
-    "baseExperience": 140
+    "baseExperience": 140,
+    "height": 13,
+    "weight": 565,
+    "category": "Psi Pokémon",
+    "description": "It possesses strong spiritual power. The more danger it faces, the stronger its psychic power."
   },
   {
     "id": 65,
@@ -1259,7 +1515,11 @@
       "specialDefense": 95,
       "speed": 120
     },
-    "baseExperience": 225
+    "baseExperience": 225,
+    "height": 15,
+    "weight": 480,
+    "category": "Psi Pokémon",
+    "description": "Closing both its eyes heightens all its other senses. This enables it to use its abilities to their extremes."
   },
   {
     "id": 66,
@@ -1278,7 +1538,11 @@
       "specialDefense": 35,
       "speed": 35
     },
-    "baseExperience": 61
+    "baseExperience": 61,
+    "height": 8,
+    "weight": 195,
+    "category": "Superpower Pokémon",
+    "description": "Always brimming with power, it passes time by lifting boulders. Doing so makes it even stronger."
   },
   {
     "id": 67,
@@ -1297,7 +1561,11 @@
       "specialDefense": 60,
       "speed": 45
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 15,
+    "weight": 705,
+    "category": "Superpower Pokémon",
+    "description": "It always goes at its full power, but this very tough and durable POKéMON never gets tired."
   },
   {
     "id": 68,
@@ -1316,7 +1584,11 @@
       "specialDefense": 85,
       "speed": 55
     },
-    "baseExperience": 227
+    "baseExperience": 227,
+    "height": 16,
+    "weight": 1300,
+    "category": "Superpower Pokémon",
+    "description": "It quickly swings its four arms to rock its opponents with ceaseless punches and chops from all angles."
   },
   {
     "id": 69,
@@ -1336,7 +1608,11 @@
       "specialDefense": 30,
       "speed": 40
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 7,
+    "weight": 40,
+    "category": "Flower Pokémon",
+    "description": "Even though its body is extremely skinny, it is blindingly fast when catching its prey."
   },
   {
     "id": 70,
@@ -1356,7 +1632,11 @@
       "specialDefense": 45,
       "speed": 55
     },
-    "baseExperience": 137
+    "baseExperience": 137,
+    "height": 10,
+    "weight": 64,
+    "category": "Flycatcher Pokémon",
+    "description": "Even though it is filled with ACID, it does not melt because it also oozes a neutral­ izing fluid."
   },
   {
     "id": 71,
@@ -1376,7 +1656,11 @@
       "specialDefense": 70,
       "speed": 70
     },
-    "baseExperience": 221
+    "baseExperience": 221,
+    "height": 17,
+    "weight": 155,
+    "category": "Flycatcher Pokémon",
+    "description": "ACID that has dis­ solved many prey becomes sweeter, making it even more effective at attracting prey."
   },
   {
     "id": 72,
@@ -1396,7 +1680,11 @@
       "specialDefense": 100,
       "speed": 70
     },
-    "baseExperience": 67
+    "baseExperience": 67,
+    "height": 9,
+    "weight": 455,
+    "category": "Jellyfish Pokémon",
+    "description": "When the tide goes out, dehydrated TENTACOOL remains can be found washed up on the shore."
   },
   {
     "id": 73,
@@ -1416,7 +1704,11 @@
       "specialDefense": 120,
       "speed": 100
     },
-    "baseExperience": 180
+    "baseExperience": 180,
+    "height": 16,
+    "weight": 550,
+    "category": "Jellyfish Pokémon",
+    "description": "Its 80 tentacles absorb water and stretch almost endlessly to CON­ STRICT its prey and enemies."
   },
   {
     "id": 74,
@@ -1436,7 +1728,11 @@
       "specialDefense": 30,
       "speed": 20
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 4,
+    "weight": 200,
+    "category": "Rock Pokémon",
+    "description": "Most people may not notice, but a closer look should reveal that there are many GEODUDE around."
   },
   {
     "id": 75,
@@ -1456,7 +1752,11 @@
       "specialDefense": 45,
       "speed": 35
     },
-    "baseExperience": 137
+    "baseExperience": 137,
+    "height": 10,
+    "weight": 1050,
+    "category": "Rock Pokémon",
+    "description": "With a free and uncaring nature, it doesn't mind if pieces break off while it rolls down mountains."
   },
   {
     "id": 76,
@@ -1476,7 +1776,11 @@
       "specialDefense": 65,
       "speed": 45
     },
-    "baseExperience": 223
+    "baseExperience": 223,
+    "height": 14,
+    "weight": 3000,
+    "category": "Megaton Pokémon",
+    "description": "It sheds its skin once a year. The discarded shell immediately hard­ ens and crumbles away."
   },
   {
     "id": 77,
@@ -1495,7 +1799,11 @@
       "specialDefense": 65,
       "speed": 90
     },
-    "baseExperience": 82
+    "baseExperience": 82,
+    "height": 10,
+    "weight": 300,
+    "category": "Fire Horse Pokémon",
+    "description": "It is a weak run­ ner immediately after birth. It gradually becomes faster by chasing after its parents."
   },
   {
     "id": 78,
@@ -1514,7 +1822,11 @@
       "specialDefense": 80,
       "speed": 105
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 17,
+    "weight": 950,
+    "category": "Fire Horse Pokémon",
+    "description": "At full gallop, its four hooves barely touch the ground because it moves so incredi­ bly fast."
   },
   {
     "id": 79,
@@ -1534,7 +1846,11 @@
       "specialDefense": 40,
       "speed": 15
     },
-    "baseExperience": 63
+    "baseExperience": 63,
+    "height": 12,
+    "weight": 360,
+    "category": "Dopey Pokémon",
+    "description": "It lazes vacantly near water. If something bites its tail, it won't even notice for a whole day."
   },
   {
     "id": 80,
@@ -1554,7 +1870,11 @@
       "specialDefense": 80,
       "speed": 30
     },
-    "baseExperience": 172
+    "baseExperience": 172,
+    "height": 16,
+    "weight": 785,
+    "category": "Hermit Crab Pokémon",
+    "description": "If the tail-biting SHELLDER is thrown off in a harsh battle, it reverts to being an ordi­ nary SLOWPOKE."
   },
   {
     "id": 81,
@@ -1574,7 +1894,11 @@
       "specialDefense": 55,
       "speed": 45
     },
-    "baseExperience": 65
+    "baseExperience": 65,
+    "height": 3,
+    "weight": 60,
+    "category": "Magnet Pokémon",
+    "description": "It is attracted by electromagnetic waves. It may approach trainers if they are using their POKéGEAR."
   },
   {
     "id": 82,
@@ -1594,7 +1918,11 @@
       "specialDefense": 70,
       "speed": 70
     },
-    "baseExperience": 163
+    "baseExperience": 163,
+    "height": 10,
+    "weight": 600,
+    "category": "Magnet Pokémon",
+    "description": "Three MAGNEMITE are linked by a strong magnetic force. Earaches will occur if you get too close."
   },
   {
     "id": 83,
@@ -1614,7 +1942,11 @@
       "specialDefense": 62,
       "speed": 60
     },
-    "baseExperience": 132
+    "baseExperience": 132,
+    "height": 8,
+    "weight": 150,
+    "category": "Wild Duck Pokémon",
+    "description": "If anyone tries to disturb where the essential plant sticks grow, it uses its own stick to thwart them."
   },
   {
     "id": 84,
@@ -1634,7 +1966,11 @@
       "specialDefense": 35,
       "speed": 75
     },
-    "baseExperience": 62
+    "baseExperience": 62,
+    "height": 14,
+    "weight": 392,
+    "category": "Twin Bird Pokémon",
+    "description": "By alternately raising and lower­ ing its two heads, it balances itself to be more stable while running."
   },
   {
     "id": 85,
@@ -1654,7 +1990,11 @@
       "specialDefense": 60,
       "speed": 110
     },
-    "baseExperience": 165
+    "baseExperience": 165,
+    "height": 18,
+    "weight": 852,
+    "category": "Triple Bird Pokémon",
+    "description": "It collects data  and plans three times as wisely, but it may think too much and be­ come immobilized."
   },
   {
     "id": 86,
@@ -1673,7 +2013,11 @@
       "specialDefense": 70,
       "speed": 45
     },
-    "baseExperience": 65
+    "baseExperience": 65,
+    "height": 11,
+    "weight": 900,
+    "category": "Sea Lion Pokémon",
+    "description": "Although it can't walk well on land, it is a graceful swimmer. It espe­ cially loves being in frigid seas."
   },
   {
     "id": 87,
@@ -1693,7 +2037,11 @@
       "specialDefense": 95,
       "speed": 70
     },
-    "baseExperience": 166
+    "baseExperience": 166,
+    "height": 17,
+    "weight": 1200,
+    "category": "Sea Lion Pokémon",
+    "description": "Its streamlined body has little drag in water. The colder the temperature, the friskier it gets."
   },
   {
     "id": 88,
@@ -1712,7 +2060,11 @@
       "specialDefense": 50,
       "speed": 25
     },
-    "baseExperience": 65
+    "baseExperience": 65,
+    "height": 9,
+    "weight": 300,
+    "category": "Sludge Pokémon",
+    "description": "As it moves, it loses bits of its body from which new GRIMER emerge. This worsens the stench around it."
   },
   {
     "id": 89,
@@ -1731,7 +2083,11 @@
       "specialDefense": 100,
       "speed": 50
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 12,
+    "weight": 300,
+    "category": "Sludge Pokémon",
+    "description": "They love to gath­ er in smelly areas where sludge ac­ cumulates, making the stench around them worse."
   },
   {
     "id": 90,
@@ -1750,7 +2106,11 @@
       "specialDefense": 25,
       "speed": 40
     },
-    "baseExperience": 61
+    "baseExperience": 61,
+    "height": 3,
+    "weight": 40,
+    "category": "Bivalve Pokémon",
+    "description": "It swims facing backward by open­ ing and closing its two-piece shell. It is surprisingly fast."
   },
   {
     "id": 91,
@@ -1770,7 +2130,11 @@
       "specialDefense": 45,
       "speed": 70
     },
-    "baseExperience": 184
+    "baseExperience": 184,
+    "height": 15,
+    "weight": 1325,
+    "category": "Bivalve Pokémon",
+    "description": "Once it slams its shell shut, it is impossible to open, even by those with superi­ or strength."
   },
   {
     "id": 92,
@@ -1790,7 +2154,11 @@
       "specialDefense": 35,
       "speed": 80
     },
-    "baseExperience": 62
+    "baseExperience": 62,
+    "height": 13,
+    "weight": 1,
+    "category": "Gas Pokémon",
+    "description": "With its gas-like body, it can sneak into any place it desires. However, it can be blown away by wind."
   },
   {
     "id": 93,
@@ -1810,7 +2178,11 @@
       "specialDefense": 55,
       "speed": 95
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 16,
+    "weight": 1,
+    "category": "Gas Pokémon",
+    "description": "In total darkness, where nothing is visible, HAUNTER lurks, silently stalking its next victim."
   },
   {
     "id": 94,
@@ -1830,7 +2202,11 @@
       "specialDefense": 75,
       "speed": 110
     },
-    "baseExperience": 225
+    "baseExperience": 225,
+    "height": 15,
+    "weight": 405,
+    "category": "Shadow Pokémon",
+    "description": "It steals heat from its surround­ ings. If you feel a sudden chill, it is certain that a GENGAR appeared."
   },
   {
     "id": 95,
@@ -1850,7 +2226,11 @@
       "specialDefense": 45,
       "speed": 70
     },
-    "baseExperience": 77
+    "baseExperience": 77,
+    "height": 88,
+    "weight": 2100,
+    "category": "Rock Snake Pokémon",
+    "description": "It twists and squirms through the ground. The thunderous roar of its tunneling echoes a long way."
   },
   {
     "id": 96,
@@ -1869,7 +2249,11 @@
       "specialDefense": 90,
       "speed": 42
     },
-    "baseExperience": 66
+    "baseExperience": 66,
+    "height": 10,
+    "weight": 324,
+    "category": "Hypnosis Pokémon",
+    "description": "If you think that you had a good dream, but you can't remember it, a DROWZEE has probably eaten it."
   },
   {
     "id": 97,
@@ -1888,7 +2272,11 @@
       "specialDefense": 115,
       "speed": 67
     },
-    "baseExperience": 169
+    "baseExperience": 169,
+    "height": 16,
+    "weight": 756,
+    "category": "Hypnosis Pokémon",
+    "description": "When it is very hungry, it puts humans it meets to sleep, then it feasts on their dreams."
   },
   {
     "id": 98,
@@ -1907,7 +2295,11 @@
       "specialDefense": 25,
       "speed": 50
     },
-    "baseExperience": 65
+    "baseExperience": 65,
+    "height": 4,
+    "weight": 65,
+    "category": "River Crab Pokémon",
+    "description": "If it senses dan­ ger approaching, it cloaks itself with bubbles from its mouth so it will look bigger."
   },
   {
     "id": 99,
@@ -1926,7 +2318,11 @@
       "specialDefense": 50,
       "speed": 75
     },
-    "baseExperience": 166
+    "baseExperience": 166,
+    "height": 13,
+    "weight": 600,
+    "category": "Pincer Pokémon",
+    "description": "It can hardly lift its massive, overgrown pincer. The pincer's size makes it difficult to aim properly."
   },
   {
     "id": 100,
@@ -1945,7 +2341,11 @@
       "specialDefense": 55,
       "speed": 100
     },
-    "baseExperience": 66
+    "baseExperience": 66,
+    "height": 5,
+    "weight": 104,
+    "category": "Ball Pokémon",
+    "description": "It rolls to move. If the ground is uneven, a sudden jolt from hitting a bump can cause it to explode."
   },
   {
     "id": 101,
@@ -1964,7 +2364,11 @@
       "specialDefense": 80,
       "speed": 150
     },
-    "baseExperience": 172
+    "baseExperience": 172,
+    "height": 12,
+    "weight": 666,
+    "category": "Ball Pokémon",
+    "description": "It is dangerous. If it has too much electricity and has nothing to do, it amuses itself by exploding."
   },
   {
     "id": 102,
@@ -1984,7 +2388,11 @@
       "specialDefense": 45,
       "speed": 40
     },
-    "baseExperience": 65
+    "baseExperience": 65,
+    "height": 4,
+    "weight": 25,
+    "category": "Egg Pokémon",
+    "description": "The shell is very durable. Even if it cracks, it can survive without spilling the contents."
   },
   {
     "id": 103,
@@ -2004,7 +2412,11 @@
       "specialDefense": 75,
       "speed": 55
     },
-    "baseExperience": 186
+    "baseExperience": 186,
+    "height": 20,
+    "weight": 1200,
+    "category": "Coconut Pokémon",
+    "description": "Its three heads think independent­ ly. However, they are friendly and never appear to squabble."
   },
   {
     "id": 104,
@@ -2023,7 +2435,11 @@
       "specialDefense": 50,
       "speed": 35
     },
-    "baseExperience": 64
+    "baseExperience": 64,
+    "height": 4,
+    "weight": 65,
+    "category": "Lonely Pokémon",
+    "description": "If it is sad or lonely, the skull it wears shakes, and emits a plain­ tive and mournful sound."
   },
   {
     "id": 105,
@@ -2042,7 +2458,11 @@
       "specialDefense": 80,
       "speed": 45
     },
-    "baseExperience": 149
+    "baseExperience": 149,
+    "height": 10,
+    "weight": 450,
+    "category": "Bone Keeper Pokémon",
+    "description": "It has been seen pounding boulders with the bone it carries in order to tap out mes­ sages to others."
   },
   {
     "id": 106,
@@ -2061,7 +2481,11 @@
       "specialDefense": 110,
       "speed": 87
     },
-    "baseExperience": 159
+    "baseExperience": 159,
+    "height": 15,
+    "weight": 498,
+    "category": "Kicking Pokémon",
+    "description": "This amazing POKé­ MON has an awesome sense of balance. It can kick in succession from any position."
   },
   {
     "id": 107,
@@ -2080,7 +2504,11 @@
       "specialDefense": 110,
       "speed": 76
     },
-    "baseExperience": 159
+    "baseExperience": 159,
+    "height": 14,
+    "weight": 502,
+    "category": "Punching Pokémon",
+    "description": "Its punches slice the air. However, it seems to need a short break after fighting for three minutes."
   },
   {
     "id": 108,
@@ -2099,7 +2527,11 @@
       "specialDefense": 75,
       "speed": 30
     },
-    "baseExperience": 77
+    "baseExperience": 77,
+    "height": 12,
+    "weight": 655,
+    "category": "Licking Pokémon",
+    "description": "Its tongue has well-developed nerves that run to the very tip, so it can be deft­ ly manipulated."
   },
   {
     "id": 109,
@@ -2118,7 +2550,11 @@
       "specialDefense": 45,
       "speed": 35
     },
-    "baseExperience": 68
+    "baseExperience": 68,
+    "height": 6,
+    "weight": 10,
+    "category": "Poison Gas Pokémon",
+    "description": "Its thin, filmy body is filled with gases that cause constant sniffles, coughs and teary eyes."
   },
   {
     "id": 110,
@@ -2137,7 +2573,11 @@
       "specialDefense": 70,
       "speed": 60
     },
-    "baseExperience": 172
+    "baseExperience": 172,
+    "height": 12,
+    "weight": 95,
+    "category": "Poison Gas Pokémon",
+    "description": "If one of the twin KOFFING inflates, the other one deflates. It con­ stantly mixes its poisonous gases."
   },
   {
     "id": 111,
@@ -2157,7 +2597,11 @@
       "specialDefense": 30,
       "speed": 25
     },
-    "baseExperience": 69
+    "baseExperience": 69,
+    "height": 10,
+    "weight": 1150,
+    "category": "Spikes Pokémon",
+    "description": "It is inept at turning because of its four short legs. It can only charge and run in one direction."
   },
   {
     "id": 112,
@@ -2177,7 +2621,11 @@
       "specialDefense": 45,
       "speed": 40
     },
-    "baseExperience": 170
+    "baseExperience": 170,
+    "height": 19,
+    "weight": 1200,
+    "category": "Drill Pokémon",
+    "description": "Its rugged hide protects it from even the heat of lava. However, the hide also makes it insensitive."
   },
   {
     "id": 113,
@@ -2196,7 +2644,11 @@
       "specialDefense": 105,
       "speed": 50
     },
-    "baseExperience": 395
+    "baseExperience": 395,
+    "height": 11,
+    "weight": 346,
+    "category": "Egg Pokémon",
+    "description": "It walks carefully to prevent its egg from breaking. However, it is extremely fast at running away."
   },
   {
     "id": 114,
@@ -2215,7 +2667,11 @@
       "specialDefense": 40,
       "speed": 60
     },
-    "baseExperience": 87
+    "baseExperience": 87,
+    "height": 10,
+    "weight": 350,
+    "category": "Vine Pokémon",
+    "description": "The vines that cloak its entire body are always jiggling. They effectively un­ nerve its foes."
   },
   {
     "id": 115,
@@ -2234,7 +2690,11 @@
       "specialDefense": 80,
       "speed": 90
     },
-    "baseExperience": 172
+    "baseExperience": 172,
+    "height": 22,
+    "weight": 800,
+    "category": "Parent Pokémon",
+    "description": "If it is safe, the young gets out of the belly pouch to play. The adult keeps a close eye on the youngster."
   },
   {
     "id": 116,
@@ -2253,7 +2713,11 @@
       "specialDefense": 25,
       "speed": 60
     },
-    "baseExperience": 59
+    "baseExperience": 59,
+    "height": 4,
+    "weight": 80,
+    "category": "Dragon Pokémon",
+    "description": "If attacked by a larger enemy, it quickly swims to safety by adeptly controlling its dorsal fin."
   },
   {
     "id": 117,
@@ -2272,7 +2736,11 @@
       "specialDefense": 45,
       "speed": 85
     },
-    "baseExperience": 154
+    "baseExperience": 154,
+    "height": 12,
+    "weight": 250,
+    "category": "Dragon Pokémon",
+    "description": "An examination of its cells revealed the presence of a gene not found in HORSEA. It became a hot topic."
   },
   {
     "id": 118,
@@ -2291,7 +2759,11 @@
       "specialDefense": 50,
       "speed": 63
     },
-    "baseExperience": 64
+    "baseExperience": 64,
+    "height": 6,
+    "weight": 150,
+    "category": "Goldfish Pokémon",
+    "description": "Its dorsal, pecto­ ral and tail fins wave elegantly in water. That is why it is known as the water dancer."
   },
   {
     "id": 119,
@@ -2310,7 +2782,11 @@
       "specialDefense": 80,
       "speed": 68
     },
-    "baseExperience": 158
+    "baseExperience": 158,
+    "height": 13,
+    "weight": 390,
+    "category": "Goldfish Pokémon",
+    "description": "During spawning season, SEAKING gather from all over, coloring the rivers a brilliant red."
   },
   {
     "id": 120,
@@ -2329,7 +2805,11 @@
       "specialDefense": 55,
       "speed": 85
     },
-    "baseExperience": 68
+    "baseExperience": 68,
+    "height": 8,
+    "weight": 345,
+    "category": "Star Shape Pokémon",
+    "description": "At night, the cen­ ter of its body slowly flickers with the same rhythm as a human heartbeat."
   },
   {
     "id": 121,
@@ -2349,7 +2829,11 @@
       "specialDefense": 85,
       "speed": 115
     },
-    "baseExperience": 182
+    "baseExperience": 182,
+    "height": 11,
+    "weight": 800,
+    "category": "Mysterious Pokémon",
+    "description": "The center section of its body is called the core. It glows in a dif­ ferent color each time it is seen."
   },
   {
     "id": 122,
@@ -2369,7 +2853,11 @@
       "specialDefense": 120,
       "speed": 90
     },
-    "baseExperience": 161
+    "baseExperience": 161,
+    "height": 13,
+    "weight": 545,
+    "category": "Barrier Pokémon",
+    "description": "A skilled mime from birth, it gains the ability to create invisi­ ble objects as it matures."
   },
   {
     "id": 123,
@@ -2389,7 +2877,11 @@
       "specialDefense": 80,
       "speed": 105
     },
-    "baseExperience": 100
+    "baseExperience": 100,
+    "height": 15,
+    "weight": 560,
+    "category": "Mantis Pokémon",
+    "description": "It slashes through grass with its sharp scythes, moving too fast for the human eye to track."
   },
   {
     "id": 124,
@@ -2409,7 +2901,11 @@
       "specialDefense": 95,
       "speed": 95
     },
-    "baseExperience": 159
+    "baseExperience": 159,
+    "height": 14,
+    "weight": 406,
+    "category": "Human Shape Pokémon",
+    "description": "It rocks its body rhythmically. It appears to alter the rhythm depend­ ing on how it is feeling."
   },
   {
     "id": 125,
@@ -2428,7 +2924,11 @@
       "specialDefense": 85,
       "speed": 105
     },
-    "baseExperience": 172
+    "baseExperience": 172,
+    "height": 11,
+    "weight": 300,
+    "category": "Electric Pokémon",
+    "description": "Electricity runs across the surface of its body. In darkness, its en­ tire body glows a whitish-blue."
   },
   {
     "id": 126,
@@ -2447,7 +2947,11 @@
       "specialDefense": 85,
       "speed": 93
     },
-    "baseExperience": 173
+    "baseExperience": 173,
+    "height": 13,
+    "weight": 445,
+    "category": "Spitfire Pokémon",
+    "description": "It dislikes cold places, so it blows scorching flames to make the environment suit­ able for itself."
   },
   {
     "id": 127,
@@ -2466,7 +2970,11 @@
       "specialDefense": 70,
       "speed": 85
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 15,
+    "weight": 550,
+    "category": "Stag Beetle Pokémon",
+    "description": "With its horns, it digs burrows to sleep in at night. In the morning, damp soil clings to its body."
   },
   {
     "id": 128,
@@ -2485,7 +2993,11 @@
       "specialDefense": 70,
       "speed": 110
     },
-    "baseExperience": 172
+    "baseExperience": 172,
+    "height": 14,
+    "weight": 884,
+    "category": "Wild Bull Pokémon",
+    "description": "They fight each other by locking horns. The herd's protector takes pride in its bat­ tle-scarred horns."
   },
   {
     "id": 129,
@@ -2504,7 +3016,11 @@
       "specialDefense": 20,
       "speed": 80
     },
-    "baseExperience": 40
+    "baseExperience": 40,
+    "height": 9,
+    "weight": 100,
+    "category": "Fish Pokémon",
+    "description": "An underpowered, pathetic POKéMON. It may jump high on rare occasions, but never more than seven feet."
   },
   {
     "id": 130,
@@ -2524,7 +3040,11 @@
       "specialDefense": 100,
       "speed": 81
     },
-    "baseExperience": 189
+    "baseExperience": 189,
+    "height": 65,
+    "weight": 2350,
+    "category": "Atrocious Pokémon",
+    "description": "They say that during past wars, GYARADOS would appear and leave blazing ruins in its wake."
   },
   {
     "id": 131,
@@ -2544,7 +3064,11 @@
       "specialDefense": 95,
       "speed": 60
     },
-    "baseExperience": 187
+    "baseExperience": 187,
+    "height": 25,
+    "weight": 2200,
+    "category": "Transport Pokémon",
+    "description": "They have gentle hearts. Because they rarely fight, many have been caught. Their num­ ber has dwindled."
   },
   {
     "id": 132,
@@ -2563,7 +3087,11 @@
       "specialDefense": 48,
       "speed": 48
     },
-    "baseExperience": 101
+    "baseExperience": 101,
+    "height": 3,
+    "weight": 40,
+    "category": "Transform Pokémon",
+    "description": "It can transform into anything. When it sleeps, it changes into a stone to avoid being attacked."
   },
   {
     "id": 133,
@@ -2582,7 +3110,11 @@
       "specialDefense": 65,
       "speed": 55
     },
-    "baseExperience": 65
+    "baseExperience": 65,
+    "height": 3,
+    "weight": 65,
+    "category": "Evolution Pokémon",
+    "description": "It has the ability to alter the com­ position of its body to suit its surrounding envi­ ronment."
   },
   {
     "id": 134,
@@ -2601,7 +3133,11 @@
       "specialDefense": 95,
       "speed": 65
     },
-    "baseExperience": 184
+    "baseExperience": 184,
+    "height": 10,
+    "weight": 290,
+    "category": "Bubble Jet Pokémon",
+    "description": "When VAPOREON's fins begin to vi­ brate, it is a sign that rain will come within a few hours."
   },
   {
     "id": 135,
@@ -2620,7 +3156,11 @@
       "specialDefense": 95,
       "speed": 130
     },
-    "baseExperience": 184
+    "baseExperience": 184,
+    "height": 8,
+    "weight": 245,
+    "category": "Lightning Pokémon",
+    "description": "It concentrates the weak electric charges emitted by its cells and launches wicked lightning bolts."
   },
   {
     "id": 136,
@@ -2639,7 +3179,11 @@
       "specialDefense": 110,
       "speed": 65
     },
-    "baseExperience": 184
+    "baseExperience": 184,
+    "height": 9,
+    "weight": 250,
+    "category": "Flame Pokémon",
+    "description": "It stores some of the air it inhales in its internal flame pouch, which heats it to over 3,000 degrees."
   },
   {
     "id": 137,
@@ -2658,7 +3202,11 @@
       "specialDefense": 75,
       "speed": 40
     },
-    "baseExperience": 79
+    "baseExperience": 79,
+    "height": 8,
+    "weight": 365,
+    "category": "Virtual Pokémon",
+    "description": "It is a manmade POKéMON. Since it doesn't breathe, people are eager to try it in any environment."
   },
   {
     "id": 138,
@@ -2678,7 +3226,11 @@
       "specialDefense": 55,
       "speed": 35
     },
-    "baseExperience": 71
+    "baseExperience": 71,
+    "height": 4,
+    "weight": 75,
+    "category": "Spiral Pokémon",
+    "description": "Revived from an ancient fossil, this POKéMON uses air stored in its shell to sink and rise in water."
   },
   {
     "id": 139,
@@ -2698,7 +3250,11 @@
       "specialDefense": 70,
       "speed": 55
     },
-    "baseExperience": 173
+    "baseExperience": 173,
+    "height": 10,
+    "weight": 350,
+    "category": "Spiral Pokémon",
+    "description": "Apparently, it cracked SHELLDER's shell with its sharp fangs and sucked out the insides."
   },
   {
     "id": 140,
@@ -2718,7 +3274,11 @@
       "specialDefense": 45,
       "speed": 55
     },
-    "baseExperience": 71
+    "baseExperience": 71,
+    "height": 5,
+    "weight": 115,
+    "category": "Shellfish Pokémon",
+    "description": "On rare occasions, some have been found as fossils which they became while hiding on the ocean floor."
   },
   {
     "id": 141,
@@ -2738,7 +3298,11 @@
       "specialDefense": 70,
       "speed": 80
     },
-    "baseExperience": 173
+    "baseExperience": 173,
+    "height": 13,
+    "weight": 405,
+    "category": "Shellfish Pokémon",
+    "description": "In the water, it tucks in its limbs to become more compact, then it wiggles its shell to swim fast."
   },
   {
     "id": 142,
@@ -2758,7 +3322,11 @@
       "specialDefense": 75,
       "speed": 130
     },
-    "baseExperience": 180
+    "baseExperience": 180,
+    "height": 18,
+    "weight": 590,
+    "category": "Fossil Pokémon",
+    "description": "A vicious POKéMON from the distant past, it appears to have flown by spreading its wings and gliding."
   },
   {
     "id": 143,
@@ -2777,7 +3345,11 @@
       "specialDefense": 110,
       "speed": 30
     },
-    "baseExperience": 189
+    "baseExperience": 189,
+    "height": 21,
+    "weight": 4600,
+    "category": "Sleeping Pokémon",
+    "description": "What sounds like its cry may ac­ tually be its snores or the rumblings of its hungry belly."
   },
   {
     "id": 144,
@@ -2797,7 +3369,11 @@
       "specialDefense": 125,
       "speed": 85
     },
-    "baseExperience": 261
+    "baseExperience": 261,
+    "height": 17,
+    "weight": 554,
+    "category": "Freeze Pokémon",
+    "description": "The magnificent, seemingly translu­ cent wings of this legendary bird POKéMON are said to be made of ice."
   },
   {
     "id": 145,
@@ -2817,7 +3393,11 @@
       "specialDefense": 90,
       "speed": 100
     },
-    "baseExperience": 261
+    "baseExperience": 261,
+    "height": 16,
+    "weight": 526,
+    "category": "Electric Pokémon",
+    "description": "This legendary bird POKéMON causes savage thunderstorms by flapping its glit­ tering wings."
   },
   {
     "id": 146,
@@ -2837,7 +3417,11 @@
       "specialDefense": 85,
       "speed": 90
     },
-    "baseExperience": 261
+    "baseExperience": 261,
+    "height": 20,
+    "weight": 600,
+    "category": "Flame Pokémon",
+    "description": "This legendary POKéMON scatters embers with every flap of its wings. It is a thrilling sight to behold."
   },
   {
     "id": 147,
@@ -2856,7 +3440,11 @@
       "specialDefense": 50,
       "speed": 50
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 18,
+    "weight": 33,
+    "category": "Dragon Pokémon",
+    "description": "It is born large to start with. It repeatedly sheds its skin as it steadily grows longer."
   },
   {
     "id": 148,
@@ -2875,7 +3463,11 @@
       "specialDefense": 70,
       "speed": 70
     },
-    "baseExperience": 147
+    "baseExperience": 147,
+    "height": 40,
+    "weight": 165,
+    "category": "Dragon Pokémon",
+    "description": "They say that if it emits an aura from its whole body, the weather will begin to change instantly."
   },
   {
     "id": 149,
@@ -2895,7 +3487,11 @@
       "specialDefense": 100,
       "speed": 80
     },
-    "baseExperience": 270
+    "baseExperience": 270,
+    "height": 22,
+    "weight": 2100,
+    "category": "Dragon Pokémon",
+    "description": "It is said that this POKéMON con­ stantly flies over the immense seas and rescues drown­ ing people."
   },
   {
     "id": 150,
@@ -2914,7 +3510,11 @@
       "specialDefense": 90,
       "speed": 130
     },
-    "baseExperience": 306
+    "baseExperience": 306,
+    "height": 20,
+    "weight": 1220,
+    "category": "Genetic Pokémon",
+    "description": "Because its battle abilities were raised to the ultimate level, it thinks only of de­ feating its foes."
   },
   {
     "id": 151,
@@ -2933,7 +3533,11 @@
       "specialDefense": 100,
       "speed": 100
     },
-    "baseExperience": 270
+    "baseExperience": 270,
+    "height": 4,
+    "weight": 40,
+    "category": "New Species Pokémon",
+    "description": "Apparently, it appears only to those people who are pure of heart and have a strong desire to see it."
   },
   {
     "id": 152,
@@ -2952,7 +3556,11 @@
       "specialDefense": 65,
       "speed": 45
     },
-    "baseExperience": 64
+    "baseExperience": 64,
+    "height": 9,
+    "weight": 64,
+    "category": "Leaf Pokémon",
+    "description": "A sweet aroma gently wafts from the leaf on its head. It is docile and loves to soak up the sun's rays."
   },
   {
     "id": 153,
@@ -2971,7 +3579,11 @@
       "specialDefense": 80,
       "speed": 60
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 12,
+    "weight": 158,
+    "category": "Leaf Pokémon",
+    "description": "The scent of spices comes from around its neck. Somehow, sniffing it makes you want to fight."
   },
   {
     "id": 154,
@@ -2990,7 +3602,11 @@
       "specialDefense": 100,
       "speed": 80
     },
-    "baseExperience": 236
+    "baseExperience": 236,
+    "height": 18,
+    "weight": 1005,
+    "category": "Herb Pokémon",
+    "description": "The aroma that rises from its petals contains a substance that calms aggressive feelings."
   },
   {
     "id": 155,
@@ -3009,7 +3625,11 @@
       "specialDefense": 50,
       "speed": 65
     },
-    "baseExperience": 62
+    "baseExperience": 62,
+    "height": 5,
+    "weight": 79,
+    "category": "Fire Mouse Pokémon",
+    "description": "It is timid, and always curls it­ self up in a ball. If attacked, it flares up its back for protection."
   },
   {
     "id": 156,
@@ -3028,7 +3648,11 @@
       "specialDefense": 65,
       "speed": 80
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 9,
+    "weight": 190,
+    "category": "Volcano Pokémon",
+    "description": "Be careful if it turns its back during battle. It means that it will attack with the fire on its back."
   },
   {
     "id": 157,
@@ -3047,7 +3671,11 @@
       "specialDefense": 85,
       "speed": 100
     },
-    "baseExperience": 240
+    "baseExperience": 240,
+    "height": 17,
+    "weight": 795,
+    "category": "Volcano Pokémon",
+    "description": "If its rage peaks, it becomes so hot that anything that touches it will instantly go up in flames."
   },
   {
     "id": 158,
@@ -3066,7 +3694,11 @@
       "specialDefense": 48,
       "speed": 43
     },
-    "baseExperience": 63
+    "baseExperience": 63,
+    "height": 6,
+    "weight": 95,
+    "category": "Big Jaw Pokémon",
+    "description": "Its well-developed jaws are powerful and capable of crushing anything. Even its trainer must be careful."
   },
   {
     "id": 159,
@@ -3085,7 +3717,11 @@
       "specialDefense": 63,
       "speed": 58
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 11,
+    "weight": 250,
+    "category": "Big Jaw Pokémon",
+    "description": "If it loses a fang, a new one grows back in its place. There are always 48 fangs lining its mouth."
   },
   {
     "id": 160,
@@ -3104,7 +3740,11 @@
       "specialDefense": 83,
       "speed": 78
     },
-    "baseExperience": 239
+    "baseExperience": 239,
+    "height": 23,
+    "weight": 888,
+    "category": "Big Jaw Pokémon",
+    "description": "When it bites with its massive and powerful jaws, it shakes its head and savagely tears its victim up."
   },
   {
     "id": 161,
@@ -3123,7 +3763,11 @@
       "specialDefense": 45,
       "speed": 20
     },
-    "baseExperience": 43
+    "baseExperience": 43,
+    "height": 8,
+    "weight": 60,
+    "category": "Scout Pokémon",
+    "description": "A very cautious POKéMON, it raises itself up using its tail to get a better view of its surroundings."
   },
   {
     "id": 162,
@@ -3142,7 +3786,11 @@
       "specialDefense": 55,
       "speed": 90
     },
-    "baseExperience": 145
+    "baseExperience": 145,
+    "height": 18,
+    "weight": 325,
+    "category": "Long Body Pokémon",
+    "description": "It makes a nest to suit its long and skinny body. The nest is impossible for other POKéMON to enter."
   },
   {
     "id": 163,
@@ -3162,7 +3810,11 @@
       "specialDefense": 56,
       "speed": 50
     },
-    "baseExperience": 52
+    "baseExperience": 52,
+    "height": 7,
+    "weight": 212,
+    "category": "Owl Pokémon",
+    "description": "It always stands on one foot. It changes feet so fast, the movement can rarely be seen."
   },
   {
     "id": 164,
@@ -3182,7 +3834,11 @@
       "specialDefense": 96,
       "speed": 70
     },
-    "baseExperience": 158
+    "baseExperience": 158,
+    "height": 16,
+    "weight": 408,
+    "category": "Owl Pokémon",
+    "description": "Its eyes are specially adapted. They concentrate even faint light and enable it to see in the dark."
   },
   {
     "id": 165,
@@ -3202,7 +3858,11 @@
       "specialDefense": 80,
       "speed": 55
     },
-    "baseExperience": 53
+    "baseExperience": 53,
+    "height": 10,
+    "weight": 108,
+    "category": "Five Star Pokémon",
+    "description": "It is very timid. It will be afraid to move if it is alone. But it will be active if it is in a group."
   },
   {
     "id": 166,
@@ -3222,7 +3882,11 @@
       "specialDefense": 110,
       "speed": 85
     },
-    "baseExperience": 137
+    "baseExperience": 137,
+    "height": 14,
+    "weight": 356,
+    "category": "Five Star Pokémon",
+    "description": "When the stars flicker in the night sky, it flutters about, scattering a glowing powder."
   },
   {
     "id": 167,
@@ -3242,7 +3906,11 @@
       "specialDefense": 40,
       "speed": 30
     },
-    "baseExperience": 50
+    "baseExperience": 50,
+    "height": 5,
+    "weight": 85,
+    "category": "String Spit Pokémon",
+    "description": "It lies still in the same pose for days in its web, waiting for its unsuspecting prey to wander close."
   },
   {
     "id": 168,
@@ -3262,7 +3930,11 @@
       "specialDefense": 70,
       "speed": 40
     },
-    "baseExperience": 140
+    "baseExperience": 140,
+    "height": 11,
+    "weight": 335,
+    "category": "Long Leg Pokémon",
+    "description": "It spins string not only from its rear but also from its mouth. It is hard to tell which end is which."
   },
   {
     "id": 169,
@@ -3282,7 +3954,11 @@
       "specialDefense": 80,
       "speed": 130
     },
-    "baseExperience": 241
+    "baseExperience": 241,
+    "height": 18,
+    "weight": 750,
+    "category": "Bat Pokémon",
+    "description": "It flies so si­ lently through the dark on its four wings that it may not be noticed even when nearby."
   },
   {
     "id": 170,
@@ -3302,7 +3978,11 @@
       "specialDefense": 56,
       "speed": 67
     },
-    "baseExperience": 66
+    "baseExperience": 66,
+    "height": 5,
+    "weight": 120,
+    "category": "Angler Pokémon",
+    "description": "It shoots positive and negative elec­ tricity between the tips of its two antennae and zaps its enemies."
   },
   {
     "id": 171,
@@ -3322,7 +4002,11 @@
       "specialDefense": 76,
       "speed": 67
     },
-    "baseExperience": 161
+    "baseExperience": 161,
+    "height": 12,
+    "weight": 225,
+    "category": "Light Pokémon",
+    "description": "The light it emits is so bright that it can illuminate the sea's surface from a depth of over three miles."
   },
   {
     "id": 172,
@@ -3341,7 +4025,11 @@
       "specialDefense": 35,
       "speed": 60
     },
-    "baseExperience": 41
+    "baseExperience": 41,
+    "height": 3,
+    "weight": 20,
+    "category": "Tiny Mouse Pokémon",
+    "description": "It is not yet skilled at storing electricity. It may send out a jolt if amused or startled."
   },
   {
     "id": 173,
@@ -3360,7 +4048,11 @@
       "specialDefense": 55,
       "speed": 15
     },
-    "baseExperience": 44
+    "baseExperience": 44,
+    "height": 3,
+    "weight": 30,
+    "category": "Star Shape Pokémon",
+    "description": "Because of its unusual, star-like silhouette, people believe that it came here on a meteor."
   },
   {
     "id": 174,
@@ -3380,7 +4072,11 @@
       "specialDefense": 20,
       "speed": 15
     },
-    "baseExperience": 42
+    "baseExperience": 42,
+    "height": 3,
+    "weight": 10,
+    "category": "Balloon Pokémon",
+    "description": "It has a very soft body. If it starts to roll, it will bounce all over and be impossible to stop."
   },
   {
     "id": 175,
@@ -3399,7 +4095,11 @@
       "specialDefense": 65,
       "speed": 20
     },
-    "baseExperience": 49
+    "baseExperience": 49,
+    "height": 3,
+    "weight": 15,
+    "category": "Spike Ball Pokémon",
+    "description": "The shell seems to be filled with joy. It is said that it will share good luck when treated kindly."
   },
   {
     "id": 176,
@@ -3419,7 +4119,11 @@
       "specialDefense": 105,
       "speed": 40
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 6,
+    "weight": 32,
+    "category": "Happiness Pokémon",
+    "description": "They say that it will appear before kindhearted, car­ ing people and shower them with happiness."
   },
   {
     "id": 177,
@@ -3439,7 +4143,11 @@
       "specialDefense": 45,
       "speed": 70
     },
-    "baseExperience": 64
+    "baseExperience": 64,
+    "height": 2,
+    "weight": 20,
+    "category": "Tiny Bird Pokémon",
+    "description": "Because its wings aren't yet fully grown, it has to hop to get around. It is always star­ ing at something."
   },
   {
     "id": 178,
@@ -3459,7 +4167,11 @@
       "specialDefense": 70,
       "speed": 95
     },
-    "baseExperience": 165
+    "baseExperience": 165,
+    "height": 15,
+    "weight": 150,
+    "category": "Mystic Pokémon",
+    "description": "They say that it stays still and quiet because it is seeing both the past and future at the same time."
   },
   {
     "id": 179,
@@ -3478,7 +4190,11 @@
       "specialDefense": 45,
       "speed": 35
     },
-    "baseExperience": 56
+    "baseExperience": 56,
+    "height": 6,
+    "weight": 78,
+    "category": "Wool Pokémon",
+    "description": "If static elec­ tricity builds in its body, its fleece doubles in volume. Touching it will shock you."
   },
   {
     "id": 180,
@@ -3497,7 +4213,11 @@
       "specialDefense": 60,
       "speed": 45
     },
-    "baseExperience": 128
+    "baseExperience": 128,
+    "height": 8,
+    "weight": 133,
+    "category": "Wool Pokémon",
+    "description": "As a result of storing too much electricity, it developed patches where even downy wool won't grow."
   },
   {
     "id": 181,
@@ -3516,7 +4236,11 @@
       "specialDefense": 90,
       "speed": 55
     },
-    "baseExperience": 230
+    "baseExperience": 230,
+    "height": 14,
+    "weight": 615,
+    "category": "Light Pokémon",
+    "description": "The tail's tip shines brightly and can be seen from far away. It acts as a beacon for lost people."
   },
   {
     "id": 182,
@@ -3535,7 +4259,11 @@
       "specialDefense": 100,
       "speed": 50
     },
-    "baseExperience": 221
+    "baseExperience": 221,
+    "height": 4,
+    "weight": 58,
+    "category": "Flower Pokémon",
+    "description": "BELLOSSOM gather at times and appear to dance. They say that the dance is a ritual to summon the sun."
   },
   {
     "id": 183,
@@ -3555,7 +4283,11 @@
       "specialDefense": 50,
       "speed": 40
     },
-    "baseExperience": 88
+    "baseExperience": 88,
+    "height": 4,
+    "weight": 85,
+    "category": "Aqua Mouse Pokémon",
+    "description": "The tip of its tail, which con­ tains oil that is lighter than wa­ ter, lets it swim without drowning."
   },
   {
     "id": 184,
@@ -3575,7 +4307,11 @@
       "specialDefense": 80,
       "speed": 50
     },
-    "baseExperience": 189
+    "baseExperience": 189,
+    "height": 8,
+    "weight": 285,
+    "category": "Aqua Rabbit Pokémon",
+    "description": "By keeping still and listening in­ tently, it can tell what is in even wild, fast- moving rivers."
   },
   {
     "id": 185,
@@ -3594,7 +4330,11 @@
       "specialDefense": 65,
       "speed": 30
     },
-    "baseExperience": 144
+    "baseExperience": 144,
+    "height": 12,
+    "weight": 380,
+    "category": "Imitation Pokémon",
+    "description": "Although it always pretends to be a tree, its composi­ tion appears to be closer to a rock than a plant."
   },
   {
     "id": 186,
@@ -3613,7 +4353,11 @@
       "specialDefense": 100,
       "speed": 70
     },
-    "baseExperience": 225
+    "baseExperience": 225,
+    "height": 11,
+    "weight": 339,
+    "category": "Frog Pokémon",
+    "description": "If POLIWAG and POLIWHIRL hear its echoing cry, they respond by gather­ ing from far and wide."
   },
   {
     "id": 187,
@@ -3633,7 +4377,11 @@
       "specialDefense": 55,
       "speed": 50
     },
-    "baseExperience": 50
+    "baseExperience": 50,
+    "height": 4,
+    "weight": 5,
+    "category": "Cottonweed Pokémon",
+    "description": "To keep from being blown away by the wind, they gather in clusters. They do enjoy gentle breezes, though."
   },
   {
     "id": 188,
@@ -3653,7 +4401,11 @@
       "specialDefense": 65,
       "speed": 80
     },
-    "baseExperience": 119
+    "baseExperience": 119,
+    "height": 6,
+    "weight": 10,
+    "category": "Cottonweed Pokémon",
+    "description": "The bloom on top of its head opens and closes as the temperature fluc­ tuates up and down."
   },
   {
     "id": 189,
@@ -3673,7 +4425,11 @@
       "specialDefense": 95,
       "speed": 110
     },
-    "baseExperience": 207
+    "baseExperience": 207,
+    "height": 8,
+    "weight": 30,
+    "category": "Cottonweed Pokémon",
+    "description": "Once it catches the wind, it deft­ ly controls its cotton-puff spores to float, even around the world."
   },
   {
     "id": 190,
@@ -3692,7 +4448,11 @@
       "specialDefense": 55,
       "speed": 85
     },
-    "baseExperience": 72
+    "baseExperience": 72,
+    "height": 8,
+    "weight": 115,
+    "category": "Long Tail Pokémon",
+    "description": "Its tail is so powerful that it can use it to grab a tree branch and hold itself up in the air."
   },
   {
     "id": 191,
@@ -3711,7 +4471,11 @@
       "specialDefense": 30,
       "speed": 30
     },
-    "baseExperience": 36
+    "baseExperience": 36,
+    "height": 3,
+    "weight": 18,
+    "category": "Seed Pokémon",
+    "description": "It may drop out of the sky suddenly. If attacked by a SPEAROW, it will violently shake its leaves."
   },
   {
     "id": 192,
@@ -3730,7 +4494,11 @@
       "specialDefense": 85,
       "speed": 30
     },
-    "baseExperience": 149
+    "baseExperience": 149,
+    "height": 8,
+    "weight": 85,
+    "category": "Sun Pokémon",
+    "description": "It converts sun­ light into energy. In the darkness after sunset, it closes its petals and becomes still."
   },
   {
     "id": 193,
@@ -3750,7 +4518,11 @@
       "specialDefense": 45,
       "speed": 95
     },
-    "baseExperience": 78
+    "baseExperience": 78,
+    "height": 12,
+    "weight": 380,
+    "category": "Clear Wing Pokémon",
+    "description": "If it flaps its wings really fast, it can generate shock waves that will shatter win­ dows in the area."
   },
   {
     "id": 194,
@@ -3770,7 +4542,11 @@
       "specialDefense": 25,
       "speed": 15
     },
-    "baseExperience": 42
+    "baseExperience": 42,
+    "height": 4,
+    "weight": 85,
+    "category": "Water Fish Pokémon",
+    "description": "This POKéMON lives in cold water. It will leave the water to search for food when it gets cold outside."
   },
   {
     "id": 195,
@@ -3790,7 +4566,11 @@
       "specialDefense": 65,
       "speed": 35
     },
-    "baseExperience": 151
+    "baseExperience": 151,
+    "height": 14,
+    "weight": 750,
+    "category": "Water Fish Pokémon",
+    "description": "This carefree POKéMON has an easy-going nature. While swimming, it always bumps into boat hulls."
   },
   {
     "id": 196,
@@ -3809,7 +4589,11 @@
       "specialDefense": 95,
       "speed": 110
     },
-    "baseExperience": 184
+    "baseExperience": 184,
+    "height": 9,
+    "weight": 265,
+    "category": "Sun Pokémon",
+    "description": "It uses the fine hair that covers its body to sense air currents and predict its ene­ my's actions."
   },
   {
     "id": 197,
@@ -3828,7 +4612,11 @@
       "specialDefense": 130,
       "speed": 65
     },
-    "baseExperience": 184
+    "baseExperience": 184,
+    "height": 10,
+    "weight": 270,
+    "category": "Moonlight Pokémon",
+    "description": "When agitated, this POKéMON pro­ tects itself by spraying poisonous sweat from its pores."
   },
   {
     "id": 198,
@@ -3848,7 +4636,11 @@
       "specialDefense": 42,
       "speed": 91
     },
-    "baseExperience": 81
+    "baseExperience": 81,
+    "height": 5,
+    "weight": 21,
+    "category": "Darkness Pokémon",
+    "description": "Feared and loathed by many, it is believed to bring misfortune to all those who see it at night."
   },
   {
     "id": 199,
@@ -3868,7 +4660,11 @@
       "specialDefense": 110,
       "speed": 30
     },
-    "baseExperience": 172
+    "baseExperience": 172,
+    "height": 20,
+    "weight": 795,
+    "category": "Royal Pokémon",
+    "description": "It has incredible intellect and in­ tuition. Whatever the situation, it remains calm and collected."
   },
   {
     "id": 200,
@@ -3887,7 +4683,11 @@
       "specialDefense": 85,
       "speed": 85
     },
-    "baseExperience": 87
+    "baseExperience": 87,
+    "height": 7,
+    "weight": 10,
+    "category": "Screech Pokémon",
+    "description": "It likes playing mischievous tricks such as screaming and wailing to startle people at night."
   },
   {
     "id": 201,
@@ -3906,7 +4706,11 @@
       "specialDefense": 48,
       "speed": 48
     },
-    "baseExperience": 118
+    "baseExperience": 118,
+    "height": 5,
+    "weight": 50,
+    "category": "Symbol Pokémon",
+    "description": "Their shapes look like hieroglyphs on ancient tab­ lets. It is said that the two are somehow related."
   },
   {
     "id": 202,
@@ -3925,7 +4729,11 @@
       "specialDefense": 58,
       "speed": 33
     },
-    "baseExperience": 142
+    "baseExperience": 142,
+    "height": 13,
+    "weight": 285,
+    "category": "Patient Pokémon",
+    "description": "It hates light and shock. If attack­ ed, it inflates its body to pump up its counter­ strike."
   },
   {
     "id": 203,
@@ -3945,7 +4753,11 @@
       "specialDefense": 65,
       "speed": 85
     },
-    "baseExperience": 159
+    "baseExperience": 159,
+    "height": 15,
+    "weight": 415,
+    "category": "Long Neck Pokémon",
+    "description": "Its tail has a small brain of its own. Beware! If you get close, it may react to your scent and bite."
   },
   {
     "id": 204,
@@ -3964,7 +4776,11 @@
       "specialDefense": 35,
       "speed": 15
     },
-    "baseExperience": 58
+    "baseExperience": 58,
+    "height": 6,
+    "weight": 72,
+    "category": "Bagworm Pokémon",
+    "description": "It likes to make its shell thicker by adding layers of tree bark. The additional weight doesn't bother it."
   },
   {
     "id": 205,
@@ -3984,7 +4800,11 @@
       "specialDefense": 60,
       "speed": 40
     },
-    "baseExperience": 163
+    "baseExperience": 163,
+    "height": 12,
+    "weight": 1258,
+    "category": "Bagworm Pokémon",
+    "description": "Its entire body is shielded by a steel-hard shell. What lurks inside the armor is a total mystery."
   },
   {
     "id": 206,
@@ -4003,7 +4823,11 @@
       "specialDefense": 65,
       "speed": 45
     },
-    "baseExperience": 145
+    "baseExperience": 145,
+    "height": 15,
+    "weight": 140,
+    "category": "Land Snake Pokémon",
+    "description": "When spotted, this POKéMON escapes backward by furi­ ously boring into the ground with its tail."
   },
   {
     "id": 207,
@@ -4023,7 +4847,11 @@
       "specialDefense": 65,
       "speed": 85
     },
-    "baseExperience": 86
+    "baseExperience": 86,
+    "height": 11,
+    "weight": 648,
+    "category": "Fly Scorpion Pokémon",
+    "description": "It flies straight at its target's face then clamps down on the star­ tled victim to inject poison."
   },
   {
     "id": 208,
@@ -4043,7 +4871,11 @@
       "specialDefense": 65,
       "speed": 30
     },
-    "baseExperience": 179
+    "baseExperience": 179,
+    "height": 92,
+    "weight": 4000,
+    "category": "Iron Snake Pokémon",
+    "description": "Its body has been compressed deep under the ground. As a result, it is even harder than a diamond."
   },
   {
     "id": 209,
@@ -4062,7 +4894,11 @@
       "specialDefense": 40,
       "speed": 30
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 6,
+    "weight": 78,
+    "category": "Fairy Pokémon",
+    "description": "Although it looks frightening, it is actually kind and affectionate. It is very popular among women."
   },
   {
     "id": 210,
@@ -4081,7 +4917,11 @@
       "specialDefense": 60,
       "speed": 45
     },
-    "baseExperience": 158
+    "baseExperience": 158,
+    "height": 14,
+    "weight": 487,
+    "category": "Fairy Pokémon",
+    "description": "It is actually timid and easily spooked. If at­ tacked, it flails about to fend off its attacker."
   },
   {
     "id": 211,
@@ -4101,7 +4941,11 @@
       "specialDefense": 55,
       "speed": 85
     },
-    "baseExperience": 88
+    "baseExperience": 88,
+    "height": 5,
+    "weight": 39,
+    "category": "Balloon Pokémon",
+    "description": "To fire its poison spikes, it must inflate its body by drinking over 2.6 gallons of water all at once."
   },
   {
     "id": 212,
@@ -4121,7 +4965,11 @@
       "specialDefense": 80,
       "speed": 65
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 18,
+    "weight": 1180,
+    "category": "Pincer Pokémon",
+    "description": "It swings its eye- patterned pincers up to scare its foes. This makes it look like it has three heads."
   },
   {
     "id": 213,
@@ -4141,7 +4989,11 @@
       "specialDefense": 230,
       "speed": 5
     },
-    "baseExperience": 177
+    "baseExperience": 177,
+    "height": 6,
+    "weight": 205,
+    "category": "Mold Pokémon",
+    "description": "The BERRIES it stores in its vase-like shell decompose and become a gooey liquid."
   },
   {
     "id": 214,
@@ -4161,7 +5013,11 @@
       "specialDefense": 95,
       "speed": 85
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 15,
+    "weight": 540,
+    "category": "Single Horn Pokémon",
+    "description": "This powerful POKéMON thrusts its prized horn under its enemies’ bellies then lifts and throws them."
   },
   {
     "id": 215,
@@ -4181,7 +5037,11 @@
       "specialDefense": 75,
       "speed": 115
     },
-    "baseExperience": 86
+    "baseExperience": 86,
+    "height": 9,
+    "weight": 280,
+    "category": "Sharp Claw Pokémon",
+    "description": "Its paws conceal sharp claws. If attacked, it sud­ denly extends the claws and startles its enemy."
   },
   {
     "id": 216,
@@ -4200,7 +5060,11 @@
       "specialDefense": 50,
       "speed": 40
     },
-    "baseExperience": 66
+    "baseExperience": 66,
+    "height": 6,
+    "weight": 88,
+    "category": "Little Bear Pokémon",
+    "description": "If it finds honey, its crescent mark glows. It always licks its paws because they are soaked with honey."
   },
   {
     "id": 217,
@@ -4219,7 +5083,11 @@
       "specialDefense": 75,
       "speed": 55
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 18,
+    "weight": 1258,
+    "category": "Hibernator Pokémon",
+    "description": "Although it is a good climber, it prefers to snap trees with its forelegs and eat fallen BERRIES."
   },
   {
     "id": 218,
@@ -4238,7 +5106,11 @@
       "specialDefense": 40,
       "speed": 20
     },
-    "baseExperience": 50
+    "baseExperience": 50,
+    "height": 7,
+    "weight": 350,
+    "category": "Lava Pokémon",
+    "description": "It never sleeps. It has to keep moving because if it stopped, its magma body would cool and harden."
   },
   {
     "id": 219,
@@ -4258,7 +5130,11 @@
       "specialDefense": 80,
       "speed": 30
     },
-    "baseExperience": 151
+    "baseExperience": 151,
+    "height": 8,
+    "weight": 550,
+    "category": "Lava Pokémon",
+    "description": "The shell on its back is just skin that has cooled and hardened. It breaks easily with a slight touch."
   },
   {
     "id": 220,
@@ -4278,7 +5154,11 @@
       "specialDefense": 30,
       "speed": 50
     },
-    "baseExperience": 50
+    "baseExperience": 50,
+    "height": 4,
+    "weight": 65,
+    "category": "Pig Pokémon",
+    "description": "It rubs its snout on the ground to find and dig up food. It sometimes discovers hot springs."
   },
   {
     "id": 221,
@@ -4298,7 +5178,11 @@
       "specialDefense": 60,
       "speed": 50
     },
-    "baseExperience": 158
+    "baseExperience": 158,
+    "height": 11,
+    "weight": 558,
+    "category": "Swine Pokémon",
+    "description": "Because the long hair all over its body obscures its sight, it just keeps charging repeatedly."
   },
   {
     "id": 222,
@@ -4318,7 +5202,11 @@
       "specialDefense": 95,
       "speed": 35
     },
-    "baseExperience": 144
+    "baseExperience": 144,
+    "height": 6,
+    "weight": 50,
+    "category": "Coral Pokémon",
+    "description": "It continuously sheds and grows. The tip of its head is prized as a treasure for its beauty."
   },
   {
     "id": 223,
@@ -4337,7 +5225,11 @@
       "specialDefense": 35,
       "speed": 65
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 6,
+    "weight": 120,
+    "category": "Jet Pokémon",
+    "description": "It has superb ac­ curacy. The water it shoots out can strike even moving prey from more than 300 feet."
   },
   {
     "id": 224,
@@ -4356,7 +5248,11 @@
       "specialDefense": 75,
       "speed": 45
     },
-    "baseExperience": 168
+    "baseExperience": 168,
+    "height": 9,
+    "weight": 285,
+    "category": "Jet Pokémon",
+    "description": "It traps enemies with its suction- cupped tentacles then smashes them with its rock-hard head."
   },
   {
     "id": 225,
@@ -4376,7 +5272,11 @@
       "specialDefense": 45,
       "speed": 75
     },
-    "baseExperience": 116
+    "baseExperience": 116,
+    "height": 9,
+    "weight": 160,
+    "category": "Delivery Pokémon",
+    "description": "It carries food all day long. There are tales about lost people who were saved by the food it had."
   },
   {
     "id": 226,
@@ -4396,7 +5296,11 @@
       "specialDefense": 140,
       "speed": 70
     },
-    "baseExperience": 170
+    "baseExperience": 170,
+    "height": 21,
+    "weight": 2200,
+    "category": "Kite Pokémon",
+    "description": "As it majestically swims, it doesn't care if REMORAID attach to it for scavenging its leftovers."
   },
   {
     "id": 227,
@@ -4416,7 +5320,11 @@
       "specialDefense": 70,
       "speed": 70
     },
-    "baseExperience": 163
+    "baseExperience": 163,
+    "height": 17,
+    "weight": 505,
+    "category": "Armor Bird Pokémon",
+    "description": "Its sturdy wings look heavy, but they are actually hollow and light, allowing it to fly freely in the sky."
   },
   {
     "id": 228,
@@ -4436,7 +5344,11 @@
       "specialDefense": 50,
       "speed": 65
     },
-    "baseExperience": 66
+    "baseExperience": 66,
+    "height": 6,
+    "weight": 108,
+    "category": "Dark Pokémon",
+    "description": "It uses different kinds of cries for communicating with others of its kind and for pursuing its prey."
   },
   {
     "id": 229,
@@ -4456,7 +5368,11 @@
       "specialDefense": 80,
       "speed": 95
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 14,
+    "weight": 350,
+    "category": "Dark Pokémon",
+    "description": "If you are burned by the flames it shoots from its mouth, the pain will never go away."
   },
   {
     "id": 230,
@@ -4476,7 +5392,11 @@
       "specialDefense": 95,
       "speed": 85
     },
-    "baseExperience": 243
+    "baseExperience": 243,
+    "height": 18,
+    "weight": 1520,
+    "category": "Dragon Pokémon",
+    "description": "It is said that it usually hides in underwater caves. It can create whirlpools by yawning."
   },
   {
     "id": 231,
@@ -4495,7 +5415,11 @@
       "specialDefense": 40,
       "speed": 40
     },
-    "baseExperience": 66
+    "baseExperience": 66,
+    "height": 5,
+    "weight": 335,
+    "category": "Long Nose Pokémon",
+    "description": "It swings its long snout around play­ fully, but because it is so strong, that can be dan­ gerous."
   },
   {
     "id": 232,
@@ -4514,7 +5438,11 @@
       "specialDefense": 60,
       "speed": 50
     },
-    "baseExperience": 175
+    "baseExperience": 175,
+    "height": 11,
+    "weight": 1200,
+    "category": "Armor Pokémon",
+    "description": "It has sharp, hard tusks and a rugged hide. Its TACKLE is strong enough to knock down a house."
   },
   {
     "id": 233,
@@ -4533,7 +5461,11 @@
       "specialDefense": 95,
       "speed": 60
     },
-    "baseExperience": 180
+    "baseExperience": 180,
+    "height": 6,
+    "weight": 325,
+    "category": "Virtual Pokémon",
+    "description": "This upgraded version of PORYGON is designed for space exploration. It can't fly, though."
   },
   {
     "id": 234,
@@ -4552,7 +5484,11 @@
       "specialDefense": 65,
       "speed": 85
     },
-    "baseExperience": 163
+    "baseExperience": 163,
+    "height": 14,
+    "weight": 712,
+    "category": "Big Horn Pokémon",
+    "description": "The curved antlers subtly change the flow of air to create a strange space where real­ ity is distorted."
   },
   {
     "id": 235,
@@ -4571,7 +5507,11 @@
       "specialDefense": 45,
       "speed": 75
     },
-    "baseExperience": 88
+    "baseExperience": 88,
+    "height": 12,
+    "weight": 580,
+    "category": "Painter Pokémon",
+    "description": "A special fluid oozes from the tip of its tail. It paints the fluid everywhere to mark its territory."
   },
   {
     "id": 236,
@@ -4590,7 +5530,11 @@
       "specialDefense": 35,
       "speed": 35
     },
-    "baseExperience": 42
+    "baseExperience": 42,
+    "height": 7,
+    "weight": 210,
+    "category": "Scuffle Pokémon",
+    "description": "It is always bursting with en­ ergy. To make it­ self stronger, it keeps on fighting even if it loses."
   },
   {
     "id": 237,
@@ -4609,7 +5553,11 @@
       "specialDefense": 110,
       "speed": 70
     },
-    "baseExperience": 159
+    "baseExperience": 159,
+    "height": 14,
+    "weight": 480,
+    "category": "Handstand Pokémon",
+    "description": "If you become enchanted by its smooth, elegant, dance-like kicks, you may get drilled hard."
   },
   {
     "id": 238,
@@ -4629,7 +5577,11 @@
       "specialDefense": 65,
       "speed": 65
     },
-    "baseExperience": 61
+    "baseExperience": 61,
+    "height": 4,
+    "weight": 60,
+    "category": "Kiss Pokémon",
+    "description": "Its lips are the most sensitive parts on its body. It always uses its lips first to examine things."
   },
   {
     "id": 239,
@@ -4648,7 +5600,11 @@
       "specialDefense": 55,
       "speed": 95
     },
-    "baseExperience": 72
+    "baseExperience": 72,
+    "height": 6,
+    "weight": 235,
+    "category": "Electric Pokémon",
+    "description": "It rotates its arms to generate electricity, but it tires easily, so it charges up only a little bit."
   },
   {
     "id": 240,
@@ -4667,7 +5623,11 @@
       "specialDefense": 55,
       "speed": 83
     },
-    "baseExperience": 73
+    "baseExperience": 73,
+    "height": 7,
+    "weight": 214,
+    "category": "Live Coal Pokémon",
+    "description": "Each and every time it inhales and exhales, hot embers dribble out of its mouth and nostrils."
   },
   {
     "id": 241,
@@ -4686,7 +5646,11 @@
       "specialDefense": 70,
       "speed": 100
     },
-    "baseExperience": 172
+    "baseExperience": 172,
+    "height": 12,
+    "weight": 755,
+    "category": "Milk Cow Pokémon",
+    "description": "Its milk is packed with nutrition, making it the ultimate beverage for the sick or weary."
   },
   {
     "id": 242,
@@ -4705,7 +5669,11 @@
       "specialDefense": 135,
       "speed": 55
     },
-    "baseExperience": 608
+    "baseExperience": 608,
+    "height": 15,
+    "weight": 468,
+    "category": "Happiness Pokémon",
+    "description": "Anyone who takes even one bite of BLISSEY's egg be­ comes unfailingly caring and pleas­ ant to everyone."
   },
   {
     "id": 243,
@@ -4724,7 +5692,11 @@
       "specialDefense": 100,
       "speed": 115
     },
-    "baseExperience": 261
+    "baseExperience": 261,
+    "height": 19,
+    "weight": 1780,
+    "category": "Thunder Pokémon",
+    "description": "The rain clouds it carries let it fire thunderbolts at will. They say that it descended with lightning."
   },
   {
     "id": 244,
@@ -4743,7 +5715,11 @@
       "specialDefense": 75,
       "speed": 100
     },
-    "baseExperience": 261
+    "baseExperience": 261,
+    "height": 21,
+    "weight": 1980,
+    "category": "Volcano Pokémon",
+    "description": "Volcanoes erupt when it barks. Un­ able to restrain its extreme power, it races headlong around the land."
   },
   {
     "id": 245,
@@ -4762,7 +5738,11 @@
       "specialDefense": 115,
       "speed": 85
     },
-    "baseExperience": 261
+    "baseExperience": 261,
+    "height": 20,
+    "weight": 1870,
+    "category": "Aurora Pokémon",
+    "description": "Said to be the reincarnation of north winds, it can instantly purify filthy, murky water."
   },
   {
     "id": 246,
@@ -4782,7 +5762,11 @@
       "specialDefense": 50,
       "speed": 41
     },
-    "baseExperience": 60
+    "baseExperience": 60,
+    "height": 6,
+    "weight": 720,
+    "category": "Rock Skin Pokémon",
+    "description": "It feeds on soil. After it has eaten a large mountain, it will fall asleep so it can grow."
   },
   {
     "id": 247,
@@ -4802,7 +5786,11 @@
       "specialDefense": 70,
       "speed": 51
     },
-    "baseExperience": 144
+    "baseExperience": 144,
+    "height": 12,
+    "weight": 1520,
+    "category": "Hard Shell Pokémon",
+    "description": "Its shell is as hard as sheet rock, and it is also very strong. Its THRASHING can topple a mountain."
   },
   {
     "id": 248,
@@ -4822,7 +5810,11 @@
       "specialDefense": 100,
       "speed": 61
     },
-    "baseExperience": 270
+    "baseExperience": 270,
+    "height": 20,
+    "weight": 2020,
+    "category": "Armor Pokémon",
+    "description": "Its body can't be harmed by any sort of attack, so it is very eager to make challenges against enemies."
   },
   {
     "id": 249,
@@ -4842,7 +5834,11 @@
       "specialDefense": 154,
       "speed": 110
     },
-    "baseExperience": 306
+    "baseExperience": 306,
+    "height": 52,
+    "weight": 2160,
+    "category": "Diving Pokémon",
+    "description": "It is said that it quietly spends its time deep at the bottom of the sea because its powers are too strong."
   },
   {
     "id": 250,
@@ -4862,7 +5858,11 @@
       "specialDefense": 154,
       "speed": 90
     },
-    "baseExperience": 306
+    "baseExperience": 306,
+    "height": 38,
+    "weight": 1990,
+    "category": "Rainbow Pokémon",
+    "description": "Legends claim this POKéMON flies the world's skies con­ tinuously on its magnificent seven- colored wings."
   },
   {
     "id": 251,
@@ -4882,6 +5882,10 @@
       "specialDefense": 100,
       "speed": 100
     },
-    "baseExperience": 270
+    "baseExperience": 270,
+    "height": 6,
+    "weight": 50,
+    "category": "Time Travel Pokémon",
+    "description": "This POKéMON wan­ ders across time. Grass and trees flourish in the forests in which it has appeared."
   }
 ]
