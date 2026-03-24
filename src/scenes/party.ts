@@ -16,13 +16,9 @@ import { getPokemonDisplayName, getMoveDisplayName, getMove, getPokemonHeight, g
 import { getTypeName, getDamageClassLabel } from '../data/type-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+// Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
-const SLOT_HEIGHT = 22;
-const SLOT_START_Y = 16;
-const SLOT_X = 4;
-const SLOT_W = SCREEN_W - 8;
 
 /** Type badge color palette. */
 const TYPE_COLORS: Record<PokemonType, string> = {
@@ -98,84 +94,124 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     }
   }
 
+  // Slot Y positions from party_coordinated.md
+  // Filled slots: 24px tall. Empty slots: 18px tall.
+  // Positions depend on how many Pokemon are in party.
+  function getSlotY(index: number, partyLen: number): number {
+    // All filled slots stack from y=14, each 24px + 2px gap
+    if (index < partyLen) return 14 + index * 26;
+    // Empty slots start after last filled
+    const afterFilled = 14 + partyLen * 26;
+    return afterFilled + (index - partyLen) * 20;
+  }
   function getHpColor(ratio: number): string {
-    if (ratio > 0.5) return '#20d860';
-    if (ratio > 0.2) return '#f8c030';
-    return '#f84038';
+    if (ratio >= 0.5) return '#20d860';
+    if (ratio >= 0.25) return '#d8a020';
+    return '#d84040';
   }
 
-  function renderSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon | null, index: number, isSelected: boolean, isSwapSource: boolean): void {
-    const y = SLOT_START_Y + index * SLOT_HEIGHT;
-    const bgColor = isSelected ? '#303060' : '#202040';
+  function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, slotNum: number, sy: number, isSel: boolean, isSwap: boolean): void {
+    // Card bg
+    fillRect(ctx, 4, sy, 232, 24, isSel ? C.CARD_SEL : C.CARD_BG);
+    drawRect(ctx, 4, sy, 232, 24, isSwap ? C.BORDER_SEL : (isSel ? '#2a6a40' : C.BORDER));
+    // Selection indicator
+    if (isSel) fillRect(ctx, 4, sy, 2, 24, '#20d860');
 
-    fillRect(ctx, SLOT_X, y, SLOT_W, SLOT_HEIGHT - 2, bgColor);
+    // Slot number box
+    fillRect(ctx, 222, sy + 1, 10, 10, isSel ? 'rgba(32,216,96,0.15)' : 'rgba(255,255,255,0.03)');
+    drawText(ctx, `${slotNum}`, 227, sy + 2, { size: 6, color: isSel ? '#20d860' : '#2a3a2a', font: 'monospace', align: 'center' });
 
-    if (isSwapSource) {
-      drawRect(ctx, SLOT_X, y, SLOT_W, SLOT_HEIGHT - 2, '#f8c030', 1);
-    }
-
-    if (!pokemon) {
-      drawText(ctx, t('party.empty'), SLOT_X + 28, y + 7, { size: 8, color: '#666688' });
-      return;
-    }
-
-    // Sprite (front sprite scaled for party list)
+    // Sprite box
+    fillRect(ctx, 194, sy + 1, 22, 22, C.CARD_BG);
+    drawRect(ctx, 194, sy + 1, 22, 22, C.BORDER);
     const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
     const sprite = getCachedImage(spriteUrl);
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(sprite, SLOT_X - 8, y - 10, 40, 40);
+      ctx.drawImage(sprite, 196, sy + 3, 18, 18);
       ctx.imageSmoothingEnabled = false;
-    } else {
-      fillRect(ctx, SLOT_X + 2, y + 1, 18, 18, '#445566');
     }
 
-    // Name + Level
-    const nameText = `${getPokemonDisplayName(pokemon.id)} Lv.${pokemon.level}`;
-    drawText(ctx, nameText, SLOT_X + 24, y + 1, { size: 8, color: '#ffffff' });
+    // Name (right-aligned)
+    drawText(ctx, getPokemonDisplayName(pokemon.id), 190, sy + 2, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+    // Level
+    drawText(ctx, `Lv.${pokemon.level}`, 78, sy + 2, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
 
+    // Type badges (row 2, dy=12)
+    const types = pokemon.types;
+    if (types.length >= 1) {
+      const color1 = TYPE_COLORS[types[0]] || '#888888';
+      fillRect(ctx, 162, sy + 12, 18, 7, color1);
+      drawText(ctx, getTypeName(types[0]), 171, sy + 12, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+    }
+    if (types.length >= 2) {
+      const color2 = TYPE_COLORS[types[1]] || '#888888';
+      fillRect(ctx, 142, sy + 12, 18, 7, color2);
+      drawText(ctx, getTypeName(types[1]), 151, sy + 12, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+    }
+
+    // HP label
+    drawText(ctx, 'HP', 86, sy + 12, { size: 5, color: C.TEXT_MUT, font: 'monospace' });
     // HP bar
-    const hpBarX = SLOT_X + 24;
-    const hpBarY = y + 11;
-    const hpBarW = 60;
-    const hpBarH = 3;
-    fillRect(ctx, hpBarX, hpBarY, hpBarW, hpBarH, '#303030');
+    fillRect(ctx, 26, sy + 14, 56, 3, C.SEP);
     const hpRatio = pokemon.maxHp > 0 ? pokemon.hp / pokemon.maxHp : 0;
-    const hpFillW = Math.floor(hpBarW * Math.max(0, Math.min(1, hpRatio)));
-    if (hpFillW > 0) {
-      fillRect(ctx, hpBarX, hpBarY, hpFillW, hpBarH, getHpColor(hpRatio));
-    }
+    const hpW = Math.round(56 * Math.max(0, Math.min(1, hpRatio)));
+    if (hpW > 0) fillRect(ctx, 26, sy + 14, hpW, 3, getHpColor(hpRatio));
+    // HP value
+    drawText(ctx, `${pokemon.hp}/${pokemon.maxHp}`, 8, sy + 12, { size: 5, color: C.TEXT_SEC, font: 'monospace' });
+  }
 
-    // HP numbers
-    drawText(ctx, `${pokemon.hp}/${pokemon.maxHp}`, hpBarX + hpBarW + 2, hpBarY - 2, { size: 7, color: '#aaaacc' });
-
-    // Type badges
-    let typeX = SLOT_X + 160;
-    for (const pType of pokemon.types) {
-      const color = TYPE_COLORS[pType] || '#888888';
-      const badgeW = 30;
-      fillRect(ctx, typeX, y + 2, badgeW, 8, color);
-      drawText(ctx, pType.toUpperCase().slice(0, 4), typeX + 1, y + 2, { size: 7, color: '#ffffff' });
-      typeX += badgeW + 2;
-    }
+  function renderEmptySlot(ctx: CanvasRenderingContext2D, slotNum: number, sy: number, isSel: boolean): void {
+    fillRect(ctx, 4, sy, 232, 18, isSel ? C.CARD_SEL : C.CARD_BG);
+    drawRect(ctx, 4, sy, 232, 18, isSel ? '#2a6a40' : C.BORDER);
+    if (isSel) fillRect(ctx, 4, sy, 2, 18, '#20d860');
+    // Slot number
+    fillRect(ctx, 222, sy + 2, 10, 10, isSel ? 'rgba(32,216,96,0.15)' : 'rgba(255,255,255,0.03)');
+    drawText(ctx, `${slotNum}`, 227, sy + 3, { size: 6, color: isSel ? '#20d860' : '#2a3a2a', font: 'monospace', align: 'center' });
+    // Empty label
+    drawText(ctx, '\u2014 \u2014 \u2014', 112, sy + 6, { size: 7, color: '#2a3a2a', font: 'monospace', align: 'center' });
   }
 
   function renderListView(ctx: CanvasRenderingContext2D): void {
     const party = getParty();
 
-    // Title
+    // ── Title bar (y=0, h=12) ──
+    fillRect(ctx, 0, 0, 240, 12, '#0a1a10');
     const title = viewMode === 'swap' ? t('party.swap') : t('party.title');
-    drawText(ctx, title, SCREEN_W / 2, 3, { size: 8, color: '#ffffff', align: 'center' });
+    drawText(ctx, title, 112, 2, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+    drawText(ctx, `${party.length} / ${MAX_PARTY}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
 
-    // Slots
+    // ── Slots ──
     for (let i = 0; i < MAX_PARTY; i++) {
-      const pokemon = i < party.length ? party[i] : null;
-      renderSlot(ctx, pokemon, i, i === cursor, viewMode === 'swap' && i === swapFrom);
+      const sy = getSlotY(i, party.length);
+      const isSel = i === cursor;
+      const isSwap = viewMode === 'swap' && i === swapFrom;
+
+      if (i < party.length) {
+        renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap);
+      } else {
+        renderEmptySlot(ctx, i + 1, sy, isSel);
+      }
     }
 
-    // Controls hint
-    drawText(ctx, 'ESC:Back  ENTER:Detail/Swap', SLOT_X, SCREEN_H - 10, { size: 7, color: '#666688' });
+    // ── Bottom bar ──
+    fillRect(ctx, 0, 150, 240, 10, '#0a1a10');
+    // ESC
+    fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
+    drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
+    drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    // Enter
+    fillRect(ctx, 62, 151, 26, 8, C.KEY_BG);
+    drawRect(ctx, 62, 151, 26, 8, C.KEY_BRD);
+    drawText(ctx, 'Enter', 75, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, t('party.hint.details') || 'Details', 90, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    // Arrows
+    fillRect(ctx, 126, 151, 18, 8, C.KEY_BG);
+    drawRect(ctx, 126, 151, 18, 8, C.KEY_BRD);
+    drawText(ctx, '\u25b2\u25bc', 135, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, t('bag.hint.navigate') || 'Nav', 146, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -688,7 +724,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     },
 
     render(ctx: CanvasRenderingContext2D): void {
-      clearScreen(ctx, viewMode === 'detail' ? '#0d1a14' : '#181830');
+      clearScreen(ctx, '#0d1a14');
 
       if (viewMode === 'detail') {
         renderDetailView(ctx);
