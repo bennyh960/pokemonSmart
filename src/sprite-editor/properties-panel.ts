@@ -80,6 +80,12 @@ export class PropertiesPanel {
   // Drag-and-drop state
   private dragSrcIndex = -1;
 
+  // Frame clipboard for copy/paste
+  private clipboardFrame: FramePos | null = null;
+
+  // Active context menu element (to dismiss)
+  private activeContextMenu: HTMLElement | null = null;
+
   constructor(container: HTMLElement, state: SpriteEditorState, image: HTMLImageElement) {
     this.container = container;
     this.state = state;
@@ -155,6 +161,12 @@ export class PropertiesPanel {
       renderFrameRows();
     };
 
+    const onFrameUpdate = (idx: number, frame: FramePos | null) => {
+      while (pendingFrames.length <= idx) pendingFrames.push(null);
+      pendingFrames[idx] = frame;
+      renderFrameRows();
+    };
+
     const rebuildFrames = () => {
       const fw = parseInt(fwInput.value) || gs;
       const fh = parseInt(fhInput.value) || gs;
@@ -201,12 +213,12 @@ export class PropertiesPanel {
           if (slot.filled && slot.index >= 0) {
             const f = pendingFrames[slot.index];
             if (f) {
-              thumbs.appendChild(this.createDraggableThumb(f.sx, f.sy, fw, fh, slot.index, slot.pose, onSwap));
+              thumbs.appendChild(this.createDraggableThumb(f.sx, f.sy, fw, fh, slot.index, slot.pose, onSwap, onFrameUpdate));
             } else {
-              thumbs.appendChild(this.createEmptySlot(fw, fh, slot.index, slot.pose, onSwap));
+              thumbs.appendChild(this.createEmptySlot(fw, fh, slot.index, slot.pose, onSwap, onFrameUpdate));
             }
           } else {
-            thumbs.appendChild(this.createEmptySlot(fw, fh, slot.index, slot.pose, onSwap));
+            thumbs.appendChild(this.createEmptySlot(fw, fh, slot.index, slot.pose, onSwap, onFrameUpdate));
           }
         }
 
@@ -314,6 +326,14 @@ export class PropertiesPanel {
       renderRows();
     };
 
+    const editFrameUpdate = (idx: number, frame: FramePos | null) => {
+      const newFrames = [...s.frames];
+      while (newFrames.length <= idx) newFrames.push({ sx: -1, sy: -1 });
+      newFrames[idx] = frame ?? { sx: -1, sy: -1 };
+      this.state.updateSprite(index, { frames: newFrames });
+      renderRows();
+    };
+
     const renderRows = () => {
       framesContainer.innerHTML = '';
       const grid = buildDirectionGrid(Math.max(s.frames.length, 12));
@@ -340,9 +360,9 @@ export class PropertiesPanel {
           const f = slot.index >= 0 && slot.index < s.frames.length ? s.frames[slot.index] : null;
           const isEmpty = !f || f.sx < 0 || f.sy < 0;
           if (!isEmpty && f) {
-            thumbs.appendChild(this.createDraggableThumb(f.sx, f.sy, s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap));
+            thumbs.appendChild(this.createDraggableThumb(f.sx, f.sy, s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap, editFrameUpdate));
           } else {
-            thumbs.appendChild(this.createEmptySlot(s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap));
+            thumbs.appendChild(this.createEmptySlot(s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap, editFrameUpdate));
           }
         }
 
@@ -377,6 +397,7 @@ export class PropertiesPanel {
     fw: number, fh: number,
     index: number, pose: string,
     onSwap: (from: number, to: number) => void,
+    onUpdate?: (index: number, frame: FramePos | null) => void,
   ): HTMLElement {
     const item = document.createElement('div');
     item.className = 'frame-item';
@@ -412,6 +433,13 @@ export class PropertiesPanel {
     badge.className = 'frame-index';
     badge.textContent = pose || String(index);
     item.appendChild(badge);
+
+    // ── Right-click context menu ──
+    if (onUpdate) {
+      item.addEventListener('contextmenu', (e) => {
+        this.showFrameContextMenu(e, index, { sx: frameSx, sy: frameSy }, onUpdate);
+      });
+    }
 
     // ── Drag-and-drop ──
     item.addEventListener('dragstart', (e) => {
@@ -457,6 +485,7 @@ export class PropertiesPanel {
     fw: number, fh: number,
     index: number, pose: string,
     onSwap: (from: number, to: number) => void,
+    onUpdate?: (index: number, frame: FramePos | null) => void,
   ): HTMLElement {
     const item = document.createElement('div');
     item.className = 'frame-item frame-empty';
@@ -473,6 +502,13 @@ export class PropertiesPanel {
     badge.className = 'frame-index';
     badge.textContent = pose;
     item.appendChild(badge);
+
+    // ── Right-click context menu (paste into empty slot) ──
+    if (onUpdate) {
+      item.addEventListener('contextmenu', (e) => {
+        this.showFrameContextMenu(e, index, null, onUpdate);
+      });
+    }
 
     // Accept drops into empty slots
     item.addEventListener('dragover', (e) => {
@@ -588,6 +624,86 @@ export class PropertiesPanel {
     section.appendChild(previewCanvas);
     section.appendChild(frameLabel);
     container.appendChild(section);
+  }
+
+  // ── Context menu for frame slots ──
+
+  private dismissContextMenu(): void {
+    if (this.activeContextMenu) {
+      this.activeContextMenu.remove();
+      this.activeContextMenu = null;
+    }
+  }
+
+  private showFrameContextMenu(
+    e: MouseEvent,
+    frameIndex: number,
+    frame: FramePos | null,
+    onUpdate: (index: number, frame: FramePos | null) => void,
+  ): void {
+    e.preventDefault();
+    this.dismissContextMenu();
+
+    const menu = document.createElement('div');
+    menu.className = 'frame-context-menu';
+    menu.style.left = e.clientX + 'px';
+    menu.style.top = e.clientY + 'px';
+
+    const isFilled = frame && frame.sx >= 0 && frame.sy >= 0;
+
+    if (isFilled) {
+      // Copy
+      const copyBtn = document.createElement('div');
+      copyBtn.className = 'frame-ctx-item';
+      copyBtn.textContent = 'Copy';
+      copyBtn.addEventListener('click', () => {
+        this.clipboardFrame = { sx: frame!.sx, sy: frame!.sy };
+        this.dismissContextMenu();
+      });
+      menu.appendChild(copyBtn);
+
+      // Delete
+      const delBtn = document.createElement('div');
+      delBtn.className = 'frame-ctx-item frame-ctx-danger';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', () => {
+        onUpdate(frameIndex, null);
+        this.dismissContextMenu();
+      });
+      menu.appendChild(delBtn);
+    }
+
+    if (this.clipboardFrame) {
+      // Paste
+      const pasteBtn = document.createElement('div');
+      pasteBtn.className = 'frame-ctx-item';
+      pasteBtn.textContent = `Paste${isFilled ? ' (replace)' : ''}`;
+      pasteBtn.addEventListener('click', () => {
+        onUpdate(frameIndex, { sx: this.clipboardFrame!.sx, sy: this.clipboardFrame!.sy });
+        this.dismissContextMenu();
+      });
+      menu.appendChild(pasteBtn);
+    }
+
+    if (menu.children.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'frame-ctx-item frame-ctx-disabled';
+      empty.textContent = 'No actions';
+      menu.appendChild(empty);
+    }
+
+    document.body.appendChild(menu);
+    this.activeContextMenu = menu;
+
+    // Dismiss on click outside
+    const dismiss = (ev: MouseEvent) => {
+      if (!menu.contains(ev.target as Node)) {
+        this.dismissContextMenu();
+        document.removeEventListener('mousedown', dismiss);
+      }
+    };
+    // Use setTimeout so the current event doesn't immediately dismiss
+    setTimeout(() => document.addEventListener('mousedown', dismiss), 0);
   }
 
   private stopAnim(): void {

@@ -811,14 +811,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Determine facing for rendering (convert from Arrow* format if needed)
           const facingDir = npcSt.facing.replace('Arrow', '').toLowerCase();
 
-          // Determine walk pose
+          // Determine walk pose — fall back to stand if walk frame is missing
           const poses = ['stand', 'walk-1', 'walk-2'];
           const pose = poses[npcSt.walkFrame % poses.length] || 'stand';
 
-          // Try character sprite system first
-          const charFrame = hasCharacter(npc.spriteType)
-            ? getCharacterFrame(npc.spriteType, facingDir, pose)
-            : null;
+          // Try character sprite system first; if the walk frame is missing, use stand
+          let charFrame: ReturnType<typeof getCharacterFrame> = null;
+          if (hasCharacter(npc.spriteType)) {
+            charFrame = getCharacterFrame(npc.spriteType, facingDir, pose);
+            if (!charFrame && pose !== 'stand') {
+              charFrame = getCharacterFrame(npc.spriteType, facingDir, 'stand');
+            }
+          }
 
           if (charFrame) {
             // Source frames may be any size (e.g. 32×32) but are always

@@ -227,6 +227,29 @@ button.primary:hover { background: #5577cc; }
   );
 }
 
+/* ── Frame Context Menu ── */
+.frame-context-menu {
+  position: fixed;
+  background: #1e1e32;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 3px 0;
+  min-width: 110px;
+  z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.frame-ctx-item {
+  padding: 5px 12px;
+  font-size: 12px;
+  color: #ccc;
+  cursor: pointer;
+}
+.frame-ctx-item:hover { background: #3355aa; color: #fff; }
+.frame-ctx-danger { color: #e66; }
+.frame-ctx-danger:hover { background: #662233; color: #fff; }
+.frame-ctx-disabled { color: #555; cursor: default; font-style: italic; }
+.frame-ctx-disabled:hover { background: transparent; color: #555; }
+
 /* ── Status Bar ── */
 .ts-status {
   grid-area: status;

@@ -50,6 +50,7 @@ async function init() {
     <div class="toolbar-group">
       <button id="btn-load-img">Load Image</button>
       <button id="btn-load">Load JSON</button>
+      <button id="btn-load-game">Load from Game</button>
       <button id="btn-save">Save</button>
       <button id="btn-copy">Copy JSON</button>
     </div>
@@ -131,6 +132,39 @@ async function init() {
       if (file) await loadManifestFromFile(state, file);
     });
     input.click();
+  });
+
+  // Load from Game — fetch characters.json from data/sprites and load its image
+  toolbarEl.querySelector('#btn-load-game')!.addEventListener('click', async () => {
+    try {
+      const jsonPath = '/src/data/sprites/characters.json';
+      const resp = await fetch(jsonPath);
+      if (!resp.ok) throw new Error(`Failed to fetch ${jsonPath}: ${resp.status}`);
+      const json = await resp.text();
+      const data = JSON.parse(json);
+
+      // Load the spritesheet image referenced in the manifest
+      const imgPath = data.image || '/sprites/characters/characters_overworld.png';
+      image.src = imgPath;
+      await new Promise<void>((resolve, reject) => {
+        image.onload = () => resolve();
+        image.onerror = () => reject(new Error('Failed to load image: ' + imgPath));
+      });
+      state.imageSrc = imgPath;
+      state.imageWidth = image.naturalWidth;
+      state.imageHeight = image.naturalHeight;
+
+      // Load the manifest data
+      loadManifest(state, json);
+
+      // Rebuild viewport with new image
+      viewport.destroy();
+      canvasEl.innerHTML = '';
+      viewport = new SpritesheetViewport(canvasEl, state, image);
+      state.emit('viewport-changed');
+    } catch (err) {
+      alert('Failed to load from game: ' + (err as Error).message);
+    }
   });
 
   // Save
