@@ -44,10 +44,10 @@
 - Map IDs resolve to display names using i18n keys (e.g., `map.route-1.name`)
 
 ### Acceptance Criteria
-- [ ] `moves.json` has `damageClass` and `description` fields for all 616 moves
-- [ ] `learnsets.json` exists with data for all 251 Pokemon
-- [ ] `getLearnset(id)` and `getSpawnLocations(id)` helpers work
-- [ ] Existing game still compiles and runs after data changes
+- [x] `moves.json` has `damageClass` and `description` fields for all 616 moves
+- [x] `learnsets.json` exists with data for all 251 Pokemon
+- [x] `getLearnset(id)` and `getSpawnLocations(id)` helpers work
+- [x] Existing game still compiles and runs after data changes
 
 ---
 
@@ -99,13 +99,13 @@ Replace the single detail view with tabbed navigation (Left/Right arrows or numb
 - Bottom bar shows context-sensitive controls
 
 ### Acceptance Criteria
-- [ ] All 5 tabs render correctly for any seen Pokemon
-- [ ] Evolution chain shows sprites with arrows
-- [ ] Type matchups accurately reflect type chart
-- [ ] Learnset shows all level-up moves with metadata
-- [ ] Spawn locations shown with level ranges
-- [ ] Navigation between tabs is smooth
-- [ ] API-sourced data displays in English; UI chrome follows selected language
+- [x] All 5 tabs render correctly for any seen Pokemon
+- [x] Evolution chain shows sprites with arrows
+- [x] Type matchups accurately reflect type chart
+- [x] Learnset shows all level-up moves with metadata
+- [x] Spawn locations shown with level ranges
+- [x] Navigation between tabs is smooth
+- [x] API-sourced data displays in English; UI chrome follows selected language
 
 ---
 
@@ -150,13 +150,13 @@ Replace the single detail view with tabbed navigation (Left/Right arrows or numb
 - Wire up in state machine
 
 ### Acceptance Criteria
-- [ ] Full-screen bag opens from overworld (B key)
-- [ ] Items organized by category tabs
-- [ ] Each item shows icon, name, quantity, description
-- [ ] Healing/PP/vitamin items can be used on party Pokemon
-- [ ] Item icons drawn programmatically (no external sprite dependency)
-- [ ] Empty categories show "No items" message
-- [ ] ESC returns to overworld
+- [x] Full-screen bag opens from overworld (B key)
+- [x] Items organized by category tabs
+- [x] Each item shows icon, name, quantity, description
+- [x] Healing/PP/vitamin items can be used on party Pokemon
+- [x] Item icons drawn programmatically (no external sprite dependency)
+- [x] Empty categories show "No items" message
+- [x] ESC returns to overworld
 
 ---
 
@@ -212,13 +212,13 @@ Per move row, show:
 - Cannot delete if Pokemon would have 0 battle moves
 
 ### Acceptance Criteria
-- [ ] Redesigned party list with larger, more informative slots
-- [ ] Sub-screen navigation (Stats / Moves / Pokedex link)
-- [ ] Move management: view all 18 slots, swap between battle/stored, delete with confirm
-- [ ] Each move shows type, power, PP, damage class, description
-- [ ] Pokedex link opens Pokedex at selected Pokemon
-- [ ] Swap party order still works
-- [ ] All text follows i18n (UI chrome in selected language, move data in English if from API)
+- [x] Redesigned party list with larger, more informative slots
+- [x] Sub-screen navigation (Stats / Moves / Pokedex link)
+- [x] Move management: view all 18 slots, swap between battle/stored, delete with confirm
+- [x] Each move shows type, power, PP, damage class, description
+- [x] Pokedex link opens Pokedex at selected Pokemon
+- [x] Swap party order still works
+- [x] All text follows i18n (UI chrome in selected language, move data in English if from API)
 
 ---
 
@@ -259,13 +259,13 @@ Per move row, show:
 - Use a shared state or callback pattern to return the result to the calling scene
 
 ### Acceptance Criteria
-- [ ] "BAG" in battle opens full bag screen (battle-filtered)
-- [ ] Using a battle item works and costs a turn
-- [ ] "POKEMON" in battle opens party screen (battle mode)
-- [ ] Switching Pokemon costs a turn
-- [ ] Can't switch to fainted/active Pokemon
-- [ ] ESC from both returns to battle action menu without cost
-- [ ] Old inline bag rendering removed from battle.ts
+- [x] "BAG" in battle opens full bag screen (battle-filtered)
+- [x] Using a battle item works and costs a turn
+- [x] "POKEMON" in battle opens party screen (battle mode)
+- [x] Switching Pokemon costs a turn
+- [x] Can't switch to fainted/active Pokemon
+- [x] ESC from both returns to battle action menu without cost
+- [x] Old inline bag rendering removed from battle.ts
 
 ---
 
@@ -286,9 +286,9 @@ Per move row, show:
 - All screens import from this shared module
 
 ### Acceptance Criteria
-- [ ] No duplicated type color maps
-- [ ] Type display names available in both languages
-- [ ] Damage class labels/symbols defined
+- [x] No duplicated type color maps
+- [x] Type display names available in both languages
+- [x] Damage class labels/symbols defined
 
 ---
 

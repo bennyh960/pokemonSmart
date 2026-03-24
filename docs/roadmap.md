@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 3 ✅ COMPLETE (Sprint 3.5 next)
+## Overall Progress: Sprint 3.5 ✅ COMPLETE (Sprint 4 next)
 
 ---
 
@@ -61,17 +61,17 @@
 
 ---
 
-## Sprint 3.5 — Screen Redesign ⬜ PLANNED
+## Sprint 3.5 — Screen Redesign ✅ COMPLETE
 **Goal:** Redesign Pokedex, Bag, Party, and Battle sub-screens into full-featured UIs
 
 | Task | Agent | Branch | Status |
 |------|-------|--------|--------|
-| Enrich PokeAPI data (damage class, descriptions, learnsets) | asset-manager | `feature/enriched-api-data` | ⬜ |
-| Type constants consolidation | game-engine-developer | `feature/type-constants` | ⬜ |
-| Pokedex redesign (5-tab detail: info, evolution, types, moves, locations) | frontend-developer | `feature/pokedex-redesign` | ⬜ |
-| Full-screen Bag with categories, icons, use-on-Pokemon flow | frontend-developer | `feature/bag-screen` | ⬜ |
-| Party redesign (sub-screens: stats, moves management, Pokedex link) | frontend-developer | `feature/party-redesign` | ⬜ |
-| Battle integration (full Bag + Party screens in battle) | game-engine-developer + frontend-developer | `feature/battle-bag-party` | ⬜ |
+| Enrich PokeAPI data (damage class, descriptions, learnsets) | asset-manager | `feature/enriched-api-data` | ✅ |
+| Type constants consolidation | game-engine-developer | `feature/type-constants` | ✅ |
+| Pokedex redesign (5-tab detail: info, evolution, types, moves, locations) | frontend-developer | `feature/pokedex-redesign` | ✅ |
+| Full-screen Bag with categories, icons, use-on-Pokemon flow | frontend-developer | `feature/bag-screen` | ✅ |
+| Party redesign (sub-screens: stats, moves management, Pokedex link) | frontend-developer | `feature/party-redesign` | ✅ |
+| Battle integration (full Bag + Party screens in battle) | game-engine-developer + frontend-developer | `feature/battle-bag-party` | ✅ |
 
 **Details:** `docs/sprint-3.5.md`
 
