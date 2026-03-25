@@ -11,6 +11,7 @@ import typeChartData from '../data/type-chart.json';
 import evolutionData from '../data/evolution-chains.json';
 import encounterData from '../data/encounter-tables.json';
 import learnsetData from '../data/learnsets.json';
+import tmLearnsetData from '../data/tm-learnsets.json';
 
 // --- Types matching the JSON shapes ---
 
@@ -228,6 +229,13 @@ const learnsets = learnsetData as Record<string, { moveId: number; levelLearned:
 /** Get the learnset for a Pokemon (moves learned by level-up). */
 export function getLearnset(pokemonId: number): { moveId: number; levelLearned: number }[] {
   return learnsets[String(pokemonId)] || [];
+}
+
+const tmLearnsets = tmLearnsetData as Record<string, { moveId: number }[]>;
+
+/** Get the TM/HM learnable moves for a Pokemon. */
+export function getTmLearnset(pokemonId: number): { moveId: number }[] {
+  return tmLearnsets[String(pokemonId)] || [];
 }
 
 // --- Pokemon metadata helpers ---

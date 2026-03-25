@@ -77,17 +77,17 @@
 
 ---
 
-## Sprint 3.5 — Open Items ⬜ IN PROGRESS
+## Sprint 3.5 — Open Items ✅ COMPLETE
 **Goal:** Finish remaining work from Sprint 3.5
 
 | Task | Status |
 |------|--------|
-| Bag item use — wire actual item effects to Pokemon (heal, revive, PP restore, rare candy) | ⬜ |
-| Move system — learnset-based wild/NPC Pokemon moves (Story 2+3 from `docs/stories/move-system.md`) | ⬜ |
-| Move system — level-up move learning with UI (Story 6) | ⬜ |
-| Pokedex "Can Learn (TM)" tab — populate with TM/HM data from PokeAPI | ⬜ |
-| Battle speed stat — turn order based on speed (currently always player-first) | ⬜ |
-| NPC item rewards — NPCs can give items on dialogue/quest completion (like trainer battle rewards) | ⬜ |
+| Bag item use — wire actual item effects to Pokemon (heal, revive, PP restore, rare candy) | ✅ |
+| Move system — learnset-based wild/NPC Pokemon moves (Story 2+3 from `docs/stories/move-system.md`) | ✅ |
+| Move system — level-up move learning with UI (Story 6) | ✅ |
+| Pokedex "Can Learn (TM)" tab — populate with TM/HM data from PokeAPI | ✅ |
+| Battle speed stat — turn order based on speed (currently always player-first) | ✅ |
+| NPC item rewards — NPCs can give items on dialogue/quest completion (like trainer battle rewards) | ✅ |
 
 ---
 
@@ -160,7 +160,9 @@ This is a foundation sprint — must be done before design/content sprints.
 
 | Task | Agent |
 |------|-------|
-| Player sprite selection screen (choose character) | frontend-developer |
+| Character selection screen — choose sprite + enter player name (new game flow) | frontend-developer |
+| Player name input UI — keyboard/on-screen input, Hebrew + English support | frontend-developer |
+| Edit player name/character — accessible from settings screen post-game-start | frontend-developer |
 | Story mode intro — cutscene system | frontend-developer |
 | Prof. Algorithma dialogues + story events | game-designer |
 | Remainder (rival) encounters + story arc | game-designer |

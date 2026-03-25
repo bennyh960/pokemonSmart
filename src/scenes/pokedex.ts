@@ -11,10 +11,12 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
+import { drawTypeBadge } from '../ui/type-badge.js';
+import { TYPE_COLORS } from '../data/type-constants.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import {
   getPokemon, getPokemonDisplayName, getMove, getMoveDisplayName,
-  getLearnset, getTypeEffectiveness, getAllTypes,
+  getLearnset, getTmLearnset, getTypeEffectiveness, getAllTypes,
 } from '../services/pokemon-data.js';
 import type { PokemonType } from '../types/index.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
@@ -25,22 +27,6 @@ const ENTRY_HEIGHT = 26;
 const VISIBLE_ENTRIES = 5;
 const TOTAL_POKEMON = 251;
 
-const TYPE_COLORS: Record<string, string> = {
-  normal: '#a8a878', fire: '#f08030', water: '#6890f0', grass: '#78c850',
-  electric: '#f8d030', ice: '#98d8d8', fighting: '#c03028', poison: '#a040a0',
-  ground: '#e0c068', flying: '#a890f0', psychic: '#f85888', bug: '#a8b820',
-  rock: '#b8a038', ghost: '#705898', dragon: '#7038f8', dark: '#705848',
-  steel: '#b8b8d0', glitch: '#00ff88',
-};
-
-/** 3-letter English abbreviations for types */
-const TYPE_ABBREV: Record<string, string> = {
-  normal: 'NRM', fire: 'FIR', water: 'WTR', grass: 'GRS',
-  electric: 'ELC', ice: 'ICE', fighting: 'FGT', poison: 'PSN',
-  ground: 'GND', flying: 'FLY', psychic: 'PSY', bug: 'BUG',
-  rock: 'RCK', ghost: 'GHO', dragon: 'DRG', dark: 'DRK',
-  steel: 'STL', glitch: 'GLT',
-};
 
 type PokedexView = 'list' | 'detail';
 type DetailTab = 'info' | 'type' | 'moves';
@@ -125,10 +111,15 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           }
         }
 
-        // Tab key switches moves sub-tabs when on MOVES tab
-        if (detailTab === 'moves' && input.isKeyPressed('Tab')) {
-          movesSubTab = movesSubTab === 'byLevel' ? 'canLearn' : 'byLevel';
-          movesScrollOffset = 0;
+        // 1/2 keys switch moves sub-tabs when on MOVES tab
+        if (detailTab === 'moves') {
+          if (input.isKeyPressed('1')) {
+            movesSubTab = 'byLevel';
+            movesScrollOffset = 0;
+          } else if (input.isKeyPressed('2')) {
+            movesSubTab = 'canLearn';
+            movesScrollOffset = 0;
+          }
         }
 
         // Up/Down scrolls moves list when on MOVES tab
@@ -245,7 +236,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           // measureText won't work without setting font, so use fixed offset
           tx = Math.max(tx, 140);
           for (const type of data.types) {
-            const color = TYPE_COLORS[type] || '#a8a878';
+            const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
             fillRect(ctx, tx, y + 5, 6, 6, color);
             drawRect(ctx, tx, y + 5, 6, 6, '#00000044');
             tx += 9;
@@ -335,7 +326,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     const rtl = isRTL();
     let helpText: string;
     if (detailTab === 'moves') {
-      helpText = rtl ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1 / Tab \u05ea\u05ea-\u05d8\u05d0\u05d1 / \u2191\u2193 \u05d2\u05dc\u05d9\u05dc\u05d4' : 'Esc:Back  L/R:Tab  Tab:Sub  Up/Dn:Scroll';
+      helpText = rtl ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1 / 1-2 \u05ea\u05ea-\u05d8\u05d0\u05d1 / \u2191\u2193 \u05d2\u05dc\u05d9\u05dc\u05d4' : 'Esc:Back  L/R:Tab  1/2:Sub  Up/Dn:Scroll';
     } else {
       helpText = rtl ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1' : 'Esc: Back  Left/Right: Switch Tab';
     }
@@ -365,7 +356,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     let badgeX = spriteX;
     const badgeY = spriteY + spriteSize + 4;
     for (const type of data.types) {
-      const color = TYPE_COLORS[type] || '#a8a878';
+      const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
       const label = type.toUpperCase();
       const badgeW = label.length * 5 + 6;
       fillRect(ctx, badgeX, badgeY, badgeW, 10, color);
@@ -449,7 +440,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
       let x = 4;
       for (const type of types) {
-        const color = TYPE_COLORS[type] || '#a8a878';
+        const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
         const badgeLabel = type.toUpperCase();
         const badgeW = badgeLabel.length * 5 + 6;
 
@@ -483,8 +474,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     const subTabY = contentY;
     const subTabW = 80;
     const subTabs: [MovesSubTab, string][] = [
-      ['byLevel', t('pokedex.moves.byLevel')],
-      ['canLearn', t('pokedex.moves.canLearn')],
+      ['byLevel', `1: ${t('pokedex.moves.byLevel')}`],
+      ['canLearn', `2: ${t('pokedex.moves.canLearn')}`],
     ];
 
     for (let i = 0; i < subTabs.length; i++) {
@@ -571,10 +562,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           const classSymbol = getDamageClassSymbol(move.power, move.type);
           drawText(ctx, classSymbol, colClass, ry, { size: 6, color: '#cccccc', font: 'monospace' });
 
-          // Type (3-letter English abbreviation, always English)
-          const typeAbbr = TYPE_ABBREV[move.type] || move.type.substring(0, 3).toUpperCase();
-          const typeColor = TYPE_COLORS[move.type] || '#a8a878';
-          drawText(ctx, typeAbbr, colType, ry, { size: 6, color: typeColor, font: 'monospace' });
+          // Type badge
+          drawTypeBadge(ctx, move.type as PokemonType, colType, ry, 'short');
 
           // Accuracy
           drawText(ctx, move.accuracy !== null ? String(move.accuracy) : '\u2014', colAcc, ry, { size: 6, color: '#ffffff', font: 'monospace' });
@@ -592,10 +581,69 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         drawText(ctx, '\u25bc', SCREEN_W - 10, dataY + maxVisibleRows * rowH, { size: 6, color: '#f8a878', font: 'monospace' });
       }
     } else {
-      // TODO: Fetch TM/HM compatibility from PokeAPI
-      drawText(ctx, t('pokedex.moves.noData'), SCREEN_W / 2, dataY + 10, {
-        size: 7, color: '#807070', font: 'monospace', align: 'center',
+      const tmMoves = getTmLearnset(pokemonId);
+
+      if (tmMoves.length === 0) {
+        drawText(ctx, t('pokedex.moves.noData'), SCREEN_W / 2, dataY + 10, {
+          size: 7, color: '#807070', font: 'monospace', align: 'center',
+        });
+        return;
+      }
+
+      // Sort by move name for easy browsing
+      const sorted = [...tmMoves].sort((a, b) => {
+        const nameA = getMoveDisplayName(a.moveId);
+        const nameB = getMoveDisplayName(b.moveId);
+        return nameA.localeCompare(nameB);
       });
+
+      // Clamp scroll offset
+      const maxScroll = Math.max(0, sorted.length - maxVisibleRows);
+      if (movesScrollOffset > maxScroll) movesScrollOffset = maxScroll;
+
+      for (let i = 0; i < maxVisibleRows; i++) {
+        const idx = movesScrollOffset + i;
+        if (idx >= sorted.length) break;
+
+        const entry = sorted[idx];
+        const move = getMove(entry.moveId);
+        const ry = dataY + i * rowH;
+
+        // Alternating row background
+        if (i % 2 === 0) {
+          fillRect(ctx, 2, ry - 1, SCREEN_W - 4, rowH, '#381818');
+        }
+
+        // TM label
+        drawText(ctx, 'TM', colLv, ry, { size: 6, color: '#a0c0ff', font: 'monospace' });
+
+        // Move name (localized)
+        const moveName = getMoveDisplayName(entry.moveId);
+        drawText(ctx, moveName, colName, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+
+        if (move) {
+          // Damage class symbol
+          const classSymbol = getDamageClassSymbol(move.power, move.type);
+          drawText(ctx, classSymbol, colClass, ry, { size: 6, color: '#cccccc', font: 'monospace' });
+
+          // Type badge
+          drawTypeBadge(ctx, move.type as PokemonType, colType, ry, 'short');
+
+          // Accuracy
+          drawText(ctx, move.accuracy !== null ? String(move.accuracy) : '\u2014', colAcc, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+
+          // Power
+          drawText(ctx, move.power !== null && move.power > 0 ? String(move.power) : '\u2014', colPow, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+        }
+      }
+
+      // Scroll indicators
+      if (movesScrollOffset > 0) {
+        drawText(ctx, '\u25b2', SCREEN_W - 10, dataY - 2, { size: 6, color: '#f8a878', font: 'monospace' });
+      }
+      if (movesScrollOffset + maxVisibleRows < sorted.length) {
+        drawText(ctx, '\u25bc', SCREEN_W - 10, dataY + maxVisibleRows * rowH, { size: 6, color: '#f8a878', font: 'monospace' });
+      }
     }
   }
 }

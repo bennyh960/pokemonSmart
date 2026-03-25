@@ -84,6 +84,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   let moveSwapFrom = -1;
   let moveMessage = '';
   let moveMessageTimer = 0;
+  let moveDeleteConfirm = false;
+  let moveDeleteConfirmCursor = 1; // 0 = yes, 1 = no (default to no)
 
   function getParty(): Pokemon[] {
     return getPlayerData().party;
@@ -510,6 +512,41 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       }
     }
 
+    // ── Delete confirmation dialog ──
+    if (moveDeleteConfirm) {
+      const move = pokemon.moves[moveCursor];
+      const moveName = move ? getMoveDisplayName(move.id) : '???';
+      // Overlay
+      fillRect(ctx, 0, 0, 240, 160, '#000000aa');
+      // Dialog box
+      const dx = 30, dy = 50, dw = 180, dh = 50;
+      fillRect(ctx, dx, dy, dw, dh, C.BG);
+      drawRect(ctx, dx, dy, dw, dh, '#cc4444');
+      // Confirm text
+      drawText(ctx, t('party.moves.forgetConfirm', { move: moveName }), dx + dw / 2, dy + 8, {
+        size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center',
+      });
+      drawText(ctx, t('party.moves.forgetWarning'), dx + dw / 2, dy + 20, {
+        size: 6, color: '#ff8888', font: 'monospace', align: 'center',
+      });
+      // Yes / No buttons
+      const btnW = 60, btnH = 12, btnGap = 20;
+      const yesX = dx + dw / 2 - btnW - btnGap / 2;
+      const noX = dx + dw / 2 + btnGap / 2;
+      const btnY = dy + 33;
+      const yesSelected = moveDeleteConfirmCursor === 0;
+      fillRect(ctx, yesX, btnY, btnW, btnH, yesSelected ? '#cc4444' : '#333333');
+      drawRect(ctx, yesX, btnY, btnW, btnH, '#cc4444');
+      drawText(ctx, t('party.moves.forgetYes'), yesX + btnW / 2, btnY + 2, {
+        size: 7, color: yesSelected ? '#ffffff' : '#888888', font: 'monospace', align: 'center',
+      });
+      fillRect(ctx, noX, btnY, btnW, btnH, !yesSelected ? '#2a6a40' : '#333333');
+      drawRect(ctx, noX, btnY, btnW, btnH, '#2a6a40');
+      drawText(ctx, t('party.moves.forgetNo'), noX + btnW / 2, btnY + 2, {
+        size: 7, color: !yesSelected ? '#ffffff' : '#888888', font: 'monospace', align: 'center',
+      });
+    }
+
     // ── Temporary message ──
     if (moveMessage && moveMessageTimer > 0) {
       fillRect(ctx, 8, 136, 224, 10, '#3a1a1a');
@@ -578,6 +615,33 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       }
     }
 
+    // Handle delete confirmation dialog
+    if (moveDeleteConfirm) {
+      if (input.isKeyPressed('Escape')) {
+        moveDeleteConfirm = false;
+        return;
+      }
+      if (input.isKeyPressed('ArrowLeft')) {
+        moveDeleteConfirmCursor = 0;
+        return;
+      }
+      if (input.isKeyPressed('ArrowRight')) {
+        moveDeleteConfirmCursor = 1;
+        return;
+      }
+      if (input.isKeyPressed('Enter')) {
+        if (moveDeleteConfirmCursor === 0) {
+          // Yes — delete the move
+          pokemon.moves.splice(moveCursor, 1);
+          if (moveCursor >= pokemon.moves.length) {
+            moveCursor = pokemon.moves.length - 1;
+          }
+        }
+        moveDeleteConfirm = false;
+      }
+      return;
+    }
+
     // Handle action menu if open
     if (moveActionMenuOpen) {
       if (input.isKeyPressed('Escape')) {
@@ -598,15 +662,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           moveSwapFrom = moveCursor;
           moveActionMenuOpen = false;
         } else if (action === 'delete') {
-          if (pokemon.moves.length <= 1) {
+          if (pokemon.moves.length <= 4) {
             moveMessage = t('party.moves.cantDeleteLast');
             moveMessageTimer = 2;
             moveActionMenuOpen = false;
           } else {
-            pokemon.moves.splice(moveCursor, 1);
-            if (moveCursor >= pokemon.moves.length) {
-              moveCursor = pokemon.moves.length - 1;
-            }
+            // Show confirmation dialog
+            moveDeleteConfirm = true;
+            moveDeleteConfirmCursor = 1; // default to "No"
             moveActionMenuOpen = false;
           }
         } else {
@@ -669,14 +732,13 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
       // D key shortcut for delete
       if (input.isKeyPressed('d') || input.isKeyPressed('D')) {
-        if (pokemon.moves.length <= 1) {
+        if (pokemon.moves.length <= 4) {
           moveMessage = t('party.moves.cantDeleteLast');
           moveMessageTimer = 2;
         } else {
-          pokemon.moves.splice(moveCursor, 1);
-          if (moveCursor >= pokemon.moves.length) {
-            moveCursor = pokemon.moves.length - 1;
-          }
+          // Show confirmation dialog
+          moveDeleteConfirm = true;
+          moveDeleteConfirmCursor = 1; // default to "No"
         }
       }
     }
@@ -693,6 +755,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       moveSwapFrom = -1;
       moveMessage = '';
       moveMessageTimer = 0;
+      moveDeleteConfirm = false;
+      moveDeleteConfirmCursor = 1;
       selectedPartyIndex = -1;
       loadPartySprites();
     },

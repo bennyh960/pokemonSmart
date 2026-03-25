@@ -3,16 +3,57 @@
  *
  * Tracks key states per-frame to distinguish between
  * "key is held down" vs "key was just pressed this frame".
- * Captures number key input for math answer entry.
+ *
+ * Uses e.code (physical key position) for game controls so they work
+ * regardless of keyboard layout (e.g. Hebrew). Uses e.key for special
+ * keys (Enter, Escape, arrows) and number input.
  */
 
 /** Input state snapshot for the current frame. */
 interface InputState {
+  /** Physical keys currently held (e.code values, e.g. 'KeyP', 'ArrowUp'). */
   keysDown: Set<string>;
+  /** Physical keys pressed this frame only (e.code values). */
   keysPressed: Set<string>;
   numberBuffer: string;
   tapDetected: boolean;
   tapPosition: { x: number; y: number } | null;
+}
+
+/**
+ * Maps legacy key strings to physical code strings.
+ * Callers can use either 'p'/'P' (old style) or 'KeyP' (new style) —
+ * this map normalizes old-style calls to physical codes.
+ */
+const KEY_TO_CODE: Record<string, string> = {
+  // Letters (both cases map to same code)
+  'a': 'KeyA', 'A': 'KeyA', 'b': 'KeyB', 'B': 'KeyB',
+  'c': 'KeyC', 'C': 'KeyC', 'd': 'KeyD', 'D': 'KeyD',
+  'e': 'KeyE', 'E': 'KeyE', 'f': 'KeyF', 'F': 'KeyF',
+  'g': 'KeyG', 'G': 'KeyG', 'h': 'KeyH', 'H': 'KeyH',
+  'i': 'KeyI', 'I': 'KeyI', 'j': 'KeyJ', 'J': 'KeyJ',
+  'k': 'KeyK', 'K': 'KeyK', 'l': 'KeyL', 'L': 'KeyL',
+  'm': 'KeyM', 'M': 'KeyM', 'n': 'KeyN', 'N': 'KeyN',
+  'o': 'KeyO', 'O': 'KeyO', 'p': 'KeyP', 'P': 'KeyP',
+  'q': 'KeyQ', 'Q': 'KeyQ', 'r': 'KeyR', 'R': 'KeyR',
+  's': 'KeyS', 'S': 'KeyS', 't': 'KeyT', 'T': 'KeyT',
+  'u': 'KeyU', 'U': 'KeyU', 'v': 'KeyV', 'V': 'KeyV',
+  'w': 'KeyW', 'W': 'KeyW', 'x': 'KeyX', 'X': 'KeyX',
+  'y': 'KeyY', 'Y': 'KeyY', 'z': 'KeyZ', 'Z': 'KeyZ',
+  // Digits
+  '0': 'Digit0', '1': 'Digit1', '2': 'Digit2', '3': 'Digit3',
+  '4': 'Digit4', '5': 'Digit5', '6': 'Digit6', '7': 'Digit7',
+  '8': 'Digit8', '9': 'Digit9',
+  // Special keys (already match e.code or e.key — pass through)
+  ' ': 'Space', 'Tab': 'Tab', 'Escape': 'Escape',
+  'Enter': 'Enter', 'Backspace': 'Backspace',
+  'ArrowUp': 'ArrowUp', 'ArrowDown': 'ArrowDown',
+  'ArrowLeft': 'ArrowLeft', 'ArrowRight': 'ArrowRight',
+};
+
+/** Normalize a key query to its physical code. */
+function toCode(key: string): string {
+  return KEY_TO_CODE[key] ?? key;
 }
 
 /** Creates and returns an InputManager bound to the given canvas. */
@@ -25,17 +66,21 @@ export function createInputManager(canvas: HTMLCanvasElement) {
     tapPosition: null,
   };
 
-  /** Game keys that should prevent default browser behavior. */
-  const PREVENTED_KEYS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', ' '];
+  /** Physical codes that should prevent default browser behavior. */
+  const PREVENTED_CODES = new Set([
+    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Space',
+  ]);
 
   function handleKeyDown(e: KeyboardEvent): void {
-    const { key } = e;
+    const code = e.code;
 
-    if (!state.keysDown.has(key)) {
-      state.keysPressed.add(key);
+    if (!state.keysDown.has(code)) {
+      state.keysPressed.add(code);
     }
-    state.keysDown.add(key);
+    state.keysDown.add(code);
 
+    // Number buffer uses e.key so it works with any layout
+    const { key } = e;
     if (key >= '0' && key <= '9') {
       state.numberBuffer += key;
     }
@@ -44,13 +89,13 @@ export function createInputManager(canvas: HTMLCanvasElement) {
       state.numberBuffer = state.numberBuffer.slice(0, -1);
     }
 
-    if (PREVENTED_KEYS.includes(key)) {
+    if (PREVENTED_CODES.has(code)) {
       e.preventDefault();
     }
   }
 
   function handleKeyUp(e: KeyboardEvent): void {
-    state.keysDown.delete(e.key);
+    state.keysDown.delete(e.code);
   }
 
   function handleTouchStart(e: TouchEvent): void {
@@ -74,19 +119,19 @@ export function createInputManager(canvas: HTMLCanvasElement) {
   canvas.addEventListener('click', handleClick);
 
   return {
-    /** Returns true if the key is currently held down. */
+    /** Returns true if the key is currently held down. Accepts key char ('p') or code ('KeyP'). */
     isKeyDown(key: string): boolean {
-      return state.keysDown.has(key);
+      return state.keysDown.has(toCode(key));
     },
 
-    /** Returns true only on the first frame the key is pressed. */
+    /** Returns true only on the first frame the key is pressed. Accepts key char ('p') or code ('KeyP'). */
     isKeyPressed(key: string): boolean {
-      return state.keysPressed.has(key);
+      return state.keysPressed.has(toCode(key));
     },
 
     /** Consume a key press so no other handler sees it this frame. */
     consumeKey(key: string): void {
-      state.keysPressed.delete(key);
+      state.keysPressed.delete(toCode(key));
     },
 
     /** Returns the current number input buffer (digits typed so far). */
