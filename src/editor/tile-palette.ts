@@ -139,12 +139,22 @@ export class TilePalette {
       // Draw tile from tileset image
       const ctx = canvas.getContext('2d')!;
       ctx.imageSmoothingEnabled = false;
-      if (this.tilesetImage.complete) {
-        ctx.drawImage(this.tilesetImage, def.sx, def.sy, def.w, def.h, 0, 0, tw, th);
-      } else {
-        this.tilesetImage.addEventListener('load', () => {
+      const drawTile = () => {
+        if (def.cells) {
+          const scaleX = tw / def.w;
+          const scaleY = th / def.h;
+          for (const cell of def.cells) {
+            ctx.drawImage(this.tilesetImage, def.sx + cell.dx * 16, def.sy + cell.dy * 16, 16, 16,
+              cell.dx * 16 * scaleX, cell.dy * 16 * scaleY, 16 * scaleX, 16 * scaleY);
+          }
+        } else {
           ctx.drawImage(this.tilesetImage, def.sx, def.sy, def.w, def.h, 0, 0, tw, th);
-        }, { once: true });
+        }
+      };
+      if (this.tilesetImage.complete) {
+        drawTile();
+      } else {
+        this.tilesetImage.addEventListener('load', drawTile, { once: true });
       }
 
       canvas.addEventListener('click', () => {

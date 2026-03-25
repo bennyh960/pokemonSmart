@@ -339,7 +339,17 @@ export class CanvasViewport {
         if (!def) continue;
         const drawX = Math.floor(obj.x * tilePixels - scrollX);
         const drawY = Math.floor(obj.y * tilePixels - scrollY);
-        ctx.drawImage(this.tilesetImage, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w * zoom, def.h * zoom);
+        if (def.cells) {
+          for (const cell of def.cells) {
+            const cellSx = def.sx + cell.dx * 16;
+            const cellSy = def.sy + cell.dy * 16;
+            const cellDrawX = drawX + cell.dx * tilePixels;
+            const cellDrawY = drawY + cell.dy * tilePixels;
+            ctx.drawImage(this.tilesetImage, cellSx, cellSy, 16, 16, cellDrawX, cellDrawY, tilePixels, tilePixels);
+          }
+        } else {
+          ctx.drawImage(this.tilesetImage, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w * zoom, def.h * zoom);
+        }
       }
     }
     // ── Legacy object layer (deprecated) ──

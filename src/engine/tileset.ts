@@ -18,6 +18,10 @@ export interface TileDef {
   overlay: boolean; // true = renders on top of player (e.g. tall grass); false = flat ground decoration
   destroy: null | 'cut' | 'strength';
   category?: string;
+  /** For grouped non-adjacent tiles: list of included 16x16 cells as grid offsets from (sx,sy).
+   *  When absent, the entire sx/sy/w/h rectangle is the tile.
+   *  When present, only these cells are rendered/collidable. */
+  cells?: Array<{ dx: number; dy: number }>;
 }
 
 /** A loaded tileset ready for rendering. */
@@ -41,6 +45,7 @@ interface TileEntryRaw {
   above: boolean;
   overlay?: boolean;
   category?: string;
+  cells?: Array<{ dx: number; dy: number }>;
 }
 
 /** Cache of loaded tilesets by name. */
@@ -85,6 +90,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
         overlay: raw.overlay ?? false,
         destroy: raw.destroy ?? null,
         category: raw.category,
+        cells: raw.cells,
       });
     }
   }

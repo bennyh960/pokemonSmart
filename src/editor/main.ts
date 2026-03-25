@@ -24,7 +24,7 @@ async function init() {
   if (Array.isArray(dppManifest.tiles)) {
     for (const raw of dppManifest.tiles as Array<{ key: string; sx: number; sy: number; w?: number; h?: number; tileSize?: number; walkable: boolean; encounter: boolean; above?: boolean; overlay?: boolean; destroy?: null | string; category?: string }>) {
       const size = raw.tileSize ?? 16;
-      tiles[raw.key] = { sx: raw.sx, sy: raw.sy, w: raw.w ?? size, h: raw.h ?? size, walkable: raw.walkable, encounter: raw.encounter, above: raw.above ?? false, overlay: raw.overlay ?? false, destroy: (raw.destroy as TileDef['destroy']) ?? null, category: raw.category };
+      tiles[raw.key] = { sx: raw.sx, sy: raw.sy, w: raw.w ?? size, h: raw.h ?? size, walkable: raw.walkable, encounter: raw.encounter, above: raw.above ?? false, overlay: raw.overlay ?? false, destroy: (raw.destroy as TileDef['destroy']) ?? null, category: raw.category, cells: (raw as Record<string, unknown>).cells as TileDef['cells'] };
     }
   } else {
     const baseTileSize = (dppManifest as Record<string, unknown>).tileSize as number ?? 16;

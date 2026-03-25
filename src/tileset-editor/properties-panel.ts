@@ -264,36 +264,12 @@ export class PropertiesPanel {
     this.container.appendChild(section);
   }
 
-  /** Batch add form for Ctrl+Click multi-selected non-adjacent cells. */
+  /** Add form for Ctrl+Click multi-selected non-adjacent cells → single grouped tile. */
   private renderMultiAddForm(): void {
     const cells = [...this.state.multiSelectedCells].map(k => {
       const [c, r] = k.split(',').map(Number);
       return { col: c, row: r };
     });
-
-    const section = document.createElement('div');
-    section.className = 'props-section';
-
-    section.innerHTML = `
-      <h3>Batch Add — ${cells.length} Cells</h3>
-      <div style="color:#0dc; font-size:11px; margin-bottom:8px; line-height:1.5">
-        Ctrl+Click to add/remove cells.<br>
-        All selected cells will share the same properties. Each cell becomes a separate 16×16 tile with auto-numbered keys.
-      </div>
-      <div class="prop-row"><label>Key prefix:</label><input id="multi-key" type="text" placeholder="e.g. building-wall" autofocus /></div>
-      <div class="prop-row"><label>Category:</label><select id="multi-cat"><option value="">None</option>${TILE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
-      <div class="prop-row"><label>Walkable:</label><input id="multi-walk" type="checkbox" /></div>
-      <div class="prop-row"><label>Encounter:</label><input id="multi-enc" type="checkbox" /></div>
-      <div class="prop-row"><label>Above (2nd layer):</label><input id="multi-above" type="checkbox" /></div>
-      <div class="prop-row"><label>Overlay (on top of player):</label><input id="multi-overlay" type="checkbox" /></div>
-      <div class="prop-row"><label>Description:</label><input id="multi-desc" type="text" placeholder="optional note" /></div>
-    `;
-
-    // Preview grid showing which cells are selected
-    const previewLabel = document.createElement('h3');
-    previewLabel.textContent = 'Selected Cells';
-    previewLabel.style.marginTop = '10px';
-    section.appendChild(previewLabel);
 
     // Compute bounding box
     let minCol = Infinity, maxCol = -Infinity, minRow = Infinity, maxRow = -Infinity;
@@ -303,8 +279,40 @@ export class PropertiesPanel {
     }
     const gridCols = maxCol - minCol + 1;
     const gridRows = maxRow - minRow + 1;
-    const cellSet = new Set(this.state.multiSelectedCells);
+    const sx = minCol * 16;
+    const sy = minRow * 16;
+    const w = gridCols * 16;
+    const h = gridRows * 16;
+    // cells as grid offsets relative to bounding box origin
+    const cellOffsets = cells.map(({ col, row }) => ({ dx: col - minCol, dy: row - minRow }));
 
+    const section = document.createElement('div');
+    section.className = 'props-section';
+
+    section.innerHTML = `
+      <h3>Grouped Tile — ${cells.length} Cells</h3>
+      <div style="color:#0dc; font-size:11px; margin-bottom:8px; line-height:1.5">
+        Ctrl+Click to add/remove cells.<br>
+        Creates <b>one tile</b> from non-adjacent cells. Gaps in the bounding box are excluded from rendering and collision.
+      </div>
+      <div class="prop-row"><label>Region:</label><span>(${sx}, ${sy}) ${w}×${h}px</span></div>
+      <div class="prop-row"><label>Cells:</label><span class="val-highlight">${cells.length} of ${gridCols * gridRows}</span></div>
+      <div class="prop-row"><label>Key:</label><input id="multi-key" type="text" placeholder="e.g. building-walls" autofocus /></div>
+      <div class="prop-row"><label>Category:</label><select id="multi-cat"><option value="">None</option>${TILE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
+      <div class="prop-row"><label>Walkable:</label><input id="multi-walk" type="checkbox" /></div>
+      <div class="prop-row"><label>Encounter:</label><input id="multi-enc" type="checkbox" /></div>
+      <div class="prop-row"><label>Above (2nd layer):</label><input id="multi-above" type="checkbox" /></div>
+      <div class="prop-row"><label>Overlay (on top of player):</label><input id="multi-overlay" type="checkbox" /></div>
+      <div class="prop-row"><label>Description:</label><input id="multi-desc" type="text" placeholder="optional note" /></div>
+    `;
+
+    // Preview grid showing which cells are selected vs skipped
+    const previewLabel = document.createElement('h3');
+    previewLabel.textContent = 'Preview';
+    previewLabel.style.marginTop = '10px';
+    section.appendChild(previewLabel);
+
+    const cellSet = new Set(this.state.multiSelectedCells);
     const cellSize = Math.min(24, Math.floor(200 / Math.max(gridCols, gridRows)));
     const previewCanvas = document.createElement('canvas');
     previewCanvas.width = gridCols * cellSize;
@@ -321,66 +329,49 @@ export class PropertiesPanel {
         const px = (c - minCol) * cellSize;
         const py = (r - minRow) * cellSize;
         if (cellSet.has(`${c},${r}`)) {
-          // Draw the actual tile from the tileset image
           pctx.drawImage(this.image, c * 16, r * 16, 16, 16, px, py, cellSize, cellSize);
           pctx.strokeStyle = 'rgba(0, 220, 220, 0.6)';
           pctx.lineWidth = 1;
           pctx.strokeRect(px, py, cellSize, cellSize);
         } else {
-          // Empty/skipped cell
+          // Skipped cell — show as dark with X pattern
           pctx.fillStyle = '#1a1a2a';
           pctx.fillRect(px, py, cellSize, cellSize);
-          pctx.strokeStyle = 'rgba(255,255,255,0.05)';
+          pctx.strokeStyle = 'rgba(255, 80, 80, 0.3)';
           pctx.lineWidth = 1;
-          pctx.strokeRect(px, py, cellSize, cellSize);
+          pctx.beginPath();
+          pctx.moveTo(px, py); pctx.lineTo(px + cellSize, py + cellSize);
+          pctx.moveTo(px + cellSize, py); pctx.lineTo(px, py + cellSize);
+          pctx.stroke();
         }
       }
     }
     section.appendChild(previewCanvas);
 
-    // Add Tiles button
+    // Add Tile button
     const addBtn = document.createElement('button');
     addBtn.className = 'primary';
-    addBtn.textContent = `+ Add ${cells.length} Tiles`;
+    addBtn.textContent = '+ Add Grouped Tile';
     addBtn.style.marginTop = '8px';
     addBtn.addEventListener('click', () => {
       const keyInput = section.querySelector('#multi-key') as HTMLInputElement;
-      const prefix = keyInput.value.trim();
-      if (!prefix) { keyInput.focus(); keyInput.style.borderColor = '#cc3333'; return; }
+      const key = keyInput.value.trim();
+      if (!key) { keyInput.focus(); keyInput.style.borderColor = '#cc3333'; return; }
+      if (this.state.tiles.some(t => t.key === key)) { alert(`Key "${key}" already exists`); return; }
 
       const catVal = (section.querySelector('#multi-cat') as HTMLSelectElement).value;
-      const walkable = (section.querySelector('#multi-walk') as HTMLInputElement).checked;
-      const encounter = (section.querySelector('#multi-enc') as HTMLInputElement).checked;
-      const above = (section.querySelector('#multi-above') as HTMLInputElement).checked;
-      const overlay = (section.querySelector('#multi-overlay') as HTMLInputElement).checked || undefined;
-      const description = (section.querySelector('#multi-desc') as HTMLInputElement).value.trim() || undefined;
-
-      // Check for key collisions
-      const existingKeys = new Set(this.state.tiles.map(t => t.key));
-      for (let i = 0; i < cells.length; i++) {
-        const key = cells.length === 1 ? prefix : `${prefix}-${i + 1}`;
-        if (existingKeys.has(key)) { alert(`Key "${key}" already exists`); return; }
-      }
-
-      // Add all tiles
-      for (let i = 0; i < cells.length; i++) {
-        const { col, row } = cells[i];
-        const key = cells.length === 1 ? prefix : `${prefix}-${i + 1}`;
-        this.state.addTile({
-          key,
-          sx: col * 16,
-          sy: row * 16,
-          w: 16,
-          h: 16,
-          walkable,
-          encounter,
-          destroy: null,
-          above,
-          overlay,
-          category: catVal || undefined,
-          description,
-        });
-      }
+      this.state.addTile({
+        key,
+        sx, sy, w, h,
+        walkable: (section.querySelector('#multi-walk') as HTMLInputElement).checked,
+        encounter: (section.querySelector('#multi-enc') as HTMLInputElement).checked,
+        destroy: null,
+        above: (section.querySelector('#multi-above') as HTMLInputElement).checked,
+        overlay: (section.querySelector('#multi-overlay') as HTMLInputElement).checked || undefined,
+        category: catVal || undefined,
+        description: (section.querySelector('#multi-desc') as HTMLInputElement).value.trim() || undefined,
+        cells: cellOffsets,
+      });
 
       this.state.clearMultiSelection();
     });
@@ -468,10 +459,13 @@ export class PropertiesPanel {
     const section = document.createElement('div');
     section.className = 'props-section';
 
+    const gridCols = Math.max(1, Math.round(t.w / 16));
+    const gridRows = Math.max(1, Math.round(t.h / 16));
     section.innerHTML = `
       <h3>Edit: ${t.key}</h3>
       <div class="prop-row"><label>Position:</label><span>(${t.sx}, ${t.sy})</span></div>
       <div class="prop-row"><label>Size:</label><span class="val-highlight">${t.w}×${t.h}px</span></div>
+      ${t.cells ? `<div class="prop-row"><label>Grouped:</label><span class="val-highlight">${t.cells.length} of ${gridCols * gridRows} cells</span></div>` : ''}
       <div class="prop-row">
         <label>Key:</label>
         <input id="edit-key" type="text" value="${t.key}" />
@@ -538,7 +532,11 @@ export class PropertiesPanel {
       this.state.updateTile(index, { description: descEl.value.trim() || undefined });
     });
 
-    this.addPreview(section, t.sx, t.sy, t.w, t.h);
+    if (t.cells) {
+      this.addGroupedPreview(section, t);
+    } else {
+      this.addPreview(section, t.sx, t.sy, t.w, t.h);
+    }
 
     // Delete button
     const delBtn = document.createElement('button');
@@ -580,6 +578,57 @@ export class PropertiesPanel {
         }
       }
       pctx.drawImage(this.image, sx, sy, w, h, 0, 0, w * scale, h * scale);
+    };
+    if (this.image.complete) draw();
+    else this.image.addEventListener('load', draw);
+
+    container.appendChild(previewCanvas);
+  }
+
+  /** Preview for grouped tiles — only draws included cells, gaps shown as dark with X. */
+  private addGroupedPreview(container: HTMLElement, t: TileEntry): void {
+    const label = document.createElement('h3');
+    label.textContent = 'Preview';
+    label.style.marginTop = '10px';
+    container.appendChild(label);
+
+    const gridCols = Math.max(1, Math.round(t.w / 16));
+    const gridRows = Math.max(1, Math.round(t.h / 16));
+    const cellSize = Math.min(24, Math.floor(200 / Math.max(gridCols, gridRows)));
+    const previewCanvas = document.createElement('canvas');
+    previewCanvas.width = gridCols * cellSize;
+    previewCanvas.height = gridRows * cellSize;
+    previewCanvas.style.imageRendering = 'pixelated';
+    previewCanvas.style.border = '1px solid #444';
+    previewCanvas.style.background = '#111';
+    previewCanvas.style.borderRadius = '4px';
+
+    const cellSet = new Set(t.cells!.map(c => `${c.dx},${c.dy}`));
+
+    const draw = () => {
+      const pctx = previewCanvas.getContext('2d')!;
+      pctx.imageSmoothingEnabled = false;
+      for (let r = 0; r < gridRows; r++) {
+        for (let c = 0; c < gridCols; c++) {
+          const px = c * cellSize;
+          const py = r * cellSize;
+          if (cellSet.has(`${c},${r}`)) {
+            pctx.drawImage(this.image, t.sx + c * 16, t.sy + r * 16, 16, 16, px, py, cellSize, cellSize);
+            pctx.strokeStyle = 'rgba(0, 220, 220, 0.4)';
+            pctx.lineWidth = 1;
+            pctx.strokeRect(px, py, cellSize, cellSize);
+          } else {
+            pctx.fillStyle = '#1a1a2a';
+            pctx.fillRect(px, py, cellSize, cellSize);
+            pctx.strokeStyle = 'rgba(255, 80, 80, 0.3)';
+            pctx.lineWidth = 1;
+            pctx.beginPath();
+            pctx.moveTo(px, py); pctx.lineTo(px + cellSize, py + cellSize);
+            pctx.moveTo(px + cellSize, py); pctx.lineTo(px, py + cellSize);
+            pctx.stroke();
+          }
+        }
+      }
     };
     if (this.image.complete) draw();
     else this.image.addEventListener('load', draw);

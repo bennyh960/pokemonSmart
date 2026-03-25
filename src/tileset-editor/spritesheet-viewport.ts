@@ -346,26 +346,49 @@ export class SpritesheetViewport {
     // Highlight defined tiles
     for (let i = 0; i < this.state.tiles.length; i++) {
       const t = this.state.tiles[i];
-      const x = t.sx * zoom - scrollX;
-      const y = t.sy * zoom - scrollY;
-      const tw = t.w * zoom;
-      const th = t.h * zoom;
       const isSelected = i === this.state.selectedIndex;
+      const fillColor = isSelected ? 'rgba(255, 200, 0, 0.2)' : (t.above ? 'rgba(100, 150, 255, 0.15)' : 'rgba(0, 200, 100, 0.12)');
+      const strokeColor = isSelected ? '#ffcc00' : (t.above ? '#6699ff' : '#33cc66');
+      const lineW = isSelected ? 2 : 1;
 
-      // Fill
-      ctx.fillStyle = isSelected ? 'rgba(255, 200, 0, 0.2)' : (t.above ? 'rgba(100, 150, 255, 0.15)' : 'rgba(0, 200, 100, 0.12)');
-      ctx.fillRect(x, y, tw, th);
+      if (t.cells) {
+        // Grouped tile: highlight each individual cell
+        for (const c of t.cells) {
+          const cx = (t.sx + c.dx * 16) * zoom - scrollX;
+          const cy = (t.sy + c.dy * 16) * zoom - scrollY;
+          ctx.fillStyle = fillColor;
+          ctx.fillRect(cx, cy, cell, cell);
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = lineW;
+          ctx.strokeRect(cx, cy, cell, cell);
+        }
+        // Label on the first cell
+        if (zoom >= 1.5 && t.cells.length > 0) {
+          const fc = t.cells[0];
+          const lx = (t.sx + fc.dx * 16) * zoom - scrollX;
+          const ly = (t.sy + fc.dy * 16) * zoom - scrollY;
+          ctx.fillStyle = '#fff';
+          ctx.font = `${Math.max(8, 10 * zoom / 2)}px Inter`;
+          ctx.fillText(t.key, lx + 2, ly + Math.max(10, 12 * zoom / 2));
+        }
+      } else {
+        // Regular rectangular tile
+        const x = t.sx * zoom - scrollX;
+        const y = t.sy * zoom - scrollY;
+        const tw = t.w * zoom;
+        const th = t.h * zoom;
 
-      // Border
-      ctx.strokeStyle = isSelected ? '#ffcc00' : (t.above ? '#6699ff' : '#33cc66');
-      ctx.lineWidth = isSelected ? 2 : 1;
-      ctx.strokeRect(x, y, tw, th);
+        ctx.fillStyle = fillColor;
+        ctx.fillRect(x, y, tw, th);
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = lineW;
+        ctx.strokeRect(x, y, tw, th);
 
-      // Label
-      if (zoom >= 1.5) {
-        ctx.fillStyle = '#fff';
-        ctx.font = `${Math.max(8, 10 * zoom / 2)}px Inter`;
-        ctx.fillText(t.key, x + 2, y + Math.max(10, 12 * zoom / 2));
+        if (zoom >= 1.5) {
+          ctx.fillStyle = '#fff';
+          ctx.font = `${Math.max(8, 10 * zoom / 2)}px Inter`;
+          ctx.fillText(t.key, x + 2, y + Math.max(10, 12 * zoom / 2));
+        }
       }
     }
 
@@ -413,7 +436,8 @@ export class SpritesheetViewport {
       ctx.fillText(`${this.state.cropSelW}×${this.state.cropSelH}px`, csx + 2, csy - 4);
     }
     // Normal grid-based selection highlight (yellow dashed)
-    else if (this.state.selectionValid) {
+    // Skip for grouped tiles — their individual cells are already highlighted above
+    else if (this.state.selectionValid && !(this.state.selectedIndex >= 0 && this.state.tiles[this.state.selectedIndex]?.cells)) {
       const sx = this.state.selStartCol * cell - scrollX;
       const sy = this.state.selStartRow * cell - scrollY;
       const sw = this.state.selCols * cell;

@@ -64,6 +64,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         overlay: t.overlay ?? undefined,
         category: t.category,
         description: t.description,
+        cells: t.cells,
       });
     }
   }

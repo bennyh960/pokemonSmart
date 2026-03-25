@@ -97,6 +97,10 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
         const lx = gx - obj.x;
         const ly = gy - obj.y;
         if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
+          // For grouped tiles with cells, only block if this cell is included
+          if (def.cells) {
+            if (!def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+          }
           if (!def.walkable) return true;
         }
       }
@@ -136,7 +140,10 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const gridH = Math.max(1, Math.round(def.h / BASE));
           const lx = gx - obj.x;
           const ly = gy - obj.y;
-          if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) return true;
+          if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
+            if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+            return true;
+          }
         }
       }
       return false;
@@ -206,7 +213,18 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
         const renderable: Renderable = {
           y: (obj.y + gridH - 1) * BASE,
           render: () => {
-            ctx.drawImage(tileset!.image, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w, def.h);
+            if (def.cells) {
+              // Grouped tile: draw each cell individually
+              for (const cell of def.cells) {
+                const cellSx = def.sx + cell.dx * BASE;
+                const cellSy = def.sy + cell.dy * BASE;
+                const cellDrawX = drawX + cell.dx * BASE;
+                const cellDrawY = drawY + cell.dy * BASE;
+                ctx.drawImage(tileset!.image, cellSx, cellSy, BASE, BASE, cellDrawX, cellDrawY, BASE, BASE);
+              }
+            } else {
+              ctx.drawImage(tileset!.image, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w, def.h);
+            }
           },
         };
 

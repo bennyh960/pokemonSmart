@@ -12,6 +12,10 @@ export interface TileEntry {
   overlay?: boolean; // true = renders on top of player (tall grass); false/absent = flat ground
   category?: string;
   description?: string;
+  /** For grouped non-adjacent tiles: list of included 16x16 cells as grid offsets from (sx,sy).
+   *  When absent, the entire sx/sy/w/h rectangle is the tile.
+   *  When present, only these cells are rendered/collidable. */
+  cells?: Array<{ dx: number; dy: number }>;
 }
 
 /** The final manifest JSON output. */

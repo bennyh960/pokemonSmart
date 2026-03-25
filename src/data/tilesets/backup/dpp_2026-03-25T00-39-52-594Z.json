@@ -702,6 +702,19 @@
       "description": "grass pink should be next pink tree"
     },
     {
+      "key": "b7",
+      "sx": 48,
+      "sy": 1472,
+      "w": 80,
+      "h": 64,
+      "walkable": false,
+      "encounter": false,
+      "destroy": null,
+      "above": true,
+      "category": "building",
+      "description": "modern house orange roof"
+    },
+    {
       "key": "b8",
       "sx": 64,
       "sy": 1536,
@@ -1695,97 +1708,6 @@
       "above": true,
       "category": "building",
       "description": "b7 building door"
-    },
-    {
-      "key": "b7",
-      "sx": 48,
-      "sy": 1472,
-      "w": 80,
-      "h": 64,
-      "walkable": false,
-      "encounter": false,
-      "destroy": null,
-      "above": true,
-      "category": "building",
-      "description": "modern house with orange roof small size",
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 3
-        },
-        {
-          "dx": 3,
-          "dy": 3
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        }
-      ]
     }
   ]
 }
