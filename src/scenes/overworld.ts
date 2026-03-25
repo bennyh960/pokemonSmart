@@ -293,6 +293,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       lines.push(t('npc.reward.money', { money: reward.money }));
     }
 
+    // Award badge
+    if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
+      pd.badges |= (1 << (reward.badge - 1));
+      lines.push(t('npc.reward.badge', { badge: reward.badge }));
+    }
+
+    // Set story event flag
+    if (reward.storyEvent) {
+      pd.flags[reward.storyEvent] = true;
+    }
+
     // Mark as given
     pd.flags[flagKey] = true;
     autoSave();
@@ -350,6 +361,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       party,
       reward: normalizeReward(trainer.reward),
       trainerSprite: NPC_TO_TRAINER_SPRITE[trainer.spriteType],
+      postBattleDialogue: trainer.postBattleDialogue,
     };
   }
 

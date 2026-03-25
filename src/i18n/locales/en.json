@@ -114,6 +114,7 @@
 
   "npc.reward.item": "Received {item} ×{qty}!",
   "npc.reward.money": "Received {money}₽!",
+  "npc.reward.badge": "Received Badge #{badge}!",
 
   "npc.choice.yes": "Yes",
   "npc.choice.no": "No",
@@ -138,6 +139,7 @@
   "battle.cantRunTrainer": "Can't run from a trainer battle!",
   "battle.trainerReward": "You got ${money} for winning!",
   "battle.trainerRewardItem": "You received {qty}x {item}!",
+  "battle.trainerRewardBadge": "You earned Badge #{badge}!",
   "trainer.defeated.dialogue": "You're pretty strong...",
   "heal.done": "Your Pokemon are fully healed!",
 

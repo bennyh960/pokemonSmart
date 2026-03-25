@@ -21,7 +21,9 @@ export interface AutoWalkConfig {
 export interface DialogueReward {
   items?: RewardItem[];
   money?: number;
-  flag?: string;  // Flag to set after giving reward (prevents re-giving)
+  badge?: number;       // Gym badge number (1-8) to award
+  storyEvent?: string;  // Story progression flag to set (e.g. 'story-received-pokedex')
+  flag?: string;        // Flag to set after giving reward (prevents re-giving)
 }
 
 /** NPC data as stored in map JSON. */
@@ -44,10 +46,12 @@ export interface RewardItem {
   quantity: number;
 }
 
-/** Trainer reward — money plus optional items. */
+/** Trainer reward — money plus optional items, badges, and story events. */
 export interface TrainerReward {
   money: number;
   items?: RewardItem[];
+  badge?: number;       // Gym badge number (1-8) to award
+  storyEvent?: string;  // Story progression flag to set
 }
 
 /** Trainer NPC with party and battle data. */
@@ -57,6 +61,7 @@ export interface TrainerData extends NPCData {
   defeated?: boolean;
   reward: TrainerReward;
   lineOfSight: number;
+  postBattleDialogue?: string[];  // Dialogue shown after defeating this trainer (e.g. gym leader speech)
 }
 
 /** Normalize a reward field that may be a legacy plain number. */

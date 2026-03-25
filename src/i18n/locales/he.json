@@ -114,6 +114,7 @@
 
   "npc.reward.item": "קיבלת {item} ×{qty}!",
   "npc.reward.money": "קיבלת {money}₽!",
+  "npc.reward.badge": "קיבלת תג #{badge}!",
 
   "npc.choice.yes": "כן",
   "npc.choice.no": "לא",
@@ -134,6 +135,7 @@
   "battle.cantRunTrainer": "אי אפשר לברוח מקרב מאמנים!",
   "battle.trainerReward": "קיבלת ${money} על הניצחון!",
   "battle.trainerRewardItem": "קיבלת {qty}x {item}!",
+  "battle.trainerRewardBadge": "השגת תג #{badge}!",
   "trainer.defeated.dialogue": "אתה די חזק...",
   "heal.done": "הפוקימונים שלך רופאו במלואם!",
 

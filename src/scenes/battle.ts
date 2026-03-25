@@ -46,7 +46,8 @@ export interface TrainerBattleData {
   trainerId: string;
   party: Pokemon[];
   reward: TrainerReward;
-  trainerSprite?: string;  // e.g., 'youngster', 'lass'
+  trainerSprite?: string;           // e.g., 'youngster', 'lass'
+  postBattleDialogue?: string[];    // Dialogue shown after defeat (e.g. gym leader speech)
 }
 
 export function setBattleData(playerPokemon: Pokemon, enemyPokemon: Pokemon, context: BattleContext = 'grass'): void {
@@ -179,28 +180,46 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function awardTrainerReward(): void {
-    if (hasActiveGame() && trainerData) {
+    const td = trainerData!;
+    if (hasActiveGame()) {
       const pd = getPlayerData();
-      const reward = trainerData.reward;
+      const reward = td.reward;
       pd.money += reward.money;
-      // Award items if any
+      // Award items
       if (reward.items) {
         for (const ri of reward.items) {
           pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
         }
       }
-      pd.flags[`trainer-${trainerData.trainerId}-defeated`] = true;
+      // Award badge
+      if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
+        pd.badges |= (1 << (reward.badge - 1));
+      }
+      // Set story event flag
+      if (reward.storyEvent) {
+        pd.flags[reward.storyEvent] = true;
+      }
+      pd.flags[`trainer-${td.trainerId}-defeated`] = true;
       autoSave();
     }
-    const lines: string[] = [t('battle.trainerReward', { money: trainerData!.reward.money })];
-    // Show item rewards
-    if (trainerData!.reward.items) {
-      for (const ri of trainerData!.reward.items) {
+
+    // Build reward message lines
+    const lines: string[] = [t('battle.trainerReward', { money: td.reward.money })];
+    if (td.reward.items) {
+      for (const ri of td.reward.items) {
         const itemDef = getItem(ri.itemId);
         const itemName = itemDef ? t(itemDef.nameKey) : ri.itemId;
         lines.push(t('battle.trainerRewardItem', { item: itemName, qty: ri.quantity }));
       }
     }
+    if (td.reward.badge !== undefined) {
+      lines.push(t('battle.trainerRewardBadge', { badge: td.reward.badge }));
+    }
+    // Append post-battle dialogue if present
+    if (td.postBattleDialogue && td.postBattleDialogue.length > 0) {
+      lines.push(...td.postBattleDialogue);
+    }
+
     textBox = createTextBox(lines, isRTL());
     phase = 'XP_GAIN';
     trainerData = null;
