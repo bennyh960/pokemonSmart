@@ -22,6 +22,7 @@ export interface TileManifest {
 
 export type TsEditorEvent =
   | 'selection-changed'
+  | 'multi-selection-changed'
   | 'item-selected'
   | 'items-changed'
   | 'viewport-changed'

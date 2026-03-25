@@ -22,6 +22,7 @@ const SFX_TRACKS: Record<string, string> = {
   'menu-cancel': '/audio/sfx/menu-cancel.wav',
   hit: '/audio/sfx/hit.wav',
   'text-blip': '/audio/sfx/text-blip.wav',
+  'heal': '/audio/sfx/menu-select.wav', // TODO: replace with proper heal sound
 };
 
 /** Default crossfade duration in ms. */
@@ -220,3 +221,8 @@ export function createAudioManager() {
 
 /** The return type of createAudioManager, for use in type annotations. */
 export type AudioManager = ReturnType<typeof createAudioManager>;
+
+/** Global audio instance — set by game.ts on init, accessible from any module. */
+let globalAudio: AudioManager | null = null;
+export function setGlobalAudio(audio: AudioManager): void { globalAudio = audio; }
+export function getGlobalAudio(): AudioManager | null { return globalAudio; }

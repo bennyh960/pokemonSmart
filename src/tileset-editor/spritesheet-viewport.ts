@@ -1,4 +1,4 @@
-import type { TilesetEditorState } from './editor-state.js';
+import { TilesetEditorState } from './editor-state.js';
 
 type CropHandle = 'move' | 'n' | 's' | 'e' | 'w' | 'nw' | 'ne' | 'sw' | 'se' | null;
 
@@ -52,7 +52,7 @@ export class SpritesheetViewport {
     this.resize();
     window.addEventListener('resize', () => this.resize());
 
-    for (const evt of ['selection-changed', 'items-changed', 'viewport-changed', 'item-selected', 'crop-mode-changed', 'crop-target-changed'] as const) {
+    for (const evt of ['selection-changed', 'multi-selection-changed', 'items-changed', 'viewport-changed', 'item-selected', 'crop-mode-changed', 'crop-target-changed'] as const) {
       state.on(evt, () => { this.dirty = true; });
     }
 
@@ -185,8 +185,23 @@ export class SpritesheetViewport {
       }
 
       // Normal mode: grid-based selection
-      this.mouseDown = true;
       const { col, row } = this.pixelToGrid(px, py);
+
+      // Ctrl+Click: toggle cell in multi-selection (non-adjacent picking)
+      if (e.ctrlKey || e.metaKey) {
+        this.state.toggleMultiCell(col, row);
+        // Clear rectangle selection when using multi-select
+        this.state.clearSelection();
+        this.state.selectedIndex = -1;
+        this.state.emit('item-selected');
+        return;
+      }
+
+      // Regular click: clear multi-selection and start rectangle drag
+      if (this.state.multiSelectionValid) {
+        this.state.clearMultiSelection();
+      }
+      this.mouseDown = true;
       this.dragStartCol = col;
       this.dragStartRow = row;
       this.state.setSelection(col, row, col, row);
@@ -415,6 +430,28 @@ export class SpritesheetViewport {
       ctx.fillStyle = 'rgba(255,255,0,0.9)';
       ctx.font = '11px Inter';
       ctx.fillText(`${this.state.selPixelW}×${this.state.selPixelH}px`, sx + 2, sy - 4);
+    }
+
+    // Multi-selected cells highlight (cyan/teal)
+    if (this.state.multiSelectionValid) {
+      for (const key of this.state.multiSelectedCells) {
+        const { col: mc, row: mr } = TilesetEditorState.parseCell(key);
+        const mx = mc * cell - scrollX;
+        const my = mr * cell - scrollY;
+        ctx.fillStyle = 'rgba(0, 220, 220, 0.2)';
+        ctx.fillRect(mx, my, cell, cell);
+        ctx.strokeStyle = 'rgba(0, 220, 220, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(mx, my, cell, cell);
+      }
+      // Show count label near the first cell
+      const firstKey = this.state.multiSelectedCells.values().next().value!;
+      const { col: fc, row: fr } = TilesetEditorState.parseCell(firstKey);
+      const fx = fc * cell - scrollX;
+      const fy = fr * cell - scrollY;
+      ctx.fillStyle = 'rgba(0, 220, 220, 0.9)';
+      ctx.font = '11px Inter';
+      ctx.fillText(`${this.state.multiSelectedCells.size} cells selected (Ctrl+Click)`, fx + 2, fy - 4);
     }
 
     // Cursor highlight (hide in crop mode)

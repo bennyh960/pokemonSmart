@@ -1695,19 +1695,6 @@
       "encounter": false,
       "destroy": null,
       "above": false
-    },
-    {
-      "key": "b7door",
-      "sx": 80,
-      "sy": 1520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "encounter": false,
-      "destroy": null,
-      "above": true,
-      "category": "building",
-      "description": "b7 building door"
     }
   ]
 }

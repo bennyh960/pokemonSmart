@@ -13,6 +13,8 @@ import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
+import { setPartyMode } from '../scenes/party.js';
+import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
 import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
@@ -750,6 +752,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // P key → Party
       if (input.isKeyPressed('p') || input.isKeyPressed('P')) {
+        setPartyMode('overworld');
         stateMachine.push('PARTY');
         return;
       }
@@ -762,6 +765,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // B key → Bag
       if (input.isKeyPressed('b') || input.isKeyPressed('B')) {
+        setBagMode('overworld');
         stateMachine.push('BAG');
         return;
       }

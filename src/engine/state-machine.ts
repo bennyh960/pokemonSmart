@@ -11,11 +11,17 @@ import type { Scene, SceneId } from '../types/index.js';
 export function createStateMachine() {
   const scenes = new Map<SceneId, Scene>();
   let stack: SceneId[] = [];
+  let onTransition: (() => void) | null = null;
 
   return {
     /** Register a scene so it can be activated by ID. */
     register(id: SceneId, scene: Scene): void {
       scenes.set(id, scene);
+    },
+
+    /** Set a callback that fires on every scene transition (push/pop/change). Clears stale input. */
+    setOnTransition(cb: () => void): void {
+      onTransition = cb;
     },
 
     /** Get the scene instance for a given ID. */
@@ -46,6 +52,7 @@ export function createStateMachine() {
       }
       stack.push(id);
       scene.enter();
+      onTransition?.();
     },
 
     /** Pop the topmost scene, calling its exit(). */
@@ -53,6 +60,7 @@ export function createStateMachine() {
       if (stack.length === 0) return;
       const oldId = stack.pop()!;
       scenes.get(oldId)?.exit();
+      onTransition?.();
     },
 
     /**
@@ -72,6 +80,7 @@ export function createStateMachine() {
 
       stack = [id];
       scene.enter();
+      onTransition?.();
     },
 
     /** Update the topmost scene. */

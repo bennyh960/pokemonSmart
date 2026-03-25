@@ -15,6 +15,7 @@ export class PropertiesPanel {
     this.image = image;
 
     state.on('selection-changed', () => this.refresh());
+    state.on('multi-selection-changed', () => this.refresh());
     state.on('item-selected', () => this.refresh());
     state.on('items-changed', () => this.refresh());
     state.on('crop-mode-changed', () => this.refresh());
@@ -56,6 +57,12 @@ export class PropertiesPanel {
     // If a tile is selected in the list, show its editable properties
     if (this.state.selectedIndex >= 0 && this.state.selectedIndex < this.state.tiles.length) {
       this.renderEditForm(this.state.selectedIndex);
+      return;
+    }
+
+    // Multi-selection: show batch add form
+    if (this.state.multiSelectionValid) {
+      this.renderMultiAddForm();
       return;
     }
 
@@ -253,6 +260,148 @@ export class PropertiesPanel {
       }
     });
     section.appendChild(applyBtn);
+
+    this.container.appendChild(section);
+  }
+
+  /** Batch add form for Ctrl+Click multi-selected non-adjacent cells. */
+  private renderMultiAddForm(): void {
+    const cells = [...this.state.multiSelectedCells].map(k => {
+      const [c, r] = k.split(',').map(Number);
+      return { col: c, row: r };
+    });
+
+    const section = document.createElement('div');
+    section.className = 'props-section';
+
+    section.innerHTML = `
+      <h3>Batch Add — ${cells.length} Cells</h3>
+      <div style="color:#0dc; font-size:11px; margin-bottom:8px; line-height:1.5">
+        Ctrl+Click to add/remove cells.<br>
+        All selected cells will share the same properties. Each cell becomes a separate 16×16 tile with auto-numbered keys.
+      </div>
+      <div class="prop-row"><label>Key prefix:</label><input id="multi-key" type="text" placeholder="e.g. building-wall" autofocus /></div>
+      <div class="prop-row"><label>Category:</label><select id="multi-cat"><option value="">None</option>${TILE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
+      <div class="prop-row"><label>Walkable:</label><input id="multi-walk" type="checkbox" /></div>
+      <div class="prop-row"><label>Encounter:</label><input id="multi-enc" type="checkbox" /></div>
+      <div class="prop-row"><label>Above (2nd layer):</label><input id="multi-above" type="checkbox" /></div>
+      <div class="prop-row"><label>Overlay (on top of player):</label><input id="multi-overlay" type="checkbox" /></div>
+      <div class="prop-row"><label>Description:</label><input id="multi-desc" type="text" placeholder="optional note" /></div>
+    `;
+
+    // Preview grid showing which cells are selected
+    const previewLabel = document.createElement('h3');
+    previewLabel.textContent = 'Selected Cells';
+    previewLabel.style.marginTop = '10px';
+    section.appendChild(previewLabel);
+
+    // Compute bounding box
+    let minCol = Infinity, maxCol = -Infinity, minRow = Infinity, maxRow = -Infinity;
+    for (const { col, row } of cells) {
+      minCol = Math.min(minCol, col); maxCol = Math.max(maxCol, col);
+      minRow = Math.min(minRow, row); maxRow = Math.max(maxRow, row);
+    }
+    const gridCols = maxCol - minCol + 1;
+    const gridRows = maxRow - minRow + 1;
+    const cellSet = new Set(this.state.multiSelectedCells);
+
+    const cellSize = Math.min(24, Math.floor(200 / Math.max(gridCols, gridRows)));
+    const previewCanvas = document.createElement('canvas');
+    previewCanvas.width = gridCols * cellSize;
+    previewCanvas.height = gridRows * cellSize;
+    previewCanvas.style.imageRendering = 'pixelated';
+    previewCanvas.style.border = '1px solid #444';
+    previewCanvas.style.background = '#111';
+    previewCanvas.style.borderRadius = '4px';
+
+    const pctx = previewCanvas.getContext('2d')!;
+    pctx.imageSmoothingEnabled = false;
+    for (let r = minRow; r <= maxRow; r++) {
+      for (let c = minCol; c <= maxCol; c++) {
+        const px = (c - minCol) * cellSize;
+        const py = (r - minRow) * cellSize;
+        if (cellSet.has(`${c},${r}`)) {
+          // Draw the actual tile from the tileset image
+          pctx.drawImage(this.image, c * 16, r * 16, 16, 16, px, py, cellSize, cellSize);
+          pctx.strokeStyle = 'rgba(0, 220, 220, 0.6)';
+          pctx.lineWidth = 1;
+          pctx.strokeRect(px, py, cellSize, cellSize);
+        } else {
+          // Empty/skipped cell
+          pctx.fillStyle = '#1a1a2a';
+          pctx.fillRect(px, py, cellSize, cellSize);
+          pctx.strokeStyle = 'rgba(255,255,255,0.05)';
+          pctx.lineWidth = 1;
+          pctx.strokeRect(px, py, cellSize, cellSize);
+        }
+      }
+    }
+    section.appendChild(previewCanvas);
+
+    // Add Tiles button
+    const addBtn = document.createElement('button');
+    addBtn.className = 'primary';
+    addBtn.textContent = `+ Add ${cells.length} Tiles`;
+    addBtn.style.marginTop = '8px';
+    addBtn.addEventListener('click', () => {
+      const keyInput = section.querySelector('#multi-key') as HTMLInputElement;
+      const prefix = keyInput.value.trim();
+      if (!prefix) { keyInput.focus(); keyInput.style.borderColor = '#cc3333'; return; }
+
+      const catVal = (section.querySelector('#multi-cat') as HTMLSelectElement).value;
+      const walkable = (section.querySelector('#multi-walk') as HTMLInputElement).checked;
+      const encounter = (section.querySelector('#multi-enc') as HTMLInputElement).checked;
+      const above = (section.querySelector('#multi-above') as HTMLInputElement).checked;
+      const overlay = (section.querySelector('#multi-overlay') as HTMLInputElement).checked || undefined;
+      const description = (section.querySelector('#multi-desc') as HTMLInputElement).value.trim() || undefined;
+
+      // Check for key collisions
+      const existingKeys = new Set(this.state.tiles.map(t => t.key));
+      for (let i = 0; i < cells.length; i++) {
+        const key = cells.length === 1 ? prefix : `${prefix}-${i + 1}`;
+        if (existingKeys.has(key)) { alert(`Key "${key}" already exists`); return; }
+      }
+
+      // Add all tiles
+      for (let i = 0; i < cells.length; i++) {
+        const { col, row } = cells[i];
+        const key = cells.length === 1 ? prefix : `${prefix}-${i + 1}`;
+        this.state.addTile({
+          key,
+          sx: col * 16,
+          sy: row * 16,
+          w: 16,
+          h: 16,
+          walkable,
+          encounter,
+          destroy: null,
+          above,
+          overlay,
+          category: catVal || undefined,
+          description,
+        });
+      }
+
+      this.state.clearMultiSelection();
+    });
+    section.appendChild(addBtn);
+
+    // Clear selection button
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'primary';
+    clearBtn.textContent = 'Clear Selection';
+    clearBtn.style.marginTop = '6px';
+    clearBtn.style.background = '#555';
+    clearBtn.style.borderColor = '#666';
+    clearBtn.addEventListener('click', () => {
+      this.state.clearMultiSelection();
+    });
+    section.appendChild(clearBtn);
+
+    // Enter key shortcut
+    section.querySelector('#multi-key')!.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Enter') addBtn.click();
+    });
 
     this.container.appendChild(section);
   }

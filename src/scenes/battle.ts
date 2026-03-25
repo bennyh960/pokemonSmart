@@ -126,6 +126,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
       playerStatStages[stat] = Math.min(6, current + def.effect.stages);
       consumeItem(pd.items, itemId);
+      audio.playSFX('heal');
       textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: getPokemonDisplayName(player.id) })], isRTL());
       phase = 'USE_ITEM'; phaseTimer = 0;
       return;
@@ -161,6 +162,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (result.success) {
       consumeItem(pd.items, itemId);
       setHP(playerHpBar, player.hp);
+      audio.playSFX('heal');
     }
     textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: getPokemonDisplayName(player.id) })], isRTL());
     phase = 'USE_ITEM'; phaseTimer = 0;

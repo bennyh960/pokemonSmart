@@ -16,6 +16,7 @@ import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
 import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
+import { getGlobalAudio } from '../audio/audio-manager.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 
 /* ── Battle integration exports ────────────────────────────────────── */
@@ -231,6 +232,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           if (result.success) {
             consumeItem(pd.items, pendingOverworldItemId);
             autoSave();
+            getGlobalAudio()?.playSFX('heal');
             const pokeName = getPokemonDisplayName(target.id);
             message = `${pokeName}: ${result.message}`;
           } else {
@@ -295,7 +297,10 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           if (needsTarget) {
             pendingOverworldItemId = item.id;
             waitingForPartyTarget = true;
-            setPartyMode('select-target');
+            setPartyMode('select-target', undefined, {
+              itemName: t(item.def.nameKey),
+              description: t(item.def.descriptionKey),
+            });
             stateMachine.push('PARTY');
           } else {
             // Non-target items (shouldn't happen for current item set, but handle gracefully)

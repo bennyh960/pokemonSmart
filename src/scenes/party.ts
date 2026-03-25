@@ -57,10 +57,14 @@ let onSelectCallback: ((index: number) => void) | null = null;
 /** Index of the Pokemon selected in battle/select-target mode (-1 = none). */
 export let selectedPartyIndex: number = -1;
 
-export function setPartyMode(mode: PartyMode, callback?: (index: number) => void): void {
+/** Context info shown when party is in select-target mode (item use). */
+let selectTargetContext: { itemName: string; description: string } | null = null;
+
+export function setPartyMode(mode: PartyMode, callback?: (index: number) => void, context?: { itemName: string; description: string }): void {
   partyMode = mode;
   onSelectCallback = callback ?? null;
   selectedPartyIndex = -1;
+  selectTargetContext = context ?? null;
 }
 
 export function clearSelectedPartyIndex(): void {
@@ -111,12 +115,23 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     return '#d84040';
   }
 
-  function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, _slotNum: number, sy: number, isSel: boolean, isSwap: boolean): void {
+  /** Check if a Pokemon is eligible for the current select-target item. */
+  function isPokemonEligible(pokemon: Pokemon): boolean {
+    if (partyMode !== 'select-target') return true;
+    // If we have context, infer from item name — but better to check HP
+    // Heal items: skip if HP is full and alive. Revive: skip if alive.
+    // For simplicity: if Pokemon HP is full and not fainted, it's "not eligible" for healing
+    // This is a heuristic — works for the common case (potions)
+    if (pokemon.hp >= pokemon.maxHp && pokemon.hp > 0) return false;
+    return true;
+  }
+
+  function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, _slotNum: number, sy: number, isSel: boolean, isSwap: boolean, disabled: boolean): void {
     // Card bg
     fillRect(ctx, 4, sy, 232, 24, isSel ? C.CARD_SEL : C.CARD_BG);
     drawRect(ctx, 4, sy, 232, 24, isSwap ? C.BORDER_SEL : (isSel ? '#2a6a40' : C.BORDER));
     // Selection indicator
-    if (isSel) fillRect(ctx, 4, sy, 2, 24, '#20d860');
+    if (isSel && !disabled) fillRect(ctx, 4, sy, 2, 24, '#20d860');
 
     // Pokeball icon (replacing slot number box) — centered in 10×10 area
     drawPokeballIcon(ctx, pokemon.caughtBall, 222, sy + 7, 10);
@@ -160,6 +175,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     if (hpW > 0) fillRect(ctx, 26, sy + 14, hpW, 3, getHpColor(hpRatio));
     // HP value
     drawText(ctx, `${pokemon.hp}/${pokemon.maxHp}`, 8, sy + 12, { size: 5, color: C.TEXT_SEC, font: 'monospace' });
+
+    // Disabled overlay (semi-transparent dark green)
+    if (disabled) {
+      ctx.save();
+      ctx.globalAlpha = 0.5;
+      fillRect(ctx, 4, sy, 232, 24, '#0d1a14');
+      ctx.restore();
+    }
   }
 
   function renderEmptySlot(ctx: CanvasRenderingContext2D, slotNum: number, sy: number, isSel: boolean): void {
@@ -189,10 +212,20 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const isSwap = viewMode === 'swap' && i === swapFrom;
 
       if (i < party.length) {
-        renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap);
+        const disabled = partyMode === 'select-target' && !isPokemonEligible(party[i]);
+        renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap, disabled);
       } else {
         renderEmptySlot(ctx, i + 1, sy, isSel);
       }
+    }
+
+    // ── Item context line (above bottom bar, when in select-target mode) ──
+    if (partyMode === 'select-target' && selectTargetContext) {
+      fillRect(ctx, 4, 140, 232, 9, C.CARD_BG);
+      drawRect(ctx, 4, 140, 232, 9, C.BORDER);
+      drawText(ctx, `💊 ${selectTargetContext.itemName}: ${selectTargetContext.description}`, 120, 141, {
+        size: 5, color: '#20d860', font: 'monospace', align: 'center',
+      });
     }
 
     // ── Bottom bar ──
@@ -202,11 +235,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
     drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-    // Enter
+    // Enter — context-aware label
     fillRect(ctx, 62, 151, 26, 8, C.KEY_BG);
     drawRect(ctx, 62, 151, 26, 8, C.KEY_BRD);
     drawText(ctx, 'Enter', 75, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, t('party.hint.details') || 'Details', 90, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    const enterHint = partyMode === 'select-target' ? (t('bag.hint.use') || 'Use')
+      : partyMode === 'battle' ? (t('party.hint.switchIn') || 'Switch')
+      : (t('party.hint.details') || 'Details');
+    drawText(ctx, enterHint, 90, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     // Arrows
     fillRect(ctx, 126, 151, 18, 8, C.KEY_BG);
     drawRect(ctx, 126, 151, 18, 8, C.KEY_BRD);
@@ -684,15 +720,32 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       }
 
       if (input.isKeyPressed('ArrowUp')) {
-        cursor = cursor > 0 ? cursor - 1 : Math.max(0, partyLen - 1);
+        let next = cursor > 0 ? cursor - 1 : Math.max(0, partyLen - 1);
+        // In select-target mode, skip non-eligible Pokemon
+        if (partyMode === 'select-target') {
+          for (let tries = 0; tries < partyLen; tries++) {
+            if (next < partyLen && isPokemonEligible(party[next])) break;
+            next = next > 0 ? next - 1 : partyLen - 1;
+          }
+        }
+        cursor = next;
       }
       if (input.isKeyPressed('ArrowDown')) {
-        cursor = cursor < partyLen - 1 ? cursor + 1 : 0;
+        let next = cursor < partyLen - 1 ? cursor + 1 : 0;
+        if (partyMode === 'select-target') {
+          for (let tries = 0; tries < partyLen; tries++) {
+            if (next < partyLen && isPokemonEligible(party[next])) break;
+            next = next < partyLen - 1 ? next + 1 : 0;
+          }
+        }
+        cursor = next;
       }
 
       if (input.isKeyPressed('Enter')) {
         if (partyLen === 0) return;
         if (cursor >= partyLen) return;
+        // Block Enter on non-eligible Pokemon in select-target mode
+        if (partyMode === 'select-target' && !isPokemonEligible(party[cursor])) return;
 
         if (viewMode === 'swap') {
           // Complete the swap
@@ -707,6 +760,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           selectedPartyIndex = cursor;
           stateMachine.pop();
         } else if (partyMode === 'select-target') {
+          selectedPartyIndex = cursor;
           if (onSelectCallback) onSelectCallback(cursor);
           stateMachine.pop();
         } else {

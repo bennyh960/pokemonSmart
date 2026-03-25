@@ -101,8 +101,8 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
       }
       // Give enough XP to trigger a level up
       target.xp = target.xpToNext;
-      const didLevel = checkAndApplyLevelUp(target);
-      if (didLevel) {
+      const result = checkAndApplyLevelUp(target);
+      if (result.leveledUp) {
         return { success: true, message: `Grew to level ${target.level}!`, leveledUp: true };
       }
       return { success: true, message: 'Gained experience!' };

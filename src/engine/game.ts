@@ -10,7 +10,7 @@
 
 import { createStateMachine } from './state-machine.js';
 import { createInputManager } from './input.js';
-import { createAudioManager } from '../audio/audio-manager.js';
+import { createAudioManager, setGlobalAudio } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle.js';
 import { createOverworldScene } from '../scenes/overworld.js';
@@ -43,6 +43,10 @@ export function createGame(container: HTMLElement) {
   const input = createInputManager(canvas);
   const stateMachine = createStateMachine();
   const audio = createAudioManager();
+  setGlobalAudio(audio);
+
+  // Clear pressed keys on scene transitions to prevent Enter/Escape bleeding between scenes
+  stateMachine.setOnTransition(() => input.endFrame());
 
   stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio));
   stateMachine.register('BATTLE', createBattleScene(input, stateMachine, canvas, audio));

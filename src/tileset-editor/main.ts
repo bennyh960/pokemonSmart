@@ -140,7 +140,15 @@ async function init() {
   state.on('selection-changed', () => {
     if (state.selectionValid) {
       sSel.textContent = `Selection: (${state.selPixelX}, ${state.selPixelY}) ${state.selPixelW}×${state.selPixelH}px`;
-    } else {
+    } else if (!state.multiSelectionValid) {
+      sSel.textContent = 'Selection: -';
+    }
+  });
+
+  state.on('multi-selection-changed', () => {
+    if (state.multiSelectionValid) {
+      sSel.textContent = `Multi-select: ${state.multiSelectedCells.size} cells (Ctrl+Click to add/remove)`;
+    } else if (!state.selectionValid) {
       sSel.textContent = 'Selection: -';
     }
   });
@@ -163,6 +171,9 @@ async function init() {
     }
     if (e.key === 'Delete' && state.selectedIndex >= 0) {
       state.removeTile(state.selectedIndex);
+    }
+    if (e.key === 'Escape' && state.multiSelectionValid) {
+      state.clearMultiSelection();
     }
     if (e.key === '=' || e.key === '+') {
       state.zoom = Math.min(8, state.zoom + 0.5);

@@ -84,6 +84,11 @@ export function createInputManager(canvas: HTMLCanvasElement) {
       return state.keysPressed.has(key);
     },
 
+    /** Consume a key press so no other handler sees it this frame. */
+    consumeKey(key: string): void {
+      state.keysPressed.delete(key);
+    },
+
     /** Returns the current number input buffer (digits typed so far). */
     getNumberInput(): string {
       return state.numberBuffer;

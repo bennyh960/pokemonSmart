@@ -11,6 +11,10 @@ export class TilesetEditorState {
   selEndRow = -1;
   isDragging = false;
 
+  // Multi-cell selection (Ctrl+Click for non-adjacent tiles)
+  // Stored as "col,row" strings for easy Set operations
+  multiSelectedCells = new Set<string>();
+
   // Currently selected tile index in the list (-1 = none)
   selectedIndex = -1;
 
@@ -76,6 +80,33 @@ export class TilesetEditorState {
 
   get selectionValid(): boolean {
     return this.selStartCol >= 0 && this.selStartRow >= 0;
+  }
+
+  // ── Multi-cell selection (Ctrl+Click) ──
+
+  toggleMultiCell(col: number, row: number): void {
+    const key = `${col},${row}`;
+    if (this.multiSelectedCells.has(key)) {
+      this.multiSelectedCells.delete(key);
+    } else {
+      this.multiSelectedCells.add(key);
+    }
+    this.emit('multi-selection-changed');
+  }
+
+  clearMultiSelection(): void {
+    this.multiSelectedCells.clear();
+    this.emit('multi-selection-changed');
+  }
+
+  get multiSelectionValid(): boolean {
+    return this.multiSelectedCells.size > 0;
+  }
+
+  /** Parse a "col,row" key into numbers. */
+  static parseCell(key: string): { col: number; row: number } {
+    const [c, r] = key.split(',').map(Number);
+    return { col: c, row: r };
   }
 
   /** Selection in pixels. */
