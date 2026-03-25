@@ -379,6 +379,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     const data = await loadMap(mapId);
     currentMapData = data;
     const tileset = data.tileset ? getTileset(data.tileset) : null;
+
+    // Filter out collected item objects so they don't render
+    if (data.objects && tileset && hasActiveGame()) {
+      const flags = getPlayerData().flags;
+      data.objects = data.objects.filter(obj => {
+        const def = tileset.getTile(obj.key);
+        if (def?.interactType?.id === 'item') {
+          const flagKey = obj.interactArgs?.flag || `obj-${obj.key}-${obj.x}-${obj.y}-collected`;
+          return !flags[flagKey];
+        }
+        return true;
+      });
+    }
+
     tileMap = createTileMap(data as TileMapData, tileset);
     setCurrentMapId(mapId);
 
@@ -812,6 +826,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                         const qty = itemQty || 1;
                         pd.items[itemId] = (pd.items[itemId] || 0) + qty;
                         pd.flags[flagKey] = true;
+                        // Remove from map so it disappears immediately
+                        if (currentMapData?.objects) {
+                          const idx = currentMapData.objects.indexOf(obj);
+                          if (idx >= 0) currentMapData.objects.splice(idx, 1);
+                        }
                         const itemDef = getItem(itemId);
                         const displayName = itemDef ? t(itemDef.nameKey) : itemId;
                         activeTextBox = createTextBox([t('npc.reward.item', { item: displayName, qty })], isRTL());

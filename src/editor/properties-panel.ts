@@ -916,26 +916,39 @@ export class PropertiesPanel {
   /** Encounter table editor — uses current map ID as the encounter table key. */
   private renderEncounterPanel(): void {
     const mapData = this.state.mapData;
-    const mapId = mapData.id || 'unknown';
-
     const section = this.makeSection('Encounters');
     const emit = () => this.state.emit('map-modified');
 
-    // Enable encounters checkbox — sets encounterTableId to map ID
-    const enableRow = document.createElement('div');
-    enableRow.className = 'prop-row';
-    enableRow.innerHTML = '<label>Has Encounters:</label>';
-    const enableCb = document.createElement('input');
-    enableCb.type = 'checkbox';
+    // Encounter table select — pick from existing tables in encounter-tables.json
+    const selectRow = document.createElement('div');
+    selectRow.className = 'prop-row';
+    selectRow.innerHTML = '<label>Encounter Table:</label>';
+    const select = document.createElement('select');
+    select.style.flex = '1';
     const currentTableId = (mapData as unknown as Record<string, unknown>)['encounterTableId'] as string | null;
-    enableCb.checked = !!currentTableId;
-    enableCb.addEventListener('change', () => {
-      (mapData as unknown as Record<string, unknown>)['encounterTableId'] = enableCb.checked ? mapId : null;
+
+    // "None" option
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.textContent = '(None)';
+    select.appendChild(noneOpt);
+
+    // Options from encounter-tables.json
+    for (const key of Object.keys(encounterTables)) {
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = key;
+      select.appendChild(opt);
+    }
+    select.value = currentTableId || '';
+
+    select.addEventListener('change', () => {
+      (mapData as unknown as Record<string, unknown>)['encounterTableId'] = select.value || null;
       emit();
     });
-    enableRow.appendChild(enableCb);
-    enableRow.appendChild(this.makeInfo(`Table ID: "${mapId}" — data stored in src/data/encounter-tables.json`));
-    section.appendChild(enableRow);
+    selectRow.appendChild(select);
+    selectRow.appendChild(this.makeInfo('Wild Pokemon encounter data — defined in encounter-tables.json'));
+    section.appendChild(selectRow);
 
     const tableId = currentTableId;
     if (!tableId) {

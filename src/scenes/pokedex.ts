@@ -16,7 +16,7 @@ import { TYPE_COLORS } from '../data/type-constants.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import {
   getPokemon, getPokemonDisplayName, getMove, getMoveDisplayName,
-  getLearnset, getTmLearnset, getTypeEffectiveness, getAllTypes,
+  getLearnset, getTmLearnset, getTypeEffectiveness, getAllTypes, getEvolutionChain,
 } from '../services/pokemon-data.js';
 import type { PokemonType } from '../types/index.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
@@ -29,10 +29,10 @@ const TOTAL_POKEMON = 251;
 
 
 type PokedexView = 'list' | 'detail';
-type DetailTab = 'info' | 'type' | 'moves';
+type DetailTab = 'info' | 'evolution' | 'type' | 'moves';
 type MovesSubTab = 'byLevel' | 'canLearn';
 
-const DETAIL_TABS: DetailTab[] = ['info', 'type', 'moves'];
+const DETAIL_TABS: DetailTab[] = ['info', 'evolution', 'type', 'moves'];
 
 export function createPokedexScene(input: InputManager, stateMachine: StateMachine): Scene {
   let cursor = 0;
@@ -169,6 +169,13 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           movesSubTab = 'byLevel';
           movesScrollOffset = 0;
           loadImage(`/sprites/pokemon/front/${id}.png`).catch(() => {});
+          // Preload evolution chain sprites
+          const chain = getEvolutionChain(id);
+          if (chain) {
+            for (const stage of chain.stages) {
+              loadImage(`/sprites/pokemon/front/${stage.id}.png`).catch(() => {});
+            }
+          }
         }
       }
     },
@@ -293,6 +300,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     fillRect(ctx, 0, tabY, SCREEN_W, tabH, '#402020');
     const tabLabels: [DetailTab, string][] = [
       ['info', t('pokedex.tab.info')],
+      ['evolution', t('pokedex.tab.evolution')],
       ['type', t('pokedex.tab.type')],
       ['moves', t('pokedex.tab.moves')],
     ];
@@ -315,6 +323,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
     if (detailTab === 'info') {
       renderInfoTab(ctx, id, data, contentY);
+    } else if (detailTab === 'evolution') {
+      renderEvolutionTab(ctx, id, contentY);
     } else if (detailTab === 'type') {
       renderTypeTab(ctx, data, contentY, contentH);
     } else if (detailTab === 'moves') {
@@ -394,6 +404,81 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     const totalStat = statValues.reduce((a, b) => a + b, 0);
     const afterStatsY = statsY + statNames.length * statRowH + 2;
     drawText(ctx, `BST: ${totalStat}`, statsX, afterStatsY, { size: 6, color: '#aaaaaa', font: 'monospace' });
+  }
+
+  function renderEvolutionTab(ctx: CanvasRenderingContext2D, id: number, contentY: number): void {
+    const chain = getEvolutionChain(id);
+
+    if (!chain || chain.stages.length <= 1) {
+      drawText(ctx, t('pokedex.evo.none'), SCREEN_W / 2, contentY + 40, {
+        size: 8, color: '#807070', font: 'monospace', align: 'center',
+      });
+      return;
+    }
+
+    const stages = chain.stages;
+    const spriteSize = 32;
+    const arrowSpace = 30;
+    const stageWidth = spriteSize + arrowSpace;
+    const totalWidth = stages.length * spriteSize + (stages.length - 1) * arrowSpace;
+    const startX = Math.max(4, Math.floor((SCREEN_W - totalWidth) / 2));
+    const centerY = contentY + 20;
+
+    for (let i = 0; i < stages.length; i++) {
+      const stage = stages[i];
+      const x = startX + i * stageWidth;
+      const isCurrent = stage.id === id;
+
+      // Background highlight for current stage
+      if (isCurrent) {
+        fillRect(ctx, x - 2, centerY - 2, spriteSize + 4, spriteSize + 4, '#582828');
+        drawRect(ctx, x - 2, centerY - 2, spriteSize + 4, spriteSize + 4, '#f8a878');
+      } else {
+        fillRect(ctx, x - 1, centerY - 1, spriteSize + 2, spriteSize + 2, '#402020');
+      }
+
+      // Sprite
+      const sprite = getCachedImage(`/sprites/pokemon/front/${stage.id}.png`);
+      if (sprite) {
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(sprite, x, centerY, spriteSize, spriteSize);
+        ctx.imageSmoothingEnabled = false;
+      } else {
+        fillRect(ctx, x, centerY, spriteSize, spriteSize, '#584040');
+        loadImage(`/sprites/pokemon/front/${stage.id}.png`).catch(() => {});
+      }
+
+      // Name below sprite
+      const name = getPokemonDisplayName(stage.id);
+      const nameColor = isCurrent ? '#f8a878' : '#cccccc';
+      drawText(ctx, name, x + spriteSize / 2, centerY + spriteSize + 4, {
+        size: 6, color: nameColor, font: 'monospace', align: 'center',
+      });
+
+      // Arrow and evolution info between stages
+      if (i < stages.length - 1) {
+        const nextStage = stages[i + 1];
+        const arrowX = x + spriteSize + 2;
+        const arrowY = centerY + spriteSize / 2 - 4;
+
+        drawText(ctx, '\u2192', arrowX + 4, arrowY, { size: 8, color: '#f8a878', font: 'monospace' });
+
+        let evoText = '';
+        if (nextStage.minLevel) {
+          evoText = `Lv.${nextStage.minLevel}`;
+        } else if (nextStage.item) {
+          evoText = nextStage.item;
+        } else if (nextStage.trigger) {
+          evoText = nextStage.trigger;
+        }
+        if (evoText) {
+          drawText(ctx, evoText, arrowX + 4, arrowY + 10, {
+            size: 5, color: '#a08080', font: 'monospace',
+          });
+        }
+      }
+    }
   }
 
   function renderTypeTab(
