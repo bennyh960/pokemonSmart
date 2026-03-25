@@ -20,9 +20,13 @@ import type { PlayerData } from '../types/index.js';
 /** Create a fresh player save with default values. */
 export function createNewPlayer(name: string): PlayerData {
   return {
-    saveVersion: 1,
+    saveVersion: 2,
     name,
     party: [],
+    boxes: Array.from({ length: 10 }, (_, i) => ({
+      name: `BOX ${i + 1}`,
+      pokemon: Array(30).fill(null),
+    })),
     badges: 0,
     serumParts: 0,
     money: 3000,

@@ -11,7 +11,7 @@ import type { PlayerData } from '../types/index.js';
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 1;
+export const CURRENT_SAVE_VERSION = 2;
 
 /**
  * Migration functions keyed by TARGET version.
@@ -28,8 +28,16 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     if (data.serumParts === undefined) data.serumParts = 0;
     data.saveVersion = 1;
   },
-  // Future migrations go here:
-  // 2: (data) => { data.boxes = []; data.saveVersion = 2; },
+  // Version 1 → 2: add PC storage boxes
+  2: (data) => {
+    if (!data.boxes) {
+      data.boxes = Array.from({ length: 10 }, (_, i) => ({
+        name: `BOX ${i + 1}`,
+        pokemon: Array(30).fill(null),
+      }));
+    }
+    data.saveVersion = 2;
+  },
 };
 
 /** Apply all needed migrations to bring a save up to CURRENT_SAVE_VERSION. */

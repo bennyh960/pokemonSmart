@@ -2,6 +2,8 @@ import type { TilesetEditorState } from './editor-state.js';
 import type { TileEntry } from './types.js';
 import { TILE_CATEGORIES } from './types.js';
 import { applyCrop, saveTilesetImage } from './io.js';
+import { INTERACT_TYPE_IDS, getInteractType } from '../data/interact-types.js';
+import { getAllItems } from '../data/items.js';
 
 /** Right sidebar: properties for current selection or selected tile. */
 export class PropertiesPanel {
@@ -365,7 +367,6 @@ export class PropertiesPanel {
         sx, sy, w, h,
         walkable: (section.querySelector('#multi-walk') as HTMLInputElement).checked,
         encounter: (section.querySelector('#multi-enc') as HTMLInputElement).checked,
-        destroy: null,
         above: (section.querySelector('#multi-above') as HTMLInputElement).checked,
         overlay: (section.querySelector('#multi-overlay') as HTMLInputElement).checked || undefined,
         category: catVal || undefined,
@@ -436,7 +437,6 @@ export class PropertiesPanel {
         w, h,
         walkable: (section.querySelector('#add-walk') as HTMLInputElement).checked,
         encounter: (section.querySelector('#add-enc') as HTMLInputElement).checked,
-        destroy: null,
         above: (section.querySelector('#add-above') as HTMLInputElement).checked,
         overlay: (section.querySelector('#add-overlay') as HTMLInputElement).checked || undefined,
         category: catVal || undefined,
@@ -493,14 +493,15 @@ export class PropertiesPanel {
         <label>Overlay (on top of player):</label>
         <input id="edit-overlay" type="checkbox" ${t.overlay ? 'checked' : ''} />
       </div>
+      ${t.category === 'interactive' ? `
       <div class="prop-row">
-        <label>Destroy:</label>
-        <select id="edit-destroy">
-          <option value="" ${t.destroy === null ? 'selected' : ''}>None</option>
-          <option value="cut" ${t.destroy === 'cut' ? 'selected' : ''}>Cut</option>
-          <option value="strength" ${t.destroy === 'strength' ? 'selected' : ''}>Strength</option>
+        <label>Interact Type:</label>
+        <select id="edit-interactType-id">
+          <option value="">None</option>
         </select>
       </div>
+      <div id="interact-args-container"></div>
+      ` : ''}
       <div class="prop-row">
         <label>Description:</label>
         <input id="edit-desc" type="text" value="${t.description ?? ''}" placeholder="optional note" />
@@ -525,7 +526,201 @@ export class PropertiesPanel {
     wire('#edit-enc', 'encounter', 'check');
     wire('#edit-above', 'above', 'check');
     wire('#edit-overlay', 'overlay', 'check');
-    wire('#edit-destroy', 'destroy', 'select');
+    // InteractType: dynamic dropdown from INTERACT_TYPE_IDS + args editor
+    // Only rendered when category === 'interactive'
+    const interactSel = section.querySelector('#edit-interactType-id') as HTMLSelectElement | null;
+    const argsContainer = section.querySelector('#interact-args-container') as HTMLElement | null;
+
+    if (interactSel && argsContainer) {
+    // Populate dropdown from INTERACT_TYPE_IDS (not hardcoded)
+    for (const typeId of INTERACT_TYPE_IDS) {
+      const opt = document.createElement('option');
+      opt.value = typeId;
+      const def = getInteractType(typeId);
+      opt.textContent = `${typeId} — ${def?.label.en ?? typeId}`;
+      if (t.interactType?.id === typeId) opt.selected = true;
+      interactSel.appendChild(opt);
+    }
+    if (!t.interactType) (interactSel.querySelector('option[value=""]') as HTMLOptionElement).selected = true;
+
+    const renderArgsEditor = () => {
+      argsContainer.innerHTML = '';
+      const ref = this.state.tiles[index]?.interactType;
+      if (!ref) return;
+
+      const defaults = getInteractType(ref.id);
+      if (!defaults) return;
+      const args = ref.args ?? {};
+      const typeId = ref.id;
+
+      // Helper: info tooltip
+      const info = (text: string): HTMLElement => {
+        const span = document.createElement('span');
+        span.textContent = '\u2139';
+        span.title = text;
+        span.style.cssText = 'cursor:help; color:#6688cc; font-size:13px; margin-left:4px; user-select:none;';
+        return span;
+      };
+
+      // Helper: add row with label + input + optional info
+      const addRow = (label: string, el: HTMLElement, infoText?: string) => {
+        const row = document.createElement('div');
+        row.className = 'prop-row';
+        const lbl = document.createElement('label');
+        lbl.textContent = label + ':';
+        row.appendChild(lbl);
+        row.appendChild(el);
+        if (infoText) row.appendChild(info(infoText));
+        argsContainer.appendChild(row);
+      };
+
+      const header = document.createElement('div');
+      header.style.cssText = 'font-size:10px; color:#88aacc; margin:4px 0 2px; font-weight:600;';
+      header.textContent = 'Overrides (empty = use default from interact-types.ts)';
+      argsContainer.appendChild(header);
+
+      // ── Label (all types) ──
+      const labelEnInput = document.createElement('input');
+      labelEnInput.type = 'text';
+      labelEnInput.value = (args as any).label?.en ?? '';
+      labelEnInput.placeholder = defaults.label.en;
+      labelEnInput.addEventListener('change', () => syncLabel());
+      addRow('Label EN', labelEnInput, 'Display name shown in-game. Leave empty to use default: "' + defaults.label.en + '"');
+
+      const labelHeInput = document.createElement('input');
+      labelHeInput.type = 'text';
+      labelHeInput.style.direction = 'rtl';
+      labelHeInput.value = (args as any).label?.he ?? '';
+      labelHeInput.placeholder = defaults.label.he;
+      labelHeInput.addEventListener('change', () => syncLabel());
+      addRow('Label HE', labelHeInput);
+
+      function syncLabel(): void {
+        const en = labelEnInput.value.trim();
+        const he = labelHeInput.value.trim();
+        updateArg('label', () => (en || he) ? { en, he } : undefined);
+      }
+
+      // ── Dialogue (sign, cut, strength — types that show text) ──
+      if (typeId === 'sign' || typeId === 'cut' || typeId === 'strength') {
+        const diaEnTa = document.createElement('textarea');
+        diaEnTa.rows = 2;
+        diaEnTa.value = ((args as any).dialogue ?? []).map((d: any) => d?.en ?? '').join('\n');
+        diaEnTa.placeholder = defaults.dialogue.map(d => d.en).join('\n') || '(none)';
+        diaEnTa.addEventListener('change', () => syncDialogue());
+        addRow('Dialogue EN', diaEnTa, 'Bilingual text shown when player interacts. Each line = one text box page. Leave empty to use default.');
+
+        const diaHeTa = document.createElement('textarea');
+        diaHeTa.rows = 2;
+        diaHeTa.style.direction = 'rtl';
+        diaHeTa.value = ((args as any).dialogue ?? []).map((d: any) => d?.he ?? '').join('\n');
+        diaHeTa.placeholder = defaults.dialogue.map(d => d.he).join('\n') || '(none)';
+        diaHeTa.addEventListener('change', () => syncDialogue());
+        addRow('Dialogue HE', diaHeTa);
+
+        function syncDialogue(): void {
+          const enLines = diaEnTa.value.split('\n');
+          const heLines = diaHeTa.value.split('\n');
+          const maxLen = Math.max(enLines.length, heLines.length);
+          const lines: { en: string; he: string }[] = [];
+          for (let i = 0; i < maxLen; i++) {
+            const en = (enLines[i] || '').trim();
+            const he = (heLines[i] || '').trim();
+            if (en || he) lines.push({ en, he });
+          }
+          updateArg('dialogue', () => lines.length > 0 ? lines : undefined);
+        }
+      }
+
+      // ── Item fields (item type only) ──
+      if (typeId === 'item') {
+        const itemSel = document.createElement('select');
+        const currentItemId = (args as any).itemId ?? defaults.itemId ?? '';
+        // Empty option = use default
+        const emptyOpt = document.createElement('option');
+        emptyOpt.value = '';
+        emptyOpt.textContent = `(default: ${defaults.itemId ?? 'none'})`;
+        if (!currentItemId || currentItemId === defaults.itemId) emptyOpt.selected = true;
+        itemSel.appendChild(emptyOpt);
+        // All items from items.ts
+        for (const item of getAllItems()) {
+          const opt = document.createElement('option');
+          opt.value = item.id;
+          opt.textContent = `${item.id}`;
+          if (item.id === currentItemId && currentItemId !== defaults.itemId) opt.selected = true;
+          itemSel.appendChild(opt);
+        }
+        itemSel.addEventListener('change', () => updateArg('itemId', () => itemSel.value || undefined));
+        addRow('Item', itemSel, 'The item to give when collected. Select from all defined items in src/data/items.ts.');
+
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.min = '1';
+        qtyInput.value = (args as any).itemQty != null ? String((args as any).itemQty) : '';
+        qtyInput.placeholder = String(defaults.itemQty ?? 1);
+        qtyInput.addEventListener('change', () => updateArg('itemQty', () => {
+          const v = parseInt(qtyInput.value, 10);
+          return isNaN(v) || v <= 0 ? undefined : v;
+        }));
+        addRow('Item Qty', qtyInput, 'How many of this item to give. Default: 1.');
+
+        const flagInput = document.createElement('input');
+        flagInput.type = 'text';
+        flagInput.value = (args as any).flag ?? '';
+        flagInput.placeholder = '(auto-generated)';
+        flagInput.addEventListener('change', () => updateArg('flag', () => flagInput.value.trim() || undefined));
+        addRow('Flag', flagInput, 'Prevents collecting the same item twice. Auto-generated from tile key + position if empty. Override to share a flag between multiple items.');
+      }
+
+      // ── PC type info ──
+      if (typeId === 'pc') {
+        const hint = document.createElement('div');
+        hint.style.cssText = 'font-size:10px; color:#667766; margin:4px 0; padding:4px; background:#0a2a1a; border-radius:3px;';
+        hint.textContent = 'PC tiles open the Pokemon storage screen on interaction. No extra args needed.';
+        argsContainer.appendChild(hint);
+      }
+
+      // ── Cut/Strength info ──
+      if (typeId === 'cut' || typeId === 'strength') {
+        const hint = document.createElement('div');
+        hint.style.cssText = 'font-size:10px; color:#667766; margin:4px 0; padding:4px; background:#0a2a1a; border-radius:3px;';
+        hint.textContent = typeId === 'cut'
+          ? 'Cut trees are removed when a party Pokemon knows Cut and the player has the required badge.'
+          : 'Strength boulders can be pushed/removed when a party Pokemon knows Strength and the player has the required badge.';
+        argsContainer.appendChild(hint);
+      }
+
+      /** Update a single arg key. getValue() returns undefined to remove the override. */
+      function updateArg(key: string, getValue: () => unknown): void {
+        const currentRef = this_state.tiles[index]?.interactType;
+        if (!currentRef) return;
+        const newArgs = { ...(currentRef.args ?? {}) } as Record<string, unknown>;
+        const val = getValue();
+        if (val === undefined) {
+          delete newArgs[key];
+        } else {
+          newArgs[key] = val;
+        }
+        const cleanArgs = Object.keys(newArgs).length > 0 ? newArgs : undefined;
+        this_state.updateTile(index, { interactType: { id: currentRef.id, args: cleanArgs } });
+      }
+    };
+
+    // Capture state ref for use in closures
+    const this_state = this.state;
+
+    interactSel.addEventListener('change', () => {
+      const val = interactSel.value;
+      if (val) {
+        this.state.updateTile(index, { interactType: { id: val } });
+      } else {
+        this.state.updateTile(index, { interactType: null });
+      }
+      renderArgsEditor();
+    });
+
+    renderArgsEditor();
+    } // end if (interactSel && argsContainer)
     // Description: empty → undefined so it's omitted from JSON export
     const descEl = section.querySelector('#edit-desc') as HTMLInputElement;
     descEl.addEventListener('change', () => {

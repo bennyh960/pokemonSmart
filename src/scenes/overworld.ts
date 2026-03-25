@@ -27,6 +27,7 @@ import { createShopState, openShop, updateShop, renderShop, type ShopState } fro
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, resolveDialogue, type DialogueReward } from '../systems/npc.js';
 import { getItem } from '../data/items.js';
+import { resolveInteract } from '../data/interact-types.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
@@ -767,6 +768,67 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL());
             interactingNPC = npc;
             return;
+          }
+        }
+
+        // Object interaction: check facing tile for interactive placed objects
+        if (tileMap) {
+          const vec = DIR_VECTORS[player.facing];
+          if (vec) {
+            const targetX = player.gridX + vec.dx;
+            const targetY = player.gridY + vec.dy;
+            const obj = tileMap.getInteractableAt(targetX, targetY);
+            if (obj) {
+              const tileDef = tileMap.getObjectTileDef(obj);
+              const tileRef = tileDef?.interactType;
+              if (!tileRef) { /* not interactive */ }
+              else {
+                // Merge: tile defaults → tile args → per-instance args
+                const resolved = resolveInteract(tileRef);
+                if (!resolved) { /* unknown type */ }
+                else {
+                  // Apply per-instance overrides from PlacedObject
+                  const inst = obj.interactArgs;
+                  const dialogue = (inst?.dialogue && inst.dialogue.length > 0) ? inst.dialogue : resolved.dialogue;
+                  const itemId = inst?.itemId !== undefined ? inst.itemId : resolved.itemId;
+                  const itemQty = inst?.itemQty !== undefined ? inst.itemQty : resolved.itemQty;
+                  const flag = inst?.flag !== undefined ? inst.flag : resolved.flag;
+
+                  if (resolved.id === 'pc') {
+                    if (hasActiveGame()) {
+                      stateMachine.push('PC');
+                    }
+                    return;
+                  } else if (resolved.id === 'sign') {
+                    if (dialogue.length > 0) {
+                      activeTextBox = createTextBox(resolveDialogue(dialogue, getLocale()), isRTL());
+                    }
+                    return;
+                  } else if (resolved.id === 'item') {
+                    if (itemId && hasActiveGame()) {
+                      const pd = getPlayerData();
+                      const flagKey = flag || `obj-${obj.key}-${obj.x}-${obj.y}-collected`;
+                      if (!pd.flags[flagKey]) {
+                        const qty = itemQty || 1;
+                        pd.items[itemId] = (pd.items[itemId] || 0) + qty;
+                        pd.flags[flagKey] = true;
+                        const itemDef = getItem(itemId);
+                        const displayName = itemDef ? t(itemDef.nameKey) : itemId;
+                        activeTextBox = createTextBox([t('npc.reward.item', { item: displayName, qty })], isRTL());
+                        autoSave();
+                      }
+                    }
+                    return;
+                  } else if (resolved.id === 'cut' || resolved.id === 'strength') {
+                    // HM moves — show dialogue for now, actual HM logic in Sprint 6.5
+                    if (dialogue.length > 0) {
+                      activeTextBox = createTextBox(resolveDialogue(dialogue, getLocale()), isRTL());
+                    }
+                    return;
+                  }
+                }
+              }
+            }
           }
         }
       }

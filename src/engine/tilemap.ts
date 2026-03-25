@@ -24,11 +24,15 @@ export interface MapTransition {
   returnToPrevious?: boolean;
 }
 
+import type { InteractArgs } from '../data/interact-types.js';
+
 /** A placed above-layer tile on the map. */
 export interface PlacedObject {
-  key: string;   // references TileDef with above=true in tileset
+  key: string;   // references TileDef in tileset
   x: number;     // grid column (16px grid)
   y: number;     // grid row (16px grid)
+  /** Optional per-instance overrides for interactive tiles (merges with tile's interactType.args). */
+  interactArgs?: InteractArgs;
 }
 
 /** Map data as loaded from JSON. */
@@ -84,6 +88,29 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
     getTile(gx: number, gy: number): number | string {
       if (gx < 0 || gx >= width || gy < 0 || gy >= height) return -1;
       return tiles[gy][gx];
+    },
+
+    /** Get the interactive placed object at a grid cell, if any. */
+    getInteractableAt(gx: number, gy: number): PlacedObject | null {
+      if (!tileset) return null;
+      for (const obj of placedObjects) {
+        const def = tileset.getTile(obj.key);
+        if (!def || !def.interactType) continue;
+        const gridW = Math.max(1, Math.round(def.w / BASE));
+        const gridH = Math.max(1, Math.round(def.h / BASE));
+        const lx = gx - obj.x;
+        const ly = gy - obj.y;
+        if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
+          if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+          return obj;
+        }
+      }
+      return null;
+    },
+
+    /** Get the TileDef for a placed object's tile key. */
+    getObjectTileDef(obj: PlacedObject): import('./tileset.js').TileDef | null {
+      return tileset?.getTile(obj.key) ?? null;
     },
 
     /** Check if a placed object blocks a grid cell. */

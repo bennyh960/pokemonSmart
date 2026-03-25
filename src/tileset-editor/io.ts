@@ -2,6 +2,16 @@ import type { TilesetEditorState } from './editor-state.js';
 import type { TileEntry, TileManifest } from './types.js';
 import { hasFSAccess, saveToDirectory, saveBlobToDirectory } from '../editor/fs-save.js';
 
+/** Normalize interactType from JSON: handles legacy string, new object, and destroy migration. */
+function normalizeEditorInteractType(raw: unknown, legacyDestroy?: string | null): TileEntry['interactType'] {
+  if (raw && typeof raw === 'object' && 'id' in (raw as Record<string, unknown>)) {
+    return raw as { id: string; args?: Record<string, unknown> };
+  }
+  if (typeof raw === 'string' && raw) return { id: raw };
+  if (typeof legacyDestroy === 'string' && legacyDestroy) return { id: legacyDestroy };
+  return null;
+}
+
 /** Export tiles as the manifest JSON. */
 export function exportManifest(state: TilesetEditorState): string {
   const manifest: TileManifest = {
@@ -59,10 +69,10 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         h: t.h ?? (t as unknown as Record<string, number>).tileSize ?? 16,
         walkable: t.walkable ?? true,
         encounter: t.encounter ?? false,
-        destroy: t.destroy ?? null,
         above: t.above ?? false,
         overlay: t.overlay ?? undefined,
-        category: t.category,
+        category: t.category ?? ((t as any).destroy ? 'interactive' : undefined),
+        interactType: normalizeEditorInteractType(t.interactType, (t as any).destroy),
         description: t.description,
         cells: t.cells,
       });
@@ -80,7 +90,6 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         h: (raw.h as number) ?? baseTileSize,
         walkable: (raw.walkable as boolean) ?? true,
         encounter: (raw.encounter as boolean) ?? false,
-        destroy: null,
         above: (raw.renderAbove as boolean) ?? false,
       });
     }

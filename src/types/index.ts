@@ -12,7 +12,7 @@ export interface Scene {
 }
 
 /** Scene identifiers used by the state machine. */
-export type SceneId = 'TITLE' | 'STARTER_SELECT' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE' | 'PARTY' | 'POKEDEX' | 'SHOP' | 'BAG';
+export type SceneId = 'TITLE' | 'STARTER_SELECT' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE' | 'PARTY' | 'POKEDEX' | 'SHOP' | 'BAG' | 'PC';
 
 /** Top-level game state snapshot. */
 export interface GameState {
@@ -105,11 +105,18 @@ export interface AdaptiveState {
   streak: number;
 }
 
+/** A single PC storage box. */
+export interface PCBox {
+  name: string;                   // e.g. "BOX 1"
+  pokemon: (Pokemon | null)[];    // 30 slots (null = empty)
+}
+
 /** Persistent player data (saved to localStorage). */
 export interface PlayerData {
-  saveVersion: number;           // Schema version for migration (current: 1)
+  saveVersion: number;           // Schema version for migration (current: 2)
   name: string;
   party: Pokemon[];
+  boxes: PCBox[];                // PC storage — 10 boxes × 30 slots
   badges: number;
   serumParts: number;
   money: number;

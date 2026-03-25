@@ -6,6 +6,7 @@ import { createNamePicker } from '../ui/name-picker.js';
 import { getAllPokemon, type PokemonData } from '../services/pokemon-data.js';
 import { getAllItems, type ItemDef } from '../data/items.js';
 import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward } from '../systems/npc.js';
+import { BADGES } from '../data/badges.js';
 import encounterTables from '../data/encounter-tables.json';
 
 // Ensure character sprites are loaded for preview
@@ -324,20 +325,7 @@ export class PropertiesPanel {
     section.appendChild(moneyRow);
 
     // ── Reward: Badge ──
-    const badgeRow = document.createElement('div');
-    badgeRow.className = 'prop-row';
-    badgeRow.innerHTML = '<label>Badge #:</label>';
-    const badgeInput = document.createElement('input');
-    badgeInput.type = 'number'; badgeInput.min = '0'; badgeInput.max = '8';
-    badgeInput.value = String(reward.badge || 0);
-    badgeInput.placeholder = '0 = none';
-    badgeInput.addEventListener('change', () => {
-      const v = parseInt(badgeInput.value, 10) || 0;
-      if (v > 0) reward.badge = v; else delete (reward as unknown as Record<string, unknown>)['badge'];
-      emit();
-    });
-    badgeRow.appendChild(badgeInput);
-    section.appendChild(badgeRow);
+    section.appendChild(this.makeBadgeSelector(reward, emit));
 
     // ── Reward: Story Event ──
     const storyRow = document.createElement('div');
@@ -713,22 +701,8 @@ export class PropertiesPanel {
     moneyRow.appendChild(moneyInput);
     section.appendChild(moneyRow);
 
-    // Badge
-    const badgeRow = document.createElement('div');
-    badgeRow.className = 'prop-row';
-    badgeRow.innerHTML = '<label>Badge #:</label>';
-    const badgeInput = document.createElement('input');
-    badgeInput.type = 'number'; badgeInput.min = '0'; badgeInput.max = '8';
-    badgeInput.value = String(reward.badge || 0);
-    badgeInput.placeholder = '0 = none';
-    badgeInput.addEventListener('change', () => {
-      const v = parseInt(badgeInput.value, 10) || 0;
-      if (v > 0) reward.badge = v; else delete (reward as unknown as Record<string, unknown>)['badge'];
-      emit();
-    });
-    badgeRow.appendChild(badgeInput);
-    badgeRow.appendChild(this.makeInfo('Gym badge number (1-8). Stored as bitmask in player data. Will be replaced with badge dropdown when badge data system is built.'));
-    section.appendChild(badgeRow);
+    // Badge selector
+    section.appendChild(this.makeBadgeSelector(reward, emit));
 
     // Story event
     const storyRow = document.createElement('div');
@@ -1098,6 +1072,51 @@ export class PropertiesPanel {
     section.appendChild(exportRow);
 
     this.container.appendChild(section);
+  }
+
+  /** Badge dropdown selector with info about which badges are already assigned to other NPCs. */
+  private makeBadgeSelector(reward: DialogueReward | TrainerReward, emit: () => void): HTMLElement {
+    const row = document.createElement('div');
+    row.className = 'prop-row';
+    row.innerHTML = '<label>Badge:</label>';
+
+    const sel = document.createElement('select');
+    // "None" option
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '0';
+    noneOpt.textContent = '(none)';
+    if (!reward.badge) noneOpt.selected = true;
+    sel.appendChild(noneOpt);
+
+    // Find which badges are already assigned to other NPCs on this map
+    const assignedBadges = new Set<number>();
+    const npcs = this.state.mapData.npcs || [];
+    for (const npc of npcs) {
+      const r = npc.reward;
+      if (r?.badge) assignedBadges.add(r.badge);
+      if (npc.type === 'trainer') {
+        const tr = npc as unknown as TrainerData;
+        if (tr.reward?.badge) assignedBadges.add(tr.reward.badge);
+      }
+    }
+
+    for (const badge of BADGES) {
+      const opt = document.createElement('option');
+      opt.value = String(badge.id);
+      const assigned = assignedBadges.has(badge.id) && reward.badge !== badge.id;
+      opt.textContent = `#${badge.id} ${badge.name.en} — ${badge.leader.en}${assigned ? ' (⚠ assigned)' : ''}`;
+      if (reward.badge === badge.id) opt.selected = true;
+      sel.appendChild(opt);
+    }
+
+    sel.addEventListener('change', () => {
+      const v = parseInt(sel.value, 10) || 0;
+      if (v > 0) reward.badge = v; else delete (reward as unknown as Record<string, unknown>)['badge'];
+      emit();
+    });
+    row.appendChild(sel);
+    row.appendChild(this.makeInfo('Select a gym badge to award. Badges marked (⚠ assigned) are already given by another NPC on this map.'));
+    return row;
   }
 
   /** Create a small info icon/tooltip element. */

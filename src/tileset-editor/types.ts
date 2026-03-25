@@ -7,10 +7,11 @@ export interface TileEntry {
   h: number;       // pixel height
   walkable: boolean;
   encounter: boolean;
-  destroy: null | 'cut' | 'strength';
   above: boolean;
   overlay?: boolean; // true = renders on top of player (tall grass); false/absent = flat ground
   category?: string;
+  /** Interactive type ref — only meaningful when category is 'interactive'. */
+  interactType?: { id: string; args?: Record<string, unknown> } | null;
   description?: string;
   /** For grouped non-adjacent tiles: list of included 16x16 cells as grid offsets from (sx,sy).
    *  When absent, the entire sx/sy/w/h rectangle is the tile.
@@ -35,6 +36,6 @@ export type TsEditorEvent =
 
 /** Preset categories for the dropdown. */
 export const TILE_CATEGORIES = [
-  'grass', 'ground', 'road','floor', 'wall', 'building',
-  'tree', 'water', 'decoration', 'interior', 'other',
+  'grass', 'ground', 'road', 'floor', 'wall', 'building',
+  'tree', 'water', 'decoration', 'interior', 'interactive', 'other',
 ] as const;

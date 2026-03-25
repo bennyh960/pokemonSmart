@@ -14,9 +14,13 @@ const SAVE_SLOT = 0;
 /** Create fresh PlayerData for a new game (party empty until starter is chosen). */
 export function createNewPlayerData(): PlayerData {
   return {
-    saveVersion: 1,
+    saveVersion: 2,
     name: 'Player',
     party: [],
+    boxes: Array.from({ length: 10 }, (_, i) => ({
+      name: `BOX ${i + 1}`,
+      pokemon: Array(30).fill(null),
+    })),
     badges: 0,
     serumParts: 0,
     money: 3000,

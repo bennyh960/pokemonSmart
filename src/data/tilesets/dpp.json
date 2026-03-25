@@ -9,9 +9,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
-      "category": "grass"
+      "category": "grass",
+      "interactType": null
     },
     {
       "key": "g2",
@@ -21,9 +21,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
-      "category": "grass"
+      "category": "grass",
+      "interactType": null
     },
     {
       "key": "pc1",
@@ -33,9 +33,9 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "building"
+      "category": "building",
+      "interactType": null
     },
     {
       "key": "pc2",
@@ -45,9 +45,9 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "building"
+      "category": "building",
+      "interactType": null
     },
     {
       "key": "m1",
@@ -57,9 +57,9 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "building"
+      "category": "building",
+      "interactType": null
     },
     {
       "key": "m2",
@@ -69,9 +69,9 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "building"
+      "category": "building",
+      "interactType": null
     },
     {
       "key": "g3",
@@ -81,10 +81,10 @@
       "h": 16,
       "walkable": true,
       "encounter": true,
-      "destroy": null,
       "above": true,
       "overlay": true,
       "category": "grass",
+      "interactType": null,
       "description": "grass for encounter"
     },
     {
@@ -95,10 +95,10 @@
       "h": 16,
       "walkable": true,
       "encounter": true,
-      "destroy": null,
       "above": true,
       "overlay": true,
       "category": "grass",
+      "interactType": null,
       "description": "grass for encounter"
     },
     {
@@ -109,10 +109,10 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "overlay": true,
       "category": "grass",
+      "interactType": null,
       "description": "grass with flower"
     },
     {
@@ -123,9 +123,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "rock as decoration"
     },
     {
@@ -136,9 +136,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "decoration"
+      "category": "decoration",
+      "interactType": null
     },
     {
       "key": "s1",
@@ -148,9 +148,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "sand 1 top left"
     },
     {
@@ -161,9 +161,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "sand 1 top"
     },
     {
@@ -174,9 +174,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "sand 1 top right"
     },
     {
@@ -187,9 +187,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "sand 1 left"
     },
     {
@@ -200,9 +200,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "ground",
+      "interactType": null,
       "description": "sand 1 center"
     },
     {
@@ -213,9 +213,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "sand 1 right"
     },
     {
@@ -226,8 +226,8 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
+      "interactType": null,
       "description": "sand 1 bottom left"
     },
     {
@@ -238,9 +238,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "sand 1 bottom"
     },
     {
@@ -251,9 +251,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "sand 1 bottom right"
     },
     {
@@ -264,9 +264,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "fence 1 top left"
     },
     {
@@ -277,9 +277,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "fence 1 top right"
     },
     {
@@ -290,9 +290,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "fence 1 left"
     },
     {
@@ -303,8 +303,8 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
+      "interactType": null,
       "description": "fence 1 right"
     },
     {
@@ -315,8 +315,8 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
+      "interactType": null,
       "description": "fence 1 bottom left"
     },
     {
@@ -327,9 +327,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "fence 1 bottom right"
     },
     {
@@ -340,9 +340,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "grass",
+      "interactType": null,
       "description": "grass 2 top left"
     },
     {
@@ -353,9 +353,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "grass",
+      "interactType": null,
       "description": "grass 2 top right"
     },
     {
@@ -366,9 +366,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "grass",
+      "interactType": null,
       "description": "grass 2 bottom left"
     },
     {
@@ -379,9 +379,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "grass",
+      "interactType": null,
       "description": "grass 2 bottom right"
     },
     {
@@ -392,9 +392,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "fence center"
     },
     {
@@ -405,9 +405,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "t2",
@@ -417,9 +417,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "t3",
@@ -429,9 +429,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "t4",
@@ -441,9 +441,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "t5",
@@ -453,9 +453,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "t6",
@@ -465,9 +465,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "t7",
@@ -477,9 +477,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "t8",
@@ -489,9 +489,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "r3",
@@ -501,8 +501,8 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
+      "interactType": null,
       "description": "rock32"
     },
     {
@@ -513,9 +513,9 @@
       "h": 32,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "cave enterance"
     },
     {
@@ -526,9 +526,9 @@
       "h": 32,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "cave entrenace"
     },
     {
@@ -539,9 +539,9 @@
       "h": 80,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "regular building"
     },
     {
@@ -552,9 +552,9 @@
       "h": 80,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "horizontal building"
     },
     {
@@ -565,9 +565,9 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "modern house"
     },
     {
@@ -578,9 +578,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "house decoration flowers"
     },
     {
@@ -591,9 +591,9 @@
       "h": 80,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "modern house bigger"
     },
     {
@@ -604,9 +604,9 @@
       "h": 80,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "modern house larger"
     },
     {
@@ -617,8 +617,8 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
+      "interactType": null,
       "description": "smaller modern house red roof"
     },
     {
@@ -629,9 +629,9 @@
       "h": 48,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "tree",
+      "interactType": null,
       "description": "tree pink leaf"
     },
     {
@@ -642,9 +642,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "tree",
+      "interactType": null,
       "description": "tree pink leaf"
     },
     {
@@ -655,9 +655,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "tree",
+      "interactType": null,
       "description": "tree pink leaf bigger"
     },
     {
@@ -668,10 +668,10 @@
       "h": 48,
       "walkable": true,
       "encounter": true,
-      "destroy": null,
       "above": true,
       "overlay": true,
       "category": "grass",
+      "interactType": null,
       "description": "grass pink should be next pink tree"
     },
     {
@@ -682,10 +682,10 @@
       "h": 16,
       "walkable": true,
       "encounter": true,
-      "destroy": null,
       "above": true,
       "overlay": true,
       "category": "grass",
+      "interactType": null,
       "description": "grass pink next pink tree smaller"
     },
     {
@@ -696,9 +696,9 @@
       "h": 16,
       "walkable": true,
       "encounter": true,
-      "destroy": null,
       "above": true,
       "overlay": true,
+      "interactType": null,
       "description": "grass pink should be next pink tree"
     },
     {
@@ -709,9 +709,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "modern house blus roof"
     },
     {
@@ -722,9 +722,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "gym sign - need be close to gyms"
     },
     {
@@ -735,9 +735,9 @@
       "h": 80,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "gym"
     },
     {
@@ -748,9 +748,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "water",
+      "interactType": null,
       "description": "water 1 top left corner"
     },
     {
@@ -761,9 +761,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "floor",
+      "interactType": null,
       "description": "deck for in house"
     },
     {
@@ -774,9 +774,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "floor",
+      "interactType": null,
       "description": "floor in house"
     },
     {
@@ -787,9 +787,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "floor",
+      "interactType": null,
       "description": "floor in house"
     },
     {
@@ -800,9 +800,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "trash can"
     },
     {
@@ -813,8 +813,8 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
+      "interactType": null,
       "description": "trash can"
     },
     {
@@ -825,9 +825,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "chair table chair in house"
     },
     {
@@ -838,8 +838,8 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
+      "interactType": null,
       "description": "street flash light right"
     },
     {
@@ -850,9 +850,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "steet flash light left"
     },
     {
@@ -863,9 +863,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "gym ghost roof"
     },
     {
@@ -876,9 +876,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "gym ghost body"
     },
     {
@@ -889,9 +889,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "gym ghost bottom"
     },
     {
@@ -902,9 +902,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "boat on water"
     },
     {
@@ -915,9 +915,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "chair left in house"
     },
     {
@@ -928,9 +928,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "chair decoration right in house"
     },
     {
@@ -941,9 +941,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "fence 2 center"
     },
     {
@@ -954,9 +954,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "mailbox"
     },
     {
@@ -967,9 +967,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "mail box"
     },
     {
@@ -980,9 +980,9 @@
       "h": 32,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "floor",
+      "interactType": null,
       "description": "floor 2"
     },
     {
@@ -993,9 +993,9 @@
       "h": 32,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "tree",
+      "interactType": null,
       "description": "tree decorative"
     },
     {
@@ -1006,9 +1006,9 @@
       "h": 48,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "wood decoration"
     },
     {
@@ -1019,8 +1019,8 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
+      "interactType": null,
       "description": "another building , look like market"
     },
     {
@@ -1031,9 +1031,9 @@
       "h": 48,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "pink carpetner"
     },
     {
@@ -1044,9 +1044,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "water",
+      "interactType": null,
       "description": "water 1 top"
     },
     {
@@ -1057,9 +1057,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "water",
+      "interactType": null,
       "description": "water 1 top right corner"
     },
     {
@@ -1070,8 +1070,8 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
+      "interactType": null,
       "description": "water 1 left"
     },
     {
@@ -1082,9 +1082,9 @@
       "h": 16,
       "walkable": true,
       "encounter": true,
-      "destroy": null,
       "above": false,
       "category": "water",
+      "interactType": null,
       "description": "water 1"
     },
     {
@@ -1095,9 +1095,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "water",
+      "interactType": null,
       "description": "water 1 top right corner"
     },
     {
@@ -1108,9 +1108,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "water",
+      "interactType": null,
       "description": "water 1 bottom left corner"
     },
     {
@@ -1121,9 +1121,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "water",
+      "interactType": null,
       "description": "water 1 bottom"
     },
     {
@@ -1134,9 +1134,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "water",
+      "interactType": null,
       "description": "water 1 bottom right corner"
     },
     {
@@ -1147,9 +1147,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain top left corner"
     },
     {
@@ -1160,9 +1160,9 @@
       "h": 16,
       "walkable": true,
       "encounter": true,
-      "destroy": null,
       "above": false,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 1 floor"
     },
     {
@@ -1173,9 +1173,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain top right corner"
     },
     {
@@ -1186,9 +1186,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 1 left side"
     },
     {
@@ -1199,9 +1199,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 1 floor 2 - no encounter"
     },
     {
@@ -1212,9 +1212,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 1 right center"
     },
     {
@@ -1225,9 +1225,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 1 bottom left"
     },
     {
@@ -1238,9 +1238,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain1 bottom"
     },
     {
@@ -1251,9 +1251,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 1 bottom right"
     },
     {
@@ -1264,9 +1264,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "desk table in house"
     },
     {
@@ -1277,9 +1277,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "decorative furtniture in house"
     },
     {
@@ -1290,9 +1290,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "library in house"
     },
     {
@@ -1303,9 +1303,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpenter 1 for in house top left"
     },
     {
@@ -1316,9 +1316,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpenter 1 for in house top"
     },
     {
@@ -1329,9 +1329,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpenter 1 for in house top right"
     },
     {
@@ -1342,9 +1342,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpenter 1 for in house bottm left"
     },
     {
@@ -1355,9 +1355,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpenter 1 for in house bottom"
     },
     {
@@ -1368,9 +1368,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpenter 1 for in house bottom right"
     },
     {
@@ -1381,9 +1381,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpenter 1 for in house left"
     },
     {
@@ -1394,9 +1394,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpenter 1 for in house right"
     },
     {
@@ -1407,9 +1407,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "carpener 1 center in hosue"
     },
     {
@@ -1420,9 +1420,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "tv in wall"
     },
     {
@@ -1433,9 +1433,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "wall in house"
     },
     {
@@ -1446,9 +1446,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "picture on wall in house"
     },
     {
@@ -1459,9 +1459,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "books on shelf"
     },
     {
@@ -1472,9 +1472,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "pictures on wall"
     },
     {
@@ -1485,9 +1485,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "shelf on wall"
     },
     {
@@ -1498,9 +1498,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "decoration",
+      "interactType": null,
       "description": "flower on wall in house"
     },
     {
@@ -1511,9 +1511,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "bench on yard"
     },
     {
@@ -1524,9 +1524,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 left top corner"
     },
     {
@@ -1537,9 +1537,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 top"
     },
     {
@@ -1550,9 +1550,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 right top corner"
     },
     {
@@ -1563,9 +1563,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 left"
     },
     {
@@ -1576,9 +1576,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": false,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 center - walkable"
     },
     {
@@ -1589,9 +1589,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 right"
     },
     {
@@ -1602,9 +1602,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 left bottom corner"
     },
     {
@@ -1615,9 +1615,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 bottom"
     },
     {
@@ -1628,9 +1628,9 @@
       "h": 16,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 right bottom corner"
     },
     {
@@ -1641,9 +1641,9 @@
       "h": 32,
       "walkable": true,
       "encounter": true,
-      "destroy": null,
       "above": false,
       "category": "ground",
+      "interactType": null,
       "description": "mountain 2 big tile for walable and encounter"
     },
     {
@@ -1654,9 +1654,9 @@
       "h": 32,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "kaktus decoration"
     },
     {
@@ -1667,9 +1667,9 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "decoration",
+      "interactType": null,
       "description": "water fountain  decoration for town decor"
     },
     {
@@ -1680,8 +1680,8 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
-      "above": false
+      "above": false,
+      "interactType": null
     },
     {
       "key": "b7door",
@@ -1691,9 +1691,9 @@
       "h": 16,
       "walkable": true,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "b7 building door"
     },
     {
@@ -1704,9 +1704,9 @@
       "h": 64,
       "walkable": false,
       "encounter": false,
-      "destroy": null,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "modern house with orange roof small size",
       "cells": [
         {
@@ -1786,6 +1786,25 @@
           "dy": 1
         }
       ]
+    },
+    {
+      "key": "pc-test",
+      "sx": 112,
+      "sy": 128,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "encounter": false,
+      "above": true,
+      "category": "interactive",
+      "interactType": {
+        "id": "item",
+        "args": {
+          "itemId": "ultra-ball",
+          "itemQty": 10
+        }
+      },
+      "description": "test"
     }
   ]
 }

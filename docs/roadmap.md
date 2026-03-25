@@ -113,14 +113,14 @@ This is a foundation sprint — must be done before design/content sprints.
 
 | Task | Agent | Status | Notes |
 |------|-------|--------|-------|
-| Interactable object layer — new map data layer for non-NPC objects (PC, signs, bookshelves, TVs) | game-engine-developer | ⬜ | Objects have position, type, and interaction handler; rendered from tileset; collision-aware |
-| PC sprite + interaction — place PC objects in Pokemon Centers, trigger PC screen on interact | game-engine-developer + asset-manager | ⬜ | New object type `pc` in map JSON |
-| PC screen UI — deposit/withdraw Pokemon between party and storage boxes | frontend-developer | ⬜ | Design: `screens_examples_coords/pc_canvas_coordinates.md` + `screens_examples_coords/pokemon_pc_240x160.html` |
-| Box storage in game state — `boxes` array in PlayerData, save/load support | game-engine-developer | ⬜ | Multiple boxes (e.g. 10 boxes × 30 slots), enforce party min 1 |
+| Interactable object layer — unified `interactType` system with central definitions | game-engine-developer | ✅ | `interact-types.ts` central defs, `{ id, args }` ref on TileDef, 3-layer merge (defaults→tile→instance), tileset editor shows contextual fields per type |
+| PC sprite + interaction — place PC objects in Pokemon Centers, trigger PC screen on interact | game-engine-developer + asset-manager | ⬜ | Needs PC tile sprite in tileset PNG — code ready, waiting on art |
+| PC screen UI — deposit/withdraw Pokemon between party and storage boxes | frontend-developer | ✅ | Full scene from design docs: 3 modes, box grid 6×5, party sidebar, detail strip |
+| Box storage in game state — `boxes` array in PlayerData, save/load support | game-engine-developer | ✅ | 10 boxes × 30 slots, save migration v1→v2, pc-storage.ts logic module |
 | Expand TrainerReward — add `badge`, `storyEvent`, and post-battle dialogue fields | game-engine-developer | ✅ | badge/storyEvent on TrainerReward + postBattleDialogue on TrainerData, wired in battle.ts |
 | Post-battle dialogue — trainer shows dialogue lines after battle ends (victory speech, badge award) | game-engine-developer + frontend-developer | ✅ | postBattleDialogue appended to reward text box after battle win |
 | Expand DialogueReward — add `badge`, `storyEvent` fields for story NPC interactions | game-engine-developer | ✅ | badge/storyEvent on DialogueReward, processed in giveNPCReward |
-| Badge data system — `src/data/badges.ts` with name (en/he), icon/sprite, ID for all 8 gym badges | game-designer + asset-manager | ⬜ | Replace numeric badge refs with proper data; editor dropdown instead of number input |
+| Badge data system — `src/data/badges.ts` with name (en/he), icon/sprite, ID for all 8 gym badges | game-designer + asset-manager | ✅ | 8 badges defined from game-spec; editor uses dropdown with assignment warnings; icons TBD |
 | Bilingual NPC dialogue — `dialogue: { en, he }[]` + editor with EN/HE textareas | game-engine-developer | ✅ | All 17 NPCs migrated; runtime resolves by locale with fallback to EN |
 | Rewards for all NPC types — healer/shopkeeper can give rewards on interaction | game-engine-developer | ✅ | Reward processing in onDialogueEnd for all types |
 | Editor: sprite preview, reward panel for all NPCs, encounter table panel | frontend-developer | ✅ | Sprite canvas, info tooltips, encounter editor with auto map ID |

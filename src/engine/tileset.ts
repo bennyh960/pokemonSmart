@@ -6,6 +6,8 @@
  *   2. Legacy: { image, tileSize, tiles: { "id": {sx, sy, walkable, encounter} } }
  */
 
+import type { InteractTypeRef } from '../data/interact-types.js';
+
 /** Definition of a single tile within a tileset. */
 export interface TileDef {
   sx: number;
@@ -16,8 +18,12 @@ export interface TileDef {
   encounter: boolean;
   above: boolean;
   overlay: boolean; // true = renders on top of player (e.g. tall grass); false = flat ground decoration
-  destroy: null | 'cut' | 'strength';
   category?: string;
+  /**
+   * Interactive type reference — only meaningful when category is 'interactive'.
+   * Contains an id (foreign key to INTERACT_TYPES) and optional args to override defaults.
+   */
+  interactType?: InteractTypeRef | null;
   /** For grouped non-adjacent tiles: list of included 16x16 cells as grid offsets from (sx,sy).
    *  When absent, the entire sx/sy/w/h rectangle is the tile.
    *  When present, only these cells are rendered/collidable. */
@@ -41,11 +47,29 @@ interface TileEntryRaw {
   tileSize?: number;  // legacy compat: square tile
   walkable: boolean;
   encounter: boolean;
-  destroy: null | 'cut' | 'strength';
   above: boolean;
   overlay?: boolean;
   category?: string;
+  interactType?: unknown;  // string (legacy) or { id, args } (new) or null
+  destroy?: string;        // legacy — migrated to interactType on load
   cells?: Array<{ dx: number; dy: number }>;
+}
+
+/** Normalize interactType from JSON: handles legacy string, new object, and destroy migration. */
+function normalizeInteractRef(raw: unknown, legacyDestroy?: string | null): InteractTypeRef | null {
+  // New format: { id: "pc", args: {...} }
+  if (raw && typeof raw === 'object' && 'id' in (raw as Record<string, unknown>)) {
+    return raw as InteractTypeRef;
+  }
+  // Legacy string format: "pc" → { id: "pc" }
+  if (typeof raw === 'string' && raw) {
+    return { id: raw };
+  }
+  // Legacy destroy field migration
+  if (typeof legacyDestroy === 'string' && legacyDestroy) {
+    return { id: legacyDestroy };
+  }
+  return null;
 }
 
 /** Cache of loaded tilesets by name. */
@@ -79,6 +103,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
   if (Array.isArray(manifest.tiles)) {
     for (const raw of manifest.tiles as TileEntryRaw[]) {
       const size = raw.tileSize ?? 16;
+      const iRef = normalizeInteractRef(raw.interactType, raw.destroy);
       tiles.set(raw.key, {
         sx: raw.sx,
         sy: raw.sy,
@@ -88,8 +113,8 @@ export async function loadTileset(name: string): Promise<Tileset> {
         encounter: raw.encounter ?? false,
         above: raw.above ?? false,
         overlay: raw.overlay ?? false,
-        destroy: raw.destroy ?? null,
-        category: raw.category,
+        category: raw.category ?? (iRef ? 'interactive' : undefined),
+        interactType: iRef,
         cells: raw.cells,
       });
     }
@@ -98,6 +123,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
   else if (typeof manifest.tiles === 'object' && manifest.tiles !== null) {
     const base = (manifest.tileSize as number) ?? 16;
     for (const [id, raw] of Object.entries(manifest.tiles as Record<string, Record<string, unknown>>)) {
+      const iRef2 = normalizeInteractRef(raw.interactType, raw.destroy as string | null);
       tiles.set(id, {
         sx: raw.sx as number,
         sy: raw.sy as number,
@@ -107,8 +133,8 @@ export async function loadTileset(name: string): Promise<Tileset> {
         encounter: (raw.encounter as boolean) ?? false,
         above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false,
         overlay: (raw.overlay as boolean) ?? false,
-        destroy: (raw.destroy as TileDef['destroy']) ?? null,
-        category: raw.category as string | undefined,
+        category: (raw.category as string) ?? (iRef2 ? 'interactive' : undefined),
+        interactType: iRef2,
       });
     }
   }
