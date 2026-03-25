@@ -190,9 +190,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Use saved return destination (e.g. exiting Pokemon Center)
           transitionTarget = { ...previousMapReturn };
         } else {
-          // Save current position as return point before transitioning
+          // Save return point one step back from the transition tile
+          // (so the player doesn't land on the transition again and loop)
           if (currentMapData.id) {
-            previousMapReturn = { mapId: currentMapData.id, x: player.gridX, y: player.gridY + 1 };
+            const backVec = DIR_VECTORS[player.facing] || { dx: 0, dy: 0 };
+            previousMapReturn = {
+              mapId: currentMapData.id,
+              x: player.gridX - backVec.dx,
+              y: player.gridY - backVec.dy,
+            };
           }
           transitionTarget = { mapId: tr.toMapId, x: tr.toX, y: tr.toY };
         }

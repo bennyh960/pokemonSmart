@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>חנות פוקימון - עיצוב חדש</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: #0a0a0f;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .shop-screen {
+    width: 580px;
+    background: linear-gradient(145deg, #0f1923 0%, #0b1a12 40%, #111a0e 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(77, 255, 180, 0.12);
+    position: relative;
+  }
+  .shop-screen::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 180px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(77, 255, 130, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Header */
+  .shop-header {
+    padding: 20px 24px 0;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .shop-title-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .shop-icon {
+    width: 36px; height: 36px;
+    background: rgba(248, 208, 48, 0.08);
+    border: 1px solid rgba(248, 208, 48, 0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .shop-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .shop-subtitle {
+    font-size: 11px;
+    color: #3a4a40;
+    font-weight: 500;
+  }
+
+  /* Money badge */
+  .money-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(248, 208, 48, 0.06);
+    border: 1px solid rgba(248, 208, 48, 0.12);
+    border-radius: 12px;
+    padding: 8px 16px;
+  }
+  .money-icon {
+    font-size: 14px;
+    color: #f8d030;
+    font-weight: 700;
+  }
+  .money-label {
+    font-size: 10px;
+    color: #5a5a40;
+    font-weight: 500;
+  }
+  .money-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: #f8d030;
+    direction: ltr;
+  }
+
+  /* Category tabs */
+  .cat-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 16px 20px 10px;
+    position: relative;
+    z-index: 1;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cat-tab {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.02);
+    color: #3a4a40;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cat-tab:hover { color: #5a7a65; background: rgba(255,255,255,0.04); }
+  .cat-tab.active {
+    background: rgba(77,255,180,0.1);
+    border-color: rgba(77,255,180,0.2);
+    color: #4dffb4;
+  }
+  .cat-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-heal { background: #20d860; }
+  .dot-status { background: #5080ff; }
+  .dot-revive { background: #f8d030; }
+  .dot-ball { background: #e85858; }
+  .dot-battle { background: #f08030; }
+  .dot-vitamin { background: #a040a0; }
+
+  /* Items list */
+  .items-list {
+    padding: 0 12px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .item-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.2s;
+    cursor: pointer;
+    direction: rtl;
+  }
+  .item-card:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(77,255,180,0.08);
+  }
+  .item-card.selected {
+    background: rgba(77,255,180,0.05);
+    border-color: rgba(77,255,180,0.2);
+    box-shadow: 0 0 20px rgba(77,255,180,0.04);
+  }
+
+  /* Item icon */
+  .item-icon-box {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon-heal-1 { background: rgba(160,64,220,0.1); }
+  .icon-heal-2 { background: rgba(80,160,255,0.1); }
+  .icon-heal-3 { background: rgba(255,120,60,0.1); }
+  .icon-heal-4 { background: rgba(248,208,48,0.1); }
+  .icon-heal-5 { background: rgba(32,216,96,0.1); }
+
+  /* Item info */
+  .item-info { flex: 1; min-width: 0; }
+  .item-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .item-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #d4e0d8;
+  }
+  .item-owned {
+    font-size: 10px;
+    color: #3a4a40;
+    font-weight: 500;
+    background: rgba(255,255,255,0.03);
+    padding: 1px 8px;
+    border-radius: 8px;
+  }
+  .item-owned span { color: #7a9a85; font-weight: 600; }
+  .item-desc {
+    font-size: 11px;
+    color: #3a5a44;
+    font-weight: 400;
+  }
+  .item-card.selected .item-desc { color: #4a6a55; }
+
+  /* Price area */
+  .item-price-area {
+    flex-shrink: 0;
+    text-align: center;
+    min-width: 70px;
+  }
+  .item-price {
+    font-size: 17px;
+    font-weight: 800;
+    color: #f8d030;
+    direction: ltr;
+    margin-bottom: 2px;
+  }
+  .item-price .currency { font-size: 12px; font-weight: 600; }
+  .buy-btn {
+    padding: 5px 16px;
+    border-radius: 8px;
+    background: rgba(77,255,180,0.1);
+    border: 1px solid rgba(77,255,180,0.2);
+    color: #4dffb4;
+    font-family: 'Heebo', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+  .item-card.selected .buy-btn { display: block; }
+  .buy-btn:hover { background: rgba(77,255,180,0.18); }
+
+  .cant-afford .item-price { color: #5a4a3a; }
+  .cant-afford .buy-btn {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.06);
+    color: #3a3a3a;
+    cursor: not-allowed;
+  }
+
+  /* Bottom bar */
+  .bottom-bar {
+    padding: 14px 24px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    direction: ltr;
+    margin-top: 10px;
+  }
+  .key-hint {
+    font-size: 11px; color: #334;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .key-badge {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #556;
+  }
+  .key-label { color: #445; }
+</style>
+</head>
+<body>
+
+<div class="shop-screen">
+
+  <!-- Header -->
+  <div class="shop-header">
+    <div class="shop-title-area">
+      <div class="shop-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f8d030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+      </div>
+      <div>
+        <div class="shop-title">חנות פוקימון</div>
+        <div class="shop-subtitle">ברוכים הבאים! מה תרצו לקנות?</div>
+      </div>
+    </div>
+    <div class="money-badge">
+      <div>
+        <div class="money-label">כסף</div>
+        <div class="money-value"><span class="money-icon">₪</span>3,000</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category tabs -->
+  <div class="cat-tabs">
+    <div class="cat-tab active"><span class="cat-dot dot-heal"></span>ריפוי</div>
+    <div class="cat-tab"><span class="cat-dot dot-status"></span>ריפוי מצב</div>
+    <div class="cat-tab"><span class="cat-dot dot-revive"></span>החייאה</div>
+    <div class="cat-tab"><span class="cat-dot dot-ball"></span>כדורים</div>
+    <div class="cat-tab"><span class="cat-dot dot-battle"></span>קרב</div>
+    <div class="cat-tab"><span class="cat-dot dot-vitamin"></span>ויטמינים</div>
+  </div>
+
+  <!-- Items list -->
+  <div class="items-list">
+
+    <!-- שיקוי -->
+    <div class="item-card">
+      <div class="item-icon-box icon-heal-1">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M9 2h6v4l3 10a4 4 0 01-4 4h-4a4 4 0 01-4-4L9 6V2z" fill="rgba(160,64,220,0.2)" stroke="#a040dc" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="9" y1="2" x2="15" y2="2" stroke="#a040dc" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="item-info">
+        <div class="item-name-row">
+          <span class="item-name">שיקוי</span>
+          <span class="item-owned">ברשותך: <span>5</span></span>
+        </div>
+        <div class="item-desc">משחזר 20 נק' חיים</div>
+      </div>
+      <div class="item-price-area">
+        <div class="item-price"><span class="currency">₪</span>300</div>
+        <button class="buy-btn">קנייה</button>
+      </div>
+    </div>
+
+    <!-- שיקוי על -->
+    <div class="item-card">
+      <div class="item-icon-box icon-heal-2">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M9 2h6v4l3 10a4 4 0 01-4 4h-4a4 4 0 01-4-4L9 6V2z" fill="rgba(80,160,255,0.2)" stroke="#50a0ff" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="9" y1="2" x2="15" y2="2" stroke="#50a0ff" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M10 12l2-2 2 2" stroke="#50a0ff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="item-info">
+        <div class="item-name-row">
+          <span class="item-name">שיקוי על</span>
+          <span class="item-owned">ברשותך: <span>3</span></span>
+        </div>
+        <div class="item-desc">משחזר 50 נק' חיים</div>
+      </div>
+      <div class="item-price-area">
+        <div class="item-price"><span class="currency">₪</span>700</div>
+        <button class="buy-btn">קנייה</button>
+      </div>
+    </div>
+
+    <!-- שיקוי היפר -->
+    <div class="item-card selected">
+      <div class="item-icon-box icon-heal-3">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M9 2h6v4l3 10a4 4 0 01-4 4h-4a4 4 0 01-4-4L9 6V2z" fill="rgba(255,120,60,0.2)" stroke="#ff783c" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="9" y1="2" x2="15" y2="2" stroke="#ff783c" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M10 12l2-3 2 3" stroke="#ff783c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 9l2-3 2 3" stroke="#ff783c" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="item-info">
+        <div class="item-name-row">
+          <span class="item-name">שיקוי היפר</span>
+          <span class="item-owned">ברשותך: <span>0</span></span>
+        </div>
+        <div class="item-desc">משחזר 200 נק' חיים</div>
+      </div>
+      <div class="item-price-area">
+        <div class="item-price"><span class="currency">₪</span>1,200</div>
+        <button class="buy-btn">קנייה</button>
+      </div>
+    </div>
+
+    <!-- שיקוי מקס -->
+    <div class="item-card">
+      <div class="item-icon-box icon-heal-4">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M9 2h6v4l3 10a4 4 0 01-4 4h-4a4 4 0 01-4-4L9 6V2z" fill="rgba(248,208,48,0.2)" stroke="#f8d030" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="9" y1="2" x2="15" y2="2" stroke="#f8d030" stroke-width="1.5" stroke-linecap="round"/>
+          <text x="12" y="14" text-anchor="middle" font-size="7" font-weight="bold" fill="#f8d030">M</text>
+        </svg>
+      </div>
+      <div class="item-info">
+        <div class="item-name-row">
+          <span class="item-name">שיקוי מקס</span>
+          <span class="item-owned">ברשותך: <span>0</span></span>
+        </div>
+        <div class="item-desc">משחזר HP במלואו</div>
+      </div>
+      <div class="item-price-area">
+        <div class="item-price"><span class="currency">₪</span>2,500</div>
+        <button class="buy-btn">קנייה</button>
+      </div>
+    </div>
+
+    <!-- שחזור מלא (can't afford) -->
+    <div class="item-card cant-afford">
+      <div class="item-icon-box icon-heal-5">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8" fill="rgba(32,216,96,0.12)" stroke="#20d860" stroke-width="1.5"/>
+          <path d="M12 8v8M8 12h8" stroke="#20d860" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="item-info">
+        <div class="item-name-row">
+          <span class="item-name">שחזור מלא</span>
+          <span class="item-owned">ברשותך: <span>0</span></span>
+        </div>
+        <div class="item-desc">משחזר HP וסטטוס במלואם</div>
+      </div>
+      <div class="item-price-area">
+        <div class="item-price"><span class="currency">₪</span>3,000</div>
+        <button class="buy-btn">קנייה</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <div class="key-hint"><span class="key-badge">ESC</span><span class="key-label">יציאה</span></div>
+    <div class="key-hint"><span class="key-badge">Enter</span><span class="key-label">קנייה</span></div>
+    <div class="key-hint"><span class="key-badge">◀▶</span><span class="key-label">קטגוריה</span></div>
+    <div class="key-hint"><span class="key-badge">▲▼</span><span class="key-label">ניווט</span></div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pokemon RPG - Shop Screen (240×160)</title>
+<style>
+  body {
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: monospace;
+  }
+  h2 { color: #4dffb4; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin: 0 0 16px; }
+  .screen {
+    width: 240px; height: 160px;
+    background: #0d1a14;
+    position: relative;
+    overflow: hidden;
+    transform: scale(3);
+    transform-origin: top center;
+    image-rendering: pixelated;
+    font-family: monospace;
+    -webkit-font-smoothing: none;
+    margin-bottom: 340px;
+    border: 1px solid #1a4a30;
+  }
+  .screen * {
+    position: absolute;
+    font-family: monospace;
+    line-height: 1;
+    white-space: nowrap;
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+
+<h2>מסך חנות</h2>
+<div class="screen">
+
+  <!-- ===== HEADER BAR (y=0, h=12) ===== -->
+  <div style="left:0px; top:0px; width:240px; height:12px; background:#0a1a10;"></div>
+  <!-- Shop title -->
+  <div style="left:176px; top:1px; width:60px; font-size:8px; color:#ffffff; text-align:right; direction:rtl;">חנות פוקימון</div>
+  <!-- Money badge bg -->
+  <div style="left:4px; top:1px; width:52px; height:10px; background:rgba(248,208,48,0.08); border:1px solid rgba(248,208,48,0.15); border-radius:3px;"></div>
+  <!-- Money icon ₪ -->
+  <div style="left:40px; top:2px; font-size:7px; color:#f8d030; font-weight:bold;">₪</div>
+  <!-- Money value -->
+  <div style="left:6px; top:2px; width:32px; font-size:7px; color:#f8d030; text-align:left; direction:ltr;">3000</div>
+
+  <!-- ===== CATEGORY TABS (y=13, h=9) ===== -->
+  <!-- Tab track -->
+  <div style="left:4px; top:13px; width:232px; height:9px; background:#0a2a1a; border:1px solid #1a4a30; border-radius:4px;"></div>
+  <!-- Active tab: ריפוי -->
+  <div style="left:198px; top:13px; width:36px; height:9px; background:#1a5a35; border:1px solid #1a4a30; border-radius:4px;"></div>
+  <div style="left:198px; top:14px; width:36px; font-size:6px; color:#20d860; text-align:center;">ריפוי</div>
+  <!-- Colored dots + labels -->
+  <div style="left:172px; top:16px; width:3px; height:3px; background:#5080ff; border-radius:2px;"></div>
+  <div style="left:142px; top:14px; width:28px; font-size:5px; color:#445544; text-align:center;">ריפוי מצב</div>
+  <div style="left:126px; top:16px; width:3px; height:3px; background:#f8d030; border-radius:2px;"></div>
+  <div style="left:104px; top:14px; width:20px; font-size:5px; color:#445544; text-align:center;">החייאה</div>
+  <div style="left:90px; top:16px; width:3px; height:3px; background:#e85858; border-radius:2px;"></div>
+  <div style="left:66px; top:14px; width:22px; font-size:5px; color:#445544; text-align:center;">כדורים</div>
+  <div style="left:54px; top:16px; width:3px; height:3px; background:#f08030; border-radius:2px;"></div>
+  <div style="left:38px; top:14px; width:14px; font-size:5px; color:#445544; text-align:center;">קרב</div>
+  <div style="left:24px; top:16px; width:3px; height:3px; background:#a040a0; border-radius:2px;"></div>
+  <div style="left:4px; top:14px; width:18px; font-size:5px; color:#445544; text-align:center;">ויטמינים</div>
+
+  <!-- ===== ITEM LIST (y=24 to y=144) ===== -->
+  <!-- 5 visible items, each h=23, gap=1px, stride=24 -->
+
+  <!-- ITEM 1: שיקוי ₪300 (owned: 5) -->
+  <div style="left:4px; top:24px; width:232px; height:23px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <!-- Icon box -->
+  <div style="left:214px; top:26px; width:16px; height:16px; background:rgba(160,64,220,0.1); border:1px solid rgba(160,64,220,0.3); border-radius:3px;"></div>
+  <!-- Icon: potion shape -->
+  <div style="left:219px; top:25px; width:6px; height:3px; background:#a040dc; border-radius:1px; opacity:0.7;"></div>
+  <div style="left:218px; top:28px; width:8px; height:10px; background:rgba(160,64,220,0.15); border:1px solid rgba(160,64,220,0.4); border-radius:1px 1px 3px 3px;"></div>
+  <!-- Name -->
+  <div style="left:120px; top:27px; width:90px; font-size:7px; color:#ffffff; text-align:right; direction:rtl;">שיקוי</div>
+  <!-- Description -->
+  <div style="left:120px; top:36px; width:90px; font-size:5px; color:#445544; text-align:right; direction:rtl;">משחזר 20 נק' חיים</div>
+  <!-- Owned badge -->
+  <div style="left:120px; top:42px; font-size:5px; color:#3a4a3a; text-align:right; direction:rtl;">ברשותך: <span style="position:relative; color:#7a9a85;">5</span></div>
+  <!-- Price -->
+  <div style="left:8px; top:27px; font-size:6px; color:#f8d030; font-weight:bold; direction:ltr;">₪</div>
+  <div style="left:14px; top:26px; font-size:8px; color:#f8d030; direction:ltr;">300</div>
+
+  <!-- ITEM 2: שיקוי על ₪700 (owned: 3) -->
+  <div style="left:4px; top:48px; width:232px; height:23px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <!-- Icon -->
+  <div style="left:214px; top:50px; width:16px; height:16px; background:rgba(80,160,255,0.1); border:1px solid rgba(80,160,255,0.3); border-radius:3px;"></div>
+  <div style="left:219px; top:49px; width:6px; height:3px; background:#50a0ff; border-radius:1px; opacity:0.7;"></div>
+  <div style="left:218px; top:52px; width:8px; height:10px; background:rgba(80,160,255,0.15); border:1px solid rgba(80,160,255,0.4); border-radius:1px 1px 3px 3px;"></div>
+  <div style="left:220px; top:56px; width:4px; height:2px; background:#50a0ff; opacity:0.4; border-radius:1px;"></div>
+  <!-- Name -->
+  <div style="left:120px; top:51px; width:90px; font-size:7px; color:#ffffff; text-align:right; direction:rtl;">שיקוי על</div>
+  <div style="left:120px; top:60px; width:90px; font-size:5px; color:#445544; text-align:right; direction:rtl;">משחזר 50 נק' חיים</div>
+  <div style="left:120px; top:66px; font-size:5px; color:#3a4a3a; direction:rtl;">ברשותך: <span style="position:relative; color:#7a9a85;">3</span></div>
+  <!-- Price -->
+  <div style="left:8px; top:51px; font-size:6px; color:#f8d030; font-weight:bold; direction:ltr;">₪</div>
+  <div style="left:14px; top:50px; font-size:8px; color:#f8d030; direction:ltr;">700</div>
+
+  <!-- ITEM 3: שיקוי היפר ₪1200 (SELECTED, owned: 0) -->
+  <div style="left:4px; top:72px; width:232px; height:23px; background:#1a3a2a; border:1px solid #2a6a40; border-radius:2px;"></div>
+  <!-- Selection bar -->
+  <div style="left:4px; top:72px; width:2px; height:23px; background:#20d860; border-radius:1px 0 0 1px;"></div>
+  <!-- Icon -->
+  <div style="left:214px; top:74px; width:16px; height:16px; background:rgba(255,120,60,0.1); border:1px solid rgba(255,120,60,0.3); border-radius:3px;"></div>
+  <div style="left:219px; top:73px; width:6px; height:3px; background:#ff783c; border-radius:1px; opacity:0.7;"></div>
+  <div style="left:218px; top:76px; width:8px; height:10px; background:rgba(255,120,60,0.15); border:1px solid rgba(255,120,60,0.4); border-radius:1px 1px 3px 3px;"></div>
+  <div style="left:220px; top:79px; width:4px; height:3px; background:#ff783c; opacity:0.3; border-radius:1px;"></div>
+  <!-- Name -->
+  <div style="left:120px; top:75px; width:90px; font-size:7px; color:#ffffff; text-align:right; direction:rtl;">שיקוי היפר</div>
+  <div style="left:120px; top:84px; width:90px; font-size:5px; color:#667766; text-align:right; direction:rtl;">משחזר 200 נק' חיים</div>
+  <div style="left:120px; top:90px; font-size:5px; color:#3a4a3a; direction:rtl;">ברשותך: <span style="position:relative; color:#7a9a85;">0</span></div>
+  <!-- Price -->
+  <div style="left:8px; top:75px; font-size:6px; color:#f8d030; font-weight:bold; direction:ltr;">₪</div>
+  <div style="left:14px; top:74px; font-size:8px; color:#f8d030; direction:ltr;">1200</div>
+  <!-- Buy button -->
+  <div style="left:8px; top:84px; width:28px; height:8px; background:#1a5a35; border:1px solid #2a6a40; border-radius:2px;"></div>
+  <div style="left:8px; top:85px; width:28px; font-size:5px; color:#20d860; text-align:center;">קנייה</div>
+
+  <!-- ITEM 4: שיקוי מקס ₪2500 (owned: 0) -->
+  <div style="left:4px; top:96px; width:232px; height:23px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <!-- Icon -->
+  <div style="left:214px; top:98px; width:16px; height:16px; background:rgba(248,208,48,0.1); border:1px solid rgba(248,208,48,0.3); border-radius:3px;"></div>
+  <div style="left:219px; top:97px; width:6px; height:3px; background:#f8d030; border-radius:1px; opacity:0.7;"></div>
+  <div style="left:218px; top:100px; width:8px; height:10px; background:rgba(248,208,48,0.15); border:1px solid rgba(248,208,48,0.4); border-radius:1px 1px 3px 3px;"></div>
+  <!-- Name -->
+  <div style="left:120px; top:99px; width:90px; font-size:7px; color:#ffffff; text-align:right; direction:rtl;">שיקוי מקס</div>
+  <div style="left:120px; top:108px; width:90px; font-size:5px; color:#445544; text-align:right; direction:rtl;">משחזר HP במלואו</div>
+  <div style="left:120px; top:114px; font-size:5px; color:#3a4a3a; direction:rtl;">ברשותך: <span style="position:relative; color:#7a9a85;">0</span></div>
+  <!-- Price -->
+  <div style="left:8px; top:99px; font-size:6px; color:#f8d030; font-weight:bold; direction:ltr;">₪</div>
+  <div style="left:14px; top:98px; font-size:8px; color:#f8d030; direction:ltr;">2500</div>
+
+  <!-- ITEM 5: שחזור מלא ₪3000 (CAN'T AFFORD, owned: 0) -->
+  <div style="left:4px; top:120px; width:232px; height:23px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <!-- Icon -->
+  <div style="left:214px; top:122px; width:16px; height:16px; background:rgba(32,216,96,0.08); border:1px solid rgba(32,216,96,0.2); border-radius:3px;"></div>
+  <!-- Cross icon -->
+  <div style="left:221px; top:125px; width:2px; height:8px; background:#20d860; opacity:0.4; border-radius:1px;"></div>
+  <div style="left:218px; top:128px; width:8px; height:2px; background:#20d860; opacity:0.4; border-radius:1px;"></div>
+  <!-- Name (dimmed - can't afford) -->
+  <div style="left:120px; top:123px; width:90px; font-size:7px; color:#667766; text-align:right; direction:rtl;">שחזור מלא</div>
+  <div style="left:120px; top:132px; width:90px; font-size:5px; color:#334433; text-align:right; direction:rtl;">משחזר HP וסטטוס במלואם</div>
+  <div style="left:120px; top:138px; font-size:5px; color:#3a4a3a; direction:rtl;">ברשותך: <span style="position:relative; color:#7a9a85;">0</span></div>
+  <!-- Price (dimmed) -->
+  <div style="left:8px; top:123px; font-size:6px; color:#5a4a2a; font-weight:bold; direction:ltr;">₪</div>
+  <div style="left:14px; top:122px; font-size:8px; color:#5a4a2a; direction:ltr;">3000</div>
+
+  <!-- ===== SCROLL INDICATOR (right edge) ===== -->
+  <div style="left:237px; top:28px; width:2px; height:110px; background:#0a2a1a; border-radius:1px;"></div>
+  <div style="left:237px; top:52px; width:2px; height:30px; background:#1a4a30; border-radius:1px;"></div>
+
+  <!-- ===== BOTTOM BAR (y=150, h=10) ===== -->
+  <div style="left:0px; top:150px; width:240px; height:10px; background:#0a1a10;"></div>
+  <!-- ESC -->
+  <div style="left:4px; top:151px; width:18px; height:8px; background:#1a3a2a; border:1px solid #2a5a3a; border-radius:2px;"></div>
+  <div style="left:4px; top:152px; width:18px; font-size:5px; color:#aaccaa; text-align:center;">ESC</div>
+  <div style="left:24px; top:153px; font-size:5px; color:#667766;">יציאה</div>
+  <!-- Enter -->
+  <div style="left:52px; top:151px; width:24px; height:8px; background:#1a3a2a; border:1px solid #2a5a3a; border-radius:2px;"></div>
+  <div style="left:52px; top:152px; width:24px; font-size:5px; color:#aaccaa; text-align:center;">Enter</div>
+  <div style="left:78px; top:153px; font-size:5px; color:#667766;">קנייה</div>
+  <!-- ◀▶ -->
+  <div style="left:108px; top:151px; width:14px; height:8px; background:#1a3a2a; border:1px solid #2a5a3a; border-radius:2px;"></div>
+  <div style="left:108px; top:152px; width:14px; font-size:5px; color:#aaccaa; text-align:center;">◀▶</div>
+  <div style="left:124px; top:153px; font-size:5px; color:#667766;">קטגוריה</div>
+  <!-- ▲▼ -->
+  <div style="left:160px; top:151px; width:14px; height:8px; background:#1a3a2a; border:1px solid #2a5a3a; border-radius:2px;"></div>
+  <div style="left:160px; top:152px; width:14px; font-size:5px; color:#aaccaa; text-align:center;">▲▼</div>
+  <div style="left:176px; top:153px; font-size:5px; color:#667766;">ניווט</div>
+
+</div>
+</body>
+</html>

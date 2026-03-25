@@ -855,6 +855,20 @@ export class PropertiesPanel {
       section.appendChild(row);
     }
 
+    // Return to previous checkbox (placed before destination fields so it can hide them)
+    const rpRow = document.createElement('div');
+    rpRow.className = 'prop-row';
+    rpRow.innerHTML = `<label>Return to prev:</label>`;
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = !!tr.returnToPrevious;
+    rpRow.appendChild(cb);
+    rpRow.appendChild(this.makeInfo('Exit to where the player entered from'));
+    section.appendChild(rpRow);
+
+    // Destination fields container (hidden when returnToPrevious is checked)
+    const destContainer = document.createElement('div');
+
     // To Map — select from known maps
     const mapRow = document.createElement('div');
     mapRow.className = 'prop-row';
@@ -878,7 +892,7 @@ export class PropertiesPanel {
     }
     mapSel.addEventListener('change', () => { trAny['toMapId'] = mapSel.value; emit(); });
     mapRow.appendChild(mapSel);
-    section.appendChild(mapRow);
+    destContainer.appendChild(mapRow);
 
     // To X/Y
     for (const f of numFields.slice(2)) {
@@ -890,19 +904,36 @@ export class PropertiesPanel {
       input.value = String(f.value);
       input.addEventListener('change', () => { trAny[f.key] = parseInt(input.value, 10) || 0; emit(); });
       row.appendChild(input);
-      section.appendChild(row);
+      destContainer.appendChild(row);
     }
 
-    // Return to previous checkbox
-    const rpRow = document.createElement('div');
-    rpRow.className = 'prop-row';
-    rpRow.innerHTML = `<label>Return to prev:</label>`;
-    const cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.checked = !!tr.returnToPrevious;
-    cb.addEventListener('change', () => { tr.returnToPrevious = cb.checked; this.state.emit('map-modified'); });
-    rpRow.appendChild(cb);
-    section.appendChild(rpRow);
+    // Toggle destination fields visibility
+    const updateDestVisibility = () => { destContainer.style.display = cb.checked ? 'none' : ''; };
+    updateDestVisibility();
+    cb.addEventListener('change', () => {
+      tr.returnToPrevious = cb.checked;
+      if (cb.checked) {
+        trAny['toMapId'] = null;
+        trAny['toX'] = null;
+        trAny['toY'] = null;
+      }
+      updateDestVisibility();
+      this.state.emit('map-modified');
+    });
+
+    section.appendChild(destContainer);
+
+    // Warn if multiple transitions use returnToPrevious (only one entry point is saved at a time)
+    const warnEl = document.createElement('div');
+    warnEl.style.cssText = 'color:#ff6; font-size:11px; padding:4px 0; display:none;';
+    warnEl.textContent = '⚠ Multiple "return to prev" transitions on this map — only one entry point is tracked, this may cause loops.';
+    section.appendChild(warnEl);
+    const checkReturnWarning = () => {
+      const count = (this.state.mapData.transitions || []).filter(t => t.returnToPrevious).length;
+      warnEl.style.display = (cb.checked && count > 1) ? '' : 'none';
+    };
+    checkReturnWarning();
+    cb.addEventListener('change', () => { setTimeout(checkReturnWarning, 0); });
 
     const delBtn = document.createElement('button');
     delBtn.className = 'btn-danger';

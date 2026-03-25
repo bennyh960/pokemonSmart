@@ -181,23 +181,69 @@ export class Toolbar {
       state.emit('map-modified');
     });
 
-    // ── Map metadata ──
+    // ── Map metadata (modal) ──
+    const MUSIC_OPTIONS = ['title', 'town', 'route', 'battle', 'victory'];
+
     container.querySelector('#btn-meta')!.addEventListener('click', () => {
+      // Remove existing modal if any
+      document.querySelector('.modal-backdrop.settings-modal')?.remove();
+
       const md = state.mapData;
-      const newName = prompt('Map name:', md.name);
-      if (newName !== null) md.name = newName;
-      const newId = prompt('Map ID:', md.id || '');
-      if (newId !== null) md.id = newId;
-      const newMusic = prompt('Music track:', md.music || '');
-      if (newMusic !== null) md.music = newMusic;
-      const sx = prompt('Spawn X:', String(md.spawn.x));
-      const sy = prompt('Spawn Y:', String(md.spawn.y));
-      if (sx !== null && sy !== null) {
-        md.spawn = { x: parseInt(sx, 10), y: parseInt(sy, 10) };
-      }
-      const enc = prompt('Encounter table ID (or empty for null):', md.encounterTableId || '');
-      if (enc !== null) md.encounterTableId = enc || null;
-      state.emit('map-modified');
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop settings-modal';
+
+      const musicOpts = MUSIC_OPTIONS.map(k =>
+        `<option value="${k}"${(md.music || 'town') === k ? ' selected' : ''}>${k}</option>`
+      ).join('');
+
+      backdrop.innerHTML = `
+        <div class="modal-dialog">
+          <h2>Map Settings</h2>
+          <div class="prop-row"><label>Name</label><input id="ms-name" type="text" value="${md.name || ''}"></div>
+          <div class="prop-row"><label>ID</label><input id="ms-id" type="text" value="${md.id || ''}"></div>
+          <div class="prop-row"><label>Music</label><select id="ms-music">${musicOpts}</select></div>
+          <div class="prop-row"><label>Spawn X</label><input id="ms-sx" type="number" value="${md.spawn.x}" min="0"></div>
+          <div class="prop-row"><label>Spawn Y</label><input id="ms-sy" type="number" value="${md.spawn.y}" min="0"></div>
+          <div class="prop-row"><label>Encounter</label><input id="ms-enc" type="text" value="${md.encounterTableId || ''}" placeholder="table ID or empty"></div>
+          <div class="modal-actions">
+            <button id="ms-cancel">Cancel</button>
+            <button id="ms-ok" class="primary">OK</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(backdrop);
+
+      const close = () => backdrop.remove();
+
+      // Close on backdrop click
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) close();
+      });
+
+      // Close on Escape
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onKey); }
+      };
+      document.addEventListener('keydown', onKey);
+
+      backdrop.querySelector('#ms-cancel')!.addEventListener('click', close);
+
+      backdrop.querySelector('#ms-ok')!.addEventListener('click', () => {
+        md.name = (backdrop.querySelector('#ms-name') as HTMLInputElement).value;
+        md.id = (backdrop.querySelector('#ms-id') as HTMLInputElement).value;
+        md.music = (backdrop.querySelector('#ms-music') as HTMLSelectElement).value;
+        md.spawn.x = parseInt((backdrop.querySelector('#ms-sx') as HTMLInputElement).value, 10) || 0;
+        md.spawn.y = parseInt((backdrop.querySelector('#ms-sy') as HTMLInputElement).value, 10) || 0;
+        const enc = (backdrop.querySelector('#ms-enc') as HTMLInputElement).value.trim();
+        md.encounterTableId = enc || null;
+        state.emit('map-modified');
+        close();
+        document.removeEventListener('keydown', onKey);
+      });
+
+      // Focus first field
+      (backdrop.querySelector('#ms-name') as HTMLInputElement).focus();
     });
   }
 }

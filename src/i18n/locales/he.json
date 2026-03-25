@@ -159,6 +159,10 @@
   "pc.hint.box": "תיבה",
   "pc.hint.mode": "מצב",
 
+  "item.potion.name": "שיקוי",
+  "item.potion.desc": "משחזר 20 HP",
+  "item.superPotion.name": "שיקוי על",
+  "item.superPotion.desc": "משחזר 50 HP",
   "item.hyperPotion.name": "שיקוי היפר",
   "item.hyperPotion.desc": "משחזר 200 HP",
   "item.maxPotion.name": "שיקוי מקס",
