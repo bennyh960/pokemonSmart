@@ -7,6 +7,7 @@
 
 import type { TileMapData } from '../engine/tilemap.js';
 import { loadTileset } from '../engine/tileset.js';
+import { normalizeDialogue } from './npc.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MapLoader = () => Promise<{ default: any }>;
@@ -40,6 +41,14 @@ export async function loadMap(id: string): Promise<TileMapData> {
   // Ensure the map has an id field
   if (!data.id) {
     data.id = id;
+  }
+  // Normalize legacy string[] dialogue to BilingualText[]
+  if (data.npcs) {
+    for (const npc of data.npcs) {
+      if (npc.dialogue) {
+        npc.dialogue = normalizeDialogue(npc.dialogue as any);
+      }
+    }
   }
   // Pre-load tileset if the map declares one
   if (data.tileset) {

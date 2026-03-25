@@ -26,25 +26,96 @@
       "facing": "right",
       "type": "dialogue",
       "dialogue": [
-        "The professor says zero is the foundation of all numbers.",
-        "Without zero, there would be no place value system!",
-        "I heard strange things are happening outside Zeroville..."
+        {
+          "en": "The professor says zero is the foundation of all numbers.",
+          "he": ""
+        },
+        {
+          "en": "Without zero, there would be no place value system!",
+          "he": ""
+        },
+        {
+          "en": "I heard strange things are happening outside Zeroville...",
+          "he": ""
+        }
       ],
       "spriteType": "npc-f",
       "name": "Sara"
     }
   ],
   "music": "town",
-  "encounterTableId": null
-,
+  "encounterTableId": null,
   "tiles": [
-    ["wall","wall","tv1","wall","wall","pic1","wall","wall"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d"],
-    ["ca1tl","ca1t","ca1t","ca1tr","d","d","d","d"],
-    ["ca1l","ca1c","ca1c","ca1r","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d"]
+    [
+      "wall",
+      "wall",
+      "tv1",
+      "wall",
+      "wall",
+      "pic1",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "ca1tl",
+      "ca1t",
+      "ca1t",
+      "ca1tr",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "ca1l",
+      "ca1c",
+      "ca1c",
+      "ca1r",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ]
   ],
   "objects": [
     {

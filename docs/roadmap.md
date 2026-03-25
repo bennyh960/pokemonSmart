@@ -120,6 +120,10 @@ This is a foundation sprint — must be done before design/content sprints.
 | Expand TrainerReward — add `badge`, `storyEvent`, and post-battle dialogue fields | game-engine-developer | ✅ | badge/storyEvent on TrainerReward + postBattleDialogue on TrainerData, wired in battle.ts |
 | Post-battle dialogue — trainer shows dialogue lines after battle ends (victory speech, badge award) | game-engine-developer + frontend-developer | ✅ | postBattleDialogue appended to reward text box after battle win |
 | Expand DialogueReward — add `badge`, `storyEvent` fields for story NPC interactions | game-engine-developer | ✅ | badge/storyEvent on DialogueReward, processed in giveNPCReward |
+| Badge data system — `src/data/badges.ts` with name (en/he), icon/sprite, ID for all 8 gym badges | game-designer + asset-manager | ⬜ | Replace numeric badge refs with proper data; editor dropdown instead of number input |
+| Bilingual NPC dialogue — `dialogue: { en, he }[]` + editor with EN/HE textareas | game-engine-developer | ✅ | All 17 NPCs migrated; runtime resolves by locale with fallback to EN |
+| Rewards for all NPC types — healer/shopkeeper can give rewards on interaction | game-engine-developer | ✅ | Reward processing in onDialogueEnd for all types |
+| Editor: sprite preview, reward panel for all NPCs, encounter table panel | frontend-developer | ✅ | Sprite canvas, info tooltips, encounter editor with auto map ID |
 
 ---
 

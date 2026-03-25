@@ -26,24 +26,92 @@
       "facing": "down",
       "type": "dialogue",
       "dialogue": [
-        "Hello!",
-        "One day I will be pokemon trainer!"
+        {
+          "en": "Hello!",
+          "he": ""
+        },
+        {
+          "en": "One day I will be pokemon trainer!",
+          "he": ""
+        }
       ],
       "spriteType": "npc-male",
       "name": "Tom"
     }
   ],
   "music": "town",
-  "encounterTableId": null
-,
+  "encounterTableId": null,
   "tiles": [
-    ["d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","ca1tl","ca1t","ca1t","ca1tr"],
-    ["d","d","d","d","ca1l","ca1c","ca1c","ca1r"],
-    ["d","d","d","d","ca1bl","ca1b","ca1b","ca1br"],
-    ["d","d","d","d","d","d","d","d"]
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1tl",
+      "ca1t",
+      "ca1t",
+      "ca1tr"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1l",
+      "ca1c",
+      "ca1c",
+      "ca1r"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1bl",
+      "ca1b",
+      "ca1b",
+      "ca1br"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ]
   ],
   "objects": [
     {

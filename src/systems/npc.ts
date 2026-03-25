@@ -3,7 +3,16 @@
  *
  * NPCs are loaded from map JSON data. Each NPC has a position, facing,
  * type (dialogue/trainer/shopkeeper/healer), dialogue lines, and sprite type.
+ *
+ * Dialogue lines are bilingual: { en: string; he: string }.
+ * Legacy maps with plain string[] are auto-normalized at load time.
  */
+
+/** A single bilingual text line. */
+export interface BilingualText {
+  en: string;
+  he: string;
+}
 
 /** Auto-walk configuration for one axis. */
 export interface AutoWalkAxis {
@@ -34,10 +43,10 @@ export interface NPCData {
   y: number;
   facing: 'up' | 'down' | 'left' | 'right';
   type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer';
-  dialogue: string[];
+  dialogue: BilingualText[];
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
-  reward?: DialogueReward;  // Optional reward on first interaction (dialogue/npc type)
+  reward?: DialogueReward;  // Optional reward on first interaction (any NPC type)
 }
 
 /** Reward item given after defeating a trainer. */
@@ -61,7 +70,7 @@ export interface TrainerData extends NPCData {
   defeated?: boolean;
   reward: TrainerReward;
   lineOfSight: number;
-  postBattleDialogue?: string[];  // Dialogue shown after defeating this trainer (e.g. gym leader speech)
+  postBattleDialogue?: BilingualText[];  // Dialogue shown after defeating this trainer (e.g. gym leader speech)
 }
 
 /** Normalize a reward field that may be a legacy plain number. */
@@ -144,6 +153,24 @@ export function checkTrainerLineOfSight(
     }
   }
   return null;
+}
+
+/**
+ * Normalize a dialogue array: converts legacy string[] to BilingualText[].
+ * Handles mixed arrays where some entries are strings and some are objects.
+ */
+export function normalizeDialogue(raw: (string | BilingualText)[]): BilingualText[] {
+  return raw.map(line =>
+    typeof line === 'string' ? { en: line, he: '' } : line
+  );
+}
+
+/** Resolve bilingual dialogue to a string array for the given locale. Falls back to en if he is empty. */
+export function resolveDialogue(lines: BilingualText[], locale: 'en' | 'he'): string[] {
+  return lines.map(line => {
+    const text = line[locale];
+    return text || line.en || '';
+  });
 }
 
 /** Return type for use in type annotations. */

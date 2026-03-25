@@ -25,7 +25,7 @@ import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
-import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, type DialogueReward } from '../systems/npc.js';
+import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, resolveDialogue, type DialogueReward } from '../systems/npc.js';
 import { getItem } from '../data/items.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
 const MOVE_DURATION = 0.2;
@@ -212,8 +212,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   /** Handle NPC post-dialogue actions. */
   function onDialogueEnd(): void {
     if (!interactingNPC) return;
+    const npc = interactingNPC;
 
-    if (interactingNPC.type === 'healer') {
+    if (npc.type === 'healer') {
       showChoice((idx) => {
         if (idx === 0) {
           healParty();
@@ -227,22 +228,30 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           autoSave();
           activeTextBox = createTextBox([t('npc.nurse.done')], isRTL());
           interactingNPC = null;
+          // Process reward after healing (first interaction only)
+          if (npc.reward && hasActiveGame()) {
+            giveNPCReward(npc, npc.reward);
+          }
         } else {
           interactingNPC = null;
         }
       });
-    } else if (interactingNPC.type === 'shopkeeper') {
+    } else if (npc.type === 'shopkeeper') {
       showChoice((idx) => {
         if (idx === 0) {
+          // Process reward before opening shop (first interaction only)
+          if (npc.reward && hasActiveGame()) {
+            giveNPCReward(npc, npc.reward);
+          }
           openShop(shop);
           interactingNPC = null;
         } else {
           interactingNPC = null;
         }
       });
-    } else if (interactingNPC.type === 'trainer') {
+    } else if (npc.type === 'trainer') {
       // After dialogue, start battle if trainer not yet defeated
-      const trainer = interactingNPC as unknown as TrainerData;
+      const trainer = npc as unknown as TrainerData;
       interactingNPC = null;
       if (hasActiveGame()) {
         const flags = getPlayerData().flags;
@@ -257,8 +266,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
     } else {
-      // Dialogue / generic NPC — check for item/money reward
-      const npc = interactingNPC;
+      // Dialogue / generic NPC
       interactingNPC = null;
       if (npc.reward && hasActiveGame()) {
         giveNPCReward(npc, npc.reward);
@@ -756,7 +764,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 return;
               }
             }
-            activeTextBox = createTextBox(npc.dialogue, isRTL());
+            activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL());
             interactingNPC = npc;
             return;
           }

@@ -20,10 +20,10 @@ import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp } from '..
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
-import { t, isRTL } from '../i18n/i18n.js';
+import { t, isRTL, getLocale } from '../i18n/i18n.js';
 import { getItem } from '../data/items.js';
 import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
-import type { TrainerReward } from '../systems/npc.js';
+import { resolveDialogue, type TrainerReward, type BilingualText } from '../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../scenes/bag.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 
@@ -47,7 +47,7 @@ export interface TrainerBattleData {
   party: Pokemon[];
   reward: TrainerReward;
   trainerSprite?: string;           // e.g., 'youngster', 'lass'
-  postBattleDialogue?: string[];    // Dialogue shown after defeat (e.g. gym leader speech)
+  postBattleDialogue?: BilingualText[];  // Dialogue shown after defeat
 }
 
 export function setBattleData(playerPokemon: Pokemon, enemyPokemon: Pokemon, context: BattleContext = 'grass'): void {
@@ -215,9 +215,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (td.reward.badge !== undefined) {
       lines.push(t('battle.trainerRewardBadge', { badge: td.reward.badge }));
     }
-    // Append post-battle dialogue if present
+    // Append post-battle dialogue if present (resolved to current locale)
     if (td.postBattleDialogue && td.postBattleDialogue.length > 0) {
-      lines.push(...td.postBattleDialogue);
+      lines.push(...resolveDialogue(td.postBattleDialogue, getLocale()));
     }
 
     textBox = createTextBox(lines, isRTL());

@@ -1,11 +1,15 @@
 import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { TileDef, NPCData, MapTransition } from './types.js';
-import { getCharacterList, getCharacterInfo } from '../engine/character-sprites.js';
+import { getCharacterList, getCharacterInfo, getCharacterFrame, loadCharacterSprites } from '../engine/character-sprites.js';
 import { createNamePicker } from '../ui/name-picker.js';
 import { getAllPokemon, type PokemonData } from '../services/pokemon-data.js';
 import { getAllItems, type ItemDef } from '../data/items.js';
-import { normalizeReward, type TrainerData, type TrainerReward } from '../systems/npc.js';
+import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward } from '../systems/npc.js';
+import encounterTables from '../data/encounter-tables.json';
+
+// Ensure character sprites are loaded for preview
+loadCharacterSprites().catch(() => {});
 
 /** Cached pokemon list (id + english name) for dropdowns. */
 let cachedPokemonList: PokemonData[] | null = null;
@@ -66,6 +70,9 @@ export class PropertiesPanel {
 
     // ── Transition list ──
     this.renderTransitionList();
+
+    // ── Encounter table ──
+    this.renderEncounterPanel();
   }
 
   private renderCellProps(cx: number, cy: number): void {
@@ -153,9 +160,40 @@ export class PropertiesPanel {
       opt.selected = true;
       spriteSel.prepend(opt);
     }
-    spriteSel.addEventListener('change', () => { npc.spriteType = spriteSel.value; emit(); });
+    spriteSel.addEventListener('change', () => {
+      npc.spriteType = spriteSel.value;
+      updateSpritePreview();
+      emit();
+    });
     spriteRow.appendChild(spriteSel);
     section.appendChild(spriteRow);
+
+    // Sprite preview canvas
+    const previewCanvas = document.createElement('canvas');
+    previewCanvas.width = 64;
+    previewCanvas.height = 64;
+    previewCanvas.style.cssText = 'image-rendering:pixelated; border:1px solid #444; margin:4px 0 8px;';
+    section.appendChild(previewCanvas);
+
+    const updateSpritePreview = () => {
+      const pCtx = previewCanvas.getContext('2d');
+      if (!pCtx) return;
+      pCtx.clearRect(0, 0, 64, 64);
+      const frame = getCharacterFrame(npc.spriteType, 'down', 'stand');
+      if (frame) {
+        pCtx.imageSmoothingEnabled = false;
+        pCtx.drawImage(frame.image, frame.sx, frame.sy, frame.w, frame.h, 0, 0, 64, 64);
+      } else {
+        pCtx.fillStyle = '#333';
+        pCtx.fillRect(0, 0, 64, 64);
+        pCtx.fillStyle = '#888';
+        pCtx.font = '10px monospace';
+        pCtx.fillText('No sprite', 6, 36);
+      }
+    };
+    // Draw initial preview (may need retry after sprites load)
+    updateSpritePreview();
+    setTimeout(updateSpritePreview, 500);
 
     // ── Name picker — initial value from character's name if defined ──
     const charInfo = getCharacterInfo(npc.spriteType);
@@ -175,22 +213,50 @@ export class PropertiesPanel {
       },
     }));
 
-    // Dialogue
+    // Dialogue (bilingual — EN and HE side by side)
     const diaRow = document.createElement('div');
     diaRow.className = 'prop-row';
-    diaRow.innerHTML = '<label>Dialogue:</label>';
-    const ta = document.createElement('textarea');
-    ta.value = npc.dialogue.join('\n');
-    ta.rows = 3;
-    ta.addEventListener('change', () => {
-      npc.dialogue = ta.value.split('\n').filter(l => l.trim());
-      emit();
-    });
-    diaRow.appendChild(ta);
+    diaRow.innerHTML = '<label>Dialogue (EN):</label>';
+    const taEn = document.createElement('textarea');
+    taEn.value = npc.dialogue.map(d => typeof d === 'string' ? d : d.en).join('\n');
+    taEn.rows = 3;
+    taEn.addEventListener('change', () => syncDialogue());
+    diaRow.appendChild(taEn);
     section.appendChild(diaRow);
+
+    const diaRowHe = document.createElement('div');
+    diaRowHe.className = 'prop-row';
+    diaRowHe.innerHTML = '<label>Dialogue (HE):</label>';
+    const taHe = document.createElement('textarea');
+    taHe.value = npc.dialogue.map(d => typeof d === 'string' ? '' : d.he).join('\n');
+    taHe.rows = 3;
+    taHe.style.direction = 'rtl';
+    taHe.addEventListener('change', () => syncDialogue());
+    diaRowHe.appendChild(taHe);
+    section.appendChild(diaRowHe);
+
+    function syncDialogue(): void {
+      const enLines = taEn.value.split('\n');
+      const heLines = taHe.value.split('\n');
+      const maxLen = Math.max(enLines.length, heLines.length);
+      npc.dialogue = [];
+      for (let i = 0; i < maxLen; i++) {
+        const en = (enLines[i] || '').trim();
+        const he = (heLines[i] || '').trim();
+        if (en || he) {
+          npc.dialogue.push({ en, he });
+        }
+      }
+      emit();
+    }
 
     // ── Auto Walk ──
     this.renderAutoWalkUI(section, npc);
+
+    // ── Reward (all NPC types except trainers — trainers have their own reward in battle) ──
+    if (npc.type !== 'trainer') {
+      this.renderDialogueRewardUI(section, npc);
+    }
 
     // ── Trainer-specific fields ──
     if (npc.type === 'trainer') {
@@ -257,8 +323,82 @@ export class PropertiesPanel {
     moneyRow.appendChild(moneyInput);
     section.appendChild(moneyRow);
 
+    // ── Reward: Badge ──
+    const badgeRow = document.createElement('div');
+    badgeRow.className = 'prop-row';
+    badgeRow.innerHTML = '<label>Badge #:</label>';
+    const badgeInput = document.createElement('input');
+    badgeInput.type = 'number'; badgeInput.min = '0'; badgeInput.max = '8';
+    badgeInput.value = String(reward.badge || 0);
+    badgeInput.placeholder = '0 = none';
+    badgeInput.addEventListener('change', () => {
+      const v = parseInt(badgeInput.value, 10) || 0;
+      if (v > 0) reward.badge = v; else delete (reward as unknown as Record<string, unknown>)['badge'];
+      emit();
+    });
+    badgeRow.appendChild(badgeInput);
+    section.appendChild(badgeRow);
+
+    // ── Reward: Story Event ──
+    const storyRow = document.createElement('div');
+    storyRow.className = 'prop-row';
+    storyRow.innerHTML = '<label>Story Event:</label>';
+    const storyInput = document.createElement('input');
+    storyInput.type = 'text';
+    storyInput.value = reward.storyEvent || '';
+    storyInput.placeholder = 'e.g. gym1-cleared';
+    storyInput.addEventListener('change', () => {
+      if (storyInput.value.trim()) reward.storyEvent = storyInput.value.trim();
+      else delete (reward as unknown as Record<string, unknown>)['storyEvent'];
+      emit();
+    });
+    storyRow.appendChild(storyInput);
+    section.appendChild(storyRow);
+
     // ── Reward: Items ──
     this.renderRewardItemsUI(section, reward, emit);
+
+    // ── Post-Battle Dialogue (bilingual) ──
+    const pbdLabel = document.createElement('div');
+    pbdLabel.className = 'trainer-subsection-header';
+    pbdLabel.innerHTML = '<span>Post-Battle Dialogue</span>';
+    section.appendChild(pbdLabel);
+
+    if (!trainer.postBattleDialogue) trainer.postBattleDialogue = [];
+
+    const pbdEnRow = document.createElement('div');
+    pbdEnRow.className = 'prop-row';
+    pbdEnRow.innerHTML = '<label>EN:</label>';
+    const pbdEnTa = document.createElement('textarea');
+    pbdEnTa.value = trainer.postBattleDialogue.map(d => typeof d === 'string' ? d : d.en).join('\n');
+    pbdEnTa.rows = 2;
+    pbdEnTa.addEventListener('change', () => syncPostBattle());
+    pbdEnRow.appendChild(pbdEnTa);
+    section.appendChild(pbdEnRow);
+
+    const pbdHeRow = document.createElement('div');
+    pbdHeRow.className = 'prop-row';
+    pbdHeRow.innerHTML = '<label>HE:</label>';
+    const pbdHeTa = document.createElement('textarea');
+    pbdHeTa.value = trainer.postBattleDialogue.map(d => typeof d === 'string' ? '' : d.he).join('\n');
+    pbdHeTa.rows = 2;
+    pbdHeTa.style.direction = 'rtl';
+    pbdHeTa.addEventListener('change', () => syncPostBattle());
+    pbdHeRow.appendChild(pbdHeTa);
+    section.appendChild(pbdHeRow);
+
+    function syncPostBattle(): void {
+      const enLines = pbdEnTa.value.split('\n');
+      const heLines = pbdHeTa.value.split('\n');
+      const maxLen = Math.max(enLines.length, heLines.length);
+      trainer.postBattleDialogue = [];
+      for (let i = 0; i < maxLen; i++) {
+        const en = (enLines[i] || '').trim();
+        const he = (heLines[i] || '').trim();
+        if (en || he) trainer.postBattleDialogue.push({ en, he });
+      }
+      emit();
+    }
 
     // ── Party ──
     this.renderPartyUI(section, trainer, emit);
@@ -535,6 +675,99 @@ export class PropertiesPanel {
     section.appendChild(movesContainer);
   }
 
+  /** Reward editor for non-trainer NPCs (money, items, badge, storyEvent). */
+  private renderDialogueRewardUI(section: HTMLElement, npc: NPCData): void {
+    const emit = () => this.state.emit('map-modified');
+    const npcAny = npc as unknown as Record<string, unknown>;
+
+    // Enable reward checkbox
+    const enableRow = document.createElement('div');
+    enableRow.className = 'prop-row';
+    enableRow.innerHTML = '<label>Has Reward:</label>';
+    const enableCb = document.createElement('input');
+    enableCb.type = 'checkbox';
+    enableCb.checked = !!npc.reward;
+    enableCb.addEventListener('change', () => {
+      if (enableCb.checked) {
+        npcAny['reward'] = { money: 0 } as DialogueReward;
+      } else {
+        delete npcAny['reward'];
+      }
+      emit();
+    });
+    enableRow.appendChild(enableCb);
+    enableRow.appendChild(this.makeInfo('One-time reward given on first NPC interaction. Works for all NPC types.'));
+    section.appendChild(enableRow);
+
+    if (!npc.reward) return;
+    const reward = npc.reward;
+
+    // Money
+    const moneyRow = document.createElement('div');
+    moneyRow.className = 'prop-row';
+    moneyRow.innerHTML = '<label>Reward $:</label>';
+    const moneyInput = document.createElement('input');
+    moneyInput.type = 'number'; moneyInput.min = '0'; moneyInput.step = '10';
+    moneyInput.value = String(reward.money || 0);
+    moneyInput.addEventListener('change', () => { reward.money = parseInt(moneyInput.value, 10) || 0; emit(); });
+    moneyRow.appendChild(moneyInput);
+    section.appendChild(moneyRow);
+
+    // Badge
+    const badgeRow = document.createElement('div');
+    badgeRow.className = 'prop-row';
+    badgeRow.innerHTML = '<label>Badge #:</label>';
+    const badgeInput = document.createElement('input');
+    badgeInput.type = 'number'; badgeInput.min = '0'; badgeInput.max = '8';
+    badgeInput.value = String(reward.badge || 0);
+    badgeInput.placeholder = '0 = none';
+    badgeInput.addEventListener('change', () => {
+      const v = parseInt(badgeInput.value, 10) || 0;
+      if (v > 0) reward.badge = v; else delete (reward as unknown as Record<string, unknown>)['badge'];
+      emit();
+    });
+    badgeRow.appendChild(badgeInput);
+    badgeRow.appendChild(this.makeInfo('Gym badge number (1-8). Stored as bitmask in player data. Will be replaced with badge dropdown when badge data system is built.'));
+    section.appendChild(badgeRow);
+
+    // Story event
+    const storyRow = document.createElement('div');
+    storyRow.className = 'prop-row';
+    storyRow.innerHTML = '<label>Story Event:</label>';
+    const storyInput = document.createElement('input');
+    storyInput.type = 'text';
+    storyInput.value = reward.storyEvent || '';
+    storyInput.placeholder = 'e.g. story-received-pokedex';
+    storyInput.addEventListener('change', () => {
+      if (storyInput.value.trim()) reward.storyEvent = storyInput.value.trim();
+      else delete (reward as unknown as Record<string, unknown>)['storyEvent'];
+      emit();
+    });
+    storyRow.appendChild(storyInput);
+    storyRow.appendChild(this.makeInfo('Sets a flag in pd.flags for story progression. Other NPCs/transitions can check this flag to gate content. E.g. "received-pokedex", "gym1-cleared"'));
+    section.appendChild(storyRow);
+
+    // Flag override
+    const flagRow = document.createElement('div');
+    flagRow.className = 'prop-row';
+    flagRow.innerHTML = '<label>Flag:</label>';
+    const flagInput = document.createElement('input');
+    flagInput.type = 'text';
+    flagInput.value = reward.flag || '';
+    flagInput.placeholder = 'auto: npc-{id}-rewarded';
+    flagInput.addEventListener('change', () => {
+      if (flagInput.value.trim()) reward.flag = flagInput.value.trim();
+      else delete (reward as unknown as Record<string, unknown>)['flag'];
+      emit();
+    });
+    flagRow.appendChild(flagInput);
+    flagRow.appendChild(this.makeInfo('"Already rewarded" guard — prevents giving reward twice. Auto-generated as "npc-{id}-rewarded" if left empty. Override to share a gate between multiple NPCs.'));
+    section.appendChild(flagRow);
+
+    // Reward items
+    this.renderRewardItemsUI(section, reward as TrainerReward, emit);
+  }
+
   private renderAutoWalkUI(section: HTMLElement, npc: NPCData): void {
     const emit = () => this.state.emit('map-modified');
     const aw = npc.autoWalk;
@@ -704,6 +937,176 @@ export class PropertiesPanel {
       });
     }
     this.container.appendChild(section);
+  }
+
+  /** Encounter table editor — uses current map ID as the encounter table key. */
+  private renderEncounterPanel(): void {
+    const mapData = this.state.mapData;
+    const mapId = mapData.id || 'unknown';
+
+    const section = this.makeSection('Encounters');
+    const emit = () => this.state.emit('map-modified');
+
+    // Enable encounters checkbox — sets encounterTableId to map ID
+    const enableRow = document.createElement('div');
+    enableRow.className = 'prop-row';
+    enableRow.innerHTML = '<label>Has Encounters:</label>';
+    const enableCb = document.createElement('input');
+    enableCb.type = 'checkbox';
+    const currentTableId = (mapData as unknown as Record<string, unknown>)['encounterTableId'] as string | null;
+    enableCb.checked = !!currentTableId;
+    enableCb.addEventListener('change', () => {
+      (mapData as unknown as Record<string, unknown>)['encounterTableId'] = enableCb.checked ? mapId : null;
+      emit();
+    });
+    enableRow.appendChild(enableCb);
+    enableRow.appendChild(this.makeInfo(`Table ID: "${mapId}" — data stored in src/data/encounter-tables.json`));
+    section.appendChild(enableRow);
+
+    const tableId = currentTableId;
+    if (!tableId) {
+      this.container.appendChild(section);
+      return;
+    }
+
+    // Load or create encounter table entry
+    const tables = encounterTables as Record<string, { encounterRate: number; entries: { pokemonId: number; minLevel: number; maxLevel: number; weight: number }[] }>;
+    if (!tables[tableId]) {
+      (tables as Record<string, unknown>)[tableId] = { encounterRate: 0.10, entries: [] };
+    }
+    const table = tables[tableId];
+
+    // Encounter rate
+    const rateRow = document.createElement('div');
+    rateRow.className = 'prop-row';
+    rateRow.innerHTML = '<label>Rate:</label>';
+    const rateInput = document.createElement('input');
+    rateInput.type = 'number'; rateInput.min = '0'; rateInput.max = '1'; rateInput.step = '0.01';
+    rateInput.value = String(table.encounterRate);
+    rateInput.addEventListener('change', () => { table.encounterRate = parseFloat(rateInput.value) || 0.1; emit(); });
+    rateRow.appendChild(rateInput);
+    rateRow.appendChild(this.makeInfo('Chance of encounter per step on encounter tiles (0.10 = 10%)'));
+    section.appendChild(rateRow);
+
+    // Entries header
+    const header = document.createElement('div');
+    header.className = 'trainer-subsection-header';
+    header.innerHTML = '<span>Pokemon</span>';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-small btn-add';
+    addBtn.textContent = '+ Pokemon';
+    addBtn.addEventListener('click', () => {
+      table.entries.push({ pokemonId: 16, minLevel: 3, maxLevel: 5, weight: 20 });
+      emit();
+    });
+    header.appendChild(addBtn);
+    section.appendChild(header);
+
+    const pokemonList = getPokemonList();
+
+    for (let i = 0; i < table.entries.length; i++) {
+      const entry = table.entries[i];
+      const row = document.createElement('div');
+      row.className = 'trainer-slot';
+
+      // Pokemon search input
+      const pkmnWrapper = document.createElement('div');
+      pkmnWrapper.className = 'pokemon-search-wrapper';
+      const pkmnInput = document.createElement('input');
+      pkmnInput.type = 'text';
+      pkmnInput.className = 'pokemon-search-input';
+      pkmnInput.placeholder = 'Pokemon...';
+      const cur = pokemonList.find(p => p.id === entry.pokemonId);
+      pkmnInput.value = cur ? `#${cur.id} ${cur.name.en}` : `#${entry.pokemonId}`;
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'pokemon-dropdown';
+      dropdown.style.display = 'none';
+
+      const renderDD = (filter: string) => {
+        dropdown.innerHTML = '';
+        const lf = filter.toLowerCase();
+        const matches = pokemonList.filter(p =>
+          p.name.en.toLowerCase().includes(lf) || String(p.id).includes(lf)
+        ).slice(0, 20);
+        for (const p of matches) {
+          const item = document.createElement('div');
+          item.className = 'pokemon-dropdown-item';
+          item.textContent = `#${p.id} ${p.name.en}`;
+          item.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            entry.pokemonId = p.id;
+            pkmnInput.value = `#${p.id} ${p.name.en}`;
+            dropdown.style.display = 'none';
+            emit();
+          });
+          dropdown.appendChild(item);
+        }
+      };
+      pkmnInput.addEventListener('focus', () => { pkmnInput.select(); renderDD(''); dropdown.style.display = 'block'; });
+      pkmnInput.addEventListener('input', () => { renderDD(pkmnInput.value); dropdown.style.display = 'block'; });
+      pkmnInput.addEventListener('blur', () => { setTimeout(() => { dropdown.style.display = 'none'; }, 150); });
+      pkmnWrapper.appendChild(pkmnInput);
+      pkmnWrapper.appendChild(dropdown);
+      row.appendChild(pkmnWrapper);
+
+      // Level range
+      const minLvl = document.createElement('input');
+      minLvl.type = 'number'; minLvl.min = '1'; minLvl.max = '100';
+      minLvl.value = String(entry.minLevel); minLvl.className = 'trainer-slot-level'; minLvl.title = 'Min Level';
+      minLvl.addEventListener('change', () => { entry.minLevel = parseInt(minLvl.value, 10) || 1; emit(); });
+      row.appendChild(minLvl);
+
+      const maxLvl = document.createElement('input');
+      maxLvl.type = 'number'; maxLvl.min = '1'; maxLvl.max = '100';
+      maxLvl.value = String(entry.maxLevel); maxLvl.className = 'trainer-slot-level'; maxLvl.title = 'Max Level';
+      maxLvl.addEventListener('change', () => { entry.maxLevel = parseInt(maxLvl.value, 10) || 1; emit(); });
+      row.appendChild(maxLvl);
+
+      // Weight
+      const weightInput = document.createElement('input');
+      weightInput.type = 'number'; weightInput.min = '1'; weightInput.max = '100';
+      weightInput.value = String(entry.weight); weightInput.className = 'trainer-slot-qty'; weightInput.title = 'Weight (spawn chance)';
+      weightInput.addEventListener('change', () => { entry.weight = parseInt(weightInput.value, 10) || 10; emit(); });
+      row.appendChild(weightInput);
+
+      // Remove
+      const rmBtn = document.createElement('button');
+      rmBtn.className = 'btn-small btn-remove';
+      rmBtn.textContent = 'x';
+      rmBtn.addEventListener('click', () => { table.entries.splice(i, 1); emit(); });
+      row.appendChild(rmBtn);
+
+      section.appendChild(row);
+    }
+
+    // Export button + info
+    const exportRow = document.createElement('div');
+    exportRow.style.cssText = 'margin-top:8px; display:flex; gap:6px; align-items:center;';
+    const exportBtn = document.createElement('button');
+    exportBtn.className = 'btn-small';
+    exportBtn.textContent = 'Copy Encounter JSON';
+    exportBtn.addEventListener('click', () => {
+      const json = JSON.stringify({ [tableId]: table }, null, 2);
+      navigator.clipboard.writeText(json).then(() => {
+        exportBtn.textContent = 'Copied!';
+        setTimeout(() => { exportBtn.textContent = 'Copy Encounter JSON'; }, 1500);
+      });
+    });
+    exportRow.appendChild(exportBtn);
+    exportRow.appendChild(this.makeInfo('Paste into src/data/encounter-tables.json — merge with existing entries'));
+    section.appendChild(exportRow);
+
+    this.container.appendChild(section);
+  }
+
+  /** Create a small info icon/tooltip element. */
+  private makeInfo(text: string): HTMLElement {
+    const span = document.createElement('span');
+    span.textContent = 'ℹ';
+    span.title = text;
+    span.style.cssText = 'cursor:help; color:#6688cc; font-size:14px; margin-left:4px; user-select:none;';
+    return span;
   }
 
   private makeSection(title: string): HTMLElement {

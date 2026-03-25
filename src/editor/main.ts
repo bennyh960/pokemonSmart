@@ -97,7 +97,7 @@ async function init() {
       y: gy,
       facing: 'down',
       type: 'dialogue',
-      dialogue: ['Hello!'],
+      dialogue: [{ en: 'Hello!', he: '' }],
       spriteType: 'npc-male',
     };
     if (!state.mapData.npcs) state.mapData.npcs = [];
