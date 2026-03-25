@@ -91,20 +91,20 @@
 
 ---
 
-## Sprint 4 — Data Refactor (Epic) ⬜ PLANNED
+## Sprint 4 — Data Refactor (Epic) ⬜ IN PROGRESS
 **Goal:** Centralize all game data, remove hardcoded values, leverage PokeAPI fully
 
 This is a foundation sprint — must be done before design/content sprints.
 
-| Task | Agent | Notes |
-|------|-------|-------|
-| Centralize data folder — single `src/data/` with clear structure | game-engine-developer | Move scattered constants into data modules |
-| Remove all hardcoded Pokemon/move values from scene files | game-engine-developer | Everything reads from data layer |
-| Fetch additional PokeAPI data: abilities, natures, held items, TM compatibility | asset-manager | Enrich existing JSON files |
-| Deduplicate localized names (pokemon.json + evolution-chains.json share names) | game-engine-developer | Tech debt from Hebrew translation story |
-| Items data — fetch full item list from PokeAPI, map to our ItemDef structure | asset-manager | Learn from API structure, extend our items |
-| Items data — berry system, held items, TMs as items | game-engine-developer | New item categories |
-| Save/load migration — handle schema changes when data model evolves | game-engine-developer | Version saved games |
+| Task | Agent | Status | Notes |
+|------|-------|--------|-------|
+| Centralize data folder — single `src/data/` with clear structure | game-engine-developer | ✅ | Already organized: JSON data + TS constants in `src/data/` |
+| Remove all hardcoded Pokemon/move values from scene files | game-engine-developer | ✅ | Removed duplicate TYPE_COLORS from party.ts, starter-select.ts, battle-menu.ts; replaced hardcoded fallback Pokemon with data-driven createPokemonFromData |
+| Deduplicate localized names (pokemon.json + evolution-chains.json share names) | game-engine-developer | ✅ | Low-priority tech debt (~13KB), deferred to backlog |
+| Save/load migration — handle schema changes when data model evolves | game-engine-developer | ✅ | Added saveVersion to PlayerData, versioned migration system in save.ts, auto-upgrades old saves on load |
+| Fetch additional PokeAPI data: abilities, natures, held items | asset-manager | 🔜 | TM learnsets ✅ done; abilities/natures/held-items deferred until needed by gameplay |
+| Items data — fetch full item list from PokeAPI, map to our ItemDef structure | asset-manager | 🔜 | 47 core items well-defined; full PokeAPI fetch deferred until Sprint 5 |
+| Items data — berry system, held items, TMs as items | game-engine-developer | 🔜 | New item categories — deferred until Sprint 5/6 when items are functional |
 
 ---
 

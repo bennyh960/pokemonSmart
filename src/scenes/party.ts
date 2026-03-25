@@ -14,34 +14,12 @@ import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js
 import { t } from '../i18n/i18n.js';
 import { getPokemonDisplayName, getMoveDisplayName, getMove, getPokemonHeight, getPokemonWeight } from '../services/pokemon-data.js';
 import { drawPokeballIcon } from '../ui/item-icons.js';
-import { getTypeName, getDamageClassLabel } from '../data/type-constants.js';
+import { TYPE_COLORS, getTypeName, getDamageClassLabel } from '../data/type-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
-
-/** Type badge color palette. */
-const TYPE_COLORS: Record<PokemonType, string> = {
-  normal: '#a8a878',
-  fire: '#f08030',
-  water: '#6890f0',
-  grass: '#78c850',
-  electric: '#f8d030',
-  ice: '#98d8d8',
-  fighting: '#c03028',
-  poison: '#a040a0',
-  ground: '#e0c068',
-  flying: '#a890f0',
-  psychic: '#f85888',
-  bug: '#a8b820',
-  rock: '#b8a038',
-  ghost: '#705898',
-  dragon: '#7038f8',
-  dark: '#705848',
-  steel: '#b8b8d0',
-  glitch: '#ff00ff',
-};
 
 
 type ViewMode = 'list' | 'detail' | 'swap';

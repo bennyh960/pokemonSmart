@@ -6,35 +6,14 @@
  */
 
 import type { InputManager } from '../engine/input.js';
-import type { Move, PokemonType } from '../types/index.js';
+import type { Move } from '../types/index.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getMoveDisplayName } from '../services/pokemon-data.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+import { TYPE_COLORS } from '../data/type-constants.js';
 const MENU_Y = SCREEN_H - 40;
 const MENU_H = 40;
-
-/** Type color map for move display. */
-const TYPE_COLORS: Record<PokemonType, string> = {
-  normal: '#a8a878',
-  fire: '#f08030',
-  water: '#6890f0',
-  grass: '#78c850',
-  electric: '#f8d030',
-  ice: '#98d8d8',
-  fighting: '#c03028',
-  poison: '#a040a0',
-  ground: '#e0c068',
-  flying: '#a890f0',
-  psychic: '#f85888',
-  bug: '#a8b820',
-  rock: '#b8a038',
-  ghost: '#705898',
-  dragon: '#7038f8',
-  dark: '#705848',
-  steel: '#b8b8d0',
-  glitch: '#00ff88',
-};
 
 export type MainMenuChoice = 'FIGHT' | 'BAG' | 'POKEMON' | 'RUN';
 

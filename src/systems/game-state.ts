@@ -14,6 +14,7 @@ const SAVE_SLOT = 0;
 /** Create fresh PlayerData for a new game (party empty until starter is chosen). */
 export function createNewPlayerData(): PlayerData {
   return {
+    saveVersion: 1,
     name: 'Player',
     party: [],
     badges: 0,

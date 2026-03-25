@@ -2,21 +2,55 @@
  * SaveSystem - Persistent save/load using localStorage.
  *
  * Serializes game state to JSON and stores it in the browser's
- * localStorage. Supports multiple save slots.
- *
- * TODO:
- * - Save game state to a named slot
- * - Load game state from a named slot
- * - List available save slots
- * - Delete a save slot
- * - Auto-save on key events (gym clear, serum collection)
- * - Save data validation/migration for version changes
- * - Export/import save as JSON string (backup)
+ * localStorage. Supports versioned schema migration: old saves are
+ * upgraded step-by-step through migration functions.
  */
 
 import type { PlayerData } from '../types/index.js';
 
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
+
+/** Current schema version — bump this when PlayerData shape changes. */
+export const CURRENT_SAVE_VERSION = 1;
+
+/**
+ * Migration functions keyed by TARGET version.
+ * Each function receives a save at version (N-1) and returns version N.
+ * Migrations run in order: 0→1, 1→2, etc.
+ */
+const migrations: Record<number, (data: Record<string, any>) => void> = {
+  // Version 0 → 1: add fields introduced before versioning was added
+  1: (data) => {
+    if (!data.items) data.items = {};
+    if (!data.flags) data.flags = {};
+    if (!data.lastPokemonCenter) data.lastPokemonCenter = { mapId: 'zeroville', x: 4, y: 5 };
+    if (data.playtime === undefined) data.playtime = 0;
+    if (data.serumParts === undefined) data.serumParts = 0;
+    data.saveVersion = 1;
+  },
+  // Future migrations go here:
+  // 2: (data) => { data.boxes = []; data.saveVersion = 2; },
+};
+
+/** Apply all needed migrations to bring a save up to CURRENT_SAVE_VERSION. */
+function migrateSave(data: Record<string, any>): PlayerData {
+  let version = typeof data.saveVersion === 'number' ? data.saveVersion : 0;
+
+  while (version < CURRENT_SAVE_VERSION) {
+    const nextVersion = version + 1;
+    const migrate = migrations[nextVersion];
+    if (migrate) {
+      migrate(data);
+      console.log(`Save migrated: v${version} → v${nextVersion}`);
+    } else {
+      console.warn(`No migration for v${version} → v${nextVersion}, setting version directly`);
+      data.saveVersion = nextVersion;
+    }
+    version = nextVersion;
+  }
+
+  return data as PlayerData;
+}
 
 /** Save player data to a slot. */
 export function saveGame(slot: number, data: PlayerData): void {
@@ -24,19 +58,22 @@ export function saveGame(slot: number, data: PlayerData): void {
   localStorage.setItem(key, JSON.stringify(data));
 }
 
-/** Load player data from a slot. Returns null if no save exists. */
+/** Load player data from a slot. Migrates old saves automatically. Returns null if no save exists. */
 export function loadGame(slot: number): PlayerData | null {
   const key = `${SAVE_KEY_PREFIX}${slot}`;
   const raw = localStorage.getItem(key);
   if (!raw) return null;
 
   try {
-    const data = JSON.parse(raw) as PlayerData;
-    // Migration: add fields if missing from old saves
-    if (!data.items) data.items = {};
-    if (!data.flags) data.flags = {};
-    if (!data.lastPokemonCenter) data.lastPokemonCenter = { mapId: 'zeroville', x: 4, y: 5 };
-    return data;
+    const data = JSON.parse(raw);
+    const migrated = migrateSave(data);
+
+    // Re-save if migration was applied so we don't re-migrate every load
+    if ((data.saveVersion ?? 0) < CURRENT_SAVE_VERSION) {
+      localStorage.setItem(key, JSON.stringify(migrated));
+    }
+
+    return migrated;
   } catch {
     console.warn(`Failed to parse save data for slot ${slot}.`);
     return null;

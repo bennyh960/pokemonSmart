@@ -15,8 +15,8 @@ import {
   createFade, updateFade, renderFade, spawnDamageNumber, updatePopups, renderPopups, clearAllPopups,
   createLevelUpEffect, updateLevelUpEffect, renderLevelUpEffect,
 } from '../ui/battle-animations.js';
-import { getCombinedTypeEffectiveness, getPokemonDisplayName, getMoveDisplayName } from '../services/pokemon-data.js';
-import { calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
+import { getCombinedTypeEffectiveness, getPokemonDisplayName, getMoveDisplayName, getPokemon } from '../services/pokemon-data.js';
+import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
@@ -816,14 +816,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 }
 
 function fallbackPlayer(): Pokemon {
-  return { id: 1, name: 'Bulbasaur', level: 5, hp: 21, maxHp: 21, attack: 9, defense: 9, specialAttack: 11, specialDefense: 11, speed: 9, types: ['grass', 'poison'], moves: [
-    { id: 33, name: 'Tackle', type: 'normal', power: 40, accuracy: 100, pp: 35, currentPp: 35, mathDifficulty: 1 },
-    { id: 22, name: 'Vine Whip', type: 'grass', power: 45, accuracy: 100, pp: 25, currentPp: 25, mathDifficulty: 2 },
-  ], xp: 0, xpToNext: 500, isGlitched: false };
+  const data = getPokemon(1); // Bulbasaur
+  return data ? createPokemonFromData(data, 5) : createPokemonFromData(getPokemon(1)!, 5);
 }
 
 function fallbackEnemy(): Pokemon {
-  return { id: 16, name: 'Pidgey', level: 3, hp: 14, maxHp: 14, attack: 7, defense: 7, specialAttack: 6, specialDefense: 6, speed: 8, types: ['normal', 'flying'], moves: [
-    { id: 33, name: 'Tackle', type: 'normal', power: 40, accuracy: 100, pp: 35, currentPp: 35, mathDifficulty: 1 },
-  ], xp: 0, xpToNext: 300, isGlitched: false };
+  const data = getPokemon(16); // Pidgey
+  return data ? createPokemonFromData(data, 3) : createPokemonFromData(getPokemon(16)!, 3);
 }

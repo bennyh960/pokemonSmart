@@ -107,6 +107,7 @@ export interface AdaptiveState {
 
 /** Persistent player data (saved to localStorage). */
 export interface PlayerData {
+  saveVersion: number;           // Schema version for migration (current: 1)
   name: string;
   party: Pokemon[];
   badges: number;

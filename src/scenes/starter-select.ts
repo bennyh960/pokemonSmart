@@ -15,6 +15,7 @@ import { getPlayerData } from '../systems/game-state.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+import { TYPE_COLORS } from '../data/type-constants.js';
 
 /** Starter definitions: Gen 1 starters — moves derived from learnset at level 5. */
 const STARTERS = [
@@ -22,12 +23,6 @@ const STARTERS = [
   { id: 4, type: 'fire', color: '#F08030' },
   { id: 7, type: 'water', color: '#6890F0' },
 ] as const;
-
-const TYPE_COLORS: Record<string, string> = {
-  fire: '#F08030',
-  water: '#6890F0',
-  grass: '#78C850',
-};
 
 export function createStarterSelectScene(
   input: InputManager,

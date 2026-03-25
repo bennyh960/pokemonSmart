@@ -20,6 +20,7 @@ import type { PlayerData } from '../types/index.js';
 /** Create a fresh player save with default values. */
 export function createNewPlayer(name: string): PlayerData {
   return {
+    saveVersion: 1,
     name,
     party: [],
     badges: 0,
