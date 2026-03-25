@@ -11,7 +11,8 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
-import { t, isRTL } from '../i18n/i18n.js';
+import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
+import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
 import { setPartyMode } from '../scenes/party.js';
 import { setBagMode } from '../scenes/bag.js';
@@ -26,7 +27,7 @@ import { createShopState, openShop, updateShop, renderShop, type ShopState } fro
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, type DialogueReward } from '../systems/npc.js';
 import { getItem } from '../data/items.js';
-import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE } from '../engine/config.js';
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -770,17 +771,24 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
-      // N key → Shop (temporary hotkey until NPC interaction wires it)
+      // L key → Toggle language
+      if (input.isKeyPressed('l') || input.isKeyPressed('L')) {
+        const next: Locale = getLocale() === 'he' ? 'en' : 'he';
+        setLocale(next);
+        return;
+      }
+
+      // N key → Shop (admin-only debug shortcut)
       if (input.isKeyPressed('n') || input.isKeyPressed('N')) {
-        if (hasActiveGame()) {
+        if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
           openShop(shop);
           return;
         }
       }
 
-      // H key → Heal party (temporary hotkey until NPC interaction wires it)
+      // H key → Heal party (admin-only debug shortcut)
       if (input.isKeyPressed('h') || input.isKeyPressed('H')) {
-        if (hasActiveGame()) {
+        if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
           healParty();
           autoSave();
           healTextBox = createTextBox([t('heal.done')], isRTL());
@@ -936,6 +944,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (hasActiveGame()) {
         const lead = getPlayerData().party[0];
         if (lead) drawText(ctx, `${getPokemonDisplayName(lead.id)} ${t('hp.level', { level: lead.level })}`, 4, 14, { size: 8, color: '#aaccff', font: 'monospace' });
+      }
+
+      // Keyboard legend bar (bottom of screen, behind dialogues)
+      if (!activeTextBox && !choiceState && !healTextBox && !shop.open && !encounterTriggered && transitionState === 'none') {
+        const barY = SCREEN_H - 11;
+        fillRect(ctx, 0, barY, SCREEN_W, 11, '#00000088');
+        const isAdmin = hasActiveGame() && getPlayerData().name === ADMIN_NAME;
+        const hints = isAdmin
+          ? 'P:Party  D:Dex  B:Bag  L:Lang  N:Shop  H:Heal'
+          : 'P:Party  D:Dex  B:Bag  L:Lang';
+        drawText(ctx, hints, SCREEN_W / 2, barY + 2, {
+          size: 6, color: '#aaaaaa', font: 'monospace', align: 'center',
+        });
       }
 
       // NPC dialogue text box

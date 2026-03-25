@@ -13,3 +13,6 @@ export const CANVAS_WIDTH = LOGICAL_WIDTH * RES_SCALE;
 export const CANVAS_HEIGHT = LOGICAL_HEIGHT * RES_SCALE;
 export const TILE_SIZE = 16;
 export const BASE_FONT_SIZE = 8;
+
+/** Admin player name — enables debug shortcuts (H=heal, N=shop). */
+export const ADMIN_NAME = 'adminBenny';
