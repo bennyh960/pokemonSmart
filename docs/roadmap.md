@@ -91,7 +91,7 @@
 
 ---
 
-## Sprint 4 — Data Refactor (Epic) ⬜ IN PROGRESS
+## Sprint 4 — Data Refactor (Epic) ✅ COMPLETE
 **Goal:** Centralize all game data, remove hardcoded values, leverage PokeAPI fully
 
 This is a foundation sprint — must be done before design/content sprints.
@@ -102,19 +102,19 @@ This is a foundation sprint — must be done before design/content sprints.
 | Remove all hardcoded Pokemon/move values from scene files | game-engine-developer | ✅ | Removed duplicate TYPE_COLORS from party.ts, starter-select.ts, battle-menu.ts; replaced hardcoded fallback Pokemon with data-driven createPokemonFromData |
 | Deduplicate localized names (pokemon.json + evolution-chains.json share names) | game-engine-developer | ✅ | Low-priority tech debt (~13KB), deferred to backlog |
 | Save/load migration — handle schema changes when data model evolves | game-engine-developer | ✅ | Added saveVersion to PlayerData, versioned migration system in save.ts, auto-upgrades old saves on load |
-| Fetch additional PokeAPI data: abilities, natures, held items | asset-manager | 🔜 | TM learnsets ✅ done; abilities/natures/held-items deferred until needed by gameplay |
-| Items data — fetch full item list from PokeAPI, map to our ItemDef structure | asset-manager | 🔜 | 47 core items well-defined; full PokeAPI fetch deferred until Sprint 5 |
-| Items data — berry system, held items, TMs as items | game-engine-developer | 🔜 | New item categories — deferred until Sprint 5/6 when items are functional |
+| Fetch additional PokeAPI data: abilities, natures, held items | asset-manager | ➡️ | Moved to Sprint 5 Phase 1 |
+| Items data — fetch full item list from PokeAPI, map to our ItemDef structure | asset-manager | ➡️ | Moved to Sprint 5 Phase 3 |
+| Items data — berry system, held items, TMs as items | game-engine-developer | ➡️ | Moved to Sprint 5 Phase 3 |
 
 ---
 
-## Sprint 4.5 — Interactable Objects, PC Storage & Reward Expansion ⬜ IN PROGRESS
+## Sprint 4.5 — Interactable Objects, PC Storage & Reward Expansion ✅ COMPLETE
 **Goal:** Add an object interaction layer, Pokemon PC storage, post-battle dialogue, and richer trainer/NPC rewards (badges, story progression)
 
 | Task | Agent | Status | Notes |
 |------|-------|--------|-------|
 | Interactable object layer — unified `interactType` system with central definitions | game-engine-developer | ✅ | `interact-types.ts` central defs, `{ id, args }` ref on TileDef, 3-layer merge (defaults→tile→instance), tileset editor shows contextual fields per type |
-| PC sprite + interaction — place PC objects in Pokemon Centers, trigger PC screen on interact | game-engine-developer + asset-manager | ⬜ | Needs PC tile sprite in tileset PNG — code ready, waiting on art |
+| PC sprite + interaction — place PC objects in Pokemon Centers, trigger PC screen on interact | game-engine-developer + asset-manager | ✅ | PC tile in tileset, interaction wired |
 | PC screen UI — deposit/withdraw Pokemon between party and storage boxes | frontend-developer | ✅ | Full scene from design docs: 3 modes, box grid 6×5, party sidebar, detail strip |
 | Box storage in game state — `boxes` array in PlayerData, save/load support | game-engine-developer | ✅ | 10 boxes × 30 slots, save migration v1→v2, pc-storage.ts logic module |
 | Expand TrainerReward — add `badge`, `storyEvent`, and post-battle dialogue fields | game-engine-developer | ✅ | badge/storyEvent on TrainerReward + postBattleDialogue on TrainerData, wired in battle.ts |
@@ -127,18 +127,36 @@ This is a foundation sprint — must be done before design/content sprints.
 
 ---
 
-## Sprint 5 — Items & Functionality ⬜ PLANNED
-**Goal:** Make all items functional, findable on maps, reusable across screens
+## Sprint 5 — Items, Abilities, Natures & Held Items ⬜ IN PROGRESS
+**Goal:** Fetch & integrate abilities/natures/held items from PokeAPI (relational model), make items functional
 
-| Task | Agent |
-|------|-------|
-| Item pickup system — find items on maps (overworld item balls) | game-engine-developer |
-| Healing items — full implementation (HP, PP, status, revive) | game-engine-developer |
-| Pokeball items — catching wild Pokemon (see Sprint 6) | game-engine-developer |
-| Stat boost items (X Attack, etc.) — apply in battle | game-engine-developer |
-| Rare Candy — level up with move learning | game-engine-developer |
-| Item reuse across screens (bag, battle, shop, map pickup) | frontend-developer |
-| Shop screen redesign using coordinate system | frontend-developer + asset-manager |
+### Phase 1 — Data Fetch (PokeAPI → relational JSON)
+| Task | Agent | Status |
+|------|-------|--------|
+| Fetch abilities from PokeAPI → `abilities.json` (id, name {en,he}, description, effect) | asset-manager | ⬜ |
+| Fetch natures from PokeAPI → `natures.json` (id, name {en,he}, +stat, -stat) | asset-manager | ⬜ |
+| Fetch pokemon-abilities mapping → `pokemon-abilities.json` (pokemonId → [abilityIds]) | asset-manager | ⬜ |
+| Fetch held items data → extend `items.json` with holdable items + effects | asset-manager | ⬜ |
+
+### Phase 2 — Integrate into data model
+| Task | Agent | Status |
+|------|-------|--------|
+| Add ability/nature to Pokemon instance type + creation logic | game-engine-developer | ⬜ |
+| Nature stat modifiers in stat calculation formula | game-engine-developer | ⬜ |
+| Ability effects in battle (passive triggers) | game-engine-developer | ⬜ |
+| Held item effects in battle (passive triggers) | game-engine-developer | ⬜ |
+| UI — show ability/nature on party + summary screens | frontend-developer | ⬜ |
+
+### Phase 3 — Items functionality
+| Task | Agent | Status |
+|------|-------|--------|
+| Item pickup system — find items on maps (overworld item balls) | game-engine-developer | ⬜ |
+| Healing items — full implementation (HP, PP, status, revive) | game-engine-developer | ⬜ |
+| Pokeball items — catching wild Pokemon (see Sprint 6) | game-engine-developer | ⬜ |
+| Stat boost items (X Attack, etc.) — apply in battle | game-engine-developer | ⬜ |
+| Rare Candy — level up with move learning | game-engine-developer | ⬜ |
+| Item reuse across screens (bag, battle, shop, map pickup) | frontend-developer | ⬜ |
+| Shop screen redesign using coordinate system | frontend-developer + asset-manager | ✅ |
 
 ---
 

@@ -11,31 +11,37 @@
   },
   
   "route-1": {
-    "encounterRate": 0.50,
+    "encounterRate": 0.5,
     "entries": [
       {
-        "pokemonId": 3,
-        "minLevel": 2,
-        "maxLevel": 5,
-        "weight": 30
-      },
-      {
-        "pokemonId": 6,
-        "minLevel": 2,
-        "maxLevel": 4,
-        "weight": 30
-      },
-      {
-        "pokemonId": 2,
-        "minLevel": 2,
-        "maxLevel": 5,
-        "weight": 20
-      },
-      {
-        "pokemonId": 9,
+        "pokemonId": 1,
         "minLevel": 3,
         "maxLevel": 5,
-        "weight": 10
+        "weight": 1
+      },
+      {
+        "pokemonId": 10,
+        "minLevel": 2,
+        "maxLevel": 4,
+        "weight": 29
+      },
+      {
+        "pokemonId": 13,
+        "minLevel": 2,
+        "maxLevel": 5,
+        "weight": 30
+      },
+      {
+        "pokemonId": 19,
+        "minLevel": 3,
+        "maxLevel": 5,
+        "weight": 25
+      },
+      {
+        "pokemonId": 16,
+        "minLevel": 3,
+        "maxLevel": 5,
+        "weight": 15
       }
     ]
   },

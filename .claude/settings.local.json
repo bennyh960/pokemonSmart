@@ -58,7 +58,10 @@
       "Bash(cp \".claude/worktrees/agent-ab608718/src/data/type-constants.ts\" \"src/data/type-constants.ts\")",
       "Bash(cp \".claude/worktrees/agent-ab608718/src/scenes/party.ts\" \"src/scenes/party.ts\")",
       "Bash(cp \".claude/worktrees/agent-ab608718/src/scenes/pokedex.ts\" \"src/scenes/pokedex.ts\")",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "WebFetch(domain:dn720300.ca.archive.org)",
+      "WebFetch(domain:archive.org)",
+      "WebFetch(domain:downloads.khinsider.com)"
     ]
   }
 }
