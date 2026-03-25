@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pokemon RPG - PC Screen (240×160)</title>
+<style>
+  body {
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: monospace;
+    color: #888;
+  }
+  h2 { color: #4dffb4; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin: 0 0 16px; }
+  .screen {
+    width: 240px; height: 160px;
+    background: #0d1a14;
+    position: relative;
+    overflow: hidden;
+    transform: scale(3);
+    transform-origin: top center;
+    image-rendering: pixelated;
+    font-family: monospace;
+    -webkit-font-smoothing: none;
+    margin-bottom: 340px;
+    border: 1px solid #1a4a30;
+  }
+  .screen * {
+    position: absolute;
+    font-family: monospace;
+    line-height: 1;
+    white-space: nowrap;
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+
+<h2>מסך מחשב</h2>
+<div class="screen">
+
+  <!-- ===== TITLE BAR (y=0, h=10) ===== -->
+  <div style="left:0px; top:0px; width:240px; height:10px; background:#0a1a10;"></div>
+  <!-- PC title -->
+  <div style="left:200px; top:1px; width:36px; font-size:8px; color:#ffffff; text-align:right; direction:rtl;">מחשב</div>
+  <!-- Mode pills -->
+  <div style="left:4px; top:1px; width:120px; height:8px; background:#0a2a1a; border:1px solid #1a4a30; border-radius:4px;"></div>
+  <!-- Active mode: משיכה -->
+  <div style="left:84px; top:1px; width:38px; height:8px; background:#1a5a35; border:1px solid #1a4a30; border-radius:4px;"></div>
+  <div style="left:84px; top:2px; width:38px; font-size:6px; color:#20d860; text-align:center;">משיכה</div>
+  <!-- Inactive: הפקדה -->
+  <div style="left:44px; top:2px; width:38px; font-size:6px; color:#445544; text-align:center;">הפקדה</div>
+  <!-- Inactive: שחרור -->
+  <div style="left:6px; top:2px; width:36px; font-size:6px; color:#445544; text-align:center;">שחרור</div>
+
+  <!-- ===== BOX HEADER (y=10, h=10) ===== -->
+  <!-- Left arrow ◀ -->
+  <div style="left:64px; top:11px; width:10px; height:8px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:64px; top:12px; width:10px; font-size:6px; color:#667766; text-align:center;">◀</div>
+  <!-- Box name -->
+  <div style="left:78px; top:11px; width:80px; font-size:7px; color:#ffffff; text-align:center; direction:rtl;">תיבה 1</div>
+  <!-- Box count -->
+  <div style="left:160px; top:12px; font-size:5px; color:#445544; direction:ltr;">3/30</div>
+  <!-- Right arrow ▶ -->
+  <div style="left:176px; top:11px; width:10px; height:8px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:176px; top:12px; width:10px; font-size:6px; color:#667766; text-align:center;">▶</div>
+
+  <!-- ===== PARTY SIDEBAR (x=4, w=56, y=22 to y=140) ===== -->
+  <!-- Party label -->
+  <div style="left:4px; top:22px; width:56px; font-size:6px; color:#445544; text-align:right; direction:rtl;">קבוצה</div>
+  <div style="left:4px; top:22px; font-size:5px; color:#445544; direction:ltr;">1/6</div>
+
+  <!-- Party Slot 1: Bulbasaur -->
+  <div style="left:4px; top:30px; width:56px; height:16px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <!-- Mini sprite box -->
+  <div style="left:44px; top:31px; width:14px; height:14px; background:#0a2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <!-- Sprite placeholder -->
+  <div style="left:46px; top:33px; width:10px; height:10px; overflow:hidden;">
+    <div style="left:2px; top:3px; width:6px; height:4px; background:#58a858; border-radius:2px;"></div>
+    <div style="left:3px; top:1px; width:4px; height:3px; background:#78c850; border-radius:1px;"></div>
+  </div>
+  <!-- Name -->
+  <div style="left:6px; top:32px; width:36px; font-size:5px; color:#ffffff; text-align:right; direction:rtl;">בולבזאור</div>
+  <!-- Mini HP bar -->
+  <div style="left:6px; top:40px; width:34px; height:2px; background:#1a3a2a; border-radius:1px;"></div>
+  <div style="left:6px; top:40px; width:34px; height:2px; background:#20d860; border-radius:1px;"></div>
+
+  <!-- Party Slot 2: Empty -->
+  <div style="left:4px; top:48px; width:56px; height:16px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:4px; top:53px; width:56px; font-size:5px; color:#1a2a1a; text-align:center;">—</div>
+
+  <!-- Party Slot 3: Empty -->
+  <div style="left:4px; top:66px; width:56px; height:16px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:4px; top:71px; width:56px; font-size:5px; color:#1a2a1a; text-align:center;">—</div>
+
+  <!-- Party Slot 4: Empty -->
+  <div style="left:4px; top:84px; width:56px; height:16px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:4px; top:89px; width:56px; font-size:5px; color:#1a2a1a; text-align:center;">—</div>
+
+  <!-- Party Slot 5: Empty -->
+  <div style="left:4px; top:102px; width:56px; height:16px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:4px; top:107px; width:56px; font-size:5px; color:#1a2a1a; text-align:center;">—</div>
+
+  <!-- Party Slot 6: Empty -->
+  <div style="left:4px; top:120px; width:56px; height:16px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:4px; top:125px; width:56px; font-size:5px; color:#1a2a1a; text-align:center;">—</div>
+
+  <!-- ===== BOX GRID (x=64, w=172, y=22) ===== -->
+  <!-- 6 columns × 5 rows = 30 cells -->
+  <!-- Each cell: 28w × 19h, 1px gap -->
+  <!-- Grid: 6×29-1 = 173w → x=64 to x=237 -->
+  <!-- Grid: 5×20-1 = 99h → y=22 to y=121 -->
+
+  <!-- Row 0 (y=22) -->
+  <!-- Cell (0,0): Charmander (SELECTED) -->
+  <div style="left:64px; top:22px; width:28px; height:19px; background:#1a3a2a; border:1px solid #2a6a40; border-radius:2px;"></div>
+  <!-- Selection glow border -->
+  <div style="left:64px; top:22px; width:28px; height:19px; border:1px solid rgba(32,216,96,0.3); border-radius:2px;"></div>
+  <!-- Sprite placeholder: Charmander (orange) -->
+  <div style="left:72px; top:24px; width:12px; height:12px; overflow:hidden;">
+    <div style="left:2px; top:3px; width:8px; height:7px; background:#e08050; border-radius:3px 3px 2px 2px;"></div>
+    <div style="left:4px; top:1px; width:4px; height:4px; background:#f0a060; border-radius:2px;"></div>
+    <div style="left:7px; top:7px; width:3px; height:4px; background:#f08030; border-radius:0 0 1px 0;"></div>
+  </div>
+  <!-- Cell cursor indicator (small corner marks) -->
+  <div style="left:65px; top:23px; width:3px; height:1px; background:#20d860;"></div>
+  <div style="left:65px; top:23px; width:1px; height:3px; background:#20d860;"></div>
+  <div style="left:89px; top:23px; width:3px; height:1px; background:#20d860;"></div>
+  <div style="left:91px; top:23px; width:1px; height:3px; background:#20d860;"></div>
+
+  <!-- Cell (1,0): Squirtle -->
+  <div style="left:93px; top:22px; width:28px; height:19px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:101px; top:24px; width:12px; height:12px; overflow:hidden;">
+    <div style="left:2px; top:3px; width:8px; height:7px; background:#5888d0; border-radius:3px;"></div>
+    <div style="left:3px; top:1px; width:5px; height:4px; background:#6890f0; border-radius:2px;"></div>
+  </div>
+
+  <!-- Cell (2,0): Empty -->
+  <div style="left:122px; top:22px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:133px; top:29px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+
+  <!-- Cell (3,0): Empty -->
+  <div style="left:151px; top:22px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:162px; top:29px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+
+  <!-- Cell (4,0): Empty -->
+  <div style="left:180px; top:22px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:191px; top:29px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+
+  <!-- Cell (5,0): Pikachu -->
+  <div style="left:209px; top:22px; width:28px; height:19px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:217px; top:24px; width:12px; height:12px; overflow:hidden;">
+    <div style="left:2px; top:4px; width:8px; height:6px; background:#e8c820; border-radius:3px;"></div>
+    <div style="left:3px; top:1px; width:2px; height:5px; background:#f8d830; border-radius:1px;"></div>
+    <div style="left:7px; top:1px; width:2px; height:5px; background:#f8d830; border-radius:1px;"></div>
+  </div>
+
+  <!-- Row 1 (y=42): All empty -->
+  <div style="left:64px;  top:42px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:75px;  top:49px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:93px;  top:42px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:104px; top:49px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:122px; top:42px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:133px; top:49px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:151px; top:42px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:162px; top:49px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:180px; top:42px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:191px; top:49px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:209px; top:42px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:220px; top:49px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+
+  <!-- Row 2 (y=62): All empty -->
+  <div style="left:64px;  top:62px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:75px;  top:69px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:93px;  top:62px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:104px; top:69px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:122px; top:62px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:133px; top:69px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:151px; top:62px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:162px; top:69px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:180px; top:62px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:191px; top:69px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:209px; top:62px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:220px; top:69px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+
+  <!-- Row 3 (y=82): All empty -->
+  <div style="left:64px;  top:82px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:75px;  top:89px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:93px;  top:82px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:104px; top:89px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:122px; top:82px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:133px; top:89px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:151px; top:82px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:162px; top:89px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:180px; top:82px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:191px; top:89px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:209px; top:82px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:220px; top:89px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+
+  <!-- Row 4 (y=102): All empty -->
+  <div style="left:64px;  top:102px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:75px;  top:109px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:93px;  top:102px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:104px; top:109px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:122px; top:102px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:133px; top:109px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:151px; top:102px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:162px; top:109px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:180px; top:102px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:191px; top:109px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+  <div style="left:209px; top:102px; width:28px; height:19px; background:#0a1a10; border:1px solid #1a3a2a; border-radius:2px;"></div>
+  <div style="left:220px; top:109px; width:4px; height:4px; background:#0f2a1a; border-radius:2px;"></div>
+
+  <!-- ===== DETAIL STRIP (y=124, h=22) ===== -->
+  <div style="left:4px; top:124px; width:232px; height:22px; background:#0a2a1a; border:1px solid #1a4a30; border-radius:3px;"></div>
+  <!-- Detail sprite -->
+  <div style="left:216px; top:126px; width:18px; height:18px; background:#0f2a1a; border:1px solid #1a4a30; border-radius:2px;"></div>
+  <div style="left:218px; top:128px; width:14px; height:14px; overflow:hidden;">
+    <div style="left:3px; top:3px; width:8px; height:7px; background:#e08050; border-radius:3px;"></div>
+    <div style="left:5px; top:1px; width:4px; height:4px; background:#f0a060; border-radius:2px;"></div>
+  </div>
+  <!-- Name + Level -->
+  <div style="left:140px; top:126px; width:72px; font-size:7px; color:#20d860; text-align:right; direction:rtl;">חרמנדר</div>
+  <div style="left:126px; top:126px; width:14px; font-size:5px; color:#667766;">Lv.8</div>
+  <!-- Type badge -->
+  <div style="left:182px; top:134px; width:16px; height:6px; background:#f08030; border-radius:2px;"></div>
+  <div style="left:182px; top:134px; width:16px; font-size:5px; color:#ffffff; text-align:center;">אש</div>
+  <!-- HP bar -->
+  <div style="left:100px; top:135px; font-size:5px; color:#667766;">HP</div>
+  <div style="left:44px; top:137px; width:52px; height:2px; background:#1a3a2a; border-radius:1px;"></div>
+  <div style="left:44px; top:137px; width:39px; height:2px; background:#20d860; border-radius:1px;"></div>
+  <div style="left:10px; top:135px; font-size:5px; color:#aaccaa; direction:ltr;">22/29</div>
+  <!-- Action buttons -->
+  <div style="left:116px; top:134px; width:28px; height:8px; background:#1a5a35; border:1px solid #2a6a40; border-radius:2px;"></div>
+  <div style="left:116px; top:135px; width:28px; font-size:5px; color:#20d860; text-align:center;">משיכה</div>
+
+  <!-- ===== BOTTOM BAR (y=150, h=10) ===== -->
+  <div style="left:0px; top:150px; width:240px; height:10px; background:#0a1a10;"></div>
+  <!-- ESC -->
+  <div style="left:4px; top:151px; width:18px; height:8px; background:#1a3a2a; border:1px solid #2a5a3a; border-radius:2px;"></div>
+  <div style="left:4px; top:152px; width:18px; font-size:5px; color:#aaccaa; text-align:center;">ESC</div>
+  <div style="left:24px; top:153px; font-size:5px; color:#667766;">חזרה</div>
+  <!-- Enter -->
+  <div style="left:52px; top:151px; width:24px; height:8px; background:#1a3a2a; border:1px solid #2a5a3a; border-radius:2px;"></div>
+  <div style="left:52px; top:152px; width:24px; font-size:5px; color:#aaccaa; text-align:center;">Enter</div>
+  <div style="left:78px; top:153px; font-size:5px; color:#667766;">בחירה</div>
+  <!-- ◀▶ -->
+  <div style="left:108px; top:151px; width:14px; height:8px; background:#1a3a2a; border:1px solid #2a5a3a; border-radius:2px;"></div>
+  <div style="left:108px; top:152px; width:14px; font-size:5px; color:#aaccaa; text-align:center;">◀▶</div>
+  <div style="left:124px; top:153px; font-size:5px; color:#667766;">תיבה</div>
+  <!-- Tab -->
+  <div style="left:152px; top:151px; width:18px; height:8px; background:#1a3a2a; border:1px solid #2a5a3a; border-radius:2px;"></div>
+  <div style="left:152px; top:152px; width:18px; font-size:5px; color:#aaccaa; text-align:center;">Tab</div>
+  <div style="left:172px; top:153px; font-size:5px; color:#667766;">מצב</div>
+
+</div>
+</body>
+</html>

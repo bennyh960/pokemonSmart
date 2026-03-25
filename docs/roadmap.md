@@ -108,6 +108,21 @@ This is a foundation sprint — must be done before design/content sprints.
 
 ---
 
+## Sprint 4.5 — Interactable Objects, PC Storage & Reward Expansion ⬜ PLANNED
+**Goal:** Add an object interaction layer, Pokemon PC storage, post-battle dialogue, and richer trainer/NPC rewards (badges, story progression)
+
+| Task | Agent | Notes |
+|------|-------|-------|
+| Interactable object layer — new map data layer for non-NPC objects (PC, signs, bookshelves, TVs) | game-engine-developer | Objects have position, type, and interaction handler; rendered from tileset; collision-aware |
+| PC sprite + interaction — place PC objects in Pokemon Centers, trigger PC screen on interact | game-engine-developer + asset-manager | New object type `pc` in map JSON |
+| PC screen UI — deposit/withdraw Pokemon between party and storage boxes | frontend-developer | Design: `screens_examples_coords/pc_canvas_coordinates.md` + `screens_examples_coords/pokemon_pc_240x160.html` |
+| Box storage in game state — `boxes` array in PlayerData, save/load support | game-engine-developer | Multiple boxes (e.g. 10 boxes × 30 slots), enforce party min 1 |
+| Expand TrainerReward — add `badge`, `storyEvent`, and post-battle dialogue fields | game-engine-developer | Gym leaders give badge + TM + set story flag after defeat |
+| Post-battle dialogue — trainer shows dialogue lines after battle ends (victory speech, badge award) | game-engine-developer + frontend-developer | New `postBattleDialogue` field on TrainerData |
+| Expand DialogueReward — add `badge`, `storyEvent` fields for story NPC interactions | game-engine-developer | Declarative in map JSON, no callbacks needed |
+
+---
+
 ## Sprint 5 — Items & Functionality ⬜ PLANNED
 **Goal:** Make all items functional, findable on maps, reusable across screens
 
