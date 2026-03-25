@@ -155,6 +155,22 @@ This is a foundation sprint — must be done before design/content sprints.
 
 ---
 
+## Sprint 6.5 — HM Overworld Moves ⬜ PLANNED
+**Goal:** Implement all HM field moves as overworld mechanics gated by badges/party moves
+
+| Task | Agent | Notes |
+|------|-------|-------|
+| HM framework — check if party Pokemon knows the move + player has required badge | game-engine-developer | Reusable gate: `canUseHM(moveId)` checks party + badges |
+| Cut — destroy cuttable trees/bushes on interact | game-engine-developer | Uses tileset `destroyable` property; prompt "Use Cut?" on interact |
+| Strength — push/destroy boulders | game-engine-developer | Uses tileset `destroyable` property; boulder push animation or remove |
+| Flash — illuminate dark caves | game-engine-developer + frontend-developer | Dark overlay with circular light radius around player; Flash expands radius |
+| Surf — travel on water tiles | game-engine-developer + frontend-developer | Player sprite swaps to surfing sprite; water tiles become walkable; wild encounters change to water Pokemon |
+| Fly — fast travel to visited cities | game-engine-developer + frontend-developer | Opens city map selector; teleport to last Pokemon Center of chosen city; requires visited flag per city |
+| HM items — TM/HM items in bag that teach moves to compatible Pokemon | game-engine-developer | HMs are reusable (not consumed), TMs are single-use |
+| Map updates — place cuttable trees, boulders, dark caves, water routes across existing maps | game-engine-developer + asset-manager | Use existing `destroyable` tileset property for Cut/Strength obstacles |
+
+---
+
 ## Sprint 7 — Player & Story ⬜ PLANNED
 **Goal:** Player customization, story mode, cutscenes
 
