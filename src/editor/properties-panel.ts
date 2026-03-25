@@ -8,6 +8,7 @@ import { getAllItems, type ItemDef } from '../data/items.js';
 import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward } from '../systems/npc.js';
 import { BADGES } from '../data/badges.js';
 import encounterTables from '../data/encounter-tables.json';
+import { getKnownMapIds } from './map-io.js';
 
 // Ensure character sprites are loaded for preview
 loadCharacterSprites().catch(() => {});
@@ -138,6 +139,7 @@ export class PropertiesPanel {
     addInput('Y', 'y', String(npc.y), 'number');
     addSelect('Facing', 'facing', ['up', 'down', 'left', 'right'], npc.facing);
     addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer'], npc.type);
+    addInput('Interact Range', 'interactRange', String((npc as unknown as Record<string, unknown>).interactRange ?? 1), 'number');
 
     // ── Sprite dropdown (from characters.json) ──
     const spriteRow = document.createElement('div');
@@ -829,27 +831,64 @@ export class PropertiesPanel {
 
   private renderTransitionProps(tr: MapTransition, index: number): void {
     const section = this.makeSection('Transition');
-    const fields = [
-      { label: 'From X', key: 'fromX', value: String(tr.fromX), type: 'number' },
-      { label: 'From Y', key: 'fromY', value: String(tr.fromY), type: 'number' },
-      { label: 'To Map', key: 'toMapId', value: tr.toMapId },
-      { label: 'To X', key: 'toX', value: String(tr.toX), type: 'number' },
-      { label: 'To Y', key: 'toY', value: String(tr.toY), type: 'number' },
+    const emit = () => this.state.emit('map-modified');
+    const trAny = tr as unknown as Record<string, unknown>;
+
+    // Number fields
+    const numFields = [
+      { label: 'From X', key: 'fromX', value: tr.fromX },
+      { label: 'From Y', key: 'fromY', value: tr.fromY },
+      { label: 'To X', key: 'toX', value: tr.toX },
+      { label: 'To Y', key: 'toY', value: tr.toY },
     ];
 
-    for (const f of fields) {
+    // From X/Y
+    for (const f of numFields.slice(0, 2)) {
       const row = document.createElement('div');
       row.className = 'prop-row';
-      const label = document.createElement('label');
-      label.textContent = f.label + ':';
-      row.appendChild(label);
+      row.innerHTML = `<label>${f.label}:</label>`;
       const input = document.createElement('input');
-      input.type = f.type || 'text';
-      input.value = f.value;
-      input.addEventListener('change', () => {
-        (tr as unknown as Record<string, unknown>)[f.key] = f.type === 'number' ? parseInt(input.value, 10) : input.value;
-        this.state.emit('map-modified');
-      });
+      input.type = 'number';
+      input.value = String(f.value);
+      input.addEventListener('change', () => { trAny[f.key] = parseInt(input.value, 10) || 0; emit(); });
+      row.appendChild(input);
+      section.appendChild(row);
+    }
+
+    // To Map — select from known maps
+    const mapRow = document.createElement('div');
+    mapRow.className = 'prop-row';
+    mapRow.innerHTML = '<label>To Map:</label>';
+    const mapSel = document.createElement('select');
+    const knownMaps = getKnownMapIds();
+    let foundCurrent = false;
+    for (const mapId of knownMaps) {
+      const opt = document.createElement('option');
+      opt.value = mapId;
+      opt.textContent = mapId;
+      if (mapId === tr.toMapId) { opt.selected = true; foundCurrent = true; }
+      mapSel.appendChild(opt);
+    }
+    if (!foundCurrent && tr.toMapId) {
+      const opt = document.createElement('option');
+      opt.value = tr.toMapId;
+      opt.textContent = `${tr.toMapId} (custom)`;
+      opt.selected = true;
+      mapSel.prepend(opt);
+    }
+    mapSel.addEventListener('change', () => { trAny['toMapId'] = mapSel.value; emit(); });
+    mapRow.appendChild(mapSel);
+    section.appendChild(mapRow);
+
+    // To X/Y
+    for (const f of numFields.slice(2)) {
+      const row = document.createElement('div');
+      row.className = 'prop-row';
+      row.innerHTML = `<label>${f.label}:</label>`;
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.value = String(f.value);
+      input.addEventListener('change', () => { trAny[f.key] = parseInt(input.value, 10) || 0; emit(); });
       row.appendChild(input);
       section.appendChild(row);
     }

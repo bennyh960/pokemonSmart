@@ -1,18 +1,19 @@
 {
   "id": "pokecenter-interior",
   "name": "Pokemon Center",
-  "width": 25,
+  "width": 23,
   "height": 10,
   "tileSize": 16,
+  "tileset": "dpp",
   "spawn": {
-    "x": 5,
-    "y": 6
+    "x": 4,
+    "y": 7
   },
   "transitions": [
     {
-      "fromX": 5,
-      "fromY": 7,
-      "toMapId": "zeroville",
+      "fromX": 4,
+      "fromY": 8,
+      "toMapId": "route-1",
       "toX": 4,
       "toY": 5,
       "returnToPrevious": true
@@ -22,44 +23,57 @@
     {
       "id": "nurse-pc",
       "name": "Nurse Joy",
-      "x": 5,
-      "y": 2,
+      "x": 4,
+      "y": 3,
       "facing": "down",
       "type": "healer",
+      "interactRange": 2,
       "dialogue": [
         {
           "en": "Welcome to the Pokemon Center!",
-          "he": ""
+          "he": "ברוך הבא למרכז הפוקימונים!"
         },
         {
           "en": "I'll heal your Pokemon!",
-          "he": ""
+          "he": "אני ארפא את הפוקימונים שלך!"
         }
       ],
       "spriteType": "nurse"
+    },
+    {
+      "id": "npc-shopkeepr",
+      "x": 17,
+      "y": 3,
+      "facing": "down",
+      "type": "shopkeeper",
+      "dialogue": [
+        {
+          "en": "Hello! How can i help you?",
+          "he": "שלום ! מה תרצה לקנות?"
+        }
+      ],
+      "spriteType": "npc-male",
+      "interactRange": 2,
+      "name": "Whitney",
+      "nameHe": "וויטני"
     }
   ],
   "music": "town",
   "encounterTableId": null
 ,
   "tiles": [
-    [5,5,5,5,5,5,5,5,5,5,"grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    [5,2,2,2,2,2,2,2,2,5,"grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    [5,2,5,5,5,5,5,5,2,5,"grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    [5,2,2,2,2,2,2,2,2,5,"grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    [5,2,2,2,2,2,2,2,2,5,"grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    [5,2,2,2,2,2,2,2,2,5,"grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    [5,2,2,2,2,2,2,2,2,5,"grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    [5,2,2,2,2,6,2,2,2,5,"grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"]
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [2,2,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [2,2,2,2,2,6,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,"pcc21",1,1,"pcc24",1]
   ],
   "objects": [
-    {
-      "key": "pcc1-indoor-tl",
-      "x": 0,
-      "y": 0
-    },
     {
       "key": "pcc2-indoor-bl",
       "x": 0,
@@ -69,31 +83,6 @@
       "key": "pcc3-indoor-lt",
       "x": 8,
       "y": 0
-    },
-    {
-      "key": "pcc5",
-      "x": 9,
-      "y": 3
-    },
-    {
-      "key": "pcc6",
-      "x": 10,
-      "y": 0
-    },
-    {
-      "key": "pcc4",
-      "x": 9,
-      "y": 0
-    },
-    {
-      "key": "pcc6-2",
-      "x": 10,
-      "y": 2
-    },
-    {
-      "key": "pcc6-3",
-      "x": 10,
-      "y": 7
     },
     {
       "key": "pcc7-1",
@@ -116,11 +105,6 @@
       "y": 3
     },
     {
-      "key": "pcc9",
-      "x": 14,
-      "y": 0
-    },
-    {
       "key": "pcc10m1",
       "x": 15,
       "y": 0
@@ -134,6 +118,121 @@
       "key": "pcc11m2-2",
       "x": 16,
       "y": 5
+    },
+    {
+      "key": "pcc1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "pcc2",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "key": "pcc3",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "key": "pcc4",
+      "x": 8,
+      "y": 0
+    },
+    {
+      "key": "pcc6",
+      "x": 9,
+      "y": 0
+    },
+    {
+      "key": "pcc5",
+      "x": 8,
+      "y": 2
+    },
+    {
+      "key": "pcc7",
+      "x": 9,
+      "y": 3
+    },
+    {
+      "key": "pcc8",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "pcc9",
+      "x": 10,
+      "y": 2
+    },
+    {
+      "key": "pcc10",
+      "x": 10,
+      "y": 7
+    },
+    {
+      "key": "pcc11",
+      "x": 10,
+      "y": 9
+    },
+    {
+      "key": "pcc12",
+      "x": 13,
+      "y": 0
+    },
+    {
+      "key": "pcc13",
+      "x": 13,
+      "y": 2
+    },
+    {
+      "key": "pcc14",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "key": "pcc15",
+      "x": 14,
+      "y": 3
+    },
+    {
+      "key": "pcc16",
+      "x": 14,
+      "y": 9
+    },
+    {
+      "key": "pcc17",
+      "x": 16,
+      "y": 3
+    },
+    {
+      "key": "pcc18",
+      "x": 16,
+      "y": 5
+    },
+    {
+      "key": "pcc19",
+      "x": 16,
+      "y": 7
+    },
+    {
+      "key": "pcc20",
+      "x": 18,
+      "y": 7
+    },
+    {
+      "key": "pcc22",
+      "x": 19,
+      "y": 7
+    },
+    {
+      "key": "pcc23",
+      "x": 21,
+      "y": 7
+    },
+    {
+      "key": "pcc25",
+      "x": 22,
+      "y": 7
     }
   ]
 }

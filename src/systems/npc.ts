@@ -47,6 +47,7 @@ export interface NPCData {
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
   reward?: DialogueReward;  // Optional reward on first interaction (any NPC type)
+  interactRange?: number;   // Max interaction distance in tiles (default 1 = adjacent)
 }
 
 /** Reward item given after defeating a trainer. */
@@ -110,13 +111,19 @@ export function createNPCManager(npcs: NPCData[]) {
       return npcs.find(npc => npc.x === x && npc.y === y);
     },
 
-    /** Get the NPC the player is facing (adjacent tile in facing direction). */
+    /** Get the NPC the player is facing (checks up to interactRange tiles in facing direction). */
     getFacingNPC(playerX: number, playerY: number, facing: string): NPCData | undefined {
       const vec = FACING_VECTORS[facing];
       if (!vec) return undefined;
-      const targetX = playerX + vec.dx;
-      const targetY = playerY + vec.dy;
-      return npcs.find(npc => npc.x === targetX && npc.y === targetY);
+      // Check closest tile first, then further — return nearest match
+      const maxRange = Math.max(1, ...npcs.map(n => n.interactRange || 1));
+      for (let dist = 1; dist <= maxRange; dist++) {
+        const tx = playerX + vec.dx * dist;
+        const ty = playerY + vec.dy * dist;
+        const npc = npcs.find(n => n.x === tx && n.y === ty && (n.interactRange || 1) >= dist);
+        if (npc) return npc;
+      }
+      return undefined;
     },
 
     /** Get all trainer NPCs. */

@@ -61,6 +61,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let camera: Camera;
   let player: PlayerState;
   let encounterTriggered = false;
+  let showLegend = true;
   let flashTimer = 0;
   let flashPhase: 'none' | 'flash' | 'black' = 'none';
 
@@ -897,6 +898,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
 
+      // K key → Toggle keyboard legend
+      if (input.isKeyPressed('k') || input.isKeyPressed('K')) {
+        showLegend = !showLegend;
+        return;
+      }
+
       if (!player.moving) {
         for (const [key, dir] of Object.entries(DIR_VECTORS)) {
           if (input.isKeyDown(key)) {
@@ -1048,13 +1055,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       // Keyboard legend bar (bottom of screen, behind dialogues)
-      if (!activeTextBox && !choiceState && !healTextBox && !shop.open && !encounterTriggered && transitionState === 'none') {
+      if (showLegend && !activeTextBox && !choiceState && !healTextBox && !shop.open && !encounterTriggered && transitionState === 'none') {
         const barY = SCREEN_H - 11;
         fillRect(ctx, 0, barY, SCREEN_W, 11, '#00000088');
         const isAdmin = hasActiveGame() && getPlayerData().name === ADMIN_NAME;
         const hints = isAdmin
-          ? 'P:Party  D:Dex  B:Bag  L:Lang  N:Shop  H:Heal'
-          : 'P:Party  D:Dex  B:Bag  L:Lang';
+          ? 'P:Party  D:Dex  B:Bag  L:Lang  M:Mute  K:Keys  N:Shop  H:Heal'
+          : 'P:Party  D:Dex  B:Bag  L:Lang  M:Mute  K:Keys';
         drawText(ctx, hints, SCREEN_W / 2, barY + 2, {
           size: 6, color: '#aaaaaa', font: 'monospace', align: 'center',
         });
