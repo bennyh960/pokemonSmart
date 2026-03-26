@@ -38,7 +38,7 @@
       "spriteType": "shopkeeper"
     }
   ],
-  "music": "town",
+  "music": "shop",
   "encounterTableId": null,
   "tiles": [
     [

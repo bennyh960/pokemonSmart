@@ -12,17 +12,26 @@ import { Howl, Howler } from 'howler';
 const MUSIC_TRACKS: Record<string, string> = {
   title: '/audio/music/title.mp3',
   town: '/audio/music/town.mp3',
+  town2: '/audio/music/town2.mp3',
+  town3: '/audio/music/town3.mp3',
+  town4: '/audio/music/town4.mp3',
   route: '/audio/music/route.mp3',
   battle: '/audio/music/battle.mp3',
+  'gym-battle': '/audio/music/gym-battle.mp3',
   victory: '/audio/music/victory.mp3',
+  pokecenter: '/audio/music/pokecenter.mp3',
+  shop: '/audio/music/shop.mp3',
 };
+
+/** Exported list of music track keys — used by map editor settings. */
+export const MUSIC_TRACK_KEYS = Object.keys(MUSIC_TRACKS);
 
 const SFX_TRACKS: Record<string, string> = {
   'menu-select': '/audio/sfx/menu-select.wav',
   'menu-cancel': '/audio/sfx/menu-cancel.wav',
   hit: '/audio/sfx/hit.wav',
   'text-blip': '/audio/sfx/text-blip.wav',
-  'heal': '/audio/sfx/menu-select.wav', // TODO: replace with proper heal sound
+  heal: '/audio/sfx/heal.mp3',
 };
 
 /** Default crossfade duration in ms. */
@@ -201,6 +210,14 @@ export function createAudioManager() {
         howl.volume(muted ? 0 : sfxVolume);
       }
       return muted;
+    },
+
+    /** Play a Pokemon cry by pokedex number (ogg files from PokeAPI). */
+    playCry(pokedexId: number): void {
+      if (muted) return;
+      const src = `/audio/cries/${pokedexId}.ogg`;
+      const howl = new Howl({ src: [src], volume: sfxVolume });
+      howl.play();
     },
 
     playLevelUp(): void {
