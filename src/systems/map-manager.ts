@@ -77,5 +77,10 @@ registerMap('route-1', () => import('../data/maps/route-1.json').catch(() => imp
 registerMap('sumville', () => import('../data/maps/sumville.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route-2', () => import('../data/maps/route-2.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('safari', () => import('../data/maps/safari.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('route-3', () => import('../data/maps/route-3.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('minusburg', () => import('../data/maps/minusburg.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('sumville-house-1', () => import('../data/maps/sumville-house-1.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('sumville-house-2', () => import('../data/maps/sumville-house-2.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('route1-house', () => import('../data/maps/route1-house.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('pokecenter-interior', () => import('../data/maps/pokecenter-interior.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('mart-interior', () => import('../data/maps/mart-interior.json').catch(() => import('../data/maps/test-map.json')));

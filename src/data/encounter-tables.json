@@ -65,6 +65,23 @@
       { "pokemonId": 66, "minLevel": 6, "maxLevel": 8, "weight": 10 }
     ]
   },
+  "route-3": {
+    "encounterRate": 0.15,
+    "entries": [
+      { "pokemonId": 23, "minLevel": 8, "maxLevel": 11, "weight": 15 },
+      { "pokemonId": 32, "minLevel": 8, "maxLevel": 11, "weight": 12 },
+      { "pokemonId": 29, "minLevel": 8, "maxLevel": 11, "weight": 12 },
+      { "pokemonId": 17, "minLevel": 9, "maxLevel": 12, "weight": 10 },
+      { "pokemonId": 43, "minLevel": 8, "maxLevel": 11, "weight": 10 },
+      { "pokemonId": 66, "minLevel": 9, "maxLevel": 12, "weight": 8 },
+      { "pokemonId": 81, "minLevel": 9, "maxLevel": 12, "weight": 8 },
+      { "pokemonId": 74, "minLevel": 9, "maxLevel": 12, "weight": 8 },
+      { "pokemonId": 95, "minLevel": 10, "maxLevel": 12, "weight": 5 },
+      { "pokemonId": 58, "minLevel": 9, "maxLevel": 12, "weight": 5 },
+      { "pokemonId": 147, "minLevel": 10, "maxLevel": 12, "weight": 2 },
+      { "pokemonId": 63, "minLevel": 8, "maxLevel": 11, "weight": 5 }
+    ]
+  },
   "small-safari": {
     "encounterRate": 0.20,
     "entries": [

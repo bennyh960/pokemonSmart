@@ -65,6 +65,20 @@
       "toMapId": "mart-interior",
       "toX": 5,
       "toY": 6
+    },
+    {
+      "fromX": 5,
+      "fromY": 6,
+      "toMapId": "sumville-house-1",
+      "toX": 4,
+      "toY": 6
+    },
+    {
+      "fromX": 22,
+      "fromY": 6,
+      "toMapId": "sumville-house-2",
+      "toX": 4,
+      "toY": 6
     }
   ],
   "npcs": [
@@ -810,6 +824,16 @@
       "key": "pokeball",
       "x": 27,
       "y": 17
+    },
+    {
+      "key": "b7door",
+      "x": 5,
+      "y": 6
+    },
+    {
+      "key": "b7door",
+      "x": 22,
+      "y": 6
     }
   ]
 }

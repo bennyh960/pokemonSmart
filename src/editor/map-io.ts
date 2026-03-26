@@ -4,7 +4,7 @@ import { hasFSAccess, saveToDirectory } from './fs-save.js';
 /** Known map IDs available in the project. */
 export function getKnownMapIds(): string[] {
   return [
-    'zeroville','zeroville-house-tl','zeroville-house-tr', 'route-1', 'sumville', 'route-2', 'safari', 'algebria', 'divideburg',
+    'zeroville','zeroville-house-tl','zeroville-house-tr', 'route-1', 'sumville', 'route-2', 'safari', 'route-3', 'minusburg', 'sumville-house-1', 'sumville-house-2', 'route1-house', 'algebria', 'divideburg',
     'fractalis', 'infinity-plateau', 'logica-heights', 'multitown',
     'prime-city', 'mart-interior', 'pokecenter-interior', 'test-map',
   ];
@@ -103,7 +103,7 @@ export function createBlankMap(width: number, height: number): TileMapData {
     npcs: [],
     music: 'town',
     encounterTableId: null,
-    tiles: Array.from({ length: height }, () => Array(width).fill('grass')),
+    tiles: Array.from({ length: height }, () => Array(width).fill('g1')),
     objectLayer: Array.from({ length: height }, () => Array(width).fill(null)),
   };
 }

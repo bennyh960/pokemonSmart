@@ -36,21 +36,21 @@
       "fromY": 6,
       "toMapId": "minusburg",
       "toX": 1,
-      "toY": 6
+      "toY": 24
     },
     {
       "fromX": 34,
       "fromY": 7,
       "toMapId": "minusburg",
       "toX": 1,
-      "toY": 7
+      "toY": 25
     },
     {
       "fromX": 34,
       "fromY": 8,
       "toMapId": "minusburg",
       "toX": 1,
-      "toY": 8
+      "toY": 26
     }
   ],
   "npcs": [

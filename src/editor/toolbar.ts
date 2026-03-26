@@ -154,7 +154,7 @@ export class Toolbar {
       const oldTiles = md.tiles;
       md.tiles = Array.from({ length: newH }, (_, y) =>
         Array.from({ length: newW }, (_, x) =>
-          (y < oldTiles.length && x < (oldTiles[y]?.length ?? 0)) ? oldTiles[y][x] : 'grass'
+          (y < oldTiles.length && x < (oldTiles[y]?.length ?? 0)) ? oldTiles[y][x] : 'g1'
         )
       );
 

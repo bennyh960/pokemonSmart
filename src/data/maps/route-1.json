@@ -51,6 +51,13 @@
       "toMapId": "sumville",
       "toX": 1,
       "toY": 8
+    },
+    {
+      "fromX": 4,
+      "fromY": 13,
+      "toMapId": "route1-house",
+      "toX": 3,
+      "toY": 4
     }
   ],
   "npcs": [
@@ -1200,6 +1207,16 @@
       "key": "s1-8",
       "x": 8,
       "y": 6
+    },
+    {
+      "key": "b7",
+      "x": 2,
+      "y": 10
+    },
+    {
+      "key": "b7door",
+      "x": 4,
+      "y": 13
     }
   ]
 }

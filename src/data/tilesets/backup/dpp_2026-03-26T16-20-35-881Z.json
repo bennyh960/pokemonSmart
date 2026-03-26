@@ -2509,19 +2509,7 @@
       "walkable": false,
       "above": true,
       "category": "other",
-      "interactType": null,
       "description": "transparent tile to block walkable"
-    },
-    {
-      "key": "house-1",
-      "sx": 0,
-      "sy": 6672,
-      "w": 208,
-      "h": 144,
-      "walkable": true,
-      "above": false,
-      "category": "interior",
-      "description": "house-1 full image with"
     }
   ]
 }

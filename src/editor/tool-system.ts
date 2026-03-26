@@ -171,9 +171,9 @@ class EraseTool implements EditorTool {
     // Erase ground/object layer cell
     if (state.activeLayer === 'ground') {
       const old = state.getGroundTile(gx, gy);
-      if (old === 'grass') return; // don't erase to empty, use grass as default
-      this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: 'grass' });
-      state.setGroundTile(gx, gy, 'grass');
+      if (old === 'g1') return; // don't erase to empty, use grass as default
+      this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: 'g1' });
+      state.setGroundTile(gx, gy, 'g1');
     } else {
       const old = state.getObjectTile(gx, gy);
       if (old === null) return;

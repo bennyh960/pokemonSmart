@@ -1,0 +1,70 @@
+{
+  "id": "sumville-house-1",
+  "name": "Math Teacher's House",
+  "tileset": "dpp",
+  "width": 9,
+  "height": 8,
+  "tileSize": 16,
+  "spawn": {
+    "x": 4,
+    "y": 7
+  },
+  "transitions": [
+    {
+      "fromX": 4,
+      "fromY": 7,
+      "toMapId": "sumville",
+      "toX": 5,
+      "toY": 7
+    }
+  ],
+  "npcs": [
+    {
+      "id": "math-teacher",
+      "name": "Teacher Adda",
+      "x": 2,
+      "y": 4,
+      "facing": "right",
+      "type": "npc",
+      "dialogue": [
+        { "en": "Welcome to my study! I research the mathematics of Pokemon battles.", "he": "" },
+        { "en": "Did you know? Type effectiveness is like multiplication — super effective is 2x damage!", "he": "" },
+        { "en": "And when you add STAB bonus on top... the numbers really add up!", "he": "" }
+      ],
+      "spriteType": "char_962c1b"
+    },
+    {
+      "id": "teacher-cat",
+      "name": "Whiskers",
+      "x": 7,
+      "y": 5,
+      "facing": "left",
+      "type": "npc",
+      "dialogue": [
+        { "en": "Meow!", "he": "" }
+      ],
+      "spriteType": "npc-f"
+    }
+  ],
+  "music": "town",
+  "encounterTableId": null,
+  "tiles": [
+    ["wall","pic1","wall","tv1","wall","wall","flh1","books","wall"],
+    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
+    ["d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","ca1tl","ca1t","ca1t","ca1tr"],
+    ["d","d","d","d","d","ca1l","ca1c","ca1c","ca1r"],
+    ["d","d","d","d","d","ca1bl","ca1b","ca1b","ca1br"],
+    ["d","d","d","d","d","d","d","d","d"]
+  ],
+  "objects": [
+    { "key": "library1", "x": 0, "y": 0 },
+    { "key": "dt1", "x": 4, "y": 0 },
+    { "key": "library1", "x": 6, "y": 0 },
+    { "key": "df1", "x": 0, "y": 2 },
+    { "key": "ctc", "x": 6, "y": 5 },
+    { "key": "ch1", "x": 4, "y": 2 },
+    { "key": "tr1", "x": 8, "y": 0 }
+  ]
+}

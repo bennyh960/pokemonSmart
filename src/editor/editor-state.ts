@@ -11,7 +11,7 @@ export class EditorState {
   // ── Editing state ──
   activeTool: ToolType = 'paint';
   activeLayer: LayerMode = 'ground';
-  selectedTileId: string | null = 'grass';
+  selectedTileId: string | null = 'g1';
 
   // ── Cursor ──
   cursorGridX = -1;

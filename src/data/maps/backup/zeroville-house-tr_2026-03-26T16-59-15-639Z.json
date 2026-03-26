@@ -37,7 +37,7 @@
       "dialogue": [
         {
           "en": "The professor says zero is the foundation of all numbers.",
-          "he": "אני אוהב פוקימוני רעל!"
+          "he": ""
         },
         {
           "en": "Without zero, there would be no place value system!",
@@ -48,9 +48,8 @@
           "he": ""
         }
       ],
-      "spriteType": "char_392694",
-      "name": "Elm",
-      "nameHe": "אלם"
+      "spriteType": "npc-f",
+      "name": "Sara"
     }
   ],
   "music": "town",
