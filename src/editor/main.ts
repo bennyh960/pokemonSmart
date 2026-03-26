@@ -172,6 +172,7 @@ async function init() {
       case 'b': state.setTool('paint'); break;
       case 'e': state.setTool('erase'); break;
       case 'g': state.setTool('fill'); break;
+      case 'i': state.setTool('eyedropper'); break;
       case 's': state.setTool('select'); break;
       case 'n': state.setTool('npc'); break;
       case 't': state.setTool('transition'); break;

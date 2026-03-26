@@ -14,22 +14,22 @@
       "fromX": 0,
       "fromY": 6,
       "toMapId": "sumville",
-      "toX": 28,
-      "toY": 6
+      "toX": 58,
+      "toY": 29
     },
     {
       "fromX": 0,
       "fromY": 7,
       "toMapId": "sumville",
-      "toX": 28,
-      "toY": 7
+      "toX": 58,
+      "toY": 30
     },
     {
       "fromX": 0,
       "fromY": 8,
       "toMapId": "sumville",
-      "toX": 28,
-      "toY": 8
+      "toX": 58,
+      "toY": 31
     },
     {
       "fromX": 34,

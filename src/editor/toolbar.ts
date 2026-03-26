@@ -12,6 +12,7 @@ export class Toolbar {
         <button class="tool-btn active" data-tool="paint" title="Paint (B)">🖌 Paint</button>
         <button class="tool-btn" data-tool="erase" title="Erase (E)">🧹 Erase</button>
         <button class="tool-btn" data-tool="fill" title="Fill (G)">🪣 Fill</button>
+        <button class="tool-btn" data-tool="eyedropper" title="Eyedropper (I) — Pick tile from map">💧 Pick</button>
         <button class="tool-btn" data-tool="select" title="Select (S)">🔍 Select</button>
         <button class="tool-btn" data-tool="npc" title="NPC (N)">👤 NPC</button>
         <button class="tool-btn" data-tool="transition" title="Transition (T)">🚪 Trans</button>

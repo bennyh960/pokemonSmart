@@ -14,22 +14,22 @@
       "fromX": 4,
       "fromY": 24,
       "toMapId": "sumville",
-      "toX": 15,
-      "toY": 15
+      "toX": 29,
+      "toY": 58
     },
     {
       "fromX": 4,
       "fromY": 25,
       "toMapId": "sumville",
-      "toX": 15,
-      "toY": 16
+      "toX": 30,
+      "toY": 58
     },
     {
       "fromX": 4,
       "fromY": 26,
       "toMapId": "sumville",
-      "toX": 15,
-      "toY": 17
+      "toX": 31,
+      "toY": 58
     }
   ],
   "npcs": [

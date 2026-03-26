@@ -83,7 +83,8 @@ export class PropertiesPanel {
     const def = typeof ground === 'string' ? this.tiles[ground] : null;
 
     const section = this.makeSection('Cell Properties');
-    section.innerHTML += `
+    const body = PropertiesPanel.sectionBody(section);
+    body.innerHTML = `
       <div class="prop-row"><label>Position:</label><span>(${cx}, ${cy})</span></div>
       <div class="prop-row"><label>Ground:</label><span>${String(ground)}</span></div>
       <div class="prop-row"><label>Object:</label><span>${obj ?? 'none'}</span></div>
@@ -97,6 +98,7 @@ export class PropertiesPanel {
 
   private renderNpcProps(npc: NPCData): void {
     const section = this.makeSection(`NPC: ${npc.id}`);
+    const body = PropertiesPanel.sectionBody(section);
     const npcAny = npc as unknown as Record<string, unknown>;
     const emit = () => this.state.emit('map-modified');
 
@@ -113,7 +115,7 @@ export class PropertiesPanel {
         emit();
       });
       row.appendChild(input);
-      section.appendChild(row);
+      body.appendChild(row);
     };
 
     // Helper: add a select row
@@ -130,7 +132,7 @@ export class PropertiesPanel {
       }
       sel.addEventListener('change', () => { npcAny[key] = sel.value; emit(); });
       row.appendChild(sel);
-      section.appendChild(row);
+      body.appendChild(row);
     };
 
     // Basic fields
@@ -169,14 +171,14 @@ export class PropertiesPanel {
       emit();
     });
     spriteRow.appendChild(spriteSel);
-    section.appendChild(spriteRow);
+    body.appendChild(spriteRow);
 
     // Sprite preview canvas
     const previewCanvas = document.createElement('canvas');
     previewCanvas.width = 64;
     previewCanvas.height = 64;
     previewCanvas.style.cssText = 'image-rendering:pixelated; border:1px solid #444; margin:4px 0 8px;';
-    section.appendChild(previewCanvas);
+    body.appendChild(previewCanvas);
 
     const updateSpritePreview = () => {
       const pCtx = previewCanvas.getContext('2d');
@@ -205,8 +207,8 @@ export class PropertiesPanel {
     const nameLabel = document.createElement('div');
     nameLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
     nameLabel.textContent = 'Name';
-    section.appendChild(nameLabel);
-    section.appendChild(createNamePicker({
+    body.appendChild(nameLabel);
+    body.appendChild(createNamePicker({
       initialEn,
       initialHe,
       onChange: (name) => {
@@ -225,7 +227,7 @@ export class PropertiesPanel {
     taEn.rows = 3;
     taEn.addEventListener('change', () => syncDialogue());
     diaRow.appendChild(taEn);
-    section.appendChild(diaRow);
+    body.appendChild(diaRow);
 
     const diaRowHe = document.createElement('div');
     diaRowHe.className = 'prop-row';
@@ -236,7 +238,7 @@ export class PropertiesPanel {
     taHe.style.direction = 'rtl';
     taHe.addEventListener('change', () => syncDialogue());
     diaRowHe.appendChild(taHe);
-    section.appendChild(diaRowHe);
+    body.appendChild(diaRowHe);
 
     function syncDialogue(): void {
       const enLines = taEn.value.split('\n');
@@ -254,16 +256,16 @@ export class PropertiesPanel {
     }
 
     // ── Auto Walk ──
-    this.renderAutoWalkUI(section, npc);
+    this.renderAutoWalkUI(body, npc);
 
     // ── Reward (all NPC types except trainers — trainers have their own reward in battle) ──
     if (npc.type !== 'trainer') {
-      this.renderDialogueRewardUI(section, npc);
+      this.renderDialogueRewardUI(body, npc);
     }
 
     // ── Trainer-specific fields ──
     if (npc.type === 'trainer') {
-      this.renderTrainerUI(section, npc as unknown as TrainerData);
+      this.renderTrainerUI(body, npc as unknown as TrainerData);
     }
 
     // Delete
@@ -277,7 +279,7 @@ export class PropertiesPanel {
       this.state.selectNpc(null);
       emit();
     });
-    section.appendChild(delBtn);
+    body.appendChild(delBtn);
     this.container.appendChild(section);
   }
 
@@ -831,6 +833,7 @@ export class PropertiesPanel {
 
   private renderTransitionProps(tr: MapTransition, index: number): void {
     const section = this.makeSection('Transition');
+    const body = PropertiesPanel.sectionBody(section);
     const emit = () => this.state.emit('map-modified');
     const trAny = tr as unknown as Record<string, unknown>;
 
@@ -852,7 +855,7 @@ export class PropertiesPanel {
       input.value = String(f.value);
       input.addEventListener('change', () => { trAny[f.key] = parseInt(input.value, 10) || 0; emit(); });
       row.appendChild(input);
-      section.appendChild(row);
+      body.appendChild(row);
     }
 
     // Return to previous checkbox (placed before destination fields so it can hide them)
@@ -864,7 +867,7 @@ export class PropertiesPanel {
     cb.checked = !!tr.returnToPrevious;
     rpRow.appendChild(cb);
     rpRow.appendChild(this.makeInfo('Exit to where the player entered from'));
-    section.appendChild(rpRow);
+    body.appendChild(rpRow);
 
     // Destination fields container (hidden when returnToPrevious is checked)
     const destContainer = document.createElement('div');
@@ -921,13 +924,13 @@ export class PropertiesPanel {
       this.state.emit('map-modified');
     });
 
-    section.appendChild(destContainer);
+    body.appendChild(destContainer);
 
     // Warn if multiple transitions use returnToPrevious (only one entry point is saved at a time)
     const warnEl = document.createElement('div');
     warnEl.style.cssText = 'color:#ff6; font-size:11px; padding:4px 0; display:none;';
     warnEl.textContent = '⚠ Multiple "return to prev" transitions on this map — only one entry point is tracked, this may cause loops.';
-    section.appendChild(warnEl);
+    body.appendChild(warnEl);
     const checkReturnWarning = () => {
       const count = (this.state.mapData.transitions || []).filter(t => t.returnToPrevious).length;
       warnEl.style.display = (cb.checked && count > 1) ? '' : 'none';
@@ -943,15 +946,16 @@ export class PropertiesPanel {
       this.state.selectTransition(null);
       this.state.emit('map-modified');
     });
-    section.appendChild(delBtn);
+    body.appendChild(delBtn);
     this.container.appendChild(section);
   }
 
   private renderNpcList(): void {
     const section = this.makeSection('NPCs');
+    const body = PropertiesPanel.sectionBody(section);
     const npcs = this.state.mapData.npcs || [];
     if (npcs.length === 0) {
-      section.innerHTML += '<div class="prop-empty">No NPCs</div>';
+      body.innerHTML = '<div class="prop-empty">No NPCs</div>';
     } else {
       for (const npc of npcs) {
         const item = document.createElement('div');
@@ -959,7 +963,7 @@ export class PropertiesPanel {
         item.textContent = `${npc.id} (${npc.x},${npc.y}) [${npc.type}]`;
         item.addEventListener('click', () => this.state.selectNpc(npc.id));
         if (this.state.selectedNpcId === npc.id) item.classList.add('selected');
-        section.appendChild(item);
+        body.appendChild(item);
       }
     }
     this.container.appendChild(section);
@@ -967,9 +971,10 @@ export class PropertiesPanel {
 
   private renderTransitionList(): void {
     const section = this.makeSection('Transitions');
+    const body = PropertiesPanel.sectionBody(section);
     const transitions = this.state.mapData.transitions || [];
     if (transitions.length === 0) {
-      section.innerHTML += '<div class="prop-empty">No transitions</div>';
+      body.innerHTML = '<div class="prop-empty">No transitions</div>';
     } else {
       transitions.forEach((tr, i) => {
         const item = document.createElement('div');
@@ -977,7 +982,7 @@ export class PropertiesPanel {
         item.textContent = `(${tr.fromX},${tr.fromY}) → ${tr.toMapId} (${tr.toX},${tr.toY})`;
         item.addEventListener('click', () => this.state.selectTransition(i));
         if (this.state.selectedTransitionIndex === i) item.classList.add('selected');
-        section.appendChild(item);
+        body.appendChild(item);
       });
     }
     this.container.appendChild(section);
@@ -987,6 +992,7 @@ export class PropertiesPanel {
   private renderEncounterPanel(): void {
     const mapData = this.state.mapData;
     const section = this.makeSection('Encounters');
+    const body = PropertiesPanel.sectionBody(section);
     const emit = () => this.state.emit('map-modified');
 
     // Encounter table select — pick from existing tables in encounter-tables.json
@@ -1018,7 +1024,7 @@ export class PropertiesPanel {
     });
     selectRow.appendChild(select);
     selectRow.appendChild(this.makeInfo('Wild Pokemon encounter data — defined in encounter-tables.json'));
-    section.appendChild(selectRow);
+    body.appendChild(selectRow);
 
     const tableId = currentTableId;
     if (!tableId) {
@@ -1043,7 +1049,7 @@ export class PropertiesPanel {
     rateInput.addEventListener('change', () => { table.encounterRate = parseFloat(rateInput.value) || 0.1; emit(); });
     rateRow.appendChild(rateInput);
     rateRow.appendChild(this.makeInfo('Chance of encounter per step on encounter tiles (0.10 = 10%)'));
-    section.appendChild(rateRow);
+    body.appendChild(rateRow);
 
     // Entries header
     const header = document.createElement('div');
@@ -1057,7 +1063,7 @@ export class PropertiesPanel {
       emit();
     });
     header.appendChild(addBtn);
-    section.appendChild(header);
+    body.appendChild(header);
 
     const pokemonList = getPokemonList();
 
@@ -1134,7 +1140,7 @@ export class PropertiesPanel {
       rmBtn.addEventListener('click', () => { table.entries.splice(i, 1); emit(); });
       row.appendChild(rmBtn);
 
-      section.appendChild(row);
+      body.appendChild(row);
     }
 
     // Export button + info
@@ -1152,7 +1158,7 @@ export class PropertiesPanel {
     });
     exportRow.appendChild(exportBtn);
     exportRow.appendChild(this.makeInfo('Paste into src/data/encounter-tables.json — merge with existing entries'));
-    section.appendChild(exportRow);
+    body.appendChild(exportRow);
 
     this.container.appendChild(section);
   }
@@ -1211,12 +1217,50 @@ export class PropertiesPanel {
     return span;
   }
 
-  private makeSection(title: string): HTMLElement {
+  /** Collapsed state persisted across refreshes (keyed by section title). */
+  private static collapsedSections = new Set<string>();
+
+  private makeSection(title: string, startOpen = true): HTMLElement {
     const section = document.createElement('div');
     section.className = 'props-section';
+
     const h3 = document.createElement('h3');
-    h3.textContent = title;
+    h3.className = 'props-section-toggle';
+
+    const arrow = document.createElement('span');
+    arrow.className = 'props-section-arrow';
+
+    h3.appendChild(arrow);
+    h3.appendChild(document.createTextNode(title));
     section.appendChild(h3);
+
+    const body = document.createElement('div');
+    body.className = 'props-section-body';
+    section.appendChild(body);
+
+    // Restore collapsed state (default open unless previously collapsed)
+    const isCollapsed = PropertiesPanel.collapsedSections.has(title) || !startOpen;
+    if (isCollapsed) {
+      section.classList.add('collapsed');
+    }
+
+    h3.addEventListener('click', () => {
+      const nowCollapsed = section.classList.toggle('collapsed');
+      if (nowCollapsed) {
+        PropertiesPanel.collapsedSections.add(title);
+      } else {
+        PropertiesPanel.collapsedSections.delete(title);
+      }
+    });
+
+    // Return the body so callers append content into it (not the section root)
+    // But we need the section itself for container.appendChild — store body ref
+    (section as unknown as Record<string, unknown>)['_body'] = body;
     return section;
+  }
+
+  /** Get the collapsible body of a section created by makeSection. */
+  private static sectionBody(section: HTMLElement): HTMLElement {
+    return ((section as unknown as Record<string, unknown>)['_body'] as HTMLElement) || section;
   }
 }

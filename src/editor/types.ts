@@ -8,7 +8,7 @@ export type { TileDef, TileMapData, MapTransition, NPCData, PlacedObject };
 export type LayerMode = 'ground' | 'object';
 
 /** Available editor tools. */
-export type ToolType = 'paint' | 'erase' | 'fill' | 'select' | 'npc' | 'transition';
+export type ToolType = 'paint' | 'erase' | 'fill' | 'select' | 'eyedropper' | 'npc' | 'transition';
 
 /** A tile category for the palette. */
 export interface TileCategory {

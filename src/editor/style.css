@@ -148,6 +148,40 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
 .props-section {
   margin-bottom: 12px;
 }
+.props-section-toggle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8899bb;
+  border-bottom: 1px solid #2a2a44;
+  padding-bottom: 3px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.props-section-toggle:hover {
+  color: #aabbdd;
+}
+.props-section-arrow {
+  display: inline-block;
+  width: 10px;
+  font-size: 10px;
+  transition: transform 0.15s ease;
+}
+.props-section-arrow::before {
+  content: '\25BC';
+}
+.props-section.collapsed .props-section-arrow {
+  transform: rotate(-90deg);
+}
+.props-section-body {
+  /* shown by default */
+}
+.props-section.collapsed .props-section-body {
+  display: none;
+}
 .props-section h3 {
   font-size: 12px;
   font-weight: 600;

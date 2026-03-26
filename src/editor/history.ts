@@ -21,6 +21,14 @@ export class HistoryManager {
     this.state.emit('history-changed');
   }
 
+  /** Push a command that was already applied (skip execute). Used by fill tool to avoid double-apply. */
+  executeAlreadyApplied(command: EditorCommand): void {
+    this.undoStack.push(command);
+    if (this.undoStack.length > this.maxSize) this.undoStack.shift();
+    this.redoStack = [];
+    this.state.emit('history-changed');
+  }
+
   undo(): void {
     const cmd = this.undoStack.pop();
     if (!cmd) return;

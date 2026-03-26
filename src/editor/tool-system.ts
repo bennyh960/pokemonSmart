@@ -143,7 +143,18 @@ class EraseTool implements EditorTool {
     if (this.visited.has(key)) return;
     this.visited.add(key);
 
-    // First try to remove a placed object at this position
+    // On ground layer: erase the ground tile directly, ignore above-layer objects
+    if (state.activeLayer === 'ground') {
+      const old = state.getGroundTile(gx, gy);
+      if (old === 'g1') return;
+      this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: 'g1' });
+      state.setGroundTile(gx, gy, 'g1');
+      return;
+    }
+
+    // On object layer: first try to remove placed objects, then the objectLayer cell
+
+    // Try to remove a placed object at this position (exact top-left match)
     const obj = state.getPlacedObjectAt(gx, gy);
     if (obj) {
       this.objDeltas.push({ key: obj.key, x: obj.x, y: obj.y, action: 'remove' });
@@ -151,7 +162,7 @@ class EraseTool implements EditorTool {
       return;
     }
 
-    // Also check if click is inside a larger object (not just top-left)
+    // Check if click is inside a larger object (not just top-left)
     if (state.mapData.objects) {
       for (let i = state.mapData.objects.length - 1; i >= 0; i--) {
         const o = state.mapData.objects[i];
@@ -168,18 +179,11 @@ class EraseTool implements EditorTool {
       }
     }
 
-    // Erase ground/object layer cell
-    if (state.activeLayer === 'ground') {
-      const old = state.getGroundTile(gx, gy);
-      if (old === 'g1') return; // don't erase to empty, use grass as default
-      this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: 'g1' });
-      state.setGroundTile(gx, gy, 'g1');
-    } else {
-      const old = state.getObjectTile(gx, gy);
-      if (old === null) return;
-      this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: null });
-      state.setObjectTile(gx, gy, null);
-    }
+    // Erase objectLayer cell
+    const old = state.getObjectTile(gx, gy);
+    if (old === null) return;
+    this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: null });
+    state.setObjectTile(gx, gy, null);
   }
 }
 
@@ -198,11 +202,13 @@ class FillTool implements EditorTool {
     if (target === tileId) return;
 
     const deltas: CellDelta[] = [];
-    const visited = new Set<string>();
+    // Use index-based queue instead of shift() for O(1) dequeue
     const queue: [number, number][] = [[gx, gy]];
+    const visited = new Set<string>();
+    let head = 0;
 
-    while (queue.length > 0 && deltas.length < 10000) {
-      const [cx, cy] = queue.shift()!;
+    while (head < queue.length && deltas.length < 10000) {
+      const [cx, cy] = queue[head++];
       const key = `${cx},${cy}`;
       if (visited.has(key)) continue;
       if (cx < 0 || cx >= width || cy < 0 || cy >= height) continue;
@@ -215,14 +221,50 @@ class FillTool implements EditorTool {
 
     if (deltas.length > 0) {
       const layer = state.activeLayer;
-      for (const d of deltas) {
-        isGround ? state.setGroundTile(d.x, d.y, d.newVal as string) : state.setObjectTile(d.x, d.y, d.newVal as string | null);
-      }
-      history.execute({
+      // Apply directly to grid arrays (bypass per-tile event emission)
+      applyDeltasBatch(state, deltas, layer, false);
+      // Register command for undo/redo only — skip execute since already applied
+      history.executeAlreadyApplied({
         label: `Fill ${deltas.length} tile(s)`,
-        execute() { for (const d of deltas) { layer === 'ground' ? state.setGroundTile(d.x, d.y, d.newVal as string) : state.setObjectTile(d.x, d.y, d.newVal as string | null); } },
-        undo() { for (const d of deltas) { layer === 'ground' ? state.setGroundTile(d.x, d.y, d.oldVal as string) : state.setObjectTile(d.x, d.y, d.oldVal as string | null); } },
+        execute() { applyDeltasBatch(state, deltas, layer, false); },
+        undo() { applyDeltasBatch(state, deltas, layer, true); },
       });
+    }
+  }
+
+  onMouseMove(): void {}
+  onMouseUp(): void {}
+}
+
+/** Apply fill deltas directly to grid arrays, emitting map-modified only once. */
+function applyDeltasBatch(state: EditorState, deltas: CellDelta[], layer: string, undo: boolean): void {
+  const md = state.mapData;
+  if (layer === 'ground') {
+    for (const d of deltas) {
+      md.tiles[d.y][d.x] = (undo ? d.oldVal : d.newVal) as string;
+    }
+  } else {
+    if (!md.objectLayer) {
+      md.objectLayer = Array.from({ length: md.height }, () => Array(md.width).fill(null));
+    }
+    for (const d of deltas) {
+      md.objectLayer[d.y][d.x] = (undo ? d.oldVal : d.newVal) as string | null;
+    }
+  }
+  state.emit('map-modified');
+}
+
+// ── Eyedropper Tool ──────────────────────────────────────
+
+class EyedropperTool implements EditorTool {
+  readonly name: ToolType = 'eyedropper';
+
+  onMouseDown(gx: number, gy: number, state: EditorState): void {
+    const isGround = state.activeLayer === 'ground';
+    const tileId = isGround ? state.getGroundTile(gx, gy) : state.getObjectTile(gx, gy);
+    if (tileId && typeof tileId === 'string') {
+      state.selectTile(tileId);
+      state.selectCell(gx, gy);
     }
   }
 
@@ -287,6 +329,7 @@ export class ToolSystem {
       ['paint', paintTool],
       ['erase', eraseTool],
       ['fill', new FillTool()],
+      ['eyedropper', new EyedropperTool()],
       ['select', new SelectTool()],
       ['npc', new NPCTool()],
       ['transition', new TransitionTool()],
