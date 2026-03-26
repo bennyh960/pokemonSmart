@@ -34,14 +34,6 @@
     {
       "fromX": 4,
       "fromY": 5,
-      "toMapId": "zeroville",
-      "toX": 4,
-      "toY": 6,
-      "returnToPrevious": false
-    },
-    {
-      "fromX": 4,
-      "fromY": 5,
       "toMapId": "zeroville-house-tl",
       "toX": 3,
       "toY": 5
@@ -780,6 +772,11 @@
       "key": "b7door",
       "x": 20,
       "y": 14
+    },
+    {
+      "key": "item-pokeball",
+      "x": 1,
+      "y": 18
     }
   ]
 }

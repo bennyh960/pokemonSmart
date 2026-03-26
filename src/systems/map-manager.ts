@@ -90,3 +90,4 @@ registerMap('dividia-house-3', () => import('../data/maps/dividia-house-3.json')
 registerMap('dividia-house-4', () => import('../data/maps/dividia-house-4.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('pokecenter-interior', () => import('../data/maps/pokecenter-interior.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('mart-interior', () => import('../data/maps/mart-interior.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('deep-forest', () => import('../data/maps/deep-forest.json').catch(() => import('../data/maps/test-map.json')));

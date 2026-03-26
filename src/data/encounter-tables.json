@@ -275,6 +275,27 @@
       { "pokemonId": 165, "minLevel": 3, "maxLevel": 5, "weight": 15 },
       { "pokemonId": 167, "minLevel": 3, "maxLevel": 5, "weight": 15 }
     ]
+  },
+  "deep-forest": {
+    "encounterRate": 0.20,
+    "entries": [
+      { "pokemonId": 12, "minLevel": 15, "maxLevel": 20, "weight": 8 },
+      { "pokemonId": 15, "minLevel": 15, "maxLevel": 20, "weight": 8 },
+      { "pokemonId": 43, "minLevel": 15, "maxLevel": 20, "weight": 12 },
+      { "pokemonId": 44, "minLevel": 18, "maxLevel": 23, "weight": 6 },
+      { "pokemonId": 46, "minLevel": 15, "maxLevel": 20, "weight": 10 },
+      { "pokemonId": 47, "minLevel": 20, "maxLevel": 25, "weight": 4 },
+      { "pokemonId": 69, "minLevel": 15, "maxLevel": 20, "weight": 10 },
+      { "pokemonId": 70, "minLevel": 18, "maxLevel": 23, "weight": 5 },
+      { "pokemonId": 167, "minLevel": 15, "maxLevel": 20, "weight": 10 },
+      { "pokemonId": 168, "minLevel": 20, "maxLevel": 25, "weight": 4 },
+      { "pokemonId": 163, "minLevel": 15, "maxLevel": 20, "weight": 6 },
+      { "pokemonId": 198, "minLevel": 18, "maxLevel": 23, "weight": 5 },
+      { "pokemonId": 25, "minLevel": 18, "maxLevel": 22, "weight": 3 },
+      { "pokemonId": 123, "minLevel": 20, "maxLevel": 25, "weight": 3 },
+      { "pokemonId": 127, "minLevel": 20, "maxLevel": 25, "weight": 3 },
+      { "pokemonId": 214, "minLevel": 22, "maxLevel": 25, "weight": 3 }
+    ]
   }
 }
 
