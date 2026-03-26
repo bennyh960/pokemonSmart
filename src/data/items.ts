@@ -1,353 +1,84 @@
 /**
- * Item definitions for the Poke Mart, battle bag, and trainer rewards.
+ * Item lookup layer — combines items.json (identity) + item-defs.ts (game logic)
+ * into a unified ItemDef for consumers (bag, shop, battle, editors).
  *
- * Items are categorized by type (healing, status-cure, revival, pokeball,
- * battle, vitamin, key). Each item has an i18n key pair, a price, an
- * optional effect, and a PokeAPI sprite URL.
+ * This is an adapter: no data is stored here. All data comes from:
+ *   - items.json:    name {en,he}, slug, description, sprite, category (PokeAPI)
+ *   - item-defs.ts:  effect, price, usableInBattle, usableInOverworld, topColor (game logic)
  */
 
-export type ItemCategory = 'healing' | 'status-cure' | 'revival' | 'pokeball' | 'battle' | 'vitamin' | 'key';
+import type { LocalizedName } from '../services/pokemon-data.js';
+import { ITEM_GAME_DATA, ITEM_ID_TO_SLUG, type ItemCategory, type ItemEffect } from './item-defs.js';
+import itemsJson from './items.json';
 
-export type ItemEffect =
-  | { type: 'heal'; amount: number }
-  | { type: 'heal-full' }
-  | { type: 'revive'; hpPercent: number }
-  | { type: 'status-cure'; status: string | 'all' }
-  | { type: 'pp-restore'; amount: number | 'all' }
-  | { type: 'stat-boost'; stat: string; stages: number }
-  | { type: 'capture'; rate: number }
-  | { type: 'rare-candy' }
-  | { type: 'none' };
+export type { ItemCategory, ItemEffect } from './item-defs.js';
+
+const rawItems = itemsJson as Record<string, {
+  name: { en: string; he: string };
+  slug: string;
+  description: string;
+  category: string;
+  sprite: string | null;
+  holdable: boolean;
+  flingPower: number | null;
+}>;
 
 export interface ItemDef {
-  id: string;
-  nameKey: string;        // i18n key for display name
-  descriptionKey: string;  // i18n key for description
+  id: string;                  // slug (e.g. 'potion') — used as key in player inventory
+  numericId: number;           // PokeAPI item ID
+  name: LocalizedName;         // { en, he } — use getLocalizedName() to resolve
+  description: string;         // English description from PokeAPI
   category: ItemCategory;
-  price: number;           // 0 = not purchasable
+  price: number;
   effect: ItemEffect;
   usableInBattle: boolean;
   usableInOverworld: boolean;
-  sprite: string;          // PokeAPI sprite URL
+  sprite: string;
+  topColor?: string;           // Pokeball top-half color
 }
 
 const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
 
-export const ITEMS: Record<string, ItemDef> = {
-  // ── Healing ──
-  'potion': {
-    id: 'potion',
-    nameKey: 'item.potion.name',
-    descriptionKey: 'item.potion.desc',
-    category: 'healing',
-    price: 300,
-    effect: { type: 'heal', amount: 20 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/potion.png`,
-  },
-  'super-potion': {
-    id: 'super-potion',
-    nameKey: 'item.superPotion.name',
-    descriptionKey: 'item.superPotion.desc',
-    category: 'healing',
-    price: 700,
-    effect: { type: 'heal', amount: 50 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/super-potion.png`,
-  },
-  'hyper-potion': {
-    id: 'hyper-potion',
-    nameKey: 'item.hyperPotion.name',
-    descriptionKey: 'item.hyperPotion.desc',
-    category: 'healing',
-    price: 1200,
-    effect: { type: 'heal', amount: 200 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/hyper-potion.png`,
-  },
-  'max-potion': {
-    id: 'max-potion',
-    nameKey: 'item.maxPotion.name',
-    descriptionKey: 'item.maxPotion.desc',
-    category: 'healing',
-    price: 2500,
-    effect: { type: 'heal-full' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/max-potion.png`,
-  },
-  'full-restore': {
-    id: 'full-restore',
-    nameKey: 'item.fullRestore.name',
-    descriptionKey: 'item.fullRestore.desc',
-    category: 'healing',
-    price: 3000,
-    effect: { type: 'heal-full' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/full-restore.png`,
-  },
-  'fresh-water': {
-    id: 'fresh-water',
-    nameKey: 'item.freshWater.name',
-    descriptionKey: 'item.freshWater.desc',
-    category: 'healing',
-    price: 200,
-    effect: { type: 'heal', amount: 50 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/fresh-water.png`,
-  },
-  'soda-pop': {
-    id: 'soda-pop',
-    nameKey: 'item.sodaPop.name',
-    descriptionKey: 'item.sodaPop.desc',
-    category: 'healing',
-    price: 300,
-    effect: { type: 'heal', amount: 60 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/soda-pop.png`,
-  },
-  'lemonade': {
-    id: 'lemonade',
-    nameKey: 'item.lemonade.name',
-    descriptionKey: 'item.lemonade.desc',
-    category: 'healing',
-    price: 350,
-    effect: { type: 'heal', amount: 80 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/lemonade.png`,
-  },
-  'moomoo-milk': {
-    id: 'moomoo-milk',
-    nameKey: 'item.moomooMilk.name',
-    descriptionKey: 'item.moomooMilk.desc',
-    category: 'healing',
-    price: 500,
-    effect: { type: 'heal', amount: 100 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/moomoo-milk.png`,
-  },
+/** Build the ITEMS lookup from JSON + game defs. Only items with game data are included. */
+function buildItems(): Record<string, ItemDef> {
+  const result: Record<string, ItemDef> = {};
 
-  // ── Status cures ──
-  'antidote': {
-    id: 'antidote',
-    nameKey: 'item.antidote.name',
-    descriptionKey: 'item.antidote.desc',
-    category: 'status-cure',
-    price: 100,
-    effect: { type: 'status-cure', status: 'poison' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/antidote.png`,
-  },
-  'burn-heal': {
-    id: 'burn-heal',
-    nameKey: 'item.burnHeal.name',
-    descriptionKey: 'item.burnHeal.desc',
-    category: 'status-cure',
-    price: 250,
-    effect: { type: 'status-cure', status: 'burn' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/burn-heal.png`,
-  },
-  'ice-heal': {
-    id: 'ice-heal',
-    nameKey: 'item.iceHeal.name',
-    descriptionKey: 'item.iceHeal.desc',
-    category: 'status-cure',
-    price: 250,
-    effect: { type: 'status-cure', status: 'freeze' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/ice-heal.png`,
-  },
-  'awakening': {
-    id: 'awakening',
-    nameKey: 'item.awakening.name',
-    descriptionKey: 'item.awakening.desc',
-    category: 'status-cure',
-    price: 250,
-    effect: { type: 'status-cure', status: 'sleep' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/awakening.png`,
-  },
-  'paralyze-heal': {
-    id: 'paralyze-heal',
-    nameKey: 'item.paralyzeHeal.name',
-    descriptionKey: 'item.paralyzeHeal.desc',
-    category: 'status-cure',
-    price: 200,
-    effect: { type: 'status-cure', status: 'paralysis' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/paralyze-heal.png`,
-  },
-  'full-heal': {
-    id: 'full-heal',
-    nameKey: 'item.fullHeal.name',
-    descriptionKey: 'item.fullHeal.desc',
-    category: 'status-cure',
-    price: 600,
-    effect: { type: 'status-cure', status: 'all' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/full-heal.png`,
-  },
+  for (const [numIdStr, gameDef] of Object.entries(ITEM_GAME_DATA)) {
+    const numId = Number(numIdStr);
+    const raw = rawItems[numIdStr];
+    const slug = raw?.slug ?? ITEM_ID_TO_SLUG[numId] ?? `item-${numId}`;
 
-  // ── Revival ──
-  'revive': {
-    id: 'revive',
-    nameKey: 'item.revive.name',
-    descriptionKey: 'item.revive.desc',
-    category: 'revival',
-    price: 1500,
-    effect: { type: 'revive', hpPercent: 50 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/revive.png`,
-  },
-  'max-revive': {
-    id: 'max-revive',
-    nameKey: 'item.maxRevive.name',
-    descriptionKey: 'item.maxRevive.desc',
-    category: 'revival',
-    price: 0,
-    effect: { type: 'revive', hpPercent: 100 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/max-revive.png`,
-  },
+    result[slug] = {
+      id: slug,
+      numericId: numId,
+      name: raw?.name ?? { en: slug, he: slug },
+      description: raw?.description ?? '',
+      category: gameDef.category,
+      price: gameDef.price,
+      effect: gameDef.effect,
+      usableInBattle: gameDef.usableInBattle,
+      usableInOverworld: gameDef.usableInOverworld,
+      sprite: raw?.sprite ?? `${SPRITE_BASE}/${slug}.png`,
+      topColor: gameDef.topColor,
+    };
+  }
 
-  // ── Pokeballs ──
-  'poke-ball': {
-    id: 'poke-ball',
-    nameKey: 'item.pokeBall.name',
-    descriptionKey: 'item.pokeBall.desc',
-    category: 'pokeball',
-    price: 200,
-    effect: { type: 'capture', rate: 1 },
-    usableInBattle: true,
-    usableInOverworld: false,
-    sprite: `${SPRITE_BASE}/poke-ball.png`,
-  },
-  'great-ball': {
-    id: 'great-ball',
-    nameKey: 'item.greatBall.name',
-    descriptionKey: 'item.greatBall.desc',
-    category: 'pokeball',
-    price: 600,
-    effect: { type: 'capture', rate: 1.5 },
-    usableInBattle: true,
-    usableInOverworld: false,
-    sprite: `${SPRITE_BASE}/great-ball.png`,
-  },
-  'ultra-ball': {
-    id: 'ultra-ball',
-    nameKey: 'item.ultraBall.name',
-    descriptionKey: 'item.ultraBall.desc',
-    category: 'pokeball',
-    price: 1200,
-    effect: { type: 'capture', rate: 2 },
-    usableInBattle: true,
-    usableInOverworld: false,
-    sprite: `${SPRITE_BASE}/ultra-ball.png`,
-  },
+  return result;
+}
 
-  // ── Battle stat boosts ──
-  'x-attack': {
-    id: 'x-attack',
-    nameKey: 'item.xAttack.name',
-    descriptionKey: 'item.xAttack.desc',
-    category: 'battle',
-    price: 500,
-    effect: { type: 'stat-boost', stat: 'attack', stages: 1 },
-    usableInBattle: true,
-    usableInOverworld: false,
-    sprite: `${SPRITE_BASE}/x-attack.png`,
-  },
-  'x-defense': {
-    id: 'x-defense',
-    nameKey: 'item.xDefense.name',
-    descriptionKey: 'item.xDefense.desc',
-    category: 'battle',
-    price: 550,
-    effect: { type: 'stat-boost', stat: 'defense', stages: 1 },
-    usableInBattle: true,
-    usableInOverworld: false,
-    sprite: `${SPRITE_BASE}/x-defense.png`,
-  },
-  'x-speed': {
-    id: 'x-speed',
-    nameKey: 'item.xSpeed.name',
-    descriptionKey: 'item.xSpeed.desc',
-    category: 'battle',
-    price: 350,
-    effect: { type: 'stat-boost', stat: 'speed', stages: 1 },
-    usableInBattle: true,
-    usableInOverworld: false,
-    sprite: `${SPRITE_BASE}/x-speed.png`,
-  },
-  'x-special': {
-    id: 'x-special',
-    nameKey: 'item.xSpecial.name',
-    descriptionKey: 'item.xSpecial.desc',
-    category: 'battle',
-    price: 350,
-    effect: { type: 'stat-boost', stat: 'specialAttack', stages: 1 },
-    usableInBattle: true,
-    usableInOverworld: false,
-    sprite: `${SPRITE_BASE}/x-special.png`,
-  },
+export const ITEMS: Record<string, ItemDef> = buildItems();
 
-  // ── Vitamins ──
-  'rare-candy': {
-    id: 'rare-candy',
-    nameKey: 'item.rareCandy.name',
-    descriptionKey: 'item.rareCandy.desc',
-    category: 'vitamin',
-    price: 0,
-    effect: { type: 'rare-candy' },
-    usableInBattle: false,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/rare-candy.png`,
-  },
-
-  // ── PP recovery ──
-  'ether': {
-    id: 'ether',
-    nameKey: 'item.ether.name',
-    descriptionKey: 'item.ether.desc',
-    category: 'healing',
-    price: 0,
-    effect: { type: 'pp-restore', amount: 10 },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/ether.png`,
-  },
-  'elixir': {
-    id: 'elixir',
-    nameKey: 'item.elixir.name',
-    descriptionKey: 'item.elixir.desc',
-    category: 'healing',
-    price: 0,
-    effect: { type: 'pp-restore', amount: 'all' },
-    usableInBattle: true,
-    usableInOverworld: true,
-    sprite: `${SPRITE_BASE}/elixir.png`,
-  },
-};
+// ─── Public API (same signatures as before) ───
 
 export function getItem(id: string): ItemDef | undefined {
-  return ITEMS[id];
+  // Support both slugs and numeric ID strings
+  if (ITEMS[id]) return ITEMS[id];
+  const numId = Number(id);
+  if (!isNaN(numId)) {
+    const slug = ITEM_ID_TO_SLUG[numId];
+    if (slug) return ITEMS[slug];
+  }
+  return undefined;
 }
 
 export function getAllItems(): ItemDef[] {

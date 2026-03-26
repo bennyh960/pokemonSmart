@@ -35,5 +35,8 @@ export function createDefaultPokemon(): Pokemon {
     xp: 0,
     xpToNext: 100,
     isGlitched: false,
+    abilityId: null,
+    natureId: null,
+    heldItemId: null,
   };
 }

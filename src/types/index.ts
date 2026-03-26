@@ -38,6 +38,9 @@ export interface Pokemon {
   xp: number;
   xpToNext: number;
   isGlitched: boolean;     // Infected by NULL-X virus
+  abilityId: number | null;   // PokeAPI ability ID — lookup in abilities.json
+  natureId: number | null;    // PokeAPI nature ID (1-25) — lookup in natures.json
+  heldItemId: number | null;  // PokeAPI item ID — lookup in items.json + item-defs.ts
   caughtBall?: string;     // Item ID of the pokeball used to catch (e.g. 'poke-ball', 'great-ball')
 }
 

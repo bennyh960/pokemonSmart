@@ -12,6 +12,10 @@ import evolutionData from '../data/evolution-chains.json';
 import encounterData from '../data/encounter-tables.json';
 import learnsetData from '../data/learnsets.json';
 import tmLearnsetData from '../data/tm-learnsets.json';
+import abilitiesData from '../data/abilities.json';
+import pokemonAbilitiesData from '../data/pokemon-abilities.json';
+import naturesData from '../data/natures.json';
+import itemsData from '../data/items.json';
 
 // --- Types matching the JSON shapes ---
 
@@ -262,4 +266,117 @@ export function getPokemonCategory(id: number): string {
 /** Get Pokemon Pokedex description/flavor text. */
 export function getPokemonDescription(id: number): string {
   return pokemonById.get(id)?.description ?? '';
+}
+
+// --- Abilities data ---
+
+export interface AbilityDef {
+  name: LocalizedName;
+  description: string;
+  generationIntroduced: string;
+}
+
+export interface PokemonAbilityMapping {
+  abilities: number[];
+  hidden: number | null;
+}
+
+const abilities = abilitiesData as Record<string, AbilityDef>;
+const pokemonAbilities = pokemonAbilitiesData as Record<string, PokemonAbilityMapping>;
+
+/** Get ability definition by PokeAPI ability ID. */
+export function getAbility(id: number): AbilityDef | undefined {
+  return abilities[String(id)];
+}
+
+/** Get localized ability name. */
+export function getAbilityDisplayName(id: number): string {
+  const a = abilities[String(id)];
+  if (!a) return '???';
+  return a.name[getLocale()];
+}
+
+/** Get the ability mapping for a Pokemon (regular + hidden abilities). */
+export function getPokemonAbilities(pokemonId: number): PokemonAbilityMapping | undefined {
+  return pokemonAbilities[String(pokemonId)];
+}
+
+/** Pick a random non-hidden ability for a Pokemon. */
+export function getRandomAbility(pokemonId: number): number | null {
+  const mapping = pokemonAbilities[String(pokemonId)];
+  if (!mapping || mapping.abilities.length === 0) return null;
+  return mapping.abilities[Math.floor(Math.random() * mapping.abilities.length)];
+}
+
+// --- Natures data ---
+
+export interface NatureDef {
+  name: LocalizedName;
+  increasedStat: string | null;
+  decreasedStat: string | null;
+}
+
+const natures = naturesData as Record<string, NatureDef>;
+
+/** Total number of natures (always 25). */
+const TOTAL_NATURES = 25;
+
+/** Get nature definition by ID (1-25). */
+export function getNature(id: number): NatureDef | undefined {
+  return natures[String(id)];
+}
+
+/** Get localized nature name. */
+export function getNatureDisplayName(id: number): string {
+  const n = natures[String(id)];
+  if (!n) return '???';
+  return n.name[getLocale()];
+}
+
+/** Pick a random nature ID (1-25). */
+export function getRandomNatureId(): number {
+  return Math.floor(Math.random() * TOTAL_NATURES) + 1;
+}
+
+/**
+ * Get the nature stat multiplier for a given stat.
+ * Returns 1.1 for boosted, 0.9 for reduced, 1.0 for neutral.
+ */
+export function getNatureMultiplier(natureId: number, stat: string): number {
+  const n = natures[String(natureId)];
+  if (!n) return 1;
+  if (n.increasedStat === stat) return 1.1;
+  if (n.decreasedStat === stat) return 0.9;
+  return 1;
+}
+
+// --- Items data (from PokeAPI JSON) ---
+
+export interface ItemData {
+  name: LocalizedName;
+  slug: string;
+  description: string;
+  category: string;
+  sprite: string | null;
+  holdable: boolean;
+  flingPower: number | null;
+}
+
+const items = itemsData as Record<string, ItemData>;
+
+/** Get item data by PokeAPI item ID. */
+export function getItemData(id: number): ItemData | undefined {
+  return items[String(id)];
+}
+
+/** Get localized item name by PokeAPI item ID. */
+export function getItemDisplayName(id: number): string {
+  const item = items[String(id)];
+  if (!item) return '???';
+  return item.name[getLocale()];
+}
+
+/** Get all item IDs in the data. */
+export function getAllItemIds(): number[] {
+  return Object.keys(items).map(Number);
 }

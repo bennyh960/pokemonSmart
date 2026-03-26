@@ -75,5 +75,6 @@ registerMap('zeroville-house-tl', () => import('../data/maps/zeroville-house-tl.
 registerMap('zeroville-house-tr', () => import('../data/maps/zeroville-house-tr.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route-1', () => import('../data/maps/route-1.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('sumville', () => import('../data/maps/sumville.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('route-2', () => import('../data/maps/route-2.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('pokecenter-interior', () => import('../data/maps/pokecenter-interior.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('mart-interior', () => import('../data/maps/mart-interior.json').catch(() => import('../data/maps/test-map.json')));

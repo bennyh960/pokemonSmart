@@ -8,7 +8,7 @@
  */
 
 import type { Pokemon, Move, PokemonType, MathDifficulty } from '../types/index.js';
-import { getPokemon, getMove, getLearnset, movePowerToMathDifficulty } from '../services/pokemon-data.js';
+import { getPokemon, getMove, getLearnset, movePowerToMathDifficulty, getRandomAbility, getRandomNatureId, getNatureMultiplier } from '../services/pokemon-data.js';
 import type { PokemonData, MoveData } from '../services/pokemon-data.js';
 import encounterTablesJson from '../data/encounter-tables.json';
 
@@ -57,12 +57,12 @@ function moveDataToMove(md: MoveData): Move {
   };
 }
 
-/** Calculate a stat value based on base stat and level (simplified formula). */
-function calcStat(baseStat: number, level: number, isHp: boolean): number {
+/** Calculate a stat value based on base stat, level, and nature multiplier. */
+function calcStat(baseStat: number, level: number, isHp: boolean, natureMultiplier = 1): number {
   if (isHp) {
     return Math.floor(((2 * baseStat) * level) / 100) + level + 10;
   }
-  return Math.floor(((2 * baseStat) * level) / 100) + 5;
+  return Math.floor((Math.floor(((2 * baseStat) * level) / 100) + 5) * natureMultiplier);
 }
 
 /** Default moves assigned to wild Pokemon by type (fallback only). */
@@ -75,6 +75,10 @@ const defaultMovesByType: Record<string, number[]> = {
 
 /** Create a Pokemon instance from base data at a given level. */
 export function createPokemonFromData(data: PokemonData, level: number, moveIds?: number[]): Pokemon {
+  // Assign random ability and nature
+  const abilityId = getRandomAbility(data.id);
+  const natureId = getRandomNatureId();
+
   const hp = calcStat(data.stats.hp, level, true);
 
   // Build move list
@@ -121,16 +125,19 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     level,
     hp,
     maxHp: hp,
-    attack: calcStat(data.stats.attack, level, false),
-    defense: calcStat(data.stats.defense, level, false),
-    specialAttack: calcStat(data.stats.specialAttack, level, false),
-    specialDefense: calcStat(data.stats.specialDefense, level, false),
-    speed: calcStat(data.stats.speed, level, false),
+    attack: calcStat(data.stats.attack, level, false, getNatureMultiplier(natureId, 'attack')),
+    defense: calcStat(data.stats.defense, level, false, getNatureMultiplier(natureId, 'defense')),
+    specialAttack: calcStat(data.stats.specialAttack, level, false, getNatureMultiplier(natureId, 'specialAttack')),
+    specialDefense: calcStat(data.stats.specialDefense, level, false, getNatureMultiplier(natureId, 'specialDefense')),
+    speed: calcStat(data.stats.speed, level, false, getNatureMultiplier(natureId, 'speed')),
     types: data.types as PokemonType[],
     moves,
     xp: 0,
     xpToNext: level * 100,
     isGlitched: false,
+    abilityId,
+    natureId,
+    heldItemId: null,
     caughtBall: 'poke-ball',
   };
 }
@@ -188,17 +195,18 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
   pokemon.level++;
   pokemon.xpToNext = pokemon.level * 100;
 
-  // Recalculate stats based on base data
+  // Recalculate stats based on base data + nature
   const data = getPokemon(pokemon.id);
   if (data) {
+    const nId = pokemon.natureId ?? 1;
     const oldMaxHp = pokemon.maxHp;
     pokemon.maxHp = calcStat(data.stats.hp, pokemon.level, true);
     pokemon.hp += pokemon.maxHp - oldMaxHp; // Heal by the HP gained
-    pokemon.attack = calcStat(data.stats.attack, pokemon.level, false);
-    pokemon.defense = calcStat(data.stats.defense, pokemon.level, false);
-    pokemon.specialAttack = calcStat(data.stats.specialAttack, pokemon.level, false);
-    pokemon.specialDefense = calcStat(data.stats.specialDefense, pokemon.level, false);
-    pokemon.speed = calcStat(data.stats.speed, pokemon.level, false);
+    pokemon.attack = calcStat(data.stats.attack, pokemon.level, false, getNatureMultiplier(nId, 'attack'));
+    pokemon.defense = calcStat(data.stats.defense, pokemon.level, false, getNatureMultiplier(nId, 'defense'));
+    pokemon.specialAttack = calcStat(data.stats.specialAttack, pokemon.level, false, getNatureMultiplier(nId, 'specialAttack'));
+    pokemon.specialDefense = calcStat(data.stats.specialDefense, pokemon.level, false, getNatureMultiplier(nId, 'specialDefense'));
+    pokemon.speed = calcStat(data.stats.speed, pokemon.level, false, getNatureMultiplier(nId, 'speed'));
   }
 
   // Check learnset for new moves at this level

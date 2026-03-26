@@ -6,7 +6,7 @@
  */
 
 import type { Pokemon } from '../types/index.js';
-import { getItem } from '../data/items.js';
+import { getItemGameData, getItemGameDataBySlug } from '../data/item-defs.js';
 import { checkAndApplyLevelUp } from './encounter.js';
 
 export interface ItemUseResult {
@@ -22,7 +22,9 @@ export interface ItemUseResult {
  * This does NOT handle capture or stat-boost in battle (those are battle-specific).
  */
 export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult {
-  const def = getItem(itemId);
+  // Support both numeric ID strings and legacy slugs
+  const numId = Number(itemId);
+  const def = !isNaN(numId) ? getItemGameData(numId) : getItemGameDataBySlug(itemId);
   if (!def) {
     return { success: false, message: 'Unknown item.' };
   }

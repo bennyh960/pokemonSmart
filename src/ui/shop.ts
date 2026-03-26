@@ -10,6 +10,7 @@ import { fillRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { getItemsByCategory, getItem, type ItemDef, type ItemCategory } from '../data/items.js';
+import { getLocalizedName } from '../services/pokemon-data.js';
 import type { InputManager } from '../engine/input.js';
 import { LOGICAL_WIDTH as SW, LOGICAL_HEIGHT as SH } from '../engine/config.js';
 import { FONT_HE } from '../engine/fonts.js';
@@ -170,7 +171,7 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
   if (input.isKeyPressed('Enter') && shop.items.length > 0) {
     const item = shop.items[shop.selectedItem];
     if (buyItem(item.id)) {
-      shop.message = t('shop.bought', { item: t(item.nameKey) });
+      shop.message = t('shop.bought', { item: getLocalizedName(item.name) });
     } else {
       shop.message = t('shop.cantAfford');
     }
@@ -416,7 +417,7 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
       ctx.font = `7px ${FONT_HE}`;
       ctx.textAlign = 'right';
       ctx.direction = 'rtl';
-      ctx.fillText(t(item.nameKey), 210, cardY + 3);
+      ctx.fillText(getLocalizedName(item.name), 210, cardY + 3);
 
       // Description
       ctx.fillStyle = isSelected ? '#667766' : '#445544';
@@ -424,7 +425,7 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
       ctx.font = `5px ${FONT_HE}`;
       ctx.textAlign = 'right';
       ctx.direction = 'rtl';
-      ctx.fillText(t(item.descriptionKey), 210, cardY + 12);
+      ctx.fillText(item.description, 210, cardY + 12);
 
       // Owned count
       ctx.fillStyle = '#3a4a3a';

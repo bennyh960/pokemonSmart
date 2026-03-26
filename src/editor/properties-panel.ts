@@ -430,7 +430,7 @@ export class PropertiesPanel {
       for (const item of allItems) {
         const opt = document.createElement('option');
         opt.value = item.id;
-        opt.textContent = `${item.id}`;
+        opt.textContent = `${item.name.en} (${item.id})`;
         if (item.id === ri.itemId) opt.selected = true;
         itemSel.appendChild(opt);
       }

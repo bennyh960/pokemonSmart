@@ -15,7 +15,7 @@ import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
 import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
-import { getPokemonDisplayName } from '../services/pokemon-data.js';
+import { getPokemonDisplayName, getLocalizedName } from '../services/pokemon-data.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 
@@ -143,10 +143,10 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         drawItemIcon(ctx, item.id, 210, cy + 3, 10);
 
         // Item name (right-aligned at x=206, cy+2)
-        drawText(ctx, t(item.def.nameKey), 206, cy + 2, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+        drawText(ctx, getLocalizedName(item.def.name), 206, cy + 2, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
 
         // Item description (right-aligned at x=206, cy+10)
-        drawText(ctx, t(item.def.descriptionKey), 206, cy + 10, {
+        drawText(ctx, item.def.description, 206, cy + 10, {
           size: 5, color: isSel ? C.TEXT_MUT : C.TEXT_DIM, font: 'monospace', align: 'right',
         });
 
@@ -181,10 +181,10 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       drawItemIcon(ctx, selItem.id, 211, 122, 12);
 
       // Selected item name (green, large, right-aligned)
-      drawText(ctx, t(selItem.def.nameKey), 206, 121, { size: 8, color: C.SEL_BAR, font: 'monospace', align: 'right' });
+      drawText(ctx, getLocalizedName(selItem.def.name), 206, 121, { size: 8, color: C.SEL_BAR, font: 'monospace', align: 'right' });
 
       // Full description (right-aligned)
-      drawText(ctx, t(selItem.def.descriptionKey), 206, 131, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
+      drawText(ctx, selItem.def.description, 206, 131, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
 
       // Use button
       fillRect(ctx, 8, 122, 34, 12, C.USE_BTN_BG);
@@ -298,8 +298,8 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             pendingOverworldItemId = item.id;
             waitingForPartyTarget = true;
             setPartyMode('select-target', undefined, {
-              itemName: t(item.def.nameKey),
-              description: t(item.def.descriptionKey),
+              itemName: getLocalizedName(item.def.name),
+              description: item.def.description,
             });
             stateMachine.push('PARTY');
           } else {

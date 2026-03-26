@@ -45,6 +45,17 @@
       }
     ]
   },
+  "route-2": {
+    "encounterRate": 0.15,
+    "entries": [
+      { "pokemonId": 74, "minLevel": 5, "maxLevel": 7, "weight": 20 },
+      { "pokemonId": 41, "minLevel": 5, "maxLevel": 8, "weight": 25 },
+      { "pokemonId": 19, "minLevel": 5, "maxLevel": 7, "weight": 20 },
+      { "pokemonId": 21, "minLevel": 5, "maxLevel": 8, "weight": 15 },
+      { "pokemonId": 46, "minLevel": 6, "maxLevel": 8, "weight": 10 },
+      { "pokemonId": 66, "minLevel": 6, "maxLevel": 8, "weight": 10 }
+    ]
+  },
   "route-29": {
     "encounterRate": 0.10,
     "entries": [

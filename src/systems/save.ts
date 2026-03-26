@@ -11,7 +11,7 @@ import type { PlayerData } from '../types/index.js';
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 2;
+export const CURRENT_SAVE_VERSION = 3;
 
 /**
  * Migration functions keyed by TARGET version.
@@ -37,6 +37,26 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
       }));
     }
     data.saveVersion = 2;
+  },
+  // Version 2 → 3: add abilityId, natureId, heldItemId to all Pokemon
+  3: (data) => {
+    const addFields = (pokemon: any) => {
+      if (!pokemon) return;
+      if (pokemon.abilityId === undefined) pokemon.abilityId = null;
+      if (pokemon.natureId === undefined) pokemon.natureId = null;
+      if (pokemon.heldItemId === undefined) pokemon.heldItemId = null;
+    };
+    if (data.party) {
+      for (const p of data.party) addFields(p);
+    }
+    if (data.boxes) {
+      for (const box of data.boxes) {
+        if (box?.pokemon) {
+          for (const p of box.pokemon) addFields(p);
+        }
+      }
+    }
+    data.saveVersion = 3;
   },
 };
 

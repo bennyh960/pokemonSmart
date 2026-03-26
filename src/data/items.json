@@ -4,2430 +4,2747 @@
       "en": "Master Ball",
       "he": "Master Ball"
     },
+    "slug": "master-ball",
     "description": "The best BALL that catches a POKéMON without fail.",
     "category": "standard-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "2": {
     "name": {
       "en": "Ultra Ball",
       "he": "Ultra Ball"
     },
+    "slug": "ultra-ball",
     "description": "A better BALL with a higher catch rate than a GREAT BALL.",
     "category": "standard-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "3": {
     "name": {
       "en": "Great Ball",
       "he": "Great Ball"
     },
+    "slug": "great-ball",
     "description": "A good BALL with a higher catch rate than a POKé BALL.",
     "category": "standard-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "4": {
     "name": {
       "en": "Poke Ball",
       "he": "Poke Ball"
     },
+    "slug": "poke-ball",
     "description": "A tool used for catching wild POKéMON.",
     "category": "standard-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "5": {
     "name": {
       "en": "Safari Ball",
       "he": "Safari Ball"
     },
+    "slug": "safari-ball",
     "description": "A special BALL that is used only in the SAFARI ZONE.",
     "category": "standard-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/safari-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/safari-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "6": {
     "name": {
       "en": "Net Ball",
       "he": "Net Ball"
     },
+    "slug": "net-ball",
     "description": "A BALL that works well on WATER- and BUG-type POKéMON.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/net-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/net-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "7": {
     "name": {
       "en": "Dive Ball",
       "he": "Dive Ball"
     },
+    "slug": "dive-ball",
     "description": "A BALL that works better on POKéMON on the ocean floor.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dive-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dive-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "8": {
     "name": {
       "en": "Nest Ball",
       "he": "Nest Ball"
     },
+    "slug": "nest-ball",
     "description": "A BALL that works better on weaker POKéMON.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/nest-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/nest-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "9": {
     "name": {
       "en": "Repeat Ball",
       "he": "Repeat Ball"
     },
+    "slug": "repeat-ball",
     "description": "A BALL that works better on POKéMON caught before.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/repeat-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/repeat-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "10": {
     "name": {
       "en": "Timer Ball",
       "he": "Timer Ball"
     },
+    "slug": "timer-ball",
     "description": "More effective as more turns are taken in battle.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/timer-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/timer-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "11": {
     "name": {
       "en": "Luxury Ball",
       "he": "Luxury Ball"
     },
+    "slug": "luxury-ball",
     "description": "A cozy BALL that makes POKéMON more friendly.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "12": {
     "name": {
       "en": "Premier Ball",
       "he": "Premier Ball"
     },
+    "slug": "premier-ball",
     "description": "A rare BALL made in commemoration of some event.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/premier-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/premier-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "13": {
     "name": {
       "en": "Dusk Ball",
       "he": "Dusk Ball"
     },
+    "slug": "dusk-ball",
     "description": "A somewhat different Poké Ball that makes it easier to catch wild Pokémon at night or in dark places like caves.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dusk-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dusk-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "14": {
     "name": {
       "en": "Heal Ball",
       "he": "Heal Ball"
     },
+    "slug": "heal-ball",
     "description": "A remedial Poké Ball that restores the caught Pokémon’s HP and eliminates any status problem.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heal-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heal-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "15": {
     "name": {
       "en": "Quick Ball",
       "he": "Quick Ball"
     },
+    "slug": "quick-ball",
     "description": "A somewhat different Poké Ball that provides a better catch rate if it is used at the start of a wild encounter.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "16": {
     "name": {
       "en": "Cherish Ball",
       "he": "Cherish Ball"
     },
+    "slug": "cherish-ball",
     "description": "A quite rare Poké Ball that has been specially crafted to commemorate an occasion of some sort.",
     "category": "special-balls",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cherish-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cherish-ball.png",
+    "holdable": true,
+    "flingPower": null
   },
   "17": {
     "name": {
       "en": "Potion",
       "he": "Potion"
     },
+    "slug": "potion",
     "description": "Restores the HP of a POKéMON by 20 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/potion.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/potion.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "18": {
     "name": {
       "en": "Antidote",
       "he": "Antidote"
     },
+    "slug": "antidote",
     "description": "Heals a poisoned POKéMON.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/antidote.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/antidote.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "19": {
     "name": {
       "en": "Burn Heal",
       "he": "Burn Heal"
     },
+    "slug": "burn-heal",
     "description": "Heals POKéMON of a burn.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/burn-heal.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/burn-heal.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "20": {
     "name": {
       "en": "Ice Heal",
       "he": "Ice Heal"
     },
+    "slug": "ice-heal",
     "description": "Defrosts a frozen POKéMON.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ice-heal.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ice-heal.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "21": {
     "name": {
       "en": "Awakening",
       "he": "Awakening"
     },
+    "slug": "awakening",
     "description": "Awakens a sleeping POKéMON.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/awakening.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/awakening.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "22": {
     "name": {
       "en": "Paralyze Heal",
       "he": "Paralyze Heal"
     },
+    "slug": "paralyze-heal",
     "description": "Heals a paralyzed POKéMON.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/paralyze-heal.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/paralyze-heal.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "23": {
     "name": {
       "en": "Full Restore",
       "he": "Full Restore"
     },
+    "slug": "full-restore",
     "description": "Fully restores the HP and status of a POKéMON.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/full-restore.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/full-restore.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "24": {
     "name": {
       "en": "Max Potion",
       "he": "Max Potion"
     },
+    "slug": "max-potion",
     "description": "Fully restores the HP of a POKéMON.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/max-potion.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/max-potion.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "25": {
     "name": {
       "en": "Hyper Potion",
       "he": "Hyper Potion"
     },
+    "slug": "hyper-potion",
     "description": "Restores the HP of a POKéMON by 200 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hyper-potion.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hyper-potion.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "26": {
     "name": {
       "en": "Super Potion",
       "he": "Super Potion"
     },
+    "slug": "super-potion",
     "description": "Restores the HP of a POKéMON by 50 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/super-potion.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/super-potion.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "27": {
     "name": {
       "en": "Full Heal",
       "he": "Full Heal"
     },
+    "slug": "full-heal",
     "description": "Heals all the status problems of one POKéMON.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/full-heal.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/full-heal.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "28": {
     "name": {
       "en": "Revive",
       "he": "Revive"
     },
+    "slug": "revive",
     "description": "Revives a fainted POKéMON with half its HP.",
     "category": "revival",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/revive.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/revive.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "29": {
     "name": {
       "en": "Max Revive",
       "he": "Max Revive"
     },
+    "slug": "max-revive",
     "description": "Revives a fainted POKéMON with all its HP.",
     "category": "revival",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/max-revive.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/max-revive.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "30": {
     "name": {
       "en": "Fresh Water",
       "he": "Fresh Water"
     },
+    "slug": "fresh-water",
     "description": "A mineral water that restores HP by 50 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fresh-water.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fresh-water.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "31": {
     "name": {
       "en": "Soda Pop",
       "he": "Soda Pop"
     },
+    "slug": "soda-pop",
     "description": "A fizzy soda drink that restores HP by 60 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soda-pop.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soda-pop.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "32": {
     "name": {
       "en": "Lemonade",
       "he": "Lemonade"
     },
+    "slug": "lemonade",
     "description": "A very sweet drink that restores HP by 80 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lemonade.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lemonade.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "33": {
     "name": {
       "en": "Moomoo Milk",
       "he": "Moomoo Milk"
     },
+    "slug": "moomoo-milk",
     "description": "A nutritious milk that restores HP by 100 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/moomoo-milk.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/moomoo-milk.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "34": {
     "name": {
       "en": "Energy Powder",
       "he": "Energy Powder"
     },
+    "slug": "energy-powder",
     "description": "A bitter powder that restores HP by 50 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/energy-powder.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/energy-powder.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "35": {
     "name": {
       "en": "Energy Root",
       "he": "Energy Root"
     },
+    "slug": "energy-root",
     "description": "A bitter root that restores HP by 200 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/energy-root.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/energy-root.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "36": {
     "name": {
       "en": "Heal Powder",
       "he": "Heal Powder"
     },
+    "slug": "heal-powder",
     "description": "A bitter powder that heals all status problems.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heal-powder.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heal-powder.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "37": {
     "name": {
       "en": "Revival Herb",
       "he": "Revival Herb"
     },
+    "slug": "revival-herb",
     "description": "A very bitter herb that revives a fainted POKéMON.",
     "category": "revival",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/revival-herb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/revival-herb.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "38": {
     "name": {
       "en": "Ether",
       "he": "Ether"
     },
+    "slug": "ether",
     "description": "Restores the PP of a selected move by 10.",
     "category": "pp-recovery",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ether.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ether.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "39": {
     "name": {
       "en": "Max Ether",
       "he": "Max Ether"
     },
+    "slug": "max-ether",
     "description": "Fully restores the PP of a selected move.",
     "category": "pp-recovery",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/max-ether.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/max-ether.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "40": {
     "name": {
       "en": "Elixir",
       "he": "Elixir"
     },
+    "slug": "elixir",
     "description": "Restores the PP of all moves by 10.",
     "category": "pp-recovery",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/elixir.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/elixir.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "41": {
     "name": {
       "en": "Max Elixir",
       "he": "Max Elixir"
     },
+    "slug": "max-elixir",
     "description": "Fully restores the PP of a POKéMON’s moves.",
     "category": "pp-recovery",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/max-elixir.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/max-elixir.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "42": {
     "name": {
       "en": "Lava Cookie",
       "he": "Lava Cookie"
     },
+    "slug": "lava-cookie",
     "description": "A local specialty that heals all status problems.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lava-cookie.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lava-cookie.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "43": {
     "name": {
       "en": "Berry Juice",
       "he": "Berry Juice"
     },
+    "slug": "berry-juice",
     "description": "A 100% pure juice that restores HP by 20 points.",
     "category": "healing",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/berry-juice.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/berry-juice.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "44": {
     "name": {
       "en": "Sacred Ash",
       "he": "Sacred Ash"
     },
+    "slug": "sacred-ash",
     "description": "Fully revives and restores all fainted POKéMON.",
     "category": "revival",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sacred-ash.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sacred-ash.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "45": {
     "name": {
       "en": "Hp Up",
       "he": "Hp Up"
     },
+    "slug": "hp-up",
     "description": "Raises the HP of one POKéMON.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hp-up.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hp-up.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "46": {
     "name": {
       "en": "Protein",
       "he": "Protein"
     },
+    "slug": "protein",
     "description": "Raises the stat ATTACK of one POKéMON.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/protein.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/protein.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "47": {
     "name": {
       "en": "Iron",
       "he": "Iron"
     },
+    "slug": "iron",
     "description": "Raises the stat DEFENSE of one POKéMON.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iron.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iron.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "48": {
     "name": {
       "en": "Carbos",
       "he": "Carbos"
     },
+    "slug": "carbos",
     "description": "Raises the stat SPEED of one POKéMON.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/carbos.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/carbos.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "49": {
     "name": {
       "en": "Calcium",
       "he": "Calcium"
     },
+    "slug": "calcium",
     "description": "Raises the stat SP. ATK of one POKéMON.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/calcium.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/calcium.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "50": {
     "name": {
       "en": "Rare Candy",
       "he": "Rare Candy"
     },
+    "slug": "rare-candy",
     "description": "Raises the level of a POKéMON by one.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "51": {
     "name": {
       "en": "Pp Up",
       "he": "Pp Up"
     },
+    "slug": "pp-up",
     "description": "Raises the maximum PP of a selected move.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pp-up.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pp-up.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "52": {
     "name": {
       "en": "Zinc",
       "he": "Zinc"
     },
+    "slug": "zinc",
     "description": "Raises the stat SP. DEF of one POKéMON.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/zinc.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/zinc.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "53": {
     "name": {
       "en": "Pp Max",
       "he": "Pp Max"
     },
+    "slug": "pp-max",
     "description": "Raises the PP of a move to its maximum points.",
     "category": "vitamins",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pp-max.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pp-max.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "54": {
     "name": {
       "en": "Old Gateau",
       "he": "Old Gateau"
     },
+    "slug": "old-gateau",
     "description": "Old Chateau’s hidden specialty. It heals all the status problems of a single Pokémon.",
     "category": "status-cures",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/old-gateau.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/old-gateau.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "55": {
     "name": {
       "en": "Guard Spec",
       "he": "Guard Spec"
     },
+    "slug": "guard-spec",
     "description": "Prevents stat reduction when used in battle.",
     "category": "stat-boosts",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/guard-spec.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/guard-spec.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "56": {
     "name": {
       "en": "Dire Hit",
       "he": "Dire Hit"
     },
+    "slug": "dire-hit",
     "description": "Raises the critical-hit ratio during one battle.",
     "category": "stat-boosts",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dire-hit.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dire-hit.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "57": {
     "name": {
       "en": "X Attack",
       "he": "X Attack"
     },
+    "slug": "x-attack",
     "description": "Raises the stat ATTACK during one battle.",
     "category": "stat-boosts",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-attack.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-attack.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "58": {
     "name": {
       "en": "X Defense",
       "he": "X Defense"
     },
+    "slug": "x-defense",
     "description": "Raises the stat DEFENSE during one battle.",
     "category": "stat-boosts",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-defense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-defense.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "59": {
     "name": {
       "en": "X Speed",
       "he": "X Speed"
     },
+    "slug": "x-speed",
     "description": "Raises the stat SPEED during one battle.",
     "category": "stat-boosts",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-speed.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-speed.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "60": {
     "name": {
       "en": "X Accuracy",
       "he": "X Accuracy"
     },
+    "slug": "x-accuracy",
     "description": "Raises accuracy of attack moves during one battle.",
     "category": "stat-boosts",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-accuracy.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-accuracy.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "61": {
     "name": {
       "en": "X Sp Atk",
       "he": "X Sp Atk"
     },
+    "slug": "x-sp-atk",
     "description": "Raises the stat SP. ATK during one battle.",
     "category": "stat-boosts",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-sp-atk.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-sp-atk.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "62": {
     "name": {
       "en": "X Sp Def",
       "he": "X Sp Def"
     },
+    "slug": "x-sp-def",
     "description": "An item that raises the Sp. Def stat of a Pokémon in battle. It wears off if the Pokémon is withdrawn.",
     "category": "stat-boosts",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-sp-def.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/x-sp-def.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "63": {
     "name": {
       "en": "Poke Doll",
       "he": "Poke Doll"
     },
+    "slug": "poke-doll",
     "description": "Use to flee from any battle with a wild POKéMON.",
     "category": "spelunking",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-doll.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-doll.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "64": {
     "name": {
       "en": "Fluffy Tail",
       "he": "Fluffy Tail"
     },
+    "slug": "fluffy-tail",
     "description": "Use to flee from any battle with a wild POKéMON.",
     "category": "spelunking",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fluffy-tail.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fluffy-tail.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "65": {
     "name": {
       "en": "Blue Flute",
       "he": "Blue Flute"
     },
+    "slug": "blue-flute",
     "description": "A glass flute that awakens sleeping POKéMON.",
     "category": "flutes",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/blue-flute.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/blue-flute.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "66": {
     "name": {
       "en": "Yellow Flute",
       "he": "Yellow Flute"
     },
+    "slug": "yellow-flute",
     "description": "A glass flute that snaps POKéMON out of confusion.",
     "category": "flutes",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yellow-flute.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yellow-flute.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "67": {
     "name": {
       "en": "Red Flute",
       "he": "Red Flute"
     },
+    "slug": "red-flute",
     "description": "A glass flute that snaps POKéMON out of attraction.",
     "category": "flutes",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/red-flute.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/red-flute.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "68": {
     "name": {
       "en": "Black Flute",
       "he": "Black Flute"
     },
+    "slug": "black-flute",
     "description": "A glass flute that keeps away wild POKéMON.",
     "category": "spelunking",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-flute.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-flute.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "69": {
     "name": {
       "en": "White Flute",
       "he": "White Flute"
     },
+    "slug": "white-flute",
     "description": "A glass flute that lures wild POKéMON.",
     "category": "spelunking",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/white-flute.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/white-flute.png",
+    "holdable": true,
+    "flingPower": 30
+  },
+  "80": {
+    "name": {
+      "en": "Sun Stone",
+      "he": "Sun Stone"
+    },
+    "slug": "sun-stone",
+    "description": "Makes certain species of POKéMON evolve.",
+    "category": "evolution",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sun-stone.png",
+    "holdable": false,
+    "flingPower": 30
+  },
+  "81": {
+    "name": {
+      "en": "Moon Stone",
+      "he": "Moon Stone"
+    },
+    "slug": "moon-stone",
+    "description": "Makes certain species of POKéMON evolve.",
+    "category": "evolution",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/moon-stone.png",
+    "holdable": false,
+    "flingPower": 30
+  },
+  "82": {
+    "name": {
+      "en": "Fire Stone",
+      "he": "Fire Stone"
+    },
+    "slug": "fire-stone",
+    "description": "Makes certain species of POKéMON evolve.",
+    "category": "evolution",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fire-stone.png",
+    "holdable": false,
+    "flingPower": 30
+  },
+  "83": {
+    "name": {
+      "en": "Thunder Stone",
+      "he": "Thunder Stone"
+    },
+    "slug": "thunder-stone",
+    "description": "Makes certain species of POKéMON evolve.",
+    "category": "evolution",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/thunder-stone.png",
+    "holdable": false,
+    "flingPower": 30
+  },
+  "84": {
+    "name": {
+      "en": "Water Stone",
+      "he": "Water Stone"
+    },
+    "slug": "water-stone",
+    "description": "Makes certain species of POKéMON evolve.",
+    "category": "evolution",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/water-stone.png",
+    "holdable": false,
+    "flingPower": 30
+  },
+  "85": {
+    "name": {
+      "en": "Leaf Stone",
+      "he": "Leaf Stone"
+    },
+    "slug": "leaf-stone",
+    "description": "Makes certain species of POKéMON evolve.",
+    "category": "evolution",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leaf-stone.png",
+    "holdable": false,
+    "flingPower": 30
   },
   "112": {
     "name": {
       "en": "Adamant Orb",
       "he": "Adamant Orb"
     },
+    "slug": "adamant-orb",
     "description": "A brightly gleaming orb to be held by DIALGA. It boosts the power of Dragon-​ and Steel-type moves.",
     "category": "species-specific",
-    "flingPower": 60,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/adamant-orb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/adamant-orb.png",
+    "holdable": true,
+    "flingPower": 60
   },
   "113": {
     "name": {
       "en": "Lustrous Orb",
       "he": "Lustrous Orb"
     },
+    "slug": "lustrous-orb",
     "description": "A beautifully glowing orb to be held by PALKIA. It boosts the power of Dragon-​ and Water-type moves.",
     "category": "species-specific",
-    "flingPower": 60,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lustrous-orb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lustrous-orb.png",
+    "holdable": true,
+    "flingPower": 60
   },
   "126": {
     "name": {
       "en": "Cheri Berry",
       "he": "Cheri Berry"
     },
+    "slug": "cheri-berry",
     "description": "A hold item that heals paralysis in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cheri-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cheri-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "127": {
     "name": {
       "en": "Chesto Berry",
       "he": "Chesto Berry"
     },
+    "slug": "chesto-berry",
     "description": "A hold item that awakens POKéMON in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/chesto-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/chesto-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "128": {
     "name": {
       "en": "Pecha Berry",
       "he": "Pecha Berry"
     },
+    "slug": "pecha-berry",
     "description": "A hold item that heals poisoning in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pecha-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pecha-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "129": {
     "name": {
       "en": "Rawst Berry",
       "he": "Rawst Berry"
     },
+    "slug": "rawst-berry",
     "description": "A hold item that heals a burn in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rawst-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rawst-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "130": {
     "name": {
       "en": "Aspear Berry",
       "he": "Aspear Berry"
     },
+    "slug": "aspear-berry",
     "description": "A hold item that defrosts POKéMON in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/aspear-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/aspear-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "131": {
     "name": {
       "en": "Leppa Berry",
       "he": "Leppa Berry"
     },
+    "slug": "leppa-berry",
     "description": "A hold item that restores 10 PP in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leppa-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leppa-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "132": {
     "name": {
       "en": "Oran Berry",
       "he": "Oran Berry"
     },
+    "slug": "oran-berry",
     "description": "A hold item that restores 10 HP in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oran-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oran-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "133": {
     "name": {
       "en": "Persim Berry",
       "he": "Persim Berry"
     },
+    "slug": "persim-berry",
     "description": "A hold item that heals confusion in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/persim-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/persim-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "134": {
     "name": {
       "en": "Lum Berry",
       "he": "Lum Berry"
     },
+    "slug": "lum-berry",
     "description": "A hold item that heals status in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lum-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lum-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "135": {
     "name": {
       "en": "Sitrus Berry",
       "he": "Sitrus Berry"
     },
+    "slug": "sitrus-berry",
     "description": "A hold item that restores 30 HP in battle.",
     "category": "medicine",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sitrus-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sitrus-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "136": {
     "name": {
       "en": "Figy Berry",
       "he": "Figy Berry"
     },
+    "slug": "figy-berry",
     "description": "A hold item that restores HP but may confuse.",
     "category": "picky-healing",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/figy-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/figy-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "137": {
     "name": {
       "en": "Wiki Berry",
       "he": "Wiki Berry"
     },
+    "slug": "wiki-berry",
     "description": "A hold item that restores HP but may confuse.",
     "category": "picky-healing",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wiki-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wiki-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "138": {
     "name": {
       "en": "Mago Berry",
       "he": "Mago Berry"
     },
+    "slug": "mago-berry",
     "description": "A hold item that restores HP but may confuse.",
     "category": "picky-healing",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mago-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mago-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "139": {
     "name": {
       "en": "Aguav Berry",
       "he": "Aguav Berry"
     },
+    "slug": "aguav-berry",
     "description": "A hold item that restores HP but may confuse.",
     "category": "picky-healing",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/aguav-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/aguav-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "140": {
     "name": {
       "en": "Iapapa Berry",
       "he": "Iapapa Berry"
     },
+    "slug": "iapapa-berry",
     "description": "A hold item that restores HP but may confuse.",
     "category": "picky-healing",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iapapa-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iapapa-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "161": {
     "name": {
       "en": "Occa Berry",
       "he": "Occa Berry"
     },
+    "slug": "occa-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Fire-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/occa-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/occa-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "162": {
     "name": {
       "en": "Passho Berry",
       "he": "Passho Berry"
     },
+    "slug": "passho-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Water-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/passho-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/passho-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "163": {
     "name": {
       "en": "Wacan Berry",
       "he": "Wacan Berry"
     },
+    "slug": "wacan-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Electric-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wacan-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wacan-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "164": {
     "name": {
       "en": "Rindo Berry",
       "he": "Rindo Berry"
     },
+    "slug": "rindo-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Grass-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rindo-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rindo-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "165": {
     "name": {
       "en": "Yache Berry",
       "he": "Yache Berry"
     },
+    "slug": "yache-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Ice-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yache-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yache-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "166": {
     "name": {
       "en": "Chople Berry",
       "he": "Chople Berry"
     },
+    "slug": "chople-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Fighting-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/chople-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/chople-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "167": {
     "name": {
       "en": "Kebia Berry",
       "he": "Kebia Berry"
     },
+    "slug": "kebia-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Poison-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kebia-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kebia-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "168": {
     "name": {
       "en": "Shuca Berry",
       "he": "Shuca Berry"
     },
+    "slug": "shuca-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Ground-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shuca-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shuca-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "169": {
     "name": {
       "en": "Coba Berry",
       "he": "Coba Berry"
     },
+    "slug": "coba-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Flying-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/coba-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/coba-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "170": {
     "name": {
       "en": "Payapa Berry",
       "he": "Payapa Berry"
     },
+    "slug": "payapa-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Psychic-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/payapa-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/payapa-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "171": {
     "name": {
       "en": "Tanga Berry",
       "he": "Tanga Berry"
     },
+    "slug": "tanga-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Bug-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tanga-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tanga-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "172": {
     "name": {
       "en": "Charti Berry",
       "he": "Charti Berry"
     },
+    "slug": "charti-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Rock-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/charti-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/charti-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "173": {
     "name": {
       "en": "Kasib Berry",
       "he": "Kasib Berry"
     },
+    "slug": "kasib-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Ghost-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kasib-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kasib-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "174": {
     "name": {
       "en": "Haban Berry",
       "he": "Haban Berry"
     },
+    "slug": "haban-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Dragon-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/haban-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/haban-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "175": {
     "name": {
       "en": "Colbur Berry",
       "he": "Colbur Berry"
     },
+    "slug": "colbur-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Dark-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/colbur-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/colbur-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "176": {
     "name": {
       "en": "Babiri Berry",
       "he": "Babiri Berry"
     },
+    "slug": "babiri-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Steel-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/babiri-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/babiri-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "177": {
     "name": {
       "en": "Chilan Berry",
       "he": "Chilan Berry"
     },
+    "slug": "chilan-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s Normal-type attack.",
     "category": "type-protection",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/chilan-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/chilan-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "178": {
     "name": {
       "en": "Liechi Berry",
       "he": "Liechi Berry"
     },
+    "slug": "liechi-berry",
     "description": "A hold item that raises ATTACK in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/liechi-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/liechi-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "179": {
     "name": {
       "en": "Ganlon Berry",
       "he": "Ganlon Berry"
     },
+    "slug": "ganlon-berry",
     "description": "A hold item that raises DEFENSE in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ganlon-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ganlon-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "180": {
     "name": {
       "en": "Salac Berry",
       "he": "Salac Berry"
     },
+    "slug": "salac-berry",
     "description": "A hold item that raises SPEED in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/salac-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/salac-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "181": {
     "name": {
       "en": "Petaya Berry",
       "he": "Petaya Berry"
     },
+    "slug": "petaya-berry",
     "description": "A hold item that raises SP. ATK in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/petaya-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/petaya-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "182": {
     "name": {
       "en": "Apicot Berry",
       "he": "Apicot Berry"
     },
+    "slug": "apicot-berry",
     "description": "A hold item that raises SP. DEF in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/apicot-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/apicot-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "183": {
     "name": {
       "en": "Lansat Berry",
       "he": "Lansat Berry"
     },
+    "slug": "lansat-berry",
     "description": "A hold item that ups the critical- hit rate in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lansat-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lansat-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "184": {
     "name": {
       "en": "Starf Berry",
       "he": "Starf Berry"
     },
+    "slug": "starf-berry",
     "description": "A hold item that sharply boosts a stat in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/starf-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/starf-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "185": {
     "name": {
       "en": "Enigma Berry",
       "he": "Enigma Berry"
     },
+    "slug": "enigma-berry",
     "description": "POKéBLOCK ingredient. Plant in loamy soil to grow a mystery.",
     "category": "other",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/enigma-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/enigma-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "186": {
     "name": {
       "en": "Micle Berry",
       "he": "Micle Berry"
     },
+    "slug": "micle-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it raises the accuracy of a move just once in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": "berry-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/micle-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/micle-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "187": {
     "name": {
       "en": "Custap Berry",
       "he": "Custap Berry"
     },
+    "slug": "custap-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, it gets to move first just once in a pinch.",
     "category": "in-a-pinch",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/custap-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/custap-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "188": {
     "name": {
       "en": "Jaboca Berry",
       "he": "Jaboca Berry"
     },
+    "slug": "jaboca-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, and if a foe’s physical attack lands, the foe also takes damage.",
     "category": "other",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/jaboca-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/jaboca-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "189": {
     "name": {
       "en": "Rowap Berry",
       "he": "Rowap Berry"
     },
+    "slug": "rowap-berry",
     "description": "A Poffin ingredient. If held by a Pokémon, and if a foe’s special attack lands, the foe also takes damage.",
     "category": "other",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rowap-berry.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rowap-berry.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "190": {
     "name": {
       "en": "Bright Powder",
       "he": "Bright Powder"
     },
+    "slug": "bright-powder",
     "description": "A hold item that casts a glare to reduce accuracy.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/bright-powder.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/bright-powder.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "191": {
     "name": {
       "en": "White Herb",
       "he": "White Herb"
     },
+    "slug": "white-herb",
     "description": "A hold item that restores any lowered stat.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": "herb-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/white-herb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/white-herb.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "192": {
     "name": {
       "en": "Macho Brace",
       "he": "Macho Brace"
     },
+    "slug": "macho-brace",
     "description": "A hold item that promotes growth, but reduces SPEED.",
     "category": "effort-training",
-    "flingPower": 60,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/macho-brace.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/macho-brace.png",
+    "holdable": true,
+    "flingPower": 60
   },
   "193": {
     "name": {
       "en": "Exp Share",
       "he": "Exp Share"
     },
+    "slug": "exp-share",
     "description": "A hold item that gets EXP. points from battles.",
     "category": "training",
-    "flingPower": null,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/exp-share.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/exp-share.png",
+    "holdable": true,
+    "flingPower": null
   },
   "194": {
     "name": {
       "en": "Quick Claw",
       "he": "Quick Claw"
     },
+    "slug": "quick-claw",
     "description": "A hold item that occasionally allows the first strike.",
     "category": "held-items",
-    "flingPower": 80,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-claw.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-claw.png",
+    "holdable": true,
+    "flingPower": 80
   },
   "195": {
     "name": {
       "en": "Soothe Bell",
       "he": "Soothe Bell"
     },
+    "slug": "soothe-bell",
     "description": "A hold item that calms spirits and fosters friendship.",
     "category": "training",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soothe-bell.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soothe-bell.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "196": {
     "name": {
       "en": "Mental Herb",
       "he": "Mental Herb"
     },
+    "slug": "mental-herb",
     "description": "A hold item that snaps POKéMON out of infatuation.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": "herb-effect",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mental-herb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mental-herb.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "197": {
     "name": {
       "en": "Choice Band",
       "he": "Choice Band"
     },
+    "slug": "choice-band",
     "description": "Raises a move’s power, but permits only that move.",
     "category": "choice",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/choice-band.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/choice-band.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "198": {
     "name": {
       "en": "Kings Rock",
       "he": "Kings Rock"
     },
+    "slug": "kings-rock",
     "description": "A hold item that may cause flinching when the foe is hit.",
     "category": "held-items",
-    "flingPower": 30,
-    "flingEffect": "flinch",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kings-rock.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kings-rock.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "199": {
     "name": {
       "en": "Silver Powder",
       "he": "Silver Powder"
     },
+    "slug": "silver-powder",
     "description": "A hold item that raises the power of BUG-type moves.",
     "category": "type-enhancement",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/silver-powder.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/silver-powder.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "200": {
     "name": {
       "en": "Amulet Coin",
       "he": "Amulet Coin"
     },
+    "slug": "amulet-coin",
     "description": "Doubles money in battle if the holder takes part.",
     "category": "training",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/amulet-coin.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/amulet-coin.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "201": {
     "name": {
       "en": "Cleanse Tag",
       "he": "Cleanse Tag"
     },
+    "slug": "cleanse-tag",
     "description": "A hold item that helps repel wild POKéMON.",
     "category": "training",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cleanse-tag.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cleanse-tag.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "202": {
     "name": {
       "en": "Soul Dew",
       "he": "Soul Dew"
     },
+    "slug": "soul-dew",
     "description": "Hold item: Raises SP. ATK & SP. DEF of LATIOS & LATIAS.",
     "category": "species-specific",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soul-dew.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soul-dew.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "203": {
     "name": {
       "en": "Deep Sea Tooth",
       "he": "Deep Sea Tooth"
     },
+    "slug": "deep-sea-tooth",
     "description": "A hold item that raises the SP. ATK of CLAMPERL.",
     "category": "species-specific",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/deep-sea-tooth.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/deep-sea-tooth.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "204": {
     "name": {
       "en": "Deep Sea Scale",
       "he": "Deep Sea Scale"
     },
+    "slug": "deep-sea-scale",
     "description": "A hold item that raises the SP. DEF of CLAMPERL.",
     "category": "species-specific",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/deep-sea-scale.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/deep-sea-scale.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "205": {
     "name": {
       "en": "Smoke Ball",
       "he": "Smoke Ball"
     },
+    "slug": "smoke-ball",
     "description": "A hold item that can be used to flee from a wild POKéMON.",
     "category": "held-items",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/smoke-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/smoke-ball.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "206": {
     "name": {
       "en": "Everstone",
       "he": "Everstone"
     },
+    "slug": "everstone",
     "description": "A wondrous stone & a hold item that prevents evolution.",
     "category": "training",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/everstone.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/everstone.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "207": {
     "name": {
       "en": "Focus Band",
       "he": "Focus Band"
     },
+    "slug": "focus-band",
     "description": "A hold item that occasionally prevents fainting.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/focus-band.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/focus-band.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "208": {
     "name": {
       "en": "Lucky Egg",
       "he": "Lucky Egg"
     },
+    "slug": "lucky-egg",
     "description": "A hold item that boosts EXP. points earned in battle.",
     "category": "training",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lucky-egg.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lucky-egg.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "209": {
     "name": {
       "en": "Scope Lens",
       "he": "Scope Lens"
     },
+    "slug": "scope-lens",
     "description": "A hold item that raises the critical- hit rate.",
     "category": "held-items",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/scope-lens.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/scope-lens.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "210": {
     "name": {
       "en": "Metal Coat",
       "he": "Metal Coat"
     },
+    "slug": "metal-coat",
     "description": "A hold item that raises the power of STEEL-type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metal-coat.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metal-coat.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "211": {
     "name": {
       "en": "Leftovers",
       "he": "Leftovers"
     },
+    "slug": "leftovers",
     "description": "A hold item that gradually restores HP in battle.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leftovers.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leftovers.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "213": {
     "name": {
       "en": "Light Ball",
       "he": "Light Ball"
     },
+    "slug": "light-ball",
     "description": "A hold item that raises the SP. ATK of PIKACHU.",
     "category": "species-specific",
-    "flingPower": 30,
-    "flingEffect": "paralyze",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/light-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/light-ball.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "214": {
     "name": {
       "en": "Soft Sand",
       "he": "Soft Sand"
     },
+    "slug": "soft-sand",
     "description": "A hold item that raises the power of GROUND-type moves.",
     "category": "type-enhancement",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soft-sand.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soft-sand.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "215": {
     "name": {
       "en": "Hard Stone",
       "he": "Hard Stone"
     },
+    "slug": "hard-stone",
     "description": "A hold item that raises the power of ROCK-type moves.",
     "category": "type-enhancement",
-    "flingPower": 100,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hard-stone.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hard-stone.png",
+    "holdable": true,
+    "flingPower": 100
   },
   "216": {
     "name": {
       "en": "Miracle Seed",
       "he": "Miracle Seed"
     },
+    "slug": "miracle-seed",
     "description": "A hold item that raises the power of GRASS-type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/miracle-seed.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/miracle-seed.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "217": {
     "name": {
       "en": "Black Glasses",
       "he": "Black Glasses"
     },
+    "slug": "black-glasses",
     "description": "A hold item that raises the power of DARK-type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-glasses.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-glasses.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "218": {
     "name": {
       "en": "Black Belt",
       "he": "Black Belt"
     },
+    "slug": "black-belt",
     "description": "A hold item that boosts FIGHTING- type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-belt.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-belt.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "219": {
     "name": {
       "en": "Magnet",
       "he": "Magnet"
     },
+    "slug": "magnet",
     "description": "A hold item that boosts ELECTRIC- type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/magnet.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/magnet.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "220": {
     "name": {
       "en": "Mystic Water",
       "he": "Mystic Water"
     },
+    "slug": "mystic-water",
     "description": "A hold item that raises the power of WATER-type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mystic-water.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mystic-water.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "221": {
     "name": {
       "en": "Sharp Beak",
       "he": "Sharp Beak"
     },
+    "slug": "sharp-beak",
     "description": "A hold item that raises the power of FLYING-type moves.",
     "category": "type-enhancement",
-    "flingPower": 50,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sharp-beak.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sharp-beak.png",
+    "holdable": true,
+    "flingPower": 50
   },
   "222": {
     "name": {
       "en": "Poison Barb",
       "he": "Poison Barb"
     },
+    "slug": "poison-barb",
     "description": "A hold item that raises the power of POISON-type moves.",
     "category": "type-enhancement",
-    "flingPower": 70,
-    "flingEffect": "poison",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poison-barb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poison-barb.png",
+    "holdable": true,
+    "flingPower": 70
   },
   "223": {
     "name": {
       "en": "Never Melt Ice",
       "he": "Never Melt Ice"
     },
+    "slug": "never-melt-ice",
     "description": "A hold item that raises the power of ICE-type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/never-melt-ice.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/never-melt-ice.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "224": {
     "name": {
       "en": "Spell Tag",
       "he": "Spell Tag"
     },
+    "slug": "spell-tag",
     "description": "A hold item that raises the power of GHOST-type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/spell-tag.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/spell-tag.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "225": {
     "name": {
       "en": "Twisted Spoon",
       "he": "Twisted Spoon"
     },
+    "slug": "twisted-spoon",
     "description": "A hold item that boosts PSYCHIC- type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/twisted-spoon.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/twisted-spoon.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "226": {
     "name": {
       "en": "Charcoal",
       "he": "Charcoal"
     },
+    "slug": "charcoal",
     "description": "A hold item that raises the power of FIRE-type moves.",
     "category": "type-enhancement",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/charcoal.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/charcoal.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "227": {
     "name": {
       "en": "Dragon Fang",
       "he": "Dragon Fang"
     },
+    "slug": "dragon-fang",
     "description": "A hold item that raises the power of DRAGON-type moves.",
     "category": "type-enhancement",
-    "flingPower": 70,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dragon-fang.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dragon-fang.png",
+    "holdable": true,
+    "flingPower": 70
   },
   "228": {
     "name": {
       "en": "Silk Scarf",
       "he": "Silk Scarf"
     },
+    "slug": "silk-scarf",
     "description": "A hold item that raises the power of NORMAL-type moves.",
     "category": "type-enhancement",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/silk-scarf.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/silk-scarf.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "230": {
     "name": {
       "en": "Shell Bell",
       "he": "Shell Bell"
     },
+    "slug": "shell-bell",
     "description": "A hold item that restores HP upon striking the foe.",
     "category": "held-items",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shell-bell.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shell-bell.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "231": {
     "name": {
       "en": "Sea Incense",
       "he": "Sea Incense"
     },
+    "slug": "sea-incense",
     "description": "A hold item that slightly boosts WATER-type moves.",
     "category": "type-enhancement",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sea-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sea-incense.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "232": {
     "name": {
       "en": "Lax Incense",
       "he": "Lax Incense"
     },
+    "slug": "lax-incense",
     "description": "A hold item that slightly lowers the foe’s accuracy.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lax-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lax-incense.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "233": {
     "name": {
       "en": "Lucky Punch",
       "he": "Lucky Punch"
     },
+    "slug": "lucky-punch",
     "description": "A hold item that raises CHANSEY’s critical-hit rate.",
     "category": "species-specific",
-    "flingPower": 40,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lucky-punch.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lucky-punch.png",
+    "holdable": true,
+    "flingPower": 40
   },
   "234": {
     "name": {
       "en": "Metal Powder",
       "he": "Metal Powder"
     },
+    "slug": "metal-powder",
     "description": "A hold item that raises DEFENSE.",
     "category": "species-specific",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metal-powder.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metal-powder.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "235": {
     "name": {
       "en": "Thick Club",
       "he": "Thick Club"
     },
+    "slug": "thick-club",
     "description": "A bone of some sort. It can be sold cheaply.",
     "category": "species-specific",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/thick-club.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/thick-club.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "236": {
     "name": {
       "en": "Stick",
       "he": "Stick"
     },
+    "slug": "stick",
     "description": "A stick of leek. It can be sold cheaply.",
     "category": "species-specific",
-    "flingPower": 60,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/stick.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/stick.png",
+    "holdable": true,
+    "flingPower": 60
   },
   "237": {
     "name": {
       "en": "Red Scarf",
       "he": "Red Scarf"
     },
+    "slug": "red-scarf",
     "description": "A hold item that raises COOL in CONTESTS.",
     "category": "scarves",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/red-scarf.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/red-scarf.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "238": {
     "name": {
       "en": "Blue Scarf",
       "he": "Blue Scarf"
     },
+    "slug": "blue-scarf",
     "description": "A hold item that raises BEAUTY in CONTESTS.",
     "category": "scarves",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/blue-scarf.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/blue-scarf.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "239": {
     "name": {
       "en": "Pink Scarf",
       "he": "Pink Scarf"
     },
+    "slug": "pink-scarf",
     "description": "A hold item that raises CUTE in CONTESTS.",
     "category": "scarves",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pink-scarf.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pink-scarf.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "240": {
     "name": {
       "en": "Green Scarf",
       "he": "Green Scarf"
     },
+    "slug": "green-scarf",
     "description": "A hold item that raises SMART in CONTESTS.",
     "category": "scarves",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/green-scarf.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/green-scarf.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "241": {
     "name": {
       "en": "Yellow Scarf",
       "he": "Yellow Scarf"
     },
+    "slug": "yellow-scarf",
     "description": "A hold item that raises TOUGH in CONTESTS.",
     "category": "scarves",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yellow-scarf.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yellow-scarf.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "242": {
     "name": {
       "en": "Wide Lens",
       "he": "Wide Lens"
     },
+    "slug": "wide-lens",
     "description": "An item to be held by a Pokémon. It is a magnifying lens that slightly boosts the accuracy of moves.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wide-lens.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wide-lens.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "243": {
     "name": {
       "en": "Muscle Band",
       "he": "Muscle Band"
     },
+    "slug": "muscle-band",
     "description": "An item to be held by a Pokémon. It is a headband that slightly boosts the power of physical moves.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/muscle-band.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/muscle-band.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "244": {
     "name": {
       "en": "Wise Glasses",
       "he": "Wise Glasses"
     },
+    "slug": "wise-glasses",
     "description": "An item to be held by a Pokémon. It is a thick pair of glasses that slightly boosts the power of special moves.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wise-glasses.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wise-glasses.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "245": {
     "name": {
       "en": "Expert Belt",
       "he": "Expert Belt"
     },
+    "slug": "expert-belt",
     "description": "An item to be held by a Pokémon. It is a well-worn belt that slightly boosts the power of supereffective moves.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/expert-belt.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/expert-belt.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "246": {
     "name": {
       "en": "Light Clay",
       "he": "Light Clay"
     },
+    "slug": "light-clay",
     "description": "A Pokémon hold item that extends the duration of barrier moves like Light Screen and Reflect used by the holder.",
     "category": "held-items",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/light-clay.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/light-clay.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "247": {
     "name": {
       "en": "Life Orb",
       "he": "Life Orb"
     },
+    "slug": "life-orb",
     "description": "An item to be held by a Pokémon. It boosts the power of moves, but at the cost of some HP on each hit.",
     "category": "held-items",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/life-orb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/life-orb.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "248": {
     "name": {
       "en": "Power Herb",
       "he": "Power Herb"
     },
+    "slug": "power-herb",
     "description": "A single-use item to be held by a Pokémon. It allows the immediate use of a move that charges on the first turn.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-herb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-herb.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "249": {
     "name": {
       "en": "Toxic Orb",
       "he": "Toxic Orb"
     },
+    "slug": "toxic-orb",
     "description": "An item to be held by a Pokémon. It is a bizarre orb that badly poisons the holder in battle.",
     "category": "bad-held-items",
-    "flingPower": 30,
-    "flingEffect": "badly-poison",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/toxic-orb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/toxic-orb.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "250": {
     "name": {
       "en": "Flame Orb",
       "he": "Flame Orb"
     },
+    "slug": "flame-orb",
     "description": "An item to be held by a Pokémon. It is a bizarre orb that inflicts a burn on the holder in battle.",
     "category": "bad-held-items",
-    "flingPower": 30,
-    "flingEffect": "burn",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/flame-orb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/flame-orb.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "251": {
     "name": {
       "en": "Quick Powder",
       "he": "Quick Powder"
     },
+    "slug": "quick-powder",
     "description": "An item to be held by DITTO. Extremely fine yet hard, this odd powder boosts the Speed stat.",
     "category": "species-specific",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-powder.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-powder.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "252": {
     "name": {
       "en": "Focus Sash",
       "he": "Focus Sash"
     },
+    "slug": "focus-sash",
     "description": "An item to be held by a Pokémon. If it has full HP, the holder will endure one potential KO attack, leaving 1 HP.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/focus-sash.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/focus-sash.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "253": {
     "name": {
       "en": "Zoom Lens",
       "he": "Zoom Lens"
     },
+    "slug": "zoom-lens",
     "description": "An item to be held by a Pokémon. If the holder moves after the foe, its critical-hit ratio will be boosted.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/zoom-lens.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/zoom-lens.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "254": {
     "name": {
       "en": "Metronome",
       "he": "Metronome"
     },
+    "slug": "metronome",
     "description": "A Pokémon hold item that boosts a move used consecutively. Its effect is reset if another move is used.",
     "category": "held-items",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metronome.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metronome.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "255": {
     "name": {
       "en": "Iron Ball",
       "he": "Iron Ball"
     },
+    "slug": "iron-ball",
     "description": "A Pokémon hold item that cuts Speed. It makes Flying-type and levitating holders susceptible to Ground moves.",
     "category": "bad-held-items",
-    "flingPower": 130,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iron-ball.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iron-ball.png",
+    "holdable": true,
+    "flingPower": 130
   },
   "256": {
     "name": {
       "en": "Lagging Tail",
       "he": "Lagging Tail"
     },
+    "slug": "lagging-tail",
     "description": "An item to be held by a Pokémon. It is tremendously heavy and makes the holder move slower than usual.",
     "category": "bad-held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lagging-tail.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lagging-tail.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "257": {
     "name": {
       "en": "Destiny Knot",
       "he": "Destiny Knot"
     },
+    "slug": "destiny-knot",
     "description": "A long, thin, bright red string to be held by a Pokémon. If the holder becomes infatuated, the foe does too.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/destiny-knot.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/destiny-knot.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "258": {
     "name": {
       "en": "Black Sludge",
       "he": "Black Sludge"
     },
+    "slug": "black-sludge",
     "description": "A hold item that gradually restores the HP of Poison-type Pokémon. It inflicts damage on all other types.",
     "category": "held-items",
-    "flingPower": 30,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-sludge.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-sludge.png",
+    "holdable": true,
+    "flingPower": 30
   },
   "259": {
     "name": {
       "en": "Icy Rock",
       "he": "Icy Rock"
     },
+    "slug": "icy-rock",
     "description": "A Pokémon hold item that extends the duration of the move Hail used by the holder.",
     "category": "held-items",
-    "flingPower": 40,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/icy-rock.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/icy-rock.png",
+    "holdable": true,
+    "flingPower": 40
   },
   "260": {
     "name": {
       "en": "Smooth Rock",
       "he": "Smooth Rock"
     },
+    "slug": "smooth-rock",
     "description": "A Pokémon hold item that extends the duration of the move Sandstorm used by the holder.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/smooth-rock.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/smooth-rock.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "261": {
     "name": {
       "en": "Heat Rock",
       "he": "Heat Rock"
     },
+    "slug": "heat-rock",
     "description": "A Pokémon hold item that extends the duration of the move Sunny Day used by the holder.",
     "category": "held-items",
-    "flingPower": 60,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heat-rock.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heat-rock.png",
+    "holdable": true,
+    "flingPower": 60
   },
   "262": {
     "name": {
       "en": "Damp Rock",
       "he": "Damp Rock"
     },
+    "slug": "damp-rock",
     "description": "A Pokémon hold item that extends the duration of the move Rain Dance used by the holder.",
     "category": "held-items",
-    "flingPower": 60,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/damp-rock.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/damp-rock.png",
+    "holdable": true,
+    "flingPower": 60
   },
   "263": {
     "name": {
       "en": "Grip Claw",
       "he": "Grip Claw"
     },
+    "slug": "grip-claw",
     "description": "A Pokémon hold item that extends the duration of multiturn attacks like Bind and Wrap.",
     "category": "held-items",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/grip-claw.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/grip-claw.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "264": {
     "name": {
       "en": "Choice Scarf",
       "he": "Choice Scarf"
     },
+    "slug": "choice-scarf",
     "description": "An item to be held by a Pokémon. This scarf boosts Speed, but allows the use of only one kind of move.",
     "category": "choice",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/choice-scarf.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/choice-scarf.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "265": {
     "name": {
       "en": "Sticky Barb",
       "he": "Sticky Barb"
     },
+    "slug": "sticky-barb",
     "description": "A hold item that damages the holder on every turn. It may latch on to foes that touch the holder.",
     "category": "bad-held-items",
-    "flingPower": 80,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sticky-barb.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sticky-barb.png",
+    "holdable": true,
+    "flingPower": 80
   },
   "266": {
     "name": {
       "en": "Power Bracer",
       "he": "Power Bracer"
     },
+    "slug": "power-bracer",
     "description": "A Pokémon hold item that promotes Attack gain on leveling, but reduces the Speed stat.",
     "category": "effort-training",
-    "flingPower": 70,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-bracer.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-bracer.png",
+    "holdable": true,
+    "flingPower": 70
   },
   "267": {
     "name": {
       "en": "Power Belt",
       "he": "Power Belt"
     },
+    "slug": "power-belt",
     "description": "A Pokémon hold item that promotes Defense gain on leveling, but reduces the Speed stat.",
     "category": "effort-training",
-    "flingPower": 70,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-belt.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-belt.png",
+    "holdable": true,
+    "flingPower": 70
   },
   "268": {
     "name": {
       "en": "Power Lens",
       "he": "Power Lens"
     },
+    "slug": "power-lens",
     "description": "A Pokémon hold item that promotes Sp. Atk gain on leveling, but reduces the Speed stat.",
     "category": "effort-training",
-    "flingPower": 70,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-lens.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-lens.png",
+    "holdable": true,
+    "flingPower": 70
   },
   "269": {
     "name": {
       "en": "Power Band",
       "he": "Power Band"
     },
+    "slug": "power-band",
     "description": "A Pokémon hold item that promotes Sp. Def gain on leveling, but reduces the Speed stat.",
     "category": "effort-training",
-    "flingPower": 70,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-band.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-band.png",
+    "holdable": true,
+    "flingPower": 70
   },
   "270": {
     "name": {
       "en": "Power Anklet",
       "he": "Power Anklet"
     },
+    "slug": "power-anklet",
     "description": "A Pokémon hold item that promotes Speed gain on leveling, but reduces the Speed stat.",
     "category": "effort-training",
-    "flingPower": 70,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-anklet.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-anklet.png",
+    "holdable": true,
+    "flingPower": 70
   },
   "271": {
     "name": {
       "en": "Power Weight",
       "he": "Power Weight"
     },
+    "slug": "power-weight",
     "description": "A Pokémon hold item that promotes HP gain on leveling, but reduces the Speed stat.",
     "category": "effort-training",
-    "flingPower": 70,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-weight.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-weight.png",
+    "holdable": true,
+    "flingPower": 70
   },
   "272": {
     "name": {
       "en": "Shed Shell",
       "he": "Shed Shell"
     },
+    "slug": "shed-shell",
     "description": "A tough, discarded carapace to be held by a Pokémon. It enables the holder to switch with a waiting Pokémon in battle.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shed-shell.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shed-shell.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "273": {
     "name": {
       "en": "Big Root",
       "he": "Big Root"
     },
+    "slug": "big-root",
     "description": "A Pokémon hold item that boosts the power of HP-stealing moves to let the holder recover more HP.",
     "category": "held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/big-root.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/big-root.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "274": {
     "name": {
       "en": "Choice Specs",
       "he": "Choice Specs"
     },
+    "slug": "choice-specs",
     "description": "An item to be held by a Pokémon. These distinctive glasses boost Sp. Atk, but allow only one kind of move to be used.",
     "category": "choice",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/choice-specs.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/choice-specs.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "275": {
     "name": {
       "en": "Flame Plate",
       "he": "Flame Plate"
     },
+    "slug": "flame-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Fire-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/flame-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/flame-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "276": {
     "name": {
       "en": "Splash Plate",
       "he": "Splash Plate"
     },
+    "slug": "splash-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Water-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/splash-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/splash-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "277": {
     "name": {
       "en": "Zap Plate",
       "he": "Zap Plate"
     },
+    "slug": "zap-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Electric-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/zap-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/zap-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "278": {
     "name": {
       "en": "Meadow Plate",
       "he": "Meadow Plate"
     },
+    "slug": "meadow-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Grass-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/meadow-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/meadow-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "279": {
     "name": {
       "en": "Icicle Plate",
       "he": "Icicle Plate"
     },
+    "slug": "icicle-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Ice-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/icicle-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/icicle-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "280": {
     "name": {
       "en": "Fist Plate",
       "he": "Fist Plate"
     },
+    "slug": "fist-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Fighting-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fist-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fist-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "281": {
     "name": {
       "en": "Toxic Plate",
       "he": "Toxic Plate"
     },
+    "slug": "toxic-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Poison-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/toxic-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/toxic-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "282": {
     "name": {
       "en": "Earth Plate",
       "he": "Earth Plate"
     },
+    "slug": "earth-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Ground-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/earth-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/earth-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "283": {
     "name": {
       "en": "Sky Plate",
       "he": "Sky Plate"
     },
+    "slug": "sky-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Flying-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sky-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sky-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "284": {
     "name": {
       "en": "Mind Plate",
       "he": "Mind Plate"
     },
+    "slug": "mind-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Psychic-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mind-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mind-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "285": {
     "name": {
       "en": "Insect Plate",
       "he": "Insect Plate"
     },
+    "slug": "insect-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Bug-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/insect-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/insect-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "286": {
     "name": {
       "en": "Stone Plate",
       "he": "Stone Plate"
     },
+    "slug": "stone-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Rock-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/stone-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/stone-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "287": {
     "name": {
       "en": "Spooky Plate",
       "he": "Spooky Plate"
     },
+    "slug": "spooky-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Ghost-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/spooky-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/spooky-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "288": {
     "name": {
       "en": "Draco Plate",
       "he": "Draco Plate"
     },
+    "slug": "draco-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Dragon-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/draco-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/draco-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "289": {
     "name": {
       "en": "Dread Plate",
       "he": "Dread Plate"
     },
+    "slug": "dread-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Dark-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dread-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dread-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "290": {
     "name": {
       "en": "Iron Plate",
       "he": "Iron Plate"
     },
+    "slug": "iron-plate",
     "description": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Steel-type moves.",
     "category": "plates",
-    "flingPower": 90,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iron-plate.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iron-plate.png",
+    "holdable": true,
+    "flingPower": 90
   },
   "291": {
     "name": {
       "en": "Odd Incense",
       "he": "Odd Incense"
     },
+    "slug": "odd-incense",
     "description": "An item to be held by a Pokémon. It is an exotic-smelling incense that boosts the power of Psychic-type moves.",
     "category": "type-enhancement",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/odd-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/odd-incense.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "292": {
     "name": {
       "en": "Rock Incense",
       "he": "Rock Incense"
     },
+    "slug": "rock-incense",
     "description": "An item to be held by a Pokémon. It is an exotic-smelling incense that boosts the power of Rock-type moves.",
     "category": "type-enhancement",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rock-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rock-incense.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "293": {
     "name": {
       "en": "Full Incense",
       "he": "Full Incense"
     },
+    "slug": "full-incense",
     "description": "An item to be held by a Pokémon. It is an exotic-smelling incense that makes the holder bloated and slow moving.",
     "category": "bad-held-items",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/full-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/full-incense.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "294": {
     "name": {
       "en": "Wave Incense",
       "he": "Wave Incense"
     },
+    "slug": "wave-incense",
     "description": "An item to be held by a Pokémon. It is an exotic-smelling incense that boosts the power of Water-type moves.",
     "category": "type-enhancement",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wave-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wave-incense.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "295": {
     "name": {
       "en": "Rose Incense",
       "he": "Rose Incense"
     },
+    "slug": "rose-incense",
     "description": "An item to be held by a Pokémon. It is an exotic-smelling incense that boosts the power of Grass-type moves.",
     "category": "type-enhancement",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rose-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rose-incense.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "296": {
     "name": {
       "en": "Luck Incense",
       "he": "Luck Incense"
     },
+    "slug": "luck-incense",
     "description": "An item to be held by a Pokémon. It doubles a battle’s prize money if the holding Pokémon joins in.",
     "category": "training",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luck-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luck-incense.png",
+    "holdable": true,
+    "flingPower": 10
   },
   "297": {
     "name": {
       "en": "Pure Incense",
       "he": "Pure Incense"
     },
+    "slug": "pure-incense",
     "description": "An item to be held by a Pokémon. It helps keep wild Pokémon away if the holder is the first one in the party.",
     "category": "training",
-    "flingPower": 10,
-    "flingEffect": null,
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pure-incense.png"
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pure-incense.png",
+    "holdable": true,
+    "flingPower": 10
+  },
+  "303": {
+    "name": {
+      "en": "Razor Claw",
+      "he": "Razor Claw"
+    },
+    "slug": "razor-claw",
+    "description": "An item to be held by a Pokémon. It is a sharply hooked claw that ups the holder’s critical-hit ratio.",
+    "category": "held-items",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/razor-claw.png",
+    "holdable": true,
+    "flingPower": 80
+  },
+  "304": {
+    "name": {
+      "en": "Razor Fang",
+      "he": "Razor Fang"
+    },
+    "slug": "razor-fang",
+    "description": "An item to be held by a Pokémon. It may cause the foe to flinch when the holder inflicts damage.",
+    "category": "held-items",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/razor-fang.png",
+    "holdable": true,
+    "flingPower": 30
   }
 }

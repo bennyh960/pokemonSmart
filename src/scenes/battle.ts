@@ -15,7 +15,7 @@ import {
   createFade, updateFade, renderFade, spawnDamageNumber, updatePopups, renderPopups, clearAllPopups,
   createLevelUpEffect, updateLevelUpEffect, renderLevelUpEffect,
 } from '../ui/battle-animations.js';
-import { getCombinedTypeEffectiveness, getPokemonDisplayName, getMoveDisplayName, getPokemon } from '../services/pokemon-data.js';
+import { getCombinedTypeEffectiveness, getPokemonDisplayName, getMoveDisplayName, getPokemon, getLocalizedName } from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
@@ -128,7 +128,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       playerStatStages[stat] = Math.min(6, current + def.effect.stages);
       consumeItem(pd.items, itemId);
       audio.playSFX('heal');
-      textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: getPokemonDisplayName(player.id) })], isRTL());
+      textBox = createTextBox([t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) })], isRTL());
       phase = 'USE_ITEM'; phaseTimer = 0;
       return;
     }
@@ -165,7 +165,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       setHP(playerHpBar, player.hp);
       audio.playSFX('heal');
     }
-    textBox = createTextBox([t('battle.usedItem', { item: t(def.nameKey), name: getPokemonDisplayName(player.id) })], isRTL());
+    textBox = createTextBox([t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) })], isRTL());
     phase = 'USE_ITEM'; phaseTimer = 0;
   }
 
@@ -208,7 +208,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (td.reward.items) {
       for (const ri of td.reward.items) {
         const itemDef = getItem(ri.itemId);
-        const itemName = itemDef ? t(itemDef.nameKey) : ri.itemId;
+        const itemName = itemDef ? getLocalizedName(itemDef.name) : ri.itemId;
         lines.push(t('battle.trainerRewardItem', { item: itemName, qty: ri.quantity }));
       }
     }

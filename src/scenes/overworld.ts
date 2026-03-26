@@ -17,7 +17,7 @@ import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCen
 import { setPartyMode } from '../scenes/party.js';
 import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
-import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
+import { getPokemon, getPokemonDisplayName, getLocalizedName } from '../services/pokemon-data.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadCharacterSprites, getCharacterFrame, hasCharacter } from '../engine/character-sprites.js';
@@ -299,7 +299,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       for (const ri of reward.items) {
         pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
         const itemDef = getItem(ri.itemId);
-        const displayName = itemDef ? t(itemDef.nameKey) : ri.itemId;
+        const displayName = itemDef ? getLocalizedName(itemDef.name) : ri.itemId;
         lines.push(t('npc.reward.item', { item: displayName, qty: ri.quantity }));
       }
     }
@@ -840,7 +840,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                           if (idx >= 0) currentMapData.objects.splice(idx, 1);
                         }
                         const itemDef = getItem(itemId);
-                        const displayName = itemDef ? t(itemDef.nameKey) : itemId;
+                        const displayName = itemDef ? getLocalizedName(itemDef.name) : itemId;
                         activeTextBox = createTextBox([t('npc.reward.item', { item: displayName, qty })], isRTL());
                         autoSave();
                       }
