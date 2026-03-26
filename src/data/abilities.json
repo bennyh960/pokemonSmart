@@ -1,0 +1,1058 @@
+{
+  "1": {
+    "name": {
+      "en": "Stench",
+      "he": "Stench"
+    },
+    "description": "Helps repel wild POKéMON.",
+    "generationIntroduced": "generation-iii"
+  },
+  "2": {
+    "name": {
+      "en": "Drizzle",
+      "he": "Drizzle"
+    },
+    "description": "Summons rain in battle.",
+    "generationIntroduced": "generation-iii"
+  },
+  "3": {
+    "name": {
+      "en": "Speed Boost",
+      "he": "Speed Boost"
+    },
+    "description": "Gradually boosts SPEED.",
+    "generationIntroduced": "generation-iii"
+  },
+  "4": {
+    "name": {
+      "en": "Battle Armor",
+      "he": "Battle Armor"
+    },
+    "description": "Blocks critical hits.",
+    "generationIntroduced": "generation-iii"
+  },
+  "5": {
+    "name": {
+      "en": "Sturdy",
+      "he": "Sturdy"
+    },
+    "description": "Negates 1-hit KO attacks.",
+    "generationIntroduced": "generation-iii"
+  },
+  "6": {
+    "name": {
+      "en": "Damp",
+      "he": "Damp"
+    },
+    "description": "Prevents self-destruction.",
+    "generationIntroduced": "generation-iii"
+  },
+  "7": {
+    "name": {
+      "en": "Limber",
+      "he": "Limber"
+    },
+    "description": "Prevents paralysis.",
+    "generationIntroduced": "generation-iii"
+  },
+  "8": {
+    "name": {
+      "en": "Sand Veil",
+      "he": "Sand Veil"
+    },
+    "description": "Ups evasion in a sandstorm.",
+    "generationIntroduced": "generation-iii"
+  },
+  "9": {
+    "name": {
+      "en": "Static",
+      "he": "Static"
+    },
+    "description": "Paralyzes on contact.",
+    "generationIntroduced": "generation-iii"
+  },
+  "10": {
+    "name": {
+      "en": "Volt Absorb",
+      "he": "Volt Absorb"
+    },
+    "description": "Turns electricity into HP.",
+    "generationIntroduced": "generation-iii"
+  },
+  "11": {
+    "name": {
+      "en": "Water Absorb",
+      "he": "Water Absorb"
+    },
+    "description": "Changes water into HP.",
+    "generationIntroduced": "generation-iii"
+  },
+  "12": {
+    "name": {
+      "en": "Oblivious",
+      "he": "Oblivious"
+    },
+    "description": "Prevents attraction.",
+    "generationIntroduced": "generation-iii"
+  },
+  "13": {
+    "name": {
+      "en": "Cloud Nine",
+      "he": "Cloud Nine"
+    },
+    "description": "Negates weather effects.",
+    "generationIntroduced": "generation-iii"
+  },
+  "14": {
+    "name": {
+      "en": "Compound Eyes",
+      "he": "Compound Eyes"
+    },
+    "description": "Raises accuracy.",
+    "generationIntroduced": "generation-iii"
+  },
+  "15": {
+    "name": {
+      "en": "Insomnia",
+      "he": "Insomnia"
+    },
+    "description": "Prevents sleep.",
+    "generationIntroduced": "generation-iii"
+  },
+  "17": {
+    "name": {
+      "en": "Immunity",
+      "he": "Immunity"
+    },
+    "description": "Prevents poisoning.",
+    "generationIntroduced": "generation-iii"
+  },
+  "18": {
+    "name": {
+      "en": "Flash Fire",
+      "he": "Flash Fire"
+    },
+    "description": "Powers up if hit by fire.",
+    "generationIntroduced": "generation-iii"
+  },
+  "19": {
+    "name": {
+      "en": "Shield Dust",
+      "he": "Shield Dust"
+    },
+    "description": "Prevents added effects.",
+    "generationIntroduced": "generation-iii"
+  },
+  "20": {
+    "name": {
+      "en": "Own Tempo",
+      "he": "Own Tempo"
+    },
+    "description": "Prevents confusion.",
+    "generationIntroduced": "generation-iii"
+  },
+  "21": {
+    "name": {
+      "en": "Suction Cups",
+      "he": "Suction Cups"
+    },
+    "description": "Firmly anchors the body.",
+    "generationIntroduced": "generation-iii"
+  },
+  "22": {
+    "name": {
+      "en": "Intimidate",
+      "he": "Intimidate"
+    },
+    "description": "Lowers the foe’s ATTACK.",
+    "generationIntroduced": "generation-iii"
+  },
+  "23": {
+    "name": {
+      "en": "Shadow Tag",
+      "he": "Shadow Tag"
+    },
+    "description": "Prevents the foe’s escape.",
+    "generationIntroduced": "generation-iii"
+  },
+  "26": {
+    "name": {
+      "en": "Levitate",
+      "he": "Levitate"
+    },
+    "description": "Not hit by GROUND attacks.",
+    "generationIntroduced": "generation-iii"
+  },
+  "27": {
+    "name": {
+      "en": "Effect Spore",
+      "he": "Effect Spore"
+    },
+    "description": "Leaves spores on contact.",
+    "generationIntroduced": "generation-iii"
+  },
+  "28": {
+    "name": {
+      "en": "Synchronize",
+      "he": "Synchronize"
+    },
+    "description": "Passes on status problems.",
+    "generationIntroduced": "generation-iii"
+  },
+  "29": {
+    "name": {
+      "en": "Clear Body",
+      "he": "Clear Body"
+    },
+    "description": "Prevents ability reduction.",
+    "generationIntroduced": "generation-iii"
+  },
+  "30": {
+    "name": {
+      "en": "Natural Cure",
+      "he": "Natural Cure"
+    },
+    "description": "Heals upon switching out.",
+    "generationIntroduced": "generation-iii"
+  },
+  "31": {
+    "name": {
+      "en": "Lightning Rod",
+      "he": "Lightning Rod"
+    },
+    "description": "Draws electrical moves.",
+    "generationIntroduced": "generation-iii"
+  },
+  "32": {
+    "name": {
+      "en": "Serene Grace",
+      "he": "Serene Grace"
+    },
+    "description": "Promotes added effects.",
+    "generationIntroduced": "generation-iii"
+  },
+  "33": {
+    "name": {
+      "en": "Swift Swim",
+      "he": "Swift Swim"
+    },
+    "description": "Raises SPEED in rain.",
+    "generationIntroduced": "generation-iii"
+  },
+  "34": {
+    "name": {
+      "en": "Chlorophyll",
+      "he": "Chlorophyll"
+    },
+    "description": "Raises SPEED in sunshine.",
+    "generationIntroduced": "generation-iii"
+  },
+  "35": {
+    "name": {
+      "en": "Illuminate",
+      "he": "Illuminate"
+    },
+    "description": "Encounter rate increases.",
+    "generationIntroduced": "generation-iii"
+  },
+  "36": {
+    "name": {
+      "en": "Trace",
+      "he": "Trace"
+    },
+    "description": "Copies special ability.",
+    "generationIntroduced": "generation-iii"
+  },
+  "37": {
+    "name": {
+      "en": "Huge Power",
+      "he": "Huge Power"
+    },
+    "description": "Raises ATTACK.",
+    "generationIntroduced": "generation-iii"
+  },
+  "38": {
+    "name": {
+      "en": "Poison Point",
+      "he": "Poison Point"
+    },
+    "description": "Poisons foe on contact.",
+    "generationIntroduced": "generation-iii"
+  },
+  "39": {
+    "name": {
+      "en": "Inner Focus",
+      "he": "Inner Focus"
+    },
+    "description": "Prevents flinching.",
+    "generationIntroduced": "generation-iii"
+  },
+  "40": {
+    "name": {
+      "en": "Magma Armor",
+      "he": "Magma Armor"
+    },
+    "description": "Prevents freezing.",
+    "generationIntroduced": "generation-iii"
+  },
+  "41": {
+    "name": {
+      "en": "Water Veil",
+      "he": "Water Veil"
+    },
+    "description": "Prevents burns.",
+    "generationIntroduced": "generation-iii"
+  },
+  "42": {
+    "name": {
+      "en": "Magnet Pull",
+      "he": "Magnet Pull"
+    },
+    "description": "Traps STEEL-type POKéMON.",
+    "generationIntroduced": "generation-iii"
+  },
+  "43": {
+    "name": {
+      "en": "Soundproof",
+      "he": "Soundproof"
+    },
+    "description": "Avoids sound-based moves.",
+    "generationIntroduced": "generation-iii"
+  },
+  "44": {
+    "name": {
+      "en": "Rain Dish",
+      "he": "Rain Dish"
+    },
+    "description": "Slight HP recovery in rain.",
+    "generationIntroduced": "generation-iii"
+  },
+  "45": {
+    "name": {
+      "en": "Sand Stream",
+      "he": "Sand Stream"
+    },
+    "description": "Summons a sandstorm.",
+    "generationIntroduced": "generation-iii"
+  },
+  "46": {
+    "name": {
+      "en": "Pressure",
+      "he": "Pressure"
+    },
+    "description": "Raises foe’s PP usage.",
+    "generationIntroduced": "generation-iii"
+  },
+  "47": {
+    "name": {
+      "en": "Thick Fat",
+      "he": "Thick Fat"
+    },
+    "description": "Heat-and-cold protection.",
+    "generationIntroduced": "generation-iii"
+  },
+  "48": {
+    "name": {
+      "en": "Early Bird",
+      "he": "Early Bird"
+    },
+    "description": "Awakens quickly from sleep.",
+    "generationIntroduced": "generation-iii"
+  },
+  "49": {
+    "name": {
+      "en": "Flame Body",
+      "he": "Flame Body"
+    },
+    "description": "Burns the foe on contact.",
+    "generationIntroduced": "generation-iii"
+  },
+  "50": {
+    "name": {
+      "en": "Run Away",
+      "he": "Run Away"
+    },
+    "description": "Makes escaping easier.",
+    "generationIntroduced": "generation-iii"
+  },
+  "51": {
+    "name": {
+      "en": "Keen Eye",
+      "he": "Keen Eye"
+    },
+    "description": "Prevents loss of accuracy.",
+    "generationIntroduced": "generation-iii"
+  },
+  "52": {
+    "name": {
+      "en": "Hyper Cutter",
+      "he": "Hyper Cutter"
+    },
+    "description": "Prevents ATTACK reduction.",
+    "generationIntroduced": "generation-iii"
+  },
+  "53": {
+    "name": {
+      "en": "Pickup",
+      "he": "Pickup"
+    },
+    "description": "May pick up items.",
+    "generationIntroduced": "generation-iii"
+  },
+  "55": {
+    "name": {
+      "en": "Hustle",
+      "he": "Hustle"
+    },
+    "description": "Trades accuracy for power.",
+    "generationIntroduced": "generation-iii"
+  },
+  "56": {
+    "name": {
+      "en": "Cute Charm",
+      "he": "Cute Charm"
+    },
+    "description": "Infatuates on contact.",
+    "generationIntroduced": "generation-iii"
+  },
+  "57": {
+    "name": {
+      "en": "Plus",
+      "he": "Plus"
+    },
+    "description": "Powers up with MINUS.",
+    "generationIntroduced": "generation-iii"
+  },
+  "60": {
+    "name": {
+      "en": "Sticky Hold",
+      "he": "Sticky Hold"
+    },
+    "description": "Prevents item theft.",
+    "generationIntroduced": "generation-iii"
+  },
+  "61": {
+    "name": {
+      "en": "Shed Skin",
+      "he": "Shed Skin"
+    },
+    "description": "Heals the body by shedding.",
+    "generationIntroduced": "generation-iii"
+  },
+  "62": {
+    "name": {
+      "en": "Guts",
+      "he": "Guts"
+    },
+    "description": "Ups ATTACK if suffering.",
+    "generationIntroduced": "generation-iii"
+  },
+  "63": {
+    "name": {
+      "en": "Marvel Scale",
+      "he": "Marvel Scale"
+    },
+    "description": "Ups DEFENSE if suffering.",
+    "generationIntroduced": "generation-iii"
+  },
+  "64": {
+    "name": {
+      "en": "Liquid Ooze",
+      "he": "Liquid Ooze"
+    },
+    "description": "Draining causes injury.",
+    "generationIntroduced": "generation-iii"
+  },
+  "65": {
+    "name": {
+      "en": "Overgrow",
+      "he": "Overgrow"
+    },
+    "description": "Ups GRASS moves in a pinch.",
+    "generationIntroduced": "generation-iii"
+  },
+  "66": {
+    "name": {
+      "en": "Blaze",
+      "he": "Blaze"
+    },
+    "description": "Ups FIRE moves in a pinch.",
+    "generationIntroduced": "generation-iii"
+  },
+  "67": {
+    "name": {
+      "en": "Torrent",
+      "he": "Torrent"
+    },
+    "description": "Ups WATER moves in a pinch.",
+    "generationIntroduced": "generation-iii"
+  },
+  "68": {
+    "name": {
+      "en": "Swarm",
+      "he": "Swarm"
+    },
+    "description": "Ups BUG moves in a pinch.",
+    "generationIntroduced": "generation-iii"
+  },
+  "69": {
+    "name": {
+      "en": "Rock Head",
+      "he": "Rock Head"
+    },
+    "description": "Prevents recoil damage.",
+    "generationIntroduced": "generation-iii"
+  },
+  "70": {
+    "name": {
+      "en": "Drought",
+      "he": "Drought"
+    },
+    "description": "Summons sunlight in battle.",
+    "generationIntroduced": "generation-iii"
+  },
+  "71": {
+    "name": {
+      "en": "Arena Trap",
+      "he": "Arena Trap"
+    },
+    "description": "Prevents fleeing.",
+    "generationIntroduced": "generation-iii"
+  },
+  "72": {
+    "name": {
+      "en": "Vital Spirit",
+      "he": "Vital Spirit"
+    },
+    "description": "Prevents sleep.",
+    "generationIntroduced": "generation-iii"
+  },
+  "75": {
+    "name": {
+      "en": "Shell Armor",
+      "he": "Shell Armor"
+    },
+    "description": "Blocks critical hits.",
+    "generationIntroduced": "generation-iii"
+  },
+  "77": {
+    "name": {
+      "en": "Tangled Feet",
+      "he": "Tangled Feet"
+    },
+    "description": "Raises evasion if the Pokémon is confused.",
+    "generationIntroduced": "generation-iv"
+  },
+  "79": {
+    "name": {
+      "en": "Rivalry",
+      "he": "Rivalry"
+    },
+    "description": "Raises Attack if the foe is of the same gender.",
+    "generationIntroduced": "generation-iv"
+  },
+  "80": {
+    "name": {
+      "en": "Steadfast",
+      "he": "Steadfast"
+    },
+    "description": "Raises Speed each time the Pokémon flinches.",
+    "generationIntroduced": "generation-iv"
+  },
+  "81": {
+    "name": {
+      "en": "Snow Cloak",
+      "he": "Snow Cloak"
+    },
+    "description": "Raises evasion in a hailstorm.",
+    "generationIntroduced": "generation-iv"
+  },
+  "82": {
+    "name": {
+      "en": "Gluttony",
+      "he": "Gluttony"
+    },
+    "description": "Encourages the early use of a held Berry.",
+    "generationIntroduced": "generation-iv"
+  },
+  "83": {
+    "name": {
+      "en": "Anger Point",
+      "he": "Anger Point"
+    },
+    "description": "Raises Attack upon taking a critical hit.",
+    "generationIntroduced": "generation-iv"
+  },
+  "84": {
+    "name": {
+      "en": "Unburden",
+      "he": "Unburden"
+    },
+    "description": "Raises Speed if a held item is used.",
+    "generationIntroduced": "generation-iv"
+  },
+  "87": {
+    "name": {
+      "en": "Dry Skin",
+      "he": "Dry Skin"
+    },
+    "description": "Reduces HP if it is hot. Water restores HP.",
+    "generationIntroduced": "generation-iv"
+  },
+  "88": {
+    "name": {
+      "en": "Download",
+      "he": "Download"
+    },
+    "description": "Adjusts power according to the foe’s ability.",
+    "generationIntroduced": "generation-iv"
+  },
+  "89": {
+    "name": {
+      "en": "Iron Fist",
+      "he": "Iron Fist"
+    },
+    "description": "Boosts the power of punching moves.",
+    "generationIntroduced": "generation-iv"
+  },
+  "91": {
+    "name": {
+      "en": "Adaptability",
+      "he": "Adaptability"
+    },
+    "description": "Powers up moves of the same type.",
+    "generationIntroduced": "generation-iv"
+  },
+  "92": {
+    "name": {
+      "en": "Skill Link",
+      "he": "Skill Link"
+    },
+    "description": "Increases the frequency of multi-strike moves.",
+    "generationIntroduced": "generation-iv"
+  },
+  "93": {
+    "name": {
+      "en": "Hydration",
+      "he": "Hydration"
+    },
+    "description": "Heals status problems if it is raining.",
+    "generationIntroduced": "generation-iv"
+  },
+  "94": {
+    "name": {
+      "en": "Solar Power",
+      "he": "Solar Power"
+    },
+    "description": "Boosts Sp. Atk, but lowers HP in sunshine.",
+    "generationIntroduced": "generation-iv"
+  },
+  "95": {
+    "name": {
+      "en": "Quick Feet",
+      "he": "Quick Feet"
+    },
+    "description": "Boosts Speed if there is a status problem.",
+    "generationIntroduced": "generation-iv"
+  },
+  "97": {
+    "name": {
+      "en": "Sniper",
+      "he": "Sniper"
+    },
+    "description": "Powers up moves if they become critical hits.",
+    "generationIntroduced": "generation-iv"
+  },
+  "98": {
+    "name": {
+      "en": "Magic Guard",
+      "he": "Magic Guard"
+    },
+    "description": "The Pokémon only takes damage from attacks.",
+    "generationIntroduced": "generation-iv"
+  },
+  "99": {
+    "name": {
+      "en": "No Guard",
+      "he": "No Guard"
+    },
+    "description": "Ensures the Pokémon and its foe’s attacks land.",
+    "generationIntroduced": "generation-iv"
+  },
+  "101": {
+    "name": {
+      "en": "Technician",
+      "he": "Technician"
+    },
+    "description": "Powers up the Pokémon’s weaker moves.",
+    "generationIntroduced": "generation-iv"
+  },
+  "102": {
+    "name": {
+      "en": "Leaf Guard",
+      "he": "Leaf Guard"
+    },
+    "description": "Prevents status problems in sunny weather.",
+    "generationIntroduced": "generation-iv"
+  },
+  "104": {
+    "name": {
+      "en": "Mold Breaker",
+      "he": "Mold Breaker"
+    },
+    "description": "Moves can be used regardless of abilities.",
+    "generationIntroduced": "generation-iv"
+  },
+  "105": {
+    "name": {
+      "en": "Super Luck",
+      "he": "Super Luck"
+    },
+    "description": "Heightens the critical-hit ratios of moves.",
+    "generationIntroduced": "generation-iv"
+  },
+  "106": {
+    "name": {
+      "en": "Aftermath",
+      "he": "Aftermath"
+    },
+    "description": "Damages the foe landing the finishing hit.",
+    "generationIntroduced": "generation-iv"
+  },
+  "107": {
+    "name": {
+      "en": "Anticipation",
+      "he": "Anticipation"
+    },
+    "description": "Senses the foe’s dangerous moves.",
+    "generationIntroduced": "generation-iv"
+  },
+  "108": {
+    "name": {
+      "en": "Forewarn",
+      "he": "Forewarn"
+    },
+    "description": "Determines what moves the foe has.",
+    "generationIntroduced": "generation-iv"
+  },
+  "109": {
+    "name": {
+      "en": "Unaware",
+      "he": "Unaware"
+    },
+    "description": "Ignores any change in ability by the foe.",
+    "generationIntroduced": "generation-iv"
+  },
+  "110": {
+    "name": {
+      "en": "Tinted Lens",
+      "he": "Tinted Lens"
+    },
+    "description": "Powers up “not very effective” moves.",
+    "generationIntroduced": "generation-iv"
+  },
+  "111": {
+    "name": {
+      "en": "Filter",
+      "he": "Filter"
+    },
+    "description": "Powers down super­ effective moves.",
+    "generationIntroduced": "generation-iv"
+  },
+  "113": {
+    "name": {
+      "en": "Scrappy",
+      "he": "Scrappy"
+    },
+    "description": "Enables moves to hit Ghost-type foes.",
+    "generationIntroduced": "generation-iv"
+  },
+  "115": {
+    "name": {
+      "en": "Ice Body",
+      "he": "Ice Body"
+    },
+    "description": "The Pokémon regains HP in a hailstorm.",
+    "generationIntroduced": "generation-iv"
+  },
+  "118": {
+    "name": {
+      "en": "Honey Gather",
+      "he": "Honey Gather"
+    },
+    "description": "The Pokémon may gather Honey from somewhere.",
+    "generationIntroduced": "generation-iv"
+  },
+  "119": {
+    "name": {
+      "en": "Frisk",
+      "he": "Frisk"
+    },
+    "description": "The Pokémon can check the foe’s held item.",
+    "generationIntroduced": "generation-iv"
+  },
+  "120": {
+    "name": {
+      "en": "Reckless",
+      "he": "Reckless"
+    },
+    "description": "Powers up moves that have recoil damage.",
+    "generationIntroduced": "generation-iv"
+  },
+  "124": {
+    "name": {
+      "en": "Pickpocket",
+      "he": "Pickpocket"
+    },
+    "description": "Steals an item when hit by another Pokémon.",
+    "generationIntroduced": "generation-v"
+  },
+  "125": {
+    "name": {
+      "en": "Sheer Force",
+      "he": "Sheer Force"
+    },
+    "description": "Removes added effects to increase move damage.",
+    "generationIntroduced": "generation-v"
+  },
+  "126": {
+    "name": {
+      "en": "Contrary",
+      "he": "Contrary"
+    },
+    "description": "Makes stat changes have an opposite effect.",
+    "generationIntroduced": "generation-v"
+  },
+  "127": {
+    "name": {
+      "en": "Unnerve",
+      "he": "Unnerve"
+    },
+    "description": "Makes the foe nervous and unable to eat Berries.",
+    "generationIntroduced": "generation-v"
+  },
+  "128": {
+    "name": {
+      "en": "Defiant",
+      "he": "Defiant"
+    },
+    "description": "When its stats are lowered its Attack increases.",
+    "generationIntroduced": "generation-v"
+  },
+  "130": {
+    "name": {
+      "en": "Cursed Body",
+      "he": "Cursed Body"
+    },
+    "description": "May disable a move used on the Pokémon.",
+    "generationIntroduced": "generation-v"
+  },
+  "131": {
+    "name": {
+      "en": "Healer",
+      "he": "Healer"
+    },
+    "description": "May heal an ally’s status conditions.",
+    "generationIntroduced": "generation-v"
+  },
+  "132": {
+    "name": {
+      "en": "Friend Guard",
+      "he": "Friend Guard"
+    },
+    "description": "Reduces damage done to allies.",
+    "generationIntroduced": "generation-v"
+  },
+  "133": {
+    "name": {
+      "en": "Weak Armor",
+      "he": "Weak Armor"
+    },
+    "description": "Physical attacks lower Defense and raise Speed.",
+    "generationIntroduced": "generation-v"
+  },
+  "135": {
+    "name": {
+      "en": "Light Metal",
+      "he": "Light Metal"
+    },
+    "description": "Halves the Pokémon’s weight.",
+    "generationIntroduced": "generation-v"
+  },
+  "136": {
+    "name": {
+      "en": "Multiscale",
+      "he": "Multiscale"
+    },
+    "description": "Reduces damage when HP is full.",
+    "generationIntroduced": "generation-v"
+  },
+  "139": {
+    "name": {
+      "en": "Harvest",
+      "he": "Harvest"
+    },
+    "description": "May create another Berry after one is used.",
+    "generationIntroduced": "generation-v"
+  },
+  "140": {
+    "name": {
+      "en": "Telepathy",
+      "he": "Telepathy"
+    },
+    "description": "Anticipates an ally’s attack and dodges it.",
+    "generationIntroduced": "generation-v"
+  },
+  "141": {
+    "name": {
+      "en": "Moody",
+      "he": "Moody"
+    },
+    "description": "Raises one stat and lowers another.",
+    "generationIntroduced": "generation-v"
+  },
+  "142": {
+    "name": {
+      "en": "Overcoat",
+      "he": "Overcoat"
+    },
+    "description": "Protects the Pokémon from damage from weather.",
+    "generationIntroduced": "generation-v"
+  },
+  "143": {
+    "name": {
+      "en": "Poison Touch",
+      "he": "Poison Touch"
+    },
+    "description": "May poison targets when a Pokémon makes contact.",
+    "generationIntroduced": "generation-v"
+  },
+  "144": {
+    "name": {
+      "en": "Regenerator",
+      "he": "Regenerator"
+    },
+    "description": "Restores a little HP when withdrawn from battle.",
+    "generationIntroduced": "generation-v"
+  },
+  "145": {
+    "name": {
+      "en": "Big Pecks",
+      "he": "Big Pecks"
+    },
+    "description": "Protects the Pokémon from Defense-lowering attacks.",
+    "generationIntroduced": "generation-v"
+  },
+  "146": {
+    "name": {
+      "en": "Sand Rush",
+      "he": "Sand Rush"
+    },
+    "description": "Boosts the Pokémon’s Speed in a sandstorm.",
+    "generationIntroduced": "generation-v"
+  },
+  "147": {
+    "name": {
+      "en": "Wonder Skin",
+      "he": "Wonder Skin"
+    },
+    "description": "Makes status-changing moves more likely to miss.",
+    "generationIntroduced": "generation-v"
+  },
+  "148": {
+    "name": {
+      "en": "Analytic",
+      "he": "Analytic"
+    },
+    "description": "Boosts move power when the Pokémon moves last.",
+    "generationIntroduced": "generation-v"
+  },
+  "150": {
+    "name": {
+      "en": "Imposter",
+      "he": "Imposter"
+    },
+    "description": "It transforms itself into the Pokémon it is facing.",
+    "generationIntroduced": "generation-v"
+  },
+  "151": {
+    "name": {
+      "en": "Infiltrator",
+      "he": "Infiltrator"
+    },
+    "description": "Passes through the foe’s barrier and strikes.",
+    "generationIntroduced": "generation-v"
+  },
+  "153": {
+    "name": {
+      "en": "Moxie",
+      "he": "Moxie"
+    },
+    "description": "Boosts Attack after knocking out any Pokémon.",
+    "generationIntroduced": "generation-v"
+  },
+  "154": {
+    "name": {
+      "en": "Justified",
+      "he": "Justified"
+    },
+    "description": "Raises Attack when hit by a Dark-type move.",
+    "generationIntroduced": "generation-v"
+  },
+  "155": {
+    "name": {
+      "en": "Rattled",
+      "he": "Rattled"
+    },
+    "description": "Some move types scare it and boost its Speed.",
+    "generationIntroduced": "generation-v"
+  },
+  "156": {
+    "name": {
+      "en": "Magic Bounce",
+      "he": "Magic Bounce"
+    },
+    "description": "Reflects status- changing moves.",
+    "generationIntroduced": "generation-v"
+  },
+  "157": {
+    "name": {
+      "en": "Sap Sipper",
+      "he": "Sap Sipper"
+    },
+    "description": "Boosts Attack when hit by a Grass-type move.",
+    "generationIntroduced": "generation-v"
+  },
+  "158": {
+    "name": {
+      "en": "Prankster",
+      "he": "Prankster"
+    },
+    "description": "Gives priority to a status move.",
+    "generationIntroduced": "generation-v"
+  },
+  "159": {
+    "name": {
+      "en": "Sand Force",
+      "he": "Sand Force"
+    },
+    "description": "Boosts certain moves’ power in a sandstorm.",
+    "generationIntroduced": "generation-v"
+  },
+  "172": {
+    "name": {
+      "en": "Competitive",
+      "he": "Competitive"
+    },
+    "description": "Boosts the Sp. Atk stat when a stat is lowered.",
+    "generationIntroduced": "generation-vi"
+  },
+  "256": {
+    "name": {
+      "en": "Neutralizing Gas",
+      "he": "Neutralizing Gas"
+    },
+    "description": "If the Pokémon with Neutralizing Gas is in the battle, the effects of all Pokémon’s Abilities will be nullified or will not be triggered.",
+    "generationIntroduced": "generation-viii"
+  }
+}

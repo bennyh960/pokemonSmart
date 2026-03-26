@@ -3,6 +3,7 @@ import type { HistoryManager } from './history.js';
 import type { ToolType } from './types.js';
 import { categorizeTiles } from './tile-palette.js';
 import { getKnownMapIds, loadMapFromProject, loadMapFromFile, saveMap, copyMapToClipboard, createBlankMap } from './map-io.js';
+import { MUSIC_TRACK_KEYS } from '../audio/audio-manager.js';
 
 export class Toolbar {
   constructor(container: HTMLElement, state: EditorState, history: HistoryManager, tileManifest: Record<string, unknown>) {
@@ -182,7 +183,7 @@ export class Toolbar {
     });
 
     // ── Map metadata (modal) ──
-    const MUSIC_OPTIONS = ['title', 'town', 'route', 'battle', 'victory'];
+    const MUSIC_OPTIONS = MUSIC_TRACK_KEYS;
 
     container.querySelector('#btn-meta')!.addEventListener('click', () => {
       // Remove existing modal if any
