@@ -1,222 +1,75 @@
-# Pokemon Math Adventure — Copilot Skills & Instructions
+# Pokemon Math Adventure - Project Context
 
-## Project Overview
-A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in "Numeria" (נומריה).
-**Tech:** Vite + TypeScript + HTML5 Canvas (240×160 scaled 3x) + Howler.js
-**Target:** Kids ages 8-14, educational math & logic game  
-**Reference docs:** `docs/game-spec.md` (full spec), `docs/roadmap.md`, `docs/sprint-1.md`
+## What is this?
+A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in "Numeria" (נומריה), players solve math and logic puzzles to attack, decode ciphers to find antidotes, and stop a rogue AI called NULL-X.
 
----
+## Key Files
+- **Full game spec:** `docs/game-spec.md` — THE reference for everything (story, world, mechanics, Pokemon, gym leaders)
+- **Current sprint:** `docs/sprint-2.md` — Active tasks, who's doing what, QA status
+- **Roadmap:** `docs/roadmap.md` — All sprints planned, what's done vs pending
+- **Agent definitions:** `.claude/agents/*.md` — 8 agents with detailed roles
+- **Agent prompts:** `.claude/prompts/*.md` — Ready-to-run instructions for parallel execution
 
-## Skill: Game Engine & Canvas Rendering
+## Agents
+| Agent | File | Role |
+|-------|------|------|
+| product-manager | Built-in (you) | Sprint planning, coordination, roadmap |
+| game-designer | `.claude/agents/game-designer.md` | Mechanics, balance, progression |
+| math-engine-developer | `.claude/agents/math-engine-developer.md` | Math & logic problem generation |
+| game-engine-developer | `.claude/agents/game-engine-developer.md` | Core game loop, overworld, tilemap |
+| frontend-developer | `.claude/agents/frontend-developer.md` | UI, battle screens, audio integration |
+| asset-manager | `.claude/agents/pixel-artist.md` | Sourcing sprites/tiles/sounds from APIs |
+| world-map-builder | `.claude/agents/world-map-builder.md` | Map design using tileset JSON manifests |
+| qa-tester | `.claude/agents/qa-tester.md` | Testing + documentation |
 
-When working on game engine code (`src/engine/`):
+## Tech Stack
+- **Runtime:** Vite + TypeScript + HTML5 Canvas (240×160 logical coords, 720×480 physical via `ctx.scale(RES_SCALE=3)` in `src/engine/config.ts`, responsive display)
+- **Audio:** Howler.js
+- **i18n:** Custom `src/i18n/i18n.ts` — Hebrew (default) + English, `t(key, params)`, L key toggles. **The game is a bilingual learning tool** — see "English Learning" below
+- **Data:** PokeAPI (fetched at build time → static JSON)
+- **Pokemon:** Real Gen 1-2 (251 Pokemon, real types/moves/evolutions)
+- **Starters:** Gen 1 — Bulbasaur, Charmander, Squirtle (8 moves each)
+- **Sprites:** PokeAPI (best quality available) for Pokemon battle sprites + DPP-style tileset PNG with JSON manifest (`src/data/tilesets/dpp.json`) for overworld tiles + custom character spritesheets (`src/data/sprites/characters.json`)
+- **Maps:** JSON files in `src/data/maps/` — tile grid + objects layer + NPCs + transitions. Registered in `src/systems/map-manager.ts`
+- **Interactive tiles:** Tileset tiles can have `category: 'interactive'` with `interactType: { id, args }`. Defaults in `src/data/interact-types.ts`, per-tile overrides in dpp.json, per-instance overrides on PlacedObject. Types: pc, sign, item, cut, strength
+- **NPC dialogue:** Bilingual `{ en, he }[]` — resolved at runtime by locale. Legacy `string[]` auto-normalized on map load
+- **PC Storage:** 10 boxes × 30 slots in `PlayerData.boxes`. Scene at `src/scenes/pc.ts`, logic at `src/systems/pc-storage.ts`. Save migration v2
+- **Badges:** 8 gym badges defined in `src/data/badges.ts` with bilingual names, gym leader, city, type. Stored as bitmask in `pd.badges`
+- **Rewards:** `DialogueReward` (any NPC) and `TrainerReward` (post-battle) support items, money, badge, storyEvent. Post-battle dialogue via `postBattleDialogue` on TrainerData
+- **Input:** Uses `e.code` (physical key position) for layout-independent controls. `src/engine/input.ts` normalizes legacy key strings
+- **Admin:** `ADMIN_NAME` in `src/engine/config.ts` — debug shortcuts (H=heal, N=shop) only for admin player
+- **Visual style:** Modern pixel art (not restricted to GBC/retro aesthetics) — full color palettes, clean sprites, performance-first
+- **Math in battle:** Currently disabled — will be rethought for a less intrusive mechanic
+- **Abilities:** 132 abilities in `src/data/abilities.json`, mapping in `pokemon-abilities.json`. Assigned randomly on Pokemon creation. Displayed on party stats screen
+- **Natures:** 25 natures in `src/data/natures.json`. Affect stats (×1.1 boosted / ×0.9 reduced). Assigned randomly on creation. Displayed on party stats screen
+- **Items (relational):** `items.json` (229 items from PokeAPI — identity/names/sprites) + `item-defs.ts` (game effects/prices). `items.ts` is a thin adapter combining both. No duplication between data and logic
+- **Encounters:** Zone-based wild Pokemon filtering. Tileset tiles have `encounterTypes?: string[]` on `TileDef`. Values: `undefined` = not encounterable, `['*']` = all types, `['*/water,ice']` = all except water & ice, `['water','bug']` = only those types. Map encounter tables (`src/data/encounter-tables.json`) list all Pokemon per map; the tile filters which subset can appear at that grid position. Exclusion logic: Pokemon excluded only if ALL its types are in the exclude list (dual-types with one allowed type still appear). Tileset editor has a visual picker widget with type badges + exception support
+- **Save version:** Currently v3. Migration adds abilityId/natureId/heldItemId to Pokemon
 
-- **Canvas resolution** is 240×160 native (GBA), scaled 3x to 720×480 display.
-- **Tile size** is 16×16 pixels. Grid-based movement — no free movement.
-- Movement animation is ~200ms per tile with smooth interpolation.
-- Use a **state machine** pattern for scene management (`TITLE`, `OVERWORLD`, `BATTLE`, `MENU`, `DIALOGUE`).
-- **Camera** follows the player, clamps to map bounds, uses lerp for smooth scrolling.
-- Tilemap is JSON-based with layers: ground, collision, above-player, events.
-- Collision tiles: trees, water, buildings are blocked. Doors and tall grass are walkable.
-- Tall grass (tile type 7) triggers wild encounters (10% chance per step).
-- All rendering is pure Canvas 2D — **no HTML overlays, no DOM elements on the game area**.
-- Target 60fps. Only render visible tiles (camera culling).
-- Use sprite loader with async image loading and cache (`src/engine/sprite-loader.ts`).
+## English Learning
+The game teaches English vocabulary progressively to Hebrew-speaking players:
+- **All data is bilingual** `{ en, he }` — Pokemon names, moves, items, abilities, natures
+- **Hebrew is the default locale** — RTL text rendering, right-aligned UI
+- **Every new UI element must support both RTL and LTR** — use `isRTL()` checks, `getLocale()` for name resolution
+- **Progressive English exposure** (Sprint 11): as playtime increases, Hebrew translations are removed category-by-category, exposing English words the player has already learned through repetition
+- **Phase plan:** Types (always English) → Items (~10h) → Abilities (~15h) → Moves (~20h) → Natures (~25h) → Pokemon names (~30h)
+- **Hebrew translations for items/abilities/natures are deferred** until Sprint 11 — currently show English names, which is intentional for the learning flow
+- **When adding new text/data:** always use `{ en, he }` format for any player-visible string. Even if Hebrew is placeholder (= English copy), the structure must be bilingual from day one
 
----
+## How to Work
+1. Read `docs/roadmap.md` to see overall progress
+2. Read `docs/sprint-{N}.md` for current sprint details
+3. Each sprint has tasks assigned to agents with branch names
+4. Agents work on feature branches → QA tests → merge to main
+5. Sprint file gets updated with ✅/❌ status
 
-## Skill: Math Engine & Problem Generation
+## Commands
+- `npm run dev` — Start dev server
+- `npm run build` — Production build
+- `npm test` — Run vitest tests
+- `npm run fetch-data` — Download all PokeAPI data (after pipeline is built)
 
-When working on math problems (`src/math/`):
-
-- 6 difficulty levels mapped to move power:
-  - Level 1 (power 1-40): Addition/subtraction, single-digit (0-9). No negative results. Timer: 15s.
-  - Level 2 (power 41-60): Add/sub double-digit (10-99). No negative results. Timer: 18s.
-  - Level 3 (power 61-80): Multiplication single-digit (tables 1-9). Timer: 20s.
-  - Level 4 (power 81-100): Multiply up to 12×12 + clean division (no remainders). Timer: 22s.
-  - Level 5 (power 101-120): Mixed operations + order of operations + parentheses. Timer: 25s.
-  - Level 6 (power 121+): Complex expressions + simple fractions (1/2, 1/4, 3/4). Timer: 30s.
-- **Adaptive difficulty** within each level:
-  - 3 correct in a row → increase complexity (bigger numbers).
-  - 2 wrong in a row → decrease complexity (smaller numbers).
-- `movePowerToMathDifficulty(power)`: 1-40→1, 41-60→2, 61-80→3, 81-100→4, 101-120→5, 121+→6.
-- Problems are generated **dynamically** (never from a static bank).
-- All problems must have a **single, unambiguous, correct numeric answer**.
-- Use types from `src/types/index.ts`: `MathDifficulty`, `MathProblem`, `MathResult`.
-
----
-
-## Skill: Battle System
-
-When working on battle code (`src/systems/battle-system.ts`, `src/scenes/battle.ts`):
-
-- **Battle flow:** Player selects move → math problem shown → player answers → result.
-- **Damage formula:** `Damage = (AttackPower × TypeMultiplier × SpeedBonus) - DefenderDefense`
-  - Min damage = 1. Max damage = 3× attack power.
-- **Speed bonus** by answer time:
-  - 0-3s → ×1.5 ("Brilliant!"). 3-6s → ×1.25 ("Fast!"). 6-10s → ×1.0.
-  - 10-15s → ×0.9 ("Slow..."). 15+ or timeout → ×0 (attack fails).
-- **Wrong answer:** Attack fails (0 damage). Player takes 10% of their maxHP as self-damage. Show correct answer for 3 seconds.
-- **Type effectiveness** uses real Gen 2 chart + custom Glitch type (neutral vs all except Glitch vs Glitch = ×2).
-- Gym leaders and Elite Four cannot be fled from. Double XP reward.
-- XP per wild battle: 20-50 (by opponent level). Gym leaders: 200-500. Elite Four: 500-800.
-- Pokemon level up → recalculate stats from base stats. Check evolution chain.
-- Party max: 6 Pokemon. Max 4 moves per Pokemon.
-- Real Gen 1-2 Pokemon (251), real types, real moves, real stats from PokeAPI data.
-
----
-
-## Skill: UI & Frontend
-
-When working on UI code (`src/ui/`, `src/scenes/`):
-
-- **GBA aesthetic:** Dark borders, cream/white background text boxes at bottom screen. Pixel monospace font ~8px scaled.
-- **HP bars**: Color gradient green (>50%) → yellow (25-50%) → red (<25%). Smooth animation.
-- **Number pad** (math input): 3×4 grid `[7][8][9] / [4][5][6] / [1][2][3] / [⌫][0][✓]`.
-  - Must work with **both mouse clicks AND keyboard** (0-9 keys, Backspace, Enter).
-  - Minimum 48px touch targets (for kids on tablets).
-  - Green flash for correct answer. Red shake + show correct answer for wrong.
-- **Timer bar:** Shrinking horizontal bar, green → yellow → red. No visible numbers.
-- **Text boxes:** GBA-style typewriter effect, press ENTER to advance. RTL support for Hebrew.
-- **Menus:** Right-aligned selection lists with arrow cursor. Navigate with arrow keys + ENTER.
-- **Battle layout:** Player's Pokemon (back sprite) bottom-left. Enemy (front sprite) top-right. HP bars for both.
-- **Transitions:** Fade-to-black 0.3s between scenes. Music crossfade 0.5s.
-- All UI is rendered on Canvas 2D — no HTML elements in the game area.
-
----
-
-## Skill: Pokemon Data & PokeAPI Pipeline
-
-When working on data scripts (`scripts/`) or data service (`src/services/pokemon-data.ts`):
-
-- All 251 Gen 1-2 Pokemon from PokeAPI, cached as static JSON at build time.
-- **Data files:**
-  - `src/data/pokemon.json` — id, name, types, stats, base_experience.
-  - `src/data/moves.json` — id, name, type, power, accuracy, pp, mathDifficulty.
-  - `src/data/type-chart.json` — 18 types (17 real + Glitch) with damage relations.
-  - `src/data/evolution-chains.json` — evolution triggers (level, item, trade).
-- **Sprites:** `public/sprites/pokemon/front/{id}.png` and `back/{id}.png` (Gen 2 Gold style).
-- Fetch scripts use PokeAPI v2 (`https://pokeapi.co/api/v2/`). Rate limit 100ms between calls.
-- `pokemon-data.ts` service provides: `getPokemon(id)`, `getMove(id)`, `getTypeEffectiveness(attacker, defender)`, `getEvolutionChain(pokemonId)`.
-- `mathDifficulty` for moves is derived from power: power 1-40→1, 41-60→2, 61-80→3, 81-100→4, 101-120→5, 121+→6. Status moves (power 0) use difficulty 2.
-
----
-
-## Skill: Type System & Interfaces
-
-When creating or modifying types (`src/types/index.ts`):
-
-- `Scene` interface: `enter()`, `exit()`, `update(dt)`, `render(ctx)`.
-- `SceneId`: `'TITLE' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE'`.
-- `Pokemon`: id(1-251), name, level, hp, maxHp, attack, defense, specialAttack, specialDefense, speed, types(PokemonType[]), moves(Move[4]), xp, xpToNext, isGlitched.
-- `PokemonType`: 18 values — `'normal'|'fire'|'water'|'grass'|...|'steel'|'dark'|'glitch'`.
-- `Move`: id, name, type(PokemonType), power(0-250), accuracy(0-100), pp, currentPp, mathDifficulty(1-6).
-- `MathDifficulty`: `1 | 2 | 3 | 4 | 5 | 6`.
-- `MathProblem`: question(string), correctAnswer(number), difficulty, timeLimit, category.
-- `MathResult`: correct(boolean), timeTaken, bonusMultiplier, answer.
-- `PlayerData`: name, party(Pokemon[]), badges(number), serumParts(number), money, pokedex, position({mapId, x, y}), playtime.
-
----
-
-## Skill: Audio & Sound
-
-When working on audio (`src/audio/audio-manager.ts`):
-
-- Use **Howler.js** for all audio. Import from `howler` package.
-- Music crossfade: 0.5s between scenes (never abrupt cuts).
-- Volume channels: Master, Music, SFX, Cries (all independent, 0-100).
-- Pokemon cries default OFF. Music + SFX default ON.
-- Mobile: unlock audio on first touch event (Howler handles this).
-- All background music loops seamlessly.
-- **Glitch zone audio:** In areas affected by the Glitch, programmatically distort current music via Web Audio API — pitch shift, bitcrush, stutter effects. Intensity 1-5 based on zone's glitch level.
-- Track assignment follows Gold/Silver OST mapping (New Bark Town for home, Route themes for paths, Gym theme inside gyms, etc).
-
----
-
-## Skill: Puzzle System
-
-When working on puzzles (`src/puzzles/`):
-
-- 4 puzzle categories: **Cipher**, **Logic**, **Visual**, **Number Sequence**.
-- Cipher: Caesar shift (Hebrew/English), variable-key shift, substitution, hidden-key.
-- Logic: If-then (truth/liar), whodunit elimination, logic grids.
-- Visual: Pattern completion (3×3 grid), spot-the-difference, spatial (rotation/reflection).
-- Sequence: arithmetic progressions, Fibonacci, squares, multi-rule.
-- Each gym uses specific puzzle types (game-spec section 7):
-  - Gym 1: visual (sum-target tiles). Gym 2: logic (truth/liar). Gym 3: cipher (mirrors).
-  - Gym 4: logic grid. Gym 5: sequences + cipher. Gym 6: visual (symmetry). 
-  - Gym 7: all types combined. Gym 8: multi-step chains.
-- Puzzles render on Canvas. Hints available (max 3, cost points).
-- Difficulty scales 1-5 matching game progression.
-
----
-
-## Skill: World & Map Design
-
-When creating map files (`src/data/maps/`):
-
-- Maps are JSON tilemaps with layers: `ground`, `collision`, `above`, `events`.
-- Tile types: 0=empty, 1=grass(#48A030), 2=path(#C8A870), 3=water(blocked), 4=tree(blocked), 5=building(blocked), 6=door(walkable), 7=tall-grass(walkable+encounters).
-- 8 cities connected by 8 routes in a circular layout (game-spec section 2.2).
-- Home town: **Zeroville** (אפסיניה). Cities: Sumville, Minusburg, Multiplia, Dividia, Primore, Symmetrika, Integrala, Absoluta.
-- Each map has `warps` array: `{ x, y, targetMap, targetX, targetY }` for area transitions.
-- Encounter tables per route (game-spec section 6.3): Pokemon species, level ranges, rarity weights.
-- NPC data per map: position, sprite, dialogue, type (static/walker/trainer).
-- Pokemon Center (free heal) and Poké Mart (shop) in every city.
-- Central final area: **NULL-X Tower** (6 floors: entrance + 4 Elite Four + NULL-X).
-
----
-
-## Skill: Save System
-
-When working on save/load (`src/systems/save.ts`):
-
-- Save to `localStorage` key `"pokemon-math-save"`.
-- Auto-save on entering a new area/town.
-- Save data: player party, position(mapId, x, y), badges, serum parts, money, pokedex, playtime, defeated trainers, story flags.
-- `saveGame(state)` → JSON.stringify → localStorage.
-- `loadGame()` → localStorage → JSON.parse → validate → return GameState | null.
-- Handle edge cases: corrupted data, missing fields (migration), empty save.
-- "Continue" on title screen: grayed out if no save exists.
-
----
-
-## Skill: Testing
-
-When writing tests (`src/**/__tests__/`):
-
-- Test framework: **Vitest** (must be installed: `npm i -D vitest`).
-- Math engine: generate 100+ problems per level, verify all answers correct. No negatives at level 1-2. Clean division at level 4.
-- Battle system: damage formula correctness, type effectiveness, XP calculation.
-- Save/load: round-trip serialization, corrupted data handling.
-- Use mocking for Canvas context, localStorage, audio.
-- Tests must be fast and hermetic — no network, no real DOM.
-- Coverage target: ≥80% on new/changed code.
-
----
-
-## Skill: Game Story & NPCs
-
-When implementing story content:
-
-- **Villain:** NULL-X — rogue AI, speaks in binary mixed with philosophy. Catchphrase: "ERROR. RECALCULATE."
-- **Rival:** Remainder (ריי-מיינדר) — competitive but good-hearted. Joins player after Badge 5.
-- **Mentor:** Prof. Algorithma — guides player via communicator device.
-- **Serum system:** 8 components collected from gyms. Thresholds: 1=heal one Pokemon, 2-3=battle item, 4-5=area healing, 6-7=expanded, 8=unlock NULL-X Tower.
-- **Glitch progression:** Intensifies through story — pixel corruption, NPC gibberish, world distortion.
-- **Elite Four:** Syntax(Electric), Logica(Ice), Entropy(Fighting+Glitch), Quantum(Psychic).
-- **Final boss:** NULL-X — 3 phases: Pokemon battle → code-repair puzzle → narrative ending.
-- All dialogue rendered in GBA-style text boxes. Hebrew RTL support.
-
----
-
-## Project Conventions
-
-- **Language:** TypeScript with strict types. Use interfaces from `src/types/index.ts`.
-- **Build:** Vite (`npm run dev` to start, `npm run build` for production).
-- **No external game frameworks** — pure Canvas 2D + TypeScript.
-- **Branch strategy:** `main` = stable. `feature/*` = work branches. QA before merge.
-- **File structure:** `src/engine/` (core), `src/scenes/` (game scenes), `src/systems/` (game logic), `src/ui/` (UI components), `src/math/` (math engine), `src/data/` (static JSON), `src/audio/` (sound), `scripts/` (build-time data fetching).
-- **Sprites:** Placeholder colored rectangles acceptable until real sprites are loaded.
-- **Commands:** `npm run dev` (dev server), `npm run build` (production), `npm test` (vitest), `npm run fetch-data` (download PokeAPI data).
+## Branch Strategy
+- `main` — Stable, tested code only
+- `feature/*` — Agent work branches (one per sprint task)
+- QA tests on feature branch → merge to main if passes

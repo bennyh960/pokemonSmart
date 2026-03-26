@@ -92,3 +92,4 @@ registerMap('pokecenter-interior', () => import('../data/maps/pokecenter-interio
 registerMap('mart-interior', () => import('../data/maps/mart-interior.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('deep-forest', () => import('../data/maps/deep-forest.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('mountain-pass', () => import('../data/maps/mountain-pass.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('house-3-i', () => import('../data/maps/house-3-i.json').catch(() => import('../data/maps/test-map.json')));

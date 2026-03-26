@@ -2602,8 +2602,18 @@
       "walkable": true,
       "above": false,
       "category": "building",
-      "interactType": null,
       "description": "empty house for reusable - 10X13"
+    },
+     {
+      "key": "pcf2",
+      "sx": 0,
+      "sy": 3616,
+      "w": 112,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "description": "Pokemon-center style front facade (7x5 tiles). Large exterior building front for town hubs; place as an object aligned to a street doorway."
     },
     {
       "key": "wallstrip2",
@@ -2614,7 +2624,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "Narrow wall/roof facade strip with window-door rhythm (5x4). Use as a compact storefront or side facade segment."
     },
     {
@@ -2626,7 +2635,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "House facade with slanted pink roof (5x4). Standard residential exterior for town neighborhoods."
     },
     {
@@ -2638,7 +2646,6 @@
       "walkable": true,
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "Stone plaza patch (4x4). Walkable ground fill for courtyards, ruins, and rocky streets."
     },
     {
@@ -2650,7 +2657,6 @@
       "walkable": false,
       "above": true,
       "category": "tree",
-      "interactType": null,
       "description": "Round canopy tree (3x4). Solid obstacle tree for parks, city medians, and forest edges."
     },
     {
@@ -2662,8 +2668,18 @@
       "walkable": false,
       "above": true,
       "category": "tree",
-      "interactType": null,
       "description": "Pink blossom tree (2x3). Decorative obstacle tree for gardens and spring-themed routes."
+    },
+    {
+      "key": "pathx1",
+      "sx": 144,
+      "sy": 48,
+      "w": 48,
+      "h": 32,
+      "walkable": true,
+      "above": false,
+      "category": "ground",
+      "description": "Cross-path dirt junction (3x2). Use where horizontal and vertical paths intersect."
     },
     {
       "key": "bnr1",
@@ -2674,7 +2690,6 @@
       "walkable": false,
       "above": true,
       "category": "decoration",
-      "interactType": null,
       "description": "Vertical banner/sign post (1x3). Tall decorative marker for gates, plazas, and landmarks."
     },
     {
@@ -2686,7 +2701,6 @@
       "walkable": false,
       "above": false,
       "category": "interior",
-      "interactType": null,
       "description": "Pokeball-themed bed (3x3). Bedroom furniture obstacle for houses and guest rooms."
     },
     {
@@ -2698,19 +2712,51 @@
       "walkable": false,
       "above": false,
       "category": "interior",
-      "interactType": null,
       "description": "Tall wardrobe cabinet (2x4). Indoor storage furniture intended for wall placement."
     },
     {
-      "key": "ft15",
-      "sx": 48,
-      "sy": 2288,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
+      "key": "bookshelf2",
+      "sx": 0,
+      "sy": 6080,
+      "w": 48,
+      "h": 48,
+      "walkable": false,
       "above": false,
-      "category": "floor",
-      "description": "floor simple tile"
+      "category": "interior",
+      "description": "Bookshelf block (3x3). Interior wall furniture for studies, libraries, and bedrooms."
+    },
+    {
+      "key": "desk2a",
+      "sx": 0,
+      "sy": 6128,
+      "w": 48,
+      "h": 48,
+      "walkable": false,
+      "above": false,
+      "category": "interior",
+      "description": "Wide desk/table variant A (3x3). Indoor obstacle piece for offices and lounge areas."
+    },
+    {
+      "key": "desk2b",
+      "sx": 32,
+      "sy": 6128,
+      "w": 48,
+      "h": 48,
+      "walkable": false,
+      "above": false,
+      "category": "interior",
+      "description": "Wide desk/table variant B (3x3). Companion variant to mix with desk2a in interior layouts."
+    },
+    {
+      "key": "tableart1",
+      "sx": 32,
+      "sy": 6160,
+      "w": 64,
+      "h": 48,
+      "walkable": false,
+      "above": false,
+      "category": "interior",
+      "description": "Table-and-wall-art furniture strip (4x3). Use for decorated rooms, galleries, or lobby interiors."
     }
   ]
 }

@@ -51,13 +51,6 @@
       "toMapId": "zeroville-house-br",
       "toX": 3,
       "toY": 7
-    },
-    {
-      "fromX": 5,
-      "fromY": 14,
-      "toMapId": "house-3-i",
-      "toX": 5,
-      "toY": 8
     }
   ],
   "npcs": [
@@ -784,16 +777,6 @@
       "key": "item-pokeball",
       "x": 1,
       "y": 18
-    },
-    {
-      "key": "b7door",
-      "x": 5,
-      "y": 14
-    },
-    {
-      "key": "b7door",
-      "x": 12,
-      "y": 14
     }
   ]
 }

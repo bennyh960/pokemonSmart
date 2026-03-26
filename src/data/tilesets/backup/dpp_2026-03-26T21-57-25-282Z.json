@@ -1538,7 +1538,7 @@
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 big tile (32x32) — walkable encounter ground covering 2x2 tiles. Has all-type encounters. Use as base tile for large open mountain areas that need encounter spawns without the bordered mt2 rectangle system"
+      "description": "mountain 2 big tile (32x32) \u2014 walkable encounter ground covering 2x2 tiles. Has all-type encounters. Use as base tile for large open mountain areas that need encounter spawns without the bordered mt2 rectangle system"
     },
     {
       "key": "kk",
@@ -2592,125 +2592,6 @@
       "category": "interactive",
       "interactType": null,
       "description": "master ball"
-    },
-    {
-      "key": "house-4",
-      "sx": 0,
-      "sy": 7056,
-      "w": 208,
-      "h": 160,
-      "walkable": true,
-      "above": false,
-      "category": "building",
-      "interactType": null,
-      "description": "empty house for reusable - 10X13"
-    },
-    {
-      "key": "wallstrip2",
-      "sx": 0,
-      "sy": 5936,
-      "w": 80,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "Narrow wall/roof facade strip with window-door rhythm (5x4). Use as a compact storefront or side facade segment."
-    },
-    {
-      "key": "h2-main",
-      "sx": 0,
-      "sy": 1296,
-      "w": 80,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "House facade with slanted pink roof (5x4). Standard residential exterior for town neighborhoods."
-    },
-    {
-      "key": "stone2",
-      "sx": 0,
-      "sy": 1536,
-      "w": 64,
-      "h": 64,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "Stone plaza patch (4x4). Walkable ground fill for courtyards, ruins, and rocky streets."
-    },
-    {
-      "key": "t12",
-      "sx": 80,
-      "sy": 512,
-      "w": 48,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "tree",
-      "interactType": null,
-      "description": "Round canopy tree (3x4). Solid obstacle tree for parks, city medians, and forest edges."
-    },
-    {
-      "key": "t13",
-      "sx": 48,
-      "sy": 1424,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "tree",
-      "interactType": null,
-      "description": "Pink blossom tree (2x3). Decorative obstacle tree for gardens and spring-themed routes."
-    },
-    {
-      "key": "bnr1",
-      "sx": 96,
-      "sy": 976,
-      "w": 16,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null,
-      "description": "Vertical banner/sign post (1x3). Tall decorative marker for gates, plazas, and landmarks."
-    },
-    {
-      "key": "bed2",
-      "sx": 0,
-      "sy": 6016,
-      "w": 48,
-      "h": 48,
-      "walkable": false,
-      "above": false,
-      "category": "interior",
-      "interactType": null,
-      "description": "Pokeball-themed bed (3x3). Bedroom furniture obstacle for houses and guest rooms."
-    },
-    {
-      "key": "wardrobe2",
-      "sx": 48,
-      "sy": 6016,
-      "w": 32,
-      "h": 64,
-      "walkable": false,
-      "above": false,
-      "category": "interior",
-      "interactType": null,
-      "description": "Tall wardrobe cabinet (2x4). Indoor storage furniture intended for wall placement."
-    },
-    {
-      "key": "ft15",
-      "sx": 48,
-      "sy": 2288,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor",
-      "description": "floor simple tile"
     }
   ]
 }
