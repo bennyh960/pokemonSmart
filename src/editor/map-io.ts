@@ -6,7 +6,7 @@ export function getKnownMapIds(): string[] {
   return [
     'zeroville','zeroville-house-tl','zeroville-house-tr','zeroville-house-br', 'route-1', 'sumville', 'route-2', 'safari', 'route-3', 'minusburg', 'sumville-house-1', 'sumville-house-2', 'route1-house', 'route-4', 'dividia-house-1', 'dividia-house-2', 'dividia-house-3', 'dividia-house-4', 'algebria', 'divideburg',
     'fractalis', 'infinity-plateau', 'logica-heights', 'multitown',
-    'prime-city', 'mart-interior', 'pokecenter-interior', 'deep-forest', 'test-map',
+    'prime-city', 'mart-interior', 'pokecenter-interior', 'deep-forest', 'mountain-pass', 'test-map',
   ];
 }
 

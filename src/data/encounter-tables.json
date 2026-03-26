@@ -296,6 +296,29 @@
       { "pokemonId": 127, "minLevel": 20, "maxLevel": 25, "weight": 3 },
       { "pokemonId": 214, "minLevel": 22, "maxLevel": 25, "weight": 3 }
     ]
+  },
+  "mountain-pass": {
+    "encounterRate": 0.18,
+    "entries": [
+      { "pokemonId": 74, "minLevel": 15, "maxLevel": 20, "weight": 15 },
+      { "pokemonId": 75, "minLevel": 18, "maxLevel": 23, "weight": 8 },
+      { "pokemonId": 76, "minLevel": 22, "maxLevel": 25, "weight": 3 },
+      { "pokemonId": 95, "minLevel": 17, "maxLevel": 22, "weight": 8 },
+      { "pokemonId": 208, "minLevel": 22, "maxLevel": 25, "weight": 2 },
+      { "pokemonId": 111, "minLevel": 15, "maxLevel": 20, "weight": 10 },
+      { "pokemonId": 112, "minLevel": 20, "maxLevel": 25, "weight": 3 },
+      { "pokemonId": 41, "minLevel": 15, "maxLevel": 20, "weight": 12 },
+      { "pokemonId": 42, "minLevel": 20, "maxLevel": 25, "weight": 5 },
+      { "pokemonId": 207, "minLevel": 17, "maxLevel": 22, "weight": 6 },
+      { "pokemonId": 82, "minLevel": 20, "maxLevel": 25, "weight": 4 },
+      { "pokemonId": 81, "minLevel": 15, "maxLevel": 20, "weight": 8 },
+      { "pokemonId": 104, "minLevel": 15, "maxLevel": 20, "weight": 6 },
+      { "pokemonId": 105, "minLevel": 20, "maxLevel": 25, "weight": 3 },
+      { "pokemonId": 246, "minLevel": 18, "maxLevel": 22, "weight": 2 },
+      { "pokemonId": 142, "minLevel": 22, "maxLevel": 25, "weight": 1 },
+      { "pokemonId": 227, "minLevel": 20, "maxLevel": 25, "weight": 2 },
+      { "pokemonId": 27, "minLevel": 15, "maxLevel": 20, "weight": 2 }
+    ]
   }
 }
 
