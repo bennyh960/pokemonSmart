@@ -7,7 +7,7 @@
   "tileSize": 16,
   "spawn": {
     "x": 3,
-    "y": 6
+    "y": 5
   },
   "transitions": [
     {
@@ -28,11 +28,11 @@
       "dialogue": [
         {
           "en": "Hello!",
-          "he": ""
+          "he": "יום יבוא ואהיה מאמן פוקימונים."
         },
         {
           "en": "One day I will be pokemon trainer!",
-          "he": ""
+          "he": "אם תמצא פה פוכדור - אתה יכול לקחת"
         }
       ],
       "spriteType": "npc-male",
@@ -40,78 +40,16 @@
     }
   ],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": null
+,
   "tiles": [
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "ca1tl",
-      "ca1t",
-      "ca1t",
-      "ca1tr"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "ca1l",
-      "ca1c",
-      "ca1c",
-      "ca1r"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "ca1bl",
-      "ca1b",
-      "ca1b",
-      "ca1br"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ]
+    ["d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","ca1tl","ca1t","ca1t","ca1tr"],
+    ["d","d","d","d","ca1l","ca1c","ca1c","ca1r"],
+    ["d","d","d","d","ca1bl","ca1b","ca1b","ca1br"],
+    ["d","d","d","d","d","d","d","d"]
   ],
   "objects": [
     {
@@ -148,6 +86,11 @@
       "key": "ch2",
       "x": 5,
       "y": 1
+    },
+    {
+      "key": "item-pokeball",
+      "x": 7,
+      "y": 6
     }
   ]
 }

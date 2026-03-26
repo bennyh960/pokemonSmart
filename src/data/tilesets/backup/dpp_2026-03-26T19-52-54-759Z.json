@@ -2565,8 +2565,9 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "above": true,
+      "above": false,
       "category": "interactive",
+      "description": "pokeball item",
       "interactType": {
         "id": "item",
         "args": {
@@ -2577,8 +2578,7 @@
           "itemId": "poke-ball",
           "itemQty": 1
         }
-      },
-      "description": "pokeball item"
+      }
     },
     {
       "key": "item-masterBall",
@@ -2589,7 +2589,6 @@
       "walkable": false,
       "above": true,
       "category": "interactive",
-      "interactType": null,
       "description": "master ball"
     }
   ]

@@ -2545,6 +2545,7 @@
       "walkable": false,
       "above": true,
       "category": "interactive",
+      "description": "interactive transparent",
       "interactType": {
         "id": "sign",
         "args": {
@@ -2555,42 +2556,7 @@
             }
           ]
         }
-      },
-      "description": "interactive transparent"
-    },
-    {
-      "key": "item-pokeball",
-      "sx": 112,
-      "sy": 7008,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "interactType": {
-        "id": "item",
-        "args": {
-          "label": {
-            "en": "Pokeball",
-            "he": "פוכדור"
-          },
-          "itemId": "poke-ball",
-          "itemQty": 1
-        }
-      },
-      "description": "pokeball item"
-    },
-    {
-      "key": "item-masterBall",
-      "sx": 64,
-      "sy": 7008,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "interactType": null,
-      "description": "master ball"
+      }
     }
   ]
 }

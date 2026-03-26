@@ -11,7 +11,7 @@ The user invoked `/build-map $ARGUMENTS`.
 ## Steps
 
 1. Read `.claude/agents/world-map-builder.md` for your full role and formats
-2. Read `docs/game-spec.md` for the target city/route lore and theme
+2. Read `docs/game-spec.md` for the target city/route lore and theme (if requested create map that not in spec)
 3. Read `src/data/tilesets/dpp.json` — the **full manifest** — understand every available tile
 4. Read adjacent maps in `src/data/maps/` for transition alignment
 5. Design and write the map JSON to `src/data/maps/{id}.json`

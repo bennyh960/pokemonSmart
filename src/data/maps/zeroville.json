@@ -34,10 +34,17 @@
     {
       "fromX": 4,
       "fromY": 5,
-      "toMapId": "zeroville-house-tl",
+      "toMapId": "zeroville",
       "toX": 4,
-      "toY": 3,
-      "returnToPrevious": true
+      "toY": 6,
+      "returnToPrevious": false
+    },
+    {
+      "fromX": 4,
+      "fromY": 5,
+      "toMapId": "zeroville-house-tl",
+      "toX": 3,
+      "toY": 5
     },
     {
       "fromX": 21,
