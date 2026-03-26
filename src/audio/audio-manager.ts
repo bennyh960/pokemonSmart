@@ -31,7 +31,8 @@ const SFX_TRACKS: Record<string, string> = {
   'menu-cancel': '/audio/sfx/menu-cancel.wav',
   hit: '/audio/sfx/hit.wav',
   'text-blip': '/audio/sfx/text-blip.wav',
-  heal: '/audio/sfx/heal.mp3',
+  heal: '/audio/sfx/menu-select.wav',
+  'pokecenter-heal': '/audio/sfx/heal.mp3',
 };
 
 /** Default crossfade duration in ms. */

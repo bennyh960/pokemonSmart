@@ -226,6 +226,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       showChoice((idx) => {
         if (idx === 0) {
           healParty();
+          audio.playSFX('pokecenter-heal');
           // Record this Pokemon Center as the respawn point
           if (previousMapReturn) {
             updateLastPokemonCenter(previousMapReturn.mapId, previousMapReturn.x, previousMapReturn.y);
