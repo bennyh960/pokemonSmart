@@ -104,7 +104,7 @@ The game already has a working tileset and character sprite system using **JSON 
 ### Tileset System
 - **Manifest:** `src/data/tilesets/dpp.json` — array of tile definitions (~170+ tiles)
 - **Spritesheet:** `public/sprites/overworld/dpp-tileset.png` — single PNG with all tiles
-- **Each tile has:** `key`, `sx`, `sy` (source coords), `w`, `h`, `walkable`, `encounter`, `above`, `destroy`, `category`, `description`
+- **Each tile has:** `key`, `sx`, `sy` (source coords), `w`, `h`, `walkable`, `encounterTypes`, `above`, `category`, `description`
 - **Engine loader:** `src/engine/tileset.ts` — reads manifest, extracts tiles from PNG via `ctx.drawImage()`
 - **To add new tiles:** Add entries to `dpp.json` with correct `sx`/`sy` coordinates pointing to the tileset PNG
 
@@ -176,7 +176,7 @@ scripts/fetch-pokemon-sprites.ts
 # 2. Tileset workflow (already done for DPP tileset)
 #    - Source/create tileset PNG spritesheet
 #    - Create/update JSON manifest (src/data/tilesets/dpp.json)
-#    - Each tile entry: key, sx, sy, w, h, walkable, encounter, above, category, description
+#    - Each tile entry: key, sx, sy, w, h, walkable, encounterTypes, above, category, description
 
 # 3. Character sprite workflow (already done for base characters)
 #    - Source/create character spritesheet PNG

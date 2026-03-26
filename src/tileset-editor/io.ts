@@ -68,7 +68,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         w: t.w ?? (t as unknown as Record<string, number>).tileSize ?? 16,
         h: t.h ?? (t as unknown as Record<string, number>).tileSize ?? 16,
         walkable: t.walkable ?? true,
-        encounter: t.encounter ?? false,
+        encounterTypes: t.encounterTypes ?? ((t as any).encounter ? ['*'] : undefined),
         above: t.above ?? false,
         overlay: t.overlay ?? undefined,
         category: t.category ?? ((t as any).destroy ? 'interactive' : undefined),
@@ -89,7 +89,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         w: (raw.w as number) ?? baseTileSize,
         h: (raw.h as number) ?? baseTileSize,
         walkable: (raw.walkable as boolean) ?? true,
-        encounter: (raw.encounter as boolean) ?? false,
+        encounterTypes: (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined),
         above: (raw.renderAbove as boolean) ?? false,
       });
     }

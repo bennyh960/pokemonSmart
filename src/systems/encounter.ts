@@ -142,24 +142,67 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
   };
 }
 
-/** Generate a random wild Pokemon for the given map area. */
-export function generateWildEncounter(mapId: string): Pokemon | null {
+/**
+ * Generate a random wild Pokemon for the given map area.
+ * @param mapId - encounter table ID (map id or explicit encounterTableId)
+ * @param tileTypes - encounter type filter from the tile. ['*'] = any, ['water'] = water only, etc.
+ */
+export function generateWildEncounter(mapId: string, tileTypes?: string[] | null): Pokemon | null {
   const table = encounterTables[mapId];
   if (!table || table.entries.length === 0) {
-    // Fallback: use test-map table
     const fallback = encounterTables['test-map'];
     if (!fallback) return null;
-    return rollEncounter(fallback);
+    return rollEncounter(fallback, tileTypes);
   }
-  return rollEncounter(table);
+  return rollEncounter(table, tileTypes);
 }
 
-/** Roll a Pokemon from the encounter table using weighted random. */
-function rollEncounter(table: EncounterTable): Pokemon | null {
-  const totalWeight = table.entries.reduce((sum, e) => sum + e.weight, 0);
+// Parse encounter type filters into include/exclude lists.
+//   ['*']             - all types, no exclusions
+//   ['* /water,ice']  - all types except water and ice (no space in actual value)
+//   ['water','bug']   - only water and bug
+function parseEncounterFilter(tileTypes: string[]): { mode: 'all' | 'include'; include: string[]; exclude: string[] } {
+  // Check for wildcard with exclusions: '*/water,ice'
+  const wildcard = tileTypes.find(t => t.startsWith('*'));
+  if (wildcard) {
+    const afterSlash = wildcard.split('/')[1]; // 'water,ice' or undefined
+    const exclude = afterSlash ? afterSlash.split(',').map(s => s.trim()).filter(Boolean) : [];
+    return { mode: 'all', include: [], exclude };
+  }
+  return { mode: 'include', include: tileTypes, exclude: [] };
+}
+
+/** Roll a Pokemon from the encounter table using weighted random, filtered by tile types. */
+function rollEncounter(table: EncounterTable, tileTypes?: string[] | null): Pokemon | null {
+  // Filter entries by tile encounter types
+  let entries = table.entries;
+  if (tileTypes) {
+    const filter = parseEncounterFilter(tileTypes);
+    if (filter.mode === 'all' && filter.exclude.length > 0) {
+      // All types except excluded
+      entries = entries.filter(e => {
+        const data = getPokemon(e.pokemonId);
+        if (!data) return false;
+        // Exclude if ALL of the Pokemon's types are in the exclude list
+        return !data.types.every(t => filter.exclude.includes(t));
+      });
+    } else if (filter.mode === 'include') {
+      // Only specific types
+      entries = entries.filter(e => {
+        const data = getPokemon(e.pokemonId);
+        if (!data) return false;
+        return data.types.some(t => filter.include.includes(t));
+      });
+    }
+    // mode === 'all' with no exclusions → no filtering needed
+  }
+
+  if (entries.length === 0) return null;
+
+  const totalWeight = entries.reduce((sum, e) => sum + e.weight, 0);
   let roll = Math.random() * totalWeight;
 
-  for (const entry of table.entries) {
+  for (const entry of entries) {
     roll -= entry.weight;
     if (roll <= 0) {
       const data = getPokemon(entry.pokemonId);

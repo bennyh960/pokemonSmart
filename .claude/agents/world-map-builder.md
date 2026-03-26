@@ -16,7 +16,7 @@ The tileset manifest (`src/data/tilesets/dpp.json`) was extracted from a tileset
 | `sx`, `sy` | Source coordinates on the PNG (you don't need these — the engine uses them) |
 | `w`, `h` | Tile dimensions in pixels. Standard = 16×16. Buildings can be 64×32, 80×64, etc. |
 | `walkable` | `true` = player can walk here. Use for paths, grass, floors. `false` = solid obstacle. |
-| `encounter` | `true` = wild Pokemon can appear. Only tall grass and deep water. |
+| `encounterTypes` | Zone-based encounter filter. `undefined` = no encounters. `['*']` = all Pokemon types from map table. `['*/water']` = all except water. `['water','ice']` = only those types. Use `['*']` for grass, `['water']` for water tiles, `['*/water']` for mountain grass where water Pokemon shouldn't appear. |
 | `destroy` | `null` = permanent. `"cut"` = removable bush/tree. `"strength"` = pushable rock. |
 | `above` | `true` = renders on top of base tiles (buildings, signs, fences, trees). Goes in the `objects` array. `false` = base ground tile. Goes in the `tiles` grid. |
 | `category` | Semantic group: `grass`, `ground`, `water`, `tree`, `sand`, `mountain`, `road`, `floor`, `building`, `decoration`, `obstacle` |
@@ -37,7 +37,7 @@ The tileset manifest (`src/data/tilesets/dpp.json`) was extracted from a tileset
 2. **Base layer** (`tiles` grid) — use only tiles where `above: false`. These fill every cell.
 3. **Object layer** (`objects` array) — use only tiles where `above: true`. These overlay on top.
 4. **Walkability** — check `walkable` to ensure players can navigate your paths
-5. **Encounters** — place `encounter: true` tiles in areas where wild Pokemon should appear
+5. **Encounters** — set `encounterTypes` on tiles where wild Pokemon should appear. Use `['*']` for generic grass, `['water']` for water tiles, `['*/water']` for areas where water Pokemon shouldn't spawn (e.g., mountain grass far from water). The map's encounter table lists ALL Pokemon for the map; tiles filter which subset appears at each location
 
 ---
 
@@ -135,7 +135,7 @@ Without these registrations, map transitions will fail silently (falling back to
 | `transitions` | Array of map-to-map connections. Must be bidirectional (if A→B exists, B→A must also exist in the other map) |
 | `npcs` | Non-player characters with position, dialogue, and optional trainer data |
 | `music` | Music track name. Available: `"town"`, `"route"`, `"battle"`, `"victory"`, `"title"` |
-| `encounterTableId` | ID for wild encounter table. `null` for towns. Set for routes/wild areas |
+| `encounterTableId` | ID for wild encounter table (`src/data/encounter-tables.json`). `null` for towns. Set for routes/wild areas. The table lists ALL Pokemon for the map; individual tiles filter by type via `encounterTypes` |
 | `tiles` | 2D array [height][width] of tile keys from the manifest. Every cell must have a base tile |
 | `objects` | Array of above-layer objects (buildings, signs, decorations) with position |
 

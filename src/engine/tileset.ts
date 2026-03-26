@@ -15,7 +15,13 @@ export interface TileDef {
   w: number;       // pixel width
   h: number;       // pixel height
   walkable: boolean;
-  encounter: boolean;
+  /**
+   * Encounter types filter for this tile.
+   *   undefined/null = not an encounter tile
+   *   ['*']          = any Pokemon type from the map's encounter table
+   *   ['water','ice']= only Pokemon with at least one matching type
+   */
+  encounterTypes?: string[] | null;
   above: boolean;
   overlay: boolean; // true = renders on top of player (e.g. tall grass); false = flat ground decoration
   category?: string;
@@ -46,7 +52,8 @@ interface TileEntryRaw {
   h?: number;
   tileSize?: number;  // legacy compat: square tile
   walkable: boolean;
-  encounter: boolean;
+  encounter?: boolean;              // legacy: true/false
+  encounterTypes?: string[] | null; // new: type filter array
   above: boolean;
   overlay?: boolean;
   category?: string;
@@ -104,13 +111,15 @@ export async function loadTileset(name: string): Promise<Tileset> {
     for (const raw of manifest.tiles as TileEntryRaw[]) {
       const size = raw.tileSize ?? 16;
       const iRef = normalizeInteractRef(raw.interactType, raw.destroy);
+      // Migrate legacy encounter:boolean → encounterTypes
+      const encTypes = raw.encounterTypes ?? (raw.encounter ? ['*'] : undefined);
       tiles.set(raw.key, {
         sx: raw.sx,
         sy: raw.sy,
         w: raw.w ?? size,
         h: raw.h ?? size,
         walkable: raw.walkable ?? true,
-        encounter: raw.encounter ?? false,
+        encounterTypes: encTypes,
         above: raw.above ?? false,
         overlay: raw.overlay ?? false,
         category: raw.category ?? (iRef ? 'interactive' : undefined),
@@ -124,13 +133,14 @@ export async function loadTileset(name: string): Promise<Tileset> {
     const base = (manifest.tileSize as number) ?? 16;
     for (const [id, raw] of Object.entries(manifest.tiles as Record<string, Record<string, unknown>>)) {
       const iRef2 = normalizeInteractRef(raw.interactType, raw.destroy as string | null);
+      const encTypes2 = (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined);
       tiles.set(id, {
         sx: raw.sx as number,
         sy: raw.sy as number,
         w: (raw.w as number) ?? (raw.tileSize as number) ?? base,
         h: (raw.h as number) ?? (raw.tileSize as number) ?? base,
         walkable: (raw.walkable as boolean) ?? true,
-        encounter: (raw.encounter as boolean) ?? false,
+        encounterTypes: encTypes2,
         above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false,
         overlay: (raw.overlay as boolean) ?? false,
         category: (raw.category as string) ?? (iRef2 ? 'interactive' : undefined),

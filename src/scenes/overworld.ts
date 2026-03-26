@@ -662,10 +662,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Check for map transition first
           if (checkTransition()) return;
 
-          if (tileMap.isEncounterTile(player.gridX, player.gridY)) {
+          const tileEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
+          if (tileEncTypes) {
             const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || 'test-map';
             if (Math.random() < getEncounterRate(encounterId)) {
-              const wild = generateWildEncounter(encounterId);
+              const wild = generateWildEncounter(encounterId, tileEncTypes);
               if (wild) { startEncounterTransition(wild); return; }
             }
           }

@@ -5,6 +5,173 @@ import { applyCrop, saveTilesetImage } from './io.js';
 import { INTERACT_TYPE_IDS, getInteractType } from '../data/interact-types.js';
 import { getAllItems } from '../data/items.js';
 
+// ─── Pokemon types for encounter picker ───
+const POKEMON_TYPES = [
+  'normal','fire','water','grass','electric','ice','fighting','poison',
+  'ground','flying','psychic','bug','rock','ghost','dragon','dark','steel',
+];
+
+const TYPE_BADGE_COLORS: Record<string, string> = {
+  normal: '#a8a878', fire: '#f08030', water: '#6890f0', grass: '#78c850',
+  electric: '#f8d030', ice: '#98d8d8', fighting: '#c03028', poison: '#a040a0',
+  ground: '#e0c068', flying: '#a890f0', psychic: '#f85888', bug: '#a8b820',
+  rock: '#b8a038', ghost: '#705898', dragon: '#7038f8', dark: '#705848',
+  steel: '#b8b8d0',
+};
+
+// Parse encounterTypes array into UI state.
+//   ['*']             - allMode=true, exceptions=[]
+//   ['* /water,ice']  - allMode=true, exceptions=['water','ice']
+//   ['water','bug']   - allMode=false, includes=['water','bug']
+//   []                - allMode=false, includes=[]
+function parseEncounterTypesForUI(types: string[]): { allMode: boolean; includes: string[]; exceptions: string[] } {
+  const wildcard = types.find(t => t.startsWith('*'));
+  if (wildcard) {
+    const afterSlash = wildcard.split('/')[1];
+    const exceptions = afterSlash ? afterSlash.split(',').map(s => s.trim()).filter(Boolean) : [];
+    return { allMode: true, includes: [], exceptions };
+  }
+  return { allMode: false, includes: [...types], exceptions: [] };
+}
+
+/** Serialize UI state back to encounterTypes array. */
+function serializeEncounterTypes(allMode: boolean, includes: string[], exceptions: string[]): string[] {
+  if (allMode) {
+    return exceptions.length > 0 ? [`*/${exceptions.join(',')}`] : ['*'];
+  }
+  return [...includes];
+}
+
+/**
+ * Creates an encounter types picker widget.
+ * - Checkbox for "All"
+ * - When All: dropdown adds exceptions (shown as red strikethrough tags)
+ * - When not All: dropdown adds included types (shown as colored tags)
+ * - Tags are clickable to remove
+ */
+function createEncounterTypesPicker(
+  container: HTMLElement,
+  initial: string[],
+  onChange: (types: string[]) => void,
+): void {
+  let { allMode, includes, exceptions } = parseEncounterTypesForUI(initial);
+
+  function emit(): void {
+    onChange(serializeEncounterTypes(allMode, includes, exceptions));
+  }
+
+  function render(): void {
+    container.innerHTML = '';
+
+    // Row 1: "All" checkbox + type dropdown
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:4px';
+
+    // All checkbox
+    const allLabel = document.createElement('label');
+    allLabel.style.cssText = 'display:flex;align-items:center;gap:3px;font-size:12px;cursor:pointer';
+    const allCb = document.createElement('input');
+    allCb.type = 'checkbox';
+    allCb.checked = allMode;
+    allCb.addEventListener('change', () => {
+      allMode = allCb.checked;
+      if (allMode) { includes = []; exceptions = []; }
+      else { exceptions = []; includes = []; }
+      emit();
+      render();
+    });
+    allLabel.appendChild(allCb);
+    allLabel.appendChild(document.createTextNode('All'));
+    row.appendChild(allLabel);
+
+    // Type dropdown
+    const usedTypes = allMode ? exceptions : includes;
+    const sel = document.createElement('select');
+    sel.style.cssText = 'font-size:11px;padding:1px 4px';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = allMode ? '+ Add exception...' : '+ Add type...';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    sel.appendChild(placeholder);
+
+    for (const t of POKEMON_TYPES) {
+      if (usedTypes.includes(t)) continue;
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+      sel.appendChild(opt);
+    }
+    sel.addEventListener('change', () => {
+      if (!sel.value) return;
+      if (allMode) {
+        if (!exceptions.includes(sel.value)) exceptions.push(sel.value);
+      } else {
+        if (!includes.includes(sel.value)) includes.push(sel.value);
+      }
+      emit();
+      render();
+    });
+    row.appendChild(sel);
+
+    container.appendChild(row);
+
+    // Row 2: Tags
+    if (!allMode && includes.length === 0) {
+      const none = document.createElement('span');
+      none.style.cssText = 'font-size:11px;color:#888;font-style:italic';
+      none.textContent = 'No encounters';
+      container.appendChild(none);
+      return;
+    }
+
+    const tagsRow = document.createElement('div');
+    tagsRow.style.cssText = 'display:flex;flex-wrap:wrap;gap:3px';
+
+    if (allMode) {
+      // Show "All" badge
+      const allTag = document.createElement('span');
+      allTag.style.cssText = 'display:inline-flex;align-items:center;gap:2px;padding:1px 6px;border-radius:3px;font-size:11px;background:#446644;color:#aaffaa;cursor:default';
+      allTag.textContent = exceptions.length > 0 ? 'All except:' : 'All types';
+      tagsRow.appendChild(allTag);
+
+      // Exception tags (red, strikethrough)
+      for (const t of exceptions) {
+        const tag = document.createElement('span');
+        const bg = TYPE_BADGE_COLORS[t] ?? '#888';
+        tag.style.cssText = `display:inline-flex;align-items:center;gap:2px;padding:1px 6px;border-radius:3px;font-size:11px;color:#fff;cursor:pointer;background:${bg};opacity:0.7;text-decoration:line-through`;
+        tag.title = 'Click to remove exception';
+        tag.textContent = `✕ ${t}`;
+        tag.addEventListener('click', () => {
+          exceptions = exceptions.filter(s => s !== t);
+          emit();
+          render();
+        });
+        tagsRow.appendChild(tag);
+      }
+    } else {
+      // Include tags (normal colored)
+      for (const t of includes) {
+        const tag = document.createElement('span');
+        const bg = TYPE_BADGE_COLORS[t] ?? '#888';
+        tag.style.cssText = `display:inline-flex;align-items:center;gap:2px;padding:1px 6px;border-radius:3px;font-size:11px;color:#fff;cursor:pointer;background:${bg}`;
+        tag.title = 'Click to remove';
+        tag.textContent = `✕ ${t}`;
+        tag.addEventListener('click', () => {
+          includes = includes.filter(s => s !== t);
+          emit();
+          render();
+        });
+        tagsRow.appendChild(tag);
+      }
+    }
+
+    container.appendChild(tagsRow);
+  }
+
+  render();
+}
+
 /** Right sidebar: properties for current selection or selected tile. */
 export class PropertiesPanel {
   private container: HTMLElement;
@@ -302,7 +469,7 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Key:</label><input id="multi-key" type="text" placeholder="e.g. building-walls" autofocus /></div>
       <div class="prop-row"><label>Category:</label><select id="multi-cat"><option value="">None</option>${TILE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
       <div class="prop-row"><label>Walkable:</label><input id="multi-walk" type="checkbox" /></div>
-      <div class="prop-row"><label>Encounter:</label><input id="multi-enc" type="checkbox" /></div>
+      <div class="prop-row" style="flex-direction:column;align-items:flex-start"><label>Encounter types:</label><div id="multi-enc-widget"></div></div>
       <div class="prop-row"><label>Above (2nd layer):</label><input id="multi-above" type="checkbox" /></div>
       <div class="prop-row"><label>Overlay (on top of player):</label><input id="multi-overlay" type="checkbox" /></div>
       <div class="prop-row"><label>Description:</label><input id="multi-desc" type="text" placeholder="optional note" /></div>
@@ -350,6 +517,13 @@ export class PropertiesPanel {
     }
     section.appendChild(previewCanvas);
 
+    // Wire encounter types picker for multi-select form
+    let multiEncTypes: string[] = [];
+    const multiEncWidget = section.querySelector('#multi-enc-widget') as HTMLElement;
+    if (multiEncWidget) {
+      createEncounterTypesPicker(multiEncWidget, [], (types) => { multiEncTypes = types; });
+    }
+
     // Add Tile button
     const addBtn = document.createElement('button');
     addBtn.className = 'primary';
@@ -366,7 +540,7 @@ export class PropertiesPanel {
         key,
         sx, sy, w, h,
         walkable: (section.querySelector('#multi-walk') as HTMLInputElement).checked,
-        encounter: (section.querySelector('#multi-enc') as HTMLInputElement).checked,
+        encounterTypes: multiEncTypes.length > 0 ? multiEncTypes : undefined,
         above: (section.querySelector('#multi-above') as HTMLInputElement).checked,
         overlay: (section.querySelector('#multi-overlay') as HTMLInputElement).checked || undefined,
         category: catVal || undefined,
@@ -413,13 +587,20 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Key:</label><input id="add-key" type="text" placeholder="e.g. grass-1" autofocus /></div>
       <div class="prop-row"><label>Category:</label><select id="add-cat"><option value="">None</option>${TILE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
       <div class="prop-row"><label>Walkable:</label><input id="add-walk" type="checkbox" checked /></div>
-      <div class="prop-row"><label>Encounter:</label><input id="add-enc" type="checkbox" /></div>
+      <div class="prop-row" style="flex-direction:column;align-items:flex-start"><label>Encounter types:</label><div id="add-enc-widget"></div></div>
       <div class="prop-row"><label>Above (2nd layer):</label><input id="add-above" type="checkbox" /></div>
       <div class="prop-row"><label>Overlay (on top of player):</label><input id="add-overlay" type="checkbox" /></div>
       <div class="prop-row"><label>Description:</label><input id="add-desc" type="text" placeholder="optional note" /></div>
     `;
 
     this.addPreview(section, sx, sy, w, h);
+
+    // Wire encounter types picker for add-tile form
+    let addEncTypes: string[] = [];
+    const addEncWidget = section.querySelector('#add-enc-widget') as HTMLElement;
+    if (addEncWidget) {
+      createEncounterTypesPicker(addEncWidget, [], (types) => { addEncTypes = types; });
+    }
 
     const addBtn = document.createElement('button');
     addBtn.className = 'primary';
@@ -436,7 +617,7 @@ export class PropertiesPanel {
         sx, sy,
         w, h,
         walkable: (section.querySelector('#add-walk') as HTMLInputElement).checked,
-        encounter: (section.querySelector('#add-enc') as HTMLInputElement).checked,
+        encounterTypes: addEncTypes.length > 0 ? addEncTypes : undefined,
         above: (section.querySelector('#add-above') as HTMLInputElement).checked,
         overlay: (section.querySelector('#add-overlay') as HTMLInputElement).checked || undefined,
         category: catVal || undefined,
@@ -481,9 +662,9 @@ export class PropertiesPanel {
         <label>Walkable:</label>
         <input id="edit-walk" type="checkbox" ${t.walkable ? 'checked' : ''} />
       </div>
-      <div class="prop-row">
-        <label>Encounter:</label>
-        <input id="edit-enc" type="checkbox" ${t.encounter ? 'checked' : ''} />
+      <div class="prop-row" style="flex-direction:column;align-items:flex-start">
+        <label>Encounter types:</label>
+        <div id="edit-enc-widget"></div>
       </div>
       <div class="prop-row">
         <label>Above (2nd layer):</label>
@@ -523,7 +704,12 @@ export class PropertiesPanel {
     wire('#edit-key', 'key', 'text');
     wire('#edit-cat', 'category', 'select');
     wire('#edit-walk', 'walkable', 'check');
-    wire('#edit-enc', 'encounter', 'check');
+    // Encounter types widget
+    createEncounterTypesPicker(
+      section.querySelector('#edit-enc-widget') as HTMLElement,
+      t.encounterTypes ?? [],
+      (types) => this.state.updateTile(index, { encounterTypes: types.length > 0 ? types : undefined } as any),
+    );
     wire('#edit-above', 'above', 'check');
     wire('#edit-overlay', 'overlay', 'check');
     // InteractType: dynamic dropdown from INTERACT_TYPE_IDS + args editor

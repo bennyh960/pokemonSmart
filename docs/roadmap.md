@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 3.5 ✅ COMPLETE (Sprint 3.5 open items → Sprint 4 next)
+## Overall Progress: Sprint 5 ⬜ IN PROGRESS (Phase 1 data fetch done, Phase 2 integration done)
 
 ---
 
@@ -270,6 +270,38 @@ This is a foundation sprint — must be done before design/content sprints.
 **Also fixed:** Bug #2 (RTL text alignment) — Hebrew strings rewritten in correct logical order
 
 **Tech debt:** Pokemon names are duplicated in `pokemon.json` and `evolution-chains.json` (both store `{ en, he }` name objects). Move names also embed the localized name in `moves.json`. A cleaner approach would be a single `pokemon-names.json` and `move-names.json` keyed by ID, with the data files only referencing IDs. Low priority — ~13KB redundant data, compresses well with gzip.
+
+---
+
+## Sprint 11 — Progressive English Learning ⬜ PLANNED
+**Goal:** Gradually expose Hebrew-speaking players to English vocabulary through gameplay progression
+
+The game doubles as an English learning tool. Initially, most text is in Hebrew. As the player progresses (measured by playtime), translations are progressively removed — forcing the player to read English words they've already seen many times in Hebrew.
+
+**Design principles:**
+- Start with minimal English: only Pokemon type names (Fire, Water, Grass...) stay in English from the start — these are short, visual, and repeated constantly
+- Each phase removes Hebrew translations for a category, replacing them with English
+- The transition is per-category, not per-word — keeps it predictable
+- A toggle in settings lets players opt out (always Hebrew / always English / progressive)
+- Phase thresholds are based on **playtime hours**, not story progress
+
+| Phase | Trigger | Category switched to English | Notes |
+|-------|---------|----------------------------|-------|
+| 0 | Game start | Pokemon type names (Fire, Water, etc.) | Already English-only in type badges |
+| 1 | ~10 hours | Item names (Potion, Revive, etc.) | High repetition from bag/shop usage |
+| 2 | ~15 hours | Ability names (Overgrow, Blaze, etc.) | Seen on every Pokemon detail screen |
+| 3 | ~20 hours | Move/attack names (Tackle, Ember, etc.) | High repetition from battles |
+| 4 | ~25 hours | Nature names (Adamant, Jolly, etc.) | Lower frequency, more advanced vocabulary |
+| 5 | ~30 hours | Pokemon names | Last phase — by now players recognize most names |
+
+| Task | Agent | Status |
+|------|-------|--------|
+| Playtime-based phase system — `getTranslationPhase(playtime)` returns current phase | game-engine-developer | ⬜ |
+| Per-category locale override — `getItemLocale()`, `getMoveLocale()`, etc. that return 'en' or current locale based on phase | game-engine-developer | ⬜ |
+| Settings toggle — always-Hebrew / always-English / progressive (default) | frontend-developer | ⬜ |
+| Phase transition notification — brief in-game message when a new phase activates | frontend-developer | ⬜ |
+| Hebrew translations for items (229), abilities (132), natures (25) — needed so phase 0 works | asset-manager | ⬜ |
+| Parent dashboard — show which English words the child has been exposed to | frontend-developer | ⬜ |
 
 ---
 

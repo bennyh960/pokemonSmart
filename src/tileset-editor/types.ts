@@ -6,7 +6,8 @@ export interface TileEntry {
   w: number;       // pixel width
   h: number;       // pixel height
   walkable: boolean;
-  encounter: boolean;
+  /** Encounter type filter: undefined = not encounterable, ['*'] = all, ['water'] = water only */
+  encounterTypes?: string[];
   above: boolean;
   overlay?: boolean; // true = renders on top of player (tall grass); false/absent = flat ground
   category?: string;

@@ -78,7 +78,8 @@ The game uses a **JSON manifest + PNG spritesheet** approach for tiles:
    - `key` — unique ID used in map tile grids (e.g., "g1", "t1", "pc1")
    - `sx`, `sy` — source pixel coordinates on the PNG spritesheet
    - `w`, `h` — tile dimensions (16×16 standard; buildings can be 64×64+)
-   - `walkable`, `encounter`, `above`, `destroy`, `category`, `description`
+   - `walkable`, `encounterTypes`, `above`, `category`, `description`
+   - `encounterTypes` replaces the old `encounter: boolean`. Values: `undefined` = not encounterable, `['*']` = all types, `['*/water,ice']` = all except water & ice, `['water','bug']` = only those types. Legacy `encounter: true` auto-migrates to `['*']` on load
 
 2. **Tileset PNG** (`public/sprites/overworld/dpp-tileset.png`) — single spritesheet containing all tiles
 

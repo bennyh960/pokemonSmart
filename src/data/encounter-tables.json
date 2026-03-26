@@ -40,11 +40,20 @@
       {
         "pokemonId": 16,
         "minLevel": 3,
-        "maxLevel": 5,
+        "maxLevel": 7,
         "weight": 15
+      },
+      {
+        "pokemonId": 21,
+        "minLevel": 3,
+        "maxLevel": 7,
+        "weight": 20
       }
     ]
-  },
+  
+},
+  
+  
   "route-2": {
     "encounterRate": 0.15,
     "entries": [
@@ -56,7 +65,7 @@
       { "pokemonId": 66, "minLevel": 6, "maxLevel": 8, "weight": 10 }
     ]
   },
-  "safari": {
+  "small-safari": {
     "encounterRate": 0.20,
     "entries": [
       { "pokemonId": 111, "minLevel": 10, "maxLevel": 14, "weight": 12 },
@@ -71,10 +80,142 @@
       { "pokemonId": 104, "minLevel": 10, "maxLevel": 13, "weight": 7 },
       { "pokemonId": 246, "minLevel": 12, "maxLevel": 15, "weight": 3 },
       { "pokemonId": 131, "minLevel": 12, "maxLevel": 15, "weight": 2 },
-      { "pokemonId": 147, "minLevel": 12, "maxLevel": 15, "weight": 2 },
       { "pokemonId": 27, "minLevel": 10, "maxLevel": 13, "weight": 3 }
     ]
   },
+  
+  "safari": {
+    "encounterRate": 0.2,
+    "entries": [
+      {
+        "pokemonId": 111,
+        "minLevel": 10,
+        "maxLevel": 14,
+        "weight": 12
+      },
+      {
+        "pokemonId": 123,
+        "minLevel": 10,
+        "maxLevel": 14,
+        "weight": 8
+      },
+      {
+        "pokemonId": 127,
+        "minLevel": 10,
+        "maxLevel": 14,
+        "weight": 8
+      },
+      {
+        "pokemonId": 128,
+        "minLevel": 12,
+        "maxLevel": 15,
+        "weight": 6
+      },
+      {
+        "pokemonId": 115,
+        "minLevel": 12,
+        "maxLevel": 15,
+        "weight": 5
+      },
+      {
+        "pokemonId": 83,
+        "minLevel": 10,
+        "maxLevel": 13,
+        "weight": 10
+      },
+      {
+        "pokemonId": 46,
+        "minLevel": 10,
+        "maxLevel": 13,
+        "weight": 12
+      },
+      {
+        "pokemonId": 48,
+        "minLevel": 10,
+        "maxLevel": 13,
+        "weight": 12
+      },
+      {
+        "pokemonId": 74,
+        "minLevel": 10,
+        "maxLevel": 14,
+        "weight": 10
+      },
+      {
+        "pokemonId": 104,
+        "minLevel": 10,
+        "maxLevel": 13,
+        "weight": 7
+      },
+      {
+        "pokemonId": 246,
+        "minLevel": 5,
+        "maxLevel": 6,
+        "weight": 3
+      },
+      {
+        "pokemonId": 131,
+        "minLevel": 15,
+        "maxLevel": 15,
+        "weight": 2
+      },
+      {
+        "pokemonId": 147,
+        "minLevel": 5,
+        "maxLevel": 6,
+        "weight": 2
+      },
+      {
+        "pokemonId": 27,
+        "minLevel": 10,
+        "maxLevel": 13,
+        "weight": 3
+      },
+      {
+        "pokemonId": 17,
+        "minLevel": 15,
+        "maxLevel": 18,
+        "weight": 10
+      },
+      {
+        "pokemonId": 241,
+        "minLevel": 10,
+        "maxLevel": 15,
+        "weight": 5
+      },
+      {
+        "pokemonId": 214,
+        "minLevel": 15,
+        "maxLevel": 20,
+        "weight": 5
+      },
+      {
+        "pokemonId": 22,
+        "minLevel": 18,
+        "maxLevel": 20,
+        "weight": 5
+      },
+      {
+        "pokemonId": 179,
+        "minLevel": 10,
+        "maxLevel": 14,
+        "weight": 15
+      },
+      {
+        "pokemonId": 180,
+        "minLevel": 15,
+        "maxLevel": 20,
+        "weight": 5
+      },
+      {
+        "pokemonId": 14,
+        "minLevel": 12,
+        "maxLevel": 18,
+        "weight": 10
+      }
+    ]
+  
+},
   "route-29": {
     "encounterRate": 0.10,
     "entries": [

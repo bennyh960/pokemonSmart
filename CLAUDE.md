@@ -25,7 +25,7 @@ A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in 
 ## Tech Stack
 - **Runtime:** Vite + TypeScript + HTML5 Canvas (240×160 logical coords, 720×480 physical via `ctx.scale(RES_SCALE=3)` in `src/engine/config.ts`, responsive display)
 - **Audio:** Howler.js
-- **i18n:** Custom `src/i18n/i18n.ts` — Hebrew (default) + English, `t(key, params)`, L key toggles
+- **i18n:** Custom `src/i18n/i18n.ts` — Hebrew (default) + English, `t(key, params)`, L key toggles. **The game is a bilingual learning tool** — see "English Learning" below
 - **Data:** PokeAPI (fetched at build time → static JSON)
 - **Pokemon:** Real Gen 1-2 (251 Pokemon, real types/moves/evolutions)
 - **Starters:** Gen 1 — Bulbasaur, Charmander, Squirtle (8 moves each)
@@ -40,6 +40,21 @@ A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in 
 - **Admin:** `ADMIN_NAME` in `src/engine/config.ts` — debug shortcuts (H=heal, N=shop) only for admin player
 - **Visual style:** Modern pixel art (not restricted to GBC/retro aesthetics) — full color palettes, clean sprites, performance-first
 - **Math in battle:** Currently disabled — will be rethought for a less intrusive mechanic
+- **Abilities:** 132 abilities in `src/data/abilities.json`, mapping in `pokemon-abilities.json`. Assigned randomly on Pokemon creation. Displayed on party stats screen
+- **Natures:** 25 natures in `src/data/natures.json`. Affect stats (×1.1 boosted / ×0.9 reduced). Assigned randomly on creation. Displayed on party stats screen
+- **Items (relational):** `items.json` (229 items from PokeAPI — identity/names/sprites) + `item-defs.ts` (game effects/prices). `items.ts` is a thin adapter combining both. No duplication between data and logic
+- **Encounters:** Zone-based wild Pokemon filtering. Tileset tiles have `encounterTypes?: string[]` on `TileDef`. Values: `undefined` = not encounterable, `['*']` = all types, `['*/water,ice']` = all except water & ice, `['water','bug']` = only those types. Map encounter tables (`src/data/encounter-tables.json`) list all Pokemon per map; the tile filters which subset can appear at that grid position. Exclusion logic: Pokemon excluded only if ALL its types are in the exclude list (dual-types with one allowed type still appear). Tileset editor has a visual picker widget with type badges + exception support
+- **Save version:** Currently v3. Migration adds abilityId/natureId/heldItemId to Pokemon
+
+## English Learning
+The game teaches English vocabulary progressively to Hebrew-speaking players:
+- **All data is bilingual** `{ en, he }` — Pokemon names, moves, items, abilities, natures
+- **Hebrew is the default locale** — RTL text rendering, right-aligned UI
+- **Every new UI element must support both RTL and LTR** — use `isRTL()` checks, `getLocale()` for name resolution
+- **Progressive English exposure** (Sprint 11): as playtime increases, Hebrew translations are removed category-by-category, exposing English words the player has already learned through repetition
+- **Phase plan:** Types (always English) → Items (~10h) → Abilities (~15h) → Moves (~20h) → Natures (~25h) → Pokemon names (~30h)
+- **Hebrew translations for items/abilities/natures are deferred** until Sprint 11 — currently show English names, which is intentional for the learning flow
+- **When adding new text/data:** always use `{ en, he }` format for any player-visible string. Even if Hebrew is placeholder (= English copy), the structure must be bilingual from day one
 
 ## How to Work
 1. Read `docs/roadmap.md` to see overall progress

@@ -150,30 +150,40 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
     },
 
     isEncounterTile(gx: number, gy: number): boolean {
-      // Check base tile layer
-      const tile = this.getTile(gx, gy);
-      if (typeof tile === 'string' && tileset) {
-        const def = tileset.getTile(tile);
-        if (def?.encounter) return true;
-      } else if (tile === TILE_TALL_GRASS) {
-        return true;
-      }
-      // Check placed objects layer (encounter grass has above: true)
+      return this.getEncounterTypes(gx, gy) !== null;
+    },
+
+    /**
+     * Get the encounter type filter for a tile.
+     * Returns null if not an encounter tile.
+     * Returns ['*'] if any type is allowed.
+     * Returns ['water','ice',...] for filtered encounters.
+     */
+    getEncounterTypes(gx: number, gy: number): string[] | null {
+      // Check placed objects layer first (above layer takes priority)
       if (tileset) {
         for (const obj of placedObjects) {
           const def = tileset.getTile(obj.key);
-          if (!def || !def.encounter) continue;
+          if (!def?.encounterTypes) continue;
           const gridW = Math.max(1, Math.round(def.w / BASE));
           const gridH = Math.max(1, Math.round(def.h / BASE));
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
             if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
-            return true;
+            return def.encounterTypes;
           }
         }
       }
-      return false;
+      // Check base tile layer
+      const tile = this.getTile(gx, gy);
+      if (typeof tile === 'string' && tileset) {
+        const def = tileset.getTile(tile);
+        if (def?.encounterTypes) return def.encounterTypes;
+      } else if (tile === TILE_TALL_GRASS) {
+        return ['*']; // legacy tall grass — all types
+      }
+      return null;
     },
 
     /** Render ground layer. */

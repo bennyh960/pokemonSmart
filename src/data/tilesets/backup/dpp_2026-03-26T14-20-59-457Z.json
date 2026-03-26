@@ -2451,39 +2451,6 @@
       "category": "ground",
       "interactType": null,
       "description": "s1 ground junction bottom left"
-    },
-    {
-      "key": "br1h",
-      "sx": 48,
-      "sy": 448,
-      "w": 48,
-      "h": 32,
-      "walkable": true,
-      "above": true,
-      "category": "floor",
-      "description": "bridge 1 horizontal"
-    },
-    {
-      "key": "br1v",
-      "sx": 48,
-      "sy": 432,
-      "w": 48,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "floor",
-      "description": "bridge 1 vertical"
-    },
-    {
-      "key": "deck1",
-      "sx": 0,
-      "sy": 432,
-      "w": 48,
-      "h": 48,
-      "walkable": true,
-      "above": true,
-      "category": "floor",
-      "description": "deck - can connect to br1h and brhv"
     }
   ]
 }

@@ -33,13 +33,13 @@ async function init() {
     for (const raw of dppManifest.tiles as Array<Record<string, unknown>>) {
       const size = (raw.tileSize as number) ?? 16;
       const iRef = toInteractRef(raw.interactType, raw.destroy);
-      tiles[raw.key as string] = { sx: raw.sx as number, sy: raw.sy as number, w: (raw.w as number) ?? size, h: (raw.h as number) ?? size, walkable: raw.walkable as boolean, encounter: raw.encounter as boolean, above: (raw.above as boolean) ?? false, overlay: (raw.overlay as boolean) ?? false, category: (raw.category as string) ?? (iRef ? 'interactive' : undefined), interactType: iRef, cells: raw.cells as TileDef['cells'] };
+      tiles[raw.key as string] = { sx: raw.sx as number, sy: raw.sy as number, w: (raw.w as number) ?? size, h: (raw.h as number) ?? size, walkable: raw.walkable as boolean, encounterTypes: (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined), above: (raw.above as boolean) ?? false, overlay: (raw.overlay as boolean) ?? false, category: (raw.category as string) ?? (iRef ? 'interactive' : undefined), interactType: iRef, cells: raw.cells as TileDef['cells'] };
     }
   } else {
     const baseTileSize = (dppManifest as Record<string, unknown>).tileSize as number ?? 16;
     for (const [id, raw] of Object.entries(dppManifest.tiles as Record<string, Record<string, unknown>>)) {
       const iRef = toInteractRef(raw.interactType, raw.destroy);
-      tiles[id] = { sx: raw.sx as number, sy: raw.sy as number, w: (raw.w as number) ?? baseTileSize, h: (raw.h as number) ?? baseTileSize, walkable: raw.walkable as boolean, encounter: raw.encounter as boolean, above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false, overlay: (raw.overlay as boolean) ?? false, category: (raw.category as string) ?? (iRef ? 'interactive' : undefined), interactType: iRef };
+      tiles[id] = { sx: raw.sx as number, sy: raw.sy as number, w: (raw.w as number) ?? baseTileSize, h: (raw.h as number) ?? baseTileSize, walkable: raw.walkable as boolean, encounterTypes: (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined), above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false, overlay: (raw.overlay as boolean) ?? false, category: (raw.category as string) ?? (iRef ? 'interactive' : undefined), interactType: iRef };
     }
   }
   const categories = categorizeTiles(tiles);

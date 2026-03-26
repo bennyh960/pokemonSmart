@@ -5,7 +5,7 @@ export class TileList {
   private container: HTMLElement;
   private state: TilesetEditorState;
   private filterText = '';
-  private filterType: 'all' | 'tiles' | 'above' = 'all';
+  private filterType: 'all' | 'tiles' | 'above' | 'encounter' = 'all';
   private filterCategory = '';
   private catSelect!: HTMLSelectElement;
 
@@ -28,11 +28,12 @@ export class TileList {
       <button class="filter-btn active" data-f="all">All</button>
       <button class="filter-btn" data-f="tiles">Tiles</button>
       <button class="filter-btn" data-f="above">Above</button>
+      <button class="filter-btn" data-f="encounter">Encounter</button>
     `;
     filters.addEventListener('click', (e) => {
       const btn = (e.target as HTMLElement).closest('.filter-btn') as HTMLElement | null;
       if (!btn) return;
-      this.filterType = btn.dataset.f as 'all' | 'tiles' | 'above';
+      this.filterType = btn.dataset.f as 'all' | 'tiles' | 'above' | 'encounter';
       filters.querySelectorAll('.filter-btn').forEach(b => (b as HTMLElement).classList.toggle('active', b === btn));
       this.build();
     });
@@ -86,6 +87,7 @@ export class TileList {
       if (this.filterText && !t.key.toLowerCase().includes(this.filterText)) return false;
       if (this.filterType === 'tiles' && t.above) return false;
       if (this.filterType === 'above' && !t.above) return false;
+      if (this.filterType === 'encounter' && (!t.encounterTypes || t.encounterTypes.length === 0)) return false;
       if (this.filterCategory && t.category !== this.filterCategory) return false;
       return true;
     });
@@ -120,6 +122,7 @@ export class TileList {
       badges.className = 'tile-size-badge';
       badges.textContent = `${t.w}×${t.h}`;
       if (t.above) badges.textContent += ' ↑';
+      if (t.encounterTypes) badges.textContent += t.encounterTypes.includes('*') ? ' ⚔' : ` ⚔${t.encounterTypes.length}`;
       if (t.category) badges.textContent += ` [${t.category}]`;
       item.appendChild(badges);
 

@@ -89,7 +89,7 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Object:</label><span>${obj ?? 'none'}</span></div>
       <div class="prop-row"><label>Size:</label><span>${def ? `${def.w}×${def.h}` : '?'}px</span></div>
       <div class="prop-row"><label>Walkable:</label><span>${def?.walkable ?? '?'}</span></div>
-      <div class="prop-row"><label>Encounter:</label><span>${def?.encounter ?? false}</span></div>
+      <div class="prop-row"><label>Encounter:</label><span>${def?.encounterTypes ? def.encounterTypes.join(', ') : 'none'}</span></div>
       <div class="prop-row"><label>Above:</label><span>${def?.above ?? false}</span></div>
     `;
     this.container.appendChild(section);
