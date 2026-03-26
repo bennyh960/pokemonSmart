@@ -118,7 +118,7 @@
       "above": true,
       "category": "decoration",
       "interactType": null,
-      "description": "rock as decoration"
+      "description": "small rock decoration (16x16). Non-walkable obstacle, placed as object. Scatter sparsely on open ground for visual variety in mountain/route maps"
     },
     {
       "key": "r2",
@@ -129,7 +129,8 @@
       "walkable": false,
       "above": true,
       "category": "decoration",
-      "interactType": null
+      "interactType": null,
+      "description": "medium rock decoration (16x16). Non-walkable obstacle, placed as object. Visual variant of r1 for variety when scattering rocks"
     },
     {
       "key": "s1",
@@ -141,7 +142,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "sand 1 top left"
+      "description": "sand border: top-left outer corner. Place as object on s1-5 base where both the tile above AND to the left are non-sand"
     },
     {
       "key": "s1-2",
@@ -153,7 +154,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "sand 1 top"
+      "description": "sand border: top edge. Place as object on s1-5 base where the tile above is non-sand (but left and right are sand)"
     },
     {
       "key": "s1-3",
@@ -165,7 +166,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "sand 1 top right"
+      "description": "sand border: top-right outer corner. Place as object on s1-5 base where both the tile above AND to the right are non-sand"
     },
     {
       "key": "s1-4",
@@ -177,7 +178,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "sand 1 left"
+      "description": "sand border: left edge. Place as object on s1-5 base where the tile to the left is non-sand (but above and below are sand)"
     },
     {
       "key": "s1-5",
@@ -189,7 +190,7 @@
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "sand 1 center"
+      "description": "sand path center — walkable base tile for sand corridors. Place s1 border objects around edges where sand meets other ground: s1/s1-2/s1-3 (top row), s1-4/s1-6 (sides), s1-7/s1-8/s1-9 (bottom row). Use s1jtl/s1jtr/s1jbl/s1jbr for inner corners where diagonal neighbor is non-sand"
     },
     {
       "key": "s1-6",
@@ -201,7 +202,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "sand 1 right"
+      "description": "sand border: right edge. Place as object on s1-5 base where the tile to the right is non-sand (but above and below are sand)"
     },
     {
       "key": "s1-7",
@@ -212,7 +213,7 @@
       "walkable": true,
       "above": true,
       "interactType": null,
-      "description": "sand 1 bottom left"
+      "description": "sand border: bottom-left outer corner. Place as object on s1-5 base where both the tile below AND to the left are non-sand"
     },
     {
       "key": "s1-8",
@@ -224,7 +225,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "sand 1 bottom"
+      "description": "sand border: bottom edge. Place as object on s1-5 base where the tile below is non-sand (but left and right are sand)"
     },
     {
       "key": "s1-9",
@@ -236,7 +237,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "sand 1 bottom right"
+      "description": "sand border: bottom-right outer corner. Place as object on s1-5 base where both the tile below AND to the right are non-sand"
     },
     {
       "key": "f1-1",
@@ -465,7 +466,7 @@
       "walkable": false,
       "above": true,
       "interactType": null,
-      "description": "rock32"
+      "description": "large rock decoration (32x32). Non-walkable obstacle, placed as object. Bigger than r1/r2, use sparingly for landmark rocks in mountain/cave areas"
     },
     {
       "key": "ce1",
@@ -477,7 +478,7 @@
       "above": true,
       "category": "interior",
       "interactType": null,
-      "description": "cave enterance"
+      "description": "cave entrance (variant 1) — 16x32 tile (1 wide, 2 tall). Place as object on walkable mtcb2 base, typically on mountain borders. Walkable so player can step into it. Use for mountain/dungeon map cave openings"
     },
     {
       "key": "ce2",
@@ -489,7 +490,7 @@
       "above": true,
       "category": "interior",
       "interactType": null,
-      "description": "cave entrenace"
+      "description": "cave entrance (variant 2) — 16x32 tile (1 wide, 2 tall). Same as ce1 but different visual style. Place as object on walkable mtcb2 base on mountain walls"
     },
     {
       "key": "b1",
@@ -1075,7 +1076,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain top left corner"
+      "description": "mt1 border: top-left corner of a mountain 1 formation. Non-walkable, placed as object. Use with mttr1, mtcl1, mtcr, mtbl1, mtb2, mtbr1 to form a complete mt1 rectangle. Interior uses mtcb2 (base) + mtc1 (object overlay)"
     },
     {
       "key": "mtc1",
@@ -1090,7 +1091,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 1 floor"
+      "description": "mt1 interior overlay — walkable mountain 1 floor with encounter. Place as object on mtcb2 base tile inside mt1 mountain borders. Has encounters for non-flying/ground/rock/dragon/steel/normal types"
     },
     {
       "key": "mttr1",
@@ -1102,7 +1103,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain top right corner"
+      "description": "mt1 border: top-right corner of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mtcl1",
@@ -1114,7 +1115,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 1 left side"
+      "description": "mt1 border: left wall of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mtcb2",
@@ -1126,7 +1127,7 @@
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 1 floor 2 - no encounter"
+      "description": "mountain 1 dark floor — use as default base tile for mountain/cave areas. Walkable, no encounters, above:false. Good universal ground for mountain zones; place mt1/mt2/mg1 border objects and mtc1 encounter overlays on top of it"
     },
     {
       "key": "mtcr",
@@ -1138,7 +1139,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 1 right center"
+      "description": "mt1 border: right wall of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mtbl1",
@@ -1150,7 +1151,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 1 bottom left"
+      "description": "mt1 border: bottom-left corner of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mtb2",
@@ -1162,7 +1163,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain1 bottom"
+      "description": "mt1 border: bottom wall of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base. Use between mtbl1 and mtbr1"
     },
     {
       "key": "mtbr1",
@@ -1174,7 +1175,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 1 bottom right"
+      "description": "mt1 border: bottom-right corner of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "dt1",
@@ -1426,7 +1427,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 left top corner"
+      "description": "mt2 border: top-left corner of a mountain 2 formation. Non-walkable, placed as object. Use with mt2t, mt2tr, mt2l, mt2r, mt2lb, mt2b, mt2br to form a complete brown mountain rectangle. Interior uses mt2c as base tile"
     },
     {
       "key": "mt2t",
@@ -1438,7 +1439,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 top"
+      "description": "mt2 border: top wall of a mountain 2 formation. Non-walkable, placed as object between mt2tl and mt2tr"
     },
     {
       "key": "mt2tr",
@@ -1450,7 +1451,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 right top corner"
+      "description": "mt2 border: top-right corner of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mt2l",
@@ -1462,7 +1463,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 left"
+      "description": "mt2 border: left wall of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mt2c",
@@ -1474,7 +1475,7 @@
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 center - walkable"
+      "description": "mt2 walkable interior — brown mountain center floor. Use as base tile inside mt2 border rectangles (mt2tl..mt2br). No encounters. Distinct brown color from mtcb2"
     },
     {
       "key": "mt2r",
@@ -1486,7 +1487,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 right"
+      "description": "mt2 border: right wall of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mt2lb",
@@ -1498,7 +1499,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 left bottom corner"
+      "description": "mt2 border: bottom-left corner of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mt2b",
@@ -1510,7 +1511,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 bottom"
+      "description": "mt2 border: bottom wall of a mountain 2 formation. Non-walkable, placed as object between mt2lb and mt2br"
     },
     {
       "key": "mt2br",
@@ -1522,7 +1523,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 right bottom corner"
+      "description": "mt2 border: bottom-right corner of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mt2cb",
@@ -1537,7 +1538,7 @@
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "mountain 2 big tile for walable and encounter"
+      "description": "mountain 2 big tile (32x32) \u2014 walkable encounter ground covering 2x2 tiles. Has all-type encounters. Use as base tile for large open mountain areas that need encounter spawns without the bordered mt2 rectangle system"
     },
     {
       "key": "kk",
@@ -2085,7 +2086,7 @@
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "ground should be encounter for rock/ground/metal etc"
+      "description": "dark dirt ground center — use as base tile for encounter patches. Place g8tl/g8t/g8tr/g8l/g8r/g8bl/g8b/g8br border objects around the edges where g8c meets other ground types (grass, sand, mountain floor). Forms a coherent dark-earth zone"
     },
     {
       "key": "g8tr",
@@ -2097,7 +2098,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "top right of g8c (should be on grass or other)"
+      "description": "g8 border: top-right corner. Place as object on non-g8 base tile at the top-right edge of a g8c patch"
     },
     {
       "key": "g8r",
@@ -2109,7 +2110,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "right of g8c (should be on grass or other)"
+      "description": "g8 border: right edge. Place as object on non-g8 base tile along the right side of a g8c patch"
     },
     {
       "key": "g8br",
@@ -2121,7 +2122,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "bottom right of g8c (should be on grass or other)"
+      "description": "g8 border: bottom-right corner. Place as object on non-g8 base tile at the bottom-right edge of a g8c patch"
     },
     {
       "key": "g8b",
@@ -2133,7 +2134,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "bottom of g8c (should be on grass or other)"
+      "description": "g8 border: bottom edge. Place as object on non-g8 base tile along the bottom row of a g8c patch"
     },
     {
       "key": "g8bl",
@@ -2145,7 +2146,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "bottom left of g8c (should be on grass or other)"
+      "description": "g8 border: bottom-left corner. Place as object on non-g8 base tile at the bottom-left edge of a g8c patch"
     },
     {
       "key": "g8l",
@@ -2157,7 +2158,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "left of g8c (should be on grass or other)"
+      "description": "g8 border: left edge. Place as object on non-g8 base tile along the left side of a g8c patch"
     },
     {
       "key": "g8tl",
@@ -2169,7 +2170,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "top left of g8c (should be on grass or other)"
+      "description": "g8 border: top-left corner. Place as object on non-g8 base tile at the top-left edge of a g8c patch to create a smooth transition"
     },
     {
       "key": "g8t",
@@ -2181,7 +2182,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "top of g8c (should be on grass or other)"
+      "description": "g8 border: top edge. Place as object on non-g8 base tile along the top row of a g8c patch"
     },
     {
       "key": "sign1left",
@@ -2229,7 +2230,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 top left"
+      "description": "mg1 border: top-left corner of a gray mountain formation. Non-walkable, placed as object. Use with mg1t, mg1tr, mg1l, mg1r, mg1bl, mg1b, mg1br to form a complete gray mountain rectangle. Interior uses mg1c as base tile"
     },
     {
       "key": "mg1t",
@@ -2241,7 +2242,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 top"
+      "description": "mg1 border: top wall of a gray mountain formation. Non-walkable, placed as object between mg1tl and mg1tr"
     },
     {
       "key": "mg1tr",
@@ -2253,7 +2254,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 top right"
+      "description": "mg1 border: top-right corner of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mg1l",
@@ -2265,7 +2266,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 left"
+      "description": "mg1 border: left wall of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mg1c",
@@ -2284,7 +2285,7 @@
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 center"
+      "description": "mg1 walkable interior — gray mountain center floor with encounters (steel/dragon/rock/electric/flying). Use as base tile inside mg1 border rectangles (mg1tl..mg1br). Distinct gray color"
     },
     {
       "key": "mg1r",
@@ -2296,7 +2297,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 right"
+      "description": "mg1 border: right wall of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mg1bl",
@@ -2308,7 +2309,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 bottom left"
+      "description": "mg1 border: bottom-left corner of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "mg1b",
@@ -2320,7 +2321,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 bottom"
+      "description": "mg1 border: bottom wall of a gray mountain formation. Non-walkable, placed as object between mg1bl and mg1br"
     },
     {
       "key": "mg1br",
@@ -2332,7 +2333,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "mountain gray 1 bottom right"
+      "description": "mg1 border: bottom-right corner of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
     {
       "key": "st1",
@@ -2402,7 +2403,7 @@
       "above": true,
       "category": "decoration",
       "interactType": null,
-      "description": "just a sgin for streets or whaever"
+      "description": "generic street/path sign. Non-walkable decoration, placed as object near intersections, cave entrances, or points of interest"
     },
     {
       "key": "s1jtl",
@@ -2414,7 +2415,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "s1 ground junction top left"
+      "description": "sand inner corner: top-left. Place as object on s1-5 base where all 4 cardinal neighbors are sand BUT the top-left diagonal neighbor is non-sand. Creates concave corner"
     },
     {
       "key": "s1jtr",
@@ -2426,7 +2427,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "s1 ground junction top rjgt"
+      "description": "sand inner corner: top-right. Place as object on s1-5 base where all 4 cardinal neighbors are sand BUT the top-right diagonal neighbor is non-sand. Creates concave corner"
     },
     {
       "key": "s1jbr",
@@ -2438,7 +2439,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "s1 junctio bottom right"
+      "description": "sand inner corner: bottom-right. Place as object on s1-5 base where all 4 cardinal neighbors are sand BUT the bottom-right diagonal is non-sand. Creates concave corner"
     },
     {
       "key": "s1jbl",
@@ -2450,7 +2451,7 @@
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "s1 ground junction bottom left"
+      "description": "sand inner corner: bottom-left. Place as object on s1-5 base where all 4 cardinal neighbors are sand BUT the bottom-left diagonal is non-sand. Creates concave corner"
     },
     {
       "key": "br1h",
