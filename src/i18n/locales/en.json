@@ -91,6 +91,8 @@
   "party.weight": "Weight: {value} {unit}",
   "party.unit.meter": "m",
   "party.unit.kg": "kg",
+  "party.ability": "Ability",
+  "party.nature": "Nature",
   "party.baseStats": "Base Stats",
   "party.xpLabel": "XP",
   "party.moves.title": "MOVES",

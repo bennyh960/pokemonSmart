@@ -91,6 +91,8 @@
   "party.weight": "משקל: {value} {unit}",
   "party.unit.meter": "מ'",
   "party.unit.kg": "ק\"ג",
+  "party.ability": "כישרון",
+  "party.nature": "אופי",
   "party.baseStats": "נתונים בסיסיים",
   "party.xpLabel": "ניסיון",
   "party.moves.title": "מהלכים",
