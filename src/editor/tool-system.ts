@@ -143,16 +143,8 @@ class EraseTool implements EditorTool {
     if (this.visited.has(key)) return;
     this.visited.add(key);
 
-    // On ground layer: erase the ground tile directly, ignore above-layer objects
-    if (state.activeLayer === 'ground') {
-      const old = state.getGroundTile(gx, gy);
-      if (old === 'g1') return;
-      this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: 'g1' });
-      state.setGroundTile(gx, gy, 'g1');
-      return;
-    }
-
-    // On object layer: first try to remove placed objects, then the objectLayer cell
+    // Always check placed objects first (paint tool adds large/above tiles as
+    // placed objects regardless of active layer, so erase must handle them on any layer)
 
     // Try to remove a placed object at this position (exact top-left match)
     const obj = state.getPlacedObjectAt(gx, gy);
@@ -179,7 +171,16 @@ class EraseTool implements EditorTool {
       }
     }
 
-    // Erase objectLayer cell
+    // Ground layer: reset to default grass tile
+    if (state.activeLayer === 'ground') {
+      const old = state.getGroundTile(gx, gy);
+      if (old === 'g1') return;
+      this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: 'g1' });
+      state.setGroundTile(gx, gy, 'g1');
+      return;
+    }
+
+    // Object layer: erase objectLayer cell
     const old = state.getObjectTile(gx, gy);
     if (old === null) return;
     this.cellDeltas.push({ x: gx, y: gy, oldVal: old, newVal: null });
