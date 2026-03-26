@@ -45,6 +45,13 @@
       "toMapId": "zeroville-house-tr",
       "toX": 4,
       "toY": 3
+    },
+    {
+      "fromX": 20,
+      "fromY": 14,
+      "toMapId": "zeroville-house-br",
+      "toX": 3,
+      "toY": 7
     }
   ],
   "npcs": [
@@ -761,6 +768,11 @@
       "key": "pc-test",
       "x": 10,
       "y": 6
+    },
+    {
+      "key": "b7door",
+      "x": 20,
+      "y": 14
     }
   ]
 }

@@ -433,6 +433,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       pd.position.x = player.gridX;
       pd.position.y = player.gridY;
       pd.position.mapId = mapId;
+      pd.previousMapReturn = previousMapReturn;
       autoSave();
     }
   }
@@ -464,6 +465,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         mapId = pd.position.mapId || 'zeroville';
         spawnX = pd.position.x;
         spawnY = pd.position.y;
+        previousMapReturn = pd.previousMapReturn ?? null;
       }
 
       loadAndSetMap(mapId, spawnX, spawnY).then(() => {

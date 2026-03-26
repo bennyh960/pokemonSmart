@@ -257,37 +257,6 @@
       "key": "tra",
       "x": 12,
       "y": 2
-    },
-    {
-      "key": "tra",
-      "x": 0,
-      "y": 8
-    },
-    {
-      "key": "tra",
-      "x": 10,
-      "y": 1
-    },
-    {
-      "key": "tra",
-      "x": 11,
-      "y": 1
-    },
-    {
-      "key": "tra",
-      "x": 9,
-      "y": 1
     }
-  ],
-  "objectLayer": [
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null]
   ]
 }

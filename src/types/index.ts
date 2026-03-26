@@ -127,6 +127,7 @@ export interface PlayerData {
   items: Record<string, number>;  // item id → quantity
   flags: Record<string, boolean>; // e.g. 'trainer-bug1-defeated'
   position: { mapId: string; x: number; y: number };
+  previousMapReturn?: { mapId: string; x: number; y: number } | null;
   lastPokemonCenter: { mapId: string; x: number; y: number };
   playtime: number;
 }

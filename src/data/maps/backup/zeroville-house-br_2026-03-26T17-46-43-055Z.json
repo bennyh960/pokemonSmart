@@ -1,0 +1,72 @@
+{
+  "id": "zeroville-house-br",
+  "name": "Zeroville House 3",
+  "tileset": "dpp",
+  "width": 13,
+  "height": 9,
+  "tileSize": 16,
+  "spawn": {
+    "x": 3,
+    "y": 7
+  },
+  "transitions": [
+    {
+      "fromX": 2,
+      "fromY": 8,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 3,
+      "fromY": 8,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [
+    {
+      "id": "zeroville-house2-npc",
+      "x": 1,
+      "y": 3,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "The professor says zero is the foundation of all numbers.",
+          "he": "אני אוהב פוקימוני רעל!"
+        },
+        {
+          "en": "Without zero, there would be no place value system!",
+          "he": ""
+        },
+        {
+          "en": "I heard strange things are happening outside Zeroville...",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_392694",
+      "name": "Elm",
+      "nameHe": "אלם"
+    }
+  ],
+  "music": "town",
+  "encounterTableId": null
+,
+  "tiles": [
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"]
+  ],
+  "objects": []
+  
+}

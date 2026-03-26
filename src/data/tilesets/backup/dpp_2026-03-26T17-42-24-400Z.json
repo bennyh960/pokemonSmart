@@ -2521,42 +2521,7 @@
       "walkable": true,
       "above": false,
       "category": "interior",
-      "interactType": null,
       "description": "house-1 full image with"
-    },
-    {
-      "key": "house3",
-      "sx": 0,
-      "sy": 6832,
-      "w": 208,
-      "h": 160,
-      "walkable": true,
-      "above": false,
-      "category": "building",
-      "interactType": null,
-      "description": "generic house interior"
-    },
-    {
-      "key": "trans-i",
-      "sx": 128,
-      "sy": 0,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "description": "interactive transparent",
-      "interactType": {
-        "id": "sign",
-        "args": {
-          "dialogue": [
-            {
-              "en": "",
-              "he": "מה המצב?"
-            }
-          ]
-        }
-      }
     }
   ]
 }
