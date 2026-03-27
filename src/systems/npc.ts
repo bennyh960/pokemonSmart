@@ -191,8 +191,9 @@ export function checkTrainerLineOfSight(
   defeatedFlags: Record<string, boolean>,
 ): TrainerData | null {
   for (const trainer of trainers) {
-    // Skip already-defeated trainers
+    // Skip already-defeated or hidden trainers
     if (defeatedFlags[`trainer-${trainer.id}-defeated`]) continue;
+    if (!isNPCVisible(trainer, defeatedFlags)) continue;
 
     const vec = FACING_VECTORS[trainer.facing];
     if (!vec) continue;

@@ -25,7 +25,7 @@ import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
-import { createNPCManager, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, resolveDialogue, type DialogueReward } from '../systems/npc.js';
+import { createNPCManager, isNPCVisible, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, resolveDialogue, type DialogueReward } from '../systems/npc.js';
 import { getItem } from '../data/items.js';
 import { resolveInteract } from '../data/interact-types.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
@@ -155,13 +155,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     targetPixelY: number;
     moveProgress: number;
     facing: string;
-    // Auto-walk state
-    autoWalkTimer: number;
-    autoWalkSteps: number;       // steps taken in current direction
-    autoWalkDir: number;         // 1 = forward, -1 = return
-    autoWalkReturnSteps: number; // how many steps to walk back (set when leg ends)
-    autoWalkAxis: 'horizontal' | 'vertical' | null;
-    autoWalkWaiting: boolean;
+    // Pattern-based auto-walk state
+    patternIndex: number;     // current step in pattern
+    stepsTaken: number;       // steps taken in current pattern step
+    patternWaiting: boolean;  // waiting delay between pattern steps
+    patternTimer: number;     // delay timer
+    patternDone: boolean;     // true if non-looping pattern finished
   }
   const npcStates = new Map<string, NPCRuntimeState>();
 
@@ -174,9 +173,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         startPixelX: npc.x * TILE_SIZE, startPixelY: npc.y * TILE_SIZE,
         targetPixelX: npc.x * TILE_SIZE, targetPixelY: npc.y * TILE_SIZE,
         moveProgress: 0, facing: npc.facing,
-        autoWalkTimer: 0, autoWalkSteps: 0, autoWalkDir: 1,
-        autoWalkReturnSteps: 0,
-        autoWalkAxis: null, autoWalkWaiting: false,
+        patternIndex: 0, stepsTaken: 0,
+        patternWaiting: false, patternTimer: 0, patternDone: false,
       };
       npcStates.set(npc.id, st);
     }
@@ -734,7 +732,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // ── NPC auto-walk + animation update ──
       if (npcManager) {
+        const flags = hasActiveGame() ? getPlayerData().flags : {};
         for (const npc of npcManager.getNPCs()) {
+          if (!isNPCVisible(npc, flags)) continue;
           const st = getNpcState(npc);
 
           // Update walk animation
@@ -757,88 +757,60 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
           }
 
-          // Auto-walk logic
+          // Pattern-based auto-walk logic
           const aw = npc.autoWalk;
-          if (aw && !st.moving && !trainerApproach) {
-            // Pick an axis to walk
-            if (!st.autoWalkAxis) {
-              if (aw.horizontal) st.autoWalkAxis = 'horizontal';
-              else if (aw.vertical) st.autoWalkAxis = 'vertical';
-            }
+          if (aw && aw.pattern.length > 0 && !st.moving && !trainerApproach && !st.patternDone) {
+            const step = aw.pattern[st.patternIndex];
 
-            const axis = st.autoWalkAxis;
-            const cfg = axis === 'horizontal' ? aw.horizontal : axis === 'vertical' ? aw.vertical : null;
-            if (cfg) {
-              if (st.autoWalkWaiting) {
-                st.autoWalkTimer += dt;
-                if (st.autoWalkTimer >= cfg.delay) {
-                  st.autoWalkWaiting = false;
-                  st.autoWalkTimer = 0;
+            if (st.patternWaiting) {
+              // Waiting delay between pattern steps
+              st.patternTimer += dt;
+              if (st.patternTimer >= step.delay) {
+                st.patternWaiting = false;
+                st.patternTimer = 0;
+                // Advance to next pattern step
+                st.patternIndex++;
+                st.stepsTaken = 0;
+                if (st.patternIndex >= aw.pattern.length) {
+                  if (aw.loop !== false) {
+                    st.patternIndex = 0;
+                  } else {
+                    st.patternDone = true;
+                  }
+                }
+              }
+            } else {
+              // Walk in the current step's direction
+              const dx = step.dir === 'right' ? 1 : step.dir === 'left' ? -1 : 0;
+              const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
+              const nextX = npc.x + dx;
+              const nextY = npc.y + dy;
+
+              const blocked = (nextX === player.gridX && nextY === player.gridY) ||
+                npcManager!.isNPCAt(nextX, nextY) ||
+                !tileMap || !tileMap.isWalkable(nextX, nextY);
+
+              if (!blocked && st.stepsTaken < step.steps) {
+                // Take a step
+                st.startPixelX = st.pixelX;
+                st.startPixelY = st.pixelY;
+                st.targetPixelX = nextX * TILE_SIZE;
+                st.targetPixelY = nextY * TILE_SIZE;
+                st.moveProgress = 0;
+                st.moving = true;
+                st.facing = step.dir;
+                npc.facing = step.dir;
+                st.stepsTaken++;
+
+                if (st.stepsTaken >= step.steps) {
+                  // Step complete — wait delay then advance
+                  st.patternWaiting = true;
+                  st.patternTimer = 0;
                 }
               } else {
-                // How many steps this leg should take:
-                // - forward (dir=1): use configured steps
-                // - returning (dir=-1): use however many we actually walked forward
-                const targetSteps = st.autoWalkDir === 1 ? cfg.steps : st.autoWalkReturnSteps;
-
-                // If return trip has 0 steps (was blocked immediately), skip it
-                if (targetSteps <= 0) {
-                  st.autoWalkDir = 1;
-                  st.autoWalkSteps = 0;
-                  st.autoWalkReturnSteps = cfg.steps;
-                  st.autoWalkWaiting = true;
-                  st.autoWalkTimer = 0;
-                  if (aw.horizontal && aw.vertical) {
-                    st.autoWalkAxis = axis === 'horizontal' ? 'vertical' : 'horizontal';
-                  }
-                } else {
-                  // Determine next step direction
-                  let dx = 0, dy = 0;
-                  if (axis === 'horizontal') dx = st.autoWalkDir;
-                  else dy = st.autoWalkDir;
-
-                  const nextX = npc.x + dx;
-                  const nextY = npc.y + dy;
-
-                  // Don't walk into player, other NPCs, or non-walkable tiles
-                  const blocked = (nextX === player.gridX && nextY === player.gridY) ||
-                    npcManager!.isNPCAt(nextX, nextY);
-
-                  if (!blocked && tileMap && tileMap.isWalkable(nextX, nextY) && st.autoWalkSteps < targetSteps) {
-                    // Take a step
-                    st.startPixelX = st.pixelX;
-                    st.startPixelY = st.pixelY;
-                    st.targetPixelX = nextX * TILE_SIZE;
-                    st.targetPixelY = nextY * TILE_SIZE;
-                    st.moveProgress = 0;
-                    st.moving = true;
-                    st.facing = dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : 'up';
-                    npc.facing = st.facing as NPCData['facing'];
-                    st.autoWalkSteps++;
-
-                    if (st.autoWalkSteps >= targetSteps) {
-                      // Leg complete — reverse, remember how many steps to return
-                      st.autoWalkReturnSteps = st.autoWalkSteps;
-                      st.autoWalkDir *= -1;
-                      st.autoWalkSteps = 0;
-                      st.autoWalkWaiting = true;
-                      st.autoWalkTimer = 0;
-                      if (aw.horizontal && aw.vertical) {
-                        st.autoWalkAxis = axis === 'horizontal' ? 'vertical' : 'horizontal';
-                      }
-                    }
-                  } else {
-                    // Blocked — end leg early, return only as far as we walked
-                    st.autoWalkReturnSteps = st.autoWalkSteps;
-                    st.autoWalkDir *= -1;
-                    st.autoWalkSteps = 0;
-                    st.autoWalkWaiting = true;
-                    st.autoWalkTimer = 0;
-                    if (aw.horizontal && aw.vertical) {
-                      st.autoWalkAxis = axis === 'horizontal' ? 'vertical' : 'horizontal';
-                    }
-                  }
-                }
+                // Blocked or steps done — skip to delay, then next step
+                st.patternWaiting = true;
+                st.patternTimer = 0;
               }
             }
           }
@@ -849,7 +821,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (!player.moving && (input.isKeyPressed('Enter') || input.isKeyPressed(' '))) {
         if (npcManager) {
           const npc = npcManager.getFacingNPC(player.gridX, player.gridY, player.facing);
-          if (npc && npc.dialogue.length > 0) {
+          const iFlags = hasActiveGame() ? getPlayerData().flags : {};
+          if (npc && npc.dialogue.length > 0 && isNPCVisible(npc, iFlags)) {
             // Defeated trainers show different dialogue
             if (npc.type === 'trainer' && hasActiveGame()) {
               const flags = getPlayerData().flags;
@@ -1052,7 +1025,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // NPCs
       if (npcManager) {
+        const visFlags = hasActiveGame() ? getPlayerData().flags : {};
         for (const npc of npcManager.getNPCs()) {
+          if (!isNPCVisible(npc, visFlags)) continue;
           const npcSt = getNpcState(npc);
 
           // Use runtime pixel position (supports auto-walk + trainer approach)

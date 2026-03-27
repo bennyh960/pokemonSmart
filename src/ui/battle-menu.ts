@@ -12,7 +12,6 @@
 import type { InputManager } from '../engine/input.js';
 import type { Move, Pokemon } from '../types/index.js';
 import { fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
-import { t } from '../i18n/i18n.js';
 import { getMoveDisplayName, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 import { BTL, TYPE_BADGE, getHpColor } from '../data/battle-constants.js';
@@ -41,7 +40,7 @@ const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG'];
 
 export function createBattleMenu(moves: Move[]): BattleMenuState {
   return {
-    mode: 'main', cursorIndex: 0, moves, movePage: 0,
+    mode: 'moves', cursorIndex: 0, moves, movePage: 0,
     activeTab: 0, turnNumber: 1, playerPokemon: null, party: [],
   };
 }
@@ -187,12 +186,8 @@ export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenu
   // Action tabs
   renderTabs(ctx, menu);
 
-  // Content area
-  if (menu.mode === 'moves') {
-    renderMoveGrid(ctx, menu);
-  } else {
-    renderTabContent(ctx, menu);
-  }
+  // Content area — always show move grid
+  renderMoveGrid(ctx, menu);
 
   // Bottom help bar
   // renderBottomBar(ctx);
@@ -254,20 +249,6 @@ function renderTabs(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void 
       size: 6, color: isActive ? tab.color : BTL.TAB_INACTIVE_C, align: 'center',
     });
   }
-}
-
-// ─── Tab Content (main mode) ──────────────────────────────────────
-
-function renderTabContent(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
-  // In main mode, show content hint for the highlighted tab
-  const tab = BTL.TABS[menu.activeTab];
-  if (!tab) return;
-
-  // Show a centered hint text for the selected tab action
-  const hintY = BTL.CONTENT_Y + 18;
-  drawText(ctx, t(`battle.menu.${tab.id}Hint`), SCREEN_W / 2, hintY, {
-    size: 7, color: BTL.COLORS.textDim, align: 'center', direction: 'rtl',
-  });
 }
 
 // ─── Move Grid (y=106, 2×2 paginated) ────────────────────────────
