@@ -12,7 +12,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { drawTypeBadge } from '../ui/type-badge.js';
-import { TYPE_COLORS } from '../data/type-constants.js';
+import { TYPE_BADGE } from '../data/type-constants.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import {
   getPokemon, getPokemonDisplayName, getMove, getMoveDisplayName,
@@ -243,7 +243,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           // measureText won't work without setting font, so use fixed offset
           tx = Math.max(tx, 140);
           for (const type of data.types) {
-            const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
+            const color = TYPE_BADGE[type as PokemonType]?.color || '#a8a878';
             fillRect(ctx, tx, y + 5, 6, 6, color);
             drawRect(ctx, tx, y + 5, 6, 6, '#00000044');
             tx += 9;
@@ -366,7 +366,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     let badgeX = spriteX;
     const badgeY = spriteY + spriteSize + 4;
     for (const type of data.types) {
-      const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
+      const color = TYPE_BADGE[type as PokemonType]?.color || '#a8a878';
       const label = type.toUpperCase();
       const badgeW = label.length * 5 + 6;
       fillRect(ctx, badgeX, badgeY, badgeW, 10, color);
@@ -525,7 +525,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
       let x = 4;
       for (const type of types) {
-        const color = TYPE_COLORS[type as PokemonType] || '#a8a878';
+        const color = TYPE_BADGE[type as PokemonType]?.color || '#a8a878';
         const badgeLabel = type.toUpperCase();
         const badgeW = badgeLabel.length * 5 + 6;
 

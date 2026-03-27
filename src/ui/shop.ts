@@ -6,7 +6,7 @@
  * Layout spec: screens_examples_coords/shop_canvas_coordinates.md
  */
 
-import { fillRect } from '../engine/renderer.js';
+import { fillRect, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { getItemsByCategory, getItem, type ItemDef, type ItemCategory } from '../data/items.js';
@@ -190,45 +190,7 @@ function hexToRGBA(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-function fillRoundRect(
-  ctx: CanvasRenderingContext2D,
-  x: number, y: number, w: number, h: number,
-  r: number | number[],
-): void {
-  const radii = typeof r === 'number' ? [r, r, r, r] : r;
-  ctx.beginPath();
-  ctx.moveTo(x + radii[0], y);
-  ctx.lineTo(x + w - radii[1], y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + radii[1]);
-  ctx.lineTo(x + w, y + h - radii[2]);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - radii[2], y + h);
-  ctx.lineTo(x + radii[3], y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - radii[3]);
-  ctx.lineTo(x, y + radii[0]);
-  ctx.quadraticCurveTo(x, y, x + radii[0], y);
-  ctx.closePath();
-  ctx.fill();
-}
-
-function strokeRoundRect(
-  ctx: CanvasRenderingContext2D,
-  x: number, y: number, w: number, h: number,
-  r: number | number[],
-): void {
-  const radii = typeof r === 'number' ? [r, r, r, r] : r;
-  ctx.beginPath();
-  ctx.moveTo(x + radii[0], y);
-  ctx.lineTo(x + w - radii[1], y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + radii[1]);
-  ctx.lineTo(x + w, y + h - radii[2]);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - radii[2], y + h);
-  ctx.lineTo(x + radii[3], y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - radii[3]);
-  ctx.lineTo(x, y + radii[0]);
-  ctx.quadraticCurveTo(x, y, x + radii[0], y);
-  ctx.closePath();
-  ctx.stroke();
-}
+// fillRoundRect and strokeRoundRect imported from renderer.ts
 
 // ─── Icon drawing (16×16 box) ───────────────────────────────────────
 function drawItemIcon(

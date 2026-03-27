@@ -14,7 +14,7 @@ import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js
 import { t } from '../i18n/i18n.js';
 import { getPokemonDisplayName, getMoveDisplayName, getMove, getPokemonHeight, getPokemonWeight, getAbilityDisplayName, getNatureDisplayName, getNature } from '../services/pokemon-data.js';
 import { drawPokeballIcon } from '../ui/item-icons.js';
-import { TYPE_COLORS, getTypeName, getDamageClassLabel } from '../data/type-constants.js';
+import { TYPE_BADGE, getTypeName, getDamageClassLabel } from '../data/type-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
@@ -136,12 +136,12 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     // Type badges (row 2, dy=12)
     const types = pokemon.types;
     if (types.length >= 1) {
-      const color1 = TYPE_COLORS[types[0]] || '#888888';
+      const color1 = TYPE_BADGE[types[0]]?.color || '#888888';
       fillRect(ctx, 172, sy + 12, 18, 7, color1);
       drawText(ctx, getTypeName(types[0]), 181, sy + 13, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
     }
     if (types.length >= 2) {
-      const color2 = TYPE_COLORS[types[1]] || '#888888';
+      const color2 = TYPE_BADGE[types[1]]?.color || '#888888';
       fillRect(ctx, 152, sy + 12, 18, 7, color2);
       drawText(ctx, getTypeName(types[1]), 161, sy + 13, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
     }
@@ -277,7 +277,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const totalW = typeLabels.length * badgeW + (typeLabels.length - 1) * badgeGap;
     let bx = Math.floor(96 - totalW / 2);
     for (const tl of typeLabels) {
-      const color = TYPE_COLORS[tl.type] || '#888888';
+      const color = TYPE_BADGE[tl.type]?.color || '#888888';
       fillRect(ctx, bx, 44, badgeW, 9, color);
       drawText(ctx, tl.label, bx + badgeW / 2, 45, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
       bx += badgeW + badgeGap;
@@ -394,7 +394,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
       // ── Type badge (relX=93, relY=+2, w=22, h=7) ──
       const typeLabel = getTypeName(move.type as PokemonType);
-      const typeColor = TYPE_COLORS[move.type] || '#888888';
+      const typeColor = TYPE_BADGE[move.type as PokemonType]?.color || '#888888';
       fillRect(ctx, 4 + 93, cy + 2, 22, 7, typeColor);
       drawText(ctx, typeLabel, 4 + 93 + 11, cy + 4, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
@@ -444,7 +444,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
         // ── Type badge ──
         const typeLabel = getTypeName(move.type as PokemonType);
-        const typeColor = TYPE_COLORS[move.type] || '#888888';
+        const typeColor = TYPE_BADGE[move.type as PokemonType]?.color || '#888888';
         fillRect(ctx, mx + 6, my + 4, 26, 9, typeColor);
         drawText(ctx, typeLabel, mx + 6 + 13, my + 5, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 

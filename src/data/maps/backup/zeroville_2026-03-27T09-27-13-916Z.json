@@ -140,7 +140,7 @@
       "id": "shop-helper",
       "name": "Merchant Maya",
       "x": 16,
-      "y": 17,
+      "y": 14,
       "facing": "up",
       "type": "npc",
       "dialogue": [
@@ -153,17 +153,7 @@
           "he": ""
         }
       ],
-      "spriteType": "char_d25760",
-      "autoWalk": {
-        "horizontal": {
-          "steps": 5,
-          "delay": 2
-        },
-        "vertical": {
-          "steps": 2,
-          "delay": 1
-        }
-      }
+      "spriteType": "char_524b56"
     },
     {
       "id": "helpful-npc-1",

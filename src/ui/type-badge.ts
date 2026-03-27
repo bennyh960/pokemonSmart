@@ -6,7 +6,7 @@
  */
 
 import { fillRect, drawRect, drawText } from '../engine/renderer.js';
-import { TYPE_COLORS, getTypeName } from '../data/type-constants.js';
+import { TYPE_BADGE, getTypeName } from '../data/type-constants.js';
 import { getLocale } from '../i18n/i18n.js';
 import type { PokemonType } from '../types/index.js';
 
@@ -61,7 +61,7 @@ export function drawTypeBadge(
   ctx.restore();
 
   const badgeW = textW + BADGE_PAD_X * 2;
-  const bgColor = TYPE_COLORS[type] || '#a8a878';
+  const bgColor = TYPE_BADGE[type]?.color || '#a8a878';
 
   // Background fill
   fillRect(ctx, x, y, badgeW, BADGE_HEIGHT, bgColor);

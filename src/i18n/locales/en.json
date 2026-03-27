@@ -32,6 +32,10 @@
   "battle.menu.run": "RUN",
   "battle.menu.whatWillYouDo1": "What will",
   "battle.menu.whatWillYouDo2": "you do?",
+  "battle.menu.fightHint": "Choose a move to attack",
+  "battle.menu.switchHint": "Switch to another Pokemon",
+  "battle.menu.bagHint": "Use an item from your bag",
+  "battle.menu.runHint": "Try to escape from battle",
 
   "hp.label": "HP",
   "hp.level": "Lv{level}",

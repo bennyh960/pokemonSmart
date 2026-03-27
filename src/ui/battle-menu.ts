@@ -1,177 +1,523 @@
 /**
- * BattleMenu - 2x2 action menu and move selection.
+ * BattleMenu V2 — Tabbed action menu with move grid, switch grid, and bottom bar.
  *
- * Main menu: FIGHT / BAG / POKEMON / RUN in a 2x2 grid.
- * Move menu: Shows 4 moves with name, type, PP. Arrow navigation + ENTER.
+ * Tabs: fight / switch / bag / run (rendered at y=94)
+ * Content area (y=106): 2×2 move grid (paginated for 8 moves) or 3×2 party switch grid
+ * Prompt bar (y=85): "?מה יעשה [name]" + HP
+ * Bottom bar (y=150): keyboard hints
+ *
+ * Reference: screens_examples_coords/battle_canvas_coordinates_v2.md
  */
 
 import type { InputManager } from '../engine/input.js';
-import type { Move } from '../types/index.js';
-import { fillRect, drawText, drawRect } from '../engine/renderer.js';
-import { t, isRTL } from '../i18n/i18n.js';
-import { getMoveDisplayName } from '../services/pokemon-data.js';
-import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
-import { TYPE_COLORS } from '../data/type-constants.js';
-const MENU_Y = SCREEN_H - 40;
-const MENU_H = 40;
+import type { Move, Pokemon } from '../types/index.js';
+import { fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
+import { t } from '../i18n/i18n.js';
+import { getMoveDisplayName, getPokemonDisplayName } from '../services/pokemon-data.js';
+import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
+import { BTL, TYPE_BADGE, getHpColor } from '../data/battle-constants.js';
+import { getTypeName } from '../data/type-constants.js';
+import { getCachedImage } from '../engine/sprite-loader.js';
 
 export type MainMenuChoice = 'FIGHT' | 'BAG' | 'POKEMON' | 'RUN';
 
-interface BattleMenuState {
+export interface BattleMenuState {
   mode: 'main' | 'moves';
   cursorIndex: number;
   moves: Move[];
+  /** For 8-move pagination: 0 = moves 0-3, 1 = moves 4-7 */
+  movePage: number;
+  /** Active tab index for rendering (0=fight,1=switch,2=bag,3=run) */
+  activeTab: number;
+  /** Turn counter for display */
+  turnNumber: number;
+  /** Player's current pokemon for prompt rendering */
+  playerPokemon: Pokemon | null;
+  /** Player party for switch grid rendering */
+  party: Pokemon[];
 }
 
-const MAIN_LABELS: MainMenuChoice[] = ['FIGHT', 'BAG', 'POKEMON', 'RUN'];
+const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG', 'RUN'];
 
 export function createBattleMenu(moves: Move[]): BattleMenuState {
-  return { mode: 'main', cursorIndex: 0, moves };
+  return {
+    mode: 'main', cursorIndex: 0, moves, movePage: 0,
+    activeTab: 0, turnNumber: 1, playerPokemon: null, party: [],
+  };
 }
 
-/** Show main action menu. */
+/** Show main action menu (tabs mode). */
 export function showMainMenu(menu: BattleMenuState): void {
   menu.mode = 'main';
   menu.cursorIndex = 0;
+  menu.activeTab = 0;
 }
 
-/** Show move selection menu. */
+/** Show move selection menu (fight tab active). */
 export function showMoveMenu(menu: BattleMenuState): void {
   menu.mode = 'moves';
   menu.cursorIndex = 0;
+  menu.movePage = 0;
+  menu.activeTab = 0;
 }
 
 /**
  * Update menu navigation. Returns the selection or null.
  * For main: returns MainMenuChoice.
- * For moves: returns the Move index (0-3) or -1 for back.
+ * For moves: returns the Move index (0-7) or -1 for back.
  */
 export function updateBattleMenu(
   menu: BattleMenuState,
   input: InputManager,
 ): { type: 'main'; choice: MainMenuChoice } | { type: 'move'; index: number } | null {
-  const maxIndex = menu.mode === 'main' ? 4 : menu.moves.length;
+  if (menu.mode === 'main') {
+    return updateTabMode(menu, input);
+  } else {
+    return updateMoveMode(menu, input);
+  }
+}
 
-  // Arrow navigation (2x2 grid)
+function updateTabMode(
+  menu: BattleMenuState,
+  input: InputManager,
+): { type: 'main'; choice: MainMenuChoice } | null {
+  // Left/Right navigate tabs (RTL: reversed direction)
   if (input.isKeyPressed('ArrowRight')) {
-    if (menu.cursorIndex % 2 === 0 && menu.cursorIndex + 1 < maxIndex) menu.cursorIndex++;
+    // Visual right = lower tab index (tabs laid out right-to-left in Hebrew)
+    if (menu.activeTab > 0) menu.activeTab--;
   }
   if (input.isKeyPressed('ArrowLeft')) {
-    if (menu.cursorIndex % 2 === 1) menu.cursorIndex--;
-  }
-  if (input.isKeyPressed('ArrowDown')) {
-    if (menu.cursorIndex + 2 < maxIndex) menu.cursorIndex += 2;
-  }
-  if (input.isKeyPressed('ArrowUp')) {
-    if (menu.cursorIndex - 2 >= 0) menu.cursorIndex -= 2;
+    if (menu.activeTab < 3) menu.activeTab++;
   }
 
-  // Select
+  // Select tab
   if (input.isKeyPressed('Enter') || input.isKeyPressed(' ')) {
-    if (menu.mode === 'main') {
-      return { type: 'main', choice: MAIN_LABELS[menu.cursorIndex] };
-    } else {
-      return { type: 'move', index: menu.cursorIndex };
+    return { type: 'main', choice: TAB_TO_CHOICE[menu.activeTab] };
+  }
+
+  // Escape = run
+  if (input.isKeyPressed('Escape')) {
+    return { type: 'main', choice: 'RUN' };
+  }
+
+  return null;
+}
+
+function updateMoveMode(
+  menu: BattleMenuState,
+  input: InputManager,
+): { type: 'move'; index: number } | null {
+  const totalMoves = menu.moves.length;
+  const totalPages = Math.ceil(totalMoves / 4);
+  const pageStart = menu.movePage * 4;
+  const pageEnd = Math.min(pageStart + 4, totalMoves);
+  const pageCount = pageEnd - pageStart;
+
+  // Grid layout: move 0=top-right(col1,row0), move 1=top-left(col0,row0),
+  //              move 2=bottom-right(col1,row1), move 3=bottom-left(col0,row1)
+  // Navigation mirrors this: left/right swap columns, up/down swap rows
+
+  if (input.isKeyPressed('ArrowRight')) {
+    // Move to right column (col 1 = even indices in our grid mapping)
+    const col = menu.cursorIndex % 2;
+    if (col === 1) {
+      // Currently left column, move to right
+      const target = menu.cursorIndex - 1;
+      if (target >= 0 && target < pageCount) menu.cursorIndex = target;
+    }
+  }
+  if (input.isKeyPressed('ArrowLeft')) {
+    const col = menu.cursorIndex % 2;
+    if (col === 0) {
+      // Currently right column, move to left
+      const target = menu.cursorIndex + 1;
+      if (target < pageCount) menu.cursorIndex = target;
+    }
+  }
+  if (input.isKeyPressed('ArrowDown')) {
+    if (menu.cursorIndex + 2 < pageCount) {
+      menu.cursorIndex += 2;
+    } else if (totalPages > 1) {
+      // Page down
+      const nextPage = (menu.movePage + 1) % totalPages;
+      menu.movePage = nextPage;
+      menu.cursorIndex = 0;
+    }
+  }
+  if (input.isKeyPressed('ArrowUp')) {
+    if (menu.cursorIndex - 2 >= 0) {
+      menu.cursorIndex -= 2;
+    } else if (totalPages > 1) {
+      // Page up
+      const prevPage = (menu.movePage - 1 + totalPages) % totalPages;
+      menu.movePage = prevPage;
+      menu.cursorIndex = 0;
     }
   }
 
-  // Back from moves
-  if (menu.mode === 'moves' && (input.isKeyPressed('Escape') || input.isKeyPressed('Backspace'))) {
+  // Select move
+  if (input.isKeyPressed('Enter') || input.isKeyPressed(' ')) {
+    const actualIndex = menu.movePage * 4 + menu.cursorIndex;
+    if (actualIndex < totalMoves) {
+      return { type: 'move', index: actualIndex };
+    }
+  }
+
+  // Back to main
+  if (input.isKeyPressed('Escape') || input.isKeyPressed('Backspace')) {
     return { type: 'move', index: -1 };
   }
 
   return null;
 }
 
-/** Render the battle menu. */
+// ─── Render ────────────────────────────────────────────────────────
+
+/** Render the full battle menu area (prompt bar + tabs + content + bottom bar). */
 export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
-  // Background
-  fillRect(ctx, 0, MENU_Y, SCREEN_W, MENU_H, '#181820');
-  drawRect(ctx, 0, MENU_Y, SCREEN_W, MENU_H, '#585858');
+  // Background fill for the entire lower area
+  fillRect(ctx, 0, BTL.DIVIDER_Y, SCREEN_W, 160 - BTL.DIVIDER_Y, BTL.COLORS.bg);
 
-  if (menu.mode === 'main') {
-    renderMainMenu(ctx, menu.cursorIndex);
+  // Divider line
+  fillRect(ctx, 0, BTL.DIVIDER_Y, SCREEN_W, 1, BTL.COLORS.divider);
+
+  // Prompt bar
+  renderPromptBar(ctx, menu);
+
+  // Action tabs
+  renderTabs(ctx, menu);
+
+  // Content area
+  if (menu.mode === 'moves') {
+    renderMoveGrid(ctx, menu);
   } else {
-    renderMoveMenu(ctx, menu);
+    renderTabContent(ctx, menu);
+  }
+
+  // Bottom help bar
+  renderBottomBar(ctx);
+}
+
+// ─── Prompt Bar (y=85) ────────────────────────────────────────────
+
+function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
+  const P = BTL.PROMPT_BG;
+  fillRect(ctx, P.x, P.y, P.w, P.h, P.color);
+
+  // Prompt text: "?מה יעשה [name]"
+  if (menu.playerPokemon) {
+    const name = getPokemonDisplayName(menu.playerPokemon.id);
+    const prompt = `?מה יעשה `;
+    drawText(ctx, prompt, BTL.PROMPT_TEXT.x, BTL.PROMPT_TEXT.y, {
+      size: BTL.PROMPT_TEXT.fs, color: BTL.COLORS.textDim, align: 'right', direction: 'rtl',
+    });
+    // Name in white, positioned before the prompt
+    const promptWidth = prompt.length * 4; // approximate
+    drawText(ctx, name, BTL.PROMPT_TEXT.x - promptWidth, BTL.PROMPT_TEXT.y, {
+      size: BTL.PROMPT_TEXT.fs, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
+    });
+
+    // HP display on the left
+    drawText(ctx, `HP ${Math.ceil(menu.playerPokemon.hp)}/${menu.playerPokemon.maxHp}`,
+      BTL.PROMPT_HP.x, BTL.PROMPT_HP.y, {
+        size: BTL.PROMPT_HP.fs, color: BTL.COLORS.textMuted,
+      });
   }
 }
 
-/** Translation keys for main menu labels. */
-const MAIN_LABEL_KEYS: Record<MainMenuChoice, string> = {
-  FIGHT: 'battle.menu.fight',
-  BAG: 'battle.menu.bag',
-  POKEMON: 'battle.menu.pokemon',
-  RUN: 'battle.menu.run',
-};
+// ─── Action Tabs (y=94) ───────────────────────────────────────────
 
-function renderMainMenu(ctx: CanvasRenderingContext2D, cursor: number): void {
-  const rtl = isRTL();
-  const startX = SCREEN_W - 110;
-  const colW = 52;
-  const rowH = 16;
+function renderTabs(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
+  const TB = BTL.TABS_BG;
+  fillRect(ctx, TB.x, TB.y, TB.w, TB.h, TB.color);
+  // Bottom border
+  fillRect(ctx, TB.x, TB.y + TB.h - 1, TB.w, 1, TB.borderColor);
 
-  // "What will you do?" prompt
-  const promptX = rtl ? SCREEN_W - 8 : 8;
-  const promptAlign = rtl ? 'right' as const : 'left' as const;
-  const promptDir = rtl ? 'rtl' as const : 'ltr' as const;
-  drawText(ctx, t('battle.menu.whatWillYouDo1'), promptX, MENU_Y + 8, { size: 8, color: '#ffffff', align: promptAlign, direction: promptDir });
-  drawText(ctx, t('battle.menu.whatWillYouDo2'), promptX, MENU_Y + 20, { size: 8, color: '#ffffff', align: promptAlign, direction: promptDir });
+  for (let i = 0; i < BTL.TABS.length; i++) {
+    const tab = BTL.TABS[i];
+    const isActive = i === menu.activeTab;
 
-  // Menu box on right
-  fillRect(ctx, startX - 4, MENU_Y + 2, 114, 36, '#202030');
-  drawRect(ctx, startX - 4, MENU_Y + 2, 114, 36, '#585858');
-
-  for (let i = 0; i < 4; i++) {
-    const col = i % 2;
-    const row = Math.floor(i / 2);
-    const x = startX + col * colW;
-    const y = MENU_Y + 6 + row * rowH;
-
-    const selected = i === cursor;
-    if (selected) {
-      drawText(ctx, '\u25b6', x, y, { size: 8, color: '#ffffff' });
+    if (isActive) {
+      // Active tab underline
+      fillRect(ctx, tab.x, TB.y + TB.h - 2, tab.w, 2, tab.color);
     }
-    drawText(ctx, t(MAIN_LABEL_KEYS[MAIN_LABELS[i]]), x + 10, y, {
-      size: 8,
-      color: selected ? '#f8f8f8' : '#a0a0a0',
+
+    drawText(ctx, tab.text, tab.x + tab.w / 2, TB.y + BTL.TAB_TEXT_DY, {
+      size: 6, color: isActive ? tab.color : BTL.TAB_INACTIVE_C, align: 'center',
     });
   }
 }
 
-function renderMoveMenu(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
-  const colW = 118;
-  const rowH = 10;
-  const maxVisible = 8; // Show up to 8 moves in 2 columns × 4 rows
+// ─── Tab Content (main mode) ──────────────────────────────────────
 
-  // Scroll offset: keep cursor visible within the grid
-  const visibleCount = Math.min(menu.moves.length, maxVisible);
+function renderTabContent(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
+  // In main mode, show content hint for the highlighted tab
+  const tab = BTL.TABS[menu.activeTab];
+  if (!tab) return;
 
-  for (let i = 0; i < visibleCount; i++) {
-    const move = menu.moves[i];
-    const col = i % 2;
-    const row = Math.floor(i / 2);
-    const x = 4 + col * colW;
-    const y = MENU_Y + 2 + row * rowH;
+  // Show a centered hint text for the selected tab action
+  const hintY = BTL.CONTENT_Y + 18;
+  drawText(ctx, t(`battle.menu.${tab.id}Hint`), SCREEN_W / 2, hintY, {
+    size: 7, color: BTL.COLORS.textDim, align: 'center', direction: 'rtl',
+  });
+}
 
-    const selected = i === menu.cursorIndex;
+// ─── Move Grid (y=106, 2×2 paginated) ────────────────────────────
 
-    if (selected) {
-      drawText(ctx, '\u25b6', x, y, { size: 8, color: '#ffffff' });
+function renderMoveGrid(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
+  const pageStart = menu.movePage * 4;
+  const totalMoves = menu.moves.length;
+  const totalPages = Math.ceil(totalMoves / 4);
+
+  for (let slotIdx = 0; slotIdx < 4; slotIdx++) {
+    const moveIdx = pageStart + slotIdx;
+    if (moveIdx >= totalMoves) {
+      // Empty cell
+      renderEmptyMoveCell(ctx, slotIdx);
+      continue;
+    }
+    const move = menu.moves[moveIdx];
+    const isSelected = slotIdx === menu.cursorIndex;
+    renderMoveCell(ctx, slotIdx, move, isSelected);
+  }
+
+  // Page indicator (if more than 4 moves)
+  if (totalPages > 1) {
+    renderPageIndicator(ctx, menu.movePage, totalPages);
+  }
+}
+
+function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Move, isSelected: boolean): void {
+  const M = BTL.MOVE;
+  const cell = M.cells[slotIdx];
+  const cx = cell.x, cy = cell.y;
+  const cw = M.W, ch = M.H;
+
+  // Cell background
+  ctx.fillStyle = isSelected ? BTL.COLORS.cellBgSel : BTL.COLORS.cellBg;
+  fillRoundRect(ctx, cx, cy, cw, ch, 2);
+  ctx.strokeStyle = isSelected ? BTL.COLORS.cellBorderSel : BTL.COLORS.cellBorder;
+  ctx.lineWidth = 1;
+  strokeRoundRect(ctx, cx, cy, cw, ch, 2);
+
+  // Selection bar (left edge)
+  if (isSelected) {
+    ctx.fillStyle = BTL.COLORS.selBar;
+    fillRoundRect(ctx, cx, cy, M.SEL_BAR_W, ch, [1, 0, 0, 1]);
+  }
+
+  // Type badge (TOP-LEFT)
+  const badge = TYPE_BADGE[move.type];
+  if (badge) {
+    ctx.fillStyle = badge.bg;
+    fillRoundRect(ctx, cx + M.TYPE_DX, cy + M.TYPE_DY, M.TYPE_W, M.TYPE_H, 2);
+    ctx.strokeStyle = badge.border;
+    ctx.lineWidth = 1;
+    strokeRoundRect(ctx, cx + M.TYPE_DX, cy + M.TYPE_DY, M.TYPE_W, M.TYPE_H, 2);
+    drawText(ctx, getTypeName(move.type), cx + M.TYPE_DX + M.TYPE_W / 2, cy + M.TYPE_DY, {
+      size: M.TYPE_FS, color: badge.color, align: 'center',
+    });
+  }
+
+  // Move name (TOP-RIGHT)
+  const moveName = getMoveDisplayName(move.id);
+  drawText(ctx, moveName, cx + cw - 4, cy + M.NAME_DY, {
+    size: M.NAME_FS, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
+  });
+
+  // Power (BOTTOM-LEFT)
+  const powerStr = move.power ? `כוח: ${move.power}` : 'כוח: —';
+  drawText(ctx, powerStr, cx + M.POWER_DX, cy + M.POWER_DY, {
+    size: M.POWER_FS, color: BTL.COLORS.textDark,
+  });
+
+  // PP (BOTTOM-RIGHT)
+  drawText(ctx, `${move.currentPp}/${move.pp}`, cx + cw - 4, cy + M.PP_DY, {
+    size: M.PP_FS, color: BTL.COLORS.textMuted, align: 'right',
+  });
+
+  // 1px PP bar at bottom
+  const ppBarX = cx + M.PP_BAR_DX;
+  const ppBarY = cy + M.PP_BAR_DY;
+  fillRect(ctx, ppBarX, ppBarY, M.PP_BAR_W, M.PP_BAR_H, BTL.COLORS.ppTrack);
+  const ppRatio = move.pp > 0 ? move.currentPp / move.pp : 0;
+  const ppFillW = Math.round(ppRatio * M.PP_BAR_W);
+  if (ppFillW > 0) {
+    fillRect(ctx, ppBarX, ppBarY, ppFillW, M.PP_BAR_H, BTL.COLORS.ppFill);
+  }
+}
+
+function renderEmptyMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number): void {
+  const M = BTL.MOVE;
+  const cell = M.cells[slotIdx];
+  ctx.fillStyle = BTL.COLORS.cellBg;
+  fillRoundRect(ctx, cell.x, cell.y, M.W, M.H, 2);
+  ctx.strokeStyle = BTL.COLORS.cellBorder;
+  ctx.lineWidth = 1;
+  strokeRoundRect(ctx, cell.x, cell.y, M.W, M.H, 2);
+
+  drawText(ctx, '—', cell.x + M.W / 2, cell.y + 6, {
+    size: 7, color: BTL.COLORS.textDark, align: 'center',
+  });
+}
+
+function renderPageIndicator(ctx: CanvasRenderingContext2D, currentPage: number, totalPages: number): void {
+  // Small dots at bottom-center of the grid area
+  const dotSize = 2;
+  const dotGap = 4;
+  const totalW = totalPages * dotSize + (totalPages - 1) * dotGap;
+  const startX = (SCREEN_W - totalW) / 2;
+  const y = 149; // Just above bottom bar
+
+  for (let i = 0; i < totalPages; i++) {
+    const dx = startX + i * (dotSize + dotGap);
+    ctx.fillStyle = i === currentPage ? BTL.COLORS.selBar : BTL.COLORS.textDark;
+    ctx.fillRect(dx, y, dotSize, dotSize);
+  }
+}
+
+// ─── Switch Grid (3×2, y=106) ────────────────────────────────────
+
+export function renderSwitchGrid(ctx: CanvasRenderingContext2D, party: Pokemon[], cursorIndex: number): void {
+  const S = BTL.SWITCH;
+
+  for (let i = 0; i < 6; i++) {
+    const cell = S.cells[i];
+    const pokemon = i < party.length ? party[i] : null;
+    const isSelected = i === cursorIndex;
+
+    // Slot background
+    ctx.fillStyle = isSelected ? BTL.COLORS.cellBgSel : BTL.COLORS.cellBg;
+    fillRoundRect(ctx, cell.x, cell.y, S.W, S.H, 2);
+    ctx.strokeStyle = isSelected ? BTL.COLORS.cellBorderSel : BTL.COLORS.cellBorder;
+    ctx.lineWidth = 1;
+    strokeRoundRect(ctx, cell.x, cell.y, S.W, S.H, 2);
+
+    if (!pokemon) {
+      // Empty slot
+      drawText(ctx, '—', cell.x + S.W / 2, cell.y + 6, {
+        size: 6, color: BTL.COLORS.textDark, align: 'center',
+      });
+      continue;
     }
 
-    // Move name + type color dot
-    const typeColor = TYPE_COLORS[move.type] || '#a8a878';
-    fillRect(ctx, x + 10, y + 2, 4, 4, typeColor);
-    drawText(ctx, getMoveDisplayName(move.id).toUpperCase(), x + 16, y, {
-      size: 8,
-      color: selected ? '#f8f8f8' : '#a0a0a0',
+    // Selection bar
+    if (isSelected) {
+      ctx.fillStyle = BTL.COLORS.selBar;
+      fillRoundRect(ctx, cell.x, cell.y, 2, S.H, [1, 0, 0, 1]);
+    }
+
+    // Mini sprite
+    const icon = getCachedImage(`/sprites/pokemon/icons/${pokemon.id}.png`);
+    if (icon) {
+      ctx.drawImage(icon, cell.x + S.SPRITE_DX, cell.y + S.SPRITE_DY, S.SPRITE_SZ, S.SPRITE_SZ);
+    }
+
+    // Name (right-aligned for RTL)
+    const name = getPokemonDisplayName(pokemon.id);
+    drawText(ctx, name, cell.x + S.NAME_DX, cell.y + S.NAME_DY, {
+      size: S.NAME_FS, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
     });
 
-    // PP on the right
-    drawText(ctx, `${move.currentPp}/${move.pp}`, x + colW - 8, y, {
-      size: 8,
-      color: '#c0c0c0',
-      align: 'right',
+    // Fainted overlay
+    if (pokemon.hp <= 0) {
+      drawText(ctx, 'מתעלף', cell.x + S.W / 2, cell.y + 8, {
+        size: 6, color: '#d84040', align: 'center', direction: 'rtl',
+      });
+    } else {
+      // HP bar
+      const hpRatio = pokemon.maxHp > 0 ? pokemon.hp / pokemon.maxHp : 0;
+      fillRect(ctx, cell.x + S.HP_DX, cell.y + S.HP_DY, S.HP_W, S.HP_H, BTL.COLORS.hpTrack);
+      const fillW = Math.round(hpRatio * S.HP_W);
+      if (fillW > 0) {
+        fillRect(ctx, cell.x + S.HP_DX, cell.y + S.HP_DY, fillW, S.HP_H, getHpColor(hpRatio));
+      }
+    }
+  }
+}
+
+// ─── Bottom Help Bar (y=150) ─────────────────────────────────────
+
+function renderBottomBar(ctx: CanvasRenderingContext2D): void {
+  const B = BTL.BTM_BG;
+  fillRect(ctx, B.x, B.y, B.w, B.h, B.color);
+
+  for (const key of BTL.BTM_KEYS) {
+    // Pill background
+    ctx.fillStyle = BTL.COLORS.pillBg;
+    fillRoundRect(ctx, key.pillX, B.y + 1, key.pillW, 8, 2);
+    ctx.strokeStyle = BTL.COLORS.pillBorder;
+    ctx.lineWidth = 1;
+    strokeRoundRect(ctx, key.pillX, B.y + 1, key.pillW, 8, 2);
+
+    // Pill text
+    drawText(ctx, key.pillText, key.pillX + key.pillW / 2, B.y + 2, {
+      size: 5, color: BTL.COLORS.pillText, align: 'center',
     });
+
+    // Hint text
+    drawText(ctx, key.hint, key.hintX, B.y + 3, {
+      size: 5, color: BTL.COLORS.pillHint, direction: 'rtl',
+    });
+  }
+}
+
+// ─── Turn Badge ──────────────────────────────────────────────────
+
+export function renderTurnBadge(ctx: CanvasRenderingContext2D, turnNumber: number): void {
+  const T = BTL.TURN;
+
+  ctx.fillStyle = T.bgColor;
+  fillRoundRect(ctx, T.x, T.y, T.w, T.h, 3);
+  ctx.strokeStyle = T.borderColor;
+  ctx.lineWidth = 1;
+  strokeRoundRect(ctx, T.x, T.y, T.w, T.h, 3);
+
+  // "תור X"
+  drawText(ctx, `תור `, T.x + T.w / 2 + 4, T.y + 1, {
+    size: T.fs, color: T.textColor, align: 'center', direction: 'rtl',
+  });
+  drawText(ctx, `${turnNumber}`, T.x + T.w / 2 - 8, T.y + 1, {
+    size: T.fs, color: T.numColor, align: 'center',
+  });
+}
+
+// ─── Party Ball Indicators ───────────────────────────────────────
+
+export function renderPartyBalls(
+  ctx: CanvasRenderingContext2D,
+  side: 'player' | 'opponent',
+  party: { hp: number }[],
+  totalSlots: number,
+  revealedCount?: number,
+): void {
+  const startX = side === 'player' ? BTL.PLY_BALLS_X0 : BTL.OPP_BALLS_X0;
+  const y = BTL.BALL_Y;
+  const size = BTL.BALL_SIZE;
+
+  for (let i = 0; i < Math.min(totalSlots, 6); i++) {
+    const x = startX + i * BTL.BALL_GAP;
+    let fillColor: string, borderColor: string;
+
+    if (i >= party.length) {
+      fillColor = BTL.BALL_EMPTY.fill;
+      borderColor = BTL.BALL_EMPTY.border;
+    } else if (side === 'opponent' && revealedCount !== undefined && i > revealedCount) {
+      fillColor = BTL.BALL_EMPTY.fill;
+      borderColor = BTL.BALL_EMPTY.border;
+    } else if (party[i].hp > 0) {
+      fillColor = BTL.BALL_ALIVE.fill;
+      borderColor = BTL.BALL_ALIVE.border;
+    } else {
+      fillColor = BTL.BALL_FAINTED.fill;
+      borderColor = BTL.BALL_FAINTED.border;
+    }
+
+    // Draw as small rounded rect (pixel-art ball)
+    ctx.fillStyle = fillColor;
+    fillRoundRect(ctx, x, y, size, size, 2);
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1;
+    strokeRoundRect(ctx, x, y, size, size, 2);
   }
 }

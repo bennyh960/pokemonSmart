@@ -1,36 +1,15 @@
 /**
- * HPBar — Showdown-style dark rounded info panel.
+ * HPBar V2 — Dark translucent info panels with green accents.
  *
- * Layout per reference:
- *   ┌─────────────────────────────┐
- *   │    Name   ♀  L82           │  ← centered name, gender colored, level right
- *   │ 100% [═══════HP BAR══════] │  ← enemy: % left, bar right
- *   │ [═══════HP BAR══════] 45%  │  ← player: bar left, % right
- *   │ 25%  [═══════XP BAR═════]  │  ← player only: % left, bar right (blue)
- *   │ [BRN] [0.4×Def] [2×SpA]   │  ← status + stat changes
- *   └─────────────────────────────┘
+ * Opponent: fixed h=18, positioned top-right.
+ * Player:   dynamic height (18-30px) anchored to bottom of battle field, with status pills.
+ *
+ * Reference: screens_examples_coords/battle_canvas_coordinates_v2.md
  */
 
-import { fillRect, drawText } from '../engine/renderer.js';
+import { drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
-
-// Panel & bar dimensions (logical pixels)
-const PANEL_W = 82;
-const PAD = 3;
-const BAR_W = 54;
-const HP_BAR_H = 3;
-const XP_BAR_H = 2;
-const PCT_W = 18;   // space reserved for percentage text
-const PCT_GAP = 2;  // gap between percentage and bar
-
-const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
-  brn: { bg: '#e86830', fg: '#fff' },
-  par: { bg: '#e8c830', fg: '#222' },
-  psn: { bg: '#a040a0', fg: '#fff' },
-  tox: { bg: '#a040a0', fg: '#fff' },
-  slp: { bg: '#a8a878', fg: '#fff' },
-  frz: { bg: '#80d0d0', fg: '#222' },
-};
+import { BTL, getPlayerBarHeight, getPlayerBarY, getHpColor, STATUS_PILL_COLORS } from '../data/battle-constants.js';
 
 export interface HPBarState {
   currentHp: number;
@@ -38,10 +17,10 @@ export interface HPBarState {
   displayHp: number;
   pokemonId: number;
   level: number;
-  x: number;  // panel top-left X
-  y: number;  // panel top-left Y
-  /** true = player side (% right for HP, XP bar shown). false = enemy (% left). */
-  showNumbers: boolean;
+  x: number;
+  y: number;
+  /** true = player side (dynamic bar, shows HP numbers). false = enemy (fixed bar, shows %). */
+  isPlayer: boolean;
   xp: number;
   xpToNext: number;
   status: string;
@@ -49,62 +28,13 @@ export interface HPBarState {
   statChanges: { stat: string; stages: number }[];
 }
 
-function getHpColor(ratio: number): string {
-  if (ratio > 0.5) return '#20d860';
-  if (ratio > 0.25) return '#f8c030';
-  return '#f84038';
-}
-
-/** Draw a dark rounded panel background (pixel-art approximation). */
-function drawRoundedPanel(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
-  ctx.save();
-  ctx.globalAlpha = 0.88;
-  const c = '#1a1a1a';
-  fillRect(ctx, x + 2, y, w - 4, h, c);
-  fillRect(ctx, x + 1, y + 1, w - 2, h - 2, c);
-  fillRect(ctx, x, y + 2, w, h - 4, c);
-  ctx.globalAlpha = 1;
-  ctx.restore();
-}
-
-/** Draw an HP/XP bar with light track, colored fill, and subtle highlight. */
-function drawBar(ctx: CanvasRenderingContext2D, bx: number, by: number, bw: number, bh: number, ratio: number, color: string): void {
-  // Outer border
-  fillRect(ctx, bx - 1, by - 1, bw + 2, bh + 2, '#282828');
-  // Light track
-  fillRect(ctx, bx, by, bw, bh, '#c8c8c8');
-  // Colored fill
-  const fw = Math.floor(bw * Math.max(0, Math.min(1, ratio)));
-  if (fw > 0) {
-    fillRect(ctx, bx, by, fw, bh, color);
-    // Top highlight
-    ctx.save();
-    ctx.globalAlpha = 0.25;
-    fillRect(ctx, bx, by, fw, 1, '#ffffff');
-    ctx.restore();
-  }
-}
-
-/** Get total panel height based on what's visible. */
-export function getPanelHeight(bar: HPBarState): number {
-  let h = 16; // name row (8px) + HP bar row (8px)
-  if (bar.showNumbers && bar.xpToNext > 0) h += 6; // XP bar row
-  if (bar.status || bar.statChanges.length > 0) h += 8; // status row
-  return h;
-}
-
-/** No-op kept for backward compatibility. Panel is drawn by renderHPBar. */
-export function drawPanelBackground(
-  _ctx: CanvasRenderingContext2D, _x: number, _y: number, _w: number, _h: number,
-): void {}
-
 export function createHPBar(
   pokemonId: number, level: number, hp: number, maxHp: number,
-  x: number, y: number, showNumbers = true, xp = 0, xpToNext = 0,
+  x: number, y: number, isPlayer = true, xp = 0, xpToNext = 0,
 ): HPBarState {
   return {
     currentHp: hp, maxHp, displayHp: hp, pokemonId, level,
-    x, y, showNumbers, xp, xpToNext, status: '', gender: '', statChanges: [],
+    x, y, isPlayer, xp, xpToNext, status: '', gender: '', statChanges: [],
   };
 }
 
@@ -141,77 +71,165 @@ export function isHPAnimating(bar: HPBarState): boolean {
   return Math.abs(bar.displayHp - bar.currentHp) > 0.5;
 }
 
-/** Render the complete info panel: background, name, HP bar, XP bar, status. */
+export function getPanelHeight(bar: HPBarState): number {
+  if (!bar.isPlayer) return BTL.OPP_BAR.h;
+  const statusCount = countStatuses(bar);
+  return getPlayerBarHeight(statusCount);
+}
+
+/** No-op kept for backward compatibility. */
+export function drawPanelBackground(
+  _ctx: CanvasRenderingContext2D, _x: number, _y: number, _w: number, _h: number,
+): void {}
+
+// ─── Internals ─────────────────────────────────────────────────────
+
+function countStatuses(bar: HPBarState): number {
+  let count = bar.statChanges.length;
+  if (bar.status) count++;
+  return count;
+}
+
+function drawPanel(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
+  ctx.fillStyle = BTL.PANEL_BG;
+  fillRoundRect(ctx, x, y, w, h, BTL.PANEL_RADIUS);
+  ctx.strokeStyle = BTL.PANEL_BORDER;
+  ctx.lineWidth = 1;
+  strokeRoundRect(ctx, x, y, w, h, BTL.PANEL_RADIUS);
+}
+
+function drawHpTrack(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, ratio: number): void {
+  // Track
+  ctx.fillStyle = BTL.COLORS.hpTrack;
+  fillRoundRect(ctx, x, y, w, h, 1);
+  // Fill
+  const fw = Math.round(ratio * w);
+  if (fw > 0) {
+    ctx.fillStyle = getHpColor(ratio);
+    fillRoundRect(ctx, x, y, fw, h, 1);
+  }
+}
+
+// ─── Render ────────────────────────────────────────────────────────
+
 export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
-  const { x, y, pokemonId, level, displayHp, maxHp, showNumbers: isPlayer, xp, xpToNext, status, gender, statChanges } = bar;
-
-  // ── Panel background ──
-  const panelH = getPanelHeight(bar);
-  drawRoundedPanel(ctx, x, y, PANEL_W, panelH);
-
-  // ── Row 1: Name + Gender + Level ──
-  const nameY = y + 2;
-  const displayName = getPokemonDisplayName(pokemonId);
-  drawText(ctx, displayName, x + PAD, nameY, { size: 6, color: '#ffffff' });
-
-  // Level on right
-  drawText(ctx, `L${level}`, x + PANEL_W - PAD, nameY, { size: 5, color: '#c8c8c8', align: 'right' });
-
-  // Gender icon just before level
-  if (gender) {
-    const genderColor = gender === '♂' ? '#3890f0' : '#f06080';
-    const lvW = (`L${level}`).length * 3 + 1;
-    drawText(ctx, gender, x + PANEL_W - PAD - lvW - 1, nameY, { size: 5, color: genderColor, align: 'right' });
-  }
-
-  // ── Row 2: HP bar ──
-  const hpY = y + 10;
-  const hpRatio = maxHp > 0 ? displayHp / maxHp : 0;
-  const hpPct = maxHp > 0 ? Math.ceil(hpRatio * 100) : 0;
-
-  if (isPlayer) {
-    // Player: [bar] pct%  — bar on left, percentage on right
-    const barX = x + PAD;
-    drawBar(ctx, barX, hpY, BAR_W, HP_BAR_H, hpRatio, getHpColor(hpRatio));
-    drawText(ctx, `${hpPct}%`, x + PAD + BAR_W + PCT_GAP, hpY - 1, { size: 5, color: '#e0e0e0' });
+  if (bar.isPlayer) {
+    renderPlayerBar(ctx, bar);
   } else {
-    // Enemy: pct% [bar]  — percentage on left, bar on right
-    drawText(ctx, `${hpPct}%`, x + PAD + PCT_W - 1, hpY - 1, { size: 5, color: '#e0e0e0', align: 'right' });
-    const barX = x + PAD + PCT_W + PCT_GAP;
-    drawBar(ctx, barX, hpY, BAR_W, HP_BAR_H, hpRatio, getHpColor(hpRatio));
+    renderOpponentBar(ctx, bar);
+  }
+}
+
+function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
+  const B = BTL.OPP_BAR;
+  drawPanel(ctx, B.x, B.y, B.w, B.h);
+
+  const ratio = bar.maxHp > 0 ? bar.displayHp / bar.maxHp : 0;
+  const hpPct = bar.maxHp > 0 ? Math.ceil(ratio * 100) : 0;
+
+  // Name (right-aligned inside panel)
+  const name = getPokemonDisplayName(bar.pokemonId);
+  drawText(ctx, name, B.x + B.w - BTL.OPP_NAME.dx, B.y + BTL.OPP_NAME.dy, {
+    size: BTL.OPP_NAME.fs, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
+  });
+
+  // Level (left-aligned)
+  drawText(ctx, `Lv.${bar.level}`, B.x + BTL.OPP_LEVEL.dx, B.y + BTL.OPP_LEVEL.dy, {
+    size: BTL.OPP_LEVEL.fs, color: BTL.COLORS.textMuted,
+  });
+
+  // HP label (right side)
+  drawText(ctx, 'HP', B.x + BTL.OPP_HP_LABEL.dx, B.y + BTL.OPP_HP_LABEL.dy, {
+    size: BTL.OPP_HP_LABEL.fs, color: BTL.COLORS.textDark, align: 'right',
+  });
+
+  // HP bar
+  const track = BTL.OPP_HP_TRACK;
+  drawHpTrack(ctx, B.x + track.dx, B.y + track.dy, track.w, track.h, ratio);
+
+  // HP percentage
+  drawText(ctx, `${hpPct}%`, B.x + BTL.OPP_HP_PCT.dx, B.y + BTL.OPP_HP_PCT.dy, {
+    size: BTL.OPP_HP_PCT.fs, color: BTL.COLORS.textMuted,
+  });
+}
+
+function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
+  const statusCount = countStatuses(bar);
+  const barH = getPlayerBarHeight(statusCount);
+  const barY = getPlayerBarY(statusCount);
+  const barX = BTL.PLY_BAR_X;
+  const barW = BTL.PLY_BAR_W;
+
+  drawPanel(ctx, barX, barY, barW, barH);
+
+  const ratio = bar.maxHp > 0 ? bar.displayHp / bar.maxHp : 0;
+  const hpCur = Math.ceil(bar.displayHp);
+  const hpMax = bar.maxHp;
+
+  // Name (right-aligned)
+  const name = getPokemonDisplayName(bar.pokemonId);
+  drawText(ctx, name, barX + BTL.PLY_NAME.dx, barY + BTL.PLY_NAME.dy, {
+    size: BTL.PLY_NAME.fs, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
+  });
+
+  // Level (left-aligned)
+  drawText(ctx, `Lv.${bar.level}`, barX + BTL.PLY_LEVEL.dx, barY + BTL.PLY_LEVEL.dy, {
+    size: BTL.PLY_LEVEL.fs, color: BTL.COLORS.textMuted,
+  });
+
+  // HP label
+  drawText(ctx, 'HP', barX + BTL.PLY_HP_LABEL.dx, barY + BTL.PLY_HP_LABEL.dy, {
+    size: BTL.PLY_HP_LABEL.fs, color: BTL.COLORS.textDark, align: 'right',
+  });
+
+  // HP bar track
+  const track = BTL.PLY_HP_TRACK;
+  drawHpTrack(ctx, barX + track.dx, barY + track.dy, track.w, track.h, ratio);
+
+  // HP numeric value
+  drawText(ctx, `${hpCur}/${hpMax}`, barX + BTL.PLY_HP_VAL.dx, barY + BTL.PLY_HP_VAL.dy, {
+    size: BTL.PLY_HP_VAL.fs, color: BTL.COLORS.textDim,
+  });
+
+  // ── Status pills ──
+  if (statusCount > 0) {
+    renderStatusPills(ctx, bar, barY);
+  }
+}
+
+function renderStatusPills(ctx: CanvasRenderingContext2D, bar: HPBarState, barY: number): void {
+  const pills: { label: string; bgColor: string; borderColor: string; textColor: string }[] = [];
+
+  // Primary status
+  if (bar.status && STATUS_PILL_COLORS[bar.status]) {
+    const s = STATUS_PILL_COLORS[bar.status];
+    pills.push({ label: s.label, bgColor: s.bgColor, borderColor: s.borderColor, textColor: s.textColor });
   }
 
-  let nextY = hpY + HP_BAR_H + 3;
-
-  // ── Row 3: XP bar (player only) — pct% [bar] (percentage on left, opposite from HP) ──
-  if (isPlayer && xpToNext > 0) {
-    const xpRatio = xpToNext > 0 ? Math.min(xp / xpToNext, 1) : 0;
-    const xpPct = Math.floor(xpRatio * 100);
-    drawText(ctx, `${xpPct}%`, x + PAD + PCT_W - 1, nextY - 1, { size: 5, color: '#80b0e0', align: 'right' });
-    const barX = x + PAD + PCT_W + PCT_GAP;
-    drawBar(ctx, barX, nextY, BAR_W, XP_BAR_H, xpRatio, '#48a0f8');
-    nextY += XP_BAR_H + 3;
-  }
-
-  // ── Row 4: Status badge + Stat changes ──
-  let badgeX = x + PAD;
-
-  if (status && STATUS_COLORS[status]) {
-    const sc = STATUS_COLORS[status];
-    fillRect(ctx, badgeX, nextY, 14, 6, sc.bg);
-    drawText(ctx, status.toUpperCase(), badgeX + 1, nextY, { size: 4, color: sc.fg });
-    badgeX += 16;
-  }
-
-  for (const change of statChanges) {
+  // Stat changes as boost/debuff pills
+  for (const change of bar.statChanges) {
     const isUp = change.stages > 0;
-    const color = isUp ? '#30c030' : '#e04040';
-    const bg = isUp ? '#1a3a1a' : '#3a1a1a';
-    const mult = Math.abs(change.stages) === 1 ? '' : `${Math.pow(2, Math.abs(change.stages) - 1)}×`;
-    const label = `${mult}${change.stat}`;
-    const badgeW = label.length * 3 + 4;
-    fillRect(ctx, badgeX, nextY, badgeW, 6, bg);
-    drawText(ctx, label, badgeX + 2, nextY, { size: 4, color });
-    badgeX += badgeW + 2;
+    const style = isUp ? STATUS_PILL_COLORS.boost : STATUS_PILL_COLORS.debuff;
+    const mult = Math.abs(change.stages) === 1 ? '' : `×${Math.pow(2, Math.abs(change.stages) - 1)}`;
+    const label = `${change.stat}${mult ? ' ' + mult : ''}`;
+    pills.push({ label, bgColor: style.bgColor, borderColor: style.borderColor, textColor: style.textColor });
+  }
+
+  for (let i = 0; i < Math.min(pills.length, 4); i++) {
+    const row = Math.floor(i / 2);
+    const col = i % 2;
+    const py = barY + (row === 0 ? BTL.STATUS_ROW0_DY : BTL.STATUS_ROW1_DY);
+    const px = col === 0 ? BTL.STATUS_X0 : BTL.STATUS_X1;
+    const pill = pills[i];
+    const pw = col === 0 ? BTL.STATUS_PILL_W : BTL.STATUS_PILL_W - 2;
+
+    ctx.fillStyle = pill.bgColor;
+    fillRoundRect(ctx, px, py, pw, BTL.STATUS_PILL_H, 2);
+    ctx.strokeStyle = pill.borderColor;
+    ctx.lineWidth = 1;
+    strokeRoundRect(ctx, px, py, pw, BTL.STATUS_PILL_H, 2);
+    drawText(ctx, pill.label, px + pw / 2, py, {
+      size: 4, color: pill.textColor, align: 'center',
+    });
   }
 }

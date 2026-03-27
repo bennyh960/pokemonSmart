@@ -15,13 +15,14 @@ import { getPlayerData } from '../systems/game-state.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
-import { TYPE_COLORS } from '../data/type-constants.js';
+import { TYPE_BADGE } from '../data/type-constants.js';
+import type { PokemonType } from '../types/index.js';
 
 /** Starter definitions: Gen 1 starters — moves derived from learnset at level 5. */
 const STARTERS = [
-  { id: 1, type: 'grass', color: '#78C850' },
-  { id: 4, type: 'fire', color: '#F08030' },
-  { id: 7, type: 'water', color: '#6890F0' },
+  { id: 1, type: 'grass' as PokemonType },
+  { id: 4, type: 'fire' as PokemonType },
+  { id: 7, type: 'water' as PokemonType },
 ] as const;
 
 export function createStarterSelectScene(
@@ -143,7 +144,7 @@ export function createStarterSelectScene(
         if (sprite) {
           ctx.drawImage(sprite, cx - 24, cy - 24, 48, 48);
         } else {
-          fillRect(ctx, cx - 12, cy - 12, 24, 24, starter.color);
+          fillRect(ctx, cx - 12, cy - 12, 24, 24, TYPE_BADGE[starter.type]?.color || '#888888');
           drawRect(ctx, cx - 12, cy - 12, 24, 24, '#ffffff44');
         }
 
@@ -155,7 +156,7 @@ export function createStarterSelectScene(
         });
 
         // Type badge
-        const typeColor = TYPE_COLORS[starter.type] || '#888888';
+        const typeColor = TYPE_BADGE[starter.type]?.color || '#888888';
         fillRect(ctx, cx - 16, cardY + 54, 32, 10, typeColor);
         drawText(ctx, starter.type.toUpperCase(), cx, cardY + 56, {
           size: 8,

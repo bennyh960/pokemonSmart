@@ -32,6 +32,10 @@
   "battle.menu.run": "בריחה",
   "battle.menu.whatWillYouDo1": "מה תרצה",
   "battle.menu.whatWillYouDo2": "לעשות?",
+  "battle.menu.fightHint": "בחר מהלך להתקפה",
+  "battle.menu.switchHint": "החלף לפוקימון אחר",
+  "battle.menu.bagHint": "השתמש בפריט מהתיק",
+  "battle.menu.runHint": "נסה לברוח מהקרב",
 
   "hp.label": "HP",
   "hp.level": "רמה {level}",

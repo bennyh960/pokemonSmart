@@ -19,7 +19,7 @@ import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
 import { depositPokemon, withdrawPokemon, releaseFromBox, releaseFromParty, getBoxCount, findEmptySlot } from '../systems/pc-storage.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-import { TYPE_COLORS } from '../data/type-constants.js';
+import { TYPE_BADGE } from '../data/type-constants.js';
 import { LOGICAL_WIDTH as SW, LOGICAL_HEIGHT as SH } from '../engine/config.js';
 
 type PCMode = 'withdraw' | 'deposit' | 'release';
@@ -446,7 +446,7 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
         });
         // Type badge
         if (selected.types.length > 0) {
-          const typeColor = TYPE_COLORS[selected.types[0] as PokemonType] || '#888';
+          const typeColor = TYPE_BADGE[selected.types[0] as PokemonType]?.color || '#888';
           fillRect(ctx, 182, 134, 16, 6, typeColor);
           drawText(ctx, selected.types[0].slice(0, 3).toUpperCase(), 190, 134, {
             size: 5, color: C.TEXT, font: 'monospace', align: 'center',

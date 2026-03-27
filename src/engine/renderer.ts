@@ -118,3 +118,45 @@ export function fillRect(
   ctx.fillStyle = color;
   ctx.fillRect(x, y, w, h);
 }
+
+/** Draw a filled rounded rectangle. Radius can be a single number or [TL, TR, BR, BL]. */
+export function fillRoundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, w: number, h: number,
+  r: number | number[],
+): void {
+  const radii = typeof r === 'number' ? [r, r, r, r] : r;
+  ctx.beginPath();
+  ctx.moveTo(x + radii[0], y);
+  ctx.lineTo(x + w - radii[1], y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radii[1]);
+  ctx.lineTo(x + w, y + h - radii[2]);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - radii[2], y + h);
+  ctx.lineTo(x + radii[3], y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - radii[3]);
+  ctx.lineTo(x, y + radii[0]);
+  ctx.quadraticCurveTo(x, y, x + radii[0], y);
+  ctx.closePath();
+  ctx.fill();
+}
+
+/** Stroke a rounded rectangle. Radius can be a single number or [TL, TR, BR, BL]. */
+export function strokeRoundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, w: number, h: number,
+  r: number | number[],
+): void {
+  const radii = typeof r === 'number' ? [r, r, r, r] : r;
+  ctx.beginPath();
+  ctx.moveTo(x + radii[0], y);
+  ctx.lineTo(x + w - radii[1], y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radii[1]);
+  ctx.lineTo(x + w, y + h - radii[2]);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - radii[2], y + h);
+  ctx.lineTo(x + radii[3], y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - radii[3]);
+  ctx.lineTo(x, y + radii[0]);
+  ctx.quadraticCurveTo(x, y, x + radii[0], y);
+  ctx.closePath();
+  ctx.stroke();
+}
