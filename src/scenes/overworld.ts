@@ -108,6 +108,40 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
   let trainerApproach: TrainerApproachState | null = null;
 
+  // NPC facing restore: saves original facing when NPC turns toward player during dialogue
+  const npcSavedFacing = new Map<string, string>();
+
+  /** Returns the opposite direction (what an NPC should face to look at the player). */
+  function oppositeDir(dir: string): string {
+    switch (dir) {
+      case 'up': case 'ArrowUp': return 'down';
+      case 'down': case 'ArrowDown': return 'up';
+      case 'left': case 'ArrowLeft': return 'right';
+      case 'right': case 'ArrowRight': return 'left';
+      default: return 'down';
+    }
+  }
+
+  /** Turn an NPC to face the player, saving its original facing for later restore. */
+  function turnNPCToPlayer(npc: NPCData): void {
+    const st = getNpcState(npc);
+    npcSavedFacing.set(npc.id, st.facing);
+    const toward = oppositeDir(player.facing);
+    st.facing = toward;
+    npc.facing = toward as NPCData['facing'];
+  }
+
+  /** Restore an NPC's facing to what it was before dialogue. */
+  function restoreNPCFacing(npc: NPCData): void {
+    const saved = npcSavedFacing.get(npc.id);
+    if (saved) {
+      const st = getNpcState(npc);
+      st.facing = saved;
+      npc.facing = saved as NPCData['facing'];
+      npcSavedFacing.delete(npc.id);
+    }
+  }
+
   // NPC animation + auto-walk runtime state (keyed by NPC id)
   interface NPCRuntimeState {
     walkFrame: number;    // 0=stand, 1=walk-1, 2=walk-2
@@ -123,8 +157,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     facing: string;
     // Auto-walk state
     autoWalkTimer: number;
-    autoWalkSteps: number;    // steps taken in current direction
-    autoWalkDir: number;      // 1 = forward, -1 = return
+    autoWalkSteps: number;       // steps taken in current direction
+    autoWalkDir: number;         // 1 = forward, -1 = return
+    autoWalkReturnSteps: number; // how many steps to walk back (set when leg ends)
     autoWalkAxis: 'horizontal' | 'vertical' | null;
     autoWalkWaiting: boolean;
   }
@@ -140,6 +175,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         targetPixelX: npc.x * TILE_SIZE, targetPixelY: npc.y * TILE_SIZE,
         moveProgress: 0, facing: npc.facing,
         autoWalkTimer: 0, autoWalkSteps: 0, autoWalkDir: 1,
+        autoWalkReturnSteps: 0,
         autoWalkAxis: null, autoWalkWaiting: false,
       };
       npcStates.set(npc.id, st);
@@ -236,12 +272,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
           autoSave();
           activeTextBox = createTextBox([t('npc.nurse.done')], isRTL());
+          restoreNPCFacing(npc);
           interactingNPC = null;
           // Process reward after healing (first interaction only)
           if (npc.reward && hasActiveGame()) {
             giveNPCReward(npc, npc.reward);
           }
         } else {
+          restoreNPCFacing(npc);
           interactingNPC = null;
         }
       });
@@ -253,14 +291,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             giveNPCReward(npc, npc.reward);
           }
           openShop(shop);
+          restoreNPCFacing(npc);
           interactingNPC = null;
         } else {
+          restoreNPCFacing(npc);
           interactingNPC = null;
         }
       });
     } else if (npc.type === 'trainer') {
       // After dialogue, start battle if trainer not yet defeated
       const trainer = npc as unknown as TrainerData;
+      restoreNPCFacing(npc);
       interactingNPC = null;
       if (hasActiveGame()) {
         const flags = getPlayerData().flags;
@@ -276,6 +317,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
     } else {
       // Dialogue / generic NPC
+      restoreNPCFacing(npc);
       interactingNPC = null;
       if (npc.reward && hasActiveGame()) {
         giveNPCReward(npc, npc.reward);
@@ -410,6 +452,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Load NPCs from map data
     npcManager = createNPCManager((data.npcs as NPCData[]) || []);
     npcStates.clear(); // reset runtime states for new map
+    npcSavedFacing.clear();
 
     player = initPlayer(spawnX, spawnY);
     camera = createCamera(SCREEN_W, SCREEN_H);
@@ -733,38 +776,64 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   st.autoWalkTimer = 0;
                 }
               } else {
-                // Determine next step direction
-                let dx = 0, dy = 0;
-                if (axis === 'horizontal') dx = st.autoWalkDir;
-                else dy = st.autoWalkDir;
+                // How many steps this leg should take:
+                // - forward (dir=1): use configured steps
+                // - returning (dir=-1): use however many we actually walked forward
+                const targetSteps = st.autoWalkDir === 1 ? cfg.steps : st.autoWalkReturnSteps;
 
-                const nextX = npc.x + dx;
-                const nextY = npc.y + dy;
+                // If return trip has 0 steps (was blocked immediately), skip it
+                if (targetSteps <= 0) {
+                  st.autoWalkDir = 1;
+                  st.autoWalkSteps = 0;
+                  st.autoWalkReturnSteps = cfg.steps;
+                  st.autoWalkWaiting = true;
+                  st.autoWalkTimer = 0;
+                  if (aw.horizontal && aw.vertical) {
+                    st.autoWalkAxis = axis === 'horizontal' ? 'vertical' : 'horizontal';
+                  }
+                } else {
+                  // Determine next step direction
+                  let dx = 0, dy = 0;
+                  if (axis === 'horizontal') dx = st.autoWalkDir;
+                  else dy = st.autoWalkDir;
 
-                // Don't walk into player or other NPCs
-                const blocked = (nextX === player.gridX && nextY === player.gridY) ||
-                  npcManager!.isNPCAt(nextX, nextY);
+                  const nextX = npc.x + dx;
+                  const nextY = npc.y + dy;
 
-                if (!blocked && tileMap && tileMap.isWalkable(nextX, nextY)) {
-                  // Start moving
-                  st.startPixelX = st.pixelX;
-                  st.startPixelY = st.pixelY;
-                  st.targetPixelX = nextX * TILE_SIZE;
-                  st.targetPixelY = nextY * TILE_SIZE;
-                  st.moveProgress = 0;
-                  st.moving = true;
-                  st.facing = dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : 'up';
-                  npc.facing = st.facing as NPCData['facing'];
-                  st.autoWalkSteps++;
+                  // Don't walk into player, other NPCs, or non-walkable tiles
+                  const blocked = (nextX === player.gridX && nextY === player.gridY) ||
+                    npcManager!.isNPCAt(nextX, nextY);
 
-                  if (st.autoWalkSteps >= cfg.steps) {
-                    // Reverse direction, wait
+                  if (!blocked && tileMap && tileMap.isWalkable(nextX, nextY) && st.autoWalkSteps < targetSteps) {
+                    // Take a step
+                    st.startPixelX = st.pixelX;
+                    st.startPixelY = st.pixelY;
+                    st.targetPixelX = nextX * TILE_SIZE;
+                    st.targetPixelY = nextY * TILE_SIZE;
+                    st.moveProgress = 0;
+                    st.moving = true;
+                    st.facing = dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : 'up';
+                    npc.facing = st.facing as NPCData['facing'];
+                    st.autoWalkSteps++;
+
+                    if (st.autoWalkSteps >= targetSteps) {
+                      // Leg complete — reverse, remember how many steps to return
+                      st.autoWalkReturnSteps = st.autoWalkSteps;
+                      st.autoWalkDir *= -1;
+                      st.autoWalkSteps = 0;
+                      st.autoWalkWaiting = true;
+                      st.autoWalkTimer = 0;
+                      if (aw.horizontal && aw.vertical) {
+                        st.autoWalkAxis = axis === 'horizontal' ? 'vertical' : 'horizontal';
+                      }
+                    }
+                  } else {
+                    // Blocked — end leg early, return only as far as we walked
+                    st.autoWalkReturnSteps = st.autoWalkSteps;
                     st.autoWalkDir *= -1;
                     st.autoWalkSteps = 0;
                     st.autoWalkWaiting = true;
                     st.autoWalkTimer = 0;
-
-                    // Switch axis if both are configured
                     if (aw.horizontal && aw.vertical) {
                       st.autoWalkAxis = axis === 'horizontal' ? 'vertical' : 'horizontal';
                     }
@@ -785,13 +854,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (npc.type === 'trainer' && hasActiveGame()) {
               const flags = getPlayerData().flags;
               if (flags[`trainer-${npc.id}-defeated`]) {
+                turnNPCToPlayer(npc);
                 activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL());
-                interactingNPC = null;
+                interactingNPC = npc;
                 return;
               }
             }
             activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL());
             interactingNPC = npc;
+            turnNPCToPlayer(npc);
             return;
           }
         }

@@ -37,7 +37,7 @@ export interface BattleMenuState {
   party: Pokemon[];
 }
 
-const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG', 'RUN'];
+const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG'];
 
 export function createBattleMenu(moves: Move[]): BattleMenuState {
   return {
@@ -87,7 +87,7 @@ function updateTabMode(
     if (menu.activeTab > 0) menu.activeTab--;
   }
   if (input.isKeyPressed('ArrowLeft')) {
-    if (menu.activeTab < 3) menu.activeTab++;
+    if (menu.activeTab < 2) menu.activeTab++;
   }
 
   // Select tab
@@ -195,7 +195,7 @@ export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenu
   }
 
   // Bottom help bar
-  renderBottomBar(ctx);
+  // renderBottomBar(ctx);
 }
 
 // ─── Prompt Bar (y=85) ────────────────────────────────────────────
@@ -203,6 +203,20 @@ export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenu
 function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
   const P = BTL.PROMPT_BG;
   fillRect(ctx, P.x, P.y, P.w, P.h, P.color);
+
+  // ESC → run button legend (left side)
+  const E = BTL.PROMPT_ESC;
+  ctx.fillStyle = BTL.COLORS.pillBg;
+  fillRoundRect(ctx, E.pillX, E.pillY, E.pillW, E.pillH, 2);
+  ctx.strokeStyle = '#e85858';
+  ctx.lineWidth = 1;
+  strokeRoundRect(ctx, E.pillX, E.pillY, E.pillW, E.pillH, 2);
+  drawText(ctx, 'ESC', E.pillX + E.pillW / 2, E.pillY + 1, {
+    size: E.fs, color: '#e85858', align: 'center',
+  });
+  drawText(ctx, 'בריחה', E.labelX, E.labelY, {
+    size: E.fs, color: BTL.COLORS.textDim, direction: 'rtl',
+  });
 
   // Prompt text: "?מה יעשה [name]"
   if (menu.playerPokemon) {
@@ -216,12 +230,6 @@ function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): 
     drawText(ctx, name, BTL.PROMPT_TEXT.x - promptWidth, BTL.PROMPT_TEXT.y, {
       size: BTL.PROMPT_TEXT.fs, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
     });
-
-    // HP display on the left
-    drawText(ctx, `HP ${Math.ceil(menu.playerPokemon.hp)}/${menu.playerPokemon.maxHp}`,
-      BTL.PROMPT_HP.x, BTL.PROMPT_HP.y, {
-        size: BTL.PROMPT_HP.fs, color: BTL.COLORS.textMuted,
-      });
   }
 }
 
@@ -367,7 +375,7 @@ function renderPageIndicator(ctx: CanvasRenderingContext2D, currentPage: number,
   const dotGap = 4;
   const totalW = totalPages * dotSize + (totalPages - 1) * dotGap;
   const startX = (SCREEN_W - totalW) / 2;
-  const y = 149; // Just above bottom bar
+  const y = 159; // Bottom of screen (no bottom bar)
 
   for (let i = 0; i < totalPages; i++) {
     const dx = startX + i * (dotSize + dotGap);

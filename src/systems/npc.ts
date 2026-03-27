@@ -14,16 +14,46 @@ export interface BilingualText {
   he: string;
 }
 
-/** Auto-walk configuration for one axis. */
-export interface AutoWalkAxis {
-  steps: number;   // how many tiles to walk
-  delay: number;   // seconds to wait before walking back
+/** A single step in an NPC's walk pattern. */
+export interface WalkStep {
+  dir: 'up' | 'down' | 'left' | 'right';
+  steps: number;   // tiles to walk in this direction
+  delay: number;   // seconds to wait AFTER completing (or being blocked during) this step
 }
 
-/** Auto-walk configuration — NPC patrols automatically. */
+/** Auto-walk configuration — NPC patrols following an ordered pattern. */
 export interface AutoWalkConfig {
-  horizontal?: AutoWalkAxis;  // walk left/right
-  vertical?: AutoWalkAxis;    // walk up/down
+  pattern: WalkStep[];
+  loop?: boolean;  // default true — repeat pattern forever
+}
+
+/** Legacy auto-walk format (horizontal/vertical axes). Converted at load time. */
+interface LegacyAutoWalkAxis {
+  steps: number;
+  delay: number;
+}
+interface LegacyAutoWalkConfig {
+  horizontal?: LegacyAutoWalkAxis;
+  vertical?: LegacyAutoWalkAxis;
+}
+
+/** Convert legacy {horizontal,vertical} autoWalk to pattern format. */
+export function normalizeAutoWalk(raw: AutoWalkConfig | LegacyAutoWalkConfig | null | undefined): AutoWalkConfig | null {
+  if (!raw) return null;
+  // Already new format
+  if ('pattern' in raw && Array.isArray(raw.pattern)) return raw as AutoWalkConfig;
+  // Legacy format — convert to pattern: go right N, go left N, go down N, go up N
+  const legacy = raw as LegacyAutoWalkConfig;
+  const pattern: WalkStep[] = [];
+  if (legacy.horizontal) {
+    pattern.push({ dir: 'right', steps: legacy.horizontal.steps, delay: legacy.horizontal.delay });
+    pattern.push({ dir: 'left', steps: legacy.horizontal.steps, delay: legacy.horizontal.delay });
+  }
+  if (legacy.vertical) {
+    pattern.push({ dir: 'down', steps: legacy.vertical.steps, delay: legacy.vertical.delay });
+    pattern.push({ dir: 'up', steps: legacy.vertical.steps, delay: legacy.vertical.delay });
+  }
+  return pattern.length > 0 ? { pattern, loop: true } : null;
 }
 
 /** Reward given by a dialogue NPC on first interaction. */
@@ -48,6 +78,10 @@ export interface NPCData {
   autoWalk?: AutoWalkConfig | null;
   reward?: DialogueReward;  // Optional reward on first interaction (any NPC type)
   interactRange?: number;   // Max interaction distance in tiles (default 1 = adjacent)
+  // Story-ready fields
+  hidden?: boolean;         // NPC exists but not rendered/interactable until triggered
+  spawnAfter?: string;      // Flag — NPC appears only after this flag is set
+  despawnAfter?: string;    // Flag — NPC disappears after this flag is set
 }
 
 /** Reward item given after defeating a trainer. */
@@ -93,8 +127,21 @@ const FACING_VECTORS: Record<string, { dx: number; dy: number }> = {
   ArrowRight: { dx: 1, dy: 0 },
 };
 
+/** Check if an NPC should be visible given the current story flags. */
+export function isNPCVisible(npc: NPCData, flags: Record<string, boolean>): boolean {
+  if (npc.hidden) return false;
+  if (npc.spawnAfter && !flags[npc.spawnAfter]) return false;
+  if (npc.despawnAfter && flags[npc.despawnAfter]) return false;
+  return true;
+}
+
 /** Create an NPC manager for a set of NPCs on a map. */
 export function createNPCManager(npcs: NPCData[]) {
+  // Normalize legacy autoWalk configs at load time
+  for (const npc of npcs) {
+    npc.autoWalk = normalizeAutoWalk(npc.autoWalk);
+  }
+
   return {
     /** Get all NPCs. */
     getNPCs(): NPCData[] {

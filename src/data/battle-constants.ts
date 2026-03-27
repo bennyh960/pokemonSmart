@@ -96,17 +96,18 @@ export const BTL = {
   BALL_EMPTY:    { fill: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08)' },
 
   // ===== PROMPT BAR =====
-  PROMPT_BG:   { x: 0, y: 85, w: 240, h: 8, color: '#0a1a10' },
+  PROMPT_BG:    { x: 0,   y: 85, w: 240, h: 8, color: '#0a1a10' },
   PROMPT_TEXT:  { x: 236, y: 86, fs: 6 },    // right anchor
-  PROMPT_HP:   { x: 44,  y: 87, fs: 5 },     // left
+  // ESC → run legend (left side of prompt bar)
+  PROMPT_ESC:   { pillX: 4, pillY: 86, pillW: 16, pillH: 6,
+                  labelX: 22, labelY: 87, fs: 5 },
 
   // ===== ACTION TABS =====
   TABS_BG: { x: 0, y: 94, w: 240, h: 8, color: '#0d1a14', borderColor: '#1a3a2a' },
   TABS: [
-    { id: 'fight'  as const, text: 'התקפה', x: 188, w: 48, color: '#20d860' },
-    { id: 'switch' as const, text: 'החלפה', x: 136, w: 48, color: '#5080ff' },
-    { id: 'bag'    as const, text: 'תיק',   x: 92,  w: 40, color: '#f8d030' },
-    { id: 'run'    as const, text: 'בריחה', x: 48,  w: 40, color: '#e85858' },
+    { id: 'fight'  as const, text: 'התקפה', x: 160, w: 80, color: '#20d860' },
+    { id: 'switch' as const, text: 'החלפה', x: 80,  w: 80, color: '#5080ff' },
+    { id: 'bag'    as const, text: 'תיק',   x: 0,   w: 80, color: '#f8d030' },
   ] as const,
   TAB_TEXT_DY: 1,
   TAB_INACTIVE_C: '#445544',
@@ -116,19 +117,19 @@ export const BTL = {
     cells: [
       { col: 1, row: 0, x: 122, y: 106 },  // move 0 top-right
       { col: 0, row: 0, x: 4,   y: 106 },  // move 1 top-left
-      { col: 1, row: 1, x: 122, y: 128 },  // move 2 bottom-right
-      { col: 0, row: 1, x: 4,   y: 128 },  // move 3 bottom-left
+      { col: 1, row: 1, x: 122, y: 133 },  // move 2 bottom-right
+      { col: 0, row: 1, x: 4,   y: 133 },  // move 3 bottom-left
     ],
     W: 114,
-    H: 20,
+    H: 25,
     SEL_BAR_W: 2,
 
     // Inside cell (relative to cellX, cellY):
     TYPE_DX: 4,     TYPE_DY: 2,     TYPE_W: 22, TYPE_H: 7, TYPE_FS: 5,
     NAME_DX: 30,    NAME_DY: 2,     NAME_W: 80, NAME_FS: 7,
-    POWER_DX: 4,    POWER_DY: 12,   POWER_FS: 5,
-    PP_DX: 110,     PP_DY: 12,      PP_W: 22, PP_FS: 5,
-    PP_BAR_DX: 76,  PP_BAR_DY: 17,  PP_BAR_W: 38, PP_BAR_H: 1,
+    POWER_DX: 4,    POWER_DY: 15,   POWER_FS: 5,
+    PP_DX: 110,     PP_DY: 15,      PP_W: 22, PP_FS: 5,
+    PP_BAR_DX: 76,  PP_BAR_DY: 22,  PP_BAR_W: 38, PP_BAR_H: 1,
   },
 
   // ===== SWITCH GRID =====
@@ -137,15 +138,15 @@ export const BTL = {
       { col: 2, row: 0, x: 160, y: 106 },
       { col: 1, row: 0, x: 82,  y: 106 },
       { col: 0, row: 0, x: 4,   y: 106 },
-      { col: 2, row: 1, x: 160, y: 128 },
-      { col: 1, row: 1, x: 82,  y: 128 },
-      { col: 0, row: 1, x: 4,   y: 128 },
+      { col: 2, row: 1, x: 160, y: 133 },
+      { col: 1, row: 1, x: 82,  y: 133 },
+      { col: 0, row: 1, x: 4,   y: 133 },
     ],
     W: 76,
-    H: 20,
-    SPRITE_DX: 56, SPRITE_DY: 2, SPRITE_SZ: 16,
+    H: 25,
+    SPRITE_DX: 56, SPRITE_DY: 2, SPRITE_SZ: 20,
     NAME_DX: 4,    NAME_DY: 3,   NAME_W: 48, NAME_FS: 6,
-    HP_DX: 4,      HP_DY: 12,    HP_W: 48,   HP_H: 2,
+    HP_DX: 4,      HP_DY: 18,    HP_W: 48,   HP_H: 2,
   },
 
   // ===== BOTTOM BAR =====
