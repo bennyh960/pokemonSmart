@@ -748,7 +748,7 @@ export class PropertiesPanel {
 
   private renderAutoWalkUI(section: HTMLElement, npc: NPCData): void {
     const emit = () => this.state.emit('map-modified');
-    const aw = npc.autoWalk;
+    const aw = npc.autoWalk as import('../systems/npc.js').AutoWalkConfig | null;
 
     // Enable checkbox
     const enableRow = document.createElement('div');
@@ -759,7 +759,7 @@ export class PropertiesPanel {
     enableCb.checked = !!aw;
     enableCb.addEventListener('change', () => {
       if (enableCb.checked) {
-        npc.autoWalk = {};
+        npc.autoWalk = { pattern: [{ dir: 'right', steps: 2, delay: 1 }, { dir: 'left', steps: 2, delay: 1 }], loop: true };
       } else {
         npc.autoWalk = null;
       }
@@ -768,67 +768,81 @@ export class PropertiesPanel {
     enableRow.appendChild(enableCb);
     section.appendChild(enableRow);
 
-    if (!aw) return;
+    if (!aw || !aw.pattern) return;
 
-    // Horizontal axis
-    const hRow = document.createElement('div');
-    hRow.className = 'prop-row';
-    hRow.innerHTML = '<label>Horizontal:</label>';
-    const hCb = document.createElement('input');
-    hCb.type = 'checkbox';
-    hCb.checked = !!aw.horizontal;
-    hCb.style.width = 'auto';
-    hRow.appendChild(hCb);
-    if (aw.horizontal) {
+    // Loop checkbox
+    const loopRow = document.createElement('div');
+    loopRow.className = 'prop-row';
+    loopRow.innerHTML = '<label>Loop:</label>';
+    const loopCb = document.createElement('input');
+    loopCb.type = 'checkbox';
+    loopCb.checked = aw.loop !== false;
+    loopCb.style.width = 'auto';
+    loopCb.addEventListener('change', () => { aw.loop = loopCb.checked; emit(); });
+    loopRow.appendChild(loopCb);
+    section.appendChild(loopRow);
+
+    // Pattern steps list
+    for (let i = 0; i < aw.pattern.length; i++) {
+      const step = aw.pattern[i];
+      const row = document.createElement('div');
+      row.className = 'prop-row';
+      row.style.alignItems = 'center';
+
+      // Step label
+      const label = document.createElement('label');
+      label.textContent = `Step ${i + 1}:`;
+      label.style.minWidth = '42px';
+      row.appendChild(label);
+
+      // Direction select
+      const dirSel = document.createElement('select');
+      dirSel.style.width = '60px';
+      for (const d of ['up', 'down', 'left', 'right']) {
+        const opt = document.createElement('option');
+        opt.value = d; opt.textContent = d;
+        if (d === step.dir) opt.selected = true;
+        dirSel.appendChild(opt);
+      }
+      dirSel.addEventListener('change', () => { step.dir = dirSel.value as 'up' | 'down' | 'left' | 'right'; emit(); });
+      row.appendChild(dirSel);
+
+      // Steps input
       const stepsIn = document.createElement('input');
-      stepsIn.type = 'number'; stepsIn.value = String(aw.horizontal.steps); stepsIn.min = '1';
-      stepsIn.style.width = '40px'; stepsIn.placeholder = 'steps';
-      stepsIn.title = 'Steps';
+      stepsIn.type = 'number'; stepsIn.value = String(step.steps); stepsIn.min = '1';
+      stepsIn.style.width = '36px'; stepsIn.title = 'Steps';
+      stepsIn.addEventListener('change', () => { step.steps = parseInt(stepsIn.value) || 1; emit(); });
+      row.appendChild(stepsIn);
+
+      // Delay input
       const delayIn = document.createElement('input');
-      delayIn.type = 'number'; delayIn.value = String(aw.horizontal.delay); delayIn.min = '0'; delayIn.step = '0.5';
-      delayIn.style.width = '40px'; delayIn.placeholder = 'delay';
-      delayIn.title = 'Delay (s)';
-      hRow.appendChild(stepsIn);
-      hRow.appendChild(delayIn);
-      stepsIn.addEventListener('change', () => { aw.horizontal!.steps = parseInt(stepsIn.value) || 1; emit(); });
-      delayIn.addEventListener('change', () => { aw.horizontal!.delay = parseFloat(delayIn.value) || 0; emit(); });
+      delayIn.type = 'number'; delayIn.value = String(step.delay); delayIn.min = '0'; delayIn.step = '0.5';
+      delayIn.style.width = '36px'; delayIn.title = 'Delay (s)';
+      delayIn.addEventListener('change', () => { step.delay = parseFloat(delayIn.value) || 0; emit(); });
+      row.appendChild(delayIn);
+
+      // Remove button
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = '✕';
+      removeBtn.title = 'Remove step';
+      removeBtn.style.marginLeft = '2px';
+      removeBtn.addEventListener('click', () => { aw.pattern.splice(i, 1); emit(); });
+      row.appendChild(removeBtn);
+
+      section.appendChild(row);
     }
-    hCb.addEventListener('change', () => {
-      if (hCb.checked) { aw.horizontal = { steps: 2, delay: 1 }; }
-      else { delete aw.horizontal; }
+
+    // Add step button
+    const addRow = document.createElement('div');
+    addRow.className = 'prop-row';
+    const addBtn = document.createElement('button');
+    addBtn.textContent = '+ Add Step';
+    addBtn.addEventListener('click', () => {
+      aw.pattern.push({ dir: 'down', steps: 2, delay: 1 });
       emit();
     });
-    section.appendChild(hRow);
-
-    // Vertical axis
-    const vRow = document.createElement('div');
-    vRow.className = 'prop-row';
-    vRow.innerHTML = '<label>Vertical:</label>';
-    const vCb = document.createElement('input');
-    vCb.type = 'checkbox';
-    vCb.checked = !!aw.vertical;
-    vCb.style.width = 'auto';
-    vRow.appendChild(vCb);
-    if (aw.vertical) {
-      const stepsIn = document.createElement('input');
-      stepsIn.type = 'number'; stepsIn.value = String(aw.vertical.steps); stepsIn.min = '1';
-      stepsIn.style.width = '40px'; stepsIn.placeholder = 'steps';
-      stepsIn.title = 'Steps';
-      const delayIn = document.createElement('input');
-      delayIn.type = 'number'; delayIn.value = String(aw.vertical.delay); delayIn.min = '0'; delayIn.step = '0.5';
-      delayIn.style.width = '40px'; delayIn.placeholder = 'delay';
-      delayIn.title = 'Delay (s)';
-      vRow.appendChild(stepsIn);
-      vRow.appendChild(delayIn);
-      stepsIn.addEventListener('change', () => { aw.vertical!.steps = parseInt(stepsIn.value) || 1; emit(); });
-      delayIn.addEventListener('change', () => { aw.vertical!.delay = parseFloat(delayIn.value) || 0; emit(); });
-    }
-    vCb.addEventListener('change', () => {
-      if (vCb.checked) { aw.vertical = { steps: 2, delay: 1 }; }
-      else { delete aw.vertical; }
-      emit();
-    });
-    section.appendChild(vRow);
+    addRow.appendChild(addBtn);
+    section.appendChild(addRow);
   }
 
   private renderTransitionProps(tr: MapTransition, index: number): void {
