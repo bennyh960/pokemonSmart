@@ -19,6 +19,7 @@ import { createPartyScene } from '../scenes/party.js';
 import { createPokedexScene } from '../scenes/pokedex.js';
 import { createBagScene } from '../scenes/bag.js';
 import { createPCScene } from '../scenes/pc.js';
+import { createWorldMapScene } from '../scenes/world-map.js';
 import {
   LOGICAL_WIDTH,
   LOGICAL_HEIGHT,
@@ -57,6 +58,7 @@ export function createGame(container: HTMLElement) {
   stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
   stateMachine.register('BAG', createBagScene(input, stateMachine));
   stateMachine.register('PC', createPCScene(input, stateMachine));
+  stateMachine.register('WORLD_MAP', createWorldMapScene(input, stateMachine));
 
   /** Compute the largest integer scale that fits the viewport and set canvas CSS size. */
   function handleResize(): void {

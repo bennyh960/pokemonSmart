@@ -239,5 +239,10 @@
   "battle.cantCatchTrainer": "אי אפשר לתפוס פוקימון של מאמן!",
   "battle.caught": "נתפס {name}!",
   "battle.brokeFreeBall": "{name} השתחרר!",
-  "battle.learnedMove": "{name} למד {move}!"
+  "battle.learnedMove": "{name} למד {move}!",
+
+  "worldMap.title": "מפת נומריה",
+  "worldMap.hint": "ESC/W: סגור",
+  "worldMap.badge.earned": "תג הושג",
+  "worldMap.currentLocation": "אתה כאן"
 }

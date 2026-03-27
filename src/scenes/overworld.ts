@@ -883,6 +883,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // W key → World Map
+      if (input.isKeyPressed('w') || input.isKeyPressed('W')) {
+        stateMachine.push('WORLD_MAP');
+        return;
+      }
+
       // L key → Toggle language
       if (input.isKeyPressed('l') || input.isKeyPressed('L')) {
         const next: Locale = getLocale() === 'he' ? 'en' : 'he';
@@ -1070,8 +1076,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         fillRect(ctx, 0, barY, SCREEN_W, 11, '#00000088');
         const isAdmin = hasActiveGame() && getPlayerData().name === ADMIN_NAME;
         const hints = isAdmin
-          ? 'P:Party  D:Dex  B:Bag  L:Lang  M:Mute  K:Keys  N:Shop  H:Heal'
-          : 'P:Party  D:Dex  B:Bag  L:Lang  M:Mute  K:Keys';
+          ? 'P:Party  D:Dex  B:Bag  W:Map  L:Lang  M:Mute  K:Keys  N:Shop  H:Heal'
+          : 'P:Party  D:Dex  B:Bag  W:Map  L:Lang  M:Mute  K:Keys';
         drawText(ctx, hints, SCREEN_W / 2, barY + 2, {
           size: 6, color: '#aaaaaa', font: 'monospace', align: 'center',
         });

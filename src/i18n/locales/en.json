@@ -239,5 +239,10 @@
   "battle.cantCatchTrainer": "Can't catch a trainer's Pokemon!",
   "battle.caught": "Caught {name}!",
   "battle.brokeFreeBall": "{name} broke free!",
-  "battle.learnedMove": "{name} learned {move}!"
+  "battle.learnedMove": "{name} learned {move}!",
+
+  "worldMap.title": "WORLD MAP — Numeria",
+  "worldMap.hint": "ESC/W: Close",
+  "worldMap.badge.earned": "Badge earned",
+  "worldMap.currentLocation": "You are here"
 }

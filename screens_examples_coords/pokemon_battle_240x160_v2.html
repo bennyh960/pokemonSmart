@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pokemon RPG - Battle Screen v2 (240×160)</title>
+  <style>
+    body {
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: monospace
+    }
+
+    h2 {
+      color: #4dffb4;
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin: 0 0 16px
+    }
+
+    .screen {
+      width: 240px;
+      height: 160px;
+      background: #0d1a14;
+      position: relative;
+      overflow: hidden;
+      transform: scale(3);
+      transform-origin: top center;
+      image-rendering: pixelated;
+      font-family: monospace;
+      -webkit-font-smoothing: none;
+      margin-bottom: 340px;
+      border: 1px solid #1a4a30
+    }
+
+    .screen * {
+      position: absolute;
+      font-family: monospace;
+      line-height: 1;
+      white-space: nowrap;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+  </style>
+</head>
+
+<body>
+  <h2>מסך קרב v2</h2>
+  <div class="screen">
+
+    <!-- ===== BACKGROUND (y=0..83) ===== -->
+    <div
+      style="left:0;top:0;width:240px;height:34px;background:linear-gradient(180deg,#4a7a5a 0%,#5a9a6a 50%,#7aaa70 100%)">
+    </div>
+    <div
+      style="left:0;top:34px;width:240px;height:50px;background:linear-gradient(180deg,#8ab87a 0%,#c8d8a0 40%,#d8c890 70%,#b8a870 100%)">
+    </div>
+    <div style="left:0;top:52px;width:240px;height:1px;background:rgba(100,80,50,0.12)"></div>
+    <div style="left:0;top:60px;width:240px;height:1px;background:rgba(100,80,50,0.08)"></div>
+    <div style="left:0;top:68px;width:240px;height:1px;background:rgba(100,80,50,0.06)"></div>
+
+    <!-- ===== TURN BADGE ===== -->
+    <div
+      style="left:102px;top:2px;width:36px;height:8px;background:rgba(10,20,14,0.8);border:1px solid rgba(77,255,180,0.25);border-radius:3px">
+    </div>
+    <div style="left:102px;top:3px;width:36px;font-size:6px;color:#4dffb4;text-align:center;">תור <span
+        style="position:relative;color:#fff">3</span></div>
+
+    <!-- ===== OPPONENT INFO BAR (h=18, no status) ===== -->
+    <div
+      style="left:136px;top:12px;width:100px;height:18px;background:rgba(10,20,14,0.82);border:1px solid rgba(77,255,180,0.15);border-radius:4px">
+    </div>
+    <div style="left:188px;top:13px;width:46px;font-size:6px;color:#fff;text-align:right;direction:rtl">סולגליאו</div>
+    <div style="left:140px;top:14px;font-size:5px;color:#667766">Lv.74</div>
+    <div style="left:228px;top:21px;font-size:5px;color:#445544;text-align:right">HP</div>
+    <div style="left:140px;top:22px;width:42px;height:3px;background:#1a3a2a;border-radius:1px"></div>
+    <div style="left:140px;top:22px;width:30px;height:3px;background:#20d860;border-radius:1px"></div>
+    <div style="left:196px;top:21px;font-size:5px;color:#667766">70%</div>
+
+    <!-- ===== OPPONENT SPRITE PLACEHOLDER ===== -->
+    <div style="left:150px;top:16px;width:46px;height:46px;border:1px dashed rgba(77,255,180,0.12);border-radius:4px">
+    </div>
+    <div style="left:150px;top:35px;width:46px;font-size:5px;color:#2a4a35;text-align:center">יריב</div>
+
+    <!-- ===== PLAYER SPRITE PLACEHOLDER ===== -->
+    <div style="left:18px;top:24px;width:56px;height:56px;border:1px dashed rgba(77,255,180,0.12);border-radius:4px">
+    </div>
+    <div style="left:18px;top:48px;width:56px;font-size:5px;color:#2a4a35;text-align:center">שלך</div>
+
+    <!-- ===== PLAYER INFO BAR (EXPANDED h=24, has status) ===== -->
+    <div
+      style="left:4px;top:58px;width:114px;height:24px;background:rgba(10,20,14,0.82);border:1px solid rgba(77,255,180,0.15);border-radius:4px">
+    </div>
+    <!-- Name + Level -->
+    <div style="left:70px;top:59px;width:46px;font-size:6px;color:#fff;text-align:right;direction:rtl">סלמנס</div>
+    <div style="left:8px;top:60px;font-size:5px;color:#667766">Lv.77</div>
+    <!-- HP row -->
+    <div style="left:108px;top:66px;font-size:5px;color:#445544;text-align:right">HP</div>
+    <div style="left:8px;top:68px;width:54px;height:3px;background:#1a3a2a;border-radius:1px"></div>
+    <div style="left:8px;top:68px;width:31px;height:3px;background:#d8a020;border-radius:1px"></div>
+    <div style="left:66px;top:66px;font-size:5px;color:#aaccaa">156/273</div>
+    <!-- Status row (inside expanded bar) -->
+    <div
+      style="left:84px;top:74px;width:30px;height:6px;background:rgba(77,255,180,0.1);border:1px solid rgba(77,255,180,0.2);border-radius:2px">
+    </div>
+    <div style="left:84px;top:74px;width:30px;font-size:4px;color:#4dffb4;text-align:center">הת ×1.5</div>
+    <div
+      style="left:52px;top:74px;width:28px;height:6px;background:rgba(248,88,136,0.15);border:1px solid rgba(248,88,136,0.25);border-radius:2px">
+    </div>
+    <div style="left:52px;top:74px;width:28px;font-size:4px;color:#f07090;text-align:center">מבולבל</div>
+
+    <!-- ===== PARTY BALL INDICATORS ===== -->
+    <div style="left:4px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+    <div style="left:10px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+    <div style="left:16px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+    <div style="left:22px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+    <div style="left:28px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+    <div style="left:34px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+
+    <div style="left:208px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+    <div style="left:214px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+    <div style="left:220px;top:79px;width:4px;height:4px;background:#d84040;border-radius:2px;border:1px solid #8a2a2a">
+    </div>
+    <div style="left:226px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+    <div style="left:232px;top:79px;width:4px;height:4px;background:#20d860;border-radius:2px;border:1px solid #2a8a4a">
+    </div>
+
+    <!-- ===== DIVIDER ===== -->
+    <div style="left:0;top:84px;width:240px;height:1px;background:#1a4a30"></div>
+
+    <!-- ===== PROMPT BAR (y=85, h=8) ===== -->
+    <div style="left:0;top:85px;width:240px;height:8px;background:#0a1a10"></div>
+    <div style="left:176px;top:86px;width:60px;font-size:6px;color:#aaccaa;text-align:right;direction:rtl">?מה יעשה
+      <span style="position:relative;color:#fff">סלמנס</span></div>
+    <div style="left:44px;top:87px;font-size:5px;color:#667766">HP 156/273</div>
+
+    <!-- ===== ACTION TABS (y=94, h=8) ===== -->
+    <div style="left:0;top:94px;width:240px;height:8px;background:#0d1a14;border-bottom:1px solid #1a3a2a"></div>
+    <!-- Active: התקפה -->
+    <div style="left:188px;top:94px;width:48px;height:8px;border-bottom:2px solid #20d860"></div>
+    <div style="left:188px;top:95px;width:48px;font-size:6px;color:#20d860;text-align:center">התקפה</div>
+    <!-- החלפה -->
+    <div style="left:136px;top:95px;width:48px;font-size:6px;color:#445544;text-align:center">החלפה</div>
+    <!-- תיק -->
+    <div style="left:92px;top:95px;width:40px;font-size:6px;color:#445544;text-align:center">תיק</div>
+    <!-- בריחה -->
+    <div style="left:48px;top:95px;width:40px;font-size:6px;color:#445544;text-align:center">בריחה</div>
+
+    <!-- ===== GAP (y=103..105) — 3px breathing room ===== -->
+
+    <!-- ===== MOVE GRID (y=106, 2×2, each w=115, h=20, gap=2) ===== -->
+
+    <!-- Move 0 (top-right, SELECTED): מנוחה / תעופה -->
+    <div
+      style="left:122px;top:106px;width:114px;height:20px;background:#1a3a2a;border:1px solid #2a6a40;border-radius:2px">
+    </div>
+    <div style="left:122px;top:106px;width:2px;height:20px;background:#20d860;border-radius:1px 0 0 1px"></div>
+    <!-- Type badge: TOP-LEFT of cell -->
+    <div
+      style="left:126px;top:108px;width:22px;height:7px;background:rgba(168,144,240,0.15);border:1px solid rgba(168,144,240,0.3);border-radius:2px">
+    </div>
+    <div style="left:126px;top:108px;width:22px;font-size:5px;color:#a890f0;text-align:center">תעופה</div>
+    <!-- Move name: TOP-RIGHT -->
+    <div style="left:152px;top:108px;width:80px;font-size:7px;color:#fff;text-align:right;direction:rtl">מנוחה</div>
+    <!-- Power: BOTTOM-LEFT (aligned) -->
+    <div style="left:126px;top:118px;font-size:5px;color:#445544">כוח: —</div>
+    <!-- PP: BOTTOM-RIGHT (aligned at same y) -->
+    <div style="left:210px;top:118px;width:22px;font-size:5px;color:#667766;text-align:right;direction:ltr">8/8</div>
+    <!-- Tiny PP bar (1px) -->
+    <div style="left:196px;top:123px;width:38px;height:1px;background:#1a3a2a;border-radius:0"></div>
+    <div style="left:196px;top:123px;width:38px;height:1px;background:#20a0d8;border-radius:0"></div>
+
+    <!-- Move 1 (top-left): זעם / דרקון -->
+    <div
+      style="left:4px;top:106px;width:114px;height:20px;background:#0f2a1a;border:1px solid #1a4a30;border-radius:2px">
+    </div>
+    <!-- Type badge: TOP-LEFT -->
+    <div
+      style="left:8px;top:108px;width:22px;height:7px;background:rgba(112,56,248,0.12);border:1px solid rgba(112,56,248,0.25);border-radius:2px">
+    </div>
+    <div style="left:8px;top:108px;width:22px;font-size:5px;color:#7038f8;text-align:center">דרקון</div>
+    <!-- Move name: TOP-RIGHT -->
+    <div style="left:34px;top:108px;width:80px;font-size:7px;color:#fff;text-align:right;direction:rtl">זעם</div>
+    <!-- Power: BOTTOM-LEFT -->
+    <div style="left:8px;top:118px;font-size:5px;color:#445544">כוח: 120</div>
+    <!-- PP: BOTTOM-RIGHT -->
+    <div style="left:92px;top:118px;width:22px;font-size:5px;color:#667766;text-align:right;direction:ltr">15/16</div>
+    <!-- Tiny PP bar -->
+    <div style="left:78px;top:123px;width:38px;height:1px;background:#1a3a2a"></div>
+    <div style="left:78px;top:123px;width:36px;height:1px;background:#20a0d8"></div>
+
+    <!-- Move 2 (bottom-right): ריקוד דרקון -->
+    <div
+      style="left:122px;top:128px;width:114px;height:20px;background:#0f2a1a;border:1px solid #1a4a30;border-radius:2px">
+    </div>
+    <!-- Type: TOP-LEFT -->
+    <div
+      style="left:126px;top:130px;width:22px;height:7px;background:rgba(112,56,248,0.12);border:1px solid rgba(112,56,248,0.25);border-radius:2px">
+    </div>
+    <div style="left:126px;top:130px;width:22px;font-size:5px;color:#7038f8;text-align:center">דרקון</div>
+    <!-- Name: TOP-RIGHT -->
+    <div style="left:152px;top:130px;width:80px;font-size:7px;color:#fff;text-align:right;direction:rtl">ריקוד דרקון
+    </div>
+    <!-- Power: BOTTOM-LEFT -->
+    <div style="left:126px;top:140px;font-size:5px;color:#445544">כוח: —</div>
+    <!-- PP: BOTTOM-RIGHT -->
+    <div style="left:210px;top:140px;width:22px;font-size:5px;color:#667766;text-align:right;direction:ltr">32/32</div>
+    <!-- Tiny PP bar -->
+    <div style="left:196px;top:145px;width:38px;height:1px;background:#1a3a2a"></div>
+    <div style="left:196px;top:145px;width:38px;height:1px;background:#20a0d8"></div>
+
+    <!-- Move 3 (bottom-left): מכת כנף כפולה -->
+    <div
+      style="left:4px;top:128px;width:114px;height:20px;background:#0f2a1a;border:1px solid #1a4a30;border-radius:2px">
+    </div>
+    <!-- Type: TOP-LEFT -->
+    <div
+      style="left:8px;top:130px;width:22px;height:7px;background:rgba(168,144,240,0.12);border:1px solid rgba(168,144,240,0.3);border-radius:2px">
+    </div>
+    <div style="left:8px;top:130px;width:22px;font-size:5px;color:#a890f0;text-align:center">תעופה</div>
+    <!-- Name: TOP-RIGHT -->
+    <div style="left:34px;top:130px;width:80px;font-size:7px;color:#fff;text-align:right;direction:rtl">מכת כנף כפולה
+    </div>
+    <!-- Power: BOTTOM-LEFT -->
+    <div style="left:8px;top:140px;font-size:5px;color:#445544">כוח: 40×2</div>
+    <!-- PP: BOTTOM-RIGHT -->
+    <div style="left:92px;top:140px;width:22px;font-size:5px;color:#667766;text-align:right;direction:ltr">16/16</div>
+    <!-- Tiny PP bar -->
+    <div style="left:78px;top:145px;width:38px;height:1px;background:#1a3a2a"></div>
+    <div style="left:78px;top:145px;width:38px;height:1px;background:#20a0d8"></div>
+
+  </div>
+</body>
+
+</html>
