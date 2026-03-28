@@ -17,6 +17,7 @@ import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 import { BTL, TYPE_BADGE, getHpColor } from '../data/battle-constants.js';
 import { getTypeName } from '../data/type-constants.js';
 import { getCachedImage } from '../engine/sprite-loader.js';
+import { t } from '../i18n/i18n.js';
 
 export type MainMenuChoice = 'FIGHT' | 'BAG' | 'POKEMON' | 'RUN';
 
@@ -189,6 +190,15 @@ export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenu
   // Content area — always show move grid
   renderMoveGrid(ctx, menu);
 
+  // Dim overlay on move grid when in tab-select mode
+  if (menu.mode === 'main') {
+    ctx.save();
+    ctx.globalAlpha = 0.45;
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, BTL.CONTENT_Y, SCREEN_W, 160 - BTL.CONTENT_Y);
+    ctx.restore();
+  }
+
   // Bottom help bar
   // renderBottomBar(ctx);
 }
@@ -209,7 +219,7 @@ function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): 
   drawText(ctx, 'ESC', E.pillX + E.pillW / 2, E.pillY + 1, {
     size: E.fs, color: '#e85858', align: 'center',
   });
-  drawText(ctx, 'בריחה', E.labelX, E.labelY, {
+  drawText(ctx, menu.mode === 'moves' ? t('battle.menu.changeSel') : t('battle.menu.run'), E.labelX, E.labelY, {
     size: E.fs, color: BTL.COLORS.textDim, direction: 'rtl',
   });
 

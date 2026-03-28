@@ -431,7 +431,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             menu.turnNumber = turnNumber;
             menu.playerPokemon = player;
             if (hasActiveGame()) menu.party = getPlayerData().party;
-            phase = 'SELECT_ACTION'; showMainMenu(menu);
+            phase = 'SELECT_MOVE'; showMoveMenu(menu);
           }
           break;
         }
@@ -516,7 +516,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               enemyAlreadyAttacked = true;
               doAttack();
             } else {
-              phase = 'SELECT_ACTION'; showMainMenu(menu);
+              phase = 'SELECT_MOVE'; showMoveMenu(menu);
             }
           }
           break;
@@ -538,7 +538,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           else if (enemyAlreadyAttacked) {
             // Enemy already attacked this turn (speed-based)
             enemyAlreadyAttacked = false;
-            phase = 'SELECT_ACTION'; showMainMenu(menu);
+            phase = 'SELECT_MOVE'; showMoveMenu(menu);
           }
           else enemyTurn();
           break;
@@ -714,11 +714,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             if (itemDef.itemId) {
               useItem(itemDef.itemId);
             } else {
-              phase = 'SELECT_ACTION'; showMainMenu(menu);
+              phase = 'SELECT_MOVE'; showMoveMenu(menu);
             }
           } else {
             // No item selected (user pressed Esc in bag)
-            phase = 'SELECT_ACTION'; showMainMenu(menu);
+            phase = 'SELECT_MOVE'; showMoveMenu(menu);
           }
           break;
         }
@@ -760,7 +760,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           } else {
             clearSelectedPartyIndex();
             // No selection (user pressed Esc in party)
-            phase = 'SELECT_ACTION'; showMainMenu(menu);
+            phase = 'SELECT_MOVE'; showMoveMenu(menu);
           }
           previousLeadId = null;
           break;

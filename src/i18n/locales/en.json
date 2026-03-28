@@ -30,6 +30,7 @@
   "battle.menu.bag": "BAG",
   "battle.menu.pokemon": "POKEMON",
   "battle.menu.run": "RUN",
+  "battle.menu.changeSel": "CHANGE",
   "battle.menu.whatWillYouDo1": "What will",
   "battle.menu.whatWillYouDo2": "you do?",
   "battle.menu.fightHint": "Choose a move to attack",
