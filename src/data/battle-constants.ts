@@ -72,6 +72,7 @@ export const BTL = {
   PLY_HP_LABEL: { dx: 104, dy: 8, fs: 5 },
   PLY_HP_TRACK: { dx: 4,  dy: 10, w: 54, h: 3 },
   PLY_HP_VAL:   { dx: 62, dy: 8, fs: 5 },
+  PLY_XP_TRACK: { dx: 4,  dy: 15, w: 46, h: 2 },
 
   // Status pills relative to barY
   STATUS_ROW0_DY: 16,
@@ -164,6 +165,8 @@ export const BTL = {
     bg:         '#0d1a14',
     divider:    '#1a3a2a',
     hpTrack:    '#1a3a2a',
+    xpTrack:    '#123028',
+    xpFill:     '#5080ff',
     ppTrack:    '#1a3a2a',
     ppFill:     '#20a0d8',
     selBar:     '#20d860',

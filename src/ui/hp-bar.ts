@@ -15,6 +15,7 @@ export interface HPBarState {
   currentHp: number;
   maxHp: number;
   displayHp: number;
+  displayXp: number;
   pokemonId: number;
   level: number;
   x: number;
@@ -34,6 +35,7 @@ export function createHPBar(
 ): HPBarState {
   return {
     currentHp: hp, maxHp, displayHp: hp, pokemonId, level,
+    displayXp: xp,
     x, y, isPlayer, xp, xpToNext, status: '', gender: '', statChanges: [],
   };
 }
@@ -45,6 +47,10 @@ export function setHP(bar: HPBarState, newHp: number): void {
 export function setXP(bar: HPBarState, xp: number, xpToNext: number): void {
   bar.xp = xp;
   bar.xpToNext = xpToNext;
+}
+
+export function setDisplayedXP(bar: HPBarState, xp: number): void {
+  bar.displayXp = Math.max(0, xp);
 }
 
 export function setStatus(bar: HPBarState, status: string): void {
@@ -65,10 +71,24 @@ export function updateHPBar(bar: HPBarState, dt: number): void {
       bar.displayHp = bar.currentHp;
     }
   }
+
+  if (Math.abs(bar.displayXp - bar.xp) > 0.5) {
+    const speed = Math.max(80, bar.xpToNext * 2.5);
+    const diff = bar.xp - bar.displayXp;
+    const step = Math.sign(diff) * Math.min(Math.abs(diff), speed * dt);
+    bar.displayXp += step;
+    if (Math.abs(bar.displayXp - bar.xp) < 0.5) {
+      bar.displayXp = bar.xp;
+    }
+  }
 }
 
 export function isHPAnimating(bar: HPBarState): boolean {
   return Math.abs(bar.displayHp - bar.currentHp) > 0.5;
+}
+
+export function isXPAnimating(bar: HPBarState): boolean {
+  return Math.abs(bar.displayXp - bar.xp) > 0.5;
 }
 
 export function getPanelHeight(bar: HPBarState): number {
@@ -190,6 +210,17 @@ function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
   drawText(ctx, `${hpCur}/${hpMax}`, barX + BTL.PLY_HP_VAL.dx, barY + BTL.PLY_HP_VAL.dy, {
     size: BTL.PLY_HP_VAL.fs, color: BTL.COLORS.textDim,
   });
+
+  // XP bar
+  const xpTrack = BTL.PLY_XP_TRACK;
+  const xpRatio = bar.xpToNext > 0 ? Math.max(0, Math.min(1, bar.displayXp / bar.xpToNext)) : 0;
+  ctx.fillStyle = BTL.COLORS.xpTrack;
+  fillRoundRect(ctx, barX + xpTrack.dx, barY + xpTrack.dy, xpTrack.w, xpTrack.h, 1);
+  const xpFillW = Math.round(xpTrack.w * xpRatio);
+  if (xpFillW > 0) {
+    ctx.fillStyle = BTL.COLORS.xpFill;
+    fillRoundRect(ctx, barX + xpTrack.dx, barY + xpTrack.dy, xpFillW, xpTrack.h, 1);
+  }
 
   // ── Status pills ──
   if (statusCount > 0) {

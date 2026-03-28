@@ -266,10 +266,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     // ── Name (centered in left 168px area) ──
     drawText(ctx, getPokemonDisplayName(pokemon.id), 96, 22, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
-    // ── Level ──
-    drawText(ctx, `${t('party.stats.level')} ${pokemon.level}`, 96, 34, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
-
-    // ── Type badges (centered, y=44) ──
+    // ── Type badges (centered, y=34) ──
     const typeLabels = pokemon.types.map(pt => ({ type: pt, label: getTypeName(pt) }));
     // Each badge is 28px wide, 4px gap between them
     const badgeW = 28;
@@ -278,75 +275,74 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     let bx = Math.floor(96 - totalW / 2);
     for (const tl of typeLabels) {
       const color = TYPE_BADGE[tl.type]?.color || '#888888';
-      fillRect(ctx, bx, 44, badgeW, 9, color);
-      drawText(ctx, tl.label, bx + badgeW / 2, 45, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      fillRect(ctx, bx, 34, badgeW, 9, color);
+      drawText(ctx, tl.label, bx + badgeW / 2, 35, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
       bx += badgeW + badgeGap;
     }
 
-    // ── Height / Weight (centered, y=56) ──
+    // ── Level / Height / Weight (centered, y=46) ──
     const hVal = getPokemonHeight(pokemon.id);
     const wVal = getPokemonWeight(pokemon.id);
+    const lvStr = `${t('party.stats.level')} ${pokemon.level}`;
     const hStr = hVal !== '?' ? t('party.height', { value: hVal, unit: t('party.unit.meter') }) : '';
     const wStr = wVal !== '?' ? t('party.weight', { value: wVal, unit: t('party.unit.kg') }) : '';
-    const hwLine = [hStr, wStr].filter(Boolean).join('  ·  ');
+    const hwLine = [lvStr, hStr, wStr].filter(Boolean).join('  ·  ');
     if (hwLine) {
-      drawText(ctx, hwLine, 96, 56, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
+      drawText(ctx, hwLine, 96, 46, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
     }
 
-    // ── Ability & Nature (y=56-63) ──
-    if (pokemon.abilityId) {
-      const abilityName = getAbilityDisplayName(pokemon.abilityId);
-      drawText(ctx, abilityName, 228, 56, { size: 6, color: '#70d8a0', font: 'monospace', align: 'right' });
-      drawText(ctx, t('party.ability') || 'Ability', 170, 56, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
-    }
+    // ── Ability & Nature (y=54, same style as level/height/weight) ──
+    const abilityStr = pokemon.abilityId ? getAbilityDisplayName(pokemon.abilityId) : '';
+    let natureStr = '';
     if (pokemon.natureId) {
       const natureName = getNatureDisplayName(pokemon.natureId);
       const natureDef = getNature(pokemon.natureId);
-      let natureColor = C.TEXT_MUT;
       let natureHint = '';
       if (natureDef?.increasedStat && natureDef?.decreasedStat) {
-        natureColor = '#f0c860';
         const statShort: Record<string, string> = {
           attack: 'Atk', defense: 'Def', specialAttack: 'SpA',
           specialDefense: 'SpD', speed: 'Spe',
         };
         natureHint = ` (+${statShort[natureDef.increasedStat] ?? '?'} -${statShort[natureDef.decreasedStat] ?? '?'})`;
       }
-      drawText(ctx, `${natureName}${natureHint}`, 228, 62, { size: 6, color: natureColor, font: 'monospace', align: 'right' });
-      drawText(ctx, t('party.nature') || 'Nature', 170, 62, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
+      natureStr = `${natureName}${natureHint}`;
+    }
+    const anLine = [abilityStr, natureStr].filter(Boolean).join('  ·  ');
+    if (anLine) {
+      drawText(ctx, anLine, 96, 54, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
     }
 
     // ── Separator 1 ──
-    fillRect(ctx, 8, 69, 224, 1, C.SEP);
+    fillRect(ctx, 8, 60, 224, 1, C.SEP);
 
     // ── HP section ──
-    drawText(ctx, 'HP', 228, 73, { size: 7, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
-    drawText(ctx, `${pokemon.hp}`, 12, 72, { size: 10, color: C.TEXT_PRI, font: 'monospace' });
-    drawText(ctx, `/ ${pokemon.maxHp}`, 30, 74, { size: 7, color: C.TEXT_MUT, font: 'monospace' });
+    drawText(ctx, 'HP', 228, 64, { size: 7, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
+    drawText(ctx, `${pokemon.hp}`, 12, 63, { size: 10, color: C.TEXT_PRI, font: 'monospace' });
+    drawText(ctx, `/ ${pokemon.maxHp}`, 30, 65, { size: 7, color: C.TEXT_MUT, font: 'monospace' });
     // HP bar
-    fillRect(ctx, 12, 83, 216, 3, C.BAR_TRACK);
+    fillRect(ctx, 12, 74, 216, 3, C.BAR_TRACK);
     const hpRatio = pokemon.maxHp > 0 ? pokemon.hp / pokemon.maxHp : 0;
     const hpFillW = Math.round(216 * Math.max(0, Math.min(1, hpRatio)));
-    if (hpFillW > 0) fillRect(ctx, 12, 83, hpFillW, 3, C.BAR_HP);
+    if (hpFillW > 0) fillRect(ctx, 12, 74, hpFillW, 3, C.BAR_HP);
 
     // ── XP row ──
-    drawText(ctx, t('party.xpLabel'), 228, 89, { size: 6, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
-    drawText(ctx, `${pokemon.xp} / ${pokemon.xpToNext}`, 12, 89, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+    drawText(ctx, t('party.xpLabel'), 228, 80, { size: 6, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
+    drawText(ctx, `${pokemon.xp} / ${pokemon.xpToNext}`, 12, 80, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
 
     // ── Separator 2 ──
-    fillRect(ctx, 8, 96, 224, 1, C.SEP);
+    fillRect(ctx, 8, 87, 224, 1, C.SEP);
 
     // ── Base Stats header ──
-    drawText(ctx, t('party.baseStats'), 228, 99, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
+    drawText(ctx, t('party.baseStats'), 228, 90, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
 
     // ── Stat rows ──
     const statRows: [string, number, string, number][] = [
-      [t('party.stats.hp'),      pokemon.maxHp,           '#20d860', 108],
-      [t('party.stats.attack'),  pokemon.attack,          '#f08030', 116],
-      [t('party.stats.defense'), pokemon.defense,         '#6890f0', 124],
-      [t('party.stats.spAtk'),   pokemon.specialAttack,   '#a040a0', 132],
-      [t('party.stats.spDef'),   pokemon.specialDefense,  '#f8d030', 140],
-      [t('party.stats.speed'),   pokemon.speed,           '#f85888', 148],
+      [t('party.stats.hp'),      pokemon.maxHp,           '#20d860',  99],
+      [t('party.stats.attack'),  pokemon.attack,          '#f08030', 107],
+      [t('party.stats.defense'), pokemon.defense,         '#6890f0', 115],
+      [t('party.stats.spAtk'),   pokemon.specialAttack,   '#a040a0', 123],
+      [t('party.stats.spDef'),   pokemon.specialDefense,  '#f8d030', 131],
+      [t('party.stats.speed'),   pokemon.speed,           '#f85888', 139],
     ];
 
     for (const [label, value, color, rowY] of statRows) {

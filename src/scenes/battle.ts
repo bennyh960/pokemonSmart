@@ -7,7 +7,7 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect } from '../engine/renderer.js';
-import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, isHPAnimating } from '../ui/hp-bar.js';
+import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu, renderPartyBalls } from '../ui/battle-menu.js';
 import { BTL } from '../data/battle-constants.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
@@ -287,6 +287,40 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     audio.playLevelUp();
   }
 
+  function syncPlayerBar(resetDisplayedXp = false): void {
+    playerHpBar.level = player.level;
+    playerHpBar.maxHp = player.maxHp;
+    playerHpBar.currentHp = Math.max(0, Math.min(player.hp, player.maxHp));
+    if (playerHpBar.displayHp > playerHpBar.maxHp) {
+      playerHpBar.displayHp = playerHpBar.maxHp;
+    }
+    setXP(playerHpBar, player.xp, player.xpToNext);
+    if (resetDisplayedXp) {
+      setDisplayedXP(playerHpBar, 0);
+    }
+    menu.playerPokemon = player;
+  }
+
+  function waitForXpResolution(): boolean {
+    setXP(playerHpBar, player.xp, player.xpToNext);
+    if (player.xp >= player.xpToNext) {
+      return playerHpBar.displayXp < playerHpBar.xpToNext - 0.5;
+    }
+    return isXPAnimating(playerHpBar);
+  }
+
+  function startLevelUp(levelPhase: BattlePhase): boolean {
+    const result = checkAndApplyLevelUp(player);
+    if (!result.leveledUp) return false;
+
+    syncPlayerBar(true);
+    triggerLevelUpFx();
+    pendingNewMoves = result.newMoves || [];
+    textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
+    phase = levelPhase;
+    return true;
+  }
+
   /** Show the next "learned move" text box from pendingNewMoves. Returns true if a message was shown. */
   function showNextLearnedMove(movesPhase: BattlePhase): boolean {
     if (pendingNewMoves.length === 0) return false;
@@ -522,17 +556,16 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'TRAINER_NEXT_XP': {
           // Shows XP gained text, then checks for level up or sends next Pokemon
-          if (textBox && updateTextBox(textBox, input, dt)) {
-            textBox = null;
-            const result = checkAndApplyLevelUp(player);
-            if (result.leveledUp) {
-              triggerLevelUpFx();
-              pendingNewMoves = result.newMoves || [];
-              textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
-              phase = 'TRAINER_NEXT_LEVEL_UP';
+          if (textBox) {
+            if (updateTextBox(textBox, input, dt)) {
+              textBox = null;
             } else {
-              sendOutNextTrainerPokemon();
+              break;
             }
+          }
+          if (waitForXpResolution()) break;
+          if (!startLevelUp('TRAINER_NEXT_LEVEL_UP')) {
+            sendOutNextTrainerPokemon();
           }
           break;
         }
@@ -541,7 +574,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
-              sendOutNextTrainerPokemon();
+              if (player.xp > 0) {
+                phase = 'TRAINER_NEXT_XP';
+              } else {
+                sendOutNextTrainerPokemon();
+              }
             }
           }
           break;
@@ -551,7 +588,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
-              sendOutNextTrainerPokemon();
+              if (player.xp > 0) {
+                phase = 'TRAINER_NEXT_XP';
+              } else {
+                sendOutNextTrainerPokemon();
+              }
             }
           }
           break;
@@ -570,17 +611,16 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'TRAINER_REWARD': {
           // Shows XP gained text (from WIN phase), then checks level up
-          if (textBox && updateTextBox(textBox, input, dt)) {
-            textBox = null;
-            const result = checkAndApplyLevelUp(player);
-            if (result.leveledUp) {
-              triggerLevelUpFx();
-              pendingNewMoves = result.newMoves || [];
-              textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
-              phase = 'TRAINER_REWARD_LEVEL_UP';
+          if (textBox) {
+            if (updateTextBox(textBox, input, dt)) {
+              textBox = null;
             } else {
-              awardTrainerReward();
+              break;
             }
+          }
+          if (waitForXpResolution()) break;
+          if (!startLevelUp('TRAINER_REWARD_LEVEL_UP')) {
+            awardTrainerReward();
           }
           break;
         }
@@ -589,7 +629,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
-              awardTrainerReward();
+              if (player.xp > 0) {
+                phase = 'TRAINER_REWARD';
+              } else {
+                awardTrainerReward();
+              }
             }
           }
           break;
@@ -599,23 +643,26 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
-              awardTrainerReward();
+              if (player.xp > 0) {
+                phase = 'TRAINER_REWARD';
+              } else {
+                awardTrainerReward();
+              }
             }
           }
           break;
         }
         case 'XP_GAIN': {
-          if (textBox && updateTextBox(textBox, input, dt)) {
-            textBox = null;
-            const result = checkAndApplyLevelUp(player);
-            if (result.leveledUp) {
-              triggerLevelUpFx();
-              pendingNewMoves = result.newMoves || [];
-              textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
-              phase = 'LEVEL_UP';
+          if (textBox) {
+            if (updateTextBox(textBox, input, dt)) {
+              textBox = null;
             } else {
-              fade = createFade(false, 0.5); phase = 'RUN';
+              break;
             }
+          }
+          if (waitForXpResolution()) break;
+          if (!startLevelUp('LEVEL_UP')) {
+            fade = createFade(false, 0.5); phase = 'RUN';
           }
           break;
         }
@@ -623,7 +670,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
-              fade = createFade(false, 0.5); phase = 'RUN';
+              if (player.xp > 0) {
+                phase = 'XP_GAIN';
+              } else {
+                fade = createFade(false, 0.5); phase = 'RUN';
+              }
             }
           }
           break;
@@ -632,7 +683,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
-              fade = createFade(false, 0.5); phase = 'RUN';
+              if (player.xp > 0) {
+                phase = 'XP_GAIN';
+              } else {
+                fade = createFade(false, 0.5); phase = 'RUN';
+              }
             }
           }
           break;
