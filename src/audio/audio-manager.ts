@@ -8,6 +8,10 @@
 
 import { Howl, Howler } from 'howler';
 
+type AudioWindow = Window & typeof globalThis & {
+  webkitAudioContext?: typeof AudioContext;
+};
+
 /** Track definitions: key → file path under public/audio/ */
 const MUSIC_TRACKS: Record<string, string> = {
   title: '/audio/music/title.mp3',
@@ -37,6 +41,11 @@ const SFX_TRACKS: Record<string, string> = {
 
 /** Default crossfade duration in ms. */
 const DEFAULT_CROSSFADE_MS = 500;
+
+function createWebAudioContext(): AudioContext | null {
+  const ctor = window.AudioContext ?? (window as AudioWindow).webkitAudioContext;
+  return ctor ? new ctor() : null;
+}
 
 export function createAudioManager() {
   /** The currently playing music Howl instance. */
@@ -82,45 +91,84 @@ export function createAudioManager() {
   /** Play a synthesized level-up jingle (ascending arpeggio) via Web Audio API. */
   function playLevelUpJingle(): void {
     if (muted) return;
-    try {
-      const actx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const vol = actx.createGain();
-      vol.gain.value = sfxVolume * 0.4;
-      vol.connect(actx.destination);
+    const actx = createWebAudioContext();
+    if (!actx) return;
 
-      // Ascending notes: C5 → E5 → G5 → C6 (classic level-up feel)
-      const notes = [523.25, 659.25, 783.99, 1046.50];
-      const noteLen = 0.12;
-      notes.forEach((freq, i) => {
-        const osc = actx.createOscillator();
-        const env = actx.createGain();
-        osc.type = 'square';
-        osc.frequency.value = freq;
-        env.gain.setValueAtTime(0.6, actx.currentTime + i * noteLen);
-        env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + i * noteLen + noteLen * 0.9);
-        osc.connect(env);
-        env.connect(vol);
-        osc.start(actx.currentTime + i * noteLen);
-        osc.stop(actx.currentTime + i * noteLen + noteLen);
-      });
+    const vol = actx.createGain();
+    vol.gain.value = sfxVolume * 0.4;
+    vol.connect(actx.destination);
 
-      // Final sustained chord
-      const chordTime = notes.length * noteLen;
-      [523.25, 783.99, 1046.50].forEach(freq => {
-        const osc = actx.createOscillator();
-        const env = actx.createGain();
-        osc.type = 'square';
-        osc.frequency.value = freq;
-        env.gain.setValueAtTime(0.4, actx.currentTime + chordTime);
-        env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + chordTime + 0.4);
-        osc.connect(env);
-        env.connect(vol);
-        osc.start(actx.currentTime + chordTime);
-        osc.stop(actx.currentTime + chordTime + 0.5);
-      });
-    } catch {
-      // Web Audio not available — silent fallback
-    }
+    // Ascending notes: C5 → E5 → G5 → C6 (classic level-up feel)
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    const noteLen = 0.12;
+    notes.forEach((freq, i) => {
+      const osc = actx.createOscillator();
+      const env = actx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      env.gain.setValueAtTime(0.6, actx.currentTime + i * noteLen);
+      env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + i * noteLen + noteLen * 0.9);
+      osc.connect(env);
+      env.connect(vol);
+      osc.start(actx.currentTime + i * noteLen);
+      osc.stop(actx.currentTime + i * noteLen + noteLen);
+    });
+
+    const chordTime = notes.length * noteLen;
+    [523.25, 783.99, 1046.50].forEach(freq => {
+      const osc = actx.createOscillator();
+      const env = actx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      env.gain.setValueAtTime(0.4, actx.currentTime + chordTime);
+      env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + chordTime + 0.4);
+      osc.connect(env);
+      env.connect(vol);
+      osc.start(actx.currentTime + chordTime);
+      osc.stop(actx.currentTime + chordTime + 0.5);
+    });
+  }
+
+  function playCaptureSuccessJingle(): void {
+    if (muted) return;
+    const actx = createWebAudioContext();
+    if (!actx) return;
+
+    const vol = actx.createGain();
+    vol.gain.value = sfxVolume * 0.32;
+    vol.connect(actx.destination);
+
+    const clicks = [880, 880, 880];
+    const clickLen = 0.07;
+    clicks.forEach((freq, i) => {
+      const start = actx.currentTime + i * 0.12;
+      const osc = actx.createOscillator();
+      const env = actx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, start);
+      env.gain.setValueAtTime(0.001, start);
+      env.gain.exponentialRampToValueAtTime(0.45, start + 0.01);
+      env.gain.exponentialRampToValueAtTime(0.01, start + clickLen);
+      osc.connect(env);
+      env.connect(vol);
+      osc.start(start);
+      osc.stop(start + clickLen);
+    });
+
+    const chimeStart = actx.currentTime + 0.39;
+    [1174.66, 1567.98].forEach((freq, i) => {
+      const osc = actx.createOscillator();
+      const env = actx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, chimeStart);
+      env.gain.setValueAtTime(0.001, chimeStart);
+      env.gain.exponentialRampToValueAtTime(0.32 - i * 0.06, chimeStart + 0.02);
+      env.gain.exponentialRampToValueAtTime(0.01, chimeStart + 0.28);
+      osc.connect(env);
+      env.connect(vol);
+      osc.start(chimeStart);
+      osc.stop(chimeStart + 0.3);
+    });
   }
 
   const manager = {
@@ -223,6 +271,10 @@ export function createAudioManager() {
 
     playLevelUp(): void {
       playLevelUpJingle();
+    },
+
+    playCaptureSuccess(): void {
+      playCaptureSuccessJingle();
     },
 
     isMuted(): boolean {

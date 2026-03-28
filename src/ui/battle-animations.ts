@@ -175,25 +175,91 @@ interface LevelUpEffect {
   originY: number;
 }
 
+interface CaptureSuccessEffect {
+  active: boolean;
+  timer: number;
+  duration: number;
+  sparkles: Sparkle[];
+  originX: number;
+  originY: number;
+}
+
 const SPARKLE_COLORS = ['#ffd700', '#fff176', '#ffab00', '#ffffff', '#ffe082'];
 
-export function createLevelUpEffect(xBarX: number, xBarY: number): LevelUpEffect {
+function createSparkleBurst(
+  originX: number,
+  originY: number,
+  count: number,
+  options: {
+    spreadX: number;
+    spreadY: number;
+    minSpeed: number;
+    maxSpeed: number;
+    upwardBias: number;
+    minLife: number;
+    maxLife: number;
+    minSize: number;
+    maxSize: number;
+  },
+): Sparkle[] {
   const sparkles: Sparkle[] = [];
-  // Burst of sparkles from XP bar area
-  for (let i = 0; i < 24; i++) {
-    const angle = (Math.PI * 2 * i) / 24 + (Math.random() - 0.5) * 0.5;
-    const speed = 15 + Math.random() * 30;
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.6;
+    const speed = options.minSpeed + Math.random() * (options.maxSpeed - options.minSpeed);
     sparkles.push({
-      x: xBarX + Math.random() * 54, // spread across bar width
-      y: xBarY,
+      x: originX + (Math.random() - 0.5) * options.spreadX,
+      y: originY + (Math.random() - 0.5) * options.spreadY,
       vx: Math.cos(angle) * speed * 0.4,
-      vy: -Math.abs(Math.sin(angle)) * speed - 5, // bias upward
-      life: 0.6 + Math.random() * 0.5,
-      maxLife: 0.6 + Math.random() * 0.5,
-      size: 1 + Math.random() * 1.5,
+      vy: Math.sin(angle) * speed * 0.3 - options.upwardBias,
+      life: options.minLife + Math.random() * (options.maxLife - options.minLife),
+      maxLife: options.minLife + Math.random() * (options.maxLife - options.minLife),
+      size: options.minSize + Math.random() * (options.maxSize - options.minSize),
       color: SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)],
     });
   }
+  return sparkles;
+}
+
+function updateSparkles(sparkles: Sparkle[], dt: number): void {
+  for (const s of sparkles) {
+    s.x += s.vx * dt;
+    s.y += s.vy * dt;
+    s.vy += 20 * dt;
+    s.life -= dt;
+  }
+}
+
+function renderSparkles(ctx: CanvasRenderingContext2D, sparkles: Sparkle[]): void {
+  for (const s of sparkles) {
+    if (s.life <= 0) continue;
+    const alpha = Math.min(1, s.life / (s.maxLife * 0.3));
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    const sz = s.size * (0.5 + 0.5 * (s.life / s.maxLife));
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y - sz);
+    ctx.lineTo(s.x + sz * 0.6, s.y);
+    ctx.lineTo(s.x, s.y + sz);
+    ctx.lineTo(s.x - sz * 0.6, s.y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+export function createLevelUpEffect(xBarX: number, xBarY: number): LevelUpEffect {
+  const sparkles = createSparkleBurst(xBarX + 27, xBarY, 24, {
+    spreadX: 54,
+    spreadY: 4,
+    minSpeed: 15,
+    maxSpeed: 45,
+    upwardBias: 12,
+    minLife: 0.6,
+    maxLife: 1.1,
+    minSize: 1,
+    maxSize: 2.5,
+  });
   return { active: true, timer: 0, duration: 1.2, sparkles, glowAlpha: 1, originX: xBarX, originY: xBarY };
 }
 
@@ -204,12 +270,7 @@ export function updateLevelUpEffect(effect: LevelUpEffect, dt: number): void {
 
   effect.glowAlpha = Math.max(0, 1 - effect.timer / 0.4); // glow fades in first 0.4s
 
-  for (const s of effect.sparkles) {
-    s.x += s.vx * dt;
-    s.y += s.vy * dt;
-    s.vy += 20 * dt; // gentle gravity
-    s.life -= dt;
-  }
+  updateSparkles(effect.sparkles, dt);
 }
 
 export function renderLevelUpEffect(ctx: CanvasRenderingContext2D, effect: LevelUpEffect): void {
@@ -225,26 +286,53 @@ export function renderLevelUpEffect(ctx: CanvasRenderingContext2D, effect: Level
     ctx.restore();
   }
 
-  // Sparkle particles
-  for (const s of effect.sparkles) {
-    if (s.life <= 0) continue;
-    const alpha = Math.min(1, s.life / (s.maxLife * 0.3)); // fade out in last 30%
-    ctx.save();
-    ctx.globalAlpha = alpha;
+  renderSparkles(ctx, effect.sparkles);
+}
 
-    // Diamond/star shape
-    const sz = s.size * (0.5 + 0.5 * (s.life / s.maxLife));
-    ctx.fillStyle = s.color;
-    ctx.beginPath();
-    ctx.moveTo(s.x, s.y - sz);
-    ctx.lineTo(s.x + sz * 0.6, s.y);
-    ctx.lineTo(s.x, s.y + sz);
-    ctx.lineTo(s.x - sz * 0.6, s.y);
-    ctx.closePath();
-    ctx.fill();
+export function createCaptureSuccessEffect(originX: number, originY: number): CaptureSuccessEffect {
+  return {
+    active: true,
+    timer: 0,
+    duration: 0.9,
+    sparkles: createSparkleBurst(originX, originY - 2, 18, {
+      spreadX: 8,
+      spreadY: 6,
+      minSpeed: 14,
+      maxSpeed: 30,
+      upwardBias: 8,
+      minLife: 0.35,
+      maxLife: 0.75,
+      minSize: 1,
+      maxSize: 2.2,
+    }),
+    originX,
+    originY,
+  };
+}
 
-    ctx.restore();
+export function updateCaptureSuccessEffect(effect: CaptureSuccessEffect, dt: number): void {
+  if (!effect.active) return;
+  effect.timer += dt;
+  if (effect.timer >= effect.duration) {
+    effect.active = false;
+    return;
   }
+  updateSparkles(effect.sparkles, dt);
+}
+
+export function renderCaptureSuccessEffect(ctx: CanvasRenderingContext2D, effect: CaptureSuccessEffect): void {
+  if (!effect.active) return;
+
+  const pulse = 1 - (effect.timer / effect.duration);
+  ctx.save();
+  ctx.globalAlpha = pulse * 0.35;
+  ctx.fillStyle = '#fff6b0';
+  ctx.beginPath();
+  ctx.arc(effect.originX, effect.originY, 10 + pulse * 8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  renderSparkles(ctx, effect.sparkles);
 }
 
 // --- Convenience: Clear all effects ---

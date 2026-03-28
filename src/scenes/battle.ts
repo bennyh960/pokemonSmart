@@ -15,7 +15,17 @@ import {
   createFlash, updateFlash, renderFlash, createShake, updateShake, applyShake, resetShake,
   createFade, updateFade, renderFade, spawnDamageNumber, updatePopups, renderPopups, clearAllPopups,
   createLevelUpEffect, updateLevelUpEffect, renderLevelUpEffect,
+  createCaptureSuccessEffect, updateCaptureSuccessEffect, renderCaptureSuccessEffect,
 } from '../ui/battle-animations.js';
+import {
+  createBattleAnimationDirector,
+  callStep,
+  parallelStep,
+  sequenceStep,
+  tweenActorStep,
+  waitStep,
+} from '../ui/battle-animation-director.js';
+import { drawPokeballIcon } from '../ui/item-icons.js';
 import { getCombinedTypeEffectiveness, getPokemonDisplayName, getMoveDisplayName, getPokemon, getLocalizedName } from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
@@ -35,7 +45,7 @@ type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_NEXT_XP'
   | 'TRAINER_NEXT_LEVEL_UP' | 'TRAINER_NEXT_LEVEL_UP_MOVES'
   | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP' | 'TRAINER_REWARD_LEVEL_UP_MOVES'
-  | 'WAITING_BAG' | 'WAITING_PARTY' | 'SWITCH_POKEMON';
+  | 'WAITING_BAG' | 'WAITING_PARTY' | 'SWITCH_POKEMON' | 'CAPTURE_ANIM';
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
@@ -98,6 +108,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let phaseTimer = 0;
   let xpGained = 0;
   let levelUpFx: ReturnType<typeof createLevelUpEffect> | null = null;
+  let captureSuccessFx: ReturnType<typeof createCaptureSuccessEffect> | null = null;
   let pendingNewMoves: number[] = [];  // moveIds learned on level-up, shown one by one
   let waitingForBag = false;
   let waitingForParty = false;
@@ -112,6 +123,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let enemyAlreadyAttacked = false;
   let playerStatStages: Record<string, number> = {};
   let turnNumber = 0;
+  let activeBallId: string | null = null;
+  let pendingCaptureOutcome: { itemId: string; caught: boolean } | null = null;
+  const animationDirector = createBattleAnimationDirector();
 
   function useItem(itemId: string): void {
     const pd = getPlayerData();
@@ -144,18 +158,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
       consumeItem(pd.items, itemId);
       const hpFactor = 1 - (enemy.hp / enemy.maxHp) * 0.5;
-      if (Math.random() < def.effect.rate * hpFactor * 0.3) {
-        enemy.caughtBall = itemId;
-        if (pd.party.length < 6) pd.party.push({ ...enemy });
-        pd.pokedex[enemy.id] = true;
-        autoSave();
-        textBox = createTextBox([t('battle.caught', { name: getPokemonDisplayName(enemy.id) })], isRTL());
-        audio.playMusic('victory');
-        phase = 'RUN';
-      } else {
-        textBox = createTextBox([t('battle.brokeFreeBall', { name: getPokemonDisplayName(enemy.id) })], isRTL());
-        phase = 'USE_ITEM';
-      }
+      startCaptureSequence(itemId, Math.random() < def.effect.rate * hpFactor * 0.3);
       phaseTimer = 0;
       return;
     }
@@ -263,10 +266,15 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
-    textBox = null; flash = null; shake = null; levelUpFx = null;
+    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null;
     waitingForBag = false; waitingForParty = false; previousLeadId = null;
     enemyGoesFirst = false; enemyAlreadyAttacked = false; playerStatStages = {};
     turnNumber = 0;
+    activeBallId = null;
+    pendingCaptureOutcome = null;
+    animationDirector.clear();
+    animationDirector.resetActors();
+    animationDirector.setActorState('ball', { visible: false });
     fade = createFade(true, 0.5); clearAllPopups();
     phase = 'INTRO'; phaseTimer = 0; xpGained = 0;
     // Preload Pokemon sprites
@@ -285,6 +293,185 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     const barY = BTL.PLY_SPRITE.y;
     levelUpFx = createLevelUpEffect(barX, barY);
     audio.playLevelUp();
+  }
+
+  function getBallStartPoint(): { x: number; y: number } {
+    return {
+      x: BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w - 6,
+      y: BTL.PLY_SPRITE.y + 18,
+    };
+  }
+
+  function getBallTargetPoint(): { x: number; y: number } {
+    return {
+      x: BTL.OPP_SPRITE.x + (BTL.OPP_SPRITE.w / 2),
+      y: BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h - 8,
+    };
+  }
+
+  function createBallShakeStep(targetX: number, targetY: number): ReturnType<typeof sequenceStep> {
+    return sequenceStep(
+      tweenActorStep('ball', { x: targetX + 3, y: targetY, rotation: 0.22 }, 0.08, 'easeInOut'),
+      tweenActorStep('ball', { x: targetX - 3, y: targetY, rotation: -0.22 }, 0.08, 'easeInOut'),
+      tweenActorStep('ball', { x: targetX, y: targetY, rotation: 0 }, 0.08, 'easeInOut'),
+      waitStep(0.05),
+    );
+  }
+
+  function resetCaptureActors(): void {
+    animationDirector.setActorState('enemy', {
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+      alpha: 1,
+      rotation: 0,
+      visible: true,
+    });
+    animationDirector.setActorState('ball', {
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+      alpha: 1,
+      rotation: 0,
+      visible: false,
+    });
+  }
+
+  function finishCaptureAnimation(): void {
+    if (!pendingCaptureOutcome) return;
+
+    const outcome = pendingCaptureOutcome;
+    const pd = getPlayerData();
+    pendingCaptureOutcome = null;
+
+    if (outcome.caught) {
+      animationDirector.setActorState('enemy', {
+        x: 0,
+        y: 0,
+        scaleX: 1,
+        scaleY: 1,
+        alpha: 0,
+        rotation: 0,
+        visible: false,
+      });
+      enemy.caughtBall = outcome.itemId;
+      if (pd.party.length < 6) pd.party.push({ ...enemy });
+      pd.pokedex[enemy.id] = true;
+      autoSave();
+      textBox = createTextBox([t('battle.caught', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+      audio.playMusic('victory');
+      phase = 'RUN';
+      return;
+    }
+
+    activeBallId = null;
+    resetCaptureActors();
+    textBox = createTextBox([t('battle.brokeFreeBall', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+    phase = 'USE_ITEM';
+  }
+
+  function startCaptureSequence(itemId: string, caught: boolean): void {
+    const start = getBallStartPoint();
+    const target = getBallTargetPoint();
+
+    activeBallId = itemId;
+    pendingCaptureOutcome = { itemId, caught };
+    textBox = null;
+    captureSuccessFx = null;
+    animationDirector.clear();
+    resetCaptureActors();
+    animationDirector.setActorState('ball', {
+      x: start.x,
+      y: start.y,
+      visible: true,
+    });
+
+    const absorbStep = parallelStep(
+      tweenActorStep('enemy', {
+        scaleX: 0.15,
+        scaleY: 0.15,
+        alpha: 0,
+      }, 0.16, 'easeInOut'),
+      sequenceStep(
+        tweenActorStep('ball', { scaleX: 1.2, scaleY: 1.2 }, 0.08, 'easeOut'),
+        tweenActorStep('ball', { scaleX: 1, scaleY: 1 }, 0.08, 'easeInOut'),
+      ),
+    );
+
+    const throwAndTrapStep = sequenceStep(
+      callStep(() => audio.playSFX('menu-select')),
+      tweenActorStep('ball', {
+        x: start.x + ((target.x - start.x) * 0.55),
+        y: target.y - 30,
+        rotation: 0.45,
+      }, 0.16, 'easeOut'),
+      tweenActorStep('ball', {
+        x: target.x,
+        y: target.y,
+        rotation: 0,
+      }, 0.14, 'easeInOut'),
+      callStep(() => audio.playSFX('hit')),
+      absorbStep,
+      callStep(() => {
+        animationDirector.setActorState('enemy', {
+          x: 0,
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          alpha: 1,
+          rotation: 0,
+          visible: false,
+        });
+      }),
+      waitStep(0.12),
+    );
+
+    const successSequence = sequenceStep(
+      createBallShakeStep(target.x, target.y),
+      createBallShakeStep(target.x, target.y),
+      createBallShakeStep(target.x, target.y),
+      callStep(() => {
+        flash = createFlash('#fff5a8', 0.16);
+        captureSuccessFx = createCaptureSuccessEffect(target.x, target.y - 1);
+        audio.playCaptureSuccess();
+      }),
+      waitStep(0.22),
+    );
+
+    const brokeFreeSequence = sequenceStep(
+      createBallShakeStep(target.x, target.y),
+      createBallShakeStep(target.x, target.y),
+      callStep(() => audio.playCry(enemy.id)),
+      callStep(() => {
+        animationDirector.setActorState('enemy', {
+          scaleX: 0.15,
+          scaleY: 0.15,
+          alpha: 0,
+          visible: true,
+        });
+      }),
+      parallelStep(
+        tweenActorStep('enemy', {
+          scaleX: 1,
+          scaleY: 1,
+          alpha: 1,
+          visible: true,
+        }, 0.16, 'easeOut'),
+        sequenceStep(
+          tweenActorStep('ball', { scaleX: 1.35, scaleY: 1.35, alpha: 0.15 }, 0.1, 'easeOut'),
+          tweenActorStep('ball', { alpha: 0, scaleX: 0.9, scaleY: 0.9 }, 0.12, 'easeInOut'),
+        ),
+      ),
+      waitStep(0.06),
+    );
+
+    animationDirector.play(sequenceStep(
+      throwAndTrapStep,
+      caught ? successSequence : brokeFreeSequence,
+    ));
+    phase = 'CAPTURE_ANIM';
   }
 
   function syncPlayerBar(resetDisplayedXp = false): void {
@@ -421,6 +608,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (shake) updateShake(shake, dt);
       if (fade) updateFade(fade, dt);
       if (levelUpFx) updateLevelUpEffect(levelUpFx, dt);
+      if (captureSuccessFx) updateCaptureSuccessEffect(captureSuccessFx, dt);
+      animationDirector.update(dt);
       updateHPBar(playerHpBar, dt); updateHPBar(enemyHpBar, dt); updatePopups(dt);
 
       switch (phase) {
@@ -778,6 +967,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (!textBox && !isHPAnimating(playerHpBar)) enemyTurn();
           break;
         }
+        case 'CAPTURE_ANIM': {
+          if (!animationDirector.isBusy()) finishCaptureAnimation();
+          break;
+        }
       }
     },
     render(ctx: CanvasRenderingContext2D): void {
@@ -825,7 +1018,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         const tImg = getCachedImage(`/sprites/trainers/${trainerData.trainerSprite}.png`);
         if (tImg) {
           if (showingTrainer) {
-            ctx.drawImage(tImg, BTL.OPP_SPRITE.x, 4, 48, 68);
+            renderActorImage(ctx, 'trainer', tImg, BTL.OPP_SPRITE.x, 4, 48, 68);
           } else {
             ctx.save();
             ctx.globalAlpha = 0.85;
@@ -839,7 +1032,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (!showingTrainer) {
         const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
         if (enemySprite) {
-          ctx.drawImage(enemySprite, BTL.OPP_SPRITE.x, BTL.OPP_SPRITE.y,
+          renderActorImage(ctx, 'enemy', enemySprite, BTL.OPP_SPRITE.x, BTL.OPP_SPRITE.y,
             BTL.OPP_SPRITE.w, BTL.OPP_SPRITE.h);
         }
       }
@@ -847,9 +1040,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       // ── Player Pokemon sprite (left side) ──
       const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
       if (playerSprite) {
-        ctx.drawImage(playerSprite, BTL.PLY_SPRITE.x, BTL.PLY_SPRITE.y,
+        renderActorImage(ctx, 'player', playerSprite, BTL.PLY_SPRITE.x, BTL.PLY_SPRITE.y,
           BTL.PLY_SPRITE.w, BTL.PLY_SPRITE.h);
       }
+
+      renderBallActor(ctx);
 
       // ── Info panels ──
       setXP(playerHpBar, player.xp, player.xpToNext);
@@ -866,6 +1061,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
       // ── Effects ──
       if (levelUpFx) renderLevelUpEffect(ctx, levelUpFx);
+      if (captureSuccessFx) renderCaptureSuccessEffect(ctx, captureSuccessFx);
       if (shake) resetShake(ctx, shake);
       renderPopups(ctx);
       if (flash) renderFlash(ctx, flash);
@@ -882,6 +1078,42 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (fade) renderFade(ctx, fade);
     },
   };
+
+  function renderActorImage(
+    ctx: CanvasRenderingContext2D,
+    actor: 'player' | 'enemy' | 'trainer',
+    image: HTMLImageElement,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+  ): void {
+    const state = animationDirector.getActorState(actor);
+    if (!state.visible || state.alpha <= 0) return;
+
+    ctx.save();
+    ctx.globalAlpha *= state.alpha;
+    ctx.translate(x + w / 2 + state.x, y + h / 2 + state.y);
+    ctx.rotate(state.rotation);
+    ctx.scale(state.scaleX, state.scaleY);
+    ctx.drawImage(image, -w / 2, -h / 2, w, h);
+    ctx.restore();
+  }
+
+  function renderBallActor(ctx: CanvasRenderingContext2D): void {
+    if (!activeBallId) return;
+
+    const state = animationDirector.getActorState('ball');
+    if (!state.visible || state.alpha <= 0) return;
+
+    ctx.save();
+    ctx.globalAlpha *= state.alpha;
+    ctx.translate(state.x, state.y);
+    ctx.rotate(state.rotation);
+    ctx.scale(state.scaleX, state.scaleY);
+    drawPokeballIcon(ctx, activeBallId, -7, -7, 14);
+    ctx.restore();
+  }
 
 }
 

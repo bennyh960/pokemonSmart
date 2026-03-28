@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 5 ⬜ IN PROGRESS (Phase 1 data fetch done, Phase 2 integration done)
+## Overall Progress: Sprint 5.5 ⬜ UP NEXT (animation foundation before the larger Sprint 6 battle pass)
 
 ---
 
@@ -127,41 +127,73 @@ This is a foundation sprint — must be done before design/content sprints.
 
 ---
 
-## Sprint 5 — Items, Abilities, Natures & Held Items ⬜ IN PROGRESS
-**Goal:** Fetch & integrate abilities/natures/held items from PokeAPI (relational model), make items functional
+
+## Sprint 5 — Items, Abilities & Natures ✅ COMPLETE
+**Goal:** Fetch & integrate abilities/natures from PokeAPI (relational model), and make the item system functional
+
+**Scope change:** Held items are officially deferred to post-launch / future patch work. Ability passive effects are moved to follow the status-effect milestone and broader battle refactor work.
 
 ### Phase 1 — Data Fetch (PokeAPI → relational JSON)
 | Task | Agent | Status |
 |------|-------|--------|
-| Fetch abilities from PokeAPI → `abilities.json` (id, name {en,he}, description, effect) | asset-manager | ⬜ |
-| Fetch natures from PokeAPI → `natures.json` (id, name {en,he}, +stat, -stat) | asset-manager | ⬜ |
-| Fetch pokemon-abilities mapping → `pokemon-abilities.json` (pokemonId → [abilityIds]) | asset-manager | ⬜ |
-| Fetch held items data → extend `items.json` with holdable items + effects | asset-manager | ⬜ |
+| Fetch abilities from PokeAPI → `abilities.json` (id, name {en,he}, description, effect) | asset-manager | ✅ |
+| Fetch natures from PokeAPI → `natures.json` (id, name {en,he}, +stat, -stat) | asset-manager | ✅ |
+| Fetch pokemon-abilities mapping → `pokemon-abilities.json` (pokemonId → [abilityIds]) | asset-manager | ✅ |
+| Fetch held items data → extend `items.json` with holdable items + effects | asset-manager | ➡️ deferred post-launch |
 
 ### Phase 2 — Integrate into data model
 | Task | Agent | Status |
 |------|-------|--------|
-| Add ability/nature to Pokemon instance type + creation logic | game-engine-developer | ⬜ |
-| Nature stat modifiers in stat calculation formula | game-engine-developer | ⬜ |
-| Ability effects in battle (passive triggers) | game-engine-developer | ⬜ |
-| Held item effects in battle (passive triggers) | game-engine-developer | ⬜ |
-| UI — show ability/nature on party + summary screens | frontend-developer | ⬜ |
+| Add ability/nature to Pokemon instance type + creation logic | game-engine-developer | ✅ |
+| Nature stat modifiers in stat calculation formula | game-engine-developer | ✅ |
+| Ability effects in battle (passive triggers) | game-engine-developer | ➡️ moved after Sprint 6 status effects + battle refactor |
+| Held item effects in battle (passive triggers) | game-engine-developer | ➡️ deferred post-launch |
+| UI — show ability/nature on party + summary screens | frontend-developer | ✅ |
 
 ### Phase 3 — Items functionality
 | Task | Agent | Status |
 |------|-------|--------|
-| Item pickup system — find items on maps (overworld item balls) | game-engine-developer | ⬜ |
-| Healing items — full implementation (HP, PP, status, revive) | game-engine-developer | ⬜ |
-| Pokeball items — catching wild Pokemon (see Sprint 6) | game-engine-developer | ⬜ |
-| Stat boost items (X Attack, etc.) — apply in battle | game-engine-developer | ⬜ |
-| Rare Candy — level up with move learning | game-engine-developer | ⬜ |
-| Item reuse across screens (bag, battle, shop, map pickup) | frontend-developer | ⬜ |
+| Item pickup system — find items on maps (overworld item balls) | game-engine-developer | ✅ |
+| Healing items — HP, PP, and revive implementation (status-curing medicine completes with Sprint 6 status system) | game-engine-developer | ✅ |
+| Pokeball items — catching wild Pokemon (formula polish remains in Sprint 6) | game-engine-developer | ✅ |
+| Stat boost items (X Attack, etc.) — apply in battle | game-engine-developer | ✅ |
+| Rare Candy — level up with move learning | game-engine-developer | ✅ |
+| Item reuse across screens (bag, battle, shop, map pickup) | frontend-developer | ✅ |
 | Shop screen redesign using coordinate system | frontend-developer + asset-manager | ✅ |
 
 ---
+## Sprint 5.5 — Battle & Evolution Animation Foundation ⬜ PLANNED
+**Goal:** Build a reusable animation layer for battle/capture/evolution flows, and ship the highest-value visual sequences before the broader battle-system overhaul.
+
+**Scope principles:**
+- Prioritize reusable animation sequencing over one-off hardcoded effects.
+- Focus on capture, faint/send-out/escape, and evolution first.
+- Treat attack animations as **research + prototype only** in this sprint, not a full move-by-move content pass.
+- Keep held items deferred to post-launch / future patch work.
+
+| Task | Agent | Status | Notes |
+|------|-------|--------|-------|
+| Animation director / sequence player for battle flows | game-engine-developer | ⬜ | Reusable queue/timeline for move/fade/scale/shake/SFX steps; battle blocks while animations run |
+| Pokeball throw + capture sequences (Poke / Great / Ultra / Master) | game-engine-developer + frontend-developer | ⬜ | Throw arc, hit/open, enemy absorb, shake/wait, success vs break-free branches |
+| Wild escape, faint, withdraw, and trainer send-out animations | game-engine-developer + frontend-developer | ⬜ | Cover flee, faint disappear, switch-out, next-Pokemon send-out, optional cry hooks |
+| Evolution scene + plumbing (level-up + stone evolutions) | game-engine-developer + frontend-developer | ⬜ | Dedicated scene instead of overloading `battle.ts`; updates species/stats/sprites/save |
+| Attack animation research + prototype set | game-engine-developer + frontend-developer | ⬜ | Prototype only: one physical lunge, one projectile, one status pulse; decide future direction |
+| Audio cue pass for new animation beats | frontend-developer | ⬜ | Throw, shake, break-free, evolution start/finish, send-out/withdraw timing |
+
+**Out of scope for Sprint 5.5:**
+- Held items
+- Ability passive effects
+- Full battle refactor
+- Full move-by-move attack animation library
+- Catch formula overhaul
+
+
+--- 
 
 ## Sprint 6 — Battle System ⬜ PLANNED
 **Goal:** Realistic Pokemon battle mechanics
+
+**Priority:** After Sprint 5.5 lands, implement status effects first. Broader battle refactor work and the first batch of ability passive effects should build on top of that foundation.
 
 | Task | Agent |
 |------|-------|
@@ -309,6 +341,7 @@ The game doubles as an English learning tool. Initially, most text is in Hebrew.
 - Multiplayer math battles
 - Leaderboard (server-side)
 - More Pokemon generations
+- Held items (data integration + passive battle effects) — deferred to post-launch / future patch
 - ~~Hebrew localization for all text~~ ✅ Done (Sprint 2 post-demo — UI only, PokeAPI data still English)
 - ~~Hebrew translation of PokeAPI data (Pokemon names, moves)~~ ✅ Done (2026-03-22) — see story above
 - Deduplicate localized names into separate name files (tech debt, low priority)
