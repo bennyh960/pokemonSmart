@@ -184,6 +184,16 @@ interface CaptureSuccessEffect {
   originY: number;
 }
 
+interface SendOutEffect {
+  active: boolean;
+  timer: number;
+  duration: number;
+  originX: number;
+  originY: number;
+  fillColor: string;
+  ringColor: string;
+}
+
 const SPARKLE_COLORS = ['#ffd700', '#fff176', '#ffab00', '#ffffff', '#ffe082'];
 
 function createSparkleBurst(
@@ -333,6 +343,56 @@ export function renderCaptureSuccessEffect(ctx: CanvasRenderingContext2D, effect
   ctx.restore();
 
   renderSparkles(ctx, effect.sparkles);
+}
+
+export function createSendOutEffect(
+  originX: number,
+  originY: number,
+  fillColor = '#ff5a5a',
+  ringColor = '#ffd6d6',
+): SendOutEffect {
+  return {
+    active: true,
+    timer: 0,
+    duration: 0.5,
+    originX,
+    originY,
+    fillColor,
+    ringColor,
+  };
+}
+
+export function updateSendOutEffect(effect: SendOutEffect, dt: number): void {
+  if (!effect.active) return;
+  effect.timer += dt;
+  if (effect.timer >= effect.duration) {
+    effect.active = false;
+    return;
+  }
+}
+
+export function renderSendOutEffect(ctx: CanvasRenderingContext2D, effect: SendOutEffect): void {
+  if (!effect.active) return;
+
+  const t = effect.timer / effect.duration;
+  const alpha = Math.max(0, 1 - t);
+  const innerR = 8 + t * 10;
+  const outerR = 14 + t * 18;
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.32;
+  ctx.fillStyle = effect.fillColor;
+  ctx.beginPath();
+  ctx.arc(effect.originX, effect.originY, outerR, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.globalAlpha = alpha * 0.8;
+  ctx.strokeStyle = effect.ringColor;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(effect.originX, effect.originY, innerR, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
 }
 
 // --- Convenience: Clear all effects ---

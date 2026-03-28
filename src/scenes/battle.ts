@@ -9,6 +9,7 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect } from '../engine/renderer.js';
 import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu, renderPartyBalls } from '../ui/battle-menu.js';
+import type { MainMenuChoice } from '../ui/battle-menu.js';
 import { BTL } from '../data/battle-constants.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
@@ -16,6 +17,7 @@ import {
   createFade, updateFade, renderFade, spawnDamageNumber, updatePopups, renderPopups, clearAllPopups,
   createLevelUpEffect, updateLevelUpEffect, renderLevelUpEffect,
   createCaptureSuccessEffect, updateCaptureSuccessEffect, renderCaptureSuccessEffect,
+  createSendOutEffect, updateSendOutEffect, renderSendOutEffect,
 } from '../ui/battle-animations.js';
 import {
   createBattleAnimationDirector,
@@ -109,6 +111,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let xpGained = 0;
   let levelUpFx: ReturnType<typeof createLevelUpEffect> | null = null;
   let captureSuccessFx: ReturnType<typeof createCaptureSuccessEffect> | null = null;
+  let sendOutFx: ReturnType<typeof createSendOutEffect> | null = null;
   let pendingNewMoves: number[] = [];  // moveIds learned on level-up, shown one by one
   let waitingForBag = false;
   let waitingForParty = false;
@@ -125,6 +128,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let turnNumber = 0;
   let activeBallId: string | null = null;
   let pendingCaptureOutcome: { itemId: string; caught: boolean } | null = null;
+  let pendingEnemySendOutAnimation = false;
+  let pendingPlayerSendOutAnimation = false;
   const animationDirector = createBattleAnimationDirector();
 
   function useItem(itemId: string): void {
@@ -181,6 +186,16 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
+    pendingEnemySendOutAnimation = true;
+    animationDirector.setActorState('enemy', {
+      x: 26,
+      y: -8,
+      scaleX: 0.55,
+      scaleY: 0.55,
+      alpha: 0,
+      rotation: -0.2,
+      visible: false,
+    });
     textBox = createTextBox([t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) })], isRTL());
     phase = 'INTRO';
   }
@@ -266,15 +281,37 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
-    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null;
+    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null;
     waitingForBag = false; waitingForParty = false; previousLeadId = null;
     enemyGoesFirst = false; enemyAlreadyAttacked = false; playerStatStages = {};
     turnNumber = 0;
     activeBallId = null;
     pendingCaptureOutcome = null;
+    pendingEnemySendOutAnimation = isTrainerBattle;
+    pendingPlayerSendOutAnimation = true;
     animationDirector.clear();
     animationDirector.resetActors();
     animationDirector.setActorState('ball', { visible: false });
+    animationDirector.setActorState('player', {
+      x: -24,
+      y: 8,
+      scaleX: 0.6,
+      scaleY: 0.6,
+      alpha: 0,
+      rotation: 0.14,
+      visible: false,
+    });
+    if (isTrainerBattle) {
+      animationDirector.setActorState('enemy', {
+        x: 26,
+        y: -8,
+        scaleX: 0.55,
+        scaleY: 0.55,
+        alpha: 0,
+        rotation: -0.2,
+        visible: false,
+      });
+    }
     fade = createFade(true, 0.5); clearAllPopups();
     phase = 'INTRO'; phaseTimer = 0; xpGained = 0;
     // Preload Pokemon sprites
@@ -307,6 +344,31 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       x: BTL.OPP_SPRITE.x + (BTL.OPP_SPRITE.w / 2),
       y: BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h - 8,
     };
+  }
+
+  function getTrainerBallStartPoint(): { x: number; y: number } {
+    return {
+      x: 224,
+      y: 42,
+    };
+  }
+
+  function getPlayerBallStartPoint(): { x: number; y: number } {
+    return {
+      x: 92,
+      y: 72,
+    };
+  }
+
+  function getPlayerBallTargetPoint(): { x: number; y: number } {
+    return {
+      x: BTL.PLY_SPRITE.x + 24,
+      y: BTL.PLY_SPRITE.y + 28,
+    };
+  }
+
+  function getPlayerBallId(): string {
+    return player.caughtBall ?? 'poke-ball';
   }
 
   function createBallShakeStep(targetX: number, targetY: number): ReturnType<typeof sequenceStep> {
@@ -370,6 +432,245 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     resetCaptureActors();
     textBox = createTextBox([t('battle.brokeFreeBall', { name: getPokemonDisplayName(enemy.id) })], isRTL());
     phase = 'USE_ITEM';
+  }
+
+  function startEnemyFaintAnimation(): void {
+    animationDirector.clear();
+    animationDirector.setActorState('enemy', {
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+      alpha: 1,
+      rotation: 0,
+      visible: true,
+    });
+    animationDirector.play(sequenceStep(
+      callStep(() => audio.playCry(enemy.id)),
+      parallelStep(
+        tweenActorStep('enemy', { y: 10, alpha: 0 }, 0.28, 'easeInOut'),
+        tweenActorStep('enemy', { scaleX: 1.08, scaleY: 0.08 }, 0.28, 'easeInOut'),
+      ),
+      callStep(() => {
+        animationDirector.setActorState('enemy', {
+          y: 10,
+          alpha: 0,
+          scaleX: 1.08,
+          scaleY: 0.08,
+          visible: false,
+        });
+      }),
+    ));
+  }
+
+  function startPlayerFaintAnimation(): void {
+    animationDirector.clear();
+    animationDirector.setActorState('player', {
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+      alpha: 1,
+      rotation: 0,
+      visible: true,
+    });
+    animationDirector.play(sequenceStep(
+      callStep(() => audio.playCry(player.id)),
+      parallelStep(
+        tweenActorStep('player', { y: 12, alpha: 0 }, 0.28, 'easeInOut'),
+        tweenActorStep('player', { scaleX: 1.04, scaleY: 0.08 }, 0.28, 'easeInOut'),
+      ),
+      callStep(() => {
+        animationDirector.setActorState('player', {
+          y: 12,
+          alpha: 0,
+          scaleX: 1.04,
+          scaleY: 0.08,
+          visible: false,
+        });
+      }),
+    ));
+  }
+
+  function startPlayerRetreatAnimation(): void {
+    animationDirector.clear();
+    animationDirector.setActorState('player', {
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+      alpha: 1,
+      rotation: 0,
+      visible: true,
+    });
+    animationDirector.play(sequenceStep(
+      parallelStep(
+        tweenActorStep('player', { x: -26, y: 10, alpha: 0 }, 0.22, 'easeInOut'),
+        tweenActorStep('player', { scaleX: 0.72, scaleY: 0.72 }, 0.22, 'easeInOut'),
+      ),
+      callStep(() => {
+        animationDirector.setActorState('player', {
+          x: -26,
+          y: 10,
+          alpha: 0,
+          scaleX: 0.72,
+          scaleY: 0.72,
+          visible: false,
+        });
+      }),
+    ));
+  }
+
+  function startEnemySendOutAnimation(): void {
+    const start = getTrainerBallStartPoint();
+    const target = getBallTargetPoint();
+    pendingEnemySendOutAnimation = false;
+    activeBallId = 'poke-ball';
+    sendOutFx = null;
+    animationDirector.clear();
+    animationDirector.setActorState('ball', {
+      x: start.x,
+      y: start.y,
+      scaleX: 1,
+      scaleY: 1,
+      alpha: 1,
+      rotation: 0,
+      visible: true,
+    });
+    animationDirector.setActorState('enemy', {
+      x: 26,
+      y: -8,
+      scaleX: 0.55,
+      scaleY: 0.55,
+      alpha: 0,
+      rotation: -0.2,
+      visible: false,
+    });
+    animationDirector.play(sequenceStep(
+      callStep(() => audio.playSFX('menu-select')),
+      tweenActorStep('ball', {
+        x: start.x + ((target.x - start.x) * 0.58),
+        y: target.y - 26,
+        rotation: -0.4,
+      }, 0.14, 'easeOut'),
+      tweenActorStep('ball', {
+        x: target.x,
+        y: target.y,
+        rotation: 0,
+      }, 0.12, 'easeInOut'),
+      callStep(() => {
+        audio.playSFX('hit');
+        flash = createFlash('#ff6a6a', 0.14);
+        sendOutFx = createSendOutEffect(target.x, target.y - 2, '#ff6a6a', '#ffd6d6');
+        activeBallId = null;
+        animationDirector.setActorState('ball', {
+          alpha: 0,
+          visible: false,
+        });
+        animationDirector.setActorState('enemy', {
+          visible: true,
+        });
+      }),
+      waitStep(0.04),
+      callStep(() => audio.playCry(enemy.id)),
+      tweenActorStep('enemy', {
+        x: 0,
+        y: 0,
+        scaleX: 1,
+        scaleY: 1,
+        alpha: 1,
+        rotation: 0,
+        visible: true,
+      }, 0.26, 'easeOut'),
+      callStep(() => {
+        activeBallId = null;
+        animationDirector.setActorState('ball', {
+          x: 0,
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          alpha: 1,
+          rotation: 0,
+          visible: false,
+        });
+      }),
+    ));
+  }
+
+  function startPlayerSendOutAnimation(): void {
+    const start = getPlayerBallStartPoint();
+    const target = getPlayerBallTargetPoint();
+    pendingPlayerSendOutAnimation = false;
+    activeBallId = getPlayerBallId();
+    sendOutFx = null;
+    animationDirector.clear();
+    animationDirector.setActorState('ball', {
+      x: start.x,
+      y: start.y,
+      scaleX: 1,
+      scaleY: 1,
+      alpha: 1,
+      rotation: 0,
+      visible: true,
+    });
+    animationDirector.setActorState('player', {
+      x: -24,
+      y: 8,
+      scaleX: 0.6,
+      scaleY: 0.6,
+      alpha: 0,
+      rotation: 0.14,
+      visible: false,
+    });
+    animationDirector.play(sequenceStep(
+      callStep(() => audio.playSFX('menu-select')),
+      tweenActorStep('ball', {
+        x: start.x - ((start.x - target.x) * 0.58),
+        y: target.y - 22,
+        rotation: 0.38,
+      }, 0.14, 'easeOut'),
+      tweenActorStep('ball', {
+        x: target.x,
+        y: target.y,
+        rotation: 0,
+      }, 0.12, 'easeInOut'),
+      callStep(() => {
+        audio.playSFX('hit');
+        flash = createFlash('#d6ecff', 0.12);
+        sendOutFx = createSendOutEffect(target.x, target.y - 2, '#80b8ff', '#e8f4ff');
+        activeBallId = null;
+        animationDirector.setActorState('ball', {
+          alpha: 0,
+          visible: false,
+        });
+        animationDirector.setActorState('player', {
+          visible: true,
+        });
+      }),
+      waitStep(0.03),
+      callStep(() => audio.playCry(player.id)),
+      tweenActorStep('player', {
+        x: 0,
+        y: 0,
+        scaleX: 1,
+        scaleY: 1,
+        alpha: 1,
+        rotation: 0,
+        visible: true,
+      }, 0.24, 'easeOut'),
+      callStep(() => {
+        activeBallId = null;
+        animationDirector.setActorState('ball', {
+          x: 0,
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          alpha: 1,
+          rotation: 0,
+          visible: false,
+        });
+      }),
+    ));
   }
 
   function startCaptureSequence(itemId: string, caught: boolean): void {
@@ -583,6 +884,45 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     stateMachine.change('OVERWORLD');
   }
 
+  function handleMainChoice(choice: MainMenuChoice): void {
+    audio.playSFX('menu-select');
+    if (choice === 'FIGHT') { phase = 'SELECT_MOVE'; showMoveMenu(menu); }
+    else if (choice === 'BAG') {
+      setBagMode('battle');
+      clearPendingItem();
+      waitingForBag = true;
+      phase = 'WAITING_BAG';
+      stateMachine.push('BAG');
+    }
+    else if (choice === 'POKEMON') {
+      if (hasActiveGame()) {
+        const pd = getPlayerData();
+        const hasOther = pd.party.some((p, i) => i !== 0 && p.hp > 0);
+        if (!hasOther) {
+          textBox = createTextBox([t('battle.noOtherPokemon')], isRTL()); phase = 'INTRO';
+        } else {
+          setPartyMode('battle');
+          clearSelectedPartyIndex();
+          previousLeadId = player.id;
+          waitingForParty = true;
+          phase = 'WAITING_PARTY';
+          stateMachine.push('PARTY');
+        }
+      } else {
+        textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO';
+      }
+    }
+    else if (choice === 'RUN') {
+      if (isTrainerBattle) {
+        textBox = createTextBox([t('battle.cantRunTrainer')], isRTL()); phase = 'INTRO';
+      } else {
+        startPlayerRetreatAnimation();
+        textBox = createTextBox([t('battle.gotAway')], isRTL()); phase = 'RUN';
+      }
+    }
+    else { textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO'; }
+  }
+
   return {
     enter(): void {
       init();
@@ -609,13 +949,28 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (fade) updateFade(fade, dt);
       if (levelUpFx) updateLevelUpEffect(levelUpFx, dt);
       if (captureSuccessFx) updateCaptureSuccessEffect(captureSuccessFx, dt);
+      if (sendOutFx) updateSendOutEffect(sendOutFx, dt);
       animationDirector.update(dt);
       updateHPBar(playerHpBar, dt); updateHPBar(enemyHpBar, dt); updatePopups(dt);
 
       switch (phase) {
         case 'INTRO': {
           if (textBox && updateTextBox(textBox, input, dt)) {
-            textBox = null; showTrainerSprite = false;
+            textBox = null;
+            showTrainerSprite = false;
+          }
+          if (!textBox) {
+            if (pendingEnemySendOutAnimation) {
+              if (!animationDirector.isBusy()) startEnemySendOutAnimation();
+              break;
+            }
+            if (pendingPlayerSendOutAnimation) {
+              if (!animationDirector.isBusy()) startPlayerSendOutAnimation();
+              break;
+            }
+            if (animationDirector.isBusy()) {
+              break;
+            }
             turnNumber++;
             menu.turnNumber = turnNumber;
             menu.playerPokemon = player;
@@ -627,48 +982,16 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'SELECT_ACTION': {
           const r = updateBattleMenu(menu, input);
           if (r?.type === 'main') {
-            audio.playSFX('menu-select');
-            if (r.choice === 'FIGHT') { phase = 'SELECT_MOVE'; showMoveMenu(menu); }
-            else if (r.choice === 'BAG') {
-              setBagMode('battle');
-              clearPendingItem();
-              waitingForBag = true;
-              phase = 'WAITING_BAG';
-              stateMachine.push('BAG');
-            }
-            else if (r.choice === 'POKEMON') {
-              // Check if there are other alive Pokemon to switch to
-              if (hasActiveGame()) {
-                const pd = getPlayerData();
-                const hasOther = pd.party.some((p, i) => i !== 0 && p.hp > 0);
-                if (!hasOther) {
-                  textBox = createTextBox([t('battle.noOtherPokemon')], isRTL()); phase = 'INTRO';
-                } else {
-                  setPartyMode('battle');
-                  clearSelectedPartyIndex();
-                  previousLeadId = player.id;
-                  waitingForParty = true;
-                  phase = 'WAITING_PARTY';
-                  stateMachine.push('PARTY');
-                }
-              } else {
-                textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO';
-              }
-            }
-            else if (r.choice === 'RUN') {
-              if (isTrainerBattle) {
-                textBox = createTextBox([t('battle.cantRunTrainer')], isRTL()); phase = 'INTRO';
-              } else {
-                textBox = createTextBox([t('battle.gotAway')], isRTL()); phase = 'RUN';
-              }
-            }
-            else { textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO'; }
+            handleMainChoice(r.choice);
           }
           break;
         }
         case 'SELECT_MOVE': {
           const r = updateBattleMenu(menu, input);
-          if (r?.type === 'move') {
+          if (r?.type === 'main') {
+            // Number shortcut (2=switch, 3=bag) pressed from move grid
+            handleMainChoice(r.choice);
+          } else if (r?.type === 'move') {
             if (r.index === -1) { phase = 'SELECT_ACTION'; showMainMenu(menu); }
             else {
               selMove = r.index;
@@ -698,6 +1021,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (!textBox && !isHPAnimating(playerHpBar)) {
             if (player.hp <= 0) {
               enemyGoesFirst = false;
+              startPlayerFaintAnimation();
               textBox = createTextBox([t('battle.fainted', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'LOSE';
             } else if (enemyGoesFirst) {
               // Enemy went first, now player attacks with pre-selected move
@@ -712,6 +1036,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'CHECK_WIN': {
           if (enemy.hp <= 0) {
+            startEnemyFaintAnimation();
             if (isTrainerBattle && trainerData && trainerPartyIndex + 1 < trainerData.party.length) {
               // Trainer has more Pokemon
               textBox = createTextBox([t('battle.fainted', { name: getPokemonDisplayName(enemy.id) })], isRTL());
@@ -736,6 +1061,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           // Shows "fainted" text, then transitions to XP phase
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
+          }
+          if (!textBox && !animationDirector.isBusy()) {
             xpGained = calculateXpGain(enemy);
             player.xp += xpGained;
             textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
@@ -788,7 +1115,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'WIN': {
           if (textBox && updateTextBox(textBox, input, dt)) {
-            textBox = null; xpGained = calculateXpGain(enemy); player.xp += xpGained;
+            textBox = null;
+          }
+          if (!textBox && !animationDirector.isBusy()) {
+            xpGained = calculateXpGain(enemy); player.xp += xpGained;
             textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
             if (isTrainerBattle && trainerData) {
               phase = 'TRAINER_REWARD';
@@ -882,12 +1212,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'RUN': {
-          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; fade = createFade(false, 0.5); }
+          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
+          if (!textBox && !animationDirector.isBusy() && !fade) { fade = createFade(false, 0.5); }
           if (!textBox && fade && !fade.active) goBack();
           break;
         }
         case 'LOSE': {
-          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; fade = createFade(false, 0.5); }
+          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
+          if (!textBox && !animationDirector.isBusy() && !fade) { fade = createFade(false, 0.5); }
           if (!textBox && fade && !fade.active) handleLoss();
           break;
         }
@@ -940,10 +1272,20 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               menu.playerPokemon = player;
               menu.party = hasActiveGame() ? getPlayerData().party : [player];
               loadImage(`/sprites/pokemon/back/${player.id}.png`).catch(() => {});
+              animationDirector.setActorState('player', {
+                x: -24,
+                y: 8,
+                scaleX: 0.6,
+                scaleY: 0.6,
+                alpha: 0,
+                rotation: 0.14,
+                visible: false,
+              });
               textBox = createTextBox([
                 t('battle.comeBack', { name: getPokemonDisplayName(previousLeadId!) }),
                 t('battle.goName', { name: getPokemonDisplayName(player.id) }),
               ], isRTL());
+              pendingPlayerSendOutAnimation = true;
               phase = 'SWITCH_POKEMON';
             }
           } else {
@@ -958,6 +1300,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           // Show the switch text, then enemy gets a turn
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
+            if (pendingPlayerSendOutAnimation) {
+              startPlayerSendOutAnimation();
+            }
+          }
+          if (!textBox && !animationDirector.isBusy()) {
             enemyTurn();
           }
           break;
@@ -1062,6 +1409,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       // ── Effects ──
       if (levelUpFx) renderLevelUpEffect(ctx, levelUpFx);
       if (captureSuccessFx) renderCaptureSuccessEffect(ctx, captureSuccessFx);
+      if (sendOutFx) renderSendOutEffect(ctx, sendOutFx);
       if (shake) resetShake(ctx, shake);
       renderPopups(ctx);
       if (flash) renderFlash(ctx, flash);

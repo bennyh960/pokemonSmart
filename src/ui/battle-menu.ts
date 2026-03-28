@@ -81,6 +81,11 @@ function updateTabMode(
   menu: BattleMenuState,
   input: InputManager,
 ): { type: 'main'; choice: MainMenuChoice } | null {
+  // Number shortcuts: 1=fight, 2=switch, 3=bag
+  if (input.isKeyPressed('Digit1')) return { type: 'main', choice: 'FIGHT' };
+  if (input.isKeyPressed('Digit2')) return { type: 'main', choice: 'POKEMON' };
+  if (input.isKeyPressed('Digit3')) return { type: 'main', choice: 'BAG' };
+
   // Left/Right navigate tabs (RTL: reversed direction)
   if (input.isKeyPressed('ArrowRight')) {
     // Visual right = lower tab index (tabs laid out right-to-left in Hebrew)
@@ -106,7 +111,11 @@ function updateTabMode(
 function updateMoveMode(
   menu: BattleMenuState,
   input: InputManager,
-): { type: 'move'; index: number } | null {
+): { type: 'main'; choice: MainMenuChoice } | { type: 'move'; index: number } | null {
+  // Number shortcuts from move mode: 2=switch, 3=bag (1=already in moves)
+  if (input.isKeyPressed('Digit2')) return { type: 'main', choice: 'POKEMON' };
+  if (input.isKeyPressed('Digit3')) return { type: 'main', choice: 'BAG' };
+
   const totalMoves = menu.moves.length;
   const totalPages = Math.ceil(totalMoves / 4);
   const pageStart = menu.movePage * 4;
@@ -257,6 +266,12 @@ function renderTabs(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void 
 
     drawText(ctx, tab.text, tab.x + tab.w / 2, TB.y + BTL.TAB_TEXT_DY, {
       size: 6, color: isActive ? tab.color : BTL.TAB_INACTIVE_C, align: 'center',
+    });
+
+    // Number hint [1/2/3] — tight right of the label
+    const hint = `[${i + 1}]`;
+    drawText(ctx, hint, tab.x + tab.w / 2 + 10, TB.y + BTL.TAB_TEXT_DY, {
+      size: 4, color: isActive ? tab.color + 'bb' : '#334433', align: 'left',
     });
   }
 }
