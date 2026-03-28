@@ -49,10 +49,7 @@ export const BTL = {
     ],
   },
 
-  // ===== TURN BADGE =====
-  TURN: { x: 102, y: 2, w: 36, h: 8, fs: 6,
-    bgColor: 'rgba(10,20,14,0.8)', borderColor: 'rgba(77,255,180,0.25)',
-    textColor: '#4dffb4', numColor: '#ffffff' },
+
 
   // ===== SPRITES =====
   OPP_SPRITE: { x: 150, y: 16, w: 46, h: 46 },

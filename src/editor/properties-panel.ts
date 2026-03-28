@@ -1,7 +1,7 @@
 import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { TileDef, NPCData, MapTransition } from './types.js';
-import { getCharacterList, getCharacterInfo, getCharacterFrame, loadCharacterSprites } from '../engine/character-sprites.js';
+import { getCharacterList, getCharacterInfo, getCharacterFrame, loadCharacterSprites, CHARACTER_ROLES } from '../engine/character-sprites.js';
 import { createNamePicker } from '../ui/name-picker.js';
 import { getAllPokemon, type PokemonData } from '../services/pokemon-data.js';
 import { getAllItems, type ItemDef } from '../data/items.js';
@@ -143,28 +143,115 @@ export class PropertiesPanel {
     addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer'], npc.type);
     addInput('Interact Range', 'interactRange', String((npc as unknown as Record<string, unknown>).interactRange ?? 1), 'number');
 
-    // ── Sprite dropdown (from characters.json) ──
+    // ── Sprite dropdown (from characters.json) with tag filter ──
+    const charList = getCharacterList();
+
+    // Collect all unique tags
+    const allTags = new Set<string>();
+    for (const c of charList) {
+      for (const t of c.tags) allTags.add(t);
+    }
+
+    // Tag filter row
+    if (allTags.size > 0) {
+      const filterRow = document.createElement('div');
+      filterRow.className = 'prop-row';
+      filterRow.innerHTML = '<label>Filter:</label>';
+      const tagSel = document.createElement('select');
+      tagSel.style.width = '100%';
+      const allOpt = document.createElement('option');
+      allOpt.value = ''; allOpt.textContent = 'All sprites';
+      tagSel.appendChild(allOpt);
+      for (const tag of [...allTags].sort()) {
+        const opt = document.createElement('option');
+        opt.value = tag; opt.textContent = tag;
+        tagSel.appendChild(opt);
+      }
+      filterRow.appendChild(tagSel);
+      body.appendChild(filterRow);
+      tagSel.addEventListener('change', () => populateSpriteOptions(tagSel.value));
+    }
+
     const spriteRow = document.createElement('div');
     spriteRow.className = 'prop-row';
     spriteRow.innerHTML = '<label>Sprite:</label>';
     const spriteSel = document.createElement('select');
-    const charList = getCharacterList();
-    let foundCurrent = false;
-    for (const c of charList) {
-      const opt = document.createElement('option');
-      opt.value = c.id;
-      const displayName = c.name.en || c.name.he || c.id;
-      opt.textContent = `${displayName} (${c.id})`;
-      if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
-      spriteSel.appendChild(opt);
+
+    function populateSpriteOptions(tagFilter: string): void {
+      spriteSel.innerHTML = '';
+      let foundCurrent = false;
+      const filtered = tagFilter ? charList.filter(c => c.tags.includes(tagFilter)) : charList;
+      for (const c of filtered) {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        const displayName = c.name.en || c.name.he || c.id;
+        const tagStr = c.tags.length > 0 ? ` [${c.tags.join(',')}]` : '';
+        opt.textContent = `${displayName} (${c.id})${tagStr}`;
+        if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
+        spriteSel.appendChild(opt);
+      }
+      if (!foundCurrent) {
+        const opt = document.createElement('option');
+        opt.value = npc.spriteType;
+        const info = charList.find(c => c.id === npc.spriteType);
+        opt.textContent = info
+          ? `${info.name.en || info.name.he || info.id} (${info.id})`
+          : `${npc.spriteType} (legacy)`;
+        opt.selected = true;
+        spriteSel.prepend(opt);
+      }
     }
-    if (!foundCurrent) {
-      const opt = document.createElement('option');
-      opt.value = npc.spriteType;
-      opt.textContent = `${npc.spriteType} (legacy)`;
-      opt.selected = true;
-      spriteSel.prepend(opt);
+    populateSpriteOptions('');
+      const filterRow = document.createElement('div');
+      filterRow.className = 'prop-row';
+      filterRow.innerHTML = '<label>Filter:</label>';
+      const tagSel = document.createElement('select');
+      tagSel.style.width = '100%';
+      const allOpt = document.createElement('option');
+      allOpt.value = ''; allOpt.textContent = 'All sprites';
+      tagSel.appendChild(allOpt);
+      for (const tag of [...allTags].sort()) {
+        const opt = document.createElement('option');
+        opt.value = tag; opt.textContent = tag;
+        tagSel.appendChild(opt);
+      }
+      filterRow.appendChild(tagSel);
+      body.appendChild(filterRow);
+      tagSel.addEventListener('change', () => populateSpriteOptions(tagSel.value));
     }
+
+    const spriteRow = document.createElement('div');
+    spriteRow.className = 'prop-row';
+    spriteRow.innerHTML = '<label>Sprite:</label>';
+    const spriteSel = document.createElement('select');
+
+    function populateSpriteOptions(tagFilter: string): void {
+      spriteSel.innerHTML = '';
+      let foundCurrent = false;
+      const filtered = tagFilter ? charList.filter(c => c.tags.includes(tagFilter)) : charList;
+      for (const c of filtered) {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        const displayName = c.name.en || c.name.he || c.id;
+        const tagStr = c.tags.length > 0 ? ` [${c.tags.join(',')}]` : '';
+        opt.textContent = `${displayName} (${c.id})${tagStr}`;
+        if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
+        spriteSel.appendChild(opt);
+      }
+      if (!foundCurrent) {
+        // Current sprite not in filtered list — add it at top
+        const opt = document.createElement('option');
+        opt.value = npc.spriteType;
+        const info = charList.find(c => c.id === npc.spriteType);
+        opt.textContent = info
+          ? `${info.name.en || info.name.he || info.id} (${info.id})`
+          : `${npc.spriteType} (legacy)`;
+        opt.selected = true;
+        spriteSel.prepend(opt);
+      }
+    }
+    populateSpriteOptions('');
+
     spriteSel.addEventListener('change', () => {
       npc.spriteType = spriteSel.value;
       updateSpritePreview();
@@ -257,6 +344,9 @@ export class PropertiesPanel {
 
     // ── Auto Walk ──
     this.renderAutoWalkUI(body, npc);
+
+    // ── Story / Visibility ──
+    this.renderStoryFieldsUI(body, npc);
 
     // ── Reward (all NPC types except trainers — trainers have their own reward in battle) ──
     if (npc.type !== 'trainer') {
@@ -744,6 +834,63 @@ export class PropertiesPanel {
 
     // Reward items
     this.renderRewardItemsUI(section, reward as TrainerReward, emit);
+  }
+
+  private renderStoryFieldsUI(section: HTMLElement, npc: NPCData): void {
+    const emit = () => this.state.emit('map-modified');
+    const npcAny = npc as unknown as Record<string, unknown>;
+
+    const label = document.createElement('div');
+    label.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:8px 0 3px;';
+    label.textContent = 'Visibility / Story';
+    section.appendChild(label);
+
+    // Hidden checkbox
+    const hiddenRow = document.createElement('div');
+    hiddenRow.className = 'prop-row';
+    hiddenRow.innerHTML = '<label>Hidden:</label>';
+    const hiddenCb = document.createElement('input');
+    hiddenCb.type = 'checkbox';
+    hiddenCb.checked = !!npc.hidden;
+    hiddenCb.title = 'NPC exists but is not rendered or interactable';
+    hiddenCb.addEventListener('change', () => {
+      npcAny['hidden'] = hiddenCb.checked || undefined;
+      emit();
+    });
+    hiddenRow.appendChild(hiddenCb);
+    section.appendChild(hiddenRow);
+
+    // Spawn After flag
+    const spawnRow = document.createElement('div');
+    spawnRow.className = 'prop-row';
+    spawnRow.innerHTML = '<label>Spawn After:</label>';
+    const spawnIn = document.createElement('input');
+    spawnIn.type = 'text';
+    spawnIn.value = npc.spawnAfter || '';
+    spawnIn.placeholder = 'story flag name';
+    spawnIn.title = 'NPC appears only after this flag is set';
+    spawnIn.addEventListener('change', () => {
+      npcAny['spawnAfter'] = spawnIn.value.trim() || undefined;
+      emit();
+    });
+    spawnRow.appendChild(spawnIn);
+    section.appendChild(spawnRow);
+
+    // Despawn After flag
+    const despawnRow = document.createElement('div');
+    despawnRow.className = 'prop-row';
+    despawnRow.innerHTML = '<label>Despawn After:</label>';
+    const despawnIn = document.createElement('input');
+    despawnIn.type = 'text';
+    despawnIn.value = npc.despawnAfter || '';
+    despawnIn.placeholder = 'story flag name';
+    despawnIn.title = 'NPC disappears after this flag is set';
+    despawnIn.addEventListener('change', () => {
+      npcAny['despawnAfter'] = despawnIn.value.trim() || undefined;
+      emit();
+    });
+    despawnRow.appendChild(despawnIn);
+    section.appendChild(despawnRow);
   }
 
   private renderAutoWalkUI(section: HTMLElement, npc: NPCData): void {

@@ -425,51 +425,9 @@ export function renderSwitchGrid(ctx: CanvasRenderingContext2D, party: Pokemon[]
   }
 }
 
-// ─── Bottom Help Bar (y=150) ─────────────────────────────────────
 
-function renderBottomBar(ctx: CanvasRenderingContext2D): void {
-  const B = BTL.BTM_BG;
-  fillRect(ctx, B.x, B.y, B.w, B.h, B.color);
 
-  for (const key of BTL.BTM_KEYS) {
-    // Pill background
-    ctx.fillStyle = BTL.COLORS.pillBg;
-    fillRoundRect(ctx, key.pillX, B.y + 1, key.pillW, 8, 2);
-    ctx.strokeStyle = BTL.COLORS.pillBorder;
-    ctx.lineWidth = 1;
-    strokeRoundRect(ctx, key.pillX, B.y + 1, key.pillW, 8, 2);
 
-    // Pill text
-    drawText(ctx, key.pillText, key.pillX + key.pillW / 2, B.y + 2, {
-      size: 5, color: BTL.COLORS.pillText, align: 'center',
-    });
-
-    // Hint text
-    drawText(ctx, key.hint, key.hintX, B.y + 3, {
-      size: 5, color: BTL.COLORS.pillHint, direction: 'rtl',
-    });
-  }
-}
-
-// ─── Turn Badge ──────────────────────────────────────────────────
-
-export function renderTurnBadge(ctx: CanvasRenderingContext2D, turnNumber: number): void {
-  const T = BTL.TURN;
-
-  ctx.fillStyle = T.bgColor;
-  fillRoundRect(ctx, T.x, T.y, T.w, T.h, 3);
-  ctx.strokeStyle = T.borderColor;
-  ctx.lineWidth = 1;
-  strokeRoundRect(ctx, T.x, T.y, T.w, T.h, 3);
-
-  // "תור X"
-  drawText(ctx, `תור `, T.x + T.w / 2 + 4, T.y + 1, {
-    size: T.fs, color: T.textColor, align: 'center', direction: 'rtl',
-  });
-  drawText(ctx, `${turnNumber}`, T.x + T.w / 2 - 8, T.y + 1, {
-    size: T.fs, color: T.numColor, align: 'center',
-  });
-}
 
 // ─── Party Ball Indicators ───────────────────────────────────────
 

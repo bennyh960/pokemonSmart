@@ -8,7 +8,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect } from '../engine/renderer.js';
 import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, isHPAnimating } from '../ui/hp-bar.js';
-import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu, renderTurnBadge, renderPartyBalls } from '../ui/battle-menu.js';
+import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu, renderPartyBalls } from '../ui/battle-menu.js';
 import { BTL } from '../data/battle-constants.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
@@ -762,10 +762,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
       }
 
-      // ── Turn badge ──
-      if (turnNumber > 0) {
-        renderTurnBadge(ctx, turnNumber);
-      }
+     
 
       // ── Trainer sprites on sides (trainer battles) ──
       const showingTrainer = showTrainerSprite && isTrainerBattle && trainerData?.trainerSprite;

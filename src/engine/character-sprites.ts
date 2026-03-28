@@ -33,8 +33,33 @@ export interface CharacterName {
   he: string;
 }
 
+/** Roles a character sprite can be tagged with for editor filtering. */
+export type CharacterRole =
+  | 'hero'          // player characters
+  | 'rival'         // rival characters
+  | 'professor'     // professors (Algorithmah etc.)
+  | 'gym-leader'    // gym leaders
+  | 'gym-helper'    // gym trainers / puzzle helpers
+  | 'elite-4'       // Elite Four members
+  | 'champion'      // Pokemon League champion
+  | 'villain'       // Team Rocket / NULL-X antagonists
+  | 'nurse'         // Pokemon Center nurses
+  | 'shopkeeper'    // Mart shopkeepers
+  | 'story'         // key story NPCs (not fitting other roles)
+  | 'trainer'       // generic route trainers
+  | 'townfolk'      // regular town residents
+  | 'ranger';       // route / safari guides
+
+/** All valid character roles (for editor dropdowns). */
+export const CHARACTER_ROLES: CharacterRole[] = [
+  'hero', 'rival', 'professor', 'gym-leader', 'gym-helper', 'elite-4',
+  'champion', 'villain', 'nurse', 'shopkeeper', 'story', 'trainer',
+  'townfolk', 'ranger',
+];
+
 interface CharacterDef {
   name?: CharacterName | string;  // string for legacy compat
+  roles?: CharacterRole[];        // filterable roles for editor
   frameWidth: number;
   frameHeight: number;
   frames: ({ sx: number; sy: number } | null)[];
@@ -139,6 +164,7 @@ export function hasCharacter(id: string): boolean {
 export interface CharacterInfo {
   id: string;
   name: CharacterName;
+  roles: CharacterRole[];
 }
 
 /**
@@ -147,7 +173,7 @@ export interface CharacterInfo {
 export function getCharacterList(): CharacterInfo[] {
   const result: CharacterInfo[] = [];
   for (const [id, charDef] of characters) {
-    result.push({ id, name: parseCharName(charDef.name) });
+    result.push({ id, name: parseCharName(charDef.name), roles: charDef.roles || [] });
   }
   return result;
 }
@@ -156,7 +182,7 @@ export function getCharacterList(): CharacterInfo[] {
 export function getCharacterInfo(id: string): CharacterInfo | undefined {
   const charDef = characters.get(id);
   if (!charDef) return undefined;
-  return { id, name: parseCharName(charDef.name) };
+  return { id, name: parseCharName(charDef.name), roles: charDef.roles || [] };
 }
 
 /** Get the frame size for a character. */
