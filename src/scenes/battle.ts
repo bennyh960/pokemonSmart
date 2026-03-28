@@ -18,6 +18,7 @@ import {
   createLevelUpEffect, updateLevelUpEffect, renderLevelUpEffect,
   createCaptureSuccessEffect, updateCaptureSuccessEffect, renderCaptureSuccessEffect,
   createSendOutEffect, updateSendOutEffect, renderSendOutEffect,
+  createAttackEffect, updateAttackEffect, renderAttackEffect,
 } from '../ui/battle-animations.js';
 import {
   createBattleAnimationDirector,
@@ -32,6 +33,7 @@ import {
   getCombinedTypeEffectiveness,
   getPokemonDisplayName,
   getMoveDisplayName,
+  getMove,
   getPokemon,
   getLocalizedName,
   type EvolutionStep,
@@ -47,6 +49,7 @@ import { resolveDialogue, type TrainerReward, type BilingualText } from '../syst
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../scenes/bag.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import { setEvolutionData } from './evolution.js';
+import { getAttackAnimationProfile } from '../systems/move-animation.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
@@ -121,6 +124,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let levelUpFx: ReturnType<typeof createLevelUpEffect> | null = null;
   let captureSuccessFx: ReturnType<typeof createCaptureSuccessEffect> | null = null;
   let sendOutFx: ReturnType<typeof createSendOutEffect> | null = null;
+  let attackFx: ReturnType<typeof createAttackEffect> | null = null;
   let pendingNewMoves: number[] = [];  // moveIds learned on level-up, shown one by one
   let pendingEvolution: EvolutionStep | null = null;
   let waitingForBag = false;
@@ -300,7 +304,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
-    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null;
+    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null; attackFx = null;
     waitingForBag = false; waitingForParty = false; previousLeadId = null;
     enemyGoesFirst = false; enemyAlreadyAttacked = false; playerStatStages = {};
     turnNumber = 0;
@@ -856,23 +860,136 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     return true;
   }
 
+  function getAttackAnchor(actor: 'player' | 'enemy'): { x: number; y: number } {
+    const state = animationDirector.getActorState(actor);
+    if (actor === 'player') {
+      return {
+        x: BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w * 0.62 + state.x,
+        y: BTL.PLY_SPRITE.y + BTL.PLY_SPRITE.h * 0.36 + state.y,
+      };
+    }
+    return {
+      x: BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w * 0.38 + state.x,
+      y: BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h * 0.44 + state.y,
+    };
+  }
+
+  function applyMoveImpact(
+    attacker: Pokemon,
+    defender: Pokemon,
+    move: Pokemon['moves'][number],
+    targetBar: ReturnType<typeof createHPBar>,
+    popupX: number,
+    popupY: number,
+  ): void {
+    const moveData = getMove(move.id);
+    const profile = getAttackAnimationProfile({
+      name: moveData?.name ?? { en: move.name, he: move.name },
+      type: move.type,
+      power: move.power,
+      damageClass: moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status'),
+    });
+
+    if (move.power > 0) {
+      const dmg = calcDamage(attacker, defender, move.power, move.type);
+      defender.hp = Math.max(0, defender.hp - dmg);
+      setHP(targetBar, defender.hp);
+      flash = createFlash(profile.flashColor, 0.15);
+      shake = createShake(profile.shakeIntensity, 0.22);
+      spawnDamageNumber(`-${dmg}`, popupX, popupY, '#f84038');
+      audio.playSFX('hit');
+    }
+  }
+
+  function playAttackAnimation(
+    attackerActor: 'player' | 'enemy',
+    defenderActor: 'player' | 'enemy',
+    move: Pokemon['moves'][number],
+    onImpact: () => void,
+  ): void {
+    const moveData = getMove(move.id);
+    const profile = getAttackAnimationProfile({
+      name: moveData?.name ?? { en: move.name, he: move.name },
+      type: move.type,
+      power: move.power,
+      damageClass: moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status'),
+    });
+
+    const attackerStart = { ...animationDirector.getActorState(attackerActor) };
+    const defenderStart = { ...animationDirector.getActorState(defenderActor) };
+    const source = getAttackAnchor(attackerActor);
+    const target = profile.selfTarget ? getAttackAnchor(attackerActor) : getAttackAnchor(defenderActor);
+    const lungeOffset = attackerActor === 'player' ? 12 : -12;
+    const recoilOffset = defenderActor === 'player' ? -6 : 6;
+    const recoveryDuration = Math.max(0.12, profile.duration - profile.impactTime);
+
+    attackFx = null;
+
+    animationDirector.play(sequenceStep(
+      callStep(() => {
+        if (profile.family === 'projectile' || profile.family === 'beam') {
+          attackFx = createAttackEffect({
+            kind: profile.family,
+            sourceX: source.x,
+            sourceY: source.y,
+            targetX: target.x,
+            targetY: target.y,
+            color: profile.color,
+            accentColor: profile.accentColor,
+            duration: profile.duration,
+          });
+        }
+      }),
+      profile.family === 'lunge'
+        ? tweenActorStep(attackerActor, {
+          x: attackerStart.x + lungeOffset,
+          y: attackerStart.y - 2,
+          rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.08 : 0.08),
+        }, profile.impactTime, 'easeInOut')
+        : waitStep(profile.impactTime),
+      callStep(() => {
+        if (profile.family === 'pulse' || profile.family === 'burst' || profile.family === 'lunge') {
+          attackFx = createAttackEffect({
+            kind: profile.family === 'lunge' ? 'burst' : profile.family,
+            sourceX: source.x,
+            sourceY: source.y,
+            targetX: target.x,
+            targetY: target.y,
+            color: profile.color,
+            accentColor: profile.accentColor,
+            duration: profile.family === 'lunge' ? 0.2 : undefined,
+          });
+        }
+        onImpact();
+      }),
+      parallelStep(
+        move.power > 0 && !profile.selfTarget
+          ? sequenceStep(
+            tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.07, 'easeInOut'),
+            tweenActorStep(defenderActor, defenderStart, 0.1, 'easeInOut'),
+          )
+          : waitStep(0.17),
+        profile.family === 'lunge'
+          ? tweenActorStep(attackerActor, attackerStart, recoveryDuration, 'easeInOut')
+          : waitStep(recoveryDuration),
+      ),
+    ));
+  }
+
   function doAttack(): void {
     const m = player.moves[selMove];
+    const rtl = isRTL();
+    const msgs = [t('battle.usedMove', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) })];
     if (m.power > 0) {
-      const dmg = calcDamage(player, enemy, m.power, m.type);
-      enemy.hp = Math.max(0, enemy.hp - dmg);
-      setHP(enemyHpBar, enemy.hp);
-      flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
-      spawnDamageNumber(`-${dmg}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#f84038');
-      audio.playSFX('hit');
-      const rtl = isRTL();
-      const msgs = [t('battle.usedMove', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) })];
       const et = effText(m.type, enemy.types);
       if (et) msgs.push(et);
-      textBox = createTextBox(msgs, rtl);
     } else {
-      textBox = createTextBox([t('battle.usedMove', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) }), t('battle.nothingHappened')], isRTL());
+      msgs.push(t('battle.nothingHappened'));
     }
+    textBox = createTextBox(msgs, rtl);
+    playAttackAnimation('player', 'enemy', m, () => {
+      applyMoveImpact(player, enemy, m, enemyHpBar, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10);
+    });
     if (m.currentPp > 0) m.currentPp--;
     phase = 'PLAYER_ATTACK'; phaseTimer = 0;
   }
@@ -884,20 +1001,15 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     const prefix: string[] = showFasterMsg
       ? [t('battle.enemyFaster', { name: getPokemonDisplayName(enemy.id) })]
       : [];
+    const msgs = [...prefix, t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })];
     if (m.power > 0) {
-      const dmg = calcDamage(enemy, player, m.power, m.type);
-      player.hp = Math.max(0, player.hp - dmg);
-      setHP(playerHpBar, player.hp);
-      flash = createFlash('#ffffff', 0.15); shake = createShake(2, 0.25);
-      spawnDamageNumber(`-${dmg}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f84038');
-      audio.playSFX('hit');
-      const msgs = [...prefix, t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })];
       const et = effText(m.type, player.types);
       if (et) msgs.push(et);
-      textBox = createTextBox(msgs, rtl);
-    } else {
-      textBox = createTextBox([...prefix, t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })], rtl);
     }
+    textBox = createTextBox(msgs, rtl);
+    playAttackAnimation('enemy', 'player', m, () => {
+      applyMoveImpact(enemy, player, m, playerHpBar, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10);
+    });
     phase = 'ENEMY_TURN'; phaseTimer = 0;
   }
 
@@ -1008,6 +1120,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (levelUpFx) updateLevelUpEffect(levelUpFx, dt);
       if (captureSuccessFx) updateCaptureSuccessEffect(captureSuccessFx, dt);
       if (sendOutFx) updateSendOutEffect(sendOutFx, dt);
+      if (attackFx) {
+        updateAttackEffect(attackFx, dt);
+        if (!attackFx.active) attackFx = null;
+      }
       animationDirector.update(dt);
       updateHPBar(playerHpBar, dt); updateHPBar(enemyHpBar, dt); updatePopups(dt);
 
@@ -1071,12 +1187,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'PLAYER_ATTACK': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
-          if (!textBox && !isHPAnimating(enemyHpBar)) phase = 'CHECK_WIN';
+          if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(enemyHpBar)) phase = 'CHECK_WIN';
           break;
         }
         case 'ENEMY_TURN': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
-          if (!textBox && !isHPAnimating(playerHpBar)) {
+          if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(playerHpBar)) {
             if (player.hp <= 0) {
               enemyGoesFirst = false;
               startPlayerFaintAnimation();
@@ -1507,6 +1623,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
 
       renderBallActor(ctx);
+      if (attackFx) {
+        renderAttackEffect(ctx, attackFx);
+      }
 
       // ── Info panels ──
       setXP(playerHpBar, player.xp, player.xpToNext);

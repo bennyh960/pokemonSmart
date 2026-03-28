@@ -194,6 +194,21 @@ interface SendOutEffect {
   ringColor: string;
 }
 
+export type AttackEffectKind = 'projectile' | 'beam' | 'pulse' | 'burst';
+
+interface AttackEffect {
+  active: boolean;
+  timer: number;
+  duration: number;
+  kind: AttackEffectKind;
+  color: string;
+  accentColor: string;
+  sourceX: number;
+  sourceY: number;
+  targetX: number;
+  targetY: number;
+}
+
 const SPARKLE_COLORS = ['#ffd700', '#fff176', '#ffab00', '#ffffff', '#ffe082'];
 
 function createSparkleBurst(
@@ -393,6 +408,164 @@ export function renderSendOutEffect(ctx: CanvasRenderingContext2D, effect: SendO
   ctx.arc(effect.originX, effect.originY, innerR, 0, Math.PI * 2);
   ctx.stroke();
   ctx.restore();
+}
+
+export function createAttackEffect(options: {
+  kind: AttackEffectKind;
+  sourceX: number;
+  sourceY: number;
+  targetX: number;
+  targetY: number;
+  color: string;
+  accentColor?: string;
+  duration?: number;
+}): AttackEffect {
+  const defaultDuration = options.kind === 'beam' ? 0.2 : options.kind === 'pulse' ? 0.3 : 0.34;
+  return {
+    active: true,
+    timer: 0,
+    duration: options.duration ?? defaultDuration,
+    kind: options.kind,
+    color: options.color,
+    accentColor: options.accentColor ?? '#ffffff',
+    sourceX: options.sourceX,
+    sourceY: options.sourceY,
+    targetX: options.targetX,
+    targetY: options.targetY,
+  };
+}
+
+export function updateAttackEffect(effect: AttackEffect, dt: number): void {
+  if (!effect.active) return;
+  effect.timer += dt;
+  if (effect.timer >= effect.duration) {
+    effect.active = false;
+  }
+}
+
+function renderProjectileEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const eased = 1 - Math.pow(1 - t, 2);
+  const x = effect.sourceX + (effect.targetX - effect.sourceX) * eased;
+  const yBase = effect.sourceY + (effect.targetY - effect.sourceY) * eased;
+  const arc = Math.sin(eased * Math.PI) * 12;
+  const y = yBase - arc;
+
+  for (let i = 0; i < 3; i++) {
+    const trailT = Math.max(0, eased - i * 0.12);
+    const tx = effect.sourceX + (effect.targetX - effect.sourceX) * trailT;
+    const ty = effect.sourceY + (effect.targetY - effect.sourceY) * trailT - Math.sin(trailT * Math.PI) * 12;
+    ctx.save();
+    ctx.globalAlpha = 0.18 + (1 - i * 0.28);
+    ctx.fillStyle = i === 0 ? effect.accentColor : effect.color;
+    ctx.beginPath();
+    ctx.arc(tx, ty, 4 - i, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  ctx.save();
+  ctx.globalAlpha = 0.9;
+  ctx.fillStyle = effect.color;
+  ctx.beginPath();
+  ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = effect.accentColor;
+  ctx.beginPath();
+  ctx.arc(x, y, 2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function renderBeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const alpha = t < 0.45 ? t / 0.45 : Math.max(0, 1 - (t - 0.45) / 0.55);
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.55;
+  ctx.strokeStyle = effect.color;
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(effect.sourceX, effect.sourceY);
+  ctx.lineTo(effect.targetX, effect.targetY);
+  ctx.stroke();
+
+  ctx.globalAlpha = alpha * 0.95;
+  ctx.strokeStyle = effect.accentColor;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(effect.sourceX, effect.sourceY);
+  ctx.lineTo(effect.targetX, effect.targetY);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function renderPulseEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const radius = 6 + t * 18;
+  const alpha = Math.max(0, 1 - t);
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.2;
+  ctx.fillStyle = effect.color;
+  ctx.beginPath();
+  ctx.arc(effect.targetX, effect.targetY, radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.globalAlpha = alpha * 0.8;
+  ctx.strokeStyle = effect.accentColor;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(effect.targetX, effect.targetY, radius * 0.75, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function renderBurstEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const radius = 4 + t * 18;
+  const alpha = Math.max(0, 1 - t);
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.22;
+  ctx.fillStyle = effect.color;
+  ctx.beginPath();
+  ctx.arc(effect.targetX, effect.targetY, radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.globalAlpha = alpha * 0.95;
+  ctx.strokeStyle = effect.accentColor;
+  ctx.lineWidth = 2;
+  for (let i = 0; i < 6; i++) {
+    const angle = (Math.PI * 2 * i) / 6 + t * 0.5;
+    const inner = radius * 0.45;
+    const outer = radius + 6;
+    ctx.beginPath();
+    ctx.moveTo(effect.targetX + Math.cos(angle) * inner, effect.targetY + Math.sin(angle) * inner);
+    ctx.lineTo(effect.targetX + Math.cos(angle) * outer, effect.targetY + Math.sin(angle) * outer);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  if (!effect.active) return;
+
+  switch (effect.kind) {
+    case 'projectile':
+      renderProjectileEffect(ctx, effect);
+      break;
+    case 'beam':
+      renderBeamEffect(ctx, effect);
+      break;
+    case 'pulse':
+      renderPulseEffect(ctx, effect);
+      break;
+    case 'burst':
+      renderBurstEffect(ctx, effect);
+      break;
+  }
 }
 
 // --- Convenience: Clear all effects ---

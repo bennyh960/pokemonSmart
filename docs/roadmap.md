@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 5.5 ⬜ UP NEXT (animation foundation before the larger Sprint 6 battle pass)
+## Overall Progress: Sprint 5.5 🟨 IN PROGRESS (audio pass remaining before the larger Sprint 6 battle pass)
 
 ---
 
@@ -162,7 +162,7 @@ This is a foundation sprint — must be done before design/content sprints.
 | Shop screen redesign using coordinate system | frontend-developer + asset-manager | ✅ |
 
 ---
-## Sprint 5.5 — Battle & Evolution Animation Foundation ⬜ PLANNED
+## Sprint 5.5 — Battle & Evolution Animation Foundation 🟨 IN PROGRESS
 **Goal:** Build a reusable animation layer for battle/capture/evolution flows, and ship the highest-value visual sequences before the broader battle-system overhaul.
 
 **Scope principles:**
@@ -173,11 +173,11 @@ This is a foundation sprint — must be done before design/content sprints.
 
 | Task | Agent | Status | Notes |
 |------|-------|--------|-------|
-| Animation director / sequence player for battle flows | game-engine-developer | ⬜ | Reusable queue/timeline for move/fade/scale/shake/SFX steps; battle blocks while animations run |
-| Pokeball throw + capture sequences (Poke / Great / Ultra / Master) | game-engine-developer + frontend-developer | ⬜ | Throw arc, hit/open, enemy absorb, shake/wait, success vs break-free branches |
-| Wild escape, faint, withdraw, and trainer send-out animations | game-engine-developer + frontend-developer | ⬜ | Cover flee, faint disappear, switch-out, next-Pokemon send-out, optional cry hooks |
-| Evolution scene + plumbing (level-up + stone evolutions) | game-engine-developer + frontend-developer | ⬜ | Dedicated scene instead of overloading `battle.ts`; updates species/stats/sprites/save |
-| Attack animation research + prototype set | game-engine-developer + frontend-developer | ⬜ | Prototype only: one physical lunge, one projectile, one status pulse; decide future direction |
+| Animation director / sequence player for battle flows | game-engine-developer | ✅ | Reusable queue/timeline for move/fade/scale/shake/SFX steps; battle blocks while animations run |
+| Pokeball throw + capture sequences (Poke / Great / Ultra / Master) | game-engine-developer + frontend-developer | ✅ | Throw arc, hit/open, enemy absorb, shake/wait, success vs break-free branches |
+| Wild escape, faint, withdraw, and trainer send-out animations | game-engine-developer + frontend-developer | ✅ | Cover flee, faint disappear, switch-out, next-Pokemon send-out, optional cry hooks |
+| Evolution scene + plumbing (level-up + stone evolutions) | game-engine-developer + frontend-developer | ✅ | Dedicated scene instead of overloading `battle.ts`; updates species/stats/sprites/save |
+| Attack animation research + prototype set | game-engine-developer + frontend-developer | ✅ | Prototype family mapper now covers physical lunge, projectile, beam, pulse, and burst styles with move-name overrides |
 | Audio cue pass for new animation beats | frontend-developer | ⬜ | Throw, shake, break-free, evolution start/finish, send-out/withdraw timing |
 
 **Out of scope for Sprint 5.5:**
