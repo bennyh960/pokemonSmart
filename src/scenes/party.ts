@@ -100,11 +100,16 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     return '#d84040';
   }
 
-  /** Check if a Pokemon is eligible for the current select-target item. */
+  /** Check if a Pokemon is eligible for selection in the current mode. */
   function isPokemonEligible(pokemon: Pokemon): boolean {
-    if (partyMode !== 'select-target') return true;
-    if (!selectTargetContext) return true;
-    return canUseItemOnPokemon(selectTargetContext.itemId, pokemon);
+    if (partyMode === 'battle') {
+      return pokemon.hp > 0;
+    }
+    if (partyMode === 'select-target') {
+      if (!selectTargetContext) return true;
+      return canUseItemOnPokemon(selectTargetContext.itemId, pokemon);
+    }
+    return true;
   }
 
   function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, _slotNum: number, sy: number, isSel: boolean, isSwap: boolean, disabled: boolean): void {
@@ -193,7 +198,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const isSwap = viewMode === 'swap' && i === swapFrom;
 
       if (i < party.length) {
-        const disabled = partyMode === 'select-target' && !isPokemonEligible(party[i]);
+        const disabled = (partyMode === 'select-target' || partyMode === 'battle') && !isPokemonEligible(party[i]);
         renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap, disabled);
       } else {
         renderEmptySlot(ctx, i + 1, sy, isSel);
@@ -757,6 +762,13 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       moveDeleteConfirmCursor = 1;
       selectedPartyIndex = -1;
       loadPartySprites();
+      // In battle mode, ensure cursor starts on an eligible (non-fainted) Pokemon
+      if (partyMode === 'battle') {
+        const party = getParty();
+        for (let i = 0; i < party.length; i++) {
+          if (isPokemonEligible(party[i])) { cursor = i; break; }
+        }
+      }
     },
 
     exit(): void {},
@@ -783,8 +795,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
       if (input.isKeyPressed('ArrowUp')) {
         let next = cursor > 0 ? cursor - 1 : Math.max(0, partyLen - 1);
-        // In select-target mode, skip non-eligible Pokemon
-        if (partyMode === 'select-target') {
+        // In battle/select-target mode, skip non-eligible Pokemon
+        if (partyMode === 'select-target' || partyMode === 'battle') {
           for (let tries = 0; tries < partyLen; tries++) {
             if (next < partyLen && isPokemonEligible(party[next])) break;
             next = next > 0 ? next - 1 : partyLen - 1;
@@ -794,7 +806,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       }
       if (input.isKeyPressed('ArrowDown')) {
         let next = cursor < partyLen - 1 ? cursor + 1 : 0;
-        if (partyMode === 'select-target') {
+        if (partyMode === 'select-target' || partyMode === 'battle') {
           for (let tries = 0; tries < partyLen; tries++) {
             if (next < partyLen && isPokemonEligible(party[next])) break;
             next = next < partyLen - 1 ? next + 1 : 0;
@@ -806,8 +818,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       if (input.isKeyPressed('Enter')) {
         if (partyLen === 0) return;
         if (cursor >= partyLen) return;
-        // Block Enter on non-eligible Pokemon in select-target mode
-        if (partyMode === 'select-target' && !isPokemonEligible(party[cursor])) return;
+        // Block Enter on non-eligible Pokemon
+        if ((partyMode === 'select-target' || partyMode === 'battle') && !isPokemonEligible(party[cursor])) return;
 
         if (viewMode === 'swap') {
           // Complete the swap

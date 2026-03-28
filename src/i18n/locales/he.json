@@ -245,6 +245,7 @@
   "battle.alreadyActive": "הפוקימון הזה כבר בקרב!",
   "battle.pokemonFainted": "הפוקימון הזה התעלף!",
   "battle.noOtherPokemon": "אין פוקימון אחר זמין!",
+  "battle.rosterFull": "אי אפשר להשתמש ביותר פוקימונים בקרב הזה!",
   "battle.enemyFaster": "{name} היריב מהיר יותר!",
   "battle.statWontGoHigher": "הסטטיסטיקה לא תעלה יותר!",
   "battle.cantCatchTrainer": "אי אפשר לתפוס פוקימון של מאמן!",
@@ -254,6 +255,8 @@
   "battle.lostTrainerBattle": "הפסדת בקרב!",
   "battle.moneyPenalty": "שילמת ₽{amount} כקנס.",
   "battle.whiteout": "אין לך פוקימון זמין! החשכת!",
+  "battle.recoverMessage": "הועברת למרכז פוקימון להתאוששות...",
+  "battle.trainerWaitsRecover": "רפא את הפוקימונים שלך וחזור לריבאנץ'!",
 
   "worldMap.title":"מפת נומריה",
   "worldMap.hint": "ESC/W: סגור",

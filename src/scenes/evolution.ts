@@ -63,6 +63,7 @@ export function createEvolutionScene(
     }
 
     completeFx = createCaptureSuccessEffect(CENTER_X, CENTER_Y + 4);
+    audio.playEvolutionFinish();
     audio.playCry(toId);
   }
 
@@ -168,6 +169,7 @@ export function createEvolutionScene(
       loadImage(`/sprites/pokemon/front/${fromId}.png`).catch(() => {});
       loadImage(`/sprites/pokemon/front/${toId}.png`).catch(() => {});
       audio.playCry(fromId);
+      audio.playEvolutionStart();
     },
 
     exit(): void {

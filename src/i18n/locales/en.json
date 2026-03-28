@@ -245,6 +245,7 @@
   "battle.alreadyActive": "That Pokemon is already out!",
   "battle.pokemonFainted": "That Pokemon has fainted!",
   "battle.noOtherPokemon": "No other Pokemon available!",
+  "battle.rosterFull": "You can't use more Pokemon in this battle!",
   "battle.enemyFaster": "Enemy {name} is faster!",
   "battle.statWontGoHigher": "Stat won't go any higher!",
   "battle.cantCatchTrainer": "Can't catch a trainer's Pokemon!",
@@ -254,6 +255,8 @@
   "battle.lostTrainerBattle": "You lost the battle!",
   "battle.moneyPenalty": "You paid ₽{amount} as penalty.",
   "battle.whiteout": "You have no usable Pokemon! You blacked out!",
+  "battle.recoverMessage": "You were brought to the Pokemon Center to recover...",
+  "battle.trainerWaitsRecover": "Recover your Pokemon and come back for a rematch!",
 
   "worldMap.title":"WORLD MAP — Numeria",
   "worldMap.hint": "ESC/W: Close",

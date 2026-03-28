@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 5.5 🟨 IN PROGRESS (audio pass remaining before the larger Sprint 6 battle pass)
+## Overall Progress: Sprint 6 ⬜ UP NEXT (status effects before the larger battle refactor + ability passives)
 
 ---
 
@@ -162,7 +162,7 @@ This is a foundation sprint — must be done before design/content sprints.
 | Shop screen redesign using coordinate system | frontend-developer + asset-manager | ✅ |
 
 ---
-## Sprint 5.5 — Battle & Evolution Animation Foundation 🟨 IN PROGRESS
+## Sprint 5.5 — Battle & Evolution Animation Foundation ✅ COMPLETE
 **Goal:** Build a reusable animation layer for battle/capture/evolution flows, and ship the highest-value visual sequences before the broader battle-system overhaul.
 
 **Scope principles:**
@@ -178,7 +178,7 @@ This is a foundation sprint — must be done before design/content sprints.
 | Wild escape, faint, withdraw, and trainer send-out animations | game-engine-developer + frontend-developer | ✅ | Cover flee, faint disappear, switch-out, next-Pokemon send-out, optional cry hooks |
 | Evolution scene + plumbing (level-up + stone evolutions) | game-engine-developer + frontend-developer | ✅ | Dedicated scene instead of overloading `battle.ts`; updates species/stats/sprites/save |
 | Attack animation research + prototype set | game-engine-developer + frontend-developer | ✅ | Prototype family mapper now covers physical lunge, projectile, beam, pulse, and burst styles with move-name overrides |
-| Audio cue pass for new animation beats | frontend-developer | ⬜ | Throw, shake, break-free, evolution start/finish, send-out/withdraw timing |
+| Audio cue pass for new animation beats | frontend-developer | ✅ | Added timed cues for capture shakes, break-free, send-out/withdraw, faint/run, evolution start/finish, and attack families |
 
 **Out of scope for Sprint 5.5:**
 - Held items
