@@ -1,10 +1,13 @@
 import type { SpriteEditorState } from './editor-state.js';
+import { CHARACTER_ROLES } from '../engine/character-sprites.js';
+import type { CharacterRole } from './types.js';
 
-/** Left sidebar: list of all defined sprites with search. */
+/** Left sidebar: list of all defined sprites with search + role filter. */
 export class SpriteList {
   private container: HTMLElement;
   private state: SpriteEditorState;
   private filterText = '';
+  private filterRole = '';
 
   constructor(container: HTMLElement, state: SpriteEditorState) {
     this.container = container;
@@ -17,6 +20,21 @@ export class SpriteList {
     search.className = 'ts-search';
     search.addEventListener('input', () => { this.filterText = search.value.toLowerCase(); this.build(); });
     container.appendChild(search);
+
+    // Role filter dropdown
+    const roleSel = document.createElement('select');
+    roleSel.className = 'ts-search';
+    roleSel.style.marginTop = '4px';
+    const allOpt = document.createElement('option');
+    allOpt.value = ''; allOpt.textContent = 'All roles';
+    roleSel.appendChild(allOpt);
+    for (const role of CHARACTER_ROLES) {
+      const opt = document.createElement('option');
+      opt.value = role; opt.textContent = role;
+      roleSel.appendChild(opt);
+    }
+    roleSel.addEventListener('change', () => { this.filterRole = roleSel.value; this.build(); });
+    container.appendChild(roleSel);
 
     // List container
     const listEl = document.createElement('div');
@@ -33,6 +51,9 @@ export class SpriteList {
     listEl.innerHTML = '';
 
     const filtered = this.state.sprites.filter((s) => {
+      // Role filter
+      if (this.filterRole && !s.roles.includes(this.filterRole as CharacterRole)) return false;
+      // Text search
       if (!this.filterText) return true;
       const q = this.filterText;
       return s.id.toLowerCase().includes(q) ||
@@ -71,7 +92,8 @@ export class SpriteList {
 
       const badges = document.createElement('span');
       badges.className = 'tile-size-badge';
-      badges.textContent = `${s.frames.length}f`;
+      const roleStr = s.roles.length > 0 ? ` ${s.roles[0]}` : '';
+      badges.textContent = `${s.frames.length}f${roleStr}`;
       item.appendChild(badges);
 
       item.addEventListener('click', () => this.state.selectItem(idx));

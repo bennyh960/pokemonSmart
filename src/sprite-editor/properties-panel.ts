@@ -2,6 +2,7 @@ import type { SpriteEditorState } from './editor-state.js';
 import type { SpriteEntry, FramePos } from './types.js';
 import { FRAME_DICT_REVERSE, FRAME_DICT, generateSpriteId } from './types.js';
 import { createNamePicker } from '../ui/name-picker.js';
+import { CHARACTER_ROLES } from '../engine/character-sprites.js';
 import { applyCrop, saveSpriteImage } from './io.js';
 
 /** Direction arrows for visual grouping. */
@@ -516,6 +517,7 @@ export class PropertiesPanel {
       const entry: SpriteEntry = {
         id: autoId,
         name: { ...pendingName },
+        roles: [],
         frameWidth: fw,
         frameHeight: fh,
         frames,
@@ -566,6 +568,40 @@ export class PropertiesPanel {
         this.state.updateSprite(index, { name: { en: name.en, he: name.he } });
       },
     }));
+
+    // Roles multi-select
+    const rolesLabel = document.createElement('div');
+    rolesLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
+    rolesLabel.textContent = 'Roles';
+    section.appendChild(rolesLabel);
+
+    const rolesContainer = document.createElement('div');
+    rolesContainer.style.cssText = 'display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px;';
+
+    const buildRoleChips = () => {
+      rolesContainer.innerHTML = '';
+      for (const role of CHARACTER_ROLES) {
+        const chip = document.createElement('button');
+        const active = s.roles.includes(role);
+        chip.textContent = role;
+        chip.style.cssText = `
+          font-size:10px; padding:2px 6px; border-radius:8px; cursor:pointer;
+          border:1px solid ${active ? '#6cf' : '#555'};
+          background:${active ? '#2a4a6a' : '#1a1a2e'};
+          color:${active ? '#8df' : '#888'};
+        `;
+        chip.addEventListener('click', () => {
+          const newRoles = active
+            ? s.roles.filter(r => r !== role)
+            : [...s.roles, role];
+          this.state.updateSprite(index, { roles: newRoles });
+          buildRoleChips();
+        });
+        rolesContainer.appendChild(chip);
+      }
+    };
+    buildRoleChips();
+    section.appendChild(rolesContainer);
 
     // Frames with direction grouping + drag-and-drop
     const framesSection = document.createElement('div');

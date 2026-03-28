@@ -9,6 +9,9 @@
  * labels (like "down-stand") to indices.
  */
 
+import type { CharacterRole } from '../engine/character-sprites.js';
+export type { CharacterRole };
+
 /** A single frame's position in the spritesheet. */
 export interface FramePos {
   sx: number;
@@ -24,6 +27,7 @@ export interface BilingualName {
 /** A character definition — all frames share the same size. */
 export interface SpriteCharacter {
   name?: BilingualName;
+  roles?: CharacterRole[];
   frameWidth: number;
   frameHeight: number;
   frames: (FramePos | null)[];  // null = empty slot (no sprite for this frame)
@@ -45,6 +49,7 @@ export interface SpriteManifest {
 export interface SpriteEntry {
   id: string;
   name: BilingualName;
+  roles: CharacterRole[];
   frameWidth: number;
   frameHeight: number;
   frames: FramePos[];

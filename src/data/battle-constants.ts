@@ -56,7 +56,7 @@ export const BTL = {
   PLY_SPRITE: { x: 18,  y: 24, w: 56, h: 56 },
 
   // ===== OPPONENT INFO BAR (fixed h=18) =====
-  OPP_BAR:      { x: 136, y: 12, w: 100, h: 18 },
+  OPP_BAR:      { x: 136, y: 2, w: 100, h: 18 },
   OPP_NAME:     { dx: 52, dy: 1, w: 46, fs: 6 },   // right-aligned from bar right edge
   OPP_LEVEL:    { dx: 4,  dy: 2, fs: 5 },           // left-aligned from bar left edge
   OPP_HP_LABEL: { dx: 92, dy: 9, fs: 5 },           // right-aligned

@@ -143,50 +143,44 @@ export class PropertiesPanel {
     addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer'], npc.type);
     addInput('Interact Range', 'interactRange', String((npc as unknown as Record<string, unknown>).interactRange ?? 1), 'number');
 
-    // ── Sprite dropdown (from characters.json) with tag filter ──
+    // ── Sprite dropdown with role filter ──
     const charList = getCharacterList();
 
-    // Collect all unique tags
-    const allTags = new Set<string>();
-    for (const c of charList) {
-      for (const t of c.tags) allTags.add(t);
+    // Role filter dropdown
+    const filterRow = document.createElement('div');
+    filterRow.className = 'prop-row';
+    filterRow.innerHTML = '<label>Filter:</label>';
+    const roleSel = document.createElement('select');
+    roleSel.style.width = '100%';
+    const allOpt = document.createElement('option');
+    allOpt.value = ''; allOpt.textContent = 'All sprites';
+    roleSel.appendChild(allOpt);
+    for (const role of CHARACTER_ROLES) {
+      const opt = document.createElement('option');
+      opt.value = role; opt.textContent = role;
+      roleSel.appendChild(opt);
     }
+    filterRow.appendChild(roleSel);
+    body.appendChild(filterRow);
 
-    // Tag filter row
-    if (allTags.size > 0) {
-      const filterRow = document.createElement('div');
-      filterRow.className = 'prop-row';
-      filterRow.innerHTML = '<label>Filter:</label>';
-      const tagSel = document.createElement('select');
-      tagSel.style.width = '100%';
-      const allOpt = document.createElement('option');
-      allOpt.value = ''; allOpt.textContent = 'All sprites';
-      tagSel.appendChild(allOpt);
-      for (const tag of [...allTags].sort()) {
-        const opt = document.createElement('option');
-        opt.value = tag; opt.textContent = tag;
-        tagSel.appendChild(opt);
-      }
-      filterRow.appendChild(tagSel);
-      body.appendChild(filterRow);
-      tagSel.addEventListener('change', () => populateSpriteOptions(tagSel.value));
-    }
-
+    // Sprite select
     const spriteRow = document.createElement('div');
     spriteRow.className = 'prop-row';
     spriteRow.innerHTML = '<label>Sprite:</label>';
     const spriteSel = document.createElement('select');
 
-    function populateSpriteOptions(tagFilter: string): void {
+    function populateSpriteOptions(roleFilter: string): void {
       spriteSel.innerHTML = '';
       let foundCurrent = false;
-      const filtered = tagFilter ? charList.filter(c => c.tags.includes(tagFilter)) : charList;
+      const filtered = roleFilter
+        ? charList.filter(c => c.roles.includes(roleFilter as never))
+        : charList;
       for (const c of filtered) {
         const opt = document.createElement('option');
         opt.value = c.id;
         const displayName = c.name.en || c.name.he || c.id;
-        const tagStr = c.tags.length > 0 ? ` [${c.tags.join(',')}]` : '';
-        opt.textContent = `${displayName} (${c.id})${tagStr}`;
+        const roleStr = c.roles.length > 0 ? ` [${c.roles.join(',')}]` : '';
+        opt.textContent = `${displayName} (${c.id})${roleStr}`;
         if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
         spriteSel.appendChild(opt);
       }
@@ -202,56 +196,7 @@ export class PropertiesPanel {
       }
     }
     populateSpriteOptions('');
-      const filterRow = document.createElement('div');
-      filterRow.className = 'prop-row';
-      filterRow.innerHTML = '<label>Filter:</label>';
-      const tagSel = document.createElement('select');
-      tagSel.style.width = '100%';
-      const allOpt = document.createElement('option');
-      allOpt.value = ''; allOpt.textContent = 'All sprites';
-      tagSel.appendChild(allOpt);
-      for (const tag of [...allTags].sort()) {
-        const opt = document.createElement('option');
-        opt.value = tag; opt.textContent = tag;
-        tagSel.appendChild(opt);
-      }
-      filterRow.appendChild(tagSel);
-      body.appendChild(filterRow);
-      tagSel.addEventListener('change', () => populateSpriteOptions(tagSel.value));
-    }
-
-    const spriteRow = document.createElement('div');
-    spriteRow.className = 'prop-row';
-    spriteRow.innerHTML = '<label>Sprite:</label>';
-    const spriteSel = document.createElement('select');
-
-    function populateSpriteOptions(tagFilter: string): void {
-      spriteSel.innerHTML = '';
-      let foundCurrent = false;
-      const filtered = tagFilter ? charList.filter(c => c.tags.includes(tagFilter)) : charList;
-      for (const c of filtered) {
-        const opt = document.createElement('option');
-        opt.value = c.id;
-        const displayName = c.name.en || c.name.he || c.id;
-        const tagStr = c.tags.length > 0 ? ` [${c.tags.join(',')}]` : '';
-        opt.textContent = `${displayName} (${c.id})${tagStr}`;
-        if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
-        spriteSel.appendChild(opt);
-      }
-      if (!foundCurrent) {
-        // Current sprite not in filtered list — add it at top
-        const opt = document.createElement('option');
-        opt.value = npc.spriteType;
-        const info = charList.find(c => c.id === npc.spriteType);
-        opt.textContent = info
-          ? `${info.name.en || info.name.he || info.id} (${info.id})`
-          : `${npc.spriteType} (legacy)`;
-        opt.selected = true;
-        spriteSel.prepend(opt);
-      }
-    }
-    populateSpriteOptions('');
-
+    roleSel.addEventListener('change', () => populateSpriteOptions(roleSel.value));
     spriteSel.addEventListener('change', () => {
       npc.spriteType = spriteSel.value;
       updateSpritePreview();

@@ -26,6 +26,10 @@ export function exportManifest(state: SpriteEditorState): string {
     if (s.name.en || s.name.he) {
       char.name = { en: s.name.en, he: s.name.he };
     }
+    // Only include roles if non-empty
+    if (s.roles.length > 0) {
+      char.roles = [...s.roles];
+    }
     characters[s.id] = char;
   }
 
@@ -116,6 +120,7 @@ export function loadManifest(state: SpriteEditorState, json: string): void {
       state.sprites.push({
         id,
         name: parseName(c.name),
+        roles: Array.isArray(c.roles) ? (c.roles as string[]).filter(Boolean) as import('./types.js').CharacterRole[] : [],
         frameWidth: (c.frameWidth as number) ?? 16,
         frameHeight: (c.frameHeight as number) ?? 16,
         frames,
