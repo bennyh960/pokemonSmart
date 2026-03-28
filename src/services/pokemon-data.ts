@@ -281,6 +281,11 @@ export interface PokemonAbilityMapping {
   hidden: number | null;
 }
 
+export interface PokemonAbilityDetail extends AbilityDef {
+  id: number;
+  isHidden: boolean;
+}
+
 const abilities = abilitiesData as Record<string, AbilityDef>;
 const pokemonAbilities = pokemonAbilitiesData as Record<string, PokemonAbilityMapping>;
 
@@ -299,6 +304,29 @@ export function getAbilityDisplayName(id: number): string {
 /** Get the ability mapping for a Pokemon (regular + hidden abilities). */
 export function getPokemonAbilities(pokemonId: number): PokemonAbilityMapping | undefined {
   return pokemonAbilities[String(pokemonId)];
+}
+
+/** Get all defined abilities for a Pokemon, including hidden ability when present. */
+export function getPokemonAbilityDetails(pokemonId: number): PokemonAbilityDetail[] {
+  const mapping = pokemonAbilities[String(pokemonId)];
+  if (!mapping) return [];
+
+  const abilityIds = [...mapping.abilities];
+  if (mapping.hidden !== null && !abilityIds.includes(mapping.hidden)) {
+    abilityIds.push(mapping.hidden);
+  }
+
+  return abilityIds
+    .map((id) => {
+      const ability = abilities[String(id)];
+      if (!ability) return undefined;
+      return {
+        id,
+        isHidden: mapping.hidden === id,
+        ...ability,
+      };
+    })
+    .filter((ability): ability is PokemonAbilityDetail => ability !== undefined);
 }
 
 /** Pick a random non-hidden ability for a Pokemon. */

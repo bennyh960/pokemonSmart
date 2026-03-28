@@ -16,7 +16,7 @@ import { TYPE_BADGE } from '../data/type-constants.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import {
   getPokemon, getPokemonDisplayName, getMove, getMoveDisplayName,
-  getLearnset, getTmLearnset, getTypeEffectiveness, getAllTypes, getEvolutionChain,
+  getLearnset, getTmLearnset, getTypeEffectiveness, getAllTypes, getEvolutionChain, getPokemonAbilityDetails, getLocalizedName,
 } from '../services/pokemon-data.js';
 import type { PokemonType } from '../types/index.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
@@ -404,6 +404,84 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     const totalStat = statValues.reduce((a, b) => a + b, 0);
     const afterStatsY = statsY + statNames.length * statRowH + 2;
     drawText(ctx, `BST: ${totalStat}`, statsX, afterStatsY, { size: 6, color: '#aaaaaa', font: 'monospace' });
+
+    renderAbilityPanel(ctx, id, contentY + 82);
+  }
+
+  function renderAbilityPanel(ctx: CanvasRenderingContext2D, id: number, panelY: number): void {
+    const abilityDetails = getPokemonAbilityDetails(id);
+    const panelX = 4;
+    const panelW = SCREEN_W - 8;
+
+    fillRect(ctx, panelX, panelY, panelW, 30, '#241010');
+    drawRect(ctx, panelX, panelY, panelW, 30, '#5a3030');
+
+    drawText(ctx, t('pokedex.info.abilities'), panelX + 4, panelY + 2, {
+      size: 6,
+      color: '#f8a878',
+      font: 'monospace',
+    });
+
+    if (abilityDetails.length === 0) {
+      drawText(ctx, t('pokedex.info.noAbilities'), panelX + 4, panelY + 12, {
+        size: 6,
+        color: '#999999',
+        font: 'monospace',
+      });
+      return;
+    }
+
+    const nameColumnX = panelX + 6;
+    const nameColumnW = 70;
+    const descColumnX = panelX + 80;
+    const descColumnW = panelW - 88;
+
+    for (let i = 0; i < Math.min(abilityDetails.length, 3); i++) {
+      const ability = abilityDetails[i];
+      const rowY = panelY + 10 + i * 7;
+      const abilityName = getLocalizedName(ability.name);
+      const abilityLabel = ability.isHidden
+        ? `${abilityName} (${t('pokedex.info.hiddenAbility')})`
+        : abilityName;
+
+      drawText(ctx, truncateText(ctx, abilityLabel, nameColumnW, 5), nameColumnX, rowY, {
+        size: 5,
+        color: ability.isHidden ? '#f0c860' : '#ffffff',
+        font: 'monospace',
+      });
+      drawText(ctx, truncateText(ctx, ability.description, descColumnW, 5), descColumnX, rowY, {
+        size: 5,
+        color: '#cccccc',
+        font: 'monospace',
+      });
+    }
+  }
+
+  function truncateText(
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    maxWidth: number,
+    fontSize: number,
+  ): string {
+    ctx.save();
+    ctx.font = `${fontSize}px monospace`;
+    if (ctx.measureText(text).width <= maxWidth) {
+      ctx.restore();
+      return text;
+    }
+
+    let end = text.length;
+    while (end > 0) {
+      const candidate = `${text.slice(0, end).trimEnd()}...`;
+      if (ctx.measureText(candidate).width <= maxWidth) {
+        ctx.restore();
+        return candidate;
+      }
+      end--;
+    }
+
+    ctx.restore();
+    return '...';
   }
 
   function renderEvolutionTab(ctx: CanvasRenderingContext2D, id: number, contentY: number): void {
