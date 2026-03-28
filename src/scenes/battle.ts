@@ -52,6 +52,7 @@ import { setEvolutionData } from './evolution.js';
 import { getAttackAnimationProfile } from '../systems/move-animation.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
+type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
 
 type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LEVEL_UP_MOVES' | 'LOSE' | 'RUN'
@@ -133,9 +134,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let activePartyIndex = 0;  // Index of the active Pokemon in the player's party
   let battleRoster = new Set<number>();  // Party indices that have entered this battle
   let battleTurnCounts = new Map<number, number>();  // Active turns per party slot this battle
-  // eslint-disable-next-line prefer-const
-  let pendingTurnCredit: boolean = false;  // Whether to credit a turn to active Pokemon after phase resolves
-  void pendingTurnCredit; // Suppress unused warning — read side not yet implemented
+  let pendingTurnCredit = false;  // Whether to credit a turn to active Pokemon after phase resolves
   let maxRosterSize = 0;  // Max Pokemon player can use (= trainer's party size, or 6 for wild)
   let isTrainerBattle = false;
   let trainerData: TrainerBattleData | null = null;
@@ -148,6 +147,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let playerStatStages: Record<string, number> = {};
   let turnNumber = 0;
   let lossDialogueShown = false;
+  let pendingLossOutcome: LossOutcome | null = null;
+  let soloOpeningSwitchUsed = false;
   let activeBallId: string | null = null;
   let pendingCaptureOutcome: { itemId: string; caught: boolean } | null = null;
   let pendingEnemySendOutAnimation = false;
@@ -315,7 +316,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     waitingForBag = false; waitingForParty = false; previousLeadId = null;
     enemyGoesFirst = false; enemyAlreadyAttacked = false; playerStatStages = {};
     turnNumber = 0;
+    pendingTurnCredit = false;
     lossDialogueShown = false;
+    pendingLossOutcome = null;
+    soloOpeningSwitchUsed = false;
     // Initialize battle roster: player's first Pokemon is automatically registered
     battleRoster = new Set<number>([activePartyIndex]);
     battleTurnCounts = new Map<number, number>([[activePartyIndex, 0]]);
@@ -375,7 +379,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function enterSelectMovePhase(): void {
     phase = 'SELECT_MOVE';
     showMoveMenu(menu);
-    recordBattleTurn(activePartyIndex);
+    if (pendingTurnCredit) {
+      recordBattleTurn(activePartyIndex);
+      pendingTurnCredit = false;
+    }
   }
 
   function getCaptureXpReward(): number {
@@ -392,8 +399,51 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
   function awardConsolationXp(pokemon: Pokemon, partyIndex: number): number {
     const bonusXp = getConsolationXpReward(partyIndex);
+    const before = pokemon.xp;
     pokemon.xp = Math.min(pokemon.xp + bonusXp, pokemon.xpToNext - 1);
-    return bonusXp;
+    return pokemon.xp - before;
+  }
+
+  function getLossPenalty(outcome: LossOutcome, currentMoney: number): number {
+    switch (outcome) {
+      case 'trainer-whiteout':
+      case 'wild-whiteout':
+        return Math.floor(currentMoney / 2);
+      case 'trainer-roster':
+        return trainerData ? Math.min(currentMoney, trainerData.reward.money * 3) : 0;
+    }
+  }
+
+  function buildLossDialogue(outcome: LossOutcome): string[] {
+    const lines: string[] = [];
+    if (outcome === 'trainer-roster') {
+      lines.push(t('battle.lostTrainerBattle'));
+    } else {
+      lines.push(t('battle.whiteout'));
+    }
+
+    if (hasActiveGame()) {
+      const penalty = getLossPenalty(outcome, getPlayerData().money);
+      if (penalty > 0) lines.push(t('battle.moneyPenalty', { amount: penalty }));
+    }
+
+    lines.push(outcome === 'trainer-roster' ? t('battle.trainerWaitsRecover') : t('battle.recoverMessage'));
+    return lines;
+  }
+
+  function beginLoss(outcome: LossOutcome): void {
+    pendingLossOutcome = outcome;
+    lossDialogueShown = false;
+    fade = null;
+    phase = 'LOSE';
+  }
+
+  function canUseOpeningSoloSwitch(partyIndex: number): boolean {
+    return isTrainerBattle
+      && maxRosterSize === 1
+      && turnNumber === 1
+      && !soloOpeningSwitchUsed
+      && partyIndex !== activePartyIndex;
   }
 
   function getBallStartPoint(): { x: number; y: number } {
@@ -1064,33 +1114,21 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function goBack(): void { autoSave(); stateMachine.change('OVERWORLD'); }
 
   function handleLoss(): void {
+    const outcome = pendingLossOutcome ?? (isTrainerBattle ? 'trainer-whiteout' : 'wild-whiteout');
     if (hasActiveGame()) {
       const pd = getPlayerData();
-      const allFainted = pd.party.every(p => p.hp <= 0);
+      const penalty = getLossPenalty(outcome, pd.money);
+      pd.money = Math.max(0, pd.money - penalty);
 
-      if (isTrainerBattle && trainerData) {
-        // Trainer battle loss: penalty = prize_money × trainer's Pokemon count
-        const penalty = trainerData.reward.money * trainerData.party.length;
-        pd.money = Math.max(0, pd.money - penalty);
-
-        if (allFainted) {
-          // Full party wipe: heal, warp to Pokemon Center
-          for (const p of pd.party) { p.hp = p.maxHp; for (const mv of p.moves) mv.currentPp = mv.pp; }
-          const center = pd.lastPokemonCenter;
-          pd.position.mapId = center.mapId;
-          pd.position.x = center.x;
-          pd.position.y = center.y;
-        }
-      } else {
-        // Wild battle: full party wipe (only path that reaches here for wild)
+      if (outcome === 'trainer-whiteout' || outcome === 'wild-whiteout') {
         for (const p of pd.party) { p.hp = p.maxHp; for (const mv of p.moves) mv.currentPp = mv.pp; }
-        pd.money = Math.floor(pd.money / 2);
         const center = pd.lastPokemonCenter;
         pd.position.mapId = center.mapId;
         pd.position.x = center.x;
         pd.position.y = center.y;
       }
     }
+    pendingLossOutcome = null;
     autoSave();
     stateMachine.change('OVERWORLD');
   }
@@ -1112,6 +1150,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
   /** Check if a party index is eligible for switching into battle */
   function canSwitchTo(partyIndex: number): boolean {
+    if (canUseOpeningSoloSwitch(partyIndex)) return true;
+    if (isTrainerBattle && maxRosterSize === 1) return false;
     if (battleRoster.has(partyIndex)) return true;  // Already in roster
     return battleRoster.size < maxRosterSize;        // New slot available
   }
@@ -1274,10 +1314,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
                 const allPartyFainted = pd ? pd.party.every(p => p.hp <= 0) : true;
                 if (isTrainerBattle && !allPartyFainted) {
                   // Roster exhausted but party has survivors — lose battle, stay in place
-                  phase = 'TRAINER_LOSS';
+                  beginLoss('trainer-roster');
                 } else {
                   // Full party wipe — warp to Pokemon Center
-                  phase = 'LOSE';
+                  beginLoss(isTrainerBattle ? 'trainer-whiteout' : 'wild-whiteout');
                 }
               }
             } else if (enemyGoesFirst) {
@@ -1486,20 +1526,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
           if (!textBox && !animationDirector.isBusy() && !fade) {
             if (!lossDialogueShown) {
-              // First: show loss dialogue
-              const msgs = [t('battle.whiteout')];
-              if (hasActiveGame()) {
-                const pd = getPlayerData();
-                const lostMoney = isTrainerBattle && trainerData
-                  ? trainerData.reward.money * trainerData.party.length
-                  : Math.floor(pd.money / 2);
-                if (lostMoney > 0) msgs.push(t('battle.moneyPenalty', { amount: lostMoney }));
-              }
-              msgs.push(t('battle.recoverMessage'));
-              textBox = createTextBox(msgs, isRTL());
+              const outcome = pendingLossOutcome ?? (isTrainerBattle ? 'trainer-whiteout' : 'wild-whiteout');
+              textBox = createTextBox(buildLossDialogue(outcome), isRTL());
               lossDialogueShown = true;
             } else {
-              // Second: dialogue dismissed, now fade out
               fade = createFade(false, 0.5);
             }
           }
@@ -1520,28 +1550,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'TRAINER_LOSS': {
-          // All roster Pokemon fainted and roster is full — trainer battle lost, pay penalty
-          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
-          if (!textBox && !animationDirector.isBusy() && !fade) {
-            if (!lossDialogueShown) {
-              const msgs = [t('battle.lostTrainerBattle')];
-              if (hasActiveGame() && trainerData) {
-                const pd = getPlayerData();
-                const penalty = trainerData.reward.money * trainerData.party.length;
-                pd.money = Math.max(0, pd.money - penalty);
-                if (penalty > 0) msgs.push(t('battle.moneyPenalty', { amount: penalty }));
-              }
-              msgs.push(t('battle.trainerWaitsRecover'));
-              textBox = createTextBox(msgs, isRTL());
-              lossDialogueShown = true;
-            } else {
-              fade = createFade(false, 0.5);
-            }
-          }
-          if (!textBox && fade && !fade.active) {
-            autoSave();
-            stateMachine.change('OVERWORLD');
-          }
+          if (!pendingLossOutcome) beginLoss('trainer-roster');
+          phase = 'LOSE';
           break;
         }
         case 'WAITING_BAG': {
@@ -1581,8 +1591,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             } else if (!canSwitchTo(chosenIndex)) {
               textBox = createTextBox([t('battle.rosterFull')], isRTL()); phase = 'INTRO';
             } else {
-              // Register in roster and switch
-              battleRoster.add(chosenIndex);
+              const isSoloOpeningSwitch = canUseOpeningSoloSwitch(chosenIndex);
+              if (isSoloOpeningSwitch) {
+                battleRoster = new Set([chosenIndex]);
+                soloOpeningSwitchUsed = true;
+              } else {
+                battleRoster.add(chosenIndex);
+              }
               if (!battleTurnCounts.has(chosenIndex)) battleTurnCounts.set(chosenIndex, 0);
               activePartyIndex = chosenIndex;
               player = pd.party[activePartyIndex];

@@ -254,7 +254,7 @@
   "battle.learnedMove": "{name} למד {move}!",
   "battle.lostTrainerBattle": "הפסדת בקרב!",
   "battle.moneyPenalty": "שילמת ₽{amount} כקנס.",
-  "battle.whiteout": "אין לך פוקימון זמין! החשכת!",
+  "battle.whiteout": "אין לך פוקימון זמין! אתה מתעלף...",
   "battle.recoverMessage": "הועברת למרכז פוקימון להתאוששות...",
   "battle.trainerWaitsRecover": "רפא את הפוקימונים שלך וחזור לריבאנץ'!",
 

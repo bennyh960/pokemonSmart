@@ -309,7 +309,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext());
-            stateMachine.push('BATTLE');
+            stateMachine.change('BATTLE');
           }
         }
       }
