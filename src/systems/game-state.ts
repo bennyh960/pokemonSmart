@@ -35,7 +35,7 @@ export function createNewPlayerData(): PlayerData {
       'full-heal': 1,
       'x-attack': 2,
       'x-speed': 2,
-      'rare-candy': 1,
+      'rare-candy': 20,
     },
     flags: {},
     position: { mapId: 'zeroville', x: 15, y: 12 },

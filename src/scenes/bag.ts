@@ -13,10 +13,11 @@ import { t } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
-import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
+import { applyItemEffect, consumeItem, itemTargetsPokemon } from '../systems/item-effects.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import { getPokemonDisplayName, getLocalizedName } from '../services/pokemon-data.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
+import { setEvolutionData } from './evolution.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 
 /* ── Battle integration exports ────────────────────────────────────── */
@@ -233,6 +234,12 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             consumeItem(pd.items, pendingOverworldItemId);
             autoSave();
             getGlobalAudio()?.playSFX('heal');
+            if (result.evolution) {
+              setEvolutionData(target, result.evolution);
+              stateMachine.push('EVOLUTION');
+              pendingOverworldItemId = null;
+              return;
+            }
             const pokeName = getPokemonDisplayName(target.id);
             message = `${pokeName}: ${result.message}`;
           } else {
@@ -291,13 +298,12 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           stateMachine.pop();
         } else if (item.def.usableInOverworld) {
           // Items that target a Pokemon: push PARTY scene in select-target mode
-          const targetCategories: string[] = ['healing', 'status-cure', 'revival', 'vitamin'];
-          const needsTarget = targetCategories.includes(item.def.category) ||
-            item.def.effect.type === 'pp-restore';
+          const needsTarget = itemTargetsPokemon(item.id);
           if (needsTarget) {
             pendingOverworldItemId = item.id;
             waitingForPartyTarget = true;
             setPartyMode('select-target', undefined, {
+              itemId: item.id,
               itemName: getLocalizedName(item.def.name),
               description: item.def.description,
             });

@@ -209,7 +209,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     flashTimer = 0;
     flashPhase = 'flash';
     const playerData = getPlayerData();
-    const playerPokemon = playerData.party[0];
+    const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
     if (playerPokemon) setBattleData(playerPokemon, wildPokemon, deriveBattleContext());
   }
 
@@ -306,7 +306,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (!flags[`trainer-${trainer.id}-defeated`]) {
           const trainerBattleData = buildTrainerBattleData(trainer);
           const playerData = getPlayerData();
-          const playerPokemon = playerData.party[0];
+          const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext());
             stateMachine.push('BATTLE');
@@ -671,7 +671,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Start the battle
           const trainerBattleData = buildTrainerBattleData(ta.trainer);
           const playerData = getPlayerData();
-          const playerPokemon = playerData.party[0];
+          const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext());
             // Reset trainer position back after battle

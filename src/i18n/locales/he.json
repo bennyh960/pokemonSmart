@@ -25,6 +25,9 @@
   "battle.youWon": "ניצחת!",
   "battle.gainedXP": "{name} קיבל {xp} XP!",
   "battle.levelUp": "{name} עלה לרמה {level}!",
+  "evolution.title": "התפתחות",
+  "evolution.congrats": "מזל טוב! {from} התפתח ל-{to}!",
+  "evolution.openPokedex": "פותח את הפוקדקס...",
 
   "battle.menu.fight": "לחימה",
   "battle.menu.bag": "תיק",
@@ -248,8 +251,11 @@
   "battle.caught": "נתפס {name}!",
   "battle.brokeFreeBall": "{name} השתחרר!",
   "battle.learnedMove": "{name} למד {move}!",
+  "battle.lostTrainerBattle": "הפסדת בקרב!",
+  "battle.moneyPenalty": "שילמת ₽{amount} כקנס.",
+  "battle.whiteout": "אין לך פוקימון זמין! החשכת!",
 
-  "worldMap.title": "מפת נומריה",
+  "worldMap.title":"מפת נומריה",
   "worldMap.hint": "ESC/W: סגור",
   "worldMap.badge.earned": "תג הושג",
   "worldMap.currentLocation": "אתה כאן"

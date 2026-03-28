@@ -28,7 +28,14 @@ import {
   waitStep,
 } from '../ui/battle-animation-director.js';
 import { drawPokeballIcon } from '../ui/item-icons.js';
-import { getCombinedTypeEffectiveness, getPokemonDisplayName, getMoveDisplayName, getPokemon, getLocalizedName } from '../services/pokemon-data.js';
+import {
+  getCombinedTypeEffectiveness,
+  getPokemonDisplayName,
+  getMoveDisplayName,
+  getPokemon,
+  getLocalizedName,
+  type EvolutionStep,
+} from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
@@ -39,6 +46,7 @@ import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText } from '../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../scenes/bag.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
+import { setEvolutionData } from './evolution.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
@@ -47,7 +55,8 @@ type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_NEXT_XP'
   | 'TRAINER_NEXT_LEVEL_UP' | 'TRAINER_NEXT_LEVEL_UP_MOVES'
   | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP' | 'TRAINER_REWARD_LEVEL_UP_MOVES'
-  | 'WAITING_BAG' | 'WAITING_PARTY' | 'SWITCH_POKEMON' | 'CAPTURE_ANIM';
+  | 'WAITING_BAG' | 'WAITING_PARTY' | 'SWITCH_POKEMON' | 'CAPTURE_ANIM'
+  | 'PLAYER_FAINT_SWITCH' | 'TRAINER_LOSS';
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
@@ -113,9 +122,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let captureSuccessFx: ReturnType<typeof createCaptureSuccessEffect> | null = null;
   let sendOutFx: ReturnType<typeof createSendOutEffect> | null = null;
   let pendingNewMoves: number[] = [];  // moveIds learned on level-up, shown one by one
+  let pendingEvolution: EvolutionStep | null = null;
   let waitingForBag = false;
   let waitingForParty = false;
   let previousLeadId: number | null = null;
+  let activePartyIndex = 0;  // Index of the active Pokemon in the player's party
   let isTrainerBattle = false;
   let trainerData: TrainerBattleData | null = null;
   let trainerPartyIndex = 0;
@@ -266,6 +277,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     if (pendingPlayer && pendingEnemy) {
       player = pendingPlayer; enemy = pendingEnemy;
+      // Determine which party index this player Pokemon corresponds to
+      if (hasActiveGame()) {
+        const pd = getPlayerData();
+        const idx = pd.party.findIndex(p => p === player);
+        activePartyIndex = idx >= 0 ? idx : 0;
+      } else {
+        activePartyIndex = 0;
+      }
       pendingPlayer = null; pendingEnemy = null;
     } else {
       player = (hasActiveGame() && getPlayerData().party[0]) || fallbackPlayer();
@@ -313,6 +332,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       });
     }
     fade = createFade(true, 0.5); clearAllPopups();
+    pendingEvolution = null;
     phase = 'INTRO'; phaseTimer = 0; xpGained = 0;
     // Preload Pokemon sprites
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
@@ -776,6 +796,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function syncPlayerBar(resetDisplayedXp = false): void {
+    playerHpBar.pokemonId = player.id;
     playerHpBar.level = player.level;
     playerHpBar.maxHp = player.maxHp;
     playerHpBar.currentHp = Math.max(0, Math.min(player.hp, player.maxHp));
@@ -804,8 +825,23 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     syncPlayerBar(true);
     triggerLevelUpFx();
     pendingNewMoves = result.newMoves || [];
+    pendingEvolution = result.evolution ?? null;
     textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
     phase = levelPhase;
+    return true;
+  }
+
+  function startPendingEvolution(nextPhase: BattlePhase): boolean {
+    if (!pendingEvolution) return false;
+    const evolution = pendingEvolution;
+    pendingEvolution = null;
+    phase = nextPhase;
+    setEvolutionData(player, evolution, () => {
+      syncPlayerBar();
+      menu.playerPokemon = player;
+      loadImage(`/sprites/pokemon/back/${player.id}.png`).catch(() => {});
+    });
+    stateMachine.push('EVOLUTION');
     return true;
   }
 
@@ -870,18 +906,40 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function handleLoss(): void {
     if (hasActiveGame()) {
       const pd = getPlayerData();
-      // Heal entire party
-      for (const p of pd.party) { p.hp = p.maxHp; for (const mv of p.moves) mv.currentPp = mv.pp; }
-      // Lose half money
-      pd.money = Math.floor(pd.money / 2);
-      // Teleport to last visited Pokemon Center
-      const center = pd.lastPokemonCenter;
-      pd.position.mapId = center.mapId;
-      pd.position.x = center.x;
-      pd.position.y = center.y;
+      const allFainted = pd.party.every(p => p.hp <= 0);
+
+      if (isTrainerBattle && trainerData) {
+        // Trainer battle loss: penalty = prize_money × trainer's Pokemon count
+        const penalty = trainerData.reward.money * trainerData.party.length;
+        pd.money = Math.max(0, pd.money - penalty);
+
+        if (allFainted) {
+          // Full party wipe: heal, warp to Pokemon Center
+          for (const p of pd.party) { p.hp = p.maxHp; for (const mv of p.moves) mv.currentPp = mv.pp; }
+          const center = pd.lastPokemonCenter;
+          pd.position.mapId = center.mapId;
+          pd.position.x = center.x;
+          pd.position.y = center.y;
+        }
+      } else {
+        // Wild battle: full party wipe (only path that reaches here for wild)
+        for (const p of pd.party) { p.hp = p.maxHp; for (const mv of p.moves) mv.currentPp = mv.pp; }
+        pd.money = Math.floor(pd.money / 2);
+        const center = pd.lastPokemonCenter;
+        pd.position.mapId = center.mapId;
+        pd.position.x = center.x;
+        pd.position.y = center.y;
+      }
     }
     autoSave();
     stateMachine.change('OVERWORLD');
+  }
+
+  /** Check if the party has any usable Pokemon besides the fainted active one */
+  function hasUsablePartyPokemon(): boolean {
+    if (!hasActiveGame()) return false;
+    const pd = getPlayerData();
+    return pd.party.some(p => p.hp > 0);
   }
 
   function handleMainChoice(choice: MainMenuChoice): void {
@@ -897,7 +955,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     else if (choice === 'POKEMON') {
       if (hasActiveGame()) {
         const pd = getPlayerData();
-        const hasOther = pd.party.some((p, i) => i !== 0 && p.hp > 0);
+        const hasOther = pd.party.some((p, i) => i !== activePartyIndex && p.hp > 0);
         if (!hasOther) {
           textBox = createTextBox([t('battle.noOtherPokemon')], isRTL()); phase = 'INTRO';
         } else {
@@ -1022,7 +1080,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             if (player.hp <= 0) {
               enemyGoesFirst = false;
               startPlayerFaintAnimation();
-              textBox = createTextBox([t('battle.fainted', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'LOSE';
+              textBox = createTextBox([t('battle.fainted', { name: getPokemonDisplayName(player.id) })], isRTL());
+              if (hasUsablePartyPokemon()) {
+                // Party has healthy Pokemon — switch (wild) or lose battle (trainer)
+                phase = isTrainerBattle ? 'TRAINER_LOSS' : 'PLAYER_FAINT_SWITCH';
+              } else {
+                // Full party wipe — game over
+                phase = 'LOSE';
+              }
             } else if (enemyGoesFirst) {
               // Enemy went first, now player attacks with pre-selected move
               enemyGoesFirst = false;
@@ -1090,6 +1155,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
+              if (startPendingEvolution('TRAINER_NEXT_XP')) break;
               if (player.xp > 0) {
                 phase = 'TRAINER_NEXT_XP';
               } else {
@@ -1104,6 +1170,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
+              if (startPendingEvolution('TRAINER_NEXT_XP')) break;
               if (player.xp > 0) {
                 phase = 'TRAINER_NEXT_XP';
               } else {
@@ -1148,6 +1215,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
+              if (startPendingEvolution('TRAINER_REWARD')) break;
               if (player.xp > 0) {
                 phase = 'TRAINER_REWARD';
               } else {
@@ -1162,6 +1230,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
+              if (startPendingEvolution('TRAINER_REWARD')) break;
               if (player.xp > 0) {
                 phase = 'TRAINER_REWARD';
               } else {
@@ -1189,6 +1258,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
+              if (startPendingEvolution('XP_GAIN')) break;
               if (player.xp > 0) {
                 phase = 'XP_GAIN';
               } else {
@@ -1202,6 +1272,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
+              if (startPendingEvolution('XP_GAIN')) break;
               if (player.xp > 0) {
                 phase = 'XP_GAIN';
               } else {
@@ -1219,8 +1290,45 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'LOSE': {
           if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
-          if (!textBox && !animationDirector.isBusy() && !fade) { fade = createFade(false, 0.5); }
+          if (!textBox && !animationDirector.isBusy() && !fade) {
+            // Full party wipe — show whiteout message before fading
+            textBox = createTextBox([t('battle.whiteout')], isRTL());
+            fade = createFade(false, 0.5);
+          }
           if (!textBox && fade && !fade.active) handleLoss();
+          break;
+        }
+        case 'PLAYER_FAINT_SWITCH': {
+          // Active Pokemon fainted in wild battle, but party has healthy Pokemon — force switch
+          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
+          if (!textBox && !animationDirector.isBusy()) {
+            setPartyMode('battle');
+            clearSelectedPartyIndex();
+            previousLeadId = player.id;
+            waitingForParty = true;
+            phase = 'WAITING_PARTY';
+            stateMachine.push('PARTY');
+          }
+          break;
+        }
+        case 'TRAINER_LOSS': {
+          // Lost trainer battle but still have healthy party Pokemon — pay penalty, stay in place
+          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
+          if (!textBox && !animationDirector.isBusy() && !fade) {
+            if (hasActiveGame() && trainerData) {
+              const pd = getPlayerData();
+              const penalty = trainerData.reward.money * trainerData.party.length;
+              pd.money = Math.max(0, pd.money - penalty);
+              const msgs = [t('battle.lostTrainerBattle')];
+              if (penalty > 0) msgs.push(t('battle.moneyPenalty', { amount: penalty }));
+              textBox = createTextBox(msgs, isRTL());
+            }
+            fade = createFade(false, 0.5);
+          }
+          if (!textBox && fade && !fade.active) {
+            autoSave();
+            stateMachine.change('OVERWORLD');
+          }
           break;
         }
         case 'WAITING_BAG': {
@@ -1258,14 +1366,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             } else if (chosen.id === previousLeadId) {
               textBox = createTextBox([t('battle.alreadyActive')], isRTL()); phase = 'INTRO';
             } else {
-              // Perform the switch: swap chosen Pokemon to front of party
-              if (chosenIndex !== 0) {
-                const temp = pd.party[0];
-                pd.party[0] = pd.party[chosenIndex];
-                pd.party[chosenIndex] = temp;
-              }
-              // Update player reference
-              player = pd.party[0];
+              // Update active party index — do NOT reorder the party
+              activePartyIndex = chosenIndex;
+              player = pd.party[activePartyIndex];
               playerHpBar = createHPBar(player.id, player.level, player.hp, player.maxHp,
                 BTL.PLY_BAR_X, BTL.PLY_BAR_BOTTOM - 18, true, player.xp, player.xpToNext);
               menu = createBattleMenu(player.moves);
@@ -1281,17 +1384,29 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
                 rotation: 0.14,
                 visible: false,
               });
-              textBox = createTextBox([
-                t('battle.comeBack', { name: getPokemonDisplayName(previousLeadId!) }),
-                t('battle.goName', { name: getPokemonDisplayName(player.id) }),
-              ], isRTL());
+              const switchMsgs: string[] = [];
+              // Only say "come back" if the previous Pokemon isn't fainted
+              const prevPokemon = pd.party.find(p => p.id === previousLeadId);
+              if (prevPokemon && prevPokemon.hp > 0) {
+                switchMsgs.push(t('battle.comeBack', { name: getPokemonDisplayName(previousLeadId!) }));
+              }
+              switchMsgs.push(t('battle.goName', { name: getPokemonDisplayName(player.id) }));
+              textBox = createTextBox(switchMsgs, isRTL());
               pendingPlayerSendOutAnimation = true;
               phase = 'SWITCH_POKEMON';
             }
           } else {
             clearSelectedPartyIndex();
-            // No selection (user pressed Esc in party)
-            phase = 'SELECT_MOVE'; showMoveMenu(menu);
+            if (player.hp <= 0) {
+              // Active Pokemon is fainted — must switch, can't cancel
+              setPartyMode('battle');
+              clearSelectedPartyIndex();
+              waitingForParty = true;
+              stateMachine.push('PARTY');
+            } else {
+              // No selection (user pressed Esc in party)
+              phase = 'SELECT_MOVE'; showMoveMenu(menu);
+            }
           }
           previousLeadId = null;
           break;

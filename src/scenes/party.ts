@@ -17,6 +17,7 @@ import { drawPokeballIcon } from '../ui/item-icons.js';
 import { TYPE_BADGE, getTypeName, getDamageClassLabel } from '../data/type-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
+import { canUseItemOnPokemon } from '../systems/item-effects.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
@@ -36,9 +37,13 @@ let onSelectCallback: ((index: number) => void) | null = null;
 export let selectedPartyIndex: number = -1;
 
 /** Context info shown when party is in select-target mode (item use). */
-let selectTargetContext: { itemName: string; description: string } | null = null;
+let selectTargetContext: { itemId: string; itemName: string; description: string } | null = null;
 
-export function setPartyMode(mode: PartyMode, callback?: (index: number) => void, context?: { itemName: string; description: string }): void {
+export function setPartyMode(
+  mode: PartyMode,
+  callback?: (index: number) => void,
+  context?: { itemId: string; itemName: string; description: string },
+): void {
   partyMode = mode;
   onSelectCallback = callback ?? null;
   selectedPartyIndex = -1;
@@ -98,12 +103,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   /** Check if a Pokemon is eligible for the current select-target item. */
   function isPokemonEligible(pokemon: Pokemon): boolean {
     if (partyMode !== 'select-target') return true;
-    // If we have context, infer from item name — but better to check HP
-    // Heal items: skip if HP is full and alive. Revive: skip if alive.
-    // For simplicity: if Pokemon HP is full and not fainted, it's "not eligible" for healing
-    // This is a heuristic — works for the common case (potions)
-    if (pokemon.hp >= pokemon.maxHp && pokemon.hp > 0) return false;
-    return true;
+    if (!selectTargetContext) return true;
+    return canUseItemOnPokemon(selectTargetContext.itemId, pokemon);
   }
 
   function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, _slotNum: number, sy: number, isSel: boolean, isSwap: boolean, disabled: boolean): void {

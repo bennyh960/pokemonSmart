@@ -8,11 +8,59 @@
 import type { Pokemon } from '../types/index.js';
 import { getItemGameData, getItemGameDataBySlug } from '../data/item-defs.js';
 import { checkAndApplyLevelUp } from './encounter.js';
+import { getPokemonDisplayName, type EvolutionStep } from '../services/pokemon-data.js';
+import { t } from '../i18n/i18n.js';
 
 export interface ItemUseResult {
   success: boolean;
   message: string;       // e.g. "Restored 20 HP!" or "Can't use on this Pokemon"
   leveledUp?: boolean;   // true if rare-candy caused a level up
+  evolution?: EvolutionStep;
+}
+
+function getItemDef(itemId: string) {
+  const numId = Number(itemId);
+  return !isNaN(numId) ? getItemGameData(numId) : getItemGameDataBySlug(itemId);
+}
+
+export function itemTargetsPokemon(itemId: string): boolean {
+  const def = getItemDef(itemId);
+  if (!def) return false;
+
+  switch (def.effect.type) {
+    case 'heal':
+    case 'heal-full':
+    case 'revive':
+    case 'status-cure':
+    case 'pp-restore':
+    case 'pp-restore-one':
+    case 'rare-candy':
+      return true;
+    default:
+      return false;
+  }
+}
+
+export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
+  const def = getItemDef(itemId);
+  if (!def) return false;
+
+  switch (def.effect.type) {
+    case 'heal':
+    case 'heal-full':
+      return target.hp > 0 && target.hp < target.maxHp;
+    case 'revive':
+      return target.hp <= 0;
+    case 'status-cure':
+      return true;
+    case 'pp-restore':
+    case 'pp-restore-one':
+      return target.hp > 0 && target.moves.some(move => move.currentPp < move.pp);
+    case 'rare-candy':
+      return target.hp > 0;
+    default:
+      return false;
+  }
 }
 
 /**
@@ -23,8 +71,7 @@ export interface ItemUseResult {
  */
 export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult {
   // Support both numeric ID strings and legacy slugs
-  const numId = Number(itemId);
-  const def = !isNaN(numId) ? getItemGameData(numId) : getItemGameDataBySlug(itemId);
+  const def = getItemDef(itemId);
   if (!def) {
     return { success: false, message: 'Unknown item.' };
   }
@@ -105,7 +152,12 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
       target.xp = target.xpToNext;
       const result = checkAndApplyLevelUp(target);
       if (result.leveledUp) {
-        return { success: true, message: `Grew to level ${target.level}!`, leveledUp: true };
+        return {
+          success: true,
+          message: t('battle.levelUp', { name: getPokemonDisplayName(target.id), level: target.level }),
+          leveledUp: true,
+          evolution: result.evolution,
+        };
       }
       return { success: true, message: 'Gained experience!' };
     }

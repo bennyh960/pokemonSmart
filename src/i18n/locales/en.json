@@ -25,6 +25,9 @@
   "battle.youWon": "You won!",
   "battle.gainedXP": "{name} gained {xp} XP!",
   "battle.levelUp": "{name} grew to level {level}!",
+  "evolution.title": "EVOLUTION",
+  "evolution.congrats": "Congratulations! {from} evolved into {to}!",
+  "evolution.openPokedex": "Opening the Pokedex...",
 
   "battle.menu.fight": "FIGHT",
   "battle.menu.bag": "BAG",
@@ -248,8 +251,11 @@
   "battle.caught": "Caught {name}!",
   "battle.brokeFreeBall": "{name} broke free!",
   "battle.learnedMove": "{name} learned {move}!",
+  "battle.lostTrainerBattle": "You lost the battle!",
+  "battle.moneyPenalty": "You paid ₽{amount} as penalty.",
+  "battle.whiteout": "You have no usable Pokemon! You blacked out!",
 
-  "worldMap.title": "WORLD MAP — Numeria",
+  "worldMap.title":"WORLD MAP — Numeria",
   "worldMap.hint": "ESC/W: Close",
   "worldMap.badge.earned": "Badge earned",
   "worldMap.currentLocation": "You are here"

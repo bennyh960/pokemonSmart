@@ -34,6 +34,12 @@ type MovesSubTab = 'byLevel' | 'canLearn';
 
 const DETAIL_TABS: DetailTab[] = ['info', 'evolution', 'type', 'moves'];
 
+let pendingPokedexFocus: { id: number; openDetail: boolean } | null = null;
+
+export function setPokedexFocus(id: number, openDetail = true): void {
+  pendingPokedexFocus = { id, openDetail };
+}
+
 export function createPokedexScene(input: InputManager, stateMachine: StateMachine): Scene {
   let cursor = 0;
   let scrollOffset = 0;
@@ -77,13 +83,24 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
   return {
     enter(): void {
-      cursor = 0;
-      scrollOffset = 0;
-      view = 'list';
+      cursor = pendingPokedexFocus ? Math.max(0, Math.min(TOTAL_POKEMON - 1, pendingPokedexFocus.id - 1)) : 0;
+      scrollOffset = Math.max(0, Math.min(cursor, TOTAL_POKEMON - VISIBLE_ENTRIES));
+      view = pendingPokedexFocus?.openDetail ? 'detail' : 'list';
       detailTab = 'info';
       movesSubTab = 'byLevel';
       movesScrollOffset = 0;
       preloadVisibleSprites();
+      if (pendingPokedexFocus?.openDetail) {
+        const id = cursor + 1;
+        loadImage(`/sprites/pokemon/front/${id}.png`).catch(() => {});
+        const chain = getEvolutionChain(id);
+        if (chain) {
+          for (const stage of chain.stages) {
+            loadImage(`/sprites/pokemon/front/${stage.id}.png`).catch(() => {});
+          }
+        }
+      }
+      pendingPokedexFocus = null;
     },
 
     exit(): void {},

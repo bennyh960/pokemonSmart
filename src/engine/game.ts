@@ -17,6 +17,7 @@ import { createOverworldScene } from '../scenes/overworld.js';
 import { createStarterSelectScene } from '../scenes/starter-select.js';
 import { createPartyScene } from '../scenes/party.js';
 import { createPokedexScene } from '../scenes/pokedex.js';
+import { createEvolutionScene } from '../scenes/evolution.js';
 import { createBagScene } from '../scenes/bag.js';
 import { createPCScene } from '../scenes/pc.js';
 import { createWorldMapScene } from '../scenes/world-map.js';
@@ -56,6 +57,7 @@ export function createGame(container: HTMLElement) {
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
   stateMachine.register('PARTY', createPartyScene(input, stateMachine));
   stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
+  stateMachine.register('EVOLUTION', createEvolutionScene(input, stateMachine, audio));
   stateMachine.register('BAG', createBagScene(input, stateMachine));
   stateMachine.register('PC', createPCScene(input, stateMachine));
   stateMachine.register('WORLD_MAP', createWorldMapScene(input, stateMachine));

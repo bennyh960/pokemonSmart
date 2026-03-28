@@ -8,8 +8,18 @@
  */
 
 import type { Pokemon, Move, PokemonType, MathDifficulty } from '../types/index.js';
-import { getPokemon, getMove, getLearnset, movePowerToMathDifficulty, getRandomAbility, getRandomNatureId, getNatureMultiplier } from '../services/pokemon-data.js';
-import type { PokemonData, MoveData } from '../services/pokemon-data.js';
+import {
+  getPokemon,
+  getMove,
+  getLearnset,
+  movePowerToMathDifficulty,
+  getRandomAbility,
+  getRandomNatureId,
+  getNatureMultiplier,
+  getNextEvolution,
+  getPokemonAbilities,
+} from '../services/pokemon-data.js';
+import type { PokemonData, MoveData, EvolutionStep } from '../services/pokemon-data.js';
 import encounterTablesJson from '../data/encounter-tables.json';
 
 /** A single entry in an encounter table. */
@@ -228,6 +238,7 @@ export interface LevelUpResult {
   leveledUp: boolean;
   newLevel?: number;
   newMoves?: number[];  // moveIds of newly learned moves
+  evolution?: EvolutionStep;
 }
 
 /** Check if a Pokemon should level up, and apply level-up if so. */
@@ -276,5 +287,49 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
     console.log(`Learned move(s): ${newMoves.join(', ')}`);
   }
 
-  return { leveledUp: true, newLevel: pokemon.level, newMoves };
+  return {
+    leveledUp: true,
+    newLevel: pokemon.level,
+    newMoves,
+    evolution: getPendingLevelEvolution(pokemon),
+  };
+}
+
+export function getPendingLevelEvolution(pokemon: Pokemon): EvolutionStep | undefined {
+  const nextEvolution = getNextEvolution(pokemon.id);
+  if (!nextEvolution) return undefined;
+  if (nextEvolution.trigger !== 'level-up') return undefined;
+  if (nextEvolution.minLevel === null) return undefined;
+  return pokemon.level >= nextEvolution.minLevel ? nextEvolution : undefined;
+}
+
+export function applyEvolution(pokemon: Pokemon, evolvedId: number): boolean {
+  const evolvedData = getPokemon(evolvedId);
+  if (!evolvedData) return false;
+
+  const oldMaxHp = pokemon.maxHp;
+  const natureId = pokemon.natureId ?? 1;
+  pokemon.id = evolvedData.id;
+  pokemon.name = evolvedData.name.en;
+  pokemon.types = evolvedData.types as PokemonType[];
+  pokemon.maxHp = calcStat(evolvedData.stats.hp, pokemon.level, true);
+  pokemon.hp = Math.max(1, Math.min(pokemon.maxHp, pokemon.hp + (pokemon.maxHp - oldMaxHp)));
+  pokemon.attack = calcStat(evolvedData.stats.attack, pokemon.level, false, getNatureMultiplier(natureId, 'attack'));
+  pokemon.defense = calcStat(evolvedData.stats.defense, pokemon.level, false, getNatureMultiplier(natureId, 'defense'));
+  pokemon.specialAttack = calcStat(evolvedData.stats.specialAttack, pokemon.level, false, getNatureMultiplier(natureId, 'specialAttack'));
+  pokemon.specialDefense = calcStat(evolvedData.stats.specialDefense, pokemon.level, false, getNatureMultiplier(natureId, 'specialDefense'));
+  pokemon.speed = calcStat(evolvedData.stats.speed, pokemon.level, false, getNatureMultiplier(natureId, 'speed'));
+
+  const evolvedAbilities = getPokemonAbilities(evolvedId);
+  if (evolvedAbilities) {
+    const allowedAbilityIds = [...evolvedAbilities.abilities];
+    if (evolvedAbilities.hidden !== null) allowedAbilityIds.push(evolvedAbilities.hidden);
+    if (pokemon.abilityId === null || !allowedAbilityIds.includes(pokemon.abilityId)) {
+      pokemon.abilityId = getRandomAbility(evolvedId);
+    }
+  } else {
+    pokemon.abilityId = null;
+  }
+
+  return true;
 }
