@@ -2,6 +2,7 @@ import type { TilesetEditorState } from './editor-state.js';
 import type { TileEntry } from './types.js';
 import { TILE_CATEGORIES } from './types.js';
 import { applyCrop, saveTilesetImage } from './io.js';
+import { BATTLE_BACKGROUNDS, normalizeBattleBackgroundId } from '../data/battle-backgrounds.js';
 import { INTERACT_TYPE_IDS, getInteractType } from '../data/interact-types.js';
 import { getAllItems } from '../data/items.js';
 
@@ -40,6 +41,14 @@ function serializeEncounterTypes(allMode: boolean, includes: string[], exception
     return exceptions.length > 0 ? [`*/${exceptions.join(',')}`] : ['*'];
   }
   return [...includes];
+}
+
+function getBattleBackgroundOptionsHtml(selected?: string): string {
+  return [
+    `<option value="" ${!selected ? 'selected' : ''}>Default (context/fallback)</option>`,
+    ...BATTLE_BACKGROUNDS.map((bg) =>
+      `<option value="${bg.id}" ${selected === bg.id ? 'selected' : ''}>${bg.label}</option>`),
+  ].join('');
 }
 
 /**
@@ -588,6 +597,7 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Category:</label><select id="add-cat"><option value="">None</option>${TILE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
       <div class="prop-row"><label>Walkable:</label><input id="add-walk" type="checkbox" checked /></div>
       <div class="prop-row" style="flex-direction:column;align-items:flex-start"><label>Encounter types:</label><div id="add-enc-widget"></div></div>
+      <div class="prop-row"><label>Battle background:</label><select id="add-battle-bg">${getBattleBackgroundOptionsHtml()}</select></div>
       <div class="prop-row"><label>Above (2nd layer):</label><input id="add-above" type="checkbox" /></div>
       <div class="prop-row"><label>Overlay (on top of player):</label><input id="add-overlay" type="checkbox" /></div>
       <div class="prop-row"><label>Description:</label><input id="add-desc" type="text" placeholder="optional note" /></div>
@@ -612,12 +622,16 @@ export class PropertiesPanel {
       if (this.state.tiles.some(t => t.key === key)) { alert(`Key "${key}" already exists`); return; }
 
       const catVal = (section.querySelector('#add-cat') as HTMLSelectElement).value;
+      const battleBackground = normalizeBattleBackgroundId(
+        (section.querySelector('#add-battle-bg') as HTMLSelectElement).value,
+      ) ?? undefined;
       const entry: TileEntry = {
         key,
         sx, sy,
         w, h,
         walkable: (section.querySelector('#add-walk') as HTMLInputElement).checked,
         encounterTypes: addEncTypes.length > 0 ? addEncTypes : undefined,
+        battleBackground,
         above: (section.querySelector('#add-above') as HTMLInputElement).checked,
         overlay: (section.querySelector('#add-overlay') as HTMLInputElement).checked || undefined,
         category: catVal || undefined,
@@ -667,6 +681,10 @@ export class PropertiesPanel {
         <div id="edit-enc-widget"></div>
       </div>
       <div class="prop-row">
+        <label>Battle background:</label>
+        <select id="edit-battle-bg">${getBattleBackgroundOptionsHtml(t.battleBackground)}</select>
+      </div>
+      <div class="prop-row">
         <label>Above (2nd layer):</label>
         <input id="edit-above" type="checkbox" ${t.above ? 'checked' : ''} />
       </div>
@@ -710,6 +728,12 @@ export class PropertiesPanel {
       t.encounterTypes ?? [],
       (types) => this.state.updateTile(index, { encounterTypes: types.length > 0 ? types : undefined } as any),
     );
+    const battleBgSel = section.querySelector('#edit-battle-bg') as HTMLSelectElement | null;
+    battleBgSel?.addEventListener('change', () => {
+      this.state.updateTile(index, {
+        battleBackground: normalizeBattleBackgroundId(battleBgSel.value) ?? undefined,
+      });
+    });
     wire('#edit-above', 'above', 'check');
     wire('#edit-overlay', 'overlay', 'check');
     // InteractType: dynamic dropdown from INTERACT_TYPE_IDS + args editor

@@ -5,26 +5,10 @@
 
 import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { BATTLE_BACKGROUNDS } from '../src/data/battle-backgrounds.js';
 
 const BASE_URL = 'https://play.pokemonshowdown.com/sprites/gen6bgs/';
 const RATE_LIMIT_MS = 200;
-
-interface BackgroundDef {
-  /** Normalized output name (without extension) */
-  name: string;
-  /** Candidate filenames to try on the server */
-  candidates: string[];
-}
-
-const BACKGROUNDS: BackgroundDef[] = [
-  { name: 'bg-meadow', candidates: ['bg-meadow.jpg', 'meadow.jpg', 'bg-grass.jpg'] },
-  { name: 'bg-ocean', candidates: ['bg-ocean.jpg', 'ocean.jpg', 'bg-water.jpg'] },
-  { name: 'bg-cave', candidates: ['bg-cave.jpg', 'cave.jpg'] },
-  { name: 'bg-city', candidates: ['bg-city.jpg', 'city.jpg'] },
-  { name: 'bg-gym', candidates: ['bg-gym.jpg', 'gym.jpg'] },
-  { name: 'bg-elite4', candidates: ['bg-elite4.jpg', 'elite4.jpg'] },
-  { name: 'bg-route', candidates: ['bg-route.jpg', 'route.jpg'] },
-];
 
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -44,12 +28,12 @@ export async function fetchBattleBackgrounds(outDir: string): Promise<number> {
   mkdirSync(outDir, { recursive: true });
   let downloaded = 0;
 
-  for (const bg of BACKGROUNDS) {
-    const outPath = join(outDir, `${bg.name}.jpg`);
+  for (const bg of BATTLE_BACKGROUNDS) {
+    const outPath = join(outDir, `${bg.assetName}.jpg`);
 
     // Skip already downloaded
     if (existsSync(outPath)) {
-      console.log(`  ⏭ ${bg.name} (already exists)`);
+      console.log(`  ⏭ ${bg.assetName} (already exists)`);
       downloaded++;
       continue;
     }
@@ -60,7 +44,7 @@ export async function fetchBattleBackgrounds(outDir: string): Promise<number> {
       const data = await tryDownload(url);
       if (data) {
         writeFileSync(outPath, data);
-        console.log(`  ✓ ${bg.name} (from ${candidate})`);
+        console.log(`  ✓ ${bg.assetName} (from ${candidate})`);
         downloaded++;
         found = true;
         break;
@@ -69,7 +53,7 @@ export async function fetchBattleBackgrounds(outDir: string): Promise<number> {
     }
 
     if (!found) {
-      console.log(`  ✗ ${bg.name} — no candidate matched (tried: ${bg.candidates.join(', ')})`);
+      console.log(`  ✗ ${bg.assetName} — no candidate matched (tried: ${bg.candidates.join(', ')})`);
     }
   }
 
@@ -82,7 +66,7 @@ if (process.argv[1]?.includes('fetch-battle-backgrounds')) {
   const OUT = join(ROOT, 'public', 'sprites', 'backgrounds');
   console.log('=== Fetching Battle Backgrounds ===\n');
   fetchBattleBackgrounds(OUT)
-    .then(n => console.log(`\nDone — ${n}/${BACKGROUNDS.length} backgrounds downloaded.`))
+    .then(n => console.log(`\nDone — ${n}/${BATTLE_BACKGROUNDS.length} backgrounds downloaded.`))
     .catch(err => {
       console.error('FATAL:', err);
       process.exit(1);

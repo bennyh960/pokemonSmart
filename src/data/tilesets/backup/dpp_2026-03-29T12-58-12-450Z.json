@@ -66,7 +66,6 @@
       "encounterTypes": [
         "*/water"
       ],
-      "battleBackground": "meadow",
       "above": true,
       "overlay": true,
       "category": "grass",
@@ -518,6 +517,18 @@
       "description": "horizontal building"
     },
     {
+      "key": "b3",
+      "sx": 0,
+      "sy": 1072,
+      "w": 80,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "modern house"
+    },
+    {
       "key": "d1",
       "sx": 0,
       "sy": 1136,
@@ -845,7 +856,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
+      "category": "decoration",
       "interactType": null,
       "description": "chair left in house"
     },
@@ -857,7 +868,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
+      "category": "decoration",
       "interactType": null,
       "description": "chair decoration right in house"
     },
@@ -2759,7 +2770,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "barn building"
     },
     {
@@ -2771,7 +2781,6 @@
       "walkable": true,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "barn building"
     },
     {
@@ -2783,168 +2792,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
-      "interactType": null,
       "description": "Bookcase decoration (brown)"
-    },
-    {
-      "key": "lab1",
-      "sx": 0,
-      "sy": 7232,
-      "w": 208,
-      "h": 192,
-      "walkable": true,
-      "above": false,
-      "category": "interior",
-      "interactType": null,
-      "description": "lab floor . North wall need unmovable tile"
-    },
-    {
-      "key": "lab1-table",
-      "sx": 0,
-      "sy": 7424,
-      "w": 48,
-      "h": 32,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "can be table on any floor - brown"
-    },
-    {
-      "key": "chair",
-      "sx": 48,
-      "sy": 7424,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "small chair - red"
-    },
-    {
-      "key": "freeze",
-      "sx": 64,
-      "sy": 7424,
-      "w": 32,
-      "h": 48,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "freeze"
-    },
-    {
-      "key": "lab-equip",
-      "sx": 128,
-      "sy": 7424,
-      "w": 48,
-      "h": 48,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "cool lab equipment"
-    },
-    {
-      "key": "b3",
-      "sx": 0,
-      "sy": 1072,
-      "w": 80,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "modern house",
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 3
-        },
-        {
-          "dx": 3,
-          "dy": 3
-        }
-      ]
-    },
-    {
-      "key": "door",
-      "sx": 32,
-      "sy": 1168,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "description": "door for building"
     }
   ]
 }

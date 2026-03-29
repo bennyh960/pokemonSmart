@@ -69,6 +69,43 @@
   ],
   "npcs": [
     {
+      "id": "prof-oak",
+      "name": "Prof. Algorithmah",
+      "x": 3,
+      "y": 6,
+      "facing": "right",
+      "type": "healer",
+      "dialogue": [
+        {
+          "en": "Welcome to Zeroville — the origin point of all journeys!",
+          "he": "ברוך הבא מאמן צעיר!"
+        },
+        {
+          "en": "Every great adventure starts from zero.",
+          "he": "יש הרבה דברים שעליך ללמוד."
+        },
+        {
+          "en": "Choose your partner Pokemon and explore Numeria!",
+          "he": ""
+        },
+        {
+          "en": "",
+          "he": "אני אהיה איתך בקשר לעזור לך במסע."
+        },
+        {
+          "en": "",
+          "he": "בינתיים תן לי להסתכל על הפוקימונים שלך ולרפא לך אותם"
+        }
+      ],
+      "spriteType": "char_a42849",
+      "party": [],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": []
+    },
+    {
       "id": "elder-zero",
       "name": "Elder Zero",
       "x": 18,
@@ -837,31 +874,6 @@
       "key": "door",
       "x": 13,
       "y": 5
-    },
-    {
-      "key": "door",
-      "x": 4,
-      "y": 5
-    },
-    {
-      "key": "door",
-      "x": 21,
-      "y": 5
-    },
-    {
-      "key": "door",
-      "x": 20,
-      "y": 14
-    },
-    {
-      "key": "door",
-      "x": 12,
-      "y": 14
-    },
-    {
-      "key": "door",
-      "x": 5,
-      "y": 14
     }
   ]
 }

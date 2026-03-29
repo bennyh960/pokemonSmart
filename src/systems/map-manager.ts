@@ -93,3 +93,4 @@ registerMap('mart-interior', () => import('../data/maps/mart-interior.json').cat
 registerMap('deep-forest', () => import('../data/maps/deep-forest.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('mountain-pass', () => import('../data/maps/mountain-pass.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('house-3-i', () => import('../data/maps/house-3-i.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('oak lab', () => import('../data/maps/oak lab.json').catch(() => import('../data/maps/test-map.json')));

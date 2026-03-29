@@ -1,3 +1,5 @@
+import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
+
 /** A single tile definition in the manifest output. */
 export interface TileEntry {
   key: string;
@@ -8,6 +10,7 @@ export interface TileEntry {
   walkable: boolean;
   /** Encounter type filter: undefined = not encounterable, ['*'] = all, ['water'] = water only */
   encounterTypes?: string[];
+  battleBackground?: BattleBackgroundId;
   above: boolean;
   overlay?: boolean; // true = renders on top of player (tall grass); false/absent = flat ground
   category?: string;

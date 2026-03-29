@@ -518,6 +518,18 @@
       "description": "horizontal building"
     },
     {
+      "key": "b3",
+      "sx": 0,
+      "sy": 1072,
+      "w": 80,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "modern house"
+    },
+    {
       "key": "d1",
       "sx": 0,
       "sy": 1136,
@@ -2795,7 +2807,6 @@
       "walkable": true,
       "above": false,
       "category": "interior",
-      "interactType": null,
       "description": "lab floor . North wall need unmovable tile"
     },
     {
@@ -2807,7 +2818,6 @@
       "walkable": true,
       "above": true,
       "category": "interior",
-      "interactType": null,
       "description": "can be table on any floor - brown"
     },
     {
@@ -2819,7 +2829,6 @@
       "walkable": true,
       "above": true,
       "category": "interior",
-      "interactType": null,
       "description": "small chair - red"
     },
     {
@@ -2831,7 +2840,6 @@
       "walkable": true,
       "above": true,
       "category": "interior",
-      "interactType": null,
       "description": "freeze"
     },
     {
@@ -2843,108 +2851,7 @@
       "walkable": true,
       "above": true,
       "category": "interior",
-      "interactType": null,
       "description": "cool lab equipment"
-    },
-    {
-      "key": "b3",
-      "sx": 0,
-      "sy": 1072,
-      "w": 80,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "modern house",
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 3
-        },
-        {
-          "dx": 3,
-          "dy": 3
-        }
-      ]
-    },
-    {
-      "key": "door",
-      "sx": 32,
-      "sy": 1168,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "description": "door for building"
     }
   ]
 }

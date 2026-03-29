@@ -1,6 +1,7 @@
 import type { TilesetEditorState } from './editor-state.js';
 import type { TileEntry, TileManifest } from './types.js';
 import { hasFSAccess, saveToDirectory, saveBlobToDirectory } from '../editor/fs-save.js';
+import { normalizeBattleBackgroundId } from '../data/battle-backgrounds.js';
 
 /** Normalize interactType from JSON: handles legacy string, new object, and destroy migration. */
 function normalizeEditorInteractType(raw: unknown, legacyDestroy?: string | null): TileEntry['interactType'] {
@@ -69,6 +70,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         h: t.h ?? (t as unknown as Record<string, number>).tileSize ?? 16,
         walkable: t.walkable ?? true,
         encounterTypes: t.encounterTypes ?? ((t as any).encounter ? ['*'] : undefined),
+        battleBackground: normalizeBattleBackgroundId((t as { battleBackground?: string | null }).battleBackground) ?? undefined,
         above: t.above ?? false,
         overlay: t.overlay ?? undefined,
         category: t.category ?? ((t as any).destroy ? 'interactive' : undefined),
@@ -90,6 +92,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         h: (raw.h as number) ?? baseTileSize,
         walkable: (raw.walkable as boolean) ?? true,
         encounterTypes: (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined),
+        battleBackground: normalizeBattleBackgroundId(raw.battleBackground as string | null | undefined) ?? undefined,
         above: (raw.renderAbove as boolean) ?? false,
       });
     }

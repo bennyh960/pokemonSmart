@@ -27,6 +27,7 @@ import { createShopState, openShop, updateShop, renderShop, type ShopState } fro
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import { createNPCManager, isNPCVisible, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, resolveDialogue, type DialogueReward } from '../systems/npc.js';
 import { getItem } from '../data/items.js';
+import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
 const MOVE_DURATION = 0.2;
@@ -204,13 +205,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     return 'grass';
   }
 
+  function deriveBattleBackground(): BattleBackgroundId | null {
+    return tileMap ? tileMap.getBattleBackground(player.gridX, player.gridY) : null;
+  }
+
   function startEncounterTransition(wildPokemon: Pokemon): void {
     encounterTriggered = true;
     flashTimer = 0;
     flashPhase = 'flash';
     const playerData = getPlayerData();
     const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
-    if (playerPokemon) setBattleData(playerPokemon, wildPokemon, deriveBattleContext());
+    if (playerPokemon) setBattleData(playerPokemon, wildPokemon, deriveBattleContext(), deriveBattleBackground());
   }
 
   /** Check if the player's current tile triggers a map transition. */
@@ -308,7 +313,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const playerData = getPlayerData();
           const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
-            setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext());
+            setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
             stateMachine.change('BATTLE');
           }
         }
@@ -673,7 +678,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const playerData = getPlayerData();
           const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
-            setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext());
+            setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
             // Reset trainer position back after battle
             ta.trainer.x = ta.originalX;
             ta.trainer.y = ta.originalY;

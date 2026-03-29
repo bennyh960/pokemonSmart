@@ -7,6 +7,7 @@
  */
 
 import type { InteractTypeRef } from '../data/interact-types.js';
+import { normalizeBattleBackgroundId, type BattleBackgroundId } from '../data/battle-backgrounds.js';
 
 /** Definition of a single tile within a tileset. */
 export interface TileDef {
@@ -25,6 +26,7 @@ export interface TileDef {
   above: boolean;
   overlay: boolean; // true = renders on top of player (e.g. tall grass); false = flat ground decoration
   category?: string;
+  battleBackground?: BattleBackgroundId;
   /**
    * Interactive type reference — only meaningful when category is 'interactive'.
    * Contains an id (foreign key to INTERACT_TYPES) and optional args to override defaults.
@@ -57,6 +59,7 @@ interface TileEntryRaw {
   above: boolean;
   overlay?: boolean;
   category?: string;
+  battleBackground?: string | null;
   interactType?: unknown;  // string (legacy) or { id, args } (new) or null
   destroy?: string;        // legacy — migrated to interactType on load
   cells?: Array<{ dx: number; dy: number }>;
@@ -123,6 +126,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
         above: raw.above ?? false,
         overlay: raw.overlay ?? false,
         category: raw.category ?? (iRef ? 'interactive' : undefined),
+        battleBackground: normalizeBattleBackgroundId(raw.battleBackground) ?? undefined,
         interactType: iRef,
         cells: raw.cells,
       });
@@ -144,6 +148,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
         above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false,
         overlay: (raw.overlay as boolean) ?? false,
         category: (raw.category as string) ?? (iRef2 ? 'interactive' : undefined),
+        battleBackground: normalizeBattleBackgroundId(raw.battleBackground as string | null | undefined) ?? undefined,
         interactType: iRef2,
       });
     }

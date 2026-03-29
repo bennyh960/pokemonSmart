@@ -10,6 +10,7 @@ import { clearScreen, fillRect } from '../engine/renderer.js';
 import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import type { MainMenuChoice } from '../ui/battle-menu.js';
+import { resolveBattleBackgroundPath, type BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { BTL } from '../data/battle-constants.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
@@ -74,6 +75,7 @@ let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
 let pendingTrainerBattle: TrainerBattleData | null = null;
 let pendingBattleContext: BattleContext = 'grass';
+let pendingBattleBackground: BattleBackgroundId | null = null;
 
 export interface TrainerBattleData {
   trainerName: string;
@@ -84,18 +86,30 @@ export interface TrainerBattleData {
   postBattleDialogue?: BilingualText[];  // Dialogue shown after defeat
 }
 
-export function setBattleData(playerPokemon: Pokemon, enemyPokemon: Pokemon, context: BattleContext = 'grass'): void {
+export function setBattleData(
+  playerPokemon: Pokemon,
+  enemyPokemon: Pokemon,
+  context: BattleContext = 'grass',
+  battleBackground: BattleBackgroundId | null = null,
+): void {
   pendingPlayer = playerPokemon;
   pendingEnemy = enemyPokemon;
   pendingTrainerBattle = null;
   pendingBattleContext = context;
+  pendingBattleBackground = battleBackground;
 }
 
-export function setTrainerBattleData(playerPokemon: Pokemon, trainerData: TrainerBattleData, context: BattleContext = 'grass'): void {
+export function setTrainerBattleData(
+  playerPokemon: Pokemon,
+  trainerData: TrainerBattleData,
+  context: BattleContext = 'grass',
+  battleBackground: BattleBackgroundId | null = null,
+): void {
   pendingPlayer = playerPokemon;
   pendingEnemy = trainerData.party[0];
   pendingTrainerBattle = trainerData;
   pendingBattleContext = context;
+  pendingBattleBackground = battleBackground;
 }
 
 function calcDamage(atk: Pokemon, def: Pokemon, power: number, moveType: PokemonType): number {
@@ -151,6 +165,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let trainerData: TrainerBattleData | null = null;
   let trainerPartyIndex = 0;
   let battleContext: BattleContext = 'grass';
+  let battleBackground: BattleBackgroundId | null = null;
   let bgImage: HTMLImageElement | null = null;
   let showTrainerSprite = false;  // Show trainer sprite during intro
   let enemyGoesFirst = false;
@@ -314,7 +329,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       enemy = fallbackEnemy();
     }
     battleContext = pendingBattleContext;
+    battleBackground = pendingBattleBackground;
     pendingBattleContext = 'grass';
+    pendingBattleBackground = null;
     // V2 layout: opponent bar at (136,12), player bar position computed dynamically
     enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp,
       BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
@@ -372,11 +389,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     // Preload Pokemon sprites
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     loadImage(`/sprites/pokemon/back/${player.id}.png`).catch(() => {});
-    // Try to load context-specific background image
+    // Try to load tile-selected or context-mapped background image
     bgImage = null;
-    loadImage(`/sprites/backgrounds/bg-${battleContext}.jpg`).then(img => {
-      bgImage = img;
-    }).catch(() => { bgImage = null; });
+    const bgPath = resolveBattleBackgroundPath(battleBackground, battleContext);
+    if (bgPath) {
+      loadImage(bgPath).then(img => {
+        bgImage = img;
+      }).catch(() => { bgImage = null; });
+    }
   }
 
   /** Trigger level-up sparkle + jingle. Uses player sprite center for the effect. */

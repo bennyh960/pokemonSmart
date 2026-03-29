@@ -1,0 +1,237 @@
+{
+  "id": "oak lab",
+  "name": "Oak - lab ",
+  "tileset": "dpp",
+  "width": 13,
+  "height": 12,
+  "tileSize": 16,
+  "spawn": {
+    "x": 6,
+    "y": 10
+  },
+  "transitions": [
+    {
+      "fromX": 6,
+      "fromY": 11,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-1774792608829",
+      "x": 3,
+      "y": 4,
+      "facing": "down",
+      "type": "healer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום מאמן צעיר!"
+        },
+        {
+          "en": "",
+          "he": "הגיע הזמן להתחיל את המסע שלך."
+        },
+        {
+          "en": "",
+          "he": "ב\"דרך 1\" תוכל לפגוש מאמנים ופוקימוני בר."
+        },
+        {
+          "en": "",
+          "he": "תתחיל להתאמן ואמשיך להדריך אותך בהמשך ."
+        },
+        {
+          "en": "",
+          "he": "תרצה בינתיים לתת לפוקימונים שלך לנוח?"
+        }
+      ],
+      "spriteType": "char_a42849",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 1,
+            "delay": 3
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 5,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 3
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 3
+          },
+          {
+            "dir": "down",
+            "steps": 4,
+            "delay": 0.5
+          },
+          {
+            "dir": "left",
+            "steps": 9,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 3
+          }
+        ],
+        "loop": true
+      }
+    }
+  ],
+  "music": "town4",
+  "encounterTableId": null
+,
+  "tiles": [
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"]
+  ],
+  "objects": [
+    {
+      "key": "lab1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "freeze",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "key": "freeze",
+      "x": 10,
+      "y": 8
+    },
+    {
+      "key": "chair",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "key": "lab1-table",
+      "x": 8,
+      "y": 4
+    },
+    {
+      "key": "lab-equip",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 11,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 12,
+      "y": 2
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

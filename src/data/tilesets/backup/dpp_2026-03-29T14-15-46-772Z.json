@@ -2855,7 +2855,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "modern house",
       "cells": [
         {
@@ -2935,16 +2934,6 @@
           "dy": 3
         }
       ]
-    },
-    {
-      "key": "door",
-      "sx": 32,
-      "sy": 1168,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "description": "door for building"
     }
   ]
 }
