@@ -3075,7 +3075,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "pokemarket small",
       "cells": [
         {
@@ -3133,7 +3132,6 @@
       "walkable": true,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "door for any - but took from market 1"
     },
     {
@@ -3145,7 +3143,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "bigger poke market",
       "cells": [
         {
@@ -3215,19 +3212,7 @@
       "walkable": true,
       "above": false,
       "category": "building",
-      "interactType": null,
       "description": "door for market2 or others"
-    },
-    {
-      "key": "evr1",
-      "sx": 192,
-      "sy": 6544,
-      "w": 16,
-      "h": 32,
-      "walkable": true,
-      "above": true,
-      "category": "floor",
-      "description": "entrance-vertical-right"
     }
   ]
 }

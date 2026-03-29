@@ -3219,15 +3219,15 @@
       "description": "door for market2 or others"
     },
     {
-      "key": "evr1",
-      "sx": 192,
+      "key": "entrance-vertical-right",
+      "sx": 176,
       "sy": 6544,
-      "w": 16,
-      "h": 32,
+      "w": 32,
+      "h": 48,
       "walkable": true,
       "above": true,
       "category": "floor",
-      "description": "entrance-vertical-right"
+      "description": "entrance vertical right"
     }
   ]
 }

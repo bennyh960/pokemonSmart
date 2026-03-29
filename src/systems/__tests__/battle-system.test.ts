@@ -4,10 +4,14 @@ import type { MoveStatusEffect } from '../../types/battle-metadata.js';
 import { getMoveByName } from '../../services/pokemon-data.js';
 import {
   applyEndOfTurnStatusEffects,
+  applyDrainHealing,
   applyLeechSeedEffect,
   applyMajorStatus,
+  applyRecoilDamage,
   applyStatChanges,
   applyVolatileMoveEffects,
+  calculateMoveHpEffectAmount,
+  clearEndOfTurnFlags,
   createBattleRuntimeStateForPokemon,
   determineTurnOrder,
   doesMoveHit,
@@ -15,9 +19,13 @@ import {
   getDisplayedVolatileStatuses,
   getEffectiveSpeed,
   getModifiedStatValue,
+  isTargetImmuneToMoveType,
+  isTargetImmuneToStatusEffectFromMoveType,
+  isTargetImmuneToVolatileEffectFromMoveType,
   processBeforeMoveEffects,
   processStartOfTurnStatus,
   rollCriticalHit,
+  tryApplyFlinch,
 } from '../battle-system.js';
 
 function createTestPokemon(overrides: Partial<Pokemon> = {}): Pokemon {
@@ -135,6 +143,43 @@ describe('battle system helpers', () => {
     expect(normalTarget.status).toBe('poison');
   });
 
+  it('uses the type chart for full move immunities', () => {
+    expect(isTargetImmuneToMoveType(createTestPokemon({ types: ['ground'] }), 'electric')).toBe(true);
+    expect(isTargetImmuneToMoveType(createTestPokemon({ types: ['flying'] }), 'ground')).toBe(true);
+    expect(isTargetImmuneToMoveType(createTestPokemon({ types: ['dark'] }), 'psychic')).toBe(true);
+    expect(isTargetImmuneToMoveType(createTestPokemon({ types: ['ghost'] }), 'normal')).toBe(true);
+    expect(isTargetImmuneToMoveType(createTestPokemon({ types: ['ghost'] }), 'fighting')).toBe(true);
+    expect(isTargetImmuneToMoveType(createTestPokemon({ types: ['steel'] }), 'poison')).toBe(true);
+  });
+
+  it('blocks same-type major-status effects without blocking damage by itself', () => {
+    expect(isTargetImmuneToStatusEffectFromMoveType(
+      createTestPokemon({ types: ['fire'] }),
+      'fire',
+      { status: 'burn', chance: 10, target: 'target' },
+    )).toBe(true);
+    expect(isTargetImmuneToStatusEffectFromMoveType(
+      createTestPokemon({ types: ['ice'] }),
+      'ice',
+      { status: 'freeze', chance: 10, target: 'target' },
+    )).toBe(true);
+    expect(isTargetImmuneToStatusEffectFromMoveType(
+      createTestPokemon({ types: ['electric'] }),
+      'electric',
+      { status: 'paralyze', chance: 10, target: 'target' },
+    )).toBe(true);
+    expect(isTargetImmuneToStatusEffectFromMoveType(
+      createTestPokemon({ types: ['grass'] }),
+      'grass',
+      { status: 'sleep', chance: 100, target: 'target' },
+    )).toBe(true);
+    expect(isTargetImmuneToStatusEffectFromMoveType(
+      createTestPokemon({ types: ['water'] }),
+      'fire',
+      { status: 'burn', chance: 10, target: 'target' },
+    )).toBe(false);
+  });
+
   it('applies poison and burn chip damage at end of turn', () => {
     const poisoned = createTestPokemon({ maxHp: 80, hp: 80, status: 'poison' });
     const poisonedRuntime = createBattleRuntimeStateForPokemon(poisoned);
@@ -192,6 +237,38 @@ describe('battle system helpers', () => {
     runtime.leechSeeded = true;
 
     expect(getDisplayedVolatileStatuses(runtime)).toEqual(['confuse', 'seed']);
+  });
+
+  it('applies flinch only when the target still has a turn left', () => {
+    const target = createTestPokemon();
+    const runtime = createBattleRuntimeStateForPokemon(target);
+
+    expect(tryApplyFlinch(runtime, 30, true, () => 0)).toBe(true);
+
+    const flinchResult = processBeforeMoveEffects(target, runtime, () => 0.9);
+    expect(flinchResult).toEqual({
+      canAct: false,
+      events: ['flinched'],
+      selfDamage: 0,
+    });
+    expect(runtime.turnFlags.flinched).toBe(false);
+
+    expect(tryApplyFlinch(runtime, 30, false, () => 0)).toBe(false);
+    clearEndOfTurnFlags(runtime);
+    expect(runtime.turnFlags.flinched).toBe(false);
+  });
+
+  it('applies drain healing and recoil from actual damage dealt', () => {
+    const drainingAttacker = createTestPokemon({ hp: 30, maxHp: 80 });
+    const drained = applyDrainHealing(drainingAttacker, 20, 50);
+    expect(calculateMoveHpEffectAmount(20, 50)).toBe(10);
+    expect(drained).toBe(10);
+    expect(drainingAttacker.hp).toBe(40);
+
+    const recoilingAttacker = createTestPokemon({ hp: 18, maxHp: 80 });
+    const recoilResult = applyRecoilDamage(recoilingAttacker, 20, 25);
+    expect(recoilResult).toEqual({ damage: 5, fainted: false });
+    expect(recoilingAttacker.hp).toBe(13);
   });
 
   it('prevents critical hits when the defender has Battle Armor', () => {
@@ -275,5 +352,18 @@ describe('battle system helpers', () => {
       { id: 'leech-seed', target: 'target', applied: false, reason: 'immune' },
     ]);
     expect(runtime.leechSeeded).toBe(false);
+  });
+
+  it('blocks same-type volatile effects like grass leech seed on grass targets', () => {
+    expect(isTargetImmuneToVolatileEffectFromMoveType(
+      createTestPokemon({ types: ['grass'] }),
+      'grass',
+      { id: 'leech-seed', target: 'target', chance: 100 },
+    )).toBe(true);
+    expect(isTargetImmuneToVolatileEffectFromMoveType(
+      createTestPokemon({ types: ['water'] }),
+      'grass',
+      { id: 'leech-seed', target: 'target', chance: 100 },
+    )).toBe(false);
   });
 });

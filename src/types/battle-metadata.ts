@@ -60,6 +60,7 @@ export interface MoveBattleMetadata {
   critRate: number;
   flinchChance: number | null;
   drainPercent: number | null;
+  recoilPercent: number | null;
   healingPercent: number | null;
   minHits: number | null;
   maxHits: number | null;
@@ -104,6 +105,7 @@ export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
     critRate: 0,
     flinchChance: null,
     drainPercent: null,
+    recoilPercent: null,
     healingPercent: null,
     minHits: null,
     maxHits: null,

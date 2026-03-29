@@ -115,6 +115,23 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Dynamic Punch': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
   'Leech Seed': volatileEffect('leech-seed', 100),
 
+  Bite: { flinchChance: 30 },
+  Headbutt: { flinchChance: 30 },
+  Stomp: { flinchChance: 30 },
+  'Rock Slide': { flinchChance: 30 },
+  'Rolling Kick': { flinchChance: 30 },
+  'Hyper Fang': { flinchChance: 10 },
+  'Bone Club': { flinchChance: 10 },
+
+  Absorb: { drainPercent: 50 },
+  'Mega Drain': { drainPercent: 50 },
+  'Giga Drain': { drainPercent: 50 },
+  'Leech Life': { drainPercent: 50 },
+
+  'Take Down': { recoilPercent: 25 },
+  'Double Edge': { recoilPercent: 25 },
+  Submission: { recoilPercent: 25 },
+
   Growl: targetStages(['attack', -1]),
   'Tail Whip': targetStages(['defense', -1]),
   Leer: targetStages(['defense', -1]),

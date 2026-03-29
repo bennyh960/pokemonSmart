@@ -67,11 +67,15 @@ import {
 import { calculateCaptureChance } from '../systems/capture.js';
 import type { BattlePokemonRuntimeState } from '../systems/battle-state.js';
 import {
+  applyDrainHealing,
   applyEndOfTurnStatusEffects,
   applyLeechSeedEffect,
   applyStatChanges,
   applyMajorStatus,
+  applyRecoilDamage,
   applyVolatileMoveEffects,
+  calculateMoveHpEffectAmount,
+  clearEndOfTurnFlags,
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
   determineTurnOrder,
@@ -79,9 +83,13 @@ import {
   getDisplayedVolatileStatuses,
   getDisplayedStatChanges,
   getModifiedStatValue,
+  isTargetImmuneToMoveType,
+  isTargetImmuneToStatusEffectFromMoveType,
+  isTargetImmuneToVolatileEffectFromMoveType,
   processBeforeMoveEffects,
   processStartOfTurnStatus,
   rollCriticalHit,
+  tryApplyFlinch,
 } from '../systems/battle-system.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
@@ -162,6 +170,7 @@ function calcDamage(
   const lf = ((2 * atk.level) / 5) + 2;
   const base = ((lf * power * ((attackStat * burnMultiplier) / defenseStat)) / 50) + 2;
   const eff = getCombinedTypeEffectiveness(moveType, def.types);
+  if (eff === 0) return 0;
   const stab = atk.types.includes(moveType) ? 1.5 : 1;
   const critMultiplier = criticalHit ? 1.5 : 1;
   const rand = 0.85 + Math.random() * 0.15;
@@ -174,6 +183,15 @@ function effText(mt: PokemonType, dt: PokemonType[]): string | null {
   if (e > 0 && e < 1) return t('battle.notVeryEffective');
   if (e === 0) return t('battle.noEffect');
   return null;
+}
+
+function doesMoveTargetOpponent(moveBattleData: ReturnType<typeof getMoveBattleData> | undefined): boolean {
+  const target = moveBattleData?.target ?? 'selected-pokemon';
+  return target !== 'user' && target !== 'users-field' && target !== 'ally' && target !== 'user-or-ally';
+}
+
+function getEffectImmuneLine(name: string): string {
+  return t('battle.effectImmune', { name });
 }
 
 function getStatusAppliedLine(name: string, status: Pokemon['status']): string | null {
@@ -227,6 +245,8 @@ function getTurnEffectLine(
       return t('battle.snappedOut', { name });
     case 'hurt-itself-confusion':
       return t('battle.hurtItselfConfusion', { name });
+    case 'flinched':
+      return t('battle.flinched', { name });
     default:
       return null;
   }
@@ -1222,6 +1242,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
   function startEndTurnStatusPhase(): void {
     const lines: string[] = [];
+    clearEndOfTurnFlags(playerBattleState);
+    clearEndOfTurnFlags(enemyBattleState);
     const playerResult = applyEndOfTurnStatusEffects(player, playerBattleState);
     const enemyResult = applyEndOfTurnStatusEffects(enemy, enemyBattleState);
 
@@ -1400,7 +1422,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     popupX: number,
     popupY: number,
     resolvedDamage = 0,
-  ): void {
+  ): number {
     const moveData = getMove(move.id);
     const damageClass = moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status');
     const profile = getAttackAnimationProfile({
@@ -1423,18 +1445,21 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         setHP(targetBar, defender.hp);
         spawnDamageNumber(`+${healed}`, popupX, popupY, '#48d870');
         audio.playSFX('heal');
-        return;
+        return 0;
       }
 
-      const dmg = resolvedDamage;
-      if (dmg <= 0) return;
+      const dmg = Math.max(0, Math.min(defender.hp, resolvedDamage));
+      if (dmg <= 0) return 0;
       defender.hp = Math.max(0, defender.hp - dmg);
       setHP(targetBar, defender.hp);
       flash = createFlash(profile.flashColor, 0.15);
       shake = createShake(profile.shakeIntensity, 0.22);
       spawnDamageNumber(`-${dmg}`, popupX, popupY, '#f84038');
       audio.playSFX('hit');
+      return dmg;
     }
+
+    return 0;
   }
 
   function applyResolvedMoveEffects(
@@ -1446,6 +1471,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     defenderName: string,
     move: Pokemon['moves'][number],
     allowTargetEffects: boolean,
+    targetCanStillAct: boolean,
   ): string[] {
     const moveBattleData = getMoveBattleData(move.id);
     if (!moveBattleData) return [];
@@ -1461,6 +1487,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (statusResult.applied) {
         const statusLine = getStatusAppliedLine(attackerName, statusResult.status);
         if (statusLine) lines.push(statusLine);
+      } else if (statusResult.reason === 'immune') {
+        lines.push(getEffectImmuneLine(attackerName));
       }
     }
 
@@ -1468,6 +1496,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     for (const effectResult of userVolatileEffects) {
       if (effectResult.applied) {
         lines.push(getMoveEffectAppliedLine(attackerName, effectResult.id));
+      } else if (effectResult.reason === 'immune') {
+        lines.push(getEffectImmuneLine(attackerName));
       }
     }
 
@@ -1478,18 +1508,37 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
 
       if (moveBattleData.ailment?.target === 'target') {
-        const statusResult = applyMajorStatus(defender, defenderState, moveBattleData.ailment);
-        if (statusResult.applied) {
-          const statusLine = getStatusAppliedLine(defenderName, statusResult.status);
-          if (statusLine) lines.push(statusLine);
+        if (isTargetImmuneToStatusEffectFromMoveType(defender, move.type, moveBattleData.ailment)) {
+          lines.push(getEffectImmuneLine(defenderName));
+        } else {
+          const statusResult = applyMajorStatus(defender, defenderState, moveBattleData.ailment);
+          if (statusResult.applied) {
+            const statusLine = getStatusAppliedLine(defenderName, statusResult.status);
+            if (statusLine) lines.push(statusLine);
+          } else if (statusResult.reason === 'immune') {
+            lines.push(getEffectImmuneLine(defenderName));
+          }
         }
       }
 
-      const targetVolatileEffects = applyVolatileMoveEffects(defender, defenderState, moveBattleData.effects, 'target');
-      for (const effectResult of targetVolatileEffects) {
+      for (const effect of moveBattleData.effects) {
+        if (effect.target !== 'target') continue;
+        if (isTargetImmuneToVolatileEffectFromMoveType(defender, move.type, effect)) {
+          lines.push(getEffectImmuneLine(defenderName));
+          continue;
+        }
+
+        const [effectResult] = applyVolatileMoveEffects(defender, defenderState, [effect], 'target');
+        if (!effectResult) continue;
         if (effectResult.applied) {
           lines.push(getMoveEffectAppliedLine(defenderName, effectResult.id));
+        } else if (effectResult.reason === 'immune') {
+          lines.push(getEffectImmuneLine(defenderName));
         }
+      }
+
+      if (tryApplyFlinch(defenderState, moveBattleData.flinchChance ?? null, targetCanStillAct)) {
+        lines.push(t('battle.flinched', { name: defenderName }));
       }
     }
 
@@ -1604,14 +1653,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
 
     const moveData = getMove(m.id);
+    const moveBattleData = getMoveBattleData(m.id);
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, playerBattleState, enemyBattleState);
-    const absorbed = hitResult.hit && m.power > 0 && doesAbilityAbsorbMove(enemy, m.type);
-    const criticalHit = hitResult.hit && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy) : false;
-    const resolvedDamage = hitResult.hit && m.power > 0 && !absorbed
+    const targetTypeImmune = hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
+    const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(enemy, m.type);
+    const criticalHit = hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy) : false;
+    const plannedDamage = hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed
       ? calcDamage(player, playerBattleState, enemy, enemyBattleState, m.power, m.type, damageClass, criticalHit)
       : 0;
-    const allowTargetEffects = hitResult.hit && !absorbed && (m.power <= 0 || resolvedDamage < enemy.hp);
+    const allowTargetEffects = hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < enemy.hp);
+    const targetCanStillAct = !enemyAlreadyAttacked;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
         player,
@@ -1622,8 +1674,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         defenderName,
         m,
         allowTargetEffects,
+        targetCanStillAct,
       )
       : [];
+    const plannedHpEffectAmount = hitResult.hit
+      ? calculateMoveHpEffectAmount(plannedDamage, moveBattleData?.drainPercent ?? moveBattleData?.recoilPercent ?? null)
+      : 0;
     const msgs: string[] = [];
     msgs.push(...turnEffectLines);
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
@@ -1640,25 +1696,52 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
     } else if (!hitResult.hit) {
       msgs.push(t('battle.moveMissed', { name: attackerName }));
+    } else if (targetTypeImmune) {
+      msgs.push(t('battle.noEffect'));
     } else if (resolvedEffectLines.length === 0) {
       msgs.push(t('battle.nothingHappened'));
       audio.playSFX('menu-cancel');
+    }
+    if (plannedHpEffectAmount > 0) {
+      if (moveBattleData?.drainPercent) {
+        msgs.push(t('battle.drainHeal', { name: attackerName, amount: plannedHpEffectAmount }));
+      }
+      if (moveBattleData?.recoilPercent) {
+        msgs.push(t('battle.recoilHit', { name: attackerName, amount: plannedHpEffectAmount }));
+      }
     }
     msgs.push(...resolvedEffectLines);
 
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation('player', 'enemy', m, () => {
       if (hitResult.hit) {
-        applyMoveImpact(
+        const actualDamage = applyMoveImpact(
           enemy,
           m,
           enemyHpBar,
           BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
           BTL.OPP_SPRITE.y + 10,
-          resolvedDamage,
+          plannedDamage,
         );
+        if (actualDamage > 0) {
+          const drained = applyDrainHealing(player, actualDamage, moveBattleData?.drainPercent ?? null);
+          if (drained > 0) {
+            setHP(playerHpBar, player.hp);
+            spawnDamageNumber(`+${drained}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#48d870');
+            audio.playSFX('heal');
+          }
+
+          const recoil = applyRecoilDamage(player, actualDamage, moveBattleData?.recoilPercent ?? null);
+          if (recoil.damage > 0) {
+            setHP(playerHpBar, player.hp);
+            spawnDamageNumber(`-${recoil.damage}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
+            flash = createFlash('#fff29a', 0.12);
+            shake = createShake(1.4, 0.18);
+            audio.playSFX('hit');
+          }
+        }
       }
-    }, hitResult.hit && !absorbed && resolvedDamage > 0);
+    }, hitResult.hit && !absorbed && plannedDamage > 0);
     phase = 'PLAYER_ATTACK'; phaseTimer = 0;
   }
 
@@ -1699,14 +1782,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
 
     const moveData = getMove(m.id);
+    const moveBattleData = getMoveBattleData(m.id);
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, enemyBattleState, playerBattleState);
-    const absorbed = hitResult.hit && m.power > 0 && doesAbilityAbsorbMove(player, m.type);
-    const criticalHit = hitResult.hit && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player) : false;
-    const resolvedDamage = hitResult.hit && m.power > 0 && !absorbed
+    const targetTypeImmune = hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
+    const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(player, m.type);
+    const criticalHit = hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player) : false;
+    const plannedDamage = hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed
       ? calcDamage(enemy, enemyBattleState, player, playerBattleState, m.power, m.type, damageClass, criticalHit)
       : 0;
-    const allowTargetEffects = hitResult.hit && !absorbed && (m.power <= 0 || resolvedDamage < player.hp);
+    const allowTargetEffects = hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < player.hp);
+    const targetCanStillAct = enemyGoesFirst;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
         enemy,
@@ -1717,8 +1803,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         defenderName,
         m,
         allowTargetEffects,
+        targetCanStillAct,
       )
       : [];
+    const plannedHpEffectAmount = hitResult.hit
+      ? calculateMoveHpEffectAmount(plannedDamage, moveBattleData?.drainPercent ?? moveBattleData?.recoilPercent ?? null)
+      : 0;
     const msgs = [...prefix];
     msgs.push(...turnEffectLines);
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
@@ -1735,25 +1825,52 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
     } else if (!hitResult.hit) {
       msgs.push(t('battle.moveMissed', { name: attackerName }));
+    } else if (targetTypeImmune) {
+      msgs.push(t('battle.noEffect'));
     } else if (resolvedEffectLines.length === 0) {
       audio.playSFX('menu-cancel');
       msgs.push(t('battle.nothingHappened'));
+    }
+    if (plannedHpEffectAmount > 0) {
+      if (moveBattleData?.drainPercent) {
+        msgs.push(t('battle.drainHeal', { name: attackerName, amount: plannedHpEffectAmount }));
+      }
+      if (moveBattleData?.recoilPercent) {
+        msgs.push(t('battle.recoilHit', { name: attackerName, amount: plannedHpEffectAmount }));
+      }
     }
     msgs.push(...resolvedEffectLines);
 
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation('enemy', 'player', m, () => {
       if (hitResult.hit) {
-        applyMoveImpact(
+        const actualDamage = applyMoveImpact(
           player,
           m,
           playerHpBar,
           BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
           BTL.PLY_SPRITE.y + 10,
-          resolvedDamage,
+          plannedDamage,
         );
+        if (actualDamage > 0) {
+          const drained = applyDrainHealing(enemy, actualDamage, moveBattleData?.drainPercent ?? null);
+          if (drained > 0) {
+            setHP(enemyHpBar, enemy.hp);
+            spawnDamageNumber(`+${drained}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#48d870');
+            audio.playSFX('heal');
+          }
+
+          const recoil = applyRecoilDamage(enemy, actualDamage, moveBattleData?.recoilPercent ?? null);
+          if (recoil.damage > 0) {
+            setHP(enemyHpBar, enemy.hp);
+            spawnDamageNumber(`-${recoil.damage}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#f8d858');
+            flash = createFlash('#fff29a', 0.12);
+            shake = createShake(1.4, 0.18);
+            audio.playSFX('hit');
+          }
+        }
       }
-    }, hitResult.hit && !absorbed && resolvedDamage > 0);
+    }, hitResult.hit && !absorbed && plannedDamage > 0);
     phase = 'ENEMY_TURN'; phaseTimer = 0;
   }
 
@@ -1954,12 +2071,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'PLAYER_ATTACK': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
-          if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(enemyHpBar)) phase = 'CHECK_WIN';
+          if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(enemyHpBar) && !isHPAnimating(playerHpBar)) {
+            phase = 'CHECK_WIN';
+          }
           break;
         }
         case 'ENEMY_TURN': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
-          if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(playerHpBar)) {
+          if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(playerHpBar) && !isHPAnimating(enemyHpBar)) {
             if (player.hp <= 0) {
               const consolationXp = awardConsolationXp(player, activePartyIndex);
               handlePlayerFaintAfterAction(consolationXp);
@@ -1988,6 +2107,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               audio.playMusic('victory');
               phase = 'WIN';
             }
+          }
+          else if (player.hp <= 0) {
+            const consolationXp = awardConsolationXp(player, activePartyIndex);
+            handlePlayerFaintAfterAction(consolationXp);
           }
           else if (enemyAlreadyAttacked) {
             // Enemy already attacked this turn

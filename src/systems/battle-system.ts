@@ -1,4 +1,4 @@
-import type { Pokemon } from '../types/index.js';
+import type { Pokemon, PokemonType } from '../types/index.js';
 import type {
   BattleStatId,
   MajorStatusId,
@@ -8,7 +8,7 @@ import type {
 } from '../types/battle-metadata.js';
 import type { BattlePokemonRuntimeState } from './battle-state.js';
 import { applyBattleStatDelta, createBattlePokemonRuntimeState } from './battle-state.js';
-import { getAbilityBattleEffects, getMoveBattleData } from '../services/pokemon-data.js';
+import { getAbilityBattleEffects, getCombinedTypeEffectiveness, getMoveBattleData } from '../services/pokemon-data.js';
 
 export interface TurnOrderDecision {
   enemyActsFirst: boolean;
@@ -31,6 +31,7 @@ export interface BeforeMoveEffectResult {
     | 'thawed-out'
     | 'frozen-solid'
     | 'fully-paralyzed'
+    | 'flinched'
     | 'confused'
     | 'snapped-out'
     | 'hurt-itself-confusion'
@@ -78,6 +79,19 @@ export interface LeechSeedResult {
   healed: number;
   fainted: boolean;
 }
+
+export interface RecoilResult {
+  damage: number;
+  fainted: boolean;
+}
+
+const SAME_TYPE_STATUS_IMMUNITY_BY_MOVE_TYPE: Partial<Record<MajorStatusId, PokemonType>> = {
+  burn: 'fire',
+  freeze: 'ice',
+  paralyze: 'electric',
+  poison: 'poison',
+  sleep: 'grass',
+};
 
 function randomTurnCount(minTurns: number, maxTurns: number, random: () => number): number {
   return Math.floor(random() * ((maxTurns - minTurns) + 1)) + minTurns;
@@ -182,6 +196,56 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   return effects;
 }
 
+export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): void {
+  runtimeState.turnFlags.flinched = false;
+  runtimeState.turnFlags.protected = false;
+  runtimeState.turnFlags.skipTurn = false;
+}
+
+export function tryApplyFlinch(
+  runtimeState: BattlePokemonRuntimeState,
+  chance: number | null,
+  targetCanStillAct: boolean,
+  random: () => number = Math.random,
+): boolean {
+  if (!targetCanStillAct || !chance || chance <= 0) return false;
+  if (runtimeState.turnFlags.flinched) return false;
+  if ((random() * 100) >= chance) return false;
+  runtimeState.turnFlags.flinched = true;
+  return true;
+}
+
+export function calculateMoveHpEffectAmount(baseAmount: number, percent: number | null): number {
+  if (!percent || percent <= 0 || baseAmount <= 0) return 0;
+  return Math.max(1, Math.floor((baseAmount * percent) / 100));
+}
+
+export function applyDrainHealing(
+  pokemon: Pokemon,
+  damageDealt: number,
+  percent: number | null,
+): number {
+  const rawHealing = calculateMoveHpEffectAmount(damageDealt, percent);
+  if (rawHealing <= 0) return 0;
+  const healed = Math.max(0, Math.min(pokemon.maxHp, pokemon.hp + rawHealing) - pokemon.hp);
+  pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + rawHealing);
+  return healed;
+}
+
+export function applyRecoilDamage(
+  pokemon: Pokemon,
+  damageDealt: number,
+  percent: number | null,
+): RecoilResult {
+  const rawDamage = calculateMoveHpEffectAmount(damageDealt, percent);
+  if (rawDamage <= 0) {
+    return { damage: 0, fainted: pokemon.hp <= 0 };
+  }
+  const damage = Math.min(pokemon.hp, rawDamage);
+  pokemon.hp = Math.max(0, pokemon.hp - rawDamage);
+  return { damage, fainted: pokemon.hp <= 0 };
+}
+
 export function applyStatChanges(
   runtimeState: BattlePokemonRuntimeState,
   statChanges: MoveStatChange[],
@@ -257,6 +321,33 @@ function isVolatileEffectImmune(target: Pokemon, effect: MoveBattleEffect): bool
   switch (effect.id) {
     case 'leech-seed':
       return target.types.includes('grass');
+    default:
+      return false;
+  }
+}
+
+export function isTargetImmuneToMoveType(target: Pokemon, moveType: PokemonType): boolean {
+  return getCombinedTypeEffectiveness(moveType, target.types) === 0;
+}
+
+export function isTargetImmuneToStatusEffectFromMoveType(
+  target: Pokemon,
+  moveType: PokemonType,
+  effect: MoveStatusEffect | null,
+): boolean {
+  if (!effect) return false;
+  const statusImmuneType = SAME_TYPE_STATUS_IMMUNITY_BY_MOVE_TYPE[effect.status];
+  return statusImmuneType === moveType && target.types.includes(moveType);
+}
+
+export function isTargetImmuneToVolatileEffectFromMoveType(
+  target: Pokemon,
+  moveType: PokemonType,
+  effect: MoveBattleEffect,
+): boolean {
+  switch (effect.id) {
+    case 'leech-seed':
+      return moveType === 'grass' && target.types.includes('grass');
     default:
       return false;
   }
@@ -422,6 +513,11 @@ export function processBeforeMoveEffects(
   }
   if (!statusResult.canAct) {
     return { canAct: false, events, selfDamage: 0 };
+  }
+
+  if (runtimeState.turnFlags.flinched) {
+    runtimeState.turnFlags.flinched = false;
+    return { canAct: false, events: [...events, 'flinched'], selfDamage: 0 };
   }
 
   if (runtimeState.confusionTurnsRemaining > 0) {
