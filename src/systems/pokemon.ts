@@ -16,6 +16,7 @@
  */
 
 import type { Pokemon } from '../types/index.js';
+import { getXpToNextLevel } from './encounter.js';
 
 /** Create an empty/default Pokemon (placeholder). */
 export function createDefaultPokemon(): Pokemon {
@@ -33,7 +34,7 @@ export function createDefaultPokemon(): Pokemon {
     types: ['normal'],
     moves: [],
     xp: 0,
-    xpToNext: 100,
+    xpToNext: getXpToNextLevel(1),
     isGlitched: false,
     abilityId: null,
     natureId: null,

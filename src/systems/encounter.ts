@@ -36,6 +36,7 @@ export interface EncounterTable {
 }
 
 const DEFAULT_ENCOUNTER_RATE = 0.10;
+const TRAINER_XP_MULTIPLIER = 1.5;
 
 /** All encounter tables keyed by area/map ID, loaded from JSON. */
 const encounterTables: Record<string, EncounterTable> = encounterTablesJson as Record<string, EncounterTable>;
@@ -128,7 +129,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     types: data.types as PokemonType[],
     moves,
     xp: 0,
-    xpToNext: level * 100,
+    xpToNext: getXpToNextLevel(level),
     isGlitched: false,
     abilityId,
     natureId,
@@ -210,12 +211,20 @@ function rollEncounter(table: EncounterTable, tileTypes?: string[] | null): Poke
   return null;
 }
 
-/** Calculate XP gained from defeating a wild Pokemon. */
-export function calculateXpGain(defeatedPokemon: Pokemon): number {
+/** Get the XP needed to advance from the current level to the next. */
+export function getXpToNextLevel(level: number): number {
+  return 50 + (level * 30);
+}
+
+/** Calculate XP gained from defeating a Pokemon in battle. */
+export function calculateXpGain(defeatedPokemon: Pokemon, options?: { trainerBattle?: boolean }): number {
   const data = getPokemon(defeatedPokemon.id);
   const baseExp = data?.baseExperience ?? 50;
-  // Simplified XP formula: (baseExp * level) / 7
-  return Math.floor((baseExp * defeatedPokemon.level) / 7);
+  const baseReward = Math.floor((baseExp * defeatedPokemon.level) / 5);
+  if (options?.trainerBattle) {
+    return Math.floor(baseReward * TRAINER_XP_MULTIPLIER);
+  }
+  return baseReward;
 }
 
 /** Result of a level-up check. */
@@ -232,7 +241,7 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
 
   pokemon.xp -= pokemon.xpToNext;
   pokemon.level++;
-  pokemon.xpToNext = pokemon.level * 100;
+  pokemon.xpToNext = getXpToNextLevel(pokemon.level);
 
   // Recalculate stats based on base data + nature
   const data = getPokemon(pokemon.id);

@@ -15,31 +15,6 @@ const loading = new Set<string>();
 /** Pending promises for in-flight loads. */
 const pending = new Map<string, Promise<HTMLImageElement>>();
 
-/**
- * Replace white/near-white pixels with transparency.
- * Many PokeAPI Gen 2 sprites are indexed PNGs with white backgrounds
- * and no tRNS transparency chunk.
- */
-function removeWhiteBackground(source: HTMLImageElement): HTMLImageElement {
-  const canvas = document.createElement('canvas');
-  canvas.width = source.naturalWidth;
-  canvas.height = source.naturalHeight;
-  const ctx = canvas.getContext('2d', { alpha: true })!;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(source, 0, 0);
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const data = imageData.data;
-  // Threshold: treat pixels with R,G,B all >= 248 as background white
-  for (let i = 0; i < data.length; i += 4) {
-    if (data[i] >= 248 && data[i + 1] >= 248 && data[i + 2] >= 248) {
-      data[i + 3] = 0; // set alpha to 0
-    }
-  }
-  ctx.putImageData(imageData, 0, 0);
-  const result = new Image();
-  result.src = canvas.toDataURL('image/png');
-  return result;
-}
 
 /** Load an image from a URL, returning from cache if available. */
 export async function loadImage(url: string): Promise<HTMLImageElement> {
@@ -49,7 +24,6 @@ export async function loadImage(url: string): Promise<HTMLImageElement> {
   const inflight = pending.get(url);
   if (inflight) return inflight;
 
-  const isSprite = url.includes('/sprites/pokemon/');
 
   const promise = new Promise<HTMLImageElement>((resolve, reject) => {
     loading.add(url);

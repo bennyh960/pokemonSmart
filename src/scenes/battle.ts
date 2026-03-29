@@ -427,8 +427,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     return calculateXpGain(enemy) * 3;
   }
 
+  function getDefeatXpReward(): number {
+    return calculateXpGain(enemy, { trainerBattle: isTrainerBattle });
+  }
+
   function getConsolationXpReward(partyIndex: number): number {
-    const winXp = calculateXpGain(enemy);
+    const winXp = getDefeatXpReward();
     const turns = Math.max(1, battleTurnCounts.get(partyIndex) ?? 0);
     const maxBonus = Math.max(1, Math.floor(winXp * 0.5));
     const perTurnBonus = Math.max(1, Math.floor(winXp * 0.1));
@@ -1441,7 +1445,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            xpGained = calculateXpGain(enemy);
+            xpGained = getDefeatXpReward();
             player.xp += xpGained;
             textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
             phase = 'TRAINER_NEXT_XP';
@@ -1499,7 +1503,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            xpGained = calculateXpGain(enemy); player.xp += xpGained;
+            xpGained = getDefeatXpReward(); player.xp += xpGained;
             textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
             if (isTrainerBattle && trainerData) {
               phase = 'TRAINER_REWARD';

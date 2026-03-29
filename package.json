@@ -8,10 +8,13 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "fetch-data": "tsx scripts/run-all.ts"
+    "fetch-data": "tsx scripts/run-all.ts",
+     "deploy": "gh-pages -d dist",
+     "cicd": "npm run build && npm run deploy"
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",
+    "gh-pages": "^6.3.0",
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",
     "vite": "^8.0.1",
