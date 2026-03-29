@@ -16,12 +16,14 @@
  */
 
 import type { PlayerData } from '../types/index.js';
+import { getDefaultHeroCharacterId } from '../engine/character-sprites.js';
 
 /** Create a fresh player save with default values. */
 export function createNewPlayer(name: string): PlayerData {
   return {
-    saveVersion: 2,
+    saveVersion: 4,
     name,
+    heroCharacterId: getDefaultHeroCharacterId(),
     party: [],
     boxes: Array.from({ length: 10 }, (_, i) => ({
       name: `BOX ${i + 1}`,

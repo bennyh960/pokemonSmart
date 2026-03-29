@@ -1012,6 +1012,21 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       renderables.push({
         y: player.pixelY,
         render: () => {
+          const poses = ['stand', 'walk-1', 'walk-2'];
+          const pose = poses[player.walkFrame % poses.length] || 'stand';
+          const facingDir = player.facing.replace('Arrow', '').toLowerCase();
+          const heroId = hasActiveGame() ? getPlayerData().heroCharacterId : '';
+          let heroFrame = heroId ? getCharacterFrame(heroId, facingDir, pose) : null;
+          if (!heroFrame && heroId && pose !== 'stand') {
+            heroFrame = getCharacterFrame(heroId, facingDir, 'stand');
+          }
+
+          if (heroFrame) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(heroFrame.image, heroFrame.sx, heroFrame.sy, heroFrame.w, heroFrame.h, psx, psy, TILE_SIZE, TILE_SIZE);
+            return;
+          }
+
           const spriteSheet = getPlayerSpriteSheet();
           if (spriteSheet.complete && spriteSheet.naturalWidth > 0) {
             const row = DIR_TO_ROW[player.facing] ?? 0;

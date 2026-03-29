@@ -178,6 +178,19 @@ export function getCharacterList(): CharacterInfo[] {
   return result;
 }
 
+/** Get all characters that include the given role tag. */
+export function getCharactersByRole(role: CharacterRole): CharacterInfo[] {
+  return getCharacterList().filter((character) => character.roles.includes(role));
+}
+
+/** Default hero sprite id used for new games and migrated saves. */
+export function getDefaultHeroCharacterId(): string {
+  const heroes = getCharactersByRole('hero');
+  if (heroes.length > 0) return heroes[0].id;
+  const firstCharacter = getCharacterList()[0];
+  return firstCharacter?.id ?? 'ashKetchum';
+}
+
 /** Get character info by ID. */
 export function getCharacterInfo(id: string): CharacterInfo | undefined {
   const charDef = characters.get(id);

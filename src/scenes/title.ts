@@ -76,7 +76,7 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
         // If save exists, first item is Continue, otherwise it's New Game
         const isContinue = hasSavedGame() && selectedIndex === 0;
         if (isContinue) { loadSavedGame(); stateMachine.change('OVERWORLD'); }
-        else { startNewGame(); stateMachine.change('STARTER_SELECT'); }
+        else { startNewGame(); stateMachine.change('HERO_SELECT'); }
       }
     },
     render(ctx: CanvasRenderingContext2D): void {

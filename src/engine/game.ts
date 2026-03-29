@@ -15,6 +15,8 @@ import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle.js';
 import { createOverworldScene } from '../scenes/overworld.js';
 import { createStarterSelectScene } from '../scenes/starter-select.js';
+import { createHeroSelectScene } from '../scenes/hero-select.js';
+import { createHeroNameSelectScene } from '../scenes/hero-name-select.js';
 import { createPartyScene } from '../scenes/party.js';
 import { createPokedexScene } from '../scenes/pokedex.js';
 import { createEvolutionScene } from '../scenes/evolution.js';
@@ -52,6 +54,8 @@ export function createGame(container: HTMLElement) {
   stateMachine.setOnTransition(() => input.endFrame());
 
   stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio));
+  stateMachine.register('HERO_SELECT', createHeroSelectScene(input, stateMachine));
+  stateMachine.register('HERO_NAME_SELECT', createHeroNameSelectScene(input, stateMachine));
   stateMachine.register('BATTLE', createBattleScene(input, stateMachine, canvas, audio));
   stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine, audio));
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));

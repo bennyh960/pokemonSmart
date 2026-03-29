@@ -6,7 +6,8 @@
  */
 
 import type { PlayerData } from '../types/index.js';
-import { saveGame, loadGame, hasSave } from './save.js';
+import { getDefaultHeroCharacterId } from '../engine/character-sprites.js';
+import { saveGame, loadGame, hasSave, CURRENT_SAVE_VERSION } from './save.js';
 
 /** Default save slot. */
 const SAVE_SLOT = 0;
@@ -14,8 +15,9 @@ const SAVE_SLOT = 0;
 /** Create fresh PlayerData for a new game (party empty until starter is chosen). */
 export function createNewPlayerData(): PlayerData {
   return {
-    saveVersion: 3,
+    saveVersion: CURRENT_SAVE_VERSION,
     name: 'Player',
+    heroCharacterId: getDefaultHeroCharacterId(),
     party: [],
     boxes: Array.from({ length: 10 }, (_, i) => ({
       name: `BOX ${i + 1}`,

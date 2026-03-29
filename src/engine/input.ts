@@ -16,6 +16,7 @@ interface InputState {
   /** Physical keys pressed this frame only (e.code values). */
   keysPressed: Set<string>;
   numberBuffer: string;
+  textBuffer: string;
   tapDetected: boolean;
   tapPosition: { x: number; y: number } | null;
 }
@@ -62,6 +63,7 @@ export function createInputManager(canvas: HTMLCanvasElement) {
     keysDown: new Set(),
     keysPressed: new Set(),
     numberBuffer: '',
+    textBuffer: '',
     tapDetected: false,
     tapPosition: null,
   };
@@ -87,6 +89,10 @@ export function createInputManager(canvas: HTMLCanvasElement) {
 
     if (key === 'Backspace' && state.numberBuffer.length > 0) {
       state.numberBuffer = state.numberBuffer.slice(0, -1);
+    }
+
+    if (!e.ctrlKey && !e.metaKey && !e.altKey && key.length === 1) {
+      state.textBuffer += key;
     }
 
     if (PREVENTED_CODES.has(code)) {
@@ -144,6 +150,16 @@ export function createInputManager(canvas: HTMLCanvasElement) {
       state.numberBuffer = '';
     },
 
+    /** Returns printable text typed this frame using the active keyboard layout. */
+    getTextInput(): string {
+      return state.textBuffer;
+    },
+
+    /** Clears the per-frame text buffer manually if needed. */
+    clearTextInput(): void {
+      state.textBuffer = '';
+    },
+
     /** Returns true if a tap/click happened this frame. */
     isTapped(): boolean {
       return state.tapDetected;
@@ -157,6 +173,7 @@ export function createInputManager(canvas: HTMLCanvasElement) {
     /** Call at the END of each frame to reset single-frame states. */
     endFrame(): void {
       state.keysPressed.clear();
+      state.textBuffer = '';
       state.tapDetected = false;
       state.tapPosition = null;
     },

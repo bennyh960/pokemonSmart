@@ -7,11 +7,12 @@
  */
 
 import type { PlayerData } from '../types/index.js';
+import { getDefaultHeroCharacterId, hasCharacter } from '../engine/character-sprites.js';
 
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 3;
+export const CURRENT_SAVE_VERSION = 4;
 
 /**
  * Migration functions keyed by TARGET version.
@@ -57,6 +58,13 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
       }
     }
     data.saveVersion = 3;
+  },
+  // Version 3 → 4: add selected hero sprite id for player rendering
+  4: (data) => {
+    if (typeof data.heroCharacterId !== 'string' || !data.heroCharacterId.trim() || !hasCharacter(data.heroCharacterId)) {
+      data.heroCharacterId = getDefaultHeroCharacterId();
+    }
+    data.saveVersion = 4;
   },
 };
 
