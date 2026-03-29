@@ -508,7 +508,7 @@
     },
     {
       "id": "npc-1774813040498",
-      "x": 36,
+      "x": 38,
       "y": 8,
       "facing": "up",
       "type": "trainer",
@@ -571,105 +571,6 @@
       ],
       "name": "Blue",
       "nameHe": "בלו"
-    },
-    {
-      "id": "npc-1774813724243",
-      "x": 29,
-      "y": 3,
-      "facing": "down",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "שלום!"
-        },
-        {
-          "en": "",
-          "he": "רוצה קרב פוקימונים?"
-        }
-      ],
-      "spriteType": "char_9ceeb2",
-      "party": [
-        {
-          "pokemonId": 95,
-          "level": 20,
-          "moves": []
-        },
-        {
-          "pokemonId": 208,
-          "level": 23,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 5,
-      "reward": {
-        "money": 200,
-        "items": [
-          {
-            "itemId": "paralyze-heal",
-            "quantity": 3
-          },
-          {
-            "itemId": "potion",
-            "quantity": 3
-          }
-        ]
-      },
-      "postBattleDialogue": [
-        {
-          "en": "",
-          "he": "פוקימון משותק הוא איטי מאוד"
-        },
-        {
-          "en": "",
-          "he": "ולפעמים אפילו לא מצליח להגיב"
-        },
-        {
-          "en": "",
-          "he": "כדאי לרפא אותו בהקדם"
-        }
-      ],
-      "name": "Sabrina",
-      "nameHe": "סברינה"
-    },
-    {
-      "id": "npc-1774813735196",
-      "x": 22,
-      "y": 8,
-      "facing": "up",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "char_459058",
-      "party": [
-        {
-          "pokemonId": 204,
-          "level": 18,
-          "moves": []
-        },
-        {
-          "pokemonId": 205,
-          "level": 20,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 5,
-      "reward": {
-        "money": 300,
-        "items": [
-          {
-            "itemId": "potion",
-            "quantity": 3
-          }
-        ]
-      },
-      "postBattleDialogue": [],
-      "name": "Max",
-      "nameHe": "מקס"
     }
   ],
   "music": "town",

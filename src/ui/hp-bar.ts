@@ -101,8 +101,8 @@ export function isXPAnimating(bar: HPBarState): boolean {
 }
 
 export function getPanelHeight(bar: HPBarState): number {
-  if (!bar.isPlayer) return BTL.OPP_BAR.h;
   const statusCount = countStatuses(bar);
+  if (!bar.isPlayer) return getStatusPanelHeight(BTL.OPP_BAR.h, statusCount);
   return getPlayerBarHeight(statusCount);
 }
 
@@ -115,6 +115,11 @@ export function drawPanelBackground(
 
 function countStatuses(bar: HPBarState): number {
   return bar.statChanges.length;
+}
+
+function getStatusPanelHeight(baseHeight: number, statusCount: number): number {
+  const extraRows = Math.ceil(Math.max(0, statusCount - 2) / 2);
+  return baseHeight + (extraRows * BTL.STATUS_PILL_H);
 }
 
 function drawPanel(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
@@ -222,7 +227,9 @@ function renderPanelHeader(
 
 function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBalls?: PartyBallState): void {
   const B = BTL.OPP_BAR;
-  drawPanel(ctx, B.x, B.y, B.w, B.h);
+  const statusCount = countStatuses(bar);
+  const barH = getStatusPanelHeight(B.h, statusCount);
+  drawPanel(ctx, B.x, B.y, B.w, barH);
 
   const ratio = bar.maxHp > 0 ? bar.displayHp / bar.maxHp : 0;
   const hpPct = bar.maxHp > 0 ? Math.ceil(ratio * 100) : 0;
@@ -247,9 +254,13 @@ function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState, party
   if (partyBalls) {
     renderPartyBalls(ctx, 'opponent', partyBalls.party, partyBalls.totalSlots, partyBalls.revealedCount, {
       x: B.x + B.w - BTL.PANEL_BALL_PAD_X,
-      y: B.y + B.h - BTL.BALL_SIZE - BTL.PANEL_BALL_PAD_BOTTOM,
+      y: B.y + barH - BTL.BALL_SIZE - BTL.PANEL_BALL_PAD_BOTTOM,
       align: 'right',
     });
+  }
+
+  if (statusCount > 0) {
+    renderStatusPills(ctx, bar, B.x, B.y, B.w, 'left');
   }
 }
 
@@ -304,19 +315,25 @@ function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBa
 
   // ── Status pills ──
   if (statusCount > 0) {
-    renderStatusPills(ctx, bar, barY);
+    renderStatusPills(ctx, bar, barX, barY, barW, 'right');
   }
 }
 
-function renderStatusPills(ctx: CanvasRenderingContext2D, bar: HPBarState, barY: number): void {
+function renderStatusPills(
+  ctx: CanvasRenderingContext2D,
+  bar: HPBarState,
+  barX: number,
+  barY: number,
+  barW: number,
+  align: 'left' | 'right',
+): void {
   const pills: { label: string; bgColor: string; borderColor: string; textColor: string }[] = [];
 
   // Stat changes as boost/debuff pills
   for (const change of bar.statChanges) {
     const isUp = change.stages > 0;
     const style = isUp ? STATUS_PILL_COLORS.boost : STATUS_PILL_COLORS.debuff;
-    const mult = Math.abs(change.stages) === 1 ? '' : `×${Math.pow(2, Math.abs(change.stages) - 1)}`;
-    const label = `${change.stat}${mult ? ' ' + mult : ''}`;
+    const label = `${getStatShortLabel(change.stat)} ${change.stages > 0 ? '+' : ''}${change.stages}`;
     pills.push({ label, bgColor: style.bgColor, borderColor: style.borderColor, textColor: style.textColor });
   }
 
@@ -324,9 +341,11 @@ function renderStatusPills(ctx: CanvasRenderingContext2D, bar: HPBarState, barY:
     const row = Math.floor(i / 2);
     const col = i % 2;
     const py = barY + (row === 0 ? BTL.STATUS_ROW0_DY : BTL.STATUS_ROW1_DY);
-    const px = col === 0 ? BTL.STATUS_X0 : BTL.STATUS_X1;
     const pill = pills[i];
     const pw = col === 0 ? BTL.STATUS_PILL_W : BTL.STATUS_PILL_W - 2;
+    const px = align === 'right'
+      ? barX + barW - 4 - (col === 0 ? pw : BTL.STATUS_PILL_W + BTL.STATUS_GAP + pw)
+      : barX + 4 + (col === 0 ? 0 : BTL.STATUS_PILL_W + BTL.STATUS_GAP);
 
     ctx.fillStyle = pill.bgColor;
     fillRoundRect(ctx, px, py, pw, BTL.STATUS_PILL_H, 2);
@@ -336,6 +355,27 @@ function renderStatusPills(ctx: CanvasRenderingContext2D, bar: HPBarState, barY:
     drawText(ctx, pill.label, px + pw / 2, py, {
       size: 4, color: pill.textColor, align: 'center',
     });
+  }
+}
+
+function getStatShortLabel(stat: string): string {
+  switch (stat) {
+    case 'attack':
+      return 'ATK';
+    case 'defense':
+      return 'DEF';
+    case 'specialAttack':
+      return 'SpA';
+    case 'specialDefense':
+      return 'SpD';
+    case 'speed':
+      return 'SPD';
+    case 'accuracy':
+      return 'ACC';
+    case 'evasion':
+      return 'EVA';
+    default:
+      return stat.slice(0, 3).toUpperCase();
   }
 }
 

@@ -5,10 +5,15 @@ import { getMoveByName } from '../../services/pokemon-data.js';
 import {
   applyEndOfTurnStatusEffects,
   applyMajorStatus,
+  applyStatChanges,
   createBattleRuntimeStateForPokemon,
   determineTurnOrder,
+  doesMoveHit,
+  getDisplayedStatChanges,
   getEffectiveSpeed,
+  getModifiedStatValue,
   processStartOfTurnStatus,
+  rollCriticalHit,
 } from '../battle-system.js';
 
 function createTestPokemon(overrides: Partial<Pokemon> = {}): Pokemon {
@@ -142,5 +147,47 @@ describe('battle system helpers', () => {
     expect(burnResult.damage).toBe(10);
     expect(burned.hp).toBe(70);
     expect(burnResult.message).toBe('burn');
+  });
+
+  it('applies battle-only stat stages and exposes them for UI display', () => {
+    const player = createTestPokemon({ attack: 40, speed: 60 });
+    const runtime = createBattleRuntimeStateForPokemon(player);
+
+    const changes = applyStatChanges(runtime, [
+      { stat: 'attack', stages: 1, target: 'user', chance: 100 },
+      { stat: 'speed', stages: -2, target: 'user', chance: 100 },
+    ], 'user', () => 0);
+
+    expect(changes).toHaveLength(2);
+    expect(getModifiedStatValue(player, runtime, 'attack')).toBe(60);
+    expect(getEffectiveSpeed(player, runtime)).toBe(30);
+    expect(getDisplayedStatChanges(runtime)).toEqual([
+      { stat: 'attack', stages: 1 },
+      { stat: 'speed', stages: -2 },
+    ]);
+  });
+
+  it('uses accuracy and evasion stages when checking move hit chance', () => {
+    const attacker = createBattleRuntimeStateForPokemon(createTestPokemon());
+    const defender = createBattleRuntimeStateForPokemon(createTestPokemon());
+
+    applyStatChanges(attacker, [{ stat: 'accuracy', stages: 1, target: 'user', chance: 100 }], 'user', () => 0);
+    applyStatChanges(defender, [{ stat: 'evasion', stages: 1, target: 'user', chance: 100 }], 'user', () => 0);
+
+    const boostedHit = doesMoveHit(80, attacker, createBattleRuntimeStateForPokemon(createTestPokemon()), () => 0.79);
+    expect(boostedHit).toEqual({ hit: true, chance: 100 });
+
+    const reducedHit = doesMoveHit(80, createBattleRuntimeStateForPokemon(createTestPokemon()), defender, () => 0.6);
+    expect(reducedHit.hit).toBe(false);
+    expect(reducedHit.chance).toBeLessThan(80);
+  });
+
+  it('prevents critical hits when the defender has Battle Armor', () => {
+    const defender = createTestPokemon({ id: 95, name: 'Onix', abilityId: 4 });
+    const slash = getMoveByName('slash');
+
+    expect(slash).toBeDefined();
+    expect(rollCriticalHit(slash!.id, defender, () => 0)).toBe(false);
+    expect(rollCriticalHit(slash!.id, createTestPokemon({ id: 1, name: 'Bulbasaur' }), () => 0)).toBe(true);
   });
 });

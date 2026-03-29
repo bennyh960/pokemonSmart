@@ -3,6 +3,7 @@
  */
 
 import type { Scene, Pokemon, PokemonType } from '../types/index.js';
+import type { BattleStatId } from '../types/battle-metadata.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
@@ -67,11 +68,16 @@ import { calculateCaptureChance } from '../systems/capture.js';
 import type { BattlePokemonRuntimeState } from '../systems/battle-state.js';
 import {
   applyEndOfTurnStatusEffects,
+  applyStatChanges,
   applyMajorStatus,
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
   determineTurnOrder,
+  doesMoveHit,
+  getDisplayedStatChanges,
+  getModifiedStatValue,
   processStartOfTurnStatus,
+  rollCriticalHit,
 } from '../systems/battle-system.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
@@ -128,16 +134,19 @@ export function setTrainerBattleData(
 
 function calcDamage(
   atk: Pokemon,
+  atkState: BattlePokemonRuntimeState,
   def: Pokemon,
+  defState: BattlePokemonRuntimeState,
   power: number,
   moveType: PokemonType,
   damageClass: string,
+  criticalHit = false,
 ): number {
   if (power <= 0) return 0;
   const isSpecial = damageClass === 'special';
   const burnMultiplier = damageClass === 'physical' && atk.status === 'burn' ? 0.5 : 1;
-  const attackStat = isSpecial ? atk.specialAttack : atk.attack;
-  const defenseStat = isSpecial ? def.specialDefense : def.defense;
+  const attackStat = getModifiedStatValue(atk, atkState, isSpecial ? 'specialAttack' : 'attack');
+  const defenseStat = getModifiedStatValue(def, defState, isSpecial ? 'specialDefense' : 'defense');
   let defenderMultiplier = 1;
   if (def.abilityId) {
     for (const effect of getAbilityBattleEffects(def.abilityId)) {
@@ -150,8 +159,9 @@ function calcDamage(
   const base = ((lf * power * ((attackStat * burnMultiplier) / defenseStat)) / 50) + 2;
   const eff = getCombinedTypeEffectiveness(moveType, def.types);
   const stab = atk.types.includes(moveType) ? 1.5 : 1;
+  const critMultiplier = criticalHit ? 1.5 : 1;
   const rand = 0.85 + Math.random() * 0.15;
-  return Math.max(1, Math.floor(base * eff * stab * defenderMultiplier * rand));
+  return Math.max(1, Math.floor(base * eff * stab * critMultiplier * defenderMultiplier * rand));
 }
 
 function effText(mt: PokemonType, dt: PokemonType[]): string | null {
@@ -194,6 +204,79 @@ function getTurnStatusLine(name: string, event: ReturnType<typeof processStartOf
     default:
       return null;
   }
+}
+
+function getBattleStatLabel(stat: BattleStatId): string {
+  if (isRTL()) {
+    switch (stat) {
+      case 'attack':
+        return 'התקפה';
+      case 'defense':
+        return 'הגנה';
+      case 'specialAttack':
+        return 'התקפה מיוחדת';
+      case 'specialDefense':
+        return 'הגנה מיוחדת';
+      case 'speed':
+        return 'מהירות';
+      case 'accuracy':
+        return 'דיוק';
+      case 'evasion':
+        return 'התחמקות';
+    }
+  }
+
+  switch (stat) {
+    case 'attack':
+      return 'Attack';
+    case 'defense':
+      return 'Defense';
+    case 'specialAttack':
+      return 'Sp. Atk';
+    case 'specialDefense':
+      return 'Sp. Def';
+    case 'speed':
+      return 'Speed';
+    case 'accuracy':
+      return 'Accuracy';
+    case 'evasion':
+      return 'Evasion';
+  }
+
+  return stat;
+}
+
+function getStatChangeLine(
+  name: string,
+  change: ReturnType<typeof applyStatChanges>[number],
+): string {
+  const stat = getBattleStatLabel(change.stat);
+  if (change.direction === 'rose') {
+    return t(change.sharply ? 'battle.statRoseSharply' : 'battle.statRose', { name, stat });
+  }
+  return t(change.sharply ? 'battle.statFellHarshly' : 'battle.statFell', { name, stat });
+}
+
+function normalizeBattleItemStat(stat: string): BattleStatId | null {
+  switch (stat) {
+    case 'attack':
+    case 'defense':
+    case 'specialAttack':
+    case 'specialDefense':
+    case 'speed':
+    case 'accuracy':
+    case 'evasion':
+      return stat;
+    default:
+      return null;
+  }
+}
+
+function doesAbilityAbsorbMove(target: Pokemon, moveType: PokemonType): boolean {
+  if (!target.abilityId) return false;
+  return getAbilityBattleEffects(target.abilityId).some(effect => {
+    return effect.kind === 'typeAbsorbHeal' && effect.moveTypes.includes(moveType);
+  });
 }
 
 export function createBattleScene(input: InputManager, stateMachine: StateMachine, _canvas: HTMLCanvasElement, audio: AudioManager): Scene {
@@ -240,7 +323,6 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let enemyGoesFirst = false;
   let enemySelectedMoveIndex = -1;
   let enemyAlreadyAttacked = false;
-  let playerStatStages: Record<string, number> = {};
   let turnNumber = 0;
   let lossDialogueShown = false;
   let pendingLossOutcome: LossOutcome | null = null;
@@ -258,17 +340,33 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     // Stat-boost items: modify temporary battle stages
     if (def.effect.type === 'stat-boost') {
-      const stat = def.effect.stat;
-      const current = playerStatStages[stat] || 0;
-      if (current >= 6) {
+      const stat = normalizeBattleItemStat(def.effect.stat);
+      if (!stat) {
+        textBox = createTextBox([t('battle.cantDoThat')], isRTL());
+        phase = 'USE_ITEM'; phaseTimer = 0;
+        return;
+      }
+
+      const applied = applyStatChanges(playerBattleState, [{
+        stat,
+        stages: def.effect.stages,
+        target: 'user',
+        chance: 100,
+      }], 'user');
+
+      if (applied.length === 0) {
         textBox = createTextBox([t('battle.statWontGoHigher')], isRTL());
         phase = 'USE_ITEM'; phaseTimer = 0;
         return;
       }
-      playerStatStages[stat] = Math.min(6, current + def.effect.stages);
+
       consumeItem(pd.items, itemId);
+      syncPlayerBar();
       audio.playSFX('heal');
-      textBox = createTextBox([t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) })], isRTL());
+      textBox = createTextBox([
+        t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) }),
+        ...applied.map(change => getStatChangeLine(getPokemonDisplayName(player.id), change)),
+      ], isRTL());
       phase = 'USE_ITEM'; phaseTimer = 0;
       return;
     }
@@ -424,7 +522,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     activeMoveLearningPrompt = null;
     pendingMoveLearningResolution = null;
     pendingMoveLearningPhase = null;
-    enemyGoesFirst = false; enemySelectedMoveIndex = -1; enemyAlreadyAttacked = false; playerStatStages = {};
+    enemyGoesFirst = false; enemySelectedMoveIndex = -1; enemyAlreadyAttacked = false;
     turnNumber = 0;
     pendingTurnCredit = false;
     lossDialogueShown = false;
@@ -1033,6 +1131,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     playerHpBar.level = player.level;
     playerHpBar.maxHp = player.maxHp;
     playerHpBar.currentHp = Math.max(0, Math.min(player.hp, player.maxHp));
+    playerHpBar.statChanges = getDisplayedStatChanges(playerBattleState);
     setStatus(playerHpBar, player.status ?? '');
     if (playerHpBar.displayHp > playerHpBar.maxHp) {
       playerHpBar.displayHp = playerHpBar.maxHp;
@@ -1049,6 +1148,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     enemyHpBar.level = enemy.level;
     enemyHpBar.maxHp = enemy.maxHp;
     enemyHpBar.currentHp = Math.max(0, Math.min(enemy.hp, enemy.maxHp));
+    enemyHpBar.statChanges = getDisplayedStatChanges(enemyBattleState);
     setStatus(enemyHpBar, enemy.status ?? '');
     if (enemyHpBar.displayHp > enemyHpBar.maxHp) {
       enemyHpBar.displayHp = enemyHpBar.maxHp;
@@ -1224,12 +1324,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function applyMoveImpact(
-    attacker: Pokemon,
     defender: Pokemon,
     move: Pokemon['moves'][number],
     targetBar: ReturnType<typeof createHPBar>,
     popupX: number,
     popupY: number,
+    resolvedDamage = 0,
   ): void {
     const moveData = getMove(move.id);
     const damageClass = moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status');
@@ -1256,7 +1356,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         return;
       }
 
-      const dmg = calcDamage(attacker, defender, move.power, move.type, damageClass);
+      const dmg = resolvedDamage;
+      if (dmg <= 0) return;
       defender.hp = Math.max(0, defender.hp - dmg);
       setHP(targetBar, defender.hp);
       flash = createFlash(profile.flashColor, 0.15);
@@ -1266,11 +1367,59 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
   }
 
+  function applyResolvedMoveEffects(
+    attacker: Pokemon,
+    attackerState: BattlePokemonRuntimeState,
+    attackerName: string,
+    defender: Pokemon,
+    defenderState: BattlePokemonRuntimeState,
+    defenderName: string,
+    move: Pokemon['moves'][number],
+    allowTargetEffects: boolean,
+  ): string[] {
+    const moveBattleData = getMoveBattleData(move.id);
+    if (!moveBattleData) return [];
+
+    const lines: string[] = [];
+    const userStatChanges = applyStatChanges(attackerState, moveBattleData.statChanges, 'user');
+    for (const change of userStatChanges) {
+      lines.push(getStatChangeLine(attackerName, change));
+    }
+
+    if (moveBattleData.ailment?.target === 'user') {
+      const statusResult = applyMajorStatus(attacker, attackerState, moveBattleData.ailment);
+      if (statusResult.applied) {
+        const statusLine = getStatusAppliedLine(attackerName, statusResult.status);
+        if (statusLine) lines.push(statusLine);
+      }
+    }
+
+    if (allowTargetEffects) {
+      const targetStatChanges = applyStatChanges(defenderState, moveBattleData.statChanges, 'target');
+      for (const change of targetStatChanges) {
+        lines.push(getStatChangeLine(defenderName, change));
+      }
+
+      if (moveBattleData.ailment?.target === 'target') {
+        const statusResult = applyMajorStatus(defender, defenderState, moveBattleData.ailment);
+        if (statusResult.applied) {
+          const statusLine = getStatusAppliedLine(defenderName, statusResult.status);
+          if (statusLine) lines.push(statusLine);
+        }
+      }
+    }
+
+    syncPlayerBar();
+    syncEnemyBar();
+    return lines;
+  }
+
   function playAttackAnimation(
     attackerActor: 'player' | 'enemy',
     defenderActor: 'player' | 'enemy',
     move: Pokemon['moves'][number],
     onImpact: () => void,
+    hitTarget = true,
   ): void {
     const moveData = getMove(move.id);
     const profile = getAttackAnimationProfile({
@@ -1328,7 +1477,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         onImpact();
       }),
       parallelStep(
-        move.power > 0 && !profile.selfTarget
+        move.power > 0 && hitTarget && !profile.selfTarget
           ? sequenceStep(
             tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.07, 'easeInOut'),
             tweenActorStep(defenderActor, defenderStart, 0.1, 'easeInOut'),
@@ -1362,43 +1511,64 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       m.currentPp--;
     }
 
-    const moveBattleData = getMoveBattleData(m.id);
+    const moveData = getMove(m.id);
+    const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
+    const hitResult = doesMoveHit(m.accuracy, playerBattleState, enemyBattleState);
+    const absorbed = hitResult.hit && m.power > 0 && doesAbilityAbsorbMove(enemy, m.type);
+    const criticalHit = hitResult.hit && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy) : false;
+    const resolvedDamage = hitResult.hit && m.power > 0 && !absorbed
+      ? calcDamage(player, playerBattleState, enemy, enemyBattleState, m.power, m.type, damageClass, criticalHit)
+      : 0;
+    const allowTargetEffects = hitResult.hit && !absorbed && (m.power <= 0 || resolvedDamage < enemy.hp);
+    const resolvedEffectLines = hitResult.hit
+      ? applyResolvedMoveEffects(
+        player,
+        playerBattleState,
+        attackerName,
+        enemy,
+        enemyBattleState,
+        defenderName,
+        m,
+        allowTargetEffects,
+      )
+      : [];
     const msgs: string[] = [];
     if (turnStatusLine) {
       msgs.push(turnStatusLine);
     }
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
 
-    let statusLine: string | null = null;
-    if (moveBattleData?.ailment?.target === 'target') {
-      const statusResult = applyMajorStatus(enemy, enemyBattleState, moveBattleData.ailment);
-      if (statusResult.applied) {
-        statusLine = getStatusAppliedLine(defenderName, statusResult.status);
-        setStatus(enemyHpBar, enemy.status ?? '');
-      }
-    } else if (moveBattleData?.ailment?.target === 'user') {
-      const statusResult = applyMajorStatus(player, playerBattleState, moveBattleData.ailment);
-      if (statusResult.applied) {
-        statusLine = getStatusAppliedLine(attackerName, statusResult.status);
-        setStatus(playerHpBar, player.status ?? '');
-      }
-    }
-
     if (m.power > 0) {
-      const et = effText(m.type, enemy.types);
-      if (et) msgs.push(et);
-    } else if (!statusLine) {
+      if (!hitResult.hit) {
+        msgs.push(t('battle.moveMissed', { name: attackerName }));
+      } else {
+        if (criticalHit) {
+          msgs.push(t('battle.criticalHit'));
+        }
+        const et = effText(m.type, enemy.types);
+        if (et) msgs.push(et);
+      }
+    } else if (!hitResult.hit) {
+      msgs.push(t('battle.moveMissed', { name: attackerName }));
+    } else if (resolvedEffectLines.length === 0) {
       msgs.push(t('battle.nothingHappened'));
       audio.playSFX('menu-cancel');
     }
-    if (statusLine) {
-      msgs.push(statusLine);
-    }
+    msgs.push(...resolvedEffectLines);
 
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation('player', 'enemy', m, () => {
-      applyMoveImpact(player, enemy, m, enemyHpBar, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10);
-    });
+      if (hitResult.hit) {
+        applyMoveImpact(
+          enemy,
+          m,
+          enemyHpBar,
+          BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+          BTL.OPP_SPRITE.y + 10,
+          resolvedDamage,
+        );
+      }
+    }, hitResult.hit && !absorbed && resolvedDamage > 0);
     phase = 'PLAYER_ATTACK'; phaseTimer = 0;
   }
 
@@ -1430,43 +1600,64 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       m.currentPp--;
     }
 
-    const moveBattleData = getMoveBattleData(m.id);
+    const moveData = getMove(m.id);
+    const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
+    const hitResult = doesMoveHit(m.accuracy, enemyBattleState, playerBattleState);
+    const absorbed = hitResult.hit && m.power > 0 && doesAbilityAbsorbMove(player, m.type);
+    const criticalHit = hitResult.hit && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player) : false;
+    const resolvedDamage = hitResult.hit && m.power > 0 && !absorbed
+      ? calcDamage(enemy, enemyBattleState, player, playerBattleState, m.power, m.type, damageClass, criticalHit)
+      : 0;
+    const allowTargetEffects = hitResult.hit && !absorbed && (m.power <= 0 || resolvedDamage < player.hp);
+    const resolvedEffectLines = hitResult.hit
+      ? applyResolvedMoveEffects(
+        enemy,
+        enemyBattleState,
+        attackerName,
+        player,
+        playerBattleState,
+        defenderName,
+        m,
+        allowTargetEffects,
+      )
+      : [];
     const msgs = [...prefix];
     if (turnStatusLine) {
       msgs.push(turnStatusLine);
     }
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
 
-    let statusLine: string | null = null;
-    if (moveBattleData?.ailment?.target === 'target') {
-      const statusResult = applyMajorStatus(player, playerBattleState, moveBattleData.ailment);
-      if (statusResult.applied) {
-        statusLine = getStatusAppliedLine(defenderName, statusResult.status);
-        setStatus(playerHpBar, player.status ?? '');
-      }
-    } else if (moveBattleData?.ailment?.target === 'user') {
-      const statusResult = applyMajorStatus(enemy, enemyBattleState, moveBattleData.ailment);
-      if (statusResult.applied) {
-        statusLine = getStatusAppliedLine(attackerName, statusResult.status);
-        setStatus(enemyHpBar, enemy.status ?? '');
-      }
-    }
-
     if (m.power > 0) {
-      const et = effText(m.type, player.types);
-      if (et) msgs.push(et);
-    } else if (!statusLine) {
+      if (!hitResult.hit) {
+        msgs.push(t('battle.moveMissed', { name: attackerName }));
+      } else {
+        if (criticalHit) {
+          msgs.push(t('battle.criticalHit'));
+        }
+        const et = effText(m.type, player.types);
+        if (et) msgs.push(et);
+      }
+    } else if (!hitResult.hit) {
+      msgs.push(t('battle.moveMissed', { name: attackerName }));
+    } else if (resolvedEffectLines.length === 0) {
       audio.playSFX('menu-cancel');
       msgs.push(t('battle.nothingHappened'));
     }
-    if (statusLine) {
-      msgs.push(statusLine);
-    }
+    msgs.push(...resolvedEffectLines);
 
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation('enemy', 'player', m, () => {
-      applyMoveImpact(enemy, player, m, playerHpBar, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10);
-    });
+      if (hitResult.hit) {
+        applyMoveImpact(
+          player,
+          m,
+          playerHpBar,
+          BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+          BTL.PLY_SPRITE.y + 10,
+          resolvedDamage,
+        );
+      }
+    }, hitResult.hit && !absorbed && resolvedDamage > 0);
     phase = 'ENEMY_TURN'; phaseTimer = 0;
   }
 
