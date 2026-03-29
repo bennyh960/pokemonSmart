@@ -50,6 +50,14 @@ import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import { setEvolutionData } from './evolution.js';
 import { getAttackAnimationProfile } from '../systems/move-animation.js';
+import {
+  createMoveLearningSession,
+  getMoveLearningAnnouncementLines,
+  getMoveLearningResolutionMessage,
+  setMoveLearningSession,
+  type LevelUpMoveResult,
+  type MoveLearningResolution,
+} from '../systems/move-learning.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -59,7 +67,7 @@ type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_NEXT_XP'
   | 'TRAINER_NEXT_LEVEL_UP' | 'TRAINER_NEXT_LEVEL_UP_MOVES'
   | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP' | 'TRAINER_REWARD_LEVEL_UP_MOVES'
-  | 'WAITING_BAG' | 'WAITING_PARTY' | 'SWITCH_POKEMON' | 'CAPTURE_ANIM'
+  | 'WAITING_BAG' | 'WAITING_PARTY' | 'WAITING_MOVE_LEARN' | 'SWITCH_POKEMON' | 'CAPTURE_ANIM'
   | 'PLAYER_FAINT_SWITCH' | 'TRAINER_LOSS';
 
 let pendingPlayer: Pokemon | null = null;
@@ -126,7 +134,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let captureSuccessFx: ReturnType<typeof createCaptureSuccessEffect> | null = null;
   let sendOutFx: ReturnType<typeof createSendOutEffect> | null = null;
   let attackFx: ReturnType<typeof createAttackEffect> | null = null;
-  let pendingNewMoves: number[] = [];  // moveIds learned on level-up, shown one by one
+  let pendingNewMoves: LevelUpMoveResult[] = [];
+  let activeMoveLearningPrompt: LevelUpMoveResult | null = null;
+  let pendingMoveLearningResolution: MoveLearningResolution | null = null;
+  let pendingMoveLearningPhase: BattlePhase | null = null;
   let pendingEvolution: EvolutionStep | null = null;
   let waitingForBag = false;
   let waitingForParty = false;
@@ -314,6 +325,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
     textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null; attackFx = null;
     waitingForBag = false; waitingForParty = false; previousLeadId = null;
+    pendingNewMoves = [];
+    activeMoveLearningPrompt = null;
+    pendingMoveLearningResolution = null;
+    pendingMoveLearningPhase = null;
     enemyGoesFirst = false; enemyAlreadyAttacked = false; playerStatStages = {};
     turnNumber = 0;
     pendingTurnCredit = false;
@@ -924,6 +939,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     syncPlayerBar(true);
     triggerLevelUpFx();
     pendingNewMoves = result.newMoves || [];
+    activeMoveLearningPrompt = null;
     pendingEvolution = result.evolution ?? null;
     textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
     phase = levelPhase;
@@ -944,13 +960,35 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     return true;
   }
 
-  /** Show the next "learned move" text box from pendingNewMoves. Returns true if a message was shown. */
+  function refreshPlayerMoveState(): void {
+    syncPlayerBar();
+    menu = createBattleMenu(player.moves);
+    menu.playerPokemon = player;
+    menu.party = hasActiveGame() ? getPlayerData().party : [player];
+  }
+
+  function startMoveLearning(phaseAfterResolution: BattlePhase): boolean {
+    if (!activeMoveLearningPrompt || !hasActiveGame()) return false;
+
+    const prompt = activeMoveLearningPrompt;
+    activeMoveLearningPrompt = null;
+    pendingMoveLearningResolution = null;
+    pendingMoveLearningPhase = phaseAfterResolution;
+    setPartyMode('move-learning');
+    setMoveLearningSession(createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
+      pendingMoveLearningResolution = resolution;
+    }));
+    phase = 'WAITING_MOVE_LEARN';
+    stateMachine.push('PARTY');
+    return true;
+  }
+
+  /** Show the next move-learning text box from pendingNewMoves. Returns true if a message was shown. */
   function showNextLearnedMove(movesPhase: BattlePhase): boolean {
     if (pendingNewMoves.length === 0) return false;
-    const moveId = pendingNewMoves.shift()!;
-    const moveName = getMoveDisplayName(moveId);
-    const pokeName = getPokemonDisplayName(player.id);
-    textBox = createTextBox([`${pokeName} learned ${moveName}!`], isRTL());
+    activeMoveLearningPrompt = pendingNewMoves.shift()!;
+    const lines = getMoveLearningAnnouncementLines(player.id, activeMoveLearningPrompt);
+    textBox = createTextBox(lines, isRTL());
     phase = movesPhase;
     return true;
   }
@@ -1403,6 +1441,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           // Shows "learned move" text one by one, then sends next Pokemon
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
+            if (startMoveLearning('TRAINER_NEXT_LEVEL_UP_MOVES')) break;
             if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
               if (startPendingEvolution('TRAINER_NEXT_XP')) break;
               if (player.xp > 0) {
@@ -1463,6 +1502,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           // Shows "learned move" text one by one, then awards trainer reward
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
+            if (startMoveLearning('TRAINER_REWARD_LEVEL_UP_MOVES')) break;
             if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
               if (startPendingEvolution('TRAINER_REWARD')) break;
               if (player.xp > 0) {
@@ -1505,6 +1545,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         case 'LEVEL_UP_MOVES': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
+            if (startMoveLearning('LEVEL_UP_MOVES')) break;
             if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
               if (startPendingEvolution('XP_GAIN')) break;
               if (player.xp > 0) {
@@ -1653,6 +1694,43 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           }
           if (!textBox && !animationDirector.isBusy()) {
             enemyTurn();
+          }
+          break;
+        }
+        case 'WAITING_MOVE_LEARN': {
+          if (!pendingMoveLearningResolution || !pendingMoveLearningPhase) break;
+          const resolution = pendingMoveLearningResolution;
+          const resumePhase = pendingMoveLearningPhase;
+          pendingMoveLearningResolution = null;
+          pendingMoveLearningPhase = null;
+          refreshPlayerMoveState();
+          const followUpText = getMoveLearningResolutionMessage(player.id, resolution);
+          if (followUpText) {
+            textBox = createTextBox([followUpText], isRTL());
+            phase = resumePhase;
+          } else if (!showNextLearnedMove(resumePhase)) {
+            if (resumePhase === 'TRAINER_NEXT_LEVEL_UP_MOVES') {
+              if (startPendingEvolution('TRAINER_NEXT_XP')) break;
+              if (player.xp > 0) {
+                phase = 'TRAINER_NEXT_XP';
+              } else {
+                sendOutNextTrainerPokemon();
+              }
+            } else if (resumePhase === 'TRAINER_REWARD_LEVEL_UP_MOVES') {
+              if (startPendingEvolution('TRAINER_REWARD')) break;
+              if (player.xp > 0) {
+                phase = 'TRAINER_REWARD';
+              } else {
+                awardTrainerReward();
+              }
+            } else if (resumePhase === 'LEVEL_UP_MOVES') {
+              if (startPendingEvolution('XP_GAIN')) break;
+              if (player.xp > 0) {
+                phase = 'XP_GAIN';
+              } else {
+                fade = createFade(false, 0.5); phase = 'RUN';
+              }
+            }
           }
           break;
         }

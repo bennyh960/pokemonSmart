@@ -7,20 +7,19 @@
  * from the current area's table.
  */
 
-import type { Pokemon, Move, PokemonType, MathDifficulty } from '../types/index.js';
+import type { Move, Pokemon, PokemonType } from '../types/index.js';
 import {
   getPokemon,
-  getMove,
   getLearnset,
-  movePowerToMathDifficulty,
   getRandomAbility,
   getRandomNatureId,
   getNatureMultiplier,
   getNextEvolution,
   getPokemonAbilities,
 } from '../services/pokemon-data.js';
-import type { PokemonData, MoveData, EvolutionStep } from '../services/pokemon-data.js';
+import type { PokemonData, EvolutionStep } from '../services/pokemon-data.js';
 import encounterTablesJson from '../data/encounter-tables.json';
+import { createMoveFromId, MAX_POKEMON_MOVES, type LevelUpMoveResult } from './move-learning.js';
 
 /** A single entry in an encounter table. */
 export interface EncounterEntry {
@@ -53,20 +52,6 @@ function randInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-/** Convert a MoveData from the data service into a game Move. */
-function moveDataToMove(md: MoveData): Move {
-  return {
-    id: md.id,
-    name: md.name.en,
-    type: md.type as PokemonType,
-    power: md.power ?? 0,
-    accuracy: md.accuracy ?? 100,
-    pp: md.pp,
-    currentPp: md.pp,
-    mathDifficulty: movePowerToMathDifficulty(md.power) as MathDifficulty,
-  };
-}
-
 /** Calculate a stat value based on base stat, level, and nature multiplier. */
 function calcStat(baseStat: number, level: number, isHp: boolean, natureMultiplier = 1): number {
   if (isHp) {
@@ -96,8 +81,8 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
   if (moveIds) {
     // Explicit moves provided (e.g. trainer Pokemon) — use them directly
     for (const id of moveIds) {
-      const md = getMove(id);
-      if (md) moves.push(moveDataToMove(md));
+      const move = createMoveFromId(id);
+      if (move) moves.push(move);
     }
   }
 
@@ -108,8 +93,8 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     // Take the last 4 moves (most recently learned by level) for wild/NPC Pokemon
     const selected = eligible.slice(-4);
     for (const entry of selected) {
-      const md = getMove(entry.moveId);
-      if (md) moves.push(moveDataToMove(md));
+      const move = createMoveFromId(entry.moveId);
+      if (move) moves.push(move);
     }
   }
 
@@ -118,15 +103,15 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     const primaryType = data.types[0] || 'normal';
     const ids = defaultMovesByType[primaryType] || defaultMovesByType['normal'];
     for (const id of ids) {
-      const md = getMove(id);
-      if (md) moves.push(moveDataToMove(md));
+      const move = createMoveFromId(id);
+      if (move) moves.push(move);
     }
   }
 
   // Always ensure at least Tackle
   if (moves.length === 0) {
-    const tackle = getMove(33);
-    if (tackle) moves.push(moveDataToMove(tackle));
+    const tackle = createMoveFromId(33);
+    if (tackle) moves.push(tackle);
   }
 
   return {
@@ -237,7 +222,7 @@ export function calculateXpGain(defeatedPokemon: Pokemon): number {
 export interface LevelUpResult {
   leveledUp: boolean;
   newLevel?: number;
-  newMoves?: number[];  // moveIds of newly learned moves
+  newMoves?: LevelUpMoveResult[];
   evolution?: EvolutionStep;
 }
 
@@ -264,7 +249,7 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
   }
 
   // Check learnset for new moves at this level
-  const newMoves: number[] = [];
+  const newMoves: LevelUpMoveResult[] = [];
   const learnset = getLearnset(pokemon.id);
   const movesAtLevel = learnset.filter(entry => entry.levelLearned === pokemon.level);
 
@@ -272,19 +257,21 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
     // Skip if already knows this move
     if (pokemon.moves.some(m => m.id === entry.moveId)) continue;
 
-    if (pokemon.moves.length < 8) {
-      const md = getMove(entry.moveId);
-      if (md) {
-        pokemon.moves.push(moveDataToMove(md));
-        newMoves.push(entry.moveId);
+    if (pokemon.moves.length < MAX_POKEMON_MOVES) {
+      const move = createMoveFromId(entry.moveId);
+      if (move) {
+        pokemon.moves.push(move);
+        newMoves.push({ moveId: entry.moveId, learned: true });
       }
+      continue;
     }
-    // If moves.length >= 8, move goes unlearned for now (TODO: prompt player to forget a move)
+
+    newMoves.push({ moveId: entry.moveId, learned: false });
   }
 
   console.log(`${pokemon.name} grew to level ${pokemon.level}!`);
   if (newMoves.length > 0) {
-    console.log(`Learned move(s): ${newMoves.join(', ')}`);
+    console.log(`Move learning events: ${newMoves.map(move => `${move.moveId}:${move.learned ? 'learned' : 'pending'}`).join(', ')}`);
   }
 
   return {

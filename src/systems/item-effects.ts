@@ -10,12 +10,14 @@ import { getItemGameData, getItemGameDataBySlug } from '../data/item-defs.js';
 import { checkAndApplyLevelUp } from './encounter.js';
 import { getPokemonDisplayName, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
+import type { LevelUpMoveResult } from './move-learning.js';
 
 export interface ItemUseResult {
   success: boolean;
   message: string;       // e.g. "Restored 20 HP!" or "Can't use on this Pokemon"
   leveledUp?: boolean;   // true if rare-candy caused a level up
   evolution?: EvolutionStep;
+  newMoves?: LevelUpMoveResult[];
 }
 
 function getItemDef(itemId: string) {
@@ -157,6 +159,7 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
           message: t('battle.levelUp', { name: getPokemonDisplayName(target.id), level: target.level }),
           leveledUp: true,
           evolution: result.evolution,
+          newMoves: result.newMoves,
         };
       }
       return { success: true, message: 'Gained experience!' };

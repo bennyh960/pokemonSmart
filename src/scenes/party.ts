@@ -18,6 +18,7 @@ import { TYPE_BADGE, getTypeName, getDamageClassLabel } from '../data/type-const
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { canUseItemOnPokemon } from '../systems/item-effects.js';
+import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } from '../systems/move-learning.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
@@ -26,7 +27,9 @@ const MAX_PARTY = 6;
 type ViewMode = 'list' | 'detail' | 'swap';
 type DetailTab = 'stats' | 'moves';
 type MoveAction = 'swap' | 'delete' | 'cancel';
-type PartyMode = 'overworld' | 'battle' | 'select-target';
+type PartyMode = 'overworld' | 'battle' | 'select-target' | 'move-learning';
+type MoveLearningConfirmAction = 'replace' | 'skip' | null;
+type DisplayMoveEntry = { move: Pokemon['moves'][number]; pending: boolean };
 
 const MOVE_ACTIONS: MoveAction[] = ['swap', 'delete', 'cancel'];
 
@@ -69,6 +72,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   let moveMessageTimer = 0;
   let moveDeleteConfirm = false;
   let moveDeleteConfirmCursor = 1; // 0 = yes, 1 = no (default to no)
+  let moveLearningActionCursor = 0;
+  let moveLearningReplaceMode = false;
+  let moveLearningConfirmAction: MoveLearningConfirmAction = null;
+  let moveLearningConfirmCursor = 1;
 
   function getParty(): Pokemon[] {
     return getPlayerData().party;
@@ -110,6 +117,39 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       return canUseItemOnPokemon(selectTargetContext.itemId, pokemon);
     }
     return true;
+  }
+
+  function isMoveLearningMode(): boolean {
+    return partyMode === 'move-learning' && getMoveLearningSession() !== null;
+  }
+
+  function getDisplayedMoves(pokemon: Pokemon): DisplayMoveEntry[] {
+    const entries = pokemon.moves.map((move) => ({ move, pending: false }));
+    const session = getMoveLearningSession();
+    if (partyMode !== 'move-learning' || !session || session.learned) {
+      return entries;
+    }
+
+    const pendingMove = createMoveFromId(session.moveId);
+    if (pendingMove) {
+      entries.push({ move: pendingMove, pending: true });
+    }
+    return entries;
+  }
+
+  function getMoveLearningActionLabels(): string[] {
+    const session = getMoveLearningSession();
+    if (!session) return [t('party.moves.cancel')];
+    if (session.learned) return [t('party.moveLearning.done')];
+    if (moveLearningReplaceMode) return [t('party.moveLearning.teachHere'), t('party.moves.cancel')];
+    return [t('party.moveLearning.replace'), t('party.moveLearning.skip')];
+  }
+
+  function completeMoveLearning(
+    resolution: { outcome: 'learned' | 'replaced' | 'skipped'; moveId: number; replacedMoveId?: number },
+  ): void {
+    resolveMoveLearningSession(resolution);
+    stateMachine.pop();
   }
 
   function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, _slotNum: number, sy: number, isSel: boolean, isSwap: boolean, disabled: boolean): void {
@@ -364,108 +404,220 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   }
 
   function renderDetailMovesTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
-    // ── Sub-header ──
+    const displayedMoves = getDisplayedMoves(pokemon);
+    const maxVisible = Math.min(displayedMoves.length, 8);
+    const scrollOffset = Math.max(0, Math.min(moveCursor - maxVisible + 1, Math.max(0, displayedMoves.length - maxVisible)));
+
     drawText(ctx, t('party.moves.battleMoves'), 228, 16, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
-    drawText(ctx, `${pokemon.moves.length} ${t('party.moves.title')}`, 12, 16, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+    drawText(ctx, `${displayedMoves.length} ${t('party.moves.title')}`, 12, 16, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
 
-    // ── Move cards: each 14px tall, 1px gap, starting at y=26 ──
-    const maxVisible = Math.min(pokemon.moves.length, 8);
+    for (let visibleIndex = 0; visibleIndex < maxVisible; visibleIndex++) {
+      const moveIndex = scrollOffset + visibleIndex;
+      const entry = displayedMoves[moveIndex];
+      if (!entry) continue;
 
-    for (let i = 0; i < maxVisible; i++) {
-      const move = pokemon.moves[i];
-      const cy = 26 + i * 15; // cardY = 26 + i*15 (14px card + 1px gap)
-      const isSelected = i === moveCursor;
-      const isSwapSource = i === moveSwapFrom;
+      const move = entry.move;
+      const cy = 26 + visibleIndex * 15;
+      const isSelected = moveIndex === moveCursor;
+      const isSwapSource = moveIndex === moveSwapFrom;
+      const borderColor = entry.pending ? '#f8c030' : (isSwapSource ? C.BORDER_SEL : C.BORDER);
 
-      // Card background (x=4, w=232, h=14)
       fillRect(ctx, 4, cy, 232, 14, isSelected ? C.CARD_SEL : C.CARD_BG);
-      drawRect(ctx, 4, cy, 232, 14, isSwapSource ? C.BORDER_SEL : C.BORDER);
+      drawRect(ctx, 4, cy, 232, 14, borderColor);
 
-      // ── Damage class dot (moved 15px right from original, now at relX=232) ──
       const moveData = getMove(move.id);
       const dc = moveData?.damageClass || (move.power > 0 ? 'physical' : 'status');
       const dcInfo = getDamageClassLabel(dc);
       ctx.beginPath();
-      ctx.arc(230, cy + 4 + 2, 2.5, 0, Math.PI * 2);
+      ctx.arc(230, cy + 6, 2.5, 0, Math.PI * 2);
       ctx.fillStyle = dcInfo.color;
       ctx.fill();
 
-      // ── Move name (relX=120, relY=+1, w=83, align=right — narrower to avoid dot overlap) ──
       const moveName = getMoveDisplayName(move.id);
       drawText(ctx, moveName, 225, cy + 1, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
 
-      // ── Type badge (relX=93, relY=+2, w=22, h=7) ──
       const typeLabel = getTypeName(move.type as PokemonType);
       const typeColor = TYPE_BADGE[move.type as PokemonType]?.color || '#888888';
-      fillRect(ctx, 4 + 93, cy + 2, 22, 7, typeColor);
-      drawText(ctx, typeLabel, 4 + 93 + 11, cy + 4, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      fillRect(ctx, 97, cy + 2, 22, 7, typeColor);
+      drawText(ctx, typeLabel, 108, cy + 4, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
-      // ── Sub-stats: fixed-width columns for acc% and pow (relY=+9, align=right) ──
       const accVal = move.accuracy > 0 ? move.accuracy : 100;
       const powVal = move.power > 0 ? move.power : 0;
-      const accStr = `${accVal}%`;
-      const powStr = `${powVal}%`;
-      // Render as two fixed-width fields with labels, right-aligned
-      drawText(ctx, `${t('party.moves.header.acc')}: ${accStr}`, 185, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
-      drawText(ctx, `${t('party.moves.header.pow')}: ${powStr}`, 225, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
+      drawText(ctx, `${t('party.moves.header.acc')}: ${accVal}%`, 185, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
+      drawText(ctx, `${t('party.moves.header.pow')}: ${powVal}%`, 225, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
 
-      // ── PP text (relX=8, relY=+2) ──
-      drawText(ctx, `${move.currentPp}/${move.pp}`, 4 + 8, cy + 2, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
-
-      // ── PP bar (relX=8, relY=+10, w=30, h=2) ──
-      fillRect(ctx, 4 + 8, cy + 10, 30, 2, C.BAR_TRACK);
+      drawText(ctx, `${move.currentPp}/${move.pp}`, 12, cy + 2, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
+      fillRect(ctx, 12, cy + 10, 30, 2, C.BAR_TRACK);
       const ppRatio = move.pp > 0 ? move.currentPp / move.pp : 0;
       const ppFillW = Math.round(30 * Math.max(0, Math.min(1, ppRatio)));
-      if (ppFillW > 0) fillRect(ctx, 4 + 8, cy + 10, ppFillW, 2, C.BAR_PP);
+      if (ppFillW > 0) fillRect(ctx, 12, cy + 10, ppFillW, 2, C.BAR_PP);
+
+      if (entry.pending) {
+        drawText(ctx, t('party.moveLearning.newTag'), 52, cy + 2, { size: 5, color: '#f8c030', font: 'monospace' });
+      }
     }
 
-    // ── Action menu overlay with move info ──
-    if (moveActionMenuOpen) {
+    const selectedEntry = displayedMoves[moveCursor];
+
+    if (isMoveLearningMode() && selectedEntry) {
+      const session = getMoveLearningSession()!;
+      const move = selectedEntry.move;
+      const moveData = getMove(move.id);
+      const dc = moveData?.damageClass || (move.power > 0 ? 'physical' : 'status');
+      const dcInfo = getDamageClassLabel(dc);
+      const pendingMove = createMoveFromId(session.moveId);
+      const pendingMoveName = pendingMove ? getMoveDisplayName(pendingMove.id) : '???';
+
+      const mx = 8, my = 20, mw = 224, mh = 126;
+      fillRect(ctx, 0, 14, 240, 136, '#000000aa');
+      fillRect(ctx, mx, my, mw, mh, C.BG);
+      drawRect(ctx, mx, my, mw, mh, '#2a6a40');
+
+      const moveName = getMoveDisplayName(move.id);
+      drawText(ctx, moveName, mx + mw - 6, my + 4, { size: 8, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+      ctx.beginPath();
+      ctx.arc(mx + mw - 8 - moveName.length * 5, my + 8, 3, 0, Math.PI * 2);
+      ctx.fillStyle = dcInfo.color;
+      ctx.fill();
+
+      const typeLabel = getTypeName(move.type as PokemonType);
+      const typeColor = TYPE_BADGE[move.type as PokemonType]?.color || '#888888';
+      fillRect(ctx, mx + 6, my + 4, 26, 9, typeColor);
+      drawText(ctx, typeLabel, mx + 19, my + 5, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+
+      const extraHeader = !session.learned && pendingMove
+        ? t(moveLearningReplaceMode ? 'party.moveLearning.replacePrompt' : 'party.moveLearning.newMoveLine', { move: pendingMoveName })
+        : '';
+      if (extraHeader) {
+        drawText(ctx, extraHeader, mx + mw / 2, my + 16, {
+          size: 6, color: '#f8c030', font: 'monospace', align: 'center',
+        });
+      }
+
+      const statsY = my + (extraHeader ? 28 : 18);
+      fillRect(ctx, mx + 4, statsY, mw - 8, 1, C.SEP);
+      const ry = statsY + 3;
+      drawText(ctx, dcInfo.label, mx + mw - 6, ry, { size: 6, color: dcInfo.color, font: 'monospace', align: 'right' });
+      drawText(ctx, `${t('party.moves.header.pow')}: ${move.power > 0 ? move.power : 0}`, mx + mw - 60, ry, {
+        size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right',
+      });
+      drawText(ctx, `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : 100}%`, mx + mw - 110, ry, {
+        size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right',
+      });
+      drawText(ctx, `PP: ${move.currentPp}/${move.pp}`, mx + 6, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
+
+      const descY = statsY + 14;
+      fillRect(ctx, mx + 4, descY - 2, mw - 8, 1, C.SEP);
+      const desc = moveData?.description || '';
+      if (desc) {
+        const maxChars = 38;
+        const words = desc.split(' ');
+        let line = '';
+        let dy = descY + 2;
+        for (const word of words) {
+          const test = line ? `${line} ${word}` : word;
+          if (test.length > maxChars && line) {
+            drawText(ctx, line, mx + 6, dy, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+            dy += 8;
+            line = word;
+          } else {
+            line = test;
+          }
+        }
+        if (line) drawText(ctx, line, mx + 6, dy, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+      }
+
+      const btnY = my + mh - 16;
+      fillRect(ctx, mx + 4, btnY - 2, mw - 8, 1, C.SEP);
+      const actionLabels = getMoveLearningActionLabels();
+      const btnW = Math.floor((mw - 16) / actionLabels.length);
+      for (let i = 0; i < actionLabels.length; i++) {
+        const isSel = i === moveLearningActionCursor;
+        const bx = mx + 6 + i * btnW;
+        if (isSel) {
+          fillRect(ctx, bx, btnY, btnW - 4, 12, C.CARD_SEL);
+          drawRect(ctx, bx, btnY, btnW - 4, 12, '#2a6a40');
+        }
+        drawText(ctx, actionLabels[i], bx + (btnW - 4) / 2, btnY + 2, {
+          size: 7, color: isSel ? C.TEXT_PRI : C.TEXT_MUT, font: 'monospace', align: 'center',
+        });
+      }
+
+      if (moveLearningConfirmAction) {
+        const oldMove = pokemon.moves[Math.min(moveCursor, pokemon.moves.length - 1)];
+        const oldMoveName = oldMove ? getMoveDisplayName(oldMove.id) : '???';
+        const confirmKey = moveLearningConfirmAction === 'replace'
+          ? 'party.moveLearning.replaceConfirm'
+          : 'party.moveLearning.skipConfirm';
+        const warningKey = moveLearningConfirmAction === 'replace'
+          ? 'party.moveLearning.replaceWarning'
+          : 'party.moveLearning.skipWarning';
+
+        fillRect(ctx, 0, 0, 240, 160, '#000000aa');
+        const dx = 28, dy = 50, dw = 184, dh = 52;
+        fillRect(ctx, dx, dy, dw, dh, C.BG);
+        drawRect(ctx, dx, dy, dw, dh, moveLearningConfirmAction === 'replace' ? '#f8c030' : '#cc4444');
+        drawText(ctx, t(confirmKey, { move: pendingMoveName, oldMove: oldMoveName }), dx + dw / 2, dy + 8, {
+          size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center',
+        });
+        drawText(ctx, t(warningKey), dx + dw / 2, dy + 20, {
+          size: 6,
+          color: moveLearningConfirmAction === 'replace' ? '#f8c030' : '#ff8888',
+          font: 'monospace',
+          align: 'center',
+        });
+        const confirmBtnW = 60, confirmBtnH = 12, btnGap = 20;
+        const yesX = dx + dw / 2 - confirmBtnW - btnGap / 2;
+        const noX = dx + dw / 2 + btnGap / 2;
+        const confirmBtnY = dy + 34;
+        const yesSelected = moveLearningConfirmCursor === 0;
+        fillRect(ctx, yesX, confirmBtnY, confirmBtnW, confirmBtnH, yesSelected ? '#2a6a40' : '#333333');
+        drawRect(ctx, yesX, confirmBtnY, confirmBtnW, confirmBtnH, '#2a6a40');
+        drawText(ctx, t('party.moves.forgetYes'), yesX + confirmBtnW / 2, confirmBtnY + 2, {
+          size: 7, color: yesSelected ? '#ffffff' : '#888888', font: 'monospace', align: 'center',
+        });
+        fillRect(ctx, noX, confirmBtnY, confirmBtnW, confirmBtnH, !yesSelected ? '#cc4444' : '#333333');
+        drawRect(ctx, noX, confirmBtnY, confirmBtnW, confirmBtnH, '#cc4444');
+        drawText(ctx, t('party.moves.forgetNo'), noX + confirmBtnW / 2, confirmBtnY + 2, {
+          size: 7, color: !yesSelected ? '#ffffff' : '#888888', font: 'monospace', align: 'center',
+        });
+      }
+    } else if (moveActionMenuOpen) {
       const move = pokemon.moves[moveCursor];
       const moveData = move ? getMove(move.id) : undefined;
       const dc = moveData?.damageClass || (move?.power > 0 ? 'physical' : 'status');
       const dcInfo = getDamageClassLabel(dc);
 
-      // Full-width modal covering content area
       const mx = 8, my = 20, mw = 224, mh = 126;
-      // Dark overlay behind
       fillRect(ctx, 0, 14, 240, 136, '#000000aa');
-      // Modal background
       fillRect(ctx, mx, my, mw, mh, C.BG);
       drawRect(ctx, mx, my, mw, mh, '#2a6a40');
 
       if (move) {
-        // ── Move name (large) + damage class dot ──
         const moveName = getMoveDisplayName(move.id);
         drawText(ctx, moveName, mx + mw - 6, my + 4, { size: 8, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
-        // Class dot next to name
         ctx.beginPath();
         ctx.arc(mx + mw - 8 - moveName.length * 5, my + 8, 3, 0, Math.PI * 2);
         ctx.fillStyle = dcInfo.color;
         ctx.fill();
 
-        // ── Type badge ──
         const typeLabel = getTypeName(move.type as PokemonType);
         const typeColor = TYPE_BADGE[move.type as PokemonType]?.color || '#888888';
         fillRect(ctx, mx + 6, my + 4, 26, 9, typeColor);
-        drawText(ctx, typeLabel, mx + 6 + 13, my + 5, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+        drawText(ctx, typeLabel, mx + 19, my + 5, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
-        // ── Stats row: Class | Power | Accuracy | PP ──
         const statsY = my + 18;
         fillRect(ctx, mx + 4, statsY, mw - 8, 1, C.SEP);
         const ry = statsY + 3;
-        // Class label
         drawText(ctx, dcInfo.label, mx + mw - 6, ry, { size: 6, color: dcInfo.color, font: 'monospace', align: 'right' });
-        // Power
-        const powVal = move.power > 0 ? `${move.power}` : '0';
-        drawText(ctx, `${t('party.moves.header.pow')}: ${powVal}`, mx + mw - 60, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
-        // Accuracy
-        const accVal = move.accuracy > 0 ? move.accuracy : 100;
-        drawText(ctx, `${t('party.moves.header.acc')}: ${accVal}%`, mx + mw - 110, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
-        // PP
+        drawText(ctx, `${t('party.moves.header.pow')}: ${move.power > 0 ? move.power : 0}`, mx + mw - 60, ry, {
+          size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right',
+        });
+        drawText(ctx, `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : 100}%`, mx + mw - 110, ry, {
+          size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right',
+        });
         drawText(ctx, `PP: ${move.currentPp}/${move.pp}`, mx + 6, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
 
-        // ── Description (word-wrapped, English from API) ──
         const descY = statsY + 14;
         fillRect(ctx, mx + 4, descY - 2, mw - 8, 1, C.SEP);
         const desc = moveData?.description || '';
@@ -475,7 +627,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           let line = '';
           let dy = descY + 2;
           for (const word of words) {
-            const test = line ? line + ' ' + word : word;
+            const test = line ? `${line} ${word}` : word;
             if (test.length > maxChars && line) {
               drawText(ctx, line, mx + 6, dy, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
               dy += 8;
@@ -484,13 +636,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
               line = test;
             }
           }
-          if (line) {
-            drawText(ctx, line, mx + 6, dy, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-          }
+          if (line) drawText(ctx, line, mx + 6, dy, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
         }
       }
 
-      // ── Action buttons at bottom of modal ──
       const btnY = my + mh - 16;
       fillRect(ctx, mx + 4, btnY - 2, mw - 8, 1, C.SEP);
       const btnW = Math.floor((mw - 16) / MOVE_ACTIONS.length);
@@ -498,41 +647,32 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         const action = MOVE_ACTIONS[i];
         const isSel = i === moveActionCursor;
         const bx = mx + 6 + i * btnW;
-
         if (isSel) {
           fillRect(ctx, bx, btnY, btnW - 4, 12, C.CARD_SEL);
           drawRect(ctx, bx, btnY, btnW - 4, 12, '#2a6a40');
         }
-
-        let label: string;
-        if (action === 'swap') label = t('party.moves.swap');
-        else if (action === 'delete') label = t('party.moves.delete');
-        else label = t('party.moves.cancel');
-
+        const label = action === 'swap' ? t('party.moves.swap')
+          : action === 'delete' ? t('party.moves.delete')
+          : t('party.moves.cancel');
         drawText(ctx, label, bx + (btnW - 4) / 2, btnY + 2, {
           size: 7, color: isSel ? C.TEXT_PRI : C.TEXT_MUT, font: 'monospace', align: 'center',
         });
       }
     }
 
-    // ── Delete confirmation dialog ──
     if (moveDeleteConfirm) {
       const move = pokemon.moves[moveCursor];
       const moveName = move ? getMoveDisplayName(move.id) : '???';
-      // Overlay
       fillRect(ctx, 0, 0, 240, 160, '#000000aa');
-      // Dialog box
       const dx = 30, dy = 50, dw = 180, dh = 50;
       fillRect(ctx, dx, dy, dw, dh, C.BG);
       drawRect(ctx, dx, dy, dw, dh, '#cc4444');
-      // Confirm text
       drawText(ctx, t('party.moves.forgetConfirm', { move: moveName }), dx + dw / 2, dy + 8, {
         size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center',
       });
       drawText(ctx, t('party.moves.forgetWarning'), dx + dw / 2, dy + 20, {
         size: 6, color: '#ff8888', font: 'monospace', align: 'center',
       });
-      // Yes / No buttons
       const btnW = 60, btnH = 12, btnGap = 20;
       const yesX = dx + dw / 2 - btnW - btnGap / 2;
       const noX = dx + dw / 2 + btnGap / 2;
@@ -550,7 +690,6 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       });
     }
 
-    // ── Temporary message ──
     if (moveMessage && moveMessageTimer > 0) {
       fillRect(ctx, 8, 136, 224, 10, '#3a1a1a');
       drawText(ctx, moveMessage, 120, 137, { size: 7, color: '#ff6666', align: 'center' });
@@ -583,24 +722,26 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       renderDetailMovesTab(ctx, pokemon);
     }
 
+    const learningMode = isMoveLearningMode();
+
     // Bottom hint bar — exact from canvas_coordinates.md
     fillRect(ctx, 0, 150, 240, 10, C.BTM_BG);
     // ESC pill
     fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
     drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
     drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    drawText(ctx, learningMode ? t('party.moves.cancel') : t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     // Arrows pill
     fillRect(ctx, 62, 151, 18, 8, C.KEY_BG);
     drawRect(ctx, 62, 151, 18, 8, C.KEY_BRD);
-    drawText(ctx, '\u25c0\u25b6', 71, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, t('party.hint.switchTab'), 82, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    drawText(ctx, learningMode ? '\u25b2\u25bc' : '\u25c0\u25b6', 71, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, learningMode ? t('bag.hint.navigate') : t('party.hint.switchTab'), 82, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     // Enter pill (only on moves tab)
     if (detailTab === 'moves') {
       fillRect(ctx, 114, 151, 26, 8, C.KEY_BG);
       drawRect(ctx, 114, 151, 26, 8, C.KEY_BRD);
       drawText(ctx, 'Enter', 127, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-      drawText(ctx, t('party.hint.action'), 142, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+      drawText(ctx, learningMode ? t('party.moveLearning.actionHint') : t('party.hint.action'), 142, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     }
   }
 
@@ -616,6 +757,132 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         moveMessage = '';
         moveMessageTimer = 0;
       }
+    }
+
+    if (isMoveLearningMode()) {
+      const session = getMoveLearningSession();
+      const pendingMove = session ? createMoveFromId(session.moveId) : null;
+      if (!session || !pendingMove) {
+        completeMoveLearning({ outcome: 'skipped', moveId: session?.moveId ?? -1 });
+        return;
+      }
+
+      const displayedMoves = getDisplayedMoves(pokemon);
+      const learnedMoveIndex = session.learned
+        ? Math.max(0, pokemon.moves.findIndex((move) => move.id === session.moveId))
+        : pokemon.moves.length;
+      const maxCursor = moveLearningReplaceMode ? Math.max(0, pokemon.moves.length - 1) : Math.max(0, displayedMoves.length - 1);
+      moveCursor = Math.max(0, Math.min(moveCursor, maxCursor));
+
+      if (moveLearningConfirmAction) {
+        if (input.isKeyPressed('Escape')) {
+          moveLearningConfirmAction = null;
+          return;
+        }
+        if (input.isKeyPressed('ArrowLeft')) {
+          moveLearningConfirmCursor = 0;
+          return;
+        }
+        if (input.isKeyPressed('ArrowRight')) {
+          moveLearningConfirmCursor = 1;
+          return;
+        }
+        if (input.isKeyPressed('Enter')) {
+          if (moveLearningConfirmCursor === 0) {
+            if (moveLearningConfirmAction === 'replace') {
+              const replacedMoveId = pokemon.moves[moveCursor]?.id;
+              pokemon.moves[moveCursor] = pendingMove;
+              completeMoveLearning({ outcome: 'replaced', moveId: session.moveId, replacedMoveId });
+              return;
+            }
+            completeMoveLearning({ outcome: 'skipped', moveId: session.moveId });
+            return;
+          }
+          moveLearningConfirmAction = null;
+        }
+        return;
+      }
+
+      if (moveLearningReplaceMode) {
+        const moveCount = Math.max(1, pokemon.moves.length);
+        if (input.isKeyPressed('Escape')) {
+          moveLearningReplaceMode = false;
+          moveLearningActionCursor = 0;
+          moveCursor = learnedMoveIndex;
+          return;
+        }
+        if (input.isKeyPressed('ArrowUp')) {
+          moveCursor = moveCursor > 0 ? moveCursor - 1 : moveCount - 1;
+          return;
+        }
+        if (input.isKeyPressed('ArrowDown')) {
+          moveCursor = moveCursor < moveCount - 1 ? moveCursor + 1 : 0;
+          return;
+        }
+        if (input.isKeyPressed('ArrowLeft')) {
+          moveLearningActionCursor = 0;
+          return;
+        }
+        if (input.isKeyPressed('ArrowRight')) {
+          moveLearningActionCursor = 1;
+          return;
+        }
+        if (input.isKeyPressed('Enter')) {
+          if (moveLearningActionCursor === 0) {
+            moveLearningConfirmAction = 'replace';
+            moveLearningConfirmCursor = 1;
+          } else {
+            moveLearningReplaceMode = false;
+            moveLearningActionCursor = 0;
+            moveCursor = learnedMoveIndex;
+          }
+          return;
+        }
+        return;
+      }
+
+      const moveCount = Math.max(1, displayedMoves.length);
+      if (input.isKeyPressed('ArrowUp')) {
+        moveCursor = moveCursor > 0 ? moveCursor - 1 : moveCount - 1;
+        return;
+      }
+      if (input.isKeyPressed('ArrowDown')) {
+        moveCursor = moveCursor < moveCount - 1 ? moveCursor + 1 : 0;
+        return;
+      }
+      if (input.isKeyPressed('ArrowLeft')) {
+        const totalActions = getMoveLearningActionLabels().length;
+        moveLearningActionCursor = moveLearningActionCursor > 0 ? moveLearningActionCursor - 1 : totalActions - 1;
+        return;
+      }
+      if (input.isKeyPressed('ArrowRight')) {
+        const totalActions = getMoveLearningActionLabels().length;
+        moveLearningActionCursor = moveLearningActionCursor < totalActions - 1 ? moveLearningActionCursor + 1 : 0;
+        return;
+      }
+      if (input.isKeyPressed('Escape')) {
+        if (session.learned) {
+          completeMoveLearning({ outcome: 'learned', moveId: session.moveId });
+        } else {
+          moveLearningConfirmAction = 'skip';
+          moveLearningConfirmCursor = 1;
+        }
+        return;
+      }
+      if (input.isKeyPressed('Enter')) {
+        if (session.learned) {
+          completeMoveLearning({ outcome: 'learned', moveId: session.moveId });
+        } else if (moveLearningActionCursor === 0) {
+          moveLearningReplaceMode = true;
+          moveLearningActionCursor = 0;
+          moveCursor = 0;
+        } else {
+          moveLearningConfirmAction = 'skip';
+          moveLearningConfirmCursor = 1;
+        }
+        return;
+      }
+      return;
     }
 
     // Handle delete confirmation dialog
@@ -760,8 +1027,27 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       moveMessageTimer = 0;
       moveDeleteConfirm = false;
       moveDeleteConfirmCursor = 1;
+      moveLearningActionCursor = 0;
+      moveLearningReplaceMode = false;
+      moveLearningConfirmAction = null;
+      moveLearningConfirmCursor = 1;
       selectedPartyIndex = -1;
       loadPartySprites();
+      if (partyMode === 'move-learning') {
+        const session = getMoveLearningSession();
+        const party = getParty();
+        if (session && party[session.partyIndex]) {
+          const pokemon = party[session.partyIndex];
+          const pendingIndex = session.learned
+            ? Math.max(0, pokemon.moves.findIndex((move) => move.id === session.moveId))
+            : pokemon.moves.length;
+          cursor = session.partyIndex;
+          viewMode = 'detail';
+          detailTab = 'moves';
+          moveCursor = pendingIndex >= 0 ? pendingIndex : 0;
+        }
+        return;
+      }
       // In battle mode, ensure cursor starts on an eligible (non-fainted) Pokemon
       if (partyMode === 'battle') {
         const party = getParty();

@@ -18,6 +18,13 @@ import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../sc
 import { getPokemonDisplayName, getLocalizedName } from '../services/pokemon-data.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setEvolutionData } from './evolution.js';
+import {
+  createMoveLearningQueueState,
+  initializeMoveLearningQueue,
+  nextMoveLearningQueueStep,
+  resetMoveLearningQueueState,
+  setMoveLearningSession,
+} from '../systems/move-learning.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 
 /* ── Battle integration exports ────────────────────────────────────── */
@@ -71,6 +78,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
   let messageTimer = 0;
   let waitingForPartyTarget = false;
   let pendingOverworldItemId: string | null = null;
+  const pendingMoveLearning = createMoveLearningQueueState();
 
   function getTabItems(): { id: string; def: ItemDef; qty: number }[] {
     const player = getPlayerData();
@@ -220,6 +228,43 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
   }
 
   function update(dt: number): void {
+    if (pendingMoveLearning.partyIndex !== null) {
+      const pd = getPlayerData();
+      const target = pd.party[pendingMoveLearning.partyIndex];
+
+      if (messageTimer > 0) {
+        messageTimer -= dt;
+        if (messageTimer <= 0) message = '';
+        return;
+      }
+
+      if (!target) {
+        resetMoveLearningQueueState(pendingMoveLearning);
+        return;
+      }
+
+      const moveLearningStep = nextMoveLearningQueueStep(pendingMoveLearning, () => {
+        autoSave();
+      });
+      if (moveLearningStep.kind === 'show-message') {
+        message = moveLearningStep.message;
+        messageTimer = 2.0;
+        return;
+      }
+      if (moveLearningStep.kind === 'open-session') {
+        setPartyMode('move-learning');
+        setMoveLearningSession(moveLearningStep.session);
+        stateMachine.push('PARTY');
+        return;
+      }
+      if (moveLearningStep.kind === 'finish' && target && moveLearningStep.evolution) {
+        setEvolutionData(target, moveLearningStep.evolution);
+        stateMachine.push('EVOLUTION');
+        return;
+      }
+      return;
+    }
+
     // Handle return from party target selection
     if (waitingForPartyTarget && pendingOverworldItemId) {
       waitingForPartyTarget = false;
@@ -234,6 +279,20 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             consumeItem(pd.items, pendingOverworldItemId);
             autoSave();
             getGlobalAudio()?.playSFX('heal');
+            if (result.newMoves && result.newMoves.length > 0) {
+              const pokeName = getPokemonDisplayName(target.id);
+              initializeMoveLearningQueue(
+                pendingMoveLearning,
+                chosenIndex,
+                target.id,
+                result.newMoves,
+                result.evolution ?? null,
+              );
+              message = `${pokeName}: ${result.message}`;
+              messageTimer = 2.0;
+              pendingOverworldItemId = null;
+              return;
+            }
             if (result.evolution) {
               setEvolutionData(target, result.evolution);
               stateMachine.push('EVOLUTION');
@@ -330,6 +389,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       pendingItem = null;
       waitingForPartyTarget = false;
       pendingOverworldItemId = null;
+      resetMoveLearningQueueState(pendingMoveLearning);
     },
     exit(): void {},
     update(dt: number): void { update(dt); },
