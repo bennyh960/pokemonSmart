@@ -5,28 +5,58 @@
   "width": 8,
   "height": 8,
   "tileSize": 16,
-  "spawn": { "x": 3, "y": 7 },
+  "spawn": {
+    "x": 3,
+    "y": 7
+  },
   "transitions": [
-    { "fromX": 3, "fromY": 7, "toMapId": null, "toX": null, "toY": null, "returnToPrevious": true },
-    { "fromX": 4, "fromY": 7, "toMapId": null, "toX": null, "toY": null, "returnToPrevious": true }
+    {
+      "fromX": 3,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 4,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
   ],
   "npcs": [
     {
       "id": "dividia-h1-npc",
       "name": "River Watcher",
-      "x": 1, "y": 3, "facing": "right", "type": "npc",
+      "x": 1,
+      "y": 3,
+      "facing": "right",
+      "type": "npc",
       "dialogue": [
-        { "en": "I watch the river from my window every day.", "he": "" },
-        { "en": "It divides the city, but the bridges unite us!", "he": "" },
-        { "en": "Did you know division and fractions are the same thing?", "he": "" }
+        {
+          "en": "I watch the river from my window every day.",
+          "he": ""
+        },
+        {
+          "en": "It divides the city, but the bridges unite us!",
+          "he": ""
+        },
+        {
+          "en": "Did you know division and fractions are the same thing?",
+          "he": ""
+        }
       ],
       "spriteType": "npc-m"
     }
   ],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": null
+,
   "tiles": [
-    ["wall","pic1","flh1","wall","wall","pic2","wall","wall"],
+    ["wall","pic1","wall","wall","wall","pic2","wall","wall"],
     ["wall","wall","wall","wall","wall","wall","wall","wall"],
     ["d","d","d","d","d","d","d","d"],
     ["d","d","d","d","d","d","d","d"],
@@ -36,10 +66,30 @@
     ["d","d","d","d","d","d","d","d"]
   ],
   "objects": [
-    { "key": "library1", "x": 0, "y": 0 },
-    { "key": "df1", "x": 4, "y": 0 },
-    { "key": "tr1", "x": 7, "y": 0 },
-    { "key": "ch2", "x": 6, "y": 2 },
-    { "key": "ctc", "x": 4, "y": 5 }
+    {
+      "key": "library1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "df1",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "tr1",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "ch2",
+      "x": 6,
+      "y": 2
+    },
+    {
+      "key": "ctc",
+      "x": 4,
+      "y": 5
+    }
   ]
 }

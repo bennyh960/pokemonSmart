@@ -154,8 +154,8 @@
       },
       {
         "pokemonId": 208,
-        "minLevel": 20,
-        "maxLevel": 22,
+        "minLevel": 15,
+        "maxLevel": 18,
         "weight": 2
       }
     ]

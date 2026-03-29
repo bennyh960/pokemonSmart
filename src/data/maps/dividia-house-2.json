@@ -5,50 +5,121 @@
   "width": 8,
   "height": 8,
   "tileSize": 16,
-  "spawn": { "x": 3, "y": 7 },
+  "spawn": {
+    "x": 3,
+    "y": 7
+  },
   "transitions": [
-    { "fromX": 3, "fromY": 7, "toMapId": null, "toX": null, "toY": null, "returnToPrevious": true },
-    { "fromX": 4, "fromY": 7, "toMapId": null, "toX": null, "toY": null, "returnToPrevious": true }
+    {
+      "fromX": 3,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 4,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
   ],
   "npcs": [
     {
       "id": "dividia-h2-dad",
       "name": "Father Numer",
-      "x": 5, "y": 3, "facing": "left", "type": "npc",
+      "x": 5,
+      "y": 3,
+      "facing": "left",
+      "type": "npc",
       "dialogue": [
-        { "en": "My wife and I divided the chores equally.", "he": "" },
-        { "en": "She cooks, I clean. Fair division!", "he": "" }
+        {
+          "en": "My wife and I divided the chores equally.",
+          "he": ""
+        },
+        {
+          "en": "She cooks, I clean. Fair division!",
+          "he": ""
+        }
       ],
       "spriteType": "npc-m"
     },
     {
       "id": "dividia-h2-mom",
       "name": "Mother Denom",
-      "x": 2, "y": 5, "facing": "right", "type": "npc",
+      "x": 2,
+      "y": 5,
+      "facing": "right",
+      "type": "npc",
       "dialogue": [
-        { "en": "Our family motto: divide and share!", "he": "" },
-        { "en": "Would you like a tip? Poison types are weak to Ground moves.", "he": "" }
+        {
+          "en": "Our family motto: divide and share!",
+          "he": ""
+        },
+        {
+          "en": "Would you like a tip? Poison types are weak to Ground moves.",
+          "he": ""
+        }
       ],
       "spriteType": "npc-f"
     }
   ],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": null
+,
   "tiles": [
-    ["shelf1","wall","tv1","wall","pic1","wall","books","shelf1"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["fh1","fh2","fh1","fh2","fh1","fh2","fh1","fh2"],
-    ["fh2","fh1","fh2","fh1","fh2","fh1","fh2","fh1"],
-    ["fh1","fh2","ca1tl","ca1t","ca1tr","fh2","fh1","fh2"],
-    ["fh2","fh1","ca1l","ca1c","ca1r","fh1","fh2","fh1"],
-    ["fh1","fh2","ca1bl","ca1b","ca1br","fh2","fh1","fh2"],
-    ["fh2","fh1","fh2","fh1","fh2","fh1","fh2","fh1"]
+    ["shelf1","wall","tv1","wall","fh1","fh1","books","shelf1"],
+    ["wall","wall","fh1","fh1","fh1","fh1","wall","wall"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","ca1tl","ca1t","ca1tr","fh1","fh1","fh1"],
+    ["fh1","fh1","ca1l","ca1c","ca1r","fh1","fh1","fh1"],
+    ["fh1","fh1","ca1bl","ca1b","ca1br","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"]
   ],
   "objects": [
-    { "key": "library1", "x": 0, "y": 0 },
-    { "key": "dt1", "x": 2, "y": 0 },
-    { "key": "library1", "x": 6, "y": 0 },
-    { "key": "ch1", "x": 0, "y": 2 },
-    { "key": "ctc", "x": 3, "y": 5 }
+    {
+      "key": "library1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "dt1",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "library1",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "ch1",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "key": "ctc",
+      "x": 3,
+      "y": 5
+    },
+    {
+      "key": "chair",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "box1",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "key": "box1",
+      "x": 4,
+      "y": 0
+    }
   ]
 }

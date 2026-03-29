@@ -1,5 +1,11 @@
 import type { Pokemon } from '../types/index.js';
-import type { BattleStatId, MajorStatusId, MoveStatChange, MoveStatusEffect } from '../types/battle-metadata.js';
+import type {
+  BattleStatId,
+  MajorStatusId,
+  MoveBattleEffect,
+  MoveStatChange,
+  MoveStatusEffect,
+} from '../types/battle-metadata.js';
 import type { BattlePokemonRuntimeState } from './battle-state.js';
 import { applyBattleStatDelta, createBattlePokemonRuntimeState } from './battle-state.js';
 import { getAbilityBattleEffects, getMoveBattleData } from '../services/pokemon-data.js';
@@ -15,6 +21,21 @@ export interface TurnOrderDecision {
 export interface TurnStartStatusResult {
   canAct: boolean;
   event: 'woke-up' | 'fast-asleep' | 'thawed-out' | 'frozen-solid' | 'fully-paralyzed' | null;
+}
+
+export interface BeforeMoveEffectResult {
+  canAct: boolean;
+  events: Array<
+    | 'woke-up'
+    | 'fast-asleep'
+    | 'thawed-out'
+    | 'frozen-solid'
+    | 'fully-paralyzed'
+    | 'confused'
+    | 'snapped-out'
+    | 'hurt-itself-confusion'
+  >;
+  selfDamage: number;
 }
 
 export interface StatusApplicationResult {
@@ -42,6 +63,20 @@ export interface AppliedStatChange {
 export interface MoveHitResult {
   hit: boolean;
   chance: number;
+}
+
+export interface AppliedVolatileEffect {
+  id: MoveBattleEffect['id'];
+  target: 'user' | 'target';
+  applied: boolean;
+  reason: 'applied' | 'already-active' | 'immune' | 'chance-failed';
+}
+
+export interface LeechSeedResult {
+  applied: boolean;
+  damage: number;
+  healed: number;
+  fainted: boolean;
 }
 
 function randomTurnCount(minTurns: number, maxTurns: number, random: () => number): number {
@@ -136,6 +171,17 @@ export function getDisplayedStatChanges(
     .map(([stat, percent]) => ({ stat, stages: percent / 50 }));
 }
 
+export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeState): string[] {
+  const effects: string[] = [];
+  if (runtimeState.confusionTurnsRemaining > 0) {
+    effects.push('confuse');
+  }
+  if (runtimeState.leechSeeded) {
+    effects.push('seed');
+  }
+  return effects;
+}
+
 export function applyStatChanges(
   runtimeState: BattlePokemonRuntimeState,
   statChanges: MoveStatChange[],
@@ -200,6 +246,68 @@ export function rollCriticalHit(
   return (random() * 100) < chance;
 }
 
+function getEffectDurationRange(effect: MoveBattleEffect): { min: number; max: number } {
+  return {
+    min: effect.minTurns ?? 2,
+    max: effect.maxTurns ?? 5,
+  };
+}
+
+function isVolatileEffectImmune(target: Pokemon, effect: MoveBattleEffect): boolean {
+  switch (effect.id) {
+    case 'leech-seed':
+      return target.types.includes('grass');
+    default:
+      return false;
+  }
+}
+
+export function applyVolatileMoveEffects(
+  target: Pokemon,
+  runtimeState: BattlePokemonRuntimeState,
+  effects: MoveBattleEffect[],
+  effectTarget: 'user' | 'target',
+  random: () => number = Math.random,
+): AppliedVolatileEffect[] {
+  const applied: AppliedVolatileEffect[] = [];
+
+  for (const effect of effects) {
+    if (effect.target !== effectTarget) continue;
+    if ((random() * 100) >= effect.chance) {
+      applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'chance-failed' });
+      continue;
+    }
+    if (isVolatileEffectImmune(target, effect)) {
+      applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'immune' });
+      continue;
+    }
+
+    switch (effect.id) {
+      case 'confusion': {
+        if (runtimeState.confusionTurnsRemaining > 0) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        const { min, max } = getEffectDurationRange(effect);
+        runtimeState.confusionTurnsRemaining = randomTurnCount(min, max, random);
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
+      case 'leech-seed': {
+        if (runtimeState.leechSeeded) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.leechSeeded = true;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
+    }
+  }
+
+  return applied;
+}
+
 export function determineTurnOrder(
   player: Pokemon,
   playerRuntimeState: BattlePokemonRuntimeState,
@@ -251,6 +359,20 @@ function clearMajorStatus(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeSt
   runtimeState.badlyPoisonTurns = 0;
 }
 
+export function calculateConfusionSelfHitDamage(
+  pokemon: Pokemon,
+  runtimeState: BattlePokemonRuntimeState,
+  random: () => number = Math.random,
+): number {
+  const burnMultiplier = pokemon.status === 'burn' ? 0.5 : 1;
+  const attackStat = getModifiedStatValue(pokemon, runtimeState, 'attack') * burnMultiplier;
+  const defenseStat = getModifiedStatValue(pokemon, runtimeState, 'defense');
+  const lf = ((2 * pokemon.level) / 5) + 2;
+  const base = ((lf * 40 * (attackStat / defenseStat)) / 50) + 2;
+  const rand = 0.85 + (random() * 0.15);
+  return Math.max(1, Math.floor(base * rand));
+}
+
 export function processStartOfTurnStatus(
   pokemon: Pokemon,
   runtimeState: BattlePokemonRuntimeState,
@@ -286,6 +408,38 @@ export function processStartOfTurnStatus(
     default:
       return { canAct: true, event: null };
   }
+}
+
+export function processBeforeMoveEffects(
+  pokemon: Pokemon,
+  runtimeState: BattlePokemonRuntimeState,
+  random: () => number = Math.random,
+): BeforeMoveEffectResult {
+  const statusResult = processStartOfTurnStatus(pokemon, runtimeState, random);
+  const events: BeforeMoveEffectResult['events'] = [];
+  if (statusResult.event) {
+    events.push(statusResult.event);
+  }
+  if (!statusResult.canAct) {
+    return { canAct: false, events, selfDamage: 0 };
+  }
+
+  if (runtimeState.confusionTurnsRemaining > 0) {
+    runtimeState.confusionTurnsRemaining--;
+    if (runtimeState.confusionTurnsRemaining <= 0) {
+      return { canAct: true, events: [...events, 'snapped-out'], selfDamage: 0 };
+    }
+
+    events.push('confused');
+    if (random() < (1 / 3)) {
+      const selfDamage = calculateConfusionSelfHitDamage(pokemon, runtimeState, random);
+      pokemon.hp = Math.max(0, pokemon.hp - selfDamage);
+      events.push('hurt-itself-confusion');
+      return { canAct: false, events, selfDamage };
+    }
+  }
+
+  return { canAct: true, events, selfDamage: 0 };
 }
 
 export function applyMajorStatus(
@@ -343,4 +497,20 @@ export function applyEndOfTurnStatusEffects(
     default:
       return { damage: 0, status: runtimeState.majorStatus, message: null, fainted: pokemon.hp <= 0 };
   }
+}
+
+export function applyLeechSeedEffect(
+  target: Pokemon,
+  runtimeState: BattlePokemonRuntimeState,
+  recipient: Pokemon,
+): LeechSeedResult {
+  if (!runtimeState.leechSeeded || target.hp <= 0) {
+    return { applied: false, damage: 0, healed: 0, fainted: target.hp <= 0 };
+  }
+
+  const damage = Math.max(1, Math.floor(target.maxHp / 8));
+  target.hp = Math.max(0, target.hp - damage);
+  const healed = Math.max(0, Math.min(recipient.maxHp, recipient.hp + damage) - recipient.hp);
+  recipient.hp = Math.min(recipient.maxHp, recipient.hp + damage);
+  return { applied: true, damage, healed, fainted: target.hp <= 0 };
 }

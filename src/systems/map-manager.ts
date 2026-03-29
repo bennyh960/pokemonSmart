@@ -88,7 +88,8 @@ registerMap('dividia-house-1', () => import('../data/maps/dividia-house-1.json')
 registerMap('dividia-house-2', () => import('../data/maps/dividia-house-2.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('dividia-house-3', () => import('../data/maps/dividia-house-3.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('dividia-house-4', () => import('../data/maps/dividia-house-4.json').catch(() => import('../data/maps/test-map.json')));
-registerMap('pokecenter-interior', () => import('../data/maps/pokecenter-interior.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('pokecenter-mart-interior', () => import('../data/maps/pokecenter-mart-interior.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('pokecenter-2', () => import('../data/maps/pokecenter-2.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('mart-interior', () => import('../data/maps/mart-interior.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('deep-forest', () => import('../data/maps/deep-forest.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('mountain-pass', () => import('../data/maps/mountain-pass.json').catch(() => import('../data/maps/test-map.json')));

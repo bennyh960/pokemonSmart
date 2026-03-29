@@ -8,7 +8,7 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect } from '../engine/renderer.js';
-import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, setStatus, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
+import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, setStatus, setVolatileStatuses, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import type { MainMenuChoice } from '../ui/battle-menu.js';
 import { resolveBattleBackgroundPath, type BattleBackgroundId } from '../data/battle-backgrounds.js';
@@ -68,14 +68,18 @@ import { calculateCaptureChance } from '../systems/capture.js';
 import type { BattlePokemonRuntimeState } from '../systems/battle-state.js';
 import {
   applyEndOfTurnStatusEffects,
+  applyLeechSeedEffect,
   applyStatChanges,
   applyMajorStatus,
+  applyVolatileMoveEffects,
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
   determineTurnOrder,
   doesMoveHit,
+  getDisplayedVolatileStatuses,
   getDisplayedStatChanges,
   getModifiedStatValue,
+  processBeforeMoveEffects,
   processStartOfTurnStatus,
   rollCriticalHit,
 } from '../systems/battle-system.js';
@@ -206,6 +210,40 @@ function getTurnStatusLine(name: string, event: ReturnType<typeof processStartOf
   }
 }
 
+function getTurnEffectLine(
+  name: string,
+  event: ReturnType<typeof processBeforeMoveEffects>['events'][number],
+): string | null {
+  switch (event) {
+    case 'woke-up':
+    case 'fast-asleep':
+    case 'thawed-out':
+    case 'frozen-solid':
+    case 'fully-paralyzed':
+      return getTurnStatusLine(name, event);
+    case 'confused':
+      return t('battle.confused', { name });
+    case 'snapped-out':
+      return t('battle.snappedOut', { name });
+    case 'hurt-itself-confusion':
+      return t('battle.hurtItselfConfusion', { name });
+    default:
+      return null;
+  }
+}
+
+function getMoveEffectAppliedLine(
+  name: string,
+  effectId: 'confusion' | 'leech-seed',
+): string {
+  switch (effectId) {
+    case 'confusion':
+      return t('battle.confused', { name });
+    case 'leech-seed':
+      return t('battle.leechSeeded', { name });
+  }
+}
+
 function getBattleStatLabel(stat: BattleStatId): string {
   if (isRTL()) {
     switch (stat) {
@@ -299,7 +337,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let captureSuccessFx: ReturnType<typeof createCaptureSuccessEffect> | null = null;
   let sendOutFx: ReturnType<typeof createSendOutEffect> | null = null;
   let attackFx: ReturnType<typeof createAttackEffect> | null = null;
-  let statusTurnFx: ReturnType<typeof createStatusTurnEffect> | null = null;
+  let statusTurnFx: Array<ReturnType<typeof createStatusTurnEffect>> = [];
   let pendingNewMoves: LevelUpMoveResult[] = [];
   let activeMoveLearningPrompt: LevelUpMoveResult | null = null;
   let pendingMoveLearningResolution: MoveLearningResolution | null = null;
@@ -405,6 +443,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp,
       BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
     setStatus(enemyHpBar, enemy.status ?? '');
+    setVolatileStatuses(enemyHpBar, getDisplayedVolatileStatuses(enemyBattleState));
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
     pendingEnemySendOutAnimation = true;
@@ -513,10 +552,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     setStatus(enemyHpBar, enemy.status ?? '');
     setStatus(playerHpBar, player.status ?? '');
+    setVolatileStatuses(enemyHpBar, getDisplayedVolatileStatuses(enemyBattleState));
+    setVolatileStatuses(playerHpBar, getDisplayedVolatileStatuses(playerBattleState));
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
-    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null; attackFx = null; statusTurnFx = null;
+    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null; attackFx = null; statusTurnFx = [];
     waitingForBag = false; waitingForParty = false; previousLeadId = null;
     pendingNewMoves = [];
     activeMoveLearningPrompt = null;
@@ -1132,6 +1173,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     playerHpBar.maxHp = player.maxHp;
     playerHpBar.currentHp = Math.max(0, Math.min(player.hp, player.maxHp));
     playerHpBar.statChanges = getDisplayedStatChanges(playerBattleState);
+    setVolatileStatuses(playerHpBar, getDisplayedVolatileStatuses(playerBattleState));
     setStatus(playerHpBar, player.status ?? '');
     if (playerHpBar.displayHp > playerHpBar.maxHp) {
       playerHpBar.displayHp = playerHpBar.maxHp;
@@ -1149,6 +1191,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     enemyHpBar.maxHp = enemy.maxHp;
     enemyHpBar.currentHp = Math.max(0, Math.min(enemy.hp, enemy.maxHp));
     enemyHpBar.statChanges = getDisplayedStatChanges(enemyBattleState);
+    setVolatileStatuses(enemyHpBar, getDisplayedVolatileStatuses(enemyBattleState));
     setStatus(enemyHpBar, enemy.status ?? '');
     if (enemyHpBar.displayHp > enemyHpBar.maxHp) {
       enemyHpBar.displayHp = enemyHpBar.maxHp;
@@ -1192,6 +1235,21 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       lines.push(t('battle.hurtByPoison', { name: getPokemonDisplayName(enemy.id) }));
     } else if (enemyResult.message === 'burn') {
       lines.push(t('battle.hurtByBurn', { name: getPokemonDisplayName(enemy.id) }));
+    }
+
+    if (player.hp > 0) {
+      const leechSeedResult = applyLeechSeedEffect(player, playerBattleState, enemy);
+      if (leechSeedResult.applied) {
+        queueStatusTurnEffect('player', 'seed');
+        lines.push(t('battle.leechSeedDrain', { name: getPokemonDisplayName(player.id) }));
+      }
+    }
+    if (enemy.hp > 0) {
+      const leechSeedResult = applyLeechSeedEffect(enemy, enemyBattleState, player);
+      if (leechSeedResult.applied) {
+        queueStatusTurnEffect('enemy', 'seed');
+        lines.push(t('battle.leechSeedDrain', { name: getPokemonDisplayName(enemy.id) }));
+      }
     }
 
     syncPlayerBar();
@@ -1311,16 +1369,28 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     };
   }
 
-  function triggerStatusTurnEffect(actor: 'player' | 'enemy', pokemon: Pokemon): void {
-    if (!pokemon.status) return;
+  function queueStatusTurnEffect(actor: 'player' | 'enemy', effectId: string): void {
     const bounds = getActorStatusBounds(actor);
-    statusTurnFx = createStatusTurnEffect(
-      pokemon.status,
+    statusTurnFx.push(createStatusTurnEffect(
+      effectId,
       bounds.centerX,
       bounds.centerY,
       bounds.width,
       bounds.height,
-    );
+    ));
+  }
+
+  function triggerStatusTurnEffects(
+    actor: 'player' | 'enemy',
+    pokemon: Pokemon,
+    runtimeState: BattlePokemonRuntimeState,
+  ): void {
+    if (pokemon.status) {
+      queueStatusTurnEffect(actor, pokemon.status);
+    }
+    for (const effectId of getDisplayedVolatileStatuses(runtimeState)) {
+      queueStatusTurnEffect(actor, effectId);
+    }
   }
 
   function applyMoveImpact(
@@ -1394,6 +1464,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
     }
 
+    const userVolatileEffects = applyVolatileMoveEffects(attacker, attackerState, moveBattleData.effects, 'user');
+    for (const effectResult of userVolatileEffects) {
+      if (effectResult.applied) {
+        lines.push(getMoveEffectAppliedLine(attackerName, effectResult.id));
+      }
+    }
+
     if (allowTargetEffects) {
       const targetStatChanges = applyStatChanges(defenderState, moveBattleData.statChanges, 'target');
       for (const change of targetStatChanges) {
@@ -1405,6 +1482,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         if (statusResult.applied) {
           const statusLine = getStatusAppliedLine(defenderName, statusResult.status);
           if (statusLine) lines.push(statusLine);
+        }
+      }
+
+      const targetVolatileEffects = applyVolatileMoveEffects(defender, defenderState, moveBattleData.effects, 'target');
+      for (const effectResult of targetVolatileEffects) {
+        if (effectResult.applied) {
+          lines.push(getMoveEffectAppliedLine(defenderName, effectResult.id));
         }
       }
     }
@@ -1495,13 +1579,21 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     const rtl = isRTL();
     const attackerName = getPokemonDisplayName(player.id);
     const defenderName = getPokemonDisplayName(enemy.id);
-    triggerStatusTurnEffect('player', player);
-    const startResult = processStartOfTurnStatus(player, playerBattleState);
-    const turnStatusLine = getTurnStatusLine(attackerName, startResult.event);
+    triggerStatusTurnEffects('player', player, playerBattleState);
+    const startResult = processBeforeMoveEffects(player, playerBattleState);
+    const turnEffectLines = startResult.events
+      .map(event => getTurnEffectLine(attackerName, event))
+      .filter((line): line is string => line !== null);
     syncPlayerBar();
+    if (startResult.selfDamage > 0) {
+      flash = createFlash('#fff29a', 0.12);
+      shake = createShake(1.4, 0.18);
+      spawnDamageNumber(`-${startResult.selfDamage}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
+      audio.playSFX('hit');
+    }
 
     if (!startResult.canAct) {
-      textBox = createTextBox(turnStatusLine ? [turnStatusLine] : [t('battle.nothingHappened')], rtl);
+      textBox = createTextBox(turnEffectLines.length > 0 ? turnEffectLines : [t('battle.nothingHappened')], rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
       return;
@@ -1533,9 +1625,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       )
       : [];
     const msgs: string[] = [];
-    if (turnStatusLine) {
-      msgs.push(turnStatusLine);
-    }
+    msgs.push(...turnEffectLines);
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
 
     if (m.power > 0) {
@@ -1579,17 +1669,25 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     const rtl = isRTL();
     const attackerName = getPokemonDisplayName(enemy.id);
     const defenderName = getPokemonDisplayName(player.id);
-    triggerStatusTurnEffect('enemy', enemy);
-    const startResult = processStartOfTurnStatus(enemy, enemyBattleState);
-    const turnStatusLine = getTurnStatusLine(attackerName, startResult.event);
+    triggerStatusTurnEffects('enemy', enemy, enemyBattleState);
+    const startResult = processBeforeMoveEffects(enemy, enemyBattleState);
+    const turnEffectLines = startResult.events
+      .map(event => getTurnEffectLine(attackerName, event))
+      .filter((line): line is string => line !== null);
     syncEnemyBar();
+    if (startResult.selfDamage > 0) {
+      flash = createFlash('#fff29a', 0.12);
+      shake = createShake(1.4, 0.18);
+      spawnDamageNumber(`-${startResult.selfDamage}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#f8d858');
+      audio.playSFX('hit');
+    }
     const prefix: string[] = showFasterMsg
       ? [t('battle.enemyMovesFirst', { name: attackerName })]
       : [];
 
     if (!startResult.canAct) {
       const msgs = [...prefix];
-      msgs.push(turnStatusLine ?? t('battle.nothingHappened'));
+      msgs.push(...(turnEffectLines.length > 0 ? turnEffectLines : [t('battle.nothingHappened')]));
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
@@ -1622,9 +1720,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       )
       : [];
     const msgs = [...prefix];
-    if (turnStatusLine) {
-      msgs.push(turnStatusLine);
-    }
+    msgs.push(...turnEffectLines);
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
 
     if (m.power > 0) {
@@ -1780,9 +1876,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         updateAttackEffect(attackFx, dt);
         if (!attackFx.active) attackFx = null;
       }
-      if (statusTurnFx) {
-        updateStatusTurnEffect(statusTurnFx, dt);
-        if (!statusTurnFx.active) statusTurnFx = null;
+      if (statusTurnFx.length > 0) {
+        for (const effect of statusTurnFx) {
+          updateStatusTurnEffect(effect, dt);
+        }
+        statusTurnFx = statusTurnFx.filter(effect => effect.active);
       }
       animationDirector.update(dt);
       updateHPBar(playerHpBar, dt); updateHPBar(enemyHpBar, dt); updatePopups(dt);
@@ -2166,6 +2264,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               playerHpBar = createHPBar(player.id, player.level, player.hp, player.maxHp,
                 BTL.PLY_BAR_X, BTL.PLY_BAR_BOTTOM - 18, true, player.xp, player.xpToNext);
               setStatus(playerHpBar, player.status ?? '');
+              setVolatileStatuses(playerHpBar, getDisplayedVolatileStatuses(playerBattleState));
               menu = createBattleMenu(player.moves);
               menu.playerPokemon = player;
               menu.party = hasActiveGame() ? getPlayerData().party : [player];
@@ -2343,8 +2442,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (attackFx) {
         renderAttackEffect(ctx, attackFx);
       }
-      if (statusTurnFx) {
-        renderStatusTurnEffect(ctx, statusTurnFx);
+      for (const effect of statusTurnFx) {
+        renderStatusTurnEffect(ctx, effect);
       }
 
       // ── Info panels ──

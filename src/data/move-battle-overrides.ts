@@ -1,4 +1,5 @@
 import type {
+  MoveBattleEffect,
   BattleStatId,
   MajorStatusId,
   MoveBattleMetadata,
@@ -8,6 +9,21 @@ import type {
 
 type MoveOverride = Partial<MoveBattleMetadata>;
 type MoveStatusExtra = Omit<MoveStatusEffect, 'status' | 'chance' | 'target'>;
+
+function volatileEffect(
+  id: MoveBattleEffect['id'],
+  chance: number,
+  extra?: Omit<MoveBattleEffect, 'id' | 'chance' | 'target'>,
+): MoveOverride {
+  return {
+    effects: [{
+      id,
+      chance,
+      target: 'target',
+      ...extra,
+    }],
+  };
+}
 
 function statusEffect(status: MajorStatusId, chance: number, extra?: MoveStatusExtra): MoveOverride {
   return {
@@ -89,6 +105,15 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Hypnosis: statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
   Spore: statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
   'Lovely Kiss': statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
+
+  'Confuse Ray': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
+  Supersonic: volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
+  'Sweet Kiss': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
+  Confusion: volatileEffect('confusion', 10, { minTurns: 2, maxTurns: 5 }),
+  Psybeam: volatileEffect('confusion', 10, { minTurns: 2, maxTurns: 5 }),
+  'Water Pulse': volatileEffect('confusion', 20, { minTurns: 2, maxTurns: 5 }),
+  'Dynamic Punch': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
+  'Leech Seed': volatileEffect('leech-seed', 100),
 
   Growl: targetStages(['attack', -1]),
   'Tail Whip': targetStages(['defense', -1]),

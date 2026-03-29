@@ -715,6 +715,60 @@ function renderFreezeStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusT
   ctx.restore();
 }
 
+function renderConfuseStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  ctx.save();
+  for (let i = 0; i < 4; i++) {
+    const phase = (effect.timer * 2.2) + (i * (Math.PI / 2));
+    const orbitX = Math.cos(phase) * effect.width * 0.16;
+    const orbitY = Math.sin(phase) * effect.height * 0.12;
+    const x = effect.centerX + orbitX;
+    const y = effect.centerY - (effect.height * 0.16) + orbitY;
+    ctx.globalAlpha = fade * (0.4 + i * 0.08);
+    ctx.fillStyle = i % 2 === 0 ? '#ff9cc0' : '#f070c8';
+    ctx.beginPath();
+    ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = fade * 0.85;
+    ctx.strokeStyle = '#fff2a6';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x - 1.5, y);
+    ctx.lineTo(x + 1.5, y);
+    ctx.moveTo(x, y - 1.5);
+    ctx.lineTo(x, y + 1.5);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function renderSeedStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  ctx.save();
+  ctx.globalAlpha = fade * 0.12;
+  ctx.strokeStyle = '#7ccf5c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(effect.centerX, effect.centerY + (effect.height * 0.08), effect.width * 0.24, Math.PI * 0.15, Math.PI * 0.85);
+  ctx.stroke();
+
+  for (let i = 0; i < 3; i++) {
+    const phase = ((effect.timer * 1.5) + (i * 0.22)) % 1;
+    const x = effect.centerX - (effect.width * 0.18) + (i * effect.width * 0.18);
+    const y = effect.centerY + (effect.height * 0.18) - (phase * effect.height * 0.38);
+    ctx.globalAlpha = fade * (0.28 + ((1 - phase) * 0.22));
+    ctx.fillStyle = i === 1 ? '#a8e070' : '#78c850';
+    ctx.beginPath();
+    ctx.ellipse(x, y, 2.2, 1.5, i === 1 ? -0.6 : 0.6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#d8f8c8';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect): void {
   if (!effect.active) return;
 
@@ -734,6 +788,12 @@ export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: St
       break;
     case 'freeze':
       renderFreezeStatusEffect(ctx, effect, fade);
+      break;
+    case 'confuse':
+      renderConfuseStatusEffect(ctx, effect, fade);
+      break;
+    case 'seed':
+      renderSeedStatusEffect(ctx, effect, fade);
       break;
   }
 }

@@ -28,6 +28,7 @@ export interface HPBarState {
   xp: number;
   xpToNext: number;
   status: string;
+  volatileStatuses: string[];
   gender: string;
   statChanges: { stat: string; stages: number }[];
 }
@@ -45,7 +46,7 @@ export function createHPBar(
   return {
     currentHp: hp, maxHp, displayHp: hp, pokemonId, level,
     displayXp: xp,
-    x, y, isPlayer, xp, xpToNext, status: '', gender: '', statChanges: [],
+    x, y, isPlayer, xp, xpToNext, status: '', volatileStatuses: [], gender: '', statChanges: [],
   };
 }
 
@@ -64,6 +65,10 @@ export function setDisplayedXP(bar: HPBarState, xp: number): void {
 
 export function setStatus(bar: HPBarState, status: string): void {
   bar.status = status;
+}
+
+export function setVolatileStatuses(bar: HPBarState, statuses: string[]): void {
+  bar.volatileStatuses = [...statuses];
 }
 
 export function setGender(bar: HPBarState, gender: string): void {
@@ -114,7 +119,7 @@ export function drawPanelBackground(
 // ─── Internals ─────────────────────────────────────────────────────
 
 function countStatuses(bar: HPBarState): number {
-  return bar.statChanges.length;
+  return bar.volatileStatuses.length + bar.statChanges.length;
 }
 
 function getStatusPanelHeight(baseHeight: number, statusCount: number): number {
@@ -328,6 +333,17 @@ function renderStatusPills(
   align: 'left' | 'right',
 ): void {
   const pills: { label: string; bgColor: string; borderColor: string; textColor: string }[] = [];
+
+  for (const status of bar.volatileStatuses) {
+    const style = STATUS_PILL_COLORS[status];
+    if (!style) continue;
+    pills.push({
+      label: style.shortLabel,
+      bgColor: style.bgColor,
+      borderColor: style.borderColor,
+      textColor: style.textColor,
+    });
+  }
 
   // Stat changes as boost/debuff pills
   for (const change of bar.statChanges) {

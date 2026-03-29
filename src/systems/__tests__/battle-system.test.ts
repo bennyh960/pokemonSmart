@@ -4,14 +4,18 @@ import type { MoveStatusEffect } from '../../types/battle-metadata.js';
 import { getMoveByName } from '../../services/pokemon-data.js';
 import {
   applyEndOfTurnStatusEffects,
+  applyLeechSeedEffect,
   applyMajorStatus,
   applyStatChanges,
+  applyVolatileMoveEffects,
   createBattleRuntimeStateForPokemon,
   determineTurnOrder,
   doesMoveHit,
   getDisplayedStatChanges,
+  getDisplayedVolatileStatuses,
   getEffectiveSpeed,
   getModifiedStatValue,
+  processBeforeMoveEffects,
   processStartOfTurnStatus,
   rollCriticalHit,
 } from '../battle-system.js';
@@ -182,6 +186,14 @@ describe('battle system helpers', () => {
     expect(reducedHit.chance).toBeLessThan(80);
   });
 
+  it('exposes volatile statuses for battle ui indicators', () => {
+    const runtime = createBattleRuntimeStateForPokemon(createTestPokemon());
+    runtime.confusionTurnsRemaining = 2;
+    runtime.leechSeeded = true;
+
+    expect(getDisplayedVolatileStatuses(runtime)).toEqual(['confuse', 'seed']);
+  });
+
   it('prevents critical hits when the defender has Battle Armor', () => {
     const defender = createTestPokemon({ id: 95, name: 'Onix', abilityId: 4 });
     const slash = getMoveByName('slash');
@@ -189,5 +201,79 @@ describe('battle system helpers', () => {
     expect(slash).toBeDefined();
     expect(rollCriticalHit(slash!.id, defender, () => 0)).toBe(false);
     expect(rollCriticalHit(slash!.id, createTestPokemon({ id: 1, name: 'Bulbasaur' }), () => 0)).toBe(true);
+  });
+
+  it('applies confusion as a battle-only volatile effect', () => {
+    const target = createTestPokemon();
+    const runtime = createBattleRuntimeStateForPokemon(target);
+
+    const result = applyVolatileMoveEffects(target, runtime, [
+      { id: 'confusion', target: 'target', chance: 100, minTurns: 2, maxTurns: 5 },
+    ], 'target', () => 0);
+
+    expect(result).toEqual([
+      { id: 'confusion', target: 'target', applied: true, reason: 'applied' },
+    ]);
+    expect(runtime.confusionTurnsRemaining).toBe(2);
+  });
+
+  it('processes confusion turns, self-hit, and snap out correctly', () => {
+    const target = createTestPokemon({ hp: 80, maxHp: 80, attack: 40, defense: 35 });
+    const runtime = createBattleRuntimeStateForPokemon(target);
+    runtime.confusionTurnsRemaining = 2;
+
+    const hurtResult = processBeforeMoveEffects(target, runtime, () => 0);
+    expect(hurtResult.canAct).toBe(false);
+    expect(hurtResult.events).toEqual(['confused', 'hurt-itself-confusion']);
+    expect(hurtResult.selfDamage).toBeGreaterThan(0);
+    expect(target.hp).toBeLessThan(80);
+    expect(runtime.confusionTurnsRemaining).toBe(1);
+
+    const snappedOutResult = processBeforeMoveEffects(target, runtime, () => 0);
+    expect(snappedOutResult).toEqual({
+      canAct: true,
+      events: ['snapped-out'],
+      selfDamage: 0,
+    });
+    expect(runtime.confusionTurnsRemaining).toBe(0);
+  });
+
+  it('applies leech seed only to valid targets and drains hp at end of turn', () => {
+    const seeded = createTestPokemon({ id: 7, name: 'Squirtle', types: ['water'], hp: 64, maxHp: 80 });
+    const seededState = createBattleRuntimeStateForPokemon(seeded);
+    const seeder = createTestPokemon({ id: 1, name: 'Bulbasaur', types: ['grass'], hp: 30, maxHp: 80 });
+
+    const applyResult = applyVolatileMoveEffects(seeded, seededState, [
+      { id: 'leech-seed', target: 'target', chance: 100 },
+    ], 'target', () => 0);
+
+    expect(applyResult).toEqual([
+      { id: 'leech-seed', target: 'target', applied: true, reason: 'applied' },
+    ]);
+    expect(seededState.leechSeeded).toBe(true);
+
+    const drainResult = applyLeechSeedEffect(seeded, seededState, seeder);
+    expect(drainResult).toEqual({
+      applied: true,
+      damage: 10,
+      healed: 10,
+      fainted: false,
+    });
+    expect(seeded.hp).toBe(54);
+    expect(seeder.hp).toBe(40);
+  });
+
+  it('treats grass types as immune to leech seed', () => {
+    const grassTarget = createTestPokemon({ id: 1, name: 'Bulbasaur', types: ['grass'] });
+    const runtime = createBattleRuntimeStateForPokemon(grassTarget);
+
+    const result = applyVolatileMoveEffects(grassTarget, runtime, [
+      { id: 'leech-seed', target: 'target', chance: 100 },
+    ], 'target', () => 0);
+
+    expect(result).toEqual([
+      { id: 'leech-seed', target: 'target', applied: false, reason: 'immune' },
+    ]);
+    expect(runtime.leechSeeded).toBe(false);
   });
 });

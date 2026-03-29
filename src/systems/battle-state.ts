@@ -21,6 +21,8 @@ export interface BattlePokemonRuntimeState {
   sleepTurnsRemaining: number;
   freezeTurnsRemaining: number;
   badlyPoisonTurns: number;
+  confusionTurnsRemaining: number;
+  leechSeeded: boolean;
   statModifiers: BattleStatModifiers;
   turnFlags: BattleTurnFlags;
 }
@@ -61,6 +63,8 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     sleepTurnsRemaining: 0,
     freezeTurnsRemaining: 0,
     badlyPoisonTurns: 0,
+    confusionTurnsRemaining: 0,
+    leechSeeded: false,
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),
   };

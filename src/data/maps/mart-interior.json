@@ -1,6 +1,7 @@
 {
-  "id": "pokecenter-interior",
-  "name": "Pokemon Center",
+
+  "id": "mart-interior",
+  "name": "Pokemon Mart",
   "width": 23,
   "height": 10,
   "tileSize": 16,

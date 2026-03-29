@@ -35,28 +35,6 @@
       "interactType": null
     },
     {
-      "key": "m1",
-      "sx": 0,
-      "sy": 368,
-      "w": 64,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "m2",
-      "sx": 64,
-      "sy": 368,
-      "w": 64,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null
-    },
-    {
       "key": "g3",
       "sx": 80,
       "sy": 16,
@@ -1557,28 +1535,6 @@
       "description": "water fountain  decoration for town decor"
     },
     {
-      "key": "bottom-dev",
-      "sx": 0,
-      "sy": 6176,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "interactType": null
-    },
-    {
-      "key": "b7door",
-      "sx": 80,
-      "sy": 1520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "b7 building door"
-    },
-    {
       "key": "b7",
       "sx": 48,
       "sy": 1472,
@@ -2973,6 +2929,290 @@
       "category": "decoration",
       "interactType": null,
       "description": "box"
+    },
+    {
+      "key": "b7door",
+      "sx": 144,
+      "sy": 1520,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "door for b7"
+    },
+    {
+      "key": "soop1",
+      "sx": 0,
+      "sy": 4992,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "soop for home decor"
+    },
+    {
+      "key": "soop2",
+      "sx": 0,
+      "sy": 5008,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "soop red f"
+    },
+    {
+      "key": "soop orange",
+      "sx": 0,
+      "sy": 5024,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "soop for decor"
+    },
+    {
+      "key": "pic3",
+      "sx": 0,
+      "sy": 6208,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "pic 1 for home decoration"
+    },
+    {
+      "key": "pic4",
+      "sx": 16,
+      "sy": 6208,
+      "w": 32,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "picture for home"
+    },
+    {
+      "key": "pic5",
+      "sx": 48,
+      "sy": 6208,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "decoration",
+      "interactType": null
+    },
+    {
+      "key": "tressureBox",
+      "sx": 80,
+      "sy": 6288,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "interactive",
+      "interactType": {
+        "id": "item",
+        "args": {
+          "itemId": "ultra-ball",
+          "itemQty": 10,
+          "label": {
+            "en": "",
+            "he": "פוקדורים סופר חזקים לתפיסת פוקימונים"
+          }
+        }
+      }
+    },
+    {
+      "key": "potion",
+      "sx": 80,
+      "sy": 7024,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "interactive",
+      "interactType": {
+        "id": "item",
+        "args": {
+          "label": {
+            "en": "",
+            "he": "שיקוי"
+          },
+          "itemQty": 3,
+          "itemId": "super-potion"
+        }
+      },
+      "description": "potion"
+    },
+    {
+      "key": "dev",
+      "sx": 0,
+      "sy": 7744,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "interactType": null
+    },
+    {
+      "key": "market1",
+      "sx": 0,
+      "sy": 384,
+      "w": 64,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "description": "pokemarket small",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        }
+      ]
+    },
+    {
+      "key": "door-market",
+      "sx": 32,
+      "sy": 416,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "building",
+      "description": "door for any - but took from market 1"
+    },
+    {
+      "key": "market2",
+      "sx": 64,
+      "sy": 368,
+      "w": 64,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "description": "bigger poke market",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        }
+      ]
+    },
+    {
+      "key": "door-m2",
+      "sx": 96,
+      "sy": 416,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building",
+      "description": "door for market2 or others"
     }
   ]
 }

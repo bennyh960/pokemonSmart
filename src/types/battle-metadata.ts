@@ -25,6 +25,8 @@ export type MoveBattleTarget =
 
 export type MoveBattleBehaviorTag = 'fails-if-target-not-attacking';
 
+export type MoveBattleEffectId = 'confusion' | 'leech-seed';
+
 export interface MoveStatusEffect {
   status: MajorStatusId;
   chance: number;
@@ -41,11 +43,20 @@ export interface MoveStatChange {
   chance: number;
 }
 
+export interface MoveBattleEffect {
+  id: MoveBattleEffectId;
+  target: 'user' | 'target';
+  chance: number;
+  minTurns?: number | null;
+  maxTurns?: number | null;
+}
+
 export interface MoveBattleMetadata {
   priority: number;
   target: MoveBattleTarget;
   ailment: MoveStatusEffect | null;
   statChanges: MoveStatChange[];
+  effects: MoveBattleEffect[];
   critRate: number;
   flinchChance: number | null;
   drainPercent: number | null;
@@ -89,6 +100,7 @@ export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
     target: 'selected-pokemon',
     ailment: null,
     statChanges: [],
+    effects: [],
     critRate: 0,
     flinchChance: null,
     drainPercent: null,

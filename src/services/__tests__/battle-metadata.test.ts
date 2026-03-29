@@ -42,6 +42,18 @@ describe('battle metadata', () => {
     ]);
   });
 
+  it('exposes volatile move effects through battle metadata', () => {
+    const confuseRay = getMoveByName('confuse ray');
+    const leechSeed = getMoveByName('leech seed');
+
+    expect(confuseRay?.battle.effects).toEqual([
+      { id: 'confusion', target: 'target', chance: 100, minTurns: 2, maxTurns: 5 },
+    ]);
+    expect(leechSeed?.battle.effects).toEqual([
+      { id: 'leech-seed', target: 'target', chance: 100 },
+    ]);
+  });
+
   it('exposes battle effects for passive ability hooks', () => {
     const thickFat = getAbility(47);
     const limberEffects = getAbilityBattleEffects(7);
