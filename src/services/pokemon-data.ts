@@ -16,6 +16,7 @@ import abilitiesData from '../data/abilities.json';
 import pokemonAbilitiesData from '../data/pokemon-abilities.json';
 import naturesData from '../data/natures.json';
 import itemsData from '../data/items.json';
+import { POKEMON_CATCH_RATES } from '../data/pokemon-catch-rates.js';
 
 // --- Types matching the JSON shapes ---
 
@@ -266,6 +267,11 @@ export function getPokemonCategory(id: number): string {
 /** Get Pokemon Pokedex description/flavor text. */
 export function getPokemonDescription(id: number): string {
   return pokemonById.get(id)?.description ?? '';
+}
+
+/** Get the base species catch rate (PokeAPI capture_rate) for a Pokemon. */
+export function getPokemonCatchRate(id: number): number {
+  return POKEMON_CATCH_RATES[id] ?? 45;
 }
 
 // --- Abilities data ---

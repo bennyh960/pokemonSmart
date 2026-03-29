@@ -32,6 +32,7 @@ import {
 import { drawPokeballIcon } from '../ui/item-icons.js';
 import {
   getCombinedTypeEffectiveness,
+  getPokemonCatchRate,
   getPokemonDisplayName,
   getMoveDisplayName,
   getMove,
@@ -59,6 +60,7 @@ import {
   type LevelUpMoveResult,
   type MoveLearningResolution,
 } from '../systems/move-learning.js';
+import { calculateCaptureChance } from '../systems/capture.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -70,6 +72,8 @@ type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP' | 'TRAINER_REWARD_LEVEL_UP_MOVES'
   | 'WAITING_BAG' | 'WAITING_PARTY' | 'WAITING_MOVE_LEARN' | 'SWITCH_POKEMON' | 'CAPTURE_ANIM'
   | 'PLAYER_FAINT_SWITCH' | 'TRAINER_LOSS';
+
+type StatusCarrier = { status?: string | null };
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
@@ -211,8 +215,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         return;
       }
       consumeItem(pd.items, itemId);
-      const hpFactor = 1 - (enemy.hp / enemy.maxHp) * 0.5;
-      startCaptureSequence(itemId, Math.random() < def.effect.rate * hpFactor * 0.3);
+      startCaptureSequence(itemId, Math.random() < getCaptureChance(def.effect.rate));
       phaseTimer = 0;
       return;
     }
@@ -518,6 +521,24 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
   function getPlayerBallId(): string {
     return player.caughtBall ?? 'poke-ball';
+  }
+
+  function getEnemyCaptureStatus(): string | null {
+    const enemyWithStatus = enemy as StatusCarrier;
+    return (enemyWithStatus.status ?? enemyHpBar.status) || null;
+  }
+
+  function getCaptureChance(ballRate: number): number {
+    return calculateCaptureChance({
+      ballRate,
+      speciesCatchRate: getPokemonCatchRate(enemy.id),
+      currentHp: enemy.hp,
+      maxHp: enemy.maxHp,
+      playerLevel: player.level,
+      wildLevel: enemy.level,
+      turnNumber,
+      status: getEnemyCaptureStatus(),
+    });
   }
 
   function createBallShakeStep(targetX: number, targetY: number): ReturnType<typeof sequenceStep> {

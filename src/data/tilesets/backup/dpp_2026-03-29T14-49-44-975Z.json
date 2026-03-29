@@ -772,7 +772,7 @@
       "sy": 2864,
       "w": 32,
       "h": 48,
-      "walkable": true,
+      "walkable": false,
       "above": true,
       "interactType": null,
       "description": "street flash light right"
@@ -783,7 +783,7 @@
       "sy": 2864,
       "w": 32,
       "h": 48,
-      "walkable": true,
+      "walkable": false,
       "above": true,
       "category": "decoration",
       "interactType": null,
@@ -2944,7 +2944,6 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "interactType": null,
       "description": "door for building"
     }
   ]
