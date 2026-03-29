@@ -16,6 +16,7 @@
  */
 
 import charactersManifest from '../data/sprites/characters.json';
+import { toAssetUrl } from './asset-path.js';
 
 // ── Types ──
 
@@ -110,7 +111,7 @@ export async function loadCharacterSprites(): Promise<void> {
 
   // Load the spritesheet image
   sheetImage = new Image();
-  sheetImage.src = manifest.image;
+  sheetImage.src = toAssetUrl(manifest.image);
   await new Promise<void>((resolve) => {
     sheetImage!.onload = () => resolve();
     sheetImage!.onerror = () => {

@@ -8,12 +8,13 @@ import { PropertiesPanel } from './properties-panel.js';
 import { createBlankMap, saveMap } from './map-io.js';
 import dppManifest from '../data/tilesets/dpp.json';
 import type { TileDef, NPCData, MapTransition } from './types.js';
+import { toAssetUrl } from '../engine/asset-path.js';
 import './style.css';
 
 async function init() {
   // 1. Load tileset image
   const tilesetImage = new Image();
-  tilesetImage.src = dppManifest.image;
+  tilesetImage.src = toAssetUrl(dppManifest.image);
   await new Promise<void>((resolve, reject) => {
     tilesetImage.onload = () => resolve();
     tilesetImage.onerror = () => reject(new Error('Failed to load tileset image'));

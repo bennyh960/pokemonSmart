@@ -6,6 +6,8 @@
  * when an image fails to load.
  */
 
+import { toAssetUrl } from './asset-path.js';
+
 /** Cache of loaded images keyed by URL. */
 const imageCache = new Map<string, HTMLImageElement>();
 
@@ -18,38 +20,39 @@ const pending = new Map<string, Promise<HTMLImageElement>>();
 
 /** Load an image from a URL, returning from cache if available. */
 export async function loadImage(url: string): Promise<HTMLImageElement> {
-  const cached = imageCache.get(url);
+  const resolvedUrl = toAssetUrl(url);
+  const cached = imageCache.get(resolvedUrl);
   if (cached) return cached;
 
-  const inflight = pending.get(url);
+  const inflight = pending.get(resolvedUrl);
   if (inflight) return inflight;
 
 
   const promise = new Promise<HTMLImageElement>((resolve, reject) => {
-    loading.add(url);
+    loading.add(resolvedUrl);
     const img = new Image();
     img.onload = () => {
       const final = img;
-      imageCache.set(url, final);
-      loading.delete(url);
-      pending.delete(url);
+      imageCache.set(resolvedUrl, final);
+      loading.delete(resolvedUrl);
+      pending.delete(resolvedUrl);
       resolve(final);
     };
     img.onerror = () => {
-      loading.delete(url);
-      pending.delete(url);
-      reject(new Error(`Failed to load image: ${url}`));
+      loading.delete(resolvedUrl);
+      pending.delete(resolvedUrl);
+      reject(new Error(`Failed to load image: ${resolvedUrl}`));
     };
-    img.src = url;
+    img.src = resolvedUrl;
   });
 
-  pending.set(url, promise);
+  pending.set(resolvedUrl, promise);
   return promise;
 }
 
 /** Get a cached image synchronously, or null if not loaded yet. */
 export function getCachedImage(url: string): HTMLImageElement | null {
-  return imageCache.get(url) ?? null;
+  return imageCache.get(toAssetUrl(url)) ?? null;
 }
 
 /**

@@ -8,6 +8,7 @@
 
 import type { InteractTypeRef } from '../data/interact-types.js';
 import { normalizeBattleBackgroundId, type BattleBackgroundId } from '../data/battle-backgrounds.js';
+import { toAssetUrl } from './asset-path.js';
 
 /** Definition of a single tile within a tileset. */
 export interface TileDef {
@@ -95,7 +96,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error(`Failed to load tileset image: ${src}`));
-    img.src = src;
+    img.src = toAssetUrl(src);
   });
 }
 

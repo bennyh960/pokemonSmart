@@ -9,8 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "fetch-data": "tsx scripts/run-all.ts",
-     "deploy": "gh-pages -d dist",
-     "cicd": "npm run build && npm run deploy"
+    "deploy": "tsx scripts/deploy-gh-pages.ts",
+    "cicd": "npm run build && npm run deploy"
   },
   "devDependencies": {
     "@types/howler": "^2.2.12",

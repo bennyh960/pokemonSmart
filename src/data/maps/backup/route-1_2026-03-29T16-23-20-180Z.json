@@ -189,24 +189,21 @@
           "he": ""
         }
       ],
-      "spriteType": "char_e19d22",
+      "spriteType": "trainer-f",
       "party": [
         {
           "pokemonId": 16,
-          "level": 4,
-          "moves": []
+          "level": 4
         },
         {
           "pokemonId": 161,
-          "level": 5,
-          "moves": []
+          "level": 5
         }
       ],
       "reward": {
         "money": 150
       },
-      "lineOfSight": 3,
-      "postBattleDialogue": []
+      "lineOfSight": 3
     },
     {
       "id": "hiker-1",
@@ -225,24 +222,21 @@
           "he": ""
         }
       ],
-      "spriteType": "char_631e91",
+      "spriteType": "trainer-m",
       "party": [
         {
           "pokemonId": 74,
-          "level": 5,
-          "moves": []
+          "level": 5
         },
         {
           "pokemonId": 95,
-          "level": 6,
-          "moves": []
+          "level": 6
         }
       ],
       "reward": {
         "money": 180
       },
-      "lineOfSight": 3,
-      "postBattleDialogue": []
+      "lineOfSight": 3
     },
     {
       "id": "picnicker-1",
@@ -261,24 +255,21 @@
           "he": ""
         }
       ],
-      "spriteType": "char_8c60a6",
+      "spriteType": "trainer-f",
       "party": [
         {
           "pokemonId": 43,
-          "level": 5,
-          "moves": []
+          "level": 5
         },
         {
           "pokemonId": 163,
-          "level": 5,
-          "moves": []
+          "level": 5
         }
       ],
       "reward": {
         "money": 140
       },
-      "lineOfSight": 3,
-      "postBattleDialogue": []
+      "lineOfSight": 3
     },
     {
       "id": "npc-1774550276085",
@@ -332,70 +323,6 @@
       ],
       "name": "Ethan",
       "nameHe": "איתן"
-    },
-    {
-      "id": "npc-1774801191518",
-      "x": 20,
-      "y": 16,
-      "facing": "up",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "אני אוהבת פוקימוני מים"
-        },
-        {
-          "en": "",
-          "he": "רוצה לבחון את הכח של הפוקימונים שלי?"
-        }
-      ],
-      "spriteType": "char_49b2a9",
-      "reward": {
-        "money": 700,
-        "items": [
-          {
-            "itemId": "potion",
-            "quantity": 3
-          },
-          {
-            "itemId": "poke-ball",
-            "quantity": 3
-          }
-        ]
-      },
-      "party": [
-        {
-          "pokemonId": 120,
-          "level": 4,
-          "moves": []
-        },
-        {
-          "pokemonId": 121,
-          "level": 6,
-          "moves": []
-        },
-        {
-          "pokemonId": 118,
-          "level": 4,
-          "moves": []
-        },
-        {
-          "pokemonId": 54,
-          "level": 7,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "postBattleDialogue": [
-        {
-          "en": "",
-          "he": "אתה מאמן חזק יותר ממה שציפיתי"
-        },
-        {
-          "en": "",
-          "he": "ייתכן ועוד ניפגש בהמשך"
-        }
-      ]
     }
   ],
   "music": "route",

@@ -26,10 +26,15 @@ describe('XP rebalance', () => {
 
   it('boosts battle XP and gives trainer battles extra reward', () => {
     const pidgey = getPokemon(16);
+    const bulbasaur = getPokemon(1);
     expect(pidgey).toBeDefined();
+    expect(bulbasaur).toBeDefined();
 
-    const enemy = createPokemonFromData(pidgey!, 3);
-    expect(calculateXpGain(enemy)).toBe(30);
-    expect(calculateXpGain(enemy, { trainerBattle: true })).toBe(45);
+    const commonEnemy = createPokemonFromData(pidgey!, 3);
+    const rareEnemy = createPokemonFromData(bulbasaur!, 5);
+
+    expect(calculateXpGain(commonEnemy)).toBe(30);
+    expect(calculateXpGain(rareEnemy)).toBe(72);
+    expect(calculateXpGain(rareEnemy, { trainerBattle: true })).toBe(108);
   });
 });

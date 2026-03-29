@@ -3,6 +3,8 @@ import { SpritesheetViewport } from './spritesheet-viewport.js';
 import { SpriteList } from './sprite-list.js';
 import { PropertiesPanel } from './properties-panel.js';
 import { saveManifest, copyManifest, loadManifestFromFile, loadManifest } from './io.js';
+import charactersManifest from '../data/sprites/characters.json';
+import { toAssetUrl } from '../engine/asset-path.js';
 import './style.css';
 
 async function init() {
@@ -13,7 +15,7 @@ async function init() {
   const params = new URLSearchParams(window.location.search);
   const imgParam = params.get('image');
 
-  let imageSrc = imgParam || '/sprites/characters/characters_overworld.png';
+  let imageSrc = imgParam ? toAssetUrl(imgParam) : toAssetUrl('/sprites/characters/characters_overworld.png');
 
   // Allow user to load a different image via toolbar
   state.imageSrc = imageSrc;
@@ -33,7 +35,7 @@ async function init() {
   const manifestParam = params.get('manifest');
   if (manifestParam) {
     try {
-      const resp = await fetch(manifestParam);
+        const resp = await fetch(toAssetUrl(manifestParam));
       if (resp.ok) {
         const json = await resp.text();
         loadManifest(state, json);
@@ -138,14 +140,11 @@ async function init() {
   // Load from Game — fetch characters.json from data/sprites and load its image
   toolbarEl.querySelector('#btn-load-game')!.addEventListener('click', async () => {
     try {
-      const jsonPath = '/src/data/sprites/characters.json';
-      const resp = await fetch(jsonPath);
-      if (!resp.ok) throw new Error(`Failed to fetch ${jsonPath}: ${resp.status}`);
-      const json = await resp.text();
-      const data = JSON.parse(json);
+      const json = JSON.stringify(charactersManifest);
+      const data = charactersManifest as Record<string, unknown>;
 
       // Load the spritesheet image referenced in the manifest
-      const imgPath = data.image || '/sprites/characters/characters_overworld.png';
+      const imgPath = toAssetUrl((data.image as string | undefined) || '/sprites/characters/characters_overworld.png');
       image.src = imgPath;
       await new Promise<void>((resolve, reject) => {
         image.onload = () => resolve();

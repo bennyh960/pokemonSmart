@@ -10,6 +10,7 @@
 import type { Move, Pokemon, PokemonType } from '../types/index.js';
 import {
   getPokemon,
+  getPokemonCatchRate,
   getLearnset,
   getRandomAbility,
   getRandomNatureId,
@@ -37,6 +38,24 @@ export interface EncounterTable {
 
 const DEFAULT_ENCOUNTER_RATE = 0.10;
 const TRAINER_XP_MULTIPLIER = 1.5;
+const MAX_CATCH_RATE = 255;
+const MAX_RARITY_XP_BONUS = 0.15;
+
+function getSteppedCatchRate(catchRate: number): number {
+  const normalizedRate = Math.max(1, Math.min(MAX_CATCH_RATE, catchRate));
+  if (normalizedRate <= 50) return 25;
+  if (normalizedRate <= 100) return 75;
+  if (normalizedRate <= 150) return 125;
+  if (normalizedRate <= 200) return 175;
+  if (normalizedRate < MAX_CATCH_RATE) return 225;
+  return MAX_CATCH_RATE;
+}
+
+function getRarityXpMultiplier(pokemonId: number): number {
+  const steppedCatchRate = getSteppedCatchRate(getPokemonCatchRate(pokemonId));
+  const rarityRatio = (MAX_CATCH_RATE - steppedCatchRate) / MAX_CATCH_RATE;
+  return 1 + (rarityRatio * MAX_RARITY_XP_BONUS);
+}
 
 /** All encounter tables keyed by area/map ID, loaded from JSON. */
 const encounterTables: Record<string, EncounterTable> = encounterTablesJson as Record<string, EncounterTable>;
@@ -221,10 +240,11 @@ export function calculateXpGain(defeatedPokemon: Pokemon, options?: { trainerBat
   const data = getPokemon(defeatedPokemon.id);
   const baseExp = data?.baseExperience ?? 50;
   const baseReward = Math.floor((baseExp * defeatedPokemon.level) / 5);
+  let reward = baseReward * getRarityXpMultiplier(defeatedPokemon.id);
   if (options?.trainerBattle) {
-    return Math.floor(baseReward * TRAINER_XP_MULTIPLIER);
+    reward *= TRAINER_XP_MULTIPLIER;
   }
-  return baseReward;
+  return Math.floor(reward);
 }
 
 /** Result of a level-up check. */

@@ -1,4 +1,5 @@
 import type { TileEntry, TsEditorEvent } from './types.js';
+import { toAssetUrl } from '../engine/asset-path.js';
 
 export class TilesetEditorState {
   // All defined tiles
@@ -46,7 +47,7 @@ export class TilesetEditorState {
   cropTargetH = 16;
 
   // Image
-  imageSrc = '/sprites/overworld/dpp-tileset.png';
+  imageSrc = toAssetUrl('/sprites/overworld/dpp-tileset.png');
   imageWidth = 256;
   imageHeight = 29888;
 

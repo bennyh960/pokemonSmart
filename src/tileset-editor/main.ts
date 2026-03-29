@@ -3,6 +3,7 @@ import { SpritesheetViewport } from './spritesheet-viewport.js';
 import { TileList } from './tile-list.js';
 import { PropertiesPanel } from './properties-panel.js';
 import { saveManifest, copyManifest, loadManifestFromFile, loadManifest } from './io.js';
+import { toAssetUrl } from '../engine/asset-path.js';
 import './style.css';
 
 // Load existing dpp.json to pre-populate
@@ -13,7 +14,7 @@ async function init() {
 
   // Load tileset image
   const image = new Image();
-  image.src = state.imageSrc;
+  image.src = toAssetUrl(state.imageSrc);
   await new Promise<void>((resolve, reject) => {
     image.onload = () => {
       state.imageWidth = image.naturalWidth;
