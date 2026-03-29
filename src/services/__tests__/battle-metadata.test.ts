@@ -1,0 +1,63 @@
+import { describe, expect, it } from 'vitest';
+import { getAbility, getAbilityBattleEffects, getMoveBattleData, getMoveByName } from '../pokemon-data.js';
+
+describe('battle metadata', () => {
+  it('adds move priority and behavior tags for battle ordering', () => {
+    const quickAttack = getMoveByName('quick attack');
+    const suckerPunch = getMoveByName('sucker punch');
+
+    expect(quickAttack?.battle.priority).toBe(1);
+    expect(suckerPunch?.battle.priority).toBe(1);
+    expect(suckerPunch?.battle.behaviorTags).toContain('fails-if-target-not-attacking');
+  });
+
+  it('exposes major-status metadata for direct and secondary-status moves', () => {
+    const toxic = getMoveByName('toxic');
+    const iceBeam = getMoveByName('ice beam');
+
+    expect(toxic?.battle.ailment).toMatchObject({
+      status: 'poison',
+      chance: 100,
+      badlyPoisoned: true,
+    });
+    expect(iceBeam?.battle.ailment).toMatchObject({
+      status: 'freeze',
+      chance: 10,
+      minTurns: 2,
+      maxTurns: 5,
+    });
+  });
+
+  it('tracks self buffs and enemy debuffs in move metadata', () => {
+    const bulkUp = getMoveByName('bulk up');
+    const growl = getMoveByName('growl');
+
+    expect(bulkUp?.battle.target).toBe('user');
+    expect(bulkUp?.battle.statChanges).toEqual([
+      { stat: 'attack', stages: 1, target: 'user', chance: 100 },
+      { stat: 'defense', stages: 1, target: 'user', chance: 100 },
+    ]);
+    expect(growl?.battle.statChanges).toEqual([
+      { stat: 'attack', stages: -1, target: 'target', chance: 100 },
+    ]);
+  });
+
+  it('exposes battle effects for passive ability hooks', () => {
+    const thickFat = getAbility(47);
+    const limberEffects = getAbilityBattleEffects(7);
+
+    expect(thickFat?.battleEffects).toEqual([
+      { kind: 'damageTakenMultiplier', moveTypes: ['fire', 'ice'], multiplier: 0.5 },
+    ]);
+    expect(limberEffects).toEqual([
+      { kind: 'statusImmunity', statuses: ['paralyze'] },
+    ]);
+  });
+
+  it('serves the same move battle metadata through helper accessors', () => {
+    const quickAttack = getMoveByName('quick attack');
+
+    expect(quickAttack).toBeDefined();
+    expect(getMoveBattleData(quickAttack!.id)).toEqual(quickAttack!.battle);
+  });
+});

@@ -209,6 +209,17 @@ interface AttackEffect {
   targetY: number;
 }
 
+interface StatusTurnEffect {
+  active: boolean;
+  timer: number;
+  duration: number;
+  status: string;
+  centerX: number;
+  centerY: number;
+  width: number;
+  height: number;
+}
+
 const SPARKLE_COLORS = ['#ffd700', '#fff176', '#ffab00', '#ffffff', '#ffe082'];
 
 function createSparkleBurst(
@@ -564,6 +575,165 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'burst':
       renderBurstEffect(ctx, effect);
+      break;
+  }
+}
+
+export function createStatusTurnEffect(
+  status: string,
+  centerX: number,
+  centerY: number,
+  width: number,
+  height: number,
+): StatusTurnEffect {
+  return {
+    active: true,
+    timer: 0,
+    duration: 0.75,
+    status,
+    centerX,
+    centerY,
+    width,
+    height,
+  };
+}
+
+export function updateStatusTurnEffect(effect: StatusTurnEffect, dt: number): void {
+  if (!effect.active) return;
+  effect.timer += dt;
+  if (effect.timer >= effect.duration) {
+    effect.active = false;
+  }
+}
+
+function renderBurnStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  const pulse = 0.75 + Math.sin(effect.timer * 18) * 0.15;
+  ctx.save();
+  ctx.globalAlpha = fade * 0.2;
+  ctx.fillStyle = '#ff7a3d';
+  ctx.beginPath();
+  ctx.ellipse(effect.centerX, effect.centerY + (effect.height * 0.15), effect.width * 0.28, effect.height * 0.22, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  for (let i = 0; i < 3; i++) {
+    const flameX = effect.centerX + ((i - 1) * effect.width * 0.16);
+    const flameY = effect.centerY + (effect.height * 0.18) - Math.sin((effect.timer * 12) + i) * 2;
+    const flameH = effect.height * (0.18 + i * 0.02) * pulse;
+    const flameW = effect.width * 0.1;
+    ctx.globalAlpha = fade * (0.42 - i * 0.06);
+    ctx.fillStyle = i === 1 ? '#ffd27a' : '#ff5c3d';
+    ctx.beginPath();
+    ctx.moveTo(flameX, flameY - flameH);
+    ctx.lineTo(flameX + flameW, flameY + flameH * 0.2);
+    ctx.lineTo(flameX, flameY + flameH * 0.5);
+    ctx.lineTo(flameX - flameW, flameY + flameH * 0.2);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function renderPoisonStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  ctx.save();
+  for (let i = 0; i < 4; i++) {
+    const phase = ((effect.timer * 1.8) + (i * 0.18)) % 1;
+    const x = effect.centerX - (effect.width * 0.16) + (i * effect.width * 0.11);
+    const y = effect.centerY + (effect.height * 0.18) - (phase * effect.height * 0.45);
+    const radius = 2 + ((1 - phase) * 2);
+    ctx.globalAlpha = fade * (0.24 + ((1 - phase) * 0.18));
+    ctx.fillStyle = i % 2 === 0 ? '#a86cf0' : '#d080f0';
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function renderParalyzeStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  ctx.save();
+  ctx.globalAlpha = fade * 0.85;
+  ctx.strokeStyle = '#ffd84a';
+  ctx.lineWidth = 2;
+  for (let i = 0; i < 3; i++) {
+    const startX = effect.centerX - (effect.width * 0.22) + (i * effect.width * 0.22);
+    const startY = effect.centerY - (effect.height * 0.18) + Math.sin((effect.timer * 14) + i) * 3;
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(startX + 3, startY + 5);
+    ctx.lineTo(startX - 1, startY + 5);
+    ctx.lineTo(startX + 4, startY + 11);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function renderSleepStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  const chars = ['Z', 'z', 'z'];
+  ctx.save();
+  for (let i = 0; i < chars.length; i++) {
+    const phase = ((effect.timer * 1.4) + (i * 0.16)) % 1;
+    const x = effect.centerX + (effect.width * 0.08) + (i * 5);
+    const y = effect.centerY - (effect.height * 0.34) - (phase * 10);
+    ctx.globalAlpha = fade * (0.35 + ((1 - phase) * 0.35));
+    drawText(ctx, chars[i], x, y, {
+      size: 6 - i,
+      color: '#d8dcff',
+      align: 'center',
+      direction: 'ltr',
+    });
+  }
+  ctx.restore();
+}
+
+function renderFreezeStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  const blocks = [
+    { x: -0.22, y: -0.15, w: 0.16, h: 0.2 },
+    { x: -0.02, y: 0.05, w: 0.18, h: 0.22 },
+    { x: 0.16, y: -0.08, w: 0.14, h: 0.18 },
+  ];
+
+  ctx.save();
+  ctx.globalAlpha = fade * 0.16;
+  ctx.fillStyle = '#8fe6ff';
+  ctx.beginPath();
+  ctx.ellipse(effect.centerX, effect.centerY, effect.width * 0.34, effect.height * 0.3, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  for (const block of blocks) {
+    const x = effect.centerX + (effect.width * block.x);
+    const y = effect.centerY + (effect.height * block.y);
+    const w = effect.width * block.w;
+    const h = effect.height * block.h;
+    ctx.globalAlpha = fade * 0.42;
+    ctx.fillStyle = '#bff6ff';
+    ctx.fillRect(x, y, w, h);
+    ctx.globalAlpha = fade * 0.9;
+    ctx.strokeStyle = '#e8ffff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x, y, w, h);
+  }
+  ctx.restore();
+}
+
+export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect): void {
+  if (!effect.active) return;
+
+  const fade = Math.max(0, 1 - (effect.timer / effect.duration));
+  switch (effect.status) {
+    case 'burn':
+      renderBurnStatusEffect(ctx, effect, fade);
+      break;
+    case 'poison':
+      renderPoisonStatusEffect(ctx, effect, fade);
+      break;
+    case 'paralyze':
+      renderParalyzeStatusEffect(ctx, effect, fade);
+      break;
+    case 'sleep':
+      renderSleepStatusEffect(ctx, effect, fade);
+      break;
+    case 'freeze':
+      renderFreezeStatusEffect(ctx, effect, fade);
       break;
   }
 }

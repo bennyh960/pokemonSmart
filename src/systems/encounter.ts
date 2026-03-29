@@ -43,11 +43,11 @@ const MAX_RARITY_XP_BONUS = 0.15;
 
 function getSteppedCatchRate(catchRate: number): number {
   const normalizedRate = Math.max(1, Math.min(MAX_CATCH_RATE, catchRate));
-  if (normalizedRate <= 50) return 25;
-  if (normalizedRate <= 100) return 75;
-  if (normalizedRate <= 150) return 125;
-  if (normalizedRate <= 200) return 175;
-  if (normalizedRate < MAX_CATCH_RATE) return 225;
+  if (normalizedRate <= 50) return 20;
+  if (normalizedRate <= 100) return 25;
+  if (normalizedRate <= 150) return 30;
+  if (normalizedRate <= 200) return 35;
+  if (normalizedRate < MAX_CATCH_RATE) return 45;
   return MAX_CATCH_RATE;
 }
 
@@ -153,6 +153,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     abilityId,
     natureId,
     heldItemId: null,
+    status: null,
     caughtBall: 'poke-ball',
   };
 }

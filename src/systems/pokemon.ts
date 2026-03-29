@@ -39,5 +39,6 @@ export function createDefaultPokemon(): Pokemon {
     abilityId: null,
     natureId: null,
     heldItemId: null,
+    status: null,
   };
 }

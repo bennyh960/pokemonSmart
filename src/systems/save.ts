@@ -8,11 +8,28 @@
 
 import type { PlayerData } from '../types/index.js';
 import { getDefaultHeroCharacterId, hasCharacter } from '../engine/character-sprites.js';
+import { ensurePersistentBattleFields } from './battle-state.js';
 
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 4;
+export const CURRENT_SAVE_VERSION = 5;
+
+function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Record<string, any>) => void): void {
+  if (data.party) {
+    for (const pokemon of data.party) {
+      if (pokemon) callback(pokemon);
+    }
+  }
+  if (data.boxes) {
+    for (const box of data.boxes) {
+      if (!box?.pokemon) continue;
+      for (const pokemon of box.pokemon) {
+        if (pokemon) callback(pokemon);
+      }
+    }
+  }
+}
 
 /**
  * Migration functions keyed by TARGET version.
@@ -41,22 +58,13 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
   },
   // Version 2 → 3: add abilityId, natureId, heldItemId to all Pokemon
   3: (data) => {
-    const addFields = (pokemon: any) => {
+    const addFields = (pokemon: Record<string, any>) => {
       if (!pokemon) return;
       if (pokemon.abilityId === undefined) pokemon.abilityId = null;
       if (pokemon.natureId === undefined) pokemon.natureId = null;
       if (pokemon.heldItemId === undefined) pokemon.heldItemId = null;
     };
-    if (data.party) {
-      for (const p of data.party) addFields(p);
-    }
-    if (data.boxes) {
-      for (const box of data.boxes) {
-        if (box?.pokemon) {
-          for (const p of box.pokemon) addFields(p);
-        }
-      }
-    }
+    forEachStoredPokemon(data, addFields);
     data.saveVersion = 3;
   },
   // Version 3 → 4: add selected hero sprite id for player rendering
@@ -65,6 +73,11 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
       data.heroCharacterId = getDefaultHeroCharacterId();
     }
     data.saveVersion = 4;
+  },
+  // Version 4 → 5: add persistent Pokemon major status field
+  5: (data) => {
+    forEachStoredPokemon(data, ensurePersistentBattleFields);
+    data.saveVersion = 5;
   },
 };
 

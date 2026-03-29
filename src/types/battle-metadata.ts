@@ -1,0 +1,122 @@
+import type { PokemonType } from './index.ts';
+
+export type MajorStatusId = 'poison' | 'burn' | 'paralyze' | 'sleep' | 'freeze';
+
+export type BattleStatId =
+  | 'attack'
+  | 'defense'
+  | 'specialAttack'
+  | 'specialDefense'
+  | 'speed'
+  | 'accuracy'
+  | 'evasion';
+
+export type MoveBattleTarget =
+  | 'selected-pokemon'
+  | 'user'
+  | 'all-opponents'
+  | 'users-field'
+  | 'entire-field'
+  | 'ally'
+  | 'user-or-ally'
+  | 'random-opponent'
+  | 'all-other-pokemon'
+  | 'specific-move';
+
+export type MoveBattleBehaviorTag = 'fails-if-target-not-attacking';
+
+export interface MoveStatusEffect {
+  status: MajorStatusId;
+  chance: number;
+  target: 'user' | 'target';
+  badlyPoisoned?: boolean;
+  minTurns?: number | null;
+  maxTurns?: number | null;
+}
+
+export interface MoveStatChange {
+  stat: BattleStatId;
+  stages: number;
+  target: 'user' | 'target';
+  chance: number;
+}
+
+export interface MoveBattleMetadata {
+  priority: number;
+  target: MoveBattleTarget;
+  ailment: MoveStatusEffect | null;
+  statChanges: MoveStatChange[];
+  critRate: number;
+  flinchChance: number | null;
+  drainPercent: number | null;
+  healingPercent: number | null;
+  minHits: number | null;
+  maxHits: number | null;
+  minTurns: number | null;
+  maxTurns: number | null;
+  category: string | null;
+  flags: string[];
+  behaviorTags: MoveBattleBehaviorTag[];
+}
+
+export type AbilityBattleEffect =
+  | {
+      kind: 'damageTakenMultiplier';
+      moveTypes: PokemonType[];
+      multiplier: number;
+    }
+  | {
+      kind: 'statusImmunity';
+      statuses: MajorStatusId[];
+    }
+  | {
+      kind: 'preventCriticalHits';
+    }
+  | {
+      kind: 'typeAbsorbHeal';
+      moveTypes: PokemonType[];
+      healPercent: number;
+    }
+  | {
+      kind: 'contactStatusChance';
+      status: MajorStatusId;
+      chance: number;
+    };
+
+export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
+  return {
+    priority: 0,
+    target: 'selected-pokemon',
+    ailment: null,
+    statChanges: [],
+    critRate: 0,
+    flinchChance: null,
+    drainPercent: null,
+    healingPercent: null,
+    minHits: null,
+    maxHits: null,
+    minTurns: null,
+    maxTurns: null,
+    category: null,
+    flags: [],
+    behaviorTags: [],
+  };
+}
+
+export function normalizeMajorStatusId(status: string | null | undefined): MajorStatusId | null {
+  switch (status) {
+    case 'poison':
+      return 'poison';
+    case 'burn':
+      return 'burn';
+    case 'paralysis':
+    case 'paralyze':
+      return 'paralyze';
+    case 'sleep':
+      return 'sleep';
+    case 'freeze':
+      return 'freeze';
+    default:
+      return null;
+  }
+}

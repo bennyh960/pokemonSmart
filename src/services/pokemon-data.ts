@@ -17,6 +17,15 @@ import pokemonAbilitiesData from '../data/pokemon-abilities.json';
 import naturesData from '../data/natures.json';
 import itemsData from '../data/items.json';
 import { POKEMON_CATCH_RATES } from '../data/pokemon-catch-rates.js';
+import { MOVE_BATTLE_OVERRIDES } from '../data/move-battle-overrides.js';
+import { ABILITY_BATTLE_EFFECTS } from '../data/ability-battle-effects.js';
+import {
+  createDefaultMoveBattleMetadata,
+  normalizeMajorStatusId,
+  type AbilityBattleEffect,
+  type MoveBattleMetadata,
+  type MoveBattleTarget,
+} from '../types/battle-metadata.js';
 
 // --- Types matching the JSON shapes ---
 
@@ -44,7 +53,7 @@ export interface PokemonData {
   description?: string;   // Pokedex flavor text — English only, TODO: fetch from PokeAPI species
 }
 
-export interface MoveData {
+interface RawMoveData {
   id: number;
   name: LocalizedName;
   type: string;
@@ -55,6 +64,11 @@ export interface MoveData {
   mathDifficulty: number;
   damageClass: string;
   description: string;
+  battle?: Partial<MoveBattleMetadata>;
+}
+
+export interface MoveData extends RawMoveData {
+  battle: MoveBattleMetadata;
 }
 
 export interface TypeChartData {
@@ -104,9 +118,40 @@ for (const p of pokemonData as unknown as PokemonData[]) {
   pokemonByName.set(p.name.en.toLowerCase(), p);
 }
 
+function normalizeMoveBattleMetadata(
+  base: Partial<MoveBattleMetadata> | undefined,
+  override: Partial<MoveBattleMetadata> | undefined,
+): MoveBattleMetadata {
+  const merged = {
+    ...createDefaultMoveBattleMetadata(),
+    ...base,
+    ...override,
+    ailment: override?.ailment ?? base?.ailment ?? null,
+    statChanges: [...(override?.statChanges ?? base?.statChanges ?? [])],
+    flags: [...(override?.flags ?? base?.flags ?? [])],
+    behaviorTags: [...(override?.behaviorTags ?? base?.behaviorTags ?? [])],
+  };
+
+  if (merged.ailment) {
+    const status = normalizeMajorStatusId(merged.ailment.status);
+    merged.ailment = status ? { ...merged.ailment, status } : null;
+  }
+
+  merged.target = merged.target as MoveBattleTarget;
+  return merged;
+}
+
+function normalizeMoveData(move: RawMoveData): MoveData {
+  return {
+    ...move,
+    battle: normalizeMoveBattleMetadata(move.battle, MOVE_BATTLE_OVERRIDES[move.name.en]),
+  };
+}
+
+const allMoves = (movesData as unknown as RawMoveData[]).map(normalizeMoveData);
 const moveById = new Map<number, MoveData>();
 const moveByName = new Map<string, MoveData>();
-for (const m of movesData as unknown as MoveData[]) {
+for (const m of allMoves) {
   moveById.set(m.id, m);
   moveByName.set(m.name.en.toLowerCase(), m);
 }
@@ -178,7 +223,11 @@ export function getMoveByName(name: string): MoveData | undefined {
 }
 
 export function getAllMoves(): MoveData[] {
-  return movesData as MoveData[];
+  return allMoves;
+}
+
+export function getMoveBattleData(id: number): MoveBattleMetadata | undefined {
+  return moveById.get(id)?.battle;
 }
 
 export function getTypeEffectiveness(attackingType: PokemonType, defendingType: PokemonType): number {
@@ -276,10 +325,15 @@ export function getPokemonCatchRate(id: number): number {
 
 // --- Abilities data ---
 
-export interface AbilityDef {
+interface RawAbilityDef {
   name: LocalizedName;
   description: string;
   generationIntroduced: string;
+  battleEffects?: AbilityBattleEffect[];
+}
+
+export interface AbilityDef extends RawAbilityDef {
+  battleEffects: AbilityBattleEffect[];
 }
 
 export interface PokemonAbilityMapping {
@@ -292,12 +346,51 @@ export interface PokemonAbilityDetail extends AbilityDef {
   isHidden: boolean;
 }
 
-const abilities = abilitiesData as Record<string, AbilityDef>;
+function normalizeAbilityBattleEffects(effects: AbilityBattleEffect[] | undefined): AbilityBattleEffect[] {
+  const normalized: AbilityBattleEffect[] = [];
+  for (const effect of effects ?? []) {
+    if (effect.kind === 'statusImmunity') {
+      const statuses = effect.statuses
+        .map((status) => normalizeMajorStatusId(status))
+        .filter((status): status is NonNullable<typeof status> => status !== null);
+      if (statuses.length > 0) {
+        normalized.push({ ...effect, statuses });
+      }
+      continue;
+    }
+
+    if (effect.kind === 'contactStatusChance') {
+      const status = normalizeMajorStatusId(effect.status);
+      if (status) {
+        normalized.push({ ...effect, status });
+      }
+      continue;
+    }
+
+    normalized.push(effect);
+  }
+  return normalized;
+}
+
+function normalizeAbilityDef(ability: RawAbilityDef): AbilityDef {
+  return {
+    ...ability,
+    battleEffects: normalizeAbilityBattleEffects(ABILITY_BATTLE_EFFECTS[ability.name.en] ?? ability.battleEffects),
+  };
+}
+
+const abilities = Object.fromEntries(
+  Object.entries(abilitiesData as Record<string, RawAbilityDef>).map(([id, ability]) => [id, normalizeAbilityDef(ability)]),
+) as Record<string, AbilityDef>;
 const pokemonAbilities = pokemonAbilitiesData as Record<string, PokemonAbilityMapping>;
 
 /** Get ability definition by PokeAPI ability ID. */
 export function getAbility(id: number): AbilityDef | undefined {
   return abilities[String(id)];
+}
+
+export function getAbilityBattleEffects(id: number): AbilityBattleEffect[] {
+  return abilities[String(id)]?.battleEffects ?? [];
 }
 
 /** Get localized ability name. */

@@ -191,21 +191,42 @@ This is a foundation sprint — must be done before design/content sprints.
 --- 
 
 ## Sprint 6 — Battle System ⬜ PLANNED
-**Goal:** Realistic Pokemon battle mechanics
+**Goal:** Build the first "real battle" pass on top of data-driven move/ability metadata and a reusable persistent battle-state layer.
 
-**Priority:** After Sprint 5.5 lands, implement status effects first. Broader battle refactor work and the first batch of ability passive effects should build on top of that foundation.
+**Priority:** Start with the data model and status foundation. Turn order, accuracy/evasion, stat stages, damage modifiers, and the first ability pass should all reuse the same battle-state layer rather than being hardcoded inside `battle.ts`.
 
-| Task | Agent |
-|------|-------|
-| Turn order based on speed stat + move priority | game-engine-developer |
-| Physical vs Special damage split (use damageClass from data) | game-engine-developer |
-| Status effects (poison, burn, sleep, paralysis, freeze) | game-engine-developer |
-| Dodge/accuracy mechanics | game-engine-developer |
-| Critical hits | game-engine-developer |
-| Stat stages (raise/lower attack, defense, etc.) | game-engine-developer |
-| Wild Pokemon catching — pokeball mechanics, catch rate formula | game-engine-developer |
-| Trainer AI improvements (smart move selection) | game-engine-developer |
-| Battle UI polish — animations, status icons | frontend-developer |
+**Battle rules for this sprint:**
+- Turn order resolves by **move priority first**, then **effective speed**, then random tie-break.
+- Priority moves (for example Quick Attack, Extreme Speed, Shadow Sneak, Sucker Punch) must come from move metadata, not per-move hardcoding in scene logic.
+- Effective speed includes stat-stage changes and status penalties.
+- Major statuses for this sprint: poison, burn, paralysis, sleep, freeze.
+- Poison, burn, and paralysis persist until cured by item/healer. Sleep and freeze block actions for a temporary turn window.
+- Burn chips HP each turn and halves physical Attack. Paralysis halves Speed and can cancel the turn. Poison chips HP each turn.
+- Sleep and freeze prevent actions for a tracked duration window and then clear automatically.
+- Stat stages are tracked separately from base stats, can target self or enemy, and are capped between `-200%` and `+200%`.
+- Accuracy and evasion feed the same hit-check pipeline used by damaging and status moves.
+- The first ability batch should focus on passive battle modifiers needed by the core damage/status loop (for example Thick Fat reducing incoming Fire/Ice damage).
+- more randoms : critical damage do 150% effect , generic random factor - each damage also has random values from 70-100% .
+
+**Architecture notes:**
+- Extend move data with battle metadata such as priority, target, ailment/status payloads, stat-stage deltas, and effect chance details wherever the current data shape is too thin.
+- Add an ability effect schema / hook layer so passive effects can modify damage, status application, or switch-in behavior without special-casing each species in `battle.ts`.
+- Add persistent major-status fields to `Pokemon`, but keep volatile battle-only state (sleep/freeze counters, temporary stat stages, accuracy/evasion stages, protect-like flags) in battle runtime state.
+- Bump save version when adding persistent Pokemon battle fields.
+- Use existing `damageClass` move data for the physical/special split, then layer crits, status modifiers, abilities, and RNG through one shared damage pipeline.
+
+| Task | Agent | Notes |
+|------|-------|-------|
+| Battle data schema audit + enrichment | game-engine-developer | Extend move/ability metadata for priority, targets, status application, stat-stage moves, and passive hooks. Prefer script/data-pipeline enrichment over manual one-offs where possible. |
+| Persistent battle-state model + save migration | game-engine-developer | Add persistent major status fields on Pokemon and keep volatile turn state inside battle runtime objects. |
+| Turn order resolver (priority -> effective speed -> tie-break) | game-engine-developer | Support regular speed ordering and priority moves without duplicating move-specific scene logic. |
+| Major status conditions | game-engine-developer | Implement poison, burn, paralysis, sleep, and freeze with chip, turn denial, cure rules, and battle messaging. |
+| Stat stage system | game-engine-developer | Track self/enemy buffs and debuffs, cap them at `-200%` to `+200%`, and expose battle feedback/UI hooks. |
+| Accuracy/evasion hit pipeline | game-engine-developer | Shared hit-resolution path for damaging and status moves, including paralysis turn-loss checks where relevant. |
+| Damage pipeline refactor | game-engine-developer | Physical vs special split, critical hits, burn attack penalty, type/STAB math, and ability modifier hooks. |
+| First ability passive batch | game-engine-developer | Start with battle-critical passives such as Thick Fat and similar damage modifier / immunity style abilities. |
+| Catch + trainer AI follow-up | game-engine-developer | Revisit catch flow after statuses land and replace random enemy move selection with better heuristics. |
+| Battle UI polish — status icons, stat-stage feedback | frontend-developer | Reuse the existing status-pill / animation foundation and expose clear visual feedback for statuses and buffs/debuffs. |
 
 ---
 

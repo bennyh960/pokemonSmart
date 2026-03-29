@@ -27,6 +27,53 @@ export interface MoveEntry {
   mathDifficulty: number;
   damageClass: string;      // "physical" | "special" | "status"
   description: string;      // English flavor text
+  battle: {
+    priority: number;
+    target: string;
+    ailment: {
+      status: string;
+      chance: number;
+      target: 'user' | 'target';
+      minTurns?: number | null;
+      maxTurns?: number | null;
+    } | null;
+    statChanges: Array<{
+      stat: string;
+      stages: number;
+      target: 'user' | 'target';
+      chance: number;
+    }>;
+    critRate: number;
+    flinchChance: number | null;
+    drainPercent: number | null;
+    healingPercent: number | null;
+    minHits: number | null;
+    maxHits: number | null;
+    minTurns: number | null;
+    maxTurns: number | null;
+    category: string | null;
+    flags: string[];
+    behaviorTags: string[];
+  };
+}
+
+function normalizeStatus(status: string | null | undefined): string | null {
+  switch (status) {
+    case 'poison':
+    case 'burn':
+    case 'sleep':
+    case 'freeze':
+      return status;
+    case 'paralysis':
+    case 'paralyze':
+      return 'paralyze';
+    default:
+      return null;
+  }
+}
+
+function inferChangeTarget(target: string | undefined): 'user' | 'target' {
+  return target === 'user' || target === 'user-or-ally' ? 'user' : 'target';
 }
 
 function sleep(ms: number): Promise<void> {
@@ -83,6 +130,15 @@ export async function fetchMovesData(): Promise<MoveEntry[]> {
     const englishEntries = flavorEntries.filter((e: any) => e.language.name === 'en');
     const gsEntry = englishEntries.find((e: any) => e.version_group.name === 'gold-silver');
     const flavorText = (gsEntry ?? englishEntries[0])?.flavor_text?.replace(/\n/g, ' ') ?? '';
+    const ailmentStatus = normalizeStatus(data.meta?.ailment?.name);
+    const ailment = ailmentStatus ? {
+      status: ailmentStatus,
+      chance: data.meta?.ailment_chance ?? data.effect_chance ?? 100,
+      target: inferChangeTarget(data.target?.name),
+      minTurns: data.meta?.min_turns ?? null,
+      maxTurns: data.meta?.max_turns ?? null,
+    } : null;
+    const changeTarget = inferChangeTarget(data.target?.name);
 
     moves.push({
       id: data.id,
@@ -95,6 +151,28 @@ export async function fetchMovesData(): Promise<MoveEntry[]> {
       mathDifficulty: powerToMathDifficulty(data.power),
       damageClass,
       description: flavorText,
+      battle: {
+        priority: data.priority ?? 0,
+        target: data.target?.name ?? 'selected-pokemon',
+        ailment,
+        statChanges: (data.stat_changes ?? []).map((change: any) => ({
+          stat: change.stat?.name ?? '',
+          stages: change.change ?? 0,
+          target: changeTarget,
+          chance: data.effect_chance ?? 100,
+        })),
+        critRate: data.meta?.crit_rate ?? 0,
+        flinchChance: data.meta?.flinch_chance ?? null,
+        drainPercent: data.meta?.drain ?? null,
+        healingPercent: data.meta?.healing ?? null,
+        minHits: data.meta?.min_hits ?? null,
+        maxHits: data.meta?.max_hits ?? null,
+        minTurns: data.meta?.min_turns ?? null,
+        maxTurns: data.meta?.max_turns ?? null,
+        category: data.meta?.category?.name ?? null,
+        flags: (data.flags ?? []).map((flag: any) => flag.name),
+        behaviorTags: [],
+      },
     });
 
     count++;

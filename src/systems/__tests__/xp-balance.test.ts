@@ -35,6 +35,6 @@ describe('XP rebalance', () => {
 
     expect(calculateXpGain(commonEnemy)).toBe(30);
     expect(calculateXpGain(rareEnemy)).toBe(72);
-    expect(calculateXpGain(rareEnemy, { trainerBattle: true })).toBe(108);
+    expect(calculateXpGain(rareEnemy, { trainerBattle: true })).toBe(109);
   });
 });

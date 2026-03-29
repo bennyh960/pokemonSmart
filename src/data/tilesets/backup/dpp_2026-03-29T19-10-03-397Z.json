@@ -1461,9 +1461,6 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -2949,30 +2946,6 @@
       "above": true,
       "interactType": null,
       "description": "door for building"
-    },
-    {
-      "key": "rock1",
-      "sx": 48,
-      "sy": 4784,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "ground",
-      "interactType": null,
-      "description": "just a gray rock"
-    },
-    {
-      "key": "box1",
-      "sx": 112,
-      "sy": 4928,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null,
-      "description": "box"
     }
   ]
 }

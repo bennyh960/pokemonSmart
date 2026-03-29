@@ -1,3 +1,5 @@
+import type { MajorStatusId } from './battle-metadata.ts';
+
 /**
  * Shared TypeScript types and interfaces for Pokemon Math Adventure.
  * All core data structures used across the game are defined here.
@@ -41,6 +43,7 @@ export interface Pokemon {
   abilityId: number | null;   // PokeAPI ability ID — lookup in abilities.json
   natureId: number | null;    // PokeAPI nature ID (1-25) — lookup in natures.json
   heldItemId: number | null;  // PokeAPI item ID — lookup in items.json + item-defs.ts
+  status: MajorStatusId | null; // Persistent major status between battles/items/healers
   caughtBall?: string;     // Item ID of the pokeball used to catch (e.g. 'poke-ball', 'great-ball')
 }
 
@@ -116,7 +119,7 @@ export interface PCBox {
 
 /** Persistent player data (saved to localStorage). */
 export interface PlayerData {
-  saveVersion: number;           // Schema version for migration (current: 4)
+  saveVersion: number;           // Schema version for migration (current: 5)
   name: string;
   heroCharacterId: string;
   party: Pokemon[];

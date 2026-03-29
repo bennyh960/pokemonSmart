@@ -29,15 +29,7 @@ export function createNewPlayerData(): PlayerData {
     pokedex: {},
     items: {
       'potion': 5,
-      'super-potion': 3,
-      'antidote': 2,
       'poke-ball': 10,
-      'great-ball': 5,
-      'revive': 2,
-      'full-heal': 1,
-      'x-attack': 2,
-      'x-speed': 2,
-      'rare-candy': 20,
     },
     flags: {},
     position: { mapId: 'zeroville', x: 15, y: 12 },
@@ -82,11 +74,12 @@ export function loadSavedGame(): PlayerData | null {
   return data;
 }
 
-/** Heal all Pokemon in the party: restore HP and PP. */
+/** Heal all Pokemon in the party: restore HP, PP, and persistent status. */
 export function healParty(): void {
   const pd = getPlayerData();
   for (const pokemon of pd.party) {
     pokemon.hp = pokemon.maxHp;
+    pokemon.status = null;
     for (const move of pokemon.moves) {
       move.currentPp = move.pp;
     }

@@ -12,20 +12,21 @@ export { TYPE_BADGE } from './type-constants.js';
 // ─── Status pill colors ────────────────────────────────────────────
 export interface StatusPillStyle {
   label: string;
+  shortLabel: string;
   bgColor: string;
   borderColor: string;
   textColor: string;
 }
 
 export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
-  poison:  { label: 'הרעלה',  bgColor: 'rgba(160,64,160,0.15)',  borderColor: 'rgba(160,64,160,0.25)',  textColor: '#c070c0' },
-  burn:    { label: 'שריפה',  bgColor: 'rgba(240,128,48,0.15)',  borderColor: 'rgba(240,128,48,0.25)',  textColor: '#f09050' },
-  paralyze:{ label: 'שיתוק',  bgColor: 'rgba(248,208,48,0.15)',  borderColor: 'rgba(248,208,48,0.25)',  textColor: '#d8b830' },
-  sleep:   { label: 'שינה',   bgColor: 'rgba(100,100,140,0.15)', borderColor: 'rgba(100,100,140,0.25)', textColor: '#8888b0' },
-  freeze:  { label: 'קפאון',  bgColor: 'rgba(152,216,216,0.15)', borderColor: 'rgba(152,216,216,0.25)', textColor: '#80c8c8' },
-  confuse: { label: 'מבולבל', bgColor: 'rgba(248,88,136,0.15)',  borderColor: 'rgba(248,88,136,0.25)',  textColor: '#f07090' },
-  boost:   { label: '',       bgColor: 'rgba(77,255,180,0.1)',   borderColor: 'rgba(77,255,180,0.2)',   textColor: '#4dffb4' },
-  debuff:  { label: '',       bgColor: 'rgba(232,88,88,0.1)',    borderColor: 'rgba(232,88,88,0.2)',    textColor: '#e85858' },
+  poison:  { label: 'הרעלה',  shortLabel: 'PSN', bgColor: 'rgba(160,64,160,0.15)',  borderColor: 'rgba(160,64,160,0.25)',  textColor: '#c070c0' },
+  burn:    { label: 'שריפה',  shortLabel: 'BRN', bgColor: 'rgba(240,128,48,0.15)',  borderColor: 'rgba(240,128,48,0.25)',  textColor: '#f09050' },
+  paralyze:{ label: 'שיתוק',  shortLabel: 'PAR', bgColor: 'rgba(248,208,48,0.15)',  borderColor: 'rgba(248,208,48,0.25)',  textColor: '#d8b830' },
+  sleep:   { label: 'שינה',   shortLabel: 'SLP', bgColor: 'rgba(100,100,140,0.15)', borderColor: 'rgba(100,100,140,0.25)', textColor: '#8888b0' },
+  freeze:  { label: 'קפאון',  shortLabel: 'FRZ', bgColor: 'rgba(152,216,216,0.15)', borderColor: 'rgba(152,216,216,0.25)', textColor: '#80c8c8' },
+  confuse: { label: 'מבולבל', shortLabel: 'CNF', bgColor: 'rgba(248,88,136,0.15)',  borderColor: 'rgba(248,88,136,0.25)',  textColor: '#f07090' },
+  boost:   { label: '',       shortLabel: 'UP',  bgColor: 'rgba(77,255,180,0.1)',   borderColor: 'rgba(77,255,180,0.2)',   textColor: '#4dffb4' },
+  debuff:  { label: '',       shortLabel: 'DN',  bgColor: 'rgba(232,88,88,0.1)',    borderColor: 'rgba(232,88,88,0.2)',    textColor: '#e85858' },
 };
 
 // ─── Main layout constants ─────────────────────────────────────────
@@ -88,6 +89,9 @@ export const BTL = {
   STATUS_GAP: 4,
   STATUS_X0: 84,  // rightmost pill (barX + barW - 4 - 30)
   STATUS_X1: 52,  // second pill
+  STATUS_BADGE_H: 7,
+  STATUS_BADGE_PAD_X: 3,
+  STATUS_BADGE_GAP: 3,
 
   // ===== PARTY BALLS =====
   BALL_SIZE: 4,

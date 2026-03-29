@@ -1,3 +1,5 @@
+import { normalizeMajorStatusId } from '../types/battle-metadata.js';
+
 export interface CaptureChanceInput {
   ballRate: number;
   speciesCatchRate: number;
@@ -19,11 +21,11 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 export function getStatusCatchMultiplier(status?: string | null): number {
-  switch (status) {
+  switch (normalizeMajorStatusId(status)) {
     case 'sleep':
     case 'freeze':
       return 1.5;
-    case 'paralysis':
+    case 'paralyze':
     case 'burn':
     case 'poison':
       return 1.2;

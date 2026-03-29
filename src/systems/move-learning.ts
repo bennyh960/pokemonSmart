@@ -2,7 +2,7 @@ import type { Move, PokemonType, MathDifficulty } from '../types/index.js';
 import { getMove, getMoveDisplayName, getPokemonDisplayName, movePowerToMathDifficulty, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
 
-export const MAX_POKEMON_MOVES = 2;
+export const MAX_POKEMON_MOVES = 8;
 
 export interface LevelUpMoveResult {
   moveId: number;

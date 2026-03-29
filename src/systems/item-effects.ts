@@ -11,6 +11,7 @@ import { checkAndApplyLevelUp } from './encounter.js';
 import { getPokemonDisplayName, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
 import type { LevelUpMoveResult } from './move-learning.js';
+import { canCurePersistentStatus } from './battle-state.js';
 
 export interface ItemUseResult {
   success: boolean;
@@ -54,7 +55,7 @@ export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
     case 'revive':
       return target.hp <= 0;
     case 'status-cure':
-      return true;
+      return canCurePersistentStatus(target.status, def.effect.status);
     case 'pp-restore':
     case 'pp-restore-one':
       return target.hp > 0 && target.moves.some(move => move.currentPp < move.pp);
@@ -115,8 +116,10 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
     }
 
     case 'status-cure': {
-      // TODO: Status effects not yet implemented in the game.
-      // For now, always succeed with a placeholder message.
+      if (!canCurePersistentStatus(target.status, effect.status)) {
+        return { success: false, message: 'No matching status to cure!' };
+      }
+      target.status = null;
       return { success: true, message: 'Cured!' };
     }
 

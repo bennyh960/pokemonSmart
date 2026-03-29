@@ -114,9 +114,7 @@ export function drawPanelBackground(
 // ─── Internals ─────────────────────────────────────────────────────
 
 function countStatuses(bar: HPBarState): number {
-  let count = bar.statChanges.length;
-  if (bar.status) count++;
-  return count;
+  return bar.statChanges.length;
 }
 
 function drawPanel(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
@@ -164,18 +162,27 @@ function renderPanelHeader(
   panelW: number,
   name: string,
   level: number,
+  status: string,
   nameStyle: { dy: number; fs: number },
   levelStyle: { dy: number; fs: number },
 ): void {
   const rtl = isRTL();
   const levelText = `Lv.${level}`;
   const levelWidth = measureTextWidth(ctx, levelText, levelStyle.fs);
+  const statusStyle = status ? STATUS_PILL_COLORS[status] : undefined;
+  const badgeLabel = statusStyle?.shortLabel ?? '';
+  const badgeTextWidth = badgeLabel ? measureTextWidth(ctx, badgeLabel, 4) : 0;
+  const badgeW = badgeLabel
+    ? Math.max(16, badgeTextWidth + (BTL.STATUS_BADGE_PAD_X * 2))
+    : 0;
   const padding = BTL.HEADER_PAD_X;
   const gap = BTL.HEADER_GAP;
+  const badgeGap = badgeW > 0 ? BTL.STATUS_BADGE_GAP : 0;
   const contentWidth = panelW - padding * 2;
-  const nameClipW = Math.max(0, contentWidth - levelWidth - gap);
+  const reservedWidth = levelWidth + badgeGap + badgeW;
+  const nameClipW = Math.max(0, contentWidth - reservedWidth - gap);
   const nameClipX = rtl
-    ? panelX + padding + levelWidth + gap
+    ? panelX + padding + reservedWidth + gap
     : panelX + padding;
   const nameAnchorX = rtl
     ? panelX + panelW - padding
@@ -183,6 +190,9 @@ function renderPanelHeader(
   const levelX = rtl
     ? panelX + padding
     : panelX + panelW - padding;
+  const badgeX = rtl
+    ? panelX + padding + levelWidth + badgeGap
+    : panelX + panelW - padding - levelWidth - badgeGap - badgeW;
 
   drawText(ctx, levelText, levelX, panelY + levelStyle.dy, {
     size: levelStyle.fs,
@@ -190,6 +200,10 @@ function renderPanelHeader(
     align: rtl ? 'left' : 'right',
     direction: 'ltr',
   });
+
+  if (statusStyle && badgeLabel) {
+    renderStatusBadge(ctx, badgeX, panelY + 1, badgeW, badgeLabel, statusStyle);
+  }
 
   if (nameClipW <= 0) return;
 
@@ -214,7 +228,7 @@ function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState, party
   const hpPct = bar.maxHp > 0 ? Math.ceil(ratio * 100) : 0;
 
   const name = getPokemonDisplayName(bar.pokemonId);
-  renderPanelHeader(ctx, B.x, B.y, B.w, name, bar.level, BTL.OPP_NAME, BTL.OPP_LEVEL);
+  renderPanelHeader(ctx, B.x, B.y, B.w, name, bar.level, bar.status, BTL.OPP_NAME, BTL.OPP_LEVEL);
 
   // HP label (right side)
   drawText(ctx, 'HP', B.x + BTL.OPP_HP_LABEL.dx, B.y + BTL.OPP_HP_LABEL.dy, {
@@ -253,7 +267,7 @@ function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBa
   const hpMax = bar.maxHp;
 
   const name = getPokemonDisplayName(bar.pokemonId);
-  renderPanelHeader(ctx, barX, barY, barW, name, bar.level, BTL.PLY_NAME, BTL.PLY_LEVEL);
+  renderPanelHeader(ctx, barX, barY, barW, name, bar.level, bar.status, BTL.PLY_NAME, BTL.PLY_LEVEL);
 
   // HP label
   drawText(ctx, 'HP', barX + BTL.PLY_HP_LABEL.dx, barY + BTL.PLY_HP_LABEL.dy, {
@@ -297,12 +311,6 @@ function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBa
 function renderStatusPills(ctx: CanvasRenderingContext2D, bar: HPBarState, barY: number): void {
   const pills: { label: string; bgColor: string; borderColor: string; textColor: string }[] = [];
 
-  // Primary status
-  if (bar.status && STATUS_PILL_COLORS[bar.status]) {
-    const s = STATUS_PILL_COLORS[bar.status];
-    pills.push({ label: s.label, bgColor: s.bgColor, borderColor: s.borderColor, textColor: s.textColor });
-  }
-
   // Stat changes as boost/debuff pills
   for (const change of bar.statChanges) {
     const isUp = change.stages > 0;
@@ -329,4 +337,25 @@ function renderStatusPills(ctx: CanvasRenderingContext2D, bar: HPBarState, barY:
       size: 4, color: pill.textColor, align: 'center',
     });
   }
+}
+
+function renderStatusBadge(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  label: string,
+  style: { bgColor: string; borderColor: string; textColor: string },
+): void {
+  ctx.fillStyle = style.bgColor;
+  fillRoundRect(ctx, x, y, w, BTL.STATUS_BADGE_H, 2);
+  ctx.strokeStyle = style.borderColor;
+  ctx.lineWidth = 1;
+  strokeRoundRect(ctx, x, y, w, BTL.STATUS_BADGE_H, 2);
+  drawText(ctx, label, x + w / 2, y + 1, {
+    size: 4,
+    color: style.textColor,
+    align: 'center',
+    direction: 'ltr',
+  });
 }

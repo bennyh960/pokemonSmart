@@ -1,0 +1,116 @@
+import type {
+  BattleStatId,
+  MajorStatusId,
+  MoveBattleMetadata,
+  MoveStatChange,
+  MoveStatusEffect,
+} from '../types/battle-metadata.js';
+
+type MoveOverride = Partial<MoveBattleMetadata>;
+type MoveStatusExtra = Omit<MoveStatusEffect, 'status' | 'chance' | 'target'>;
+
+function statusEffect(status: MajorStatusId, chance: number, extra?: MoveStatusExtra): MoveOverride {
+  return {
+    ailment: {
+      status,
+      chance,
+      target: 'target',
+      ...extra,
+    },
+  };
+}
+
+function stageChange(stat: BattleStatId, stages: number, target: 'user' | 'target', chance = 100): MoveStatChange {
+  return { stat, stages, target, chance };
+}
+
+function userStages(...changes: Array<[BattleStatId, number]>): MoveOverride {
+  return {
+    target: 'user',
+    statChanges: changes.map(([stat, stages]) => stageChange(stat, stages, 'user')),
+  };
+}
+
+function targetStages(...changes: Array<[BattleStatId, number]>): MoveOverride {
+  return {
+    target: 'selected-pokemon',
+    statChanges: changes.map(([stat, stages]) => stageChange(stat, stages, 'target')),
+  };
+}
+
+export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
+  'Quick Attack': { priority: 1 },
+  'Extreme Speed': { priority: 2 },
+  'Mach Punch': { priority: 1 },
+  'Aqua Jet': { priority: 1 },
+  'Ice Shard': { priority: 1 },
+  'Bullet Punch': { priority: 1 },
+  'Vacuum Wave': { priority: 1 },
+  'Shadow Sneak': { priority: 1 },
+  'Sucker Punch': { priority: 1, behaviorTags: ['fails-if-target-not-attacking'] },
+
+  'Karate Chop': { critRate: 1 },
+  'Razor Leaf': { critRate: 1 },
+  Slash: { critRate: 1 },
+  Crabhammer: { critRate: 1 },
+  Aeroblast: { critRate: 1 },
+  'Cross Chop': { critRate: 1 },
+  'Blaze Kick': { critRate: 1 },
+
+  Ember: statusEffect('burn', 10),
+  Flamethrower: statusEffect('burn', 10),
+  'Fire Blast': statusEffect('burn', 10),
+  'Flame Wheel': statusEffect('burn', 10),
+  'Sacred Fire': statusEffect('burn', 50),
+
+  'Ice Beam': statusEffect('freeze', 10, { minTurns: 2, maxTurns: 5 }),
+  Blizzard: statusEffect('freeze', 10, { minTurns: 2, maxTurns: 5 }),
+  'Powder Snow': statusEffect('freeze', 10, { minTurns: 2, maxTurns: 5 }),
+
+  Toxic: statusEffect('poison', 100, { badlyPoisoned: true }),
+  'Poison Powder': statusEffect('poison', 100),
+  'Poison Sting': statusEffect('poison', 30),
+  Smog: statusEffect('poison', 40),
+  'Sludge Bomb': statusEffect('poison', 30),
+
+  'Thunder Wave': statusEffect('paralyze', 100),
+  'Stun Spore': statusEffect('paralyze', 100),
+  Glare: statusEffect('paralyze', 100),
+  'Thunder Shock': statusEffect('paralyze', 10),
+  Thunderbolt: statusEffect('paralyze', 10),
+  Thunder: statusEffect('paralyze', 30),
+  'Body Slam': statusEffect('paralyze', 30),
+  Lick: statusEffect('paralyze', 30),
+  'Dragon Breath': statusEffect('paralyze', 30),
+  Spark: statusEffect('paralyze', 30),
+
+  Sing: statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
+  'Sleep Powder': statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
+  Hypnosis: statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
+  Spore: statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
+  'Lovely Kiss': statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
+
+  Growl: targetStages(['attack', -1]),
+  'Tail Whip': targetStages(['defense', -1]),
+  Leer: targetStages(['defense', -1]),
+  'String Shot': targetStages(['speed', -1]),
+  Smokescreen: targetStages(['accuracy', -1]),
+  'Sand Attack': targetStages(['accuracy', -1]),
+  Flash: targetStages(['accuracy', -1]),
+  Screech: targetStages(['defense', -2]),
+  'Scary Face': targetStages(['speed', -2]),
+  'Cotton Spore': targetStages(['speed', -2]),
+  'Metal Sound': targetStages(['specialDefense', -2]),
+  Charm: targetStages(['attack', -2]),
+
+  Harden: userStages(['defense', 1]),
+  Withdraw: userStages(['defense', 1]),
+  'Defense Curl': userStages(['defense', 1]),
+  Meditate: userStages(['attack', 1]),
+  'Swords Dance': userStages(['attack', 2]),
+  Agility: userStages(['speed', 2]),
+  'Double Team': userStages(['evasion', 1]),
+  Minimize: userStages(['evasion', 1]),
+  Amnesia: userStages(['specialDefense', 2]),
+  'Bulk Up': userStages(['attack', 1], ['defense', 1]),
+};

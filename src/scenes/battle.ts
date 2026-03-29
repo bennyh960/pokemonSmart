@@ -7,7 +7,7 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect } from '../engine/renderer.js';
-import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
+import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, setStatus, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import type { MainMenuChoice } from '../ui/battle-menu.js';
 import { resolveBattleBackgroundPath, type BattleBackgroundId } from '../data/battle-backgrounds.js';
@@ -20,6 +20,7 @@ import {
   createCaptureSuccessEffect, updateCaptureSuccessEffect, renderCaptureSuccessEffect,
   createSendOutEffect, updateSendOutEffect, renderSendOutEffect,
   createAttackEffect, updateAttackEffect, renderAttackEffect,
+  createStatusTurnEffect, updateStatusTurnEffect, renderStatusTurnEffect,
 } from '../ui/battle-animations.js';
 import {
   createBattleAnimationDirector,
@@ -32,6 +33,8 @@ import {
 import { drawPokeballIcon } from '../ui/item-icons.js';
 import {
   getCombinedTypeEffectiveness,
+  getAbilityBattleEffects,
+  getMoveBattleData,
   getPokemonCatchRate,
   getPokemonDisplayName,
   getMoveDisplayName,
@@ -61,6 +64,15 @@ import {
   type MoveLearningResolution,
 } from '../systems/move-learning.js';
 import { calculateCaptureChance } from '../systems/capture.js';
+import type { BattlePokemonRuntimeState } from '../systems/battle-state.js';
+import {
+  applyEndOfTurnStatusEffects,
+  applyMajorStatus,
+  chooseEnemyMoveIndex,
+  createBattleRuntimeStateForPokemon,
+  determineTurnOrder,
+  processStartOfTurnStatus,
+} from '../systems/battle-system.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -71,9 +83,7 @@ type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
   | 'TRAINER_NEXT_LEVEL_UP' | 'TRAINER_NEXT_LEVEL_UP_MOVES'
   | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP' | 'TRAINER_REWARD_LEVEL_UP_MOVES'
   | 'WAITING_BAG' | 'WAITING_PARTY' | 'WAITING_MOVE_LEARN' | 'SWITCH_POKEMON' | 'CAPTURE_ANIM'
-  | 'PLAYER_FAINT_SWITCH' | 'TRAINER_LOSS';
-
-type StatusCarrier = { status?: string | null };
+  | 'PLAYER_FAINT_SWITCH' | 'TRAINER_LOSS' | 'END_TURN_STATUS';
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
@@ -116,14 +126,32 @@ export function setTrainerBattleData(
   pendingBattleBackground = battleBackground;
 }
 
-function calcDamage(atk: Pokemon, def: Pokemon, power: number, moveType: PokemonType): number {
+function calcDamage(
+  atk: Pokemon,
+  def: Pokemon,
+  power: number,
+  moveType: PokemonType,
+  damageClass: string,
+): number {
   if (power <= 0) return 0;
+  const isSpecial = damageClass === 'special';
+  const burnMultiplier = damageClass === 'physical' && atk.status === 'burn' ? 0.5 : 1;
+  const attackStat = isSpecial ? atk.specialAttack : atk.attack;
+  const defenseStat = isSpecial ? def.specialDefense : def.defense;
+  let defenderMultiplier = 1;
+  if (def.abilityId) {
+    for (const effect of getAbilityBattleEffects(def.abilityId)) {
+      if (effect.kind === 'damageTakenMultiplier' && effect.moveTypes.includes(moveType)) {
+        defenderMultiplier *= effect.multiplier;
+      }
+    }
+  }
   const lf = ((2 * atk.level) / 5) + 2;
-  const base = ((lf * power * (atk.attack / def.defense)) / 50) + 2;
+  const base = ((lf * power * ((attackStat * burnMultiplier) / defenseStat)) / 50) + 2;
   const eff = getCombinedTypeEffectiveness(moveType, def.types);
   const stab = atk.types.includes(moveType) ? 1.5 : 1;
   const rand = 0.85 + Math.random() * 0.15;
-  return Math.max(1, Math.floor(base * eff * stab * rand));
+  return Math.max(1, Math.floor(base * eff * stab * defenderMultiplier * rand));
 }
 
 function effText(mt: PokemonType, dt: PokemonType[]): string | null {
@@ -134,12 +162,48 @@ function effText(mt: PokemonType, dt: PokemonType[]): string | null {
   return null;
 }
 
+function getStatusAppliedLine(name: string, status: Pokemon['status']): string | null {
+  switch (status) {
+    case 'poison':
+      return t('battle.statusPoison', { name });
+    case 'burn':
+      return t('battle.statusBurn', { name });
+    case 'paralyze':
+      return t('battle.statusParalyze', { name });
+    case 'sleep':
+      return t('battle.statusSleep', { name });
+    case 'freeze':
+      return t('battle.statusFreeze', { name });
+    default:
+      return null;
+  }
+}
+
+function getTurnStatusLine(name: string, event: ReturnType<typeof processStartOfTurnStatus>['event']): string | null {
+  switch (event) {
+    case 'woke-up':
+      return t('battle.wokeUp', { name });
+    case 'fast-asleep':
+      return t('battle.fastAsleep', { name });
+    case 'thawed-out':
+      return t('battle.thawedOut', { name });
+    case 'frozen-solid':
+      return t('battle.frozenSolid', { name });
+    case 'fully-paralyzed':
+      return t('battle.fullyParalyzed', { name });
+    default:
+      return null;
+  }
+}
+
 export function createBattleScene(input: InputManager, stateMachine: StateMachine, _canvas: HTMLCanvasElement, audio: AudioManager): Scene {
   let phase: BattlePhase = 'INTRO';
   let player: Pokemon;
   let enemy: Pokemon;
   let playerHpBar: ReturnType<typeof createHPBar>;
   let enemyHpBar: ReturnType<typeof createHPBar>;
+  let playerBattleState: BattlePokemonRuntimeState;
+  let enemyBattleState: BattlePokemonRuntimeState;
   let menu: ReturnType<typeof createBattleMenu>;
   let textBox: ReturnType<typeof createTextBox> | null = null;
   let selMove = 0;
@@ -152,6 +216,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let captureSuccessFx: ReturnType<typeof createCaptureSuccessEffect> | null = null;
   let sendOutFx: ReturnType<typeof createSendOutEffect> | null = null;
   let attackFx: ReturnType<typeof createAttackEffect> | null = null;
+  let statusTurnFx: ReturnType<typeof createStatusTurnEffect> | null = null;
   let pendingNewMoves: LevelUpMoveResult[] = [];
   let activeMoveLearningPrompt: LevelUpMoveResult | null = null;
   let pendingMoveLearningResolution: MoveLearningResolution | null = null;
@@ -173,6 +238,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let bgImage: HTMLImageElement | null = null;
   let showTrainerSprite = false;  // Show trainer sprite during intro
   let enemyGoesFirst = false;
+  let enemySelectedMoveIndex = -1;
   let enemyAlreadyAttacked = false;
   let playerStatStages: Record<string, number> = {};
   let turnNumber = 0;
@@ -225,6 +291,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (result.success) {
       consumeItem(pd.items, itemId);
       setHP(playerHpBar, player.hp);
+      setStatus(playerHpBar, player.status ?? '');
       audio.playSFX('heal');
     }
     textBox = createTextBox([t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) })], isRTL());
@@ -234,8 +301,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function sendOutNextTrainerPokemon(): void {
     trainerPartyIndex++;
     enemy = trainerData!.party[trainerPartyIndex];
+    enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
+    enemySelectedMoveIndex = -1;
+    enemyAlreadyAttacked = false;
     enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp,
       BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
+    setStatus(enemyHpBar, enemy.status ?? '');
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
     pendingEnemySendOutAnimation = true;
@@ -340,16 +411,20 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
     playerHpBar = createHPBar(player.id, player.level, player.hp, player.maxHp,
       BTL.PLY_BAR_X, BTL.PLY_BAR_BOTTOM - 18, true, player.xp, player.xpToNext);
+    playerBattleState = createBattleRuntimeStateForPokemon(player);
+    enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
+    setStatus(enemyHpBar, enemy.status ?? '');
+    setStatus(playerHpBar, player.status ?? '');
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
-    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null; attackFx = null;
+    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null; attackFx = null; statusTurnFx = null;
     waitingForBag = false; waitingForParty = false; previousLeadId = null;
     pendingNewMoves = [];
     activeMoveLearningPrompt = null;
     pendingMoveLearningResolution = null;
     pendingMoveLearningPhase = null;
-    enemyGoesFirst = false; enemyAlreadyAttacked = false; playerStatStages = {};
+    enemyGoesFirst = false; enemySelectedMoveIndex = -1; enemyAlreadyAttacked = false; playerStatStages = {};
     turnNumber = 0;
     pendingTurnCredit = false;
     lossDialogueShown = false;
@@ -528,8 +603,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function getEnemyCaptureStatus(): string | null {
-    const enemyWithStatus = enemy as StatusCarrier;
-    return (enemyWithStatus.status ?? enemyHpBar.status) || null;
+    return (enemy.status ?? enemyHpBar.status) || null;
   }
 
   function getCaptureChance(ballRate: number): number {
@@ -959,6 +1033,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     playerHpBar.level = player.level;
     playerHpBar.maxHp = player.maxHp;
     playerHpBar.currentHp = Math.max(0, Math.min(player.hp, player.maxHp));
+    setStatus(playerHpBar, player.status ?? '');
     if (playerHpBar.displayHp > playerHpBar.maxHp) {
       playerHpBar.displayHp = playerHpBar.maxHp;
     }
@@ -967,6 +1042,79 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       setDisplayedXP(playerHpBar, 0);
     }
     menu.playerPokemon = player;
+  }
+
+  function syncEnemyBar(): void {
+    enemyHpBar.pokemonId = enemy.id;
+    enemyHpBar.level = enemy.level;
+    enemyHpBar.maxHp = enemy.maxHp;
+    enemyHpBar.currentHp = Math.max(0, Math.min(enemy.hp, enemy.maxHp));
+    setStatus(enemyHpBar, enemy.status ?? '');
+    if (enemyHpBar.displayHp > enemyHpBar.maxHp) {
+      enemyHpBar.displayHp = enemyHpBar.maxHp;
+    }
+  }
+
+  function handlePlayerFaintAfterAction(consolationXp = 0): void {
+    enemyGoesFirst = false;
+    startPlayerFaintAnimation();
+    const faintLines = [t('battle.fainted', { name: getPokemonDisplayName(player.id) })];
+    if (consolationXp > 0) {
+      faintLines.push(t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: consolationXp }));
+    }
+    textBox = createTextBox(faintLines, isRTL());
+    if (hasUsablePartyPokemon()) {
+      phase = 'PLAYER_FAINT_SWITCH';
+      return;
+    }
+
+    const pd = hasActiveGame() ? getPlayerData() : null;
+    const allPartyFainted = pd ? pd.party.every(p => p.hp <= 0) : true;
+    if (isTrainerBattle && !allPartyFainted) {
+      beginLoss('trainer-roster');
+    } else {
+      beginLoss(isTrainerBattle ? 'trainer-whiteout' : 'wild-whiteout');
+    }
+  }
+
+  function startEndTurnStatusPhase(): void {
+    const lines: string[] = [];
+    const playerResult = applyEndOfTurnStatusEffects(player, playerBattleState);
+    const enemyResult = applyEndOfTurnStatusEffects(enemy, enemyBattleState);
+
+    if (playerResult.message === 'poison') {
+      lines.push(t('battle.hurtByPoison', { name: getPokemonDisplayName(player.id) }));
+    } else if (playerResult.message === 'burn') {
+      lines.push(t('battle.hurtByBurn', { name: getPokemonDisplayName(player.id) }));
+    }
+
+    if (enemyResult.message === 'poison') {
+      lines.push(t('battle.hurtByPoison', { name: getPokemonDisplayName(enemy.id) }));
+    } else if (enemyResult.message === 'burn') {
+      lines.push(t('battle.hurtByBurn', { name: getPokemonDisplayName(enemy.id) }));
+    }
+
+    syncPlayerBar();
+    syncEnemyBar();
+
+    if (lines.length > 0) {
+      textBox = createTextBox(lines, isRTL());
+      phase = 'END_TURN_STATUS';
+      phaseTimer = 0;
+      return;
+    }
+
+    if (enemy.hp <= 0) {
+      phase = 'CHECK_WIN';
+      return;
+    }
+    if (player.hp <= 0) {
+      handlePlayerFaintAfterAction();
+      return;
+    }
+
+    pendingTurnCredit = true;
+    enterSelectMovePhase();
   }
 
   function waitForXpResolution(): boolean {
@@ -1052,6 +1200,29 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     };
   }
 
+  function getActorStatusBounds(actor: 'player' | 'enemy'): { centerX: number; centerY: number; width: number; height: number } {
+    const sprite = actor === 'player' ? BTL.PLY_SPRITE : BTL.OPP_SPRITE;
+    const state = animationDirector.getActorState(actor);
+    return {
+      centerX: sprite.x + (sprite.w / 2) + state.x,
+      centerY: sprite.y + (sprite.h / 2) + state.y,
+      width: sprite.w * Math.abs(state.scaleX),
+      height: sprite.h * Math.abs(state.scaleY),
+    };
+  }
+
+  function triggerStatusTurnEffect(actor: 'player' | 'enemy', pokemon: Pokemon): void {
+    if (!pokemon.status) return;
+    const bounds = getActorStatusBounds(actor);
+    statusTurnFx = createStatusTurnEffect(
+      pokemon.status,
+      bounds.centerX,
+      bounds.centerY,
+      bounds.width,
+      bounds.height,
+    );
+  }
+
   function applyMoveImpact(
     attacker: Pokemon,
     defender: Pokemon,
@@ -1061,15 +1232,31 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     popupY: number,
   ): void {
     const moveData = getMove(move.id);
+    const damageClass = moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status');
     const profile = getAttackAnimationProfile({
       name: moveData?.name ?? { en: move.name, he: move.name },
       type: move.type,
       power: move.power,
-      damageClass: moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status'),
+      damageClass,
     });
 
     if (move.power > 0) {
-      const dmg = calcDamage(attacker, defender, move.power, move.type);
+      const absorbEffect = defender.abilityId
+        ? getAbilityBattleEffects(defender.abilityId).find((effect) => {
+          return effect.kind === 'typeAbsorbHeal' && effect.moveTypes.includes(move.type);
+        })
+        : undefined;
+      if (absorbEffect?.kind === 'typeAbsorbHeal') {
+        const healAmount = Math.max(1, Math.floor((defender.maxHp * absorbEffect.healPercent) / 100));
+        const healed = Math.max(0, Math.min(defender.maxHp, defender.hp + healAmount) - defender.hp);
+        defender.hp = Math.min(defender.maxHp, defender.hp + healAmount);
+        setHP(targetBar, defender.hp);
+        spawnDamageNumber(`+${healed}`, popupX, popupY, '#48d870');
+        audio.playSFX('heal');
+        return;
+      }
+
+      const dmg = calcDamage(attacker, defender, move.power, move.type, damageClass);
       defender.hp = Math.max(0, defender.hp - dmg);
       setHP(targetBar, defender.hp);
       flash = createFlash(profile.flashColor, 0.15);
@@ -1157,36 +1344,125 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function doAttack(): void {
     const m = player.moves[selMove];
     const rtl = isRTL();
-    const msgs = [t('battle.usedMove', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) })];
+    const attackerName = getPokemonDisplayName(player.id);
+    const defenderName = getPokemonDisplayName(enemy.id);
+    triggerStatusTurnEffect('player', player);
+    const startResult = processStartOfTurnStatus(player, playerBattleState);
+    const turnStatusLine = getTurnStatusLine(attackerName, startResult.event);
+    syncPlayerBar();
+
+    if (!startResult.canAct) {
+      textBox = createTextBox(turnStatusLine ? [turnStatusLine] : [t('battle.nothingHappened')], rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
+    }
+
+    if (m.currentPp > 0) {
+      m.currentPp--;
+    }
+
+    const moveBattleData = getMoveBattleData(m.id);
+    const msgs: string[] = [];
+    if (turnStatusLine) {
+      msgs.push(turnStatusLine);
+    }
+    msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
+
+    let statusLine: string | null = null;
+    if (moveBattleData?.ailment?.target === 'target') {
+      const statusResult = applyMajorStatus(enemy, enemyBattleState, moveBattleData.ailment);
+      if (statusResult.applied) {
+        statusLine = getStatusAppliedLine(defenderName, statusResult.status);
+        setStatus(enemyHpBar, enemy.status ?? '');
+      }
+    } else if (moveBattleData?.ailment?.target === 'user') {
+      const statusResult = applyMajorStatus(player, playerBattleState, moveBattleData.ailment);
+      if (statusResult.applied) {
+        statusLine = getStatusAppliedLine(attackerName, statusResult.status);
+        setStatus(playerHpBar, player.status ?? '');
+      }
+    }
+
     if (m.power > 0) {
       const et = effText(m.type, enemy.types);
       if (et) msgs.push(et);
-    } else {
+    } else if (!statusLine) {
       msgs.push(t('battle.nothingHappened'));
       audio.playSFX('menu-cancel');
     }
+    if (statusLine) {
+      msgs.push(statusLine);
+    }
+
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation('player', 'enemy', m, () => {
       applyMoveImpact(player, enemy, m, enemyHpBar, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10);
     });
-    if (m.currentPp > 0) m.currentPp--;
     phase = 'PLAYER_ATTACK'; phaseTimer = 0;
   }
 
   function enemyTurn(showFasterMsg = false): void {
-    const mi = Math.floor(Math.random() * enemy.moves.length);
+    const mi = enemySelectedMoveIndex >= 0 ? enemySelectedMoveIndex : chooseEnemyMoveIndex(enemy);
+    enemySelectedMoveIndex = -1;
     const m = enemy.moves[mi];
     const rtl = isRTL();
+    const attackerName = getPokemonDisplayName(enemy.id);
+    const defenderName = getPokemonDisplayName(player.id);
+    triggerStatusTurnEffect('enemy', enemy);
+    const startResult = processStartOfTurnStatus(enemy, enemyBattleState);
+    const turnStatusLine = getTurnStatusLine(attackerName, startResult.event);
+    syncEnemyBar();
     const prefix: string[] = showFasterMsg
-      ? [t('battle.enemyFaster', { name: getPokemonDisplayName(enemy.id) })]
+      ? [t('battle.enemyMovesFirst', { name: attackerName })]
       : [];
-    const msgs = [...prefix, t('battle.usedMove', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) })];
+
+    if (!startResult.canAct) {
+      const msgs = [...prefix];
+      msgs.push(turnStatusLine ?? t('battle.nothingHappened'));
+      textBox = createTextBox(msgs, rtl);
+      phase = 'ENEMY_TURN';
+      phaseTimer = 0;
+      return;
+    }
+
+    if (m.currentPp > 0) {
+      m.currentPp--;
+    }
+
+    const moveBattleData = getMoveBattleData(m.id);
+    const msgs = [...prefix];
+    if (turnStatusLine) {
+      msgs.push(turnStatusLine);
+    }
+    msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
+
+    let statusLine: string | null = null;
+    if (moveBattleData?.ailment?.target === 'target') {
+      const statusResult = applyMajorStatus(player, playerBattleState, moveBattleData.ailment);
+      if (statusResult.applied) {
+        statusLine = getStatusAppliedLine(defenderName, statusResult.status);
+        setStatus(playerHpBar, player.status ?? '');
+      }
+    } else if (moveBattleData?.ailment?.target === 'user') {
+      const statusResult = applyMajorStatus(enemy, enemyBattleState, moveBattleData.ailment);
+      if (statusResult.applied) {
+        statusLine = getStatusAppliedLine(attackerName, statusResult.status);
+        setStatus(enemyHpBar, enemy.status ?? '');
+      }
+    }
+
     if (m.power > 0) {
       const et = effText(m.type, player.types);
       if (et) msgs.push(et);
-    } else {
+    } else if (!statusLine) {
       audio.playSFX('menu-cancel');
+      msgs.push(t('battle.nothingHappened'));
     }
+    if (statusLine) {
+      msgs.push(statusLine);
+    }
+
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation('enemy', 'player', m, () => {
       applyMoveImpact(enemy, player, m, playerHpBar, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10);
@@ -1204,7 +1480,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       pd.money = Math.max(0, pd.money - penalty);
 
       if (outcome === 'trainer-whiteout' || outcome === 'wild-whiteout') {
-        for (const p of pd.party) { p.hp = p.maxHp; for (const mv of p.moves) mv.currentPp = mv.pp; }
+        for (const p of pd.party) {
+          p.hp = p.maxHp;
+          p.status = null;
+          for (const mv of p.moves) mv.currentPp = mv.pp;
+        }
         const center = pd.lastPokemonCenter;
         pd.position.mapId = center.mapId;
         pd.position.x = center.x;
@@ -1309,6 +1589,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         updateAttackEffect(attackFx, dt);
         if (!attackFx.active) attackFx = null;
       }
+      if (statusTurnFx) {
+        updateStatusTurnEffect(statusTurnFx, dt);
+        if (!statusTurnFx.active) statusTurnFx = null;
+      }
       animationDirector.update(dt);
       updateHPBar(playerHpBar, dt); updateHPBar(enemyHpBar, dt); updatePopups(dt);
 
@@ -1358,9 +1642,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               const m = player.moves[selMove];
               if (m.currentPp <= 0) { textBox = createTextBox([t('battle.noPP')], isRTL()); phase = 'INTRO'; }
               else {
-                // Speed-based turn order
-                enemyGoesFirst = player.speed < enemy.speed ||
-                  (player.speed === enemy.speed && Math.random() >= 0.5);
+                enemySelectedMoveIndex = chooseEnemyMoveIndex(enemy);
+                const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
+                const turnOrder = determineTurnOrder(
+                  player,
+                  playerBattleState,
+                  m.id,
+                  enemy,
+                  enemyBattleState,
+                  enemyMove.id,
+                );
+                enemyGoesFirst = turnOrder.enemyActsFirst;
                 if (enemyGoesFirst) {
                   enemyTurn(true);
                 } else {
@@ -1381,36 +1673,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(playerHpBar)) {
             if (player.hp <= 0) {
               const consolationXp = awardConsolationXp(player, activePartyIndex);
-              enemyGoesFirst = false;
-              startPlayerFaintAnimation();
-              const faintLines = [t('battle.fainted', { name: getPokemonDisplayName(player.id) })];
-              if (consolationXp > 0) {
-                faintLines.push(t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: consolationXp }));
-              }
-              textBox = createTextBox(faintLines, isRTL());
-              if (hasUsablePartyPokemon()) {
-                // Can still fight — force switch to another Pokemon
-                phase = 'PLAYER_FAINT_SWITCH';
-              } else {
-                // Check if entire party is wiped or just roster exhausted
-                const pd = hasActiveGame() ? getPlayerData() : null;
-                const allPartyFainted = pd ? pd.party.every(p => p.hp <= 0) : true;
-                if (isTrainerBattle && !allPartyFainted) {
-                  // Roster exhausted but party has survivors — lose battle, stay in place
-                  beginLoss('trainer-roster');
-                } else {
-                  // Full party wipe — warp to Pokemon Center
-                  beginLoss(isTrainerBattle ? 'trainer-whiteout' : 'wild-whiteout');
-                }
-              }
+              handlePlayerFaintAfterAction(consolationXp);
             } else if (enemyGoesFirst) {
               // Enemy went first, now player attacks with pre-selected move
               enemyGoesFirst = false;
               enemyAlreadyAttacked = true;
               doAttack();
             } else {
-              pendingTurnCredit = true;
-              enterSelectMovePhase();
+              startEndTurnStatusPhase();
             }
           }
           break;
@@ -1431,12 +1701,26 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             }
           }
           else if (enemyAlreadyAttacked) {
-            // Enemy already attacked this turn (speed-based)
+            // Enemy already attacked this turn
             enemyAlreadyAttacked = false;
-            pendingTurnCredit = true;
-            enterSelectMovePhase();
+            startEndTurnStatusPhase();
           }
           else enemyTurn();
+          break;
+        }
+        case 'END_TURN_STATUS': {
+          if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
+          if (!textBox && !animationDirector.isBusy() && !attackFx
+            && !isHPAnimating(playerHpBar) && !isHPAnimating(enemyHpBar)) {
+            if (enemy.hp <= 0) {
+              phase = 'CHECK_WIN';
+            } else if (player.hp <= 0) {
+              handlePlayerFaintAfterAction();
+            } else {
+              pendingTurnCredit = true;
+              enterSelectMovePhase();
+            }
+          }
           break;
         }
         case 'TRAINER_NEXT_POKEMON': {
@@ -1687,8 +1971,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               if (!battleTurnCounts.has(chosenIndex)) battleTurnCounts.set(chosenIndex, 0);
               activePartyIndex = chosenIndex;
               player = pd.party[activePartyIndex];
+              playerBattleState = createBattleRuntimeStateForPokemon(player);
               playerHpBar = createHPBar(player.id, player.level, player.hp, player.maxHp,
                 BTL.PLY_BAR_X, BTL.PLY_BAR_BOTTOM - 18, true, player.xp, player.xpToNext);
+              setStatus(playerHpBar, player.status ?? '');
               menu = createBattleMenu(player.moves);
               menu.playerPokemon = player;
               menu.party = hasActiveGame() ? getPlayerData().party : [player];
@@ -1738,6 +2024,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             }
           }
           if (!textBox && !animationDirector.isBusy()) {
+            enemySelectedMoveIndex = -1;
             enemyTurn();
           }
           break;
@@ -1864,6 +2151,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       renderBallActor(ctx);
       if (attackFx) {
         renderAttackEffect(ctx, attackFx);
+      }
+      if (statusTurnFx) {
+        renderStatusTurnEffect(ctx, statusTurnFx);
       }
 
       // ── Info panels ──
