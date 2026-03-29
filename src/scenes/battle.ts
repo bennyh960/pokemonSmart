@@ -8,7 +8,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect } from '../engine/renderer.js';
 import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
-import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu, renderPartyBalls } from '../ui/battle-menu.js';
+import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import type { MainMenuChoice } from '../ui/battle-menu.js';
 import { BTL } from '../data/battle-constants.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
@@ -1823,16 +1823,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
       // ── Info panels ──
       setXP(playerHpBar, player.xp, player.xpToNext);
-      renderHPBar(ctx, enemyHpBar);
-      renderHPBar(ctx, playerHpBar);
-
-      // ── Party ball indicators (y=79) ──
-      if (hasActiveGame()) {
-        renderPartyBalls(ctx, 'player', getPlayerData().party, 6);
-      }
-      if (isTrainerBattle && trainerData) {
-        renderPartyBalls(ctx, 'opponent', trainerData.party, trainerData.party.length, trainerPartyIndex);
-      }
+      const playerParty = hasActiveGame() ? getPlayerData().party : null;
+      renderHPBar(ctx, enemyHpBar, isTrainerBattle && trainerData
+        ? { party: trainerData.party, totalSlots: trainerData.party.length, revealedCount: trainerPartyIndex }
+        : undefined);
+      renderHPBar(ctx, playerHpBar, playerParty
+        ? { party: playerParty, totalSlots: 6 }
+        : undefined);
 
       // ── Effects ──
       if (levelUpFx) renderLevelUpEffect(ctx, levelUpFx);

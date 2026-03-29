@@ -8,8 +8,11 @@
  */
 
 import { drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
+import { fontFor } from '../engine/fonts.js';
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
 import { BTL, getPlayerBarHeight, getPlayerBarY, getHpColor, STATUS_PILL_COLORS } from '../data/battle-constants.js';
+import { isRTL } from '../i18n/i18n.js';
+import { renderPartyBalls } from './battle-menu.js';
 
 export interface HPBarState {
   currentHp: number;
@@ -27,6 +30,12 @@ export interface HPBarState {
   status: string;
   gender: string;
   statChanges: { stat: string; stages: number }[];
+}
+
+export interface PartyBallState {
+  party: { hp: number }[];
+  totalSlots: number;
+  revealedCount?: number;
 }
 
 export function createHPBar(
@@ -132,31 +141,80 @@ function drawHpTrack(ctx: CanvasRenderingContext2D, x: number, y: number, w: num
 
 // ─── Render ────────────────────────────────────────────────────────
 
-export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
+export function renderHPBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBalls?: PartyBallState): void {
   if (bar.isPlayer) {
-    renderPlayerBar(ctx, bar);
+    renderPlayerBar(ctx, bar, partyBalls);
   } else {
-    renderOpponentBar(ctx, bar);
+    renderOpponentBar(ctx, bar, partyBalls);
   }
 }
 
-function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
+function measureTextWidth(ctx: CanvasRenderingContext2D, text: string, size: number): number {
+  ctx.save();
+  ctx.font = `${size}px ${fontFor(text)}`;
+  const width = ctx.measureText(text).width;
+  ctx.restore();
+  return width;
+}
+
+function renderPanelHeader(
+  ctx: CanvasRenderingContext2D,
+  panelX: number,
+  panelY: number,
+  panelW: number,
+  name: string,
+  level: number,
+  nameStyle: { dy: number; fs: number },
+  levelStyle: { dy: number; fs: number },
+): void {
+  const rtl = isRTL();
+  const levelText = `Lv.${level}`;
+  const levelWidth = measureTextWidth(ctx, levelText, levelStyle.fs);
+  const padding = BTL.HEADER_PAD_X;
+  const gap = BTL.HEADER_GAP;
+  const contentWidth = panelW - padding * 2;
+  const nameClipW = Math.max(0, contentWidth - levelWidth - gap);
+  const nameClipX = rtl
+    ? panelX + padding + levelWidth + gap
+    : panelX + padding;
+  const nameAnchorX = rtl
+    ? panelX + panelW - padding
+    : panelX + padding;
+  const levelX = rtl
+    ? panelX + padding
+    : panelX + panelW - padding;
+
+  drawText(ctx, levelText, levelX, panelY + levelStyle.dy, {
+    size: levelStyle.fs,
+    color: BTL.COLORS.textMuted,
+    align: rtl ? 'left' : 'right',
+    direction: 'ltr',
+  });
+
+  if (nameClipW <= 0) return;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(nameClipX, panelY, nameClipW, Math.max(nameStyle.fs, levelStyle.fs) + 4);
+  ctx.clip();
+  drawText(ctx, name, nameAnchorX, panelY + nameStyle.dy, {
+    size: nameStyle.fs,
+    color: BTL.COLORS.text,
+    align: rtl ? 'right' : 'left',
+    direction: rtl ? 'rtl' : 'ltr',
+  });
+  ctx.restore();
+}
+
+function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBalls?: PartyBallState): void {
   const B = BTL.OPP_BAR;
   drawPanel(ctx, B.x, B.y, B.w, B.h);
 
   const ratio = bar.maxHp > 0 ? bar.displayHp / bar.maxHp : 0;
   const hpPct = bar.maxHp > 0 ? Math.ceil(ratio * 100) : 0;
 
-  // Name (right-aligned inside panel)
   const name = getPokemonDisplayName(bar.pokemonId);
-  drawText(ctx, name, B.x + B.w - BTL.OPP_NAME.dx, B.y + BTL.OPP_NAME.dy, {
-    size: BTL.OPP_NAME.fs, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
-  });
-
-  // Level (left-aligned)
-  drawText(ctx, `Lv.${bar.level}`, B.x + BTL.OPP_LEVEL.dx, B.y + BTL.OPP_LEVEL.dy, {
-    size: BTL.OPP_LEVEL.fs, color: BTL.COLORS.textMuted,
-  });
+  renderPanelHeader(ctx, B.x, B.y, B.w, name, bar.level, BTL.OPP_NAME, BTL.OPP_LEVEL);
 
   // HP label (right side)
   drawText(ctx, 'HP', B.x + BTL.OPP_HP_LABEL.dx, B.y + BTL.OPP_HP_LABEL.dy, {
@@ -171,9 +229,17 @@ function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void
   drawText(ctx, `${hpPct}%`, B.x + BTL.OPP_HP_PCT.dx, B.y + BTL.OPP_HP_PCT.dy, {
     size: BTL.OPP_HP_PCT.fs, color: BTL.COLORS.textMuted,
   });
+
+  if (partyBalls) {
+    renderPartyBalls(ctx, 'opponent', partyBalls.party, partyBalls.totalSlots, partyBalls.revealedCount, {
+      x: B.x + B.w - BTL.PANEL_BALL_PAD_X,
+      y: B.y + B.h - BTL.BALL_SIZE - BTL.PANEL_BALL_PAD_BOTTOM,
+      align: 'right',
+    });
+  }
 }
 
-function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
+function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBalls?: PartyBallState): void {
   const statusCount = countStatuses(bar);
   const barH = getPlayerBarHeight(statusCount);
   const barY = getPlayerBarY(statusCount);
@@ -186,16 +252,8 @@ function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
   const hpCur = Math.ceil(bar.displayHp);
   const hpMax = bar.maxHp;
 
-  // Name (right-aligned)
   const name = getPokemonDisplayName(bar.pokemonId);
-  drawText(ctx, name, barX + BTL.PLY_NAME.dx, barY + BTL.PLY_NAME.dy, {
-    size: BTL.PLY_NAME.fs, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
-  });
-
-  // Level (left-aligned)
-  drawText(ctx, `Lv.${bar.level}`, barX + BTL.PLY_LEVEL.dx, barY + BTL.PLY_LEVEL.dy, {
-    size: BTL.PLY_LEVEL.fs, color: BTL.COLORS.textMuted,
-  });
+  renderPanelHeader(ctx, barX, barY, barW, name, bar.level, BTL.PLY_NAME, BTL.PLY_LEVEL);
 
   // HP label
   drawText(ctx, 'HP', barX + BTL.PLY_HP_LABEL.dx, barY + BTL.PLY_HP_LABEL.dy, {
@@ -220,6 +278,14 @@ function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState): void {
   if (xpFillW > 0) {
     ctx.fillStyle = BTL.COLORS.xpFill;
     fillRoundRect(ctx, barX + xpTrack.dx, barY + xpTrack.dy, xpFillW, xpTrack.h, 1);
+  }
+
+  if (partyBalls) {
+    renderPartyBalls(ctx, 'player', partyBalls.party, partyBalls.totalSlots, partyBalls.revealedCount, {
+      x: barX + BTL.PANEL_BALL_PAD_X,
+      y: barY + barH - BTL.BALL_SIZE - BTL.PANEL_BALL_PAD_BOTTOM,
+      align: 'left',
+    });
   }
 
   // ── Status pills ──

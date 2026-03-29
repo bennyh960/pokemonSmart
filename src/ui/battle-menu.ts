@@ -232,19 +232,6 @@ function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): 
     size: E.fs, color: BTL.COLORS.textDim, direction: 'rtl',
   });
 
-  // Prompt text: "?מה יעשה [name]"
-  if (menu.playerPokemon) {
-    const name = getPokemonDisplayName(menu.playerPokemon.id);
-    const prompt = `?מה יעשה `;
-    drawText(ctx, prompt, BTL.PROMPT_TEXT.x, BTL.PROMPT_TEXT.y, {
-      size: BTL.PROMPT_TEXT.fs, color: BTL.COLORS.textDim, align: 'right', direction: 'rtl',
-    });
-    // Name in white, positioned before the prompt
-    const promptWidth = prompt.length * 4; // approximate
-    drawText(ctx, name, BTL.PROMPT_TEXT.x - promptWidth, BTL.PROMPT_TEXT.y, {
-      size: BTL.PROMPT_TEXT.fs, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
-    });
-  }
 }
 
 // ─── Action Tabs (y=94) ───────────────────────────────────────────
@@ -462,12 +449,19 @@ export function renderPartyBalls(
   party: { hp: number }[],
   totalSlots: number,
   revealedCount?: number,
+  layout?: { x: number; y: number; align?: 'left' | 'right' },
 ): void {
-  const startX = side === 'player' ? BTL.PLY_BALLS_X0 : BTL.OPP_BALLS_X0;
-  const y = BTL.BALL_Y;
+  const count = Math.min(totalSlots, 6);
   const size = BTL.BALL_SIZE;
+  const rowWidth = count > 0 ? size + (count - 1) * BTL.BALL_GAP : 0;
+  const startX = layout
+    ? layout.align === 'right'
+      ? layout.x - rowWidth
+      : layout.x
+    : (side === 'player' ? BTL.PLY_BALLS_X0 : BTL.OPP_BALLS_X0);
+  const y = layout?.y ?? BTL.BALL_Y;
 
-  for (let i = 0; i < Math.min(totalSlots, 6); i++) {
+  for (let i = 0; i < count; i++) {
     const x = startX + i * BTL.BALL_GAP;
     let fillColor: string, borderColor: string;
 

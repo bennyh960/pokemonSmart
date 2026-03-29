@@ -62,12 +62,12 @@
   ],
   "npcs": [
     {
-      "id": "prof-oak",
+      "id": "prof-algorithmah",
       "name": "Prof. Algorithmah",
-      "x": 3,
-      "y": 6,
-      "facing": "right",
-      "type": "healer",
+      "x": 9,
+      "y": 4,
+      "facing": "left",
+      "type": "npc",
       "dialogue": [
         {
           "en": "Welcome to Zeroville — the origin point of all journeys!",
@@ -79,24 +79,14 @@
         },
         {
           "en": "Choose your partner Pokemon and explore Numeria!",
-          "he": ""
-        },
-        {
-          "en": "",
           "he": "אני אהיה איתך בקשר לעזור לך במסע."
         },
         {
           "en": "",
-          "he": "בינתיים תן לי להסתכל על הפוקימונים שלך ולרפא לך אותם"
+          "he": "בהצלחה במסע הפוקימונים שלך"
         }
       ],
-      "spriteType": "char_a42849",
-      "party": [],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 0
-      },
-      "postBattleDialogue": []
+      "spriteType": "char_a42849"
     },
     {
       "id": "elder-zero",
