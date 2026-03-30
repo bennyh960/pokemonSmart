@@ -31,6 +31,7 @@ export interface BeforeMoveEffectResult {
     | 'thawed-out'
     | 'frozen-solid'
     | 'fully-paralyzed'
+    | 'must-recharge'
     | 'flinched'
     | 'confused'
     | 'snapped-out'
@@ -83,6 +84,13 @@ export interface LeechSeedResult {
 export interface RecoilResult {
   damage: number;
   fainted: boolean;
+}
+
+export interface TrapEffectResult {
+  applied: boolean;
+  damage: number;
+  fainted: boolean;
+  ended: boolean;
 }
 
 const SAME_TYPE_STATUS_IMMUNITY_BY_MOVE_TYPE: Partial<Record<MajorStatusId, PokemonType>> = {
@@ -193,7 +201,14 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.leechSeeded) {
     effects.push('seed');
   }
+  if (runtimeState.trappedTurnsRemaining > 0) {
+    effects.push('trap');
+  }
   return effects;
+}
+
+export function isBattlePokemonTrapped(runtimeState: BattlePokemonRuntimeState): boolean {
+  return runtimeState.trappedTurnsRemaining > 0;
 }
 
 export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): void {
@@ -213,6 +228,13 @@ export function tryApplyFlinch(
   if ((random() * 100) >= chance) return false;
   runtimeState.turnFlags.flinched = true;
   return true;
+}
+
+export function applyPostMoveTurnFlags(runtimeState: BattlePokemonRuntimeState, moveId: number): void {
+  const behaviorTags = getMoveBattleData(moveId)?.behaviorTags ?? [];
+  if (behaviorTags.includes('must-recharge')) {
+    runtimeState.turnFlags.mustRecharge = true;
+  }
 }
 
 export function calculateMoveHpEffectAmount(baseAmount: number, percent: number | null): number {
@@ -393,6 +415,17 @@ export function applyVolatileMoveEffects(
         applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
         break;
       }
+      case 'trap': {
+        if (runtimeState.trappedTurnsRemaining > 0) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        const { min, max } = getEffectDurationRange(effect);
+        runtimeState.trappedTurnsRemaining = randomTurnCount(min, max, random);
+        runtimeState.trapDamagePercent = effect.damagePercent ?? 6.25;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
     }
   }
 
@@ -512,7 +545,15 @@ export function processBeforeMoveEffects(
     events.push(statusResult.event);
   }
   if (!statusResult.canAct) {
+    if (runtimeState.turnFlags.mustRecharge) {
+      runtimeState.turnFlags.mustRecharge = false;
+    }
     return { canAct: false, events, selfDamage: 0 };
+  }
+
+  if (runtimeState.turnFlags.mustRecharge) {
+    runtimeState.turnFlags.mustRecharge = false;
+    return { canAct: false, events: [...events, 'must-recharge'], selfDamage: 0 };
   }
 
   if (runtimeState.turnFlags.flinched) {
@@ -609,4 +650,23 @@ export function applyLeechSeedEffect(
   const healed = Math.max(0, Math.min(recipient.maxHp, recipient.hp + damage) - recipient.hp);
   recipient.hp = Math.min(recipient.maxHp, recipient.hp + damage);
   return { applied: true, damage, healed, fainted: target.hp <= 0 };
+}
+
+export function applyTrapEndOfTurnEffect(
+  target: Pokemon,
+  runtimeState: BattlePokemonRuntimeState,
+): TrapEffectResult {
+  if (runtimeState.trappedTurnsRemaining <= 0 || target.hp <= 0) {
+    return { applied: false, damage: 0, fainted: target.hp <= 0, ended: runtimeState.trappedTurnsRemaining <= 0 };
+  }
+
+  const damage = calculateMoveHpEffectAmount(target.maxHp, runtimeState.trapDamagePercent ?? 6.25);
+  target.hp = Math.max(0, target.hp - damage);
+  runtimeState.trappedTurnsRemaining = Math.max(0, runtimeState.trappedTurnsRemaining - 1);
+  const ended = runtimeState.trappedTurnsRemaining <= 0;
+  if (ended) {
+    runtimeState.trapDamagePercent = null;
+  }
+
+  return { applied: true, damage, fainted: target.hp <= 0, ended };
 }

@@ -7,6 +7,8 @@ import {
   applyDrainHealing,
   applyLeechSeedEffect,
   applyMajorStatus,
+  applyPostMoveTurnFlags,
+  applyTrapEndOfTurnEffect,
   applyRecoilDamage,
   applyStatChanges,
   applyVolatileMoveEffects,
@@ -19,6 +21,7 @@ import {
   getDisplayedVolatileStatuses,
   getEffectiveSpeed,
   getModifiedStatValue,
+  isBattlePokemonTrapped,
   isTargetImmuneToMoveType,
   isTargetImmuneToStatusEffectFromMoveType,
   isTargetImmuneToVolatileEffectFromMoveType,
@@ -258,6 +261,24 @@ describe('battle system helpers', () => {
     expect(runtime.turnFlags.flinched).toBe(false);
   });
 
+  it('forces a recharge turn after must-recharge moves are used', () => {
+    const user = createTestPokemon();
+    const runtime = createBattleRuntimeStateForPokemon(user);
+    const hyperBeam = getMoveByName('hyper beam');
+
+    expect(hyperBeam).toBeDefined();
+    applyPostMoveTurnFlags(runtime, hyperBeam!.id);
+    expect(runtime.turnFlags.mustRecharge).toBe(true);
+
+    const rechargeResult = processBeforeMoveEffects(user, runtime, () => 0.9);
+    expect(rechargeResult).toEqual({
+      canAct: false,
+      events: ['must-recharge'],
+      selfDamage: 0,
+    });
+    expect(runtime.turnFlags.mustRecharge).toBe(false);
+  });
+
   it('applies drain healing and recoil from actual damage dealt', () => {
     const drainingAttacker = createTestPokemon({ hp: 30, maxHp: 80 });
     const drained = applyDrainHealing(drainingAttacker, 20, 50);
@@ -365,5 +386,32 @@ describe('battle system helpers', () => {
       'grass',
       { id: 'leech-seed', target: 'target', chance: 100 },
     )).toBe(false);
+  });
+
+  it('applies trapping as a battle-only volatile effect and chips hp each end turn', () => {
+    const target = createTestPokemon({ types: ['water'], hp: 64, maxHp: 80 });
+    const runtime = createBattleRuntimeStateForPokemon(target);
+
+    const result = applyVolatileMoveEffects(target, runtime, [
+      { id: 'trap', target: 'target', chance: 100, minTurns: 2, maxTurns: 5, damagePercent: 6.25 },
+    ], 'target', () => 0);
+
+    expect(result).toEqual([
+      { id: 'trap', target: 'target', applied: true, reason: 'applied' },
+    ]);
+    expect(isBattlePokemonTrapped(runtime)).toBe(true);
+    expect(getDisplayedVolatileStatuses(runtime)).toEqual(['trap']);
+
+    const firstTick = applyTrapEndOfTurnEffect(target, runtime);
+    expect(firstTick).toEqual({ applied: true, damage: 5, fainted: false, ended: false });
+    expect(target.hp).toBe(59);
+    expect(runtime.trappedTurnsRemaining).toBe(1);
+
+    const secondTick = applyTrapEndOfTurnEffect(target, runtime);
+    expect(secondTick).toEqual({ applied: true, damage: 5, fainted: false, ended: true });
+    expect(target.hp).toBe(54);
+    expect(runtime.trappedTurnsRemaining).toBe(0);
+    expect(runtime.trapDamagePercent).toBeNull();
+    expect(isBattlePokemonTrapped(runtime)).toBe(false);
   });
 });

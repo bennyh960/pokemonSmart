@@ -769,6 +769,29 @@ function renderSeedStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTur
   ctx.restore();
 }
 
+function renderTrapStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  ctx.save();
+  ctx.globalAlpha = fade * 0.75;
+  ctx.strokeStyle = '#f0a060';
+  ctx.lineWidth = 2;
+  for (let i = 0; i < 3; i++) {
+    const y = effect.centerY - (effect.height * 0.08) + (i * effect.height * 0.12);
+    ctx.beginPath();
+    for (let step = 0; step <= 12; step++) {
+      const progress = step / 12;
+      const x = effect.centerX - (effect.width * 0.24) + (progress * effect.width * 0.48);
+      const offsetY = Math.sin((progress * Math.PI * 2) + (effect.timer * 10) + i) * 2.5;
+      if (step === 0) {
+        ctx.moveTo(x, y + offsetY);
+      } else {
+        ctx.lineTo(x, y + offsetY);
+      }
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect): void {
   if (!effect.active) return;
 
@@ -794,6 +817,9 @@ export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: St
       break;
     case 'seed':
       renderSeedStatusEffect(ctx, effect, fade);
+      break;
+    case 'trap':
+      renderTrapStatusEffect(ctx, effect, fade);
       break;
   }
 }

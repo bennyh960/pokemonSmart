@@ -23,9 +23,9 @@ export type MoveBattleTarget =
   | 'all-other-pokemon'
   | 'specific-move';
 
-export type MoveBattleBehaviorTag = 'fails-if-target-not-attacking';
+export type MoveBattleBehaviorTag = 'fails-if-target-not-attacking' | 'must-recharge';
 
-export type MoveBattleEffectId = 'confusion' | 'leech-seed';
+export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 
 export interface MoveStatusEffect {
   status: MajorStatusId;
@@ -49,6 +49,7 @@ export interface MoveBattleEffect {
   chance: number;
   minTurns?: number | null;
   maxTurns?: number | null;
+  damagePercent?: number | null;
 }
 
 export interface MoveBattleMetadata {

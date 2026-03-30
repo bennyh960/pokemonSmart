@@ -54,9 +54,14 @@ function targetStages(...changes: Array<[BattleStatId, number]>): MoveOverride {
   };
 }
 
+function trappingEffect(): MoveOverride {
+  return volatileEffect('trap', 100, { minTurns: 2, maxTurns: 5, damagePercent: 6.25 });
+}
+
 export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Quick Attack': { priority: 1 },
   'Extreme Speed': { priority: 2 },
+  'Hyper Beam': { behaviorTags: ['must-recharge'] },
   'Mach Punch': { priority: 1 },
   'Aqua Jet': { priority: 1 },
   'Ice Shard': { priority: 1 },
@@ -114,6 +119,11 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Water Pulse': volatileEffect('confusion', 20, { minTurns: 2, maxTurns: 5 }),
   'Dynamic Punch': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
   'Leech Seed': volatileEffect('leech-seed', 100),
+  Wrap: trappingEffect(),
+  Bind: trappingEffect(),
+  Clamp: trappingEffect(),
+  'Fire Spin': trappingEffect(),
+  Whirlpool: trappingEffect(),
 
   Bite: { flinchChance: 30 },
   Headbutt: { flinchChance: 30 },

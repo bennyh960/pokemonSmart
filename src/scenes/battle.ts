@@ -70,6 +70,8 @@ import {
   applyDrainHealing,
   applyEndOfTurnStatusEffects,
   applyLeechSeedEffect,
+  applyPostMoveTurnFlags,
+  applyTrapEndOfTurnEffect,
   applyStatChanges,
   applyMajorStatus,
   applyRecoilDamage,
@@ -83,6 +85,7 @@ import {
   getDisplayedVolatileStatuses,
   getDisplayedStatChanges,
   getModifiedStatValue,
+  isBattlePokemonTrapped,
   isTargetImmuneToMoveType,
   isTargetImmuneToStatusEffectFromMoveType,
   isTargetImmuneToVolatileEffectFromMoveType,
@@ -245,6 +248,8 @@ function getTurnEffectLine(
       return t('battle.snappedOut', { name });
     case 'hurt-itself-confusion':
       return t('battle.hurtItselfConfusion', { name });
+    case 'must-recharge':
+      return t('battle.mustRecharge', { name });
     case 'flinched':
       return t('battle.flinched', { name });
     default:
@@ -254,13 +259,15 @@ function getTurnEffectLine(
 
 function getMoveEffectAppliedLine(
   name: string,
-  effectId: 'confusion' | 'leech-seed',
+  effectId: 'confusion' | 'leech-seed' | 'trap',
 ): string {
   switch (effectId) {
     case 'confusion':
       return t('battle.confused', { name });
     case 'leech-seed':
       return t('battle.leechSeeded', { name });
+    case 'trap':
+      return t('battle.trapped', { name });
   }
 }
 
@@ -649,12 +656,36 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function enterSelectMovePhase(): void {
-    phase = 'SELECT_MOVE';
-    showMoveMenu(menu);
     if (pendingTurnCredit) {
       recordBattleTurn(activePartyIndex);
       pendingTurnCredit = false;
     }
+    if (playerBattleState.turnFlags.mustRecharge) {
+      resolveForcedPlayerTurn();
+      return;
+    }
+    phase = 'SELECT_MOVE';
+    showMoveMenu(menu);
+  }
+
+  function resolveForcedPlayerTurn(): void {
+    const rtl = isRTL();
+    const attackerName = getPokemonDisplayName(player.id);
+    triggerStatusTurnEffects('player', player, playerBattleState);
+    const startResult = processBeforeMoveEffects(player, playerBattleState);
+    const turnEffectLines = startResult.events
+      .map(event => getTurnEffectLine(attackerName, event))
+      .filter((line): line is string => line !== null);
+    syncPlayerBar();
+    if (startResult.selfDamage > 0) {
+      flash = createFlash('#fff29a', 0.12);
+      shake = createShake(1.4, 0.18);
+      spawnDamageNumber(`-${startResult.selfDamage}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
+      audio.playSFX('hit');
+    }
+    textBox = createTextBox(turnEffectLines.length > 0 ? turnEffectLines : [t('battle.nothingHappened')], rtl);
+    phase = 'PLAYER_ATTACK';
+    phaseTimer = 0;
   }
 
   function getCaptureXpReward(): number {
@@ -1274,6 +1305,21 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       }
     }
 
+    if (player.hp > 0) {
+      const trapResult = applyTrapEndOfTurnEffect(player, playerBattleState);
+      if (trapResult.applied) {
+        queueStatusTurnEffect('player', 'trap');
+        lines.push(t('battle.trapDamage', { name: getPokemonDisplayName(player.id) }));
+      }
+    }
+    if (enemy.hp > 0) {
+      const trapResult = applyTrapEndOfTurnEffect(enemy, enemyBattleState);
+      if (trapResult.applied) {
+        queueStatusTurnEffect('enemy', 'trap');
+        lines.push(t('battle.trapDamage', { name: getPokemonDisplayName(enemy.id) }));
+      }
+    }
+
     syncPlayerBar();
     syncEnemyBar();
 
@@ -1651,6 +1697,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (m.currentPp > 0) {
       m.currentPp--;
     }
+    applyPostMoveTurnFlags(playerBattleState, m.id);
 
     const moveData = getMove(m.id);
     const moveBattleData = getMoveBattleData(m.id);
@@ -1780,6 +1827,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (m.currentPp > 0) {
       m.currentPp--;
     }
+    applyPostMoveTurnFlags(enemyBattleState, m.id);
 
     const moveData = getMove(m.id);
     const moveBattleData = getMoveBattleData(m.id);
@@ -1934,6 +1982,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       stateMachine.push('BAG');
     }
     else if (choice === 'POKEMON') {
+      if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState)) {
+        textBox = createTextBox([t('battle.cantSwitchTrapped', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'INTRO';
+      }
+      else
       if (hasActiveGame()) {
         const pd = getPlayerData();
         const hasOther = pd.party.some((p, i) => i !== activePartyIndex && p.hp > 0 && canSwitchTo(i));
@@ -1954,6 +2006,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     else if (choice === 'RUN') {
       if (isTrainerBattle) {
         textBox = createTextBox([t('battle.cantRunTrainer')], isRTL()); phase = 'INTRO';
+      } else if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState)) {
+        textBox = createTextBox([t('battle.cantEscapeTrapped', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'INTRO';
       } else {
         startPlayerRetreatAnimation();
         textBox = createTextBox([t('battle.gotAway')], isRTL()); phase = 'RUN';

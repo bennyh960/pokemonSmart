@@ -16,6 +16,8 @@ describe('battle state helpers', () => {
     expect(runtime.badlyPoisonTurns).toBe(0);
     expect(runtime.confusionTurnsRemaining).toBe(0);
     expect(runtime.leechSeeded).toBe(false);
+    expect(runtime.trappedTurnsRemaining).toBe(0);
+    expect(runtime.trapDamagePercent).toBeNull();
     expect(runtime.statModifiers).toEqual(createEmptyBattleStatModifiers());
     expect(runtime.turnFlags).toEqual({
       flinched: false,

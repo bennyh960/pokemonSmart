@@ -5,10 +5,12 @@ describe('battle metadata', () => {
   it('adds move priority and behavior tags for battle ordering', () => {
     const quickAttack = getMoveByName('quick attack');
     const suckerPunch = getMoveByName('sucker punch');
+    const hyperBeam = getMoveByName('hyper beam');
 
     expect(quickAttack?.battle.priority).toBe(1);
     expect(suckerPunch?.battle.priority).toBe(1);
     expect(suckerPunch?.battle.behaviorTags).toContain('fails-if-target-not-attacking');
+    expect(hyperBeam?.battle.behaviorTags).toContain('must-recharge');
   });
 
   it('exposes major-status metadata for direct and secondary-status moves', () => {
@@ -45,6 +47,7 @@ describe('battle metadata', () => {
   it('exposes volatile move effects through battle metadata', () => {
     const confuseRay = getMoveByName('confuse ray');
     const leechSeed = getMoveByName('leech seed');
+    const wrap = getMoveByName('wrap');
     const bite = getMoveByName('bite');
     const megaDrain = getMoveByName('mega drain');
     const doubleEdge = getMoveByName('double edge');
@@ -54,6 +57,9 @@ describe('battle metadata', () => {
     ]);
     expect(leechSeed?.battle.effects).toEqual([
       { id: 'leech-seed', target: 'target', chance: 100 },
+    ]);
+    expect(wrap?.battle.effects).toEqual([
+      { id: 'trap', target: 'target', chance: 100, minTurns: 2, maxTurns: 5, damagePercent: 6.25 },
     ]);
     expect(bite?.battle.flinchChance).toBe(30);
     expect(megaDrain?.battle.drainPercent).toBe(50);
