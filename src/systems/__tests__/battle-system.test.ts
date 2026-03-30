@@ -13,22 +13,25 @@ import {
   applyStatChanges,
   applyVolatileMoveEffects,
   calculateMoveHpEffectAmount,
-  clearEndOfTurnFlags,
-  createBattleRuntimeStateForPokemon,
-  determineTurnOrder,
-  doesMoveHit,
-  getDisplayedStatChanges,
-  getDisplayedVolatileStatuses,
-  getEffectiveSpeed,
+    clearEndOfTurnFlags,
+    clearChargingMove,
+    createBattleRuntimeStateForPokemon,
+    determineTurnOrder,
+    doesMoveHit,
+    getChargingMoveId,
+    getDisplayedStatChanges,
+    getDisplayedVolatileStatuses,
+    getEffectiveSpeed,
   getModifiedStatValue,
   isBattlePokemonTrapped,
   isTargetImmuneToMoveType,
   isTargetImmuneToStatusEffectFromMoveType,
   isTargetImmuneToVolatileEffectFromMoveType,
-  processBeforeMoveEffects,
-  processStartOfTurnStatus,
-  rollCriticalHit,
-  tryApplyFlinch,
+    processBeforeMoveEffects,
+    processStartOfTurnStatus,
+    rollCriticalHit,
+    startChargingMove,
+    tryApplyFlinch,
 } from '../battle-system.js';
 
 function createTestPokemon(overrides: Partial<Pokemon> = {}): Pokemon {
@@ -240,6 +243,20 @@ describe('battle system helpers', () => {
     runtime.leechSeeded = true;
 
     expect(getDisplayedVolatileStatuses(runtime)).toEqual(['confuse', 'seed']);
+  });
+
+  it('tracks charging moves in battle runtime state', () => {
+    const runtime = createBattleRuntimeStateForPokemon(createTestPokemon());
+
+    expect(getChargingMoveId(runtime)).toBeNull();
+
+    startChargingMove(runtime, 76);
+    expect(getChargingMoveId(runtime)).toBe(76);
+    expect(runtime.turnFlags.charging).toBe(true);
+
+    clearChargingMove(runtime);
+    expect(getChargingMoveId(runtime)).toBeNull();
+    expect(runtime.turnFlags.charging).toBe(false);
   });
 
   it('applies flinch only when the target still has a turn left', () => {

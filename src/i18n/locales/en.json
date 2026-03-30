@@ -317,6 +317,7 @@
   "battle.frozenSolid": "{name} is frozen solid!",
   "battle.fullyParalyzed": "{name} is fully paralyzed!",
   "battle.mustRecharge": "{name} must recharge!",
+  "battle.beganChargingMove": "{name} began charging {move}!",
   "battle.hurtByPoison": "{name} is hurt by poison!",
   "battle.hurtByBurn": "{name} is hurt by its burn!",
   "battle.statWontGoHigher": "Stat won't go any higher!",

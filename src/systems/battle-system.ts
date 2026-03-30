@@ -211,6 +211,20 @@ export function isBattlePokemonTrapped(runtimeState: BattlePokemonRuntimeState):
   return runtimeState.trappedTurnsRemaining > 0;
 }
 
+export function getChargingMoveId(runtimeState: BattlePokemonRuntimeState): number | null {
+  return runtimeState.turnFlags.charging ? runtimeState.chargingMoveId : null;
+}
+
+export function startChargingMove(runtimeState: BattlePokemonRuntimeState, moveId: number): void {
+  runtimeState.turnFlags.charging = true;
+  runtimeState.chargingMoveId = moveId;
+}
+
+export function clearChargingMove(runtimeState: BattlePokemonRuntimeState): void {
+  runtimeState.turnFlags.charging = false;
+  runtimeState.chargingMoveId = null;
+}
+
 export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): void {
   runtimeState.turnFlags.flinched = false;
   runtimeState.turnFlags.protected = false;

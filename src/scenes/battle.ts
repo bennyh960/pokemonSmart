@@ -80,8 +80,10 @@ import {
   clearEndOfTurnFlags,
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
+  clearChargingMove,
   determineTurnOrder,
   doesMoveHit,
+  getChargingMoveId,
   getDisplayedVolatileStatuses,
   getDisplayedStatChanges,
   getModifiedStatValue,
@@ -92,6 +94,7 @@ import {
   processBeforeMoveEffects,
   processStartOfTurnStatus,
   rollCriticalHit,
+  startChargingMove,
   tryApplyFlinch,
 } from '../systems/battle-system.js';
 
@@ -195,6 +198,10 @@ function doesMoveTargetOpponent(moveBattleData: ReturnType<typeof getMoveBattleD
 
 function getEffectImmuneLine(name: string): string {
   return t('battle.effectImmune', { name });
+}
+
+function getChargingLine(name: string, move: string): string {
+  return t('battle.beganChargingMove', { name, move });
 }
 
 function getStatusAppliedLine(name: string, status: Pokemon['status']): string | null {
@@ -388,6 +395,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let enemyGoesFirst = false;
   let enemySelectedMoveIndex = -1;
   let enemyAlreadyAttacked = false;
+  let pendingForcedPlayerMoveIndex: number | null = null;
   let turnNumber = 0;
   let lossDialogueShown = false;
   let pendingLossOutcome: LossOutcome | null = null;
@@ -655,12 +663,34 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     battleTurnCounts.set(partyIndex, (battleTurnCounts.get(partyIndex) ?? 0) + 1);
   }
 
+  function findMoveIndexById(pokemon: Pokemon, moveId: number): number | null {
+    const moveIndex = pokemon.moves.findIndex((move) => move.id === moveId);
+    return moveIndex >= 0 ? moveIndex : null;
+  }
+
+  function getForcedPlayerMoveIndex(): number | null {
+    const chargingMoveId = getChargingMoveId(playerBattleState);
+    if (chargingMoveId === null) return null;
+    return findMoveIndexById(player, chargingMoveId);
+  }
+
+  function getPlannedEnemyMoveIndex(): number {
+    const chargingMoveId = getChargingMoveId(enemyBattleState);
+    if (chargingMoveId !== null) {
+      const chargingMoveIndex = findMoveIndexById(enemy, chargingMoveId);
+      if (chargingMoveIndex !== null) return chargingMoveIndex;
+    }
+    return chooseEnemyMoveIndex(enemy);
+  }
+
   function enterSelectMovePhase(): void {
     if (pendingTurnCredit) {
       recordBattleTurn(activePartyIndex);
       pendingTurnCredit = false;
     }
-    if (playerBattleState.turnFlags.mustRecharge) {
+
+    pendingForcedPlayerMoveIndex = getForcedPlayerMoveIndex();
+    if (playerBattleState.turnFlags.mustRecharge || pendingForcedPlayerMoveIndex !== null) {
       resolveForcedPlayerTurn();
       return;
     }
@@ -669,23 +699,28 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function resolveForcedPlayerTurn(): void {
-    const rtl = isRTL();
-    const attackerName = getPokemonDisplayName(player.id);
-    triggerStatusTurnEffects('player', player, playerBattleState);
-    const startResult = processBeforeMoveEffects(player, playerBattleState);
-    const turnEffectLines = startResult.events
-      .map(event => getTurnEffectLine(attackerName, event))
-      .filter((line): line is string => line !== null);
-    syncPlayerBar();
-    if (startResult.selfDamage > 0) {
-      flash = createFlash('#fff29a', 0.12);
-      shake = createShake(1.4, 0.18);
-      spawnDamageNumber(`-${startResult.selfDamage}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
-      audio.playSFX('hit');
+    enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
+    const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
+    const playerMoveId = pendingForcedPlayerMoveIndex !== null
+      ? player.moves[pendingForcedPlayerMoveIndex]?.id ?? 0
+      : 0;
+    const turnOrder = determineTurnOrder(
+      player,
+      playerBattleState,
+      playerMoveId,
+      enemy,
+      enemyBattleState,
+      enemyMove.id,
+    );
+    enemyGoesFirst = turnOrder.enemyActsFirst;
+    if (enemyGoesFirst) {
+      enemyTurn(true);
+      return;
     }
-    textBox = createTextBox(turnEffectLines.length > 0 ? turnEffectLines : [t('battle.nothingHappened')], rtl);
-    phase = 'PLAYER_ATTACK';
-    phaseTimer = 0;
+
+    const forcedMoveIndex = pendingForcedPlayerMoveIndex;
+    pendingForcedPlayerMoveIndex = null;
+    doAttack(forcedMoveIndex ?? undefined);
   }
 
   function getCaptureXpReward(): number {
@@ -1669,11 +1704,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     ));
   }
 
-  function doAttack(): void {
-    const m = player.moves[selMove];
+  function doAttack(forcedMoveIndex?: number): void {
     const rtl = isRTL();
     const attackerName = getPokemonDisplayName(player.id);
-    const defenderName = getPokemonDisplayName(enemy.id);
+    const pendingChargeMoveId = getChargingMoveId(playerBattleState);
+    const forcedChargeRelease = forcedMoveIndex !== undefined
+      && pendingChargeMoveId !== null
+      && player.moves[forcedMoveIndex]?.id === pendingChargeMoveId;
     triggerStatusTurnEffects('player', player, playerBattleState);
     const startResult = processBeforeMoveEffects(player, playerBattleState);
     const turnEffectLines = startResult.events
@@ -1688,19 +1725,47 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
 
     if (!startResult.canAct) {
+      if (forcedChargeRelease) {
+        clearChargingMove(playerBattleState);
+      }
       textBox = createTextBox(turnEffectLines.length > 0 ? turnEffectLines : [t('battle.nothingHappened')], rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
       return;
     }
 
-    if (m.currentPp > 0) {
+    const moveIndex = forcedMoveIndex ?? selMove;
+    const m = player.moves[moveIndex];
+    const defenderName = getPokemonDisplayName(enemy.id);
+    const moveBattleData = getMoveBattleData(m.id);
+    const isChargeRelease = pendingChargeMoveId !== null && pendingChargeMoveId === m.id;
+    const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
+    const isChargeStart = requiresChargeTurn && !isChargeRelease;
+
+    if (!isChargeRelease && m.currentPp > 0) {
       m.currentPp--;
+    }
+
+    const moveData = getMove(m.id);
+    if (isChargeStart) {
+      startChargingMove(playerBattleState, m.id);
+      const chargeStatChanges = applyStatChanges(playerBattleState, moveBattleData?.chargeStatChanges ?? [], 'user');
+      const msgs = [...turnEffectLines, getChargingLine(attackerName, getMoveDisplayName(m.id))];
+      for (const change of chargeStatChanges) {
+        msgs.push(getStatChangeLine(attackerName, change));
+      }
+      syncPlayerBar();
+      textBox = createTextBox(msgs, rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
+    }
+
+    if (isChargeRelease) {
+      clearChargingMove(playerBattleState);
     }
     applyPostMoveTurnFlags(playerBattleState, m.id);
 
-    const moveData = getMove(m.id);
-    const moveBattleData = getMoveBattleData(m.id);
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, playerBattleState, enemyBattleState);
     const targetTypeImmune = hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
@@ -1793,12 +1858,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function enemyTurn(showFasterMsg = false): void {
-    const mi = enemySelectedMoveIndex >= 0 ? enemySelectedMoveIndex : chooseEnemyMoveIndex(enemy);
+    const mi = enemySelectedMoveIndex >= 0 ? enemySelectedMoveIndex : getPlannedEnemyMoveIndex();
     enemySelectedMoveIndex = -1;
     const m = enemy.moves[mi];
     const rtl = isRTL();
     const attackerName = getPokemonDisplayName(enemy.id);
     const defenderName = getPokemonDisplayName(player.id);
+    const moveBattleData = getMoveBattleData(m.id);
+    const chargingMoveId = getChargingMoveId(enemyBattleState);
+    const isChargeRelease = chargingMoveId !== null && chargingMoveId === m.id;
+    const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
+    const isChargeStart = requiresChargeTurn && !isChargeRelease;
     triggerStatusTurnEffects('enemy', enemy, enemyBattleState);
     const startResult = processBeforeMoveEffects(enemy, enemyBattleState);
     const turnEffectLines = startResult.events
@@ -1816,6 +1886,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       : [];
 
     if (!startResult.canAct) {
+      if (isChargeRelease) {
+        clearChargingMove(enemyBattleState);
+      }
       const msgs = [...prefix];
       msgs.push(...(turnEffectLines.length > 0 ? turnEffectLines : [t('battle.nothingHappened')]));
       textBox = createTextBox(msgs, rtl);
@@ -1824,13 +1897,30 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       return;
     }
 
-    if (m.currentPp > 0) {
+    if (!isChargeRelease && m.currentPp > 0) {
       m.currentPp--;
+    }
+
+    const moveData = getMove(m.id);
+    if (isChargeStart) {
+      startChargingMove(enemyBattleState, m.id);
+      const chargeStatChanges = applyStatChanges(enemyBattleState, moveBattleData?.chargeStatChanges ?? [], 'user');
+      const msgs = [...prefix, ...turnEffectLines, getChargingLine(attackerName, getMoveDisplayName(m.id))];
+      for (const change of chargeStatChanges) {
+        msgs.push(getStatChangeLine(attackerName, change));
+      }
+      syncEnemyBar();
+      textBox = createTextBox(msgs, rtl);
+      phase = 'ENEMY_TURN';
+      phaseTimer = 0;
+      return;
+    }
+
+    if (isChargeRelease) {
+      clearChargingMove(enemyBattleState);
     }
     applyPostMoveTurnFlags(enemyBattleState, m.id);
 
-    const moveData = getMove(m.id);
-    const moveBattleData = getMoveBattleData(m.id);
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, enemyBattleState, playerBattleState);
     const targetTypeImmune = hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
@@ -2099,10 +2189,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             if (r.index === -1) { phase = 'SELECT_ACTION'; showMainMenu(menu); }
             else {
               selMove = r.index;
+              pendingForcedPlayerMoveIndex = null;
               const m = player.moves[selMove];
               if (m.currentPp <= 0) { textBox = createTextBox([t('battle.noPP')], isRTL()); phase = 'INTRO'; }
               else {
-                enemySelectedMoveIndex = chooseEnemyMoveIndex(enemy);
+                enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
                 const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
                 const turnOrder = determineTurnOrder(
                   player,
@@ -2140,8 +2231,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               // Enemy went first, now player attacks with pre-selected move
               enemyGoesFirst = false;
               enemyAlreadyAttacked = true;
-              doAttack();
+              const forcedMoveIndex = pendingForcedPlayerMoveIndex;
+              pendingForcedPlayerMoveIndex = null;
+              doAttack(forcedMoveIndex ?? undefined);
             } else {
+              pendingForcedPlayerMoveIndex = null;
               startEndTurnStatusPhase();
             }
           }

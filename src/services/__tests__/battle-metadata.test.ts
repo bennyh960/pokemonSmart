@@ -51,6 +51,8 @@ describe('battle metadata', () => {
     const bite = getMoveByName('bite');
     const megaDrain = getMoveByName('mega drain');
     const doubleEdge = getMoveByName('double edge');
+    const solarBeam = getMoveByName('solar beam');
+    const skullBash = getMoveByName('skull bash');
 
     expect(confuseRay?.battle.effects).toEqual([
       { id: 'confusion', target: 'target', chance: 100, minTurns: 2, maxTurns: 5 },
@@ -64,6 +66,11 @@ describe('battle metadata', () => {
     expect(bite?.battle.flinchChance).toBe(30);
     expect(megaDrain?.battle.drainPercent).toBe(50);
     expect(doubleEdge?.battle.recoilPercent).toBe(25);
+    expect(solarBeam?.battle.behaviorTags).toContain('requires-charge-turn');
+    expect(skullBash?.battle.behaviorTags).toContain('requires-charge-turn');
+    expect(skullBash?.battle.chargeStatChanges).toEqual([
+      { stat: 'defense', stages: 1, target: 'user', chance: 100 },
+    ]);
   });
 
   it('exposes battle effects for passive ability hooks', () => {

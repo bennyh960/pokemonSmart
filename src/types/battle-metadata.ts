@@ -23,7 +23,7 @@ export type MoveBattleTarget =
   | 'all-other-pokemon'
   | 'specific-move';
 
-export type MoveBattleBehaviorTag = 'fails-if-target-not-attacking' | 'must-recharge';
+export type MoveBattleBehaviorTag = 'fails-if-target-not-attacking' | 'must-recharge' | 'requires-charge-turn';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 
@@ -57,6 +57,7 @@ export interface MoveBattleMetadata {
   target: MoveBattleTarget;
   ailment: MoveStatusEffect | null;
   statChanges: MoveStatChange[];
+  chargeStatChanges: MoveStatChange[];
   effects: MoveBattleEffect[];
   critRate: number;
   flinchChance: number | null;
@@ -102,6 +103,7 @@ export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
     target: 'selected-pokemon',
     ailment: null,
     statChanges: [],
+    chargeStatChanges: [],
     effects: [],
     critRate: 0,
     flinchChance: null,

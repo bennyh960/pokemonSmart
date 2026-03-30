@@ -58,10 +58,21 @@ function trappingEffect(): MoveOverride {
   return volatileEffect('trap', 100, { minTurns: 2, maxTurns: 5, damagePercent: 6.25 });
 }
 
+function chargingMove(...chargeStatChanges: MoveStatChange[]): MoveOverride {
+  return {
+    behaviorTags: ['requires-charge-turn'],
+    chargeStatChanges,
+  };
+}
+
 export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Quick Attack': { priority: 1 },
   'Extreme Speed': { priority: 2 },
   'Hyper Beam': { behaviorTags: ['must-recharge'] },
+  'Solar Beam': chargingMove(),
+  'Skull Bash': chargingMove(stageChange('defense', 1, 'user')),
+  'Sky Attack': chargingMove(),
+  'Razor Wind': chargingMove(),
   'Mach Punch': { priority: 1 },
   'Aqua Jet': { priority: 1 },
   'Ice Shard': { priority: 1 },
