@@ -3456,17 +3456,6 @@
       "walkable": false,
       "above": true,
       "category": "interactive",
-      "interactType": {
-        "id": "item",
-        "args": {
-          "label": {
-            "en": "Ultra Ball",
-            "he": "אולטרה בול"
-          },
-          "itemId": "ultra-ball",
-          "itemQty": 3
-        }
-      },
       "description": "intercative ultra ball equal to 3 ultraballs"
     },
     {
@@ -3478,17 +3467,6 @@
       "walkable": false,
       "above": true,
       "category": "interactive",
-      "interactType": {
-        "id": "item",
-        "args": {
-          "label": {
-            "en": "Great Ball",
-            "he": "גרייט בול"
-          },
-          "itemId": "great-ball",
-          "itemQty": 3
-        }
-      },
       "description": "interactive great ball equal to 3 great balls"
     },
     {
@@ -3500,6 +3478,7 @@
       "walkable": true,
       "above": true,
       "category": "interactive",
+      "description": "revive item X3",
       "interactType": {
         "id": "item",
         "args": {
@@ -3510,8 +3489,7 @@
           "itemId": "revive",
           "itemQty": 3
         }
-      },
-      "description": "revive item X3"
+      }
     }
   ]
 }
