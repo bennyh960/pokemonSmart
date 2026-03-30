@@ -330,7 +330,7 @@ export function getPokemonCatchRate(id: number): number {
 
 interface RawAbilityDef {
   name: LocalizedName;
-  description: string;
+  description: {en: string; he: string};
   generationIntroduced: string;
   battleEffects?: AbilityBattleEffect[];
 }

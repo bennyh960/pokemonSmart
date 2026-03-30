@@ -2,81 +2,121 @@
   "1": {
     "name": {
       "en": "Stench",
-      "he": "Stench"
+      "he": "סירחון"
     },
-    "description": "Helps repel wild POKéMON.",
+    "description":
+    {
+      "en":"Helps repel wild POKéMON.",
+      "he":"מסייע להרחיק פוקימונים פראיים."
+    },
     "generationIntroduced": "generation-iii"
   },
   "2": {
     "name": {
       "en": "Drizzle",
-      "he": "Drizzle"
+      "he": "טפטוף"
     },
-    "description": "Summons rain in battle.",
+    "description":
+    {
+      "en":"Summons rain in battle.",
+      "he":"מזמן גשם בקרב."
+    },
     "generationIntroduced": "generation-iii"
   },
   "3": {
     "name": {
       "en": "Speed Boost",
-      "he": "Speed Boost"
+      "he": "צהירת מהירות"
     },
-    "description": "Gradually boosts SPEED.",
+    "description":
+    {
+      "en":"Gradually boosts SPEED.",
+      "he":""
+    },
     "generationIntroduced": "generation-iii"
   },
   "4": {
     "name": {
       "en": "Battle Armor",
-      "he": "Battle Armor"
+      "he": "שריון קרב"
     },
-    "description": "Blocks critical hits.",
+    "description":
+    {
+      "en":"Blocks critical hits.",
+      "he":"חסין מפגיעות קריטיות."
+    },
     "generationIntroduced": "generation-iii"
   },
   "5": {
     "name": {
       "en": "Sturdy",
-      "he": "Sturdy"
+      "he": "חוסן"
     },
-    "description": "Negates 1-hit KO attacks.",
+    "description":
+    {
+      "en":"Negates 1-hit KO attacks.",
+      "he":""
+    },
     "generationIntroduced": "generation-iii"
   },
   "6": {
     "name": {
       "en": "Damp",
-      "he": "Damp"
+      "he": "לחה"
     },
-    "description": "Prevents self-destruction.",
+    "description":
+    {
+      "en":"Prevents self-destruction.",
+      "he":"מונע השמדה עצמית."
+    },
     "generationIntroduced": "generation-iii"
   },
   "7": {
     "name": {
       "en": "Limber",
-      "he": "Limber"
+      "he": "גמישות"
     },
-    "description": "Prevents paralysis.",
+    "description":
+    {
+      "en":"Prevents paralysis.",
+      "he":"מונע שיתוק."
+    },
     "generationIntroduced": "generation-iii"
   },
   "8": {
     "name": {
       "en": "Sand Veil",
-      "he": "Sand Veil"
+      "he": "מסווה חול"
     },
-    "description": "Ups evasion in a sandstorm.",
+    "description":
+    {
+      "en":"Ups evasion in a sandstorm.",
+      "he":"מעלה את הסיכוי להתחמק בסופת חול."
+    },
     "generationIntroduced": "generation-iii"
   },
   "9": {
     "name": {
       "en": "Static",
-      "he": "Static"
+      "he": "סטטיק"
     },
-    "description": "Paralyzes on contact.",
+    "description":
+    {
+      "en":"Paralyzes on contact.",
+      "he":"משתק במגע."
+    },
     "generationIntroduced": "generation-iii"
   },
   "10": {
     "name": {
       "en": "Volt Absorb",
-      "he": "Volt Absorb"
+      "he": "ספיגת מתח"
     },
-    "description": "Turns electricity into HP.",
+    "description":
+    {
+      "en":"Turns electricity into HP.",
+      "he":"ממיר חשמל לנקודות חיים."
+    },
     "generationIntroduced": "generation-iii"
   },
   "11": {
@@ -84,335 +124,506 @@
       "en": "Water Absorb",
       "he": "Water Absorb"
     },
-    "description": "Changes water into HP.",
+    "description":
+    {
+      "en":"Changes water into HP.",
+      "he":"ממיר מים לנקודות חיים."
+    },
     "generationIntroduced": "generation-iii"
   },
   "12": {
     "name": {
       "en": "Oblivious",
-      "he": "Oblivious"
+      "he": "חסר מודעות"
     },
-    "description": "Prevents attraction.",
+    "description":
+    {
+      "en":"Prevents attraction.",
+      "he":"מונע משיכה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "13": {
     "name": {
       "en": "Cloud Nine",
-      "he": "Cloud Nine"
+      "he": "שמיים בהירים"
     },
-    "description": "Negates weather effects.",
+    "description":
+    {
+      "en":"Negates weather effects.",
+      "he":"מבטל את השפעות מזג האוויר."
+    },
     "generationIntroduced": "generation-iii"
   },
   "14": {
     "name": {
       "en": "Compound Eyes",
-      "he": "Compound Eyes"
+      "he": "עיניים מורכבות"
     },
-    "description": "Raises accuracy.",
+    "description":
+    {
+      "en":"Raises accuracy.",
+      "he":"מעלה את הדיוק."
+    },
     "generationIntroduced": "generation-iii"
   },
   "15": {
     "name": {
       "en": "Insomnia",
-      "he": "Insomnia"
+      "he": "חוסר שינה"
     },
-    "description": "Prevents sleep.",
+    "description":
+    {
+      "en":"Prevents sleep.",
+      "he":"מונע שינה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "17": {
     "name": {
       "en": "Immunity",
-      "he": "Immunity"
+      "he": "חסינות"
     },
-    "description": "Prevents poisoning.",
+    "description":
+    {
+      "en":"Prevents poisoning.",
+      "he":"מונע הרעלה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "18": {
     "name": {
       "en": "Flash Fire",
-      "he": "Flash Fire"
+      "he": "אש פתאומית"
     },
-    "description": "Powers up if hit by fire.",
+    "description":
+    {
+      "en":"Powers up if hit by fire.",
+      "he":"הכח מתגבר אם נפגע מאש."
+    },
     "generationIntroduced": "generation-iii"
   },
   "19": {
     "name": {
       "en": "Shield Dust",
-      "he": "Shield Dust"
+      "he": "אבק מגן"
     },
-    "description": "Prevents added effects.",
+    "description":
+    {
+      "en":"Prevents added effects.",
+      "he":"מבטל השפעת אפקטים שהתווספו ."
+    },
     "generationIntroduced": "generation-iii"
   },
   "20": {
     "name": {
       "en": "Own Tempo",
-      "he": "Own Tempo"
+      "he": "קצב אישי"
     },
-    "description": "Prevents confusion.",
+    "description":
+    {
+      "en":"Prevents confusion.",
+      "he":"מונע בלבול."
+    },
     "generationIntroduced": "generation-iii"
   },
   "21": {
     "name": {
       "en": "Suction Cups",
-      "he": "Suction Cups"
+      "he": "ספיגת כוסות"
     },
-    "description": "Firmly anchors the body.",
+    "description":
+    {
+      "en":"Firmly anchors the body.",
+      "he":"מעגן את הגוף בחוזקה."
+
+    },
     "generationIntroduced": "generation-iii"
   },
   "22": {
     "name": {
       "en": "Intimidate",
-      "he": "Intimidate"
+      "he": "מבהיל"
     },
-    "description": "Lowers the foe’s ATTACK.",
+    "description":
+    {
+      "en":"Lowers the foe’s ATTACK.",
+      "he":"מנמיך את ההתקפה של היריב."
+    },
     "generationIntroduced": "generation-iii"
   },
   "23": {
     "name": {
       "en": "Shadow Tag",
-      "he": "Shadow Tag"
+      "he": "צללית"
     },
-    "description": "Prevents the foe’s escape.",
+    "description":
+    {
+      "en":"Prevents the foe’s escape.",
+      "he":"מונע מהיריב לברוח."
+    },
     "generationIntroduced": "generation-iii"
   },
   "26": {
     "name": {
       "en": "Levitate",
-      "he": "Levitate"
+      "he": "ריחוף"
     },
-    "description": "Not hit by GROUND attacks.",
+    "description":
+    {
+      "en":"Not hit by GROUND attacks.",
+      "he":"לא נפגע מהתקפות קרקע."
+
+    },
     "generationIntroduced": "generation-iii"
   },
   "27": {
     "name": {
       "en": "Effect Spore",
-      "he": "Effect Spore"
+      "he": "נבג אפקט"
     },
-    "description": "Leaves spores on contact.",
+    "description":
+    {
+      "en":"Leaves spores on contact.",
+      "he":"משאיר נבגים במגע."
+    },
     "generationIntroduced": "generation-iii"
   },
   "28": {
     "name": {
       "en": "Synchronize",
-      "he": "Synchronize"
+      "he": "סינכרון"
     },
-    "description": "Passes on status problems.",
+    "description":
+    {
+      "en":"Passes on status problems.",
+      "he":"מעביר בעיות מצב."
+    },
     "generationIntroduced": "generation-iii"
   },
   "29": {
     "name": {
       "en": "Clear Body",
-      "he": "Clear Body"
+      "he": "גוף נקי"
     },
-    "description": "Prevents ability reduction.",
+    "description":
+    {
+      "en":"Prevents ability reduction.",
+      "he":"מונע הפחתת יכולת."
+    },
     "generationIntroduced": "generation-iii"
   },
   "30": {
     "name": {
       "en": "Natural Cure",
-      "he": "Natural Cure"
+      "he": "ריפוי טבעי"
     },
-    "description": "Heals upon switching out.",
+    "description":
+    {
+      "en":"Heals upon switching out.",
+      "he":"מרפא בעת החלפה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "31": {
     "name": {
       "en": "Lightning Rod",
-      "he": "Lightning Rod"
+      "he": "חוט ברק"
     },
-    "description": "Draws electrical moves.",
+    "description":
+    {
+      "en":"Draws electrical moves.",
+      "he":"מושך מהלכים חשמליים."
+    },
     "generationIntroduced": "generation-iii"
   },
   "32": {
     "name": {
       "en": "Serene Grace",
-      "he": "Serene Grace"
+      "he": "חסד רגוע"
     },
-    "description": "Promotes added effects.",
+    "description":
+    {
+      "en":"Promotes added effects.",
+      "he":"מגביר אפקטים נוספים."
+    },
     "generationIntroduced": "generation-iii"
   },
   "33": {
     "name": {
       "en": "Swift Swim",
-      "he": "Swift Swim"
+      "he": "שחייה מהירה"
     },
-    "description": "Raises SPEED in rain.",
+    "description":
+    {
+      "en":"Raises SPEED in rain.",
+      "he":"מעלה את המהירות בגשם."
+    },
     "generationIntroduced": "generation-iii"
   },
   "34": {
     "name": {
       "en": "Chlorophyll",
-      "he": "Chlorophyll"
+      "he": "כלורופיל"
     },
-    "description": "Raises SPEED in sunshine.",
+    "description":
+    {
+      "en":"Raises SPEED in sunshine.",
+      "he":"מעלה את המהירות בשמש."
+    },
     "generationIntroduced": "generation-iii"
   },
   "35": {
     "name": {
       "en": "Illuminate",
-      "he": "Illuminate"
+      "he": "הארה"
     },
-    "description": "Encounter rate increases.",
+    "description":
+    {
+      "en":"Encounter rate increases.",
+      "he":"מעלה את שיעור המפגשים."
+    },
     "generationIntroduced": "generation-iii"
   },
   "36": {
     "name": {
       "en": "Trace",
-      "he": "Trace"
+      "he": "עקבות"
     },
-    "description": "Copies special ability.",
+    "description":
+    {
+      "en":"Copies special ability.",
+      "he":"מעביר יכולת מיוחדת."
+    },
     "generationIntroduced": "generation-iii"
   },
   "37": {
     "name": {
       "en": "Huge Power",
-      "he": "Huge Power"
+      "he": "כוח עצום"
     },
-    "description": "Raises ATTACK.",
+    "description":
+    {
+      "en":"Raises ATTACK.",
+      "he":"מעלה את ההתקפה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "38": {
     "name": {
       "en": "Poison Point",
-      "he": "Poison Point"
+      "he": "נקודת רעל"
     },
-    "description": "Poisons foe on contact.",
+    "description":
+    {
+      "en":"Poisons foe on contact.",
+      "he":"מרעיל את היריב במגע"
+    },
     "generationIntroduced": "generation-iii"
   },
   "39": {
     "name": {
       "en": "Inner Focus",
-      "he": "Inner Focus"
+      "he": "מיקוד פנימי"
     },
-    "description": "Prevents flinching.",
+    "description":
+    {
+      "en":"Prevents flinching.",
+      "he":"מונע רעד (לא מאפשר לפחד)."
+
+    },
     "generationIntroduced": "generation-iii"
   },
   "40": {
     "name": {
       "en": "Magma Armor",
-      "he": "Magma Armor"
+      "he": "שריון מגמה"
     },
-    "description": "Prevents freezing.",
+    "description":
+    {
+      "en":"Prevents freezing.",
+      "he":"מונע הקפאה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "41": {
     "name": {
       "en": "Water Veil",
-      "he": "Water Veil"
+      "he":"מסווה מים"
     },
-    "description": "Prevents burns.",
+    "description":
+    {
+      "en":"Prevents burns.",
+      "he":"מונע כוויות."
+    },
     "generationIntroduced": "generation-iii"
   },
   "42": {
     "name": {
       "en": "Magnet Pull",
-      "he": "Magnet Pull"
+      "he": "מגנט פול"
     },
-    "description": "Traps STEEL-type POKéMON.",
+    "description":
+    {
+      "en":"Traps STEEL-type POKéMON.",
+      "he":"לוכד פוקימונים מסוג פלדה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "43": {
     "name": {
       "en": "Soundproof",
-      "he": "Soundproof"
+      "he": "עמיד לקול"
     },
-    "description": "Avoids sound-based moves.",
+    "description":
+    {
+      "en":"Avoids sound-based moves.",
+      "he":"מונע מהלכים מבוססי קול."
+    },
     "generationIntroduced": "generation-iii"
   },
   "44": {
     "name": {
       "en": "Rain Dish",
-      "he": "Rain Dish"
+      "he": "צלחת גשם"
     },
-    "description": "Slight HP recovery in rain.",
+    "description":
+    {
+      "en":"Slight HP recovery in rain.",
+      "he":"שחזור קל של HP בגשם."
+    },
     "generationIntroduced": "generation-iii"
   },
   "45": {
     "name": {
       "en": "Sand Stream",
-      "he": "Sand Stream"
+      "he": "זרם חול"
     },
-    "description": "Summons a sandstorm.",
+    "description":
+    {
+      "en":"Summons a sandstorm.",
+      "he":"מזמן סופת חול."
+    },
     "generationIntroduced": "generation-iii"
   },
   "46": {
     "name": {
       "en": "Pressure",
-      "he": "Pressure"
+      "he": "לחץ"
     },
-    "description": "Raises foe’s PP usage.",
+    "description":
+    {
+      "en":"Raises foe’s PP usage.",
+      "he":"מעלה את השימוש ב-PP של היריב."
+    },
     "generationIntroduced": "generation-iii"
   },
   "47": {
     "name": {
       "en": "Thick Fat",
-      "he": "Thick Fat"
+      "he": "שומן עבה"
     },
-    "description": "Heat-and-cold protection.",
+    "description":
+    {
+      "en":"Heat-and-cold protection.",
+      "he":"מגן מפני חום וקור. (מקטין נזק ממתקפות אש וקרח)"
+    },
     "generationIntroduced": "generation-iii"
   },
   "48": {
     "name": {
       "en": "Early Bird",
-      "he": "Early Bird"
+      "he": "ציפור מוקדמת"
     },
-    "description": "Awakens quickly from sleep.",
+    "description":
+    {
+      "en":"Awakens quickly from sleep.",
+      "he":"מתעורר במהירות משינה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "49": {
     "name": {
       "en": "Flame Body",
-      "he": "Flame Body"
+      "he": "גוף בוער"
     },
-    "description": "Burns the foe on contact.",
+    "description":
+    {
+      "en":"Burns the foe on contact.",
+      "he":"שורף את היריב במגע."
+    },
     "generationIntroduced": "generation-iii"
   },
   "50": {
     "name": {
       "en": "Run Away",
-      "he": "Run Away"
+      "he": "בריחה"
     },
-    "description": "Makes escaping easier.",
+    "description":
+    {
+      "en":"Makes escaping easier.",
+      "he":"מקל על הבריחה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "51": {
     "name": {
       "en": "Keen Eye",
-      "he": "Keen Eye"
+      "he": "עין חדה"
     },
-    "description": "Prevents loss of accuracy.",
+    "description":
+    {
+      "en":"Prevents loss of accuracy.",
+      "he":"מונע אובדן דיוק."
+    },
     "generationIntroduced": "generation-iii"
   },
   "52": {
     "name": {
       "en": "Hyper Cutter",
-      "he": "Hyper Cutter"
+      "he": "חיתוך על"
     },
-    "description": "Prevents ATTACK reduction.",
+    "description":
+    {
+      "en":"Prevents ATTACK reduction.",
+      "he":"מונע הפחתת כוח התקפה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "53": {
     "name": {
       "en": "Pickup",
-      "he": "Pickup"
+      "he": "איסוף"
     },
-    "description": "May pick up items.",
+    "description":
+    {
+      "en":"May pick up items.",
+      "he":"עלול לאסוף פריטים."
+    },
     "generationIntroduced": "generation-iii"
   },
   "55": {
     "name": {
       "en": "Hustle",
-      "he": "Hustle"
+      "he": "חוסר שליטה"
     },
-    "description": "Trades accuracy for power.",
+    "description":
+    {
+      "en":"Trades accuracy for power.",
+      "he":"מחליף דיוק בכוח."
+    },
     "generationIntroduced": "generation-iii"
   },
   "56": {
     "name": {
       "en": "Cute Charm",
-      "he": "Cute Charm"
+      "he": "קסם חמוד"
     },
-    "description": "Infatuates on contact.",
+    "description":
+    {
+      "en":"Infatuates on contact.",
+      "he":"מפתה במגע."
+    },
     "generationIntroduced": "generation-iii"
   },
   "57": {
@@ -420,343 +631,520 @@
       "en": "Plus",
       "he": "Plus"
     },
-    "description": "Powers up with MINUS.",
+    "description":
+    {
+      "en":"Powers up with MINUS.",
+      "he":"מגביר כוח כאשר יש MINUS. בקרב עם Pokémon בעל MINUS, ההתקפה וההגנה של Pokémon עם Plus יגדלו ב-50%."
+    },
     "generationIntroduced": "generation-iii"
   },
   "60": {
     "name": {
       "en": "Sticky Hold",
-      "he": "Sticky Hold"
+      "he": "אחיזה דביקה"
     },
-    "description": "Prevents item theft.",
+    "description":
+    {
+      "en":"Prevents item theft.",
+      "he":"מונע גניבת פריטים."
+    },
     "generationIntroduced": "generation-iii"
   },
   "61": {
     "name": {
       "en": "Shed Skin",
-      "he": "Shed Skin"
+      "he": "קליפת עור"
     },
-    "description": "Heals the body by shedding.",
+    "description":
+    {
+      "en":"Heals the body by shedding.",
+      "he":"מרפא את הגוף על ידי התקלפות."
+    },
     "generationIntroduced": "generation-iii"
   },
   "62": {
     "name": {
       "en": "Guts",
-      "he": "Guts"
+      "he": "אומץ"
     },
-    "description": "Ups ATTACK if suffering.",
+    "description":
+    {
+      "en":"Ups ATTACK if suffering.",
+      "he":"מעלה את כוח ההתקפה כאשר סובל מפגיעה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "63": {
     "name": {
       "en": "Marvel Scale",
-      "he": "Marvel Scale"
+      "he": "קנה מידה מופלא"
     },
-    "description": "Ups DEFENSE if suffering.",
+    "description":
+    {
+      "en":"Ups DEFENSE if suffering.",
+      "he":"מעלה את כוח ההגנה כאשר סובל מפגיעה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "64": {
     "name": {
       "en": "Liquid Ooze",
-      "he": "Liquid Ooze"
+      "he": "נוזל רעיל"
     },
-    "description": "Draining causes injury.",
+    "description":
+    {
+      "en":"Draining causes injury.",
+      "he":"נזק מהשאיבה גורם לפגיעה."
+
+    },
     "generationIntroduced": "generation-iii"
   },
   "65": {
     "name": {
       "en": "Overgrow",
-      "he": "Overgrow"
+      "he": "צמחייה"
     },
-    "description": "Ups GRASS moves in a pinch.",
+    "description":
+    {
+      "en":"Ups GRASS moves in a pinch.",
+      "he":"מגביר כוח מתקפות עשב במצוקה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "66": {
     "name": {
       "en": "Blaze",
-      "he": "Blaze"
+      "he": "להבה"
     },
-    "description": "Ups FIRE moves in a pinch.",
+    "description":
+    {
+      "en":"Ups FIRE moves in a pinch.",
+      "he":""
+    },
     "generationIntroduced": "generation-iii"
   },
   "67": {
     "name": {
       "en": "Torrent",
-      "he": "Torrent"
+      "he": "סופה"
     },
-    "description": "Ups WATER moves in a pinch.",
+    "description":
+    {
+      "en":"Ups WATER moves in a pinch.",
+      "he":"מגביר כוח מתקפות מים במצוקה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "68": {
     "name": {
       "en": "Swarm",
-      "he": "Swarm"
+      "he": "להקה"
     },
-    "description": "Ups BUG moves in a pinch.",
+    "description":
+    {
+      "en":"Ups BUG moves in a pinch.",
+      "he":"מגביר כוח מתקפות חרקים במצוקה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "69": {
     "name": {
       "en": "Rock Head",
-      "he": "Rock Head"
+      "he": "ראש סלע"
     },
-    "description": "Prevents recoil damage.",
+    "description":
+    {
+      "en":"Prevents recoil damage.",
+      "he":"מונע נזק חוזר."
+    },
     "generationIntroduced": "generation-iii"
   },
   "70": {
     "name": {
       "en": "Drought",
-      "he": "Drought"
+      "he": "בצורת"
     },
-    "description": "Summons sunlight in battle.",
+    "description":
+    {
+      "en":"Summons sunlight in battle.",
+      "he":"מזמן שמש בקרב."
+    },
     "generationIntroduced": "generation-iii"
   },
   "71": {
     "name": {
       "en": "Arena Trap",
-      "he": "Arena Trap"
+      "he": "מלכודת זירה"
     },
-    "description": "Prevents fleeing.",
+    "description":
+    {
+      "en":"Prevents fleeing.",
+      "he":"מונע בריחה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "72": {
     "name": {
       "en": "Vital Spirit",
-      "he": "Vital Spirit"
+      "he": "רוח חיונית"
     },
-    "description": "Prevents sleep.",
+    "description":
+    {
+      "en":"Prevents sleep.",
+      "he":"מונע שינה."
+    },
     "generationIntroduced": "generation-iii"
   },
   "75": {
     "name": {
       "en": "Shell Armor",
-      "he": "Shell Armor"
+      "he": "שריון קליפה"
     },
-    "description": "Blocks critical hits.",
+    "description":
+    {
+      "en":"Blocks critical hits.",
+      "he":"מונע מכות קריטיות."
+    },
     "generationIntroduced": "generation-iii"
   },
   "77": {
     "name": {
       "en": "Tangled Feet",
-      "he": "Tangled Feet"
+      "he": "רגליים מסובכות"
     },
-    "description": "Raises evasion if the Pokémon is confused.",
+    "description":
+    {
+      "en":"Raises evasion if the Pokémon is confused.",
+      "he":"מעלה את הסיכוי להתחמק אם הפוקימון מבולבל."
+    },
     "generationIntroduced": "generation-iv"
   },
   "79": {
     "name": {
       "en": "Rivalry",
-      "he": "Rivalry"
+      "he": "יריבות"
     },
-    "description": "Raises Attack if the foe is of the same gender.",
+    "description":
+    {
+      "en":"Raises Attack if the foe is of the same gender.",
+      "he":"מעלה את כוח ההתקפה אם האויב מאותו מין."
+    },
     "generationIntroduced": "generation-iv"
   },
   "80": {
     "name": {
       "en": "Steadfast",
-      "he": "Steadfast"
+      "he": "נחישות"
     },
-    "description": "Raises Speed each time the Pokémon flinches.",
+    "description":
+    {
+      "en":"Raises Speed each time the Pokémon flinches.",
+      "he":"מעלה את המהירות בכל פעם שהפוקימון מפחד."
+    },
     "generationIntroduced": "generation-iv"
   },
   "81": {
     "name": {
       "en": "Snow Cloak",
-      "he": "Snow Cloak"
+      "he": "כיסוי שלג"
     },
-    "description": "Raises evasion in a hailstorm.",
+    "description":
+    {
+      "en":"Raises evasion in a hailstorm.",
+      "he":"מעלה את הסיכוי להתחמק בסופת שלג."
+    },
     "generationIntroduced": "generation-iv"
   },
   "82": {
     "name": {
       "en": "Gluttony",
-      "he": "Gluttony"
+      "he": "תאווה"
     },
-    "description": "Encourages the early use of a held Berry.",
+    "description":
+    {
+      "en":"Encourages the early use of a held Berry.",
+      "he":"מעודד שימוש מוקדם בפרי מוחזק."
+    },
     "generationIntroduced": "generation-iv"
   },
   "83": {
     "name": {
       "en": "Anger Point",
-      "he": "Anger Point"
+      "he": "נקודת זעם"
     },
-    "description": "Raises Attack upon taking a critical hit.",
+    "description":
+    {
+      "en":"Raises Attack upon taking a critical hit.",
+      "he":"מעלה את כוח ההתקפה לאחר קבלת מכה קריטית."
+    },
     "generationIntroduced": "generation-iv"
   },
   "84": {
     "name": {
       "en": "Unburden",
-      "he": "Unburden"
+      "he": "קלות משקל"
     },
-    "description": "Raises Speed if a held item is used.",
+    "description":
+    {
+      "en":"Raises Speed if a held item is used.",
+      "he":"מעלה את המהירות אם פריט מוחזק בשימוש."
+    },
     "generationIntroduced": "generation-iv"
   },
   "87": {
     "name": {
       "en": "Dry Skin",
-      "he": "Dry Skin"
+      "he": "עור יבש"
     },
-    "description": "Reduces HP if it is hot. Water restores HP.",
+    "description":
+    {
+      "en":"Reduces HP if it is hot. Water restores HP.",
+      "he":"מקטין את נקודות החיים אם חם. מים משחזרים נקודות חיים. מונע נזק ממתקפות מים, אך מקבל נזק ממתקפות אש."
+    },
     "generationIntroduced": "generation-iv"
   },
   "88": {
     "name": {
       "en": "Download",
-      "he": "Download"
+      "he": "הורדה"
     },
-    "description": "Adjusts power according to the foe’s ability.",
+    "description":
+    {
+      "en":"Adjusts power according to the foe’s ability.",
+      "he":"מכוון את הכוח בהתאם ליכולת של האויב."
+    },
     "generationIntroduced": "generation-iv"
   },
   "89": {
     "name": {
       "en": "Iron Fist",
-      "he": "Iron Fist"
+      "he": "אגרוף ברזל"
     },
-    "description": "Boosts the power of punching moves.",
+    "description":
+    {
+      "en":"Boosts the power of punching moves.",
+      "he":"מגביר את כוח המהלכים של אגרופים."
+
+    },
     "generationIntroduced": "generation-iv"
   },
   "91": {
     "name": {
       "en": "Adaptability",
-      "he": "Adaptability"
+      "he": "התאמה"
     },
-    "description": "Powers up moves of the same type.",
+    "description":
+    {
+      "en":"Powers up moves of the same type.",
+      "he":"מגביר את כוח המהלכים מאותו סוג."
+    },
     "generationIntroduced": "generation-iv"
   },
   "92": {
     "name": {
       "en": "Skill Link",
-      "he": "Skill Link"
+      "he": "קישור מיומנות"
     },
-    "description": "Increases the frequency of multi-strike moves.",
+    "description":
+    {
+      "en":"Increases the frequency of multi-strike moves.",
+      "he":"מעלה את תדירות המהלכים הרב-מכה."
+
+    },
     "generationIntroduced": "generation-iv"
   },
   "93": {
     "name": {
       "en": "Hydration",
-      "he": "Hydration"
+      "he": "הידרציה"
     },
-    "description": "Heals status problems if it is raining.",
+    "description":
+    {
+      "en":"Heals status problems if it is raining.",
+      "he":"מרפא בעיות מצב אם יורד גשם."
+    },
     "generationIntroduced": "generation-iv"
   },
   "94": {
     "name": {
       "en": "Solar Power",
-      "he": "Solar Power"
+      "he": "כוח סולארי"
     },
-    "description": "Boosts Sp. Atk, but lowers HP in sunshine.",
+    "description":
+    {
+      "en":"Boosts Sp. Atk, but lowers HP in sunshine.",
+      "he":"מגביר את כוח ההתקפה המיוחדת, אך מפחית את נקודות החיים בשמש."
+    },
     "generationIntroduced": "generation-iv"
   },
   "95": {
     "name": {
       "en": "Quick Feet",
-      "he": "Quick Feet"
+      "he": "רגליים מהירות"
     },
-    "description": "Boosts Speed if there is a status problem.",
+    "description":
+    {
+      "en":"Boosts Speed if there is a status problem.",
+      "he":"מגביר את המהירות אם יש בעיית מצב."
+    },
     "generationIntroduced": "generation-iv"
   },
   "97": {
     "name": {
       "en": "Sniper",
-      "he": "Sniper"
+      "he": "סנייפר"
     },
-    "description": "Powers up moves if they become critical hits.",
+    "description":
+    {
+      "en":"Powers up moves if they become critical hits.",
+      "he":"מגביר את כוח המהלכים אם הם הופכים למכות קריטיות."
+    },
     "generationIntroduced": "generation-iv"
   },
   "98": {
     "name": {
       "en": "Magic Guard",
-      "he": "Magic Guard"
+      "he": "שומר קסם"
     },
-    "description": "The Pokémon only takes damage from attacks.",
+    "description":
+    {
+      "en":"The Pokémon only takes damage from attacks.",
+      "he":" הפוקימון ניזוק רק מהתקפות פיזיות."
+    },
     "generationIntroduced": "generation-iv"
   },
   "99": {
     "name": {
       "en": "No Guard",
-      "he": "No Guard"
+      "he": "ללא משמר"
     },
-    "description": "Ensures the Pokémon and its foe’s attacks land.",
+    "description":
+    {
+      "en":"Ensures the Pokémon and its foe’s attacks land.",
+      "he":"מבטיח שההתקפות של הפוקימון ושל האויב יצליחו."
+
+    },
     "generationIntroduced": "generation-iv"
   },
   "101": {
     "name": {
       "en": "Technician",
-      "he": "Technician"
+      "he": "טכניקן"
     },
-    "description": "Powers up the Pokémon’s weaker moves.",
+    "description":
+    {
+      "en":"Powers up the Pokémon’s weaker moves.",
+      "he":"מגביר את כוח המהלכים החלשים של הפוקימון."
+    },
     "generationIntroduced": "generation-iv"
   },
   "102": {
     "name": {
       "en": "Leaf Guard",
-      "he": "Leaf Guard"
+      "he": "מגן עלים"
     },
-    "description": "Prevents status problems in sunny weather.",
+    "description":
+    {
+      "en":"Prevents status problems in sunny weather.",
+      "he":"מונע בעיות מצב במזג אוויר שמשי."
+    },
     "generationIntroduced": "generation-iv"
   },
   "104": {
     "name": {
       "en": "Mold Breaker",
-      "he": "Mold Breaker"
+      "he": "שובר תבניות"
     },
-    "description": "Moves can be used regardless of abilities.",
+    "description":
+    {
+      "en":"Moves can be used regardless of abilities.",
+      "he":"מהלכים יכולים לשמש ללא קשר ליכולות."
+    },
     "generationIntroduced": "generation-iv"
   },
   "105": {
     "name": {
       "en": "Super Luck",
-      "he": "Super Luck"
+      "he": "מזל על"
     },
-    "description": "Heightens the critical-hit ratios of moves.",
+    "description":
+    {
+      "en":"Heightens the critical-hit ratios of moves.",
+      "he":"מגביר את הסיכויים למכות קריטיות של מהלכים."
+    },
     "generationIntroduced": "generation-iv"
   },
   "106": {
     "name": {
       "en": "Aftermath",
-      "he": "Aftermath"
+      "he": "תוצאות הקרב"
     },
-    "description": "Damages the foe landing the finishing hit.",
+    "description":
+    {
+      "en":"Damages the foe landing the finishing hit.",
+      "he":"ניזוק האויב שהכה את המכה הסופית."
+    },
     "generationIntroduced": "generation-iv"
   },
   "107": {
     "name": {
       "en": "Anticipation",
-      "he": "Anticipation"
+      "he": "ציפייה"
     },
-    "description": "Senses the foe’s dangerous moves.",
+    "description":
+    {
+      "en":"Senses the foe’s dangerous moves.",
+      "he":"חוש את המהלכים המסוכנים של האויב."
+    },
     "generationIntroduced": "generation-iv"
   },
   "108": {
     "name": {
       "en": "Forewarn",
-      "he": "Forewarn"
+      "he": "אזהרה מוקדמת"
     },
-    "description": "Determines what moves the foe has.",
+    "description":
+    {
+      "en":"Determines what moves the foe has.",
+      "he":"קובע אילו מהלכים יש לאויב."
+    },
     "generationIntroduced": "generation-iv"
   },
   "109": {
     "name": {
       "en": "Unaware",
-      "he": "Unaware"
+      "he": "חסר מודעות"
     },
-    "description": "Ignores any change in ability by the foe.",
+    "description":
+    {
+      "en":"Ignores any change in ability by the foe.",
+      "he":"מתעלם מכל שינוי ביכולת של האויב."
+    },
     "generationIntroduced": "generation-iv"
   },
   "110": {
     "name": {
       "en": "Tinted Lens",
-      "he": "Tinted Lens"
+      "he": "עדשת צבע"
     },
-    "description": "Powers up “not very effective” moves.",
+    "description":
+    {
+      "en":"Powers up “not very effective” moves.",
+      "he":"מגביר את כוח המהלכים שפחות יעילים."
+    },
     "generationIntroduced": "generation-iv"
   },
   "111": {
     "name": {
       "en": "Filter",
-      "he": "Filter"
+      "he": "מסנן"
     },
-    "description": "Powers down super­ effective moves.",
+    "description":
+    {
+      "en":"Powers down super­ effective moves.",
+      "he":"מגביר את כוח המהלכים שפחות יעילים."
+
+    },
     "generationIntroduced": "generation-iv"
   },
   "113": {
@@ -764,39 +1152,59 @@
       "en": "Scrappy",
       "he": "Scrappy"
     },
-    "description": "Enables moves to hit Ghost-type foes.",
+    "description":
+    {
+      "en":"Enables moves to hit Ghost-type foes.",
+      "he":"מאפשר למהלכים פיזים לפגוע באויבי סוג רוח."
+    },
     "generationIntroduced": "generation-iv"
   },
   "115": {
     "name": {
       "en": "Ice Body",
-      "he": "Ice Body"
+      "he": "גוף קרח"
     },
-    "description": "The Pokémon regains HP in a hailstorm.",
+    "description":
+    {
+      "en":"The Pokémon regains HP in a hailstorm.",
+      "he":"הפוקימון משחזר נקודות חיים בסופת ברד."
+    },
     "generationIntroduced": "generation-iv"
   },
   "118": {
     "name": {
       "en": "Honey Gather",
-      "he": "Honey Gather"
+      "he": "איסוף דבש"
     },
-    "description": "The Pokémon may gather Honey from somewhere.",
+    "description":
+    {
+      "en":"The Pokémon may gather Honey from somewhere.",
+      "he":"הפוקימון עשוי לאסוף דבש ממקום כלשהו."
+    },
     "generationIntroduced": "generation-iv"
   },
   "119": {
     "name": {
       "en": "Frisk",
-      "he": "Frisk"
+      "he": "בדיקת פריטים"
     },
-    "description": "The Pokémon can check the foe’s held item.",
+    "description":
+    {
+      "en":"The Pokémon can check the foe’s held item.",
+      "he":"הפוקימון יכול לבדוק את הפריט שהאויב מחזיק."
+    },
     "generationIntroduced": "generation-iv"
   },
   "120": {
     "name": {
       "en": "Reckless",
-      "he": "Reckless"
+      "he": "חסר זהירות"
     },
-    "description": "Powers up moves that have recoil damage.",
+    "description":
+    {
+      "en":"Powers up moves that have recoil damage.",
+      "he":"מגביר את כוח המהלכים שיש להם נזק חוזר."
+    },
     "generationIntroduced": "generation-iv"
   },
   "124": {
@@ -804,183 +1212,277 @@
       "en": "Pickpocket",
       "he": "Pickpocket"
     },
-    "description": "Steals an item when hit by another Pokémon.",
+    "description":
+    {
+      "en":"Steals an item when hit by another Pokémon.",
+      "he":""
+    },
     "generationIntroduced": "generation-v"
   },
   "125": {
     "name": {
       "en": "Sheer Force",
-      "he": "Sheer Force"
+      "he": "כוח טהור"
     },
-    "description": "Removes added effects to increase move damage.",
+    "description":
+    {
+      "en":"Removes added effects to increase move damage.",
+      "he":"מסיר אפקטים נוספים כדי להגדיל את נזק המהלך."
+    },
     "generationIntroduced": "generation-v"
   },
   "126": {
     "name": {
       "en": "Contrary",
-      "he": "Contrary"
+      "he": "ניגודי"
     },
-    "description": "Makes stat changes have an opposite effect.",
+    "description":
+    {
+      "en":"Makes stat changes have an opposite effect.",
+      "he":"גורם לשינויים בסטטיסטיקות להיות עם אפקט הפוך."
+    },
     "generationIntroduced": "generation-v"
   },
   "127": {
     "name": {
       "en": "Unnerve",
-      "he": "Unnerve"
+      "he": "מטריד"
     },
-    "description": "Makes the foe nervous and unable to eat Berries.",
+    "description":
+    {
+      "en":"Makes the foe nervous and unable to eat Berries.",
+      "he":"גורם לאויב להיות עצבני ולא מסוגל לאכול פירות."
+    },
     "generationIntroduced": "generation-v"
   },
   "128": {
     "name": {
       "en": "Defiant",
-      "he": "Defiant"
+      "he": "נחוש"
     },
-    "description": "When its stats are lowered its Attack increases.",
+    "description":
+    {
+      "en":"When its stats are lowered its Attack increases.",
+      "he":"כאשר הסטטיסטיקות שלו יורדות, ההתקפה שלו עולה."
+
+    },
     "generationIntroduced": "generation-v"
   },
   "130": {
     "name": {
       "en": "Cursed Body",
-      "he": "Cursed Body"
+      "he": "גוף מקולל"
     },
-    "description": "May disable a move used on the Pokémon.",
+    "description":
+    {
+      "en":"May disable a move used on the Pokémon.",
+      "he":"עשוי לנטרל מהלך שהשתמשו בו על הפוקימון."
+    },
     "generationIntroduced": "generation-v"
   },
   "131": {
     "name": {
       "en": "Healer",
-      "he": "Healer"
+      "he": "מרפא"
     },
-    "description": "May heal an ally’s status conditions.",
+    "description":
+    {
+      "en":"May heal an ally’s status conditions.",
+      "he":"עשוי לרפא מצבי סטטוס של בן ברית."
+    },
     "generationIntroduced": "generation-v"
   },
   "132": {
     "name": {
       "en": "Friend Guard",
-      "he": "Friend Guard"
+      "he": "מגן חבר"
     },
-    "description": "Reduces damage done to allies.",
+    "description":
+    {
+      "en":"Reduces damage done to allies.",
+      "he":"מפחית את הנזק שנגרם לבני ברית."
+    },
     "generationIntroduced": "generation-v"
   },
   "133": {
     "name": {
       "en": "Weak Armor",
-      "he": "Weak Armor"
+      "he": "שריון חלש"
     },
-    "description": "Physical attacks lower Defense and raise Speed.",
+    "description":
+    {
+      "en":"Physical attacks lower Defense and raise Speed.",
+      "he":"מתקפות פיזיות מפחיתות את ההגנה ומעלות את המהירות."
+    },
     "generationIntroduced": "generation-v"
   },
   "135": {
     "name": {
       "en": "Light Metal",
-      "he": "Light Metal"
+      "he": "מתכת קלה"
     },
-    "description": "Halves the Pokémon’s weight.",
+    "description":
+    {
+      "en":"Halves the Pokémon’s weight.",
+      "he":"מחצית ממשקל הפוקימון."
+    },
     "generationIntroduced": "generation-v"
   },
   "136": {
     "name": {
       "en": "Multiscale",
-      "he": "Multiscale"
+      "he": "קנה מידה מרובה"
     },
-    "description": "Reduces damage when HP is full.",
+    "description":
+    {
+      "en":"Reduces damage when HP is full.",
+      "he":"מפחית נזק כאשר נקודות החיים מלאות."
+    },
     "generationIntroduced": "generation-v"
   },
   "139": {
     "name": {
       "en": "Harvest",
-      "he": "Harvest"
+      "he": "קציר"
     },
-    "description": "May create another Berry after one is used.",
+    "description":
+    {
+      "en":"May create another Berry after one is used.",
+      "he":"עשוי ליצור פרי נוסף לאחר שאחד שומש."
+    },
     "generationIntroduced": "generation-v"
   },
   "140": {
     "name": {
       "en": "Telepathy",
-      "he": "Telepathy"
+      "he": "טלפתיה"
     },
-    "description": "Anticipates an ally’s attack and dodges it.",
+    "description":
+    {
+      "en":"Anticipates an ally’s attack and dodges it.",
+      "he":"צופה במתקפת בן ברית ומתחמק ממנה."
+    },
     "generationIntroduced": "generation-v"
   },
   "141": {
     "name": {
       "en": "Moody",
-      "he": "Moody"
+      "he": "מצב רוח מוזר"
     },
-    "description": "Raises one stat and lowers another.",
+    "description":
+    {
+      "en":"Raises one stat and lowers another.",
+      "he":"מעלה סטט אחד ומוריד סטט אחר."
+    },
     "generationIntroduced": "generation-v"
   },
   "142": {
     "name": {
       "en": "Overcoat",
-      "he": "Overcoat"
+      "he": "מעיל מגן"
     },
-    "description": "Protects the Pokémon from damage from weather.",
+    "description":
+    {
+      "en":"Protects the Pokémon from damage from weather.",
+      "he":"מגן על הפוקימון מנזקי מזג האוויר. מונע נזק ממתקפות מזג אוויר כמו סופת חול, סופת שלג, גשם חזק ושמש חזקה."
+    },
     "generationIntroduced": "generation-v"
   },
   "143": {
     "name": {
       "en": "Poison Touch",
-      "he": "Poison Touch"
+      "he": "מגע רעיל"
     },
-    "description": "May poison targets when a Pokémon makes contact.",
+    "description":
+    {
+      "en":"May poison targets when a Pokémon makes contact.",
+      "he":"עשוי להרעל מטרות כאשר פוקימון יוצר מגע."
+    },
     "generationIntroduced": "generation-v"
   },
   "144": {
     "name": {
       "en": "Regenerator",
-      "he": "Regenerator"
+      "he": "משקם"
     },
-    "description": "Restores a little HP when withdrawn from battle.",
+    "description":
+    {
+      "en":"Restores a little HP when withdrawn from battle.",
+      "he":"משחזר מעט נקודות חיים כאשר נסוג מהקרב."
+    },
     "generationIntroduced": "generation-v"
   },
   "145": {
     "name": {
       "en": "Big Pecks",
-      "he": "Big Pecks"
+      "he": "חזה גדול"
     },
-    "description": "Protects the Pokémon from Defense-lowering attacks.",
+    "description":
+    {
+      "en":"Protects the Pokémon from Defense-lowering attacks.",
+      "he":"מגן על הפוקימון מפני מתקפות שמורידות את ההגנה."
+    },
     "generationIntroduced": "generation-v"
   },
   "146": {
     "name": {
       "en": "Sand Rush",
-      "he": "Sand Rush"
+      "he": "ריצת חול"
     },
-    "description": "Boosts the Pokémon’s Speed in a sandstorm.",
+    "description":
+    {
+      "en":"Boosts the Pokémon’s Speed in a sandstorm.",
+      "he":"מגביר את מהירות הפוקימון בסופת חול."
+    },
     "generationIntroduced": "generation-v"
   },
   "147": {
     "name": {
       "en": "Wonder Skin",
-      "he": "Wonder Skin"
+      "he": "עור פלא"
     },
-    "description": "Makes status-changing moves more likely to miss.",
+    "description":
+    {
+      "en":"Makes status-changing moves more likely to miss.",
+      "he":"גורם למהלכים שמשנים סטטוס להיות בעלי סיכוי גבוה יותר להחמיץ."
+
+    },
     "generationIntroduced": "generation-v"
   },
   "148": {
     "name": {
       "en": "Analytic",
-      "he": "Analytic"
+      "he": "אנליטי"
     },
-    "description": "Boosts move power when the Pokémon moves last.",
+    "description":
+    {
+      "en":"Boosts move power when the Pokémon moves last.",
+      "he":"מגביר את עוצמת המהלכים כאשר הפוקימון פועל אחרון."
+    },
     "generationIntroduced": "generation-v"
   },
   "150": {
     "name": {
       "en": "Imposter",
-      "he": "Imposter"
+      "he": "חוקר"
     },
-    "description": "It transforms itself into the Pokémon it is facing.",
+    "description":
+    {
+      "en":"It transforms itself into the Pokémon it is facing.",
+      "he":"הוא משנה את צורתו לפוקימון שהוא מתמודד מולו."
+    },
     "generationIntroduced": "generation-v"
   },
   "151": {
     "name": {
       "en": "Infiltrator",
-      "he": "Infiltrator"
+      "he": "חודר"
     },
-    "description": "Passes through the foe’s barrier and strikes.",
+    "description":
+    {
+      "en":"Passes through the foe’s barrier and strikes.",
+      "he":"חודר דרך המחסום של האויב ותוקף."
+    },
     "generationIntroduced": "generation-v"
   },
   "153": {
@@ -988,71 +1490,107 @@
       "en": "Moxie",
       "he": "Moxie"
     },
-    "description": "Boosts Attack after knocking out any Pokémon.",
+    "description":
+    {
+      "en":"Boosts Attack after knocking out any Pokémon.",
+      "he":"מגביר את ההתקפה לאחר שהשמיד פוקימון כלשהו."
+    },
     "generationIntroduced": "generation-v"
   },
   "154": {
     "name": {
       "en": "Justified",
-      "he": "Justified"
+      "he": "צודק"
     },
-    "description": "Raises Attack when hit by a Dark-type move.",
+    "description":
+    {
+      "en":"Raises Attack when hit by a Dark-type move.",
+      "he":"מעלה את ההתקפה כאשר פוגע בו מהלך מסוג אפל."
+    },
     "generationIntroduced": "generation-v"
   },
   "155": {
     "name": {
       "en": "Rattled",
-      "he": "Rattled"
+      "he": "רועש"
     },
-    "description": "Some move types scare it and boost its Speed.",
+    "description":
+    {
+      "en":"Some move types scare it and boost its Speed.",
+      "he":"חלק מסוגי המהלכים מפחידים אותו ומגבירים את מהירותו."
+    },
     "generationIntroduced": "generation-v"
   },
   "156": {
     "name": {
       "en": "Magic Bounce",
-      "he": "Magic Bounce"
+      "he": "החזרת קסם"
     },
-    "description": "Reflects status- changing moves.",
+    "description":
+    {
+      "en":"Reflects status- changing moves.",
+      "he":"מחזיר מהלכים שמשנים סטטוס."
+    },
     "generationIntroduced": "generation-v"
   },
   "157": {
     "name": {
       "en": "Sap Sipper",
-      "he": "Sap Sipper"
+      "he": "מתחזק מדשא"
     },
-    "description": "Boosts Attack when hit by a Grass-type move.",
+    "description":
+    {
+      "en":"Boosts Attack when hit by a Grass-type move.",
+      "he":"מגביר את ההתקפה כאשר פוגע בו מהלך מסוג דשא."
+    },
     "generationIntroduced": "generation-v"
   },
   "158": {
     "name": {
       "en": "Prankster",
-      "he": "Prankster"
+      "he": "קונדסן"
     },
-    "description": "Gives priority to a status move.",
+    "description":
+    {
+      "en":"Gives priority to a status move.",
+      "he":"נותן עדיפות למהלך שמשנה סטטוס."
+    },
     "generationIntroduced": "generation-v"
   },
   "159": {
     "name": {
       "en": "Sand Force",
-      "he": "Sand Force"
+      "he": "כוח החול"
     },
-    "description": "Boosts certain moves’ power in a sandstorm.",
+    "description":
+    {
+      "en":"Boosts certain moves’ power in a sandstorm.",
+      "he":"מגביר את עוצמת מהלכים מסוימים בסופת חול."
+    },
     "generationIntroduced": "generation-v"
   },
   "172": {
     "name": {
       "en": "Competitive",
-      "he": "Competitive"
+      "he": "תחרותי"
     },
-    "description": "Boosts the Sp. Atk stat when a stat is lowered.",
+    "description":
+    {
+      "en":"Boosts the Sp. Atk stat when a stat is lowered.",
+      "he":"מגביר את הסטטיסטיקה של התקפה מיוחדת כאשר סטטיסטיקה כלשהי יורדת."
+    },
     "generationIntroduced": "generation-vi"
   },
   "256": {
     "name": {
       "en": "Neutralizing Gas",
-      "he": "Neutralizing Gas"
+      "he": "גז מנטרל"
     },
-    "description": "If the Pokémon with Neutralizing Gas is in the battle, the effects of all Pokémon’s Abilities will be nullified or will not be triggered.",
+    "description":
+    {
+      "en":"If the Pokémon with Neutralizing Gas is in the battle, the effects of all Pokémon’s Abilities will be nullified or will not be triggered.",
+      "he":"אם הפוקימון עם גז מנטרל נמצא בקרב, ההשפעות של כל היכולות של הפוקימונים יבוטלו או לא יופעלו. "
+    },
     "generationIntroduced": "generation-viii"
   }
 }

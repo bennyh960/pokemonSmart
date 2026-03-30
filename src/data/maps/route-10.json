@@ -10,7 +10,183 @@
     "y": 10
   },
   "transitions": [],
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-1774904944899",
+      "x": 60,
+      "y": 17,
+      "facing": "left",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_2c5fb3",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      },
+      "party": [
+        {
+          "pokemonId": 131,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 130,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 55,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 160,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 199,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 9,
+          "level": 50,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 1,
+      "reward": {
+        "money": 900,
+        "items": [
+          {
+            "itemId": "soda-pop",
+            "quantity": 3
+          },
+          {
+            "itemId": "protein",
+            "quantity": 1
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "שחייה מאוד בריאה לשרירים"
+        },
+        {
+          "en": "",
+          "he": "אחרי שמחזקים את השריר חשוב לאכול מאכלים שמכילים חלבון"
+        },
+        {
+          "en": "",
+          "he": "פוקימון שמקבל חלבון ההתקפה שלו מתחזקת לתמיד"
+        }
+      ]
+    },
+    {
+      "id": "npc-1774905477357",
+      "x": 53,
+      "y": 21,
+      "facing": "up",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "פוקימוני מים הם חזקים יותר במים"
+        }
+      ],
+      "spriteType": "char_878b8c",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 6,
+            "delay": 1
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 6,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      },
+      "party": [
+        {
+          "pokemonId": 134,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 195,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 73,
+          "level": 50,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 1,
+      "reward": {
+        "money": 900,
+        "items": [
+          {
+            "itemId": "lemonade",
+            "quantity": 1
+          },
+          {
+            "itemId": "water-stone",
+            "quantity": 1
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "Water stone can help you evolve pokemon",
+          "he": "אבן מים יכולה לפתח פוקימונים"
+        }
+      ]
+    }
+  ],
   "music": "route",
   "encounterTableId": null
 ,

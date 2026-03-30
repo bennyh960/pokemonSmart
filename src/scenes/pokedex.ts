@@ -466,7 +466,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         color: ability.isHidden ? '#f0c860' : '#ffffff',
         font: 'monospace',
       });
-      drawText(ctx, truncateText(ctx, ability.description, descColumnW, 5), descColumnX, rowY, {
+      drawText(ctx, truncateText(ctx, getLocalizedName(ability.description), descColumnW, 5), descColumnX, rowY, {
         size: 5,
         color: '#cccccc',
         font: 'monospace',
