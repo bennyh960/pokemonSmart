@@ -2771,7 +2771,7 @@
       "sy": 7424,
       "w": 48,
       "h": 32,
-      "walkable": true,
+      "walkable": false,
       "above": true,
       "category": "interior",
       "interactType": null,
@@ -2939,18 +2939,6 @@
       "description": "box"
     },
     {
-      "key": "b7door",
-      "sx": 144,
-      "sy": 1520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "door for b7"
-    },
-    {
       "key": "soop1",
       "sx": 0,
       "sy": 4992,
@@ -2968,8 +2956,9 @@
       "sy": 5008,
       "w": 16,
       "h": 16,
-      "walkable": true,
-      "above": true,
+      "walkable": false,
+      "above": false,
+      "overlay": true,
       "category": "decoration",
       "interactType": null,
       "description": "soop red f"
@@ -3236,7 +3225,7 @@
       "above": true,
       "category": "floor",
       "interactType": null,
-      "description": "entrance-vertical-right"
+      "description": "entrance-vertical-right carpet"
     },
     {
       "key": "gym-purple",
@@ -3497,7 +3486,7 @@
       "sy": 7024,
       "w": 16,
       "h": 16,
-      "walkable": true,
+      "walkable": false,
       "above": true,
       "category": "interactive",
       "interactType": {
@@ -3512,6 +3501,28 @@
         }
       },
       "description": "revive item X3"
+    },
+    {
+      "key": "ehb1",
+      "sx": 176,
+      "sy": 6592,
+      "w": 32,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "entrance-horizon-bottom carpet"
+    },
+    {
+      "key": "b7door",
+      "sx": 80,
+      "sy": 1520,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "description": "door for b7 house"
     }
   ]
 }

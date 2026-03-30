@@ -7,7 +7,7 @@
   "tileSize": 16,
   "spawn": {
     "x": 4,
-    "y": 7
+    "y": 6
   },
   "transitions": [
     {
@@ -15,6 +15,13 @@
       "fromY": 7,
       "toMapId": "sumville",
       "toX": 5,
+      "toY": 7
+    },
+    {
+      "fromX": 3,
+      "fromY": 7,
+      "toMapId": "sumville",
+      "toX": 4,
       "toY": 7
     }
   ],
@@ -27,9 +34,18 @@
       "facing": "right",
       "type": "npc",
       "dialogue": [
-        { "en": "Welcome to my study! I research the mathematics of Pokemon battles.", "he": "" },
-        { "en": "Did you know? Type effectiveness is like multiplication — super effective is 2x damage!", "he": "" },
-        { "en": "And when you add STAB bonus on top... the numbers really add up!", "he": "" }
+        {
+          "en": "Welcome to my study! I research the mathematics of Pokemon battles.",
+          "he": ""
+        },
+        {
+          "en": "Did you know? Type effectiveness is like multiplication — super effective is 2x damage!",
+          "he": ""
+        },
+        {
+          "en": "And when you add STAB bonus on top... the numbers really add up!",
+          "he": ""
+        }
       ],
       "spriteType": "char_962c1b"
     },
@@ -41,13 +57,17 @@
       "facing": "left",
       "type": "npc",
       "dialogue": [
-        { "en": "Meow!", "he": "" }
+        {
+          "en": "Meow!",
+          "he": ""
+        }
       ],
       "spriteType": "npc-f"
     }
   ],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": null
+,
   "tiles": [
     ["wall","pic1","wall","tv1","wall","wall","flh1","books","wall"],
     ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
@@ -59,12 +79,60 @@
     ["d","d","d","d","d","d","d","d","d"]
   ],
   "objects": [
-    { "key": "library1", "x": 0, "y": 0 },
-    { "key": "dt1", "x": 4, "y": 0 },
-    { "key": "library1", "x": 6, "y": 0 },
-    { "key": "df1", "x": 0, "y": 2 },
-    { "key": "ctc", "x": 6, "y": 5 },
-    { "key": "ch1", "x": 4, "y": 2 },
-    { "key": "tr1", "x": 8, "y": 0 }
+    {
+      "key": "library1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "dt1",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "library1",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "df1",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "key": "ctc",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "ch1",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "key": "tr1",
+      "x": 8,
+      "y": 0
+    },
+    {
+      "key": "ehb1",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "key": "f2",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "f2",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "pic5",
+      "x": 3,
+      "y": 0
+    }
   ]
 }

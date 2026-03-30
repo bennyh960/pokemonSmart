@@ -45,7 +45,7 @@ export function exportManifest(state: SpriteEditorState): string {
 /**
  * Save sprite manifest.
  */
-export async function saveManifest(state: SpriteEditorState, fileName = 'sprites.json'): Promise<void> {
+export async function saveManifest(state: SpriteEditorState, fileName = 'characters.json'): Promise<void> {
   const json = exportManifest(state);
 
   if (hasFSAccess()) {

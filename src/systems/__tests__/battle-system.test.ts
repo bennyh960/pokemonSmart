@@ -3,36 +3,44 @@ import type { Pokemon } from '../../types/index.js';
 import type { MoveStatusEffect } from '../../types/battle-metadata.js';
 import { getMoveByName } from '../../services/pokemon-data.js';
 import {
+  advanceSideEffectTurns,
   applyEndOfTurnStatusEffects,
   applyDrainHealing,
   applyLeechSeedEffect,
+  applyLeaveUserAtOneHpCost,
   applyMajorStatus,
   applyPostMoveTurnFlags,
+  applySideEffects,
   applyTrapEndOfTurnEffect,
   applyRecoilDamage,
   applyStatChanges,
   applyVolatileMoveEffects,
   calculateMoveHpEffectAmount,
-    clearEndOfTurnFlags,
-    clearChargingMove,
-    createBattleRuntimeStateForPokemon,
-    determineTurnOrder,
-    doesMoveHit,
-    getChargingMoveId,
-    getDisplayedStatChanges,
-    getDisplayedVolatileStatuses,
-    getEffectiveSpeed,
+  clearEndOfTurnFlags,
+  clearChargingMove,
+  createBattleRuntimeStateForPokemon,
+  determineTurnOrder,
+  doesMoveHit,
+  getChargingMoveId,
+  getDisplayedSideStatuses,
+  getDisplayedStatChanges,
+  getDisplayedVolatileStatuses,
+  getEffectiveSpeed,
+  getSideDamageTakenMultiplier,
   getModifiedStatValue,
   isBattlePokemonTrapped,
+  isMistActive,
+  isSafeguardActive,
   isTargetImmuneToMoveType,
   isTargetImmuneToStatusEffectFromMoveType,
   isTargetImmuneToVolatileEffectFromMoveType,
-    processBeforeMoveEffects,
-    processStartOfTurnStatus,
-    rollCriticalHit,
-    startChargingMove,
-    tryApplyFlinch,
+  processBeforeMoveEffects,
+  processStartOfTurnStatus,
+  rollCriticalHit,
+  startChargingMove,
+  tryApplyFlinch,
 } from '../battle-system.js';
+import { createBattleSideRuntimeState } from '../battle-state.js';
 
 function createTestPokemon(overrides: Partial<Pokemon> = {}): Pokemon {
   return {
@@ -309,6 +317,15 @@ describe('battle system helpers', () => {
     expect(recoilingAttacker.hp).toBe(13);
   });
 
+  it('can leave self-sacrifice move users at 1 hp', () => {
+    const attacker = createTestPokemon({ hp: 80, maxHp: 80 });
+
+    const result = applyLeaveUserAtOneHpCost(attacker);
+
+    expect(result).toEqual({ damage: 79, fainted: false });
+    expect(attacker.hp).toBe(1);
+  });
+
   it('prevents critical hits when the defender has Battle Armor', () => {
     const defender = createTestPokemon({ id: 95, name: 'Onix', abilityId: 4 });
     const slash = getMoveByName('slash');
@@ -430,5 +447,30 @@ describe('battle system helpers', () => {
     expect(runtime.trappedTurnsRemaining).toBe(0);
     expect(runtime.trapDamagePercent).toBeNull();
     expect(isBattlePokemonTrapped(runtime)).toBe(false);
+  });
+
+  it('applies and expires side-field protections', () => {
+    const sideState = createBattleSideRuntimeState();
+
+    const result = applySideEffects(sideState, [
+      { id: 'reflect', target: 'user', turns: 5 },
+      { id: 'mist', target: 'user', turns: 5 },
+    ], 'user');
+
+    expect(result).toEqual([
+      { id: 'reflect', target: 'user', applied: true, reason: 'applied' },
+      { id: 'mist', target: 'user', applied: true, reason: 'applied' },
+    ]);
+    expect(getDisplayedSideStatuses(sideState)).toEqual(['reflect', 'mist']);
+    expect(getSideDamageTakenMultiplier(sideState, 'physical')).toBe(0.5);
+    expect(getSideDamageTakenMultiplier(sideState, 'special')).toBe(1);
+    expect(isMistActive(sideState)).toBe(true);
+    expect(isSafeguardActive(sideState)).toBe(false);
+
+    for (let i = 0; i < 4; i++) {
+      expect(advanceSideEffectTurns(sideState)).toEqual([]);
+    }
+    expect(advanceSideEffectTurns(sideState)).toEqual(['reflect', 'mist']);
+    expect(getDisplayedSideStatuses(sideState)).toEqual([]);
   });
 });

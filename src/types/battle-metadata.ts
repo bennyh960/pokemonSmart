@@ -23,9 +23,15 @@ export type MoveBattleTarget =
   | 'all-other-pokemon'
   | 'specific-move';
 
-export type MoveBattleBehaviorTag = 'fails-if-target-not-attacking' | 'must-recharge' | 'requires-charge-turn';
+export type MoveBattleBehaviorTag =
+  | 'fails-if-target-not-attacking'
+  | 'must-recharge'
+  | 'requires-charge-turn'
+  | 'leave-user-at-1-hp';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
+
+export type MoveBattleSideEffectId = 'reflect' | 'light-screen' | 'mist' | 'safeguard';
 
 export interface MoveStatusEffect {
   status: MajorStatusId;
@@ -52,6 +58,12 @@ export interface MoveBattleEffect {
   damagePercent?: number | null;
 }
 
+export interface MoveBattleSideEffect {
+  id: MoveBattleSideEffectId;
+  target: 'user' | 'target';
+  turns?: number | null;
+}
+
 export interface MoveBattleMetadata {
   priority: number;
   target: MoveBattleTarget;
@@ -59,6 +71,7 @@ export interface MoveBattleMetadata {
   statChanges: MoveStatChange[];
   chargeStatChanges: MoveStatChange[];
   effects: MoveBattleEffect[];
+  sideEffects: MoveBattleSideEffect[];
   critRate: number;
   flinchChance: number | null;
   drainPercent: number | null;
@@ -105,6 +118,7 @@ export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
     statChanges: [],
     chargeStatChanges: [],
     effects: [],
+    sideEffects: [],
     critRate: 0,
     flinchChance: null,
     drainPercent: null,

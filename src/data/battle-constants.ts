@@ -27,6 +27,10 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
   confuse: { label: 'מבולבל', shortLabel: 'CNF', bgColor: 'rgba(248,88,136,0.15)',  borderColor: 'rgba(248,88,136,0.25)',  textColor: '#f07090' },
   seed:    { label: 'זרע',    shortLabel: 'SEED', bgColor: 'rgba(120,208,80,0.15)', borderColor: 'rgba(120,208,80,0.25)', textColor: '#90d060' },
   trap:    { label: 'לכוד',   shortLabel: 'TRAP', bgColor: 'rgba(232,136,72,0.15)', borderColor: 'rgba(232,136,72,0.25)', textColor: '#f0a060' },
+  reflect: { label: 'רפלקט', shortLabel: 'REF', bgColor: 'rgba(112,160,255,0.15)', borderColor: 'rgba(112,160,255,0.25)', textColor: '#88b8ff' },
+  'light-screen': { label: 'מסך אור', shortLabel: 'LTS', bgColor: 'rgba(255,232,120,0.15)', borderColor: 'rgba(255,232,120,0.25)', textColor: '#ffe278' },
+  mist:    { label: 'ערפל',   shortLabel: 'MIST', bgColor: 'rgba(176,224,240,0.15)', borderColor: 'rgba(176,224,240,0.25)', textColor: '#b8e0f0' },
+  safeguard: { label: 'שמירה', shortLabel: 'SAFE', bgColor: 'rgba(144,240,192,0.15)', borderColor: 'rgba(144,240,192,0.25)', textColor: '#98f0c0' },
   boost:   { label: '',       shortLabel: 'UP',  bgColor: 'rgba(77,255,180,0.1)',   borderColor: 'rgba(77,255,180,0.2)',   textColor: '#4dffb4' },
   debuff:  { label: '',       shortLabel: 'DN',  bgColor: 'rgba(232,88,88,0.1)',    borderColor: 'rgba(232,88,88,0.2)',    textColor: '#e85858' },
 };

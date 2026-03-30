@@ -3,6 +3,7 @@ import type {
   BattleStatId,
   MajorStatusId,
   MoveBattleMetadata,
+  MoveBattleSideEffectId,
   MoveStatChange,
   MoveStatusEffect,
 } from '../types/battle-metadata.js';
@@ -65,14 +66,33 @@ function chargingMove(...chargeStatChanges: MoveStatChange[]): MoveOverride {
   };
 }
 
+function usersFieldEffect(id: MoveBattleSideEffectId, turns = 5): MoveOverride {
+  return {
+    target: 'users-field',
+    sideEffects: [{ id, target: 'user', turns }],
+  };
+}
+
+function leavesUserAtOneHp(): MoveOverride {
+  return {
+    behaviorTags: ['leave-user-at-1-hp'],
+  };
+}
+
 export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Quick Attack': { priority: 1 },
   'Extreme Speed': { priority: 2 },
   'Hyper Beam': { behaviorTags: ['must-recharge'] },
+  'Self Destruct': leavesUserAtOneHp(),
+  Explosion: leavesUserAtOneHp(),
   'Solar Beam': chargingMove(),
   'Skull Bash': chargingMove(stageChange('defense', 1, 'user')),
   'Sky Attack': chargingMove(),
   'Razor Wind': chargingMove(),
+  Reflect: usersFieldEffect('reflect'),
+  'Light Screen': usersFieldEffect('light-screen'),
+  Mist: usersFieldEffect('mist'),
+  Safeguard: usersFieldEffect('safeguard'),
   'Mach Punch': { priority: 1 },
   'Aqua Jet': { priority: 1 },
   'Ice Shard': { priority: 1 },

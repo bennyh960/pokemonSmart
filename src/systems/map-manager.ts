@@ -84,6 +84,7 @@ registerMap('sumville-house-1', () => import('../data/maps/sumville-house-1.json
 registerMap('sumville-house-2', () => import('../data/maps/sumville-house-2.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route1-house', () => import('../data/maps/route1-house.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route-4', () => import('../data/maps/route-4.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('route-10', () => import('../data/maps/route-10.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('dividia-house-1', () => import('../data/maps/dividia-house-1.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('dividia-house-2', () => import('../data/maps/dividia-house-2.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('dividia-house-3', () => import('../data/maps/dividia-house-3.json').catch(() => import('../data/maps/test-map.json')));

@@ -27,7 +27,41 @@
       "returnToPrevious": true
     }
   ],
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-1774902306699",
+      "x": 10,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "קראתי שכדי לחזק פוקימון צריך לחשוף אותו לקרבות יותר ויותר."
+        },
+        {
+          "en": "To increase your pokemon expereince you need to let him battle.",
+          "he": "פוקימון צובר ניסיון רב בקרב אם הוא מנצח או אפילו מפסיד."
+        },
+        {
+          "en": "",
+          "he": "או אפילו אם הפוקימון שלך עזר לך לתפוס פוקימון חדש"
+        }
+      ],
+      "spriteType": "char_a5abb0",
+      "name": "Jasmine",
+      "nameHe": "ג'סמין",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "poke-ball",
+            "quantity": 1
+          }
+        ]
+      }
+    }
+  ],
   "music": "town",
   "encounterTableId": null
 ,

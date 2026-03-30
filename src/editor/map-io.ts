@@ -4,7 +4,7 @@ import { hasFSAccess, saveToDirectory } from './fs-save.js';
 /** Known map IDs available in the project. */
 export function getKnownMapIds(): string[] {
   return [
-    'zeroville','zeroville-house-tl','zeroville-house-tr','zeroville-house-br', 'route-1', 'sumville', 'route-2', 'safari', 'route-3', 'minusburg', 'sumville-house-1', 'sumville-house-2', 'route1-house', 'route-4', 'dividia-house-1', 'dividia-house-2', 'dividia-house-3', 'dividia-house-4', 'algebria', 'divideburg',
+    'zeroville','zeroville-house-tl','zeroville-house-tr','zeroville-house-br', 'route-1', 'route-10', 'sumville', 'route-2', 'safari', 'route-3', 'minusburg', 'sumville-house-1', 'sumville-house-2', 'route1-house', 'route-4', 'dividia-house-1', 'dividia-house-2', 'dividia-house-3', 'dividia-house-4', 'algebria', 'divideburg',
     'fractalis', 'infinity-plateau', 'logica-heights', 'multitown',
     'prime-city', 'mart-interior','pokecenter-2', 'pokecenter-mart-interior', 'deep-forest', 'mountain-pass', 'test-map','house-3-i','oak lab'
   ].sort();

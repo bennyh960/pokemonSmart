@@ -3,11 +3,18 @@ import type {
   BattleStatId,
   MajorStatusId,
   MoveBattleEffect,
+  MoveBattleSideEffect,
+  MoveBattleSideEffectId,
   MoveStatChange,
   MoveStatusEffect,
 } from '../types/battle-metadata.js';
-import type { BattlePokemonRuntimeState } from './battle-state.js';
-import { applyBattleStatDelta, createBattlePokemonRuntimeState } from './battle-state.js';
+import type { BattlePokemonRuntimeState, BattleSideRuntimeState } from './battle-state.js';
+import {
+  applyBattleStatDelta,
+  createBattlePokemonRuntimeState,
+  getBattleSideEffectTurnsRemaining,
+  setBattleSideEffectTurnsRemaining,
+} from './battle-state.js';
 import { getAbilityBattleEffects, getCombinedTypeEffectiveness, getMoveBattleData } from '../services/pokemon-data.js';
 
 export interface TurnOrderDecision {
@@ -91,6 +98,13 @@ export interface TrapEffectResult {
   damage: number;
   fainted: boolean;
   ended: boolean;
+}
+
+export interface AppliedSideEffect {
+  id: MoveBattleSideEffectId;
+  target: 'user' | 'target';
+  applied: boolean;
+  reason: 'applied' | 'already-active';
 }
 
 const SAME_TYPE_STATUS_IMMUNITY_BY_MOVE_TYPE: Partial<Record<MajorStatusId, PokemonType>> = {
@@ -207,6 +221,23 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   return effects;
 }
 
+export function getDisplayedSideStatuses(runtimeState: BattleSideRuntimeState): string[] {
+  const effects: string[] = [];
+  if (runtimeState.reflectTurnsRemaining > 0) {
+    effects.push('reflect');
+  }
+  if (runtimeState.lightScreenTurnsRemaining > 0) {
+    effects.push('light-screen');
+  }
+  if (runtimeState.mistTurnsRemaining > 0) {
+    effects.push('mist');
+  }
+  if (runtimeState.safeguardTurnsRemaining > 0) {
+    effects.push('safeguard');
+  }
+  return effects;
+}
+
 export function isBattlePokemonTrapped(runtimeState: BattlePokemonRuntimeState): boolean {
   return runtimeState.trappedTurnsRemaining > 0;
 }
@@ -268,6 +299,15 @@ export function applyDrainHealing(
   return healed;
 }
 
+export function applyLeaveUserAtOneHpCost(pokemon: Pokemon): RecoilResult {
+  if (pokemon.hp <= 1) {
+    return { damage: 0, fainted: false };
+  }
+  const damage = pokemon.hp - 1;
+  pokemon.hp = 1;
+  return { damage, fainted: false };
+}
+
 export function applyRecoilDamage(
   pokemon: Pokemon,
   damageDealt: number,
@@ -280,6 +320,64 @@ export function applyRecoilDamage(
   const damage = Math.min(pokemon.hp, rawDamage);
   pokemon.hp = Math.max(0, pokemon.hp - rawDamage);
   return { damage, fainted: pokemon.hp <= 0 };
+}
+
+export function applySideEffects(
+  runtimeState: BattleSideRuntimeState,
+  effects: MoveBattleSideEffect[],
+  effectTarget: 'user' | 'target',
+): AppliedSideEffect[] {
+  const applied: AppliedSideEffect[] = [];
+
+  for (const effect of effects) {
+    if (effect.target !== effectTarget) continue;
+    if (getBattleSideEffectTurnsRemaining(runtimeState, effect.id) > 0) {
+      applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+      continue;
+    }
+    setBattleSideEffectTurnsRemaining(runtimeState, effect.id, effect.turns ?? 5);
+    applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+  }
+
+  return applied;
+}
+
+export function isMistActive(runtimeState: BattleSideRuntimeState): boolean {
+  return runtimeState.mistTurnsRemaining > 0;
+}
+
+export function isSafeguardActive(runtimeState: BattleSideRuntimeState): boolean {
+  return runtimeState.safeguardTurnsRemaining > 0;
+}
+
+export function getSideDamageTakenMultiplier(
+  runtimeState: BattleSideRuntimeState,
+  damageClass: string,
+): number {
+  if (damageClass === 'physical' && runtimeState.reflectTurnsRemaining > 0) {
+    return 0.5;
+  }
+  if (damageClass === 'special' && runtimeState.lightScreenTurnsRemaining > 0) {
+    return 0.5;
+  }
+  return 1;
+}
+
+export function advanceSideEffectTurns(runtimeState: BattleSideRuntimeState): MoveBattleSideEffectId[] {
+  const ended: MoveBattleSideEffectId[] = [];
+  const sideEffects: MoveBattleSideEffectId[] = ['reflect', 'light-screen', 'mist', 'safeguard'];
+
+  for (const effectId of sideEffects) {
+    const turnsRemaining = getBattleSideEffectTurnsRemaining(runtimeState, effectId);
+    if (turnsRemaining <= 0) continue;
+    const nextTurns = turnsRemaining - 1;
+    setBattleSideEffectTurnsRemaining(runtimeState, effectId, nextTurns);
+    if (nextTurns <= 0) {
+      ended.push(effectId);
+    }
+  }
+
+  return ended;
 }
 
 export function applyStatChanges(

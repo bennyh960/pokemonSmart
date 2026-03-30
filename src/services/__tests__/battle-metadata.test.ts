@@ -53,6 +53,10 @@ describe('battle metadata', () => {
     const doubleEdge = getMoveByName('double edge');
     const solarBeam = getMoveByName('solar beam');
     const skullBash = getMoveByName('skull bash');
+    const reflect = getMoveByName('reflect');
+    const lightScreen = getMoveByName('light screen');
+    const safeguard = getMoveByName('safeguard');
+    const explosion = getMoveByName('explosion');
 
     expect(confuseRay?.battle.effects).toEqual([
       { id: 'confusion', target: 'target', chance: 100, minTurns: 2, maxTurns: 5 },
@@ -71,6 +75,16 @@ describe('battle metadata', () => {
     expect(skullBash?.battle.chargeStatChanges).toEqual([
       { stat: 'defense', stages: 1, target: 'user', chance: 100 },
     ]);
+    expect(reflect?.battle.sideEffects).toEqual([
+      { id: 'reflect', target: 'user', turns: 5 },
+    ]);
+    expect(lightScreen?.battle.sideEffects).toEqual([
+      { id: 'light-screen', target: 'user', turns: 5 },
+    ]);
+    expect(safeguard?.battle.sideEffects).toEqual([
+      { id: 'safeguard', target: 'user', turns: 5 },
+    ]);
+    expect(explosion?.battle.behaviorTags).toContain('leave-user-at-1-hp');
   });
 
   it('exposes battle effects for passive ability hooks', () => {

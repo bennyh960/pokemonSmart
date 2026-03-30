@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   applyBattleStatDelta,
+  createBattleSideRuntimeState,
   createBattlePokemonRuntimeState,
   createEmptyBattleStatModifiers,
   ensurePersistentBattleFields,
@@ -44,5 +45,14 @@ describe('battle state helpers', () => {
     expect(applyBattleStatDelta(150, 2)).toBe(200);
     expect(applyBattleStatDelta(-150, -2)).toBe(-200);
     expect(applyBattleStatDelta(0, 1)).toBe(50);
+  });
+
+  it('creates empty side runtime state', () => {
+    expect(createBattleSideRuntimeState()).toEqual({
+      reflectTurnsRemaining: 0,
+      lightScreenTurnsRemaining: 0,
+      mistTurnsRemaining: 0,
+      safeguardTurnsRemaining: 0,
+    });
   });
 });

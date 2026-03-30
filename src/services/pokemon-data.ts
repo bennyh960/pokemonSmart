@@ -130,6 +130,7 @@ function normalizeMoveBattleMetadata(
     statChanges: [...(override?.statChanges ?? base?.statChanges ?? [])],
     chargeStatChanges: [...(override?.chargeStatChanges ?? base?.chargeStatChanges ?? [])],
     effects: [...(override?.effects ?? base?.effects ?? [])],
+    sideEffects: [...(override?.sideEffects ?? base?.sideEffects ?? [])],
     flags: [...(override?.flags ?? base?.flags ?? [])],
     behaviorTags: [...(override?.behaviorTags ?? base?.behaviorTags ?? [])],
   };

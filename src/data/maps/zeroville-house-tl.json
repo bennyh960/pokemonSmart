@@ -1,18 +1,25 @@
 {
   "id": "zeroville-house-tl",
-  "name": "Zeroville House",
+  "name": "Zeroville Revive Maker House",
   "tileset": "dpp",
-  "width": 8,
-  "height": 7,
+  "width": 12,
+  "height": 12,
   "tileSize": 16,
   "spawn": {
     "x": 3,
-    "y": 5
+    "y": 10
   },
   "transitions": [
     {
       "fromX": 3,
-      "fromY": 6,
+      "fromY": 11,
+      "toMapId": "zeroville",
+      "toX": 4,
+      "toY": 6
+    },
+    {
+      "fromX": 4,
+      "fromY": 11,
       "toMapId": "zeroville",
       "toX": 4,
       "toY": 6
@@ -23,74 +30,143 @@
       "id": "npc-1774305358586",
       "x": 1,
       "y": 3,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "אבא שלי מכין מרק מיוחד!"
+        },
+        {
+          "en": "One day I will be pokemon trainer!",
+          "he": "הוא נותן כח לפוקימונים."
+        },
+        {
+          "en": "",
+          "he": "פוקימון ששותה מנה מלאה יכול לחזור למלוא כוחו."
+        }
+      ],
+      "spriteType": "char_0502ea",
+      "name": "Tom",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "max-revive",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1774900552509",
+      "x": 8,
+      "y": 7,
       "facing": "down",
       "type": "dialogue",
       "dialogue": [
         {
           "en": "Hello!",
-          "he": "יום יבוא ואהיה מאמן פוקימונים."
+          "he": "המרק שלי יכול לרפא כל פוקימון."
         },
         {
-          "en": "One day I will be pokemon trainer!",
-          "he": "אם תמצא פה פוכדור - אתה יכול לקחת"
+          "en": "I make Revive Soop",
+          "he": "את המרק שלי אני מוכר לחנויות בתור \"Revive\" ."
+        },
+        {
+          "en": "",
+          "he": "בעברית מבטאים את זה \"רבייב\"."
+        },
+        {
+          "en": "",
+          "he": "התרגום של זה \"להקים לתחיה\""
+        },
+        {
+          "en": "",
+          "he": "פוקימון שלא יכול להלחם ויקבל \"רבייב\" יוכל לחזור להילחם בקלות"
         }
       ],
-      "spriteType": "npc-male",
-      "name": "Tom"
+      "spriteType": "char_8c60a6",
+      "name": "Rick",
+      "nameHe": "ריק",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "revive",
+            "quantity": 3
+          }
+        ]
+      }
     }
   ],
   "music": "town",
   "encounterTableId": null
 ,
   "tiles": [
-    ["d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","ca1tl","ca1t","ca1t","ca1tr"],
-    ["d","d","d","d","ca1l","ca1c","ca1c","ca1r"],
-    ["d","d","d","d","ca1bl","ca1b","ca1b","ca1br"],
-    ["d","d","d","d","d","d","d","d"]
+    ["wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall"],
+    ["wall","wall","wall","wall","wall","wall","wall","wall","tv1","wall","wall","wall"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","ca1tl","ca1t","ca1t","ca1t","ca1tr","d"],
+    ["d","d","d","d","d","d","ca1l","ca1c","ca1c","ca1c","ca1r","d"],
+    ["d","d","d","d","d","d","ca1l","ca1c","ca1c","ca1c","ca1r","d"],
+    ["d","d","d","d","d","d","ca1bl","ca1b","ca1b","ca1b","ca1br","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"]
   ],
   "objects": [
     {
-      "key": "tr2",
+      "key": "bed2",
+      "x": 0,
+      "y": 4
+    },
+    {
+      "key": "wardrobe2",
       "x": 0,
       "y": 0
     },
     {
-      "key": "df1",
-      "x": 2,
-      "y": 0
+      "key": "ehb1",
+      "x": 3,
+      "y": 11
     },
     {
-      "key": "library1",
-      "x": 6,
-      "y": 0
-    },
-    {
-      "key": "dt1",
+      "key": "pic3",
       "x": 4,
       "y": 0
     },
     {
-      "key": "tr1",
-      "x": 1,
+      "key": "pic3",
+      "x": 10,
       "y": 0
     },
     {
-      "key": "ctc",
-      "x": 5,
-      "y": 4
-    },
-    {
-      "key": "ch2",
-      "x": 5,
-      "y": 1
-    },
-    {
-      "key": "item-pokeball",
+      "key": "lab1-table",
       "x": 7,
-      "y": 6
+      "y": 8
+    },
+    {
+      "key": "pcd1",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "key": "ch1",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "key": "item-revive",
+      "x": 11,
+      "y": 10
+    },
+    {
+      "key": "soop2",
+      "x": 8,
+      "y": 8
     }
   ]
 }

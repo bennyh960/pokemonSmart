@@ -1,5 +1,5 @@
 import type { Pokemon } from '../types/index.js';
-import type { BattleStatId, MajorStatusId } from '../types/battle-metadata.js';
+import type { BattleStatId, MajorStatusId, MoveBattleSideEffectId } from '../types/battle-metadata.js';
 import { normalizeMajorStatusId } from '../types/battle-metadata.js';
 
 export const BATTLE_STAT_PERCENT_STEP = 50;
@@ -28,6 +28,13 @@ export interface BattlePokemonRuntimeState {
   chargingMoveId: number | null;
   statModifiers: BattleStatModifiers;
   turnFlags: BattleTurnFlags;
+}
+
+export interface BattleSideRuntimeState {
+  reflectTurnsRemaining: number;
+  lightScreenTurnsRemaining: number;
+  mistTurnsRemaining: number;
+  safeguardTurnsRemaining: number;
 }
 
 export function createEmptyBattleStatModifiers(): BattleStatModifiers {
@@ -74,6 +81,52 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),
   };
+}
+
+export function createBattleSideRuntimeState(): BattleSideRuntimeState {
+  return {
+    reflectTurnsRemaining: 0,
+    lightScreenTurnsRemaining: 0,
+    mistTurnsRemaining: 0,
+    safeguardTurnsRemaining: 0,
+  };
+}
+
+export function getBattleSideEffectTurnsRemaining(
+  runtimeState: BattleSideRuntimeState,
+  effectId: MoveBattleSideEffectId,
+): number {
+  switch (effectId) {
+    case 'reflect':
+      return runtimeState.reflectTurnsRemaining;
+    case 'light-screen':
+      return runtimeState.lightScreenTurnsRemaining;
+    case 'mist':
+      return runtimeState.mistTurnsRemaining;
+    case 'safeguard':
+      return runtimeState.safeguardTurnsRemaining;
+  }
+}
+
+export function setBattleSideEffectTurnsRemaining(
+  runtimeState: BattleSideRuntimeState,
+  effectId: MoveBattleSideEffectId,
+  turnsRemaining: number,
+): void {
+  switch (effectId) {
+    case 'reflect':
+      runtimeState.reflectTurnsRemaining = turnsRemaining;
+      break;
+    case 'light-screen':
+      runtimeState.lightScreenTurnsRemaining = turnsRemaining;
+      break;
+    case 'mist':
+      runtimeState.mistTurnsRemaining = turnsRemaining;
+      break;
+    case 'safeguard':
+      runtimeState.safeguardTurnsRemaining = turnsRemaining;
+      break;
+  }
 }
 
 export function normalizePersistentPokemonStatus(status: unknown): MajorStatusId | null {
