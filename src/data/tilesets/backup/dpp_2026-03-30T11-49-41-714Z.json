@@ -2524,7 +2524,7 @@
             "he": "פוכדור"
           },
           "itemId": "poke-ball",
-          "itemQty": 5
+          "itemQty": 1
         }
       },
       "description": "pokeball item"
@@ -2538,15 +2538,7 @@
       "walkable": false,
       "above": true,
       "category": "interactive",
-      "interactType": {
-        "id": "item",
-        "args": {
-          "label": {
-            "en": "Master Ball",
-            "he": "מאסטר בול"
-          }
-        }
-      },
+      "interactType": null,
       "description": "master ball"
     },
     {
@@ -3247,7 +3239,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "purple gym - need add door , and edges bl,br,tl,tr",
       "cells": [
         {
@@ -3361,7 +3352,6 @@
       "walkable": true,
       "above": false,
       "category": "building",
-      "interactType": null,
       "description": "door can add to gyms"
     },
     {
@@ -3373,7 +3363,6 @@
       "walkable": true,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "gym purple top-right"
     },
     {
@@ -3385,7 +3374,6 @@
       "walkable": true,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "gym purple top left edge"
     },
     {
@@ -3397,7 +3385,6 @@
       "walkable": true,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "gum purple bottom right"
     },
     {
@@ -3409,87 +3396,7 @@
       "walkable": true,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "gym purple bottom left"
-    },
-    {
-      "key": "wall-1-c",
-      "sx": 16,
-      "sy": 576,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": false,
-      "interactType": null,
-      "description": "white wall + blue on top and bottom,type 1 , center"
-    },
-    {
-      "key": "wall-1-r",
-      "sx": 32,
-      "sy": 576,
-      "w": 16,
-      "h": 48,
-      "walkable": false,
-      "above": false,
-      "category": "interior",
-      "interactType": null,
-      "description": "wall 1 , right slant"
-    },
-    {
-      "key": "w-1-l",
-      "sx": 0,
-      "sy": 576,
-      "w": 16,
-      "h": 48,
-      "walkable": false,
-      "above": false,
-      "category": "interior",
-      "interactType": null,
-      "description": "wall 1 left slant"
-    },
-    {
-      "key": "item-ultra ball",
-      "sx": 80,
-      "sy": 7008,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "description": "intercative ultra ball equal to 3 ultraballs"
-    },
-    {
-      "key": "item-greatball",
-      "sx": 96,
-      "sy": 7008,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "description": "interactive great ball equal to 3 great balls"
-    },
-    {
-      "key": "item-revive",
-      "sx": 64,
-      "sy": 7024,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interactive",
-      "description": "revive item X3",
-      "interactType": {
-        "id": "item",
-        "args": {
-          "label": {
-            "en": "Revive",
-            "he": "מחזיר לחיים"
-          },
-          "itemId": "revive",
-          "itemQty": 3
-        }
-      }
     }
   ]
 }

@@ -3490,6 +3490,11 @@
       "y": 11
     },
     {
+      "key": "item-masterBall",
+      "x": 20,
+      "y": 3
+    },
+    {
       "key": "mt2b",
       "x": 22,
       "y": 10
@@ -3508,6 +3513,11 @@
       "key": "item-pokeball",
       "x": 20,
       "y": 5
+    },
+    {
+      "key": "item-masterBall",
+      "x": 20,
+      "y": 8
     },
     {
       "key": "item-pokeball",
@@ -3613,21 +3623,6 @@
       "key": "f1-7",
       "x": 59,
       "y": 28
-    },
-    {
-      "key": "item-ultra ball",
-      "x": 20,
-      "y": 3
-    },
-    {
-      "key": "item-greatball",
-      "x": 20,
-      "y": 8
-    },
-    {
-      "key": "item-revive",
-      "x": 3,
-      "y": 3
     }
   ]
 }
