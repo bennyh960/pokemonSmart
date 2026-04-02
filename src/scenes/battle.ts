@@ -728,13 +728,89 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     return findMoveIndexById(player, chargingMoveId);
   }
 
+  function scoreMoveForEnemy(moveIndex: number): number {
+    const move = enemy.moves[moveIndex];
+    if (!move) return -Infinity;
+
+    // Skip moves with 0 PP
+    if (move.currentPp <= 0) return -Infinity;
+
+    const movePower = move.power ?? 0;
+    const battleData = getMoveBattleData(move.id);
+    const moveFullData = getMove(move.id);
+
+    // Determine damage class
+    const damageClass = moveFullData?.damageClass ?? (movePower > 0 ? 'physical' : 'status');
+
+    let score = 0;
+
+    if (movePower > 0) {
+      // Type effectiveness
+      const effectiveness = getCombinedTypeEffectiveness(move.type, player.types);
+
+      // Moves that do zero damage are worthless
+      if (effectiveness === 0) return -Infinity;
+
+      // STAB bonus
+      const stab = enemy.types.includes(move.type) ? 1.5 : 1;
+
+      const estimatedScore = movePower * effectiveness * stab;
+      score += estimatedScore;
+
+      // KO bonus: rough damage estimate using attack vs defense
+      const attackStat = damageClass === 'physical'
+        ? getModifiedStatValue(enemy, enemyBattleState, 'attack')
+        : getModifiedStatValue(enemy, enemyBattleState, 'specialAttack');
+      const defenseStat = damageClass === 'physical'
+        ? getModifiedStatValue(player, playerBattleState, 'defense')
+        : getModifiedStatValue(player, playerBattleState, 'specialDefense');
+      // Simplified damage formula (proportional to Gen 1 formula)
+      const estimatedDamage = ((2 * enemy.level / 5 + 2) * movePower * attackStat / defenseStat / 50 + 2) * stab * effectiveness;
+      if (estimatedDamage >= player.hp) {
+        score += 10000;
+      }
+    } else {
+      // Status move
+      const ailment = battleData?.ailment ?? null;
+
+      // Encourage status moves when enemy is healthy (> 50% HP)
+      if (ailment !== null && enemy.hp > enemy.maxHp * 0.5) {
+        score += 200;
+      }
+
+      // Penalty: don't waste status moves if player already has a status
+      if (ailment !== null && player.status !== null) {
+        score -= 500;
+      }
+    }
+
+    return score;
+  }
+
   function getPlannedEnemyMoveIndex(): number {
     const chargingMoveId = getChargingMoveId(enemyBattleState);
     if (chargingMoveId !== null) {
       const chargingMoveIndex = findMoveIndexById(enemy, chargingMoveId);
       if (chargingMoveIndex !== null) return chargingMoveIndex;
     }
-    return chooseEnemyMoveIndex(enemy);
+
+    // Score each move and pick the best one
+    let bestIndex = -1;
+    let bestScore = -Infinity;
+    for (let i = 0; i < enemy.moves.length; i++) {
+      const s = scoreMoveForEnemy(i);
+      if (s > bestScore) {
+        bestScore = s;
+        bestIndex = i;
+      }
+    }
+
+    // If all moves are -Infinity, fall back to random selection
+    if (bestIndex === -1 || bestScore === -Infinity) {
+      return chooseEnemyMoveIndex(enemy);
+    }
+
+    return bestIndex;
   }
 
   function enterSelectMovePhase(): void {
