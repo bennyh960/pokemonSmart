@@ -189,7 +189,7 @@ function calcDamage(
   if (eff === 0) return 0;
   const stab = atk.types.includes(moveType) ? 1.5 : 1;
   const critMultiplier = criticalHit ? 1.5 : 1;
-  const rand = 0.85 + Math.random() * 0.15;
+  const rand = 0.70 + Math.random() * 0.30;
   return Math.max(1, Math.floor(base * eff * stab * critMultiplier * defenderMultiplier * rand));
 }
 
@@ -1919,6 +1919,19 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
     msgs.push(...resolvedEffectLines);
 
+    // Contact ability: enemy ability may inflict status on player when hit by physical move
+    const contactEffectsOnPlayer: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
+    if (hitResult.hit && damageClass === 'physical' && plannedDamage > 0 && !player.status && enemy.abilityId !== null) {
+      const enemyAbilityEffects = getAbilityBattleEffects(enemy.abilityId);
+      for (const effect of enemyAbilityEffects) {
+        if (effect.kind === 'contactStatusChance' && Math.random() * 100 < effect.chance) {
+          contactEffectsOnPlayer.push({ status: effect.status });
+          const statusLine = getStatusAppliedLine(attackerName, effect.status);
+          if (statusLine) msgs.push(statusLine);
+        }
+      }
+    }
+
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation('player', 'enemy', m, () => {
       if (hitResult.hit) {
@@ -1945,6 +1958,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             flash = createFlash('#fff29a', 0.12);
             shake = createShake(1.4, 0.18);
             audio.playSFX('hit');
+          }
+
+          // Apply contact ability status effects to the attacking player
+          for (const contactEffect of contactEffectsOnPlayer) {
+            applyMajorStatus(player, playerBattleState, { status: contactEffect.status, chance: 100, target: 'user' });
+            setStatus(playerHpBar, player.status ?? '');
           }
         }
       }
@@ -2091,6 +2110,19 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
     msgs.push(...resolvedEffectLines);
 
+    // Contact ability: player ability may inflict status on enemy when enemy uses physical move
+    const contactEffectsOnEnemy: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
+    if (hitResult.hit && damageClass === 'physical' && plannedDamage > 0 && !enemy.status && player.abilityId !== null) {
+      const playerAbilityEffects = getAbilityBattleEffects(player.abilityId);
+      for (const effect of playerAbilityEffects) {
+        if (effect.kind === 'contactStatusChance' && Math.random() * 100 < effect.chance) {
+          contactEffectsOnEnemy.push({ status: effect.status });
+          const statusLine = getStatusAppliedLine(attackerName, effect.status);
+          if (statusLine) msgs.push(statusLine);
+        }
+      }
+    }
+
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation('enemy', 'player', m, () => {
       if (hitResult.hit) {
@@ -2117,6 +2149,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             flash = createFlash('#fff29a', 0.12);
             shake = createShake(1.4, 0.18);
             audio.playSFX('hit');
+          }
+
+          // Apply contact ability status effects to the attacking enemy
+          for (const contactEffect of contactEffectsOnEnemy) {
+            applyMajorStatus(enemy, enemyBattleState, { status: contactEffect.status, chance: 100, target: 'user' });
+            setStatus(enemyHpBar, enemy.status ?? '');
           }
         }
       }
