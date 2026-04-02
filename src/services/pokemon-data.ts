@@ -510,3 +510,15 @@ export function getItemDisplayName(id: number): string {
 export function getAllItemIds(): number[] {
   return Object.keys(items).map(Number);
 }
+
+/** Returns the level at which a Pokemon naturally learns a move, or null if it doesn't. */
+export function getLearnLevelForMove(pokemonId: number, moveId: number): number | null {
+  const learnset = getLearnset(pokemonId);
+  const entry = learnset.find(e => e.moveId === moveId);
+  return entry ? entry.levelLearned : null;
+}
+
+/** Returns true if a Pokemon can learn a specific move via TM/HM. */
+export function canLearnViaTM(pokemonId: number, moveId: number): boolean {
+  return getTmLearnset(pokemonId).some(e => e.moveId === moveId);
+}

@@ -48,11 +48,17 @@ function buildItems(): Record<string, ItemDef> {
     const raw = rawItems[numIdStr];
     const slug = raw?.slug ?? ITEM_ID_TO_SLUG[numId] ?? `item-${numId}`;
 
+    // Resolve localized name and description: prefer game def override, then items.json, then slug fallback
+    const resolvedName = gameDef.name ?? raw?.name ?? { en: slug, he: slug };
+    const resolvedDescription = typeof gameDef.description === 'object'
+      ? gameDef.description.en
+      : (raw?.description ?? '');
+
     result[slug] = {
       id: slug,
       numericId: numId,
-      name: raw?.name ?? { en: slug, he: slug },
-      description: raw?.description ?? '',
+      name: resolvedName,
+      description: resolvedDescription,
       category: gameDef.category,
       price: gameDef.price,
       effect: gameDef.effect,

@@ -8,10 +8,12 @@
 import type { Pokemon } from '../types/index.js';
 import { getItemGameData, getItemGameDataBySlug } from '../data/item-defs.js';
 import { checkAndApplyLevelUp } from './encounter.js';
-import { getPokemonDisplayName, type EvolutionStep } from '../services/pokemon-data.js';
+import { getPokemonDisplayName, getMove, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
 import type { LevelUpMoveResult } from './move-learning.js';
+import { createMoveFromId } from './move-learning.js';
 import { canCurePersistentStatus } from './battle-state.js';
+import { getItem } from '../data/items.js';
 
 export interface ItemUseResult {
   success: boolean;
@@ -38,6 +40,7 @@ export function itemTargetsPokemon(itemId: string): boolean {
     case 'pp-restore':
     case 'pp-restore-one':
     case 'rare-candy':
+    case 'tm':
       return true;
     default:
       return false;
@@ -168,6 +171,30 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
       return { success: true, message: 'Gained experience!' };
     }
 
+    case 'tm': {
+      // NOTE: Actual compatibility check and natural-level warning are handled in bag.ts.
+      // This function only does the raw move addition (called after UI confirms).
+      const move = getMove(effect.moveId);
+      if (!move) return { success: false, message: 'Move not found' };
+
+      // Check if already knows the move
+      const allMoves = [...(target.moves || [])];
+      if (allMoves.some(m => m.id === effect.moveId)) {
+        return { success: false, message: 'already-knows' };
+      }
+
+      // Add to battle moves if there is space (up to 8 max)
+      if ((target.moves?.length ?? 0) < 8) {
+        const newMove = createMoveFromId(effect.moveId);
+        if (!newMove) return { success: false, message: 'Move not found' };
+        target.moves = [...(target.moves || []), newMove];
+      } else {
+        return { success: false, message: 'no-space' };
+      }
+
+      return { success: true, message: 'learned' };
+    }
+
     case 'capture': {
       // Capture is handled separately in battle flow, not via this function
       return { success: false, message: "Can't use that here!" };
@@ -193,4 +220,14 @@ export function consumeItem(items: Record<string, number>, itemId: string): void
       delete items[itemId];
     }
   }
+}
+
+/**
+ * Returns true if this item should be consumed (removed from inventory) after use.
+ * TMs and HMs are never consumed — they can be used repeatedly.
+ */
+export function isItemConsumable(itemId: string): boolean {
+  const def = getItem(itemId);
+  if (!def) return false;
+  return def.effect.type !== 'tm';
 }

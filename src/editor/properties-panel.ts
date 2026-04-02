@@ -3,8 +3,9 @@ import type { HistoryManager } from './history.js';
 import type { TileDef, NPCData, MapTransition } from './types.js';
 import { getCharacterList, getCharacterInfo, getCharacterFrame, loadCharacterSprites, CHARACTER_ROLES } from '../engine/character-sprites.js';
 import { createNamePicker } from '../ui/name-picker.js';
-import { getAllPokemon, type PokemonData } from '../services/pokemon-data.js';
+import { getAllPokemon, getMoveDisplayName, type PokemonData } from '../services/pokemon-data.js';
 import { getAllItems, type ItemDef } from '../data/items.js';
+import { getTMEffect } from '../data/item-defs.js';
 import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward } from '../systems/npc.js';
 import { BADGES } from '../data/badges.js';
 import encounterTables from '../data/encounter-tables.json';
@@ -455,7 +456,15 @@ export class PropertiesPanel {
       section.appendChild(empty);
     }
 
-    const allItems = getItemList();
+    // Sort items so TM/HM appear first, then alphabetically
+    const allItems = getItemList().slice().sort((a, b) => {
+      const aIsTM = getTMEffect(a.id) !== null;
+      const bIsTM = getTMEffect(b.id) !== null;
+      if (aIsTM && !bIsTM) return -1;
+      if (!aIsTM && bIsTM) return 1;
+      return a.name.en.localeCompare(b.name.en);
+    });
+
     for (let i = 0; i < items.length; i++) {
       const ri = items[i];
       const row = document.createElement('div');
@@ -467,7 +476,11 @@ export class PropertiesPanel {
       for (const item of allItems) {
         const opt = document.createElement('option');
         opt.value = item.id;
-        opt.textContent = `${item.name.en} (${item.id})`;
+        const tmData = getTMEffect(item.id);
+        const label = tmData
+          ? `${item.name.en} \u2014 ${getMoveDisplayName(tmData.moveId)} (${item.id})`
+          : `${item.name.en} (${item.id})`;
+        opt.textContent = label;
         if (item.id === ri.itemId) opt.selected = true;
         itemSel.appendChild(opt);
       }

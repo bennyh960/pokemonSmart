@@ -280,6 +280,11 @@
   "bag.category.battle": "קרב",
   "bag.category.vitamins": "ויטמינים",
   "bag.category.key": "מפתח",
+  "bag.tm.cantLearn": "{name} לא יכול ללמוד את {move}!",
+  "bag.tm.alreadyKnows": "{name} כבר יודע את {move}!",
+  "bag.tm.naturalWarn": "{name} ילמד את {move} באופן טבעי ברמה {level}. לשמור את ה-TM לפוקימון אחר?",
+  "bag.tm.learned": "{name} למד את {move}!",
+  "bag.tm.noSpace": "{name} לא יכול ללמוד עוד מהלכים!",
 
   "battle.goName": "קדימה, {name}!",
   "battle.comeBack": "חזור, {name}!",

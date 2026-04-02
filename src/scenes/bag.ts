@@ -5,7 +5,7 @@
  * Controls: Up/Down navigate items, Left/Right switch categories, Enter use, Esc back.
  */
 
-import type { Scene } from '../types/index.js';
+import type { Scene, Pokemon } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
@@ -13,11 +13,12 @@ import { t } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
-import { applyItemEffect, consumeItem, itemTargetsPokemon } from '../systems/item-effects.js';
+import { applyItemEffect, consumeItem, isItemConsumable, itemTargetsPokemon } from '../systems/item-effects.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
-import { getPokemonDisplayName, getLocalizedName } from '../services/pokemon-data.js';
+import { getPokemonDisplayName, getLocalizedName, getMoveDisplayName, canLearnViaTM, getLearnLevelForMove } from '../services/pokemon-data.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setEvolutionData } from './evolution.js';
+import { getTMEffect } from '../data/item-defs.js';
 import {
   createMoveLearningQueueState,
   initializeMoveLearningQueue,
@@ -80,6 +81,15 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
   let pendingOverworldItemId: string | null = null;
   const pendingMoveLearning = createMoveLearningQueueState();
 
+  // TM natural-level warning state (yes/no confirmation)
+  interface TMWarningState {
+    itemId: string;
+    tmEffect: { moveId: number; isHM: boolean };
+    pokemon: Pokemon;
+    choiceIndex: number; // 0 = Yes (save TM), 1 = No (teach anyway)
+  }
+  let tmWarning: TMWarningState | null = null;
+
   function getTabItems(): { id: string; def: ItemDef; qty: number }[] {
     const player = getPlayerData();
     const tab = BAG_TABS[tabIndex];
@@ -93,6 +103,62 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       result.push({ id, def, qty });
     }
     return result;
+  }
+
+  // ── TM Teaching helpers ──────────────────────────────────────────────
+
+  function handleTMTeaching(itemId: string, tmEffect: { moveId: number; isHM: boolean }, pokemon: Pokemon): void {
+    const moveName = getMoveDisplayName(tmEffect.moveId);
+    const pokemonName = getPokemonDisplayName(pokemon.id);
+
+    if (!canLearnViaTM(pokemon.id, tmEffect.moveId)) {
+      message = t('bag.tm.cantLearn', { name: pokemonName, move: moveName });
+      messageTimer = 2.0;
+      return;
+    }
+
+    if (pokemon.moves.some(m => m.id === tmEffect.moveId)) {
+      message = t('bag.tm.alreadyKnows', { name: pokemonName, move: moveName });
+      messageTimer = 2.0;
+      return;
+    }
+
+    if (pokemon.moves.length >= 8) {
+      message = t('bag.tm.noSpace', { name: pokemonName, move: moveName });
+      messageTimer = 2.0;
+      return;
+    }
+
+    const naturalLevel = getLearnLevelForMove(pokemon.id, tmEffect.moveId);
+    if (naturalLevel !== null && naturalLevel > pokemon.level) {
+      tmWarning = { itemId, tmEffect, pokemon, choiceIndex: 0 };
+      return;
+    }
+
+    teachTMNow(itemId, tmEffect, pokemon);
+  }
+
+  function teachTMNow(itemId: string, tmEffect: { moveId: number; isHM: boolean }, pokemon: Pokemon): void {
+    const pd = getPlayerData();
+    const result = applyItemEffect(itemId, pokemon);
+    // TMs and HMs are NOT consumed — skip consumeItem
+    if (result.success) {
+      autoSave();
+      const moveName = getMoveDisplayName(tmEffect.moveId);
+      const pokeName = getPokemonDisplayName(pokemon.id);
+      message = t('bag.tm.learned', { name: pokeName, move: moveName });
+      messageTimer = 2.5;
+    } else if (result.message === 'no-space') {
+      const pokeName = getPokemonDisplayName(pokemon.id);
+      const moveName = getMoveDisplayName(tmEffect.moveId);
+      message = t('bag.tm.noSpace', { name: pokeName, move: moveName });
+      messageTimer = 2.0;
+    } else {
+      message = result.message;
+      messageTimer = 2.0;
+    }
+    // Suppress unused var warning
+    void pd;
   }
 
   function render(ctx: CanvasRenderingContext2D): void {
@@ -225,9 +291,53 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       drawRect(ctx, 20, 70, 200, 20, C.BORDER_SEL);
       drawText(ctx, message, 120, 75, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
     }
+
+    // ── TM natural-level warning overlay ──
+    if (tmWarning) {
+      const w = tmWarning;
+      const pokeName = getPokemonDisplayName(w.pokemon.id);
+      const moveName = getMoveDisplayName(w.tmEffect.moveId);
+      const naturalLevel = getLearnLevelForMove(w.pokemon.id, w.tmEffect.moveId) ?? 0;
+      const warnText = t('bag.tm.naturalWarn', { name: pokeName, move: moveName, level: naturalLevel });
+
+      // Dialog box
+      fillRect(ctx, 10, 40, 220, 80, C.CARD_BG);
+      drawRect(ctx, 10, 40, 220, 80, C.BORDER_SEL);
+      drawText(ctx, warnText, 120, 48, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: 'center', maxWidth: 200 });
+
+      // Yes / No buttons
+      const yesColor = w.choiceIndex === 0 ? C.SEL_BAR : C.TEXT_MUT;
+      const noColor  = w.choiceIndex === 1 ? C.SEL_BAR : C.TEXT_MUT;
+      fillRect(ctx, 40,  98, 60, 12, w.choiceIndex === 0 ? C.TAB_ACT : C.CARD_BG);
+      drawRect(ctx, 40,  98, 60, 12, C.BORDER);
+      drawText(ctx, t('npc.choice.yes'), 70, 101, { size: 7, color: yesColor, font: 'monospace', align: 'center' });
+      fillRect(ctx, 140, 98, 60, 12, w.choiceIndex === 1 ? C.TAB_ACT : C.CARD_BG);
+      drawRect(ctx, 140, 98, 60, 12, C.BORDER);
+      drawText(ctx, t('npc.choice.no'), 170, 101, { size: 7, color: noColor, font: 'monospace', align: 'center' });
+    }
   }
 
   function update(dt: number): void {
+    // Handle TM natural-level warning (yes/no choice)
+    if (tmWarning) {
+      if (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowRight')) {
+        tmWarning.choiceIndex = tmWarning.choiceIndex === 0 ? 1 : 0;
+      }
+      if (input.isKeyPressed('Enter')) {
+        const w = tmWarning;
+        tmWarning = null;
+        if (w.choiceIndex === 1) {
+          // No — teach anyway
+          teachTMNow(w.itemId, w.tmEffect, w.pokemon);
+        }
+        // Yes — save TM, do nothing
+      }
+      if (input.isKeyPressed('Escape')) {
+        tmWarning = null;
+      }
+      return;
+    }
+
     if (pendingMoveLearning.partyIndex !== null) {
       const pd = getPlayerData();
       const target = pd.party[pendingMoveLearning.partyIndex];
@@ -274,9 +384,20 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         const pd = getPlayerData();
         const target = pd.party[chosenIndex];
         if (target) {
+          // Check if this is a TM/HM — handle separately
+          const tmEffect = getTMEffect(pendingOverworldItemId);
+          if (tmEffect) {
+            const itemIdForTM = pendingOverworldItemId;
+            pendingOverworldItemId = null;
+            handleTMTeaching(itemIdForTM, tmEffect, target);
+            return;
+          }
+
           const result = applyItemEffect(pendingOverworldItemId, target);
           if (result.success) {
-            consumeItem(pd.items, pendingOverworldItemId);
+            if (isItemConsumable(pendingOverworldItemId)) {
+              consumeItem(pd.items, pendingOverworldItemId);
+            }
             autoSave();
             getGlobalAudio()?.playSFX('heal');
             if (result.newMoves && result.newMoves.length > 0) {
@@ -389,6 +510,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       pendingItem = null;
       waitingForPartyTarget = false;
       pendingOverworldItemId = null;
+      tmWarning = null;
       resetMoveLearningQueueState(pendingMoveLearning);
     },
     exit(): void {},

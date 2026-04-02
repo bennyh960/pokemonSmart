@@ -280,6 +280,11 @@
   "bag.category.battle": "Battle",
   "bag.category.vitamins": "Vitamins",
   "bag.category.key": "Key Items",
+  "bag.tm.cantLearn": "{name} can't learn {move}!",
+  "bag.tm.alreadyKnows": "{name} already knows {move}!",
+  "bag.tm.naturalWarn": "{name} will learn {move} naturally at Lv.{level}. Save this TM for another Pokemon?",
+  "bag.tm.learned": "{name} learned {move}!",
+  "bag.tm.noSpace": "{name} can't learn any more moves!",
 
   "battle.goName": "Go, {name}!",
   "battle.comeBack": "Come back, {name}!",
