@@ -347,5 +347,11 @@
   "worldMap.title":"מפת נומריה",
   "worldMap.hint": "ESC/W: סגור",
   "worldMap.badge.earned": "תג הושג",
-  "worldMap.currentLocation": "אתה כאן"
+  "worldMap.currentLocation": "אתה כאן",
+
+  "hm.chooseYou": "קדימה, {name}! בבקשה {action} את ה{tileName} הזה!",
+  "hm.cut.action": "גזום",
+  "hm.strength.action": "הזז",
+  "hm.cannotUse.cut": "אתה צריך פוקימון שיודע Cut ברמה 20 ומעלה!",
+  "hm.cannotUse.strength": "אתה צריך פוקימון שיודע Strength ברמה 30 ומעלה!"
 }

@@ -30,6 +30,8 @@ import { getItem } from '../data/items.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
+import { findHMUser } from '../systems/hm.js';
+import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -90,6 +92,27 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Choice prompt state
   let choiceState: ChoiceState | null = null;
+
+  // HM animation state
+  interface HMAnimState {
+    phase: 'pokemon-out' | 'action' | 'return' | 'done';
+    pokemonId: number;
+    pokemonSprite: HTMLImageElement | null;
+    obstacleX: number;
+    obstacleY: number;
+    playerFacing: string;
+    timer: number;
+    flipSprite: boolean;
+    spritePixelX: number;
+    spritePixelY: number;
+    spriteAlpha: number;
+    flashAlpha: number;
+    hmName: string;
+    slashProgress: number;
+    pendingTileRemoval: (() => void) | null;
+  }
+  let hmAnim: HMAnimState | null = null;
+  let pendingHMAction: (() => void) | null = null;
 
   // Trainer approach state
   interface TrainerApproachState {
@@ -427,13 +450,106 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
   }
 
+  /** Draw cut slash effect. */
+  function drawCutSlash(ctx: CanvasRenderingContext2D, cx: number, cy: number, progress: number): void {
+    if (progress <= 0) return;
+    const len = TILE_SIZE * progress;
+    ctx.save();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = Math.max(0, 1 - progress);
+    ctx.beginPath();
+    ctx.moveTo(cx - len, cy - len);
+    ctx.lineTo(cx + len, cy + len);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + len, cy - len);
+    ctx.lineTo(cx - len, cy + len);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /** Draw strength stomp/impact effect. */
+  function drawStrengthEffect(ctx: CanvasRenderingContext2D, cx: number, cy: number, progress: number): void {
+    if (progress <= 0) return;
+    ctx.save();
+    ctx.strokeStyle = '#ffaa00';
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = Math.max(0, 1 - progress);
+    const r = TILE_SIZE * progress;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /** Start the HM animation sequence. */
+  function startHMAnimation(hmName: string, pokemon: import('../types/index.js').Pokemon, obsX: number, obsY: number): void {
+    const flipSprite = player.facing === 'ArrowRight';
+
+    // Try to step back one tile (opposite of facing)
+    const faceVec = DIR_VECTORS[player.facing];
+    if (faceVec) {
+      const backX = player.gridX - faceVec.dx;
+      const backY = player.gridY - faceVec.dy;
+      if (tileMap && tileMap.isWalkable(backX, backY) && !(npcManager?.isNPCAt(backX, backY))) {
+        player.gridX = backX;
+        player.gridY = backY;
+        player.pixelX = backX * TILE_SIZE;
+        player.pixelY = backY * TILE_SIZE;
+        player.targetGridX = backX;
+        player.targetGridY = backY;
+        player.moving = false;
+      }
+    }
+
+    const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
+
+    hmAnim = {
+      phase: 'pokemon-out',
+      pokemonId: pokemon.id,
+      pokemonSprite: getCachedImage(spritePath),
+      obstacleX: obsX,
+      obstacleY: obsY,
+      playerFacing: player.facing,
+      timer: 0,
+      flipSprite,
+      spritePixelX: obsX * TILE_SIZE,
+      spritePixelY: obsY * TILE_SIZE,
+      spriteAlpha: 0,
+      flashAlpha: 0,
+      hmName,
+      slashProgress: 0,
+      pendingTileRemoval: () => {
+        // Remove the object from the map
+        if (currentMapData?.objects) {
+          const objIdx = currentMapData.objects.findIndex(o => o.x === obsX && o.y === obsY);
+          if (objIdx >= 0) currentMapData.objects.splice(objIdx, 1);
+        }
+        // Persist the removal via flags so it survives map reload
+        if (hasActiveGame()) {
+          const pd = getPlayerData();
+          pd.flags[`${hmName}-${obsX}-${obsY}`] = true;
+          autoSave();
+        }
+      },
+    };
+
+    // Start loading sprite if not cached yet
+    loadImage(spritePath).then(img => {
+      if (hmAnim && hmAnim.pokemonId === pokemon.id) {
+        hmAnim.pokemonSprite = img;
+      }
+    }).catch(() => { /* sprite load failure is non-fatal */ });
+  }
+
   /** Load a map and set up the scene. */
   async function loadAndSetMap(mapId: string, spawnX: number, spawnY: number): Promise<void> {
     const data = await loadMap(mapId);
     currentMapData = data;
     const tileset = data.tileset ? getTileset(data.tileset) : null;
 
-    // Filter out collected item objects so they don't render
+    // Filter out collected item objects and already-cut/moved obstacles
     if (data.objects && tileset && hasActiveGame()) {
       const flags = getPlayerData().flags;
       data.objects = data.objects.filter(obj => {
@@ -441,6 +557,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (def?.interactType?.id === 'item') {
           const flagKey = obj.interactArgs?.flag || `obj-${obj.key}-${obj.x}-${obj.y}-collected`;
           return !flags[flagKey];
+        }
+        // Remove already-cut trees or already-moved boulders
+        if (flags[`cut-${obj.x}-${obj.y}`] || flags[`strength-${obj.x}-${obj.y}`]) {
+          return false;
         }
         return true;
       });
@@ -472,6 +592,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     choiceState = null;
     healTextBox = null;
     trainerApproach = null;
+    hmAnim = null;
+    pendingHMAction = null;
 
     // Auto-save on area entry
     if (hasActiveGame()) {
@@ -499,6 +621,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       choiceState = null;
       healTextBox = null;
       trainerApproach = null;
+      hmAnim = null;
+      pendingHMAction = null;
       mapLoading = true;
 
       // Determine which map to load
@@ -576,10 +700,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         const done = updateTextBox(activeTextBox, input, dt);
         if (done) {
           activeTextBox = null;
-          if (interactingNPC) {
+          if (pendingHMAction) {
+            const action = pendingHMAction;
+            pendingHMAction = null;
+            action();
+          } else if (interactingNPC) {
             onDialogueEnd();
           }
         }
+        return;
+      }
+
+      // Block input during HM animation
+      if (hmAnim) {
         return;
       }
 
@@ -689,6 +822,38 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           } else {
             trainerApproach = null;
           }
+        }
+        return;
+      }
+
+      // HM animation update
+      if (hmAnim) {
+        const anim: HMAnimState = hmAnim;
+        anim.timer += dt;
+        const animPhase = anim.phase;
+        if (animPhase === 'pokemon-out') {
+          anim.spriteAlpha = Math.min(1, anim.timer / 0.3);
+          if (anim.timer >= 0.4) {
+            anim.phase = 'action';
+            anim.timer = 0;
+          }
+        } else if (animPhase === 'action') {
+          anim.slashProgress = anim.timer / 0.5;
+          anim.flashAlpha = Math.max(0, 1 - anim.timer / 0.15);
+          if (anim.timer >= 0.5) {
+            anim.pendingTileRemoval?.();
+            anim.pendingTileRemoval = null;
+            audio.playSFX('hit');
+            anim.phase = 'return';
+            anim.timer = 0;
+          }
+        } else if (animPhase === 'return') {
+          anim.spriteAlpha = Math.max(0, 1 - anim.timer / 0.3);
+          if (anim.timer >= 0.4) {
+            anim.phase = 'done';
+          }
+        } else if (animPhase === 'done') {
+          hmAnim = null;
         }
         return;
       }
@@ -899,10 +1064,34 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                     }
                     return;
                   } else if (resolved.id === 'cut' || resolved.id === 'strength') {
-                    // HM moves — show dialogue for now, actual HM logic in Sprint 6.5
-                    if (dialogue.length > 0) {
-                      activeTextBox = createTextBox(resolveDialogue(dialogue, getLocale()), isRTL());
+                    if (!hasActiveGame()) return;
+                    const pd = getPlayerData();
+                    const hmName = resolved.id;
+                    const hmUser = findHMUser(hmName, pd.party);
+
+                    if (!hmUser) {
+                      activeTextBox = createTextBox([t(`hm.cannotUse.${hmName}`)], isRTL());
+                      return;
                     }
+
+                    const pokemonName = getPokemonDisplayName(hmUser.id);
+                    const tileName = (resolveDialogue(dialogue, getLocale())[0])
+                      ?? (hmName === 'cut' ? 'tree' : 'boulder');
+                    const actionKey = hmName === 'cut' ? 'hm.cut.action' : 'hm.strength.action';
+                    const dialogueLine = t('hm.chooseYou', {
+                      name: pokemonName,
+                      action: t(actionKey),
+                      tileName,
+                    });
+
+                    activeTextBox = createTextBox([dialogueLine], isRTL());
+                    const capturedHmName = hmName;
+                    const capturedHmUser = hmUser;
+                    const capturedTargetX = targetX;
+                    const capturedTargetY = targetY;
+                    pendingHMAction = () => {
+                      startHMAnimation(capturedHmName, capturedHmUser, capturedTargetX, capturedTargetY);
+                    };
                     return;
                   }
                 }
@@ -1126,6 +1315,50 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       tileMap.renderAbove(ctx, camera.x, camera.y);
       // Render placed object above rows (e.g. roof overhangs)
       for (const r of objRenderables.above) r.render();
+
+      // HM animation overlay
+      if (hmAnim && hmAnim.spriteAlpha > 0) {
+        const worldX = hmAnim.obstacleX * TILE_SIZE;
+        const worldY = hmAnim.obstacleY * TILE_SIZE;
+        const screenX = worldX - camera.x;
+        const screenY = worldY - camera.y;
+
+        if (hmAnim.pokemonSprite) {
+          ctx.save();
+          ctx.globalAlpha = hmAnim.spriteAlpha;
+          const spriteSize = TILE_SIZE * 2;
+          if (hmAnim.flipSprite) {
+            ctx.translate(screenX + spriteSize / 2, screenY);
+            ctx.scale(-1, 1);
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(hmAnim.pokemonSprite, -spriteSize / 2, -spriteSize / 2, spriteSize, spriteSize);
+          } else {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(hmAnim.pokemonSprite, screenX - spriteSize / 4, screenY - spriteSize / 2, spriteSize, spriteSize);
+          }
+          ctx.restore();
+        }
+
+        // Draw slash/stomp effect during action and return phases
+        if (hmAnim.phase === 'action' || (hmAnim.phase === 'return' && hmAnim.slashProgress >= 1)) {
+          const cx = screenX + TILE_SIZE / 2;
+          const cy = screenY + TILE_SIZE / 2;
+          if (hmAnim.hmName === 'cut') {
+            drawCutSlash(ctx, cx, cy, hmAnim.slashProgress);
+          } else {
+            drawStrengthEffect(ctx, cx, cy, hmAnim.slashProgress);
+          }
+        }
+
+        // White flash at start of action phase
+        if (hmAnim.flashAlpha > 0) {
+          ctx.save();
+          ctx.globalAlpha = hmAnim.flashAlpha * 0.7;
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(screenX - TILE_SIZE / 2, screenY - TILE_SIZE, TILE_SIZE * 2, TILE_SIZE * 2);
+          ctx.restore();
+        }
+      }
 
       // HUD
       const mapName = currentMapData?.name || '';

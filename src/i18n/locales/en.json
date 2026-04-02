@@ -347,5 +347,11 @@
   "worldMap.title":"WORLD MAP — Numeria",
   "worldMap.hint": "ESC/W: Close",
   "worldMap.badge.earned": "Badge earned",
-  "worldMap.currentLocation": "You are here"
+  "worldMap.currentLocation": "You are here",
+
+  "hm.chooseYou": "Go, {name}! Please {action} this {tileName}!",
+  "hm.cut.action": "cut",
+  "hm.strength.action": "move",
+  "hm.cannotUse.cut": "You need a Pokémon that knows Cut (level 20+)!",
+  "hm.cannotUse.strength": "You need a Pokémon that knows Strength (level 30+)!"
 }
