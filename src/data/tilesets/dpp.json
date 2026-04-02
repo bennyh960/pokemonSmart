@@ -3522,7 +3522,22 @@
       "h": 16,
       "walkable": true,
       "above": false,
+      "interactType": null,
       "description": "door for b7 house"
+    },
+    {
+      "key": "t5-cut",
+      "sx": 112,
+      "sy": 432,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interactive",
+      "description": "cutable tree",
+      "interactType": {
+        "id": "cut"
+      }
     }
   ]
 }

@@ -190,7 +190,7 @@ This is a foundation sprint — must be done before design/content sprints.
 
 --- 
 
-## Sprint 6 — Battle System ⬜ PLANNED
+## Sprint 6 — Battle System ✅ COMPLETE
 **Goal:** Build the first "real battle" pass on top of data-driven move/ability metadata and a reusable persistent battle-state layer.
 
 **Priority:** Start with the data model and status foundation. Turn order, accuracy/evasion, stat stages, damage modifiers, and the first ability pass should all reuse the same battle-state layer rather than being hardcoded inside `battle.ts`.
@@ -230,19 +230,70 @@ This is a foundation sprint — must be done before design/content sprints.
 
 ---
 
-## Sprint 6.5 — HM Overworld Moves ⬜ PLANNED
-**Goal:** Implement all HM field moves as overworld mechanics gated by badges/party moves
+## Sprint 6.5 — HM Overworld Moves ✅ COMPLETE
+**Goal:** Implement Cut, Strength, Fly, and Surf as animated overworld HM mechanics. No map updates this sprint.
 
-| Task | Agent | Notes |
-|------|-------|-------|
-| HM framework — check if party Pokemon knows the move + player has required badge | game-engine-developer | Reusable gate: `canUseHM(moveId)` checks party + badges |
-| Cut — destroy cuttable trees/bushes on interact | game-engine-developer | Uses tileset `destroyable` property; prompt "Use Cut?" on interact |
-| Strength — push/destroy boulders | game-engine-developer | Uses tileset `destroyable` property; boulder push animation or remove |
-| Flash — illuminate dark caves | game-engine-developer + frontend-developer | Dark overlay with circular light radius around player; Flash expands radius |
-| Surf — travel on water tiles | game-engine-developer + frontend-developer | Player sprite swaps to surfing sprite; water tiles become walkable; wild encounters change to water Pokemon |
-| Fly — fast travel to visited cities | game-engine-developer + frontend-developer | Opens city map selector; teleport to last Pokemon Center of chosen city; requires visited flag per city |
-| HM items — TM/HM items in bag that teach moves to compatible Pokemon | game-engine-developer | HMs are reusable (not consumed), TMs are single-use |
-| Map updates — place cuttable trees, boulders, dark caves, water routes across existing maps | game-engine-developer + asset-manager | Use existing `destroyable` tileset property for Cut/Strength obstacles |
+### HM Framework (src/systems/hm.ts)
+- `HM_CONFIG` — per-HM requirements object (NOT hardcoded constants — configurable): `{ moveId, minLevel, minWeight?, minHeight? }`
+- `findHMUser(moveId, party)` — returns best eligible party Pokemon (knows move + meets level + meets size if required)
+- `canUseHM(moveId, party)` — boolean gate
+- HM move IDs (from PokeAPI): Cut=15, Fly=19, Surf=57, Strength=70
+
+### Cut (minLevel: 20)
+- Triggered by interacting with `interactType: 'cut'` tile (already defined in interact-types.ts)
+- Gate: party Pokemon knows Cut (id=15) + level ≥ 20
+- No badge requirement for now
+- **Animation sequence:**
+  1. Dialogue: "{pokemonName}, go! Please cut this {tileName}!" (bilingual)
+  2. Player steps back 1 tile (away from obstacle)
+  3. Pokemon sprite appears at obstacle tile (`/public/sprites/pokemon/front/{id}.png`)
+  4. Sprite orientation: front sprites face LEFT by default → if player faced RIGHT, flip horizontally; UP/DOWN keep as-is
+  5. Flash effect (quick white flash) + cut slash canvas lines animation
+  6. Tile/object removed from map + flagged (flag key: `cut-{x}-{y}`) so it's gone permanently
+  7. Pokemon fades out, player faces back toward where obstacle was
+
+### Strength (minLevel: 30)
+- Triggered by interacting with `interactType: 'strength'` tile
+- Gate: party Pokemon knows Strength (id=70) + level ≥ 30
+- **Same animation sequence as Cut** but with stomp/shake effect instead of slash
+- Dialogue: "{pokemonName}, go! Please move this {tileName}!"
+
+### Fly (minLevel: 50, minWeight: 350hg, minHeight: 14dm)
+- Pokemon must know Fly (id=19) AND meet weight/height thresholds (e.g. Butterfree 320hg/11dm fails, Pidgeot 395hg/15dm passes)
+- `W` key opens world map; if player has fly-capable Pokemon, show Fly option
+- Track visited cities via `pd.flags['visited-{mapId}']` — set when player arrives at any city map
+- **World map (src/scenes/world-map.ts):** Show list of visited cities. If fly-capable, allow selecting a destination.
+- **Fly animation:**
+  1. Pokemon sprite appears beside player (at player tile)
+  2. Player "mounts" — player sprite hidden
+  3. Pokemon rises upward + scales down (flies away animation)
+  4. Screen fades to black
+  5. Teleport: `loadMap(destination.mapId, destination.x, destination.y)` using the city's Pokemon Center spawn
+  6. Screen fades in, Pokemon sprite descends + grows
+  7. Player sprite returns, Pokemon fades out
+
+### Surf (minLevel: 60, minWeight: 200hg, minHeight: 8dm)
+- Triggered when player tries to walk onto a tile with encounterType including `'water'` (check tile's encounterTypes array)
+- Gate: party Pokemon knows Surf (id=57) + meets weight/height thresholds + level ≥ 60
+- Prompt: "The water looks deep. Surf?" (bilingual choice: Yes/No)
+- **Surf mode (isSurfing flag):**
+  - Player sprite replaced by surfing Pokemon sprite (draw it programmatically — oval body + fin shape, or load front sprite scaled to tile)
+  - Water tiles are walkable while surfing
+  - Wild encounters on water use `encounterTypes: ['water']` filter
+  - Exiting to land: player touches a non-water walkable tile → auto-dismount, player sprite restored
+- **No separate surfing sprite asset** — reuse the front Pokemon sprite (scaled, maybe slightly tinted)
+
+### Deferred (out of scope Sprint 6.5)
+- Flash (dark cave overlay)
+- HM items (TM/HM teachable items in bag)
+- Map updates (placing Cut trees, boulders, water routes)
+
+| Task | Agent | Status |
+|------|-------|--------|
+| HM framework (hm.ts) | game-engine-developer | ⬜ |
+| Cut + Strength with full animation | game-engine-developer + frontend-developer | ⬜ |
+| Fly with world map city selection | game-engine-developer + frontend-developer | ⬜ |
+| Surf with water movement + encounters | game-engine-developer + frontend-developer | ⬜ |
 
 ---
 
