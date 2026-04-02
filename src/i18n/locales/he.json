@@ -353,5 +353,11 @@
   "hm.cut.action": "גזום",
   "hm.strength.action": "הזז",
   "hm.cannotUse.cut": "אתה צריך פוקימון שיודע Cut ברמה 20 ומעלה!",
-  "hm.cannotUse.strength": "אתה צריך פוקימון שיודע Strength ברמה 30 ומעלה!"
+  "hm.cannotUse.strength": "אתה צריך פוקימון שיודע Strength ברמה 30 ומעלה!",
+  "hm.fly.cannotUse": "אתה צריך פוקימון גדול שיודע Fly ברמה 50 ומעלה!",
+  "hm.surf.prompt": "המים נראים עמוקים. לגלוש?",
+  "hm.surf.mounted": "{name} השתמש ב-Surf!",
+  "hm.cannotUse.surf": "אתה צריך פוקימון גדול שיודע Surf ברמה 60 ומעלה!",
+  "worldMap.flyHint": "Enter: טוס לכאן",
+  "worldMap.noFly": "אין פוקימון שיכול לטוס כרגע"
 }

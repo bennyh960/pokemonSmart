@@ -353,5 +353,11 @@
   "hm.cut.action": "cut",
   "hm.strength.action": "move",
   "hm.cannotUse.cut": "You need a Pokémon that knows Cut (level 20+)!",
-  "hm.cannotUse.strength": "You need a Pokémon that knows Strength (level 30+)!"
+  "hm.cannotUse.strength": "You need a Pokémon that knows Strength (level 30+)!",
+  "hm.fly.cannotUse": "You need a large Pokémon that knows Fly (level 50+)!",
+  "hm.surf.prompt": "The water looks deep. Surf?",
+  "hm.surf.mounted": "{name} used Surf!",
+  "hm.cannotUse.surf": "You need a large Pokémon that knows Surf (level 60+)!",
+  "worldMap.flyHint": "Enter: Fly here",
+  "worldMap.noFly": "No Pokémon can Fly right now"
 }

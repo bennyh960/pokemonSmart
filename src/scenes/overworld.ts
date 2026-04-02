@@ -30,8 +30,9 @@ import { getItem } from '../data/items.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
-import { findHMUser } from '../systems/hm.js';
+import { findHMUser, canUseHM } from '../systems/hm.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
+import { setFlyCallback, CITY_INFO } from './world-map.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -113,6 +114,28 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
   let hmAnim: HMAnimState | null = null;
   let pendingHMAction: (() => void) | null = null;
+
+  // Fly animation state
+  interface FlyAnimState {
+    phase: 'mount' | 'rise' | 'fadeout' | 'fadein' | 'land' | 'done';
+    pokemonId: number;
+    pokemonSprite: HTMLImageElement | null;
+    timer: number;
+    spriteScale: number;
+    spriteAlpha: number;
+    fadeAlpha: number;
+    destMapId: string;
+    destX: number;
+    destY: number;
+    spriteOffsetY: number;
+    teleported: boolean;
+  }
+  let flyAnim: FlyAnimState | null = null;
+
+  // Surf state
+  let isCurrentlySurfing = false;
+  let surfPokemonId: number | null = null;
+  let surfPokemonSprite: HTMLImageElement | null = null;
 
   // Trainer approach state
   interface TrainerApproachState {
@@ -543,6 +566,48 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }).catch(() => { /* sprite load failure is non-fatal */ });
   }
 
+  /** Start the Fly animation sequence. */
+  function startFlyAnimation(pokemon: import('../types/index.js').Pokemon, destMapId: string): void {
+    const cityInfo = CITY_INFO[destMapId];
+    const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
+    flyAnim = {
+      phase: 'mount',
+      pokemonId: pokemon.id,
+      pokemonSprite: getCachedImage(spritePath),
+      timer: 0,
+      spriteScale: 1,
+      spriteAlpha: 0,
+      fadeAlpha: 0,
+      destMapId,
+      destX: cityInfo?.spawnX ?? 5,
+      destY: cityInfo?.spawnY ?? 5,
+      spriteOffsetY: 0,
+      teleported: false,
+    };
+    loadImage(spritePath).then(img => {
+      if (flyAnim && flyAnim.pokemonId === pokemon.id) flyAnim.pokemonSprite = img;
+    }).catch(() => { /* non-fatal */ });
+  }
+
+  /** Start surfing on a Pokemon. */
+  function startSurfing(pokemon: import('../types/index.js').Pokemon): void {
+    isCurrentlySurfing = true;
+    surfPokemonId = pokemon.id;
+    const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
+    surfPokemonSprite = getCachedImage(spritePath);
+    loadImage(spritePath).then(img => {
+      if (surfPokemonId === pokemon.id) surfPokemonSprite = img;
+    }).catch(() => { /* non-fatal */ });
+    audio.playSFX('splash');
+  }
+
+  /** Stop surfing (dismount). */
+  function stopSurfing(): void {
+    isCurrentlySurfing = false;
+    surfPokemonId = null;
+    surfPokemonSprite = null;
+  }
+
   /** Load a map and set up the scene. */
   async function loadAndSetMap(mapId: string, spawnX: number, spawnY: number): Promise<void> {
     const data = await loadMap(mapId);
@@ -595,6 +660,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     hmAnim = null;
     pendingHMAction = null;
 
+    // Stop surfing when map changes
+    stopSurfing();
+
     // Auto-save on area entry
     if (hasActiveGame()) {
       const pd = getPlayerData();
@@ -602,6 +670,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       pd.position.y = player.gridY;
       pd.position.mapId = mapId;
       pd.previousMapReturn = previousMapReturn;
+
+      // Track city visits for Fly destination list
+      // City maps are those in CITY_INFO (not routes, not interiors)
+      if (CITY_INFO[mapId]) {
+        pd.flags[`visited-${mapId}`] = true;
+      }
+
       autoSave();
     }
   }
@@ -623,6 +698,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       trainerApproach = null;
       hmAnim = null;
       pendingHMAction = null;
+      flyAnim = null;
+      stopSurfing();
       mapLoading = true;
 
       // Determine which map to load
@@ -713,6 +790,55 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // Block input during HM animation
       if (hmAnim) {
+        return;
+      }
+
+      // Fly animation update — blocks all other input
+      if (flyAnim) {
+        const fa = flyAnim;
+        fa.timer += dt;
+        if (fa.phase === 'mount') {
+          // 0.4s: Pokemon sprite fades in beside player
+          fa.spriteAlpha = Math.min(1, fa.timer / 0.3);
+          if (fa.timer >= 0.4) { fa.phase = 'rise'; fa.timer = 0; }
+        } else if (fa.phase === 'rise') {
+          // 0.6s: rises up, scales down
+          const progress = Math.min(fa.timer / 0.6, 1);
+          fa.spriteOffsetY = -progress * TILE_SIZE * 4;
+          fa.spriteScale = 1 - progress * 0.7; // 1 → 0.3
+          if (fa.timer >= 0.6) { fa.phase = 'fadeout'; fa.timer = 0; }
+        } else if (fa.phase === 'fadeout') {
+          // 0.3s: screen fades to black + pokemon fades out
+          const progress = Math.min(fa.timer / 0.3, 1);
+          fa.fadeAlpha = progress;
+          fa.spriteAlpha = 1 - progress;
+          if (!fa.teleported && fa.timer >= 0.15) {
+            // Teleport mid-fade so it's invisible
+            fa.teleported = true;
+            mapLoading = true;
+            loadAndSetMap(fa.destMapId, fa.destX, fa.destY).then(() => {
+              mapLoading = false;
+            }).catch(err => {
+              console.error('Fly teleport failed:', err);
+              mapLoading = false;
+              flyAnim = null;
+            });
+          }
+          if (fa.timer >= 0.3) { fa.phase = 'fadein'; fa.timer = 0; fa.fadeAlpha = 1; fa.spriteAlpha = 0; fa.spriteScale = 0.3; fa.spriteOffsetY = -TILE_SIZE * 4; }
+        } else if (fa.phase === 'fadein') {
+          // 0.3s: screen fades from black to visible
+          fa.fadeAlpha = Math.max(0, 1 - fa.timer / 0.3);
+          if (fa.timer >= 0.3) { fa.phase = 'land'; fa.timer = 0; fa.fadeAlpha = 0; }
+        } else if (fa.phase === 'land') {
+          // 0.5s: Pokemon descends, scale grows 0.3 → 1, fades in
+          const progress = Math.min(fa.timer / 0.5, 1);
+          fa.spriteOffsetY = -TILE_SIZE * 4 * (1 - progress);
+          fa.spriteScale = 0.3 + progress * 0.7; // 0.3 → 1
+          fa.spriteAlpha = progress;
+          if (fa.timer >= 0.5) { fa.phase = 'done'; }
+        } else if (fa.phase === 'done') {
+          flyAnim = null;
+        }
         return;
       }
 
@@ -875,11 +1001,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Check for map transition first
           if (checkTransition()) return;
 
+          // Auto-dismount surf when stepping onto non-water land
+          if (isCurrentlySurfing) {
+            const landEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
+            const isWaterTile = landEncTypes?.some(et => et === 'water' || et.startsWith('water') || et.includes('/water'));
+            if (!isWaterTile) {
+              stopSurfing();
+            }
+          }
+
           const tileEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
           if (tileEncTypes) {
             const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || 'test-map';
             if (Math.random() < getEncounterRate(encounterId)) {
-              const wild = generateWildEncounter(encounterId, tileEncTypes);
+              // Pass water encounter filter when surfing
+              const encFilter = isCurrentlySurfing ? ['water'] : tileEncTypes;
+              const wild = generateWildEncounter(encounterId, encFilter);
               if (wild) { startEncounterTransition(wild); return; }
             }
           }
@@ -1121,8 +1258,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
-      // W key → World Map
+      // W key → World Map (with Fly if available)
       if (input.isKeyPressed('w') || input.isKeyPressed('W')) {
+        if (hasActiveGame()) {
+          const pd = getPlayerData();
+          const flyUser = canUseHM('fly', pd.party) ? findHMUser('fly', pd.party) : null;
+          if (flyUser) {
+            const capturedFlyUser = flyUser;
+            setFlyCallback((destMapId: string) => {
+              startFlyAnimation(capturedFlyUser, destMapId);
+            });
+          } else {
+            setFlyCallback(null);
+          }
+        } else {
+          setFlyCallback(null);
+        }
         stateMachine.push('WORLD_MAP');
         return;
       }
@@ -1164,7 +1315,44 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             player.facing = key;
             const nx = player.gridX + dir.dx;
             const ny = player.gridY + dir.dy;
-            if (tileMap.isWalkable(nx, ny) && !(npcManager?.isNPCAt(nx, ny))) {
+
+            // Check walkability — water is walkable while surfing
+            const baseWalkable = tileMap.isWalkable(nx, ny);
+            let walkable = baseWalkable;
+
+            if (!walkable && isCurrentlySurfing) {
+              // While surfing, water tiles become walkable
+              const encTypes = tileMap.getEncounterTypes(nx, ny);
+              const isWater = encTypes?.some(et => et === 'water' || et.startsWith('water') || et.includes('/water') || et === '*');
+              if (isWater) walkable = true;
+            }
+
+            if (!walkable && !isCurrentlySurfing && hasActiveGame()) {
+              // Check if blocked tile is water — offer surf
+              const encTypes = tileMap.getEncounterTypes(nx, ny);
+              const isWaterTile = encTypes?.some(et => et === 'water' || et.startsWith('water') || et.includes('/water'));
+              if (isWaterTile) {
+                const pd = getPlayerData();
+                const surfUser = findHMUser('surf', pd.party);
+                if (surfUser) {
+                  const capturedSurfUser = surfUser;
+                  activeTextBox = createTextBox([t('hm.surf.prompt')], isRTL());
+                  pendingHMAction = () => {
+                    showChoice((idx) => {
+                      if (idx === 0 && capturedSurfUser) {
+                        startSurfing(capturedSurfUser);
+                        const mountMsg = t('hm.surf.mounted', { name: capturedSurfUser.name });
+                        activeTextBox = createTextBox([mountMsg], isRTL());
+                      }
+                    });
+                  };
+                } else {
+                  activeTextBox = createTextBox([t('hm.cannotUse.surf')], isRTL());
+                }
+              }
+            }
+
+            if (walkable && !(npcManager?.isNPCAt(nx, ny))) {
               player.moving = true;
               player.targetGridX = nx; player.targetGridY = ny;
               player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
@@ -1206,6 +1394,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       renderables.push({
         y: player.pixelY,
         render: () => {
+          // Surfing: draw surf Pokemon sprite at player position
+          if (isCurrentlySurfing && surfPokemonSprite) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(surfPokemonSprite, psx - TILE_SIZE / 2, psy - TILE_SIZE / 2, TILE_SIZE * 2, TILE_SIZE * 2);
+            // Draw small player on top
+            const spriteSheet = getPlayerSpriteSheet();
+            if (spriteSheet.complete && spriteSheet.naturalWidth > 0) {
+              const row = DIR_TO_ROW[player.facing] ?? 0;
+              ctx.drawImage(spriteSheet, player.walkFrame * 16, row * 16, 16, 16, psx, psy - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
+            }
+            return;
+          }
+
           const poses = ['stand', 'walk-1', 'walk-2'];
           const pose = poses[player.walkFrame % poses.length] || 'stand';
           const facingDir = player.facing.replace('Arrow', '').toLowerCase();
@@ -1213,6 +1414,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           let heroFrame = heroId ? getCharacterFrame(heroId, facingDir, pose) : null;
           if (!heroFrame && heroId && pose !== 'stand') {
             heroFrame = getCharacterFrame(heroId, facingDir, 'stand');
+          }
+
+          // Hide player sprite during fly mount/rise/land phases
+          if (flyAnim && (flyAnim.phase === 'mount' || flyAnim.phase === 'rise' || flyAnim.phase === 'land')) {
+            return;
           }
 
           if (heroFrame) {
@@ -1358,6 +1564,32 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           ctx.fillRect(screenX - TILE_SIZE / 2, screenY - TILE_SIZE, TILE_SIZE * 2, TILE_SIZE * 2);
           ctx.restore();
         }
+      }
+
+      // Fly animation overlay
+      if (flyAnim && flyAnim.spriteAlpha > 0 && flyAnim.pokemonSprite) {
+        const flyScreenX = psx; // player screen position
+        const flyScreenY = psy + flyAnim.spriteOffsetY;
+        const flySize = TILE_SIZE * 2 * flyAnim.spriteScale;
+        ctx.save();
+        ctx.globalAlpha = flyAnim.spriteAlpha;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(
+          flyAnim.pokemonSprite,
+          flyScreenX - flySize / 2,
+          flyScreenY - flySize / 2,
+          flySize, flySize
+        );
+        ctx.restore();
+      }
+
+      // Fly fade overlay (black screen fade in/out)
+      if (flyAnim && flyAnim.fadeAlpha > 0) {
+        ctx.save();
+        ctx.globalAlpha = flyAnim.fadeAlpha;
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
+        ctx.restore();
       }
 
       // HUD
