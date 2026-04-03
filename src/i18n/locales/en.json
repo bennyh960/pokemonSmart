@@ -5,7 +5,6 @@
   "title.pressEnter": "Press ENTER",
   "title.continue": "Continue",
   "title.newGame": "New Game",
-
   "heroSelect.title": "Choose your hero",
   "heroSelect.subtitle": "Pick the trainer sprite you want to play with.",
   "heroSelect.trainerLabel": "Current trainer name",
@@ -14,7 +13,6 @@
   "heroSelect.gridHint": "Arrow keys move in the grid",
   "heroSelect.continueHint": "ENTER to continue, ESC to return",
   "heroSelect.languageHint": "[2]En[1]He",
-
   "heroName.title": "Name your trainer",
   "heroName.subtitle": "Type your name using your keyboard layout.",
   "heroName.previewLabel": "Hero",
@@ -23,21 +21,18 @@
   "heroName.languageHint": "[2]En[1]He",
   "heroName.continueHint": "ENTER to continue",
   "heroName.backHint": "ESC to go back",
-
   "hero.title": "Choose your hero",
   "hero.subtitle": "Pick a hero sprite and set your trainer name.",
   "hero.heroLabel": "Hero",
   "hero.nameLabel": "Trainer name",
   "hero.nameHint": "Type letters or digits, BACKSPACE deletes",
-  "hero.selectHint": "\u25c0 \u25b6 choose hero, L switches language",
+  "hero.selectHint": "◀ ▶ choose hero, L switches language",
   "hero.continueHint": "ENTER to continue",
   "hero.backHint": "ESC to return to title",
-
   "starter.title": "Choose your partner!",
   "starter.professor": "Prof. Algorithma:",
-  "starter.instructions": "\u25c0 \u25b6 to choose, ENTER to confirm",
+  "starter.instructions": "◀ ▶ to choose, ENTER to confirm",
   "starter.chosen": "\"I choose {name}!\"",
-
   "battle.wildAppeared": "A wild {name} appeared!",
   "battle.usedMove": "{name} used {move}!",
   "battle.weakAttack": "The attack was weak...",
@@ -57,7 +52,6 @@
   "evolution.title": "EVOLUTION",
   "evolution.congrats": "Congratulations! {from} evolved into {to}!",
   "evolution.openPokedex": "Opening the Pokedex...",
-
   "battle.menu.fight": "FIGHT",
   "battle.menu.bag": "BAG",
   "battle.menu.pokemon": "POKEMON",
@@ -69,12 +63,9 @@
   "battle.menu.switchHint": "Switch to another Pokemon",
   "battle.menu.bagHint": "Use an item from your bag",
   "battle.menu.runHint": "Try to escape from battle",
-
   "hp.label": "HP",
   "hp.level": "Lv{level}",
-
   "math.answer": "Answer: {answer}",
-
   "pokedex.title": "POKEDEX",
   "pokedex.unknown": "???",
   "pokedex.noData": "No data",
@@ -103,7 +94,6 @@
   "pokedex.moves.header.pow": "POW",
   "pokedex.seen": "Seen: {count}",
   "pokedex.number": "#{number}",
-
   "party.title": "PARTY",
   "party.empty": "---",
   "party.stats.hp": "HP",
@@ -167,17 +157,14 @@
   "party.moveLearning.skipConfirm": "Stop learning {move}?",
   "party.moveLearning.skipWarning": "The new move will be lost.",
   "party.info.pokedexHint": "ENTER: View in Pokedex",
-
   "npc.reward.item": "Received {item} ×{qty}!",
   "npc.reward.money": "Received {money}₽!",
   "npc.reward.badge": "Received Badge #{badge}!",
-
   "npc.choice.yes": "Yes",
   "npc.choice.no": "No",
   "npc.nurse.heal": "I'll heal your Pokemon!",
   "npc.nurse.done": "Your Pokemon are fully healed!",
   "npc.shopkeeper.welcome": "Welcome! What can I get you?",
-
   "shop.title": "POKE MART",
   "shop.money": "Money: ${money}",
   "shop.buy": "Buy",
@@ -198,7 +185,6 @@
   "battle.trainerRewardBadge": "You earned Badge #{badge}!",
   "trainer.defeated.dialogue": "You're pretty strong...",
   "heal.done": "Your Pokemon are fully healed!",
-
   "pc.title": "PC",
   "pc.party": "Party",
   "pc.mode.withdraw": "Withdraw",
@@ -216,7 +202,6 @@
   "pc.hint.select": "Select",
   "pc.hint.box": "Box",
   "pc.hint.mode": "Mode",
-
   "item.hyperPotion.name": "Hyper Potion",
   "item.hyperPotion.desc": "Restores 200 HP",
   "item.maxPotion.name": "Max Potion",
@@ -267,25 +252,24 @@
   "item.ether.desc": "Restores 10 PP of a move",
   "item.elixir.name": "Elixir",
   "item.elixir.desc": "Restores all PP of all moves",
-
   "bag.title": "BAG",
   "bag.noItems": "No items in this category",
   "bag.cantUseHere": "Can't use this here!",
   "bag.selectPokemon": "Select a Pokemon to use on",
-  "bag.hint": "ESC:Back  ENTER:Use  \u25c0\u25b6:Navigate",
+  "bag.hint": "ESC:Back  ENTER:Use  ◀▶:Navigate",
   "bag.hint.use": "Use",
   "bag.hint.navigate": "Nav",
   "bag.category.medicine": "Medicine",
   "bag.category.balls": "Balls",
   "bag.category.battle": "Battle",
   "bag.category.vitamins": "Vitamins",
+  "bag.category.moves": "Moves",
   "bag.category.key": "Key Items",
   "bag.tm.cantLearn": "{name} can't learn {move}!",
   "bag.tm.alreadyKnows": "{name} already knows {move}!",
   "bag.tm.naturalWarn": "{name} will learn {move} naturally at Lv.{level}. Save this TM for another Pokemon?",
   "bag.tm.learned": "{name} learned {move}!",
   "bag.tm.noSpace": "{name} can't learn any more moves!",
-
   "battle.goName": "Go, {name}!",
   "battle.comeBack": "Come back, {name}!",
   "battle.alreadyActive": "That Pokemon is already out!",
@@ -348,12 +332,10 @@
   "battle.whiteout": "You have no usable Pokemon! You blacked out!",
   "battle.recoverMessage": "You were brought to the Pokemon Center to recover...",
   "battle.trainerWaitsRecover": "Recover your Pokemon and come back for a rematch!",
-
-  "worldMap.title":"WORLD MAP — Numeria",
+  "worldMap.title": "WORLD MAP — Numeria",
   "worldMap.hint": "ESC/W: Close",
   "worldMap.badge.earned": "Badge earned",
   "worldMap.currentLocation": "You are here",
-
   "hm.chooseYou": "Go, {name}! Please {action} this {tileName}!",
   "hm.cut.action": "cut",
   "hm.strength.action": "move",

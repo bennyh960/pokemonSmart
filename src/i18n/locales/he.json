@@ -5,7 +5,6 @@
   "title.pressEnter": "לחץ ENTER",
   "title.continue": "המשך",
   "title.newGame": "משחק חדש",
-
   "heroSelect.title": "בחר את הגיבור שלך",
   "heroSelect.subtitle": "בחר את ספרייט המאמן שאיתו תשחק.",
   "heroSelect.trainerLabel": "שם המאמן הנוכחי",
@@ -14,7 +13,6 @@
   "heroSelect.gridHint": "מקשי החצים מזיזים בתוך הרשת",
   "heroSelect.continueHint": "ENTER להמשך, ESC לחזרה",
   "heroSelect.languageHint": "[2]En[1] He",
-
   "heroName.title": "בחר שם למאמן",
   "heroName.subtitle": "הקלד את השם באמצעות פריסת המקלדת שלך.",
   "heroName.previewLabel": "גיבור",
@@ -23,7 +21,6 @@
   "heroName.languageHint": "[2]En[1] He",
   "heroName.continueHint": "ENTER להמשך",
   "heroName.backHint": "ESC לחזרה",
-
   "hero.title": "בחר את הגיבור שלך",
   "hero.subtitle": "בחר ספרייט גיבור וקבע את שם המאמן.",
   "hero.heroLabel": "גיבור",
@@ -32,12 +29,10 @@
   "hero.selectHint": "◀ ▶ לבחירת גיבור, L מחליף שפה",
   "hero.continueHint": "ENTER להמשך",
   "hero.backHint": "ESC לחזרה למסך הפתיחה",
-
   "starter.title": "בחר את השותף שלך!",
   "starter.professor": "פרופ' אלגוריתמה:",
   "starter.instructions": "◀ ▶ לבחירה, ENTER לאישור",
   "starter.chosen": "\"אני בוחר ב{name}!\"",
-
   "battle.wildAppeared": "{name} פראי הופיע!",
   "battle.usedMove": "{name} השתמש ב{move}!",
   "battle.weakAttack": "ההתקפה הייתה חלשה...",
@@ -57,7 +52,6 @@
   "evolution.title": "התפתחות",
   "evolution.congrats": "מזל טוב! {from} התפתח ל-{to}!",
   "evolution.openPokedex": "פותח את הפוקדקס...",
-
   "battle.menu.fight": "לחימה",
   "battle.menu.bag": "תיק",
   "battle.menu.pokemon": "פוקימון",
@@ -69,12 +63,9 @@
   "battle.menu.switchHint": "החלף לפוקימון אחר",
   "battle.menu.bagHint": "השתמש בפריט מהתיק",
   "battle.menu.runHint": "נסה לברוח מהקרב",
-
   "hp.label": "HP",
   "hp.level": "רמה {level}",
-
   "math.answer": "תשובה: {answer}",
-
   "pokedex.title": "פוקדקס",
   "pokedex.unknown": "???",
   "pokedex.noData": "אין מידע",
@@ -103,7 +94,6 @@
   "pokedex.moves.header.pow": "כוח",
   "pokedex.seen": "נראו: {count}",
   "pokedex.number": "#{number}",
-
   "party.title": "קבוצה",
   "party.empty": "---",
   "party.stats.hp": "HP",
@@ -167,17 +157,14 @@
   "party.moveLearning.skipConfirm": "להפסיק ללמוד את {move}?",
   "party.moveLearning.skipWarning": "המהלך החדש יאבד.",
   "party.info.pokedexHint": "ENTER: צפה בפוקדקס",
-
   "npc.reward.item": "קיבלת {item} ×{qty}!",
   "npc.reward.money": "קיבלת {money}₽!",
   "npc.reward.badge": "קיבלת תג #{badge}!",
-
   "npc.choice.yes": "כן",
   "npc.choice.no": "לא",
   "npc.nurse.heal": "אני ארפא את הפוקימונים שלך!",
   "npc.nurse.done": "הפוקימונים שלך רופאו במלואם!",
   "npc.shopkeeper.welcome": "ברוכים הבאים! מה אפשר להביא לך?",
-
   "shop.title": "חנות פוקימון",
   "shop.money": "כסף: ${money}",
   "shop.buy": "קנה",
@@ -194,7 +181,6 @@
   "battle.trainerRewardBadge": "השגת תג #{badge}!",
   "trainer.defeated.dialogue": "אתה די חזק...",
   "heal.done": "הפוקימונים שלך רופאו במלואם!",
-
   "pc.title": "מחשב",
   "pc.party": "קבוצה",
   "pc.mode.withdraw": "משיכה",
@@ -212,7 +198,6 @@
   "pc.hint.select": "בחירה",
   "pc.hint.box": "תיבה",
   "pc.hint.mode": "מצב",
-
   "item.potion.name": "שיקוי",
   "item.potion.desc": "משחזר 20 HP",
   "item.superPotion.name": "שיקוי על",
@@ -267,7 +252,6 @@
   "item.ether.desc": "משחזר 10 PP למהלך",
   "item.elixir.name": "אליקסיר",
   "item.elixir.desc": "משחזר את כל ה-PP של כל המהלכים",
-
   "bag.title": "תיק",
   "bag.noItems": "אין פריטים",
   "bag.cantUseHere": "אי אפשר להשתמש כאן!",
@@ -279,13 +263,13 @@
   "bag.category.balls": "כדורים",
   "bag.category.battle": "קרב",
   "bag.category.vitamins": "ויטמינים",
+  "bag.category.moves": "מהלכים",
   "bag.category.key": "מפתח",
   "bag.tm.cantLearn": "{name} לא יכול ללמוד את {move}!",
   "bag.tm.alreadyKnows": "{name} כבר יודע את {move}!",
   "bag.tm.naturalWarn": "{name} ילמד את {move} באופן טבעי ברמה {level}. לשמור את ה-TM לפוקימון אחר?",
   "bag.tm.learned": "{name} למד את {move}!",
   "bag.tm.noSpace": "{name} לא יכול ללמוד עוד מהלכים!",
-
   "battle.goName": "קדימה, {name}!",
   "battle.comeBack": "חזור, {name}!",
   "battle.alreadyActive": "הפוקימון הזה כבר בקרב!",
@@ -348,12 +332,10 @@
   "battle.whiteout": "אין לך פוקימון זמין! אתה מתעלף...",
   "battle.recoverMessage": "הועברת למרכז פוקימון להתאוששות...",
   "battle.trainerWaitsRecover": "רפא את הפוקימונים שלך וחזור לריבאנץ'!",
-
-  "worldMap.title":"מפת נומריה",
+  "worldMap.title": "מפת נומריה",
   "worldMap.hint": "ESC/W: סגור",
   "worldMap.badge.earned": "תג הושג",
   "worldMap.currentLocation": "אתה כאן",
-
   "hm.chooseYou": "קדימה, {name}! בבקשה {action} את ה{tileName} הזה!",
   "hm.cut.action": "גזום",
   "hm.strength.action": "הזז",

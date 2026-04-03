@@ -59,10 +59,11 @@ interface BagTab {
 
 const BAG_TABS: BagTab[] = [
   { labelKey: 'bag.category.medicine', categories: ['healing', 'status-cure', 'revival'], x: 188, w: 46 },
-  { labelKey: 'bag.category.balls',    categories: ['pokeball'],                          x: 144, w: 40 },
-  { labelKey: 'bag.category.battle',   categories: ['battle'],                            x: 112, w: 30 },
-  { labelKey: 'bag.category.vitamins', categories: ['vitamin'],                           x: 64,  w: 44 },
-  { labelKey: 'bag.category.key',      categories: ['key'],                               x: 22,  w: 38 },
+  { labelKey: 'bag.category.balls',    categories: ['pokeball'],                          x: 155, w: 30 },
+  { labelKey: 'bag.category.battle',   categories: ['battle'],                            x: 124, w: 28 },
+  { labelKey: 'bag.category.vitamins', categories: ['vitamin'],                           x: 84,  w: 38 },
+  { labelKey: 'bag.category.moves',    categories: ['machine'],                           x: 46,  w: 36 },
+  { labelKey: 'bag.category.key',      categories: ['key'],                               x: 8,   w: 36 },
 ];
 
 /* ── Layout constants (from bag_coordinated.md) ───────────────────── */
@@ -101,6 +102,15 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       if (!tab.categories.includes(def.category)) continue;
       if (bagMode === 'battle' && !def.usableInBattle) continue;
       result.push({ id, def, qty });
+    }
+    // Moves tab: HMs first (isHM=true), then TMs; each group sorted by item id
+    if (tab.categories.includes('machine')) {
+      result.sort((a, b) => {
+        const aHM = getTMEffect(a.id)?.isHM ?? false;
+        const bHM = getTMEffect(b.id)?.isHM ?? false;
+        if (aHM !== bHM) return aHM ? -1 : 1;
+        return a.id.localeCompare(b.id);
+      });
     }
     return result;
   }

@@ -64,6 +64,8 @@ export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
       return target.hp > 0 && target.moves.some(move => move.currentPp < move.pp);
     case 'rare-candy':
       return target.hp > 0;
+    case 'tm':
+      return true;  // compatibility/duplicate check is done in bag.ts after selection
     default:
       return false;
   }
