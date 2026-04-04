@@ -96,3 +96,19 @@ registerMap('deep-forest', () => import('../data/maps/deep-forest.json').catch((
 registerMap('mountain-pass', () => import('../data/maps/mountain-pass.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('house-3-i', () => import('../data/maps/house-3-i.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('oak lab', () => import('../data/maps/oak lab.json').catch(() => import('../data/maps/test-map.json')));
+// Story-canonical IDs — point to renamed/new map files
+registerMap('algorithma-lab', () => import('../data/maps/algorithma-lab.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('multiplia', () => import('../data/maps/multiplia.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('dividia', () => import('../data/maps/dividia.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('primore', () => import('../data/maps/primore.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('fake-pokecenter', () => import('../data/maps/fake-pokecenter.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('route-5', () => import('../data/maps/route-5.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('route-6', () => import('../data/maps/route-6.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('route-7', () => import('../data/maps/route-7.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('route-8', () => import('../data/maps/route-8.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('symmetrika', () => import('../data/maps/symmetrika.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('symmetrika-terminal', () => import('../data/maps/symmetrika-terminal.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('integrala', () => import('../data/maps/integrala.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('absoluta', () => import('../data/maps/absoluta.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('nullx-tower', () => import('../data/maps/nullx-tower.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('nullx-floor-6', () => import('../data/maps/nullx-floor-6.json').catch(() => import('../data/maps/test-map.json')));

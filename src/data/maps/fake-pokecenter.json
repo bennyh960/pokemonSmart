@@ -1,0 +1,243 @@
+{
+  "id": "fake-pokecenter",
+  "name": "Pokemon Center (Multiplia)",
+  "tileset": "dpp",
+  "width": 14,
+  "height": 10,
+  "tileSize": 16,
+  "spawn": {
+    "x": 4,
+    "y": 7
+  },
+  "transitions": [
+    {
+      "fromX": 4,
+      "fromY": 8,
+      "toMapId": "multiplia",
+      "toX": 10,
+      "toY": 9,
+      "returnToPrevious": false
+    },
+    {
+      "fromX": 5,
+      "fromY": 8,
+      "toMapId": "multiplia",
+      "toX": 11,
+      "toY": 9,
+      "returnToPrevious": false
+    }
+  ],
+  "music": "pokecenter",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "fake-nurse-joy",
+      "name": "Nurse Joy",
+      "x": 7,
+      "y": 2,
+      "facing": "down",
+      "type": "healer",
+      "spriteType": "char_962c1b",
+      "dialogue": [
+        {
+          "en": "Welcome! Let me heal your Pokemon!",
+          "he": "ברוכים הבאים! בואו אשחרר את הפוקמון שלכם!"
+        }
+      ]
+    },
+    {
+      "id": "jessie-nurse",
+      "name": "Jessie",
+      "x": 7,
+      "y": 2,
+      "facing": "down",
+      "type": "npc",
+      "hidden": true,
+      "spriteType": "char_8bd601",
+      "dialogue": [
+        {
+          "en": "SURPRISE! Team Rocket's blasting off!",
+          "he": "הפתעה! צוות רוקט ממריא!"
+        }
+      ]
+    },
+    {
+      "id": "james-pokecenter",
+      "name": "James",
+      "x": 9,
+      "y": 3,
+      "facing": "left",
+      "type": "npc",
+      "spriteType": "char_59c8b9",
+      "dialogue": [
+        {
+          "en": "The boss will be pleased when we bring him all these Pokemon!",
+          "he": "הבוס יהיה מרוצה כשנביא לו את כל הפוקמון האלה!"
+        }
+      ]
+    }
+  ],
+  "tiles": [
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  ],
+  "objects": []
+}

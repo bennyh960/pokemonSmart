@@ -3787,7 +3787,6 @@
       "walkable": true,
       "above": false,
       "category": "other",
-      "interactType": null,
       "description": "cave laddger - transision point"
     },
     {
@@ -3799,7 +3798,6 @@
       "walkable": true,
       "above": false,
       "category": "other",
-      "interactType": null,
       "description": "cave laddger transistion point"
     },
     {
@@ -3814,60 +3812,7 @@
       ],
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "cave ground decoraion"
-    },
-    {
-      "key": "cave-sign",
-      "sx": 16,
-      "sy": 7472,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "other",
-      "interactType": null,
-      "description": "cave road sign decoration"
-    },
-    {
-      "key": "cave-eg",
-      "sx": 32,
-      "sy": 7472,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave encounter ground x"
-    },
-    {
-      "key": "cave-rock1",
-      "sx": 16,
-      "sy": 7536,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "other",
-      "description": "cave rock decoration"
-    },
-    {
-      "key": "caverock2",
-      "sx": 0,
-      "sy": 7520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "interactive",
-      "description": "cave rock decor that can destroy",
-      "interactType": {
-        "id": "strength"
-      }
     }
   ]
 }

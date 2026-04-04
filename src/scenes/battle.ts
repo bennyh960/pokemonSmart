@@ -58,6 +58,7 @@ import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import { setEvolutionData } from './evolution.js';
 import { getAttackAnimationProfile } from '../systems/move-animation.js';
+import { fireStoryTrigger } from '../systems/story-engine.js';
 import {
   createMoveLearningSession,
   getMoveLearningAnnouncementLines,
@@ -572,6 +573,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (!isRematch) {
         if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
           pd.badges |= (1 << (reward.badge - 1));
+          fireStoryTrigger({ type: 'badge-earned', badge: reward.badge });
         }
         if (reward.storyEvent) {
           pd.flags[reward.storyEvent] = true;

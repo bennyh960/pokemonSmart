@@ -3739,7 +3739,6 @@
       "walkable": true,
       "above": false,
       "category": "floor",
-      "interactType": null,
       "description": "floor type 5 last row col 1 (bottom left corner)"
     },
     {
@@ -3751,7 +3750,6 @@
       "walkable": true,
       "above": false,
       "category": "floor",
-      "interactType": null,
       "description": "floor type 5 last row col 2"
     },
     {
@@ -3763,7 +3761,6 @@
       "walkable": true,
       "above": false,
       "category": "floor",
-      "interactType": null,
       "description": "floor type 5 last row col 3"
     },
     {
@@ -3775,99 +3772,7 @@
       "walkable": true,
       "above": false,
       "category": "floor",
-      "interactType": null,
       "description": "floor type 5 last row col 4 (bottom right corner)"
-    },
-    {
-      "key": "cave-ladder",
-      "sx": 0,
-      "sy": 7488,
-      "w": 16,
-      "h": 32,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "interactType": null,
-      "description": "cave laddger - transision point"
-    },
-    {
-      "key": "cave ladder 2",
-      "sx": 0,
-      "sy": 7552,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "interactType": null,
-      "description": "cave laddger transistion point"
-    },
-    {
-      "key": "cave-g4",
-      "sx": 48,
-      "sy": 7504,
-      "w": 32,
-      "h": 32,
-      "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave ground decoraion"
-    },
-    {
-      "key": "cave-sign",
-      "sx": 16,
-      "sy": 7472,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "other",
-      "interactType": null,
-      "description": "cave road sign decoration"
-    },
-    {
-      "key": "cave-eg",
-      "sx": 32,
-      "sy": 7472,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave encounter ground x"
-    },
-    {
-      "key": "cave-rock1",
-      "sx": 16,
-      "sy": 7536,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "other",
-      "description": "cave rock decoration"
-    },
-    {
-      "key": "caverock2",
-      "sx": 0,
-      "sy": 7520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "interactive",
-      "description": "cave rock decor that can destroy",
-      "interactType": {
-        "id": "strength"
-      }
     }
   ]
 }

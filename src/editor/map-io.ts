@@ -4,9 +4,32 @@ import { hasFSAccess, saveToDirectory } from './fs-save.js';
 /** Known map IDs available in the project. */
 export function getKnownMapIds(): string[] {
   return [
-    'zeroville','zeroville-house-tl','zeroville-house-tr','zeroville-house-br', 'route-1', 'route-10', 'sumville', 'route-2', 'safari', 'route-3', 'minusburg', 'sumville-house-1', 'sumville-house-2', 'route1-house', 'route-4', 'dividia-house-1', 'dividia-house-2', 'dividia-house-3', 'dividia-house-4', 'algebria', 'divideburg',
-    'fractalis', 'infinity-plateau', 'logica-heights', 'multitown',
-    'prime-city', 'mart-interior','pokecenter-2', 'pokecenter-mart-interior', 'deep-forest', 'mountain-pass', 'test-map','house-3-i','oak lab'
+    // Zeroville area
+    'zeroville', 'zeroville-house-tl', 'zeroville-house-tr', 'zeroville-house-br',
+    // Act 0 — lab
+    'algorithma-lab', 'oak lab',
+    // Act 1 — Route 1 → Sumville → Route 2 → Minusburg
+    'route-1', 'route1-house', 'sumville', 'sumville-house-1', 'sumville-house-2',
+    'route-2', 'minusburg',
+    // Act 2 — Route 3 → Multiplia → Route 4 → Dividia
+    'route-3', 'multiplia', 'fake-pokecenter',
+    'route-4', 'dividia', 'dividia-house-1', 'dividia-house-2', 'dividia-house-3', 'dividia-house-4',
+    // Act 3 — Route 5 → Primore → Route 6 → Symmetrika
+    'route-5', 'primore',
+    'route-6', 'symmetrika', 'symmetrika-terminal',
+    // Act 4 — Route 7 → Integrala → Route 8 → Absoluta
+    'route-7', 'integrala',
+    'route-8', 'absoluta',
+    // Act 5 — NULL-X Tower
+    'nullx-tower', 'nullx-floor-6',
+    // Interiors / shared
+    'mart-interior', 'pokecenter-2', 'pokecenter-mart-interior', 'house-3-i',
+    // Side areas
+    'safari', 'deep-forest', 'mountain-pass', 'route-10',
+    // Legacy / scratch
+    'algebria', 'divideburg', 'multitown', 'prime-city',
+    'fractalis', 'infinity-plateau', 'logica-heights',
+    'test-map',
   ].sort();
 }
 
