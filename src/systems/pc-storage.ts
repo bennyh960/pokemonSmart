@@ -81,6 +81,23 @@ export function swapPartyAndBox(partyIndex: number, boxIndex: number, slotIndex:
   return true;
 }
 
+/**
+ * Send a newly caught Pokemon directly to the first available box slot.
+ * Used when the party is already full at the moment of capture.
+ * Returns the box index (1-based for display) or -1 if all boxes are full.
+ */
+export function sendCaughtToBox(pokemon: Pokemon): number {
+  const pd = getPlayerData();
+  for (let b = 0; b < pd.boxes.length; b++) {
+    const slot = pd.boxes[b].pokemon.indexOf(null);
+    if (slot >= 0) {
+      pd.boxes[b].pokemon[slot] = { ...pokemon };
+      return b + 1; // 1-based box number for display
+    }
+  }
+  return -1; // all boxes full (extremely unlikely)
+}
+
 /** Count non-null Pokemon in a box. */
 export function getBoxCount(boxIndex: number): number {
   const pd = getPlayerData();

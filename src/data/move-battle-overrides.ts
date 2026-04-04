@@ -195,5 +195,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Double Team': userStages(['evasion', 1]),
   Minimize: userStages(['evasion', 1]),
   Amnesia: userStages(['specialDefense', 2]),
+  'Rapid Spin': userStages(['speed', 1]),
   'Bulk Up': userStages(['attack', 1], ['defense', 1]),
+
 };

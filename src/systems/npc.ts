@@ -72,7 +72,7 @@ export interface NPCData {
   x: number;
   y: number;
   facing: 'up' | 'down' | 'left' | 'right';
-  type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer';
+  type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer' | 'gate-guard';
   dialogue: BilingualText[];
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
@@ -98,6 +98,37 @@ export interface TrainerReward {
   storyEvent?: string;  // Story progression flag to set
 }
 
+/** Re-encounter configuration on a trainer NPC. */
+export interface ReencounterConfig {
+  count: number;           // max additional encounters after the first (e.g. 3 = 4 total fights)
+  lvlStep: number;         // level boost applied to all party members per re-encounter
+  timeInterval: number;    // hours the player must wait between encounters
+  partyExtra?: { pokemonId: number; level: number }[];  // extra Pokemon added from 2nd encounter onwards
+  addToPhone?: boolean;    // whether to add trainer to phone list after first defeat (default: true)
+}
+
+/**
+ * Gate-guard NPC — blocks the path until the player passes a verification gate.
+ *
+ * Map JSON example:
+ * {
+ *   "id": "route1-guard",
+ *   "type": "gate-guard",
+ *   "gateId": "gate-route1-sumville",
+ *   "dialogue": [{ "en": "You shall not pass!", "he": "אסור לעבור!" }],
+ *   "passedDialogue": [{ "en": "Welcome!", "he": "ברוך הבא!" }],
+ *   ...
+ * }
+ */
+export interface GateGuardData extends NPCData {
+  type: 'gate-guard';
+  gateId: string;
+  /** How many tiles in front the guard can see. Default 3. */
+  lineOfSight?: number;
+  /** Dialogue shown after the gate has been passed. Defaults to a generic "you may pass" line. */
+  passedDialogue?: BilingualText[];
+}
+
 /** Trainer NPC with party and battle data. */
 export interface TrainerData extends NPCData {
   type: 'trainer';
@@ -105,7 +136,9 @@ export interface TrainerData extends NPCData {
   defeated?: boolean;
   reward: TrainerReward;
   lineOfSight: number;
-  postBattleDialogue?: BilingualText[];  // Dialogue shown after defeating this trainer (e.g. gym leader speech)
+  postBattleDialogue?: BilingualText[];  // Dialogue shown after defeating this trainer
+  reencounter?: ReencounterConfig;       // Optional re-encounter config
+  location?: BilingualText;             // Human-readable location for phone display (e.g. "Route 1")
 }
 
 /** Normalize a reward field that may be a legacy plain number. */

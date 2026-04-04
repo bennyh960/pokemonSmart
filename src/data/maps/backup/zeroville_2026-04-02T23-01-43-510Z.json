@@ -104,15 +104,6 @@
           }
         ],
         "loop": true
-      },
-      "reward": {
-        "money": 0,
-        "items": [
-          {
-            "itemId": "hm01",
-            "quantity": 1
-          }
-        ]
       }
     },
     {
@@ -871,11 +862,6 @@
       "key": "door",
       "x": 5,
       "y": 14
-    },
-    {
-      "key": "gate",
-      "x": 13,
-      "y": 7
     }
   ]
 }

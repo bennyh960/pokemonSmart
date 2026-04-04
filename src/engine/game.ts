@@ -23,6 +23,11 @@ import { createEvolutionScene } from '../scenes/evolution.js';
 import { createBagScene } from '../scenes/bag.js';
 import { createPCScene } from '../scenes/pc.js';
 import { createWorldMapScene } from '../scenes/world-map.js';
+import { createPhoneScene } from '../scenes/phone.js';
+import { createGateScene } from '../scenes/gate-scene.js';
+import { initStoryEngine } from '../systems/story-engine.js';
+// Story content — side-effect imports that register events/cutscenes/gates/quests
+import '../data/story/content/act0-act1.js';
 import {
   LOGICAL_WIDTH,
   LOGICAL_HEIGHT,
@@ -65,6 +70,11 @@ export function createGame(container: HTMLElement) {
   stateMachine.register('BAG', createBagScene(input, stateMachine));
   stateMachine.register('PC', createPCScene(input, stateMachine));
   stateMachine.register('WORLD_MAP', createWorldMapScene(input, stateMachine));
+  stateMachine.register('PHONE', createPhoneScene(input, stateMachine));
+  stateMachine.register('GATE', createGateScene(input, stateMachine));
+
+  // Initialise story engine with the state machine so it can push scenes
+  initStoryEngine(stateMachine);
 
   /** Compute the largest integer scale that fits the viewport and set canvas CSS size. */
   function handleResize(): void {

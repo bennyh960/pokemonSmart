@@ -14,7 +14,7 @@ export interface Scene {
 }
 
 /** Scene identifiers used by the state machine. */
-export type SceneId = 'TITLE' | 'HERO_SELECT' | 'HERO_NAME_SELECT' | 'STARTER_SELECT' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE' | 'PARTY' | 'POKEDEX' | 'SHOP' | 'BAG' | 'PC' | 'WORLD_MAP' | 'EVOLUTION';
+export type SceneId = 'TITLE' | 'HERO_SELECT' | 'HERO_NAME_SELECT' | 'STARTER_SELECT' | 'OVERWORLD' | 'BATTLE' | 'MENU' | 'DIALOGUE' | 'PARTY' | 'POKEDEX' | 'SHOP' | 'BAG' | 'PC' | 'WORLD_MAP' | 'EVOLUTION' | 'PHONE' | 'GATE' | 'CUTSCENE';
 
 /** Top-level game state snapshot. */
 export interface GameState {
@@ -117,9 +117,34 @@ export interface PCBox {
   pokemon: (Pokemon | null)[];    // 30 slots (null = empty)
 }
 
+/** Persistent re-encounter state for a single trainer. */
+export interface TrainerEncounterState {
+  count: number;           // how many times player has defeated this trainer (including first)
+  lastDefeatedAt: number;  // timestamp (ms) of last defeat
+}
+
+/** Story-mode infection level for a city. */
+export type InfectionLevel = 'none' | 'low' | 'medium' | 'high' | 'critical' | 'cleared';
+
+/** Player story state — timed gates, city infection, active quest. */
+export interface PlayerStoryState {
+  gateUnlocks: Record<string, number>;          // gateId → expiry ms (0 = permanent)
+  cityInfection: Record<string, InfectionLevel>;
+  activeQuestId: string | null;
+  completedQuestIds: string[];
+}
+
+/** A phone contact entry — saved when trainer is first defeated. */
+export interface PhoneContactInfo {
+  trainerId: string;
+  trainerName: string;
+  locationEn: string;
+  locationHe: string;
+}
+
 /** Persistent player data (saved to localStorage). */
 export interface PlayerData {
-  saveVersion: number;           // Schema version for migration (current: 5)
+  saveVersion: number;           // Schema version for migration (current: 6)
   name: string;
   heroCharacterId: string;
   party: Pokemon[];
@@ -134,6 +159,9 @@ export interface PlayerData {
   previousMapReturn?: { mapId: string; x: number; y: number } | null;
   lastPokemonCenter: { mapId: string; x: number; y: number };
   playtime: number;
+  trainerEncounters: Record<string, TrainerEncounterState>; // trainerId → encounter state
+  phoneContacts: PhoneContactInfo[];  // trainers added to phone after first defeat
+  story?: PlayerStoryState;           // story mode state (gates, infection, quests)
 }
 
 /** Options for text rendering. */

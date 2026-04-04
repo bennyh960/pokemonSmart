@@ -56,8 +56,7 @@ export function showMainMenu(menu: BattleMenuState): void {
 /** Show move selection menu (fight tab active). */
 export function showMoveMenu(menu: BattleMenuState): void {
   menu.mode = 'moves';
-  menu.cursorIndex = 0;
-  menu.movePage = 0;
+  // Keep cursorIndex so focus stays on last selected move
   menu.activeTab = 0;
 }
 

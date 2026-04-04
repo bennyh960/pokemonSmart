@@ -25,12 +25,16 @@ import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
-import { createNPCManager, isNPCVisible, type NPCData, type NPCManager, type TrainerData, checkTrainerLineOfSight, normalizeReward, resolveDialogue, type DialogueReward } from '../systems/npc.js';
+import { createNPCManager, isNPCVisible, type NPCData, type NPCManager, type TrainerData, type GateGuardData, checkTrainerLineOfSight, normalizeReward, resolveDialogue, type DialogueReward } from '../systems/npc.js';
 import { getItem } from '../data/items.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
 import { findHMUser, canUseHM } from '../systems/hm.js';
+import { getReencounterStatus, buildReencounterParty } from '../systems/reencounter.js';
+import { isGateUnlocked, setActiveGate, fireStoryTrigger, consumePendingCutscene } from '../systems/story-engine.js';
+import { getQuest } from '../data/story/quests.js';
+import { isCutsceneActive, activateCutscene, updateCutscene, renderCutscene, type CutsceneContext } from '../systems/cutscene-runner.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { setFlyCallback, CITY_INFO } from './world-map.js';
 const MOVE_DURATION = 0.2;
@@ -154,6 +158,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     originalY: number;
   }
   let trainerApproach: TrainerApproachState | null = null;
+
+  // Gate-guard approach state
+  interface GateGuardApproachState {
+    guard: import('../systems/npc.js').GateGuardData;
+    phase: 'exclamation';
+    timer: number;
+  }
+  let gateGuardApproach: GateGuardApproachState | null = null;
+
+  // Cutscene: hide player sprite
+  let playerHidden = false;
+
+  // Pending push-back after gate scene dismissal without passing
+  let pendingGateBack: { pushDx: number; pushDy: number; gateId: string } | null = null;
 
   // NPC facing restore: saves original facing when NPC turns toward player during dialogue
   const npcSavedFacing = new Map<string, string>();
@@ -348,22 +366,43 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       });
     } else if (npc.type === 'trainer') {
-      // After dialogue, start battle if trainer not yet defeated
       const trainer = npc as unknown as TrainerData;
       restoreNPCFacing(npc);
       interactingNPC = null;
       if (hasActiveGame()) {
         const flags = getPlayerData().flags;
         if (!flags[`trainer-${trainer.id}-defeated`]) {
-          const trainerBattleData = buildTrainerBattleData(trainer);
+          // First encounter
+          const trainerBattleData = buildTrainerBattleData(trainer, 0);
           const playerData = getPlayerData();
           const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
             stateMachine.change('BATTLE');
           }
+        } else {
+          // Already defeated — check re-encounter eligibility
+          const status = getReencounterStatus(trainer);
+          if (status.eligible) {
+            const reencounterParty = buildReencounterParty(trainer, status.encounterIndex);
+            const reencounterData = buildTrainerBattleData(trainer, status.encounterIndex, reencounterParty);
+            const playerData = getPlayerData();
+            const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
+            if (playerPokemon) {
+              setTrainerBattleData(playerPokemon, reencounterData, deriveBattleContext(), deriveBattleBackground());
+              stateMachine.change('BATTLE');
+            }
+          }
+          // cooldown / max-reached: dialogue was already shown, nothing to do here
         }
       }
+    } else if (npc.type === 'gate-guard') {
+      // Blocking dialogue finished — launch the gate scene
+      const guard = npc as unknown as GateGuardData;
+      restoreNPCFacing(npc);
+      interactingNPC = null;
+      setActiveGate(guard.gateId);
+      stateMachine.push('GATE');
     } else {
       // Dialogue / generic NPC
       restoreNPCFacing(npc);
@@ -448,21 +487,90 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
   }
 
+  /** Build the CutsceneContext used by the cutscene runner to poke overworld state. */
+  function buildCutsceneContext(): CutsceneContext {
+    return {
+      getNPCById(id) {
+        return npcManager?.getNPCs().find(n => n.id === id);
+      },
+      setNPCFacing(npc, dir) {
+        npc.facing = dir as 'up' | 'down' | 'left' | 'right';
+      },
+      setNPCHidden(id, hidden) {
+        const npc = npcManager?.getNPCs().find(n => n.id === id);
+        if (npc) npc.hidden = hidden;
+      },
+      setPlayerHidden(hidden) {
+        playerHidden = hidden;
+      },
+      moveNPCAlongPath(npc, path) {
+        const dirVecs: Record<string, { dx: number; dy: number }> = {
+          up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 },
+          left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 },
+        };
+        for (const dir of path) {
+          const v = dirVecs[dir];
+          if (v) { npc.x += v.dx; npc.y += v.dy; npc.facing = dir as 'up'|'down'|'left'|'right'; }
+        }
+      },
+      snapCamera(x, y) {
+        if (camera && tileMap) camera.snapTo(x, y, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
+      },
+      panCamera(x, y, _durationMs) {
+        if (camera && tileMap) camera.snapTo(x, y, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
+      },
+      playMusic(id) { audio.playMusic(id); },
+      stopMusic() { audio.stopMusic?.(); },
+      playSFX(id) { audio.playSFX(id); },
+      executeStoryAction(action) {
+        if (!hasActiveGame()) return;
+        const pd = getPlayerData();
+        switch (action.type) {
+          case 'set-flag': pd.flags[action.flag] = action.value ?? true; break;
+          case 'give-item': pd.items[action.itemId] = (pd.items[action.itemId] || 0) + action.quantity; break;
+          case 'give-money': pd.money += action.amount; break;
+          case 'set-quest': if (pd.story) pd.story.activeQuestId = action.questId; break;
+          case 'start-cutscene': activateCutscene(action.cutsceneId); break;
+          case 'play-music': audio.playMusic(action.musicId); break;
+          // Other actions deferred to story-engine
+        }
+      },
+      getFlag(flag) {
+        if (!hasActiveGame()) return false;
+        return !!getPlayerData().flags[flag];
+      },
+    };
+  }
+
+  /** Start gate-guard approach: show "!" bubble, then dialogue, then gate scene. */
+  function startGateGuardApproach(guard: import('../systems/npc.js').GateGuardData): void {
+    gateGuardApproach = { guard, phase: 'exclamation', timer: 0 };
+  }
+
   /** Map NPC spriteType to Showdown trainer sprite name. */
   const NPC_TO_TRAINER_SPRITE: Record<string, string> = {
     'trainer-m': 'youngster',
     'trainer-f': 'lass',
   };
 
-  /** Build TrainerBattleData from a TrainerData NPC. */
-  function buildTrainerBattleData(trainer: TrainerData): TrainerBattleData {
-    const party = trainer.party.map(p => {
+  /** Build TrainerBattleData from a TrainerData NPC.
+   * @param encounterIndex 0 = first fight, 1+ = rematch
+   * @param prebuiltParty  optional pre-scaled party (from buildReencounterParty)
+   */
+  function buildTrainerBattleData(trainer: TrainerData, encounterIndex = 0, prebuiltParty?: import('../types/index.js').Pokemon[]): TrainerBattleData {
+    const party = prebuiltParty ?? trainer.party.map(p => {
       const data = getPokemon(p.pokemonId);
-      const pokemon = data
+      return data
         ? createPokemonFromData(data, p.level, p.moves)
         : createPokemonFromData(getPokemon(19)!, p.level);
-      return pokemon;
     });
+
+    // Register phone contact after first defeat (called lazily when building re-encounter data)
+    if (encounterIndex === 0 && trainer.reencounter) {
+      // We'll do this in battle.ts after win — see recordTrainerDefeat
+      // But proactively register if trainer has phone config
+    }
+
     return {
       trainerName: trainer.name || trainer.id,
       trainerId: trainer.id,
@@ -470,6 +578,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       reward: normalizeReward(trainer.reward),
       trainerSprite: NPC_TO_TRAINER_SPRITE[trainer.spriteType],
       postBattleDialogue: trainer.postBattleDialogue,
+      reencounterIndex: encounterIndex,
+      hasReencounter: !!trainer.reencounter,
+      locationEn: trainer.location?.en,
+      locationHe: trainer.location?.he,
     };
   }
 
@@ -651,12 +763,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Play map music
     audio.playMusic(currentMapData.music || 'town');
 
+    // Fire map-enter story trigger
+    if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id });
+
     // Reset interaction state
     activeTextBox = null;
     interactingNPC = null;
     choiceState = null;
     healTextBox = null;
     trainerApproach = null;
+    gateGuardApproach = null;
+    pendingGateBack = null;
+    playerHidden = false;
     hmAnim = null;
     pendingHMAction = null;
 
@@ -739,6 +857,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // While map is loading, do nothing
       if (mapLoading || !tileMap) return;
 
+      // ── Cutscene runner: takes full control of input ──
+      if (isCutsceneActive()) {
+        updateCutscene(dt, input, buildCutsceneContext());
+        return;
+      }
+
+      // Check for pending cutscene queued by story engine
+      const pendingCutsceneId = consumePendingCutscene();
+      if (pendingCutsceneId) {
+        activateCutscene(pendingCutsceneId);
+        return;
+      }
+
       // Shop overlay takes priority
       if (shop.open) {
         updateShop(shop, input, dt);
@@ -785,11 +916,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             onDialogueEnd();
           }
         }
-        return;
-      }
-
-      // Block input during HM animation
-      if (hmAnim) {
         return;
       }
 
@@ -882,6 +1008,43 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // Push player back after gate dismissal without passing
+      if (pendingGateBack) {
+        const pb = pendingGateBack;
+        pendingGateBack = null;
+        if (!isGateUnlocked(pb.gateId)) {
+          const bx = player.gridX + pb.pushDx;
+          const by = player.gridY + pb.pushDy;
+          if (tileMap && tileMap.isWalkable(bx, by) && !(npcManager?.isNPCAt(bx, by))) {
+            player.moving = true;
+            player.targetGridX = bx; player.targetGridY = by;
+            player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
+            player.moveProgress = 0;
+            player.walkTimer = 0; player.walkFrame = 1;
+          }
+        }
+      }
+
+      // Gate-guard approach animation (exclamation → dialogue → gate scene)
+      if (gateGuardApproach) {
+        const ga = gateGuardApproach;
+        ga.timer += dt;
+        if (ga.phase === 'exclamation' && ga.timer >= 0.8) {
+          gateGuardApproach = null;
+          // Face guard toward player
+          turnNPCToPlayer(ga.guard);
+          // Store push-back direction (opposite of player's facing)
+          const facingVec = DIR_VECTORS[player.facing];
+          if (facingVec) {
+            pendingGateBack = { gateId: ga.guard.gateId, pushDx: -facingVec.dx, pushDy: -facingVec.dy };
+          }
+          // Show blocking dialogue → onDialogueEnd will push GATE scene
+          interactingNPC = ga.guard;
+          activeTextBox = createTextBox(resolveDialogue(ga.guard.dialogue, getLocale()), isRTL());
+        }
+        return;
+      }
+
       // Trainer approach animation
       if (trainerApproach) {
         const ta = trainerApproach;
@@ -932,8 +1095,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             ta.trainerPixelY = ta.trainerStartY + (ta.trainerTargetY - ta.trainerStartY) * ta.walkProgress;
           }
         } else if (ta.phase === 'battle-start') {
-          // Start the battle
-          const trainerBattleData = buildTrainerBattleData(ta.trainer);
+          // Start the battle (line-of-sight triggered — always first encounter)
+          const trainerBattleData = buildTrainerBattleData(ta.trainer, 0);
           const playerData = getPlayerData();
           const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
@@ -1029,6 +1192,30 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (spotter) {
               startTrainerApproach(spotter);
               return;
+            }
+          }
+
+          // Check gate-guard line-of-sight after each step
+          if (npcManager && hasActiveGame() && !gateGuardApproach) {
+            const guardFacingVecs: Record<string, { dx: number; dy: number }> = {
+              up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 },
+              left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 },
+            };
+            const flags = getPlayerData().flags;
+            for (const npc of npcManager.getNPCs()) {
+              if (npc.type !== 'gate-guard') continue;
+              if (!isNPCVisible(npc, flags)) continue;
+              const guard = npc as unknown as import('../systems/npc.js').GateGuardData;
+              if (isGateUnlocked(guard.gateId)) continue;
+              const vec = guardFacingVecs[guard.facing];
+              if (!vec) continue;
+              const range = guard.lineOfSight ?? 3;
+              for (let d = 1; d <= range; d++) {
+                if (guard.x + vec.dx * d === player.gridX && guard.y + vec.dy * d === player.gridY) {
+                  startGateGuardApproach(guard);
+                  return;
+                }
+              }
             }
           }
         } else {
@@ -1130,16 +1317,44 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const npc = npcManager.getFacingNPC(player.gridX, player.gridY, player.facing);
           const iFlags = hasActiveGame() ? getPlayerData().flags : {};
           if (npc && npc.dialogue.length > 0 && isNPCVisible(npc, iFlags)) {
-            // Defeated trainers show different dialogue
+            // Defeated trainers: show re-encounter dialogue or "already beaten" message
             if (npc.type === 'trainer' && hasActiveGame()) {
               const flags = getPlayerData().flags;
               if (flags[`trainer-${npc.id}-defeated`]) {
+                const trainer = npc as unknown as TrainerData;
+                const status = getReencounterStatus(trainer);
                 turnNPCToPlayer(npc);
-                activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL());
                 interactingNPC = npc;
+                if (status.eligible) {
+                  activeTextBox = createTextBox([t('trainer.reencounter.ready')], isRTL());
+                } else if (status.reason === 'cooldown') {
+                  activeTextBox = createTextBox([t('trainer.reencounter.cooldown', { hours: status.hoursLeft ?? 1 })], isRTL());
+                } else if (status.reason === 'max-reached') {
+                  activeTextBox = createTextBox([t('trainer.reencounter.maxReached')], isRTL());
+                } else {
+                  activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL());
+                }
                 return;
               }
             }
+            // Gate-guard: check if gate is already passed before showing dialogue
+            if (npc.type === 'gate-guard' && hasActiveGame()) {
+              const guard = npc as unknown as GateGuardData;
+              turnNPCToPlayer(npc);
+              if (isGateUnlocked(guard.gateId)) {
+                // Gate already passed — show passedDialogue or default
+                const passed = guard.passedDialogue && guard.passedDialogue.length > 0
+                  ? resolveDialogue(guard.passedDialogue, getLocale())
+                  : [getLocale() === 'he' ? 'תעבור, בבקשה!' : 'You may pass!'];
+                activeTextBox = createTextBox(passed, isRTL());
+              } else {
+                // Gate locked — show blocking dialogue, then launch gate scene on dismiss
+                interactingNPC = npc;
+                activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL());
+              }
+              return;
+            }
+
             activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL());
             interactingNPC = npc;
             turnNPCToPlayer(npc);
@@ -1230,6 +1445,27 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                       startHMAnimation(capturedHmName, capturedHmUser, capturedTargetX, capturedTargetY);
                     };
                     return;
+                  } else if (resolved.id === 'gate') {
+                    const effectiveGateId = inst?.gateId !== undefined ? inst.gateId : resolved.gateId;
+                    if (!effectiveGateId) {
+                      // No gate configured — show default dialogue
+                      if (dialogue.length > 0) {
+                        activeTextBox = createTextBox(resolveDialogue(dialogue, getLocale()), isRTL());
+                      }
+                      return;
+                    }
+                    if (!hasActiveGame()) return;
+                    // Check if gate is already unlocked (timed pass still active)
+                    if (isGateUnlocked(effectiveGateId)) {
+                      // Already passed — show brief confirmation and allow through
+                      const locale = getLocale();
+                      const msg = locale === 'he' ? 'המסלול פתוח.' : 'The path is open.';
+                      activeTextBox = createTextBox([msg], isRTL());
+                      return;
+                    }
+                    setActiveGate(effectiveGateId);
+                    stateMachine.push('GATE');
+                    return;
                   }
                 }
               }
@@ -1276,6 +1512,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
         stateMachine.push('WORLD_MAP');
         return;
+      }
+
+      // T key → Phone (trainer contact list)
+      if (input.isKeyPressed('t') || input.isKeyPressed('T')) {
+        if (hasActiveGame()) {
+          stateMachine.push('PHONE');
+          return;
+        }
       }
 
       // L key → Toggle language
@@ -1388,12 +1632,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Body objects (trees, buildings) participate in Y-sort
       renderables.push(...objRenderables.body);
 
-      // Player
+      // Player (hidden during cutscenes that call hide-player)
       const psx = Math.floor(player.pixelX - camera.x);
       const psy = Math.floor(player.pixelY - camera.y);
       renderables.push({
         y: player.pixelY,
         render: () => {
+          if (playerHidden) return;
           // Surfing: draw surf Pokemon sprite at player position
           if (isCurrentlySurfing && surfPokemonSprite) {
             ctx.imageSmoothingEnabled = false;
@@ -1482,8 +1727,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               render: () => {
                 ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, nx, ny, TILE_SIZE, TILE_SIZE);
-                // "!" exclamation during trainer approach
-                if (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') {
+                // "!" exclamation during trainer or gate-guard approach
+                const showExclamation =
+                  (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') ||
+                  (gateGuardApproach && gateGuardApproach.guard === npc && gateGuardApproach.phase === 'exclamation');
+                if (showExclamation) {
                   fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
                   drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
                 }
@@ -1503,7 +1751,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 } else {
                   fillRect(ctx, nx, ny, TILE_SIZE, TILE_SIZE, '#FF8800');
                 }
-                if (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') {
+                const showExclamationFb =
+                  (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') ||
+                  (gateGuardApproach && gateGuardApproach.guard === npc && gateGuardApproach.phase === 'exclamation');
+                if (showExclamationFb) {
                   fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
                   drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
                 }
@@ -1599,6 +1850,23 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (hasActiveGame()) {
         const lead = getPlayerData().party[0];
         if (lead) drawText(ctx, `${getPokemonDisplayName(lead.id)} ${t('hp.level', { level: lead.level })}`, 4, 14, { size: 8, color: '#aaccff', font: 'monospace' });
+
+        // Quest tracker — top-right corner
+        const pd = getPlayerData();
+        const questId = pd.story?.activeQuestId;
+        if (questId) {
+          const quest = getQuest(questId);
+          if (quest) {
+            const locale = getLocale();
+            const questTitle = locale === 'he' ? quest.title.he : quest.title.en;
+            const questObj   = locale === 'he' ? quest.objective.he : quest.objective.en;
+            const rtl = isRTL();
+            const qx = rtl ? 4 : SCREEN_W - 4;
+            const align = rtl ? 'left' : 'right';
+            drawText(ctx, `★ ${questTitle}`, qx, 4, { size: 6, color: '#ffd700', align, direction: rtl ? 'rtl' : 'ltr' });
+            drawText(ctx, questObj, qx, 12, { size: 5, color: '#cccccc', align, maxWidth: 100, direction: rtl ? 'rtl' : 'ltr' });
+          }
+        }
       }
 
       // Keyboard legend bar (bottom of screen, behind dialogues)
@@ -1670,6 +1938,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // Heal text overlay
       if (healTextBox) renderTextBox(ctx, healTextBox);
+
+      // Cutscene overlay (dialogue + fade — drawn last so it sits above everything)
+      renderCutscene(ctx);
     },
   };
 }

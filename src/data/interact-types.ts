@@ -15,6 +15,7 @@ export interface InteractArgs {
   itemId?: string | null;
   itemQty?: number | null;
   flag?: string | null;
+  gateId?: string | null;   // QuestionGateDef ID — triggers a verification gate on interact
 }
 
 /** A full interact type definition with defaults. */
@@ -25,6 +26,7 @@ export interface InteractTypeDef {
   itemId: string | null;
   itemQty: number | null;
   flag: string | null;
+  gateId: string | null;
 }
 
 /** Reference stored on a tile: type ID + optional per-tile overrides. */
@@ -34,7 +36,7 @@ export interface InteractTypeRef {
 }
 
 /** All available interact type IDs. */
-export const INTERACT_TYPE_IDS = ['pc', 'sign', 'item', 'cut', 'strength'] as const;
+export const INTERACT_TYPE_IDS = ['pc', 'sign', 'item', 'cut', 'strength', 'gate'] as const;
 export type InteractTypeId = typeof INTERACT_TYPE_IDS[number];
 
 /** Default definitions for each interact type. */
@@ -43,41 +45,37 @@ const INTERACT_TYPES: Record<InteractTypeId, InteractTypeDef> = {
     id: 'pc',
     label: { en: 'PC', he: 'מחשב' },
     dialogue: [{ en: 'Turn on the PC?', he: 'להפעיל את המחשב?' }],
-    itemId: null,
-    itemQty: null,
-    flag: null,
+    itemId: null, itemQty: null, flag: null, gateId: null,
   },
   sign: {
     id: 'sign',
     label: { en: 'Sign', he: 'שלט' },
     dialogue: [],
-    itemId: null,
-    itemQty: null,
-    flag: null,
+    itemId: null, itemQty: null, flag: null, gateId: null,
   },
   item: {
     id: 'item',
     label: { en: 'Item Ball', he: 'פריט' },
     dialogue: [],
-    itemId: 'potion',
-    itemQty: 1,
-    flag: null,
+    itemId: 'potion', itemQty: 1, flag: null, gateId: null,
   },
   cut: {
     id: 'cut',
     label: { en: 'Small Tree', he: 'עץ קטן' },
     dialogue: [{ en: 'This tree can be cut!', he: 'אפשר לגזום את העץ הזה!' }],
-    itemId: null,
-    itemQty: null,
-    flag: null,
+    itemId: null, itemQty: null, flag: null, gateId: null,
   },
   strength: {
     id: 'strength',
     label: { en: 'Boulder', he: 'סלע' },
     dialogue: [{ en: 'This boulder can be moved!', he: 'אפשר להזיז את הסלע הזה!' }],
-    itemId: null,
-    itemQty: null,
-    flag: null,
+    itemId: null, itemQty: null, flag: null, gateId: null,
+  },
+  gate: {
+    id: 'gate',
+    label: { en: 'Checkpoint', he: 'מחסום' },
+    dialogue: [{ en: 'This path requires verification.', he: 'המסלול הזה דורש אימות.' }],
+    itemId: null, itemQty: null, flag: null, gateId: null,
   },
 };
 
@@ -101,5 +99,6 @@ export function resolveInteract(ref: InteractTypeRef): InteractTypeDef | null {
     itemId: args.itemId !== undefined ? args.itemId : defaults.itemId,
     itemQty: args.itemQty !== undefined ? args.itemQty : defaults.itemQty,
     flag: args.flag !== undefined ? args.flag : defaults.flag,
+    gateId: args.gateId !== undefined ? args.gateId : defaults.gateId,
   };
 }

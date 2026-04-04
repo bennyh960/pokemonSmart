@@ -704,8 +704,8 @@
       "id": "npc-1774823591327",
       "x": 56,
       "y": 30,
-      "facing": "down",
-      "type": "gate-guard",
+      "facing": "left",
+      "type": "dialogue",
       "dialogue": [
         {
           "en": "Hello!",
@@ -720,8 +720,7 @@
           "he": "לא נפתח את המעבר עד שלא נסיים את החקירה"
         }
       ],
-      "spriteType": "leon",
-      "gateId": "gate-route1-sumville"
+      "spriteType": "leon"
     }
   ],
   "music": "town",
@@ -3579,6 +3578,11 @@
       "key": "f1-3",
       "x": 56,
       "y": 29
+    },
+    {
+      "key": "f1-3",
+      "x": 56,
+      "y": 31
     },
     {
       "key": "f1-7",

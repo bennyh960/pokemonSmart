@@ -3522,67 +3522,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "interactType": null,
       "description": "door for b7 house"
-    },
-    {
-      "key": "t5-cut",
-      "sx": 112,
-      "sy": 432,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "interactType": {
-        "id": "cut"
-      },
-      "description": "cutable tree"
-    },
-    {
-      "key": "gate",
-      "sx": 0,
-      "sy": 2064,
-      "w": 16,
-      "h": 32,
-      "walkable": true,
-      "above": true,
-      "category": "interactive",
-      "interactType": {
-        "id": "gate"
-      }
-    },
-    {
-      "key": "c1lwe",
-      "sx": 80,
-      "sy": 7536,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "other",
-      "description": "cave 1 - left wall from exit"
-    },
-    {
-      "key": "c1ew",
-      "sx": 96,
-      "sy": 7536,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "description": "cave 1 exit path"
-    },
-    {
-      "key": "c1ewr",
-      "sx": 112,
-      "sy": 7536,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "description": "cave 1 exit wall right side"
     }
   ]
 }

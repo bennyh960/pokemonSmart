@@ -35,6 +35,9 @@ export function createNewPlayerData(): PlayerData {
     position: { mapId: 'zeroville', x: 15, y: 12 },
     lastPokemonCenter: { mapId: 'zeroville', x: 4, y: 5 },
     playtime: 0,
+    trainerEncounters: {},
+    phoneContacts: [] as import('../types/index.js').PhoneContactInfo[],
+    story: { gateUnlocks: {}, cityInfection: {}, activeQuestId: null, completedQuestIds: [] },
   };
 }
 

@@ -45,6 +45,8 @@ import {
   type EvolutionStep,
 } from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
+import { sendCaughtToBox } from '../systems/pc-storage.js';
+import { recordTrainerDefeat } from '../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
@@ -130,6 +132,10 @@ export interface TrainerBattleData {
   reward: TrainerReward;
   trainerSprite?: string;           // e.g., 'youngster', 'lass'
   postBattleDialogue?: BilingualText[];  // Dialogue shown after defeat
+  reencounterIndex?: number;        // 0 = first fight, 1+ = rematch (items skipped on rematch)
+  hasReencounter?: boolean;         // true if trainer has re-encounter config (for phone registration)
+  locationEn?: string;              // trainer location for phone display
+  locationHe?: string;
 }
 
 export function setBattleData(
@@ -432,6 +438,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let waitingForBag = false;
   let waitingForParty = false;
   let previousLeadId: number | null = null;
+  // True when the switch was forced by a faint — enemy does NOT get a free attack
+  let isForcedFaintSwitch = false;
   let activePartyIndex = 0;  // Index of the active Pokemon in the player's party
   let battleRoster = new Set<number>();  // Party indices that have entered this battle
   let battleTurnCounts = new Map<number, number>();  // Active turns per party slot this battle
@@ -549,38 +557,53 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
   function awardTrainerReward(): void {
     const td = trainerData!;
+    const isRematch = (td.reencounterIndex ?? 0) > 0;
     if (hasActiveGame()) {
       const pd = getPlayerData();
       const reward = td.reward;
       pd.money += reward.money;
-      // Award items
-      if (reward.items) {
+      // Items only on the first encounter
+      if (!isRematch && reward.items) {
         for (const ri of reward.items) {
           pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
         }
       }
-      // Award badge
-      if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
-        pd.badges |= (1 << (reward.badge - 1));
+      // Badge + story events only on first encounter
+      if (!isRematch) {
+        if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
+          pd.badges |= (1 << (reward.badge - 1));
+        }
+        if (reward.storyEvent) {
+          pd.flags[reward.storyEvent] = true;
+        }
+        pd.flags[`trainer-${td.trainerId}-defeated`] = true;
       }
-      // Set story event flag
-      if (reward.storyEvent) {
-        pd.flags[reward.storyEvent] = true;
+      // Always record the defeat for re-encounter tracking
+      recordTrainerDefeat(td.trainerId);
+      // Register phone contact on first defeat if trainer supports re-encounters
+      if (!isRematch && td.hasReencounter) {
+        if (!pd.phoneContacts.some(c => c.trainerId === td.trainerId)) {
+          pd.phoneContacts.push({
+            trainerId: td.trainerId,
+            trainerName: td.trainerName,
+            locationEn: td.locationEn ?? '',
+            locationHe: td.locationHe ?? '',
+          });
+        }
       }
-      pd.flags[`trainer-${td.trainerId}-defeated`] = true;
       autoSave();
     }
 
     // Build reward message lines
     const lines: string[] = [t('battle.trainerReward', { money: td.reward.money })];
-    if (td.reward.items) {
+    if (!isRematch && td.reward.items) {
       for (const ri of td.reward.items) {
         const itemDef = getItem(ri.itemId);
         const itemName = itemDef ? getLocalizedName(itemDef.name) : ri.itemId;
         lines.push(t('battle.trainerRewardItem', { item: itemName, qty: ri.quantity }));
       }
     }
-    if (td.reward.badge !== undefined) {
+    if (!isRematch && td.reward.badge !== undefined) {
       lines.push(t('battle.trainerRewardBadge', { badge: td.reward.badge }));
     }
     // Append post-battle dialogue if present (resolved to current locale)
@@ -1022,15 +1045,23 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         visible: false,
       });
       enemy.caughtBall = outcome.itemId;
-      if (pd.party.length < 6) pd.party.push({ ...enemy });
       pd.pokedex[enemy.id] = true;
       xpGained = getCaptureXpReward();
       player.xp += xpGained;
+
+      const catchMessages: string[] = [t('battle.caught', { name: getPokemonDisplayName(enemy.id) })];
+      if (pd.party.length < 6) {
+        pd.party.push({ ...enemy });
+      } else {
+        const boxNum = sendCaughtToBox(enemy);
+        if (boxNum > 0) {
+          catchMessages.push(t('battle.partyFull', { name: getPokemonDisplayName(enemy.id), box: boxNum }));
+        }
+      }
+      catchMessages.push(t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }));
+
       autoSave();
-      textBox = createTextBox([
-        t('battle.caught', { name: getPokemonDisplayName(enemy.id) }),
-        t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }),
-      ], isRTL());
+      textBox = createTextBox(catchMessages, isRTL());
       audio.playMusic('victory');
       phase = 'XP_GAIN';
       return;
@@ -2710,6 +2741,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             clearSelectedPartyIndex();
             previousLeadId = player.id;
             waitingForParty = true;
+            isForcedFaintSwitch = true;  // don't give enemy a free attack after faint switch
             phase = 'WAITING_PARTY';
             stateMachine.push('PARTY');
           }
@@ -2803,6 +2835,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               setPartyMode('battle');
               clearSelectedPartyIndex();
               waitingForParty = true;
+              isForcedFaintSwitch = true;
               stateMachine.push('PARTY');
             } else {
               // No selection (user pressed Esc in party)
@@ -2813,7 +2846,9 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           break;
         }
         case 'SWITCH_POKEMON': {
-          // Show the switch text, then enemy gets a turn
+          // Show the switch text, then:
+          //   - voluntary switch → enemy gets a turn (they also acted this turn)
+          //   - forced faint switch → start a fresh turn (enemy already attacked this turn)
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             if (pendingPlayerSendOutAnimation) {
@@ -2821,8 +2856,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             }
           }
           if (!textBox && !animationDirector.isBusy()) {
-            enemySelectedMoveIndex = -1;
-            enemyTurn();
+            if (isForcedFaintSwitch) {
+              isForcedFaintSwitch = false;
+              enterSelectMovePhase();
+            } else {
+              enemySelectedMoveIndex = -1;
+              enemyTurn();
+            }
           }
           break;
         }

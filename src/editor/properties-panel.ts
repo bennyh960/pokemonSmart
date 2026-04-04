@@ -7,6 +7,7 @@ import { getAllPokemon, getMoveDisplayName, type PokemonData } from '../services
 import { getAllItems, type ItemDef } from '../data/items.js';
 import { getTMEffect } from '../data/item-defs.js';
 import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward } from '../systems/npc.js';
+import { GATES } from '../data/story/gates.js';
 import { BADGES } from '../data/badges.js';
 import encounterTables from '../data/encounter-tables.json';
 import { getKnownMapIds } from './map-io.js';
@@ -141,7 +142,7 @@ export class PropertiesPanel {
     addInput('X', 'x', String(npc.x), 'number');
     addInput('Y', 'y', String(npc.y), 'number');
     addSelect('Facing', 'facing', ['up', 'down', 'left', 'right'], npc.facing);
-    addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer'], npc.type);
+    addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard'], npc.type);
     addInput('Interact Range', 'interactRange', String((npc as unknown as Record<string, unknown>).interactRange ?? 1), 'number');
 
     // ── Sprite dropdown with role filter ──
@@ -294,14 +295,19 @@ export class PropertiesPanel {
     // ── Story / Visibility ──
     this.renderStoryFieldsUI(body, npc);
 
-    // ── Reward (all NPC types except trainers — trainers have their own reward in battle) ──
-    if (npc.type !== 'trainer') {
+    // ── Reward (dialogue/shopkeeper/healer only — trainers and gate-guards don't use this) ──
+    if (npc.type !== 'trainer' && npc.type !== 'gate-guard') {
       this.renderDialogueRewardUI(body, npc);
     }
 
     // ── Trainer-specific fields ──
     if (npc.type === 'trainer') {
       this.renderTrainerUI(body, npc as unknown as TrainerData);
+    }
+
+    // ── Gate-guard fields ──
+    if (npc.type === 'gate-guard') {
+      this.renderGateGuardUI(body, npc);
     }
 
     // Delete
@@ -317,6 +323,110 @@ export class PropertiesPanel {
     });
     body.appendChild(delBtn);
     this.container.appendChild(section);
+  }
+
+  // ── Gate-Guard: Gate ID and Passed Dialogue ──
+  private renderGateGuardUI(section: HTMLElement, npc: NPCData): void {
+    const emit = () => this.state.emit('map-modified');
+    const npcAny = npc as unknown as Record<string, unknown>;
+
+    const label = document.createElement('div');
+    label.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:8px 0 3px;';
+    label.textContent = 'Gate Guard';
+    section.appendChild(label);
+
+    // Line of sight
+    const losRow = document.createElement('div');
+    losRow.className = 'prop-row';
+    losRow.innerHTML = '<label>Line of Sight:</label>';
+    const losInput = document.createElement('input');
+    losInput.type = 'number';
+    losInput.min = '1';
+    losInput.max = '10';
+    losInput.value = String((npcAny['lineOfSight'] as number) ?? 3);
+    losInput.addEventListener('change', () => {
+      const v = parseInt(losInput.value, 10);
+      npcAny['lineOfSight'] = isNaN(v) ? 3 : Math.max(1, v);
+      emit();
+    });
+    losRow.appendChild(losInput);
+    losRow.appendChild(this.makeInfo('How many tiles in front the guard can see. Default 3.'));
+    section.appendChild(losRow);
+
+    // Gate ID input — datalist for known gates + free text for new ones
+    const gateRow = document.createElement('div');
+    gateRow.className = 'prop-row';
+    gateRow.innerHTML = '<label>Gate ID:</label>';
+
+    const datalistId = 'gate-id-list';
+    let datalist = document.getElementById(datalistId) as HTMLDataListElement | null;
+    if (!datalist) {
+      datalist = document.createElement('datalist');
+      datalist.id = datalistId;
+      document.body.appendChild(datalist);
+    }
+    datalist.innerHTML = '';
+    for (const id of Object.keys(GATES)) {
+      const opt = document.createElement('option');
+      opt.value = id;
+      const g = GATES[id];
+      opt.label = g.title?.en || id;
+      datalist.appendChild(opt);
+    }
+
+    const gateInput = document.createElement('input');
+    gateInput.type = 'text';
+    gateInput.setAttribute('list', datalistId);
+    gateInput.value = (npcAny['gateId'] as string) || '';
+    gateInput.placeholder = 'e.g. gate-route1-sumville';
+    gateInput.addEventListener('change', () => {
+      npcAny['gateId'] = gateInput.value.trim() || '';
+      emit();
+    });
+    gateRow.appendChild(gateInput);
+    gateRow.appendChild(this.makeInfo('Select an existing gate or type a new ID. Gates are defined in src/data/story/gates.ts.'));
+    section.appendChild(gateRow);
+
+    // Passed Dialogue EN
+    const passedDef = ((npcAny['passedDialogue'] as Array<{en:string;he:string}>) || []);
+    const passedDialogueRow = document.createElement('div');
+    passedDialogueRow.className = 'prop-row';
+    passedDialogueRow.innerHTML = '<label>Passed (EN):</label>';
+    const passedEn = document.createElement('textarea');
+    passedEn.value = passedDef.map(d => d.en).join('\n');
+    passedEn.rows = 2;
+    passedEn.placeholder = 'You may pass! (shown after gate is cleared)';
+    passedEn.addEventListener('change', () => syncPassedDialogue());
+    passedDialogueRow.appendChild(passedEn);
+    section.appendChild(passedDialogueRow);
+
+    // Passed Dialogue HE
+    const passedDialogueRowHe = document.createElement('div');
+    passedDialogueRowHe.className = 'prop-row';
+    passedDialogueRowHe.innerHTML = '<label>Passed (HE):</label>';
+    const passedHe = document.createElement('textarea');
+    passedHe.value = passedDef.map(d => d.he).join('\n');
+    passedHe.rows = 2;
+    passedHe.style.direction = 'rtl';
+    passedHe.placeholder = 'תעבור, בבקשה!';
+    passedHe.addEventListener('change', () => syncPassedDialogue());
+    passedDialogueRowHe.appendChild(passedHe);
+    section.appendChild(passedDialogueRowHe);
+
+    function syncPassedDialogue(): void {
+      const enLines = passedEn.value.split('\n').filter(l => l.trim());
+      const heLines = passedHe.value.split('\n').filter(l => l.trim());
+      const maxLen = Math.max(enLines.length, heLines.length);
+      if (maxLen === 0) {
+        delete npcAny['passedDialogue'];
+      } else {
+        npcAny['passedDialogue'] = Array.from({ length: maxLen }, (_, i) => ({
+          en: enLines[i] || '',
+          he: heLines[i] || '',
+        }));
+      }
+      emit();
+    }
   }
 
   // ── Trainer: Line of Sight, Reward, Party ──

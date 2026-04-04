@@ -13,7 +13,7 @@ import { ensurePersistentBattleFields } from './battle-state.js';
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 5;
+export const CURRENT_SAVE_VERSION = 7;
 
 function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Record<string, any>) => void): void {
   if (data.party) {
@@ -78,6 +78,24 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
   5: (data) => {
     forEachStoredPokemon(data, ensurePersistentBattleFields);
     data.saveVersion = 5;
+  },
+  // Version 5 → 6: add trainer re-encounter state and phone contacts
+  6: (data) => {
+    if (!data.trainerEncounters) data.trainerEncounters = {};
+    if (!data.phoneContacts) data.phoneContacts = [];
+    data.saveVersion = 6;
+  },
+  // Version 6 → 7: add story mode state
+  7: (data) => {
+    if (!data.story) {
+      data.story = {
+        gateUnlocks: {},
+        cityInfection: {},
+        activeQuestId: null,
+        completedQuestIds: [],
+      };
+    }
+    data.saveVersion = 7;
   },
 };
 

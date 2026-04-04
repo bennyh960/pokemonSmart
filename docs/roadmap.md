@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 6 ⬜ UP NEXT (status effects before the larger battle refactor + ability passives)
+## Overall Progress: Sprint 7 🔄 IN PROGRESS (story mode planning + question system)
 
 ---
 
@@ -290,25 +290,77 @@ This is a foundation sprint — must be done before design/content sprints.
 
 | Task | Agent | Status |
 |------|-------|--------|
-| HM framework (hm.ts) | game-engine-developer | ⬜ |
-| Cut + Strength with full animation | game-engine-developer + frontend-developer | ⬜ |
-| Fly with world map city selection | game-engine-developer + frontend-developer | ⬜ |
-| Surf with water movement + encounters | game-engine-developer + frontend-developer | ⬜ |
+| HM framework (hm.ts) | game-engine-developer | ✅ |
+| Cut + Strength with full animation | game-engine-developer + frontend-developer | ✅ |
+| Fly with world map city selection | game-engine-developer + frontend-developer | ✅ |
+| Surf with water movement + encounters | game-engine-developer + frontend-developer | ✅ |
+| TM/HM items — NPC rewards, bag teaching flow, learnset check, reusable TMs | game-engine-developer | ✅ |
+| Caught Pokemon sent to PC box when party full | game-engine-developer | ✅ |
 
 ---
 
-## Sprint 7 — Player & Story ⬜ PLANNED
-**Goal:** Player customization, story mode, cutscenes
+## Sprint 7 — Player & Story Foundation 🔄 IN PROGRESS
+**Goal:** Ship the data model and runtime engine that all story content builds on
+**Reference docs:** `docs/story-mode-final.md` (narrative), `docs/story-data-model.md` (data model)
 
-| Task | Agent |
-|------|-------|
-| Character selection screen — choose sprite + enter player name (new game flow) | frontend-developer |
-| Player name input UI — keyboard/on-screen input, Hebrew + English support | frontend-developer |
-| Edit player name/character — accessible from settings screen post-game-start | frontend-developer |
-| Story mode intro — cutscene system | frontend-developer |
-| Prof. Algorithma dialogues + story events | game-designer |
-| Remainder (rival) encounters + story arc | game-designer |
-| Cutscene engine (scripted sequences, camera, text) | game-engine-developer + frontend-developer |
+### Completed
+| Task | Agent | Status |
+|------|-------|--------|
+| Character selection screen — choose sprite + enter player name | frontend-developer | ✅ |
+| Player name input UI — Hebrew + English | frontend-developer | ✅ |
+| Story mode narrative design (characters, acts, gyms, Rocket encounters) | game-designer | ✅ docs/story-mode-final.md |
+| Story mode data model (events, gates, cutscenes, quests, city profiles) | game-engine-developer | ✅ docs/story-data-model.md |
+| Re-encounter system + phone contacts | game-engine-developer | ✅ |
+| Caught Pokemon → PC box when party full | game-engine-developer | ✅ |
+
+### Sprint 7A — Story Engine Core ✅ COMPLETE
+*Goal: Build the runtime that powers all story interactions. No content yet — just the engine.*
+
+| Task | Agent | Notes |
+|------|-------|-------|
+| `PlayerStoryState` + save migration v7 | game-engine-developer | ✅ |
+| Story event registry + evaluator (`story-engine.ts`) | game-engine-developer | ✅ Triggers, conditions, actions |
+| Verification gate scene + runtime (`gate-scene.ts`) | frontend-developer + game-engine-developer | ✅ Placeholder "Press Enter" |
+| Gate-guard NPC — LOS detection, `!` approach, push-back, editor | game-engine-developer | ✅ |
+| Cutscene engine (`cutscene-runner.ts`) | game-engine-developer + frontend-developer | ✅ Runs inside overworld, typewriter dialogue, fade, NPC control |
+| Quest registry + HUD (`quests.ts` + overworld HUD) | frontend-developer | ✅ Top-right corner, title + objective |
+| City infection visuals (tile/overlay system) | frontend-developer | ⬜ Deferred to Sprint 7B |
+
+### Sprint 7B — Story Content: Act 0 + Act 1 🔄 IN PROGRESS
+*Goal: Playable intro + first gate. Proves the full stack.*
+
+| Task | Agent | Notes |
+|------|-------|-------|
+| Act 0 + Act 1 story events, cutscenes, gates (data) | game-engine-developer | ✅ `content/act0-act1.ts` — fires when maps are built |
+| Quest definitions Act 0–2 | game-engine-developer | ✅ `quests.ts` |
+| Real math question system in gates | math-engine-developer | ⬜ Tomorrow — Sprint 7B priority 1 |
+| Sumville Gym 1 (Adda) trainer data | game-designer | ⬜ |
+| Minusburg Gym 2 (Minus) + Remainder trainer data | game-designer | ⬜ |
+| Jessie/James fake shop encounter at Sumville | game-engine-developer | ⬜ |
+| Maps: Route 1, Route 2, Sumville (full), Minusburg (full) | world-map-builder | ⬜ User task |
+
+### Sprint 7C — Story Content: Acts 2–3 ⬜
+| Task | Agent | Notes |
+|------|-------|-------|
+| Multiplia/Dividia cutscenes + Rocket nurse disguise | game-engine-developer | |
+| Brock/Misty mentor dialogue events | game-engine-developer | |
+| Remainder glitch + rescue scene | game-engine-developer | Uses existing serum system |
+| Gyms 3–4 (Mila, Divon) + serum C/D | game-designer | |
+| Gary Oak appearance at Primore | game-engine-developer | |
+| Gyms 5–6 (Prima, Symma) + serum E/F | game-designer | |
+| NULL-X first direct contact cutscene (Symmetrika terminal) | game-engine-developer | |
+| Maps: Routes 3–6, Multiplia, Dividia, Primore, Symmetrika | world-map-builder | User task |
+
+### Sprint 7D — Story Content: Acts 4–5 + Endgame ⬜
+| Task | Agent | Notes |
+|------|-------|-------|
+| Prof. Elm arrival + NULL-X history cutscene | game-engine-developer | |
+| Gyms 7–8 (Formax, Absa) + serum G/H | game-designer | |
+| Serum assembly scene | game-engine-developer | |
+| NULL-X Tower map + floor progression | world-map-builder | User task |
+| Elite Four: PARSE, RECURSE, NULL-Y, AXIOM | game-designer | Battle + gate combo per member |
+| NULL-X final boss (3-phase: cutscene + gate + battle) | game-engine-developer + game-designer | |
+| Ending cutscene + credits | game-engine-developer + frontend-developer | |
 
 ---
 
