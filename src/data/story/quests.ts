@@ -117,3 +117,87 @@ registerQuest({
   title: { en: 'Dividia Gym', he: 'חדר הכושר של דיווידיה' },
   objective: { en: 'Defeat Divon at the Division Gym', he: 'נצח את דיבון בחדר הכושר של החילוק' },
 });
+
+// ---------------------------------------------------------------------------
+// Act 3 — Language Layer
+// ---------------------------------------------------------------------------
+
+registerQuest({
+  id: 'main-act3-primore',
+  title: { en: 'Primore', he: 'פרימור' },
+  objective: { en: 'Reach Primore and find Gary Oak', he: 'הגע לפרימור ומצא את גארי אוק' },
+});
+
+registerQuest({
+  id: 'main-act3-gym5',
+  title: { en: 'Primore Gym', he: 'חדר הכושר של פרימור' },
+  objective: { en: 'Defeat Prima at the Prime Gym', he: 'נצח את פרימה בחדר הכושר של מספרי הראשוניים' },
+});
+
+registerQuest({
+  id: 'main-act3-symmetrika',
+  title: { en: 'Symmetrika', he: 'סימטריקה' },
+  objective: { en: 'Investigate the glitched terminal at Symmetrika', he: 'חקור את הטרמינל הפגום בסימטריקה' },
+});
+
+registerQuest({
+  id: 'main-act3-gym6',
+  title: { en: 'Symmetrika Gym', he: 'חדר הכושר של סימטריקה' },
+  objective: { en: 'Defeat Symma at the Symmetry Gym', he: 'נצח את סימה בחדר הכושר של הסימטריה' },
+});
+
+// ---------------------------------------------------------------------------
+// Act 4 — Rocket Escalation
+// ---------------------------------------------------------------------------
+
+registerQuest({
+  id: 'main-act4-integrala',
+  title: { en: 'Integrala', he: 'אינטגרלה' },
+  objective: { en: 'Meet Prof. Elm and learn about NULL-X\'s history', he: 'פגוש את פרופ׳ אלם ולמד על ההיסטוריה של NULL-X' },
+});
+
+registerQuest({
+  id: 'main-act4-gym7',
+  title: { en: 'Integrala Gym', he: 'חדר הכושר של אינטגרלה' },
+  objective: { en: 'Defeat Formax at the Formula Gym', he: 'נצח את פורמקס בחדר הכושר של הנוסחאות' },
+});
+
+registerQuest({
+  id: 'main-act4-absoluta',
+  title: { en: 'Absoluta', he: 'אבסולוטה' },
+  objective: { en: 'Fight through Rocket patrols and reach the gym', he: 'לחם דרך סיורי רוקט והגע לחדר הכושר' },
+});
+
+registerQuest({
+  id: 'main-act4-gym8',
+  title: { en: 'Absoluta Gym', he: 'חדר הכושר של אבסולוטה' },
+  objective: { en: 'Defeat Absa at the Absolute Gym', he: 'נצח את אבסה בחדר הכושר של הערך המוחלט' },
+});
+
+registerQuest({
+  id: 'main-act4-serum',
+  title: { en: 'Assemble the Serum', he: 'הרכב את הסרום' },
+  objective: { en: 'Assemble all 8 serum fragments to open NULL-X Tower', he: 'אסוף את כל 8 חלקי הסרום כדי לפתוח את מגדל NULL-X' },
+});
+
+// ---------------------------------------------------------------------------
+// Act 5 — The Core
+// ---------------------------------------------------------------------------
+
+registerQuest({
+  id: 'main-act5-tower',
+  title: { en: 'NULL-X Tower', he: 'מגדל NULL-X' },
+  objective: { en: 'Enter NULL-X Tower and reach the top floor', he: 'כנס למגדל NULL-X והגע לקומה העליונה' },
+});
+
+registerQuest({
+  id: 'main-act5-elite',
+  title: { en: 'Elite Four', he: 'ארבעת האליטה' },
+  objective: { en: 'Defeat the four guardian programs: PARSE, RECURSE, NULL-Y, AXIOM', he: 'נצח את ארבעת תוכניות השמירה: PARSE, RECURSE, NULL-Y, AXIOM' },
+});
+
+registerQuest({
+  id: 'main-act5-nullx',
+  title: { en: 'Confront NULL-X', he: 'עמות את NULL-X' },
+  objective: { en: 'Face NULL-X and save Numeria', he: 'עמוד מול NULL-X והצל את נומריה' },
+});

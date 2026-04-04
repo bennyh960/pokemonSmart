@@ -28,6 +28,9 @@ import { createGateScene } from '../scenes/gate-scene.js';
 import { initStoryEngine } from '../systems/story-engine.js';
 // Story content — side-effect imports that register events/cutscenes/gates/quests
 import '../data/story/content/act0-act1.js';
+import '../data/story/content/act2.js';
+import '../data/story/content/act3.js';
+import '../data/story/content/act4-act5.js';
 import {
   LOGICAL_WIDTH,
   LOGICAL_HEIGHT,

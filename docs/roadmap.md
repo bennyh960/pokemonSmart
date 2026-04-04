@@ -1,6 +1,6 @@
 # Pokemon Math Adventure — Roadmap
 
-## Overall Progress: Sprint 7 🔄 IN PROGRESS (story mode planning + question system)
+## Overall Progress: Sprint 7B ✅ COMPLETE — Story content Acts 0–5 fully registered. Next: math question system for gates.
 
 ---
 
@@ -326,41 +326,22 @@ This is a foundation sprint — must be done before design/content sprints.
 | Quest registry + HUD (`quests.ts` + overworld HUD) | frontend-developer | ✅ Top-right corner, title + objective |
 | City infection visuals (tile/overlay system) | frontend-developer | ⬜ Deferred to Sprint 7B |
 
-### Sprint 7B — Story Content: Act 0 + Act 1 🔄 IN PROGRESS
-*Goal: Playable intro + first gate. Proves the full stack.*
+### Sprint 7B — Story Content: All Acts ✅ COMPLETE
+*Goal: Full story mode content registered for Acts 0–5 (no math questions yet — gate questions deferred).*
 
 | Task | Agent | Notes |
 |------|-------|-------|
-| Act 0 + Act 1 story events, cutscenes, gates (data) | game-engine-developer | ✅ `content/act0-act1.ts` — fires when maps are built |
-| Quest definitions Act 0–2 | game-engine-developer | ✅ `quests.ts` |
-| Real math question system in gates | math-engine-developer | ⬜ Tomorrow — Sprint 7B priority 1 |
-| Sumville Gym 1 (Adda) trainer data | game-designer | ⬜ |
-| Minusburg Gym 2 (Minus) + Remainder trainer data | game-designer | ⬜ |
-| Jessie/James fake shop encounter at Sumville | game-engine-developer | ⬜ |
-| Maps: Route 1, Route 2, Sumville (full), Minusburg (full) | world-map-builder | ⬜ User task |
-
-### Sprint 7C — Story Content: Acts 2–3 ⬜
-| Task | Agent | Notes |
-|------|-------|-------|
-| Multiplia/Dividia cutscenes + Rocket nurse disguise | game-engine-developer | |
-| Brock/Misty mentor dialogue events | game-engine-developer | |
-| Remainder glitch + rescue scene | game-engine-developer | Uses existing serum system |
-| Gyms 3–4 (Mila, Divon) + serum C/D | game-designer | |
-| Gary Oak appearance at Primore | game-engine-developer | |
-| Gyms 5–6 (Prima, Symma) + serum E/F | game-designer | |
-| NULL-X first direct contact cutscene (Symmetrika terminal) | game-engine-developer | |
-| Maps: Routes 3–6, Multiplia, Dividia, Primore, Symmetrika | world-map-builder | User task |
-
-### Sprint 7D — Story Content: Acts 4–5 + Endgame ⬜
-| Task | Agent | Notes |
-|------|-------|-------|
-| Prof. Elm arrival + NULL-X history cutscene | game-engine-developer | |
-| Gyms 7–8 (Formax, Absa) + serum G/H | game-designer | |
-| Serum assembly scene | game-engine-developer | |
-| NULL-X Tower map + floor progression | world-map-builder | User task |
-| Elite Four: PARSE, RECURSE, NULL-Y, AXIOM | game-designer | Battle + gate combo per member |
-| NULL-X final boss (3-phase: cutscene + gate + battle) | game-engine-developer + game-designer | |
-| Ending cutscene + credits | game-engine-developer + frontend-developer | |
+| Act 0 + Act 1 story events, cutscenes, gates (data) | game-engine-developer | ✅ `content/act0-act1.ts` |
+| Act 2 story events, cutscenes, gates (data) | game-engine-developer | ✅ `content/act2.ts` |
+| Act 3 story events, cutscenes, gates (data) | game-engine-developer | ✅ `content/act3.ts` |
+| Acts 4–5 story events, cutscenes, gates (data) | game-engine-developer | ✅ `content/act4-act5.ts` |
+| Quest definitions Act 0–5 | game-engine-developer | ✅ `quests.ts` — ~20 quests all acts |
+| Wire all content imports in game.ts | game-engine-developer | ✅ All 4 content files imported |
+| Build verification | game-engine-developer | ✅ Clean build, 0 TypeScript errors |
+| Real math question system in gates | math-engine-developer | ⬜ Next priority |
+| Gym trainer data (Adda, Minus, Mila, Divon, Prima, Symma, Formax, Absa) | game-designer | ⬜ |
+| Maps: all routes + cities | world-map-builder | ⬜ User task |
+| City infection visuals | frontend-developer | ⬜ Deferred from 7A |
 
 ---
 
