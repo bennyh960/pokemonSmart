@@ -51,6 +51,20 @@
       "toMapId": "minusburg",
       "toX": 1,
       "toY": 26
+    },
+    {
+      "fromX": 20,
+      "fromY": 4,
+      "toMapId": "safari",
+      "toX": 52,
+      "toY": 24
+    },
+    {
+      "fromX": 20,
+      "fromY": 5,
+      "toMapId": "safari",
+      "toX": 52,
+      "toY": 25
     }
   ],
   "npcs": [
@@ -186,6 +200,137 @@
         "money": 250
       },
       "lineOfSight": 3
+    },
+    {
+      "id": "r2-t1",
+      "name": "Youngster Benny",
+      "x": 8,
+      "y": 7,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "dani",
+      "party": [
+        {
+          "pokemonId": 19,
+          "level": 7
+        },
+        {
+          "pokemonId": 21,
+          "level": 8
+        }
+      ],
+      "reward": {
+        "money": 200
+      },
+      "dialogue": [
+        {
+          "en": "Ready for a rematch anytime!",
+          "he": "מוכן לתגמול בכל עת!"
+        }
+      ]
+    },
+    {
+      "id": "r2-t2",
+      "name": "Lass Tali",
+      "x": 22,
+      "y": 9,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "dana",
+      "party": [
+        {
+          "pokemonId": 35,
+          "level": 8
+        },
+        {
+          "pokemonId": 39,
+          "level": 8
+        }
+      ],
+      "reward": {
+        "money": 220
+      },
+      "dialogue": [
+        {
+          "en": "My Jigglypuff knows all the moves!",
+          "he": "הג'יגלפאף שלי יודע את כל המהלכים!"
+        }
+      ]
+    },
+    {
+      "id": "r2-t3",
+      "name": "Bug Catcher Guy",
+      "x": 15,
+      "y": 4,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "dani",
+      "party": [
+        {
+          "pokemonId": 10,
+          "level": 6
+        },
+        {
+          "pokemonId": 11,
+          "level": 7
+        },
+        {
+          "pokemonId": 13,
+          "level": 7
+        }
+      ],
+      "reward": {
+        "money": 180
+      },
+      "dialogue": [
+        {
+          "en": "Bugs always win!",
+          "he": "חרקים תמיד מנצחים!"
+        }
+      ]
+    },
+    {
+      "id": "r2-t4",
+      "name": "Camper Erez",
+      "x": 28,
+      "y": 11,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_e38ab2",
+      "party": [
+        {
+          "pokemonId": 23,
+          "level": 9
+        },
+        {
+          "pokemonId": 27,
+          "level": 9
+        }
+      ],
+      "reward": {
+        "money": 240
+      },
+      "dialogue": [
+        {
+          "en": "I camp and train every day.",
+          "he": "אני מחנה ומתאמן כל יום."
+        }
+      ]
+    },
+    {
+      "id": "r2-sign",
+      "name": "Explorer",
+      "x": 5,
+      "y": 3,
+      "facing": "down",
+      "type": "npc",
+      "spriteType": "char_962c1b",
+      "dialogue": [
+        {
+          "en": "There is a Safari Zone shortcut through the grass if you can CUT those trees.",
+          "he": "יש קיצור לאזור הספארי דרך העשב אם תוכל לגזום את העצים."
+        }
+      ]
     }
   ],
   "music": "route",
@@ -1452,6 +1597,11 @@
       "key": "g5",
       "x": 27,
       "y": 5
+    },
+    {
+      "key": "t5-cut",
+      "x": 18,
+      "y": 6
     }
   ]
 }

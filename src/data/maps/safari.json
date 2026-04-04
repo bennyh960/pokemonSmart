@@ -30,6 +30,20 @@
       "toMapId": "sumville",
       "toX": 31,
       "toY": 58
+    },
+    {
+      "fromX": 53,
+      "fromY": 24,
+      "toMapId": "route-2",
+      "toX": 20,
+      "toY": 5
+    },
+    {
+      "fromX": 53,
+      "fromY": 25,
+      "toMapId": "route-2",
+      "toX": 20,
+      "toY": 6
     }
   ],
   "npcs": [

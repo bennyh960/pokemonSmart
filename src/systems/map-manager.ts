@@ -112,3 +112,7 @@ registerMap('integrala', () => import('../data/maps/integrala.json').catch(() =>
 registerMap('absoluta', () => import('../data/maps/absoluta.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('nullx-tower', () => import('../data/maps/nullx-tower.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('nullx-floor-6', () => import('../data/maps/nullx-floor-6.json').catch(() => import('../data/maps/test-map.json')));
+// Cave maps
+registerMap('dividia-cave', () => import('../data/maps/dividia-cave.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('symmetrika-cave', () => import('../data/maps/symmetrika-cave.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('mountain-cave', () => import('../data/maps/mountain-cave.json').catch(() => import('../data/maps/test-map.json')));

@@ -37,11 +37,182 @@
       "toMapId": "symmetrika",
       "toX": 1,
       "toY": 10
+    },
+    {
+      "fromX": 14,
+      "fromY": 3,
+      "toMapId": "symmetrika-cave",
+      "toX": 10,
+      "toY": 18
+    },
+    {
+      "fromX": 15,
+      "fromY": 3,
+      "toMapId": "symmetrika-cave",
+      "toX": 11,
+      "toY": 18
     }
   ],
   "music": "route",
   "encounterTableId": "route-6",
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "r6-t1",
+      "name": "Channeler Vered",
+      "x": 5,
+      "y": 5,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "dana",
+      "party": [
+        {
+          "pokemonId": 92,
+          "level": 26
+        },
+        {
+          "pokemonId": 93,
+          "level": 27
+        }
+      ],
+      "reward": {
+        "money": 780
+      },
+      "dialogue": [
+        {
+          "en": "Ghosts guide my path!",
+          "he": "רוחות מדריכות את דרכי!"
+        }
+      ]
+    },
+    {
+      "id": "r6-t2",
+      "name": "Swimmer Ron",
+      "x": 18,
+      "y": 14,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_2c5fb3",
+      "party": [
+        {
+          "pokemonId": 54,
+          "level": 26
+        },
+        {
+          "pokemonId": 55,
+          "level": 27
+        },
+        {
+          "pokemonId": 60,
+          "level": 27
+        }
+      ],
+      "reward": {
+        "money": 760
+      },
+      "dialogue": [
+        {
+          "en": "The water route is rough!",
+          "he": "מסלול המים קשה!"
+        }
+      ]
+    },
+    {
+      "id": "r6-t3",
+      "name": "Psychic Dan",
+      "x": 24,
+      "y": 8,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_b8427f",
+      "party": [
+        {
+          "pokemonId": 63,
+          "level": 26
+        },
+        {
+          "pokemonId": 64,
+          "level": 27
+        },
+        {
+          "pokemonId": 121,
+          "level": 27
+        }
+      ],
+      "reward": {
+        "money": 820
+      },
+      "dialogue": [
+        {
+          "en": "My Starmie is all-knowing!",
+          "he": "הסטארמי שלי יודע הכל!"
+        }
+      ]
+    },
+    {
+      "id": "r6-t4",
+      "name": "Lass Gali",
+      "x": 10,
+      "y": 11,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "dana",
+      "party": [
+        {
+          "pokemonId": 36,
+          "level": 26
+        },
+        {
+          "pokemonId": 39,
+          "level": 27
+        },
+        {
+          "pokemonId": 40,
+          "level": 27
+        }
+      ],
+      "reward": {
+        "money": 800
+      },
+      "dialogue": [
+        {
+          "en": "Fairies and normals rule!",
+          "he": "פיות ורגילים שולטים!"
+        }
+      ]
+    },
+    {
+      "id": "r6-t5",
+      "name": "Bird Keeper Orr",
+      "x": 20,
+      "y": 4,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_e38ab2",
+      "party": [
+        {
+          "pokemonId": 16,
+          "level": 26
+        },
+        {
+          "pokemonId": 22,
+          "level": 27
+        },
+        {
+          "pokemonId": 145,
+          "level": 28
+        }
+      ],
+      "reward": {
+        "money": 900
+      },
+      "dialogue": [
+        {
+          "en": "Even Zapdos fears my birds!",
+          "he": "אפילו זאפדוס מפחד מהציפורים שלי!"
+        }
+      ]
+    }
+  ],
   "tiles": [
     [
       "g1",
@@ -620,5 +791,16 @@
       "g1"
     ]
   ],
-  "objects": []
+  "objects": [
+    {
+      "key": "t5-cut",
+      "x": 14,
+      "y": 4
+    },
+    {
+      "key": "t5-cut",
+      "x": 14,
+      "y": 5
+    }
+  ]
 }

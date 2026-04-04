@@ -41,7 +41,232 @@
   ],
   "music": "route",
   "encounterTableId": "route-8",
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "r8-rocket1",
+      "name": "Rocket Grunt",
+      "x": 5,
+      "y": 8,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_59c8b9",
+      "party": [
+        {
+          "pokemonId": 52,
+          "level": 37
+        },
+        {
+          "pokemonId": 110,
+          "level": 38
+        },
+        {
+          "pokemonId": 109,
+          "level": 39
+        }
+      ],
+      "reward": {
+        "money": 1400
+      },
+      "dialogue": [
+        {
+          "en": "Team Rocket controls this road!",
+          "he": "צוות רוקט שולט בכביש הזה!"
+        }
+      ]
+    },
+    {
+      "id": "r8-rocket2",
+      "name": "Rocket Grunt",
+      "x": 14,
+      "y": 4,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_8bd601",
+      "party": [
+        {
+          "pokemonId": 41,
+          "level": 36
+        },
+        {
+          "pokemonId": 42,
+          "level": 37
+        },
+        {
+          "pokemonId": 169,
+          "level": 38
+        }
+      ],
+      "reward": {
+        "money": 1350
+      },
+      "dialogue": [
+        {
+          "en": "You dare challenge Team Rocket?!",
+          "he": "אתה מעז לאתגר את צוות רוקט?!"
+        }
+      ]
+    },
+    {
+      "id": "r8-rocket3",
+      "name": "Rocket Admin",
+      "x": 22,
+      "y": 12,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_b8427f",
+      "party": [
+        {
+          "pokemonId": 110,
+          "level": 39
+        },
+        {
+          "pokemonId": 88,
+          "level": 39
+        },
+        {
+          "pokemonId": 89,
+          "level": 40
+        }
+      ],
+      "reward": {
+        "money": 1800
+      },
+      "dialogue": [
+        {
+          "en": "The boss won't be happy about this.",
+          "he": "הבוס לא יהיה שמח על זה."
+        }
+      ]
+    },
+    {
+      "id": "r8-t4",
+      "name": "Cooltrainer Gal",
+      "x": 8,
+      "y": 14,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_d152a6",
+      "party": [
+        {
+          "pokemonId": 149,
+          "level": 38
+        },
+        {
+          "pokemonId": 142,
+          "level": 39
+        },
+        {
+          "pokemonId": 143,
+          "level": 39
+        }
+      ],
+      "reward": {
+        "money": 1600
+      },
+      "dialogue": [
+        {
+          "en": "I defeated three Rockets today already!",
+          "he": "כבר הבסתי שלושה רוקט היום!"
+        }
+      ]
+    },
+    {
+      "id": "r8-t5",
+      "name": "Hiker Kobi",
+      "x": 26,
+      "y": 7,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_d25760",
+      "party": [
+        {
+          "pokemonId": 76,
+          "level": 37
+        },
+        {
+          "pokemonId": 111,
+          "level": 38
+        },
+        {
+          "pokemonId": 112,
+          "level": 39
+        }
+      ],
+      "reward": {
+        "money": 1500
+      },
+      "dialogue": [
+        {
+          "en": "The Rockets have taken over everything!",
+          "he": "הרוקט השתלטו על הכל!"
+        }
+      ]
+    },
+    {
+      "id": "r8-rocket4",
+      "name": "Rocket Grunt",
+      "x": 18,
+      "y": 16,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_59c8b9",
+      "party": [
+        {
+          "pokemonId": 23,
+          "level": 36
+        },
+        {
+          "pokemonId": 100,
+          "level": 37
+        },
+        {
+          "pokemonId": 101,
+          "level": 38
+        }
+      ],
+      "reward": {
+        "money": 1300
+      },
+      "dialogue": [
+        {
+          "en": "You should not have come here!",
+          "he": "לא היית צריך לבוא לכאן!"
+        }
+      ]
+    },
+    {
+      "id": "r8-t6",
+      "name": "Cooltrainer Ayelet",
+      "x": 27,
+      "y": 3,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "dana",
+      "party": [
+        {
+          "pokemonId": 65,
+          "level": 38
+        },
+        {
+          "pokemonId": 121,
+          "level": 39
+        },
+        {
+          "pokemonId": 196,
+          "level": 39
+        }
+      ],
+      "reward": {
+        "money": 1700
+      },
+      "dialogue": [
+        {
+          "en": "I use Psychic types to expose Rocket plans!",
+          "he": "אני משתמשת בסוגי פסיכי לחשוף את תוכניות רוקט!"
+        }
+      ]
+    }
+  ],
   "tiles": [
     [
       "g1",

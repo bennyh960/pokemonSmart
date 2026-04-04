@@ -8,7 +8,36 @@
     "x": 10,
     "y": 7
   },
-  "transitions": [],
+  "transitions": [
+    {
+      "fromX": 0,
+      "fromY": 6,
+      "toMapId": "route-5",
+      "toX": 28,
+      "toY": 8
+    },
+    {
+      "fromX": 0,
+      "fromY": 7,
+      "toMapId": "route-5",
+      "toX": 28,
+      "toY": 9
+    },
+    {
+      "fromX": 19,
+      "fromY": 6,
+      "toMapId": "route-6",
+      "toX": 1,
+      "toY": 8
+    },
+    {
+      "fromX": 19,
+      "fromY": 7,
+      "toMapId": "route-6",
+      "toX": 1,
+      "toY": 9
+    }
+  ],
   "npcs": [
     {
       "id": "gary-primore",

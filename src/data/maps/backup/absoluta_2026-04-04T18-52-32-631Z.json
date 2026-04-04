@@ -1,145 +1,63 @@
 {
-  "id": "route-7",
-  "name": "Route 7",
+  "id": "absoluta",
+  "name": "Absoluta",
   "tileset": "dpp",
-  "width": 30,
-  "height": 18,
+  "width": 25,
+  "height": 20,
   "tileSize": 16,
   "spawn": {
-    "x": 2,
-    "y": 9
+    "x": 5,
+    "y": 10
   },
   "transitions": [
     {
       "fromX": 0,
-      "fromY": 8,
-      "toMapId": "symmetrika",
+      "fromY": 9,
+      "toMapId": "route-8",
       "toX": 28,
       "toY": 9
     },
     {
       "fromX": 0,
-      "fromY": 9,
-      "toMapId": "symmetrika",
+      "fromY": 10,
+      "toMapId": "route-8",
       "toX": 28,
       "toY": 10
     },
     {
-      "fromX": 29,
-      "fromY": 8,
-      "toMapId": "integrala",
-      "toX": 1,
-      "toY": 9
-    },
-    {
-      "fromX": 29,
+      "fromX": 24,
       "fromY": 9,
-      "toMapId": "integrala",
-      "toX": 1,
-      "toY": 10
+      "toMapId": "nullx-tower",
+      "toX": 12,
+      "toY": 18
     },
     {
-      "fromX": 0,
-      "fromY": 4,
-      "toMapId": "mountain-cave",
-      "toX": 28,
-      "toY": 14
-    },
-    {
-      "fromX": 0,
-      "fromY": 5,
-      "toMapId": "mountain-cave",
-      "toX": 28,
-      "toY": 15
+      "fromX": 24,
+      "fromY": 10,
+      "toMapId": "nullx-tower",
+      "toX": 12,
+      "toY": 19
     }
   ],
-  "music": "route",
-  "encounterTableId": "route-7",
+  "music": "town",
+  "encounterTableId": null,
   "npcs": [
     {
-      "id": "r7-t1",
-      "name": "Hiker Boaz",
-      "x": 6,
+      "id": "rocket-grunt-1",
+      "name": "Rocket Grunt",
+      "x": 10,
       "y": 8,
       "facing": "down",
       "type": "trainer",
-      "spriteType": "char_d25760",
+      "spriteType": "char_59c8b9",
       "party": [
         {
-          "pokemonId": 74,
-          "level": 31
+          "pokemonId": 52,
+          "level": 40
         },
         {
-          "pokemonId": 75,
-          "level": 32
-        },
-        {
-          "pokemonId": 95,
-          "level": 33
-        }
-      ],
-      "reward": {
-        "money": 1000
-      },
-      "dialogue": [
-        {
-          "en": "The mountains are my home!",
-          "he": "ההרים הם ביתי!"
-        }
-      ]
-    },
-    {
-      "id": "r7-t2",
-      "name": "Cooltrainer Avi",
-      "x": 15,
-      "y": 5,
-      "facing": "right",
-      "type": "trainer",
-      "spriteType": "char_d152a6",
-      "party": [
-        {
-          "pokemonId": 65,
-          "level": 32
-        },
-        {
-          "pokemonId": 106,
-          "level": 33
-        },
-        {
-          "pokemonId": 107,
-          "level": 33
-        }
-      ],
-      "reward": {
-        "money": 1100
-      },
-      "dialogue": [
-        {
-          "en": "Only the best trainers travel here.",
-          "he": "רק המאמנים הטובים ביותר נוסעים כאן."
-        }
-      ]
-    },
-    {
-      "id": "r7-t3",
-      "name": "Cooltrainer Noa",
-      "x": 22,
-      "y": 12,
-      "facing": "left",
-      "type": "trainer",
-      "spriteType": "dana",
-      "party": [
-        {
-          "pokemonId": 147,
-          "level": 32
-        },
-        {
-          "pokemonId": 148,
-          "level": 33
-        },
-        {
-          "pokemonId": 149,
-          "level": 34
+          "pokemonId": 109,
+          "level": 42
         }
       ],
       "reward": {
@@ -147,104 +65,36 @@
       },
       "dialogue": [
         {
-          "en": "Dratini line all the way!",
-          "he": "שושלת דרטיני כל הדרך!"
+          "en": "Team Rocket will not let you pass!",
+          "he": "צוות רוקט לא ייתן לך לעבור!"
         }
       ]
     },
     {
-      "id": "r7-t4",
-      "name": "Psychic Eli",
-      "x": 8,
-      "y": 14,
-      "facing": "up",
+      "id": "rocket-grunt-2",
+      "name": "Rocket Grunt",
+      "x": 18,
+      "y": 12,
+      "facing": "left",
       "type": "trainer",
-      "spriteType": "char_b8427f",
+      "spriteType": "char_8bd601",
       "party": [
         {
-          "pokemonId": 63,
-          "level": 32
+          "pokemonId": 41,
+          "level": 38
         },
         {
-          "pokemonId": 64,
-          "level": 33
-        },
-        {
-          "pokemonId": 122,
-          "level": 33
+          "pokemonId": 42,
+          "level": 40
         }
       ],
       "reward": {
-        "money": 1050
+        "money": 1100
       },
       "dialogue": [
         {
-          "en": "Your mind is an open book!",
-          "he": "המוח שלך ספר פתוח!"
-        }
-      ]
-    },
-    {
-      "id": "r7-t5",
-      "name": "Swimmer Maya",
-      "x": 27,
-      "y": 9,
-      "facing": "down",
-      "type": "trainer",
-      "spriteType": "char_878b8c",
-      "party": [
-        {
-          "pokemonId": 54,
-          "level": 31
-        },
-        {
-          "pokemonId": 55,
-          "level": 32
-        },
-        {
-          "pokemonId": 134,
-          "level": 33
-        }
-      ],
-      "reward": {
-        "money": 980
-      },
-      "dialogue": [
-        {
-          "en": "The river here is cold but refreshing!",
-          "he": "הנהר כאן קר אבל מרענן!"
-        }
-      ]
-    },
-    {
-      "id": "r7-t6",
-      "name": "Hiker Tal",
-      "x": 3,
-      "y": 4,
-      "facing": "right",
-      "type": "trainer",
-      "spriteType": "char_d25760",
-      "party": [
-        {
-          "pokemonId": 74,
-          "level": 32
-        },
-        {
-          "pokemonId": 76,
-          "level": 33
-        },
-        {
-          "pokemonId": 111,
-          "level": 34
-        }
-      ],
-      "reward": {
-        "money": 1020
-      },
-      "dialogue": [
-        {
-          "en": "My Rhyhorn is unstoppable!",
-          "he": "הריהורן שלי לא ניתן לעצירה!"
+          "en": "The boss says no one gets through!",
+          "he": "הבוס אמר שאף אחד לא יעבור!"
         }
       ]
     }
@@ -275,51 +125,9 @@
       "g1",
       "g1",
       "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1"
     ],
     [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1"
-    ],
-    [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1",
       "g1",
       "g1",
@@ -371,51 +179,9 @@
       "g1",
       "g1",
       "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1"
     ],
     [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1"
-    ],
-    [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1",
       "g1",
       "g1",
@@ -467,51 +233,9 @@
       "g1",
       "g1",
       "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1"
     ],
     [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1"
-    ],
-    [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1",
       "g1",
       "g1",
@@ -563,51 +287,9 @@
       "g1",
       "g1",
       "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1"
     ],
     [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1"
-    ],
-    [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1",
       "g1",
       "g1",
@@ -659,51 +341,9 @@
       "g1",
       "g1",
       "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1"
     ],
     [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1"
-    ],
-    [
-      "g1",
-      "g1",
-      "g1",
-      "g1",
-      "g1",
       "g1",
       "g1",
       "g1",
@@ -755,6 +395,28 @@
       "g1",
       "g1",
       "g1",
+      "g1"
+    ],
+    [
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
       "g1",
       "g1",
       "g1",
@@ -787,6 +449,28 @@
       "g1",
       "g1",
       "g1",
+      "g1"
+    ],
+    [
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
       "g1",
       "g1",
       "g1",
@@ -800,6 +484,136 @@
       "g1",
       "g1",
       "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1"
+    ],
+    [
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1"
+    ],
+    [
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1"
+    ],
+    [
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1"
+    ],
+    [
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1",
+      "g1"
+    ],
+    [
       "g1",
       "g1",
       "g1",

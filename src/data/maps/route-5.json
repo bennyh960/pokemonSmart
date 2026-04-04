@@ -13,15 +13,15 @@
     {
       "fromX": 0,
       "fromY": 8,
-      "toMapId": "route-4",
-      "toX": 28,
+      "toMapId": "dividia",
+      "toX": 53,
       "toY": 9
     },
     {
       "fromX": 0,
       "fromY": 9,
-      "toMapId": "route-4",
-      "toX": 28,
+      "toMapId": "dividia",
+      "toX": 53,
       "toY": 10
     },
     {
@@ -37,11 +37,197 @@
       "toMapId": "primore",
       "toX": 1,
       "toY": 10
+    },
+    {
+      "fromX": 15,
+      "fromY": 0,
+      "toMapId": "dividia-cave",
+      "toX": 15,
+      "toY": 13
+    },
+    {
+      "fromX": 16,
+      "fromY": 0,
+      "toMapId": "dividia-cave",
+      "toX": 16,
+      "toY": 13
     }
   ],
   "music": "route",
   "encounterTableId": "route-5",
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "r5-t1",
+      "name": "Picnicker Tamar",
+      "x": 6,
+      "y": 5,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "dana",
+      "party": [
+        {
+          "pokemonId": 35,
+          "level": 21
+        },
+        {
+          "pokemonId": 36,
+          "level": 22
+        }
+      ],
+      "reward": {
+        "money": 600
+      },
+      "dialogue": [
+        {
+          "en": "Route 5 is mine!",
+          "he": "שביל 5 שלי!"
+        }
+      ]
+    },
+    {
+      "id": "r5-t2",
+      "name": "Youngster Uri",
+      "x": 14,
+      "y": 13,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "dani",
+      "party": [
+        {
+          "pokemonId": 25,
+          "level": 22
+        },
+        {
+          "pokemonId": 100,
+          "level": 22
+        },
+        {
+          "pokemonId": 101,
+          "level": 23
+        }
+      ],
+      "reward": {
+        "money": 580
+      },
+      "dialogue": [
+        {
+          "en": "Electric shocks for everyone!",
+          "he": "הלם חשמלי לכולם!"
+        }
+      ]
+    },
+    {
+      "id": "r5-t3",
+      "name": "Hiker Amnon",
+      "x": 22,
+      "y": 7,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_d25760",
+      "party": [
+        {
+          "pokemonId": 66,
+          "level": 21
+        },
+        {
+          "pokemonId": 67,
+          "level": 22
+        },
+        {
+          "pokemonId": 68,
+          "level": 23
+        }
+      ],
+      "reward": {
+        "money": 640
+      },
+      "dialogue": [
+        {
+          "en": "I train with Fighting types!",
+          "he": "אני מתאמן עם סוגי לחימה!"
+        }
+      ]
+    },
+    {
+      "id": "r5-t4",
+      "name": "Lass Dina",
+      "x": 8,
+      "y": 14,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "dana",
+      "party": [
+        {
+          "pokemonId": 43,
+          "level": 22
+        },
+        {
+          "pokemonId": 52,
+          "level": 23
+        },
+        {
+          "pokemonId": 53,
+          "level": 23
+        }
+      ],
+      "reward": {
+        "money": 620
+      },
+      "dialogue": [
+        {
+          "en": "My Meowth loves gold coins!",
+          "he": "הפרסה שלי אוהב מטבעות זהב!"
+        }
+      ]
+    },
+    {
+      "id": "r5-t5",
+      "name": "Psychic Gal",
+      "x": 24,
+      "y": 4,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_8bd601",
+      "party": [
+        {
+          "pokemonId": 63,
+          "level": 22
+        },
+        {
+          "pokemonId": 64,
+          "level": 22
+        },
+        {
+          "pokemonId": 65,
+          "level": 23
+        }
+      ],
+      "reward": {
+        "money": 700
+      },
+      "dialogue": [
+        {
+          "en": "I can read your moves!",
+          "he": "אני יכולה לקרוא את המהלכים שלך!"
+        }
+      ]
+    },
+    {
+      "id": "r5-hiker",
+      "name": "Hiker",
+      "x": 3,
+      "y": 9,
+      "facing": "right",
+      "type": "npc",
+      "spriteType": "char_d25760",
+      "dialogue": [
+        {
+          "en": "There is a cave shortcut through the mountains ahead. Need STRENGTH to move the boulders inside.",
+          "he": "יש קיצור מערה דרך ההרים לפנינו. צריך כוח להזיז את הסלעים בפנים."
+        }
+      ]
+    }
+  ],
   "tiles": [
     [
       "g1",

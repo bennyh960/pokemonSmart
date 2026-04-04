@@ -8,7 +8,50 @@
     "x": 10,
     "y": 7
   },
-  "transitions": [],
+  "transitions": [
+    {
+      "fromX": 0,
+      "fromY": 6,
+      "toMapId": "route-3",
+      "toX": 38,
+      "toY": 8
+    },
+    {
+      "fromX": 0,
+      "fromY": 7,
+      "toMapId": "route-3",
+      "toX": 38,
+      "toY": 9
+    },
+    {
+      "fromX": 19,
+      "fromY": 6,
+      "toMapId": "route-4",
+      "toX": 1,
+      "toY": 8
+    },
+    {
+      "fromX": 19,
+      "fromY": 7,
+      "toMapId": "route-4",
+      "toX": 1,
+      "toY": 9
+    },
+    {
+      "fromX": 9,
+      "fromY": 9,
+      "toMapId": "fake-pokecenter",
+      "toX": 4,
+      "toY": 7
+    },
+    {
+      "fromX": 10,
+      "fromY": 9,
+      "toMapId": "fake-pokecenter",
+      "toX": 5,
+      "toY": 7
+    }
+  ],
   "npcs": [
     {
       "id": "misty-multiplia",

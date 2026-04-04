@@ -34,23 +34,23 @@
     {
       "fromX": 39,
       "fromY": 8,
-      "toMapId": "multitown",
+      "toMapId": "multiplia",
       "toX": 1,
-      "toY": 8
+      "toY": 9
     },
     {
       "fromX": 39,
       "fromY": 9,
-      "toMapId": "multitown",
+      "toMapId": "multiplia",
       "toX": 1,
       "toY": 9
     },
     {
       "fromX": 39,
       "fromY": 10,
-      "toMapId": "multitown",
+      "toMapId": "multiplia",
       "toX": 1,
-      "toY": 10
+      "toY": 9
     }
   ],
   "npcs": [
@@ -251,6 +251,154 @@
         }
       ],
       "spriteType": "trainer-m"
+    },
+    {
+      "id": "r3-t1",
+      "name": "Youngster Dor",
+      "x": 7,
+      "y": 4,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "dani",
+      "party": [
+        {
+          "pokemonId": 21,
+          "level": 11
+        },
+        {
+          "pokemonId": 19,
+          "level": 12
+        }
+      ],
+      "reward": {
+        "money": 320
+      },
+      "dialogue": [
+        {
+          "en": "You won't get past me!",
+          "he": "לא תעבור אותי!"
+        }
+      ]
+    },
+    {
+      "id": "r3-t2",
+      "name": "Lass Noga",
+      "x": 20,
+      "y": 12,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "dana",
+      "party": [
+        {
+          "pokemonId": 35,
+          "level": 11
+        },
+        {
+          "pokemonId": 39,
+          "level": 12
+        },
+        {
+          "pokemonId": 40,
+          "level": 12
+        }
+      ],
+      "reward": {
+        "money": 340
+      },
+      "dialogue": [
+        {
+          "en": "My Clefairy is unbeatable!",
+          "he": "הקלפרי שלי אחד בלתי מנוצח!"
+        }
+      ]
+    },
+    {
+      "id": "r3-t3",
+      "name": "Hiker Moshe",
+      "x": 30,
+      "y": 7,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_d25760",
+      "party": [
+        {
+          "pokemonId": 74,
+          "level": 12
+        },
+        {
+          "pokemonId": 75,
+          "level": 12
+        }
+      ],
+      "reward": {
+        "money": 360
+      },
+      "dialogue": [
+        {
+          "en": "These rocks keep me strong!",
+          "he": "האבנים האלה שומרות אותי חזק!"
+        }
+      ]
+    },
+    {
+      "id": "r3-t4",
+      "name": "Bird Keeper Lior",
+      "x": 12,
+      "y": 14,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_e38ab2",
+      "party": [
+        {
+          "pokemonId": 16,
+          "level": 13
+        },
+        {
+          "pokemonId": 18,
+          "level": 14
+        },
+        {
+          "pokemonId": 22,
+          "level": 14
+        }
+      ],
+      "reward": {
+        "money": 350
+      },
+      "dialogue": [
+        {
+          "en": "My birds dominate the skies!",
+          "he": "הציפורים שלי שולטות בשמיים!"
+        }
+      ]
+    },
+    {
+      "id": "r3-t5",
+      "name": "Picnicker Shira",
+      "x": 35,
+      "y": 9,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "dana",
+      "party": [
+        {
+          "pokemonId": 43,
+          "level": 11
+        },
+        {
+          "pokemonId": 52,
+          "level": 11
+        }
+      ],
+      "reward": {
+        "money": 330
+      },
+      "dialogue": [
+        {
+          "en": "Come battle me in the grass!",
+          "he": "בוא להילחם בי בעשב!"
+        }
+      ]
     }
   ],
   "music": "route",
@@ -1993,6 +2141,16 @@
       "key": "r3",
       "x": 12,
       "y": 16
+    },
+    {
+      "key": "t5-cut",
+      "x": 38,
+      "y": 6
+    },
+    {
+      "key": "t5-cut",
+      "x": 38,
+      "y": 7
     }
   ]
 }

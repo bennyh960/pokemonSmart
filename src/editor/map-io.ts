@@ -22,6 +22,8 @@ export function getKnownMapIds(): string[] {
     'route-8', 'absoluta',
     // Act 5 — NULL-X Tower
     'nullx-tower', 'nullx-floor-6',
+    // Caves
+    'dividia-cave', 'symmetrika-cave', 'mountain-cave',
     // Interiors / shared
     'mart-interior', 'pokecenter-2', 'pokecenter-mart-interior', 'house-3-i',
     // Side areas
