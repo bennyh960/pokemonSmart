@@ -3968,28 +3968,6 @@
       "category": "ground",
       "interactType": null,
       "description": "cave 1 sand - can be place around cs1ricj tiles where i.j are indices"
-    },
-    {
-      "key": "cs1r",
-      "sx": 128,
-      "sy": 7504,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "description": "cave sand right"
-    },
-    {
-      "key": "cs1l",
-      "sx": 128,
-      "sy": 7520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "description": "cave sand 1 left"
     }
   ]
 }

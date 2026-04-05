@@ -3584,7 +3584,6 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "other",
       "interactType": null,
       "description": "cave 1 exit wall right side"
     },
@@ -3854,7 +3853,6 @@
       "walkable": false,
       "above": false,
       "category": "other",
-      "interactType": null,
       "description": "cave rock decoration"
     },
     {
@@ -3866,130 +3864,10 @@
       "walkable": true,
       "above": false,
       "category": "interactive",
+      "description": "cave rock decor that can destroy",
       "interactType": {
         "id": "strength"
-      },
-      "description": "cave rock decor that can destroy"
-    },
-    {
-      "key": "stairs",
-      "sx": 32,
-      "sy": 7552,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "cs1r1c1",
-      "sx": 80,
-      "sy": 7504,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave 1 sand row 1 col 1 top left"
-    },
-    {
-      "key": "cs1r1c2",
-      "sx": 96,
-      "sy": 7504,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave 1 sand row 1 col 2"
-    },
-    {
-      "key": "cs1r1c3",
-      "sx": 112,
-      "sy": 7504,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave 1 sand row 1 col 3 top right"
-    },
-    {
-      "key": "cs1r2c1",
-      "sx": 80,
-      "sy": 7520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave 1 sand row 2 col 1 bottom left"
-    },
-    {
-      "key": "cs1r2c2",
-      "sx": 96,
-      "sy": 7520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave 1 sand row 2 col 2"
-    },
-    {
-      "key": "cs1r2c3",
-      "sx": 112,
-      "sy": 7520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave 1 sand row 2 col 3 bottom right"
-    },
-    {
-      "key": "cs1",
-      "sx": 80,
-      "sy": 7552,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "encounterTypes": [
-        "*"
-      ],
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "cave 1 sand - can be place around cs1ricj tiles where i.j are indices"
-    },
-    {
-      "key": "cs1r",
-      "sx": 128,
-      "sy": 7504,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "description": "cave sand right"
-    },
-    {
-      "key": "cs1l",
-      "sx": 128,
-      "sy": 7520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "description": "cave sand 1 left"
+      }
     }
   ]
 }

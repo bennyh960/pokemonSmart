@@ -1,6 +1,8 @@
 import type { TileEntry, TsEditorEvent } from './types.js';
 import { toAssetUrl } from '../engine/asset-path.js';
 
+const DEFAULT_TILE_SIZE = 16
+
 export class TilesetEditorState {
   // All defined tiles
   tiles: TileEntry[] = [];
@@ -43,8 +45,8 @@ export class TilesetEditorState {
   // Target region (draggable/resizable)
   cropTargetX = 0;
   cropTargetY = 0;
-  cropTargetW = 16;
-  cropTargetH = 16;
+  cropTargetW = DEFAULT_TILE_SIZE;
+  cropTargetH = DEFAULT_TILE_SIZE;
 
   // Image
   imageSrc = toAssetUrl('/sprites/overworld/dpp-tileset.png');
@@ -111,12 +113,12 @@ export class TilesetEditorState {
   }
 
   /** Selection in pixels. */
-  get selPixelX(): number { return this.selStartCol * 16; }
-  get selPixelY(): number { return this.selStartRow * 16; }
+  get selPixelX(): number { return this.selStartCol * DEFAULT_TILE_SIZE; }
+  get selPixelY(): number { return this.selStartRow * DEFAULT_TILE_SIZE; }
   get selCols(): number { return this.selEndCol - this.selStartCol + 1; }
   get selRows(): number { return this.selEndRow - this.selStartRow + 1; }
-  get selPixelW(): number { return this.selCols * 16; }
-  get selPixelH(): number { return this.selRows * 16; }
+  get selPixelW(): number { return this.selCols * DEFAULT_TILE_SIZE; }
+  get selPixelH(): number { return this.selRows * DEFAULT_TILE_SIZE; }
 
   // ── Crop lock ──
 
@@ -158,15 +160,15 @@ export class TilesetEditorState {
     // Highlight the tile's region on the spritesheet
     if (index >= 0 && index < this.tiles.length) {
       const t = this.tiles[index];
-      const gridW = Math.max(1, Math.round(t.w / 16));
-      const gridH = Math.max(1, Math.round(t.h / 16));
-      const startCol = Math.round(t.sx / 16);
-      const startRow = Math.round(t.sy / 16);
+      const gridW = Math.max(1, Math.round(t.w / DEFAULT_TILE_SIZE));
+      const gridH = Math.max(1, Math.round(t.h / DEFAULT_TILE_SIZE));
+      const startCol = Math.round(t.sx / DEFAULT_TILE_SIZE);
+      const startRow = Math.round(t.sy / DEFAULT_TILE_SIZE);
       this.setSelection(startCol, startRow, startCol + gridW - 1, startRow + gridH - 1);
 
       // Scroll to make the tile visible
-      const centerX = (startCol + gridW / 2) * 16 * this.zoom;
-      const centerY = (startRow + gridH / 2) * 16 * this.zoom;
+      const centerX = (startCol + gridW / 2) * DEFAULT_TILE_SIZE * this.zoom;
+      const centerY = (startRow + gridH / 2) * DEFAULT_TILE_SIZE * this.zoom;
       // Only scroll if far from current view (don't jump on every click)
       const viewW = 800; // approximate
       const viewH = 600;

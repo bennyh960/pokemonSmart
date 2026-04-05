@@ -136,18 +136,33 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
     },
 
     isWalkable(gx: number, gy: number): boolean {
+      // Object tiles override base tile walkability.
+      // `above` is purely a render hint — it has no effect on walkability.
+      // Example: bridge (above:true, walkable:true) over water (walkable:false) → CAN walk.
+      // Example: tree trunk (above:false, walkable:false) over grass (walkable:true) → CANNOT walk.
+      if (tileset) {
+        for (const obj of placedObjects) {
+          const def = tileset.getTile(obj.key);
+          if (!def) continue;
+          const gridW = Math.max(1, Math.round(def.w / BASE));
+          const gridH = Math.max(1, Math.round(def.h / BASE));
+          const lx = gx - obj.x;
+          const ly = gy - obj.y;
+          if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
+            if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+            return def.walkable; // object tile is present — its walkable is the answer
+          }
+        }
+      }
+      // No object tile at this cell — base tile decides
       const tile = this.getTile(gx, gy);
       if (tile === -1) return false;
-      let groundOk = false;
       if (typeof tile === 'string' && tileset) {
         const def = tileset.getTile(tile);
-        groundOk = def ? def.walkable : false;
-      } else if (typeof tile === 'number') {
-        groundOk = !BLOCKED_TILES.has(tile);
+        return def ? def.walkable : false;
       }
-      if (!groundOk) return false;
-      if (this.isObjectBlocking(gx, gy)) return false;
-      return true;
+      if (typeof tile === 'number') return !BLOCKED_TILES.has(tile);
+      return false;
     },
 
     isEncounterTile(gx: number, gy: number): boolean {

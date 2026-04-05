@@ -3584,7 +3584,6 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "other",
       "interactType": null,
       "description": "cave 1 exit wall right side"
     },
@@ -3891,7 +3890,6 @@
       "walkable": true,
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "cave 1 sand row 1 col 1 top left"
     },
     {
@@ -3903,7 +3901,6 @@
       "walkable": true,
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "cave 1 sand row 1 col 2"
     },
     {
@@ -3915,7 +3912,6 @@
       "walkable": true,
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "cave 1 sand row 1 col 3 top right"
     },
     {
@@ -3927,7 +3923,6 @@
       "walkable": true,
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "cave 1 sand row 2 col 1 bottom left"
     },
     {
@@ -3939,7 +3934,6 @@
       "walkable": true,
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "cave 1 sand row 2 col 2"
     },
     {
@@ -3951,7 +3945,6 @@
       "walkable": true,
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "cave 1 sand row 2 col 3 bottom right"
     },
     {
@@ -3966,30 +3959,7 @@
       ],
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "cave 1 sand - can be place around cs1ricj tiles where i.j are indices"
-    },
-    {
-      "key": "cs1r",
-      "sx": 128,
-      "sy": 7504,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "description": "cave sand right"
-    },
-    {
-      "key": "cs1l",
-      "sx": 128,
-      "sy": 7520,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "other",
-      "description": "cave sand 1 left"
     }
   ]
 }
