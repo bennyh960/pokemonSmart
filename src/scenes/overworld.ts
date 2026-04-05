@@ -167,6 +167,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
   let gateGuardApproach: GateGuardApproachState | null = null;
 
+  // Party-guard approach state (NPC with despawnWhenParty that blocks until party is ready)
+  interface PartyGuardApproachState {
+    npc: NPCData;
+    phase: 'exclamation';
+    timer: number;
+  }
+  let partyGuardApproach: PartyGuardApproachState | null = null;
+  let pendingPartyBack: { pushDx: number; pushDy: number } | null = null;
+
   // Cutscene: hide player sprite
   let playerHidden = false;
 
@@ -774,6 +783,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     trainerApproach = null;
     gateGuardApproach = null;
     pendingGateBack = null;
+    partyGuardApproach = null;
+    pendingPartyBack = null;
     playerHidden = false;
     hmAnim = null;
     pendingHMAction = null;
@@ -1025,6 +1036,39 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
 
+      // Push player back after party-guard blocks them
+      if (pendingPartyBack) {
+        const pb = pendingPartyBack;
+        pendingPartyBack = null;
+        const bx = player.gridX + pb.pushDx;
+        const by = player.gridY + pb.pushDy;
+        if (tileMap && tileMap.isWalkable(bx, by) && !(npcManager?.isNPCAt(bx, by))) {
+          player.moving = true;
+          player.targetGridX = bx; player.targetGridY = by;
+          player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
+          player.moveProgress = 0;
+          player.walkTimer = 0; player.walkFrame = 1;
+        }
+      }
+
+      // Party-guard approach animation (exclamation → dialogue → push back)
+      if (partyGuardApproach) {
+        const pga = partyGuardApproach;
+        pga.timer += dt;
+        if (pga.phase === 'exclamation' && pga.timer >= 0.8) {
+          partyGuardApproach = null;
+          turnNPCToPlayer(pga.npc);
+          // Store push-back direction (opposite of player's current facing)
+          const facingVec = DIR_VECTORS[player.facing];
+          if (facingVec) {
+            pendingPartyBack = { pushDx: -facingVec.dx, pushDy: -facingVec.dy };
+          }
+          interactingNPC = pga.npc;
+          activeTextBox = createTextBox(resolveDialogue(pga.npc.dialogue, getLocale()), isRTL());
+        }
+        return;
+      }
+
       // Gate-guard approach animation (exclamation → dialogue → gate scene)
       if (gateGuardApproach) {
         const ga = gateGuardApproach;
@@ -1214,6 +1258,29 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               for (let d = 1; d <= range; d++) {
                 if (guard.x + vec.dx * d === player.gridX && guard.y + vec.dy * d === player.gridY) {
                   startGateGuardApproach(guard);
+                  return;
+                }
+              }
+            }
+          }
+
+          // Check party-guard line-of-sight (despawnWhenParty NPCs that block until party is ready)
+          if (npcManager && hasActiveGame() && !partyGuardApproach && !gateGuardApproach) {
+            const _pgPd = getPlayerData();
+            const pgFacingVecs: Record<string, { dx: number; dy: number }> = {
+              up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 },
+              left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 },
+            };
+            for (const npc of npcManager.getNPCs()) {
+              if (!npc.despawnWhenParty) continue;
+              // If condition already met the NPC is invisible — skip
+              if (!isNPCVisible(npc, _pgPd.flags, _pgPd.party)) continue;
+              const vec = pgFacingVecs[npc.facing];
+              if (!vec) continue;
+              const range = npc.lineOfSight ?? 3;
+              for (let d = 1; d <= range; d++) {
+                if (npc.x + vec.dx * d === player.gridX && npc.y + vec.dy * d === player.gridY) {
+                  partyGuardApproach = { npc, phase: 'exclamation', timer: 0 };
                   return;
                 }
               }
@@ -1731,10 +1798,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               render: () => {
                 ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, nx, ny, TILE_SIZE, TILE_SIZE);
-                // "!" exclamation during trainer or gate-guard approach
+                // "!" exclamation during trainer, gate-guard, or party-guard approach
                 const showExclamation =
                   (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') ||
-                  (gateGuardApproach && gateGuardApproach.guard === npc && gateGuardApproach.phase === 'exclamation');
+                  (gateGuardApproach && gateGuardApproach.guard === npc && gateGuardApproach.phase === 'exclamation') ||
+                  (partyGuardApproach && partyGuardApproach.npc === npc && partyGuardApproach.phase === 'exclamation');
                 if (showExclamation) {
                   fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
                   drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });

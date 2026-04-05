@@ -4543,7 +4543,6 @@
       "walkable": false,
       "above": true,
       "category": "tree",
-      "interactType": null,
       "description": "small tree 1 bottom"
     },
     {
@@ -4553,10 +4552,9 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "above": true,
+      "above": false,
       "overlay": true,
       "category": "tree",
-      "interactType": null,
       "description": "small tree 1 top"
     },
     {
@@ -4568,7 +4566,6 @@
       "walkable": false,
       "above": true,
       "category": "tree",
-      "interactType": null,
       "description": "tree 2 bottom"
     },
     {
@@ -4578,10 +4575,9 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "above": true,
+      "above": false,
       "overlay": true,
       "category": "tree",
-      "interactType": null,
       "description": "tree 2 top"
     }
   ]

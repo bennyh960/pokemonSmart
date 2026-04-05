@@ -256,30 +256,6 @@
         "money": 100,
         "flag": "npc-helpful-1-rewarded"
       }
-    },
-    {
-      "id": "npc-1775416788336",
-      "x": 8,
-      "y": 1,
-      "facing": "right",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "מסוכן מידי ללכת ליער ללא פוקימון מאומן היטב."
-        },
-        {
-          "en": "If you dont have pokemon above level 25 its dangaorues for you",
-          "he": "נסה להגיע עם פוקימון לרמה 25 לפחות"
-        }
-      ],
-      "spriteType": "char_0502ea",
-      "name": "Max",
-      "nameHe": "מקס",
-      "despawnWhenParty": {
-        "count": 1,
-        "minLevel": 25
-      }
     }
   ],
   "music": "town",

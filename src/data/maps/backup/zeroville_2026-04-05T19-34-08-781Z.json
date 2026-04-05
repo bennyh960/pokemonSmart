@@ -275,11 +275,7 @@
       ],
       "spriteType": "char_0502ea",
       "name": "Max",
-      "nameHe": "מקס",
-      "despawnWhenParty": {
-        "count": 1,
-        "minLevel": 25
-      }
+      "nameHe": "מקס"
     }
   ],
   "music": "town",

@@ -1026,12 +1026,17 @@ export class PropertiesPanel {
     const updateDwp = () => {
       const cnt = parseInt(cntInput.value, 10);
       const lvl = parseInt(lvlInput.value, 10);
+      const bothEmpty = cntInput.value.trim() === '' && lvlInput.value.trim() === '';
       if (!isNaN(cnt) && !isNaN(lvl) && cnt > 0 && lvl > 0) {
+        // Both valid — save and refresh
         npcAny['despawnWhenParty'] = { count: cnt, minLevel: lvl };
-      } else {
+        emit();
+      } else if (bothEmpty) {
+        // Both cleared — remove and refresh
         delete npcAny['despawnWhenParty'];
+        emit();
       }
-      emit();
+      // Partially filled — do nothing (don't emit, don't refresh, inputs keep their typed value)
     };
     cntInput.addEventListener('change', updateDwp);
     lvlInput.addEventListener('change', updateDwp);
@@ -1042,6 +1047,28 @@ export class PropertiesPanel {
     partyRow.appendChild(lvlInput);
     partyRow.appendChild(this.makeInfo('NPC disappears once the player has ≥ count Pokémon all at or above minLevel. Clear both fields to disable.'));
     section.appendChild(partyRow);
+
+    // ── Line of sight (only meaningful when despawnWhenParty is set) ──
+    if (npcAny['despawnWhenParty']) {
+      const losRow = document.createElement('div');
+      losRow.className = 'prop-row';
+      losRow.innerHTML = '<label>Block range (tiles):</label>';
+      const losIn = document.createElement('input');
+      losIn.type = 'number';
+      losIn.min = '1';
+      losIn.max = '10';
+      losIn.value = String((npcAny['lineOfSight'] as number | undefined) ?? 3);
+      losIn.title = 'How many tiles in front the NPC can see to block the player';
+      losIn.style.width = '46px';
+      losIn.addEventListener('change', () => {
+        const v = parseInt(losIn.value, 10);
+        npcAny['lineOfSight'] = isNaN(v) ? 3 : Math.max(1, v);
+        emit();
+      });
+      losRow.appendChild(losIn);
+      losRow.appendChild(this.makeInfo('NPC shows ! and blocks the player when they step within this many tiles. Works like a gate guard.'));
+      section.appendChild(losRow);
+    }
   }
 
   private renderAutoWalkUI(section: HTMLElement, npc: NPCData): void {
