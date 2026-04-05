@@ -66,7 +66,8 @@
     }
   ],
   "music": "town",
-  "encounterTableId": null
+  "encounterTableId": null,
+  "area": "Sumville"
 ,
   "tiles": [
     ["wall","pic1","wall","tv1","wall","wall","flh1","books","wall"],

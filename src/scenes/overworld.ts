@@ -1187,8 +1187,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Check trainer line-of-sight after each step
           if (npcManager && hasActiveGame()) {
             const trainers = npcManager.getTrainers();
-            const flags = getPlayerData().flags;
-            const spotter = checkTrainerLineOfSight(trainers, player.gridX, player.gridY, flags);
+            const _losPd = getPlayerData();
+            const spotter = checkTrainerLineOfSight(trainers, player.gridX, player.gridY, _losPd.flags, _losPd.party);
             if (spotter) {
               startTrainerApproach(spotter);
               return;
@@ -1202,9 +1202,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 },
             };
             const flags = getPlayerData().flags;
+            const _gParty = getPlayerData().party;
             for (const npc of npcManager.getNPCs()) {
               if (npc.type !== 'gate-guard') continue;
-              if (!isNPCVisible(npc, flags)) continue;
+              if (!isNPCVisible(npc, flags, _gParty)) continue;
               const guard = npc as unknown as import('../systems/npc.js').GateGuardData;
               if (isGateUnlocked(guard.gateId)) continue;
               const vec = guardFacingVecs[guard.facing];
@@ -1226,9 +1227,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // ── NPC auto-walk + animation update ──
       if (npcManager) {
-        const flags = hasActiveGame() ? getPlayerData().flags : {};
+        const _pd1 = hasActiveGame() ? getPlayerData() : null;
+        const flags = _pd1?.flags ?? {};
         for (const npc of npcManager.getNPCs()) {
-          if (!isNPCVisible(npc, flags)) continue;
+          if (!isNPCVisible(npc, flags, _pd1?.party)) continue;
           const st = getNpcState(npc);
 
           // Update walk animation
@@ -1315,8 +1317,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (!player.moving && (input.isKeyPressed('Enter') || input.isKeyPressed(' '))) {
         if (npcManager) {
           const npc = npcManager.getFacingNPC(player.gridX, player.gridY, player.facing);
-          const iFlags = hasActiveGame() ? getPlayerData().flags : {};
-          if (npc && npc.dialogue.length > 0 && isNPCVisible(npc, iFlags)) {
+          const _iPd = hasActiveGame() ? getPlayerData() : null;
+          const iFlags = _iPd?.flags ?? {};
+          if (npc && npc.dialogue.length > 0 && isNPCVisible(npc, iFlags, _iPd?.party)) {
             // Defeated trainers: show re-encounter dialogue or "already beaten" message
             if (npc.type === 'trainer' && hasActiveGame()) {
               const flags = getPlayerData().flags;
@@ -1685,9 +1688,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // NPCs
       if (npcManager) {
-        const visFlags = hasActiveGame() ? getPlayerData().flags : {};
+        const _visPd = hasActiveGame() ? getPlayerData() : null;
+        const visFlags = _visPd?.flags ?? {};
         for (const npc of npcManager.getNPCs()) {
-          if (!isNPCVisible(npc, visFlags)) continue;
+          if (!isNPCVisible(npc, visFlags, _visPd?.party)) continue;
           const npcSt = getNpcState(npc);
 
           // Use runtime pixel position (supports auto-walk + trainer approach)

@@ -101,7 +101,8 @@
     }
   ],
   "music": "town",
-  "encounterTableId": null
+  "encounterTableId": null,
+  "area": "Zeroville"
 ,
   "tiles": [
     ["wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall"],

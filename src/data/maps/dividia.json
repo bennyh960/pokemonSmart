@@ -345,7 +345,8 @@
     }
   ],
   "music": "town",
-  "encounterTableId": null
+  "encounterTableId": null,
+  "area": "Dividia"
 ,
   "tiles": [
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1l","wt1","wt1tr","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],

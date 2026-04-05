@@ -5,7 +5,9 @@ import { CanvasViewport } from './canvas-viewport.js';
 import { TilePalette, categorizeTiles } from './tile-palette.js';
 import { Toolbar } from './toolbar.js';
 import { PropertiesPanel } from './properties-panel.js';
-import { createBlankMap, saveMap } from './map-io.js';
+import { createBlankMap, saveMap, loadMapFromProject } from './map-io.js';
+import { mapRelationIndex } from './map-relation-index.js';
+import { RegionMapOverlay } from './region-map.js';
 import dppManifest from '../data/tilesets/dpp.json';
 import type { TileDef, NPCData, MapTransition } from './types.js';
 import { toAssetUrl } from '../engine/asset-path.js';
@@ -89,7 +91,35 @@ async function init() {
   new Toolbar(toolbarEl, state, history, tiles);
   new TilePalette(paletteEl, state, dppManifest.image, tiles, tilesetImage.naturalWidth, tilesetImage);
   new CanvasViewport(canvasEl, state, tilesetImage, new Map(Object.entries(tiles)), toolSystem);
-  new PropertiesPanel(propsEl, state, history, tiles);
+
+  // Navigation callback — used by PropertiesPanel map links and RegionMapOverlay
+  const navigateToMap = async (mapId: string) => {
+    try {
+      const data = await loadMapFromProject(mapId);
+      const cats = categorizeTiles(tiles as unknown as Record<string, never>);
+      state.loadMap(data, cats);
+      history.clear();
+    } catch (err) {
+      console.error('Failed to navigate to map:', mapId, err);
+    }
+  };
+
+  new PropertiesPanel(propsEl, state, history, tiles, navigateToMap);
+
+  // Region map overlay (full-screen canvas view of all maps)
+  const regionMap = new RegionMapOverlay(document.body, navigateToMap);
+
+  // Add Region button to toolbar
+  const regionBtn = document.createElement('button');
+  regionBtn.id = 'btn-region';
+  regionBtn.textContent = '🗺 Region';
+  regionBtn.title = 'Open Region Map (view all maps and connections)';
+  regionBtn.style.cssText = 'margin-left:8px;';
+  regionBtn.addEventListener('click', () => regionMap.toggle(state.mapData.id));
+  toolbarEl.querySelector('[data-group="view"]')!.appendChild(regionBtn);
+
+  // Kick off background loading of map relation index
+  mapRelationIndex.load().catch(console.error);
 
   // 7. Wire NPC tool dialog
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

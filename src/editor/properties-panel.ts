@@ -10,7 +10,9 @@ import { normalizeReward, type TrainerData, type TrainerReward, type DialogueRew
 import { GATES } from '../data/story/gates.js';
 import { BADGES } from '../data/badges.js';
 import encounterTables from '../data/encounter-tables.json';
-import { getKnownMapIds } from './map-io.js';
+import { getKnownMapIds, loadMapFromProject } from './map-io.js';
+import { mapRelationIndex } from './map-relation-index.js';
+import { categorizeTiles } from './tile-palette.js';
 
 // Ensure character sprites are loaded for preview
 loadCharacterSprites().catch(() => {});
@@ -35,12 +37,14 @@ export class PropertiesPanel {
   // @ts-expect-error Reserved for future use (undo on property edits)
   private _history: HistoryManager;
   private tiles: Record<string, TileDef>;
+  private onNavigate?: (mapId: string) => void;
 
-  constructor(container: HTMLElement, state: EditorState, history: HistoryManager, tiles: Record<string, TileDef>) {
+  constructor(container: HTMLElement, state: EditorState, history: HistoryManager, tiles: Record<string, TileDef>, onNavigate?: (mapId: string) => void) {
     this.container = container;
     this.state = state;
     this._history = history;
     this.tiles = tiles;
+    this.onNavigate = onNavigate;
 
     state.on('selection-changed', () => this.refresh());
     state.on('map-modified', () => this.refresh());
@@ -68,6 +72,12 @@ export class PropertiesPanel {
       const tr = this.state.mapData.transitions?.[selectedTransitionIndex];
       if (tr) this.renderTransitionProps(tr, selectedTransitionIndex);
     }
+
+    // ── Map info (area field) ──
+    this.renderMapInfo();
+
+    // ── Related maps ──
+    this.renderRelatedMaps();
 
     // ── NPC list ──
     this.renderNpcList();
@@ -441,6 +451,23 @@ export class PropertiesPanel {
     // Normalize reward (handles legacy number format)
     const reward: TrainerReward = normalizeReward(trainer.reward);
     trainerAny['reward'] = reward;
+
+    // ── Despawn on defeat ──
+    const dodRow = document.createElement('div');
+    dodRow.className = 'prop-row';
+    dodRow.innerHTML = '<label>Despawn on defeat:</label>';
+    const dodCb = document.createElement('input');
+    dodCb.type = 'checkbox';
+    dodCb.checked = !!trainer.despawnOnDefeat;
+    dodCb.title = 'When checked, this trainer disappears from the map after the player wins the battle (rival/rocket style)';
+    dodCb.addEventListener('change', () => {
+      if (dodCb.checked) trainerAny['despawnOnDefeat'] = true;
+      else delete trainerAny['despawnOnDefeat'];
+      emit();
+    });
+    dodRow.appendChild(dodCb);
+    dodRow.appendChild(this.makeInfo('Trainer sprite disappears after losing. Use for rival, Team Rocket, story bosses.'));
+    section.appendChild(dodRow);
 
     // ── Line of Sight ──
     const losRow = document.createElement('div');
@@ -959,6 +986,62 @@ export class PropertiesPanel {
     });
     despawnRow.appendChild(despawnIn);
     section.appendChild(despawnRow);
+
+    // ── Despawn when party reaches level threshold ──
+    const partyHdr = document.createElement('div');
+    partyHdr.style.cssText = 'font-size:10px;color:#7a8aaa;margin:8px 0 3px;font-weight:600;';
+    partyHdr.textContent = 'Despawn when party is strong enough:';
+    section.appendChild(partyHdr);
+
+    const dwp = (npcAny['despawnWhenParty'] as { count?: number; minLevel?: number } | undefined);
+
+    const partyRow = document.createElement('div');
+    partyRow.className = 'prop-row';
+    partyRow.style.gap = '6px';
+
+    const cntLabel = document.createElement('label');
+    cntLabel.textContent = '≥';
+    cntLabel.style.cssText = 'min-width:auto;';
+    const cntInput = document.createElement('input');
+    cntInput.type = 'number';
+    cntInput.min = '1';
+    cntInput.max = '6';
+    cntInput.placeholder = 'count';
+    cntInput.title = 'Number of qualifying Pokémon needed';
+    cntInput.value = dwp?.count != null ? String(dwp.count) : '';
+    cntInput.style.width = '46px';
+
+    const lvlLabel = document.createElement('label');
+    lvlLabel.textContent = 'Pokémon ≥ Lv';
+    lvlLabel.style.cssText = 'min-width:auto;';
+    const lvlInput = document.createElement('input');
+    lvlInput.type = 'number';
+    lvlInput.min = '1';
+    lvlInput.max = '100';
+    lvlInput.placeholder = 'level';
+    lvlInput.title = 'Minimum level each qualifying Pokémon must have';
+    lvlInput.value = dwp?.minLevel != null ? String(dwp.minLevel) : '';
+    lvlInput.style.width = '46px';
+
+    const updateDwp = () => {
+      const cnt = parseInt(cntInput.value, 10);
+      const lvl = parseInt(lvlInput.value, 10);
+      if (!isNaN(cnt) && !isNaN(lvl) && cnt > 0 && lvl > 0) {
+        npcAny['despawnWhenParty'] = { count: cnt, minLevel: lvl };
+      } else {
+        delete npcAny['despawnWhenParty'];
+      }
+      emit();
+    };
+    cntInput.addEventListener('change', updateDwp);
+    lvlInput.addEventListener('change', updateDwp);
+
+    partyRow.appendChild(cntLabel);
+    partyRow.appendChild(cntInput);
+    partyRow.appendChild(lvlLabel);
+    partyRow.appendChild(lvlInput);
+    partyRow.appendChild(this.makeInfo('NPC disappears once the player has ≥ count Pokémon all at or above minLevel. Clear both fields to disable.'));
+    section.appendChild(partyRow);
   }
 
   private renderAutoWalkUI(section: HTMLElement, npc: NPCData): void {
@@ -1177,6 +1260,129 @@ export class PropertiesPanel {
     });
     body.appendChild(delBtn);
     this.container.appendChild(section);
+  }
+
+  private renderMapInfo(): void {
+    const mapData = this.state.mapData;
+    const section = this.makeSection('Map Info', true);
+    const body = PropertiesPanel.sectionBody(section);
+
+    // Map ID (read-only display)
+    const idRow = document.createElement('div');
+    idRow.className = 'prop-row';
+    idRow.innerHTML = `<label>ID:</label><span style="font-family:monospace;font-size:11px">${mapData.id ?? '—'}</span>`;
+    body.appendChild(idRow);
+
+    // Area field (editable)
+    const areaRow = document.createElement('div');
+    areaRow.className = 'prop-row';
+    const areaLabel = document.createElement('label');
+    areaLabel.textContent = 'Area:';
+    const areaInput = document.createElement('input');
+    areaInput.type = 'text';
+    areaInput.value = mapData.area ?? '';
+    areaInput.placeholder = 'e.g. Dividia, Route 1';
+    areaInput.title = 'Group this map with a city/region. Maps sharing the same area appear in Related Maps.';
+    areaInput.addEventListener('change', () => {
+      const val = areaInput.value.trim();
+      mapData.area = val || undefined;
+      this.state.emit('map-modified');
+    });
+    areaRow.appendChild(areaLabel);
+    areaRow.appendChild(areaInput);
+    areaRow.appendChild(this.makeInfo('Set to group with other maps (e.g. city buildings). Shared area maps appear in Related Maps below.'));
+    body.appendChild(areaRow);
+
+    this.container.appendChild(section);
+  }
+
+  private renderRelatedMaps(): void {
+    const mapData = this.state.mapData;
+    const mapId = mapData.id ?? '';
+    const area = mapData.area;
+
+    const section = this.makeSection('Related Maps', true);
+    const body = PropertiesPanel.sectionBody(section);
+
+    if (!mapRelationIndex.isReady) {
+      body.innerHTML = '<div class="prop-empty">Loading map index…</div>';
+      // Re-render once the index is done
+      mapRelationIndex.onReady(() => this.refresh());
+      this.container.appendChild(section);
+      return;
+    }
+
+    // Live outgoing from current map's transitions (may include unsaved additions)
+    const liveOutgoing = (mapData.transitions ?? []).map(t => t.toMapId);
+    const related = mapRelationIndex.getRelated(mapId, area, liveOutgoing);
+
+    if (related.length === 0) {
+      body.innerHTML = '<div class="prop-empty">No related maps — set Area or add Transitions</div>';
+    } else {
+      const areaItems  = related.filter(r => r.relation === 'area');
+      const outItems   = related.filter(r => r.relation === 'outgoing');
+      const inItems    = related.filter(r => r.relation === 'incoming');
+
+      if (areaItems.length > 0) {
+        const hdr = document.createElement('div');
+        hdr.className = 'trainer-subsection-header';
+        hdr.textContent = area ? `Same area: ${area}` : 'Same area';
+        body.appendChild(hdr);
+        for (const rel of areaItems) body.appendChild(this.makeMapLink(rel.id, rel.name));
+      }
+
+      if (outItems.length > 0) {
+        const hdr = document.createElement('div');
+        hdr.className = 'trainer-subsection-header';
+        hdr.textContent = 'Outgoing transitions';
+        body.appendChild(hdr);
+        for (const rel of outItems) body.appendChild(this.makeMapLink(rel.id, rel.name));
+      }
+
+      if (inItems.length > 0) {
+        const hdr = document.createElement('div');
+        hdr.className = 'trainer-subsection-header';
+        hdr.textContent = 'Incoming transitions';
+        body.appendChild(hdr);
+        for (const rel of inItems) body.appendChild(this.makeMapLink(rel.id, rel.name));
+      }
+    }
+
+    this.container.appendChild(section);
+  }
+
+  private makeMapLink(mapId: string, name: string): HTMLElement {
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    item.style.cssText = 'cursor:pointer; display:flex; align-items:center; gap:6px;';
+
+    const idSpan = document.createElement('span');
+    idSpan.style.cssText = 'font-family:monospace; font-size:10px; color:#8a9aaa; flex-shrink:0;';
+    idSpan.textContent = mapId;
+
+    item.appendChild(idSpan);
+
+    if (name !== mapId) {
+      const nameSpan = document.createElement('span');
+      nameSpan.style.cssText = 'font-size:11px; color:#c8d8e8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;';
+      nameSpan.textContent = name;
+      item.appendChild(nameSpan);
+    }
+
+    item.title = `Open ${mapId} in editor`;
+    item.addEventListener('click', () => {
+      if (this.onNavigate) {
+        this.onNavigate(mapId);
+      } else {
+        // Fallback: load directly
+        loadMapFromProject(mapId).then(data => {
+          const cats = categorizeTiles(this.tiles as Record<string, never>);
+          this.state.loadMap(data, cats);
+        }).catch(err => console.error('Failed to load map:', err));
+      }
+    });
+
+    return item;
   }
 
   private renderNpcList(): void {

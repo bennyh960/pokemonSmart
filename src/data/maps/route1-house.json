@@ -28,18 +28,34 @@
       "facing": "right",
       "type": "npc",
       "dialogue": [
-        { "en": "Oh, a traveler! You must be tired from Route 1.", "he": "" },
-        { "en": "Would you like some advice? Always save before fighting a strong trainer!", "he": "" },
-        { "en": "The Pokemon Center in Sumville is just up ahead — keep going east!", "he": "" }
+        {
+          "en": "Oh, a traveler! You must be tired from Route 1.",
+          "he": ""
+        },
+        {
+          "en": "Would you like some advice? Always save before fighting a strong trainer!",
+          "he": ""
+        },
+        {
+          "en": "The Pokemon Center in Sumville is just up ahead — keep going east!",
+          "he": ""
+        }
       ],
       "spriteType": "npc-f",
       "reward": {
-        "items": [{ "itemId": "potion", "quantity": 1 }]
+        "items": [
+          {
+            "itemId": "potion",
+            "quantity": 1
+          }
+        ]
       }
     }
   ],
   "music": "town",
   "encounterTableId": null,
+  "area": "Route 1"
+,
   "tiles": [
     ["wall","pic2","flh1","wall","wall","pic1","wall"],
     ["wall","wall","wall","wall","wall","wall","wall"],
@@ -49,10 +65,30 @@
     ["d","d","d","d","d","d","d"]
   ],
   "objects": [
-    { "key": "df1", "x": 0, "y": 0 },
-    { "key": "tr1", "x": 6, "y": 0 },
-    { "key": "dt1", "x": 3, "y": 0 },
-    { "key": "ch1", "x": 5, "y": 2 },
-    { "key": "ctc", "x": 4, "y": 3 }
+    {
+      "key": "df1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "tr1",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "dt1",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "key": "ch1",
+      "x": 5,
+      "y": 2
+    },
+    {
+      "key": "ctc",
+      "x": 4,
+      "y": 3
+    }
   ]
 }

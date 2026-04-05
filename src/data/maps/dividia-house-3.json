@@ -5,26 +5,57 @@
   "width": 9,
   "height": 8,
   "tileSize": 16,
-  "spawn": { "x": 3, "y": 7 },
+  "spawn": {
+    "x": 3,
+    "y": 7
+  },
   "transitions": [
-    { "fromX": 3, "fromY": 7, "toMapId": null, "toX": null, "toY": null, "returnToPrevious": true },
-    { "fromX": 4, "fromY": 7, "toMapId": null, "toX": null, "toY": null, "returnToPrevious": true }
+    {
+      "fromX": 3,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 4,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
   ],
   "npcs": [
     {
       "id": "dividia-h3-trainer",
       "name": "Retired Trainer",
-      "x": 6, "y": 4, "facing": "left", "type": "npc",
+      "x": 6,
+      "y": 4,
+      "facing": "left",
+      "type": "npc",
       "dialogue": [
-        { "en": "I used to challenge the Gym here every week.", "he": "" },
-        { "en": "Fracta is tough — her Pokemon know moves that divide your defenses.", "he": "" },
-        { "en": "Here's a tip: Ground types resist her Electric moves!", "he": "" }
+        {
+          "en": "I used to challenge the Gym here every week.",
+          "he": ""
+        },
+        {
+          "en": "Fracta is tough — her Pokemon know moves that divide your defenses.",
+          "he": ""
+        },
+        {
+          "en": "Here's a tip: Ground types resist her Electric moves!",
+          "he": ""
+        }
       ],
       "spriteType": "trainer-m"
     }
   ],
   "music": "town",
   "encounterTableId": null,
+  "area": "Dividia"
+,
   "tiles": [
     ["wall","pic2","wall","flh1","wall","wall","pic1","books","wall"],
     ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
@@ -36,11 +67,35 @@
     ["d","d","d","d","d","d","d","d","d"]
   ],
   "objects": [
-    { "key": "df1", "x": 0, "y": 0 },
-    { "key": "library1", "x": 4, "y": 0 },
-    { "key": "tr2", "x": 8, "y": 0 },
-    { "key": "ch1", "x": 3, "y": 2 },
-    { "key": "dt1", "x": 1, "y": 2 },
-    { "key": "ctc", "x": 6, "y": 4 }
+    {
+      "key": "df1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "library1",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "tr2",
+      "x": 8,
+      "y": 0
+    },
+    {
+      "key": "ch1",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "key": "dt1",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "key": "ctc",
+      "x": 6,
+      "y": 4
+    }
   ]
 }

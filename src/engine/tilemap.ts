@@ -52,6 +52,8 @@ export interface TileMapData {
   npcs?: NPCData[];
   music?: string;
   encounterTableId?: string | null;
+  /** Optional area/city grouping label for map editor (e.g. "Dividia", "Route 1"). Not used in gameplay. */
+  area?: string;
 }
 
 /** Tile type constants (legacy). */

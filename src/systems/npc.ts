@@ -82,6 +82,8 @@ export interface NPCData {
   hidden?: boolean;         // NPC exists but not rendered/interactable until triggered
   spawnAfter?: string;      // Flag — NPC appears only after this flag is set
   despawnAfter?: string;    // Flag — NPC disappears after this flag is set
+  /** NPC disappears once player has at least `count` Pokémon at or above `minLevel`. */
+  despawnWhenParty?: { count: number; minLevel: number };
 }
 
 /** Reward item given after defeating a trainer. */
@@ -134,6 +136,8 @@ export interface TrainerData extends NPCData {
   type: 'trainer';
   party: { pokemonId: number; level: number; moves?: number[] }[];
   defeated?: boolean;
+  /** When true the trainer sprite disappears from the map after the player wins. */
+  despawnOnDefeat?: boolean;
   reward: TrainerReward;
   lineOfSight: number;
   postBattleDialogue?: BilingualText[];  // Dialogue shown after defeating this trainer
@@ -160,11 +164,27 @@ const FACING_VECTORS: Record<string, { dx: number; dy: number }> = {
   ArrowRight: { dx: 1, dy: 0 },
 };
 
-/** Check if an NPC should be visible given the current story flags. */
-export function isNPCVisible(npc: NPCData, flags: Record<string, boolean>): boolean {
+/** Check if an NPC should be visible given the current story flags and player party. */
+export function isNPCVisible(
+  npc: NPCData,
+  flags: Record<string, boolean>,
+  party?: import('../types/index.js').Pokemon[],
+): boolean {
   if (npc.hidden) return false;
   if (npc.spawnAfter && !flags[npc.spawnAfter]) return false;
   if (npc.despawnAfter && flags[npc.despawnAfter]) return false;
+
+  // Disappear once player has ≥ count Pokémon at or above minLevel
+  if (npc.despawnWhenParty && party) {
+    const { count, minLevel } = npc.despawnWhenParty;
+    if (party.filter(p => p.level >= minLevel).length >= count) return false;
+  }
+
+  // Trainers with despawnOnDefeat vanish after the player beats them
+  if (npc.type === 'trainer' && (npc as TrainerData).despawnOnDefeat) {
+    if (flags[`trainer-${npc.id}-defeated`]) return false;
+  }
+
   return true;
 }
 
@@ -222,11 +242,12 @@ export function checkTrainerLineOfSight(
   playerX: number,
   playerY: number,
   defeatedFlags: Record<string, boolean>,
+  party?: import('../types/index.js').Pokemon[],
 ): TrainerData | null {
   for (const trainer of trainers) {
     // Skip already-defeated or hidden trainers
     if (defeatedFlags[`trainer-${trainer.id}-defeated`]) continue;
-    if (!isNPCVisible(trainer, defeatedFlags)) continue;
+    if (!isNPCVisible(trainer, defeatedFlags, party)) continue;
 
     const vec = FACING_VECTORS[trainer.facing];
     if (!vec) continue;

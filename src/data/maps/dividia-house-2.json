@@ -68,7 +68,8 @@
     }
   ],
   "music": "town",
-  "encounterTableId": null
+  "encounterTableId": null,
+  "area": "Dividia"
 ,
   "tiles": [
     ["shelf1","wall","tv1","wall","fh1","fh1","books","shelf1"],

@@ -116,7 +116,8 @@
       "lineOfSight": 3,
       "postBattleDialogue": []
     }
-  ]
+  ],
+  "area": "Absoluta"
 ,
   "tiles": [
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
