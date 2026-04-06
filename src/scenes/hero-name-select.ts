@@ -61,7 +61,7 @@ export function createHeroNameSelectScene(input: InputManager, stateMachine: Sta
         fadeAlpha += dt * 2;
         if (fadeAlpha >= 1) {
           fadeAlpha = 1;
-          stateMachine.change('STARTER_SELECT');
+          stateMachine.change('OVERWORLD');
         }
         return;
       }

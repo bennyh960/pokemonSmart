@@ -24,7 +24,23 @@ export interface WalkStep {
 /** Auto-walk configuration — NPC patrols following an ordered pattern. */
 export interface AutoWalkConfig {
   pattern: WalkStep[];
-  loop?: boolean;  // default true — repeat pattern forever
+  loop?: boolean;               // default true — repeat main pattern forever
+
+  /** Played while NPC is not yet visible (before spawnAfter flag is set). NPC renders during this. */
+  beforeSpawnPattern?: WalkStep[];
+  beforeSpawnLoop?: boolean;    // default false — play once then wait; true = loop until visible
+
+  /** Played once (unless *Loop=true) immediately after NPC first becomes visible. */
+  afterSpawnPattern?: WalkStep[];
+  afterSpawnLoop?: boolean;     // default false
+
+  /** Played when despawn conditions are first met (NPC still rendered/interactable). Runs before afterDespawn. */
+  beforeDespawnPattern?: WalkStep[];
+  beforeDespawnLoop?: boolean;  // default false
+
+  /** Played once (unless *Loop=true) after despawn conditions are met; NPC still renders until done. */
+  afterDespawnPattern?: WalkStep[];
+  afterDespawnLoop?: boolean;   // default false
 }
 
 /** Legacy auto-walk format (horizontal/vertical axes). Converted at load time. */
@@ -202,9 +218,14 @@ export function createNPCManager(npcs: NPCData[]) {
       return npcs;
     },
 
-    /** Check if there is an NPC at the given grid position. */
+    /** Check if there is an NPC at the given grid position (any NPC, including invisible ones). */
     isNPCAt(x: number, y: number): boolean {
       return npcs.some(npc => npc.x === x && npc.y === y);
+    },
+
+    /** Check if there is a VISIBLE NPC at the given grid position. Invisible/unspawned NPCs are ignored. */
+    isVisibleNPCAt(x: number, y: number, flags: Record<string, boolean>, party?: import('../types/index.js').Pokemon[]): boolean {
+      return npcs.some(npc => npc.x === x && npc.y === y && isNPCVisible(npc, flags, party));
     },
 
     /** Get the NPC at a given grid position. */

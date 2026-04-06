@@ -9,6 +9,7 @@ import { getTMEffect } from '../data/item-defs.js';
 import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward } from '../systems/npc.js';
 import { GATES } from '../data/story/gates.js';
 import { BADGES } from '../data/badges.js';
+import { getStoryEvents } from '../data/story/events.js';
 import encounterTables from '../data/encounter-tables.json';
 import { getKnownMapIds, loadMapFromProject } from './map-io.js';
 import { mapRelationIndex } from './map-relation-index.js';
@@ -931,9 +932,133 @@ export class PropertiesPanel {
     this.renderRewardItemsUI(section, reward as TrainerReward, emit);
   }
 
+  /**
+   * Collect all story flags and where each one is used.
+   * Sources: story events (conditions + actions) + current map's NPC spawn/despawn fields.
+   */
+  private collectStoryFlags(): Map<string, string[]> {
+    const usages = new Map<string, string[]>();
+    const add = (flag: string, src: string) => {
+      if (!usages.has(flag)) usages.set(flag, []);
+      usages.get(flag)!.push(src);
+    };
+
+    // Scan registered story events
+    for (const ev of getStoryEvents()) {
+      for (const cond of ev.conditions ?? []) {
+        const c = cond as Record<string, unknown>;
+        if (typeof c['flag'] === 'string') add(c['flag'], `event "${ev.id}" (condition)`);
+      }
+      for (const act of ev.actions) {
+        const a = act as Record<string, unknown>;
+        if (act.type === 'set-flag' && typeof a['flag'] === 'string') add(a['flag'] as string, `event "${ev.id}" (sets flag)`);
+        if (act.type === 'start-cutscene' && typeof a['cutsceneId'] === 'string') {/* skip non-flag */}
+      }
+    }
+
+    // Scan current map NPCs
+    for (const n of (this.state.mapData.npcs ?? []) as NPCData[]) {
+      if (n.spawnAfter) add(n.spawnAfter, `NPC "${n.id}" → spawnAfter`);
+      if (n.despawnAfter) add(n.despawnAfter, `NPC "${n.id}" → despawnAfter`);
+    }
+
+    return usages;
+  }
+
+  /**
+   * Build a flag input field (text + datalist autocomplete) with live usage info.
+   * Shows a coloured note below the input if the entered flag is already referenced elsewhere.
+   */
+  private makeFlagInput(opts: {
+    value: string | undefined;
+    allFlags: Map<string, string[]>;
+    currentNpcId: string;
+    roleLabel: string;      // e.g. "spawnAfter" — used to exclude self from usage display
+    onChange: (flag: string | undefined) => void;
+  }): HTMLElement {
+    const { value, allFlags, currentNpcId, roleLabel, onChange } = opts;
+    const wrap = document.createElement('div');
+    wrap.style.flex = '1';
+
+    const inputRow = document.createElement('div');
+    inputRow.style.display = 'flex';
+    inputRow.style.gap = '4px';
+
+    // Text input with datalist
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = value || '';
+    input.placeholder = 'flag name…';
+    input.style.flex = '1';
+    const listId = `fl-${Math.random().toString(36).slice(2, 8)}`;
+    const datalist = document.createElement('datalist');
+    datalist.id = listId;
+    for (const flag of Array.from(allFlags.keys()).sort()) {
+      const opt = document.createElement('option');
+      opt.value = flag;
+      datalist.appendChild(opt);
+    }
+    input.setAttribute('list', listId);
+    inputRow.appendChild(datalist);
+    inputRow.appendChild(input);
+
+    // ⓘ button — click to see full usage list
+    const infoBtn = document.createElement('button');
+    infoBtn.textContent = 'ⓘ';
+    infoBtn.title = 'Show where this flag is used';
+    infoBtn.style.cssText = 'width:22px;padding:0;flex-shrink:0;background:#1e2a3a;border:1px solid #445;color:#88aaff;cursor:pointer;border-radius:3px;';
+    infoBtn.addEventListener('click', () => {
+      const flag = input.value.trim();
+      if (!flag) { alert('Enter a flag name first.'); return; }
+      const usages = allFlags.get(flag) ?? [];
+      const self = `NPC "${currentNpcId}" → ${roleLabel}`;
+      const others = usages.filter(u => u !== self);
+      if (others.length === 0) {
+        alert(`Flag "${flag}" is not referenced anywhere else in the registered story events or this map's NPCs.\n\nNote: it may be set/checked in other map files not yet loaded.`);
+      } else {
+        alert(`Flag "${flag}" is used in:\n\n• ${others.join('\n• ')}`);
+      }
+    });
+    inputRow.appendChild(infoBtn);
+
+    // Info note shown inline
+    const infoNote = document.createElement('div');
+    infoNote.style.cssText = 'font-size:10px;margin-top:2px;min-height:13px;';
+
+    const updateNote = (flag: string) => {
+      if (!flag) { infoNote.textContent = ''; return; }
+      const self = `NPC "${currentNpcId}" → ${roleLabel}`;
+      const others = (allFlags.get(flag) ?? []).filter(u => u !== self);
+      if (others.length > 0) {
+        infoNote.style.color = '#ffaa44';
+        const preview = others.slice(0, 2).join(', ');
+        const extra = others.length > 2 ? ` +${others.length - 2} more` : '';
+        infoNote.textContent = `⚠ also in: ${preview}${extra}`;
+      } else {
+        infoNote.style.color = '#55bb77';
+        infoNote.textContent = allFlags.has(flag) ? '✓ known flag' : '＋ new flag';
+      }
+    };
+
+    // Initial note
+    updateNote(value || '');
+
+    input.addEventListener('input', () => updateNote(input.value.trim()));
+    input.addEventListener('change', () => {
+      const v = input.value.trim();
+      updateNote(v);
+      onChange(v || undefined);
+    });
+
+    wrap.appendChild(inputRow);
+    wrap.appendChild(infoNote);
+    return wrap;
+  }
+
   private renderStoryFieldsUI(section: HTMLElement, npc: NPCData): void {
     const emit = () => this.state.emit('map-modified');
     const npcAny = npc as unknown as Record<string, unknown>;
+    const allFlags = this.collectStoryFlags();
 
     const label = document.createElement('div');
     label.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:8px 0 3px;';
@@ -955,36 +1080,36 @@ export class PropertiesPanel {
     hiddenRow.appendChild(hiddenCb);
     section.appendChild(hiddenRow);
 
-    // Spawn After flag
+    // Spawn After flag — searchable select
     const spawnRow = document.createElement('div');
     spawnRow.className = 'prop-row';
-    spawnRow.innerHTML = '<label>Spawn After:</label>';
-    const spawnIn = document.createElement('input');
-    spawnIn.type = 'text';
-    spawnIn.value = npc.spawnAfter || '';
-    spawnIn.placeholder = 'story flag name';
-    spawnIn.title = 'NPC appears only after this flag is set';
-    spawnIn.addEventListener('change', () => {
-      npcAny['spawnAfter'] = spawnIn.value.trim() || undefined;
-      emit();
-    });
-    spawnRow.appendChild(spawnIn);
+    spawnRow.style.alignItems = 'flex-start';
+    const spawnLabel = document.createElement('label');
+    spawnLabel.textContent = 'Spawn After:';
+    spawnRow.appendChild(spawnLabel);
+    spawnRow.appendChild(this.makeFlagInput({
+      value: npc.spawnAfter,
+      allFlags,
+      currentNpcId: npc.id,
+      roleLabel: 'spawnAfter',
+      onChange: v => { npcAny['spawnAfter'] = v; emit(); },
+    }));
     section.appendChild(spawnRow);
 
-    // Despawn After flag
+    // Despawn After flag — searchable select
     const despawnRow = document.createElement('div');
     despawnRow.className = 'prop-row';
-    despawnRow.innerHTML = '<label>Despawn After:</label>';
-    const despawnIn = document.createElement('input');
-    despawnIn.type = 'text';
-    despawnIn.value = npc.despawnAfter || '';
-    despawnIn.placeholder = 'story flag name';
-    despawnIn.title = 'NPC disappears after this flag is set';
-    despawnIn.addEventListener('change', () => {
-      npcAny['despawnAfter'] = despawnIn.value.trim() || undefined;
-      emit();
-    });
-    despawnRow.appendChild(despawnIn);
+    despawnRow.style.alignItems = 'flex-start';
+    const despawnLabel = document.createElement('label');
+    despawnLabel.textContent = 'Despawn After:';
+    despawnRow.appendChild(despawnLabel);
+    despawnRow.appendChild(this.makeFlagInput({
+      value: npc.despawnAfter,
+      allFlags,
+      currentNpcId: npc.id,
+      roleLabel: 'despawnAfter',
+      onChange: v => { npcAny['despawnAfter'] = v; emit(); },
+    }));
     section.appendChild(despawnRow);
 
     // ── Despawn when party reaches level threshold ──
@@ -1071,6 +1196,136 @@ export class PropertiesPanel {
     }
   }
 
+  /** Render an editable list of walk steps for one phase (main / afterSpawn / afterDespawn). */
+  private renderWalkSteps(
+    parent: HTMLElement,
+    steps: import('../systems/npc.js').WalkStep[],
+    emit: () => void,
+  ): void {
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+      const row = document.createElement('div');
+      row.className = 'prop-row';
+      row.style.alignItems = 'center';
+
+      const lbl = document.createElement('label');
+      lbl.textContent = `${i + 1}:`;
+      lbl.style.minWidth = '18px';
+      row.appendChild(lbl);
+
+      const dirSel = document.createElement('select');
+      dirSel.style.width = '60px';
+      for (const d of ['up', 'down', 'left', 'right']) {
+        const opt = document.createElement('option');
+        opt.value = d; opt.textContent = d;
+        if (d === step.dir) opt.selected = true;
+        dirSel.appendChild(opt);
+      }
+      dirSel.addEventListener('change', () => { step.dir = dirSel.value as 'up' | 'down' | 'left' | 'right'; emit(); });
+      row.appendChild(dirSel);
+
+      const stepsIn = document.createElement('input');
+      stepsIn.type = 'number'; stepsIn.value = String(step.steps); stepsIn.min = '1';
+      stepsIn.style.width = '36px'; stepsIn.title = 'Tiles to walk';
+      stepsIn.addEventListener('change', () => { step.steps = parseInt(stepsIn.value) || 1; emit(); });
+      row.appendChild(stepsIn);
+
+      const delayIn = document.createElement('input');
+      delayIn.type = 'number'; delayIn.value = String(step.delay); delayIn.min = '0'; delayIn.step = '0.5';
+      delayIn.style.width = '36px'; delayIn.title = 'Delay after step (s)';
+      delayIn.addEventListener('change', () => { step.delay = parseFloat(delayIn.value) || 0; emit(); });
+      row.appendChild(delayIn);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = '✕'; removeBtn.title = 'Remove step';
+      removeBtn.style.marginLeft = '2px';
+      removeBtn.addEventListener('click', () => { steps.splice(i, 1); emit(); });
+      row.appendChild(removeBtn);
+
+      parent.appendChild(row);
+    }
+
+    const addRow = document.createElement('div');
+    addRow.className = 'prop-row';
+    const addBtn = document.createElement('button');
+    addBtn.textContent = '+ Add Step';
+    addBtn.addEventListener('click', () => { steps.push({ dir: 'right', steps: 2, delay: 0.5 }); emit(); });
+    addRow.appendChild(addBtn);
+    parent.appendChild(addRow);
+  }
+
+  /**
+   * Render an optional phase-pattern sub-section (After Spawn / After Despawn).
+   * @param label     Display name e.g. "After Spawn"
+   * @param patKey    Key on AutoWalkConfig e.g. "afterSpawnPattern"
+   * @param loopKey   e.g. "afterSpawnLoop"
+   * @param defaultDir Default direction for new steps
+   */
+  private renderPhasePatternUI(
+    parent: HTMLElement,
+    aw: import('../systems/npc.js').AutoWalkConfig,
+    label: string,
+    patKey: 'beforeSpawnPattern' | 'afterSpawnPattern' | 'beforeDespawnPattern' | 'afterDespawnPattern',
+    loopKey: 'beforeSpawnLoop' | 'afterSpawnLoop' | 'beforeDespawnLoop' | 'afterDespawnLoop',
+    emit: () => void,
+  ): void {
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'font-size:10px;color:#7a8aaa;font-weight:600;margin:8px 0 3px;display:flex;align-items:center;gap:6px;';
+
+    const enableCb = document.createElement('input');
+    enableCb.type = 'checkbox';
+    enableCb.style.width = 'auto';
+    enableCb.checked = !!(aw[patKey] && (aw[patKey] as import('../systems/npc.js').WalkStep[]).length > 0);
+    enableCb.title = `Enable ${label} pattern`;
+
+    const hdrLabel = document.createElement('span');
+    hdrLabel.textContent = `⚡ ${label}`;
+    hdrLabel.style.cursor = 'pointer';
+    hdrLabel.addEventListener('click', () => { enableCb.click(); });
+
+    hdr.appendChild(enableCb);
+    hdr.appendChild(hdrLabel);
+    parent.appendChild(hdr);
+
+    const body = document.createElement('div');
+    body.style.paddingLeft = '8px';
+
+    const render = () => {
+      body.innerHTML = '';
+      const pat = aw[patKey] as import('../systems/npc.js').WalkStep[] | undefined;
+      if (!pat || pat.length === 0) return;
+
+      // Loop checkbox
+      const loopRow = document.createElement('div');
+      loopRow.className = 'prop-row';
+      loopRow.innerHTML = '<label>Loop:</label>';
+      const loopCb = document.createElement('input');
+      loopCb.type = 'checkbox';
+      loopCb.checked = !!(aw[loopKey]);
+      loopCb.style.width = 'auto';
+      loopCb.addEventListener('change', () => { (aw as unknown as Record<string, unknown>)[loopKey] = loopCb.checked || undefined; emit(); });
+      loopRow.appendChild(loopCb);
+      body.appendChild(loopRow);
+
+      this.renderWalkSteps(body, pat, emit);
+    };
+
+    enableCb.addEventListener('change', () => {
+      if (enableCb.checked) {
+        (aw as unknown as Record<string, unknown>)[patKey] = [{ dir: 'right', steps: 3, delay: 0 }];
+        (aw as unknown as Record<string, unknown>)[loopKey] = undefined;
+      } else {
+        (aw as unknown as Record<string, unknown>)[patKey] = undefined;
+        (aw as unknown as Record<string, unknown>)[loopKey] = undefined;
+      }
+      emit();
+      render();
+    });
+
+    render();
+    parent.appendChild(body);
+  }
+
   private renderAutoWalkUI(section: HTMLElement, npc: NPCData): void {
     const emit = () => this.state.emit('map-modified');
     const aw = npc.autoWalk as import('../systems/npc.js').AutoWalkConfig | null;
@@ -1095,6 +1350,12 @@ export class PropertiesPanel {
 
     if (!aw || !aw.pattern) return;
 
+    // ── Main pattern ──
+    const mainHdr = document.createElement('div');
+    mainHdr.style.cssText = 'font-size:10px;color:#7a8aaa;font-weight:600;margin:6px 0 3px;';
+    mainHdr.textContent = 'Main Pattern (while visible)';
+    section.appendChild(mainHdr);
+
     // Loop checkbox
     const loopRow = document.createElement('div');
     loopRow.className = 'prop-row';
@@ -1107,67 +1368,13 @@ export class PropertiesPanel {
     loopRow.appendChild(loopCb);
     section.appendChild(loopRow);
 
-    // Pattern steps list
-    for (let i = 0; i < aw.pattern.length; i++) {
-      const step = aw.pattern[i];
-      const row = document.createElement('div');
-      row.className = 'prop-row';
-      row.style.alignItems = 'center';
+    this.renderWalkSteps(section, aw.pattern, emit);
 
-      // Step label
-      const label = document.createElement('label');
-      label.textContent = `Step ${i + 1}:`;
-      label.style.minWidth = '42px';
-      row.appendChild(label);
-
-      // Direction select
-      const dirSel = document.createElement('select');
-      dirSel.style.width = '60px';
-      for (const d of ['up', 'down', 'left', 'right']) {
-        const opt = document.createElement('option');
-        opt.value = d; opt.textContent = d;
-        if (d === step.dir) opt.selected = true;
-        dirSel.appendChild(opt);
-      }
-      dirSel.addEventListener('change', () => { step.dir = dirSel.value as 'up' | 'down' | 'left' | 'right'; emit(); });
-      row.appendChild(dirSel);
-
-      // Steps input
-      const stepsIn = document.createElement('input');
-      stepsIn.type = 'number'; stepsIn.value = String(step.steps); stepsIn.min = '1';
-      stepsIn.style.width = '36px'; stepsIn.title = 'Steps';
-      stepsIn.addEventListener('change', () => { step.steps = parseInt(stepsIn.value) || 1; emit(); });
-      row.appendChild(stepsIn);
-
-      // Delay input
-      const delayIn = document.createElement('input');
-      delayIn.type = 'number'; delayIn.value = String(step.delay); delayIn.min = '0'; delayIn.step = '0.5';
-      delayIn.style.width = '36px'; delayIn.title = 'Delay (s)';
-      delayIn.addEventListener('change', () => { step.delay = parseFloat(delayIn.value) || 0; emit(); });
-      row.appendChild(delayIn);
-
-      // Remove button
-      const removeBtn = document.createElement('button');
-      removeBtn.textContent = '✕';
-      removeBtn.title = 'Remove step';
-      removeBtn.style.marginLeft = '2px';
-      removeBtn.addEventListener('click', () => { aw.pattern.splice(i, 1); emit(); });
-      row.appendChild(removeBtn);
-
-      section.appendChild(row);
-    }
-
-    // Add step button
-    const addRow = document.createElement('div');
-    addRow.className = 'prop-row';
-    const addBtn = document.createElement('button');
-    addBtn.textContent = '+ Add Step';
-    addBtn.addEventListener('click', () => {
-      aw.pattern.push({ dir: 'down', steps: 2, delay: 1 });
-      emit();
-    });
-    addRow.appendChild(addBtn);
-    section.appendChild(addRow);
+    // ── Phase patterns ──
+    this.renderPhasePatternUI(section, aw, 'Before Spawn', 'beforeSpawnPattern', 'beforeSpawnLoop', emit);
+    this.renderPhasePatternUI(section, aw, 'After Spawn', 'afterSpawnPattern', 'afterSpawnLoop', emit);
+    this.renderPhasePatternUI(section, aw, 'Before Despawn', 'beforeDespawnPattern', 'beforeDespawnLoop', emit);
+    this.renderPhasePatternUI(section, aw, 'After Despawn', 'afterDespawnPattern', 'afterDespawnLoop', emit);
   }
 
   private renderTransitionProps(tr: MapTransition, index: number): void {

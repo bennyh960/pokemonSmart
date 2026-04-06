@@ -136,6 +136,7 @@ registerCutscene({
       { en: 'Let\'s go together. As partners. ...Don\'t make it weird.', he: 'בוא נלך ביחד. כשותפים. ...אל תהפוך את זה למוזר.' },
     ]},
     { type: 'action', action: { type: 'set-flag', flag: 'story-remainder-ally' } },
+    { type: 'action', action: { type: 'set-flag', flag: 'story-remainder-joined' } },
   ],
 });
 
@@ -214,6 +215,7 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 5 },
   conditions: [],
   actions: [
+    { type: 'set-flag', flag: 'story-badge-5' },
     { type: 'set-infection', cityId: 'primore', value: 'cleared' },
     { type: 'set-quest', questId: 'main-act3-symmetrika' },
     { type: 'set-flag', flag: 'gate-primore-pass' },
@@ -246,6 +248,7 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 6 },
   conditions: [],
   actions: [
+    { type: 'set-flag', flag: 'story-badge-6' },
     { type: 'set-infection', cityId: 'symmetrika', value: 'cleared' },
     { type: 'set-quest', questId: 'main-act4-integrala' },
   ],

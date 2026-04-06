@@ -342,6 +342,7 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 7 },
   conditions: [],
   actions: [
+    { type: 'set-flag', flag: 'story-badge-7' },
     { type: 'set-infection', cityId: 'integrala', value: 'cleared' },
     { type: 'set-quest', questId: 'main-act4-absoluta' },
   ],
@@ -363,6 +364,7 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 8 },
   conditions: [],
   actions: [
+    { type: 'set-flag', flag: 'story-badge-8' },
     { type: 'set-infection', cityId: 'absoluta', value: 'cleared' },
     { type: 'start-cutscene', cutsceneId: 'act4-serum-assembled' },
   ],

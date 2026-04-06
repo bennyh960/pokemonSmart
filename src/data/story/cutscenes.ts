@@ -21,7 +21,8 @@ export type CutsceneStep =
   | { type: 'action';       action: StoryAction }
   | { type: 'if-flag';      flag: string; thenSteps: CutsceneStep[]; elseSteps?: CutsceneStep[] }
   | { type: 'start-battle'; trainerId: string }
-  | { type: 'start-gate';   gateId: string };
+  | { type: 'start-gate';   gateId: string }
+  | { type: 'start-scene';  sceneId: string };
 
 export interface CutsceneDef {
   id: string;

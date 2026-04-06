@@ -185,6 +185,7 @@ registerCutscene({
       { en: 'Use the serum fragments! Quickly — before the infection spreads to the others!', he: 'השתמש בחלקי הסרום! מהר — לפני שהזיהום מתפשט לאחרים!' },
     ]},
     { type: 'action', action: { type: 'set-flag', flag: 'story-remainder-glitched' } },
+    { type: 'action', action: { type: 'set-flag', flag: 'story-remainder-infected' } },
   ],
 });
 
@@ -205,6 +206,7 @@ registerCutscene({
     ]},
     { type: 'face-npc', npcId: 'remainder-dividia', dir: 'up' },
     { type: 'action', action: { type: 'set-flag', flag: 'story-remainder-saved' } },
+    { type: 'action', action: { type: 'set-flag', flag: 'story-remainder-cured' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act2-gym4' } },
   ],
 });
@@ -265,6 +267,7 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 3 },
   conditions: [],
   actions: [
+    { type: 'set-flag', flag: 'story-badge-3' },
     { type: 'set-infection', cityId: 'multiplia', value: 'cleared' },
     { type: 'set-quest', questId: 'main-act2-dividia' },
   ],
@@ -313,6 +316,7 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 4 },
   conditions: [],
   actions: [
+    { type: 'set-flag', flag: 'story-badge-4' },
     { type: 'set-infection', cityId: 'dividia', value: 'cleared' },
     { type: 'start-cutscene', cutsceneId: 'act2-remainder-saved' },
   ],

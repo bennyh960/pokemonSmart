@@ -280,6 +280,41 @@
         "count": 1,
         "minLevel": 25
       }
+    },
+    {
+      "id": "npc-1775421353670",
+      "x": 19,
+      "y": 21,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Ah, you're awake! Come to the lab at once. NULL-X has broken free — Numeria is in danger.",
+          "he": "אה, התעוררת! בוא למעבדה מיד. NULL-X השתחרר — נומריה בסכנה."
+        },
+        {
+          "en": "I need you to collect 8 Serum components from across Numeria. You are my only hope.",
+          "he": "אני צריך שתאסוף 8 רכיבי נסיוב מרחבי נומריה. אתה תקוותי היחידה."
+        }
+      ],
+      "spriteType": "Prof.Algorithma",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 1,
+            "delay": 0
+          },
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 0.5
+          }
+        ]
+      },
+      "despawnAfter": "story-received-starter"
     }
   ],
   "music": "town",

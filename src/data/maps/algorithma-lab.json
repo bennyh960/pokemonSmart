@@ -28,11 +28,19 @@
       "type": "npc",
       "dialogue": [
         {
-          "en": "Welcome to my lab! Take good care of your Pokemon.",
-          "he": "ברוכים הבאים למעבדה שלי! דאגו לפוקמון שלכם."
+          "en": "Now, go out there and explore! Your adventure awaits.",
+          "he": "ההרפתקה הבאה מחכה לך!"
+        },
+        {
+          "en": "",
+          "he": "אל תשכח להשתמש בפקוידע שלך בלחיצה על 'D'"
+        },
+        {
+          "en": "",
+          "he": "תמיד תוכל לבדוק את מצב הפוקימונים שלך בלחיצה על P"
         }
       ],
-      "spriteType": "char_a42849",
+      "spriteType": "Prof.Algorithma",
       "autoWalk": {
         "pattern": [
           {
@@ -76,17 +84,30 @@
     {
       "id": "remainder-lab",
       "name": "Remainder",
-      "x": 8,
-      "y": 4,
+      "x": 7,
+      "y": 5,
       "facing": "down",
       "type": "npc",
-      "spriteType": "red",
+      "spriteType": "char_6b9002",
       "dialogue": [
         {
           "en": "Hey! You're the new trainer, right? Try not to fall behind.",
           "he": "הי! אתה המאמן החדש, נכון? נסה לא להישאר מאחור."
         }
-      ]
+      ],
+      "nameHe": "ג'ואי שארית",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 6,
+            "delay": 0
+          }
+        ]
+      },
+      "despawnAfter": "act0-remainder-met"
     }
   ],
   "music": "town4",

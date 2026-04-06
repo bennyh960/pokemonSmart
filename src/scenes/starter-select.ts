@@ -90,6 +90,7 @@ export function createStarterSelectScene(
           const playerData = getPlayerData();
           playerData.party = [pokemon];
           playerData.pokedex[starter.id] = true;
+          playerData.flags['story-received-starter'] = true;
           confirmed = true;
           fadeOut = true;
         }

@@ -40,6 +40,8 @@ export interface CutsceneContext {
   playSFX(id: string): void;
   executeStoryAction(action: StoryAction): void;
   getFlag(flag: string): boolean;
+  /** Immediately end the cutscene and switch to a different scene (e.g. STARTER_SELECT). */
+  startScene(sceneId: string): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -376,6 +378,13 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       // TODO Sprint 7B: start trainer battle from cutscene
       console.warn('[cutscene] start-battle not yet wired — skipping');
       _stepIndex++;
+      break;
+    }
+
+    case 'start-scene': {
+      // Deactivate cutscene and switch scene (e.g. STARTER_SELECT → returns to OVERWORLD)
+      deactivateCutscene();
+      ctx.startScene(step.sceneId);
       break;
     }
 

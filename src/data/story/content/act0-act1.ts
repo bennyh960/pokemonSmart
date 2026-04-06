@@ -91,25 +91,41 @@ registerCutscene({
   id: 'act0-intro',
   skippable: true,
   steps: [
-    { type: 'screen-fade', direction: 'in', durationMs: 1200 },
-    { type: 'wait', durationMs: 500 },
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'Ah, you\'re awake! Welcome to Numeria — a region where knowledge opens every door.', he: 'א, התעוררת! ברוך הבא לנומריה — אזור שבו ידע פותח כל דלת.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'I am Professor Algorithma. I built the verification systems that keep this region safe.', he: 'אני פרופסור אלגוריתמה. בניתי את מערכות האימות ששומרות על האזור הזה.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'Something is wrong. Strange errors. Contradictions in the system. I fear the worst.', he: 'משהו לא בסדר. שגיאות מוזרות. סתירות במערכת. אני חושש מהגרוע מכל.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'You have a rare gift — an intuition for numbers and logic. Numeria needs you.', he: 'יש לך כישרון נדיר — אינטואיציה למספרים ולוגיקה. נומריה צריכה אותך.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'First — choose your partner. A Pokemon who will travel by your side.', he: 'קודם כל — בחר את השותף שלך. פוקמון שיסע לצידך.' },
-    ]},
+    { type: 'screen-fade', direction: 'in', durationMs: 500 },
+    // { type: 'wait', durationMs: 500 },
+    {
+      type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
+        { en: 'Ah, you\'re here! Welcome to my lab. I\'m Professor Algorithma.', he: 'או, הגעת! ברוך הבא למעבדה שלי. אני פרופסור אלגוריתמה.' },
+      ]
+    },
+    {
+      type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
+        { en: 'This is Numeria — a region where knowledge and Pokemon go hand in hand.', he: 'זוהי נומריה — אזור שבו ידע ופוקמונים הולכים יד ביד.' },
+      ]
+    },
+    {
+      type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
+        { en: 'You have a rare gift — an intuition for numbers and logic. I\'ve been waiting for someone like you.', he: 'יש לך כישרון נדיר — אינטואיציה למספרים ולוגיקה. חיכיתי למישהו כמוך.' },
+      ]
+    },
+    {
+      type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
+        { en: 'Every trainer in Numeria begins their journey by choosing a partner Pokemon. It\'s time for you to choose yours.', he: 'כל מאמן בנומריה מתחיל את מסעו בבחירת פוקמון שותף. הגיע הזמן שגם אתה תבחר.' },
+      ]
+    },
+    {
+      type: "dialogue", speakerId: "Prof. Algorithma / פרופ׳ אלגוריתמה", lines: [
+        { en: "Train your partner and become the best trainer you can.", he: "אמן את השותף שלך והפוך למאמן הטוב ביותר שאתה יכול להיות." },
+        { en: "In your journey, you'll face many challenges.", he: "במסע שלך, תתמודד עם אתגרים רבים." },
+        { en: "Some will test your knowledge. Others will test your strength.", he: "חלקם יבדקו את הידע שלך. אחרים יבדקו את כוחך." },
+        { en: "But don't worry — you'll grow stronger with every step.", he: "אבל אל תדאג — תתחזק עם כל צעד." },
+      ]
+    },
     { type: 'action', action: { type: 'set-flag', flag: 'act0-intro-seen' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act0-starter' } },
+    // Transition to starter selection scene, returns to OVERWORLD when done
+    { type: 'start-scene', sceneId: 'STARTER_SELECT' },
+    
   ],
 });
 
@@ -134,13 +150,34 @@ registerCutscene({
   skippable: true,
   steps: [
     { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'The path to Sumville lies through Route 1. The gate guards are there to keep the Glitch out.', he: 'המסלול לסאמוויל עובר דרך שביל 1. השומרים שם כדי לשמור על הגליץ׳ בחוץ.' },
+      { en: 'Heading to Route 1 already? Good. The trainers there will sharpen your skills.', he: 'כבר הולך לשביל 1? טוב. המאמנים שם ישפרו את כישוריך.' },
     ]},
     { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'Answer their questions honestly. Your knowledge is your key. Good luck!', he: 'ענה על שאלותיהם בכנות. הידע שלך הוא המפתח שלך. בהצלחה!' },
+      { en: 'Sumville is at the other end. I have friends there who can help you. Safe travels!', he: 'סאמוויל נמצאת בצד השני. יש לי שם חברים שיכולים לעזור לך. נסיעה טובה!' },
     ]},
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-route1' } },
     { type: 'action', action: { type: 'set-flag', flag: 'act0-complete' } },
+  ],
+});
+
+registerCutscene({
+  id: 'act1-nullx-intro',
+  skippable: false,
+  steps: [
+    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
+      { en: 'Wait — before you leave Route 1, I need to tell you something.', he: 'רגע — לפני שתעזוב את שביל 1, יש לי משהו לספר לך.' },
+    ]},
+    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
+      { en: 'Strange errors have been appearing in the verification systems. Corrupted logic. Contradictions.', he: 'שגיאות מוזרות מופיעות במערכות האימות. לוגיקה פגומה. סתירות.' },
+    ]},
+    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
+      { en: 'I fear something — or someone — is deliberately disrupting the region\'s knowledge gates.', he: 'אני חושש שמשהו — או מישהו — מפריע בכוונה לשערי הידע של האזור.' },
+    ]},
+    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
+      { en: 'Be careful in Sumville. And keep growing stronger — you\'ll need it.', he: 'היה זהיר בסאמוויל. והמשך להתחזק — תזדקק לזה.' },
+    ]},
+    { type: 'action', action: { type: 'set-flag', flag: 'act1-nullx-intro-seen' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act1-sumville' } },
   ],
 });
 
@@ -284,6 +321,7 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 1 },
   conditions: [],
   actions: [
+    { type: 'set-flag', flag: 'story-badge-1' },
     { type: 'set-infection', cityId: 'sumville', value: 'cleared' },
     { type: 'set-quest', questId: 'main-act1-route2' },
   ],
@@ -309,12 +347,26 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 2 },
   conditions: [],
   actions: [
+    { type: 'set-flag', flag: 'story-badge-2' },
     { type: 'set-infection', cityId: 'minusburg', value: 'cleared' },
     { type: 'set-quest', questId: 'main-act2-multiplia' },
   ],
 });
 
-// Gate 1 cleared → advance quest to show gate was passed
+// Talking to the Route 1 exit NPC → triggers NULL-X intro cutscene (first time only)
+registerStoryEvent({
+  id: 'evt-route1-exit-npc',
+  trigger: { type: 'npc-interact', npcId: 'route1-exit-npc' },
+  conditions: [
+    { type: 'flag', flag: 'act0-complete' },
+    { type: 'flag-not', flag: 'act1-nullx-intro-seen' },
+  ],
+  actions: [
+    { type: 'start-cutscene', cutsceneId: 'act1-nullx-intro' },
+  ],
+});
+
+// Gate 1 cleared → advance quest to show gate was passed (if not already advanced by exit NPC)
 registerStoryEvent({
   id: 'evt-gate-route1-cleared',
   trigger: { type: 'gate-cleared', gateId: 'gate-route1-sumville' },

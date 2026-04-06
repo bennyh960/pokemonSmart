@@ -426,6 +426,27 @@
       ]
     },
     {
+      "id": "route1-exit-npc",
+      "name": "Lab Researcher",
+      "x": 31,
+      "y": 9,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "dani",
+      "spawnAfter": "act0-complete",
+      "despawnAfter": "act1-nullx-intro-seen",
+      "autoWalk": {
+        "pattern": [],
+        "afterDespawnPattern": [
+          { "dir": "right", "steps": 4, "delay": 0 }
+        ],
+        "afterDespawnLoop": false
+      },
+      "dialogue": [
+        { "en": "Hey, wait! The professor sent me — he has an urgent message for you!", "he": "היי, רגע! הפרופסור שלח אותי — יש לו הודעה דחופה בשבילך!" }
+      ]
+    },
+    {
       "id": "r1-extra2",
       "name": "Lass Neta",
       "x": 18,
