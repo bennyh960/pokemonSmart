@@ -113,14 +113,14 @@
     {
       "id": "elder-zero",
       "name": "Elder Zero",
-      "x": 23,
-      "y": 6,
-      "facing": "down",
+      "x": 18,
+      "y": 7,
+      "facing": "left",
       "type": "npc",
       "dialogue": [
         {
           "en": "Zeroville has stood since before anyone can remember.",
-          "he": "דרך 1 פתוחה למאמנים בלבד!"
+          "he": ""
         },
         {
           "en": "The professor's shield keeps the glitch at bay.",
@@ -131,14 +131,30 @@
           "he": ""
         }
       ],
-      "spriteType": "char_a5abb0",
-      "autoWalk": null,
-      "reward": {
-        "money": 0
+      "spriteType": "dani",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 4,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 4,
+            "delay": 1
+          }
+        ],
+        "loop": true
       },
-      "despawnWhenParty": {
-        "count": 1,
-        "minLevel": 3
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "hm01",
+            "quantity": 1
+          }
+        ]
       }
     },
     {

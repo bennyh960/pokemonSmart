@@ -31,6 +31,10 @@ export class EditorState {
   selectedCellX: number | null = null;
   selectedCellY: number | null = null;
 
+  // ── Focus tile (for camera pan) ──
+  focusTileX = 0;
+  focusTileY = 0;
+
   // ── Event bus ──
   private listeners = new Map<EditorEvent, Set<() => void>>();
 
@@ -107,6 +111,13 @@ export class EditorState {
     this.selectedCellY = null;
     this.selectedNpcId = null;
     this.emit('selection-changed');
+  }
+
+  /** Pan the viewport to center on tile (x, y). Used by the properties panel list. */
+  focusTile(x: number, y: number): void {
+    this.focusTileX = x;
+    this.focusTileY = y;
+    this.emit('focus-tile');
   }
 
   // ── Map data access ──

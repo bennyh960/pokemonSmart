@@ -65,7 +65,7 @@
       "id": "bug-catcher-1",
       "name": "Bug Catcher Ben",
       "x": 6,
-      "y": 2,
+      "y": 4,
       "facing": "down",
       "type": "trainer",
       "dialogue": [
@@ -101,16 +101,30 @@
           }
         ]
       },
-      "lineOfSight": 7,
-      "autoWalk": null,
+      "lineOfSight": 3,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 2.5
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 2.5
+          }
+        ],
+        "loop": true
+      },
       "postBattleDialogue": []
     },
     {
       "id": "youngster-1",
       "name": "Youngster Joey",
       "x": 17,
-      "y": 2,
-      "facing": "down",
+      "y": 7,
+      "facing": "up",
       "type": "trainer",
       "dialogue": [
         {
@@ -118,7 +132,7 @@
           "he": ""
         }
       ],
-      "spriteType": "char_7ba749",
+      "spriteType": "dani",
       "party": [
         {
           "pokemonId": 19,
@@ -129,8 +143,32 @@
       "reward": {
         "money": 120
       },
-      "lineOfSight": 15,
-      "autoWalk": null,
+      "lineOfSight": 4,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      },
       "postBattleDialogue": [
         {
           "en": "I dont know how to catch pokemon!",
@@ -173,8 +211,8 @@
     {
       "id": "hiker-1",
       "name": "Hiker Rock",
-      "x": 23,
-      "y": 17,
+      "x": 22,
+      "y": 13,
       "facing": "up",
       "type": "trainer",
       "dialogue": [
@@ -187,7 +225,7 @@
           "he": ""
         }
       ],
-      "spriteType": "char_304fc6",
+      "spriteType": "char_631e91",
       "party": [
         {
           "pokemonId": 74,
@@ -204,29 +242,14 @@
         "money": 180
       },
       "lineOfSight": 3,
-      "postBattleDialogue": [],
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "up",
-            "steps": 15,
-            "delay": 1
-          },
-          {
-            "dir": "down",
-            "steps": 15,
-            "delay": 1
-          }
-        ],
-        "loop": true
-      }
+      "postBattleDialogue": []
     },
     {
       "id": "picnicker-1",
       "name": "Picnicker Daisy",
-      "x": 14,
-      "y": 17,
-      "facing": "up",
+      "x": 11,
+      "y": 14,
+      "facing": "right",
       "type": "trainer",
       "dialogue": [
         {
@@ -254,7 +277,7 @@
       "reward": {
         "money": 140
       },
-      "lineOfSight": 16,
+      "lineOfSight": 3,
       "postBattleDialogue": []
     },
     {
@@ -309,6 +332,70 @@
       ],
       "name": "Ethan",
       "nameHe": "איתן"
+    },
+    {
+      "id": "npc-1774801191518",
+      "x": 20,
+      "y": 16,
+      "facing": "up",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "אני אוהבת פוקימוני מים"
+        },
+        {
+          "en": "",
+          "he": "רוצה לבחון את הכח של הפוקימונים שלי?"
+        }
+      ],
+      "spriteType": "char_49b2a9",
+      "reward": {
+        "money": 700,
+        "items": [
+          {
+            "itemId": "potion",
+            "quantity": 3
+          },
+          {
+            "itemId": "poke-ball",
+            "quantity": 3
+          }
+        ]
+      },
+      "party": [
+        {
+          "pokemonId": 120,
+          "level": 4,
+          "moves": []
+        },
+        {
+          "pokemonId": 121,
+          "level": 6,
+          "moves": []
+        },
+        {
+          "pokemonId": 118,
+          "level": 4,
+          "moves": []
+        },
+        {
+          "pokemonId": 54,
+          "level": 7,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "אתה מאמן חזק יותר ממה שציפיתי"
+        },
+        {
+          "en": "",
+          "he": "ייתכן ועוד ניפגש בהמשך"
+        }
+      ]
     },
     {
       "id": "r1-extra1",
@@ -370,26 +457,23 @@
     {
       "id": "r1-extra2",
       "name": "Lass Neta",
-      "x": 6,
+      "x": 18,
       "y": 4,
-      "facing": "left",
+      "facing": "down",
       "type": "trainer",
       "spriteType": "dana",
       "party": [
         {
           "pokemonId": 10,
-          "level": 4,
-          "moves": []
+          "level": 4
         },
         {
           "pokemonId": 13,
-          "level": 4,
-          "moves": []
+          "level": 4
         },
         {
           "pokemonId": 16,
-          "level": 5,
-          "moves": []
+          "level": 5
         }
       ],
       "reward": {
@@ -400,24 +484,7 @@
           "en": "Butterflies are my specialty!",
           "he": "פרפרים הם ההתמחות שלי!"
         }
-      ],
-      "lineOfSight": 3,
-      "postBattleDialogue": [],
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "right",
-            "steps": 18,
-            "delay": 3
-          },
-          {
-            "dir": "left",
-            "steps": 18,
-            "delay": 3
-          }
-        ],
-        "loop": true
-      }
+      ]
     }
   ],
   "music": "route",
@@ -1349,11 +1416,6 @@
     {
       "key": "r3",
       "x": 33,
-      "y": 3
-    },
-    {
-      "key": "g3",
-      "x": 7,
       "y": 3
     }
   ]

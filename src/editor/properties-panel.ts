@@ -47,13 +47,13 @@ export class PropertiesPanel {
     this.tiles = tiles;
     this.onNavigate = onNavigate;
 
-    state.on('selection-changed', () => this.refresh());
-    state.on('map-modified', () => this.refresh());
-    state.on('map-loaded', () => this.refresh());
-    this.refresh();
+    state.on('selection-changed', () => this.refresh(true));
+    state.on('map-modified', () => this.refresh(false));
+    state.on('map-loaded', () => this.refresh(false));
+    this.refresh(false);
   }
 
-  private refresh(): void {
+  private refresh(scrollToSelected = false): void {
     this.container.innerHTML = '';
     const { selectedCellX: cx, selectedCellY: cy, selectedNpcId, selectedTransitionIndex } = this.state;
 
@@ -81,10 +81,10 @@ export class PropertiesPanel {
     this.renderRelatedMaps();
 
     // ── NPC list ──
-    this.renderNpcList();
+    this.renderNpcList(scrollToSelected);
 
     // ── Transition list ──
-    this.renderTransitionList();
+    this.renderTransitionList(scrollToSelected);
 
     // ── Encounter table ──
     this.renderEncounterPanel();
@@ -1619,7 +1619,7 @@ export class PropertiesPanel {
     return item;
   }
 
-  private renderNpcList(): void {
+  private renderNpcList(scrollToSelected = false): void {
     const section = this.makeSection('NPCs');
     const body = PropertiesPanel.sectionBody(section);
     const npcs = this.state.mapData.npcs || [];
@@ -1630,15 +1630,23 @@ export class PropertiesPanel {
         const item = document.createElement('div');
         item.className = 'list-item';
         item.textContent = `${npc.id} (${npc.x},${npc.y}) [${npc.type}]`;
-        item.addEventListener('click', () => this.state.selectNpc(npc.id));
-        if (this.state.selectedNpcId === npc.id) item.classList.add('selected');
+        item.addEventListener('click', () => {
+          this.state.selectNpc(npc.id);
+          this.state.focusTile(npc.x, npc.y);
+        });
+        if (this.state.selectedNpcId === npc.id) {
+          item.classList.add('selected');
+          if (scrollToSelected) {
+            requestAnimationFrame(() => item.scrollIntoView({ block: 'nearest' }));
+          }
+        }
         body.appendChild(item);
       }
     }
     this.container.appendChild(section);
   }
 
-  private renderTransitionList(): void {
+  private renderTransitionList(scrollToSelected = false): void {
     const section = this.makeSection('Transitions');
     const body = PropertiesPanel.sectionBody(section);
     const transitions = this.state.mapData.transitions || [];
@@ -1649,8 +1657,16 @@ export class PropertiesPanel {
         const item = document.createElement('div');
         item.className = 'list-item';
         item.textContent = `(${tr.fromX},${tr.fromY}) → ${tr.toMapId} (${tr.toX},${tr.toY})`;
-        item.addEventListener('click', () => this.state.selectTransition(i));
-        if (this.state.selectedTransitionIndex === i) item.classList.add('selected');
+        item.addEventListener('click', () => {
+          this.state.selectTransition(i);
+          this.state.focusTile(tr.fromX, tr.fromY);
+        });
+        if (this.state.selectedTransitionIndex === i) {
+          item.classList.add('selected');
+          if (scrollToSelected) {
+            requestAnimationFrame(() => item.scrollIntoView({ block: 'nearest' }));
+          }
+        }
         body.appendChild(item);
       });
     }

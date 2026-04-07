@@ -35,4 +35,5 @@ export type EditorEvent =
   | 'selection-changed'
   | 'npc-changed'
   | 'transition-changed'
-  | 'history-changed';
+  | 'history-changed'
+  | 'focus-tile';

@@ -58,6 +58,17 @@ export class CanvasViewport {
       state.on(evt, () => this.markDirty());
     }
 
+    // Pan to tile when selection is made from the properties panel
+    state.on('focus-tile', () => {
+      const tilePixels = 16 * state.zoom;
+      const cx = state.focusTileX * tilePixels + tilePixels / 2;
+      const cy = state.focusTileY * tilePixels + tilePixels / 2;
+      state.setScroll(
+        cx - this.canvas.width / 2,
+        cy - this.canvas.height / 2,
+      );
+    });
+
     // Mouse events
     this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
     this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
@@ -385,27 +396,41 @@ export class CanvasViewport {
     // ── Transition markers ──
     if (this.state.showTransitions && this.state.mapData.transitions) {
       ctx.fillStyle = 'rgba(50, 100, 255, 0.35)';
-      for (const t of this.state.mapData.transitions) {
+      const selTIdx = this.state.selectedTransitionIndex;
+      this.state.mapData.transitions.forEach((t, i) => {
         const drawX = Math.floor(t.fromX * tilePixels - scrollX);
         const drawY = Math.floor(t.fromY * tilePixels - scrollY);
+        ctx.fillStyle = selTIdx === i ? 'rgba(80, 160, 255, 0.6)' : 'rgba(50, 100, 255, 0.35)';
         ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
         ctx.fillStyle = '#fff';
         ctx.font = `${Math.max(8, tilePixels * 0.3)}px Inter`;
         ctx.fillText('T', drawX + 2, drawY + tilePixels * 0.5);
-        ctx.fillStyle = 'rgba(50, 100, 255, 0.35)';
-      }
+        // Selection outline
+        if (selTIdx === i) {
+          ctx.strokeStyle = '#55aaff';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(drawX + 1, drawY + 1, tilePixels - 2, tilePixels - 2);
+        }
+      });
     }
 
     // ── NPC markers ──
     if (this.state.mapData.npcs) {
+      const selNpcId = this.state.selectedNpcId;
       for (const npc of this.state.mapData.npcs) {
         const drawX = Math.floor(npc.x * tilePixels - scrollX);
         const drawY = Math.floor(npc.y * tilePixels - scrollY);
-        ctx.fillStyle = 'rgba(255, 150, 0, 0.5)';
+        ctx.fillStyle = selNpcId === npc.id ? 'rgba(255, 180, 0, 0.75)' : 'rgba(255, 150, 0, 0.5)';
         ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
         ctx.fillStyle = '#fff';
         ctx.font = `bold ${Math.max(8, tilePixels * 0.3)}px Inter`;
         ctx.fillText(npc.type[0].toUpperCase(), drawX + 2, drawY + tilePixels * 0.5);
+        // Selection outline
+        if (selNpcId === npc.id) {
+          ctx.strokeStyle = '#ffcc00';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(drawX + 1, drawY + 1, tilePixels - 2, tilePixels - 2);
+        }
       }
     }
 

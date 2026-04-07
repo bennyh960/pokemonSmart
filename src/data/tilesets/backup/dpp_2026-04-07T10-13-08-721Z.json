@@ -78,6 +78,9 @@
       "w": 16,
       "h": 16,
       "walkable": true,
+      "encounterTypes": [
+        "*/fire,poison,water"
+      ],
       "above": true,
       "overlay": true,
       "category": "grass",
@@ -4662,7 +4665,6 @@
       "walkable": false,
       "above": true,
       "category": "tree",
-      "interactType": null,
       "description": "tree type 1 - full , and block from top"
     },
     {
@@ -4674,7 +4676,6 @@
       "walkable": false,
       "above": true,
       "category": "tree",
-      "interactType": null,
       "description": "tree type 2 - full , and block from top"
     }
   ]
