@@ -30,14 +30,14 @@ registerGate({
   id: 'gate-route1-sumville',
   title: { en: 'Route 1 Checkpoint', he: 'מחסום שביל 1' },
   description: {
-    en: 'The path to Sumville is locked. Answer 3 questions to continue.',
-    he: 'המסלול לסאמוויל חסום. ענה על 3 שאלות כדי להמשיך.',
+    en: 'The path to Sumville is locked. We must identify you are not NULL-X creators. Three questions will determine if you can pass. Choose wisely.',
+    he: "הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.",
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-  totalQuestions: 3,
-  passThreshold: 2,
-  failurePenalty: { type: 'money', amount: 50 },
+  totalQuestions: 5,
+  passThreshold: 5,
+  failurePenalty: { type: 'money', amount: 150 },
   reopenCooldownMs: 30 * 60 * 1000,   // 30 min
   successActions: [
     { type: 'set-flag', flag: 'gate-route1-pass' },
@@ -49,13 +49,13 @@ registerGate({
   id: 'gate-route2-minusburg',
   title: { en: 'Route 2 Checkpoint', he: 'מחסום שביל 2' },
   description: {
-    en: 'The Glitch is spreading. 3 questions — think carefully.',
-    he: 'הגליץ׳ מתפשט. 3 שאלות — חשוב היטב.',
+    en: 'The Glitch is spreading. 10 questions — think carefully.',
+    he: 'הגליץ׳ מתפשט. 10 שאלות — חשוב היטב.',
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-  totalQuestions: 3,
-  passThreshold: 2,
+  totalQuestions: 10,
+  passThreshold: 8,
   failurePenalty: { type: 'money-and-cooldown', amount: 100, durationMs: 5 * 60 * 1000 },
   reopenCooldownMs: 30 * 60 * 1000,
   successActions: [
@@ -66,15 +66,15 @@ registerGate({
 
 registerGate({
   id: 'gate-sumville-gym',
-  title: { en: 'Addition Gym Entry', he: 'כניסה לחדר כושר החיבור' },
+  title: { en: 'Addition Gym Entry', he: 'כניסה למכון החיבור' },
   description: {
-    en: 'The gym door requires a verification. Answer 4 questions.',
-    he: 'דלת חדר הכושר דורשת אימות. ענה על 4 שאלות.',
+    en: 'The gym door requires a verification. Answer 15 questions.',
+    he: 'דלת המכון דורשת אימות. ענה על 15 שאלות.',
   },
   triggerType: 'gym-entry',
   questionSetIds: ['placeholder'],
-  totalQuestions: 4,
-  passThreshold: 3,
+  totalQuestions: 15,
+  passThreshold: 12,
   failurePenalty: { type: 'none' },
   reopenCooldownMs: 0,    // permanent once passed
   successActions: [
