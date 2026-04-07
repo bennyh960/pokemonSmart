@@ -139,7 +139,8 @@
       "despawnWhenParty": {
         "count": 1,
         "minLevel": 3
-      }
+      },
+      "blocker": true
     },
     {
       "id": "kid-origin",
@@ -263,7 +264,8 @@
       "despawnWhenParty": {
         "count": 1,
         "minLevel": 25
-      }
+      },
+      "blocker": true
     },
     {
       "id": "npc-1775421353670",

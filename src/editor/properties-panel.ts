@@ -1112,13 +1112,43 @@ export class PropertiesPanel {
     }));
     section.appendChild(despawnRow);
 
-    // ── Despawn when party reaches level threshold ──
-    const partyHdr = document.createElement('div');
-    partyHdr.style.cssText = 'font-size:10px;color:#7a8aaa;margin:8px 0 3px;font-weight:600;';
-    partyHdr.textContent = 'Despawn when party is strong enough:';
-    section.appendChild(partyHdr);
+    // ── Blocker NPC ──
+    const blockerHdr = document.createElement('div');
+    blockerHdr.style.cssText = 'font-size:10px;color:#7a8aaa;margin:8px 0 3px;font-weight:600;';
+    blockerHdr.textContent = 'Blocker:';
+    section.appendChild(blockerHdr);
 
+    const blockerRow = document.createElement('div');
+    blockerRow.className = 'prop-row';
+    blockerRow.innerHTML = '<label>Blocker NPC:</label>';
+    const blockerCb = document.createElement('input');
+    blockerCb.type = 'checkbox';
+    blockerCb.checked = !!npcAny['blocker'];
+    blockerCb.title = 'NPC uses line-of-sight to block the player until despawn conditions are met';
+    blockerRow.appendChild(blockerCb);
+    blockerRow.appendChild(this.makeInfo('When enabled, NPC shows ! and pushes the player back when they step into its line of sight. Unblocks when its despawn conditions are met.'));
+    section.appendChild(blockerRow);
+
+    // Sub-panel shown when blocker is checked
+    const blockerPanel = document.createElement('div');
+    blockerPanel.style.cssText = 'margin-left:12px;border-left:2px solid #3a4a6a;padding-left:8px;display:' + (npcAny['blocker'] ? 'block' : 'none') + ';';
+    section.appendChild(blockerPanel);
+
+    // ── By party strength ──
+    const partyStrRow = document.createElement('div');
+    partyStrRow.className = 'prop-row';
+    partyStrRow.innerHTML = '<label>By party strength:</label>';
+    const partyStrCb = document.createElement('input');
+    partyStrCb.type = 'checkbox';
     const dwp = (npcAny['despawnWhenParty'] as { count?: number; minLevel?: number } | undefined);
+    partyStrCb.checked = !!dwp;
+    partyStrCb.title = 'Block until player has enough Pokémon at a minimum level';
+    partyStrRow.appendChild(partyStrCb);
+    blockerPanel.appendChild(partyStrRow);
+
+    // Party strength inputs
+    const partyInputsDiv = document.createElement('div');
+    partyInputsDiv.style.cssText = 'margin-left:12px;display:' + (dwp ? 'block' : 'none') + ';';
 
     const partyRow = document.createElement('div');
     partyRow.className = 'prop-row';
@@ -1153,15 +1183,12 @@ export class PropertiesPanel {
       const lvl = parseInt(lvlInput.value, 10);
       const bothEmpty = cntInput.value.trim() === '' && lvlInput.value.trim() === '';
       if (!isNaN(cnt) && !isNaN(lvl) && cnt > 0 && lvl > 0) {
-        // Both valid — save and refresh
         npcAny['despawnWhenParty'] = { count: cnt, minLevel: lvl };
         emit();
       } else if (bothEmpty) {
-        // Both cleared — remove and refresh
         delete npcAny['despawnWhenParty'];
         emit();
       }
-      // Partially filled — do nothing (don't emit, don't refresh, inputs keep their typed value)
     };
     cntInput.addEventListener('change', updateDwp);
     lvlInput.addEventListener('change', updateDwp);
@@ -1170,30 +1197,87 @@ export class PropertiesPanel {
     partyRow.appendChild(cntInput);
     partyRow.appendChild(lvlLabel);
     partyRow.appendChild(lvlInput);
-    partyRow.appendChild(this.makeInfo('NPC disappears once the player has ≥ count Pokémon all at or above minLevel. Clear both fields to disable.'));
-    section.appendChild(partyRow);
+    partyRow.appendChild(this.makeInfo('NPC unblocks once the player has ≥ count Pokémon all at or above minLevel.'));
+    partyInputsDiv.appendChild(partyRow);
+    blockerPanel.appendChild(partyInputsDiv);
 
-    // ── Line of sight (only meaningful when despawnWhenParty is set) ──
-    if (npcAny['despawnWhenParty']) {
-      const losRow = document.createElement('div');
-      losRow.className = 'prop-row';
-      losRow.innerHTML = '<label>Block range (tiles):</label>';
-      const losIn = document.createElement('input');
-      losIn.type = 'number';
-      losIn.min = '1';
-      losIn.max = '10';
-      losIn.value = String((npcAny['lineOfSight'] as number | undefined) ?? 3);
-      losIn.title = 'How many tiles in front the NPC can see to block the player';
-      losIn.style.width = '46px';
-      losIn.addEventListener('change', () => {
-        const v = parseInt(losIn.value, 10);
-        npcAny['lineOfSight'] = isNaN(v) ? 3 : Math.max(1, v);
+    partyStrCb.addEventListener('change', () => {
+      partyInputsDiv.style.display = partyStrCb.checked ? 'block' : 'none';
+      if (!partyStrCb.checked) {
+        delete npcAny['despawnWhenParty'];
+        cntInput.value = '';
+        lvlInput.value = '';
         emit();
-      });
-      losRow.appendChild(losIn);
-      losRow.appendChild(this.makeInfo('NPC shows ! and blocks the player when they step within this many tiles. Works like a gate guard.'));
-      section.appendChild(losRow);
-    }
+      }
+    });
+
+    // ── By flag (despawnAfter) ──
+    const byFlagRow = document.createElement('div');
+    byFlagRow.className = 'prop-row';
+    byFlagRow.innerHTML = '<label>By flag:</label>';
+    const byFlagCb = document.createElement('input');
+    byFlagCb.type = 'checkbox';
+    byFlagCb.checked = !!npc.despawnAfter;
+    byFlagCb.title = 'Block until a story flag is set (uses Despawn After field)';
+    byFlagRow.appendChild(byFlagCb);
+    blockerPanel.appendChild(byFlagRow);
+
+    // Flag input shown when by-flag is checked
+    const flagInputDiv = document.createElement('div');
+    flagInputDiv.style.cssText = 'margin-left:12px;display:' + (npc.despawnAfter ? 'block' : 'none') + ';';
+    flagInputDiv.appendChild(this.makeFlagInput({
+      value: npc.despawnAfter,
+      allFlags,
+      currentNpcId: npc.id,
+      roleLabel: 'despawnAfter',
+      onChange: v => { npcAny['despawnAfter'] = v; emit(); },
+    }));
+    blockerPanel.appendChild(flagInputDiv);
+
+    byFlagCb.addEventListener('change', () => {
+      flagInputDiv.style.display = byFlagCb.checked ? 'block' : 'none';
+      if (!byFlagCb.checked) {
+        delete npcAny['despawnAfter'];
+        emit();
+      }
+    });
+
+    // ── Block range ──
+    const losRow = document.createElement('div');
+    losRow.className = 'prop-row';
+    losRow.innerHTML = '<label>Block range (tiles):</label>';
+    const losIn = document.createElement('input');
+    losIn.type = 'number';
+    losIn.min = '1';
+    losIn.max = '10';
+    losIn.value = String((npcAny['lineOfSight'] as number | undefined) ?? 3);
+    losIn.title = 'How many tiles in front the NPC can see to block the player';
+    losIn.style.width = '46px';
+    losIn.addEventListener('change', () => {
+      const v = parseInt(losIn.value, 10);
+      npcAny['lineOfSight'] = isNaN(v) ? 3 : Math.max(1, v);
+      emit();
+    });
+    losRow.appendChild(losIn);
+    losRow.appendChild(this.makeInfo('NPC shows ! and blocks the player when they step within this many tiles.'));
+    blockerPanel.appendChild(losRow);
+
+    blockerCb.addEventListener('change', () => {
+      if (blockerCb.checked) {
+        npcAny['blocker'] = true;
+      } else {
+        delete npcAny['blocker'];
+        // Clear blocker-specific data
+        delete npcAny['despawnWhenParty'];
+        delete npcAny['lineOfSight'];
+        partyStrCb.checked = false;
+        partyInputsDiv.style.display = 'none';
+        byFlagCb.checked = false;
+        flagInputDiv.style.display = 'none';
+      }
+      blockerPanel.style.display = blockerCb.checked ? 'block' : 'none';
+      emit();
+    });
   }
 
   /** Render an editable list of walk steps for one phase (main / afterSpawn / afterDespawn). */

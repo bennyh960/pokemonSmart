@@ -1309,7 +1309,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
           }
 
-          // Check party-guard line-of-sight (despawnWhenParty NPCs that block until party is ready)
+          // Check blocker NPC line-of-sight (NPCs with blocker:true that block until despawn conditions are met)
           if (npcManager && hasActiveGame() && !partyGuardApproach && !gateGuardApproach) {
             const _pgPd = getPlayerData();
             const pgFacingVecs: Record<string, { dx: number; dy: number }> = {
@@ -1317,8 +1317,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 },
             };
             for (const npc of npcManager.getNPCs()) {
-              if (!npc.despawnWhenParty) continue;
-              // If condition already met the NPC is invisible — skip
+              if (!npc.blocker) continue;
+              // If all conditions met the NPC is invisible — skip
               if (!isNPCVisible(npc, _pgPd.flags, _pgPd.party)) continue;
               const vec = pgFacingVecs[npc.facing];
               if (!vec) continue;
