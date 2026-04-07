@@ -940,9 +940,9 @@
     {
       "id": "sumville-gym-blocker-phase2",
       "name": "Worried Student",
-      "x": 54,
+      "x": 6,
       "y": 55,
-      "facing": "right",
+      "facing": "up",
       "type": "dialogue",
       "spawnAfter": "sumville-crystal-found",
       "despawnAfter": "sumville-crystal-returned",
@@ -960,32 +960,14 @@
         "storyEvent": "sumville-crystal-returned",
         "flag": "sumville-crystal-delivered"
       },
-      "spriteType": "char_8c60a6",
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "afterSpawnPattern": [
-          {
-            "dir": "right",
-            "steps": 1,
-            "delay": 0
-          }
-        ],
-        "beforeDespawnPattern": [
-          {
-            "dir": "left",
-            "steps": 1,
-            "delay": 0
-          }
-        ]
-      }
+      "spriteType": "char_8c60a6"
     },
     {
       "id": "sumville-jessie",
-      "name": "",
-      "x": 57,
+      "name": "Jessie",
+      "x": 56,
       "y": 55,
-      "facing": "left",
+      "facing": "down",
       "type": "trainer",
       "spawnAfter": "sumville-gym-blocker-talked",
       "despawnAfter": "sumville-crystal-found",
@@ -993,7 +975,7 @@
       "dialogue": [
         {
           "en": "Prepare for trouble!",
-          "he": "היכון לצרה!"
+          "he": "התכוני לצרה!"
         },
         {
           "en": "This Bridge Crystal is ours — by order of Team Rocket and NULL-X!",
@@ -1002,27 +984,15 @@
       ],
       "spriteType": "char_59c8b9",
       "party": [
-        {
-          "pokemonId": 23,
-          "level": 13,
-          "moves": []
-        },
-        {
-          "pokemonId": 52,
-          "level": 14,
-          "moves": []
-        },
-        {
-          "pokemonId": 41,
-          "level": 14,
-          "moves": []
-        }
+        { "pokemonId": 23, "level": 13, "moves": [] },
+        { "pokemonId": 52, "level": 14, "moves": [] },
+        { "pokemonId": 41, "level": 14, "moves": [] }
       ],
       "reward": {
         "money": 560,
         "storyEvent": "sumville-crystal-found"
       },
-      "lineOfSight": 1,
+      "lineOfSight": 4,
       "postBattleDialogue": [
         {
           "en": "Ugh... the crystal! I dropped it when I fell!",
@@ -1032,16 +1002,15 @@
           "en": "James — RETREAT!",
           "he": "ג'יימס — נסיגה!"
         }
-      ],
-      "nameHe": "ג'יימס"
+      ]
     },
     {
       "id": "sumville-james",
-      "name": "Jessi",
+      "name": "James",
       "x": 57,
-      "y": 56,
+      "y": 54,
       "facing": "left",
-      "type": "trainer",
+      "type": "dialogue",
       "spawnAfter": "sumville-gym-blocker-talked",
       "despawnAfter": "sumville-crystal-found",
       "dialogue": [
@@ -1054,25 +1023,7 @@
           "he": "אל תיגע בנו — אנחנו בשליחות רשמית של NULL-X!"
         }
       ],
-      "spriteType": "char_8bd601",
-      "nameHe": "ג'סי",
-      "party": [
-        {
-          "pokemonId": 23,
-          "level": 15,
-          "moves": []
-        },
-        {
-          "pokemonId": 21,
-          "level": 15,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 1,
-      "reward": {
-        "money": 0
-      },
-      "postBattleDialogue": []
+      "spriteType": "char_8bd601"
     },
     {
       "id": "sumville-grateful-citizen",
@@ -2048,7 +1999,7 @@
     },
     {
       "key": "b5",
-      "x": 52,
+      "x": 50,
       "y": 50
     },
     {

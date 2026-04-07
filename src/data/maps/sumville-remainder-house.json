@@ -1,0 +1,96 @@
+{
+  "id": "sumville-remainder-house",
+  "name": "Remainder's House",
+  "tileset": "dpp",
+  "width": 9,
+  "height": 8,
+  "tileSize": 16,
+  "spawn": {
+    "x": 4,
+    "y": 6
+  },
+  "transitions": [
+    {
+      "fromX": 3,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 4,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [
+    {
+      "id": "remainder-mom",
+      "name": "Remainder's Mom",
+      "x": 6,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Oh, are you a friend of Remainder's? He left for his own adventure already...",
+          "he": "הו, אתה חבר של ריי-מיינדר? הוא כבר יצא להרפתקה שלו..."
+        },
+        {
+          "en": "He's always running ahead — never stops to add things up properly! Just like his name.",
+          "he": "הוא תמיד רץ קדימה — אף פעם לא עוצר לחשב דברים כמו שצריך! ממש כמו שמו."
+        },
+        {
+          "en": "If you see him, tell him his mother says to eat his vegetables.",
+          "he": "אם אתה רואה אותו, תגיד לו שאמא שלו אומרת לאכול ירקות."
+        }
+      ],
+      "spriteType": "char_a5abb0"
+    },
+    {
+      "id": "remainder-note",
+      "name": "Remainder's Note",
+      "x": 1,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "A messy note on the desk: \"Gone to prove I'm the best trainer in Numeria. Don't wait up. — R\"",
+          "he": "פתק מבולגן על השולחן: \"הלכתי להוכיח שאני המאמן הטוב ביותר בנומריה. אל תחכו. — ר\""
+        },
+        {
+          "en": "Below it, scrawled in different ink: \"P.S. If a stranger reads this — bet you can't beat me!\"",
+          "he": "מתחת, כתוב בצבע אחר: \"נ.ב. אם זר קורא את זה — מהמר שאתה לא יכול לנצח אותי!\""
+        }
+      ],
+      "spriteType": "npc-m",
+      "interactRange": 2
+    }
+  ],
+  "music": "town",
+  "encounterTableId": null,
+  "area": "Sumville",
+  "tiles": [
+    ["wall","books","wall","wall","pic1","wall","wall","books","wall"],
+    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
+    ["d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","ca1tl","ca1t","ca1tr","d"],
+    ["d","d","d","d","d","ca1l","ca1c","ca1r","d"],
+    ["d","d","d","d","d","ca1bl","ca1b","ca1br","d"],
+    ["d","d","d","d","d","d","d","d","d"]
+  ],
+  "objects": [
+    { "key": "library1", "x": 0, "y": 0 },
+    { "key": "library1", "x": 5, "y": 0 },
+    { "key": "dt1", "x": 0, "y": 2 },
+    { "key": "ch1", "x": 2, "y": 2 },
+    { "key": "ctc", "x": 5, "y": 5 },
+    { "key": "ehb1", "x": 3, "y": 7 }
+  ]
+}

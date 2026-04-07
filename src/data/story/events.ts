@@ -50,6 +50,80 @@ export interface StoryEventDef {
 /** All registered story events. */
 const EVENTS: StoryEventDef[] = [];
 
+// ---------------------------------------------------------------------------
+// Sumville Arc — Bridge Crystal story
+// ---------------------------------------------------------------------------
+
+// When player enters Sumville for the first time, activate the Sumville quest
+registerStoryEvent({
+  id: 'ev-sumville-arrive',
+  label: 'Sumville: First Arrival',
+  trigger: { type: 'map-enter', mapId: 'sumville' },
+  conditions: [
+    { type: 'flag-not', flag: 'sumville-arrived' },
+  ],
+  actions: [
+    { type: 'set-flag', flag: 'sumville-arrived' },
+    { type: 'set-quest', questId: 'main-sumville-investigate' },
+  ],
+  completedFlag: 'sumville-arrived',
+});
+
+// When player talks to gym blocker → Jessie & James spawn near the bridge
+registerStoryEvent({
+  id: 'ev-sumville-gym-blocker-talked',
+  label: 'Sumville: Gym Blocker Talked',
+  trigger: { type: 'flag-set', flag: 'sumville-gym-blocker-talked' },
+  actions: [
+    { type: 'set-quest', questId: 'main-sumville-rocket' },
+  ],
+});
+
+// When Jessie drops the crystal → advance quest to return it
+registerStoryEvent({
+  id: 'ev-sumville-crystal-found',
+  label: 'Sumville: Crystal Found',
+  trigger: { type: 'flag-set', flag: 'sumville-crystal-found' },
+  actions: [
+    { type: 'set-quest', questId: 'main-sumville-crystal' },
+  ],
+});
+
+// When crystal is returned → advance quest to challenge Adda
+registerStoryEvent({
+  id: 'ev-sumville-crystal-returned',
+  label: 'Sumville: Crystal Returned',
+  trigger: { type: 'flag-set', flag: 'sumville-crystal-returned' },
+  actions: [
+    { type: 'set-quest', questId: 'main-act1-gym1' },
+    {
+      type: 'show-message',
+      lines: [
+        { en: 'The Bridge Crystal is restored! Power flows back to the Addition Gym...', he: 'גביש הגשר שוחזר! הכוח זורם בחזרה למכון...' },
+        { en: 'Adda has returned to the gym. Go challenge her!', he: 'אדה חזרה למכון. לך לאתגר אותה!' },
+      ],
+    },
+  ],
+});
+
+// When gym is cleared → advance story to Route 2
+registerStoryEvent({
+  id: 'ev-sumville-gym-cleared',
+  label: 'Sumville: Gym Cleared',
+  trigger: { type: 'flag-set', flag: 'sumville-gym-cleared' },
+  actions: [
+    { type: 'complete-quest', questId: 'main-act1-gym1' },
+    { type: 'set-quest', questId: 'main-act1-route2' },
+    {
+      type: 'show-message',
+      lines: [
+        { en: 'You earned the Sum Badge and HM01 Cut!', he: 'הרווחת את תג הסכום ו-HM01 גזירה!' },
+        { en: 'The path to Route 2 — Difference Pass — is now open. Minusburg awaits!', he: 'הדרך לשביל 2 — מעבר ההפרש — פתוחה עכשיו. מינוסבורג ממתין!' },
+      ],
+    },
+  ],
+});
+
 export function registerStoryEvent(def: StoryEventDef): void {
   EVENTS.push(def);
 }

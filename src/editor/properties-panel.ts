@@ -622,8 +622,30 @@ export class PropertiesPanel {
         if (item.id === ri.itemId) opt.selected = true;
         itemSel.appendChild(opt);
       }
-      itemSel.addEventListener('change', () => { ri.itemId = itemSel.value; emit(); });
+      itemSel.addEventListener('change', () => {
+        ri.itemId = itemSel.value;
+        updateKeyNote();
+        emit();
+      });
       row.appendChild(itemSel);
+
+      // Key item info note — shown when selected item is a key item
+      const keyNote = document.createElement('div');
+      keyNote.style.cssText = 'font-size:10px;color:#ffaa44;margin:2px 0 4px;display:none;';
+      const updateKeyNote = () => {
+        const selected = allItems.find(it => it.id === itemSel.value);
+        if (selected?.category === 'key') {
+          keyNote.style.display = 'block';
+          const parts: string[] = ['Key item'];
+          if (selected.keyFlag) parts.push(`auto-sets flag: "${selected.keyFlag}"`);
+          if (selected.usedFlag) parts.push(`shows as used when: "${selected.usedFlag}"`);
+          keyNote.textContent = parts.join(' · ');
+        } else {
+          keyNote.style.display = 'none';
+        }
+      };
+      updateKeyNote();
+      row.appendChild(keyNote);
 
       // Quantity
       const qtyInput = document.createElement('input');

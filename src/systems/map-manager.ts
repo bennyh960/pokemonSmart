@@ -82,6 +82,8 @@ registerMap('route-3', () => import('../data/maps/route-3.json').catch(() => imp
 registerMap('minusburg', () => import('../data/maps/minusburg.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('sumville-house-1', () => import('../data/maps/sumville-house-1.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('sumville-house-2', () => import('../data/maps/sumville-house-2.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('sumville-gym', () => import('../data/maps/sumville-gym.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('sumville-remainder-house', () => import('../data/maps/sumville-remainder-house.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route1-house', () => import('../data/maps/route1-house.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route-4', () => import('../data/maps/route-4.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route-10', () => import('../data/maps/route-10.json').catch(() => import('../data/maps/test-map.json')));
@@ -116,3 +118,5 @@ registerMap('nullx-floor-6', () => import('../data/maps/nullx-floor-6.json').cat
 registerMap('dividia-cave', () => import('../data/maps/dividia-cave.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('symmetrika-cave', () => import('../data/maps/symmetrika-cave.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('mountain-cave', () => import('../data/maps/mountain-cave.json').catch(() => import('../data/maps/test-map.json')));
+// Route 9 — south of Zeroville (stub, under construction)
+registerMap('route-9', () => import('../data/maps/route-9.json').catch(() => import('../data/maps/test-map.json')));

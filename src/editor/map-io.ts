@@ -10,6 +10,7 @@ export function getKnownMapIds(): string[] {
     'algorithma-lab', 'oak lab',
     // Act 1 — Route 1 → Sumville → Route 2 → Minusburg
     'route-1', 'route1-house', 'sumville', 'sumville-house-1', 'sumville-house-2',
+    'sumville-gym', 'sumville-remainder-house',
     'route-2', 'minusburg',
     // Act 2 — Route 3 → Multiplia → Route 4 → Dividia
     'route-3', 'multiplia', 'fake-pokecenter',

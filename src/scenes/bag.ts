@@ -9,7 +9,7 @@ import type { Scene, Pokemon } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
-import { t } from '../i18n/i18n.js';
+import { t, getLocale } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
@@ -268,13 +268,25 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       // Selected item name (green, large, right-aligned)
       drawText(ctx, getLocalizedName(selItem.def.name), 206, 121, { size: 8, color: C.SEL_BAR, font: 'monospace', align: 'right' });
 
-      // Full description (right-aligned)
-      drawText(ctx, selItem.def.description, 206, 131, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
+      // Full description (right-aligned) — key items show used state when their usedFlag is set
+      const pd = getPlayerData();
+      const isKeyUsed = !!(selItem.def.usedFlag && pd.flags[selItem.def.usedFlag]);
+      let detailDesc = selItem.def.description;
+      if (isKeyUsed && selItem.def.usedDescription) {
+        detailDesc = getLocale() === 'he' ? selItem.def.usedDescription.he : selItem.def.usedDescription.en;
+      }
+      drawText(ctx, detailDesc, 206, 131, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
+      // "✓ Used" label for delivered key items
+      if (isKeyUsed) {
+        drawText(ctx, getLocale() === 'he' ? '✓ נמסר' : '✓ Used', 8, 131, { size: 6, color: '#44cc88', font: 'monospace' });
+      }
 
-      // Use button
-      fillRect(ctx, 8, 122, 34, 12, C.USE_BTN_BG);
-      drawRect(ctx, 8, 122, 34, 12, C.USE_BTN_BRD);
-      drawText(ctx, t('bag.hint.use') || 'Use', 25, 124, { size: 7, color: C.SEL_BAR, font: 'monospace', align: 'center' });
+      // Use button — hidden for key items (they can't be manually used)
+      if (selItem.def.category !== 'key') {
+        fillRect(ctx, 8, 122, 34, 12, C.USE_BTN_BG);
+        drawRect(ctx, 8, 122, 34, 12, C.USE_BTN_BRD);
+        drawText(ctx, t('bag.hint.use') || 'Use', 25, 124, { size: 7, color: C.SEL_BAR, font: 'monospace', align: 'center' });
+      }
     }
 
     // ── Bottom bar (y=150, h=10) ──

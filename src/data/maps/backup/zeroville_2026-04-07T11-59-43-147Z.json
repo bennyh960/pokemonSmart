@@ -350,8 +350,8 @@
     {
       "id": "pokecenter-hint",
       "name": "Nurse Joy",
-      "x": 12,
-      "y": 15,
+      "x": 14,
+      "y": 17,
       "facing": "down",
       "type": "dialogue",
       "dialogue": [
@@ -368,7 +368,7 @@
           "he": "תמיד תרפא לפני שאתה נכנס לדשא גבוה או מתמודד עם מאמן קשה!"
         }
       ],
-      "spriteType": "char_c3dacc"
+      "spriteType": "char_d25760"
     }
   ],
   "music": "town",

@@ -36,21 +36,24 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "קראתי שכדי לחזק פוקימון צריך לחשוף אותו לקרבות יותר ויותר."
+          "en": "Hi there! I am Jasmine. My research is all about Pokemon experience.",
+          "he": "שלום! אני ג'סמין. המחקר שלי עוסק בניסיון של פוקימון."
         },
         {
-          "en": "To increase your pokemon expereince you need to let him battle.",
-          "he": "פוקימון צובר ניסיון רב בקרב אם הוא מנצח או אפילו מפסיד."
+          "en": "The more a Pokemon battles, the more EXP — experience points — it earns. EXP helps it grow stronger and level up!",
+          "he": "ככל שפוקימון נלחם יותר, כך הוא צובר יותר EXP — נקודות ניסיון. EXP עוזר לו להתחזק ולעלות רמה!"
         },
         {
-          "en": "",
-          "he": "או אפילו אם הפוקימון שלך עזר לך לתפוס פוקימון חדש"
+          "en": "Your Pokemon gains EXP even if it helps you catch a wild Pokemon. Every battle counts!",
+          "he": "הפוקימון שלך צובר EXP אפילו אם הוא עוזר לך לתפוס פוקימון פראי. כל קרב חשוב!"
+        },
+        {
+          "en": "Take this Pokeball — practice catching is the best way to start!",
+          "he": "קח את כדור הפוקה הזה — תרגול תפיסה הוא הדרך הטובה ביותר להתחיל!"
         }
       ],
       "spriteType": "char_a5abb0",
       "name": "Jasmine",
-      "nameHe": "ג'סמין",
       "reward": {
         "money": 0,
         "items": [
@@ -58,7 +61,8 @@
             "itemId": "poke-ball",
             "quantity": 1
           }
-        ]
+        ],
+        "flag": "house-br-jasmine-rewarded"
       }
     }
   ],

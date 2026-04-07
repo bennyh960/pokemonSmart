@@ -36,21 +36,24 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "The professor says zero is the foundation of all numbers.",
-          "he": "אני אוהב פוקימוני רעל!"
+          "en": "Hey, I'm Elan! I live right next to the lab, so I know a thing or two.",
+          "he": "היי, אני אלן! אני גר ממש ליד המעבדה, אז אני יודע דבר או שניים."
         },
         {
-          "en": "Without zero, there would be no place value system!",
-          "he": ""
+          "en": "When your Pokemon faints — meaning its HP reaches zero — it can't battle anymore until you heal it.",
+          "he": "כשהפוקימון שלך מתעלף — כלומר ה-HP שלו מגיע לאפס — הוא לא יכול להילחם יותר עד שתרפא אותו."
         },
         {
-          "en": "I heard strange things are happening outside Zeroville...",
-          "he": ""
+          "en": "Use a Revive to wake it up right away! Or visit the Pokemon Center — it's free!",
+          "he": "השתמש ב-Revive כדי להעירו מיד! או בקר במרכז הפוקימון — זה בחינם!"
+        },
+        {
+          "en": "Strange things are indeed stirring outside our town... Prof. Algorithma is worried. Stay alert out there!",
+          "he": "דברים מוזרים אכן מתרחשים מחוץ לעיירה שלנו... פרופ׳ אלגוריתמה מוטרדת. היה ערני שם בחוץ!"
         }
       ],
       "spriteType": "char_392694",
-      "name": "Elm",
-      "nameHe": "אלם"
+      "name": "Elan"
     }
   ],
   "music": "town",

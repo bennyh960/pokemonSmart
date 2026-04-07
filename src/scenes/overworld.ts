@@ -479,6 +479,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         const itemDef = getItem(ri.itemId);
         const displayName = itemDef ? getLocalizedName(itemDef.name) : ri.itemId;
         lines.push(t('npc.reward.item', { item: displayName, qty: ri.quantity }));
+        // Key items auto-set their flag when received
+        if (itemDef?.keyFlag) {
+          pd.flags[itemDef.keyFlag] = true;
+        }
       }
     }
 

@@ -35,6 +35,10 @@ export interface ItemDef {
   usableInOverworld: boolean;
   sprite: string;
   topColor?: string;           // Pokeball top-half color
+  // ── Key item fields (forwarded from ItemGameDef) ──
+  keyFlag?: string;            // Flag auto-set when item is received
+  usedFlag?: string;           // Flag that marks item as delivered/used
+  usedDescription?: { en: string; he: string }; // Shown in bag when usedFlag is true
 }
 
 const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
@@ -66,6 +70,9 @@ function buildItems(): Record<string, ItemDef> {
       usableInOverworld: gameDef.usableInOverworld,
       sprite: raw?.sprite ?? `${SPRITE_BASE}/${slug}.png`,
       topColor: gameDef.topColor,
+      keyFlag: gameDef.keyFlag,
+      usedFlag: gameDef.usedFlag,
+      usedDescription: gameDef.usedDescription,
     };
   }
 

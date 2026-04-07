@@ -37,6 +37,13 @@ export interface ItemGameDef {
   name?: { en: string; he: string };         // Override name (used for TM/HM items not in items.json)
   description?: { en: string; he: string };  // Override description (bilingual)
   sellPrice?: number;         // Custom sell price (TMs have explicit sell prices)
+  // ── Key item fields ──
+  /** Flag automatically set in pd.flags when this item is received. */
+  keyFlag?: string;
+  /** Flag that marks this key item as delivered/used. When set, the bag shows usedDescription. */
+  usedFlag?: string;
+  /** Description shown in the bag after the item has been used/delivered. */
+  usedDescription?: { en: string; he: string };
 }
 
 // ─── Slug ↔ ID mapping ───

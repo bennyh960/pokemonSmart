@@ -383,11 +383,7 @@
       "name": {
         "en": "Alice",
         "he": "אליס"
-      },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      }
     },
     "char_45ba6c": {
       "frameWidth": 32,
@@ -1990,11 +1986,7 @@
       "name": {
         "en": "Brock",
         "he": "ברוק"
-      },
-      "roles": [
-        "story",
-        "gym-leader"
-      ]
+      }
     },
     "ashKetchum": {
       "frameWidth": 32,
@@ -2645,11 +2637,7 @@
       "name": {
         "en": "Morty",
         "he": "מורטי"
-      },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      }
     },
     "char_919bca": {
       "frameWidth": 32,
@@ -2707,11 +2695,7 @@
       "name": {
         "en": "Lance",
         "he": "לאנס"
-      },
-      "roles": [
-        "story",
-        "elite-4"
-      ]
+      }
     },
     "char_424d3d": {
       "frameWidth": 32,
@@ -2769,11 +2753,7 @@
       "name": {
         "en": "Blue",
         "he": "בלו"
-      },
-      "roles": [
-        "story",
-        "gym-helper"
-      ]
+      }
     },
     "char_2c5fb3": {
       "frameWidth": 32,
@@ -3814,64 +3794,6 @@
         "rival",
         "trainer"
       ]
-    },
-    "char_3979e8": {
-      "frameWidth": 32,
-      "frameHeight": 32,
-      "frames": [
-        {
-          "sx": 416,
-          "sy": 416
-        },
-        {
-          "sx": 448,
-          "sy": 416
-        },
-        {
-          "sx": 480,
-          "sy": 416
-        },
-        {
-          "sx": 416,
-          "sy": 448
-        },
-        {
-          "sx": 448,
-          "sy": 448
-        },
-        {
-          "sx": 480,
-          "sy": 448
-        },
-        {
-          "sx": 416,
-          "sy": 480
-        },
-        {
-          "sx": 448,
-          "sy": 480
-        },
-        {
-          "sx": 480,
-          "sy": 480
-        },
-        {
-          "sx": 416,
-          "sy": 512
-        },
-        {
-          "sx": 448,
-          "sy": 512
-        },
-        {
-          "sx": 480,
-          "sy": 512
-        }
-      ],
-      "name": {
-        "en": "Clown Hays",
-        "he": "הייס הליצן"
-      }
     }
   }
 }

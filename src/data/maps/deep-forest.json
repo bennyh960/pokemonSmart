@@ -12,6 +12,20 @@
   "transitions": [
     {
       "fromX": 8,
+      "fromY": 0,
+      "toMapId": "zeroville",
+      "toX": 8,
+      "toY": 1
+    },
+    {
+      "fromX": 9,
+      "fromY": 0,
+      "toMapId": "zeroville",
+      "toX": 9,
+      "toY": 1
+    },
+    {
+      "fromX": 8,
       "fromY": 59,
       "toMapId": "route-4",
       "toX": 10,

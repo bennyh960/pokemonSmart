@@ -34,16 +34,16 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "אבא שלי מכין מרק מיוחד!"
+          "en": "My dad makes the most amazing soup! He says it gives Pokemon back their strength.",
+          "he": "אבא שלי מכין מרק מדהים! הוא אומר שזה נותן לפוקימונים בחזרה את כוחם."
         },
         {
-          "en": "One day I will be pokemon trainer!",
-          "he": "הוא נותן כח לפוקימונים."
+          "en": "A Pokemon that drinks a full serving can recover completely — even from fainting!",
+          "he": "פוקימון ששותה מנה מלאה יכול להתאושש לחלוטין — אפילו מהתעלפות!"
         },
         {
-          "en": "",
-          "he": "פוקימון ששותה מנה מלאה יכול לחזור למלוא כוחו."
+          "en": "One day I will be a Pokemon trainer too!",
+          "he": "יום אחד גם אני אהיה מאמן פוקימון!"
         }
       ],
       "spriteType": "char_0502ea",
@@ -66,29 +66,24 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "המרק שלי יכול לרפא כל פוקימון."
+          "en": "Welcome! I am Rick, and I brew a special soup that restores fallen Pokemon.",
+          "he": "ברוך הבא! אני ריק, ואני מבשל מרק מיוחד שמחזיר פוקימון שנפלו."
         },
         {
-          "en": "I make Revive Soop",
-          "he": "את המרק שלי אני מוכר לחנויות בתור \"Revive\" ."
+          "en": "The shops sell it as a 'Revive'. In Hebrew that's 'רבייב' — it means 'to bring back to life'.",
+          "he": "החנויות מוכרות את זה בתור 'Revive'. בעברית זה 'רבייב' — זה אומר 'להקים לתחיה'."
         },
         {
-          "en": "",
-          "he": "בעברית מבטאים את זה \"רבייב\"."
+          "en": "A fainted Pokemon that receives a Revive can fight again right away. Keep a few in your bag at all times!",
+          "he": "פוקימון מותש שמקבל רבייב יכול לחזור ולהילחם מיד. שמור כמה בתיק שלך כל הזמן!"
         },
         {
-          "en": "",
-          "he": "התרגום של זה \"להקים לתחיה\""
-        },
-        {
-          "en": "",
-          "he": "פוקימון שלא יכול להלחם ויקבל \"רבייב\" יוכל לחזור להילחם בקלות"
+          "en": "Here, take some Revives to get you started on your journey!",
+          "he": "הנה, קח כמה רבייבים כדי להתחיל את המסע שלך!"
         }
       ],
       "spriteType": "char_8c60a6",
       "name": "Rick",
-      "nameHe": "ריק",
       "reward": {
         "money": 0,
         "items": [

@@ -72,6 +72,26 @@ registerQuest({
   objective: { en: 'Meet Prof. Oak and explore Sumville', he: 'פגוש את פרופ׳ אוק וחקור את סאמוויל' },
 });
 
+// --- Sumville story arc sub-quests ---
+
+registerQuest({
+  id: 'main-sumville-investigate',
+  title: { en: 'Locked Gym', he: 'חדר כושר נעול' },
+  objective: { en: 'Investigate why the Addition Gym is closed', he: 'חקור מדוע חדר הכושר של החיבור סגור' },
+});
+
+registerQuest({
+  id: 'main-sumville-rocket',
+  title: { en: 'Bridge Crystal', he: 'גביש הגשר' },
+  objective: { en: 'Defeat Team Rocket at the bridge and recover the stolen Crystal Core', he: 'נצח את רוקט בגשר ושחזר את גביש הליבה הגנוב' },
+});
+
+registerQuest({
+  id: 'main-sumville-crystal',
+  title: { en: 'Return the Crystal', he: 'החזר את הגביש' },
+  objective: { en: 'Return the Bridge Crystal to the Crystal Keeper at the bridge', he: 'החזר את גביש הגשר לשומרת הגביש בגשר' },
+});
+
 registerQuest({
   id: 'main-act1-gym1',
   title: { en: 'Sumville Gym', he: 'חדר הכושר של סאמוויל' },
