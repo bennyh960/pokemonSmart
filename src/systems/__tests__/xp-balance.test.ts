@@ -3,10 +3,13 @@ import { getPokemon } from '../../services/pokemon-data.js';
 import { calculateXpGain, checkAndApplyLevelUp, createPokemonFromData, getXpToNextLevel } from '../encounter.js';
 
 describe('XP rebalance', () => {
-  it('uses the lighter XP-to-next curve', () => {
-    expect(getXpToNextLevel(1)).toBe(80);
-    expect(getXpToNextLevel(5)).toBe(200);
-    expect(getXpToNextLevel(10)).toBe(350);
+  it('uses the Fluctuating XP-to-next curve', () => {
+    // L1→2: total(2)-total(1) = 4-0 = 4
+    expect(getXpToNextLevel(1)).toBe(4);
+    // L5→6: total(6)-total(5) = 112-65 = 47
+    expect(getXpToNextLevel(5)).toBe(47);
+    // L10→11: total(11)-total(10) = 745-540 = 205
+    expect(getXpToNextLevel(10)).toBe(205);
   });
 
   it('initializes and updates xpToNext with the shared formula', () => {
@@ -14,14 +17,15 @@ describe('XP rebalance', () => {
     expect(bulbasaur).toBeDefined();
 
     const pokemon = createPokemonFromData(bulbasaur!, 5);
-    expect(pokemon.xpToNext).toBe(200);
+    expect(pokemon.xpToNext).toBe(47);
 
     pokemon.xp = pokemon.xpToNext;
     const result = checkAndApplyLevelUp(pokemon);
 
     expect(result.leveledUp).toBe(true);
     expect(pokemon.level).toBe(6);
-    expect(pokemon.xpToNext).toBe(230);
+    // L6→7: total(7)-total(6) = 178-112 = 66
+    expect(pokemon.xpToNext).toBe(66);
   });
 
   it('boosts battle XP and gives trainer battles extra reward', () => {

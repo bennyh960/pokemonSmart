@@ -36,7 +36,7 @@ export interface EncounterTable {
   entries: EncounterEntry[];
 }
 
-const DEFAULT_ENCOUNTER_RATE = 0.10;
+const DEFAULT_ENCOUNTER_RATE = 0.1;
 const TRAINER_XP_MULTIPLIER = 1.5;
 const MAX_CATCH_RATE = 255;
 const MAX_RARITY_XP_BONUS = 0.15;
@@ -54,7 +54,7 @@ function getSteppedCatchRate(catchRate: number): number {
 function getRarityXpMultiplier(pokemonId: number): number {
   const steppedCatchRate = getSteppedCatchRate(getPokemonCatchRate(pokemonId));
   const rarityRatio = (MAX_CATCH_RATE - steppedCatchRate) / MAX_CATCH_RATE;
-  return 1 + (rarityRatio * MAX_RARITY_XP_BONUS);
+  return 1 + rarityRatio * MAX_RARITY_XP_BONUS;
 }
 
 /** All encounter tables keyed by area/map ID, loaded from JSON. */
@@ -91,17 +91,29 @@ export function recalcPokemonStats(pokemon: Pokemon): void {
   pokemon.hp = Math.min(pokemon.hp + (pokemon.maxHp - oldMaxHp), pokemon.maxHp);
   pokemon.attack = calcStat(data.stats.attack, pokemon.level, false, getNatureMultiplier(nId, 'attack'), evs.atk);
   pokemon.defense = calcStat(data.stats.defense, pokemon.level, false, getNatureMultiplier(nId, 'defense'), evs.def);
-  pokemon.specialAttack = calcStat(data.stats.specialAttack, pokemon.level, false, getNatureMultiplier(nId, 'specialAttack'), evs.spa);
-  pokemon.specialDefense = calcStat(data.stats.specialDefense, pokemon.level, false, getNatureMultiplier(nId, 'specialDefense'), evs.spd);
+  pokemon.specialAttack = calcStat(
+    data.stats.specialAttack,
+    pokemon.level,
+    false,
+    getNatureMultiplier(nId, 'specialAttack'),
+    evs.spa,
+  );
+  pokemon.specialDefense = calcStat(
+    data.stats.specialDefense,
+    pokemon.level,
+    false,
+    getNatureMultiplier(nId, 'specialDefense'),
+    evs.spd,
+  );
   pokemon.speed = calcStat(data.stats.speed, pokemon.level, false, getNatureMultiplier(nId, 'speed'), evs.spe);
 }
 
 /** Default moves assigned to wild Pokemon by type (fallback only). */
 const defaultMovesByType: Record<string, number[]> = {
-  normal:  [33, 98],   // Tackle, Quick Attack
-  flying:  [33, 16],   // Tackle, Gust
-  bug:     [33, 81],   // Tackle, String Shot
-  poison:  [33, 40],   // Tackle, Poison Sting
+  normal: [33, 98], // Tackle, Quick Attack
+  flying: [33, 16], // Tackle, Gust
+  bug: [33, 81], // Tackle, String Shot
+  poison: [33, 40], // Tackle, Poison Sting
 };
 
 /** Create a Pokemon instance from base data at a given level. */
@@ -125,7 +137,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
   // If no explicit moves, derive from learnset
   if (moves.length === 0) {
     const learnset = getLearnset(data.id);
-    const eligible = learnset.filter(entry => entry.levelLearned <= level);
+    const eligible = learnset.filter((entry) => entry.levelLearned <= level);
     // Take the last 4 moves (most recently learned by level) for wild/NPC Pokemon
     const selected = eligible.slice(-4);
     for (const entry of selected) {
@@ -196,10 +208,15 @@ export function generateWildEncounter(mapId: string, tileTypes?: string[] | null
 //   ['water','bug']   - only water and bug
 function parseEncounterFilter(tileTypes: string[]): { mode: 'all' | 'include'; include: string[]; exclude: string[] } {
   // Check for wildcard with exclusions: '*/water,ice'
-  const wildcard = tileTypes.find(t => t.startsWith('*'));
+  const wildcard = tileTypes.find((t) => t.startsWith('*'));
   if (wildcard) {
     const afterSlash = wildcard.split('/')[1]; // 'water,ice' or undefined
-    const exclude = afterSlash ? afterSlash.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const exclude = afterSlash
+      ? afterSlash
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
     return { mode: 'all', include: [], exclude };
   }
   return { mode: 'include', include: tileTypes, exclude: [] };
@@ -213,18 +230,18 @@ function rollEncounter(table: EncounterTable, tileTypes?: string[] | null): Poke
     const filter = parseEncounterFilter(tileTypes);
     if (filter.mode === 'all' && filter.exclude.length > 0) {
       // All types except excluded
-      entries = entries.filter(e => {
+      entries = entries.filter((e) => {
         const data = getPokemon(e.pokemonId);
         if (!data) return false;
         // Exclude if ALL of the Pokemon's types are in the exclude list
-        return !data.types.every(t => filter.exclude.includes(t));
+        return !data.types.every((t) => filter.exclude.includes(t));
       });
     } else if (filter.mode === 'include') {
       // Only specific types
-      entries = entries.filter(e => {
+      entries = entries.filter((e) => {
         const data = getPokemon(e.pokemonId);
         if (!data) return false;
-        return data.types.some(t => filter.include.includes(t));
+        return data.types.some((t) => filter.include.includes(t));
       });
     }
     // mode === 'all' with no exclusions → no filtering needed
@@ -248,9 +265,21 @@ function rollEncounter(table: EncounterTable, tileTypes?: string[] | null): Poke
   return null;
 }
 
-/** Get the XP needed to advance from the current level to the next. */
+/** Total XP required to reach a given level (Fluctuating growth rate). */
+function fluctuatingTotal(n: number): number {
+  if (n <= 15) return Math.floor((n ** 3) * (24 + Math.floor((n + 1) / 3)) / 50);
+  if (n <= 36) return Math.floor((n ** 3) * (14 + n) / 50);
+  return Math.floor((n ** 3) * (32 + Math.floor(n / 2)) / 50);
+}
+
+/**
+ * XP needed to advance from `level` to `level + 1`.
+ * Uses the Fluctuating growth rate formula from the mainline games.
+ * Fast at low levels, very steep past ~level 30.
+ * Reference: https://bulbapedia.bulbagarden.net/wiki/Experience#Fluctuating
+ */
 export function getXpToNextLevel(level: number): number {
-  return 50 + (level * 30);
+  return Math.max(1, fluctuatingTotal(level + 1) - fluctuatingTotal(level));
 }
 
 /** Calculate XP gained from defeating a Pokemon in battle. */
@@ -291,19 +320,31 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
     pokemon.hp += pokemon.maxHp - oldMaxHp; // Heal by the HP gained
     pokemon.attack = calcStat(data.stats.attack, pokemon.level, false, getNatureMultiplier(nId, 'attack'), evs.atk);
     pokemon.defense = calcStat(data.stats.defense, pokemon.level, false, getNatureMultiplier(nId, 'defense'), evs.def);
-    pokemon.specialAttack = calcStat(data.stats.specialAttack, pokemon.level, false, getNatureMultiplier(nId, 'specialAttack'), evs.spa);
-    pokemon.specialDefense = calcStat(data.stats.specialDefense, pokemon.level, false, getNatureMultiplier(nId, 'specialDefense'), evs.spd);
+    pokemon.specialAttack = calcStat(
+      data.stats.specialAttack,
+      pokemon.level,
+      false,
+      getNatureMultiplier(nId, 'specialAttack'),
+      evs.spa,
+    );
+    pokemon.specialDefense = calcStat(
+      data.stats.specialDefense,
+      pokemon.level,
+      false,
+      getNatureMultiplier(nId, 'specialDefense'),
+      evs.spd,
+    );
     pokemon.speed = calcStat(data.stats.speed, pokemon.level, false, getNatureMultiplier(nId, 'speed'), evs.spe);
   }
 
   // Check learnset for new moves at this level
   const newMoves: LevelUpMoveResult[] = [];
   const learnset = getLearnset(pokemon.id);
-  const movesAtLevel = learnset.filter(entry => entry.levelLearned === pokemon.level);
+  const movesAtLevel = learnset.filter((entry) => entry.levelLearned === pokemon.level);
 
   for (const entry of movesAtLevel) {
     // Skip if already knows this move
-    if (pokemon.moves.some(m => m.id === entry.moveId)) continue;
+    if (pokemon.moves.some((m) => m.id === entry.moveId)) continue;
 
     if (pokemon.moves.length < MAX_POKEMON_MOVES) {
       const move = createMoveFromId(entry.moveId);
@@ -319,7 +360,9 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
 
   console.log(`${pokemon.name} grew to level ${pokemon.level}!`);
   if (newMoves.length > 0) {
-    console.log(`Move learning events: ${newMoves.map(move => `${move.moveId}:${move.learned ? 'learned' : 'pending'}`).join(', ')}`);
+    console.log(
+      `Move learning events: ${newMoves.map((move) => `${move.moveId}:${move.learned ? 'learned' : 'pending'}`).join(', ')}`,
+    );
   }
 
   return {
@@ -350,11 +393,41 @@ export function applyEvolution(pokemon: Pokemon, evolvedId: number): boolean {
   pokemon.types = evolvedData.types as PokemonType[];
   pokemon.maxHp = calcStat(evolvedData.stats.hp, pokemon.level, true, 1, evs.hp);
   pokemon.hp = Math.max(1, Math.min(pokemon.maxHp, pokemon.hp + (pokemon.maxHp - oldMaxHp)));
-  pokemon.attack = calcStat(evolvedData.stats.attack, pokemon.level, false, getNatureMultiplier(natureId, 'attack'), evs.atk);
-  pokemon.defense = calcStat(evolvedData.stats.defense, pokemon.level, false, getNatureMultiplier(natureId, 'defense'), evs.def);
-  pokemon.specialAttack = calcStat(evolvedData.stats.specialAttack, pokemon.level, false, getNatureMultiplier(natureId, 'specialAttack'), evs.spa);
-  pokemon.specialDefense = calcStat(evolvedData.stats.specialDefense, pokemon.level, false, getNatureMultiplier(natureId, 'specialDefense'), evs.spd);
-  pokemon.speed = calcStat(evolvedData.stats.speed, pokemon.level, false, getNatureMultiplier(natureId, 'speed'), evs.spe);
+  pokemon.attack = calcStat(
+    evolvedData.stats.attack,
+    pokemon.level,
+    false,
+    getNatureMultiplier(natureId, 'attack'),
+    evs.atk,
+  );
+  pokemon.defense = calcStat(
+    evolvedData.stats.defense,
+    pokemon.level,
+    false,
+    getNatureMultiplier(natureId, 'defense'),
+    evs.def,
+  );
+  pokemon.specialAttack = calcStat(
+    evolvedData.stats.specialAttack,
+    pokemon.level,
+    false,
+    getNatureMultiplier(natureId, 'specialAttack'),
+    evs.spa,
+  );
+  pokemon.specialDefense = calcStat(
+    evolvedData.stats.specialDefense,
+    pokemon.level,
+    false,
+    getNatureMultiplier(natureId, 'specialDefense'),
+    evs.spd,
+  );
+  pokemon.speed = calcStat(
+    evolvedData.stats.speed,
+    pokemon.level,
+    false,
+    getNatureMultiplier(natureId, 'speed'),
+    evs.spe,
+  );
 
   const evolvedAbilities = getPokemonAbilities(evolvedId);
   if (evolvedAbilities) {
