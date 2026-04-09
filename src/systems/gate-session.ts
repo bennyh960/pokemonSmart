@@ -1,0 +1,226 @@
+/**
+ * GateSession — manages the state of a single question-gate play session.
+ *
+ * Flow:
+ *  1. Session is created with a config.
+ *  2. `nextQuestion()` generates the next RichQuestion to show.
+ *  3. `submitAnswer(value)` records the answer, returns `AnswerFeedback`.
+ *     - Correct: progress advances, no retry.
+ *     - Wrong:   `retryRequired = true` — same template, different variables;
+ *               question count for "required" is bumped by 1.
+ *  4. Once `correctCount >= config.questionsRequired`, session moves to
+ *     optional bonus phase (if enabled).
+ *  5. `getResult()` computes the final SessionResult with reward/penalty info.
+ */
+
+import {
+  QuestionBuilder,
+  buildSnapshot,
+  getClassConfig,
+  registry,
+} from '../math/question-builder/index.js';
+import type { RichQuestion } from '../math/question-builder/index.js';
+import type { GateSessionConfig, GateReward } from '../data/story/gates.js';
+import { gradeFromBirthYear } from '../data/story/global-gate-config.js';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface AnswerFeedback {
+  correct: boolean;
+  /** Only set on wrong answers — a new question with different variables. */
+  retryQuestion?: RichQuestion;
+  /** Progress after this answer. */
+  correctCount: number;
+  required: number;
+  /** Whether the session (main phase) is now complete. */
+  mainPhaseComplete: boolean;
+}
+
+export interface SessionResult {
+  /** Did the player satisfy `questionsRequired`? (they always do — session ends when they do) */
+  passed: boolean;
+  /** How many times the player answered correctly. */
+  correctCount: number;
+  /** Total answer attempts (correct + wrong). */
+  totalAttempts: number;
+  /** correctCount / totalAttempts — used for reward/penalty gating. */
+  successRate: number;
+  /** null = bonus not offered; true/false = offered and answered. */
+  bonusPassed: boolean | null;
+  /** PokeCoins deducted (0 if none). */
+  penaltyApplied: number;
+  /** Rewards the player earned (after bonus multiplier applied to money). */
+  rewardsEarned: GateReward[];
+}
+
+// ─── GateSession ────────────────────────────────────────────────────────────────────
+
+export class GateSession {
+  private readonly config: GateSessionConfig;
+  private readonly snapshot = buildSnapshot();
+  private readonly gradeId = gradeFromBirthYear(2018); // constant for now
+
+  private correctCount = 0;
+  private totalAttempts = 0;
+
+  /** Bumped by 1 for every wrong answer (you must earn one extra correct). */
+  private requiredTotal: number;
+
+  /** Last-used template id (so retries reuse exact same template). */
+  private lastTemplateId = '';
+
+  private phase: 'main' | 'bonus' | 'done' = 'main';
+  private bonusPassed: boolean | null = null;
+
+  constructor(config: GateSessionConfig) {
+    this.config = config;
+    this.requiredTotal = config.questionsRequired;
+  }
+
+  // ── Public API ─────────────────────────────────────────────────────────────
+
+  get isComplete(): boolean { return this.phase === 'done'; }
+  get isBonusPhase(): boolean { return this.phase === 'bonus'; }
+  get currentCorrect(): number { return this.correctCount; }
+  get currentRequired(): number { return this.requiredTotal; }
+
+  /**
+   * Generate the next question for the current phase.
+   * Call this at the start of a session and after each `submitAnswer()` that returns
+   * `mainPhaseComplete = false`.
+   */
+  nextQuestion(): RichQuestion {
+    const gradeId = this.phase === 'bonus'
+      ? this._bonusGradeId()
+      : this.gradeId;
+
+    const cfg = getClassConfig(gradeId);
+    const builder = new QuestionBuilder()
+      .withConfig(cfg)
+      .withSnapshot(this.snapshot);
+
+    const q = builder.build();
+    this.lastTemplateId = q.templateId;
+    return q;
+  }
+
+  /**
+   * Submit an answer for the current question.
+   * Returns feedback including whether a retry question should be shown.
+   */
+  submitAnswer(value: number, correctAnswer: number): AnswerFeedback {
+    this.totalAttempts++;
+
+    if (value === correctAnswer) {
+      this.correctCount++;
+      const mainPhaseComplete = this.correctCount >= this.requiredTotal;
+
+      if (this.phase === 'bonus') {
+        this.bonusPassed = true;
+        this.phase = 'done';
+      } else if (mainPhaseComplete) {
+        if (this.config.bonusEnabled) {
+          this.phase = 'bonus';
+        } else {
+          this.phase = 'done';
+        }
+      }
+
+      return {
+        correct: true,
+        correctCount: this.correctCount,
+        required: this.requiredTotal,
+        mainPhaseComplete,
+      };
+    }
+
+    // Wrong answer in main phase  — bump required count and provide a retry
+    if (this.phase === 'main') {
+      this.requiredTotal++;
+    } else if (this.phase === 'bonus') {
+      // Bonus wrong = bonus failed, penalty cleared
+      this.bonusPassed = false;
+      this.phase = 'done';
+      return {
+        correct: false,
+        correctCount: this.correctCount,
+        required: this.requiredTotal,
+        mainPhaseComplete: true,
+      };
+    }
+
+    // Generate a retry question using the same template type
+    const cfg = getClassConfig(this.gradeId);
+    const builder = new QuestionBuilder()
+      .withConfig(cfg)
+      .withSnapshot(this.snapshot);
+
+    try {
+      if (this.lastTemplateId) {
+        registry.get(this.lastTemplateId);
+        builder.withTemplateId(this.lastTemplateId);
+      }
+    } catch { /* template not found — use random */ }
+
+    const retryQuestion = builder.build();
+    this.lastTemplateId = retryQuestion.templateId;
+
+    return {
+      correct: false,
+      retryQuestion,
+      correctCount: this.correctCount,
+      required: this.requiredTotal,
+      mainPhaseComplete: false,
+    };
+  }
+
+  /** Skip bonus phase (player chose not to answer optional question). */
+  skipBonus(): void {
+    if (this.phase === 'bonus') {
+      this.bonusPassed = null;
+      this.phase = 'done';
+    }
+  }
+
+  /** Compute the final result once the session is done. */
+  getResult(): SessionResult {
+    const successRate = this.totalAttempts > 0
+      ? this.correctCount / this.totalAttempts
+      : 1;
+
+    const meetsRewardThreshold = successRate >= this.config.rewardThreshold;
+    const belowPenaltyThreshold = successRate < this.config.penaltyThreshold;
+
+    const penaltyApplied = belowPenaltyThreshold && this.bonusPassed !== true
+      ? this.config.penaltyAmount
+      : 0;
+
+    let rewardsEarned: GateReward[] = [];
+    if (meetsRewardThreshold) {
+      rewardsEarned = this.config.rewards.map(r => {
+        if (r.type === 'money' && this.bonusPassed === true && r.amount !== undefined) {
+          return { ...r, amount: Math.round(r.amount * this.config.bonusMultiplier) };
+        }
+        return r;
+      });
+    }
+
+    return {
+      passed: true,   // session always ends with a pass (player answered enough correct)
+      correctCount: this.correctCount,
+      totalAttempts: this.totalAttempts,
+      successRate,
+      bonusPassed: this.bonusPassed,
+      penaltyApplied,
+      rewardsEarned,
+    };
+  }
+
+  // ── Private helpers ────────────────────────────────────────────────────────
+
+  private _bonusGradeId(): ReturnType<typeof getClassConfig>['id'] {
+    const gradeNum = Number(this.gradeId.replace('grade', ''));
+    const bonusNum = Math.min(6, gradeNum + 1);
+    return `grade${bonusNum}` as ReturnType<typeof getClassConfig>['id'];
+  }
+}

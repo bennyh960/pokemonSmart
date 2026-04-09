@@ -10,7 +10,11 @@ export type GateTriggerType =
   | 'elite-four'
   | 'service'
   | 'npc-trust'
-  | 'story-event';
+  | 'story-event'
+  // ── Auto-gate types (no gatekeeper NPC — fires on location entry) ──
+  | 'auto-pokecenter'
+  | 'auto-pokemarket'
+  | 'auto-gym-entrance';
 
 export type GatePenalty =
   | { type: 'none' }
@@ -18,17 +22,73 @@ export type GatePenalty =
   | { type: 'cooldown'; durationMs: number }
   | { type: 'money-and-cooldown'; amount: number; durationMs: number };
 
+/** A single reward granted on successful pass of a session. */
+export interface GateReward {
+  type: 'money' | 'item';
+  amount?: number;        // used when type === 'money'
+  itemId?: string;        // used when type === 'item'
+  quantity?: number;      // used when type === 'item'
+}
+
+/**
+ * Session configuration for a gate.
+ * Controls question count, timing, reward/penalty thresholds, and bonus questions.
+ */
+export interface GateSessionConfig {
+  /** Year the player was born — used to calculate grade. Constant 2018 until date-of-birth is added. */
+  birthYear: number;
+
+  /** How many correct answers are required to pass. */
+  questionsRequired: number;
+
+  /** Time limit per question in seconds. 0 = no limit. */
+  timeLimitPerQuestion: number;
+
+  /**
+   * Minimum success rate (correctAnswers / totalAttempts) needed to receive rewards.
+   * Example: 0.8 = player must have answered correctly on at least 80% of all attempts.
+   */
+  rewardThreshold: number;
+
+  /**
+   * Success rate below which a money penalty is applied.
+   * Example: 0.5 = if success rate < 50%, deduct `penaltyAmount` PokeCoins.
+   */
+  penaltyThreshold: number;
+
+  /** Amount of PokeCoins deducted on penalty. */
+  penaltyAmount: number;
+
+  /** Rewards granted when the player clears `rewardThreshold`. */
+  rewards: GateReward[];
+
+  /**
+   * Enable optional bonus question (one question at grade+1 difficulty).
+   * If answered correctly: rewards are multiplied by `bonusMultiplier`.
+   * If answered incorrectly: any active penalty is cleared.
+   */
+  bonusEnabled: boolean;
+
+  /**
+   * Multiplier applied to all money rewards when the bonus question is answered correctly.
+   * Example: 2 = double all money rewards.
+   */
+  bonusMultiplier: number;
+}
+
 export interface QuestionGateDef {
   id: string;
   title: BilingualText;
   description?: BilingualText;
   triggerType: GateTriggerType;
 
+  /** Which question-set templates to draw from ('*' = all). */
   questionSetIds: string[];
   totalQuestions: number;
   passThreshold: number;
   timeLimitPerQuestion?: number;
 
+  /** @deprecated prefer sessionConfig */
   failurePenalty?: GatePenalty;
   successActions?: StoryAction[];
   failureActions?: StoryAction[];
@@ -37,6 +97,9 @@ export interface QuestionGateDef {
   reopenCooldownMs?: number;
 
   conditions?: StoryCondition[];
+
+  /** Full session config (reward/penalty/bonus). If omitted, falls back to global defaults. */
+  sessionConfig?: GateSessionConfig;
 }
 
 /** Registered gate definitions keyed by ID. */
@@ -47,12 +110,23 @@ export const GATES: Record<string, QuestionGateDef> = {
     title: { en: 'Route Checkpoint', he: 'מחסום שביל' },
     description: { en: 'The path is locked. Answer to continue.', he: 'המסלול חסום. ענה כדי להמשיך.' },
     triggerType: 'route-checkpoint',
-    questionSetIds: ['placeholder'],
-    totalQuestions: 1,
-    passThreshold: 1,
+    questionSetIds: ['*'],
+    totalQuestions: 3,
+    passThreshold: 3,
     failurePenalty: { type: 'none' },
     reopenCooldownMs: 30 * 60 * 1000,  // 30 min
     successActions: [{ type: 'set-flag', flag: 'gate-route1-sumville-pass' }],
+    sessionConfig: {
+      birthYear: 2018,
+      questionsRequired: 3,
+      timeLimitPerQuestion: 45,
+      rewardThreshold: 0.8,
+      penaltyThreshold: 0.5,
+      penaltyAmount: 50,
+      rewards: [{ type: 'money', amount: 100 }],
+      bonusEnabled: true,
+      bonusMultiplier: 2,
+    },
   },
 };
 

@@ -31,6 +31,8 @@ import '../data/story/content/act0-act1.js';
 import '../data/story/content/act2.js';
 import '../data/story/content/act3.js';
 import '../data/story/content/act4-act5.js';
+// Global auto-gate config — registers the auto-pokecenter/pokemarket/gym gates + map service tags
+import '../data/story/global-gate-config.js';
 import {
   LOGICAL_WIDTH,
   LOGICAL_HEIGHT,

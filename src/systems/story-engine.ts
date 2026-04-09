@@ -25,6 +25,37 @@ export function initStoryEngine(sm: StateMachine): void {
 }
 
 // ---------------------------------------------------------------------------
+// Auto-gate service map registry
+// ---------------------------------------------------------------------------
+
+type AutoGateService = 'pokecenter' | 'pokemarket' | 'gym';
+const _autoGateMapRegistry = new Map<string, AutoGateService>();
+
+/** Register a map ID → service type mapping so entering it triggers the auto-gate. */
+export function registerAutoGateMap(mapId: string, service: AutoGateService): void {
+  _autoGateMapRegistry.set(mapId, service);
+}
+
+const AUTO_GATE_IDS: Record<AutoGateService, string> = {
+  pokecenter: 'auto-pokecenter',
+  pokemarket: 'auto-pokemarket',
+  gym:        'auto-gym',
+};
+
+function _checkAutoGate(mapId: string): void {
+  const service = _autoGateMapRegistry.get(mapId);
+  if (!service) return;
+
+  const gateId = AUTO_GATE_IDS[service];
+  if (isGateUnlocked(gateId)) return;
+
+  if (_stateMachine) {
+    setActiveGate(gateId);
+    _stateMachine.push('GATE');
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Pending gate / cutscene — stored so the caller can read it after firing
 // ---------------------------------------------------------------------------
 let _pendingGateId: string | null = null;
@@ -82,6 +113,11 @@ export function fireStoryTrigger(trigger: StoryTrigger): void {
     if (!event.repeatable) {
       pd.flags[doneFlag] = true;
     }
+  }
+
+  // ── Auto-gate check for service map entry ────────────────────────────────
+  if (trigger.type === 'map-enter') {
+    _checkAutoGate((trigger as { mapId: string }).mapId);
   }
 
   autoSave();
@@ -173,6 +209,8 @@ function checkCondition(cond: StoryCondition, pd: ReturnType<typeof getPlayerDat
       return pd.story?.cityInfection[cond.cityId] === cond.value;
     case 'money-min':
       return pd.money >= cond.amount;
+    case 'gate-locked':
+      return !isGateUnlocked(cond.gateId);
     default:
       return true;
   }
