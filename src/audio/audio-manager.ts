@@ -59,7 +59,7 @@ export function createAudioManager() {
 
   let musicVolume = 0.5;
   let sfxVolume = 0.7;
-  let muted = true;
+  let muted = localStorage.getItem('muted') === 'true'; 
 
   function withSynthContext(run: (actx: AudioContext) => void): void {
     if (muted) return;

@@ -27,7 +27,7 @@ export interface ItemDef {
   id: string;                  // slug (e.g. 'potion') — used as key in player inventory
   numericId: number;           // PokeAPI item ID
   name: LocalizedName;         // { en, he } — use getLocalizedName() to resolve
-  description: string;         // English description from PokeAPI
+  description: LocalizedName;  // { en, he } — use getLocalizedName() to resolve
   category: ItemCategory;
   price: number;
   effect: ItemEffect;

@@ -167,13 +167,14 @@ export class HPReductionTemplate extends QuestionTemplate {
     const hp = params.hp as number;
     const target = params.target as number;
     const dmg = params.dmg as number;
-    return {
-      en: `${pokemon.name.en} has ${hp} HP.\n` +
-          `To catch it you must lower its HP to ${target} or below.\n` +
-          `Your move deals ${dmg} damage each turn.\n` +
-          `How many turns do you need to attack?`,
-      he: `ל-${pokemon.name.he} יש ${hp} נקודות HP.\n` +
-          `כדי לתפוס אותו תצטרך להוריד את ה-HP שלו ל-${target} או מטה.\n` +
+      return {
+          en: `${pokemon.name.en} has ${hp} HP.\n` +
+              `To catch it you must lower its HP to ${target} or below.\n` +
+              `Your move deals ${dmg} damage each turn.\n` +
+              `How many turns do you need to attack?`,
+          he: `ל-${pokemon.name.he} יש ${hp} נקודות HP.\n` +
+          ` (HP = Health Points = נקודות חיים)\n` +
+          `כדי לתפוס אותו תצטרך להוריד את ה-HP שלו ל-${target} או פחות.\n` +
           `המהלך שלך גורם ${dmg} נזק בכל תור.\n` +
           `כמה תורות תצטרך לתקוף?`,
     };

@@ -7,7 +7,7 @@
 
 import type { Pokemon } from '../types/index.js';
 import { getItemGameData, getItemGameDataBySlug } from '../data/item-defs.js';
-import { checkAndApplyLevelUp } from './encounter.js';
+import { checkAndApplyLevelUp, recalcPokemonStats } from './encounter.js';
 import { getPokemonDisplayName, getMove, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
 import type { LevelUpMoveResult } from './move-learning.js';
@@ -40,6 +40,7 @@ export function itemTargetsPokemon(itemId: string): boolean {
     case 'pp-restore':
     case 'pp-restore-one':
     case 'rare-candy':
+    case 'vitamin':
     case 'tm':
       return true;
     default:
@@ -64,6 +65,8 @@ export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
       return target.hp > 0 && target.moves.some(move => move.currentPp < move.pp);
     case 'rare-candy':
       return target.hp > 0;
+    case 'vitamin':
+      return target.hp > 0 && ((target.evs?.[def.effect.stat] ?? 0) < 31);
     case 'tm':
       return true;  // compatibility/duplicate check is done in bag.ts after selection
     default:
@@ -204,6 +207,26 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
 
     case 'none': {
       return { success: false, message: "This item can't be used." };
+    }
+
+    case 'vitamin': {
+      if (target.hp <= 0) {
+        return { success: false, message: "Can't use on a fainted Pokemon!" };
+      }
+      const stat = effect.stat;
+      const EV_CAP = 31;
+      const EV_PER_USE = 4;  // 4 EVs per vitamin so stat changes are visible at normal levels
+      const evs = target.evs ?? { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 };
+      if (evs[stat] >= EV_CAP) {
+        return { success: false, message: "It won't have any more effect." };
+      }
+      evs[stat] = Math.min(EV_CAP, evs[stat] + EV_PER_USE);
+      target.evs = evs;
+      recalcPokemonStats(target);
+      const statNames: Record<string, string> = {
+        hp: 'HP', atk: 'Attack', def: 'Defense', spe: 'Speed', spa: 'Sp. Atk', spd: 'Sp. Def',
+      };
+      return { success: true, message: `${target.name}'s ${statNames[stat] ?? stat} slightly rose!` };
     }
 
     default: {

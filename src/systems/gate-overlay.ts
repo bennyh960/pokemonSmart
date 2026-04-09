@@ -21,6 +21,7 @@ import { getLocale, isRTL } from '../i18n/i18n.js';
 import type { GateSessionConfig } from '../data/story/gates.js';
 import type { SessionResult, AnswerFeedback } from './gate-session.js';
 import type { RichQuestion, QuestionAsset } from '../math/question-builder/index.js';
+import { getItem } from '../data/items.js';
 
 // Re-export so gate-scene can use the same type
 export type { SessionResult };
@@ -328,7 +329,10 @@ class GateOverlayController {
           <div class="go-rewards-title">${rewardLabel}</div>
           ${result.rewardsEarned.map(r => {
             if (r.type === 'money') return `<div class="go-reward-row">💰 +${r.amount} PokeCoins</div>`;
-            return `<div class="go-reward-row">🎒 ${r.itemId} × ${r.quantity ?? 1}</div>`;
+            // Resolve item name (supports numeric id or slug)
+            const def = r.itemId ? getItem(r.itemId) : undefined;
+            const name = def ? def.name[loc] ?? def.name.en : r.itemId ?? '?';
+            return `<div class="go-reward-row">🎒 ${name} × ${r.quantity ?? 1}</div>`;
           }).join('')}
          </div>`
       : '';

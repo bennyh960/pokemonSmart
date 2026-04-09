@@ -25,6 +25,7 @@ export type ItemEffect =
   | { type: 'rare-candy' }
   | { type: 'evolution-stone' }
   | { type: 'tm'; moveId: number; isHM: boolean }
+  | { type: 'vitamin'; stat: 'hp' | 'atk' | 'def' | 'spe' | 'spa' | 'spd' }
   | { type: 'none' };
 
 export interface ItemGameDef {
@@ -125,6 +126,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'iron': 47,
   'carbos': 48,
   'calcium': 49,
+  'zinc': 52,
   'rare-candy': 50,
   // Battle items
   'guard-spec': 55,
@@ -192,11 +194,12 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   41: { category: 'pp-restore', price: 0, effect: { type: 'pp-restore', amount: 'all' },   usableInBattle: true, usableInOverworld: true },  // Max Elixir
 
   // ── Vitamins ──
-  45: { category: 'vitamin', price: 9800, effect: { type: 'none' },        usableInBattle: false, usableInOverworld: true },  // HP Up
-  46: { category: 'vitamin', price: 9800, effect: { type: 'none' },        usableInBattle: false, usableInOverworld: true },  // Protein
-  47: { category: 'vitamin', price: 9800, effect: { type: 'none' },        usableInBattle: false, usableInOverworld: true },  // Iron
-  48: { category: 'vitamin', price: 9800, effect: { type: 'none' },        usableInBattle: false, usableInOverworld: true },  // Carbos
-  49: { category: 'vitamin', price: 9800, effect: { type: 'none' },        usableInBattle: false, usableInOverworld: true },  // Calcium
+  45: { category: 'vitamin', price: 9800, effect: { type: 'vitamin', stat: 'hp'  }, usableInBattle: false, usableInOverworld: true },  // HP Up
+  46: { category: 'vitamin', price: 9800, effect: { type: 'vitamin', stat: 'atk' }, usableInBattle: false, usableInOverworld: true },  // Protein
+  47: { category: 'vitamin', price: 9800, effect: { type: 'vitamin', stat: 'def' }, usableInBattle: false, usableInOverworld: true },  // Iron
+  48: { category: 'vitamin', price: 9800, effect: { type: 'vitamin', stat: 'spe' }, usableInBattle: false, usableInOverworld: true },  // Carbos
+  49: { category: 'vitamin', price: 9800, effect: { type: 'vitamin', stat: 'spa' }, usableInBattle: false, usableInOverworld: true },  // Calcium
+  52: { category: 'vitamin', price: 9800, effect: { type: 'vitamin', stat: 'spd' }, usableInBattle: false, usableInOverworld: true },  // Zinc
   50: { category: 'vitamin', price: 0,    effect: { type: 'rare-candy' },  usableInBattle: false, usableInOverworld: true },  // Rare Candy
 
   // ── Battle items ──

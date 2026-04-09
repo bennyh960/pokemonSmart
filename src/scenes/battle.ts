@@ -879,7 +879,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function getCaptureXpReward(): number {
-    return calculateXpGain(enemy) * 3;
+    return calculateXpGain(enemy) * 2;
   }
 
   function getDefeatXpReward(): number {
@@ -889,8 +889,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function getConsolationXpReward(partyIndex: number): number {
     const winXp = getDefeatXpReward();
     const turns = Math.max(1, battleTurnCounts.get(partyIndex) ?? 0);
-    const maxBonus = Math.max(1, Math.floor(winXp * 0.5));
-    const perTurnBonus = Math.max(1, Math.floor(winXp * 0.1));
+    const maxBonus = Math.max(1, Math.floor(winXp * 0.25));
+    const perTurnBonus = Math.max(1, Math.floor(winXp * 0.05));
     return Math.min(maxBonus, perTurnBonus * turns);
   }
 

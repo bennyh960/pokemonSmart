@@ -35,6 +35,7 @@ import {
   DEFAULT_SESSION_CONFIG,
 } from '../data/story/global-gate-config.js';
 import type { GateSessionConfig } from '../data/story/gates.js';
+import { getItem } from '../data/items.js';
 
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
@@ -130,7 +131,10 @@ export function createGateScene(
         pd.money += reward.amount;
       } else if (reward.type === 'item' && reward.itemId) {
         const qty = reward.quantity ?? 1;
-        pd.items[reward.itemId] = (pd.items[reward.itemId] ?? 0) + qty;
+        // Resolve numeric id ("45") or slug ("hp-up") → canonical slug
+        const itemDef = getItem(reward.itemId);
+        const slug = itemDef?.id ?? reward.itemId;
+        pd.items[slug] = (pd.items[slug] ?? 0) + qty;
       }
     }
 

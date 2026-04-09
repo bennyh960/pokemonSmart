@@ -269,9 +269,9 @@
     {
       "id": "route9-guard",
       "name": "South Gate Warden",
-      "x": 10,
+      "x": 9,
       "y": 23,
-      "facing": "left",
+      "facing": "down",
       "type": "dialogue",
       "dialogue": [
         {
@@ -284,12 +284,9 @@
         }
       ],
       "spriteType": "char_a5abb0",
-      "lineOfSight": 4,
+      "lineOfSight": 2,
       "blocker": true,
-      "despawnWhenParty": {
-        "count": 3,
-        "minLevel": 15
-      }
+      "despawnAfter": "story-received-starter"
     },
     {
       "id": "battle-tutor-zeroville",

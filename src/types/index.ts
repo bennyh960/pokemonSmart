@@ -45,6 +45,8 @@ export interface Pokemon {
   heldItemId: number | null;  // PokeAPI item ID — lookup in items.json + item-defs.ts
   status: MajorStatusId | null; // Persistent major status between battles/items/healers
   caughtBall?: string;     // Item ID of the pokeball used to catch (e.g. 'poke-ball', 'great-ball')
+  /** EV-like stat boosts from vitamins. Each stat capped at 31. Optional for save-file backwards-compat. */
+  evs?: { hp: number; atk: number; def: number; spe: number; spa: number; spd: number };
 }
 
 /** Pokemon elemental types (real Gen 2 types + Glitch). */

@@ -231,7 +231,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         drawText(ctx, getLocalizedName(item.def.name), 206, cy + 2, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
 
         // Item description (right-aligned at x=206, cy+10)
-        drawText(ctx, item.def.description, 206, cy + 10, {
+        drawText(ctx, getLocalizedName(item.def.description), 206, cy + 10, {
           size: 5, color: isSel ? C.TEXT_MUT : C.TEXT_DIM, font: 'monospace', align: 'right',
         });
 

@@ -73,11 +73,27 @@ function randInt(min: number, max: number): number {
 }
 
 /** Calculate a stat value based on base stat, level, and nature multiplier. */
-function calcStat(baseStat: number, level: number, isHp: boolean, natureMultiplier = 1): number {
+export function calcStat(baseStat: number, level: number, isHp: boolean, natureMultiplier = 1, ev = 0): number {
   if (isHp) {
-    return Math.floor(((2 * baseStat) * level) / 100) + level + 10;
+    return Math.floor(((2 * baseStat + ev) * level) / 100) + level + 10;
   }
-  return Math.floor((Math.floor(((2 * baseStat) * level) / 100) + 5) * natureMultiplier);
+  return Math.floor((Math.floor(((2 * baseStat + ev) * level) / 100) + 5) * natureMultiplier);
+}
+
+/** Recalculate all battle stats for a Pokemon using its current level, nature, and EVs. */
+export function recalcPokemonStats(pokemon: Pokemon): void {
+  const data = getPokemon(pokemon.id);
+  if (!data) return;
+  const nId = pokemon.natureId ?? 1;
+  const evs = pokemon.evs ?? { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 };
+  const oldMaxHp = pokemon.maxHp;
+  pokemon.maxHp = calcStat(data.stats.hp, pokemon.level, true, 1, evs.hp);
+  pokemon.hp = Math.min(pokemon.hp + (pokemon.maxHp - oldMaxHp), pokemon.maxHp);
+  pokemon.attack = calcStat(data.stats.attack, pokemon.level, false, getNatureMultiplier(nId, 'attack'), evs.atk);
+  pokemon.defense = calcStat(data.stats.defense, pokemon.level, false, getNatureMultiplier(nId, 'defense'), evs.def);
+  pokemon.specialAttack = calcStat(data.stats.specialAttack, pokemon.level, false, getNatureMultiplier(nId, 'specialAttack'), evs.spa);
+  pokemon.specialDefense = calcStat(data.stats.specialDefense, pokemon.level, false, getNatureMultiplier(nId, 'specialDefense'), evs.spd);
+  pokemon.speed = calcStat(data.stats.speed, pokemon.level, false, getNatureMultiplier(nId, 'speed'), evs.spe);
 }
 
 /** Default moves assigned to wild Pokemon by type (fallback only). */
@@ -155,6 +171,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     heldItemId: null,
     status: null,
     caughtBall: 'poke-ball',
+    evs: { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 },
   };
 }
 
@@ -264,18 +281,19 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
   pokemon.level++;
   pokemon.xpToNext = getXpToNextLevel(pokemon.level);
 
-  // Recalculate stats based on base data + nature
+  // Recalculate stats based on base data + nature + EVs
   const data = getPokemon(pokemon.id);
   if (data) {
     const nId = pokemon.natureId ?? 1;
+    const evs = pokemon.evs ?? { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 };
     const oldMaxHp = pokemon.maxHp;
-    pokemon.maxHp = calcStat(data.stats.hp, pokemon.level, true);
+    pokemon.maxHp = calcStat(data.stats.hp, pokemon.level, true, 1, evs.hp);
     pokemon.hp += pokemon.maxHp - oldMaxHp; // Heal by the HP gained
-    pokemon.attack = calcStat(data.stats.attack, pokemon.level, false, getNatureMultiplier(nId, 'attack'));
-    pokemon.defense = calcStat(data.stats.defense, pokemon.level, false, getNatureMultiplier(nId, 'defense'));
-    pokemon.specialAttack = calcStat(data.stats.specialAttack, pokemon.level, false, getNatureMultiplier(nId, 'specialAttack'));
-    pokemon.specialDefense = calcStat(data.stats.specialDefense, pokemon.level, false, getNatureMultiplier(nId, 'specialDefense'));
-    pokemon.speed = calcStat(data.stats.speed, pokemon.level, false, getNatureMultiplier(nId, 'speed'));
+    pokemon.attack = calcStat(data.stats.attack, pokemon.level, false, getNatureMultiplier(nId, 'attack'), evs.atk);
+    pokemon.defense = calcStat(data.stats.defense, pokemon.level, false, getNatureMultiplier(nId, 'defense'), evs.def);
+    pokemon.specialAttack = calcStat(data.stats.specialAttack, pokemon.level, false, getNatureMultiplier(nId, 'specialAttack'), evs.spa);
+    pokemon.specialDefense = calcStat(data.stats.specialDefense, pokemon.level, false, getNatureMultiplier(nId, 'specialDefense'), evs.spd);
+    pokemon.speed = calcStat(data.stats.speed, pokemon.level, false, getNatureMultiplier(nId, 'speed'), evs.spe);
   }
 
   // Check learnset for new moves at this level
@@ -326,16 +344,17 @@ export function applyEvolution(pokemon: Pokemon, evolvedId: number): boolean {
 
   const oldMaxHp = pokemon.maxHp;
   const natureId = pokemon.natureId ?? 1;
+  const evs = pokemon.evs ?? { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 };
   pokemon.id = evolvedData.id;
   pokemon.name = evolvedData.name.en;
   pokemon.types = evolvedData.types as PokemonType[];
-  pokemon.maxHp = calcStat(evolvedData.stats.hp, pokemon.level, true);
+  pokemon.maxHp = calcStat(evolvedData.stats.hp, pokemon.level, true, 1, evs.hp);
   pokemon.hp = Math.max(1, Math.min(pokemon.maxHp, pokemon.hp + (pokemon.maxHp - oldMaxHp)));
-  pokemon.attack = calcStat(evolvedData.stats.attack, pokemon.level, false, getNatureMultiplier(natureId, 'attack'));
-  pokemon.defense = calcStat(evolvedData.stats.defense, pokemon.level, false, getNatureMultiplier(natureId, 'defense'));
-  pokemon.specialAttack = calcStat(evolvedData.stats.specialAttack, pokemon.level, false, getNatureMultiplier(natureId, 'specialAttack'));
-  pokemon.specialDefense = calcStat(evolvedData.stats.specialDefense, pokemon.level, false, getNatureMultiplier(natureId, 'specialDefense'));
-  pokemon.speed = calcStat(evolvedData.stats.speed, pokemon.level, false, getNatureMultiplier(natureId, 'speed'));
+  pokemon.attack = calcStat(evolvedData.stats.attack, pokemon.level, false, getNatureMultiplier(natureId, 'attack'), evs.atk);
+  pokemon.defense = calcStat(evolvedData.stats.defense, pokemon.level, false, getNatureMultiplier(natureId, 'defense'), evs.def);
+  pokemon.specialAttack = calcStat(evolvedData.stats.specialAttack, pokemon.level, false, getNatureMultiplier(natureId, 'specialAttack'), evs.spa);
+  pokemon.specialDefense = calcStat(evolvedData.stats.specialDefense, pokemon.level, false, getNatureMultiplier(natureId, 'specialDefense'), evs.spd);
+  pokemon.speed = calcStat(evolvedData.stats.speed, pokemon.level, false, getNatureMultiplier(natureId, 'speed'), evs.spe);
 
   const evolvedAbilities = getPokemonAbilities(evolvedId);
   if (evolvedAbilities) {
