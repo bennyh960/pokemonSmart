@@ -864,125 +864,184 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
 
   // ── Overworld HUD ──────────────────────────────────────────────────────────
-  // Compact frosted-glass panel — tabs: MAP / LEADER / STORY (Tab key cycles).
+  // 128×64 frosted-glass panel.  3 symbol tabs — click or press 1/2/3.
   function drawOverworldHUD(ctx: CanvasRenderingContext2D): void {
-    const locale  = getLocale();
-    const isHe    = locale === 'he';
+    const isHe = getLocale() === 'he';
 
-    // Tab metadata — bilingual labels + accent colour
-    const TABS = [
-      { en: 'MAP',   he: 'מפה',    color: '#b8ccff' },
-      { en: 'LEAD',  he: 'מוביל',  color: '#88e888' },
-      { en: 'QUEST', he: 'משימה',  color: '#ffd060' },
-    ];
-
-    // ── Gather content for active tab ───────────────────────────────────────
-    let contentText = '';
-    let contentColor = TABS[hudTabIndex].color;
-
-    if (hudTabIndex === 0) {
-      // Map / location
-      const rawName = currentMapData?.name;
-      if (rawName) {
-        contentText = typeof rawName === 'object'
-          ? (isHe ? (rawName as { en: string; he: string }).he : (rawName as { en: string; he: string }).en)
-          : String(rawName);
-      } else {
-        contentText = isHe ? 'לא ידוע' : 'Unknown';
-      }
-    } else if (hudTabIndex === 1 && hasActiveGame()) {
-      // Lead Pokémon
-      const lead = getPlayerData().party[0];
-      contentText = lead
-        ? `${getPokemonDisplayName(lead.id)}  Lv.${lead.level}`
-        : (isHe ? 'אין פוקמון' : 'No Pokemon');
-    } else if (hudTabIndex === 2 && hasActiveGame()) {
-      // Active quest
-      const questId = getPlayerData().story?.activeQuestId;
-      if (questId) {
-        const quest = getQuest(questId);
-        if (quest) {
-          const title = isHe ? quest.title.he : quest.title.en;
-          const obj   = isHe ? quest.objective.he : quest.objective.en;
-          contentText = `${title}: ${obj}`;
-        }
-      }
-      if (!contentText) contentText = isHe ? 'אין משימה' : 'No quest';
-    }
-
-    if (!contentText) return;
-
-    // ── Layout constants ────────────────────────────────────────────────────
-    const TEXT_SZ  = 6;
-    const TAB_SZ   = 5;
-    const PANEL_W  = 90;
-    const TAB_H    = 7;   // height of the tabs row
-    const ROW_H    = 9;   // height of content row
-    const PAD_X    = 3;
-    const PAD_Y    = 2;
-    const PANEL_H  = TAB_H + PAD_Y + ROW_H + PAD_Y;
+    // ── Constants ────────────────────────────────────────────────────────────
     const PANEL_X  = 3;
     const PANEL_Y  = 3;
-    const RADIUS   = 3;
-    const TAB_W    = Math.floor(PANEL_W / TABS.length);
+    const PANEL_W  = 128;
+    const PANEL_H  = 58;
+    const RADIUS   = 4;
+    const TAB_H    = 14;   // tab row height
+    const SEP      = 1;    // separator thickness
+    const PAD_X    = 5;
+    const PAD_Y    = 3;
+    const SYM_SZ   = 9;    // symbol font size in tab
+    const NUM_SZ   = 5;    // tiny numeral hint
+    const TXT_SZ   = 7;    // content text size
+    const SUB_SZ   = 6;    // sub-line text size
+    const LINE_H   = 9;    // content line height
+    const TAB_W    = Math.floor(PANEL_W / 3);
 
-    // ── Drop shadow ──────────────────────────────────────────────────────────
+    // Tab definitions — symbol, numeral, accent colour
+    const TABS = [
+      { sym: '◉', num: '1', color: '#a8c8ff' },  // map / location
+      { sym: '◆', num: '2', color: '#7edc7e' },  // leader pokemon
+      { sym: '★', num: '3', color: '#ffd060' },  // quest / story
+    ];
+
+    // ── Mouse-click tab switching ─────────────────────────────────────────────
+    if (input.isTapped()) {
+      const tap = input.getTapPosition();
+      if (tap) {
+        const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
+        if (canvas) {
+          const rect   = canvas.getBoundingClientRect();
+          const lx     = (tap.x - rect.left) * (SCREEN_W / rect.width);
+          const ly     = (tap.y - rect.top)  * (SCREEN_H / rect.height);
+          if (lx >= PANEL_X && lx <= PANEL_X + PANEL_W &&
+              ly >= PANEL_Y && ly <= PANEL_Y + TAB_H) {
+            const clicked = Math.floor((lx - PANEL_X) / TAB_W);
+            if (clicked >= 0 && clicked < 3) hudTabIndex = clicked;
+          }
+        }
+      }
+    }
+
+    // ── Drop shadow ───────────────────────────────────────────────────────────
     ctx.save();
-    ctx.filter = 'blur(4px)';
-    ctx.fillStyle = 'rgba(0, 0, 12, 0.88)';
-    fillRoundRect(ctx, PANEL_X - 2, PANEL_Y - 2, PANEL_W + 4, PANEL_H + 4, RADIUS + 2);
+    ctx.filter = 'blur(5px)';
+    ctx.fillStyle = 'rgba(0, 0, 16, 0.9)';
+    fillRoundRect(ctx, PANEL_X - 3, PANEL_Y - 3, PANEL_W + 6, PANEL_H + 6, RADIUS + 2);
     ctx.restore();
 
-    // ── Panel background ─────────────────────────────────────────────────────
+    // ── Panel background ──────────────────────────────────────────────────────
     ctx.save();
-    ctx.fillStyle = 'rgba(6, 8, 22, 0.84)';
+    ctx.fillStyle = 'rgba(5, 7, 20, 0.86)';
     fillRoundRect(ctx, PANEL_X, PANEL_Y, PANEL_W, PANEL_H, RADIUS);
-
-    // Border
-    ctx.strokeStyle = 'rgba(70, 100, 210, 0.4)';
+    ctx.strokeStyle = 'rgba(60, 90, 200, 0.45)';
     ctx.lineWidth = 0.5;
     strokeRoundRect(ctx, PANEL_X + 0.5, PANEL_Y + 0.5, PANEL_W - 1, PANEL_H - 1, RADIUS);
     ctx.restore();
 
-    // ── Tabs row ─────────────────────────────────────────────────────────────
-    for (let i = 0; i < TABS.length; i++) {
+    // ── Tab row ───────────────────────────────────────────────────────────────
+    for (let i = 0; i < 3; i++) {
       const tab    = TABS[i];
       const tabX   = PANEL_X + i * TAB_W;
       const active = i === hudTabIndex;
-      const label  = isHe ? tab.he : tab.en;
 
-      // Active tab gets a filled highlight
+      // Active tab highlight
       if (active) {
         ctx.save();
-        ctx.fillStyle = 'rgba(60, 80, 180, 0.55)';
-        // Only round top corners on first/last tab
-        const r: [number, number, number, number] = i === 0
-          ? [RADIUS, 0, 0, 0]
-          : i === TABS.length - 1
-            ? [0, RADIUS, 0, 0]
-            : [0, 0, 0, 0];
+        ctx.fillStyle = 'rgba(50, 75, 175, 0.60)';
+        const r: [number, number, number, number] =
+          i === 0 ? [RADIUS, 0, 0, 0] :
+          i === 2 ? [0, RADIUS, 0, 0] :
+                    [0, 0, 0, 0];
         fillRoundRect(ctx, tabX, PANEL_Y, TAB_W, TAB_H, r);
         ctx.restore();
       }
 
-      // Tab label — centred horizontally
-      const labelColor = active ? tab.color : 'rgba(160,160,180,0.65)';
-      drawText(ctx, label, tabX + TAB_W / 2, PANEL_Y + TAB_H / 2 + TAB_SZ / 2 - 1, {
-        size: TAB_SZ, color: labelColor, font: 'monospace', align: 'center',
+      const symColor = active ? tab.color : 'rgba(140,145,170,0.55)';
+      const cx = tabX + TAB_W / 2;
+
+      // Symbol centred in tab
+      drawText(ctx, tab.sym, cx, PANEL_Y + 3, {
+        size: SYM_SZ, color: symColor, font: 'monospace', align: 'center', baseline: 'top',
+      });
+
+      // Tiny numeral hint bottom-right of tab area
+      drawText(ctx, tab.num, tabX + TAB_W - 3, PANEL_Y + TAB_H - 1, {
+        size: NUM_SZ, color: 'rgba(120,125,160,0.5)', font: 'monospace', align: 'right', baseline: 'bottom',
       });
     }
 
-    // Thin separator between tabs and content
+    // Tab / content separator
     ctx.save();
-    ctx.fillStyle = 'rgba(70, 100, 210, 0.35)';
-    fillRoundRect(ctx, PANEL_X + 2, PANEL_Y + TAB_H, PANEL_W - 4, 0.5, 0);
+    ctx.fillStyle = 'rgba(60, 90, 200, 0.35)';
+    ctx.fillRect(PANEL_X + 2, PANEL_Y + TAB_H, PANEL_W - 4, SEP);
     ctx.restore();
 
-    // ── Content row ──────────────────────────────────────────────────────────
-    const contentY = PANEL_Y + TAB_H + PAD_Y + TEXT_SZ;
-    drawText(ctx, contentText, PANEL_X + PAD_X, contentY, {
-      size: TEXT_SZ, color: contentColor, font: 'monospace', maxWidth: PANEL_W - PAD_X * 2,
-    });
+    // ── Content area ──────────────────────────────────────────────────────────
+    const CY0 = PANEL_Y + TAB_H + SEP + PAD_Y; // top of content region
+
+    if (hudTabIndex === 0) {
+      // ── MAP tab ──────────────────────────────────────────────────────────
+      const rawName = currentMapData?.name;
+      const locName = rawName
+        ? (typeof rawName === 'object'
+            ? (isHe ? (rawName as {en:string;he:string}).he : (rawName as {en:string;he:string}).en)
+            : String(rawName))
+        : (isHe ? 'לא ידוע' : 'Unknown');
+      drawText(ctx, locName, PANEL_X + PAD_X, CY0, {
+        size: TXT_SZ, color: TABS[0].color, font: 'monospace', baseline: 'top',
+        maxWidth: PANEL_W - PAD_X * 2,
+      });
+
+    } else if (hudTabIndex === 1 && hasActiveGame()) {
+      // ── LEADER tab ───────────────────────────────────────────────────────
+      const lead = getPlayerData().party[0];
+      if (lead) {
+        const name = getPokemonDisplayName(lead.id);
+        drawText(ctx, `${name}`, PANEL_X + PAD_X, CY0, {
+          size: TXT_SZ, color: TABS[1].color, font: 'monospace', baseline: 'top',
+        });
+        drawText(ctx, `Lv.${lead.level}`, PANEL_X + PANEL_W - PAD_X, CY0, {
+          size: TXT_SZ, color: '#cce8cc', font: 'monospace', baseline: 'top', align: 'right',
+        });
+
+        // HP bar
+        const hpPct   = Math.max(0, lead.hp / lead.maxHp);
+        const barY    = CY0 + LINE_H + 1;
+        const barW    = PANEL_W - PAD_X * 2;
+        const barH    = 3;
+        const barX    = PANEL_X + PAD_X;
+        const barFill = hpPct > 0.5 ? '#40cc40' : hpPct > 0.25 ? '#cccc30' : '#cc3030';
+        ctx.save();
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.fillRect(barX, barY, barW, barH);
+        ctx.fillStyle = barFill;
+        ctx.fillRect(barX, barY, barW * hpPct, barH);
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(barX, barY, barW, barH);
+        ctx.restore();
+
+        // HP numbers
+        drawText(ctx, `${lead.hp}/${lead.maxHp} HP`, PANEL_X + PAD_X, barY + barH + 2, {
+          size: SUB_SZ, color: '#8aaa8a', font: 'monospace', baseline: 'top',
+        });
+      } else {
+        drawText(ctx, isHe ? 'אין פוקמון' : 'No Pokemon', PANEL_X + PAD_X, CY0, {
+          size: TXT_SZ, color: '#666', font: 'monospace', baseline: 'top',
+        });
+      }
+
+    } else if (hudTabIndex === 2) {
+      // ── QUEST tab ────────────────────────────────────────────────────────
+      if (hasActiveGame()) {
+        const questId = getPlayerData().story?.activeQuestId;
+        const quest   = questId ? getQuest(questId) : null;
+        if (quest) {
+          const title = isHe ? quest.title.he : quest.title.en;
+          const obj   = isHe ? quest.objective.he : quest.objective.en;
+          drawText(ctx, title, PANEL_X + PAD_X, CY0, {
+            size: TXT_SZ, color: TABS[2].color, font: 'monospace', baseline: 'top',
+            maxWidth: PANEL_W - PAD_X * 2,
+          });
+          drawText(ctx, obj, PANEL_X + PAD_X, CY0 + LINE_H + 1, {
+            size: SUB_SZ, color: '#9999bb', font: 'monospace', baseline: 'top',
+            maxWidth: PANEL_W - PAD_X * 2,
+          });
+        } else {
+          drawText(ctx, isHe ? 'אין משימה' : 'No active quest', PANEL_X + PAD_X, CY0, {
+            size: TXT_SZ, color: '#666', font: 'monospace', baseline: 'top',
+          });
+        }
+      }
+    }
   }
 
   return {
@@ -1917,12 +1976,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
-      // Tab key → Cycle HUD tab (map / leader / story)
-      if (input.isKeyPressed('Tab')) {
-        hudTabIndex = (hudTabIndex + 1) % 3;
-        input.consumeKey('Tab');
-        return;
-      }
+      // 1/2/3 keys → switch HUD tab (map / leader / story)
+      if (input.isKeyPressed('Digit1')) { hudTabIndex = 0; input.consumeKey('Digit1'); }
+      if (input.isKeyPressed('Digit2')) { hudTabIndex = 1; input.consumeKey('Digit2'); }
+      if (input.isKeyPressed('Digit3')) { hudTabIndex = 2; input.consumeKey('Digit3'); }
 
       if (!player.moving) {
         for (const [key, dir] of Object.entries(DIR_VECTORS)) {

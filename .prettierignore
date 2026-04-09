@@ -1,0 +1,6 @@
+# Map JSON files — tile arrays must stay as rows (one array per line)
+src/data/maps/*.json
+
+# Build output
+dist/
+node_modules/

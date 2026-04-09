@@ -7,7 +7,14 @@
  * - Battle backgrounds (grass field)
  *
  * All assets are generated once and cached as HTMLImageElement.
+ * If sprite sheet PNGs have been preloaded, those are returned instead.
  */
+
+import {
+  getPreloadedTile,
+  getPreloadedPlayerSheet,
+  getPreloadedNPCSprite,
+} from './sprite-preloader.js';
 
 const generatedCache = new Map<string, HTMLImageElement>();
 
@@ -114,6 +121,9 @@ function drawPlayerFrame(ctx: CanvasRenderingContext2D, dir: number, frame: numb
 
 /** Generate the player overworld sprite sheet (48×64). */
 export function getPlayerSpriteSheet(): HTMLImageElement {
+  const preloaded = getPreloadedPlayerSheet();
+  if (preloaded) return preloaded;
+
   const key = 'player-overworld';
   const cached = generatedCache.get(key);
   if (cached) return cached;
@@ -230,6 +240,10 @@ function drawRouteExitTile(ctx: CanvasRenderingContext2D): void {
 
 /** Generate a single 16×16 tile image by tile type ID. */
 export function getTileImage(tileType: number): HTMLImageElement {
+  // Check preloader cache first (sprite sheet tiles)
+  const preloaded = getPreloadedTile(tileType);
+  if (preloaded) return preloaded;
+
   const key = `tile-${tileType}`;
   const cached = generatedCache.get(key);
   if (cached) return cached;
@@ -379,6 +393,9 @@ const NPC_DRAW_FNS: Record<string, (ctx: CanvasRenderingContext2D) => void> = {
 
 /** Generate a 16x16 NPC sprite by sprite type. */
 export function getNPCSpriteImage(spriteType: string): HTMLImageElement {
+  const preloaded = getPreloadedNPCSprite(spriteType);
+  if (preloaded) return preloaded;
+
   const key = `npc-${spriteType}`;
   const cached = generatedCache.get(key);
   if (cached) return cached;
