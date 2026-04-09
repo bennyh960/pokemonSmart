@@ -10,7 +10,8 @@ import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
-import { clearScreen, fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
+import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
+import { initHUD, showHUD, hideHUD, updateHUD, setHUDTab } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
@@ -33,7 +34,6 @@ import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN
 import { findHMUser, canUseHM } from '../systems/hm.js';
 import { getReencounterStatus, buildReencounterParty } from '../systems/reencounter.js';
 import { isGateUnlocked, setActiveGate, fireStoryTrigger, consumePendingCutscene } from '../systems/story-engine.js';
-import { getQuest } from '../data/story/quests.js';
 import { isCutsceneActive, activateCutscene, updateCutscene, renderCutscene, type CutsceneContext } from '../systems/cutscene-runner.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { setFlyCallback, CITY_INFO } from './world-map.js';
@@ -70,7 +70,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let player: PlayerState;
   let encounterTriggered = false;
   let showLegend = true;
-  let hudTabIndex = 0; // 0=map  1=leader  2=story
   let flashTimer = 0;
   let flashPhase: 'none' | 'flash' | 'black' = 'none';
   let exclamationFlashTimer = -1; // -1 = inactive; counts up from 0 when any NPC spots player
@@ -863,189 +862,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
   }
 
-  // ── Overworld HUD ──────────────────────────────────────────────────────────
-  // 128×64 frosted-glass panel.  3 symbol tabs — click or press 1/2/3.
-  function drawOverworldHUD(ctx: CanvasRenderingContext2D): void {
-    const isHe = getLocale() === 'he';
-
-    // ── Constants ────────────────────────────────────────────────────────────
-    const PANEL_X  = 3;
-    const PANEL_Y  = 3;
-    const PANEL_W  = 128;
-    const PANEL_H  = 58;
-    const RADIUS   = 4;
-    const TAB_H    = 14;   // tab row height
-    const SEP      = 1;    // separator thickness
-    const PAD_X    = 5;
-    const PAD_Y    = 3;
-    const SYM_SZ   = 9;    // symbol font size in tab
-    const NUM_SZ   = 5;    // tiny numeral hint
-    const TXT_SZ   = 7;    // content text size
-    const SUB_SZ   = 6;    // sub-line text size
-    const LINE_H   = 9;    // content line height
-    const TAB_W    = Math.floor(PANEL_W / 3);
-
-    // Tab definitions — symbol, numeral, accent colour
-    const TABS = [
-      { sym: '◉', num: '1', color: '#a8c8ff' },  // map / location
-      { sym: '◆', num: '2', color: '#7edc7e' },  // leader pokemon
-      { sym: '★', num: '3', color: '#ffd060' },  // quest / story
-    ];
-
-    // ── Mouse-click tab switching ─────────────────────────────────────────────
-    if (input.isTapped()) {
-      const tap = input.getTapPosition();
-      if (tap) {
-        const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
-        if (canvas) {
-          const rect   = canvas.getBoundingClientRect();
-          const lx     = (tap.x - rect.left) * (SCREEN_W / rect.width);
-          const ly     = (tap.y - rect.top)  * (SCREEN_H / rect.height);
-          if (lx >= PANEL_X && lx <= PANEL_X + PANEL_W &&
-              ly >= PANEL_Y && ly <= PANEL_Y + TAB_H) {
-            const clicked = Math.floor((lx - PANEL_X) / TAB_W);
-            if (clicked >= 0 && clicked < 3) hudTabIndex = clicked;
-          }
-        }
-      }
-    }
-
-    // ── Drop shadow ───────────────────────────────────────────────────────────
-    ctx.save();
-    ctx.filter = 'blur(5px)';
-    ctx.fillStyle = 'rgba(0, 0, 16, 0.9)';
-    fillRoundRect(ctx, PANEL_X - 3, PANEL_Y - 3, PANEL_W + 6, PANEL_H + 6, RADIUS + 2);
-    ctx.restore();
-
-    // ── Panel background ──────────────────────────────────────────────────────
-    ctx.save();
-    ctx.fillStyle = 'rgba(5, 7, 20, 0.86)';
-    fillRoundRect(ctx, PANEL_X, PANEL_Y, PANEL_W, PANEL_H, RADIUS);
-    ctx.strokeStyle = 'rgba(60, 90, 200, 0.45)';
-    ctx.lineWidth = 0.5;
-    strokeRoundRect(ctx, PANEL_X + 0.5, PANEL_Y + 0.5, PANEL_W - 1, PANEL_H - 1, RADIUS);
-    ctx.restore();
-
-    // ── Tab row ───────────────────────────────────────────────────────────────
-    for (let i = 0; i < 3; i++) {
-      const tab    = TABS[i];
-      const tabX   = PANEL_X + i * TAB_W;
-      const active = i === hudTabIndex;
-
-      // Active tab highlight
-      if (active) {
-        ctx.save();
-        ctx.fillStyle = 'rgba(50, 75, 175, 0.60)';
-        const r: [number, number, number, number] =
-          i === 0 ? [RADIUS, 0, 0, 0] :
-          i === 2 ? [0, RADIUS, 0, 0] :
-                    [0, 0, 0, 0];
-        fillRoundRect(ctx, tabX, PANEL_Y, TAB_W, TAB_H, r);
-        ctx.restore();
-      }
-
-      const symColor = active ? tab.color : 'rgba(140,145,170,0.55)';
-      const cx = tabX + TAB_W / 2;
-
-      // Symbol centred in tab
-      drawText(ctx, tab.sym, cx, PANEL_Y + 3, {
-        size: SYM_SZ, color: symColor, font: 'monospace', align: 'center', baseline: 'top',
-      });
-
-      // Tiny numeral hint bottom-right of tab area
-      drawText(ctx, tab.num, tabX + TAB_W - 3, PANEL_Y + TAB_H - 1, {
-        size: NUM_SZ, color: 'rgba(120,125,160,0.5)', font: 'monospace', align: 'right', baseline: 'bottom',
-      });
-    }
-
-    // Tab / content separator
-    ctx.save();
-    ctx.fillStyle = 'rgba(60, 90, 200, 0.35)';
-    ctx.fillRect(PANEL_X + 2, PANEL_Y + TAB_H, PANEL_W - 4, SEP);
-    ctx.restore();
-
-    // ── Content area ──────────────────────────────────────────────────────────
-    const CY0 = PANEL_Y + TAB_H + SEP + PAD_Y; // top of content region
-
-    if (hudTabIndex === 0) {
-      // ── MAP tab ──────────────────────────────────────────────────────────
-      const rawName = currentMapData?.name;
-      const locName = rawName
-        ? (typeof rawName === 'object'
-            ? (isHe ? (rawName as {en:string;he:string}).he : (rawName as {en:string;he:string}).en)
-            : String(rawName))
-        : (isHe ? 'לא ידוע' : 'Unknown');
-      drawText(ctx, locName, PANEL_X + PAD_X, CY0, {
-        size: TXT_SZ, color: TABS[0].color, font: 'monospace', baseline: 'top',
-        maxWidth: PANEL_W - PAD_X * 2,
-      });
-
-    } else if (hudTabIndex === 1 && hasActiveGame()) {
-      // ── LEADER tab ───────────────────────────────────────────────────────
-      const lead = getPlayerData().party[0];
-      if (lead) {
-        const name = getPokemonDisplayName(lead.id);
-        drawText(ctx, `${name}`, PANEL_X + PAD_X, CY0, {
-          size: TXT_SZ, color: TABS[1].color, font: 'monospace', baseline: 'top',
-        });
-        drawText(ctx, `Lv.${lead.level}`, PANEL_X + PANEL_W - PAD_X, CY0, {
-          size: TXT_SZ, color: '#cce8cc', font: 'monospace', baseline: 'top', align: 'right',
-        });
-
-        // HP bar
-        const hpPct   = Math.max(0, lead.hp / lead.maxHp);
-        const barY    = CY0 + LINE_H + 1;
-        const barW    = PANEL_W - PAD_X * 2;
-        const barH    = 3;
-        const barX    = PANEL_X + PAD_X;
-        const barFill = hpPct > 0.5 ? '#40cc40' : hpPct > 0.25 ? '#cccc30' : '#cc3030';
-        ctx.save();
-        ctx.fillStyle = 'rgba(255,255,255,0.08)';
-        ctx.fillRect(barX, barY, barW, barH);
-        ctx.fillStyle = barFill;
-        ctx.fillRect(barX, barY, barW * hpPct, barH);
-        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-        ctx.lineWidth = 0.5;
-        ctx.strokeRect(barX, barY, barW, barH);
-        ctx.restore();
-
-        // HP numbers
-        drawText(ctx, `${lead.hp}/${lead.maxHp} HP`, PANEL_X + PAD_X, barY + barH + 2, {
-          size: SUB_SZ, color: '#8aaa8a', font: 'monospace', baseline: 'top',
-        });
-      } else {
-        drawText(ctx, isHe ? 'אין פוקמון' : 'No Pokemon', PANEL_X + PAD_X, CY0, {
-          size: TXT_SZ, color: '#666', font: 'monospace', baseline: 'top',
-        });
-      }
-
-    } else if (hudTabIndex === 2) {
-      // ── QUEST tab ────────────────────────────────────────────────────────
-      if (hasActiveGame()) {
-        const questId = getPlayerData().story?.activeQuestId;
-        const quest   = questId ? getQuest(questId) : null;
-        if (quest) {
-          const title = isHe ? quest.title.he : quest.title.en;
-          const obj   = isHe ? quest.objective.he : quest.objective.en;
-          drawText(ctx, title, PANEL_X + PAD_X, CY0, {
-            size: TXT_SZ, color: TABS[2].color, font: 'monospace', baseline: 'top',
-            maxWidth: PANEL_W - PAD_X * 2,
-          });
-          drawText(ctx, obj, PANEL_X + PAD_X, CY0 + LINE_H + 1, {
-            size: SUB_SZ, color: '#9999bb', font: 'monospace', baseline: 'top',
-            maxWidth: PANEL_W - PAD_X * 2,
-          });
-        } else {
-          drawText(ctx, isHe ? 'אין משימה' : 'No active quest', PANEL_X + PAD_X, CY0, {
-            size: TXT_SZ, color: '#666', font: 'monospace', baseline: 'top',
-          });
-        }
-      }
-    }
+  /** Build the data payload for the HTML HUD overlay. */
+  function buildHUDData() {
+    const pd = hasActiveGame() ? getPlayerData() : null;
+    return {
+      mapName: currentMapData?.name,
+      lead:    pd?.party[0] ?? null,
+      questId: pd?.story?.activeQuestId ?? null,
+    };
   }
 
   return {
     enter(): void {
+      initHUD();
+      showHUD();
       encounterTriggered = false;
       flashPhase = 'none';
       flashTimer = 0;
@@ -1089,6 +919,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     },
 
     exit(): void {
+      hideHUD();
       if (hasActiveGame() && currentMapData) {
         const pd = getPlayerData();
         pd.position.x = player.gridX;
@@ -1977,9 +1808,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       // 1/2/3 keys → switch HUD tab (map / leader / story)
-      if (input.isKeyPressed('Digit1')) { hudTabIndex = 0; input.consumeKey('Digit1'); }
-      if (input.isKeyPressed('Digit2')) { hudTabIndex = 1; input.consumeKey('Digit2'); }
-      if (input.isKeyPressed('Digit3')) { hudTabIndex = 2; input.consumeKey('Digit3'); }
+      if (input.isKeyPressed('Digit1')) { setHUDTab(0); updateHUD(buildHUDData()); input.consumeKey('Digit1'); }
+      if (input.isKeyPressed('Digit2')) { setHUDTab(1); updateHUD(buildHUDData()); input.consumeKey('Digit2'); }
+      if (input.isKeyPressed('Digit3')) { setHUDTab(2); updateHUD(buildHUDData()); input.consumeKey('Digit3'); }
 
       if (!player.moving) {
         for (const [key, dir] of Object.entries(DIR_VECTORS)) {
@@ -2302,8 +2133,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.restore();
       }
 
-      // HUD — unified frosted-glass notification panel (top-left)
-      drawOverworldHUD(ctx);
+      // HUD — HTML overlay (updated every frame, skips DOM write if unchanged)
+      updateHUD(buildHUDData());
 
       // Keyboard legend bar (bottom of screen, behind dialogues)
       if (showLegend && !activeTextBox && !choiceState && !healTextBox && !shop.open && !encounterTriggered && transitionState === 'none') {
