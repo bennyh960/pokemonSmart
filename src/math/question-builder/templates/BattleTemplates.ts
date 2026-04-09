@@ -469,7 +469,11 @@ export class MoveEffectivenessTemplate extends QuestionTemplate {
 
   protected generateParams(snapshot: PokemonWorldSnapshot, config: ClassConfig): TemplateParams {
     const attacker = this.pickRandom(snapshot.pokemon);
-    const defender = this.pickRandom(snapshot.pokemon.filter((p) => p.id !== attacker.id));
+    // Single-type defenders only — keeps the type matchup explanation unambiguous
+    // (dual types like Bug/Steel can produce "neutral" from two opposing interactions,
+    // which would make the educational text misleading for kids)
+    const singleTypePool = snapshot.pokemon.filter((p) => p.id !== attacker.id && p.types.length === 1);
+    const defender = this.pickRandom(singleTypePool.length > 0 ? singleTypePool : snapshot.pokemon.filter((p) => p.id !== attacker.id));
     const move = this.pickRandom(snapshot.moves);
 
     const effectiveness = getTypeEffectiveness(move.type, defender.types);
