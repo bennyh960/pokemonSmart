@@ -11,7 +11,7 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
-import { initHUD, showHUD, hideHUD, updateHUD, setHUDTab } from '../ui/hud-overlay.js';
+import { initHUD, updateHUD, setHUDTab } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
@@ -26,7 +26,18 @@ import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
-import { createNPCManager, isNPCVisible, type NPCData, type NPCManager, type TrainerData, type GateGuardData, checkTrainerLineOfSight, normalizeReward, resolveDialogue, type DialogueReward } from '../systems/npc.js';
+import {
+  createNPCManager,
+  isNPCVisible,
+  type NPCData,
+  type NPCManager,
+  type TrainerData,
+  type GateGuardData,
+  checkTrainerLineOfSight,
+  normalizeReward,
+  resolveDialogue,
+  type DialogueReward,
+} from '../systems/npc.js';
 import { getItem } from '../data/items.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
@@ -34,7 +45,13 @@ import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN
 import { findHMUser, canUseHM } from '../systems/hm.js';
 import { getReencounterStatus, buildReencounterParty } from '../systems/reencounter.js';
 import { isGateUnlocked, setActiveGate, fireStoryTrigger, consumePendingCutscene } from '../systems/story-engine.js';
-import { isCutsceneActive, activateCutscene, updateCutscene, renderCutscene, type CutsceneContext } from '../systems/cutscene-runner.js';
+import {
+  isCutsceneActive,
+  activateCutscene,
+  updateCutscene,
+  renderCutscene,
+  type CutsceneContext,
+} from '../systems/cutscene-runner.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { setFlyCallback, CITY_INFO } from './world-map.js';
 const MOVE_DURATION = 0.2;
@@ -42,19 +59,33 @@ const MOVE_DURATION = 0.2;
 const TRANSITION_FADE_TIME = 0.3;
 
 const DIR_VECTORS: Record<string, { dx: number; dy: number }> = {
-  ArrowUp: { dx: 0, dy: -1 }, ArrowDown: { dx: 0, dy: 1 },
-  ArrowLeft: { dx: -1, dy: 0 }, ArrowRight: { dx: 1, dy: 0 },
+  ArrowUp: { dx: 0, dy: -1 },
+  ArrowDown: { dx: 0, dy: 1 },
+  ArrowLeft: { dx: -1, dy: 0 },
+  ArrowRight: { dx: 1, dy: 0 },
 };
 
 const DIR_TO_ROW: Record<string, number> = {
-  ArrowDown: 0, ArrowUp: 1, ArrowLeft: 2, ArrowRight: 3,
+  ArrowDown: 0,
+  ArrowUp: 1,
+  ArrowLeft: 2,
+  ArrowRight: 3,
 };
 
 interface PlayerState {
-  gridX: number; gridY: number; pixelX: number; pixelY: number;
-  moving: boolean; targetGridX: number; targetGridY: number;
-  startPixelX: number; startPixelY: number; moveProgress: number; facing: string;
-  walkFrame: number; walkTimer: number;
+  gridX: number;
+  gridY: number;
+  pixelX: number;
+  pixelY: number;
+  moving: boolean;
+  targetGridX: number;
+  targetGridY: number;
+  startPixelX: number;
+  startPixelY: number;
+  moveProgress: number;
+  facing: string;
+  walkFrame: number;
+  walkTimer: number;
 }
 
 interface ChoiceState {
@@ -189,11 +220,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   /** Returns the opposite direction (what an NPC should face to look at the player). */
   function oppositeDir(dir: string): string {
     switch (dir) {
-      case 'up': case 'ArrowUp': return 'down';
-      case 'down': case 'ArrowDown': return 'up';
-      case 'left': case 'ArrowLeft': return 'right';
-      case 'right': case 'ArrowRight': return 'left';
-      default: return 'down';
+      case 'up':
+      case 'ArrowUp':
+        return 'down';
+      case 'down':
+      case 'ArrowDown':
+        return 'up';
+      case 'left':
+      case 'ArrowLeft':
+        return 'right';
+      case 'right':
+      case 'ArrowRight':
+        return 'left';
+      default:
+        return 'down';
     }
   }
 
@@ -219,7 +259,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // NPC animation + auto-walk runtime state (keyed by NPC id)
   interface NPCRuntimeState {
-    walkFrame: number;    // 0=stand, 1=walk-1, 2=walk-2
+    walkFrame: number; // 0=stand, 1=walk-1, 2=walk-2
     walkTimer: number;
     moving: boolean;
     pixelX: number;
@@ -231,21 +271,21 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     moveProgress: number;
     facing: string;
     // Pattern-based auto-walk state
-    patternIndex: number;     // current step in pattern
-    stepsTaken: number;       // steps taken in current pattern step
-    patternWaiting: boolean;  // waiting delay between pattern steps
-    patternTimer: number;     // delay timer
-    patternDone: boolean;     // true if non-looping pattern finished
+    patternIndex: number; // current step in pattern
+    stepsTaken: number; // steps taken in current pattern step
+    patternWaiting: boolean; // waiting delay between pattern steps
+    patternTimer: number; // delay timer
+    patternDone: boolean; // true if non-looping pattern finished
     // Spawn/despawn phase patterns
-    wasPreviouslyVisible: boolean;   // tracks visibility changes
+    wasPreviouslyVisible: boolean; // tracks visibility changes
     // beforeSpawn phase: NPC rendered + walking while not yet visible
-    beforeSpawnDone: boolean;        // played once (for non-looping beforeSpawnPattern)
+    beforeSpawnDone: boolean; // played once (for non-looping beforeSpawnPattern)
     beforeSpawnIdx: number;
     beforeSpawnSteps: number;
     beforeSpawnWaiting: boolean;
     beforeSpawnTimer: number;
     // afterSpawn phase
-    afterSpawnDone: boolean;         // afterSpawnPattern has played
+    afterSpawnDone: boolean; // afterSpawnPattern has played
     afterSpawnIdx: number;
     afterSpawnSteps: number;
     afterSpawnWaiting: boolean;
@@ -269,22 +309,47 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     let st = npcStates.get(npc.id);
     if (!st) {
       st = {
-        walkFrame: 0, walkTimer: 0, moving: false,
-        pixelX: npc.x * TILE_SIZE, pixelY: npc.y * TILE_SIZE,
-        startPixelX: npc.x * TILE_SIZE, startPixelY: npc.y * TILE_SIZE,
-        targetPixelX: npc.x * TILE_SIZE, targetPixelY: npc.y * TILE_SIZE,
-        moveProgress: 0, facing: npc.facing,
-        patternIndex: 0, stepsTaken: 0,
-        patternWaiting: false, patternTimer: 0, patternDone: false,
-        wasPreviouslyVisible: isNPCVisible(npc, hasActiveGame() ? (getPlayerData().flags ?? {}) : {}, hasActiveGame() ? getPlayerData().party : undefined),
-        beforeSpawnDone: false, beforeSpawnIdx: 0, beforeSpawnSteps: 0,
-        beforeSpawnWaiting: false, beforeSpawnTimer: 0,
-        afterSpawnDone: false, afterSpawnIdx: 0, afterSpawnSteps: 0,
-        afterSpawnWaiting: false, afterSpawnTimer: 0,
-        isPreDespawning: false, beforeDespawnIdx: 0, beforeDespawnSteps: 0,
-        beforeDespawnWaiting: false, beforeDespawnTimer: 0,
-        isDespawning: false, despawnIdx: 0, despawnSteps: 0,
-        despawnWaiting: false, despawnTimer: 0,
+        walkFrame: 0,
+        walkTimer: 0,
+        moving: false,
+        pixelX: npc.x * TILE_SIZE,
+        pixelY: npc.y * TILE_SIZE,
+        startPixelX: npc.x * TILE_SIZE,
+        startPixelY: npc.y * TILE_SIZE,
+        targetPixelX: npc.x * TILE_SIZE,
+        targetPixelY: npc.y * TILE_SIZE,
+        moveProgress: 0,
+        facing: npc.facing,
+        patternIndex: 0,
+        stepsTaken: 0,
+        patternWaiting: false,
+        patternTimer: 0,
+        patternDone: false,
+        wasPreviouslyVisible: isNPCVisible(
+          npc,
+          hasActiveGame() ? (getPlayerData().flags ?? {}) : {},
+          hasActiveGame() ? getPlayerData().party : undefined,
+        ),
+        beforeSpawnDone: false,
+        beforeSpawnIdx: 0,
+        beforeSpawnSteps: 0,
+        beforeSpawnWaiting: false,
+        beforeSpawnTimer: 0,
+        afterSpawnDone: false,
+        afterSpawnIdx: 0,
+        afterSpawnSteps: 0,
+        afterSpawnWaiting: false,
+        afterSpawnTimer: 0,
+        isPreDespawning: false,
+        beforeDespawnIdx: 0,
+        beforeDespawnSteps: 0,
+        beforeDespawnWaiting: false,
+        beforeDespawnTimer: 0,
+        isDespawning: false,
+        despawnIdx: 0,
+        despawnSteps: 0,
+        despawnWaiting: false,
+        despawnTimer: 0,
       };
       npcStates.set(npc.id, st);
     }
@@ -293,11 +358,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   function initPlayer(sx: number, sy: number): PlayerState {
     return {
-      gridX: sx, gridY: sy, pixelX: sx * TILE_SIZE, pixelY: sy * TILE_SIZE,
-      moving: false, targetGridX: sx, targetGridY: sy,
-      startPixelX: sx * TILE_SIZE, startPixelY: sy * TILE_SIZE,
-      moveProgress: 0, facing: 'ArrowDown',
-      walkFrame: 0, walkTimer: 0,
+      gridX: sx,
+      gridY: sy,
+      pixelX: sx * TILE_SIZE,
+      pixelY: sy * TILE_SIZE,
+      moving: false,
+      targetGridX: sx,
+      targetGridY: sy,
+      startPixelX: sx * TILE_SIZE,
+      startPixelY: sy * TILE_SIZE,
+      moveProgress: 0,
+      facing: 'ArrowDown',
+      walkFrame: 0,
+      walkTimer: 0,
     };
   }
 
@@ -323,7 +396,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     flashTimer = 0;
     flashPhase = 'flash';
     const playerData = getPlayerData();
-    const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
+    const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
     if (playerPokemon) setBattleData(playerPokemon, wildPokemon, deriveBattleContext(), deriveBattleBackground());
   }
 
@@ -420,7 +493,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // First encounter
           const trainerBattleData = buildTrainerBattleData(trainer, 0);
           const playerData = getPlayerData();
-          const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
+          const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
             stateMachine.change('BATTLE');
@@ -432,7 +505,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const reencounterParty = buildReencounterParty(trainer, status.encounterIndex);
             const reencounterData = buildTrainerBattleData(trainer, status.encounterIndex, reencounterParty);
             const playerData = getPlayerData();
-            const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
+            const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
             if (playerPokemon) {
               setTrainerBattleData(playerPokemon, reencounterData, deriveBattleContext(), deriveBattleBackground());
               stateMachine.change('BATTLE');
@@ -496,7 +569,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     // Award badge
     if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
-      pd.badges |= (1 << (reward.badge - 1));
+      pd.badges |= 1 << (reward.badge - 1);
       lines.push(t('npc.reward.badge', { badge: reward.badge }));
     }
 
@@ -547,13 +620,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   function buildCutsceneContext(): CutsceneContext {
     return {
       getNPCById(id) {
-        return npcManager?.getNPCs().find(n => n.id === id);
+        return npcManager?.getNPCs().find((n) => n.id === id);
       },
       setNPCFacing(npc, dir) {
         npc.facing = dir as 'up' | 'down' | 'left' | 'right';
       },
       setNPCHidden(id, hidden) {
-        const npc = npcManager?.getNPCs().find(n => n.id === id);
+        const npc = npcManager?.getNPCs().find((n) => n.id === id);
         if (npc) npc.hidden = hidden;
       },
       setPlayerHidden(hidden) {
@@ -561,12 +634,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       },
       moveNPCAlongPath(npc, path) {
         const dirVecs: Record<string, { dx: number; dy: number }> = {
-          up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 },
-          left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 },
+          up: { dx: 0, dy: -1 },
+          down: { dx: 0, dy: 1 },
+          left: { dx: -1, dy: 0 },
+          right: { dx: 1, dy: 0 },
         };
         for (const dir of path) {
           const v = dirVecs[dir];
-          if (v) { npc.x += v.dx; npc.y += v.dy; npc.facing = dir as 'up'|'down'|'left'|'right'; }
+          if (v) {
+            npc.x += v.dx;
+            npc.y += v.dy;
+            npc.facing = dir as 'up' | 'down' | 'left' | 'right';
+          }
         }
       },
       snapCamera(x, y) {
@@ -575,19 +654,37 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       panCamera(x, y, _durationMs) {
         if (camera && tileMap) camera.snapTo(x, y, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
       },
-      playMusic(id) { audio.playMusic(id); },
-      stopMusic() { audio.stopMusic?.(); },
-      playSFX(id) { audio.playSFX(id); },
+      playMusic(id) {
+        audio.playMusic(id);
+      },
+      stopMusic() {
+        audio.stopMusic?.();
+      },
+      playSFX(id) {
+        audio.playSFX(id);
+      },
       executeStoryAction(action) {
         if (!hasActiveGame()) return;
         const pd = getPlayerData();
         switch (action.type) {
-          case 'set-flag': pd.flags[action.flag] = action.value ?? true; break;
-          case 'give-item': pd.items[action.itemId] = (pd.items[action.itemId] || 0) + action.quantity; break;
-          case 'give-money': pd.money += action.amount; break;
-          case 'set-quest': if (pd.story) pd.story.activeQuestId = action.questId; break;
-          case 'start-cutscene': activateCutscene(action.cutsceneId); break;
-          case 'play-music': audio.playMusic(action.musicId); break;
+          case 'set-flag':
+            pd.flags[action.flag] = action.value ?? true;
+            break;
+          case 'give-item':
+            pd.items[action.itemId] = (pd.items[action.itemId] || 0) + action.quantity;
+            break;
+          case 'give-money':
+            pd.money += action.amount;
+            break;
+          case 'set-quest':
+            if (pd.story) pd.story.activeQuestId = action.questId;
+            break;
+          case 'start-cutscene':
+            activateCutscene(action.cutsceneId);
+            break;
+          case 'play-music':
+            audio.playMusic(action.musicId);
+            break;
           // Other actions deferred to story-engine
         }
       },
@@ -618,13 +715,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
    * @param encounterIndex 0 = first fight, 1+ = rematch
    * @param prebuiltParty  optional pre-scaled party (from buildReencounterParty)
    */
-  function buildTrainerBattleData(trainer: TrainerData, encounterIndex = 0, prebuiltParty?: import('../types/index.js').Pokemon[]): TrainerBattleData {
-    const party = prebuiltParty ?? trainer.party.map(p => {
-      const data = getPokemon(p.pokemonId);
-      return data
-        ? createPokemonFromData(data, p.level, p.moves)
-        : createPokemonFromData(getPokemon(19)!, p.level);
-    });
+  function buildTrainerBattleData(
+    trainer: TrainerData,
+    encounterIndex = 0,
+    prebuiltParty?: import('../types/index.js').Pokemon[],
+  ): TrainerBattleData {
+    const party =
+      prebuiltParty ??
+      trainer.party.map((p) => {
+        const data = getPokemon(p.pokemonId);
+        return data ? createPokemonFromData(data, p.level, p.moves) : createPokemonFromData(getPokemon(19)!, p.level);
+      });
 
     // Register phone contact after first defeat (called lazily when building re-encounter data)
     if (encounterIndex === 0 && trainer.reencounter) {
@@ -680,7 +781,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
 
   /** Start the HM animation sequence. */
-  function startHMAnimation(hmName: string, pokemon: import('../types/index.js').Pokemon, obsX: number, obsY: number): void {
+  function startHMAnimation(
+    hmName: string,
+    pokemon: import('../types/index.js').Pokemon,
+    obsX: number,
+    obsY: number,
+  ): void {
     const flipSprite = player.facing === 'ArrowRight';
 
     // Try to step back one tile (opposite of facing)
@@ -689,7 +795,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       const backX = player.gridX - faceVec.dx;
       const backY = player.gridY - faceVec.dy;
       const _hmPd = hasActiveGame() ? getPlayerData() : null;
-      if (tileMap && tileMap.isWalkable(backX, backY) && !(npcManager?.isVisibleNPCAt(backX, backY, _hmPd?.flags ?? {}, _hmPd?.party))) {
+      if (
+        tileMap &&
+        tileMap.isWalkable(backX, backY) &&
+        !npcManager?.isVisibleNPCAt(backX, backY, _hmPd?.flags ?? {}, _hmPd?.party)
+      ) {
         player.gridX = backX;
         player.gridY = backY;
         player.pixelX = backX * TILE_SIZE;
@@ -720,7 +830,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       pendingTileRemoval: () => {
         // Remove the object from the map
         if (currentMapData?.objects) {
-          const objIdx = currentMapData.objects.findIndex(o => o.x === obsX && o.y === obsY);
+          const objIdx = currentMapData.objects.findIndex((o) => o.x === obsX && o.y === obsY);
           if (objIdx >= 0) currentMapData.objects.splice(objIdx, 1);
         }
         // Persist the removal via flags so it survives map reload
@@ -733,11 +843,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
 
     // Start loading sprite if not cached yet
-    loadImage(spritePath).then(img => {
-      if (hmAnim && hmAnim.pokemonId === pokemon.id) {
-        hmAnim.pokemonSprite = img;
-      }
-    }).catch(() => { /* sprite load failure is non-fatal */ });
+    loadImage(spritePath)
+      .then((img) => {
+        if (hmAnim && hmAnim.pokemonId === pokemon.id) {
+          hmAnim.pokemonSprite = img;
+        }
+      })
+      .catch(() => {
+        /* sprite load failure is non-fatal */
+      });
   }
 
   /** Start the Fly animation sequence. */
@@ -758,9 +872,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       spriteOffsetY: 0,
       teleported: false,
     };
-    loadImage(spritePath).then(img => {
-      if (flyAnim && flyAnim.pokemonId === pokemon.id) flyAnim.pokemonSprite = img;
-    }).catch(() => { /* non-fatal */ });
+    loadImage(spritePath)
+      .then((img) => {
+        if (flyAnim && flyAnim.pokemonId === pokemon.id) flyAnim.pokemonSprite = img;
+      })
+      .catch(() => {
+        /* non-fatal */
+      });
   }
 
   /** Start surfing on a Pokemon. */
@@ -769,9 +887,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     surfPokemonId = pokemon.id;
     const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
     surfPokemonSprite = getCachedImage(spritePath);
-    loadImage(spritePath).then(img => {
-      if (surfPokemonId === pokemon.id) surfPokemonSprite = img;
-    }).catch(() => { /* non-fatal */ });
+    loadImage(spritePath)
+      .then((img) => {
+        if (surfPokemonId === pokemon.id) surfPokemonSprite = img;
+      })
+      .catch(() => {
+        /* non-fatal */
+      });
     audio.playSFX('splash');
   }
 
@@ -791,7 +913,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Filter out collected item objects and already-cut/moved obstacles
     if (data.objects && tileset && hasActiveGame()) {
       const flags = getPlayerData().flags;
-      data.objects = data.objects.filter(obj => {
+      data.objects = data.objects.filter((obj) => {
         const def = tileset.getTile(obj.key);
         if (def?.interactType?.id === 'item') {
           const flagKey = obj.interactArgs?.flag || `obj-${obj.key}-${obj.x}-${obj.y}-collected`;
@@ -880,7 +1002,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   return {
     enter(): void {
       initHUD();
-      showHUD();
       encounterTriggered = false;
       flashPhase = 'none';
       flashTimer = 0;
@@ -913,18 +1034,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         previousMapReturn = pd.previousMapReturn ?? null;
       }
 
-      loadAndSetMap(mapId, spawnX, spawnY).then(() => {
-        mapLoading = false;
-      }).catch((err) => {
-        console.error('Failed to load map, falling back to test-map:', err);
-        loadAndSetMap('test-map', 10, 10).then(() => {
+      loadAndSetMap(mapId, spawnX, spawnY)
+        .then(() => {
           mapLoading = false;
+        })
+        .catch((err) => {
+          console.error('Failed to load map, falling back to test-map:', err);
+          loadAndSetMap('test-map', 10, 10).then(() => {
+            mapLoading = false;
+          });
         });
-      });
     },
 
     exit(): void {
-      hideHUD();
+      console.log('Exiting overworld, saving game...');
       if (hasActiveGame() && currentMapData) {
         const pd = getPlayerData();
         pd.position.x = player.gridX;
@@ -936,10 +1059,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     update(dt: number): void {
       // While map is loading, do nothing
-      if (mapLoading || !tileMap) return;
+      if (mapLoading || !tileMap) {
+        return;
+      }
+
+      // console.log(stateMachine.currentId());
+      // if (stateMachine.currentId() === 'OVERWORLD') {
+      //   showHUD();
+      // } else {
+      //   hideHUD();
+      // }
 
       // ── Cutscene runner: takes full control of input ──
       if (isCutsceneActive()) {
+        // hideHUD();
         updateCutscene(dt, input, buildCutsceneContext());
         return;
       }
@@ -1007,13 +1140,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (fa.phase === 'mount') {
           // 0.4s: Pokemon sprite fades in beside player
           fa.spriteAlpha = Math.min(1, fa.timer / 0.3);
-          if (fa.timer >= 0.4) { fa.phase = 'rise'; fa.timer = 0; }
+          if (fa.timer >= 0.4) {
+            fa.phase = 'rise';
+            fa.timer = 0;
+          }
         } else if (fa.phase === 'rise') {
           // 0.6s: rises up, scales down
           const progress = Math.min(fa.timer / 0.6, 1);
           fa.spriteOffsetY = -progress * TILE_SIZE * 4;
           fa.spriteScale = 1 - progress * 0.7; // 1 → 0.3
-          if (fa.timer >= 0.6) { fa.phase = 'fadeout'; fa.timer = 0; }
+          if (fa.timer >= 0.6) {
+            fa.phase = 'fadeout';
+            fa.timer = 0;
+          }
         } else if (fa.phase === 'fadeout') {
           // 0.3s: screen fades to black + pokemon fades out
           const progress = Math.min(fa.timer / 0.3, 1);
@@ -1023,26 +1162,41 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             // Teleport mid-fade so it's invisible
             fa.teleported = true;
             mapLoading = true;
-            loadAndSetMap(fa.destMapId, fa.destX, fa.destY).then(() => {
-              mapLoading = false;
-            }).catch(err => {
-              console.error('Fly teleport failed:', err);
-              mapLoading = false;
-              flyAnim = null;
-            });
+            loadAndSetMap(fa.destMapId, fa.destX, fa.destY)
+              .then(() => {
+                mapLoading = false;
+              })
+              .catch((err) => {
+                console.error('Fly teleport failed:', err);
+                mapLoading = false;
+                flyAnim = null;
+              });
           }
-          if (fa.timer >= 0.3) { fa.phase = 'fadein'; fa.timer = 0; fa.fadeAlpha = 1; fa.spriteAlpha = 0; fa.spriteScale = 0.3; fa.spriteOffsetY = -TILE_SIZE * 4; }
+          if (fa.timer >= 0.3) {
+            fa.phase = 'fadein';
+            fa.timer = 0;
+            fa.fadeAlpha = 1;
+            fa.spriteAlpha = 0;
+            fa.spriteScale = 0.3;
+            fa.spriteOffsetY = -TILE_SIZE * 4;
+          }
         } else if (fa.phase === 'fadein') {
           // 0.3s: screen fades from black to visible
           fa.fadeAlpha = Math.max(0, 1 - fa.timer / 0.3);
-          if (fa.timer >= 0.3) { fa.phase = 'land'; fa.timer = 0; fa.fadeAlpha = 0; }
+          if (fa.timer >= 0.3) {
+            fa.phase = 'land';
+            fa.timer = 0;
+            fa.fadeAlpha = 0;
+          }
         } else if (fa.phase === 'land') {
           // 0.5s: Pokemon descends, scale grows 0.3 → 1, fades in
           const progress = Math.min(fa.timer / 0.5, 1);
           fa.spriteOffsetY = -TILE_SIZE * 4 * (1 - progress);
           fa.spriteScale = 0.3 + progress * 0.7; // 0.3 → 1
           fa.spriteAlpha = progress;
-          if (fa.timer >= 0.5) { fa.phase = 'done'; }
+          if (fa.timer >= 0.5) {
+            fa.phase = 'done';
+          }
         } else if (fa.phase === 'done') {
           flyAnim = null;
         }
@@ -1060,16 +1214,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           transitionTimer = 0;
           if (transitionTarget) {
             mapLoading = true;
-            loadAndSetMap(transitionTarget.mapId, transitionTarget.x, transitionTarget.y).then(() => {
-              mapLoading = false;
-              transitionState = 'fade-in';
-              transitionTimer = 0;
-            }).catch((err) => {
-              console.error('Transition failed:', err);
-              mapLoading = false;
-              transitionState = 'none';
-              transitionTarget = null;
-            });
+            loadAndSetMap(transitionTarget.mapId, transitionTarget.x, transitionTarget.y)
+              .then(() => {
+                mapLoading = false;
+                transitionState = 'fade-in';
+                transitionTimer = 0;
+              })
+              .catch((err) => {
+                console.error('Transition failed:', err);
+                mapLoading = false;
+                transitionState = 'none';
+                transitionTarget = null;
+              });
           }
         }
         if (transitionState === 'fade-in' && transitionTimer >= TRANSITION_FADE_TIME) {
@@ -1081,9 +1237,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       if (encounterTriggered) {
         flashTimer += dt;
-        if (flashPhase === 'flash' && flashTimer >= 0.4) { flashPhase = 'black'; flashTimer = 0; }
+        if (flashPhase === 'flash' && flashTimer >= 0.4) {
+          flashPhase = 'black';
+          flashTimer = 0;
+        }
         if (flashPhase === 'black' && flashTimer >= 0.3) {
-          encounterTriggered = false; flashPhase = 'none';
+          encounterTriggered = false;
+          flashPhase = 'none';
           stateMachine.change('BATTLE');
         }
         return;
@@ -1097,12 +1257,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const bx = player.gridX + pb.pushDx;
           const by = player.gridY + pb.pushDy;
           const _gbPd = hasActiveGame() ? getPlayerData() : null;
-          if (tileMap && tileMap.isWalkable(bx, by) && !(npcManager?.isVisibleNPCAt(bx, by, _gbPd?.flags ?? {}, _gbPd?.party))) {
+          if (
+            tileMap &&
+            tileMap.isWalkable(bx, by) &&
+            !npcManager?.isVisibleNPCAt(bx, by, _gbPd?.flags ?? {}, _gbPd?.party)
+          ) {
             player.moving = true;
-            player.targetGridX = bx; player.targetGridY = by;
-            player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
+            player.targetGridX = bx;
+            player.targetGridY = by;
+            player.startPixelX = player.pixelX;
+            player.startPixelY = player.pixelY;
             player.moveProgress = 0;
-            player.walkTimer = 0; player.walkFrame = 1;
+            player.walkTimer = 0;
+            player.walkFrame = 1;
           }
         }
       }
@@ -1114,12 +1281,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         const bx = player.gridX + pb.pushDx;
         const by = player.gridY + pb.pushDy;
         const _pbPd = hasActiveGame() ? getPlayerData() : null;
-        if (tileMap && tileMap.isWalkable(bx, by) && !(npcManager?.isVisibleNPCAt(bx, by, _pbPd?.flags ?? {}, _pbPd?.party))) {
+        if (
+          tileMap &&
+          tileMap.isWalkable(bx, by) &&
+          !npcManager?.isVisibleNPCAt(bx, by, _pbPd?.flags ?? {}, _pbPd?.party)
+        ) {
           player.moving = true;
-          player.targetGridX = bx; player.targetGridY = by;
-          player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
+          player.targetGridX = bx;
+          player.targetGridY = by;
+          player.startPixelX = player.pixelX;
+          player.startPixelY = player.pixelY;
           player.moveProgress = 0;
-          player.walkTimer = 0; player.walkFrame = 1;
+          player.walkTimer = 0;
+          player.walkFrame = 1;
         }
       }
 
@@ -1218,7 +1392,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Start the battle (line-of-sight triggered — always first encounter)
           const trainerBattleData = buildTrainerBattleData(ta.trainer, 0);
           const playerData = getPlayerData();
-          const playerPokemon = playerData.party.find(p => p.hp > 0) || playerData.party[0];
+          const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
             // Reset trainer position back after battle
@@ -1271,7 +1445,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         player.moveProgress += dt / MOVE_DURATION;
         // Walk animation
         player.walkTimer += dt;
-        if (player.walkTimer >= 0.1) { player.walkTimer = 0; player.walkFrame = player.walkFrame === 1 ? 2 : 1; }
+        if (player.walkTimer >= 0.1) {
+          player.walkTimer = 0;
+          player.walkFrame = player.walkFrame === 1 ? 2 : 1;
+        }
         if (player.moveProgress >= 1) {
           player.moveProgress = 1;
           player.gridX = player.targetGridX;
@@ -1287,7 +1464,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Auto-dismount surf when stepping onto non-water land
           if (isCurrentlySurfing) {
             const landEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
-            const isWaterTile = landEncTypes?.some(et => et === 'water' || et.startsWith('water') || et.includes('/water'));
+            const isWaterTile = landEncTypes?.some(
+              (et) => et === 'water' || et.startsWith('water') || et.includes('/water'),
+            );
             if (!isWaterTile) {
               stopSurfing();
             }
@@ -1300,7 +1479,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               // Pass water encounter filter when surfing
               const encFilter = isCurrentlySurfing ? ['water'] : tileEncTypes;
               const wild = generateWildEncounter(encounterId, encFilter);
-              if (wild) { startEncounterTransition(wild); return; }
+              if (wild) {
+                startEncounterTransition(wild);
+                return;
+              }
             }
           }
 
@@ -1318,8 +1500,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Check gate-guard line-of-sight after each step
           if (npcManager && hasActiveGame() && !gateGuardApproach) {
             const guardFacingVecs: Record<string, { dx: number; dy: number }> = {
-              up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 },
-              left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 },
+              up: { dx: 0, dy: -1 },
+              down: { dx: 0, dy: 1 },
+              left: { dx: -1, dy: 0 },
+              right: { dx: 1, dy: 0 },
             };
             const flags = getPlayerData().flags;
             const _gParty = getPlayerData().party;
@@ -1344,8 +1528,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (npcManager && hasActiveGame() && !partyGuardApproach && !gateGuardApproach) {
             const _pgPd = getPlayerData();
             const pgFacingVecs: Record<string, { dx: number; dy: number }> = {
-              up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 },
-              left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 },
+              up: { dx: 0, dy: -1 },
+              down: { dx: 0, dy: 1 },
+              left: { dx: -1, dy: 0 },
+              right: { dx: 1, dy: 0 },
             };
             for (const npc of npcManager.getNPCs()) {
               if (!npc.blocker) continue;
@@ -1365,8 +1551,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
           }
         } else {
-          player.pixelX = player.startPixelX + (player.targetGridX * TILE_SIZE - player.startPixelX) * player.moveProgress;
-          player.pixelY = player.startPixelY + (player.targetGridY * TILE_SIZE - player.startPixelY) * player.moveProgress;
+          player.pixelX =
+            player.startPixelX + (player.targetGridX * TILE_SIZE - player.startPixelX) * player.moveProgress;
+          player.pixelY =
+            player.startPixelY + (player.targetGridY * TILE_SIZE - player.startPixelY) * player.moveProgress;
         }
       }
 
@@ -1377,35 +1565,60 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
         /** Execute one frame of a walk pattern (shared between main, afterSpawn, afterDespawn). */
         const runPattern = (
-          npc: NPCData, st: NPCRuntimeState, pattern: import('../systems/npc.js').WalkStep[],
-          loop: boolean, idx: number, steps: number, waiting: boolean, timer: number,
+          npc: NPCData,
+          st: NPCRuntimeState,
+          pattern: import('../systems/npc.js').WalkStep[],
+          loop: boolean,
+          idx: number,
+          steps: number,
+          waiting: boolean,
+          timer: number,
         ): { idx: number; steps: number; waiting: boolean; timer: number; done: boolean } => {
           if (waiting) {
             timer += dt;
             const step = pattern[idx];
             if (timer >= step.delay) {
-              waiting = false; timer = 0; idx++; steps = 0;
+              waiting = false;
+              timer = 0;
+              idx++;
+              steps = 0;
               if (idx >= pattern.length) {
-                if (loop) { idx = 0; } else { return { idx, steps, waiting, timer, done: true }; }
+                if (loop) {
+                  idx = 0;
+                } else {
+                  return { idx, steps, waiting, timer, done: true };
+                }
               }
             }
           } else {
             const step = pattern[idx];
             const dx = step.dir === 'right' ? 1 : step.dir === 'left' ? -1 : 0;
             const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
-            const nextX = npc.x + dx; const nextY = npc.y + dy;
-            const blocked = (nextX === player.gridX && nextY === player.gridY) ||
+            const nextX = npc.x + dx;
+            const nextY = npc.y + dy;
+            const blocked =
+              (nextX === player.gridX && nextY === player.gridY) ||
               npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party) ||
-              !tileMap || !tileMap.isWalkable(nextX, nextY);
+              !tileMap ||
+              !tileMap.isWalkable(nextX, nextY);
             if (!blocked && steps < step.steps) {
-              st.startPixelX = st.pixelX; st.startPixelY = st.pixelY;
-              st.targetPixelX = nextX * TILE_SIZE; st.targetPixelY = nextY * TILE_SIZE;
-              st.moveProgress = 0; st.moving = true;
-              st.facing = step.dir; npc.facing = step.dir; steps++;
-              if (steps >= step.steps) { waiting = true; timer = 0; }
+              st.startPixelX = st.pixelX;
+              st.startPixelY = st.pixelY;
+              st.targetPixelX = nextX * TILE_SIZE;
+              st.targetPixelY = nextY * TILE_SIZE;
+              st.moveProgress = 0;
+              st.moving = true;
+              st.facing = step.dir;
+              npc.facing = step.dir;
+              steps++;
+              if (steps >= step.steps) {
+                waiting = true;
+                timer = 0;
+              }
             } else if (steps > 0) {
               // Blocked mid-step: wait the delay then advance to next step
-              waiting = true; timer = 0;
+              waiting = true;
+              timer = 0;
             }
             // Blocked at step 0: retry next frame (don't advance pattern)
           }
@@ -1421,19 +1634,26 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const aw = npc.autoWalk;
             if (aw?.beforeDespawnPattern && aw.beforeDespawnPattern.length > 0) {
               st.isPreDespawning = true;
-              st.beforeDespawnIdx = 0; st.beforeDespawnSteps = 0;
-              st.beforeDespawnWaiting = false; st.beforeDespawnTimer = 0;
+              st.beforeDespawnIdx = 0;
+              st.beforeDespawnSteps = 0;
+              st.beforeDespawnWaiting = false;
+              st.beforeDespawnTimer = 0;
             } else if (aw?.afterDespawnPattern && aw.afterDespawnPattern.length > 0) {
               st.isDespawning = true;
-              st.despawnIdx = 0; st.despawnSteps = 0;
-              st.despawnWaiting = false; st.despawnTimer = 0;
+              st.despawnIdx = 0;
+              st.despawnSteps = 0;
+              st.despawnWaiting = false;
+              st.despawnTimer = 0;
             }
             st.wasPreviouslyVisible = false;
           }
 
           // ── Skip truly invisible NPCs not in any despawn/beforeSpawn walk ──
           const inDespawnPhase = st.isPreDespawning || st.isDespawning;
-          const inBeforeSpawn = !isVis && !inDespawnPhase && !st.beforeSpawnDone &&
+          const inBeforeSpawn =
+            !isVis &&
+            !inDespawnPhase &&
+            !st.beforeSpawnDone &&
             !!(npc.autoWalk?.beforeSpawnPattern && npc.autoWalk.beforeSpawnPattern.length > 0);
           if (!isVis && !inDespawnPhase && !inBeforeSpawn) continue;
 
@@ -1441,11 +1661,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (st.moving) {
             st.moveProgress += dt / MOVE_DURATION;
             st.walkTimer += dt;
-            if (st.walkTimer >= 0.1) { st.walkTimer = 0; st.walkFrame = st.walkFrame === 1 ? 2 : 1; }
+            if (st.walkTimer >= 0.1) {
+              st.walkTimer = 0;
+              st.walkFrame = st.walkFrame === 1 ? 2 : 1;
+            }
             if (st.moveProgress >= 1) {
-              st.moveProgress = 1; st.pixelX = st.targetPixelX; st.pixelY = st.targetPixelY;
-              npc.x = Math.round(st.pixelX / TILE_SIZE); npc.y = Math.round(st.pixelY / TILE_SIZE);
-              st.moving = false; st.walkFrame = 0;
+              st.moveProgress = 1;
+              st.pixelX = st.targetPixelX;
+              st.pixelY = st.targetPixelY;
+              npc.x = Math.round(st.pixelX / TILE_SIZE);
+              npc.y = Math.round(st.pixelY / TILE_SIZE);
+              st.moving = false;
+              st.walkFrame = 0;
             } else {
               st.pixelX = st.startPixelX + (st.targetPixelX - st.startPixelX) * st.moveProgress;
               st.pixelY = st.startPixelY + (st.targetPixelY - st.startPixelY) * st.moveProgress;
@@ -1456,10 +1683,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (inBeforeSpawn) {
             const aw = npc.autoWalk!;
             if (!st.moving) {
-              const r = runPattern(npc, st, aw.beforeSpawnPattern!, aw.beforeSpawnLoop ?? false,
-                st.beforeSpawnIdx, st.beforeSpawnSteps, st.beforeSpawnWaiting, st.beforeSpawnTimer);
-              st.beforeSpawnIdx = r.idx; st.beforeSpawnSteps = r.steps;
-              st.beforeSpawnWaiting = r.waiting; st.beforeSpawnTimer = r.timer;
+              const r = runPattern(
+                npc,
+                st,
+                aw.beforeSpawnPattern!,
+                aw.beforeSpawnLoop ?? false,
+                st.beforeSpawnIdx,
+                st.beforeSpawnSteps,
+                st.beforeSpawnWaiting,
+                st.beforeSpawnTimer,
+              );
+              st.beforeSpawnIdx = r.idx;
+              st.beforeSpawnSteps = r.steps;
+              st.beforeSpawnWaiting = r.waiting;
+              st.beforeSpawnTimer = r.timer;
               if (r.done) st.beforeSpawnDone = true;
             }
             continue;
@@ -1469,17 +1706,29 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (st.isPreDespawning) {
             const aw = npc.autoWalk;
             if (aw?.beforeDespawnPattern && aw.beforeDespawnPattern.length > 0 && !st.moving) {
-              const r = runPattern(npc, st, aw.beforeDespawnPattern, aw.beforeDespawnLoop ?? false,
-                st.beforeDespawnIdx, st.beforeDespawnSteps, st.beforeDespawnWaiting, st.beforeDespawnTimer);
-              st.beforeDespawnIdx = r.idx; st.beforeDespawnSteps = r.steps;
-              st.beforeDespawnWaiting = r.waiting; st.beforeDespawnTimer = r.timer;
+              const r = runPattern(
+                npc,
+                st,
+                aw.beforeDespawnPattern,
+                aw.beforeDespawnLoop ?? false,
+                st.beforeDespawnIdx,
+                st.beforeDespawnSteps,
+                st.beforeDespawnWaiting,
+                st.beforeDespawnTimer,
+              );
+              st.beforeDespawnIdx = r.idx;
+              st.beforeDespawnSteps = r.steps;
+              st.beforeDespawnWaiting = r.waiting;
+              st.beforeDespawnTimer = r.timer;
               if (r.done) {
                 st.isPreDespawning = false;
                 // Chain to afterDespawn if configured
                 if (aw.afterDespawnPattern && aw.afterDespawnPattern.length > 0) {
                   st.isDespawning = true;
-                  st.despawnIdx = 0; st.despawnSteps = 0;
-                  st.despawnWaiting = false; st.despawnTimer = 0;
+                  st.despawnIdx = 0;
+                  st.despawnSteps = 0;
+                  st.despawnWaiting = false;
+                  st.despawnTimer = 0;
                 }
               }
             } else if (!st.moving) {
@@ -1492,10 +1741,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (st.isDespawning) {
             const aw = npc.autoWalk;
             if (aw?.afterDespawnPattern && aw.afterDespawnPattern.length > 0 && !st.moving) {
-              const r = runPattern(npc, st, aw.afterDespawnPattern, aw.afterDespawnLoop ?? false,
-                st.despawnIdx, st.despawnSteps, st.despawnWaiting, st.despawnTimer);
-              st.despawnIdx = r.idx; st.despawnSteps = r.steps;
-              st.despawnWaiting = r.waiting; st.despawnTimer = r.timer;
+              const r = runPattern(
+                npc,
+                st,
+                aw.afterDespawnPattern,
+                aw.afterDespawnLoop ?? false,
+                st.despawnIdx,
+                st.despawnSteps,
+                st.despawnWaiting,
+                st.despawnTimer,
+              );
+              st.despawnIdx = r.idx;
+              st.despawnSteps = r.steps;
+              st.despawnWaiting = r.waiting;
+              st.despawnTimer = r.timer;
               if (r.done) st.isDespawning = false;
             } else if (!st.moving) {
               st.isDespawning = false;
@@ -1510,8 +1769,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const aw = npc.autoWalk;
             if (aw?.afterSpawnPattern && aw.afterSpawnPattern.length > 0) {
               st.afterSpawnDone = false;
-              st.afterSpawnIdx = 0; st.afterSpawnSteps = 0;
-              st.afterSpawnWaiting = false; st.afterSpawnTimer = 0;
+              st.afterSpawnIdx = 0;
+              st.afterSpawnSteps = 0;
+              st.afterSpawnWaiting = false;
+              st.afterSpawnTimer = 0;
             } else {
               st.afterSpawnDone = true;
             }
@@ -1521,10 +1782,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (!st.afterSpawnDone) {
             const aw = npc.autoWalk;
             if (aw?.afterSpawnPattern && aw.afterSpawnPattern.length > 0 && !st.moving) {
-              const r = runPattern(npc, st, aw.afterSpawnPattern, aw.afterSpawnLoop ?? false,
-                st.afterSpawnIdx, st.afterSpawnSteps, st.afterSpawnWaiting, st.afterSpawnTimer);
-              st.afterSpawnIdx = r.idx; st.afterSpawnSteps = r.steps;
-              st.afterSpawnWaiting = r.waiting; st.afterSpawnTimer = r.timer;
+              const r = runPattern(
+                npc,
+                st,
+                aw.afterSpawnPattern,
+                aw.afterSpawnLoop ?? false,
+                st.afterSpawnIdx,
+                st.afterSpawnSteps,
+                st.afterSpawnWaiting,
+                st.afterSpawnTimer,
+              );
+              st.afterSpawnIdx = r.idx;
+              st.afterSpawnSteps = r.steps;
+              st.afterSpawnWaiting = r.waiting;
+              st.afterSpawnTimer = r.timer;
               if (r.done) st.afterSpawnDone = true;
             } else if (!st.moving) {
               st.afterSpawnDone = true;
@@ -1540,28 +1811,46 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (st.patternWaiting) {
               st.patternTimer += dt;
               if (st.patternTimer >= step.delay) {
-                st.patternWaiting = false; st.patternTimer = 0;
-                st.patternIndex++; st.stepsTaken = 0;
+                st.patternWaiting = false;
+                st.patternTimer = 0;
+                st.patternIndex++;
+                st.stepsTaken = 0;
                 if (st.patternIndex >= aw.pattern.length) {
-                  if (aw.loop !== false) { st.patternIndex = 0; } else { st.patternDone = true; }
+                  if (aw.loop !== false) {
+                    st.patternIndex = 0;
+                  } else {
+                    st.patternDone = true;
+                  }
                 }
               }
             } else {
               const dx = step.dir === 'right' ? 1 : step.dir === 'left' ? -1 : 0;
               const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
-              const nextX = npc.x + dx; const nextY = npc.y + dy;
-              const blocked = (nextX === player.gridX && nextY === player.gridY) ||
+              const nextX = npc.x + dx;
+              const nextY = npc.y + dy;
+              const blocked =
+                (nextX === player.gridX && nextY === player.gridY) ||
                 npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party) ||
-                !tileMap || !tileMap.isWalkable(nextX, nextY);
+                !tileMap ||
+                !tileMap.isWalkable(nextX, nextY);
               if (!blocked && st.stepsTaken < step.steps) {
-                st.startPixelX = st.pixelX; st.startPixelY = st.pixelY;
-                st.targetPixelX = nextX * TILE_SIZE; st.targetPixelY = nextY * TILE_SIZE;
-                st.moveProgress = 0; st.moving = true;
-                st.facing = step.dir; npc.facing = step.dir; st.stepsTaken++;
-                if (st.stepsTaken >= step.steps) { st.patternWaiting = true; st.patternTimer = 0; }
+                st.startPixelX = st.pixelX;
+                st.startPixelY = st.pixelY;
+                st.targetPixelX = nextX * TILE_SIZE;
+                st.targetPixelY = nextY * TILE_SIZE;
+                st.moveProgress = 0;
+                st.moving = true;
+                st.facing = step.dir;
+                npc.facing = step.dir;
+                st.stepsTaken++;
+                if (st.stepsTaken >= step.steps) {
+                  st.patternWaiting = true;
+                  st.patternTimer = 0;
+                }
               } else if (st.stepsTaken > 0) {
                 // Blocked mid-step: wait delay then advance; if blocked at step 0, retry next frame
-                st.patternWaiting = true; st.patternTimer = 0;
+                st.patternWaiting = true;
+                st.patternTimer = 0;
               }
             }
           }
@@ -1586,7 +1875,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 if (status.eligible) {
                   activeTextBox = createTextBox([t('trainer.reencounter.ready')], isRTL());
                 } else if (status.reason === 'cooldown') {
-                  activeTextBox = createTextBox([t('trainer.reencounter.cooldown', { hours: status.hoursLeft ?? 1 })], isRTL());
+                  activeTextBox = createTextBox(
+                    [t('trainer.reencounter.cooldown', { hours: status.hoursLeft ?? 1 })],
+                    isRTL(),
+                  );
                 } else if (status.reason === 'max-reached') {
                   activeTextBox = createTextBox([t('trainer.reencounter.maxReached')], isRTL());
                 } else {
@@ -1601,9 +1893,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               turnNPCToPlayer(npc);
               if (isGateUnlocked(guard.gateId)) {
                 // Gate already passed — show passedDialogue or default
-                const passed = guard.passedDialogue && guard.passedDialogue.length > 0
-                  ? resolveDialogue(guard.passedDialogue, getLocale())
-                  : [getLocale() === 'he' ? 'תעבור, בבקשה!' : 'You may pass!'];
+                const passed =
+                  guard.passedDialogue && guard.passedDialogue.length > 0
+                    ? resolveDialogue(guard.passedDialogue, getLocale())
+                    : [getLocale() === 'he' ? 'תעבור, בבקשה!' : 'You may pass!'];
                 activeTextBox = createTextBox(passed, isRTL());
               } else {
                 // Gate locked — show blocking dialogue, then launch gate scene on dismiss
@@ -1630,15 +1923,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (obj) {
               const tileDef = tileMap.getObjectTileDef(obj);
               const tileRef = tileDef?.interactType;
-              if (!tileRef) { /* not interactive */ }
-              else {
+              if (!tileRef) {
+                /* not interactive */
+              } else {
                 // Merge: tile defaults → tile args → per-instance args
                 const resolved = resolveInteract(tileRef);
-                if (!resolved) { /* unknown type */ }
-                else {
+                if (!resolved) {
+                  /* unknown type */
+                } else {
                   // Apply per-instance overrides from PlacedObject
                   const inst = obj.interactArgs;
-                  const dialogue = (inst?.dialogue && inst.dialogue.length > 0) ? inst.dialogue : resolved.dialogue;
+                  const dialogue = inst?.dialogue && inst.dialogue.length > 0 ? inst.dialogue : resolved.dialogue;
                   const itemId = inst?.itemId !== undefined ? inst.itemId : resolved.itemId;
                   const itemQty = inst?.itemQty !== undefined ? inst.itemQty : resolved.itemQty;
                   const flag = inst?.flag !== undefined ? inst.flag : resolved.flag;
@@ -1686,8 +1981,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                     }
 
                     const pokemonName = getPokemonDisplayName(hmUser.id);
-                    const tileName = (resolveDialogue(dialogue, getLocale())[0])
-                      ?? (hmName === 'cut' ? 'tree' : 'boulder');
+                    const tileName =
+                      resolveDialogue(dialogue, getLocale())[0] ?? (hmName === 'cut' ? 'tree' : 'boulder');
                     const actionKey = hmName === 'cut' ? 'hm.cut.action' : 'hm.strength.action';
                     const dialogueLine = t('hm.chooseYou', {
                       name: pokemonName,
@@ -1737,12 +2032,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (input.isKeyPressed('p') || input.isKeyPressed('P')) {
         setPartyMode('overworld');
         stateMachine.push('PARTY');
+        // hideHUD();
         return;
       }
 
       // D key → Pokedex
       if (input.isKeyPressed('d') || input.isKeyPressed('D')) {
         stateMachine.push('POKEDEX');
+        // hideHUD();
         return;
       }
 
@@ -1750,6 +2047,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (input.isKeyPressed('b') || input.isKeyPressed('B')) {
         setBagMode('overworld');
         stateMachine.push('BAG');
+        // hideHUD();
         return;
       }
 
@@ -1813,9 +2111,21 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       // 1/2/3 keys → switch HUD tab (map / leader / story)
-      if (input.isKeyPressed('Digit1')) { setHUDTab(0); updateHUD(buildHUDData()); input.consumeKey('Digit1'); }
-      if (input.isKeyPressed('Digit2')) { setHUDTab(1); updateHUD(buildHUDData()); input.consumeKey('Digit2'); }
-      if (input.isKeyPressed('Digit3')) { setHUDTab(2); updateHUD(buildHUDData()); input.consumeKey('Digit3'); }
+      if (input.isKeyPressed('Digit1')) {
+        setHUDTab(0);
+        updateHUD(buildHUDData());
+        input.consumeKey('Digit1');
+      }
+      if (input.isKeyPressed('Digit2')) {
+        setHUDTab(1);
+        updateHUD(buildHUDData());
+        input.consumeKey('Digit2');
+      }
+      if (input.isKeyPressed('Digit3')) {
+        setHUDTab(2);
+        updateHUD(buildHUDData());
+        input.consumeKey('Digit3');
+      }
 
       if (!player.moving) {
         for (const [key, dir] of Object.entries(DIR_VECTORS)) {
@@ -1831,14 +2141,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (!walkable && isCurrentlySurfing) {
               // While surfing, water tiles become walkable
               const encTypes = tileMap.getEncounterTypes(nx, ny);
-              const isWater = encTypes?.some(et => et === 'water' || et.startsWith('water') || et.includes('/water') || et === '*');
+              const isWater = encTypes?.some(
+                (et) => et === 'water' || et.startsWith('water') || et.includes('/water') || et === '*',
+              );
               if (isWater) walkable = true;
             }
 
             if (!walkable && !isCurrentlySurfing && hasActiveGame()) {
               // Check if blocked tile is water — offer surf
               const encTypes = tileMap.getEncounterTypes(nx, ny);
-              const isWaterTile = encTypes?.some(et => et === 'water' || et.startsWith('water') || et.includes('/water'));
+              const isWaterTile = encTypes?.some(
+                (et) => et === 'water' || et.startsWith('water') || et.includes('/water'),
+              );
               if (isWaterTile) {
                 const pd = getPlayerData();
                 const surfUser = findHMUser('surf', pd.party);
@@ -1864,13 +2178,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
 
             const _movPd = hasActiveGame() ? getPlayerData() : null;
-            if (walkable && !(npcManager?.isVisibleNPCAt(nx, ny, _movPd?.flags ?? {}, _movPd?.party))) {
+            if (walkable && !npcManager?.isVisibleNPCAt(nx, ny, _movPd?.flags ?? {}, _movPd?.party)) {
               player.moving = true;
-              player.targetGridX = nx; player.targetGridY = ny;
-              player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
+              player.targetGridX = nx;
+              player.targetGridY = ny;
+              player.startPixelX = player.pixelX;
+              player.startPixelY = player.pixelY;
               player.moveProgress = 0;
-              player.walkTimer = 0; player.walkFrame = 1;
-            } else if (walkable && npcManager?.isVisibleNPCAt(nx, ny, _movPd?.flags ?? {}, _movPd?.party) && input.isKeyPressed(key)) {
+              player.walkTimer = 0;
+              player.walkFrame = 1;
+            } else if (
+              walkable &&
+              npcManager?.isVisibleNPCAt(nx, ny, _movPd?.flags ?? {}, _movPd?.party) &&
+              input.isKeyPressed(key)
+            ) {
               // Bump into NPC — play once per keypress
               audio.playSFX('bump-wall');
             }
@@ -1893,7 +2214,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       tileMap.render(ctx, camera.x, camera.y);
 
       // Collect renderables for Y-sorting (player + NPCs + placed objects)
-      interface Renderable { y: number; render: () => void; }
+      interface Renderable {
+        y: number;
+        render: () => void;
+      }
       const renderables: Renderable[] = [];
 
       // Placed objects split into ground/body/above passes
@@ -1918,7 +2242,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const spriteSheet = getPlayerSpriteSheet();
             if (spriteSheet.complete && spriteSheet.naturalWidth > 0) {
               const row = DIR_TO_ROW[player.facing] ?? 0;
-              ctx.drawImage(spriteSheet, player.walkFrame * 16, row * 16, 16, 16, psx, psy - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
+              ctx.drawImage(
+                spriteSheet,
+                player.walkFrame * 16,
+                row * 16,
+                16,
+                16,
+                psx,
+                psy - TILE_SIZE / 2,
+                TILE_SIZE,
+                TILE_SIZE,
+              );
             }
             return;
           }
@@ -1939,7 +2273,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
           if (heroFrame) {
             ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(heroFrame.image, heroFrame.sx, heroFrame.sy, heroFrame.w, heroFrame.h, psx, psy, TILE_SIZE, TILE_SIZE);
+            ctx.drawImage(
+              heroFrame.image,
+              heroFrame.sx,
+              heroFrame.sy,
+              heroFrame.w,
+              heroFrame.h,
+              psx,
+              psy,
+              TILE_SIZE,
+              TILE_SIZE,
+            );
             return;
           }
 
@@ -1963,7 +2307,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const _npcVis = isNPCVisible(npc, visFlags, _visPd?.party);
           const _awCfg = npc.autoWalk;
           // Render if visible, OR in any active despawn/pre-spawn phase that keeps NPC rendered
-          const _keepRendered = npcSt.isPreDespawning || npcSt.isDespawning ||
+          const _keepRendered =
+            npcSt.isPreDespawning ||
+            npcSt.isDespawning ||
             (!_npcVis && !npcSt.beforeSpawnDone && !!_awCfg?.beforeSpawnPattern?.length);
           if (!_npcVis && !_keepRendered) continue;
 
@@ -2003,7 +2349,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               y: renderY,
               render: () => {
                 ctx.imageSmoothingEnabled = false;
-                ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, nx, ny, TILE_SIZE, TILE_SIZE);
+                ctx.drawImage(
+                  charFrame.image,
+                  charFrame.sx,
+                  charFrame.sy,
+                  charFrame.w,
+                  charFrame.h,
+                  nx,
+                  ny,
+                  TILE_SIZE,
+                  TILE_SIZE,
+                );
                 // "!" exclamation during trainer, gate-guard, or party-guard approach
                 const showExclamation =
                   (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') ||
@@ -2011,12 +2367,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   (partyGuardApproach && partyGuardApproach.npc === npc && partyGuardApproach.phase === 'exclamation');
                 if (showExclamation) {
                   let excT = 0;
-                  if (trainerApproach?.trainer === npc && trainerApproach.phase === 'exclamation') excT = trainerApproach.timer;
+                  if (trainerApproach?.trainer === npc && trainerApproach.phase === 'exclamation')
+                    excT = trainerApproach.timer;
                   else if (gateGuardApproach?.guard === npc) excT = gateGuardApproach.timer;
                   else if (partyGuardApproach?.npc === npc) excT = partyGuardApproach.timer;
-                  const scl = excT < 0.12 ? (excT / 0.12) * 1.3
-                            : excT < 0.22 ? 1.3 - ((excT - 0.12) / 0.10) * 0.3
-                            : 1.0;
+                  const scl = excT < 0.12 ? (excT / 0.12) * 1.3 : excT < 0.22 ? 1.3 - ((excT - 0.12) / 0.1) * 0.3 : 1.0;
                   ctx.save();
                   ctx.translate(nx + 8, ny - 7);
                   ctx.scale(scl, scl);
@@ -2046,12 +2401,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   (partyGuardApproach && partyGuardApproach.npc === npc && partyGuardApproach.phase === 'exclamation');
                 if (showExclamationFb) {
                   let excT = 0;
-                  if (trainerApproach?.trainer === npc && trainerApproach.phase === 'exclamation') excT = trainerApproach.timer;
+                  if (trainerApproach?.trainer === npc && trainerApproach.phase === 'exclamation')
+                    excT = trainerApproach.timer;
                   else if (gateGuardApproach?.guard === npc) excT = gateGuardApproach.timer;
                   else if (partyGuardApproach?.npc === npc) excT = partyGuardApproach.timer;
-                  const scl = excT < 0.12 ? (excT / 0.12) * 1.3
-                            : excT < 0.22 ? 1.3 - ((excT - 0.12) / 0.10) * 0.3
-                            : 1.0;
+                  const scl = excT < 0.12 ? (excT / 0.12) * 1.3 : excT < 0.22 ? 1.3 - ((excT - 0.12) / 0.1) * 0.3 : 1.0;
                   ctx.save();
                   ctx.translate(nx + 8, ny - 7);
                   ctx.scale(scl, scl);
@@ -2092,7 +2446,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             ctx.drawImage(hmAnim.pokemonSprite, -spriteSize / 2, -spriteSize / 2, spriteSize, spriteSize);
           } else {
             ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(hmAnim.pokemonSprite, screenX - spriteSize / 4, screenY - spriteSize / 2, spriteSize, spriteSize);
+            ctx.drawImage(
+              hmAnim.pokemonSprite,
+              screenX - spriteSize / 4,
+              screenY - spriteSize / 2,
+              spriteSize,
+              spriteSize,
+            );
           }
           ctx.restore();
         }
@@ -2126,12 +2486,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.save();
         ctx.globalAlpha = flyAnim.spriteAlpha;
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(
-          flyAnim.pokemonSprite,
-          flyScreenX - flySize / 2,
-          flyScreenY - flySize / 2,
-          flySize, flySize
-        );
+        ctx.drawImage(flyAnim.pokemonSprite, flyScreenX - flySize / 2, flyScreenY - flySize / 2, flySize, flySize);
         ctx.restore();
       }
 
@@ -2148,7 +2503,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       updateHUD(buildHUDData());
 
       // Keyboard legend bar (bottom of screen, behind dialogues)
-      if (showLegend && !activeTextBox && !choiceState && !healTextBox && !shop.open && !encounterTriggered && transitionState === 'none') {
+      if (
+        showLegend &&
+        !activeTextBox &&
+        !choiceState &&
+        !healTextBox &&
+        !shop.open &&
+        !encounterTriggered &&
+        transitionState === 'none'
+      ) {
         const barY = SCREEN_H - 11;
         fillRect(ctx, 0, barY, SCREEN_W, 11, '#00000088');
         const isAdmin = hasActiveGame() && getPlayerData().name === ADMIN_NAME;
@@ -2156,7 +2519,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           ? 'P:Party  D:Dex  B:Bag  W:Map  L:Lang  M:Mute  K:Keys  N:Shop  H:Heal'
           : 'P:Party  D:Dex  B:Bag  W:Map  L:Lang  M:Mute  K:Keys';
         drawText(ctx, hints, SCREEN_W / 2, barY + 2, {
-          size: 6, color: '#aaaaaa', font: 'monospace', align: 'center',
+          size: 6,
+          color: '#aaaaaa',
+          font: 'monospace',
+          align: 'center',
         });
       }
 

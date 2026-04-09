@@ -39,7 +39,7 @@ export function registerAutoGateMap(mapId: string, service: AutoGateService): vo
 const AUTO_GATE_IDS: Record<AutoGateService, string> = {
   pokecenter: 'auto-pokecenter',
   pokemarket: 'auto-pokemarket',
-  gym:        'auto-gym',
+  gym: 'auto-gym',
 };
 
 function _checkAutoGate(mapId: string): void {
@@ -93,6 +93,7 @@ export function fireStoryTrigger(trigger: StoryTrigger): void {
   }
 
   const events = getStoryEvents();
+
   for (const event of events) {
     // Trigger type must match
     if (!triggerMatches(event.trigger, trigger)) continue;
@@ -131,7 +132,7 @@ export function isGateUnlocked(gateId: string): boolean {
   if (!story) return false;
   const expiry = story.gateUnlocks[gateId];
   if (expiry === undefined) return false;
-  if (expiry === 0) return true;          // permanent
+  if (expiry === 0) return true; // permanent
   return Date.now() < expiry;
 }
 
@@ -293,15 +294,21 @@ let _pendingMusic: string | null = null;
 let _pendingMessage: import('../systems/npc.js').BilingualText[] | null = null;
 
 export function consumePendingTeleport(): { mapId: string; x: number; y: number } | null {
-  const v = _pendingTeleport; _pendingTeleport = null; return v;
+  const v = _pendingTeleport;
+  _pendingTeleport = null;
+  return v;
 }
 
 export function consumePendingMusic(): string | null {
-  const v = _pendingMusic; _pendingMusic = null; return v;
+  const v = _pendingMusic;
+  _pendingMusic = null;
+  return v;
 }
 
 export function consumePendingMessage(): import('../systems/npc.js').BilingualText[] | null {
-  const v = _pendingMessage; _pendingMessage = null; return v;
+  const v = _pendingMessage;
+  _pendingMessage = null;
+  return v;
 }
 
 // ---------------------------------------------------------------------------
@@ -311,12 +318,24 @@ export function consumePendingMessage(): import('../systems/npc.js').BilingualTe
 let _activeGateId: string | null = null;
 let _activeCutsceneId: string | null = null;
 
-export function setActiveGate(id: string): void   { _activeGateId = id; }
-export function setActiveCutscene(id: string): void { _activeCutsceneId = id; }
-export function getActiveGateId(): string | null   { return _activeGateId; }
-export function getActiveCutsceneId(): string | null { return _activeCutsceneId; }
-export function clearActiveGate(): void   { _activeGateId = null; }
-export function clearActiveCutscene(): void { _activeCutsceneId = null; }
+export function setActiveGate(id: string): void {
+  _activeGateId = id;
+}
+export function setActiveCutscene(id: string): void {
+  _activeCutsceneId = id;
+}
+export function getActiveGateId(): string | null {
+  return _activeGateId;
+}
+export function getActiveCutsceneId(): string | null {
+  return _activeCutsceneId;
+}
+export function clearActiveGate(): void {
+  _activeGateId = null;
+}
+export function clearActiveCutscene(): void {
+  _activeCutsceneId = null;
+}
 
 // ---------------------------------------------------------------------------
 // Utility
@@ -324,7 +343,10 @@ export function clearActiveCutscene(): void { _activeCutsceneId = null; }
 
 function countBits(n: number): number {
   let count = 0;
-  while (n) { count += n & 1; n >>= 1; }
+  while (n) {
+    count += n & 1;
+    n >>= 1;
+  }
   return count;
 }
 

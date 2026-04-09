@@ -31,14 +31,14 @@ registerGate({
   title: { en: 'Route 1 Checkpoint', he: 'מחסום שביל 1' },
   description: {
     en: 'The path to Sumville is locked. We must identify you are not NULL-X creators. Three questions will determine if you can pass. Choose wisely.',
-    he: "הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.",
+    he: 'הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
   totalQuestions: 5,
   passThreshold: 5,
   failurePenalty: { type: 'money', amount: 150 },
-  reopenCooldownMs: 30 * 60 * 1000,   // 30 min
+  reopenCooldownMs: 30 * 60 * 1000, // 30 min
   successActions: [
     { type: 'set-flag', flag: 'gate-route1-pass' },
     { type: 'set-quest', questId: 'main-act1-sumville' },
@@ -49,17 +49,15 @@ registerGate({
   title: { en: 'Route 2 Checkpoint', he: 'מחסום שביל 2' },
   description: {
     en: 'The path Sumville-Route2 is locked. We must identify you are not NULL-X creators. Three questions will determine if you can pass. Choose wisely.',
-    he: "הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.",
+    he: 'הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
   totalQuestions: 5,
   passThreshold: 5,
   failurePenalty: { type: 'money', amount: 150 },
-  reopenCooldownMs: 15 * 60 * 1000,   // 15 min
-  successActions: [
-    { type: 'set-flag', flag: 'gate-sumville-route2-pass' },
-  ],
+  reopenCooldownMs: 15 * 60 * 1000, // 15 min
+  successActions: [{ type: 'set-flag', flag: 'gate-sumville-route2-pass' }],
 });
 
 registerGate({
@@ -93,7 +91,7 @@ registerGate({
   totalQuestions: 15,
   passThreshold: 12,
   failurePenalty: { type: 'none' },
-  reopenCooldownMs: 0,    // permanent once passed
+  reopenCooldownMs: 0, // permanent once passed
   successActions: [
     { type: 'set-flag', flag: 'gate-sumville-gym-pass' },
     { type: 'set-quest', questId: 'main-act1-gym1' },
@@ -111,38 +109,66 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in', durationMs: 500 },
     // { type: 'wait', durationMs: 500 },
     {
-      type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-        { en: 'Ah, you\'re here! Welcome to my lab. I\'m Professor Algorithma.', he: 'או, הגעת! ברוך הבא למעבדה שלי. אני פרופסור אלגוריתמה.' },
-      ]
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: "Ah, you're here! Welcome to my lab. I'm Professor Algorithma.",
+          he: 'או, הגעת! ברוך הבא למעבדה שלי. אני פרופסור אלגוריתמה.',
+        },
+      ],
     },
     {
-      type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-        { en: 'This is Numeria — a region where knowledge and Pokemon go hand in hand.', he: 'זוהי נומריה — אזור שבו ידע ופוקמונים הולכים יד ביד.' },
-      ]
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: 'This is Numeria — a region where knowledge and Pokemon go hand in hand.',
+          he: 'זוהי נומריה — אזור שבו ידע ופוקמונים הולכים יד ביד.',
+        },
+      ],
     },
     {
-      type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-        { en: 'You have a rare gift — an intuition for numbers and logic. I\'ve been waiting for someone like you.', he: 'יש לך כישרון נדיר — אינטואיציה למספרים ולוגיקה. חיכיתי למישהו כמוך.' },
-      ]
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: "You have a rare gift — an intuition for numbers and logic. I've been waiting for someone like you.",
+          he: 'יש לך כישרון נדיר — אינטואיציה למספרים ולוגיקה. חיכיתי למישהו כמוך.',
+        },
+      ],
     },
     {
-      type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-        { en: 'Every trainer in Numeria begins their journey by choosing a partner Pokemon. It\'s time for you to choose yours.', he: 'כל מאמן בנומריה מתחיל את מסעו בבחירת פוקמון שותף. הגיע הזמן שגם אתה תבחר.' },
-      ]
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: "Every trainer in Numeria begins their journey by choosing a partner Pokemon. It's time for you to choose yours.",
+          he: 'כל מאמן בנומריה מתחיל את מסעו בבחירת פוקמון שותף. הגיע הזמן שגם אתה תבחר.',
+        },
+      ],
     },
     {
-      type: "dialogue", speakerId: "Prof. Algorithma / פרופ׳ אלגוריתמה", lines: [
-        { en: "Train your partner and become the best trainer you can.", he: "אמן את השותף שלך והפוך למאמן הטוב ביותר שאתה יכול להיות." },
-        { en: "In your journey, you'll face many challenges.", he: "במסע שלך, תתמודד עם אתגרים רבים." },
-        { en: "Some will test your knowledge. Others will test your strength.", he: "חלקם יבדקו את הידע שלך. אחרים יבדקו את כוחך." },
-        { en: "But don't worry — you'll grow stronger with every step.", he: "אבל אל תדאג — תתחזק עם כל צעד." },
-      ]
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: 'Train your partner and become the best trainer you can.',
+          he: 'אמן את השותף שלך והפוך למאמן הטוב ביותר שאתה יכול להיות.',
+        },
+        { en: "In your journey, you'll face many challenges.", he: 'במסע שלך, תתמודד עם אתגרים רבים.' },
+        {
+          en: 'Some will test your knowledge. Others will test your strength.',
+          he: 'חלקם יבדקו את הידע שלך. אחרים יבדקו את כוחך.',
+        },
+        { en: "But don't worry — you'll grow stronger with every step.", he: 'אבל אל תדאג — תתחזק עם כל צעד.' },
+      ],
     },
     { type: 'action', action: { type: 'set-flag', flag: 'act0-intro-seen' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act0-starter' } },
     // Transition to starter selection scene, returns to OVERWORLD when done
     { type: 'start-scene', sceneId: 'STARTER_SELECT' },
-    
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act0-starter' } },
   ],
 });
 
@@ -151,12 +177,18 @@ registerCutscene({
   skippable: true,
   steps: [
     { type: 'face-npc', npcId: 'remainder-lab', dir: 'down' },
-    { type: 'dialogue', speakerId: 'Remainder / ריי-מיינדר', lines: [
-      { en: 'Oh. YOU got chosen? I\'ve been studying here for months.', he: 'או. אתה נבחרת? למדתי כאן חודשים שלמים.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Remainder / ריי-מיינדר', lines: [
-      { en: 'Whatever. Don\'t expect any help from me on the road.', he: 'נו טוב. אל תצפה לעזרה ממני בדרך.' },
-    ]},
+    {
+      type: 'dialogue',
+      speakerId: 'Remainder / ריי-מיינדר',
+      lines: [
+        { en: "Oh. YOU got chosen? I've been studying here for months.", he: 'או. אתה נבחרת? למדתי כאן חודשים שלמים.' },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Remainder / ריי-מיינדר',
+      lines: [{ en: "Whatever. Don't expect any help from me on the road.", he: 'נו טוב. אל תצפה לעזרה ממני בדרך.' }],
+    },
     { type: 'face-npc', npcId: 'remainder-lab', dir: 'up' },
     { type: 'action', action: { type: 'set-flag', flag: 'act0-remainder-met' } },
   ],
@@ -166,12 +198,26 @@ registerCutscene({
   id: 'act0-leave-zeroville',
   skippable: true,
   steps: [
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'Heading to Route 1 already? Good. The trainers there will sharpen your skills.', he: 'כבר הולך לשביל 1? טוב. המאמנים שם ישפרו את כישוריך.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'Sumville is at the other end. I have friends there who can help you. Safe travels!', he: 'סאמוויל נמצאת בצד השני. יש לי שם חברים שיכולים לעזור לך. נסיעה טובה!' },
-    ]},
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: 'Heading to Route 1 already? Good. The trainers there will sharpen your skills.',
+          he: 'כבר הולך לשביל 1? טוב. המאמנים שם ישפרו את כישוריך.',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: 'Sumville is at the other end. I have friends there who can help you. Safe travels!',
+          he: 'סאמוויל נמצאת בצד השני. יש לי שם חברים שיכולים לעזור לך. נסיעה טובה!',
+        },
+      ],
+    },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-route1' } },
     { type: 'action', action: { type: 'set-flag', flag: 'act0-complete' } },
   ],
@@ -181,18 +227,46 @@ registerCutscene({
   id: 'act1-nullx-intro',
   skippable: false,
   steps: [
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'Wait — before you leave Route 1, I need to tell you something.', he: 'רגע — לפני שתעזוב את שביל 1, יש לי משהו לספר לך.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'Strange errors have been appearing in the verification systems. Corrupted logic. Contradictions.', he: 'שגיאות מוזרות מופיעות במערכות האימות. לוגיקה פגומה. סתירות.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'I fear something — or someone — is deliberately disrupting the region\'s knowledge gates.', he: 'אני חושש שמשהו — או מישהו — מפריע בכוונה לשערי הידע של האזור.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה', lines: [
-      { en: 'Be careful in Sumville. And keep growing stronger — you\'ll need it.', he: 'היה זהיר בסאמוויל. והמשך להתחזק — תזדקק לזה.' },
-    ]},
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: 'Wait — before you leave Route 1, I need to tell you something.',
+          he: 'רגע — לפני שתעזוב את שביל 1, יש לי משהו לספר לך.',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: 'Strange errors have been appearing in the verification systems. Corrupted logic. Contradictions.',
+          he: 'שגיאות מוזרות מופיעות במערכות האימות. לוגיקה פגומה. סתירות.',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: "I fear something — or someone — is deliberately disrupting the region's knowledge gates.",
+          he: 'אני חושש שמשהו — או מישהו — מפריע בכוונה לשערי הידע של האזור.',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: "Be careful in Sumville. And keep growing stronger — you'll need it.",
+          he: 'היה זהיר בסאמוויל. והמשך להתחזק — תזדקק לזה.',
+        },
+      ],
+    },
     { type: 'action', action: { type: 'set-flag', flag: 'act1-nullx-intro-seen' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-sumville' } },
   ],
@@ -204,15 +278,36 @@ registerCutscene({
   steps: [
     { type: 'screen-fade', direction: 'out', durationMs: 600 },
     { type: 'screen-fade', direction: 'in', durationMs: 800 },
-    { type: 'dialogue', speakerId: 'Prof. Oak / פרופ׳ אוק', lines: [
-      { en: 'I came as soon as Algorithma called. This is bigger than Numeria.', he: 'הגעתי ברגע שאלגוריתמה התקשר. זה גדול יותר מנומריה.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Oak / פרופ׳ אוק', lines: [
-      { en: 'A rogue AI compromising verification systems — Kanto has seen disruptions too.', he: 'בינה מלאכותית סוררת שמסכנת מערכות אימות — קנטו גם כן חווה שיבושים.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Prof. Oak / פרופ׳ אוק', lines: [
-      { en: 'You\'ve already made it past Route 1. Your brother — ah, I mean Algorithma — chose wisely.', he: 'כבר עברת את שביל 1. אחיך — אה, כלומר אלגוריתמה — בחר בחוכמה.' },
-    ]},
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      lines: [
+        {
+          en: 'I came as soon as Algorithma called. This is bigger than Numeria.',
+          he: 'הגעתי ברגע שאלגוריתמה התקשר. זה גדול יותר מנומריה.',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      lines: [
+        {
+          en: 'A rogue AI compromising verification systems — Kanto has seen disruptions too.',
+          he: 'בינה מלאכותית סוררת שמסכנת מערכות אימות — קנטו גם כן חווה שיבושים.',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      lines: [
+        {
+          en: "You've already made it past Route 1. Your brother — ah, I mean Algorithma — chose wisely.",
+          he: 'כבר עברת את שביל 1. אחיך — אה, כלומר אלגוריתמה — בחר בחוכמה.',
+        },
+      ],
+    },
     { type: 'action', action: { type: 'set-flag', flag: 'act1-oak-warning-heard' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-gym1' } },
   ],
@@ -223,12 +318,26 @@ registerCutscene({
   skippable: false,
   steps: [
     { type: 'face-npc', npcId: 'remainder-minusburg', dir: 'down' },
-    { type: 'dialogue', speakerId: 'Remainder / ריי-מיינדר', lines: [
-      { en: 'You made it this far. I\'m... impressed. But don\'t get comfortable.', he: 'הגעת עד כאן. אני... מרשים. אבל אל תרגיש בנוח.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Remainder / ריי-מיינדר', lines: [
-      { en: 'I\'ve been training harder than you. This battle will prove it.', he: 'אימנתי קשה יותר ממך. הקרב הזה יוכיח את זה.' },
-    ]},
+    {
+      type: 'dialogue',
+      speakerId: 'Remainder / ריי-מיינדר',
+      lines: [
+        {
+          en: "You made it this far. I'm... impressed. But don't get comfortable.",
+          he: 'הגעת עד כאן. אני... מרשים. אבל אל תרגיש בנוח.',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Remainder / ריי-מיינדר',
+      lines: [
+        {
+          en: "I've been training harder than you. This battle will prove it.",
+          he: 'אימנתי קשה יותר ממך. הקרב הזה יוכיח את זה.',
+        },
+      ],
+    },
     { type: 'action', action: { type: 'set-flag', flag: 'act1-remainder-battle-started' } },
   ],
 });
@@ -237,12 +346,21 @@ registerCutscene({
   id: 'act1-remainder-after-battle',
   skippable: true,
   steps: [
-    { type: 'dialogue', speakerId: 'Remainder / ריי-מיינדר', lines: [
-      { en: '...You won. Fine. I won\'t forget this.', he: '...ניצחת. טוב. לא אשכח את זה.' },
-    ]},
-    { type: 'dialogue', speakerId: 'Remainder / ריי-מיינדר', lines: [
-      { en: 'There\'s something strange in this city. The numbers on the signs don\'t add up.', he: 'יש משהו מוזר בעיר הזאת. המספרים על השלטים לא מסתדרים.' },
-    ]},
+    {
+      type: 'dialogue',
+      speakerId: 'Remainder / ריי-מיינדר',
+      lines: [{ en: "...You won. Fine. I won't forget this.", he: '...ניצחת. טוב. לא אשכח את זה.' }],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Remainder / ריי-מיינדר',
+      lines: [
+        {
+          en: "There's something strange in this city. The numbers on the signs don't add up.",
+          he: 'יש משהו מוזר בעיר הזאת. המספרים על השלטים לא מסתדרים.',
+        },
+      ],
+    },
     { type: 'face-npc', npcId: 'remainder-minusburg', dir: 'up' },
     { type: 'action', action: { type: 'set-flag', flag: 'act1-remainder-first-battle-done' } },
   ],
@@ -252,13 +370,18 @@ registerCutscene({
 // STORY EVENTS
 // ============================================================================
 
+registerStoryEvent({
+  id: 'start-game',
+  trigger: { type: 'map-enter', mapId: 'zeroville' },
+  conditions: [{ type: 'flag-not', flag: 'act0-intro-seen' }],
+  actions: [{ type: 'set-quest', questId: 'main-act0' }],
+});
+
 // Act 0: Entering the lab for the first time triggers the intro cutscene
 registerStoryEvent({
   id: 'evt-act0-intro',
   trigger: { type: 'map-enter', mapId: 'algorithma-lab' },
-  conditions: [
-    { type: 'flag-not', flag: 'act0-intro-seen' },
-  ],
+  conditions: [{ type: 'flag-not', flag: 'act0-intro-seen' }],
   actions: [
     { type: 'set-infection', cityId: 'zeroville', value: 'none' },
     { type: 'start-cutscene', cutsceneId: 'act0-intro' },
@@ -273,9 +396,7 @@ registerStoryEvent({
     { type: 'flag', flag: 'act0-intro-seen' },
     { type: 'flag-not', flag: 'act0-remainder-met' },
   ],
-  actions: [
-    { type: 'start-cutscene', cutsceneId: 'act0-remainder-meets-player' },
-  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'act0-remainder-meets-player' }],
 });
 
 // Entering Route 1 for the first time — Algorithma sends the player off
@@ -286,18 +407,14 @@ registerStoryEvent({
     { type: 'flag', flag: 'act0-intro-seen' },
     { type: 'flag-not', flag: 'act0-complete' },
   ],
-  actions: [
-    { type: 'start-cutscene', cutsceneId: 'act0-leave-zeroville' },
-  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'act0-leave-zeroville' }],
 });
 
 // Visiting Zeroville sets infection to none + quest if no quest active
 registerStoryEvent({
   id: 'evt-zeroville-visit',
   trigger: { type: 'map-enter', mapId: 'zeroville' },
-  conditions: [
-    { type: 'flag-not', flag: 'visited-zeroville' },
-  ],
+  conditions: [{ type: 'flag-not', flag: 'visited-zeroville' }],
   actions: [
     { type: 'set-flag', flag: 'visited-zeroville' },
     { type: 'set-infection', cityId: 'zeroville', value: 'none' },
@@ -323,9 +440,7 @@ registerStoryEvent({
 registerStoryEvent({
   id: 'evt-sumville-infection',
   trigger: { type: 'map-enter', mapId: 'sumville' },
-  conditions: [
-    { type: 'flag-not', flag: 'visited-sumville' },
-  ],
+  conditions: [{ type: 'flag-not', flag: 'visited-sumville' }],
   actions: [
     { type: 'set-flag', flag: 'visited-sumville' },
     { type: 'set-infection', cityId: 'sumville', value: 'low' },
@@ -348,9 +463,7 @@ registerStoryEvent({
 registerStoryEvent({
   id: 'evt-minusburg-visit',
   trigger: { type: 'map-enter', mapId: 'minusburg' },
-  conditions: [
-    { type: 'flag-not', flag: 'visited-minusburg' },
-  ],
+  conditions: [{ type: 'flag-not', flag: 'visited-minusburg' }],
   actions: [
     { type: 'set-flag', flag: 'visited-minusburg' },
     { type: 'set-infection', cityId: 'minusburg', value: 'low' },
@@ -378,9 +491,7 @@ registerStoryEvent({
     { type: 'flag', flag: 'act0-complete' },
     { type: 'flag-not', flag: 'act1-nullx-intro-seen' },
   ],
-  actions: [
-    { type: 'start-cutscene', cutsceneId: 'act1-nullx-intro' },
-  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'act1-nullx-intro' }],
 });
 
 // Gate 1 cleared → advance quest to show gate was passed (if not already advanced by exit NPC)
@@ -388,7 +499,5 @@ registerStoryEvent({
   id: 'evt-gate-route1-cleared',
   trigger: { type: 'gate-cleared', gateId: 'gate-route1-sumville' },
   conditions: [],
-  actions: [
-    { type: 'set-quest', questId: 'main-act1-sumville' },
-  ],
+  actions: [{ type: 'set-quest', questId: 'main-act1-sumville' }],
 });

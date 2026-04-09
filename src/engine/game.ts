@@ -26,6 +26,7 @@ import { createWorldMapScene } from '../scenes/world-map.js';
 import { createPhoneScene } from '../scenes/phone.js';
 import { createGateScene } from '../scenes/gate-scene.js';
 import { initStoryEngine } from '../systems/story-engine.js';
+import { showHUD, hideHUD } from '../ui/hud-overlay.js';
 // Story content — side-effect imports that register events/cutscenes/gates/quests
 import '../data/story/content/act0-act1.js';
 import '../data/story/content/act2.js';
@@ -60,8 +61,16 @@ export function createGame(container: HTMLElement) {
   const audio = createAudioManager();
   setGlobalAudio(audio);
 
-  // Clear pressed keys on scene transitions to prevent Enter/Escape bleeding between scenes
-  stateMachine.setOnTransition(() => input.endFrame());
+  // Clear pressed keys on scene transitions to prevent Enter/Escape bleeding between scenes.
+  // Also auto-show/hide the HUD: visible only when on the OVERWORLD scene.
+  stateMachine.setOnTransition(() => {
+    input.endFrame();
+    if (stateMachine.currentId() === 'OVERWORLD') {
+      showHUD();
+    } else {
+      hideHUD();
+    }
+  });
 
   stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio));
   stateMachine.register('HERO_SELECT', createHeroSelectScene(input, stateMachine));

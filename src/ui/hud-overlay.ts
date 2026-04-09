@@ -15,17 +15,17 @@ export interface HUDData {
 }
 
 const TAB_META = [
-  { sym: '◉', num: '1', activeClass: 'hud-tab--map'    },
-  { sym: '◆', num: '2', activeClass: 'hud-tab--lead'   },
-  { sym: '★', num: '3', activeClass: 'hud-tab--quest'  },
+  { sym: '◉', num: '1', activeClass: 'hud-tab--map' },
+  { sym: '◆', num: '2', activeClass: 'hud-tab--lead' },
+  { sym: '★', num: '3', activeClass: 'hud-tab--quest' },
 ];
 
-let hudEl:     HTMLDivElement | null = null;
-let tabsEl:    HTMLDivElement | null = null;
+let hudEl: HTMLDivElement | null = null;
+let tabsEl: HTMLDivElement | null = null;
 let contentEl: HTMLDivElement | null = null;
 let activeTab = 0;
 let lastData: HUDData = {};
-let lastTab  = -1;
+let lastTab = -1;
 
 // ── DOM helpers ────────────────────────────────────────────────────────────
 
@@ -37,7 +37,7 @@ function getCanvas(): HTMLCanvasElement | null {
 function positionHUD(): void {
   if (!hudEl) return;
   const canvas = getCanvas();
-  const app    = document.getElementById('app');
+  const app = document.getElementById('app');
   if (!canvas || !app) return;
 
   const cr = canvas.getBoundingClientRect();
@@ -45,7 +45,7 @@ function positionHUD(): void {
   const scale = cr.width / 240;
 
   hudEl.style.left = `${cr.left - ar.left}px`;
-  hudEl.style.top  = `${cr.top  - ar.top}px`;
+  hudEl.style.top = `${cr.top - ar.top}px`;
   hudEl.style.setProperty('--s', String(scale));
 }
 
@@ -70,8 +70,7 @@ export function initHUD(): void {
     const btn = document.createElement('button');
     btn.className = 'hud-tab' + (i === 0 ? ' hud-tab--active hud-tab--map' : '');
     btn.dataset.tab = String(i);
-    btn.innerHTML =
-      `<span class="hud-sym">${sym}</span><span class="hud-num">${num}</span>`;
+    btn.innerHTML = `<span class="hud-sym">${sym}</span><span class="hud-num">${num}</span>`;
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       setHUDTab(i);
@@ -103,12 +102,14 @@ export function hideHUD(): void {
 /** Switch active tab (0/1/2) and refresh content. */
 export function setHUDTab(i: number): void {
   activeTab = i;
-  lastTab   = -1;        // force redraw
+  lastTab = -1; // force redraw
   syncTabButtons();
   renderContent(lastData);
 }
 
-export function getHUDTab(): number { return activeTab; }
+export function getHUDTab(): number {
+  return activeTab;
+}
 
 /** Feed updated data; only re-renders when something changed. */
 export function updateHUD(data: HUDData): void {
@@ -122,7 +123,7 @@ export function updateHUD(data: HUDData): void {
   if (!changed) return;
 
   lastData = data;
-  lastTab  = activeTab;
+  lastTab = activeTab;
   renderContent(data);
 }
 
@@ -133,7 +134,7 @@ function syncTabButtons(): void {
     const active = i === activeTab;
     btn.classList.toggle('hud-tab--active', active);
     // remove all colour classes then re-add active one
-    TAB_META.forEach(m => btn.classList.remove(m.activeClass));
+    TAB_META.forEach((m) => btn.classList.remove(m.activeClass));
     if (active) btn.classList.add(TAB_META[i].activeClass);
   });
 }
@@ -144,22 +145,24 @@ function renderContent(data: HUDData): void {
 
   if (activeTab === 0) {
     // ── MAP ──────────────────────────────────────────────────────────────
-    const raw  = data.mapName;
+    const raw = data.mapName;
     const name = !raw
-      ? (isHe ? 'לא ידוע' : 'Unknown')
+      ? isHe
+        ? 'לא ידוע'
+        : 'Unknown'
       : typeof raw === 'object'
-        ? (isHe ? (raw as {en:string;he:string}).he : (raw as {en:string;he:string}).en)
+        ? isHe
+          ? (raw as { en: string; he: string }).he
+          : (raw as { en: string; he: string }).en
         : String(raw);
-    contentEl.innerHTML =
-      `<div class="hud-line hud-map">${escHtml(name)}</div>`;
-
+    contentEl.innerHTML = `<div class="hud-line hud-map">${escHtml(name)}</div>`;
   } else if (activeTab === 1) {
     // ── LEADER ───────────────────────────────────────────────────────────
     if (data.lead) {
       const { id, level, hp, maxHp } = data.lead;
-      const name   = getPokemonDisplayName(id);
-      const pct    = Math.max(0, hp / maxHp) * 100;
-      const hpCls  = pct > 50 ? 'hp-high' : pct > 25 ? 'hp-mid' : 'hp-low';
+      const name = getPokemonDisplayName(id);
+      const pct = Math.max(0, hp / maxHp) * 100;
+      const hpCls = pct > 50 ? 'hp-high' : pct > 25 ? 'hp-mid' : 'hp-low';
       contentEl.innerHTML = `
         <div class="hud-line hud-lead-name">
           ${escHtml(name)} <span class="hud-lv">Lv.${level}</span>
@@ -169,26 +172,24 @@ function renderContent(data: HUDData): void {
         </div>
         <div class="hud-line hud-hp-num">${hp}/${maxHp} HP</div>`;
     } else {
-      contentEl.innerHTML =
-        `<div class="hud-line hud-empty">${isHe ? 'אין פוקמון' : 'No Pokemon'}</div>`;
+      contentEl.innerHTML = `<div class="hud-line hud-empty">${isHe ? 'אין פוקמון' : 'No Pokemon'}</div>`;
     }
-
   } else {
     // ── QUEST ────────────────────────────────────────────────────────────
     const quest = data.questId ? getQuest(data.questId) : null;
+    console.log('Updating HUD quest:', data.questId, quest);
     if (quest) {
       const title = isHe ? quest.title.he : quest.title.en;
-      const obj   = isHe ? quest.objective.he : quest.objective.en;
+      const obj = isHe ? quest.objective.he : quest.objective.en;
       contentEl.innerHTML = `
         <div class="hud-line hud-quest-title">${escHtml(title)}</div>
         <div class="hud-line hud-quest-obj">${escHtml(obj)}</div>`;
     } else {
-      contentEl.innerHTML =
-        `<div class="hud-line hud-empty">${isHe ? 'אין משימה' : 'No quest'}</div>`;
+      contentEl.innerHTML = `<div class="hud-line hud-empty">${isHe ? 'אין משימה' : 'No quest'}</div>`;
     }
   }
 }
 
 function escHtml(s: string): string {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

@@ -91,6 +91,17 @@ export function createStarterSelectScene(
           playerData.party = [pokemon];
           playerData.pokedex[starter.id] = true;
           playerData.flags['story-received-starter'] = true;
+          // Complete the starter quest now — the cutscene step after start-scene never runs
+          // because start-scene deactivates the cutscene immediately.
+          if (playerData.story) {
+            const qid = 'main-act0-starter';
+            if (!playerData.story.completedQuestIds.includes(qid)) {
+              playerData.story.completedQuestIds.push(qid);
+            }
+            if (playerData.story.activeQuestId === qid) {
+              playerData.story.activeQuestId = null;
+            }
+          }
           confirmed = true;
           fadeOut = true;
         }
