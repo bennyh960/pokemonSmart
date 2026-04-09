@@ -57,6 +57,8 @@ export { SingleItemCostTemplate, MaxItemsBudgetTemplate, TwoItemsTotalTemplate, 
 export { BasicDamageTemplate, AttackFormulaDamageTemplate, STABBonusTemplate, MoveEffectivenessTemplate } from './templates/BattleTemplates.js';
 // Catch templates
 export { PokeBallsNeededTemplate, HPReductionTemplate, CatchCostTemplate } from './templates/CatchTemplates.js';
+// Fraction templates
+export { FractionOfHPTemplate, FractionOfBudgetTemplate, FractionCompareTemplate, FractionItemSplitTemplate } from './templates/FractionTemplates.js';
 
 // ─── Auto-registration of built-in templates ──────────────────────────────────
 
@@ -65,6 +67,7 @@ import { registry as _registry } from './TemplateRegistry.js';
 import { SingleItemCostTemplate, MaxItemsBudgetTemplate, TwoItemsTotalTemplate, BudgetRemainingTemplate } from './templates/StoreTemplates.js';
 import { BasicDamageTemplate, AttackFormulaDamageTemplate, STABBonusTemplate, MoveEffectivenessTemplate } from './templates/BattleTemplates.js';
 import { PokeBallsNeededTemplate, HPReductionTemplate, CatchCostTemplate } from './templates/CatchTemplates.js';
+import { FractionOfHPTemplate, FractionOfBudgetTemplate, FractionCompareTemplate, FractionItemSplitTemplate } from './templates/FractionTemplates.js';
 
 _registry.registerAll([
   // Store
@@ -81,6 +84,11 @@ _registry.registerAll([
   new PokeBallsNeededTemplate(),
   new HPReductionTemplate(),
   new CatchCostTemplate(),
+  // Fractions
+  new FractionOfHPTemplate(),
+  new FractionOfBudgetTemplate(),
+  new FractionCompareTemplate(),
+  new FractionItemSplitTemplate(),
 ]);
 
 // ─── QuestionFactory ──────────────────────────────────────────────────────────

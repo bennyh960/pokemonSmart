@@ -119,7 +119,18 @@ export class BasicDamageTemplate extends QuestionTemplate {
 /**
  * Classic Gen-1-style simplified formula:
  *   damage = (atk × power) ÷ def
- * Two-step: multiply then divide.
+ *
+ * The divisor is NEVER purely random — it is always chosen to have a clear,
+ * mentally tractable relationship to one of the other two operands so kids
+ * can reason about the answer rather than just grinding arithmetic.
+ *
+ * Six "nice divisor" strategies (one is picked randomly per question):
+ *   1. def ≈ power (±1|±2)  → result ≈ atk
+ *   2. def ≈ atk  (±1|±2)  → result ≈ power
+ *   3. def = power × 2      → result = atk ÷ 2
+ *   4. def = power ÷ 2      → result = atk × 2
+ *   5. def = atk × 2        → result = power ÷ 2
+ *   6. def = atk ÷ 2        → result = power × 2
  */
 export class AttackFormulaDamageTemplate extends QuestionTemplate {
   readonly id = 'battle.attack-formula';
@@ -132,30 +143,86 @@ export class AttackFormulaDamageTemplate extends QuestionTemplate {
   readonly minDifficulty = 3 as const;
   readonly maxDifficulty = 5 as const;
 
+  // Strategy names — kept as a const tuple so TS can type narrow them.
+  private static readonly STRATEGIES = [
+    'def≈power', 'def≈atk',
+    'def=power×2', 'def=power÷2',
+    'def=atk×2',  'def=atk÷2',
+  ] as const;
+
   protected generateParams(
     snapshot: PokemonWorldSnapshot,
     config: ClassConfig,
   ): TemplateParams {
-    // Use small numbers so the division works out cleanly
     const attacker = this.pickRandom(snapshot.pokemon);
     const defender = this.pickRandom(snapshot.pokemon.filter(p => p.id !== attacker.id));
-    const maxVal = Math.min(config.numberRange.max, 50);
-    // Pick def first, then pick power and atk so result is a whole number
-    const def = this.randInt(2, Math.min(maxVal, 20));
-    const power = def * this.randInt(1, 5);     // ensures (atk*power) divisible by def with clean result
-    const atk = this.randInt(1, Math.min(maxVal, 30));
-    const move = this.pickRandom(snapshot.moves);
-    return { attacker, defender, move, atk, def, power };
+    const move     = this.pickRandom(snapshot.moves);
+    const strategy = this.pickRandom([...AttackFormulaDamageTemplate.STRATEGIES]);
+
+    const cap = Math.min(config.numberRange.max, 60);
+    let atk: number, power: number, def: number;
+
+    switch (strategy) {
+      case 'def≈power': {
+        // def = power ± delta  →  result ≈ atk
+        atk   = this.randInt(2, Math.min(cap, 40));
+        power = this.randInt(4, Math.min(cap, 50));
+        const d1 = this.pickRandom([-2, -1, 1, 2]);
+        def = Math.max(1, power + d1);
+        break;
+      }
+      case 'def≈atk': {
+        // def = atk ± delta  →  result ≈ power
+        atk   = this.randInt(4, Math.min(cap, 50));
+        power = this.randInt(2, Math.min(cap, 40));
+        const d2 = this.pickRandom([-2, -1, 1, 2]);
+        def = Math.max(1, atk + d2);
+        break;
+      }
+      case 'def=power×2': {
+        // def = power × 2, atk even  →  result = atk ÷ 2  (exact)
+        power = this.randInt(2, Math.min(cap, 25));
+        def   = power * 2;
+        atk   = this.randInt(2, Math.min(cap, 30)) * 2;   // even → exact integer
+        break;
+      }
+      case 'def=power÷2': {
+        // power even, def = power ÷ 2  →  result = atk × 2  (exact)
+        power = this.randInt(2, Math.min(Math.floor(cap / 2), 20)) * 2;  // even
+        def   = power / 2;
+        atk   = this.randInt(2, Math.min(cap, 30));
+        break;
+      }
+      case 'def=atk×2': {
+        // def = atk × 2, power even  →  result = power ÷ 2  (exact)
+        atk   = this.randInt(2, Math.min(cap, 25));
+        def   = atk * 2;
+        power = this.randInt(2, Math.min(cap, 30)) * 2;   // even → exact integer
+        break;
+      }
+      case 'def=atk÷2': {
+        // atk even, def = atk ÷ 2  →  result = power × 2  (exact)
+        atk   = this.randInt(2, Math.min(Math.floor(cap / 2), 20)) * 2;  // even
+        def   = atk / 2;
+        power = this.randInt(2, Math.min(cap, 30));
+        break;
+      }
+    }
+
+    return { attacker, defender, move, atk, def, power, strategy };
   }
 
   protected solve(params: TemplateParams, _config: ClassConfig): SolveResult {
     const attacker = params.attacker as QuestionPokemon;
     const defender = params.defender as QuestionPokemon;
-    const atk = params.atk as number;
-    const def = params.def as number;
-    const power = params.power as number;
+    const atk      = params.atk      as number;
+    const def      = params.def      as number;
+    const power    = params.power    as number;
+    const strategy = params.strategy as string;
     const intermediate = atk * power;
-    const answer = Math.floor(intermediate / def);
+    const answer       = Math.floor(intermediate / def);
+
+    const hint = this._strategyHint(strategy, atk, power, def, answer);
 
     return {
       answer,
@@ -169,31 +236,91 @@ export class AttackFormulaDamageTemplate extends QuestionTemplate {
           he: `שלב 2 – ÷ הגנה: ${intermediate} ÷ ${def} = ${answer}`,
         },
       ],
-      hint: {
-        en: `First multiply the attack by the move power. Then divide by the defense.`,
-        he: `ראשית הכפל את ההתקפה בעוצמת המהלך. לאחר מכן חלק בהגנה.`,
-      },
+      hint,
       assets: [pokemonAsset(attacker), pokemonAsset(defender)],
-      distractors: [answer + atk, answer - 1, answer * 2],
+      distractors: [answer + atk, Math.max(1, answer - 1), answer * 2],
     };
   }
 
   protected questionText(params: TemplateParams): BilingualText {
     const attacker = params.attacker as QuestionPokemon;
     const defender = params.defender as QuestionPokemon;
-    const move = params.move as QuestionMove;
-    const atk = params.atk as number;
-    const def = params.def as number;
-    const power = params.power as number;
+    const move     = params.move    as QuestionMove;
+    const atk      = params.atk     as number;
+    const def      = params.def     as number;
+    const power    = params.power   as number;
     return {
       en: `${attacker.name.en} uses ${move.name.en} on ${defender.name.en}!\n` +
           `Formula: (ATK × Power) ÷ DEF\n` +
-          `ATK = ${atk}, Power = ${power}, DEF = ${def}\n` +
+          `ATK = ${atk},  Power = ${power},  DEF = ${def}\n` +
           `How much damage?`,
       he: `${attacker.name.he} תקף את ${defender.name.he} עם ${move.name.he}!\n` +
           `נוסחה: (התקפה × עוצמה) ÷ הגנה\n` +
-          `התקפה = ${atk}, עוצמה = ${power}, הגנה = ${def}\n` +
+          `התקפה = ${atk},  עוצמה = ${power},  הגנה = ${def}\n` +
           `כמה נזק?`,
+    };
+  }
+
+  /** Strategy-specific mental-shortcut hint. */
+  private _strategyHint(
+    strategy: string,
+    atk: number, power: number, def: number,
+    answer: number,
+  ): BilingualText {
+    const delta    = def - power;
+    const deltaAtk = def - atk;
+    return this._buildHint(strategy, atk, power, def, delta, deltaAtk, answer);
+  }
+
+  /** Flat lookup table — avoids switch/case to keep cognitive complexity low. */
+  private _buildHint(
+    strategy: string,
+    atk: number, power: number, def: number,
+    delta: number, deltaAtk: number, answer: number,
+  ): BilingualText {
+    const biggerEn = (d: number) => d > 0 ? 'slightly BIGGER'  : 'slightly SMALLER';
+    const resultEn = (d: number) => d > 0 ? 'slightly LESS'    : 'slightly MORE';
+    const biggerHe = (d: number) => d > 0 ? 'קצת גדולה'        : 'קצת קטנה';
+    const resultHe = (d: number) => d > 0 ? 'קצת פחות'         : 'קצת יותר';
+
+    const hints: Record<string, BilingualText> = {
+      'def≈power': {
+        en: `DEF (${def}) is very close to Power (${power}).\n` +
+            `They almost cancel — the result is close to ATK = ${atk}.\n` +
+            `Since DEF is ${biggerEn(delta)} than Power, the answer is ${resultEn(delta)} than ${atk}.`,
+        he: `הגנה (${def}) קרובה מאוד לעוצמה (${power}).\n` +
+            `הם כמעט מצטמצמים — התוצאה קרובה להתקפה = ${atk}.\n` +
+            `מכיוון שהגנה ${biggerHe(delta)} מהעוצמה, התשובה ${resultHe(delta)} מ-${atk}.`,
+      },
+      'def≈atk': {
+        en: `DEF (${def}) is very close to ATK (${atk}).\n` +
+            `They almost cancel — the result is close to Power = ${power}.\n` +
+            `Since DEF is ${biggerEn(deltaAtk)} than ATK, the answer is ${resultEn(deltaAtk)} than ${power}.`,
+        he: `הגנה (${def}) קרובה מאוד להתקפה (${atk}).\n` +
+            `הם כמעט מצטמצמים — התוצאה קרובה לעוצמה = ${power}.\n` +
+            `מכיוון שהגנה ${biggerHe(deltaAtk)} מההתקפה, התשובה ${resultHe(deltaAtk)} מ-${power}.`,
+      },
+      'def=power×2': {
+        en: `DEF = Power × 2, so Power ÷ DEF = ½.\nThe formula becomes: ATK × ½ = ${atk} ÷ 2 = ${answer}.`,
+        he: `הגנה = עוצמה × 2, כך ש-עוצמה ÷ הגנה = ½.\nהנוסחה הופכת ל: התקפה × ½ = ${atk} ÷ 2 = ${answer}.`,
+      },
+      'def=power÷2': {
+        en: `DEF = Power ÷ 2, so Power ÷ DEF = 2.\nThe formula becomes: ATK × 2 = ${atk} × 2 = ${answer}.`,
+        he: `הגנה = עוצמה ÷ 2, כך ש-עוצמה ÷ הגנה = 2.\nהנוסחה הופכת ל: התקפה × 2 = ${atk} × 2 = ${answer}.`,
+      },
+      'def=atk×2': {
+        en: `DEF = ATK × 2, so ATK ÷ DEF = ½.\nThe formula becomes: Power × ½ = ${power} ÷ 2 = ${answer}.`,
+        he: `הגנה = התקפה × 2, כך ש-התקפה ÷ הגנה = ½.\nהנוסחה הופכת ל: עוצמה × ½ = ${power} ÷ 2 = ${answer}.`,
+      },
+      'def=atk÷2': {
+        en: `DEF = ATK ÷ 2, so ATK ÷ DEF = 2.\nThe formula becomes: Power × 2 = ${power} × 2 = ${answer}.`,
+        he: `הגנה = התקפה ÷ 2, כך ש-התקפה ÷ הגנה = 2.\nהנוסחה הופכת ל: עוצמה × 2 = ${power} × 2 = ${answer}.`,
+      },
+    };
+
+    return hints[strategy] ?? {
+      en: `Multiply ATK × Power first, then divide by DEF.`,
+      he: `הכפל התקפה × עוצמה תחילה, ואז חלק בהגנה.`,
     };
   }
 }

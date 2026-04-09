@@ -154,8 +154,9 @@ export interface PokemonWorldSnapshot {
 /**
  * Loose bag of named values produced by generateParams()
  * and consumed by solve() inside a QuestionTemplate.
+ * Includes `Record<string, unknown>` to allow custom sub-objects like Fraction.
  */
-export type TemplateParams = Record<string, number | string | boolean | StoreItem | QuestionPokemon | QuestionMove>;
+export type TemplateParams = Record<string, unknown>;
 
 // ─── Kid profile ──────────────────────────────────────────────────────────────
 

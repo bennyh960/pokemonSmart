@@ -212,60 +212,83 @@ export class CatchCostTemplate extends QuestionTemplate {
       ?? snapshot.items.find(i => i.category === 'healing')
       ?? snapshot.items[1];
 
-    const maxQty = Math.min(8, Math.floor(config.numberRange.max / Math.max(ball.price, potion.price)));
-    const balls = this.randInt(1, Math.max(1, maxQty));
-    const potions = this.randInt(1, Math.max(1, maxQty));
+    // Generous upper bound — makes quantities more diverse (1–8 balls, 0–6 potions)
+    const maxBalls   = Math.min(8, Math.floor(config.numberRange.max / ball.price));
+    const maxPotions = Math.min(6, Math.floor(config.numberRange.max / potion.price));
+    const balls   = this.randInt(1, Math.max(1, maxBalls));   // always ≥ 1
+    const potions = this.randInt(0, Math.max(0, maxPotions)); // can be 0
 
     return { pokemon, ball, potion, balls, potions };
   }
 
   protected solve(params: TemplateParams, _config: ClassConfig): SolveResult {
     const pokemon = params.pokemon as QuestionPokemon;
-    const ball = params.ball as StoreItem;
-    const potion = params.potion as StoreItem;
-    const balls = params.balls as number;
+    const ball    = params.ball    as StoreItem;
+    const potion  = params.potion  as StoreItem;
+    const balls   = params.balls   as number;
     const potions = params.potions as number;
-    const ballCost = ball.price * balls;
+    const ballCost   = ball.price * balls;
     const potionCost = potion.price * potions;
     const answer = ballCost + potionCost;
 
+    const steps: BilingualText[] = [
+      {
+        en: `Poké Balls: ${balls} × ${ball.price}₽ = ${ballCost}₽`,
+        he: `כדורי-פוקה: ${balls} × ${ball.price}₽ = ${ballCost}₽`,
+      },
+    ];
+    if (potions > 0) {
+      steps.push({
+        en: `Potions: ${potions} × ${potion.price}₽ = ${potionCost}₽`,
+        he: `תרופות: ${potions} × ${potion.price}₽ = ${potionCost}₽`,
+      });
+      steps.push({
+        en: `Total: ${ballCost}₽ + ${potionCost}₽ = ${answer}₽`,
+        he: `סכום: ${ballCost}₽ + ${potionCost}₽ = ${answer}₽`,
+      });
+    }
+
+    const assets: QuestionAsset[] = [pokemonAsset(pokemon), itemAsset(ball)];
+    if (potions > 0) assets.push(itemAsset(potion));
+
     return {
       answer,
-      steps: [
-        {
-          en: `Poké Balls: ${balls} × ${ball.price}₽ = ${ballCost}₽`,
-          he: `כדורי-פוקה: ${balls} × ${ball.price}₽ = ${ballCost}₽`,
-        },
-        {
-          en: `Potions: ${potions} × ${potion.price}₽ = ${potionCost}₽`,
-          he: `תרופות: ${potions} × ${potion.price}₽ = ${potionCost}₽`,
-        },
-        {
-          en: `Total: ${ballCost}₽ + ${potionCost}₽ = ${answer}₽`,
-          he: `סכום: ${ballCost}₽ + ${potionCost}₽ = ${answer}₽`,
-        },
-      ],
+      steps,
       hint: {
         en: `Calculate the cost of each item group separately, then add them.`,
         he: `חשב את עלות כל קבוצת פריטים בנפרד, ואז חבר.`,
       },
-      assets: [pokemonAsset(pokemon), itemAsset(ball), itemAsset(potion)],
-      distractors: [ballCost + potion.price, potionCost + ball.price, answer + ball.price],
+      assets,
+      distractors: [
+        ballCost + potion.price,
+        potionCost > 0 ? potionCost + ball.price : answer + ball.price,
+        answer + ball.price,
+      ],
     };
   }
 
   protected questionText(params: TemplateParams): BilingualText {
     const pokemon = params.pokemon as QuestionPokemon;
-    const ball = params.ball as StoreItem;
-    const potion = params.potion as StoreItem;
-    const balls = params.balls as number;
+    const ball    = params.ball    as StoreItem;
+    const potion  = params.potion  as StoreItem;
+    const balls   = params.balls   as number;
     const potions = params.potions as number;
+
+    if (potions === 0) {
+      return {
+        en: `To catch ${pokemon.name.en} you'll need ${balls} Poké Ball${balls > 1 ? 's' : ''} (${ball.price}₽ each).\nHow much will everything cost?`,
+        he: `כדי לתפוס את ${pokemon.name.he} תצטרך ${balls} כדורי-פוקה (${ball.price}₽ כל אחד).\nכמה יעלה הכל?`,
+      };
+    }
+
     return {
-      en: `To catch ${pokemon.name.en} you'll need ${balls} Poké Balls (${ball.price}₽ each)\n` +
-          `and ${potions} Potions (${potion.price}₽ each).\n` +
+      en: `To catch ${pokemon.name.en} you'll need:\n` +
+          `• ${balls} Poké Ball${balls > 1 ? 's' : ''} at ${ball.price}₽ each\n` +
+          `• ${potions} Potion${potions > 1 ? 's' : ''} at ${potion.price}₽ each\n` +
           `How much will everything cost?`,
-      he: `כדי לתפוס את ${pokemon.name.he} תצטרך ${balls} כדורי-פוקה (${ball.price}₽ כל אחד)\n` +
-          `ו-${potions} תרופות (${potion.price}₽ כל אחת).\n` +
+      he: `כדי לתפוס את ${pokemon.name.he} תצטרך:\n` +
+          `• ${balls} כדורי-פוקה ב-${ball.price}₽ כל אחד\n` +
+          `• ${potions} תרופות ב-${potion.price}₽ כל אחת\n` +
           `כמה יעלה הכל?`,
     };
   }

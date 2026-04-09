@@ -347,13 +347,14 @@ describe('CatchTemplates', () => {
     }
   });
 
-  it('CatchCostTemplate: has pokemon + 2 item assets', () => {
+  it('CatchCostTemplate: has pokemon + 1 or 2 item assets', () => {
     const t = new CatchCostTemplate();
     const q = t.build(MOCK_SNAPSHOT, grade3);
-    expect(q.assets).toHaveLength(3);
+    // potions qty can be 0, so we get 2 assets (pokemon+balls) or 3 (pokemon+balls+potions)
+    expect(q.assets.length).toBeGreaterThanOrEqual(2);
+    expect(q.assets.length).toBeLessThanOrEqual(3);
     expect(q.assets[0].kind).toBe('pokemon');
     expect(q.assets[1].kind).toBe('item');
-    expect(q.assets[2].kind).toBe('item');
   });
 });
 
