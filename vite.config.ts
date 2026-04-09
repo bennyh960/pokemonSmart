@@ -24,6 +24,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        'question-builder': resolve(__dirname, 'question-builder.html'),
         // 'sprite-editor': resolve(__dirname, 'sprite-editor.html'),
       }
       
