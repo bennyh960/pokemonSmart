@@ -36,6 +36,7 @@ import {
 } from '../data/story/global-gate-config.js';
 import type { GateSessionConfig } from '../data/story/gates.js';
 import { getItem } from '../data/items.js';
+import { getGlobalAudio } from '../audio/audio-manager.js';
 
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
@@ -47,6 +48,7 @@ export function createGateScene(
   let overlayRunning = false;
   let pendingResult: SessionResult | null = null;
   let resolved = false;
+  let wasMutedBeforeGate = false;
 
   return {
     enter(): void {
@@ -66,6 +68,11 @@ export function createGateScene(
         return;
       }
 
+      // Mute audio during questions; remember prior state so we can restore it
+      const audio = getGlobalAudio();
+      wasMutedBeforeGate = audio?.isMuted() ?? false;
+      if (!wasMutedBeforeGate) audio?.setMuted(true);
+
       overlayRunning = true;
       setTimeout(() => void _launchOverlay(), 0);
     },
@@ -73,12 +80,20 @@ export function createGateScene(
     exit(): void {
       clearActiveGate();
       overlayRunning = false;
+      // Restore audio to pre-gate state
+      if (!wasMutedBeforeGate) getGlobalAudio()?.setMuted(false);
     },
 
     update(_dt: number): void {
       if (!overlayRunning && pendingResult && !resolved) {
         resolved = true;
+        const passed = pendingResult.passed;
         _applyResult(pendingResult);
+        // Play success jingle before popping (audio is restored in exit())
+        if (passed && !wasMutedBeforeGate) {
+          getGlobalAudio()?.setMuted(false);
+          getGlobalAudio()?.playGateSuccess();
+        }
         stateMachine.pop();
       }
     },

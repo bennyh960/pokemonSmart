@@ -32,7 +32,7 @@
       "id": "gym-hint-npc",
       "name": "Gym Guide",
       "x": 7,
-      "y": 17,
+      "y": 18,
       "facing": "right",
       "type": "dialogue",
       "dialogue": [

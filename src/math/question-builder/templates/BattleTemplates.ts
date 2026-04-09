@@ -439,7 +439,7 @@ export class MoveEffectivenessTemplate extends QuestionTemplate {
         },
       ],
       hint: {
-        en: superEffective ? `Super effective means ×2 the damage.` : `Not very effective means ×0.5 (half the damage).`,
+        en: superEffective ? `Super effective means ×2 the damage.` : `Not very effective means ×1/2 (half the damage).`,
         he: superEffective ? `יעיל במיוחד = כפול נזק.` : `לא יעיל במיוחד = חצי נזק.`,
       },
       assets: [pokemonAsset(attacker), pokemonAsset(defender)],
@@ -454,7 +454,7 @@ export class MoveEffectivenessTemplate extends QuestionTemplate {
     const superEffective = params.superEffective as boolean;
     const label = superEffective
       ? { en: 'SUPER EFFECTIVE (×2)', he: 'יעיל במיוחד (×2)' }
-      : { en: 'NOT VERY EFFECTIVE (×0.5)', he: 'לא יעיל במיוחד (×0.5)' };
+      : { en: 'NOT VERY EFFECTIVE (×1/2)', he: 'לא יעיל במיוחד (×1/2)' };
 
     return {
       en: `${attacker.name.en} attacks ${defender.name.en}!\n` +

@@ -10,7 +10,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
-import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
+import { clearScreen, fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
@@ -70,8 +70,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let player: PlayerState;
   let encounterTriggered = false;
   let showLegend = true;
+  let hudTabIndex = 0; // 0=map  1=leader  2=story
   let flashTimer = 0;
   let flashPhase: 'none' | 'flash' | 'black' = 'none';
+  let exclamationFlashTimer = -1; // -1 = inactive; counts up from 0 when any NPC spots player
 
   // Map transition state
   let transitionState: 'none' | 'fade-out' | 'loading' | 'fade-in' = 'none';
@@ -522,6 +524,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     const dist = Math.max(Math.abs(dx), Math.abs(dy));
     const stepsToTake = dist - 1;
 
+    audio.playTrainerSpot();
+    exclamationFlashTimer = 0;
     trainerApproach = {
       trainer,
       phase: 'exclamation',
@@ -599,6 +603,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   /** Start gate-guard approach: show "!" bubble, then dialogue, then gate scene. */
   function startGateGuardApproach(guard: import('../systems/npc.js').GateGuardData): void {
+    audio.playTrainerSpot();
+    exclamationFlashTimer = 0;
     gateGuardApproach = { guard, phase: 'exclamation', timer: 0 };
   }
 
@@ -857,6 +863,128 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
   }
 
+  // ── Overworld HUD ──────────────────────────────────────────────────────────
+  // Compact frosted-glass panel — tabs: MAP / LEADER / STORY (Tab key cycles).
+  function drawOverworldHUD(ctx: CanvasRenderingContext2D): void {
+    const locale  = getLocale();
+    const isHe    = locale === 'he';
+
+    // Tab metadata — bilingual labels + accent colour
+    const TABS = [
+      { en: 'MAP',   he: 'מפה',    color: '#b8ccff' },
+      { en: 'LEAD',  he: 'מוביל',  color: '#88e888' },
+      { en: 'QUEST', he: 'משימה',  color: '#ffd060' },
+    ];
+
+    // ── Gather content for active tab ───────────────────────────────────────
+    let contentText = '';
+    let contentColor = TABS[hudTabIndex].color;
+
+    if (hudTabIndex === 0) {
+      // Map / location
+      const rawName = currentMapData?.name;
+      if (rawName) {
+        contentText = typeof rawName === 'object'
+          ? (isHe ? (rawName as { en: string; he: string }).he : (rawName as { en: string; he: string }).en)
+          : String(rawName);
+      } else {
+        contentText = isHe ? 'לא ידוע' : 'Unknown';
+      }
+    } else if (hudTabIndex === 1 && hasActiveGame()) {
+      // Lead Pokémon
+      const lead = getPlayerData().party[0];
+      contentText = lead
+        ? `${getPokemonDisplayName(lead.id)}  Lv.${lead.level}`
+        : (isHe ? 'אין פוקמון' : 'No Pokemon');
+    } else if (hudTabIndex === 2 && hasActiveGame()) {
+      // Active quest
+      const questId = getPlayerData().story?.activeQuestId;
+      if (questId) {
+        const quest = getQuest(questId);
+        if (quest) {
+          const title = isHe ? quest.title.he : quest.title.en;
+          const obj   = isHe ? quest.objective.he : quest.objective.en;
+          contentText = `${title}: ${obj}`;
+        }
+      }
+      if (!contentText) contentText = isHe ? 'אין משימה' : 'No quest';
+    }
+
+    if (!contentText) return;
+
+    // ── Layout constants ────────────────────────────────────────────────────
+    const TEXT_SZ  = 6;
+    const TAB_SZ   = 5;
+    const PANEL_W  = 90;
+    const TAB_H    = 7;   // height of the tabs row
+    const ROW_H    = 9;   // height of content row
+    const PAD_X    = 3;
+    const PAD_Y    = 2;
+    const PANEL_H  = TAB_H + PAD_Y + ROW_H + PAD_Y;
+    const PANEL_X  = 3;
+    const PANEL_Y  = 3;
+    const RADIUS   = 3;
+    const TAB_W    = Math.floor(PANEL_W / TABS.length);
+
+    // ── Drop shadow ──────────────────────────────────────────────────────────
+    ctx.save();
+    ctx.filter = 'blur(4px)';
+    ctx.fillStyle = 'rgba(0, 0, 12, 0.88)';
+    fillRoundRect(ctx, PANEL_X - 2, PANEL_Y - 2, PANEL_W + 4, PANEL_H + 4, RADIUS + 2);
+    ctx.restore();
+
+    // ── Panel background ─────────────────────────────────────────────────────
+    ctx.save();
+    ctx.fillStyle = 'rgba(6, 8, 22, 0.84)';
+    fillRoundRect(ctx, PANEL_X, PANEL_Y, PANEL_W, PANEL_H, RADIUS);
+
+    // Border
+    ctx.strokeStyle = 'rgba(70, 100, 210, 0.4)';
+    ctx.lineWidth = 0.5;
+    strokeRoundRect(ctx, PANEL_X + 0.5, PANEL_Y + 0.5, PANEL_W - 1, PANEL_H - 1, RADIUS);
+    ctx.restore();
+
+    // ── Tabs row ─────────────────────────────────────────────────────────────
+    for (let i = 0; i < TABS.length; i++) {
+      const tab    = TABS[i];
+      const tabX   = PANEL_X + i * TAB_W;
+      const active = i === hudTabIndex;
+      const label  = isHe ? tab.he : tab.en;
+
+      // Active tab gets a filled highlight
+      if (active) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(60, 80, 180, 0.55)';
+        // Only round top corners on first/last tab
+        const r: [number, number, number, number] = i === 0
+          ? [RADIUS, 0, 0, 0]
+          : i === TABS.length - 1
+            ? [0, RADIUS, 0, 0]
+            : [0, 0, 0, 0];
+        fillRoundRect(ctx, tabX, PANEL_Y, TAB_W, TAB_H, r);
+        ctx.restore();
+      }
+
+      // Tab label — centred horizontally
+      const labelColor = active ? tab.color : 'rgba(160,160,180,0.65)';
+      drawText(ctx, label, tabX + TAB_W / 2, PANEL_Y + TAB_H / 2 + TAB_SZ / 2 - 1, {
+        size: TAB_SZ, color: labelColor, font: 'monospace', align: 'center',
+      });
+    }
+
+    // Thin separator between tabs and content
+    ctx.save();
+    ctx.fillStyle = 'rgba(70, 100, 210, 0.35)';
+    fillRoundRect(ctx, PANEL_X + 2, PANEL_Y + TAB_H, PANEL_W - 4, 0.5, 0);
+    ctx.restore();
+
+    // ── Content row ──────────────────────────────────────────────────────────
+    const contentY = PANEL_Y + TAB_H + PAD_Y + TEXT_SZ;
+    drawText(ctx, contentText, PANEL_X + PAD_X, contentY, {
+      size: TEXT_SZ, color: contentColor, font: 'monospace', maxWidth: PANEL_W - PAD_X * 2,
+    });
+  }
+
   return {
     enter(): void {
       encounterTriggered = false;
@@ -1100,6 +1228,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
 
+      // Tick exclamation flash overlay
+      if (exclamationFlashTimer >= 0) exclamationFlashTimer += dt;
+
       // Party-guard approach animation (exclamation → dialogue → push back)
       if (partyGuardApproach) {
         const pga = partyGuardApproach;
@@ -1171,6 +1302,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             ta.trainer.x = Math.round(ta.trainerPixelX / TILE_SIZE);
             ta.trainer.y = Math.round(ta.trainerPixelY / TILE_SIZE);
             ta.stepsRemaining--;
+            audio.playTrainerStep();
             if (ta.stepsRemaining > 0) {
               const dirX = Math.sign(player.gridX - ta.trainer.x);
               const dirY = Math.sign(player.gridY - ta.trainer.y);
@@ -1329,6 +1461,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               const range = npc.lineOfSight ?? 3;
               for (let d = 1; d <= range; d++) {
                 if (npc.x + vec.dx * d === player.gridX && npc.y + vec.dy * d === player.gridY) {
+                  audio.playTrainerSpot();
+                  exclamationFlashTimer = 0;
                   partyGuardApproach = { npc, phase: 'exclamation', timer: 0 };
                   return;
                 }
@@ -1637,6 +1771,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                           const idx = currentMapData.objects.indexOf(obj);
                           if (idx >= 0) currentMapData.objects.splice(idx, 1);
                         }
+                        audio.playItemPickup();
                         const itemDef = getItem(itemId);
                         const displayName = itemDef ? getLocalizedName(itemDef.name) : itemId;
                         activeTextBox = createTextBox([t('npc.reward.item', { item: displayName, qty })], isRTL());
@@ -1779,6 +1914,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // K key → Toggle keyboard legend
       if (input.isKeyPressed('k') || input.isKeyPressed('K')) {
         showLegend = !showLegend;
+        return;
+      }
+
+      // Tab key → Cycle HUD tab (map / leader / story)
+      if (input.isKeyPressed('Tab')) {
+        hudTabIndex = (hudTabIndex + 1) % 3;
+        input.consumeKey('Tab');
         return;
       }
 
@@ -1969,8 +2111,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   (gateGuardApproach && gateGuardApproach.guard === npc && gateGuardApproach.phase === 'exclamation') ||
                   (partyGuardApproach && partyGuardApproach.npc === npc && partyGuardApproach.phase === 'exclamation');
                 if (showExclamation) {
-                  fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
-                  drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
+                  let excT = 0;
+                  if (trainerApproach?.trainer === npc && trainerApproach.phase === 'exclamation') excT = trainerApproach.timer;
+                  else if (gateGuardApproach?.guard === npc) excT = gateGuardApproach.timer;
+                  else if (partyGuardApproach?.npc === npc) excT = partyGuardApproach.timer;
+                  const scl = excT < 0.12 ? (excT / 0.12) * 1.3
+                            : excT < 0.22 ? 1.3 - ((excT - 0.12) / 0.10) * 0.3
+                            : 1.0;
+                  ctx.save();
+                  ctx.translate(nx + 8, ny - 7);
+                  ctx.scale(scl, scl);
+                  fillRect(ctx, -4, -5, 8, 10, '#ffffff');
+                  drawText(ctx, '!', -3, -4, { size: 8, color: '#ff0000', font: 'monospace' });
+                  ctx.restore();
                 }
               },
             });
@@ -1990,10 +2143,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 }
                 const showExclamationFb =
                   (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') ||
-                  (gateGuardApproach && gateGuardApproach.guard === npc && gateGuardApproach.phase === 'exclamation');
+                  (gateGuardApproach && gateGuardApproach.guard === npc && gateGuardApproach.phase === 'exclamation') ||
+                  (partyGuardApproach && partyGuardApproach.npc === npc && partyGuardApproach.phase === 'exclamation');
                 if (showExclamationFb) {
-                  fillRect(ctx, nx + 4, ny - 12, 8, 10, '#ffffff');
-                  drawText(ctx, '!', nx + 5, ny - 11, { size: 8, color: '#ff0000', font: 'monospace' });
+                  let excT = 0;
+                  if (trainerApproach?.trainer === npc && trainerApproach.phase === 'exclamation') excT = trainerApproach.timer;
+                  else if (gateGuardApproach?.guard === npc) excT = gateGuardApproach.timer;
+                  else if (partyGuardApproach?.npc === npc) excT = partyGuardApproach.timer;
+                  const scl = excT < 0.12 ? (excT / 0.12) * 1.3
+                            : excT < 0.22 ? 1.3 - ((excT - 0.12) / 0.10) * 0.3
+                            : 1.0;
+                  ctx.save();
+                  ctx.translate(nx + 8, ny - 7);
+                  ctx.scale(scl, scl);
+                  fillRect(ctx, -4, -5, 8, 10, '#ffffff');
+                  drawText(ctx, '!', -3, -4, { size: 8, color: '#ff0000', font: 'monospace' });
+                  ctx.restore();
                 }
               },
             });
@@ -2080,31 +2245,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.restore();
       }
 
-      // HUD
-      const mapName = currentMapData?.name || '';
-      drawText(ctx, mapName, 4, 4, { size: 8, color: '#ffffff', font: 'monospace' });
-
-      if (hasActiveGame()) {
-        const lead = getPlayerData().party[0];
-        if (lead) drawText(ctx, `${getPokemonDisplayName(lead.id)} ${t('hp.level', { level: lead.level })}`, 4, 14, { size: 8, color: '#aaccff', font: 'monospace' });
-
-        // Quest tracker — top-right corner
-        const pd = getPlayerData();
-        const questId = pd.story?.activeQuestId;
-        if (questId) {
-          const quest = getQuest(questId);
-          if (quest) {
-            const locale = getLocale();
-            const questTitle = locale === 'he' ? quest.title.he : quest.title.en;
-            const questObj   = locale === 'he' ? quest.objective.he : quest.objective.en;
-            const rtl = isRTL();
-            const qx = rtl ? 4 : SCREEN_W - 4;
-            const align = rtl ? 'left' : 'right';
-            drawText(ctx, `★ ${questTitle}`, qx, 4, { size: 6, color: '#ffd700', align, direction: rtl ? 'rtl' : 'ltr' });
-            drawText(ctx, questObj, qx, 12, { size: 5, color: '#cccccc', align, maxWidth: 100, direction: rtl ? 'rtl' : 'ltr' });
-          }
-        }
-      }
+      // HUD — unified frosted-glass notification panel (top-left)
+      drawOverworldHUD(ctx);
 
       // Keyboard legend bar (bottom of screen, behind dialogues)
       if (showLegend && !activeTextBox && !choiceState && !healTextBox && !shop.open && !encounterTriggered && transitionState === 'none') {
@@ -2148,6 +2290,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             font: 'monospace',
           });
         }
+      }
+
+      // Exclamation spotlight flash (brief white fade when NPC spots player)
+      if (exclamationFlashTimer >= 0 && exclamationFlashTimer < 0.3) {
+        const alpha = (1 - exclamationFlashTimer / 0.3) * 0.45;
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
       }
 
       // Encounter flash overlay

@@ -52,7 +52,7 @@ export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'
 export const AUTO_GATE_QUESTION_COUNTS = {
   pokecenter: 3,
   pokemarket: 10,
-  gym:        15,
+  gym:        1,
 } as const;
 
 /** Time limit per question (seconds) for each service type. 0 = no limit. */

@@ -298,6 +298,38 @@ export function createAudioManager() {
     });
   }
 
+  function playItemPickup(): void {
+    playToneSequence({
+      notes: [523.25, 659.25, 783.99, 1046.5],
+      durations: [0.07, 0.07, 0.07, 0.18],
+      type: 'triangle',
+      gain: 0.18,
+      spacing: 0.01,
+    });
+  }
+
+  function playTrainerSpot(): void {
+    // Sharp high "!" pop, then two deep GBC-style hits: POP → DUN → DUN
+    playToneSequence({
+      notes: [1047, 196, 175],
+      durations: [0.05, 0.13, 0.18],
+      type: 'square',
+      gain: 0.26,
+      spacing: 0.04,
+    });
+  }
+
+  function playTrainerStep(): void {
+    playToneSequence({
+      notes: [120],
+      durations: [0.05],
+      type: 'square',
+      gain: 0.08,
+      spacing: 0,
+      sweepTo: 80,
+    });
+  }
+
   function playAttackFamilyCue(family: 'lunge' | 'projectile' | 'beam' | 'pulse' | 'burst'): void {
     switch (family) {
       case 'lunge':
@@ -489,6 +521,37 @@ export function createAudioManager() {
 
     playAttackFamilyCue(family: 'lunge' | 'projectile' | 'beam' | 'pulse' | 'burst'): void {
       playAttackFamilyCue(family);
+    },
+
+    playItemPickup(): void {
+      playItemPickup();
+    },
+
+    playTrainerSpot(): void {
+      playTrainerSpot();
+    },
+
+    playTrainerStep(): void {
+      playTrainerStep();
+    },
+
+    playGateSuccess(): void {
+      playToneSequence({
+        notes: [523.25, 659.25, 783.99, 1046.5, 1318.51],
+        durations: [0.08, 0.08, 0.08, 0.08, 0.28],
+        type: 'triangle',
+        gain: 0.22,
+        spacing: 0.02,
+      });
+    },
+
+    setMuted(value: boolean): void {
+      if (muted === value) return;
+      muted = value;
+      if (currentHowl) currentHowl.volume(muted ? 0 : musicVolume);
+      for (const howl of sfxCache.values()) {
+        howl.volume(muted ? 0 : sfxVolume);
+      }
     },
 
     isMuted(): boolean {

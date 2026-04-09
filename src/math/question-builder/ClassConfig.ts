@@ -42,13 +42,13 @@ const GRADE_1: ClassConfig = {
 const GRADE_2: ClassConfig = {
   id: 'grade2',
   label: { en: 'Grade 2', he: 'כיתה ב׳' },
-  allowedOperations: ['+', '-', '×'],
-  numberRange: { min: 1, max: 50 },
-  maxSteps: 1,
+  allowedOperations: ['+', '-', '×', '÷'],
+  numberRange: { min: 1, max: 100 },
+  maxSteps: 3,
   allowNegative: false,
   allowFractions: false,
   allowRemainders: false,
-  difficultyRange: [1, 2],
+  difficultyRange: [1, 2,],
 };
 
 /**
@@ -59,8 +59,8 @@ const GRADE_3: ClassConfig = {
   id: 'grade3',
   label: { en: 'Grade 3', he: 'כיתה ג׳' },
   allowedOperations: ['+', '-', '×', '÷'],
-  numberRange: { min: 1, max: 100 },
-  maxSteps: 2,
+  numberRange: { min: 1, max: 200 },
+  maxSteps: 4,
   allowNegative: false,
   allowFractions: false,
   allowRemainders: true,

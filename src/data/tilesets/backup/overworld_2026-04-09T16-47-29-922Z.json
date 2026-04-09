@@ -3427,9 +3427,9 @@
       "sy": 2064,
       "w": 16,
       "h": 32,
-      "walkable": false,
+      "walkable": true,
       "above": true,
-      "category": "decoration",
+      "category": "interactive",
       "interactType": {
         "id": "gate"
       }
