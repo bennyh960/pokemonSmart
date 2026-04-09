@@ -57,10 +57,7 @@ export class PokeBallsNeededTemplate extends QuestionTemplate {
   readonly minDifficulty = 1 as const;
   readonly maxDifficulty = 3 as const;
 
-  protected generateParams(
-    snapshot: PokemonWorldSnapshot,
-    config: ClassConfig,
-  ): TemplateParams {
+  protected generateParams(snapshot: PokemonWorldSnapshot, config: ClassConfig): TemplateParams {
     const pokemon = this.pickRandom(snapshot.pokemon);
     const needed = this.pickNumber(config, 3, Math.min(20, config.numberRange.max));
     const have = this.randInt(0, needed - 1); // always have fewer than needed
@@ -95,10 +92,12 @@ export class PokeBallsNeededTemplate extends QuestionTemplate {
     const needed = params.needed as number;
     const have = params.have as number;
     return {
-      en: `To catch ${pokemon.name.en} you need ${needed} Poké Balls.\n` +
-          `You already have ${have}.\nHow many more do you need to buy?`,
-      he: `כדי לתפוס את ${pokemon.name.he} אתה צריך ${needed} כדורי-פוקה.\n` +
-          `כבר יש לך ${have}.\nכמה עוד אתה צריך לקנות?`,
+      en:
+        `To catch ${pokemon.name.en} you need ${needed} Poké Balls.\n` +
+        `You already have ${have}.\nHow many more do you need to buy?`,
+      he:
+        `כדי לתפוס את ${pokemon.name.he} אתה צריך ${needed} פוכדור${balls > 1 ? 'ים' : ''}.\n` +
+        `כבר יש לך ${have}.\nכמה עוד אתה צריך לקנות?`,
     };
   }
 }
@@ -119,10 +118,7 @@ export class HPReductionTemplate extends QuestionTemplate {
   readonly minDifficulty = 2 as const;
   readonly maxDifficulty = 4 as const;
 
-  protected generateParams(
-    snapshot: PokemonWorldSnapshot,
-    config: ClassConfig,
-  ): TemplateParams {
+  protected generateParams(snapshot: PokemonWorldSnapshot, config: ClassConfig): TemplateParams {
     const pokemon = this.pickRandom(snapshot.pokemon);
     const divisor = this.randInt(2, 8); // attack damage per turn
     const turnsNeeded = this.randInt(2, Math.min(8, config.numberRange.max));
@@ -167,16 +163,18 @@ export class HPReductionTemplate extends QuestionTemplate {
     const hp = params.hp as number;
     const target = params.target as number;
     const dmg = params.dmg as number;
-      return {
-          en: `${pokemon.name.en} has ${hp} HP.\n` +
-              `To catch it you must lower its HP to ${target} or below.\n` +
-              `Your move deals ${dmg} damage each turn.\n` +
-              `How many turns do you need to attack?`,
-          he: `ל-${pokemon.name.he} יש ${hp} נקודות HP.\n` +
-          ` (HP = Health Points = נקודות חיים)\n` +
-          `כדי לתפוס אותו תצטרך להוריד את ה-HP שלו ל-${target} או פחות.\n` +
-          `המהלך שלך גורם ${dmg} נזק בכל תור.\n` +
-          `כמה תורות תצטרך לתקוף?`,
+    return {
+      en:
+        `${pokemon.name.en} has ${hp} HP.\n` +
+        `To catch it you must lower its HP to ${target} or below.\n` +
+        `Your move deals ${dmg} damage each turn.\n` +
+        `How many turns do you need to attack?`,
+      he:
+        `ל-${pokemon.name.he} יש ${hp} נקודות HP.\n` +
+        ` (HP = Health Points = נקודות חיים)\n` +
+        `כדי לתפוס אותו תצטרך להוריד את ה-HP שלו ל-${target} או פחות.\n` +
+        `המהלך שלך גורם ${dmg} נזק בכל תור.\n` +
+        `כמה תורות תצטרך לתקוף?`,
     };
   }
 }
@@ -201,22 +199,21 @@ export class CatchCostTemplate extends QuestionTemplate {
   private static readonly POKEBALL_ID = 4;
   private static readonly POTION_ID = 17;
 
-  protected generateParams(
-    snapshot: PokemonWorldSnapshot,
-    config: ClassConfig,
-  ): TemplateParams {
+  protected generateParams(snapshot: PokemonWorldSnapshot, config: ClassConfig): TemplateParams {
     const pokemon = this.pickRandom(snapshot.pokemon);
-    const ball = snapshot.items.find(i => i.id === CatchCostTemplate.POKEBALL_ID)
-      ?? snapshot.items.find(i => i.category === 'pokeball')
-      ?? snapshot.items[0];
-    const potion = snapshot.items.find(i => i.id === CatchCostTemplate.POTION_ID)
-      ?? snapshot.items.find(i => i.category === 'healing')
-      ?? snapshot.items[1];
+    const ball =
+      snapshot.items.find((i) => i.id === CatchCostTemplate.POKEBALL_ID) ??
+      snapshot.items.find((i) => i.category === 'pokeball') ??
+      snapshot.items[0];
+    const potion =
+      snapshot.items.find((i) => i.id === CatchCostTemplate.POTION_ID) ??
+      snapshot.items.find((i) => i.category === 'healing') ??
+      snapshot.items[1];
 
     // Generous upper bound — makes quantities more diverse (1–8 balls, 0–6 potions)
-    const maxBalls   = Math.min(8, Math.floor(config.numberRange.max / ball.price));
+    const maxBalls = Math.min(8, Math.floor(config.numberRange.max / ball.price));
     const maxPotions = Math.min(6, Math.floor(config.numberRange.max / potion.price));
-    const balls   = this.randInt(1, Math.max(1, maxBalls));   // always ≥ 1
+    const balls = this.randInt(1, Math.max(1, maxBalls)); // always ≥ 1
     const potions = this.randInt(0, Math.max(0, maxPotions)); // can be 0
 
     return { pokemon, ball, potion, balls, potions };
@@ -224,18 +221,18 @@ export class CatchCostTemplate extends QuestionTemplate {
 
   protected solve(params: TemplateParams, _config: ClassConfig): SolveResult {
     const pokemon = params.pokemon as QuestionPokemon;
-    const ball    = params.ball    as StoreItem;
-    const potion  = params.potion  as StoreItem;
-    const balls   = params.balls   as number;
+    const ball = params.ball as StoreItem;
+    const potion = params.potion as StoreItem;
+    const balls = params.balls as number;
     const potions = params.potions as number;
-    const ballCost   = ball.price * balls;
+    const ballCost = ball.price * balls;
     const potionCost = potion.price * potions;
     const answer = ballCost + potionCost;
 
     const steps: BilingualText[] = [
       {
         en: `Poké Balls: ${balls} × ${ball.price}₽ = ${ballCost}₽`,
-        he: `כדורי-פוקה: ${balls} × ${ball.price}₽ = ${ballCost}₽`,
+        he: `פוכדור${balls > 1 ? 'ים' : ''}: ${balls} × ${ball.price}₽ = ${ballCost}₽`,
       },
     ];
     if (potions > 0) {
@@ -270,27 +267,29 @@ export class CatchCostTemplate extends QuestionTemplate {
 
   protected questionText(params: TemplateParams): BilingualText {
     const pokemon = params.pokemon as QuestionPokemon;
-    const ball    = params.ball    as StoreItem;
-    const potion  = params.potion  as StoreItem;
-    const balls   = params.balls   as number;
+    const ball = params.ball as StoreItem;
+    const potion = params.potion as StoreItem;
+    const balls = params.balls as number;
     const potions = params.potions as number;
 
     if (potions === 0) {
       return {
         en: `To catch ${pokemon.name.en} you'll need ${balls} Poké Ball${balls > 1 ? 's' : ''} (${ball.price}₽ each).\nHow much will everything cost?`,
-        he: `כדי לתפוס את ${pokemon.name.he} תצטרך ${balls} כדורי-פוקה (${ball.price}₽ כל אחד).\nכמה יעלה הכל?`,
+        he: `כדי לתפוס את ${pokemon.name.he} תצטרך ${balls} פוכדור${balls > 1 ? 'ים' : ''} (${ball.price}₽ כל אחד).\nכמה יעלה הכל?`,
       };
     }
 
     return {
-      en: `To catch ${pokemon.name.en} you'll need:\n` +
-          `• ${balls} Poké Ball${balls > 1 ? 's' : ''} at ${ball.price}₽ each\n` +
-          `• ${potions} Potion${potions > 1 ? 's' : ''} at ${potion.price}₽ each\n` +
-          `How much will everything cost?`,
-      he: `כדי לתפוס את ${pokemon.name.he} תצטרך:\n` +
-          `• ${balls} כדורי-פוקה ב-${ball.price}₽ כל אחד\n` +
-          `• ${potions} תרופות ב-${potion.price}₽ כל אחת\n` +
-          `כמה יעלה הכל?`,
+      en:
+        `To catch ${pokemon.name.en} you'll need:\n` +
+        `• ${balls} Poké Ball${balls > 1 ? 's' : ''} at ${ball.price}₽ each\n` +
+        `• ${potions} Potion${potions > 1 ? 's' : ''} at ${potion.price}₽ each\n` +
+        `How much will everything cost?`,
+      he:
+        `כדי לתפוס את ${pokemon.name.he} תצטרך:\n` +
+        `• ${balls} פוכדור${balls > 1 ? 'ים' : ''} ב-${ball.price}₽ כל אחד\n` +
+        `• ${potions} תרופות ב-${potion.price}₽ כל אחת\n` +
+        `כמה יעלה הכל?`,
     };
   }
 }
