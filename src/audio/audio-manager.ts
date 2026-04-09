@@ -38,6 +38,8 @@ const SFX_TRACKS: Record<string, string> = {
   'text-blip': toAssetUrl('audio/sfx/text-blip.wav'),
   heal: toAssetUrl('audio/sfx/menu-select.wav'),
   'pokecenter-heal': toAssetUrl('audio/sfx/heal.mp3'),
+  'item-found': toAssetUrl('audio/sfx/item-found.mp3'),
+  'bump-wall': toAssetUrl('audio/sfx/bumpintowall.mp3'),
 };
 
 /** Default crossfade duration in ms. */
@@ -525,6 +527,10 @@ export function createAudioManager() {
 
     playItemPickup(): void {
       playItemPickup();
+    },
+
+    playItemFound(): void {
+      manager.playSFX('item-found');
     },
 
     playTrainerSpot(): void {

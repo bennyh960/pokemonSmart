@@ -150,6 +150,7 @@ export function createGateScene(
         const itemDef = getItem(reward.itemId);
         const slug = itemDef?.id ?? reward.itemId;
         pd.items[slug] = (pd.items[slug] ?? 0) + qty;
+        getGlobalAudio()?.playItemFound();
       }
     }
 

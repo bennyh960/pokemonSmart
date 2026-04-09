@@ -475,6 +475,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     // Give items
     if (reward.items) {
+      audio.playItemFound();
       for (const ri of reward.items) {
         pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
         const itemDef = getItem(ri.itemId);
@@ -865,9 +866,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   /** Build the data payload for the HTML HUD overlay. */
   function buildHUDData() {
     const pd = hasActiveGame() ? getPlayerData() : null;
+    const p0 = pd?.party[0];
     return {
       mapName: currentMapData?.name,
-      lead:    pd?.party[0] ?? null,
+      // Snapshot primitive values so the change-detector in updateHUD
+      // can see differences — passing the live object reference means
+      // lastData.lead.hp mutates in place and the comparison always ties.
+      lead: p0 ? { id: p0.id, level: p0.level, hp: p0.hp, maxHp: p0.maxHp } : null,
       questId: pd?.story?.activeQuestId ?? null,
     };
   }
@@ -1661,7 +1666,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                           const idx = currentMapData.objects.indexOf(obj);
                           if (idx >= 0) currentMapData.objects.splice(idx, 1);
                         }
-                        audio.playItemPickup();
+                        audio.playItemFound();
                         const itemDef = getItem(itemId);
                         const displayName = itemDef ? getLocalizedName(itemDef.name) : itemId;
                         activeTextBox = createTextBox([t('npc.reward.item', { item: displayName, qty })], isRTL());
@@ -1852,6 +1857,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 } else {
                   activeTextBox = createTextBox([t('hm.cannotUse.surf')], isRTL());
                 }
+              } else if (input.isKeyPressed(key)) {
+                // Bump into non-walkable wall — play once per keypress, not every frame
+                audio.playSFX('bump-wall');
               }
             }
 
@@ -1862,6 +1870,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               player.startPixelX = player.pixelX; player.startPixelY = player.pixelY;
               player.moveProgress = 0;
               player.walkTimer = 0; player.walkFrame = 1;
+            } else if (walkable && npcManager?.isVisibleNPCAt(nx, ny, _movPd?.flags ?? {}, _movPd?.party) && input.isKeyPressed(key)) {
+              // Bump into NPC — play once per keypress
+              audio.playSFX('bump-wall');
             }
             break;
           }

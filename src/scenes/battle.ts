@@ -565,6 +565,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       pd.money += reward.money;
       // Items only on the first encounter
       if (!isRematch && reward.items) {
+        audio.playItemFound();
         for (const ri of reward.items) {
           pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
         }
