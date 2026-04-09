@@ -32,6 +32,7 @@ export class TilePalette {
   private tilesetImage: HTMLImageElement;
   private searchText = '';
   private filterCategory = '';
+  private catFilter!: HTMLSelectElement;
 
   constructor(container: HTMLElement, state: EditorState, tilesetSrc: string, tiles: Record<string, TileDef>, tilesetWidth: number, tilesetImage?: HTMLImageElement) {
     this.container = container;
@@ -75,7 +76,7 @@ export class TilePalette {
     });
 
     // Category filter
-    const catFilter = document.createElement('select');
+    const catFilter = this.catFilter = document.createElement('select');
     catFilter.className = 'palette-search';
     catFilter.innerHTML = `<option value="">All categories</option>`;
     for (const cat of getCategories(tiles)) {
@@ -175,6 +176,20 @@ export class TilePalette {
     }
 
     gridContainer.appendChild(grid);
+  }
+
+  updateTileset(image: HTMLImageElement, tiles: Record<string, TileDef>): void {
+    this.tilesetImage = image;
+    this.tiles = tiles;
+    this.catFilter.innerHTML = '<option value="">All categories</option>';
+    for (const cat of getCategories(tiles)) {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      this.catFilter.appendChild(opt);
+    }
+    this.filterCategory = '';
+    this.buildGrid();
   }
 
   private updateSelection(): void {

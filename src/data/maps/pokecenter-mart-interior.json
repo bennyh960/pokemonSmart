@@ -5,7 +5,7 @@
   "width": 23,
   "height": 10,
   "tileSize": 16,
-  "tileset": "dpp",
+  "tileset": "overworld",
   "spawn": {
     "x": 4,
     "y": 7

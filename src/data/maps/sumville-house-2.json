@@ -1,7 +1,7 @@
 {
   "id": "sumville-house-2",
   "name": "Collector's House",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 9,
   "height": 8,
   "tileSize": 16,

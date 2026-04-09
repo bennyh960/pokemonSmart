@@ -49,7 +49,7 @@ export class TilesetEditorState {
   cropTargetH = DEFAULT_TILE_SIZE;
 
   // Image
-  imageSrc = toAssetUrl('/sprites/overworld/dpp-tileset.png');
+  imageSrc = toAssetUrl('/sprites/overworld/overworld-tileset.png');
   imageWidth = 256;
   imageHeight = 29888;
 

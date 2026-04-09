@@ -66,6 +66,11 @@ export class SpritesheetViewport {
     this.renderLoop();
   }
 
+  updateImage(image: HTMLImageElement): void {
+    this.image = image;
+    this.dirty = true;
+  }
+
   private resize(): void {
     const rect = this.canvas.parentElement!.getBoundingClientRect();
     this.canvas.width = rect.width;

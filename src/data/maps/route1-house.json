@@ -1,7 +1,7 @@
 {
   "id": "route1-house",
   "name": "Rest Stop",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 7,
   "height": 6,
   "tileSize": 16,

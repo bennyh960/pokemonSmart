@@ -1,7 +1,7 @@
 {
   "id": "integrala",
   "name": "Integrala",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 25,
   "height": 20,
   "tileSize": 16,

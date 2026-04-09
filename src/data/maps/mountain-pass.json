@@ -1,7 +1,7 @@
 {
   "id": "mountain-pass",
   "name": "Mountain Pass",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 60,
   "height": 30,
   "tileSize": 16,

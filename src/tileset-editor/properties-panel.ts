@@ -201,6 +201,11 @@ export class PropertiesPanel {
     this.refresh();
   }
 
+  updateImage(image: HTMLImageElement): void {
+    this.image = image;
+    this.refresh();
+  }
+
   /** Sync input fields from state when dragging on canvas (without full re-render). */
   private syncCropInputs(): void {
     if (!this.state.cropMode || !this.state.cropLocked) return;

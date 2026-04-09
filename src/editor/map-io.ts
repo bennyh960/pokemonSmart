@@ -120,7 +120,7 @@ export function createBlankMap(width: number, height: number): TileMapData {
   return {
     id: 'new-map',
     name: 'New Map',
-    tileset: 'dpp',
+    tileset: 'overworld',
     width,
     height,
     tileSize: 16,

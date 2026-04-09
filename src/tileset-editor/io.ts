@@ -26,7 +26,7 @@ export function exportManifest(state: TilesetEditorState): string {
  * Save tileset manifest.
  * Uses File System Access API if available, falls back to browser download.
  */
-export async function saveManifest(state: TilesetEditorState, fileName = 'dpp.json'): Promise<void> {
+export async function saveManifest(state: TilesetEditorState, fileName = 'overworld.json'): Promise<void> {
   const json = exportManifest(state);
 
   if (hasFSAccess()) {
@@ -142,7 +142,7 @@ export async function applyCrop(
 /**
  * Save the modified tileset image to disk.
  */
-export async function saveTilesetImage(blob: Blob, fileName = 'dpp-tileset.png'): Promise<void> {
+export async function saveTilesetImage(blob: Blob, fileName = 'overworld-tileset.png'): Promise<void> {
   if (hasFSAccess()) {
     await saveBlobToDirectory('tileset-image', fileName, blob);
     return;

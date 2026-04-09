@@ -1,7 +1,7 @@
 {
   "id": "sumville-gym",
   "name": "Addition Gym",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 18,
   "height": 20,
   "tileSize": 16,

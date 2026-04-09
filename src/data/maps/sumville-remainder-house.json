@@ -1,7 +1,7 @@
 {
   "id": "sumville-remainder-house",
   "name": "Remainder's House",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 9,
   "height": 8,
   "tileSize": 16,

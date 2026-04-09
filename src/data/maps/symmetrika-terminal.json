@@ -1,7 +1,7 @@
 {
   "id": "symmetrika-terminal",
   "name": "NULL-X Terminal",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 14,
   "height": 10,
   "tileSize": 16,

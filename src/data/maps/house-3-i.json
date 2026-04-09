@@ -1,7 +1,7 @@
 {
   "id": "house-3-i",
   "name": "house-3 generic",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 13,
   "height": 10,
   "tileSize": 16,

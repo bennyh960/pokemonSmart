@@ -1,7 +1,7 @@
 {
   "id": "mountain-cave",
   "name": "Mountain Cave",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 35,
   "height": 20,
   "tileSize": 16,

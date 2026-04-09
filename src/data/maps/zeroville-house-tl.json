@@ -1,7 +1,7 @@
 {
   "id": "zeroville-house-tl",
   "name": "Zeroville Revive Maker House",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 12,
   "height": 12,
   "tileSize": 16,

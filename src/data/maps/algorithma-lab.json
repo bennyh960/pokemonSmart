@@ -1,7 +1,7 @@
 {
   "id": "algorithma-lab",
   "name": "Algorithma Lab",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 13,
   "height": 12,
   "tileSize": 16,

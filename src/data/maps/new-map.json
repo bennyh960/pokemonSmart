@@ -1,7 +1,7 @@
 {
   "id": "new-map",
   "name": "New Map",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 10,
   "height": 9,
   "tileSize": 16,

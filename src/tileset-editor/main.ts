@@ -6,11 +6,21 @@ import { saveManifest, copyManifest, loadManifestFromFile, loadManifest } from '
 import { toAssetUrl } from '../engine/asset-path.js';
 import './style.css';
 
-// Load existing dpp.json to pre-populate
-import dppManifestRaw from '../data/tilesets/dpp.json';
+/** Vite-friendly static imports for each known tileset manifest. */
+async function loadTilesetManifest(name: string): Promise<Record<string, unknown>> {
+  switch (name) {
+    case 'overworld': return (await import('../data/tilesets/overworld.json')) as unknown as Record<string, unknown>;
+    case 'interior':  return (await import('../data/tilesets/interior.json')) as unknown as Record<string, unknown>;
+    default: throw new Error(`Unknown tileset: ${name}`);
+  }
+}
 
 async function init() {
   const state = new TilesetEditorState();
+
+  // Load initial tileset (overworld)
+  const initialManifest = await loadTilesetManifest('overworld');
+  loadManifest(state, JSON.stringify(initialManifest));
 
   // Load tileset image
   const image = new Image();
@@ -23,9 +33,6 @@ async function init() {
     };
     image.onerror = () => reject(new Error('Failed to load tileset image'));
   });
-
-  // Pre-load existing manifest (old format → auto-migrated)
-  loadManifest(state, JSON.stringify(dppManifestRaw));
 
   // ── Build DOM ──
   const root = document.getElementById('editor-root')!;
@@ -44,6 +51,13 @@ async function init() {
       <button id="btn-zoom-in">+</button>
       <button id="btn-grid" class="active">Grid</button>
       <button id="btn-crop">Crop</button>
+    </div>
+    <div class="toolbar-group">
+      <label class="toolbar-label">Tileset:</label>
+      <select id="sel-tileset">
+        <option value="overworld">overworld</option>
+        <option value="interior">interior</option>
+      </select>
     </div>
     <div class="toolbar-group">
       <span class="toolbar-label" id="tile-count">${state.tiles.length} tiles</span>
@@ -73,11 +87,56 @@ async function init() {
   root.appendChild(statusEl);
 
   // ── Init modules ──
-  new SpritesheetViewport(canvasEl, state, image);
+  let currentTileset = 'overworld';
+  const spritesheetViewport = new SpritesheetViewport(canvasEl, state, image);
   new TileList(listEl, state);
-  new PropertiesPanel(propsEl, state, image);
+  const propertiesPanel = new PropertiesPanel(propsEl, state, image);
+
+  /** Load an image src reliably, handling both cached and uncached cases. */
+  function loadImageSrc(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const cleanup = () => {
+        img.removeEventListener('load', onLoad);
+        img.removeEventListener('error', onError);
+      };
+      const onLoad = () => { cleanup(); resolve(img); };
+      const onError = () => { cleanup(); reject(new Error(`Failed to load tileset image: ${src}`)); };
+      img.addEventListener('load', onLoad);
+      img.addEventListener('error', onError);
+      img.src = src;
+      // Already cached — complete fires synchronously before onload would
+      if (img.complete && img.naturalWidth > 0) { cleanup(); resolve(img); }
+    });
+  }
+
+  /** Switch to a different tileset manifest + image. */
+  async function switchTileset(name: string): Promise<void> {
+    if (name === currentTileset) return;
+    try {
+      const manifest = await loadTilesetManifest(name);
+      const newImage = await loadImageSrc(toAssetUrl(manifest.image as string));
+
+      // Update viewport + panel with the new image BEFORE loadManifest fires
+      // items-changed — so every render triggered by that event uses the correct PNG.
+      state.imageWidth = newImage.naturalWidth;
+      state.imageHeight = newImage.naturalHeight;
+      spritesheetViewport.updateImage(newImage);
+      propertiesPanel.updateImage(newImage);
+
+      loadManifest(state, JSON.stringify(manifest));
+      tilesetSelector.value = name;
+      currentTileset = name;
+    } catch (err) {
+      console.error('Failed to switch tileset:', err);
+    }
+  }
 
   // ── Toolbar wiring ──
+
+  // Tileset selector
+  const tilesetSelector = toolbarEl.querySelector('#sel-tileset') as HTMLSelectElement;
+  tilesetSelector.addEventListener('change', () => switchTileset(tilesetSelector.value));
 
   // File ops
   toolbarEl.querySelector('#btn-load')!.addEventListener('click', () => {

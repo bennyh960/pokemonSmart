@@ -1,7 +1,7 @@
 {
   "id": "dividia-house-3",
   "name": "Trainer's Lodge",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 9,
   "height": 8,
   "tileSize": 16,

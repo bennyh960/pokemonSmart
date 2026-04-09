@@ -1,12 +1,18 @@
 import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
-import type { ToolType } from './types.js';
+import type { ToolType, TileMapData } from './types.js';
 import { categorizeTiles } from './tile-palette.js';
 import { getKnownMapIds, loadMapFromProject, loadMapFromFile, saveMap, copyMapToClipboard, createBlankMap } from './map-io.js';
 import { MUSIC_TRACK_KEYS } from '../audio/audio-manager.js';
 
 export class Toolbar {
-  constructor(container: HTMLElement, state: EditorState, history: HistoryManager, tileManifest: Record<string, unknown>) {
+  constructor(
+    container: HTMLElement,
+    state: EditorState,
+    history: HistoryManager,
+    tileManifest: Record<string, unknown>,
+    onLoadMapData?: (data: TileMapData) => Promise<void>,
+  ) {
     container.innerHTML = `
       <div class="toolbar-group" data-group="tools">
         <button class="tool-btn active" data-tool="paint" title="Paint (B)">🖌 Paint</button>
@@ -64,9 +70,13 @@ export class Toolbar {
       if (!selLoad.value) return;
       try {
         const data = await loadMapFromProject(selLoad.value);
-        const cats = categorizeTiles(tileManifest as Record<string, never>);
-        state.loadMap(data, cats);
-        history.clear();
+        if (onLoadMapData) {
+          await onLoadMapData(data);
+        } else {
+          const cats = categorizeTiles(tileManifest as Record<string, never>);
+          state.loadMap(data, cats);
+          history.clear();
+        }
       } catch (err) { console.error('Failed to load map:', err); }
       selLoad.value = '';
     });
@@ -80,9 +90,13 @@ export class Toolbar {
         if (!file) return;
         try {
           const data = await loadMapFromFile(file);
-          const cats = categorizeTiles(tileManifest as Record<string, never>);
-          state.loadMap(data, cats);
-          history.clear();
+          if (onLoadMapData) {
+            await onLoadMapData(data);
+          } else {
+            const cats = categorizeTiles(tileManifest as Record<string, never>);
+            state.loadMap(data, cats);
+            history.clear();
+          }
         } catch (err) { console.error('Failed to load file:', err); }
       });
       input.click();

@@ -1,7 +1,7 @@
 {
   "id": "zeroville-house-tr",
   "name": "Zeroville House 2",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 13,
   "height": 9,
   "tileSize": 16,

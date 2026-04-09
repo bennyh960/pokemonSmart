@@ -1,7 +1,7 @@
 {
   "id": "oak lab",
   "name": "Oak - lab ",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 13,
   "height": 12,
   "tileSize": 16,

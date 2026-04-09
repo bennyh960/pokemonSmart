@@ -1,7 +1,7 @@
 {
   "id": "dividia-house-4",
   "name": "Mathematician's Study",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 9,
   "height": 8,
   "tileSize": 16,

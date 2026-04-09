@@ -1,7 +1,7 @@
 {
   "id": "dividia-cave",
   "name": "Dividia Cave",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 30,
   "height": 15,
   "tileSize": 16,

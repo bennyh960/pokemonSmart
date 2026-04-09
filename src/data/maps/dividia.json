@@ -1,7 +1,7 @@
 {
   "id": "dividia",
   "name": "Dividia",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 55,
   "height": 50,
   "tileSize": 16,

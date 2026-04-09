@@ -1,5 +1,5 @@
 {
-  "image": "/sprites/overworld/dpp-tileset.png",
+  "image": "/sprites/overworld/overworld-tileset.png",
   "tiles": [
     {
       "key": "g1",

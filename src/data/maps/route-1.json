@@ -1,7 +1,7 @@
 {
   "id": "route-1",
   "name": "Route 1",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 35,
   "height": 20,
   "tileSize": 16,

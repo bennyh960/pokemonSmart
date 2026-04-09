@@ -1,7 +1,7 @@
 {
   "id": "sumville",
   "name": "Sumville",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 60,
   "height": 60,
   "tileSize": 16,

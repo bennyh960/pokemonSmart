@@ -1,7 +1,7 @@
 {
   "id": "minusburg",
   "name": "Minusburg",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 50,
   "height": 50,
   "tileSize": 16,

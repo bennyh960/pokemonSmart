@@ -1,7 +1,7 @@
 {
   "id": "deep-forest",
   "name": "Deep Forest",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 20,
   "height": 60,
   "tileSize": 16,

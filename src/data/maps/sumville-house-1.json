@@ -1,7 +1,7 @@
 {
   "id": "sumville-house-1",
   "name": "Math Teacher's House",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 9,
   "height": 8,
   "tileSize": 16,

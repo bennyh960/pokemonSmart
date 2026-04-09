@@ -1,7 +1,7 @@
 {
   "id": "nullx-floor-6",
   "name": "NULL-X Core",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 20,
   "height": 20,
   "tileSize": 16,

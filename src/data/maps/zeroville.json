@@ -1,7 +1,7 @@
 {
   "id": "zeroville",
   "name": "Zeroville",
-  "tileset": "dpp",
+  "tileset": "overworld",
   "width": 25,
   "height": 25,
   "tileSize": 16,

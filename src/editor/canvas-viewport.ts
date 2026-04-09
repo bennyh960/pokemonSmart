@@ -116,6 +116,12 @@ export class CanvasViewport {
 
   markDirty(): void { this.dirty = true; }
 
+  updateTileset(image: HTMLImageElement, tiles: Map<string, TileDef>): void {
+    this.tilesetImage = image;
+    this.tiles = tiles;
+    this.markDirty();
+  }
+
   private pixelToGrid(px: number, py: number): { gx: number; gy: number } {
     const tilePixels = 16 * this.state.zoom;
     return {
