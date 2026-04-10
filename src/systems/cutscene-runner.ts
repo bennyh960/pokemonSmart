@@ -368,17 +368,19 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     }
 
     case 'start-gate': {
-      // TODO Sprint 7B: push gate scene from here
-      console.warn('[cutscene] start-gate not yet wired — skipping');
-      _stepIndex++;
-      break;
+      // Not yet implemented — wire up in overworld to push the gate scene
+      throw new Error(
+        `[cutscene] step 'start-gate' (gateId: "${(step as { gateId: string }).gateId}") is not implemented yet. ` +
+        `Remove this step from the cutscene, or implement gate-from-cutscene handoff.`
+      );
     }
 
     case 'start-battle': {
-      // TODO Sprint 7B: start trainer battle from cutscene
-      console.warn('[cutscene] start-battle not yet wired — skipping');
-      _stepIndex++;
-      break;
+      // Not yet implemented — wire up battle scene launch from cutscene
+      throw new Error(
+        `[cutscene] step 'start-battle' (trainerId: "${(step as { trainerId: string }).trainerId}") is not implemented yet. ` +
+        `Remove this step from the cutscene, or implement battle-from-cutscene handoff.`
+      );
     }
 
     case 'start-scene': {
@@ -389,9 +391,11 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     }
 
     case 'move-player': {
-      // TODO: animate player movement; for now skip
-      _stepIndex++;
-      break;
+      // Not yet implemented — player movement animation is not wired up.
+      throw new Error(
+        `[cutscene] step 'move-player' is not implemented yet. ` +
+        `Remove this step from the cutscene or implement player path animation.`
+      );
     }
 
     default: {

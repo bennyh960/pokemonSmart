@@ -102,33 +102,8 @@ export interface QuestionGateDef {
   sessionConfig?: GateSessionConfig;
 }
 
-/** Registered gate definitions keyed by ID. */
-export const GATES: Record<string, QuestionGateDef> = {
-  // Example: route 1 → Sumville checkpoint
-  'gate-route1-sumville': {
-    id: 'gate-route1-sumville',
-    title: { en: 'Route Checkpoint', he: 'מחסום שביל' },
-    description: { en: 'The path is locked. Answer to continue.', he: 'המסלול חסום. ענה כדי להמשיך.' },
-    triggerType: 'route-checkpoint',
-    questionSetIds: ['*'],
-    totalQuestions: 3,
-    passThreshold: 3,
-    failurePenalty: { type: 'none' },
-    reopenCooldownMs: 30 * 60 * 1000,  // 30 min
-    successActions: [{ type: 'set-flag', flag: 'gate-route1-sumville-pass' }],
-    sessionConfig: {
-      birthYear: 2018,
-      questionsRequired: 3,
-      timeLimitPerQuestion: 45,
-      rewardThreshold: 0.8,
-      penaltyThreshold: 0.5,
-      penaltyAmount: 50,
-      rewards: [{ type: 'money', amount: 100 }],
-      bonusEnabled: true,
-      bonusMultiplier: 2,
-    },
-  },
-};
+/** Registered gate definitions keyed by ID. Populated by registerGate(). */
+export const GATES: Record<string, QuestionGateDef> = {};
 
 export function getGate(id: string): QuestionGateDef | undefined {
   return GATES[id];

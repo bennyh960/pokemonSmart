@@ -27,11 +27,8 @@ import { createPhoneScene } from '../scenes/phone.js';
 import { createGateScene } from '../scenes/gate-scene.js';
 import { initStoryEngine } from '../systems/story-engine.js';
 import { showHUD, hideHUD } from '../ui/hud-overlay.js';
-// Story content — side-effect imports that register events/cutscenes/gates/quests
-import '../data/story/content/act0-act1.js';
-import '../data/story/content/act2.js';
-import '../data/story/content/act3.js';
-import '../data/story/content/act4-act5.js';
+// Story content — single entry point; see content/index.ts for all quest files
+import '../data/story/content/index.js';
 // Global auto-gate config — registers the auto-pokecenter/pokemarket/gym gates + map service tags
 import '../data/story/global-gate-config.js';
 import {

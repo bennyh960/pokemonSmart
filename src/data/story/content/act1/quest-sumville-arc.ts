@@ -1,0 +1,221 @@
+/**
+ * ACT 1: Sumville Arc — Bridge Crystal + Addition Gym
+ * ─────────────────────────────────────────────────────────────────────────────
+ * QUESTS:   main-act1-sumville, main-sumville-investigate, main-sumville-rocket,
+ *           main-sumville-crystal, main-act1-gym1
+ * GATES:    gate-sumville-gym (Addition Gym entry gate)
+ *
+ * STORY BEATS (in order):
+ *   1. Player arrives in Sumville → Prof. Oak appears, warns about NULL-X
+ *   2. Player finds the gym is closed/blocked → investigate quest
+ *   3. Player talks to gym blocker → Jessie & James appear near bridge
+ *   4. Player defeats Jessie & James → Bridge Crystal dropped
+ *   5. Player returns Crystal to keeper → Adda returns to gym
+ *   6. Player passes gym gate → battles Adda → badge 1 earned
+ *   7. Badge 1 → Sumville infection cleared → path to Route 2 opens
+ *
+ * FLAGS SET: VISITED_SUMVILLE, ACT1_OAK_WARNING_HEARD, SUMVILLE_ARRIVED,
+ *            SUMVILLE_GYM_BLOCKER_TALKED, SUMVILLE_CRYSTAL_FOUND,
+ *            SUMVILLE_CRYSTAL_RETURNED, SUMVILLE_GYM_CLEARED,
+ *            GATE_SUMVILLE_GYM_PASS, STORY_BADGE_1
+ * FLAGS READ: GATE_ROUTE1_PASS, ACT1_OAK_WARNING_HEARD, VISITED_SUMVILLE,
+ *             SUMVILLE_ARRIVED, SUMVILLE_GYM_BLOCKER_TALKED, SUMVILLE_CRYSTAL_FOUND,
+ *             SUMVILLE_CRYSTAL_RETURNED, SUMVILLE_GYM_CLEARED
+ *
+ * MAP IDs:  'sumville'
+ * NPC IDs:  gym blocker despawns after SUMVILLE_CRYSTAL_RETURNED
+ *           Adda (gym leader) spawns after SUMVILLE_CRYSTAL_RETURNED
+ */
+
+import { registerQuest }      from '../../quests.js';
+import { registerCutscene }   from '../../cutscenes.js';
+import { registerGate }       from '../../gates.js';
+import { registerStoryEvent } from '../../events.js';
+import { FLAGS }              from '../../flags.js';
+
+// ── Quests ───────────────────────────────────────────────────────────────────
+
+registerQuest({
+  id: 'main-act1-sumville',
+  title:     { en: 'Sumville',              he: 'סאמוויל' },
+  objective: { en: "Meet Prof. Oak and explore Sumville", he: "פגוש את פרופ׳ אוק וחקור את סאמוויל" },
+});
+
+registerQuest({
+  id: 'main-sumville-investigate',
+  title:     { en: 'Locked Gym',            he: 'חדר כושר נעול' },
+  objective: { en: 'Investigate why the Addition Gym is closed', he: 'חקור מדוע חדר הכושר של החיבור סגור' },
+});
+
+registerQuest({
+  id: 'main-sumville-rocket',
+  title:     { en: 'Bridge Crystal',        he: 'גביש הגשר' },
+  objective: { en: 'Defeat Team Rocket at the bridge and recover the stolen Crystal Core', he: 'נצח את רוקט בגשר ושחזר את גביש הליבה הגנוב' },
+});
+
+registerQuest({
+  id: 'main-sumville-crystal',
+  title:     { en: 'Return the Crystal',    he: 'החזר את הגביש' },
+  objective: { en: 'Return the Bridge Crystal to the Crystal Keeper at the bridge', he: 'החזר את גביש הגשר לשומרת הגביש בגשר' },
+});
+
+registerQuest({
+  id: 'main-act1-gym1',
+  title:     { en: 'Sumville Gym',          he: 'חדר הכושר של סאמוויל' },
+  objective: { en: 'Defeat Adda at the Addition Gym', he: 'נצח את אדה בחדר הכושר של החיבור' },
+});
+
+// ── Gate ─────────────────────────────────────────────────────────────────────
+
+registerGate({
+  id: 'gate-sumville-gym',
+  title: { en: 'Addition Gym Entry', he: 'כניסה למכון החיבור' },
+  description: {
+    en: 'The gym door requires a verification. Answer 15 questions.',
+    he: 'דלת המכון דורשת אימות. ענה על 15 שאלות.',
+  },
+  triggerType: 'gym-entry',
+  questionSetIds: ['placeholder'],
+  totalQuestions: 15,
+  passThreshold: 12,
+  failurePenalty: { type: 'none' },
+  reopenCooldownMs: 0, // permanent once passed
+  successActions: [
+    { type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_GYM_PASS },
+    { type: 'set-quest', questId: 'main-act1-gym1' },
+  ],
+});
+
+// ── Cutscenes ─────────────────────────────────────────────────────────────────
+
+// Prof. Oak arrives at Sumville — warns about cross-region NULL-X impact
+registerCutscene({
+  id: 'act1-oak-arrives',
+  skippable: false,
+  steps: [
+    { type: 'screen-fade', direction: 'out', durationMs: 600 },
+    { type: 'screen-fade', direction: 'in',  durationMs: 800 },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      lines: [
+        { en: 'I came as soon as Algorithma called.', he: 'הגעתי ברגע שאלגוריתמה התקשר. זה גדול יותר מנומריה.' },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      lines: [
+        { en: 'A rogue AI compromising verification systems — Kanto has seen disruptions too.', he: 'בינה מלאכותית סוררת שמסכנת מערכות אימות — קנטו גם כן חווה שיבושים.' },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      lines: [
+        { en: "You've already made it past Route 1. Your brother — ah, I mean Algorithma — chose wisely.", he: 'כבר עברת את שביל 1. אחיך — אה, כלומר אלגוריתמה — בחר בחוכמה.' },
+      ],
+    },
+    { type: 'action', action: { type: 'set-flag',  flag: FLAGS.ACT1_OAK_WARNING_HEARD } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act1-gym1' } },
+  ],
+});
+
+// ── Story Events ──────────────────────────────────────────────────────────────
+
+// First arrival in Sumville (after passing gate) → Oak cutscene
+registerStoryEvent({
+  id: 'evt-act1-oak-arrives',
+  trigger: { type: 'map-enter', mapId: 'sumville' },
+  conditions: [
+    { type: 'flag',     flag: FLAGS.GATE_ROUTE1_PASS },
+    { type: 'flag-not', flag: FLAGS.ACT1_OAK_WARNING_HEARD },
+  ],
+  actions: [
+    { type: 'set-flag',      flag: FLAGS.VISITED_SUMVILLE },
+    { type: 'set-infection', cityId: 'sumville', value: 'low' },
+    { type: 'start-cutscene', cutsceneId: 'act1-oak-arrives' },
+  ],
+});
+
+// Arriving in Sumville before passing the gate (shouldn't happen normally, but guard it)
+registerStoryEvent({
+  id: 'evt-sumville-infection',
+  trigger: { type: 'map-enter', mapId: 'sumville' },
+  conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_SUMVILLE }],
+  actions: [
+    { type: 'set-flag',      flag: FLAGS.VISITED_SUMVILLE },
+    { type: 'set-infection', cityId: 'sumville', value: 'low' },
+  ],
+});
+
+// Player talks to gym blocker → Rocket team appears at bridge
+registerStoryEvent({
+  id: 'ev-sumville-arrive',
+  trigger: { type: 'map-enter', mapId: 'sumville' },
+  conditions: [{ type: 'flag-not', flag: FLAGS.SUMVILLE_ARRIVED }],
+  actions: [
+    { type: 'set-flag',  flag: FLAGS.SUMVILLE_ARRIVED },
+    { type: 'set-quest', questId: 'main-sumville-investigate' },
+  ],
+  completedFlag: FLAGS.SUMVILLE_ARRIVED,
+});
+
+// Gym blocker NPC sets a flag when talked to → triggers Rocket appearance
+registerStoryEvent({
+  id: 'ev-sumville-gym-blocker-talked',
+  trigger: { type: 'flag-set', flag: FLAGS.SUMVILLE_GYM_BLOCKER_TALKED },
+  actions: [{ type: 'set-quest', questId: 'main-sumville-rocket' }],
+});
+
+// Jessie drops crystal → return it quest
+registerStoryEvent({
+  id: 'ev-sumville-crystal-found',
+  trigger: { type: 'flag-set', flag: FLAGS.SUMVILLE_CRYSTAL_FOUND },
+  actions: [{ type: 'set-quest', questId: 'main-sumville-crystal' }],
+});
+
+// Crystal returned → Adda comes back to gym
+registerStoryEvent({
+  id: 'ev-sumville-crystal-returned',
+  trigger: { type: 'flag-set', flag: FLAGS.SUMVILLE_CRYSTAL_RETURNED },
+  actions: [
+    { type: 'set-quest', questId: 'main-act1-gym1' },
+    {
+      type: 'show-message',
+      lines: [
+        { en: 'The Bridge Crystal is restored! Power flows back to the Addition Gym...', he: 'גביש הגשר שוחזר! הכוח זורם בחזרה למכון...' },
+        { en: 'Adda has returned to the gym. Go challenge her!', he: 'אדה חזרה למכון. לך לאתגר אותה!' },
+      ],
+    },
+  ],
+});
+
+// Gym cleared → advance to Route 2
+registerStoryEvent({
+  id: 'ev-sumville-gym-cleared',
+  trigger: { type: 'flag-set', flag: FLAGS.SUMVILLE_GYM_CLEARED },
+  actions: [
+    { type: 'complete-quest', questId: 'main-act1-gym1' },
+    { type: 'set-quest',      questId: 'main-act1-route2' },
+    {
+      type: 'show-message',
+      lines: [
+        { en: 'You earned the Sum Badge and HM01 Cut!', he: 'הרווחת את תג הסכום ו-HM01 גזירה!' },
+        { en: 'The path to Route 2 — Difference Pass — is now open. Minusburg awaits!', he: 'הדרך לשביל 2 — מעבר ההפרש — פתוחה עכשיו. מינוסבורג ממתין!' },
+      ],
+    },
+  ],
+});
+
+// Badge 1 earned → infection cleared, path to Route 2 opens
+registerStoryEvent({
+  id: 'evt-badge1-clears-sumville',
+  trigger: { type: 'badge-earned', badge: 1 },
+  conditions: [],
+  actions: [
+    { type: 'set-flag',      flag: FLAGS.STORY_BADGE_1 },
+    { type: 'set-infection', cityId: 'sumville', value: 'cleared' },
+    { type: 'set-quest',     questId: 'main-act1-route2' },
+  ],
+});

@@ -1,6 +1,40 @@
 # Pokemon Math Adventure — Final Story Mode Design
 **Version:** 1.0 | **Status:** Approved for implementation
-**Source:** Synthesized from game-spec.md, story-mode.md, story-mode2.md
+**Source of truth:** This file. For architecture/types see `docs/story-data-model.md`.
+
+> **This is the narrative bible.** When in doubt, this file wins.
+> Do not maintain story content in game-spec.md — that file covers mechanics only.
+
+---
+
+## Implementation Map
+
+Each story beat is implemented in one file. Open that file to see the trigger,
+cutscene, gate, and quest definitions all in one place.
+
+| Story Beat | Implementation File |
+|------------|---------------------|
+| Act 0: Zeroville intro, starter selection, Remainder meets player | `src/data/story/content/act0/quest-zeroville-intro.ts` |
+| Act 1: Route 1 gate, NULL-X first warning | `src/data/story/content/act1/quest-route1.ts` |
+| Act 1: Sumville arc — Bridge Crystal, gym, badge 1 | `src/data/story/content/act1/quest-sumville-arc.ts` |
+| Act 1: Route 2, Minusburg, Remainder first battle, badge 2 | `src/data/story/content/act1/quest-minusburg.ts` |
+| Act 2: Route 3, Multiplia, fake nurse reveal, badge 3 | `src/data/story/content/act2/quest-multiplia.ts` |
+| Act 2: Route 4, Dividia, Remainder glitch + saved, badge 4 | `src/data/story/content/act2/quest-dividia.ts` |
+| Act 3: Route 5, Primore, Gary battle, Remainder returns, badge 5 | `src/data/story/content/act3/quest-primore.ts` |
+| Act 3: Route 6, Symmetrika, NULL-X first contact, badge 6 | `src/data/story/content/act3/quest-symmetrika.ts` |
+| Act 4: Route 7, Integrala, Prof. Elm reveals origins, badge 7 | `src/data/story/content/act4/quest-integrala.ts` |
+| Act 4: Route 8, Absoluta, Jessie/James back down, badge 8, serum complete | `src/data/story/content/act4/quest-absoluta.ts` |
+| Act 5: NULL-X Tower, Elite Four gates, final confrontation | `src/data/story/content/act5/quest-nullx-tower.ts` |
+
+**All story flags** (strings used for spawnAfter, story events, if-flag steps):
+→ `src/data/story/flags.ts`
+
+**To add a new story beat:**
+1. Create `src/data/story/content/act{N}/quest-{name}.ts`
+2. Import `FLAGS` from `../../flags.ts` — never use raw strings
+3. Register quests, gates, cutscenes, events in that one file
+4. Add the import to `src/data/story/content/index.ts`
+5. Add a row to the table above
 
 ---
 
