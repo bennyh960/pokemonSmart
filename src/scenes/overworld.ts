@@ -11,7 +11,7 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
-import { initHUD, updateHUD, setHUDTab } from '../ui/hud-overlay.js';
+import { initHUD, updateHUD, setHUDTab, showHUD, hideHUD } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
@@ -476,6 +476,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             giveNPCReward(npc, npc.reward);
           }
           openShop(shop);
+          hideHUD();
           restoreNPCFacing(npc);
           interactingNPC = null;
         } else {
@@ -1087,6 +1088,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Shop overlay takes priority
       if (shop.open) {
         updateShop(shop, input, dt);
+        if (!shop.open) showHUD(); // shop just closed
         return;
       }
 
@@ -2090,6 +2092,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (input.isKeyPressed('n') || input.isKeyPressed('N')) {
         if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
           openShop(shop);
+          hideHUD();
           return;
         }
       }
