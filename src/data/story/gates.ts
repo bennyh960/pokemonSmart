@@ -25,9 +25,9 @@ export type GatePenalty =
 /** A single reward granted on successful pass of a session. */
 export interface GateReward {
   type: 'money' | 'item';
-  amount?: number;        // used when type === 'money'
-  itemId?: string;        // used when type === 'item'
-  quantity?: number;      // used when type === 'item'
+  amount?: number; // used when type === 'money'
+  itemId?: string; // used when type === 'item'
+  quantity?: number; // used when type === 'item'
 }
 
 /**

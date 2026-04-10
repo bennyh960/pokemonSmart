@@ -5,6 +5,19 @@ export type CutsceneStep =
   | { type: 'camera-pan';   x: number; y: number; durationMs: number }
   | { type: 'camera-snap';  x: number; y: number }
   | { type: 'screen-fade';  direction: 'in' | 'out'; durationMs: number; color?: string }
+  /**
+   * overlay — set a persistent background behind dialogue.
+   *   color: '#000000'  → solid black screen (or any hex color)
+   *   color: null       → clear the overlay, world shows through again
+   * Place before dialogue steps that need a background, clear it after.
+   * Example:
+   *   { type: 'screen-fade', direction: 'out', durationMs: 400 }
+   *   { type: 'overlay', color: '#000000' }   ← holds black while dialogue plays
+   *   { type: 'dialogue', ... }
+   *   { type: 'overlay', color: null }         ← clear before fading back in
+   *   { type: 'screen-fade', direction: 'in', durationMs: 400 }
+   */
+  | { type: 'overlay';      color: string | null }
   | { type: 'move-npc';     npcId: string; path: Array<'up'|'down'|'left'|'right'>; waitForComplete?: boolean }
   | { type: 'face-npc';     npcId: string; dir: 'up'|'down'|'left'|'right' }
   | { type: 'show-npc';     npcId: string }

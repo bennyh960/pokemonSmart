@@ -143,7 +143,7 @@
           "he": "הגשרים שלנו פועלים בעזרת גבישי ליבה — רוקט גנב את שלנו! כל העיר מתרוקנת!"
         }
       ],
-      "spriteType": "char_962c1b",
+      "spriteType": "char_0502ea",
       "nameHe": "מדריך העיר"
     },
     {
@@ -905,7 +905,9 @@
         }
       ],
       "spriteType": "char_8c73c5",
-      "gateId": "gate-route1-sumville"
+      "gateId": "gate-route1-sumville",
+      "spawnAfter": "act1-oak-warning-heard",
+      "autoWalk": null
     },
     {
       "id": "sumville-gym-blocker",
@@ -1128,6 +1130,53 @@
         }
       ],
       "spriteType": "char_459058"
+    },
+    {
+      "id": "npc-1775827117423",
+      "x": 2,
+      "y": 29,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [],
+      "spriteType": "oak",
+      "despawnAfter": "act1-oak-warning-heard",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1775830387514",
+      "x": 3,
+      "y": 30,
+      "facing": "left",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "Jenny",
+      "despawnAfter": "act1-oak-warning-heard",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 10,
+            "delay": 0
+          }
+        ]
+      }
     }
   ],
   "music": "town",

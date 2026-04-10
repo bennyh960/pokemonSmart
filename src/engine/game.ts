@@ -31,17 +31,10 @@ import { showHUD, hideHUD } from '../ui/hud-overlay.js';
 import '../data/story/content/index.js';
 // Global auto-gate config — registers the auto-pokecenter/pokemarket/gym gates + map service tags
 import '../data/story/global-gate-config.js';
-import {
-  LOGICAL_WIDTH,
-  LOGICAL_HEIGHT,
-  RES_SCALE,
-  CANVAS_WIDTH,
-  CANVAS_HEIGHT,
-} from './config.js';
+import { LOGICAL_WIDTH, LOGICAL_HEIGHT, RES_SCALE, CANVAS_WIDTH, CANVAS_HEIGHT } from './config.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement) {
-
   const canvas = document.createElement('canvas');
   canvas.width = CANVAS_WIDTH;
   canvas.height = CANVAS_HEIGHT;
@@ -136,7 +129,9 @@ export function createGame(container: HTMLElement) {
       lastTime = performance.now();
       requestAnimationFrame(loop);
     },
-    stop(): void { running = false; },
+    stop(): void {
+      running = false;
+    },
     destroy(): void {
       running = false;
       window.removeEventListener('resize', handleResize);

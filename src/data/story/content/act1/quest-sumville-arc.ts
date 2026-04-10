@@ -27,42 +27,48 @@
  *           Adda (gym leader) spawns after SUMVILLE_CRYSTAL_RETURNED
  */
 
-import { registerQuest }      from '../../quests.js';
-import { registerCutscene }   from '../../cutscenes.js';
-import { registerGate }       from '../../gates.js';
+import { registerQuest } from '../../quests.js';
+import { registerCutscene } from '../../cutscenes.js';
+import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
-import { FLAGS }              from '../../flags.js';
+import { FLAGS } from '../../flags.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
 registerQuest({
   id: 'main-act1-sumville',
-  title:     { en: 'Sumville',              he: 'סאמוויל' },
-  objective: { en: "Meet Prof. Oak and explore Sumville", he: "פגוש את פרופ׳ אוק וחקור את סאמוויל" },
+  title: { en: 'Sumville', he: 'סאמוויל' },
+  objective: { en: 'Meet Prof. Oak and explore Sumville', he: 'פגוש את פרופ׳ אוק וחקור את סאמוויל' },
 });
 
 registerQuest({
   id: 'main-sumville-investigate',
-  title:     { en: 'Locked Gym',            he: 'חדר כושר נעול' },
-  objective: { en: 'Investigate why the Addition Gym is closed', he: 'חקור מדוע חדר הכושר של החיבור סגור' },
+  title: { en: 'Locked Gym', he: 'מכון הפוקימונים נעול' },
+  objective: { en: 'Investigate why the Addition Gym is closed', he: 'חקור מדוע מכון הפוקימונים של החיבור סגור' },
 });
 
 registerQuest({
   id: 'main-sumville-rocket',
-  title:     { en: 'Bridge Crystal',        he: 'גביש הגשר' },
-  objective: { en: 'Defeat Team Rocket at the bridge and recover the stolen Crystal Core', he: 'נצח את רוקט בגשר ושחזר את גביש הליבה הגנוב' },
+  title: { en: 'Bridge Crystal', he: 'גביש הגשר' },
+  objective: {
+    en: 'Defeat Team Rocket at the bridge and recover the stolen Crystal Core',
+    he: 'נצח את רוקט בגשר ושחזר את גביש הליבה הגנוב',
+  },
 });
 
 registerQuest({
   id: 'main-sumville-crystal',
-  title:     { en: 'Return the Crystal',    he: 'החזר את הגביש' },
-  objective: { en: 'Return the Bridge Crystal to the Crystal Keeper at the bridge', he: 'החזר את גביש הגשר לשומרת הגביש בגשר' },
+  title: { en: 'Return the Crystal', he: 'החזר את הגביש' },
+  objective: {
+    en: 'Return the Bridge Crystal to the Crystal Keeper at the bridge',
+    he: 'החזר את גביש הגשר לשומרת הגביש בגשר',
+  },
 });
 
 registerQuest({
   id: 'main-act1-gym1',
-  title:     { en: 'Sumville Gym',          he: 'חדר הכושר של סאמוויל' },
-  objective: { en: 'Defeat Adda at the Addition Gym', he: 'נצח את אדה בחדר הכושר של החיבור' },
+  title: { en: 'Sumville Gym', he: 'מכון הפוקימונים של סאמוויל' },
+  objective: { en: 'Defeat Adda at the Addition Gym', he: 'נצח את אדה במכון הפוקימונים של החיבור' },
 });
 
 // ── Gate ─────────────────────────────────────────────────────────────────────
@@ -76,6 +82,7 @@ registerGate({
   },
   triggerType: 'gym-entry',
   questionSetIds: ['placeholder'],
+  conditions: [],
   totalQuestions: 15,
   passThreshold: 12,
   failurePenalty: { type: 'none' },
@@ -92,31 +99,80 @@ registerGate({
 registerCutscene({
   id: 'act1-oak-arrives',
   skippable: false,
+
   steps: [
     { type: 'screen-fade', direction: 'out', durationMs: 600 },
-    { type: 'screen-fade', direction: 'in',  durationMs: 800 },
+    { type: 'screen-fade', direction: 'in', durationMs: 800 },
+    { type: 'overlay', color: null },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      lines: [{ en: 'I came as soon as Algorithma called.', he: 'באתי ברגע שפרופסור אלגוריתמה התקשר.' }],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Officer Jenny / שוטרת ג׳ני',
+      lines: [
+        {
+          en: "Team Rocket's stole the Null-X system , is the AI that control all of our system. We are in big problem",
+          he: 'גניבת מערכת נול-אקס על ידי צוות רוקט, הבינה המלאכותית ששולטת על כל המערכות שלנו. אנחנו בבעיה גדולה',
+        },
+      ],
+    },
+
     {
       type: 'dialogue',
       speakerId: 'Prof. Oak / פרופ׳ אוק',
       lines: [
-        { en: 'I came as soon as Algorithma called.', he: 'הגעתי ברגע שאלגוריתמה התקשר. זה גדול יותר מנומריה.' },
+        {
+          en: 'A rogue AI compromising verification systems — Kanto has seen disruptions too.',
+          he: 'בינה מלאכותית סוררת שמסכנת מערכות אימות — קנטו גם כן חווה שיבושים.',
+        },
       ],
     },
     {
       type: 'dialogue',
       speakerId: 'Prof. Oak / פרופ׳ אוק',
       lines: [
-        { en: 'A rogue AI compromising verification systems — Kanto has seen disruptions too.', he: 'בינה מלאכותית סוררת שמסכנת מערכות אימות — קנטו גם כן חווה שיבושים.' },
+        {
+          en: 'Until we figure out what to do about Null-x , we still can protect our technology.',
+          he: 'עד שנבין מה לעשות עם נול-אקס, עדיין נוכל להגן על הטכנולוגיה שלנו.',
+        },
+        {
+          he: 'נול-אקס יכול לגרום לשגיאות שעלולות להזיק לאנשים ולפוקימונים. עלינו להיות זהירים ולהגן על הטכנולוגיה שלנו עד שנמצא פתרון.',
+          en: 'The Null-x can produce glitches that can cause harm to the people and the Pokémon. We need to be careful and protect our technology until we can find a solution.',
+        },
+        {
+          en: "Me and Professor Algorithma was in a team that developed the Null-x asystem 20 years ago, Its very sofisticated system but it has cons , it's glitches are dangoures but has limitations!",
+          he: 'אני ופרופסור אלגוריתמה היינו בצוות שפיתח את מערכת נול-אקס לפני 20 שנה, זו מערכת מתוחכמת מאוד אבל יש לה חסרונות, התקלות שלה מסוכנות אבל יש לה מגבלות!',
+        },
+        {
+          en: "They can't solve simple questions that smart kids can ! Math problems, logic questions and even english questions is the Null-x's weakness! ",
+          he: 'הם לא יכולים לפתור שאלות פשוטות שילדים חכמים יכולים! בעיות מתמטיות, שאלות לוגיות ואפילו שאלות באנגלית הן הנקודות החלשות של נול-אקס!',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Officer Jenny / שוטרת ג׳ני',
+      lines: [
+        {
+          en: 'So, lets use this as solution we will block any kind of technology in Numeria region by adding Question guard',
+          he: 'אז, בואו נשתמש בזה כפתרון, נחסום כל סוג של טכנולוגיה באזור נומריה על ידי הוספת שומר שאלות',
+        },
       ],
     },
     {
       type: 'dialogue',
       speakerId: 'Prof. Oak / פרופ׳ אוק',
       lines: [
-        { en: "You've already made it past Route 1. Your brother — ah, I mean Algorithma — chose wisely.", he: 'כבר עברת את שביל 1. אחיך — אה, כלומר אלגוריתמה — בחר בחוכמה.' },
+        {
+          he: 'זו רעיון טוב, כבר יש לנו שאלות מוכנות, פשוט תקרא לקצינים שלך ותמקם אותם בכניסת העיר, בבתי הפוקימונים, במכונים ה , בשוק ובכל מקום שיש בו טכנולוגיה, אנחנו צריכים להגן על האנשים והפוקימונים שלנו מהתקלות של נול-אקס',
+          en: "Its a good idea, we already have ready questions , just call your officers and place them in city entrance, pokecenters , gyms , market and any place that has technology, we need to protect our people and pokemons from the Null-x's glitches",
+        },
       ],
     },
-    { type: 'action', action: { type: 'set-flag',  flag: FLAGS.ACT1_OAK_WARNING_HEARD } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_OAK_WARNING_HEARD } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-gym1' } },
   ],
 });
@@ -127,12 +183,12 @@ registerCutscene({
 registerStoryEvent({
   id: 'evt-act1-oak-arrives',
   trigger: { type: 'map-enter', mapId: 'sumville' },
-  conditions: [
-    { type: 'flag',     flag: FLAGS.GATE_ROUTE1_PASS },
-    { type: 'flag-not', flag: FLAGS.ACT1_OAK_WARNING_HEARD },
-  ],
+  conditions: [{ type: 'flag-not', flag: FLAGS.ACT1_OAK_WARNING_HEARD }],
+  // repeatable: flag-not condition is the real guard; cutscene sets ACT1_OAK_WARNING_HEARD.
+  // Without this, __event-done-* blocks replay if cutscene was interrupted.
+  // repeatable: true,
   actions: [
-    { type: 'set-flag',      flag: FLAGS.VISITED_SUMVILLE },
+    { type: 'set-flag', flag: FLAGS.VISITED_SUMVILLE },
     { type: 'set-infection', cityId: 'sumville', value: 'low' },
     { type: 'start-cutscene', cutsceneId: 'act1-oak-arrives' },
   ],
@@ -144,7 +200,7 @@ registerStoryEvent({
   trigger: { type: 'map-enter', mapId: 'sumville' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_SUMVILLE }],
   actions: [
-    { type: 'set-flag',      flag: FLAGS.VISITED_SUMVILLE },
+    { type: 'set-flag', flag: FLAGS.VISITED_SUMVILLE },
     { type: 'set-infection', cityId: 'sumville', value: 'low' },
   ],
 });
@@ -155,7 +211,7 @@ registerStoryEvent({
   trigger: { type: 'map-enter', mapId: 'sumville' },
   conditions: [{ type: 'flag-not', flag: FLAGS.SUMVILLE_ARRIVED }],
   actions: [
-    { type: 'set-flag',  flag: FLAGS.SUMVILLE_ARRIVED },
+    { type: 'set-flag', flag: FLAGS.SUMVILLE_ARRIVED },
     { type: 'set-quest', questId: 'main-sumville-investigate' },
   ],
   completedFlag: FLAGS.SUMVILLE_ARRIVED,
@@ -184,7 +240,10 @@ registerStoryEvent({
     {
       type: 'show-message',
       lines: [
-        { en: 'The Bridge Crystal is restored! Power flows back to the Addition Gym...', he: 'גביש הגשר שוחזר! הכוח זורם בחזרה למכון...' },
+        {
+          en: 'The Bridge Crystal is restored! Power flows back to the Addition Gym...',
+          he: 'גביש הגשר שוחזר! הכוח זורם בחזרה למכון...',
+        },
         { en: 'Adda has returned to the gym. Go challenge her!', he: 'אדה חזרה למכון. לך לאתגר אותה!' },
       ],
     },
@@ -197,12 +256,15 @@ registerStoryEvent({
   trigger: { type: 'flag-set', flag: FLAGS.SUMVILLE_GYM_CLEARED },
   actions: [
     { type: 'complete-quest', questId: 'main-act1-gym1' },
-    { type: 'set-quest',      questId: 'main-act1-route2' },
+    { type: 'set-quest', questId: 'main-act1-route2' },
     {
       type: 'show-message',
       lines: [
         { en: 'You earned the Sum Badge and HM01 Cut!', he: 'הרווחת את תג הסכום ו-HM01 גזירה!' },
-        { en: 'The path to Route 2 — Difference Pass — is now open. Minusburg awaits!', he: 'הדרך לשביל 2 — מעבר ההפרש — פתוחה עכשיו. מינוסבורג ממתין!' },
+        {
+          en: 'The path to Route 2 — Difference Pass — is now open. Minusburg awaits!',
+          he: 'הדרך לשביל 2 — מעבר ההפרש — פתוחה עכשיו. מינוסבורג ממתין!',
+        },
       ],
     },
   ],
@@ -214,8 +276,8 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 1 },
   conditions: [],
   actions: [
-    { type: 'set-flag',      flag: FLAGS.STORY_BADGE_1 },
+    { type: 'set-flag', flag: FLAGS.STORY_BADGE_1 },
     { type: 'set-infection', cityId: 'sumville', value: 'cleared' },
-    { type: 'set-quest',     questId: 'main-act1-route2' },
+    { type: 'set-quest', questId: 'main-act1-route2' },
   ],
 });

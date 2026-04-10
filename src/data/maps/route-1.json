@@ -259,7 +259,7 @@
     },
     {
       "id": "npc-1774550276085",
-      "x": 33,
+      "x": 32,
       "y": 5,
       "facing": "down",
       "type": "trainer",
@@ -350,14 +350,13 @@
       "despawnAfter": "act1-nullx-intro-seen",
       "autoWalk": {
         "pattern": [],
-        "afterDespawnPattern": [
+        "beforeDespawnPattern": [
           {
             "dir": "right",
-            "steps": 4,
+            "steps": 3,
             "delay": 0
           }
-        ],
-        "afterDespawnLoop": false
+        ]
       },
       "dialogue": [
         {
@@ -448,12 +447,12 @@
   "objects": [
     {
       "key": "r1",
-      "x": 4,
+      "x": 2,
       "y": 6
     },
     {
       "key": "r1",
-      "x": 7,
+      "x": 6,
       "y": 6
     },
     {
@@ -464,21 +463,21 @@
     {
       "key": "r1",
       "x": 16,
+      "y": 8
+    },
+    {
+      "key": "r1",
+      "x": 18,
       "y": 6
     },
     {
       "key": "r1",
-      "x": 19,
+      "x": 21,
       "y": 6
     },
     {
       "key": "r1",
-      "x": 22,
-      "y": 6
-    },
-    {
-      "key": "r1",
-      "x": 25,
+      "x": 24,
       "y": 6
     },
     {
@@ -498,18 +497,18 @@
     },
     {
       "key": "r1",
-      "x": 7,
+      "x": 8,
       "y": 8
     },
     {
       "key": "r1",
-      "x": 10,
+      "x": 12,
       "y": 8
     },
     {
       "key": "r1",
-      "x": 13,
-      "y": 8
+      "x": 14,
+      "y": 6
     },
     {
       "key": "r1",
@@ -528,12 +527,12 @@
     },
     {
       "key": "r1",
-      "x": 28,
+      "x": 29,
       "y": 8
     },
     {
       "key": "r1",
-      "x": 31,
+      "x": 32,
       "y": 8
     },
     {

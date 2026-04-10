@@ -77,6 +77,7 @@ let _active = false;
 
 let _dialogue: DialogueState | null = null;
 let _fade: FadeState | null = null;
+let _overlay: string | null = null; // persistent background color (null = world shows through)
 let _waitTimer = 0;                 // for 'wait' steps
 let _waitingInput = false;          // for 'wait-input' steps
 
@@ -113,6 +114,7 @@ export function deactivateCutscene(): void {
   _def = null;
   _dialogue = null;
   _fade = null;
+  _overlay = null;
   _waitingInput = false;
 }
 
@@ -123,8 +125,22 @@ export function deactivateCutscene(): void {
 export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneContext): void {
   if (!_active) return;
 
-  // Skip: if cutscene is skippable and player presses Escape, jump to end
+  // Skip: if cutscene is skippable and player presses Escape.
+  // We still execute remaining 'action' and 'start-scene' steps so that
+  // story flags / quest changes are applied even when dialogue is skipped.
   if (_def?.skippable && input.isKeyPressed('Escape')) {
+    for (let i = _stepIndex; i < _steps.length; i++) {
+      const step = _steps[i];
+      if (step.type === 'action') {
+        ctx.executeStoryAction((step as { action: import('../data/story/events.js').StoryAction }).action);
+      } else if (step.type === 'start-scene') {
+        // Transition scene must still happen (e.g. STARTER_SELECT)
+        deactivateCutscene();
+        ctx.startScene((step as { sceneId: string }).sceneId);
+        return;
+      }
+      // Dialogue, fades, waits, NPC movement — safely skipped
+    }
     deactivateCutscene();
     return;
   }
@@ -215,7 +231,12 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
 export function renderCutscene(canvas: CanvasRenderingContext2D): void {
   if (!_active) return;
 
-  // Fade overlay (drawn first so dialogue sits on top)
+  // Persistent overlay (solid background — drawn before fade animation)
+  if (_overlay) {
+    fillRect(canvas, 0, 0, W, H, _overlay);
+  }
+
+  // Fade animation overlay (drawn on top of persistent overlay)
   if (_fade && _fade.alpha > 0) {
     canvas.save();
     canvas.globalAlpha = _fade.alpha;
@@ -330,6 +351,12 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     case 'camera-pan': {
       // For now snap immediately; smooth pan can be added later
       ctx.snapCamera(step.x * TILE_SIZE, step.y * TILE_SIZE);
+      _stepIndex++;
+      break;
+    }
+
+    case 'overlay': {
+      _overlay = step.color;  // null clears it, string sets solid color
       _stepIndex++;
       break;
     }
