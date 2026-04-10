@@ -473,7 +473,9 @@ export class MoveEffectivenessTemplate extends QuestionTemplate {
     // (dual types like Bug/Steel can produce "neutral" from two opposing interactions,
     // which would make the educational text misleading for kids)
     const singleTypePool = snapshot.pokemon.filter((p) => p.id !== attacker.id && p.types.length === 1);
-    const defender = this.pickRandom(singleTypePool.length > 0 ? singleTypePool : snapshot.pokemon.filter((p) => p.id !== attacker.id));
+    const defender = this.pickRandom(
+      singleTypePool.length > 0 ? singleTypePool : snapshot.pokemon.filter((p) => p.id !== attacker.id),
+    );
     const move = this.pickRandom(snapshot.moves);
 
     const effectiveness = getTypeEffectiveness(move.type, defender.types);
@@ -529,7 +531,6 @@ export class MoveEffectivenessTemplate extends QuestionTemplate {
     const moveTypeEn = typeNameEn(move.type);
     const moveTypeHe = typeNameHe(move.type);
     const defTypeEnStr = formatTypesEn(defender.types);
-    const defTypeHeStr = formatTypesHe(defender.types);
     // Primary type used in the Hebrew narrative sentence
     const defPrimaryTypeHe = typeNameHe(defender.types[0]);
 
@@ -540,7 +541,6 @@ export class MoveEffectivenessTemplate extends QuestionTemplate {
       label.multiplierStr,
       defPrimaryTypeHe,
       defender.name.he,
-      defTypeHeStr,
     );
 
     return {
@@ -593,7 +593,6 @@ function _typeEffectivenessLineHe(
   multStr: string,
   defPrimaryTypeHe: string,
   defenderNameHe: string,
-  defTypeHeStr: string,
 ): string {
   const suffix = `כמו ${defenderNameHe}`;
   if (mult === 0) {

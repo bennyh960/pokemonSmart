@@ -10,6 +10,7 @@ import { normalizeReward, type TrainerData, type TrainerReward, type DialogueRew
 import { GATES } from '../data/story/gates.js';
 import { BADGES } from '../data/badges.js';
 import { getStoryEvents } from '../data/story/events.js';
+import { FLAGS, FLAG_DESCRIPTIONS } from '../data/story/flags.js';
 import encounterTables from '../data/encounter-tables.json';
 import { getKnownMapIds, loadMapFromProject } from './map-io.js';
 import { mapRelationIndex } from './map-relation-index.js';
@@ -320,6 +321,9 @@ export class PropertiesPanel {
     if (npc.type === 'gate-guard') {
       this.renderGateGuardUI(body, npc);
     }
+
+    // ── Story cross-references ──
+    this.renderStoryRefsPanel(body, npc);
 
     // Delete
     const delBtn = document.createElement('button');
@@ -955,6 +959,96 @@ export class PropertiesPanel {
   }
 
   /**
+   * Render a "Story Cross-References" panel for an NPC.
+   * Shows which story events trigger on this NPC, and which events will
+   * cause it to spawn or despawn (based on its spawnAfter/despawnAfter flags).
+   */
+  private renderStoryRefsPanel(section: HTMLElement, npc: NPCData): void {
+    const events = getStoryEvents();
+    const npcAny = npc as unknown as Record<string, unknown>;
+
+    // Events that trigger when player interacts with this NPC
+    const interactEvents = events.filter(
+      e => e.trigger.type === 'npc-interact' && (e.trigger as { npcId: string }).npcId === npc.id
+    );
+
+    // Events that trigger when this NPC's trainer is defeated
+    const defeatEvents = events.filter(
+      e => e.trigger.type === 'trainer-defeated' && (e.trigger as { trainerId: string }).trainerId === npc.id
+    );
+
+    // Events that SET the spawnAfter flag (i.e., what causes this NPC to appear)
+    const spawnFlag = npcAny['spawnAfter'] as string | undefined;
+    const spawnSources = spawnFlag ? events.filter(e =>
+      e.actions.some(a => a.type === 'set-flag' && (a as { flag: string }).flag === spawnFlag)
+    ) : [];
+
+    // Events that SET the despawnAfter flag (i.e., what causes this NPC to disappear)
+    const despawnFlag = npcAny['despawnAfter'] as string | undefined;
+    const despawnSources = despawnFlag ? events.filter(e =>
+      e.actions.some(a => a.type === 'set-flag' && (a as { flag: string }).flag === despawnFlag)
+    ) : [];
+
+    const hasAny = interactEvents.length || defeatEvents.length || spawnSources.length || despawnSources.length;
+    if (!hasAny) return;
+
+    // Section header
+    const header = document.createElement('div');
+    header.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:10px 0 4px;border-top:1px solid #2a3a5a;padding-top:8px;';
+    header.textContent = '📖 Story Cross-References';
+    section.appendChild(header);
+
+    const container = document.createElement('div');
+    container.style.cssText = 'background:#0d1a2e;border:1px solid #1e3050;border-radius:4px;padding:6px 8px;font-size:10px;line-height:1.6;';
+
+    const addGroup = (title: string, items: string[], color: string) => {
+      if (!items.length) return;
+      const titleEl = document.createElement('div');
+      titleEl.style.cssText = `color:${color};font-weight:600;margin-top:4px;`;
+      titleEl.textContent = title;
+      container.appendChild(titleEl);
+      for (const item of items) {
+        const row = document.createElement('div');
+        row.style.cssText = 'color:#aabbcc;padding-left:8px;';
+        row.textContent = `• ${item}`;
+        container.appendChild(row);
+      }
+    };
+
+    if (interactEvents.length) {
+      addGroup('When player talks to this NPC:', interactEvents.map(e => {
+        const actions = e.actions.map(a => a.type).join(', ');
+        return `"${e.id}" → ${actions}`;
+      }), '#66ddaa');
+    }
+
+    if (defeatEvents.length) {
+      addGroup('When this trainer is defeated:', defeatEvents.map(e => {
+        const actions = e.actions.map(a => a.type).join(', ');
+        return `"${e.id}" → ${actions}`;
+      }), '#dd8866');
+    }
+
+    if (spawnSources.length) {
+      const desc = FLAG_DESCRIPTIONS[spawnFlag!] ?? spawnFlag;
+      addGroup(`What sets spawnAfter (${spawnFlag}):`, spawnSources.map(e => {
+        return `"${e.id}" (trigger: ${e.trigger.type})`;
+      }), '#88aaff');
+      void desc; // suppress unused warning
+    }
+
+    if (despawnSources.length) {
+      const desc = FLAG_DESCRIPTIONS[despawnFlag!] ?? despawnFlag;
+      addGroup(`What sets despawnAfter (${despawnFlag}):`, despawnSources.map(e => {
+        return `"${e.id}" (trigger: ${e.trigger.type})`;
+      }), '#ffaacc');
+      void desc;
+    }
+
+    section.appendChild(container);
+  }
+
+  /**
    * Collect all story flags and where each one is used.
    * Sources: story events (conditions + actions) + current map's NPC spawn/despawn fields.
    */
@@ -982,6 +1076,12 @@ export class PropertiesPanel {
     for (const n of (this.state.mapData.npcs ?? []) as NPCData[]) {
       if (n.spawnAfter) add(n.spawnAfter, `NPC "${n.id}" → spawnAfter`);
       if (n.despawnAfter) add(n.despawnAfter, `NPC "${n.id}" → despawnAfter`);
+    }
+
+    // Seed with all registered FLAGS so they appear in autocomplete
+    // even if not yet used anywhere. Existing entries are kept as-is.
+    for (const flagValue of Object.values(FLAGS)) {
+      if (!usages.has(flagValue)) usages.set(flagValue, []);
     }
 
     return usages;
@@ -1018,6 +1118,8 @@ export class PropertiesPanel {
     for (const flag of Array.from(allFlags.keys()).sort()) {
       const opt = document.createElement('option');
       opt.value = flag;
+      const desc = FLAG_DESCRIPTIONS[flag];
+      if (desc) opt.label = desc;
       datalist.appendChild(opt);
     }
     input.setAttribute('list', listId);

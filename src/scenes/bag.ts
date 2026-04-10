@@ -15,7 +15,13 @@ import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
 import { applyItemEffect, consumeItem, isItemConsumable, itemTargetsPokemon } from '../systems/item-effects.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
-import { getPokemonDisplayName, getLocalizedName, getMoveDisplayName, canLearnViaTM, getLearnLevelForMove } from '../services/pokemon-data.js';
+import {
+  getPokemonDisplayName,
+  getLocalizedName,
+  getMoveDisplayName,
+  canLearnViaTM,
+  getLearnLevelForMove,
+} from '../services/pokemon-data.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setEvolutionData } from './evolution.js';
 import { getTMEffect } from '../data/item-defs.js';
@@ -35,18 +41,35 @@ let bagMode: BagMode = 'overworld';
 
 export let pendingItem: { itemId: string; def: ItemDef } | null = null;
 
-export function setBagMode(mode: BagMode): void { bagMode = mode; }
-export function clearPendingItem(): void { pendingItem = null; }
+export function setBagMode(mode: BagMode): void {
+  bagMode = mode;
+}
+export function clearPendingItem(): void {
+  pendingItem = null;
+}
 
 /* ── Colors (from canvas_coordinates.md) ──────────────────────────── */
 
 const C = {
-  BG: '#0d1a14', CARD_BG: '#0f2a1a', CARD_SEL: '#1a3a2a',
-  BORDER: '#1a4a30', BORDER_SEL: '#2a6a40', SEP: '#1a3a2a',
-  TEXT_PRI: '#ffffff', TEXT_SEC: '#aaccaa', TEXT_MUT: '#667766', TEXT_DIM: '#445544',
-  TAB_BG: '#0a2a1a', TAB_ACT: '#1a5a35', TITLE_BG: '#0a1a10',
-  BTM_BG: '#0a1a10', KEY_BG: '#1a3a2a', KEY_BRD: '#2a5a3a',
-  SEL_BAR: '#20d860', USE_BTN_BG: '#1a5a35', USE_BTN_BRD: '#2a6a40',
+  BG: '#0d1a14',
+  CARD_BG: '#0f2a1a',
+  CARD_SEL: '#1a3a2a',
+  BORDER: '#1a4a30',
+  BORDER_SEL: '#2a6a40',
+  SEP: '#1a3a2a',
+  TEXT_PRI: '#ffffff',
+  TEXT_SEC: '#aaccaa',
+  TEXT_MUT: '#667766',
+  TEXT_DIM: '#445544',
+  TAB_BG: '#0a2a1a',
+  TAB_ACT: '#1a5a35',
+  TITLE_BG: '#0a1a10',
+  BTM_BG: '#0a1a10',
+  KEY_BG: '#1a3a2a',
+  KEY_BRD: '#2a5a3a',
+  SEL_BAR: '#20d860',
+  USE_BTN_BG: '#1a5a35',
+  USE_BTN_BRD: '#2a6a40',
 };
 
 /* ── Category tabs ────────────────────────────────────────────────── */
@@ -54,24 +77,25 @@ const C = {
 interface BagTab {
   labelKey: string;
   categories: ItemCategory[];
-  x: number; w: number;   // from coordinate table
+  x: number;
+  w: number; // from coordinate table
 }
 
 const BAG_TABS: BagTab[] = [
   { labelKey: 'bag.category.medicine', categories: ['healing', 'status-cure', 'revival'], x: 188, w: 46 },
-  { labelKey: 'bag.category.balls',    categories: ['pokeball'],                          x: 155, w: 30 },
-  { labelKey: 'bag.category.battle',   categories: ['battle'],                            x: 124, w: 28 },
-  { labelKey: 'bag.category.vitamins', categories: ['vitamin'],                           x: 84,  w: 38 },
-  { labelKey: 'bag.category.moves',    categories: ['machine'],                           x: 46,  w: 36 },
-  { labelKey: 'bag.category.key',      categories: ['key'],                               x: 8,   w: 36 },
+  { labelKey: 'bag.category.balls', categories: ['pokeball'], x: 155, w: 30 },
+  { labelKey: 'bag.category.battle', categories: ['battle'], x: 124, w: 28 },
+  { labelKey: 'bag.category.vitamins', categories: ['vitamin'], x: 84, w: 38 },
+  { labelKey: 'bag.category.moves', categories: ['machine'], x: 46, w: 36 },
+  { labelKey: 'bag.category.key', categories: ['key'], x: 8, w: 36 },
 ];
 
 /* ── Layout constants (from bag_coordinated.md) ───────────────────── */
 
-const ITEM_Y0 = 28;       // first card Y
-const ITEM_H = 16;        // card height
-const ITEM_STRIDE = 17;   // card + 1px gap
-const MAX_VISIBLE = 5;    // cards visible before separator
+const ITEM_Y0 = 28; // first card Y
+const ITEM_H = 16; // card height
+const ITEM_STRIDE = 17; // card + 1px gap
+const MAX_VISIBLE = 5; // cards visible before separator
 
 export function createBagScene(input: InputManager, stateMachine: StateMachine): Scene {
   let tabIndex = 0;
@@ -127,7 +151,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       return;
     }
 
-    if (pokemon.moves.some(m => m.id === tmEffect.moveId)) {
+    if (pokemon.moves.some((m) => m.id === tmEffect.moveId)) {
       message = t('bag.tm.alreadyKnows', { name: pokemonName, move: moveName });
       messageTimer = 2.0;
       return;
@@ -194,7 +218,10 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         fillRect(ctx, tab.x, 14, tab.w, 10, C.TAB_ACT);
       }
       drawText(ctx, t(tab.labelKey), tab.x + tab.w / 2, 15, {
-        size: 6, color: isActive ? C.TEXT_PRI : C.TEXT_MUT, font: 'monospace', align: 'center',
+        size: 6,
+        color: isActive ? C.TEXT_PRI : C.TEXT_MUT,
+        font: 'monospace',
+        align: 'center',
       });
     }
 
@@ -228,11 +255,19 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         drawItemIcon(ctx, item.id, 210, cy + 3, 10);
 
         // Item name (right-aligned at x=206, cy+2)
-        drawText(ctx, getLocalizedName(item.def.name), 206, cy + 2, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+        drawText(ctx, getLocalizedName(item.def.name), 206, cy + 2, {
+          size: 7,
+          color: C.TEXT_PRI,
+          font: 'monospace',
+          align: 'right',
+        });
 
         // Item description (right-aligned at x=206, cy+10)
         drawText(ctx, getLocalizedName(item.def.description), 206, cy + 10, {
-          size: 5, color: isSel ? C.TEXT_MUT : C.TEXT_DIM, font: 'monospace', align: 'right',
+          size: 5,
+          color: isSel ? C.TEXT_MUT : C.TEXT_DIM,
+          font: 'monospace',
+          align: 'right',
         });
 
         // Qty × symbol + number (left side)
@@ -245,7 +280,11 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         drawText(ctx, '\u25b2', 228, 26, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
       }
       if (scrollOffset + visible < items.length) {
-        drawText(ctx, '\u25bc', 228, ITEM_Y0 + visible * ITEM_STRIDE - 4, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+        drawText(ctx, '\u25bc', 228, ITEM_Y0 + visible * ITEM_STRIDE - 4, {
+          size: 6,
+          color: C.TEXT_MUT,
+          font: 'monospace',
+        });
       }
     }
 
@@ -266,26 +305,45 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       drawItemIcon(ctx, selItem.id, 211, 122, 12);
 
       // Selected item name (green, large, right-aligned)
-      drawText(ctx, getLocalizedName(selItem.def.name), 206, 121, { size: 8, color: C.SEL_BAR, font: 'monospace', align: 'right' });
+      drawText(ctx, getLocalizedName(selItem.def.name), 206, 121, {
+        size: 8,
+        color: C.SEL_BAR,
+        font: 'monospace',
+        align: 'right',
+      });
 
       // Full description (right-aligned) — key items show used state when their usedFlag is set
       const pd = getPlayerData();
       const isKeyUsed = !!(selItem.def.usedFlag && pd.flags[selItem.def.usedFlag]);
       let detailDesc = selItem.def.description;
-      if (isKeyUsed && selItem.def.usedDescription) {
-        detailDesc = getLocale() === 'he' ? selItem.def.usedDescription.he : selItem.def.usedDescription.en;
-      }
-      drawText(ctx, detailDesc, 206, 131, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
+      // if (isKeyUsed && selItem.def.usedDescription) {
+      //   detailDesc = getLocale() === 'he' ? selItem.def.usedDescription.he : selItem.def.usedDescription.en;
+      // }
+      drawText(ctx, getLocalizedName(detailDesc), 206, 131, {
+        size: 6,
+        color: C.TEXT_SEC,
+        font: 'monospace',
+        align: 'right',
+      });
       // "✓ Used" label for delivered key items
       if (isKeyUsed) {
-        drawText(ctx, getLocale() === 'he' ? '✓ נמסר' : '✓ Used', 8, 131, { size: 6, color: '#44cc88', font: 'monospace' });
+        drawText(ctx, getLocale() === 'he' ? '✓ נמסר' : '✓ Used', 8, 131, {
+          size: 6,
+          color: '#44cc88',
+          font: 'monospace',
+        });
       }
 
       // Use button — hidden for key items (they can't be manually used)
       if (selItem.def.category !== 'key') {
         fillRect(ctx, 8, 122, 34, 12, C.USE_BTN_BG);
         drawRect(ctx, 8, 122, 34, 12, C.USE_BTN_BRD);
-        drawText(ctx, t('bag.hint.use') || 'Use', 25, 124, { size: 7, color: C.SEL_BAR, font: 'monospace', align: 'center' });
+        drawText(ctx, t('bag.hint.use') || 'Use', 25, 124, {
+          size: 7,
+          color: C.SEL_BAR,
+          font: 'monospace',
+          align: 'center',
+        });
       }
     }
 
@@ -325,13 +383,19 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       // Dialog box
       fillRect(ctx, 10, 40, 220, 80, C.CARD_BG);
       drawRect(ctx, 10, 40, 220, 80, C.BORDER_SEL);
-      drawText(ctx, warnText, 120, 48, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: 'center', maxWidth: 200 });
+      drawText(ctx, warnText, 120, 48, {
+        size: 6,
+        color: C.TEXT_PRI,
+        font: 'monospace',
+        align: 'center',
+        maxWidth: 200,
+      });
 
       // Yes / No buttons
       const yesColor = w.choiceIndex === 0 ? C.SEL_BAR : C.TEXT_MUT;
-      const noColor  = w.choiceIndex === 1 ? C.SEL_BAR : C.TEXT_MUT;
-      fillRect(ctx, 40,  98, 60, 12, w.choiceIndex === 0 ? C.TAB_ACT : C.CARD_BG);
-      drawRect(ctx, 40,  98, 60, 12, C.BORDER);
+      const noColor = w.choiceIndex === 1 ? C.SEL_BAR : C.TEXT_MUT;
+      fillRect(ctx, 40, 98, 60, 12, w.choiceIndex === 0 ? C.TAB_ACT : C.CARD_BG);
+      drawRect(ctx, 40, 98, 60, 12, C.BORDER);
       drawText(ctx, t('npc.choice.yes'), 70, 101, { size: 7, color: yesColor, font: 'monospace', align: 'center' });
       fillRect(ctx, 140, 98, 60, 12, w.choiceIndex === 1 ? C.TAB_ACT : C.CARD_BG);
       drawRect(ctx, 140, 98, 60, 12, C.BORDER);
@@ -507,7 +571,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             setPartyMode('select-target', undefined, {
               itemId: item.id,
               itemName: getLocalizedName(item.def.name),
-              description: item.def.description,
+              description: getLocalizedName(item.def.description),
             });
             stateMachine.push('PARTY');
           } else {
@@ -536,7 +600,11 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       resetMoveLearningQueueState(pendingMoveLearning);
     },
     exit(): void {},
-    update(dt: number): void { update(dt); },
-    render(ctx: CanvasRenderingContext2D): void { render(ctx); },
+    update(dt: number): void {
+      update(dt);
+    },
+    render(ctx: CanvasRenderingContext2D): void {
+      render(ctx);
+    },
   };
 }

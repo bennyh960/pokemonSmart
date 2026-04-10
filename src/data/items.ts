@@ -13,31 +13,34 @@ import itemsJson from './items.json';
 
 export type { ItemCategory, ItemEffect } from './item-defs.js';
 
-const rawItems = itemsJson as Record<string, {
-  name: { en: string; he: string };
-  slug: string;
-  description: string;
-  category: string;
-  sprite: string | null;
-  holdable: boolean;
-  flingPower: number | null;
-}>;
+const rawItems = itemsJson as unknown as Record<
+  string,
+  {
+    name: { en: string; he: string };
+    slug: string;
+    description: { en: string; he: string };
+    category: string;
+    sprite: string | null;
+    holdable: boolean;
+    flingPower: number | null;
+  }
+>;
 
 export interface ItemDef {
-  id: string;                  // slug (e.g. 'potion') — used as key in player inventory
-  numericId: number;           // PokeAPI item ID
-  name: LocalizedName;         // { en, he } — use getLocalizedName() to resolve
-  description: LocalizedName;  // { en, he } — use getLocalizedName() to resolve
+  id: string; // slug (e.g. 'potion') — used as key in player inventory
+  numericId: number; // PokeAPI item ID
+  name: LocalizedName; // { en, he } — use getLocalizedName() to resolve
+  description: LocalizedName; // { en, he } — use getLocalizedName() to resolve
   category: ItemCategory;
   price: number;
   effect: ItemEffect;
   usableInBattle: boolean;
   usableInOverworld: boolean;
   sprite: string;
-  topColor?: string;           // Pokeball top-half color
+  topColor?: string; // Pokeball top-half color
   // ── Key item fields (forwarded from ItemGameDef) ──
-  keyFlag?: string;            // Flag auto-set when item is received
-  usedFlag?: string;           // Flag that marks item as delivered/used
+  keyFlag?: string; // Flag auto-set when item is received
+  usedFlag?: string; // Flag that marks item as delivered/used
   usedDescription?: { en: string; he: string }; // Shown in bag when usedFlag is true
 }
 
@@ -54,15 +57,12 @@ function buildItems(): Record<string, ItemDef> {
 
     // Resolve localized name and description: prefer game def override, then items.json, then slug fallback
     const resolvedName = gameDef.name ?? raw?.name ?? { en: slug, he: slug };
-    const resolvedDescription = typeof gameDef.description === 'object'
-      ? gameDef.description.en
-      : (raw?.description ?? '');
 
     result[slug] = {
       id: slug,
       numericId: numId,
       name: resolvedName,
-      description: resolvedDescription,
+      description: gameDef.description ?? raw?.description ?? { en: 'unknown', he: '???' },
       category: gameDef.category,
       price: gameDef.price,
       effect: gameDef.effect,
@@ -99,10 +99,10 @@ export function getAllItems(): ItemDef[] {
 }
 
 export function getItemsByCategory(category: ItemCategory): ItemDef[] {
-  return Object.values(ITEMS).filter(i => i.category === category);
+  return Object.values(ITEMS).filter((i) => i.category === category);
 }
 
 /** Items available in the Poke Mart (price > 0, not key items). */
 export function getShopItems(): ItemDef[] {
-  return Object.values(ITEMS).filter(i => i.price > 0 && i.category !== 'key');
+  return Object.values(ITEMS).filter((i) => i.price > 0 && i.category !== 'key');
 }

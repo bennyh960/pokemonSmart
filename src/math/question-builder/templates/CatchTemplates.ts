@@ -96,7 +96,7 @@ export class PokeBallsNeededTemplate extends QuestionTemplate {
         `To catch ${pokemon.name.en} you need ${needed} Poké Balls.\n` +
         `You already have ${have}.\nHow many more do you need to buy?`,
       he:
-        `כדי לתפוס את ${pokemon.name.he} אתה צריך ${needed} פוכדור${balls > 1 ? 'ים' : ''}.\n` +
+        `כדי לתפוס את ${pokemon.name.he} אתה צריך ${needed} פוכדור${needed > 1 ? 'ים' : ''}.\n` +
         `כבר יש לך ${have}.\nכמה עוד אתה צריך לקנות?`,
     };
   }

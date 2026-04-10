@@ -3,7 +3,6 @@
  * Uses dynamic imports to load map JSON files directly from the game's data folder.
  */
 
-import { editorState } from '../state/editor-state.js';
 import { importMap } from './map-importer.js';
 
 /** All known game maps with their display names */
@@ -25,18 +24,18 @@ export const GAME_MAPS: { id: string; label: string }[] = [
 
 /** Dynamic import loaders for each map */
 const mapLoaders: Record<string, () => Promise<any>> = {
-  'zeroville': () => import('../../data/maps/zeroville.json'),
+  zeroville: () => import('../../data/maps/zeroville.json'),
   'route-1': () => import('../../data/maps/route-1.json'),
-  'sumville': () => import('../../data/maps/sumville.json'),
+  sumville: () => import('../../data/maps/sumville.json'),
   'pokecenter-interior': () => import('../../data/maps/pokecenter-interior.json'),
   'mart-interior': () => import('../../data/maps/mart-interior.json'),
   'test-map': () => import('../../data/maps/test-map.json'),
-  'algebria': () => import('../../data/maps/algebria.json'),
-  'divideburg': () => import('../../data/maps/divideburg.json'),
-  'fractalis': () => import('../../data/maps/fractalis.json'),
+  algebria: () => import('../../data/maps/algebria.json'),
+  divideburg: () => import('../../data/maps/divideburg.json'),
+  fractalis: () => import('../../data/maps/fractalis.json'),
   'infinity-plateau': () => import('../../data/maps/infinity-plateau.json'),
   'logica-heights': () => import('../../data/maps/logica-heights.json'),
-  'multitown': () => import('../../data/maps/multitown.json'),
+  multitown: () => import('../../data/maps/multitown.json'),
   'prime-city': () => import('../../data/maps/prime-city.json'),
 };
 

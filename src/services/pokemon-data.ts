@@ -47,10 +47,10 @@ export interface PokemonData {
     speed: number;
   };
   baseExperience: number;
-  height?: number;        // in decimeters (from PokeAPI) — TODO: populate via scripts/enrich-pokemon-metadata.ts
-  weight?: number;        // in hectograms (from PokeAPI) — TODO: populate via scripts/enrich-pokemon-metadata.ts
-  category?: string;      // e.g. "Seed Pokémon" — English only, TODO: fetch from PokeAPI species
-  description?: string;   // Pokedex flavor text — English only, TODO: fetch from PokeAPI species
+  height?: number; // in decimeters (from PokeAPI) — TODO: populate via scripts/enrich-pokemon-metadata.ts
+  weight?: number; // in hectograms (from PokeAPI) — TODO: populate via scripts/enrich-pokemon-metadata.ts
+  category?: string; // e.g. "Seed Pokémon" — English only, TODO: fetch from PokeAPI species
+  description?: string; // Pokedex flavor text — English only, TODO: fetch from PokeAPI species
 }
 
 interface RawMoveData {
@@ -258,7 +258,7 @@ export function getNextEvolution(pokemonId: number): EvolutionStep | undefined {
   if (!chain) return undefined;
 
   const stages = chain.stages;
-  const currentIndex = stages.findIndex(s => s.id === pokemonId);
+  const currentIndex = stages.findIndex((s) => s.id === pokemonId);
   if (currentIndex === -1 || currentIndex >= stages.length - 1) return undefined;
 
   return stages[currentIndex + 1];
@@ -330,7 +330,7 @@ export function getPokemonCatchRate(id: number): number {
 
 interface RawAbilityDef {
   name: LocalizedName;
-  description: {en: string; he: string};
+  description: { en: string; he: string };
   generationIntroduced: string;
   battleEffects?: AbilityBattleEffect[];
 }
@@ -383,7 +383,10 @@ function normalizeAbilityDef(ability: RawAbilityDef): AbilityDef {
 }
 
 const abilities = Object.fromEntries(
-  Object.entries(abilitiesData as Record<string, RawAbilityDef>).map(([id, ability]) => [id, normalizeAbilityDef(ability)]),
+  Object.entries(abilitiesData as Record<string, RawAbilityDef>).map(([id, ability]) => [
+    id,
+    normalizeAbilityDef(ability),
+  ]),
 ) as Record<string, AbilityDef>;
 const pokemonAbilities = pokemonAbilitiesData as Record<string, PokemonAbilityMapping>;
 
@@ -492,7 +495,7 @@ export interface ItemData {
   flingPower: number | null;
 }
 
-const items = itemsData as Record<string, ItemData>;
+const items = itemsData as unknown as Record<string, ItemData>;
 
 /** Get item data by PokeAPI item ID. */
 export function getItemData(id: number): ItemData | undefined {
@@ -514,11 +517,11 @@ export function getAllItemIds(): number[] {
 /** Returns the level at which a Pokemon naturally learns a move, or null if it doesn't. */
 export function getLearnLevelForMove(pokemonId: number, moveId: number): number | null {
   const learnset = getLearnset(pokemonId);
-  const entry = learnset.find(e => e.moveId === moveId);
+  const entry = learnset.find((e) => e.moveId === moveId);
   return entry ? entry.levelLearned : null;
 }
 
 /** Returns true if a Pokemon can learn a specific move via TM/HM. */
 export function canLearnViaTM(pokemonId: number, moveId: number): boolean {
-  return getTmLearnset(pokemonId).some(e => e.moveId === moveId);
+  return getTmLearnset(pokemonId).some((e) => e.moveId === moveId);
 }

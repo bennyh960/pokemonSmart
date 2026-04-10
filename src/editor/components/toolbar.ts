@@ -188,7 +188,9 @@ export function createToolbar(): HTMLElement {
     const json = exportMapJson();
     navigator.clipboard.writeText(json).then(() => {
       copyBtn.textContent = 'Copied!';
-      setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1500);
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy JSON';
+      }, 1500);
     });
   });
   mapGroup.appendChild(copyBtn);
@@ -203,7 +205,6 @@ export function createToolbar(): HTMLElement {
   // Update on state changes
   editorState.subscribe(() => {
     // Update tool button states
-    const allButtons = [...toolButtons, ...entityButtons];
     for (const btn of toolButtons) {
       const t = tools.find((t) => btn.textContent?.startsWith(t.icon));
       btn.classList.toggle('active', t?.tool === editorState.activeTool);
@@ -229,4 +230,3 @@ function createGroup(label: string): HTMLElement {
   group.appendChild(lbl);
   return group;
 }
-

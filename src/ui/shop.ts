@@ -26,41 +26,41 @@ interface CategoryDef {
 }
 
 const CATEGORIES: CategoryDef[] = [
-  { id: 'healing',     text: 'ריפוי',     x: 198, w: 36, dotColor: '#20d860' },
+  { id: 'healing', text: 'ריפוי', x: 198, w: 36, dotColor: '#20d860' },
   { id: 'status-cure', text: 'ריפוי מצב', x: 142, w: 28, dotColor: '#5080ff', dotX: 172 },
-  { id: 'revival',     text: 'החייאה',     x: 104, w: 20, dotColor: '#f8d030', dotX: 126 },
-  { id: 'pokeball',    text: 'כדורים',     x: 66,  w: 22, dotColor: '#e85858', dotX: 90 },
-  { id: 'battle',      text: 'קרב',        x: 38,  w: 14, dotColor: '#f08030', dotX: 54 },
-  { id: 'vitamin',     text: 'ויטמינים',   x: 4,   w: 18, dotColor: '#a040a0', dotX: 24 },
+  { id: 'revival', text: 'החייאה', x: 104, w: 20, dotColor: '#f8d030', dotX: 126 },
+  { id: 'pokeball', text: 'כדורים', x: 66, w: 22, dotColor: '#e85858', dotX: 90 },
+  { id: 'battle', text: 'קרב', x: 38, w: 14, dotColor: '#f08030', dotX: 54 },
+  { id: 'vitamin', text: 'ויטמינים', x: 4, w: 18, dotColor: '#a040a0', dotX: 24 },
 ];
 
 // Icon color mapping per item id
 const ICON_COLORS: Record<string, { color: string; type: string }> = {
-  'potion':        { color: '#a040dc', type: 'potion' },
-  'super-potion':  { color: '#50a0ff', type: 'potion' },
-  'hyper-potion':  { color: '#ff783c', type: 'potion' },
-  'max-potion':    { color: '#f8d030', type: 'potion' },
-  'full-restore':  { color: '#20d860', type: 'cross' },
-  'fresh-water':   { color: '#40b0e0', type: 'potion' },
-  'soda-pop':      { color: '#e060a0', type: 'potion' },
-  'lemonade':      { color: '#e0c040', type: 'potion' },
-  'moomoo-milk':   { color: '#f0f0f0', type: 'potion' },
-  'antidote':      { color: '#f8d030', type: 'capsule' },
-  'burn-heal':     { color: '#f08030', type: 'capsule' },
-  'ice-heal':      { color: '#98d8d8', type: 'capsule' },
-  'awakening':     { color: '#f0c040', type: 'capsule' },
+  potion: { color: '#a040dc', type: 'potion' },
+  'super-potion': { color: '#50a0ff', type: 'potion' },
+  'hyper-potion': { color: '#ff783c', type: 'potion' },
+  'max-potion': { color: '#f8d030', type: 'potion' },
+  'full-restore': { color: '#20d860', type: 'cross' },
+  'fresh-water': { color: '#40b0e0', type: 'potion' },
+  'soda-pop': { color: '#e060a0', type: 'potion' },
+  lemonade: { color: '#e0c040', type: 'potion' },
+  'moomoo-milk': { color: '#f0f0f0', type: 'potion' },
+  antidote: { color: '#f8d030', type: 'capsule' },
+  'burn-heal': { color: '#f08030', type: 'capsule' },
+  'ice-heal': { color: '#98d8d8', type: 'capsule' },
+  awakening: { color: '#f0c040', type: 'capsule' },
   'paralyze-heal': { color: '#f8d830', type: 'capsule' },
-  'full-heal':     { color: '#20d860', type: 'cross' },
-  'revive':        { color: '#f08030', type: 'diamond' },
-  'max-revive':    { color: '#f8d030', type: 'diamond' },
-  'poke-ball':     { color: '#e85858', type: 'ball' },
-  'great-ball':    { color: '#5080ff', type: 'ball' },
-  'ultra-ball':    { color: '#f8d030', type: 'ball' },
-  'x-attack':      { color: '#f08030', type: 'bottle' },
-  'x-defense':     { color: '#6890f0', type: 'bottle' },
-  'x-speed':       { color: '#f85888', type: 'bottle' },
-  'x-special':     { color: '#a040a0', type: 'bottle' },
-  'rare-candy':    { color: '#ff60a0', type: 'diamond' },
+  'full-heal': { color: '#20d860', type: 'cross' },
+  revive: { color: '#f08030', type: 'diamond' },
+  'max-revive': { color: '#f8d030', type: 'diamond' },
+  'poke-ball': { color: '#e85858', type: 'ball' },
+  'great-ball': { color: '#5080ff', type: 'ball' },
+  'ultra-ball': { color: '#f8d030', type: 'ball' },
+  'x-attack': { color: '#f08030', type: 'bottle' },
+  'x-defense': { color: '#6890f0', type: 'bottle' },
+  'x-speed': { color: '#f85888', type: 'bottle' },
+  'x-special': { color: '#a040a0', type: 'bottle' },
+  'rare-candy': { color: '#ff60a0', type: 'diamond' },
 };
 
 // ─── Layout constants ───────────────────────────────────────────────
@@ -107,7 +107,7 @@ export function closeShop(shop: ShopState): void {
 }
 
 function getShopItemsForCategory(cat: ItemCategory): ItemDef[] {
-  return getItemsByCategory(cat).filter(i => i.price > 0);
+  return getItemsByCategory(cat).filter((i) => i.price > 0);
 }
 
 function buyItem(itemId: string): boolean {
@@ -193,11 +193,7 @@ function hexToRGBA(hex: string, alpha: number): string {
 // fillRoundRect and strokeRoundRect imported from renderer.ts
 
 // ─── Icon drawing (16×16 box) ───────────────────────────────────────
-function drawItemIcon(
-  ctx: CanvasRenderingContext2D,
-  type: string, color: string,
-  ix: number, iy: number,
-): void {
+function drawItemIcon(ctx: CanvasRenderingContext2D, type: string, color: string, ix: number, iy: number): void {
   // Box background
   ctx.fillStyle = hexToRGBA(color, 0.1);
   fillRoundRect(ctx, ix, iy, 16, 16, 3);
@@ -387,7 +383,7 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
       ctx.font = `5px ${FONT_HE}`;
       ctx.textAlign = 'right';
       ctx.direction = 'rtl';
-      ctx.fillText(item.description, 210, cardY + 12);
+      ctx.fillText(getLocalizedName(item.description), 210, cardY + 12);
 
       // Owned count
       ctx.fillStyle = '#3a4a3a';
@@ -431,9 +427,7 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
     // Thumb
     const thumbH = Math.max(20, (MAX_VISIBLE / shop.items.length) * 110);
     const maxScroll = shop.items.length - MAX_VISIBLE;
-    const thumbY = maxScroll > 0
-      ? 28 + (shop.scrollOffset / maxScroll) * (110 - thumbH)
-      : 28;
+    const thumbY = maxScroll > 0 ? 28 + (shop.scrollOffset / maxScroll) * (110 - thumbH) : 28;
     ctx.fillStyle = '#1a4a30';
     ctx.fillRect(237, thumbY, 2, thumbH);
   }
@@ -442,10 +436,10 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
   fillRect(ctx, 0, 150, 240, 10, '#0a1a10');
 
   const keys = [
-    { pillX: 4,   pillW: 18, pillText: 'ESC',   hintX: 24,  hintText: 'יציאה' },
-    { pillX: 52,  pillW: 24, pillText: 'Enter',  hintX: 78,  hintText: t('shop.buy') },
-    { pillX: 108, pillW: 14, pillText: '◀▶',     hintX: 124, hintText: 'קטגוריה' },
-    { pillX: 160, pillW: 14, pillText: '▲▼',     hintX: 176, hintText: 'ניווט' },
+    { pillX: 4, pillW: 18, pillText: 'ESC', hintX: 24, hintText: 'יציאה' },
+    { pillX: 52, pillW: 24, pillText: 'Enter', hintX: 78, hintText: t('shop.buy') },
+    { pillX: 108, pillW: 14, pillText: '◀▶', hintX: 124, hintText: 'קטגוריה' },
+    { pillX: 160, pillW: 14, pillText: '▲▼', hintX: 176, hintText: 'ניווט' },
   ];
 
   for (const k of keys) {
