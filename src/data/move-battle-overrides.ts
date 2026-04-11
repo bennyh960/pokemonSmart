@@ -17,12 +17,14 @@ function volatileEffect(
   extra?: Omit<MoveBattleEffect, 'id' | 'chance' | 'target'>,
 ): MoveOverride {
   return {
-    effects: [{
-      id,
-      chance,
-      target: 'target',
-      ...extra,
-    }],
+    effects: [
+      {
+        id,
+        chance,
+        target: 'target',
+        ...extra,
+      },
+    ],
   };
 }
 
@@ -80,6 +82,7 @@ function leavesUserAtOneHp(): MoveOverride {
 }
 
 export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
+  'Dragon Rage': { minimumDamage: 40 },
   'Quick Attack': { priority: 1 },
   'Extreme Speed': { priority: 2 },
   'Hyper Beam': { behaviorTags: ['must-recharge'] },
@@ -197,5 +200,4 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Amnesia: userStages(['specialDefense', 2]),
   'Rapid Spin': userStages(['speed', 1]),
   'Bulk Up': userStages(['attack', 1], ['defense', 1]),
-
 };

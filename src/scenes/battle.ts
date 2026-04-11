@@ -2169,20 +2169,22 @@ export function createBattleScene(
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(enemy, m.type);
     const criticalHit =
       hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy) : false;
-    const plannedDamage =
-      hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed
-        ? calcDamage(
-            player,
-            playerBattleState,
-            enemy,
-            enemyBattleState,
-            enemySideState,
-            m.power,
-            m.type,
-            damageClass,
-            criticalHit,
-          )
-        : 0;
+    const plannedDamage = (() => {
+      if (!hitResult.hit || targetTypeImmune || m.power <= 0 || absorbed) return 0;
+      const base = calcDamage(
+        player,
+        playerBattleState,
+        enemy,
+        enemyBattleState,
+        enemySideState,
+        m.power,
+        m.type,
+        damageClass,
+        criticalHit,
+      );
+      const min = moveBattleData?.minimumDamage ?? null;
+      return min !== null ? Math.max(min, base) : base;
+    })();
     const allowTargetEffects =
       hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < enemy.hp);
     const targetCanStillAct = !enemyAlreadyAttacked;
@@ -2412,20 +2414,22 @@ export function createBattleScene(
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(player, m.type);
     const criticalHit =
       hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player) : false;
-    const plannedDamage =
-      hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed
-        ? calcDamage(
-            enemy,
-            enemyBattleState,
-            player,
-            playerBattleState,
-            playerSideState,
-            m.power,
-            m.type,
-            damageClass,
-            criticalHit,
-          )
-        : 0;
+    const plannedDamage = (() => {
+      if (!hitResult.hit || targetTypeImmune || m.power <= 0 || absorbed) return 0;
+      const base = calcDamage(
+        enemy,
+        enemyBattleState,
+        player,
+        playerBattleState,
+        playerSideState,
+        m.power,
+        m.type,
+        damageClass,
+        criticalHit,
+      );
+      const min = moveBattleData?.minimumDamage ?? null;
+      return min !== null ? Math.max(min, base) : base;
+    })();
     const allowTargetEffects =
       hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < player.hp);
     const targetCanStillAct = enemyGoesFirst;

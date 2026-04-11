@@ -1221,13 +1221,13 @@
       "he": "זעם דרקון"
     },
     "type": "dragon",
-    "power": null,
+    "power": 75,
     "accuracy": 100,
     "pp": 10,
     "effectChance": null,
     "mathDifficulty": 1,
     "damageClass": "special",
-    "description": "Inflicts n*40HP damage where n is the turn number of usage."
+    "description": "Deals damage based on the user's stats, but always deals at least 40 HP. Type immunities still apply."
   },
   {
     "id": 83,

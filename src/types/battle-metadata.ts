@@ -2,14 +2,7 @@ import type { PokemonType } from './index.ts';
 
 export type MajorStatusId = 'poison' | 'burn' | 'paralyze' | 'sleep' | 'freeze';
 
-export type BattleStatId =
-  | 'attack'
-  | 'defense'
-  | 'specialAttack'
-  | 'specialDefense'
-  | 'speed'
-  | 'accuracy'
-  | 'evasion';
+export type BattleStatId = 'attack' | 'defense' | 'specialAttack' | 'specialDefense' | 'speed' | 'accuracy' | 'evasion';
 
 export type MoveBattleTarget =
   | 'selected-pokemon'
@@ -84,6 +77,7 @@ export interface MoveBattleMetadata {
   category: string | null;
   flags: string[];
   behaviorTags: MoveBattleBehaviorTag[];
+  minimumDamage: number | null;
 }
 
 export type AbilityBattleEffect =
@@ -131,6 +125,7 @@ export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
     category: null,
     flags: [],
     behaviorTags: [],
+    minimumDamage: null,
   };
 }
 
