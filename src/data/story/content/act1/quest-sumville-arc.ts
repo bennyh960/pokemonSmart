@@ -202,6 +202,7 @@ registerStoryEvent({
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_SUMVILLE },
     { type: 'set-infection', cityId: 'sumville', value: 'low' },
+    { type: 'complete-quest', questId: 'main-act1-sumville' },
   ],
 });
 

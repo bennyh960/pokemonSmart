@@ -1227,7 +1227,7 @@
     "effectChance": null,
     "mathDifficulty": 1,
     "damageClass": "special",
-    "description": "Always inflicts 40HP damage."
+    "description": "Inflicts n*40HP damage where n is the turn number of usage."
   },
   {
     "id": 83,

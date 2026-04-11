@@ -8,20 +8,53 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect } from '../engine/renderer.js';
-import { createHPBar, updateHPBar, renderHPBar, setHP, setXP, setDisplayedXP, setStatus, setVolatileStatuses, isHPAnimating, isXPAnimating } from '../ui/hp-bar.js';
+import {
+  createHPBar,
+  updateHPBar,
+  renderHPBar,
+  setHP,
+  setXP,
+  setDisplayedXP,
+  setStatus,
+  setVolatileStatuses,
+  isHPAnimating,
+  isXPAnimating,
+} from '../ui/hp-bar.js';
 import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
 import type { MainMenuChoice } from '../ui/battle-menu.js';
 import { resolveBattleBackgroundPath, type BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { BTL } from '../data/battle-constants.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
-  createFlash, updateFlash, renderFlash, createShake, updateShake, applyShake, resetShake,
-  createFade, updateFade, renderFade, spawnDamageNumber, updatePopups, renderPopups, clearAllPopups,
-  createLevelUpEffect, updateLevelUpEffect, renderLevelUpEffect,
-  createCaptureSuccessEffect, updateCaptureSuccessEffect, renderCaptureSuccessEffect,
-  createSendOutEffect, updateSendOutEffect, renderSendOutEffect,
-  createAttackEffect, updateAttackEffect, renderAttackEffect,
-  createStatusTurnEffect, updateStatusTurnEffect, renderStatusTurnEffect,
+  createFlash,
+  updateFlash,
+  renderFlash,
+  createShake,
+  updateShake,
+  applyShake,
+  resetShake,
+  createFade,
+  updateFade,
+  renderFade,
+  spawnDamageNumber,
+  updatePopups,
+  renderPopups,
+  clearAllPopups,
+  createLevelUpEffect,
+  updateLevelUpEffect,
+  renderLevelUpEffect,
+  createCaptureSuccessEffect,
+  updateCaptureSuccessEffect,
+  renderCaptureSuccessEffect,
+  createSendOutEffect,
+  updateSendOutEffect,
+  renderSendOutEffect,
+  createAttackEffect,
+  updateAttackEffect,
+  renderAttackEffect,
+  createStatusTurnEffect,
+  updateStatusTurnEffect,
+  renderStatusTurnEffect,
 } from '../ui/battle-animations.js';
 import {
   createBattleAnimationDirector,
@@ -69,7 +102,7 @@ import {
 } from '../systems/move-learning.js';
 import { calculateCaptureChance } from '../systems/capture.js';
 import type { BattlePokemonRuntimeState, BattleSideRuntimeState } from '../systems/battle-state.js';
-import { createBattleSideRuntimeState } from '../systems/battle-state.js';
+import { BATTLE_STAT_PERCENT_STEP, createBattleSideRuntimeState } from '../systems/battle-state.js';
 import {
   advanceSideEffectTurns,
   applyDrainHealing,
@@ -112,13 +145,35 @@ import {
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
 
-type BattlePhase = 'INTRO' | 'SELECT_ACTION' | 'SELECT_MOVE' | 'PLAYER_ATTACK'
-  | 'ENEMY_TURN' | 'CHECK_WIN' | 'WIN' | 'XP_GAIN' | 'LEVEL_UP' | 'LEVEL_UP_MOVES' | 'LOSE' | 'RUN'
-  | 'USE_ITEM' | 'TRAINER_NEXT_POKEMON' | 'TRAINER_NEXT_XP'
-  | 'TRAINER_NEXT_LEVEL_UP' | 'TRAINER_NEXT_LEVEL_UP_MOVES'
-  | 'TRAINER_REWARD' | 'TRAINER_REWARD_LEVEL_UP' | 'TRAINER_REWARD_LEVEL_UP_MOVES'
-  | 'WAITING_BAG' | 'WAITING_PARTY' | 'WAITING_MOVE_LEARN' | 'SWITCH_POKEMON' | 'CAPTURE_ANIM'
-  | 'PLAYER_FAINT_SWITCH' | 'TRAINER_LOSS' | 'END_TURN_STATUS';
+type BattlePhase =
+  | 'INTRO'
+  | 'SELECT_ACTION'
+  | 'SELECT_MOVE'
+  | 'PLAYER_ATTACK'
+  | 'ENEMY_TURN'
+  | 'CHECK_WIN'
+  | 'WIN'
+  | 'XP_GAIN'
+  | 'LEVEL_UP'
+  | 'LEVEL_UP_MOVES'
+  | 'LOSE'
+  | 'RUN'
+  | 'USE_ITEM'
+  | 'TRAINER_NEXT_POKEMON'
+  | 'TRAINER_NEXT_XP'
+  | 'TRAINER_NEXT_LEVEL_UP'
+  | 'TRAINER_NEXT_LEVEL_UP_MOVES'
+  | 'TRAINER_REWARD'
+  | 'TRAINER_REWARD_LEVEL_UP'
+  | 'TRAINER_REWARD_LEVEL_UP_MOVES'
+  | 'WAITING_BAG'
+  | 'WAITING_PARTY'
+  | 'WAITING_MOVE_LEARN'
+  | 'SWITCH_POKEMON'
+  | 'CAPTURE_ANIM'
+  | 'PLAYER_FAINT_SWITCH'
+  | 'TRAINER_LOSS'
+  | 'END_TURN_STATUS';
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
@@ -131,11 +186,11 @@ export interface TrainerBattleData {
   trainerId: string;
   party: Pokemon[];
   reward: TrainerReward;
-  trainerSprite?: string;           // e.g., 'youngster', 'lass'
-  postBattleDialogue?: BilingualText[];  // Dialogue shown after defeat
-  reencounterIndex?: number;        // 0 = first fight, 1+ = rematch (items skipped on rematch)
-  hasReencounter?: boolean;         // true if trainer has re-encounter config (for phone registration)
-  locationEn?: string;              // trainer location for phone display
+  trainerSprite?: string; // e.g., 'youngster', 'lass'
+  postBattleDialogue?: BilingualText[]; // Dialogue shown after defeat
+  reencounterIndex?: number; // 0 = first fight, 1+ = rematch (items skipped on rematch)
+  hasReencounter?: boolean; // true if trainer has re-encounter config (for phone registration)
+  locationEn?: string; // trainer location for phone display
   locationHe?: string;
 }
 
@@ -190,13 +245,13 @@ function calcDamage(
     }
   }
   defenderMultiplier *= getSideDamageTakenMultiplier(defSideState, damageClass);
-  const lf = ((2 * atk.level) / 5) + 2;
-  const base = ((lf * power * ((attackStat * burnMultiplier) / defenseStat)) / 50) + 2;
+  const lf = (2 * atk.level) / 5 + 2;
+  const base = (lf * power * ((attackStat * burnMultiplier) / defenseStat)) / 50 + 2;
   const eff = getCombinedTypeEffectiveness(moveType, def.types);
   if (eff === 0) return 0;
   const stab = atk.types.includes(moveType) ? 1.5 : 1;
   const critMultiplier = criticalHit ? 1.5 : 1;
-  const rand = 0.70 + Math.random() * 0.30;
+  const rand = 0.7 + Math.random() * 0.3;
   return Math.max(1, Math.floor(base * eff * stab * critMultiplier * defenderMultiplier * rand));
 }
 
@@ -281,10 +336,7 @@ function getTurnEffectLine(
   }
 }
 
-function getMoveEffectAppliedLine(
-  name: string,
-  effectId: 'confusion' | 'leech-seed' | 'trap',
-): string {
+function getMoveEffectAppliedLine(name: string, effectId: 'confusion' | 'leech-seed' | 'trap'): string {
   switch (effectId) {
     case 'confusion':
       return t('battle.confused', { name });
@@ -295,10 +347,7 @@ function getMoveEffectAppliedLine(
   }
 }
 
-function getSideEffectAppliedLine(
-  name: string,
-  effectId: 'reflect' | 'light-screen' | 'mist' | 'safeguard',
-): string {
+function getSideEffectAppliedLine(name: string, effectId: 'reflect' | 'light-screen' | 'mist' | 'safeguard'): string {
   switch (effectId) {
     case 'reflect':
       return t('battle.reflectApplied', { name });
@@ -311,10 +360,7 @@ function getSideEffectAppliedLine(
   }
 }
 
-function getSideEffectEndedLine(
-  name: string,
-  effectId: 'reflect' | 'light-screen' | 'mist' | 'safeguard',
-): string {
+function getSideEffectEndedLine(name: string, effectId: 'reflect' | 'light-screen' | 'mist' | 'safeguard'): string {
   switch (effectId) {
     case 'reflect':
       return t('battle.reflectEnded', { name });
@@ -367,10 +413,7 @@ function getBattleStatLabel(stat: BattleStatId): string {
   return stat;
 }
 
-function getStatChangeLine(
-  name: string,
-  change: ReturnType<typeof applyStatChanges>[number],
-): string {
+function getStatChangeLine(name: string, change: ReturnType<typeof applyStatChanges>[number]): string {
   const stat = getBattleStatLabel(change.stat);
   if (change.direction === 'rose') {
     return t(change.sharply ? 'battle.statRoseSharply' : 'battle.statRose', { name, stat });
@@ -403,12 +446,17 @@ function normalizeBattleItemStat(stat: string): BattleStatId | null {
 
 function doesAbilityAbsorbMove(target: Pokemon, moveType: PokemonType): boolean {
   if (!target.abilityId) return false;
-  return getAbilityBattleEffects(target.abilityId).some(effect => {
+  return getAbilityBattleEffects(target.abilityId).some((effect) => {
     return effect.kind === 'typeAbsorbHeal' && effect.moveTypes.includes(moveType);
   });
 }
 
-export function createBattleScene(input: InputManager, stateMachine: StateMachine, _canvas: HTMLCanvasElement, audio: AudioManager): Scene {
+export function createBattleScene(
+  input: InputManager,
+  stateMachine: StateMachine,
+  _canvas: HTMLCanvasElement,
+  audio: AudioManager,
+): Scene {
   let phase: BattlePhase = 'INTRO';
   let player: Pokemon;
   let enemy: Pokemon;
@@ -441,18 +489,18 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   let previousLeadId: number | null = null;
   // True when the switch was forced by a faint — enemy does NOT get a free attack
   let isForcedFaintSwitch = false;
-  let activePartyIndex = 0;  // Index of the active Pokemon in the player's party
-  let battleRoster = new Set<number>();  // Party indices that have entered this battle
-  let battleTurnCounts = new Map<number, number>();  // Active turns per party slot this battle
-  let pendingTurnCredit = false;  // Whether to credit a turn to active Pokemon after phase resolves
-  let maxRosterSize = 0;  // Max Pokemon player can use (= trainer's party size, or 6 for wild)
+  let activePartyIndex = 0; // Index of the active Pokemon in the player's party
+  let battleRoster = new Set<number>(); // Party indices that have entered this battle
+  let battleTurnCounts = new Map<number, number>(); // Active turns per party slot this battle
+  let pendingTurnCredit = false; // Whether to credit a turn to active Pokemon after phase resolves
+  let maxRosterSize = 0; // Max Pokemon player can use (= trainer's party size, or 6 for wild)
   let isTrainerBattle = false;
   let trainerData: TrainerBattleData | null = null;
   let trainerPartyIndex = 0;
   let battleContext: BattleContext = 'grass';
   let battleBackground: BattleBackgroundId | null = null;
   let bgImage: HTMLImageElement | null = null;
-  let showTrainerSprite = false;  // Show trainer sprite during intro
+  let showTrainerSprite = false; // Show trainer sprite during intro
   let enemyGoesFirst = false;
   let enemySelectedMoveIndex = -1;
   let enemyAlreadyAttacked = false;
@@ -477,31 +525,43 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       const stat = normalizeBattleItemStat(def.effect.stat);
       if (!stat) {
         textBox = createTextBox([t('battle.cantDoThat')], isRTL());
-        phase = 'USE_ITEM'; phaseTimer = 0;
+        phase = 'USE_ITEM';
+        phaseTimer = 0;
         return;
       }
 
-      const applied = applyStatChanges(playerBattleState, [{
-        stat,
-        stages: def.effect.stages,
-        target: 'user',
-        chance: 100,
-      }], 'user');
+      const applied = applyStatChanges(
+        playerBattleState,
+        [
+          {
+            stat,
+            stages: def.effect.stages,
+            target: 'user',
+            chance: 100,
+          },
+        ],
+        'user',
+      );
 
       if (applied.length === 0) {
         textBox = createTextBox([t('battle.statWontGoHigher')], isRTL());
-        phase = 'USE_ITEM'; phaseTimer = 0;
+        phase = 'USE_ITEM';
+        phaseTimer = 0;
         return;
       }
 
       consumeItem(pd.items, itemId);
       syncPlayerBar();
       audio.playSFX('heal');
-      textBox = createTextBox([
-        t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) }),
-        ...applied.map(change => getStatChangeLine(getPokemonDisplayName(player.id), change)),
-      ], isRTL());
-      phase = 'USE_ITEM'; phaseTimer = 0;
+      textBox = createTextBox(
+        [
+          t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) }),
+          ...applied.map((change) => getStatChangeLine(getPokemonDisplayName(player.id), change)),
+        ],
+        isRTL(),
+      );
+      phase = 'USE_ITEM';
+      phaseTimer = 0;
       return;
     }
 
@@ -509,7 +569,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (def.effect.type === 'capture') {
       if (isTrainerBattle) {
         textBox = createTextBox([t('battle.cantCatchTrainer')], isRTL());
-        phase = 'USE_ITEM'; phaseTimer = 0;
+        phase = 'USE_ITEM';
+        phaseTimer = 0;
         return;
       }
       consumeItem(pd.items, itemId);
@@ -526,8 +587,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       setStatus(playerHpBar, player.status ?? '');
       audio.playSFX('heal');
     }
-    textBox = createTextBox([t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) })], isRTL());
-    phase = 'USE_ITEM'; phaseTimer = 0;
+    textBox = createTextBox(
+      [t('battle.usedItem', { item: getLocalizedName(def.name), name: getPokemonDisplayName(player.id) })],
+      isRTL(),
+    );
+    phase = 'USE_ITEM';
+    phaseTimer = 0;
   }
 
   function sendOutNextTrainerPokemon(): void {
@@ -536,10 +601,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     enemySelectedMoveIndex = -1;
     enemyAlreadyAttacked = false;
-    enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp,
-      BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
+    enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
     setStatus(enemyHpBar, enemy.status ?? '');
-    setVolatileStatuses(enemyHpBar, [...getDisplayedVolatileStatuses(enemyBattleState), ...getDisplayedSideStatuses(enemySideState)]);
+    setVolatileStatuses(enemyHpBar, [
+      ...getDisplayedVolatileStatuses(enemyBattleState),
+      ...getDisplayedSideStatuses(enemySideState),
+    ]);
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
     pendingEnemySendOutAnimation = true;
@@ -573,7 +640,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       // Badge + story events only on first encounter
       if (!isRematch) {
         if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
-          pd.badges |= (1 << (reward.badge - 1));
+          pd.badges |= 1 << (reward.badge - 1);
           fireStoryTrigger({ type: 'badge-earned', badge: reward.badge });
         }
         if (reward.storyEvent) {
@@ -585,7 +652,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       recordTrainerDefeat(td.trainerId);
       // Register phone contact on first defeat if trainer supports re-encounters
       if (!isRematch && td.hasReencounter) {
-        if (!pd.phoneContacts.some(c => c.trainerId === td.trainerId)) {
+        if (!pd.phoneContacts.some((c) => c.trainerId === td.trainerId)) {
           pd.phoneContacts.push({
             trainerId: td.trainerId,
             trainerName: td.trainerName,
@@ -629,7 +696,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       isTrainerBattle = true;
       trainerData = pendingTrainerBattle;
       trainerPartyIndex = 0;
-      showTrainerSprite = true;  // Show trainer sprite during initial intro
+      showTrainerSprite = true; // Show trainer sprite during initial intro
       pendingTrainerBattle = null;
       // Preload trainer sprite if available
       if (trainerData.trainerSprite) {
@@ -638,16 +705,18 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
 
     if (pendingPlayer && pendingEnemy) {
-      player = pendingPlayer; enemy = pendingEnemy;
+      player = pendingPlayer;
+      enemy = pendingEnemy;
       // Determine which party index this player Pokemon corresponds to
       if (hasActiveGame()) {
         const pd = getPlayerData();
-        const idx = pd.party.findIndex(p => p === player);
+        const idx = pd.party.findIndex((p) => p === player);
         activePartyIndex = idx >= 0 ? idx : 0;
       } else {
         activePartyIndex = 0;
       }
-      pendingPlayer = null; pendingEnemy = null;
+      pendingPlayer = null;
+      pendingEnemy = null;
     } else {
       player = (hasActiveGame() && getPlayerData().party[0]) || fallbackPlayer();
       enemy = fallbackEnemy();
@@ -657,28 +726,53 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     pendingBattleContext = 'grass';
     pendingBattleBackground = null;
     // V2 layout: opponent bar at (136,12), player bar position computed dynamically
-    enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp,
-      BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
-    playerHpBar = createHPBar(player.id, player.level, player.hp, player.maxHp,
-      BTL.PLY_BAR_X, BTL.PLY_BAR_BOTTOM - 18, true, player.xp, player.xpToNext);
+    enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
+    playerHpBar = createHPBar(
+      player.id,
+      player.level,
+      player.hp,
+      player.maxHp,
+      BTL.PLY_BAR_X,
+      BTL.PLY_BAR_BOTTOM - 18,
+      true,
+      player.xp,
+      player.xpToNext,
+    );
     playerBattleState = createBattleRuntimeStateForPokemon(player);
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     playerSideState = createBattleSideRuntimeState();
     enemySideState = createBattleSideRuntimeState();
     setStatus(enemyHpBar, enemy.status ?? '');
     setStatus(playerHpBar, player.status ?? '');
-    setVolatileStatuses(enemyHpBar, [...getDisplayedVolatileStatuses(enemyBattleState), ...getDisplayedSideStatuses(enemySideState)]);
-    setVolatileStatuses(playerHpBar, [...getDisplayedVolatileStatuses(playerBattleState), ...getDisplayedSideStatuses(playerSideState)]);
+    setVolatileStatuses(enemyHpBar, [
+      ...getDisplayedVolatileStatuses(enemyBattleState),
+      ...getDisplayedSideStatuses(enemySideState),
+    ]);
+    setVolatileStatuses(playerHpBar, [
+      ...getDisplayedVolatileStatuses(playerBattleState),
+      ...getDisplayedSideStatuses(playerSideState),
+    ]);
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
-    textBox = null; flash = null; shake = null; levelUpFx = null; captureSuccessFx = null; sendOutFx = null; attackFx = null; statusTurnFx = [];
-    waitingForBag = false; waitingForParty = false; previousLeadId = null;
+    textBox = null;
+    flash = null;
+    shake = null;
+    levelUpFx = null;
+    captureSuccessFx = null;
+    sendOutFx = null;
+    attackFx = null;
+    statusTurnFx = [];
+    waitingForBag = false;
+    waitingForParty = false;
+    previousLeadId = null;
     pendingNewMoves = [];
     activeMoveLearningPrompt = null;
     pendingMoveLearningResolution = null;
     pendingMoveLearningPhase = null;
-    enemyGoesFirst = false; enemySelectedMoveIndex = -1; enemyAlreadyAttacked = false;
+    enemyGoesFirst = false;
+    enemySelectedMoveIndex = -1;
+    enemyAlreadyAttacked = false;
     turnNumber = 0;
     pendingTurnCredit = false;
     lossDialogueShown = false;
@@ -715,9 +809,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         visible: false,
       });
     }
-    fade = createFade(true, 0.5); clearAllPopups();
+    fade = createFade(true, 0.5);
+    clearAllPopups();
     pendingEvolution = null;
-    phase = 'INTRO'; phaseTimer = 0; xpGained = 0;
+    phase = 'INTRO';
+    phaseTimer = 0;
+    xpGained = 0;
     // Preload Pokemon sprites
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
     loadImage(`/sprites/pokemon/back/${player.id}.png`).catch(() => {});
@@ -725,9 +822,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     bgImage = null;
     const bgPath = resolveBattleBackgroundPath(battleBackground, battleContext);
     if (bgPath) {
-      loadImage(bgPath).then(img => {
-        bgImage = img;
-      }).catch(() => { bgImage = null; });
+      loadImage(bgPath)
+        .then((img) => {
+          bgImage = img;
+        })
+        .catch(() => {
+          bgImage = null;
+        });
     }
   }
 
@@ -784,14 +885,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       score += estimatedScore;
 
       // KO bonus: rough damage estimate using attack vs defense
-      const attackStat = damageClass === 'physical'
-        ? getModifiedStatValue(enemy, enemyBattleState, 'attack')
-        : getModifiedStatValue(enemy, enemyBattleState, 'specialAttack');
-      const defenseStat = damageClass === 'physical'
-        ? getModifiedStatValue(player, playerBattleState, 'defense')
-        : getModifiedStatValue(player, playerBattleState, 'specialDefense');
+      const attackStat =
+        damageClass === 'physical'
+          ? getModifiedStatValue(enemy, enemyBattleState, 'attack')
+          : getModifiedStatValue(enemy, enemyBattleState, 'specialAttack');
+      const defenseStat =
+        damageClass === 'physical'
+          ? getModifiedStatValue(player, playerBattleState, 'defense')
+          : getModifiedStatValue(player, playerBattleState, 'specialDefense');
       // Simplified damage formula (proportional to Gen 1 formula)
-      const estimatedDamage = ((2 * enemy.level / 5 + 2) * movePower * attackStat / defenseStat / 50 + 2) * stab * effectiveness;
+      const estimatedDamage =
+        ((((2 * enemy.level) / 5 + 2) * movePower * attackStat) / defenseStat / 50 + 2) * stab * effectiveness;
       if (estimatedDamage >= player.hp) {
         score += 10000;
       }
@@ -857,9 +961,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function resolveForcedPlayerTurn(): void {
     enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
     const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
-    const playerMoveId = pendingForcedPlayerMoveIndex !== null
-      ? player.moves[pendingForcedPlayerMoveIndex]?.id ?? 0
-      : 0;
+    const playerMoveId =
+      pendingForcedPlayerMoveIndex !== null ? (player.moves[pendingForcedPlayerMoveIndex]?.id ?? 0) : 0;
     const turnOrder = determineTurnOrder(
       player,
       playerBattleState,
@@ -937,11 +1040,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function canUseOpeningSoloSwitch(partyIndex: number): boolean {
-    return isTrainerBattle
-      && maxRosterSize === 1
-      && turnNumber === 1
-      && !soloOpeningSwitchUsed
-      && partyIndex !== activePartyIndex;
+    return (
+      isTrainerBattle &&
+      maxRosterSize === 1 &&
+      turnNumber === 1 &&
+      !soloOpeningSwitchUsed &&
+      partyIndex !== activePartyIndex
+    );
   }
 
   function getBallStartPoint(): { x: number; y: number } {
@@ -953,7 +1058,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
   function getBallTargetPoint(): { x: number; y: number } {
     return {
-      x: BTL.OPP_SPRITE.x + (BTL.OPP_SPRITE.w / 2),
+      x: BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
       y: BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h - 8,
     };
   }
@@ -988,6 +1093,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   }
 
   function getCaptureChance(ballRate: number): number {
+    // Sum all negative stat-stage values (each stage = BATTLE_STAT_PERCENT_STEP) to get total stages reduced
+    const statStagesReduced = Object.values(enemyBattleState.statModifiers)
+      .filter((v) => v < 0)
+      .reduce((sum, v) => sum + Math.abs(v) / BATTLE_STAT_PERCENT_STEP, 0);
+
     return calculateCaptureChance({
       ballRate,
       speciesCatchRate: getPokemonCatchRate(enemy.id),
@@ -997,6 +1107,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       wildLevel: enemy.level,
       turnNumber,
       status: getEnemyCaptureStatus(),
+      statStagesReduced,
     });
   }
 
@@ -1087,22 +1198,24 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       rotation: 0,
       visible: true,
     });
-    animationDirector.play(sequenceStep(
-      callStep(() => audio.playCry(enemy.id)),
-      parallelStep(
-        tweenActorStep('enemy', { y: 10, alpha: 0 }, 0.28, 'easeInOut'),
-        tweenActorStep('enemy', { scaleX: 1.08, scaleY: 0.08 }, 0.28, 'easeInOut'),
+    animationDirector.play(
+      sequenceStep(
+        callStep(() => audio.playCry(enemy.id)),
+        parallelStep(
+          tweenActorStep('enemy', { y: 10, alpha: 0 }, 0.28, 'easeInOut'),
+          tweenActorStep('enemy', { scaleX: 1.08, scaleY: 0.08 }, 0.28, 'easeInOut'),
+        ),
+        callStep(() => {
+          animationDirector.setActorState('enemy', {
+            y: 10,
+            alpha: 0,
+            scaleX: 1.08,
+            scaleY: 0.08,
+            visible: false,
+          });
+        }),
       ),
-      callStep(() => {
-        animationDirector.setActorState('enemy', {
-          y: 10,
-          alpha: 0,
-          scaleX: 1.08,
-          scaleY: 0.08,
-          visible: false,
-        });
-      }),
-    ));
+    );
   }
 
   function startPlayerFaintAnimation(): void {
@@ -1116,22 +1229,24 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       rotation: 0,
       visible: true,
     });
-    animationDirector.play(sequenceStep(
-      callStep(() => audio.playCry(player.id)),
-      parallelStep(
-        tweenActorStep('player', { y: 12, alpha: 0 }, 0.28, 'easeInOut'),
-        tweenActorStep('player', { scaleX: 1.04, scaleY: 0.08 }, 0.28, 'easeInOut'),
+    animationDirector.play(
+      sequenceStep(
+        callStep(() => audio.playCry(player.id)),
+        parallelStep(
+          tweenActorStep('player', { y: 12, alpha: 0 }, 0.28, 'easeInOut'),
+          tweenActorStep('player', { scaleX: 1.04, scaleY: 0.08 }, 0.28, 'easeInOut'),
+        ),
+        callStep(() => {
+          animationDirector.setActorState('player', {
+            y: 12,
+            alpha: 0,
+            scaleX: 1.04,
+            scaleY: 0.08,
+            visible: false,
+          });
+        }),
       ),
-      callStep(() => {
-        animationDirector.setActorState('player', {
-          y: 12,
-          alpha: 0,
-          scaleX: 1.04,
-          scaleY: 0.08,
-          visible: false,
-        });
-      }),
-    ));
+    );
   }
 
   function startPlayerRetreatAnimation(): void {
@@ -1145,22 +1260,24 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       rotation: 0,
       visible: true,
     });
-    animationDirector.play(sequenceStep(
-      parallelStep(
-        tweenActorStep('player', { x: -26, y: 10, alpha: 0 }, 0.22, 'easeInOut'),
-        tweenActorStep('player', { scaleX: 0.72, scaleY: 0.72 }, 0.22, 'easeInOut'),
+    animationDirector.play(
+      sequenceStep(
+        parallelStep(
+          tweenActorStep('player', { x: -26, y: 10, alpha: 0 }, 0.22, 'easeInOut'),
+          tweenActorStep('player', { scaleX: 0.72, scaleY: 0.72 }, 0.22, 'easeInOut'),
+        ),
+        callStep(() => {
+          animationDirector.setActorState('player', {
+            x: -26,
+            y: 10,
+            alpha: 0,
+            scaleX: 0.72,
+            scaleY: 0.72,
+            visible: false,
+          });
+        }),
       ),
-      callStep(() => {
-        animationDirector.setActorState('player', {
-          x: -26,
-          y: 10,
-          alpha: 0,
-          scaleX: 0.72,
-          scaleY: 0.72,
-          visible: false,
-        });
-      }),
-    ));
+    );
   }
 
   function startEnemySendOutAnimation(): void {
@@ -1188,55 +1305,72 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       rotation: -0.2,
       visible: false,
     });
-    animationDirector.play(sequenceStep(
-      callStep(() => audio.playSFX('menu-select')),
-      tweenActorStep('ball', {
-        x: start.x + ((target.x - start.x) * 0.58),
-        y: target.y - 26,
-        rotation: -0.4,
-      }, 0.14, 'easeOut'),
-      tweenActorStep('ball', {
-        x: target.x,
-        y: target.y,
-        rotation: 0,
-      }, 0.12, 'easeInOut'),
-      callStep(() => {
-        audio.playSFX('hit');
-        flash = createFlash('#ff6a6a', 0.14);
-        sendOutFx = createSendOutEffect(target.x, target.y - 2, '#ff6a6a', '#ffd6d6');
-        activeBallId = null;
-        animationDirector.setActorState('ball', {
-          alpha: 0,
-          visible: false,
-        });
-        animationDirector.setActorState('enemy', {
-          visible: true,
-        });
-      }),
-      waitStep(0.04),
-      callStep(() => audio.playCry(enemy.id)),
-      tweenActorStep('enemy', {
-        x: 0,
-        y: 0,
-        scaleX: 1,
-        scaleY: 1,
-        alpha: 1,
-        rotation: 0,
-        visible: true,
-      }, 0.26, 'easeOut'),
-      callStep(() => {
-        activeBallId = null;
-        animationDirector.setActorState('ball', {
-          x: 0,
-          y: 0,
-          scaleX: 1,
-          scaleY: 1,
-          alpha: 1,
-          rotation: 0,
-          visible: false,
-        });
-      }),
-    ));
+    animationDirector.play(
+      sequenceStep(
+        callStep(() => audio.playSFX('menu-select')),
+        tweenActorStep(
+          'ball',
+          {
+            x: start.x + (target.x - start.x) * 0.58,
+            y: target.y - 26,
+            rotation: -0.4,
+          },
+          0.14,
+          'easeOut',
+        ),
+        tweenActorStep(
+          'ball',
+          {
+            x: target.x,
+            y: target.y,
+            rotation: 0,
+          },
+          0.12,
+          'easeInOut',
+        ),
+        callStep(() => {
+          audio.playSFX('hit');
+          flash = createFlash('#ff6a6a', 0.14);
+          sendOutFx = createSendOutEffect(target.x, target.y - 2, '#ff6a6a', '#ffd6d6');
+          activeBallId = null;
+          animationDirector.setActorState('ball', {
+            alpha: 0,
+            visible: false,
+          });
+          animationDirector.setActorState('enemy', {
+            visible: true,
+          });
+        }),
+        waitStep(0.04),
+        callStep(() => audio.playCry(enemy.id)),
+        tweenActorStep(
+          'enemy',
+          {
+            x: 0,
+            y: 0,
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            rotation: 0,
+            visible: true,
+          },
+          0.26,
+          'easeOut',
+        ),
+        callStep(() => {
+          activeBallId = null;
+          animationDirector.setActorState('ball', {
+            x: 0,
+            y: 0,
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            rotation: 0,
+            visible: false,
+          });
+        }),
+      ),
+    );
   }
 
   function startPlayerSendOutAnimation(): void {
@@ -1264,55 +1398,72 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       rotation: 0.14,
       visible: false,
     });
-    animationDirector.play(sequenceStep(
-      callStep(() => audio.playSFX('menu-select')),
-      tweenActorStep('ball', {
-        x: start.x - ((start.x - target.x) * 0.58),
-        y: target.y - 22,
-        rotation: 0.38,
-      }, 0.14, 'easeOut'),
-      tweenActorStep('ball', {
-        x: target.x,
-        y: target.y,
-        rotation: 0,
-      }, 0.12, 'easeInOut'),
-      callStep(() => {
-        audio.playSFX('hit');
-        flash = createFlash('#d6ecff', 0.12);
-        sendOutFx = createSendOutEffect(target.x, target.y - 2, '#80b8ff', '#e8f4ff');
-        activeBallId = null;
-        animationDirector.setActorState('ball', {
-          alpha: 0,
-          visible: false,
-        });
-        animationDirector.setActorState('player', {
-          visible: true,
-        });
-      }),
-      waitStep(0.03),
-      callStep(() => audio.playCry(player.id)),
-      tweenActorStep('player', {
-        x: 0,
-        y: 0,
-        scaleX: 1,
-        scaleY: 1,
-        alpha: 1,
-        rotation: 0,
-        visible: true,
-      }, 0.24, 'easeOut'),
-      callStep(() => {
-        activeBallId = null;
-        animationDirector.setActorState('ball', {
-          x: 0,
-          y: 0,
-          scaleX: 1,
-          scaleY: 1,
-          alpha: 1,
-          rotation: 0,
-          visible: false,
-        });
-      }),
-    ));
+    animationDirector.play(
+      sequenceStep(
+        callStep(() => audio.playSFX('menu-select')),
+        tweenActorStep(
+          'ball',
+          {
+            x: start.x - (start.x - target.x) * 0.58,
+            y: target.y - 22,
+            rotation: 0.38,
+          },
+          0.14,
+          'easeOut',
+        ),
+        tweenActorStep(
+          'ball',
+          {
+            x: target.x,
+            y: target.y,
+            rotation: 0,
+          },
+          0.12,
+          'easeInOut',
+        ),
+        callStep(() => {
+          audio.playSFX('hit');
+          flash = createFlash('#d6ecff', 0.12);
+          sendOutFx = createSendOutEffect(target.x, target.y - 2, '#80b8ff', '#e8f4ff');
+          activeBallId = null;
+          animationDirector.setActorState('ball', {
+            alpha: 0,
+            visible: false,
+          });
+          animationDirector.setActorState('player', {
+            visible: true,
+          });
+        }),
+        waitStep(0.03),
+        callStep(() => audio.playCry(player.id)),
+        tweenActorStep(
+          'player',
+          {
+            x: 0,
+            y: 0,
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            rotation: 0,
+            visible: true,
+          },
+          0.24,
+          'easeOut',
+        ),
+        callStep(() => {
+          activeBallId = null;
+          animationDirector.setActorState('ball', {
+            x: 0,
+            y: 0,
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            rotation: 0,
+            visible: false,
+          });
+        }),
+      ),
+    );
   }
 
   function startCaptureSequence(itemId: string, caught: boolean): void {
@@ -1332,11 +1483,16 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     });
 
     const absorbStep = parallelStep(
-      tweenActorStep('enemy', {
-        scaleX: 0.15,
-        scaleY: 0.15,
-        alpha: 0,
-      }, 0.16, 'easeInOut'),
+      tweenActorStep(
+        'enemy',
+        {
+          scaleX: 0.15,
+          scaleY: 0.15,
+          alpha: 0,
+        },
+        0.16,
+        'easeInOut',
+      ),
       sequenceStep(
         tweenActorStep('ball', { scaleX: 1.2, scaleY: 1.2 }, 0.08, 'easeOut'),
         tweenActorStep('ball', { scaleX: 1, scaleY: 1 }, 0.08, 'easeInOut'),
@@ -1345,16 +1501,26 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     const throwAndTrapStep = sequenceStep(
       callStep(() => audio.playSFX('menu-select')),
-      tweenActorStep('ball', {
-        x: start.x + ((target.x - start.x) * 0.55),
-        y: target.y - 30,
-        rotation: 0.45,
-      }, 0.16, 'easeOut'),
-      tweenActorStep('ball', {
-        x: target.x,
-        y: target.y,
-        rotation: 0,
-      }, 0.14, 'easeInOut'),
+      tweenActorStep(
+        'ball',
+        {
+          x: start.x + (target.x - start.x) * 0.55,
+          y: target.y - 30,
+          rotation: 0.45,
+        },
+        0.16,
+        'easeOut',
+      ),
+      tweenActorStep(
+        'ball',
+        {
+          x: target.x,
+          y: target.y,
+          rotation: 0,
+        },
+        0.14,
+        'easeInOut',
+      ),
       callStep(() => audio.playSFX('hit')),
       absorbStep,
       callStep(() => {
@@ -1396,12 +1562,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         });
       }),
       parallelStep(
-        tweenActorStep('enemy', {
-          scaleX: 1,
-          scaleY: 1,
-          alpha: 1,
-          visible: true,
-        }, 0.16, 'easeOut'),
+        tweenActorStep(
+          'enemy',
+          {
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            visible: true,
+          },
+          0.16,
+          'easeOut',
+        ),
         sequenceStep(
           tweenActorStep('ball', { scaleX: 1.35, scaleY: 1.35, alpha: 0.15 }, 0.1, 'easeOut'),
           tweenActorStep('ball', { alpha: 0, scaleX: 0.9, scaleY: 0.9 }, 0.12, 'easeInOut'),
@@ -1410,10 +1581,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       waitStep(0.06),
     );
 
-    animationDirector.play(sequenceStep(
-      throwAndTrapStep,
-      caught ? successSequence : brokeFreeSequence,
-    ));
+    animationDirector.play(sequenceStep(throwAndTrapStep, caught ? successSequence : brokeFreeSequence));
     phase = 'CAPTURE_ANIM';
   }
 
@@ -1423,7 +1591,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     playerHpBar.maxHp = player.maxHp;
     playerHpBar.currentHp = Math.max(0, Math.min(player.hp, player.maxHp));
     playerHpBar.statChanges = getDisplayedStatChanges(playerBattleState);
-    setVolatileStatuses(playerHpBar, [...getDisplayedVolatileStatuses(playerBattleState), ...getDisplayedSideStatuses(playerSideState)]);
+    setVolatileStatuses(playerHpBar, [
+      ...getDisplayedVolatileStatuses(playerBattleState),
+      ...getDisplayedSideStatuses(playerSideState),
+    ]);
     setStatus(playerHpBar, player.status ?? '');
     if (playerHpBar.displayHp > playerHpBar.maxHp) {
       playerHpBar.displayHp = playerHpBar.maxHp;
@@ -1441,7 +1612,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     enemyHpBar.maxHp = enemy.maxHp;
     enemyHpBar.currentHp = Math.max(0, Math.min(enemy.hp, enemy.maxHp));
     enemyHpBar.statChanges = getDisplayedStatChanges(enemyBattleState);
-    setVolatileStatuses(enemyHpBar, [...getDisplayedVolatileStatuses(enemyBattleState), ...getDisplayedSideStatuses(enemySideState)]);
+    setVolatileStatuses(enemyHpBar, [
+      ...getDisplayedVolatileStatuses(enemyBattleState),
+      ...getDisplayedSideStatuses(enemySideState),
+    ]);
     setStatus(enemyHpBar, enemy.status ?? '');
     if (enemyHpBar.displayHp > enemyHpBar.maxHp) {
       enemyHpBar.displayHp = enemyHpBar.maxHp;
@@ -1462,7 +1636,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
 
     const pd = hasActiveGame() ? getPlayerData() : null;
-    const allPartyFainted = pd ? pd.party.every(p => p.hp <= 0) : true;
+    const allPartyFainted = pd ? pd.party.every((p) => p.hp <= 0) : true;
     if (isTrainerBattle && !allPartyFainted) {
       beginLoss('trainer-roster');
     } else {
@@ -1546,6 +1720,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
 
     pendingTurnCredit = true;
+    turnNumber++;
+    menu.turnNumber = turnNumber;
     enterSelectMovePhase();
   }
 
@@ -1566,7 +1742,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     pendingNewMoves = result.newMoves || [];
     activeMoveLearningPrompt = null;
     pendingEvolution = result.evolution ?? null;
-    textBox = createTextBox([t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })], isRTL());
+    textBox = createTextBox(
+      [t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })],
+      isRTL(),
+    );
     phase = levelPhase;
     return true;
   }
@@ -1600,9 +1779,11 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     pendingMoveLearningResolution = null;
     pendingMoveLearningPhase = phaseAfterResolution;
     setPartyMode('move-learning');
-    setMoveLearningSession(createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
-      pendingMoveLearningResolution = resolution;
-    }));
+    setMoveLearningSession(
+      createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
+        pendingMoveLearningResolution = resolution;
+      }),
+    );
     phase = 'WAITING_MOVE_LEARN';
     stateMachine.push('PARTY');
     return true;
@@ -1632,12 +1813,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     };
   }
 
-  function getActorStatusBounds(actor: 'player' | 'enemy'): { centerX: number; centerY: number; width: number; height: number } {
+  function getActorStatusBounds(actor: 'player' | 'enemy'): {
+    centerX: number;
+    centerY: number;
+    width: number;
+    height: number;
+  } {
     const sprite = actor === 'player' ? BTL.PLY_SPRITE : BTL.OPP_SPRITE;
     const state = animationDirector.getActorState(actor);
     return {
-      centerX: sprite.x + (sprite.w / 2) + state.x,
-      centerY: sprite.y + (sprite.h / 2) + state.y,
+      centerX: sprite.x + sprite.w / 2 + state.x,
+      centerY: sprite.y + sprite.h / 2 + state.y,
       width: sprite.w * Math.abs(state.scaleX),
       height: sprite.h * Math.abs(state.scaleY),
     };
@@ -1645,13 +1831,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
   function queueStatusTurnEffect(actor: 'player' | 'enemy', effectId: string): void {
     const bounds = getActorStatusBounds(actor);
-    statusTurnFx.push(createStatusTurnEffect(
-      effectId,
-      bounds.centerX,
-      bounds.centerY,
-      bounds.width,
-      bounds.height,
-    ));
+    statusTurnFx.push(createStatusTurnEffect(effectId, bounds.centerX, bounds.centerY, bounds.width, bounds.height));
   }
 
   function triggerStatusTurnEffects(
@@ -1687,8 +1867,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (move.power > 0) {
       const absorbEffect = defender.abilityId
         ? getAbilityBattleEffects(defender.abilityId).find((effect) => {
-          return effect.kind === 'typeAbsorbHeal' && effect.moveTypes.includes(move.type);
-        })
+            return effect.kind === 'typeAbsorbHeal' && effect.moveTypes.includes(move.type);
+          })
         : undefined;
       if (absorbEffect?.kind === 'typeAbsorbHeal') {
         const healAmount = Math.max(1, Math.floor((defender.maxHp * absorbEffect.healPercent) / 100));
@@ -1765,15 +1945,18 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     if (allowTargetEffects) {
       const targetStatChanges = isMistActive(defenderSideState)
         ? applyStatChanges(
-          defenderState,
-          moveBattleData.statChanges.filter(change => change.target !== 'target' || change.stages >= 0),
-          'target',
-        )
+            defenderState,
+            moveBattleData.statChanges.filter((change) => change.target !== 'target' || change.stages >= 0),
+            'target',
+          )
         : applyStatChanges(defenderState, moveBattleData.statChanges, 'target');
       for (const change of targetStatChanges) {
         lines.push(getStatChangeLine(defenderName, change));
       }
-      if (isMistActive(defenderSideState) && moveBattleData.statChanges.some(change => change.target === 'target' && change.stages < 0)) {
+      if (
+        isMistActive(defenderSideState) &&
+        moveBattleData.statChanges.some((change) => change.target === 'target' && change.stages < 0)
+      ) {
         lines.push(getMistBlockedLine(defenderName));
       }
 
@@ -1851,74 +2034,87 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     attackFx = null;
 
-    animationDirector.play(sequenceStep(
-      callStep(() => {
-        if (profile.family === 'projectile' || profile.family === 'beam') {
-          attackFx = createAttackEffect({
-            kind: profile.family,
-            sourceX: source.x,
-            sourceY: source.y,
-            targetX: target.x,
-            targetY: target.y,
-            color: profile.color,
-            accentColor: profile.accentColor,
-            duration: profile.duration,
-          });
-        }
-      }),
-      profile.family === 'lunge'
-        ? tweenActorStep(attackerActor, {
-          x: attackerStart.x + lungeOffset,
-          y: attackerStart.y - 2,
-          rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.08 : 0.08),
-        }, profile.impactTime, 'easeInOut')
-        : waitStep(profile.impactTime),
-      callStep(() => {
-        if (profile.family === 'pulse' || profile.family === 'burst' || profile.family === 'lunge') {
-          attackFx = createAttackEffect({
-            kind: profile.family === 'lunge' ? 'burst' : profile.family,
-            sourceX: source.x,
-            sourceY: source.y,
-            targetX: target.x,
-            targetY: target.y,
-            color: profile.color,
-            accentColor: profile.accentColor,
-            duration: profile.family === 'lunge' ? 0.2 : undefined,
-          });
-        }
-        onImpact();
-      }),
-      parallelStep(
-        move.power > 0 && hitTarget && !profile.selfTarget
-          ? sequenceStep(
-            tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.07, 'easeInOut'),
-            tweenActorStep(defenderActor, defenderStart, 0.1, 'easeInOut'),
-          )
-          : waitStep(0.17),
+    animationDirector.play(
+      sequenceStep(
+        callStep(() => {
+          if (profile.family === 'projectile' || profile.family === 'beam') {
+            attackFx = createAttackEffect({
+              kind: profile.family,
+              sourceX: source.x,
+              sourceY: source.y,
+              targetX: target.x,
+              targetY: target.y,
+              color: profile.color,
+              accentColor: profile.accentColor,
+              duration: profile.duration,
+            });
+          }
+        }),
         profile.family === 'lunge'
-          ? tweenActorStep(attackerActor, attackerStart, recoveryDuration, 'easeInOut')
-          : waitStep(recoveryDuration),
+          ? tweenActorStep(
+              attackerActor,
+              {
+                x: attackerStart.x + lungeOffset,
+                y: attackerStart.y - 2,
+                rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.08 : 0.08),
+              },
+              profile.impactTime,
+              'easeInOut',
+            )
+          : waitStep(profile.impactTime),
+        callStep(() => {
+          if (profile.family === 'pulse' || profile.family === 'burst' || profile.family === 'lunge') {
+            attackFx = createAttackEffect({
+              kind: profile.family === 'lunge' ? 'burst' : profile.family,
+              sourceX: source.x,
+              sourceY: source.y,
+              targetX: target.x,
+              targetY: target.y,
+              color: profile.color,
+              accentColor: profile.accentColor,
+              duration: profile.family === 'lunge' ? 0.2 : undefined,
+            });
+          }
+          onImpact();
+        }),
+        parallelStep(
+          move.power > 0 && hitTarget && !profile.selfTarget
+            ? sequenceStep(
+                tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.07, 'easeInOut'),
+                tweenActorStep(defenderActor, defenderStart, 0.1, 'easeInOut'),
+              )
+            : waitStep(0.17),
+          profile.family === 'lunge'
+            ? tweenActorStep(attackerActor, attackerStart, recoveryDuration, 'easeInOut')
+            : waitStep(recoveryDuration),
+        ),
       ),
-    ));
+    );
   }
 
   function doAttack(forcedMoveIndex?: number): void {
     const rtl = isRTL();
     const attackerName = getPokemonDisplayName(player.id);
     const pendingChargeMoveId = getChargingMoveId(playerBattleState);
-    const forcedChargeRelease = forcedMoveIndex !== undefined
-      && pendingChargeMoveId !== null
-      && player.moves[forcedMoveIndex]?.id === pendingChargeMoveId;
+    const forcedChargeRelease =
+      forcedMoveIndex !== undefined &&
+      pendingChargeMoveId !== null &&
+      player.moves[forcedMoveIndex]?.id === pendingChargeMoveId;
     triggerStatusTurnEffects('player', player, playerBattleState);
     const startResult = processBeforeMoveEffects(player, playerBattleState);
     const turnEffectLines = startResult.events
-      .map(event => getTurnEffectLine(attackerName, event))
+      .map((event) => getTurnEffectLine(attackerName, event))
       .filter((line): line is string => line !== null);
     syncPlayerBar();
     if (startResult.selfDamage > 0) {
       flash = createFlash('#fff29a', 0.12);
       shake = createShake(1.4, 0.18);
-      spawnDamageNumber(`-${startResult.selfDamage}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
+      spawnDamageNumber(
+        `-${startResult.selfDamage}`,
+        BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+        BTL.PLY_SPRITE.y + 10,
+        '#f8d858',
+      );
       audio.playSFX('hit');
     }
 
@@ -1968,31 +2164,48 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, playerBattleState, enemyBattleState);
-    const targetTypeImmune = hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
+    const targetTypeImmune =
+      hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(enemy, m.type);
-    const criticalHit = hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy) : false;
-    const plannedDamage = hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed
-      ? calcDamage(player, playerBattleState, enemy, enemyBattleState, enemySideState, m.power, m.type, damageClass, criticalHit)
-      : 0;
-    const allowTargetEffects = hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < enemy.hp);
+    const criticalHit =
+      hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy) : false;
+    const plannedDamage =
+      hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed
+        ? calcDamage(
+            player,
+            playerBattleState,
+            enemy,
+            enemyBattleState,
+            enemySideState,
+            m.power,
+            m.type,
+            damageClass,
+            criticalHit,
+          )
+        : 0;
+    const allowTargetEffects =
+      hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < enemy.hp);
     const targetCanStillAct = !enemyAlreadyAttacked;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
-        player,
-        playerBattleState,
-        playerSideState,
-        attackerName,
-        enemy,
-        enemyBattleState,
-        enemySideState,
-        defenderName,
-        m,
-        allowTargetEffects,
-        targetCanStillAct,
-      )
+          player,
+          playerBattleState,
+          playerSideState,
+          attackerName,
+          enemy,
+          enemyBattleState,
+          enemySideState,
+          defenderName,
+          m,
+          allowTargetEffects,
+          targetCanStillAct,
+        )
       : [];
     const plannedHpEffectAmount = hitResult.hit
-      ? calculateMoveHpEffectAmount(plannedDamage, moveBattleData?.drainPercent ?? moveBattleData?.recoilPercent ?? null)
+      ? calculateMoveHpEffectAmount(
+          plannedDamage,
+          moveBattleData?.drainPercent ?? moveBattleData?.recoilPercent ?? null,
+        )
       : 0;
     const msgs: string[] = [];
     msgs.push(...turnEffectLines);
@@ -2031,7 +2244,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     // Contact ability: enemy ability may inflict status on player when hit by physical move
     const contactEffectsOnPlayer: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
-    if (hitResult.hit && damageClass === 'physical' && plannedDamage > 0 && !player.status && enemy.abilityId !== null) {
+    if (
+      hitResult.hit &&
+      damageClass === 'physical' &&
+      plannedDamage > 0 &&
+      !player.status &&
+      enemy.abilityId !== null
+    ) {
       const enemyAbilityEffects = getAbilityBattleEffects(enemy.abilityId);
       for (const effect of enemyAbilityEffects) {
         if (effect.kind === 'contactStatusChance' && Math.random() * 100 < effect.chance) {
@@ -2043,52 +2262,78 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
 
     textBox = createTextBox(msgs, rtl);
-    playAttackAnimation('player', 'enemy', m, () => {
-      if (hitResult.hit) {
-        const actualDamage = applyMoveImpact(
-          enemy,
-          m,
-          enemyHpBar,
-          BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
-          BTL.OPP_SPRITE.y + 10,
-          plannedDamage,
-        );
-        if (actualDamage > 0) {
-          const drained = applyDrainHealing(player, actualDamage, moveBattleData?.drainPercent ?? null);
-          if (drained > 0) {
-            setHP(playerHpBar, player.hp);
-            spawnDamageNumber(`+${drained}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#48d870');
-            audio.playSFX('heal');
-          }
+    playAttackAnimation(
+      'player',
+      'enemy',
+      m,
+      () => {
+        if (hitResult.hit) {
+          const actualDamage = applyMoveImpact(
+            enemy,
+            m,
+            enemyHpBar,
+            BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+            BTL.OPP_SPRITE.y + 10,
+            plannedDamage,
+          );
+          if (actualDamage > 0) {
+            const drained = applyDrainHealing(player, actualDamage, moveBattleData?.drainPercent ?? null);
+            if (drained > 0) {
+              setHP(playerHpBar, player.hp);
+              spawnDamageNumber(
+                `+${drained}`,
+                BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+                BTL.PLY_SPRITE.y + 10,
+                '#48d870',
+              );
+              audio.playSFX('heal');
+            }
 
-          const recoil = applyRecoilDamage(player, actualDamage, moveBattleData?.recoilPercent ?? null);
-          if (recoil.damage > 0) {
+            const recoil = applyRecoilDamage(player, actualDamage, moveBattleData?.recoilPercent ?? null);
+            if (recoil.damage > 0) {
+              setHP(playerHpBar, player.hp);
+              spawnDamageNumber(
+                `-${recoil.damage}`,
+                BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+                BTL.PLY_SPRITE.y + 10,
+                '#f8d858',
+              );
+              flash = createFlash('#fff29a', 0.12);
+              shake = createShake(1.4, 0.18);
+              audio.playSFX('hit');
+            }
+
+            // Apply contact ability status effects to the attacking player
+            for (const contactEffect of contactEffectsOnPlayer) {
+              applyMajorStatus(player, playerBattleState, {
+                status: contactEffect.status,
+                chance: 100,
+                target: 'user',
+              });
+              setStatus(playerHpBar, player.status ?? '');
+            }
+          }
+        }
+        if (leaveUserAtOneHp) {
+          const selfCost = applyLeaveUserAtOneHpCost(player);
+          if (selfCost.damage > 0) {
             setHP(playerHpBar, player.hp);
-            spawnDamageNumber(`-${recoil.damage}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
+            spawnDamageNumber(
+              `-${selfCost.damage}`,
+              BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+              BTL.PLY_SPRITE.y + 10,
+              '#f8d858',
+            );
             flash = createFlash('#fff29a', 0.12);
             shake = createShake(1.4, 0.18);
             audio.playSFX('hit');
           }
-
-          // Apply contact ability status effects to the attacking player
-          for (const contactEffect of contactEffectsOnPlayer) {
-            applyMajorStatus(player, playerBattleState, { status: contactEffect.status, chance: 100, target: 'user' });
-            setStatus(playerHpBar, player.status ?? '');
-          }
         }
-      }
-      if (leaveUserAtOneHp) {
-        const selfCost = applyLeaveUserAtOneHpCost(player);
-        if (selfCost.damage > 0) {
-          setHP(playerHpBar, player.hp);
-          spawnDamageNumber(`-${selfCost.damage}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
-          flash = createFlash('#fff29a', 0.12);
-          shake = createShake(1.4, 0.18);
-          audio.playSFX('hit');
-        }
-      }
-    }, hitResult.hit && !absorbed && plannedDamage > 0);
-    phase = 'PLAYER_ATTACK'; phaseTimer = 0;
+      },
+      hitResult.hit && !absorbed && plannedDamage > 0,
+    );
+    phase = 'PLAYER_ATTACK';
+    phaseTimer = 0;
   }
 
   function enemyTurn(showFasterMsg = false): void {
@@ -2108,18 +2353,21 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     triggerStatusTurnEffects('enemy', enemy, enemyBattleState);
     const startResult = processBeforeMoveEffects(enemy, enemyBattleState);
     const turnEffectLines = startResult.events
-      .map(event => getTurnEffectLine(attackerName, event))
+      .map((event) => getTurnEffectLine(attackerName, event))
       .filter((line): line is string => line !== null);
     syncEnemyBar();
     if (startResult.selfDamage > 0) {
       flash = createFlash('#fff29a', 0.12);
       shake = createShake(1.4, 0.18);
-      spawnDamageNumber(`-${startResult.selfDamage}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#f8d858');
+      spawnDamageNumber(
+        `-${startResult.selfDamage}`,
+        BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+        BTL.OPP_SPRITE.y + 10,
+        '#f8d858',
+      );
       audio.playSFX('hit');
     }
-    const prefix: string[] = showFasterMsg
-      ? [t('battle.enemyMovesFirst', { name: attackerName })]
-      : [];
+    const prefix: string[] = showFasterMsg ? [t('battle.enemyMovesFirst', { name: attackerName })] : [];
 
     if (!startResult.canAct) {
       if (isChargeRelease) {
@@ -2159,31 +2407,48 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, enemyBattleState, playerBattleState);
-    const targetTypeImmune = hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
+    const targetTypeImmune =
+      hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(player, m.type);
-    const criticalHit = hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player) : false;
-    const plannedDamage = hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed
-      ? calcDamage(enemy, enemyBattleState, player, playerBattleState, playerSideState, m.power, m.type, damageClass, criticalHit)
-      : 0;
-    const allowTargetEffects = hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < player.hp);
+    const criticalHit =
+      hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player) : false;
+    const plannedDamage =
+      hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed
+        ? calcDamage(
+            enemy,
+            enemyBattleState,
+            player,
+            playerBattleState,
+            playerSideState,
+            m.power,
+            m.type,
+            damageClass,
+            criticalHit,
+          )
+        : 0;
+    const allowTargetEffects =
+      hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < player.hp);
     const targetCanStillAct = enemyGoesFirst;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
-        enemy,
-        enemyBattleState,
-        enemySideState,
-        attackerName,
-        player,
-        playerBattleState,
-        playerSideState,
-        defenderName,
-        m,
-        allowTargetEffects,
-        targetCanStillAct,
-      )
+          enemy,
+          enemyBattleState,
+          enemySideState,
+          attackerName,
+          player,
+          playerBattleState,
+          playerSideState,
+          defenderName,
+          m,
+          allowTargetEffects,
+          targetCanStillAct,
+        )
       : [];
     const plannedHpEffectAmount = hitResult.hit
-      ? calculateMoveHpEffectAmount(plannedDamage, moveBattleData?.drainPercent ?? moveBattleData?.recoilPercent ?? null)
+      ? calculateMoveHpEffectAmount(
+          plannedDamage,
+          moveBattleData?.drainPercent ?? moveBattleData?.recoilPercent ?? null,
+        )
       : 0;
     const msgs = [...prefix];
     msgs.push(...turnEffectLines);
@@ -2222,7 +2487,13 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
 
     // Contact ability: player ability may inflict status on enemy when enemy uses physical move
     const contactEffectsOnEnemy: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
-    if (hitResult.hit && damageClass === 'physical' && plannedDamage > 0 && !enemy.status && player.abilityId !== null) {
+    if (
+      hitResult.hit &&
+      damageClass === 'physical' &&
+      plannedDamage > 0 &&
+      !enemy.status &&
+      player.abilityId !== null
+    ) {
       const playerAbilityEffects = getAbilityBattleEffects(player.abilityId);
       for (const effect of playerAbilityEffects) {
         if (effect.kind === 'contactStatusChance' && Math.random() * 100 < effect.chance) {
@@ -2234,55 +2505,80 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     }
 
     textBox = createTextBox(msgs, rtl);
-    playAttackAnimation('enemy', 'player', m, () => {
-      if (hitResult.hit) {
-        const actualDamage = applyMoveImpact(
-          player,
-          m,
-          playerHpBar,
-          BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
-          BTL.PLY_SPRITE.y + 10,
-          plannedDamage,
-        );
-        if (actualDamage > 0) {
-          const drained = applyDrainHealing(enemy, actualDamage, moveBattleData?.drainPercent ?? null);
-          if (drained > 0) {
-            setHP(enemyHpBar, enemy.hp);
-            spawnDamageNumber(`+${drained}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#48d870');
-            audio.playSFX('heal');
-          }
+    playAttackAnimation(
+      'enemy',
+      'player',
+      m,
+      () => {
+        if (hitResult.hit) {
+          const actualDamage = applyMoveImpact(
+            player,
+            m,
+            playerHpBar,
+            BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+            BTL.PLY_SPRITE.y + 10,
+            plannedDamage,
+          );
+          if (actualDamage > 0) {
+            const drained = applyDrainHealing(enemy, actualDamage, moveBattleData?.drainPercent ?? null);
+            if (drained > 0) {
+              setHP(enemyHpBar, enemy.hp);
+              spawnDamageNumber(
+                `+${drained}`,
+                BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+                BTL.OPP_SPRITE.y + 10,
+                '#48d870',
+              );
+              audio.playSFX('heal');
+            }
 
-          const recoil = applyRecoilDamage(enemy, actualDamage, moveBattleData?.recoilPercent ?? null);
-          if (recoil.damage > 0) {
+            const recoil = applyRecoilDamage(enemy, actualDamage, moveBattleData?.recoilPercent ?? null);
+            if (recoil.damage > 0) {
+              setHP(enemyHpBar, enemy.hp);
+              spawnDamageNumber(
+                `-${recoil.damage}`,
+                BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+                BTL.OPP_SPRITE.y + 10,
+                '#f8d858',
+              );
+              flash = createFlash('#fff29a', 0.12);
+              shake = createShake(1.4, 0.18);
+              audio.playSFX('hit');
+            }
+
+            // Apply contact ability status effects to the attacking enemy
+            for (const contactEffect of contactEffectsOnEnemy) {
+              applyMajorStatus(enemy, enemyBattleState, { status: contactEffect.status, chance: 100, target: 'user' });
+              setStatus(enemyHpBar, enemy.status ?? '');
+            }
+          }
+        }
+        if (leaveUserAtOneHp) {
+          const selfCost = applyLeaveUserAtOneHpCost(enemy);
+          if (selfCost.damage > 0) {
             setHP(enemyHpBar, enemy.hp);
-            spawnDamageNumber(`-${recoil.damage}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#f8d858');
+            spawnDamageNumber(
+              `-${selfCost.damage}`,
+              BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+              BTL.OPP_SPRITE.y + 10,
+              '#f8d858',
+            );
             flash = createFlash('#fff29a', 0.12);
             shake = createShake(1.4, 0.18);
             audio.playSFX('hit');
           }
-
-          // Apply contact ability status effects to the attacking enemy
-          for (const contactEffect of contactEffectsOnEnemy) {
-            applyMajorStatus(enemy, enemyBattleState, { status: contactEffect.status, chance: 100, target: 'user' });
-            setStatus(enemyHpBar, enemy.status ?? '');
-          }
         }
-      }
-      if (leaveUserAtOneHp) {
-        const selfCost = applyLeaveUserAtOneHpCost(enemy);
-        if (selfCost.damage > 0) {
-          setHP(enemyHpBar, enemy.hp);
-          spawnDamageNumber(`-${selfCost.damage}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#f8d858');
-          flash = createFlash('#fff29a', 0.12);
-          shake = createShake(1.4, 0.18);
-          audio.playSFX('hit');
-        }
-      }
-    }, hitResult.hit && !absorbed && plannedDamage > 0);
-    phase = 'ENEMY_TURN'; phaseTimer = 0;
+      },
+      hitResult.hit && !absorbed && plannedDamage > 0,
+    );
+    phase = 'ENEMY_TURN';
+    phaseTimer = 0;
   }
 
-  function goBack(): void { autoSave(); stateMachine.change('OVERWORLD'); }
+  function goBack(): void {
+    autoSave();
+    stateMachine.change('OVERWORLD');
+  }
 
   function handleLoss(): void {
     const outcome = pendingLossOutcome ?? (isTrainerBattle ? 'trainer-whiteout' : 'wild-whiteout');
@@ -2327,30 +2623,30 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
   function canSwitchTo(partyIndex: number): boolean {
     if (canUseOpeningSoloSwitch(partyIndex)) return true;
     if (isTrainerBattle && maxRosterSize === 1) return false;
-    if (battleRoster.has(partyIndex)) return true;  // Already in roster
-    return battleRoster.size < maxRosterSize;        // New slot available
+    if (battleRoster.has(partyIndex)) return true; // Already in roster
+    return battleRoster.size < maxRosterSize; // New slot available
   }
 
   function handleMainChoice(choice: MainMenuChoice): void {
     audio.playSFX('menu-select');
-    if (choice === 'FIGHT') { enterSelectMovePhase(); }
-    else if (choice === 'BAG') {
+    if (choice === 'FIGHT') {
+      enterSelectMovePhase();
+    } else if (choice === 'BAG') {
       setBagMode('battle');
       clearPendingItem();
       waitingForBag = true;
       phase = 'WAITING_BAG';
       stateMachine.push('BAG');
-    }
-    else if (choice === 'POKEMON') {
+    } else if (choice === 'POKEMON') {
       if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState)) {
-        textBox = createTextBox([t('battle.cantSwitchTrapped', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'INTRO';
-      }
-      else
-      if (hasActiveGame()) {
+        textBox = createTextBox([t('battle.cantSwitchTrapped', { name: getPokemonDisplayName(player.id) })], isRTL());
+        phase = 'INTRO';
+      } else if (hasActiveGame()) {
         const pd = getPlayerData();
         const hasOther = pd.party.some((p, i) => i !== activePartyIndex && p.hp > 0 && canSwitchTo(i));
         if (!hasOther) {
-          textBox = createTextBox([t('battle.noOtherPokemon')], isRTL()); phase = 'INTRO';
+          textBox = createTextBox([t('battle.noOtherPokemon')], isRTL());
+          phase = 'INTRO';
         } else {
           setPartyMode('battle');
           clearSelectedPartyIndex();
@@ -2360,20 +2656,25 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           stateMachine.push('PARTY');
         }
       } else {
-        textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO';
+        textBox = createTextBox([t('battle.cantDoThat')], isRTL());
+        phase = 'INTRO';
       }
-    }
-    else if (choice === 'RUN') {
+    } else if (choice === 'RUN') {
       if (isTrainerBattle) {
-        textBox = createTextBox([t('battle.cantRunTrainer')], isRTL()); phase = 'INTRO';
+        textBox = createTextBox([t('battle.cantRunTrainer')], isRTL());
+        phase = 'INTRO';
       } else if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState)) {
-        textBox = createTextBox([t('battle.cantEscapeTrapped', { name: getPokemonDisplayName(player.id) })], isRTL()); phase = 'INTRO';
+        textBox = createTextBox([t('battle.cantEscapeTrapped', { name: getPokemonDisplayName(player.id) })], isRTL());
+        phase = 'INTRO';
       } else {
         startPlayerRetreatAnimation();
-        textBox = createTextBox([t('battle.gotAway')], isRTL()); phase = 'RUN';
+        textBox = createTextBox([t('battle.gotAway')], isRTL());
+        phase = 'RUN';
       }
+    } else {
+      textBox = createTextBox([t('battle.cantDoThat')], isRTL());
+      phase = 'INTRO';
     }
-    else { textBox = createTextBox([t('battle.cantDoThat')], isRTL()); phase = 'INTRO'; }
   }
 
   return {
@@ -2384,17 +2685,22 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         getPlayerData().pokedex[enemy.id] = true;
       }
       if (isTrainerBattle && trainerData) {
-        textBox = createTextBox([
-          t('battle.trainerWantsBattle', { name: trainerData.trainerName }),
-          t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
-        ], isRTL());
+        textBox = createTextBox(
+          [
+            t('battle.trainerWantsBattle', { name: trainerData.trainerName }),
+            t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
+          ],
+          isRTL(),
+        );
       } else {
         textBox = createTextBox([t('battle.wildAppeared', { name: getPokemonDisplayName(enemy.id) })], isRTL());
       }
       phase = 'INTRO';
       audio.playMusic('battle');
     },
-    exit(): void { clearAllPopups(); },
+    exit(): void {
+      clearAllPopups();
+    },
     update(dt: number): void {
       phaseTimer += dt;
       if (flash) updateFlash(flash, dt);
@@ -2411,10 +2717,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         for (const effect of statusTurnFx) {
           updateStatusTurnEffect(effect, dt);
         }
-        statusTurnFx = statusTurnFx.filter(effect => effect.active);
+        statusTurnFx = statusTurnFx.filter((effect) => effect.active);
       }
       animationDirector.update(dt);
-      updateHPBar(playerHpBar, dt); updateHPBar(enemyHpBar, dt); updatePopups(dt);
+      updateHPBar(playerHpBar, dt);
+      updateHPBar(enemyHpBar, dt);
+      updatePopups(dt);
 
       switch (phase) {
         case 'INTRO': {
@@ -2456,13 +2764,17 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             // Number shortcut (2=switch, 3=bag) pressed from move grid
             handleMainChoice(r.choice);
           } else if (r?.type === 'move') {
-            if (r.index === -1) { phase = 'SELECT_ACTION'; showMainMenu(menu); }
-            else {
+            if (r.index === -1) {
+              phase = 'SELECT_ACTION';
+              showMainMenu(menu);
+            } else {
               selMove = r.index;
               pendingForcedPlayerMoveIndex = null;
               const m = player.moves[selMove];
-              if (m.currentPp <= 0) { textBox = createTextBox([t('battle.noPP')], isRTL()); phase = 'INTRO'; }
-              else {
+              if (m.currentPp <= 0) {
+                textBox = createTextBox([t('battle.noPP')], isRTL());
+                phase = 'INTRO';
+              } else {
                 enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
                 const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
                 const turnOrder = determineTurnOrder(
@@ -2486,14 +2798,26 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'PLAYER_ATTACK': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
-          if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(enemyHpBar) && !isHPAnimating(playerHpBar)) {
+          if (
+            !textBox &&
+            !animationDirector.isBusy() &&
+            !attackFx &&
+            !isHPAnimating(enemyHpBar) &&
+            !isHPAnimating(playerHpBar)
+          ) {
             phase = 'CHECK_WIN';
           }
           break;
         }
         case 'ENEMY_TURN': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
-          if (!textBox && !animationDirector.isBusy() && !attackFx && !isHPAnimating(playerHpBar) && !isHPAnimating(enemyHpBar)) {
+          if (
+            !textBox &&
+            !animationDirector.isBusy() &&
+            !attackFx &&
+            !isHPAnimating(playerHpBar) &&
+            !isHPAnimating(enemyHpBar)
+          ) {
             if (player.hp <= 0) {
               const consolationXp = awardConsolationXp(player, activePartyIndex);
               handlePlayerFaintAfterAction(consolationXp);
@@ -2525,28 +2849,32 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               audio.playMusic('victory');
               phase = 'WIN';
             }
-          }
-          else if (player.hp <= 0) {
+          } else if (player.hp <= 0) {
             const consolationXp = awardConsolationXp(player, activePartyIndex);
             handlePlayerFaintAfterAction(consolationXp);
-          }
-          else if (enemyAlreadyAttacked) {
+          } else if (enemyAlreadyAttacked) {
             // Enemy already attacked this turn
             enemyAlreadyAttacked = false;
             startEndTurnStatusPhase();
-          }
-          else enemyTurn();
+          } else enemyTurn();
           break;
         }
         case 'END_TURN_STATUS': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
-          if (!textBox && !animationDirector.isBusy() && !attackFx
-            && !isHPAnimating(playerHpBar) && !isHPAnimating(enemyHpBar)) {
+          if (
+            !textBox &&
+            !animationDirector.isBusy() &&
+            !attackFx &&
+            !isHPAnimating(playerHpBar) &&
+            !isHPAnimating(enemyHpBar)
+          ) {
             if (enemy.hp <= 0) {
               phase = 'CHECK_WIN';
             } else if (player.hp <= 0) {
               handlePlayerFaintAfterAction();
             } else {
+              turnNumber++;
+              menu.turnNumber = turnNumber;
               pendingTurnCredit = true;
               enterSelectMovePhase();
             }
@@ -2561,7 +2889,10 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           if (!textBox && !animationDirector.isBusy()) {
             xpGained = getDefeatXpReward();
             player.xp += xpGained;
-            textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
+            textBox = createTextBox(
+              [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })],
+              isRTL(),
+            );
             phase = 'TRAINER_NEXT_XP';
           }
           break;
@@ -2617,8 +2948,12 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            xpGained = getDefeatXpReward(); player.xp += xpGained;
-            textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
+            xpGained = getDefeatXpReward();
+            player.xp += xpGained;
+            textBox = createTextBox(
+              [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })],
+              isRTL(),
+            );
             if (isTrainerBattle && trainerData) {
               phase = 'TRAINER_REWARD';
             } else {
@@ -2683,7 +3018,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
           }
           if (waitForXpResolution()) break;
           if (!startLevelUp('LEVEL_UP')) {
-            fade = createFade(false, 0.5); phase = 'RUN';
+            fade = createFade(false, 0.5);
+            phase = 'RUN';
           }
           break;
         }
@@ -2695,7 +3031,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               if (player.xp > 0) {
                 phase = 'XP_GAIN';
               } else {
-                fade = createFade(false, 0.5); phase = 'RUN';
+                fade = createFade(false, 0.5);
+                phase = 'RUN';
               }
             }
           }
@@ -2710,20 +3047,27 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               if (player.xp > 0) {
                 phase = 'XP_GAIN';
               } else {
-                fade = createFade(false, 0.5); phase = 'RUN';
+                fade = createFade(false, 0.5);
+                phase = 'RUN';
               }
             }
           }
           break;
         }
         case 'RUN': {
-          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
-          if (!textBox && !animationDirector.isBusy() && !fade) { fade = createFade(false, 0.5); }
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+          }
+          if (!textBox && !animationDirector.isBusy() && !fade) {
+            fade = createFade(false, 0.5);
+          }
           if (!textBox && fade && !fade.active) goBack();
           break;
         }
         case 'LOSE': {
-          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+          }
           if (!textBox && !animationDirector.isBusy() && !fade) {
             if (!lossDialogueShown) {
               const outcome = pendingLossOutcome ?? (isTrainerBattle ? 'trainer-whiteout' : 'wild-whiteout');
@@ -2738,13 +3082,15 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
         case 'PLAYER_FAINT_SWITCH': {
           // Active Pokemon fainted but roster has usable Pokemon — force switch
-          if (textBox && updateTextBox(textBox, input, dt)) { textBox = null; }
+          if (textBox && updateTextBox(textBox, input, dt)) {
+            textBox = null;
+          }
           if (!textBox && !animationDirector.isBusy()) {
             setPartyMode('battle');
             clearSelectedPartyIndex();
             previousLeadId = player.id;
             waitingForParty = true;
-            isForcedFaintSwitch = true;  // don't give enemy a free attack after faint switch
+            isForcedFaintSwitch = true; // don't give enemy a free attack after faint switch
             phase = 'WAITING_PARTY';
             stateMachine.push('PARTY');
           }
@@ -2786,11 +3132,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
             clearSelectedPartyIndex();
             // Validate the switch
             if (!chosen || chosen.hp <= 0) {
-              textBox = createTextBox([t('battle.pokemonFainted')], isRTL()); phase = 'INTRO';
+              textBox = createTextBox([t('battle.pokemonFainted')], isRTL());
+              phase = 'INTRO';
             } else if (chosenIndex === activePartyIndex) {
-              textBox = createTextBox([t('battle.alreadyActive')], isRTL()); phase = 'INTRO';
+              textBox = createTextBox([t('battle.alreadyActive')], isRTL());
+              phase = 'INTRO';
             } else if (!canSwitchTo(chosenIndex)) {
-              textBox = createTextBox([t('battle.rosterFull')], isRTL()); phase = 'INTRO';
+              textBox = createTextBox([t('battle.rosterFull')], isRTL());
+              phase = 'INTRO';
             } else {
               const isSoloOpeningSwitch = canUseOpeningSoloSwitch(chosenIndex);
               if (isSoloOpeningSwitch) {
@@ -2803,10 +3152,22 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               activePartyIndex = chosenIndex;
               player = pd.party[activePartyIndex];
               playerBattleState = createBattleRuntimeStateForPokemon(player);
-              playerHpBar = createHPBar(player.id, player.level, player.hp, player.maxHp,
-                BTL.PLY_BAR_X, BTL.PLY_BAR_BOTTOM - 18, true, player.xp, player.xpToNext);
+              playerHpBar = createHPBar(
+                player.id,
+                player.level,
+                player.hp,
+                player.maxHp,
+                BTL.PLY_BAR_X,
+                BTL.PLY_BAR_BOTTOM - 18,
+                true,
+                player.xp,
+                player.xpToNext,
+              );
               setStatus(playerHpBar, player.status ?? '');
-              setVolatileStatuses(playerHpBar, [...getDisplayedVolatileStatuses(playerBattleState), ...getDisplayedSideStatuses(playerSideState)]);
+              setVolatileStatuses(playerHpBar, [
+                ...getDisplayedVolatileStatuses(playerBattleState),
+                ...getDisplayedSideStatuses(playerSideState),
+              ]);
               menu = createBattleMenu(player.moves);
               menu.playerPokemon = player;
               menu.party = hasActiveGame() ? getPlayerData().party : [player];
@@ -2822,7 +3183,7 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               });
               const switchMsgs: string[] = [];
               // Only say "come back" if the previous Pokemon isn't fainted
-              const prevPokemon = pd.party.find(p => p.id === previousLeadId);
+              const prevPokemon = pd.party.find((p) => p.id === previousLeadId);
               if (prevPokemon && prevPokemon.hp > 0) {
                 switchMsgs.push(t('battle.comeBack', { name: getPokemonDisplayName(previousLeadId!) }));
               }
@@ -2900,7 +3261,8 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
               if (player.xp > 0) {
                 phase = 'XP_GAIN';
               } else {
-                fade = createFade(false, 0.5); phase = 'RUN';
+                fade = createFade(false, 0.5);
+                phase = 'RUN';
               }
             }
           }
@@ -2954,8 +3316,6 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
         }
       }
 
-     
-
       // ── Trainer sprites on sides (trainer battles) ──
       const showingTrainer = showTrainerSprite && isTrainerBattle && trainerData?.trainerSprite;
       if (isTrainerBattle && trainerData?.trainerSprite) {
@@ -2976,16 +3336,30 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       if (!showingTrainer) {
         const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
         if (enemySprite) {
-          renderActorImage(ctx, 'enemy', enemySprite, BTL.OPP_SPRITE.x, BTL.OPP_SPRITE.y,
-            BTL.OPP_SPRITE.w, BTL.OPP_SPRITE.h);
+          renderActorImage(
+            ctx,
+            'enemy',
+            enemySprite,
+            BTL.OPP_SPRITE.x,
+            BTL.OPP_SPRITE.y,
+            BTL.OPP_SPRITE.w,
+            BTL.OPP_SPRITE.h,
+          );
         }
       }
 
       // ── Player Pokemon sprite (left side) ──
       const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
       if (playerSprite) {
-        renderActorImage(ctx, 'player', playerSprite, BTL.PLY_SPRITE.x, BTL.PLY_SPRITE.y,
-          BTL.PLY_SPRITE.w, BTL.PLY_SPRITE.h);
+        renderActorImage(
+          ctx,
+          'player',
+          playerSprite,
+          BTL.PLY_SPRITE.x,
+          BTL.PLY_SPRITE.y,
+          BTL.PLY_SPRITE.w,
+          BTL.PLY_SPRITE.h,
+        );
       }
 
       renderBallActor(ctx);
@@ -2999,12 +3373,14 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
       // ── Info panels ──
       setXP(playerHpBar, player.xp, player.xpToNext);
       const playerParty = hasActiveGame() ? getPlayerData().party : null;
-      renderHPBar(ctx, enemyHpBar, isTrainerBattle && trainerData
-        ? { party: trainerData.party, totalSlots: trainerData.party.length, revealedCount: trainerPartyIndex }
-        : undefined);
-      renderHPBar(ctx, playerHpBar, playerParty
-        ? { party: playerParty, totalSlots: 6 }
-        : undefined);
+      renderHPBar(
+        ctx,
+        enemyHpBar,
+        isTrainerBattle && trainerData
+          ? { party: trainerData.party, totalSlots: trainerData.party.length, revealedCount: trainerPartyIndex }
+          : undefined,
+      );
+      renderHPBar(ctx, playerHpBar, playerParty ? { party: playerParty, totalSlots: 6 } : undefined);
 
       // ── Effects ──
       if (levelUpFx) renderLevelUpEffect(ctx, levelUpFx);
@@ -3062,7 +3438,6 @@ export function createBattleScene(input: InputManager, stateMachine: StateMachin
     drawPokeballIcon(ctx, activeBallId, -7, -7, 14);
     ctx.restore();
   }
-
 }
 
 function fallbackPlayer(): Pokemon {
