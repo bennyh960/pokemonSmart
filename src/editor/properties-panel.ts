@@ -6,7 +6,7 @@ import { createNamePicker } from '../ui/name-picker.js';
 import { getAllPokemon, getMoveDisplayName, type PokemonData } from '../services/pokemon-data.js';
 import { getAllItems, type ItemDef } from '../data/items.js';
 import { getTMEffect } from '../data/item-defs.js';
-import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward } from '../systems/npc.js';
+import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward, type ReencounterConfig } from '../systems/npc.js';
 import { GATES } from '../data/story/gates.js';
 import { BADGES } from '../data/badges.js';
 import { getStoryEvents } from '../data/story/events.js';
@@ -570,8 +570,209 @@ export class PropertiesPanel {
       emit();
     }
 
+    // ── Re-encounter ──
+    this.renderReencounterUI(section, trainer, emit);
+
     // ── Party ──
     this.renderPartyUI(section, trainer, emit);
+  }
+
+  private renderReencounterUI(section: HTMLElement, trainer: TrainerData, emit: () => void): void {
+    const trainerAny = trainer as unknown as Record<string, unknown>;
+
+    const header = document.createElement('div');
+    header.className = 'trainer-subsection-header';
+    header.innerHTML = '<span>Re-encounter</span>';
+    section.appendChild(header);
+
+    // ── Enable checkbox ──
+    const enableRow = document.createElement('div');
+    enableRow.className = 'prop-row';
+    enableRow.innerHTML = '<label>Enable rematches:</label>';
+    const enableCb = document.createElement('input');
+    enableCb.type = 'checkbox';
+    enableCb.checked = !!trainer.reencounter;
+    enableCb.title = 'Allow the player to battle this trainer multiple times';
+
+    const configDiv = document.createElement('div');
+    configDiv.style.display = trainer.reencounter ? 'block' : 'none';
+    configDiv.style.paddingLeft = '8px';
+    configDiv.style.borderLeft = '2px solid #444';
+    configDiv.style.marginTop = '4px';
+
+    enableCb.addEventListener('change', () => {
+      if (enableCb.checked) {
+        trainerAny['reencounter'] = { count: 3, lvlStep: 2, timeInterval: 1 } satisfies ReencounterConfig;
+      } else {
+        delete trainerAny['reencounter'];
+      }
+      configDiv.style.display = enableCb.checked ? 'block' : 'none';
+      rebuildConfig();
+      emit();
+    });
+    enableRow.appendChild(enableCb);
+    section.appendChild(enableRow);
+    section.appendChild(configDiv);
+
+    const rebuildConfig = () => {
+      configDiv.innerHTML = '';
+      const rc = trainer.reencounter;
+      if (!rc) return;
+
+      // Count
+      const countRow = document.createElement('div');
+      countRow.className = 'prop-row';
+      countRow.innerHTML = '<label>Max rematches:</label>';
+      const countInput = document.createElement('input');
+      countInput.type = 'number';
+      countInput.min = '1';
+      countInput.max = '99';
+      countInput.value = String(rc.count ?? 3);
+      countInput.title = 'Total extra battles allowed (e.g. 3 = up to 4 total fights)';
+      countInput.addEventListener('change', () => {
+        rc.count = Math.max(1, parseInt(countInput.value, 10) || 1);
+        emit();
+      });
+      countRow.appendChild(countInput);
+      configDiv.appendChild(countRow);
+
+      // Level step
+      const lvlRow = document.createElement('div');
+      lvlRow.className = 'prop-row';
+      lvlRow.innerHTML = '<label>Level boost/rematch:</label>';
+      const lvlInput = document.createElement('input');
+      lvlInput.type = 'number';
+      lvlInput.min = '0';
+      lvlInput.max = '20';
+      lvlInput.value = String(rc.lvlStep ?? 2);
+      lvlInput.title = 'Levels added to all party members for each subsequent fight';
+      lvlInput.addEventListener('change', () => {
+        rc.lvlStep = Math.max(0, parseInt(lvlInput.value, 10) || 0);
+        emit();
+      });
+      lvlRow.appendChild(lvlInput);
+      configDiv.appendChild(lvlRow);
+
+      // Add to phone
+      const phoneRow = document.createElement('div');
+      phoneRow.className = 'prop-row';
+      phoneRow.innerHTML = '<label>Add to phone:</label>';
+      const phoneCb = document.createElement('input');
+      phoneCb.type = 'checkbox';
+      phoneCb.checked = rc.addToPhone !== false;
+      phoneCb.title = 'Trainer appears in the phone contacts after first defeat';
+      phoneCb.addEventListener('change', () => {
+        if (phoneCb.checked) delete (rc as unknown as Record<string, unknown>)['addToPhone'];
+        else rc.addToPhone = false;
+        emit();
+      });
+      phoneRow.appendChild(phoneCb);
+      configDiv.appendChild(phoneRow);
+
+      // Trigger mode selector
+      const triggerRow = document.createElement('div');
+      triggerRow.className = 'prop-row';
+      triggerRow.innerHTML = '<label>Trigger mode:</label>';
+      const triggerSel = document.createElement('select');
+      const modes = [
+        { value: 'time', label: 'Time after defeat' },
+        { value: 'flag', label: 'Story flag set' },
+        { value: 'flag-delay', label: 'Story flag + delay' },
+      ];
+      // Detect mode by key presence, not value — triggerFlag may be '' (sentinel for "flag mode, not yet filled")
+      let currentMode = 'time';
+      if ('triggerFlag' in rc && (rc.triggerFlagDelayHours ?? 0) > 0) currentMode = 'flag-delay';
+      else if ('triggerFlag' in rc) currentMode = 'flag';
+
+      for (const m of modes) {
+        const opt = document.createElement('option');
+        opt.value = m.value;
+        opt.textContent = m.label;
+        opt.selected = m.value === currentMode;
+        triggerSel.appendChild(opt);
+      }
+      triggerRow.appendChild(triggerSel);
+      configDiv.appendChild(triggerRow);
+
+      // Dynamic sub-row (changes with mode)
+      const modeDiv = document.createElement('div');
+      configDiv.appendChild(modeDiv);
+
+      const renderModeFields = (mode: string) => {
+        modeDiv.innerHTML = '';
+
+        if (mode === 'time') {
+          // Clear flag fields
+          delete (rc as unknown as Record<string, unknown>)['triggerFlag'];
+          delete (rc as unknown as Record<string, unknown>)['triggerFlagDelayHours'];
+
+          const row = document.createElement('div');
+          row.className = 'prop-row';
+          row.innerHTML = '<label>Hours to wait:</label>';
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.min = '0';
+          input.step = '0.5';
+          input.value = String(rc.timeInterval ?? 1);
+          input.title = 'Hours after last defeat before rematch is available (0 = immediate)';
+          input.addEventListener('change', () => {
+            rc.timeInterval = Math.max(0, parseFloat(input.value) || 0);
+            emit();
+          });
+          row.appendChild(input);
+          modeDiv.appendChild(row);
+        } else if (mode === 'flag' || mode === 'flag-delay') {
+          // Clear time field; seed triggerFlag key so mode survives re-render
+          delete (rc as unknown as Record<string, unknown>)['timeInterval'];
+          if (!('triggerFlag' in rc)) rc.triggerFlag = '';
+
+          const flagRow = document.createElement('div');
+          flagRow.className = 'prop-row';
+          flagRow.innerHTML = '<label>Required flag:</label>';
+          const flagInput = document.createElement('input');
+          flagInput.type = 'text';
+          flagInput.value = rc.triggerFlag ?? '';
+          flagInput.placeholder = 'e.g. gym1-cleared';
+          flagInput.title = 'Story flag that must be set before rematch becomes available';
+          flagInput.addEventListener('change', () => {
+            // Keep the key even if empty (sentinel for flag mode) — runtime ignores blank flags
+            rc.triggerFlag = flagInput.value.trim();
+            emit();
+          });
+          flagRow.appendChild(flagInput);
+          modeDiv.appendChild(flagRow);
+
+          if (mode === 'flag-delay') {
+            const delayRow = document.createElement('div');
+            delayRow.className = 'prop-row';
+            delayRow.innerHTML = '<label>Delay (hours):</label>';
+            const delayInput = document.createElement('input');
+            delayInput.type = 'number';
+            delayInput.min = '0';
+            delayInput.step = '0.5';
+            delayInput.value = String(rc.triggerFlagDelayHours ?? 1);
+            delayInput.title = 'Hours after the flag was set before rematch unlocks';
+            delayInput.addEventListener('change', () => {
+              rc.triggerFlagDelayHours = Math.max(0, parseFloat(delayInput.value) || 0);
+              emit();
+            });
+            delayRow.appendChild(delayInput);
+            modeDiv.appendChild(delayRow);
+          } else {
+            delete (rc as unknown as Record<string, unknown>)['triggerFlagDelayHours'];
+          }
+        }
+      };
+
+      triggerSel.addEventListener('change', () => {
+        renderModeFields(triggerSel.value);
+        emit();
+      });
+
+      renderModeFields(currentMode);
+    };
+
+    rebuildConfig();
   }
 
   // ── Reward Items editor ──

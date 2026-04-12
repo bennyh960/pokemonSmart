@@ -40,7 +40,7 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
   if (state.count > rc.count) return { eligible: false, reason: 'max-reached' };
 
   // ── Trigger mode resolution ────────────────────────────────────────────────
-  if (rc.triggerFlag) {
+  if (rc.triggerFlag && rc.triggerFlag.trim()) {
     // Flag-based trigger: reencounter unlocks when a story flag is set (+ optional delay)
     if (!pd.flags[rc.triggerFlag]) {
       return { eligible: false, reason: 'cooldown' };

@@ -103,12 +103,7 @@
       },
       "lineOfSight": 7,
       "autoWalk": null,
-      "postBattleDialogue": [],
-      "reencounter": {
-        "count": 2,
-        "lvlStep": 2,
-        "timeInterval": 0.1
-      }
+      "postBattleDialogue": []
     },
     {
       "id": "youngster-1",
