@@ -13,7 +13,7 @@
 
 import type { StateMachine } from '../engine/state-machine.js';
 import type { PlayerStoryState } from '../types/index.js';
-import { getPlayerData, hasActiveGame, autoSave } from './game-state.js';
+import { getPlayerData, hasActiveGame, autoSave, setFlag } from './game-state.js';
 import { getStoryEvents } from '../data/story/events.js';
 import type { StoryTrigger, StoryCondition, StoryAction } from '../data/story/events.js';
 import { awaitCutsceneCompletion } from './cutscene-runner.js';
@@ -126,7 +126,7 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
 
     // Mark as done unless repeatable — happens AFTER cutscene completes
     if (!event.repeatable) {
-      pd.flags[doneFlag] = true;
+      setFlag(pd, doneFlag);
     }
   }
 

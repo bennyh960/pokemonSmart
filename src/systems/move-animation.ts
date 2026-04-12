@@ -3,10 +3,22 @@ import type { PokemonType } from '../types/index.js';
 import type { LocalizedName, MoveData } from '../services/pokemon-data.js';
 
 export type AttackAnimationFamily =
-  | 'lunge' | 'projectile' | 'beam' | 'pulse' | 'burst'
-  | 'dragon-aura' | 'flamethrower' | 'leaf-spray' | 'water-flow'
-  | 'psychic-wave' | 'rock-throw' | 'rock-slide' | 'fire-blast'
-  | 'giga-drain' | 'lightning';
+  | 'lunge'
+  | 'projectile'
+  | 'beam'
+  | 'pulse'
+  | 'burst'
+  | 'dragon-aura'
+  | 'flamethrower'
+  | 'leaf-spray'
+  | 'water-flow'
+  | 'psychic-wave'
+  | 'rock-throw'
+  | 'rock-slide'
+  | 'fire-blast'
+  | 'giga-drain'
+  | 'lightning'
+  | 'vine-whip';
 
 export interface AttackAnimationProfile {
   family: AttackAnimationFamily;
@@ -28,75 +40,131 @@ const WHITE = '#f8f8ff';
 const CHARMANDER_LINE = new Set([4, 5, 6]);
 const DRATINI_LINE = new Set([147, 148, 149]);
 
+// Vine Whip whip-count variants — more vines for species that make sense
+// vine-3: Ivysaur, Bayleef, Meganium, Chikorita, Snivy line, Leafeon etc.
+const VINE_WHIP_3 = new Set([2, 152, 153, 154, 495, 496, 470]);
+// vine-4: Venusaur (many thick vines), Tangela (body of vines), Lombre, Ludicolo
+const VINE_WHIP_4 = new Set([3, 114, 270, 271, 286]);
+// vine-5: Tangrowth — literally giant wads of vines
+const VINE_WHIP_5 = new Set([465]);
+
 const SELF_STATUS_KEYWORDS = [
-  'agility', 'amnesia', 'barrier', 'calm mind', 'defense curl', 'double team', 'focus energy',
-  'growth', 'harden', 'meditate', 'minimize', 'recover', 'rest', 'sharpen', 'splash',
-  'string shot', 'swords dance', 'transform', 'withdraw',
+  'agility',
+  'amnesia',
+  'barrier',
+  'calm mind',
+  'defense curl',
+  'double team',
+  'focus energy',
+  'growth',
+  'harden',
+  'meditate',
+  'minimize',
+  'recover',
+  'rest',
+  'sharpen',
+  'splash',
+  'string shot',
+  'swords dance',
+  'transform',
+  'withdraw',
 ];
 
 const TARGET_STATUS_KEYWORDS = [
-  'confuse', 'growl', 'leer', 'poison', 'powder', 'roar', 'sand-attack', 'screech',
-  'sing', 'sleep', 'smoke', 'spore', 'stun', 'supersonic', 'tail whip', 'thunder wave',
-  'toxic', 'whirlwind',
+  'confuse',
+  'growl',
+  'leer',
+  'poison',
+  'powder',
+  'roar',
+  'sand-attack',
+  'screech',
+  'sing',
+  'sleep',
+  'smoke',
+  'spore',
+  'stun',
+  'supersonic',
+  'tail whip',
+  'thunder wave',
+  'toxic',
+  'whirlwind',
 ];
 
 // --- Specific move name overrides (checked before generic detection) ---
 
 const DRAGON_AURA_MOVES = [
-  'dragon rage', 'dragon breath', 'dragon pulse', 'dragon claw', 'dragon rush',
-  'outrage', 'draco meteor', 'dragon tail', 'twister',
+  'dragon rage',
+  'dragon breath',
+  'dragon pulse',
+  'dragon claw',
+  'dragon rush',
+  'outrage',
+  'draco meteor',
+  'dragon tail',
+  'twister',
 ];
 
-const FLAMETHROWER_MOVES = [
-  'flamethrower', 'fire spin', 'heat wave', 'blast burn', 'inferno',
-];
+const FLAMETHROWER_MOVES = ['flamethrower', 'fire spin', 'heat wave', 'blast burn', 'inferno'];
 
-const LEAF_SPRAY_MOVES = [
-  'razor leaf', 'leaf blade', 'petal dance', 'magic leaf', 'leaf tornado', 'petal blizzard',
-];
+const LEAF_SPRAY_MOVES = ['razor leaf', 'leaf blade', 'petal dance', 'magic leaf', 'leaf tornado', 'petal blizzard'];
 
-const WATER_FLOW_MOVES = [
-  'water gun', 'surf', 'waterfall', 'aqua tail', 'whirlpool',
-];
+const WATER_FLOW_MOVES = ['water gun', 'surf', 'waterfall', 'aqua tail', 'whirlpool'];
 
-const PSYCHIC_WAVE_MOVES = [
-  'psychic', 'psywave', 'confusion', 'future sight', 'extrasensory', 'luster purge',
-];
+const PSYCHIC_WAVE_MOVES = ['psychic', 'psywave', 'confusion', 'future sight', 'extrasensory', 'luster purge'];
 
-const ROCK_THROW_MOVES = [
-  'rock throw', 'stone edge', 'rock blast', 'rock wrecker',
-];
+const ROCK_THROW_MOVES = ['rock throw', 'stone edge', 'rock blast', 'rock wrecker'];
 
-const ROCK_SLIDE_MOVES = [
-  'rock slide', 'ancient power', 'power gem',
-];
+const ROCK_SLIDE_MOVES = ['rock slide', 'ancient power', 'power gem'];
 
-const FIRE_BLAST_MOVES = [
-  'fire blast', 'sacred fire', 'v-create',
-];
+const FIRE_BLAST_MOVES = ['fire blast', 'sacred fire', 'v-create'];
 
-const GIGA_DRAIN_MOVES = [
-  'giga drain', 'mega drain', 'absorb', 'leech life',
-];
+const VINE_WHIP_MOVES = ['vine whip'];
 
-const LIGHTNING_MOVES = [
-  'thunderbolt', 'thunder', 'discharge', 'charge beam', 'zap cannon',
-];
+const GIGA_DRAIN_MOVES = ['giga drain', 'mega drain', 'absorb', 'leech life'];
+
+const LIGHTNING_MOVES = ['thunderbolt', 'thunder', 'discharge', 'charge beam', 'zap cannon'];
 
 // Generic fallback keyword lists (for moves not matched above)
 const BURST_KEYWORDS = [
-  'bonemerang', 'dig', 'earthquake', 'explosion', 'fissure', 'magnitude',
-  'self-destruct', 'skull bash',
+  'bonemerang',
+  'dig',
+  'earthquake',
+  'explosion',
+  'fissure',
+  'magnitude',
+  'self-destruct',
+  'skull bash',
 ];
 
 const BEAM_KEYWORDS = [
-  'aurora beam', 'beam', 'bubblebeam', 'hyper beam', 'ice beam',
-  'psybeam', 'solarbeam', 'tri attack',
+  'aurora beam',
+  'beam',
+  'bubblebeam',
+  'hyper beam',
+  'ice beam',
+  'psybeam',
+  'solarbeam',
+  'tri attack',
 ];
 
 const PROJECTILE_KEYWORDS = [
-  'acid', 'ball', 'bomb', 'bubble', 'egg', 'ember', 'gun', 'leaf', 'needle', 'pin missile',
-  'seed', 'shot', 'sludge', 'star', 'sting', 'swift',
+  'acid',
+  'ball',
+  'bomb',
+  'bubble',
+  'egg',
+  'ember',
+  'gun',
+  'leaf',
+  'needle',
+  'pin missile',
+  'seed',
+  'shot',
+  'sludge',
+  'star',
+  'sting',
+  'swift',
 ];
 
 function normalizeName(name: string | LocalizedName): string {
@@ -105,11 +173,11 @@ function normalizeName(name: string | LocalizedName): string {
 }
 
 function matchesAny(moveName: string, list: string[]): boolean {
-  return list.some(entry => moveName.includes(entry));
+  return list.some((entry) => moveName.includes(entry));
 }
 
 function hasKeyword(name: string, keywords: string[]): boolean {
-  return keywords.some(keyword => name.includes(keyword));
+  return keywords.some((keyword) => name.includes(keyword));
 }
 
 function getFlashColor(type: PokemonType, color: string): string {
@@ -134,6 +202,14 @@ function getVariant(moveName: string, speciesId: number | undefined): string | u
     if (moveName.includes('hyper beam')) return 'dra-hyper';
   }
 
+  // Vine Whip: whip count encoded as 'vine-N'
+  if (matchesAny(moveName, VINE_WHIP_MOVES)) {
+    if (VINE_WHIP_5.has(speciesId)) return 'vine-5';
+    if (VINE_WHIP_4.has(speciesId)) return 'vine-4';
+    if (VINE_WHIP_3.has(speciesId)) return 'vine-3';
+    return 'vine-2';
+  }
+
   // Non-species variants
   if (moveName === 'thunder') return 'thunder';
 
@@ -150,63 +226,228 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
   // --- Specific move overrides (highest priority) ---
 
   if (matchesAny(moveName, DRAGON_AURA_MOVES)) {
-    return { family: 'dragon-aura', color, accentColor: WHITE, duration: 0.75, impactTime: 0.56, selfTarget: false, shakeIntensity: 3.0, flashColor, variant };
+    return {
+      family: 'dragon-aura',
+      color,
+      accentColor: WHITE,
+      duration: 0.75,
+      impactTime: 0.56,
+      selfTarget: false,
+      shakeIntensity: 3.0,
+      flashColor,
+      variant,
+    };
   }
 
   if (matchesAny(moveName, FIRE_BLAST_MOVES)) {
-    return { family: 'fire-blast', color, accentColor: WHITE, duration: 0.52, impactTime: 0.21, selfTarget: false, shakeIntensity: 2.5, flashColor, variant };
+    return {
+      family: 'fire-blast',
+      color,
+      accentColor: WHITE,
+      duration: 0.52,
+      impactTime: 0.21,
+      selfTarget: false,
+      shakeIntensity: 2.5,
+      flashColor,
+      variant,
+    };
   }
 
   if (matchesAny(moveName, FLAMETHROWER_MOVES)) {
-    return { family: 'flamethrower', color, accentColor: WHITE, duration: 0.50, impactTime: 0.38, selfTarget: false, shakeIntensity: 2.0, flashColor, variant };
+    return {
+      family: 'flamethrower',
+      color,
+      accentColor: WHITE,
+      duration: 0.5,
+      impactTime: 0.38,
+      selfTarget: false,
+      shakeIntensity: 2.0,
+      flashColor,
+      variant,
+    };
   }
 
   if (matchesAny(moveName, LIGHTNING_MOVES)) {
-    return { family: 'lightning', color, accentColor: WHITE, duration: 0.42, impactTime: 0.18, selfTarget: false, shakeIntensity: 3.0, flashColor, variant };
+    return {
+      family: 'lightning',
+      color,
+      accentColor: WHITE,
+      duration: 0.42,
+      impactTime: 0.18,
+      selfTarget: false,
+      shakeIntensity: 3.0,
+      flashColor,
+      variant,
+    };
   }
 
   if (matchesAny(moveName, PSYCHIC_WAVE_MOVES)) {
-    return { family: 'psychic-wave', color, accentColor: WHITE, duration: 0.55, impactTime: 0.38, selfTarget: false, shakeIntensity: 2.0, flashColor, variant };
+    return {
+      family: 'psychic-wave',
+      color,
+      accentColor: WHITE,
+      duration: 0.55,
+      impactTime: 0.38,
+      selfTarget: false,
+      shakeIntensity: 2.0,
+      flashColor,
+      variant,
+    };
   }
 
   if (matchesAny(moveName, GIGA_DRAIN_MOVES)) {
-    return { family: 'giga-drain', color, accentColor: WHITE, duration: 0.60, impactTime: 0.30, selfTarget: false, shakeIntensity: 1.5, flashColor, variant };
+    return {
+      family: 'giga-drain',
+      color,
+      accentColor: WHITE,
+      duration: 0.6,
+      impactTime: 0.3,
+      selfTarget: false,
+      shakeIntensity: 1.5,
+      flashColor,
+      variant,
+    };
   }
 
   if (matchesAny(moveName, ROCK_SLIDE_MOVES)) {
-    return { family: 'rock-slide', color, accentColor: WHITE, duration: 0.60, impactTime: 0.36, selfTarget: false, shakeIntensity: 3.5, flashColor, variant };
+    return {
+      family: 'rock-slide',
+      color,
+      accentColor: WHITE,
+      duration: 0.6,
+      impactTime: 0.36,
+      selfTarget: false,
+      shakeIntensity: 3.5,
+      flashColor,
+      variant,
+    };
   }
 
   if (matchesAny(moveName, ROCK_THROW_MOVES)) {
-    return { family: 'rock-throw', color, accentColor: WHITE, duration: 0.46, impactTime: 0.34, selfTarget: false, shakeIntensity: 2.5, flashColor, variant };
+    return {
+      family: 'rock-throw',
+      color,
+      accentColor: WHITE,
+      duration: 0.46,
+      impactTime: 0.34,
+      selfTarget: false,
+      shakeIntensity: 2.5,
+      flashColor,
+      variant,
+    };
   }
 
   if (matchesAny(moveName, WATER_FLOW_MOVES)) {
-    return { family: 'water-flow', color, accentColor: WHITE, duration: 0.45, impactTime: 0.32, selfTarget: false, shakeIntensity: 2.0, flashColor, variant };
+    return {
+      family: 'water-flow',
+      color,
+      accentColor: WHITE,
+      duration: 0.45,
+      impactTime: 0.32,
+      selfTarget: false,
+      shakeIntensity: 2.0,
+      flashColor,
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, VINE_WHIP_MOVES)) {
+    return {
+      family: 'vine-whip',
+      color: '#2ecc40',
+      accentColor: '#a8ff6a',
+      duration: 0.55,
+      impactTime: 0.38,
+      selfTarget: false,
+      shakeIntensity: 2.0,
+      flashColor: '#a8ff6a',
+      variant,
+    };
   }
 
   if (matchesAny(moveName, LEAF_SPRAY_MOVES)) {
-    return { family: 'leaf-spray', color, accentColor: WHITE, duration: 0.46, impactTime: 0.35, selfTarget: false, shakeIntensity: 2.0, flashColor, variant };
+    return {
+      family: 'leaf-spray',
+      color,
+      accentColor: WHITE,
+      duration: 0.46,
+      impactTime: 0.35,
+      selfTarget: false,
+      shakeIntensity: 2.0,
+      flashColor,
+      variant,
+    };
   }
 
   // --- Generic detection (existing logic, lower priority) ---
 
   if (move.damageClass === 'status') {
     const selfTarget = hasKeyword(moveName, SELF_STATUS_KEYWORDS) && !hasKeyword(moveName, TARGET_STATUS_KEYWORDS);
-    return { family: 'pulse', color, accentColor: WHITE, duration: 0.34, impactTime: 0.18, selfTarget, shakeIntensity: 0, flashColor };
+    return {
+      family: 'pulse',
+      color,
+      accentColor: WHITE,
+      duration: 0.34,
+      impactTime: 0.18,
+      selfTarget,
+      shakeIntensity: 0,
+      flashColor,
+    };
   }
 
-  if (hasKeyword(moveName, BURST_KEYWORDS) || (move.damageClass === 'physical' && type === 'ground' && (move.power ?? 0) >= 60)) {
-    return { family: 'burst', color, accentColor: WHITE, duration: 0.34, impactTime: 0.2, selfTarget: false, shakeIntensity: 3.5, flashColor };
+  if (
+    hasKeyword(moveName, BURST_KEYWORDS) ||
+    (move.damageClass === 'physical' && type === 'ground' && (move.power ?? 0) >= 60)
+  ) {
+    return {
+      family: 'burst',
+      color,
+      accentColor: WHITE,
+      duration: 0.34,
+      impactTime: 0.2,
+      selfTarget: false,
+      shakeIntensity: 3.5,
+      flashColor,
+    };
   }
 
-  if (move.damageClass === 'special' && (hasKeyword(moveName, BEAM_KEYWORDS) || ['electric', 'ice', 'dragon'].includes(type))) {
-    return { family: 'beam', color, accentColor: WHITE, duration: 0.28, impactTime: 0.14, selfTarget: false, shakeIntensity: 2.5, flashColor };
+  if (
+    move.damageClass === 'special' &&
+    (hasKeyword(moveName, BEAM_KEYWORDS) || ['electric', 'ice', 'dragon'].includes(type))
+  ) {
+    return {
+      family: 'beam',
+      color,
+      accentColor: WHITE,
+      duration: 0.28,
+      impactTime: 0.14,
+      selfTarget: false,
+      shakeIntensity: 2.5,
+      flashColor,
+    };
   }
 
   if (hasKeyword(moveName, PROJECTILE_KEYWORDS) || move.damageClass === 'special') {
-    return { family: 'projectile', color, accentColor: WHITE, duration: 0.34, impactTime: 0.2, selfTarget: false, shakeIntensity: 2.5, flashColor };
+    return {
+      family: 'projectile',
+      color,
+      accentColor: WHITE,
+      duration: 0.34,
+      impactTime: 0.2,
+      selfTarget: false,
+      shakeIntensity: 2.5,
+      flashColor,
+    };
   }
 
-  return { family: 'lunge', color, accentColor: WHITE, duration: 0.26, impactTime: 0.11, selfTarget: false, shakeIntensity: 2, flashColor };
+  return {
+    family: 'lunge',
+    color,
+    accentColor: WHITE,
+    duration: 0.26,
+    impactTime: 0.11,
+    selfTarget: false,
+    shakeIntensity: 2,
+    flashColor,
+  };
 }

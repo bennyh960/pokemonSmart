@@ -14,7 +14,7 @@ import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { initHUD, updateHUD, setHUDTab, showHUD, hideHUD } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
-import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter } from '../systems/game-state.js';
+import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter, setFlag } from '../systems/game-state.js';
 import { setPartyMode } from '../scenes/party.js';
 import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
@@ -557,7 +557,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         lines.push(t('npc.reward.item', { item: displayName, qty: ri.quantity }));
         // Key items auto-set their flag when received
         if (itemDef?.keyFlag) {
-          pd.flags[itemDef.keyFlag] = true;
+          setFlag(pd, itemDef.keyFlag);
         }
       }
     }
@@ -576,11 +576,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     // Set story event flag
     if (reward.storyEvent) {
-      pd.flags[reward.storyEvent] = true;
+      setFlag(pd, reward.storyEvent);
     }
 
     // Mark as given
-    pd.flags[flagKey] = true;
+    setFlag(pd, flagKey);
     autoSave();
 
     // Show reward message
@@ -837,7 +837,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         // Persist the removal via flags so it survives map reload
         if (hasActiveGame()) {
           const pd = getPlayerData();
-          pd.flags[`${hmName}-${obsX}-${obsY}`] = true;
+          setFlag(pd, `${hmName}-${obsX}-${obsY}`);
           autoSave();
         }
       },
@@ -979,7 +979,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Track city visits for Fly destination list
       // City maps are those in CITY_INFO (not routes, not interiors)
       if (CITY_INFO[mapId]) {
-        pd.flags[`visited-${mapId}`] = true;
+        setFlag(pd, `visited-${mapId}`);
       }
 
       autoSave();
@@ -1957,7 +1957,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                       if (!pd.flags[flagKey]) {
                         const qty = itemQty || 1;
                         pd.items[itemId] = (pd.items[itemId] || 0) + qty;
-                        pd.flags[flagKey] = true;
+                        setFlag(pd, flagKey);
                         // Remove from map so it disappears immediately
                         if (currentMapData?.objects) {
                           const idx = currentMapData.objects.indexOf(obj);

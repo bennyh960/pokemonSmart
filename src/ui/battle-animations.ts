@@ -195,10 +195,21 @@ interface SendOutEffect {
 }
 
 export type AttackEffectKind =
-  | 'projectile' | 'beam' | 'pulse' | 'burst'
-  | 'dragon-aura' | 'flamethrower' | 'leaf-spray' | 'water-flow'
-  | 'psychic-wave' | 'rock-throw' | 'rock-slide' | 'fire-blast'
-  | 'giga-drain' | 'lightning';
+  | 'projectile'
+  | 'beam'
+  | 'pulse'
+  | 'burst'
+  | 'dragon-aura'
+  | 'flamethrower'
+  | 'leaf-spray'
+  | 'water-flow'
+  | 'psychic-wave'
+  | 'rock-throw'
+  | 'rock-slide'
+  | 'fire-blast'
+  | 'giga-drain'
+  | 'lightning'
+  | 'vine-whip';
 
 interface AttackEffect {
   active: boolean;
@@ -308,7 +319,10 @@ export function createLevelUpEffect(xBarX: number, xBarY: number): LevelUpEffect
 export function updateLevelUpEffect(effect: LevelUpEffect, dt: number): void {
   if (!effect.active) return;
   effect.timer += dt;
-  if (effect.timer >= effect.duration) { effect.active = false; return; }
+  if (effect.timer >= effect.duration) {
+    effect.active = false;
+    return;
+  }
 
   effect.glowAlpha = Math.max(0, 1 - effect.timer / 0.4); // glow fades in first 0.4s
 
@@ -365,7 +379,7 @@ export function updateCaptureSuccessEffect(effect: CaptureSuccessEffect, dt: num
 export function renderCaptureSuccessEffect(ctx: CanvasRenderingContext2D, effect: CaptureSuccessEffect): void {
   if (!effect.active) return;
 
-  const pulse = 1 - (effect.timer / effect.duration);
+  const pulse = 1 - effect.timer / effect.duration;
   ctx.save();
   ctx.globalAlpha = pulse * 0.35;
   ctx.fillStyle = '#fff6b0';
@@ -573,20 +587,51 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
   if (!effect.active) return;
 
   switch (effect.kind) {
-    case 'projectile':   renderProjectileEffect(ctx, effect); break;
-    case 'beam':         renderBeamEffect(ctx, effect); break;
-    case 'pulse':        renderPulseEffect(ctx, effect); break;
-    case 'burst':        renderBurstEffect(ctx, effect); break;
-    case 'dragon-aura':  renderDragonAuraEffect(ctx, effect); break;
-    case 'flamethrower': renderFlamethrowerEffect(ctx, effect); break;
-    case 'leaf-spray':   renderLeafSprayEffect(ctx, effect); break;
-    case 'water-flow':   renderWaterFlowEffect(ctx, effect); break;
-    case 'psychic-wave': renderPsychicWaveEffect(ctx, effect); break;
-    case 'rock-throw':   renderRockThrowEffect(ctx, effect); break;
-    case 'rock-slide':   renderRockSlideEffect(ctx, effect); break;
-    case 'fire-blast':   renderFireBlastEffect(ctx, effect); break;
-    case 'giga-drain':   renderGigaDrainEffect(ctx, effect); break;
-    case 'lightning':    renderLightningEffect(ctx, effect); break;
+    case 'projectile':
+      renderProjectileEffect(ctx, effect);
+      break;
+    case 'beam':
+      renderBeamEffect(ctx, effect);
+      break;
+    case 'pulse':
+      renderPulseEffect(ctx, effect);
+      break;
+    case 'burst':
+      renderBurstEffect(ctx, effect);
+      break;
+    case 'dragon-aura':
+      renderDragonAuraEffect(ctx, effect);
+      break;
+    case 'flamethrower':
+      renderFlamethrowerEffect(ctx, effect);
+      break;
+    case 'leaf-spray':
+      renderLeafSprayEffect(ctx, effect);
+      break;
+    case 'water-flow':
+      renderWaterFlowEffect(ctx, effect);
+      break;
+    case 'psychic-wave':
+      renderPsychicWaveEffect(ctx, effect);
+      break;
+    case 'rock-throw':
+      renderRockThrowEffect(ctx, effect);
+      break;
+    case 'rock-slide':
+      renderRockSlideEffect(ctx, effect);
+      break;
+    case 'fire-blast':
+      renderFireBlastEffect(ctx, effect);
+      break;
+    case 'giga-drain':
+      renderGigaDrainEffect(ctx, effect);
+      break;
+    case 'lightning':
+      renderLightningEffect(ctx, effect);
+      break;
+    case 'vine-whip':
+      renderVineWhipEffect(ctx, effect);
+      break;
   }
 }
 
@@ -605,8 +650,10 @@ function seededRng(seed: number): () => number {
 
 function drawRockShape(
   ctx: CanvasRenderingContext2D,
-  cx: number, cy: number,
-  size: number, rotation: number,
+  cx: number,
+  cy: number,
+  size: number,
+  rotation: number,
   rng: () => number,
 ): void {
   ctx.save();
@@ -637,10 +684,13 @@ function drawRockShape(
 
 function drawLightningPath(
   ctx: CanvasRenderingContext2D,
-  x1: number, y1: number,
-  x2: number, y2: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
   branchCount: number,
-  boltColor: string, glowColor: string,
+  boltColor: string,
+  glowColor: string,
   alpha: number,
   rng: () => number,
 ): void {
@@ -674,9 +724,9 @@ function drawLightningPath(
   };
 
   ctx.save();
-  drawPath(5, glowColor, alpha * 0.25);   // outer glow
-  drawPath(1.8, boltColor, alpha);         // main bolt
-  drawPath(0.6, '#ffffff', alpha * 0.85);  // white core
+  drawPath(5, glowColor, alpha * 0.25); // outer glow
+  drawPath(1.8, boltColor, alpha); // main bolt
+  drawPath(0.6, '#ffffff', alpha * 0.85); // white core
 
   // Branch forks
   for (let b = 0; b < branchCount; b++) {
@@ -710,8 +760,14 @@ function renderDragonAuraEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
 
   let auraColor = '#8855f8';
   let glowColor = '#40d0c0';
-  if (effect.variant === 'char-dragon') { auraColor = '#ff6820'; glowColor = '#ffc840'; }
-  if (effect.variant === 'dra-dragon')  { auraColor = '#20a8ff'; glowColor = '#88ffff'; }
+  if (effect.variant === 'char-dragon') {
+    auraColor = '#ff6820';
+    glowColor = '#ffc840';
+  }
+  if (effect.variant === 'dra-dragon') {
+    auraColor = '#20a8ff';
+    glowColor = '#88ffff';
+  }
 
   const PHASE2 = 0.37;
   const PHASE3 = 0.75;
@@ -738,7 +794,7 @@ function renderDragonAuraEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
 
     // Pulsing secondary ring
     const ring2R = auraR * (1.35 + Math.sin(pt * Math.PI * 5) * 0.08);
-    ctx.globalAlpha = pt * 0.30;
+    ctx.globalAlpha = pt * 0.3;
     ctx.strokeStyle = glowColor;
     ctx.lineWidth = 0.8;
     ctx.beginPath();
@@ -765,7 +821,6 @@ function renderDragonAuraEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
       );
       ctx.stroke();
     }
-
   } else if (t < PHASE3) {
     const pt = (t - PHASE2) / (PHASE3 - PHASE2);
     const eased = 1 - Math.pow(1 - pt, 2);
@@ -810,7 +865,6 @@ function renderDragonAuraEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
     ctx.beginPath();
     ctx.arc(effect.sourceX, effect.sourceY, 13, 0, Math.PI * 2);
     ctx.stroke();
-
   } else {
     const pt = (t - PHASE3) / (1 - PHASE3);
     const rng = seededRng(effect.seed + 1);
@@ -897,7 +951,7 @@ function renderFlamethrowerEffect(ctx: CanvasRenderingContext2D, effect: AttackE
     const size = 2.2 + heat * 2.8;
 
     ctx.globalAlpha = alpha;
-    ctx.fillStyle = heat > 0.65 ? '#fff060' : (rng() > 0.4 ? '#ff7020' : '#ff4010');
+    ctx.fillStyle = heat > 0.65 ? '#fff060' : rng() > 0.4 ? '#ff7020' : '#ff4010';
     ctx.beginPath();
     ctx.arc(fpx, fpy, size, 0, Math.PI * 2);
     ctx.fill();
@@ -947,7 +1001,7 @@ function renderLeafSprayEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     const spinSpeed = 3 + rng() * 4;
     const pointAngle = leafAngle + adjT * Math.PI * spinSpeed * spinDir;
     const leafSize = 3.5 + rng() * 1.8;
-    const alpha = adjT < 0.88 ? 0.92 : (1 - adjT) / 0.12 * 0.92;
+    const alpha = adjT < 0.88 ? 0.92 : ((1 - adjT) / 0.12) * 0.92;
 
     ctx.globalAlpha = alpha;
     ctx.save();
@@ -972,6 +1026,124 @@ function renderLeafSprayEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     ctx.stroke();
 
     ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+// --- Vine Whip ---
+// Curved vine tendrils extend from attacker to target, whip-snap, then retract.
+// Number of vines driven by 'vine-N' variant (2 by default, up to 5 for Tangrowth).
+
+function renderVineWhipEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const numWhips = parseInt(effect.variant?.replace('vine-', '') ?? '2', 10) || 2;
+
+  const dx = effect.targetX - effect.sourceX;
+  const dy = effect.targetY - effect.sourceY;
+  const dist = Math.hypot(dx, dy) || 1;
+
+  // Phase timing
+  const extendEnd = 0.48; // end of extension phase
+  const holdEnd = 0.7; // end of hold-at-target phase
+
+  ctx.save();
+
+  for (let i = 0; i < numWhips; i++) {
+    const rng = seededRng(effect.seed + i * 31);
+
+    // Stagger: alternate left/right whips extend slightly offset in time
+    const stagger = (i % 2 === 0 ? 0 : 0.055) + rng() * 0.03;
+    const localT = Math.max(0, (t - stagger) / (1 - stagger));
+    if (localT <= 0) continue;
+
+    // Vertical spread — symmetric around center, tighter for more whips
+    const spreadIndex = i - (numWhips - 1) * 0.5;
+    const spacing = numWhips <= 2 ? 6.5 : numWhips <= 3 ? 5.0 : 4.0;
+    const baseOffsetY = spreadIndex * spacing * 2;
+    const jitterY = (rng() - 0.5) * 2.5;
+    const offsetY = baseOffsetY + jitterY;
+
+    // How far the vine tip has reached along the path (0→1)
+    let reach: number;
+    let alpha: number;
+    if (localT <= extendEnd) {
+      reach = 1 - Math.pow(1 - localT / extendEnd, 2.5); // fast ease-out extension
+      alpha = 1;
+    } else if (localT <= holdEnd) {
+      reach = 1;
+      alpha = 1;
+    } else {
+      const retractT = (localT - holdEnd) / (1 - holdEnd);
+      reach = Math.pow(1 - retractT, 1.8);
+      alpha = Math.max(0, 1 - retractT * 0.8);
+    }
+
+    if (reach <= 0.02 || alpha <= 0.01) continue;
+
+    // Whip curve: control point arcs out perpendicular to the attack direction
+    // Oscillates outward during extension, straightens at impact
+    const whipBow = Math.sin(localT * Math.PI) * 0.18;
+    const perpX = -dy / dist;
+    const perpY = dx / dist;
+
+    const startX = effect.sourceX;
+    const startY = effect.sourceY + offsetY * 0.15;
+    const tipX = effect.sourceX + dx * reach;
+    const tipY = effect.sourceY + dy * reach + offsetY * (0.9 + 0.1 * reach);
+    const ctrlX = effect.sourceX + dx * 0.5 + perpX * dist * whipBow;
+    const ctrlY = effect.sourceY + dy * 0.5 + perpY * dist * whipBow + offsetY * 0.55;
+
+    const vineW = 2.0 + rng() * 0.5 - i * 0.12;
+
+    // Dark outline (drawn first, behind the vine)
+    ctx.globalAlpha = alpha * 0.45;
+    ctx.lineWidth = vineW + 1.2;
+    ctx.strokeStyle = '#145218';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.quadraticCurveTo(ctrlX, ctrlY, tipX, tipY);
+    ctx.stroke();
+
+    // Main vine body
+    ctx.globalAlpha = alpha * 0.95;
+    ctx.lineWidth = vineW;
+    ctx.strokeStyle = '#2ecc40';
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.quadraticCurveTo(ctrlX, ctrlY, tipX, tipY);
+    ctx.stroke();
+
+    // Bright highlight stripe along the vine
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.lineWidth = 0.9;
+    ctx.strokeStyle = '#a8ff6a';
+    ctx.beginPath();
+    ctx.moveTo(startX, startY - 0.5);
+    ctx.quadraticCurveTo(ctrlX, ctrlY - 0.6, tipX, tipY - 0.5);
+    ctx.stroke();
+
+    // Leaf tip — small dark-green teardrop bud at the vine end
+    if (reach > 0.45) {
+      const tipAlpha = alpha * Math.min(1, (reach - 0.45) * 3.5);
+      ctx.globalAlpha = tipAlpha;
+      ctx.fillStyle = '#1a7a28';
+      const tipAngle = Math.atan2(tipY - ctrlY, tipX - ctrlX);
+      ctx.save();
+      ctx.translate(tipX, tipY);
+      ctx.rotate(tipAngle);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 1.4, 3.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Small highlight on the bud
+      ctx.fillStyle = '#5aff7a';
+      ctx.globalAlpha = tipAlpha * 0.5;
+      ctx.beginPath();
+      ctx.ellipse(-0.3, -0.9, 0.5, 1.2, -0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
   }
 
   ctx.restore();
@@ -1080,7 +1252,6 @@ function renderPsychicWaveEffect(ctx: CanvasRenderingContext2D, effect: AttackEf
       ctx.restore();
       ctx.stroke();
     }
-
   } else {
     const pt = (t - SPLIT) / (1 - SPLIT);
     const alpha = Math.max(0, 1 - pt);
@@ -1132,7 +1303,7 @@ function renderRockThrowEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
 
   for (let i = 0; i < numRocks; i++) {
     const posRng = seededRng(effect.seed + i * 17);
-    const delay = i * 0.10;
+    const delay = i * 0.1;
     const adjT = Math.max(0, Math.min(1, (t - delay) / (1 - delay)));
     if (adjT <= 0) continue;
 
@@ -1144,7 +1315,7 @@ function renderRockThrowEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     const rotation = adjT * Math.PI * (2.5 + posRng() * 3) * (posRng() > 0.5 ? 1 : -1);
     const size = 4 + posRng() * 3;
 
-    if (adjT < 0.90) {
+    if (adjT < 0.9) {
       ctx.globalAlpha = Math.min(1, adjT * 5) * 0.92;
       const shapeRng = seededRng(effect.seed + i * 17);
       drawRockShape(ctx, x, y, size, rotation, shapeRng);
@@ -1228,7 +1399,7 @@ function renderRockSlideEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
 
 function renderFireBlastEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = effect.timer / effect.duration;
-  const SPLIT = 0.40;
+  const SPLIT = 0.4;
   const isChar = effect.variant === 'char-blast';
 
   ctx.save();
@@ -1262,7 +1433,6 @@ function renderFireBlastEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       ctx.arc(tx, ty, Math.max(0.5, 4.5 - i), 0, Math.PI * 2);
       ctx.fill();
     }
-
   } else {
     const pt = (t - SPLIT) / (1 - SPLIT);
     const alpha = Math.max(0, 1 - pt);
@@ -1284,7 +1454,7 @@ function renderFireBlastEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     ctx.beginPath();
     for (let i = 0; i < numPoints * 2; i++) {
       const angle = (Math.PI * i) / numPoints + rotation;
-      const r = i % 2 === 0 ? baseR : baseR * 0.40;
+      const r = i % 2 === 0 ? baseR : baseR * 0.4;
       const px = effect.targetX + Math.cos(angle) * r;
       const py = effect.targetY + Math.sin(angle) * r;
       if (i === 0) ctx.moveTo(px, py);
@@ -1311,7 +1481,9 @@ function renderFireBlastEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       ctx.arc(
         effect.targetX + Math.cos(angle) * dist,
         effect.targetY + Math.sin(angle) * dist,
-        1 + rng() * 2, 0, Math.PI * 2,
+        1 + rng() * 2,
+        0,
+        Math.PI * 2,
       );
       ctx.fill();
     }
@@ -1326,7 +1498,7 @@ function renderFireBlastEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
 
 function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = effect.timer / effect.duration;
-  const SPLIT = 0.50;
+  const SPLIT = 0.5;
   const dx = effect.sourceX - effect.targetX;
   const dy = effect.sourceY - effect.targetY;
   const len = Math.hypot(dx, dy) || 1;
@@ -1339,7 +1511,7 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
   ctx.save();
 
   // Target sickly glow throughout
-  const glowAlpha = t < SPLIT ? t / SPLIT * 0.22 : (1 - (t - SPLIT) / SPLIT) * 0.22;
+  const glowAlpha = t < SPLIT ? (t / SPLIT) * 0.22 : (1 - (t - SPLIT) / SPLIT) * 0.22;
   ctx.globalAlpha = glowAlpha;
   ctx.fillStyle = '#40d040';
   ctx.beginPath();
@@ -1369,7 +1541,6 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       }
       ctx.stroke();
     }
-
   } else {
     const pt = (t - SPLIT) / (1 - SPLIT);
 
@@ -1381,7 +1552,7 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       const eased = 1 - Math.pow(1 - orbT, 2);
       const x = effect.targetX + dx * eased;
       const y = effect.targetY + dy * eased;
-      const alpha = orbT < 0.88 ? 0.85 : (1 - orbT) / 0.12 * 0.85;
+      const alpha = orbT < 0.88 ? 0.85 : ((1 - orbT) / 0.12) * 0.85;
 
       ctx.globalAlpha = alpha;
       ctx.fillStyle = '#60f060';
@@ -1430,16 +1601,23 @@ function renderLightningEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
   ctx.save();
 
   const branches = isDra ? 3 : 2;
-  drawLightningPath(ctx, bx1, by1, effect.targetX, effect.targetY, branches,
-    '#ffe030', '#88ccff', baseAlpha, rng);
+  drawLightningPath(ctx, bx1, by1, effect.targetX, effect.targetY, branches, '#ffe030', '#88ccff', baseAlpha, rng);
 
   // Second flicker bolt (dra variant has extra)
   if (isDra && baseAlpha > 0.2) {
     const rng2 = seededRng(flickerSeed + 50);
-    drawLightningPath(ctx,
-      bx1 + (rng2() - 0.5) * 8, by1,
-      effect.targetX + (rng2() - 0.5) * 5, effect.targetY,
-      1, '#aaddff', '#4488cc', baseAlpha * 0.45, rng2);
+    drawLightningPath(
+      ctx,
+      bx1 + (rng2() - 0.5) * 8,
+      by1,
+      effect.targetX + (rng2() - 0.5) * 5,
+      effect.targetY,
+      1,
+      '#aaddff',
+      '#4488cc',
+      baseAlpha * 0.45,
+      rng2,
+    );
   }
 
   // Impact flash at target
@@ -1505,12 +1683,20 @@ function renderBurnStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTur
   ctx.globalAlpha = fade * 0.2;
   ctx.fillStyle = '#ff7a3d';
   ctx.beginPath();
-  ctx.ellipse(effect.centerX, effect.centerY + (effect.height * 0.15), effect.width * 0.28, effect.height * 0.22, 0, 0, Math.PI * 2);
+  ctx.ellipse(
+    effect.centerX,
+    effect.centerY + effect.height * 0.15,
+    effect.width * 0.28,
+    effect.height * 0.22,
+    0,
+    0,
+    Math.PI * 2,
+  );
   ctx.fill();
 
   for (let i = 0; i < 3; i++) {
-    const flameX = effect.centerX + ((i - 1) * effect.width * 0.16);
-    const flameY = effect.centerY + (effect.height * 0.18) - Math.sin((effect.timer * 12) + i) * 2;
+    const flameX = effect.centerX + (i - 1) * effect.width * 0.16;
+    const flameY = effect.centerY + effect.height * 0.18 - Math.sin(effect.timer * 12 + i) * 2;
     const flameH = effect.height * (0.18 + i * 0.02) * pulse;
     const flameW = effect.width * 0.1;
     ctx.globalAlpha = fade * (0.42 - i * 0.06);
@@ -1529,11 +1715,11 @@ function renderBurnStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTur
 function renderPoisonStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
   ctx.save();
   for (let i = 0; i < 4; i++) {
-    const phase = ((effect.timer * 1.8) + (i * 0.18)) % 1;
-    const x = effect.centerX - (effect.width * 0.16) + (i * effect.width * 0.11);
-    const y = effect.centerY + (effect.height * 0.18) - (phase * effect.height * 0.45);
-    const radius = 2 + ((1 - phase) * 2);
-    ctx.globalAlpha = fade * (0.24 + ((1 - phase) * 0.18));
+    const phase = (effect.timer * 1.8 + i * 0.18) % 1;
+    const x = effect.centerX - effect.width * 0.16 + i * effect.width * 0.11;
+    const y = effect.centerY + effect.height * 0.18 - phase * effect.height * 0.45;
+    const radius = 2 + (1 - phase) * 2;
+    ctx.globalAlpha = fade * (0.24 + (1 - phase) * 0.18);
     ctx.fillStyle = i % 2 === 0 ? '#a86cf0' : '#d080f0';
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -1548,8 +1734,8 @@ function renderParalyzeStatusEffect(ctx: CanvasRenderingContext2D, effect: Statu
   ctx.strokeStyle = '#ffd84a';
   ctx.lineWidth = 2;
   for (let i = 0; i < 3; i++) {
-    const startX = effect.centerX - (effect.width * 0.22) + (i * effect.width * 0.22);
-    const startY = effect.centerY - (effect.height * 0.18) + Math.sin((effect.timer * 14) + i) * 3;
+    const startX = effect.centerX - effect.width * 0.22 + i * effect.width * 0.22;
+    const startY = effect.centerY - effect.height * 0.18 + Math.sin(effect.timer * 14 + i) * 3;
     ctx.beginPath();
     ctx.moveTo(startX, startY);
     ctx.lineTo(startX + 3, startY + 5);
@@ -1564,10 +1750,10 @@ function renderSleepStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTu
   const chars = ['Z', 'z', 'z'];
   ctx.save();
   for (let i = 0; i < chars.length; i++) {
-    const phase = ((effect.timer * 1.4) + (i * 0.16)) % 1;
-    const x = effect.centerX + (effect.width * 0.08) + (i * 5);
-    const y = effect.centerY - (effect.height * 0.34) - (phase * 10);
-    ctx.globalAlpha = fade * (0.35 + ((1 - phase) * 0.35));
+    const phase = (effect.timer * 1.4 + i * 0.16) % 1;
+    const x = effect.centerX + effect.width * 0.08 + i * 5;
+    const y = effect.centerY - effect.height * 0.34 - phase * 10;
+    ctx.globalAlpha = fade * (0.35 + (1 - phase) * 0.35);
     drawText(ctx, chars[i], x, y, {
       size: 6 - i,
       color: '#d8dcff',
@@ -1593,8 +1779,8 @@ function renderFreezeStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusT
   ctx.fill();
 
   for (const block of blocks) {
-    const x = effect.centerX + (effect.width * block.x);
-    const y = effect.centerY + (effect.height * block.y);
+    const x = effect.centerX + effect.width * block.x;
+    const y = effect.centerY + effect.height * block.y;
     const w = effect.width * block.w;
     const h = effect.height * block.h;
     ctx.globalAlpha = fade * 0.42;
@@ -1611,11 +1797,11 @@ function renderFreezeStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusT
 function renderConfuseStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
   ctx.save();
   for (let i = 0; i < 4; i++) {
-    const phase = (effect.timer * 2.2) + (i * (Math.PI / 2));
+    const phase = effect.timer * 2.2 + i * (Math.PI / 2);
     const orbitX = Math.cos(phase) * effect.width * 0.16;
     const orbitY = Math.sin(phase) * effect.height * 0.12;
     const x = effect.centerX + orbitX;
-    const y = effect.centerY - (effect.height * 0.16) + orbitY;
+    const y = effect.centerY - effect.height * 0.16 + orbitY;
     ctx.globalAlpha = fade * (0.4 + i * 0.08);
     ctx.fillStyle = i % 2 === 0 ? '#ff9cc0' : '#f070c8';
     ctx.beginPath();
@@ -1640,14 +1826,14 @@ function renderSeedStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTur
   ctx.strokeStyle = '#7ccf5c';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.arc(effect.centerX, effect.centerY + (effect.height * 0.08), effect.width * 0.24, Math.PI * 0.15, Math.PI * 0.85);
+  ctx.arc(effect.centerX, effect.centerY + effect.height * 0.08, effect.width * 0.24, Math.PI * 0.15, Math.PI * 0.85);
   ctx.stroke();
 
   for (let i = 0; i < 3; i++) {
-    const phase = ((effect.timer * 1.5) + (i * 0.22)) % 1;
-    const x = effect.centerX - (effect.width * 0.18) + (i * effect.width * 0.18);
-    const y = effect.centerY + (effect.height * 0.18) - (phase * effect.height * 0.38);
-    ctx.globalAlpha = fade * (0.28 + ((1 - phase) * 0.22));
+    const phase = (effect.timer * 1.5 + i * 0.22) % 1;
+    const x = effect.centerX - effect.width * 0.18 + i * effect.width * 0.18;
+    const y = effect.centerY + effect.height * 0.18 - phase * effect.height * 0.38;
+    ctx.globalAlpha = fade * (0.28 + (1 - phase) * 0.22);
     ctx.fillStyle = i === 1 ? '#a8e070' : '#78c850';
     ctx.beginPath();
     ctx.ellipse(x, y, 2.2, 1.5, i === 1 ? -0.6 : 0.6, 0, Math.PI * 2);
@@ -1668,12 +1854,12 @@ function renderTrapStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTur
   ctx.strokeStyle = '#f0a060';
   ctx.lineWidth = 2;
   for (let i = 0; i < 3; i++) {
-    const y = effect.centerY - (effect.height * 0.08) + (i * effect.height * 0.12);
+    const y = effect.centerY - effect.height * 0.08 + i * effect.height * 0.12;
     ctx.beginPath();
     for (let step = 0; step <= 12; step++) {
       const progress = step / 12;
-      const x = effect.centerX - (effect.width * 0.24) + (progress * effect.width * 0.48);
-      const offsetY = Math.sin((progress * Math.PI * 2) + (effect.timer * 10) + i) * 2.5;
+      const x = effect.centerX - effect.width * 0.24 + progress * effect.width * 0.48;
+      const offsetY = Math.sin(progress * Math.PI * 2 + effect.timer * 10 + i) * 2.5;
       if (step === 0) {
         ctx.moveTo(x, y + offsetY);
       } else {
@@ -1688,7 +1874,7 @@ function renderTrapStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTur
 export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect): void {
   if (!effect.active) return;
 
-  const fade = Math.max(0, 1 - (effect.timer / effect.duration));
+  const fade = Math.max(0, 1 - effect.timer / effect.duration);
   switch (effect.status) {
     case 'burn':
       renderBurnStatusEffect(ctx, effect, fade);

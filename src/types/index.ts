@@ -157,6 +157,7 @@ export interface PlayerData {
   pokedex: Record<number, boolean>;
   items: Record<string, number>;  // item id → quantity
   flags: Record<string, boolean>; // e.g. 'trainer-bug1-defeated'
+  flagTimestamps: Record<string, number>; // unix ms when each flag was first set
   position: { mapId: string; x: number; y: number };
   previousMapReturn?: { mapId: string; x: number; y: number } | null;
   lastPokemonCenter: { mapId: string; x: number; y: number };

@@ -32,7 +32,7 @@ export interface CutsceneContext {
   setNPCHidden(id: string, hidden: boolean): void;
   setPlayerHidden(hidden: boolean): void;
   /** Instantly move an NPC along a path (teleport, no animation). */
-  moveNPCAlongPath(npc: NPCData, path: Array<'up'|'down'|'left'|'right'>): void;
+  moveNPCAlongPath(npc: NPCData, path: Array<'up' | 'down' | 'left' | 'right'>): void;
   snapCamera(x: number, y: number): void;
   panCamera(x: number, y: number, durationMs: number): void;
   playMusic(id: string): void;
@@ -49,41 +49,57 @@ export interface CutsceneContext {
 // ---------------------------------------------------------------------------
 
 interface DialogueState {
-  lines: string[];          // resolved to current locale
+  lines: string[]; // resolved to current locale
   lineIndex: number;
-  charIndex: number;        // typewriter char counter
+  charIndex: number; // typewriter char counter
   charTimer: number;
   speakerId?: string;
-  waitingDismiss: boolean;  // true once all chars revealed, waiting for Enter
+  waitingDismiss: boolean; // true once all chars revealed, waiting for Enter
 }
 
 interface FadeState {
   direction: 'in' | 'out';
-  alpha: number;            // current alpha (0=transparent,1=opaque)
-  duration: number;         // seconds
+  alpha: number; // current alpha (0=transparent,1=opaque)
+  duration: number; // seconds
   elapsed: number;
   color: string;
   done: boolean;
 }
+
+interface PhoneRingState {
+  callerName: string; // resolved to current locale
+  elapsed: number; // total time in ring phase
+  sfxPlayed: boolean; // play ring SFX only once per 1.5s cycle
+  sfxTimer: number; // countdown to next ring SFX
+  /** true once the player presses Enter or auto-timeout fires */
+  answered: boolean;
+  answerTimer: number; // brief pause after answering before starting steps
+}
+
+const PHONE_RING_MIN_DURATION = 1.2; // seconds before player input is accepted (avoids instant-answer from trigger keypress)
+const PHONE_RING_AUTO_ANSWER = 6; // seconds before auto-answer
+const PHONE_RING_SFX_INTERVAL = 1.5; // seconds between ring tones
+const PHONE_ANSWER_PAUSE = 0.6; // seconds of "Connected..." pause after answering
 
 // ---------------------------------------------------------------------------
 // Module state (singleton — only one cutscene runs at a time)
 // ---------------------------------------------------------------------------
 
 let _def: CutsceneDef | null = null;
-let _steps: CutsceneStep[] = [];    // flattened/active steps (if-flag branches resolved at runtime)
+let _steps: CutsceneStep[] = []; // flattened/active steps (if-flag branches resolved at runtime)
 let _stepIndex = 0;
 let _active = false;
 
 let _dialogue: DialogueState | null = null;
 let _fade: FadeState | null = null;
 let _overlay: string | null = null; // persistent background color (null = world shows through)
-let _waitTimer = 0;                 // for 'wait' steps
-let _waitingInput = false;          // for 'wait-input' steps
+let _waitTimer = 0; // for 'wait' steps
+let _waitingInput = false; // for 'wait-input' steps
+let _phoneRing: PhoneRingState | null = null; // phone-ring intro phase
 
 let _completionResolve: (() => void) | null = null;
 
-const CHARS_PER_SEC = 40;           // typewriter speed
+const CHARS_PER_SEC = 40; // typewriter speed
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -108,6 +124,24 @@ export function activateCutscene(id: string): boolean {
   _fade = null;
   _waitTimer = 0;
   _waitingInput = false;
+  _phoneRing = null;
+
+  // If phoneCaller is set, enter the ring phase before executing any steps
+  // console.log('[cutscene] activating:', id, '| phoneCaller:', def.phoneCaller);
+  if (def.phoneCaller) {
+    const locale = getLocale();
+    const name = locale === 'he' ? def.phoneCaller.he : def.phoneCaller.en;
+    _phoneRing = {
+      callerName: name,
+      elapsed: 0,
+      sfxPlayed: false,
+      sfxTimer: 0,
+      answered: false,
+      answerTimer: 0,
+    };
+    console.log('[cutscene] phone ring starting for:', name);
+  }
+
   return true;
 }
 
@@ -118,6 +152,7 @@ export function deactivateCutscene(): void {
   _fade = null;
   _overlay = null;
   _waitingInput = false;
+  _phoneRing = null;
   _completionResolve?.();
   _completionResolve = null;
 }
@@ -128,7 +163,9 @@ export function deactivateCutscene(): void {
  * is registered before deactivateCutscene() could theoretically fire.
  */
 export function awaitCutsceneCompletion(): Promise<void> {
-  return new Promise(resolve => { _completionResolve = resolve; });
+  return new Promise((resolve) => {
+    _completionResolve = resolve;
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -137,6 +174,41 @@ export function awaitCutsceneCompletion(): Promise<void> {
 
 export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneContext): void {
   if (!_active) return;
+
+  // ── Phone ring intro phase ──
+  if (_phoneRing) {
+    const r = _phoneRing;
+    r.elapsed += dt;
+
+    // Play ring SFX on first frame and then every PHONE_RING_SFX_INTERVAL seconds
+    r.sfxTimer -= dt;
+    if (!r.sfxPlayed || r.sfxTimer <= 0) {
+      ctx.playSFX('phone-ring');
+      r.sfxPlayed = true;
+      r.sfxTimer = PHONE_RING_SFX_INTERVAL;
+    }
+
+    if (!r.answered) {
+      // Only accept input after minimum ring duration — prevents the same
+      // keypress that triggered the cutscene from instantly answering the phone
+      const canAnswer = r.elapsed >= PHONE_RING_MIN_DURATION;
+      const pressedAnswer =
+        canAnswer &&
+        (input.isKeyPressed('Enter') || input.isKeyPressed(' ') || input.isKeyPressed('z') || input.isKeyPressed('Z'));
+      if (pressedAnswer || r.elapsed >= PHONE_RING_AUTO_ANSWER) {
+        r.answered = true;
+        r.answerTimer = PHONE_ANSWER_PAUSE;
+      }
+    } else {
+      // Brief pause after answering, then begin steps
+      r.answerTimer -= dt;
+      if (r.answerTimer <= 0) {
+        _phoneRing = null;
+        // Steps begin normally from here
+      }
+    }
+    return; // Block all normal step execution while ring is active
+  }
 
   // Skip: if cutscene is skippable and player presses Escape.
   // We still execute remaining 'action' and 'start-scene' steps so that
@@ -174,7 +246,12 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
         }
       }
     } else {
-      if (input.isKeyPressed('Enter') || input.isKeyPressed(' ') || input.isKeyPressed('z') || input.isKeyPressed('Z')) {
+      if (
+        input.isKeyPressed('Enter') ||
+        input.isKeyPressed(' ') ||
+        input.isKeyPressed('z') ||
+        input.isKeyPressed('Z')
+      ) {
         d.lineIndex++;
         if (d.lineIndex >= d.lines.length) {
           // All lines done — advance to next step
@@ -244,6 +321,12 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
 export function renderCutscene(canvas: CanvasRenderingContext2D): void {
   if (!_active) return;
 
+  // Phone ring overlay — rendered instead of normal cutscene content
+  if (_phoneRing) {
+    renderPhoneRing(canvas, _phoneRing);
+    return;
+  }
+
   // Persistent overlay (solid background — drawn before fade animation)
   if (_overlay) {
     fillRect(canvas, 0, 0, W, H, _overlay);
@@ -279,7 +362,7 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
   switch (step.type) {
     case 'dialogue': {
       const locale = getLocale();
-      const lines = step.lines.map(l => (locale === 'he' ? l.he : l.en) || l.en || '');
+      const lines = step.lines.map((l) => (locale === 'he' ? l.he : l.en) || l.en || '');
       _dialogue = {
         lines,
         lineIndex: 0,
@@ -369,7 +452,7 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     }
 
     case 'overlay': {
-      _overlay = step.color;  // null clears it, string sets solid color
+      _overlay = step.color; // null clears it, string sets solid color
       _stepIndex++;
       break;
     }
@@ -411,7 +494,7 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       // Not yet implemented — wire up in overworld to push the gate scene
       throw new Error(
         `[cutscene] step 'start-gate' (gateId: "${(step as { gateId: string }).gateId}") is not implemented yet. ` +
-        `Remove this step from the cutscene, or implement gate-from-cutscene handoff.`
+          `Remove this step from the cutscene, or implement gate-from-cutscene handoff.`,
       );
     }
 
@@ -419,7 +502,7 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       // Not yet implemented — wire up battle scene launch from cutscene
       throw new Error(
         `[cutscene] step 'start-battle' (trainerId: "${(step as { trainerId: string }).trainerId}") is not implemented yet. ` +
-        `Remove this step from the cutscene, or implement battle-from-cutscene handoff.`
+          `Remove this step from the cutscene, or implement battle-from-cutscene handoff.`,
       );
     }
 
@@ -434,7 +517,7 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       // Not yet implemented — player movement animation is not wired up.
       throw new Error(
         `[cutscene] step 'move-player' is not implemented yet. ` +
-        `Remove this step from the cutscene or implement player path animation.`
+          `Remove this step from the cutscene or implement player path animation.`,
       );
     }
 
@@ -443,6 +526,80 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       _stepIndex++;
       break;
     }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Phone ring rendering
+// ---------------------------------------------------------------------------
+
+function renderPhoneRing(ctx: CanvasRenderingContext2D, r: PhoneRingState): void {
+  const rtl = isRTL();
+
+  // Full black background — phone call covers the world entirely
+  fillRect(ctx, 0, 0, W, H, '#000000');
+
+  // Pulsing border color: cyan to white
+  const pulse = Math.abs(Math.sin(r.elapsed * 4));
+  const borderColor = r.answered ? '#20d860' : pulse > 0.5 ? '#00d4ff' : '#ffffff';
+
+  // Card — centered, large enough to be unmissable
+  const CW = 190,
+    CH = 70;
+  const CX = Math.floor((W - CW) / 2);
+  const CY = Math.floor((H - CH) / 2);
+
+  // Card fill
+  fillRect(ctx, CX, CY, CW, CH, '#0d2233');
+
+  // Card border — 2px bright pulsing
+  fillRect(ctx, CX, CY, CW, 2, borderColor);
+  fillRect(ctx, CX, CY + CH - 2, CW, 2, borderColor);
+  fillRect(ctx, CX, CY, 2, CH, borderColor);
+  fillRect(ctx, CX + CW - 2, CY, 2, CH, borderColor);
+
+  // Header stripe
+  fillRect(ctx, CX + 2, CY + 2, CW - 4, 12, r.answered ? '#0d3a1a' : '#0a2a3a');
+
+  // "Incoming Call" / "שיחה נכנסת"
+  const headerText = rtl ? 'שיחה נכנסת' : 'Incoming Call';
+  drawText(ctx, headerText, W / 2, CY + 4, {
+    size: 6,
+    color: borderColor,
+    align: 'center',
+  });
+
+  // Caller name — large white text
+  drawText(ctx, r.callerName, W / 2, CY + 22, {
+    size: 9,
+    color: '#ffffff',
+    align: 'center',
+  });
+
+  if (!r.answered) {
+    // Ringing animation: animated dots
+    const dots = '.'.repeat((Math.floor(r.elapsed * 3) % 3) + 1);
+    drawText(ctx, '[ TEL' + dots + ' ]', W / 2, CY + 38, {
+      size: 6,
+      color: '#00d4ff',
+      align: 'center',
+    });
+    // Blinking hint
+    if (Math.floor(Date.now() / 500) % 2 === 0) {
+      const hintText = rtl ? 'ENTER – ענה' : '[ ENTER ] to answer';
+      drawText(ctx, hintText, W / 2, CY + CH - 10, {
+        size: 5,
+        color: '#aaaaaa',
+        align: 'center',
+      });
+    }
+  } else {
+    const connText = rtl ? 'מחובר...' : 'Connected...';
+    drawText(ctx, connText, W / 2, CY + 38, {
+      size: 7,
+      color: '#20d860',
+      align: 'center',
+    });
   }
 }
 
@@ -462,7 +619,7 @@ function renderDialogue(ctx: CanvasRenderingContext2D, d: DialogueState): void {
 
   // Box background
   fillRect(ctx, BOX_X, BOX_Y, BOX_W, BOX_H, '#0a0a1a');
-  fillRect(ctx, BOX_X, BOX_Y, BOX_W, 2, '#00d4ff');       // top accent
+  fillRect(ctx, BOX_X, BOX_Y, BOX_W, 2, '#00d4ff'); // top accent
   fillRect(ctx, BOX_X, BOX_Y + BOX_H - 2, BOX_W, 2, '#00d4ff'); // bottom accent
 
   // Speaker name
@@ -497,7 +654,9 @@ function renderDialogue(ctx: CanvasRenderingContext2D, d: DialogueState): void {
     const promptVisible = Math.floor(Date.now() / 400) % 2 === 0;
     if (promptVisible) {
       drawText(ctx, '▼', BOX_X + BOX_W - PADDING - 2, BOX_Y + BOX_H - 10, {
-        size: 6, color: '#aaaaaa', align: 'right',
+        size: 6,
+        color: '#aaaaaa',
+        align: 'right',
       });
     }
   }

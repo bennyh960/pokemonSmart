@@ -40,6 +40,14 @@ export type CutsceneStep =
 export interface CutsceneDef {
   id: string;
   skippable?: boolean;
+  /**
+   * When set, the cutscene opens with a phone-ring notification before the first step.
+   * The player sees an "Incoming Call" overlay with the caller's name and presses Enter to answer.
+   * If undefined, no phone ring — cutscene starts immediately as normal.
+   *
+   * Example: phoneCaller: { en: 'Alex', he: 'אלכס' }
+   */
+  phoneCaller?: BilingualText;
   steps: CutsceneStep[];
 }
 

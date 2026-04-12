@@ -92,7 +92,21 @@ registerGate({
     { type: 'set-quest', questId: 'main-act1-gym1' },
   ],
 });
-
+registerGate({
+  id: 'gate-sumville-route2',
+  title: { en: 'Route 2 Checkpoint', he: 'מחסום שביל 2' },
+  description: {
+    en: 'The path Sumville-Route2 is locked. We must identify you are not NULL-X creators. Questions will determine if you can pass. Choose wisely.',
+    he: 'הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
+  },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['placeholder'],
+  totalQuestions: 5,
+  passThreshold: 5,
+  failurePenalty: { type: 'money', amount: 150 },
+  reopenCooldownMs: 15 * 60 * 1000, // 15 min
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
+});
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
 
 // Prof. Oak arrives at Sumville — warns about cross-region NULL-X impact

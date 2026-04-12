@@ -167,6 +167,7 @@ export function createNewPlayerData(): PlayerData {
       'poke-ball': 10,
     },
     flags: {},
+    flagTimestamps: {},
     position: { mapId: 'zeroville', x: 15, y: 12 },
     lastPokemonCenter: { mapId: 'zeroville', x: 4, y: 5 },
     playtime: 0,
@@ -193,6 +194,19 @@ export function getPlayerData(): PlayerData {
 /** Check if a game is currently active. */
 export function hasActiveGame(): boolean {
   return currentPlayerData !== null;
+}
+
+/**
+ * Set a story/progression flag on the player data and record its timestamp.
+ * Always use this instead of `pd.flags[key] = true` so that flag-based
+ * reencounter triggers can measure elapsed time since the flag was set.
+ */
+export function setFlag(pd: PlayerData, key: string): void {
+  if (!pd.flags[key]) {
+    pd.flags[key] = true;
+    if (!pd.flagTimestamps) pd.flagTimestamps = {};
+    pd.flagTimestamps[key] = Date.now();
+  }
 }
 
 /** Check if a saved game exists. */

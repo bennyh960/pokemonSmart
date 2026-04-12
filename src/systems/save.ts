@@ -13,7 +13,7 @@ import { ensurePersistentBattleFields } from './battle-state.js';
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 8;
+export const CURRENT_SAVE_VERSION = 9;
 
 function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Record<string, any>) => void): void {
   if (data.party) {
@@ -103,6 +103,11 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     if (data.battleHelperBattles === undefined) data.battleHelperBattles = 0;
     if (data.battleHelperEnabled === undefined) data.battleHelperEnabled = false;
     data.saveVersion = 8;
+  },
+  // Version 8 → 9: add flagTimestamps for flag-based reencounter triggers
+  9: (data) => {
+    if (!data.flagTimestamps) data.flagTimestamps = {};
+    data.saveVersion = 9;
   },
 };
 

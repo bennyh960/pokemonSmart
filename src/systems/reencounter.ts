@@ -39,11 +39,33 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
   // count tracks total defeats; re-encounter count = total allowed additional fights
   if (state.count > rc.count) return { eligible: false, reason: 'max-reached' };
 
-  const elapsed = Date.now() - state.lastDefeatedAt;
-  const required = rc.timeInterval * MS_PER_HOUR;
-  if (elapsed < required) {
-    const hoursLeft = Math.ceil((required - elapsed) / MS_PER_HOUR);
-    return { eligible: false, reason: 'cooldown', hoursLeft };
+  // ── Trigger mode resolution ────────────────────────────────────────────────
+  if (rc.triggerFlag) {
+    // Flag-based trigger: reencounter unlocks when a story flag is set (+ optional delay)
+    if (!pd.flags[rc.triggerFlag]) {
+      return { eligible: false, reason: 'cooldown' };
+    }
+    if (rc.triggerFlagDelayHours && rc.triggerFlagDelayHours > 0) {
+      const timestamps = pd.flagTimestamps ?? {};
+      const flagSetAt = timestamps[rc.triggerFlag] ?? 0;
+      const elapsed = Date.now() - flagSetAt;
+      const required = rc.triggerFlagDelayHours * MS_PER_HOUR;
+      if (elapsed < required) {
+        const hoursLeft = Math.ceil((required - elapsed) / MS_PER_HOUR);
+        return { eligible: false, reason: 'cooldown', hoursLeft };
+      }
+    }
+    return { eligible: true, encounterIndex: state.count };
+  }
+
+  // Classic time-after-defeat mode
+  if (rc.timeInterval && rc.timeInterval > 0) {
+    const elapsed = Date.now() - state.lastDefeatedAt;
+    const required = rc.timeInterval * MS_PER_HOUR;
+    if (elapsed < required) {
+      const hoursLeft = Math.ceil((required - elapsed) / MS_PER_HOUR);
+      return { eligible: false, reason: 'cooldown', hoursLeft };
+    }
   }
 
   return { eligible: true, encounterIndex: state.count };

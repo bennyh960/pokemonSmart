@@ -80,7 +80,7 @@ import {
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
 import { sendCaughtToBox } from '../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../systems/reencounter.js';
-import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
+import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground } from '../engine/asset-generator.js';
 import { t, isRTL, getLocale } from '../i18n/i18n.js';
@@ -649,9 +649,9 @@ export function createBattleScene(
           fireStoryTrigger({ type: 'badge-earned', badge: reward.badge });
         }
         if (reward.storyEvent) {
-          pd.flags[reward.storyEvent] = true;
+          setFlag(pd, reward.storyEvent);
         }
-        pd.flags[`trainer-${td.trainerId}-defeated`] = true;
+        setFlag(pd, `trainer-${td.trainerId}-defeated`);
       }
       // Always record the defeat for re-encounter tracking
       recordTrainerDefeat(td.trainerId);
@@ -2033,10 +2033,19 @@ export function createBattleScene(
 
   // Families that create the effect at animation start (not at impact time)
   const START_FX_FAMILIES = new Set([
-    'projectile', 'beam',
-    'dragon-aura', 'flamethrower', 'leaf-spray', 'water-flow',
-    'psychic-wave', 'rock-throw', 'rock-slide', 'fire-blast',
-    'giga-drain', 'lightning',
+    'projectile',
+    'beam',
+    'dragon-aura',
+    'flamethrower',
+    'leaf-spray',
+    'water-flow',
+    'psychic-wave',
+    'rock-throw',
+    'rock-slide',
+    'fire-blast',
+    'giga-drain',
+    'lightning',
+    'vine-whip',
   ]);
 
   function playAttackAnimation(
@@ -2700,7 +2709,10 @@ export function createBattleScene(
       if (hasActiveGame()) {
         const pd = getPlayerData();
         if (pd.pokedexBatteryCharges <= 0) {
-          textBox = createTextBox(['פוקדקס ריק! תטען במרכז פוקימון.', 'Pokedex battery empty! Recharge at PokeCenter.'], isRTL());
+          textBox = createTextBox(
+            ['פוקדקס ריק! תטען במרכז פוקימון.', 'Pokedex battery empty! Recharge at PokeCenter.'],
+            isRTL(),
+          );
           phase = 'INTRO';
         } else {
           pd.pokedexBatteryCharges--;

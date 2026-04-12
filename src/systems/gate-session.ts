@@ -13,12 +13,7 @@
  *  5. `getResult()` computes the final SessionResult with reward/penalty info.
  */
 
-import {
-  QuestionBuilder,
-  buildSnapshot,
-  getClassConfig,
-  registry,
-} from '../math/question-builder/index.js';
+import { QuestionBuilder, buildSnapshot, getClassConfig, registry } from '../math/question-builder/index.js';
 import type { RichQuestion } from '../math/question-builder/index.js';
 import type { GateSessionConfig, GateReward } from '../data/story/gates.js';
 import { gradeFromBirthYear } from '../data/story/global-gate-config.js';
@@ -79,10 +74,18 @@ export class GateSession {
 
   // ── Public API ─────────────────────────────────────────────────────────────
 
-  get isComplete(): boolean { return this.phase === 'done'; }
-  get isBonusPhase(): boolean { return this.phase === 'bonus'; }
-  get currentCorrect(): number { return this.correctCount; }
-  get currentRequired(): number { return this.requiredTotal; }
+  get isComplete(): boolean {
+    return this.phase === 'done';
+  }
+  get isBonusPhase(): boolean {
+    return this.phase === 'bonus';
+  }
+  get currentCorrect(): number {
+    return this.correctCount;
+  }
+  get currentRequired(): number {
+    return this.requiredTotal;
+  }
 
   /**
    * Generate the next question for the current phase.
@@ -90,14 +93,10 @@ export class GateSession {
    * `mainPhaseComplete = false`.
    */
   nextQuestion(): RichQuestion {
-    const gradeId = this.phase === 'bonus'
-      ? this._bonusGradeId()
-      : this.gradeId;
+    const gradeId = this.phase === 'bonus' ? this._bonusGradeId() : this.gradeId;
 
     const cfg = getClassConfig(gradeId);
-    const builder = new QuestionBuilder()
-      .withConfig(cfg)
-      .withSnapshot(this.snapshot);
+    const builder = new QuestionBuilder().withConfig(cfg).withSnapshot(this.snapshot);
 
     const q = builder.build();
     this.lastTemplateId = q.templateId;
@@ -135,7 +134,7 @@ export class GateSession {
     }
 
     // Wrong answer in main phase  — bump required count and provide a retry
-    if (this.phase === 'main') {
+    if (this.phase === 'main' && this.config.questionsRequired * 3 > this.requiredTotal) {
       this.requiredTotal++;
     } else if (this.phase === 'bonus') {
       // Bonus wrong = bonus failed, penalty cleared
@@ -151,16 +150,16 @@ export class GateSession {
 
     // Generate a retry question using the same template type
     const cfg = getClassConfig(this.gradeId);
-    const builder = new QuestionBuilder()
-      .withConfig(cfg)
-      .withSnapshot(this.snapshot);
+    const builder = new QuestionBuilder().withConfig(cfg).withSnapshot(this.snapshot);
 
     try {
       if (this.lastTemplateId) {
         registry.get(this.lastTemplateId);
         builder.withTemplateId(this.lastTemplateId);
       }
-    } catch { /* template not found — use random */ }
+    } catch {
+      /* template not found — use random */
+    }
 
     const retryQuestion = builder.build();
     this.lastTemplateId = retryQuestion.templateId;
@@ -184,20 +183,16 @@ export class GateSession {
 
   /** Compute the final result once the session is done. */
   getResult(): SessionResult {
-    const successRate = this.totalAttempts > 0
-      ? this.correctCount / this.totalAttempts
-      : 1;
+    const successRate = this.totalAttempts > 0 ? this.correctCount / this.totalAttempts : 1;
 
     const meetsRewardThreshold = successRate >= this.config.rewardThreshold;
     const belowPenaltyThreshold = successRate < this.config.penaltyThreshold;
 
-    const penaltyApplied = belowPenaltyThreshold && this.bonusPassed !== true
-      ? this.config.penaltyAmount
-      : 0;
+    const penaltyApplied = belowPenaltyThreshold && this.bonusPassed !== true ? this.config.penaltyAmount : 0;
 
     let rewardsEarned: GateReward[] = [];
     if (meetsRewardThreshold) {
-      rewardsEarned = this.config.rewards.map(r => {
+      rewardsEarned = this.config.rewards.map((r) => {
         if (r.type === 'money' && this.bonusPassed === true && r.amount !== undefined) {
           return { ...r, amount: Math.round(r.amount * this.config.bonusMultiplier) };
         }
@@ -206,7 +201,7 @@ export class GateSession {
     }
 
     return {
-      passed: true,   // session always ends with a pass (player answered enough correct)
+      passed: true, // session always ends with a pass (player answered enough correct)
       correctCount: this.correctCount,
       totalAttempts: this.totalAttempts,
       successRate,

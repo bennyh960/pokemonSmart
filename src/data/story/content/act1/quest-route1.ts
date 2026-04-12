@@ -38,7 +38,7 @@ registerQuest({
 });
 
 // ── Gates ─────────────────────────────────────────────────────────────────────
-
+// this gate is on sumvile placed but its ok we can write it here
 registerGate({
   id: 'gate-route1-sumville',
   title: { en: 'Route 1 Checkpoint', he: 'מחסום שביל 1' },
@@ -48,14 +48,15 @@ registerGate({
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-  totalQuestions: 2,
+  totalQuestions: 2, //seems like deprecated,use questionsRequired
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
     rewards: [{ type: 'money', amount: 500 }],
     questionsRequired: 5,
     timeLimitPerQuestion: 120,
+    rewardThreshold: 0.8,
   },
-  passThreshold: 2,
+  passThreshold: 3,
   failurePenalty: { type: 'money', amount: 1250 },
   reopenCooldownMs: 0 * 30 * 60 * 1000, // 30 min
   successActions: [
@@ -64,28 +65,13 @@ registerGate({
   ],
 });
 
-registerGate({
-  id: 'gate-sumville-route2',
-  title: { en: 'Route 2 Checkpoint', he: 'מחסום שביל 2' },
-  description: {
-    en: 'The path Sumville-Route2 is locked. We must identify you are not NULL-X creators. Questions will determine if you can pass. Choose wisely.',
-    he: 'הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
-  },
-  triggerType: 'route-checkpoint',
-  questionSetIds: ['placeholder'],
-  totalQuestions: 5,
-  passThreshold: 5,
-  failurePenalty: { type: 'money', amount: 150 },
-  reopenCooldownMs: 15 * 60 * 1000, // 15 min
-  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
-});
-
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
 
 // Fires at Route 1 exit — first time Algorithma warns about NULL-X
 registerCutscene({
   id: 'act1-nullx-intro',
   skippable: false,
+  phoneCaller: { en: 'Prof. Algorithma', he: "פרופ' אלגוריתמה" },
   steps: [
     {
       type: 'dialogue',
