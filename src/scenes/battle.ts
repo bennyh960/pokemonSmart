@@ -88,6 +88,7 @@ import { getItem } from '../data/items.js';
 import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText } from '../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../scenes/bag.js';
+import { setPokedexFocus } from '../scenes/pokedex.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import { setEvolutionData } from './evolution.js';
 import { getAttackAnimationProfile } from '../systems/move-animation.js';
@@ -168,6 +169,7 @@ type BattlePhase =
   | 'TRAINER_REWARD_LEVEL_UP_MOVES'
   | 'WAITING_BAG'
   | 'WAITING_PARTY'
+  | 'WAITING_POKEDEX'
   | 'WAITING_MOVE_LEARN'
   | 'SWITCH_POKEMON'
   | 'CAPTURE_ANIM'
@@ -486,6 +488,7 @@ export function createBattleScene(
   let pendingEvolution: EvolutionStep | null = null;
   let waitingForBag = false;
   let waitingForParty = false;
+  let waitingForPokedex = false;
   let previousLeadId: number | null = null;
   // True when the switch was forced by a faint — enemy does NOT get a free attack
   let isForcedFaintSwitch = false;
@@ -600,6 +603,8 @@ export function createBattleScene(
     enemy = trainerData!.party[trainerPartyIndex];
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     enemySelectedMoveIndex = -1;
+    // Update enemy types for battle helper display
+    if (menu) menu.enemyTypes = (enemy.types ?? []) as import('../types/index.js').PokemonType[];
     enemyAlreadyAttacked = false;
     enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
     setStatus(enemyHpBar, enemy.status ?? '');
@@ -755,6 +760,18 @@ export function createBattleScene(
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
+    menu.enemyTypes = (enemy.types ?? []) as import('../types/index.js').PokemonType[];
+    // Consume one Battle Helper charge if enabled
+    if (hasActiveGame()) {
+      const pd = getPlayerData();
+      if (pd.battleHelperEnabled && pd.battleHelperBattles > 0) {
+        pd.battleHelperBattles--;
+        menu.battleHelperActive = true;
+        if (pd.battleHelperBattles === 0) pd.battleHelperEnabled = false;
+      } else {
+        menu.battleHelperActive = false;
+      }
+    }
     textBox = null;
     flash = null;
     shake = null;
@@ -765,6 +782,7 @@ export function createBattleScene(
     statusTurnFx = [];
     waitingForBag = false;
     waitingForParty = false;
+    waitingForPokedex = false;
     previousLeadId = null;
     pendingNewMoves = [];
     activeMoveLearningPrompt = null;
@@ -1766,9 +1784,13 @@ export function createBattleScene(
 
   function refreshPlayerMoveState(): void {
     syncPlayerBar();
+    const prevHelperActive = menu?.battleHelperActive ?? false;
+    const prevEnemyTypes = menu?.enemyTypes ?? [];
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
+    menu.battleHelperActive = prevHelperActive;
+    menu.enemyTypes = prevEnemyTypes;
   }
 
   function startMoveLearning(phaseAfterResolution: BattlePhase): boolean {
@@ -2674,6 +2696,24 @@ export function createBattleScene(
         textBox = createTextBox([t('battle.cantDoThat')], isRTL());
         phase = 'INTRO';
       }
+    } else if (choice === 'POKEDEX') {
+      if (hasActiveGame()) {
+        const pd = getPlayerData();
+        if (pd.pokedexBatteryCharges <= 0) {
+          textBox = createTextBox(['פוקדקס ריק! תטען במרכז פוקימון.', 'Pokedex battery empty! Recharge at PokeCenter.'], isRTL());
+          phase = 'INTRO';
+        } else {
+          pd.pokedexBatteryCharges--;
+          autoSave();
+          setPokedexFocus(enemy.id, true, 'type', 'battle');
+          waitingForPokedex = true;
+          phase = 'WAITING_POKEDEX';
+          stateMachine.push('POKEDEX');
+        }
+      } else {
+        textBox = createTextBox([t('battle.cantDoThat')], isRTL());
+        phase = 'INTRO';
+      }
     } else if (choice === 'RUN') {
       if (isTrainerBattle) {
         textBox = createTextBox([t('battle.cantRunTrainer')], isRTL());
@@ -3222,6 +3262,14 @@ export function createBattleScene(
             }
           }
           previousLeadId = null;
+          break;
+        }
+        case 'WAITING_POKEDEX': {
+          // Battle is in this phase while the POKEDEX scene is pushed on top.
+          // Pokedex does NOT consume a turn — just resume action selection.
+          if (!waitingForPokedex) break;
+          waitingForPokedex = false;
+          enterSelectMovePhase();
           break;
         }
         case 'SWITCH_POKEMON': {

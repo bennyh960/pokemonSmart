@@ -13,7 +13,7 @@ import { ensurePersistentBattleFields } from './battle-state.js';
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 7;
+export const CURRENT_SAVE_VERSION = 8;
 
 function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Record<string, any>) => void): void {
   if (data.party) {
@@ -96,6 +96,13 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
       };
     }
     data.saveVersion = 7;
+  },
+  // Version 7 → 8: add Pokedex battery and Battle Helper fields
+  8: (data) => {
+    if (data.pokedexBatteryCharges === undefined) data.pokedexBatteryCharges = 50;
+    if (data.battleHelperBattles === undefined) data.battleHelperBattles = 0;
+    if (data.battleHelperEnabled === undefined) data.battleHelperEnabled = false;
+    data.saveVersion = 8;
   },
 };
 

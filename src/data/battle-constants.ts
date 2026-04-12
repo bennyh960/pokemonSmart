@@ -119,9 +119,10 @@ export const BTL = {
   // ===== ACTION TABS =====
   TABS_BG: { x: 0, y: 94, w: 240, h: 8, color: '#0d1a14', borderColor: '#1a3a2a' },
   TABS: [
-    { id: 'fight'  as const, text: 'התקפה', x: 160, w: 80, color: '#20d860' },
-    { id: 'switch' as const, text: 'החלפה', x: 80,  w: 80, color: '#5080ff' },
-    { id: 'bag'    as const, text: 'תיק',   x: 0,   w: 80, color: '#f8d030' },
+    { id: 'fight'   as const, text: 'התקפה', x: 180, w: 60, color: '#20d860' },
+    { id: 'switch'  as const, text: 'החלפה', x: 120, w: 60, color: '#5080ff' },
+    { id: 'bag'     as const, text: 'תיק',   x: 60,  w: 60, color: '#f8d030' },
+    { id: 'pokedex' as const, text: 'פוקדקס', x: 0,  w: 60, color: '#ff8040' },
   ] as const,
   TAB_TEXT_DY: 1,
   TAB_INACTIVE_C: '#445544',

@@ -26,6 +26,8 @@ export type ItemEffect =
   | { type: 'evolution-stone' }
   | { type: 'tm'; moveId: number; isHM: boolean }
   | { type: 'vitamin'; stat: 'hp' | 'atk' | 'def' | 'spe' | 'spa' | 'spd' }
+  | { type: 'pokedex-battery'; amount: number }
+  | { type: 'battle-helper'; battles: number }
   | { type: 'none' };
 
 export interface ItemGameDef {
@@ -146,6 +148,9 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   // Trade evolution held items
   'kings-rock': 198,
   'metal-coat': 210,
+  // Custom game items (no PokeAPI equivalent)
+  'pokedex-battery': 9001,
+  'battle-helper': 9002,
 };
 
 // Reverse lookup
@@ -222,6 +227,26 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   // ── Trade evolution items (holdable) ──
   198: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false },  // King's Rock
   210: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false },  // Metal Coat
+
+  // ── Custom game items ──
+  9001: {
+    category: 'battle',
+    price: 100,
+    effect: { type: 'pokedex-battery', amount: 10 },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'Pokedex Battery', he: 'סוללת פוקדקס' },
+    description: { en: 'Charges Pokedex by 10 uses (max 50). Recharge free at PokeCenter.', he: 'טוען פוקדקס ב-10 שימושים (מקס 50). טעינה חינמית במרכז הפוקימון.' },
+  },
+  9002: {
+    category: 'battle',
+    price: 1500,
+    effect: { type: 'battle-helper', battles: 30 },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'Battle Helper', he: 'עוזר קרב' },
+    description: { en: 'Shows type effectiveness on moves for 30 battles. Toggle ON/OFF in Pokedex.', he: 'מציג יעילות סוג על מהלכים ל-30 קרבות. הפעל/כבה בפוקדקס.' },
+  },
 
   // ── HM items (reusable field-moves) — IDs 305-309 ──
   305: { category: 'machine', price: 0, sellPrice: 0, effect: { type: 'tm', moveId: 15, isHM: true }, usableInBattle: false, usableInOverworld: true, name: { en: 'HM01 Cut', he: 'HM01 גזירה' }, description: { en: 'Teaches Cut. Reusable.', he: 'מלמד גזירה. שימוש חוזר.' } },

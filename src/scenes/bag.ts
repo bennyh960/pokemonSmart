@@ -13,7 +13,7 @@ import { t, getLocale } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
-import { applyItemEffect, consumeItem, isItemConsumable, itemTargetsPokemon } from '../systems/item-effects.js';
+import { applyItemEffect, applyDirectItemEffect, consumeItem, isItemConsumable, itemTargetsPokemon, isDirectUseItem } from '../systems/item-effects.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import {
   getPokemonDisplayName,
@@ -574,8 +574,20 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
               description: getLocalizedName(item.def.description),
             });
             stateMachine.push('PARTY');
+          } else if (isDirectUseItem(item.id)) {
+            // Direct-use items (e.g. pokedex-battery, battle-helper) — no Pokemon target needed
+            const result = applyDirectItemEffect(item.id);
+            if (result.success) {
+              const bagPd = getPlayerData();
+              if (isItemConsumable(item.id)) {
+                consumeItem(bagPd.items, item.id);
+              }
+              autoSave();
+            }
+            message = result.message;
+            messageTimer = 2.5;
           } else {
-            // Non-target items (shouldn't happen for current item set, but handle gracefully)
+            // Non-usable items
             message = t('bag.cantUseHere');
             messageTimer = 1.5;
           }

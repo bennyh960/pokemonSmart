@@ -7,6 +7,7 @@
 
 import type { Pokemon } from '../types/index.js';
 import { getItemGameData, getItemGameDataBySlug } from '../data/item-defs.js';
+import { getPlayerData } from './game-state.js';
 import { checkAndApplyLevelUp, recalcPokemonStats } from './encounter.js';
 import { getPokemonDisplayName, getMove, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
@@ -46,6 +47,13 @@ export function itemTargetsPokemon(itemId: string): boolean {
     default:
       return false;
   }
+}
+
+/** Returns true if this item can be used directly without selecting a Pokemon target. */
+export function isDirectUseItem(itemId: string): boolean {
+  const def = getItemDef(itemId);
+  if (!def) return false;
+  return def.effect.type === 'pokedex-battery' || def.effect.type === 'battle-helper';
 }
 
 export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
@@ -233,6 +241,41 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
       return { success: false, message: "This item can't be used." };
     }
   }
+}
+
+/**
+ * Apply a direct-use item effect (no Pokemon target — affects player data directly).
+ * Used for pokedex-battery and battle-helper items.
+ */
+export function applyDirectItemEffect(itemId: string): ItemUseResult {
+  const def = getItemDef(itemId);
+  if (!def) return { success: false, message: 'Unknown item.' };
+
+  const effect = def.effect;
+
+  if (effect.type === 'pokedex-battery') {
+    const pd = getPlayerData();
+    const MAX = 50;
+    if (pd.pokedexBatteryCharges >= MAX) {
+      return { success: false, message: 'Pokedex battery is already full!' };
+    }
+    const newVal = Math.min(MAX, pd.pokedexBatteryCharges + effect.amount);
+    const added = newVal - pd.pokedexBatteryCharges;
+    const wasted = effect.amount - added;
+    pd.pokedexBatteryCharges = newVal;
+    if (wasted > 0) {
+      return { success: true, message: `Pokedex charged +${added}! (${pd.pokedexBatteryCharges}/50) — ${wasted} wasted` };
+    }
+    return { success: true, message: `Pokedex charged +${added}! (${pd.pokedexBatteryCharges}/50)` };
+  }
+
+  if (effect.type === 'battle-helper') {
+    const pd = getPlayerData();
+    pd.battleHelperBattles += effect.battles;
+    return { success: true, message: `Battle Helper +${effect.battles} battles! (${pd.battleHelperBattles} left). Toggle ON in Pokedex [H].` };
+  }
+
+  return { success: false, message: "This item can't be used directly." };
 }
 
 /**

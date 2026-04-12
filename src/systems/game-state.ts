@@ -18,7 +18,142 @@ export function createNewPlayerData(): PlayerData {
     saveVersion: CURRENT_SAVE_VERSION,
     name: 'Player',
     heroCharacterId: getDefaultHeroCharacterId(),
-    party: [],
+    party: [
+      {
+        abilityId: 1,
+        heldItemId: null,
+        isGlitched: false,
+        natureId: 1,
+        status: null,
+        xp: 0,
+        xpToNext: 100,
+        caughtBall: 'poke-ball',
+        evs: { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 },
+        id: 151,
+        name: 'Mew',
+        level: 50,
+        hp: 160,
+        maxHp: 160,
+        attack: 100,
+        defense: 100,
+        specialAttack: 100,
+        specialDefense: 100,
+        speed: 100,
+        types: ['psychic'],
+        moves: [
+          {
+            id: 82,
+            name: 'Dragon Rage',
+            type: 'dragon',
+            power: 75,
+            accuracy: 100,
+            pp: 10,
+            currentPp: 10,
+            mathDifficulty: 3,
+          },
+          {
+            id: 53,
+            name: 'Flamethrower',
+            type: 'fire',
+            power: 90,
+            accuracy: 100,
+            pp: 15,
+            currentPp: 15,
+            mathDifficulty: 4,
+          },
+          {
+            id: 75,
+            name: 'Razor Leaf',
+            type: 'grass',
+            power: 55,
+            accuracy: 95,
+            pp: 25,
+            currentPp: 25,
+            mathDifficulty: 2,
+          },
+          {
+            id: 55,
+            name: 'Water Gun',
+            type: 'water',
+            power: 40,
+            accuracy: 100,
+            pp: 25,
+            currentPp: 25,
+            mathDifficulty: 1,
+          },
+          {
+            id: 94,
+            name: 'Psychic',
+            type: 'psychic',
+            power: 90,
+            accuracy: 100,
+            pp: 10,
+            currentPp: 10,
+            mathDifficulty: 4,
+          },
+          {
+            id: 88,
+            name: 'Rock Throw',
+            type: 'rock',
+            power: 50,
+            accuracy: 90,
+            pp: 15,
+            currentPp: 15,
+            mathDifficulty: 2,
+          },
+          {
+            id: 157,
+            name: 'Rock Slide',
+            type: 'rock',
+            power: 75,
+            accuracy: 90,
+            pp: 10,
+            currentPp: 10,
+            mathDifficulty: 3,
+          },
+          {
+            id: 126,
+            name: 'Fire Blast',
+            type: 'fire',
+            power: 110,
+            accuracy: 85,
+            pp: 5,
+            currentPp: 5,
+            mathDifficulty: 5,
+          },
+          {
+            id: 202,
+            name: 'Giga Drain',
+            type: 'grass',
+            power: 75,
+            accuracy: 100,
+            pp: 10,
+            currentPp: 10,
+            mathDifficulty: 3,
+          },
+          {
+            id: 85,
+            name: 'Thunderbolt',
+            type: 'electric',
+            power: 90,
+            accuracy: 100,
+            pp: 15,
+            currentPp: 15,
+            mathDifficulty: 4,
+          },
+          {
+            id: 87,
+            name: 'Thunder',
+            type: 'electric',
+            power: 110,
+            accuracy: 70,
+            pp: 10,
+            currentPp: 10,
+            mathDifficulty: 5,
+          },
+        ],
+      },
+    ],
     boxes: Array.from({ length: 10 }, (_, i) => ({
       name: `BOX ${i + 1}`,
       pokemon: Array(30).fill(null),
@@ -38,6 +173,9 @@ export function createNewPlayerData(): PlayerData {
     trainerEncounters: {},
     phoneContacts: [] as import('../types/index.js').PhoneContactInfo[],
     story: { gateUnlocks: {}, cityInfection: {}, activeQuestId: null, completedQuestIds: [] },
+    pokedexBatteryCharges: 50,
+    battleHelperBattles: 10,
+    battleHelperEnabled: true,
   };
 }
 
@@ -77,7 +215,7 @@ export function loadSavedGame(): PlayerData | null {
   return data;
 }
 
-/** Heal all Pokemon in the party: restore HP, PP, and persistent status. */
+/** Heal all Pokemon in the party: restore HP, PP, and persistent status. Also recharges Pokedex battery. */
 export function healParty(): void {
   const pd = getPlayerData();
   for (const pokemon of pd.party) {
@@ -87,6 +225,7 @@ export function healParty(): void {
       move.currentPp = move.pp;
     }
   }
+  pd.pokedexBatteryCharges = 50;
 }
 
 /** Record the current location as the last Pokemon Center visited. */

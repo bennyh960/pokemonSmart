@@ -10,16 +10,16 @@
  */
 
 import type { InputManager } from '../engine/input.js';
-import type { Move, Pokemon } from '../types/index.js';
+import type { Move, Pokemon, PokemonType } from '../types/index.js';
 import { fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
-import { getMoveDisplayName, getPokemonDisplayName } from '../services/pokemon-data.js';
+import { getMoveDisplayName, getPokemonDisplayName, getCombinedTypeEffectiveness } from '../services/pokemon-data.js';
 import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 import { BTL, TYPE_BADGE, getHpColor } from '../data/battle-constants.js';
 import { getTypeName } from '../data/type-constants.js';
 import { getCachedImage } from '../engine/sprite-loader.js';
-import { t } from '../i18n/i18n.js';
+import { t, isRTL } from '../i18n/i18n.js';
 
-export type MainMenuChoice = 'FIGHT' | 'BAG' | 'POKEMON' | 'RUN';
+export type MainMenuChoice = 'FIGHT' | 'BAG' | 'POKEMON' | 'RUN' | 'POKEDEX';
 
 export interface BattleMenuState {
   mode: 'main' | 'moves';
@@ -27,7 +27,7 @@ export interface BattleMenuState {
   moves: Move[];
   /** For 8-move pagination: 0 = moves 0-3, 1 = moves 4-7 */
   movePage: number;
-  /** Active tab index for rendering (0=fight,1=switch,2=bag,3=run) */
+  /** Active tab index for rendering (0=fight,1=switch,2=bag,3=pokedex) */
   activeTab: number;
   /** Turn counter for display */
   turnNumber: number;
@@ -35,14 +35,19 @@ export interface BattleMenuState {
   playerPokemon: Pokemon | null;
   /** Player party for switch grid rendering */
   party: Pokemon[];
+  /** Enemy types — used for type effectiveness display when battleHelperActive */
+  enemyTypes: PokemonType[];
+  /** When true, show type effectiveness multipliers on each move cell */
+  battleHelperActive: boolean;
 }
 
-const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG'];
+const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG', 'POKEDEX'];
 
 export function createBattleMenu(moves: Move[]): BattleMenuState {
   return {
     mode: 'moves', cursorIndex: 0, moves, movePage: 0,
     activeTab: 0, turnNumber: 1, playerPokemon: null, party: [],
+    enemyTypes: [], battleHelperActive: false,
   };
 }
 
@@ -80,10 +85,11 @@ function updateTabMode(
   menu: BattleMenuState,
   input: InputManager,
 ): { type: 'main'; choice: MainMenuChoice } | null {
-  // Number shortcuts: 1=fight, 2=switch, 3=bag
+  // Number shortcuts: 1=fight, 2=switch, 3=bag, 4=pokedex
   if (input.isKeyPressed('Digit1')) return { type: 'main', choice: 'FIGHT' };
   if (input.isKeyPressed('Digit2')) return { type: 'main', choice: 'POKEMON' };
   if (input.isKeyPressed('Digit3')) return { type: 'main', choice: 'BAG' };
+  if (input.isKeyPressed('Digit4')) return { type: 'main', choice: 'POKEDEX' };
 
   // Left/Right navigate tabs (RTL: reversed direction)
   if (input.isKeyPressed('ArrowRight')) {
@@ -91,7 +97,7 @@ function updateTabMode(
     if (menu.activeTab > 0) menu.activeTab--;
   }
   if (input.isKeyPressed('ArrowLeft')) {
-    if (menu.activeTab < 2) menu.activeTab++;
+    if (menu.activeTab < 3) menu.activeTab++;
   }
 
   // Select tab
@@ -111,9 +117,10 @@ function updateMoveMode(
   menu: BattleMenuState,
   input: InputManager,
 ): { type: 'main'; choice: MainMenuChoice } | { type: 'move'; index: number } | null {
-  // Number shortcuts from move mode: 2=switch, 3=bag (1=already in moves)
+  // Number shortcuts from move mode: 2=switch, 3=bag, 4=pokedex (1=already in moves)
   if (input.isKeyPressed('Digit2')) return { type: 'main', choice: 'POKEMON' };
   if (input.isKeyPressed('Digit3')) return { type: 'main', choice: 'BAG' };
+  if (input.isKeyPressed('Digit4')) return { type: 'main', choice: 'POKEDEX' };
 
   const totalMoves = menu.moves.length;
   const totalPages = Math.ceil(totalMoves / 4);
@@ -278,7 +285,7 @@ function renderMoveGrid(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
     }
     const move = menu.moves[moveIdx];
     const isSelected = slotIdx === menu.cursorIndex;
-    renderMoveCell(ctx, slotIdx, move, isSelected);
+    renderMoveCell(ctx, slotIdx, move, isSelected, menu.battleHelperActive, menu.enemyTypes);
   }
 
   // Page indicator (if more than 4 moves)
@@ -287,7 +294,16 @@ function renderMoveGrid(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
   }
 }
 
-function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Move, isSelected: boolean): void {
+function getEffectivenessLabel(mult: number, rtl: boolean): { text: string; color: string } {
+  if (mult === 0)   return { text: rtl ? 'x0 חסין'     : 'x0 immune',    color: '#888888' };
+  if (mult <= 0.25) return { text: 'x0.25',                               color: '#d84040' };
+  if (mult < 1)     return { text: rtl ? 'לא יעיל'     : 'x0.5 weak',    color: '#f08030' };
+  if (mult === 1)   return { text: '',                                     color: '' };       // neutral = no label
+  if (mult < 4)     return { text: rtl ? 'יעיל מאוד'   : 'x2 super!',    color: '#20d860' };
+  return              { text: rtl ? 'יעיל מאוד!'        : 'x4 super!!',   color: '#ffff40' };
+}
+
+function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Move, isSelected: boolean, helperActive = false, enemyTypes: PokemonType[] = []): void {
   const M = BTL.MOVE;
   const cell = M.cells[slotIdx];
   const cx = cell.x, cy = cell.y;
@@ -325,11 +341,23 @@ function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Mo
     size: M.NAME_FS, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
   });
 
-  // Power (BOTTOM-LEFT)
-  const powerStr = move.power ? `כוח: ${move.power}` : 'כוח: —';
+  // Power (BOTTOM-LEFT) — always shown
+  const rtl = isRTL();
+  const powerStr = move.power ? (rtl ? `כוח: ${move.power}` : `Pow: ${move.power}`) : (rtl ? 'כוח: —' : 'Pow: —');
   drawText(ctx, powerStr, cx + M.POWER_DX, cy + M.POWER_DY, {
     size: M.POWER_FS, color: BTL.COLORS.textDark,
   });
+
+  // Effectiveness label (below power, size 4) — only when helper active
+  if (helperActive && enemyTypes.length > 0 && move.type) {
+    const mult = getCombinedTypeEffectiveness(move.type as PokemonType, enemyTypes);
+    const { text, color } = getEffectivenessLabel(mult, rtl);
+    if (text) {
+      drawText(ctx, text, cx + M.POWER_DX, cy + M.POWER_DY + 6, {
+        size: 4, color,
+      });
+    }
+  }
 
   // PP (BOTTOM-RIGHT)
   drawText(ctx, `${move.currentPp}/${move.pp}`, cx + cw - 4, cy + M.PP_DY, {

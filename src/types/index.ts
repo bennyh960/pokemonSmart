@@ -164,6 +164,9 @@ export interface PlayerData {
   trainerEncounters: Record<string, TrainerEncounterState>; // trainerId → encounter state
   phoneContacts: PhoneContactInfo[];  // trainers added to phone after first defeat
   story?: PlayerStoryState;           // story mode state (gates, infection, quests)
+  pokedexBatteryCharges: number;      // in-battle Pokedex uses remaining (max 50, free recharge at PokeCenter)
+  battleHelperBattles: number;        // remaining Battle Helper battles (shows type effectiveness on moves)
+  battleHelperEnabled: boolean;       // toggle: auto-consumes from battleHelperBattles each battle when ON
 }
 
 /** Options for text rendering. */
