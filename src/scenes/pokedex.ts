@@ -30,13 +30,15 @@ import {
 import type { PokemonType } from '../types/index.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+import { BADGES, hasBadge, countBadges } from '../data/badges.js';
+import { getTypeColor } from '../data/type-constants.js';
 
 const BG_COLOR = '#301818';
 const ENTRY_HEIGHT = 26;
 const VISIBLE_ENTRIES = 5;
 const TOTAL_POKEMON = 251;
 
-type PokedexView = 'list' | 'detail';
+type PokedexView = 'list' | 'detail' | 'badges';
 export type DetailTab = 'info' | 'evolution' | 'type' | 'moves';
 type MovesSubTab = 'byLevel' | 'canLearn';
 type PokedexContext = 'overworld' | 'battle';
@@ -122,8 +124,21 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         const pd = getPlayerData();
         if (pd.battleHelperBattles > 0 || pd.battleHelperEnabled) {
           pd.battleHelperEnabled = !pd.battleHelperEnabled;
-          // Dynamically import autoSave to avoid circular deps
           autoSave();
+        }
+        return;
+      }
+
+      // Badge case: B key from list or badges view
+      if (input.isKeyPressed('KeyB')) {
+        view = view === 'badges' ? 'list' : 'badges';
+        return;
+      }
+
+      // Badges view: only Escape to close
+      if (view === 'badges') {
+        if (input.isKeyPressed('Escape')) {
+          view = 'list';
         }
         return;
       }
@@ -229,6 +244,11 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
       if (view === 'detail') {
         renderDetailView(ctx, cursor + 1);
+        return;
+      }
+
+      if (view === 'badges') {
+        renderBadgesView(ctx);
         return;
       }
 
@@ -369,15 +389,123 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       });
     }
 
-    // Bottom bar (two rows: navigation + H-toggle hint)
+    // Bottom bar (two rows: navigation + shortcuts)
     fillRect(ctx, 0, SCREEN_H - 20, SCREEN_W, 20, '#481818');
     if (rtl) {
       drawText(ctx, 'ESC \u2190 \u2190\u2192 \u05e0\u05d9\u05d5\u05d5\u05d8 / ENTER \u05e4\u05e8\u05d8\u05d9\u05dd', 4, SCREEN_H - 17, { size: 6, color: '#cccccc', font: 'monospace' });
-      drawText(ctx, '[H] \u05e2\u05d5\u05d6\u05e8 \u05e7\u05e8\u05d1 — \u05d4\u05d3\u05dc\u05e7/\u05db\u05d1\u05d4', 4, SCREEN_H - 9, { size: 5, color: '#888888', font: 'monospace' });
+      drawText(ctx, '[H] \u05e2\u05d5\u05d6\u05e8 \u05e7\u05e8\u05d1    [B] \u05ea\u05d2\u05d9\u05dd', 4, SCREEN_H - 9, { size: 5, color: '#888888', font: 'monospace' });
     } else {
       drawText(ctx, 'Up/Down: Navigate  Enter: Details  Esc: Back', 4, SCREEN_H - 17, { size: 6, color: '#cccccc', font: 'monospace' });
-      drawText(ctx, '[H] Toggle Battle Helper ON/OFF', 4, SCREEN_H - 9, { size: 5, color: '#888888', font: 'monospace' });
+      drawText(ctx, '[H] Battle Helper    [B] Badge Case', 4, SCREEN_H - 9, { size: 5, color: '#888888', font: 'monospace' });
     }
+  }
+
+  function drawBadgeStar(ctx: CanvasRenderingContext2D, cx: number, cy: number, outerR: number, innerR: number, fillColor: string, borderColor: string): void {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const angle = (i * Math.PI) / 5 - Math.PI / 2;
+      const r = i % 2 === 0 ? outerR : innerR;
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  function renderBadgesView(ctx: CanvasRenderingContext2D): void {
+    const rtl = isRTL();
+    const locale = getLocale();
+    clearScreen(ctx, '#0d1a0d');
+
+    // Title bar
+    fillRect(ctx, 0, 0, SCREEN_W, 16, '#1a3a1a');
+    const title = rtl ? '\u05ea\u05d9\u05e7 \u05d4\u05ea\u05d2\u05d9\u05dd' : 'BADGE CASE'; // תיק התגים / BADGE CASE
+    drawText(ctx, title, SCREEN_W / 2, 3, { size: 8, color: '#f8d880', font: 'monospace', align: 'center' });
+
+    // Money display in title bar
+    if (hasActiveGame()) {
+      const pd = getPlayerData();
+      const moneyStr = `$${pd.money.toLocaleString()}`;
+      if (rtl) {
+        drawText(ctx, moneyStr, 4, 4, { size: 7, color: '#f8d030', font: 'monospace' });
+      } else {
+        drawText(ctx, moneyStr, SCREEN_W - 4, 4, { size: 7, color: '#f8d030', font: 'monospace', align: 'right' });
+      }
+
+      // Badge count
+      const earned = countBadges(pd.badges);
+      const countStr = rtl ? `${earned}/8 \u05ea\u05d2\u05d9\u05dd` : `${earned}/8 badges`;
+      drawText(ctx, countStr, SCREEN_W / 2, 12, { size: 5, color: '#aaaaaa', font: 'monospace', align: 'center' });
+    }
+
+    // Badge case background
+    fillRect(ctx, 10, 20, SCREEN_W - 20, 116, '#0a0f0a');
+    drawRect(ctx, 10, 20, SCREEN_W - 20, 116, '#2a4a2a');
+
+    // Badge grid: 4 columns × 2 rows
+    const COLS = 4;
+    const ROWS = 2;
+    const SLOT_W = (SCREEN_W - 20) / COLS;  // 55px
+    const SLOT_H = 116 / ROWS;               // 58px
+    const STAR_OUTER = 14;
+    const STAR_INNER = 6;
+    const GRID_X = 10;
+    const GRID_Y = 20;
+
+    const pd = hasActiveGame() ? getPlayerData() : null;
+
+    for (let i = 0; i < 8; i++) {
+      const badge = BADGES[i];
+      const col = i % COLS;
+      const row = Math.floor(i / COLS);
+      const cx = GRID_X + col * SLOT_W + SLOT_W / 2;
+      const cy = GRID_Y + row * SLOT_H + SLOT_H / 2 - 6;
+
+      const owned = pd ? hasBadge(pd.badges, badge.id) : false;
+      const typeColor = getTypeColor(badge.type as any);
+
+      if (owned) {
+        // Glow effect: outer soft ring
+        ctx.globalAlpha = 0.25;
+        ctx.fillStyle = typeColor;
+        ctx.beginPath();
+        ctx.arc(cx, cy, STAR_OUTER + 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Draw star badge: filled
+        drawBadgeStar(ctx, cx, cy, STAR_OUTER, STAR_INNER, typeColor, '#ffffff88');
+
+        // Badge name (small, below star)
+        const name = badge.name[locale] ?? badge.name.en;
+        drawText(ctx, name, cx, cy + STAR_OUTER + 3, { size: 4, color: '#ffffff', align: 'center', font: 'monospace' });
+
+        // Math topic (tiny, below name)
+        const topic = badge.mathTopic[locale] ?? badge.mathTopic.en;
+        drawText(ctx, topic, cx, cy + STAR_OUTER + 9, { size: 4, color: typeColor, align: 'center', font: 'monospace' });
+      } else {
+        // Unearned: dark star outline only
+        drawBadgeStar(ctx, cx, cy, STAR_OUTER, STAR_INNER, '#1a1a1a', '#333333');
+        drawText(ctx, '?', cx, cy - 4, { size: 8, color: '#2a2a2a', align: 'center', font: 'monospace' });
+      }
+
+      // Slot divider lines
+      if (col < COLS - 1) {
+        fillRect(ctx, GRID_X + (col + 1) * SLOT_W, GRID_Y + 4, 1, SLOT_H - 8, '#1a2a1a');
+      }
+    }
+    // Row divider
+    fillRect(ctx, GRID_X + 4, GRID_Y + SLOT_H, SCREEN_W - 28, 1, '#1a2a1a');
+
+    // Bottom bar
+    fillRect(ctx, 0, SCREEN_H - 14, SCREEN_W, 14, '#1a3a1a');
+    const hint = rtl ? 'ESC / [B] \u05d7\u05d6\u05e8\u05d4' : 'ESC / [B] Back';
+    drawText(ctx, hint, 4, SCREEN_H - 11, { size: 6, color: '#aaaaaa', font: 'monospace' });
   }
 
   function renderDetailView(ctx: CanvasRenderingContext2D, id: number): void {
