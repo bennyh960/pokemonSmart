@@ -49,7 +49,7 @@
       "y": 8,
       "facing": "down",
       "type": "trainer",
-      "spriteType": "char_59c8b9",
+      "spriteType": "rocket-james",
       "party": [
         {
           "pokemonId": 52,
@@ -81,7 +81,7 @@
       "y": 4,
       "facing": "right",
       "type": "trainer",
-      "spriteType": "char_8bd601",
+      "spriteType": "rocket-jessi",
       "party": [
         {
           "pokemonId": 41,
@@ -209,7 +209,7 @@
       "y": 16,
       "facing": "up",
       "type": "trainer",
-      "spriteType": "char_59c8b9",
+      "spriteType": "rocket-james",
       "party": [
         {
           "pokemonId": 23,

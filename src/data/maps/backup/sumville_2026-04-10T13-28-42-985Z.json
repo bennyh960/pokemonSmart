@@ -143,7 +143,7 @@
           "he": "הגשרים שלנו פועלים בעזרת גבישי ליבה — רוקט גנב את שלנו! כל העיר מתרוקנת!"
         }
       ],
-      "spriteType": "char_0502ea",
+      "spriteType": "char_962c1b",
       "nameHe": "מדריך העיר"
     },
     {
@@ -728,7 +728,7 @@
           "he": "לא נפתח את המעבר עד שלא נסיים את החקירה"
         }
       ],
-      "spriteType": "gate-officer",
+      "spriteType": "char_8c73c5",
       "gateId": "gate-sumville-route2"
     },
     {
@@ -904,10 +904,8 @@
           "he": "תענה נכון על השאלות ותוכל להתקדם"
         }
       ],
-      "spriteType": "gate-officer",
-      "gateId": "gate-route1-sumville",
-      "spawnAfter": "act1-oak-warning-heard",
-      "autoWalk": null
+      "spriteType": "char_8c73c5",
+      "gateId": "gate-route1-sumville"
     },
     {
       "id": "sumville-gym-blocker",
@@ -1002,7 +1000,7 @@
           "he": "גביש הגשר הזה שלנו — בפקודת צוות רוקט ו-NULL-X!"
         }
       ],
-      "spriteType": "rocket-james",
+      "spriteType": "char_59c8b9",
       "party": [
         {
           "pokemonId": 23,
@@ -1056,7 +1054,7 @@
           "he": "אל תיגע בנו — אנחנו בשליחות רשמית של NULL-X!"
         }
       ],
-      "spriteType": "rocket-jessi",
+      "spriteType": "char_8bd601",
       "nameHe": "ג'סי",
       "party": [
         {
@@ -1138,41 +1136,21 @@
       "facing": "down",
       "type": "dialogue",
       "dialogue": [],
-      "spriteType": "oak",
+      "spriteType": "char_a42849",
       "despawnAfter": "act1-oak-warning-heard",
       "autoWalk": {
-        "pattern": [],
+        "pattern": [
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1
+          }
+        ],
         "loop": false,
         "beforeDespawnPattern": [
           {
             "dir": "left",
             "steps": 3,
-            "delay": 0
-          }
-        ]
-      }
-    },
-    {
-      "id": "npc-1775830387514",
-      "x": 3,
-      "y": 30,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "Jenny",
-      "despawnAfter": "act1-oak-warning-heard",
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 10,
             "delay": 0
           }
         ]

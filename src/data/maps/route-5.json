@@ -187,7 +187,7 @@
       "y": 4,
       "facing": "down",
       "type": "trainer",
-      "spriteType": "char_8bd601",
+      "spriteType": "rocket-jessi",
       "party": [
         {
           "pokemonId": 63,

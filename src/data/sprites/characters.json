@@ -15,7 +15,7 @@
     "right-walk-2": 11
   },
   "characters": {
-    "dani": {
+    "rival-reminder": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -81,9 +81,10 @@
         }
       ],
       "name": {
-        "en": "Dani",
-        "he": "דני"
-      }
+        "en": "Rei Minder",
+        "he": "ריי שארית"
+      },
+      "roles": ["rival", "story"]
     },
     "dana": {
       "frameWidth": 32,
@@ -322,7 +323,8 @@
       "name": {
         "en": "Cyntia",
         "he": "סינתיה"
-      }
+      },
+      "roles": ["elite-4"]
     },
     "alice": {
       "frameWidth": 32,
@@ -381,7 +383,7 @@
         "en": "Alice",
         "he": "אליס"
       },
-      "roles": ["gym-leader", "story"]
+      "roles": ["story", "elite-4"]
     },
     "char_45ba6c": {
       "frameWidth": 32,
@@ -1172,7 +1174,7 @@
         }
       ]
     },
-    "char_0b613f": {
+    "gym-1-adda": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -1224,7 +1226,12 @@
           "sx": 640,
           "sy": 928
         }
-      ]
+      ],
+      "name": {
+        "en": "Adda",
+        "he": "אדה פלוס"
+      },
+      "roles": ["story", "gym-leader"]
     },
     "char_e30fdb": {
       "frameWidth": 32,
@@ -1278,7 +1285,8 @@
           "sx": 736,
           "sy": 928
         }
-      ]
+      ],
+      "roles": ["story", "champion"]
     },
     "char_ca2fd2": {
       "frameWidth": 32,
@@ -1388,7 +1396,7 @@
         }
       ]
     },
-    "char_524b56": {
+    "gym-3-miss-mila": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -1440,7 +1448,12 @@
           "sx": 928,
           "sy": 768
         }
-      ]
+      ],
+      "name": {
+        "en": "Miss Mila",
+        "he": "גב' מילה"
+      },
+      "roles": ["story", "gym-leader"]
     },
     "char_304fc6": {
       "frameWidth": 32,
@@ -1604,7 +1617,7 @@
         }
       ]
     },
-    "char_c94030": {
+    "gym-5-prima": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -1656,7 +1669,12 @@
           "sx": 768,
           "sy": 384
         }
-      ]
+      ],
+      "name": {
+        "en": "Lady Prima",
+        "he": "גברת פרימה"
+      },
+      "roles": ["story", "gym-leader"]
     },
     "char_c2b2c1": {
       "frameWidth": 32,
@@ -1820,7 +1838,7 @@
         }
       ]
     },
-    "char_20f351": {
+    "gym-2-minus": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -1872,9 +1890,18 @@
           "sx": 992,
           "sy": 1056
         }
-      ]
+      ],
+      "name": {
+        "en": "Captain Minus",
+        "he": "קפטיין מינוס"
+      },
+      "roles": ["gym-leader", "story"]
     },
-    "char_631e91": {
+    "gym-8-absa": {
+      "name": {
+        "en": "Sir Absa",
+        "he": "דון אבסה"
+      },
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -1926,7 +1953,8 @@
           "sx": 352,
           "sy": 1056
         }
-      ]
+      ],
+      "roles": ["gym-leader", "story"]
     },
     "char_d25760": {
       "frameWidth": 32,
@@ -1985,7 +2013,7 @@
         "en": "Brock",
         "he": "ברוק"
       },
-      "roles": ["story", "gym-leader"]
+      "roles": ["story"]
     },
     "ashKetchum": {
       "frameWidth": 32,
@@ -2104,7 +2132,7 @@
         "he": "אש קאטצ'ם"
       }
     },
-    "char_59c8b9": {
+    "rocket-james": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -2161,9 +2189,9 @@
         "en": "James",
         "he": "ג'יימס"
       },
-      "roles": ["story", "trainer", "villain"]
+      "roles": ["story", "villain"]
     },
-    "char_8bd601": {
+    "rocket-jessi": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -2220,7 +2248,7 @@
         "en": "Jessi",
         "he": "ג'סי"
       },
-      "roles": ["story", "villain", "trainer"]
+      "roles": ["story", "villain"]
     },
     "Misty": {
       "frameWidth": 32,
@@ -2279,7 +2307,7 @@
         "en": "Misty",
         "he": "מיסטי"
       },
-      "roles": ["story", "gym-leader", "trainer"]
+      "roles": ["story"]
     },
     "oak": {
       "frameWidth": 32,
@@ -2561,7 +2589,7 @@
         "he": "יעקב"
       }
     },
-    "char_b8427f": {
+    "gym-4-divon": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -2615,8 +2643,8 @@
         }
       ],
       "name": {
-        "en": "Morty",
-        "he": "מורטי"
+        "en": "Morty Divon",
+        "he": "מורטי דיבון"
       },
       "roles": ["gym-leader", "story"]
     },
@@ -2735,8 +2763,7 @@
       "name": {
         "en": "Blue",
         "he": "בלו"
-      },
-      "roles": ["story", "gym-helper"]
+      }
     },
     "char_2c5fb3": {
       "frameWidth": 32,
@@ -2912,52 +2939,6 @@
         "he": "מאיה"
       },
       "roles": ["hero"]
-    },
-    "char_8c73c5": {
-      "frameWidth": 32,
-      "frameHeight": 32,
-      "frames": [
-        {
-          "sx": 0,
-          "sy": 672
-        },
-        {
-          "sx": 32,
-          "sy": 672
-        },
-        {
-          "sx": 32,
-          "sy": 768
-        },
-        {
-          "sx": 32,
-          "sy": 704
-        },
-        {
-          "sx": 0,
-          "sy": 704
-        },
-        null,
-        {
-          "sx": 0,
-          "sy": 736
-        },
-        {
-          "sx": 0,
-          "sy": 768
-        },
-        null,
-        {
-          "sx": 32,
-          "sy": 736
-        },
-        null,
-        null
-      ],
-      "name": {
-        "en": "Gate Officer",
-        "he": "שומר שער"
-      }
     },
     "char_d6a779": {
       "frameWidth": 32,
@@ -3353,7 +3334,7 @@
         "he": "אלם"
       }
     },
-    "char_5712a9": {
+    "gym-6-sima": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -3407,9 +3388,10 @@
         }
       ],
       "name": {
-        "en": "Sam",
-        "he": "סם"
-      }
+        "en": "Sam Sima",
+        "he": "סם סימה"
+      },
+      "roles": ["gym-leader", "story"]
     },
     "char_899006": {
       "frameWidth": 32,
@@ -3469,7 +3451,7 @@
         "he": "איתן"
       }
     },
-    "char_a1da50": {
+    "gym-7-max": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -3523,10 +3505,10 @@
         }
       ],
       "name": {
-        "en": "Jimmy",
-        "he": "ג'ימי"
+        "en": "Max Formax",
+        "he": "מקס פרבולה"
       },
-      "roles": ["gym-leader"]
+      "roles": ["gym-leader", "story"]
     },
     "Prof.Algorithma": {
       "frameWidth": 32,
@@ -3702,10 +3684,9 @@
       "name": {
         "en": "Joey",
         "he": "ג'ואי"
-      },
-      "roles": ["rival"]
+      }
     },
-    "char_6b9002": {
+    "rival-story-gary": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -3762,7 +3743,7 @@
         "en": "Gary",
         "he": "גארי"
       },
-      "roles": ["rival", "trainer"]
+      "roles": ["rival", "trainer", "story"]
     },
     "char_3979e8": {
       "frameWidth": 32,
@@ -3822,7 +3803,7 @@
         "he": "הייס הליצן"
       }
     },
-    "Jenny": {
+    "officer-Jenny": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -3878,7 +3859,67 @@
       "name": {
         "en": "Officer Jenny",
         "he": "השוטרת ג'ני"
-      }
+      },
+      "roles": ["story", "ranger"]
+    },
+    "gate-officer": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 0,
+          "sy": 672
+        },
+        {
+          "sx": 32,
+          "sy": 672
+        },
+        {
+          "sx": 64,
+          "sy": 672
+        },
+        {
+          "sx": 0,
+          "sy": 704
+        },
+        {
+          "sx": 32,
+          "sy": 704
+        },
+        {
+          "sx": 64,
+          "sy": 704
+        },
+        {
+          "sx": 0,
+          "sy": 736
+        },
+        {
+          "sx": 32,
+          "sy": 736
+        },
+        {
+          "sx": 64,
+          "sy": 736
+        },
+        {
+          "sx": 0,
+          "sy": 768
+        },
+        {
+          "sx": 32,
+          "sy": 768
+        },
+        {
+          "sx": 64,
+          "sy": 768
+        }
+      ],
+      "name": {
+        "en": "Officer X",
+        "he": "שומר שער"
+      },
+      "roles": ["ranger"]
     }
   }
 }

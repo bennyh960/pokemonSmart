@@ -140,8 +140,19 @@ export interface PlayerStoryState {
 export interface PhoneContactInfo {
   trainerId: string;
   trainerName: string;
+  /** Map the trainer lives on — used to derive the display location at runtime (any locale). */
+  mapId?: string;
+  /** Legacy fallback: pre-stored English location (populated for contacts before mapId was introduced). */
   locationEn: string;
   locationHe: string;
+  /** Stored at registration time so the phone scene can compute live re-encounter status. */
+  reencounterConfig?: {
+    count: number;
+    lvlStep: number;
+    timeInterval?: number;
+    triggerFlag?: string;
+    triggerFlagDelayHours?: number;
+  };
 }
 
 /** Persistent player data (saved to localStorage). */

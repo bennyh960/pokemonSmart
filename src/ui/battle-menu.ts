@@ -12,7 +12,7 @@
 import type { InputManager } from '../engine/input.js';
 import type { Move, Pokemon, PokemonType } from '../types/index.js';
 import { fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
-import { getMoveDisplayName, getPokemonDisplayName, getCombinedTypeEffectiveness } from '../services/pokemon-data.js';
+import { getMoveDisplayName, getPokemonDisplayName, getCombinedTypeEffectiveness, getMove } from '../services/pokemon-data.js';
 import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 import { BTL, TYPE_BADGE, getHpColor } from '../data/battle-constants.js';
 import { getTypeName } from '../data/type-constants.js';
@@ -348,8 +348,9 @@ function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Mo
     size: M.POWER_FS, color: BTL.COLORS.textDark,
   });
 
-  // Effectiveness label (below power, size 4) — only when helper active
-  if (helperActive && enemyTypes.length > 0 && move.type) {
+  // Effectiveness label (below power, size 4) — only when helper active and not a status move
+  const moveFullData = getMove(move.id);
+  if (helperActive && enemyTypes.length > 0 && move.type && moveFullData?.damageClass !== 'status') {
     const mult = getCombinedTypeEffectiveness(move.type as PokemonType, enemyTypes);
     const { text, color } = getEffectivenessLabel(mult, rtl);
     if (text) {

@@ -16,6 +16,7 @@ import { getPlayerData, hasActiveGame } from './game-state.js';
 import { getPokemon } from '../services/pokemon-data.js';
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { createPokemonFromData } from './encounter.js';
+import { getCurrentMapId, getMapDisplayName } from './map-manager.js';
 import type { Pokemon } from '../types/index.js';
 
 const MS_PER_HOUR = 3_600_000;
@@ -23,7 +24,13 @@ const MS_PER_HOUR = 3_600_000;
 /** Check if a trainer is eligible for a re-encounter right now. */
 export type ReencounterStatus =
   | { eligible: true; encounterIndex: number }
-  | { eligible: false; reason: 'no-config' | 'max-reached' | 'cooldown'; hoursLeft?: number };
+  | { eligible: false; reason: 'no-config' | 'max-reached' | 'cooldown'; hoursLeft?: number; minutesLeft?: number };
+
+function cooldownStatus(msRemaining: number): ReencounterStatus {
+  const minutesLeft = Math.ceil(msRemaining / 60_000);
+  if (minutesLeft < 60) return { eligible: false, reason: 'cooldown', minutesLeft };
+  return { eligible: false, reason: 'cooldown', hoursLeft: Math.ceil(msRemaining / MS_PER_HOUR) };
+}
 
 export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
   if (!trainer.reencounter) return { eligible: false, reason: 'no-config' };
@@ -51,8 +58,7 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
       const elapsed = Date.now() - flagSetAt;
       const required = rc.triggerFlagDelayHours * MS_PER_HOUR;
       if (elapsed < required) {
-        const hoursLeft = Math.ceil((required - elapsed) / MS_PER_HOUR);
-        return { eligible: false, reason: 'cooldown', hoursLeft };
+        return cooldownStatus(required - elapsed);
       }
     }
     return { eligible: true, encounterIndex: state.count };
@@ -63,8 +69,7 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
     const elapsed = Date.now() - state.lastDefeatedAt;
     const required = rc.timeInterval * MS_PER_HOUR;
     if (elapsed < required) {
-      const hoursLeft = Math.ceil((required - elapsed) / MS_PER_HOUR);
-      return { eligible: false, reason: 'cooldown', hoursLeft };
+      return cooldownStatus(required - elapsed);
     }
   }
 
@@ -142,10 +147,22 @@ export function addTrainerToPhone(trainer: TrainerData): void {
   if (trainer.reencounter?.addToPhone === false) return;
   const pd = getPlayerData();
   if (pd.phoneContacts.some(c => c.trainerId === trainer.id)) return;
+
+  const mapId = getCurrentMapId() ?? undefined;
+  const nameStr = typeof trainer.name === 'string' ? trainer.name : trainer.id;
+  const rc = trainer.reencounter;
   pd.phoneContacts.push({
     trainerId: trainer.id,
-    trainerName: typeof trainer.name === 'string' ? trainer.name : trainer.id,
+    trainerName: nameStr,
+    mapId,
     locationEn: trainer.location?.en ?? '',
     locationHe: trainer.location?.he ?? '',
+    reencounterConfig: rc ? {
+      count: rc.count,
+      lvlStep: rc.lvlStep,
+      timeInterval: rc.timeInterval,
+      triggerFlag: rc.triggerFlag,
+      triggerFlagDelayHours: rc.triggerFlagDelayHours,
+    } : undefined,
   });
 }

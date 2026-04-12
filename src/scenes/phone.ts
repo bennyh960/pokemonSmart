@@ -21,30 +21,64 @@ import { drawText, fillRect } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 import { t, isRTL, getLocale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
+import { getReencounterStatus } from '../systems/reencounter.js';
+import { getMapDisplayName, findMapForTrainer } from '../systems/map-manager.js';
 import type { PhoneContactInfo } from '../types/index.js';
 
-// Re-encounter status needs to be checked without a full TrainerData object.
-// We only need the persisted encounter state and the config — but config is in
-// the trainer's map JSON which we don't load here. So we just show the raw count
-// and whether cooldown has passed based on the saved encounter state.
-//
-// For full status we would need the trainer's reencounter config. We work around
-// this by storing what we need at registration time. For now we show what we know.
+/** Resolve the trainer's location label for the current locale. */
+function getContactLocation(contact: PhoneContactInfo, locale: string): string {
+  if (contact.mapId) {
+    const name = getMapDisplayName(contact.mapId);
+    return locale === 'he' ? name.he : name.en;
+  }
+  // Legacy fallback for contacts saved before mapId was stored
+  return locale === 'he' ? contact.locationHe : contact.locationEn;
+}
 
-const MS_PER_HOUR = 3_600_000;
+type StatusKind = 'ready' | 'cooldown' | 'maxReached' | 'unknown';
+
+function getReencounterKind(contact: PhoneContactInfo): StatusKind {
+  if (!hasActiveGame()) return 'unknown';
+  const pd = getPlayerData();
+  const state = pd.trainerEncounters[contact.trainerId];
+  if (!state || !contact.reencounterConfig) return 'unknown';
+  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<typeof getReencounterStatus>[0];
+  const status = getReencounterStatus(fakeTrainer);
+  if (!status.eligible) return status.reason === 'max-reached' ? 'maxReached' : 'cooldown';
+  return 'ready';
+}
+
+function getStatusColor(kind: StatusKind): string {
+  if (kind === 'ready') return '#44ff88';
+  if (kind === 'maxReached') return '#888888';
+  if (kind === 'cooldown') return '#ffaa44';
+  return '#aaaaaa';
+}
 
 function getStatusLine(contact: PhoneContactInfo): string {
   if (!hasActiveGame()) return '';
   const pd = getPlayerData();
   const state = pd.trainerEncounters[contact.trainerId];
   if (!state) return t('phone.status.notDefeated');
-  // We don't have the reencounter config here (it lives in the map JSON),
-  // so we show the last-defeat time as a hint only
-  const hoursSince = (Date.now() - state.lastDefeatedAt) / MS_PER_HOUR;
-  const timeLine = hoursSince < 1
-    ? t('phone.status.justBattled')
-    : t('phone.status.hoursSince', { hours: Math.floor(hoursSince) });
-  return `${t('phone.status.battles', { count: state.count })}  ${timeLine}`;
+
+  if (!contact.reencounterConfig) {
+    return t('phone.status.battles', { count: state.count });
+  }
+
+  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<typeof getReencounterStatus>[0];
+  const status = getReencounterStatus(fakeTrainer);
+
+  if (!status.eligible) {
+    if (status.reason === 'max-reached') return t('phone.status.maxReached');
+    if (status.reason === 'cooldown') {
+      if (status.minutesLeft != null) return t('phone.status.cooldownMin', { minutes: status.minutesLeft });
+      if (status.hoursLeft != null) return t('phone.status.cooldown', { hours: status.hoursLeft });
+      return t('phone.status.notReady');
+    }
+    // 'no-config' or unexpected — not eligible
+    return t('phone.status.notReady');
+  }
+  return t('phone.status.ready');
 }
 
 export function createPhoneScene(
@@ -59,7 +93,16 @@ export function createPhoneScene(
     enter(): void {
       selectedIndex = 0;
       dialogueLine = null;
-      contacts = hasActiveGame() ? [...getPlayerData().phoneContacts] : [];
+      if (!hasActiveGame()) { contacts = []; return; }
+      const pd = getPlayerData();
+      // Resolve missing mapId for existing contacts by searching the loaded map cache
+      for (const contact of pd.phoneContacts) {
+        if (!contact.mapId) {
+          const found = findMapForTrainer(contact.trainerId);
+          if (found) contact.mapId = found;  // patch in place — persists on next save
+        }
+      }
+      contacts = [...pd.phoneContacts];
     },
 
     exit(): void {},
@@ -139,34 +182,35 @@ export function createPhoneScene(
           fillRect(ctx, 4, y, 3, ROW_H - 2, '#00d4ff');
         }
 
-        // Trainer name
+        // Trainer name (top line, left/right aligned by locale)
         const nameX = rtl ? SCREEN_W - 10 : 12;
-        const name = contact.trainerName;
-        drawText(ctx, name, nameX, y + 9, {
+        drawText(ctx, contact.trainerName, nameX, y + 9, {
           size: 7,
           color: selected ? '#ffffff' : '#cccccc',
           align: rtl ? 'right' : 'left',
           direction: rtl ? 'rtl' : 'ltr',
+          maxWidth: (SCREEN_W / 2) - 10,
         });
 
-        // Location
-        const loc = locale === 'he' ? contact.locationHe : contact.locationEn;
-        if (loc) {
-          const locX = rtl ? SCREEN_W - 10 : 12;
-          drawText(ctx, loc, locX, y + 18, {
+        // Map location (bottom line, same side as name)
+        const loc = getContactLocation(contact, locale);
+        const locLabel = loc ? `@ ${loc}` : '';
+        if (locLabel) {
+          drawText(ctx, locLabel, nameX, y + 20, {
             size: 6,
-            color: selected ? '#88ccff' : '#666',
+            color: selected ? '#88ccff' : '#4488aa',
             align: rtl ? 'right' : 'left',
             direction: rtl ? 'rtl' : 'ltr',
           });
         }
 
-        // Status on right side
+        // Status (right side, opposite to name)
         const status = getStatusLine(contact);
+        const statusKind = getReencounterKind(contact);
         const statusX = rtl ? 10 : SCREEN_W - 10;
         drawText(ctx, status, statusX, y + 9, {
           size: 6,
-          color: '#aaaaaa',
+          color: getStatusColor(statusKind),
           align: rtl ? 'left' : 'right',
           direction: 'ltr',
         });
@@ -217,18 +261,23 @@ function buildCallDialogue(contact: PhoneContactInfo): string {
   const state = pd.trainerEncounters[contact.trainerId];
   const locale = getLocale();
   const name = contact.trainerName;
-  const loc = locale === 'he' ? contact.locationHe : contact.locationEn;
+  const loc = getContactLocation(contact, locale);
 
-  if (!state) {
-    return t('phone.call.notBeaten', { name });
+  if (!state) return t('phone.call.notBeaten', { name });
+
+  if (!contact.reencounterConfig) {
+    return loc ? t('phone.call.location', { name, location: loc }) : t('phone.call.ready', { name });
   }
 
-  const hoursSince = (Date.now() - state.lastDefeatedAt) / MS_PER_HOUR;
-  // We don't know the exact timeInterval from here, but we show a contextual line
-  if (hoursSince < 1) {
+  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<typeof getReencounterStatus>[0];
+  const status = getReencounterStatus(fakeTrainer);
+
+  if (!status.eligible) {
+    if (status.reason === 'max-reached') return t('phone.call.noMoreBattles', { name });
+    if (status.minutesLeft != null) return t('phone.call.cooldownMin', { name, minutes: status.minutesLeft });
+    if (status.hoursLeft != null) return t('phone.call.cooldown', { name, hours: status.hoursLeft });
     return t('phone.call.stillTraining', { name });
   }
 
-  const locLine = loc ? t('phone.call.location', { name, location: loc }) : t('phone.call.ready', { name });
-  return locLine;
+  return loc ? t('phone.call.location', { name, location: loc }) : t('phone.call.ready', { name });
 }

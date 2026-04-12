@@ -53,7 +53,7 @@
       "facing": "down",
       "type": "npc",
       "hidden": true,
-      "spriteType": "char_8bd601",
+      "spriteType": "rocket-jessi",
       "dialogue": [
         {
           "en": "SURPRISE! Team Rocket's blasting off!",
@@ -68,7 +68,7 @@
       "y": 3,
       "facing": "left",
       "type": "npc",
-      "spriteType": "char_59c8b9",
+      "spriteType": "rocket-james",
       "dialogue": [
         {
           "en": "The boss will be pleased when we bring him all these Pokemon!",

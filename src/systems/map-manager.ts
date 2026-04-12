@@ -12,6 +12,78 @@ import { normalizeDialogue } from './npc.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MapLoader = () => Promise<{ default: any }>;
 
+/** Bilingual display names for every registered map. */
+const MAP_NAMES: Record<string, { en: string; he: string }> = {
+  'zeroville':              { en: 'Zeroville',          he: 'זרוויל' },
+  'zeroville-house-tl':    { en: 'Zeroville House',     he: 'בית בזרוויל' },
+  'zeroville-house-tr':    { en: 'Zeroville House',     he: 'בית בזרוויל' },
+  'zeroville-house-br':    { en: 'Zeroville House',     he: 'בית בזרוויל' },
+  'route-1':               { en: 'Route 1',             he: 'מסלול 1' },
+  'route1-house':          { en: 'Route 1 House',       he: 'בית במסלול 1' },
+  'sumville':              { en: 'Sumville',             he: 'סאמוויל' },
+  'sumville-gym':          { en: 'Sumville Gym',         he: 'ג׳ים סאמוויל' },
+  'sumville-house-1':      { en: 'Sumville House',       he: 'בית בסאמוויל' },
+  'sumville-house-2':      { en: 'Sumville House',       he: 'בית בסאמוויל' },
+  'sumville-remainder-house': { en: 'Remainder House',  he: 'בית השארית' },
+  'route-2':               { en: 'Route 2',             he: 'מסלול 2' },
+  'route-3':               { en: 'Route 3',             he: 'מסלול 3' },
+  'route-4':               { en: 'Route 4',             he: 'מסלול 4' },
+  'route-5':               { en: 'Route 5',             he: 'מסלול 5' },
+  'route-6':               { en: 'Route 6',             he: 'מסלול 6' },
+  'route-7':               { en: 'Route 7',             he: 'מסלול 7' },
+  'route-8':               { en: 'Route 8',             he: 'מסלול 8' },
+  'route-9':               { en: 'Route 9',             he: 'מסלול 9' },
+  'route-10':              { en: 'Route 10',            he: 'מסלול 10' },
+  'safari':                { en: 'Safari Zone',          he: 'אזור הספארי' },
+  'minusburg':             { en: 'Minusburg',            he: 'מינוסבורג' },
+  'deep-forest':           { en: 'Deep Forest',          he: 'יער עמוק' },
+  'mountain-pass':         { en: 'Mountain Pass',        he: 'מעבר ההר' },
+  'mountain-cave':         { en: 'Mountain Cave',        he: 'מערת ההר' },
+  'dividia':               { en: 'Dividia',              he: 'דיוידיה' },
+  'divideburg':            { en: 'Dividia',              he: 'דיוידיה' },
+  'dividia-cave':          { en: 'Dividia Cave',         he: 'מערת דיוידיה' },
+  'dividia-house-1':       { en: 'Dividia House',        he: 'בית בדיוידיה' },
+  'dividia-house-2':       { en: 'Dividia House',        he: 'בית בדיוידיה' },
+  'dividia-house-3':       { en: 'Dividia House',        he: 'בית בדיוידיה' },
+  'dividia-house-4':       { en: 'Dividia House',        he: 'בית בדיוידיה' },
+  'multiplia':             { en: 'Multiplia',            he: 'מולטיפליה' },
+  'primore':               { en: 'Primore',              he: 'פרימור' },
+  'symmetrika':            { en: 'Symmetrika',           he: 'סימטריקה' },
+  'symmetrika-cave':       { en: 'Symmetrika Cave',      he: 'מערת סימטריקה' },
+  'symmetrika-terminal':   { en: 'Symmetrika Terminal',  he: 'תחנת סימטריקה' },
+  'integrala':             { en: 'Integrala',            he: 'אינטגרלה' },
+  'absoluta':              { en: 'Absoluta',             he: 'אבסולוטה' },
+  'algorithma-lab':        { en: 'Algorithma Lab',       he: 'מעבדת אלגוריתמה' },
+  'logica-heights':        { en: 'Logica Heights',       he: 'גבעות לוגיקה' },
+  'fractalis':             { en: 'Fractalis',            he: 'פרקטליס' },
+  'algebria':              { en: 'Algebria',             he: 'אלגברייה' },
+  'infinity-plateau':      { en: 'Infinity Plateau',     he: 'רמת האינסוף' },
+  'prime-city':            { en: 'Prime City',           he: 'עיר הראשוניים' },
+  'multitown':             { en: 'Multitown',            he: 'מולטיטאון' },
+  'nullx-tower':           { en: 'NULL-X Tower',         he: 'מגדל NULL-X' },
+  'nullx-floor-6':         { en: 'NULL-X Tower — Floor 6', he: 'מגדל NULL-X — קומה 6' },
+  'pokecenter-interior':   { en: 'Pokémon Center',       he: 'מרכז פוקימון' },
+  'pokecenter-2':          { en: 'Pokémon Center',       he: 'מרכז פוקימון' },
+  'pokecenter-mart-interior': { en: 'Pokémon Center',   he: 'מרכז פוקימון' },
+  'mart-interior':         { en: 'Poké Mart',            he: 'פוקה מארט' },
+  'fake-pokecenter':       { en: 'Strange Building',     he: 'בניין מוזר' },
+  'house-3-i':             { en: 'House',                he: 'בית' },
+  'oak lab':               { en: 'Prof. Oak\'s Lab',     he: 'מעבדת פרופ׳ אלון' },
+};
+
+/** Return bilingual display name for a map ID. Falls back to the raw ID if unknown. */
+export function getMapDisplayName(mapId: string): { en: string; he: string } {
+  return MAP_NAMES[mapId] ?? { en: mapId, he: mapId };
+}
+
+/** Search cached (already-loaded) maps to find which map contains a trainer with the given ID. */
+export function findMapForTrainer(trainerId: string): string | null {
+  for (const [mapId, mapData] of mapCache) {
+    if (mapData.npcs?.some(npc => npc.id === trainerId)) return mapId;
+  }
+  return null;
+}
+
 /** Registry of map loaders keyed by map ID. */
 const mapLoaders = new Map<string, MapLoader>();
 

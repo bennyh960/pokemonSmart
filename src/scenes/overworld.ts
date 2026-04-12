@@ -1877,10 +1877,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 if (status.eligible) {
                   activeTextBox = createTextBox([t('trainer.reencounter.ready')], isRTL());
                 } else if (status.reason === 'cooldown') {
-                  activeTextBox = createTextBox(
-                    [t('trainer.reencounter.cooldown', { hours: status.hoursLeft ?? 1 })],
-                    isRTL(),
-                  );
+                  const cooldownMsg = status.minutesLeft != null
+                    ? t('trainer.reencounter.cooldownMin', { minutes: status.minutesLeft })
+                    : t('trainer.reencounter.cooldown', { hours: status.hoursLeft ?? 1 });
+                  activeTextBox = createTextBox([cooldownMsg], isRTL());
                 } else if (status.reason === 'max-reached') {
                   activeTextBox = createTextBox([t('trainer.reencounter.maxReached')], isRTL());
                 } else {
