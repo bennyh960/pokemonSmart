@@ -17,30 +17,30 @@ export interface BilingualText {
 /** A single step in an NPC's walk pattern. */
 export interface WalkStep {
   dir: 'up' | 'down' | 'left' | 'right';
-  steps: number;   // tiles to walk in this direction
-  delay: number;   // seconds to wait AFTER completing (or being blocked during) this step
+  steps: number; // tiles to walk in this direction
+  delay: number; // seconds to wait AFTER completing (or being blocked during) this step
 }
 
 /** Auto-walk configuration — NPC patrols following an ordered pattern. */
 export interface AutoWalkConfig {
   pattern: WalkStep[];
-  loop?: boolean;               // default true — repeat main pattern forever
+  loop?: boolean; // default true — repeat main pattern forever
 
-  /** Played while NPC is not yet visible (before spawnAfter flag is set). NPC renders during this. */
-  beforeSpawnPattern?: WalkStep[];
-  beforeSpawnLoop?: boolean;    // default false — play once then wait; true = loop until visible
-
-  /** Played once (unless *Loop=true) immediately after NPC first becomes visible. */
+  /**
+   * Played ONCE the first time the NPC becomes visible (spawnAfter flag set).
+   * Completion is persisted in player flags so re-entering the map does not replay it.
+   * afterSpawnLoop: if true, loops forever (story NPCs should leave this false).
+   */
   afterSpawnPattern?: WalkStep[];
-  afterSpawnLoop?: boolean;     // default false
+  afterSpawnLoop?: boolean; // default false
 
-  /** Played when despawn conditions are first met (NPC still rendered/interactable). Runs before afterDespawn. */
+  /**
+   * Played ONCE when despawn conditions are first met (NPC still rendered/interactable).
+   * Persisted in player flags — re-entering the map after despawn does not replay it.
+   * beforeDespawnLoop: if true, loops forever.
+   */
   beforeDespawnPattern?: WalkStep[];
-  beforeDespawnLoop?: boolean;  // default false
-
-  /** Played once (unless *Loop=true) after despawn conditions are met; NPC still renders until done. */
-  afterDespawnPattern?: WalkStep[];
-  afterDespawnLoop?: boolean;   // default false
+  beforeDespawnLoop?: boolean; // default false
 }
 
 /** Legacy auto-walk format (horizontal/vertical axes). Converted at load time. */
@@ -54,7 +54,9 @@ interface LegacyAutoWalkConfig {
 }
 
 /** Convert legacy {horizontal,vertical} autoWalk to pattern format. */
-export function normalizeAutoWalk(raw: AutoWalkConfig | LegacyAutoWalkConfig | null | undefined): AutoWalkConfig | null {
+export function normalizeAutoWalk(
+  raw: AutoWalkConfig | LegacyAutoWalkConfig | null | undefined,
+): AutoWalkConfig | null {
   if (!raw) return null;
   // Already new format
   if ('pattern' in raw && Array.isArray(raw.pattern)) return raw as AutoWalkConfig;
@@ -76,15 +78,15 @@ export function normalizeAutoWalk(raw: AutoWalkConfig | LegacyAutoWalkConfig | n
 export interface DialogueReward {
   items?: RewardItem[];
   money?: number;
-  badge?: number;       // Gym badge number (1-8) to award
-  storyEvent?: string;  // Story progression flag to set (e.g. 'story-received-pokedex')
-  flag?: string;        // Flag to set after giving reward (prevents re-giving)
+  badge?: number; // Gym badge number (1-8) to award
+  storyEvent?: string; // Story progression flag to set (e.g. 'story-received-pokedex')
+  flag?: string; // Flag to set after giving reward (prevents re-giving)
 }
 
 /** NPC data as stored in map JSON. */
 export interface NPCData {
   id: string;
-  name?: string;
+  name?: BilingualText; // Optional name for dialogue and phone display (defaults to id if not provided)
   x: number;
   y: number;
   facing: 'up' | 'down' | 'left' | 'right';
@@ -92,13 +94,13 @@ export interface NPCData {
   dialogue: BilingualText[];
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
-  reward?: DialogueReward;  // Optional reward on first interaction (any NPC type)
-  interactRange?: number;   // Max interaction distance in tiles (default 1 = adjacent)
-  lineOfSight?: number;     // Used by gate-guards and blocker NPCs (default 3)
+  reward?: DialogueReward; // Optional reward on first interaction (any NPC type)
+  interactRange?: number; // Max interaction distance in tiles (default 1 = adjacent)
+  lineOfSight?: number; // Used by gate-guards and blocker NPCs (default 3)
   // Story-ready fields
-  hidden?: boolean;         // NPC exists but not rendered/interactable until triggered
-  spawnAfter?: string;      // Flag — NPC appears only after this flag is set
-  despawnAfter?: string;    // Flag — NPC disappears after this flag is set
+  hidden?: boolean; // NPC exists but not rendered/interactable until triggered
+  spawnAfter?: string; // Flag — NPC appears only after this flag is set
+  despawnAfter?: string; // Flag — NPC disappears after this flag is set
   /** NPC disappears once player has at least `count` Pokémon at or above `minLevel`. */
   despawnWhenParty?: { count: number; minLevel: number };
   /** When true, NPC uses line-of-sight to block the player until despawn conditions are met. */
@@ -115,14 +117,14 @@ export interface RewardItem {
 export interface TrainerReward {
   money: number;
   items?: RewardItem[];
-  badge?: number;       // Gym badge number (1-8) to award
-  storyEvent?: string;  // Story progression flag to set
+  badge?: number; // Gym badge number (1-8) to award
+  storyEvent?: string; // Story progression flag to set
 }
 
 /** Re-encounter configuration on a trainer NPC. */
 export interface ReencounterConfig {
-  count: number;           // max additional encounters after the first (e.g. 3 = 4 total fights)
-  lvlStep: number;         // level boost applied to all party members per re-encounter
+  count: number; // max additional encounters after the first (e.g. 3 = 4 total fights)
+  lvlStep: number; // level boost applied to all party members per re-encounter
   /**
    * Trigger mode — choose ONE of the following:
    *
@@ -134,10 +136,10 @@ export interface ReencounterConfig {
    * If no trigger is specified the trainer is immediately available for a rematch after each defeat.
    */
   timeInterval?: number;
-  triggerFlag?: string;              // story flag that must be set (e.g. 'gym1-cleared')
-  triggerFlagDelayHours?: number;    // hours after triggerFlag was set before reencounter is ready
-  partyExtra?: { pokemonId: number; level: number }[];  // extra Pokemon added from 2nd encounter onwards
-  addToPhone?: boolean;    // whether to add trainer to phone list after first defeat (default: true)
+  triggerFlag?: string; // story flag that must be set (e.g. 'gym1-cleared')
+  triggerFlagDelayHours?: number; // hours after triggerFlag was set before reencounter is ready
+  partyExtra?: { pokemonId: number; level: number }[]; // extra Pokemon added from 2nd encounter onwards
+  addToPhone?: boolean; // whether to add trainer to phone list after first defeat (default: true)
 }
 
 /**
@@ -171,9 +173,9 @@ export interface TrainerData extends NPCData {
   despawnOnDefeat?: boolean;
   reward: TrainerReward;
   lineOfSight: number;
-  postBattleDialogue?: BilingualText[];  // Dialogue shown after defeating this trainer
-  reencounter?: ReencounterConfig;       // Optional re-encounter config
-  location?: BilingualText;             // Human-readable location for phone display (e.g. "Route 1")
+  postBattleDialogue?: BilingualText[]; // Dialogue shown after defeating this trainer
+  reencounter?: ReencounterConfig; // Optional re-encounter config
+  location?: BilingualText; // Human-readable location for phone display (e.g. "Route 1")
 }
 
 /** Normalize a reward field that may be a legacy plain number. */
@@ -208,7 +210,7 @@ export function isNPCVisible(
   // Disappear once player has ≥ count Pokémon at or above minLevel
   if (npc.despawnWhenParty && party) {
     const { count, minLevel } = npc.despawnWhenParty;
-    if (party.filter(p => p.level >= minLevel).length >= count) return false;
+    if (party.filter((p) => p.level >= minLevel).length >= count) return false;
   }
 
   // Trainers with despawnOnDefeat vanish after the player beats them
@@ -221,9 +223,15 @@ export function isNPCVisible(
 
 /** Create an NPC manager for a set of NPCs on a map. */
 export function createNPCManager(npcs: NPCData[]) {
-  // Normalize legacy autoWalk configs at load time
+  // Normalize legacy data at load time
   for (const npc of npcs) {
     npc.autoWalk = normalizeAutoWalk(npc.autoWalk);
+    // Legacy: name was stored as plain string — upgrade to BilingualText
+    if (typeof npc.name === 'string') {
+      const nameStr = npc.name as unknown as string;
+      const nameHeStr = (npc as unknown as Record<string, unknown>)['nameHe'] as string | undefined;
+      npc.name = { en: nameStr, he: nameHeStr || nameStr };
+    }
   }
 
   return {
@@ -234,17 +242,22 @@ export function createNPCManager(npcs: NPCData[]) {
 
     /** Check if there is an NPC at the given grid position (any NPC, including invisible ones). */
     isNPCAt(x: number, y: number): boolean {
-      return npcs.some(npc => npc.x === x && npc.y === y);
+      return npcs.some((npc) => npc.x === x && npc.y === y);
     },
 
     /** Check if there is a VISIBLE NPC at the given grid position. Invisible/unspawned NPCs are ignored. */
-    isVisibleNPCAt(x: number, y: number, flags: Record<string, boolean>, party?: import('../types/index.js').Pokemon[]): boolean {
-      return npcs.some(npc => npc.x === x && npc.y === y && isNPCVisible(npc, flags, party));
+    isVisibleNPCAt(
+      x: number,
+      y: number,
+      flags: Record<string, boolean>,
+      party?: import('../types/index.js').Pokemon[],
+    ): boolean {
+      return npcs.some((npc) => npc.x === x && npc.y === y && isNPCVisible(npc, flags, party));
     },
 
     /** Get the NPC at a given grid position. */
     getNPCAt(x: number, y: number): NPCData | undefined {
-      return npcs.find(npc => npc.x === x && npc.y === y);
+      return npcs.find((npc) => npc.x === x && npc.y === y);
     },
 
     /** Get the NPC the player is facing (checks up to interactRange tiles in facing direction). */
@@ -252,11 +265,11 @@ export function createNPCManager(npcs: NPCData[]) {
       const vec = FACING_VECTORS[facing];
       if (!vec) return undefined;
       // Check closest tile first, then further — return nearest match
-      const maxRange = Math.max(1, ...npcs.map(n => n.interactRange || 1));
+      const maxRange = Math.max(1, ...npcs.map((n) => n.interactRange || 1));
       for (let dist = 1; dist <= maxRange; dist++) {
         const tx = playerX + vec.dx * dist;
         const ty = playerY + vec.dy * dist;
-        const npc = npcs.find(n => n.x === tx && n.y === ty && (n.interactRange || 1) >= dist);
+        const npc = npcs.find((n) => n.x === tx && n.y === ty && (n.interactRange || 1) >= dist);
         if (npc) return npc;
       }
       return undefined;
@@ -305,14 +318,12 @@ export function checkTrainerLineOfSight(
  * Handles mixed arrays where some entries are strings and some are objects.
  */
 export function normalizeDialogue(raw: (string | BilingualText)[]): BilingualText[] {
-  return raw.map(line =>
-    typeof line === 'string' ? { en: line, he: '' } : line
-  );
+  return raw.map((line) => (typeof line === 'string' ? { en: line, he: '' } : line));
 }
 
 /** Resolve bilingual dialogue to a string array for the given locale. Falls back to en if he is empty. */
 export function resolveDialogue(lines: BilingualText[], locale: 'en' | 'he'): string[] {
-  return lines.map(line => {
+  return lines.map((line) => {
     const text = line[locale];
     return text || line.en || '';
   });

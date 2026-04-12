@@ -248,8 +248,8 @@ export class PropertiesPanel {
 
     // ── Name picker — initial value from character's name if defined ──
     const charInfo = getCharacterInfo(npc.spriteType);
-    const initialEn = npc.name || charInfo?.name.en || '';
-    const initialHe = (npcAny['nameHe'] as string) || charInfo?.name.he || '';
+    const initialEn = (npc.name as import('../systems/npc.js').BilingualText | undefined)?.en || charInfo?.name.en || '';
+    const initialHe = (npc.name as import('../systems/npc.js').BilingualText | undefined)?.he || charInfo?.name.he || '';
     const nameLabel = document.createElement('div');
     nameLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
     nameLabel.textContent = 'Name';
@@ -258,8 +258,8 @@ export class PropertiesPanel {
       initialEn,
       initialHe,
       onChange: (name) => {
-        npcAny['name'] = name.en;
-        npcAny['nameHe'] = name.he;
+        npcAny['name'] = { en: name.en, he: name.he };
+        delete npcAny['nameHe'];
         emit();
       },
     }));
@@ -1634,9 +1634,9 @@ export class PropertiesPanel {
       row.appendChild(dirSel);
 
       const stepsIn = document.createElement('input');
-      stepsIn.type = 'number'; stepsIn.value = String(step.steps); stepsIn.min = '1';
-      stepsIn.style.width = '36px'; stepsIn.title = 'Tiles to walk';
-      stepsIn.addEventListener('change', () => { step.steps = parseInt(stepsIn.value) || 1; emit(); });
+      stepsIn.type = 'number'; stepsIn.value = String(step.steps); stepsIn.min = '0';
+      stepsIn.style.width = '36px'; stepsIn.title = 'Tiles to walk (0 = face direction only)';
+      stepsIn.addEventListener('change', () => { step.steps = Math.max(0, parseInt(stepsIn.value) || 0); emit(); });
       row.appendChild(stepsIn);
 
       const delayIn = document.createElement('input');
@@ -1674,8 +1674,8 @@ export class PropertiesPanel {
     parent: HTMLElement,
     aw: import('../systems/npc.js').AutoWalkConfig,
     label: string,
-    patKey: 'beforeSpawnPattern' | 'afterSpawnPattern' | 'beforeDespawnPattern' | 'afterDespawnPattern',
-    loopKey: 'beforeSpawnLoop' | 'afterSpawnLoop' | 'beforeDespawnLoop' | 'afterDespawnLoop',
+    patKey: 'afterSpawnPattern' | 'beforeDespawnPattern',
+    loopKey: 'afterSpawnLoop' | 'beforeDespawnLoop',
     emit: () => void,
   ): void {
     const hdr = document.createElement('div');
@@ -1780,10 +1780,8 @@ export class PropertiesPanel {
     this.renderWalkSteps(section, aw.pattern, emit);
 
     // ── Phase patterns ──
-    this.renderPhasePatternUI(section, aw, 'Before Spawn', 'beforeSpawnPattern', 'beforeSpawnLoop', emit);
-    this.renderPhasePatternUI(section, aw, 'After Spawn', 'afterSpawnPattern', 'afterSpawnLoop', emit);
-    this.renderPhasePatternUI(section, aw, 'Before Despawn', 'beforeDespawnPattern', 'beforeDespawnLoop', emit);
-    this.renderPhasePatternUI(section, aw, 'After Despawn', 'afterDespawnPattern', 'afterDespawnLoop', emit);
+    this.renderPhasePatternUI(section, aw, 'After Spawn (once)', 'afterSpawnPattern', 'afterSpawnLoop', emit);
+    this.renderPhasePatternUI(section, aw, 'Before Despawn (once)', 'beforeDespawnPattern', 'beforeDespawnLoop', emit);
   }
 
   private renderTransitionProps(tr: MapTransition, index: number): void {

@@ -184,7 +184,7 @@ let pendingBattleContext: BattleContext = 'grass';
 let pendingBattleBackground: BattleBackgroundId | null = null;
 
 export interface TrainerBattleData {
-  trainerName: string;
+  trainerName: { en: string; he: string };
   trainerId: string;
   party: Pokemon[];
   reward: TrainerReward;
@@ -660,7 +660,7 @@ export function createBattleScene(
         if (!pd.phoneContacts.some((c) => c.trainerId === td.trainerId)) {
           pd.phoneContacts.push({
             trainerId: td.trainerId,
-            trainerName: td.trainerName,
+            trainerName: getLocalizedName(td.trainerName),
             locationEn: td.locationEn ?? '',
             locationHe: td.locationHe ?? '',
           });
@@ -2754,7 +2754,7 @@ export function createBattleScene(
       if (isTrainerBattle && trainerData) {
         textBox = createTextBox(
           [
-            t('battle.trainerWantsBattle', { name: trainerData.trainerName }),
+            t('battle.trainerWantsBattle', { name: getLocalizedName(trainerData.trainerName) }),
             t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
           ],
           isRTL(),

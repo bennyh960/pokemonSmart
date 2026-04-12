@@ -22,10 +22,11 @@ interface TextBoxState {
   done: boolean;
   isRtl: boolean;
   waitingForInput: boolean;
+  speakerName?: string;
 }
 
 /** Create a text box with an array of lines to display. */
-export function createTextBox(lines: string[], rtl = false): TextBoxState {
+export function createTextBox(lines: string[], rtl = false, speakerName?: string): TextBoxState {
   return {
     lines,
     currentLine: 0,
@@ -34,6 +35,7 @@ export function createTextBox(lines: string[], rtl = false): TextBoxState {
     done: false,
     isRtl: rtl,
     waitingForInput: false,
+    speakerName,
   };
 }
 
@@ -74,9 +76,33 @@ export function updateTextBox(state: TextBoxState, input: InputManager, dt: numb
   return false;
 }
 
+const NAME_PAD_X = 6;
+const NAME_PAD_Y = 3;
+const NAME_FONT_SIZE = 8;
+const NAME_TAB_H = NAME_FONT_SIZE + NAME_PAD_Y * 2;
+
 /** Render the text box. */
 export function renderTextBox(ctx: CanvasRenderingContext2D, state: TextBoxState): void {
   if (state.done) return;
+
+  // ── Speaker nameplate (tab above box) ──
+  if (state.speakerName) {
+    const nameW = state.speakerName.length * (NAME_FONT_SIZE * 0.62) + NAME_PAD_X * 2;
+    const tabX = state.isRtl ? SCREEN_W - nameW - 4 : 4;
+    const tabY = BOX_Y - NAME_TAB_H;
+    fillRect(ctx, tabX, tabY, nameW, NAME_TAB_H + 2, '#181820');
+    drawRect(ctx, tabX, tabY, nameW, NAME_TAB_H, '#585858');
+    drawRect(ctx, tabX - 1, tabY - 1, nameW + 2, NAME_TAB_H + 1, '#383848');
+    drawText(ctx, state.speakerName,
+      state.isRtl ? tabX + nameW - NAME_PAD_X : tabX + NAME_PAD_X,
+      tabY + NAME_PAD_Y,
+      {
+        size: NAME_FONT_SIZE,
+        color: '#ffe878',
+        direction: state.isRtl ? 'rtl' : 'ltr',
+        align: state.isRtl ? 'right' : 'left',
+      });
+  }
 
   // Box background
   fillRect(ctx, 0, BOX_Y, SCREEN_W, BOX_H, '#181820');

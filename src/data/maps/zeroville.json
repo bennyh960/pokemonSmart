@@ -158,7 +158,7 @@
     },
     {
       "id": "shop-helper",
-      "name": "Merchant Maya",
+      "name": "Ben",
       "x": 16,
       "y": 17,
       "facing": "up",
@@ -166,18 +166,18 @@
       "dialogue": [
         {
           "en": "Welcome to the Mart! We have everything a new trainer needs.",
-          "he": "ברוך הבא לחנות! יש לנו כל מה שמאמן חדש צריך."
+          "he": "תצטייד לפני שאתה יוצא לדרך 1 — פוקימון פראיים יכולים להפתיע אותך שם בחוץ!"
         },
         {
           "en": "A Potion restores 20 HP to your Pokemon. Think of it as a healing spray!",
-          "he": "פוציון מחזיר 20 HP לפוקימון שלך. תחשוב על זה כמו ספריי ריפוי!"
+          "he": "תדאג תמיד למלאי של שיקויים ופוקדורים."
         },
         {
           "en": "Stock up before heading to Route 1 — wild Pokemon can surprise you out there!",
-          "he": "תצטייד לפני שאתה יוצא לדרך 1 — פוקימון פראיים יכולים להפתיע אותך שם בחוץ!"
+          "he": ""
         }
       ],
-      "spriteType": "char_d25760",
+      "spriteType": "char_95ee55",
       "autoWalk": {
         "pattern": [
           {
@@ -202,6 +202,16 @@
           }
         ],
         "loop": true
+      },
+      "nameHe": "בן",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "poke-ball",
+            "quantity": 1
+          }
+        ]
       }
     },
     {

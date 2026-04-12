@@ -14,7 +14,14 @@ import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { initHUD, updateHUD, setHUDTab, showHUD, hideHUD } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
-import { getPlayerData, hasActiveGame, autoSave, healParty, updateLastPokemonCenter, setFlag } from '../systems/game-state.js';
+import {
+  getPlayerData,
+  hasActiveGame,
+  autoSave,
+  healParty,
+  updateLastPokemonCenter,
+  setFlag,
+} from '../systems/game-state.js';
 import { setPartyMode } from '../scenes/party.js';
 import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
@@ -278,36 +285,25 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     patternDone: boolean; // true if non-looping pattern finished
     // Spawn/despawn phase patterns
     wasPreviouslyVisible: boolean; // tracks visibility changes
-    // beforeSpawn phase: NPC rendered + walking while not yet visible
-    beforeSpawnDone: boolean; // played once (for non-looping beforeSpawnPattern)
-    beforeSpawnIdx: number;
-    beforeSpawnSteps: number;
-    beforeSpawnWaiting: boolean;
-    beforeSpawnTimer: number;
-    // afterSpawn phase
-    afterSpawnDone: boolean; // afterSpawnPattern has played
+    // afterSpawn phase: plays once when NPC first becomes visible (persisted in flags)
+    afterSpawnDone: boolean;
     afterSpawnIdx: number;
     afterSpawnSteps: number;
     afterSpawnWaiting: boolean;
     afterSpawnTimer: number;
-    // beforeDespawn phase: plays when despawn conditions first met, before afterDespawn
+    // beforeDespawn phase: plays once when despawn conditions first met (persisted in flags)
     isPreDespawning: boolean;
     beforeDespawnIdx: number;
     beforeDespawnSteps: number;
     beforeDespawnWaiting: boolean;
     beforeDespawnTimer: number;
-    // afterDespawn phase: NPC rendered + walking after becoming invisible
-    isDespawning: boolean;
-    despawnIdx: number;
-    despawnSteps: number;
-    despawnWaiting: boolean;
-    despawnTimer: number;
   }
   const npcStates = new Map<string, NPCRuntimeState>();
 
   function getNpcState(npc: NPCData): NPCRuntimeState {
     let st = npcStates.get(npc.id);
     if (!st) {
+      const _initFlags = hasActiveGame() ? (getPlayerData().flags ?? {}) : {};
       st = {
         walkFrame: 0,
         walkTimer: 0,
@@ -325,17 +321,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         patternWaiting: false,
         patternTimer: 0,
         patternDone: false,
-        wasPreviouslyVisible: isNPCVisible(
-          npc,
-          hasActiveGame() ? (getPlayerData().flags ?? {}) : {},
-          hasActiveGame() ? getPlayerData().party : undefined,
-        ),
-        beforeSpawnDone: false,
-        beforeSpawnIdx: 0,
-        beforeSpawnSteps: 0,
-        beforeSpawnWaiting: false,
-        beforeSpawnTimer: 0,
-        afterSpawnDone: false,
+        wasPreviouslyVisible: isNPCVisible(npc, _initFlags, hasActiveGame() ? getPlayerData().party : undefined),
+        // afterSpawnDone: persisted in flags so re-entering the map doesn't replay it
+        afterSpawnDone: !!_initFlags[`npc-afterSpawn-done-${npc.id}`] || !npc.autoWalk?.afterSpawnPattern?.length,
         afterSpawnIdx: 0,
         afterSpawnSteps: 0,
         afterSpawnWaiting: false,
@@ -345,11 +333,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         beforeDespawnSteps: 0,
         beforeDespawnWaiting: false,
         beforeDespawnTimer: 0,
-        isDespawning: false,
-        despawnIdx: 0,
-        despawnSteps: 0,
-        despawnWaiting: false,
-        despawnTimer: 0,
       };
       npcStates.set(npc.id, st);
     }
@@ -735,7 +718,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
 
     return {
-      trainerName: trainer.name || trainer.id,
+      trainerName: trainer.name ?? { en: trainer.id, he: trainer.id },
       trainerId: trainer.id,
       party,
       reward: normalizeReward(trainer.reward),
@@ -1315,7 +1298,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             pendingPartyBack = { pushDx: -facingVec.dx, pushDy: -facingVec.dy };
           }
           interactingNPC = pga.npc;
-          activeTextBox = createTextBox(resolveDialogue(pga.npc.dialogue, getLocale()), isRTL());
+          activeTextBox = createTextBox(resolveDialogue(pga.npc.dialogue, getLocale()), isRTL(), pga.npc.name ? getLocalizedName(pga.npc.name) : undefined);
         }
         return;
       }
@@ -1335,7 +1318,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
           // Show blocking dialogue → onDialogueEnd will push GATE scene
           interactingNPC = ga.guard;
-          activeTextBox = createTextBox(resolveDialogue(ga.guard.dialogue, getLocale()), isRTL());
+          activeTextBox = createTextBox(resolveDialogue(ga.guard.dialogue, getLocale()), isRTL(), ga.guard.name ? getLocalizedName(ga.guard.name) : undefined);
         }
         return;
       }
@@ -1594,35 +1577,43 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
           } else {
             const step = pattern[idx];
-            const dx = step.dir === 'right' ? 1 : step.dir === 'left' ? -1 : 0;
-            const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
-            const nextX = npc.x + dx;
-            const nextY = npc.y + dy;
-            const blocked =
-              (nextX === player.gridX && nextY === player.gridY) ||
-              npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party) ||
-              !tileMap ||
-              !tileMap.isWalkable(nextX, nextY);
-            if (!blocked && steps < step.steps) {
-              st.startPixelX = st.pixelX;
-              st.startPixelY = st.pixelY;
-              st.targetPixelX = nextX * TILE_SIZE;
-              st.targetPixelY = nextY * TILE_SIZE;
-              st.moveProgress = 0;
-              st.moving = true;
+            // steps=0: face the direction without moving, then wait the delay
+            if (step.steps === 0) {
               st.facing = step.dir;
               npc.facing = step.dir;
-              steps++;
-              if (steps >= step.steps) {
+              waiting = true;
+              timer = 0;
+            } else {
+              const dx = step.dir === 'right' ? 1 : step.dir === 'left' ? -1 : 0;
+              const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
+              const nextX = npc.x + dx;
+              const nextY = npc.y + dy;
+              const blocked =
+                (nextX === player.gridX && nextY === player.gridY) ||
+                npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party) ||
+                !tileMap ||
+                !tileMap.isWalkable(nextX, nextY);
+              if (!blocked && steps < step.steps) {
+                st.startPixelX = st.pixelX;
+                st.startPixelY = st.pixelY;
+                st.targetPixelX = nextX * TILE_SIZE;
+                st.targetPixelY = nextY * TILE_SIZE;
+                st.moveProgress = 0;
+                st.moving = true;
+                st.facing = step.dir;
+                npc.facing = step.dir;
+                steps++;
+                if (steps >= step.steps) {
+                  waiting = true;
+                  timer = 0;
+                }
+              } else if (steps > 0) {
+                // Blocked mid-step: wait the delay then advance to next step
                 waiting = true;
                 timer = 0;
               }
-            } else if (steps > 0) {
-              // Blocked mid-step: wait the delay then advance to next step
-              waiting = true;
-              timer = 0;
+              // Blocked at step 0: retry next frame (don't advance pattern)
             }
-            // Blocked at step 0: retry next frame (don't advance pattern)
           }
           return { idx, steps, waiting, timer, done: false };
         };
@@ -1631,33 +1622,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const isVis = isNPCVisible(npc, flags, _pd1?.party);
           const st = getNpcState(npc);
 
-          // ── Detect visibility transition: visible → invisible (start despawn sequence) ──
-          if (!isVis && st.wasPreviouslyVisible && !st.isPreDespawning && !st.isDespawning) {
+          // ── Detect visibility transition: visible → invisible (start beforeDespawn) ──
+          if (!isVis && st.wasPreviouslyVisible && !st.isPreDespawning) {
             const aw = npc.autoWalk;
-            if (aw?.beforeDespawnPattern && aw.beforeDespawnPattern.length > 0) {
+            const alreadyDespawnDone = hasActiveGame() && getPlayerData().flags[`npc-beforeDespawn-done-${npc.id}`];
+            if (!alreadyDespawnDone && aw?.beforeDespawnPattern && aw.beforeDespawnPattern.length > 0) {
               st.isPreDespawning = true;
               st.beforeDespawnIdx = 0;
               st.beforeDespawnSteps = 0;
               st.beforeDespawnWaiting = false;
               st.beforeDespawnTimer = 0;
-            } else if (aw?.afterDespawnPattern && aw.afterDespawnPattern.length > 0) {
-              st.isDespawning = true;
-              st.despawnIdx = 0;
-              st.despawnSteps = 0;
-              st.despawnWaiting = false;
-              st.despawnTimer = 0;
             }
             st.wasPreviouslyVisible = false;
           }
 
-          // ── Skip truly invisible NPCs not in any despawn/beforeSpawn walk ──
-          const inDespawnPhase = st.isPreDespawning || st.isDespawning;
-          const inBeforeSpawn =
-            !isVis &&
-            !inDespawnPhase &&
-            !st.beforeSpawnDone &&
-            !!(npc.autoWalk?.beforeSpawnPattern && npc.autoWalk.beforeSpawnPattern.length > 0);
-          if (!isVis && !inDespawnPhase && !inBeforeSpawn) continue;
+          // ── Skip truly invisible NPCs not in beforeDespawn walk ──
+          if (!isVis && !st.isPreDespawning) continue;
 
           // ── Update walk animation (shared for all phases) ──
           if (st.moving) {
@@ -1681,30 +1661,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
           }
 
-          // ── beforeSpawn phase: NPC rendered + walking before it becomes visible ──
-          if (inBeforeSpawn) {
-            const aw = npc.autoWalk!;
-            if (!st.moving) {
-              const r = runPattern(
-                npc,
-                st,
-                aw.beforeSpawnPattern!,
-                aw.beforeSpawnLoop ?? false,
-                st.beforeSpawnIdx,
-                st.beforeSpawnSteps,
-                st.beforeSpawnWaiting,
-                st.beforeSpawnTimer,
-              );
-              st.beforeSpawnIdx = r.idx;
-              st.beforeSpawnSteps = r.steps;
-              st.beforeSpawnWaiting = r.waiting;
-              st.beforeSpawnTimer = r.timer;
-              if (r.done) st.beforeSpawnDone = true;
-            }
-            continue;
-          }
-
-          // ── beforeDespawn phase: plays when despawn conditions first met ──
+          // ── beforeDespawn phase: plays once when despawn conditions first met ──
           if (st.isPreDespawning) {
             const aw = npc.autoWalk;
             if (aw?.beforeDespawnPattern && aw.beforeDespawnPattern.length > 0 && !st.moving) {
@@ -1724,13 +1681,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               st.beforeDespawnTimer = r.timer;
               if (r.done) {
                 st.isPreDespawning = false;
-                // Chain to afterDespawn if configured
-                if (aw.afterDespawnPattern && aw.afterDespawnPattern.length > 0) {
-                  st.isDespawning = true;
-                  st.despawnIdx = 0;
-                  st.despawnSteps = 0;
-                  st.despawnWaiting = false;
-                  st.despawnTimer = 0;
+                // Persist so re-entering the map doesn't replay it
+                if (hasActiveGame()) {
+                  setFlag(getPlayerData(), `npc-beforeDespawn-done-${npc.id}`);
+                  autoSave();
                 }
               }
             } else if (!st.moving) {
@@ -1739,37 +1693,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             continue;
           }
 
-          // ── afterDespawn phase: walk away after becoming invisible ──
-          if (st.isDespawning) {
-            const aw = npc.autoWalk;
-            if (aw?.afterDespawnPattern && aw.afterDespawnPattern.length > 0 && !st.moving) {
-              const r = runPattern(
-                npc,
-                st,
-                aw.afterDespawnPattern,
-                aw.afterDespawnLoop ?? false,
-                st.despawnIdx,
-                st.despawnSteps,
-                st.despawnWaiting,
-                st.despawnTimer,
-              );
-              st.despawnIdx = r.idx;
-              st.despawnSteps = r.steps;
-              st.despawnWaiting = r.waiting;
-              st.despawnTimer = r.timer;
-              if (r.done) st.isDespawning = false;
-            } else if (!st.moving) {
-              st.isDespawning = false;
-            }
-            continue;
-          }
-
-          // ── NPC is visible — stop beforeSpawn if it was running ──
+          // ── NPC is visible — detect first-time spawn ──
           if (!st.wasPreviouslyVisible) {
             st.wasPreviouslyVisible = true;
-            st.beforeSpawnDone = true; // stop beforeSpawn once NPC becomes visible
             const aw = npc.autoWalk;
-            if (aw?.afterSpawnPattern && aw.afterSpawnPattern.length > 0) {
+            // Only trigger afterSpawn if not already done (persisted in flags)
+            const alreadySpawnDone = hasActiveGame() && getPlayerData().flags[`npc-afterSpawn-done-${npc.id}`];
+            if (!alreadySpawnDone && aw?.afterSpawnPattern && aw.afterSpawnPattern.length > 0) {
               st.afterSpawnDone = false;
               st.afterSpawnIdx = 0;
               st.afterSpawnSteps = 0;
@@ -1780,7 +1710,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
           }
 
-          // ── afterSpawn phase: play intro walk before main pattern ──
+          // ── afterSpawn phase: plays once when NPC first becomes visible ──
           if (!st.afterSpawnDone) {
             const aw = npc.autoWalk;
             if (aw?.afterSpawnPattern && aw.afterSpawnPattern.length > 0 && !st.moving) {
@@ -1798,7 +1728,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               st.afterSpawnSteps = r.steps;
               st.afterSpawnWaiting = r.waiting;
               st.afterSpawnTimer = r.timer;
-              if (r.done) st.afterSpawnDone = true;
+              if (r.done) {
+                st.afterSpawnDone = true;
+                // Persist so re-entering the map doesn't replay it
+                if (hasActiveGame()) {
+                  setFlag(getPlayerData(), `npc-afterSpawn-done-${npc.id}`);
+                  autoSave();
+                }
+              }
             } else if (!st.moving) {
               st.afterSpawnDone = true;
             }
@@ -1826,33 +1763,41 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 }
               }
             } else {
-              const dx = step.dir === 'right' ? 1 : step.dir === 'left' ? -1 : 0;
-              const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
-              const nextX = npc.x + dx;
-              const nextY = npc.y + dy;
-              const blocked =
-                (nextX === player.gridX && nextY === player.gridY) ||
-                npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party) ||
-                !tileMap ||
-                !tileMap.isWalkable(nextX, nextY);
-              if (!blocked && st.stepsTaken < step.steps) {
-                st.startPixelX = st.pixelX;
-                st.startPixelY = st.pixelY;
-                st.targetPixelX = nextX * TILE_SIZE;
-                st.targetPixelY = nextY * TILE_SIZE;
-                st.moveProgress = 0;
-                st.moving = true;
+              // steps=0: face direction only, no movement
+              if (step.steps === 0) {
                 st.facing = step.dir;
                 npc.facing = step.dir;
-                st.stepsTaken++;
-                if (st.stepsTaken >= step.steps) {
+                st.patternWaiting = true;
+                st.patternTimer = 0;
+              } else {
+                const dx = step.dir === 'right' ? 1 : step.dir === 'left' ? -1 : 0;
+                const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
+                const nextX = npc.x + dx;
+                const nextY = npc.y + dy;
+                const blocked =
+                  (nextX === player.gridX && nextY === player.gridY) ||
+                  npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party) ||
+                  !tileMap ||
+                  !tileMap.isWalkable(nextX, nextY);
+                if (!blocked && st.stepsTaken < step.steps) {
+                  st.startPixelX = st.pixelX;
+                  st.startPixelY = st.pixelY;
+                  st.targetPixelX = nextX * TILE_SIZE;
+                  st.targetPixelY = nextY * TILE_SIZE;
+                  st.moveProgress = 0;
+                  st.moving = true;
+                  st.facing = step.dir;
+                  npc.facing = step.dir;
+                  st.stepsTaken++;
+                  if (st.stepsTaken >= step.steps) {
+                    st.patternWaiting = true;
+                    st.patternTimer = 0;
+                  }
+                } else if (st.stepsTaken > 0) {
+                  // Blocked mid-step: wait delay then advance; if blocked at step 0, retry next frame
                   st.patternWaiting = true;
                   st.patternTimer = 0;
                 }
-              } else if (st.stepsTaken > 0) {
-                // Blocked mid-step: wait delay then advance; if blocked at step 0, retry next frame
-                st.patternWaiting = true;
-                st.patternTimer = 0;
               }
             }
           }
@@ -1877,9 +1822,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 if (status.eligible) {
                   activeTextBox = createTextBox([t('trainer.reencounter.ready')], isRTL());
                 } else if (status.reason === 'cooldown') {
-                  const cooldownMsg = status.minutesLeft != null
-                    ? t('trainer.reencounter.cooldownMin', { minutes: status.minutesLeft })
-                    : t('trainer.reencounter.cooldown', { hours: status.hoursLeft ?? 1 });
+                  const cooldownMsg =
+                    status.minutesLeft != null
+                      ? t('trainer.reencounter.cooldownMin', { minutes: status.minutesLeft })
+                      : t('trainer.reencounter.cooldown', { hours: status.hoursLeft ?? 1 });
                   activeTextBox = createTextBox([cooldownMsg], isRTL());
                 } else if (status.reason === 'max-reached') {
                   activeTextBox = createTextBox([t('trainer.reencounter.maxReached')], isRTL());
@@ -1893,22 +1839,23 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (npc.type === 'gate-guard' && hasActiveGame()) {
               const guard = npc as unknown as GateGuardData;
               turnNPCToPlayer(npc);
+              const npcName = npc.name ? getLocalizedName(npc.name) : undefined;
               if (isGateUnlocked(guard.gateId)) {
                 // Gate already passed — show passedDialogue or default
                 const passed =
                   guard.passedDialogue && guard.passedDialogue.length > 0
                     ? resolveDialogue(guard.passedDialogue, getLocale())
                     : [getLocale() === 'he' ? 'תעבור, בבקשה!' : 'You may pass!'];
-                activeTextBox = createTextBox(passed, isRTL());
+                activeTextBox = createTextBox(passed, isRTL(), npcName);
               } else {
                 // Gate locked — show blocking dialogue, then launch gate scene on dismiss
                 interactingNPC = npc;
-                activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL());
+                activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL(), npcName);
               }
               return;
             }
 
-            activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL());
+            activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL(), npc.name ? getLocalizedName(npc.name) : undefined);
             interactingNPC = npc;
             turnNPCToPlayer(npc);
             return;
@@ -2308,13 +2255,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         for (const npc of npcManager.getNPCs()) {
           const npcSt = getNpcState(npc);
           const _npcVis = isNPCVisible(npc, visFlags, _visPd?.party);
-          const _awCfg = npc.autoWalk;
-          // Render if visible, OR in any active despawn/pre-spawn phase that keeps NPC rendered
-          const _keepRendered =
-            npcSt.isPreDespawning ||
-            npcSt.isDespawning ||
-            (!_npcVis && !npcSt.beforeSpawnDone && !!_awCfg?.beforeSpawnPattern?.length);
-          if (!_npcVis && !_keepRendered) continue;
+          // Render if visible, OR in beforeDespawn phase (NPC still rendered while playing exit walk)
+          if (!_npcVis && !npcSt.isPreDespawning) continue;
 
           // Use runtime pixel position (supports auto-walk + trainer approach)
           let npcPixelX = npcSt.pixelX;
