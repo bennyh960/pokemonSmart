@@ -81,6 +81,8 @@ let _overlay: string | null = null; // persistent background color (null = world
 let _waitTimer = 0;                 // for 'wait' steps
 let _waitingInput = false;          // for 'wait-input' steps
 
+let _completionResolve: (() => void) | null = null;
+
 const CHARS_PER_SEC = 40;           // typewriter speed
 
 // ---------------------------------------------------------------------------
@@ -116,6 +118,17 @@ export function deactivateCutscene(): void {
   _fade = null;
   _overlay = null;
   _waitingInput = false;
+  _completionResolve?.();
+  _completionResolve = null;
+}
+
+/**
+ * Returns a Promise that resolves when the current (or next) cutscene finishes.
+ * Call this immediately before/after setting _pendingCutsceneId so the resolve
+ * is registered before deactivateCutscene() could theoretically fire.
+ */
+export function awaitCutsceneCompletion(): Promise<void> {
+  return new Promise(resolve => { _completionResolve = resolve; });
 }
 
 // ---------------------------------------------------------------------------

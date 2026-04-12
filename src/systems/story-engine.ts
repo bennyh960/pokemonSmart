@@ -16,6 +16,7 @@ import type { PlayerStoryState } from '../types/index.js';
 import { getPlayerData, hasActiveGame, autoSave } from './game-state.js';
 import { getStoryEvents } from '../data/story/events.js';
 import type { StoryTrigger, StoryCondition, StoryAction } from '../data/story/events.js';
+import { awaitCutsceneCompletion } from './cutscene-runner.js';
 
 let _stateMachine: StateMachine | null = null;
 
@@ -78,7 +79,7 @@ export function consumePendingCutscene(): string | null {
 // ---------------------------------------------------------------------------
 
 /** Fire a story trigger and execute all matching events. */
-export function fireStoryTrigger(trigger: StoryTrigger): void {
+export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
   if (!hasActiveGame()) return;
   const pd = getPlayerData();
 
@@ -105,12 +106,25 @@ export function fireStoryTrigger(trigger: StoryTrigger): void {
     // Check conditions
     if (event.conditions && !allConditionsMet(event.conditions, pd)) continue;
 
-    // Execute actions
+    // Execute actions — if a cutscene is queued, await its completion before
+    // marking the event done. This prevents the done-flag from being saved
+    // before the cutscene's own set-flag actions run.
+    let cutscenePromise: Promise<void> | null = null;
     for (const action of event.actions) {
-      executeAction(action, pd);
+      if (action.type === 'start-cutscene') {
+        _pendingCutsceneId = action.cutsceneId;
+        cutscenePromise = awaitCutsceneCompletion();
+      } else {
+        executeAction(action, pd);
+      }
     }
 
-    // Mark as done unless repeatable
+    if (cutscenePromise) {
+      autoSave(); // persist intermediate flags (e.g. VISITED_SUMVILLE) before waiting
+      await cutscenePromise;
+    }
+
+    // Mark as done unless repeatable — happens AFTER cutscene completes
     if (!event.repeatable) {
       pd.flags[doneFlag] = true;
     }
