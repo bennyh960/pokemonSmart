@@ -2009,6 +2009,14 @@ export function createBattleScene(
     return lines;
   }
 
+  // Families that create the effect at animation start (not at impact time)
+  const START_FX_FAMILIES = new Set([
+    'projectile', 'beam',
+    'dragon-aura', 'flamethrower', 'leaf-spray', 'water-flow',
+    'psychic-wave', 'rock-throw', 'rock-slide', 'fire-blast',
+    'giga-drain', 'lightning',
+  ]);
+
   function playAttackAnimation(
     attackerActor: 'player' | 'enemy',
     defenderActor: 'player' | 'enemy',
@@ -2017,11 +2025,13 @@ export function createBattleScene(
     hitTarget = true,
   ): void {
     const moveData = getMove(move.id);
+    const attackerPokemon = attackerActor === 'player' ? player : enemy;
     const profile = getAttackAnimationProfile({
       name: moveData?.name ?? { en: move.name, he: move.name },
       type: move.type,
       power: move.power,
       damageClass: moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status'),
+      speciesId: attackerPokemon.id,
     });
 
     const attackerStart = { ...animationDirector.getActorState(attackerActor) };
@@ -2037,9 +2047,9 @@ export function createBattleScene(
     animationDirector.play(
       sequenceStep(
         callStep(() => {
-          if (profile.family === 'projectile' || profile.family === 'beam') {
+          if (START_FX_FAMILIES.has(profile.family)) {
             attackFx = createAttackEffect({
-              kind: profile.family,
+              kind: profile.family as Parameters<typeof createAttackEffect>[0]['kind'],
               sourceX: source.x,
               sourceY: source.y,
               targetX: target.x,
@@ -2047,6 +2057,7 @@ export function createBattleScene(
               color: profile.color,
               accentColor: profile.accentColor,
               duration: profile.duration,
+              variant: profile.variant,
             });
           }
         }),

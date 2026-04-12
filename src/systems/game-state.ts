@@ -28,7 +28,7 @@ export function createNewPlayerData(): PlayerData {
     money: 3000,
     pokedex: {},
     items: {
-      'potion': 5,
+      potion: 5,
       'poke-ball': 10,
     },
     flags: {},

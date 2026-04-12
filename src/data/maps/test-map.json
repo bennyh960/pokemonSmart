@@ -1,8 +1,8 @@
 {
-  "id": "new-map",
+  "id": "test-map",
   "name": "New Map",
   "tileset": "overworld",
-  "width": 25,
+  "width": 26,
   "height": 20,
   "tileSize": 16,
   "spawn": {
@@ -12,27 +12,257 @@
   "transitions": [],
   "npcs": [],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": null
+,
   "tiles": [
-    ["f11","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f12","f13"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f14","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f15","f16"],
-    ["f17","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f18","f19"]
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g1","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2","c1g2"],
+    ["c1g2","c1g2","c1g2","c1lwe","c1ewr","c1lwe","c1ewr","c1lwe","c1ewr","c1lwe","c1ewr","c1lwe","c1ew","c1ewr","c1lwe","c1ewr","c1lwe","c1ewr","c1lwe","c1lwe","c1ewr","c1ewr","c1lwe","c1g2","c1g2","c1g2"]
+  ],
+  "objects": [
+    {
+      "key": "cw1tlc",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 8,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 12,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 16,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 18,
+      "y": 0
+    },
+    {
+      "key": "cw1t",
+      "x": 20,
+      "y": 0
+    },
+    {
+      "key": "cw1trc",
+      "x": 22,
+      "y": 0
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 10
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 12
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 11
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 13
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 14
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 15
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 16
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 17
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 18
+    },
+    {
+      "key": "cw1l",
+      "x": 0,
+      "y": 19
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 5
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 6
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 7
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 8
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 9
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 10
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 11
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 12
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 13
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 14
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 15
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 16
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 17
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 18
+    },
+    {
+      "key": "cw1r",
+      "x": 23,
+      "y": 19
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
   ]
 }

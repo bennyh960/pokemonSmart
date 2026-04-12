@@ -1226,7 +1226,7 @@
     "pp": 10,
     "effectChance": null,
     "mathDifficulty": 1,
-    "damageClass": "special",
+    "damageClass": "physical",
     "description": "Deals damage based on the user's stats, but always deals at least 40 HP. Type immunities still apply."
   },
   {
