@@ -32,6 +32,7 @@ import { registerCutscene } from '../../cutscenes.js';
 import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
+import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -106,6 +107,32 @@ registerGate({
   failurePenalty: { type: 'money', amount: 150 },
   reopenCooldownMs: 15 * 60 * 1000, // 15 min
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
+});
+registerGate({
+  id: 'gate-sumville-safari',
+  title: { en: 'Safari Zone Checkpoint', he: 'מחסום אזור הספארי' },
+  description: {
+    en: 'The path Sumville-Safari is locked. We must identify you are not NULL-X creators. Questions will determine if you can pass. Choose wisely.',
+    he: 'הדרך לסאמוויל אזור הספארי נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
+  },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['placeholder'],
+  totalQuestions: 15,
+  passThreshold: 13,
+  failurePenalty: { type: 'money', amount: 550 },
+  reopenCooldownMs: 15 * 60 * 1000, // 15 min
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_SAFARI_PASS }],
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 15,
+    rewardThreshold: 13,
+    bonusMultiplier: 2,
+    rewards: [
+      { type: 'money', amount: 1000 },
+      { itemId: 'rare-candy', type: 'item', amount: 2 },
+      { itemId: 'pokeball', type: 'item', amount: 15 },
+    ],
+  },
 });
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
 

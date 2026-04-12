@@ -5,33 +5,70 @@ import { hasFSAccess, saveToDirectory } from './fs-save.js';
 export function getKnownMapIds(): string[] {
   return [
     // Zeroville area
-    'zeroville', 'zeroville-house-tl', 'zeroville-house-tr', 'zeroville-house-br',
+    'zeroville',
+    'zeroville-house-tl',
+    'zeroville-house-tr',
+    'zeroville-house-br',
     // Act 0 — lab
-    'algorithma-lab', 'oak lab',
+    'algorithma-lab',
+    'oak lab',
     // Act 1 — Route 1 → Sumville → Route 2 → Minusburg
-    'route-1', 'route1-house', 'sumville', 'sumville-house-1', 'sumville-house-2',
-    'sumville-gym', 'sumville-remainder-house',
-    'route-2', 'minusburg',
+    'route-1',
+    'route1-house',
+    'sumville',
+    'sumville-house-1',
+    'sumville-house-2',
+    'sumvile-house I',
+    'sumville-gym',
+    'sumville-remainder-house',
+    'route-2',
+    'minusburg',
     // Act 2 — Route 3 → Multiplia → Route 4 → Dividia
-    'route-3', 'multiplia', 'fake-pokecenter',
-    'route-4', 'dividia', 'dividia-house-1', 'dividia-house-2', 'dividia-house-3', 'dividia-house-4',
+    'route-3',
+    'multiplia',
+    'fake-pokecenter',
+    'route-4',
+    'dividia',
+    'dividia-house-1',
+    'dividia-house-2',
+    'dividia-house-3',
+    'dividia-house-4',
     // Act 3 — Route 5 → Primore → Route 6 → Symmetrika
-    'route-5', 'primore',
-    'route-6', 'symmetrika', 'symmetrika-terminal',
+    'route-5',
+    'primore',
+    'route-6',
+    'symmetrika',
+    'symmetrika-terminal',
     // Act 4 — Route 7 → Integrala → Route 8 → Absoluta
-    'route-7', 'integrala',
-    'route-8', 'absoluta',
+    'route-7',
+    'integrala',
+    'route-8',
+    'absoluta',
     // Act 5 — NULL-X Tower
-    'nullx-tower', 'nullx-floor-6',
+    'nullx-tower',
+    'nullx-floor-6',
     // Caves
-    'dividia-cave', 'symmetrika-cave', 'mountain-cave',
+    'dividia-cave',
+    'symmetrika-cave',
+    'mountain-cave',
     // Interiors / shared
-    'mart-interior', 'pokecenter-2', 'pokecenter-mart-interior', 'house-3-i',
+    'mart-interior',
+    'pokecenter-2',
+    'pokecenter-mart-interior',
+    'house-3-i',
     // Side areas
-    'safari', 'deep-forest', 'mountain-pass', 'route-10',
+    'safari',
+    'deep-forest',
+    'mountain-pass',
+    'route-10',
     // Legacy / scratch
-    'algebria', 'divideburg', 'multitown', 'prime-city',
-    'fractalis', 'infinity-plateau', 'logica-heights',
+    'algebria',
+    'divideburg',
+    'multitown',
+    'prime-city',
+    'fractalis',
+    'infinity-plateau',
+    'logica-heights',
     'test-map',
   ].sort();
 }
@@ -65,18 +102,23 @@ export function exportMapJSON(data: TileMapData): string {
   let json = JSON.stringify(clone, null, 2);
 
   // Insert tiles array with compact rows
-  const tileRows = tiles.map(row => '    ' + JSON.stringify(row));
+  const tileRows = tiles.map((row) => '    ' + JSON.stringify(row));
   const tilesStr = '  "tiles": [\n' + tileRows.join(',\n') + '\n  ]';
   json = json.slice(0, -1) + ',\n' + tilesStr;
 
   // Insert placed objects
   if (objects && objects.length > 0) {
-    json += ',\n  "objects": ' + JSON.stringify(objects, null, 2).split('\n').map((l, i) => i === 0 ? l : '  ' + l).join('\n');
+    json +=
+      ',\n  "objects": ' +
+      JSON.stringify(objects, null, 2)
+        .split('\n')
+        .map((l, i) => (i === 0 ? l : '  ' + l))
+        .join('\n');
   }
 
   // Legacy objectLayer (deprecated)
   if (objLayer) {
-    const objRows = objLayer.map(row => '    ' + JSON.stringify(row));
+    const objRows = objLayer.map((row) => '    ' + JSON.stringify(row));
     json += ',\n  "objectLayer": [\n' + objRows.join(',\n') + '\n  ]';
   }
 

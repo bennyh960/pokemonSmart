@@ -36,14 +36,71 @@
         },
         {
           "en": "My prize possession? A rare Eevee from Sumville's early days.",
-          "he": "ידעת שיש פוקימונים מסוימים שמתפתחים רק ע\"י שמחה?"
+          "he": "ככל שהפוקימון שלך יאכל בריא יותר - הוא יהיה חזק יותר!"
         },
         {
           "en": "If you fill your Pokedex, come show me — I might have a reward!",
-          "he": ""
+          "he": "במהלך קרב תוכל גם לתת לפוקימון שלך בוסטר!"
+        },
+        {
+          "en": "",
+          "he": "בוסטר זה פריט שמעצים את הכח של הפוקימון באמצע קרב."
+        },
+        {
+          "en": "",
+          "he": "תוכל לקנות בחנות , זה לא כ\"כ יקר."
+        },
+        {
+          "en": "",
+          "he": "X-ATK למשל - מחזק את ההתקפה"
+        },
+        {
+          "en": "",
+          "he": "X-DEF - מחזק את ההגנה"
+        },
+        {
+          "en": "",
+          "he": "X-SPEED - את המהירות"
+        },
+        {
+          "en": "",
+          "he": "ויש עוד ."
+        },
+        {
+          "en": "",
+          "he": "פשוט במהלך קרב , אם אתה מתקשה לנצח , תשתמש בהם כל עוד אתה יכול."
+        },
+        {
+          "en": "",
+          "he": "טיפ נוסף - אי אפשר להגביר עוצמה יותר מ 4 פעמים! אז אל תבזבז סתם"
         }
       ],
-      "spriteType": "mosh"
+      "spriteType": "mosh",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "x-attack",
+            "quantity": 1
+          },
+          {
+            "itemId": "x-defense",
+            "quantity": 1
+          },
+          {
+            "itemId": "x-sp-atk",
+            "quantity": 1
+          },
+          {
+            "itemId": "x-speed",
+            "quantity": 1
+          },
+          {
+            "itemId": "x-accuracy",
+            "quantity": 1
+          }
+        ]
+      }
     },
     {
       "id": "collector-kid",
@@ -74,96 +131,17 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Sumville",
+  "area": "Sumville"
+,
   "tiles": [
-    [
-      "shelf1",
-      "pic2",
-      "wall",
-      "wall",
-      "pic1",
-      "wall",
-      "books",
-      "shelf1",
-      "pic2"
-    ],
-    [
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "ca1tl",
-      "ca1t",
-      "ca1tr",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "ca1l",
-      "ca1c",
-      "ca1r",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "ca1bl",
-      "ca1b",
-      "ca1br",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1"
-    ]
+    ["shelf1","pic2","wall","wall","pic1","wall","books","shelf1","pic2"],
+    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","ca1tl","ca1t","ca1tr","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","ca1l","ca1c","ca1r","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","ca1bl","ca1b","ca1br","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"]
   ],
   "objects": [
     {

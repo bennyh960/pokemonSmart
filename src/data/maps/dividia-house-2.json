@@ -75,88 +75,17 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Dividia",
+  "area": "Dividia"
+,
   "tiles": [
-    [
-      "shelf1",
-      "wall",
-      "tv1",
-      "wall",
-      "fh1",
-      "fh1",
-      "books",
-      "shelf1"
-    ],
-    [
-      "wall",
-      "wall",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "wall",
-      "wall"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "ca1tl",
-      "ca1t",
-      "ca1tr",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "ca1l",
-      "ca1c",
-      "ca1r",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "ca1bl",
-      "ca1b",
-      "ca1br",
-      "fh1",
-      "fh1",
-      "fh1"
-    ],
-    [
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1",
-      "fh1"
-    ]
+    ["shelf1","wall","tv1","wall","fh1","fh1","books","shelf1"],
+    ["wall","wall","fh1","fh1","fh1","fh1","wall","wall"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","ca1tl","ca1tr","fh1","fh1","fh1"]
   ],
   "objects": [
     {
@@ -178,11 +107,6 @@
       "key": "ch1",
       "x": 0,
       "y": 2
-    },
-    {
-      "key": "ctc",
-      "x": 3,
-      "y": 5
     },
     {
       "key": "chair",

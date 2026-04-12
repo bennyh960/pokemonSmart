@@ -36,7 +36,7 @@ export function gradeFromBirthYear(birthYear: number): GradeId {
 // ─── Default session config ───────────────────────────────────────────────────
 
 /** Shared base config — override per location as needed. */
-export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired' | 'timeLimitPerQuestion'> = {
+export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'> = {
   birthYear: PLAYER_BIRTH_YEAR,
   rewardThreshold: 0.8, // ≥ 80% correct → earn rewards
   penaltyThreshold: 0.5, // < 50% correct → money penalty
@@ -44,6 +44,7 @@ export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'
   rewards: [{ type: 'money', amount: 500 }],
   bonusEnabled: true,
   bonusMultiplier: 3,
+  timeLimitPerQuestion: 0, // default to no time limit (override per location)
 };
 
 // ─── Per-service configs ──────────────────────────────────────────────────────
