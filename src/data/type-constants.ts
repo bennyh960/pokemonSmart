@@ -25,24 +25,54 @@ export interface TypeBadgeStyle {
 }
 
 export const TYPE_BADGE: Record<PokemonType, TypeBadgeStyle> = {
-  normal:   { en: 'Normal',   he: 'רגיל',   color: '#a8a878', bg: 'rgba(168,168,120,0.15)', border: 'rgba(168,168,120,0.25)' },
-  fire:     { en: 'Fire',     he: 'אש',     color: '#f08030', bg: 'rgba(240,128,48,0.12)',  border: 'rgba(240,128,48,0.2)' },
-  water:    { en: 'Water',    he: 'מים',    color: '#6890f0', bg: 'rgba(104,144,240,0.12)', border: 'rgba(104,144,240,0.2)' },
-  grass:    { en: 'Grass',    he: 'דשא',    color: '#78c850', bg: 'rgba(120,200,80,0.12)',  border: 'rgba(120,200,80,0.2)' },
-  electric: { en: 'Electric', he: 'חשמל',   color: '#f8d030', bg: 'rgba(248,208,48,0.12)',  border: 'rgba(248,208,48,0.2)' },
-  ice:      { en: 'Ice',      he: 'קרח',    color: '#98d8d8', bg: 'rgba(152,216,216,0.12)', border: 'rgba(152,216,216,0.2)' },
-  fighting: { en: 'Fighting', he: 'לחימה',  color: '#c03028', bg: 'rgba(192,48,40,0.12)',   border: 'rgba(192,48,40,0.2)' },
-  poison:   { en: 'Poison',   he: 'רעל',    color: '#a040a0', bg: 'rgba(160,64,160,0.12)',  border: 'rgba(160,64,160,0.2)' },
-  ground:   { en: 'Ground',   he: 'אדמה',   color: '#e0c068', bg: 'rgba(224,192,104,0.12)', border: 'rgba(224,192,104,0.2)' },
-  flying:   { en: 'Flying',   he: 'תעופה',  color: '#a890f0', bg: 'rgba(168,144,240,0.12)', border: 'rgba(168,144,240,0.2)' },
-  psychic:  { en: 'Psychic',  he: 'פסיכי',  color: '#f85888', bg: 'rgba(248,88,136,0.12)',  border: 'rgba(248,88,136,0.2)' },
-  bug:      { en: 'Bug',      he: 'חרק',    color: '#a8b820', bg: 'rgba(168,184,32,0.12)',  border: 'rgba(168,184,32,0.2)' },
-  rock:     { en: 'Rock',     he: 'סלע',    color: '#b8a038', bg: 'rgba(184,160,56,0.12)',  border: 'rgba(184,160,56,0.2)' },
-  ghost:    { en: 'Ghost',    he: 'רוח',    color: '#705898', bg: 'rgba(112,88,152,0.12)',  border: 'rgba(112,88,152,0.2)' },
-  dragon:   { en: 'Dragon',   he: 'דרקון',  color: '#7038f8', bg: 'rgba(112,56,248,0.12)',  border: 'rgba(112,56,248,0.2)' },
-  dark:     { en: 'Dark',     he: 'חושך',   color: '#705848', bg: 'rgba(112,88,72,0.12)',   border: 'rgba(112,88,72,0.2)' },
-  steel:    { en: 'Steel',    he: 'פלדה',   color: '#b8b8d0', bg: 'rgba(184,184,208,0.12)', border: 'rgba(184,184,208,0.2)' },
-  glitch:   { en: 'Glitch',   he: 'גליץ\'', color: '#00ff88', bg: 'rgba(0,255,136,0.12)',   border: 'rgba(0,255,136,0.2)' },
+  normal: {
+    en: 'Normal',
+    he: 'רגיל',
+    color: '#a8a878',
+    bg: 'rgba(168,168,120,0.15)',
+    border: 'rgba(168,168,120,0.25)',
+  },
+  fire: { en: 'Fire', he: 'אש', color: '#f08030', bg: 'rgba(240,128,48,0.12)', border: 'rgba(240,128,48,0.2)' },
+  water: { en: 'Water', he: 'מים', color: '#6890f0', bg: 'rgba(104,144,240,0.12)', border: 'rgba(104,144,240,0.2)' },
+  grass: { en: 'Grass', he: 'דשא', color: '#78c850', bg: 'rgba(120,200,80,0.12)', border: 'rgba(120,200,80,0.2)' },
+  electric: {
+    en: 'Electric',
+    he: 'חשמל',
+    color: '#f8d030',
+    bg: 'rgba(248,208,48,0.12)',
+    border: 'rgba(248,208,48,0.2)',
+  },
+  ice: { en: 'Ice', he: 'קרח', color: '#98d8d8', bg: 'rgba(152,216,216,0.12)', border: 'rgba(152,216,216,0.2)' },
+  fighting: {
+    en: 'Fighting',
+    he: 'לחימה',
+    color: '#c03028',
+    bg: 'rgba(192,48,40,0.12)',
+    border: 'rgba(192,48,40,0.2)',
+  },
+  poison: { en: 'Poison', he: 'רעל', color: '#a040a0', bg: 'rgba(160,64,160,0.12)', border: 'rgba(160,64,160,0.2)' },
+  ground: { en: 'Ground', he: 'אדמה', color: '#e0c068', bg: 'rgba(224,192,104,0.12)', border: 'rgba(224,192,104,0.2)' },
+  flying: {
+    en: 'Flying',
+    he: 'תעופה',
+    color: '#a890f0',
+    bg: 'rgba(168,144,240,0.12)',
+    border: 'rgba(168,144,240,0.2)',
+  },
+  psychic: {
+    en: 'Psychic',
+    he: 'על חושי',
+    color: '#f85888',
+    bg: 'rgba(248,88,136,0.12)',
+    border: 'rgba(248,88,136,0.2)',
+  },
+  bug: { en: 'Bug', he: 'חרק', color: '#a8b820', bg: 'rgba(168,184,32,0.12)', border: 'rgba(168,184,32,0.2)' },
+  rock: { en: 'Rock', he: 'סלע', color: '#b8a038', bg: 'rgba(184,160,56,0.12)', border: 'rgba(184,160,56,0.2)' },
+  ghost: { en: 'Ghost', he: 'רוח', color: '#705898', bg: 'rgba(112,88,152,0.12)', border: 'rgba(112,88,152,0.2)' },
+  dragon: { en: 'Dragon', he: 'דרקון', color: '#7038f8', bg: 'rgba(112,56,248,0.12)', border: 'rgba(112,56,248,0.2)' },
+  dark: { en: 'Dark', he: 'חושך', color: '#705848', bg: 'rgba(112,88,72,0.12)', border: 'rgba(112,88,72,0.2)' },
+  steel: { en: 'Steel', he: 'פלדה', color: '#b8b8d0', bg: 'rgba(184,184,208,0.12)', border: 'rgba(184,184,208,0.2)' },
+  glitch: { en: 'Glitch', he: "גליץ'", color: '#00ff88', bg: 'rgba(0,255,136,0.12)', border: 'rgba(0,255,136,0.2)' },
 };
 
 // ─── Convenience helpers (derived from TYPE_BADGE) ─────────────────
@@ -64,8 +94,8 @@ export function getTypeColor(type: PokemonType): string {
 /** Labels and symbols for move damage classes. */
 export const DAMAGE_CLASS_LABELS: Record<string, { en: string; he: string; symbol: string; color: string }> = {
   physical: { en: 'Physical', he: 'פיזי', symbol: '⚔', color: '#f08030' },
-  special:  { en: 'Special',  he: 'מיוחד', symbol: '◆', color: '#6890f0' },
-  status:   { en: 'Status',   he: 'סטטוס', symbol: '☆', color: '#a040a0' },
+  special: { en: 'Special', he: 'מיוחד', symbol: '◆', color: '#6890f0' },
+  status: { en: 'Status', he: 'סטטוס', symbol: '☆', color: '#a040a0' },
 };
 
 /** Returns the localized label, symbol, and color for a move damage class. */

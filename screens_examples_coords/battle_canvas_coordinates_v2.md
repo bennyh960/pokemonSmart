@@ -37,15 +37,15 @@
 
 ## ZONE MAP
 
-| Zone            | y start | y end | height | notes                          |
-|-----------------|--------:|------:|-------:|--------------------------------|
-| Battle field    |       0 |    93 |     84 | Background + sprites + info UI |
-| Divider         |      94 |    105 |      1 | #1a4a30                        |
-| Prompt bar      |      95 |    102 |      8 | Prompt + HP value              |
-| Action tabs     |      104 |   111 |      8 | 4 mode tabs (gap y=93 1px)     |
-| Gap             |     112 |   115 |      4 | Breathing room                 |
-| Move grid       |     116 |   157 |     42 | 2×2 grid (20h + 2gap + 20h)   |
-| Spacer          |     158 |   159 |      2 | —                              |
+| Zone         | y start | y end | height | notes                          |
+| ------------ | ------: | ----: | -----: | ------------------------------ |
+| Battle field |       0 |    93 |     84 | Background + sprites + info UI |
+| Divider      |      94 |   105 |      1 | #1a4a30                        |
+| Prompt bar   |      95 |   102 |      8 | Prompt + HP value              |
+| Action tabs  |     104 |   111 |      8 | 4 mode tabs (gap y=93 1px)     |
+| Gap          |     112 |   115 |      4 | Breathing room                 |
+| Move grid    |     116 |   157 |     42 | 2×2 grid (20h + 2gap + 20h)    |
+| Spacer       |     158 |   159 |      2 | —                              |
 
 ---
 
@@ -56,41 +56,41 @@
 Draw imported background image at `(0, 0, 240, 84)`.
 Fallback gradient layers:
 
-| Layer        |   x |  y |   w |  h | gradient                                              |
-|--------------|----:|---:|----:|---:|-------------------------------------------------------|
-| Sky          |   0 |  0 | 240 | 34 | linear(180deg, #4a7a5a → #5a9a6a → #7aaa70)          |
-| Ground       |   0 | 34 | 240 | 50 | linear(180deg, #8ab87a → #c8d8a0 → #d8c890 → #b8a870)|
-| Ground line  |   0 | 52 | 240 |  1 | rgba(100,80,50,0.12)                                  |
-| Ground line  |   0 | 60 | 240 |  1 | rgba(100,80,50,0.08)                                  |
-| Ground line  |   0 | 68 | 240 |  1 | rgba(100,80,50,0.06)                                  |
+| Layer       |   x |   y |   w |   h | gradient                                              |
+| ----------- | --: | --: | --: | --: | ----------------------------------------------------- |
+| Sky         |   0 |   0 | 240 |  34 | linear(180deg, #4a7a5a → #5a9a6a → #7aaa70)           |
+| Ground      |   0 |  34 | 240 |  50 | linear(180deg, #8ab87a → #c8d8a0 → #d8c890 → #b8a870) |
+| Ground line |   0 |  52 | 240 |   1 | rgba(100,80,50,0.12)                                  |
+| Ground line |   0 |  60 | 240 |   1 | rgba(100,80,50,0.08)                                  |
+| Ground line |   0 |  68 | 240 |   1 | rgba(100,80,50,0.06)                                  |
 
 ### Turn Badge
 
-| Element   |   x |  y |  w |  h | fs | color   | bgColor            | borderColor              |
-|-----------|----:|---:|---:|---:|---:|---------|--------------------|--------------------------| 
-| Badge bg  | 102 |  2 | 36 |  8 |  — | —       | rgba(10,20,14,0.8) | rgba(77,255,180,0.25)    |
-| Badge txt | 102 |  3 | 36 |  — |  6 | #4dffb4 | —                  | —                        |
+| Element   |   x |   y |   w |   h |  fs | color   | bgColor            | borderColor           |
+| --------- | --: | --: | --: | --: | --: | ------- | ------------------ | --------------------- |
+| Badge bg  | 102 |   2 |  36 |   8 |   — | —       | rgba(10,20,14,0.8) | rgba(77,255,180,0.25) |
+| Badge txt | 102 |   3 |  36 |   — |   6 | #4dffb4 | —                  | —                     |
 
 Text: `"תור " + turnNumber` — turnNumber in `#ffffff`
 
 ### Sprite Placeholders
 
-| Sprite   |   x |  y |   w |  h | notes                                |
-|----------|----:|---:|----:|---:|--------------------------------------|
-| Opponent | 150 | 16 |  46 | 46 | Draw opponent front sprite here      |
-| Player   |  18 | 24 |  56 | 56 | Draw player back sprite here         |
+| Sprite   |   x |   y |   w |   h | notes                           |
+| -------- | --: | --: | --: | --: | ------------------------------- |
+| Opponent | 150 |  16 |  46 |  46 | Draw opponent front sprite here |
+| Player   |  18 |  24 |  56 |  56 | Draw player back sprite here    |
 
 ### Opponent Info Bar (fixed h=18, no status)
 
-| Element      |   x |  y |   w |  h | fs | color   | text       | align  |
-|--------------|----:|---:|----:|---:|---:|---------|------------|--------|
-| Bar bg       | 136 | 12 | 100 | 18 |  — | —       | —          | —      |
-| Name         | 188 | 13 |  46 |  — |  6 | #ffffff | (dynamic)  | right  |
-| Level        | 140 | 14 |  — |  — |  5 | #667766 | Lv.XX      | left   |
-| HP label     | 228 | 21 |  — |  — |  5 | #445544 | HP         | right  |
-| HP bar track | 140 | 22 |  42 |  3 |  — | #1a3a2a | —          | —      |
-| HP bar fill  | 140 | 22 |   * |  3 |  — | (by %)  | —          | —      |
-| HP pct       | 196 | 21 |  — |  — |  5 | #667766 | XX%        | left   |
+| Element      |   x |   y |   w |   h |  fs | color   | text      | align |
+| ------------ | --: | --: | --: | --: | --: | ------- | --------- | ----- |
+| Bar bg       | 136 |  12 | 100 |  18 |   — | —       | —         | —     |
+| Name         | 188 |  13 |  46 |   — |   6 | #ffffff | (dynamic) | right |
+| Level        | 140 |  14 |   — |   — |   5 | #667766 | Lv.XX     | left  |
+| HP label     | 228 |  21 |   — |   — |   5 | #445544 | HP        | right |
+| HP bar track | 140 |  22 |  42 |   3 |   — | #1a3a2a | —         | —     |
+| HP bar fill  | 140 |  22 |  \* |   3 |   — | (by %)  | —         | —     |
+| HP pct       | 196 |  21 |   — |   — |   5 | #667766 | XX%       | left  |
 
 `oppHpFillW = Math.round((oppHP / oppMaxHP) * 42)`
 
@@ -98,37 +98,38 @@ Text: `"תור " + turnNumber` — turnNumber in `#ffffff`
 
 The player bar expands vertically to fit status effects:
 
-| Status count | Bar height | Bar y  | Notes                      |
-|-------------:|-----------:|-------:|----------------------------|
-|            0 |         18 |     62 | Name + HP only             |
-|          1-2 |         24 |     58 | + 1 row of status pills    |
-|          3-4 |         30 |     54 | + 2 rows of status pills   |
+| Status count | Bar height | Bar y | Notes                    |
+| -----------: | ---------: | ----: | ------------------------ |
+|            0 |         18 |    62 | Name + HP only           |
+|          1-2 |         24 |    58 | + 1 row of status pills  |
+|          3-4 |         30 |    54 | + 2 rows of status pills |
 
 **Formula:** `barH = 18 + Math.ceil(statusCount / 2) * 6`
 **Bar y:** `barY = 82 - barH` (anchored to bottom of field at y=82)
 
 ### Player Info Bar Elements (relative to barY)
 
-| Element      | x   | relY |   w | fs | color   | text       | align  |
-|--------------|----:|-----:|----:|---:|---------|------------|--------|
-| Bar bg       |   4 |    0 | 114 |  — | —       | —          | —      |
-| Name         |  70 |   +1 |  46 |  6 | #ffffff | (dynamic)  | right  |
-| Level        |   8 |   +2 |  — |  5 | #667766 | Lv.XX      | left   |
-| HP label     | 108 |   +8 |  — |  5 | #445544 | HP         | right  |
-| HP bar track |   8 |  +10 |  54 |  3 | #1a3a2a | —          | —      |
-| HP bar fill  |   8 |  +10 |   * |  3 | (by %)  | —          | —      |
-| HP val text  |  66 |   +8 |  — |  5 | #aaccaa | 156/273    | left   |
+| Element      |   x | relY |   w |  fs | color   | text      | align |
+| ------------ | --: | ---: | --: | --: | ------- | --------- | ----- |
+| Bar bg       |   4 |    0 | 114 |   — | —       | —         | —     |
+| Name         |  70 |   +1 |  46 |   6 | #ffffff | (dynamic) | right |
+| Level        |   8 |   +2 |   — |   5 | #667766 | Lv.XX     | left  |
+| HP label     | 108 |   +8 |   — |   5 | #445544 | HP        | right |
+| HP bar track |   8 |  +10 |  54 |   3 | #1a3a2a | —         | —     |
+| HP bar fill  |   8 |  +10 |  \* |   3 | (by %)  | —         | —     |
+| HP val text  |  66 |   +8 |   — |   5 | #aaccaa | 156/273   | left  |
 
 `playerHpFillW = Math.round((playerHP / playerMaxHP) * 54)`
 
 ### Status Pills (inside player bar, relative to barY)
 
-| Row | relY  | Max pills | Layout                            |
-|----:|------:|----------:|-----------------------------------|
-|   0 | +16   |         2 | Right-to-left from x=114          |
-|   1 | +22   |         2 | Right-to-left from x=114          |
+| Row | relY | Max pills | Layout                   |
+| --: | ---: | --------: | ------------------------ |
+|   0 |  +16 |         2 | Right-to-left from x=114 |
+|   1 |  +22 |         2 | Right-to-left from x=114 |
 
 Each pill: w=30, h=6, gap=4 between pills.
+
 - Pill 0: x = barX + barW - 4 - 30 = 84
 - Pill 1: x = 84 - 4 - 28 = 52
 - Pill 2 (row 1): x = 84
@@ -136,23 +137,23 @@ Each pill: w=30, h=6, gap=4 between pills.
 
 ### Status Pill Colors
 
-| Status  | Hebrew | bgColor                     | borderColor                    | textColor | fs |
-|---------|--------|-----------------------------|--------------------------------|-----------|---:|
-| poison  | הרעלה  | rgba(160,64,160,0.15)       | rgba(160,64,160,0.25)          | #c070c0   |  4 |
-| burn    | שריפה  | rgba(240,128,48,0.15)       | rgba(240,128,48,0.25)          | #f09050   |  4 |
-| paralyze| שיתוק  | rgba(248,208,48,0.15)       | rgba(248,208,48,0.25)          | #d8b830   |  4 |
-| sleep   | שינה   | rgba(100,100,140,0.15)      | rgba(100,100,140,0.25)         | #8888b0   |  4 |
-| freeze  | קפאון  | rgba(152,216,216,0.15)      | rgba(152,216,216,0.25)         | #80c8c8   |  4 |
-| confuse | מבולבל | rgba(248,88,136,0.15)       | rgba(248,88,136,0.25)          | #f07090   |  4 |
-| boost   | (var)  | rgba(77,255,180,0.1)        | rgba(77,255,180,0.2)           | #4dffb4   |  4 |
-| debuff  | (var)  | rgba(232,88,88,0.1)         | rgba(232,88,88,0.2)            | #e85858   |  4 |
+| Status   | Hebrew | bgColor                | borderColor            | textColor |  fs |
+| -------- | ------ | ---------------------- | ---------------------- | --------- | --: |
+| poison   | הרעלה  | rgba(160,64,160,0.15)  | rgba(160,64,160,0.25)  | #c070c0   |   4 |
+| burn     | שריפה  | rgba(240,128,48,0.15)  | rgba(240,128,48,0.25)  | #f09050   |   4 |
+| paralyze | שיתוק  | rgba(248,208,48,0.15)  | rgba(248,208,48,0.25)  | #d8b830   |   4 |
+| sleep    | שינה   | rgba(100,100,140,0.15) | rgba(100,100,140,0.25) | #8888b0   |   4 |
+| freeze   | קפאון  | rgba(152,216,216,0.15) | rgba(152,216,216,0.25) | #80c8c8   |   4 |
+| confuse  | מבולבל | rgba(248,88,136,0.15)  | rgba(248,88,136,0.25)  | #f07090   |   4 |
+| boost    | (var)  | rgba(77,255,180,0.1)   | rgba(77,255,180,0.2)   | #4dffb4   |   4 |
+| debuff   | (var)  | rgba(232,88,88,0.1)    | rgba(232,88,88,0.2)    | #e85858   |   4 |
 
 ### Party Ball Indicators
 
-| Set      | y  | x positions                    | size | gap |
-|----------|---:|--------------------------------|-----:|----:|
-| Player   | 79 | 4, 10, 16, 22, 28, 34         |  4×4 |   6 |
-| Opponent | 79 | 208, 214, 220, 226, 232        |  4×4 |   6 |
+| Set      |   y | x positions             | size | gap |
+| -------- | --: | ----------------------- | ---: | --: |
+| Player   |  79 | 4, 10, 16, 22, 28, 34   |  4×4 |   6 |
+| Opponent |  79 | 208, 214, 220, 226, 232 |  4×4 |   6 |
 
 Ball states: alive=#20d860/#2a8a4a, fainted=#d84040/#8a2a2a, empty=rgba(255,255,255,0.05)/rgba(255,255,255,0.08)
 
@@ -160,33 +161,33 @@ Ball states: alive=#20d860/#2a8a4a, fainted=#d84040/#8a2a2a, empty=rgba(255,255,
 
 ## PROMPT BAR (y=85, h=8)
 
-| Element      |   x |  y |   w | fs | color   | bgColor | text              | align  |
-|--------------|----:|---:|----:|---:|---------|---------|-------------------|--------|
-| Bar bg       |   0 | 85 | 240 |  8 | —       | #0a1a10 | —                 | —      |
-| Prompt text  | 176 | 86 |  60 |  6 | #aaccaa | —       | ?מה יעשה (name)   | right  |
-| Prompt name  |  — |  — |  — |  6 | #ffffff | —       | (dynamic)         | —      |
-| HP display   |  44 | 87 |  — |  5 | #667766 | —       | HP XXX/XXX        | left   |
+| Element     |   x |   y |   w |  fs | color   | bgColor | text            | align |
+| ----------- | --: | --: | --: | --: | ------- | ------- | --------------- | ----- |
+| Bar bg      |   0 |  85 | 240 |   8 | —       | #0a1a10 | —               | —     |
+| Prompt text | 176 |  86 |  60 |   6 | #aaccaa | —       | ?מה יעשה (name) | right |
+| Prompt name |   — |   — |   — |   6 | #ffffff | —       | (dynamic)       | —     |
+| HP display  |  44 |  87 |   — |   5 | #667766 | —       | HP XXX/XXX      | left  |
 
 ---
 
 ## ACTION TABS (y=94, h=8)
 
-| Element      |   x |  y |   w |  h | fs | color   | notes                              |
-|--------------|----:|---:|----:|---:|---:|---------|------------------------------------|
-| Tab bar bg   |   0 | 94 | 240 |  8 |  — | —       | bg=#0d1a14, border-bottom #1a3a2a  |
-| Tab: התקפה   | 188 | 94 |  48 |  8 |  6 | #20d860 | active: border-bottom 2px          |
-| Tab: החלפה   | 136 | 95 |  48 |  — |  6 | #445544 | inactive                           |
-| Tab: תיק     |  92 | 95 |  40 |  — |  6 | #445544 | inactive                           |
-| Tab: בריחה   |  48 | 95 |  40 |  — |  6 | #445544 | inactive                           |
+| Element    |   x |   y |   w |   h |  fs | color   | notes                             |
+| ---------- | --: | --: | --: | --: | --: | ------- | --------------------------------- |
+| Tab bar bg |   0 |  94 | 240 |   8 |   — | —       | bg=#0d1a14, border-bottom #1a3a2a |
+| Tab: התקפה | 188 |  94 |  48 |   8 |   6 | #20d860 | active: border-bottom 2px         |
+| Tab: החלפה | 136 |  95 |  48 |   — |   6 | #445544 | inactive                          |
+| Tab: תיק   |  92 |  95 |  40 |   — |   6 | #445544 | inactive                          |
+| Tab: בריחה |  48 |  95 |  40 |   — |   6 | #445544 | inactive                          |
 
 ### Tab Data
 
-| Idx | id     | text   |   x |  w | activeColor |
-|----:|--------|--------|----:|---:|-------------|
-|   0 | fight  | התקפה  | 188 | 48 | #20d860     |
-|   1 | switch | החלפה  | 136 | 48 | #5080ff     |
-|   2 | bag    | תיק    |  92 | 40 | #f8d030     |
-|   3 | run    | בריחה  |  48 | 40 | #e85858     |
+| Idx | id     | text  |   x |   w | activeColor |
+| --: | ------ | ----- | --: | --: | ----------- |
+|   0 | fight  | התקפה | 188 |  48 | #20d860     |
+|   1 | switch | החלפה | 136 |  48 | #5080ff     |
+|   2 | bag    | תיק   |  92 |  40 | #f8d030     |
+|   3 | run    | בריחה |  48 |  40 | #e85858     |
 
 ---
 
@@ -217,24 +218,24 @@ Row 1 (bottom): y = 128
 └──────────────────────────────────────────┘ cellY+20
 ```
 
-| Sub-element    | Position     | relX     | relY | w   | fs | color   | align  |
-|----------------|-------------|----------|-----:|----:|---:|---------|--------|
-| Cell bg        | full        | 0        |    0 | 114 |  — | —       | —      |
-| Select bar     | left edge   | 0        |    0 |   2 |  — | #20d860 | —      |
-| Type badge bg  | TOP-LEFT    | +4       |   +2 |  22 |  — | (type)  | —      |
-| Type badge txt | TOP-LEFT    | +4       |   +2 |  22 |  5 | (type)  | center |
-| Move name      | TOP-RIGHT   | +30      |   +2 |  80 |  7 | #ffffff | right  |
-| Power text     | BOTTOM-LEFT | +4       |  +12 |  — |  5 | #445544 | left   |
-| PP text        | BOTTOM-RIGHT| +cellW-4 |  +12 |  22 |  5 | #667766 | right  |
-| PP bar track   | BOTTOM      | +cellW-38|  +17 |  38 |  — | #1a3a2a | —      |
-| PP bar fill    | BOTTOM      | +cellW-38|  +17 |   * |  — | #20a0d8 | —      |
+| Sub-element    | Position     | relX      | relY |   w |  fs | color   | align  |
+| -------------- | ------------ | --------- | ---: | --: | --: | ------- | ------ |
+| Cell bg        | full         | 0         |    0 | 114 |   — | —       | —      |
+| Select bar     | left edge    | 0         |    0 |   2 |   — | #20d860 | —      |
+| Type badge bg  | TOP-LEFT     | +4        |   +2 |  22 |   — | (type)  | —      |
+| Type badge txt | TOP-LEFT     | +4        |   +2 |  22 |   5 | (type)  | center |
+| Move name      | TOP-RIGHT    | +30       |   +2 |  80 |   7 | #ffffff | right  |
+| Power text     | BOTTOM-LEFT  | +4        |  +12 |   — |   5 | #445544 | left   |
+| PP text        | BOTTOM-RIGHT | +cellW-4  |  +12 |  22 |   5 | #667766 | right  |
+| PP bar track   | BOTTOM       | +cellW-38 |  +17 |  38 |   — | #1a3a2a | —      |
+| PP bar fill    | BOTTOM       | +cellW-38 |  +17 |  \* |   — | #20a0d8 | —      |
 
 PP bar: h=1, `fillW = Math.round((ppCur / ppMax) * 38)`
 
 ### Move Index → Cell Position
 
 | Move | gridPos | cellX | cellY |
-|------|---------|------:|------:|
+| ---- | ------- | ----: | ----: |
 | 0    | (1,0)   |   122 |   106 |
 | 1    | (0,0)   |     4 |   106 |
 | 2    | (1,1)   |   122 |   128 |
@@ -243,7 +244,7 @@ PP bar: h=1, `fillW = Math.round((ppCur / ppMax) * 38)`
 ### Absolute Coordinates for All 4 Moves
 
 | Move | cellX | cellY | badgeX | badgeY | nameX(right-anchor) | nameY | powerX | powerY | ppX(right-anchor) | ppY | ppBarX | ppBarY |
-|------|------:|------:|-------:|-------:|--------------------:|------:|-------:|-------:|------------------:|----:|-------:|-------:|
+| ---- | ----: | ----: | -----: | -----: | ------------------: | ----: | -----: | -----: | ----------------: | --: | -----: | -----: |
 | 0    |   122 |   106 |    126 |    108 |                 232 |   108 |    126 |    118 |               232 | 118 |    196 |    123 |
 | 1    |     4 |   106 |      8 |    108 |                 114 |   108 |      8 |    118 |               114 | 118 |     78 |    123 |
 | 2    |   122 |   128 |    126 |    130 |                 232 |   130 |    126 |    140 |               232 | 140 |    196 |    145 |
@@ -265,46 +266,46 @@ PP bar: h=1, `fillW = Math.round((ppCur / ppMax) * 38)`
 
 ### Grid: 3 columns × 2 rows
 
-| Property       | Value |
-|----------------|------:|
-| Cell width     |    76 |
-| Cell height    |    20 |
-| Col stride     |    78 |
-| Row stride     |    22 |
-| Col 0 x        |     4 |
-| Col 1 x        |    82 |
-| Col 2 x        |   160 |
-| Row 0 y        |   106 |
-| Row 1 y        |   128 |
+| Property    | Value |
+| ----------- | ----: |
+| Cell width  |    76 |
+| Cell height |    20 |
+| Col stride  |    78 |
+| Row stride  |    22 |
+| Col 0 x     |     4 |
+| Col 1 x     |    82 |
+| Col 2 x     |   160 |
+| Row 0 y     |   106 |
+| Row 1 y     |   128 |
 
 ### Party Slot Template (w=76, h=20)
 
-| Sub-element    | relX | relY |   w | fs | color   | notes                    |
-|----------------|-----:|-----:|----:|---:|---------|--------------------------|
-| Slot bg        |    0 |    0 |  76 |  — | —       | #0f2a1a / #1a4a30        |
-| Active bg      |    0 |    0 |  76 |  — | —       | #1a3a2a / #2a6a40        |
-| Mini sprite    |   56 |   +2 |  16 | — | —       | 16×16 sprite area        |
-| Name           |   +4 |   +3 |  48 |  6 | #ffffff | right, dir=rtl           |
-| HP bar track   |   +4 |  +12 |  48 |  — | #1a3a2a | h=2, radius=1            |
-| HP bar fill    |   +4 |  +12 |   * |  — | (by %)  | w = (hp/max) × 48        |
-| Fainted text   |  center |+8 |  — |  6 | #d84040 | "מתעלף" if fainted       |
+| Sub-element  |   relX | relY |   w |  fs | color   | notes              |
+| ------------ | -----: | ---: | --: | --: | ------- | ------------------ |
+| Slot bg      |      0 |    0 |  76 |   — | —       | #0f2a1a / #1a4a30  |
+| Active bg    |      0 |    0 |  76 |   — | —       | #1a3a2a / #2a6a40  |
+| Mini sprite  |     56 |   +2 |  16 |   — | —       | 16×16 sprite area  |
+| Name         |     +4 |   +3 |  48 |   6 | #ffffff | right, dir=rtl     |
+| HP bar track |     +4 |  +12 |  48 |   — | #1a3a2a | h=2, radius=1      |
+| HP bar fill  |     +4 |  +12 |  \* |   — | (by %)  | w = (hp/max) × 48  |
+| Fainted text | center |   +8 |   — |   6 | #d84040 | "מתעלף" if fainted |
 
 ---
 
 ## BOTTOM BAR (y=150, h=10) — NO Tab KEY
 
-| Element          |   x |   y |  w |  h | fs | color   | bgColor | borderColor | text   | align  |
-|------------------|----:|----:|---:|---:|---:|---------|---------|-------------|--------|--------|
-| Bar bg           |   0 | 150 | 240 | 10 |  — | —       | #0a1a10 | —           | —      | —      |
-| ESC pill bg      |   8 | 151 |  18 |  8 |  — | —       | #1a3a2a | #2a5a3a     | —      | —      |
-| ESC pill text    |   8 | 152 |  18 |  — |  5 | #aaccaa | —       | —           | ESC    | center |
-| ESC hint         |  28 | 153 |  — |  — |  5 | #667766 | —       | —           | בריחה  | left   |
-| Enter pill bg    |  66 | 151 |  24 |  8 |  — | —       | #1a3a2a | #2a5a3a     | —      | —      |
-| Enter pill text  |  66 | 152 |  24 |  — |  5 | #aaccaa | —       | —           | Enter  | center |
-| Enter hint       |  92 | 153 |  — |  — |  5 | #667766 | —       | —           | בחירה  | left   |
-| ▲▼◀▶ pill bg     | 132 | 151 |  24 |  8 |  — | —       | #1a3a2a | #2a5a3a     | —      | —      |
-| ▲▼◀▶ pill text   | 132 | 152 |  24 |  — |  5 | #aaccaa | —       | —           | ▲▼◀▶   | center |
-| ▲▼◀▶ hint        | 158 | 153 |  — |  — |  5 | #667766 | —       | —           | ניווט  | left   |
+| Element         |   x |   y |   w |   h |  fs | color   | bgColor | borderColor | text  | align  |
+| --------------- | --: | --: | --: | --: | --: | ------- | ------- | ----------- | ----- | ------ |
+| Bar bg          |   0 | 150 | 240 |  10 |   — | —       | #0a1a10 | —           | —     | —      |
+| ESC pill bg     |   8 | 151 |  18 |   8 |   — | —       | #1a3a2a | #2a5a3a     | —     | —      |
+| ESC pill text   |   8 | 152 |  18 |   — |   5 | #aaccaa | —       | —           | ESC   | center |
+| ESC hint        |  28 | 153 |   — |   — |   5 | #667766 | —       | —           | בריחה | left   |
+| Enter pill bg   |  66 | 151 |  24 |   8 |   — | —       | #1a3a2a | #2a5a3a     | —     | —      |
+| Enter pill text |  66 | 152 |  24 |   — |   5 | #aaccaa | —       | —           | Enter | center |
+| Enter hint      |  92 | 153 |   — |   — |   5 | #667766 | —       | —           | בחירה | left   |
+| ▲▼◀▶ pill bg    | 132 | 151 |  24 |   8 |   — | —       | #1a3a2a | #2a5a3a     | —     | —      |
+| ▲▼◀▶ pill text  | 132 | 152 |  24 |   — |   5 | #aaccaa | —       | —           | ▲▼◀▶  | center |
+| ▲▼◀▶ hint       | 158 | 153 |   — |   — |   5 | #667766 | —       | —           | ניווט | left   |
 
 ---
 
@@ -504,7 +505,7 @@ const TYPE_BADGE = {
   fighting: { text:'לחימה',  bg:'rgba(192,48,40,0.12)',    border:'rgba(192,48,40,0.2)',    color:'#c03028' },
   ground:   { text:'אדמה',   bg:'rgba(224,192,104,0.12)',  border:'rgba(224,192,104,0.2)',  color:'#e0c068' },
   flying:   { text:'תעופה',  bg:'rgba(168,144,240,0.12)',  border:'rgba(168,144,240,0.2)',  color:'#a890f0' },
-  psychic:  { text:'פסיכי',  bg:'rgba(248,88,136,0.12)',   border:'rgba(248,88,136,0.2)',   color:'#f85888' },
+  psychic:  { text:'על חושי',  bg:'rgba(248,88,136,0.12)',   border:'rgba(248,88,136,0.2)',   color:'#f85888' },
   bug:      { text:'חרק',    bg:'rgba(168,184,32,0.12)',   border:'rgba(168,184,32,0.2)',   color:'#a8b820' },
   rock:     { text:'סלע',    bg:'rgba(184,160,56,0.12)',   border:'rgba(184,160,56,0.2)',   color:'#b8a038' },
   ghost:    { text:'רוח',    bg:'rgba(112,88,152,0.12)',   border:'rgba(112,88,152,0.2)',   color:'#705898' },

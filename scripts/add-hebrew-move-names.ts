@@ -12,7 +12,10 @@ const __dirname = dirname(__filename);
 
 /** Capitalize and format move name: "karate-chop" -> "Karate Chop" */
 function formatMoveName(name: string): string {
-  return name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  return name
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 }
 
 const hebrewMoves: Record<number, string> = {
@@ -109,7 +112,7 @@ const hebrewMoves: Record<number, string> = {
   91: 'חפירה',
   92: 'רעלן',
   93: 'בלבול',
-  94: 'פסיכי',
+  94: 'על חושי',
   95: 'היפנוזה',
   96: 'מדיטציה',
   97: 'זריזות',
@@ -572,7 +575,7 @@ const hebrewMoves: Record<number, string> = {
   673: 'מיקוד לייזר',
   675: 'מכת גרון',
   676: 'פולן גלולה',
-  678: 'שטח פסיכי',
+  678: 'שטח על חושי',
   679: 'זינוק',
   681: 'מסע כוח',
   682: 'שריפה מוחלטת',
@@ -580,7 +583,7 @@ const hebrewMoves: Record<number, string> = {
   684: 'מכה חכמה',
   693: 'נדנוד אכזרי',
   694: 'רעלה אורורה',
-  706: 'ניבי פסיכו',
+  706: 'ניבי על חושי',
   707: 'זעם דורס',
   710: 'נזלה',
   715: 'מבט דומע',
@@ -629,7 +632,7 @@ const hebrewMoves: Record<number, string> = {
   914: 'קול מפתה',
   915: 'להבת עצבים',
   916: 'טריקת סופר-תא',
-  917: 'רעש פסיכי',
+  917: 'רעש על חושי',
   918: 'יד עליונה',
 };
 
