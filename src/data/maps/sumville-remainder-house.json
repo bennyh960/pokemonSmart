@@ -30,7 +30,10 @@
   "npcs": [
     {
       "id": "remainder-mom",
-      "name": "Remainder's Mom",
+      "name": {
+        "en": "Remainder's Mom",
+        "he": "Remainder's Mom"
+      },
       "x": 6,
       "y": 3,
       "facing": "down",
@@ -53,7 +56,10 @@
     },
     {
       "id": "remainder-note",
-      "name": "Remainder's Note",
+      "name": {
+        "en": "Remainder's Note",
+        "he": "Remainder's Note"
+      },
       "x": 1,
       "y": 2,
       "facing": "down",
@@ -76,21 +82,125 @@
   "encounterTableId": null,
   "area": "Sumville",
   "tiles": [
-    ["wall","books","wall","wall","pic1","wall","wall","books","wall"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","ca1tl","ca1t","ca1tr","d"],
-    ["d","d","d","d","d","ca1l","ca1c","ca1r","d"],
-    ["d","d","d","d","d","ca1bl","ca1b","ca1br","d"],
-    ["d","d","d","d","d","d","d","d","d"]
+    [
+      "wall",
+      "books",
+      "wall",
+      "wall",
+      "pic1",
+      "wall",
+      "wall",
+      "books",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1tl",
+      "ca1t",
+      "ca1tr",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1l",
+      "ca1c",
+      "ca1r",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1bl",
+      "ca1b",
+      "ca1br",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ]
   ],
   "objects": [
-    { "key": "library1", "x": 0, "y": 0 },
-    { "key": "library1", "x": 5, "y": 0 },
-    { "key": "dt1", "x": 0, "y": 2 },
-    { "key": "ch1", "x": 2, "y": 2 },
-    { "key": "ctc", "x": 5, "y": 5 },
-    { "key": "ehb1", "x": 3, "y": 7 }
+    {
+      "key": "library1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "library1",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "key": "dt1",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "key": "ch1",
+      "x": 2,
+      "y": 2
+    },
+    {
+      "key": "ctc",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "key": "ehb1",
+      "x": 3,
+      "y": 7
+    }
   ]
 }

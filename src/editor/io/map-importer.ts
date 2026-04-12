@@ -28,7 +28,7 @@ export function importMap(jsonString: string): boolean {
       spawn: data.spawn || { x: 0, y: 0 },
       npcs: (data.npcs || []).map((npc: any) => ({
         id: npc.id || `npc-${Date.now()}`,
-        name: npc.name || '',
+        name: npc.name,
         x: npc.x || 0,
         y: npc.y || 0,
         facing: npc.facing || 'down',

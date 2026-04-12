@@ -149,11 +149,11 @@ export function addTrainerToPhone(trainer: TrainerData): void {
   if (pd.phoneContacts.some(c => c.trainerId === trainer.id)) return;
 
   const mapId = getCurrentMapId() ?? undefined;
-  const nameStr = typeof trainer.name === 'string' ? trainer.name : trainer.id;
+  const trainerName = trainer.name ?? { en: trainer.id, he: trainer.id };
   const rc = trainer.reencounter;
   pd.phoneContacts.push({
     trainerId: trainer.id,
-    trainerName: nameStr,
+    trainerName,
     mapId,
     locationEn: trainer.location?.en ?? '',
     locationHe: trainer.location?.he ?? '',

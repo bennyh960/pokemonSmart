@@ -21,7 +21,10 @@
   "npcs": [
     {
       "id": "collector-npc",
-      "name": "Collector Primo",
+      "name": {
+        "en": "Collector Primo",
+        "he": "Collector Primo"
+      },
       "x": 0,
       "y": 2,
       "facing": "right",
@@ -44,7 +47,10 @@
     },
     {
       "id": "collector-kid",
-      "name": "Little Max",
+      "name": {
+        "en": "Little Max",
+        "he": "Little Max"
+      },
       "x": 2,
       "y": 2,
       "facing": "left",
@@ -68,17 +74,96 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Sumville"
-,
+  "area": "Sumville",
   "tiles": [
-    ["shelf1","pic2","wall","wall","pic1","wall","books","shelf1","pic2"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","ca1tl","ca1t","ca1tr","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","ca1l","ca1c","ca1r","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","ca1bl","ca1b","ca1br","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"]
+    [
+      "shelf1",
+      "pic2",
+      "wall",
+      "wall",
+      "pic1",
+      "wall",
+      "books",
+      "shelf1",
+      "pic2"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "ca1tl",
+      "ca1t",
+      "ca1tr",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "ca1l",
+      "ca1c",
+      "ca1r",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "ca1bl",
+      "ca1b",
+      "ca1br",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1"
+    ]
   ],
   "objects": [
     {

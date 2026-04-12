@@ -56,7 +56,10 @@
   "npcs": [
     {
       "id": "route4-ranger",
-      "name": "Ranger Fern",
+      "name": {
+        "en": "Ranger Fern",
+        "he": "Ranger Fern"
+      },
       "x": 10,
       "y": 10,
       "facing": "down",
@@ -75,7 +78,10 @@
     },
     {
       "id": "route4-trainer1",
-      "name": "Bug Catcher Split",
+      "name": {
+        "en": "Bug Catcher Split",
+        "he": "Bug Catcher Split"
+      },
       "x": 7,
       "y": 6,
       "facing": "down",
@@ -108,7 +114,10 @@
     },
     {
       "id": "route4-trainer2",
-      "name": "Hiker Fraction",
+      "name": {
+        "en": "Hiker Fraction",
+        "he": "Hiker Fraction"
+      },
       "x": 32,
       "y": 8,
       "facing": "left",
@@ -145,7 +154,10 @@
     },
     {
       "id": "route4-trainer3",
-      "name": "Ace Trainer Segment",
+      "name": {
+        "en": "Ace Trainer Segment",
+        "he": "Ace Trainer Segment"
+      },
       "x": 38,
       "y": 12,
       "facing": "up",
@@ -188,7 +200,10 @@
     },
     {
       "id": "r4-t1",
-      "name": "Swimmer Shaked",
+      "name": {
+        "en": "Swimmer Shaked",
+        "he": "Swimmer Shaked"
+      },
       "x": 10,
       "y": 8,
       "facing": "down",
@@ -216,7 +231,10 @@
     },
     {
       "id": "r4-t2",
-      "name": "Swimmer Adi",
+      "name": {
+        "en": "Swimmer Adi",
+        "he": "Swimmer Adi"
+      },
       "x": 28,
       "y": 5,
       "facing": "right",
@@ -244,7 +262,10 @@
     },
     {
       "id": "r4-t3",
-      "name": "Youngster Ilan",
+      "name": {
+        "en": "Youngster Ilan",
+        "he": "Youngster Ilan"
+      },
       "x": 18,
       "y": 14,
       "facing": "left",
@@ -276,7 +297,10 @@
     },
     {
       "id": "r4-t4",
-      "name": "Lass Michal",
+      "name": {
+        "en": "Lass Michal",
+        "he": "Lass Michal"
+      },
       "x": 38,
       "y": 16,
       "facing": "up",
@@ -308,7 +332,10 @@
     },
     {
       "id": "r4-t5",
-      "name": "Fisher Rami",
+      "name": {
+        "en": "Fisher Rami",
+        "he": "Fisher Rami"
+      },
       "x": 22,
       "y": 2,
       "facing": "down",
@@ -340,7 +367,10 @@
     },
     {
       "id": "r4-t6",
-      "name": "Hiker Ran",
+      "name": {
+        "en": "Hiker Ran",
+        "he": "Hiker Ran"
+      },
       "x": 8,
       "y": 3,
       "facing": "right",

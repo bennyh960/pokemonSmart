@@ -58,7 +58,10 @@
   "npcs": [
     {
       "id": "r5-t1",
-      "name": "Picnicker Tamar",
+      "name": {
+        "en": "Picnicker Tamar",
+        "he": "Picnicker Tamar"
+      },
       "x": 6,
       "y": 5,
       "facing": "down",
@@ -86,7 +89,10 @@
     },
     {
       "id": "r5-t2",
-      "name": "Youngster Uri",
+      "name": {
+        "en": "Youngster Uri",
+        "he": "Youngster Uri"
+      },
       "x": 14,
       "y": 13,
       "facing": "right",
@@ -118,7 +124,10 @@
     },
     {
       "id": "r5-t3",
-      "name": "Hiker Amnon",
+      "name": {
+        "en": "Hiker Amnon",
+        "he": "Hiker Amnon"
+      },
       "x": 22,
       "y": 7,
       "facing": "left",
@@ -150,7 +159,10 @@
     },
     {
       "id": "r5-t4",
-      "name": "Lass Dina",
+      "name": {
+        "en": "Lass Dina",
+        "he": "Lass Dina"
+      },
       "x": 8,
       "y": 14,
       "facing": "up",
@@ -182,7 +194,10 @@
     },
     {
       "id": "r5-t5",
-      "name": "Psychic Gal",
+      "name": {
+        "en": "Psychic Gal",
+        "he": "Psychic Gal"
+      },
       "x": 24,
       "y": 4,
       "facing": "down",
@@ -214,7 +229,10 @@
     },
     {
       "id": "r5-hiker",
-      "name": "Hiker",
+      "name": {
+        "en": "Hiker",
+        "he": "Hiker"
+      },
       "x": 3,
       "y": 9,
       "facing": "right",

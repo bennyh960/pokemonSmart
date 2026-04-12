@@ -47,7 +47,10 @@
         }
       ],
       "spriteType": "char_0502ea",
-      "name": "Tom",
+      "name": {
+        "en": "Tom",
+        "he": "Tom"
+      },
       "reward": {
         "money": 0,
         "items": [
@@ -83,7 +86,10 @@
         }
       ],
       "spriteType": "char_8c60a6",
-      "name": "Rick",
+      "name": {
+        "en": "Rick",
+        "he": "Rick"
+      },
       "reward": {
         "money": 0,
         "items": [
@@ -97,21 +103,176 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Zeroville"
-,
+  "area": "Zeroville",
   "tiles": [
-    ["wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall","tv1","wall","wall","wall"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","ca1tl","ca1t","ca1t","ca1t","ca1tr","d"],
-    ["d","d","d","d","d","d","ca1l","ca1c","ca1c","ca1c","ca1r","d"],
-    ["d","d","d","d","d","d","ca1l","ca1c","ca1c","ca1c","ca1r","d"],
-    ["d","d","d","d","d","d","ca1bl","ca1b","ca1b","ca1b","ca1br","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"]
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "tv1",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1tl",
+      "ca1t",
+      "ca1t",
+      "ca1t",
+      "ca1tr",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1l",
+      "ca1c",
+      "ca1c",
+      "ca1c",
+      "ca1r",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1l",
+      "ca1c",
+      "ca1c",
+      "ca1c",
+      "ca1r",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1bl",
+      "ca1b",
+      "ca1b",
+      "ca1b",
+      "ca1br",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ]
   ],
   "objects": [
     {

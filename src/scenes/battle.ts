@@ -660,7 +660,7 @@ export function createBattleScene(
         if (!pd.phoneContacts.some((c) => c.trainerId === td.trainerId)) {
           pd.phoneContacts.push({
             trainerId: td.trainerId,
-            trainerName: getLocalizedName(td.trainerName),
+            trainerName: td.trainerName,
             locationEn: td.locationEn ?? '',
             locationHe: td.locationHe ?? '',
           });

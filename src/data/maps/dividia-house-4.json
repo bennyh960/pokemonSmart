@@ -30,7 +30,10 @@
   "npcs": [
     {
       "id": "dividia-h4-prof",
-      "name": "Prof. Divisor",
+      "name": {
+        "en": "Prof. Divisor",
+        "he": "Prof. Divisor"
+      },
       "x": 2,
       "y": 4,
       "facing": "right",
@@ -57,7 +60,10 @@
     },
     {
       "id": "dividia-h4-assistant",
-      "name": "Lab Assistant",
+      "name": {
+        "en": "Lab Assistant",
+        "he": "Lab Assistant"
+      },
       "x": 7,
       "y": 3,
       "facing": "down",
@@ -77,17 +83,96 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Dividia"
-,
+  "area": "Dividia",
   "tiles": [
-    ["books","shelf1","wall","pic2","wall","shelf1","books","wall","shelf1"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","ca1tl","ca1t","ca1tr","d","d"],
-    ["d","d","d","d","ca1l","ca1c","ca1r","d","d"],
-    ["d","d","d","d","ca1bl","ca1b","ca1br","d","d"],
-    ["d","d","d","d","d","d","d","d","d"]
+    [
+      "books",
+      "shelf1",
+      "wall",
+      "pic2",
+      "wall",
+      "shelf1",
+      "books",
+      "wall",
+      "shelf1"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1tl",
+      "ca1t",
+      "ca1tr",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1l",
+      "ca1c",
+      "ca1r",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1bl",
+      "ca1b",
+      "ca1br",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ]
   ],
   "objects": [
     {

@@ -139,7 +139,7 @@ export interface PlayerStoryState {
 /** A phone contact entry — saved when trainer is first defeated. */
 export interface PhoneContactInfo {
   trainerId: string;
-  trainerName: string;
+  trainerName: { en: string; he: string };
   /** Map the trainer lives on — used to derive the display location at runtime (any locale). */
   mapId?: string;
   /** Legacy fallback: pre-stored English location (populated for contacts before mapId was introduced). */

@@ -184,7 +184,7 @@ export function createPhoneScene(
 
         // Trainer name (top line, left/right aligned by locale)
         const nameX = rtl ? SCREEN_W - 10 : 12;
-        drawText(ctx, contact.trainerName, nameX, y + 9, {
+        drawText(ctx, contact.trainerName[locale as 'en' | 'he'] ?? contact.trainerName.en, nameX, y + 9, {
           size: 7,
           color: selected ? '#ffffff' : '#cccccc',
           align: rtl ? 'right' : 'left',
@@ -260,7 +260,7 @@ function buildCallDialogue(contact: PhoneContactInfo): string {
   const pd = getPlayerData();
   const state = pd.trainerEncounters[contact.trainerId];
   const locale = getLocale();
-  const name = contact.trainerName;
+  const name = contact.trainerName[locale as 'en' | 'he'] ?? contact.trainerName.en;
   const loc = getContactLocation(contact, locale);
 
   if (!state) return t('phone.call.notBeaten', { name });

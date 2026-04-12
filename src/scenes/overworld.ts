@@ -1819,18 +1819,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 const status = getReencounterStatus(trainer);
                 turnNPCToPlayer(npc);
                 interactingNPC = npc;
+                const _trainerName = npc.name ? getLocalizedName(npc.name) : undefined;
                 if (status.eligible) {
-                  activeTextBox = createTextBox([t('trainer.reencounter.ready')], isRTL());
+                  activeTextBox = createTextBox([t('trainer.reencounter.ready')], isRTL(), _trainerName);
                 } else if (status.reason === 'cooldown') {
                   const cooldownMsg =
                     status.minutesLeft != null
                       ? t('trainer.reencounter.cooldownMin', { minutes: status.minutesLeft })
                       : t('trainer.reencounter.cooldown', { hours: status.hoursLeft ?? 1 });
-                  activeTextBox = createTextBox([cooldownMsg], isRTL());
+                  activeTextBox = createTextBox([cooldownMsg], isRTL(), _trainerName);
                 } else if (status.reason === 'max-reached') {
-                  activeTextBox = createTextBox([t('trainer.reencounter.maxReached')], isRTL());
+                  activeTextBox = createTextBox([t('trainer.reencounter.maxReached')], isRTL(), _trainerName);
                 } else {
-                  activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL());
+                  activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL(), _trainerName);
                 }
                 return;
               }

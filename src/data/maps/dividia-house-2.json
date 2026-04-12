@@ -30,7 +30,10 @@
   "npcs": [
     {
       "id": "dividia-h2-dad",
-      "name": "Father Numer",
+      "name": {
+        "en": "Father Numer",
+        "he": "Father Numer"
+      },
       "x": 5,
       "y": 3,
       "facing": "left",
@@ -49,7 +52,10 @@
     },
     {
       "id": "dividia-h2-mom",
-      "name": "Mother Denom",
+      "name": {
+        "en": "Mother Denom",
+        "he": "Mother Denom"
+      },
       "x": 2,
       "y": 5,
       "facing": "right",
@@ -69,17 +75,88 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Dividia"
-,
+  "area": "Dividia",
   "tiles": [
-    ["shelf1","wall","tv1","wall","fh1","fh1","books","shelf1"],
-    ["wall","wall","fh1","fh1","fh1","fh1","wall","wall"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","ca1tl","ca1t","ca1tr","fh1","fh1","fh1"],
-    ["fh1","fh1","ca1l","ca1c","ca1r","fh1","fh1","fh1"],
-    ["fh1","fh1","ca1bl","ca1b","ca1br","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"]
+    [
+      "shelf1",
+      "wall",
+      "tv1",
+      "wall",
+      "fh1",
+      "fh1",
+      "books",
+      "shelf1"
+    ],
+    [
+      "wall",
+      "wall",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "wall",
+      "wall"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "ca1tl",
+      "ca1t",
+      "ca1tr",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "ca1l",
+      "ca1c",
+      "ca1r",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "ca1bl",
+      "ca1b",
+      "ca1br",
+      "fh1",
+      "fh1",
+      "fh1"
+    ],
+    [
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1",
+      "fh1"
+    ]
   ],
   "objects": [
     {

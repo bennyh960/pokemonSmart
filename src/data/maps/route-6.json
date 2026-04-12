@@ -58,7 +58,10 @@
   "npcs": [
     {
       "id": "r6-t1",
-      "name": "Channeler Vered",
+      "name": {
+        "en": "Channeler Vered",
+        "he": "Channeler Vered"
+      },
       "x": 5,
       "y": 5,
       "facing": "down",
@@ -86,7 +89,10 @@
     },
     {
       "id": "r6-t2",
-      "name": "Swimmer Ron",
+      "name": {
+        "en": "Swimmer Ron",
+        "he": "Swimmer Ron"
+      },
       "x": 18,
       "y": 14,
       "facing": "right",
@@ -118,7 +124,10 @@
     },
     {
       "id": "r6-t3",
-      "name": "Psychic Dan",
+      "name": {
+        "en": "Psychic Dan",
+        "he": "Psychic Dan"
+      },
       "x": 24,
       "y": 8,
       "facing": "left",
@@ -150,7 +159,10 @@
     },
     {
       "id": "r6-t4",
-      "name": "Lass Gali",
+      "name": {
+        "en": "Lass Gali",
+        "he": "Lass Gali"
+      },
       "x": 10,
       "y": 11,
       "facing": "up",
@@ -182,7 +194,10 @@
     },
     {
       "id": "r6-t5",
-      "name": "Bird Keeper Orr",
+      "name": {
+        "en": "Bird Keeper Orr",
+        "he": "Bird Keeper Orr"
+      },
       "x": 20,
       "y": 4,
       "facing": "down",

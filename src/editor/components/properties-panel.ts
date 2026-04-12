@@ -30,7 +30,7 @@ export function createPropertiesPanel(): HTMLElement {
         const npcSection = createSection('NPC Properties');
 
         npcSection.appendChild(createField('ID', npc.id, (v) => { npc.id = v; }));
-        npcSection.appendChild(createField('Name', npc.name, (v) => { npc.name = v; }));
+        npcSection.appendChild(createField('Name (EN)', (npc.name as unknown as { en: string; he: string } | undefined)?.en ?? '', (v) => { (npc as unknown as Record<string, unknown>).name = { en: v, he: (npc.name as unknown as { en: string; he: string } | undefined)?.he ?? v }; }));
         npcSection.appendChild(createNumberField('X', npc.x, (v) => { npc.x = v; editorState.notify(); }));
         npcSection.appendChild(createNumberField('Y', npc.y, (v) => { npc.y = v; editorState.notify(); }));
 

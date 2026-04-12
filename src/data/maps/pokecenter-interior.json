@@ -21,7 +21,10 @@
   "npcs": [
     {
       "id": "nurse-pc",
-      "name": "Nurse Joy",
+      "name": {
+        "en": "Nurse Joy",
+        "he": "Nurse Joy"
+      },
       "x": 5,
       "y": 2,
       "facing": "down",

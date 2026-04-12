@@ -56,7 +56,10 @@
   "npcs": [
     {
       "id": "lass-route3",
-      "name": "Lass Multiplica",
+      "name": {
+        "en": "Lass Multiplica",
+        "he": "Lass Multiplica"
+      },
       "x": 8,
       "y": 6,
       "facing": "down",
@@ -103,7 +106,10 @@
     },
     {
       "id": "hiker-route3",
-      "name": "Hiker Granite",
+      "name": {
+        "en": "Hiker Granite",
+        "he": "Hiker Granite"
+      },
       "x": 31,
       "y": 3,
       "facing": "down",
@@ -140,7 +146,10 @@
     },
     {
       "id": "youngster-route3",
-      "name": "Youngster Factor",
+      "name": {
+        "en": "Youngster Factor",
+        "he": "Youngster Factor"
+      },
       "x": 24,
       "y": 10,
       "facing": "left",
@@ -196,7 +205,10 @@
     },
     {
       "id": "ace-route3",
-      "name": "Ace Trainer Sigma",
+      "name": {
+        "en": "Ace Trainer Sigma",
+        "he": "Ace Trainer Sigma"
+      },
       "x": 34,
       "y": 15,
       "facing": "up",
@@ -235,7 +247,10 @@
     },
     {
       "id": "fisherman-route3",
-      "name": "Fisherman Pike",
+      "name": {
+        "en": "Fisherman Pike",
+        "he": "Fisherman Pike"
+      },
       "x": 17,
       "y": 12,
       "facing": "right",
@@ -254,7 +269,10 @@
     },
     {
       "id": "r3-t1",
-      "name": "Youngster Dor",
+      "name": {
+        "en": "Youngster Dor",
+        "he": "Youngster Dor"
+      },
       "x": 7,
       "y": 4,
       "facing": "down",
@@ -282,7 +300,10 @@
     },
     {
       "id": "r3-t2",
-      "name": "Lass Noga",
+      "name": {
+        "en": "Lass Noga",
+        "he": "Lass Noga"
+      },
       "x": 20,
       "y": 12,
       "facing": "right",
@@ -314,7 +335,10 @@
     },
     {
       "id": "r3-t3",
-      "name": "Hiker Moshe",
+      "name": {
+        "en": "Hiker Moshe",
+        "he": "Hiker Moshe"
+      },
       "x": 30,
       "y": 7,
       "facing": "left",
@@ -342,7 +366,10 @@
     },
     {
       "id": "r3-t4",
-      "name": "Bird Keeper Lior",
+      "name": {
+        "en": "Bird Keeper Lior",
+        "he": "Bird Keeper Lior"
+      },
       "x": 12,
       "y": 14,
       "facing": "up",
@@ -374,7 +401,10 @@
     },
     {
       "id": "r3-t5",
-      "name": "Picnicker Shira",
+      "name": {
+        "en": "Picnicker Shira",
+        "he": "Picnicker Shira"
+      },
       "x": 35,
       "y": 9,
       "facing": "down",

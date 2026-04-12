@@ -8,6 +8,7 @@
 import type { InputManager } from '../engine/input.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+import { fontFor } from '../engine/fonts.js';
 const BOX_H = 36;
 const BOX_Y = SCREEN_H - BOX_H;
 const TEXT_X = 8;
@@ -87,7 +88,12 @@ export function renderTextBox(ctx: CanvasRenderingContext2D, state: TextBoxState
 
   // ── Speaker nameplate (tab above box) ──
   if (state.speakerName) {
-    const nameW = state.speakerName.length * (NAME_FONT_SIZE * 0.62) + NAME_PAD_X * 2;
+    // Measure with the actual font so the tab fits the text exactly
+    ctx.save();
+    ctx.font = `${NAME_FONT_SIZE}px ${fontFor(state.speakerName)}`;
+    const measured = Math.ceil(ctx.measureText(state.speakerName).width);
+    ctx.restore();
+    const nameW = Math.min(measured + NAME_PAD_X * 2, SCREEN_W - 8);
     const tabX = state.isRtl ? SCREEN_W - nameW - 4 : 4;
     const tabY = BOX_Y - NAME_TAB_H;
     fillRect(ctx, tabX, tabY, nameW, NAME_TAB_H + 2, '#181820');

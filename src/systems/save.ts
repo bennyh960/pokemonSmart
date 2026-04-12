@@ -13,7 +13,7 @@ import { ensurePersistentBattleFields } from './battle-state.js';
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 9;
+export const CURRENT_SAVE_VERSION = 10;
 
 function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Record<string, any>) => void): void {
   if (data.party) {
@@ -108,6 +108,17 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
   9: (data) => {
     if (!data.flagTimestamps) data.flagTimestamps = {};
     data.saveVersion = 9;
+  },
+  // Version 9 → 10: migrate phoneContacts.trainerName from string to BilingualText
+  10: (data) => {
+    if (Array.isArray(data.phoneContacts)) {
+      for (const contact of data.phoneContacts) {
+        if (typeof contact.trainerName === 'string') {
+          contact.trainerName = { en: contact.trainerName, he: contact.trainerName };
+        }
+      }
+    }
+    data.saveVersion = 10;
   },
 };
 

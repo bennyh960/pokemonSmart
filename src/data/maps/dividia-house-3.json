@@ -30,7 +30,10 @@
   "npcs": [
     {
       "id": "dividia-h3-trainer",
-      "name": "Retired Trainer",
+      "name": {
+        "en": "Retired Trainer",
+        "he": "Retired Trainer"
+      },
       "x": 6,
       "y": 4,
       "facing": "left",
@@ -54,17 +57,96 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Dividia"
-,
+  "area": "Dividia",
   "tiles": [
-    ["wall","pic2","wall","flh1","wall","wall","pic1","books","wall"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","ca1tl","ca1t","ca1t","ca1tr"],
-    ["d","d","d","d","d","ca1l","ca1c","ca1c","ca1r"],
-    ["d","d","d","d","d","ca1bl","ca1b","ca1b","ca1br"],
-    ["d","d","d","d","d","d","d","d","d"]
+    [
+      "wall",
+      "pic2",
+      "wall",
+      "flh1",
+      "wall",
+      "wall",
+      "pic1",
+      "books",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1tl",
+      "ca1t",
+      "ca1t",
+      "ca1tr"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1l",
+      "ca1c",
+      "ca1c",
+      "ca1r"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "ca1bl",
+      "ca1b",
+      "ca1b",
+      "ca1br"
+    ],
+    [
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d",
+      "d"
+    ]
   ],
   "objects": [
     {

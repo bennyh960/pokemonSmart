@@ -44,7 +44,10 @@
   "npcs": [
     {
       "id": "r8-rocket1",
-      "name": "Rocket Grunt",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "Rocket Grunt"
+      },
       "x": 5,
       "y": 8,
       "facing": "down",
@@ -76,7 +79,10 @@
     },
     {
       "id": "r8-rocket2",
-      "name": "Rocket Grunt",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "Rocket Grunt"
+      },
       "x": 14,
       "y": 4,
       "facing": "right",
@@ -108,7 +114,10 @@
     },
     {
       "id": "r8-rocket3",
-      "name": "Rocket Admin",
+      "name": {
+        "en": "Rocket Admin",
+        "he": "Rocket Admin"
+      },
       "x": 22,
       "y": 12,
       "facing": "left",
@@ -140,7 +149,10 @@
     },
     {
       "id": "r8-t4",
-      "name": "Cooltrainer Gal",
+      "name": {
+        "en": "Cooltrainer Gal",
+        "he": "Cooltrainer Gal"
+      },
       "x": 8,
       "y": 14,
       "facing": "up",
@@ -172,7 +184,10 @@
     },
     {
       "id": "r8-t5",
-      "name": "Hiker Kobi",
+      "name": {
+        "en": "Hiker Kobi",
+        "he": "Hiker Kobi"
+      },
       "x": 26,
       "y": 7,
       "facing": "down",
@@ -204,7 +219,10 @@
     },
     {
       "id": "r8-rocket4",
-      "name": "Rocket Grunt",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "Rocket Grunt"
+      },
       "x": 18,
       "y": 16,
       "facing": "up",
@@ -236,7 +254,10 @@
     },
     {
       "id": "r8-t6",
-      "name": "Cooltrainer Ayelet",
+      "name": {
+        "en": "Cooltrainer Ayelet",
+        "he": "Cooltrainer Ayelet"
+      },
       "x": 27,
       "y": 3,
       "facing": "left",

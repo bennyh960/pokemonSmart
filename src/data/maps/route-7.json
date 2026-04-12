@@ -58,7 +58,10 @@
   "npcs": [
     {
       "id": "r7-t1",
-      "name": "Hiker Boaz",
+      "name": {
+        "en": "Hiker Boaz",
+        "he": "Hiker Boaz"
+      },
       "x": 6,
       "y": 8,
       "facing": "down",
@@ -90,7 +93,10 @@
     },
     {
       "id": "r7-t2",
-      "name": "Cooltrainer Avi",
+      "name": {
+        "en": "Cooltrainer Avi",
+        "he": "Cooltrainer Avi"
+      },
       "x": 15,
       "y": 5,
       "facing": "right",
@@ -122,7 +128,10 @@
     },
     {
       "id": "r7-t3",
-      "name": "Cooltrainer Noa",
+      "name": {
+        "en": "Cooltrainer Noa",
+        "he": "Cooltrainer Noa"
+      },
       "x": 22,
       "y": 12,
       "facing": "left",
@@ -154,7 +163,10 @@
     },
     {
       "id": "r7-t4",
-      "name": "Psychic Eli",
+      "name": {
+        "en": "Psychic Eli",
+        "he": "Psychic Eli"
+      },
       "x": 8,
       "y": 14,
       "facing": "up",
@@ -186,7 +198,10 @@
     },
     {
       "id": "r7-t5",
-      "name": "Swimmer Maya",
+      "name": {
+        "en": "Swimmer Maya",
+        "he": "Swimmer Maya"
+      },
       "x": 27,
       "y": 9,
       "facing": "down",
@@ -218,7 +233,10 @@
     },
     {
       "id": "r7-t6",
-      "name": "Hiker Tal",
+      "name": {
+        "en": "Hiker Tal",
+        "he": "Hiker Tal"
+      },
       "x": 3,
       "y": 4,
       "facing": "right",

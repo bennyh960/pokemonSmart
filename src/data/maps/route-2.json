@@ -70,7 +70,10 @@
   "npcs": [
     {
       "id": "hiker-route2",
-      "name": "Hiker Boulder",
+      "name": {
+        "en": "Hiker Boulder",
+        "he": "Hiker Boulder"
+      },
       "x": 10,
       "y": 5,
       "facing": "down",
@@ -111,7 +114,10 @@
     },
     {
       "id": "youngster-route2",
-      "name": "Youngster Minus",
+      "name": {
+        "en": "Youngster Minus",
+        "he": "Youngster Minus"
+      },
       "x": 20,
       "y": 8,
       "facing": "up",
@@ -163,7 +169,10 @@
     },
     {
       "id": "lass-route2",
-      "name": "Lass Negativa",
+      "name": {
+        "en": "Lass Negativa",
+        "he": "Lass Negativa"
+      },
       "x": 29,
       "y": 5,
       "facing": "left",
@@ -203,7 +212,10 @@
     },
     {
       "id": "r2-t1",
-      "name": "Youngster Benny",
+      "name": {
+        "en": "Youngster Benny",
+        "he": "Youngster Benny"
+      },
       "x": 8,
       "y": 7,
       "facing": "down",
@@ -231,7 +243,10 @@
     },
     {
       "id": "r2-t2",
-      "name": "Lass Tali",
+      "name": {
+        "en": "Lass Tali",
+        "he": "Lass Tali"
+      },
       "x": 22,
       "y": 9,
       "facing": "left",
@@ -259,7 +274,10 @@
     },
     {
       "id": "r2-t3",
-      "name": "Bug Catcher Guy",
+      "name": {
+        "en": "Bug Catcher Guy",
+        "he": "Bug Catcher Guy"
+      },
       "x": 15,
       "y": 4,
       "facing": "down",
@@ -291,7 +309,10 @@
     },
     {
       "id": "r2-t4",
-      "name": "Camper Erez",
+      "name": {
+        "en": "Camper Erez",
+        "he": "Camper Erez"
+      },
       "x": 28,
       "y": 11,
       "facing": "left",
@@ -319,7 +340,10 @@
     },
     {
       "id": "r2-sign",
-      "name": "Explorer",
+      "name": {
+        "en": "Explorer",
+        "he": "Explorer"
+      },
       "x": 5,
       "y": 3,
       "facing": "down",
