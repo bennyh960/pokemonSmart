@@ -16,7 +16,7 @@ import { getPlayerData, hasActiveGame } from './game-state.js';
 import { getPokemon } from '../services/pokemon-data.js';
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { createPokemonFromData } from './encounter.js';
-import { getCurrentMapId, getMapDisplayName } from './map-manager.js';
+import { getCurrentMapId } from './map-manager.js';
 import type { Pokemon } from '../types/index.js';
 
 const MS_PER_HOUR = 3_600_000;
@@ -146,7 +146,7 @@ export function addTrainerToPhone(trainer: TrainerData): void {
   if (!hasActiveGame()) return;
   if (trainer.reencounter?.addToPhone === false) return;
   const pd = getPlayerData();
-  if (pd.phoneContacts.some(c => c.trainerId === trainer.id)) return;
+  if (pd.phoneContacts.some((c) => c.trainerId === trainer.id)) return;
 
   const mapId = getCurrentMapId() ?? undefined;
   const trainerName = trainer.name ?? { en: trainer.id, he: trainer.id };
@@ -157,12 +157,14 @@ export function addTrainerToPhone(trainer: TrainerData): void {
     mapId,
     locationEn: trainer.location?.en ?? '',
     locationHe: trainer.location?.he ?? '',
-    reencounterConfig: rc ? {
-      count: rc.count,
-      lvlStep: rc.lvlStep,
-      timeInterval: rc.timeInterval,
-      triggerFlag: rc.triggerFlag,
-      triggerFlagDelayHours: rc.triggerFlagDelayHours,
-    } : undefined,
+    reencounterConfig: rc
+      ? {
+          count: rc.count,
+          lvlStep: rc.lvlStep,
+          timeInterval: rc.timeInterval,
+          triggerFlag: rc.triggerFlag,
+          triggerFlagDelayHours: rc.triggerFlagDelayHours,
+        }
+      : undefined,
   });
 }
