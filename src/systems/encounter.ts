@@ -294,12 +294,22 @@ export function calculateXpGain(defeatedPokemon: Pokemon, options?: { trainerBat
   return Math.floor(reward);
 }
 
+export interface StatGains {
+  hp: number;
+  attack: number;
+  defense: number;
+  specialAttack: number;
+  specialDefense: number;
+  speed: number;
+}
+
 /** Result of a level-up check. */
 export interface LevelUpResult {
   leveledUp: boolean;
   newLevel?: number;
   newMoves?: LevelUpMoveResult[];
   evolution?: EvolutionStep;
+  statGains?: StatGains;
 }
 
 /** Check if a Pokemon should level up, and apply level-up if so. */
@@ -312,10 +322,16 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
 
   // Recalculate stats based on base data + nature + EVs
   const data = getPokemon(pokemon.id);
+  let statGains: StatGains | undefined;
   if (data) {
     const nId = pokemon.natureId ?? 1;
     const evs = pokemon.evs ?? { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 };
     const oldMaxHp = pokemon.maxHp;
+    const oldAttack = pokemon.attack;
+    const oldDefense = pokemon.defense;
+    const oldSpecialAttack = pokemon.specialAttack;
+    const oldSpecialDefense = pokemon.specialDefense;
+    const oldSpeed = pokemon.speed;
     pokemon.maxHp = calcStat(data.stats.hp, pokemon.level, true, 1, evs.hp);
     pokemon.hp += pokemon.maxHp - oldMaxHp; // Heal by the HP gained
     pokemon.attack = calcStat(data.stats.attack, pokemon.level, false, getNatureMultiplier(nId, 'attack'), evs.atk);
@@ -335,6 +351,14 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
       evs.spd,
     );
     pokemon.speed = calcStat(data.stats.speed, pokemon.level, false, getNatureMultiplier(nId, 'speed'), evs.spe);
+    statGains = {
+      hp: pokemon.maxHp - oldMaxHp,
+      attack: pokemon.attack - oldAttack,
+      defense: pokemon.defense - oldDefense,
+      specialAttack: pokemon.specialAttack - oldSpecialAttack,
+      specialDefense: pokemon.specialDefense - oldSpecialDefense,
+      speed: pokemon.speed - oldSpeed,
+    };
   }
 
   // Check learnset for new moves at this level
@@ -370,6 +394,7 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
     newLevel: pokemon.level,
     newMoves,
     evolution: getPendingLevelEvolution(pokemon),
+    statGains,
   };
 }
 

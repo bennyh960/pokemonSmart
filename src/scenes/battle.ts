@@ -7,7 +7,7 @@ import type { BattleStatId } from '../types/battle-metadata.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
-import { clearScreen, fillRect } from '../engine/renderer.js';
+import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import {
   createHPBar,
   updateHPBar,
@@ -77,7 +77,7 @@ import {
   getLocalizedName,
   type EvolutionStep,
 } from '../services/pokemon-data.js';
-import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp } from '../systems/encounter.js';
+import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp, type StatGains } from '../systems/encounter.js';
 import { sendCaughtToBox } from '../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../systems/game-state.js';
@@ -477,6 +477,7 @@ export function createBattleScene(
   let phaseTimer = 0;
   let xpGained = 0;
   let levelUpFx: ReturnType<typeof createLevelUpEffect> | null = null;
+  let statGainsPopup: StatGains | null = null;
   let captureSuccessFx: ReturnType<typeof createCaptureSuccessEffect> | null = null;
   let sendOutFx: ReturnType<typeof createSendOutEffect> | null = null;
   let attackFx: ReturnType<typeof createAttackEffect> | null = null;
@@ -776,6 +777,7 @@ export function createBattleScene(
     flash = null;
     shake = null;
     levelUpFx = null;
+    statGainsPopup = null;
     captureSuccessFx = null;
     sendOutFx = null;
     attackFx = null;
@@ -1760,6 +1762,7 @@ export function createBattleScene(
     pendingNewMoves = result.newMoves || [];
     activeMoveLearningPrompt = null;
     pendingEvolution = result.evolution ?? null;
+    statGainsPopup = result.statGains ?? null;
     textBox = createTextBox(
       [t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })],
       isRTL(),
@@ -2983,6 +2986,7 @@ export function createBattleScene(
           // Shows level-up text, then shows learned moves or sends next Pokemon
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
+            statGainsPopup = null;
             if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
               if (startPendingEvolution('TRAINER_NEXT_XP')) break;
               if (player.xp > 0) {
@@ -3048,6 +3052,7 @@ export function createBattleScene(
           // Shows level-up text, then shows learned moves or awards trainer reward
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
+            statGainsPopup = null;
             if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
               if (startPendingEvolution('TRAINER_REWARD')) break;
               if (player.xp > 0) {
@@ -3093,6 +3098,7 @@ export function createBattleScene(
         case 'LEVEL_UP': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
+            statGainsPopup = null;
             if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
               if (startPendingEvolution('XP_GAIN')) break;
               if (player.xp > 0) {
@@ -3465,6 +3471,11 @@ export function createBattleScene(
       renderPopups(ctx);
       if (flash) renderFlash(ctx, flash);
 
+      // ── Stat gains popup (shown while level-up textBox is visible) ──
+      if (statGainsPopup && textBox) {
+        renderStatGainsPopup(ctx, statGainsPopup);
+      }
+
       // ── Menu / text area ──
       if (textBox) {
         // Fill lower area background before text box
@@ -3477,6 +3488,59 @@ export function createBattleScene(
       if (fade) renderFade(ctx, fade);
     },
   };
+
+  function renderStatGainsPopup(ctx: CanvasRenderingContext2D, gains: StatGains): void {
+    const rtl = isRTL();
+    const PW = 128;
+    const PH = 74;
+    const PX = Math.round((240 - PW) / 2);
+    const PY = 6;
+    const PAD = 5;
+
+    // Background panel
+    fillRect(ctx, PX, PY, PW, PH, 'rgba(16,24,32,0.92)');
+    // Border
+    ctx.save();
+    ctx.strokeStyle = '#f8d030';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(PX + 0.5, PY + 0.5, PW - 1, PH - 1);
+    ctx.restore();
+
+    // Title
+    drawText(ctx, t('party.baseStats'), PX + PW / 2, PY + PAD, {
+      size: 6,
+      color: '#f8d030',
+      font: 'monospace',
+      align: 'center',
+    });
+
+    // Stat rows: [label, gain, color]
+    const statRows: [string, number, string][] = [
+      [t('party.stats.hp'),      gains.hp,              '#20d860'],
+      [t('party.stats.attack'),  gains.attack,           '#f08030'],
+      [t('party.stats.defense'), gains.defense,          '#6890f0'],
+      [t('party.stats.spAtk'),   gains.specialAttack,    '#a040a0'],
+      [t('party.stats.spDef'),   gains.specialDefense,   '#f8d030'],
+      [t('party.stats.speed'),   gains.speed,            '#f85888'],
+    ];
+
+    const ROW_H = 10;
+    const startY = PY + PAD + 8;
+    for (let i = 0; i < statRows.length; i++) {
+      const [label, gain, color] = statRows[i];
+      const rowY = startY + i * ROW_H;
+      const gainStr = `+${gain}`;
+      if (rtl) {
+        // RTL: gain on left, label on right
+        drawText(ctx, gainStr, PX + PAD + 16, rowY, { size: 6, color, font: 'monospace', align: 'right' });
+        drawText(ctx, label,   PX + PW - PAD, rowY, { size: 6, color: '#e8e8e8', font: 'monospace', align: 'right' });
+      } else {
+        // LTR: label on left, gain on right
+        drawText(ctx, label,   PX + PAD,      rowY, { size: 6, color: '#e8e8e8', font: 'monospace' });
+        drawText(ctx, gainStr, PX + PW - PAD, rowY, { size: 6, color, font: 'monospace', align: 'right' });
+      }
+    }
+  }
 
   function renderActorImage(
     ctx: CanvasRenderingContext2D,
