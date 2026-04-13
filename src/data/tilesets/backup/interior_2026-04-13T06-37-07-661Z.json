@@ -1,0 +1,49 @@
+{
+  "image": "/sprites/overworld/interior-tileset.png",
+  "tiles": [
+    {
+      "key": "up",
+      "sx": 96,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "description": "up direction tile"
+    },
+    {
+      "key": "left",
+      "sx": 112,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "description": "left direction tile"
+    },
+    {
+      "key": "down",
+      "sx": 96,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "description": "down direction tile"
+    },
+    {
+      "key": "right",
+      "sx": 112,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "description": "right direction tile"
+    }
+  ]
+}

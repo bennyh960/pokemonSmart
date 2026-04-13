@@ -10,7 +10,7 @@
  * player's phone list so they can be called to check readiness and location.
  */
 
-import type { TrainerData } from './npc.js';
+import type { TrainerData, ReencounterConfig } from './npc.js';
 import type { TrainerEncounterState } from '../types/index.js';
 import { getPlayerData, hasActiveGame } from './game-state.js';
 import { getPokemon } from '../services/pokemon-data.js';
@@ -46,31 +46,43 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
   // count tracks total defeats; re-encounter count = total allowed additional fights
   if (state.count > rc.count) return { eligible: false, reason: 'max-reached' };
 
-  // ── Trigger mode resolution ────────────────────────────────────────────────
-  if (rc.triggerFlag && rc.triggerFlag.trim()) {
-    // Flag-based trigger: reencounter unlocks when a story flag is set (+ optional delay)
-    if (!pd.flags[rc.triggerFlag]) {
-      return { eligible: false, reason: 'cooldown' };
+  // All enabled conditions are checked independently — ALL must pass (AND logic).
+
+  // ── Condition 1: Party level gate ─────────────────────────────────────────
+  // Player must have ≥1 Pokémon at or above (trainerBaseMaxLevel + lvlStep*i - minPartyLevelBoost)
+  if (rc.minPartyLevelBoost != null && rc.minPartyLevelBoost >= 0) {
+    // Resolve the trainer's max base party level.
+    // trainer.party may be absent when called from the phone scene (fake trainer),
+    // in which case a stored maxBasePartyLevel on rc is used as fallback.
+    const rcAny = rc as ReencounterConfig & { maxBasePartyLevel?: number };
+    let trainerBaseMax = 0;
+    if (trainer.party && trainer.party.length > 0) {
+      trainerBaseMax = Math.max(...trainer.party.map(p => p.level));
+    } else if (rcAny.maxBasePartyLevel != null) {
+      trainerBaseMax = rcAny.maxBasePartyLevel;
     }
+    const threshold = trainerBaseMax + rc.lvlStep * state.count - rc.minPartyLevelBoost;
+    const playerMaxLevel = pd.party.length > 0 ? Math.max(...pd.party.map(p => p.level)) : 0;
+    if (playerMaxLevel < threshold) return { eligible: false, reason: 'cooldown' };
+  }
+
+  // ── Condition 2: Story flag ───────────────────────────────────────────────
+  if (rc.triggerFlag && rc.triggerFlag.trim()) {
+    if (!pd.flags[rc.triggerFlag]) return { eligible: false, reason: 'cooldown' };
     if (rc.triggerFlagDelayHours && rc.triggerFlagDelayHours > 0) {
       const timestamps = pd.flagTimestamps ?? {};
       const flagSetAt = timestamps[rc.triggerFlag] ?? 0;
       const elapsed = Date.now() - flagSetAt;
       const required = rc.triggerFlagDelayHours * MS_PER_HOUR;
-      if (elapsed < required) {
-        return cooldownStatus(required - elapsed);
-      }
+      if (elapsed < required) return cooldownStatus(required - elapsed);
     }
-    return { eligible: true, encounterIndex: state.count };
   }
 
-  // Classic time-after-defeat mode
+  // ── Condition 3: Time cooldown ────────────────────────────────────────────
   if (rc.timeInterval && rc.timeInterval > 0) {
     const elapsed = Date.now() - state.lastDefeatedAt;
     const required = rc.timeInterval * MS_PER_HOUR;
-    if (elapsed < required) {
-      return cooldownStatus(required - elapsed);
-    }
+    if (elapsed < required) return cooldownStatus(required - elapsed);
   }
 
   return { eligible: true, encounterIndex: state.count };
@@ -164,6 +176,12 @@ export function addTrainerToPhone(trainer: TrainerData): void {
           timeInterval: rc.timeInterval,
           triggerFlag: rc.triggerFlag,
           triggerFlagDelayHours: rc.triggerFlagDelayHours,
+          minPartyLevelBoost: rc.minPartyLevelBoost,
+          // Store max base party level so the phone scene can compute level-gate checks
+          // without having access to the full trainer data.
+          maxBasePartyLevel: trainer.party && trainer.party.length > 0
+            ? Math.max(...trainer.party.map(p => p.level))
+            : undefined,
         }
       : undefined,
   });

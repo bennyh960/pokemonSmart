@@ -126,18 +126,21 @@ export interface ReencounterConfig {
   count: number; // max additional encounters after the first (e.g. 3 = 4 total fights)
   lvlStep: number; // level boost applied to all party members per re-encounter
   /**
-   * Trigger mode — choose ONE of the following:
+   * Trigger conditions — any combination can be set; ALL enabled conditions must be satisfied.
    *
-   * • timeInterval (number, hours) — classic mode: available X hours after the last defeat.
-   * • triggerFlag (string) — flag mode: becomes available as soon as this story flag is set.
-   * • triggerFlag + triggerFlagDelayHours — delayed-flag mode: available X hours after the
-   *   story flag was first set (e.g. "1 hour after winning gym 1").
+   * • timeInterval (number, hours) — available X hours after the last defeat.
+   * • triggerFlag (string) — requires a story flag to be set (+ optional delay).
+   * • triggerFlagDelayHours — hours after triggerFlag was set before reencounter is ready.
+   * • minPartyLevelBoost (number) — player must have ≥1 Pokémon within this many levels
+   *   below the next encounter's boosted level.
+   *   Formula: player max level ≥ (trainerBaseMaxLevel + lvlStep × encounterIndex − minPartyLevelBoost)
    *
    * If no trigger is specified the trainer is immediately available for a rematch after each defeat.
    */
   timeInterval?: number;
   triggerFlag?: string; // story flag that must be set (e.g. 'gym1-cleared')
   triggerFlagDelayHours?: number; // hours after triggerFlag was set before reencounter is ready
+  minPartyLevelBoost?: number; // player needs ≥1 Pokémon within N levels of the boosted encounter level
   partyExtra?: { pokemonId: number; level: number }[]; // extra Pokemon added from 2nd encounter onwards
   addToPhone?: boolean; // whether to add trainer to phone list after first defeat (default: true)
 }

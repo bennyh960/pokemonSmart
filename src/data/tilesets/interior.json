@@ -2,329 +2,400 @@
   "image": "/sprites/overworld/interior-tileset.png",
   "tiles": [
     {
-      "key": "wall1",
+      "key": "up",
+      "sx": 96,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null,
+      "description": "up direction tile"
+    },
+    {
+      "key": "left",
+      "sx": 112,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null,
+      "description": "left direction tile"
+    },
+    {
+      "key": "down",
+      "sx": 96,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null,
+      "description": "down direction tile"
+    },
+    {
+      "key": "right",
+      "sx": 112,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null,
+      "description": "right direction tile"
+    },
+    {
+      "key": "bc1-11",
+      "sx": 0,
+      "sy": 144,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "blue carpet type 1 , col 1 , row 1"
+    },
+    {
+      "key": "bc1-21",
       "sx": 16,
-      "sy": 9968,
-      "w": 224,
-      "h": 144,
+      "sy": 144,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "blude carpet 1 col 2 row 1"
+    },
+    {
+      "key": "bc1-31",
+      "sx": 32,
+      "sy": 144,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "blue carpet 1 col 3 row 1"
+    },
+    {
+      "key": "bc1-12",
+      "sx": 0,
+      "sy": 160,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "blue carpet 1 col 1 row 2"
+    },
+    {
+      "key": "bc1-22",
+      "sx": 16,
+      "sy": 160,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "blue carpet 1 col 2 row 2"
+    },
+    {
+      "key": "bc1-32",
+      "sx": 32,
+      "sy": 160,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "blue carpet 1 col 3 row 2"
+    },
+    {
+      "key": "bc1-13",
+      "sx": 0,
+      "sy": 176,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "blue carpet 1 col 1 row 3"
+    },
+    {
+      "key": "bc1-23",
+      "sx": 16,
+      "sy": 176,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "blue carpet 1 (c2 r3)"
+    },
+    {
+      "key": "bc1-33",
+      "sx": 32,
+      "sy": 176,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "blue carpet 1 c3 r3"
+    },
+    {
+      "key": "snake-cab1",
+      "sx": 0,
+      "sy": 896,
+      "w": 16,
+      "h": 48,
       "walkable": false,
       "above": true,
-      "category": "wall",
-      "description": "gray wall for special buildings like labs",
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 7
-        },
-        {
-          "dx": 0,
-          "dy": 6
-        },
-        {
-          "dx": 0,
-          "dy": 8
-        },
-        {
-          "dx": 0,
-          "dy": 5
-        },
-        {
-          "dx": 0,
-          "dy": 4
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        },
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 4
-        },
-        {
-          "dx": 2,
-          "dy": 4
-        },
-        {
-          "dx": 2,
-          "dy": 3
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 3
-        },
-        {
-          "dx": 3,
-          "dy": 4
-        },
-        {
-          "dx": 4,
-          "dy": 4
-        },
-        {
-          "dx": 5,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 3
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 5,
-          "dy": 0
-        },
-        {
-          "dx": 5,
-          "dy": 1
-        },
-        {
-          "dx": 5,
-          "dy": 3
-        },
-        {
-          "dx": 5,
-          "dy": 4
-        },
-        {
-          "dx": 6,
-          "dy": 4
-        },
-        {
-          "dx": 7,
-          "dy": 4
-        },
-        {
-          "dx": 8,
-          "dy": 4
-        },
-        {
-          "dx": 9,
-          "dy": 4
-        },
-        {
-          "dx": 10,
-          "dy": 4
-        },
-        {
-          "dx": 11,
-          "dy": 4
-        },
-        {
-          "dx": 12,
-          "dy": 4
-        },
-        {
-          "dx": 13,
-          "dy": 5
-        },
-        {
-          "dx": 13,
-          "dy": 6
-        },
-        {
-          "dx": 13,
-          "dy": 7
-        },
-        {
-          "dx": 13,
-          "dy": 8
-        },
-        {
-          "dx": 6,
-          "dy": 0
-        },
-        {
-          "dx": 7,
-          "dy": 0
-        },
-        {
-          "dx": 8,
-          "dy": 0
-        },
-        {
-          "dx": 9,
-          "dy": 0
-        },
-        {
-          "dx": 10,
-          "dy": 0
-        },
-        {
-          "dx": 11,
-          "dy": 0
-        },
-        {
-          "dx": 12,
-          "dy": 0
-        },
-        {
-          "dx": 13,
-          "dy": 0
-        },
-        {
-          "dx": 13,
-          "dy": 1
-        },
-        {
-          "dx": 12,
-          "dy": 1
-        },
-        {
-          "dx": 11,
-          "dy": 1
-        },
-        {
-          "dx": 10,
-          "dy": 1
-        },
-        {
-          "dx": 9,
-          "dy": 1
-        },
-        {
-          "dx": 8,
-          "dy": 1
-        },
-        {
-          "dx": 7,
-          "dy": 1
-        },
-        {
-          "dx": 6,
-          "dy": 1
-        },
-        {
-          "dx": 6,
-          "dy": 2
-        },
-        {
-          "dx": 6,
-          "dy": 3
-        },
-        {
-          "dx": 7,
-          "dy": 3
-        },
-        {
-          "dx": 7,
-          "dy": 2
-        },
-        {
-          "dx": 8,
-          "dy": 2
-        },
-        {
-          "dx": 8,
-          "dy": 3
-        },
-        {
-          "dx": 9,
-          "dy": 3
-        },
-        {
-          "dx": 9,
-          "dy": 2
-        },
-        {
-          "dx": 10,
-          "dy": 2
-        },
-        {
-          "dx": 11,
-          "dy": 2
-        },
-        {
-          "dx": 11,
-          "dy": 3
-        },
-        {
-          "dx": 10,
-          "dy": 3
-        },
-        {
-          "dx": 12,
-          "dy": 3
-        },
-        {
-          "dx": 13,
-          "dy": 3
-        },
-        {
-          "dx": 13,
-          "dy": 4
-        },
-        {
-          "dx": 13,
-          "dy": 2
-        },
-        {
-          "dx": 12,
-          "dy": 2
-        }
-      ]
+      "category": "interior",
+      "description": "snakes cabinet"
+    },
+    {
+      "key": "small fridge1",
+      "sx": 16,
+      "sy": 896,
+      "w": 16,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "interior"
+    },
+    {
+      "key": "small fridge2",
+      "sx": 32,
+      "sy": 896,
+      "w": 16,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "interior"
+    },
+    {
+      "key": "small-fridge3",
+      "sx": 48,
+      "sy": 896,
+      "w": 16,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "seems like lab fridge"
+    },
+    {
+      "key": "coca-fridge",
+      "sx": 64,
+      "sy": 896,
+      "w": 16,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "coca cola small fridge"
+    },
+    {
+      "key": "tv-screen1",
+      "sx": 0,
+      "sy": 1072,
+      "w": 48,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "big screen 16X3 seems like led, front"
+    },
+    {
+      "key": "screen2",
+      "sx": 48,
+      "sy": 1072,
+      "w": 48,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "screen , gray . can be for lab front view"
+    },
+    {
+      "key": "kazinot1",
+      "sx": 96,
+      "sy": 1056,
+      "w": 32,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "kasino table look like rolute"
+    },
+    {
+      "key": "kazino2",
+      "sx": 48,
+      "sy": 1040,
+      "w": 48,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "kazino table"
+    },
+    {
+      "key": "kazino3-aside",
+      "sx": 96,
+      "sy": 1008,
+      "w": 32,
+      "h": 48,
+      "walkable": false,
+      "above": false,
+      "category": "interior",
+      "description": "kazino machines - profile view"
+    },
+    {
+      "key": "home-fridge1",
+      "sx": 0,
+      "sy": 1136,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "home fridge 1 white-gray color"
+    },
+    {
+      "key": "home-frdige2",
+      "sx": 16,
+      "sy": 1136,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "home fridge ornage color"
+    },
+    {
+      "key": "sink1",
+      "sx": 32,
+      "sy": 1136,
+      "w": 16,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "home/lab sink"
+    },
+    {
+      "key": "stove1",
+      "sx": 48,
+      "sy": 1136,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "stove"
+    },
+    {
+      "key": "stvoe2",
+      "sx": 96,
+      "sy": 1136,
+      "w": 32,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "stove 4 flames"
+    },
+    {
+      "key": "chair1R",
+      "sx": 112,
+      "sy": 1168,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "blue chair facing right"
+    },
+    {
+      "key": "chair1L",
+      "sx": 112,
+      "sy": 1184,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "blue chair facing left"
+    },
+    {
+      "key": "chair2D",
+      "sx": 112,
+      "sy": 1232,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "chiar facing 240 degree"
+    },
+    {
+      "key": "chair2Dr",
+      "sx": 96,
+      "sy": 1232,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "charir 2 (purple) facing right bottom (330 degree)"
+    },
+    {
+      "key": "chair2R",
+      "sx": 96,
+      "sy": 1264,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "chair 2 right"
+    },
+    {
+      "key": "chair2L",
+      "sx": 112,
+      "sy": 1264,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": false,
+      "category": "interior",
+      "description": "chair 2 facing left"
+    },
+    {
+      "key": "chair2F",
+      "sx": 112,
+      "sy": 1296,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "chair 2 facing front"
     }
   ]
 }

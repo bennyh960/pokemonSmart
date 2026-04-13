@@ -464,8 +464,7 @@ export class PropertiesPanel {
           targetSx,
           targetSy,
         );
-        //  overworld-tileset.png
-        await saveTilesetImage(blob);
+        await saveTilesetImage(blob, 'overworld-tileset.png');
 
         // Reload the image with the modified data
         const url = URL.createObjectURL(blob);

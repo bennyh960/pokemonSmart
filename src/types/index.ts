@@ -152,6 +152,9 @@ export interface PhoneContactInfo {
     timeInterval?: number;
     triggerFlag?: string;
     triggerFlagDelayHours?: number;
+    minPartyLevelBoost?: number;
+    /** Cached trainer max base party level — required for minPartyLevelBoost check in the phone scene. */
+    maxBasePartyLevel?: number;
   };
 }
 

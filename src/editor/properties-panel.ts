@@ -669,107 +669,202 @@ export class PropertiesPanel {
       phoneRow.appendChild(phoneCb);
       configDiv.appendChild(phoneRow);
 
-      // Trigger mode selector
-      const triggerRow = document.createElement('div');
-      triggerRow.className = 'prop-row';
-      triggerRow.innerHTML = '<label>Trigger mode:</label>';
-      const triggerSel = document.createElement('select');
-      const modes = [
-        { value: 'time', label: 'Time after defeat' },
-        { value: 'flag', label: 'Story flag set' },
-        { value: 'flag-delay', label: 'Story flag + delay' },
-      ];
-      // Detect mode by key presence, not value — triggerFlag may be '' (sentinel for "flag mode, not yet filled")
-      let currentMode = 'time';
-      if ('triggerFlag' in rc && (rc.triggerFlagDelayHours ?? 0) > 0) currentMode = 'flag-delay';
-      else if ('triggerFlag' in rc) currentMode = 'flag';
+      // ── Trigger conditions (all enabled must pass) ────────────────────────
+      const triggerHeader = document.createElement('div');
+      triggerHeader.style.cssText = 'font-size:11px;color:#aaa;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.05em';
+      triggerHeader.textContent = 'Trigger conditions (all enabled must pass)';
+      configDiv.appendChild(triggerHeader);
 
-      for (const m of modes) {
-        const opt = document.createElement('option');
-        opt.value = m.value;
-        opt.textContent = m.label;
-        opt.selected = m.value === currentMode;
-        triggerSel.appendChild(opt);
-      }
-      triggerRow.appendChild(triggerSel);
-      configDiv.appendChild(triggerRow);
+      // ── Party level gate ──
+      const lvlGateRow = document.createElement('div');
+      lvlGateRow.className = 'prop-row';
+      lvlGateRow.innerHTML = '<label>Party level gate:</label>';
+      const lvlGateCb = document.createElement('input');
+      lvlGateCb.type = 'checkbox';
+      lvlGateCb.checked = rc.minPartyLevelBoost != null;
+      lvlGateCb.title = 'Rematch unlocks when player has ≥1 Pokémon near the next encounter\'s level';
+      const lvlGateFields = document.createElement('div');
+      lvlGateFields.style.display = rc.minPartyLevelBoost != null ? 'block' : 'none';
+      lvlGateFields.style.paddingLeft = '8px';
 
-      // Dynamic sub-row (changes with mode)
-      const modeDiv = document.createElement('div');
-      configDiv.appendChild(modeDiv);
-
-      const renderModeFields = (mode: string) => {
-        modeDiv.innerHTML = '';
-
-        if (mode === 'time') {
-          // Clear flag fields
-          delete (rc as unknown as Record<string, unknown>)['triggerFlag'];
-          delete (rc as unknown as Record<string, unknown>)['triggerFlagDelayHours'];
-
-          const row = document.createElement('div');
-          row.className = 'prop-row';
-          row.innerHTML = '<label>Hours to wait:</label>';
-          const input = document.createElement('input');
-          input.type = 'number';
-          input.min = '0';
-          input.step = '0.5';
-          input.value = String(rc.timeInterval ?? 1);
-          input.title = 'Hours after last defeat before rematch is available (0 = immediate)';
-          input.addEventListener('change', () => {
-            rc.timeInterval = Math.max(0, parseFloat(input.value) || 0);
-            emit();
-          });
-          row.appendChild(input);
-          modeDiv.appendChild(row);
-        } else if (mode === 'flag' || mode === 'flag-delay') {
-          // Clear time field; seed triggerFlag key so mode survives re-render
-          delete (rc as unknown as Record<string, unknown>)['timeInterval'];
-          if (!('triggerFlag' in rc)) rc.triggerFlag = '';
-
-          const flagRow = document.createElement('div');
-          flagRow.className = 'prop-row';
-          flagRow.innerHTML = '<label>Required flag:</label>';
-          const flagInput = document.createElement('input');
-          flagInput.type = 'text';
-          flagInput.value = rc.triggerFlag ?? '';
-          flagInput.placeholder = 'e.g. gym1-cleared';
-          flagInput.title = 'Story flag that must be set before rematch becomes available';
-          flagInput.addEventListener('change', () => {
-            // Keep the key even if empty (sentinel for flag mode) — runtime ignores blank flags
-            rc.triggerFlag = flagInput.value.trim();
-            emit();
-          });
-          flagRow.appendChild(flagInput);
-          modeDiv.appendChild(flagRow);
-
-          if (mode === 'flag-delay') {
-            const delayRow = document.createElement('div');
-            delayRow.className = 'prop-row';
-            delayRow.innerHTML = '<label>Delay (hours):</label>';
-            const delayInput = document.createElement('input');
-            delayInput.type = 'number';
-            delayInput.min = '0';
-            delayInput.step = '0.5';
-            delayInput.value = String(rc.triggerFlagDelayHours ?? 1);
-            delayInput.title = 'Hours after the flag was set before rematch unlocks';
-            delayInput.addEventListener('change', () => {
-              rc.triggerFlagDelayHours = Math.max(0, parseFloat(delayInput.value) || 0);
-              emit();
-            });
-            delayRow.appendChild(delayInput);
-            modeDiv.appendChild(delayRow);
-          } else {
-            delete (rc as unknown as Record<string, unknown>)['triggerFlagDelayHours'];
-          }
-        }
+      const renderLvlGateFields = () => {
+        lvlGateFields.innerHTML = '';
+        const row = document.createElement('div');
+        row.className = 'prop-row';
+        row.innerHTML = '<label>Level margin:</label>';
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.max = '20';
+        input.value = String(rc.minPartyLevelBoost ?? 3);
+        input.title = 'Player needs ≥1 Pokémon at ≥ (trainerBaseLevel + lvlStep×i − margin)';
+        input.addEventListener('change', () => {
+          rc.minPartyLevelBoost = Math.max(0, parseInt(input.value, 10) || 0);
+          emit();
+        });
+        row.appendChild(input);
+        lvlGateFields.appendChild(row);
+        const hint = document.createElement('div');
+        hint.style.cssText = 'font-size:10px;color:#888;padding:2px 0 4px';
+        hint.textContent = 'e.g. 3 → need Lv≥(nextEncounterLv−3)';
+        lvlGateFields.appendChild(hint);
       };
 
-      triggerSel.addEventListener('change', () => {
-        renderModeFields(triggerSel.value);
+      lvlGateCb.addEventListener('change', () => {
+        if (lvlGateCb.checked) {
+          rc.minPartyLevelBoost = 3;
+          lvlGateFields.style.display = 'block';
+          renderLvlGateFields();
+        } else {
+          delete (rc as unknown as Record<string, unknown>)['minPartyLevelBoost'];
+          lvlGateFields.style.display = 'none';
+        }
         emit();
       });
+      if (rc.minPartyLevelBoost != null) renderLvlGateFields();
+      lvlGateRow.appendChild(lvlGateCb);
+      configDiv.appendChild(lvlGateRow);
+      configDiv.appendChild(lvlGateFields);
 
-      renderModeFields(currentMode);
+      // ── Time cooldown ──
+      const timeRow = document.createElement('div');
+      timeRow.className = 'prop-row';
+      timeRow.innerHTML = '<label>Time cooldown:</label>';
+      const timeCb = document.createElement('input');
+      timeCb.type = 'checkbox';
+      timeCb.checked = rc.timeInterval != null && rc.timeInterval > 0;
+      timeCb.title = 'Rematch available only after X hours since last defeat';
+      const timeFields = document.createElement('div');
+      timeFields.style.display = timeCb.checked ? 'block' : 'none';
+      timeFields.style.paddingLeft = '8px';
+
+      const renderTimeFields = () => {
+        timeFields.innerHTML = '';
+        const row = document.createElement('div');
+        row.className = 'prop-row';
+        row.innerHTML = '<label>Hours to wait:</label>';
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.step = '0.5';
+        input.value = String(rc.timeInterval ?? 1);
+        input.title = 'Hours after last defeat before rematch is available';
+        input.addEventListener('change', () => {
+          rc.timeInterval = Math.max(0, parseFloat(input.value) || 0);
+          emit();
+        });
+        row.appendChild(input);
+        timeFields.appendChild(row);
+      };
+
+      timeCb.addEventListener('change', () => {
+        if (timeCb.checked) {
+          rc.timeInterval = rc.timeInterval && rc.timeInterval > 0 ? rc.timeInterval : 1;
+          timeFields.style.display = 'block';
+          renderTimeFields();
+        } else {
+          delete (rc as unknown as Record<string, unknown>)['timeInterval'];
+          timeFields.style.display = 'none';
+        }
+        emit();
+      });
+      if (timeCb.checked) renderTimeFields();
+      timeRow.appendChild(timeCb);
+      configDiv.appendChild(timeRow);
+      configDiv.appendChild(timeFields);
+
+      // ── Story flag ──
+      const flagRow = document.createElement('div');
+      flagRow.className = 'prop-row';
+      flagRow.innerHTML = '<label>Story flag:</label>';
+      const flagCb = document.createElement('input');
+      flagCb.type = 'checkbox';
+      flagCb.checked = 'triggerFlag' in rc;
+      flagCb.title = 'Rematch requires a story flag to be set';
+      const flagFields = document.createElement('div');
+      flagFields.style.display = flagCb.checked ? 'block' : 'none';
+      flagFields.style.paddingLeft = '8px';
+
+      const renderFlagFields = () => {
+        flagFields.innerHTML = '';
+        const fRow = document.createElement('div');
+        fRow.className = 'prop-row';
+        fRow.innerHTML = '<label>Required flag:</label>';
+        const flagInput = document.createElement('input');
+        flagInput.type = 'text';
+        flagInput.value = rc.triggerFlag ?? '';
+        flagInput.placeholder = 'e.g. gym1-cleared';
+        flagInput.title = 'Story flag that must be set before rematch becomes available';
+        flagInput.addEventListener('change', () => {
+          rc.triggerFlag = flagInput.value.trim();
+          emit();
+        });
+        fRow.appendChild(flagInput);
+        flagFields.appendChild(fRow);
+
+        // Delay sub-option
+        const delayRow = document.createElement('div');
+        delayRow.className = 'prop-row';
+        delayRow.innerHTML = '<label>+ delay (hours):</label>';
+        const delayCb = document.createElement('input');
+        delayCb.type = 'checkbox';
+        delayCb.checked = (rc.triggerFlagDelayHours ?? 0) > 0;
+        delayCb.title = 'Also wait N hours after the flag was set';
+        const delayFields = document.createElement('div');
+        delayFields.style.display = delayCb.checked ? 'block' : 'none';
+        delayFields.style.paddingLeft = '8px';
+
+        const renderDelayFields = () => {
+          delayFields.innerHTML = '';
+          const dr = document.createElement('div');
+          dr.className = 'prop-row';
+          dr.innerHTML = '<label>Delay hours:</label>';
+          const di = document.createElement('input');
+          di.type = 'number';
+          di.min = '0';
+          di.step = '0.5';
+          di.value = String(rc.triggerFlagDelayHours ?? 1);
+          di.title = 'Hours after the flag was set before rematch unlocks';
+          di.addEventListener('change', () => {
+            rc.triggerFlagDelayHours = Math.max(0, parseFloat(di.value) || 0);
+            emit();
+          });
+          dr.appendChild(di);
+          delayFields.appendChild(dr);
+        };
+        delayCb.addEventListener('change', () => {
+          if (delayCb.checked) {
+            rc.triggerFlagDelayHours = rc.triggerFlagDelayHours ?? 1;
+            delayFields.style.display = 'block';
+            renderDelayFields();
+          } else {
+            delete (rc as unknown as Record<string, unknown>)['triggerFlagDelayHours'];
+            delayFields.style.display = 'none';
+          }
+          emit();
+        });
+        if (delayCb.checked) renderDelayFields();
+        delayRow.appendChild(delayCb);
+        flagFields.appendChild(delayRow);
+        flagFields.appendChild(delayFields);
+      };
+
+      flagCb.addEventListener('change', () => {
+        if (flagCb.checked) {
+          if (!('triggerFlag' in rc)) rc.triggerFlag = '';
+          flagFields.style.display = 'block';
+          renderFlagFields();
+        } else {
+          delete (rc as unknown as Record<string, unknown>)['triggerFlag'];
+          delete (rc as unknown as Record<string, unknown>)['triggerFlagDelayHours'];
+          flagFields.style.display = 'none';
+        }
+        emit();
+      });
+      if (flagCb.checked) renderFlagFields();
+      flagRow.appendChild(flagCb);
+      configDiv.appendChild(flagRow);
+      configDiv.appendChild(flagFields);
     };
 
     rebuildConfig();

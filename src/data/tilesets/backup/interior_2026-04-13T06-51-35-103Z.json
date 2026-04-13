@@ -1,0 +1,152 @@
+{
+  "image": "/sprites/overworld/interior-tileset.png",
+  "tiles": [
+    {
+      "key": "up",
+      "sx": 96,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null,
+      "description": "up direction tile"
+    },
+    {
+      "key": "left",
+      "sx": 112,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null,
+      "description": "left direction tile"
+    },
+    {
+      "key": "down",
+      "sx": 96,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null,
+      "description": "down direction tile"
+    },
+    {
+      "key": "right",
+      "sx": 112,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null,
+      "description": "right direction tile"
+    },
+    {
+      "key": "bc1-11",
+      "sx": 0,
+      "sy": 144,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "blue carpet type 1 , col 1 , row 1"
+    },
+    {
+      "key": "bc1-21",
+      "sx": 16,
+      "sy": 144,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "description": "blude carpet 1 col 2 row 1"
+    },
+    {
+      "key": "bc1-31",
+      "sx": 32,
+      "sy": 144,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "blue carpet 1 col 3 row 1"
+    },
+    {
+      "key": "bc1-12",
+      "sx": 0,
+      "sy": 160,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "blue carpet 1 col 1 row 2"
+    },
+    {
+      "key": "bc1-22",
+      "sx": 16,
+      "sy": 160,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "blue carpet 1 col 2 row 2"
+    },
+    {
+      "key": "bc1-32",
+      "sx": 32,
+      "sy": 160,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "blue carpet 1 col 3 row 2"
+    },
+    {
+      "key": "bc1-13",
+      "sx": 0,
+      "sy": 176,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "blue carpet 1 col 1 row 3"
+    },
+    {
+      "key": "bc1-23",
+      "sx": 16,
+      "sy": 176,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "blue carpet 1 (c2 r3)"
+    },
+    {
+      "key": "bc1-33",
+      "sx": 32,
+      "sy": 176,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior",
+      "description": "blue carpet 1 c3 r3"
+    }
+  ]
+}
