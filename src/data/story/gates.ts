@@ -1,5 +1,6 @@
 import type { BilingualText } from '../../systems/npc.js';
 import type { StoryAction, StoryCondition } from './events.js';
+import type { SimpleOpType } from '../../math/simple-input-question.js';
 
 export type GateTriggerType =
   | 'route-checkpoint'
@@ -74,6 +75,22 @@ export interface GateSessionConfig {
    * Example: 2 = double all money rewards.
    */
   bonusMultiplier: number;
+
+  /**
+   * Optional simple arithmetic input questions (player types the answer — no choices).
+   * These count TOWARD `questionsRequired`; the remainder are rich (story-themed) questions.
+   * Default: null (disabled — all questions are rich).
+   */
+  inputQuestions?: {
+    /** How many of the questionsRequired should be simple input questions. */
+    count: number;
+    /**
+     * Which operation types to use.
+     * Undefined / empty array = all operations allowed for the player's grade.
+     * Example: ['+', '-'] restricts to addition and subtraction only.
+     */
+    types?: SimpleOpType[];
+  };
 }
 
 export interface QuestionGateDef {

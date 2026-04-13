@@ -83,6 +83,21 @@ export interface DialogueReward {
   flag?: string; // Flag to set after giving reward (prevents re-giving)
 }
 
+/**
+ * Configuration for simple arithmetic questions presented by an NPC before dialogue.
+ * The player must solve `count` problems (typed answer, no multiple choice).
+ */
+export interface NPCQuestionsConfig {
+  /** Number of correct answers required before dialogue begins. */
+  count: number;
+  /**
+   * Which operation types to allow.
+   * Undefined / empty array = all operations appropriate for the player's grade.
+   * Example: ['+', '-'] restricts to addition and subtraction only.
+   */
+  types?: string[]; // SimpleOpType values: '+' | '-' | '×' | '÷'
+}
+
 /** NPC data as stored in map JSON. */
 export interface NPCData {
   id: string;
@@ -105,6 +120,12 @@ export interface NPCData {
   despawnWhenParty?: { count: number; minLevel: number };
   /** When true, NPC uses line-of-sight to block the player until despawn conditions are met. */
   blocker?: boolean;
+  /**
+   * Optional math questions presented BEFORE dialogue starts.
+   * Player must solve `count` arithmetic problems (typed answer, no choices).
+   * Dialogue and rewards proceed normally after questions are completed.
+   */
+  questions?: NPCQuestionsConfig;
 }
 
 /** Reward item given after defeating a trainer. */

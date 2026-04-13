@@ -166,6 +166,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "snakes cabinet"
     },
     {
@@ -176,7 +177,8 @@
       "h": 48,
       "walkable": false,
       "above": true,
-      "category": "interior"
+      "category": "interior",
+      "interactType": null
     },
     {
       "key": "small fridge2",
@@ -186,7 +188,8 @@
       "h": 48,
       "walkable": false,
       "above": true,
-      "category": "interior"
+      "category": "interior",
+      "interactType": null
     },
     {
       "key": "small-fridge3",
@@ -197,6 +200,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "seems like lab fridge"
     },
     {
@@ -208,6 +212,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "coca cola small fridge"
     },
     {
@@ -219,6 +224,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "big screen 16X3 seems like led, front"
     },
     {
@@ -230,6 +236,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "screen , gray . can be for lab front view"
     },
     {
@@ -241,6 +248,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "kasino table look like rolute"
     },
     {
@@ -252,6 +260,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "kazino table"
     },
     {
@@ -263,6 +272,7 @@
       "walkable": false,
       "above": false,
       "category": "interior",
+      "interactType": null,
       "description": "kazino machines - profile view"
     },
     {
@@ -274,6 +284,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "home fridge 1 white-gray color"
     },
     {
@@ -285,6 +296,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "home fridge ornage color"
     },
     {
@@ -296,6 +308,7 @@
       "walkable": true,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "home/lab sink"
     },
     {
@@ -307,6 +320,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "stove"
     },
     {
@@ -318,6 +332,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "stove 4 flames"
     },
     {
@@ -329,6 +344,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "blue chair facing right"
     },
     {
@@ -340,6 +356,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "blue chair facing left"
     },
     {
@@ -351,6 +368,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "chiar facing 240 degree"
     },
     {
@@ -362,6 +380,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "charir 2 (purple) facing right bottom (330 degree)"
     },
     {
@@ -373,6 +392,7 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "chair 2 right"
     },
     {
@@ -384,6 +404,7 @@
       "walkable": false,
       "above": false,
       "category": "interior",
+      "interactType": null,
       "description": "chair 2 facing left"
     },
     {
@@ -395,7 +416,59 @@
       "walkable": false,
       "above": true,
       "category": "interior",
+      "interactType": null,
       "description": "chair 2 facing front"
+    },
+    {
+      "key": "firePlaceTop",
+      "sx": 0,
+      "sy": 0,
+      "w": 48,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "description": "firaplace top can fit to several",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        }
+      ]
+    },
+    {
+      "key": "firPlaceBody1",
+      "sx": 0,
+      "sy": 48,
+      "w": 48,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "interior"
     }
   ]
 }

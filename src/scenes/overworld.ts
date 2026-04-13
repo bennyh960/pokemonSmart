@@ -61,6 +61,9 @@ import {
 } from '../systems/cutscene-runner.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { setFlyCallback, CITY_INFO } from './world-map.js';
+import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
+import type { SimpleOpType } from '../math/simple-input-question.js';
+import { PLAYER_BIRTH_YEAR, gradeFromBirthYear } from '../data/story/global-gate-config.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -220,6 +223,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Pending push-back after gate scene dismissal without passing
   let pendingGateBack: { pushDx: number; pushDy: number; gateId: string } | null = null;
+
+  // Blocks all input while an NPC math-question overlay is running
+  let npcOverlayActive = false;
 
   // NPC facing restore: saves original facing when NPC turns toward player during dialogue
   const npcSavedFacing = new Map<string, string>();
@@ -509,6 +515,33 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Dialogue / generic NPC
       restoreNPCFacing(npc);
       interactingNPC = null;
+
+      // If this NPC has math questions, show them BEFORE giving the reward
+      const npcQ = (npc as unknown as Record<string, unknown>).questions as
+        { count: number; types?: string[] } | undefined;
+      if (npcQ && npcQ.count > 0 && hasActiveGame()) {
+        const appContainer = document.getElementById('app');
+        if (appContainer) {
+          npcOverlayActive = true;
+          const gradeId = gradeFromBirthYear(PLAYER_BIRTH_YEAR);
+          mountInputMathOverlay({
+            count: npcQ.count,
+            types: npcQ.types as SimpleOpType[] | undefined,
+            gradeId,
+            container: appContainer,
+          }).then(() => {
+            npcOverlayActive = false;
+            if (npc.reward && hasActiveGame()) {
+              giveNPCReward(npc, npc.reward);
+            }
+            if (hasActiveGame()) {
+              fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+            }
+          });
+          return;
+        }
+      }
+
       if (npc.reward && hasActiveGame()) {
         giveNPCReward(npc, npc.reward);
       }
@@ -1067,6 +1100,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         activateCutscene(pendingCutsceneId);
         return;
       }
+
+      // NPC question overlay blocks all game input while active
+      if (npcOverlayActive) return;
 
       // Shop overlay takes priority
       if (shop.open) {

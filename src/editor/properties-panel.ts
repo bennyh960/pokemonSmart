@@ -322,6 +322,11 @@ export class PropertiesPanel {
       this.renderGateGuardUI(body, npc);
     }
 
+    // ── Math Questions (all NPC types except gate-guard which uses its own gate) ──
+    if (npc.type !== 'gate-guard') {
+      this.renderNPCQuestionsUI(body, npc);
+    }
+
     // ── Story cross-references ──
     this.renderStoryRefsPanel(body, npc);
 
@@ -442,6 +447,112 @@ export class PropertiesPanel {
       }
       emit();
     }
+  }
+
+  // ── NPC Math Questions (pre-dialogue arithmetic challenge) ──
+  private renderNPCQuestionsUI(section: HTMLElement, npc: NPCData): void {
+    const emit = () => this.state.emit('map-modified');
+    const npcAny = npc as unknown as Record<string, unknown>;
+
+    const header = document.createElement('div');
+    header.className = 'trainer-subsection-header';
+    header.innerHTML = '<span>Math Questions</span>';
+    section.appendChild(header);
+
+    // ── Enable / disable ──
+    const enableRow = document.createElement('div');
+    enableRow.className = 'prop-row';
+    enableRow.innerHTML = '<label>Has Questions:</label>';
+    const enableCb = document.createElement('input');
+    enableCb.type = 'checkbox';
+    enableCb.title = 'Player must solve arithmetic problems before this NPC starts talking';
+    const currentQ = npcAny['questions'] as { count: number; types?: string[] } | undefined;
+    enableCb.checked = !!currentQ;
+
+    const configDiv = document.createElement('div');
+    configDiv.style.display = currentQ ? 'block' : 'none';
+    configDiv.style.paddingLeft = '8px';
+    configDiv.style.borderLeft = '2px solid #444';
+    configDiv.style.marginTop = '4px';
+
+    const rebuildConfig = () => {
+      configDiv.innerHTML = '';
+      const q = npcAny['questions'] as { count: number; types?: string[] } | undefined;
+      if (!q) return;
+
+      // Count
+      const countRow = document.createElement('div');
+      countRow.className = 'prop-row';
+      countRow.innerHTML = '<label>Question Count:</label>';
+      const countInput = document.createElement('input');
+      countInput.type = 'number';
+      countInput.min = '1';
+      countInput.max = '20';
+      countInput.value = String(q.count ?? 1);
+      countInput.title = 'How many correct answers are required before dialogue starts';
+      countInput.addEventListener('change', () => {
+        q.count = Math.max(1, parseInt(countInput.value, 10) || 1);
+        emit();
+      });
+      countRow.appendChild(countInput);
+      configDiv.appendChild(countRow);
+
+      // Op type checkboxes
+      const opsLabel = document.createElement('div');
+      opsLabel.style.cssText = 'font-size:11px;color:#8899bb;margin:6px 0 2px;';
+      opsLabel.textContent = 'Operation types (empty = all grade-appropriate):';
+      configDiv.appendChild(opsLabel);
+
+      const OPS: Array<{ value: string; label: string }> = [
+        { value: '+', label: 'Addition (+)' },
+        { value: '-', label: 'Subtraction (−)' },
+        { value: '×', label: 'Multiplication (×)' },
+        { value: '÷', label: 'Division (÷)' },
+      ];
+
+      const opsRow = document.createElement('div');
+      opsRow.style.display = 'flex';
+      opsRow.style.flexWrap = 'wrap';
+      opsRow.style.gap = '6px';
+
+      for (const op of OPS) {
+        const label = document.createElement('label');
+        label.style.cssText = 'display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = op.value;
+        cb.checked = !q.types || q.types.length === 0 || q.types.includes(op.value);
+        cb.addEventListener('change', () => {
+          // Collect all checked ops
+          const checked = Array.from(opsRow.querySelectorAll<HTMLInputElement>('input[type=checkbox]:checked'))
+            .map(c => c.value);
+          // If all 4 checked, store undefined (all allowed)
+          q.types = checked.length === 4 || checked.length === 0 ? [] : checked;
+          emit();
+        });
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(op.label));
+        opsRow.appendChild(label);
+      }
+      configDiv.appendChild(opsRow);
+    };
+
+    enableCb.addEventListener('change', () => {
+      if (enableCb.checked) {
+        npcAny['questions'] = { count: 1, types: [] };
+      } else {
+        delete npcAny['questions'];
+      }
+      configDiv.style.display = enableCb.checked ? 'block' : 'none';
+      rebuildConfig();
+      emit();
+    });
+
+    rebuildConfig();
+
+    enableRow.appendChild(enableCb);
+    section.appendChild(enableRow);
+    section.appendChild(configDiv);
   }
 
   // ── Trainer: Line of Sight, Reward, Party ──

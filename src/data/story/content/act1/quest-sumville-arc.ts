@@ -85,6 +85,18 @@ registerGate({
   questionSetIds: ['placeholder'],
   conditions: [],
   totalQuestions: 15,
+  sessionConfig: {
+    inputQuestions: { count: 5, types: ['+'] },
+    ...DEFAULT_SESSION_CONFIG,
+    rewards: [
+      { type: 'money', amount: 750 },
+      { type: 'item', itemId: 'rare-candy', amount: 1 },
+      { type: 'item', itemId: 'zinc', amount: 3 },
+    ],
+    questionsRequired: 15,
+    rewardThreshold: 12,
+    bonusMultiplier: 3,
+  },
   passThreshold: 12,
   failurePenalty: { type: 'none' },
   reopenCooldownMs: 0, // permanent once passed

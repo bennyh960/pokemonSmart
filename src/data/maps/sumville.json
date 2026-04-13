@@ -877,6 +877,10 @@
       "name": {
         "en": "Max",
         "he": "מקס"
+      },
+      "questions": {
+        "count": 3,
+        "types": []
       }
     },
     {

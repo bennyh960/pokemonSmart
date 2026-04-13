@@ -19,12 +19,18 @@
 import { GateSession } from './gate-session.js';
 import { getLocale, isRTL } from '../i18n/i18n.js';
 import type { GateSessionConfig } from '../data/story/gates.js';
-import type { SessionResult, AnswerFeedback } from './gate-session.js';
+import type { SessionResult, AnswerFeedback, AnyQuestion } from './gate-session.js';
 import type { RichQuestion, QuestionAsset } from '../math/question-builder/index.js';
+import type { SimpleInputQuestion } from '../math/simple-input-question.js';
 import { getItem } from '../data/items.js';
 
 // Re-export so gate-scene can use the same type
 export type { SessionResult };
+
+/** Type guard — distinguishes SimpleInputQuestion from RichQuestion. */
+function isSimpleInput(q: AnyQuestion): q is SimpleInputQuestion {
+  return (q as SimpleInputQuestion).type === 'simple-input';
+}
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -58,7 +64,7 @@ class GateOverlayController {
   private readonly el: HTMLDivElement;
   private readonly locale: 'he' | 'en';
 
-  private currentQuestion: RichQuestion | null = null;
+  private currentQuestion: AnyQuestion | null = null;
   private timerHandle: ReturnType<typeof setInterval> | null = null;
   private timerRemaining = 0;
   private inputLocked = false;
@@ -115,12 +121,21 @@ class GateOverlayController {
     this._stopTimer();
 
     const q = this.currentQuestion!;
-    const text = q.question[this.locale];
-    const loc = this.locale;
 
-    // Progress info
+    // Branch: simple input vs rich (multiple choice)
+    if (isSimpleInput(q)) {
+      this._showInputQuestion(q, isRetry);
+    } else {
+      this._showRichQuestion(q as RichQuestion, isRetry);
+    }
+  }
+
+  /** Render a simple arithmetic input question (player types the answer). */
+  private _showInputQuestion(q: SimpleInputQuestion, isRetry: boolean): void {
+    const loc = this.locale;
     const correct = this.session.currentCorrect;
     const required = this.session.currentRequired;
+
     const progressLabel = loc === 'he'
       ? `${correct} / ${required} נכון`
       : `${correct} / ${required} correct`;
@@ -133,7 +148,80 @@ class GateOverlayController {
     const showTimer = timerLimit > 0;
     this.timerRemaining = timerLimit;
 
-    // Assets
+    const submitLabel = loc === 'he' ? 'אשר ✓' : 'Submit ✓';
+    const placeholder = loc === 'he' ? 'הכנס תשובה...' : 'Enter answer...';
+
+    this.el.innerHTML = /* html */`
+      <div class="go-backdrop"></div>
+      <div class="go-panel">
+
+        <div class="go-header">
+          <div class="go-progress-bar-track">
+            <div class="go-progress-bar-fill" style="width:${(correct / required) * 100}%"></div>
+          </div>
+          <div class="go-progress-label">${progressLabel}</div>
+          ${showTimer ? `<div class="go-timer" id="go-timer">${this.timerRemaining}s</div>` : ''}
+          ${retryBadge}
+        </div>
+
+        <!-- dir="ltr": arithmetic is always written left-to-right regardless of locale -->
+        <div class="go-iq-expression" dir="ltr">${q.expression}</div>
+
+        <div class="go-iq-input-row">
+          <input
+            type="number"
+            id="go-iq-input"
+            class="go-iq-input"
+            placeholder="${placeholder}"
+            autocomplete="off"
+            inputmode="numeric"
+          />
+          <button class="go-btn go-btn-primary go-iq-submit">${submitLabel}</button>
+        </div>
+
+        <div id="go-feedback-area" class="go-feedback-area"></div>
+      </div>
+    `;
+
+    const inputEl = this.el.querySelector<HTMLInputElement>('#go-iq-input')!;
+    setTimeout(() => inputEl?.focus(), 50);
+
+    const handleSubmit = () => {
+      if (this.inputLocked) return;
+      const raw = inputEl.value.trim();
+      if (raw === '') return;
+      const parsed = parseFloat(raw);
+      if (isNaN(parsed)) return;
+      this._handleAnswer(Math.round(parsed));
+    };
+
+    this.el.querySelector('.go-iq-submit')!.addEventListener('click', handleSubmit);
+    inputEl.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); }
+    });
+
+    if (showTimer) this._startTimer(timerLimit);
+  }
+
+  /** Render a rich (story-themed, multiple-choice) question. */
+  private _showRichQuestion(q: RichQuestion, isRetry: boolean): void {
+    const loc = this.locale;
+    const text = q.question[loc];
+    const correct = this.session.currentCorrect;
+    const required = this.session.currentRequired;
+
+    const progressLabel = loc === 'he'
+      ? `${correct} / ${required} נכון`
+      : `${correct} / ${required} correct`;
+
+    const retryBadge = isRetry
+      ? `<span class="go-retry-badge">${loc === 'he' ? '🔁 נסה שוב' : '🔁 Try Again'}</span>`
+      : '';
+
+    const timerLimit = this.opts.sessionConfig.timeLimitPerQuestion;
+    const showTimer = timerLimit > 0;
+    this.timerRemaining = timerLimit;
+
     const assetsHtml = q.assets.length > 0
       ? `<div class="go-assets">${q.assets.map((a: QuestionAsset) => `
           <div class="go-asset">
@@ -145,7 +233,6 @@ class GateOverlayController {
          </div>`
       : '';
 
-    // Choices
     const choicesHtml = q.choices
       ? `<div class="go-choices">${q.choices.map((c: number) =>
           `<button class="go-choice" data-value="${c}">${_fmtNum(c)}</button>`
@@ -176,7 +263,6 @@ class GateOverlayController {
       </div>
     `;
 
-    // Bind choice clicks
     this.el.querySelectorAll('.go-choice').forEach(btn => {
       btn.addEventListener('click', () => {
         if (this.inputLocked) return;
@@ -185,10 +271,7 @@ class GateOverlayController {
       });
     });
 
-    // Start timer
-    if (showTimer) {
-      this._startTimer(timerLimit);
-    }
+    if (showTimer) this._startTimer(timerLimit);
   }
 
   private _handleAnswer(value: number): void {
@@ -197,24 +280,40 @@ class GateOverlayController {
     this._stopTimer();
 
     const q = this.currentQuestion!;
-    const feedback = this.session.submitAnswer(value, q.correctAnswer);
+    const correctAnswer = isSimpleInput(q) ? q.answer : (q as RichQuestion).correctAnswer;
+    const feedback = this.session.submitAnswer(value, correctAnswer);
     const loc = this.locale;
 
-    // Visual feedback on choice buttons
-    this.el.querySelectorAll('.go-choice').forEach(btn => {
-      const btnVal = parseInt((btn as HTMLButtonElement).dataset.value ?? '', 10);
-      if (btnVal === q.correctAnswer) {
-        btn.classList.add('go-correct');
-      } else if (btnVal === value && value !== q.correctAnswer) {
-        btn.classList.add('go-wrong');
-      }
-      (btn as HTMLButtonElement).disabled = true;
-    });
+    if (isSimpleInput(q)) {
+      // Disable the input field
+      const inputEl = this.el.querySelector<HTMLInputElement>('#go-iq-input');
+      const submitBtn = this.el.querySelector<HTMLButtonElement>('.go-iq-submit');
+      if (inputEl) inputEl.disabled = true;
+      if (submitBtn) submitBtn.disabled = true;
 
-    if (feedback.correct) {
-      this._showFeedbackCorrect(feedback);
+      if (feedback.correct) {
+        this._showFeedbackCorrect(feedback);
+      } else {
+        this._showFeedbackWrong(feedback, undefined);
+      }
     } else {
-      this._showFeedbackWrong(feedback, q.hint?.[loc]);
+      // Visual feedback on choice buttons
+      const richQ = q as RichQuestion;
+      this.el.querySelectorAll('.go-choice').forEach(btn => {
+        const btnVal = parseInt((btn as HTMLButtonElement).dataset.value ?? '', 10);
+        if (btnVal === richQ.correctAnswer) {
+          btn.classList.add('go-correct');
+        } else if (btnVal === value && value !== richQ.correctAnswer) {
+          btn.classList.add('go-wrong');
+        }
+        (btn as HTMLButtonElement).disabled = true;
+      });
+
+      if (feedback.correct) {
+        this._showFeedbackCorrect(feedback);
+      } else {
+        this._showFeedbackWrong(feedback, richQ.hint?.[loc]);
+      }
     }
   }
 
@@ -540,6 +639,54 @@ class GateOverlayController {
         border: 1px solid #2a2a55;
         border-radius: 10px;
         padding: 14px 18px;
+      }
+
+      /* ── Input question (simple arithmetic — typed answer) ── */
+      .go-iq-expression {
+        font-size: clamp(22px, 5vw, 36px);
+        font-weight: 700;
+        color: #00d4ff;
+        text-align: center;
+        padding: 18px 24px;
+        background: #0d0d22;
+        border: 2px solid #2a2a55;
+        border-radius: 14px;
+        letter-spacing: 3px;
+        font-family: 'Courier New', 'Lucida Console', monospace;
+        line-height: 1.4;
+        direction: ltr;
+        unicode-bidi: bidi-override;
+      }
+      .go-iq-input-row {
+        display: flex;
+        gap: 10px;
+        align-items: stretch;
+      }
+      .go-iq-input {
+        flex: 1;
+        background: #1c1c38;
+        border: 2px solid #3a3a66;
+        border-radius: 10px;
+        color: #eeeeff;
+        font-size: 24px;
+        font-weight: 700;
+        padding: 12px 16px;
+        outline: none;
+        text-align: center;
+        font-family: 'Courier New', monospace;
+        min-width: 0;
+        transition: border-color 0.15s;
+      }
+      .go-iq-input:focus { border-color: #00d4ff; }
+      .go-iq-input:disabled { opacity: 0.5; }
+      .go-iq-input::-webkit-inner-spin-button,
+      .go-iq-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+      .go-iq-input[type=number] { -moz-appearance: textfield; }
+      .go-iq-submit {
+        width: auto !important;
+        padding: 12px 22px !important;
+        font-size: 14px !important;
+        white-space: nowrap;
       }
 
       /* ── Choices ── */

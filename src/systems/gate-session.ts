@@ -17,13 +17,20 @@ import { QuestionBuilder, buildSnapshot, getClassConfig, registry } from '../mat
 import type { RichQuestion } from '../math/question-builder/index.js';
 import type { GateSessionConfig, GateReward } from '../data/story/gates.js';
 import { gradeFromBirthYear } from '../data/story/global-gate-config.js';
+import {
+  generateSimpleInputQuestion,
+  type SimpleInputQuestion,
+  type SimpleOpType,
+} from '../math/simple-input-question.js';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+
+export type AnyQuestion = RichQuestion | SimpleInputQuestion;
 
 export interface AnswerFeedback {
   correct: boolean;
   /** Only set on wrong answers — a new question with different variables. */
-  retryQuestion?: RichQuestion;
+  retryQuestion?: AnyQuestion;
   /** Progress after this answer. */
   correctCount: number;
   required: number;
@@ -64,12 +71,21 @@ export class GateSession {
   /** Last-used template id (so retries reuse exact same template). */
   private lastTemplateId = '';
 
+  /** Tracks how many simple-input questions remain to be served. */
+  private inputQuestionsRemaining: number;
+
+  /** Type of the most recently served question — used to generate same-type retries. */
+  private lastQuestionType: 'rich' | 'input' = 'rich';
+
   private phase: 'main' | 'bonus' | 'done' = 'main';
   private bonusPassed: boolean | null = null;
 
   constructor(config: GateSessionConfig) {
     this.config = config;
     this.requiredTotal = config.questionsRequired;
+    const inputCount = config.inputQuestions?.count ?? 0;
+    // Clamp: can't have more input questions than questionsRequired
+    this.inputQuestionsRemaining = Math.min(inputCount, config.questionsRequired);
   }
 
   // ── Public API ─────────────────────────────────────────────────────────────
@@ -89,15 +105,36 @@ export class GateSession {
 
   /**
    * Generate the next question for the current phase.
-   * Call this at the start of a session and after each `submitAnswer()` that returns
-   * `mainPhaseComplete = false`.
+   * Returns a RichQuestion (story-themed, multiple choice) OR a SimpleInputQuestion
+   * (plain arithmetic, typed answer) depending on the session config.
    */
-  nextQuestion(): RichQuestion {
-    const gradeId = this.phase === 'bonus' ? this._bonusGradeId() : this.gradeId;
+  nextQuestion(): AnyQuestion {
+    // Bonus phase always uses a rich question
+    if (this.phase === 'bonus') {
+      return this._nextRichQuestion(this._bonusGradeId());
+    }
 
+    // Decide whether to serve a simple input question.
+    // Probability = remaining input questions / remaining total questions.
+    const totalRemaining = this.requiredTotal - this.correctCount;
+    if (
+      this.inputQuestionsRemaining > 0 &&
+      (totalRemaining <= this.inputQuestionsRemaining ||
+        Math.random() < this.inputQuestionsRemaining / totalRemaining)
+    ) {
+      this.inputQuestionsRemaining--;
+      this.lastQuestionType = 'input';
+      const types = this.config.inputQuestions?.types as SimpleOpType[] | undefined;
+      return generateSimpleInputQuestion(this.gradeId, types);
+    }
+
+    this.lastQuestionType = 'rich';
+    return this._nextRichQuestion(this.gradeId);
+  }
+
+  private _nextRichQuestion(gradeId: ReturnType<typeof getClassConfig>['id']): RichQuestion {
     const cfg = getClassConfig(gradeId);
     const builder = new QuestionBuilder().withConfig(cfg).withSnapshot(this.snapshot);
-
     const q = builder.build();
     this.lastTemplateId = q.templateId;
     return q;
@@ -133,7 +170,7 @@ export class GateSession {
       };
     }
 
-    // Wrong answer in main phase  — bump required count and provide a retry
+    // Wrong answer in main phase — bump required count and provide a retry
     if (this.phase === 'main' && this.config.questionsRequired * 3 > this.requiredTotal) {
       this.requiredTotal++;
     } else if (this.phase === 'bonus') {
@@ -148,21 +185,27 @@ export class GateSession {
       };
     }
 
-    // Generate a retry question using the same template type
-    const cfg = getClassConfig(this.gradeId);
-    const builder = new QuestionBuilder().withConfig(cfg).withSnapshot(this.snapshot);
+    // Generate a retry question matching the type of the last question served
+    let retryQuestion: AnyQuestion;
 
-    try {
-      if (this.lastTemplateId) {
-        registry.get(this.lastTemplateId);
-        builder.withTemplateId(this.lastTemplateId);
+    if (this.lastQuestionType === 'input') {
+      const types = this.config.inputQuestions?.types as SimpleOpType[] | undefined;
+      retryQuestion = generateSimpleInputQuestion(this.gradeId, types);
+    } else {
+      const cfg = getClassConfig(this.gradeId);
+      const builder = new QuestionBuilder().withConfig(cfg).withSnapshot(this.snapshot);
+      try {
+        if (this.lastTemplateId) {
+          registry.get(this.lastTemplateId);
+          builder.withTemplateId(this.lastTemplateId);
+        }
+      } catch {
+        /* template not found — use random */
       }
-    } catch {
-      /* template not found — use random */
+      const richRetry = builder.build();
+      this.lastTemplateId = richRetry.templateId;
+      retryQuestion = richRetry;
     }
-
-    const retryQuestion = builder.build();
-    this.lastTemplateId = retryQuestion.templateId;
 
     return {
       correct: false,
