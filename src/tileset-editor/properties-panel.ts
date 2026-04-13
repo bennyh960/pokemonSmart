@@ -8,15 +8,42 @@ import { getAllItems } from '../data/items.js';
 
 // ─── Pokemon types for encounter picker ───
 const POKEMON_TYPES = [
-  'normal','fire','water','grass','electric','ice','fighting','poison',
-  'ground','flying','psychic','bug','rock','ghost','dragon','dark','steel',
+  'normal',
+  'fire',
+  'water',
+  'grass',
+  'electric',
+  'ice',
+  'fighting',
+  'poison',
+  'ground',
+  'flying',
+  'psychic',
+  'bug',
+  'rock',
+  'ghost',
+  'dragon',
+  'dark',
+  'steel',
 ];
 
 const TYPE_BADGE_COLORS: Record<string, string> = {
-  normal: '#a8a878', fire: '#f08030', water: '#6890f0', grass: '#78c850',
-  electric: '#f8d030', ice: '#98d8d8', fighting: '#c03028', poison: '#a040a0',
-  ground: '#e0c068', flying: '#a890f0', psychic: '#f85888', bug: '#a8b820',
-  rock: '#b8a038', ghost: '#705898', dragon: '#7038f8', dark: '#705848',
+  normal: '#a8a878',
+  fire: '#f08030',
+  water: '#6890f0',
+  grass: '#78c850',
+  electric: '#f8d030',
+  ice: '#98d8d8',
+  fighting: '#c03028',
+  poison: '#a040a0',
+  ground: '#e0c068',
+  flying: '#a890f0',
+  psychic: '#f85888',
+  bug: '#a8b820',
+  rock: '#b8a038',
+  ghost: '#705898',
+  dragon: '#7038f8',
+  dark: '#705848',
   steel: '#b8b8d0',
 };
 
@@ -26,10 +53,15 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
 //   ['water','bug']   - allMode=false, includes=['water','bug']
 //   []                - allMode=false, includes=[]
 function parseEncounterTypesForUI(types: string[]): { allMode: boolean; includes: string[]; exceptions: string[] } {
-  const wildcard = types.find(t => t.startsWith('*'));
+  const wildcard = types.find((t) => t.startsWith('*'));
   if (wildcard) {
     const afterSlash = wildcard.split('/')[1];
-    const exceptions = afterSlash ? afterSlash.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const exceptions = afterSlash
+      ? afterSlash
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
     return { allMode: true, includes: [], exceptions };
   }
   return { allMode: false, includes: [...types], exceptions: [] };
@@ -46,8 +78,9 @@ function serializeEncounterTypes(allMode: boolean, includes: string[], exception
 function getBattleBackgroundOptionsHtml(selected?: string): string {
   return [
     `<option value="" ${!selected ? 'selected' : ''}>Default (context/fallback)</option>`,
-    ...BATTLE_BACKGROUNDS.map((bg) =>
-      `<option value="${bg.id}" ${selected === bg.id ? 'selected' : ''}>${bg.label}</option>`),
+    ...BATTLE_BACKGROUNDS.map(
+      (bg) => `<option value="${bg.id}" ${selected === bg.id ? 'selected' : ''}>${bg.label}</option>`,
+    ),
   ].join('');
 }
 
@@ -84,8 +117,13 @@ function createEncounterTypesPicker(
     allCb.checked = allMode;
     allCb.addEventListener('change', () => {
       allMode = allCb.checked;
-      if (allMode) { includes = []; exceptions = []; }
-      else { exceptions = []; includes = []; }
+      if (allMode) {
+        includes = [];
+        exceptions = [];
+      } else {
+        exceptions = [];
+        includes = [];
+      }
       emit();
       render();
     });
@@ -140,7 +178,8 @@ function createEncounterTypesPicker(
     if (allMode) {
       // Show "All" badge
       const allTag = document.createElement('span');
-      allTag.style.cssText = 'display:inline-flex;align-items:center;gap:2px;padding:1px 6px;border-radius:3px;font-size:11px;background:#446644;color:#aaffaa;cursor:default';
+      allTag.style.cssText =
+        'display:inline-flex;align-items:center;gap:2px;padding:1px 6px;border-radius:3px;font-size:11px;background:#446644;color:#aaffaa;cursor:default';
       allTag.textContent = exceptions.length > 0 ? 'All except:' : 'All types';
       tagsRow.appendChild(allTag);
 
@@ -152,7 +191,7 @@ function createEncounterTypesPicker(
         tag.title = 'Click to remove exception';
         tag.textContent = `✕ ${t}`;
         tag.addEventListener('click', () => {
-          exceptions = exceptions.filter(s => s !== t);
+          exceptions = exceptions.filter((s) => s !== t);
           emit();
           render();
         });
@@ -167,7 +206,7 @@ function createEncounterTypesPicker(
         tag.title = 'Click to remove';
         tag.textContent = `✕ ${t}`;
         tag.addEventListener('click', () => {
-          includes = includes.filter(s => s !== t);
+          includes = includes.filter((s) => s !== t);
           emit();
           render();
         });
@@ -232,7 +271,8 @@ export class PropertiesPanel {
       } else if (this.state.cropSelValid) {
         this.renderCropForm();
       } else {
-        this.container.innerHTML = '<div class="prop-empty">Crop mode is active.<br><br>Select a region on the spritesheet to crop/resize it in-place. Selection is pixel-level (1px steps).</div>';
+        this.container.innerHTML =
+          '<div class="prop-empty">Crop mode is active.<br><br>Select a region on the spritesheet to crop/resize it in-place. Selection is pixel-level (1px steps).</div>';
       }
       return;
     }
@@ -255,7 +295,8 @@ export class PropertiesPanel {
       return;
     }
 
-    this.container.innerHTML = '<div class="prop-empty">Select a region on the spritesheet to define a tile, or click an existing tile in the list to edit it.</div>';
+    this.container.innerHTML =
+      '<div class="prop-empty">Select a region on the spritesheet to define a tile, or click an existing tile in the list to edit it.</div>';
   }
 
   /** Before locking — show selection info and Lock button. */
@@ -368,7 +409,7 @@ export class PropertiesPanel {
       pctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       for (let y = 0; y < previewCanvas.height; y += 8) {
         for (let x = 0; x < previewCanvas.width; x += 8) {
-          pctx.fillStyle = ((x / 8 + y / 8) % 2 === 0) ? '#222' : '#333';
+          pctx.fillStyle = (x / 8 + y / 8) % 2 === 0 ? '#222' : '#333';
           pctx.fillRect(x, y, 8, 8);
         }
       }
@@ -403,13 +444,27 @@ export class PropertiesPanel {
       const th = s.cropTargetH;
       const targetSx = s.cropTargetX;
       const targetSy = s.cropTargetY;
-      if (tw < 1 || th < 1) { alert('Invalid target size'); return; }
+      if (tw < 1 || th < 1) {
+        alert('Invalid target size');
+        return;
+      }
 
       applyBtn.disabled = true;
       applyBtn.textContent = 'Applying...';
 
       try {
-        const blob = await applyCrop(this.image, s.cropSrcX, s.cropSrcY, s.cropSrcW, s.cropSrcH, tw, th, targetSx, targetSy);
+        const blob = await applyCrop(
+          this.image,
+          s.cropSrcX,
+          s.cropSrcY,
+          s.cropSrcW,
+          s.cropSrcH,
+          tw,
+          th,
+          targetSx,
+          targetSy,
+        );
+        //  overworld-tileset.png
         await saveTilesetImage(blob);
 
         // Reload the image with the modified data
@@ -449,16 +504,21 @@ export class PropertiesPanel {
 
   /** Add form for Ctrl+Click multi-selected non-adjacent cells → single grouped tile. */
   private renderMultiAddForm(): void {
-    const cells = [...this.state.multiSelectedCells].map(k => {
+    const cells = [...this.state.multiSelectedCells].map((k) => {
       const [c, r] = k.split(',').map(Number);
       return { col: c, row: r };
     });
 
     // Compute bounding box
-    let minCol = Infinity, maxCol = -Infinity, minRow = Infinity, maxRow = -Infinity;
+    let minCol = Infinity,
+      maxCol = -Infinity,
+      minRow = Infinity,
+      maxRow = -Infinity;
     for (const { col, row } of cells) {
-      minCol = Math.min(minCol, col); maxCol = Math.max(maxCol, col);
-      minRow = Math.min(minRow, row); maxRow = Math.max(maxRow, row);
+      minCol = Math.min(minCol, col);
+      maxCol = Math.max(maxCol, col);
+      minRow = Math.min(minRow, row);
+      maxRow = Math.max(maxRow, row);
     }
     const gridCols = maxCol - minCol + 1;
     const gridRows = maxRow - minRow + 1;
@@ -481,7 +541,7 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Region:</label><span>(${sx}, ${sy}) ${w}×${h}px</span></div>
       <div class="prop-row"><label>Cells:</label><span class="val-highlight">${cells.length} of ${gridCols * gridRows}</span></div>
       <div class="prop-row"><label>Key:</label><input id="multi-key" type="text" placeholder="e.g. building-walls" autofocus /></div>
-      <div class="prop-row"><label>Category:</label><select id="multi-cat"><option value="">None</option>${TILE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
+      <div class="prop-row"><label>Category:</label><select id="multi-cat"><option value="">None</option>${TILE_CATEGORIES.map((c) => `<option value="${c}">${c}</option>`).join('')}</select></div>
       <div class="prop-row"><label>Walkable:</label><input id="multi-walk" type="checkbox" /></div>
       <div class="prop-row" style="flex-direction:column;align-items:flex-start"><label>Encounter types:</label><div id="multi-enc-widget"></div></div>
       <div class="prop-row"><label>Above (2nd layer):</label><input id="multi-above" type="checkbox" /></div>
@@ -523,8 +583,10 @@ export class PropertiesPanel {
           pctx.strokeStyle = 'rgba(255, 80, 80, 0.3)';
           pctx.lineWidth = 1;
           pctx.beginPath();
-          pctx.moveTo(px, py); pctx.lineTo(px + cellSize, py + cellSize);
-          pctx.moveTo(px + cellSize, py); pctx.lineTo(px, py + cellSize);
+          pctx.moveTo(px, py);
+          pctx.lineTo(px + cellSize, py + cellSize);
+          pctx.moveTo(px + cellSize, py);
+          pctx.lineTo(px, py + cellSize);
           pctx.stroke();
         }
       }
@@ -535,7 +597,9 @@ export class PropertiesPanel {
     let multiEncTypes: string[] = [];
     const multiEncWidget = section.querySelector('#multi-enc-widget') as HTMLElement;
     if (multiEncWidget) {
-      createEncounterTypesPicker(multiEncWidget, [], (types) => { multiEncTypes = types; });
+      createEncounterTypesPicker(multiEncWidget, [], (types) => {
+        multiEncTypes = types;
+      });
     }
 
     // Add Tile button
@@ -546,13 +610,23 @@ export class PropertiesPanel {
     addBtn.addEventListener('click', () => {
       const keyInput = section.querySelector('#multi-key') as HTMLInputElement;
       const key = keyInput.value.trim();
-      if (!key) { keyInput.focus(); keyInput.style.borderColor = '#cc3333'; return; }
-      if (this.state.tiles.some(t => t.key === key)) { alert(`Key "${key}" already exists`); return; }
+      if (!key) {
+        keyInput.focus();
+        keyInput.style.borderColor = '#cc3333';
+        return;
+      }
+      if (this.state.tiles.some((t) => t.key === key)) {
+        alert(`Key "${key}" already exists`);
+        return;
+      }
 
       const catVal = (section.querySelector('#multi-cat') as HTMLSelectElement).value;
       this.state.addTile({
         key,
-        sx, sy, w, h,
+        sx,
+        sy,
+        w,
+        h,
         walkable: (section.querySelector('#multi-walk') as HTMLInputElement).checked,
         encounterTypes: multiEncTypes.length > 0 ? multiEncTypes : undefined,
         above: (section.querySelector('#multi-above') as HTMLInputElement).checked,
@@ -599,7 +673,7 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Region:</label><span>(${sx}, ${sy})</span></div>
       <div class="prop-row"><label>Size:</label><span class="val-highlight">${w}×${h}px</span></div>
       <div class="prop-row"><label>Key:</label><input id="add-key" type="text" placeholder="e.g. grass-1" autofocus /></div>
-      <div class="prop-row"><label>Category:</label><select id="add-cat"><option value="">None</option>${TILE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}</select></div>
+      <div class="prop-row"><label>Category:</label><select id="add-cat"><option value="">None</option>${TILE_CATEGORIES.map((c) => `<option value="${c}">${c}</option>`).join('')}</select></div>
       <div class="prop-row"><label>Walkable:</label><input id="add-walk" type="checkbox" checked /></div>
       <div class="prop-row" style="flex-direction:column;align-items:flex-start"><label>Encounter types:</label><div id="add-enc-widget"></div></div>
       <div class="prop-row"><label>Battle background:</label><select id="add-battle-bg">${getBattleBackgroundOptionsHtml()}</select></div>
@@ -614,7 +688,9 @@ export class PropertiesPanel {
     let addEncTypes: string[] = [];
     const addEncWidget = section.querySelector('#add-enc-widget') as HTMLElement;
     if (addEncWidget) {
-      createEncounterTypesPicker(addEncWidget, [], (types) => { addEncTypes = types; });
+      createEncounterTypesPicker(addEncWidget, [], (types) => {
+        addEncTypes = types;
+      });
     }
 
     const addBtn = document.createElement('button');
@@ -623,17 +699,25 @@ export class PropertiesPanel {
     addBtn.addEventListener('click', () => {
       const keyInput = section.querySelector('#add-key') as HTMLInputElement;
       const key = keyInput.value.trim();
-      if (!key) { keyInput.focus(); keyInput.style.borderColor = '#cc3333'; return; }
-      if (this.state.tiles.some(t => t.key === key)) { alert(`Key "${key}" already exists`); return; }
+      if (!key) {
+        keyInput.focus();
+        keyInput.style.borderColor = '#cc3333';
+        return;
+      }
+      if (this.state.tiles.some((t) => t.key === key)) {
+        alert(`Key "${key}" already exists`);
+        return;
+      }
 
       const catVal = (section.querySelector('#add-cat') as HTMLSelectElement).value;
-      const battleBackground = normalizeBattleBackgroundId(
-        (section.querySelector('#add-battle-bg') as HTMLSelectElement).value,
-      ) ?? undefined;
+      const battleBackground =
+        normalizeBattleBackgroundId((section.querySelector('#add-battle-bg') as HTMLSelectElement).value) ?? undefined;
       const entry: TileEntry = {
         key,
-        sx, sy,
-        w, h,
+        sx,
+        sy,
+        w,
+        h,
         walkable: (section.querySelector('#add-walk') as HTMLInputElement).checked,
         encounterTypes: addEncTypes.length > 0 ? addEncTypes : undefined,
         battleBackground,
@@ -674,7 +758,7 @@ export class PropertiesPanel {
         <label>Category:</label>
         <select id="edit-cat">
           <option value="">None</option>
-          ${TILE_CATEGORIES.map(c => `<option value="${c}" ${t.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+          ${TILE_CATEGORIES.map((c) => `<option value="${c}" ${t.category === c ? 'selected' : ''}>${c}</option>`).join('')}
         </select>
       </div>
       <div class="prop-row">
@@ -697,7 +781,9 @@ export class PropertiesPanel {
         <label>Overlay (on top of player):</label>
         <input id="edit-overlay" type="checkbox" ${t.overlay ? 'checked' : ''} />
       </div>
-      ${t.category === 'interactive' ? `
+      ${
+        t.category === 'interactive'
+          ? `
       <div class="prop-row">
         <label>Interact Type:</label>
         <select id="edit-interactType-id">
@@ -705,7 +791,9 @@ export class PropertiesPanel {
         </select>
       </div>
       <div id="interact-args-container"></div>
-      ` : ''}
+      `
+          : ''
+      }
       <div class="prop-row">
         <label>Description:</label>
         <input id="edit-desc" type="text" value="${t.description ?? ''}" placeholder="optional note" />
@@ -747,194 +835,215 @@ export class PropertiesPanel {
     const argsContainer = section.querySelector('#interact-args-container') as HTMLElement | null;
 
     if (interactSel && argsContainer) {
-    // Populate dropdown from INTERACT_TYPE_IDS (not hardcoded)
-    for (const typeId of INTERACT_TYPE_IDS) {
-      const opt = document.createElement('option');
-      opt.value = typeId;
-      const def = getInteractType(typeId);
-      opt.textContent = `${typeId} — ${def?.label.en ?? typeId}`;
-      if (t.interactType?.id === typeId) opt.selected = true;
-      interactSel.appendChild(opt);
-    }
-    if (!t.interactType) (interactSel.querySelector('option[value=""]') as HTMLOptionElement).selected = true;
-
-    const renderArgsEditor = () => {
-      argsContainer.innerHTML = '';
-      const ref = this.state.tiles[index]?.interactType;
-      if (!ref) return;
-
-      const defaults = getInteractType(ref.id);
-      if (!defaults) return;
-      const args = ref.args ?? {};
-      const typeId = ref.id;
-
-      // Helper: info tooltip
-      const info = (text: string): HTMLElement => {
-        const span = document.createElement('span');
-        span.textContent = '\u2139';
-        span.title = text;
-        span.style.cssText = 'cursor:help; color:#6688cc; font-size:13px; margin-left:4px; user-select:none;';
-        return span;
-      };
-
-      // Helper: add row with label + input + optional info
-      const addRow = (label: string, el: HTMLElement, infoText?: string) => {
-        const row = document.createElement('div');
-        row.className = 'prop-row';
-        const lbl = document.createElement('label');
-        lbl.textContent = label + ':';
-        row.appendChild(lbl);
-        row.appendChild(el);
-        if (infoText) row.appendChild(info(infoText));
-        argsContainer.appendChild(row);
-      };
-
-      const header = document.createElement('div');
-      header.style.cssText = 'font-size:10px; color:#88aacc; margin:4px 0 2px; font-weight:600;';
-      header.textContent = 'Overrides (empty = use default from interact-types.ts)';
-      argsContainer.appendChild(header);
-
-      // ── Label (all types) ──
-      const labelEnInput = document.createElement('input');
-      labelEnInput.type = 'text';
-      labelEnInput.value = (args as any).label?.en ?? '';
-      labelEnInput.placeholder = defaults.label.en;
-      labelEnInput.addEventListener('change', () => syncLabel());
-      addRow('Label EN', labelEnInput, 'Display name shown in-game. Leave empty to use default: "' + defaults.label.en + '"');
-
-      const labelHeInput = document.createElement('input');
-      labelHeInput.type = 'text';
-      labelHeInput.style.direction = 'rtl';
-      labelHeInput.value = (args as any).label?.he ?? '';
-      labelHeInput.placeholder = defaults.label.he;
-      labelHeInput.addEventListener('change', () => syncLabel());
-      addRow('Label HE', labelHeInput);
-
-      function syncLabel(): void {
-        const en = labelEnInput.value.trim();
-        const he = labelHeInput.value.trim();
-        updateArg('label', () => (en || he) ? { en, he } : undefined);
+      // Populate dropdown from INTERACT_TYPE_IDS (not hardcoded)
+      for (const typeId of INTERACT_TYPE_IDS) {
+        const opt = document.createElement('option');
+        opt.value = typeId;
+        const def = getInteractType(typeId);
+        opt.textContent = `${typeId} — ${def?.label.en ?? typeId}`;
+        if (t.interactType?.id === typeId) opt.selected = true;
+        interactSel.appendChild(opt);
       }
+      if (!t.interactType) (interactSel.querySelector('option[value=""]') as HTMLOptionElement).selected = true;
 
-      // ── Dialogue (sign, cut, strength — types that show text) ──
-      if (typeId === 'sign' || typeId === 'cut' || typeId === 'strength') {
-        const diaEnTa = document.createElement('textarea');
-        diaEnTa.rows = 2;
-        diaEnTa.value = ((args as any).dialogue ?? []).map((d: any) => d?.en ?? '').join('\n');
-        diaEnTa.placeholder = defaults.dialogue.map(d => d.en).join('\n') || '(none)';
-        diaEnTa.addEventListener('change', () => syncDialogue());
-        addRow('Dialogue EN', diaEnTa, 'Bilingual text shown when player interacts. Each line = one text box page. Leave empty to use default.');
+      const renderArgsEditor = () => {
+        argsContainer.innerHTML = '';
+        const ref = this.state.tiles[index]?.interactType;
+        if (!ref) return;
 
-        const diaHeTa = document.createElement('textarea');
-        diaHeTa.rows = 2;
-        diaHeTa.style.direction = 'rtl';
-        diaHeTa.value = ((args as any).dialogue ?? []).map((d: any) => d?.he ?? '').join('\n');
-        diaHeTa.placeholder = defaults.dialogue.map(d => d.he).join('\n') || '(none)';
-        diaHeTa.addEventListener('change', () => syncDialogue());
-        addRow('Dialogue HE', diaHeTa);
+        const defaults = getInteractType(ref.id);
+        if (!defaults) return;
+        const args = ref.args ?? {};
+        const typeId = ref.id;
 
-        function syncDialogue(): void {
-          const enLines = diaEnTa.value.split('\n');
-          const heLines = diaHeTa.value.split('\n');
-          const maxLen = Math.max(enLines.length, heLines.length);
-          const lines: { en: string; he: string }[] = [];
-          for (let i = 0; i < maxLen; i++) {
-            const en = (enLines[i] || '').trim();
-            const he = (heLines[i] || '').trim();
-            if (en || he) lines.push({ en, he });
+        // Helper: info tooltip
+        const info = (text: string): HTMLElement => {
+          const span = document.createElement('span');
+          span.textContent = '\u2139';
+          span.title = text;
+          span.style.cssText = 'cursor:help; color:#6688cc; font-size:13px; margin-left:4px; user-select:none;';
+          return span;
+        };
+
+        // Helper: add row with label + input + optional info
+        const addRow = (label: string, el: HTMLElement, infoText?: string) => {
+          const row = document.createElement('div');
+          row.className = 'prop-row';
+          const lbl = document.createElement('label');
+          lbl.textContent = label + ':';
+          row.appendChild(lbl);
+          row.appendChild(el);
+          if (infoText) row.appendChild(info(infoText));
+          argsContainer.appendChild(row);
+        };
+
+        const header = document.createElement('div');
+        header.style.cssText = 'font-size:10px; color:#88aacc; margin:4px 0 2px; font-weight:600;';
+        header.textContent = 'Overrides (empty = use default from interact-types.ts)';
+        argsContainer.appendChild(header);
+
+        // ── Label (all types) ──
+        const labelEnInput = document.createElement('input');
+        labelEnInput.type = 'text';
+        labelEnInput.value = (args as any).label?.en ?? '';
+        labelEnInput.placeholder = defaults.label.en;
+        labelEnInput.addEventListener('change', () => syncLabel());
+        addRow(
+          'Label EN',
+          labelEnInput,
+          'Display name shown in-game. Leave empty to use default: "' + defaults.label.en + '"',
+        );
+
+        const labelHeInput = document.createElement('input');
+        labelHeInput.type = 'text';
+        labelHeInput.style.direction = 'rtl';
+        labelHeInput.value = (args as any).label?.he ?? '';
+        labelHeInput.placeholder = defaults.label.he;
+        labelHeInput.addEventListener('change', () => syncLabel());
+        addRow('Label HE', labelHeInput);
+
+        function syncLabel(): void {
+          const en = labelEnInput.value.trim();
+          const he = labelHeInput.value.trim();
+          updateArg('label', () => (en || he ? { en, he } : undefined));
+        }
+
+        // ── Dialogue (sign, cut, strength — types that show text) ──
+        if (typeId === 'sign' || typeId === 'cut' || typeId === 'strength') {
+          const diaEnTa = document.createElement('textarea');
+          diaEnTa.rows = 2;
+          diaEnTa.value = ((args as any).dialogue ?? []).map((d: any) => d?.en ?? '').join('\n');
+          diaEnTa.placeholder = defaults.dialogue.map((d) => d.en).join('\n') || '(none)';
+          diaEnTa.addEventListener('change', () => syncDialogue());
+          addRow(
+            'Dialogue EN',
+            diaEnTa,
+            'Bilingual text shown when player interacts. Each line = one text box page. Leave empty to use default.',
+          );
+
+          const diaHeTa = document.createElement('textarea');
+          diaHeTa.rows = 2;
+          diaHeTa.style.direction = 'rtl';
+          diaHeTa.value = ((args as any).dialogue ?? []).map((d: any) => d?.he ?? '').join('\n');
+          diaHeTa.placeholder = defaults.dialogue.map((d) => d.he).join('\n') || '(none)';
+          diaHeTa.addEventListener('change', () => syncDialogue());
+          addRow('Dialogue HE', diaHeTa);
+
+          function syncDialogue(): void {
+            const enLines = diaEnTa.value.split('\n');
+            const heLines = diaHeTa.value.split('\n');
+            const maxLen = Math.max(enLines.length, heLines.length);
+            const lines: { en: string; he: string }[] = [];
+            for (let i = 0; i < maxLen; i++) {
+              const en = (enLines[i] || '').trim();
+              const he = (heLines[i] || '').trim();
+              if (en || he) lines.push({ en, he });
+            }
+            updateArg('dialogue', () => (lines.length > 0 ? lines : undefined));
           }
-          updateArg('dialogue', () => lines.length > 0 ? lines : undefined);
         }
-      }
 
-      // ── Item fields (item type only) ──
-      if (typeId === 'item') {
-        const itemSel = document.createElement('select');
-        const currentItemId = (args as any).itemId ?? defaults.itemId ?? '';
-        // Empty option = use default
-        const emptyOpt = document.createElement('option');
-        emptyOpt.value = '';
-        emptyOpt.textContent = `(default: ${defaults.itemId ?? 'none'})`;
-        if (!currentItemId || currentItemId === defaults.itemId) emptyOpt.selected = true;
-        itemSel.appendChild(emptyOpt);
-        // All items from items.ts
-        for (const item of getAllItems()) {
-          const opt = document.createElement('option');
-          opt.value = item.id;
-          opt.textContent = `${item.id}`;
-          if (item.id === currentItemId && currentItemId !== defaults.itemId) opt.selected = true;
-          itemSel.appendChild(opt);
+        // ── Item fields (item type only) ──
+        if (typeId === 'item') {
+          const itemSel = document.createElement('select');
+          const currentItemId = (args as any).itemId ?? defaults.itemId ?? '';
+          // Empty option = use default
+          const emptyOpt = document.createElement('option');
+          emptyOpt.value = '';
+          emptyOpt.textContent = `(default: ${defaults.itemId ?? 'none'})`;
+          if (!currentItemId || currentItemId === defaults.itemId) emptyOpt.selected = true;
+          itemSel.appendChild(emptyOpt);
+          // All items from items.ts
+          for (const item of getAllItems()) {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = `${item.id}`;
+            if (item.id === currentItemId && currentItemId !== defaults.itemId) opt.selected = true;
+            itemSel.appendChild(opt);
+          }
+          itemSel.addEventListener('change', () => updateArg('itemId', () => itemSel.value || undefined));
+          addRow(
+            'Item',
+            itemSel,
+            'The item to give when collected. Select from all defined items in src/data/items.ts.',
+          );
+
+          const qtyInput = document.createElement('input');
+          qtyInput.type = 'number';
+          qtyInput.min = '1';
+          qtyInput.value = (args as any).itemQty != null ? String((args as any).itemQty) : '';
+          qtyInput.placeholder = String(defaults.itemQty ?? 1);
+          qtyInput.addEventListener('change', () =>
+            updateArg('itemQty', () => {
+              const v = parseInt(qtyInput.value, 10);
+              return isNaN(v) || v <= 0 ? undefined : v;
+            }),
+          );
+          addRow('Item Qty', qtyInput, 'How many of this item to give. Default: 1.');
+
+          const flagInput = document.createElement('input');
+          flagInput.type = 'text';
+          flagInput.value = (args as any).flag ?? '';
+          flagInput.placeholder = '(auto-generated)';
+          flagInput.addEventListener('change', () => updateArg('flag', () => flagInput.value.trim() || undefined));
+          addRow(
+            'Flag',
+            flagInput,
+            'Prevents collecting the same item twice. Auto-generated from tile key + position if empty. Override to share a flag between multiple items.',
+          );
         }
-        itemSel.addEventListener('change', () => updateArg('itemId', () => itemSel.value || undefined));
-        addRow('Item', itemSel, 'The item to give when collected. Select from all defined items in src/data/items.ts.');
 
-        const qtyInput = document.createElement('input');
-        qtyInput.type = 'number';
-        qtyInput.min = '1';
-        qtyInput.value = (args as any).itemQty != null ? String((args as any).itemQty) : '';
-        qtyInput.placeholder = String(defaults.itemQty ?? 1);
-        qtyInput.addEventListener('change', () => updateArg('itemQty', () => {
-          const v = parseInt(qtyInput.value, 10);
-          return isNaN(v) || v <= 0 ? undefined : v;
-        }));
-        addRow('Item Qty', qtyInput, 'How many of this item to give. Default: 1.');
+        // ── PC type info ──
+        if (typeId === 'pc') {
+          const hint = document.createElement('div');
+          hint.style.cssText =
+            'font-size:10px; color:#667766; margin:4px 0; padding:4px; background:#0a2a1a; border-radius:3px;';
+          hint.textContent = 'PC tiles open the Pokemon storage screen on interaction. No extra args needed.';
+          argsContainer.appendChild(hint);
+        }
 
-        const flagInput = document.createElement('input');
-        flagInput.type = 'text';
-        flagInput.value = (args as any).flag ?? '';
-        flagInput.placeholder = '(auto-generated)';
-        flagInput.addEventListener('change', () => updateArg('flag', () => flagInput.value.trim() || undefined));
-        addRow('Flag', flagInput, 'Prevents collecting the same item twice. Auto-generated from tile key + position if empty. Override to share a flag between multiple items.');
-      }
+        // ── Cut/Strength info ──
+        if (typeId === 'cut' || typeId === 'strength') {
+          const hint = document.createElement('div');
+          hint.style.cssText =
+            'font-size:10px; color:#667766; margin:4px 0; padding:4px; background:#0a2a1a; border-radius:3px;';
+          hint.textContent =
+            typeId === 'cut'
+              ? 'Cut trees are removed when a party Pokemon knows Cut and the player has the required badge.'
+              : 'Strength boulders can be pushed/removed when a party Pokemon knows Strength and the player has the required badge.';
+          argsContainer.appendChild(hint);
+        }
 
-      // ── PC type info ──
-      if (typeId === 'pc') {
-        const hint = document.createElement('div');
-        hint.style.cssText = 'font-size:10px; color:#667766; margin:4px 0; padding:4px; background:#0a2a1a; border-radius:3px;';
-        hint.textContent = 'PC tiles open the Pokemon storage screen on interaction. No extra args needed.';
-        argsContainer.appendChild(hint);
-      }
+        /** Update a single arg key. getValue() returns undefined to remove the override. */
+        function updateArg(key: string, getValue: () => unknown): void {
+          const currentRef = this_state.tiles[index]?.interactType;
+          if (!currentRef) return;
+          const newArgs = { ...(currentRef.args ?? {}) } as Record<string, unknown>;
+          const val = getValue();
+          if (val === undefined) {
+            delete newArgs[key];
+          } else {
+            newArgs[key] = val;
+          }
+          const cleanArgs = Object.keys(newArgs).length > 0 ? newArgs : undefined;
+          this_state.updateTile(index, { interactType: { id: currentRef.id, args: cleanArgs } });
+        }
+      };
 
-      // ── Cut/Strength info ──
-      if (typeId === 'cut' || typeId === 'strength') {
-        const hint = document.createElement('div');
-        hint.style.cssText = 'font-size:10px; color:#667766; margin:4px 0; padding:4px; background:#0a2a1a; border-radius:3px;';
-        hint.textContent = typeId === 'cut'
-          ? 'Cut trees are removed when a party Pokemon knows Cut and the player has the required badge.'
-          : 'Strength boulders can be pushed/removed when a party Pokemon knows Strength and the player has the required badge.';
-        argsContainer.appendChild(hint);
-      }
+      // Capture state ref for use in closures
+      const this_state = this.state;
 
-      /** Update a single arg key. getValue() returns undefined to remove the override. */
-      function updateArg(key: string, getValue: () => unknown): void {
-        const currentRef = this_state.tiles[index]?.interactType;
-        if (!currentRef) return;
-        const newArgs = { ...(currentRef.args ?? {}) } as Record<string, unknown>;
-        const val = getValue();
-        if (val === undefined) {
-          delete newArgs[key];
+      interactSel.addEventListener('change', () => {
+        const val = interactSel.value;
+        if (val) {
+          this.state.updateTile(index, { interactType: { id: val } });
         } else {
-          newArgs[key] = val;
+          this.state.updateTile(index, { interactType: null });
         }
-        const cleanArgs = Object.keys(newArgs).length > 0 ? newArgs : undefined;
-        this_state.updateTile(index, { interactType: { id: currentRef.id, args: cleanArgs } });
-      }
-    };
+        renderArgsEditor();
+      });
 
-    // Capture state ref for use in closures
-    const this_state = this.state;
-
-    interactSel.addEventListener('change', () => {
-      const val = interactSel.value;
-      if (val) {
-        this.state.updateTile(index, { interactType: { id: val } });
-      } else {
-        this.state.updateTile(index, { interactType: null });
-      }
       renderArgsEditor();
-    });
-
-    renderArgsEditor();
     } // end if (interactSel && argsContainer)
     // Description: empty → undefined so it's omitted from JSON export
     const descEl = section.querySelector('#edit-desc') as HTMLInputElement;
@@ -983,7 +1092,7 @@ export class PropertiesPanel {
       // Checkerboard transparency background
       for (let y = 0; y < previewCanvas.height; y += 8) {
         for (let x = 0; x < previewCanvas.width; x += 8) {
-          pctx.fillStyle = ((x / 8 + y / 8) % 2 === 0) ? '#222' : '#333';
+          pctx.fillStyle = (x / 8 + y / 8) % 2 === 0 ? '#222' : '#333';
           pctx.fillRect(x, y, 8, 8);
         }
       }
@@ -1013,7 +1122,7 @@ export class PropertiesPanel {
     previewCanvas.style.background = '#111';
     previewCanvas.style.borderRadius = '4px';
 
-    const cellSet = new Set(t.cells!.map(c => `${c.dx},${c.dy}`));
+    const cellSet = new Set(t.cells!.map((c) => `${c.dx},${c.dy}`));
 
     const draw = () => {
       const pctx = previewCanvas.getContext('2d')!;
@@ -1033,8 +1142,10 @@ export class PropertiesPanel {
             pctx.strokeStyle = 'rgba(255, 80, 80, 0.3)';
             pctx.lineWidth = 1;
             pctx.beginPath();
-            pctx.moveTo(px, py); pctx.lineTo(px + cellSize, py + cellSize);
-            pctx.moveTo(px + cellSize, py); pctx.lineTo(px, py + cellSize);
+            pctx.moveTo(px, py);
+            pctx.lineTo(px + cellSize, py + cellSize);
+            pctx.moveTo(px + cellSize, py);
+            pctx.lineTo(px, py + cellSize);
             pctx.stroke();
           }
         }
@@ -1047,7 +1158,14 @@ export class PropertiesPanel {
   }
 
   /** Draw 16px grid lines on a preview canvas, offset to match the original tileset grid. */
-  private drawGridOnCanvas(ctx: CanvasRenderingContext2D, cw: number, ch: number, originX: number, originY: number, scale: number): void {
+  private drawGridOnCanvas(
+    ctx: CanvasRenderingContext2D,
+    cw: number,
+    ch: number,
+    originX: number,
+    originY: number,
+    scale: number,
+  ): void {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
     ctx.lineWidth = 1;
     const gridPx = 16 * scale;
@@ -1097,7 +1215,7 @@ export class PropertiesPanel {
       // Checkerboard
       for (let y2 = 0; y2 < previewCanvas.height; y2 += 8) {
         for (let x2 = 0; x2 < previewCanvas.width; x2 += 8) {
-          pctx.fillStyle = ((x2 / 8 + y2 / 8) % 2 === 0) ? '#222' : '#333';
+          pctx.fillStyle = (x2 / 8 + y2 / 8) % 2 === 0 ? '#222' : '#333';
           pctx.fillRect(x2, y2, 8, 8);
         }
       }

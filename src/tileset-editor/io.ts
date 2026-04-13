@@ -17,7 +17,7 @@ function normalizeEditorInteractType(raw: unknown, legacyDestroy?: string | null
 export function exportManifest(state: TilesetEditorState): string {
   const manifest: TileManifest = {
     image: state.imageSrc,
-    tiles: state.tiles.map(t => ({ ...t })),
+    tiles: state.tiles.map((t) => ({ ...t })),
   };
   return JSON.stringify(manifest, null, 2);
 }
@@ -70,7 +70,8 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         h: t.h ?? (t as unknown as Record<string, number>).tileSize ?? 16,
         walkable: t.walkable ?? true,
         encounterTypes: t.encounterTypes ?? ((t as any).encounter ? ['*'] : undefined),
-        battleBackground: normalizeBattleBackgroundId((t as { battleBackground?: string | null }).battleBackground) ?? undefined,
+        battleBackground:
+          normalizeBattleBackgroundId((t as { battleBackground?: string | null }).battleBackground) ?? undefined,
         above: t.above ?? false,
         overlay: t.overlay ?? undefined,
         category: t.category ?? ((t as any).destroy ? 'interactive' : undefined),
@@ -91,7 +92,8 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         w: (raw.w as number) ?? baseTileSize,
         h: (raw.h as number) ?? baseTileSize,
         walkable: (raw.walkable as boolean) ?? true,
-        encounterTypes: (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined),
+        encounterTypes:
+          (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined),
         battleBackground: normalizeBattleBackgroundId(raw.battleBackground as string | null | undefined) ?? undefined,
         above: (raw.renderAbove as boolean) ?? false,
       });
@@ -112,9 +114,14 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
  */
 export async function applyCrop(
   image: HTMLImageElement,
-  sx: number, sy: number, sw: number, sh: number,
-  tw: number, th: number,
-  targetSx: number, targetSy: number,
+  sx: number,
+  sy: number,
+  sw: number,
+  sh: number,
+  tw: number,
+  th: number,
+  targetSx: number,
+  targetSy: number,
 ): Promise<Blob> {
   const canvas = document.createElement('canvas');
   canvas.width = image.naturalWidth;
@@ -133,7 +140,7 @@ export async function applyCrop(
 
   // Convert to blob
   const blob = await new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/png');
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/png');
   });
 
   return blob;
@@ -142,7 +149,7 @@ export async function applyCrop(
 /**
  * Save the modified tileset image to disk.
  */
-export async function saveTilesetImage(blob: Blob, fileName = 'overworld-tileset.png'): Promise<void> {
+export async function saveTilesetImage(blob: Blob, fileName: string): Promise<void> {
   if (hasFSAccess()) {
     await saveBlobToDirectory('tileset-image', fileName, blob);
     return;

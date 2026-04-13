@@ -9,9 +9,12 @@ import './style.css';
 /** Vite-friendly static imports for each known tileset manifest. */
 async function loadTilesetManifest(name: string): Promise<Record<string, unknown>> {
   switch (name) {
-    case 'overworld': return (await import('../data/tilesets/overworld.json')) as unknown as Record<string, unknown>;
-    case 'interior':  return (await import('../data/tilesets/interior.json')) as unknown as Record<string, unknown>;
-    default: throw new Error(`Unknown tileset: ${name}`);
+    case 'overworld':
+      return (await import('../data/tilesets/overworld.json')) as unknown as Record<string, unknown>;
+    case 'interior':
+      return (await import('../data/tilesets/interior.json')) as unknown as Record<string, unknown>;
+    default:
+      throw new Error(`Unknown tileset: ${name}`);
   }
 }
 
@@ -100,13 +103,22 @@ async function init() {
         img.removeEventListener('load', onLoad);
         img.removeEventListener('error', onError);
       };
-      const onLoad = () => { cleanup(); resolve(img); };
-      const onError = () => { cleanup(); reject(new Error(`Failed to load tileset image: ${src}`)); };
+      const onLoad = () => {
+        cleanup();
+        resolve(img);
+      };
+      const onError = () => {
+        cleanup();
+        reject(new Error(`Failed to load tileset image: ${src}`));
+      };
       img.addEventListener('load', onLoad);
       img.addEventListener('error', onError);
       img.src = src;
       // Already cached — complete fires synchronously before onload would
-      if (img.complete && img.naturalWidth > 0) { cleanup(); resolve(img); }
+      if (img.complete && img.naturalWidth > 0) {
+        cleanup();
+        resolve(img);
+      }
     });
   }
 
@@ -150,8 +162,11 @@ async function init() {
     input.click();
   });
   toolbarEl.querySelector('#btn-save')!.addEventListener('click', async () => {
-    try { await saveManifest(state); }
-    catch (err) { if ((err as DOMException).name !== 'AbortError') console.error('Save failed:', err); }
+    try {
+      await saveManifest(state, `${currentTileset}.json`);
+    } catch (err) {
+      if ((err as DOMException).name !== 'AbortError') console.error('Save failed:', err);
+    }
   });
   toolbarEl.querySelector('#btn-copy')!.addEventListener('click', async () => {
     await copyManifest(state);
@@ -227,7 +242,7 @@ async function init() {
 
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
       e.preventDefault();
-      saveManifest(state);
+      saveManifest(state, `${currentTileset}.json`);
     }
     if (e.key === 'Delete' && state.selectedIndex >= 0) {
       state.removeTile(state.selectedIndex);
