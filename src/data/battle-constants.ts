@@ -19,20 +19,104 @@ export interface StatusPillStyle {
 }
 
 export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
-  poison:  { label: 'הרעלה',  shortLabel: 'PSN', bgColor: 'rgba(160,64,160,0.15)',  borderColor: 'rgba(160,64,160,0.25)',  textColor: '#c070c0' },
-  burn:    { label: 'שריפה',  shortLabel: 'BRN', bgColor: 'rgba(240,128,48,0.15)',  borderColor: 'rgba(240,128,48,0.25)',  textColor: '#f09050' },
-  paralyze:{ label: 'שיתוק',  shortLabel: 'PAR', bgColor: 'rgba(248,208,48,0.15)',  borderColor: 'rgba(248,208,48,0.25)',  textColor: '#d8b830' },
-  sleep:   { label: 'שינה',   shortLabel: 'SLP', bgColor: 'rgba(100,100,140,0.15)', borderColor: 'rgba(100,100,140,0.25)', textColor: '#8888b0' },
-  freeze:  { label: 'קפאון',  shortLabel: 'FRZ', bgColor: 'rgba(152,216,216,0.15)', borderColor: 'rgba(152,216,216,0.25)', textColor: '#80c8c8' },
-  confuse: { label: 'מבולבל', shortLabel: 'CNF', bgColor: 'rgba(248,88,136,0.15)',  borderColor: 'rgba(248,88,136,0.25)',  textColor: '#f07090' },
-  seed:    { label: 'זרע',    shortLabel: 'SEED', bgColor: 'rgba(120,208,80,0.15)', borderColor: 'rgba(120,208,80,0.25)', textColor: '#90d060' },
-  trap:    { label: 'לכוד',   shortLabel: 'TRAP', bgColor: 'rgba(232,136,72,0.15)', borderColor: 'rgba(232,136,72,0.25)', textColor: '#f0a060' },
-  reflect: { label: 'רפלקט', shortLabel: 'REF', bgColor: 'rgba(112,160,255,0.15)', borderColor: 'rgba(112,160,255,0.25)', textColor: '#88b8ff' },
-  'light-screen': { label: 'מסך אור', shortLabel: 'LTS', bgColor: 'rgba(255,232,120,0.15)', borderColor: 'rgba(255,232,120,0.25)', textColor: '#ffe278' },
-  mist:    { label: 'ערפל',   shortLabel: 'MIST', bgColor: 'rgba(176,224,240,0.15)', borderColor: 'rgba(176,224,240,0.25)', textColor: '#b8e0f0' },
-  safeguard: { label: 'שמירה', shortLabel: 'SAFE', bgColor: 'rgba(144,240,192,0.15)', borderColor: 'rgba(144,240,192,0.25)', textColor: '#98f0c0' },
-  boost:   { label: '',       shortLabel: 'UP',  bgColor: 'rgba(77,255,180,0.1)',   borderColor: 'rgba(77,255,180,0.2)',   textColor: '#4dffb4' },
-  debuff:  { label: '',       shortLabel: 'DN',  bgColor: 'rgba(232,88,88,0.1)',    borderColor: 'rgba(232,88,88,0.2)',    textColor: '#e85858' },
+  poison: {
+    label: 'הרעלה',
+    shortLabel: 'PSN',
+    bgColor: 'rgba(160,64,160,0.15)',
+    borderColor: 'rgba(160,64,160,0.25)',
+    textColor: '#c070c0',
+  },
+  burn: {
+    label: 'שריפה',
+    shortLabel: 'BRN',
+    bgColor: 'rgba(240,128,48,0.15)',
+    borderColor: 'rgba(240,128,48,0.25)',
+    textColor: '#f09050',
+  },
+  paralyze: {
+    label: 'שיתוק',
+    shortLabel: 'PAR',
+    bgColor: 'rgba(248,208,48,0.15)',
+    borderColor: 'rgba(248,208,48,0.25)',
+    textColor: '#d8b830',
+  },
+  sleep: {
+    label: 'שינה',
+    shortLabel: 'SLP',
+    bgColor: 'rgba(100,100,140,0.15)',
+    borderColor: 'rgba(100,100,140,0.25)',
+    textColor: '#8888b0',
+  },
+  freeze: {
+    label: 'קפאון',
+    shortLabel: 'FRZ',
+    bgColor: 'rgba(152,216,216,0.15)',
+    borderColor: 'rgba(152,216,216,0.25)',
+    textColor: '#80c8c8',
+  },
+  confuse: {
+    label: 'מבולבל',
+    shortLabel: 'CNF',
+    bgColor: 'rgba(248,88,136,0.15)',
+    borderColor: 'rgba(248,88,136,0.25)',
+    textColor: '#f07090',
+  },
+  seed: {
+    label: 'זרע',
+    shortLabel: 'SEED',
+    bgColor: 'rgba(120,208,80,0.15)',
+    borderColor: 'rgba(120,208,80,0.25)',
+    textColor: '#90d060',
+  },
+  trap: {
+    label: 'לכוד',
+    shortLabel: 'TRAP',
+    bgColor: 'rgba(232,136,72,0.15)',
+    borderColor: 'rgba(232,136,72,0.25)',
+    textColor: '#f0a060',
+  },
+  reflect: {
+    label: 'רפלקט',
+    shortLabel: 'REF',
+    bgColor: 'rgba(112,160,255,0.15)',
+    borderColor: 'rgba(112,160,255,0.25)',
+    textColor: '#88b8ff',
+  },
+  'light-screen': {
+    label: 'מסך אור',
+    shortLabel: 'LTS',
+    bgColor: 'rgba(255,232,120,0.15)',
+    borderColor: 'rgba(255,232,120,0.25)',
+    textColor: '#ffe278',
+  },
+  mist: {
+    label: 'ערפל',
+    shortLabel: 'MIST',
+    bgColor: 'rgba(176,224,240,0.15)',
+    borderColor: 'rgba(176,224,240,0.25)',
+    textColor: '#b8e0f0',
+  },
+  safeguard: {
+    label: 'שמירה',
+    shortLabel: 'SAFE',
+    bgColor: 'rgba(144,240,192,0.15)',
+    borderColor: 'rgba(144,240,192,0.25)',
+    textColor: '#98f0c0',
+  },
+  boost: {
+    label: '',
+    shortLabel: 'UP',
+    bgColor: 'rgba(77,255,180,0.1)',
+    borderColor: 'rgba(77,255,180,0.2)',
+    textColor: '#4dffb4',
+  },
+  debuff: {
+    label: '',
+    shortLabel: 'DN',
+    bgColor: 'rgba(232,88,88,0.1)',
+    borderColor: 'rgba(232,88,88,0.2)',
+    textColor: '#e85858',
+  },
 };
 
 // ─── Main layout constants ─────────────────────────────────────────
@@ -40,14 +124,17 @@ export const BTL = {
   // ===== ZONES =====
   FIELD_H: 84,
   DIVIDER_Y: 84,
-  PROMPT_Y: 85,   PROMPT_H: 8,
-  TABS_Y: 94,     TABS_H: 8,
+  PROMPT_Y: 85,
+  PROMPT_H: 8,
+  TABS_Y: 94,
+  TABS_H: 8,
   CONTENT_Y: 106,
-  BTM_Y: 150,     BTM_H: 10,
+  BTM_Y: 150,
+  BTM_H: 10,
 
   // ===== BACKGROUND =====
   BG: {
-    SKY:    { x: 0, y: 0,  w: 240, h: 34, from: '#4a7a5a', mid: '#5a9a6a', to: '#7aaa70' },
+    SKY: { x: 0, y: 0, w: 240, h: 34, from: '#4a7a5a', mid: '#5a9a6a', to: '#7aaa70' },
     GROUND: { x: 0, y: 34, w: 240, h: 50, from: '#8ab87a', mid1: '#c8d8a0', mid2: '#d8c890', to: '#b8a870' },
     LINES: [
       { y: 52, alpha: 0.12 },
@@ -56,30 +143,28 @@ export const BTL = {
     ],
   },
 
-
-
   // ===== SPRITES =====
   OPP_SPRITE: { x: 150, y: 16, w: 46, h: 46 },
-  PLY_SPRITE: { x: 18,  y: 24, w: 56, h: 56 },
+  PLY_SPRITE: { x: 18, y: 24, w: 56, h: 56 },
 
   // ===== OPPONENT INFO BAR (tall enough for party balls) =====
-  OPP_BAR:      { x: 136, y: 2, w: 100, h: 24 },
-  OPP_NAME:     { dx: 52, dy: 1, w: 46, fs: 6 },   // right-aligned from bar right edge
-  OPP_LEVEL:    { dx: 4,  dy: 2, fs: 5 },           // left-aligned from bar left edge
-  OPP_HP_LABEL: { dx: 92, dy: 9, fs: 5 },           // right-aligned
-  OPP_HP_TRACK: { dx: 4,  dy: 10, w: 42, h: 3 },
-  OPP_HP_PCT:   { dx: 60, dy: 9, fs: 5 },
+  OPP_BAR: { x: 136, y: 2, w: 100, h: 24 },
+  OPP_NAME: { dx: 52, dy: 1, w: 46, fs: 6 }, // right-aligned from bar right edge
+  OPP_LEVEL: { dx: 4, dy: 2, fs: 5 }, // left-aligned from bar left edge
+  OPP_HP_LABEL: { dx: 92, dy: 9, fs: 5 }, // right-aligned
+  OPP_HP_TRACK: { dx: 4, dy: 10, w: 42, h: 3 },
+  OPP_HP_PCT: { dx: 60, dy: 9, fs: 5 },
 
   // ===== PLAYER INFO BAR (dynamic height) =====
   PLY_BAR_X: 4,
   PLY_BAR_W: 114,
   PLY_BAR_BOTTOM: 82,
-  PLY_NAME:     { dx: 66, dy: 1, w: 46, fs: 6 },
-  PLY_LEVEL:    { dx: 4,  dy: 2, fs: 5 },
+  PLY_NAME: { dx: 66, dy: 1, w: 46, fs: 6 },
+  PLY_LEVEL: { dx: 4, dy: 2, fs: 5 },
   PLY_HP_LABEL: { dx: 104, dy: 8, fs: 5 },
-  PLY_HP_TRACK: { dx: 4,  dy: 10, w: 54, h: 3 },
-  PLY_HP_VAL:   { dx: 62, dy: 8, fs: 5 },
-  PLY_XP_TRACK: { dx: 4,  dy: 15, w: 46, h: 2 },
+  PLY_HP_TRACK: { dx: 4, dy: 10, w: 54, h: 3 },
+  PLY_HP_VAL: { dx: 62, dy: 8, fs: 5 },
+  PLY_XP_TRACK: { dx: 4, dy: 15, w: 46, h: 2 },
 
   // Shared panel header spacing
   HEADER_PAD_X: 2,
@@ -93,8 +178,8 @@ export const BTL = {
   STATUS_PILL_H: 6,
   STATUS_PILL_W: 30,
   STATUS_GAP: 4,
-  STATUS_X0: 84,  // rightmost pill (barX + barW - 4 - 30)
-  STATUS_X1: 52,  // second pill
+  STATUS_X0: 84, // rightmost pill (barX + barW - 4 - 30)
+  STATUS_X1: 52, // second pill
   STATUS_BADGE_H: 7,
   STATUS_BADGE_PAD_X: 3,
   STATUS_BADGE_GAP: 3,
@@ -105,24 +190,23 @@ export const BTL = {
   BALL_GAP: 6,
   PLY_BALLS_X0: 4,
   OPP_BALLS_X0: 208,
-  BALL_ALIVE:   { fill: '#20d860', border: '#2a8a4a' },
-  BALL_FAINTED:  { fill: '#d84040', border: '#8a2a2a' },
-  BALL_EMPTY:    { fill: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08)' },
+  BALL_ALIVE: { fill: '#20d860', border: '#2a8a4a' },
+  BALL_FAINTED: { fill: '#d84040', border: '#8a2a2a' },
+  BALL_EMPTY: { fill: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08)' },
 
   // ===== PROMPT BAR =====
-  PROMPT_BG:    { x: 0,   y: 85, w: 240, h: 8, color: '#0a1a10' },
-  PROMPT_TEXT:  { x: 236, y: 86, fs: 6 },    // right anchor
+  PROMPT_BG: { x: 0, y: 85, w: 240, h: 8, color: '#0a1a10' },
+  PROMPT_TEXT: { x: 236, y: 86, fs: 6 }, // right anchor
   // ESC → run legend (left side of prompt bar)
-  PROMPT_ESC:   { pillX: 4, pillY: 86, pillW: 16, pillH: 6,
-                  labelX: 22, labelY: 87, fs: 5 },
+  PROMPT_ESC: { pillX: 4, pillY: 86, pillW: 16, pillH: 6, labelX: 22, labelY: 87, fs: 5 },
 
   // ===== ACTION TABS =====
   TABS_BG: { x: 0, y: 94, w: 240, h: 8, color: '#0d1a14', borderColor: '#1a3a2a' },
   TABS: [
-    { id: 'fight'   as const, text: 'התקפה', x: 180, w: 60, color: '#20d860' },
-    { id: 'switch'  as const, text: 'החלפה', x: 120, w: 60, color: '#5080ff' },
-    { id: 'bag'     as const, text: 'תיק',   x: 60,  w: 60, color: '#f8d030' },
-    { id: 'pokedex' as const, text: 'פוקדקס', x: 0,  w: 60, color: '#ff8040' },
+    { id: 'fight' as const, text: 'התקפה', x: 180, w: 60, color: '#20d860' },
+    { id: 'switch' as const, text: 'החלפה', x: 120, w: 60, color: '#5080ff' },
+    { id: 'bag' as const, text: 'תיק', x: 60, w: 60, color: '#f8d030' },
+    { id: 'pokedex' as const, text: 'פוקדקס', x: 0, w: 60, color: '#ff8040' },
   ] as const,
   TAB_TEXT_DY: 1,
   TAB_INACTIVE_C: '#445544',
@@ -130,47 +214,72 @@ export const BTL = {
   // ===== MOVE GRID =====
   MOVE: {
     cells: [
-      { col: 1, row: 0, x: 122, y: 106 },  // move 0 top-right
-      { col: 0, row: 0, x: 4,   y: 106 },  // move 1 top-left
-      { col: 1, row: 1, x: 122, y: 133 },  // move 2 bottom-right
-      { col: 0, row: 1, x: 4,   y: 133 },  // move 3 bottom-left
+      { col: 1, row: 0, x: 122, y: 106 }, // move 0 top-right
+      { col: 0, row: 0, x: 4, y: 106 }, // move 1 top-left
+      { col: 1, row: 1, x: 122, y: 133 }, // move 2 bottom-right
+      { col: 0, row: 1, x: 4, y: 133 }, // move 3 bottom-left
     ],
     W: 114,
     H: 25,
     SEL_BAR_W: 2,
 
     // Inside cell (relative to cellX, cellY):
-    TYPE_DX: 4,     TYPE_DY: 2,     TYPE_W: 22, TYPE_H: 7, TYPE_FS: 5,
-    CLASS_DX: 28,   CLASS_DY: 2,    CLASS_FS: 5,   // damage class symbol right of type badge
-    NAME_DX: 30,    NAME_DY: 2,     NAME_W: 80, NAME_FS: 7,
-    POWER_DX: 4,    POWER_DY: 15,   POWER_FS: 5,
-    ACC_DX: 46,     ACC_DY: 15,     ACC_FS: 5,     // accuracy, same row as power
-    PP_DX: 110,     PP_DY: 15,      PP_W: 22, PP_FS: 5,
-    PP_BAR_DX: 76,  PP_BAR_DY: 22,  PP_BAR_W: 38, PP_BAR_H: 1,
+    TYPE_DX: 5,
+    TYPE_DY: 3,
+    TYPE_W: 22,
+    TYPE_H: 8,
+    TYPE_FS: 6,
+    CLASS_FS: 5, // damage class symbol inside type badge
+    NAME_DX: 30,
+    NAME_DY: 2,
+    NAME_W: 80,
+    NAME_FS: 7,
+    POWER_DX: 4,
+    POWER_DY: 15,
+    POWER_FS: 5,
+    ACC_DX: 46,
+    ACC_DY: 15,
+    ACC_FS: 5, // accuracy, same row as power
+    PP_DX: 110,
+    PP_DY: 15,
+    PP_W: 22,
+    PP_FS: 5,
+    PP_BAR_DX: 76,
+    PP_BAR_DY: 22,
+    PP_BAR_W: 38,
+    PP_BAR_H: 1,
   },
 
   // ===== SWITCH GRID =====
   SWITCH: {
     cells: [
       { col: 2, row: 0, x: 160, y: 106 },
-      { col: 1, row: 0, x: 82,  y: 106 },
-      { col: 0, row: 0, x: 4,   y: 106 },
+      { col: 1, row: 0, x: 82, y: 106 },
+      { col: 0, row: 0, x: 4, y: 106 },
       { col: 2, row: 1, x: 160, y: 133 },
-      { col: 1, row: 1, x: 82,  y: 133 },
-      { col: 0, row: 1, x: 4,   y: 133 },
+      { col: 1, row: 1, x: 82, y: 133 },
+      { col: 0, row: 1, x: 4, y: 133 },
     ],
     W: 76,
     H: 25,
-    SPRITE_DX: 56, SPRITE_DY: 2, SPRITE_SZ: 20,
-    NAME_DX: 4,    NAME_DY: 3,   NAME_W: 48, NAME_FS: 6,
-    HP_DX: 4,      HP_DY: 18,    HP_W: 48,   HP_H: 2,
+    SPRITE_DX: 56,
+    SPRITE_DY: 2,
+    SPRITE_SZ: 20,
+    NAME_DX: 4,
+    NAME_DY: 3,
+    NAME_W: 48,
+    NAME_FS: 6,
+    HP_DX: 4,
+    HP_DY: 18,
+    HP_W: 48,
+    HP_H: 2,
   },
 
   // ===== BOTTOM BAR =====
   BTM_BG: { x: 0, y: 150, w: 240, h: 10, color: '#0a1a10' },
   BTM_KEYS: [
-    { pillX: 8,   pillW: 18, pillText: 'ESC',   hintX: 28,  hint: 'בריחה' },
-    { pillX: 66,  pillW: 24, pillText: 'Enter', hintX: 92,  hint: 'בחירה' },
+    { pillX: 8, pillW: 18, pillText: 'ESC', hintX: 28, hint: 'בריחה' },
+    { pillX: 66, pillW: 24, pillText: 'Enter', hintX: 92, hint: 'בחירה' },
     { pillX: 132, pillW: 24, pillText: '▲▼◀▶', hintX: 158, hint: 'ניווט' },
   ],
 
@@ -181,26 +290,26 @@ export const BTL = {
 
   // ===== COMMON COLORS =====
   COLORS: {
-    bg:         '#0d1a14',
-    divider:    '#1a3a2a',
-    hpTrack:    '#1a3a2a',
-    xpTrack:    '#123028',
-    xpFill:     '#5080ff',
-    ppTrack:    '#1a3a2a',
-    ppFill:     '#20a0d8',
-    selBar:     '#20d860',
-    cellBg:     '#0f2a1a',
-    cellBgSel:  '#1a3a2a',
+    bg: '#0d1a14',
+    divider: '#1a3a2a',
+    hpTrack: '#1a3a2a',
+    xpTrack: '#123028',
+    xpFill: '#5080ff',
+    ppTrack: '#1a3a2a',
+    ppFill: '#20a0d8',
+    selBar: '#20d860',
+    cellBg: '#0f2a1a',
+    cellBgSel: '#1a3a2a',
     cellBorder: '#1a4a30',
     cellBorderSel: '#2a6a40',
-    text:       '#ffffff',
-    textDim:    '#aaccaa',
-    textMuted:  '#667766',
-    textDark:   '#445544',
-    pillBg:     '#1a3a2a',
+    text: '#ffffff',
+    textDim: '#aaccaa',
+    textMuted: '#667766',
+    textDark: '#445544',
+    pillBg: '#1a3a2a',
     pillBorder: '#2a5a3a',
-    pillText:   '#aaccaa',
-    pillHint:   '#667766',
+    pillText: '#aaccaa',
+    pillHint: '#667766',
   },
 } as const;
 

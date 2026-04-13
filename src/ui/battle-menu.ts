@@ -12,7 +12,12 @@
 import type { InputManager } from '../engine/input.js';
 import type { Move, Pokemon, PokemonType } from '../types/index.js';
 import { fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
-import { getMoveDisplayName, getPokemonDisplayName, getCombinedTypeEffectiveness, getMove } from '../services/pokemon-data.js';
+import {
+  getMoveDisplayName,
+  getPokemonDisplayName,
+  getCombinedTypeEffectiveness,
+  getMove,
+} from '../services/pokemon-data.js';
 import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 import { BTL, TYPE_BADGE, getHpColor } from '../data/battle-constants.js';
 import { getTypeName } from '../data/type-constants.js';
@@ -45,9 +50,16 @@ const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG', 'POKEDEX'];
 
 export function createBattleMenu(moves: Move[]): BattleMenuState {
   return {
-    mode: 'moves', cursorIndex: 0, moves, movePage: 0,
-    activeTab: 0, turnNumber: 1, playerPokemon: null, party: [],
-    enemyTypes: [], battleHelperActive: false,
+    mode: 'moves',
+    cursorIndex: 0,
+    moves,
+    movePage: 0,
+    activeTab: 0,
+    turnNumber: 1,
+    playerPokemon: null,
+    party: [],
+    enemyTypes: [],
+    battleHelperActive: false,
   };
 }
 
@@ -81,10 +93,7 @@ export function updateBattleMenu(
   }
 }
 
-function updateTabMode(
-  menu: BattleMenuState,
-  input: InputManager,
-): { type: 'main'; choice: MainMenuChoice } | null {
+function updateTabMode(menu: BattleMenuState, input: InputManager): { type: 'main'; choice: MainMenuChoice } | null {
   // Number shortcuts: 1=fight, 2=switch, 3=bag, 4=pokedex
   if (input.isKeyPressed('Digit1')) return { type: 'main', choice: 'FIGHT' };
   if (input.isKeyPressed('Digit2')) return { type: 'main', choice: 'POKEMON' };
@@ -232,12 +241,15 @@ function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): 
   ctx.lineWidth = 1;
   strokeRoundRect(ctx, E.pillX, E.pillY, E.pillW, E.pillH, 2);
   drawText(ctx, 'ESC', E.pillX + E.pillW / 2, E.pillY + 1, {
-    size: E.fs, color: '#e85858', align: 'center',
+    size: E.fs,
+    color: '#e85858',
+    align: 'center',
   });
   drawText(ctx, menu.mode === 'moves' ? t('battle.menu.changeSel') : t('battle.menu.run'), E.labelX, E.labelY, {
-    size: E.fs, color: BTL.COLORS.textDim, direction: 'rtl',
+    size: E.fs,
+    color: BTL.COLORS.textDim,
+    direction: 'rtl',
   });
-
 }
 
 // ─── Action Tabs (y=94) ───────────────────────────────────────────
@@ -258,13 +270,17 @@ function renderTabs(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void 
     }
 
     drawText(ctx, tab.text, tab.x + tab.w / 2, TB.y + BTL.TAB_TEXT_DY, {
-      size: 6, color: isActive ? tab.color : BTL.TAB_INACTIVE_C, align: 'center',
+      size: 6,
+      color: isActive ? tab.color : BTL.TAB_INACTIVE_C,
+      align: 'center',
     });
 
     // Number hint [1/2/3] — tight right of the label
     const hint = `[${i + 1}]`;
     drawText(ctx, hint, tab.x + tab.w / 2 + 10, TB.y + BTL.TAB_TEXT_DY, {
-      size: 4, color: isActive ? tab.color + 'bb' : '#334433', align: 'left',
+      size: 4,
+      color: isActive ? tab.color + 'bb' : '#334433',
+      align: 'left',
     });
   }
 }
@@ -295,19 +311,28 @@ function renderMoveGrid(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
 }
 
 function getEffectivenessLabel(mult: number, rtl: boolean): { text: string; color: string } {
-  if (mult === 0)   return { text: rtl ? 'x0 חסין'     : 'x0 immune',    color: '#888888' };
-  if (mult <= 0.25) return { text: 'x0.25',                               color: '#d84040' };
-  if (mult < 1)     return { text: rtl ? 'לא יעיל'     : 'x0.5 weak',    color: '#f08030' };
-  if (mult === 1)   return { text: '',                                     color: '' };       // neutral = no label
-  if (mult < 4)     return { text: rtl ? 'יעיל מאוד'   : 'x2 super!',    color: '#20d860' };
-  return              { text: rtl ? 'יעיל מאוד!'        : 'x4 super!!',   color: '#ffff40' };
+  if (mult === 0) return { text: rtl ? 'x0 חסין' : 'x0 immune', color: '#888888' };
+  if (mult <= 0.25) return { text: 'x0.25', color: '#d84040' };
+  if (mult < 1) return { text: rtl ? 'לא יעיל' : 'x0.5 weak', color: '#f08030' };
+  if (mult === 1) return { text: '', color: '' }; // neutral = no label
+  if (mult < 4) return { text: rtl ? 'יעיל מאוד' : 'x2 super!', color: '#20d860' };
+  return { text: rtl ? 'יעיל מאוד!' : 'x4 super!!', color: '#ffff40' };
 }
 
-function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Move, isSelected: boolean, helperActive = false, enemyTypes: PokemonType[] = []): void {
+function renderMoveCell(
+  ctx: CanvasRenderingContext2D,
+  slotIdx: number,
+  move: Move,
+  isSelected: boolean,
+  helperActive = false,
+  enemyTypes: PokemonType[] = [],
+): void {
   const M = BTL.MOVE;
   const cell = M.cells[slotIdx];
-  const cx = cell.x, cy = cell.y;
-  const cw = M.W, ch = M.H;
+  const cx = cell.x,
+    cy = cell.y;
+  const cw = M.W,
+    ch = M.H;
 
   // Cell background
   ctx.fillStyle = isSelected ? BTL.COLORS.cellBgSel : BTL.COLORS.cellBg;
@@ -330,40 +355,50 @@ function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Mo
     ctx.strokeStyle = badge.border;
     ctx.lineWidth = 1;
     strokeRoundRect(ctx, cx + M.TYPE_DX, cy + M.TYPE_DY, M.TYPE_W, M.TYPE_H, 2);
-    drawText(ctx, getTypeName(move.type), cx + M.TYPE_DX + M.TYPE_W / 2, cy + M.TYPE_DY, {
-      size: M.TYPE_FS, color: badge.color, align: 'center',
+    drawText(ctx, getTypeName(move.type), cx + M.TYPE_DX - 1 + M.TYPE_W / 2, cy + M.TYPE_DY + 1, {
+      size: M.TYPE_FS,
+      color: badge.color,
+      align: 'center',
     });
   }
 
   // Fetch full move data once for class symbol + accuracy + helper
   const moveFullData = getMove(move.id);
 
-  // Damage class symbol (top row, right of type badge): ⚔ physical, ◆ special, ☆ status
-  const classSymbol = moveFullData?.damageClass === 'physical' ? '⚔'
-    : moveFullData?.damageClass === 'special' ? '◆'
-    : '☆';
-  drawText(ctx, classSymbol, cx + M.CLASS_DX, cy + M.CLASS_DY, {
-    size: M.CLASS_FS, color: '#aaaaaa',
-  });
+  // Damage class symbol inside type rect (right-aligned): ⚔ physical, ◆ special, ☆ status
+  if (badge) {
+    const classSymbol =
+      moveFullData?.damageClass === 'physical' ? '⚔' : moveFullData?.damageClass === 'special' ? '◆' : '☆';
+    drawText(ctx, classSymbol, cx + M.TYPE_DX + M.TYPE_W - 1, cy + M.TYPE_DY + 1, {
+      size: M.CLASS_FS,
+      color: badge.color,
+      align: 'right',
+    });
+  }
 
   // Move name (TOP-RIGHT)
   const moveName = getMoveDisplayName(move.id);
   drawText(ctx, moveName, cx + cw - 4, cy + M.NAME_DY, {
-    size: M.NAME_FS, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
+    size: M.NAME_FS,
+    color: BTL.COLORS.text,
+    align: 'right',
+    direction: 'rtl',
   });
 
   // Power (BOTTOM-LEFT) — always shown
   const rtl = isRTL();
-  const powerStr = move.power ? (rtl ? `כוח: ${move.power}` : `Pow: ${move.power}`) : (rtl ? 'כוח: —' : 'Pow: —');
+  const powerStr = move.power ? (rtl ? `כוח: ${move.power}` : `Pow: ${move.power}`) : rtl ? 'כוח: —' : 'Pow: —';
   drawText(ctx, powerStr, cx + M.POWER_DX, cy + M.POWER_DY, {
-    size: M.POWER_FS, color: BTL.COLORS.textDark,
+    size: M.POWER_FS,
+    color: BTL.COLORS.textDark,
   });
 
   // Accuracy (BOTTOM, after power)
   const accVal = moveFullData?.accuracy;
-  const accStr = accVal != null ? (rtl ? `דיוק: ${accVal}%` : `Acc: ${accVal}%`) : (rtl ? 'דיוק: —' : 'Acc: —');
+  const accStr = accVal != null ? (rtl ? `דיוק: ${accVal}%` : `Acc: ${accVal}%`) : rtl ? 'דיוק: —' : 'Acc: —';
   drawText(ctx, accStr, cx + M.ACC_DX, cy + M.ACC_DY, {
-    size: M.ACC_FS, color: BTL.COLORS.textDark,
+    size: M.ACC_FS,
+    color: BTL.COLORS.textDark,
   });
 
   // Effectiveness label (below power, size 4) — only when helper active and not a status move
@@ -372,14 +407,17 @@ function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Mo
     const { text, color } = getEffectivenessLabel(mult, rtl);
     if (text) {
       drawText(ctx, text, cx + M.POWER_DX, cy + M.POWER_DY + 6, {
-        size: 4, color,
+        size: 4,
+        color,
       });
     }
   }
 
   // PP (BOTTOM-RIGHT)
   drawText(ctx, `${move.currentPp}/${move.pp}`, cx + cw - 4, cy + M.PP_DY, {
-    size: M.PP_FS, color: BTL.COLORS.textMuted, align: 'right',
+    size: M.PP_FS,
+    color: BTL.COLORS.textMuted,
+    align: 'right',
   });
 
   // 1px PP bar at bottom
@@ -403,7 +441,9 @@ function renderEmptyMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number): vo
   strokeRoundRect(ctx, cell.x, cell.y, M.W, M.H, 2);
 
   drawText(ctx, '—', cell.x + M.W / 2, cell.y + 6, {
-    size: 7, color: BTL.COLORS.textDark, align: 'center',
+    size: 7,
+    color: BTL.COLORS.textDark,
+    align: 'center',
   });
 }
 
@@ -442,7 +482,9 @@ export function renderSwitchGrid(ctx: CanvasRenderingContext2D, party: Pokemon[]
     if (!pokemon) {
       // Empty slot
       drawText(ctx, '—', cell.x + S.W / 2, cell.y + 6, {
-        size: 6, color: BTL.COLORS.textDark, align: 'center',
+        size: 6,
+        color: BTL.COLORS.textDark,
+        align: 'center',
       });
       continue;
     }
@@ -462,13 +504,19 @@ export function renderSwitchGrid(ctx: CanvasRenderingContext2D, party: Pokemon[]
     // Name (right-aligned for RTL)
     const name = getPokemonDisplayName(pokemon.id);
     drawText(ctx, name, cell.x + S.NAME_DX, cell.y + S.NAME_DY, {
-      size: S.NAME_FS, color: BTL.COLORS.text, align: 'right', direction: 'rtl',
+      size: S.NAME_FS,
+      color: BTL.COLORS.text,
+      align: 'right',
+      direction: 'rtl',
     });
 
     // Fainted overlay
     if (pokemon.hp <= 0) {
       drawText(ctx, 'מתעלף', cell.x + S.W / 2, cell.y + 8, {
-        size: 6, color: '#d84040', align: 'center', direction: 'rtl',
+        size: 6,
+        color: '#d84040',
+        align: 'center',
+        direction: 'rtl',
       });
     } else {
       // HP bar
@@ -481,10 +529,6 @@ export function renderSwitchGrid(ctx: CanvasRenderingContext2D, party: Pokemon[]
     }
   }
 }
-
-
-
-
 
 // ─── Party Ball Indicators ───────────────────────────────────────
 
@@ -503,7 +547,9 @@ export function renderPartyBalls(
     ? layout.align === 'right'
       ? layout.x - rowWidth
       : layout.x
-    : (side === 'player' ? BTL.PLY_BALLS_X0 : BTL.OPP_BALLS_X0);
+    : side === 'player'
+      ? BTL.PLY_BALLS_X0
+      : BTL.OPP_BALLS_X0;
   const y = layout?.y ?? BTL.BALL_Y;
 
   for (let i = 0; i < count; i++) {
