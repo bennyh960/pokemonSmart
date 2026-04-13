@@ -13,9 +13,10 @@
     {
       "fromX": 4,
       "fromY": 7,
-      "toMapId": "sumville",
-      "toX": 22,
-      "toY": 7
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
     }
   ],
   "npcs": [
@@ -138,10 +139,10 @@
     ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
     ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
     ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","ca1tl","ca1t","ca1tr","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","ca1l","ca1c","ca1r","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","ca1bl","ca1b","ca1br","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"]
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
+    ["fh1","fh1","fh1","ca1tl","ca1t","ca1tr","fh1","fh1","fh1"]
   ],
   "objects": [
     {
@@ -178,11 +179,6 @@
       "key": "ch1",
       "x": 0,
       "y": 2
-    },
-    {
-      "key": "ctc",
-      "x": 3,
-      "y": 5
     }
   ]
 }
