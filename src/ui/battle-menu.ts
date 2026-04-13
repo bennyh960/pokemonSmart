@@ -335,6 +335,17 @@ function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Mo
     });
   }
 
+  // Fetch full move data once for class symbol + accuracy + helper
+  const moveFullData = getMove(move.id);
+
+  // Damage class symbol (top row, right of type badge): ⚔ physical, ◆ special, ☆ status
+  const classSymbol = moveFullData?.damageClass === 'physical' ? '⚔'
+    : moveFullData?.damageClass === 'special' ? '◆'
+    : '☆';
+  drawText(ctx, classSymbol, cx + M.CLASS_DX, cy + M.CLASS_DY, {
+    size: M.CLASS_FS, color: '#aaaaaa',
+  });
+
   // Move name (TOP-RIGHT)
   const moveName = getMoveDisplayName(move.id);
   drawText(ctx, moveName, cx + cw - 4, cy + M.NAME_DY, {
@@ -348,8 +359,14 @@ function renderMoveCell(ctx: CanvasRenderingContext2D, slotIdx: number, move: Mo
     size: M.POWER_FS, color: BTL.COLORS.textDark,
   });
 
+  // Accuracy (BOTTOM, after power)
+  const accVal = moveFullData?.accuracy;
+  const accStr = accVal != null ? (rtl ? `דיוק: ${accVal}%` : `Acc: ${accVal}%`) : (rtl ? 'דיוק: —' : 'Acc: —');
+  drawText(ctx, accStr, cx + M.ACC_DX, cy + M.ACC_DY, {
+    size: M.ACC_FS, color: BTL.COLORS.textDark,
+  });
+
   // Effectiveness label (below power, size 4) — only when helper active and not a status move
-  const moveFullData = getMove(move.id);
   if (helperActive && enemyTypes.length > 0 && move.type && moveFullData?.damageClass !== 'status') {
     const mult = getCombinedTypeEffectiveness(move.type as PokemonType, enemyTypes);
     const { text, color } = getEffectivenessLabel(mult, rtl);

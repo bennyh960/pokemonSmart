@@ -141,8 +141,10 @@ export const BTL = {
 
     // Inside cell (relative to cellX, cellY):
     TYPE_DX: 4,     TYPE_DY: 2,     TYPE_W: 22, TYPE_H: 7, TYPE_FS: 5,
+    CLASS_DX: 28,   CLASS_DY: 2,    CLASS_FS: 5,   // damage class symbol right of type badge
     NAME_DX: 30,    NAME_DY: 2,     NAME_W: 80, NAME_FS: 7,
     POWER_DX: 4,    POWER_DY: 15,   POWER_FS: 5,
+    ACC_DX: 46,     ACC_DY: 15,     ACC_FS: 5,     // accuracy, same row as power
     PP_DX: 110,     PP_DY: 15,      PP_W: 22, PP_FS: 5,
     PP_BAR_DX: 76,  PP_BAR_DY: 22,  PP_BAR_W: 38, PP_BAR_H: 1,
   },
