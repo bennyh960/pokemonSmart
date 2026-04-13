@@ -218,7 +218,7 @@
       "y": 2,
       "facing": "down",
       "type": "trainer",
-      "spriteType": "char_962c1b",
+      "spriteType": "gym-1-adda",
       "spawnAfter": "sumville-crystal-returned",
       "dialogue": [
         {
@@ -272,7 +272,7 @@
           }
         ]
       },
-      "lineOfSight": 5,
+      "lineOfSight": 1,
       "postBattleDialogue": [
         {
           "en": "Impressive! You've earned the Sum Badge — proof of your addition of strength and wisdom.",
