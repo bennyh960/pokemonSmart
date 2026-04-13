@@ -15,11 +15,23 @@ import type { GateSessionConfig, GateReward } from './gates.js';
 import { registerGate } from './gates.js';
 import type { GradeId } from '../../math/question-builder/index.js';
 import { registerAutoGateMap } from '../../systems/story-engine.js';
+import { getPlayerData } from '../../systems/game-state.js';
 
 // ─── Player grade resolution ──────────────────────────────────────────────────
 
-/** Constant birth year used until date-of-birth feature is implemented. */
-export const PLAYER_BIRTH_YEAR = 2018;
+/**
+ * Returns the player's birth year from saved data.
+ * Falls back to PLAYER_BIRTH_YEAR (2018) if data is not yet loaded.
+ */
+export function getPlayerBirthYear(): number {
+  /** Fallback birth year if player has not set one. */
+  const PLAYER_BIRTH_YEAR = 2018;
+  try {
+    return getPlayerData()?.birthYear ?? PLAYER_BIRTH_YEAR;
+  } catch {
+    return PLAYER_BIRTH_YEAR;
+  }
+}
 
 /**
  * Calculate grade ID from a birth year.
@@ -37,7 +49,7 @@ export function gradeFromBirthYear(birthYear: number): GradeId {
 
 /** Shared base config — override per location as needed. */
 export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'> = {
-  birthYear: PLAYER_BIRTH_YEAR,
+  birthYear: getPlayerBirthYear(), // runtime callers (GateSession) use getPlayerBirthYear() for live value
   rewardThreshold: 0.8, // ≥ 80% correct → earn rewards
   penaltyThreshold: 0.5, // < 50% correct → money penalty
   penaltyAmount: 500, // 500 PokeCoins deducted on penalty
@@ -51,8 +63,8 @@ export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'
 
 /** How many correct answers are required for each service type. Configurable globally. */
 export const AUTO_GATE_QUESTION_COUNTS = {
-  pokecenter: 3,
-  pokemarket: 1,
+  pokecenter: 5,
+  pokemarket: 10,
   gym: 15,
 } as const;
 
@@ -72,12 +84,8 @@ export const AUTO_GATE_COOLDOWNS = {
 
 /** Rewards per service type. */
 export const AUTO_GATE_REWARDS: Record<string, GateReward[]> = {
-  pokecenter: [
-    { type: 'money', amount: 500 },
-    { type: 'item', itemId: '45', quantity: 1 },
-    { type: 'item', itemId: '46', quantity: 1 },
-  ],
-  pokemarket: [{ type: 'money', amount: 800 }],
+  pokecenter: [{ type: 'money', amount: 500 }],
+  pokemarket: [{ type: 'money', amount: 1000 }],
   gym: [
     { type: 'money', amount: 1500 },
     { type: 'item', itemId: '45', quantity: 3 }, // hp-up

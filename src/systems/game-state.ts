@@ -17,6 +17,7 @@ export function createNewPlayerData(): PlayerData {
   return {
     saveVersion: CURRENT_SAVE_VERSION,
     name: 'Player',
+    birthYear: 2018,
     heroCharacterId: getDefaultHeroCharacterId(),
     party: [
       {

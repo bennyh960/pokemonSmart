@@ -63,7 +63,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { setFlyCallback, CITY_INFO } from './world-map.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
 import type { SimpleOpType } from '../math/simple-input-question.js';
-import { PLAYER_BIRTH_YEAR, gradeFromBirthYear } from '../data/story/global-gate-config.js';
+import { getPlayerBirthYear, gradeFromBirthYear } from '../data/story/global-gate-config.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -518,12 +518,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // If this NPC has math questions, show them BEFORE giving the reward
       const npcQ = (npc as unknown as Record<string, unknown>).questions as
-        { count: number; types?: string[] } | undefined;
+        | { count: number; types?: string[] }
+        | undefined;
       if (npcQ && npcQ.count > 0 && hasActiveGame()) {
         const appContainer = document.getElementById('app');
         if (appContainer) {
           npcOverlayActive = true;
-          const gradeId = gradeFromBirthYear(PLAYER_BIRTH_YEAR);
+          const gradeId = gradeFromBirthYear(getPlayerBirthYear());
           mountInputMathOverlay({
             count: npcQ.count,
             types: npcQ.types as SimpleOpType[] | undefined,
@@ -1334,7 +1335,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             pendingPartyBack = { pushDx: -facingVec.dx, pushDy: -facingVec.dy };
           }
           interactingNPC = pga.npc;
-          activeTextBox = createTextBox(resolveDialogue(pga.npc.dialogue, getLocale()), isRTL(), pga.npc.name ? getLocalizedName(pga.npc.name) : undefined);
+          activeTextBox = createTextBox(
+            resolveDialogue(pga.npc.dialogue, getLocale()),
+            isRTL(),
+            pga.npc.name ? getLocalizedName(pga.npc.name) : undefined,
+          );
         }
         return;
       }
@@ -1354,7 +1359,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
           // Show blocking dialogue → onDialogueEnd will push GATE scene
           interactingNPC = ga.guard;
-          activeTextBox = createTextBox(resolveDialogue(ga.guard.dialogue, getLocale()), isRTL(), ga.guard.name ? getLocalizedName(ga.guard.name) : undefined);
+          activeTextBox = createTextBox(
+            resolveDialogue(ga.guard.dialogue, getLocale()),
+            isRTL(),
+            ga.guard.name ? getLocalizedName(ga.guard.name) : undefined,
+          );
         }
         return;
       }
@@ -1892,7 +1901,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               return;
             }
 
-            activeTextBox = createTextBox(resolveDialogue(npc.dialogue, getLocale()), isRTL(), npc.name ? getLocalizedName(npc.name) : undefined);
+            activeTextBox = createTextBox(
+              resolveDialogue(npc.dialogue, getLocale()),
+              isRTL(),
+              npc.name ? getLocalizedName(npc.name) : undefined,
+            );
             interactingNPC = npc;
             turnNPCToPlayer(npc);
             return;

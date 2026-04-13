@@ -16,9 +16,10 @@
 // Act 0 — Zeroville: The Beginning
 import './act0/quest-zeroville-intro.js';
 
-// Act 1 — First Steps: Route 1, Sumville, Minusburg
+// Act 1 — First Steps: Route 1, Sumville, Route 2, Minusburg
 import './act1/quest-route1.js';
 import './act1/quest-sumville-arc.js';
+import './act1/quest-route2.js';
 import './act1/quest-minusburg.js';
 
 // Act 2 — Trust Nobody: Multiplia, Dividia

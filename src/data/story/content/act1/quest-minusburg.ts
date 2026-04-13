@@ -19,23 +19,24 @@
  * NPC IDs:  'remainder-minusburg'
  */
 
-import { registerQuest }      from '../../quests.js';
-import { registerCutscene }   from '../../cutscenes.js';
-import { registerGate }       from '../../gates.js';
+import { registerQuest } from '../../quests.js';
+import { registerCutscene } from '../../cutscenes.js';
+import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
-import { FLAGS }              from '../../flags.js';
+import { FLAGS } from '../../flags.js';
+import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
 registerQuest({
   id: 'main-act1-route2',
-  title:     { en: 'Onward to Minusburg',  he: 'קדימה לעיר מינוסבורג' },
+  title: { en: 'Onward to Minusburg', he: 'קדימה לעיר מינוסבורג' },
   objective: { en: 'Cross Route 2 and reach Minusburg', he: 'חצה את שביל 2 והגע למינוסבורג' },
 });
 
 registerQuest({
   id: 'main-act1-gym2',
-  title:     { en: 'Minusburg Gym',        he: 'חדר הכושר של מינוסבורג' },
+  title: { en: 'Minusburg Gym', he: 'חדר הכושר של מינוסבורג' },
   objective: { en: 'Defeat Minus at the Subtraction Gym', he: 'נצח את מינוס בחדר הכושר של החיסור' },
 });
 
@@ -53,7 +54,14 @@ registerGate({
   totalQuestions: 10,
   passThreshold: 8,
   failurePenalty: { type: 'money-and-cooldown', amount: 100, durationMs: 5 * 60 * 1000 },
-  reopenCooldownMs: 30 * 60 * 1000,
+  reopenCooldownMs: 10 * 60 * 1000,
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    rewards: [{ type: 'money', amount: 500 }],
+    questionsRequired: 5,
+    timeLimitPerQuestion: 120,
+    rewardThreshold: 0.8,
+  },
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_ROUTE2_PASS },
     { type: 'set-quest', questId: 'main-act1-gym2' },
@@ -72,14 +80,20 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'Remainder / ריי-מיינדר',
       lines: [
-        { en: "You made it this far. I'm... impressed. But don't get comfortable.", he: 'הגעת עד כאן. אני... מרשים. אבל אל תרגיש בנוח.' },
+        {
+          en: "You made it this far. I'm... impressed. But don't get comfortable.",
+          he: 'הגעת עד כאן. אני... מרשים. אבל אל תרגיש בנוח.',
+        },
       ],
     },
     {
       type: 'dialogue',
       speakerId: 'Remainder / ריי-מיינדר',
       lines: [
-        { en: "I've been training harder than you. This battle will prove it.", he: 'אימנתי קשה יותר ממך. הקרב הזה יוכיח את זה.' },
+        {
+          en: "I've been training harder than you. This battle will prove it.",
+          he: 'אימנתי קשה יותר ממך. הקרב הזה יוכיח את זה.',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_REMAINDER_BATTLE_STARTED } },
@@ -100,7 +114,10 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'Remainder / ריי-מיינדר',
       lines: [
-        { en: "There's something strange in this city. The numbers on the signs don't add up.", he: 'יש משהו מוזר בעיר הזאת. המספרים על השלטים לא מסתדרים.' },
+        {
+          en: "There's something strange in this city. The numbers on the signs don't add up.",
+          he: 'יש משהו מוזר בעיר הזאת. המספרים על השלטים לא מסתדרים.',
+        },
       ],
     },
     { type: 'face-npc', npcId: 'remainder-minusburg', dir: 'up' },
@@ -116,9 +133,9 @@ registerStoryEvent({
   trigger: { type: 'map-enter', mapId: 'minusburg' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_MINUSBURG }],
   actions: [
-    { type: 'set-flag',      flag: FLAGS.VISITED_MINUSBURG },
+    { type: 'set-flag', flag: FLAGS.VISITED_MINUSBURG },
     { type: 'set-infection', cityId: 'minusburg', value: 'low' },
-    { type: 'set-quest',     questId: 'main-act1-gym2' },
+    { type: 'set-quest', questId: 'main-act1-gym2' },
   ],
 });
 
@@ -128,8 +145,8 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 2 },
   conditions: [],
   actions: [
-    { type: 'set-flag',      flag: FLAGS.STORY_BADGE_2 },
+    { type: 'set-flag', flag: FLAGS.STORY_BADGE_2 },
     { type: 'set-infection', cityId: 'minusburg', value: 'cleared' },
-    { type: 'set-quest',     questId: 'main-act2-multiplia' },
+    { type: 'set-quest', questId: 'main-act2-multiplia' },
   ],
 });

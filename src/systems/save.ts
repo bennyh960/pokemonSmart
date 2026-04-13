@@ -13,7 +13,7 @@ import { ensurePersistentBattleFields } from './battle-state.js';
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 10;
+export const CURRENT_SAVE_VERSION = 11;
 
 function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Record<string, any>) => void): void {
   if (data.party) {
@@ -69,7 +69,11 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
   },
   // Version 3 → 4: add selected hero sprite id for player rendering
   4: (data) => {
-    if (typeof data.heroCharacterId !== 'string' || !data.heroCharacterId.trim() || !hasCharacter(data.heroCharacterId)) {
+    if (
+      typeof data.heroCharacterId !== 'string' ||
+      !data.heroCharacterId.trim() ||
+      !hasCharacter(data.heroCharacterId)
+    ) {
       data.heroCharacterId = getDefaultHeroCharacterId();
     }
     data.saveVersion = 4;
@@ -119,6 +123,11 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
       }
     }
     data.saveVersion = 10;
+  },
+  // Version 10 → 11: add birthYear field (default 2018)
+  11: (data) => {
+    if (data.birthYear === undefined) data.birthYear = 2018;
+    data.saveVersion = 11;
   },
 };
 

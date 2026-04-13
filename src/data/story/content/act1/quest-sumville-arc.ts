@@ -90,12 +90,12 @@ registerGate({
     ...DEFAULT_SESSION_CONFIG,
     rewards: [
       { type: 'money', amount: 750 },
-      { type: 'item', itemId: 'rare-candy', amount: 1 },
-      { type: 'item', itemId: 'zinc', amount: 3 },
+      { type: 'item', itemId: 'rare-candy', amount: 100 },
+      { type: 'item', itemId: 'zinc', amount: 300 },
     ],
-    questionsRequired: 15,
-    rewardThreshold: 12,
-    bonusMultiplier: 3,
+    questionsRequired: 1,
+    rewardThreshold: 1,
+    bonusMultiplier: 30,
   },
   passThreshold: 12,
   failurePenalty: { type: 'none' },
@@ -104,6 +104,26 @@ registerGate({
     { type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_GYM_PASS },
     { type: 'set-quest', questId: 'main-act1-gym1' },
   ],
+});
+registerGate({
+  id: 'gate-route1-sumville',
+  title: { en: 'Route 1 Checkpoint', he: 'מחסום שביל 1' },
+  description: {
+    en: 'The path Sumville-Route1 is locked. We must identify you are not NULL-X creators. Questions will determine if you can pass. Choose wisely.',
+    he: 'הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
+  },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['placeholder'],
+  totalQuestions: 5,
+  passThreshold: 5,
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    inputQuestions: { count: 3 },
+    questionsRequired: 5,
+  },
+  failurePenalty: { type: 'money', amount: 150 },
+  reopenCooldownMs: 15 * 60 * 1000, // 15 min
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
 });
 registerGate({
   id: 'gate-sumville-route2',
@@ -120,6 +140,7 @@ registerGate({
   reopenCooldownMs: 15 * 60 * 1000, // 15 min
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
 });
+// THIS GATE IS FAKE _ THERE IS NO ENTRANCE TO SAFARI BUT DONT CARE FOR NOW
 registerGate({
   id: 'gate-sumville-safari',
   title: { en: 'Safari Zone Checkpoint', he: 'מחסום אזור הספארי' },

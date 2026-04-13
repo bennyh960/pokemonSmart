@@ -16,7 +16,7 @@
 import { QuestionBuilder, buildSnapshot, getClassConfig, registry } from '../math/question-builder/index.js';
 import type { RichQuestion } from '../math/question-builder/index.js';
 import type { GateSessionConfig, GateReward } from '../data/story/gates.js';
-import { gradeFromBirthYear } from '../data/story/global-gate-config.js';
+import { gradeFromBirthYear, getPlayerBirthYear } from '../data/story/global-gate-config.js';
 import {
   generateSimpleInputQuestion,
   type SimpleInputQuestion,
@@ -60,7 +60,7 @@ export interface SessionResult {
 export class GateSession {
   private readonly config: GateSessionConfig;
   private readonly snapshot = buildSnapshot();
-  private readonly gradeId = gradeFromBirthYear(2018); // constant for now
+  private readonly gradeId = gradeFromBirthYear(getPlayerBirthYear());
 
   private correctCount = 0;
   private totalAttempts = 0;
@@ -119,8 +119,7 @@ export class GateSession {
     const totalRemaining = this.requiredTotal - this.correctCount;
     if (
       this.inputQuestionsRemaining > 0 &&
-      (totalRemaining <= this.inputQuestionsRemaining ||
-        Math.random() < this.inputQuestionsRemaining / totalRemaining)
+      (totalRemaining <= this.inputQuestionsRemaining || Math.random() < this.inputQuestionsRemaining / totalRemaining)
     ) {
       this.inputQuestionsRemaining--;
       this.lastQuestionType = 'input';

@@ -41,6 +41,19 @@ registerQuest({
 
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
 
+// registerCutscene({
+//   id: 'test',
+//   skippable: true,
+//   steps: [
+//     {
+//       type: 'dialogue',
+//       speakerId: 'Test Speaker',
+//       lines: [{ en: 'This is a test dialogue.', he: 'זה דיאלוג בדיקה.' }],
+//     },
+//     { type: 'move-npc', npcId: 'rival-reminder', path: ['down', 'down'] },
+//   ],
+// });
+
 registerCutscene({
   id: 'act0-intro',
   skippable: true,
@@ -163,6 +176,13 @@ registerCutscene({
 });
 
 // ── Story Events ──────────────────────────────────────────────────────────────
+// registerStoryEvent({
+//   id: 'start-test',
+//   trigger: { type: 'map-enter', mapId: 'zeroville-house-tl' },
+//   // conditions: [{ type: 'flag-not', flag: FLAGS.TEST_EVENT_SEEN }],
+//   repeatable: true, // flag-not condition is the guard; cutscene sets TEST_EVENT_SEEN
+//   actions: [{ type: 'start-cutscene', cutsceneId: 'test' }],
+// });
 
 // Entering Zeroville for the first time — set visit flag + start opening quest
 registerStoryEvent({

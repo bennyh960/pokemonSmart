@@ -39,8 +39,11 @@ export const FLAGS = {
   SUMVILLE_CRYSTAL_RETURNED: 'sumville-crystal-returned', // Crystal returned to keeper at bridge
   SUMVILLE_GYM_CLEARED: 'sumville-gym-cleared', // Addition Gym trainer defeated
   GATE_SUMVILLE_GYM_PASS: 'gate-sumville-gym-pass', // Passed Addition Gym gate
+  //! @depercated : SAFARI IS MOVED TO OTHER PLACE - WILL USE LATER
   GATE_SUMVILLE_SAFARI_PASS: 'gate-sumville-safari-pass', // Passed Sumville Safari gate (optional challenge)
   // ── Act 1: Route 2 + Minusburg ──────────────────────────────────────────────
+  ACT1_PROF_ALGORITHMA_ROUTE2_SCENE_SEEN: 'act1-prof-algorithma-route2-scene-seen', // Prof. Algorithma cutscene at Route 2 seen
+  ACT1_RIVAL_BATTLE_1: 'act1-rival-battle-1', // First rival battle dialogue started
   GATE_ROUTE2_PASS: 'gate-route2-pass', // Route 2 → Minusburg checkpoint passed
   VISITED_MINUSBURG: 'visited-minusburg',
   ACT1_REMAINDER_BATTLE_STARTED: 'act1-remainder-battle-started',
