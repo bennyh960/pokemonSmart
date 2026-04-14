@@ -653,6 +653,7 @@ export function createBattleScene(
           setFlag(pd, reward.storyEvent);
         }
         setFlag(pd, `trainer-${td.trainerId}-defeated`);
+        fireStoryTrigger({ type: 'trainer-defeated', trainerId: td.trainerId });
       }
       // Always record the defeat for re-encounter tracking
       recordTrainerDefeat(td.trainerId);

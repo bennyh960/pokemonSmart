@@ -41,9 +41,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "meadow",
       "above": true,
       "overlay": true,
@@ -58,13 +56,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "poison",
-        "grass",
-        "bug",
-        "flying",
-        "psychic"
-      ],
+      "encounterTypes": ["poison", "grass", "bug", "flying", "psychic"],
       "above": true,
       "overlay": true,
       "category": "grass",
@@ -527,9 +519,7 @@
       "w": 48,
       "h": 48,
       "walkable": true,
-      "encounterTypes": [
-        "*/ice,water,fire,poison"
-      ],
+      "encounterTypes": ["*/ice,water,fire,poison"],
       "above": true,
       "overlay": true,
       "category": "grass",
@@ -543,9 +533,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/fire,water,ice,rock"
-      ],
+      "encounterTypes": ["*/fire,water,ice,rock"],
       "above": true,
       "overlay": true,
       "category": "grass",
@@ -559,9 +547,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*"
-      ],
+      "encounterTypes": ["*"],
       "above": true,
       "overlay": true,
       "interactType": null,
@@ -858,10 +844,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "ice"
-      ],
+      "encounterTypes": ["water", "ice"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -934,9 +917,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/flying,ground,rock,dragon,steel,normal"
-      ],
+      "encounterTypes": ["*/flying,ground,rock,dragon,steel,normal"],
       "above": true,
       "category": "ground",
       "interactType": null,
@@ -1321,9 +1302,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -1376,6 +1355,19 @@
       "category": "ground",
       "interactType": null,
       "description": "mt2 border: bottom-right corner of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
+    },
+    {
+      "key": "mt2cb",
+      "sx": 0,
+      "sy": 1760,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "encounterTypes": ["*"],
+      "above": false,
+      "category": "ground",
+      "interactType": null,
+      "description": "mountain 2 big tile (32x32) — walkable encounter ground covering 2x2 tiles. Has all-type encounters. Use as base tile for large open mountain areas that need encounter spawns without the bordered mt2 rectangle system"
     },
     {
       "key": "kk",
@@ -1895,9 +1887,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water,ice"
-      ],
+      "encounterTypes": ["*/water,ice"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -2090,13 +2080,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "steel",
-        "dragon",
-        "rock",
-        "electric",
-        "flying"
-      ],
+      "encounterTypes": ["steel", "dragon", "rock", "electric", "flying"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3666,9 +3650,7 @@
       "w": 32,
       "h": 32,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3693,9 +3675,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3757,9 +3737,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3820,9 +3798,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*"
-      ],
+      "encounterTypes": ["*"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -4754,12 +4730,9 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": true,
       "category": "grass",
-      "interactType": null,
       "description": "dense grass with small shadow at bottom"
     },
     {
@@ -4769,60 +4742,10 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/fire,ice,poison,bug"
-      ],
+      "encounterTypes": ["*/fire,ice,poison,bug"],
       "above": true,
       "category": "grass",
-      "interactType": null,
       "description": "yellow dry leafes"
-    },
-    {
-      "key": "mt2br2",
-      "sx": 0,
-      "sy": 1760,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "mountain 2 connection botom right"
-    },
-    {
-      "key": "mt2tl2",
-      "sx": 16,
-      "sy": 1760,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "mountain 2 bottom left connection"
-    },
-    {
-      "key": "mt2tr2",
-      "sx": 0,
-      "sy": 1776,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "mountain connection top right i thibk"
-    },
-    {
-      "key": "flowerX",
-      "sx": 144,
-      "sy": 16,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "grass",
-      "description": "just flowers"
     }
   ]
 }

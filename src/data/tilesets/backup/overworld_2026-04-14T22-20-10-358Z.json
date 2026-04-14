@@ -4810,19 +4810,7 @@
       "walkable": true,
       "above": false,
       "category": "ground",
-      "interactType": null,
       "description": "mountain connection top right i thibk"
-    },
-    {
-      "key": "flowerX",
-      "sx": 144,
-      "sy": 16,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "grass",
-      "description": "just flowers"
     }
   ]
 }

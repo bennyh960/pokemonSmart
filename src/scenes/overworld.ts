@@ -334,7 +334,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         afterSpawnSteps: 0,
         afterSpawnWaiting: false,
         afterSpawnTimer: 0,
-        isPreDespawning: false,
+        // If NPC is already invisible on scene init but beforeDespawn hasn't run yet
+        // (e.g. returning from a trainer battle that just set the defeat flag),
+        // start the beforeDespawn walk immediately rather than waiting for the
+        // visible→invisible transition which will never fire on a fresh scene.
+        isPreDespawning:
+          !isNPCVisible(npc, _initFlags, hasActiveGame() ? getPlayerData().party : undefined) &&
+          !_initFlags[`npc-beforeDespawn-done-${npc.id}`] &&
+          !!(npc.autoWalk?.beforeDespawnPattern?.length),
         beforeDespawnIdx: 0,
         beforeDespawnSteps: 0,
         beforeDespawnWaiting: false,
@@ -1419,6 +1426,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             ta.trainerPixelY = ta.trainerStartY + (ta.trainerTargetY - ta.trainerStartY) * ta.walkProgress;
           }
         } else if (ta.phase === 'battle-start') {
+          // Fire npc-interact before the battle so story events can react (mirrors player-initiated flow)
+          if (hasActiveGame()) {
+            fireStoryTrigger({ type: 'npc-interact', npcId: ta.trainer.id });
+          }
           // Start the battle (line-of-sight triggered — always first encounter)
           const trainerBattleData = buildTrainerBattleData(ta.trainer, 0);
           const playerData = getPlayerData();
@@ -1901,6 +1912,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               return;
             }
 
+            // Fire npc-interact before trainer dialogue starts (first encounter only)
+            if (npc.type === 'trainer' && hasActiveGame()) {
+              fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+            }
             activeTextBox = createTextBox(
               resolveDialogue(npc.dialogue, getLocale()),
               isRTL(),

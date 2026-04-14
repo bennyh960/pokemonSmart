@@ -87,18 +87,27 @@ registerCutscene({
 registerCutscene({
   id: 'act1-scene-rival-route2',
   skippable: false,
+  phoneCaller: { en: 'Rei Minder', he: 'ריי מיינדר' },
   steps: [
     {
       type: 'dialogue',
       speakerId: 'Rei Minder / ריי שארית',
       lines: [
         {
-          en: "Hey again. I see you've made it to Route 2. I've been waiting for you. Ready for our battle?",
-          he: 'היי שוב. אני רואה שהגעת לשביל 2. חיכיתי לך. מוכן לקרב שלנו?',
+          en: 'Hey , I just saw you on the road , what talking you too long?',
+          he: 'היי, רק ראיתי אותך בדרך, למה לקחת כל כך הרבה זמן?',
+        },
+        {
+          en: 'I saw rare pokemon , I run after him... I gout to catch him! ',
+          he: 'ראיתי פוקימון נדיר, רדפתי אחריו... אני חייב לתפוס אותו! ',
+        },
+        {
+          en: "Don't leave the place without battling me! I want to see if you are getting stronger like I am! ",
+          he: 'אל תעזוב את המקום בלי להילחם בי! אני רוצה לראות אם אתה מתחזק כמוני! ',
         },
       ],
     },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_RIVAL_BATTLE_1 } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_RIVAL_RUN_1 } },
   ],
 });
 
@@ -119,7 +128,13 @@ registerStoryEvent({
 
 // Gate 1 cleared → advance quest (if exit NPC cutscene already played this is a no-op)
 registerStoryEvent({
+  id: 'evt-ACT1_RIVAL_CHASING',
+  // trigger: { type: 'npc-interact', npcId: 'rival-reminder-act1-battle-1' },
+  trigger: { type: 'trainer-defeated', trainerId: FLAGS.ACT1_RIVAL_TRIGGER_CALL },
+  actions: [{ type: 'start-cutscene', cutsceneId: 'act1-scene-rival-route2' }],
+});
+registerStoryEvent({
   id: 'evt-ACT1_RIVAL_BATTLE_1',
   trigger: { type: 'npc-interact', npcId: 'rival-reminder-act1-battle-1' },
-  actions: [{ type: 'start-cutscene', cutsceneId: 'act1-scene-rival-route2' }],
+  actions: [{ type: 'set-flag', flag: FLAGS.ACT1_RIVAL_BATTLE_1 }],
 });

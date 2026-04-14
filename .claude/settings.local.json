@@ -62,7 +62,8 @@
       "WebFetch(domain:dn720300.ca.archive.org)",
       "WebFetch(domain:archive.org)",
       "WebFetch(domain:downloads.khinsider.com)",
-      "Bash(find /c/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon/src -name *.tsx -o -name *.jsx)"
+      "Bash(find /c/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon/src -name *.tsx -o -name *.jsx)",
+      "Bash(python3 -c ':*)"
     ]
   }
 }

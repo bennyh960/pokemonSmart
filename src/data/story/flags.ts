@@ -43,7 +43,9 @@ export const FLAGS = {
   GATE_SUMVILLE_SAFARI_PASS: 'gate-sumville-safari-pass', // Passed Sumville Safari gate (optional challenge)
   // ── Act 1: Route 2 + Minusburg ──────────────────────────────────────────────
   ACT1_PROF_ALGORITHMA_ROUTE2_SCENE_SEEN: 'act1-prof-algorithma-route2-scene-seen', // Prof. Algorithma cutscene at Route 2 seen
-  ACT1_RIVAL_BATTLE_1: 'act1-rival-battle-1', // First rival battle dialogue started
+  ACT1_RIVAL_TRIGGER_CALL: 'act1-rival-trigger-call', // First rival battle dialogue started
+  ACT1_RIVAL_RUN_1: 'act1-rival-run-1', // Rival run 1 started (Route 2)
+  ACT1_RIVAL_BATTLE_1: 'act1-rival-battle-1', // Rival battle 1 started (Route 2)
   GATE_ROUTE2_PASS: 'gate-route2-pass', // Route 2 → Minusburg checkpoint passed
   VISITED_MINUSBURG: 'visited-minusburg',
   ACT1_REMAINDER_BATTLE_STARTED: 'act1-remainder-battle-started',
@@ -144,6 +146,7 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.SUMVILLE_GYM_CLEARED]: 'Addition Gym trainer defeated',
   [FLAGS.GATE_SUMVILLE_GYM_PASS]: 'Passed Addition Gym gate',
   [FLAGS.GATE_ROUTE2_PASS]: 'Route 2 → Minusburg checkpoint passed',
+  [FLAGS.ACT1_RIVAL_BATTLE_1]: 'Rival battle 1 started (Route 2)',
   [FLAGS.VISITED_MINUSBURG]: 'First arrival at Minusburg',
   [FLAGS.ACT1_REMAINDER_BATTLE_STARTED]: 'Remainder battle dialogue started',
   [FLAGS.ACT1_REMAINDER_FIRST_BATTLE_DONE]: 'Remainder first battle complete',

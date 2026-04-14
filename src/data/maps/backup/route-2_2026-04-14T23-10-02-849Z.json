@@ -454,7 +454,7 @@
     {
       "id": "npc-1776181427912",
       "x": 14,
-      "y": 11,
+      "y": 9,
       "facing": "left",
       "type": "trainer",
       "dialogue": [
@@ -644,263 +644,6 @@
         "timeInterval": 1,
         "minPartyLevelBoost": 6
       }
-    },
-    {
-      "id": "npc-1776207287868",
-      "x": 20,
-      "y": 9,
-      "facing": "down",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "הדרך מפה מובילה לעיר מיניסבורג. עיר החיסורים!"
-        },
-        {
-          "en": "",
-          "he": "כדאי לך לדעת תרגילי חיסור!"
-        }
-      ],
-      "spriteType": "char_392694",
-      "party": [
-        {
-          "pokemonId": 88,
-          "level": 20,
-          "moves": []
-        },
-        {
-          "pokemonId": 207,
-          "level": 20,
-          "moves": []
-        },
-        {
-          "pokemonId": 42,
-          "level": 20,
-          "moves": []
-        },
-        {
-          "pokemonId": 167,
-          "level": 20,
-          "moves": []
-        },
-        {
-          "pokemonId": 109,
-          "level": 20,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 800,
-        "items": [
-          {
-            "itemId": "tm06",
-            "quantity": 1
-          }
-        ]
-      },
-      "postBattleDialogue": [
-        {
-          "en": "",
-          "he": "רעלן הוא מהלך טכני שמרעיל את היריב . פוקימון שיכול ללמוד מתקפה זו פשוט יהיה מעולה"
-        }
-      ],
-      "name": {
-        "en": "Whitney",
-        "he": "וויטני"
-      },
-      "questions": {
-        "count": 1,
-        "types": [
-          "-"
-        ]
-      }
-    },
-    {
-      "id": "npc-1776207580390",
-      "x": 23,
-      "y": 5,
-      "facing": "down",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "שמעתי שיש פה מאמנים חזקים באזור"
-        }
-      ],
-      "spriteType": "char_ca2fd2",
-      "party": [
-        {
-          "pokemonId": 156,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 153,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 159,
-          "level": 25,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 600,
-        "items": [
-          {
-            "itemId": "potion",
-            "quantity": 5
-          }
-        ]
-      },
-      "postBattleDialogue": [],
-      "name": {
-        "en": "Whitney",
-        "he": "וויטני"
-      },
-      "reencounter": {
-        "count": 3,
-        "lvlStep": 10,
-        "minPartyLevelBoost": 3
-      },
-      "questions": {
-        "count": 6,
-        "types": [
-          "+",
-          "-"
-        ]
-      }
-    },
-    {
-      "id": "npc-1776207788633",
-      "x": 44,
-      "y": 9,
-      "facing": "down",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "char_1f9b7d",
-      "party": [
-        {
-          "pokemonId": 95,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 246,
-          "level": 25,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 600
-      },
-      "postBattleDialogue": []
-    },
-    {
-      "id": "npc-1776207953881",
-      "x": 28,
-      "y": 12,
-      "facing": "down",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "נעים להכיר!"
-        }
-      ],
-      "spriteType": "char_10af6a",
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "down",
-            "steps": 4,
-            "delay": 1
-          },
-          {
-            "dir": "right",
-            "steps": 6,
-            "delay": 3
-          },
-          {
-            "dir": "up",
-            "steps": 4,
-            "delay": 0.5
-          },
-          {
-            "dir": "left",
-            "steps": 6,
-            "delay": 1.5
-          }
-        ],
-        "loop": true
-      },
-      "name": {
-        "en": "Rick",
-        "he": "ריק"
-      },
-      "questions": {
-        "count": 5,
-        "types": [
-          "×"
-        ]
-      },
-      "party": [
-        {
-          "pokemonId": 133,
-          "level": 15,
-          "moves": []
-        },
-        {
-          "pokemonId": 135,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 134,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 196,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 136,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 197,
-          "level": 28,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 1000,
-        "items": [
-          {
-            "itemId": "thunder-stone",
-            "quantity": 1
-          }
-        ]
-      },
-      "postBattleDialogue": [
-        {
-          "en": "",
-          "he": "אבן חשמל יכולה לפתח פוקימונים מסוימים כשהם באים איתה במגע"
-        }
-      ]
     }
   ],
   "music": "route",
@@ -1342,6 +1085,16 @@
     {
       "key": "g3",
       "x": 9,
+      "y": 10
+    },
+    {
+      "key": "g3",
+      "x": 19,
+      "y": 9
+    },
+    {
+      "key": "g3",
+      "x": 19,
       "y": 10
     },
     {
@@ -2565,6 +2318,26 @@
       "y": 6
     },
     {
+      "key": "g3",
+      "x": 17,
+      "y": 11
+    },
+    {
+      "key": "g3",
+      "x": 18,
+      "y": 11
+    },
+    {
+      "key": "g3",
+      "x": 19,
+      "y": 11
+    },
+    {
+      "key": "g3",
+      "x": 19,
+      "y": 8
+    },
+    {
       "key": "mt2t",
       "x": 10,
       "y": 2
@@ -2688,6 +2461,36 @@
       "key": "mt2b",
       "x": 16,
       "y": 11
+    },
+    {
+      "key": "mt2b",
+      "x": 17,
+      "y": 11
+    },
+    {
+      "key": "mt2b",
+      "x": 18,
+      "y": 11
+    },
+    {
+      "key": "mt2br",
+      "x": 19,
+      "y": 11
+    },
+    {
+      "key": "mt2r",
+      "x": 19,
+      "y": 10
+    },
+    {
+      "key": "mt2r",
+      "x": 19,
+      "y": 9
+    },
+    {
+      "key": "mt2r",
+      "x": 19,
+      "y": 8
     },
     {
       "key": "rock1",
@@ -2911,6 +2714,11 @@
     },
     {
       "key": "g4",
+      "x": 18,
+      "y": 10
+    },
+    {
+      "key": "g4",
       "x": 27,
       "y": 9
     },
@@ -3031,8 +2839,18 @@
     },
     {
       "key": "g5",
+      "x": 55,
+      "y": 4
+    },
+    {
+      "key": "g5",
       "x": 56,
       "y": 4
+    },
+    {
+      "key": "g5",
+      "x": 56,
+      "y": 3
     },
     {
       "key": "g5",
@@ -3051,6 +2869,11 @@
     },
     {
       "key": "g5",
+      "x": 57,
+      "y": 4
+    },
+    {
+      "key": "g5",
       "x": 58,
       "y": 4
     },
@@ -3058,6 +2881,11 @@
       "key": "g5",
       "x": 58,
       "y": 3
+    },
+    {
+      "key": "g5",
+      "x": 58,
+      "y": 2
     },
     {
       "key": "g5",
@@ -3067,6 +2895,11 @@
     {
       "key": "g5",
       "x": 55,
+      "y": 14
+    },
+    {
+      "key": "g5",
+      "x": 55,
       "y": 15
     },
     {
@@ -3093,6 +2926,11 @@
       "key": "g5",
       "x": 58,
       "y": 16
+    },
+    {
+      "key": "g5",
+      "x": 58,
+      "y": 15
     },
     {
       "key": "g5",
@@ -3183,6 +3021,16 @@
       "key": "mt2r",
       "x": 19,
       "y": 5
+    },
+    {
+      "key": "mt2r",
+      "x": 19,
+      "y": 6
+    },
+    {
+      "key": "mt2r",
+      "x": 19,
+      "y": 7
     },
     {
       "key": "mt2r",
@@ -3763,166 +3611,6 @@
       "key": "g3",
       "x": 9,
       "y": 11
-    },
-    {
-      "key": "g4",
-      "x": 56,
-      "y": 4
-    },
-    {
-      "key": "g4",
-      "x": 57,
-      "y": 3
-    },
-    {
-      "key": "g4",
-      "x": 57,
-      "y": 4
-    },
-    {
-      "key": "g4",
-      "x": 58,
-      "y": 4
-    },
-    {
-      "key": "g4",
-      "x": 58,
-      "y": 3
-    },
-    {
-      "key": "g4",
-      "x": 57,
-      "y": 2
-    },
-    {
-      "key": "g4",
-      "x": 56,
-      "y": 2
-    },
-    {
-      "key": "g4",
-      "x": 55,
-      "y": 2
-    },
-    {
-      "key": "g4",
-      "x": 55,
-      "y": 3
-    },
-    {
-      "key": "flowerX",
-      "x": 56,
-      "y": 3
-    },
-    {
-      "key": "flowerX",
-      "x": 55,
-      "y": 14
-    },
-    {
-      "key": "flowerX",
-      "x": 58,
-      "y": 15
-    },
-    {
-      "key": "g5",
-      "x": 57,
-      "y": 4
-    },
-    {
-      "key": "g5",
-      "x": 58,
-      "y": 2
-    },
-    {
-      "key": "g5",
-      "x": 55,
-      "y": 4
-    },
-    {
-      "key": "mt2r",
-      "x": 19,
-      "y": 6
-    },
-    {
-      "key": "mt2r",
-      "x": 19,
-      "y": 7
-    },
-    {
-      "key": "mt2r",
-      "x": 19,
-      "y": 8
-    },
-    {
-      "key": "mt2r",
-      "x": 19,
-      "y": 9
-    },
-    {
-      "key": "mt2r",
-      "x": 19,
-      "y": 10
-    },
-    {
-      "key": "mt2br",
-      "x": 19,
-      "y": 11
-    },
-    {
-      "key": "mt2b",
-      "x": 18,
-      "y": 11
-    },
-    {
-      "key": "mt2b",
-      "x": 17,
-      "y": 11
-    },
-    {
-      "key": "st1s",
-      "x": 10,
-      "y": 4
-    },
-    {
-      "key": "rock1",
-      "x": 10,
-      "y": 4
-    },
-    {
-      "key": "g4",
-      "x": 18,
-      "y": 8
-    },
-    {
-      "key": "flowerX",
-      "x": 18,
-      "y": 9
-    },
-    {
-      "key": "flowerX",
-      "x": 12,
-      "y": 3
-    },
-    {
-      "key": "flowerX",
-      "x": 19,
-      "y": 2
-    },
-    {
-      "key": "tressureBox",
-      "x": 18,
-      "y": 9
-    },
-    {
-      "key": "item-revive",
-      "x": 27,
-      "y": 16
-    },
-    {
-      "key": "potion",
-      "x": 31,
-      "y": 10
     }
   ],
   "objectLayer": [
