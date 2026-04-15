@@ -11,7 +11,7 @@ import { drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js'
 import { fontFor } from '../engine/fonts.js';
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
 import { BTL, getPlayerBarHeight, getPlayerBarY, getHpColor, STATUS_PILL_COLORS } from '../data/battle-constants.js';
-import { getLocale, isRTL, t } from '../i18n/i18n.js';
+import { getLocale, isRTL } from '../i18n/i18n.js';
 import { renderPartyBalls } from './battle-menu.js';
 
 export interface HPBarState {
