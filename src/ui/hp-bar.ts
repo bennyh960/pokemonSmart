@@ -11,7 +11,7 @@ import { drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js'
 import { fontFor } from '../engine/fonts.js';
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
 import { BTL, getPlayerBarHeight, getPlayerBarY, getHpColor, STATUS_PILL_COLORS } from '../data/battle-constants.js';
-import { isRTL } from '../i18n/i18n.js';
+import { getLocale, isRTL, t } from '../i18n/i18n.js';
 import { renderPartyBalls } from './battle-menu.js';
 
 export interface HPBarState {
@@ -40,13 +40,32 @@ export interface PartyBallState {
 }
 
 export function createHPBar(
-  pokemonId: number, level: number, hp: number, maxHp: number,
-  x: number, y: number, isPlayer = true, xp = 0, xpToNext = 0,
+  pokemonId: number,
+  level: number,
+  hp: number,
+  maxHp: number,
+  x: number,
+  y: number,
+  isPlayer = true,
+  xp = 0,
+  xpToNext = 0,
 ): HPBarState {
   return {
-    currentHp: hp, maxHp, displayHp: hp, pokemonId, level,
+    currentHp: hp,
+    maxHp,
+    displayHp: hp,
+    pokemonId,
+    level,
     displayXp: xp,
-    x, y, isPlayer, xp, xpToNext, status: '', volatileStatuses: [], gender: '', statChanges: [],
+    x,
+    y,
+    isPlayer,
+    xp,
+    xpToNext,
+    status: '',
+    volatileStatuses: [],
+    gender: '',
+    statChanges: [],
   };
 }
 
@@ -113,7 +132,11 @@ export function getPanelHeight(bar: HPBarState): number {
 
 /** No-op kept for backward compatibility. */
 export function drawPanelBackground(
-  _ctx: CanvasRenderingContext2D, _x: number, _y: number, _w: number, _h: number,
+  _ctx: CanvasRenderingContext2D,
+  _x: number,
+  _y: number,
+  _w: number,
+  _h: number,
 ): void {}
 
 // ─── Internals ─────────────────────────────────────────────────────
@@ -124,7 +147,7 @@ function countStatuses(bar: HPBarState): number {
 
 function getStatusPanelHeight(baseHeight: number, statusCount: number): number {
   const extraRows = Math.ceil(Math.max(0, statusCount - 2) / 2);
-  return baseHeight + (extraRows * BTL.STATUS_PILL_H);
+  return baseHeight + extraRows * BTL.STATUS_PILL_H;
 }
 
 function drawPanel(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
@@ -182,24 +205,16 @@ function renderPanelHeader(
   const statusStyle = status ? STATUS_PILL_COLORS[status] : undefined;
   const badgeLabel = statusStyle?.shortLabel ?? '';
   const badgeTextWidth = badgeLabel ? measureTextWidth(ctx, badgeLabel, 4) : 0;
-  const badgeW = badgeLabel
-    ? Math.max(16, badgeTextWidth + (BTL.STATUS_BADGE_PAD_X * 2))
-    : 0;
+  const badgeW = badgeLabel ? Math.max(16, badgeTextWidth + BTL.STATUS_BADGE_PAD_X * 2) : 0;
   const padding = BTL.HEADER_PAD_X;
   const gap = BTL.HEADER_GAP;
   const badgeGap = badgeW > 0 ? BTL.STATUS_BADGE_GAP : 0;
   const contentWidth = panelW - padding * 2;
   const reservedWidth = levelWidth + badgeGap + badgeW;
   const nameClipW = Math.max(0, contentWidth - reservedWidth - gap);
-  const nameClipX = rtl
-    ? panelX + padding + reservedWidth + gap
-    : panelX + padding;
-  const nameAnchorX = rtl
-    ? panelX + panelW - padding
-    : panelX + padding;
-  const levelX = rtl
-    ? panelX + padding
-    : panelX + panelW - padding;
+  const nameClipX = rtl ? panelX + padding + reservedWidth + gap : panelX + padding;
+  const nameAnchorX = rtl ? panelX + panelW - padding : panelX + padding;
+  const levelX = rtl ? panelX + padding : panelX + panelW - padding;
   const badgeX = rtl
     ? panelX + padding + levelWidth + badgeGap
     : panelX + panelW - padding - levelWidth - badgeGap - badgeW;
@@ -212,7 +227,8 @@ function renderPanelHeader(
   });
 
   if (statusStyle && badgeLabel) {
-    renderStatusBadge(ctx, badgeX, panelY + 1, badgeW, badgeLabel, statusStyle);
+    console.debug('Rendering status badge:', badgeLabel, statusStyle);
+    renderStatusBadge(ctx, badgeX, panelY, badgeW, badgeLabel, statusStyle);
   }
 
   if (nameClipW <= 0) return;
@@ -244,7 +260,9 @@ function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState, party
 
   // HP label (right side)
   drawText(ctx, 'HP', B.x + BTL.OPP_HP_LABEL.dx, B.y + BTL.OPP_HP_LABEL.dy, {
-    size: BTL.OPP_HP_LABEL.fs, color: BTL.COLORS.textDark, align: 'right',
+    size: BTL.OPP_HP_LABEL.fs,
+    color: BTL.COLORS.textDark,
+    align: 'right',
   });
 
   // HP bar
@@ -253,7 +271,8 @@ function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState, party
 
   // HP percentage
   drawText(ctx, `${hpPct}%`, B.x + BTL.OPP_HP_PCT.dx, B.y + BTL.OPP_HP_PCT.dy, {
-    size: BTL.OPP_HP_PCT.fs, color: BTL.COLORS.textMuted,
+    size: BTL.OPP_HP_PCT.fs,
+    color: BTL.COLORS.textMuted,
   });
 
   if (partyBalls) {
@@ -287,7 +306,9 @@ function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBa
 
   // HP label
   drawText(ctx, 'HP', barX + BTL.PLY_HP_LABEL.dx, barY + BTL.PLY_HP_LABEL.dy, {
-    size: BTL.PLY_HP_LABEL.fs, color: BTL.COLORS.textDark, align: 'right',
+    size: BTL.PLY_HP_LABEL.fs,
+    color: BTL.COLORS.textDark,
+    align: 'right',
   });
 
   // HP bar track
@@ -296,7 +317,8 @@ function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBa
 
   // HP numeric value
   drawText(ctx, `${hpCur}/${hpMax}`, barX + BTL.PLY_HP_VAL.dx, barY + BTL.PLY_HP_VAL.dy, {
-    size: BTL.PLY_HP_VAL.fs, color: BTL.COLORS.textDim,
+    size: BTL.PLY_HP_VAL.fs,
+    color: BTL.COLORS.textDim,
   });
 
   // XP bar
@@ -359,9 +381,10 @@ function renderStatusPills(
     const py = barY + (row === 0 ? BTL.STATUS_ROW0_DY : BTL.STATUS_ROW1_DY);
     const pill = pills[i];
     const pw = col === 0 ? BTL.STATUS_PILL_W : BTL.STATUS_PILL_W - 2;
-    const px = align === 'right'
-      ? barX + barW - 4 - (col === 0 ? pw : BTL.STATUS_PILL_W + BTL.STATUS_GAP + pw)
-      : barX + 4 + (col === 0 ? 0 : BTL.STATUS_PILL_W + BTL.STATUS_GAP);
+    const px =
+      align === 'right'
+        ? barX + barW - 4 - (col === 0 ? pw : BTL.STATUS_PILL_W + BTL.STATUS_GAP + pw)
+        : barX + 4 + (col === 0 ? 0 : BTL.STATUS_PILL_W + BTL.STATUS_GAP);
 
     ctx.fillStyle = pill.bgColor;
     fillRoundRect(ctx, px, py, pw, BTL.STATUS_PILL_H, 2);
@@ -369,27 +392,30 @@ function renderStatusPills(
     ctx.lineWidth = 1;
     strokeRoundRect(ctx, px, py, pw, BTL.STATUS_PILL_H, 2);
     drawText(ctx, pill.label, px + pw / 2, py, {
-      size: 4, color: pill.textColor, align: 'center',
+      size: 4,
+      color: pill.textColor,
+      align: 'center',
     });
   }
 }
 
 function getStatShortLabel(stat: string): string {
+  const locale = getLocale();
   switch (stat) {
     case 'attack':
-      return 'ATK';
+      return locale === 'en' ? 'ATK' : 'התקפה';
     case 'defense':
-      return 'DEF';
+      return locale === 'en' ? 'DEF' : 'הגנה';
     case 'specialAttack':
-      return 'SpA';
+      return locale === 'en' ? 'SpA' : 'התקפה מ';
     case 'specialDefense':
-      return 'SpD';
+      return locale === 'en' ? 'SpD' : 'הגנה מ';
     case 'speed':
-      return 'SPD';
+      return locale === 'en' ? 'SPD' : 'מהירות';
     case 'accuracy':
-      return 'ACC';
+      return locale === 'en' ? 'ACC' : 'דיוק';
     case 'evasion':
-      return 'EVA';
+      return locale === 'en' ? 'EVA' : 'התחמקות';
     default:
       return stat.slice(0, 3).toUpperCase();
   }
@@ -404,6 +430,7 @@ function renderStatusBadge(
   style: { bgColor: string; borderColor: string; textColor: string },
 ): void {
   ctx.fillStyle = style.bgColor;
+  // console.debug('Rendering status badge:', label, style);
   fillRoundRect(ctx, x, y, w, BTL.STATUS_BADGE_H, 2);
   ctx.strokeStyle = style.borderColor;
   ctx.lineWidth = 1;

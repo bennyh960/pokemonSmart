@@ -144,6 +144,10 @@ import {
   tryApplyFlinch,
   applyRestEffect,
   applyHealPercent,
+  applyEntryHazards,
+  clearEntryHazards,
+  clearScreens,
+  type EntryHazardResult,
 } from '../systems/battle-system.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
@@ -457,6 +461,28 @@ function doesAbilityAbsorbMove(target: Pokemon, moveType: PokemonType): boolean 
   });
 }
 
+function buildHazardMessages(result: EntryHazardResult, pokemonName: string, sideState: BattleSideRuntimeState): string[] {
+  const msgs: string[] = [];
+  if (result.stealthRockDamage > 0) {
+    msgs.push(t('battle.hazardStealthRockHit', { name: pokemonName }));
+  } else if (result.stealthRockImmune && sideState.stealthRockActive) {
+    msgs.push(t('battle.hazardNoEffect', { name: pokemonName, hazard: t('battle.hazardNameStealthRock') }));
+  }
+  if (result.spikesDamage > 0) {
+    msgs.push(t('battle.hazardSpikesHit', { name: pokemonName }));
+  } else if (result.spikesImmune && sideState.spikesLayers > 0) {
+    msgs.push(t('battle.hazardNoEffect', { name: pokemonName, hazard: t('battle.hazardNameSpikes') }));
+  }
+  if (result.toxicSpikesAbsorbed) {
+    msgs.push(t('battle.hazardToxicSpikesAbsorbed', { name: pokemonName }));
+  } else if (result.statusApplied === 'poison' || result.statusApplied === 'badly-poison') {
+    msgs.push(t('battle.hazardToxicSpikesPoison', { name: pokemonName }));
+  } else if (result.toxicSpikesImmune && sideState.toxicSpikesLayers > 0) {
+    msgs.push(t('battle.hazardNoEffect', { name: pokemonName, hazard: t('battle.hazardNameToxicSpikes') }));
+  }
+  return msgs;
+}
+
 export function createBattleScene(
   input: InputManager,
   stateMachine: StateMachine,
@@ -521,6 +547,8 @@ export function createBattleScene(
   let pendingCaptureOutcome: { itemId: string; caught: boolean } | null = null;
   let pendingEnemySendOutAnimation = false;
   let pendingPlayerSendOutAnimation = false;
+  let pendingPlayerEntryHazard = false;
+  let pendingEnemyEntryHazard = false;
   const animationDirector = createBattleAnimationDirector();
 
   function useItem(itemId: string): void {
@@ -821,6 +849,8 @@ export function createBattleScene(
     pendingCaptureOutcome = null;
     pendingEnemySendOutAnimation = isTrainerBattle;
     pendingPlayerSendOutAnimation = true;
+    pendingPlayerEntryHazard = false;
+    pendingEnemyEntryHazard = false;
     animationDirector.clear();
     animationDirector.resetActors();
     animationDirector.setActorState('ball', { visible: false });
@@ -1395,6 +1425,7 @@ export function createBattleScene(
         ),
         callStep(() => {
           activeBallId = null;
+          pendingEnemyEntryHazard = true;
           animationDirector.setActorState('ball', {
             x: 0,
             y: 0,
@@ -1488,6 +1519,7 @@ export function createBattleScene(
         ),
         callStep(() => {
           activeBallId = null;
+          pendingPlayerEntryHazard = true;
           animationDirector.setActorState('ball', {
             x: 0,
             y: 0,
@@ -2388,6 +2420,12 @@ export function createBattleScene(
     const isOhko = moveBattleData?.behaviorTags?.includes('ohko') ?? false;
     const isProtect = moveBattleData?.behaviorTags?.includes('protect') ?? false;
     const isEndure = moveBattleData?.behaviorTags?.includes('endure') ?? false;
+    const isBrickBreak = moveBattleData?.behaviorTags?.includes('brick-break') ?? false;
+    const isDefog = moveBattleData?.behaviorTags?.includes('defog') ?? false;
+    const isStealthRock = moveBattleData?.behaviorTags?.includes('stealth-rock') ?? false;
+    const isSpikes = moveBattleData?.behaviorTags?.includes('spikes') ?? false;
+    const isToxicSpikes = moveBattleData?.behaviorTags?.includes('toxic-spikes') ?? false;
+    const isRapidSpinClear = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
     const healPercent = moveBattleData?.healingPercent ?? null;
     const hitCount = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -2580,6 +2618,24 @@ export function createBattleScene(
       msgs.push(isProtect ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }));
     } else if (healPercent !== null) {
       msgs.push(t('battle.healedHp', { name: attackerName }));
+    } else if (isStealthRock) {
+      if (!enemySideState.stealthRockActive) {
+        msgs.push(t('battle.stealthRockSet'));
+      } else {
+        msgs.push(t('battle.hazardAlreadySet'));
+      }
+    } else if (isSpikes) {
+      if (enemySideState.spikesLayers < 3) {
+        msgs.push(t('battle.spikesSet'));
+      } else {
+        msgs.push(t('battle.hazardAlreadySet'));
+      }
+    } else if (isToxicSpikes) {
+      if (enemySideState.toxicSpikesLayers < 2) {
+        msgs.push(t('battle.toxicSpikesSet'));
+      } else {
+        msgs.push(t('battle.hazardAlreadySet'));
+      }
     } else if (resolvedEffectLines.length === 0) {
       msgs.push(t('battle.nothingHappened'));
       audio.playSFX('menu-cancel');
@@ -2599,6 +2655,26 @@ export function createBattleScene(
       msgs.push(t('battle.recoilHit', { name: attackerName, amount: selfCostAmount }));
     }
     msgs.push(...resolvedEffectLines);
+
+    // Brick Break: will shatter enemy screens on impact
+    if (isBrickBreak && hitResult.hit && plannedDamage > 0) {
+      const hadScreens = enemySideState.reflectTurnsRemaining > 0 || enemySideState.lightScreenTurnsRemaining > 0;
+      if (hadScreens) {
+        msgs.push(t('battle.brickBreakShatter'));
+      }
+    }
+    // Rapid Spin: will clear own hazards + leech seed on impact
+    if (isRapidSpinClear && hitResult.hit && plannedDamage > 0) {
+      const hadHazards = playerSideState.stealthRockActive || playerSideState.spikesLayers > 0 || playerSideState.toxicSpikesLayers > 0;
+      const hadSeed = playerBattleState.leechSeeded;
+      if (hadHazards || hadSeed) {
+        msgs.push(t('battle.rapidSpinClear', { name: attackerName }));
+      }
+    }
+    // Defog: will clear all hazards and screens
+    if (isDefog) {
+      msgs.push(t('battle.defogClear'));
+    }
 
     // Contact ability: enemy ability may inflict status on player when hit by physical move
     const contactEffectsOnPlayer: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
@@ -2625,6 +2701,19 @@ export function createBattleScene(
       'enemy',
       m,
       () => {
+        // Entry hazard placement (status moves)
+        if (isStealthRock && !enemySideState.stealthRockActive) {
+          enemySideState.stealthRockActive = true;
+          syncEnemyBar();
+        }
+        if (isSpikes && enemySideState.spikesLayers < 3) {
+          enemySideState.spikesLayers++;
+          syncEnemyBar();
+        }
+        if (isToxicSpikes && enemySideState.toxicSpikesLayers < 2) {
+          enemySideState.toxicSpikesLayers++;
+          syncEnemyBar();
+        }
         // Rest: full heal + sleep 2 turns + all PP restored
         if (isRest) {
           applyRestEffect(player, playerBattleState);
@@ -2726,6 +2815,26 @@ export function createBattleScene(
             audio.playSFX('hit');
           }
         }
+        // Brick Break: clear enemy screens after hitting
+        if (isBrickBreak) {
+          clearScreens(enemySideState);
+          syncEnemyBar();
+        }
+        // Rapid Spin: clear own entry hazards and leech seed after hitting
+        if (isRapidSpinClear) {
+          clearEntryHazards(playerSideState);
+          playerBattleState.leechSeeded = false;
+          syncPlayerBar();
+        }
+        // Defog: clear all hazards and screens on both sides
+        if (isDefog) {
+          clearEntryHazards(playerSideState);
+          clearEntryHazards(enemySideState);
+          clearScreens(playerSideState);
+          clearScreens(enemySideState);
+          syncPlayerBar();
+          syncEnemyBar();
+        }
       },
       hitResult.hit && !absorbed && plannedDamage > 0,
       hitCount,
@@ -2756,6 +2865,12 @@ export function createBattleScene(
     const isOhkoEnemy = moveBattleData?.behaviorTags?.includes('ohko') ?? false;
     const isProtectEnemy = moveBattleData?.behaviorTags?.includes('protect') ?? false;
     const isEndureEnemy = moveBattleData?.behaviorTags?.includes('endure') ?? false;
+    const isBrickBreakEnemy = moveBattleData?.behaviorTags?.includes('brick-break') ?? false;
+    const isDefogEnemy = moveBattleData?.behaviorTags?.includes('defog') ?? false;
+    const isStealthRockEnemy = moveBattleData?.behaviorTags?.includes('stealth-rock') ?? false;
+    const isSpikesEnemy = moveBattleData?.behaviorTags?.includes('spikes') ?? false;
+    const isToxicSpikesEnemy = moveBattleData?.behaviorTags?.includes('toxic-spikes') ?? false;
+    const isRapidSpinClearEnemy = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
     const healPercentEnemy = moveBattleData?.healingPercent ?? null;
     const hitCountEnemy = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -2975,6 +3090,24 @@ export function createBattleScene(
       msgs.push(t('battle.focusEnergy', { name: attackerName }));
     } else if (healPercentEnemy !== null) {
       msgs.push(t('battle.healedHp', { name: attackerName }));
+    } else if (isStealthRockEnemy) {
+      if (!playerSideState.stealthRockActive) {
+        msgs.push(t('battle.stealthRockSet'));
+      } else {
+        msgs.push(t('battle.hazardAlreadySet'));
+      }
+    } else if (isSpikesEnemy) {
+      if (playerSideState.spikesLayers < 3) {
+        msgs.push(t('battle.spikesSet'));
+      } else {
+        msgs.push(t('battle.hazardAlreadySet'));
+      }
+    } else if (isToxicSpikesEnemy) {
+      if (playerSideState.toxicSpikesLayers < 2) {
+        msgs.push(t('battle.toxicSpikesSet'));
+      } else {
+        msgs.push(t('battle.hazardAlreadySet'));
+      }
     } else if (resolvedEffectLines.length === 0) {
       audio.playSFX('menu-cancel');
       msgs.push(t('battle.nothingHappened'));
@@ -2994,6 +3127,26 @@ export function createBattleScene(
       msgs.push(t('battle.recoilHit', { name: attackerName, amount: selfCostAmount }));
     }
     msgs.push(...resolvedEffectLines);
+
+    // Brick Break: will shatter player screens on impact
+    if (isBrickBreakEnemy && hitResult.hit && plannedDamage > 0) {
+      const hadScreens = playerSideState.reflectTurnsRemaining > 0 || playerSideState.lightScreenTurnsRemaining > 0;
+      if (hadScreens) {
+        msgs.push(t('battle.brickBreakShatter'));
+      }
+    }
+    // Rapid Spin: will clear own hazards + leech seed on impact
+    if (isRapidSpinClearEnemy && hitResult.hit && plannedDamage > 0) {
+      const hadHazards = enemySideState.stealthRockActive || enemySideState.spikesLayers > 0 || enemySideState.toxicSpikesLayers > 0;
+      const hadSeed = enemyBattleState.leechSeeded;
+      if (hadHazards || hadSeed) {
+        msgs.push(t('battle.rapidSpinClear', { name: attackerName }));
+      }
+    }
+    // Defog: will clear all hazards and screens
+    if (isDefogEnemy) {
+      msgs.push(t('battle.defogClear'));
+    }
 
     // Contact ability: player ability may inflict status on enemy when enemy uses physical move
     const contactEffectsOnEnemy: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
@@ -3020,6 +3173,19 @@ export function createBattleScene(
       'player',
       m,
       () => {
+        // Entry hazard placement (status moves) - enemy side
+        if (isStealthRockEnemy && !playerSideState.stealthRockActive) {
+          playerSideState.stealthRockActive = true;
+          syncPlayerBar();
+        }
+        if (isSpikesEnemy && playerSideState.spikesLayers < 3) {
+          playerSideState.spikesLayers++;
+          syncPlayerBar();
+        }
+        if (isToxicSpikesEnemy && playerSideState.toxicSpikesLayers < 2) {
+          playerSideState.toxicSpikesLayers++;
+          syncPlayerBar();
+        }
         // Rest: full heal + sleep 2 turns + all PP restored
         if (isRestEnemy) {
           applyRestEffect(enemy, enemyBattleState);
@@ -3116,6 +3282,26 @@ export function createBattleScene(
             shake = createShake(1.4, 0.18);
             audio.playSFX('hit');
           }
+        }
+        // Brick Break: clear player screens after hitting
+        if (isBrickBreakEnemy) {
+          clearScreens(playerSideState);
+          syncPlayerBar();
+        }
+        // Rapid Spin: clear own entry hazards and leech seed after hitting
+        if (isRapidSpinClearEnemy) {
+          clearEntryHazards(enemySideState);
+          enemyBattleState.leechSeeded = false;
+          syncEnemyBar();
+        }
+        // Defog: clear all hazards and screens on both sides
+        if (isDefogEnemy) {
+          clearEntryHazards(playerSideState);
+          clearEntryHazards(enemySideState);
+          clearScreens(playerSideState);
+          clearScreens(enemySideState);
+          syncPlayerBar();
+          syncEnemyBar();
         }
       },
       hitResult.hit && !absorbed && plannedDamage > 0,
@@ -3312,6 +3498,30 @@ export function createBattleScene(
             }
             if (animationDirector.isBusy()) {
               break;
+            }
+            if (pendingPlayerEntryHazard) {
+              pendingPlayerEntryHazard = false;
+              const hazardResult = applyEntryHazards(player, playerBattleState, playerSideState);
+              const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(player.id), playerSideState);
+              if (hazardMsgs.length > 0) {
+                setHP(playerHpBar, player.hp);
+                setStatus(playerHpBar, player.status ?? '');
+                syncPlayerBar();
+                textBox = createTextBox(hazardMsgs, isRTL());
+                break;
+              }
+            }
+            if (pendingEnemyEntryHazard) {
+              pendingEnemyEntryHazard = false;
+              const hazardResult = applyEntryHazards(enemy, enemyBattleState, enemySideState);
+              const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(enemy.id), enemySideState);
+              if (hazardMsgs.length > 0) {
+                setHP(enemyHpBar, enemy.hp);
+                setStatus(enemyHpBar, enemy.status ?? '');
+                syncEnemyBar();
+                textBox = createTextBox(hazardMsgs, isRTL());
+                break;
+              }
             }
             turnNumber++;
             menu.turnNumber = turnNumber;
@@ -3944,6 +4154,7 @@ export function createBattleScene(
         );
       }
 
+      renderArenaEffects(ctx);
       renderBallActor(ctx);
       if (attackFx) {
         renderAttackEffect(ctx, attackFx);
@@ -4076,6 +4287,139 @@ export function createBattleScene(
     ctx.rotate(state.rotation);
     ctx.scale(state.scaleX, state.scaleY);
     drawPokeballIcon(ctx, activeBallId, -7, -7, 14);
+    ctx.restore();
+  }
+
+  function renderArenaEffects(ctx: CanvasRenderingContext2D): void {
+    const now = Date.now() / 1000;
+
+    const screenY = 34;
+    const screenH = 50;
+    const screenW = 50;
+
+    // Player's side screens (right half of field)
+    const playerScreenX = 70;
+    if (playerSideState.reflectTurnsRemaining > 0) {
+      renderScreenWall(ctx, playerScreenX, screenY, screenW, screenH, '#ff6040', now);
+    }
+    if (playerSideState.lightScreenTurnsRemaining > 0) {
+      renderScreenWall(ctx, playerScreenX, screenY, screenW, screenH, '#40c0ff', now);
+    }
+
+    // Enemy's side screens (left of enemy)
+    const enemyScreenX = 130;
+    if (enemySideState.reflectTurnsRemaining > 0) {
+      renderScreenWall(ctx, enemyScreenX, screenY, screenW, screenH, '#ff6040', now);
+    }
+    if (enemySideState.lightScreenTurnsRemaining > 0) {
+      renderScreenWall(ctx, enemyScreenX, screenY, screenW, screenH, '#40c0ff', now);
+    }
+
+    // Enemy side hazards
+    const enemyHazardX = BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2;
+    const enemyHazardY = BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h;
+    if (enemySideState.stealthRockActive) {
+      renderStealthRocks(ctx, enemyHazardX, enemyHazardY, now);
+    }
+    if (enemySideState.spikesLayers > 0) {
+      renderSpikes(ctx, enemyHazardX, enemyHazardY + 4, enemySideState.spikesLayers, '#c8d8a0', now);
+    }
+    if (enemySideState.toxicSpikesLayers > 0) {
+      renderSpikes(ctx, enemyHazardX, enemyHazardY + 4, enemySideState.toxicSpikesLayers, '#c060e0', now);
+    }
+
+    // Player side hazards
+    const playerHazardX = BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2;
+    const playerHazardY = BTL.PLY_SPRITE.y + BTL.PLY_SPRITE.h;
+    if (playerSideState.stealthRockActive) {
+      renderStealthRocks(ctx, playerHazardX, playerHazardY, now);
+    }
+    if (playerSideState.spikesLayers > 0) {
+      renderSpikes(ctx, playerHazardX, playerHazardY + 4, playerSideState.spikesLayers, '#c8d8a0', now);
+    }
+    if (playerSideState.toxicSpikesLayers > 0) {
+      renderSpikes(ctx, playerHazardX, playerHazardY + 4, playerSideState.toxicSpikesLayers, '#c060e0', now);
+    }
+  }
+
+  function renderScreenWall(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, color: string, time: number): void {
+    ctx.save();
+    const pulse = 0.07 + Math.sin(time * 2.5) * 0.03;
+    ctx.globalAlpha = pulse;
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, w, h);
+
+    ctx.globalAlpha = pulse * 1.5;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.5;
+    const gridSize = 8;
+    for (let gx = x; gx < x + w; gx += gridSize) {
+      for (let gy = y; gy < y + h; gy += gridSize) {
+        ctx.strokeRect(gx, gy, gridSize, gridSize);
+      }
+    }
+
+    ctx.globalAlpha = pulse * 3;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + w, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y + h);
+    ctx.lineTo(x + w, y + h);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function renderStealthRocks(ctx: CanvasRenderingContext2D, cx: number, cy: number, time: number): void {
+    ctx.save();
+    const rocks = [
+      { dx: -8, dy: -3, r: 3 },
+      { dx: 4, dy: -1, r: 2.5 },
+      { dx: 0, dy: 3, r: 2 },
+    ];
+    for (let i = 0; i < rocks.length; i++) {
+      const rock = rocks[i];
+      const bobY = Math.sin(time * 1.5 + i * 1.2) * 1;
+      const rx = cx + rock.dx;
+      const ry = cy + rock.dy + bobY;
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = '#888080';
+      ctx.beginPath();
+      ctx.ellipse(rx, ry, rock.r * 1.2, rock.r * 0.8, 0.3 + i * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = '#c0a880';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function renderSpikes(ctx: CanvasRenderingContext2D, cx: number, cy: number, count: number, color: string, _time: number): void {
+    ctx.save();
+    const spacing = 7;
+    const startX = cx - ((count - 1) * spacing) / 2;
+    for (let i = 0; i < count; i++) {
+      const sx = startX + i * spacing;
+      const sy = cy;
+      const sh = 6;
+      const sw = 3;
+      ctx.globalAlpha = 0.85;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy - sh);
+      ctx.lineTo(sx - sw, sy + sh * 0.3);
+      ctx.lineTo(sx + sw, sy + sh * 0.3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.globalAlpha = 0.5;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 0.4;
+      ctx.stroke();
+    }
     ctx.restore();
   }
 }

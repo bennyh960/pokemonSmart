@@ -387,5 +387,20 @@
   "hm.surf.mounted": "{name} השתמש ב-Surf!",
   "hm.cannotUse.surf": "אתה צריך פוקימון גדול שיודע Surf ברמה 60 ומעלה!",
   "worldMap.flyHint": "Enter: טוס לכאן",
-  "worldMap.noFly": "אין פוקימון שיכול לטוס כרגע"
+  "worldMap.noFly": "אין פוקימון שיכול לטוס כרגע",
+  "battle.stealthRockSet": "אבנים חדות מרחפות באוויר סביב היריב!",
+  "battle.spikesSet": "קוצים פוזרו מסביב לרגלי היריב!",
+  "battle.toxicSpikesSet": "קוצי רעל פוזרו מסביב לרגלי היריב!",
+  "battle.hazardAlreadySet": "אבל זה נכשל!",
+  "battle.hazardStealthRockHit": "אבנים חדות נקבו את {name}!",
+  "battle.hazardSpikesHit": "{name} נפגע מהקוצים!",
+  "battle.hazardToxicSpikesPoison": "{name} הורעל על ידי קוצי הרעל!",
+  "battle.hazardToxicSpikesAbsorbed": "{name} ספג את קוצי הרעל!",
+  "battle.hazardNoEffect": "ה{hazard} לא משפיעים על {name}!",
+  "battle.hazardNameStealthRock": "אבנות חדות",
+  "battle.hazardNameSpikes": "קוצים",
+  "battle.hazardNameToxicSpikes": "קוצי רעל",
+  "battle.brickBreakShatter": "המחסום נשבר!",
+  "battle.rapidSpinClear": "{name} פינה את המכשולים!",
+  "battle.defogClear": "הזירה נוקתה ממכשולים!"
 }

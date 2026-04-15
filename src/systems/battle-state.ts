@@ -38,6 +38,9 @@ export interface BattleSideRuntimeState {
   lightScreenTurnsRemaining: number;
   mistTurnsRemaining: number;
   safeguardTurnsRemaining: number;
+  stealthRockActive: boolean;
+  spikesLayers: number;      // 0–3
+  toxicSpikesLayers: number; // 0–2
 }
 
 export function createEmptyBattleStatModifiers(): BattleStatModifiers {
@@ -95,6 +98,9 @@ export function createBattleSideRuntimeState(): BattleSideRuntimeState {
     lightScreenTurnsRemaining: 0,
     mistTurnsRemaining: 0,
     safeguardTurnsRemaining: 0,
+    stealthRockActive: false,
+    spikesLayers: 0,
+    toxicSpikesLayers: 0,
   };
 }
 

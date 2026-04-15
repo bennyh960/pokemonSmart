@@ -2480,7 +2480,7 @@
     "damageClass": "special",
     "description": {
       "en": "Steals HP from a sleeping victim.",
-      "he": "גונב HP מיריב ישן."
+      "he": "גונב נקודות חיים מיריב ישן."
     }
   },
   {
@@ -2534,7 +2534,7 @@
     "damageClass": "physical",
     "description": {
       "en": "Steals 1/2 of the damage inflicted.",
-      "he": "משחזר HP בשיעור חצי מהנזק שנגרם."
+      "he": "עלוקה ששואבת נקודות חיים מהיריב ומעניקה חצי מהם למשתמש"
     }
   },
   {
@@ -2912,7 +2912,7 @@
     "damageClass": "physical",
     "description": {
       "en": "Cuts the foe's HP by 1/2.",
-      "he": "מקצץ את ה-HP של האויב ב-1/2."
+      "he": "מתקפת ניב שחוצה את נקודות החיים בחצי"
     }
   },
   {
@@ -2948,7 +2948,7 @@
     "damageClass": "status",
     "description": {
       "en": "Makes a decoy with 1/4 user's max HP.",
-      "he": "עושה פיתוי עם 1/4 HP מקסימום של המשתמש."
+      "he": "המשתמש מפתה את היריב לתקוף משהו אחר , זה עולה למשתמש ברבע מכח החיים המקסימלי שלו אבל מצד שני סהתחליף נפגע מהמתקפה של היריב ככה שלא יורד למשתמש כלום. "
     }
   },
   {

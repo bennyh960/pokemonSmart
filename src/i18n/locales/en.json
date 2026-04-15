@@ -387,5 +387,20 @@
   "hm.surf.mounted": "{name} used Surf!",
   "hm.cannotUse.surf": "You need a large Pokémon that knows Surf (level 60+)!",
   "worldMap.flyHint": "Enter: Fly here",
-  "worldMap.noFly": "No Pokémon can Fly right now"
+  "worldMap.noFly": "No Pokémon can Fly right now",
+  "battle.stealthRockSet": "Pointed stones float in the air around the foe!",
+  "battle.spikesSet": "Spikes were scattered all around the foe's feet!",
+  "battle.toxicSpikesSet": "Poison spikes were scattered all around the foe's feet!",
+  "battle.hazardAlreadySet": "But it failed!",
+  "battle.hazardStealthRockHit": "Pointed stones dug into {name}!",
+  "battle.hazardSpikesHit": "{name} was hurt by the spikes!",
+  "battle.hazardToxicSpikesPoison": "{name} was poisoned by the toxic spikes!",
+  "battle.hazardToxicSpikesAbsorbed": "{name} absorbed the toxic spikes!",
+  "battle.hazardNoEffect": "The {hazard} don't affect {name}!",
+  "battle.hazardNameStealthRock": "pointed stones",
+  "battle.hazardNameSpikes": "spikes",
+  "battle.hazardNameToxicSpikes": "toxic spikes",
+  "battle.brickBreakShatter": "The barrier was shattered!",
+  "battle.rapidSpinClear": "{name} blew away the hazards!",
+  "battle.defogClear": "The arena was cleared of hazards!"
 }

@@ -30,7 +30,13 @@ export type MoveBattleBehaviorTag =
   | 'dream-eater'
   | 'ohko'
   | 'protect'
-  | 'endure';
+  | 'endure'
+  | 'stealth-rock'
+  | 'spikes'
+  | 'toxic-spikes'
+  | 'brick-break'
+  | 'defog'
+  | 'rapid-spin-clear';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 

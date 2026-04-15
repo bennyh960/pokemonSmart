@@ -198,8 +198,17 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Double Team': userStages(['evasion', 1]),
   Minimize: userStages(['evasion', 1]),
   Amnesia: userStages(['specialDefense', 2]),
-  'Rapid Spin': userStages(['speed', 1]),
+  'Rapid Spin': { behaviorTags: ['rapid-spin-clear'], statChanges: [stageChange('speed', 1, 'user', 100)] },
   'Bulk Up': userStages(['attack', 1], ['defense', 1]),
+
+  // Entry hazards (target opponent's field)
+  'Stealth Rock': { behaviorTags: ['stealth-rock'], target: 'selected-pokemon' },
+  Spikes: { behaviorTags: ['spikes'], target: 'selected-pokemon' },
+  'Toxic Spikes': { behaviorTags: ['toxic-spikes'], target: 'selected-pokemon' },
+
+  // Hazard/screen interactions
+  'Brick Break': { behaviorTags: ['brick-break'] },
+  Defog: { behaviorTags: ['defog'], statChanges: [stageChange('evasion', -1, 'target', 100)] },
 
   // Healing moves
   Rest: { behaviorTags: ['rest'], target: 'user' },
@@ -213,22 +222,23 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
 
   // --- Self stat-drop after attacking ---
   'Psycho Boost': { statChanges: [stageChange('specialAttack', -2, 'user', 100)] },
-  'Overheat': { statChanges: [stageChange('specialAttack', -2, 'user', 100)] },
+  Overheat: { statChanges: [stageChange('specialAttack', -2, 'user', 100)] },
   'Draco Meteor': { statChanges: [stageChange('specialAttack', -2, 'user', 100)] },
   'Leaf Storm': { statChanges: [stageChange('specialAttack', -2, 'user', 100)] },
-  'Superpower': { statChanges: [stageChange('attack', -1, 'user', 100), stageChange('defense', -1, 'user', 100)] },
+  Superpower: { statChanges: [stageChange('attack', -1, 'user', 100), stageChange('defense', -1, 'user', 100)] },
   'Hammer Arm': { statChanges: [stageChange('speed', -1, 'user', 100)] },
 
   // --- Recoil moves ---
   'Flare Blitz': { recoilPercent: 33, ...statusEffect('burn', 10) },
   'Brave Bird': { recoilPercent: 33 },
   'Wave Crash': { recoilPercent: 33 },
+  'Belly Drum': { recoilPercent: 50, statChanges: [stageChange('attack', +4, 'user', 100)] },
 
   // --- Target stat-down on hit (always) ---
   'Icy Wind': { statChanges: [stageChange('speed', -1, 'target', 100)] },
   'Mud Shot': { statChanges: [stageChange('speed', -1, 'target', 100)] },
-  'Electroweb': { statChanges: [stageChange('speed', -1, 'target', 100)] },
-  'Lunge': { statChanges: [stageChange('attack', -1, 'target', 100)] },
+  Electroweb: { statChanges: [stageChange('speed', -1, 'target', 100)] },
+  Lunge: { statChanges: [stageChange('attack', -1, 'target', 100)] },
   'Mystical Fire': { statChanges: [stageChange('specialAttack', -1, 'target', 100)] },
   'Breaking Swipe': targetStages(['attack', -1]),
   'Skitter Smack': { statChanges: [stageChange('specialAttack', -1, 'target', 100)] },
@@ -236,12 +246,12 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   // --- Status on hit ---
   'Zap Cannon': statusEffect('paralyze', 100),
   'Lava Plume': statusEffect('burn', 30),
-  'Inferno': statusEffect('burn', 100),
+  Inferno: statusEffect('burn', 100),
   'Iron Head': { flinchChance: 30 },
   'Dragon Rush': { flinchChance: 20 },
   'Air Slash': { flinchChance: 30 },
   'Zen Headbutt': { flinchChance: 20 },
-  'Extrasensory': { flinchChance: 10 },
+  Extrasensory: { flinchChance: 10 },
   'Dark Pulse': { flinchChance: 20 },
   'Icicle Crash': { flinchChance: 30 },
   'Fire Fang': { ...statusEffect('burn', 10), flinchChance: 10 },
@@ -252,33 +262,33 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
 
   // --- Confusion on hit ---
   'Alluring Voice': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
-  'Hurricane': volatileEffect('confusion', 30, { minTurns: 2, maxTurns: 5 }),
+  Hurricane: volatileEffect('confusion', 30, { minTurns: 2, maxTurns: 5 }),
 
   // --- Protect-family moves ---
-  'Protect': { behaviorTags: ['protect'], priority: 4, target: 'user' },
-  'Detect': { behaviorTags: ['protect'], priority: 4, target: 'user' },
-  'Endure': { behaviorTags: ['endure'], priority: 4, target: 'user' },
+  Protect: { behaviorTags: ['protect'], priority: 4, target: 'user' },
+  Detect: { behaviorTags: ['protect'], priority: 4, target: 'user' },
+  Endure: { behaviorTags: ['endure'], priority: 4, target: 'user' },
 
   // --- One-hit KO moves ---
-  'Guillotine': { behaviorTags: ['ohko'] },
+  Guillotine: { behaviorTags: ['ohko'] },
   'Horn Drill': { behaviorTags: ['ohko'] },
-  'Fissure': { behaviorTags: ['ohko'] },
+  Fissure: { behaviorTags: ['ohko'] },
   'Sheer Cold': { behaviorTags: ['ohko'] },
 
   // --- Special behavior moves ---
   'Focus Punch': { behaviorTags: ['focus-punch'] },
-  'Facade': { behaviorTags: ['facade-boost'] },
+  Facade: { behaviorTags: ['facade-boost'] },
   'Foul Play': { behaviorTags: ['foul-play'] },
   'Dream Eater': { behaviorTags: ['dream-eater'], drainPercent: 50 },
   'Burning Jealousy': { behaviorTags: ['burning-jealousy'] },
 
   // --- Confusion + stat (status moves) ---
-  'Swagger': {
+  Swagger: {
     target: 'selected-pokemon',
     statChanges: [stageChange('attack', 2, 'target', 100)],
     effects: [{ id: 'confusion' as const, target: 'target' as const, chance: 100, minTurns: 2, maxTurns: 5 }],
   },
-  'Flatter': {
+  Flatter: {
     target: 'selected-pokemon',
     statChanges: [stageChange('specialAttack', 1, 'target', 100)],
     effects: [{ id: 'confusion' as const, target: 'target' as const, chance: 100, minTurns: 2, maxTurns: 5 }],
@@ -286,16 +296,16 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
 
   // --- Self-boost on hit ---
   'Flame Charge': { statChanges: [stageChange('speed', 1, 'user', 100)] },
-  'Trailblaze': { statChanges: [stageChange('speed', 1, 'user', 100)] },
+  Trailblaze: { statChanges: [stageChange('speed', 1, 'user', 100)] },
   'Power Up Punch': { statChanges: [stageChange('attack', 1, 'user', 100)] },
   'Drain Punch': { drainPercent: 50 },
   'Meteor Beam': chargingMove(stageChange('specialAttack', 1, 'user', 100)),
 
   // --- Status move self-boosts ---
-  'Growth': userStages(['specialAttack', 1]),
-  'Sharpen': userStages(['attack', 1]),
+  Growth: userStages(['specialAttack', 1]),
+  Sharpen: userStages(['attack', 1]),
   'Acid Armor': userStages(['defense', 2]),
-  'Coil': userStages(['attack', 1], ['defense', 1], ['accuracy', 1]),
+  Coil: userStages(['attack', 1], ['defense', 1], ['accuracy', 1]),
   'Focus Energy': { behaviorTags: ['focus-energy'], target: 'user' },
 
   // --- High crit rate ---
@@ -306,16 +316,18 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Stone Edge': { critRate: 1 },
 
   // --- Thrash/Outrage/Petal Dance: 30% self-confusion post-use, no lock-in ---
-  'Thrash': { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }] },
-  'Outrage': { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }] },
-  'Petal Dance': { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }] },
+  Thrash: { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }] },
+  Outrage: { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }] },
+  'Petal Dance': {
+    effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }],
+  },
 
   // --- Multi-hit ---
-  'Bonemerang': { minHits: 2, maxHits: 2 },
+  Bonemerang: { minHits: 2, maxHits: 2 },
   'Dual Chop': { minHits: 2, maxHits: 2 },
   'Double Hit': { minHits: 2, maxHits: 2 },
   'Dual Wingbeat': { minHits: 2, maxHits: 2 },
   'Twin Beam': { minHits: 2, maxHits: 2 },
-  'Twineedle': { minHits: 2, maxHits: 2, ...statusEffect('poison', 20) },
+  Twineedle: { minHits: 2, maxHits: 2, ...statusEffect('poison', 20) },
   'Triple Kick': { minHits: 3, maxHits: 3 },
 };

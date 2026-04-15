@@ -116,7 +116,7 @@ const SAME_TYPE_STATUS_IMMUNITY_BY_MOVE_TYPE: Partial<Record<MajorStatusId, Poke
 };
 
 function randomTurnCount(minTurns: number, maxTurns: number, random: () => number): number {
-  return Math.floor(random() * ((maxTurns - minTurns) + 1)) + minTurns;
+  return Math.floor(random() * (maxTurns - minTurns + 1)) + minTurns;
 }
 
 function getStatusDurationRange(effect: MoveStatusEffect | null): { min: number; max: number } {
@@ -148,9 +148,7 @@ export function createBattleRuntimeStateForPokemon(
 }
 
 export function chooseEnemyMoveIndex(enemy: Pokemon, random: () => number = Math.random): number {
-  const usableMoves = enemy.moves
-    .map((move, index) => ({ move, index }))
-    .filter(({ move }) => move.currentPp > 0);
+  const usableMoves = enemy.moves.map((move, index) => ({ move, index })).filter(({ move }) => move.currentPp > 0);
   if (usableMoves.length === 0) return 0;
   return usableMoves[Math.floor(random() * usableMoves.length)].index;
 }
@@ -165,7 +163,7 @@ export function getEffectiveSpeed(pokemon: Pokemon, runtimeState: BattlePokemonR
 
 export function getBattleStatMultiplier(percent: number): number {
   if (percent >= 0) {
-    return 1 + (percent / 100);
+    return 1 + percent / 100;
   }
   return 100 / (100 + Math.abs(percent));
 }
@@ -275,7 +273,7 @@ export function tryApplyFlinch(
 ): boolean {
   if (!targetCanStillAct || !chance || chance <= 0) return false;
   if (runtimeState.turnFlags.flinched) return false;
-  if ((random() * 100) >= chance) return false;
+  if (random() * 100 >= chance) return false;
   runtimeState.turnFlags.flinched = true;
   return true;
 }
@@ -292,11 +290,7 @@ export function calculateMoveHpEffectAmount(baseAmount: number, percent: number 
   return Math.max(1, Math.floor((baseAmount * percent) / 100));
 }
 
-export function applyDrainHealing(
-  pokemon: Pokemon,
-  damageDealt: number,
-  percent: number | null,
-): number {
+export function applyDrainHealing(pokemon: Pokemon, damageDealt: number, percent: number | null): number {
   const rawHealing = calculateMoveHpEffectAmount(damageDealt, percent);
   if (rawHealing <= 0) return 0;
   const healed = Math.max(0, Math.min(pokemon.maxHp, pokemon.hp + rawHealing) - pokemon.hp);
@@ -313,11 +307,7 @@ export function applyLeaveUserAtOneHpCost(pokemon: Pokemon): RecoilResult {
   return { damage, fainted: false };
 }
 
-export function applyRecoilDamage(
-  pokemon: Pokemon,
-  damageDealt: number,
-  percent: number | null,
-): RecoilResult {
+export function applyRecoilDamage(pokemon: Pokemon, damageDealt: number, percent: number | null): RecoilResult {
   const rawDamage = calculateMoveHpEffectAmount(damageDealt, percent);
   if (rawDamage <= 0) {
     return { damage: 0, fainted: pokemon.hp <= 0 };
@@ -355,10 +345,7 @@ export function isSafeguardActive(runtimeState: BattleSideRuntimeState): boolean
   return runtimeState.safeguardTurnsRemaining > 0;
 }
 
-export function getSideDamageTakenMultiplier(
-  runtimeState: BattleSideRuntimeState,
-  damageClass: string,
-): number {
+export function getSideDamageTakenMultiplier(runtimeState: BattleSideRuntimeState, damageClass: string): number {
   if (damageClass === 'physical' && runtimeState.reflectTurnsRemaining > 0) {
     return 0.5;
   }
@@ -395,7 +382,7 @@ export function applyStatChanges(
 
   for (const change of statChanges) {
     if (change.target !== target) continue;
-    if ((random() * 100) >= change.chance) continue;
+    if (random() * 100 >= change.chance) continue;
 
     const current = runtimeState.statModifiers[change.stat];
     const next = applyBattleStatDelta(current, change.stages);
@@ -428,9 +415,22 @@ export function doesMoveHit(
   const accuracyMultiplier = getBattleStatMultiplier(attackerState.statModifiers.accuracy);
   const evasionMultiplier = getBattleStatMultiplier(defenderState.statModifiers.evasion);
   const chance = Math.max(1, Math.min(100, moveAccuracy * (accuracyMultiplier / evasionMultiplier)));
+  console.log(
+    `Move accuracy: ${moveAccuracy}, Accuracy multiplier: ${accuracyMultiplier.toFixed(2)}, Evasion multiplier: ${evasionMultiplier.toFixed(2)}, Final hit chance: ${chance.toFixed(2)}%`,
+  );
+  // my extra
+  const AttkcerspeedMultiplier = getBattleStatMultiplier(attackerState.statModifiers.speed);
+  const DefenderspeedMultiplier = getBattleStatMultiplier(defenderState.statModifiers.speed);
+
+  const MAX_SPEED_EFFECT = 0.1; // Cap the speed effect to 1% for balance
+  const speedDeltaFactor =
+    (MAX_SPEED_EFFECT * (AttkcerspeedMultiplier - DefenderspeedMultiplier)) /
+    Math.max(AttkcerspeedMultiplier, DefenderspeedMultiplier);
+  const finalChance = chance + speedDeltaFactor - 2;
+
   return {
-    hit: (random() * 100) < chance,
-    chance,
+    hit: random() * 100 < finalChance,
+    chance: finalChance,
   };
 }
 
@@ -441,7 +441,9 @@ export function rollCriticalHit(
   attackerState?: BattlePokemonRuntimeState,
 ): boolean {
   if (defender.abilityId) {
-    const preventsCrit = getAbilityBattleEffects(defender.abilityId).some(effect => effect.kind === 'preventCriticalHits');
+    const preventsCrit = getAbilityBattleEffects(defender.abilityId).some(
+      (effect) => effect.kind === 'preventCriticalHits',
+    );
     if (preventsCrit) return false;
   }
 
@@ -449,7 +451,7 @@ export function rollCriticalHit(
   const focusBoost = attackerState?.critBoost ? 1 : 0;
   const effective = critRate + focusBoost;
   const chance = effective >= 2 ? 50 : effective >= 1 ? 12.5 : 6.25;
-  return (random() * 100) < chance;
+  return random() * 100 < chance;
 }
 
 function getEffectDurationRange(effect: MoveBattleEffect): { min: number; max: number } {
@@ -506,7 +508,7 @@ export function applyVolatileMoveEffects(
 
   for (const effect of effects) {
     if (effect.target !== effectTarget) continue;
-    if ((random() * 100) >= effect.chance) {
+    if (random() * 100 >= effect.chance) {
       applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'chance-failed' });
       continue;
     }
@@ -611,9 +613,9 @@ export function calculateConfusionSelfHitDamage(
   const burnMultiplier = pokemon.status === 'burn' ? 0.5 : 1;
   const attackStat = getModifiedStatValue(pokemon, runtimeState, 'attack') * burnMultiplier;
   const defenseStat = getModifiedStatValue(pokemon, runtimeState, 'defense');
-  const lf = ((2 * pokemon.level) / 5) + 2;
-  const base = ((lf * 40 * (attackStat / defenseStat)) / 50) + 2;
-  const rand = 0.85 + (random() * 0.15);
+  const lf = (2 * pokemon.level) / 5 + 2;
+  const base = (lf * 40 * (attackStat / defenseStat)) / 50 + 2;
+  const rand = 0.85 + random() * 0.15;
   return Math.max(1, Math.floor(base * rand));
 }
 
@@ -646,9 +648,7 @@ export function processStartOfTurnStatus(
       return { canAct: false, event: 'frozen-solid' };
     }
     case 'paralyze':
-      return random() < 0.25
-        ? { canAct: false, event: 'fully-paralyzed' }
-        : { canAct: true, event: null };
+      return random() < 0.25 ? { canAct: false, event: 'fully-paralyzed' } : { canAct: true, event: null };
     default:
       return { canAct: true, event: null };
   }
@@ -688,7 +688,7 @@ export function processBeforeMoveEffects(
     }
 
     events.push('confused');
-    if (random() < (1 / 3)) {
+    if (random() < 1 / 3) {
       const selfDamage = calculateConfusionSelfHitDamage(pokemon, runtimeState, random);
       pokemon.hp = Math.max(0, pokemon.hp - selfDamage);
       events.push('hurt-itself-confusion');
@@ -712,7 +712,7 @@ export function applyMajorStatus(
   if (hasStatusImmunity(target, effect.status)) {
     return { applied: false, status: effect.status, reason: 'immune' };
   }
-  if ((random() * 100) >= effect.chance) {
+  if (random() * 100 >= effect.chance) {
     return { applied: false, status: effect.status, reason: 'chance-failed' };
   }
 
@@ -737,9 +737,10 @@ export function applyEndOfTurnStatusEffects(
 ): EndOfTurnStatusResult {
   switch (runtimeState.majorStatus) {
     case 'poison': {
-      const damage = runtimeState.badlyPoisonTurns > 0
-        ? Math.max(1, Math.floor((pokemon.maxHp * runtimeState.badlyPoisonTurns) / 16))
-        : Math.max(1, Math.floor(pokemon.maxHp / 8));
+      const damage =
+        runtimeState.badlyPoisonTurns > 0
+          ? Math.max(1, Math.floor((pokemon.maxHp * runtimeState.badlyPoisonTurns) / 16))
+          : Math.max(1, Math.floor(pokemon.maxHp / 8));
       pokemon.hp = Math.max(0, pokemon.hp - damage);
       if (runtimeState.badlyPoisonTurns > 0) {
         runtimeState.badlyPoisonTurns++;
@@ -772,10 +773,7 @@ export function applyLeechSeedEffect(
   return { applied: true, damage, healed, fainted: target.hp <= 0 };
 }
 
-export function applyRestEffect(
-  pokemon: Pokemon,
-  runtimeState: BattlePokemonRuntimeState,
-): number {
+export function applyRestEffect(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): number {
   const healed = pokemon.maxHp - pokemon.hp;
   pokemon.hp = pokemon.maxHp;
   pokemon.status = 'sleep';
@@ -788,20 +786,14 @@ export function applyRestEffect(
   return healed;
 }
 
-export function applyHealPercent(
-  pokemon: Pokemon,
-  percent: number,
-): number {
+export function applyHealPercent(pokemon: Pokemon, percent: number): number {
   const healAmount = Math.max(1, Math.floor((pokemon.maxHp * percent) / 100));
   const healed = Math.min(healAmount, pokemon.maxHp - pokemon.hp);
   pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
   return healed;
 }
 
-export function applyTrapEndOfTurnEffect(
-  target: Pokemon,
-  runtimeState: BattlePokemonRuntimeState,
-): TrapEffectResult {
+export function applyTrapEndOfTurnEffect(target: Pokemon, runtimeState: BattlePokemonRuntimeState): TrapEffectResult {
   if (runtimeState.trappedTurnsRemaining <= 0 || target.hp <= 0) {
     return { applied: false, damage: 0, fainted: target.hp <= 0, ended: runtimeState.trappedTurnsRemaining <= 0 };
   }
@@ -815,4 +807,97 @@ export function applyTrapEndOfTurnEffect(
   }
 
   return { applied: true, damage, fainted: target.hp <= 0, ended };
+}
+
+/** Clear all entry hazards on a side. */
+export function clearEntryHazards(sideState: BattleSideRuntimeState): void {
+  sideState.stealthRockActive = false;
+  sideState.spikesLayers = 0;
+  sideState.toxicSpikesLayers = 0;
+}
+
+/** Clear defensive screens (Reflect + Light Screen) on a side. */
+export function clearScreens(sideState: BattleSideRuntimeState): void {
+  sideState.reflectTurnsRemaining = 0;
+  sideState.lightScreenTurnsRemaining = 0;
+}
+
+export interface EntryHazardResult {
+  stealthRockDamage: number;
+  spikesDamage: number;
+  toxicSpikesAbsorbed: boolean;
+  statusApplied: 'poison' | 'badly-poison' | null;
+  stealthRockImmune: boolean;
+  spikesImmune: boolean;
+  toxicSpikesImmune: boolean;
+}
+
+/**
+ * Calculate and apply entry hazard damage/effects when a Pokemon enters the field.
+ */
+export function applyEntryHazards(
+  pokemon: Pokemon,
+  pokemonBattleState: BattlePokemonRuntimeState,
+  sideState: BattleSideRuntimeState,
+): EntryHazardResult {
+  const result: EntryHazardResult = {
+    stealthRockDamage: 0,
+    spikesDamage: 0,
+    toxicSpikesAbsorbed: false,
+    statusApplied: null,
+    stealthRockImmune: false,
+    spikesImmune: false,
+    toxicSpikesImmune: false,
+  };
+
+  const isFlying = pokemon.types.includes('flying');
+  const hasLevitate = pokemon.abilityId === 26;
+  const isGrounded = !isFlying && !hasLevitate;
+  const isPoisonType = pokemon.types.includes('poison');
+
+  // --- Stealth Rock ---
+  if (sideState.stealthRockActive) {
+    const eff = getCombinedTypeEffectiveness('rock', pokemon.types as any);
+    if (eff === 0) {
+      result.stealthRockImmune = true;
+    } else {
+      const dmg = Math.max(1, Math.floor((pokemon.maxHp / 8) * eff));
+      pokemon.hp = Math.max(0, pokemon.hp - dmg);
+      result.stealthRockDamage = dmg;
+    }
+  }
+
+  // --- Spikes (not Flying, not Levitate) ---
+  if (sideState.spikesLayers > 0) {
+    if (!isGrounded) {
+      result.spikesImmune = true;
+    } else if (pokemon.types.includes('ghost')) {
+      result.spikesImmune = true;
+    } else {
+      const dmg = Math.max(1, Math.floor((pokemon.maxHp * sideState.spikesLayers) / 8));
+      pokemon.hp = Math.max(0, pokemon.hp - dmg);
+      result.spikesDamage = dmg;
+    }
+  }
+
+  // --- Toxic Spikes (not Flying, not Levitate) ---
+  if (sideState.toxicSpikesLayers > 0 && isGrounded) {
+    if (isPoisonType) {
+      sideState.toxicSpikesLayers = 0;
+      result.toxicSpikesAbsorbed = true;
+    } else if (pokemon.status === null && !hasStatusImmunity(pokemon, 'poison')) {
+      if (sideState.toxicSpikesLayers >= 2) {
+        pokemon.status = 'poison';
+        pokemonBattleState.badlyPoisonTurns = 0;
+        result.statusApplied = 'badly-poison';
+      } else {
+        pokemon.status = 'poison';
+        result.statusApplied = 'poison';
+      }
+    } else {
+      result.toxicSpikesImmune = true;
+    }
+  }
+
+  return result;
 }
