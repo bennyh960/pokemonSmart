@@ -138,6 +138,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'x-speed': 59,
   'x-accuracy': 60,
   'x-special': 61,   // X Sp. Atk
+  'x-sp-def': 62,    // X Sp. Def
   // Evolution stones
   'sun-stone': 80,
   'moon-stone': 81,
@@ -214,7 +215,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   58: { category: 'battle', price: 550, effect: { type: 'stat-boost', stat: 'defense', stages: 1 },       usableInBattle: true, usableInOverworld: false },  // X Defense
   59: { category: 'battle', price: 350, effect: { type: 'stat-boost', stat: 'speed', stages: 1 },         usableInBattle: true, usableInOverworld: false },  // X Speed
   60: { category: 'battle', price: 950, effect: { type: 'stat-boost', stat: 'accuracy', stages: 1 },      usableInBattle: true, usableInOverworld: false },  // X Accuracy
-  61: { category: 'battle', price: 350, effect: { type: 'stat-boost', stat: 'specialAttack', stages: 1 }, usableInBattle: true, usableInOverworld: false },  // X Sp. Atk
+  61: { category: 'battle', price: 350, effect: { type: 'stat-boost', stat: 'specialAttack', stages: 1 },  usableInBattle: true, usableInOverworld: false },  // X Sp. Atk
+  62: { category: 'battle', price: 350, effect: { type: 'stat-boost', stat: 'specialDefense', stages: 1 }, usableInBattle: true, usableInOverworld: false },  // X Sp. Def
 
   // ── Evolution stones ──
   80: { category: 'evolution', price: 0, effect: { type: 'evolution-stone' }, usableInBattle: false, usableInOverworld: true },  // Sun Stone

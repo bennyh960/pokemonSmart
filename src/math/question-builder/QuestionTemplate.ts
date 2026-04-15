@@ -82,10 +82,7 @@ export abstract class QuestionTemplate {
    * Uses the snapshot (live Pokemon/items) and classConfig (number ranges, etc.)
    * to pick and produce all named slots the question text needs.
    */
-  protected abstract generateParams(
-    snapshot: PokemonWorldSnapshot,
-    config: ClassConfig,
-  ): TemplateParams;
+  protected abstract generateParams(snapshot: PokemonWorldSnapshot, config: ClassConfig): TemplateParams;
 
   /**
    * Given the generated parameters, compute the correct answer,
@@ -112,9 +109,7 @@ export abstract class QuestionTemplate {
     const { answer, steps, hint, assets, distractors } = this.solve(params, config);
     const questionText = this.questionText(params);
 
-    const choices = distractors
-      ? this._buildChoices(answer, distractors)
-      : undefined;
+    const choices = distractors ? this._buildChoices(answer, distractors) : undefined;
 
     return {
       templateId: this.id,
@@ -138,12 +133,9 @@ export abstract class QuestionTemplate {
    * `config.allowedOperations`, AND difficulty ranges overlap.
    */
   isCompatibleWith(config: ClassConfig): boolean {
-    const opsOk = this.requiredOperations.every(op =>
-      config.allowedOperations.includes(op),
-    );
+    const opsOk = this.requiredOperations.every((op) => config.allowedOperations.includes(op));
     const difficultyOk =
-      this.minDifficulty <= config.difficultyRange[1] &&
-      this.maxDifficulty >= config.difficultyRange[0];
+      this.minDifficulty <= config.difficultyRange[1] && this.maxDifficulty >= config.difficultyRange[0];
 
     return opsOk && difficultyOk;
   }
@@ -166,11 +158,7 @@ export abstract class QuestionTemplate {
    * and additionally clamped to [localMin, localMax].
    * Use this for operand generation so templates respect the grade's number range.
    */
-  protected pickNumber(
-    config: ClassConfig,
-    localMin: number,
-    localMax: number,
-  ): number {
+  protected pickNumber(config: ClassConfig, localMin: number, localMax: number): number {
     const min = Math.max(config.numberRange.min, localMin);
     const max = Math.min(config.numberRange.max, localMax);
     if (min > max) return localMin; // fallback when ranges don't overlap
@@ -183,7 +171,7 @@ export abstract class QuestionTemplate {
     if (!this.isCompatibleWith(config)) {
       throw new Error(
         `[QuestionTemplate] "${this.id}" is not compatible with class config "${config.id}". ` +
-        `Required ops: [${this.requiredOperations}], allowed: [${config.allowedOperations}].`,
+          `Required ops: [${this.requiredOperations}], allowed: [${config.allowedOperations}].`,
       );
     }
   }
@@ -203,7 +191,16 @@ export abstract class QuestionTemplate {
 
   private _buildChoices(correct: number, distractors: number[]): number[] {
     // Dedupe, exclude correct, take up to 3 and shuffle.
-    const unique = [...new Set(distractors.filter(d => d !== correct))].slice(0, 3);
+    const unique = [...new Set(distractors.filter((d) => d !== correct))].slice(0, 3);
+
+    while (unique.length < 3) {
+      // Pad with random numbers if not enough unique distractors provided.
+      const randomDistractor = correct + this.randInt(-10, 10);
+      if (!unique.includes(randomDistractor) && randomDistractor !== correct) {
+        unique.push(randomDistractor);
+      }
+    }
+
     const all = [...unique, correct];
     // Fisher-Yates shuffle
     for (let i = all.length - 1; i > 0; i--) {

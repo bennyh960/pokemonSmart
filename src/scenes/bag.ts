@@ -19,9 +19,11 @@ import {
   getPokemonDisplayName,
   getLocalizedName,
   getMoveDisplayName,
+  getMove,
   canLearnViaTM,
   getLearnLevelForMove,
 } from '../services/pokemon-data.js';
+import { getDamageClassLabel } from '../data/type-constants.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setEvolutionData } from './evolution.js';
 import { getTMEffect } from '../data/item-defs.js';
@@ -263,7 +265,17 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         });
 
         // Item description (right-aligned at x=206, cy+10)
-        drawText(ctx, getLocalizedName(item.def.description), 206, cy + 10, {
+        // For TM/HM items show the move's actual description instead of "Teaches X"
+        const rowTmEffect = getTMEffect(item.id);
+        let rowSecondaryText = getLocalizedName(item.def.description);
+        if (rowTmEffect) {
+          const rowMoveData = getMove(rowTmEffect.moveId);
+          if (rowMoveData?.description) {
+            const raw = rowMoveData.description;
+            rowSecondaryText = raw.length > 40 ? raw.slice(0, 37) + '\u2026' : raw;
+          }
+        }
+        drawText(ctx, rowSecondaryText, 206, cy + 10, {
           size: 5,
           color: isSel ? C.TEXT_MUT : C.TEXT_DIM,
           font: 'monospace',
@@ -315,23 +327,44 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       // Full description (right-aligned) — key items show used state when their usedFlag is set
       const pd = getPlayerData();
       const isKeyUsed = !!(selItem.def.usedFlag && pd.flags[selItem.def.usedFlag]);
-      let detailDesc = selItem.def.description;
-      // if (isKeyUsed && selItem.def.usedDescription) {
-      //   detailDesc = getLocale() === 'he' ? selItem.def.usedDescription.he : selItem.def.usedDescription.en;
-      // }
-      drawText(ctx, getLocalizedName(detailDesc), 206, 131, {
-        size: 6,
-        color: C.TEXT_SEC,
-        font: 'monospace',
-        align: 'right',
-      });
-      // "✓ Used" label for delivered key items
-      if (isKeyUsed) {
-        drawText(ctx, getLocale() === 'he' ? '✓ נמסר' : '✓ Used', 8, 131, {
+      const detailTmEffect = getTMEffect(selItem.id);
+      if (detailTmEffect) {
+        // TM/HM: show move stats + description
+        const detailMoveData = getMove(detailTmEffect.moveId);
+        if (detailMoveData) {
+          const dcInfo = getDamageClassLabel(detailMoveData.damageClass);
+          const pow = detailMoveData.power !== null && detailMoveData.power > 0 ? String(detailMoveData.power) : '\u2014';
+          const acc = detailMoveData.accuracy !== null ? detailMoveData.accuracy + '%' : '\u2014';
+          drawText(ctx, `PWR:${pow}  ACC:${acc}  ${dcInfo.label}`, 206, 127, {
+            size: 5,
+            color: dcInfo.color,
+            font: 'monospace',
+            align: 'right',
+          });
+          const rawDesc = detailMoveData.description;
+          const desc = rawDesc.length > 46 ? rawDesc.slice(0, 43) + '\u2026' : rawDesc;
+          drawText(ctx, desc, 206, 136, {
+            size: 5,
+            color: C.TEXT_SEC,
+            font: 'monospace',
+            align: 'right',
+          });
+        }
+      } else {
+        let detailDesc = selItem.def.description;
+        drawText(ctx, getLocalizedName(detailDesc), 206, 131, {
           size: 6,
-          color: '#44cc88',
+          color: C.TEXT_SEC,
           font: 'monospace',
+          align: 'right',
         });
+        if (isKeyUsed) {
+          drawText(ctx, getLocale() === 'he' ? '✓ נמסר' : '✓ Used', 8, 131, {
+            size: 6,
+            color: '#44cc88',
+            font: 'monospace',
+          });
+        }
       }
 
       // Use button — hidden for key items (they can't be manually used)

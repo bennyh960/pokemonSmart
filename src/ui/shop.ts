@@ -60,6 +60,7 @@ const ICON_COLORS: Record<string, { color: string; type: string }> = {
   'x-defense': { color: '#6890f0', type: 'bottle' },
   'x-speed': { color: '#f85888', type: 'bottle' },
   'x-special': { color: '#a040a0', type: 'bottle' },
+  'x-sp-def': { color: '#78c850', type: 'bottle' },
   'rare-candy': { color: '#ff60a0', type: 'diamond' },
 };
 

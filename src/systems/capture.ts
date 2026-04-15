@@ -31,8 +31,8 @@ const STATUS_MODERATE = 0.25; // paralysis
 const STATUS_MILD = 0.2; // burn / poison
 
 // Turn bonus: +1% per turn after turn 1, capped at 30%
-const TURN_BONUS_PER_TURN = 0.01;
-const TURN_BONUS_MAX = 0.3;
+const TURN_BONUS_PER_TURN = 0.02;
+const TURN_BONUS_MAX = 10;
 
 // Stat-reduction bonus: +3% per enemy stat stage lowered, capped at 30%
 const STAT_BONUS_PER_STAGE = 0.03;
@@ -40,7 +40,7 @@ const STAT_BONUS_MAX = 0.3;
 
 // Level-difference bonus/penalty: ±1% per level, capped at ±20%
 const LEVEL_BONUS_PER_LEVEL = 0.01;
-const LEVEL_BONUS_MAX = 0.2;
+const LEVEL_BONUS_MAX = 0.15;
 
 const SPECIES_FACTOR_REDUCER = 0.8; // reduces the impact of species catch rate on final probability to keep gameplay engaging across rarities
 

@@ -12,9 +12,19 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
-import { getPokemonDisplayName, getMoveDisplayName, getMove, getPokemonHeight, getPokemonWeight, getAbilityDisplayName, getNatureDisplayName, getNature } from '../services/pokemon-data.js';
+import {
+  getPokemonDisplayName,
+  getMoveDisplayName,
+  getMove,
+  getPokemonHeight,
+  getPokemonWeight,
+  getAbilityDisplayName,
+  getNatureDisplayName,
+  getNature,
+} from '../services/pokemon-data.js';
 import { drawPokeballIcon } from '../ui/item-icons.js';
 import { TYPE_BADGE, getTypeName, getDamageClassLabel } from '../data/type-constants.js';
+import { STATUS_PILL_COLORS } from '../data/battle-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { canUseItemOnPokemon } from '../systems/item-effects.js';
@@ -22,7 +32,6 @@ import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } 
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
-
 
 type ViewMode = 'list' | 'detail' | 'swap';
 type DetailTab = 'stats' | 'moves';
@@ -95,11 +104,11 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   // Filled slots: 24px tall. Empty slots: 18px tall.
   // Positions depend on how many Pokemon are in party.
   function getSlotY(index: number, partyLen: number): number {
-    // All filled slots stack from y=14, each 24px + 2px gap
-    if (index < partyLen) return 14 + index * 26;
+    // All filled slots stack from y=12, each 22px + 1px gap
+    if (index < partyLen) return 12 + index * 23;
     // Empty slots start after last filled
-    const afterFilled = 14 + partyLen * 26;
-    return afterFilled + (index - partyLen) * 20;
+    const afterFilled = 12 + partyLen * 23;
+    return afterFilled + (index - partyLen) * 17;
   }
   function getHpColor(ratio: number): string {
     if (ratio >= 0.5) return '#20d860';
@@ -145,81 +154,128 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     return [t('party.moveLearning.replace'), t('party.moveLearning.skip')];
   }
 
-  function completeMoveLearning(
-    resolution: { outcome: 'learned' | 'replaced' | 'skipped'; moveId: number; replacedMoveId?: number },
-  ): void {
+  function completeMoveLearning(resolution: {
+    outcome: 'learned' | 'replaced' | 'skipped';
+    moveId: number;
+    replacedMoveId?: number;
+  }): void {
     resolveMoveLearningSession(resolution);
     stateMachine.pop();
   }
 
-  function renderFilledSlot(ctx: CanvasRenderingContext2D, pokemon: Pokemon, _slotNum: number, sy: number, isSel: boolean, isSwap: boolean, disabled: boolean): void {
+  function renderFilledSlot(
+    ctx: CanvasRenderingContext2D,
+    pokemon: Pokemon,
+    _slotNum: number,
+    sy: number,
+    isSel: boolean,
+    isSwap: boolean,
+    disabled: boolean,
+  ): void {
     // Card bg
-    fillRect(ctx, 4, sy, 232, 24, isSel ? C.CARD_SEL : C.CARD_BG);
-    drawRect(ctx, 4, sy, 232, 24, isSwap ? C.BORDER_SEL : (isSel ? '#2a6a40' : C.BORDER));
+    fillRect(ctx, 4, sy, 232, 22, isSel ? C.CARD_SEL : C.CARD_BG);
+    drawRect(ctx, 4, sy, 232, 22, isSwap ? C.BORDER_SEL : isSel ? '#2a6a40' : C.BORDER);
     // Selection indicator
-    if (isSel && !disabled) fillRect(ctx, 4, sy, 2, 24, '#20d860');
+    if (isSel && !disabled) fillRect(ctx, 4, sy, 2, 22, '#20d860');
 
-    // Pokeball icon (replacing slot number box) — centered in 10×10 area
-    drawPokeballIcon(ctx, pokemon.caughtBall, 222, sy + 7, 10);
+    // Pokeball icon — centered in 9×9 area
+    drawPokeballIcon(ctx, pokemon.caughtBall, 222, sy + 6, 9);
 
-    // Sprite box (22×22, sprite fills ~66% = 20×20 with 1px padding)
-    fillRect(ctx, 194, sy + 1, 22, 22, C.CARD_BG);
-    drawRect(ctx, 194, sy + 1, 22, 22, C.BORDER);
+    // Sprite box (20×20)
+    fillRect(ctx, 194, sy + 1, 20, 20, C.CARD_BG);
+    drawRect(ctx, 194, sy + 1, 20, 20, C.BORDER);
     const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
     const sprite = getCachedImage(spriteUrl);
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(sprite, 186, sy - 8, 40, 40);
+      ctx.drawImage(sprite, 193, sy - 1, 23, 23);
       ctx.imageSmoothingEnabled = false;
     }
 
     // Name (right-aligned)
-    drawText(ctx, getPokemonDisplayName(pokemon.id), 190, sy + 2, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+    drawText(ctx, getPokemonDisplayName(pokemon.id), 190, sy + 2, {
+      size: 7,
+      color: C.TEXT_PRI,
+      font: 'monospace',
+      align: 'right',
+    });
     // Level
-    drawText(ctx, `Lv.${pokemon.level}`, 78, sy + 2, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
+    drawText(ctx, `Lv.${pokemon.level}`, 16, sy + 2, {
+      size: 6,
+      color: C.TEXT_MUT,
+      font: 'monospace',
+      align: 'center',
+    });
+    // Status tag (PSN / BRN / PAR / SLP / FRZ) — aligned to HP bar start x=30
+    if (pokemon.status) {
+      const pill = STATUS_PILL_COLORS[pokemon.status];
+      if (pill) {
+        drawText(ctx, pill.shortLabel, 30, sy + 2, { size: 5, color: pill.textColor, font: 'monospace' });
+      }
+    }
 
-    // Type badges (row 2, dy=12)
+    // Type badges (row 2, dy=11)
     const types = pokemon.types;
     if (types.length >= 1) {
       const color1 = TYPE_BADGE[types[0]]?.color || '#888888';
-      fillRect(ctx, 172, sy + 12, 18, 7, color1);
-      drawText(ctx, getTypeName(types[0]), 181, sy + 13, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      fillRect(ctx, 172, sy + 11, 18, 6, color1);
+      drawText(ctx, getTypeName(types[0]), 181, sy + 12, {
+        size: 5,
+        color: C.TEXT_PRI,
+        font: 'monospace',
+        align: 'center',
+      });
     }
     if (types.length >= 2) {
       const color2 = TYPE_BADGE[types[1]]?.color || '#888888';
-      fillRect(ctx, 152, sy + 12, 18, 7, color2);
-      drawText(ctx, getTypeName(types[1]), 161, sy + 13, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      fillRect(ctx, 152, sy + 11, 18, 6, color2);
+      drawText(ctx, getTypeName(types[1]), 161, sy + 12, {
+        size: 5,
+        color: C.TEXT_PRI,
+        font: 'monospace',
+        align: 'center',
+      });
     }
 
     // HP label
-    drawText(ctx, 'HP', 86, sy + 12, { size: 5, color: C.TEXT_MUT, font: 'monospace' });
+    drawText(ctx, 'HP', 88, sy + 11, { size: 5, color: C.TEXT_MUT, font: 'monospace' });
     // HP bar
-    fillRect(ctx, 26, sy + 14, 56, 3, C.SEP);
+    fillRect(ctx, 30, sy + 13, 56, 3, C.SEP);
     const hpRatio = pokemon.maxHp > 0 ? pokemon.hp / pokemon.maxHp : 0;
     const hpW = Math.round(56 * Math.max(0, Math.min(1, hpRatio)));
-    if (hpW > 0) fillRect(ctx, 26, sy + 14, hpW, 3, getHpColor(hpRatio));
+    if (hpW > 0) fillRect(ctx, 30, sy + 11, hpW, 3, getHpColor(hpRatio));
     // HP value
-    drawText(ctx, `${pokemon.hp}/${pokemon.maxHp}`, 8, sy + 12, { size: 5, color: C.TEXT_SEC, font: 'monospace' });
+    drawText(ctx, `${pokemon.hp}/${pokemon.maxHp}`, 8, sy + 9, { size: 5, color: C.TEXT_SEC, font: 'monospace' });
 
     // Disabled overlay (semi-transparent dark green)
     if (disabled) {
       ctx.save();
       ctx.globalAlpha = 0.5;
-      fillRect(ctx, 4, sy, 232, 24, '#0d1a14');
+      fillRect(ctx, 4, sy, 232, 22, '#0d1a14');
       ctx.restore();
     }
   }
 
   function renderEmptySlot(ctx: CanvasRenderingContext2D, slotNum: number, sy: number, isSel: boolean): void {
-    fillRect(ctx, 4, sy, 232, 18, isSel ? C.CARD_SEL : C.CARD_BG);
-    drawRect(ctx, 4, sy, 232, 18, isSel ? '#2a6a40' : C.BORDER);
-    if (isSel) fillRect(ctx, 4, sy, 2, 18, '#20d860');
+    fillRect(ctx, 4, sy, 232, 16, isSel ? C.CARD_SEL : C.CARD_BG);
+    drawRect(ctx, 4, sy, 232, 16, isSel ? '#2a6a40' : C.BORDER);
+    if (isSel) fillRect(ctx, 4, sy, 2, 16, '#20d860');
     // Slot number
-    fillRect(ctx, 222, sy + 2, 10, 10, isSel ? 'rgba(32,216,96,0.15)' : 'rgba(255,255,255,0.03)');
-    drawText(ctx, `${slotNum}`, 227, sy + 3, { size: 6, color: isSel ? '#20d860' : '#2a3a2a', font: 'monospace', align: 'center' });
+    fillRect(ctx, 222, sy + 2, 9, 8, isSel ? 'rgba(32,216,96,0.15)' : 'rgba(255,255,255,0.03)');
+    drawText(ctx, `${slotNum}`, 227, sy + 3, {
+      size: 6,
+      color: isSel ? '#20d860' : '#2a3a2a',
+      font: 'monospace',
+      align: 'center',
+    });
     // Empty label
-    drawText(ctx, '\u2014 \u2014 \u2014', 112, sy + 6, { size: 7, color: '#2a3a2a', font: 'monospace', align: 'center' });
+    drawText(ctx, '\u2014 \u2014 \u2014', 112, sy + 5, {
+      size: 7,
+      color: '#2a3a2a',
+      font: 'monospace',
+      align: 'center',
+    });
   }
 
   function renderListView(ctx: CanvasRenderingContext2D): void {
@@ -250,7 +306,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       fillRect(ctx, 4, 140, 232, 9, C.CARD_BG);
       drawRect(ctx, 4, 140, 232, 9, C.BORDER);
       drawText(ctx, `💊 ${selectTargetContext.itemName}: ${selectTargetContext.description}`, 120, 141, {
-        size: 5, color: '#20d860', font: 'monospace', align: 'center',
+        size: 5,
+        color: '#20d860',
+        font: 'monospace',
+        align: 'center',
       });
     }
 
@@ -265,9 +324,12 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     fillRect(ctx, 62, 151, 26, 8, C.KEY_BG);
     drawRect(ctx, 62, 151, 26, 8, C.KEY_BRD);
     drawText(ctx, 'Enter', 75, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    const enterHint = partyMode === 'select-target' ? (t('bag.hint.use') || 'Use')
-      : partyMode === 'battle' ? (t('party.hint.switchIn') || 'Switch')
-      : (t('party.hint.details') || 'Details');
+    const enterHint =
+      partyMode === 'select-target'
+        ? t('bag.hint.use') || 'Use'
+        : partyMode === 'battle'
+          ? t('party.hint.switchIn') || 'Switch'
+          : t('party.hint.details') || 'Details';
     drawText(ctx, enterHint, 90, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     // Arrows
     fillRect(ctx, 126, 151, 18, 8, C.KEY_BG);
@@ -287,12 +349,24 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   // COLORS — from canvas_coordinates.md
   // ═══════════════════════════════════════════════════════════════════
   const C = {
-    BG: '#0d1a14', CARD_BG: '#0f2a1a', CARD_SEL: '#1a3a2a',
-    BORDER: '#1a4a30', SEP: '#1a3a2a', TEXT_PRI: '#ffffff',
-    TEXT_SEC: '#aaccaa', TEXT_MUT: '#667766', TEXT_DIM: '#445544',
-    BAR_HP: '#20d860', BAR_TRACK: '#1a3a2a', BAR_XP: '#5080ff',
-    BAR_PP: '#20a0d8', TAB_BG: '#0a2a1a', TAB_ACT: '#1a5a35',
-    BTM_BG: '#0a1a10', KEY_BG: '#1a3a2a', KEY_BRD: '#2a5a3a',
+    BG: '#0d1a14',
+    CARD_BG: '#0f2a1a',
+    CARD_SEL: '#1a3a2a',
+    BORDER: '#1a4a30',
+    SEP: '#1a3a2a',
+    TEXT_PRI: '#ffffff',
+    TEXT_SEC: '#aaccaa',
+    TEXT_MUT: '#667766',
+    TEXT_DIM: '#445544',
+    BAR_HP: '#20d860',
+    BAR_TRACK: '#1a3a2a',
+    BAR_XP: '#5080ff',
+    BAR_PP: '#20a0d8',
+    TAB_BG: '#0a2a1a',
+    TAB_ACT: '#1a5a35',
+    BTM_BG: '#0a1a10',
+    KEY_BG: '#1a3a2a',
+    KEY_BRD: '#2a5a3a',
     BORDER_SEL: '#f8c030',
   };
 
@@ -310,10 +384,15 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     }
 
     // ── Name (centered in left 168px area) ──
-    drawText(ctx, getPokemonDisplayName(pokemon.id), 96, 22, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+    drawText(ctx, getPokemonDisplayName(pokemon.id), 96, 22, {
+      size: 10,
+      color: C.TEXT_PRI,
+      font: 'monospace',
+      align: 'center',
+    });
 
     // ── Type badges (centered, y=34) ──
-    const typeLabels = pokemon.types.map(pt => ({ type: pt, label: getTypeName(pt) }));
+    const typeLabels = pokemon.types.map((pt) => ({ type: pt, label: getTypeName(pt) }));
     // Each badge is 28px wide, 4px gap between them
     const badgeW = 28;
     const badgeGap = 4;
@@ -346,8 +425,11 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       let natureHint = '';
       if (natureDef?.increasedStat && natureDef?.decreasedStat) {
         const statShort: Record<string, string> = {
-          attack: 'Atk', defense: 'Def', specialAttack: 'SpA',
-          specialDefense: 'SpD', speed: 'Spe',
+          attack: 'Atk',
+          defense: 'Def',
+          specialAttack: 'SpA',
+          specialDefense: 'SpD',
+          speed: 'Spe',
         };
         natureHint = ` (+${statShort[natureDef.increasedStat] ?? '?'} -${statShort[natureDef.decreasedStat] ?? '?'})`;
       }
@@ -383,12 +465,12 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
     // ── Stat rows ──
     const statRows: [string, number, string, number][] = [
-      [t('party.stats.hp'),      pokemon.maxHp,           '#20d860',  99],
-      [t('party.stats.attack'),  pokemon.attack,          '#f08030', 107],
-      [t('party.stats.defense'), pokemon.defense,         '#6890f0', 115],
-      [t('party.stats.spAtk'),   pokemon.specialAttack,   '#a040a0', 123],
-      [t('party.stats.spDef'),   pokemon.specialDefense,  '#f8d030', 131],
-      [t('party.stats.speed'),   pokemon.speed,           '#f85888', 139],
+      [t('party.stats.hp'), pokemon.maxHp, '#20d860', 99],
+      [t('party.stats.attack'), pokemon.attack, '#f08030', 107],
+      [t('party.stats.defense'), pokemon.defense, '#6890f0', 115],
+      [t('party.stats.spAtk'), pokemon.specialAttack, '#a040a0', 123],
+      [t('party.stats.spDef'), pokemon.specialDefense, '#f8d030', 131],
+      [t('party.stats.speed'), pokemon.speed, '#f85888', 139],
     ];
 
     for (const [label, value, color, rowY] of statRows) {
@@ -406,10 +488,22 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   function renderDetailMovesTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
     const displayedMoves = getDisplayedMoves(pokemon);
     const maxVisible = Math.min(displayedMoves.length, 8);
-    const scrollOffset = Math.max(0, Math.min(moveCursor - maxVisible + 1, Math.max(0, displayedMoves.length - maxVisible)));
+    const scrollOffset = Math.max(
+      0,
+      Math.min(moveCursor - maxVisible + 1, Math.max(0, displayedMoves.length - maxVisible)),
+    );
 
-    drawText(ctx, t('party.moves.battleMoves'), 228, 16, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
-    drawText(ctx, `${displayedMoves.length} ${t('party.moves.title')}`, 12, 16, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+    drawText(ctx, t('party.moves.battleMoves'), 228, 16, {
+      size: 7,
+      color: C.TEXT_MUT,
+      font: 'monospace',
+      align: 'right',
+    });
+    drawText(ctx, `${displayedMoves.length} ${t('party.moves.title')}`, 12, 16, {
+      size: 6,
+      color: C.TEXT_DIM,
+      font: 'monospace',
+    });
 
     for (let visibleIndex = 0; visibleIndex < maxVisible; visibleIndex++) {
       const moveIndex = scrollOffset + visibleIndex;
@@ -420,7 +514,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const cy = 26 + visibleIndex * 15;
       const isSelected = moveIndex === moveCursor;
       const isSwapSource = moveIndex === moveSwapFrom;
-      const borderColor = entry.pending ? '#f8c030' : (isSwapSource ? C.BORDER_SEL : C.BORDER);
+      const borderColor = entry.pending ? '#f8c030' : isSwapSource ? C.BORDER_SEL : C.BORDER;
 
       fillRect(ctx, 4, cy, 232, 14, isSelected ? C.CARD_SEL : C.CARD_BG);
       drawRect(ctx, 4, cy, 232, 14, borderColor);
@@ -443,8 +537,18 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
       const accVal = move.accuracy > 0 ? move.accuracy : 100;
       const powVal = move.power > 0 ? move.power : 0;
-      drawText(ctx, `${t('party.moves.header.acc')}: ${accVal}%`, 185, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
-      drawText(ctx, `${t('party.moves.header.pow')}: ${powVal}%`, 225, cy + 9, { size: 5, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
+      drawText(ctx, `${t('party.moves.header.acc')}: ${accVal}%`, 185, cy + 9, {
+        size: 5,
+        color: C.TEXT_DIM,
+        font: 'monospace',
+        align: 'right',
+      });
+      drawText(ctx, `${t('party.moves.header.pow')}: ${powVal}%`, 225, cy + 9, {
+        size: 5,
+        color: C.TEXT_DIM,
+        font: 'monospace',
+        align: 'right',
+      });
 
       drawText(ctx, `${move.currentPp}/${move.pp}`, 12, cy + 2, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
       fillRect(ctx, 12, cy + 10, 30, 2, C.BAR_TRACK);
@@ -468,7 +572,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const pendingMove = createMoveFromId(session.moveId);
       const pendingMoveName = pendingMove ? getMoveDisplayName(pendingMove.id) : '???';
 
-      const mx = 8, my = 20, mw = 224, mh = 126;
+      const mx = 8,
+        my = 20,
+        mw = 224,
+        mh = 126;
       fillRect(ctx, 0, 14, 240, 136, '#000000aa');
       fillRect(ctx, mx, my, mw, mh, C.BG);
       drawRect(ctx, mx, my, mw, mh, '#2a6a40');
@@ -485,12 +592,18 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       fillRect(ctx, mx + 6, my + 4, 26, 9, typeColor);
       drawText(ctx, typeLabel, mx + 19, my + 5, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
-      const extraHeader = !session.learned && pendingMove
-        ? t(moveLearningReplaceMode ? 'party.moveLearning.replacePrompt' : 'party.moveLearning.newMoveLine', { move: pendingMoveName })
-        : '';
+      const extraHeader =
+        !session.learned && pendingMove
+          ? t(moveLearningReplaceMode ? 'party.moveLearning.replacePrompt' : 'party.moveLearning.newMoveLine', {
+              move: pendingMoveName,
+            })
+          : '';
       if (extraHeader) {
         drawText(ctx, extraHeader, mx + mw / 2, my + 16, {
-          size: 6, color: '#f8c030', font: 'monospace', align: 'center',
+          size: 6,
+          color: '#f8c030',
+          font: 'monospace',
+          align: 'center',
         });
       }
 
@@ -499,10 +612,16 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const ry = statsY + 3;
       drawText(ctx, dcInfo.label, mx + mw - 6, ry, { size: 6, color: dcInfo.color, font: 'monospace', align: 'right' });
       drawText(ctx, `${t('party.moves.header.pow')}: ${move.power > 0 ? move.power : 0}`, mx + mw - 60, ry, {
-        size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right',
+        size: 6,
+        color: C.TEXT_SEC,
+        font: 'monospace',
+        align: 'right',
       });
       drawText(ctx, `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : 100}%`, mx + mw - 110, ry, {
-        size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right',
+        size: 6,
+        color: C.TEXT_SEC,
+        font: 'monospace',
+        align: 'right',
       });
       drawText(ctx, `PP: ${move.currentPp}/${move.pp}`, mx + 6, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
 
@@ -539,26 +658,37 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           drawRect(ctx, bx, btnY, btnW - 4, 12, '#2a6a40');
         }
         drawText(ctx, actionLabels[i], bx + (btnW - 4) / 2, btnY + 2, {
-          size: 7, color: isSel ? C.TEXT_PRI : C.TEXT_MUT, font: 'monospace', align: 'center',
+          size: 7,
+          color: isSel ? C.TEXT_PRI : C.TEXT_MUT,
+          font: 'monospace',
+          align: 'center',
         });
       }
 
       if (moveLearningConfirmAction) {
         const oldMove = pokemon.moves[Math.min(moveCursor, pokemon.moves.length - 1)];
         const oldMoveName = oldMove ? getMoveDisplayName(oldMove.id) : '???';
-        const confirmKey = moveLearningConfirmAction === 'replace'
-          ? 'party.moveLearning.replaceConfirm'
-          : 'party.moveLearning.skipConfirm';
-        const warningKey = moveLearningConfirmAction === 'replace'
-          ? 'party.moveLearning.replaceWarning'
-          : 'party.moveLearning.skipWarning';
+        const confirmKey =
+          moveLearningConfirmAction === 'replace'
+            ? 'party.moveLearning.replaceConfirm'
+            : 'party.moveLearning.skipConfirm';
+        const warningKey =
+          moveLearningConfirmAction === 'replace'
+            ? 'party.moveLearning.replaceWarning'
+            : 'party.moveLearning.skipWarning';
 
         fillRect(ctx, 0, 0, 240, 160, '#000000aa');
-        const dx = 28, dy = 50, dw = 184, dh = 52;
+        const dx = 28,
+          dy = 50,
+          dw = 184,
+          dh = 52;
         fillRect(ctx, dx, dy, dw, dh, C.BG);
         drawRect(ctx, dx, dy, dw, dh, moveLearningConfirmAction === 'replace' ? '#f8c030' : '#cc4444');
         drawText(ctx, t(confirmKey, { move: pendingMoveName, oldMove: oldMoveName }), dx + dw / 2, dy + 8, {
-          size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center',
+          size: 7,
+          color: C.TEXT_PRI,
+          font: 'monospace',
+          align: 'center',
         });
         drawText(ctx, t(warningKey), dx + dw / 2, dy + 20, {
           size: 6,
@@ -566,7 +696,9 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           font: 'monospace',
           align: 'center',
         });
-        const confirmBtnW = 60, confirmBtnH = 12, btnGap = 20;
+        const confirmBtnW = 60,
+          confirmBtnH = 12,
+          btnGap = 20;
         const yesX = dx + dw / 2 - confirmBtnW - btnGap / 2;
         const noX = dx + dw / 2 + btnGap / 2;
         const confirmBtnY = dy + 34;
@@ -574,12 +706,18 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         fillRect(ctx, yesX, confirmBtnY, confirmBtnW, confirmBtnH, yesSelected ? '#2a6a40' : '#333333');
         drawRect(ctx, yesX, confirmBtnY, confirmBtnW, confirmBtnH, '#2a6a40');
         drawText(ctx, t('party.moves.forgetYes'), yesX + confirmBtnW / 2, confirmBtnY + 2, {
-          size: 7, color: yesSelected ? '#ffffff' : '#888888', font: 'monospace', align: 'center',
+          size: 7,
+          color: yesSelected ? '#ffffff' : '#888888',
+          font: 'monospace',
+          align: 'center',
         });
         fillRect(ctx, noX, confirmBtnY, confirmBtnW, confirmBtnH, !yesSelected ? '#cc4444' : '#333333');
         drawRect(ctx, noX, confirmBtnY, confirmBtnW, confirmBtnH, '#cc4444');
         drawText(ctx, t('party.moves.forgetNo'), noX + confirmBtnW / 2, confirmBtnY + 2, {
-          size: 7, color: !yesSelected ? '#ffffff' : '#888888', font: 'monospace', align: 'center',
+          size: 7,
+          color: !yesSelected ? '#ffffff' : '#888888',
+          font: 'monospace',
+          align: 'center',
         });
       }
     } else if (moveActionMenuOpen) {
@@ -588,7 +726,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const dc = moveData?.damageClass || (move?.power > 0 ? 'physical' : 'status');
       const dcInfo = getDamageClassLabel(dc);
 
-      const mx = 8, my = 20, mw = 224, mh = 126;
+      const mx = 8,
+        my = 20,
+        mw = 224,
+        mh = 126;
       fillRect(ctx, 0, 14, 240, 136, '#000000aa');
       fillRect(ctx, mx, my, mw, mh, C.BG);
       drawRect(ctx, mx, my, mw, mh, '#2a6a40');
@@ -609,14 +750,35 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         const statsY = my + 18;
         fillRect(ctx, mx + 4, statsY, mw - 8, 1, C.SEP);
         const ry = statsY + 3;
-        drawText(ctx, dcInfo.label, mx + mw - 6, ry, { size: 6, color: dcInfo.color, font: 'monospace', align: 'right' });
+        drawText(ctx, dcInfo.label, mx + mw - 6, ry, {
+          size: 6,
+          color: dcInfo.color,
+          font: 'monospace',
+          align: 'right',
+        });
         drawText(ctx, `${t('party.moves.header.pow')}: ${move.power > 0 ? move.power : 0}`, mx + mw - 60, ry, {
-          size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right',
+          size: 6,
+          color: C.TEXT_SEC,
+          font: 'monospace',
+          align: 'right',
         });
-        drawText(ctx, `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : 100}%`, mx + mw - 110, ry, {
-          size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'right',
+        drawText(
+          ctx,
+          `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : 100}%`,
+          mx + mw - 110,
+          ry,
+          {
+            size: 6,
+            color: C.TEXT_SEC,
+            font: 'monospace',
+            align: 'right',
+          },
+        );
+        drawText(ctx, `PP: ${move.currentPp}/${move.pp}`, mx + 6, ry, {
+          size: 6,
+          color: C.TEXT_SEC,
+          font: 'monospace',
         });
-        drawText(ctx, `PP: ${move.currentPp}/${move.pp}`, mx + 6, ry, { size: 6, color: C.TEXT_SEC, font: 'monospace' });
 
         const descY = statsY + 14;
         fillRect(ctx, mx + 4, descY - 2, mw - 8, 1, C.SEP);
@@ -651,11 +813,17 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           fillRect(ctx, bx, btnY, btnW - 4, 12, C.CARD_SEL);
           drawRect(ctx, bx, btnY, btnW - 4, 12, '#2a6a40');
         }
-        const label = action === 'swap' ? t('party.moves.swap')
-          : action === 'delete' ? t('party.moves.delete')
-          : t('party.moves.cancel');
+        const label =
+          action === 'swap'
+            ? t('party.moves.swap')
+            : action === 'delete'
+              ? t('party.moves.delete')
+              : t('party.moves.cancel');
         drawText(ctx, label, bx + (btnW - 4) / 2, btnY + 2, {
-          size: 7, color: isSel ? C.TEXT_PRI : C.TEXT_MUT, font: 'monospace', align: 'center',
+          size: 7,
+          color: isSel ? C.TEXT_PRI : C.TEXT_MUT,
+          font: 'monospace',
+          align: 'center',
         });
       }
     }
@@ -664,16 +832,27 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const move = pokemon.moves[moveCursor];
       const moveName = move ? getMoveDisplayName(move.id) : '???';
       fillRect(ctx, 0, 0, 240, 160, '#000000aa');
-      const dx = 30, dy = 50, dw = 180, dh = 50;
+      const dx = 30,
+        dy = 50,
+        dw = 180,
+        dh = 50;
       fillRect(ctx, dx, dy, dw, dh, C.BG);
       drawRect(ctx, dx, dy, dw, dh, '#cc4444');
       drawText(ctx, t('party.moves.forgetConfirm', { move: moveName }), dx + dw / 2, dy + 8, {
-        size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center',
+        size: 7,
+        color: C.TEXT_PRI,
+        font: 'monospace',
+        align: 'center',
       });
       drawText(ctx, t('party.moves.forgetWarning'), dx + dw / 2, dy + 20, {
-        size: 6, color: '#ff8888', font: 'monospace', align: 'center',
+        size: 6,
+        color: '#ff8888',
+        font: 'monospace',
+        align: 'center',
       });
-      const btnW = 60, btnH = 12, btnGap = 20;
+      const btnW = 60,
+        btnH = 12,
+        btnGap = 20;
       const yesX = dx + dw / 2 - btnW - btnGap / 2;
       const noX = dx + dw / 2 + btnGap / 2;
       const btnY = dy + 33;
@@ -681,12 +860,18 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       fillRect(ctx, yesX, btnY, btnW, btnH, yesSelected ? '#cc4444' : '#333333');
       drawRect(ctx, yesX, btnY, btnW, btnH, '#cc4444');
       drawText(ctx, t('party.moves.forgetYes'), yesX + btnW / 2, btnY + 2, {
-        size: 7, color: yesSelected ? '#ffffff' : '#888888', font: 'monospace', align: 'center',
+        size: 7,
+        color: yesSelected ? '#ffffff' : '#888888',
+        font: 'monospace',
+        align: 'center',
       });
       fillRect(ctx, noX, btnY, btnW, btnH, !yesSelected ? '#2a6a40' : '#333333');
       drawRect(ctx, noX, btnY, btnW, btnH, '#2a6a40');
       drawText(ctx, t('party.moves.forgetNo'), noX + btnW / 2, btnY + 2, {
-        size: 7, color: !yesSelected ? '#ffffff' : '#888888', font: 'monospace', align: 'center',
+        size: 7,
+        color: !yesSelected ? '#ffffff' : '#888888',
+        font: 'monospace',
+        align: 'center',
       });
     }
 
@@ -730,18 +915,35 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
     drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
     drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, learningMode ? t('party.moves.cancel') : t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    drawText(ctx, learningMode ? t('party.moves.cancel') : t('party.hint.back'), 30, 153, {
+      size: 6,
+      color: C.TEXT_MUT,
+      font: 'monospace',
+    });
     // Arrows pill
     fillRect(ctx, 62, 151, 18, 8, C.KEY_BG);
     drawRect(ctx, 62, 151, 18, 8, C.KEY_BRD);
-    drawText(ctx, learningMode ? '\u25b2\u25bc' : '\u25c0\u25b6', 71, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, learningMode ? t('bag.hint.navigate') : t('party.hint.switchTab'), 82, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    drawText(ctx, learningMode ? '\u25b2\u25bc' : '\u25c0\u25b6', 71, 152, {
+      size: 6,
+      color: C.TEXT_SEC,
+      font: 'monospace',
+      align: 'center',
+    });
+    drawText(ctx, learningMode ? t('bag.hint.navigate') : t('party.hint.switchTab'), 82, 153, {
+      size: 6,
+      color: C.TEXT_MUT,
+      font: 'monospace',
+    });
     // Enter pill (only on moves tab)
     if (detailTab === 'moves') {
       fillRect(ctx, 114, 151, 26, 8, C.KEY_BG);
       drawRect(ctx, 114, 151, 26, 8, C.KEY_BRD);
       drawText(ctx, 'Enter', 127, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-      drawText(ctx, learningMode ? t('party.moveLearning.actionHint') : t('party.hint.action'), 142, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+      drawText(ctx, learningMode ? t('party.moveLearning.actionHint') : t('party.hint.action'), 142, 153, {
+        size: 6,
+        color: C.TEXT_MUT,
+        font: 'monospace',
+      });
     }
   }
 
@@ -769,9 +971,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
       const displayedMoves = getDisplayedMoves(pokemon);
       const learnedMoveIndex = session.learned
-        ? Math.max(0, pokemon.moves.findIndex((move) => move.id === session.moveId))
+        ? Math.max(
+            0,
+            pokemon.moves.findIndex((move) => move.id === session.moveId),
+          )
         : pokemon.moves.length;
-      const maxCursor = moveLearningReplaceMode ? Math.max(0, pokemon.moves.length - 1) : Math.max(0, displayedMoves.length - 1);
+      const maxCursor = moveLearningReplaceMode
+        ? Math.max(0, pokemon.moves.length - 1)
+        : Math.max(0, displayedMoves.length - 1);
       moveCursor = Math.max(0, Math.min(moveCursor, maxCursor));
 
       if (moveLearningConfirmAction) {
@@ -1039,7 +1246,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         if (session && party[session.partyIndex]) {
           const pokemon = party[session.partyIndex];
           const pendingIndex = session.learned
-            ? Math.max(0, pokemon.moves.findIndex((move) => move.id === session.moveId))
+            ? Math.max(
+                0,
+                pokemon.moves.findIndex((move) => move.id === session.moveId),
+              )
             : pokemon.moves.length;
           cursor = session.partyIndex;
           viewMode = 'detail';
@@ -1052,7 +1262,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       if (partyMode === 'battle') {
         const party = getParty();
         for (let i = 0; i < party.length; i++) {
-          if (isPokemonEligible(party[i])) { cursor = i; break; }
+          if (isPokemonEligible(party[i])) {
+            cursor = i;
+            break;
+          }
         }
       }
     },

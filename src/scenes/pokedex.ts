@@ -58,6 +58,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
   let detailTab: DetailTab = 'info';
   let movesSubTab: MovesSubTab = 'byLevel';
   let movesScrollOffset = 0;
+  let movesCursor = 0;
+  let movesDetailOpen = false;
   let openContext: PokedexContext = 'overworld';
 
   function getPokedex(): Record<number, boolean> {
@@ -102,6 +104,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       openContext = pendingPokedexFocus?.context ?? 'overworld';
       movesSubTab = 'byLevel';
       movesScrollOffset = 0;
+      movesCursor = 0;
+      movesDetailOpen = false;
       preloadVisibleSprites();
       if (pendingPokedexFocus?.openDetail) {
         const id = cursor + 1;
@@ -144,6 +148,14 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       }
 
       if (view === 'detail') {
+        // Move detail popup: Escape closes it before any other navigation
+        if (detailTab === 'moves' && movesDetailOpen) {
+          if (input.isKeyPressed('Escape')) {
+            movesDetailOpen = false;
+          }
+          return;
+        }
+
         if (input.isKeyPressed('Escape')) {
           if (openContext === 'battle') {
             // In battle mode, escape pops back to the battle scene
@@ -154,12 +166,13 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           return;
         }
 
-        // Left/Right switches main tabs (unless on moves sub-tab switching)
+        // Left/Right switches main tabs
         if (input.isKeyPressed('ArrowLeft')) {
           const idx = DETAIL_TABS.indexOf(detailTab);
           if (idx > 0) {
             detailTab = DETAIL_TABS[idx - 1];
             movesScrollOffset = 0;
+            movesCursor = 0;
           }
         }
         if (input.isKeyPressed('ArrowRight')) {
@@ -167,6 +180,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           if (idx < DETAIL_TABS.length - 1) {
             detailTab = DETAIL_TABS[idx + 1];
             movesScrollOffset = 0;
+            movesCursor = 0;
           }
         }
 
@@ -175,19 +189,35 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           if (input.isKeyPressed('1')) {
             movesSubTab = 'byLevel';
             movesScrollOffset = 0;
+            movesCursor = 0;
           } else if (input.isKeyPressed('2')) {
             movesSubTab = 'canLearn';
             movesScrollOffset = 0;
+            movesCursor = 0;
           }
         }
 
-        // Up/Down scrolls moves list when on MOVES tab
+        // Up/Down navigates move rows; Enter opens detail popup
         if (detailTab === 'moves') {
-          if (input.isKeyPressed('ArrowUp') && movesScrollOffset > 0) {
-            movesScrollOffset--;
+          const pokemonId = cursor + 1;
+          const sorted =
+            movesSubTab === 'byLevel'
+              ? [...getLearnset(pokemonId)].sort((a, b) => a.levelLearned - b.levelLearned)
+              : [...getTmLearnset(pokemonId)].sort((a, b) =>
+                  getMoveDisplayName(a.moveId).localeCompare(getMoveDisplayName(b.moveId)));
+          const MAX_ROWS = 9; // matches maxVisibleRows in renderMovesTab
+
+          if (input.isKeyPressed('ArrowUp') && movesCursor > 0) {
+            movesCursor--;
+            if (movesCursor < movesScrollOffset) movesScrollOffset = movesCursor;
           }
-          if (input.isKeyPressed('ArrowDown')) {
-            movesScrollOffset++;
+          if (input.isKeyPressed('ArrowDown') && movesCursor < sorted.length - 1) {
+            movesCursor++;
+            if (movesCursor >= movesScrollOffset + MAX_ROWS)
+              movesScrollOffset = movesCursor - MAX_ROWS + 1;
+          }
+          if (input.isKeyPressed('Enter') && sorted.length > 0) {
+            movesDetailOpen = true;
           }
         }
 
@@ -227,6 +257,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           detailTab = 'info';
           movesSubTab = 'byLevel';
           movesScrollOffset = 0;
+          movesCursor = 0;
+          movesDetailOpen = false;
           loadImage(`/sprites/pokemon/front/${id}.png`).catch(() => {});
           // Preload evolution chain sprites
           const chain = getEvolutionChain(id);
@@ -585,10 +617,12 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     fillRect(ctx, 0, SCREEN_H - 14, SCREEN_W, 14, '#481818');
     const rtl = isRTL();
     let helpText: string;
-    if (detailTab === 'moves') {
+    if (detailTab === 'moves' && movesDetailOpen) {
+      helpText = rtl ? 'ESC \u05e1\u05d2\u05d9\u05e8\u05d4' : 'Esc: Close';
+    } else if (detailTab === 'moves') {
       helpText = rtl
-        ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1 / 1-2 \u05ea\u05ea-\u05d8\u05d0\u05d1 / \u2191\u2193 \u05d2\u05dc\u05d9\u05dc\u05d4'
-        : 'Esc:Back  L/R:Tab  1/2:Sub  Up/Dn:Scroll';
+        ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1 / 1-2 \u05ea\u05ea-\u05d8\u05d0\u05d1 / \u2191\u2193 \u05e9\u05d5\u05e8\u05d4 / Enter \u05e4\u05e8\u05d8\u05d9\u05dd'
+        : 'Esc:Back  L/R:Tab  1/2:Sub  \u2191\u2193:Row  Enter:Info';
     } else {
       helpText = rtl
         ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1'
@@ -954,158 +988,146 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
     const dataY = tableY + rowH + 2;
 
-    if (movesSubTab === 'byLevel') {
-      const learnset = getLearnset(pokemonId);
+    // Build sorted list for current sub-tab
+    type MoveEntry = { moveId: number; levelLearned?: number };
+    const sorted: MoveEntry[] =
+      movesSubTab === 'byLevel'
+        ? [...getLearnset(pokemonId)].sort((a, b) => a.levelLearned - b.levelLearned)
+        : [...getTmLearnset(pokemonId)].sort((a, b) =>
+            getMoveDisplayName(a.moveId).localeCompare(getMoveDisplayName(b.moveId)));
 
-      if (learnset.length === 0) {
-        drawText(ctx, t('pokedex.moves.noData'), SCREEN_W / 2, dataY + 10, {
-          size: 7,
-          color: '#807070',
-          font: 'monospace',
-          align: 'center',
-        });
-        return;
-      }
-
-      // Sort by level
-      const sorted = [...learnset].sort((a, b) => a.levelLearned - b.levelLearned);
-
-      // Clamp scroll offset
-      const maxScroll = Math.max(0, sorted.length - maxVisibleRows);
-      if (movesScrollOffset > maxScroll) movesScrollOffset = maxScroll;
-
-      for (let i = 0; i < maxVisibleRows; i++) {
-        const idx = movesScrollOffset + i;
-        if (idx >= sorted.length) break;
-
-        const entry = sorted[idx];
-        const move = getMove(entry.moveId);
-        const ry = dataY + i * rowH;
-
-        // Alternating row background
-        if (i % 2 === 0) {
-          fillRect(ctx, 2, ry - 1, SCREEN_W - 4, rowH, '#381818');
-        }
-
-        // Level
-        drawText(ctx, String(entry.levelLearned), colLv, ry, { size: 6, color: '#ffffff', font: 'monospace' });
-
-        // Move name (localized)
-        const moveName = getMoveDisplayName(entry.moveId);
-        drawText(ctx, moveName, colName, ry, { size: 6, color: '#ffffff', font: 'monospace' });
-
-        if (move) {
-          // Damage class symbol (infer from power: null/0 = status, else physical/special based on type pre-gen4)
-          const classSymbol = getDamageClassSymbol(move.power, move.type);
-          drawText(ctx, classSymbol, colClass, ry, { size: 6, color: '#cccccc', font: 'monospace' });
-
-          // Type badge
-          drawTypeBadge(ctx, move.type as PokemonType, colType, ry, 'short');
-
-          // Accuracy
-          drawText(ctx, move.accuracy !== null ? String(move.accuracy) : '\u2014', colAcc, ry, {
-            size: 6,
-            color: '#ffffff',
-            font: 'monospace',
-          });
-
-          // Power
-          drawText(ctx, move.power !== null && move.power > 0 ? String(move.power) : '\u2014', colPow, ry, {
-            size: 6,
-            color: '#ffffff',
-            font: 'monospace',
-          });
-        }
-      }
-
-      // Scroll indicators
-      if (movesScrollOffset > 0) {
-        drawText(ctx, '\u25b2', SCREEN_W - 10, dataY - 2, { size: 6, color: '#f8a878', font: 'monospace' });
-      }
-      if (movesScrollOffset + maxVisibleRows < sorted.length) {
-        drawText(ctx, '\u25bc', SCREEN_W - 10, dataY + maxVisibleRows * rowH, {
-          size: 6,
-          color: '#f8a878',
-          font: 'monospace',
-        });
-      }
-    } else {
-      const tmMoves = getTmLearnset(pokemonId);
-
-      if (tmMoves.length === 0) {
-        drawText(ctx, t('pokedex.moves.noData'), SCREEN_W / 2, dataY + 10, {
-          size: 7,
-          color: '#807070',
-          font: 'monospace',
-          align: 'center',
-        });
-        return;
-      }
-
-      // Sort by move name for easy browsing
-      const sorted = [...tmMoves].sort((a, b) => {
-        const nameA = getMoveDisplayName(a.moveId);
-        const nameB = getMoveDisplayName(b.moveId);
-        return nameA.localeCompare(nameB);
+    if (sorted.length === 0) {
+      drawText(ctx, t('pokedex.moves.noData'), SCREEN_W / 2, dataY + 10, {
+        size: 7,
+        color: '#807070',
+        font: 'monospace',
+        align: 'center',
       });
+      return;
+    }
 
-      // Clamp scroll offset
-      const maxScroll = Math.max(0, sorted.length - maxVisibleRows);
-      if (movesScrollOffset > maxScroll) movesScrollOffset = maxScroll;
+    // Clamp scroll and cursor
+    const maxScroll = Math.max(0, sorted.length - maxVisibleRows);
+    if (movesScrollOffset > maxScroll) movesScrollOffset = maxScroll;
+    if (movesCursor >= sorted.length) movesCursor = sorted.length - 1;
 
-      for (let i = 0; i < maxVisibleRows; i++) {
-        const idx = movesScrollOffset + i;
-        if (idx >= sorted.length) break;
+    for (let i = 0; i < maxVisibleRows; i++) {
+      const idx = movesScrollOffset + i;
+      if (idx >= sorted.length) break;
 
-        const entry = sorted[idx];
-        const move = getMove(entry.moveId);
-        const ry = dataY + i * rowH;
+      const entry = sorted[idx];
+      const move = getMove(entry.moveId);
+      const ry = dataY + i * rowH;
 
-        // Alternating row background
-        if (i % 2 === 0) {
-          fillRect(ctx, 2, ry - 1, SCREEN_W - 4, rowH, '#381818');
-        }
+      // Row background — cursor row highlighted, alternating otherwise
+      if (idx === movesCursor) {
+        fillRect(ctx, 2, ry - 1, SCREEN_W - 4, rowH, '#583838');
+        drawRect(ctx, 2, ry - 1, SCREEN_W - 4, rowH, '#f8a878');
+      } else if (i % 2 === 0) {
+        fillRect(ctx, 2, ry - 1, SCREEN_W - 4, rowH, '#381818');
+      }
 
-        // TM label
+      // Level or TM label
+      if (isLevelTab) {
+        drawText(ctx, String(entry.levelLearned), colLv, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+      } else {
         drawText(ctx, 'TM', colLv, ry, { size: 6, color: '#a0c0ff', font: 'monospace' });
-
-        // Move name (localized)
-        const moveName = getMoveDisplayName(entry.moveId);
-        drawText(ctx, moveName, colName, ry, { size: 6, color: '#ffffff', font: 'monospace' });
-
-        if (move) {
-          // Damage class symbol
-          const classSymbol = getDamageClassSymbol(move.power, move.type);
-          drawText(ctx, classSymbol, colClass, ry, { size: 6, color: '#cccccc', font: 'monospace' });
-
-          // Type badge
-          drawTypeBadge(ctx, move.type as PokemonType, colType, ry, 'short');
-
-          // Accuracy
-          drawText(ctx, move.accuracy !== null ? String(move.accuracy) : '\u2014', colAcc, ry, {
-            size: 6,
-            color: '#ffffff',
-            font: 'monospace',
-          });
-
-          // Power
-          drawText(ctx, move.power !== null && move.power > 0 ? String(move.power) : '\u2014', colPow, ry, {
-            size: 6,
-            color: '#ffffff',
-            font: 'monospace',
-          });
-        }
       }
 
-      // Scroll indicators
-      if (movesScrollOffset > 0) {
-        drawText(ctx, '\u25b2', SCREEN_W - 10, dataY - 2, { size: 6, color: '#f8a878', font: 'monospace' });
-      }
-      if (movesScrollOffset + maxVisibleRows < sorted.length) {
-        drawText(ctx, '\u25bc', SCREEN_W - 10, dataY + maxVisibleRows * rowH, {
+      // Move name (localized)
+      const moveName = getMoveDisplayName(entry.moveId);
+      drawText(ctx, moveName, colName, ry, { size: 6, color: '#ffffff', font: 'monospace' });
+
+      if (move) {
+        const classSymbol = getDamageClassSymbol(move.power, move.type);
+        drawText(ctx, classSymbol, colClass, ry, { size: 6, color: '#cccccc', font: 'monospace' });
+        drawTypeBadge(ctx, move.type as PokemonType, colType, ry, 'short');
+        drawText(ctx, move.accuracy !== null ? String(move.accuracy) : '\u2014', colAcc, ry, {
           size: 6,
-          color: '#f8a878',
+          color: '#ffffff',
           font: 'monospace',
+        });
+        drawText(ctx, move.power !== null && move.power > 0 ? String(move.power) : '\u2014', colPow, ry, {
+          size: 6,
+          color: '#ffffff',
+          font: 'monospace',
+        });
+      }
+    }
+
+    // Scroll indicators
+    if (movesScrollOffset > 0) {
+      drawText(ctx, '\u25b2', SCREEN_W - 10, dataY - 2, { size: 6, color: '#f8a878', font: 'monospace' });
+    }
+    if (movesScrollOffset + maxVisibleRows < sorted.length) {
+      drawText(ctx, '\u25bc', SCREEN_W - 10, dataY + maxVisibleRows * rowH, {
+        size: 6,
+        color: '#f8a878',
+        font: 'monospace',
+      });
+    }
+
+    // Move detail popup
+    if (movesDetailOpen && movesCursor < sorted.length) {
+      const entry = sorted[movesCursor];
+      const moveData = getMove(entry.moveId);
+      if (moveData) {
+        const mx = 8, my = 18, mw = 224, mh = 114;
+        fillRect(ctx, 0, 14, SCREEN_W, SCREEN_H - 14, '#000000cc');
+        fillRect(ctx, mx, my, mw, mh, '#301818');
+        drawRect(ctx, mx, my, mw, mh, '#f8a878');
+
+        // Move name (right side) + type badge (left side)
+        const moveName = getMoveDisplayName(entry.moveId);
+        drawText(ctx, moveName, mx + mw - 6, my + 4, { size: 8, color: '#ffffff', font: 'monospace', align: 'right' });
+        drawTypeBadge(ctx, moveData.type as PokemonType, mx + 6, my + 4, 'short');
+
+        // Separator
+        fillRect(ctx, mx + 4, my + 17, mw - 8, 1, '#584040');
+
+        // Stats row: class symbol + POW / ACC / PP
+        const statsY = my + 21;
+        const classSymbol = getDamageClassSymbol(moveData.power, moveData.type);
+        const pow = moveData.power !== null && moveData.power > 0 ? String(moveData.power) : '\u2014';
+        const acc = moveData.accuracy !== null ? moveData.accuracy + '%' : '\u2014';
+        drawText(ctx, classSymbol, mx + 6, statsY, { size: 7, color: '#cccccc', font: 'monospace' });
+        drawText(ctx, `POW: ${pow}`, mx + 20, statsY, { size: 6, color: '#aaddaa', font: 'monospace' });
+        drawText(ctx, `ACC: ${acc}`, mx + 76, statsY, { size: 6, color: '#aaddaa', font: 'monospace' });
+        drawText(ctx, `PP: ${moveData.pp}`, mx + 136, statsY, { size: 6, color: '#aaddaa', font: 'monospace' });
+
+        // Separator
+        fillRect(ctx, mx + 4, statsY + 12, mw - 8, 1, '#584040');
+
+        // Description (word-wrapped)
+        const desc = moveData.description || '';
+        const maxChars = 36;
+        let dy = statsY + 16;
+        if (desc) {
+          const words = desc.split(' ');
+          let line = '';
+          for (const word of words) {
+            const test = line ? `${line} ${word}` : word;
+            if (test.length > maxChars && line) {
+              drawText(ctx, line, mx + 6, dy, { size: 6, color: '#c0b0a0', font: 'monospace' });
+              dy += 8;
+              line = word;
+            } else {
+              line = test;
+            }
+            if (dy > my + mh - 14) break;
+          }
+          if (line && dy <= my + mh - 14) {
+            drawText(ctx, line, mx + 6, dy, { size: 6, color: '#c0b0a0', font: 'monospace' });
+          }
+        }
+
+        // ESC hint
+        fillRect(ctx, mx + 4, my + mh - 11, mw - 8, 1, '#584040');
+        drawText(ctx, 'ESC: Close', mx + mw - 6, my + mh - 8, {
+          size: 6,
+          color: '#888888',
+          font: 'monospace',
+          align: 'right',
         });
       }
     }

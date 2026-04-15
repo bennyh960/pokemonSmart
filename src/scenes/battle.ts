@@ -582,7 +582,9 @@ export function createBattleScene(
         return;
       }
       consumeItem(pd.items, itemId);
-      startCaptureSequence(itemId, Math.random() < getCaptureChance(def.effect.rate));
+      const random = Math.random();
+      // console.log({ random });
+      startCaptureSequence(itemId, random < getCaptureChance(def.effect.rate));
       phaseTimer = 0;
       return;
     }
@@ -1133,6 +1135,7 @@ export function createBattleScene(
 
     return calculateCaptureChance({
       ballRate,
+      // caughtBall: enemy.caughtBall,
       speciesCatchRate: getPokemonCatchRate(enemy.id),
       currentHp: enemy.hp,
       maxHp: enemy.maxHp,
@@ -2048,7 +2051,11 @@ export function createBattleScene(
       if (moveBattleData.behaviorTags?.includes('burning-jealousy')) {
         const hasBoost = Object.values(defenderState.statModifiers).some((v) => v > 0);
         if (hasBoost && !isSafeguardActive(defenderSideState)) {
-          const burnResult = applyMajorStatus(defender, defenderState, { status: 'burn', chance: 100, target: 'target' });
+          const burnResult = applyMajorStatus(defender, defenderState, {
+            status: 'burn',
+            chance: 100,
+            target: 'target',
+          });
           if (burnResult.applied) {
             const statusLine = getStatusAppliedLine(defenderName, 'burn');
             if (statusLine) lines.push(statusLine);
@@ -2120,29 +2127,40 @@ export function createBattleScene(
       const steps: BattleAnimationStep[] = [];
       for (let i = 0; i < hitCount; i++) {
         const isLastHit = i === hitCount - 1;
-        steps.push(tweenActorStep(
-          attackerActor,
-          { x: attackerStart.x + lungeOffset, y: attackerStart.y - 2, rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.06 : 0.06) },
-          hitTime, 'easeInOut',
-        ));
+        steps.push(
+          tweenActorStep(
+            attackerActor,
+            {
+              x: attackerStart.x + lungeOffset,
+              y: attackerStart.y - 2,
+              rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.06 : 0.06),
+            },
+            hitTime,
+            'easeInOut',
+          ),
+        );
         const capturedIsLast = isLastHit;
-        steps.push(callStep(() => {
-          if (hitTarget) {
-            flash = createFlash(profile.flashColor, 0.1);
-            shake = createShake(profile.shakeIntensity * 0.75, 0.15);
-            audio.playSFX('hit');
-          }
-          if (capturedIsLast) onImpact();
-        }));
-        steps.push(parallelStep(
-          hitTarget
-            ? sequenceStep(
-                tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.06, 'easeInOut'),
-                tweenActorStep(defenderActor, defenderStart, 0.07, 'easeInOut'),
-              )
-            : waitStep(0.13),
-          tweenActorStep(attackerActor, attackerStart, 0.09, 'easeInOut'),
-        ));
+        steps.push(
+          callStep(() => {
+            if (hitTarget) {
+              flash = createFlash(profile.flashColor, 0.1);
+              shake = createShake(profile.shakeIntensity * 0.75, 0.15);
+              audio.playSFX('hit');
+            }
+            if (capturedIsLast) onImpact();
+          }),
+        );
+        steps.push(
+          parallelStep(
+            hitTarget
+              ? sequenceStep(
+                  tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.06, 'easeInOut'),
+                  tweenActorStep(defenderActor, defenderStart, 0.07, 'easeInOut'),
+                )
+              : waitStep(0.13),
+            tweenActorStep(attackerActor, attackerStart, 0.09, 'easeInOut'),
+          ),
+        );
       }
       animationDirector.play(sequenceStep(...steps));
       return;
@@ -2176,7 +2194,9 @@ export function createBattleScene(
               'linear',
             ),
           ),
-          callStep(() => { onImpact(); }),
+          callStep(() => {
+            onImpact();
+          }),
           parallelStep(
             hitTarget
               ? sequenceStep(
@@ -2219,7 +2239,9 @@ export function createBattleScene(
               'linear',
             ),
           ),
-          callStep(() => { onImpact(); }),
+          callStep(() => {
+            onImpact();
+          }),
           tweenActorStep(defenderActor, { ...defenderStart, rotation: defenderStart.rotation }, 0.18, 'easeOut'),
         ),
       );
@@ -2242,11 +2264,11 @@ export function createBattleScene(
               duration: profile.duration,
             });
           }),
-          parallelStep(
-            tweenActorStep(attackerActor, { alpha: 0.45 }, 0.18, 'easeInOut'),
-          ),
+          parallelStep(tweenActorStep(attackerActor, { alpha: 0.45 }, 0.18, 'easeInOut')),
           tweenActorStep(attackerActor, attackerStart, 0.2, 'easeInOut'),
-          callStep(() => { onImpact(); }),
+          callStep(() => {
+            onImpact();
+          }),
           waitStep(0.15),
         ),
       );
@@ -2397,8 +2419,11 @@ export function createBattleScene(
 
     // Focus Punch: fails if the player took damage this turn
     if (isFocusPunch && playerBattleState.turnFlags.tookDamageThisTurn) {
-      const msgs = [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-        t('battle.focusPunchFailed', { name: attackerName })];
+      const msgs = [
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+        t('battle.focusPunchFailed', { name: attackerName }),
+      ];
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
@@ -2413,9 +2438,12 @@ export function createBattleScene(
     // Dream Eater: blocked if target is not asleep
     const dreamEaterBlocked = isDreamEater && enemy.status !== 'sleep';
     const criticalHit =
-      hitResult.hit && !targetTypeImmune && !dreamEaterBlocked && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy, Math.random, playerBattleState) : false;
+      hitResult.hit && !targetTypeImmune && !dreamEaterBlocked && m.power > 0 && !absorbed
+        ? rollCriticalHit(m.id, enemy, Math.random, playerBattleState)
+        : false;
     // Facade: double power when user has a status condition
-    const facadeActive = isFacadeBoost && player.status !== null && ['burn', 'paralyze', 'poison'].includes(player.status as string);
+    const facadeActive =
+      isFacadeBoost && player.status !== null && ['burn', 'paralyze', 'poison'].includes(player.status as string);
     const effectivePower = facadeActive ? m.power * 2 : m.power;
     // Foul Play: use target's attack stat
     const foulPlayAttackStat = isFoulPlay ? getModifiedStatValue(enemy, enemyBattleState, 'attack') : undefined;
@@ -2424,7 +2452,8 @@ export function createBattleScene(
       const md = moveData;
       return getAttackAnimationProfile({
         name: md?.name ?? { en: m.name, he: m.name },
-        type: m.type, power: m.power,
+        type: m.type,
+        power: m.power,
         damageClass: md?.damageClass ?? (m.power > 0 ? 'physical' : 'status'),
         speciesId: player.id,
       });
@@ -2433,14 +2462,26 @@ export function createBattleScene(
     const plannedDamage = (() => {
       if (!hitResult.hit || targetTypeImmune || effectivePower <= 0 || absorbed || dreamEaterBlocked) return 0;
       const base = calcDamage(
-        player, playerBattleState, enemy, enemyBattleState, enemySideState,
-        effectivePower, m.type, damageClass, criticalHit, foulPlayAttackStat,
+        player,
+        playerBattleState,
+        enemy,
+        enemyBattleState,
+        enemySideState,
+        effectivePower,
+        m.type,
+        damageClass,
+        criticalHit,
+        foulPlayAttackStat,
       );
       const min = moveBattleData?.minimumDamage ?? null;
       return min !== null ? Math.max(min, base) : base;
     })();
     const allowTargetEffects =
-      hitResult.hit && !targetTypeImmune && !absorbed && !dreamEaterBlocked && (effectivePower <= 0 || plannedDamage < enemy.hp);
+      hitResult.hit &&
+      !targetTypeImmune &&
+      !absorbed &&
+      !dreamEaterBlocked &&
+      (effectivePower <= 0 || plannedDamage < enemy.hp);
     const targetCanStillAct = !enemyAlreadyAttacked;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
@@ -2553,12 +2594,7 @@ export function createBattleScene(
           const healed = applyHealPercent(player, healPercent);
           if (healed > 0) {
             setHP(playerHpBar, player.hp);
-            spawnDamageNumber(
-              `+${healed}`,
-              BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
-              BTL.PLY_SPRITE.y + 10,
-              '#48d870',
-            );
+            spawnDamageNumber(`+${healed}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#48d870');
             audio.playSFX('heal');
           }
         }
@@ -2572,9 +2608,13 @@ export function createBattleScene(
             if (enemy.hp <= 0) break;
             const popupY = BTL.OPP_SPRITE.y + 10 - hit * 5;
             totalActualDamage += applyMoveImpact(
-              enemy, m, enemyHpBar,
-              BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, popupY,
-              plannedDamage, suppressHitAudio,
+              enemy,
+              m,
+              enemyHpBar,
+              BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+              popupY,
+              plannedDamage,
+              suppressHitAudio,
             );
           }
           const actualDamage = totalActualDamage;
@@ -2724,9 +2764,12 @@ export function createBattleScene(
 
     // Focus Punch: fails if enemy took damage this turn
     if (isFocusPunchEnemy && enemyBattleState.turnFlags.tookDamageThisTurn) {
-      const msgs = [...prefix, ...turnEffectLines,
+      const msgs = [
+        ...prefix,
+        ...turnEffectLines,
         t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-        t('battle.focusPunchFailed', { name: attackerName })];
+        t('battle.focusPunchFailed', { name: attackerName }),
+      ];
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
@@ -2740,31 +2783,50 @@ export function createBattleScene(
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(player, m.type);
     const dreamEaterBlockedEnemy = isDreamEaterEnemy && player.status !== 'sleep';
     const criticalHit =
-      hitResult.hit && !targetTypeImmune && !dreamEaterBlockedEnemy && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player, Math.random, enemyBattleState) : false;
-    const facadeActiveEnemy = isFacadeBoostEnemy && enemy.status !== null && ['burn', 'paralyze', 'poison'].includes(enemy.status as string);
+      hitResult.hit && !targetTypeImmune && !dreamEaterBlockedEnemy && m.power > 0 && !absorbed
+        ? rollCriticalHit(m.id, player, Math.random, enemyBattleState)
+        : false;
+    const facadeActiveEnemy =
+      isFacadeBoostEnemy && enemy.status !== null && ['burn', 'paralyze', 'poison'].includes(enemy.status as string);
     const effectivePowerEnemy = facadeActiveEnemy ? m.power * 2 : m.power;
-    const foulPlayAttackStatEnemy = isFoulPlayEnemy ? getModifiedStatValue(player, playerBattleState, 'attack') : undefined;
+    const foulPlayAttackStatEnemy = isFoulPlayEnemy
+      ? getModifiedStatValue(player, playerBattleState, 'attack')
+      : undefined;
     const atkAnimProfileEnemy = (() => {
       const md = moveData;
       return getAttackAnimationProfile({
         name: md?.name ?? { en: m.name, he: m.name },
-        type: m.type, power: m.power,
+        type: m.type,
+        power: m.power,
         damageClass: md?.damageClass ?? (m.power > 0 ? 'physical' : 'status'),
         speciesId: enemy.id,
       });
     })();
     const suppressHitAudioEnemy = hitCountEnemy > 1 && atkAnimProfileEnemy.family === 'lunge';
     const plannedDamage = (() => {
-      if (!hitResult.hit || targetTypeImmune || effectivePowerEnemy <= 0 || absorbed || dreamEaterBlockedEnemy) return 0;
+      if (!hitResult.hit || targetTypeImmune || effectivePowerEnemy <= 0 || absorbed || dreamEaterBlockedEnemy)
+        return 0;
       const base = calcDamage(
-        enemy, enemyBattleState, player, playerBattleState, playerSideState,
-        effectivePowerEnemy, m.type, damageClass, criticalHit, foulPlayAttackStatEnemy,
+        enemy,
+        enemyBattleState,
+        player,
+        playerBattleState,
+        playerSideState,
+        effectivePowerEnemy,
+        m.type,
+        damageClass,
+        criticalHit,
+        foulPlayAttackStatEnemy,
       );
       const min = moveBattleData?.minimumDamage ?? null;
       return min !== null ? Math.max(min, base) : base;
     })();
     const allowTargetEffects =
-      hitResult.hit && !targetTypeImmune && !absorbed && !dreamEaterBlockedEnemy && (effectivePowerEnemy <= 0 || plannedDamage < player.hp);
+      hitResult.hit &&
+      !targetTypeImmune &&
+      !absorbed &&
+      !dreamEaterBlockedEnemy &&
+      (effectivePowerEnemy <= 0 || plannedDamage < player.hp);
     const targetCanStillAct = enemyGoesFirst;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
@@ -2877,12 +2939,7 @@ export function createBattleScene(
           const healed = applyHealPercent(enemy, healPercentEnemy);
           if (healed > 0) {
             setHP(enemyHpBar, enemy.hp);
-            spawnDamageNumber(
-              `+${healed}`,
-              BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
-              BTL.OPP_SPRITE.y + 10,
-              '#48d870',
-            );
+            spawnDamageNumber(`+${healed}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#48d870');
             audio.playSFX('heal');
           }
         }
@@ -2896,9 +2953,13 @@ export function createBattleScene(
             if (player.hp <= 0) break;
             const popupY = BTL.PLY_SPRITE.y + 10 - hit * 5;
             totalActualDamageEnemy += applyMoveImpact(
-              player, m, playerHpBar,
-              BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, popupY,
-              plannedDamage, suppressHitAudioEnemy,
+              player,
+              m,
+              playerHpBar,
+              BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+              popupY,
+              plannedDamage,
+              suppressHitAudioEnemy,
             );
           }
           const actualDamage = totalActualDamageEnemy;
@@ -3852,12 +3913,12 @@ export function createBattleScene(
 
     // Stat rows: [label, gain, color]
     const statRows: [string, number, string][] = [
-      [t('party.stats.hp'),      gains.hp,              '#20d860'],
-      [t('party.stats.attack'),  gains.attack,           '#f08030'],
-      [t('party.stats.defense'), gains.defense,          '#6890f0'],
-      [t('party.stats.spAtk'),   gains.specialAttack,    '#a040a0'],
-      [t('party.stats.spDef'),   gains.specialDefense,   '#f8d030'],
-      [t('party.stats.speed'),   gains.speed,            '#f85888'],
+      [t('party.stats.hp'), gains.hp, '#20d860'],
+      [t('party.stats.attack'), gains.attack, '#f08030'],
+      [t('party.stats.defense'), gains.defense, '#6890f0'],
+      [t('party.stats.spAtk'), gains.specialAttack, '#a040a0'],
+      [t('party.stats.spDef'), gains.specialDefense, '#f8d030'],
+      [t('party.stats.speed'), gains.speed, '#f85888'],
     ];
 
     const ROW_H = 10;
@@ -3869,10 +3930,10 @@ export function createBattleScene(
       if (rtl) {
         // RTL: gain on left, label on right
         drawText(ctx, gainStr, PX + PAD + 16, rowY, { size: 6, color, font: 'monospace', align: 'right' });
-        drawText(ctx, label,   PX + PW - PAD, rowY, { size: 6, color: '#e8e8e8', font: 'monospace', align: 'right' });
+        drawText(ctx, label, PX + PW - PAD, rowY, { size: 6, color: '#e8e8e8', font: 'monospace', align: 'right' });
       } else {
         // LTR: label on left, gain on right
-        drawText(ctx, label,   PX + PAD,      rowY, { size: 6, color: '#e8e8e8', font: 'monospace' });
+        drawText(ctx, label, PX + PAD, rowY, { size: 6, color: '#e8e8e8', font: 'monospace' });
         drawText(ctx, gainStr, PX + PW - PAD, rowY, { size: 6, color, font: 'monospace', align: 'right' });
       }
     }
