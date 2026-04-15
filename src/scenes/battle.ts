@@ -591,6 +591,14 @@ export function createBattleScene(
     const result = applyItemEffect(itemId, player);
     if (result.success) {
       consumeItem(pd.items, itemId);
+      // If the item cleared the status, also clear the battle runtime state
+      // (which is what processStartOfTurnStatus reads for PAR/FRZ/SLP/PSN effects)
+      if (player.status === null) {
+        playerBattleState.majorStatus = null;
+        playerBattleState.sleepTurnsRemaining = 0;
+        playerBattleState.freezeTurnsRemaining = 0;
+        playerBattleState.badlyPoisonTurns = 0;
+      }
       setHP(playerHpBar, player.hp);
       setStatus(playerHpBar, player.status ?? '');
       audio.playSFX('heal');
