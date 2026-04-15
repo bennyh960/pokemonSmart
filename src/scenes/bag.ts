@@ -9,11 +9,18 @@ import type { Scene, Pokemon } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
-import { t, getLocale } from '../i18n/i18n.js';
+import { t, getLocale, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
-import { applyItemEffect, applyDirectItemEffect, consumeItem, isItemConsumable, itemTargetsPokemon, isDirectUseItem } from '../systems/item-effects.js';
+import {
+  applyItemEffect,
+  applyDirectItemEffect,
+  consumeItem,
+  isItemConsumable,
+  itemTargetsPokemon,
+  isDirectUseItem,
+} from '../systems/item-effects.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import {
   getPokemonDisplayName,
@@ -256,30 +263,34 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         // Draw mini icon inside the box
         drawItemIcon(ctx, item.id, 210, cy + 3, 10);
 
-        // Item name (right-aligned at x=206, cy+2)
-        drawText(ctx, getLocalizedName(item.def.name), 206, cy + 2, {
+        // Item name — for TM/HM prepend move name: "TM06 Toxic"
+        const rowTmEffect = getTMEffect(item.id);
+        let itemDisplayName = getLocalizedName(item.def.name);
+        if (rowTmEffect) {
+          itemDisplayName = `${itemDisplayName} ${getMoveDisplayName(rowTmEffect.moveId)}`;
+        }
+        drawText(ctx, itemDisplayName, 206, cy + 2, {
           size: 7,
           color: C.TEXT_PRI,
           font: 'monospace',
           align: 'right',
         });
 
-        // Item description (right-aligned at x=206, cy+10)
-        // For TM/HM items show the move's actual description instead of "Teaches X"
-        const rowTmEffect = getTMEffect(item.id);
+        // Item description — for TM/HM use move description; align to locale direction
         let rowSecondaryText = getLocalizedName(item.def.description);
         if (rowTmEffect) {
           const rowMoveData = getMove(rowTmEffect.moveId);
           if (rowMoveData?.description) {
-            const raw = rowMoveData.description;
+            const raw = getLocalizedName(rowMoveData.description);
             rowSecondaryText = raw.length > 40 ? raw.slice(0, 37) + '\u2026' : raw;
           }
         }
-        drawText(ctx, rowSecondaryText, 206, cy + 10, {
+        const rtl = isRTL();
+        drawText(ctx, rowSecondaryText, rtl ? 206 : 28, cy + 10, {
           size: 5,
           color: isSel ? C.TEXT_MUT : C.TEXT_DIM,
           font: 'monospace',
-          align: 'right',
+          align: rtl ? 'right' : 'left',
         });
 
         // Qty × symbol + number (left side)
@@ -328,26 +339,29 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       const pd = getPlayerData();
       const isKeyUsed = !!(selItem.def.usedFlag && pd.flags[selItem.def.usedFlag]);
       const detailTmEffect = getTMEffect(selItem.id);
+      const detailRtl = isRTL();
       if (detailTmEffect) {
         // TM/HM: show move stats + description
         const detailMoveData = getMove(detailTmEffect.moveId);
         if (detailMoveData) {
           const dcInfo = getDamageClassLabel(detailMoveData.damageClass);
-          const pow = detailMoveData.power !== null && detailMoveData.power > 0 ? String(detailMoveData.power) : '\u2014';
+          const pow =
+            detailMoveData.power !== null && detailMoveData.power > 0 ? String(detailMoveData.power) : '\u2014';
           const acc = detailMoveData.accuracy !== null ? detailMoveData.accuracy + '%' : '\u2014';
-          drawText(ctx, `PWR:${pow}  ACC:${acc}  ${dcInfo.label}`, 206, 127, {
+          const statsText = `PWR:${pow}  ACC:${acc}  ${dcInfo.label}`;
+          drawText(ctx, statsText, detailRtl ? 206 : 44, 127, {
             size: 5,
             color: dcInfo.color,
             font: 'monospace',
-            align: 'right',
+            align: detailRtl ? 'right' : 'left',
           });
-          const rawDesc = detailMoveData.description;
+          const rawDesc = getLocalizedName(detailMoveData.description);
           const desc = rawDesc.length > 46 ? rawDesc.slice(0, 43) + '\u2026' : rawDesc;
-          drawText(ctx, desc, 206, 136, {
+          drawText(ctx, desc, detailRtl ? 206 : 44, 136, {
             size: 5,
             color: C.TEXT_SEC,
             font: 'monospace',
-            align: 'right',
+            align: detailRtl ? 'right' : 'left',
           });
         }
       } else {

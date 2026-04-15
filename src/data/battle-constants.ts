@@ -103,6 +103,13 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(144,240,192,0.25)',
     textColor: '#98f0c0',
   },
+  focus: {
+    label: 'מרוכז',
+    shortLabel: 'FOCUS',
+    bgColor: 'rgba(255,200,40,0.15)',
+    borderColor: 'rgba(255,200,40,0.25)',
+    textColor: '#ffc820',
+  },
   boost: {
     label: '',
     shortLabel: 'UP',

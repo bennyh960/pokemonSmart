@@ -218,6 +218,9 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.trappedTurnsRemaining > 0) {
     effects.push('trap');
   }
+  if (runtimeState.critBoost) {
+    effects.push('focus');
+  }
   return effects;
 }
 
@@ -259,6 +262,7 @@ export function clearChargingMove(runtimeState: BattlePokemonRuntimeState): void
 export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): void {
   runtimeState.turnFlags.flinched = false;
   runtimeState.turnFlags.protected = false;
+  runtimeState.turnFlags.endured = false;
   runtimeState.turnFlags.skipTurn = false;
   runtimeState.turnFlags.tookDamageThisTurn = false;
 }

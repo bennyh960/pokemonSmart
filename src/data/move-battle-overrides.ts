@@ -254,6 +254,17 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Alluring Voice': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
   'Hurricane': volatileEffect('confusion', 30, { minTurns: 2, maxTurns: 5 }),
 
+  // --- Protect-family moves ---
+  'Protect': { behaviorTags: ['protect'], priority: 4, target: 'user' },
+  'Detect': { behaviorTags: ['protect'], priority: 4, target: 'user' },
+  'Endure': { behaviorTags: ['endure'], priority: 4, target: 'user' },
+
+  // --- One-hit KO moves ---
+  'Guillotine': { behaviorTags: ['ohko'] },
+  'Horn Drill': { behaviorTags: ['ohko'] },
+  'Fissure': { behaviorTags: ['ohko'] },
+  'Sheer Cold': { behaviorTags: ['ohko'] },
+
   // --- Special behavior moves ---
   'Focus Punch': { behaviorTags: ['focus-punch'] },
   'Facade': { behaviorTags: ['facade-boost'] },

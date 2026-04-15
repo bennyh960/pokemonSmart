@@ -27,7 +27,10 @@ export type MoveBattleBehaviorTag =
   | 'focus-punch'
   | 'facade-boost'
   | 'foul-play'
-  | 'dream-eater';
+  | 'dream-eater'
+  | 'ohko'
+  | 'protect'
+  | 'endure';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 

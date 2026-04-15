@@ -2091,6 +2091,7 @@ export function createBattleScene(
     'twister-spin',
     'icy-wind',
     'electroweb',
+    'protect-shield',
   ]);
 
   function playAttackAnimation(
@@ -2384,6 +2385,9 @@ export function createBattleScene(
     const isFoulPlay = moveBattleData?.behaviorTags?.includes('foul-play') ?? false;
     const isDreamEater = moveBattleData?.behaviorTags?.includes('dream-eater') ?? false;
     const isFocusPunch = moveBattleData?.behaviorTags?.includes('focus-punch') ?? false;
+    const isOhko = moveBattleData?.behaviorTags?.includes('ohko') ?? false;
+    const isProtect = moveBattleData?.behaviorTags?.includes('protect') ?? false;
+    const isEndure = moveBattleData?.behaviorTags?.includes('endure') ?? false;
     const healPercent = moveBattleData?.healingPercent ?? null;
     const hitCount = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -2430,6 +2434,47 @@ export function createBattleScene(
       return;
     }
 
+    // Protect / Endure: player sets its own shield flag for this turn
+    if (isProtect || isEndure) {
+      playAttackAnimation(
+        'player',
+        'enemy',
+        m,
+        () => {
+          if (isProtect) {
+            playerBattleState.turnFlags.protected = true;
+            syncPlayerBar();
+          }
+          if (isEndure) {
+            playerBattleState.turnFlags.endured = true;
+          }
+          const msgs = [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            isProtect ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'PLAYER_ATTACK';
+          phaseTimer = 0;
+        },
+        false,
+      );
+      return;
+    }
+
+    // Enemy is protected — block the player attack entirely
+    if (doesMoveTargetOpponent(moveBattleData) && enemyBattleState.turnFlags.protected) {
+      const msgs = [
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+        t('battle.protectedBlock', { name: defenderName }),
+      ];
+      textBox = createTextBox(msgs, rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
+    }
+
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, playerBattleState, enemyBattleState);
     const targetTypeImmune =
@@ -2460,7 +2505,9 @@ export function createBattleScene(
     })();
     const suppressHitAudio = hitCount > 1 && atkAnimProfile.family === 'lunge';
     const plannedDamage = (() => {
-      if (!hitResult.hit || targetTypeImmune || effectivePower <= 0 || absorbed || dreamEaterBlocked) return 0;
+      if (!hitResult.hit || targetTypeImmune || absorbed || dreamEaterBlocked) return 0;
+      if (isOhko) return enemy.hp;
+      if (effectivePower <= 0) return 0;
       const base = calcDamage(
         player,
         playerBattleState,
@@ -2481,7 +2528,7 @@ export function createBattleScene(
       !targetTypeImmune &&
       !absorbed &&
       !dreamEaterBlocked &&
-      (effectivePower <= 0 || plannedDamage < enemy.hp);
+      ((!isOhko && effectivePower <= 0) || plannedDamage < enemy.hp);
     const targetCanStillAct = !enemyAlreadyAttacked;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
@@ -2529,6 +2576,8 @@ export function createBattleScene(
       msgs.push(t('battle.restSleep', { name: attackerName }));
     } else if (isFocusEnergy) {
       msgs.push(t('battle.focusEnergy', { name: attackerName }));
+    } else if (isProtect || isEndure) {
+      msgs.push(isProtect ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }));
     } else if (healPercent !== null) {
       msgs.push(t('battle.healedHp', { name: attackerName }));
     } else if (resolvedEffectLines.length === 0) {
@@ -2617,6 +2666,11 @@ export function createBattleScene(
               suppressHitAudio,
             );
           }
+          // Endure: enemy survives lethal hit at 1 HP
+          if (enemy.hp <= 0 && enemyBattleState.turnFlags.endured) {
+            enemy.hp = 1;
+            setHP(enemyHpBar, 1);
+          }
           const actualDamage = totalActualDamage;
           if (actualDamage > 0) {
             enemyBattleState.turnFlags.tookDamageThisTurn = true;
@@ -2699,6 +2753,9 @@ export function createBattleScene(
     const isFoulPlayEnemy = moveBattleData?.behaviorTags?.includes('foul-play') ?? false;
     const isDreamEaterEnemy = moveBattleData?.behaviorTags?.includes('dream-eater') ?? false;
     const isFocusPunchEnemy = moveBattleData?.behaviorTags?.includes('focus-punch') ?? false;
+    const isOhkoEnemy = moveBattleData?.behaviorTags?.includes('ohko') ?? false;
+    const isProtectEnemy = moveBattleData?.behaviorTags?.includes('protect') ?? false;
+    const isEndureEnemy = moveBattleData?.behaviorTags?.includes('endure') ?? false;
     const healPercentEnemy = moveBattleData?.healingPercent ?? null;
     const hitCountEnemy = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -2776,6 +2833,47 @@ export function createBattleScene(
       return;
     }
 
+    // Protect / Endure: enemy sets its own shield flag for this turn
+    if (isProtectEnemy || isEndureEnemy) {
+      if (isProtectEnemy) {
+        enemyBattleState.turnFlags.protected = true;
+        syncEnemyBar();
+      }
+      if (isEndureEnemy) {
+        enemyBattleState.turnFlags.endured = true;
+      }
+      const msgs = [
+        ...prefix,
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+        isProtectEnemy
+          ? t('battle.protected', { name: attackerName })
+          : t('battle.endured', { name: attackerName }),
+      ];
+      playAttackAnimation(
+        'enemy',
+        'player',
+        m,
+        () => { textBox = createTextBox(msgs, rtl); phase = 'ENEMY_TURN'; phaseTimer = 0; },
+        false,
+      );
+      return;
+    }
+
+    // Player is protected — block the enemy attack entirely
+    if (doesMoveTargetOpponent(moveBattleData) && playerBattleState.turnFlags.protected) {
+      const msgs = [
+        ...prefix,
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+        t('battle.protectedBlock', { name: getPokemonDisplayName(player.id) }),
+      ];
+      textBox = createTextBox(msgs, rtl);
+      phase = 'ENEMY_TURN';
+      phaseTimer = 0;
+      return;
+    }
+
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, enemyBattleState, playerBattleState);
     const targetTypeImmune =
@@ -2804,8 +2902,9 @@ export function createBattleScene(
     })();
     const suppressHitAudioEnemy = hitCountEnemy > 1 && atkAnimProfileEnemy.family === 'lunge';
     const plannedDamage = (() => {
-      if (!hitResult.hit || targetTypeImmune || effectivePowerEnemy <= 0 || absorbed || dreamEaterBlockedEnemy)
-        return 0;
+      if (!hitResult.hit || targetTypeImmune || absorbed || dreamEaterBlockedEnemy) return 0;
+      if (isOhkoEnemy) return player.hp;
+      if (effectivePowerEnemy <= 0) return 0;
       const base = calcDamage(
         enemy,
         enemyBattleState,
@@ -2826,7 +2925,7 @@ export function createBattleScene(
       !targetTypeImmune &&
       !absorbed &&
       !dreamEaterBlockedEnemy &&
-      (effectivePowerEnemy <= 0 || plannedDamage < player.hp);
+      ((!isOhkoEnemy && effectivePowerEnemy <= 0) || plannedDamage < player.hp);
     const targetCanStillAct = enemyGoesFirst;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
@@ -2961,6 +3060,11 @@ export function createBattleScene(
               plannedDamage,
               suppressHitAudioEnemy,
             );
+          }
+          // Endure: survive lethal hit at 1 HP
+          if (player.hp <= 0 && playerBattleState.turnFlags.endured) {
+            player.hp = 1;
+            setHP(playerHpBar, 1);
           }
           const actualDamage = totalActualDamageEnemy;
           if (actualDamage > 0) {

@@ -25,7 +25,8 @@ export type AttackAnimationFamily =
   | 'rapid-spin'
   | 'twister-spin'
   | 'icy-wind'
-  | 'electroweb';
+  | 'electroweb'
+  | 'protect-shield';
 
 export interface AttackAnimationProfile {
   family: AttackAnimationFamily;
@@ -99,6 +100,8 @@ const TARGET_STATUS_KEYWORDS = [
 ];
 
 // --- Specific move name overrides (checked before generic detection) ---
+
+const PROTECT_SHIELD_MOVES = ['protect', 'detect', 'endure'];
 
 const HEAL_PULSE_MOVES = ['rest', 'recover', 'roost', 'soft-boiled', 'milk drink', 'morning sun', 'moonlight', 'synthesis'];
 
@@ -239,6 +242,21 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
   const variant = getVariant(moveName, move.speciesId);
 
   // --- Specific move overrides (highest priority) ---
+
+  if (matchesAny(moveName, PROTECT_SHIELD_MOVES)) {
+    const isEndure = moveName === 'endure';
+    return {
+      family: 'protect-shield',
+      color: isEndure ? '#ff8840' : '#40c8ff',
+      accentColor: isEndure ? '#ffffff' : '#c8f0ff',
+      duration: 0.7,
+      impactTime: 0.0,
+      selfTarget: true,
+      shakeIntensity: 0,
+      flashColor: isEndure ? '#ff8840' : '#40c8ff',
+      variant: isEndure ? 'endure' : 'protect',
+    };
+  }
 
   if (matchesAny(moveName, HEAL_PULSE_MOVES)) {
     return {

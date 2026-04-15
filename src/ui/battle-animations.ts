@@ -216,7 +216,8 @@ export type AttackEffectKind =
   | 'rapid-spin'
   | 'twister-spin'
   | 'icy-wind'
-  | 'electroweb';
+  | 'electroweb'
+  | 'protect-shield';
 
 interface AttackEffect {
   active: boolean;
@@ -641,6 +642,9 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'heal-pulse':
       renderHealPulseEffect(ctx, effect);
+      break;
+    case 'protect-shield':
+      renderProtectShieldEffect(ctx, effect);
       break;
     case 'double-team':
       renderDoubleTeamEffect(ctx, effect);
@@ -1987,6 +1991,95 @@ function renderHealPulseEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     ctx.fillStyle = pt < 0.5 ? effect.accentColor : effect.color;
     ctx.beginPath();
     ctx.arc(px, py, sz, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+// --- Protect Shield (Protect / Detect / Endure) ---
+// Expanding hex-faceted shield dome + energy sparks + edge flare
+function renderProtectShieldEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const cx = effect.targetX;
+  const cy = effect.targetY;
+  const isEndure = effect.variant === 'endure';
+
+  // Envelope: fast rise (0→0.25) then hold with gentle pulse (0.25→0.85) then fade (0.85→1)
+  let alpha: number;
+  if (t < 0.25) {
+    alpha = t / 0.25;
+  } else if (t < 0.85) {
+    alpha = 1.0 - Math.sin((t - 0.25) / 0.6 * Math.PI) * 0.1; // gentle breathe
+  } else {
+    alpha = Math.max(0, 1 - (t - 0.85) / 0.15);
+  }
+
+  ctx.save();
+
+  const shieldR = 18 + Math.sin(t * Math.PI * 3) * 1.5;
+
+  // --- Outer glowing ring ---
+  ctx.globalAlpha = alpha * 0.9;
+  ctx.strokeStyle = effect.color;
+  ctx.lineWidth = 2.2;
+  ctx.shadowColor = effect.color;
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  ctx.arc(cx, cy, shieldR, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // --- Inner fill glow ---
+  ctx.globalAlpha = alpha * 0.12;
+  ctx.fillStyle = effect.color;
+  ctx.beginPath();
+  ctx.arc(cx, cy, shieldR - 1, 0, Math.PI * 2);
+  ctx.fill();
+
+  // --- Hexagonal facets (6 inner lines from center to edge) ---
+  ctx.globalAlpha = alpha * 0.35;
+  ctx.strokeStyle = effect.accentColor;
+  ctx.lineWidth = 0.8;
+  for (let i = 0; i < 6; i++) {
+    const angle = (i / 6) * Math.PI * 2 + t * 0.8;
+    const r = shieldR - 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle) * 4, cy + Math.sin(angle) * 4);
+    ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
+    ctx.stroke();
+    // Connect adjacent outer points for hex look
+    const nextAngle = ((i + 1) / 6) * Math.PI * 2 + t * 0.8;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
+    ctx.lineTo(cx + Math.cos(nextAngle) * r, cy + Math.sin(nextAngle) * r);
+    ctx.stroke();
+  }
+
+  // --- Orbiting energy sparks ---
+  const NUM_SPARKS = isEndure ? 5 : 4;
+  for (let i = 0; i < NUM_SPARKS; i++) {
+    const sparkT = (t + i / NUM_SPARKS) % 1;
+    const angle = sparkT * Math.PI * 2 * (isEndure ? 1.5 : 1.2) + (i * Math.PI * 2) / NUM_SPARKS;
+    const sparkR = shieldR + 2 + Math.sin(t * Math.PI * 4 + i) * 2;
+    const sx = cx + Math.cos(angle) * sparkR;
+    const sy = cy + Math.sin(angle) * sparkR;
+    const sparkAlpha = alpha * (0.6 + Math.sin(t * Math.PI * 6 + i) * 0.3);
+    ctx.globalAlpha = sparkAlpha;
+    ctx.fillStyle = i % 2 === 0 ? effect.color : effect.accentColor;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 1.8, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Flash burst on entry (t < 0.2) ---
+  if (t < 0.2) {
+    const burstT = t / 0.2;
+    const burstAlpha = Math.max(0, 1 - burstT) * 0.55;
+    ctx.globalAlpha = burstAlpha;
+    ctx.fillStyle = effect.accentColor;
+    ctx.beginPath();
+    ctx.arc(cx, cy, shieldR * burstT, 0, Math.PI * 2);
     ctx.fill();
   }
 

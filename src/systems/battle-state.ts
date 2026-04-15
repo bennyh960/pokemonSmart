@@ -12,6 +12,7 @@ export interface BattleTurnFlags {
   flinched: boolean;
   mustRecharge: boolean;
   protected: boolean;
+  endured: boolean;
   charging: boolean;
   skipTurn: boolean;
   tookDamageThisTurn: boolean;
@@ -56,6 +57,7 @@ export function createBattleTurnFlags(): BattleTurnFlags {
     flinched: false,
     mustRecharge: false,
     protected: false,
+    endured: false,
     charging: false,
     skipTurn: false,
     tookDamageThisTurn: false,

@@ -11,7 +11,7 @@ import type { Scene, Pokemon, PokemonType } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
-import { t } from '../i18n/i18n.js';
+import { getLocale, t } from '../i18n/i18n.js';
 import {
   getPokemonDisplayName,
   getMoveDisplayName,
@@ -627,7 +627,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
       const descY = statsY + 14;
       fillRect(ctx, mx + 4, descY - 2, mw - 8, 1, C.SEP);
-      const desc = moveData?.description || '';
+      const desc = moveData?.description?.[getLocale()] || '';
       if (desc) {
         const maxChars = 38;
         const words = desc.split(' ');
@@ -782,7 +782,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
         const descY = statsY + 14;
         fillRect(ctx, mx + 4, descY - 2, mw - 8, 1, C.SEP);
-        const desc = moveData?.description || '';
+        const desc = moveData?.description?.[getLocale()] || '';
         if (desc) {
           const maxChars = 38;
           const words = desc.split(' ');

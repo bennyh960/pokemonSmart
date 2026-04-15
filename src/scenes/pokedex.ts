@@ -32,6 +32,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 import { BADGES, hasBadge, countBadges } from '../data/badges.js';
 import { getTypeColor } from '../data/type-constants.js';
+import { getTMLabelForMoveId } from '../data/item-defs.js';
 
 const BG_COLOR = '#301818';
 const ENTRY_HEIGHT = 26;
@@ -204,7 +205,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
             movesSubTab === 'byLevel'
               ? [...getLearnset(pokemonId)].sort((a, b) => a.levelLearned - b.levelLearned)
               : [...getTmLearnset(pokemonId)].sort((a, b) =>
-                  getMoveDisplayName(a.moveId).localeCompare(getMoveDisplayName(b.moveId)));
+                  getMoveDisplayName(a.moveId).localeCompare(getMoveDisplayName(b.moveId)),
+                );
           const MAX_ROWS = 9; // matches maxVisibleRows in renderMovesTab
 
           if (input.isKeyPressed('ArrowUp') && movesCursor > 0) {
@@ -213,8 +215,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           }
           if (input.isKeyPressed('ArrowDown') && movesCursor < sorted.length - 1) {
             movesCursor++;
-            if (movesCursor >= movesScrollOffset + MAX_ROWS)
-              movesScrollOffset = movesCursor - MAX_ROWS + 1;
+            if (movesCursor >= movesScrollOffset + MAX_ROWS) movesScrollOffset = movesCursor - MAX_ROWS + 1;
           }
           if (input.isKeyPressed('Enter') && sorted.length > 0) {
             movesDetailOpen = true;
@@ -295,7 +296,12 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
     if (rtl) {
       // RTL: title on right, widgets on left
-      drawText(ctx, t('pokedex.title'), SCREEN_W - 4, 3, { size: 8, color: '#ffffff', font: 'monospace', align: 'right' });
+      drawText(ctx, t('pokedex.title'), SCREEN_W - 4, 3, {
+        size: 8,
+        color: '#ffffff',
+        font: 'monospace',
+        align: 'right',
+      });
       const seenSubText = '(' + t('pokedex.seen', { count: getSeenCount() }) + ')';
       drawText(ctx, seenSubText, SCREEN_W - 4, 14, { size: 5, color: '#aaaaaa', font: 'monospace', align: 'right' });
     } else {
@@ -306,44 +312,73 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
     if (hasActiveGame()) {
       const pd = getPlayerData();
-      const battColor = pd.pokedexBatteryCharges > 20 ? '#20d860' : pd.pokedexBatteryCharges > 5 ? '#f8d030' : '#d84040';
+      const battColor =
+        pd.pokedexBatteryCharges > 20 ? '#20d860' : pd.pokedexBatteryCharges > 5 ? '#f8d030' : '#d84040';
       const helperOn = pd.battleHelperEnabled && pd.battleHelperBattles > 0;
       const helperColor = helperOn ? '#20d860' : '#444444';
 
       if (rtl) {
         // RTL: battery at left edge, toggle pill to its right
-        const BATT_X = 6, BATT_Y = 3, BATT_W = 14, BATT_H = 6;
+        const BATT_X = 6,
+          BATT_Y = 3,
+          BATT_W = 14,
+          BATT_H = 6;
         fillRect(ctx, BATT_X, BATT_Y, BATT_W, BATT_H, '#222222');
         drawRect(ctx, BATT_X, BATT_Y, BATT_W, BATT_H, '#555555');
         const bFill = Math.max(1, Math.round((pd.pokedexBatteryCharges / 50) * (BATT_W - 2)));
         fillRect(ctx, BATT_X + 1, BATT_Y + 1, bFill, BATT_H - 2, battColor);
-        drawText(ctx, pd.pokedexBatteryCharges + '/50', BATT_X + BATT_W / 2, 12, { size: 4, color: battColor, align: 'center' });
+        drawText(ctx, pd.pokedexBatteryCharges + '/50', BATT_X + BATT_W / 2, 12, {
+          size: 4,
+          color: battColor,
+          align: 'center',
+        });
 
-        const PILL_X = 26, PILL_Y = 2, PILL_W = 18, PILL_H = 8;
+        const PILL_X = 26,
+          PILL_Y = 2,
+          PILL_W = 18,
+          PILL_H = 8;
         ctx.fillStyle = helperOn ? '#1a4a1a' : '#1a1a1a';
         fillRoundRect(ctx, PILL_X, PILL_Y, PILL_W, PILL_H, 3);
         ctx.strokeStyle = helperColor;
         ctx.lineWidth = 1;
         strokeRoundRect(ctx, PILL_X, PILL_Y, PILL_W, PILL_H, 3);
-        drawText(ctx, helperOn ? 'ON' : 'OFF', PILL_X + PILL_W / 2, PILL_Y + 1, { size: 5, color: helperColor, align: 'center' });
+        drawText(ctx, helperOn ? 'ON' : 'OFF', PILL_X + PILL_W / 2, PILL_Y + 1, {
+          size: 5,
+          color: helperColor,
+          align: 'center',
+        });
         const helperCountStr = pd.battleHelperBattles > 0 ? String(pd.battleHelperBattles) : '—';
         drawText(ctx, helperCountStr, PILL_X + PILL_W / 2, 13, { size: 4, color: helperColor, align: 'center' });
       } else {
         // LTR: battery on right edge, toggle pill to its left
-        const BATT_X = SCREEN_W - 20, BATT_Y = 3, BATT_W = 14, BATT_H = 6;
+        const BATT_X = SCREEN_W - 20,
+          BATT_Y = 3,
+          BATT_W = 14,
+          BATT_H = 6;
         fillRect(ctx, BATT_X, BATT_Y, BATT_W, BATT_H, '#222222');
         drawRect(ctx, BATT_X, BATT_Y, BATT_W, BATT_H, '#555555');
         const bFill = Math.max(1, Math.round((pd.pokedexBatteryCharges / 50) * (BATT_W - 2)));
         fillRect(ctx, BATT_X + 1, BATT_Y + 1, bFill, BATT_H - 2, battColor);
-        drawText(ctx, pd.pokedexBatteryCharges + '/50', BATT_X + BATT_W / 2, 12, { size: 4, color: battColor, align: 'center' });
+        drawText(ctx, pd.pokedexBatteryCharges + '/50', BATT_X + BATT_W / 2, 12, {
+          size: 4,
+          color: battColor,
+          align: 'center',
+        });
 
-        const PILL_X = SCREEN_W - 44, PILL_Y = 2, PILL_W = 18, PILL_H = 8;
+        const PILL_X = SCREEN_W - 44,
+          PILL_Y = 2,
+          PILL_W = 18,
+          PILL_H = 8;
         ctx.fillStyle = helperOn ? '#1a4a1a' : '#1a1a1a';
         fillRoundRect(ctx, PILL_X, PILL_Y, PILL_W, PILL_H, 3);
         ctx.strokeStyle = helperColor;
         ctx.lineWidth = 1;
         strokeRoundRect(ctx, PILL_X, PILL_Y, PILL_W, PILL_H, 3);
-        drawText(ctx, helperOn ? 'ON' : 'OFF', PILL_X + PILL_W / 2, PILL_Y + 1, { size: 5, color: helperColor, align: 'center' });
+        drawText(ctx, helperOn ? 'ON' : 'OFF', PILL_X + PILL_W / 2, PILL_Y + 1, {
+          size: 5,
+          color: helperColor,
+          align: 'center',
+        });
         const helperCountStr = pd.battleHelperBattles > 0 ? String(pd.battleHelperBattles) : '—';
         drawText(ctx, helperCountStr, PILL_X + PILL_W / 2, 13, { size: 4, color: helperColor, align: 'center' });
       }
@@ -424,22 +459,51 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     // Bottom bar (two rows: navigation + shortcuts)
     fillRect(ctx, 0, SCREEN_H - 20, SCREEN_W, 20, '#481818');
     if (rtl) {
-      drawText(ctx, 'ESC \u2190 \u2190\u2192 \u05e0\u05d9\u05d5\u05d5\u05d8 / ENTER \u05e4\u05e8\u05d8\u05d9\u05dd', 4, SCREEN_H - 17, { size: 6, color: '#cccccc', font: 'monospace' });
-      drawText(ctx, '[H] \u05e2\u05d5\u05d6\u05e8 \u05e7\u05e8\u05d1    [B] \u05ea\u05d2\u05d9\u05dd', 4, SCREEN_H - 9, { size: 5, color: '#888888', font: 'monospace' });
+      drawText(
+        ctx,
+        'ESC \u2190 \u2190\u2192 \u05e0\u05d9\u05d5\u05d5\u05d8 / ENTER \u05e4\u05e8\u05d8\u05d9\u05dd',
+        4,
+        SCREEN_H - 17,
+        { size: 6, color: '#cccccc', font: 'monospace' },
+      );
+      drawText(
+        ctx,
+        '[H] \u05e2\u05d5\u05d6\u05e8 \u05e7\u05e8\u05d1    [B] \u05ea\u05d2\u05d9\u05dd',
+        4,
+        SCREEN_H - 9,
+        { size: 5, color: '#888888', font: 'monospace' },
+      );
     } else {
-      drawText(ctx, 'Up/Down: Navigate  Enter: Details  Esc: Back', 4, SCREEN_H - 17, { size: 6, color: '#cccccc', font: 'monospace' });
-      drawText(ctx, '[H] Battle Helper    [B] Badge Case', 4, SCREEN_H - 9, { size: 5, color: '#888888', font: 'monospace' });
+      drawText(ctx, 'Up/Down: Navigate  Enter: Details  Esc: Back', 4, SCREEN_H - 17, {
+        size: 6,
+        color: '#cccccc',
+        font: 'monospace',
+      });
+      drawText(ctx, '[H] Battle Helper    [B] Badge Case', 4, SCREEN_H - 9, {
+        size: 5,
+        color: '#888888',
+        font: 'monospace',
+      });
     }
   }
 
-  function drawBadgeStar(ctx: CanvasRenderingContext2D, cx: number, cy: number, outerR: number, innerR: number, fillColor: string, borderColor: string): void {
+  function drawBadgeStar(
+    ctx: CanvasRenderingContext2D,
+    cx: number,
+    cy: number,
+    outerR: number,
+    innerR: number,
+    fillColor: string,
+    borderColor: string,
+  ): void {
     ctx.beginPath();
     for (let i = 0; i < 10; i++) {
       const angle = (i * Math.PI) / 5 - Math.PI / 2;
       const r = i % 2 === 0 ? outerR : innerR;
       const x = cx + Math.cos(angle) * r;
       const y = cy + Math.sin(angle) * r;
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
     }
     ctx.closePath();
     ctx.fillStyle = fillColor;
@@ -482,8 +546,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     // Badge grid: 4 columns × 2 rows
     const COLS = 4;
     const ROWS = 2;
-    const SLOT_W = (SCREEN_W - 20) / COLS;  // 55px
-    const SLOT_H = 116 / ROWS;               // 58px
+    const SLOT_W = (SCREEN_W - 20) / COLS; // 55px
+    const SLOT_H = 116 / ROWS; // 58px
     const STAR_OUTER = 14;
     const STAR_INNER = 6;
     const GRID_X = 10;
@@ -519,7 +583,12 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
         // Math topic (tiny, below name)
         const topic = badge.mathTopic[locale] ?? badge.mathTopic.en;
-        drawText(ctx, topic, cx, cy + STAR_OUTER + 9, { size: 4, color: typeColor, align: 'center', font: 'monospace' });
+        drawText(ctx, topic, cx, cy + STAR_OUTER + 9, {
+          size: 4,
+          color: typeColor,
+          align: 'center',
+          font: 'monospace',
+        });
       } else {
         // Unearned: dark star outline only
         drawBadgeStar(ctx, cx, cy, STAR_OUTER, STAR_INNER, '#1a1a1a', '#333333');
@@ -994,7 +1063,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       movesSubTab === 'byLevel'
         ? [...getLearnset(pokemonId)].sort((a, b) => a.levelLearned - b.levelLearned)
         : [...getTmLearnset(pokemonId)].sort((a, b) =>
-            getMoveDisplayName(a.moveId).localeCompare(getMoveDisplayName(b.moveId)));
+            getMoveDisplayName(a.moveId).localeCompare(getMoveDisplayName(b.moveId)),
+          );
 
     if (sorted.length === 0) {
       drawText(ctx, t('pokedex.moves.noData'), SCREEN_W / 2, dataY + 10, {
@@ -1031,7 +1101,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       if (isLevelTab) {
         drawText(ctx, String(entry.levelLearned), colLv, ry, { size: 6, color: '#ffffff', font: 'monospace' });
       } else {
-        drawText(ctx, 'TM', colLv, ry, { size: 6, color: '#a0c0ff', font: 'monospace' });
+        const tmLabel = getTMLabelForMoveId(entry.moveId)?.slice(0, 4) ?? 'TM';
+        drawText(ctx, tmLabel, colLv, ry, { size: 6, color: '#a0c0ff', font: 'monospace' });
       }
 
       // Move name (localized)
@@ -1072,7 +1143,10 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       const entry = sorted[movesCursor];
       const moveData = getMove(entry.moveId);
       if (moveData) {
-        const mx = 8, my = 18, mw = 224, mh = 114;
+        const mx = 8,
+          my = 18,
+          mw = 224,
+          mh = 114;
         fillRect(ctx, 0, 14, SCREEN_W, SCREEN_H - 14, '#000000cc');
         fillRect(ctx, mx, my, mw, mh, '#301818');
         drawRect(ctx, mx, my, mw, mh, '#f8a878');
@@ -1098,9 +1172,12 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         // Separator
         fillRect(ctx, mx + 4, statsY + 12, mw - 8, 1, '#584040');
 
-        // Description (word-wrapped)
-        const desc = moveData.description || '';
+        // Description (word-wrapped, aligned to locale direction)
+        const desc = getLocalizedName(moveData.description);
+        const popupRtl = isRTL();
         const maxChars = 36;
+        const descX = popupRtl ? mx + mw - 6 : mx + 6;
+        const descAlign = popupRtl ? 'right' : 'left';
         let dy = statsY + 16;
         if (desc) {
           const words = desc.split(' ');
@@ -1108,7 +1185,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           for (const word of words) {
             const test = line ? `${line} ${word}` : word;
             if (test.length > maxChars && line) {
-              drawText(ctx, line, mx + 6, dy, { size: 6, color: '#c0b0a0', font: 'monospace' });
+              drawText(ctx, line, descX, dy, { size: 6, color: '#c0b0a0', font: 'monospace', align: descAlign });
               dy += 8;
               line = word;
             } else {
@@ -1117,13 +1194,13 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
             if (dy > my + mh - 14) break;
           }
           if (line && dy <= my + mh - 14) {
-            drawText(ctx, line, mx + 6, dy, { size: 6, color: '#c0b0a0', font: 'monospace' });
+            drawText(ctx, line, descX, dy, { size: 6, color: '#c0b0a0', font: 'monospace', align: descAlign });
           }
         }
 
         // ESC hint
         fillRect(ctx, mx + 4, my + mh - 11, mw - 8, 1, '#584040');
-        drawText(ctx, 'ESC: Close', mx + mw - 6, my + mh - 8, {
+        drawText(ctx, popupRtl ? 'ESC: \u05e1\u05d2\u05d5\u05e8' : 'ESC: Close', mx + mw - 6, my + mh - 8, {
           size: 6,
           color: '#888888',
           font: 'monospace',

@@ -63,7 +63,7 @@ interface RawMoveData {
   effectChance: number | null;
   mathDifficulty: number;
   damageClass: string;
-  description: string;
+  description: { en: string; he: string };
   battle?: Partial<MoveBattleMetadata>;
 }
 

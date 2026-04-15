@@ -323,6 +323,16 @@ export function getItemIdsByCategory(category: ItemCategory): number[] {
     .map(([id]) => Number(id));
 }
 
+/** Reverse lookup: given a moveId, return the TM/HM label (e.g. "TM06", "HM01"). Returns null if not teachable by TM/HM. */
+export function getTMLabelForMoveId(moveId: number): string | null {
+  for (const def of Object.values(ITEM_GAME_DATA)) {
+    if (def.effect.type === 'tm' && def.effect.moveId === moveId && def.name) {
+      return def.name.en;
+    }
+  }
+  return null;
+}
+
 /** Get TM/HM data for an item by its slug or numeric ID string. Returns null if not a TM/HM. */
 export function getTMEffect(itemId: string): { moveId: number; isHM: boolean } | null {
   const numId = Number(itemId);
