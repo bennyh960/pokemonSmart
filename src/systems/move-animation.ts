@@ -18,7 +18,14 @@ export type AttackAnimationFamily =
   | 'fire-blast'
   | 'giga-drain'
   | 'lightning'
-  | 'vine-whip';
+  | 'vine-whip'
+  | 'heal-pulse'
+  | 'double-team'
+  | 'solar-beam'
+  | 'rapid-spin'
+  | 'twister-spin'
+  | 'icy-wind'
+  | 'electroweb';
 
 export interface AttackAnimationProfile {
   family: AttackAnimationFamily;
@@ -93,6 +100,8 @@ const TARGET_STATUS_KEYWORDS = [
 
 // --- Specific move name overrides (checked before generic detection) ---
 
+const HEAL_PULSE_MOVES = ['rest', 'recover', 'roost', 'soft-boiled', 'milk drink', 'morning sun', 'moonlight', 'synthesis'];
+
 const DRAGON_AURA_MOVES = [
   'dragon rage',
   'dragon breath',
@@ -102,12 +111,11 @@ const DRAGON_AURA_MOVES = [
   'outrage',
   'draco meteor',
   'dragon tail',
-  'twister',
 ];
 
 const FLAMETHROWER_MOVES = ['flamethrower', 'fire spin', 'heat wave', 'blast burn', 'inferno'];
 
-const LEAF_SPRAY_MOVES = ['razor leaf', 'leaf blade', 'petal dance', 'magic leaf', 'leaf tornado', 'petal blizzard'];
+const LEAF_SPRAY_MOVES = ['razor leaf', 'leaf blade', 'petal dance', 'magic leaf', 'leaf tornado', 'petal blizzard', 'leaf storm'];
 
 const WATER_FLOW_MOVES = ['water gun', 'surf', 'waterfall', 'aqua tail', 'whirlpool'];
 
@@ -123,7 +131,14 @@ const VINE_WHIP_MOVES = ['vine whip'];
 
 const GIGA_DRAIN_MOVES = ['giga drain', 'mega drain', 'absorb', 'leech life'];
 
-const LIGHTNING_MOVES = ['thunderbolt', 'thunder', 'discharge', 'charge beam', 'zap cannon'];
+const SOLAR_BEAM_MOVES = ['solar beam'];
+const RAPID_SPIN_MOVES = ['rapid spin'];
+const TWISTER_MOVES = ['twister'];
+const DOUBLE_TEAM_MOVES = ['double team'];
+const ICY_WIND_MOVES = ['icy wind', 'powder snow'];
+const ELECTROWEB_MOVES = ['electroweb'];
+
+const LIGHTNING_MOVES = ['thunderbolt', 'thunder', 'discharge', 'charge beam', 'zap cannon', 'supercell slam'];
 
 // Generic fallback keyword lists (for moves not matched above)
 const BURST_KEYWORDS = [
@@ -224,6 +239,104 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
   const variant = getVariant(moveName, move.speciesId);
 
   // --- Specific move overrides (highest priority) ---
+
+  if (matchesAny(moveName, HEAL_PULSE_MOVES)) {
+    return {
+      family: 'heal-pulse',
+      color: '#48d870',
+      accentColor: '#b8ffe8',
+      duration: 0.6,
+      impactTime: 0.15,
+      selfTarget: true,
+      shakeIntensity: 0,
+      flashColor: '#48d870',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, SOLAR_BEAM_MOVES)) {
+    return {
+      family: 'solar-beam',
+      color: '#f8d030',
+      accentColor: '#ffffff',
+      duration: 0.52,
+      impactTime: 0.18,
+      selfTarget: false,
+      shakeIntensity: 2.5,
+      flashColor: '#ffffa0',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, RAPID_SPIN_MOVES)) {
+    return {
+      family: 'rapid-spin',
+      color: '#c8c8c8',
+      accentColor: '#ffffff',
+      duration: 0.45,
+      impactTime: 0.28,
+      selfTarget: false,
+      shakeIntensity: 2.0,
+      flashColor: '#ffffff',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, TWISTER_MOVES)) {
+    return {
+      family: 'twister-spin',
+      color: '#9060e0',
+      accentColor: '#c8a0ff',
+      duration: 0.5,
+      impactTime: 0.22,
+      selfTarget: false,
+      shakeIntensity: 2.5,
+      flashColor: '#c8a0ff',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, ICY_WIND_MOVES)) {
+    return {
+      family: 'icy-wind',
+      color: '#9fd8ff',
+      accentColor: '#ffffff',
+      duration: 0.55,
+      impactTime: 0.22,
+      selfTarget: false,
+      shakeIntensity: 1.5,
+      flashColor: '#c8f0ff',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, ELECTROWEB_MOVES)) {
+    return {
+      family: 'electroweb',
+      color: '#f8d030',
+      accentColor: '#ffffff',
+      duration: 0.5,
+      impactTime: 0.15,
+      selfTarget: false,
+      shakeIntensity: 1.5,
+      flashColor: '#ffffa0',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, DOUBLE_TEAM_MOVES)) {
+    return {
+      family: 'double-team',
+      color: '#f0f0f0',
+      accentColor: '#a8c8ff',
+      duration: 0.55,
+      impactTime: 0.1,
+      selfTarget: true,
+      shakeIntensity: 0,
+      flashColor: '#ffffff',
+      variant,
+    };
+  }
 
   if (matchesAny(moveName, DRAGON_AURA_MOVES)) {
     return {

@@ -4,86 +4,92 @@
   "heroCharacterId": "ashKetchum",
   "party": [
     {
-      "id": 3,
-      "name": "Venusaur",
-      "level": 32,
-      "hp": 89,
-      "maxHp": 102,
-      "attack": 67,
-      "defense": 60,
-      "specialAttack": 85,
-      "specialDefense": 78,
-      "speed": 65,
-      "types": ["grass", "poison"],
+      "abilityId": 1,
+      "heldItemId": null,
+      "isGlitched": false,
+      "natureId": 1,
+      "status": null,
+      "xp": 451,
+      "xpToNext": 11883,
+      "caughtBall": "poke-ball",
+      "evs": {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "spe": 0,
+        "spa": 0,
+        "spd": 0
+      },
+      "id": 151,
+      "name": "Mew",
+      "level": 51,
+      "hp": 160,
+      "maxHp": 163,
+      "attack": 107,
+      "defense": 107,
+      "specialAttack": 107,
+      "specialDefense": 107,
+      "speed": 107,
+      "types": ["psychic"],
       "moves": [
         {
-          "id": 33,
-          "name": "Tackle",
-          "type": "normal",
-          "power": 40,
-          "accuracy": 100,
-          "pp": 35,
-          "currentPp": 33,
-          "mathDifficulty": 1
-        },
-        {
-          "id": 45,
-          "name": "Growl",
-          "type": "normal",
-          "power": 0,
-          "accuracy": 100,
-          "pp": 40,
-          "currentPp": 40,
-          "mathDifficulty": 1
-        },
-        {
-          "id": 73,
-          "name": "Leech Seed",
+          "id": 76,
+          "name": "Solar Beam",
           "type": "grass",
-          "power": 0,
-          "accuracy": 90,
+          "power": 120,
+          "accuracy": 100,
           "pp": 10,
           "currentPp": 10,
-          "mathDifficulty": 1
+          "mathDifficulty": 5
         },
         {
-          "id": 22,
-          "name": "Vine Whip",
-          "type": "grass",
-          "power": 45,
-          "accuracy": 100,
-          "pp": 25,
-          "currentPp": 24,
-          "mathDifficulty": 2
-        },
-        {
-          "id": 77,
-          "name": "Poison Powder",
-          "type": "poison",
+          "id": 104,
+          "name": "Double Team",
+          "type": "normal",
           "power": 0,
-          "accuracy": 75,
-          "pp": 35,
-          "currentPp": 35,
-          "mathDifficulty": 1
-        },
-        {
-          "id": 79,
-          "name": "Sleep Powder",
-          "type": "grass",
-          "power": 0,
-          "accuracy": 75,
+          "accuracy": 0,
           "pp": 15,
-          "currentPp": 15,
+          "currentPp": 13,
           "mathDifficulty": 1
         },
         {
-          "id": 75,
-          "name": "Razor Leaf",
-          "type": "grass",
-          "power": 55,
-          "accuracy": 95,
-          "pp": 25,
-          "currentPp": 25,
+          "id": 105,
+          "name": "Recover",
+          "type": "normal",
+          "power": 0,
+          "accuracy": 0,
+          "pp": 5,
+          "currentPp": 5,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 156,
+          "name": "Rest",
+          "type": "psychic",
+          "power": 0,
+          "accuracy": 0,
+          "pp": 5,
+          "currentPp": 5,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 208,
+          "name": "Milk Drink",
+          "type": "normal",
+          "power": 0,
+          "accuracy": 0,
+          "pp": 5,
+          "currentPp": 5,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 229,
+          "name": "Rapid Spin",
+          "type": "normal",
+          "power": 50,
+          "accuracy": 100,
+          "pp": 40,
+          "currentPp": 39,
           "mathDifficulty": 2
         },
         {
@@ -93,32 +99,36 @@
           "power": 0,
           "accuracy": 100,
           "pp": 20,
-          "currentPp": 20,
+          "currentPp": 18,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 239,
+          "name": "Twister",
+          "type": "dragon",
+          "power": 40,
+          "accuracy": 100,
+          "pp": 20,
+          "currentPp": 19,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 355,
+          "name": "Roost",
+          "type": "flying",
+          "power": 0,
+          "accuracy": 0,
+          "pp": 5,
+          "currentPp": 4,
           "mathDifficulty": 1
         }
-      ],
-      "xp": 3422,
-      "xpToNext": 3634,
-      "isGlitched": false,
-      "abilityId": 65,
-      "natureId": 8,
-      "heldItemId": null,
-      "status": null,
-      "caughtBall": "poke-ball",
-      "evs": {
-        "hp": 30,
-        "atk": 30,
-        "def": 30,
-        "spe": 30,
-        "spa": 30,
-        "spd": 30
-      }
+      ]
     },
     {
       "id": 66,
       "name": "Machop",
       "level": 21,
-      "hp": 64,
+      "hp": 49,
       "maxHp": 64,
       "attack": 37,
       "defense": 30,
@@ -166,6 +176,16 @@
           "pp": 25,
           "currentPp": 25,
           "mathDifficulty": 2
+        },
+        {
+          "id": 156,
+          "name": "Rest",
+          "type": "psychic",
+          "power": 0,
+          "accuracy": 100,
+          "pp": 5,
+          "currentPp": 3,
+          "mathDifficulty": 1
         }
       ],
       "xp": 528,
@@ -183,6 +203,117 @@
         "spe": 20,
         "spa": 20,
         "spd": 20
+      }
+    },
+    {
+      "id": 3,
+      "name": "Venusaur",
+      "level": 35,
+      "hp": 31,
+      "maxHp": 111,
+      "attack": 72,
+      "defense": 65,
+      "specialAttack": 93,
+      "specialDefense": 85,
+      "speed": 71,
+      "types": ["grass", "poison"],
+      "moves": [
+        {
+          "id": 33,
+          "name": "Tackle",
+          "type": "normal",
+          "power": 40,
+          "accuracy": 100,
+          "pp": 35,
+          "currentPp": 19,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 45,
+          "name": "Growl",
+          "type": "normal",
+          "power": 0,
+          "accuracy": 100,
+          "pp": 40,
+          "currentPp": 40,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 73,
+          "name": "Leech Seed",
+          "type": "grass",
+          "power": 0,
+          "accuracy": 90,
+          "pp": 10,
+          "currentPp": 3,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 22,
+          "name": "Vine Whip",
+          "type": "grass",
+          "power": 45,
+          "accuracy": 100,
+          "pp": 25,
+          "currentPp": 18,
+          "mathDifficulty": 2
+        },
+        {
+          "id": 77,
+          "name": "Poison Powder",
+          "type": "poison",
+          "power": 0,
+          "accuracy": 75,
+          "pp": 35,
+          "currentPp": 35,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 79,
+          "name": "Sleep Powder",
+          "type": "grass",
+          "power": 0,
+          "accuracy": 75,
+          "pp": 15,
+          "currentPp": 14,
+          "mathDifficulty": 1
+        },
+        {
+          "id": 75,
+          "name": "Razor Leaf",
+          "type": "grass",
+          "power": 55,
+          "accuracy": 95,
+          "pp": 25,
+          "currentPp": 22,
+          "mathDifficulty": 2
+        },
+        {
+          "id": 230,
+          "name": "Sweet Scent",
+          "type": "normal",
+          "power": 0,
+          "accuracy": 100,
+          "pp": 20,
+          "currentPp": 19,
+          "mathDifficulty": 1
+        }
+      ],
+      "xp": 872,
+      "xpToNext": 4639,
+      "isGlitched": false,
+      "abilityId": 65,
+      "natureId": 8,
+      "heldItemId": null,
+      "status": "paralyze",
+      "caughtBall": "poke-ball",
+      "evs": {
+        "hp": 30,
+        "atk": 30,
+        "def": 30,
+        "spe": 30,
+        "spa": 30,
+        "spd": 30
       }
     }
   ],
@@ -540,7 +671,7 @@
   ],
   "badges": 1,
   "serumParts": 0,
-  "money": 9701,
+  "money": 14501,
   "pokedex": {
     "1": true,
     "2": true,
@@ -557,7 +688,11 @@
     "21": true,
     "22": true,
     "23": true,
+    "25": true,
     "27": true,
+    "29": true,
+    "30": true,
+    "32": true,
     "35": true,
     "39": true,
     "40": true,
@@ -577,6 +712,7 @@
     "98": true,
     "100": true,
     "104": true,
+    "125": true,
     "143": true,
     "152": true,
     "155": true,
@@ -587,12 +723,16 @@
     "165": true,
     "167": true,
     "172": true,
+    "183": true,
     "187": true,
     "190": true,
     "194": true,
+    "198": true,
     "204": true,
+    "206": true,
     "208": true,
     "209": true,
+    "214": true,
     "217": true,
     "220": true,
     "228": true,
@@ -601,7 +741,7 @@
   },
   "items": {
     "51": 3,
-    "potion": 98,
+    "potion": 110,
     "poke-ball": 220,
     "revive": 121,
     "hp-up": 225,
@@ -619,7 +759,9 @@
     "calcium": 300,
     "iron": 300,
     "hm01": 1,
-    "max-revive": 1
+    "max-revive": 1,
+    "soda-pop": 1,
+    "tm44": 5
   },
   "flags": {
     "visited-zeroville": true,
@@ -674,7 +816,17 @@
     "__event-done-evt-minusburg-visit": true,
     "trainer-npc-1774550276085-defeated": true,
     "trainer-youngster-1-defeated": true,
-    "trainer-picnicker-1-defeated": true
+    "trainer-picnicker-1-defeated": true,
+    "trainer-act1-rival-trigger-call-defeated": true,
+    "act1-rival-run-1": true,
+    "__event-done-evt-ACT1_RIVAL_CHASING": true,
+    "trainer-npc-1776181427912-defeated": true,
+    "trainer-npc-1776205313006-defeated": true,
+    "act1-rival-battle-1": true,
+    "__event-done-evt-ACT1_RIVAL_BATTLE_1": true,
+    "trainer-rival-reminder-act1-battle-1-defeated": true,
+    "npc-beforeDespawn-done-rival-reminder-act1-battle-1": true,
+    "trainer-npc-1776181069153-defeated": true
   },
   "flagTimestamps": {
     "__event-done-start-game": 1775993783190,
@@ -717,20 +869,27 @@
     "trainer-youngster-1-defeated": 1776145875300,
     "trainer-picnicker-1-defeated": 1776145894520,
     "npc-rival-reminder-act1-battle-1-rewarded": 1776146730810,
-    "__event-done-evt-ACT1_RIVAL_BATTLE_1": 1776146732575,
-    "trainer-act1-rival-x-trainer-defeat-trigger-call-defeated": 1776203113716
+    "__event-done-evt-ACT1_RIVAL_BATTLE_1": 1776206813661,
+    "trainer-act1-rival-x-trainer-defeat-trigger-call-defeated": 1776203113716,
+    "trainer-act1-rival-trigger-call-defeated": 1776205944119,
+    "__event-done-evt-ACT1_RIVAL_CHASING": 1776205960155,
+    "trainer-npc-1776181427912-defeated": 1776205992011,
+    "trainer-npc-1776205313006-defeated": 1776206729179,
+    "trainer-rival-reminder-act1-battle-1-defeated": 1776206858236,
+    "npc-beforeDespawn-done-rival-reminder-act1-battle-1": 1776206864937,
+    "trainer-npc-1776181069153-defeated": 1776206930299
   },
   "position": {
-    "mapId": "sumville",
-    "x": 58,
-    "y": 30
+    "mapId": "route-2",
+    "x": 19,
+    "y": 16
   },
   "lastPokemonCenter": {
     "mapId": "zeroville",
     "x": 20,
     "y": 21
   },
-  "playtime": 1467.4418999985717,
+  "playtime": 1556.5252999984466,
   "trainerEncounters": {
     "bug-catcher-1": {
       "count": 1,
@@ -799,6 +958,26 @@
     "act1-rival-x-trainer-defeat-trigger-call": {
       "count": 1,
       "lastDefeatedAt": 1776203113716
+    },
+    "act1-rival-trigger-call": {
+      "count": 1,
+      "lastDefeatedAt": 1776205944119
+    },
+    "npc-1776181427912": {
+      "count": 1,
+      "lastDefeatedAt": 1776205992012
+    },
+    "npc-1776205313006": {
+      "count": 1,
+      "lastDefeatedAt": 1776206729180
+    },
+    "rival-reminder-act1-battle-1": {
+      "count": 1,
+      "lastDefeatedAt": 1776206858237
+    },
+    "npc-1776181069153": {
+      "count": 1,
+      "lastDefeatedAt": 1776206930300
     }
   },
   "phoneContacts": [
@@ -821,6 +1000,15 @@
       "locationEn": "",
       "locationHe": "",
       "mapId": "route-2"
+    },
+    {
+      "trainerId": "npc-1776205313006",
+      "trainerName": {
+        "en": "Amy",
+        "he": "איימי"
+      },
+      "locationEn": "",
+      "locationHe": ""
     }
   ],
   "story": {
@@ -842,9 +1030,9 @@
   "battleHelperBattles": 0,
   "battleHelperEnabled": false,
   "previousMapReturn": {
-    "mapId": "route-2",
-    "x": 1,
-    "y": 7
+    "mapId": "sumville",
+    "x": 58,
+    "y": 30
   },
   "birthYear": 2018
 }

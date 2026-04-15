@@ -14,6 +14,7 @@ export interface BattleTurnFlags {
   protected: boolean;
   charging: boolean;
   skipTurn: boolean;
+  tookDamageThisTurn: boolean;
 }
 
 export interface BattlePokemonRuntimeState {
@@ -28,6 +29,7 @@ export interface BattlePokemonRuntimeState {
   chargingMoveId: number | null;
   statModifiers: BattleStatModifiers;
   turnFlags: BattleTurnFlags;
+  critBoost: boolean;
 }
 
 export interface BattleSideRuntimeState {
@@ -56,6 +58,7 @@ export function createBattleTurnFlags(): BattleTurnFlags {
     protected: false,
     charging: false,
     skipTurn: false,
+    tookDamageThisTurn: false,
   };
 }
 
@@ -80,6 +83,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     chargingMoveId: null,
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),
+    critBoost: false,
   };
 }
 

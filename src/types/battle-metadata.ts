@@ -20,7 +20,14 @@ export type MoveBattleBehaviorTag =
   | 'fails-if-target-not-attacking'
   | 'must-recharge'
   | 'requires-charge-turn'
-  | 'leave-user-at-1-hp';
+  | 'leave-user-at-1-hp'
+  | 'rest'
+  | 'focus-energy'
+  | 'burning-jealousy'
+  | 'focus-punch'
+  | 'facade-boost'
+  | 'foul-play'
+  | 'dream-eater';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 

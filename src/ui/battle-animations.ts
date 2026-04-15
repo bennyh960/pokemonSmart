@@ -209,7 +209,14 @@ export type AttackEffectKind =
   | 'fire-blast'
   | 'giga-drain'
   | 'lightning'
-  | 'vine-whip';
+  | 'vine-whip'
+  | 'heal-pulse'
+  | 'double-team'
+  | 'solar-beam'
+  | 'rapid-spin'
+  | 'twister-spin'
+  | 'icy-wind'
+  | 'electroweb';
 
 interface AttackEffect {
   active: boolean;
@@ -631,6 +638,27 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'vine-whip':
       renderVineWhipEffect(ctx, effect);
+      break;
+    case 'heal-pulse':
+      renderHealPulseEffect(ctx, effect);
+      break;
+    case 'double-team':
+      renderDoubleTeamEffect(ctx, effect);
+      break;
+    case 'solar-beam':
+      renderSolarBeamEffect(ctx, effect);
+      break;
+    case 'rapid-spin':
+      renderRapidSpinEffect(ctx, effect);
+      break;
+    case 'twister-spin':
+      renderTwisterSpinEffect(ctx, effect);
+      break;
+    case 'icy-wind':
+      renderIcyWindEffect(ctx, effect);
+      break;
+    case 'electroweb':
+      renderElectrowebEffect(ctx, effect);
       break;
   }
 }
@@ -1901,6 +1929,499 @@ export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: St
       renderTrapStatusEffect(ctx, effect, fade);
       break;
   }
+}
+
+// =============================================================================
+// NEW MOVE ANIMATION RENDER FUNCTIONS
+// =============================================================================
+
+// --- Heal Pulse (Rest / Recover / Roost / Milk Drink) ---
+// Expanding green rings + rising sparkles centered on user
+function renderHealPulseEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const cx = effect.targetX; // self-target → targetX == sourceX
+  const cy = effect.targetY;
+  const rng = seededRng(effect.seed);
+
+  ctx.save();
+
+  // Two staggered expanding rings
+  for (let ring = 0; ring < 3; ring++) {
+    const offset = ring * 0.22;
+    const rt = Math.max(0, Math.min(1, (t - offset) / (1 - offset)));
+    if (rt <= 0) continue;
+    const radius = 4 + rt * 22;
+    const alpha = Math.max(0, 1 - rt);
+    ctx.globalAlpha = alpha * 0.7;
+    ctx.strokeStyle = ring === 1 ? effect.accentColor : effect.color;
+    ctx.lineWidth = ring === 0 ? 2 : 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Soft inner glow
+  const glowAlpha = Math.max(0, 1 - t * 2);
+  if (glowAlpha > 0) {
+    ctx.globalAlpha = glowAlpha * 0.18;
+    ctx.fillStyle = effect.color;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 16, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Rising sparkle particles
+  const NUM_PARTICLES = 8;
+  for (let i = 0; i < NUM_PARTICLES; i++) {
+    const phaseSeed = rng();
+    const delay = phaseSeed * 0.35;
+    const pt = Math.max(0, Math.min(1, (t - delay) / (1 - delay)));
+    if (pt <= 0) continue;
+    const angle = (Math.PI * 2 * i) / NUM_PARTICLES + phaseSeed;
+    const spread = 6 + rng() * 10;
+    const px = cx + Math.cos(angle) * spread * (0.5 + pt * 0.5);
+    const py = cy - pt * 18 - rng() * 4;
+    const alpha = Math.max(0, 1 - pt * 1.4);
+    const sz = 1.5 + rng() * 1.5;
+    ctx.globalAlpha = alpha * 0.9;
+    ctx.fillStyle = pt < 0.5 ? effect.accentColor : effect.color;
+    ctx.beginPath();
+    ctx.arc(px, py, sz, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+// --- Double Team ---
+// Ghost clones fanning out from user position then fading
+function renderDoubleTeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const cx = effect.sourceX;
+  const cy = effect.sourceY;
+
+  ctx.save();
+
+  const CLONES = 4;
+  const offsets = [-20, -10, 10, 20];
+
+  for (let i = 0; i < CLONES; i++) {
+    const delay = i * 0.07;
+    const pt = Math.max(0, Math.min(1, (t - delay) / 0.6));
+    if (pt <= 0) continue;
+
+    // Clone moves outward then fades
+    const spreadT = Math.min(1, pt * 1.4);
+    const fadeT = Math.max(0, (pt - 0.5) / 0.5);
+    const alpha = Math.max(0, (0.55 - fadeT * 0.55));
+    const ox = offsets[i] * spreadT;
+
+    // Render as a blueish silhouette ellipse (suggests body shape)
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = i % 2 === 0 ? effect.accentColor : effect.color;
+    ctx.beginPath();
+    ctx.ellipse(cx + ox, cy, 10, 16, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Inner lighter ring for ghost feel
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.strokeStyle = effect.accentColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(cx + ox, cy, 9, 14, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+// --- Solar Beam ---
+// Phase 0–0.35: Sun glow builds at source
+// Phase 0.35–1.0: Wide bright beam fires to target + impact flare
+function renderSolarBeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const PHASE2 = 0.35;
+
+  ctx.save();
+
+  if (t < PHASE2) {
+    const pt = t / PHASE2;
+    // Building sun glow at source
+    const glowR = 4 + pt * 14;
+
+    ctx.globalAlpha = pt * 0.25;
+    ctx.fillStyle = effect.color;
+    ctx.beginPath();
+    ctx.arc(effect.sourceX, effect.sourceY, glowR * 1.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalAlpha = pt * 0.7;
+    ctx.strokeStyle = effect.color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(effect.sourceX, effect.sourceY, glowR, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Sun rays
+    const numRays = 8;
+    for (let i = 0; i < numRays; i++) {
+      const angle = (Math.PI * 2 * i) / numRays + pt * 0.8;
+      const rayLen = glowR * (0.5 + 0.4 * Math.sin(pt * Math.PI * 3 + i));
+      ctx.globalAlpha = pt * 0.6;
+      ctx.strokeStyle = effect.accentColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(
+        effect.sourceX + Math.cos(angle) * glowR * 0.7,
+        effect.sourceY + Math.sin(angle) * glowR * 0.7,
+      );
+      ctx.lineTo(
+        effect.sourceX + Math.cos(angle) * (glowR + rayLen),
+        effect.sourceY + Math.sin(angle) * (glowR + rayLen),
+      );
+      ctx.stroke();
+    }
+  } else {
+    const pt = (t - PHASE2) / (1 - PHASE2);
+    const fadeAlpha = pt > 0.7 ? Math.max(0, 1 - (pt - 0.7) / 0.3) : 1;
+
+    // Wide beam body
+    const beamWidth = 7 - pt * 3;
+    ctx.globalAlpha = 0.55 * fadeAlpha;
+    ctx.strokeStyle = effect.color;
+    ctx.lineWidth = beamWidth * 2;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(effect.sourceX, effect.sourceY);
+    ctx.lineTo(effect.targetX, effect.targetY);
+    ctx.stroke();
+
+    // Bright core
+    ctx.globalAlpha = 0.9 * fadeAlpha;
+    ctx.strokeStyle = effect.accentColor;
+    ctx.lineWidth = beamWidth * 0.5;
+    ctx.beginPath();
+    ctx.moveTo(effect.sourceX, effect.sourceY);
+    ctx.lineTo(effect.targetX, effect.targetY);
+    ctx.stroke();
+
+    // Impact flare
+    const flareR = 4 + pt * 16;
+    ctx.globalAlpha = (1 - pt) * 0.7 * fadeAlpha;
+    ctx.fillStyle = effect.color;
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, flareR, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalAlpha = (1 - pt) * 0.95 * fadeAlpha;
+    ctx.fillStyle = effect.accentColor;
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, flareR * 0.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Side scatter lines at target
+    const scatter = 6;
+    for (let i = 0; i < scatter; i++) {
+      const angle = (Math.PI * 2 * i) / scatter + pt;
+      const inner = flareR * 0.3;
+      const outer = flareR + 5;
+      ctx.globalAlpha = (1 - pt) * 0.5 * fadeAlpha;
+      ctx.strokeStyle = effect.color;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(
+        effect.targetX + Math.cos(angle) * inner,
+        effect.targetY + Math.sin(angle) * inner,
+      );
+      ctx.lineTo(
+        effect.targetX + Math.cos(angle) * outer,
+        effect.targetY + Math.sin(angle) * outer,
+      );
+      ctx.stroke();
+    }
+    ctx.lineCap = 'butt';
+  }
+
+  ctx.restore();
+}
+
+// --- Rapid Spin ---
+// Concentric motion-blur rings + speed lines at attacker position
+// (The pokemon sprite itself is spun by the animation director tween)
+function renderRapidSpinEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const cx = effect.sourceX;
+  const cy = effect.sourceY;
+  const rng = seededRng(effect.seed);
+
+  ctx.save();
+
+  // Spinning arc rings (motion blur feel)
+  const NUM_RINGS = 3;
+  for (let r = 0; r < NUM_RINGS; r++) {
+    const rt = Math.max(0, Math.min(1, t - r * 0.08));
+    const radius = 8 + r * 5 + rt * 4;
+    const startAngle = rt * Math.PI * 6 + (r * Math.PI * 2) / NUM_RINGS;
+    const arcLength = Math.PI * 1.2;
+    const alpha = Math.max(0, (1 - rt) * 0.6);
+
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = r === 0 ? '#ffffff' : effect.color;
+    ctx.lineWidth = 2 - r * 0.4;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle, startAngle + arcLength);
+    ctx.stroke();
+  }
+
+  // Speed lines radiating outward
+  if (t < 0.7) {
+    const numLines = 6;
+    for (let i = 0; i < numLines; i++) {
+      const baseAngle = (Math.PI * 2 * i) / numLines + t * Math.PI * 4 + rng() * 0.3;
+      const innerR = 4 + rng() * 3;
+      const outerR = 14 + rng() * 8;
+      const alpha = (1 - t / 0.7) * (0.4 + rng() * 0.3);
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = effect.accentColor;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(baseAngle) * innerR, cy + Math.sin(baseAngle) * innerR);
+      ctx.lineTo(cx + Math.cos(baseAngle) * outerR, cy + Math.sin(baseAngle) * outerR);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
+// --- Twister Spin ---
+// Spiral wind vortex at target position
+// (The target pokemon sprite is spun by the animation director tween)
+function renderTwisterSpinEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const cx = effect.targetX;
+  const cy = effect.targetY;
+  const rng = seededRng(effect.seed);
+
+  ctx.save();
+
+  // Spiral arms
+  const NUM_ARMS = 4;
+  for (let arm = 0; arm < NUM_ARMS; arm++) {
+    const armOffset = (Math.PI * 2 * arm) / NUM_ARMS;
+    const numPoints = 18;
+    ctx.beginPath();
+    for (let p = 0; p < numPoints; p++) {
+      const progress = p / numPoints;
+      const angle = armOffset + progress * Math.PI * 3 + t * Math.PI * 5;
+      const radius = progress * 20 * (0.6 + t * 0.4);
+      const px = cx + Math.cos(angle) * radius;
+      const py = cy + Math.sin(angle) * radius * 0.6;
+      if (p === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    const alpha = Math.max(0, 0.6 - t * 0.4);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = arm % 2 === 0 ? effect.color : effect.accentColor;
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+  }
+
+  // Debris particles orbiting center
+  const NUM_DEBRIS = 8;
+  for (let i = 0; i < NUM_DEBRIS; i++) {
+    const debrisSeed = rng();
+    const angle = (Math.PI * 2 * i) / NUM_DEBRIS + t * Math.PI * 6 + debrisSeed;
+    const radius = (6 + debrisSeed * 14) * (0.5 + t * 0.5);
+    const px = cx + Math.cos(angle) * radius;
+    const py = cy + Math.sin(angle) * radius * 0.55;
+    const alpha = Math.max(0, (0.7 - t * 0.5) * (0.5 + debrisSeed * 0.5));
+    const sz = 1 + debrisSeed * 2;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = effect.accentColor;
+    ctx.beginPath();
+    ctx.arc(px, py, sz, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Center condensed glow
+  const glowAlpha = Math.max(0, 0.4 - t * 0.3);
+  ctx.globalAlpha = glowAlpha;
+  ctx.fillStyle = effect.color;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+// --- Icy Wind ---
+// Horizontal sweep of ice crystal particles from one side to the other across the target
+function renderIcyWindEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const rng = seededRng(effect.seed);
+
+  ctx.save();
+
+  // Direction: attack comes from source side toward target
+  const fromLeft = effect.sourceX < effect.targetX;
+
+  // Draw 20 ice crystal particles swept in the wind
+  const NUM = 20;
+  for (let i = 0; i < NUM; i++) {
+    const pSeed = rng();
+    const delay = pSeed * 0.35;
+    const pt = Math.max(0, Math.min(1, (t - delay) / (1 - delay)));
+    if (pt <= 0) continue;
+
+    const startX = fromLeft ? effect.sourceX - 10 - pSeed * 20 : effect.sourceX + 10 + pSeed * 20;
+    const spanX = (fromLeft ? 1 : -1) * (80 + pSeed * 50);
+    const px = startX + spanX * pt;
+    const py = effect.targetY - 20 + rng() * 40;
+    const alpha = Math.min(1, pt * 3) * Math.max(0, 1 - (pt - 0.65) / 0.35);
+    const sz = 1.5 + rng() * 2.5;
+
+    ctx.globalAlpha = alpha * 0.85;
+    ctx.fillStyle = rng() > 0.6 ? effect.accentColor : effect.color;
+    // Draw small ice shard (diamond shape)
+    ctx.beginPath();
+    ctx.moveTo(px, py - sz);
+    ctx.lineTo(px + sz * 0.6, py);
+    ctx.lineTo(px, py + sz);
+    ctx.lineTo(px - sz * 0.6, py);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Trailing cold mist streaks
+  const NUM_STREAKS = 6;
+  for (let i = 0; i < NUM_STREAKS; i++) {
+    const sSeed = rng();
+    const delay = sSeed * 0.2;
+    const pt = Math.max(0, Math.min(1, (t - delay) / (1 - delay)));
+    if (pt <= 0) continue;
+
+    const y = effect.targetY - 15 + (i / NUM_STREAKS) * 30;
+    const startX2 = fromLeft ? effect.sourceX : effect.sourceX;
+    const len = (fromLeft ? 1 : -1) * (30 + sSeed * 25) * pt;
+    const alpha = Math.max(0, 0.4 - pt * 0.3) * (0.5 + sSeed * 0.5);
+
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = effect.color;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(startX2, y);
+    ctx.lineTo(startX2 + len, y + (rng() - 0.5) * 4);
+    ctx.stroke();
+  }
+
+  // Impact burst at target when front arrives
+  if (t > 0.55) {
+    const burstT = (t - 0.55) / 0.45;
+    const radius = 2 + burstT * 14;
+    ctx.globalAlpha = Math.max(0, (1 - burstT) * 0.55);
+    ctx.strokeStyle = effect.color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = Math.max(0, (1 - burstT) * 0.2);
+    ctx.fillStyle = effect.color;
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, radius * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+// --- Electroweb ---
+// An expanding hexagonal electric net that captures the target
+function renderElectrowebEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const cx = effect.targetX;
+  const cy = effect.targetY;
+  const rng = seededRng(effect.seed);
+
+  ctx.save();
+
+  // Phase 1 (0-0.4): Net shoots from source and expands
+  // Phase 2 (0.4-1.0): Net fully covers target and crackles
+  const expandT = Math.min(1, t / 0.4);
+  const crackleT = Math.max(0, (t - 0.4) / 0.6);
+
+  // Draw hexagonal web grid
+  const maxRadius = 22;
+  const radius = maxRadius * expandT;
+  const fadeAlpha = Math.max(0, 1 - crackleT * 0.6);
+  const numRings = 3;
+
+  for (let ring = 1; ring <= numRings; ring++) {
+    const r = (radius * ring) / numRings;
+    const hexSides = 6;
+    ctx.beginPath();
+    for (let i = 0; i <= hexSides; i++) {
+      const angle = (Math.PI * 2 * i) / hexSides - Math.PI / 6;
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r * 0.6;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    const ringAlpha = fadeAlpha * (1 - (ring - 1) * 0.2);
+    ctx.globalAlpha = ringAlpha * 0.8;
+    ctx.strokeStyle = ring === 1 ? effect.accentColor : effect.color;
+    ctx.lineWidth = ring === 1 ? 1.5 : 1;
+    ctx.stroke();
+  }
+
+  // Spoke lines from center to hex corners
+  if (expandT > 0.3) {
+    const hexSides = 6;
+    for (let i = 0; i < hexSides; i++) {
+      const angle = (Math.PI * 2 * i) / hexSides - Math.PI / 6;
+      const x = cx + Math.cos(angle) * radius;
+      const y = cy + Math.sin(angle) * radius * 0.6;
+      ctx.globalAlpha = fadeAlpha * 0.55;
+      ctx.strokeStyle = effect.color;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+  }
+
+  // Electric crackle sparks on nodes (phase 2)
+  if (crackleT > 0) {
+    const hexSides = 6;
+    for (let i = 0; i < hexSides; i++) {
+      const angle = (Math.PI * 2 * i) / hexSides - Math.PI / 6;
+      const r = maxRadius;
+      const nx = cx + Math.cos(angle) * r;
+      const ny = cy + Math.sin(angle) * r * 0.6;
+      const flickerAlpha = rng() * crackleT * 0.9;
+      ctx.globalAlpha = flickerAlpha;
+      ctx.fillStyle = effect.accentColor;
+      ctx.beginPath();
+      ctx.arc(nx, ny, 1.5 + rng() * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Small lightning arcs between nodes
+    for (let i = 0; i < 3; i++) {
+      if (rng() > 0.5 * crackleT) continue;
+      const a1 = ((Math.PI * 2 * i) / 6) - Math.PI / 6;
+      const a2 = ((Math.PI * 2 * (i + 2)) / 6) - Math.PI / 6;
+      const x1 = cx + Math.cos(a1) * maxRadius * 0.7;
+      const y1 = cy + Math.sin(a1) * maxRadius * 0.7 * 0.6;
+      const x2 = cx + Math.cos(a2) * maxRadius * 0.7;
+      const y2 = cy + Math.sin(a2) * maxRadius * 0.7 * 0.6;
+      ctx.globalAlpha = rng() * 0.6;
+      drawLightningPath(ctx, x1, y1, x2, y2, 1, effect.color, effect.accentColor, 0.5, rng);
+    }
+  }
+
+  ctx.restore();
 }
 
 // --- Convenience: Clear all effects ---

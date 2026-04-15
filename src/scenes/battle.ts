@@ -63,6 +63,7 @@ import {
   sequenceStep,
   tweenActorStep,
   waitStep,
+  type BattleAnimationStep,
 } from '../ui/battle-animation-director.js';
 import { drawPokeballIcon } from '../ui/item-icons.js';
 import {
@@ -141,6 +142,8 @@ import {
   rollCriticalHit,
   startChargingMove,
   tryApplyFlinch,
+  applyRestEffect,
+  applyHealPercent,
 } from '../systems/battle-system.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
@@ -232,11 +235,12 @@ function calcDamage(
   moveType: PokemonType,
   damageClass: string,
   criticalHit = false,
+  attackStatOverride?: number,
 ): number {
   if (power <= 0) return 0;
   const isSpecial = damageClass === 'special';
   const burnMultiplier = damageClass === 'physical' && atk.status === 'burn' ? 0.5 : 1;
-  const attackStat = getModifiedStatValue(atk, atkState, isSpecial ? 'specialAttack' : 'attack');
+  const attackStat = attackStatOverride ?? getModifiedStatValue(atk, atkState, isSpecial ? 'specialAttack' : 'attack');
   const defenseStat = getModifiedStatValue(def, defState, isSpecial ? 'specialDefense' : 'defense');
   let defenderMultiplier = 1;
   if (def.abilityId) {
@@ -1880,6 +1884,7 @@ export function createBattleScene(
     popupX: number,
     popupY: number,
     resolvedDamage = 0,
+    suppressAudio = false,
   ): number {
     const moveData = getMove(move.id);
     const damageClass = moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status');
@@ -1910,10 +1915,12 @@ export function createBattleScene(
       if (dmg <= 0) return 0;
       defender.hp = Math.max(0, defender.hp - dmg);
       setHP(targetBar, defender.hp);
-      flash = createFlash(profile.flashColor, 0.15);
-      shake = createShake(profile.shakeIntensity, 0.22);
       spawnDamageNumber(`-${dmg}`, popupX, popupY, '#f84038');
-      audio.playSFX('hit');
+      if (!suppressAudio) {
+        flash = createFlash(profile.flashColor, 0.15);
+        shake = createShake(profile.shakeIntensity, 0.22);
+        audio.playSFX('hit');
+      }
       return dmg;
     }
 
@@ -2028,6 +2035,18 @@ export function createBattleScene(
       if (tryApplyFlinch(defenderState, moveBattleData.flinchChance ?? null, targetCanStillAct)) {
         lines.push(t('battle.flinched', { name: defenderName }));
       }
+
+      // Burning Jealousy: burn target if they currently have any positive stat modifier
+      if (moveBattleData.behaviorTags?.includes('burning-jealousy')) {
+        const hasBoost = Object.values(defenderState.statModifiers).some((v) => v > 0);
+        if (hasBoost && !isSafeguardActive(defenderSideState)) {
+          const burnResult = applyMajorStatus(defender, defenderState, { status: 'burn', chance: 100, target: 'target' });
+          if (burnResult.applied) {
+            const statusLine = getStatusAppliedLine(defenderName, 'burn');
+            if (statusLine) lines.push(statusLine);
+          }
+        }
+      }
     }
 
     syncPlayerBar();
@@ -2050,6 +2069,13 @@ export function createBattleScene(
     'giga-drain',
     'lightning',
     'vine-whip',
+    'heal-pulse',
+    'double-team',
+    'solar-beam',
+    'rapid-spin',
+    'twister-spin',
+    'icy-wind',
+    'electroweb',
   ]);
 
   function playAttackAnimation(
@@ -2058,6 +2084,7 @@ export function createBattleScene(
     move: Pokemon['moves'][number],
     onImpact: () => void,
     hitTarget = true,
+    hitCount = 1,
   ): void {
     const moveData = getMove(move.id);
     const attackerPokemon = attackerActor === 'player' ? player : enemy;
@@ -2078,6 +2105,145 @@ export function createBattleScene(
     const recoveryDuration = Math.max(0.12, profile.duration - profile.impactTime);
 
     attackFx = null;
+
+    // --- Multi-hit lunge: repeat lunge+sfx N times, then call onImpact ---
+    if (hitCount > 1 && profile.family === 'lunge') {
+      const hitTime = Math.max(0.07, profile.impactTime * 0.6);
+      const steps: BattleAnimationStep[] = [];
+      for (let i = 0; i < hitCount; i++) {
+        const isLastHit = i === hitCount - 1;
+        steps.push(tweenActorStep(
+          attackerActor,
+          { x: attackerStart.x + lungeOffset, y: attackerStart.y - 2, rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.06 : 0.06) },
+          hitTime, 'easeInOut',
+        ));
+        const capturedIsLast = isLastHit;
+        steps.push(callStep(() => {
+          if (hitTarget) {
+            flash = createFlash(profile.flashColor, 0.1);
+            shake = createShake(profile.shakeIntensity * 0.75, 0.15);
+            audio.playSFX('hit');
+          }
+          if (capturedIsLast) onImpact();
+        }));
+        steps.push(parallelStep(
+          hitTarget
+            ? sequenceStep(
+                tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.06, 'easeInOut'),
+                tweenActorStep(defenderActor, defenderStart, 0.07, 'easeInOut'),
+              )
+            : waitStep(0.13),
+          tweenActorStep(attackerActor, attackerStart, 0.09, 'easeInOut'),
+        ));
+      }
+      animationDirector.play(sequenceStep(...steps));
+      return;
+    }
+
+    // --- Special: Rapid Spin — attacker pokemon spins fast ---
+    if (profile.family === 'rapid-spin') {
+      animationDirector.play(
+        sequenceStep(
+          callStep(() => {
+            attackFx = createAttackEffect({
+              kind: 'rapid-spin',
+              sourceX: source.x,
+              sourceY: source.y,
+              targetX: target.x,
+              targetY: target.y,
+              color: profile.color,
+              accentColor: profile.accentColor,
+              duration: profile.duration,
+            });
+          }),
+          parallelStep(
+            tweenActorStep(
+              attackerActor,
+              {
+                scaleX: attackerStart.scaleX * 0.82,
+                scaleY: attackerStart.scaleY * 0.82,
+                rotation: attackerStart.rotation + Math.PI * 6,
+              },
+              profile.impactTime,
+              'linear',
+            ),
+          ),
+          callStep(() => { onImpact(); }),
+          parallelStep(
+            hitTarget
+              ? sequenceStep(
+                  tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.07, 'easeInOut'),
+                  tweenActorStep(defenderActor, defenderStart, 0.1, 'easeInOut'),
+                )
+              : waitStep(0.17),
+            tweenActorStep(attackerActor, { ...attackerStart, rotation: attackerStart.rotation }, 0.15, 'easeOut'),
+          ),
+        ),
+      );
+      return;
+    }
+
+    // --- Special: Twister Spin — target pokemon spins, vortex effect ---
+    if (profile.family === 'twister-spin') {
+      animationDirector.play(
+        sequenceStep(
+          callStep(() => {
+            attackFx = createAttackEffect({
+              kind: 'twister-spin',
+              sourceX: source.x,
+              sourceY: source.y,
+              targetX: target.x,
+              targetY: target.y,
+              color: profile.color,
+              accentColor: profile.accentColor,
+              duration: profile.duration,
+            });
+          }),
+          parallelStep(
+            tweenActorStep(
+              defenderActor,
+              {
+                scaleX: defenderStart.scaleX * 0.85,
+                scaleY: defenderStart.scaleY * 0.85,
+                rotation: defenderStart.rotation + Math.PI * 4,
+              },
+              profile.impactTime,
+              'linear',
+            ),
+          ),
+          callStep(() => { onImpact(); }),
+          tweenActorStep(defenderActor, { ...defenderStart, rotation: defenderStart.rotation }, 0.18, 'easeOut'),
+        ),
+      );
+      return;
+    }
+
+    // --- Special: Double Team — ghost clone burst, attacker briefly fades ---
+    if (profile.family === 'double-team') {
+      animationDirector.play(
+        sequenceStep(
+          callStep(() => {
+            attackFx = createAttackEffect({
+              kind: 'double-team',
+              sourceX: source.x,
+              sourceY: source.y,
+              targetX: source.x,
+              targetY: source.y,
+              color: profile.color,
+              accentColor: profile.accentColor,
+              duration: profile.duration,
+            });
+          }),
+          parallelStep(
+            tweenActorStep(attackerActor, { alpha: 0.45 }, 0.18, 'easeInOut'),
+          ),
+          tweenActorStep(attackerActor, attackerStart, 0.2, 'easeInOut'),
+          callStep(() => { onImpact(); }),
+          waitStep(0.15),
+        ),
+      );
+      return;
+    }
 
     animationDirector.play(
       sequenceStep(
@@ -2182,6 +2348,19 @@ export function createBattleScene(
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease;
     const leaveUserAtOneHp = moveBattleData?.behaviorTags?.includes('leave-user-at-1-hp') ?? false;
+    const isRest = moveBattleData?.behaviorTags?.includes('rest') ?? false;
+    const isFocusEnergy = moveBattleData?.behaviorTags?.includes('focus-energy') ?? false;
+    const isFacadeBoost = moveBattleData?.behaviorTags?.includes('facade-boost') ?? false;
+    const isFoulPlay = moveBattleData?.behaviorTags?.includes('foul-play') ?? false;
+    const isDreamEater = moveBattleData?.behaviorTags?.includes('dream-eater') ?? false;
+    const isFocusPunch = moveBattleData?.behaviorTags?.includes('focus-punch') ?? false;
+    const healPercent = moveBattleData?.healingPercent ?? null;
+    const hitCount = (() => {
+      const min = moveBattleData?.minHits ?? null;
+      const max = moveBattleData?.maxHits ?? null;
+      if (min !== null && max !== null) return Math.floor(Math.random() * (max - min + 1)) + min;
+      return 1;
+    })();
     const selfCostAmount = leaveUserAtOneHp ? Math.max(0, player.hp - 1) : 0;
 
     if (!isChargeRelease && m.currentPp > 0) {
@@ -2208,31 +2387,52 @@ export function createBattleScene(
     }
     applyPostMoveTurnFlags(playerBattleState, m.id);
 
+    // Focus Punch: fails if the player took damage this turn
+    if (isFocusPunch && playerBattleState.turnFlags.tookDamageThisTurn) {
+      const msgs = [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+        t('battle.focusPunchFailed', { name: attackerName })];
+      textBox = createTextBox(msgs, rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
+    }
+
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, playerBattleState, enemyBattleState);
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(enemy, m.type);
+    // Dream Eater: blocked if target is not asleep
+    const dreamEaterBlocked = isDreamEater && enemy.status !== 'sleep';
     const criticalHit =
-      hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy) : false;
+      hitResult.hit && !targetTypeImmune && !dreamEaterBlocked && m.power > 0 && !absorbed ? rollCriticalHit(m.id, enemy, Math.random, playerBattleState) : false;
+    // Facade: double power when user has a status condition
+    const facadeActive = isFacadeBoost && player.status !== null && ['burn', 'paralyze', 'poison'].includes(player.status as string);
+    const effectivePower = facadeActive ? m.power * 2 : m.power;
+    // Foul Play: use target's attack stat
+    const foulPlayAttackStat = isFoulPlay ? getModifiedStatValue(enemy, enemyBattleState, 'attack') : undefined;
+    // Compute animation profile to determine suppressAudio for multi-hit
+    const atkAnimProfile = (() => {
+      const md = moveData;
+      return getAttackAnimationProfile({
+        name: md?.name ?? { en: m.name, he: m.name },
+        type: m.type, power: m.power,
+        damageClass: md?.damageClass ?? (m.power > 0 ? 'physical' : 'status'),
+        speciesId: player.id,
+      });
+    })();
+    const suppressHitAudio = hitCount > 1 && atkAnimProfile.family === 'lunge';
     const plannedDamage = (() => {
-      if (!hitResult.hit || targetTypeImmune || m.power <= 0 || absorbed) return 0;
+      if (!hitResult.hit || targetTypeImmune || effectivePower <= 0 || absorbed || dreamEaterBlocked) return 0;
       const base = calcDamage(
-        player,
-        playerBattleState,
-        enemy,
-        enemyBattleState,
-        enemySideState,
-        m.power,
-        m.type,
-        damageClass,
-        criticalHit,
+        player, playerBattleState, enemy, enemyBattleState, enemySideState,
+        effectivePower, m.type, damageClass, criticalHit, foulPlayAttackStat,
       );
       const min = moveBattleData?.minimumDamage ?? null;
       return min !== null ? Math.max(min, base) : base;
     })();
     const allowTargetEffects =
-      hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < enemy.hp);
+      hitResult.hit && !targetTypeImmune && !absorbed && !dreamEaterBlocked && (effectivePower <= 0 || plannedDamage < enemy.hp);
     const targetCanStillAct = !enemyAlreadyAttacked;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
@@ -2273,9 +2473,21 @@ export function createBattleScene(
       msgs.push(t('battle.moveMissed', { name: attackerName }));
     } else if (targetTypeImmune) {
       msgs.push(t('battle.noEffect'));
+    } else if (dreamEaterBlocked) {
+      msgs.push(t('battle.dreamEaterFailed'));
+      audio.playSFX('menu-cancel');
+    } else if (isRest) {
+      msgs.push(t('battle.restSleep', { name: attackerName }));
+    } else if (isFocusEnergy) {
+      msgs.push(t('battle.focusEnergy', { name: attackerName }));
+    } else if (healPercent !== null) {
+      msgs.push(t('battle.healedHp', { name: attackerName }));
     } else if (resolvedEffectLines.length === 0) {
       msgs.push(t('battle.nothingHappened'));
       audio.playSFX('menu-cancel');
+    }
+    if (hitCount > 1 && hitResult.hit && !targetTypeImmune && !dreamEaterBlocked) {
+      msgs.push(t('battle.multiHit', { count: hitCount }));
     }
     if (plannedHpEffectAmount > 0) {
       if (moveBattleData?.drainPercent) {
@@ -2315,16 +2527,51 @@ export function createBattleScene(
       'enemy',
       m,
       () => {
-        if (hitResult.hit) {
-          const actualDamage = applyMoveImpact(
-            enemy,
-            m,
-            enemyHpBar,
-            BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
-            BTL.OPP_SPRITE.y + 10,
-            plannedDamage,
+        // Rest: full heal + sleep 2 turns + all PP restored
+        if (isRest) {
+          applyRestEffect(player, playerBattleState);
+          setHP(playerHpBar, player.hp);
+          setStatus(playerHpBar, player.status ?? '');
+          spawnDamageNumber(
+            `+${player.maxHp}`,
+            BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+            BTL.PLY_SPRITE.y + 10,
+            '#48d870',
           );
+          audio.playSFX('heal');
+        }
+        // Heal % moves (Recover, Roost, Milk Drink, etc.)
+        if (healPercent !== null) {
+          const healed = applyHealPercent(player, healPercent);
+          if (healed > 0) {
+            setHP(playerHpBar, player.hp);
+            spawnDamageNumber(
+              `+${healed}`,
+              BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+              BTL.PLY_SPRITE.y + 10,
+              '#48d870',
+            );
+            audio.playSFX('heal');
+          }
+        }
+        // Focus Energy: boost crit rate for all future moves
+        if (isFocusEnergy) {
+          playerBattleState.critBoost = true;
+        }
+        if (hitResult.hit) {
+          let totalActualDamage = 0;
+          for (let hit = 0; hit < hitCount; hit++) {
+            if (enemy.hp <= 0) break;
+            const popupY = BTL.OPP_SPRITE.y + 10 - hit * 5;
+            totalActualDamage += applyMoveImpact(
+              enemy, m, enemyHpBar,
+              BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, popupY,
+              plannedDamage, suppressHitAudio,
+            );
+          }
+          const actualDamage = totalActualDamage;
           if (actualDamage > 0) {
+            enemyBattleState.turnFlags.tookDamageThisTurn = true;
             const drained = applyDrainHealing(player, actualDamage, moveBattleData?.drainPercent ?? null);
             if (drained > 0) {
               setHP(playerHpBar, player.hp);
@@ -2379,6 +2626,7 @@ export function createBattleScene(
         }
       },
       hitResult.hit && !absorbed && plannedDamage > 0,
+      hitCount,
     );
     phase = 'PLAYER_ATTACK';
     phaseTimer = 0;
@@ -2397,6 +2645,19 @@ export function createBattleScene(
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease;
     const leaveUserAtOneHp = moveBattleData?.behaviorTags?.includes('leave-user-at-1-hp') ?? false;
+    const isRestEnemy = moveBattleData?.behaviorTags?.includes('rest') ?? false;
+    const isFocusEnergyEnemy = moveBattleData?.behaviorTags?.includes('focus-energy') ?? false;
+    const isFacadeBoostEnemy = moveBattleData?.behaviorTags?.includes('facade-boost') ?? false;
+    const isFoulPlayEnemy = moveBattleData?.behaviorTags?.includes('foul-play') ?? false;
+    const isDreamEaterEnemy = moveBattleData?.behaviorTags?.includes('dream-eater') ?? false;
+    const isFocusPunchEnemy = moveBattleData?.behaviorTags?.includes('focus-punch') ?? false;
+    const healPercentEnemy = moveBattleData?.healingPercent ?? null;
+    const hitCountEnemy = (() => {
+      const min = moveBattleData?.minHits ?? null;
+      const max = moveBattleData?.maxHits ?? null;
+      if (min !== null && max !== null) return Math.floor(Math.random() * (max - min + 1)) + min;
+      return 1;
+    })();
     const selfCostAmount = leaveUserAtOneHp ? Math.max(0, enemy.hp - 1) : 0;
     triggerStatusTurnEffects('enemy', enemy, enemyBattleState);
     const startResult = processBeforeMoveEffects(enemy, enemyBattleState);
@@ -2453,31 +2714,49 @@ export function createBattleScene(
     }
     applyPostMoveTurnFlags(enemyBattleState, m.id);
 
+    // Focus Punch: fails if enemy took damage this turn
+    if (isFocusPunchEnemy && enemyBattleState.turnFlags.tookDamageThisTurn) {
+      const msgs = [...prefix, ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+        t('battle.focusPunchFailed', { name: attackerName })];
+      textBox = createTextBox(msgs, rtl);
+      phase = 'ENEMY_TURN';
+      phaseTimer = 0;
+      return;
+    }
+
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const hitResult = doesMoveHit(m.accuracy, enemyBattleState, playerBattleState);
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(player, m.type);
+    const dreamEaterBlockedEnemy = isDreamEaterEnemy && player.status !== 'sleep';
     const criticalHit =
-      hitResult.hit && !targetTypeImmune && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player) : false;
+      hitResult.hit && !targetTypeImmune && !dreamEaterBlockedEnemy && m.power > 0 && !absorbed ? rollCriticalHit(m.id, player, Math.random, enemyBattleState) : false;
+    const facadeActiveEnemy = isFacadeBoostEnemy && enemy.status !== null && ['burn', 'paralyze', 'poison'].includes(enemy.status as string);
+    const effectivePowerEnemy = facadeActiveEnemy ? m.power * 2 : m.power;
+    const foulPlayAttackStatEnemy = isFoulPlayEnemy ? getModifiedStatValue(player, playerBattleState, 'attack') : undefined;
+    const atkAnimProfileEnemy = (() => {
+      const md = moveData;
+      return getAttackAnimationProfile({
+        name: md?.name ?? { en: m.name, he: m.name },
+        type: m.type, power: m.power,
+        damageClass: md?.damageClass ?? (m.power > 0 ? 'physical' : 'status'),
+        speciesId: enemy.id,
+      });
+    })();
+    const suppressHitAudioEnemy = hitCountEnemy > 1 && atkAnimProfileEnemy.family === 'lunge';
     const plannedDamage = (() => {
-      if (!hitResult.hit || targetTypeImmune || m.power <= 0 || absorbed) return 0;
+      if (!hitResult.hit || targetTypeImmune || effectivePowerEnemy <= 0 || absorbed || dreamEaterBlockedEnemy) return 0;
       const base = calcDamage(
-        enemy,
-        enemyBattleState,
-        player,
-        playerBattleState,
-        playerSideState,
-        m.power,
-        m.type,
-        damageClass,
-        criticalHit,
+        enemy, enemyBattleState, player, playerBattleState, playerSideState,
+        effectivePowerEnemy, m.type, damageClass, criticalHit, foulPlayAttackStatEnemy,
       );
       const min = moveBattleData?.minimumDamage ?? null;
       return min !== null ? Math.max(min, base) : base;
     })();
     const allowTargetEffects =
-      hitResult.hit && !targetTypeImmune && !absorbed && (m.power <= 0 || plannedDamage < player.hp);
+      hitResult.hit && !targetTypeImmune && !absorbed && !dreamEaterBlockedEnemy && (effectivePowerEnemy <= 0 || plannedDamage < player.hp);
     const targetCanStillAct = enemyGoesFirst;
     const resolvedEffectLines = hitResult.hit
       ? applyResolvedMoveEffects(
@@ -2518,9 +2797,21 @@ export function createBattleScene(
       msgs.push(t('battle.moveMissed', { name: attackerName }));
     } else if (targetTypeImmune) {
       msgs.push(t('battle.noEffect'));
+    } else if (dreamEaterBlockedEnemy) {
+      msgs.push(t('battle.dreamEaterFailed'));
+      audio.playSFX('menu-cancel');
+    } else if (isRestEnemy) {
+      msgs.push(t('battle.restSleep', { name: attackerName }));
+    } else if (isFocusEnergyEnemy) {
+      msgs.push(t('battle.focusEnergy', { name: attackerName }));
+    } else if (healPercentEnemy !== null) {
+      msgs.push(t('battle.healedHp', { name: attackerName }));
     } else if (resolvedEffectLines.length === 0) {
       audio.playSFX('menu-cancel');
       msgs.push(t('battle.nothingHappened'));
+    }
+    if (hitCountEnemy > 1 && hitResult.hit && !targetTypeImmune && !dreamEaterBlockedEnemy) {
+      msgs.push(t('battle.multiHit', { count: hitCountEnemy }));
     }
     if (plannedHpEffectAmount > 0) {
       if (moveBattleData?.drainPercent) {
@@ -2560,16 +2851,51 @@ export function createBattleScene(
       'player',
       m,
       () => {
-        if (hitResult.hit) {
-          const actualDamage = applyMoveImpact(
-            player,
-            m,
-            playerHpBar,
-            BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
-            BTL.PLY_SPRITE.y + 10,
-            plannedDamage,
+        // Rest: full heal + sleep 2 turns + all PP restored
+        if (isRestEnemy) {
+          applyRestEffect(enemy, enemyBattleState);
+          setHP(enemyHpBar, enemy.hp);
+          setStatus(enemyHpBar, enemy.status ?? '');
+          spawnDamageNumber(
+            `+${enemy.maxHp}`,
+            BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+            BTL.OPP_SPRITE.y + 10,
+            '#48d870',
           );
+          audio.playSFX('heal');
+        }
+        // Heal % moves (Recover, Roost, Milk Drink, etc.)
+        if (healPercentEnemy !== null) {
+          const healed = applyHealPercent(enemy, healPercentEnemy);
+          if (healed > 0) {
+            setHP(enemyHpBar, enemy.hp);
+            spawnDamageNumber(
+              `+${healed}`,
+              BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+              BTL.OPP_SPRITE.y + 10,
+              '#48d870',
+            );
+            audio.playSFX('heal');
+          }
+        }
+        // Focus Energy: boost crit rate for all future moves
+        if (isFocusEnergyEnemy) {
+          enemyBattleState.critBoost = true;
+        }
+        if (hitResult.hit) {
+          let totalActualDamageEnemy = 0;
+          for (let hit = 0; hit < hitCountEnemy; hit++) {
+            if (player.hp <= 0) break;
+            const popupY = BTL.PLY_SPRITE.y + 10 - hit * 5;
+            totalActualDamageEnemy += applyMoveImpact(
+              player, m, playerHpBar,
+              BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, popupY,
+              plannedDamage, suppressHitAudioEnemy,
+            );
+          }
+          const actualDamage = totalActualDamageEnemy;
           if (actualDamage > 0) {
+            playerBattleState.turnFlags.tookDamageThisTurn = true;
             const drained = applyDrainHealing(enemy, actualDamage, moveBattleData?.drainPercent ?? null);
             if (drained > 0) {
               setHP(enemyHpBar, enemy.hp);
@@ -2620,6 +2946,7 @@ export function createBattleScene(
         }
       },
       hitResult.hit && !absorbed && plannedDamage > 0,
+      hitCountEnemy,
     );
     phase = 'ENEMY_TURN';
     phaseTimer = 0;

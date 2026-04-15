@@ -18,6 +18,7 @@
 import type { PlayerData } from '../types/index.js';
 import { getDefaultHeroCharacterId } from '../engine/character-sprites.js';
 import { CURRENT_SAVE_VERSION } from './save.js';
+import { getPlayerBirthYear } from '../data/story/global-gate-config.js';
 
 /** Create a fresh player save with default values. */
 export function createNewPlayer(name: string): PlayerData {
@@ -46,5 +47,6 @@ export function createNewPlayer(name: string): PlayerData {
     pokedexBatteryCharges: 50,
     battleHelperBattles: 10,
     battleHelperEnabled: true,
+    birthYear: getPlayerBirthYear(),
   };
 }

@@ -260,6 +260,7 @@ export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): vo
   runtimeState.turnFlags.flinched = false;
   runtimeState.turnFlags.protected = false;
   runtimeState.turnFlags.skipTurn = false;
+  runtimeState.turnFlags.tookDamageThisTurn = false;
 }
 
 export function tryApplyFlinch(
@@ -433,6 +434,7 @@ export function rollCriticalHit(
   moveId: number,
   defender: Pokemon,
   random: () => number = Math.random,
+  attackerState?: BattlePokemonRuntimeState,
 ): boolean {
   if (defender.abilityId) {
     const preventsCrit = getAbilityBattleEffects(defender.abilityId).some(effect => effect.kind === 'preventCriticalHits');
@@ -440,7 +442,9 @@ export function rollCriticalHit(
   }
 
   const critRate = getMoveBattleData(moveId)?.critRate ?? 0;
-  const chance = critRate >= 1 ? 12.5 : 6.25;
+  const focusBoost = attackerState?.critBoost ? 1 : 0;
+  const effective = critRate + focusBoost;
+  const chance = effective >= 2 ? 50 : effective >= 1 ? 12.5 : 6.25;
   return (random() * 100) < chance;
 }
 
@@ -762,6 +766,32 @@ export function applyLeechSeedEffect(
   const healed = Math.max(0, Math.min(recipient.maxHp, recipient.hp + damage) - recipient.hp);
   recipient.hp = Math.min(recipient.maxHp, recipient.hp + damage);
   return { applied: true, damage, healed, fainted: target.hp <= 0 };
+}
+
+export function applyRestEffect(
+  pokemon: Pokemon,
+  runtimeState: BattlePokemonRuntimeState,
+): number {
+  const healed = pokemon.maxHp - pokemon.hp;
+  pokemon.hp = pokemon.maxHp;
+  pokemon.status = 'sleep';
+  runtimeState.majorStatus = 'sleep';
+  runtimeState.sleepTurnsRemaining = 2;
+  runtimeState.badlyPoisonTurns = 0;
+  for (const move of pokemon.moves) {
+    move.currentPp = move.pp;
+  }
+  return healed;
+}
+
+export function applyHealPercent(
+  pokemon: Pokemon,
+  percent: number,
+): number {
+  const healAmount = Math.max(1, Math.floor((pokemon.maxHp * percent) / 100));
+  const healed = Math.min(healAmount, pokemon.maxHp - pokemon.hp);
+  pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
+  return healed;
 }
 
 export function applyTrapEndOfTurnEffect(
