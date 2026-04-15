@@ -2047,7 +2047,11 @@ export function createBattleScene(
       }
 
       if (moveBattleData.ailment?.target === 'target') {
-        if (isSafeguardActive(defenderSideState)) {
+        const substituteBlocksStatus = defenderState.substituteActive
+          && !isSubstituteBypass(move.name, attacker.abilityId);
+        if (substituteBlocksStatus) {
+          // substitute silently blocks foe-caused status — Infiltrator ability bypasses this
+        } else if (isSafeguardActive(defenderSideState)) {
           lines.push(getSafeguardBlockedLine(defenderName));
         } else if (isTargetImmuneToStatusEffectFromMoveType(defender, move.type, moveBattleData.ailment)) {
           lines.push(getEffectImmuneLine(defenderName));
