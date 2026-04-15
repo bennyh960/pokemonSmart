@@ -31,6 +31,8 @@ export interface BattlePokemonRuntimeState {
   statModifiers: BattleStatModifiers;
   turnFlags: BattleTurnFlags;
   critBoost: boolean;
+  substituteActive: boolean;
+  substituteHitsAbsorbed: number;
 }
 
 export interface BattleSideRuntimeState {
@@ -89,6 +91,8 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),
     critBoost: false,
+    substituteActive: false,
+    substituteHitsAbsorbed: 0,
   };
 }
 

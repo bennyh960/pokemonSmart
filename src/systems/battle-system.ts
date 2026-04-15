@@ -257,6 +257,17 @@ export function clearChargingMove(runtimeState: BattlePokemonRuntimeState): void
   runtimeState.chargingMoveId = null;
 }
 
+const SOUND_MOVE_NAMES = new Set([
+  'bug buzz', 'hyper voice', 'supersonic', 'uproar', 'torch song',
+  'roar', 'whirlwind', 'snore', 'screech', 'sing', 'boomburst',
+  'chatter', 'echoed voice', 'round', 'relic song', 'sparkling aria',
+  'noble roar', 'disarming voice', 'parting shot', 'confide', 'snarl',
+]);
+
+export function isSubstituteBypass(moveName: string, attackerAbilityId: number | null | undefined): boolean {
+  return SOUND_MOVE_NAMES.has(moveName.toLowerCase()) || attackerAbilityId === 151;
+}
+
 export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): void {
   runtimeState.turnFlags.flinched = false;
   runtimeState.turnFlags.protected = false;

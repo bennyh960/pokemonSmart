@@ -21,6 +21,16 @@
   "types": ["psychic"],
   "moves": [
     {
+      "id": 164,
+      "name": "Substitute",
+      "type": "normal",
+      "power": null,
+      "accuracy": null,
+      "pp": 10,
+      "currentPp": 10,
+      "mathDifficulty": 1
+    },
+    {
       "id": 138,
       "name": "Dream Eater",
       "type": "psychic",

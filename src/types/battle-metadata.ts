@@ -36,7 +36,9 @@ export type MoveBattleBehaviorTag =
   | 'toxic-spikes'
   | 'brick-break'
   | 'defog'
-  | 'rapid-spin-clear';
+  | 'rapid-spin-clear'
+  | 'substitute'
+  | 'baton-pass';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 

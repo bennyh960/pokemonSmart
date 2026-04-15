@@ -277,6 +277,8 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
 
   // --- Special behavior moves ---
   'Focus Punch': { behaviorTags: ['focus-punch'] },
+  Substitute: { behaviorTags: ['substitute'], target: 'user' },
+  'Baton Pass': { behaviorTags: ['baton-pass'], target: 'user' },
   Facade: { behaviorTags: ['facade-boost'] },
   'Foul Play': { behaviorTags: ['foul-play'] },
   'Dream Eater': { behaviorTags: ['dream-eater'], drainPercent: 50 },

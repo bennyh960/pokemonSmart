@@ -120,6 +120,7 @@ import {
   applyVolatileMoveEffects,
   calculateMoveHpEffectAmount,
   clearEndOfTurnFlags,
+  isSubstituteBypass,
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
   clearChargingMove,
@@ -549,6 +550,8 @@ export function createBattleScene(
   let pendingPlayerSendOutAnimation = false;
   let pendingPlayerEntryHazard = false;
   let pendingEnemyEntryHazard = false;
+  let pendingSubstituteCarryover: { active: boolean; hitsAbsorbed: number } | null = null;
+  let substituteDollFlash: { timer: number; duration: number; color: string; side: 'player' | 'enemy' } | null = null;
   const animationDirector = createBattleAnimationDirector();
 
   function useItem(itemId: string): void {
@@ -851,6 +854,8 @@ export function createBattleScene(
     pendingPlayerSendOutAnimation = true;
     pendingPlayerEntryHazard = false;
     pendingEnemyEntryHazard = false;
+    pendingSubstituteCarryover = null;
+    substituteDollFlash = null;
     animationDirector.clear();
     animationDirector.resetActors();
     animationDirector.setActorState('ball', { visible: false });
@@ -1520,6 +1525,11 @@ export function createBattleScene(
         callStep(() => {
           activeBallId = null;
           pendingPlayerEntryHazard = true;
+          if (pendingSubstituteCarryover) {
+            playerBattleState.substituteActive = pendingSubstituteCarryover.active;
+            playerBattleState.substituteHitsAbsorbed = pendingSubstituteCarryover.hitsAbsorbed;
+            pendingSubstituteCarryover = null;
+          }
           animationDirector.setActorState('ball', {
             x: 0,
             y: 0,
@@ -2426,6 +2436,8 @@ export function createBattleScene(
     const isSpikes = moveBattleData?.behaviorTags?.includes('spikes') ?? false;
     const isToxicSpikes = moveBattleData?.behaviorTags?.includes('toxic-spikes') ?? false;
     const isRapidSpinClear = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
+    const isSubstitute = moveBattleData?.behaviorTags?.includes('substitute') ?? false;
+    const isBatonPass = moveBattleData?.behaviorTags?.includes('baton-pass') ?? false;
     const healPercent = moveBattleData?.healingPercent ?? null;
     const hitCount = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -2465,6 +2477,70 @@ export function createBattleScene(
         ...turnEffectLines,
         t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
         t('battle.focusPunchFailed', { name: attackerName }),
+      ];
+      textBox = createTextBox(msgs, rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
+    }
+
+    // Substitute: player creates a doll at 1/4 max HP cost
+    if (isSubstitute) {
+      const cost = Math.floor(player.maxHp / 4);
+      if (playerBattleState.substituteActive) {
+        const msgs = [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.substituteAlreadyActive', { name: attackerName }),
+        ];
+        audio.playSFX('menu-cancel');
+        textBox = createTextBox(msgs, rtl);
+        phase = 'PLAYER_ATTACK';
+        phaseTimer = 0;
+        return;
+      }
+      if (player.hp <= cost) {
+        const msgs = [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.substituteTooWeak', { name: attackerName }),
+        ];
+        audio.playSFX('menu-cancel');
+        textBox = createTextBox(msgs, rtl);
+        phase = 'PLAYER_ATTACK';
+        phaseTimer = 0;
+        return;
+      }
+      playAttackAnimation('player', 'enemy', m, () => {
+        player.hp -= cost;
+        setHP(playerHpBar, player.hp);
+        playerBattleState.substituteActive = true;
+        playerBattleState.substituteHitsAbsorbed = 0;
+        syncPlayerBar();
+        const msgs = [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.substituteCreated', { name: attackerName }),
+        ];
+        textBox = createTextBox(msgs, rtl);
+        phase = 'PLAYER_ATTACK';
+        phaseTimer = 0;
+      }, false);
+      return;
+    }
+
+    // Baton Pass: save substitute state for incoming Pokemon
+    if (isBatonPass) {
+      if (playerBattleState.substituteActive) {
+        pendingSubstituteCarryover = {
+          active: true,
+          hitsAbsorbed: playerBattleState.substituteHitsAbsorbed,
+        };
+        playerBattleState.substituteActive = false;
+      }
+      const msgs = [
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
       ];
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
@@ -2695,6 +2771,21 @@ export function createBattleScene(
       }
     }
 
+    // Substitute: precompute message based on planned damage
+    if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && enemyBattleState.substituteActive) {
+      const playerMoveName2 = moveData?.name?.en ?? m.name;
+      if (!isSubstituteBypass(playerMoveName2, player.abilityId)) {
+        const subThreshold = Math.floor(enemy.maxHp / 4);
+        if (plannedDamage >= subThreshold) {
+          msgs.push(t('battle.substituteDestroyed'));
+        } else {
+          msgs.push(t('battle.substituteAbsorbed'));
+        }
+      } else if (plannedDamage > 0) {
+        msgs.push(t('battle.substituteBypassed'));
+      }
+    }
+
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation(
       'player',
@@ -2742,9 +2833,30 @@ export function createBattleScene(
         }
         if (hitResult.hit) {
           let totalActualDamage = 0;
+          const playerMoveName = moveData?.name?.en ?? m.name;
+          const playerBypassesSub = isSubstituteBypass(playerMoveName, player.abilityId);
           for (let hit = 0; hit < hitCount; hit++) {
             if (enemy.hp <= 0) break;
             const popupY = BTL.OPP_SPRITE.y + 10 - hit * 5;
+            if (enemyBattleState.substituteActive && !playerBypassesSub && doesMoveTargetOpponent(moveBattleData)) {
+              const threshold = Math.floor(enemy.maxHp / 4);
+              if (plannedDamage >= threshold) {
+                enemyBattleState.substituteActive = false;
+                enemyBattleState.substituteHitsAbsorbed = 0;
+                substituteDollFlash = { timer: 0, duration: 0.4, color: '#ff4040', side: 'enemy' };
+                audio.playSFX('hit');
+              } else {
+                enemyBattleState.substituteHitsAbsorbed++;
+                substituteDollFlash = { timer: 0, duration: 0.3, color: '#ffffff', side: 'enemy' };
+                audio.playSFX('hit');
+                if (enemyBattleState.substituteHitsAbsorbed >= 2) {
+                  enemyBattleState.substituteActive = false;
+                  enemyBattleState.substituteHitsAbsorbed = 0;
+                  substituteDollFlash = { timer: 0, duration: 0.4, color: '#ff4040', side: 'enemy' };
+                }
+              }
+              continue;
+            }
             totalActualDamage += applyMoveImpact(
               enemy,
               m,
@@ -2871,6 +2983,7 @@ export function createBattleScene(
     const isSpikesEnemy = moveBattleData?.behaviorTags?.includes('spikes') ?? false;
     const isToxicSpikesEnemy = moveBattleData?.behaviorTags?.includes('toxic-spikes') ?? false;
     const isRapidSpinClearEnemy = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
+    const isSubstituteEnemy = moveBattleData?.behaviorTags?.includes('substitute') ?? false;
     const healPercentEnemy = moveBattleData?.healingPercent ?? null;
     const hitCountEnemy = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -2945,6 +3058,52 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
+      return;
+    }
+
+    // Substitute: enemy creates a doll at 1/4 max HP cost
+    if (isSubstituteEnemy) {
+      const cost = Math.floor(enemy.maxHp / 4);
+      if (enemyBattleState.substituteActive) {
+        const msgs = [
+          ...prefix,
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.substituteAlreadyActive', { name: attackerName }),
+        ];
+        textBox = createTextBox(msgs, rtl);
+        phase = 'ENEMY_TURN';
+        phaseTimer = 0;
+        return;
+      }
+      if (enemy.hp <= cost) {
+        const msgs = [
+          ...prefix,
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.substituteTooWeak', { name: attackerName }),
+        ];
+        textBox = createTextBox(msgs, rtl);
+        phase = 'ENEMY_TURN';
+        phaseTimer = 0;
+        return;
+      }
+      playAttackAnimation('enemy', 'player', m, () => {
+        enemy.hp -= cost;
+        setHP(enemyHpBar, enemy.hp);
+        enemyBattleState.substituteActive = true;
+        enemyBattleState.substituteHitsAbsorbed = 0;
+        syncEnemyBar();
+        const msgs = [
+          ...prefix,
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.substituteCreated', { name: attackerName }),
+        ];
+        textBox = createTextBox(msgs, rtl);
+        phase = 'ENEMY_TURN';
+        phaseTimer = 0;
+      }, false);
       return;
     }
 
@@ -3167,6 +3326,21 @@ export function createBattleScene(
       }
     }
 
+    // Substitute: precompute message based on planned damage
+    if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && playerBattleState.substituteActive) {
+      const enemyMoveName = moveData?.name?.en ?? m.name;
+      if (!isSubstituteBypass(enemyMoveName, enemy.abilityId)) {
+        const subThreshold = Math.floor(player.maxHp / 4);
+        if (plannedDamage >= subThreshold) {
+          msgs.push(t('battle.substituteDestroyed'));
+        } else {
+          msgs.push(t('battle.substituteAbsorbed'));
+        }
+      } else if (plannedDamage > 0) {
+        msgs.push(t('battle.substituteBypassed'));
+      }
+    }
+
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation(
       'enemy',
@@ -3214,9 +3388,30 @@ export function createBattleScene(
         }
         if (hitResult.hit) {
           let totalActualDamageEnemy = 0;
+          const enemyMoveName2 = moveData?.name?.en ?? m.name;
+          const enemyBypassesSub = isSubstituteBypass(enemyMoveName2, enemy.abilityId);
           for (let hit = 0; hit < hitCountEnemy; hit++) {
             if (player.hp <= 0) break;
             const popupY = BTL.PLY_SPRITE.y + 10 - hit * 5;
+            if (playerBattleState.substituteActive && !enemyBypassesSub && doesMoveTargetOpponent(moveBattleData)) {
+              const threshold = Math.floor(player.maxHp / 4);
+              if (plannedDamage >= threshold) {
+                playerBattleState.substituteActive = false;
+                playerBattleState.substituteHitsAbsorbed = 0;
+                substituteDollFlash = { timer: 0, duration: 0.4, color: '#ff4040', side: 'player' };
+                audio.playSFX('hit');
+              } else {
+                playerBattleState.substituteHitsAbsorbed++;
+                substituteDollFlash = { timer: 0, duration: 0.3, color: '#ffffff', side: 'player' };
+                audio.playSFX('hit');
+                if (playerBattleState.substituteHitsAbsorbed >= 2) {
+                  playerBattleState.substituteActive = false;
+                  playerBattleState.substituteHitsAbsorbed = 0;
+                  substituteDollFlash = { timer: 0, duration: 0.4, color: '#ff4040', side: 'player' };
+                }
+              }
+              continue;
+            }
             totalActualDamageEnemy += applyMoveImpact(
               player,
               m,
@@ -3462,6 +3657,12 @@ export function createBattleScene(
       phaseTimer += dt;
       if (flash) updateFlash(flash, dt);
       if (shake) updateShake(shake, dt);
+      if (substituteDollFlash) {
+        substituteDollFlash.timer += dt;
+        if (substituteDollFlash.timer >= substituteDollFlash.duration) {
+          substituteDollFlash = null;
+        }
+      }
       if (fade) updateFade(fade, dt);
       if (levelUpFx) updateLevelUpEffect(levelUpFx, dt);
       if (captureSuccessFx) updateCaptureSuccessEffect(captureSuccessFx, dt);
@@ -4128,6 +4329,7 @@ export function createBattleScene(
       if (!showingTrainer) {
         const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
         if (enemySprite) {
+          if (enemyBattleState?.substituteActive) ctx.globalAlpha = 0.45;
           renderActorImage(
             ctx,
             'enemy',
@@ -4137,12 +4339,14 @@ export function createBattleScene(
             BTL.OPP_SPRITE.w,
             BTL.OPP_SPRITE.h,
           );
+          ctx.globalAlpha = 1;
         }
       }
 
       // ── Player Pokemon sprite (left side) ──
       const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
       if (playerSprite) {
+        if (playerBattleState?.substituteActive) ctx.globalAlpha = 0.45;
         renderActorImage(
           ctx,
           'player',
@@ -4152,6 +4356,7 @@ export function createBattleScene(
           BTL.PLY_SPRITE.w,
           BTL.PLY_SPRITE.h,
         );
+        ctx.globalAlpha = 1;
       }
 
       renderArenaEffects(ctx);
@@ -4340,6 +4545,74 @@ export function createBattleScene(
     if (playerSideState.toxicSpikesLayers > 0) {
       renderSpikes(ctx, playerHazardX, playerHazardY + 4, playerSideState.toxicSpikesLayers, '#c060e0', now);
     }
+
+    // Substitute dolls
+    if (playerBattleState?.substituteActive) {
+      const dollX = BTL.PLY_SPRITE.x + 30;
+      const dollY = BTL.PLY_SPRITE.y + 38 + Math.sin(now * 2.5) * 1;
+      renderSubstituteDoll(ctx, dollX, dollY);
+    }
+    if (enemyBattleState?.substituteActive) {
+      const dollX = BTL.OPP_SPRITE.x + 16;
+      const dollY = BTL.OPP_SPRITE.y + 30 + Math.sin(now * 2.5 + 1) * 1;
+      renderSubstituteDoll(ctx, dollX, dollY);
+    }
+
+    // Substitute doll flash
+    if (substituteDollFlash) {
+      const flashT = substituteDollFlash.timer / substituteDollFlash.duration;
+      const flashAlpha = (1 - flashT) * 0.8;
+      const flashSide = substituteDollFlash.side;
+      const flashX = flashSide === 'player' ? BTL.PLY_SPRITE.x + 30 : BTL.OPP_SPRITE.x + 16;
+      const flashY = flashSide === 'player' ? BTL.PLY_SPRITE.y + 38 : BTL.OPP_SPRITE.y + 30;
+      ctx.save();
+      ctx.globalAlpha = flashAlpha;
+      ctx.fillStyle = substituteDollFlash.color;
+      ctx.beginPath();
+      ctx.arc(flashX, flashY, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function renderSubstituteDoll(ctx: CanvasRenderingContext2D, cx: number, cy: number): void {
+    ctx.save();
+    ctx.fillStyle = '#e8d8a0';
+    ctx.strokeStyle = '#8b6914';
+    ctx.lineWidth = 0.6;
+    ctx.beginPath();
+    ctx.arc(cx, cy - 8, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#d4b870';
+    ctx.fillRect(cx - 2.5, cy - 4, 5, 7);
+    ctx.strokeRect(cx - 2.5, cy - 4, 5, 7);
+    ctx.strokeStyle = '#c8a860';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(cx - 2.5, cy - 2);
+    ctx.lineTo(cx - 6, cy + 1);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + 2.5, cy - 2);
+    ctx.lineTo(cx + 6, cy + 1);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx - 1, cy + 3);
+    ctx.lineTo(cx - 2, cy + 7);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + 1, cy + 3);
+    ctx.lineTo(cx + 2, cy + 7);
+    ctx.stroke();
+    ctx.fillStyle = '#5a3a00';
+    ctx.beginPath();
+    ctx.arc(cx - 1.5, cy - 9, 0.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx + 1.5, cy - 9, 0.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
 
   function renderScreenWall(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, color: string, time: number): void {
