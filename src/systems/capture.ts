@@ -42,6 +42,8 @@ const STAT_BONUS_MAX = 0.3;
 const LEVEL_BONUS_PER_LEVEL = 0.01;
 const LEVEL_BONUS_MAX = 0.2;
 
+const SPECIES_FACTOR_REDUCER = 0.8; // reduces the impact of species catch rate on final probability to keep gameplay engaging across rarities
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function clamp(value: number, min: number, max: number): number {
@@ -106,7 +108,7 @@ export function calculateCaptureChance(input: CaptureChanceInput): number {
 
   const maxHp = Math.max(1, input.maxHp);
   const currentHp = clamp(input.currentHp, 0, maxHp);
-  const speciesFactor = clamp(input.speciesCatchRate / 255, 0, 1);
+  const speciesFactor = clamp(input.speciesCatchRate / 255, 0, 1) / SPECIES_FACTOR_REDUCER;
 
   const hpComponent = HP_BASE + (1 - currentHp / maxHp) * HP_RANGE;
   const statusBonus = getStatusCatchBonus(input.status);
@@ -116,17 +118,17 @@ export function calculateCaptureChance(input: CaptureChanceInput): number {
 
   const rawScore = hpComponent + statusBonus + turnBonus + statReductBonus + levelBonus;
 
-  // console.log(`Capture Chance Calculation Debug:
-  // HP Component: ${hpComponent.toFixed(4)}
-  // Status Bonus: ${statusBonus.toFixed(4)}
-  // Turn Bonus: ${turnBonus.toFixed(4)}
-  // Stat Reduction Bonus: ${statReductBonus.toFixed(4)}
-  // Level Bonus: ${levelBonus.toFixed(4)}
-  // Raw Score: ${rawScore.toFixed(4)}
-  // Species Factor: ${speciesFactor.toFixed(4)}
-  // Ball Rate: ${input.ballRate.toFixed(4)}
-  // Final Chance (before clamping): ${(rawScore * speciesFactor * input.ballRate).toFixed(4)}
-  // Final Capture Chance: ${clamp(rawScore * speciesFactor * input.ballRate, 0, 1).toFixed(4)}
-  // `);
+  console.log(`Capture Chance Calculation Debug:
+  HP Component: ${hpComponent.toFixed(4)}
+  Status Bonus: ${statusBonus.toFixed(4)}
+  Turn Bonus: ${turnBonus.toFixed(4)}
+  Stat Reduction Bonus: ${statReductBonus.toFixed(4)}
+  Level Bonus: ${levelBonus.toFixed(4)}
+  Raw Score: ${rawScore.toFixed(4)}
+  Species Factor: ${speciesFactor.toFixed(4)}
+  Ball Rate: ${input.ballRate.toFixed(4)}
+  Final Chance (before clamping): ${(rawScore * speciesFactor * input.ballRate).toFixed(4)}
+  Final Capture Chance: ${clamp(rawScore * speciesFactor * input.ballRate, 0, 1).toFixed(4)}
+  `);
   return clamp(rawScore * speciesFactor * input.ballRate, 0, 1);
 }

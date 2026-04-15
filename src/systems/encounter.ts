@@ -267,9 +267,9 @@ function rollEncounter(table: EncounterTable, tileTypes?: string[] | null): Poke
 
 /** Total XP required to reach a given level (Fluctuating growth rate). */
 function fluctuatingTotal(n: number): number {
-  if (n <= 15) return Math.floor((n ** 3) * (24 + Math.floor((n + 1) / 3)) / 50);
-  if (n <= 36) return Math.floor((n ** 3) * (14 + n) / 50);
-  return Math.floor((n ** 3) * (32 + Math.floor(n / 2)) / 50);
+  if (n <= 15) return Math.floor((n ** 3 * (24 + Math.floor((n + 1) / 3))) / 50);
+  if (n <= 36) return Math.floor((n ** 3 * (14 + n)) / 50);
+  return Math.floor((n ** 3 * (32 + Math.floor(n / 2))) / 50);
 }
 
 /**
