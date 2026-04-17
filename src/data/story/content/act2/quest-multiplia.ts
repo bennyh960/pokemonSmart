@@ -26,6 +26,7 @@ import { registerCutscene }   from '../../cutscenes.js';
 import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
+import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -52,9 +53,11 @@ registerGate({
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-  totalQuestions: 3,
-  passThreshold: 2,
-  failurePenalty: { type: 'money-and-cooldown', amount: 100, durationMs: 5 * 60 * 1000 },
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 3,
+    penaltyAmount: 100,
+  },
   reopenCooldownMs: 30 * 60 * 1000,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_ROUTE3_PASS },
@@ -68,9 +71,11 @@ registerGate({
   description: { en: 'Answer 4 questions to enter the gym.', he: 'ענה על 4 שאלות כדי להיכנס לחדר הכושר.' },
   triggerType: 'gym-entry',
   questionSetIds: ['placeholder'],
-  totalQuestions: 4,
-  passThreshold: 3,
-  failurePenalty: { type: 'none' },
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 4,
+    penaltyAmount: 0,
+  },
   reopenCooldownMs: 0,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_MULTIPLIA_GYM_PASS },

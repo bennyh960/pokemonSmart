@@ -30,11 +30,7 @@ import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js
 import { mountGateOverlay } from '../systems/gate-overlay.js';
 import type { SessionResult } from '../systems/gate-overlay.js';
 import type { StoryAction } from '../data/story/events.js';
-import {
-  VERIFICATION_DIALOGUES,
-  DEFAULT_SESSION_CONFIG,
-} from '../data/story/global-gate-config.js';
-import type { GateSessionConfig } from '../data/story/gates.js';
+import { VERIFICATION_DIALOGUES } from '../data/story/global-gate-config.js';
 import { getItem } from '../data/items.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 
@@ -111,11 +107,7 @@ export function createGateScene(
     const gate = getGate(gateId);
     if (!gate) { overlayRunning = false; return; }
 
-    const cfg: GateSessionConfig = gate.sessionConfig ?? {
-      ...DEFAULT_SESSION_CONFIG,
-      questionsRequired: gate.totalQuestions,
-      timeLimitPerQuestion: gate.timeLimitPerQuestion ?? 45,
-    };
+    const cfg = gate.sessionConfig;
 
     const dialogues = _dialoguesFor(gate.triggerType);
 

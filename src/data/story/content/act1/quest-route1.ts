@@ -48,17 +48,15 @@ registerGate({
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-  totalQuestions: 2, //seems like deprecated,use questionsRequired
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
-    rewards: [{ type: 'money', amount: 500 }],
     questionsRequired: 5,
     timeLimitPerQuestion: 120,
     rewardThreshold: 0.8,
+    rewards: [{ type: 'money', amount: 500 }],
+    penaltyAmount: 1250,
   },
-  passThreshold: 3,
-  failurePenalty: { type: 'money', amount: 1250 },
-  reopenCooldownMs: 0 * 30 * 60 * 1000, // 30 min
+  reopenCooldownMs: 0,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_ROUTE1_PASS },
     { type: 'set-quest', questId: 'main-act1-sumville' },

@@ -25,6 +25,7 @@ import { registerCutscene }   from '../../cutscenes.js';
 import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
+import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -51,9 +52,11 @@ registerGate({
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-  totalQuestions: 5,
-  passThreshold: 3,
-  failurePenalty: { type: 'money-and-cooldown', amount: 200, durationMs: 10 * 60 * 1000 },
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 5,
+    penaltyAmount: 200,
+  },
   reopenCooldownMs: 30 * 60 * 1000,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_ROUTE6_PASS },
@@ -67,9 +70,11 @@ registerGate({
   description: { en: 'Answer 5 questions to challenge Symma.', he: 'ענה על 5 שאלות כדי לאתגר את סימה.' },
   triggerType: 'gym-entry',
   questionSetIds: ['placeholder'],
-  totalQuestions: 5,
-  passThreshold: 4,
-  failurePenalty: { type: 'none' },
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 5,
+    penaltyAmount: 0,
+  },
   reopenCooldownMs: 0,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_SYMMETRIKA_GYM_PASS },

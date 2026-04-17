@@ -170,8 +170,6 @@ registerGate({
   description: { en: 'Market security requires identity verification.', he: 'אבטחת השוק דורשת אימות זהות.' },
   triggerType: 'auto-pokemarket',
   questionSetIds: ['*'],
-  totalQuestions: AUTO_GATE_QUESTION_COUNTS.pokemarket,
-  passThreshold: AUTO_GATE_QUESTION_COUNTS.pokemarket,
   reopenCooldownMs: AUTO_GATE_COOLDOWNS.pokemarket,
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
@@ -190,8 +188,6 @@ registerGate({
   },
   triggerType: 'auto-gym-entrance',
   questionSetIds: ['*'],
-  totalQuestions: AUTO_GATE_QUESTION_COUNTS.gym,
-  passThreshold: AUTO_GATE_QUESTION_COUNTS.gym,
   reopenCooldownMs: AUTO_GATE_COOLDOWNS.gym,
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,

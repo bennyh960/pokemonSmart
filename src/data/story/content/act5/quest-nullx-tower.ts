@@ -33,6 +33,7 @@ import { registerCutscene }   from '../../cutscenes.js';
 import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
+import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -65,9 +66,7 @@ registerGate({
   },
   triggerType: 'story-event',
   questionSetIds: ['placeholder'],
-  totalQuestions: 5,
-  passThreshold: 4,
-  failurePenalty: { type: 'none' },
+  sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 5, penaltyAmount: 0 },
   reopenCooldownMs: 0,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_TOWER_ENTRY_PASS },
@@ -81,9 +80,7 @@ registerGate({
   description: { en: 'Pattern recognition + comprehension. 8 questions.', he: 'זיהוי דפוסים + הבנה. 8 שאלות.' },
   triggerType: 'elite-four',
   questionSetIds: ['placeholder'],
-  totalQuestions: 8,
-  passThreshold: 6,
-  failurePenalty: { type: 'none' },
+  sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 8, penaltyAmount: 0 },
   reopenCooldownMs: 0,
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ELITE_PARSE_PASS }],
 });
@@ -94,9 +91,7 @@ registerGate({
   description: { en: 'Recursive logic + number sequences. 8 questions.', he: 'לוגיקה רקורסיבית + סדרות מספרים. 8 שאלות.' },
   triggerType: 'elite-four',
   questionSetIds: ['placeholder'],
-  totalQuestions: 8,
-  passThreshold: 6,
-  failurePenalty: { type: 'none' },
+  sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 8, penaltyAmount: 0 },
   reopenCooldownMs: 0,
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ELITE_RECURSE_PASS }],
 });
@@ -107,9 +102,7 @@ registerGate({
   description: { en: 'Mixed challenge — hardest gate before the final. 8 questions.', he: 'אתגר מעורב — השער הקשה ביותר לפני הסיום. 8 שאלות.' },
   triggerType: 'elite-four',
   questionSetIds: ['placeholder'],
-  totalQuestions: 8,
-  passThreshold: 6,
-  failurePenalty: { type: 'none' },
+  sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 8, penaltyAmount: 0 },
   reopenCooldownMs: 0,
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ELITE_NULL_Y_PASS }],
 });
@@ -120,9 +113,7 @@ registerGate({
   description: { en: 'First-principles math. Speed gates. 8 questions.', he: 'מתמטיקה מעקרונות ראשוניים. שערי מהירות. 8 שאלות.' },
   triggerType: 'elite-four',
   questionSetIds: ['placeholder'],
-  totalQuestions: 8,
-  passThreshold: 6,
-  failurePenalty: { type: 'none' },
+  sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 8, penaltyAmount: 0 },
   reopenCooldownMs: 0,
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ELITE_AXIOM_PASS }],
 });
@@ -133,9 +124,7 @@ registerGate({
   description: { en: "NULL-X's ultimate challenge. 10 questions. 8 correct to proceed.", he: 'האתגר האולטימטיבי של NULL-X. 10 שאלות. 8 נכונות להמשיך.' },
   triggerType: 'elite-four',
   questionSetIds: ['placeholder'],
-  totalQuestions: 10,
-  passThreshold: 8,
-  failurePenalty: { type: 'none' },
+  sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 10, penaltyAmount: 0 },
   reopenCooldownMs: 0,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_NULLX_FINAL_PASS },

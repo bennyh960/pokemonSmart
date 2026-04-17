@@ -84,22 +84,20 @@ registerGate({
   triggerType: 'gym-entry',
   questionSetIds: ['placeholder'],
   conditions: [],
-  totalQuestions: 15,
   sessionConfig: {
-    inputQuestions: { count: 5, types: ['+'] },
     ...DEFAULT_SESSION_CONFIG,
+    inputQuestions: { count: 5, types: ['+'] },
+    questionsRequired: 1,
+    rewardThreshold: 1,
+    bonusMultiplier: 30,
+    penaltyAmount: 0,
     rewards: [
       { type: 'money', amount: 750 },
       { type: 'item', itemId: 'rare-candy', amount: 100 },
       { type: 'item', itemId: 'zinc', amount: 300 },
     ],
-    questionsRequired: 1,
-    rewardThreshold: 1,
-    bonusMultiplier: 30,
   },
-  passThreshold: 12,
-  failurePenalty: { type: 'none' },
-  reopenCooldownMs: 0, // permanent once passed
+  reopenCooldownMs: 0,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_GYM_PASS },
     { type: 'set-quest', questId: 'main-act1-gym1' },
@@ -114,16 +112,13 @@ registerGate({
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-  totalQuestions: 5,
-  passThreshold: 5,
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
-    inputQuestions: { count: 3 },
-
     questionsRequired: 5,
+    inputQuestions: { count: 3 },
+    penaltyAmount: 150,
   },
-  failurePenalty: { type: 'money', amount: 150 },
-  reopenCooldownMs: 15 * 60 * 1000, // 15 min
+  reopenCooldownMs: 15 * 60 * 1000,
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
 });
 registerGate({
@@ -135,11 +130,12 @@ registerGate({
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-
-  totalQuestions: 5,
-  passThreshold: 5,
-  failurePenalty: { type: 'money', amount: 150 },
-  reopenCooldownMs: 15 * 60 * 1000, // 15 min
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 5,
+    penaltyAmount: 150,
+  },
+  reopenCooldownMs: 15 * 60 * 1000,
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
 });
 // THIS GATE IS FAKE _ THERE IS NO ENTRANCE TO SAFARI BUT DONT CARE FOR NOW
@@ -152,22 +148,20 @@ registerGate({
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
-  totalQuestions: 15,
-  passThreshold: 13,
-  failurePenalty: { type: 'money', amount: 550 },
-  reopenCooldownMs: 15 * 60 * 1000, // 15 min
-  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_SAFARI_PASS }],
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
     questionsRequired: 15,
-    rewardThreshold: 13,
+    rewardThreshold: 0.86,
     bonusMultiplier: 2,
+    penaltyAmount: 550,
     rewards: [
       { type: 'money', amount: 1000 },
-      { itemId: 'rare-candy', type: 'item', amount: 2 },
-      { itemId: 'pokeball', type: 'item', amount: 15 },
+      { type: 'item', itemId: 'rare-candy', quantity: 2 },
+      { type: 'item', itemId: 'pokeball', quantity: 15 },
     ],
   },
+  reopenCooldownMs: 15 * 60 * 1000,
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_SAFARI_PASS }],
 });
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
 

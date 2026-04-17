@@ -88,20 +88,18 @@ registerGate({
   triggerType: 'gym-entry',
   questionSetIds: ['placeholder'],
   conditions: [],
-  totalQuestions: 15,
   sessionConfig: {
-    inputQuestions: { count: 5, types: ['-'] },
     ...DEFAULT_SESSION_CONFIG,
-    rewards: [
-      { type: 'money', amount: 600 },
-      { type: 'item', itemId: 'super-potion', amount: 3 },
-    ],
+    inputQuestions: { count: 5, types: ['-'] },
     questionsRequired: 1,
     rewardThreshold: 0.8,
     bonusMultiplier: 25,
+    penaltyAmount: 0,
+    rewards: [
+      { type: 'money', amount: 600 },
+      { type: 'item', itemId: 'super-potion', quantity: 3 },
+    ],
   },
-  passThreshold: 12,
-  failurePenalty: { type: 'none' },
   reopenCooldownMs: 15 * 60 * 1000,
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_MINUSBURG_GYM_PASS },
