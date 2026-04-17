@@ -346,6 +346,17 @@
       "description": "fence center"
     },
     {
+      "key": "t5",
+      "sx": 112,
+      "sy": 432,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
       "key": "t6",
       "sx": 96,
       "sy": 464,
@@ -3371,6 +3382,20 @@
       "description": "door for b7 house"
     },
     {
+      "key": "t5-cut",
+      "sx": 112,
+      "sy": 432,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "interactive",
+      "interactType": {
+        "id": "cut"
+      },
+      "description": "cutable tree"
+    },
+    {
       "key": "gate",
       "sx": 0,
       "sy": 2064,
@@ -4498,7 +4523,7 @@
       "sy": 496,
       "w": 16,
       "h": 16,
-      "walkable": true,
+      "walkable": false,
       "above": false,
       "overlay": true,
       "category": "tree",
@@ -4797,22 +4822,7 @@
       "walkable": true,
       "above": true,
       "category": "grass",
-      "interactType": null,
       "description": "just flowers"
-    },
-    {
-      "key": "t5-cut",
-      "sx": 112,
-      "sy": 448,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "description": "cuttable tree",
-      "interactType": {
-        "id": "cut"
-      }
     }
   ]
 }

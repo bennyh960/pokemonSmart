@@ -127,6 +127,8 @@ function getStatusDurationRange(effect: MoveStatusEffect | null): { min: number;
 }
 
 function hasStatusImmunity(pokemon: Pokemon, status: MajorStatusId): boolean {
+  const immuneType = SAME_TYPE_STATUS_IMMUNITY_BY_MOVE_TYPE[status];
+  if (immuneType && pokemon.types.includes(immuneType)) return true;
   if (!pokemon.abilityId) return false;
   return getAbilityBattleEffects(pokemon.abilityId).some((effect) => {
     return effect.kind === 'statusImmunity' && effect.statuses.includes(status);

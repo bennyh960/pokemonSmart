@@ -188,26 +188,6 @@
           "pokemonId": 17,
           "level": 25,
           "moves": []
-        },
-        {
-          "pokemonId": 246,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 97,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 58,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 3,
-          "level": 32,
-          "moves": []
         }
       ],
       "lineOfSight": 1,

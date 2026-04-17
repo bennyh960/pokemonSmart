@@ -391,7 +391,7 @@
   "hm.fly.cannotUse": "אתה צריך פוקימון גדול שיודע Fly ברמה 50 ומעלה!",
   "hm.surf.prompt": "המים נראים עמוקים. לגלוש?",
   "hm.surf.mounted": "{name} השתמש ב-Surf!",
-  "hm.cannotUse.surf": "אתה צריך פוקימון גדול שיודע Surf ברמה 60 ומעלה!",
+  "hm.cannotUse.surf": "מאמן מנוסה מספיק יכול להשתמש בפוקימון שיודע שחייה! המשך להתחזק",
   "worldMap.flyHint": "Enter: טוס לכאן",
   "worldMap.noFly": "אין פוקימון שיכול לטוס כרגע",
   "battle.stealthRockSet": "אבנים חדות מרחפות באוויר סביב היריב!",
