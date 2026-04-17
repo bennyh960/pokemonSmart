@@ -68,170 +68,226 @@
     }
   ],
   "npcs": [
- {
-    "id": "gary-oak-mb",
-    "name": { "en": "Gary Oak", "he": "קוא יראג" },
-    "x": 0, "y": 0, "facing": "down",
-    "type": "npc",
-    "spriteType": "trainer-m",
-    "despawnAfter": "rocket-minusburg-all-defeated",
-    "dialogue": [
-      { "en": "Still training? Good. Don't let your guard down — Team Rocket doesn't.", "he": "תאז השוע אל טקור תווצ — רמשמה תא דירות לא .בוט ?ןמאתמ ןיידע."
-   }
-    ]
-  },
-   {
-    "id": "jenny-mb",
-    "name": { "en": "Officer Jenny", "he": "ינ'ג תרטוש" },
-    "x": 1, "y": 0, "facing": "down",
-    "type": "npc",
-    "spriteType": "npc-f",
-    "despawnAfter": "rocket-minusburg-all-defeated",
-    "dialogue": [
-      { "en": "The city is counting on you. Those agents are still out there.", "he": "םש ןיידע םינכוס םתוא .ךילע תכמוס ריעה." }
-    ]
-  },{
-    "id": "minessa-field-mb",
-    "name": { "en": "Minessa", "he": "הסנימ" },
-    "x": 2, "y": 0, "facing": "down",
-    "type": "npc",
-    "spriteType": "npc-f",
-    "spawnAfter": "minusburg-gym-leader-found",
-    "despawnAfter": "rocket-minusburg-all-defeated",
-    "dialogue": [
-      { "en": "Keep going. There are still Rocket agents out there. Drive them all out!", "he": "םלוכ תא שרג .טקור ינכוס םש שי ןיידע .ךשמה!" }
-    ]
-  },{
-    "id": "rocket-mb-1",
-    "name": { "en": "Rocket Grunt", "he": "טקור לייח" },
-    "x": 3, "y": 0, "facing": "down",
-    "type": "trainer", "spriteType": "trainer-m",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "This city belongs to Team Rocket now!", "he": "וישכע טקור תווצל תכייש וזה ריעה!" }],
-    "postBattleDialogue": [{ "en": "NULL-X... will not forgive this.", "he": "NULL-X... הז לע חלסי אל." }],
-    "party": [{ "pokemonId": 23, "level": 10 }, { "pokemonId": 41, "level": 11 }],
-    "reward": { "money": 200 }, "lineOfSight": 3
-  },
-  {
-    "id": "rocket-mb-1",
-    "name": { "en": "Rocket Grunt", "he": "טקור לייח" },
-    "x": 3, "y": 0, "facing": "down",
-    "type": "trainer", "spriteType": "trainer-m",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "This city belongs to Team Rocket now!", "he": "וישכע טקור תווצל תכייש וזה ריעה!" }],
-    "postBattleDialogue": [{ "en": "NULL-X... will not forgive this.", "he": "NULL-X... הז לע חלסי אל." }],
-    "party": [{ "pokemonId": 23, "level": 10 }, { "pokemonId": 41, "level": 11 }],
-    "reward": { "money": 200 }, "lineOfSight": 3
-  },
-  {
-    "id": "rocket-mb-2",
-    "name": { "en": "Rocket Grunt", "he": "טקור תלייח" },
-    "x": 4, "y": 0, "facing": "down",
-    "type": "trainer", "spriteType": "trainer-f",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "Hand over your Pokemon or battle me!", "he": "יב םחליה וא ךלש םינומיקופה תא רוסמת!" }],
-    "postBattleDialogue": [{ "en": "Impossible...", "he": "ירשפא יתלב..." }],
-    "party": [{ "pokemonId": 41, "level": 10 }, { "pokemonId": 19, "level": 11 }],
-    "reward": { "money": 200 }, "lineOfSight": 3
-  },
-  {
-    "id": "rocket-mb-3",
-    "name": { "en": "Rocket Grunt", "he": "טקור לייח" },
-    "x": 5, "y": 0, "facing": "right",
-    "type": "trainer", "spriteType": "trainer-m",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "Team Rocket always has a plan!", "he": "תינכות שי דימת טקור תווצל!" }],
-    "postBattleDialogue": [{ "en": "The plan... failed.", "he": "הלשכנ ...תינכותה." }],
-    "party": [{ "pokemonId": 109, "level": 11 }, { "pokemonId": 23, "level": 11 }],
-    "reward": { "money": 220 }, "lineOfSight": 3
-  },
-  {
-    "id": "rocket-mb-4",
-    "name": { "en": "Rocket Grunt", "he": "טקור תלייח" },
-    "x": 6, "y": 0, "facing": "left",
-    "type": "trainer", "spriteType": "trainer-f",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "NULL-X calculates your defeat already!", "he": "NULL-X ךתסובת תא בשחמ רבכ!" }],
-    "postBattleDialogue": [{ "en": "The calculation was wrong...", "he": "יוגש היה בושיחה..." }],
-    "party": [{ "pokemonId": 23, "level": 11 }, { "pokemonId": 88, "level": 12 }],
-    "reward": { "money": 240 }, "lineOfSight": 3
-  }
-  {
-    "id": "rocket-mb-5",
-    "name": { "en": "Rocket Grunt", "he": "טקור לייח" },
-    "x": 7, "y": 0, "facing": "down",
-    "type": "trainer", "spriteType": "trainer-m",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "You think you can stop us? We outnumber you!", "he": "רפסמב ךילע םילוע ונחנא ?ונתוא רוצעל לכותש בשוח התא!" }],
-    "postBattleDialogue": [{ "en": "One less... but there are more of us.", "he": "דוע שי לבא ...תוחפ דחא דוע." }],
-    "party": [{ "pokemonId": 41, "level": 12 }, { "pokemonId": 109, "level": 12 }],
-    "reward": { "money": 260 },
-    "lineOfSight": 3,
-    "reward": { "money": 260, "items": [{ "itemId": "antidote", "quantity": 1 }] }
-  },
-  {
-    "id": "rocket-mb-6",
-    "name": { "en": "Rocket Grunt", "he": "טקור תלייח" },
-    "x": 8, "y": 0, "facing": "right",
-    "type": "trainer", "spriteType": "trainer-f",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "Pokemon are just tools — and tools belong to Team Rocket!", "he": "טקור תווצל םיכייש םילכו — םילכ קר םה םינומיקופ!" }],
-    "postBattleDialogue": [{ "en": "They chose you over us...", "he": "ונינפ לע ךב ורחב םה..." }],
-    "party": [{ "pokemonId": 88, "level": 12 }, { "pokemonId": 41, "level": 13 }],
-    "reward": { "money": 270 }, "lineOfSight": 3
-  },
-  {
-    "id": "rocket-mb-7",
-    "name": { "en": "Rocket Grunt", "he": "טקור לייח" },
-    "x": 9, "y": 0, "facing": "down",
-    "type": "trainer", "spriteType": "trainer-m",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "Seven of us have fallen — but I won't!", "he": "אל ינא לבא — ולפנ ונתיאמ העבש!" }],
-    "postBattleDialogue": [{ "en": "Seven... eight...", "he": "הנומש ...העבש..." }],
-    "party": [{ "pokemonId": 109, "level": 13 }, { "pokemonId": 88, "level": 13 }],
-    "reward": { "money": 290 }, "lineOfSight": 3
-  },
-  {
-    "id": "rocket-mb-8",
-    "name": { "en": "Rocket Grunt", "he": "טקור תלייח" },
-    "x": 10, "y": 0, "facing": "left",
-    "type": "trainer", "spriteType": "trainer-f",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "Stand down! This is your last warning!", "he": "ךלש הנורחאה הרהזאה וז !ענכת!" }],
-    "postBattleDialogue": [{ "en": "I gave you a warning... I should have just run.", "he": "חורבל טושפ הכירצ יתייה ...הרהזא ךל יתתנ." }],
-    "party": [{ "pokemonId": 24, "level": 13 }, { "pokemonId": 109, "level": 13 }],
-    "reward": { "money": 310 }, "lineOfSight": 3
-  },
-  {
-    "id": "rocket-mb-9",
-    "name": { "en": "Rocket Grunt", "he": "טקור לייח" },
-    "x": 11, "y": 0, "facing": "down",
-    "type": "trainer", "spriteType": "trainer-m",
-    "despawnOnDefeat": true,
-    "dialogue": [{ "en": "You've beaten nine of us... the commander will handle you.", "he": "ךב לפטי דקפמה ...ונתיאמ העשת תחצינ." }],
-    "postBattleDialogue": [{ "en": "Nine down... good luck with number ten.", "he": "הרשע רפסמ םע החלצהב ...ולפנ העשת." }],
-    "party": [{ "pokemonId": 88, "level": 13 }, { "pokemonId": 24, "level": 14 }],
-    "reward": { "money": 330 }, "lineOfSight": 3
-  }, {
-    "id": "rocket-mb-10",
-    "name": { "en": "Rocket Commander", "he": "טקור דקפמ" },
-    "x": 12, "y": 0, "facing": "down",
-    "type": "trainer", "spriteType": "trainer-m",
-    "despawnOnDefeat": true,
-    "dialogue": [
-      { "en": "Impressive... you've defeated all nine of my agents.", "he": "ילש םינכוסה תעשת לכ תא תחצינ ...םישרמ." },
-      { "en": "I'm Team Rocket's field commander. This city is OURS — and so are its Pokemon. This ends HERE!", "he": "אני המפקד של הקבוצה! אני אגמור איתך אחת ולתמיד"}
-    ],
-    "postBattleDialogue": [
-      { "en": "NULL-X... predicted victory. The data must have been wrong.", "he": "NULL-X... םייוגש תויהל םיבייח םינותנה .ןוחצינ הזח." }
-    ],
-    "party": [
-      { "pokemonId": 24, "level": 14 },
-      { "pokemonId": 110, "level": 13 }
-    ],
-    "reward": { "money": 450 },
-    "lineOfSight": 3
-  }
+    {
+      "id": "minusburg-greeter",
+      "name": {
+        "en": "City Guide",
+        "he": "City Guide"
+      },
+      "x": 11,
+      "y": 25,
+      "facing": "right",
+      "type": "npc",
+      "dialogue": [
+        {
+          "en": "Welcome to Minusburg — the city of Subtraction!",
+          "he": ""
+        },
+        {
+          "en": "Our Gym Leader, Minessa, is a master of taking things away.",
+          "he": ""
+        },
+        {
+          "en": "Visit the Pokemon Center if you need to heal up!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_962c1b"
+    },
+    {
+      "id": "minusburg-math-kid",
+      "name": {
+        "en": "Math Student",
+        "he": "Math Student"
+      },
+      "x": 25,
+      "y": 25,
+      "facing": "down",
+      "type": "npc",
+      "dialogue": [
+        {
+          "en": "In Minusburg, we learn that subtraction isn't about losing.",
+          "he": ""
+        },
+        {
+          "en": "It's about finding the difference! 10 minus 7 equals 3.",
+          "he": ""
+        },
+        {
+          "en": "The difference between my Pokemon and yours... let's find out!",
+          "he": ""
+        }
+      ],
+      "spriteType": "dani"
+    },
+    {
+      "id": "minusburg-old-man",
+      "name": {
+        "en": "Elder Minus",
+        "he": "Elder Minus"
+      },
+      "x": 35,
+      "y": 18,
+      "facing": "left",
+      "type": "npc",
+      "dialogue": [
+        {
+          "en": "Back in my day, we subtracted by hand!",
+          "he": ""
+        },
+        {
+          "en": "No calculators, no fancy gadgets...",
+          "he": ""
+        },
+        {
+          "en": "The mountains to the west are full of wild Pokemon. Be careful!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-m"
+    },
+    {
+      "id": "minusburg-gym-fan",
+      "name": {
+        "en": "Gym Fan",
+        "he": "Gym Fan"
+      },
+      "x": 22,
+      "y": 36,
+      "facing": "right",
+      "type": "npc",
+      "dialogue": [
+        {
+          "en": "Minessa's Gym is right here! She uses Poison and Dark types.",
+          "he": ""
+        },
+        {
+          "en": "They'll subtract your HP fast if you're not prepared!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-f"
+    },
+    {
+      "id": "minusburg-fisher",
+      "name": {
+        "en": "Fisherman Reed",
+        "he": "Fisherman Reed"
+      },
+      "x": 20,
+      "y": 41,
+      "facing": "down",
+      "type": "npc",
+      "dialogue": [
+        {
+          "en": "The lake at the south of town is perfect for fishing.",
+          "he": ""
+        },
+        {
+          "en": "I caught a Magikarp here yesterday... minus the excitement.",
+          "he": ""
+        }
+      ],
+      "spriteType": "trainer-m"
+    },
+    {
+      "id": "minusburg-trainer1",
+      "name": {
+        "en": "Schoolboy Cal",
+        "he": "Schoolboy Cal"
+      },
+      "x": 30,
+      "y": 14,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "I've been studying subtraction all day! Let me test what I learned!",
+          "he": ""
+        }
+      ],
+      "spriteType": "dani",
+      "party": [
+        {
+          "pokemonId": 92,
+          "level": 8
+        },
+        {
+          "pokemonId": 41,
+          "level": 9
+        },
+        {
+          "pokemonId": 23,
+          "level": 9
+        }
+      ],
+      "reward": {
+        "money": 250
+      },
+      "lineOfSight": 3
+    },
+    {
+      "id": "minusburg-merchant",
+      "name": {
+        "en": "Traveling Merchant",
+        "he": "Traveling Merchant"
+      },
+      "x": 32,
+      "y": 25,
+      "facing": "left",
+      "type": "npc",
+      "dialogue": [
+        {
+          "en": "I sell rare items from across Numeria!",
+          "he": ""
+        },
+        {
+          "en": "The Mart has basic supplies, but come find me for the good stuff.",
+          "he": ""
+        }
+      ],
+      "spriteType": "trainer-m"
+    },
+    {
+      "id": "minusburg-scientist",
+      "name": {
+        "en": "Prof. Negato",
+        "he": "Prof. Negato"
+      },
+      "x": 15,
+      "y": 14,
+      "facing": "down",
+      "type": "npc",
+      "dialogue": [
+        {
+          "en": "I'm researching negative numbers and their relationship to Pokemon types.",
+          "he": ""
+        },
+        {
+          "en": "Did you know? Subtracting a negative is the same as adding! Mind-blowing!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_962c1b"
+    },
+    {
+      "id": "remainder-minusburg",
+      "name": {
+        "en": "Remainder",
+        "he": "Remainder"
+      },
+      "x": 8,
+      "y": 20,
+      "facing": "down",
+      "type": "npc",
+      "spriteType": "red",
+      "dialogue": [
+        {
+          "en": "You beat Gym 1 already? Hmph. Do not get used to winning.",
+          "he": "כבר ניצחת את חדר הכושר הראשון? המ. אל תתרגל לנצח."
+        }
+      ]
+    }
   ],
   "music": "town",
   "encounterTableId": null,
@@ -402,6 +458,16 @@
     },
     {
       "key": "r3",
+      "x": 44,
+      "y": 0
+    },
+    {
+      "key": "r3",
+      "x": 46,
+      "y": 0
+    },
+    {
+      "key": "r3",
       "x": 48,
       "y": 0
     },
@@ -509,6 +575,46 @@
       "key": "r3",
       "x": 0,
       "y": 22
+    },
+    {
+      "key": "r3",
+      "x": 0,
+      "y": 28
+    },
+    {
+      "key": "r3",
+      "x": 0,
+      "y": 30
+    },
+    {
+      "key": "r3",
+      "x": 0,
+      "y": 32
+    },
+    {
+      "key": "r3",
+      "x": 0,
+      "y": 34
+    },
+    {
+      "key": "r3",
+      "x": 0,
+      "y": 36
+    },
+    {
+      "key": "r3",
+      "x": 0,
+      "y": 38
+    },
+    {
+      "key": "r3",
+      "x": 0,
+      "y": 44
+    },
+    {
+      "key": "r3",
+      "x": 0,
+      "y": 46
     },
     {
       "key": "r3",
@@ -1028,6 +1134,16 @@
     {
       "key": "t1",
       "x": 44,
+      "y": 2
+    },
+    {
+      "key": "t2",
+      "x": 45,
+      "y": 2
+    },
+    {
+      "key": "t1",
+      "x": 44,
       "y": 5
     },
     {
@@ -1044,6 +1160,11 @@
       "key": "t2",
       "x": 45,
       "y": 8
+    },
+    {
+      "key": "t1",
+      "x": 47,
+      "y": 2
     },
     {
       "key": "t1",
@@ -1641,6 +1762,11 @@
       "y": 41
     },
     {
+      "key": "r3",
+      "x": 0,
+      "y": 40
+    },
+    {
       "key": "s1-2",
       "x": 4,
       "y": 41
@@ -1869,56 +1995,6 @@
       "key": "r3",
       "x": 48,
       "y": 40
-    },
-    {
-      "key": "s1-2",
-      "x": 0,
-      "y": 41
-    },
-    {
-      "key": "r3",
-      "x": 0,
-      "y": 27
-    },
-    {
-      "key": "r3",
-      "x": 0,
-      "y": 29
-    },
-    {
-      "key": "r3",
-      "x": 0,
-      "y": 31
-    },
-    {
-      "key": "r3",
-      "x": 0,
-      "y": 33
-    },
-    {
-      "key": "r3",
-      "x": 0,
-      "y": 35
-    },
-    {
-      "key": "r3",
-      "x": 0,
-      "y": 37
-    },
-    {
-      "key": "r3",
-      "x": 0,
-      "y": 39
-    },
-    {
-      "key": "r3",
-      "x": 14,
-      "y": 48
-    },
-    {
-      "key": "r3",
-      "x": 30,
-      "y": 48
     }
   ]
 }

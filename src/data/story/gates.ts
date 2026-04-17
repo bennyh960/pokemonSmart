@@ -17,12 +17,6 @@ export type GateTriggerType =
   | 'auto-pokemarket'
   | 'auto-gym-entrance';
 
-export type GatePenalty =
-  | { type: 'none' }
-  | { type: 'money'; amount: number }
-  | { type: 'cooldown'; durationMs: number }
-  | { type: 'money-and-cooldown'; amount: number; durationMs: number };
-
 /** A single reward granted on successful pass of a session. */
 export interface GateReward {
   type: 'money' | 'item';
@@ -36,9 +30,6 @@ export interface GateReward {
  * Controls question count, timing, reward/penalty thresholds, and bonus questions.
  */
 export interface GateSessionConfig {
-  /** Year the player was born — used to calculate grade. Constant 2018 until date-of-birth is added. */
-  birthYear: number;
-
   /** How many correct answers are required to pass. */
   questionsRequired: number;
 
@@ -101,22 +92,15 @@ export interface QuestionGateDef {
 
   /** Which question-set templates to draw from ('*' = all). */
   questionSetIds: string[];
-  totalQuestions: number;
-  passThreshold: number;
-  timeLimitPerQuestion?: number;
 
-  /** @deprecated prefer sessionConfig */
-  failurePenalty?: GatePenalty;
   successActions?: StoryAction[];
-  failureActions?: StoryAction[];
 
   /** Gate stays open for this many ms after passing. 0 = permanent. undefined = always re-check. */
   reopenCooldownMs?: number;
 
   conditions?: StoryCondition[];
 
-  /** Full session config (reward/penalty/bonus). If omitted, falls back to global defaults. */
-  sessionConfig?: GateSessionConfig;
+  sessionConfig: GateSessionConfig;
 }
 
 /** Registered gate definitions keyed by ID. Populated by registerGate(). */

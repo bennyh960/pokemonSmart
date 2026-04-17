@@ -49,7 +49,6 @@ export function gradeFromBirthYear(birthYear: number): GradeId {
 
 /** Shared base config — override per location as needed. */
 export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'> = {
-  birthYear: getPlayerBirthYear(), // runtime callers (GateSession) use getPlayerBirthYear() for live value
   rewardThreshold: 0.8, // ≥ 80% correct → earn rewards
   penaltyThreshold: 0.5, // < 50% correct → money penalty
   penaltyAmount: 500, // 500 PokeCoins deducted on penalty
@@ -156,8 +155,6 @@ registerGate({
   },
   triggerType: 'auto-pokecenter',
   questionSetIds: ['*'],
-  totalQuestions: AUTO_GATE_QUESTION_COUNTS.pokecenter,
-  passThreshold: AUTO_GATE_QUESTION_COUNTS.pokecenter,
   reopenCooldownMs: AUTO_GATE_COOLDOWNS.pokecenter,
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,

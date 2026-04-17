@@ -341,7 +341,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         isPreDespawning:
           !isNPCVisible(npc, _initFlags, hasActiveGame() ? getPlayerData().party : undefined) &&
           !_initFlags[`npc-beforeDespawn-done-${npc.id}`] &&
-          !!(npc.autoWalk?.beforeDespawnPattern?.length),
+          !!npc.autoWalk?.beforeDespawnPattern?.length,
         beforeDespawnIdx: 0,
         beforeDespawnSteps: 0,
         beforeDespawnWaiting: false,
@@ -2007,8 +2007,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                     activeTextBox = createTextBox([dialogueLine], isRTL());
                     const capturedHmName = hmName;
                     const capturedHmUser = hmUser;
-                    const capturedTargetX = targetX;
-                    const capturedTargetY = targetY;
+                    // Use the object's origin coords (obj.x/obj.y), NOT the player-facing tile.
+                    // If the tree/boulder spans multiple tiles and the player faces a non-origin cell,
+                    // targetX/Y won't match obj.x/obj.y, causing findIndex to return -1 and the cut to silently fail.
+                    const capturedTargetX = obj.x;
+                    const capturedTargetY = obj.y;
                     pendingHMAction = () => {
                       startHMAnimation(capturedHmName, capturedHmUser, capturedTargetX, capturedTargetY);
                     };

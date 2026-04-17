@@ -119,6 +119,7 @@ registerGate({
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
     inputQuestions: { count: 3 },
+
     questionsRequired: 5,
   },
   failurePenalty: { type: 'money', amount: 150 },
@@ -134,6 +135,7 @@ registerGate({
   },
   triggerType: 'route-checkpoint',
   questionSetIds: ['placeholder'],
+
   totalQuestions: 5,
   passThreshold: 5,
   failurePenalty: { type: 'money', amount: 150 },

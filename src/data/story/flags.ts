@@ -50,6 +50,10 @@ export const FLAGS = {
   VISITED_MINUSBURG: 'visited-minusburg',
   ACT1_REMAINDER_BATTLE_STARTED: 'act1-remainder-battle-started',
   ACT1_REMAINDER_FIRST_BATTLE_DONE: 'act1-remainder-first-battle-done',
+  GATE_MINUSBURG_GYM_PASS: 'gate-minusburg-gym-pass', // Subtraction Gym entry passed
+  MINUSBURG_GARY_MET: 'minusburg-gary-met', // Gary Oak + Officer Jenny intro cutscene seen
+  MINUSBURG_GYM_LEADER_FOUND: 'minusburg-gym-leader-found', // Minessa found in the gym, quest assigned
+  ROCKET_MINUSBURG_ALL_DEFEATED: 'rocket-minusburg-all-defeated', // All 10 Rocket agents driven out
 
   // ── Act 2: Multiplia ────────────────────────────────────────────────────────
   VISITED_ROUTE3: 'visited-route3',
@@ -150,6 +154,10 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.VISITED_MINUSBURG]: 'First arrival at Minusburg',
   [FLAGS.ACT1_REMAINDER_BATTLE_STARTED]: 'Remainder battle dialogue started',
   [FLAGS.ACT1_REMAINDER_FIRST_BATTLE_DONE]: 'Remainder first battle complete',
+  [FLAGS.GATE_MINUSBURG_GYM_PASS]: 'Subtraction Gym entry gate passed',
+  [FLAGS.MINUSBURG_GARY_MET]: 'Gary Oak + Officer Jenny intro cutscene seen',
+  [FLAGS.MINUSBURG_GYM_LEADER_FOUND]: 'Minessa found in the gym, Rocket-hunt quest started',
+  [FLAGS.ROCKET_MINUSBURG_ALL_DEFEATED]: 'All 10 Team Rocket agents in Minusburg defeated',
   [FLAGS.VISITED_ROUTE3]: 'First step onto Route 3',
   [FLAGS.GATE_ROUTE3_PASS]: 'Route 3 → Multiplia checkpoint passed',
   [FLAGS.VISITED_MULTIPLIA]: 'First arrival at Multiplia',

@@ -1,0 +1,339 @@
+{
+  "id": "minusburg-gym",
+  "name": "Minusburg Gym",
+  "tileset": "overworld",
+  "width": 18,
+  "height": 20,
+  "tileSize": 16,
+  "spawn": {
+    "x": 9,
+    "y": 18
+  },
+  "transitions": [
+    {
+      "fromX": 8,
+      "fromY": 19,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 9,
+      "fromY": 19,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [{
+    "id": "minessa-gym-mb",
+    "name": { "en": "Miss Mila Minessa", "he": "גברת מילה מינסה" },
+    "x": 0, "y": 0, "facing": "down",
+    "type": "npc",
+    "spriteType": "npc-f",
+    "despawnAfter": "minusburg-gym-leader-found",
+    "dialogue": [
+      { "en": "I knew someone would come. The city needs you.", "he": "ךל הקוקז ריעה .עיגי והשימש יתעדי." }
+    ]
+  }],
+  "music": "gym-battle",
+  "encounterTableId": null,
+  "area": "Minusburg"
+,
+  "tiles": [
+    ["wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","wall"],
+    ["wall","wall","wall","wall","wall","wall","wall","wall","fh1","fh1","wall","wall","wall","wall","wall","wall","wall","wall"]
+  ],
+  "objects": [
+    {
+      "key": "gym-sign",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "gym-gb",
+      "x": 6,
+      "y": 2
+    },
+    {
+      "key": "cr1r1c1",
+      "x": 7,
+      "y": 6
+    },
+    {
+      "key": "cr1r1c2",
+      "x": 8,
+      "y": 6
+    },
+    {
+      "key": "cr1r1c3",
+      "x": 9,
+      "y": 6
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 7
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 9
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 10
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 11
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 12
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 13
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 14
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 15
+    },
+    {
+      "key": "cr1r2c2",
+      "x": 8,
+      "y": 16
+    },
+    {
+      "key": "cr1r3c1",
+      "x": 7,
+      "y": 17
+    },
+    {
+      "key": "cr1r3c2",
+      "x": 8,
+      "y": 17
+    },
+    {
+      "key": "cr1r3c3",
+      "x": 9,
+      "y": 17
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 16
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 15
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 14
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 13
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 12
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 11
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 10
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 9
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 8
+    },
+    {
+      "key": "cr1r2c3",
+      "x": 9,
+      "y": 7
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 9
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 10
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 11
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 12
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 13
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 14
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 15
+    },
+    {
+      "key": "cr1r2c1",
+      "x": 7,
+      "y": 16
+    },
+    {
+      "key": "r2",
+      "x": 1,
+      "y": 5
+    },
+    {
+      "key": "r2",
+      "x": 1,
+      "y": 9
+    },
+    {
+      "key": "r2",
+      "x": 1,
+      "y": 13
+    },
+    {
+      "key": "r2",
+      "x": 1,
+      "y": 17
+    },
+    {
+      "key": "r2",
+      "x": 16,
+      "y": 5
+    },
+    {
+      "key": "r2",
+      "x": 16,
+      "y": 9
+    },
+    {
+      "key": "r2",
+      "x": 16,
+      "y": 13
+    },
+    {
+      "key": "r2",
+      "x": 16,
+      "y": 17
+    },
+    {
+      "key": "d1",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "d1",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "d1",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "d1",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "d1",
+      "x": 13,
+      "y": 0
+    },
+    {
+      "key": "d1",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "key": "gate",
+      "x": 6,
+      "y": 17
+    },
+    {
+      "key": "gate",
+      "x": 10,
+      "y": 17
+    }
+  ]
+}

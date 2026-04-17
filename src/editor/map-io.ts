@@ -23,6 +23,7 @@ export function getKnownMapIds(): string[] {
     'sumville-remainder-house',
     'route-2',
     'minusburg',
+    'minusburg-gym',
     // Act 2 — Route 3 → Multiplia → Route 4 → Dividia
     'route-3',
     'multiplia',

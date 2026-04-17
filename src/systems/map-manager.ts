@@ -159,6 +159,9 @@ registerMap('route-2', () => import('../data/maps/route-2.json').catch(() => imp
 registerMap('safari', () => import('../data/maps/safari.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('route-3', () => import('../data/maps/route-3.json').catch(() => import('../data/maps/test-map.json')));
 registerMap('minusburg', () => import('../data/maps/minusburg.json').catch(() => import('../data/maps/test-map.json')));
+registerMap('minusburg-gym', () =>
+  import('../data/maps/minusburg-gym.json').catch(() => import('../data/maps/test-map.json')),
+);
 registerMap('sumville-house-1', () =>
   import('../data/maps/sumville-house-1.json').catch(() => import('../data/maps/test-map.json')),
 );
