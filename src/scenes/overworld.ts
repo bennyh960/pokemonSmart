@@ -1436,6 +1436,26 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
+            // Push player back 1 step (opposite of facing direction) before battle starts
+            const _tbFaceVec = DIR_VECTORS[player.facing];
+            if (_tbFaceVec) {
+              const _tbBackX = player.gridX - _tbFaceVec.dx;
+              const _tbBackY = player.gridY - _tbFaceVec.dy;
+              const _tbPd = hasActiveGame() ? getPlayerData() : null;
+              if (
+                tileMap &&
+                tileMap.isWalkable(_tbBackX, _tbBackY) &&
+                !npcManager?.isVisibleNPCAt(_tbBackX, _tbBackY, _tbPd?.flags ?? {}, _tbPd?.party)
+              ) {
+                player.gridX = _tbBackX;
+                player.gridY = _tbBackY;
+                player.pixelX = _tbBackX * TILE_SIZE;
+                player.pixelY = _tbBackY * TILE_SIZE;
+                player.targetGridX = _tbBackX;
+                player.targetGridY = _tbBackY;
+                player.moving = false;
+              }
+            }
             // Reset trainer position back after battle
             ta.trainer.x = ta.originalX;
             ta.trainer.y = ta.originalY;
