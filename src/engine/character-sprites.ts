@@ -36,31 +36,42 @@ export interface CharacterName {
 
 /** Roles a character sprite can be tagged with for editor filtering. */
 export type CharacterRole =
-  | 'hero'          // player characters
-  | 'rival'         // rival characters
-  | 'professor'     // professors (Algorithmah etc.)
-  | 'gym-leader'    // gym leaders
-  | 'gym-helper'    // gym trainers / puzzle helpers
-  | 'elite-4'       // Elite Four members
-  | 'champion'      // Pokemon League champion
-  | 'villain'       // Team Rocket / NULL-X antagonists
-  | 'nurse'         // Pokemon Center nurses
-  | 'shopkeeper'    // Mart shopkeepers
-  | 'story'         // key story NPCs (not fitting other roles)
-  | 'trainer'       // generic route trainers
-  | 'townfolk'      // regular town residents
-  | 'ranger';       // route / safari guides
+  | 'hero' // player characters
+  | 'rival' // rival characters
+  | 'professor' // professors (Algorithmah etc.)
+  | 'gym-leader' // gym leaders
+  | 'gym-helper' // gym trainers / puzzle helpers
+  | 'elite-4' // Elite Four members
+  | 'champion' // Pokemon League champion
+  | 'villain' // Team Rocket / NULL-X antagonists
+  | 'nurse' // Pokemon Center nurses
+  | 'shopkeeper' // Mart shopkeepers
+  | 'story' // key story NPCs (not fitting other roles)
+  | 'trainer' // generic route trainers
+  | 'townfolk' // regular town residents
+  | 'ranger'; // route / safari guides
 
 /** All valid character roles (for editor dropdowns). */
 export const CHARACTER_ROLES: CharacterRole[] = [
-  'hero', 'rival', 'professor', 'gym-leader', 'gym-helper', 'elite-4',
-  'champion', 'villain', 'nurse', 'shopkeeper', 'story', 'trainer',
-  'townfolk', 'ranger',
+  'hero',
+  'rival',
+  'professor',
+  'gym-leader',
+  'gym-helper',
+  'elite-4',
+  'champion',
+  'villain',
+  'nurse',
+  'shopkeeper',
+  'story',
+  'trainer',
+  'townfolk',
+  'ranger',
 ];
 
 interface CharacterDef {
-  name?: CharacterName | string;  // string for legacy compat
-  roles?: CharacterRole[];        // filterable roles for editor
+  name?: CharacterName | string; // string for legacy compat
+  roles?: CharacterRole[]; // filterable roles for editor
   frameWidth: number;
   frameHeight: number;
   frames: ({ sx: number; sy: number } | null)[];

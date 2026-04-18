@@ -6,7 +6,7 @@
   "height": 20,
   "tileSize": 16,
   "spawn": {
-    "x": 8,
+    "x": 9,
     "y": 18
   },
   "transitions": [
@@ -25,37 +25,19 @@
       "toX": null,
       "toY": null,
       "returnToPrevious": true
-    },
-    {
-      "fromX": 7,
-      "fromY": 19,
-      "toMapId": null,
-      "toX": null,
-      "toY": null,
-      "returnToPrevious": true
     }
   ],
-  "npcs": [
-    {
-      "id": "minessa-gym-mb",
-      "name": {
-        "en": "Miss Mila Minessa",
-        "he": "גברת מילה מינסה"
-      },
-      "x": 0,
-      "y": 0,
-      "facing": "down",
-      "type": "npc",
-      "spriteType": "npc-f",
-      "despawnAfter": "minusburg-gym-leader-found",
-      "dialogue": [
-        {
-          "en": "I knew someone would come. The city needs you.",
-          "he": "ךל הקוקז ריעה .עיגי והשימש יתעדי."
-        }
-      ]
-    }
-  ],
+  "npcs": [{
+    "id": "minessa-gym-mb",
+    "name": { "en": "Miss Mila Minessa", "he": "גברת מילה מינסה" },
+    "x": 0, "y": 0, "facing": "down",
+    "type": "npc",
+    "spriteType": "npc-f",
+    "despawnAfter": "minusburg-gym-leader-found",
+    "dialogue": [
+      { "en": "I knew someone would come. The city needs you.", "he": "ךל הקוקז ריעה .עיגי והשימש יתעדי." }
+    ]
+  }],
   "music": "gym-battle",
   "encounterTableId": null,
   "area": "Minusburg"

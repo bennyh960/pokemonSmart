@@ -6,7 +6,16 @@ import { saveManifest, copyManifest, loadManifestFromFile, loadManifest } from '
 import { toAssetUrl } from '../engine/asset-path.js';
 import './style.css';
 
-/** Vite-friendly static imports for each known tileset manifest. */
+/**
+ * Registry of all tilesets. To add a new tileset (e.g. cave):
+ *   1. Add its name here
+ *   2. Add a case in loadTilesetManifest below
+ *   3. Create src/data/tilesets/<name>.json with an `image` field pointing to the PNG
+ */
+export const TILESET_NAMES = ['overworld', 'interior'] as const;
+export type TilesetName = (typeof TILESET_NAMES)[number];
+
+/** Vite-friendly static imports — Vite requires literal import() paths at build time. */
 async function loadTilesetManifest(name: string): Promise<Record<string, unknown>> {
   switch (name) {
     case 'overworld':
@@ -58,8 +67,7 @@ async function init() {
     <div class="toolbar-group">
       <label class="toolbar-label">Tileset:</label>
       <select id="sel-tileset">
-        <option value="overworld">overworld</option>
-        <option value="interior">interior</option>
+        ${TILESET_NAMES.map((n) => `<option value="${n}">${n}</option>`).join('')}
       </select>
     </div>
     <div class="toolbar-group">

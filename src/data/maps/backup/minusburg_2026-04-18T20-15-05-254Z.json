@@ -174,11 +174,11 @@
         "en": "Minessa",
         "he": "הסנימ"
       },
-      "x": 44,
-      "y": 2,
+      "x": 2,
+      "y": 0,
       "facing": "down",
       "type": "npc",
-      "spriteType": "gym-3-Minessa",
+      "spriteType": "gym-2-minus",
       "spawnAfter": "minusburg-gym-leader-found",
       "despawnAfter": "rocket-minusburg-all-defeated",
       "dialogue": [
@@ -189,16 +189,16 @@
       ]
     },
     {
-      "id": "rocket-mb-11",
+      "id": "rocket-mb-1",
       "name": {
         "en": "Rocket Grunt",
         "he": "טקור לייח"
       },
-      "x": 46,
-      "y": 9,
+      "x": 3,
+      "y": 0,
       "facing": "down",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-m",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -209,41 +209,23 @@
       "postBattleDialogue": [
         {
           "en": "NULL-X... will not forgive this.",
-          "he": "עשית טעות! הדרך הזו חסומה עבורך! אתה תפסיד לי ואקח לך את הפוקימונים"
+          "he": "NULL-X... הז לע חלסי אל."
         }
       ],
       "party": [
         {
           "pokemonId": 23,
-          "level": 10,
-          "moves": []
+          "level": 10
         },
         {
           "pokemonId": 41,
-          "level": 11,
-          "moves": []
+          "level": 11
         }
       ],
       "reward": {
         "money": 200
       },
-      "lineOfSight": 3,
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "up",
-            "steps": 2,
-            "delay": 0
-          },
-          {
-            "dir": "left",
-            "steps": 15,
-            "delay": 0.5
-          }
-        ]
-      }
+      "lineOfSight": 3
     },
     {
       "id": "rocket-mb-1",
@@ -251,11 +233,11 @@
         "en": "Rocket Grunt",
         "he": "טקור לייח"
       },
-      "x": 47,
-      "y": 2,
-      "facing": "left",
+      "x": 3,
+      "y": 0,
+      "facing": "down",
       "type": "trainer",
-      "spriteType": "rocket-james",
+      "spriteType": "trainer-m",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -266,19 +248,17 @@
       "postBattleDialogue": [
         {
           "en": "NULL-X... will not forgive this.",
-          "he": "NULL-X... לא יסלח על זה"
+          "he": "NULL-X... הז לע חלסי אל."
         }
       ],
       "party": [
         {
-          "pokemonId": 70,
-          "level": 28,
-          "moves": []
+          "pokemonId": 23,
+          "level": 10
         },
         {
-          "pokemonId": 110,
-          "level": 30,
-          "moves": []
+          "pokemonId": 41,
+          "level": 11
         }
       ],
       "reward": {
@@ -292,11 +272,11 @@
         "en": "Rocket Grunt",
         "he": "טקור תלייח"
       },
-      "x": 41,
-      "y": 6,
+      "x": 4,
+      "y": 0,
       "facing": "down",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-f",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -313,13 +293,11 @@
       "party": [
         {
           "pokemonId": 41,
-          "level": 10,
-          "moves": []
+          "level": 10
         },
         {
           "pokemonId": 19,
-          "level": 11,
-          "moves": []
+          "level": 11
         }
       ],
       "reward": {
@@ -333,11 +311,11 @@
         "en": "Rocket Grunt",
         "he": "טקור לייח"
       },
-      "x": 32,
-      "y": 7,
-      "facing": "up",
+      "x": 5,
+      "y": 0,
+      "facing": "right",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-m",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -354,13 +332,11 @@
       "party": [
         {
           "pokemonId": 109,
-          "level": 11,
-          "moves": []
+          "level": 11
         },
         {
           "pokemonId": 23,
-          "level": 11,
-          "moves": []
+          "level": 11
         }
       ],
       "reward": {
@@ -374,11 +350,11 @@
         "en": "Rocket Grunt",
         "he": "טקור תלייח"
       },
-      "x": 17,
-      "y": 6,
-      "facing": "down",
+      "x": 6,
+      "y": 0,
+      "facing": "left",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-f",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -395,13 +371,11 @@
       "party": [
         {
           "pokemonId": 23,
-          "level": 11,
-          "moves": []
+          "level": 11
         },
         {
           "pokemonId": 88,
-          "level": 12,
-          "moves": []
+          "level": 12
         }
       ],
       "reward": {
@@ -415,11 +389,11 @@
         "en": "Rocket Grunt",
         "he": "טקור לייח"
       },
-      "x": 5,
-      "y": 7,
-      "facing": "up",
+      "x": 7,
+      "y": 0,
+      "facing": "down",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-m",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -436,13 +410,11 @@
       "party": [
         {
           "pokemonId": 41,
-          "level": 12,
-          "moves": []
+          "level": 12
         },
         {
           "pokemonId": 109,
-          "level": 12,
-          "moves": []
+          "level": 12
         }
       ],
       "reward": {
@@ -462,11 +434,11 @@
         "en": "Rocket Grunt",
         "he": "טקור תלייח"
       },
-      "x": 2,
-      "y": 4,
+      "x": 8,
+      "y": 0,
       "facing": "right",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-f",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -483,13 +455,11 @@
       "party": [
         {
           "pokemonId": 88,
-          "level": 12,
-          "moves": []
+          "level": 12
         },
         {
           "pokemonId": 41,
-          "level": 13,
-          "moves": []
+          "level": 13
         }
       ],
       "reward": {
@@ -503,11 +473,11 @@
         "en": "Rocket Grunt",
         "he": "טקור לייח"
       },
-      "x": 18,
-      "y": 4,
-      "facing": "up",
+      "x": 9,
+      "y": 0,
+      "facing": "down",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-m",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -524,13 +494,11 @@
       "party": [
         {
           "pokemonId": 109,
-          "level": 13,
-          "moves": []
+          "level": 13
         },
         {
           "pokemonId": 88,
-          "level": 13,
-          "moves": []
+          "level": 13
         }
       ],
       "reward": {
@@ -544,11 +512,11 @@
         "en": "Rocket Grunt",
         "he": "טקור תלייח"
       },
-      "x": 33,
-      "y": 3,
-      "facing": "down",
+      "x": 10,
+      "y": 0,
+      "facing": "left",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-f",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -565,13 +533,11 @@
       "party": [
         {
           "pokemonId": 24,
-          "level": 13,
-          "moves": []
+          "level": 13
         },
         {
           "pokemonId": 109,
-          "level": 13,
-          "moves": []
+          "level": 13
         }
       ],
       "reward": {
@@ -585,11 +551,11 @@
         "en": "Rocket Grunt",
         "he": "טקור לייח"
       },
-      "x": 42,
-      "y": 4,
-      "facing": "up",
+      "x": 11,
+      "y": 0,
+      "facing": "down",
       "type": "trainer",
-      "spriteType": "char_7db1c5",
+      "spriteType": "trainer-m",
       "despawnOnDefeat": true,
       "dialogue": [
         {
@@ -606,13 +572,11 @@
       "party": [
         {
           "pokemonId": 88,
-          "level": 13,
-          "moves": []
+          "level": 13
         },
         {
           "pokemonId": 24,
-          "level": 14,
-          "moves": []
+          "level": 14
         }
       ],
       "reward": {
@@ -624,73 +588,44 @@
       "id": "rocket-mb-10",
       "name": {
         "en": "Rocket Commander",
-        "he": "ג'סי"
+        "he": "טקור דקפמ"
       },
-      "x": 47,
-      "y": 1,
-      "facing": "left",
+      "x": 12,
+      "y": 0,
+      "facing": "down",
       "type": "trainer",
-      "spriteType": "rocket-jessi",
+      "spriteType": "trainer-m",
       "despawnOnDefeat": true,
       "dialogue": [
         {
           "en": "Impressive... you've defeated all nine of my agents.",
-          "he": "מרשים - הגעת עד לכאן?! אני זו שאביס אותך!!!"
+          "he": "ילש םינכוסה תעשת לכ תא תחצינ ...םישרמ."
         },
         {
           "en": "I'm Team Rocket's field commander. This city is OURS — and so are its Pokemon. This ends HERE!",
-          "he": ""
+          "he": "אני המפקד של הקבוצה! אני אגמור איתך אחת ולתמיד"
         }
       ],
       "postBattleDialogue": [
         {
           "en": "NULL-X... predicted victory. The data must have been wrong.",
-          "he": "NULL-X... הוא יתאכזב נורא ! היזהר אנו עוד נחזור"
+          "he": "NULL-X... םייוגש תויהל םיבייח םינותנה .ןוחצינ הזח."
         }
       ],
       "party": [
         {
           "pokemonId": 24,
-          "level": 30,
-          "moves": []
+          "level": 14
         },
         {
-          "pokemonId": 108,
-          "level": 30,
-          "moves": []
-        },
-        {
-          "pokemonId": 202,
-          "level": 35,
-          "moves": []
+          "pokemonId": 110,
+          "level": 13
         }
       ],
       "reward": {
         "money": 450
       },
-      "lineOfSight": 3,
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "right",
-            "steps": 2,
-            "delay": 1
-          },
-          {
-            "dir": "left",
-            "steps": 2,
-            "delay": 1
-          }
-        ],
-        "loop": true,
-        "beforeDespawnPattern": [
-          {
-            "dir": "up",
-            "steps": 2,
-            "delay": 0
-          }
-        ]
-      }
+      "lineOfSight": 3
     }
   ],
   "music": "town",

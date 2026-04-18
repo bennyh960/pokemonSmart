@@ -84,10 +84,7 @@
         "en": "Rei Minder",
         "he": "ריי שארית"
       },
-      "roles": [
-        "rival",
-        "story"
-      ]
+      "roles": ["rival", "story"]
     },
     "dana": {
       "frameWidth": 32,
@@ -210,10 +207,7 @@
         "en": "Leon",
         "he": "ליאון"
       },
-      "roles": [
-        "elite-4",
-        "story"
-      ]
+      "roles": ["elite-4", "story"]
     },
     "mosh": {
       "frameWidth": 32,
@@ -330,9 +324,7 @@
         "en": "Cyntia",
         "he": "סינתיה"
       },
-      "roles": [
-        "elite-4"
-      ]
+      "roles": ["elite-4"]
     },
     "alice": {
       "frameWidth": 32,
@@ -391,10 +383,7 @@
         "en": "Alice",
         "he": "אליס"
       },
-      "roles": [
-        "story",
-        "elite-4"
-      ]
+      "roles": ["story", "elite-4"]
     },
     "char_45ba6c": {
       "frameWidth": 32,
@@ -1242,10 +1231,7 @@
         "en": "Adda",
         "he": "אדה פלוס"
       },
-      "roles": [
-        "story",
-        "gym-leader"
-      ]
+      "roles": ["story", "gym-leader"]
     },
     "char_e30fdb": {
       "frameWidth": 32,
@@ -1300,10 +1286,7 @@
           "sy": 928
         }
       ],
-      "roles": [
-        "story",
-        "champion"
-      ]
+      "roles": ["story", "champion"]
     },
     "char_ca2fd2": {
       "frameWidth": 32,
@@ -1413,7 +1396,7 @@
         }
       ]
     },
-    "gym-3-Minessa": {
+    "gym-3-miss-mila": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -1467,13 +1450,10 @@
         }
       ],
       "name": {
-        "en": "Miss Minessa",
-        "he": "מינזה"
+        "en": "Miss Mila",
+        "he": "גב' מילה"
       },
-      "roles": [
-        "story",
-        "gym-leader"
-      ]
+      "roles": ["story", "gym-leader"]
     },
     "char_304fc6": {
       "frameWidth": 32,
@@ -1694,10 +1674,7 @@
         "en": "Lady Prima",
         "he": "גברת פרימה"
       },
-      "roles": [
-        "story",
-        "gym-leader"
-      ]
+      "roles": ["story", "gym-leader"]
     },
     "char_c2b2c1": {
       "frameWidth": 32,
@@ -1861,7 +1838,7 @@
         }
       ]
     },
-    "gym-2-Minessa": {
+    "gym-2-minus": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -1915,75 +1892,69 @@
         }
       ],
       "name": {
-        "en": "Minessa",
-        "he": "מינסה"
+        "en": "Captain Minus",
+        "he": "קפטיין מינוס"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "roles": ["gym-leader", "story"]
     },
     "gym-8-absa": {
-      "frameWidth": 32,
-      "frameHeight": 32,
-      "frames": [
-        {
-          "sx": 288,
-          "sy": 960
-        },
-        {
-          "sx": 320,
-          "sy": 960
-        },
-        {
-          "sx": 352,
-          "sy": 960
-        },
-        {
-          "sx": 288,
-          "sy": 992
-        },
-        {
-          "sx": 320,
-          "sy": 992
-        },
-        {
-          "sx": 352,
-          "sy": 992
-        },
-        {
-          "sx": 288,
-          "sy": 1024
-        },
-        {
-          "sx": 320,
-          "sy": 1024
-        },
-        {
-          "sx": 352,
-          "sy": 1024
-        },
-        {
-          "sx": 288,
-          "sy": 1056
-        },
-        {
-          "sx": 320,
-          "sy": 1056
-        },
-        {
-          "sx": 352,
-          "sy": 1056
-        }
-      ],
       "name": {
         "en": "Sir Absa",
         "he": "דון אבסה"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 288,
+          "sy": 960
+        },
+        {
+          "sx": 320,
+          "sy": 960
+        },
+        {
+          "sx": 352,
+          "sy": 960
+        },
+        {
+          "sx": 288,
+          "sy": 992
+        },
+        {
+          "sx": 320,
+          "sy": 992
+        },
+        {
+          "sx": 352,
+          "sy": 992
+        },
+        {
+          "sx": 288,
+          "sy": 1024
+        },
+        {
+          "sx": 320,
+          "sy": 1024
+        },
+        {
+          "sx": 352,
+          "sy": 1024
+        },
+        {
+          "sx": 288,
+          "sy": 1056
+        },
+        {
+          "sx": 320,
+          "sy": 1056
+        },
+        {
+          "sx": 352,
+          "sy": 1056
+        }
+      ],
+      "roles": ["gym-leader", "story"]
     },
     "char_d25760": {
       "frameWidth": 32,
@@ -2042,9 +2013,7 @@
         "en": "Brock",
         "he": "ברוק"
       },
-      "roles": [
-        "story"
-      ]
+      "roles": ["story"]
     },
     "ashKetchum": {
       "frameWidth": 32,
@@ -2103,9 +2072,7 @@
         "en": "Ash Ketchum",
         "he": "אש קאטצ'ם"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
     "ashKetchumBicycle": {
       "frameWidth": 32,
@@ -2222,10 +2189,7 @@
         "en": "James",
         "he": "ג'יימס"
       },
-      "roles": [
-        "story",
-        "villain"
-      ]
+      "roles": ["story", "villain"]
     },
     "rocket-jessi": {
       "frameWidth": 32,
@@ -2284,10 +2248,7 @@
         "en": "Jessi",
         "he": "ג'סי"
       },
-      "roles": [
-        "story",
-        "villain"
-      ]
+      "roles": ["story", "villain"]
     },
     "Misty": {
       "frameWidth": 32,
@@ -2346,9 +2307,7 @@
         "en": "Misty",
         "he": "מיסטי"
       },
-      "roles": [
-        "story"
-      ]
+      "roles": ["story"]
     },
     "oak": {
       "frameWidth": 32,
@@ -2407,10 +2366,7 @@
         "en": "Oak",
         "he": "אוק"
       },
-      "roles": [
-        "story",
-        "professor"
-      ]
+      "roles": ["story", "professor"]
     },
     "red": {
       "frameWidth": 32,
@@ -2469,9 +2425,7 @@
         "en": "Red",
         "he": "רד"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
     "char_fbf115": {
       "frameWidth": 32,
@@ -2692,10 +2646,7 @@
         "en": "Morty Divon",
         "he": "מורטי דיבון"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "roles": ["gym-leader", "story"]
     },
     "char_919bca": {
       "frameWidth": 32,
@@ -2754,10 +2705,7 @@
         "en": "Lance",
         "he": "לאנס"
       },
-      "roles": [
-        "story",
-        "elite-4"
-      ]
+      "roles": ["story", "elite-4"]
     },
     "char_424d3d": {
       "frameWidth": 32,
@@ -2990,9 +2938,7 @@
         "en": "Maya",
         "he": "מאיה"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
     "char_d6a779": {
       "frameWidth": 32,
@@ -3445,10 +3391,7 @@
         "en": "Sam Sima",
         "he": "סם סימה"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "roles": ["gym-leader", "story"]
     },
     "char_899006": {
       "frameWidth": 32,
@@ -3565,10 +3508,7 @@
         "en": "Max Formax",
         "he": "מקס פרבולה"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "roles": ["gym-leader", "story"]
     },
     "Prof.Algorithma": {
       "frameWidth": 32,
@@ -3627,10 +3567,7 @@
         "en": "Prof Algorithma",
         "he": "פרופסור אלגוריתם"
       },
-      "roles": [
-        "story",
-        "professor"
-      ]
+      "roles": ["story", "professor"]
     },
     "char_4007d6": {
       "frameWidth": 32,
@@ -3689,9 +3626,7 @@
         "en": "Jasmine",
         "he": "ג'סמין"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
     "char_615686": {
       "frameWidth": 32,
@@ -3808,11 +3743,7 @@
         "en": "Gary",
         "he": "גארי"
       },
-      "roles": [
-        "rival",
-        "trainer",
-        "story"
-      ]
+      "roles": ["rival", "trainer", "story"]
     },
     "char_3979e8": {
       "frameWidth": 32,
@@ -3929,10 +3860,7 @@
         "en": "Officer Jenny",
         "he": "השוטרת ג'ני"
       },
-      "roles": [
-        "story",
-        "ranger"
-      ]
+      "roles": ["story", "ranger"]
     },
     "gate-officer": {
       "frameWidth": 32,
@@ -3991,108 +3919,7 @@
         "en": "Officer X",
         "he": "שומר שער"
       },
-      "roles": [
-        "ranger"
-      ]
-    },
-    "ashKetchum-surf": {
-      "frameWidth": 32,
-      "frameHeight": 32,
-      "frames": [
-        {
-          "sx": 320,
-          "sy": 1184
-        },
-        null,
-        null,
-        {
-          "sx": 288,
-          "sy": 1184
-        },
-        null,
-        null,
-        {
-          "sx": 384,
-          "sy": 1184
-        },
-        null,
-        null,
-        {
-          "sx": 352,
-          "sy": 1184
-        },
-        null,
-        null
-      ],
-      "name": {
-        "en": "Ash-surf",
-        "he": "אש-שחייה"
-      },
-      "roles": [
-        "hero"
-      ]
-    },
-    "char_7db1c5": {
-      "frameWidth": 32,
-      "frameHeight": 32,
-      "frames": [
-        {
-          "sx": 736,
-          "sy": 1088
-        },
-        {
-          "sx": 768,
-          "sy": 1088
-        },
-        {
-          "sx": 800,
-          "sy": 1088
-        },
-        {
-          "sx": 736,
-          "sy": 1120
-        },
-        {
-          "sx": 768,
-          "sy": 1120
-        },
-        {
-          "sx": 800,
-          "sy": 1120
-        },
-        {
-          "sx": 736,
-          "sy": 1152
-        },
-        {
-          "sx": 768,
-          "sy": 1152
-        },
-        {
-          "sx": 800,
-          "sy": 1152
-        },
-        {
-          "sx": 736,
-          "sy": 1184
-        },
-        {
-          "sx": 768,
-          "sy": 1184
-        },
-        {
-          "sx": 800,
-          "sy": 1184
-        }
-      ],
-      "name": {
-        "en": "Rocket Grunt",
-        "he": "סוכן צוות רוקט"
-      },
-      "roles": [
-        "trainer",
-        "villain"
-      ]
+      "roles": ["ranger"]
     }
   }
 }
