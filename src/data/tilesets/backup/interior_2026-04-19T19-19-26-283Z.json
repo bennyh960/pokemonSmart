@@ -3018,8 +3018,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "f3",
@@ -3029,64 +3028,12 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "f4",
       "sx": 16,
       "sy": 3392,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor",
-      "interactType": null
-    },
-    {
-      "key": "f5-1",
-      "sx": 48,
-      "sy": 3424,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor"
-    },
-    {
-      "key": "f5-shadow-l",
-      "sx": 32,
-      "sy": 3408,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor"
-    },
-    {
-      "key": "f5-shadow-top",
-      "sx": 32,
-      "sy": 3424,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor"
-    },
-    {
-      "key": "f6-shadow",
-      "sx": 64,
-      "sy": 3392,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor"
-    },
-    {
-      "key": "f6-shadow-top",
-      "sx": 64,
-      "sy": 3408,
       "w": 16,
       "h": 16,
       "walkable": true,

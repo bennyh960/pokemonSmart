@@ -138,8 +138,8 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
   if (moves.length === 0) {
     const learnset = getLearnset(data.id);
     const eligible = learnset.filter((entry) => entry.levelLearned <= level);
-    // Take the last 4 moves (most recently learned by level) for wild/NPC Pokemon
-    const selected = eligible.slice(-4);
+    // Take the last 8 moves (most recently learned by level) for wild/NPC Pokemon
+    const selected = eligible.slice(-8);
     for (const entry of selected) {
       const move = createMoveFromId(entry.moveId);
       if (move) moves.push(move);
