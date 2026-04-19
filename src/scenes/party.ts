@@ -29,6 +29,7 @@ import { getPlayerData } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { canUseItemOnPokemon } from '../systems/item-effects.js';
 import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } from '../systems/move-learning.js';
+import { getTMEffect } from '../data/item-defs.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
@@ -126,6 +127,19 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       return canUseItemOnPokemon(selectTargetContext.itemId, pokemon);
     }
     return true;
+  }
+
+  /** For TM select-target: returns only eligible Pokemon with their real party indices.
+   *  Returns null for non-TM items (use normal full-list rendering). */
+  function getSelectTargetFiltered(): { pokemon: Pokemon; realIndex: number }[] | null {
+    if (partyMode !== 'select-target' || !selectTargetContext) return null;
+    if (!getTMEffect(selectTargetContext.itemId)) return null;
+    const party = getParty();
+    const result: { pokemon: Pokemon; realIndex: number }[] = [];
+    for (let i = 0; i < party.length; i++) {
+      if (isPokemonEligible(party[i])) result.push({ pokemon: party[i], realIndex: i });
+    }
+    return result;
   }
 
   function isMoveLearningMode(): boolean {
@@ -280,29 +294,46 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
   function renderListView(ctx: CanvasRenderingContext2D): void {
     const party = getParty();
+    const tmFiltered = getSelectTargetFiltered();
 
     // ── Title bar (y=0, h=12) ──
     fillRect(ctx, 0, 0, 240, 12, '#0a1a10');
-    const title = viewMode === 'swap' ? t('party.swap') : t('party.title');
-    drawText(ctx, title, 112, 2, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
-    drawText(ctx, `${party.length} / ${MAX_PARTY}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+    if (tmFiltered && selectTargetContext) {
+      const tmEffect = getTMEffect(selectTargetContext.itemId);
+      const moveName = tmEffect ? getMoveDisplayName(tmEffect.moveId) : selectTargetContext.itemName;
+      const title = t('party.selectTarget.tmTitle', { move: moveName });
+      drawText(ctx, title, 112, 2, { size: 7, color: '#20d860', font: 'monospace', align: 'right' });
+      drawText(ctx, `${tmFiltered.length}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+    } else {
+      const title = viewMode === 'swap' ? t('party.swap') : t('party.title');
+      drawText(ctx, title, 112, 2, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+      drawText(ctx, `${party.length} / ${MAX_PARTY}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+    }
 
     // ── Slots ──
-    for (let i = 0; i < MAX_PARTY; i++) {
-      const sy = getSlotY(i, party.length);
-      const isSel = i === cursor;
-      const isSwap = viewMode === 'swap' && i === swapFrom;
+    if (tmFiltered) {
+      // TM select-target: show only eligible Pokemon, no disabled slots
+      for (let i = 0; i < tmFiltered.length; i++) {
+        const sy = getSlotY(i, tmFiltered.length);
+        renderFilledSlot(ctx, tmFiltered[i].pokemon, i + 1, sy, i === cursor, false, false);
+      }
+    } else {
+      for (let i = 0; i < MAX_PARTY; i++) {
+        const sy = getSlotY(i, party.length);
+        const isSel = i === cursor;
+        const isSwap = viewMode === 'swap' && i === swapFrom;
 
-      if (i < party.length) {
-        const disabled = (partyMode === 'select-target' || partyMode === 'battle') && !isPokemonEligible(party[i]);
-        renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap, disabled);
-      } else {
-        renderEmptySlot(ctx, i + 1, sy, isSel);
+        if (i < party.length) {
+          const disabled = (partyMode === 'select-target' || partyMode === 'battle') && !isPokemonEligible(party[i]);
+          renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap, disabled);
+        } else {
+          renderEmptySlot(ctx, i + 1, sy, isSel);
+        }
       }
     }
 
-    // ── Item context line (above bottom bar, when in select-target mode) ──
-    if (partyMode === 'select-target' && selectTargetContext) {
+    // ── Item context line (above bottom bar, when in select-target mode for non-TM items) ──
+    if (partyMode === 'select-target' && selectTargetContext && !tmFiltered) {
       fillRect(ctx, 4, 140, 232, 9, C.CARD_BG);
       drawRect(ctx, 4, 140, 232, 9, C.BORDER);
       drawText(ctx, `💊 ${selectTargetContext.itemName}: ${selectTargetContext.description}`, 120, 141, {
@@ -1275,6 +1306,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     update(dt: number): void {
       const party = getParty();
       const partyLen = party.length;
+      const tmFiltered = getSelectTargetFiltered();
+      const listLen = tmFiltered ? tmFiltered.length : partyLen;
 
       if (viewMode === 'detail') {
         updateDetailView(dt);
@@ -1293,32 +1326,39 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       }
 
       if (input.isKeyPressed('ArrowUp')) {
-        let next = cursor > 0 ? cursor - 1 : Math.max(0, partyLen - 1);
-        // In battle/select-target mode, skip non-eligible Pokemon
-        if (partyMode === 'select-target' || partyMode === 'battle') {
-          for (let tries = 0; tries < partyLen; tries++) {
-            if (next < partyLen && isPokemonEligible(party[next])) break;
-            next = next > 0 ? next - 1 : partyLen - 1;
+        if (tmFiltered) {
+          cursor = cursor > 0 ? cursor - 1 : Math.max(0, listLen - 1);
+        } else {
+          let next = cursor > 0 ? cursor - 1 : Math.max(0, partyLen - 1);
+          if (partyMode === 'battle') {
+            for (let tries = 0; tries < partyLen; tries++) {
+              if (next < partyLen && isPokemonEligible(party[next])) break;
+              next = next > 0 ? next - 1 : partyLen - 1;
+            }
           }
+          cursor = next;
         }
-        cursor = next;
       }
       if (input.isKeyPressed('ArrowDown')) {
-        let next = cursor < partyLen - 1 ? cursor + 1 : 0;
-        if (partyMode === 'select-target' || partyMode === 'battle') {
-          for (let tries = 0; tries < partyLen; tries++) {
-            if (next < partyLen && isPokemonEligible(party[next])) break;
-            next = next < partyLen - 1 ? next + 1 : 0;
+        if (tmFiltered) {
+          cursor = cursor < listLen - 1 ? cursor + 1 : 0;
+        } else {
+          let next = cursor < partyLen - 1 ? cursor + 1 : 0;
+          if (partyMode === 'battle') {
+            for (let tries = 0; tries < partyLen; tries++) {
+              if (next < partyLen && isPokemonEligible(party[next])) break;
+              next = next < partyLen - 1 ? next + 1 : 0;
+            }
           }
+          cursor = next;
         }
-        cursor = next;
       }
 
       if (input.isKeyPressed('Enter')) {
-        if (partyLen === 0) return;
-        if (cursor >= partyLen) return;
-        // Block Enter on non-eligible Pokemon
-        if ((partyMode === 'select-target' || partyMode === 'battle') && !isPokemonEligible(party[cursor])) return;
+        if (listLen === 0) return;
+        if (cursor >= listLen) return;
+        // Block Enter on non-eligible Pokemon (battle mode only — TM mode already filtered)
+        if (partyMode === 'battle' && !isPokemonEligible(party[cursor])) return;
 
         if (viewMode === 'swap') {
           // Complete the swap
@@ -1333,8 +1373,9 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           selectedPartyIndex = cursor;
           stateMachine.pop();
         } else if (partyMode === 'select-target') {
-          selectedPartyIndex = cursor;
-          if (onSelectCallback) onSelectCallback(cursor);
+          // For TM filtered mode, resolve cursor to real party index
+          selectedPartyIndex = tmFiltered ? tmFiltered[cursor].realIndex : cursor;
+          if (onSelectCallback) onSelectCallback(selectedPartyIndex);
           stateMachine.pop();
         } else {
           // Overworld: open detail

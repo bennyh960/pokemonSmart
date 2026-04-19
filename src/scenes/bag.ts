@@ -120,6 +120,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     itemId: string;
     tmEffect: { moveId: number; isHM: boolean };
     pokemon: Pokemon;
+    partyIndex: number;
     choiceIndex: number; // 0 = Yes (save TM), 1 = No (teach anyway)
   }
   let tmWarning: TMWarningState | null = null;
@@ -150,7 +151,12 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
 
   // ── TM Teaching helpers ──────────────────────────────────────────────
 
-  function handleTMTeaching(itemId: string, tmEffect: { moveId: number; isHM: boolean }, pokemon: Pokemon): void {
+  function handleTMTeaching(
+    itemId: string,
+    tmEffect: { moveId: number; isHM: boolean },
+    pokemon: Pokemon,
+    partyIndex: number,
+  ): void {
     const moveName = getMoveDisplayName(tmEffect.moveId);
     const pokemonName = getPokemonDisplayName(pokemon.id);
 
@@ -167,14 +173,20 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     }
 
     if (pokemon.moves.length >= 8) {
-      message = t('bag.tm.noSpace', { name: pokemonName, move: moveName });
-      messageTimer = 2.0;
+      // Full moveset — open the move-replacement screen so the player can swap one out
+      initializeMoveLearningQueue(
+        pendingMoveLearning,
+        partyIndex,
+        pokemon.id,
+        [{ moveId: tmEffect.moveId, learned: false }],
+        null,
+      );
       return;
     }
 
     const naturalLevel = getLearnLevelForMove(pokemon.id, tmEffect.moveId);
     if (naturalLevel !== null && naturalLevel > pokemon.level) {
-      tmWarning = { itemId, tmEffect, pokemon, choiceIndex: 0 };
+      tmWarning = { itemId, tmEffect, pokemon, partyIndex, choiceIndex: 0 };
       return;
     }
 
@@ -522,7 +534,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           if (tmEffect) {
             const itemIdForTM = pendingOverworldItemId;
             pendingOverworldItemId = null;
-            handleTMTeaching(itemIdForTM, tmEffect, target);
+            handleTMTeaching(itemIdForTM, tmEffect, target, chosenIndex);
             return;
           }
 
@@ -613,6 +625,22 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           // Items that target a Pokemon: push PARTY scene in select-target mode
           const needsTarget = itemTargetsPokemon(item.id);
           if (needsTarget) {
+            // For TMs: check if anyone in party can learn the move before opening party screen
+            const tmCheckEffect = getTMEffect(item.id);
+            if (tmCheckEffect) {
+              const pd = getPlayerData();
+              const moveName = getMoveDisplayName(tmCheckEffect.moveId);
+              const anyCanLearn = pd.party.some(
+                (p) =>
+                  canLearnViaTM(p.id, tmCheckEffect.moveId) &&
+                  !p.moves.some((m) => m.id === tmCheckEffect.moveId),
+              );
+              if (!anyCanLearn) {
+                message = t('bag.tm.noneCanLearn', { move: moveName });
+                messageTimer = 2.5;
+                return;
+              }
+            }
             pendingOverworldItemId = item.id;
             waitingForPartyTarget = true;
             setPartyMode('select-target', undefined, {

@@ -6,10 +6,10 @@
  */
 
 import type { Pokemon } from '../types/index.js';
-import { getItemGameData, getItemGameDataBySlug } from '../data/item-defs.js';
+import { getItemGameData, getItemGameDataBySlug, getTMEffect } from '../data/item-defs.js';
 import { getPlayerData } from './game-state.js';
 import { checkAndApplyLevelUp, recalcPokemonStats } from './encounter.js';
-import { getPokemonDisplayName, getMove, type EvolutionStep } from '../services/pokemon-data.js';
+import { getPokemonDisplayName, getMove, canLearnViaTM, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
 import type { LevelUpMoveResult } from './move-learning.js';
 import { createMoveFromId } from './move-learning.js';
@@ -75,8 +75,13 @@ export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
       return target.hp > 0;
     case 'vitamin':
       return target.hp > 0 && ((target.evs?.[def.effect.stat] ?? 0) < 31);
-    case 'tm':
-      return true;  // compatibility/duplicate check is done in bag.ts after selection
+    case 'tm': {
+      const tmEffect = getTMEffect(itemId);
+      if (!tmEffect) return false;
+      if (!canLearnViaTM(target.id, tmEffect.moveId)) return false;
+      if (target.moves.some((m) => m.id === tmEffect.moveId)) return false;
+      return true; // eligible even if move slots full — replacement flow handles that
+    }
     default:
       return false;
   }

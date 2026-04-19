@@ -1,0 +1,473 @@
+{
+  "id": "house-minusburg-1",
+  "name": "Someone House",
+  "tileset": "overworld",
+  "width": 25,
+  "height": 20,
+  "tileSize": 16,
+  "spawn": {
+    "x": 11,
+    "y": 18
+  },
+  "transitions": [],
+  "npcs": [],
+  "music": "town4",
+  "encounterTableId": null
+,
+  "tiles": [
+    ["w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x1","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x1","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-box","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-box","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","w1-x","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x2","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x2","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x1","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-x1","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-box","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","w1-box","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2","w1-y2"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"],
+    ["f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23","f1-23"]
+  ],
+  "objects": [
+    {
+      "key": "w1",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 12,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 13,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 14,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 15,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 16,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 17,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 18,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 19,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 20,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 21,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 22,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 23,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 24,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 0,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 1,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 2,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 3,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 4,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 5,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 6,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 7,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 8,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 16,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 17,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 18,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 19,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 20,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 21,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 22,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 23,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 24,
+      "y": 14
+    },
+    {
+      "key": "w1",
+      "x": 17,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 18,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 19,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 20,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 21,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 22,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 23,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 24,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 6,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 5,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "bed3",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "bed2",
+      "x": 23,
+      "y": 3
+    },
+    {
+      "key": "w1",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "home-frdige2",
+      "x": 17,
+      "y": 8
+    },
+    {
+      "key": "mat1",
+      "x": 3,
+      "y": 3
+    },
+    {
+      "key": "bookCab1",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "key": "tableWork1Left",
+      "x": 23,
+      "y": 3
+    },
+    {
+      "key": "bed6",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "stereo",
+      "x": 1,
+      "y": 8
+    },
+    {
+      "key": "img5",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "w1",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "stvoe2",
+      "x": 22,
+      "y": 8
+    },
+    {
+      "key": "sink1",
+      "x": 21,
+      "y": 8
+    },
+    {
+      "key": "stove1",
+      "x": 20,
+      "y": 8
+    },
+    {
+      "key": "sofa2up3",
+      "x": 1,
+      "y": 11
+    },
+    {
+      "key": "firePlaceTop",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "firPlaceBody1",
+      "x": 10,
+      "y": 3
+    },
+    {
+      "key": "w1",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "key": "w1",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "key": "screen2",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "key": "smallTable",
+      "x": 21,
+      "y": 11
+    },
+    {
+      "key": "img2",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "img1",
+      "x": 19,
+      "y": 1
+    },
+    {
+      "key": "img1",
+      "x": 23,
+      "y": 1
+    },
+    {
+      "key": "chair2B",
+      "x": 21,
+      "y": 11
+    },
+    {
+      "key": "chair2R",
+      "x": 22,
+      "y": 4
+    },
+    {
+      "key": "mat2",
+      "x": 10,
+      "y": 19
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

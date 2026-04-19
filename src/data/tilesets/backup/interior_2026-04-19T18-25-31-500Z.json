@@ -1357,7 +1357,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
+      "category": "floor",
       "interactType": null
     },
     {
@@ -1412,8 +1412,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w1-z2",
@@ -1423,8 +1422,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w1-z3",
@@ -1434,8 +1432,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w1-z4",
@@ -1445,8 +1442,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w1-round-c-l",
@@ -1456,8 +1452,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w1-round-c-r",
@@ -1467,8 +1462,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w2-c1",
@@ -1665,7 +1659,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
+      "category": "floor",
       "interactType": null
     },
     {
@@ -1720,8 +1714,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w2-z2",
@@ -1731,8 +1724,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w2-z3",
@@ -1742,8 +1734,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w2-z4",
@@ -1753,8 +1744,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w2-round-c-l",
@@ -1764,8 +1754,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w2-round-c-r",
@@ -1775,8 +1764,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w3-c1",
@@ -1973,7 +1961,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
+      "category": "floor",
       "interactType": null
     },
     {
@@ -2028,8 +2016,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w3-z2",
@@ -2039,8 +2026,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w3-z3",
@@ -2050,8 +2036,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w3-z4",
@@ -2061,8 +2046,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w3-round-c-l",
@@ -2072,8 +2056,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w3-round-c-r",
@@ -2083,8 +2066,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w4-c1",
@@ -2281,7 +2263,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
+      "category": "floor",
       "interactType": null
     },
     {
@@ -2336,8 +2318,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w4-z2",
@@ -2347,8 +2328,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w4-z3",
@@ -2358,8 +2338,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w4-z4",
@@ -2369,8 +2348,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w4-round-c-l",
@@ -2380,8 +2358,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w4-round-c-r",
@@ -2391,8 +2368,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w5-c1",
@@ -2589,7 +2565,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
+      "category": "floor",
       "interactType": null
     },
     {
@@ -2644,8 +2620,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w5-z2",
@@ -2655,8 +2630,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w5-z3",
@@ -2666,8 +2640,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w5-z4",
@@ -2677,8 +2650,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w5-round-c-l",
@@ -2688,8 +2660,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w5-round-c-r",
@@ -2699,8 +2670,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w6-c1",
@@ -2897,7 +2867,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
+      "category": "floor",
       "interactType": null
     },
     {
@@ -2952,8 +2922,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w6-z2",
@@ -2963,8 +2932,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w6-z3",
@@ -2974,8 +2942,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w6-z4",
@@ -2985,8 +2952,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w6-round-c-l",
@@ -2996,8 +2962,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     },
     {
       "key": "w6-round-c-r",
@@ -3007,38 +2972,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall",
-      "interactType": null
-    },
-    {
-      "key": "f2",
-      "sx": 0,
-      "sy": 3392,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor"
-    },
-    {
-      "key": "f3",
-      "sx": 0,
-      "sy": 3408,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor"
-    },
-    {
-      "key": "f4",
-      "sx": 16,
-      "sy": 3392,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor"
+      "category": "wall"
     }
   ]
 }
