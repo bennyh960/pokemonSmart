@@ -2,15 +2,12 @@
   "id": "minusburg-gym",
   "name": "Minusburg Gym",
   "template": "gray-floor-house",
-  "tileset": "overworld",
-  "area": "Minusburg",
-  "music": "gym-battle",
-  "encounterTableId": null,
   "spawn": {
-    "x": 9,
-    "y": 13
+    "x": 8,
+    "y": 18
   },
-  "npcs": [
+
+   "npcs": [
     {
       "id": "minessa-gym-mb",
       "name": {
@@ -56,9 +53,7 @@
         {
           "pokemonId": 111,
           "level": 50,
-          "moves": [
-            446
-          ]
+          "moves": [446]
         },
         {
           "pokemonId": 149,
@@ -78,10 +73,7 @@
         {
           "pokemonId": 249,
           "level": 50,
-          "moves": [
-            347,
-            105
-          ]
+          "moves": [347, 105]
         }
       ],
       "lineOfSight": 3,
@@ -90,5 +82,9 @@
       },
       "postBattleDialogue": []
     }
-  ]
+  ],
+  "music": "gym-battle",
+  "encounterTableId": null,
+  "area": "Minusburg"
+
 }

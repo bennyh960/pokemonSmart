@@ -769,6 +769,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       hasReencounter: !!trainer.reencounter,
       locationEn: trainer.location?.en,
       locationHe: trainer.location?.he,
+      aiLevel: trainer.aiLevel,
+      bagItems: trainer.bagItems,
+      trainerSpriteType: trainer.spriteType,
     };
   }
 
@@ -1015,7 +1018,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     const pd = hasActiveGame() ? getPlayerData() : null;
     const p0 = pd?.party[0];
     return {
-      mapName: currentMapData?.name,
+      mapName: currentMapData?.label ?? currentMapData?.name,
       // Snapshot primitive values so the change-detector in updateHUD
       // can see differences — passing the live object reference means
       // lastData.lead.hp mutates in place and the comparison always ties.

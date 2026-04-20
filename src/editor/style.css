@@ -37,6 +37,12 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
 }
 .toolbar-group:last-child { border-right: none; }
 
+/* Mode toggle (Maps / Templates) */
+.mode-toggle { display: flex; border: 1px solid #555; border-radius: 4px; overflow: hidden; margin-right: 4px; }
+.mode-btn { background: #222238; color: #666; border: none; border-right: 1px solid #555; padding: 3px 10px; font-size: 12px; cursor: pointer; }
+.mode-btn:last-child { border-right: none; }
+.mode-btn.active { background: #2a3a88; color: #ddeeff; font-weight: 600; }
+
 .toolbar-group button, .toolbar-group select {
   background: #2a2a44;
   color: #ccc;
@@ -140,8 +146,13 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
 .editor-props {
   grid-area: props;
   background: #16162a;
-  overflow-y: auto;
+  overflow: hidden;       /* flex column handles scrolling per-child */
   border-left: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+}
+/* The actual scrollable content area inside props */
+.editor-props > div:not(#template-panel) {
   padding: 8px;
 }
 

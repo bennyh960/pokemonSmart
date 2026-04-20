@@ -1,165 +1,22 @@
 {
   "id": "dividia-house-1",
   "name": "Riverside Cottage",
-  "tileset": "overworld",
-  "width": 8,
-  "height": 8,
-  "tileSize": 16,
-  "spawn": {
-    "x": 3,
-    "y": 7
-  },
-  "transitions": [
-    {
-      "fromX": 3,
-      "fromY": 7,
-      "toMapId": null,
-      "toX": null,
-      "toY": null,
-      "returnToPrevious": true
-    },
-    {
-      "fromX": 4,
-      "fromY": 7,
-      "toMapId": null,
-      "toX": null,
-      "toY": null,
-      "returnToPrevious": true
-    }
-  ],
+  "template": "house-small",
+  "area": "Dividia",
   "npcs": [
     {
       "id": "dividia-h1-npc",
-      "name": {
-        "en": "River Watcher",
-        "he": "River Watcher"
-      },
+      "name": { "en": "River Watcher", "he": "River Watcher" },
       "x": 1,
       "y": 6,
       "facing": "up",
       "type": "npc",
       "dialogue": [
-        {
-          "en": "I watch the river from my window every day.",
-          "he": ""
-        },
-        {
-          "en": "It divides the city, but the bridges unite us!",
-          "he": ""
-        },
-        {
-          "en": "Did you know division and fractions are the same thing?",
-          "he": ""
-        }
+        { "en": "I watch the river from my window every day.", "he": "" },
+        { "en": "It divides the city, but the bridges unite us!", "he": "" },
+        { "en": "Did you know division and fractions are the same thing?", "he": "" }
       ],
       "spriteType": "npc-m"
-    }
-  ],
-  "music": "town",
-  "encounterTableId": null,
-  "area": "Dividia",
-  "tiles": [
-    [
-      "wall",
-      "pic1",
-      "pic1",
-      "pic1",
-      "wall",
-      "pic2",
-      "wall",
-      "wall"
-    ],
-    [
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "flh1"
-    ],
-    [
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t"
-    ],
-    [
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t"
-    ],
-    [
-      "g1",
-      "g1",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t"
-    ],
-    [
-      "g1",
-      "g1",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t"
-    ],
-    [
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t"
-    ],
-    [
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t",
-      "pc1t"
-    ]
-  ],
-  "objects": [
-    {
-      "key": "library1",
-      "x": 0,
-      "y": 0
-    },
-    {
-      "key": "df1",
-      "x": 4,
-      "y": 0
-    },
-    {
-      "key": "Bookcase",
-      "x": 0,
-      "y": 3
-    },
-    {
-      "key": "ehb1",
-      "x": 3,
-      "y": 7
     }
   ]
 }

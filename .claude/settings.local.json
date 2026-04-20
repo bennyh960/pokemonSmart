@@ -64,7 +64,9 @@
       "WebFetch(domain:downloads.khinsider.com)",
       "Bash(find /c/Users/behassan/Desktop/Projects/Practice/mehunan/pokemon/src -name *.tsx -o -name *.jsx)",
       "Bash(python3 -c ':*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(python -c \"import json; d=json.load\\(open\\('src/data/sprites/characters.json'\\)\\); print\\(json.dumps\\(d.get\\('characters',d\\)[:3] if isinstance\\(d.get\\('characters',d\\), list\\) else list\\(d.items\\(\\)\\)[:3], indent=2\\)\\)\")",
+      "Bash(echo \"EXIT:$?\")"
     ]
   }
 }

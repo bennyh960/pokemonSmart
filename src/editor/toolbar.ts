@@ -2,8 +2,16 @@ import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { ToolType, TileMapData } from './types.js';
 import { categorizeTiles } from './tile-palette.js';
-import { getKnownMapIds, loadMapFromProject, loadMapFromFile, saveMap, copyMapToClipboard, createBlankMap } from './map-io.js';
+import { getKnownMapIds, getKnownTemplateIds, loadMapFromProject, loadTemplateFromProject, loadMapFromFile, saveMap, copyMapToClipboard, createBlankMap } from './map-io.js';
 import { MUSIC_TRACK_KEYS } from '../audio/audio-manager.js';
+
+export type EditorMode = 'map' | 'template';
+
+export interface ToolbarCallbacks {
+  onLoadMap?: (data: TileMapData) => Promise<void>;
+  onSave?: () => Promise<void>;
+  onModeChange?: (mode: EditorMode) => void;
+}
 
 export class Toolbar {
   constructor(
@@ -11,7 +19,7 @@ export class Toolbar {
     state: EditorState,
     history: HistoryManager,
     tileManifest: Record<string, unknown>,
-    onLoadMapData?: (data: TileMapData) => Promise<void>,
+    callbacks: ToolbarCallbacks = {},
   ) {
     container.innerHTML = `
       <div class="toolbar-group" data-group="tools">
@@ -24,6 +32,10 @@ export class Toolbar {
         <button class="tool-btn" data-tool="transition" title="Transition (T)">🚪 Trans</button>
       </div>
       <div class="toolbar-group" data-group="file">
+        <span class="mode-toggle">
+          <button class="mode-btn active" data-mode="map" title="Edit maps">Maps</button>
+          <button class="mode-btn" data-mode="template" title="Edit templates">Templates</button>
+        </span>
         <button id="btn-new" title="New Map">📄 New</button>
         <select id="sel-load" title="Load Map"><option value="">Load Map...</option></select>
         <button id="btn-load-file" title="Load from file">📂 File</button>
@@ -45,64 +57,102 @@ export class Toolbar {
       </div>
     `;
 
+    // ── Mode toggle ──
+    let currentMode: EditorMode = 'map';
+    const selLoad = container.querySelector('#sel-load') as HTMLSelectElement;
+    const btnNew = container.querySelector('#btn-new') as HTMLButtonElement;
+    const btnLoadFile = container.querySelector('#btn-load-file') as HTMLButtonElement;
+
+    const populateLoadSelect = (mode: EditorMode) => {
+      selLoad.innerHTML = '';
+      const def = document.createElement('option');
+      def.value = '';
+      def.textContent = mode === 'map' ? 'Load Map...' : 'Load Template...';
+      selLoad.appendChild(def);
+      const ids = mode === 'map' ? getKnownMapIds() : getKnownTemplateIds();
+      for (const id of ids) {
+        const opt = document.createElement('option');
+        opt.value = id;
+        opt.textContent = id;
+        selLoad.appendChild(opt);
+      }
+    };
+    populateLoadSelect('map');
+
+    container.querySelector('.mode-toggle')!.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('.mode-btn') as HTMLElement | null;
+      if (!btn?.dataset.mode) return;
+      const mode = btn.dataset.mode as EditorMode;
+      if (mode === currentMode) return;
+      currentMode = mode;
+      container.querySelectorAll('.mode-btn').forEach(b =>
+        (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.mode === mode));
+      populateLoadSelect(mode);
+      btnNew.textContent = mode === 'map' ? '📄 New' : '📄 New Tmpl';
+      btnNew.title = mode === 'map' ? 'New Map' : 'New blank template';
+      btnLoadFile.style.display = mode === 'map' ? '' : 'none';
+      callbacks.onModeChange?.(mode);
+    });
+
     // ── Tool buttons ──
     container.querySelector('[data-group="tools"]')!.addEventListener('click', (e) => {
       const btn = (e.target as HTMLElement).closest('.tool-btn') as HTMLElement | null;
       if (!btn?.dataset.tool) return;
       state.setTool(btn.dataset.tool as ToolType);
     });
-
     state.on('tool-changed', () => {
       container.querySelectorAll('.tool-btn').forEach(b => {
         (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.tool === state.activeTool);
       });
     });
 
-    // ── File ops ──
-    const selLoad = container.querySelector('#sel-load') as HTMLSelectElement;
-    for (const id of getKnownMapIds()) {
-      const opt = document.createElement('option');
-      opt.value = id;
-      opt.textContent = id;
-      selLoad.appendChild(opt);
-    }
-    selLoad.addEventListener('change', async () => {
-      if (!selLoad.value) return;
-      try {
-        const data = await loadMapFromProject(selLoad.value);
-        if (onLoadMapData) {
-          await onLoadMapData(data);
-        } else {
+    // ── Load (map or template depending on mode) ──
+    const doLoad = callbacks.onLoadMap
+      ? callbacks.onLoadMap
+      : async (data: TileMapData) => {
           const cats = categorizeTiles(tileManifest as Record<string, never>);
           state.loadMap(data, cats);
           history.clear();
-        }
-      } catch (err) { console.error('Failed to load map:', err); }
+        };
+
+    selLoad.addEventListener('change', async () => {
+      if (!selLoad.value) return;
+      try {
+        const data = currentMode === 'template'
+          ? await loadTemplateFromProject(selLoad.value)
+          : await loadMapFromProject(selLoad.value);
+        await doLoad(data);
+      } catch (err) { console.error('Failed to load:', err); }
       selLoad.value = '';
     });
 
-    container.querySelector('#btn-load-file')!.addEventListener('click', () => {
+    btnLoadFile.addEventListener('click', () => {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = '.json';
       input.addEventListener('change', async () => {
         const file = input.files?.[0];
         if (!file) return;
-        try {
-          const data = await loadMapFromFile(file);
-          if (onLoadMapData) {
-            await onLoadMapData(data);
-          } else {
-            const cats = categorizeTiles(tileManifest as Record<string, never>);
-            state.loadMap(data, cats);
-            history.clear();
-          }
-        } catch (err) { console.error('Failed to load file:', err); }
+        try { await doLoad(await loadMapFromFile(file)); }
+        catch (err) { console.error('Failed to load file:', err); }
       });
       input.click();
     });
 
-    container.querySelector('#btn-new')!.addEventListener('click', () => {
+    btnNew.addEventListener('click', () => {
+      if (currentMode === 'template') {
+        const w = parseInt(prompt('Template width (tiles):', '20') || '20', 10);
+        const h = parseInt(prompt('Template height (tiles):', '15') || '15', 10);
+        if (w > 0 && h > 0) {
+          const data = createBlankMap(w, h);
+          data.id = 'new-template';
+          data.name = 'new-template';
+          const cats = categorizeTiles(tileManifest as Record<string, never>);
+          state.loadMap(data, cats);
+          history.clear();
+        }
+        return;
+      }
       const w = parseInt(prompt('Map width (tiles):', '25') || '25', 10);
       const h = parseInt(prompt('Map height (tiles):', '20') || '20', 10);
       if (w > 0 && h > 0) {
@@ -113,15 +163,16 @@ export class Toolbar {
       }
     });
 
+    // ── Save ──
     container.querySelector('#btn-save')!.addEventListener('click', async () => {
       try {
-        await saveMap(state.mapData);
+        if (callbacks.onSave) await callbacks.onSave();
+        else await saveMap(state.mapData);
       } catch (err) {
-        if ((err as DOMException).name !== 'AbortError') {
-          console.error('Save failed:', err);
-        }
+        if ((err as DOMException).name !== 'AbortError') console.error('Save failed:', err);
       }
     });
+
     container.querySelector('#btn-copy')!.addEventListener('click', async () => {
       await copyMapToClipboard(state.mapData);
       alert('Map JSON copied to clipboard!');
@@ -159,21 +210,22 @@ export class Toolbar {
 
     // ── Resize map ──
     container.querySelector('#btn-resize')!.addEventListener('click', () => {
+      if ((state.mapData as unknown as Record<string, unknown>).template) {
+        alert(`This map uses template "${(state.mapData as unknown as Record<string, unknown>).template}" — dimensions are fixed by the template.\nLoad the template to resize it.`);
+        return;
+      }
       const md = state.mapData;
       const newW = parseInt(prompt('New width (tiles):', String(md.width)) || '', 10);
       const newH = parseInt(prompt('New height (tiles):', String(md.height)) || '', 10);
       if (!newW || !newH || newW < 1 || newH < 1) return;
       if (newW === md.width && newH === md.height) return;
 
-      // Resize tiles grid
       const oldTiles = md.tiles;
       md.tiles = Array.from({ length: newH }, (_, y) =>
         Array.from({ length: newW }, (_, x) =>
           (y < oldTiles.length && x < (oldTiles[y]?.length ?? 0)) ? oldTiles[y][x] : 'g1'
         )
       );
-
-      // Resize objectLayer if present
       if (md.objectLayer) {
         const oldObj = md.objectLayer;
         md.objectLayer = Array.from({ length: newH }, (_, y) =>
@@ -182,18 +234,11 @@ export class Toolbar {
           )
         );
       }
-
-      // Filter out objects that are now out of bounds
-      if (md.objects) {
-        md.objects = md.objects.filter(o => o.x < newW && o.y < newH);
-      }
-
+      if (md.objects) md.objects = md.objects.filter(o => o.x < newW && o.y < newH);
       md.width = newW;
       md.height = newH;
-      // Clamp spawn
       md.spawn.x = Math.min(md.spawn.x, newW - 1);
       md.spawn.y = Math.min(md.spawn.y, newH - 1);
-
       state.emit('map-modified');
     });
 
@@ -201,7 +246,6 @@ export class Toolbar {
     const MUSIC_OPTIONS = MUSIC_TRACK_KEYS;
 
     container.querySelector('#btn-meta')!.addEventListener('click', () => {
-      // Remove existing modal if any
       document.querySelector('.modal-backdrop.settings-modal')?.remove();
 
       const md = state.mapData;
@@ -212,12 +256,20 @@ export class Toolbar {
         `<option value="${k}"${(md.music || 'town') === k ? ' selected' : ''}>${k}</option>`
       ).join('');
 
+      const labelEn = md.label?.en ?? '';
+      const labelHe = md.label?.he ?? '';
       backdrop.innerHTML = `
         <div class="modal-dialog">
           <h2>Map Settings</h2>
-          <div class="prop-row"><label>Name</label><input id="ms-name" type="text" value="${md.name || ''}"></div>
-          <div class="prop-row"><label>ID</label><input id="ms-id" type="text" value="${md.id || ''}"></div>
-          <div class="prop-row"><label>Music</label><select id="ms-music">${musicOpts}</select></div>
+          <div class="prop-row"><label>File / ID</label><input id="ms-id" type="text" value="${md.id || ''}"></div>
+          <div class="prop-row"><label>Internal name</label><input id="ms-name" type="text" value="${md.name || ''}"></div>
+          <div class="prop-row" style="border-top:1px solid #333;margin-top:6px;padding-top:6px">
+            <label>Label EN</label><input id="ms-label-en" type="text" value="${labelEn}" placeholder="English display name">
+          </div>
+          <div class="prop-row"><label>Label HE</label><input id="ms-label-he" type="text" value="${labelHe}" placeholder="שם בעברית" dir="rtl"></div>
+          <div class="prop-row" style="border-top:1px solid #333;margin-top:6px;padding-top:6px">
+            <label>Music</label><select id="ms-music">${musicOpts}</select>
+          </div>
           <div class="prop-row"><label>Spawn X</label><input id="ms-sx" type="number" value="${md.spawn.x}" min="0"></div>
           <div class="prop-row"><label>Spawn Y</label><input id="ms-sy" type="number" value="${md.spawn.y}" min="0"></div>
           <div class="prop-row"><label>Encounter</label><input id="ms-enc" type="text" value="${md.encounterTableId || ''}" placeholder="table ID or empty"></div>
@@ -229,25 +281,21 @@ export class Toolbar {
       `;
 
       document.body.appendChild(backdrop);
-
       const close = () => backdrop.remove();
-
-      // Close on backdrop click
-      backdrop.addEventListener('click', (e) => {
-        if (e.target === backdrop) close();
-      });
-
-      // Close on Escape
+      backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
       const onKey = (e: KeyboardEvent) => {
         if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onKey); }
       };
       document.addEventListener('keydown', onKey);
-
       backdrop.querySelector('#ms-cancel')!.addEventListener('click', close);
 
       backdrop.querySelector('#ms-ok')!.addEventListener('click', () => {
+        md.id   = (backdrop.querySelector('#ms-id')   as HTMLInputElement).value;
         md.name = (backdrop.querySelector('#ms-name') as HTMLInputElement).value;
-        md.id = (backdrop.querySelector('#ms-id') as HTMLInputElement).value;
+        const en = (backdrop.querySelector('#ms-label-en') as HTMLInputElement).value.trim();
+        const he = (backdrop.querySelector('#ms-label-he') as HTMLInputElement).value.trim();
+        if (en || he) md.label = { en, he };
+        else delete (md as unknown as Record<string, unknown>).label;
         md.music = (backdrop.querySelector('#ms-music') as HTMLSelectElement).value;
         md.spawn.x = parseInt((backdrop.querySelector('#ms-sx') as HTMLInputElement).value, 10) || 0;
         md.spawn.y = parseInt((backdrop.querySelector('#ms-sy') as HTMLInputElement).value, 10) || 0;
@@ -258,7 +306,6 @@ export class Toolbar {
         document.removeEventListener('keydown', onKey);
       });
 
-      // Focus first field
       (backdrop.querySelector('#ms-name') as HTMLInputElement).focus();
     });
   }

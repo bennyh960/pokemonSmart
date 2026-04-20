@@ -1,0 +1,65 @@
+{
+  "width": 8,
+  "height": 8,
+  "tileSize": 16,
+  "spawn": {
+    "x": 3,
+    "y": 7
+  },
+  "tileset": "overworld",
+  "transitions": [
+    {
+      "fromX": 3,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 4,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
+  ],
+  "music": "town",
+  "encounterTableId": null,
+  "id": "house-small",
+  "name": "house-small"
+,
+  "tiles": [
+    ["f3","f3","f3","f3","f3","f3","f3","f3"],
+    ["f3","f3","f3","f3","f3","f3","f3","f3"],
+    ["f3","f3","f3","f3","f3","f3","f3","f3"],
+    ["f3","f3","f3","f3","f3","f3","f3","f3"],
+    ["f3","f3","f3","f3","f3","f3","f3","f3"],
+    ["f3","f3","f3","f3","f3","f3","f3","f3"],
+    ["f3","f3","f3","f3","f3","f3","f3","f3"],
+    ["f3","f3","f3","f3","f3","f3","f3","f3"]
+  ],
+  "objects": [
+    {
+      "key": "bed6",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "desk2",
+      "x": 5,
+      "y": 0
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null]
+  ]
+}

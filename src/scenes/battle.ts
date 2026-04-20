@@ -120,6 +120,7 @@ import {
   applyVolatileMoveEffects,
   calculateMoveHpEffectAmount,
   clearEndOfTurnFlags,
+  clearMajorStatus,
   isSubstituteBypass,
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
@@ -150,9 +151,76 @@ import {
   clearScreens,
   type EntryHazardResult,
 } from '../systems/battle-system.js';
+import charactersManifest from '../data/sprites/characters.json';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
+type AiLevel = 1 | 2 | 3 | 4 | 5;
+
+interface TrainerAIState {
+  level: AiLevel;
+  switchesUsed: number;
+  chargingMovesStarted: number;
+  itemsUsedByPartyIdx: Map<number, Set<string>>;
+  itemUsesTotalHeal: number;
+  itemUsesTotalCure: number;
+}
+
+/** Randomness factors per AI level: higher = more random suboptimal picks. */
+const AI_RANDOMNESS: [number, number, number, number, number] = [0.65, 0.45, 0.28, 0.15, 0.06];
+
+function getCharacterRoles(spriteType: string): string[] {
+  const chars = (charactersManifest as any).characters as Record<string, { roles?: string[] }>;
+  return chars[spriteType]?.roles ?? [];
+}
+
+function computeAiLevel(spriteType: string, explicit?: AiLevel): AiLevel {
+  if (explicit) return explicit;
+  const roles = getCharacterRoles(spriteType);
+  // console.log({ spriteType, explicit, roles });
+
+  if (roles.includes('elite-4') || roles.includes('champion')) return 5;
+  if (roles.includes('gym-leader')) return Math.random() < 0.5 ? 4 : 5;
+  if (roles.includes('story') || roles.includes('rival')) {
+    const r = Math.random();
+    if (r < 0.333) return 3;
+    if (r < 0.667) return 4;
+    return 5;
+  }
+  if (roles.includes('villain')) {
+    const r = Math.random();
+    if (r < 0.25) return 2;
+    if (r < 0.5) return 3;
+    if (r < 0.75) return 4;
+    return 5;
+  }
+
+  // Fallback: check sprite name patterns for unnamed/custom sprites
+  const s = spriteType.toLowerCase();
+  if (s.includes('elite') || s.includes('champion')) return 5;
+  if (s.startsWith('gym-')) return Math.random() < 0.5 ? 4 : 5;
+  if (s.includes('rocket') || s.includes('villain') || s.includes('null-x')) {
+    const r = Math.random();
+    if (r < 0.25) return 2;
+    if (r < 0.5) return 3;
+    if (r < 0.75) return 4;
+    return 5;
+  }
+
+  const r = Math.random();
+  if (r < 0.1) return 1;
+  if (r < 0.4) return 2;
+  if (r < 0.75) return 3;
+  if (r < 0.95) return 4;
+  return 5;
+}
+
+function getDefaultBagItems(level: AiLevel): string[] {
+  if (level >= 5)
+    return ['max-potion', 'max-potion', 'full-restore', 'full-heal', 'full-heal', 'x-attack', 'x-special'];
+  if (level >= 4) return ['hyper-potion', 'full-heal', 'x-attack'];
+  return [];
+}
 
 type BattlePhase =
   | 'INTRO'
@@ -183,7 +251,8 @@ type BattlePhase =
   | 'CAPTURE_ANIM'
   | 'PLAYER_FAINT_SWITCH'
   | 'TRAINER_LOSS'
-  | 'END_TURN_STATUS';
+  | 'END_TURN_STATUS'
+  | 'TRAINER_VOLUNTARY_SWITCH';
 
 let pendingPlayer: Pokemon | null = null;
 let pendingEnemy: Pokemon | null = null;
@@ -202,6 +271,9 @@ export interface TrainerBattleData {
   hasReencounter?: boolean; // true if trainer has re-encounter config (for phone registration)
   locationEn?: string; // trainer location for phone display
   locationHe?: string;
+  aiLevel?: 1 | 2 | 3 | 4 | 5;
+  bagItems?: string[];
+  trainerSpriteType?: string; // used to auto-compute AI level from role
 }
 
 export function setBattleData(
@@ -462,7 +534,11 @@ function doesAbilityAbsorbMove(target: Pokemon, moveType: PokemonType): boolean 
   });
 }
 
-function buildHazardMessages(result: EntryHazardResult, pokemonName: string, sideState: BattleSideRuntimeState): string[] {
+function buildHazardMessages(
+  result: EntryHazardResult,
+  pokemonName: string,
+  sideState: BattleSideRuntimeState,
+): string[] {
   const msgs: string[] = [];
   if (result.stealthRockDamage > 0) {
     msgs.push(t('battle.hazardStealthRockHit', { name: pokemonName }));
@@ -547,6 +623,7 @@ export function createBattleScene(
   let activeBallId: string | null = null;
   let pendingCaptureOutcome: { itemId: string; caught: boolean } | null = null;
   let pendingEnemySendOutAnimation = false;
+  let trainerAIState: TrainerAIState | null = null;
   let pendingPlayerSendOutAnimation = false;
   let pendingPlayerEntryHazard = false;
   let pendingEnemyEntryHazard = false;
@@ -644,7 +721,49 @@ export function createBattleScene(
     phaseTimer = 0;
   }
 
+  function arrangeNextTrainerPokemon(): void {
+    if (!trainerData || !trainerAIState || trainerAIState.level < 3) return;
+    const party = trainerData.party;
+    const nextIdx = trainerPartyIndex + 1;
+    if (nextIdx >= party.length) return;
+
+    let bestIdx = nextIdx;
+    let bestScore = -Infinity;
+    for (let i = nextIdx; i < party.length; i++) {
+      const candidate = party[i];
+      if (!candidate || candidate.hp <= 0) continue;
+      let score = 0;
+      for (const pType of player.types) {
+        const eff = getCombinedTypeEffectiveness(
+          pType as import('../types/index.js').PokemonType,
+          candidate.types as import('../types/index.js').PokemonType[],
+        );
+        if (eff < 1) score += 200;
+        else if (eff > 1) score -= 100;
+      }
+      for (const cType of candidate.types) {
+        const eff = getCombinedTypeEffectiveness(
+          cType as import('../types/index.js').PokemonType,
+          player.types as import('../types/index.js').PokemonType[],
+        );
+        if (eff > 1) score += 150;
+      }
+      score += (candidate.hp / candidate.maxHp) * 50;
+      if (score > bestScore) {
+        bestScore = score;
+        bestIdx = i;
+      }
+    }
+
+    if (bestIdx !== nextIdx) {
+      const temp = party[nextIdx];
+      party[nextIdx] = party[bestIdx];
+      party[bestIdx] = temp;
+    }
+  }
+
   function sendOutNextTrainerPokemon(): void {
+    arrangeNextTrainerPokemon();
     trainerPartyIndex++;
     enemy = trainerData!.party[trainerPartyIndex];
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
@@ -856,6 +975,17 @@ export function createBattleScene(
     pendingEnemyEntryHazard = false;
     pendingSubstituteCarryover = null;
     substituteDollFlash = null;
+    trainerAIState =
+      isTrainerBattle && trainerData
+        ? {
+            level: computeAiLevel(trainerData.trainerSpriteType ?? '', trainerData.aiLevel),
+            switchesUsed: 0,
+            chargingMovesStarted: 0,
+            itemsUsedByPartyIdx: new Map(),
+            itemUsesTotalHeal: 0,
+            itemUsesTotalCure: 0,
+          }
+        : null;
     animationDirector.clear();
     animationDirector.resetActors();
     animationDirector.setActorState('ball', { visible: false });
@@ -925,36 +1055,320 @@ export function createBattleScene(
     return findMoveIndexById(player, chargingMoveId);
   }
 
+  // --- Trainer AI item helpers ---
+
+  function isHealItem(id: string): boolean {
+    return ['max-potion', 'hyper-potion', 'super-potion', 'full-restore'].includes(id);
+  }
+
+  function isCureItem(id: string): boolean {
+    return ['full-heal', 'antidote', 'full-restore', 'awakening', 'ice-heal', 'burn-heal', 'parlyz-heal'].includes(id);
+  }
+
+  function isStatBoostItem(id: string): boolean {
+    return ['x-attack', 'x-defense', 'x-speed', 'x-special', 'x-sp-def'].includes(id);
+  }
+
+  function getStatBoostStat(id: string): BattleStatId | null {
+    const map: Record<string, BattleStatId> = {
+      'x-attack': 'attack',
+      'x-defense': 'defense',
+      'x-speed': 'speed',
+      'x-special': 'specialAttack',
+      'x-sp-def': 'specialDefense',
+    };
+    return (map[id] as BattleStatId) ?? null;
+  }
+
+  function getBestBoostItemId(bagItems: string[]): string | null {
+    const preferred = enemy.attack >= enemy.specialAttack ? 'x-attack' : 'x-special';
+    for (const id of [preferred, 'x-defense', 'x-sp-def', 'x-speed']) {
+      if (bagItems.includes(id)) return id;
+    }
+    return null;
+  }
+
+  function checkTrainerItemUse(): { itemId: string; itemName: string } | null {
+    const ai = trainerAIState;
+    if (!ai || ai.level < 4) return null;
+    const remaining = trainerData ? trainerData.party.filter((_, i) => i >= trainerPartyIndex).length : 0;
+    if (ai.level === 4 && remaining > 3) return null;
+
+    const idx = trainerPartyIndex;
+    const usedByThis = ai.itemsUsedByPartyIdx.get(idx) ?? new Set<string>();
+    // Use explicit bag items if provided, otherwise use level-based defaults
+    const bag = trainerData?.bagItems?.length ? trainerData.bagItems : getDefaultBagItems(ai.level);
+    if (!bag.length) return null;
+
+    const def = (id: string) => {
+      const d = getItem(id);
+      return d ? getLocalizedName(d.name) : id;
+    };
+
+    // Priority 1: stat boost on this Pokemon's first trainer action
+    if (!usedByThis.has('boost')) {
+      const boostId = getBestBoostItemId(bag);
+      if (boostId) return { itemId: boostId, itemName: def(boostId) };
+    }
+
+    // Priority 2: status cure (up to 2 total)
+    if (enemyBattleState.majorStatus !== null && ai.itemUsesTotalCure < 2 && !usedByThis.has('cure')) {
+      const cureId = bag.find((id) => isCureItem(id));
+      if (cureId) return { itemId: cureId, itemName: def(cureId) };
+    }
+
+    // Priority 3: heal when HP < 45% (up to 2 total)
+    if (enemy.hp / enemy.maxHp < 0.45 && ai.itemUsesTotalHeal < 2 && !usedByThis.has('heal')) {
+      const healId = bag.find((id) => isHealItem(id));
+      if (healId) return { itemId: healId, itemName: def(healId) };
+    }
+
+    return null;
+  }
+
+  function applyTrainerItemEffect(itemId: string): void {
+    const ai = trainerAIState!;
+    const idx = trainerPartyIndex;
+    const usedByThis = ai.itemsUsedByPartyIdx.get(idx) ?? new Set<string>();
+
+    if (isStatBoostItem(itemId)) {
+      const stat = getStatBoostStat(itemId);
+      if (stat) {
+        const current = enemyBattleState.statModifiers[stat];
+        enemyBattleState.statModifiers[stat] = Math.max(-200, Math.min(200, current + BATTLE_STAT_PERCENT_STEP));
+      }
+      usedByThis.add('boost');
+    } else if (isCureItem(itemId)) {
+      if (itemId === 'full-restore') {
+        enemy.hp = enemy.maxHp;
+        setHP(enemyHpBar, enemy.hp);
+      }
+      clearMajorStatus(enemy, enemyBattleState);
+      setStatus(enemyHpBar, '');
+      usedByThis.add('cure');
+      ai.itemUsesTotalCure++;
+    } else if (isHealItem(itemId)) {
+      if (itemId === 'full-restore') {
+        enemy.hp = enemy.maxHp;
+        clearMajorStatus(enemy, enemyBattleState);
+        setStatus(enemyHpBar, '');
+      } else if (itemId === 'max-potion') {
+        enemy.hp = enemy.maxHp;
+      } else if (itemId === 'hyper-potion') {
+        enemy.hp = Math.min(enemy.maxHp, enemy.hp + 200);
+      } else {
+        enemy.hp = Math.min(enemy.maxHp, enemy.hp + 50);
+      }
+      setHP(enemyHpBar, enemy.hp);
+      usedByThis.add('heal');
+      ai.itemUsesTotalHeal++;
+    }
+
+    ai.itemsUsedByPartyIdx.set(idx, usedByThis);
+  }
+
+  function findBestSwitchTarget(): number | null {
+    const ai = trainerAIState;
+    if (!ai || !isTrainerBattle || !trainerData) return null;
+    const maxSwitches = ai.level >= 5 ? 3 : ai.level >= 4 ? 2 : 1;
+    if (ai.switchesUsed >= maxSwitches) return null;
+
+    // Only switch when player has type advantage against current enemy
+    let playerHasAdvantage = false;
+    for (const pType of player.types) {
+      if (
+        getCombinedTypeEffectiveness(
+          pType as import('../types/index.js').PokemonType,
+          enemy.types as import('../types/index.js').PokemonType[],
+        ) > 1
+      ) {
+        playerHasAdvantage = true;
+        break;
+      }
+    }
+    if (!playerHasAdvantage) return null;
+
+    let bestIdx = -1;
+    let bestScore = -Infinity;
+    for (let i = trainerPartyIndex + 1; i < trainerData.party.length; i++) {
+      const candidate = trainerData.party[i];
+      if (!candidate || candidate.hp <= 0) continue;
+      let score = 0;
+      for (const pType of player.types) {
+        const eff = getCombinedTypeEffectiveness(
+          pType as import('../types/index.js').PokemonType,
+          candidate.types as import('../types/index.js').PokemonType[],
+        );
+        if (eff < 1) score += 200;
+        else if (eff > 1) score -= 100;
+      }
+      for (const cType of candidate.types) {
+        const eff = getCombinedTypeEffectiveness(
+          cType as import('../types/index.js').PokemonType,
+          player.types as import('../types/index.js').PokemonType[],
+        );
+        if (eff > 1) score += 150;
+      }
+      score += (candidate.hp / candidate.maxHp) * 50;
+      if (score > bestScore) {
+        bestScore = score;
+        bestIdx = i;
+      }
+    }
+
+    return bestIdx >= 0 && bestScore > 0 ? bestIdx : null;
+  }
+
+  function executeTrainerItemUse(itemId: string, itemName: string): void {
+    applyTrainerItemEffect(itemId);
+    const trainerName = getLocalizedName(trainerData!.trainerName);
+    const pokemonName = getPokemonDisplayName(enemy.id);
+    textBox = createTextBox(
+      [t('battle.trainerUsedItem', { trainer: trainerName, item: itemName, name: pokemonName })],
+      isRTL(),
+    );
+    phase = 'ENEMY_TURN';
+    enemyGoesFirst = true; // Player attacks after this text resolves
+  }
+
+  function executeTrainerVoluntarySwitch(targetPartyIdx: number): void {
+    const party = trainerData!.party;
+    const current = party[trainerPartyIndex];
+    const target = party[targetPartyIdx];
+
+    // Rearrange party: insert target at current position, shift current to right after
+    party.splice(targetPartyIdx, 1);
+    party.splice(trainerPartyIndex, 0, target);
+    // Now party[trainerPartyIndex] = target, party[trainerPartyIndex+1] = current (withdrawn, available later)
+
+    enemy = party[trainerPartyIndex];
+    enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
+    enemySelectedMoveIndex = -1;
+    if (menu) menu.enemyTypes = (enemy.types ?? []) as import('../types/index.js').PokemonType[];
+    enemyAlreadyAttacked = false;
+    enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
+    setStatus(enemyHpBar, enemy.status ?? '');
+    setVolatileStatuses(enemyHpBar, [
+      ...getDisplayedVolatileStatuses(enemyBattleState),
+      ...getDisplayedSideStatuses(enemySideState),
+    ]);
+    loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
+    if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
+
+    trainerAIState!.switchesUsed++;
+    // Clear item-use tracking for this slot so new Pokemon gets fresh item access
+    trainerAIState!.itemsUsedByPartyIdx.delete(trainerPartyIndex);
+
+    pendingEnemySendOutAnimation = true;
+    animationDirector.setActorState('enemy', {
+      x: 26,
+      y: -8,
+      scaleX: 0.55,
+      scaleY: 0.55,
+      alpha: 0,
+      rotation: -0.2,
+      visible: false,
+    });
+
+    const trainerName = getLocalizedName(trainerData!.trainerName);
+    textBox = createTextBox(
+      [
+        t('battle.trainerWithdrew', { trainer: trainerName, name: getPokemonDisplayName(current.id) }),
+        t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
+      ],
+      isRTL(),
+    );
+
+    phase = 'TRAINER_VOLUNTARY_SWITCH';
+    enemyGoesFirst = true; // Player attacks after switch animation resolves
+  }
+
+  function handleTrainerTurnPriority(): boolean {
+    if (!isTrainerBattle || !trainerAIState) return false;
+
+    const itemAction = checkTrainerItemUse();
+    if (itemAction) {
+      executeTrainerItemUse(itemAction.itemId, itemAction.itemName);
+      return true;
+    }
+
+    if (trainerAIState.level >= 3) {
+      const switchTarget = findBestSwitchTarget();
+      if (switchTarget !== null) {
+        executeTrainerVoluntarySwitch(switchTarget);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   function scoreMoveForEnemy(moveIndex: number): number {
     const move = enemy.moves[moveIndex];
     if (!move) return -Infinity;
-
-    // Skip moves with 0 PP
     if (move.currentPp <= 0) return -Infinity;
 
     const movePower = move.power ?? 0;
     const battleData = getMoveBattleData(move.id);
     const moveFullData = getMove(move.id);
-
-    // Determine damage class
     const damageClass = moveFullData?.damageClass ?? (movePower > 0 ? 'physical' : 'status');
+    const isOhko = battleData?.behaviorTags?.includes('ohko') ?? false;
+    const isCharging = battleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
+    const isRest = battleData?.behaviorTags?.includes('rest') ?? false;
+    const isSelfHeal = (battleData?.healingPercent ?? 0) > 0 && battleData?.target === 'user';
+
+    const ai = trainerAIState;
+    const enemyHpRatio = enemy.hp / enemy.maxHp;
+    const playerHpRatio = player.hp / player.maxHp;
+
+    // --- OHKO moves (Horn Drill, Fissure, etc.): gamble — only worthwhile on a healthy opponent ---
+    if (isOhko) {
+      if (playerHpRatio < 0.7) return -Infinity;
+      // Effective accuracy considering stat modifiers (base ~30%)
+      const accMod = enemyBattleState.statModifiers.accuracy;
+      const evaMod = playerBattleState.statModifiers.evasion;
+      const effectiveAcc = (30 * (1 + accMod / 100)) / Math.max(0.01, 1 + Math.max(0, evaMod) / 100);
+      return effectiveAcc * 15;
+    }
+
+    // --- Charging moves: cap at 2 initiations ---
+    if (isCharging && enemyBattleState.chargingMoveId === null && (ai?.chargingMovesStarted ?? 0) >= 2)
+      return -Infinity;
+
+    // --- Rest: only when very low HP ---
+    if (isRest) {
+      if (enemyHpRatio > 0.33) return -Infinity;
+      let s = (1 - enemyHpRatio) * 800;
+      if (enemyBattleState.majorStatus !== null) s += 300;
+      return s;
+    }
+
+    // --- Other self-heal moves (Recover, Roost): only below 50% HP ---
+    if (isSelfHeal) {
+      if (enemyHpRatio >= 0.5) return -Infinity;
+      return (1 - enemyHpRatio) * 600;
+    }
 
     let score = 0;
 
     if (movePower > 0) {
-      // Type effectiveness
       const effectiveness = getCombinedTypeEffectiveness(move.type, player.types);
-
-      // Moves that do zero damage are worthless
       if (effectiveness === 0) return -Infinity;
 
-      // STAB bonus
       const stab = enemy.types.includes(move.type) ? 1.5 : 1;
 
-      const estimatedScore = movePower * effectiveness * stab;
-      score += estimatedScore;
+      // Physical/Special preference
+      const physicalBias = enemy.attack > enemy.specialAttack * 1.2;
+      const specialBias = enemy.specialAttack > enemy.attack * 1.2;
+      let statBias = 1.0;
+      if (physicalBias && damageClass === 'physical') statBias = 1.3;
+      else if (physicalBias && damageClass === 'special') statBias = 0.7;
+      else if (specialBias && damageClass === 'special') statBias = 1.3;
+      else if (specialBias && damageClass === 'physical') statBias = 0.7;
 
-      // KO bonus: rough damage estimate using attack vs defense
+      score += movePower * effectiveness * stab * statBias;
+
+      // KO bonus: scaled by how much HP the player has left
       const attackStat =
         damageClass === 'physical'
           ? getModifiedStatValue(enemy, enemyBattleState, 'attack')
@@ -963,24 +1377,80 @@ export function createBattleScene(
         damageClass === 'physical'
           ? getModifiedStatValue(player, playerBattleState, 'defense')
           : getModifiedStatValue(player, playerBattleState, 'specialDefense');
-      // Simplified damage formula (proportional to Gen 1 formula)
       const estimatedDamage =
         ((((2 * enemy.level) / 5 + 2) * movePower * attackStat) / defenseStat / 50 + 2) * stab * effectiveness;
       if (estimatedDamage >= player.hp) {
-        score += 10000;
+        if (playerHpRatio > 0.3) score += 10000;
+        else if (playerHpRatio > 0.15) score += 3000;
+        // Below 15%: any move can finish — no bonus needed
+      }
+
+      // Prefer higher accuracy moves when player is nearly dead
+      if (playerHpRatio < 0.3) {
+        const accuracy = moveFullData?.accuracy ?? 100;
+        if (accuracy < 100) score -= (100 - accuracy) * 5;
       }
     } else {
-      // Status move
+      // Status / utility move
       const ailment = battleData?.ailment ?? null;
+      const effects = battleData?.effects ?? [];
 
-      // Encourage status moves when enemy is healthy (> 50% HP)
-      if (ailment !== null && enemy.hp > enemy.maxHp * 0.5) {
-        score += 200;
+      // Evasion-raising moves
+      const raisesEvasion =
+        battleData?.statChanges?.some((sc) => sc.stat === 'evasion' && sc.target === 'user' && sc.stages > 0) ?? false;
+      if (raisesEvasion) {
+        if (enemyBattleState.statModifiers.evasion >= 100) return -Infinity; // Already +2 stages
+        score += 350;
       }
 
-      // Penalty: don't waste status moves if player already has a status
-      if (ailment !== null && player.status !== null) {
-        score -= 500;
+      // Substitute blocks all opponent-targeting effects — skip moves that would be completely wasted
+      if (playerBattleState.substituteActive) {
+        const ailment = battleData?.ailment ?? null;
+        const hasOpponentTarget =
+          (ailment !== null && ailment.target === 'target') ||
+          effects.some((e) => e.target === 'target') ||
+          (battleData?.statChanges?.some((sc) => sc.target === 'target' && sc.stages < 0) ?? false);
+        if (hasOpponentTarget) return -Infinity;
+      }
+
+      // Entry hazard moves — set up once, never repeat
+      const isEntryHazardSR = battleData?.behaviorTags?.includes('stealth-rock') ?? false;
+      const isEntryHazardSpikes = battleData?.behaviorTags?.includes('spikes') ?? false;
+      const isEntryHazardToxicSpikes = battleData?.behaviorTags?.includes('toxic-spikes') ?? false;
+      if (isEntryHazardSR) {
+        if (playerSideState.stealthRockActive) return -Infinity;
+        return 400;
+      }
+      if (isEntryHazardSpikes) {
+        if (playerSideState.spikesLayers >= 3) return -Infinity;
+        return 350;
+      }
+      if (isEntryHazardToxicSpikes) {
+        if (playerSideState.toxicSpikesLayers >= 2) return -Infinity;
+        return 300;
+      }
+
+      // Volatile status (confusion, leech-seed, trap) — don't reapply, and respect type immunity
+      const appliesConfusion = effects.some((e) => e.id === 'confusion' && e.target === 'target');
+      const appliesLeechSeed = effects.some((e) => e.id === 'leech-seed' && e.target === 'target');
+      const appliesTrap = effects.some((e) => e.id === 'trap' && e.target === 'target');
+      if (appliesConfusion && playerBattleState.confusionTurnsRemaining > 0) return -Infinity;
+      if (appliesLeechSeed) {
+        if (playerBattleState.leechSeeded) return -Infinity;
+        if (player.types.includes('grass')) return -Infinity; // Grass types immune to leech seed
+      }
+      if (appliesTrap && playerBattleState.trappedTurnsRemaining > 0) return -Infinity;
+
+      if (appliesConfusion || appliesLeechSeed || appliesTrap) {
+        score += 300; // Volatile statuses are valuable
+      }
+
+      // Major status ailment moves — check type immunity before scoring
+      if (ailment !== null) {
+        if (player.status !== null) return -Infinity; // Already statused
+        if (isTargetImmuneToStatusEffectFromMoveType(player, move.type, ailment)) return -Infinity; // Type immune
+        if (enemyHpRatio > 0.5) score += 250;
+        else score += 100; // Lower priority when enemy is struggling
       }
     }
 
@@ -992,6 +1462,12 @@ export function createBattleScene(
     if (chargingMoveId !== null) {
       const chargingMoveIndex = findMoveIndexById(enemy, chargingMoveId);
       if (chargingMoveIndex !== null) return chargingMoveIndex;
+    }
+
+    // Randomness: AI level determines how often a random move is chosen instead of optimal
+    if (trainerAIState) {
+      const randomChance = AI_RANDOMNESS[trainerAIState.level - 1];
+      if (Math.random() < randomChance) return chooseEnemyMoveIndex(enemy);
     }
 
     // Score each move and pick the best one
@@ -1008,6 +1484,17 @@ export function createBattleScene(
     // If all moves are -Infinity, fall back to random selection
     if (bestIndex === -1 || bestScore === -Infinity) {
       return chooseEnemyMoveIndex(enemy);
+    }
+
+    // Track charging move initiations to enforce the cap
+    if (trainerAIState && bestIndex >= 0) {
+      const selectedMove = enemy.moves[bestIndex];
+      if (selectedMove) {
+        const selectedData = getMoveBattleData(selectedMove.id);
+        if (selectedData?.behaviorTags.includes('requires-charge-turn') && enemyBattleState.chargingMoveId === null) {
+          trainerAIState.chargingMovesStarted++;
+        }
+      }
     }
 
     return bestIndex;
@@ -1948,8 +2435,8 @@ export function createBattleScene(
       damageClass,
     });
 
-    if (move.power > 0) {
-      const absorbEffect = defender.abilityId
+    if (move.power > 0 || resolvedDamage > 0) {
+      const absorbEffect = move.power > 0 && defender.abilityId
         ? getAbilityBattleEffects(defender.abilityId).find((effect) => {
             return effect.kind === 'typeAbsorbHeal' && effect.moveTypes.includes(move.type);
           })
@@ -2047,8 +2534,8 @@ export function createBattleScene(
       }
 
       if (moveBattleData.ailment?.target === 'target') {
-        const substituteBlocksStatus = defenderState.substituteActive
-          && !isSubstituteBypass(move.name, attacker.abilityId);
+        const substituteBlocksStatus =
+          defenderState.substituteActive && !isSubstituteBypass(move.name, attacker.abilityId);
         if (substituteBlocksStatus) {
           // substitute silently blocks foe-caused status — Infiltrator ability bypasses this
         } else if (isSafeguardActive(defenderSideState)) {
@@ -2073,8 +2560,11 @@ export function createBattleScene(
         }
       }
 
+      const substituteBlocksVolatile =
+        defenderState.substituteActive && !isSubstituteBypass(move.name, attacker.abilityId);
       for (const effect of moveBattleData.effects) {
         if (effect.target !== 'target') continue;
+        if (substituteBlocksVolatile) continue; // Substitute silently blocks volatile effects
         if (isTargetImmuneToVolatileEffectFromMoveType(defender, move.type, effect)) {
           lines.push(getEffectImmuneLine(defenderName));
           continue;
@@ -2515,21 +3005,27 @@ export function createBattleScene(
         phaseTimer = 0;
         return;
       }
-      playAttackAnimation('player', 'enemy', m, () => {
-        player.hp -= cost;
-        setHP(playerHpBar, player.hp);
-        playerBattleState.substituteActive = true;
-        playerBattleState.substituteHitsAbsorbed = 0;
-        syncPlayerBar();
-        const msgs = [
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          t('battle.substituteCreated', { name: attackerName }),
-        ];
-        textBox = createTextBox(msgs, rtl);
-        phase = 'PLAYER_ATTACK';
-        phaseTimer = 0;
-      }, false);
+      playAttackAnimation(
+        'player',
+        'enemy',
+        m,
+        () => {
+          player.hp -= cost;
+          setHP(playerHpBar, player.hp);
+          playerBattleState.substituteActive = true;
+          playerBattleState.substituteHitsAbsorbed = 0;
+          syncPlayerBar();
+          const msgs = [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.substituteCreated', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'PLAYER_ATTACK';
+          phaseTimer = 0;
+        },
+        false,
+      );
       return;
     }
 
@@ -2542,10 +3038,7 @@ export function createBattleScene(
         };
         playerBattleState.substituteActive = false;
       }
-      const msgs = [
-        ...turnEffectLines,
-        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-      ];
+      const msgs = [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) })];
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
@@ -2683,6 +3176,8 @@ export function createBattleScene(
         const et = effText(m.type, enemy.types);
         if (et) msgs.push(et);
       }
+    } else if (isOhko && hitResult.hit && !targetTypeImmune) {
+      msgs.push(t('battle.ohkoHit'));
     } else if (!hitResult.hit) {
       msgs.push(t('battle.moveMissed', { name: attackerName }));
     } else if (targetTypeImmune) {
@@ -2695,7 +3190,9 @@ export function createBattleScene(
     } else if (isFocusEnergy) {
       msgs.push(t('battle.focusEnergy', { name: attackerName }));
     } else if (isProtect || isEndure) {
-      msgs.push(isProtect ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }));
+      msgs.push(
+        isProtect ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }),
+      );
     } else if (healPercent !== null) {
       msgs.push(t('battle.healedHp', { name: attackerName }));
     } else if (isStealthRock) {
@@ -2745,7 +3242,8 @@ export function createBattleScene(
     }
     // Rapid Spin: will clear own hazards + leech seed on impact
     if (isRapidSpinClear && hitResult.hit && plannedDamage > 0) {
-      const hadHazards = playerSideState.stealthRockActive || playerSideState.spikesLayers > 0 || playerSideState.toxicSpikesLayers > 0;
+      const hadHazards =
+        playerSideState.stealthRockActive || playerSideState.spikesLayers > 0 || playerSideState.toxicSpikesLayers > 0;
       const hadSeed = playerBattleState.leechSeeded;
       if (hadHazards || hadSeed) {
         msgs.push(t('battle.rapidSpinClear', { name: attackerName }));
@@ -2775,8 +3273,13 @@ export function createBattleScene(
       }
     }
 
-    // Substitute: precompute message based on planned damage
-    if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && enemyBattleState.substituteActive) {
+    // Substitute: precompute message based on planned damage (only for damaging moves)
+    if (
+      hitResult.hit &&
+      plannedDamage > 0 &&
+      doesMoveTargetOpponent(moveBattleData) &&
+      enemyBattleState.substituteActive
+    ) {
       const playerMoveName2 = moveData?.name?.en ?? m.name;
       if (!isSubstituteBypass(playerMoveName2, player.abilityId)) {
         const subThreshold = Math.floor(enemy.maxHp / 4);
@@ -2842,7 +3345,12 @@ export function createBattleScene(
           for (let hit = 0; hit < hitCount; hit++) {
             if (enemy.hp <= 0) break;
             const popupY = BTL.OPP_SPRITE.y + 10 - hit * 5;
-            if (enemyBattleState.substituteActive && !playerBypassesSub && doesMoveTargetOpponent(moveBattleData)) {
+            if (
+              plannedDamage > 0 &&
+              enemyBattleState.substituteActive &&
+              !playerBypassesSub &&
+              doesMoveTargetOpponent(moveBattleData)
+            ) {
               const threshold = Math.floor(enemy.maxHp / 4);
               if (plannedDamage >= threshold) {
                 enemyBattleState.substituteActive = false;
@@ -3092,22 +3600,28 @@ export function createBattleScene(
         phaseTimer = 0;
         return;
       }
-      playAttackAnimation('enemy', 'player', m, () => {
-        enemy.hp -= cost;
-        setHP(enemyHpBar, enemy.hp);
-        enemyBattleState.substituteActive = true;
-        enemyBattleState.substituteHitsAbsorbed = 0;
-        syncEnemyBar();
-        const msgs = [
-          ...prefix,
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          t('battle.substituteCreated', { name: attackerName }),
-        ];
-        textBox = createTextBox(msgs, rtl);
-        phase = 'ENEMY_TURN';
-        phaseTimer = 0;
-      }, false);
+      playAttackAnimation(
+        'enemy',
+        'player',
+        m,
+        () => {
+          enemy.hp -= cost;
+          setHP(enemyHpBar, enemy.hp);
+          enemyBattleState.substituteActive = true;
+          enemyBattleState.substituteHitsAbsorbed = 0;
+          syncEnemyBar();
+          const msgs = [
+            ...prefix,
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.substituteCreated', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'ENEMY_TURN';
+          phaseTimer = 0;
+        },
+        false,
+      );
       return;
     }
 
@@ -3124,15 +3638,17 @@ export function createBattleScene(
         ...prefix,
         ...turnEffectLines,
         t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-        isProtectEnemy
-          ? t('battle.protected', { name: attackerName })
-          : t('battle.endured', { name: attackerName }),
+        isProtectEnemy ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }),
       ];
       playAttackAnimation(
         'enemy',
         'player',
         m,
-        () => { textBox = createTextBox(msgs, rtl); phase = 'ENEMY_TURN'; phaseTimer = 0; },
+        () => {
+          textBox = createTextBox(msgs, rtl);
+          phase = 'ENEMY_TURN';
+          phaseTimer = 0;
+        },
         false,
       );
       return;
@@ -3240,6 +3756,8 @@ export function createBattleScene(
         const et = effText(m.type, player.types);
         if (et) msgs.push(et);
       }
+    } else if (isOhkoEnemy && hitResult.hit && !targetTypeImmune) {
+      msgs.push(t('battle.ohkoHit'));
     } else if (!hitResult.hit) {
       msgs.push(t('battle.moveMissed', { name: attackerName }));
     } else if (targetTypeImmune) {
@@ -3300,7 +3818,8 @@ export function createBattleScene(
     }
     // Rapid Spin: will clear own hazards + leech seed on impact
     if (isRapidSpinClearEnemy && hitResult.hit && plannedDamage > 0) {
-      const hadHazards = enemySideState.stealthRockActive || enemySideState.spikesLayers > 0 || enemySideState.toxicSpikesLayers > 0;
+      const hadHazards =
+        enemySideState.stealthRockActive || enemySideState.spikesLayers > 0 || enemySideState.toxicSpikesLayers > 0;
       const hadSeed = enemyBattleState.leechSeeded;
       if (hadHazards || hadSeed) {
         msgs.push(t('battle.rapidSpinClear', { name: attackerName }));
@@ -3330,8 +3849,13 @@ export function createBattleScene(
       }
     }
 
-    // Substitute: precompute message based on planned damage
-    if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && playerBattleState.substituteActive) {
+    // Substitute: precompute message based on planned damage (only for damaging moves)
+    if (
+      hitResult.hit &&
+      plannedDamage > 0 &&
+      doesMoveTargetOpponent(moveBattleData) &&
+      playerBattleState.substituteActive
+    ) {
       const enemyMoveName = moveData?.name?.en ?? m.name;
       if (!isSubstituteBypass(enemyMoveName, enemy.abilityId)) {
         const subThreshold = Math.floor(player.maxHp / 4);
@@ -3397,7 +3921,12 @@ export function createBattleScene(
           for (let hit = 0; hit < hitCountEnemy; hit++) {
             if (player.hp <= 0) break;
             const popupY = BTL.PLY_SPRITE.y + 10 - hit * 5;
-            if (playerBattleState.substituteActive && !enemyBypassesSub && doesMoveTargetOpponent(moveBattleData)) {
+            if (
+              plannedDamage > 0 &&
+              playerBattleState.substituteActive &&
+              !enemyBypassesSub &&
+              doesMoveTargetOpponent(moveBattleData)
+            ) {
               const threshold = Math.floor(player.maxHp / 4);
               if (plannedDamage >= threshold) {
                 playerBattleState.substituteActive = false;
@@ -3761,21 +4290,23 @@ export function createBattleScene(
                 textBox = createTextBox([t('battle.noPP')], isRTL());
                 phase = 'INTRO';
               } else {
-                enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
-                const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
-                const turnOrder = determineTurnOrder(
-                  player,
-                  playerBattleState,
-                  m.id,
-                  enemy,
-                  enemyBattleState,
-                  enemyMove.id,
-                );
-                enemyGoesFirst = turnOrder.enemyActsFirst;
-                if (enemyGoesFirst) {
-                  enemyTurn(true);
-                } else {
-                  doAttack();
+                if (!handleTrainerTurnPriority()) {
+                  enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
+                  const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
+                  const turnOrder = determineTurnOrder(
+                    player,
+                    playerBattleState,
+                    m.id,
+                    enemy,
+                    enemyBattleState,
+                    enemyMove.id,
+                  );
+                  enemyGoesFirst = turnOrder.enemyActsFirst;
+                  if (enemyGoesFirst) {
+                    enemyTurn(true);
+                  } else {
+                    doAttack();
+                  }
                 }
               }
             }
@@ -3864,6 +4395,33 @@ export function createBattleScene(
               pendingTurnCredit = true;
               enterSelectMovePhase();
             }
+          }
+          break;
+        }
+        case 'TRAINER_VOLUNTARY_SWITCH': {
+          // Trainer withdrew one Pokemon and sent out another — wait for text + send-out animation
+          if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
+          if (!textBox) {
+            if (pendingEnemySendOutAnimation) {
+              if (!animationDirector.isBusy()) startEnemySendOutAnimation();
+              break;
+            }
+            if (animationDirector.isBusy()) break;
+            // Apply entry hazards to the newly switched-in enemy Pokemon
+            if (pendingEnemyEntryHazard) {
+              pendingEnemyEntryHazard = false;
+              const hazardResult = applyEntryHazards(enemy, enemyBattleState, enemySideState);
+              const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(enemy.id), enemySideState);
+              if (hazardMsgs.length > 0) {
+                setHP(enemyHpBar, enemy.hp);
+                setStatus(enemyHpBar, enemy.status ?? '');
+                syncEnemyBar();
+                textBox = createTextBox(hazardMsgs, isRTL());
+                break;
+              }
+            }
+            // Transition to ENEMY_TURN; since enemyGoesFirst=true, player will attack the new Pokemon
+            phase = 'ENEMY_TURN';
           }
           break;
         }
@@ -4217,6 +4775,19 @@ export function createBattleScene(
             }
           }
           if (!textBox && !animationDirector.isBusy()) {
+            // Apply entry hazards to the newly switched-in player Pokemon
+            if (pendingPlayerEntryHazard) {
+              pendingPlayerEntryHazard = false;
+              const hazardResult = applyEntryHazards(player, playerBattleState, playerSideState);
+              const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(player.id), playerSideState);
+              if (hazardMsgs.length > 0) {
+                setHP(playerHpBar, player.hp);
+                setStatus(playerHpBar, player.status ?? '');
+                syncPlayerBar();
+                textBox = createTextBox(hazardMsgs, isRTL());
+                break;
+              }
+            }
             if (isForcedFaintSwitch) {
               isForcedFaintSwitch = false;
               enterSelectMovePhase();
@@ -4619,7 +5190,15 @@ export function createBattleScene(
     ctx.restore();
   }
 
-  function renderScreenWall(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, color: string, time: number): void {
+  function renderScreenWall(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    color: string,
+    time: number,
+  ): void {
     ctx.save();
     const pulse = 0.07 + Math.sin(time * 2.5) * 0.03;
     ctx.globalAlpha = pulse;
@@ -4675,7 +5254,14 @@ export function createBattleScene(
     ctx.restore();
   }
 
-  function renderSpikes(ctx: CanvasRenderingContext2D, cx: number, cy: number, count: number, color: string, _time: number): void {
+  function renderSpikes(
+    ctx: CanvasRenderingContext2D,
+    cx: number,
+    cy: number,
+    count: number,
+    color: string,
+    _time: number,
+  ): void {
     ctx.save();
     const spacing = 7;
     const startX = cx - ((count - 1) * spacing) / 2;

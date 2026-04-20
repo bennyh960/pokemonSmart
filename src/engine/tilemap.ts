@@ -54,6 +54,58 @@ export interface TileMapData {
   encounterTableId?: string | null;
   /** Optional area/city grouping label for map editor (e.g. "Dividia", "Route 1"). Not used in gameplay. */
   area?: string;
+  /** Bilingual display name shown in-game when entering this map. */
+  label?: { en: string; he: string };
+  /** ID of the template this map is based on (e.g. "house-open"). */
+  template?: string;
+  /** Internal — tracks how many transitions/npcs/objects came from the template so saves strip them. */
+  _templateCounts?: { transitions: number; npcs: number; objects: number };
+}
+
+/**
+ * Merge a template map with an instance map using the canonical rules:
+ * - Layout (tiles, objectLayer, tileset, width, height, tileSize) → always from template
+ * - Arrays (transitions, npcs, objects)                            → concat [template…, instance…]
+ * - Scalar overrides (music, encounterTableId, spawn)              → instance wins, template as default
+ * - Identity (id, name, label, area, template)                     → instance only
+ * - Stores _templateCounts so exportMapJSON can slice instance-only portions on save
+ */
+export function mergeMapWithTemplate(
+  instance: TileMapData & { template?: string },
+  template: TileMapData,
+): TileMapData {
+  const tc = {
+    transitions: template.transitions?.length ?? 0,
+    npcs:        template.npcs?.length        ?? 0,
+    objects:     template.objects?.length     ?? 0,
+  };
+  return {
+    // ── Layout: always from template ──────────────────────────────
+    tiles:       template.tiles,
+    objectLayer: template.objectLayer,
+    tileset:     template.tileset,
+    width:       template.width,
+    height:      template.height,
+    tileSize:    template.tileSize,
+    // ── Arrays: concat (template first, instance appended) ────────
+    transitions: [...(template.transitions ?? []), ...(instance.transitions ?? [])],
+    npcs:        [...(template.npcs        ?? []), ...(instance.npcs        ?? [])],
+    objects:     [...(template.objects     ?? []), ...(instance.objects     ?? [])],
+    // ── Scalars: instance wins, template as default ────────────────
+    music:            instance.music            ?? template.music,
+    encounterTableId: instance.encounterTableId !== undefined
+                        ? instance.encounterTableId
+                        : template.encounterTableId,
+    spawn: instance.spawn ?? template.spawn,
+    // ── Identity: instance only ────────────────────────────────────
+    id:       instance.id,
+    name:     instance.name   ?? template.name,
+    label:    instance.label,
+    area:     instance.area,
+    template: instance.template,
+    // ── Internal ──────────────────────────────────────────────────
+    _templateCounts: tc,
+  };
 }
 
 /** Tile type constants (legacy). */

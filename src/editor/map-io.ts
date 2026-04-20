@@ -1,83 +1,91 @@
+import { mergeMapWithTemplate } from '../engine/tilemap.js';
 import type { TileMapData } from './types.js';
 import { hasFSAccess, saveToDirectory } from './fs-save.js';
 
-/** Known map IDs available in the project. */
+/** All map IDs — derived from files in src/data/maps/ (not subdirectories). */
 export function getKnownMapIds(): string[] {
-  return [
-    // Zeroville area
-    'zeroville',
-    'zeroville-house-tl',
-    'zeroville-house-tr',
-    'zeroville-house-br',
-    // Act 0 — lab
-    'algorithma-lab',
-    'oak lab',
-    // Act 1 — Route 1 → Sumville → Route 2 → Minusburg
-    'route-1',
-    'route1-house',
-    'sumville',
-    'sumville-house-1',
-    'sumville-house-2',
-    'sumvile-house I',
-    'sumville-gym',
-    'sumville-remainder-house',
-    'route-2',
-    'minusburg',
-    'minusburg-gym',
-    // Act 2 — Route 3 → Multiplia → Route 4 → Dividia
-    'route-3',
-    'multiplia',
-    'fake-pokecenter',
-    'route-4',
-    'dividia',
-    'dividia-house-1',
-    'dividia-house-2',
-    'dividia-house-3',
-    'dividia-house-4',
-    // Act 3 — Route 5 → Primore → Route 6 → Symmetrika
-    'route-5',
-    'primore',
-    'route-6',
-    'symmetrika',
-    'symmetrika-terminal',
-    // Act 4 — Route 7 → Integrala → Route 8 → Absoluta
-    'route-7',
-    'integrala',
-    'route-8',
-    'absoluta',
-    // Act 5 — NULL-X Tower
-    'nullx-tower',
-    'nullx-floor-6',
-    // Caves
-    'dividia-cave',
-    'symmetrika-cave',
-    'mountain-cave',
-    // Interiors / shared
-    'mart-interior',
-    'pokecenter-2',
-    'pokecenter-mart-interior',
-    'house-3-i',
-    // Side areas
-    'safari',
-    'deep-forest',
-    'mountain-pass',
-    'route-10',
-    // Legacy / scratch
-    'algebria',
-    'divideburg',
-    'multitown',
-    'prime-city',
-    'fractalis',
-    'infinity-plateau',
-    'logica-heights',
-    'test-map',
-  ].sort();
+  return Object.keys(allMapModules)
+    .map(path => path.replace(/^.*\/maps\//, '').replace(/\.json$/, ''))
+    .sort();
 }
 
-/** Load a map JSON from the project's data directory. */
+// ─── Template registry (auto-discovered via import.meta.glob) ────────────────
+// Drop any .json file into src/data/maps/templates/ — no code changes needed.
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const templateModules = import.meta.glob<{ default: any }>('../data/maps/templates/*.json');
+
+// Auto-discover map JSONs to compute template consumer relationships
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const allMapModules = import.meta.glob<{ default: any }>('../data/maps/*.json', { eager: true });
+
+function templateIdFromPath(path: string): string {
+  return path.replace(/^.*\/templates\//, '').replace(/\.json$/, '');
+}
+
+/** All known template IDs (derived from files in templates/ folder). */
+export function getKnownTemplateIds(): string[] {
+  return Object.keys(templateModules).map(templateIdFromPath).sort();
+}
+
+/** Which map IDs use a given template — computed from actual map files. */
+export function getTemplateConsumers(templateId: string): string[] {
+  return Object.entries(allMapModules)
+    .filter(([, mod]) => mod.default?.template === templateId)
+    .map(([path]) => path.replace(/^.*\/maps\//, '').replace(/\.json$/, ''));
+}
+
+/** Load a raw template JSON (unmerged). Injects id/name so the editor knows what to call the file. */
+export async function loadTemplateFromProject(templateId: string): Promise<TileMapData> {
+  const path = Object.keys(templateModules).find(k => templateIdFromPath(k) === templateId);
+  if (!path) throw new Error(`Template "${templateId}" not found in templates/ folder.`);
+  const raw = (await templateModules[path]()).default as Record<string, unknown>;
+  return { ...raw, id: (raw.id as string) || templateId, name: (raw.name as string) || templateId } as unknown as TileMapData;
+}
+
+/** Load a map JSON without merging its template (returns raw instance data). */
+export async function loadMapRaw(mapId: string): Promise<TileMapData & { template?: string }> {
+  const module = await import(`../data/maps/${mapId}.json`);
+  return module.default as TileMapData & { template?: string };
+}
+
+/** Save map data to a specific destination type ('map' or 'map-template'). */
+export async function saveMapWithType(data: TileMapData, type: 'map' | 'map-template'): Promise<void> {
+  const fileName = `${data.id ?? data.name ?? 'map'}.json`;
+  const json = exportMapJSON(data);
+  if (hasFSAccess()) {
+    await saveToDirectory(type, fileName, json);
+    return;
+  }
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/** Save current map data as a new template. */
+export async function saveTemplate(name: string, data: TileMapData): Promise<void> {
+  const templateData = { ...(data as unknown as Record<string, unknown>), id: name, name, npcs: [] };
+  delete (templateData as Record<string, unknown>).template;
+  await saveMapWithType(templateData as unknown as TileMapData, 'map-template');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Load a map JSON from the project's data directory. Merges template if present. */
 export async function loadMapFromProject(mapId: string): Promise<TileMapData> {
   const module = await import(`../data/maps/${mapId}.json`);
-  return module.default as TileMapData;
+  const raw = module.default as TileMapData & { template?: string };
+  if (raw.template) {
+    const template = await loadTemplateFromProject(raw.template);
+    return mergeMapWithTemplate(raw, template);
+  }
+  return raw;
 }
 
 /** Load a map from a user-picked File. */
@@ -88,36 +96,63 @@ export async function loadMapFromFile(file: File): Promise<TileMapData> {
 
 /** Export map data as formatted JSON string. */
 export function exportMapJSON(data: TileMapData): string {
-  // Custom serializer: put tile rows on single lines for compact output
-  const clone = { ...data };
-  const tiles = clone.tiles;
-  const objects = clone.objects;
-  const objLayer = clone.objectLayer;
+  const raw = data as unknown as Record<string, unknown>;
+  const tc = raw._templateCounts as { transitions: number; npcs: number; objects: number } | undefined;
+  const hasTemplate = !!raw.template;
 
-  // Temporarily remove arrays for base serialization
-  delete (clone as Record<string, unknown>).tiles;
-  delete (clone as Record<string, unknown>).objects;
-  delete (clone as Record<string, unknown>).objectLayer;
+  // ── Template-backed map ───────────────────────────────────────────────────
+  // Save only instance-specific fields; layout and template-provided array
+  // items are omitted — they are injected at load time from the template.
+  if (hasTemplate && tc) {
+    const clone: Record<string, unknown> = {};
+    // Identity
+    if (raw.id)       clone.id       = raw.id;
+    if (raw.name)     clone.name     = raw.name;
+    clone.template = raw.template;
+    if (raw.tileset)  clone.tileset  = raw.tileset;   // explicit for readability
+    if (raw.label)    clone.label    = raw.label;
+    if (raw.area)     clone.area     = raw.area;
+    if (raw.music)    clone.music    = raw.music;
+    if (raw.encounterTableId !== undefined) clone.encounterTableId = raw.encounterTableId;
+    if (raw.spawn)    clone.spawn    = raw.spawn;
+    if (raw.music)    clone.music    = raw.music;
 
-  // Serialize metadata
-  let json = JSON.stringify(clone, null, 2);
+    // Slice to instance-only array portions
+    const instTransitions = (data.transitions ?? []).slice(tc.transitions);
+    const instNpcs        = (data.npcs        ?? []).slice(tc.npcs);
+    const instObjects     = (data.objects     ?? []).slice(tc.objects);
+    if (instTransitions.length) clone.transitions = instTransitions;
+    if (instNpcs.length)        clone.npcs        = instNpcs;
 
-  // Insert tiles array with compact rows
-  const tileRows = tiles.map((row) => '    ' + JSON.stringify(row));
-  const tilesStr = '  "tiles": [\n' + tileRows.join(',\n') + '\n  ]';
-  json = json.slice(0, -1) + ',\n' + tilesStr;
-
-  // Insert placed objects
-  if (objects && objects.length > 0) {
-    json +=
-      ',\n  "objects": ' +
-      JSON.stringify(objects, null, 2)
-        .split('\n')
-        .map((l, i) => (i === 0 ? l : '  ' + l))
-        .join('\n');
+    let json = JSON.stringify(clone, null, 2);
+    if (instObjects.length) {
+      json = json.slice(0, -1) + ',\n  "objects": ' +
+        JSON.stringify(instObjects, null, 2).split('\n').map((l, i) => i === 0 ? l : '  ' + l).join('\n') +
+        '\n}';
+    }
+    return json;
   }
 
-  // Legacy objectLayer (deprecated)
+  // ── Normal map (no template) ──────────────────────────────────────────────
+  const clone = { ...data } as Record<string, unknown>;
+  const tiles  = data.tiles;
+  const objects = data.objects;
+  const objLayer = data.objectLayer;
+  delete clone._templateCounts;
+  delete clone.tiles;
+  delete clone.objects;
+  delete clone.objectLayer;
+
+  let json = JSON.stringify(clone, null, 2);
+
+  const tileRows = tiles.map((row) => '    ' + JSON.stringify(row));
+  json = json.slice(0, -1) + ',\n  "tiles": [\n' + tileRows.join(',\n') + '\n  ]';
+
+  if (objects && objects.length > 0) {
+    json += ',\n  "objects": ' +
+      JSON.stringify(objects, null, 2).split('\n').map((l, i) => i === 0 ? l : '  ' + l).join('\n');
+  }
+
   if (objLayer) {
     const objRows = objLayer.map((row) => '    ' + JSON.stringify(row));
     json += ',\n  "objectLayer": [\n' + objRows.join(',\n') + '\n  ]';
@@ -132,25 +167,9 @@ export function exportMapJSON(data: TileMapData): string {
  * Uses File System Access API if available (picks folder once, then direct writes with backup).
  * Falls back to browser download otherwise.
  */
+/** Save map to disk (always to the maps directory). Use saveMapWithType for templates. */
 export async function saveMap(data: TileMapData): Promise<void> {
-  const fileName = `${data.id ?? data.name ?? 'map'}.json`;
-  const json = exportMapJSON(data);
-
-  if (hasFSAccess()) {
-    await saveToDirectory('map', fileName, json);
-    return;
-  }
-
-  // Fallback: browser download
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  await saveMapWithType(data, 'map');
 }
 
 /** Copy map JSON to clipboard. */
