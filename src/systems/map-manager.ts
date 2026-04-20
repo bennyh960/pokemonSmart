@@ -10,6 +10,12 @@ import { loadTileset } from '../engine/tileset.js';
 import { normalizeDialogue } from './npc.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const TEMPLATE_LOADERS: Record<string, () => Promise<{ default: any }>> = {
+  'house-small': () => import('../data/maps/templates/house-small.json'),
+  'house-open':  () => import('../data/maps/templates/house-open.json'),
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MapLoader = () => Promise<{ default: any }>;
 
 /** Bilingual display names for every registered map. */
@@ -110,7 +116,16 @@ export async function loadMap(id: string): Promise<TileMapData> {
   }
 
   const module = await loader();
-  const data = module.default as TileMapData;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let data = module.default as TileMapData & { template?: string };
+
+  if (data.template) {
+    const templateLoader = TEMPLATE_LOADERS[data.template];
+    if (!templateLoader) throw new Error(`Map template "${data.template}" is not registered.`);
+    const templateModule = await templateLoader();
+    data = { ...templateModule.default, ...data };
+  }
+
   // Ensure the map has an id field
   if (!data.id) {
     data.id = id;

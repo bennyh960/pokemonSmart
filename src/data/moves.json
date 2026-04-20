@@ -1677,7 +1677,7 @@
     "id": 94,
     "name": {
       "en": "Psychic",
-      "he": "פסיכי"
+      "he": "על חושי"
     },
     "type": "psychic",
     "power": 90,
@@ -1688,7 +1688,7 @@
     "damageClass": "special",
     "description": {
       "en": "An attack that may lower SPCL.DEF.",
-      "he": "התקפה שעשויה להוריד את ההגנה המיוחדת"
+      "he": "התקפה על חושית -  שעשויה להוריד את ההגנה המיוחדת"
     }
   },
   {

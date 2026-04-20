@@ -305,6 +305,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
 
   // --- Status move self-boosts ---
   Growth: userStages(['specialAttack', 1]),
+  'Calm Mind': userStages(['specialAttack', 1], ['specialDefense', 1]),
   Sharpen: userStages(['attack', 1]),
   'Acid Armor': userStages(['defense', 2]),
   Coil: userStages(['attack', 1], ['defense', 1], ['accuracy', 1]),

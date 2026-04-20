@@ -428,18 +428,18 @@ export function doesMoveHit(
   const accuracyMultiplier = getBattleStatMultiplier(attackerState.statModifiers.accuracy);
   const evasionMultiplier = getBattleStatMultiplier(defenderState.statModifiers.evasion);
   const chance = Math.max(1, Math.min(100, moveAccuracy * (accuracyMultiplier / evasionMultiplier)));
-  console.log(
-    `Move accuracy: ${moveAccuracy}, Accuracy multiplier: ${accuracyMultiplier.toFixed(2)}, Evasion multiplier: ${evasionMultiplier.toFixed(2)}, Final hit chance: ${chance.toFixed(2)}%`,
-  );
   // my extra
   const AttkcerspeedMultiplier = getBattleStatMultiplier(attackerState.statModifiers.speed);
   const DefenderspeedMultiplier = getBattleStatMultiplier(defenderState.statModifiers.speed);
 
-  const MAX_SPEED_EFFECT = 0.1; // Cap the speed effect to 1% for balance
+  const MAX_SPEED_EFFECT = 0.1;
   const speedDeltaFactor =
     (MAX_SPEED_EFFECT * (AttkcerspeedMultiplier - DefenderspeedMultiplier)) /
     Math.max(AttkcerspeedMultiplier, DefenderspeedMultiplier);
-  const finalChance = chance + speedDeltaFactor - 2;
+  const finalChance = Math.max(0, Math.min(100, chance + speedDeltaFactor));
+  console.log(
+    `Move accuracy: ${moveAccuracy}, Accuracy multiplier: ${accuracyMultiplier.toFixed(2)}, Evasion multiplier: ${evasionMultiplier.toFixed(2)}, Final hit chance: ${finalChance.toFixed(2)}%`,
+  );
 
   return {
     hit: random() * 100 < finalChance,
@@ -610,7 +610,7 @@ export function determineTurnOrder(
   };
 }
 
-function clearMajorStatus(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): void {
+export function clearMajorStatus(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): void {
   pokemon.status = null;
   runtimeState.majorStatus = null;
   runtimeState.sleepTurnsRemaining = 0;

@@ -227,7 +227,7 @@ function renderPanelHeader(
   });
 
   if (statusStyle && badgeLabel) {
-    console.debug('Rendering status badge:', badgeLabel, statusStyle);
+    // console.debug('Rendering status badge:', badgeLabel, statusStyle);
     renderStatusBadge(ctx, badgeX, panelY, badgeW, badgeLabel, statusStyle);
   }
 

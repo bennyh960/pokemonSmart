@@ -199,6 +199,8 @@ export interface TrainerData extends NPCData {
   lineOfSight: number;
   postBattleDialogue?: BilingualText[]; // Dialogue shown after defeating this trainer
   reencounter?: ReencounterConfig; // Optional re-encounter config
+  aiLevel?: 1 | 2 | 3 | 4 | 5; // Override AI difficulty (auto-detected from spriteType if absent)
+  bagItems?: string[]; // Item IDs trainer can use during battle (level 4+ only)
   location?: BilingualText; // Human-readable location for phone display (e.g. "Route 1")
 }
 
