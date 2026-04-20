@@ -124,26 +124,35 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
 
   const hp = calcStat(data.stats.hp, level, true);
 
-  // Build move list
+  // Build move list — learnset base + optional custom overrides
   const moves: Move[] = [];
-  if (moveIds) {
-    // Explicit moves provided (e.g. trainer Pokemon) — use them directly
-    for (const id of moveIds) {
-      const move = createMoveFromId(id);
-      if (move) moves.push(move);
-    }
+
+  // Always compute learnset moves first
+  const learnset = getLearnset(data.id);
+  const eligible = learnset.filter((entry) => entry.levelLearned <= level);
+  const learnsetEntries = eligible.slice(-8); // up to 8 most recent
+  const learnsetMoves: Move[] = [];
+  for (const entry of learnsetEntries) {
+    const move = createMoveFromId(entry.moveId);
+    if (move) learnsetMoves.push(move);
   }
 
-  // If no explicit moves, derive from learnset
-  if (moves.length === 0) {
-    const learnset = getLearnset(data.id);
-    const eligible = learnset.filter((entry) => entry.levelLearned <= level);
-    // Take the last 8 moves (most recently learned by level) for wild/NPC Pokemon
-    const selected = eligible.slice(-8);
-    for (const entry of selected) {
-      const move = createMoveFromId(entry.moveId);
-      if (move) moves.push(move);
+  if (!moveIds || moveIds.length === 0) {
+    // No custom moves: use full learnset
+    moves.push(...learnsetMoves);
+  } else {
+    // Custom moves are appended at the end (newest slot).
+    // Learnset fills remaining slots from the front, up to 8 total.
+    // Custom moves with 8 entries → exact custom set (backward-compatible for starters/bosses).
+    const customMoves: Move[] = [];
+    const customIds = new Set(moveIds);
+    for (const id of moveIds) {
+      const move = createMoveFromId(id);
+      if (move) customMoves.push(move);
     }
+    const learnsetSlots = Math.max(0, 8 - customMoves.length);
+    const filteredLearnset = learnsetMoves.filter((m) => !customIds.has(m.id));
+    moves.push(...filteredLearnset.slice(-learnsetSlots), ...customMoves);
   }
 
   // Fallback: use defaults based on primary type if learnset yielded nothing

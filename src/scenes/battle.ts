@@ -1414,6 +1414,7 @@ export function createBattleScene(
       }
 
       // Entry hazard moves — set up once, never repeat
+      // Check both the live side-state AND the planned flag (set when move is chosen, before animation fires)
       const isEntryHazardSR = battleData?.behaviorTags?.includes('stealth-rock') ?? false;
       const isEntryHazardSpikes = battleData?.behaviorTags?.includes('spikes') ?? false;
       const isEntryHazardToxicSpikes = battleData?.behaviorTags?.includes('toxic-spikes') ?? false;
@@ -2436,11 +2437,12 @@ export function createBattleScene(
     });
 
     if (move.power > 0 || resolvedDamage > 0) {
-      const absorbEffect = move.power > 0 && defender.abilityId
-        ? getAbilityBattleEffects(defender.abilityId).find((effect) => {
-            return effect.kind === 'typeAbsorbHeal' && effect.moveTypes.includes(move.type);
-          })
-        : undefined;
+      const absorbEffect =
+        move.power > 0 && defender.abilityId
+          ? getAbilityBattleEffects(defender.abilityId).find((effect) => {
+              return effect.kind === 'typeAbsorbHeal' && effect.moveTypes.includes(move.type);
+            })
+          : undefined;
       if (absorbEffect?.kind === 'typeAbsorbHeal') {
         const healAmount = Math.max(1, Math.floor((defender.maxHp * absorbEffect.healPercent) / 100));
         const healed = Math.max(0, Math.min(defender.maxHp, defender.hp + healAmount) - defender.hp);
@@ -3293,25 +3295,26 @@ export function createBattleScene(
       }
     }
 
+    // Entry hazards: update state immediately (same as enemy-side above)
+    if (isStealthRock && !enemySideState.stealthRockActive) {
+      enemySideState.stealthRockActive = true;
+      syncEnemyBar();
+    }
+    if (isSpikes && enemySideState.spikesLayers < 3) {
+      enemySideState.spikesLayers++;
+      syncEnemyBar();
+    }
+    if (isToxicSpikes && enemySideState.toxicSpikesLayers < 2) {
+      enemySideState.toxicSpikesLayers++;
+      syncEnemyBar();
+    }
+
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation(
       'player',
       'enemy',
       m,
       () => {
-        // Entry hazard placement (status moves)
-        if (isStealthRock && !enemySideState.stealthRockActive) {
-          enemySideState.stealthRockActive = true;
-          syncEnemyBar();
-        }
-        if (isSpikes && enemySideState.spikesLayers < 3) {
-          enemySideState.spikesLayers++;
-          syncEnemyBar();
-        }
-        if (isToxicSpikes && enemySideState.toxicSpikesLayers < 2) {
-          enemySideState.toxicSpikesLayers++;
-          syncEnemyBar();
-        }
         // Rest: full heal + sleep 2 turns + all PP restored
         if (isRest) {
           applyRestEffect(player, playerBattleState);
@@ -3869,25 +3872,26 @@ export function createBattleScene(
       }
     }
 
+    // Entry hazards: update state immediately so scoreMoveForEnemy sees the change on the same turn
+    if (isStealthRockEnemy && !playerSideState.stealthRockActive) {
+      playerSideState.stealthRockActive = true;
+      syncPlayerBar();
+    }
+    if (isSpikesEnemy && playerSideState.spikesLayers < 3) {
+      playerSideState.spikesLayers++;
+      syncPlayerBar();
+    }
+    if (isToxicSpikesEnemy && playerSideState.toxicSpikesLayers < 2) {
+      playerSideState.toxicSpikesLayers++;
+      syncPlayerBar();
+    }
+
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation(
       'enemy',
       'player',
       m,
       () => {
-        // Entry hazard placement (status moves) - enemy side
-        if (isStealthRockEnemy && !playerSideState.stealthRockActive) {
-          playerSideState.stealthRockActive = true;
-          syncPlayerBar();
-        }
-        if (isSpikesEnemy && playerSideState.spikesLayers < 3) {
-          playerSideState.spikesLayers++;
-          syncPlayerBar();
-        }
-        if (isToxicSpikesEnemy && playerSideState.toxicSpikesLayers < 2) {
-          playerSideState.toxicSpikesLayers++;
-          syncPlayerBar();
-        }
         // Rest: full heal + sleep 2 turns + all PP restored
         if (isRestEnemy) {
           applyRestEffect(enemy, enemyBattleState);

@@ -1,6 +1,7 @@
 {
   "id": "minusburg-gym",
   "name": "Minusburg Gym",
+  "label":{"he":"מכון העיר מיניסבורג","en":"Minusburg Gym"},
   "template": "gray-floor-house",
   "tileset": "overworld",
   "area": "Minusburg",
@@ -49,16 +50,16 @@
       },
       "party": [
         {
-          "pokemonId": 3,
-          "level": 50,
-          "moves": []
-        },
-        {
           "pokemonId": 111,
           "level": 50,
           "moves": [
             446
           ]
+        },
+        {
+          "pokemonId": 3,
+          "level": 50,
+          "moves": []
         },
         {
           "pokemonId": 149,
