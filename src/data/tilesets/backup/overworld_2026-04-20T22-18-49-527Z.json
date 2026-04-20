@@ -5004,7 +5004,7 @@
       "sy": 5952,
       "w": 80,
       "h": 48,
-      "walkable": false,
+      "walkable": true,
       "above": true,
       "category": "building",
       "interactType": null,

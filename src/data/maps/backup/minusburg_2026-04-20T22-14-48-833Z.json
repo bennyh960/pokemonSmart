@@ -18,22 +18,22 @@
       "fromX": 0,
       "fromY": 24,
       "toMapId": "route-2",
-      "toX": 59,
-      "toY": 9
+      "toX": 33,
+      "toY": 6
     },
     {
       "fromX": 0,
       "fromY": 25,
       "toMapId": "route-2",
-      "toX": 58,
-      "toY": 10
+      "toX": 33,
+      "toY": 7
     },
     {
       "fromX": 0,
       "fromY": 26,
       "toMapId": "route-2",
-      "toX": 58,
-      "toY": 11
+      "toX": 33,
+      "toY": 8
     },
     {
       "fromX": 49,
@@ -81,8 +81,8 @@
       "fromX": 14,
       "fromY": 16,
       "toMapId": "minusburg-template-gray",
-      "toX": 9,
-      "toY": 13
+      "toX": null,
+      "toY": null
     }
   ],
   "npcs": [

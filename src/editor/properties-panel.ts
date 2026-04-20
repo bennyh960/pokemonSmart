@@ -1996,16 +1996,8 @@ export class PropertiesPanel {
     const emit = () => this.state.emit('map-modified');
     const trAny = tr as unknown as Record<string, unknown>;
 
-    // Number fields
-    const numFields = [
-      { label: 'From X', key: 'fromX', value: tr.fromX },
-      { label: 'From Y', key: 'fromY', value: tr.fromY },
-      { label: 'To X', key: 'toX', value: tr.toX },
-      { label: 'To Y', key: 'toY', value: tr.toY },
-    ];
-
     // From X/Y
-    for (const f of numFields.slice(0, 2)) {
+    for (const f of [{ label: 'From X', key: 'fromX', value: tr.fromX }, { label: 'From Y', key: 'fromY', value: tr.fromY }]) {
       const row = document.createElement('div');
       row.className = 'prop-row';
       row.innerHTML = `<label>${f.label}:</label>`;
@@ -2056,8 +2048,28 @@ export class PropertiesPanel {
     mapRow.appendChild(mapSel);
     destContainer.appendChild(mapRow);
 
-    // To X/Y
-    for (const f of numFields.slice(2)) {
+    // Spawn vs custom destination toggle
+    const spawnRow = document.createElement('div');
+    spawnRow.className = 'prop-row';
+    spawnRow.innerHTML = '<label>Destination:</label>';
+    const spawnSel = document.createElement('select');
+    const optSpawn = document.createElement('option');
+    optSpawn.value = 'spawn';
+    optSpawn.textContent = 'Use spawn point';
+    const optCustom = document.createElement('option');
+    optCustom.value = 'custom';
+    optCustom.textContent = 'Custom coords';
+    spawnSel.appendChild(optSpawn);
+    spawnSel.appendChild(optCustom);
+    const isCustomMode = tr.toX !== undefined || tr.toY !== undefined;
+    spawnSel.value = isCustomMode ? 'custom' : 'spawn';
+    spawnRow.appendChild(spawnSel);
+    spawnRow.appendChild(this.makeInfo('Where the player appears on the destination map'));
+    destContainer.appendChild(spawnRow);
+
+    // To X/Y (only shown in custom mode)
+    const toXYContainer = document.createElement('div');
+    for (const f of [{ label: 'To X', key: 'toX', value: tr.toX ?? 1 }, { label: 'To Y', key: 'toY', value: tr.toY ?? 1 }]) {
       const row = document.createElement('div');
       row.className = 'prop-row';
       row.innerHTML = `<label>${f.label}:</label>`;
@@ -2066,8 +2078,22 @@ export class PropertiesPanel {
       input.value = String(f.value);
       input.addEventListener('change', () => { trAny[f.key] = parseInt(input.value, 10) || 0; emit(); });
       row.appendChild(input);
-      destContainer.appendChild(row);
+      toXYContainer.appendChild(row);
     }
+    const updateToXYVisibility = () => { toXYContainer.style.display = spawnSel.value === 'custom' ? '' : 'none'; };
+    updateToXYVisibility();
+    spawnSel.addEventListener('change', () => {
+      if (spawnSel.value === 'spawn') {
+        delete trAny['toX'];
+        delete trAny['toY'];
+      } else {
+        trAny['toX'] = tr.toX ?? 1;
+        trAny['toY'] = tr.toY ?? 1;
+      }
+      updateToXYVisibility();
+      emit();
+    });
+    destContainer.appendChild(toXYContainer);
 
     // Toggle destination fields visibility
     const updateDestVisibility = () => { destContainer.style.display = cb.checked ? 'none' : ''; };
@@ -2075,9 +2101,9 @@ export class PropertiesPanel {
     cb.addEventListener('change', () => {
       tr.returnToPrevious = cb.checked;
       if (cb.checked) {
-        trAny['toMapId'] = null;
-        trAny['toX'] = null;
-        trAny['toY'] = null;
+        delete trAny['toMapId'];
+        delete trAny['toX'];
+        delete trAny['toY'];
       }
       updateDestVisibility();
       this.state.emit('map-modified');

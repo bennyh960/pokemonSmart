@@ -20,8 +20,8 @@ export interface MapTransition {
   fromX: number;
   fromY: number;
   toMapId: string;
-  toX: number;
-  toY: number;
+  toX?: number;
+  toY?: number;
   returnToPrevious?: boolean;
 }
 

@@ -117,7 +117,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Map transition state
   let transitionState: 'none' | 'fade-out' | 'loading' | 'fade-in' = 'none';
-  let transitionTarget: { mapId: string; x: number; y: number } | null = null;
+  let transitionTarget: { mapId: string; x?: number; y?: number } | null = null;
   let transitionTimer = 0;
   let mapLoading = false;
 
@@ -933,7 +933,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
 
   /** Load a map and set up the scene. */
-  async function loadAndSetMap(mapId: string, spawnX: number, spawnY: number): Promise<void> {
+  async function loadAndSetMap(mapId: string, spawnX?: number, spawnY?: number): Promise<void> {
     const data = await loadMap(mapId);
     currentMapData = data;
     const tileset = data.tileset ? getTileset(data.tileset) : null;
@@ -966,7 +966,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     npcStates.clear(); // reset runtime states for new map
     npcSavedFacing.clear();
 
-    player = initPlayer(spawnX, spawnY);
+    player = initPlayer(spawnX ?? data.spawn.x, spawnY ?? data.spawn.y);
     camera = createCamera(SCREEN_W, SCREEN_H);
     const cx = player.pixelX + TILE_SIZE / 2;
     const cy = player.pixelY + TILE_SIZE / 2;

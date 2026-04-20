@@ -428,9 +428,7 @@ async function init() {
     }
     const toMapId = prompt('To Map ID:', 'route-1');
     if (!toMapId) return;
-    const toX = parseInt(prompt('To X:', '1') || '1', 10);
-    const toY = parseInt(prompt('To Y:', '7') || '7', 10);
-    const transition: MapTransition = { fromX: gx, fromY: gy, toMapId, toX, toY };
+    const transition: MapTransition = { fromX: gx, fromY: gy, toMapId };
     if (!state.mapData.transitions) state.mapData.transitions = [];
     state.mapData.transitions.push(transition);
     state.selectTransition(state.mapData.transitions.length - 1);
