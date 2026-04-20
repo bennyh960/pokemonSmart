@@ -260,10 +260,27 @@ export function clearChargingMove(runtimeState: BattlePokemonRuntimeState): void
 }
 
 const SOUND_MOVE_NAMES = new Set([
-  'bug buzz', 'hyper voice', 'supersonic', 'uproar', 'torch song',
-  'roar', 'whirlwind', 'snore', 'screech', 'sing', 'boomburst',
-  'chatter', 'echoed voice', 'round', 'relic song', 'sparkling aria',
-  'noble roar', 'disarming voice', 'parting shot', 'confide', 'snarl',
+  'bug buzz',
+  'hyper voice',
+  'supersonic',
+  'uproar',
+  'torch song',
+  'roar',
+  'whirlwind',
+  'snore',
+  'screech',
+  'sing',
+  'boomburst',
+  'chatter',
+  'echoed voice',
+  'round',
+  'relic song',
+  'sparkling aria',
+  'noble roar',
+  'disarming voice',
+  'parting shot',
+  'confide',
+  'snarl',
 ]);
 
 export function isSubstituteBypass(moveName: string, attackerAbilityId: number | null | undefined): boolean {
@@ -437,9 +454,9 @@ export function doesMoveHit(
     (MAX_SPEED_EFFECT * (AttkcerspeedMultiplier - DefenderspeedMultiplier)) /
     Math.max(AttkcerspeedMultiplier, DefenderspeedMultiplier);
   const finalChance = Math.max(0, Math.min(100, chance + speedDeltaFactor));
-  console.log(
-    `Move accuracy: ${moveAccuracy}, Accuracy multiplier: ${accuracyMultiplier.toFixed(2)}, Evasion multiplier: ${evasionMultiplier.toFixed(2)}, Final hit chance: ${finalChance.toFixed(2)}%`,
-  );
+  // console.log(
+  //   `Move accuracy: ${moveAccuracy}, Accuracy multiplier: ${accuracyMultiplier.toFixed(2)}, Evasion multiplier: ${evasionMultiplier.toFixed(2)}, Final hit chance: ${finalChance.toFixed(2)}%`,
+  // );
 
   return {
     hit: random() * 100 < finalChance,
