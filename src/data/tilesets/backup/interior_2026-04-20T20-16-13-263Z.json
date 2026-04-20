@@ -718,6 +718,16 @@
       "interactType": null
     },
     {
+      "key": "bookCab1",
+      "sx": 0,
+      "sy": 2544,
+      "w": 16,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "interactType": null
+    },
+    {
       "key": "bookCab2",
       "sx": 16,
       "sy": 2544,
@@ -3074,8 +3084,7 @@
       "h": 32,
       "walkable": true,
       "above": false,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "mat-horizontal",
@@ -3085,8 +3094,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "mat-h-above",
@@ -3096,8 +3104,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "pc-1",
@@ -3107,8 +3114,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "pc-2",
@@ -3117,8 +3123,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "above": true,
-      "interactType": null
+      "above": true
     },
     {
       "key": "pc-1-back",
@@ -3128,8 +3133,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "pc-back-1",
@@ -3139,8 +3143,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "screen-432",
@@ -3150,8 +3153,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "pc-game",
@@ -3174,8 +3176,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-1",
@@ -3185,8 +3186,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-2",
@@ -3196,8 +3196,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-3",
@@ -3207,8 +3206,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-4",
@@ -3218,8 +3216,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-5",
@@ -3229,8 +3226,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-6",
@@ -3240,8 +3236,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-7",
@@ -3251,8 +3246,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-8",
@@ -3262,8 +3256,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-9",
@@ -3273,8 +3266,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-10",
@@ -3284,8 +3276,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-11",
@@ -3295,8 +3286,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-12",
@@ -3306,8 +3296,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-13",
@@ -3317,8 +3306,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-14",
@@ -3328,8 +3316,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-15",
@@ -3339,8 +3326,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-16",
@@ -3350,8 +3336,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t1-18",
@@ -3361,8 +3346,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-1",
@@ -3372,8 +3356,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-2",
@@ -3383,8 +3366,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-3",
@@ -3394,8 +3376,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-4",
@@ -3405,8 +3386,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-5",
@@ -3416,8 +3396,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-6",
@@ -3427,8 +3406,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-7",
@@ -3438,8 +3416,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-8",
@@ -3449,8 +3426,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-9",
@@ -3460,8 +3436,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-10",
@@ -3471,8 +3446,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-11",
@@ -3482,8 +3456,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-12",
@@ -3493,8 +3466,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-13",
@@ -3504,8 +3476,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-14",
@@ -3515,8 +3486,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-15",
@@ -3526,8 +3496,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-16",
@@ -3537,8 +3506,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t2-18",
@@ -3548,8 +3516,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-1",
@@ -3559,8 +3526,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-2",
@@ -3570,8 +3536,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-3",
@@ -3581,8 +3546,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-4",
@@ -3592,8 +3556,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-5",
@@ -3603,8 +3566,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-6",
@@ -3614,8 +3576,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-7",
@@ -3625,8 +3586,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-8",
@@ -3636,8 +3596,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-9",
@@ -3647,8 +3606,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-10",
@@ -3658,8 +3616,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-11",
@@ -3669,8 +3626,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-12",
@@ -3680,8 +3636,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-13",
@@ -3691,8 +3646,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-14",
@@ -3702,8 +3656,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-15",
@@ -3713,8 +3666,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-16",
@@ -3724,8 +3676,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t3-18",
@@ -3735,8 +3686,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-1",
@@ -3746,8 +3696,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-2",
@@ -3757,8 +3706,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-3",
@@ -3768,8 +3716,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-4",
@@ -3779,8 +3726,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-5",
@@ -3790,8 +3736,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-6",
@@ -3801,8 +3746,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-7",
@@ -3812,8 +3756,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-8",
@@ -3823,8 +3766,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-9",
@@ -3834,8 +3776,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-10",
@@ -3845,8 +3786,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-11",
@@ -3856,8 +3796,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-12",
@@ -3867,8 +3806,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-13",
@@ -3878,8 +3816,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-14",
@@ -3889,8 +3826,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-15",
@@ -3900,8 +3836,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-16",
@@ -3911,8 +3846,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t4-18",
@@ -3922,503 +3856,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sofa1bl-2",
-      "sx": 0,
-      "sy": 1808,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sofa1br-2",
-      "sx": 16,
-      "sy": 1808,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sof-1",
-      "sx": 80,
-      "sy": 1824,
-      "w": 48,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sof-1-2",
-      "sx": 80,
-      "sy": 1808,
-      "w": 48,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sof-1-x",
-      "sx": 48,
-      "sy": 1840,
-      "w": 32,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sof-1-y",
-      "sx": 96,
-      "sy": 1840,
-      "w": 32,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sof-5-1",
-      "sx": 32,
-      "sy": 2000,
-      "w": 48,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sof-5-2",
-      "sx": 32,
-      "sy": 1984,
-      "w": 48,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "overlay": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sof-6-1",
-      "sx": 80,
-      "sy": 2000,
-      "w": 48,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sof-6-2",
-      "sx": 80,
-      "sy": 1984,
-      "w": 48,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "closet",
-      "sx": 96,
-      "sy": 2224,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "box",
-      "sx": 96,
-      "sy": 2416,
-      "w": 32,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "i1",
-      "sx": 0,
-      "sy": 2448,
-      "w": 16,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "i2",
-      "sx": 16,
-      "sy": 2448,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "i3",
-      "sx": 0,
-      "sy": 2496,
-      "w": 16,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "i4",
-      "sx": 16,
-      "sy": 2496,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "box-2",
-      "sx": 0,
-      "sy": 2432,
-      "w": 32,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "bookCab1",
-      "sx": 0,
-      "sy": 2544,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "clock",
-      "sx": 48,
-      "sy": 3072,
-      "w": 16,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "Img-xxx",
-      "sx": 80,
-      "sy": 3072,
-      "w": 48,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "i10",
-      "sx": 80,
-      "sy": 3328,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor",
-      "interactType": null
-    },
-    {
-      "key": "battle-arena",
-      "sx": 0,
-      "sy": 3328,
-      "w": 80,
-      "h": 64,
-      "walkable": true,
-      "above": false,
-      "category": "floor",
-      "interactType": null
-    },
-    {
-      "key": "window-1",
-      "sx": 16,
-      "sy": 3920,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "window-2",
-      "sx": 64,
-      "sy": 3920,
-      "w": 32,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "window-3",
-      "sx": 112,
-      "sy": 3936,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "board-1",
-      "sx": 0,
-      "sy": 4000,
-      "w": 64,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "board-2",
-      "sx": 64,
-      "sy": 4032,
-      "w": 64,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "pic-12",
-      "sx": 0,
-      "sy": 4064,
-      "w": 32,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "pic212",
-      "sx": 32,
-      "sy": 4064,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "map",
-      "sx": 64,
-      "sy": 4064,
-      "w": 32,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "fridge-2",
-      "sx": 112,
-      "sy": 4352,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "kitchen-1-1",
-      "sx": 64,
-      "sy": 4368,
-      "w": 48,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "kitchen-1-3",
-      "sx": 32,
-      "sy": 4368,
-      "w": 32,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "kitchen-1-4",
-      "sx": 0,
-      "sy": 4368,
-      "w": 32,
-      "h": 16,
-      "walkable": true,
-      "above": false
-    },
-    {
-      "key": "light",
-      "sx": 0,
-      "sy": 2944,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "light2",
-      "sx": 0,
-      "sy": 2976,
-      "w": 16,
-      "h": 48,
-      "walkable": true,
-      "above": true,
       "category": "decoration"
-    },
-    {
-      "key": "deck",
-      "sx": 0,
-      "sy": 2832,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration"
-    },
-    {
-      "key": "boockCab3",
-      "sx": 64,
-      "sy": 2544,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "decoration"
-    },
-    {
-      "key": "stairs-right",
-      "sx": 64,
-      "sy": 2336,
-      "w": 64,
-      "h": 48,
-      "walkable": true,
-      "above": false,
-      "category": "floor",
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        }
-      ]
-    },
-    {
-      "key": "stairs2-1",
-      "sx": 32,
-      "sy": 4288,
-      "w": 32,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "cells": [
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        }
-      ]
-    },
-    {
-      "key": "stairs2-2",
-      "sx": 48,
-      "sy": 4304,
-      "w": 16,
-      "h": 32,
-      "walkable": true,
-      "above": false,
-      "category": "interior"
     }
   ]
 }

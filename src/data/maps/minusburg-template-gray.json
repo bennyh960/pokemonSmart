@@ -1,0 +1,80 @@
+{
+  "id": "minusburg-template-gray",
+  "name": "minusburg-template-gray",
+  "template": "gray-floor-house",
+  "tileset": "interior",
+  "label": {
+    "he": "משפחת צ'ואן",
+    "en": "Choen Family"
+  },
+  "area": "Minusburg",
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 9,
+    "y": 13
+  },
+  "npcs": [
+    {
+      "id": "npc-1776721387916",
+      "x": 16,
+      "y": 4,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום! אני איימי ואני לומדת מחקר פוקימונים."
+        },
+        {
+          "en": "",
+          "he": "אני לומדת הרבה - במהלך קרבות קשים ישנם פריטים שיכולים להעצים את היכולות של הפוקימון שלך"
+        },
+        {
+          "en": "",
+          "he": "חיזוק התקפה לדוגמא נקרא X-ATTACK"
+        },
+        {
+          "en": "",
+          "he": "ATTACK באנגלית זה \"התקפה\" בעברית וזה נשמע כמו \"אטאק\""
+        },
+        {
+          "en": "",
+          "he": "יש גם X-DEFFENCE שזה מחזק את ההגנה ."
+        },
+        {
+          "en": "",
+          "he": "DEFFENCE באנגלית זה הגנה וזה נשמע כמו \"דיפנס\""
+        },
+        {
+          "en": "",
+          "he": "יש עוד פריטים , אני ממשיכה ללמוד"
+        }
+      ],
+      "spriteType": "char_c3dacc",
+      "name": {
+        "en": "Amy",
+        "he": "איימי"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "x-attack",
+            "quantity": 5
+          },
+          {
+            "itemId": "x-defense",
+            "quantity": 5
+          }
+        ]
+      },
+      "questions": {
+        "count": 3,
+        "types": [
+          "-"
+        ]
+      }
+    }
+  ]
+}

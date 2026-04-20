@@ -4121,8 +4121,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "clock",
@@ -4132,8 +4131,7 @@
       "h": 48,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "Img-xxx",
@@ -4143,8 +4141,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "i10",
@@ -4154,8 +4151,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "battle-arena",
@@ -4165,8 +4161,7 @@
       "h": 64,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "window-1",
@@ -4176,8 +4171,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "window-2",
@@ -4187,8 +4181,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "window-3",
@@ -4198,8 +4191,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "board-1",
@@ -4209,8 +4201,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "other",
-      "interactType": null
+      "category": "other"
     },
     {
       "key": "board-2",
@@ -4220,8 +4211,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "other",
-      "interactType": null
+      "category": "other"
     },
     {
       "key": "pic-12",
@@ -4231,8 +4221,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "pic212",
@@ -4242,8 +4231,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "map",
@@ -4253,8 +4241,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "fridge-2",
@@ -4264,8 +4251,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "kitchen-1-1",
@@ -4275,8 +4261,17 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
+    },
+    {
+      "key": "kitchen-1-2",
+      "sx": 64,
+      "sy": 4352,
+      "w": 48,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interior"
     },
     {
       "key": "kitchen-1-3",
@@ -4286,138 +4281,6 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "kitchen-1-4",
-      "sx": 0,
-      "sy": 4368,
-      "w": 32,
-      "h": 16,
-      "walkable": true,
-      "above": false
-    },
-    {
-      "key": "light",
-      "sx": 0,
-      "sy": 2944,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "light2",
-      "sx": 0,
-      "sy": 2976,
-      "w": 16,
-      "h": 48,
-      "walkable": true,
-      "above": true,
-      "category": "decoration"
-    },
-    {
-      "key": "deck",
-      "sx": 0,
-      "sy": 2832,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration"
-    },
-    {
-      "key": "boockCab3",
-      "sx": 64,
-      "sy": 2544,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "decoration"
-    },
-    {
-      "key": "stairs-right",
-      "sx": 64,
-      "sy": 2336,
-      "w": 64,
-      "h": 48,
-      "walkable": true,
-      "above": false,
-      "category": "floor",
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        }
-      ]
-    },
-    {
-      "key": "stairs2-1",
-      "sx": 32,
-      "sy": 4288,
-      "w": 32,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "cells": [
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        }
-      ]
-    },
-    {
-      "key": "stairs2-2",
-      "sx": 48,
-      "sy": 4304,
-      "w": 16,
-      "h": 32,
-      "walkable": true,
-      "above": false,
       "category": "interior"
     }
   ]

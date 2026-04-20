@@ -24,6 +24,17 @@
       "interactType": null
     },
     {
+      "key": "pc2",
+      "sx": 0,
+      "sy": 304,
+      "w": 80,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null
+    },
+    {
       "key": "g3",
       "sx": 80,
       "sy": 16,
@@ -770,6 +781,17 @@
       "category": "decoration",
       "interactType": null,
       "description": "wood decoration"
+    },
+    {
+      "key": "b9",
+      "sx": 32,
+      "sy": 3136,
+      "w": 96,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "interactType": null,
+      "description": "another building , look like market"
     },
     {
       "key": "crp",
@@ -2394,6 +2416,18 @@
       "category": "building",
       "interactType": null,
       "description": "empty house for reusable - 10X13"
+    },
+    {
+      "key": "wallstrip2",
+      "sx": 0,
+      "sy": 5936,
+      "w": 80,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "Narrow wall/roof facade strip with window-door rhythm (5x4). Use as a compact storefront or side facade segment."
     },
     {
       "key": "h2-main",
@@ -4775,422 +4809,10 @@
       "walkable": false,
       "above": true,
       "category": "interactive",
+      "description": "cuttable tree",
       "interactType": {
         "id": "cut"
-      },
-      "description": "cuttable tree"
-    },
-    {
-      "key": "pc2",
-      "sx": 0,
-      "sy": 304,
-      "w": 80,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "pokemon center2",
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 3
-        },
-        {
-          "dx": 3,
-          "dy": 3
-        }
-      ]
-    },
-    {
-      "key": "pc2-door",
-      "sx": 32,
-      "sy": 352,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "pc2-extra-roof",
-      "sx": 0,
-      "sy": 288,
-      "w": 80,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "house-x-1",
-      "sx": 0,
-      "sy": 2368,
-      "w": 64,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "cells": [
-        {
-          "dx": 2,
-          "dy": 3
-        },
-        {
-          "dx": 3,
-          "dy": 3
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        }
-      ]
-    },
-    {
-      "key": "house-x-1-door",
-      "sx": 16,
-      "sy": 2416,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "house-x-1-extra",
-      "sx": 64,
-      "sy": 2384,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "house-x-1-extra2",
-      "sx": 64,
-      "sy": 2368,
-      "w": 32,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "wallstrip2",
-      "sx": 0,
-      "sy": 5952,
-      "w": 80,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "cells": [
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        }
-      ]
-    },
-    {
-      "key": "wallstrip2-door",
-      "sx": 16,
-      "sy": 5984,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "b9",
-      "sx": 32,
-      "sy": 3136,
-      "w": 96,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "cells": [
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 5,
-          "dy": 0
-        },
-        {
-          "dx": 5,
-          "dy": 1
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 3
-        },
-        {
-          "dx": 4,
-          "dy": 3
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 5,
-          "dy": 2
-        },
-        {
-          "dx": 5,
-          "dy": 3
-        }
-      ]
-    },
-    {
-      "key": "b9-door",
-      "sx": 64,
-      "sy": 3184,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "building"
+      }
     }
   ]
 }
