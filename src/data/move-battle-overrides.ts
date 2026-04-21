@@ -269,6 +269,13 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Detect: { behaviorTags: ['protect'], priority: 4, target: 'user' },
   Endure: { behaviorTags: ['endure'], priority: 4, target: 'user' },
 
+  // --- Counter / Mirror Coat: deal 2× received damage, always go last ---
+  Counter: { behaviorTags: ['counter'], priority: -5, target: 'selected-pokemon' },
+  'Mirror Coat': { behaviorTags: ['mirror-coat'], priority: -5, target: 'selected-pokemon' },
+
+  // --- Magic Coat: reflect status moves back at the attacker ---
+  'Magic Coat': { behaviorTags: ['magic-coat'], priority: 4, target: 'user' },
+
   // --- One-hit KO moves ---
   Guillotine: { behaviorTags: ['ohko'] },
   'Horn Drill': { behaviorTags: ['ohko'] },

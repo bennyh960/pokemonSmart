@@ -43,4 +43,7 @@ export const ABILITY_BATTLE_EFFECTS: Record<string, AbilityBattleEffect[]> = {
   'Flame Body': [
     { kind: 'contactStatusChance', status: 'burn', chance: 30 },
   ],
+  Contrary: [
+    { kind: 'contraryStatChanges' },
+  ],
 };

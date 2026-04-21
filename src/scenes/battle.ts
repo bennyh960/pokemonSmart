@@ -2481,12 +2481,39 @@ export function createBattleScene(
     move: Pokemon['moves'][number],
     allowTargetEffects: boolean,
     targetCanStillAct: boolean,
+    magicCoatActive = false,
   ): string[] {
     const moveBattleData = getMoveBattleData(move.id);
     if (!moveBattleData) return [];
 
+    const attackerHasContrary = attacker.abilityId
+      ? getAbilityBattleEffects(attacker.abilityId).some((e) => e.kind === 'contraryStatChanges')
+      : false;
+    const defenderHasContrary = defender.abilityId
+      ? getAbilityBattleEffects(defender.abilityId).some((e) => e.kind === 'contraryStatChanges')
+      : false;
+    const isReflectable =
+      move.power <= 0 &&
+      (moveBattleData.ailment?.target === 'target' ||
+        moveBattleData.statChanges.some((c) => c.target === 'target') ||
+        moveBattleData.effects.some((e) => e.target === 'target') ||
+        moveBattleData.behaviorTags.some((tag) =>
+          (['stealth-rock', 'spikes', 'toxic-spikes'] as string[]).includes(tag),
+        ));
+    const reflected = magicCoatActive && isReflectable;
+
     const lines: string[] = [];
-    const userStatChanges = applyStatChanges(attackerState, moveBattleData.statChanges, 'user');
+    if (reflected) {
+      lines.push(t('battle.magicCoatReflect', { name: defenderName }));
+    }
+
+    const userStatChanges = applyStatChanges(
+      attackerState,
+      moveBattleData.statChanges,
+      'user',
+      Math.random,
+      attackerHasContrary,
+    );
     for (const change of userStatChanges) {
       lines.push(getStatChangeLine(attackerName, change));
     }
@@ -2518,85 +2545,127 @@ export function createBattleScene(
     }
 
     if (allowTargetEffects) {
-      const targetStatChanges = isMistActive(defenderSideState)
-        ? applyStatChanges(
-            defenderState,
-            moveBattleData.statChanges.filter((change) => change.target !== 'target' || change.stages >= 0),
-            'target',
-          )
-        : applyStatChanges(defenderState, moveBattleData.statChanges, 'target');
-      for (const change of targetStatChanges) {
-        lines.push(getStatChangeLine(defenderName, change));
-      }
-      if (
-        isMistActive(defenderSideState) &&
-        moveBattleData.statChanges.some((change) => change.target === 'target' && change.stages < 0)
-      ) {
-        lines.push(getMistBlockedLine(defenderName));
-      }
-
-      if (moveBattleData.ailment?.target === 'target') {
-        const substituteBlocksStatus =
-          defenderState.substituteActive && !isSubstituteBypass(move.name, attacker.abilityId);
-        if (substituteBlocksStatus) {
-          // substitute silently blocks foe-caused status — Infiltrator ability bypasses this
-        } else if (isSafeguardActive(defenderSideState)) {
-          lines.push(getSafeguardBlockedLine(defenderName));
-        } else if (isTargetImmuneToStatusEffectFromMoveType(defender, move.type, moveBattleData.ailment)) {
-          lines.push(getEffectImmuneLine(defenderName));
-        } else {
-          const statusResult = applyMajorStatus(defender, defenderState, moveBattleData.ailment);
+      if (reflected) {
+        // Magic Coat: redirect all target-aimed effects back to the attacker
+        const reflectedStatChanges = applyStatChanges(
+          attackerState,
+          moveBattleData.statChanges,
+          'target',
+          Math.random,
+          attackerHasContrary,
+        );
+        for (const change of reflectedStatChanges) {
+          lines.push(getStatChangeLine(attackerName, change));
+        }
+        if (moveBattleData.ailment?.target === 'target') {
+          const statusResult = applyMajorStatus(attacker, attackerState, moveBattleData.ailment);
           if (statusResult.applied) {
-            const statusLine = getStatusAppliedLine(defenderName, statusResult.status);
+            const statusLine = getStatusAppliedLine(attackerName, statusResult.status);
             if (statusLine) lines.push(statusLine);
           } else if (statusResult.reason === 'immune') {
+            lines.push(getEffectImmuneLine(attackerName));
+          }
+        }
+        for (const effect of moveBattleData.effects) {
+          if (effect.target !== 'target') continue;
+          const [effectResult] = applyVolatileMoveEffects(attacker, attackerState, [effect], 'target');
+          if (!effectResult) continue;
+          if (effectResult.applied) {
+            lines.push(getMoveEffectAppliedLine(attackerName, effectResult.id));
+          } else if (effectResult.reason === 'immune') {
+            lines.push(getEffectImmuneLine(attackerName));
+          }
+        }
+        // Entry hazards reflected to attacker's side — handled in scene code via `reflected` return value
+      } else {
+        // Normal target effects
+        const effectiveStage = (stages: number) => (defenderHasContrary ? -stages : stages);
+        const targetStatChanges = isMistActive(defenderSideState)
+          ? applyStatChanges(
+              defenderState,
+              moveBattleData.statChanges.filter(
+                (change) => change.target !== 'target' || effectiveStage(change.stages) >= 0,
+              ),
+              'target',
+              Math.random,
+              defenderHasContrary,
+            )
+          : applyStatChanges(defenderState, moveBattleData.statChanges, 'target', Math.random, defenderHasContrary);
+        for (const change of targetStatChanges) {
+          lines.push(getStatChangeLine(defenderName, change));
+        }
+        if (
+          isMistActive(defenderSideState) &&
+          moveBattleData.statChanges.some(
+            (change) => change.target === 'target' && effectiveStage(change.stages) < 0,
+          )
+        ) {
+          lines.push(getMistBlockedLine(defenderName));
+        }
+
+        if (moveBattleData.ailment?.target === 'target') {
+          const substituteBlocksStatus =
+            defenderState.substituteActive && !isSubstituteBypass(move.name, attacker.abilityId);
+          if (substituteBlocksStatus) {
+            // substitute silently blocks foe-caused status — Infiltrator ability bypasses this
+          } else if (isSafeguardActive(defenderSideState)) {
+            lines.push(getSafeguardBlockedLine(defenderName));
+          } else if (isTargetImmuneToStatusEffectFromMoveType(defender, move.type, moveBattleData.ailment)) {
+            lines.push(getEffectImmuneLine(defenderName));
+          } else {
+            const statusResult = applyMajorStatus(defender, defenderState, moveBattleData.ailment);
+            if (statusResult.applied) {
+              const statusLine = getStatusAppliedLine(defenderName, statusResult.status);
+              if (statusLine) lines.push(statusLine);
+            } else if (statusResult.reason === 'immune') {
+              lines.push(getEffectImmuneLine(defenderName));
+            }
+          }
+        }
+
+        const targetSideEffects = applySideEffects(defenderSideState, moveBattleData.sideEffects, 'target');
+        for (const effectResult of targetSideEffects) {
+          if (effectResult.applied) {
+            lines.push(getSideEffectAppliedLine(defenderName, effectResult.id));
+          }
+        }
+
+        const substituteBlocksVolatile =
+          defenderState.substituteActive && !isSubstituteBypass(move.name, attacker.abilityId);
+        for (const effect of moveBattleData.effects) {
+          if (effect.target !== 'target') continue;
+          if (substituteBlocksVolatile) continue; // Substitute silently blocks volatile effects
+          if (isTargetImmuneToVolatileEffectFromMoveType(defender, move.type, effect)) {
+            lines.push(getEffectImmuneLine(defenderName));
+            continue;
+          }
+
+          const [effectResult] = applyVolatileMoveEffects(defender, defenderState, [effect], 'target');
+          if (!effectResult) continue;
+          if (effectResult.applied) {
+            lines.push(getMoveEffectAppliedLine(defenderName, effectResult.id));
+          } else if (effectResult.reason === 'immune') {
             lines.push(getEffectImmuneLine(defenderName));
           }
         }
-      }
 
-      const targetSideEffects = applySideEffects(defenderSideState, moveBattleData.sideEffects, 'target');
-      for (const effectResult of targetSideEffects) {
-        if (effectResult.applied) {
-          lines.push(getSideEffectAppliedLine(defenderName, effectResult.id));
-        }
-      }
-
-      const substituteBlocksVolatile =
-        defenderState.substituteActive && !isSubstituteBypass(move.name, attacker.abilityId);
-      for (const effect of moveBattleData.effects) {
-        if (effect.target !== 'target') continue;
-        if (substituteBlocksVolatile) continue; // Substitute silently blocks volatile effects
-        if (isTargetImmuneToVolatileEffectFromMoveType(defender, move.type, effect)) {
-          lines.push(getEffectImmuneLine(defenderName));
-          continue;
+        if (tryApplyFlinch(defenderState, moveBattleData.flinchChance ?? null, targetCanStillAct)) {
+          lines.push(t('battle.flinched', { name: defenderName }));
         }
 
-        const [effectResult] = applyVolatileMoveEffects(defender, defenderState, [effect], 'target');
-        if (!effectResult) continue;
-        if (effectResult.applied) {
-          lines.push(getMoveEffectAppliedLine(defenderName, effectResult.id));
-        } else if (effectResult.reason === 'immune') {
-          lines.push(getEffectImmuneLine(defenderName));
-        }
-      }
-
-      if (tryApplyFlinch(defenderState, moveBattleData.flinchChance ?? null, targetCanStillAct)) {
-        lines.push(t('battle.flinched', { name: defenderName }));
-      }
-
-      // Burning Jealousy: burn target if they currently have any positive stat modifier
-      if (moveBattleData.behaviorTags?.includes('burning-jealousy')) {
-        const hasBoost = Object.values(defenderState.statModifiers).some((v) => v > 0);
-        if (hasBoost && !isSafeguardActive(defenderSideState)) {
-          const burnResult = applyMajorStatus(defender, defenderState, {
-            status: 'burn',
-            chance: 100,
-            target: 'target',
-          });
-          if (burnResult.applied) {
-            const statusLine = getStatusAppliedLine(defenderName, 'burn');
-            if (statusLine) lines.push(statusLine);
+        // Burning Jealousy: burn target if they currently have any positive stat modifier
+        if (moveBattleData.behaviorTags?.includes('burning-jealousy')) {
+          const hasBoost = Object.values(defenderState.statModifiers).some((v) => v > 0);
+          if (hasBoost && !isSafeguardActive(defenderSideState)) {
+            const burnResult = applyMajorStatus(defender, defenderState, {
+              status: 'burn',
+              chance: 100,
+              target: 'target',
+            });
+            if (burnResult.applied) {
+              const statusLine = getStatusAppliedLine(defenderName, 'burn');
+              if (statusLine) lines.push(statusLine);
+            }
           }
         }
       }
@@ -2934,6 +3003,9 @@ export function createBattleScene(
     const isRapidSpinClear = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
     const isSubstitute = moveBattleData?.behaviorTags?.includes('substitute') ?? false;
     const isBatonPass = moveBattleData?.behaviorTags?.includes('baton-pass') ?? false;
+    const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
+    const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
+    const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
     const healPercent = moveBattleData?.healingPercent ?? null;
     const hitCount = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -2950,7 +3022,10 @@ export function createBattleScene(
     const moveData = getMove(m.id);
     if (isChargeStart) {
       startChargingMove(playerBattleState, m.id);
-      const chargeStatChanges = applyStatChanges(playerBattleState, moveBattleData?.chargeStatChanges ?? [], 'user');
+      const playerHasContrary = player.abilityId
+        ? getAbilityBattleEffects(player.abilityId).some((e) => e.kind === 'contraryStatChanges')
+        : false;
+      const chargeStatChanges = applyStatChanges(playerBattleState, moveBattleData?.chargeStatChanges ?? [], 'user', Math.random, playerHasContrary);
       const msgs = [...turnEffectLines, getChargingLine(attackerName, getMoveDisplayName(m.id))];
       for (const change of chargeStatChanges) {
         msgs.push(getStatChangeLine(attackerName, change));
@@ -3047,6 +3122,28 @@ export function createBattleScene(
       return;
     }
 
+    // Magic Coat: player cloaks themselves to reflect status moves this turn
+    if (isMagicCoat) {
+      playAttackAnimation(
+        'player',
+        'enemy',
+        m,
+        () => {
+          playerBattleState.turnFlags.magicCoatActive = true;
+          const msgs = [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.magicCoatActive', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'PLAYER_ATTACK';
+          phaseTimer = 0;
+        },
+        false,
+      );
+      return;
+    }
+
     // Protect / Endure: player sets its own shield flag for this turn
     if (isProtect || isEndure) {
       playAttackAnimation(
@@ -3085,6 +3182,41 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
+      return;
+    }
+
+    // Counter / Mirror Coat: deal 2× the damage received this turn of the matching class
+    if (isCounter || isMirrorCoat) {
+      const counterDamage = isCounter
+        ? playerBattleState.turnFlags.physicalDamageTakenThisTurn * 2
+        : playerBattleState.turnFlags.specialDamageTakenThisTurn * 2;
+      const msgsBase = [
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+      ];
+      if (counterDamage <= 0 || enemy.hp <= 0) {
+        audio.playSFX('menu-cancel');
+        textBox = createTextBox([...msgsBase, t('battle.counterFailed', { name: attackerName })], rtl);
+        phase = 'PLAYER_ATTACK';
+        phaseTimer = 0;
+        return;
+      }
+      playAttackAnimation(
+        'player',
+        'enemy',
+        m,
+        () => {
+          applyMoveImpact(
+            enemy, m, enemyHpBar,
+            BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10,
+            counterDamage, false,
+          );
+          textBox = createTextBox(msgsBase, rtl);
+          phase = 'PLAYER_ATTACK';
+          phaseTimer = 0;
+        },
+        true,
+      );
       return;
     }
 
@@ -3156,6 +3288,7 @@ export function createBattleScene(
           m,
           allowTargetEffects,
           targetCanStillAct,
+          enemyBattleState.turnFlags.magicCoatActive,
         )
       : [];
     const plannedHpEffectAmount = hitResult.hit
@@ -3295,18 +3428,22 @@ export function createBattleScene(
       }
     }
 
-    // Entry hazards: update state immediately (same as enemy-side above)
-    if (isStealthRock && !enemySideState.stealthRockActive) {
-      enemySideState.stealthRockActive = true;
-      syncEnemyBar();
+    // Entry hazards: update state (Magic Coat redirects hazards back to player's side)
+    const hazardReflectedByEnemy =
+      enemyBattleState.turnFlags.magicCoatActive && m.power <= 0 && (isStealthRock || isSpikes || isToxicSpikes);
+    const hazardTargetState = hazardReflectedByEnemy ? playerSideState : enemySideState;
+    const syncHazardBar = hazardReflectedByEnemy ? syncPlayerBar : syncEnemyBar;
+    if (isStealthRock && !hazardTargetState.stealthRockActive) {
+      hazardTargetState.stealthRockActive = true;
+      syncHazardBar();
     }
-    if (isSpikes && enemySideState.spikesLayers < 3) {
-      enemySideState.spikesLayers++;
-      syncEnemyBar();
+    if (isSpikes && hazardTargetState.spikesLayers < 3) {
+      hazardTargetState.spikesLayers++;
+      syncHazardBar();
     }
-    if (isToxicSpikes && enemySideState.toxicSpikesLayers < 2) {
-      enemySideState.toxicSpikesLayers++;
-      syncEnemyBar();
+    if (isToxicSpikes && hazardTargetState.toxicSpikesLayers < 2) {
+      hazardTargetState.toxicSpikesLayers++;
+      syncHazardBar();
     }
 
     textBox = createTextBox(msgs, rtl);
@@ -3390,6 +3527,8 @@ export function createBattleScene(
           const actualDamage = totalActualDamage;
           if (actualDamage > 0) {
             enemyBattleState.turnFlags.tookDamageThisTurn = true;
+            if (damageClass === 'physical') enemyBattleState.turnFlags.physicalDamageTakenThisTurn += actualDamage;
+            else if (damageClass === 'special') enemyBattleState.turnFlags.specialDamageTakenThisTurn += actualDamage;
             const drained = applyDrainHealing(player, actualDamage, moveBattleData?.drainPercent ?? null);
             if (drained > 0) {
               setHP(playerHpBar, player.hp);
@@ -3499,6 +3638,9 @@ export function createBattleScene(
     const isToxicSpikesEnemy = moveBattleData?.behaviorTags?.includes('toxic-spikes') ?? false;
     const isRapidSpinClearEnemy = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
     const isSubstituteEnemy = moveBattleData?.behaviorTags?.includes('substitute') ?? false;
+    const isCounterEnemy = moveBattleData?.behaviorTags?.includes('counter') ?? false;
+    const isMirrorCoatEnemy = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
+    const isMagicCoatEnemy = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
     const healPercentEnemy = moveBattleData?.healingPercent ?? null;
     const hitCountEnemy = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -3545,7 +3687,10 @@ export function createBattleScene(
     const moveData = getMove(m.id);
     if (isChargeStart) {
       startChargingMove(enemyBattleState, m.id);
-      const chargeStatChanges = applyStatChanges(enemyBattleState, moveBattleData?.chargeStatChanges ?? [], 'user');
+      const enemyHasContrary = enemy.abilityId
+        ? getAbilityBattleEffects(enemy.abilityId).some((e) => e.kind === 'contraryStatChanges')
+        : false;
+      const chargeStatChanges = applyStatChanges(enemyBattleState, moveBattleData?.chargeStatChanges ?? [], 'user', Math.random, enemyHasContrary);
       const msgs = [...prefix, ...turnEffectLines, getChargingLine(attackerName, getMoveDisplayName(m.id))];
       for (const change of chargeStatChanges) {
         msgs.push(getStatChangeLine(attackerName, change));
@@ -3628,6 +3773,29 @@ export function createBattleScene(
       return;
     }
 
+    // Magic Coat: enemy cloaks itself to reflect status moves this turn
+    if (isMagicCoatEnemy) {
+      playAttackAnimation(
+        'enemy',
+        'player',
+        m,
+        () => {
+          enemyBattleState.turnFlags.magicCoatActive = true;
+          const msgs = [
+            ...prefix,
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.magicCoatActive', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'ENEMY_TURN';
+          phaseTimer = 0;
+        },
+        false,
+      );
+      return;
+    }
+
     // Protect / Endure: enemy sets its own shield flag for this turn
     if (isProtectEnemy || isEndureEnemy) {
       if (isProtectEnemy) {
@@ -3668,6 +3836,42 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
+      return;
+    }
+
+    // Counter / Mirror Coat: enemy deals 2× the damage it received this turn
+    if (isCounterEnemy || isMirrorCoatEnemy) {
+      const counterDamage = isCounterEnemy
+        ? enemyBattleState.turnFlags.physicalDamageTakenThisTurn * 2
+        : enemyBattleState.turnFlags.specialDamageTakenThisTurn * 2;
+      const msgsBase = [
+        ...prefix,
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+      ];
+      if (counterDamage <= 0 || player.hp <= 0) {
+        audio.playSFX('menu-cancel');
+        textBox = createTextBox([...msgsBase, t('battle.counterFailed', { name: attackerName })], rtl);
+        phase = 'ENEMY_TURN';
+        phaseTimer = 0;
+        return;
+      }
+      playAttackAnimation(
+        'enemy',
+        'player',
+        m,
+        () => {
+          applyMoveImpact(
+            player, m, playerHpBar,
+            BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10,
+            counterDamage, false,
+          );
+          textBox = createTextBox(msgsBase, rtl);
+          phase = 'ENEMY_TURN';
+          phaseTimer = 0;
+        },
+        true,
+      );
       return;
     }
 
@@ -3737,6 +3941,7 @@ export function createBattleScene(
           m,
           allowTargetEffects,
           targetCanStillAct,
+          playerBattleState.turnFlags.magicCoatActive,
         )
       : [];
     const plannedHpEffectAmount = hitResult.hit
@@ -3872,18 +4077,24 @@ export function createBattleScene(
       }
     }
 
-    // Entry hazards: update state immediately so scoreMoveForEnemy sees the change on the same turn
-    if (isStealthRockEnemy && !playerSideState.stealthRockActive) {
-      playerSideState.stealthRockActive = true;
-      syncPlayerBar();
+    // Entry hazards: update state (Magic Coat redirects hazards back to enemy's side)
+    const hazardReflectedByPlayer =
+      playerBattleState.turnFlags.magicCoatActive &&
+      m.power <= 0 &&
+      (isStealthRockEnemy || isSpikesEnemy || isToxicSpikesEnemy);
+    const enemyHazardTargetState = hazardReflectedByPlayer ? enemySideState : playerSideState;
+    const syncEnemyHazardBar = hazardReflectedByPlayer ? syncEnemyBar : syncPlayerBar;
+    if (isStealthRockEnemy && !enemyHazardTargetState.stealthRockActive) {
+      enemyHazardTargetState.stealthRockActive = true;
+      syncEnemyHazardBar();
     }
-    if (isSpikesEnemy && playerSideState.spikesLayers < 3) {
-      playerSideState.spikesLayers++;
-      syncPlayerBar();
+    if (isSpikesEnemy && enemyHazardTargetState.spikesLayers < 3) {
+      enemyHazardTargetState.spikesLayers++;
+      syncEnemyHazardBar();
     }
-    if (isToxicSpikesEnemy && playerSideState.toxicSpikesLayers < 2) {
-      playerSideState.toxicSpikesLayers++;
-      syncPlayerBar();
+    if (isToxicSpikesEnemy && enemyHazardTargetState.toxicSpikesLayers < 2) {
+      enemyHazardTargetState.toxicSpikesLayers++;
+      syncEnemyHazardBar();
     }
 
     textBox = createTextBox(msgs, rtl);
@@ -3967,6 +4178,8 @@ export function createBattleScene(
           const actualDamage = totalActualDamageEnemy;
           if (actualDamage > 0) {
             playerBattleState.turnFlags.tookDamageThisTurn = true;
+            if (damageClass === 'physical') playerBattleState.turnFlags.physicalDamageTakenThisTurn += actualDamage;
+            else if (damageClass === 'special') playerBattleState.turnFlags.specialDamageTakenThisTurn += actualDamage;
             const drained = applyDrainHealing(enemy, actualDamage, moveBattleData?.drainPercent ?? null);
             if (drained > 0) {
               setHP(enemyHpBar, enemy.hp);

@@ -38,7 +38,10 @@ export type MoveBattleBehaviorTag =
   | 'defog'
   | 'rapid-spin-clear'
   | 'substitute'
-  | 'baton-pass';
+  | 'baton-pass'
+  | 'counter'
+  | 'mirror-coat'
+  | 'magic-coat';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 
@@ -120,6 +123,9 @@ export type AbilityBattleEffect =
       kind: 'contactStatusChance';
       status: MajorStatusId;
       chance: number;
+    }
+  | {
+      kind: 'contraryStatChanges';
     };
 
 export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {

@@ -183,30 +183,40 @@
       "id": "minessa-field-mb",
       "name": {
         "en": "Minessa",
-        "he": "הסנימ"
+        "he": "מניסה מנהיגת המכון"
       },
       "x": 44,
       "y": 2,
       "facing": "down",
       "type": "npc",
       "spriteType": "gym-3-Minessa",
-      "spawnAfter": "minusburg-gym-leader-found",
-      "despawnAfter": "rocket-minusburg-all-defeated",
       "dialogue": [
         {
           "en": "Keep going. There are still Rocket agents out there. Drive them all out!",
-          "he": "צוות עדיין מפוזרים כאן! צריך לסלק את כולם!"
+          "he": "עבודה טובה! אל תתן להם לנצח!"
         }
-      ]
+      ],
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 20,
+            "delay": 0
+          }
+        ]
+      },
+      "despawnAfter": "rocket-minusburg-all-defeated"
     },
     {
       "id": "rocket-mb-11",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טקור לייח"
+        "he": "טום (סוכן צוות רוקט)"
       },
       "x": 46,
-      "y": 9,
+      "y": 8,
       "facing": "down",
       "type": "trainer",
       "spriteType": "char_7db1c5",
@@ -300,13 +310,29 @@
       "reward": {
         "money": 4000
       },
-      "lineOfSight": 3
+      "lineOfSight": 3,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 1,
+            "delay": 0
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 0.5
+          }
+        ]
+      }
     },
     {
       "id": "rocket-mb-2",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טקור תלייח"
+        "he": "סוכן צוות רוקט"
       },
       "x": 41,
       "y": 6,
@@ -352,13 +378,24 @@
           }
         ]
       },
-      "lineOfSight": 3
+      "lineOfSight": 1,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 20,
+            "delay": 0
+          }
+        ]
+      }
     },
     {
       "id": "rocket-mb-3",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טקור לייח"
+        "he": "סוכן צוות רוקט"
       },
       "x": 32,
       "y": 7,
@@ -398,13 +435,14 @@
       "reward": {
         "money": 2200
       },
-      "lineOfSight": 3
+      "lineOfSight": 3,
+      "autoWalk": null
     },
     {
       "id": "rocket-mb-4",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טקור תלייח"
+        "he": "סוכן רוקט"
       },
       "x": 17,
       "y": 6,
@@ -415,7 +453,7 @@
       "dialogue": [
         {
           "en": "NULL-X calculates your defeat already!",
-          "he": "NULL-X ךתסובת תא בשחמ רבכ!"
+          "he": "הסתבכת בצרות כפולות ומכופלות!"
         }
       ],
       "postBattleDialogue": [
@@ -439,7 +477,28 @@
       "reward": {
         "money": 2400
       },
-      "lineOfSight": 3
+      "lineOfSight": 1,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 13,
+            "delay": 0
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.5
+          },
+          {
+            "dir": "right",
+            "steps": 26,
+            "delay": 0.5
+          }
+        ]
+      }
     },
     {
       "id": "rocket-mb-5",
@@ -491,13 +550,34 @@
           }
         ]
       },
-      "lineOfSight": 1
+      "lineOfSight": 1,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 1,
+            "delay": 0
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.5
+          },
+          {
+            "dir": "right",
+            "steps": 20,
+            "delay": 0.5
+          }
+        ]
+      }
     },
     {
       "id": "rocket-mb-6",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טקור תלייח"
+        "he": "סוכן צוות רוקט"
       },
       "x": 2,
       "y": 4,
@@ -508,7 +588,7 @@
       "dialogue": [
         {
           "en": "Pokemon are just tools — and tools belong to Team Rocket!",
-          "he": "טקור תווצל םיכייש םילכו — םילכ קר םה םינומיקופ!"
+          "he": "בסופו של דבר צוות רוקט ישלוט בעולם!"
         }
       ],
       "postBattleDialogue": [
@@ -532,13 +612,24 @@
       "reward": {
         "money": 270
       },
-      "lineOfSight": 3
+      "lineOfSight": 3,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 20,
+            "delay": 0
+          }
+        ]
+      }
     },
     {
       "id": "rocket-mb-7",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טקור לייח"
+        "he": "סוכן רוקט"
       },
       "x": 18,
       "y": 4,
@@ -549,7 +640,11 @@
       "dialogue": [
         {
           "en": "Seven of us have fallen — but I won't!",
-          "he": "אל ינא לבא — ולפנ ונתיאמ העבש!"
+          "he": "אני בשוק שהצלחת להגיע לכאן!"
+        },
+        {
+          "en": "",
+          "he": "איך עברת את כל הסוכנים בדרך?"
         }
       ],
       "postBattleDialogue": [
@@ -577,16 +672,27 @@
       "reward": {
         "money": 1500
       },
-      "lineOfSight": 3
+      "lineOfSight": 3,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 20,
+            "delay": 0
+          }
+        ]
+      }
     },
     {
       "id": "rocket-mb-8",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טקור תלייח"
+        "he": "סוכן רוקט"
       },
       "x": 33,
-      "y": 3,
+      "y": 2,
       "facing": "down",
       "type": "trainer",
       "spriteType": "char_7db1c5",
@@ -594,7 +700,7 @@
       "dialogue": [
         {
           "en": "Stand down! This is your last warning!",
-          "he": "היכנעו עכשיו"
+          "he": "אין מעבר! אבל אם כבר הגעת לכאן - הגיע הזמן לקחת לך את הפוקימונים"
         }
       ],
       "postBattleDialogue": [],
@@ -620,13 +726,34 @@
       "reward": {
         "money": 2000
       },
-      "lineOfSight": 3
+      "lineOfSight": 2,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 0
+          },
+          {
+            "dir": "right",
+            "steps": 12,
+            "delay": 0.5
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.5
+          }
+        ]
+      }
     },
     {
       "id": "rocket-mb-9",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טקור לייח"
+        "he": "סוכן רוקט"
       },
       "x": 42,
       "y": 4,
@@ -640,7 +767,16 @@
           "he": "אתם בצרות צרורות!"
         }
       ],
-      "postBattleDialogue": [],
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "אוי ואבוי!"
+        },
+        {
+          "en": "",
+          "he": "הבוס הולך להתאכזב וזה גרוע מאוד!"
+        }
+      ],
       "party": [
         {
           "pokemonId": 177,
@@ -656,7 +792,23 @@
       "reward": {
         "money": 2000
       },
-      "lineOfSight": 1
+      "lineOfSight": 1,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 0
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.5
+          }
+        ]
+      }
     },
     {
       "id": "rocket-mb-10",
@@ -704,23 +856,13 @@
         }
       ],
       "reward": {
-        "money": 450
+        "money": 3000,
+        "storyEvent": "rocket-minusburg-all-defeated"
       },
       "lineOfSight": 3,
       "autoWalk": {
-        "pattern": [
-          {
-            "dir": "right",
-            "steps": 2,
-            "delay": 1
-          },
-          {
-            "dir": "left",
-            "steps": 2,
-            "delay": 1
-          }
-        ],
-        "loop": true,
+        "pattern": [],
+        "loop": false,
         "beforeDespawnPattern": [
           {
             "dir": "up",
@@ -729,6 +871,74 @@
           }
         ]
       }
+    },
+    {
+      "id": "npc-1776760658959",
+      "x": 44,
+      "y": 1,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "rival-story-gary",
+      "despawnAfter": "rocket-minusburg-all-defeated",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 20,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-1776760718681",
+      "x": 44,
+      "y": 0,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Thanks for your help",
+          "he": "תודה על עזרתך!"
+        },
+        {
+          "en": "",
+          "he": "האזור תחת חקירה משטרתית ולכן הוא חסום עד ההודעה החדשה"
+        }
+      ],
+      "spriteType": "officer-Jenny",
+      "blocker": true,
+      "despawnAfter": "NOT_EXIST_YET_FLAG"
+    },
+    {
+      "id": "npc-1776761882211",
+      "x": 46,
+      "y": 9,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "אתה מאמן פוקימונים?"
+        },
+        {
+          "en": "",
+          "he": "צוות רוקט מנסים לזהם את העיר! עזור לי להביס אותם"
+        }
+      ],
+      "spriteType": "gym-3-Minessa"
     }
   ],
   "music": "town",
@@ -1517,11 +1727,6 @@
       "key": "g4",
       "x": 44,
       "y": 7
-    },
-    {
-      "key": "g4",
-      "x": 46,
-      "y": 5
     },
     {
       "key": "g5",
@@ -4840,11 +5045,6 @@
     },
     {
       "key": "t1",
-      "x": 46,
-      "y": 5
-    },
-    {
-      "key": "t1",
       "x": 43,
       "y": 5
     },
@@ -4976,11 +5176,6 @@
     {
       "key": "t2u",
       "x": 43,
-      "y": 4
-    },
-    {
-      "key": "t2u",
-      "x": 46,
       "y": 4
     },
     {
@@ -5336,11 +5531,6 @@
     {
       "key": "g3",
       "x": 40,
-      "y": 6
-    },
-    {
-      "key": "g3",
-      "x": 41,
       "y": 6
     },
     {

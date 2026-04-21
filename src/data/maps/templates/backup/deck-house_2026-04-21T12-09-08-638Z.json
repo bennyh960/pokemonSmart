@@ -1,0 +1,267 @@
+{
+  "id": "deck-house",
+  "name": "deck-house",
+  "tileset": "overworld",
+  "width": 15,
+  "height": 15,
+  "tileSize": 16,
+  "spawn": {
+    "x": 10,
+    "y": 13
+  },
+  "transitions": [],
+  "npcs": [],
+  "music": "town4",
+  "encounterTableId": null,
+  "label": {
+    "en": "Family House",
+    "he": "בית משפחה קומה 1"
+  }
+,
+  "tiles": [
+    ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","stairs","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"]
+  ],
+  "objects": [
+    {
+      "key": "chair2R",
+      "x": 2,
+      "y": 11
+    },
+    {
+      "key": "chair2L",
+      "x": 7,
+      "y": 11
+    },
+    {
+      "key": "w4",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "key": "bookCab2",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "stereo",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "key": "screen2",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "sof-1",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "key": "sof-1-2",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "key": "w4",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "t4-13",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "key": "t4-3",
+      "x": 6,
+      "y": 11
+    },
+    {
+      "key": "t4-2",
+      "x": 5,
+      "y": 11
+    },
+    {
+      "key": "t4-2",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "key": "purpleCup",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "key": "t4-1",
+      "x": 3,
+      "y": 11
+    },
+    {
+      "key": "t4-9",
+      "x": 6,
+      "y": 13
+    },
+    {
+      "key": "t4-8",
+      "x": 5,
+      "y": 13
+    },
+    {
+      "key": "t4-8",
+      "x": 4,
+      "y": 13
+    },
+    {
+      "key": "t4-7",
+      "x": 3,
+      "y": 13
+    },
+    {
+      "key": "t4-5",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "key": "t4-5",
+      "x": 5,
+      "y": 12
+    },
+    {
+      "key": "t4-4",
+      "x": 3,
+      "y": 12
+    },
+    {
+      "key": "t4-6",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "key": "img1",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "firePlaceTop",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "firPlaceBody1",
+      "x": 7,
+      "y": 3
+    },
+    {
+      "key": "mat-horizontal",
+      "x": 9,
+      "y": 14
+    },
+    {
+      "key": "w4",
+      "x": 12,
+      "y": 1
+    },
+    {
+      "key": "sofa1l1",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "sofa1l2",
+      "x": 6,
+      "y": 4
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "key": "laptopLeft",
+      "x": 3,
+      "y": 12
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

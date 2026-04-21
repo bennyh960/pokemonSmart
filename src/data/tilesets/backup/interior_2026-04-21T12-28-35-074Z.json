@@ -4686,7 +4686,6 @@
       "walkable": false,
       "above": true,
       "category": "decoration",
-      "interactType": null,
       "description": "small chair type 1"
     },
     {
@@ -4697,8 +4696,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "sofa1r1",
@@ -4708,8 +4706,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "sofa1r2",
@@ -4719,8 +4716,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "i123",
@@ -4730,8 +4726,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "closet1",
@@ -4741,8 +4736,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "closet1-2",
@@ -4753,7 +4747,6 @@
       "walkable": true,
       "above": true,
       "category": "decoration",
-      "interactType": null,
       "cells": [
         {
           "dx": 0,
@@ -4793,8 +4786,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "fur1-2",
@@ -4804,8 +4796,7 @@
       "h": 32,
       "walkable": false,
       "above": false,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "fur1-3",
@@ -4815,8 +4806,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "fur1-4",
@@ -4826,8 +4816,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "fur1-5",
@@ -4837,8 +4826,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "fur1-6",
@@ -4848,8 +4836,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "fur1-6-legs",
@@ -4859,8 +4846,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "piano1",
@@ -4870,8 +4856,7 @@
       "h": 48,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "t",
@@ -4881,78 +4866,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
-    },
-    {
-      "key": "i2321",
-      "sx": 32,
-      "sy": 2832,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration"
-    },
-    {
-      "key": "bookCab5",
-      "sx": 0,
-      "sy": 2624,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "bookC6",
-      "sx": 16,
-      "sy": 2624,
-      "w": 32,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "bookC7",
-      "sx": 48,
-      "sy": 2624,
-      "w": 16,
-      "h": 32,
-      "walkable": true,
-      "above": false,
-      "category": "interior"
-    },
-    {
-      "key": "bookC-r1",
-      "sx": 112,
-      "sy": 2624,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "bookc-l1",
-      "sx": 96,
-      "sy": 2624,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "home-flower",
-      "sx": 48,
-      "sy": 2960,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration"
+      "category": "floor"
     }
   ]
 }

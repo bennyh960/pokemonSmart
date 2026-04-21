@@ -293,6 +293,9 @@ export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): vo
   runtimeState.turnFlags.endured = false;
   runtimeState.turnFlags.skipTurn = false;
   runtimeState.turnFlags.tookDamageThisTurn = false;
+  runtimeState.turnFlags.physicalDamageTakenThisTurn = 0;
+  runtimeState.turnFlags.specialDamageTakenThisTurn = 0;
+  runtimeState.turnFlags.magicCoatActive = false;
 }
 
 export function tryApplyFlinch(
@@ -407,6 +410,7 @@ export function applyStatChanges(
   statChanges: MoveStatChange[],
   target: 'user' | 'target',
   random: () => number = Math.random,
+  contraryActive = false,
 ): AppliedStatChange[] {
   const applied: AppliedStatChange[] = [];
 
@@ -414,18 +418,19 @@ export function applyStatChanges(
     if (change.target !== target) continue;
     if (random() * 100 >= change.chance) continue;
 
+    const stages = contraryActive ? -change.stages : change.stages;
     const current = runtimeState.statModifiers[change.stat];
-    const next = applyBattleStatDelta(current, change.stages);
+    const next = applyBattleStatDelta(current, stages);
     if (next === current) continue;
 
     runtimeState.statModifiers[change.stat] = next;
     applied.push({
       stat: change.stat,
-      stages: change.stages,
+      stages,
       newPercent: next,
       target,
-      direction: change.stages > 0 ? 'rose' : 'fell',
-      sharply: Math.abs(change.stages) >= 2,
+      direction: stages > 0 ? 'rose' : 'fell',
+      sharply: Math.abs(stages) >= 2,
     });
   }
 

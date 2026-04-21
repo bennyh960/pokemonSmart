@@ -38,7 +38,7 @@ import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
 
-// ── Quests ───────────────────────────────────────────────────────────────────
+//#region Quests And Gates ───────────────────────────────────────────────────────────────────
 
 registerQuest({
   id: 'main-act1-minusburg',
@@ -71,7 +71,7 @@ registerQuest({
   id: 'main-act1-gym2',
   title: { en: 'Minusburg Gym', he: 'מכון מינוסבורג' },
   objective: {
-    en: "Defeat Minessa at the Subtraction Gym and earn Badge 2",
+    en: 'Defeat Minessa at the Subtraction Gym and earn Badge 2',
     he: 'נצח את מינסה במכון החיסור וזכה בתג 2',
   },
 });
@@ -107,7 +107,9 @@ registerGate({
   ],
 });
 
-// ── Cutscenes ─────────────────────────────────────────────────────────────────
+//#endregion
+
+//#region Cutscenes ─────────────────────────────────────────────────────────────────
 
 // Beat 1 — first arrival: atmosphere set, investigation quest starts
 registerCutscene({
@@ -141,7 +143,7 @@ registerCutscene({
       speakerId: 'Gary Oak / גארי אוק',
       lines: [
         {
-          en: 'Well, well — another trainer? I\'m Gary Oak. You\'ve heard of my grandfather, Prof. Oak, right? Of course you have.',
+          en: "Well, well — another trainer? I'm Gary Oak. You've heard of my grandfather, Prof. Oak, right? Of course you have.",
           he: 'הו הו — מאמן נוסף? אני גארי אוק. שמעת על סבי, פרופ׳ אוק, נכון? ברור שכן.',
         },
       ],
@@ -151,7 +153,7 @@ registerCutscene({
       speakerId: 'Gary Oak / גארי אוק',
       lines: [
         {
-          en: 'Gramps sent me here to investigate. I\'ve already spotted Team Rocket scouts near the trees in the eastern district — at least ten of them.',
+          en: "Gramps sent me here to investigate. I've already spotted Team Rocket scouts near the trees in the eastern district — at least ten of them.",
           he: 'סבא שלח אותי לכאן לחקור. כבר זיהיתי סיירי צוות רוקט ליד העצים ברובע המזרחי — לפחות עשרה מהם.',
         },
       ],
@@ -171,8 +173,8 @@ registerCutscene({
       speakerId: 'Officer Jenny / שוטרת ג׳ני',
       lines: [
         {
-          en: "Most critically — the gym has been empty for three days. Minessa, our gym leader, went silent. The gym door is open but no one is there.",
-          he: "חשוב מכל — המכון ריק כבר שלושה ימים. מינסה, מנהיגת המכון שלנו, שתקה. דלת המכון פתוחה אך אין איש.",
+          en: 'Most critically — the gym has been empty for three days. Minessa, our gym leader, went silent. The gym door is open but no one is there.',
+          he: 'חשוב מכל — המכון ריק כבר שלושה ימים. מינסה, מנהיגת המכון שלנו, שתקה. דלת המכון פתוחה אך אין איש.',
         },
       ],
     },
@@ -181,8 +183,8 @@ registerCutscene({
       speakerId: 'Gary Oak / גארי אוק',
       lines: [
         {
-          en: "If Team Rocket has NULL-X backing, this is serious. You should check the gym — Minessa might still be inside.",
-          he: "אם לצוות רוקט יש תמיכה של NULL-X, זה חמור. כדאי שתבדוק את המכון — מינסה עשויה להיות עדיין בפנים.",
+          en: 'If Team Rocket has NULL-X backing, this is serious. You should check the gym — Minessa might still be inside.',
+          he: 'אם לצוות רוקט יש תמיכה של NULL-X, זה חמור. כדאי שתבדוק את המכון — מינסה עשויה להיות עדיין בפנים.',
         },
       ],
     },
@@ -206,7 +208,7 @@ registerCutscene({
       lines: [
         {
           en: "A trainer — here? Good. I've been expecting someone brave enough to walk through that door.",
-          he: "מאמן — כאן? טוב. ציפיתי למישהו אמיץ מספיק להיכנס דרך הדלת הזו.",
+          he: 'מאמן — כאן? טוב. ציפיתי למישהו אמיץ מספיק להיכנס דרך הדלת הזו.',
         },
       ],
     },
@@ -216,11 +218,11 @@ registerCutscene({
       lines: [
         {
           en: "Team Rocket, guided by NULL-X, has been terrorizing this city. Their moves are calculated, fast — smarter than anything I've seen from them before.",
-          he: "צוות רוקט, בהנחיית NULL-X, מטריד את העיר הזו. המהלכים שלהם מחושבים, מהירים — חכמים יותר מכל מה שראיתי מהם.",
+          he: 'צוות רוקט, בהנחיית NULL-X, מטריד את העיר הזו. המהלכים שלהם מחושבים, מהירים — חכמים יותר מכל מה שראיתי מהם.',
         },
         {
           en: "Ten agents are scattered through the eastern trees. They've been stealing Pokemon from trainers who refuse to hand them over.",
-          he: "עשרה סוכנים מפוזרים בעצים המזרחיים. הם גנבו פוקימונים ממאמנים שסירבו להסגירם.",
+          he: 'עשרה סוכנים מפוזרים בעצים המזרחיים. הם גנבו פוקימונים ממאמנים שסירבו להסגירם.',
         },
       ],
     },
@@ -230,11 +232,11 @@ registerCutscene({
       lines: [
         {
           en: "I've mapped their positions with Officer Jenny. Gary Oak is ready to assist. But someone needs to go out there and drive every last one of them out.",
-          he: "מיפיתי את עמדותיהם עם שוטרת ג׳ני. גארי אוק מוכן לסייע. אבל מישהו צריך לצאת לשם ולגרש את כולם.",
+          he: 'מיפיתי את עמדותיהם עם שוטרת ג׳ני. גארי אוק מוכן לסייע. אבל מישהו צריך לצאת לשם ולגרש את כולם.',
         },
         {
-          en: "That someone is you.",
-          he: "אותו מישהו זה אתה.",
+          en: 'That someone is you.',
+          he: 'אותו מישהו זה אתה.',
         },
       ],
     },
@@ -255,7 +257,7 @@ registerCutscene({
       lines: [
         {
           en: "That's the last one! Ten for ten — not bad at all.",
-          he: "זה האחרון! עשרה מתוך עשרה — לא רע בכלל.",
+          he: 'זה האחרון! עשרה מתוך עשרה — לא רע בכלל.',
         },
       ],
     },
@@ -265,7 +267,7 @@ registerCutscene({
       lines: [
         {
           en: "Outstanding work. I'll file a full report to Kanto HQ. Minusburg owes you more than it can repay.",
-          he: "עבודה מצוינת. אגיש דוח מלא למפקדה בקנטו. מינוסבורג חייבת לך יותר ממה שתוכל להחזיר.",
+          he: 'עבודה מצוינת. אגיש דוח מלא למפקדה בקנטו. מינוסבורג חייבת לך יותר ממה שתוכל להחזיר.',
         },
       ],
     },
@@ -275,7 +277,7 @@ registerCutscene({
       lines: [
         {
           en: "You protected this city when I couldn't. The trainers here will sleep soundly tonight.",
-          he: "הגנת על העיר הזו כשאני לא יכולתי. המאמנים כאן יישנו בשקט הלילה.",
+          he: 'הגנת על העיר הזו כשאני לא יכולתי. המאמנים כאן יישנו בשקט הלילה.',
         },
       ],
     },
@@ -287,12 +289,17 @@ registerCutscene({
       lines: [
         {
           en: "Come find me at the gym when you're ready. I'll be waiting — and I won't hold back.",
-          he: "בוא למצוא אותי במכון כשאתה מוכן. אחכה — ולא אקל עליך.",
+          he: 'בוא למצוא אותי במכון כשאתה מוכן. אחכה — ולא אקל עליך.',
         },
       ],
     },
     { type: 'face-npc', npcId: 'minessa-field-mb', dir: 'right' },
-    { type: 'move-npc', npcId: 'minessa-field-mb', path: ['right', 'right', 'right', 'right', 'right'], waitForComplete: true },
+    {
+      type: 'move-npc',
+      npcId: 'minessa-field-mb',
+      path: ['right', 'right', 'right', 'right', 'right'],
+      waitForComplete: true,
+    },
     { type: 'hide-npc', npcId: 'minessa-field-mb' },
     { type: 'hide-npc', npcId: 'jenny-mb' },
     { type: 'hide-npc', npcId: 'gary-oak-mb' },
@@ -306,7 +313,7 @@ registerCutscene({
         lines: [
           {
             en: "The city feels lighter already. Head to the Subtraction Gym when you're ready to battle Minessa!",
-            he: "העיר כבר מרגישה קלילה יותר. לך למכון החיסור כשאתה מוכן להילחם במינסה!",
+            he: 'העיר כבר מרגישה קלילה יותר. לך למכון החיסור כשאתה מוכן להילחם במינסה!',
           },
         ],
       },
@@ -325,8 +332,8 @@ registerCutscene({
       speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
-          en: "Congratulations on the Minus Badge! Defeating Minessa AND driving out Team Rocket in the same city — remarkable.",
-          he: "ברכות על תג המינוס! לנצח את מינסה וגם לגרש את צוות רוקט באותה עיר — מדהים.",
+          en: 'Congratulations on the Minus Badge! Defeating Minessa AND driving out Team Rocket in the same city — remarkable.',
+          he: 'ברכות על תג המינוס! לנצח את מינסה וגם לגרש את צוות רוקט באותה עיר — מדהים.',
         },
       ],
     },
@@ -335,12 +342,12 @@ registerCutscene({
       speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
-          en: "NULL-X uses confusion as a weapon. Every time you solve a problem or win a battle, you chip away at its influence.",
-          he: "NULL-X משתמש בבלבול כנשק. בכל פעם שאתה פותר בעיה או מנצח בקרב, אתה מחריב את השפעתו.",
+          en: 'NULL-X uses confusion as a weapon. Every time you solve a problem or win a battle, you chip away at its influence.',
+          he: 'NULL-X משתמש בבלבול כנשק. בכל פעם שאתה פותר בעיה או מנצח בקרב, אתה מחריב את השפעתו.',
         },
         {
-          en: "Route 3 leads to Multiplia. The challenges multiply from here — stay sharp!",
-          he: "שביל 3 מוביל למולטיפליה. האתגרים מתרבים מכאן — הישאר ממוקד!",
+          en: 'Route 3 leads to Multiplia. The challenges multiply from here — stay sharp!',
+          he: 'שביל 3 מוביל למולטיפליה. האתגרים מתרבים מכאן — הישאר ממוקד!',
         },
       ],
     },
@@ -348,8 +355,9 @@ registerCutscene({
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-gym2' } },
   ],
 });
+//#endregion
 
-// ── Story Events ──────────────────────────────────────────────────────────────
+//#region Events (story events) ──────────────────────────────────────────────────────────────
 
 // Beat 1 — first arrival: atmospheric opening
 registerStoryEvent({
@@ -390,7 +398,7 @@ registerStoryEvent({
       lines: [
         {
           en: "The gym is open... but there's nobody inside. Footsteps in the dust. Then silence.",
-          he: "המכון פתוח... אבל אין איש בפנים. טביעות רגליים באבק. ואז שקט.",
+          he: 'המכון פתוח... אבל אין איש בפנים. טביעות רגליים באבק. ואז שקט.',
         },
       ],
     },
@@ -426,3 +434,4 @@ registerStoryEvent({
     { type: 'start-cutscene', cutsceneId: 'act1-minusburg-badge2-call' },
   ],
 });
+//#endregion

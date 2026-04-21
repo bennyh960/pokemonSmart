@@ -158,222 +158,6 @@
       "description": "blue carpet 1 c3 r3"
     },
     {
-      "key": "rc1-11",
-      "sx": 0,
-      "sy": 192,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "red carpet type 2 , col 1 , row 1"
-    },
-    {
-      "key": "rc1-21",
-      "sx": 16,
-      "sy": 192,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "ground",
-      "interactType": null,
-      "description": "blude carpet 1 col 2 row 1"
-    },
-    {
-      "key": "rc1-31",
-      "sx": 32,
-      "sy": 192,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 3 row 1"
-    },
-    {
-      "key": "rc1-12",
-      "sx": 0,
-      "sy": 208,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 1 row 2"
-    },
-    {
-      "key": "rc1-22",
-      "sx": 16,
-      "sy": 208,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 2 row 2"
-    },
-    {
-      "key": "rc1-32",
-      "sx": 32,
-      "sy": 208,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 3 row 2"
-    },
-    {
-      "key": "rc1-13",
-      "sx": 0,
-      "sy": 224,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 1 row 3"
-    },
-    {
-      "key": "rc1-23",
-      "sx": 16,
-      "sy": 224,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 (c2 r3)"
-    },
-    {
-      "key": "rc1-33",
-      "sx": 32,
-      "sy": 224,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 c3 r3"
-    },
-    {
-      "key": "bc1-11",
-      "sx": 0,
-      "sy": 240,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet type 1 , col 1 , row 1"
-    },
-    {
-      "key": "bc1-21",
-      "sx": 16,
-      "sy": 240,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "ground",
-      "interactType": null,
-      "description": "blude carpet 1 col 2 row 1"
-    },
-    {
-      "key": "bc1-31",
-      "sx": 32,
-      "sy": 240,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 3 row 1"
-    },
-    {
-      "key": "bc1-12",
-      "sx": 0,
-      "sy": 256,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 1 row 2"
-    },
-    {
-      "key": "bc1-22",
-      "sx": 16,
-      "sy": 256,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 2 row 2"
-    },
-    {
-      "key": "bc1-32",
-      "sx": 32,
-      "sy": 256,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 3 row 2"
-    },
-    {
-      "key": "bc1-13",
-      "sx": 0,
-      "sy": 272,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 col 1 row 3"
-    },
-    {
-      "key": "bc1-23",
-      "sx": 16,
-      "sy": 272,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 (c2 r3)"
-    },
-    {
-      "key": "bc1-33",
-      "sx": 32,
-      "sy": 272,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null,
-      "description": "blue carpet 1 c3 r3"
-    },
-    {
       "key": "snake-cab1",
       "sx": 0,
       "sy": 896,
@@ -4512,8 +4296,7 @@
       "w": 32,
       "h": 16,
       "walkable": true,
-      "above": false,
-      "interactType": null
+      "above": false
     },
     {
       "key": "light",
@@ -4523,8 +4306,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "light2",
@@ -4534,8 +4316,7 @@
       "h": 48,
       "walkable": true,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "deck",
@@ -4545,8 +4326,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "boockCab3",
@@ -4556,8 +4336,7 @@
       "h": 48,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "stairs-right",
@@ -4568,7 +4347,6 @@
       "walkable": true,
       "above": false,
       "category": "floor",
-      "interactType": null,
       "cells": [
         {
           "dx": 0,
@@ -4605,7 +4383,6 @@
       "walkable": false,
       "above": true,
       "category": "interior",
-      "interactType": null,
       "cells": [
         {
           "dx": 1,
@@ -4641,318 +4418,7 @@
       "h": 32,
       "walkable": true,
       "above": false,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "sofa1l1",
-      "sx": 0,
-      "sy": 1888,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "sofa1l2",
-      "sx": 0,
-      "sy": 1872,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "stairs",
-      "sx": 0,
-      "sy": 2368,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "sc1",
-      "sx": 0,
-      "sy": 1168,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null,
-      "description": "small chair type 1"
-    },
-    {
-      "key": "kankan",
-      "sx": 96,
-      "sy": 1744,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sofa1r1",
-      "sx": 16,
-      "sy": 1888,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "sofa1r2",
-      "sx": 16,
-      "sy": 1872,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "i123",
-      "sx": 32,
-      "sy": 2800,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "closet1",
-      "sx": 64,
-      "sy": 2752,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "closet1-2",
-      "sx": 48,
-      "sy": 2752,
-      "w": 48,
-      "h": 48,
-      "walkable": true,
-      "above": true,
-      "category": "decoration",
-      "interactType": null,
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        }
-      ]
-    },
-    {
-      "key": "furn1-1",
-      "sx": 0,
-      "sy": 2672,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "fur1-2",
-      "sx": 16,
-      "sy": 2672,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": false,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "fur1-3",
-      "sx": 32,
-      "sy": 2672,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "fur1-4",
-      "sx": 48,
-      "sy": 2672,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "fur1-5",
-      "sx": 64,
-      "sy": 2672,
-      "w": 32,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "fur1-6",
-      "sx": 0,
-      "sy": 2704,
-      "w": 32,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "fur1-6-legs",
-      "sx": 0,
-      "sy": 2736,
-      "w": 32,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "piano1",
-      "sx": 64,
-      "sy": 3120,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "decoration",
-      "interactType": null
-    },
-    {
-      "key": "t",
-      "sx": 64,
-      "sy": 3328,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor",
-      "interactType": null
-    },
-    {
-      "key": "i2321",
-      "sx": 32,
-      "sy": 2832,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration"
-    },
-    {
-      "key": "bookCab5",
-      "sx": 0,
-      "sy": 2624,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
       "category": "interior"
-    },
-    {
-      "key": "bookC6",
-      "sx": 16,
-      "sy": 2624,
-      "w": 32,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "bookC7",
-      "sx": 48,
-      "sy": 2624,
-      "w": 16,
-      "h": 32,
-      "walkable": true,
-      "above": false,
-      "category": "interior"
-    },
-    {
-      "key": "bookC-r1",
-      "sx": 112,
-      "sy": 2624,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "bookc-l1",
-      "sx": 96,
-      "sy": 2624,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interior"
-    },
-    {
-      "key": "home-flower",
-      "sx": 48,
-      "sy": 2960,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "decoration"
     }
   ]
 }

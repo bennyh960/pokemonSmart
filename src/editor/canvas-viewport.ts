@@ -386,15 +386,66 @@ export class CanvasViewport {
 
     // ── Walkability overlay ──
     if (this.state.showWalkability) {
+      // Pre-build set of cells blocked by above-layers so multi-tile footprints are fully covered.
+      const aboveBlocked = new Set<string>();
+
+      // Object layer: expand each anchor tile to its full w×h footprint
+      if (this.state.mapData.objectLayer) {
+        for (let r = 0; r < mapH; r++) {
+          for (let c = 0; c < mapW; c++) {
+            const t = this.state.getObjectTile(c, r);
+            if (!t) continue;
+            const d = this.tiles.get(t);
+            if (!d || d.walkable) continue;
+            const gw = Math.max(1, Math.round(d.w / 16));
+            const gh = Math.max(1, Math.round(d.h / 16));
+            for (let dy = 0; dy < gh; dy++)
+              for (let dx = 0; dx < gw; dx++)
+                aboveBlocked.add(`${c + dx},${r + dy}`);
+          }
+        }
+      }
+
+      // Placed objects: expand using cells[] for irregular shapes, or gw×gh for rectangular
+      for (const obj of this.state.mapData.objects ?? []) {
+        const d = this.tiles.get(obj.key);
+        if (!d || d.walkable) continue;
+        if (d.cells) {
+          for (const cell of d.cells)
+            aboveBlocked.add(`${obj.x + cell.dx},${obj.y + cell.dy}`);
+        } else {
+          const gw = Math.max(1, Math.round(d.w / 16));
+          const gh = Math.max(1, Math.round(d.h / 16));
+          for (let dy = 0; dy < gh; dy++)
+            for (let dx = 0; dx < gw; dx++)
+              aboveBlocked.add(`${obj.x + dx},${obj.y + dy}`);
+        }
+      }
+
       for (let row = startRow; row <= endRow; row++) {
         for (let col = startCol; col <= endCol; col++) {
           const tile = this.state.getGroundTile(col, row);
           const def = typeof tile === 'string' ? this.tiles.get(tile) : null;
-          const walkable = def ? def.walkable : false;
+          const walkable = (def ? def.walkable : false) && !aboveBlocked.has(`${col},${row}`);
+
           const drawX = Math.floor(col * tilePixels - scrollX);
           const drawY = Math.floor(row * tilePixels - scrollY);
-          ctx.fillStyle = walkable ? 'rgba(0, 200, 0, 0.2)' : 'rgba(200, 0, 0, 0.2)';
-          ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+          if (walkable) {
+            ctx.fillStyle = 'rgba(0, 220, 0, 0.35)';
+            ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+          } else {
+            ctx.fillStyle = 'rgba(220, 0, 0, 0.45)';
+            ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+            // X mark so blocked tiles are obvious even at small zoom
+            ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(drawX + 2, drawY + 2);
+            ctx.lineTo(drawX + tilePixels - 2, drawY + tilePixels - 2);
+            ctx.moveTo(drawX + tilePixels - 2, drawY + 2);
+            ctx.lineTo(drawX + 2, drawY + tilePixels - 2);
+            ctx.stroke();
+          }
         }
       }
     }

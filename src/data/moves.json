@@ -4963,7 +4963,7 @@
     "mathDifficulty": 1,
     "damageClass": "status",
     "description": {
-      "en": "Reflects special effects back to the attacker.",
+      "en": "Reflects special attack move back to the attacker.",
       "he": "מחזיר מהלך סטטוס אל המשתמש המקורי."
     }
   },

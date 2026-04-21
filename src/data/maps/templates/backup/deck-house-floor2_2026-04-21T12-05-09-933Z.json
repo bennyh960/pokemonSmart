@@ -1,0 +1,63 @@
+{
+  "id": "deck-house-floor2",
+  "name": "deck-house-floor2",
+  "tileset": "overworld",
+  "width": 15,
+  "height": 15,
+  "tileSize": 16,
+  "spawn": {
+    "x": 13,
+    "y": 13
+  },
+  "transitions": [],
+  "npcs": [],
+  "music": "town",
+  "encounterTableId": null
+,
+  "tiles": [
+    ["w6-b1","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-b2"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x2","f3","w6-x2","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x1","f3","w6-x1","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
+    ["w6-r","w6-y2","w6-y2","w6-y2","w6-y2","w6-y2","w6-y2","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x2","f3","w6-z3","w6-y2","w6-y2","w6-y2","w6-y2","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x1","f3","f3","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","f3","f3","f3","f3","f3","w6-l"],
+    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","f3","f3","f3","f3","f3","w6-l"],
+    ["w6-b3","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","stairs","w6-l"]
+  ],
+  "objects": [
+    {
+      "key": "deck",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "deck",
+      "x": 6,
+      "y": 1
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

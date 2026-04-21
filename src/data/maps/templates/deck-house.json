@@ -1,0 +1,358 @@
+{
+  "id": "deck-house",
+  "name": "deck-house",
+  "tileset": "overworld",
+  "width": 15,
+  "height": 15,
+  "tileSize": 16,
+  "spawn": {
+    "x": 10,
+    "y": 13
+  },
+  "transitions": [
+    {
+      "fromX": 9,
+      "fromY": 14,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 10,
+      "fromY": 14,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [],
+  "music": "town4",
+  "encounterTableId": null,
+  "label": {
+    "en": "Family House",
+    "he": "בית משפחה קומה 1"
+  }
+,
+  "tiles": [
+    ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","stairs","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
+    ["w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","f3","f3","w1-1","w1-1","w1-1","w1-b4"]
+  ],
+  "objects": [
+    {
+      "key": "chair2R",
+      "x": 2,
+      "y": 10
+    },
+    {
+      "key": "chair2L",
+      "x": 7,
+      "y": 10
+    },
+    {
+      "key": "w4",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "key": "bookCab2",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "stereo",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "key": "screen2",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "t4-3",
+      "x": 6,
+      "y": 10
+    },
+    {
+      "key": "t4-2",
+      "x": 5,
+      "y": 10
+    },
+    {
+      "key": "t4-2",
+      "x": 4,
+      "y": 10
+    },
+    {
+      "key": "t4-1",
+      "x": 3,
+      "y": 10
+    },
+    {
+      "key": "t4-9",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "key": "t4-8",
+      "x": 5,
+      "y": 12
+    },
+    {
+      "key": "t4-8",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "key": "t4-7",
+      "x": 3,
+      "y": 12
+    },
+    {
+      "key": "t4-5",
+      "x": 5,
+      "y": 11
+    },
+    {
+      "key": "t4-4",
+      "x": 3,
+      "y": 11
+    },
+    {
+      "key": "t4-6",
+      "x": 6,
+      "y": 11
+    },
+    {
+      "key": "w4",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "firePlaceTop",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "firPlaceBody1",
+      "x": 7,
+      "y": 3
+    },
+    {
+      "key": "mat-horizontal",
+      "x": 9,
+      "y": 14
+    },
+    {
+      "key": "w4",
+      "x": 12,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "key": "pic-12",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "rc1-11",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "key": "rc1-21",
+      "x": 3,
+      "y": 4
+    },
+    {
+      "key": "rc1-13",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "key": "rc1-23",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "key": "rc1-23",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "key": "rc1-12",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "key": "rc1-23",
+      "x": 5,
+      "y": 6
+    },
+    {
+      "key": "rc1-33",
+      "x": 6,
+      "y": 6
+    },
+    {
+      "key": "rc1-31",
+      "x": 6,
+      "y": 4
+    },
+    {
+      "key": "rc1-32",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "rc1-22",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "key": "sof-1",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "key": "sofa1r1",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "key": "sc1",
+      "x": 8,
+      "y": 4
+    },
+    {
+      "key": "sofa1r2",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "key": "t4-5",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "key": "home-flower",
+      "x": 5,
+      "y": 11
+    },
+    {
+      "key": "i2321",
+      "x": 3,
+      "y": 11
+    },
+    {
+      "key": "piano1",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "key": "chair2Dr",
+      "x": 11,
+      "y": 6
+    },
+    {
+      "key": "rc1-21",
+      "x": 4,
+      "y": 4
+    },
+    {
+      "key": "rc1-21",
+      "x": 5,
+      "y": 4
+    },
+    {
+      "key": "rc1-23",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "key": "rc1-22",
+      "x": 3,
+      "y": 5
+    },
+    {
+      "key": "sof-1-2",
+      "x": 3,
+      "y": 5
+    },
+    {
+      "key": "t1-13",
+      "x": 4,
+      "y": 4
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

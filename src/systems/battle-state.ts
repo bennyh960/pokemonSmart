@@ -16,6 +16,9 @@ export interface BattleTurnFlags {
   charging: boolean;
   skipTurn: boolean;
   tookDamageThisTurn: boolean;
+  physicalDamageTakenThisTurn: number;
+  specialDamageTakenThisTurn: number;
+  magicCoatActive: boolean;
 }
 
 export interface BattlePokemonRuntimeState {
@@ -66,6 +69,9 @@ export function createBattleTurnFlags(): BattleTurnFlags {
     charging: false,
     skipTurn: false,
     tookDamageThisTurn: false,
+    physicalDamageTakenThisTurn: 0,
+    specialDamageTakenThisTurn: 0,
+    magicCoatActive: false,
   };
 }
 
