@@ -2,7 +2,16 @@ import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { ToolType, TileMapData } from './types.js';
 import { categorizeTiles } from './tile-palette.js';
-import { getKnownMapIds, getKnownTemplateIds, loadMapFromProject, loadTemplateFromProject, loadMapFromFile, saveMap, copyMapToClipboard, createBlankMap } from './map-io.js';
+import {
+  getKnownMapIds,
+  getKnownTemplateIds,
+  loadMapFromProject,
+  loadTemplateFromProject,
+  loadMapFromFile,
+  saveMap,
+  copyMapToClipboard,
+  createBlankMap,
+} from './map-io.js';
 import { MUSIC_TRACK_KEYS } from '../audio/audio-manager.js';
 
 export type EditorMode = 'map' | 'template';
@@ -37,8 +46,8 @@ export class Toolbar {
           <button class="mode-btn" data-mode="template" title="Edit templates">Templates</button>
         </span>
         <button id="btn-new" title="New Map">📄 New</button>
-        <select id="sel-load" title="Load Map"><option value="">Load Map...</option></select>
-        <button id="btn-load-file" title="Load from file">📂 File</button>
+        <input id="sel-load" list="sel-load-list" placeholder="Load Map..." autocomplete="off" title="Load Map" style="width:120px">
+        <datalist id="sel-load-list"></datalist>
         <button id="btn-save" title="Save (Ctrl+S)">💾 Save</button>
         <button id="btn-copy" title="Copy JSON">📋 Copy</button>
       </div>
@@ -59,22 +68,21 @@ export class Toolbar {
 
     // ── Mode toggle ──
     let currentMode: EditorMode = 'map';
-    const selLoad = container.querySelector('#sel-load') as HTMLSelectElement;
+    const selLoad = container.querySelector('#sel-load') as HTMLInputElement;
+    const selLoadList = container.querySelector('#sel-load-list') as HTMLDataListElement;
     const btnNew = container.querySelector('#btn-new') as HTMLButtonElement;
-    const btnLoadFile = container.querySelector('#btn-load-file') as HTMLButtonElement;
+    // const btnLoadFile = container.querySelector('#btn-load-file') as HTMLButtonElement;
 
+    let knownIds: string[] = [];
     const populateLoadSelect = (mode: EditorMode) => {
-      selLoad.innerHTML = '';
-      const def = document.createElement('option');
-      def.value = '';
-      def.textContent = mode === 'map' ? 'Load Map...' : 'Load Template...';
-      selLoad.appendChild(def);
-      const ids = mode === 'map' ? getKnownMapIds() : getKnownTemplateIds();
-      for (const id of ids) {
+      selLoad.placeholder = mode === 'map' ? 'Load Map...' : 'Load Template...';
+      selLoad.value = '';
+      knownIds = mode === 'map' ? getKnownMapIds() : getKnownTemplateIds();
+      selLoadList.innerHTML = '';
+      for (const id of knownIds) {
         const opt = document.createElement('option');
         opt.value = id;
-        opt.textContent = id;
-        selLoad.appendChild(opt);
+        selLoadList.appendChild(opt);
       }
     };
     populateLoadSelect('map');
@@ -85,12 +93,13 @@ export class Toolbar {
       const mode = btn.dataset.mode as EditorMode;
       if (mode === currentMode) return;
       currentMode = mode;
-      container.querySelectorAll('.mode-btn').forEach(b =>
-        (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.mode === mode));
+      container
+        .querySelectorAll('.mode-btn')
+        .forEach((b) => (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.mode === mode));
       populateLoadSelect(mode);
       btnNew.textContent = mode === 'map' ? '📄 New' : '📄 New Tmpl';
       btnNew.title = mode === 'map' ? 'New Map' : 'New blank template';
-      btnLoadFile.style.display = mode === 'map' ? '' : 'none';
+      // btnLoadFile.style.display = mode === 'map' ? '' : 'none';
       callbacks.onModeChange?.(mode);
     });
 
@@ -101,7 +110,7 @@ export class Toolbar {
       state.setTool(btn.dataset.tool as ToolType);
     });
     state.on('tool-changed', () => {
-      container.querySelectorAll('.tool-btn').forEach(b => {
+      container.querySelectorAll('.tool-btn').forEach((b) => {
         (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.tool === state.activeTool);
       });
     });
@@ -116,28 +125,32 @@ export class Toolbar {
         };
 
     selLoad.addEventListener('change', async () => {
-      if (!selLoad.value) return;
+      const id = selLoad.value.trim();
+      if (!id || !knownIds.includes(id)) return;
       try {
-        const data = currentMode === 'template'
-          ? await loadTemplateFromProject(selLoad.value)
-          : await loadMapFromProject(selLoad.value);
+        const data =
+          currentMode === 'template'
+            ? await loadTemplateFromProject(id)
+            : await loadMapFromProject(id);
         await doLoad(data);
-      } catch (err) { console.error('Failed to load:', err); }
+      } catch (err) {
+        console.error('Failed to load:', err);
+      }
       selLoad.value = '';
     });
 
-    btnLoadFile.addEventListener('click', () => {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.json';
-      input.addEventListener('change', async () => {
-        const file = input.files?.[0];
-        if (!file) return;
-        try { await doLoad(await loadMapFromFile(file)); }
-        catch (err) { console.error('Failed to load file:', err); }
-      });
-      input.click();
-    });
+    // btnLoadFile.addEventListener('click', () => {
+    //   const input = document.createElement('input');
+    //   input.type = 'file';
+    //   input.accept = '.json';
+    //   input.addEventListener('change', async () => {
+    //     const file = input.files?.[0];
+    //     if (!file) return;
+    //     try { await doLoad(await loadMapFromFile(file)); }
+    //     catch (err) { console.error('Failed to load file:', err); }
+    //   });
+    //   input.click();
+    // });
 
     btnNew.addEventListener('click', () => {
       if (currentMode === 'template') {
@@ -192,7 +205,9 @@ export class Toolbar {
     const zoomLabel = container.querySelector('#zoom-label')!;
     container.querySelector('#btn-zoom-out')!.addEventListener('click', () => state.setZoom(state.zoom - 0.5));
     container.querySelector('#btn-zoom-in')!.addEventListener('click', () => state.setZoom(state.zoom + 0.5));
-    state.on('viewport-changed', () => { zoomLabel.textContent = state.zoom + 'x'; });
+    state.on('viewport-changed', () => {
+      zoomLabel.textContent = state.zoom + 'x';
+    });
 
     const btnGrid = container.querySelector('#btn-grid') as HTMLElement;
     btnGrid.addEventListener('click', () => {
@@ -211,7 +226,9 @@ export class Toolbar {
     // ── Resize map ──
     container.querySelector('#btn-resize')!.addEventListener('click', () => {
       if ((state.mapData as unknown as Record<string, unknown>).template) {
-        alert(`This map uses template "${(state.mapData as unknown as Record<string, unknown>).template}" — dimensions are fixed by the template.\nLoad the template to resize it.`);
+        alert(
+          `This map uses template "${(state.mapData as unknown as Record<string, unknown>).template}" — dimensions are fixed by the template.\nLoad the template to resize it.`,
+        );
         return;
       }
       const md = state.mapData;
@@ -223,18 +240,18 @@ export class Toolbar {
       const oldTiles = md.tiles;
       md.tiles = Array.from({ length: newH }, (_, y) =>
         Array.from({ length: newW }, (_, x) =>
-          (y < oldTiles.length && x < (oldTiles[y]?.length ?? 0)) ? oldTiles[y][x] : 'g1'
-        )
+          y < oldTiles.length && x < (oldTiles[y]?.length ?? 0) ? oldTiles[y][x] : 'g1',
+        ),
       );
       if (md.objectLayer) {
         const oldObj = md.objectLayer;
         md.objectLayer = Array.from({ length: newH }, (_, y) =>
           Array.from({ length: newW }, (_, x) =>
-            (y < oldObj.length && x < (oldObj[y]?.length ?? 0)) ? oldObj[y][x] : null
-          )
+            y < oldObj.length && x < (oldObj[y]?.length ?? 0) ? oldObj[y][x] : null,
+          ),
         );
       }
-      if (md.objects) md.objects = md.objects.filter(o => o.x < newW && o.y < newH);
+      if (md.objects) md.objects = md.objects.filter((o) => o.x < newW && o.y < newH);
       md.width = newW;
       md.height = newH;
       md.spawn.x = Math.min(md.spawn.x, newW - 1);
@@ -252,8 +269,8 @@ export class Toolbar {
       const backdrop = document.createElement('div');
       backdrop.className = 'modal-backdrop settings-modal';
 
-      const musicOpts = MUSIC_OPTIONS.map(k =>
-        `<option value="${k}"${(md.music || 'town') === k ? ' selected' : ''}>${k}</option>`
+      const musicOpts = MUSIC_OPTIONS.map(
+        (k) => `<option value="${k}"${(md.music || 'town') === k ? ' selected' : ''}>${k}</option>`,
       ).join('');
 
       const labelEn = md.label?.en ?? '';
@@ -282,15 +299,20 @@ export class Toolbar {
 
       document.body.appendChild(backdrop);
       const close = () => backdrop.remove();
-      backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) close();
+      });
       const onKey = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onKey); }
+        if (e.key === 'Escape') {
+          close();
+          document.removeEventListener('keydown', onKey);
+        }
       };
       document.addEventListener('keydown', onKey);
       backdrop.querySelector('#ms-cancel')!.addEventListener('click', close);
 
       backdrop.querySelector('#ms-ok')!.addEventListener('click', () => {
-        md.id   = (backdrop.querySelector('#ms-id')   as HTMLInputElement).value;
+        md.id = (backdrop.querySelector('#ms-id') as HTMLInputElement).value;
         md.name = (backdrop.querySelector('#ms-name') as HTMLInputElement).value;
         const en = (backdrop.querySelector('#ms-label-en') as HTMLInputElement).value.trim();
         const he = (backdrop.querySelector('#ms-label-he') as HTMLInputElement).value.trim();
