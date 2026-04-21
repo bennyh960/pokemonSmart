@@ -269,6 +269,9 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Detect: { behaviorTags: ['protect'], priority: 4, target: 'user' },
   Endure: { behaviorTags: ['endure'], priority: 4, target: 'user' },
 
+  // --- Destiny Bond: mark the foe; if foe kills user, foe also faints ---
+  'Destiny Bond': { behaviorTags: ['destiny-bond'], target: 'user' },
+
   // --- Counter / Mirror Coat: deal 2× received damage, always go last ---
   Counter: { behaviorTags: ['counter'], priority: -5, target: 'selected-pokemon' },
   'Mirror Coat': { behaviorTags: ['mirror-coat'], priority: -5, target: 'selected-pokemon' },

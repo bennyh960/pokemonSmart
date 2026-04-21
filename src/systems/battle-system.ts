@@ -221,6 +221,9 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.critBoost) {
     effects.push('focus');
   }
+  if (runtimeState.destinyBonded) {
+    effects.push('bond');
+  }
   return effects;
 }
 

@@ -41,7 +41,8 @@ export type MoveBattleBehaviorTag =
   | 'baton-pass'
   | 'counter'
   | 'mirror-coat'
-  | 'magic-coat';
+  | 'magic-coat'
+  | 'destiny-bond';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 

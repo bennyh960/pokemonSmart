@@ -110,6 +110,13 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(255,200,40,0.25)',
     textColor: '#ffc820',
   },
+  bond: {
+    label: 'קשר גורל',
+    shortLabel: 'גורל',
+    bgColor: 'rgba(160,80,200,0.15)',
+    borderColor: 'rgba(160,80,200,0.25)',
+    textColor: '#c878f0',
+  },
   boost: {
     label: '',
     shortLabel: 'UP',

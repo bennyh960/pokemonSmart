@@ -36,6 +36,7 @@ export interface BattlePokemonRuntimeState {
   critBoost: boolean;
   substituteActive: boolean;
   substituteHitsAbsorbed: number;
+  destinyBonded: boolean;
 }
 
 export interface BattleSideRuntimeState {
@@ -99,6 +100,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     critBoost: false,
     substituteActive: false,
     substituteHitsAbsorbed: 0,
+    destinyBonded: false,
   };
 }
 

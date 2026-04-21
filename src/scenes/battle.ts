@@ -628,6 +628,7 @@ export function createBattleScene(
   let pendingPlayerEntryHazard = false;
   let pendingEnemyEntryHazard = false;
   let pendingSubstituteCarryover: { active: boolean; hitsAbsorbed: number } | null = null;
+  let pendingDestinyBondMsg: string | null = null;
   let substituteDollFlash: { timer: number; duration: number; color: string; side: 'player' | 'enemy' } | null = null;
   const animationDirector = createBattleAnimationDirector();
 
@@ -2943,6 +2944,11 @@ export function createBattleScene(
   }
 
   function doAttack(forcedMoveIndex?: number): void {
+    // Clear Destiny Bond from enemy when player acts (bond expires on user's next turn)
+    if (enemyBattleState.destinyBonded) {
+      enemyBattleState.destinyBonded = false;
+      syncEnemyBar();
+    }
     const rtl = isRTL();
     const attackerName = getPokemonDisplayName(player.id);
     const pendingChargeMoveId = getChargingMoveId(playerBattleState);
@@ -3006,6 +3012,7 @@ export function createBattleScene(
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
+    const isDestinyBond = moveBattleData?.behaviorTags?.includes('destiny-bond') ?? false;
     const healPercent = moveBattleData?.healingPercent ?? null;
     const hitCount = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -3134,6 +3141,29 @@ export function createBattleScene(
             ...turnEffectLines,
             t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
             t('battle.magicCoatActive', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'PLAYER_ATTACK';
+          phaseTimer = 0;
+        },
+        false,
+      );
+      return;
+    }
+
+    // Destiny Bond: mark the enemy with the bond — if enemy kills player before player acts again, enemy also faints
+    if (isDestinyBond) {
+      playAttackAnimation(
+        'player',
+        'enemy',
+        m,
+        () => {
+          enemyBattleState.destinyBonded = true;
+          syncEnemyBar();
+          const msgs = [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.destinyBondActive', { name: defenderName }),
           ];
           textBox = createTextBox(msgs, rtl);
           phase = 'PLAYER_ATTACK';
@@ -3581,6 +3611,13 @@ export function createBattleScene(
             audio.playSFX('hit');
           }
         }
+        // Destiny Bond: if player killed enemy and player has the bond (enemy set it), player also faints
+        if (enemy.hp <= 0 && playerBattleState.destinyBonded) {
+          playerBattleState.destinyBonded = false;
+          player.hp = 0;
+          setHP(playerHpBar, 0);
+          pendingDestinyBondMsg = t('battle.destinyBondTrigger', { name: attackerName });
+        }
         // Brick Break: clear enemy screens after hitting
         if (isBrickBreak) {
           clearScreens(enemySideState);
@@ -3610,6 +3647,11 @@ export function createBattleScene(
   }
 
   function enemyTurn(showFasterMsg = false): void {
+    // Clear Destiny Bond from player when enemy acts (bond expires on user's next turn)
+    if (playerBattleState.destinyBonded) {
+      playerBattleState.destinyBonded = false;
+      syncPlayerBar();
+    }
     const mi = enemySelectedMoveIndex >= 0 ? enemySelectedMoveIndex : getPlannedEnemyMoveIndex();
     enemySelectedMoveIndex = -1;
     const m = enemy.moves[mi];
@@ -3641,6 +3683,7 @@ export function createBattleScene(
     const isCounterEnemy = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoatEnemy = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoatEnemy = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
+    const isDestinyBondEnemy = moveBattleData?.behaviorTags?.includes('destiny-bond') ?? false;
     const healPercentEnemy = moveBattleData?.healingPercent ?? null;
     const hitCountEnemy = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -3786,6 +3829,30 @@ export function createBattleScene(
             ...turnEffectLines,
             t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
             t('battle.magicCoatActive', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'ENEMY_TURN';
+          phaseTimer = 0;
+        },
+        false,
+      );
+      return;
+    }
+
+    // Destiny Bond: mark the player with the bond — if player kills enemy before enemy acts again, player also faints
+    if (isDestinyBondEnemy) {
+      playAttackAnimation(
+        'enemy',
+        'player',
+        m,
+        () => {
+          playerBattleState.destinyBonded = true;
+          syncPlayerBar();
+          const msgs = [
+            ...prefix,
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.destinyBondActive', { name: defenderName }),
           ];
           textBox = createTextBox(msgs, rtl);
           phase = 'ENEMY_TURN';
@@ -4228,6 +4295,13 @@ export function createBattleScene(
             audio.playSFX('hit');
           }
         }
+        // Destiny Bond: if enemy killed player and enemy has the bond (player set it), enemy also faints
+        if (player.hp <= 0 && enemyBattleState.destinyBonded) {
+          enemyBattleState.destinyBonded = false;
+          enemy.hp = 0;
+          setHP(enemyHpBar, 0);
+          pendingDestinyBondMsg = t('battle.destinyBondTrigger', { name: attackerName });
+        }
         // Brick Break: clear player screens after hitting
         if (isBrickBreakEnemy) {
           clearScreens(playerSideState);
@@ -4539,7 +4613,12 @@ export function createBattleScene(
             !isHPAnimating(enemyHpBar) &&
             !isHPAnimating(playerHpBar)
           ) {
-            phase = 'CHECK_WIN';
+            if (pendingDestinyBondMsg) {
+              textBox = createTextBox([pendingDestinyBondMsg], isRTL());
+              pendingDestinyBondMsg = null;
+            } else {
+              phase = 'CHECK_WIN';
+            }
           }
           break;
         }
@@ -4552,7 +4631,13 @@ export function createBattleScene(
             !isHPAnimating(playerHpBar) &&
             !isHPAnimating(enemyHpBar)
           ) {
-            if (player.hp <= 0) {
+            if (pendingDestinyBondMsg) {
+              textBox = createTextBox([pendingDestinyBondMsg], isRTL());
+              pendingDestinyBondMsg = null;
+            } else if (enemy.hp <= 0) {
+              // Enemy fainted (e.g. Destiny Bond triggered)
+              phase = 'CHECK_WIN';
+            } else if (player.hp <= 0) {
               const consolationXp = awardConsolationXp(player, activePartyIndex);
               handlePlayerFaintAfterAction(consolationXp);
             } else if (enemyGoesFirst) {
