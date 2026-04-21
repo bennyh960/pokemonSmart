@@ -1441,7 +1441,7 @@
       "w": 16,
       "h": 32,
       "walkable": false,
-      "above": false,
+      "above": true,
       "category": "wall",
       "interactType": null
     },
@@ -1749,7 +1749,7 @@
       "w": 16,
       "h": 32,
       "walkable": false,
-      "above": false,
+      "above": true,
       "category": "wall",
       "interactType": null
     },
@@ -2057,7 +2057,7 @@
       "w": 16,
       "h": 32,
       "walkable": false,
-      "above": false,
+      "above": true,
       "category": "wall",
       "interactType": null
     },
@@ -2365,7 +2365,7 @@
       "w": 16,
       "h": 32,
       "walkable": false,
-      "above": false,
+      "above": true,
       "category": "wall",
       "interactType": null
     },
@@ -2673,7 +2673,7 @@
       "w": 16,
       "h": 32,
       "walkable": false,
-      "above": false,
+      "above": true,
       "category": "wall",
       "interactType": null
     },
@@ -2981,7 +2981,7 @@
       "w": 16,
       "h": 32,
       "walkable": false,
-      "above": false,
+      "above": true,
       "category": "wall",
       "interactType": null
     },
@@ -4892,8 +4892,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "bookCab5",
@@ -4903,8 +4902,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "bookC6",
@@ -4914,8 +4912,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "bookC7",
@@ -4925,8 +4922,7 @@
       "h": 32,
       "walkable": true,
       "above": false,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "bookC-r1",
@@ -4936,8 +4932,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "bookc-l1",
@@ -4947,8 +4942,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "home-flower",
@@ -4958,8 +4952,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     }
   ]
 }

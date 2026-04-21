@@ -27,6 +27,14 @@ export interface MapTransition {
 
 import type { InteractArgs } from '../data/interact-types.js';
 
+/** One entry in a map's interactiveItems override list. */
+export interface InteractiveItemEntry {
+  itemId: string;
+  itemQty?: number;  // defaults to 1 if omitted
+  x?: number;
+  y?: number;
+}
+
 /** A placed above-layer tile on the map. */
 export interface PlacedObject {
   key: string;   // references TileDef in tileset
@@ -58,6 +66,13 @@ export interface TileMapData {
   label?: { en: string; he: string };
   /** ID of the template this map is based on (e.g. "house-open"). */
   template?: string;
+  /**
+   * Map-level item overrides, keyed by tile key → ordered list of assignments.
+   * Entries with x+y target an exact position; x-only or y-only do a partial match;
+   * entries with neither fill by index over remaining unmatched objects.
+   * The list length caps how many objects of that key get overridden.
+   */
+  interactiveItems?: Record<string, InteractiveItemEntry[]>;
   /** Internal — tracks how many transitions/npcs/objects came from the template so saves strip them. */
   _templateCounts?: { transitions: number; npcs: number; objects: number };
 }
@@ -103,6 +118,8 @@ export function mergeMapWithTemplate(
     label:    instance.label,
     area:     instance.area,
     template: instance.template,
+    // ── Map-level interact overrides: instance wins (shallow merge) ──
+    interactiveItems: instance.interactiveItems ?? template.interactiveItems,
     // ── Internal ──────────────────────────────────────────────────
     _templateCounts: tc,
   };
@@ -130,15 +147,75 @@ const BLOCKED_TILES = new Set([TILE_WATER, TILE_TREE, TILE_BUILDING]);
 /** Renderable for Y-sorting. */
 export interface Renderable { y: number; render: () => void; }
 
+/**
+ * Pre-compute which PlacedObject gets which item override.
+ * Sort priority: both x+y → x-only → y-only → neither (index-based).
+ * If a coord-targeted entry finds no unclaimed match it falls back to index order.
+ */
+function buildInteractOverrides(
+  interactiveItems: Record<string, InteractiveItemEntry[]>,
+  objects: PlacedObject[],
+): Map<PlacedObject, { itemId: string; itemQty: number }> {
+  const result = new Map<PlacedObject, { itemId: string; itemQty: number }>();
+
+  for (const [tileKey, entries] of Object.entries(interactiveItems)) {
+    const candidates = objects.filter(o => o.key === tileKey);
+    if (!candidates.length) continue;
+
+    const sorted = [...entries].sort((a, b) => {
+      const score = (e: InteractiveItemEntry) =>
+        e.x !== undefined && e.y !== undefined ? 0 :
+        e.x !== undefined ? 1 :
+        e.y !== undefined ? 2 : 3;
+      return score(a) - score(b);
+    });
+
+    const claimed = new Set<PlacedObject>();
+    const fallbacks: InteractiveItemEntry[] = [];
+
+    for (const entry of sorted) {
+      let matched: PlacedObject | undefined;
+      if (entry.x !== undefined && entry.y !== undefined) {
+        matched = candidates.find(o => !claimed.has(o) && o.x === entry.x && o.y === entry.y);
+      } else if (entry.x !== undefined) {
+        matched = candidates.find(o => !claimed.has(o) && o.x === entry.x);
+      } else if (entry.y !== undefined) {
+        matched = candidates.find(o => !claimed.has(o) && o.y === entry.y);
+      }
+
+      if (matched) {
+        claimed.add(matched);
+        result.set(matched, { itemId: entry.itemId, itemQty: entry.itemQty ?? 1 });
+      } else {
+        fallbacks.push(entry);
+      }
+    }
+
+    // Assign fallbacks to remaining unclaimed candidates in their natural array order
+    const unclaimed = candidates.filter(o => !claimed.has(o));
+    for (let i = 0; i < fallbacks.length && i < unclaimed.length; i++) {
+      result.set(unclaimed[i], { itemId: fallbacks[i].itemId, itemQty: fallbacks[i].itemQty ?? 1 });
+    }
+  }
+
+  return result;
+}
+
 /** Create a tilemap from loaded JSON data. */
 export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
   const { width, height, tileSize, tiles, spawn, name } = data;
   const objectLayer = data.objectLayer ?? null;
   const placedObjects = data.objects ?? [];
+  const interactOverrides = buildInteractOverrides(data.interactiveItems ?? {}, placedObjects);
   const BASE = 16; // base grid unit
 
   return {
     name, width, height, tileSize, spawn,
+
+    /** Returns the item override for a placed object, or null if none. */
+    getInteractOverride(obj: PlacedObject): { itemId: string; itemQty: number } | null {
+      return interactOverrides.get(obj) ?? null;
+    },
 
     getTile(gx: number, gy: number): number | string {
       if (gx < 0 || gx >= width || gy < 0 || gy >= height) return -1;

@@ -1,0 +1,25 @@
+{
+  "id": "minusburg-template-deck1",
+  "name": "minusburg-template-deck1",
+  "template": "deck-house",
+  "tileset": "interior",
+  "label": {
+    "he": "משפחת בן",
+    "en": "Ben's Family"
+  },
+  "area": "Minusburg",
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 9,
+    "y": 13
+  },
+  "transitions": [
+    {
+      "fromX": 13,
+      "fromY": 1,
+      "returnToPrevious": false,
+      "toMapId": "minusburg-template-deck2"
+    }
+  ]
+}

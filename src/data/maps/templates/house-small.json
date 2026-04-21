@@ -6,7 +6,7 @@
     "x": 3,
     "y": 7
   },
-  "tileset": "overworld",
+  "tileset": "interior",
   "transitions": [
     {
       "fromX": 3,
@@ -28,17 +28,16 @@
   "music": "town",
   "encounterTableId": null,
   "id": "house-small",
-  "name": "house-small"
-,
+  "name": "house-small",
   "tiles": [
-    ["f3","f3","f3","f3","f3","f3","f3","f3"],
-    ["f3","f3","f3","f3","f3","f3","f3","f3"],
-    ["f3","f3","f3","f3","f3","f3","f3","f3"],
-    ["f3","f3","f3","f3","f3","f3","f3","f3"],
-    ["f3","f3","f3","f3","f3","f3","f3","f3"],
-    ["f3","f3","f3","f3","f3","f3","f3","f3"],
-    ["f3","f3","f3","f3","f3","f3","f3","f3"],
-    ["f3","f3","f3","f3","f3","f3","f3","f3"]
+    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
+    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
+    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
+    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
+    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
+    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
+    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
+    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"]
   ],
   "objects": [
     {
@@ -53,13 +52,13 @@
     }
   ],
   "objectLayer": [
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null]
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null]
   ]
 }

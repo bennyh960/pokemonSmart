@@ -1963,16 +1963,23 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               if (!tileRef) {
                 /* not interactive */
               } else {
-                // Merge: tile defaults → tile args → per-instance args
+                // Merge: tile defaults → tile args → map-level interactiveItems → per-instance args
                 const resolved = resolveInteract(tileRef);
                 if (!resolved) {
                   /* unknown type */
                 } else {
-                  // Apply per-instance overrides from PlacedObject
+                  // Merge: tile defaults → interactiveItems map override → per-instance args
+                  const mapOverride = tileMap.getInteractOverride(obj);
                   const inst = obj.interactArgs;
                   const dialogue = inst?.dialogue && inst.dialogue.length > 0 ? inst.dialogue : resolved.dialogue;
-                  const itemId = inst?.itemId !== undefined ? inst.itemId : resolved.itemId;
-                  const itemQty = inst?.itemQty !== undefined ? inst.itemQty : resolved.itemQty;
+                  const itemId =
+                    inst?.itemId !== undefined ? inst.itemId :
+                    mapOverride ? mapOverride.itemId :
+                    resolved.itemId;
+                  const itemQty =
+                    inst?.itemQty !== undefined ? inst.itemQty :
+                    mapOverride ? mapOverride.itemQty :
+                    resolved.itemQty;
                   const flag = inst?.flag !== undefined ? inst.flag : resolved.flag;
 
                   if (resolved.id === 'pc') {
