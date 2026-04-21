@@ -214,29 +214,29 @@
       "dialogue": [
         {
           "en": "This city belongs to Team Rocket now!",
-          "he": "אוויש איך הגעת לכאן?! כדאי להתרחק מהמקום הזה או שתתכוננו לצרות"
+          "he": "וישכע טקור תווצל תכייש וזה ריעה!"
         }
       ],
       "postBattleDialogue": [
         {
           "en": "NULL-X... will not forgive this.",
-          "he": "אני לא מאמין שהפסדתי ... חייב לברוח לפני שהמשטרה תמצא אותי"
+          "he": "עשית טעות! הדרך הזו חסומה עבורך! אתה תפסיד לי ואקח לך את הפוקימונים"
         }
       ],
       "party": [
         {
-          "pokemonId": 96,
-          "level": 25,
+          "pokemonId": 23,
+          "level": 10,
           "moves": []
         },
         {
-          "pokemonId": 97,
-          "level": 28,
+          "pokemonId": 41,
+          "level": 11,
           "moves": []
         }
       ],
       "reward": {
-        "money": 2000
+        "money": 200
       },
       "lineOfSight": 3,
       "autoWalk": {
@@ -287,18 +287,13 @@
           "moves": []
         },
         {
-          "pokemonId": 228,
-          "level": 30,
-          "moves": []
-        },
-        {
           "pokemonId": 110,
           "level": 30,
           "moves": []
         }
       ],
       "reward": {
-        "money": 4000
+        "money": 200
       },
       "lineOfSight": 3
     },
@@ -317,40 +312,29 @@
       "dialogue": [
         {
           "en": "Hand over your Pokemon or battle me!",
-          "he": "כדאי שתוותר על הפוקימונים שלך אם אתה לא רוצה לסבול"
+          "he": "יב םחליה וא ךלש םינומיקופה תא רוסמת!"
         }
       ],
       "postBattleDialogue": [
         {
           "en": "Impossible...",
-          "he": "בלתי אפשרי !! לעולם לא תמצא את המחבוא שלנו"
+          "he": "ירשפא יתלב..."
         }
       ],
       "party": [
         {
+          "pokemonId": 41,
+          "level": 10,
+          "moves": []
+        },
+        {
           "pokemonId": 19,
-          "level": 22,
-          "moves": []
-        },
-        {
-          "pokemonId": 20,
-          "level": 24,
-          "moves": []
-        },
-        {
-          "pokemonId": 15,
-          "level": 25,
+          "level": 11,
           "moves": []
         }
       ],
       "reward": {
-        "money": 1500,
-        "items": [
-          {
-            "itemId": "potion",
-            "quantity": 1
-          }
-        ]
+        "money": 200
       },
       "lineOfSight": 3
     },
@@ -369,34 +353,29 @@
       "dialogue": [
         {
           "en": "Team Rocket always has a plan!",
-          "he": "איך הגעת לפה?! עכשיו זמן לצרות"
+          "he": "תינכות שי דימת טקור תווצל!"
         }
       ],
       "postBattleDialogue": [
         {
           "en": "The plan... failed.",
-          "he": "אוויש התוכנית שלי נכשלה...עוד נפגש"
+          "he": "הלשכנ ...תינכותה."
         }
       ],
       "party": [
         {
-          "pokemonId": 84,
-          "level": 20,
+          "pokemonId": 109,
+          "level": 11,
           "moves": []
         },
         {
-          "pokemonId": 85,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 215,
-          "level": 30,
+          "pokemonId": 23,
+          "level": 11,
           "moves": []
         }
       ],
       "reward": {
-        "money": 2200
+        "money": 220
       },
       "lineOfSight": 3
     },
@@ -426,18 +405,18 @@
       ],
       "party": [
         {
-          "pokemonId": 88,
-          "level": 25,
+          "pokemonId": 23,
+          "level": 11,
           "moves": []
         },
         {
-          "pokemonId": 89,
-          "level": 30,
+          "pokemonId": 88,
+          "level": 12,
           "moves": []
         }
       ],
       "reward": {
-        "money": 2400
+        "money": 240
       },
       "lineOfSight": 3
     },
@@ -456,34 +435,29 @@
       "dialogue": [
         {
           "en": "You think you can stop us? We outnumber you!",
-          "he": "נראה לי שאקח לך את הפוקימונים"
+          "he": "רפסמב ךילע םילוע ונחנא ?ונתוא רוצעל לכותש בשוח התא!"
         }
       ],
       "postBattleDialogue": [
         {
           "en": "One less... but there are more of us.",
-          "he": "אנחנו הרבה יותר ממך!"
+          "he": "דוע שי לבא ...תוחפ דחא דוע."
         }
       ],
       "party": [
         {
-          "pokemonId": 158,
-          "level": 15,
+          "pokemonId": 41,
+          "level": 12,
           "moves": []
         },
         {
-          "pokemonId": 159,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 160,
-          "level": 35,
+          "pokemonId": 109,
+          "level": 12,
           "moves": []
         }
       ],
       "reward": {
-        "money": 1500,
+        "money": 260,
         "items": [
           {
             "itemId": "antidote",
@@ -491,7 +465,7 @@
           }
         ]
       },
-      "lineOfSight": 1
+      "lineOfSight": 3
     },
     {
       "id": "rocket-mb-6",
@@ -514,18 +488,18 @@
       "postBattleDialogue": [
         {
           "en": "They chose you over us...",
-          "he": "חחח נראה לך שאפשר לעצור אותנו?"
+          "he": "ונינפ לע ךב ורחב םה..."
         }
       ],
       "party": [
         {
-          "pokemonId": 215,
-          "level": 25,
+          "pokemonId": 88,
+          "level": 12,
           "moves": []
         },
         {
-          "pokemonId": 197,
-          "level": 35,
+          "pokemonId": 41,
+          "level": 13,
           "moves": []
         }
       ],
@@ -555,27 +529,23 @@
       "postBattleDialogue": [
         {
           "en": "Seven... eight...",
-          "he": "התרחקת קצת יותר מידי ...."
-        },
-        {
-          "en": "",
-          "he": "חייבים להענש על טעות שכזאת"
+          "he": "הנומש ...העבש..."
         }
       ],
       "party": [
         {
-          "pokemonId": 228,
-          "level": 25,
+          "pokemonId": 109,
+          "level": 13,
           "moves": []
         },
         {
-          "pokemonId": 229,
-          "level": 30,
+          "pokemonId": 88,
+          "level": 13,
           "moves": []
         }
       ],
       "reward": {
-        "money": 1500
+        "money": 290
       },
       "lineOfSight": 3
     },
@@ -594,31 +564,29 @@
       "dialogue": [
         {
           "en": "Stand down! This is your last warning!",
-          "he": "היכנעו עכשיו"
+          "he": "ךלש הנורחאה הרהזאה וז !ענכת!"
         }
       ],
-      "postBattleDialogue": [],
+      "postBattleDialogue": [
+        {
+          "en": "I gave you a warning... I should have just run.",
+          "he": "חורבל טושפ הכירצ יתייה ...הרהזא ךל יתתנ."
+        }
+      ],
       "party": [
         {
-          "pokemonId": 63,
-          "level": 25,
-          "moves": [
-            33
-          ]
-        },
-        {
-          "pokemonId": 64,
-          "level": 30,
+          "pokemonId": 24,
+          "level": 13,
           "moves": []
         },
         {
-          "pokemonId": 65,
-          "level": 33,
+          "pokemonId": 109,
+          "level": 13,
           "moves": []
         }
       ],
       "reward": {
-        "money": 2000
+        "money": 310
       },
       "lineOfSight": 3
     },
@@ -637,26 +605,31 @@
       "dialogue": [
         {
           "en": "You've beaten nine of us... the commander will handle you.",
-          "he": "אתם בצרות צרורות!"
+          "he": "ךב לפטי דקפמה ...ונתיאמ העשת תחצינ."
         }
       ],
-      "postBattleDialogue": [],
+      "postBattleDialogue": [
+        {
+          "en": "Nine down... good luck with number ten.",
+          "he": "הרשע רפסמ םע החלצהב ...ולפנ העשת."
+        }
+      ],
       "party": [
         {
-          "pokemonId": 177,
-          "level": 25,
+          "pokemonId": 88,
+          "level": 13,
           "moves": []
         },
         {
-          "pokemonId": 178,
-          "level": 30,
+          "pokemonId": 24,
+          "level": 14,
           "moves": []
         }
       ],
       "reward": {
-        "money": 2000
+        "money": 330
       },
-      "lineOfSight": 1
+      "lineOfSight": 3
     },
     {
       "id": "rocket-mb-10",
