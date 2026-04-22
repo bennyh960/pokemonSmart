@@ -7,7 +7,6 @@ import {
   getKnownTemplateIds,
   loadMapFromProject,
   loadTemplateFromProject,
-  loadMapFromFile,
   saveMap,
   copyMapToClipboard,
   createBlankMap,
@@ -128,10 +127,7 @@ export class Toolbar {
       const id = selLoad.value.trim();
       if (!id || !knownIds.includes(id)) return;
       try {
-        const data =
-          currentMode === 'template'
-            ? await loadTemplateFromProject(id)
-            : await loadMapFromProject(id);
+        const data = currentMode === 'template' ? await loadTemplateFromProject(id) : await loadMapFromProject(id);
         await doLoad(data);
       } catch (err) {
         console.error('Failed to load:', err);
