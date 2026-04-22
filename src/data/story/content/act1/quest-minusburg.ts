@@ -118,6 +118,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
+      speakerId: 'Myself/ אתה חושב לעצמך',
       lines: [
         {
           en: 'You arrive in Minusburg — the City of Subtraction.',
@@ -126,6 +127,10 @@ registerCutscene({
         {
           en: 'The streets are quiet. Too quiet. Trainers walk fast, eyes down — Pokemon tucked out of sight.',
           he: 'הרחובות שקטים. שקטים מדי. מאמנים הולכים מהר, עיניים למטה — פוקימונים מוסתרים.',
+        },
+        {
+          en: "Let's find people to talk - maybe there is something i should know",
+          he: 'אולי כדאי לדבר עם אנשים - אולי יש משהו שצריך לדעת',
         },
       ],
     },
@@ -357,6 +362,7 @@ registerCutscene({
 });
 //#endregion
 
+//#endregion
 //#region Events (story events) ──────────────────────────────────────────────────────────────
 
 // Beat 1 — first arrival: atmospheric opening

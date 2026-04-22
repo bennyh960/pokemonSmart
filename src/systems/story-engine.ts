@@ -40,18 +40,20 @@ export function registerAutoGateMap(mapId: string, service: AutoGateService): vo
 const AUTO_GATE_IDS: Record<AutoGateService, string> = {
   pokecenter: 'auto-pokecenter',
   pokemarket: 'auto-pokemarket',
-  gym: 'auto-gym',
+  gym: 'auto-gym', // we can use auto and also use gate guard as regular
 };
 
 function _checkAutoGate(mapId: string): void {
   const service = _autoGateMapRegistry.get(mapId);
   if (!service) return;
 
-  const gateId = AUTO_GATE_IDS[service];
-  if (isGateUnlocked(gateId)) return;
+  // Gyms get a per-map gate ID so each gym unlocks independently
+  const gateIdLockCheck = service === 'gym' ? `auto-gym-${mapId}` : AUTO_GATE_IDS[service];
+  if (isGateUnlocked(gateIdLockCheck)) return;
 
   if (_stateMachine) {
-    setActiveGate(gateId);
+    // Use per-map ID so unlock tracking is per-gym, not shared across all gyms
+    setActiveGate(gateIdLockCheck);
     _stateMachine.push('GATE');
   }
 }

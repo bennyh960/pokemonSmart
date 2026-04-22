@@ -59,12 +59,12 @@ export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'
 };
 
 // ─── Per-service configs ──────────────────────────────────────────────────────
-
+const isProd = import.meta.env.MODE === 'production';
 /** How many correct answers are required for each service type. Configurable globally. */
 export const AUTO_GATE_QUESTION_COUNTS = {
-  pokecenter: 5,
-  pokemarket: 1,
-  gym: 15,
+  pokecenter: isProd ? 5 : 1,
+  pokemarket: isProd ? 10 : 1,
+  gym: isProd ? 15 : 1,
 } as const;
 
 /** Time limit per question (seconds) for each service type. 0 = no limit. */
@@ -86,7 +86,7 @@ export const AUTO_GATE_REWARDS: Record<string, GateReward[]> = {
   pokecenter: [{ type: 'money', amount: 500 }],
   pokemarket: [{ type: 'money', amount: 1000 }],
   gym: [
-    { type: 'money', amount: 1500 },
+    { type: 'money', amount: 5000 },
     { type: 'item', itemId: '45', quantity: 3 }, // hp-up
     { type: 'item', itemId: '46', quantity: 3 }, //protein
     { type: 'item', itemId: '48', quantity: 3 }, //carbos

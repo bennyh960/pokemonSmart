@@ -107,7 +107,11 @@ export interface QuestionGateDef {
 export const GATES: Record<string, QuestionGateDef> = {};
 
 export function getGate(id: string): QuestionGateDef | undefined {
-  return GATES[id];
+  if (GATES[id]) return GATES[id];
+  // Per-map gym IDs like 'auto-gym-minusburg-gym' fall back to 'auto-gym' config
+  const baseMatch = id.match(/^(auto-gym)-/);
+  if (baseMatch) return GATES[baseMatch[1]];
+  return undefined;
 }
 
 export function registerGate(def: QuestionGateDef): void {
