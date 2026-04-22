@@ -78,34 +78,34 @@ registerQuest({
 
 // ── Gate ─────────────────────────────────────────────────────────────────────
 
-registerGate({
-  id: 'gate-minusburg-gym',
-  title: { en: 'Subtraction Gym Entry', he: 'כניסה למכון החיסור' },
-  description: {
-    en: "The gym door is shielded. Solve 15 subtraction problems to prove you're not a NULL-X agent.",
-    he: 'דלת המכון מוגנת. פתור 15 בעיות חיסור כדי להוכיח שאינך סוכן NULL-X.',
-  },
-  triggerType: 'gym-entry',
-  questionSetIds: ['placeholder'],
-  conditions: [],
-  sessionConfig: {
-    ...DEFAULT_SESSION_CONFIG,
-    inputQuestions: { count: 5, types: ['-'] },
-    questionsRequired: 1,
-    rewardThreshold: 0.8,
-    bonusMultiplier: 25,
-    penaltyAmount: 0,
-    rewards: [
-      { type: 'money', amount: 600 },
-      { type: 'item', itemId: 'super-potion', quantity: 3 },
-    ],
-  },
-  reopenCooldownMs: 15 * 60 * 1000,
-  successActions: [
-    { type: 'set-flag', flag: FLAGS.GATE_MINUSBURG_GYM_PASS },
-    { type: 'set-quest', questId: 'main-act1-gym2' },
-  ],
-});
+// registerGate({
+//   id: 'gate-minusburg-gym',
+//   title: { en: 'Subtraction Gym Entry', he: 'כניסה למכון החיסור' },
+//   description: {
+//     en: "The gym door is shielded. Solve 15 subtraction problems to prove you're not a NULL-X agent.",
+//     he: 'דלת המכון מוגנת. פתור 15 בעיות חיסור כדי להוכיח שאינך סוכן NULL-X.',
+//   },
+//   triggerType: 'gym-entry',
+//   questionSetIds: ['placeholder'],
+//   conditions: [],
+//   sessionConfig: {
+//     ...DEFAULT_SESSION_CONFIG,
+//     inputQuestions: { count: 5, types: ['-'] },
+//     questionsRequired: 1,
+//     rewardThreshold: 0.8,
+//     bonusMultiplier: 25,
+//     penaltyAmount: 0,
+//     rewards: [
+//       { type: 'money', amount: 600 },
+//       { type: 'item', itemId: 'super-potion', quantity: 3 },
+//     ],
+//   },
+//   reopenCooldownMs: 15 * 60 * 1000,
+//   successActions: [
+//     { type: 'set-flag', flag: FLAGS.GATE_MINUSBURG_GYM_PASS },
+//     { type: 'set-quest', questId: 'main-act1-gym2' },
+//   ],
+// });
 
 //#endregion
 

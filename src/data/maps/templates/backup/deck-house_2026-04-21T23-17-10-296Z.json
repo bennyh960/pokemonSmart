@@ -9,7 +9,18 @@
     "x": 10,
     "y": 13
   },
-  "transitions": [],
+  "transitions": [
+    {
+      "fromX": 9,
+      "fromY": 14,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 10,
+      "fromY": 14,
+      "returnToPrevious": true
+    }
+  ],
   "npcs": [],
   "music": "town4",
   "encounterTableId": null,
@@ -17,24 +28,54 @@
     "en": "Family House",
     "he": "בית משפחה קומה 1"
   },
-  "interactiveItems": {}
-,
   "tiles": [
-    ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","stairs","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","f3","f3","w1-1","w1-1","w1-1","w1-b4"]
+    [
+      "w1-b1",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-2",
+      "w1-b2"
+    ],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "stairs", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    ["w1-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w1-l"],
+    [
+      "w1-b3",
+      "w1-1",
+      "w1-1",
+      "w1-1",
+      "w1-1",
+      "w1-1",
+      "w1-1",
+      "w1-1",
+      "w1-1",
+      "f3",
+      "f3",
+      "w1-1",
+      "w1-1",
+      "w1-1",
+      "w1-b4"
+    ]
   ],
   "objects": [
     {
@@ -329,20 +370,20 @@
     }
   ],
   "objectLayer": [
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
   ]
 }

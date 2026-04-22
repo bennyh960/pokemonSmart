@@ -123,6 +123,8 @@ export function exportMapJSON(data: TileMapData): string {
     const instObjects     = (data.objects     ?? []).slice(tc.objects);
     if (instTransitions.length) clone.transitions = instTransitions;
     if (instNpcs.length)        clone.npcs        = instNpcs;
+    if (raw.interactiveItems && Object.keys(raw.interactiveItems as object).length > 0)
+      clone.interactiveItems = raw.interactiveItems;
 
     let json = JSON.stringify(clone, null, 2);
     if (instObjects.length) {

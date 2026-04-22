@@ -73,7 +73,9 @@
     {
       "fromX": 25,
       "fromY": 36,
-      "toMapId": "minusburg-gym"
+      "toMapId": "minusburg-gym",
+      "toX": 9,
+      "toY": 13
     },
     {
       "fromX": 15,

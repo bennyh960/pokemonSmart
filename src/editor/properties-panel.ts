@@ -89,6 +89,9 @@ export class PropertiesPanel {
 
     // ── Encounter table ──
     this.renderEncounterPanel();
+
+    // ── Interactive item overrides ──
+    this.renderInteractiveItemsPanel();
   }
 
   private renderCellProps(cx: number, cy: number): void {
@@ -2586,5 +2589,194 @@ export class PropertiesPanel {
   /** Get the collapsible body of a section created by makeSection. */
   private static sectionBody(section: HTMLElement): HTMLElement {
     return ((section as unknown as Record<string, unknown>)['_body'] as HTMLElement) || section;
+  }
+
+  /** Interactive item overrides — lets map designers remap generic item tiles to specific items. */
+  private renderInteractiveItemsPanel(): void {
+    const mapData = this.state.mapData;
+    const section = this.makeSection('Item Overrides');
+    const body = PropertiesPanel.sectionBody(section);
+    const emit = () => this.state.emit('map-modified');
+
+    const overrides = (mapData.interactiveItems ??= {});
+
+    // Detect all item-type placed objects on the map
+    const objects = mapData.objects ?? [];
+    const itemObjects = objects.filter(o => this.tiles[o.key]?.interactType?.id === 'item');
+
+    // Group by tile key
+    const byKey = new Map<string, typeof objects>();
+    for (const obj of itemObjects) {
+      if (!byKey.has(obj.key)) byKey.set(obj.key, []);
+      byKey.get(obj.key)!.push(obj);
+    }
+
+    // Keys in overrides with no matching objects on this map
+    const staleKeys = Object.keys(overrides).filter(k => !byKey.has(k));
+
+    if (byKey.size === 0 && staleKeys.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'prop-empty';
+      empty.textContent = 'No item tiles found on this map.';
+      body.appendChild(empty);
+      this.container.appendChild(section);
+      return;
+    }
+
+    // Sorted items list for selects (TMs first, then alphabetical)
+    const allItems = getItemList().slice().sort((a, b) => {
+      const aTM = getTMEffect(a.id) !== null;
+      const bTM = getTMEffect(b.id) !== null;
+      if (aTM && !bTM) return -1;
+      if (!aTM && bTM) return 1;
+      return a.name.en.localeCompare(b.name.en);
+    });
+
+    // ── Per tile-key group ─────────────────────────────────────────
+    for (const [tileKey, tileObjs] of byKey) {
+      const keyEntries = overrides[tileKey] ?? [];
+
+      // Group header
+      const grpHeader = document.createElement('div');
+      grpHeader.className = 'trainer-subsection-header';
+      const grpLabel = document.createElement('span');
+      grpLabel.textContent = `${tileKey} (${tileObjs.length})`;
+      grpHeader.appendChild(grpLabel);
+
+      const addBtn = document.createElement('button');
+      addBtn.className = 'btn-small btn-add';
+      addBtn.textContent = '+ Override';
+      addBtn.addEventListener('click', () => {
+        if (!overrides[tileKey]) overrides[tileKey] = [];
+        overrides[tileKey].push({ itemId: allItems[0]?.id ?? 'potion' });
+        emit();
+      });
+      grpHeader.appendChild(addBtn);
+      body.appendChild(grpHeader);
+
+      // Detected object info rows (read-only)
+      const tileDef = this.tiles[tileKey];
+      const defItemId = (tileDef?.interactType as { id: string; args?: { itemId?: string | null; itemQty?: number | null } } | null | undefined)?.args?.itemId ?? null;
+      const defItemQty = (tileDef?.interactType as { id: string; args?: { itemId?: string | null; itemQty?: number | null } } | null | undefined)?.args?.itemQty ?? 1;
+      const defItemName = defItemId ? (allItems.find(i => i.id === defItemId)?.name.en ?? defItemId) : 'unknown';
+
+      for (const obj of tileObjs) {
+        const infoRow = document.createElement('div');
+        infoRow.style.cssText = 'font-size:11px; color:#888; padding:1px 6px 1px 12px;';
+        infoRow.textContent = `(${obj.x},${obj.y}) default: ${defItemName} ×${defItemQty}`;
+        body.appendChild(infoRow);
+      }
+
+      // Override entry rows
+      if (keyEntries.length === 0) {
+        const emptyMsg = document.createElement('div');
+        emptyMsg.className = 'prop-empty';
+        emptyMsg.textContent = 'No overrides — using tileset defaults.';
+        body.appendChild(emptyMsg);
+      }
+
+      for (let i = 0; i < keyEntries.length; i++) {
+        const entry = keyEntries[i];
+        const row = document.createElement('div');
+        row.className = 'trainer-slot';
+
+        // itemId select
+        const itemSel = document.createElement('select');
+        itemSel.className = 'trainer-slot-select';
+        for (const item of allItems) {
+          const opt = document.createElement('option');
+          opt.value = item.id;
+          const tmData = getTMEffect(item.id);
+          opt.textContent = tmData
+            ? `${item.name.en} — ${getMoveDisplayName(tmData.moveId)} (${item.id})`
+            : `${item.name.en} (${item.id})`;
+          if (item.id === entry.itemId) opt.selected = true;
+          itemSel.appendChild(opt);
+        }
+        itemSel.addEventListener('change', () => { entry.itemId = itemSel.value; emit(); });
+        row.appendChild(itemSel);
+
+        // qty
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number'; qtyInput.min = '1';
+        qtyInput.value = String(entry.itemQty ?? 1);
+        qtyInput.className = 'trainer-slot-qty';
+        qtyInput.title = 'Quantity';
+        qtyInput.placeholder = '1';
+        qtyInput.addEventListener('change', () => {
+          const v = parseInt(qtyInput.value, 10);
+          entry.itemQty = v >= 1 ? v : undefined;
+          emit();
+        });
+        row.appendChild(qtyInput);
+
+        // x coord (optional target)
+        const xInput = document.createElement('input');
+        xInput.type = 'number'; xInput.min = '0';
+        xInput.value = entry.x !== undefined ? String(entry.x) : '';
+        xInput.className = 'trainer-slot-qty';
+        xInput.style.width = '42px';
+        xInput.title = 'Target X — leave empty for index-based matching';
+        xInput.placeholder = 'x?';
+        xInput.addEventListener('change', () => {
+          entry.x = xInput.value.trim() === '' ? undefined : parseInt(xInput.value, 10);
+          emit();
+        });
+        row.appendChild(xInput);
+
+        // y coord (optional target)
+        const yInput = document.createElement('input');
+        yInput.type = 'number'; yInput.min = '0';
+        yInput.value = entry.y !== undefined ? String(entry.y) : '';
+        yInput.className = 'trainer-slot-qty';
+        yInput.style.width = '42px';
+        yInput.title = 'Target Y — leave empty for index-based matching';
+        yInput.placeholder = 'y?';
+        yInput.addEventListener('change', () => {
+          entry.y = yInput.value.trim() === '' ? undefined : parseInt(yInput.value, 10);
+          emit();
+        });
+        row.appendChild(yInput);
+
+        // remove
+        const rmBtn = document.createElement('button');
+        rmBtn.className = 'btn-small btn-remove';
+        rmBtn.textContent = 'x';
+        rmBtn.title = 'Remove override';
+        rmBtn.addEventListener('click', () => {
+          overrides[tileKey].splice(i, 1);
+          if (overrides[tileKey].length === 0) delete overrides[tileKey];
+          emit();
+        });
+        row.appendChild(rmBtn);
+        body.appendChild(row);
+      }
+    }
+
+    // ── Stale override warnings ────────────────────────────────────
+    for (const staleKey of staleKeys) {
+      const warnRow = document.createElement('div');
+      warnRow.style.cssText =
+        'display:flex; align-items:center; gap:6px; background:#3a2200; ' +
+        'border:1px solid #ff8800; border-radius:4px; padding:4px 8px; margin:4px 0;';
+
+      const warnText = document.createElement('span');
+      warnText.style.cssText = 'flex:1; font-size:11px; color:#ffaa44;';
+      warnText.textContent = `⚠ "${staleKey}" has overrides but no matching tiles on this map`;
+      warnRow.appendChild(warnText);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'btn-small btn-remove';
+      removeBtn.textContent = 'Remove';
+      removeBtn.title = 'Delete stale overrides for this key';
+      removeBtn.addEventListener('click', () => {
+        delete overrides[staleKey];
+        emit();
+      });
+      warnRow.appendChild(removeBtn);
+      body.appendChild(warnRow);
+    }
+
+    this.container.appendChild(section);
   }
 }

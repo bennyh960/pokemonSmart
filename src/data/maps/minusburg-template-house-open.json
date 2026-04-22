@@ -1,0 +1,20 @@
+{
+  "id": "minusburg-template-house-open",
+  "name": "minusburg-template-house-open",
+  "template": "house-open",
+  "tileset": "interior",
+  "label": {
+    "he": "מושיק ורחל",
+    "en": "Moshik and Rachel"
+  },
+  "area": "Minusburg",
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 9,
+    "y": 13
+  },
+  "transitions": [
+   
+  ]
+}

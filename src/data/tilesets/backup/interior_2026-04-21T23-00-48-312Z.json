@@ -709,9 +709,7 @@
       "walkable": true,
       "above": true,
       "category": "interactive",
-      "interactType": {
-        "id": "sign"
-      }
+      "interactType": null
     },
     {
       "key": "decor1",
@@ -4962,40 +4960,6 @@
       "above": true,
       "category": "decoration",
       "interactType": null
-    },
-    {
-      "key": "item-generic",
-      "sx": 32,
-      "sy": 4112,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "description": "generic item to be replaced on map",
-      "interactType": {
-        "id": "item"
-      }
-    },
-    {
-      "key": "w3-up",
-      "sx": 48,
-      "sy": 3648,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "wall"
-    },
-    {
-      "key": "w3-down",
-      "sx": 48,
-      "sy": 3664,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "wall"
     }
   ]
 }

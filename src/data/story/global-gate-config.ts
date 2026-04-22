@@ -63,7 +63,7 @@ export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'
 /** How many correct answers are required for each service type. Configurable globally. */
 export const AUTO_GATE_QUESTION_COUNTS = {
   pokecenter: 5,
-  pokemarket: 10,
+  pokemarket: 1,
   gym: 15,
 } as const;
 
@@ -212,5 +212,5 @@ registerAutoGateMap('mart-interior', 'pokemarket');
 // Gym interiors
 registerAutoGateMap('sumville-gym', 'gym');
 // Add future gyms here as their map IDs become known, e.g.:
-// registerAutoGateMap('minusburg-gym',          'gym');
+registerAutoGateMap('minusburg-gym', 'gym');
 // registerAutoGateMap('multiplia-gym',          'gym');

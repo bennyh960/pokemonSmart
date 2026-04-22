@@ -5191,7 +5191,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "description": "big house green roof",
       "cells": [
         {
@@ -5300,22 +5299,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "item-generic",
-      "sx": 112,
-      "sy": 7024,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "description": "Generic item to be overide",
-      "interactType": {
-        "id": "item"
-      }
+      "category": "building"
     }
   ]
 }

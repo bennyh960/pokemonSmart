@@ -73,7 +73,9 @@
     {
       "fromX": 25,
       "fromY": 36,
-      "toMapId": "minusburg-gym"
+      "toMapId": "minusburg-gym",
+      "toX": 9,
+      "toY": 13
     },
     {
       "fromX": 15,
@@ -5191,6 +5193,11 @@
       "key": "item-revive",
       "x": 2,
       "y": 6
+    },
+    {
+      "key": "item-pokeball",
+      "x": 2,
+      "y": 3
     },
     {
       "key": "item-greatball",
