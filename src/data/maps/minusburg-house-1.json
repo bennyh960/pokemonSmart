@@ -1,0 +1,108 @@
+{
+  "id": "house-minusburg-1",
+  "name": "Traversy House",
+  "template": "house-1",
+  "tileset": "interior",
+  "label": {
+    "en": "Traversy House",
+    "he": "בית טראברסי"
+  },
+  "music": "town2",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 11,
+    "y": 18
+  },
+  "npcs": [
+    {
+      "id": "npc-1776945791301",
+      "x": 21,
+      "y": 10,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "אני דואגת מאוד ממה שקורה בחוץ . תשמור על עצמך"
+        }
+      ],
+      "spriteType": "char_1b9be7",
+      "name": {
+        "en": "Jenny",
+        "he": "ג'ני"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "pokedex-battery",
+            "quantity": 2
+          }
+        ]
+      },
+      "questions": {
+        "count": 1,
+        "types": [
+          "+",
+          "-"
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "rocket-minusburg-all-defeated",
+        "dialogue": [
+          {
+            "en": "",
+            "he": "תודה רבה ! עכשיו יותר בטוח בחוץ"
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1776945883084",
+      "x": 11,
+      "y": 4,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "אני רוצה לצאת ולהלחם בצוות רוקט."
+        },
+        {
+          "en": "",
+          "he": "אמא שלי חוששת ולא מסכימה לי"
+        }
+      ],
+      "spriteType": "char_459058",
+      "questions": {
+        "count": 3,
+        "types": [
+          "+",
+          "-"
+        ]
+      },
+      "name": {
+        "en": "Alex",
+        "he": "אלכס"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "soda-pop",
+            "quantity": 1
+          }
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "rocket-minusburg-all-defeated",
+        "dialogue": [
+          {
+            "en": "",
+            "he": "אני רוצה להיות חזק כמוך!"
+          }
+        ]
+      }
+    }
+  ]
+}

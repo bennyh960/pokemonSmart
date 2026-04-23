@@ -812,6 +812,7 @@ export function createBattleScene(
       if (!isRematch) {
         if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
           pd.badges |= 1 << (reward.badge - 1);
+          audio.playBadgeEarned();
           fireStoryTrigger({ type: 'badge-earned', badge: reward.badge });
         }
         if (reward.storyEvent) {
@@ -2597,9 +2598,7 @@ export function createBattleScene(
         }
         if (
           isMistActive(defenderSideState) &&
-          moveBattleData.statChanges.some(
-            (change) => change.target === 'target' && effectiveStage(change.stages) < 0,
-          )
+          moveBattleData.statChanges.some((change) => change.target === 'target' && effectiveStage(change.stages) < 0)
         ) {
           lines.push(getMistBlockedLine(defenderName));
         }
@@ -3032,7 +3031,13 @@ export function createBattleScene(
       const playerHasContrary = player.abilityId
         ? getAbilityBattleEffects(player.abilityId).some((e) => e.kind === 'contraryStatChanges')
         : false;
-      const chargeStatChanges = applyStatChanges(playerBattleState, moveBattleData?.chargeStatChanges ?? [], 'user', Math.random, playerHasContrary);
+      const chargeStatChanges = applyStatChanges(
+        playerBattleState,
+        moveBattleData?.chargeStatChanges ?? [],
+        'user',
+        Math.random,
+        playerHasContrary,
+      );
       const msgs = [...turnEffectLines, getChargingLine(attackerName, getMoveDisplayName(m.id))];
       for (const change of chargeStatChanges) {
         msgs.push(getStatChangeLine(attackerName, change));
@@ -3237,9 +3242,13 @@ export function createBattleScene(
         m,
         () => {
           applyMoveImpact(
-            enemy, m, enemyHpBar,
-            BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10,
-            counterDamage, false,
+            enemy,
+            m,
+            enemyHpBar,
+            BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+            BTL.OPP_SPRITE.y + 10,
+            counterDamage,
+            false,
           );
           textBox = createTextBox(msgsBase, rtl);
           phase = 'PLAYER_ATTACK';
@@ -3733,7 +3742,13 @@ export function createBattleScene(
       const enemyHasContrary = enemy.abilityId
         ? getAbilityBattleEffects(enemy.abilityId).some((e) => e.kind === 'contraryStatChanges')
         : false;
-      const chargeStatChanges = applyStatChanges(enemyBattleState, moveBattleData?.chargeStatChanges ?? [], 'user', Math.random, enemyHasContrary);
+      const chargeStatChanges = applyStatChanges(
+        enemyBattleState,
+        moveBattleData?.chargeStatChanges ?? [],
+        'user',
+        Math.random,
+        enemyHasContrary,
+      );
       const msgs = [...prefix, ...turnEffectLines, getChargingLine(attackerName, getMoveDisplayName(m.id))];
       for (const change of chargeStatChanges) {
         msgs.push(getStatChangeLine(attackerName, change));
@@ -3929,9 +3944,13 @@ export function createBattleScene(
         m,
         () => {
           applyMoveImpact(
-            player, m, playerHpBar,
-            BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10,
-            counterDamage, false,
+            player,
+            m,
+            playerHpBar,
+            BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+            BTL.PLY_SPRITE.y + 10,
+            counterDamage,
+            false,
           );
           textBox = createTextBox(msgsBase, rtl);
           phase = 'ENEMY_TURN';

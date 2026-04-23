@@ -105,7 +105,8 @@
             "quantity": 3
           }
         ],
-        "badge": 2
+        "badge": 2,
+        "storyEvent": "story-badge-2"
       },
       "postBattleDialogue": [
         {

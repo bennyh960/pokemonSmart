@@ -1,0 +1,17 @@
+{
+  "id": "minusburg-library",
+  "name": "Minusburg Library",
+  "template": "library1",
+  "tileset": "interior",
+  "label": {
+    "en": "Minusburg Library",
+    "he": "ספריית מינוסבורג"
+  },
+  "music": "town2",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 10,
+    "y": 18
+  },
+  "npcs": []
+}

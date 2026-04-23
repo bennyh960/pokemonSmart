@@ -36,6 +36,45 @@ import { registerQuest } from '../../quests.js';
 import { registerCutscene } from '../../cutscenes.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
+import { registerGate } from '../../gates.js';
+import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+
+registerGate({
+  id: 'gate-route2-minusburg',
+  title: { en: 'Minusburg Checkpoint', he: 'מחסום מינוסבורג' },
+  description: {
+    en: "Please identify yourself. This city is already infected by NULL-X and we can't risk letting more infected trainers in. Please answer the questions to prove you are not infected.",
+    he: 'אנא זהה את עצמך. העיר הזו כבר נגועה ב-NULL-X ואנחנו לא יכולים לסכן את הכניסה של מאמנים נגועים נוספים. אנא ענה על השאלות כדי להוכיח שאינך נגוע.',
+  },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['-'],
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 6,
+    inputQuestions: { count: 2, types: ['-'] },
+    penaltyAmount: 150,
+    // timeLimitPerQuestion: 30,
+  },
+  reopenCooldownMs: 15 * 60 * 1000,
+});
+registerGate({
+  id: 'gate-minusburg-exit-right',
+  title: { en: 'Minusburg Checkpoint', he: 'מחסום מינוסבורג' },
+  description: {
+    en: 'Finally leaving Minusburg? Be sure to answer these questions to prove you are not infected before you go. The last thing we need is for NULL-X to spread to other cities.',
+    he: ' סוף סוף עוזב את מינוסבורג? ודא שאתה עונה על השאלות האלה כדי להוכיח שאינך נגוע לפני שאתה הולך. הדבר האחרון שאנחנו צריכים זה ש-NULL-X יתפשט לערים אחרות.',
+  },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['-'],
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 8,
+    inputQuestions: { count: 3, types: ['-', '×'] },
+    penaltyAmount: 150,
+    // timeLimitPerQuestion: 30,
+  },
+  reopenCooldownMs: 15 * 60 * 1000,
+});
 
 //#region Quests ─────────────────────────────────────────────────────────────────────────────
 
@@ -71,6 +110,22 @@ registerQuest({
   objective: {
     en: 'Defeat Minessa at the Subtraction Gym and earn Badge 2',
     he: 'נצח את מינסה במכון החיסור וזכה בתג 2',
+  },
+});
+registerQuest({
+  id: 'main-act1-search-prof-ben',
+  title: { en: 'Find Professor Ben', he: 'מצא את פרופסור בן' },
+  objective: {
+    en: 'Search for Professor Ben in Minusburg',
+    he: 'חפש את פרופסור בן במינוסבורג',
+  },
+});
+registerQuest({
+  id: 'main-act1-met-prof-algo-in-sumvile',
+  title: { en: 'Meet Professor Algorithma in Sumvile', he: 'פגוש את פרופסור אלגוריתמה בסומוויל' },
+  objective: {
+    en: 'Meet Professor Algorithma in Sumvile',
+    he: 'פגוש את פרופסור אלגוריתמה בסומוויל',
   },
 });
 
@@ -125,7 +180,7 @@ registerCutscene({
       lines: [
         {
           en: "Heh — another one shows up. I'm Gary Oak. You've heard of my grandfather, Professor Oak? Of course you have.",
-          he: 'היי — עוד אחד מגיע. אני גארי אוק. שמעת על הסבא שלי, פרופסור אוק? ברור שכן.',
+          he: 'היי אני גארי אוק. הנכד של פרופסור אוק  .',
         },
         {
           en: 'Gramps sent me here to keep an eye on things. Turns out Team Rocket decided this city is their personal playground.',
@@ -199,9 +254,9 @@ registerCutscene({
     },
     // { type: 'move-npc', npcId: 'gary-oak-mb-1', path: ['up', 'up', 'left', 'left', 'left'], waitForComplete: true },
     // { type: 'move-npc', npcId: 'minessa-mb-1', path: ['up', 'up', 'left', 'left', 'left'], waitForComplete: true },
-    { type: 'move-npc', npcId: 'rocket-mb-11', path: ['up', 'up', 'down'], waitForComplete: true },
+    // { type: 'move-npc', npcId: 'rocket-mb-11', path: ['up', 'up', 'down'], waitForComplete: true },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.MINUSBURG_GARY_MET } },
-    { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-minusburg' } },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-minusburg-search-minnessa' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-rocket-hunt' } },
   ],
 });
@@ -211,9 +266,6 @@ registerCutscene({
   id: 'act1-minusburg-rockets-cleared',
   skippable: false,
   steps: [
-    // Jenny walks in from off-screen
-    { type: 'face-npc', npcId: 'jenny-mb', dir: 'left' },
-    { type: 'move-npc', npcId: 'jenny-mb', path: ['left', 'left', 'left'], waitForComplete: true },
     {
       type: 'dialogue',
       speakerId: 'Officer Jenny / שוטרת ג׳ני',
@@ -255,44 +307,34 @@ registerCutscene({
           en: "NULL-X doesn't understand balance. It sees Pokemon as data — variables to be optimised, corrupted, or deleted. It's been injecting bad calculations into wild Pokemon, making them aggressive and unpredictable.",
           he: 'NULL-X לא מבין איזון. הוא רואה פוקימונים כנתונים — משתנים לאופטימיזציה, שחיתות, או מחיקה. הוא מזריק חישובים שגויים לפוקימוני בר, גורם להם להיות תוקפניים ובלתי צפויים.',
         },
-        {
-          en: 'Every grunt you beat makes it harder for NULL-X to coordinate. Keep pushing — Multiplia is next.',
-          he: 'כל סוכן שתנצח מקשה על NULL-X לתאם. המשך ללחוץ — מולטיפליה הבאה.',
-        },
       ],
     },
-    {
-      type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
-      lines: [
-        {
-          en: 'Oh — almost forgot. Take these. Consider it payment for doing the dirty work.',
-          he: 'אה — כמעט שכחתי. קח את אלה. תחשוב על זה כתשלום על עשיית העבודה המלוכלכת.',
-        },
-      ],
-    },
-    // TODO: replace item IDs with final choices
-    { type: 'action', action: { type: 'give-item', itemId: 'super-potion', quantity: 3 } },
-    { type: 'action', action: { type: 'give-item', itemId: 'revive', quantity: 1 } },
-    {
-      type: 'action',
-      action: {
-        type: 'show-message',
-        lines: [{ en: 'Received 3× Super Potion and 1× Revive!', he: 'קיבלת ×3 תרופה משופרת ו-×1 תחייה!' }],
-      },
-    },
-    // ── Jenny walks off ──────────────────────────────────────────────────────
-    { type: 'face-npc', npcId: 'jenny-mb', dir: 'right' },
-    { type: 'move-npc', npcId: 'jenny-mb', path: ['up'], waitForComplete: true },
-    { type: 'hide-npc', npcId: 'jenny-mb' },
-    // ── Minessa walks off ────────────────────────────────────────────────────
-    // { type: 'face-npc', npcId: 'minessa-mb-2', dir: 'right' },
     // {
-    //   type: 'move-npc',
-    //   npcId: 'minessa-mb-2',
-    //   path: ['right', 'right', 'right', 'right', 'right'],
-    //   waitForComplete: true,
+    //   type: 'dialogue',
+    //   speakerId: 'Gary Oak / גארי אוק',
+    //   lines: [
+    //     {
+    //       en: 'Oh — almost forgot. Take these. Consider it payment for doing the dirty work.',
+    //       he: 'אה — כמעט שכחתי. קח את אלה. תחשוב על זה כתשלום על עשיית העבודה המלוכלכת.',
+    //     },
+    //   ],
     // },
+    // // TODO: replace item IDs with final choices
+    // { type: 'action', action: { type: 'give-item', itemId: 'super-potion', quantity: 3 } },
+    // { type: 'action', action: { type: 'give-item', itemId: 'revive', quantity: 1 } },
+    // {
+    //   type: 'action',
+    //   action: {
+    //     type: 'show-message',
+    //     lines: [{ en: 'Received 3× Super Potion and 1× Revive!', he: 'קיבלת ×3 תרופה משופרת ו-×1 תחייה!' }],
+    //   },
+    // },
+    // ── Jenny walks off ──────────────────────────────────────────────────────
+    // { type: 'face-npc', npcId: 'jenny-mb', dir: 'right' },
+    // { type: 'move-npc', npcId: 'jenny-mb', path: ['up'], waitForComplete: true },
+    // { type: 'hide-npc', npcId: 'jenny-mb' },
+    // ── Minessa walks off ────────────────────────────────────────────────────
+
     // { type: 'hide-npc', npcId: 'minessa-mb-2' },
     // ── Set flags + quest, blocker spawns via flag ───────────────────────────
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-rocket-hunt' } },
@@ -344,8 +386,59 @@ registerCutscene({
       ],
     },
 
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.STORY_BADGE_2 } },
+    // { type: 'action', action: { type: 'set-flag', flag: FLAGS.STORY_BADGE_2 } }, // should be given by gym leader
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-gym2' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act1-search-prof-ben' } },
+  ],
+});
+
+registerCutscene({
+  id: 'act1-professor-ben-met',
+  skippable: false,
+  steps: [
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Ben / פרופ׳ בן',
+      lines: [
+        {
+          en: "Hello -- I\'m Professor Ben. I study the effects of NULL-X on Pokemon data. I heard you\'ve been busy in Minusburg — thank you for your help.",
+          he: 'שלום — אני פרופ׳ בן. אני חוקר את השפעות NULL-X על נתוני פוקימונים. שמעתי שהיית עסוק במינוסבורג — תודה על העזרה שלך.',
+        },
+        {
+          en: 'Proffessor Algorithma mentioned you wanted to talk about some documents related to NULL-X that Team Rocket dropped. I might be able to help with that.',
+          he: 'פרופסור אלגוריתמה אמר שאתה רוצה לדבר על כמה מסמכים שקשורים ל-NULL-X שצוות רוקט איבד. אולי אני יכול לעזור עם זה.',
+        },
+        {
+          en: 'I trust you will bring those documents to proffesor Algorithma in Sumvile after we are done here',
+          he: 'אני סומך עליך שתביא את המסמכים האלה לפרופסור אלגוריתמה בסומוויל אחרי שנגמור כאן',
+        },
+      ],
+    },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_COLLECT_DOCS_FROM_BEN } },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-search-prof-ben' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act1-met-prof-algo-in-sumvile' } },
+  ],
+});
+
+registerCutscene({
+  id: 'act1-professor-algo-met-docs',
+  skippable: false,
+  steps: [
+    {
+      type: 'dialogue',
+      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      lines: [
+        {
+          en: "Good to see you again. Thanks for bringing these documents. Let me take a look... Hmm, interesting. This data could be really helpful for understanding NULL-X's next moves.",
+          he: 'טוב לראות אותך שוב. תודה שהבאת את המסמכים האלה. תן לי להסתכל... הממ, מעניין. הנתונים האלה יכולים להיות מאוד מועילים להבנת הצעדים הבאים של NULL-X.',
+        },
+        {
+          en: 'I will contact you once I analyze this data. In the meantime, keep your guard up — NULL-X is getting desperate and might try something big soon.',
+          he: 'אני אצור איתך קשר ברגע שאנתח את הנתונים האלה. בינתיים, שמור על ערנות — NULL-X מתייאש ויכול לנסות משהו גדול בקרוב.',
+        },
+      ],
+    },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_BRING_DOCUMENTS_TO_ALGORITHMA } },
   ],
 });
 
@@ -417,14 +510,6 @@ registerStoryEvent({
   actions: [{ type: 'start-cutscene', cutsceneId: 'act1-minusburg-rockets-cleared' }],
 });
 
-// Beat 7a — Gary's map NPC (gary-oak-mb-2) uses despawnAfter: STORY_BADGE_2 in map JSON.
-// This event sets a flag when the player enters the gym so the same despawnAfter flag
-// covers both the "entered gym" and "got badge" cases — we reuse STORY_BADGE_2 for both
-// by simply not firing anything extra here. Gary will vanish because the map checks:
-//   despawnAfter: STORY_BADGE_2
-// When player enters the gym we DON'T need to do anything — Gary is still visible there
-// and will despawn only after the badge is earned (map JSON handles it).
-
 // Beat 8 — badge 2 earned → clear infection + Algorithma call
 // (Gary's map NPC despawns automatically via despawnAfter: STORY_BADGE_2 in map JSON)
 registerStoryEvent({
@@ -441,6 +526,26 @@ registerStoryEvent({
     { type: 'set-infection', cityId: 'minusburg', value: 'cleared' },
     { type: 'start-cutscene', cutsceneId: 'act1-minusburg-badge2-call' },
   ],
+});
+registerStoryEvent({
+  id: 'evt-profBen-docs',
+  repeatable: false,
+  trigger: { type: 'npc-interact', npcId: 'npc-prof-ben-act1' },
+  conditions: [
+    { type: 'flag', flag: FLAGS.STORY_BADGE_2 },
+    { type: 'flag-not', flag: FLAGS.ACT1_BRING_DOCUMENTS_TO_ALGORITHMA },
+  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'act1-professor-ben-met' }],
+});
+registerStoryEvent({
+  id: 'evt-profBen-docs-to-algo',
+  repeatable: false,
+  trigger: { type: 'npc-interact', npcId: 'npc-act1-prof-algo' },
+  conditions: [
+    { type: 'flag', flag: FLAGS.ACT1_COLLECT_DOCS_FROM_BEN },
+    { type: 'flag-not', flag: FLAGS.ACT1_BRING_DOCUMENTS_TO_ALGORITHMA },
+  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'act1-professor-algo-met-docs' }],
 });
 
 //#endregion

@@ -19,36 +19,70 @@
   "npcs": [],
   "music": "town",
   "encounterTableId": null,
-  "interactiveItems": {
-    "item-generic": [
-      {
-        "itemId": "moomoo-milk"
-      },
-      {
-        "itemId": "ice-heal"
-      },
-      {
-        "itemId": "super-potion"
-      }
-    ]
-  }
-,
   "tiles": [
-    ["w6-b1","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-b2"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x2","f3","w6-x2","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x1","f3","w6-x1","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
-    ["w6-r","w6-y2","w6-y2","w6-y2","w6-y2","w6-y2","w6-y2","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","w6-x","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x2","f3","w6-z3","w6-y2","w6-y2","w6-y2","w6-y2","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x1","f3","f3","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","f3","f3","f3","f3","f3","w6-l"],
-    ["w6-r","f3","f3","f3","f3","f3","f3","w6-x","f3","f3","f3","f3","f3","f3","w6-l"],
-    ["w6-b3","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","stairs","w6-l"]
+    [
+      "w6-b1",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-b2"
+    ],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x", "f3", "w6-x", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x", "f3", "w6-x", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x2", "f3", "w6-x2", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x1", "f3", "w6-x1", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x", "f3", "w6-x", "f3", "f3", "f3", "f3", "w6-l"],
+    [
+      "w6-r",
+      "w6-y2",
+      "w6-y2",
+      "w6-y2",
+      "w6-y2",
+      "w6-y2",
+      "w6-y2",
+      "w6-x",
+      "f3",
+      "w6-x",
+      "f3",
+      "f3",
+      "f3",
+      "f3",
+      "w6-l"
+    ],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x", "f3", "w6-x", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x2", "f3", "w6-z3", "w6-y2", "w6-y2", "w6-y2", "w6-y2", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x1", "f3", "f3", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x", "f3", "f3", "f3", "f3", "f3", "f3", "w6-l"],
+    ["w6-r", "f3", "f3", "f3", "f3", "f3", "f3", "w6-x", "f3", "f3", "f3", "f3", "f3", "f3", "w6-l"],
+    [
+      "w6-b3",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "stairs",
+      "w6-l"
+    ]
   ],
   "objects": [
     {
@@ -305,33 +339,23 @@
       "key": "i3",
       "x": 13,
       "y": 10
-    },
-    {
-      "key": "item-generic",
-      "x": 13,
-      "y": 6
-    },
-    {
-      "key": "item-generic",
-      "x": 3,
-      "y": 13
     }
   ],
   "objectLayer": [
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
   ]
 }

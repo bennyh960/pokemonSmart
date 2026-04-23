@@ -1,24 +1,24 @@
 {
-  "width": 8,
-  "height": 8,
+  "width": 15,
+  "height": 15,
   "tileSize": 16,
   "spawn": {
-    "x": 3,
-    "y": 7
+    "x": 6,
+    "y": 13
   },
   "tileset": "interior",
   "transitions": [
     {
-      "fromX": 3,
-      "fromY": 7,
+      "fromX": 6,
+      "fromY": 14,
       "toMapId": null,
       "toX": null,
       "toY": null,
       "returnToPrevious": true
     },
     {
-      "fromX": 4,
-      "fromY": 7,
+      "fromX": 7,
+      "fromY": 14,
       "toMapId": null,
       "toX": null,
       "toY": null,
@@ -29,36 +29,212 @@
   "encounterTableId": null,
   "id": "house-small",
   "name": "house-small",
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "poke-ball",
+        "itemQty": 3
+      },
+      {
+        "itemId": "pokedex-battery"
+      }
+    ]
+  }
+,
   "tiles": [
-    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
-    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
-    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
-    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
-    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
-    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
-    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"],
-    ["f3", "f3", "f3", "f3", "f3", "f3", "f3", "f3"]
+    ["w4-b1","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-b2"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-b3","w4-1","w4-1","w4-1","w4-1","w4-1","f6-shadow","f6-shadow","w4-1","w4-1","w4-1","w4-1","w4-1","w4-1","w4-b4"]
   ],
   "objects": [
     {
-      "key": "bed6",
+      "key": "mat-horizontal",
+      "x": 6,
+      "y": 14
+    },
+    {
+      "key": "w4",
       "x": 1,
       "y": 1
     },
     {
-      "key": "desk2",
+      "key": "w4",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "w4",
       "x": 5,
-      "y": 0
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 12,
+      "y": 1
+    },
+    {
+      "key": "w4",
+      "x": 13,
+      "y": 1
+    },
+    {
+      "key": "stvoe2",
+      "x": 12,
+      "y": 3
+    },
+    {
+      "key": "home-frdige2",
+      "x": 11,
+      "y": 3
+    },
+    {
+      "key": "mat3",
+      "x": 10,
+      "y": 7
+    },
+    {
+      "key": "t2-12",
+      "x": 11,
+      "y": 9
+    },
+    {
+      "key": "t2-6",
+      "x": 11,
+      "y": 8
+    },
+    {
+      "key": "t2-11",
+      "x": 11,
+      "y": 8
+    },
+    {
+      "key": "t2-10",
+      "x": 11,
+      "y": 7
+    },
+    {
+      "key": "desk2",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "key": "pc-2",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "key": "bed6",
+      "x": 1,
+      "y": 10
+    },
+    {
+      "key": "chair2R",
+      "x": 10,
+      "y": 8
+    },
+    {
+      "key": "chair2R",
+      "x": 10,
+      "y": 7
+    },
+    {
+      "key": "chair2R",
+      "x": 10,
+      "y": 6
+    },
+    {
+      "key": "chair2L",
+      "x": 12,
+      "y": 7
+    },
+    {
+      "key": "chair2L",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "key": "chair2L",
+      "x": 12,
+      "y": 8
+    },
+    {
+      "key": "item-generic",
+      "x": 1,
+      "y": 5
+    },
+    {
+      "key": "item-generic",
+      "x": 1,
+      "y": 6
     }
   ],
   "objectLayer": [
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null]
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
   ]
 }

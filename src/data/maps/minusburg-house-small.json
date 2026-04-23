@@ -1,0 +1,63 @@
+{
+  "id": "house-minusburg-small",
+  "name": "Levies House",
+  "area": "minusburg",
+  "template": "house-small",
+  "tileset": "interior",
+  "label": {
+    "en": "Levies House",
+    "he": "בית לוי"
+  },
+  "music": "town2",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 6,
+    "y": 13
+  },
+  "npcs": [
+    {
+      "id": "npc-1776945791301",
+      "x": 11,
+      "y": 5,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "אני דואגת מאוד ממה שקורה בחוץ . תשמור על עצמך"
+        }
+      ],
+      "spriteType": "char_1b9be7",
+      "name": {
+        "en": "Dina",
+        "he": "דינה"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "pokedex-battery",
+            "quantity": 3
+          }
+        ]
+      },
+      "questions": {
+        "count": 3,
+        "types": [
+          "+",
+          "-"
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "rocket-minusburg-all-defeated",
+        "dialogue": [
+          {
+            "en": "",
+            "he": "תודה רבה ! עכשיו יותר בטוח בחוץ"
+          }
+        ]
+      }
+    }
+  
+  ]
+}

@@ -1406,39 +1406,11 @@
           "he": "אנחנו צריכים מאמנים חכמים כמוך!"
         }
       ]
-    },
-    {
-      "id": "npc-act1-prof-algo",
-      "x": 55,
-      "y": 31,
-      "facing": "right",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "Prof.Algorithma",
-      "spawnAfter": "act1-collect-docs-from-ben",
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "left",
-            "steps": 25,
-            "delay": 0
-          }
-        ]
-      },
-      "despawnAfter": "act1-bring-documents-to-algorithma"
     }
   ],
   "music": "town",
   "encounterTableId": "sumville",
-  "area": "Sumville",
-  "interactiveItems": {}
+  "area": "Sumville"
 ,
   "tiles": [
     ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b"],

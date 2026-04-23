@@ -81,7 +81,7 @@
       "id": "npc-1776935305588",
       "x": 7,
       "y": 4,
-      "facing": "left",
+      "facing": "up",
       "type": "dialogue",
       "dialogue": [
         {
@@ -104,18 +104,5 @@
       },
       "despawnAfter": "story-badge-2"
     }
-  ],
-  "interactiveItems": {
-    "item-generic": [
-      {
-        "itemId": "moomoo-milk"
-      },
-      {
-        "itemId": "ice-heal"
-      },
-      {
-        "itemId": "super-potion"
-      }
-    ]
-  }
+  ]
 }

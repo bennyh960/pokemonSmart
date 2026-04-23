@@ -1,5 +1,5 @@
 {
-  "id": "house-minusburg-1",
+  "id": "house-1",
   "name": "Someone House",
   "tileset": "interior",
   "width": 25,
@@ -1011,6 +1011,16 @@
       "key": "closet1",
       "x": 7,
       "y": 1
+    },
+    {
+      "key": "purpleCup",
+      "x": 20,
+      "y": 13
+    },
+    {
+      "key": "mat-h-above",
+      "x": 10,
+      "y": 17
     }
   ]
 }

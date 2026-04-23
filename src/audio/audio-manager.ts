@@ -290,6 +290,47 @@ export function createAudioManager() {
     });
   }
 
+  function playBadgeEarnedJingle(): void {
+    withSynthContext((actx) => {
+      const vol = actx.createGain();
+      vol.gain.value = sfxVolume * 0.38;
+      vol.connect(actx.destination);
+
+      // Triumphant ascending arpeggio: G4 → B4 → D5 → G5 → B5
+      const arpNotes = [392.0, 493.88, 587.33, 783.99, 987.77];
+      const arpLen = 0.09;
+      arpNotes.forEach((freq, i) => {
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.55, actx.currentTime + i * arpLen);
+        env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + i * arpLen + arpLen * 0.85);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(actx.currentTime + i * arpLen);
+        osc.stop(actx.currentTime + i * arpLen + arpLen);
+      });
+
+      // Final G major chord (G4 + D5 + G5 + B5)
+      const chordStart = actx.currentTime + arpNotes.length * arpLen + 0.04;
+      const chordDur = 0.7;
+      [392.0, 587.33, 783.99, 987.77].forEach((freq) => {
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.001, chordStart);
+        env.gain.exponentialRampToValueAtTime(0.45, chordStart + 0.02);
+        env.gain.exponentialRampToValueAtTime(0.01, chordStart + chordDur);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(chordStart);
+        osc.stop(chordStart + chordDur);
+      });
+    });
+  }
+
   function playFaintCue(): void {
     playToneSequence({
       notes: [280, 220, 180],
@@ -515,6 +556,10 @@ export function createAudioManager() {
 
     playRunCue(): void {
       playRunCue();
+    },
+
+    playBadgeEarned(): void {
+      playBadgeEarnedJingle();
     },
 
     playFaintCue(): void {

@@ -130,7 +130,7 @@ registerGate({
     he: 'הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
   },
   triggerType: 'route-checkpoint',
-  questionSetIds: ['-'],
+  questionSetIds: ['-', '+'],
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
     questionsRequired: 5,

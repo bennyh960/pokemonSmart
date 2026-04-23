@@ -660,6 +660,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       },
       setNPCFacing(npc, dir) {
         npc.facing = dir as 'up' | 'down' | 'left' | 'right';
+        getNpcState(npc).facing = dir;
       },
       setNPCHidden(id, hidden) {
         const npc = npcManager?.getNPCs().find((n) => n.id === id);

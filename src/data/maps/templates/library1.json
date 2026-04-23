@@ -1,0 +1,1365 @@
+{
+  "id": "library1",
+  "name": "library1",
+  "tileset": "interior",
+  "width": 20,
+  "height": 20,
+  "tileSize": 16,
+  "spawn": {
+    "x": 9,
+    "y": 18
+  },
+  "transitions": [
+    {
+      "fromX": 8,
+      "fromY": 19,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 9,
+      "fromY": 19,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 10,
+      "fromY": 19,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [],
+  "music": "pokecenter",
+  "encounterTableId": null,
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "poke-ball",
+        "itemQty": 3
+      }
+    ]
+  },
+  "label": {
+    "en": "City Library",
+    "he": "הספרייה העירונית"
+  },
+  "tiles": [
+    [
+      "w6-b1",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-2",
+      "w6-b2"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-r",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "f2",
+      "w6-l"
+    ],
+    [
+      "w6-b3",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "f2",
+      "f2",
+      "f2",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-1",
+      "w6-b4"
+    ]
+  ],
+  "objects": [
+    {
+      "key": "w6",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 12,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 13,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 14,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 15,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 16,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 17,
+      "y": 1
+    },
+    {
+      "key": "w6",
+      "x": 18,
+      "y": 1
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 5
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 6
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 4
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 8
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 9
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 10
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 11
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 12
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 13
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 14
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 15
+    },
+    {
+      "key": "bookC-r1",
+      "x": 1,
+      "y": 16
+    },
+    {
+      "key": "home-flower",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "key": "desk2",
+      "x": 16,
+      "y": 6
+    },
+    {
+      "key": "desk2",
+      "x": 16,
+      "y": 9
+    },
+    {
+      "key": "desk2",
+      "x": 16,
+      "y": 12
+    },
+    {
+      "key": "desk2",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "key": "desk2",
+      "x": 12,
+      "y": 9
+    },
+    {
+      "key": "desk2",
+      "x": 12,
+      "y": 12
+    },
+    {
+      "key": "w6",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "bookC6",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "key": "bookC6",
+      "x": 5,
+      "y": 2
+    },
+    {
+      "key": "bookC6",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "key": "bookC6",
+      "x": 3,
+      "y": 5
+    },
+    {
+      "key": "bookC6",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "key": "bookC6",
+      "x": 7,
+      "y": 5
+    },
+    {
+      "key": "bookC6",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "key": "bookC6",
+      "x": 5,
+      "y": 8
+    },
+    {
+      "key": "bookC6",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "key": "bookC6",
+      "x": 3,
+      "y": 11
+    },
+    {
+      "key": "bookC6",
+      "x": 5,
+      "y": 11
+    },
+    {
+      "key": "bookC6",
+      "x": 7,
+      "y": 11
+    },
+    {
+      "key": "bookC6",
+      "x": 3,
+      "y": 14
+    },
+    {
+      "key": "bookC6",
+      "x": 5,
+      "y": 14
+    },
+    {
+      "key": "bookC6",
+      "x": 7,
+      "y": 14
+    },
+    {
+      "key": "board-2",
+      "x": 13,
+      "y": 1
+    },
+    {
+      "key": "i3",
+      "x": 18,
+      "y": 1
+    },
+    {
+      "key": "box-2",
+      "x": 1,
+      "y": 18
+    },
+    {
+      "key": "box-2",
+      "x": 3,
+      "y": 18
+    },
+    {
+      "key": "window-1",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "window-1",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "chair2B",
+      "x": 12,
+      "y": 7
+    },
+    {
+      "key": "chair2B",
+      "x": 16,
+      "y": 7
+    },
+    {
+      "key": "chair2B",
+      "x": 16,
+      "y": 10
+    },
+    {
+      "key": "chair2B",
+      "x": 12,
+      "y": 10
+    },
+    {
+      "key": "chair2B",
+      "x": 12,
+      "y": 13
+    },
+    {
+      "key": "chair2B",
+      "x": 16,
+      "y": 13
+    },
+    {
+      "key": "notebook",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "key": "notebook",
+      "x": 16,
+      "y": 9
+    },
+    {
+      "key": "notebook",
+      "x": 13,
+      "y": 12
+    },
+    {
+      "key": "pc-1",
+      "x": 13,
+      "y": 9
+    },
+    {
+      "key": "pc-1",
+      "x": 17,
+      "y": 6
+    },
+    {
+      "key": "pc-1",
+      "x": 17,
+      "y": 9
+    },
+    {
+      "key": "mat-h-above",
+      "x": 8,
+      "y": 19
+    },
+    {
+      "key": "t2-7",
+      "x": 14,
+      "y": 5
+    },
+    {
+      "key": "clock",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "t2-9",
+      "x": 15,
+      "y": 5
+    },
+    {
+      "key": "t2-1",
+      "x": 14,
+      "y": 4
+    },
+    {
+      "key": "t2-3",
+      "x": 15,
+      "y": 4
+    },
+    {
+      "key": "pc-back-1",
+      "x": 14,
+      "y": 4
+    },
+    {
+      "key": "notebook",
+      "x": 15,
+      "y": 4
+    },
+    {
+      "key": "chair2F",
+      "x": 15,
+      "y": 2
+    },
+    {
+      "key": "item-generic",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "key": "kazino3-aside",
+      "x": 17,
+      "y": 16
+    },
+    {
+      "key": "chair1R",
+      "x": 16,
+      "y": 17
+    },
+    {
+      "key": "chair1R",
+      "x": 16,
+      "y": 18
+    },
+    {
+      "key": "sc1",
+      "x": 7,
+      "y": 6
+    },
+    {
+      "key": "sc1",
+      "x": 5,
+      "y": 3
+    },
+    {
+      "key": "purpleCup",
+      "x": 17,
+      "y": 12
+    }
+  ],
+  "objectLayer": [
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  ]
+}

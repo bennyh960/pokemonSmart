@@ -1,0 +1,20 @@
+{
+  "id": "minusburg-template-deck2",
+  "name": "minusburg-template-deck2",
+  "template": "deck-house-floor2",
+  "tileset": "interior",
+  "label": {
+    "he": "משפחת בן - קומה 2",
+    "en": "Ben's Family - Floor 2"
+  },
+  "area": "Minusburg",
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 13,
+    "y": 13
+  },
+  "npcs": [
+    
+  ]
+}

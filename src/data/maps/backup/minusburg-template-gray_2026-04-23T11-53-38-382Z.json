@@ -75,37 +75,6 @@
           "-"
         ]
       }
-    },
-    {
-      "id": "npc-1776945109068",
-      "x": 13,
-      "y": 11,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "אני מפחד לצאת החוצה. ראיתי סוכני צוות רוקט . תיזהר , הם גונבים פוקימונים"
-        }
-      ],
-      "spriteType": "char_459058",
-      "name": {
-        "en": "Brock",
-        "he": "ברוק לסנר"
-      },
-      "postFlagDialogue": {
-        "flag": "rocket-minusburg-all-defeated",
-        "dialogue": [
-          {
-            "en": "",
-            "he": "סוף סוף חזר השקט לאזור."
-          },
-          {
-            "en": "",
-            "he": "תודה רבה לך!!!"
-          }
-        ]
-      }
     }
   ]
 }
