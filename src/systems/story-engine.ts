@@ -188,14 +188,14 @@ function triggerMatches(a: StoryTrigger, b: StoryTrigger): boolean {
       return (a as { badge: number }).badge === (b as { badge: number }).badge;
     case 'gate-cleared':
       return (a as { gateId: string }).gateId === (b as { gateId: string }).gateId;
-    case 'quest-complete':
-      return (a as { questId: string }).questId === (b as { questId: string }).questId;
+    // case 'quest-complete':  // NOT WIRED
+    //   return (a as { questId: string }).questId === (b as { questId: string }).questId;
     case 'flag-set':
       return (a as { flag: string }).flag === (b as { flag: string }).flag;
-    case 'item-used':
-      return (a as { itemId: string }).itemId === (b as { itemId: string }).itemId;
-    case 'manual':
-      return (a as { key: string }).key === (b as { key: string }).key;
+    // case 'item-used':  // NOT WIRED
+    //   return (a as { itemId: string }).itemId === (b as { itemId: string }).itemId;
+    // case 'manual':     // NOT WIRED
+    //   return (a as { key: string }).key === (b as { key: string }).key;
     default:
       return false;
   }
@@ -237,6 +237,10 @@ function executeAction(action: StoryAction, pd: ReturnType<typeof getPlayerData>
   switch (action.type) {
     case 'set-flag':
       pd.flags[action.flag] = action.value ?? true;
+      // Fire flag-set trigger after the current synchronous chain unwinds.
+      // void (no await) prevents stack recursion while still letting chained
+      // flag-set story events react in the same game tick.
+      void fireStoryTrigger({ type: 'flag-set', flag: action.flag });
       break;
 
     case 'set-infection':
