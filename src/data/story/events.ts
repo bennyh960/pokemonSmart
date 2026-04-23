@@ -2,16 +2,17 @@ import type { BilingualText } from '../../systems/npc.js';
 import type { InfectionLevel } from '../../types/index.js';
 
 export type StoryTrigger =
-  | { type: 'map-enter';        mapId: string }
-  | { type: 'map-exit';         mapId: string }
-  | { type: 'npc-interact';     npcId: string }
-  | { type: 'trainer-defeated'; trainerId: string }
-  | { type: 'badge-earned';     badge: number }
-  | { type: 'gate-cleared';     gateId: string }
-  | { type: 'quest-complete';   questId: string }
-  | { type: 'flag-set';         flag: string }
-  | { type: 'item-used';        itemId: string }
-  | { type: 'manual';           key: string };
+  | { type: 'map-enter';        mapId: string }        // fired: overworld on map load
+  | { type: 'map-exit';         mapId: string }        // fired: overworld on transition start
+  | { type: 'npc-interact';     npcId: string }        // fired: overworld on A/Space press
+  | { type: 'trainer-defeated'; trainerId: string }    // fired: battle scene on win
+  | { type: 'badge-earned';     badge: number }        // fired: battle scene on badge reward
+  | { type: 'gate-cleared';     gateId: string }       // fired: gate-scene on exit
+  // | { type: 'quest-complete'; questId: string }     // NOT WIRED — no firing site yet
+  | { type: 'flag-set';         flag: string }         // fired: story-engine executeAction set-flag
+  // | { type: 'item-used';     itemId: string }       // NOT WIRED — no firing site yet
+  // | { type: 'manual';        key: string }          // NOT WIRED — no firing site yet
+  ;
 
 export type StoryCondition =
   | { type: 'flag';             flag: string; value?: boolean }
