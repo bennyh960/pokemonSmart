@@ -38,6 +38,7 @@ import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { registerGate } from '../../gates.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { ITEM_GAME_DATA, ITEM_SLUG_TO_ID } from '../../../item-defs.js';
 
 registerGate({
   id: 'gate-route2-minusburg',
@@ -380,7 +381,11 @@ registerCutscene({
         },
         {
           en: 'Before You continue to Route-3 , I need to ask you for a favor, During invstigation team-rocket drop out a documents related to Null-x that I need to analyze',
-          he: 'לפני שתמשיך לשביל 3, אני צריך לבקש ממך טובה, במהלך החקירה צוות רוקט איבד מסמכים שקשורים ל-NULL-X שאני צריך לנתח',
+          he: 'לפני שתמשיך לשביל 3, אני צריך לבקש ממך טובה. במהלך חקירת צוות רוקט המודיעין השיג מסמכים שקשורים ל-NULL-X שאני צריך לנתח',
+        },
+        {
+          en: 'Those documents are importants and stored in my coluge house proffestor Ben. please visit him.',
+          he: 'המסמכים האלה חשובים ומאוחסנים בבית של עמיתי פרופסור בן. בבקשה בקר אותו.',
         },
       ],
     },
@@ -438,6 +443,7 @@ registerCutscene({
       ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_BRING_DOCUMENTS_TO_ALGORITHMA } },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-met-prof-algo-in-sumvile' } },
   ],
 });
 
@@ -521,12 +527,8 @@ registerStoryEvent({
   id: 'evt-badge2-earned',
   // trigger: { type: 'badge-earned', badge: 2 },
   repeatable: false,
-  trigger: { type: 'map-exit', mapId: 'gym-minusburg' },
-  conditions: [
-    { type: 'flag', flag: FLAGS.STORY_BADGE_2 },
-    { type: 'badge-count-max', max: 2 },
-    { type: 'badge-count', min: 2 },
-  ],
+  trigger: { type: 'map-exit', mapId: 'minusburg-gym' },
+  conditions: [{ type: 'flag', flag: FLAGS.STORY_BADGE_2 }],
   actions: [
     { type: 'set-infection', cityId: 'minusburg', value: 'cleared' },
     { type: 'start-cutscene', cutsceneId: 'act1-minusburg-badge2-call' },
@@ -550,7 +552,11 @@ registerStoryEvent({
     { type: 'flag', flag: FLAGS.ACT1_COLLECT_DOCS_FROM_BEN },
     { type: 'flag-not', flag: FLAGS.ACT1_BRING_DOCUMENTS_TO_ALGORITHMA },
   ],
-  actions: [{ type: 'start-cutscene', cutsceneId: 'act1-professor-algo-met-docs' }],
+  actions: [
+    { type: 'start-cutscene', cutsceneId: 'act1-professor-algo-met-docs' },
+    // Mark key file as used
+    { type: 'set-flag', flag: ITEM_GAME_DATA['9003'].usedFlag ?? 'key-secret-doc-analyzed' },
+  ],
 });
 
 //#endregion

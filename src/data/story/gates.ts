@@ -107,6 +107,11 @@ export interface QuestionGateDef {
 export const GATES: Record<string, QuestionGateDef> = {};
 
 export function getGate(id: string): QuestionGateDef | undefined {
+  if (import.meta.env.DEV && GATES[id]) {
+    console.log(`DEV reduce questions required.`);
+    GATES[id].sessionConfig.questionsRequired = 1;
+  }
+
   if (GATES[id]) return GATES[id];
   // Per-map gym IDs like 'auto-gym-minusburg-gym' fall back to 'auto-gym' config
   // currently there is no gate for each gym with diferent config - all same config

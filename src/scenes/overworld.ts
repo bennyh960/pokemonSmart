@@ -731,6 +731,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           case 'set-quest':
             if (pd.story) pd.story.activeQuestId = action.questId;
             break;
+          case 'complete-quest':
+            if (pd.story) {
+              if (!pd.story.completedQuestIds.includes(action.questId)) {
+                pd.story.completedQuestIds.push(action.questId);
+              }
+              if (pd.story.activeQuestId === action.questId) {
+                pd.story.activeQuestId = null;
+              }
+            }
+            break;
           case 'start-cutscene':
             activateCutscene(action.cutsceneId);
             break;
