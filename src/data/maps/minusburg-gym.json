@@ -28,7 +28,7 @@
   ],
   "npcs": [
     {
-      "id": "npc-1776784388928",
+      "id": "minessa-mb-2",
       "x": 45,
       "y": 4,
       "facing": "down",
@@ -36,7 +36,19 @@
       "dialogue": [
         {
           "en": "Hello!",
-          "he": ""
+          "he": "הוכחת שאתה בהחלט מאמן מוכשר!"
+        },
+        {
+          "en": "",
+          "he": "עכשיו הקרב שלנו ! 6 על 6"
+        },
+        {
+          "en": "",
+          "he": "אם תנצח - תזכה בתג החיסור."
+        },
+        {
+          "en": "",
+          "he": "אל תחשוב שאקל עלייך כי עזרת לנו להביס את צוות רוקט"
         }
       ],
       "spriteType": "gym-3-Minessa",
@@ -95,7 +107,278 @@
         ],
         "badge": 2
       },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "כל הכבוד לך על הזכייה בתג החיסור !"
+        },
+        {
+          "en": "",
+          "he": "ועוד יותר כל הכבוד על העזרה שעזרת לנו להחזיר את השקט לעיר. אני לא אשכח את זה"
+        }
+      ]
+    },
+    {
+      "id": "npc-1776929045360",
+      "x": 24,
+      "y": 44,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "ברוך הבא למכון החיסור!"
+        },
+        {
+          "en": "",
+          "he": "מינסה סיפרה לי עלייך - תודה שעזרת להחזיר את הסדר לעיר."
+        },
+        {
+          "en": "",
+          "he": "מקווה שתהנה משהות במכון !"
+        },
+        {
+          "en": "",
+          "he": "בהצלחה"
+        }
+      ],
+      "spriteType": "char_1b9be7",
+      "name": {
+        "en": "Talia",
+        "he": "שקד"
+      }
+    },
+    {
+      "id": "npc-1776929274714",
+      "x": 6,
+      "y": 47,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "מינסה הזאת פשוט חזקה!"
+        },
+        {
+          "en": "",
+          "he": "בוא נראה אם יש לך סיכוי נגדה"
+        }
+      ],
+      "spriteType": "char_45ba6c",
+      "name": {
+        "en": "Erika",
+        "he": "אריקה"
+      },
+      "party": [
+        {
+          "pokemonId": 172,
+          "level": 20,
+          "moves": []
+        },
+        {
+          "pokemonId": 25,
+          "level": 25,
+          "moves": []
+        },
+        {
+          "pokemonId": 26,
+          "level": 30,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 400
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "וואוו מרשים! אתה בהחלט יכול לאתגר את מינסה"
+        }
+      ],
+      "questions": {
+        "count": 3,
+        "types": [
+          "-"
+        ]
+      }
+    },
+    {
+      "id": "npc-1776929438566",
+      "x": 6,
+      "y": 36,
+      "facing": "right",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "ניסיתי את מזלי - אבל פוקימוני האש שלי מאוד התקשו לנצח את מינסה. אולי יהיה לי יותר מזל מולך"
+        }
+      ],
+      "spriteType": "char_392694",
+      "name": {
+        "en": "Rick",
+        "he": "ריק"
+      },
+      "party": [
+        {
+          "pokemonId": 37,
+          "level": 20,
+          "moves": []
+        },
+        {
+          "pokemonId": 38,
+          "level": 25,
+          "moves": []
+        },
+        {
+          "pokemonId": 58,
+          "level": 20,
+          "moves": []
+        },
+        {
+          "pokemonId": 59,
+          "level": 25,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 500,
+        "items": [
+          {
+            "itemId": "revive",
+            "quantity": 1
+          },
+          {
+            "itemId": "max-potion",
+            "quantity": 1
+          }
+        ]
+      },
       "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1776929614940",
+      "x": 2,
+      "y": 27,
+      "facing": "left",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "אני לא אוהבת להיות תלויה במזל! אני מעדיפה להתאמץ ולסמוך על עצמי! רק ככה אנצח את מינסה"
+        },
+        {
+          "en": "",
+          "he": "אחרי אימונים ועבודה קשה"
+        }
+      ],
+      "spriteType": "char_962c1b",
+      "party": [],
+      "lineOfSight": 1,
+      "reward": {
+        "money": 1000,
+        "items": [
+          {
+            "itemId": "full-heal",
+            "quantity": 3
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "ריפוי מלא יכול לנקות לפוקימון שלך כל מצב סטטוס"
+        }
+      ]
+    },
+    {
+      "id": "npc-1776930053839",
+      "x": 5,
+      "y": 15,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום! אני מנסה להשיג את תג החיבור כבר כ\"כ הרבה זמן. רוצה קרב?"
+        }
+      ],
+      "spriteType": "char_3470af",
+      "name": {
+        "en": "Lisa",
+        "he": "ליסה"
+      },
+      "party": [
+        {
+          "pokemonId": 218,
+          "level": 20,
+          "moves": []
+        },
+        {
+          "pokemonId": 105,
+          "level": 25,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1000
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "האא אני מזהה אותך! עזרת למשטרה לסלק מפה את צוות רוקט! תודה רבה לך!"
+        }
+      ],
+      "questions": {
+        "count": 5,
+        "types": [
+          "-"
+        ]
+      }
+    },
+    {
+      "id": "npc-1776930281174",
+      "x": 16,
+      "y": 42,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "אני אזכה בתג מכון החיסור בקרוב מאוד"
+        }
+      ],
+      "spriteType": "char_459058",
+      "name": {
+        "en": "Tommy",
+        "he": "טומי"
+      },
+      "party": [
+        {
+          "pokemonId": 152,
+          "level": 20,
+          "moves": []
+        },
+        {
+          "pokemonId": 153,
+          "level": 25,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": [],
+      "questions": {
+        "count": 3,
+        "types": [
+          "-"
+        ]
+      }
     }
   ],
   "music": "gym-battle",
@@ -128,6 +411,12 @@
       {
         "itemId": "x-accuracy",
         "itemQty": 3
+      },
+      {
+        "itemId": "max-potion"
+      },
+      {
+        "itemId": "zinc"
       }
     ]
   }
@@ -1559,6 +1848,41 @@
       "key": "chair1L",
       "x": 18,
       "y": 36
+    },
+    {
+      "key": "small fridge1",
+      "x": 5,
+      "y": 33
+    },
+    {
+      "key": "small fridge1",
+      "x": 4,
+      "y": 33
+    },
+    {
+      "key": "kazino3-aside",
+      "x": 3,
+      "y": 26
+    },
+    {
+      "key": "pic-12",
+      "x": 3,
+      "y": 23
+    },
+    {
+      "key": "chair2L",
+      "x": 5,
+      "y": 27
+    },
+    {
+      "key": "chair2L",
+      "x": 5,
+      "y": 26
+    },
+    {
+      "key": "item-generic",
+      "x": 5,
+      "y": 25
     }
   ]
 }

@@ -51,6 +51,27 @@
       "toMapId": "minusburg",
       "toX": 1,
       "toY": 26
+    },
+    {
+      "fromX": 59,
+      "fromY": 18,
+      "toMapId": "minusburg",
+      "toX": 1,
+      "toY": 41
+    },
+    {
+      "fromX": 59,
+      "fromY": 19,
+      "toMapId": "minusburg",
+      "toX": 1,
+      "toY": 41
+    },
+    {
+      "fromX": 59,
+      "fromY": 20,
+      "toMapId": "minusburg",
+      "toX": 1,
+      "toY": 42
     }
   ],
   "npcs": [
@@ -924,7 +945,8 @@
     }
   ],
   "music": "route",
-  "encounterTableId": "route-2"
+  "encounterTableId": "route-2",
+  "interactiveItems": {}
 ,
   "tiles": [
     ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b"],
@@ -2107,16 +2129,6 @@
     {
       "key": "s1-8",
       "x": 54,
-      "y": 11
-    },
-    {
-      "key": "s1-8",
-      "x": 53,
-      "y": 11
-    },
-    {
-      "key": "s1-8",
-      "x": 52,
       "y": 11
     },
     {
@@ -3606,11 +3618,6 @@
     },
     {
       "key": "mt2b",
-      "x": 49,
-      "y": 16
-    },
-    {
-      "key": "mt2b",
       "x": 50,
       "y": 16
     },
@@ -3928,6 +3935,21 @@
       "key": "potion",
       "x": 31,
       "y": 10
+    },
+    {
+      "key": "s1-8",
+      "x": 52,
+      "y": 11
+    },
+    {
+      "key": "s1-8",
+      "x": 53,
+      "y": 11
+    },
+    {
+      "key": "mt2b",
+      "x": 49,
+      "y": 16
     }
   ],
   "objectLayer": [

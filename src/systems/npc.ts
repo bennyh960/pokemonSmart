@@ -126,6 +126,14 @@ export interface NPCData {
    * Dialogue and rewards proceed normally after questions are completed.
    */
   questions?: NPCQuestionsConfig;
+  /** When present and the flag is set, this dialogue replaces the default one. */
+  postFlagDialogue?: PostFlagDialogue;
+}
+
+/** Dialogue shown instead of the default once a story flag is set. */
+export interface PostFlagDialogue {
+  flag: string;
+  dialogue: BilingualText[];
 }
 
 /** Reward item given after defeating a trainer. */

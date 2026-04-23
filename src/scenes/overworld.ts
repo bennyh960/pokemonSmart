@@ -51,7 +51,7 @@ import { resolveInteract } from '../data/interact-types.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
 import { findHMUser, canUseHM } from '../systems/hm.js';
 import { getReencounterStatus, buildReencounterParty } from '../systems/reencounter.js';
-import { isGateUnlocked, setActiveGate, fireStoryTrigger, consumePendingCutscene } from '../systems/story-engine.js';
+import { isGateUnlocked, setActiveGate, fireStoryTrigger, consumePendingCutscene, consumePendingMessage } from '../systems/story-engine.js';
 import {
   isCutsceneActive,
   activateCutscene,
@@ -303,6 +303,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     beforeDespawnSteps: number;
     beforeDespawnWaiting: boolean;
     beforeDespawnTimer: number;
+    // Cutscene-driven path walking (animated, one tile per frame)
+    cutscenePathQueue: Array<'up' | 'down' | 'left' | 'right'>;
+    cutsceneWalking: boolean;
   }
   const npcStates = new Map<string, NPCRuntimeState>();
 
@@ -338,14 +341,19 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         // (e.g. returning from a trainer battle that just set the defeat flag),
         // start the beforeDespawn walk immediately rather than waiting for the
         // visible→invisible transition which will never fire on a fresh scene.
+        // Guard: only apply if the NPC was actually spawnable (spawnAfter flag was set),
+        // not when the NPC was simply never spawned yet (spawnAfter flag not set).
         isPreDespawning:
           !isNPCVisible(npc, _initFlags, hasActiveGame() ? getPlayerData().party : undefined) &&
           !_initFlags[`npc-beforeDespawn-done-${npc.id}`] &&
-          !!npc.autoWalk?.beforeDespawnPattern?.length,
+          !!npc.autoWalk?.beforeDespawnPattern?.length &&
+          (!npc.spawnAfter || !!_initFlags[npc.spawnAfter]),
         beforeDespawnIdx: 0,
         beforeDespawnSteps: 0,
         beforeDespawnWaiting: false,
         beforeDespawnTimer: 0,
+        cutscenePathQueue: [],
+        cutsceneWalking: false,
       };
       npcStates.set(npc.id, st);
     }
@@ -401,6 +409,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     if (!currentMapData?.transitions) return false;
     for (const tr of currentMapData.transitions) {
       if (tr.fromX === player.gridX && tr.fromY === player.gridY) {
+        if (currentMapData.id && hasActiveGame()) {
+          fireStoryTrigger({ type: 'map-exit', mapId: currentMapData.id });
+        }
         transitionState = 'fade-out';
         transitionTimer = 0;
         if (tr.returnToPrevious && previousMapReturn) {
@@ -658,20 +669,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         playerHidden = hidden;
       },
       moveNPCAlongPath(npc, path) {
-        const dirVecs: Record<string, { dx: number; dy: number }> = {
-          up: { dx: 0, dy: -1 },
-          down: { dx: 0, dy: 1 },
-          left: { dx: -1, dy: 0 },
-          right: { dx: 1, dy: 0 },
-        };
-        for (const dir of path) {
-          const v = dirVecs[dir];
-          if (v) {
-            npc.x += v.dx;
-            npc.y += v.dy;
-            npc.facing = dir as 'up' | 'down' | 'left' | 'right';
-          }
+        const st = getNpcState(npc);
+        st.cutscenePathQueue = [...path];
+        st.cutsceneWalking = path.length > 0;
+        if (path.length > 0) {
+          npc.facing = path[0];
+          st.facing = path[0];
         }
+      },
+      isNPCWalking(id) {
+        const npc = npcManager?.getNPCs().find((n) => n.id === id);
+        if (!npc) return false;
+        return getNpcState(npc).cutsceneWalking;
       },
       snapCamera(x, y) {
         if (camera && tileMap) camera.snapTo(x, y, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
@@ -1102,6 +1111,43 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (isCutsceneActive()) {
         // hideHUD();
         updateCutscene(dt, input, buildCutsceneContext());
+        // Advance NPC cutscene walk animations so move-npc steps can complete.
+        // The main NPC update loop is skipped during cutscenes, so we run only
+        // the walk-progress and cutscene-path-queue parts here.
+        if (npcManager) {
+          for (const npc of npcManager.getNPCs()) {
+            const st = getNpcState(npc);
+            if (!st.cutsceneWalking && !st.moving) continue;
+            if (st.moving) {
+              st.moveProgress += dt / MOVE_DURATION;
+              st.walkTimer += dt;
+              if (st.walkTimer >= 0.1) { st.walkTimer = 0; st.walkFrame = st.walkFrame === 1 ? 2 : 1; }
+              if (st.moveProgress >= 1) {
+                st.moveProgress = 1;
+                st.pixelX = st.targetPixelX;
+                st.pixelY = st.targetPixelY;
+                npc.x = Math.round(st.pixelX / TILE_SIZE);
+                npc.y = Math.round(st.pixelY / TILE_SIZE);
+                st.moving = false;
+                st.walkFrame = 0;
+                if (st.cutscenePathQueue.length === 0) st.cutsceneWalking = false;
+              } else {
+                st.pixelX = st.startPixelX + (st.targetPixelX - st.startPixelX) * st.moveProgress;
+                st.pixelY = st.startPixelY + (st.targetPixelY - st.startPixelY) * st.moveProgress;
+              }
+            }
+            if (st.cutsceneWalking && !st.moving && st.cutscenePathQueue.length > 0) {
+              const dir = st.cutscenePathQueue.shift()!;
+              const dx = dir === 'right' ? 1 : dir === 'left' ? -1 : 0;
+              const dy = dir === 'down' ? 1 : dir === 'up' ? -1 : 0;
+              npc.facing = dir; st.facing = dir;
+              st.startPixelX = st.pixelX; st.startPixelY = st.pixelY;
+              st.targetPixelX = (npc.x + dx) * TILE_SIZE;
+              st.targetPixelY = (npc.y + dy) * TILE_SIZE;
+              st.moveProgress = 0; st.moving = true;
+            }
+          }
+        }
         return;
       }
 
@@ -1109,6 +1155,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       const pendingCutsceneId = consumePendingCutscene();
       if (pendingCutsceneId) {
         activateCutscene(pendingCutsceneId);
+        return;
+      }
+
+      // Check for pending message queued by story engine (show-message action)
+      const pendingMsg = consumePendingMessage();
+      if (pendingMsg && !activeTextBox) {
+        activeTextBox = createTextBox(
+          pendingMsg.map((l) => (getLocale() === 'he' ? l.he : l.en)),
+          isRTL(),
+        );
         return;
       }
 
@@ -1734,10 +1790,29 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               npc.y = Math.round(st.pixelY / TILE_SIZE);
               st.moving = false;
               st.walkFrame = 0;
+              if (st.cutscenePathQueue.length === 0) st.cutsceneWalking = false;
             } else {
               st.pixelX = st.startPixelX + (st.targetPixelX - st.startPixelX) * st.moveProgress;
               st.pixelY = st.startPixelY + (st.targetPixelY - st.startPixelY) * st.moveProgress;
             }
+          }
+
+          // ── Cutscene-driven path queue: animate one tile at a time ──
+          if (st.cutsceneWalking) {
+            if (!st.moving && st.cutscenePathQueue.length > 0) {
+              const dir = st.cutscenePathQueue.shift()!;
+              const dx = dir === 'right' ? 1 : dir === 'left' ? -1 : 0;
+              const dy = dir === 'down' ? 1 : dir === 'up' ? -1 : 0;
+              npc.facing = dir;
+              st.facing = dir;
+              st.startPixelX = st.pixelX;
+              st.startPixelY = st.pixelY;
+              st.targetPixelX = (npc.x + dx) * TILE_SIZE;
+              st.targetPixelY = (npc.y + dy) * TILE_SIZE;
+              st.moveProgress = 0;
+              st.moving = true;
+            }
+            continue;
           }
 
           // ── beforeDespawn phase: plays once when despawn conditions first met ──
@@ -1939,8 +2014,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (npc.type === 'trainer' && hasActiveGame()) {
               fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
             }
+            // Use postFlagDialogue when present and its flag is set
+            const pfd = npc.postFlagDialogue;
+            const dialogueLines = (pfd && hasActiveGame() && getPlayerData().flags[pfd.flag])
+              ? pfd.dialogue
+              : npc.dialogue;
             activeTextBox = createTextBox(
-              resolveDialogue(npc.dialogue, getLocale()),
+              resolveDialogue(dialogueLines, getLocale()),
               isRTL(),
               npc.name ? getLocalizedName(npc.name) : undefined,
             );

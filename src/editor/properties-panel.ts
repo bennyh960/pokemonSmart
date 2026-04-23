@@ -330,6 +330,9 @@ export class PropertiesPanel {
       this.renderNPCQuestionsUI(body, npc);
     }
 
+    // ── Post-Flag Dialogue ──
+    this.renderPostFlagDialogueUI(body, npc);
+
     // ── Story cross-references ──
     this.renderStoryRefsPanel(body, npc);
 
@@ -552,6 +555,106 @@ export class PropertiesPanel {
     });
 
     rebuildConfig();
+
+    enableRow.appendChild(enableCb);
+    section.appendChild(enableRow);
+    section.appendChild(configDiv);
+  }
+
+  // ── Post-Flag Dialogue ──
+  private renderPostFlagDialogueUI(section: HTMLElement, npc: NPCData): void {
+    const emit = () => this.state.emit('map-modified');
+    const npcAny = npc as unknown as Record<string, unknown>;
+
+    const header = document.createElement('div');
+    header.className = 'trainer-subsection-header';
+    header.innerHTML = '<span>Post-Flag Dialogue</span>';
+    section.appendChild(header);
+
+    const enableRow = document.createElement('div');
+    enableRow.className = 'prop-row';
+    enableRow.innerHTML = '<label>Has Post-Flag Dialogue:</label>';
+    const enableCb = document.createElement('input');
+    enableCb.type = 'checkbox';
+    enableCb.title = 'Replace default dialogue once a story flag is set';
+    const current = npcAny['postFlagDialogue'] as { flag: string; dialogue: { en: string; he: string }[] } | undefined;
+    enableCb.checked = !!current;
+
+    const configDiv = document.createElement('div');
+    configDiv.style.display = current ? 'block' : 'none';
+    configDiv.style.paddingLeft = '8px';
+    configDiv.style.borderLeft = '2px solid #444';
+    configDiv.style.marginTop = '4px';
+
+    const rebuildPFD = () => {
+      configDiv.innerHTML = '';
+      const pfd = npcAny['postFlagDialogue'] as { flag: string; dialogue: { en: string; he: string }[] } | undefined;
+      if (!pfd) return;
+
+      // Flag input
+      const flagRow = document.createElement('div');
+      flagRow.className = 'prop-row';
+      flagRow.innerHTML = '<label>Flag:</label>';
+      const flagInput = document.createElement('input');
+      flagInput.type = 'text';
+      flagInput.value = pfd.flag || '';
+      flagInput.placeholder = 'e.g. rescued-professor';
+      flagInput.addEventListener('change', () => {
+        pfd.flag = flagInput.value.trim();
+        emit();
+      });
+      flagRow.appendChild(flagInput);
+      configDiv.appendChild(flagRow);
+
+      // EN dialogue
+      const enRow = document.createElement('div');
+      enRow.className = 'prop-row';
+      enRow.innerHTML = '<label>EN:</label>';
+      const enTa = document.createElement('textarea');
+      enTa.value = (pfd.dialogue || []).map(d => typeof d === 'string' ? d : d.en).join('\n');
+      enTa.rows = 2;
+      enTa.addEventListener('change', () => syncPFD());
+      enRow.appendChild(enTa);
+      configDiv.appendChild(enRow);
+
+      // HE dialogue
+      const heRow = document.createElement('div');
+      heRow.className = 'prop-row';
+      heRow.innerHTML = '<label>HE:</label>';
+      const heTa = document.createElement('textarea');
+      heTa.value = (pfd.dialogue || []).map(d => typeof d === 'string' ? '' : d.he).join('\n');
+      heTa.rows = 2;
+      heTa.style.direction = 'rtl';
+      heTa.addEventListener('change', () => syncPFD());
+      heRow.appendChild(heTa);
+      configDiv.appendChild(heRow);
+
+      function syncPFD(): void {
+        const enLines = enTa.value.split('\n');
+        const heLines = heTa.value.split('\n');
+        const maxLen = Math.max(enLines.length, heLines.length);
+        pfd!.dialogue = [];
+        for (let i = 0; i < maxLen; i++) {
+          const en = (enLines[i] || '').trim();
+          const he = (heLines[i] || '').trim();
+          if (en || he) pfd!.dialogue.push({ en, he });
+        }
+        emit();
+      }
+    };
+
+    enableCb.addEventListener('change', () => {
+      if (enableCb.checked) {
+        npcAny['postFlagDialogue'] = { flag: '', dialogue: [] };
+      } else {
+        delete npcAny['postFlagDialogue'];
+      }
+      configDiv.style.display = enableCb.checked ? 'block' : 'none';
+      rebuildPFD();
+      emit();
+    });
+
+    rebuildPFD();
 
     enableRow.appendChild(enableCb);
     section.appendChild(enableRow);
@@ -1050,9 +1153,9 @@ export class PropertiesPanel {
         const selected = allItems.find(it => it.id === itemSel.value);
         if (selected?.category === 'key') {
           keyNote.style.display = 'block';
-          const parts: string[] = ['Key item'];
-          if (selected.keyFlag) parts.push(`auto-sets flag: "${selected.keyFlag}"`);
-          if (selected.usedFlag) parts.push(`shows as used when: "${selected.usedFlag}"`);
+          const parts: string[] = ['⚠ Key item — give ONCE only (use reward flag guard)'];
+          if (selected.keyFlag) parts.push(`auto-sets: "${selected.keyFlag}"`);
+          if (selected.usedFlag) parts.push(`checked in bag when: "${selected.usedFlag}"`);
           keyNote.textContent = parts.join(' · ');
         } else {
           keyNote.style.display = 'none';
@@ -1486,6 +1589,7 @@ export class PropertiesPanel {
     for (const n of (this.state.mapData.npcs ?? []) as NPCData[]) {
       if (n.spawnAfter) add(n.spawnAfter, `NPC "${n.id}" → spawnAfter`);
       if (n.despawnAfter) add(n.despawnAfter, `NPC "${n.id}" → despawnAfter`);
+      if (n.postFlagDialogue?.flag) add(n.postFlagDialogue.flag, `NPC "${n.id}" → postFlagDialogue`);
     }
 
     // Seed with all registered FLAGS so they appear in autocomplete

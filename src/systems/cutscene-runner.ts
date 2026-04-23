@@ -31,8 +31,10 @@ export interface CutsceneContext {
   setNPCFacing(npc: NPCData, dir: string): void;
   setNPCHidden(id: string, hidden: boolean): void;
   setPlayerHidden(hidden: boolean): void;
-  /** Instantly move an NPC along a path (teleport, no animation). */
+  /** Queue animated walking for an NPC along a path (one tile per step). */
   moveNPCAlongPath(npc: NPCData, path: Array<'up' | 'down' | 'left' | 'right'>): void;
+  /** Returns true while the NPC is still walking its cutscene path. */
+  isNPCWalking(id: string): boolean;
   snapCamera(x: number, y: number): void;
   panCamera(x: number, y: number, durationMs: number): void;
   playMusic(id: string): void;
@@ -97,6 +99,7 @@ let _waitTimer = 0; // for 'wait' steps
 let _waitingInput = false; // for 'wait-input' steps
 let _phoneRing: PhoneRingState | null = null; // phone-ring intro phase
 
+let _npcMoveWaiting: string | null = null; // npcId being waited on for animated walk
 let _completionResolve: (() => void) | null = null;
 
 const CHARS_PER_SEC = 40; // typewriter speed
@@ -124,6 +127,7 @@ export function activateCutscene(id: string): boolean {
   _fade = null;
   _waitTimer = 0;
   _waitingInput = false;
+  _npcMoveWaiting = null;
   _phoneRing = null;
 
   // If phoneCaller is set, enter the ring phase before executing any steps
@@ -152,6 +156,7 @@ export function deactivateCutscene(): void {
   _fade = null;
   _overlay = null;
   _waitingInput = false;
+  _npcMoveWaiting = null;
   _phoneRing = null;
   _completionResolve?.();
   _completionResolve = null;
@@ -281,6 +286,15 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
     }
     if (f.done) {
       _fade = null;
+      _stepIndex++;
+    }
+    return;
+  }
+
+  // ── NPC animated walk wait ──
+  if (_npcMoveWaiting) {
+    if (!ctx.isNPCWalking(_npcMoveWaiting)) {
+      _npcMoveWaiting = null;
       _stepIndex++;
     }
     return;
@@ -434,7 +448,12 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     case 'move-npc': {
       const npc = ctx.getNPCById(step.npcId);
       if (npc) ctx.moveNPCAlongPath(npc, step.path);
-      _stepIndex++;
+      // Wait for animation unless caller explicitly opts out
+      if (step.waitForComplete !== false && step.path.length > 0 && npc) {
+        _npcMoveWaiting = step.npcId;
+      } else {
+        _stepIndex++;
+      }
       break;
     }
 

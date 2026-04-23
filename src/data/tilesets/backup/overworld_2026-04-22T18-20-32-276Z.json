@@ -55,7 +55,7 @@
         "psychic"
       ],
       "above": true,
-      "overlay": false,
+      "overlay": true,
       "category": "grass",
       "interactType": null,
       "description": "grass for encounter"
@@ -68,7 +68,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "overlay": false,
+      "overlay": true,
       "category": "grass",
       "interactType": null,
       "description": "grass with flower"
@@ -5312,10 +5312,10 @@
       "walkable": false,
       "above": true,
       "category": "interactive",
+      "description": "Generic item to be overide",
       "interactType": {
         "id": "item"
-      },
-      "description": "Generic item to be overide"
+      }
     }
   ]
 }

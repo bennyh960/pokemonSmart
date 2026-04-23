@@ -109,7 +109,9 @@ export const GATES: Record<string, QuestionGateDef> = {};
 export function getGate(id: string): QuestionGateDef | undefined {
   if (GATES[id]) return GATES[id];
   // Per-map gym IDs like 'auto-gym-minusburg-gym' fall back to 'auto-gym' config
+  // currently there is no gate for each gym with diferent config - all same config
   const baseMatch = id.match(/^(auto-gym)-/);
+  // console.warn(`Gate with ID '${id}' - baseMatch =`, baseMatch);
   if (baseMatch) return GATES[baseMatch[1]];
   return undefined;
 }

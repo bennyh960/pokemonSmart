@@ -91,6 +91,20 @@
       "fromX": 35,
       "fromY": 17,
       "toMapId": "minusburg-template-house-open"
+    },
+    {
+      "fromX": 0,
+      "fromY": 41,
+      "toMapId": "route-2",
+      "toX": 59,
+      "toY": 19
+    },
+    {
+      "fromX": 0,
+      "fromY": 42,
+      "toMapId": "route-2",
+      "toX": 59,
+      "toY": 20
     }
   ],
   "npcs": [
@@ -98,94 +112,37 @@
       "id": "gary-oak-mb",
       "name": {
         "en": "Gary Oak",
-        "he": "קוא יראג"
+        "he": "גארי אוק"
       },
-      "x": 10,
-      "y": 19,
-      "facing": "down",
+      "x": 46,
+      "y": 8,
+      "facing": "up",
       "type": "npc",
       "spriteType": "rival-story-gary",
-      "despawnAfter": "rocket-minusburg-all-defeated",
+      "despawnAfter": "minusburg-gary-met",
       "dialogue": [
         {
           "en": "Still training? Good. Don't let your guard down — Team Rocket doesn't.",
-          "he": "תמשיך להתאמן חזק! צוות רוקט לא מפסיקים לעשות בלאגן"
+          "he": "אתה מספיק אמיץ לעזור לנו?"
         }
       ],
       "autoWalk": {
-        "pattern": [
-          {
-            "dir": "down",
-            "steps": 11,
-            "delay": 0.5
-          },
-          {
-            "dir": "right",
-            "steps": 20,
-            "delay": 0.5
-          },
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
           {
             "dir": "up",
-            "steps": 20,
-            "delay": 1
+            "steps": 1,
+            "delay": 0
           },
           {
             "dir": "left",
-            "steps": 2,
-            "delay": 20
+            "steps": 25,
+            "delay": 0.5
           }
-        ],
-        "loop": true
-      }
-    },
-    {
-      "id": "jenny-mb",
-      "name": {
-        "en": "Officer Jenny",
-        "he": "ינ'ג תרטוש"
+        ]
       },
-      "x": 10,
-      "y": 20,
-      "facing": "down",
-      "type": "npc",
-      "spriteType": "officer-Jenny",
-      "despawnAfter": "rocket-minusburg-all-defeated",
-      "dialogue": [
-        {
-          "en": "The city is counting on you. Those agents are still out there.",
-          "he": "העיר הזאת זקוקה למאמנים אמיצים! הסוכנים של צוות רוקט עושים פה טרור!"
-        }
-      ],
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "down",
-            "steps": 10,
-            "delay": 1
-          },
-          {
-            "dir": "right",
-            "steps": 20,
-            "delay": 1
-          },
-          {
-            "dir": "up",
-            "steps": 10,
-            "delay": 1.5
-          },
-          {
-            "dir": "left",
-            "steps": 20,
-            "delay": 2
-          },
-          {
-            "dir": "right",
-            "steps": 0,
-            "delay": 2
-          }
-        ],
-        "loop": true
-      }
+      "spawnAfter": "minusburg-gym-blocker-met"
     },
     {
       "id": "minessa-field-mb",
@@ -193,8 +150,8 @@
         "en": "Minessa",
         "he": "מניסה מנהיגת המכון"
       },
-      "x": 44,
-      "y": 2,
+      "x": 46,
+      "y": 0,
       "facing": "down",
       "type": "npc",
       "spriteType": "gym-3-Minessa",
@@ -209,9 +166,14 @@
         "loop": false,
         "beforeDespawnPattern": [
           {
-            "dir": "left",
-            "steps": 20,
+            "dir": "down",
+            "steps": 3,
             "delay": 0
+          },
+          {
+            "dir": "left",
+            "steps": 30,
+            "delay": 0.5
           }
         ]
       },
@@ -224,7 +186,7 @@
         "he": "טום (סוכן צוות רוקט)"
       },
       "x": 46,
-      "y": 8,
+      "y": 6,
       "facing": "down",
       "type": "trainer",
       "spriteType": "char_7db1c5",
@@ -254,9 +216,9 @@
         }
       ],
       "reward": {
-        "money": 2000
+        "money": 1000
       },
-      "lineOfSight": 3,
+      "lineOfSight": 1,
       "autoWalk": {
         "pattern": [],
         "loop": false,
@@ -882,9 +844,9 @@
     },
     {
       "id": "npc-1776760658959",
-      "x": 44,
-      "y": 1,
-      "facing": "right",
+      "x": 47,
+      "y": 0,
+      "facing": "down",
       "type": "dialogue",
       "dialogue": [
         {
@@ -895,19 +857,20 @@
       "spriteType": "rival-story-gary",
       "despawnAfter": "rocket-minusburg-all-defeated",
       "autoWalk": {
-        "pattern": [
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
           {
             "dir": "down",
-            "steps": 2,
-            "delay": 1
+            "steps": 3,
+            "delay": 0
           },
           {
             "dir": "left",
             "steps": 20,
-            "delay": 1
+            "delay": 0.5
           }
-        ],
-        "loop": true
+        ]
       }
     },
     {
@@ -928,13 +891,14 @@
       ],
       "spriteType": "officer-Jenny",
       "blocker": true,
-      "despawnAfter": "NOT_EXIST_YET_FLAG"
+      "despawnAfter": "TODO-AFTER CREATE TRANSISTION AND MAP",
+      "spawnAfter": "rocket-minusburg-all-defeated"
     },
     {
       "id": "npc-1776761882211",
       "x": 46,
-      "y": 9,
-      "facing": "down",
+      "y": 7,
+      "facing": "up",
       "type": "dialogue",
       "dialogue": [
         {
@@ -943,10 +907,145 @@
         },
         {
           "en": "",
-          "he": "צוות רוקט מנסים לזהם את העיר! עזור לי להביס אותם"
+          "he": "צוות רוקט מנסים לזהם את העיר! תזמין סיוע"
         }
       ],
-      "spriteType": "gym-3-Minessa"
+      "spriteType": "gym-3-Minessa",
+      "spawnAfter": "minusburg-gym-blocker-met",
+      "despawnAfter": "minusburg-gary-met",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 25,
+            "delay": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "id": "cop-gym-mb",
+      "x": 25,
+      "y": 37,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום לך! - הזדהה בבקשה!"
+        },
+        {
+          "en": "",
+          "he": "אני השוטרת ג'ני - מפקדת התחנה של משטרת מינסבורג ."
+        },
+        {
+          "en": "",
+          "he": "הרחובות ריקים מאחר ויש פלישה של צוות רוקט - אני חייבת לבדוק שגם אתה לא מהם."
+        },
+        {
+          "en": "",
+          "he": "אנחנו מפטרלים בכל העיר ומחפשים אותם."
+        },
+        {
+          "en": "",
+          "he": "מינסה מנהיגת המכון עוזרת לנו בחקירה."
+        },
+        {
+          "en": "",
+          "he": "היא בדיוק הלכה לכיוון היער באזור הצפוני של העיר."
+        }
+      ],
+      "spriteType": "officer-Jenny",
+      "despawnAfter": "rocket-minusburg-all-defeated",
+      "questions": {
+        "count": 1,
+        "types": [
+          "-"
+        ]
+      }
+    },
+    {
+      "id": "npc-1776894986726",
+      "x": 10,
+      "y": 10,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "ראית סוכנים של צוות רוקט?"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 29,
+            "delay": 2
+          },
+          {
+            "dir": "up",
+            "steps": 29,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      },
+      "despawnAfter": "rocket-minusburg-all-defeated"
+    },
+    {
+      "id": "npc-1776895180991",
+      "x": 11,
+      "y": 10,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "לא בטוח להסתובב ברחוב"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "despawnAfter": "rocket-minusburg-all-defeated",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 26,
+            "delay": 2.5
+          },
+          {
+            "dir": "left",
+            "steps": 26,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-1776895419287",
+      "x": 47,
+      "y": 9,
+      "facing": "left",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "מצאתי את המחבוא של צוות רוקט - אני מחכה לגיבוי שנוכל לתקוף אותם. מסוכן ללכת לבד"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Officer X",
+        "he": "שוטר"
+      },
+      "blocker": true,
+      "despawnAfter": "minusburg-gym-blocker-met",
+      "lineOfSight": 1
     }
   ],
   "music": "town",
@@ -972,7 +1071,7 @@
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","b4-door","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","b4-door","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","b4-door","g1","g1","g1","g1","s1-5","g1","g1","g1","b9-door","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","b4-door","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1"],

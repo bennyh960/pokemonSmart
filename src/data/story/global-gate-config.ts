@@ -12,7 +12,7 @@
  */
 
 import type { GateSessionConfig, GateReward } from './gates.js';
-import { registerGate } from './gates.js';
+import { GATES, registerGate } from './gates.js';
 import type { GradeId } from '../../math/question-builder/index.js';
 import { registerAutoGateMap } from '../../systems/story-engine.js';
 import { getPlayerData } from '../../systems/game-state.js';
@@ -181,10 +181,10 @@ registerGate({
 
 registerGate({
   id: 'auto-gym',
-  title: { en: 'Gym Entrance Verification', he: 'אימות כניסה לGYM' },
+  title: { en: 'Gym Entrance Verification', he: 'אימות כניסה למכון' },
   description: {
     en: 'The gym only admits verified, non-glitched trainers.',
-    he: 'ה-GYM מקבל רק מאמנים מאומתים ושאינם תקולים.',
+    he: 'המכון מקבל רק מאמנים מאומתים - אמצעי זהירות כנגד צוות רוקט.',
   },
   triggerType: 'auto-gym-entrance',
   questionSetIds: ['*'],
@@ -211,6 +211,10 @@ registerAutoGateMap('mart-interior', 'pokemarket');
 
 // Gym interiors
 registerAutoGateMap('sumville-gym', 'gym');
-// Add future gyms here as their map IDs become known, e.g.:
+console.log({ GATES });
+// GATES['auto-gym-sumville-gym'].sessionConfig.inputQuestions = { count: 5, types: ['+'] };
+// GATES['auto-gym-sumville-gym'].questionSetIds = ['+'];
 registerAutoGateMap('minusburg-gym', 'gym');
+// GATES['auto-gym-minusburg-gym'].sessionConfig.inputQuestions = { count: 5, types: ['-'] };
+// GATES['auto-gym-minusburg-gym'].questionSetIds = ['-'];
 // registerAutoGateMap('multiplia-gym',          'gym');
