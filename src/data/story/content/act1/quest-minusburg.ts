@@ -38,7 +38,7 @@ import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { registerGate } from '../../gates.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
-import { ITEM_GAME_DATA, ITEM_SLUG_TO_ID } from '../../../item-defs.js';
+import { ITEM_GAME_DATA } from '../../../item-defs.js';
 
 registerGate({
   id: 'gate-route2-minusburg',
