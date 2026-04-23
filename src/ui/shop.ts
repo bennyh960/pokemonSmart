@@ -108,7 +108,7 @@ export function closeShop(shop: ShopState): void {
 }
 
 function getShopItemsForCategory(cat: ItemCategory): ItemDef[] {
-  return getItemsByCategory(cat).filter((i) => i.price > 0);
+  return getItemsByCategory(cat).filter((i) => i.price > 0 && i.category !== 'key');
 }
 
 function buyItem(itemId: string): boolean {

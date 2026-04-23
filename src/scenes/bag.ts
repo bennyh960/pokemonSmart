@@ -305,9 +305,20 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           align: rtl ? 'right' : 'left',
         });
 
-        // Qty × symbol + number (left side)
-        drawText(ctx, '\u00d7', 8, cy + 2, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-        drawText(ctx, `${item.qty}`, 14, cy + 1, { size: 8, color: isSel ? C.SEL_BAR : C.TEXT_SEC, font: 'monospace' });
+        // Key items: show ✓ (used) or □ (pending) instead of quantity
+        if (item.def.category === 'key') {
+          const kPd = getPlayerData();
+          const kUsed = !!(item.def.usedFlag && kPd.flags[item.def.usedFlag]);
+          drawText(ctx, kUsed ? '\u2713' : '\u25a1', 8, cy + 1, {
+            size: 9,
+            color: kUsed ? '#44cc88' : C.TEXT_MUT,
+            font: 'monospace',
+          });
+        } else {
+          // Qty × symbol + number (left side)
+          drawText(ctx, '\u00d7', 8, cy + 2, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+          drawText(ctx, `${item.qty}`, 14, cy + 1, { size: 8, color: isSel ? C.SEL_BAR : C.TEXT_SEC, font: 'monospace' });
+        }
       }
 
       // Scroll indicators
