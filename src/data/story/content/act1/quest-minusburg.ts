@@ -382,12 +382,11 @@ registerCutscene({
           en: 'Before You continue to Route-3 , I need to ask you for a favor, During invstigation team-rocket drop out a documents related to Null-x that I need to analyze',
           he: 'לפני שתמשיך לשביל 3, אני צריך לבקש ממך טובה, במהלך החקירה צוות רוקט איבד מסמכים שקשורים ל-NULL-X שאני צריך לנתח',
         },
-        { en: '', he: '' },
       ],
     },
 
     // { type: 'action', action: { type: 'set-flag', flag: FLAGS.STORY_BADGE_2 } }, // should be given by gym leader
-    { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-gym2' } },
+    // { type: 'action', action: { type: 'complete-quest', questId: 'main-act1-gym2' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-search-prof-ben' } },
   ],
 });
@@ -510,6 +509,12 @@ registerStoryEvent({
   actions: [{ type: 'start-cutscene', cutsceneId: 'act1-minusburg-rockets-cleared' }],
 });
 
+registerStoryEvent({
+  id: 'update-quest-gym2-on-badge2',
+  trigger: { badge: 2, type: 'badge-earned' },
+  actions: [{ type: 'complete-quest', questId: 'main-act1-gym2' }],
+});
+
 // Beat 8 — badge 2 earned → clear infection + Algorithma call
 // (Gary's map NPC despawns automatically via despawnAfter: STORY_BADGE_2 in map JSON)
 registerStoryEvent({
@@ -549,45 +554,3 @@ registerStoryEvent({
 });
 
 //#endregion
-
-// ─────────────────────────────────────────────────────────────────────────────
-// NPC PLACEMENT TABLE (copy IDs into map editor)
-// ─────────────────────────────────────────────────────────────────────────────
-//
-//  ID                Name              Description / Placement rules
-// ─────────────────────────────────────────────────────────────────────────────
-//  cop-gym-mb        Generic cop       Stands directly in front of the gym door.
-//                                      despawnAfter: ROCKET_MINUSBURG_ALL_DEFEATED
-//
-//  gary-oak-mb-1     Gary Oak          At the eastern encounter corner, facing
-//                                      2 Rocket grunts. Always visible until
-//                                      encounter cutscene fires (hidden in step).
-//                                      despawnAfter: MINUSBURG_GARY_MET
-//
-//  minessa-mb-1      Minessa           Next to gary-oak-mb-1, same encounter.
-//                                      despawnAfter: MINUSBURG_GARY_MET
-//
-//  gary-oak-mb-2     Gary Oak          Near far end of the eastern path (waiting).
-//                                      Idle dialogue about NULL-X / Pokemon world.
-//                                      spawnAfter:   MINUSBURG_GARY_MET
-//                                      despawnAfter: STORY_BADGE_2
-//                                      (also hidden by evt-gary-despawn-on-gym-enter)
-//
-//  minessa-mb-2      Minessa           Near far end of the eastern path (waiting).
-//                                      Auto-walks off and is hidden in finale cutscene.
-//                                      spawnAfter:   MINUSBURG_GARY_MET
-//                                      despawnAfter: handled by cutscene hide-npc
-//
-//  jenny-mb          Officer Jenny     Appears off-screen east, walks in for finale.
-//                                      spawnAfter:   ROCKET_MINUSBURG_ALL_DEFEATED
-//                                      despawnAfter: handled by cutscene hide-npc
-//
-//  blocker-mb        Youngster (NPC)   Blocks the eastern path entrance after it
-//                                      has been secured — stops players re-entering.
-//                                      spawnAfter: MINUSBURG_BLOCKER_PLACED
-//
-//  rocket-mb-1..10   Team Rocket Grunt 10 battlable grunts on the eastern path.
-//                                      despawnOnDefeat: true
-//                                      Finale fires when trainer flag
-//                                      "trainer-rocket-mb-10-defeated" is set.
-// ─────────────────────────────────────────────────────────────────────────────

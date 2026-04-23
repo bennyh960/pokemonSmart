@@ -62,6 +62,7 @@ import {
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { setFlyCallback, CITY_INFO } from './world-map.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
+import charactersManifest from '../data/sprites/characters.json';
 import type { SimpleOpType } from '../math/simple-input-question.js';
 import { getPlayerBirthYear, gradeFromBirthYear } from '../data/story/global-gate-config.js';
 const MOVE_DURATION = 0.2;
@@ -769,7 +770,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
 
     return {
-      trainerName: trainer.name ?? { en: trainer.id, he: trainer.id },
+      trainerName:
+        trainer.name ??
+        (charactersManifest.characters as Record<string, { name?: { en: string; he: string } }>)[trainer.spriteType]
+          ?.name ??
+        { en: trainer.id, he: trainer.id },
       trainerId: trainer.id,
       party,
       reward: normalizeReward(trainer.reward),
