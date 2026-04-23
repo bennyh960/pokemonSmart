@@ -17,6 +17,8 @@ import { getPlayerData, hasActiveGame, autoSave, setFlag } from './game-state.js
 import { getStoryEvents } from '../data/story/events.js';
 import type { StoryTrigger, StoryCondition, StoryAction } from '../data/story/events.js';
 import { awaitCutsceneCompletion } from './cutscene-runner.js';
+import { getCurrentMapId, getCachedMap } from './map-manager.js';
+import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 
 let _stateMachine: StateMachine | null = null;
 
@@ -55,6 +57,29 @@ function _checkAutoGate(mapId: string): void {
     // Use per-map ID so unlock tracking is per-gym, not shared across all gyms
     setActiveGate(gateIdLockCheck);
     _stateMachine.push('GATE');
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Auto all-trainers-defeated flag
+// ---------------------------------------------------------------------------
+
+function _autoCheckMapTrainersCleared(pd: ReturnType<typeof getPlayerData>): void {
+  const mapId = getCurrentMapId();
+  if (!mapId) return;
+
+  const autoFlag = allTrainersDefeatedFlag(mapId);
+  if (pd.flags[autoFlag]) return; // already set, skip
+
+  const mapData = getCachedMap(mapId);
+  if (!mapData?.npcs) return;
+
+  const trainers = mapData.npcs.filter((npc) => npc.type === 'trainer' && !npc.excludeFromMapClear);
+  if (trainers.length === 0) return;
+
+  if (trainers.every((npc) => pd.flags[`trainer-${npc.id}-defeated`])) {
+    setFlag(pd, autoFlag);
+    void fireStoryTrigger({ type: 'flag-set', flag: autoFlag });
   }
 }
 
@@ -135,6 +160,14 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
   // ── Auto-gate check for service map entry ────────────────────────────────
   if (trigger.type === 'map-enter') {
     _checkAutoGate((trigger as { mapId: string }).mapId);
+  }
+
+  // ── Auto all-trainers-defeated flag ──────────────────────────────────────
+  // After any trainer defeat, check if every trainer on the current map is
+  // now beaten. If so, set all-trainers-defeated-{mapId} so NPCs and story
+  // events can react without needing a manually-maintained flag.
+  if (trigger.type === 'trainer-defeated') {
+    _autoCheckMapTrainersCleared(pd);
   }
 
   autoSave();

@@ -128,6 +128,10 @@ export interface NPCData {
   questions?: NPCQuestionsConfig;
   /** When present and the flag is set, this dialogue replaces the default one. */
   postFlagDialogue?: PostFlagDialogue;
+
+  excludeFromMapClear?: boolean; // When true, this trainer is ignored by the all-trainers-defeated auto-flag and the map-clear blocker count
+  /** When true, appends a live "X of Y trainers still standing" line to this NPC's dialogue. */
+  mapClearBlocker?: boolean;
 }
 
 /** Dialogue shown instead of the default once a story flag is set. */

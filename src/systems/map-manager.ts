@@ -94,6 +94,11 @@ export function getCurrentMapId(): string | null {
   return currentMapId;
 }
 
+/** Get cached map data by ID. Returns undefined if the map hasn't been loaded yet. */
+export function getCachedMap(mapId: string): TileMapData | undefined {
+  return mapCache.get(mapId);
+}
+
 /** Set the current map ID (called when transitioning). */
 export function setCurrentMapId(id: string): void {
   currentMapId = id;

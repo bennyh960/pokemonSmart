@@ -1753,7 +1753,7 @@ export class PropertiesPanel {
     // ── Blocker NPC ──
     const blockerHdr = document.createElement('div');
     blockerHdr.style.cssText = 'font-size:10px;color:#7a8aaa;margin:8px 0 3px;font-weight:600;';
-    blockerHdr.textContent = 'Blocker:';
+    blockerHdr.textContent = 'Extra Settings';
     section.appendChild(blockerHdr);
 
     const blockerRow = document.createElement('div');
@@ -1914,6 +1914,46 @@ export class PropertiesPanel {
         flagInputDiv.style.display = 'none';
       }
       blockerPanel.style.display = blockerCb.checked ? 'block' : 'none';
+      emit();
+    });
+
+    // ── Map Clear Blocker ──
+    const mapClearRow = document.createElement('div');
+    mapClearRow.className = 'prop-row';
+    mapClearRow.innerHTML = '<label>Map Clear Blocker:</label>';
+    const mapClearCb = document.createElement('input');
+    mapClearCb.type = 'checkbox';
+    mapClearCb.checked = !!npcAny['mapClearBlocker'];
+    mapClearRow.appendChild(mapClearCb);
+    mapClearRow.appendChild(this.makeInfo(
+      'Appends a live "X of Y trainers still standing" line to the END of this NPC\'s dialogue. ' +
+      'Counts all type:"trainer" NPCs on the current map, excluding those with excludeFromMapClear:true. ' +
+      'Does not require blocker:true — any dialogue NPC can show the count.'
+    ));
+    section.appendChild(mapClearRow);
+    mapClearCb.addEventListener('change', () => {
+      if (mapClearCb.checked) npcAny['mapClearBlocker'] = true;
+      else delete npcAny['mapClearBlocker'];
+      emit();
+    });
+
+    // ── Exclude From Map Clear ──
+    const excludeRow = document.createElement('div');
+    excludeRow.className = 'prop-row';
+    excludeRow.innerHTML = '<label>Exclude From Map Clear:</label>';
+    const excludeCb = document.createElement('input');
+    excludeCb.type = 'checkbox';
+    excludeCb.checked = !!npcAny['excludeFromMapClear'];
+    excludeRow.appendChild(excludeCb);
+    excludeRow.appendChild(this.makeInfo(
+      'Excludes this trainer from the auto-computed allTrainersDefeatedFlag("mapId") ' +
+      '(flag: "all-trainers-defeated-{mapId}") and from the mapClearBlocker count. ' +
+      'Use for gym leaders or story bosses that should not count toward clearing the area.'
+    ));
+    section.appendChild(excludeRow);
+    excludeCb.addEventListener('change', () => {
+      if (excludeCb.checked) npcAny['excludeFromMapClear'] = true;
+      else delete npcAny['excludeFromMapClear'];
       emit();
     });
   }

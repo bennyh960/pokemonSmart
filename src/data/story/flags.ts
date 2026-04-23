@@ -133,6 +133,22 @@ export const FLAGS = {
 /** Union type of all valid flag string values. Useful for typed flag parameters. */
 export type StoryFlag = (typeof FLAGS)[keyof typeof FLAGS];
 
+// ── Auto-computed per-map flags ─────────────────────────────────────────────
+//
+// The story engine automatically sets "all-trainers-defeated-{mapId}" in
+// pd.flags the moment every type:"trainer" NPC on the current map has been
+// beaten at least once.  No manual registerStoryEvent needed.
+//
+// Use the helper below so the flag name is never a hand-typed string:
+//
+//   NPC json:   "despawnAfter": "all-trainers-defeated-minusburg"
+//   TS story:   conditions: [{ type: 'flag', flag: allTrainersDefeatedFlag('minusburg') }]
+//
+/** Returns the auto-computed flag string for "all trainers on mapId defeated". */
+export function allTrainersDefeatedFlag(mapId: string): string {
+  return `all-trainers-defeated-${mapId}`;
+}
+
 /**
  * Human-readable descriptions for each flag — used by the map editor
  * to show tooltips in the spawnAfter/despawnAfter autocomplete dropdowns.

@@ -29,7 +29,7 @@ import { getPokemon, getPokemonDisplayName, getLocalizedName } from '../services
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadCharacterSprites, getCharacterFrame, hasCharacter } from '../engine/character-sprites.js';
-import { loadMap, setCurrentMapId } from '../systems/map-manager.js';
+import { loadMap, setCurrentMapId, getCachedMap, getCurrentMapId } from '../systems/map-manager.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
@@ -249,6 +249,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       default:
         return 'down';
     }
+  }
+
+  /** Build a bilingual "X of Y trainers still standing" string for a mapClearBlocker NPC. */
+  function buildMapClearCountLine(locale: string): string {
+    const mapId = getCurrentMapId();
+    if (!mapId) return '';
+    const mapData = getCachedMap(mapId);
+    if (!mapData?.npcs) return '';
+    const trainers = mapData.npcs.filter((npc) => npc.type === 'trainer' && !npc.excludeFromMapClear);
+    if (trainers.length === 0) return '';
+    const pd = getPlayerData();
+    const defeated = trainers.filter((npc) => pd.flags[`trainer-${npc.id}-defeated`]).length;
+    const remaining = trainers.length - defeated;
+    return locale === 'he'
+      ? `${remaining} מתוך ${trainers.length} מאמנים עדיין עומדים.`
+      : `${remaining} of ${trainers.length} trainers still standing.`;
   }
 
   /** Turn an NPC to face the player, saving its original facing for later restore. */
@@ -2025,8 +2041,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const dialogueLines = (pfd && hasActiveGame() && getPlayerData().flags[pfd.flag])
               ? pfd.dialogue
               : npc.dialogue;
+            const locale = getLocale();
+            const resolvedLines = resolveDialogue(dialogueLines, locale);
+            if (npc.mapClearBlocker && hasActiveGame()) {
+              const countLine = buildMapClearCountLine(locale);
+              if (countLine) resolvedLines.push(countLine);
+            }
             activeTextBox = createTextBox(
-              resolveDialogue(dialogueLines, getLocale()),
+              resolvedLines,
               isRTL(),
               npc.name ? getLocalizedName(npc.name) : undefined,
             );

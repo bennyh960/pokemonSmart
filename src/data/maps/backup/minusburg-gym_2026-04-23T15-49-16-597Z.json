@@ -28,18 +28,12 @@
     {
       "fromX": 49,
       "fromY": 4,
-      "returnToPrevious": false,
-      "toMapId": "minusburg",
-      "toX": 29,
-      "toY": 33
+      "returnToPrevious": true
     },
     {
       "fromX": 49,
       "fromY": 5,
-      "returnToPrevious": false,
-      "toX": 29,
-      "toY": 33,
-      "toMapId": "minusburg"
+      "returnToPrevious": true
     }
   ],
   "npcs": [
@@ -695,7 +689,7 @@
       "id": "npc-1776955360152",
       "x": 30,
       "y": 6,
-      "facing": "down",
+      "facing": "right",
       "type": "trainer",
       "dialogue": [
         {
@@ -744,7 +738,7 @@
     },
     {
       "id": "npc-1776958646484",
-      "x": 37,
+      "x": 38,
       "y": 3,
       "facing": "left",
       "type": "dialogue",
@@ -766,23 +760,19 @@
         "he": "ריק"
       },
       "autoWalk": {
-        "pattern": [],
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 0.5
+          }
+        ],
         "loop": false,
         "beforeDespawnPattern": [
           {
             "dir": "right",
             "steps": 3,
-            "delay": 1
-          },
-          {
-            "dir": "down",
-            "steps": 2,
-            "delay": 0.5
-          },
-          {
-            "dir": "right",
-            "steps": 10,
-            "delay": 0.5
+            "delay": 0
           }
         ]
       }

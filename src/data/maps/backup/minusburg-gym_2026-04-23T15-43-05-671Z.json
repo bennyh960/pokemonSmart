@@ -24,22 +24,6 @@
       "fromX": 26,
       "fromY": 49,
       "returnToPrevious": true
-    },
-    {
-      "fromX": 49,
-      "fromY": 4,
-      "returnToPrevious": false,
-      "toMapId": "minusburg",
-      "toX": 29,
-      "toY": 33
-    },
-    {
-      "fromX": 49,
-      "fromY": 5,
-      "returnToPrevious": false,
-      "toX": 29,
-      "toY": 33,
-      "toMapId": "minusburg"
     }
   ],
   "npcs": [
@@ -695,7 +679,7 @@
       "id": "npc-1776955360152",
       "x": 30,
       "y": 6,
-      "facing": "down",
+      "facing": "right",
       "type": "trainer",
       "dialogue": [
         {
@@ -741,51 +725,6 @@
           "he": "אני משתמשת בפקוידע במהלך הקרב - וזה עוזר לי מאוד"
         }
       ]
-    },
-    {
-      "id": "npc-1776958646484",
-      "x": 37,
-      "y": 3,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "מצטערים אבל יש עומס גדול מאוד היום במכון."
-        },
-        {
-          "en": "",
-          "he": "מינזה תילחם היום במאמן הראשון שינצח את כל המתחרים האחרים"
-        }
-      ],
-      "spriteType": "char_304fc6",
-      "mapClearBlocker": true,
-      "despawnAfter": "all-trainers-defeated-minusburg",
-      "name": {
-        "en": "Rick",
-        "he": "ריק"
-      },
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 3,
-            "delay": 1
-          },
-          {
-            "dir": "down",
-            "steps": 2,
-            "delay": 0.5
-          },
-          {
-            "dir": "right",
-            "steps": 10,
-            "delay": 0.5
-          }
-        ]
-      }
     }
   ],
   "music": "gym-battle",
@@ -2308,11 +2247,6 @@
       "key": "item-generic",
       "x": 48,
       "y": 20
-    },
-    {
-      "key": "mat-vertical",
-      "x": 49,
-      "y": 4
     }
   ]
 }
