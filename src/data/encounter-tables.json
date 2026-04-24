@@ -259,21 +259,21 @@
       },
       {
         "pokemonId": 190,
-        "minLevel": 15,
-        "maxLevel": 20,
+        "minLevel": 20,
+        "maxLevel": 25,
         "weight": 10
       },
       {
         "pokemonId": 32,
         "minLevel": 15,
         "maxLevel": 18,
-        "weight": 20
+        "weight": 15
       },
       {
         "pokemonId": 29,
         "minLevel": 15,
         "maxLevel": 18,
-        "weight": 20
+        "weight": 15
       },
       {
         "pokemonId": 172,
@@ -285,19 +285,55 @@
         "pokemonId": 54,
         "minLevel": 20,
         "maxLevel": 25,
-        "weight": 20
+        "weight": 5
       },
       {
         "pokemonId": 223,
         "minLevel": 25,
         "maxLevel": 30,
-        "weight": 20
+        "weight": 5
       },
       {
         "pokemonId": 72,
         "minLevel": 25,
         "maxLevel": 30,
-        "weight": 20
+        "weight": 5
+      },
+      {
+        "pokemonId": 30,
+        "minLevel": 22,
+        "maxLevel": 26,
+        "weight": 2
+      },
+      {
+        "pokemonId": 33,
+        "minLevel": 22,
+        "maxLevel": 26,
+        "weight": 3
+      },
+      {
+        "pokemonId": 56,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 10
+      },
+      {
+        "pokemonId": 23,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 15
+      },
+      {
+        "pokemonId": 216,
+        "minLevel": 15,
+        "maxLevel": 25,
+        "weight": 8
+      },
+      {
+        "pokemonId": 191,
+        "minLevel": 15,
+        "maxLevel": 20,
+        "weight": 15
       }
     ]
   },

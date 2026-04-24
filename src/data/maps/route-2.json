@@ -164,7 +164,7 @@
       "party": [
         {
           "pokemonId": 14,
-          "level": 14,
+          "level": 18,
           "moves": []
         },
         {
@@ -357,12 +357,12 @@
         },
         {
           "pokemonId": 55,
-          "level": 35,
+          "level": 33,
           "moves": []
         },
         {
           "pokemonId": 199,
-          "level": 35,
+          "level": 33,
           "moves": []
         }
       ],
@@ -407,12 +407,12 @@
       "party": [
         {
           "pokemonId": 73,
-          "level": 35,
+          "level": 33,
           "moves": []
         },
         {
           "pokemonId": 195,
-          "level": 35,
+          "level": 33,
           "moves": []
         }
       ],
@@ -468,7 +468,7 @@
       "party": [
         {
           "pokemonId": 25,
-          "level": 30,
+          "level": 30,  
           "moves": []
         },
         {
@@ -517,7 +517,7 @@
         },
         {
           "pokemonId": 32,
-          "level": 20,
+          "level": 25,
           "moves": []
         },
         {
@@ -567,7 +567,7 @@
         },
         {
           "pokemonId": 228,
-          "level": 22,
+          "level": 25,
           "moves": []
         }
       ],
@@ -637,19 +637,19 @@
       "party": [
         {
           "pokemonId": 206,
-          "level": 20,
+          "level": 25,
           "moves": [
             156
           ]
         },
         {
           "pokemonId": 214,
-          "level": 20,
+          "level": 25,
           "moves": []
         },
         {
           "pokemonId": 198,
-          "level": 20,
+          "level": 25,
           "moves": [
             355
           ]
