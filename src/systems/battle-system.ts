@@ -112,7 +112,6 @@ const SAME_TYPE_STATUS_IMMUNITY_BY_MOVE_TYPE: Partial<Record<MajorStatusId, Poke
   freeze: 'ice',
   paralyze: 'electric',
   poison: 'poison',
-  sleep: 'grass',
 };
 
 function randomTurnCount(minTurns: number, maxTurns: number, random: () => number): number {
@@ -783,11 +782,13 @@ export function applyEndOfTurnStatusEffects(
       if (runtimeState.badlyPoisonTurns > 0) {
         runtimeState.badlyPoisonTurns++;
       }
+      if (pokemon.hp <= 0) pokemon.status = null;
       return { damage, status: 'poison', message: 'poison', fainted: pokemon.hp <= 0 };
     }
     case 'burn': {
       const damage = Math.max(1, Math.floor(pokemon.maxHp / 8));
       pokemon.hp = Math.max(0, pokemon.hp - damage);
+      if (pokemon.hp <= 0) pokemon.status = null;
       return { damage, status: 'burn', message: 'burn', fainted: pokemon.hp <= 0 };
     }
     default:

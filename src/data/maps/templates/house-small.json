@@ -32,8 +32,24 @@
   "interactiveItems": {
     "item-generic": [
       {
-        "itemId": "poke-ball",
+        "itemId": "super-potion",
         "itemQty": 3
+      },
+      {
+        "itemId": "potion",
+        "itemQty": 6
+      },
+      {
+        "itemId": "poke-ball",
+        "itemQty": 5
+      },
+      {
+        "itemId": "great-ball",
+        "itemQty": 3
+      },
+      {
+        "itemId": "ultra-ball",
+        "itemQty": 1
       },
       {
         "itemId": "pokedex-battery"

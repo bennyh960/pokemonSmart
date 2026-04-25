@@ -294,23 +294,7 @@
         }
       ],
       "spriteType": "char_962c1b",
-      "party": [
-        {
-          "pokemonId": 156,
-          "level": 25,
-          "moves": []
-        },
-        {
-          "pokemonId": 64,
-          "level": 28,
-          "moves": []
-        },
-        {
-          "pokemonId": 75,
-          "level": 30,
-          "moves": []
-        }
-      ],
+      "party": [],
       "lineOfSight": 1,
       "reward": {
         "money": 1000,
@@ -414,7 +398,7 @@
     {
       "id": "npc-1776954300525",
       "x": 46,
-      "y": 41,
+      "y": 40,
       "facing": "right",
       "type": "trainer",
       "dialogue": [
@@ -818,7 +802,7 @@
       ],
       "spriteType": "char_304fc6",
       "mapClearBlocker": true,
-      "despawnAfter": "all-trainers-defeated-minusburg/gym",
+      "despawnAfter": "all-trainers-defeated-minusburg",
       "name": {
         "en": "Rick",
         "he": "ריק"

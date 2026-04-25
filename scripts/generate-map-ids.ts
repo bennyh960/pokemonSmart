@@ -33,9 +33,11 @@ function collectEntries(dir: string, topFolder: string, entries: MapEntry[] = []
         const raw = fs.readFileSync(path.join(dir, entry.name), 'utf-8');
         const parsed = JSON.parse(raw);
         if (typeof parsed?.id === 'string' && parsed.id.trim() !== '') {
-          const id = parsed.id.trim();
-          const value = `${topFolder}/${id}`;
-          const key = toEnumKey(`${topFolder}_${id}`);
+          // Use only the last path segment so maps saved with the old full-path id
+          // (e.g. "routes/route-1") don't produce a double-prefix value.
+          const shortId = parsed.id.trim().split('/').pop()!;
+          const value = `${topFolder}/${shortId}`;
+          const key = toEnumKey(`${topFolder}_${shortId}`);
           entries.push({ key, value });
         }
       } catch {

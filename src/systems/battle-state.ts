@@ -47,6 +47,8 @@ export interface BattleSideRuntimeState {
   stealthRockActive: boolean;
   spikesLayers: number;      // 0–3
   toxicSpikesLayers: number; // 0–2
+  futureSightTurnsRemaining: number;
+  futureSightDamage: number;
 }
 
 export function createEmptyBattleStatModifiers(): BattleStatModifiers {
@@ -113,6 +115,8 @@ export function createBattleSideRuntimeState(): BattleSideRuntimeState {
     stealthRockActive: false,
     spikesLayers: 0,
     toxicSpikesLayers: 0,
+    futureSightTurnsRemaining: 0,
+    futureSightDamage: 0,
   };
 }
 

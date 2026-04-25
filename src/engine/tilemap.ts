@@ -191,10 +191,20 @@ function buildInteractOverrides(
       }
     }
 
-    // Assign fallbacks to remaining unclaimed candidates in their natural array order
+    // Assign fallbacks to remaining unclaimed candidates
     const unclaimed = candidates.filter(o => !claimed.has(o));
-    for (let i = 0; i < fallbacks.length && i < unclaimed.length; i++) {
-      result.set(unclaimed[i], { itemId: fallbacks[i].itemId, itemQty: fallbacks[i].itemQty ?? 1 });
+    let assignable = fallbacks;
+    if (fallbacks.length > unclaimed.length) {
+      // y > x: randomly sample unclaimed.length overrides without replacement (Fisher-Yates)
+      const pool = [...fallbacks];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      assignable = pool.slice(0, unclaimed.length);
+    }
+    for (let i = 0; i < assignable.length && i < unclaimed.length; i++) {
+      result.set(unclaimed[i], { itemId: assignable[i].itemId, itemQty: assignable[i].itemQty ?? 1 });
     }
   }
 

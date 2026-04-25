@@ -126,8 +126,8 @@ export function exportMapJSON(data: TileMapData): string {
   // items are omitted — they are injected at load time from the template.
   if (hasTemplate && tc) {
     const clone: Record<string, unknown> = {};
-    // Identity
-    if (raw.id)       clone.id       = raw.id;
+    // Identity — write only the short name (last segment), not the full folder/name path
+    if (raw.id)       clone.id       = (raw.id as string).split('/').pop() ?? raw.id;
     if (raw.name)     clone.name     = raw.name;
     clone.template = raw.template;
     if (raw.tileset)  clone.tileset  = raw.tileset;   // explicit for readability
@@ -165,6 +165,8 @@ export function exportMapJSON(data: TileMapData): string {
   delete clone.tiles;
   delete clone.objects;
   delete clone.objectLayer;
+  // Write only the short name (last segment), not the full folder/name path
+  if (clone.id) clone.id = (clone.id as string).split('/').pop() ?? clone.id;
 
   let json = JSON.stringify(clone, null, 2);
 

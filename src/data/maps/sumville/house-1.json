@@ -1,6 +1,9 @@
 {
   "id": "sumville-house-1",
-  "name": "Math Teacher's House",
+  "label": {
+    "en": "Sumville House 1",
+    "he": "בית בסומוויל 1"
+  },
   "tileset": "overworld",
   "width": 9,
   "height": 8,
@@ -109,17 +112,16 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Sumville"
-,
+  "area": "Sumville",
   "tiles": [
-    ["wall","pic1","wall","tv1","wall","wall","flh1","books","wall"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","ca1tl","ca1t","ca1t","ca1tr"],
-    ["d","d","d","d","d","ca1l","ca1c","ca1c","ca1r"],
-    ["d","d","d","d","d","ca1bl","ca1b","ca1b","ca1br"],
-    ["d","d","d","d","d","d","d","d","d"]
+    ["wall", "pic1", "wall", "tv1", "wall", "wall", "flh1", "books", "wall"],
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "d", "d", "ca1tl", "ca1t", "ca1t", "ca1tr"],
+    ["d", "d", "d", "d", "d", "ca1l", "ca1c", "ca1c", "ca1r"],
+    ["d", "d", "d", "d", "d", "ca1bl", "ca1b", "ca1b", "ca1br"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d"]
   ],
   "objects": [
     {

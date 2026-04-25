@@ -1,9 +1,6 @@
 {
   "id": "sumville",
-  "label": {
-    "en": "Sumville",
-    "he": "סאמוויל עיר החיבור"
-  },
+  "name": "Sumville",
   "tileset": "overworld",
   "width": 60,
   "height": 60,
@@ -126,16 +123,6 @@
       "toX": 10,
       "toY": 18,
       "returnToPrevious": false
-    },
-    {
-      "fromX": 25,
-      "fromY": 37,
-      "toMapId": "sumville/library"
-    },
-    {
-      "fromX": 26,
-      "fromY": 27,
-      "toMapId": "sumville/h4"
     }
   ],
   "npcs": [
@@ -3154,7 +3141,7 @@
       "g1",
       "g1",
       "g1",
-      "bigBuildingXDoor",
+      "g1",
       "g1",
       "g1",
       "g1",
@@ -3773,7 +3760,7 @@
       "g1",
       "g1",
       "g1",
-      "b7door",
+      "g1",
       "g1",
       "g1",
       "g1",
@@ -4383,7 +4370,6 @@
       "g1",
       "g1",
       "g1",
-      "b7door",
       "g1",
       "g1",
       "g1",
@@ -4393,7 +4379,8 @@
       "g1",
       "g1",
       "g1",
-      "lock-door",
+      "g1",
+      "g1",
       "g1",
       "g1",
       "g1",
@@ -10939,16 +10926,6 @@
       "key": "item-revive",
       "x": 3,
       "y": 3
-    },
-    {
-      "key": "r3",
-      "x": 2,
-      "y": 0
-    },
-    {
-      "key": "r3",
-      "x": 4,
-      "y": 0
     }
   ]
 }

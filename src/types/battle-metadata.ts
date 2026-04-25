@@ -42,7 +42,8 @@ export type MoveBattleBehaviorTag =
   | 'counter'
   | 'mirror-coat'
   | 'magic-coat'
-  | 'destiny-bond';
+  | 'destiny-bond'
+  | 'future-sight';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 

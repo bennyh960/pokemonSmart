@@ -6,7 +6,7 @@ import { createNamePicker } from '../ui/name-picker.js';
 import { getAllPokemon, getMoveDisplayName, type PokemonData } from '../services/pokemon-data.js';
 import { getAllItems, type ItemDef } from '../data/items.js';
 import { getTMEffect } from '../data/item-defs.js';
-import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward, type ReencounterConfig } from '../systems/npc.js';
+import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward, type ReencounterConfig, type NpcInteraction } from '../systems/npc.js';
 import { GATES } from '../data/story/gates.js';
 import { BADGES } from '../data/badges.js';
 import { getStoryEvents } from '../data/story/events.js';
@@ -313,6 +313,11 @@ export class PropertiesPanel {
     // ── Reward (dialogue/shopkeeper/healer only — trainers and gate-guards don't use this) ──
     if (npc.type !== 'trainer' && npc.type !== 'gate-guard') {
       this.renderDialogueRewardUI(body, npc);
+    }
+
+    // ── NPC Interaction ──
+    if (npc.type !== 'trainer' && npc.type !== 'gate-guard') {
+      this.renderNpcInteractionUI(body, npc);
     }
 
     // ── Trainer-specific fields ──
@@ -1392,6 +1397,151 @@ export class PropertiesPanel {
     section.appendChild(movesContainer);
   }
 
+  /** Interaction editor for non-trainer NPCs (show-pokemon, show-types, trade-evolution, swap-pokemon). */
+  private renderNpcInteractionUI(section: HTMLElement, npc: NPCData): void {
+    const emit = () => this.state.emit('map-modified');
+    const npcAny = npc as unknown as Record<string, unknown>;
+    const interaction = npcAny['interaction'] as NpcInteraction | undefined;
+
+    const container = document.createElement('div');
+    container.style.marginTop = '6px';
+
+    const header = document.createElement('div');
+    header.className = 'prop-row';
+    header.innerHTML = '<label>Interaction:</label>';
+    const kindSel = document.createElement('select');
+    for (const opt of ['none', 'show-pokemon', 'show-types', 'trade-evolution', 'swap-pokemon']) {
+      const o = document.createElement('option');
+      o.value = opt; o.textContent = opt;
+      if ((interaction?.kind ?? 'none') === opt) o.selected = true;
+      kindSel.appendChild(o);
+    }
+    header.appendChild(kindSel);
+    container.appendChild(header);
+
+    const fields = document.createElement('div');
+    fields.style.marginLeft = '8px';
+    container.appendChild(fields);
+    section.appendChild(container);
+
+    const renderFields = () => {
+      fields.innerHTML = '';
+      const kind = kindSel.value;
+      if (kind === 'none') return;
+
+      if (kind === 'show-pokemon') {
+        const cur = interaction?.kind === 'show-pokemon' ? interaction : null;
+        const idsRow = document.createElement('div'); idsRow.className = 'prop-row';
+        idsRow.innerHTML = '<label>Pokemon IDs:</label>';
+        const idsInput = document.createElement('input');
+        idsInput.type = 'text'; idsInput.placeholder = '1,4,7';
+        idsInput.value = cur ? cur.pokemonIds.join(',') : '';
+        idsInput.title = 'Comma-separated Pokemon IDs';
+        idsInput.addEventListener('change', () => {
+          const ids = idsInput.value.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+          const prev = npcAny['interaction'] as NpcInteraction & { kind: 'show-pokemon' } | undefined;
+          npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: ids, reward: prev?.reward ?? { money: 0 } };
+          emit();
+        });
+        idsRow.appendChild(idsInput);
+        fields.appendChild(idsRow);
+        this.renderInlineReward(fields, npcAny, 'show-pokemon', emit);
+      }
+
+      if (kind === 'show-types') {
+        const cur = interaction?.kind === 'show-types' ? interaction : null;
+        const typesRow = document.createElement('div'); typesRow.className = 'prop-row';
+        typesRow.innerHTML = '<label>Types:</label>';
+        const typesInput = document.createElement('input');
+        typesInput.type = 'text'; typesInput.placeholder = 'fire,water';
+        typesInput.value = cur ? cur.types.join(',') : '';
+        typesInput.title = 'Comma-separated type names';
+        typesInput.addEventListener('change', () => {
+          const types = typesInput.value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+          const prev = npcAny['interaction'] as NpcInteraction & { kind: 'show-types' } | undefined;
+          npcAny['interaction'] = { kind: 'show-types', types, count: prev?.kind === 'show-types' ? prev.count : 1, reward: prev?.kind === 'show-types' ? prev.reward : { money: 0 } };
+          emit();
+        });
+        typesRow.appendChild(typesInput);
+        fields.appendChild(typesRow);
+
+        const countRow = document.createElement('div'); countRow.className = 'prop-row';
+        countRow.innerHTML = '<label>Count:</label>';
+        const countInput = document.createElement('input');
+        countInput.type = 'number'; countInput.min = '1'; countInput.value = String(cur?.count ?? 1);
+        countInput.addEventListener('change', () => {
+          const prev = npcAny['interaction'] as NpcInteraction & { kind: 'show-types' } | undefined;
+          if (prev?.kind === 'show-types') { prev.count = parseInt(countInput.value, 10) || 1; emit(); }
+        });
+        countRow.appendChild(countInput);
+        fields.appendChild(countRow);
+        this.renderInlineReward(fields, npcAny, 'show-types', emit);
+      }
+
+      if (kind === 'trade-evolution') {
+        const note = document.createElement('div');
+        note.className = 'prop-row';
+        note.style.color = '#aaa';
+        note.textContent = 'Scans party for trade-evolvable Pokemon.';
+        fields.appendChild(note);
+      }
+
+      if (kind === 'swap-pokemon') {
+        const cur = interaction?.kind === 'swap-pokemon' ? interaction : null;
+        for (const [label, key, defaultVal] of [['Offers ID', 'offersId', '0'], ['Level', 'level', '20'], ['Wants ID', 'wantsId', '0']] as const) {
+          const row = document.createElement('div'); row.className = 'prop-row';
+          row.innerHTML = `<label>${label}:</label>`;
+          const inp = document.createElement('input');
+          inp.type = 'number'; inp.min = '0';
+          inp.value = String(cur ? (cur as Record<string, unknown>)[key] ?? defaultVal : defaultVal);
+          inp.addEventListener('change', () => {
+            const prev = (npcAny['interaction'] as Record<string, unknown> | undefined) ?? {};
+            npcAny['interaction'] = { kind: 'swap-pokemon', offersId: 0, level: 20, wantsId: 0, ...prev, [key]: parseInt(inp.value, 10) || 0 };
+            emit();
+          });
+          row.appendChild(inp);
+          fields.appendChild(row);
+        }
+      }
+    };
+
+    kindSel.addEventListener('change', () => {
+      if (kindSel.value === 'none') {
+        delete npcAny['interaction'];
+      } else if (kindSel.value === 'trade-evolution') {
+        npcAny['interaction'] = { kind: 'trade-evolution' } satisfies NpcInteraction;
+      } else if (kindSel.value === 'show-pokemon') {
+        npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: [], reward: { money: 0 } } satisfies NpcInteraction;
+      } else if (kindSel.value === 'show-types') {
+        npcAny['interaction'] = { kind: 'show-types', types: [], count: 1, reward: { money: 0 } } satisfies NpcInteraction;
+      } else if (kindSel.value === 'swap-pokemon') {
+        npcAny['interaction'] = { kind: 'swap-pokemon', offersId: 0, level: 20, wantsId: 0 } satisfies NpcInteraction;
+      }
+      emit();
+      renderFields();
+    });
+
+    renderFields();
+  }
+
+  /** Inline reward editor (money + flag) used inside interaction sub-panels. */
+  private renderInlineReward(container: HTMLElement, npcAny: Record<string, unknown>, kind: string, emit: () => void): void {
+    const moneyRow = document.createElement('div'); moneyRow.className = 'prop-row';
+    moneyRow.innerHTML = '<label>Reward $:</label>';
+    const moneyInput = document.createElement('input');
+    moneyInput.type = 'number'; moneyInput.min = '0';
+    const cur = npcAny['interaction'] as Record<string, unknown> | undefined;
+    const reward = (cur?.['reward'] as Record<string, unknown> | undefined) ?? {};
+    moneyInput.value = String(reward['money'] ?? 0);
+    moneyInput.addEventListener('change', () => {
+      const intx = npcAny['interaction'] as Record<string, unknown> | undefined;
+      if (intx) { (intx['reward'] as Record<string, unknown>)['money'] = parseInt(moneyInput.value, 10) || 0; emit(); }
+    });
+    moneyRow.appendChild(moneyInput);
+    container.appendChild(moneyRow);
+    void kind;
+  }
+
   /** Reward editor for non-trainer NPCs (money, items, badge, storyEvent). */
   private renderDialogueRewardUI(section: HTMLElement, npc: NPCData): void {
     const emit = () => this.state.emit('map-modified');
@@ -2287,10 +2437,10 @@ export class PropertiesPanel {
     const section = this.makeSection('Map Info', true);
     const body = PropertiesPanel.sectionBody(section);
 
-    // Map ID (read-only display)
+    // Map path (read-only display — the id field in the JSON is just the short name)
     const idRow = document.createElement('div');
     idRow.className = 'prop-row';
-    idRow.innerHTML = `<label>ID:</label><span style="font-family:monospace;font-size:11px">${mapData.id ?? '—'}</span>`;
+    idRow.innerHTML = `<label>Path:</label><span style="font-family:monospace;font-size:11px">${mapData.id ?? '—'}</span>`;
     body.appendChild(idRow);
 
     // Area field (editable)

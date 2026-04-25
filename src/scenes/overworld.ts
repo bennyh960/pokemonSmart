@@ -25,7 +25,8 @@ import {
 import { setPartyMode } from '../scenes/party.js';
 import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
-import { getPokemon, getPokemonDisplayName, getLocalizedName } from '../services/pokemon-data.js';
+import { getPokemon, getPokemonDisplayName, getLocalizedName, getNextEvolution } from '../services/pokemon-data.js';
+import { setEvolutionData } from '../scenes/evolution.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadCharacterSprites, getCharacterFrame, hasCharacter } from '../engine/character-sprites.js';
@@ -40,6 +41,7 @@ import {
   type NPCManager,
   type TrainerData,
   type GateGuardData,
+  type NpcInteraction,
   checkTrainerLineOfSight,
   normalizeReward,
   resolveDialogue,
@@ -417,7 +419,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     flashTimer = 0;
     flashPhase = 'flash';
     const playerData = getPlayerData();
-    const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
+    const playerPokemon = playerData.party.find((p) => p.hp > 0);
     if (playerPokemon) setBattleData(playerPokemon, wildPokemon, deriveBattleContext(), deriveBattleBackground());
   }
 
@@ -518,7 +520,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // First encounter
           const trainerBattleData = buildTrainerBattleData(trainer, 0);
           const playerData = getPlayerData();
-          const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
+          const playerPokemon = playerData.party.find((p) => p.hp > 0);
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
             stateMachine.change('BATTLE');
@@ -530,7 +532,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const reencounterParty = buildReencounterParty(trainer, status.encounterIndex);
             const reencounterData = buildTrainerBattleData(trainer, status.encounterIndex, reencounterParty);
             const playerData = getPlayerData();
-            const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
+            const playerPokemon = playerData.party.find((p) => p.hp > 0);
             if (playerPokemon) {
               setTrainerBattleData(playerPokemon, reencounterData, deriveBattleContext(), deriveBattleBackground());
               stateMachine.change('BATTLE');
@@ -570,6 +572,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (npc.reward && hasActiveGame()) {
               giveNPCReward(npc, npc.reward);
             }
+            handleNpcInteraction(npc);
             if (hasActiveGame()) {
               fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
             }
@@ -581,9 +584,90 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (npc.reward && hasActiveGame()) {
         giveNPCReward(npc, npc.reward);
       }
+      handleNpcInteraction(npc);
       // Fire npc-interact story trigger so story events can react to this NPC being talked to
       if (hasActiveGame()) {
         fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+      }
+    }
+  }
+
+  /** Handle special NPC interaction after dialogue is dismissed. */
+  function handleNpcInteraction(npc: NPCData): void {
+    const interaction = (npc as unknown as { interaction?: NpcInteraction }).interaction;
+    if (!interaction || !hasActiveGame()) return;
+
+    const pd = getPlayerData();
+    const party = pd.party;
+    const rtl = isRTL();
+
+    switch (interaction.kind) {
+      case 'show-pokemon': {
+        const flagKey = `npc-${npc.id}-show-pokemon-done`;
+        if (pd.flags[flagKey]) return;
+        const missing = interaction.pokemonIds.filter((id) => !party.some((p) => p.id === id));
+        if (missing.length === 0) {
+          giveNPCReward(npc, { ...interaction.reward, flag: flagKey });
+        } else {
+          const missingNames = missing.map((id) => getPokemonDisplayName(id)).join(', ');
+          activeTextBox = createTextBox([t('npc.interaction.showPokemon.missing', { names: missingNames })], rtl);
+        }
+        break;
+      }
+      case 'show-types': {
+        const flagKey = `npc-${npc.id}-show-types-done`;
+        if (pd.flags[flagKey]) return;
+        const matchCount = party.filter((p) => {
+          const data = getPokemon(p.id);
+          return data && data.types.some((type) => interaction.types.includes(type));
+        }).length;
+        if (matchCount >= interaction.count) {
+          giveNPCReward(npc, { ...interaction.reward, flag: flagKey });
+        } else {
+          const typesStr = interaction.types.join(', ');
+          activeTextBox = createTextBox(
+            [t('npc.interaction.showTypes.missing', { count: interaction.count, types: typesStr, has: matchCount })],
+            rtl,
+          );
+        }
+        break;
+      }
+      case 'trade-evolution': {
+        for (const pokemon of party) {
+          const evo = getNextEvolution(pokemon.id);
+          if (evo && evo.trigger === 'trade') {
+            setEvolutionData(pokemon, evo);
+            stateMachine.push('EVOLUTION');
+            return;
+          }
+        }
+        activeTextBox = createTextBox([t('npc.interaction.tradeEvo.nothing')], rtl);
+        break;
+      }
+      case 'swap-pokemon': {
+        const flagKey = `npc-${npc.id}-swap-done`;
+        if (pd.flags[flagKey]) return;
+        const partyIdx = party.findIndex((p) => p.id === interaction.wantsId);
+        if (partyIdx >= 0) {
+          const givenName = getPokemonDisplayName(party[partyIdx].id);
+          party.splice(partyIdx, 1);
+          const offerData = getPokemon(interaction.offersId);
+          if (offerData) {
+            const newPokemon = createPokemonFromData(offerData, interaction.level);
+            party.push(newPokemon);
+            const receivedName = getPokemonDisplayName(interaction.offersId);
+            setFlag(pd, flagKey);
+            autoSave();
+            activeTextBox = createTextBox(
+              [t('npc.interaction.swap.done', { given: givenName, received: receivedName })],
+              rtl,
+            );
+          }
+        } else {
+          const wantedName = getPokemonDisplayName(interaction.wantsId);
+          activeTextBox = createTextBox([t('npc.interaction.swap.missing', { name: wantedName })], rtl);
+        }
+        break;
       }
     }
   }
@@ -985,7 +1069,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       data.objects = data.objects.filter((obj) => {
         const def = tileset.getTile(obj.key);
         if (def?.interactType?.id === 'item') {
-          const flagKey = obj.interactArgs?.flag || `obj-${obj.key}-${obj.x}-${obj.y}-collected`;
+          const flagKey = obj.interactArgs?.flag || `obj-${mapId}-${obj.key}-${obj.x}-${obj.y}-collected`;
           return !flags[flagKey];
         }
         // Remove already-cut trees or already-moved boulders
@@ -1524,7 +1608,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Start the battle (line-of-sight triggered — always first encounter)
           const trainerBattleData = buildTrainerBattleData(ta.trainer, 0);
           const playerData = getPlayerData();
-          const playerPokemon = playerData.party.find((p) => p.hp > 0) || playerData.party[0];
+          const playerPokemon = playerData.party.find((p) => p.hp > 0);
           if (playerPokemon) {
             setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
             // Push player back 1 step (opposite of facing direction) before battle starts
@@ -2113,7 +2197,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   } else if (resolved.id === 'item') {
                     if (itemId && hasActiveGame()) {
                       const pd = getPlayerData();
-                      const flagKey = flag || `obj-${obj.key}-${obj.x}-${obj.y}-collected`;
+                      const flagKey = flag || `obj-${currentMapData?.id}-${obj.key}-${obj.x}-${obj.y}-collected`;
                       if (!pd.flags[flagKey]) {
                         const qty = itemQty || 1;
                         pd.items[itemId] = (pd.items[itemId] || 0) + qty;

@@ -1,6 +1,9 @@
 {
   "id": "route-2",
-  "name": "Route 2",
+  "label": {
+    "en": "Route 2",
+    "he": "דרך 2"
+  },
   "tileset": "overworld",
   "width": 60,
   "height": 30,
@@ -291,10 +294,7 @@
       },
       "questions": {
         "count": 1,
-        "types": [
-          "+",
-          "-"
-        ]
+        "types": ["+", "-"]
       }
     },
     {
@@ -638,9 +638,7 @@
         {
           "pokemonId": 206,
           "level": 25,
-          "moves": [
-            156
-          ]
+          "moves": [156]
         },
         {
           "pokemonId": 214,
@@ -650,9 +648,7 @@
         {
           "pokemonId": 198,
           "level": 25,
-          "moves": [
-            355
-          ]
+          "moves": [355]
         }
       ],
       "lineOfSight": 3,
@@ -752,9 +748,7 @@
       },
       "questions": {
         "count": 1,
-        "types": [
-          "-"
-        ]
+        "types": ["-"]
       }
     },
     {
@@ -809,10 +803,7 @@
       },
       "questions": {
         "count": 6,
-        "types": [
-          "+",
-          "-"
-        ]
+        "types": ["+", "-"]
       }
     },
     {
@@ -890,9 +881,7 @@
       },
       "questions": {
         "count": 5,
-        "types": [
-          "×"
-        ]
+        "types": ["×"]
       },
       "party": [
         {

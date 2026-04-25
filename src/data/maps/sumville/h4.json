@@ -1,0 +1,8 @@
+{
+  "id": "house4",
+  "label": {
+    "en": "House 4",
+    "he": "בית 4"
+  },
+  "template": "house-small"
+}

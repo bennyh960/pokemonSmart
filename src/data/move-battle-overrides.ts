@@ -92,6 +92,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Skull Bash': chargingMove(stageChange('defense', 1, 'user')),
   'Sky Attack': chargingMove(),
   'Razor Wind': chargingMove(),
+  'Future Sight': { behaviorTags: ['future-sight'] },
   Reflect: usersFieldEffect('reflect'),
   'Light Screen': usersFieldEffect('light-screen'),
   Mist: usersFieldEffect('mist'),

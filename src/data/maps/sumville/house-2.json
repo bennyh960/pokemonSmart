@@ -1,6 +1,9 @@
 {
   "id": "sumville-house-2",
-  "name": "Collector's House",
+  "label": {
+    "en": "Collector's House",
+    "he": "בית האספנים"
+  },
   "tileset": "overworld",
   "width": 9,
   "height": 8,
@@ -132,17 +135,16 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "area": "Sumville"
-,
+  "area": "Sumville",
   "tiles": [
-    ["shelf1","pic2","wall","wall","pic1","wall","books","shelf1","pic2"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1","fh1"],
-    ["fh1","fh1","fh1","ca1tl","ca1t","ca1tr","fh1","fh1","fh1"]
+    ["shelf1", "pic2", "wall", "wall", "pic1", "wall", "books", "shelf1", "pic2"],
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
+    ["fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1"],
+    ["fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1"],
+    ["fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1"],
+    ["fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1"],
+    ["fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1", "fh1"],
+    ["fh1", "fh1", "fh1", "ca1tl", "ca1t", "ca1tr", "fh1", "fh1", "fh1"]
   ],
   "objects": [
     {

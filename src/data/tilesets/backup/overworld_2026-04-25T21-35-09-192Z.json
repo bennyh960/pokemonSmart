@@ -5326,7 +5326,6 @@
       "walkable": true,
       "above": true,
       "category": "ground",
-      "interactType": null,
       "description": "edgeBR"
     },
     {
@@ -5337,8 +5336,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "stairs1Front",
@@ -5348,8 +5346,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "other",
-      "interactType": null
+      "category": "other"
     },
     {
       "key": "deck6",
@@ -5359,8 +5356,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "stairsDecl",
@@ -5370,8 +5366,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "deck22shadow",
@@ -5381,8 +5376,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "bigBuildingX1",
@@ -5393,7 +5387,6 @@
       "walkable": false,
       "above": true,
       "category": "building",
-      "interactType": null,
       "cells": [
         {
           "dx": 1,
@@ -5461,8 +5454,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "building",
-      "interactType": null
+      "category": "building"
     },
     {
       "key": "bigBuildingX1-above",
@@ -5474,7 +5466,6 @@
       "above": false,
       "overlay": true,
       "category": "building",
-      "interactType": null,
       "cells": [
         {
           "dx": 1,
@@ -5585,27 +5576,6 @@
           "dy": 1
         }
       ]
-    },
-    {
-      "key": "lock-door",
-      "sx": 80,
-      "sy": 1664,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "interactive",
-      "interactType": {
-        "id": "sign",
-        "args": {
-          "dialogue": [
-            {
-              "en": "",
-              "he": "דלת נעולה"
-            }
-          ]
-        }
-      }
     }
   ]
 }

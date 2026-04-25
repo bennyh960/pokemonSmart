@@ -2191,6 +2191,8 @@ export function createBattleScene(
   }
 
   function handlePlayerFaintAfterAction(consolationXp = 0): void {
+    player.status = null;
+    playerBattleState.majorStatus = null;
     enemyGoesFirst = false;
     startPlayerFaintAnimation();
     const faintLines = [t('battle.fainted', { name: getPokemonDisplayName(player.id) })];
@@ -2258,6 +2260,23 @@ export function createBattleScene(
       if (trapResult.applied) {
         queueStatusTurnEffect('enemy', 'trap');
         lines.push(t('battle.trapDamage', { name: getPokemonDisplayName(enemy.id) }));
+      }
+    }
+
+    if (playerSideState.futureSightTurnsRemaining > 0) {
+      playerSideState.futureSightTurnsRemaining--;
+      if (playerSideState.futureSightTurnsRemaining === 0 && enemy.hp > 0) {
+        enemy.hp = Math.max(0, enemy.hp - playerSideState.futureSightDamage);
+        playerSideState.futureSightDamage = 0;
+        lines.push(t('battle.futureSightHit', { name: getPokemonDisplayName(enemy.id) }));
+      }
+    }
+    if (enemySideState.futureSightTurnsRemaining > 0) {
+      enemySideState.futureSightTurnsRemaining--;
+      if (enemySideState.futureSightTurnsRemaining === 0 && player.hp > 0) {
+        player.hp = Math.max(0, player.hp - enemySideState.futureSightDamage);
+        enemySideState.futureSightDamage = 0;
+        lines.push(t('battle.futureSightHit', { name: getPokemonDisplayName(player.id) }));
       }
     }
 
@@ -3012,6 +3031,7 @@ export function createBattleScene(
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
     const isDestinyBond = moveBattleData?.behaviorTags?.includes('destiny-bond') ?? false;
+    const isFutureSight = moveBattleData?.behaviorTags?.includes('future-sight') ?? false;
     const healPercent = moveBattleData?.healingPercent ?? null;
     const hitCount = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -3043,6 +3063,23 @@ export function createBattleScene(
         msgs.push(getStatChangeLine(attackerName, change));
       }
       syncPlayerBar();
+      textBox = createTextBox(msgs, rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
+    }
+
+    if (isFutureSight) {
+      const usedMove = getMoveDisplayName(m.id);
+      const msgs = [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove })];
+      if (playerSideState.futureSightTurnsRemaining > 0) {
+        msgs.push(t('battle.futureSightAlreadyActive'));
+      } else {
+        const damage = calcDamage(player, playerBattleState, enemy, enemyBattleState, enemySideState, 120, 'psychic', 'special');
+        playerSideState.futureSightTurnsRemaining = 2;
+        playerSideState.futureSightDamage = damage;
+        msgs.push(t('battle.futureSightSet', { name: attackerName }));
+      }
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
@@ -3693,6 +3730,7 @@ export function createBattleScene(
     const isMirrorCoatEnemy = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoatEnemy = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
     const isDestinyBondEnemy = moveBattleData?.behaviorTags?.includes('destiny-bond') ?? false;
+    const isFutureSightEnemy = moveBattleData?.behaviorTags?.includes('future-sight') ?? false;
     const healPercentEnemy = moveBattleData?.healingPercent ?? null;
     const hitCountEnemy = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -3754,6 +3792,23 @@ export function createBattleScene(
         msgs.push(getStatChangeLine(attackerName, change));
       }
       syncEnemyBar();
+      textBox = createTextBox(msgs, rtl);
+      phase = 'ENEMY_TURN';
+      phaseTimer = 0;
+      return;
+    }
+
+    if (isFutureSightEnemy) {
+      const usedMove = getMoveDisplayName(m.id);
+      const msgs = [...prefix, ...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove })];
+      if (enemySideState.futureSightTurnsRemaining > 0) {
+        msgs.push(t('battle.futureSightAlreadyActive'));
+      } else {
+        const damage = calcDamage(enemy, enemyBattleState, player, playerBattleState, playerSideState, 120, 'psychic', 'special');
+        enemySideState.futureSightTurnsRemaining = 2;
+        enemySideState.futureSightDamage = damage;
+        msgs.push(t('battle.futureSightSet', { name: attackerName }));
+      }
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
@@ -4675,6 +4730,8 @@ export function createBattleScene(
         }
         case 'CHECK_WIN': {
           if (enemy.hp <= 0) {
+            enemy.status = null;
+            enemyBattleState.majorStatus = null;
             startEnemyFaintAnimation();
             if (isTrainerBattle && trainerData && trainerPartyIndex + 1 < trainerData.party.length) {
               // Trainer has more Pokemon

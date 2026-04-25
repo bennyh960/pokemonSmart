@@ -132,6 +132,8 @@ export interface NPCData {
   excludeFromMapClear?: boolean; // When true, this trainer is ignored by the all-trainers-defeated auto-flag and the map-clear blocker count
   /** When true, appends a live "X of Y trainers still standing" line to this NPC's dialogue. */
   mapClearBlocker?: boolean;
+  /** Special interaction triggered after dialogue is dismissed. */
+  interaction?: NpcInteraction;
 }
 
 /** Dialogue shown instead of the default once a story flag is set. */
@@ -139,6 +141,13 @@ export interface PostFlagDialogue {
   flag: string;
   dialogue: BilingualText[];
 }
+
+/** Special interaction triggered after NPC dialogue is dismissed. */
+export type NpcInteraction =
+  | { kind: 'show-pokemon'; pokemonIds: number[]; reward: DialogueReward }
+  | { kind: 'show-types'; types: string[]; count: number; reward: DialogueReward }
+  | { kind: 'trade-evolution' }
+  | { kind: 'swap-pokemon'; offersId: number; level: number; wantsId: number };
 
 /** Reward item given after defeating a trainer. */
 export interface RewardItem {
