@@ -25,14 +25,15 @@ import './act1/quest-minusburg.js';
 // Act 2 — Trust Nobody: Multiplia, Dividia
 import './act2/quest-multiplia.js';
 import './act2/quest-dividia.js';
+import './act2/quest-safari.js';
 
 // Act 3 — Language Layer: Primore, Symmetrika
-import './act3/quest-primore.js';
+import './act3/quest-fractiles.js';
 import './act3/quest-symmetrika.js';
 
 // Act 4 — Rocket Escalation: Integrala, Absoluta
 import './act4/quest-integrala.js';
-import './act4/quest-absoluta.js';
+import './act4/quest-algebria.js';
 
 // Act 5 — The Core: NULL-X Tower
 import './act5/quest-nullx-tower.js';

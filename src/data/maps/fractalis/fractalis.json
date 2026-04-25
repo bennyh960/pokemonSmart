@@ -1,6 +1,9 @@
 {
   "id": "fractalis",
-  "name": "Fractalis — עיר השברים",
+  "label": {
+    "en": "Fractalis",
+    "he": "פרקטליס טאוון - עיר השברים"
+  },
   "width": 20,
   "height": 15,
   "tileSize": 16,

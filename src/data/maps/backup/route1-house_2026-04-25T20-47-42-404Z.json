@@ -1,19 +1,10 @@
 {
-  "id": "routes/route1-house",
-  "name": "house-small",
-  "template": "house-small",
-  "tileset": "interior",
+  "id": "route1-house",
   "label": {
     "en": "Route 1 House",
     "he": "בית בדרך 1"
   },
-  "area": "Route 1",
-  "music": "town3",
-  "encounterTableId": null,
-  "spawn": {
-    "x": 6,
-    "y": 13
-  },
+  "template": "house-small",
   "npcs": [
     {
       "id": "rest-stop-guy",
@@ -21,7 +12,7 @@
         "en": "Kind Guy",
         "he": "אדם אדיב"
       },
-      "x": 3,
+      "x": 4,
       "y": 11,
       "facing": "right",
       "type": "npc",
@@ -50,15 +41,7 @@
       }
     }
   ],
-  "interactiveItems": {
-    "item-generic": [
-      {
-        "itemId": "poke-ball",
-        "itemQty": 3
-      },
-      {
-        "itemId": "pokedex-battery"
-      }
-    ]
-  }
+  "music": "town3",
+  "encounterTableId": null,
+  "area": "Route 1"
 }
