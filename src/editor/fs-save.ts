@@ -78,15 +78,17 @@ export async function saveBlobToDirectory(type: string, fileName: string, blob: 
   await writable.close();
 }
 
-export async function saveToDirectory(type: string, fileName: string, content: string): Promise<void> {
+export async function saveToDirectory(type: string, fileName: string, content: string, subfolder?: string): Promise<void> {
   const dirHandle = await getDirHandle(type);
+  const targetDir = subfolder
+    ? await dirHandle.getDirectoryHandle(subfolder, { create: true })
+    : dirHandle;
 
-  // 1. Backup existing file if it exists
+  // 1. Backup existing file if it exists (always goes to root backup/)
   try {
-    const existingFile = await dirHandle.getFileHandle(fileName);
+    const existingFile = await targetDir.getFileHandle(fileName);
     const existingData = await (await existingFile.getFile()).text();
 
-    // Create backup/ subdirectory
     const backupDir = await dirHandle.getDirectoryHandle('backup', { create: true });
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const baseName = fileName.replace(/\.json$/, '');
@@ -99,8 +101,8 @@ export async function saveToDirectory(type: string, fileName: string, content: s
     // File doesn't exist yet — no backup needed
   }
 
-  // 2. Write the new file
-  const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
+  // 2. Write the new file to the target directory (root or subfolder)
+  const fileHandle = await targetDir.getFileHandle(fileName, { create: true });
   const writable = await fileHandle.createWritable();
   await writable.write(content);
   await writable.close();

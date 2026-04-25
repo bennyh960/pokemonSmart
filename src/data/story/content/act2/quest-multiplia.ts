@@ -184,7 +184,7 @@ registerStoryEvent({
 // First arrival in Multiplia
 registerStoryEvent({
   id: 'evt-multiplia-enter',
-  trigger: { type: 'map-enter', mapId: 'multiplia' },
+  trigger: { type: 'map-enter', mapId: 'multiplia/multiplia' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_MULTIPLIA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_MULTIPLIA },
@@ -196,7 +196,7 @@ registerStoryEvent({
 // Misty appears on second visit (after flag is set by first arrival event)
 registerStoryEvent({
   id: 'evt-misty-multiplia',
-  trigger: { type: 'map-enter', mapId: 'multiplia' },
+  trigger: { type: 'map-enter', mapId: 'multiplia/multiplia' },
   conditions: [
     { type: 'flag',     flag: FLAGS.VISITED_MULTIPLIA },
     { type: 'flag-not', flag: FLAGS.ACT2_MISTY_MET },

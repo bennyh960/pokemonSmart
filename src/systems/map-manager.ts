@@ -8,9 +8,13 @@ import type { TileMapData } from '../engine/tilemap.js';
 import { loadTileset } from '../engine/tileset.js';
 import { normalizeDialogue } from './npc.js';
 
-// ─── Auto-discover all maps (*.json directly in maps/, not subdirectories) ────
+// ─── Auto-discover all maps (recursive, excludes templates/ and backup/) ─────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapModules = import.meta.glob<{ default: any }>('../data/maps/*.json');
+const mapModules = import.meta.glob<{ default: any }>([
+  '../data/maps/**/*.json',
+  '!../data/maps/templates/**',
+  '!../data/maps/backup/**',
+]);
 
 // ─── Auto-discover templates ──────────────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,7 +40,7 @@ export function getMapDisplayName(mapId: string): { en: string; he: string } {
   if (cached?.label?.en || cached?.label?.he) {
     return { en: cached.label.en ?? mapId, he: cached.label.he ?? mapId };
   }
-  if (cached?.name) return { en: cached.name, he: cached.name };
+  if (cached?.name) return { en: cached.name, he: cached.name };  // TODO: remove once all maps use label
   return { en: mapId, he: mapId };
 }
 
@@ -75,7 +79,7 @@ export async function loadMap(id: string): Promise<TileMapData> {
     data = mergeMapWithTemplate(data, templateModule.default);
   }
 
-  if (!data.id) data.id = id;
+  data.id = id;
 
   if (data.npcs) {
     for (const npc of data.npcs) {

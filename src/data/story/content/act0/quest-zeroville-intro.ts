@@ -41,19 +41,6 @@ registerQuest({
 
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
 
-// registerCutscene({
-//   id: 'test',
-//   skippable: true,
-//   steps: [
-//     {
-//       type: 'dialogue',
-//       speakerId: 'Test Speaker',
-//       lines: [{ en: 'This is a test dialogue.', he: 'זה דיאלוג בדיקה.' }],
-//     },
-//     { type: 'move-npc', npcId: 'rival-reminder', path: ['down', 'down'] },
-//   ],
-// });
-
 registerCutscene({
   id: 'act0-intro',
   skippable: true,
@@ -187,7 +174,7 @@ registerCutscene({
 // Entering Zeroville for the first time — set visit flag + start opening quest
 registerStoryEvent({
   id: 'start-game',
-  trigger: { type: 'map-enter', mapId: 'zeroville' },
+  trigger: { type: 'map-enter', mapId: 'zeroville/zeroville' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_ZEROVILLE }],
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_ZEROVILLE },
@@ -199,7 +186,7 @@ registerStoryEvent({
 // Entering Algorithma's lab before the intro → play intro cutscene
 registerStoryEvent({
   id: 'evt-act0-intro',
-  trigger: { type: 'map-enter', mapId: 'algorithma-lab' },
+  trigger: { type: 'map-enter', mapId: 'zeroville/algorithma-lab' },
   conditions: [{ type: 'flag-not', flag: FLAGS.ACT0_INTRO_SEEN }],
   repeatable: true, // flag-not condition is the guard; cutscene sets ACT0_INTRO_SEEN
   actions: [{ type: 'start-cutscene', cutsceneId: 'act0-intro' }],
@@ -208,7 +195,7 @@ registerStoryEvent({
 // Returning to lab after starter chosen — Remainder reacts
 registerStoryEvent({
   id: 'evt-act0-remainder',
-  trigger: { type: 'map-enter', mapId: 'algorithma-lab' },
+  trigger: { type: 'map-enter', mapId: 'zeroville/algorithma-lab' },
   conditions: [
     { type: 'flag', flag: FLAGS.ACT0_INTRO_SEEN },
     { type: 'flag-not', flag: FLAGS.ACT0_REMAINDER_MET },
@@ -220,7 +207,7 @@ registerStoryEvent({
 // Stepping onto Route 1 for the first time → Algorithma farewell + act0 done
 registerStoryEvent({
   id: 'evt-act0-leave',
-  trigger: { type: 'map-enter', mapId: 'route-1' },
+  trigger: { type: 'map-enter', mapId: 'routes/route-1' },
   conditions: [
     { type: 'flag', flag: FLAGS.ACT0_INTRO_SEEN },
     { type: 'flag-not', flag: FLAGS.ACT0_COMPLETE },

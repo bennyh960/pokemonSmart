@@ -114,7 +114,7 @@ registerCutscene({
 // First arrival in Integrala
 registerStoryEvent({
   id: 'evt-integrala-enter',
-  trigger: { type: 'map-enter', mapId: 'integrala' },
+  trigger: { type: 'map-enter', mapId: 'integrala/integrala' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_INTEGRALA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_INTEGRALA },
@@ -126,7 +126,7 @@ registerStoryEvent({
 // Elm arrives after badge 6 (and player hasn't seen him yet)
 registerStoryEvent({
   id: 'evt-elm-integrala',
-  trigger: { type: 'map-enter', mapId: 'integrala' },
+  trigger: { type: 'map-enter', mapId: 'integrala/integrala' },
   conditions: [
     { type: 'flag',        flag: FLAGS.VISITED_INTEGRALA },
     { type: 'flag-not',    flag: FLAGS.STORY_ELM_ARRIVED },

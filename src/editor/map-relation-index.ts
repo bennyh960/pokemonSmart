@@ -49,7 +49,9 @@ class MapRelationIndex {
       try {
         const map = await loadMapFromProject(id);
         const node = this._getOrCreate(id);
-        node.name = map.name || id;
+        node.name = (map as unknown as Record<string, unknown>).label && typeof (map as unknown as Record<string, unknown>).label === 'object'
+          ? ((map as unknown as Record<string, { en: string }>).label?.en || id)
+          : id;
         node.area = map.area;
         node.outgoing = (map.transitions ?? []).map(t => t.toMapId).filter(Boolean);
       } catch {

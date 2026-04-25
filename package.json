@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "fetch-data": "tsx scripts/run-all.ts",
+    "generate-mapIds": "tsx scripts/generate-map-ids.ts",
     "deploy": "tsx scripts/deploy-gh-pages.ts",
     "cicd": "npm run build && npm run deploy"
   },

@@ -154,7 +154,7 @@ registerCutscene({
 // First arrival in Primore
 registerStoryEvent({
   id: 'evt-primore-enter',
-  trigger: { type: 'map-enter', mapId: 'primore' },
+  trigger: { type: 'map-enter', mapId: 'primore/primore' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_PRIMORE }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_PRIMORE },
@@ -166,7 +166,7 @@ registerStoryEvent({
 // Remainder returns at Primore after badge 4 (and after being saved in Dividia)
 registerStoryEvent({
   id: 'evt-remainder-returns',
-  trigger: { type: 'map-enter', mapId: 'primore' },
+  trigger: { type: 'map-enter', mapId: 'primore/primore' },
   conditions: [
     { type: 'flag',        flag: FLAGS.STORY_REMAINDER_SAVED },
     { type: 'flag-not',    flag: FLAGS.STORY_REMAINDER_ALLY },

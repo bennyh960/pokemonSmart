@@ -2,25 +2,40 @@ import { mergeMapWithTemplate } from '../engine/tilemap.js';
 import type { TileMapData } from './types.js';
 import { hasFSAccess, saveToDirectory } from './fs-save.js';
 
-/** All map IDs — derived from files in src/data/maps/ (not subdirectories). */
-export function getKnownMapIds(): string[] {
-  return Object.keys(allMapModules)
-    .map(path => path.replace(/^.*\/maps\//, '').replace(/\.json$/, ''))
-    .sort();
+function mapIdFromPath(path: string): string {
+  return path.replace(/^.*\/maps\//, '').replace(/\.json$/, '');
 }
-
-// ─── Template registry (auto-discovered via import.meta.glob) ────────────────
-// Drop any .json file into src/data/maps/templates/ — no code changes needed.
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const templateModules = import.meta.glob<{ default: any }>('../data/maps/templates/*.json');
-
-// Auto-discover map JSONs to compute template consumer relationships
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const allMapModules = import.meta.glob<{ default: any }>('../data/maps/*.json', { eager: true });
 
 function templateIdFromPath(path: string): string {
   return path.replace(/^.*\/templates\//, '').replace(/\.json$/, '');
+}
+
+// ─── Template registry (auto-discovered via import.meta.glob) ────────────────
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const templateModules = import.meta.glob<{ default: any }>('../data/maps/templates/*.json');
+
+// Auto-discover all map JSONs (recursive, excludes templates/ and backup/)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const allMapModules = import.meta.glob<{ default: any }>([
+  '../data/maps/**/*.json',
+  '!../data/maps/templates/**',
+  '!../data/maps/backup/**',
+], { eager: true });
+
+// ID → path lookup
+const mapPathById: Record<string, string> = Object.fromEntries(
+  Object.keys(allMapModules).map(k => [mapIdFromPath(k), k])
+);
+
+/** All map IDs — derived from files in src/data/maps/ (recursive). */
+export function getKnownMapIds(): string[] {
+  return Object.keys(mapPathById).sort();
+}
+
+/** Return the subfolder a map lives in (e.g. 'minusburg'), or '' for root-level maps. */
+export function getMapFolder(mapId: string): string {
+  const slash = mapId.indexOf('/');
+  return slash >= 0 ? mapId.slice(0, slash) : '';
 }
 
 /** All known template IDs (derived from files in templates/ folder). */
@@ -32,7 +47,7 @@ export function getKnownTemplateIds(): string[] {
 export function getTemplateConsumers(templateId: string): string[] {
   return Object.entries(allMapModules)
     .filter(([, mod]) => mod.default?.template === templateId)
-    .map(([path]) => path.replace(/^.*\/maps\//, '').replace(/\.json$/, ''));
+    .map(([path]) => mapIdFromPath(path));
 }
 
 /** Load a raw template JSON (unmerged). Injects id/name so the editor knows what to call the file. */
@@ -45,16 +60,21 @@ export async function loadTemplateFromProject(templateId: string): Promise<TileM
 
 /** Load a map JSON without merging its template (returns raw instance data). */
 export async function loadMapRaw(mapId: string): Promise<TileMapData & { template?: string }> {
-  const module = await import(`../data/maps/${mapId}.json`);
-  return module.default as TileMapData & { template?: string };
+  const path = mapPathById[mapId];
+  if (!path) throw new Error(`Map "${mapId}" not found in maps/ folder.`);
+  const data = { ...allMapModules[path].default } as TileMapData & { template?: string };
+  data.id = mapId;
+  return data;
 }
 
 /** Save map data to a specific destination type ('map' or 'map-template'). */
 export async function saveMapWithType(data: TileMapData, type: 'map' | 'map-template'): Promise<void> {
-  const fileName = `${data.id ?? data.name ?? 'map'}.json`;
+  const fullId = data.id ?? 'map';
+  const fileName = `${fullId.split('/').pop() ?? fullId}.json`;
+  const subfolder = type === 'map' ? getMapFolder(fullId) : undefined;
   const json = exportMapJSON(data);
   if (hasFSAccess()) {
-    await saveToDirectory(type, fileName, json);
+    await saveToDirectory(type, fileName, json, subfolder || undefined);
     return;
   }
   const blob = new Blob([json], { type: 'application/json' });
@@ -79,11 +99,12 @@ export async function saveTemplate(name: string, data: TileMapData): Promise<voi
 
 /** Load a map JSON from the project's data directory. Merges template if present. */
 export async function loadMapFromProject(mapId: string): Promise<TileMapData> {
-  const module = await import(`../data/maps/${mapId}.json`);
-  const raw = module.default as TileMapData & { template?: string };
+  const raw = await loadMapRaw(mapId);
   if (raw.template) {
     const template = await loadTemplateFromProject(raw.template);
-    return mergeMapWithTemplate(raw, template);
+    const merged = mergeMapWithTemplate(raw, template);
+    merged.id = mapId;
+    return merged;
   }
   return raw;
 }

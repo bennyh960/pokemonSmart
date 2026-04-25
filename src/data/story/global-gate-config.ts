@@ -201,20 +201,20 @@ registerGate({
 // ─── Service map registrations ────────────────────────────────────────────────
 
 // Pokecenter interiors
-registerAutoGateMap('pokecenter-mart-interior', 'pokecenter');
-registerAutoGateMap('pokecenter-2', 'pokecenter');
-registerAutoGateMap('fake-pokecenter', 'pokecenter');
+registerAutoGateMap('shared/pokecenter-mart-interior', 'pokecenter');
+registerAutoGateMap('shared/pokecenter-2', 'pokecenter');
+registerAutoGateMap('shared/fake-pokecenter', 'pokecenter');
 registerAutoGateMap('multiplia-pokecenter', 'pokecenter');
 
 // Pokemart interiors
-registerAutoGateMap('mart-interior', 'pokemarket');
+registerAutoGateMap('shared/mart-interior', 'pokemarket');
 
 // Gym interiors
-registerAutoGateMap('sumville-gym', 'gym');
+registerAutoGateMap('sumville/gym', 'gym');
 console.log({ GATES });
-// GATES['auto-gym-sumville-gym'].sessionConfig.inputQuestions = { count: 5, types: ['+'] };
-// GATES['auto-gym-sumville-gym'].questionSetIds = ['+'];
-registerAutoGateMap('minusburg-gym', 'gym');
+// GATES['auto-gym-sumville/gym'].sessionConfig.inputQuestions = { count: 5, types: ['+'] };
+// GATES['auto-gym-sumville/gym'].questionSetIds = ['+'];
+registerAutoGateMap('minusburg/gym', 'gym');
 // GATES['auto-gym-minusburg-gym'].sessionConfig.inputQuestions = { count: 5, types: ['-'] };
 // GATES['auto-gym-minusburg-gym'].questionSetIds = ['-'];
 // registerAutoGateMap('multiplia-gym',          'gym');

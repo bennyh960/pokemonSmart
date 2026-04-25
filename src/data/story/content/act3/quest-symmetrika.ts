@@ -144,7 +144,7 @@ registerCutscene({
 // First arrival in Symmetrika
 registerStoryEvent({
   id: 'evt-symmetrika-enter',
-  trigger: { type: 'map-enter', mapId: 'symmetrika' },
+  trigger: { type: 'map-enter', mapId: 'symmetrika/symmetrika' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_SYMMETRIKA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_SYMMETRIKA },

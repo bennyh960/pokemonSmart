@@ -60,7 +60,7 @@ import {
   type CutsceneContext,
 } from '../systems/cutscene-runner.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-import { setFlyCallback, CITY_INFO } from './world-map.js';
+import { setFlyCallback, FLY_DESTINATIONS } from './world-map.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
 import charactersManifest from '../data/sprites/characters.json';
 import type { SimpleOpType } from '../math/simple-input-question.js';
@@ -925,7 +925,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   /** Start the Fly animation sequence. */
   function startFlyAnimation(pokemon: import('../types/index.js').Pokemon, destMapId: string): void {
-    const cityInfo = CITY_INFO[destMapId];
+    const destSpawn = getCachedMap(destMapId)?.spawn ?? { x: 5, y: 5 };
     const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
     flyAnim = {
       phase: 'mount',
@@ -936,8 +936,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       spriteAlpha: 0,
       fadeAlpha: 0,
       destMapId,
-      destX: cityInfo?.spawnX ?? 5,
-      destY: cityInfo?.spawnY ?? 5,
+      destX: destSpawn.x,
+      destY: destSpawn.y,
       spriteOffsetY: 0,
       teleported: false,
     };
@@ -1045,8 +1045,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       pd.previousMapReturn = previousMapReturn;
 
       // Track city visits for Fly destination list
-      // City maps are those in CITY_INFO (not routes, not interiors)
-      if (CITY_INFO[mapId]) {
+      // Track city visits for the Fly destination list
+      if (FLY_DESTINATIONS.includes(mapId)) {
         setFlag(pd, `visited-${mapId}`);
       }
 
@@ -1059,7 +1059,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     const pd = hasActiveGame() ? getPlayerData() : null;
     const p0 = pd?.party[0];
     return {
-      mapName: currentMapData?.label ?? currentMapData?.name,
+      mapName: currentMapData?.label,
       // Snapshot primitive values so the change-detector in updateHUD
       // can see differences — passing the live object reference means
       // lastData.lead.hp mutates in place and the comparison always ties.
@@ -1091,13 +1091,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       mapLoading = true;
 
       // Determine which map to load
-      let mapId = 'zeroville';
+      let mapId = 'zeroville/zeroville';
       let spawnX = 15;
       let spawnY = 12;
 
       if (hasActiveGame()) {
         const pd = getPlayerData();
-        mapId = pd.position.mapId || 'zeroville';
+        mapId = pd.position.mapId || 'zeroville/zeroville';
         spawnX = pd.position.x;
         spawnY = pd.position.y;
         previousMapReturn = pd.previousMapReturn ?? null;

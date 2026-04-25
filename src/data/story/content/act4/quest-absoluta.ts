@@ -151,7 +151,7 @@ registerCutscene({
 // First arrival in Absoluta
 registerStoryEvent({
   id: 'evt-absoluta-enter',
-  trigger: { type: 'map-enter', mapId: 'absoluta' },
+  trigger: { type: 'map-enter', mapId: 'absoluta/absoluta' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_ABSOLUTA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_ABSOLUTA },
@@ -163,7 +163,7 @@ registerStoryEvent({
 // Jessie/James serum attempt fires when entering Absoluta with all 8 badges
 registerStoryEvent({
   id: 'evt-rocket-serum-attempt',
-  trigger: { type: 'map-enter', mapId: 'absoluta' },
+  trigger: { type: 'map-enter', mapId: 'absoluta/absoluta' },
   conditions: [
     { type: 'badge-count', min: 8 },
     { type: 'flag-not',    flag: FLAGS.ROCKET_SERUM_ATTEMPT_FAILED },

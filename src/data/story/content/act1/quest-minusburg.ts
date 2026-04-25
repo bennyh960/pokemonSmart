@@ -454,7 +454,7 @@ registerCutscene({
 // Beat 1 — first map enter: atmospheric arrival cutscene
 registerStoryEvent({
   id: 'evt-minusburg-first-arrive',
-  trigger: { type: 'map-enter', mapId: 'minusburg' },
+  trigger: { type: 'map-enter', mapId: 'minusburg/minusburg' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_MINUSBURG }],
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_MINUSBURG },
@@ -527,7 +527,7 @@ registerStoryEvent({
   id: 'evt-badge2-earned',
   // trigger: { type: 'badge-earned', badge: 2 },
   repeatable: false,
-  trigger: { type: 'map-exit', mapId: 'minusburg-gym' },
+  trigger: { type: 'map-exit', mapId: 'minusburg/gym' },
   conditions: [{ type: 'flag', flag: FLAGS.STORY_BADGE_2 }],
   actions: [
     { type: 'set-infection', cityId: 'minusburg', value: 'cleared' },

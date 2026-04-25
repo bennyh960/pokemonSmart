@@ -3,7 +3,6 @@ import type { HistoryManager } from './history.js';
 import type { ToolType, TileMapData } from './types.js';
 import { categorizeTiles } from './tile-palette.js';
 import {
-  getKnownMapIds,
   getKnownTemplateIds,
   loadMapFromProject,
   loadTemplateFromProject,
@@ -11,6 +10,7 @@ import {
   copyMapToClipboard,
   createBlankMap,
 } from './map-io.js';
+import { GAME_MAPS, KNOWN_FOLDERS } from './io/map-browser.js';
 import { MUSIC_TRACK_KEYS } from '../audio/audio-manager.js';
 
 export type EditorMode = 'map' | 'template';
@@ -72,16 +72,28 @@ export class Toolbar {
     const btnNew = container.querySelector('#btn-new') as HTMLButtonElement;
     // const btnLoadFile = container.querySelector('#btn-load-file') as HTMLButtonElement;
 
-    let knownIds: string[] = [];
+    // Maps label (e.g. "minusburg#gym") → actual map ID
+    let labelToId = new Map<string, string>();
+
     const populateLoadSelect = (mode: EditorMode) => {
       selLoad.placeholder = mode === 'map' ? 'Load Map...' : 'Load Template...';
       selLoad.value = '';
-      knownIds = mode === 'map' ? getKnownMapIds() : getKnownTemplateIds();
+      labelToId.clear();
       selLoadList.innerHTML = '';
-      for (const id of knownIds) {
-        const opt = document.createElement('option');
-        opt.value = id;
-        selLoadList.appendChild(opt);
+      if (mode === 'map') {
+        for (const { id, label } of GAME_MAPS) {
+          const opt = document.createElement('option');
+          opt.value = label;
+          labelToId.set(label, id);
+          selLoadList.appendChild(opt);
+        }
+      } else {
+        for (const id of getKnownTemplateIds()) {
+          const opt = document.createElement('option');
+          opt.value = id;
+          labelToId.set(id, id);
+          selLoadList.appendChild(opt);
+        }
       }
     };
     populateLoadSelect('map');
@@ -124,8 +136,10 @@ export class Toolbar {
         };
 
     selLoad.addEventListener('change', async () => {
-      const id = selLoad.value.trim();
-      if (!id || !knownIds.includes(id)) return;
+      const raw = selLoad.value.trim();
+      if (!raw) return;
+      const id = labelToId.get(raw);
+      if (!id) return;
       try {
         const data = currentMode === 'template' ? await loadTemplateFromProject(id) : await loadMapFromProject(id);
         await doLoad(data);
@@ -162,14 +176,55 @@ export class Toolbar {
         }
         return;
       }
-      const w = parseInt(prompt('Map width (tiles):', '25') || '25', 10);
-      const h = parseInt(prompt('Map height (tiles):', '20') || '20', 10);
-      if (w > 0 && h > 0) {
+
+      // ── New Map modal ──────────────────────────────────────────────────────
+      document.querySelector('.modal-backdrop.new-map-modal')?.remove();
+      const folderOpts = ['', ...KNOWN_FOLDERS]
+        .map(f => `<option value="${f}">${f || '(root)'}</option>`)
+        .join('');
+
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop new-map-modal';
+      backdrop.innerHTML = `
+        <div class="modal-dialog">
+          <h2>New Map</h2>
+          <div class="prop-row"><label>Folder</label><select id="nm-folder">${folderOpts}</select></div>
+          <div class="prop-row"><label>Map ID</label><input id="nm-id" type="text" placeholder="e.g. minusburg-house-3" autocomplete="off"></div>
+          <div class="prop-row"><label>Width</label><input id="nm-w" type="number" value="25" min="1" max="200"></div>
+          <div class="prop-row"><label>Height</label><input id="nm-h" type="number" value="20" min="1" max="200"></div>
+          <div class="modal-actions">
+            <button id="nm-cancel">Cancel</button>
+            <button id="nm-ok" class="primary">Create</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(backdrop);
+
+      const closeModal = () => backdrop.remove();
+      backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', onKey); }
+      };
+      document.addEventListener('keydown', onKey);
+      backdrop.querySelector('#nm-cancel')!.addEventListener('click', closeModal);
+
+      backdrop.querySelector('#nm-ok')!.addEventListener('click', () => {
+        const folder = (backdrop.querySelector('#nm-folder') as HTMLSelectElement).value;
+        const mapId = (backdrop.querySelector('#nm-id') as HTMLInputElement).value.trim() || 'new-map';
+        const w = parseInt((backdrop.querySelector('#nm-w') as HTMLInputElement).value, 10) || 25;
+        const h = parseInt((backdrop.querySelector('#nm-h') as HTMLInputElement).value, 10) || 20;
+        if (w < 1 || h < 1) return;
+
         const data = createBlankMap(w, h);
+        data.id = folder ? `${folder}/${mapId}` : mapId;
         const cats = categorizeTiles(tileManifest as Record<string, never>);
         state.loadMap(data, cats);
         history.clear();
-      }
+        closeModal();
+        document.removeEventListener('keydown', onKey);
+      });
+
+      (backdrop.querySelector('#nm-id') as HTMLInputElement).focus();
     });
 
     // ── Save ──
@@ -275,7 +330,6 @@ export class Toolbar {
         <div class="modal-dialog">
           <h2>Map Settings</h2>
           <div class="prop-row"><label>File / ID</label><input id="ms-id" type="text" value="${md.id || ''}"></div>
-          <div class="prop-row"><label>Internal name</label><input id="ms-name" type="text" value="${md.name || ''}"></div>
           <div class="prop-row" style="border-top:1px solid #333;margin-top:6px;padding-top:6px">
             <label>Label EN</label><input id="ms-label-en" type="text" value="${labelEn}" placeholder="English display name">
           </div>
@@ -309,7 +363,6 @@ export class Toolbar {
 
       backdrop.querySelector('#ms-ok')!.addEventListener('click', () => {
         md.id = (backdrop.querySelector('#ms-id') as HTMLInputElement).value;
-        md.name = (backdrop.querySelector('#ms-name') as HTMLInputElement).value;
         const en = (backdrop.querySelector('#ms-label-en') as HTMLInputElement).value.trim();
         const he = (backdrop.querySelector('#ms-label-he') as HTMLInputElement).value.trim();
         if (en || he) md.label = { en, he };

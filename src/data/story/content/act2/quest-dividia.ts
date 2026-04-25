@@ -165,7 +165,7 @@ registerCutscene({
 // First arrival in Dividia
 registerStoryEvent({
   id: 'evt-dividia-enter',
-  trigger: { type: 'map-enter', mapId: 'dividia' },
+  trigger: { type: 'map-enter', mapId: 'dividia/dividia' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_DIVIDIA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_DIVIDIA },
@@ -177,7 +177,7 @@ registerStoryEvent({
 // Brock introduction on second entry (after visited flag set)
 registerStoryEvent({
   id: 'evt-brock-dividia',
-  trigger: { type: 'map-enter', mapId: 'dividia' },
+  trigger: { type: 'map-enter', mapId: 'dividia/dividia' },
   conditions: [
     { type: 'flag',     flag: FLAGS.VISITED_DIVIDIA },
     { type: 'flag-not', flag: FLAGS.ACT2_BROCK_MET },
@@ -188,7 +188,7 @@ registerStoryEvent({
 // Remainder gets glitched when player has 3+ badges and re-enters Dividia
 registerStoryEvent({
   id: 'evt-remainder-glitch',
-  trigger: { type: 'map-enter', mapId: 'dividia' },
+  trigger: { type: 'map-enter', mapId: 'dividia/dividia' },
   conditions: [
     { type: 'flag',       flag: FLAGS.VISITED_DIVIDIA },
     { type: 'flag-not',   flag: FLAGS.STORY_REMAINDER_GLITCHED },

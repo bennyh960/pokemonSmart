@@ -2053,17 +2053,6 @@
       "interactType": null
     },
     {
-      "key": "w3",
-      "sx": 16,
-      "sy": 3648,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": false,
-      "category": "wall",
-      "interactType": null
-    },
-    {
       "key": "w3-round-cl",
       "sx": 48,
       "sy": 3616,
@@ -4972,10 +4961,10 @@
       "walkable": false,
       "above": true,
       "category": "interactive",
-      "description": "generic item to be replaced on map",
       "interactType": {
         "id": "item"
-      }
+      },
+      "description": "generic item to be replaced on map"
     },
     {
       "key": "w3-up",
@@ -4985,7 +4974,8 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall"
+      "category": "wall",
+      "interactType": null
     },
     {
       "key": "w3-down",
@@ -4995,7 +4985,75 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "wall"
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "pc-device",
+      "sx": 32,
+      "sy": 544,
+      "w": 32,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "interior",
+      "interactType": null,
+      "description": "heal pokemon device"
+    },
+    {
+      "key": "chair-x1",
+      "sx": 0,
+      "sy": 1184,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null
+    },
+    {
+      "key": "chair-x2",
+      "sx": 16,
+      "sy": 1184,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null
+    },
+    {
+      "key": "chair-x3",
+      "sx": 32,
+      "sy": 1184,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null
+    },
+    {
+      "key": "chair-x4",
+      "sx": 48,
+      "sy": 1184,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null
+    },
+    {
+      "key": "chair-x5",
+      "sx": 64,
+      "sy": 1184,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null
     }
   ]
 }

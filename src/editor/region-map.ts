@@ -42,26 +42,26 @@ interface WorldEdge {
  */
 const NODES: WorldNode[] = [
   // ── Starting town ──
-  { id: 'zeroville',        label: 'Zeroville',         col: 0, row: 3, type: 'start' },
+  { id: 'zeroville/zeroville',             label: 'Zeroville',         col: 0, row: 3, type: 'start' },
 
   // ── Gym cities ──
-  { id: 'sumville',         label: 'Sumville',     gymNum: 1, col: 1, row: 1, type: 'city' },
-  { id: 'minusburg',        label: 'Minusburg',    gymNum: 2, col: 3, row: 0, type: 'city' },
-  { id: 'multiplia',        label: 'Multiplia',    gymNum: 3, col: 4, row: 2, type: 'city' },
-  { id: 'dividia',          label: 'Dividia',      gymNum: 4, col: 1, row: 4, type: 'city' },
-  { id: 'primore',          label: 'Primore',      gymNum: 5, col: 3, row: 3, type: 'city' },
-  { id: 'symmetrika',       label: 'Symmetrika',   gymNum: 6, col: 5, row: 1, type: 'city' },
-  { id: 'integrala',        label: 'Integrala',    gymNum: 7, col: 3, row: 5, type: 'city' },
-  { id: 'absoluta',         label: 'Absoluta',     gymNum: 8, col: 5, row: 4, type: 'city' },
+  { id: 'sumville/sumville',               label: 'Sumville',     gymNum: 1, col: 1, row: 1, type: 'city' },
+  { id: 'minusburg/minusburg',             label: 'Minusburg',    gymNum: 2, col: 3, row: 0, type: 'city' },
+  { id: 'multiplia/multiplia',             label: 'Multiplia',    gymNum: 3, col: 4, row: 2, type: 'city' },
+  { id: 'dividia/dividia',                 label: 'Dividia',      gymNum: 4, col: 1, row: 4, type: 'city' },
+  { id: 'primore/primore',                 label: 'Primore',      gymNum: 5, col: 3, row: 3, type: 'city' },
+  { id: 'symmetrika/symmetrika',           label: 'Symmetrika',   gymNum: 6, col: 5, row: 1, type: 'city' },
+  { id: 'integrala/integrala',             label: 'Integrala',    gymNum: 7, col: 3, row: 5, type: 'city' },
+  { id: 'absoluta/absoluta',               label: 'Absoluta',     gymNum: 8, col: 5, row: 4, type: 'city' },
 
   // ── Final destination ──
-  { id: 'nullx-tower',      label: 'NULL-X Tower',       col: 4, row: 6, type: 'endgame' },
+  { id: 'nullx/tower',                     label: 'NULL-X Tower',       col: 4, row: 6, type: 'endgame' },
 
   // ── Side / optional areas ──
-  { id: 'deep-forest',      label: 'Deep Forest',        col: 0, row: 1, type: 'side' },
-  { id: 'safari',           label: 'Safari Zone',        col: 5, row: 3, type: 'side' },
-  { id: 'mountain-pass',    label: 'Mountain Pass',      col: 0, row: 5, type: 'cave' },
-  { id: 'infinity-plateau', label: 'Infinity Plateau',   col: 6, row: 2, type: 'side' },
+  { id: 'caves/deep-forest',               label: 'Deep Forest',        col: 0, row: 1, type: 'side' },
+  { id: 'caves/safari',                    label: 'Safari Zone',        col: 5, row: 3, type: 'side' },
+  { id: 'caves/mountain-pass',             label: 'Mountain Pass',      col: 0, row: 5, type: 'cave' },
+  { id: 'infinity-plateau/infinity-plateau', label: 'Infinity Plateau', col: 6, row: 2, type: 'side' },
 ];
 
 /**
@@ -74,31 +74,27 @@ const NODES: WorldNode[] = [
  */
 const EDGES: WorldEdge[] = [
   // ── Main story path ──────────────────────────────────────────────────────
-  { from: 'zeroville',   to: 'sumville',      label: 'Route 1',  kind: 'main' },
-  { from: 'sumville',    to: 'minusburg',     label: 'Route 2',  kind: 'main' },
-  { from: 'minusburg',   to: 'multiplia',     label: 'Route 3',  kind: 'main' },
-  { from: 'multiplia',   to: 'dividia',       label: 'Route 4',  kind: 'main' },
-  { from: 'dividia',     to: 'primore',       label: 'Route 5',  kind: 'main' },
-  { from: 'primore',     to: 'symmetrika',    label: 'Route 6',  kind: 'main' },
-  { from: 'symmetrika',  to: 'integrala',     label: 'Route 7',  kind: 'main' },
-  { from: 'integrala',   to: 'absoluta',      label: 'Route 8',  kind: 'main' },
-  { from: 'absoluta',    to: 'nullx-tower',   label: '',         kind: 'main' },
+  { from: 'zeroville/zeroville',   to: 'sumville/sumville',      label: 'Route 1',  kind: 'main' },
+  { from: 'sumville/sumville',     to: 'minusburg/minusburg',    label: 'Route 2',  kind: 'main' },
+  { from: 'minusburg/minusburg',   to: 'multiplia/multiplia',    label: 'Route 3',  kind: 'main' },
+  { from: 'multiplia/multiplia',   to: 'dividia/dividia',        label: 'Route 4',  kind: 'main' },
+  { from: 'dividia/dividia',       to: 'primore/primore',        label: 'Route 5',  kind: 'main' },
+  { from: 'primore/primore',       to: 'symmetrika/symmetrika',  label: 'Route 6',  kind: 'main' },
+  { from: 'symmetrika/symmetrika', to: 'integrala/integrala',    label: 'Route 7',  kind: 'main' },
+  { from: 'integrala/integrala',   to: 'absoluta/absoluta',      label: 'Route 8',  kind: 'main' },
+  { from: 'absoluta/absoluta',     to: 'nullx/tower',            label: '',         kind: 'main' },
 
   // ── Non-linear cross-connections (make the world non-linear) ─────────────
-  // Route 9: big western loop — shortcut from start to Dividia (gym 4 area)
-  { from: 'zeroville',   to: 'dividia',       label: 'Route 9',  kind: 'extra' },
-  // Route 10: southern return — Absoluta → Multiplia backtrack path
-  { from: 'absoluta',    to: 'multiplia',     label: 'Route 10', kind: 'extra' },
-  // Route 11: forest shortcut — Sumville → Primore (skips gyms 2-4 area, high-level)
-  { from: 'sumville',    to: 'primore',       label: 'Route 11', kind: 'extra' },
-  // Route 12: eastern coast — Minusburg → Symmetrika (skips to gym 6 early)
-  { from: 'minusburg',   to: 'symmetrika',    label: 'Route 12', kind: 'extra' },
+  { from: 'zeroville/zeroville',   to: 'dividia/dividia',        label: 'Route 9',  kind: 'extra' },
+  { from: 'absoluta/absoluta',     to: 'multiplia/multiplia',    label: 'Route 10', kind: 'extra' },
+  { from: 'sumville/sumville',     to: 'primore/primore',        label: 'Route 11', kind: 'extra' },
+  { from: 'minusburg/minusburg',   to: 'symmetrika/symmetrika',  label: 'Route 12', kind: 'extra' },
 
   // ── Optional / side area access ───────────────────────────────────────────
-  { from: 'zeroville',   to: 'deep-forest',   label: '',         kind: 'side' },
-  { from: 'multiplia',   to: 'safari',        label: '',         kind: 'side' },
-  { from: 'dividia',     to: 'mountain-pass', label: '',         kind: 'side' },
-  { from: 'symmetrika',  to: 'infinity-plateau', label: '',      kind: 'side' },
+  { from: 'zeroville/zeroville',             to: 'caves/deep-forest',               label: '', kind: 'side' },
+  { from: 'multiplia/multiplia',             to: 'caves/safari',                    label: '', kind: 'side' },
+  { from: 'dividia/dividia',                 to: 'caves/mountain-pass',             label: '', kind: 'side' },
+  { from: 'symmetrika/symmetrika',           to: 'infinity-plateau/infinity-plateau', label: '', kind: 'side' },
 ];
 
 // ── Styling ───────────────────────────────────────────────────────────────────

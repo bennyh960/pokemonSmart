@@ -452,10 +452,9 @@ async function init() {
   state.on('tool-changed', () => { statusTool.textContent = `Tool: ${state.activeTool}`; });
   function formatStatusMap(modified = false): string {
     const md = state.mapData;
-    const id = md.id || md.name;
-    const label = md.label ? ` · ${md.label.en}${md.label.he ? ` / ${md.label.he}` : ''}` : '';
+    const displayName = md.label?.en || md.id;
     const tmpl = md.template ? `  [tmpl: ${md.template}]` : '';
-    return `${id} (${md.width}×${md.height})${label}${tmpl}${modified ? ' *' : ''}`;
+    return `${md.id} (${md.width}×${md.height})${displayName !== md.id ? ` · ${displayName}` : ''}${tmpl}${modified ? ' *' : ''}`;
   }
   state.on('map-loaded',   () => { statusMap.textContent = formatStatusMap(false); });
   state.on('map-modified', () => { statusMap.textContent = formatStatusMap(true); });

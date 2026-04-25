@@ -255,7 +255,7 @@ registerCutscene({
 // First arrival in Sumville (after passing gate) → Oak cutscene
 registerStoryEvent({
   id: 'evt-act1-oak-arrives',
-  trigger: { type: 'map-enter', mapId: 'sumville' },
+  trigger: { type: 'map-enter', mapId: 'sumville/sumville' },
   conditions: [{ type: 'flag-not', flag: FLAGS.ACT1_OAK_WARNING_HEARD }],
   // repeatable: flag-not condition is the real guard; cutscene sets ACT1_OAK_WARNING_HEARD.
   // Without this, __event-done-* blocks replay if cutscene was interrupted.
@@ -270,7 +270,7 @@ registerStoryEvent({
 // Arriving in Sumville before passing the gate (shouldn't happen normally, but guard it)
 registerStoryEvent({
   id: 'evt-sumville-infection',
-  trigger: { type: 'map-enter', mapId: 'sumville' },
+  trigger: { type: 'map-enter', mapId: 'sumville/sumville' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_SUMVILLE }],
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_SUMVILLE },
@@ -282,7 +282,7 @@ registerStoryEvent({
 // Player talks to gym blocker → Rocket team appears at bridge
 registerStoryEvent({
   id: 'ev-sumville-arrive',
-  trigger: { type: 'map-enter', mapId: 'sumville' },
+  trigger: { type: 'map-enter', mapId: 'sumville/sumville' },
   conditions: [{ type: 'flag-not', flag: FLAGS.SUMVILLE_ARRIVED }],
   actions: [
     { type: 'set-flag', flag: FLAGS.SUMVILLE_ARRIVED },

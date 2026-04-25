@@ -20,6 +20,7 @@ import { registerQuest } from '../../quests.js';
 import { registerCutscene } from '../../cutscenes.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -114,7 +115,7 @@ registerCutscene({
 // Talking to the Route 2 enter
 registerStoryEvent({
   id: 'evt-route2-enter',
-  trigger: { type: 'map-enter', mapId: 'route-2' },
+  trigger: { type: 'map-enter', mapId: MapId.ROUTES_ROUTE_2 },
   conditions: [{ type: 'flag-not', flag: FLAGS.ACT1_PROF_ALGORITHMA_ROUTE2_SCENE_SEEN }],
   repeatable: true,
   actions: [

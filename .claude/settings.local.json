@@ -67,7 +67,22 @@
       "Bash(python3:*)",
       "Bash(python -c \"import json; d=json.load\\(open\\('src/data/sprites/characters.json'\\)\\); print\\(json.dumps\\(d.get\\('characters',d\\)[:3] if isinstance\\(d.get\\('characters',d\\), list\\) else list\\(d.items\\(\\)\\)[:3], indent=2\\)\\)\")",
       "Bash(echo \"EXIT:$?\")",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(xargs -I{} basename {} .json)",
+      "Bash(mv zeroville.json zeroville-house-br.json zeroville-house-tl.json zeroville-house-tr.json \"oak lab.json\" algorithma-lab.json zeroville/)",
+      "Bash(mv sumville.json sumville-gym.json sumville-house-1.json sumville-house-2.json sumville-remainder-house.json \"sumvile-house I.json\" sumville/)",
+      "Bash(mv minusburg.json minusburg-gym.json minusburg-house-1.json minusburg-house-small.json minusburg-library.json minusburg-template-deck1.json minusburg-template-deck2.json minusburg-template-gray.json minusburg-template-house-open.json minusburg/)",
+      "Bash(mv route-1.json route-2.json route-3.json route-4.json route-5.json route-6.json route-7.json route-8.json route-9.json route-10.json route1-house.json routes/)",
+      "Bash(mv mountain-cave.json mountain-pass.json dividia-cave.json symmetrika-cave.json deep-forest.json safari.json caves/)",
+      "Bash(mv pokecenter-interior.json mart-interior.json pokecenter-2.json pokecenter-mart-interior.json fake-pokecenter.json house-3-i.json shared/)",
+      "Bash(mv dividia.json dividia-house-1.json dividia-house-2.json dividia-house-3.json dividia-house-4.json dividia/)",
+      "Bash(mv symmetrika.json symmetrika-terminal.json symmetrika/)",
+      "Bash(mv nullx-tower.json nullx-floor-6.json nullx/)",
+      "Bash(mv zeroville/zeroville-house-br.json zeroville/house-br.json)",
+      "Bash(mv zeroville/zeroville-house-tl.json zeroville/house-tl.json)",
+      "Bash(mv zeroville/zeroville-house-tr.json zeroville/house-tr.json)",
+      "Bash(mv \"sumville/sumvile-house I.json\" sumville/house-i.json)",
+      "Bash(mv sumville/sumville-gym.json sumville/gym.json)"
     ]
   }
 }

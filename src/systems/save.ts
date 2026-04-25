@@ -41,7 +41,7 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
   1: (data) => {
     if (!data.items) data.items = {};
     if (!data.flags) data.flags = {};
-    if (!data.lastPokemonCenter) data.lastPokemonCenter = { mapId: 'zeroville', x: 4, y: 5 };
+    if (!data.lastPokemonCenter) data.lastPokemonCenter = { mapId: 'zeroville/zeroville', x: 4, y: 5 };
     if (data.playtime === undefined) data.playtime = 0;
     if (data.serumParts === undefined) data.serumParts = 0;
     data.saveVersion = 1;

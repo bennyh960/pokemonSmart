@@ -1,0 +1,139 @@
+{
+  "id": "pokecenter-interior",
+  "name": "Pokemon Center",
+  "width": 10,
+  "height": 8,
+  "tileSize": 16,
+  "spawn": {
+    "x": 5,
+    "y": 6
+  },
+  "transitions": [
+    {
+      "fromX": 5,
+      "fromY": 7,
+      "toMapId": "zeroville/zeroville",
+      "toX": 5,
+      "toY": 6,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [
+    {
+      "id": "nurse-pc",
+      "name": {
+        "en": "Nurse Joy",
+        "he": "Nurse Joy"
+      },
+      "x": 5,
+      "y": 2,
+      "facing": "down",
+      "type": "healer",
+      "dialogue": [
+        "Welcome to the Pokemon Center!",
+        "I'll heal your Pokemon!"
+      ],
+      "spriteType": "nurse"
+    }
+  ],
+  "music": "town",
+  "encounterTableId": null,
+  "tiles": [
+    [
+      16,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      16
+    ],
+    [
+      16,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      16
+    ],
+    [
+      16,
+      25,
+      21,
+      21,
+      21,
+      21,
+      21,
+      21,
+      25,
+      16
+    ],
+    [
+      16,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      16
+    ],
+    [
+      16,
+      25,
+      25,
+      22,
+      22,
+      25,
+      22,
+      22,
+      25,
+      16
+    ],
+    [
+      16,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      16
+    ],
+    [
+      16,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      25,
+      16
+    ],
+    [
+      16,
+      25,
+      25,
+      25,
+      25,
+      15,
+      25,
+      25,
+      25,
+      16
+    ]
+  ]
+}
