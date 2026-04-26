@@ -2247,6 +2247,30 @@
       "description": "sand inner corner: bottom-left. Place as object on s1-5 base where all 4 cardinal neighbors are sand BUT the bottom-left diagonal is non-sand. Creates concave corner"
     },
     {
+      "key": "br1v",
+      "sx": 48,
+      "sy": 432,
+      "w": 48,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "bridge 1 vertical"
+    },
+    {
+      "key": "deck1",
+      "sx": 0,
+      "sy": 432,
+      "w": 48,
+      "h": 48,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "deck - can connect to br1h and brhv"
+    },
+    {
       "key": "pc1t",
       "sx": 48,
       "sy": 6448,
@@ -5670,7 +5694,6 @@
       "walkable": true,
       "above": true,
       "category": "floor",
-      "interactType": null,
       "description": "bridge on water -walkabe part"
     },
     {
@@ -5682,7 +5705,6 @@
       "walkable": false,
       "above": true,
       "category": "floor",
-      "interactType": null,
       "description": "bridghe 1 vertical top"
     },
     {
@@ -5693,8 +5715,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "br1h",
@@ -5704,8 +5725,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "br1hr",
@@ -5715,8 +5735,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "br1hl",
@@ -5725,29 +5744,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "above": true,
-      "interactType": null
-    },
-    {
-      "key": "",
-      "sx": 160,
-      "sy": 512,
-      "w": 48,
-      "h": 48,
-      "walkable": true,
-      "above": true,
-      "category": "floor",
-      "interactType": null
-    },
-    {
-      "key": "br-deck1-new",
-      "sx": 144,
-      "sy": 496,
-      "w": 48,
-      "h": 64,
-      "walkable": true,
-      "above": true,
-      "category": "floor"
+      "above": true
     }
   ]
 }

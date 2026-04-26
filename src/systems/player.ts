@@ -48,5 +48,6 @@ export function createNewPlayer(name: string): PlayerData {
     battleHelperBattles: 10,
     battleHelperEnabled: true,
     birthYear: getPlayerBirthYear(),
+    repelStepsRemaining: 0,
   };
 }

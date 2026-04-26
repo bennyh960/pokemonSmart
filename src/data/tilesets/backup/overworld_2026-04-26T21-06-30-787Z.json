@@ -5740,13 +5740,13 @@
       "interactType": null
     },
     {
-      "key": "br-deck1-new",
+      "key": "deck1-new",
       "sx": 144,
       "sy": 496,
-      "w": 48,
-      "h": 64,
+      "w": 64,
+      "h": 48,
       "walkable": true,
-      "above": true,
+      "above": false,
       "category": "floor"
     }
   ]

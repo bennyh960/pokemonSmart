@@ -13,7 +13,7 @@ import { ensurePersistentBattleFields } from './battle-state.js';
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 11;
+export const CURRENT_SAVE_VERSION = 12;
 
 function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Record<string, any>) => void): void {
   if (data.party) {
@@ -128,6 +128,11 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
   11: (data) => {
     if (data.birthYear === undefined) data.birthYear = 2018;
     data.saveVersion = 11;
+  },
+  // Version 11 → 12: add repelStepsRemaining field
+  12: (data) => {
+    if (data.repelStepsRemaining === undefined) data.repelStepsRemaining = 0;
+    data.saveVersion = 12;
   },
 };
 

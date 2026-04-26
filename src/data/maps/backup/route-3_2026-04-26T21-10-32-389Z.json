@@ -103,11 +103,11 @@
         }
       ],
       "reward": {
-        "money": 800,
+        "money": 600,
         "items": [
           {
-            "itemId": "repel",
-            "quantity": 3
+            "itemId": "potion",
+            "quantity": 2
           }
         ]
       },
@@ -115,15 +115,7 @@
       "postBattleDialogue": [
         {
           "en": "",
-          "he": "וואו איזה אזור מהמם! יש פה הרבה פוקימונים פראיים!"
-        },
-        {
-          "en": "",
-          "he": "אני אוהבת להלחם בפוקימונים פראיים - זה עוזר לי לחזק את הפוקימונים שלי שלא מאומנים מספיק."
-        },
-        {
-          "en": "",
-          "he": "לפעמים כשאני ממהרת אני משתמשת ב\"רפל\" - זה מרחיק פוקימונים לזמן מסויים . קניתי מהחנות כמה."
+          "he": "שלום! נפגשנו כבר , לא?"
         }
       ],
       "questions": {
@@ -877,40 +869,7 @@
   ],
   "music": "route",
   "encounterTableId": "route-3",
-  "interactiveItems": {
-    "item-generic": [
-      {
-        "itemId": "repel",
-        "itemQty": 3
-      },
-      {
-        "itemId": "repel",
-        "itemQty": 3
-      },
-      {
-        "itemId": "lemonade"
-      },
-      {
-        "itemId": "hyper-repel"
-      }
-    ],
-    "item-revive": [
-      {
-        "itemId": "fishing-bait",
-        "itemQty": 3
-      },
-      {
-        "itemId": "ice-heal",
-        "itemQty": 3
-      },
-      {
-        "itemId": "awakening"
-      },
-      {
-        "itemId": "elixir"
-      }
-    ]
-  }
+  "interactiveItems": {}
 ,
   "tiles": [
     ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1","wt1","wt1"],
@@ -943,13 +902,13 @@
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","g2br","g2br","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1bl","wt1b","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","g2br","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mg1c","mg1c","mg1c","mg1c","wt1","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mg1c","wt1","wt1","wt1","wt1","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","g2","g2","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","g2","g2","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","g2","g2","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mg1c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1bl","wt1b","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mg1c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mg1c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
@@ -2356,6 +2315,11 @@
       "y": 30
     },
     {
+      "key": "br1h",
+      "x": 18,
+      "y": 74
+    },
+    {
       "key": "rock1",
       "x": 24,
       "y": 30
@@ -3189,6 +3153,76 @@
       "key": "mg1br",
       "x": 24,
       "y": 33
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 38
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 39
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 40
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 41
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 42
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 43
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 44
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 45
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 46
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 47
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 48
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 49
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 50
+    },
+    {
+      "key": "br1v",
+      "x": 33,
+      "y": 51
     },
     {
       "key": "st1rs",
@@ -5681,229 +5715,179 @@
       "y": 34
     },
     {
-      "key": "br1hr",
-      "x": 36,
-      "y": 37
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 38
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 39
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 40
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 41
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 42
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 43
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 44
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 45
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 46
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 47
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 48
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 49
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 50
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 51
-    },
-    {
-      "key": "br1hr",
-      "x": 36,
-      "y": 36
-    },
-    {
-      "key": "br1hl",
+      "key": "br1vhtop",
       "x": 32,
-      "y": 51
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 50
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 49
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 48
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 47
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 46
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 44
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 43
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 42
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 41
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 40
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 39
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 38
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 37
-    },
-    {
-      "key": "br1hl",
-      "x": 32,
-      "y": 45
-    },
-    {
-      "key": "br1vh",
-      "x": 18,
-      "y": 74
-    },
-    {
-      "key": "br1vh",
-      "x": 18,
-      "y": 75
+      "y": 33
     },
     {
       "key": "br1vhtop",
-      "x": 18,
-      "y": 73
-    },
-    {
-      "key": "br1vhbottom",
-      "x": 18,
-      "y": 76
-    },
-    {
-      "key": "br-deck1-new",
       "x": 33,
       "y": 33
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 34
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 35
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 36
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 37
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 38
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 39
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 40
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 41
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 42
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 43
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 44
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 45
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 46
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 47
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 48
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 49
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 50
+    },
+    {
+      "key": "br1hr",
+      "x": 36,
+      "y": 51
     },
     {
       "key": "br1hl",
       "x": 32,
-      "y": 36
+      "y": 37
     },
     {
-      "key": "t4",
-      "x": 38,
-      "y": 30
+      "key": "br1hl",
+      "x": 32,
+      "y": 38
     },
     {
-      "key": "t4",
-      "x": 39,
-      "y": 30
+      "key": "br1hl",
+      "x": 32,
+      "y": 39
     },
     {
-      "key": "t4",
-      "x": 25,
-      "y": 30
+      "key": "br1hl",
+      "x": 32,
+      "y": 40
     },
     {
-      "key": "t4",
-      "x": 26,
-      "y": 30
+      "key": "br1hl",
+      "x": 32,
+      "y": 41
     },
     {
-      "key": "r2",
-      "x": 40,
-      "y": 33
+      "key": "br1hl",
+      "x": 32,
+      "y": 42
     },
     {
-      "key": "r2",
-      "x": 37,
-      "y": 34
+      "key": "br1hl",
+      "x": 32,
+      "y": 43
     },
     {
-      "key": "br1h",
-      "x": 33,
-      "y": 36
+      "key": "br1hl",
+      "x": 32,
+      "y": 44
     },
     {
-      "key": "br1h",
-      "x": 34,
-      "y": 36
+      "key": "br1hl",
+      "x": 32,
+      "y": 45
+    },
+    {
+      "key": "br1hl",
+      "x": 32,
+      "y": 46
+    },
+    {
+      "key": "br1hl",
+      "x": 32,
+      "y": 47
+    },
+    {
+      "key": "br1hl",
+      "x": 32,
+      "y": 48
+    },
+    {
+      "key": "br1hl",
+      "x": 32,
+      "y": 49
+    },
+    {
+      "key": "br1hl",
+      "x": 32,
+      "y": 50
+    },
+    {
+      "key": "br1hl",
+      "x": 32,
+      "y": 51
     },
     {
       "key": "br1h",
@@ -5912,7 +5896,17 @@
     },
     {
       "key": "br1h",
+      "x": 34,
+      "y": 37
+    },
+    {
+      "key": "br1h",
       "x": 33,
+      "y": 38
+    },
+    {
+      "key": "br1h",
+      "x": 34,
       "y": 38
     },
     {
@@ -5979,16 +5973,6 @@
       "key": "br1h",
       "x": 33,
       "y": 51
-    },
-    {
-      "key": "br1h",
-      "x": 34,
-      "y": 37
-    },
-    {
-      "key": "br1h",
-      "x": 34,
-      "y": 38
     },
     {
       "key": "br1h",

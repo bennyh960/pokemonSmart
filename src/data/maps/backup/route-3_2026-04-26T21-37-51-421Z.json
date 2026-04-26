@@ -103,11 +103,11 @@
         }
       ],
       "reward": {
-        "money": 800,
+        "money": 600,
         "items": [
           {
-            "itemId": "repel",
-            "quantity": 3
+            "itemId": "potion",
+            "quantity": 2
           }
         ]
       },
@@ -115,15 +115,7 @@
       "postBattleDialogue": [
         {
           "en": "",
-          "he": "וואו איזה אזור מהמם! יש פה הרבה פוקימונים פראיים!"
-        },
-        {
-          "en": "",
-          "he": "אני אוהבת להלחם בפוקימונים פראיים - זה עוזר לי לחזק את הפוקימונים שלי שלא מאומנים מספיק."
-        },
-        {
-          "en": "",
-          "he": "לפעמים כשאני ממהרת אני משתמשת ב\"רפל\" - זה מרחיק פוקימונים לזמן מסויים . קניתי מהחנות כמה."
+          "he": "שלום! נפגשנו כבר , לא?"
         }
       ],
       "questions": {
@@ -877,40 +869,7 @@
   ],
   "music": "route",
   "encounterTableId": "route-3",
-  "interactiveItems": {
-    "item-generic": [
-      {
-        "itemId": "repel",
-        "itemQty": 3
-      },
-      {
-        "itemId": "repel",
-        "itemQty": 3
-      },
-      {
-        "itemId": "lemonade"
-      },
-      {
-        "itemId": "hyper-repel"
-      }
-    ],
-    "item-revive": [
-      {
-        "itemId": "fishing-bait",
-        "itemQty": 3
-      },
-      {
-        "itemId": "ice-heal",
-        "itemQty": 3
-      },
-      {
-        "itemId": "awakening"
-      },
-      {
-        "itemId": "elixir"
-      }
-    ]
-  }
+  "interactiveItems": {}
 ,
   "tiles": [
     ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1","wt1","wt1"],

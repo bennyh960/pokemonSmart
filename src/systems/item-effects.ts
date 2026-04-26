@@ -53,7 +53,7 @@ export function itemTargetsPokemon(itemId: string): boolean {
 export function isDirectUseItem(itemId: string): boolean {
   const def = getItemDef(itemId);
   if (!def) return false;
-  return def.effect.type === 'pokedex-battery' || def.effect.type === 'battle-helper';
+  return def.effect.type === 'pokedex-battery' || def.effect.type === 'battle-helper' || def.effect.type === 'repel';
 }
 
 export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
@@ -278,6 +278,15 @@ export function applyDirectItemEffect(itemId: string): ItemUseResult {
     const pd = getPlayerData();
     pd.battleHelperBattles += effect.battles;
     return { success: true, message: `Battle Helper +${effect.battles} battles! (${pd.battleHelperBattles} left). Toggle ON in Pokedex [H].` };
+  }
+
+  if (effect.type === 'repel') {
+    const pd = getPlayerData();
+    if (pd.repelStepsRemaining > 0) {
+      return { success: false, message: t('repel.already') };
+    }
+    pd.repelStepsRemaining = effect.steps;
+    return { success: true, message: t('repel.active', { steps: String(effect.steps) }) };
   }
 
   return { success: false, message: "This item can't be used directly." };

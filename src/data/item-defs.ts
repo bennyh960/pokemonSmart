@@ -39,6 +39,7 @@ export type ItemEffect =
   | { type: 'vitamin'; stat: 'hp' | 'atk' | 'def' | 'spe' | 'spa' | 'spd' }
   | { type: 'pokedex-battery'; amount: number }
   | { type: 'battle-helper'; battles: number }
+  | { type: 'repel'; steps: number }
   | { type: 'none' };
 
 export interface ItemGameDef {
@@ -176,6 +177,11 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   // Fishing items
   'fishing-rod': 9012,
   'fishing-bait': 9013,
+  // Repel series
+  'repel': 9014,
+  'super-repel': 9015,
+  'hyper-repel': 9016,
+  'max-repel': 9017,
 };
 
 // Reverse lookup
@@ -708,6 +714,55 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     description: {
       en: 'Bait used when fishing. One consumed per cast. Buy more at the Pokémart.',
       he: 'פיתיון לדיג. אחד מתכלה בכל זריקה. קנה עוד בחנות הפוקמארט.',
+    },
+  },
+
+  9014: {
+    category: 'battle',
+    price: 350,
+    effect: { type: 'repel', steps: 100 },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'Repel', he: 'רפל' },
+    description: {
+      en: 'Blocks wild encounters for 100 steps. Cannot stack with other Repels.',
+      he: 'חוסם מפגשים עם פוקימון פראיים ל-100 צעדים. לא ניתן לצבור עם רפלים אחרים.',
+    },
+  },
+  9015: {
+    category: 'battle',
+    price: 500,
+    effect: { type: 'repel', steps: 150 },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'Super Repel', he: 'סופר-רפל' },
+    description: {
+      en: 'Blocks wild encounters for 150 steps. Cannot stack with other Repels.',
+      he: 'חוסם מפגשים עם פוקימון פראיים ל-150 צעדים. לא ניתן לצבור עם רפלים אחרים.',
+    },
+  },
+  9016: {
+    category: 'battle',
+    price: 700,
+    effect: { type: 'repel', steps: 250 },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'Hyper Repel', he: 'היפר-רפל' },
+    description: {
+      en: 'Blocks wild encounters for 250 steps. Cannot stack with other Repels.',
+      he: 'חוסם מפגשים עם פוקימון פראיים ל-250 צעדים. לא ניתן לצבור עם רפלים אחרים.',
+    },
+  },
+  9017: {
+    category: 'battle',
+    price: 1200,
+    effect: { type: 'repel', steps: 500 },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'Max Repel', he: 'מקסי-רפל' },
+    description: {
+      en: 'Blocks wild encounters for 500 steps. Cannot stack with other Repels.',
+      he: 'חוסם מפגשים עם פוקימון פראיים ל-500 צעדים. לא ניתן לצבור עם רפלים אחרים.',
     },
   },
 

@@ -178,6 +178,7 @@ export function createNewPlayerData(): PlayerData {
     pokedexBatteryCharges: 50,
     battleHelperBattles: 10,
     battleHelperEnabled: true,
+    repelStepsRemaining: 0,
   };
 }
 

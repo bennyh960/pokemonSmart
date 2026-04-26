@@ -201,6 +201,7 @@ export interface PlayerData {
   pokedexBatteryCharges: number; // in-battle Pokedex uses remaining (max 50, free recharge at PokeCenter)
   battleHelperBattles: number; // remaining Battle Helper battles (shows type effectiveness on moves)
   battleHelperEnabled: boolean; // toggle: auto-consumes from battleHelperBattles each battle when ON
+  repelStepsRemaining: number; // steps left on active repel (0 = no repel)
 }
 
 /** Options for text rendering. */

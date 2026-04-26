@@ -1825,13 +1825,26 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const tileEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
           if (tileEncTypes) {
             const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || 'test-map';
-            if (Math.random() < getEncounterRate(encounterId)) {
+            const repelActive = hasActiveGame() && getPlayerData().repelStepsRemaining > 0;
+            if (!repelActive && Math.random() < getEncounterRate(encounterId)) {
               // Pass water encounter filter when surfing
               const encFilter = isCurrentlySurfing ? ['water'] : tileEncTypes;
               const wild = generateWildEncounter(encounterId, encFilter);
               if (wild) {
                 startEncounterTransition(wild);
                 return;
+              }
+            }
+          }
+
+          // Decrement repel counter AFTER encounter check (so the last step still has protection)
+          if (hasActiveGame()) {
+            const _repPd = getPlayerData();
+            if (_repPd.repelStepsRemaining > 0) {
+              _repPd.repelStepsRemaining--;
+              if (_repPd.repelStepsRemaining === 0) {
+                activeTextBox = createTextBox([t('repel.woreOff')], isRTL());
+                autoSave();
               }
             }
           }
