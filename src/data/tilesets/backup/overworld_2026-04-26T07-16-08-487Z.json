@@ -1,5 +1,5 @@
 {
-  "image": "/sprites/overworld/dpp-tileset.png",
+  "image": "/sprites/overworld/overworld-tileset.png",
   "tiles": [
     {
       "key": "g1",
@@ -21,17 +21,6 @@
       "walkable": true,
       "above": false,
       "category": "grass",
-      "interactType": null
-    },
-    {
-      "key": "pc2",
-      "sx": 0,
-      "sy": 304,
-      "w": 80,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
       "interactType": null
     },
     {
@@ -66,7 +55,7 @@
         "psychic"
       ],
       "above": true,
-      "overlay": true,
+      "overlay": false,
       "category": "grass",
       "interactType": null,
       "description": "grass for encounter"
@@ -78,11 +67,8 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/fire,poison,water"
-      ],
       "above": true,
-      "overlay": true,
+      "overlay": false,
       "category": "grass",
       "interactType": null,
       "description": "grass with flower"
@@ -349,61 +335,6 @@
       "description": "fence center"
     },
     {
-      "key": "t1",
-      "sx": 0,
-      "sy": 496,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "tree",
-      "interactType": null
-    },
-    {
-      "key": "t2",
-      "sx": 16,
-      "sy": 496,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "tree",
-      "interactType": null
-    },
-    {
-      "key": "t3",
-      "sx": 32,
-      "sy": 496,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "tree",
-      "interactType": null
-    },
-    {
-      "key": "t4",
-      "sx": 48,
-      "sy": 496,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "tree",
-      "interactType": null
-    },
-    {
-      "key": "t5",
-      "sx": 112,
-      "sy": 432,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "tree",
-      "interactType": null
-    },
-    {
       "key": "t6",
       "sx": 96,
       "sy": 464,
@@ -506,18 +437,6 @@
       "category": "decoration",
       "interactType": null,
       "description": "house decoration flowers"
-    },
-    {
-      "key": "b4",
-      "sx": 48,
-      "sy": 1136,
-      "w": 80,
-      "h": 80,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "modern house bigger"
     },
     {
       "key": "b5",
@@ -627,18 +546,6 @@
       "description": "gym sign - need be close to gyms"
     },
     {
-      "key": "gym1",
-      "sx": 16,
-      "sy": 2544,
-      "w": 112,
-      "h": 80,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "gym"
-    },
-    {
       "key": "wt1-tl",
       "sx": 16,
       "sy": 0,
@@ -743,42 +650,6 @@
       "category": "decoration",
       "interactType": null,
       "description": "steet flash light left"
-    },
-    {
-      "key": "gymgt",
-      "sx": 32,
-      "sy": 5328,
-      "w": 80,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "gym ghost roof"
-    },
-    {
-      "key": "gymgb",
-      "sx": 16,
-      "sy": 5344,
-      "w": 112,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "gym ghost body"
-    },
-    {
-      "key": "gymgbt",
-      "sx": 32,
-      "sy": 5392,
-      "w": 80,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "gym ghost bottom"
     },
     {
       "key": "boat",
@@ -887,17 +758,6 @@
       "category": "decoration",
       "interactType": null,
       "description": "wood decoration"
-    },
-    {
-      "key": "b9",
-      "sx": 32,
-      "sy": 3136,
-      "w": 96,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "interactType": null,
-      "description": "another building , look like market"
     },
     {
       "key": "crp",
@@ -1471,21 +1331,6 @@
       "category": "ground",
       "interactType": null,
       "description": "mt2 border: bottom-right corner of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
-    },
-    {
-      "key": "mt2cb",
-      "sx": 0,
-      "sy": 1760,
-      "w": 32,
-      "h": 32,
-      "walkable": true,
-      "encounterTypes": [
-        "*"
-      ],
-      "above": false,
-      "category": "ground",
-      "interactType": null,
-      "description": "mountain 2 big tile (32x32) — walkable encounter ground covering 2x2 tiles. Has all-type encounters. Use as base tile for large open mountain areas that need encounter spawns without the bordered mt2 rectangle system"
     },
     {
       "key": "kk",
@@ -2539,18 +2384,6 @@
       "description": "empty house for reusable - 10X13"
     },
     {
-      "key": "wallstrip2",
-      "sx": 0,
-      "sy": 5936,
-      "w": 80,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "description": "Narrow wall/roof facade strip with window-door rhythm (5x4). Use as a compact storefront or side facade segment."
-    },
-    {
       "key": "h2-main",
       "sx": 0,
       "sy": 1296,
@@ -2879,17 +2712,6 @@
           "dy": 3
         }
       ]
-    },
-    {
-      "key": "door",
-      "sx": 32,
-      "sy": 1168,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "interactType": null,
-      "description": "door for building"
     },
     {
       "key": "rock1",
@@ -3503,28 +3325,14 @@
       "description": "door for b7 house"
     },
     {
-      "key": "t5-cut",
-      "sx": 112,
-      "sy": 432,
-      "w": 16,
-      "h": 32,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "interactType": {
-        "id": "cut"
-      },
-      "description": "cutable tree"
-    },
-    {
       "key": "gate",
       "sx": 0,
       "sy": 2064,
       "w": 16,
       "h": 32,
-      "walkable": true,
+      "walkable": false,
       "above": true,
-      "category": "interactive",
+      "category": "decoration",
       "interactType": {
         "id": "gate"
       }
@@ -4288,6 +4096,7 @@
       "walkable": false,
       "above": true,
       "category": "building",
+      "interactType": null,
       "description": "modern house blue roof",
       "cells": [
         {
@@ -4344,7 +4153,1459 @@
       "h": 16,
       "walkable": true,
       "above": false,
+      "interactType": null,
       "description": "b8 door"
+    },
+    {
+      "key": "cr1r1c1",
+      "sx": 144,
+      "sy": 800,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 1 col 1"
+    },
+    {
+      "key": "cr1r1c2",
+      "sx": 160,
+      "sy": 800,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 1 col 2"
+    },
+    {
+      "key": "cr1r1c3",
+      "sx": 192,
+      "sy": 800,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 1 col 3"
+    },
+    {
+      "key": "cr1r2c1",
+      "sx": 144,
+      "sy": 816,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 2 col 1"
+    },
+    {
+      "key": "cr1r2c2",
+      "sx": 160,
+      "sy": 816,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 2 col 2"
+    },
+    {
+      "key": "cr1r2c3",
+      "sx": 192,
+      "sy": 816,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 2 col 3"
+    },
+    {
+      "key": "cr1r3c1",
+      "sx": 144,
+      "sy": 832,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 3 col 1"
+    },
+    {
+      "key": "cr1r3c2",
+      "sx": 160,
+      "sy": 832,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 3 col 2"
+    },
+    {
+      "key": "cr1r3c3",
+      "sx": 192,
+      "sy": 832,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null,
+      "description": "carpet 1 red row 3 col 3"
+    },
+    {
+      "key": "gym1",
+      "sx": 16,
+      "sy": 2544,
+      "w": 112,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "gym building",
+      "cells": [
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 5,
+          "dy": 0
+        },
+        {
+          "dx": 5,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 2
+        },
+        {
+          "dx": 6,
+          "dy": 2
+        },
+        {
+          "dx": 6,
+          "dy": 1
+        },
+        {
+          "dx": 6,
+          "dy": 3
+        },
+        {
+          "dx": 5,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 5,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        }
+      ]
+    },
+    {
+      "key": "gym1door",
+      "sx": 64,
+      "sy": 2608,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building",
+      "interactType": null,
+      "description": "gym 1 door"
+    },
+    {
+      "key": "t4",
+      "sx": 48,
+      "sy": 496,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": false,
+      "category": "tree",
+      "interactType": null,
+      "description": "tree"
+    },
+    {
+      "key": "t3",
+      "sx": 32,
+      "sy": 496,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": false,
+      "category": "tree",
+      "interactType": null,
+      "description": "tree"
+    },
+    {
+      "key": "t1",
+      "sx": 0,
+      "sy": 512,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "small tree 1 bottom"
+    },
+    {
+      "key": "t1u",
+      "sx": 0,
+      "sy": 496,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "small tree 1 top"
+    },
+    {
+      "key": "t2",
+      "sx": 16,
+      "sy": 512,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "tree 2 bottom"
+    },
+    {
+      "key": "t2u",
+      "sx": 16,
+      "sy": 496,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "tree 2 top"
+    },
+    {
+      "key": "f2tr",
+      "sx": 80,
+      "sy": 160,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "fence type 2 top right"
+    },
+    {
+      "key": "f2r",
+      "sx": 80,
+      "sy": 176,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "fence 2 right"
+    },
+    {
+      "key": "f2br",
+      "sx": 80,
+      "sy": 192,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "fence 2 bottom right"
+    },
+    {
+      "key": "f2bl",
+      "sx": 64,
+      "sy": 192,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "fence 2 bottom left"
+    },
+    {
+      "key": "f2l",
+      "sx": 64,
+      "sy": 176,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "fence 2 left"
+    },
+    {
+      "key": "f2tl",
+      "sx": 64,
+      "sy": 160,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "decoration",
+      "interactType": null,
+      "description": "fence 2 left"
+    },
+    {
+      "key": "t1b",
+      "sx": 0,
+      "sy": 496,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "tree type 1 - full , and block from top"
+    },
+    {
+      "key": "t2b",
+      "sx": 16,
+      "sy": 496,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "tree type 2 - full , and block from top"
+    },
+    {
+      "key": "black",
+      "sx": 32,
+      "sy": 6352,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": false,
+      "category": "interior",
+      "interactType": null,
+      "description": "black for interiror after  edges"
+    },
+    {
+      "key": "cw1tlc",
+      "sx": 48,
+      "sy": 7632,
+      "w": 64,
+      "h": 80,
+      "walkable": false,
+      "above": false,
+      "category": "wall",
+      "interactType": null,
+      "description": "cave wall 1 top left corner"
+    },
+    {
+      "key": "cw1t",
+      "sx": 112,
+      "sy": 7632,
+      "w": 32,
+      "h": 80,
+      "walkable": false,
+      "above": false,
+      "category": "wall",
+      "interactType": null,
+      "description": "cave wall 1 top W shape"
+    },
+    {
+      "key": "cw1trc",
+      "sx": 144,
+      "sy": 7632,
+      "w": 64,
+      "h": 80,
+      "walkable": false,
+      "above": false,
+      "category": "wall",
+      "interactType": null,
+      "description": "cave wall 1 top right corner"
+    },
+    {
+      "key": "cw1l",
+      "sx": 48,
+      "sy": 7712,
+      "w": 48,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "wall",
+      "interactType": null,
+      "description": "cave wall 1 left side wall"
+    },
+    {
+      "key": "cw1r",
+      "sx": 160,
+      "sy": 7712,
+      "w": 48,
+      "h": 16,
+      "walkable": false,
+      "above": false,
+      "category": "wall",
+      "interactType": null,
+      "description": "cave wall 1 right side wall"
+    },
+    {
+      "key": "c1g1",
+      "sx": 0,
+      "sy": 7680,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "ground",
+      "interactType": null,
+      "description": "cave 1 ground with stone"
+    },
+    {
+      "key": "c1g2",
+      "sx": 32,
+      "sy": 7680,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "ground",
+      "interactType": null,
+      "description": "cave 1 ground 2 - similar to ground 1 but without stone"
+    },
+    {
+      "key": "grassNew",
+      "sx": 16,
+      "sy": 7680,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounterTypes": [
+        "*/water"
+      ],
+      "above": true,
+      "category": "grass",
+      "interactType": null,
+      "description": "dense grass with small shadow at bottom"
+    },
+    {
+      "key": "yl",
+      "sx": 0,
+      "sy": 7696,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounterTypes": [
+        "*/fire,ice,poison,bug"
+      ],
+      "above": true,
+      "category": "grass",
+      "interactType": null,
+      "description": "yellow dry leafes"
+    },
+    {
+      "key": "mt2br2",
+      "sx": 0,
+      "sy": 1760,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "ground",
+      "interactType": null,
+      "description": "mountain 2 connection botom right"
+    },
+    {
+      "key": "mt2tl2",
+      "sx": 16,
+      "sy": 1760,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "ground",
+      "interactType": null,
+      "description": "mountain 2 bottom left connection"
+    },
+    {
+      "key": "mt2tr2",
+      "sx": 0,
+      "sy": 1776,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "ground",
+      "interactType": null,
+      "description": "mountain connection top right i thibk"
+    },
+    {
+      "key": "flowerX",
+      "sx": 144,
+      "sy": 16,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "grass",
+      "interactType": null,
+      "description": "just flowers"
+    },
+    {
+      "key": "t5-cut",
+      "sx": 112,
+      "sy": 448,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "interactive",
+      "interactType": {
+        "id": "cut"
+      },
+      "description": "cuttable tree"
+    },
+    {
+      "key": "pc2",
+      "sx": 0,
+      "sy": 304,
+      "w": 80,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "pokemon center2",
+      "cells": [
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        }
+      ]
+    },
+    {
+      "key": "pc2-door",
+      "sx": 32,
+      "sy": 352,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "pc2-extra-roof",
+      "sx": 0,
+      "sy": 288,
+      "w": 80,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "house-x-1",
+      "sx": 0,
+      "sy": 2368,
+      "w": 64,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        }
+      ]
+    },
+    {
+      "key": "house-x-1-door",
+      "sx": 16,
+      "sy": 2416,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "house-x-1-extra",
+      "sx": 64,
+      "sy": 2384,
+      "w": 32,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "house-x-1-extra2",
+      "sx": 64,
+      "sy": 2368,
+      "w": 32,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "wallstrip2",
+      "sx": 0,
+      "sy": 5952,
+      "w": 80,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        }
+      ]
+    },
+    {
+      "key": "wallstrip2-door",
+      "sx": 16,
+      "sy": 5984,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "b9",
+      "sx": 32,
+      "sy": 3136,
+      "w": 96,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 5,
+          "dy": 0
+        },
+        {
+          "dx": 5,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 3
+        }
+      ]
+    },
+    {
+      "key": "b9-door",
+      "sx": 64,
+      "sy": 3184,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "b4",
+      "sx": 48,
+      "sy": 1136,
+      "w": 80,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "big house green roof",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        }
+      ]
+    },
+    {
+      "key": "b4-door",
+      "sx": 80,
+      "sy": 1200,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "item-generic",
+      "sx": 112,
+      "sy": 7024,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "interactive",
+      "interactType": {
+        "id": "item"
+      },
+      "description": "Generic item to be overide"
+    },
+    {
+      "key": "edgeBR",
+      "sx": 32,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "edgeBR"
+    },
+    {
+      "key": "edgeBL",
+      "sx": 48,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null
+    },
+    {
+      "key": "stairs1Front",
+      "sx": 96,
+      "sy": 1792,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "other",
+      "interactType": null
+    },
+    {
+      "key": "deck6",
+      "sx": 96,
+      "sy": 1776,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "stairsDecl",
+      "sx": 112,
+      "sy": 1776,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "deck22shadow",
+      "sx": 64,
+      "sy": 1776,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "bigBuildingX1",
+      "sx": 48,
+      "sy": 1920,
+      "w": 80,
+      "h": 48,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        }
+      ]
+    },
+    {
+      "key": "bigBuildingXDoor",
+      "sx": 80,
+      "sy": 1952,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "bigBuildingX1-above",
+      "sx": 48,
+      "sy": 1808,
+      "w": 80,
+      "h": 112,
+      "walkable": true,
+      "above": false,
+      "overlay": true,
+      "category": "building",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 6
+        },
+        {
+          "dx": 0,
+          "dy": 6
+        },
+        {
+          "dx": 2,
+          "dy": 6
+        },
+        {
+          "dx": 3,
+          "dy": 6
+        },
+        {
+          "dx": 4,
+          "dy": 6
+        },
+        {
+          "dx": 4,
+          "dy": 5
+        },
+        {
+          "dx": 3,
+          "dy": 5
+        },
+        {
+          "dx": 2,
+          "dy": 5
+        },
+        {
+          "dx": 1,
+          "dy": 5
+        },
+        {
+          "dx": 0,
+          "dy": 5
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        }
+      ]
+    },
+    {
+      "key": "lock-door",
+      "sx": 80,
+      "sy": 1664,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": false,
+      "category": "interactive",
+      "interactType": {
+        "id": "sign",
+        "args": {
+          "dialogue": [
+            {
+              "en": "",
+              "he": "דלת נעולה"
+            }
+          ]
+        }
+      }
     }
   ]
 }

@@ -5606,6 +5606,17 @@
           ]
         }
       }
+    },
+    {
+      "key": "mg1tb",
+      "sx": 112,
+      "sy": 4832,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "ground",
+      "description": "mg1 top better"
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "id": "route-3-4",
+  "name": "Route 3 continued",
+  "tileset": "overworld",
+  "width": 50,
+  "height": 30,
+  "tileSize": 16,
+  "spawn": {
+    "x": 2,
+    "y": 9
+  },
+  "transitions": [],
+  "npcs": [],
+  "music": "route",
+  "encounterTableId": "route-3",
+  "interactiveItems": {},
+  "tiles": [],
+  "objects": []
+}

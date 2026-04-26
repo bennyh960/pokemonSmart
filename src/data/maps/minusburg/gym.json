@@ -415,7 +415,7 @@
       "id": "npc-1776954300525",
       "x": 46,
       "y": 41,
-      "facing": "right",
+      "facing": "left",
       "type": "trainer",
       "dialogue": [
         {
