@@ -948,10 +948,13 @@ export function applyEntryHazards(
     } else if (pokemon.status === null && !hasStatusImmunity(pokemon, 'poison')) {
       if (sideState.toxicSpikesLayers >= 2) {
         pokemon.status = 'poison';
-        pokemonBattleState.badlyPoisonTurns = 0;
+        pokemonBattleState.majorStatus = 'poison';
+        pokemonBattleState.badlyPoisonTurns = 1;
         result.statusApplied = 'badly-poison';
       } else {
         pokemon.status = 'poison';
+        pokemonBattleState.majorStatus = 'poison';
+        pokemonBattleState.badlyPoisonTurns = 0;
         result.statusApplied = 'poison';
       }
     } else {

@@ -52,15 +52,20 @@ export let selectedPartyIndex: number = -1;
 /** Context info shown when party is in select-target mode (item use). */
 let selectTargetContext: { itemId: string; itemName: string; description: string } | null = null;
 
+/** Battle roster context: tracks which party slots are committed and the max allowed. */
+let battleRosterCtx: { roster: Set<number>; maxSize: number } | null = null;
+
 export function setPartyMode(
   mode: PartyMode,
   callback?: (index: number) => void,
   context?: { itemId: string; itemName: string; description: string },
+  rosterCtx?: { roster: Set<number>; maxSize: number },
 ): void {
   partyMode = mode;
   onSelectCallback = callback ?? null;
   selectedPartyIndex = -1;
   selectTargetContext = context ?? null;
+  battleRosterCtx = rosterCtx ?? null;
 }
 
 export function clearSelectedPartyIndex(): void {
@@ -118,15 +123,25 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   }
 
   /** Check if a Pokemon is eligible for selection in the current mode. */
-  function isPokemonEligible(pokemon: Pokemon): boolean {
+  function isPokemonEligible(pokemon: Pokemon, partyIndex?: number): boolean {
     if (partyMode === 'battle') {
-      return pokemon.hp > 0;
+      if (pokemon.hp === 0) return false;
+      if (battleRosterCtx && partyIndex !== undefined) {
+        const { roster, maxSize } = battleRosterCtx;
+        if (!roster.has(partyIndex) && roster.size >= maxSize) return false;
+      }
+      return true;
     }
     if (partyMode === 'select-target') {
       if (!selectTargetContext) return true;
       return canUseItemOnPokemon(selectTargetContext.itemId, pokemon);
     }
     return true;
+  }
+
+  /** Returns true if this party slot is committed to the current battle. */
+  function isBattleCommitted(partyIndex: number): boolean {
+    return partyMode === 'battle' && battleRosterCtx !== null && battleRosterCtx.roster.has(partyIndex);
   }
 
   /** For TM select-target: returns only eligible Pokemon with their real party indices.
@@ -185,12 +200,15 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     isSel: boolean,
     isSwap: boolean,
     disabled: boolean,
+    committed = false,
   ): void {
     // Card bg
     fillRect(ctx, 4, sy, 232, 22, isSel ? C.CARD_SEL : C.CARD_BG);
     drawRect(ctx, 4, sy, 232, 22, isSwap ? C.BORDER_SEL : isSel ? '#2a6a40' : C.BORDER);
     // Selection indicator
     if (isSel && !disabled) fillRect(ctx, 4, sy, 2, 22, '#20d860');
+    // Battle-committed indicator: amber strip on right edge
+    if (committed) fillRect(ctx, 234, sy, 2, 22, '#f0a020');
 
     // Pokeball icon — centered in 9×9 area
     drawPokeballIcon(ctx, pokemon.caughtBall, 222, sy + 6, 9);
@@ -307,7 +325,40 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     } else {
       const title = viewMode === 'swap' ? t('party.swap') : t('party.title');
       drawText(ctx, title, 112, 2, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
-      drawText(ctx, `${party.length} / ${MAX_PARTY}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+      if (partyMode === 'battle' && battleRosterCtx) {
+        // Battle team slots: tiny Pokemon sprites for committed, dim placeholder for open slots
+        const { roster, maxSize } = battleRosterCtx;
+        const rosterIndices = [...roster]; // insertion-ordered party indices
+        const slotSize = 10;
+        const slotGap = 1;
+        const totalW = maxSize * (slotSize + slotGap) - slotGap;
+        const startX = 236 - totalW;
+        for (let s = 0; s < maxSize; s++) {
+          const dx = startX + s * (slotSize + slotGap);
+          const dy = 1;
+          if (s < rosterIndices.length) {
+            const poke = party[rosterIndices[s]];
+            if (poke) {
+              const iconUrl = `/sprites/pokemon/icons/${poke.id}.png`;
+              const icon = getCachedImage(iconUrl);
+              if (icon && icon.complete && icon.naturalWidth > 0) {
+                ctx.save();
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(icon, dx, dy, slotSize, slotSize);
+                ctx.restore();
+              } else {
+                fillRect(ctx, dx, dy, slotSize, slotSize, '#f0a020');
+              }
+            }
+          } else {
+            fillRect(ctx, dx, dy, slotSize, slotSize, '#1a3a2a');
+            drawRect(ctx, dx, dy, slotSize, slotSize, '#2a5a40');
+          }
+        }
+      } else {
+        drawText(ctx, `${party.length} / ${MAX_PARTY}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+      }
     }
 
     // ── Slots ──
@@ -324,8 +375,9 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         const isSwap = viewMode === 'swap' && i === swapFrom;
 
         if (i < party.length) {
-          const disabled = (partyMode === 'select-target' || partyMode === 'battle') && !isPokemonEligible(party[i]);
-          renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap, disabled);
+          const disabled = (partyMode === 'select-target' || partyMode === 'battle') && !isPokemonEligible(party[i], i);
+          const committed = isBattleCommitted(i);
+          renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap, disabled, committed);
         } else {
           renderEmptySlot(ctx, i + 1, sy, isSel);
         }

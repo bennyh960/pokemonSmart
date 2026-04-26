@@ -343,6 +343,28 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
       return null;
     },
 
+    /** Return the tileset category string for a grid cell ('water', 'grass', 'ground', etc.)
+     *  Checks placed objects first, then falls back to the base tile. */
+    getTileCategory(gx: number, gy: number): string | undefined {
+      if (tileset) {
+        for (const obj of placedObjects) {
+          const def = tileset.getTile(obj.key);
+          if (!def) continue;
+          const gridW = Math.max(1, Math.round(def.w / BASE));
+          const gridH = Math.max(1, Math.round(def.h / BASE));
+          const lx = gx - obj.x;
+          const ly = gy - obj.y;
+          if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
+            if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+            return def.category;
+          }
+        }
+        const tile = this.getTile(gx, gy);
+        if (typeof tile === 'string') return tileset.getTile(tile)?.category;
+      }
+      return undefined;
+    },
+
     getBattleBackground(gx: number, gy: number): BattleBackgroundId | null {
       if (tileset) {
         for (const obj of placedObjects) {

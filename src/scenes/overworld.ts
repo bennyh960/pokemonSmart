@@ -53,7 +53,13 @@ import { resolveInteract } from '../data/interact-types.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
 import { findHMUser, canUseHM } from '../systems/hm.js';
 import { getReencounterStatus, buildReencounterParty } from '../systems/reencounter.js';
-import { isGateUnlocked, setActiveGate, fireStoryTrigger, consumePendingCutscene, consumePendingMessage } from '../systems/story-engine.js';
+import {
+  isGateUnlocked,
+  setActiveGate,
+  fireStoryTrigger,
+  consumePendingCutscene,
+  consumePendingMessage,
+} from '../systems/story-engine.js';
 import {
   isCutsceneActive,
   activateCutscene,
@@ -185,6 +191,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let isCurrentlySurfing = false;
   let surfPokemonId: number | null = null;
   let surfPokemonSprite: HTMLImageElement | null = null;
+
+  // Fishing state
+  let fishingPhase: 'casting' | 'waiting' | 'bite' | null = null;
+  let fishingTimer = 0;
+  let fishingWaitDuration = 0;
+  let fishingBobberOffset = 0;
+  let fishingWaterGridX = 0;
+  let fishingWaterGridY = 0;
 
   // Trainer approach state
   interface TrainerApproachState {
@@ -880,11 +894,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
 
     return {
-      trainerName:
-        trainer.name ??
+      trainerName: trainer.name ??
         (charactersManifest.characters as Record<string, { name?: { en: string; he: string } }>)[trainer.spriteType]
-          ?.name ??
-        { en: trainer.id, he: trainer.id },
+          ?.name ?? { en: trainer.id, he: trainer.id },
       trainerId: trainer.id,
       party,
       reward: normalizeReward(trainer.reward),
@@ -1055,6 +1067,92 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     isCurrentlySurfing = false;
     surfPokemonId = null;
     surfPokemonSprite = null;
+  }
+
+  /** Returns true only if the tile itself is categorised as water (category === 'water').
+   *  Walkable ground tiles (beach sand, cave sand) that happen to have water encounter
+   *  types are NOT fishing tiles — the player must face real water to cast a line. */
+  function isTileWater(gx: number, gy: number): boolean {
+    return tileMap?.getTileCategory(gx, gy) === 'water';
+  }
+
+  /** Attempt to start fishing — validates rod, bait, and facing direction. */
+  function tryStartFishing(): void {
+    if (!tileMap || !currentMapData) return;
+    const pd = getPlayerData();
+    const dir = DIR_VECTORS[player.facing] || { dx: 0, dy: 1 };
+    const wx = player.gridX + dir.dx;
+    const wy = player.gridY + dir.dy;
+    const onWater = isTileWater(player.gridX, player.gridY);
+    const adjWater = isTileWater(wx, wy);
+
+    if (!onWater && !adjWater) {
+      activeTextBox = createTextBox([t('fishing.noWater')], isRTL());
+      return;
+    }
+    if (!pd.items['fishing-rod'] || pd.items['fishing-rod'] <= 0) {
+      activeTextBox = createTextBox([t('fishing.noRod')], isRTL());
+      return;
+    }
+    if (!pd.items['fishing-bait'] || pd.items['fishing-bait'] <= 0) {
+      activeTextBox = createTextBox([t('fishing.noBait')], isRTL());
+      return;
+    }
+
+    pd.items['fishing-bait']--;
+    if (pd.items['fishing-bait'] <= 0) delete pd.items['fishing-bait'];
+    autoSave();
+
+    if (adjWater) {
+      fishingWaterGridX = wx;
+      fishingWaterGridY = wy;
+    } else {
+      fishingWaterGridX = player.gridX;
+      fishingWaterGridY = player.gridY;
+    }
+    fishingPhase = 'casting';
+    fishingTimer = 0;
+    fishingWaitDuration = 1.5 + Math.random() * 2.5;
+    fishingBobberOffset = 0;
+  }
+
+  /** Advance fishing state machine each frame. */
+  function updateFishing(dt: number): void {
+    if (!fishingPhase) return;
+    fishingTimer += dt;
+
+    if (fishingPhase === 'casting') {
+      if (fishingTimer >= 0.8) {
+        fishingPhase = 'waiting';
+        fishingTimer = 0;
+      }
+      return;
+    }
+
+    if (fishingPhase === 'waiting') {
+      fishingBobberOffset = Math.sin(fishingTimer * 3.5) * 2;
+      const FISHING_RANDOMNESS = 0.5; // adjust to make bites more or less frequent
+      if (fishingTimer >= fishingWaitDuration) {
+        if (Math.random() < FISHING_RANDOMNESS) {
+          fishingPhase = 'bite';
+          fishingTimer = 0;
+          activeTextBox = createTextBox([t('fishing.bite')], isRTL());
+          pendingHMAction = () => {
+            const encId = (currentMapData?.encounterTableId ?? currentMapData?.id) || 'test-map';
+            const wild = generateWildEncounter(encId, ['water']);
+            fishingPhase = null;
+            if (wild) {
+              startEncounterTransition(wild);
+            } else {
+              activeTextBox = createTextBox([t('fishing.escaped')], isRTL());
+            }
+          };
+        } else {
+          fishingPhase = null;
+          activeTextBox = createTextBox([t('fishing.escaped')], isRTL());
+        }
+      }
+    }
   }
 
   /** Load a map and set up the scene. */
@@ -1237,7 +1335,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (st.moving) {
               st.moveProgress += dt / MOVE_DURATION;
               st.walkTimer += dt;
-              if (st.walkTimer >= 0.1) { st.walkTimer = 0; st.walkFrame = st.walkFrame === 1 ? 2 : 1; }
+              if (st.walkTimer >= 0.1) {
+                st.walkTimer = 0;
+                st.walkFrame = st.walkFrame === 1 ? 2 : 1;
+              }
               if (st.moveProgress >= 1) {
                 st.moveProgress = 1;
                 st.pixelX = st.targetPixelX;
@@ -1256,11 +1357,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               const dir = st.cutscenePathQueue.shift()!;
               const dx = dir === 'right' ? 1 : dir === 'left' ? -1 : 0;
               const dy = dir === 'down' ? 1 : dir === 'up' ? -1 : 0;
-              npc.facing = dir; st.facing = dir;
-              st.startPixelX = st.pixelX; st.startPixelY = st.pixelY;
+              npc.facing = dir;
+              st.facing = dir;
+              st.startPixelX = st.pixelX;
+              st.startPixelY = st.pixelY;
               st.targetPixelX = (npc.x + dx) * TILE_SIZE;
               st.targetPixelY = (npc.y + dy) * TILE_SIZE;
-              st.moveProgress = 0; st.moving = true;
+              st.moveProgress = 0;
+              st.moving = true;
             }
           }
         }
@@ -1335,6 +1439,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
         }
         return;
+      }
+
+      // Fishing animation — freeze movement while casting / waiting
+      if (fishingPhase === 'casting' || fishingPhase === 'waiting') {
+        if (input.isKeyPressed('Escape')) {
+          fishingPhase = null;
+        } else {
+          updateFishing(dt);
+          return;
+        }
       }
 
       // Fly animation update — blocks all other input
@@ -2132,20 +2246,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
             // Use postFlagDialogue when present and its flag is set
             const pfd = npc.postFlagDialogue;
-            const dialogueLines = (pfd && hasActiveGame() && getPlayerData().flags[pfd.flag])
-              ? pfd.dialogue
-              : npc.dialogue;
+            const dialogueLines =
+              pfd && hasActiveGame() && getPlayerData().flags[pfd.flag] ? pfd.dialogue : npc.dialogue;
             const locale = getLocale();
             const resolvedLines = resolveDialogue(dialogueLines, locale);
             if (npc.mapClearBlocker && hasActiveGame()) {
               const countLine = buildMapClearCountLine(locale);
               if (countLine) resolvedLines.push(countLine);
             }
-            activeTextBox = createTextBox(
-              resolvedLines,
-              isRTL(),
-              npc.name ? getLocalizedName(npc.name) : undefined,
-            );
+            activeTextBox = createTextBox(resolvedLines, isRTL(), npc.name ? getLocalizedName(npc.name) : undefined);
             interactingNPC = npc;
             turnNPCToPlayer(npc);
             return;
@@ -2175,13 +2284,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   const inst = obj.interactArgs;
                   const dialogue = inst?.dialogue && inst.dialogue.length > 0 ? inst.dialogue : resolved.dialogue;
                   const itemId =
-                    inst?.itemId !== undefined ? inst.itemId :
-                    mapOverride ? mapOverride.itemId :
-                    resolved.itemId;
+                    inst?.itemId !== undefined ? inst.itemId : mapOverride ? mapOverride.itemId : resolved.itemId;
                   const itemQty =
-                    inst?.itemQty !== undefined ? inst.itemQty :
-                    mapOverride ? mapOverride.itemQty :
-                    resolved.itemQty;
+                    inst?.itemQty !== undefined ? inst.itemQty : mapOverride ? mapOverride.itemQty : resolved.itemQty;
                   const flag = inst?.flag !== undefined ? inst.flag : resolved.flag;
 
                   if (resolved.id === 'pc') {
@@ -2358,6 +2463,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (input.isKeyPressed('k') || input.isKeyPressed('K')) {
         showLegend = !showLegend;
         return;
+      }
+
+      // F key → Fish (requires Fishing Rod + Bait, water tile nearby)
+      if (input.isKeyPressed('f') || input.isKeyPressed('F')) {
+        if (hasActiveGame() && !fishingPhase) {
+          tryStartFishing();
+          return;
+        }
       }
 
       // 1/2/3 keys → switch HUD tab (map / leader / story)
@@ -2668,6 +2781,80 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       renderables.sort((a, b) => a.y - b.y);
       for (const r of renderables) r.render();
 
+      // ── Fishing rod world overlay ──
+      if (fishingPhase && !playerHidden) {
+        const fpsx = Math.floor(player.pixelX - camera.x);
+        const fpsy = Math.floor(player.pixelY - camera.y);
+        const wsx = Math.floor(fishingWaterGridX * TILE_SIZE - camera.x);
+        const wsy = Math.floor(fishingWaterGridY * TILE_SIZE - camera.y);
+
+        let handX: number;
+        let handY: number;
+        const facing = player.facing;
+        if (facing === 'ArrowDown') {
+          handX = fpsx + TILE_SIZE * 0.65;
+          handY = fpsy + TILE_SIZE * 0.6;
+        } else if (facing === 'ArrowUp') {
+          handX = fpsx + TILE_SIZE * 0.65;
+          handY = fpsy + TILE_SIZE * 0.35;
+        } else if (facing === 'ArrowRight') {
+          handX = fpsx + TILE_SIZE * 0.9;
+          handY = fpsy + TILE_SIZE * 0.5;
+        } else {
+          handX = fpsx + TILE_SIZE * 0.1;
+          handY = fpsy + TILE_SIZE * 0.5;
+        }
+
+        const bobberX = wsx + TILE_SIZE * 0.5;
+        const bobberY = wsy + TILE_SIZE * 0.55 + fishingBobberOffset;
+        const lineProgress = fishingPhase === 'casting' ? Math.min(1, fishingTimer / 0.8) : 1;
+        const lineEndX = handX + (bobberX - handX) * lineProgress;
+        const lineEndY = handY + (bobberY - handY) * lineProgress;
+        const arcCX = (handX + lineEndX) / 2;
+        const arcCY = Math.min(handY, lineEndY) - 5;
+
+        const dist = Math.sqrt((bobberX - handX) ** 2 + (bobberY - handY) ** 2) || 1;
+        const rdx = ((bobberX - handX) / dist) * 3;
+        const rdy = ((bobberY - handY) / dist) * 3;
+
+        ctx.save();
+        ctx.strokeStyle = '#7B4A2D';
+        ctx.lineWidth = 1.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(handX - rdx, handY - rdy);
+        ctx.lineTo(handX + rdx * 1.5, handY + rdy * 1.5);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#b8d0b0';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(handX + rdx * 1.5, handY + rdy * 1.5);
+        ctx.quadraticCurveTo(arcCX, arcCY, lineEndX, lineEndY);
+        ctx.stroke();
+
+        if (lineProgress >= 1) {
+          ctx.beginPath();
+          ctx.moveTo(bobberX, bobberY);
+          ctx.arc(bobberX, bobberY, 2, Math.PI, 0, false);
+          ctx.closePath();
+          ctx.fillStyle = '#e03020';
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(bobberX, bobberY);
+          ctx.arc(bobberX, bobberY, 2, 0, Math.PI, false);
+          ctx.closePath();
+          ctx.fillStyle = '#f0f0f0';
+          ctx.fill();
+          ctx.strokeStyle = '#404040';
+          ctx.lineWidth = 0.4;
+          ctx.beginPath();
+          ctx.arc(bobberX, bobberY, 2, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
       // Render above layer (tree canopies, roof overhangs) on top of sprites
       tileMap.renderAbove(ctx, camera.x, camera.y);
       // Render placed object above rows (e.g. roof overhangs)
@@ -2768,6 +2955,28 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           color: '#aaaaaa',
           font: 'monospace',
           align: 'center',
+        });
+      }
+
+      // Fishing status bar (non-interactive, shown during casting / waiting)
+      if (fishingPhase === 'casting' || fishingPhase === 'waiting') {
+        const fbY = SCREEN_H - 36;
+        ctx.fillStyle = '#181820';
+        ctx.fillRect(0, fbY, SCREEN_W, 36);
+        ctx.strokeStyle = '#585858';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(1, fbY + 1, SCREEN_W - 2, 34);
+        ctx.strokeStyle = '#383848';
+        ctx.strokeRect(0, fbY, SCREEN_W, 36);
+        const dots = '.'.repeat(1 + (Math.floor(fishingTimer * 2) % 3));
+        const fishMsg = fishingPhase === 'casting' ? t('fishing.cast') : t('fishing.waiting') + dots;
+        drawText(ctx, fishMsg, isRTL() ? SCREEN_W - 8 : 8, fbY + 6, {
+          size: 8,
+          color: '#f8f8f8',
+          direction: isRTL() ? 'rtl' : 'ltr',
+          align: isRTL() ? 'right' : 'left',
+          maxWidth: SCREEN_W - 16,
+          lineHeight: 12,
         });
       }
 

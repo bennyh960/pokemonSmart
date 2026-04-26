@@ -4524,7 +4524,7 @@ export function createBattleScene(
           textBox = createTextBox([t('battle.noOtherPokemon')], isRTL());
           phase = 'INTRO';
         } else {
-          setPartyMode('battle');
+          setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
           clearSelectedPartyIndex();
           previousLeadId = player.id;
           waitingForParty = true;
@@ -5058,7 +5058,7 @@ export function createBattleScene(
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            setPartyMode('battle');
+            setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
             clearSelectedPartyIndex();
             previousLeadId = player.id;
             waitingForParty = true;
@@ -5168,7 +5168,7 @@ export function createBattleScene(
             clearSelectedPartyIndex();
             if (player.hp <= 0) {
               // Active Pokemon is fainted — must switch, can't cancel
-              setPartyMode('battle');
+              setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
               clearSelectedPartyIndex();
               waitingForParty = true;
               isForcedFaintSwitch = true;

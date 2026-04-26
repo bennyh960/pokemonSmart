@@ -778,9 +778,6 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -793,9 +790,6 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -808,12 +802,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water",
-        "flying"
-      ],
       "above": false,
-      "category": "water",
       "interactType": null,
       "description": "water 1 left"
     },
@@ -840,9 +829,6 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -855,9 +841,6 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -870,9 +853,6 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -885,9 +865,6 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -5650,8 +5627,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "fl5-sh",
@@ -5661,8 +5637,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "fl5-sh2",
@@ -5672,8 +5647,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     },
     {
       "key": "fl5-sh3",
@@ -5683,19 +5657,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "floor",
-      "interactType": null
-    },
-    {
-      "key": "fl6",
-      "sx": 128,
-      "sy": 7632,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     }
   ]
 }

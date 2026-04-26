@@ -173,6 +173,9 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'core-x6': 9009,
   'core-x7': 9010,
   'core-x8': 9011,
+  // Fishing items
+  'fishing-rod': 9012,
+  'fishing-bait': 9013,
 };
 
 // Reverse lookup
@@ -679,6 +682,32 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usedDescription: {
       en: 'All fragments neutralised. NULL-X has been shut down.',
       he: 'כל השברים נוטרלו. NULL-X כובה.',
+    },
+  },
+
+  9012: {
+    category: 'key',
+    price: 0,
+    effect: { type: 'none' },
+    usableInBattle: false,
+    usableInOverworld: false,
+    name: { en: 'Fishing Rod', he: 'חכת דיג' },
+    description: {
+      en: 'A rod for catching wild water Pokémon. Press F near water to fish.',
+      he: 'חכה לתפיסת פוקימוני מים פראיים. לחץ F ליד מים כדי לדוג.',
+    },
+    keyFlag: 'key-fishing-rod-obtained',
+  },
+  9013: {
+    category: 'battle',
+    price: 300,
+    effect: { type: 'none' },
+    usableInBattle: false,
+    usableInOverworld: false,
+    name: { en: 'Fishing Bait', he: 'פיתיון דיג' },
+    description: {
+      en: 'Bait used when fishing. One consumed per cast. Buy more at the Pokémart.',
+      he: 'פיתיון לדיג. אחד מתכלה בכל זריקה. קנה עוד בחנות הפוקמארט.',
     },
   },
 

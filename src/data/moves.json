@@ -806,7 +806,7 @@
     "damageClass": "status",
     "description": {
       "en": "Reduces the foe's ATTACK.",
-      "he": "מפחית את ההתקפה של האויב."
+      "he": "מפחית את ההתקפה הפיזית של האויב."
     }
   },
   {
@@ -1201,8 +1201,8 @@
     "mathDifficulty": 1,
     "damageClass": "physical",
     "description": {
-      "en": "An attack that may cause flinching.",
-      "he": "התקפה שעלולה לגרום לרתיעה."
+      "en": "Power depends on the foe's weight. As long as the foe is heavy the power is stronger.",
+      "he": "הכוח תלוי במשקל היריב. ככל שהיריב כבד יותר, הכוח חזק יותר."
     }
   },
   {
@@ -1634,7 +1634,7 @@
     "damageClass": "physical",
     "description": {
       "en": "1st turn: Burrow 2nd turn: Attack",
-      "he": "תור 1: מאורה סיבוב 2: התקפה"
+      "he": "תור 1: הפוקימון מתחפר באדמה וחסין להתקפות סיבוב 2: התקפה"
     }
   },
   {
@@ -4100,7 +4100,7 @@
     "damageClass": "physical",
     "description": {
       "en": "A high-speed spinning attack.",
-      "he": "התקפת ספינינג במהירות גבוהה."
+      "he": "התקפת ספינינג במהירות גבוהה -מעלה את המהירות ו מסירה מחסומים כמו סלעים או מלכודות."
     }
   },
   {
