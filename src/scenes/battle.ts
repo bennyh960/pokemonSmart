@@ -3297,7 +3297,9 @@ export function createBattleScene(
     }
 
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
-    const hitResult = doesMoveHit(m.accuracy, playerBattleState, enemyBattleState);
+    const hitResult = doesMoveTargetOpponent(moveBattleData)
+      ? doesMoveHit(m.accuracy, playerBattleState, enemyBattleState)
+      : { hit: true, chance: 100 };
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(enemy, m.type);
@@ -4017,7 +4019,9 @@ export function createBattleScene(
     }
 
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
-    const hitResult = doesMoveHit(m.accuracy, enemyBattleState, playerBattleState);
+    const hitResult = doesMoveTargetOpponent(moveBattleData)
+      ? doesMoveHit(m.accuracy, enemyBattleState, playerBattleState)
+      : { hit: true, chance: 100 };
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
     const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(player, m.type);

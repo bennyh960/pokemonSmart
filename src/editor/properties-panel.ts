@@ -1,12 +1,25 @@
 import type { EditorState } from './editor-state.js';
 import type { HistoryManager } from './history.js';
 import type { TileDef, NPCData, MapTransition } from './types.js';
-import { getCharacterList, getCharacterInfo, getCharacterFrame, loadCharacterSprites, CHARACTER_ROLES } from '../engine/character-sprites.js';
+import {
+  getCharacterList,
+  getCharacterInfo,
+  getCharacterFrame,
+  loadCharacterSprites,
+  CHARACTER_ROLES,
+} from '../engine/character-sprites.js';
 import { createNamePicker } from '../ui/name-picker.js';
 import { getAllPokemon, getMoveDisplayName, type PokemonData } from '../services/pokemon-data.js';
 import { getAllItems, type ItemDef } from '../data/items.js';
 import { getTMEffect } from '../data/item-defs.js';
-import { normalizeReward, type TrainerData, type TrainerReward, type DialogueReward, type ReencounterConfig, type NpcInteraction } from '../systems/npc.js';
+import {
+  normalizeReward,
+  type TrainerData,
+  type TrainerReward,
+  type DialogueReward,
+  type ReencounterConfig,
+  type NpcInteraction,
+} from '../systems/npc.js';
 import { GATES } from '../data/story/gates.js';
 import { BADGES } from '../data/badges.js';
 import { getStoryEvents } from '../data/story/events.js';
@@ -41,7 +54,13 @@ export class PropertiesPanel {
   private tiles: Record<string, TileDef>;
   private onNavigate?: (mapId: string) => void;
 
-  constructor(container: HTMLElement, state: EditorState, history: HistoryManager, tiles: Record<string, TileDef>, onNavigate?: (mapId: string) => void) {
+  constructor(
+    container: HTMLElement,
+    state: EditorState,
+    history: HistoryManager,
+    tiles: Record<string, TileDef>,
+    onNavigate?: (mapId: string) => void,
+  ) {
     this.container = container;
     this.state = state;
     this._history = history;
@@ -65,7 +84,7 @@ export class PropertiesPanel {
 
     // ── Selected NPC ──
     if (selectedNpcId !== null) {
-      const npc = this.state.mapData.npcs?.find(n => n.id === selectedNpcId);
+      const npc = this.state.mapData.npcs?.find((n) => n.id === selectedNpcId);
       if (npc) this.renderNpcProps(npc);
     }
 
@@ -143,11 +162,15 @@ export class PropertiesPanel {
       const sel = document.createElement('select');
       for (const o of options) {
         const opt = document.createElement('option');
-        opt.value = o; opt.textContent = o;
+        opt.value = o;
+        opt.textContent = o;
         if (o === current) opt.selected = true;
         sel.appendChild(opt);
       }
-      sel.addEventListener('change', () => { npcAny[key] = sel.value; emit(); });
+      sel.addEventListener('change', () => {
+        npcAny[key] = sel.value;
+        emit();
+      });
       row.appendChild(sel);
       body.appendChild(row);
     };
@@ -158,7 +181,12 @@ export class PropertiesPanel {
     addInput('Y', 'y', String(npc.y), 'number');
     addSelect('Facing', 'facing', ['up', 'down', 'left', 'right'], npc.facing);
     addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard'], npc.type);
-    addInput('Interact Range', 'interactRange', String((npc as unknown as Record<string, unknown>).interactRange ?? 1), 'number');
+    addInput(
+      'Interact Range',
+      'interactRange',
+      String((npc as unknown as Record<string, unknown>).interactRange ?? 1),
+      'number',
+    );
 
     // ── Sprite dropdown with role filter ──
     const charList = getCharacterList();
@@ -170,11 +198,13 @@ export class PropertiesPanel {
     const roleSel = document.createElement('select');
     roleSel.style.width = '100%';
     const allOpt = document.createElement('option');
-    allOpt.value = ''; allOpt.textContent = 'All sprites';
+    allOpt.value = '';
+    allOpt.textContent = 'All sprites';
     roleSel.appendChild(allOpt);
     for (const role of CHARACTER_ROLES) {
       const opt = document.createElement('option');
-      opt.value = role; opt.textContent = role;
+      opt.value = role;
+      opt.textContent = role;
       roleSel.appendChild(opt);
     }
     filterRow.appendChild(roleSel);
@@ -189,22 +219,23 @@ export class PropertiesPanel {
     function populateSpriteOptions(roleFilter: string): void {
       spriteSel.innerHTML = '';
       let foundCurrent = false;
-      const filtered = roleFilter
-        ? charList.filter(c => c.roles.includes(roleFilter as never))
-        : charList;
+      const filtered = roleFilter ? charList.filter((c) => c.roles.includes(roleFilter as never)) : charList;
       for (const c of filtered) {
         const opt = document.createElement('option');
         opt.value = c.id;
         const displayName = c.name.en || c.name.he || c.id;
         const roleStr = c.roles.length > 0 ? ` [${c.roles.join(',')}]` : '';
         opt.textContent = `${displayName} (${c.id})${roleStr}`;
-        if (c.id === npc.spriteType) { opt.selected = true; foundCurrent = true; }
+        if (c.id === npc.spriteType) {
+          opt.selected = true;
+          foundCurrent = true;
+        }
         spriteSel.appendChild(opt);
       }
       if (!foundCurrent) {
         const opt = document.createElement('option');
         opt.value = npc.spriteType;
-        const info = charList.find(c => c.id === npc.spriteType);
+        const info = charList.find((c) => c.id === npc.spriteType);
         opt.textContent = info
           ? `${info.name.en || info.name.he || info.id} (${info.id})`
           : `${npc.spriteType} (legacy)`;
@@ -251,28 +282,32 @@ export class PropertiesPanel {
 
     // ── Name picker — initial value from character's name if defined ──
     const charInfo = getCharacterInfo(npc.spriteType);
-    const initialEn = (npc.name as import('../systems/npc.js').BilingualText | undefined)?.en || charInfo?.name.en || '';
-    const initialHe = (npc.name as import('../systems/npc.js').BilingualText | undefined)?.he || charInfo?.name.he || '';
+    const initialEn =
+      (npc.name as import('../systems/npc.js').BilingualText | undefined)?.en || charInfo?.name.en || '';
+    const initialHe =
+      (npc.name as import('../systems/npc.js').BilingualText | undefined)?.he || charInfo?.name.he || '';
     const nameLabel = document.createElement('div');
     nameLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
     nameLabel.textContent = 'Name';
     body.appendChild(nameLabel);
-    body.appendChild(createNamePicker({
-      initialEn,
-      initialHe,
-      onChange: (name) => {
-        npcAny['name'] = { en: name.en, he: name.he };
-        delete npcAny['nameHe'];
-        emit();
-      },
-    }));
+    body.appendChild(
+      createNamePicker({
+        initialEn,
+        initialHe,
+        onChange: (name) => {
+          npcAny['name'] = { en: name.en, he: name.he };
+          delete npcAny['nameHe'];
+          emit();
+        },
+      }),
+    );
 
     // Dialogue (bilingual — EN and HE side by side)
     const diaRow = document.createElement('div');
     diaRow.className = 'prop-row';
     diaRow.innerHTML = '<label>Dialogue (EN):</label>';
     const taEn = document.createElement('textarea');
-    taEn.value = npc.dialogue.map(d => typeof d === 'string' ? d : d.en).join('\n');
+    taEn.value = npc.dialogue.map((d) => (typeof d === 'string' ? d : d.en)).join('\n');
     taEn.rows = 3;
     taEn.addEventListener('change', () => syncDialogue());
     diaRow.appendChild(taEn);
@@ -282,7 +317,7 @@ export class PropertiesPanel {
     diaRowHe.className = 'prop-row';
     diaRowHe.innerHTML = '<label>Dialogue (HE):</label>';
     const taHe = document.createElement('textarea');
-    taHe.value = npc.dialogue.map(d => typeof d === 'string' ? '' : d.he).join('\n');
+    taHe.value = npc.dialogue.map((d) => (typeof d === 'string' ? '' : d.he)).join('\n');
     taHe.rows = 3;
     taHe.style.direction = 'rtl';
     taHe.addEventListener('change', () => syncDialogue());
@@ -415,16 +450,18 @@ export class PropertiesPanel {
       emit();
     });
     gateRow.appendChild(gateInput);
-    gateRow.appendChild(this.makeInfo('Select an existing gate or type a new ID. Gates are defined in src/data/story/gates.ts.'));
+    gateRow.appendChild(
+      this.makeInfo('Select an existing gate or type a new ID. Gates are defined in src/data/story/gates.ts.'),
+    );
     section.appendChild(gateRow);
 
     // Passed Dialogue EN
-    const passedDef = ((npcAny['passedDialogue'] as Array<{en:string;he:string}>) || []);
+    const passedDef = (npcAny['passedDialogue'] as Array<{ en: string; he: string }>) || [];
     const passedDialogueRow = document.createElement('div');
     passedDialogueRow.className = 'prop-row';
     passedDialogueRow.innerHTML = '<label>Passed (EN):</label>';
     const passedEn = document.createElement('textarea');
-    passedEn.value = passedDef.map(d => d.en).join('\n');
+    passedEn.value = passedDef.map((d) => d.en).join('\n');
     passedEn.rows = 2;
     passedEn.placeholder = 'You may pass! (shown after gate is cleared)';
     passedEn.addEventListener('change', () => syncPassedDialogue());
@@ -436,7 +473,7 @@ export class PropertiesPanel {
     passedDialogueRowHe.className = 'prop-row';
     passedDialogueRowHe.innerHTML = '<label>Passed (HE):</label>';
     const passedHe = document.createElement('textarea');
-    passedHe.value = passedDef.map(d => d.he).join('\n');
+    passedHe.value = passedDef.map((d) => d.he).join('\n');
     passedHe.rows = 2;
     passedHe.style.direction = 'rtl';
     passedHe.placeholder = 'תעבור, בבקשה!';
@@ -445,8 +482,8 @@ export class PropertiesPanel {
     section.appendChild(passedDialogueRowHe);
 
     function syncPassedDialogue(): void {
-      const enLines = passedEn.value.split('\n').filter(l => l.trim());
-      const heLines = passedHe.value.split('\n').filter(l => l.trim());
+      const enLines = passedEn.value.split('\n').filter((l) => l.trim());
+      const heLines = passedHe.value.split('\n').filter((l) => l.trim());
       const maxLen = Math.max(enLines.length, heLines.length);
       if (maxLen === 0) {
         delete npcAny['passedDialogue'];
@@ -535,8 +572,9 @@ export class PropertiesPanel {
         cb.checked = !q.types || q.types.length === 0 || q.types.includes(op.value);
         cb.addEventListener('change', () => {
           // Collect all checked ops
-          const checked = Array.from(opsRow.querySelectorAll<HTMLInputElement>('input[type=checkbox]:checked'))
-            .map(c => c.value);
+          const checked = Array.from(opsRow.querySelectorAll<HTMLInputElement>('input[type=checkbox]:checked')).map(
+            (c) => c.value,
+          );
           // If all 4 checked, store undefined (all allowed)
           q.types = checked.length === 4 || checked.length === 0 ? [] : checked;
           emit();
@@ -616,7 +654,7 @@ export class PropertiesPanel {
       enRow.className = 'prop-row';
       enRow.innerHTML = '<label>EN:</label>';
       const enTa = document.createElement('textarea');
-      enTa.value = (pfd.dialogue || []).map(d => typeof d === 'string' ? d : d.en).join('\n');
+      enTa.value = (pfd.dialogue || []).map((d) => (typeof d === 'string' ? d : d.en)).join('\n');
       enTa.rows = 2;
       enTa.addEventListener('change', () => syncPFD());
       enRow.appendChild(enTa);
@@ -627,7 +665,7 @@ export class PropertiesPanel {
       heRow.className = 'prop-row';
       heRow.innerHTML = '<label>HE:</label>';
       const heTa = document.createElement('textarea');
-      heTa.value = (pfd.dialogue || []).map(d => typeof d === 'string' ? '' : d.he).join('\n');
+      heTa.value = (pfd.dialogue || []).map((d) => (typeof d === 'string' ? '' : d.he)).join('\n');
       heTa.rows = 2;
       heTa.style.direction = 'rtl';
       heTa.addEventListener('change', () => syncPFD());
@@ -686,14 +724,17 @@ export class PropertiesPanel {
     const dodCb = document.createElement('input');
     dodCb.type = 'checkbox';
     dodCb.checked = !!trainer.despawnOnDefeat;
-    dodCb.title = 'When checked, this trainer disappears from the map after the player wins the battle (rival/rocket style)';
+    dodCb.title =
+      'When checked, this trainer disappears from the map after the player wins the battle (rival/rocket style)';
     dodCb.addEventListener('change', () => {
       if (dodCb.checked) trainerAny['despawnOnDefeat'] = true;
       else delete trainerAny['despawnOnDefeat'];
       emit();
     });
     dodRow.appendChild(dodCb);
-    dodRow.appendChild(this.makeInfo('Trainer sprite disappears after losing. Use for rival, Team Rocket, story bosses.'));
+    dodRow.appendChild(
+      this.makeInfo('Trainer sprite disappears after losing. Use for rival, Team Rocket, story bosses.'),
+    );
     section.appendChild(dodRow);
 
     // ── Line of Sight ──
@@ -762,7 +803,7 @@ export class PropertiesPanel {
     pbdEnRow.className = 'prop-row';
     pbdEnRow.innerHTML = '<label>EN:</label>';
     const pbdEnTa = document.createElement('textarea');
-    pbdEnTa.value = trainer.postBattleDialogue.map(d => typeof d === 'string' ? d : d.en).join('\n');
+    pbdEnTa.value = trainer.postBattleDialogue.map((d) => (typeof d === 'string' ? d : d.en)).join('\n');
     pbdEnTa.rows = 2;
     pbdEnTa.addEventListener('change', () => syncPostBattle());
     pbdEnRow.appendChild(pbdEnTa);
@@ -772,7 +813,7 @@ export class PropertiesPanel {
     pbdHeRow.className = 'prop-row';
     pbdHeRow.innerHTML = '<label>HE:</label>';
     const pbdHeTa = document.createElement('textarea');
-    pbdHeTa.value = trainer.postBattleDialogue.map(d => typeof d === 'string' ? '' : d.he).join('\n');
+    pbdHeTa.value = trainer.postBattleDialogue.map((d) => (typeof d === 'string' ? '' : d.he)).join('\n');
     pbdHeTa.rows = 2;
     pbdHeTa.style.direction = 'rtl';
     pbdHeTa.addEventListener('change', () => syncPostBattle());
@@ -893,7 +934,8 @@ export class PropertiesPanel {
 
       // ── Trigger conditions (all enabled must pass) ────────────────────────
       const triggerHeader = document.createElement('div');
-      triggerHeader.style.cssText = 'font-size:11px;color:#aaa;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.05em';
+      triggerHeader.style.cssText =
+        'font-size:11px;color:#aaa;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.05em';
       triggerHeader.textContent = 'Trigger conditions (all enabled must pass)';
       configDiv.appendChild(triggerHeader);
 
@@ -904,7 +946,7 @@ export class PropertiesPanel {
       const lvlGateCb = document.createElement('input');
       lvlGateCb.type = 'checkbox';
       lvlGateCb.checked = rc.minPartyLevelBoost != null;
-      lvlGateCb.title = 'Rematch unlocks when player has ≥1 Pokémon near the next encounter\'s level';
+      lvlGateCb.title = "Rematch unlocks when player has ≥1 Pokémon near the next encounter's level";
       const lvlGateFields = document.createElement('div');
       lvlGateFields.style.display = rc.minPartyLevelBoost != null ? 'block' : 'none';
       lvlGateFields.style.paddingLeft = '8px';
@@ -1117,13 +1159,15 @@ export class PropertiesPanel {
     }
 
     // Sort items so TM/HM appear first, then alphabetically
-    const allItems = getItemList().slice().sort((a, b) => {
-      const aIsTM = getTMEffect(a.id) !== null;
-      const bIsTM = getTMEffect(b.id) !== null;
-      if (aIsTM && !bIsTM) return -1;
-      if (!aIsTM && bIsTM) return 1;
-      return a.name.en.localeCompare(b.name.en);
-    });
+    const allItems = getItemList()
+      .slice()
+      .sort((a, b) => {
+        const aIsTM = getTMEffect(a.id) !== null;
+        const bIsTM = getTMEffect(b.id) !== null;
+        if (aIsTM && !bIsTM) return -1;
+        if (!aIsTM && bIsTM) return 1;
+        return a.name.en.localeCompare(b.name.en);
+      });
 
     for (let i = 0; i < items.length; i++) {
       const ri = items[i];
@@ -1155,7 +1199,7 @@ export class PropertiesPanel {
       const keyNote = document.createElement('div');
       keyNote.style.cssText = 'font-size:10px;color:#ffaa44;margin:2px 0 4px;display:none;';
       const updateKeyNote = () => {
-        const selected = allItems.find(it => it.id === itemSel.value);
+        const selected = allItems.find((it) => it.id === itemSel.value);
         if (selected?.category === 'key') {
           keyNote.style.display = 'block';
           const parts: string[] = ['⚠ Key item — give ONCE only (use reward flag guard)'];
@@ -1176,7 +1220,10 @@ export class PropertiesPanel {
       qtyInput.value = String(ri.quantity);
       qtyInput.className = 'trainer-slot-qty';
       qtyInput.title = 'Quantity';
-      qtyInput.addEventListener('change', () => { ri.quantity = parseInt(qtyInput.value, 10) || 1; emit(); });
+      qtyInput.addEventListener('change', () => {
+        ri.quantity = parseInt(qtyInput.value, 10) || 1;
+        emit();
+      });
       row.appendChild(qtyInput);
 
       // Remove
@@ -1232,7 +1279,7 @@ export class PropertiesPanel {
       pkmnInput.type = 'text';
       pkmnInput.className = 'pokemon-search-input';
       pkmnInput.placeholder = 'Search Pokemon...';
-      const currentPkmn = pokemonList.find(p => p.id === member.pokemonId);
+      const currentPkmn = pokemonList.find((p) => p.id === member.pokemonId);
       pkmnInput.value = currentPkmn ? `#${currentPkmn.id} ${currentPkmn.name.en}` : `#${member.pokemonId}`;
 
       const dropdown = document.createElement('div');
@@ -1242,10 +1289,9 @@ export class PropertiesPanel {
       const renderDropdownItems = (filter: string) => {
         dropdown.innerHTML = '';
         const lowerFilter = filter.toLowerCase();
-        const matches = pokemonList.filter(p =>
-          p.name.en.toLowerCase().includes(lowerFilter) ||
-          String(p.id).includes(lowerFilter)
-        ).slice(0, 30); // Limit for performance
+        const matches = pokemonList
+          .filter((p) => p.name.en.toLowerCase().includes(lowerFilter) || String(p.id).includes(lowerFilter))
+          .slice(0, 30); // Limit for performance
 
         for (const p of matches) {
           const item = document.createElement('div');
@@ -1276,7 +1322,9 @@ export class PropertiesPanel {
       });
       pkmnInput.addEventListener('blur', () => {
         // Delay to allow mousedown on dropdown item
-        setTimeout(() => { dropdown.style.display = 'none'; }, 150);
+        setTimeout(() => {
+          dropdown.style.display = 'none';
+        }, 150);
       });
 
       pkmnWrapper.appendChild(pkmnInput);
@@ -1316,7 +1364,12 @@ export class PropertiesPanel {
   }
 
   // ── Optional moves override per party member ──
-  private renderPartyMoveUI(section: HTMLElement, member: { pokemonId: number; level: number; moves?: number[] }, _index: number, emit: () => void): void {
+  private renderPartyMoveUI(
+    section: HTMLElement,
+    member: { pokemonId: number; level: number; moves?: number[] },
+    _index: number,
+    emit: () => void,
+  ): void {
     const movesRow = document.createElement('div');
     movesRow.className = 'party-moves';
 
@@ -1412,7 +1465,8 @@ export class PropertiesPanel {
     const kindSel = document.createElement('select');
     for (const opt of ['none', 'show-pokemon', 'show-types', 'trade-evolution', 'swap-pokemon']) {
       const o = document.createElement('option');
-      o.value = opt; o.textContent = opt;
+      o.value = opt;
+      o.textContent = opt;
       if ((interaction?.kind ?? 'none') === opt) o.selected = true;
       kindSel.appendChild(o);
     }
@@ -1431,15 +1485,20 @@ export class PropertiesPanel {
 
       if (kind === 'show-pokemon') {
         const cur = interaction?.kind === 'show-pokemon' ? interaction : null;
-        const idsRow = document.createElement('div'); idsRow.className = 'prop-row';
+        const idsRow = document.createElement('div');
+        idsRow.className = 'prop-row';
         idsRow.innerHTML = '<label>Pokemon IDs:</label>';
         const idsInput = document.createElement('input');
-        idsInput.type = 'text'; idsInput.placeholder = '1,4,7';
+        idsInput.type = 'text';
+        idsInput.placeholder = '1,4,7';
         idsInput.value = cur ? cur.pokemonIds.join(',') : '';
         idsInput.title = 'Comma-separated Pokemon IDs';
         idsInput.addEventListener('change', () => {
-          const ids = idsInput.value.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
-          const prev = npcAny['interaction'] as NpcInteraction & { kind: 'show-pokemon' } | undefined;
+          const ids = idsInput.value
+            .split(',')
+            .map((s) => parseInt(s.trim(), 10))
+            .filter((n) => !isNaN(n));
+          const prev = npcAny['interaction'] as (NpcInteraction & { kind: 'show-pokemon' }) | undefined;
           npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: ids, reward: prev?.reward ?? { money: 0 } };
           emit();
         });
@@ -1450,28 +1509,44 @@ export class PropertiesPanel {
 
       if (kind === 'show-types') {
         const cur = interaction?.kind === 'show-types' ? interaction : null;
-        const typesRow = document.createElement('div'); typesRow.className = 'prop-row';
+        const typesRow = document.createElement('div');
+        typesRow.className = 'prop-row';
         typesRow.innerHTML = '<label>Types:</label>';
         const typesInput = document.createElement('input');
-        typesInput.type = 'text'; typesInput.placeholder = 'fire,water';
+        typesInput.type = 'text';
+        typesInput.placeholder = 'fire,water';
         typesInput.value = cur ? cur.types.join(',') : '';
         typesInput.title = 'Comma-separated type names';
         typesInput.addEventListener('change', () => {
-          const types = typesInput.value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
-          const prev = npcAny['interaction'] as NpcInteraction & { kind: 'show-types' } | undefined;
-          npcAny['interaction'] = { kind: 'show-types', types, count: prev?.kind === 'show-types' ? prev.count : 1, reward: prev?.kind === 'show-types' ? prev.reward : { money: 0 } };
+          const types = typesInput.value
+            .split(',')
+            .map((s) => s.trim().toLowerCase())
+            .filter(Boolean);
+          const prev = npcAny['interaction'] as (NpcInteraction & { kind: 'show-types' }) | undefined;
+          npcAny['interaction'] = {
+            kind: 'show-types',
+            types,
+            count: prev?.kind === 'show-types' ? prev.count : 1,
+            reward: prev?.kind === 'show-types' ? prev.reward : { money: 0 },
+          };
           emit();
         });
         typesRow.appendChild(typesInput);
         fields.appendChild(typesRow);
 
-        const countRow = document.createElement('div'); countRow.className = 'prop-row';
+        const countRow = document.createElement('div');
+        countRow.className = 'prop-row';
         countRow.innerHTML = '<label>Count:</label>';
         const countInput = document.createElement('input');
-        countInput.type = 'number'; countInput.min = '1'; countInput.value = String(cur?.count ?? 1);
+        countInput.type = 'number';
+        countInput.min = '1';
+        countInput.value = String(cur?.count ?? 1);
         countInput.addEventListener('change', () => {
-          const prev = npcAny['interaction'] as NpcInteraction & { kind: 'show-types' } | undefined;
-          if (prev?.kind === 'show-types') { prev.count = parseInt(countInput.value, 10) || 1; emit(); }
+          const prev = npcAny['interaction'] as (NpcInteraction & { kind: 'show-types' }) | undefined;
+          if (prev?.kind === 'show-types') {
+            prev.count = parseInt(countInput.value, 10) || 1;
+            emit();
+          }
         });
         countRow.appendChild(countInput);
         fields.appendChild(countRow);
@@ -1488,15 +1563,28 @@ export class PropertiesPanel {
 
       if (kind === 'swap-pokemon') {
         const cur = interaction?.kind === 'swap-pokemon' ? interaction : null;
-        for (const [label, key, defaultVal] of [['Offers ID', 'offersId', '0'], ['Level', 'level', '20'], ['Wants ID', 'wantsId', '0']] as const) {
-          const row = document.createElement('div'); row.className = 'prop-row';
+        for (const [label, key, defaultVal] of [
+          ['Offers ID', 'offersId', '0'],
+          ['Level', 'level', '20'],
+          ['Wants ID', 'wantsId', '0'],
+        ] as const) {
+          const row = document.createElement('div');
+          row.className = 'prop-row';
           row.innerHTML = `<label>${label}:</label>`;
           const inp = document.createElement('input');
-          inp.type = 'number'; inp.min = '0';
-          inp.value = String(cur ? (cur as Record<string, unknown>)[key] ?? defaultVal : defaultVal);
+          inp.type = 'number';
+          inp.min = '0';
+          inp.value = String(cur ? ((cur as Record<string, unknown>)[key] ?? defaultVal) : defaultVal);
           inp.addEventListener('change', () => {
             const prev = (npcAny['interaction'] as Record<string, unknown> | undefined) ?? {};
-            npcAny['interaction'] = { kind: 'swap-pokemon', offersId: 0, level: 20, wantsId: 0, ...prev, [key]: parseInt(inp.value, 10) || 0 };
+            npcAny['interaction'] = {
+              kind: 'swap-pokemon',
+              offersId: 0,
+              level: 20,
+              wantsId: 0,
+              ...prev,
+              [key]: parseInt(inp.value, 10) || 0,
+            };
             emit();
           });
           row.appendChild(inp);
@@ -1513,7 +1601,12 @@ export class PropertiesPanel {
       } else if (kindSel.value === 'show-pokemon') {
         npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: [], reward: { money: 0 } } satisfies NpcInteraction;
       } else if (kindSel.value === 'show-types') {
-        npcAny['interaction'] = { kind: 'show-types', types: [], count: 1, reward: { money: 0 } } satisfies NpcInteraction;
+        npcAny['interaction'] = {
+          kind: 'show-types',
+          types: [],
+          count: 1,
+          reward: { money: 0 },
+        } satisfies NpcInteraction;
       } else if (kindSel.value === 'swap-pokemon') {
         npcAny['interaction'] = { kind: 'swap-pokemon', offersId: 0, level: 20, wantsId: 0 } satisfies NpcInteraction;
       }
@@ -1525,17 +1618,27 @@ export class PropertiesPanel {
   }
 
   /** Inline reward editor (money + flag) used inside interaction sub-panels. */
-  private renderInlineReward(container: HTMLElement, npcAny: Record<string, unknown>, kind: string, emit: () => void): void {
-    const moneyRow = document.createElement('div'); moneyRow.className = 'prop-row';
+  private renderInlineReward(
+    container: HTMLElement,
+    npcAny: Record<string, unknown>,
+    kind: string,
+    emit: () => void,
+  ): void {
+    const moneyRow = document.createElement('div');
+    moneyRow.className = 'prop-row';
     moneyRow.innerHTML = '<label>Reward $:</label>';
     const moneyInput = document.createElement('input');
-    moneyInput.type = 'number'; moneyInput.min = '0';
+    moneyInput.type = 'number';
+    moneyInput.min = '0';
     const cur = npcAny['interaction'] as Record<string, unknown> | undefined;
     const reward = (cur?.['reward'] as Record<string, unknown> | undefined) ?? {};
     moneyInput.value = String(reward['money'] ?? 0);
     moneyInput.addEventListener('change', () => {
       const intx = npcAny['interaction'] as Record<string, unknown> | undefined;
-      if (intx) { (intx['reward'] as Record<string, unknown>)['money'] = parseInt(moneyInput.value, 10) || 0; emit(); }
+      if (intx) {
+        (intx['reward'] as Record<string, unknown>)['money'] = parseInt(moneyInput.value, 10) || 0;
+        emit();
+      }
     });
     moneyRow.appendChild(moneyInput);
     container.appendChild(moneyRow);
@@ -1574,9 +1677,14 @@ export class PropertiesPanel {
     moneyRow.className = 'prop-row';
     moneyRow.innerHTML = '<label>Reward $:</label>';
     const moneyInput = document.createElement('input');
-    moneyInput.type = 'number'; moneyInput.min = '0'; moneyInput.step = '10';
+    moneyInput.type = 'number';
+    moneyInput.min = '0';
+    moneyInput.step = '10';
     moneyInput.value = String(reward.money || 0);
-    moneyInput.addEventListener('change', () => { reward.money = parseInt(moneyInput.value, 10) || 0; emit(); });
+    moneyInput.addEventListener('change', () => {
+      reward.money = parseInt(moneyInput.value, 10) || 0;
+      emit();
+    });
     moneyRow.appendChild(moneyInput);
     section.appendChild(moneyRow);
 
@@ -1597,7 +1705,11 @@ export class PropertiesPanel {
       emit();
     });
     storyRow.appendChild(storyInput);
-    storyRow.appendChild(this.makeInfo('Sets a flag in pd.flags for story progression. Other NPCs/transitions can check this flag to gate content. E.g. "received-pokedex", "gym1-cleared"'));
+    storyRow.appendChild(
+      this.makeInfo(
+        'Sets a flag in pd.flags for story progression. Other NPCs/transitions can check this flag to gate content. E.g. "received-pokedex", "gym1-cleared"',
+      ),
+    );
     section.appendChild(storyRow);
 
     // Flag override
@@ -1614,7 +1726,11 @@ export class PropertiesPanel {
       emit();
     });
     flagRow.appendChild(flagInput);
-    flagRow.appendChild(this.makeInfo('"Already rewarded" guard — prevents giving reward twice. Auto-generated as "npc-{id}-rewarded" if left empty. Override to share a gate between multiple NPCs.'));
+    flagRow.appendChild(
+      this.makeInfo(
+        '"Already rewarded" guard — prevents giving reward twice. Auto-generated as "npc-{id}-rewarded" if left empty. Override to share a gate between multiple NPCs.',
+      ),
+    );
     section.appendChild(flagRow);
 
     // Reward items
@@ -1632,37 +1748,41 @@ export class PropertiesPanel {
 
     // Events that trigger when player interacts with this NPC
     const interactEvents = events.filter(
-      e => e.trigger.type === 'npc-interact' && (e.trigger as { npcId: string }).npcId === npc.id
+      (e) => e.trigger.type === 'npc-interact' && (e.trigger as { npcId: string }).npcId === npc.id,
     );
 
     // Events that trigger when this NPC's trainer is defeated
     const defeatEvents = events.filter(
-      e => e.trigger.type === 'trainer-defeated' && (e.trigger as { trainerId: string }).trainerId === npc.id
+      (e) => e.trigger.type === 'trainer-defeated' && (e.trigger as { trainerId: string }).trainerId === npc.id,
     );
 
     // Events that SET the spawnAfter flag (i.e., what causes this NPC to appear)
     const spawnFlag = npcAny['spawnAfter'] as string | undefined;
-    const spawnSources = spawnFlag ? events.filter(e =>
-      e.actions.some(a => a.type === 'set-flag' && (a as { flag: string }).flag === spawnFlag)
-    ) : [];
+    const spawnSources = spawnFlag
+      ? events.filter((e) => e.actions.some((a) => a.type === 'set-flag' && (a as { flag: string }).flag === spawnFlag))
+      : [];
 
     // Events that SET the despawnAfter flag (i.e., what causes this NPC to disappear)
     const despawnFlag = npcAny['despawnAfter'] as string | undefined;
-    const despawnSources = despawnFlag ? events.filter(e =>
-      e.actions.some(a => a.type === 'set-flag' && (a as { flag: string }).flag === despawnFlag)
-    ) : [];
+    const despawnSources = despawnFlag
+      ? events.filter((e) =>
+          e.actions.some((a) => a.type === 'set-flag' && (a as { flag: string }).flag === despawnFlag),
+        )
+      : [];
 
     const hasAny = interactEvents.length || defeatEvents.length || spawnSources.length || despawnSources.length;
     if (!hasAny) return;
 
     // Section header
     const header = document.createElement('div');
-    header.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:10px 0 4px;border-top:1px solid #2a3a5a;padding-top:8px;';
+    header.style.cssText =
+      'font-size:11px;color:#8899bb;font-weight:600;margin:10px 0 4px;border-top:1px solid #2a3a5a;padding-top:8px;';
     header.textContent = '📖 Story Cross-References';
     section.appendChild(header);
 
     const container = document.createElement('div');
-    container.style.cssText = 'background:#0d1a2e;border:1px solid #1e3050;border-radius:4px;padding:6px 8px;font-size:10px;line-height:1.6;';
+    container.style.cssText =
+      'background:#0d1a2e;border:1px solid #1e3050;border-radius:4px;padding:6px 8px;font-size:10px;line-height:1.6;';
 
     const addGroup = (title: string, items: string[], color: string) => {
       if (!items.length) return;
@@ -1679,32 +1799,48 @@ export class PropertiesPanel {
     };
 
     if (interactEvents.length) {
-      addGroup('When player talks to this NPC:', interactEvents.map(e => {
-        const actions = e.actions.map(a => a.type).join(', ');
-        return `"${e.id}" → ${actions}`;
-      }), '#66ddaa');
+      addGroup(
+        'When player talks to this NPC:',
+        interactEvents.map((e) => {
+          const actions = e.actions.map((a) => a.type).join(', ');
+          return `"${e.id}" → ${actions}`;
+        }),
+        '#66ddaa',
+      );
     }
 
     if (defeatEvents.length) {
-      addGroup('When this trainer is defeated:', defeatEvents.map(e => {
-        const actions = e.actions.map(a => a.type).join(', ');
-        return `"${e.id}" → ${actions}`;
-      }), '#dd8866');
+      addGroup(
+        'When this trainer is defeated:',
+        defeatEvents.map((e) => {
+          const actions = e.actions.map((a) => a.type).join(', ');
+          return `"${e.id}" → ${actions}`;
+        }),
+        '#dd8866',
+      );
     }
 
     if (spawnSources.length) {
       const desc = FLAG_DESCRIPTIONS[spawnFlag!] ?? spawnFlag;
-      addGroup(`What sets spawnAfter (${spawnFlag}):`, spawnSources.map(e => {
-        return `"${e.id}" (trigger: ${e.trigger.type})`;
-      }), '#88aaff');
+      addGroup(
+        `What sets spawnAfter (${spawnFlag}):`,
+        spawnSources.map((e) => {
+          return `"${e.id}" (trigger: ${e.trigger.type})`;
+        }),
+        '#88aaff',
+      );
       void desc; // suppress unused warning
     }
 
     if (despawnSources.length) {
       const desc = FLAG_DESCRIPTIONS[despawnFlag!] ?? despawnFlag;
-      addGroup(`What sets despawnAfter (${despawnFlag}):`, despawnSources.map(e => {
-        return `"${e.id}" (trigger: ${e.trigger.type})`;
-      }), '#ffaacc');
+      addGroup(
+        `What sets despawnAfter (${despawnFlag}):`,
+        despawnSources.map((e) => {
+          return `"${e.id}" (trigger: ${e.trigger.type})`;
+        }),
+        '#ffaacc',
+      );
       void desc;
     }
 
@@ -1730,8 +1866,11 @@ export class PropertiesPanel {
       }
       for (const act of ev.actions) {
         const a = act as Record<string, unknown>;
-        if (act.type === 'set-flag' && typeof a['flag'] === 'string') add(a['flag'] as string, `event "${ev.id}" (sets flag)`);
-        if (act.type === 'start-cutscene' && typeof a['cutsceneId'] === 'string') {/* skip non-flag */}
+        if (act.type === 'set-flag' && typeof a['flag'] === 'string')
+          add(a['flag'] as string, `event "${ev.id}" (sets flag)`);
+        if (act.type === 'start-cutscene' && typeof a['cutsceneId'] === 'string') {
+          /* skip non-flag */
+        }
       }
     }
 
@@ -1759,7 +1898,7 @@ export class PropertiesPanel {
     value: string | undefined;
     allFlags: Map<string, string[]>;
     currentNpcId: string;
-    roleLabel: string;      // e.g. "spawnAfter" — used to exclude self from usage display
+    roleLabel: string; // e.g. "spawnAfter" — used to exclude self from usage display
     onChange: (flag: string | undefined) => void;
   }): HTMLElement {
     const { value, allFlags, currentNpcId, roleLabel, onChange } = opts;
@@ -1794,15 +1933,21 @@ export class PropertiesPanel {
     const infoBtn = document.createElement('button');
     infoBtn.textContent = 'ⓘ';
     infoBtn.title = 'Show where this flag is used';
-    infoBtn.style.cssText = 'width:22px;padding:0;flex-shrink:0;background:#1e2a3a;border:1px solid #445;color:#88aaff;cursor:pointer;border-radius:3px;';
+    infoBtn.style.cssText =
+      'width:22px;padding:0;flex-shrink:0;background:#1e2a3a;border:1px solid #445;color:#88aaff;cursor:pointer;border-radius:3px;';
     infoBtn.addEventListener('click', () => {
       const flag = input.value.trim();
-      if (!flag) { alert('Enter a flag name first.'); return; }
+      if (!flag) {
+        alert('Enter a flag name first.');
+        return;
+      }
       const usages = allFlags.get(flag) ?? [];
       const self = `NPC "${currentNpcId}" → ${roleLabel}`;
-      const others = usages.filter(u => u !== self);
+      const others = usages.filter((u) => u !== self);
       if (others.length === 0) {
-        alert(`Flag "${flag}" is not referenced anywhere else in the registered story events or this map's NPCs.\n\nNote: it may be set/checked in other map files not yet loaded.`);
+        alert(
+          `Flag "${flag}" is not referenced anywhere else in the registered story events or this map's NPCs.\n\nNote: it may be set/checked in other map files not yet loaded.`,
+        );
       } else {
         alert(`Flag "${flag}" is used in:\n\n• ${others.join('\n• ')}`);
       }
@@ -1814,9 +1959,12 @@ export class PropertiesPanel {
     infoNote.style.cssText = 'font-size:10px;margin-top:2px;min-height:13px;';
 
     const updateNote = (flag: string) => {
-      if (!flag) { infoNote.textContent = ''; return; }
+      if (!flag) {
+        infoNote.textContent = '';
+        return;
+      }
       const self = `NPC "${currentNpcId}" → ${roleLabel}`;
-      const others = (allFlags.get(flag) ?? []).filter(u => u !== self);
+      const others = (allFlags.get(flag) ?? []).filter((u) => u !== self);
       if (others.length > 0) {
         infoNote.style.color = '#ffaa44';
         const preview = others.slice(0, 2).join(', ');
@@ -1875,13 +2023,18 @@ export class PropertiesPanel {
     const spawnLabel = document.createElement('label');
     spawnLabel.textContent = 'Spawn After:';
     spawnRow.appendChild(spawnLabel);
-    spawnRow.appendChild(this.makeFlagInput({
-      value: npc.spawnAfter,
-      allFlags,
-      currentNpcId: npc.id,
-      roleLabel: 'spawnAfter',
-      onChange: v => { npcAny['spawnAfter'] = v; emit(); },
-    }));
+    spawnRow.appendChild(
+      this.makeFlagInput({
+        value: npc.spawnAfter,
+        allFlags,
+        currentNpcId: npc.id,
+        roleLabel: 'spawnAfter',
+        onChange: (v) => {
+          npcAny['spawnAfter'] = v;
+          emit();
+        },
+      }),
+    );
     section.appendChild(spawnRow);
 
     // Despawn After flag — searchable select
@@ -1891,13 +2044,18 @@ export class PropertiesPanel {
     const despawnLabel = document.createElement('label');
     despawnLabel.textContent = 'Despawn After:';
     despawnRow.appendChild(despawnLabel);
-    despawnRow.appendChild(this.makeFlagInput({
-      value: npc.despawnAfter,
-      allFlags,
-      currentNpcId: npc.id,
-      roleLabel: 'despawnAfter',
-      onChange: v => { npcAny['despawnAfter'] = v; emit(); },
-    }));
+    despawnRow.appendChild(
+      this.makeFlagInput({
+        value: npc.despawnAfter,
+        allFlags,
+        currentNpcId: npc.id,
+        roleLabel: 'despawnAfter',
+        onChange: (v) => {
+          npcAny['despawnAfter'] = v;
+          emit();
+        },
+      }),
+    );
     section.appendChild(despawnRow);
 
     // ── Blocker NPC ──
@@ -1914,12 +2072,19 @@ export class PropertiesPanel {
     blockerCb.checked = !!npcAny['blocker'];
     blockerCb.title = 'NPC uses line-of-sight to block the player until despawn conditions are met';
     blockerRow.appendChild(blockerCb);
-    blockerRow.appendChild(this.makeInfo('When enabled, NPC shows ! and pushes the player back when they step into its line of sight. Unblocks when its despawn conditions are met.'));
+    blockerRow.appendChild(
+      this.makeInfo(
+        'When enabled, NPC shows ! and pushes the player back when they step into its line of sight. Unblocks when its despawn conditions are met.',
+      ),
+    );
     section.appendChild(blockerRow);
 
     // Sub-panel shown when blocker is checked
     const blockerPanel = document.createElement('div');
-    blockerPanel.style.cssText = 'margin-left:12px;border-left:2px solid #3a4a6a;padding-left:8px;display:' + (npcAny['blocker'] ? 'block' : 'none') + ';';
+    blockerPanel.style.cssText =
+      'margin-left:12px;border-left:2px solid #3a4a6a;padding-left:8px;display:' +
+      (npcAny['blocker'] ? 'block' : 'none') +
+      ';';
     section.appendChild(blockerPanel);
 
     // ── By party strength ──
@@ -1928,7 +2093,7 @@ export class PropertiesPanel {
     partyStrRow.innerHTML = '<label>By party strength:</label>';
     const partyStrCb = document.createElement('input');
     partyStrCb.type = 'checkbox';
-    const dwp = (npcAny['despawnWhenParty'] as { count?: number; minLevel?: number } | undefined);
+    const dwp = npcAny['despawnWhenParty'] as { count?: number; minLevel?: number } | undefined;
     partyStrCb.checked = !!dwp;
     partyStrCb.title = 'Block until player has enough Pokémon at a minimum level';
     partyStrRow.appendChild(partyStrCb);
@@ -2013,13 +2178,18 @@ export class PropertiesPanel {
     // Flag input shown when by-flag is checked
     const flagInputDiv = document.createElement('div');
     flagInputDiv.style.cssText = 'margin-left:12px;display:' + (npc.despawnAfter ? 'block' : 'none') + ';';
-    flagInputDiv.appendChild(this.makeFlagInput({
-      value: npc.despawnAfter,
-      allFlags,
-      currentNpcId: npc.id,
-      roleLabel: 'despawnAfter',
-      onChange: v => { npcAny['despawnAfter'] = v; emit(); },
-    }));
+    flagInputDiv.appendChild(
+      this.makeFlagInput({
+        value: npc.despawnAfter,
+        allFlags,
+        currentNpcId: npc.id,
+        roleLabel: 'despawnAfter',
+        onChange: (v) => {
+          npcAny['despawnAfter'] = v;
+          emit();
+        },
+      }),
+    );
     blockerPanel.appendChild(flagInputDiv);
 
     byFlagCb.addEventListener('change', () => {
@@ -2075,11 +2245,13 @@ export class PropertiesPanel {
     mapClearCb.type = 'checkbox';
     mapClearCb.checked = !!npcAny['mapClearBlocker'];
     mapClearRow.appendChild(mapClearCb);
-    mapClearRow.appendChild(this.makeInfo(
-      'Appends a live "X of Y trainers still standing" line to the END of this NPC\'s dialogue. ' +
-      'Counts all type:"trainer" NPCs on the current map, excluding those with excludeFromMapClear:true. ' +
-      'Does not require blocker:true — any dialogue NPC can show the count.'
-    ));
+    mapClearRow.appendChild(
+      this.makeInfo(
+        'Appends a live "X of Y trainers still standing" line to the END of this NPC\'s dialogue. ' +
+          'Counts all type:"trainer" NPCs on the current map, excluding those with excludeFromMapClear:true. ' +
+          'Does not require blocker:true — any dialogue NPC can show the count.',
+      ),
+    );
     section.appendChild(mapClearRow);
     mapClearCb.addEventListener('change', () => {
       if (mapClearCb.checked) npcAny['mapClearBlocker'] = true;
@@ -2095,11 +2267,13 @@ export class PropertiesPanel {
     excludeCb.type = 'checkbox';
     excludeCb.checked = !!npcAny['excludeFromMapClear'];
     excludeRow.appendChild(excludeCb);
-    excludeRow.appendChild(this.makeInfo(
-      'Excludes this trainer from the auto-computed allTrainersDefeatedFlag("mapId") ' +
-      '(flag: "all-trainers-defeated-{mapId}") and from the mapClearBlocker count. ' +
-      'Use for gym leaders or story bosses that should not count toward clearing the area.'
-    ));
+    excludeRow.appendChild(
+      this.makeInfo(
+        'Excludes this trainer from the auto-computed allTrainersDefeatedFlag("mapId") ' +
+          '(flag: "all-trainers-defeated-{mapId}") and from the mapClearBlocker count. ' +
+          'Use for gym leaders or story bosses that should not count toward clearing the area.',
+      ),
+    );
     section.appendChild(excludeRow);
     excludeCb.addEventListener('change', () => {
       if (excludeCb.checked) npcAny['excludeFromMapClear'] = true;
@@ -2109,11 +2283,7 @@ export class PropertiesPanel {
   }
 
   /** Render an editable list of walk steps for one phase (main / afterSpawn / afterDespawn). */
-  private renderWalkSteps(
-    parent: HTMLElement,
-    steps: import('../systems/npc.js').WalkStep[],
-    emit: () => void,
-  ): void {
+  private renderWalkSteps(parent: HTMLElement, steps: import('../systems/npc.js').WalkStep[], emit: () => void): void {
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
       const row = document.createElement('div');
@@ -2129,29 +2299,50 @@ export class PropertiesPanel {
       dirSel.style.width = '60px';
       for (const d of ['up', 'down', 'left', 'right']) {
         const opt = document.createElement('option');
-        opt.value = d; opt.textContent = d;
+        opt.value = d;
+        opt.textContent = d;
         if (d === step.dir) opt.selected = true;
         dirSel.appendChild(opt);
       }
-      dirSel.addEventListener('change', () => { step.dir = dirSel.value as 'up' | 'down' | 'left' | 'right'; emit(); });
+      dirSel.addEventListener('change', () => {
+        step.dir = dirSel.value as 'up' | 'down' | 'left' | 'right';
+        emit();
+      });
       row.appendChild(dirSel);
 
       const stepsIn = document.createElement('input');
-      stepsIn.type = 'number'; stepsIn.value = String(step.steps); stepsIn.min = '0';
-      stepsIn.style.width = '36px'; stepsIn.title = 'Tiles to walk (0 = face direction only)';
-      stepsIn.addEventListener('change', () => { step.steps = Math.max(0, parseInt(stepsIn.value) || 0); emit(); });
+      stepsIn.type = 'number';
+      stepsIn.value = String(step.steps);
+      stepsIn.min = '0';
+      stepsIn.style.width = '36px';
+      stepsIn.title = 'Tiles to walk (0 = face direction only)';
+      stepsIn.addEventListener('change', () => {
+        step.steps = Math.max(0, parseInt(stepsIn.value) || 0);
+        emit();
+      });
       row.appendChild(stepsIn);
 
       const delayIn = document.createElement('input');
-      delayIn.type = 'number'; delayIn.value = String(step.delay); delayIn.min = '0'; delayIn.step = '0.5';
-      delayIn.style.width = '36px'; delayIn.title = 'Delay after step (s)';
-      delayIn.addEventListener('change', () => { step.delay = parseFloat(delayIn.value) || 0; emit(); });
+      delayIn.type = 'number';
+      delayIn.value = String(step.delay);
+      delayIn.min = '0';
+      delayIn.step = '0.5';
+      delayIn.style.width = '36px';
+      delayIn.title = 'Delay after step (s)';
+      delayIn.addEventListener('change', () => {
+        step.delay = parseFloat(delayIn.value) || 0;
+        emit();
+      });
       row.appendChild(delayIn);
 
       const removeBtn = document.createElement('button');
-      removeBtn.textContent = '✕'; removeBtn.title = 'Remove step';
+      removeBtn.textContent = '✕';
+      removeBtn.title = 'Remove step';
       removeBtn.style.marginLeft = '2px';
-      removeBtn.addEventListener('click', () => { steps.splice(i, 1); emit(); });
+      removeBtn.addEventListener('click', () => {
+        steps.splice(i, 1);
+        emit();
+      });
       row.appendChild(removeBtn);
 
       parent.appendChild(row);
@@ -2161,7 +2352,10 @@ export class PropertiesPanel {
     addRow.className = 'prop-row';
     const addBtn = document.createElement('button');
     addBtn.textContent = '+ Add Step';
-    addBtn.addEventListener('click', () => { steps.push({ dir: 'right', steps: 2, delay: 0.5 }); emit(); });
+    addBtn.addEventListener('click', () => {
+      steps.push({ dir: 'right', steps: 2, delay: 0.5 });
+      emit();
+    });
     addRow.appendChild(addBtn);
     parent.appendChild(addRow);
   }
@@ -2182,7 +2376,8 @@ export class PropertiesPanel {
     emit: () => void,
   ): void {
     const hdr = document.createElement('div');
-    hdr.style.cssText = 'font-size:10px;color:#7a8aaa;font-weight:600;margin:8px 0 3px;display:flex;align-items:center;gap:6px;';
+    hdr.style.cssText =
+      'font-size:10px;color:#7a8aaa;font-weight:600;margin:8px 0 3px;display:flex;align-items:center;gap:6px;';
 
     const enableCb = document.createElement('input');
     enableCb.type = 'checkbox';
@@ -2193,7 +2388,9 @@ export class PropertiesPanel {
     const hdrLabel = document.createElement('span');
     hdrLabel.textContent = `⚡ ${label}`;
     hdrLabel.style.cursor = 'pointer';
-    hdrLabel.addEventListener('click', () => { enableCb.click(); });
+    hdrLabel.addEventListener('click', () => {
+      enableCb.click();
+    });
 
     hdr.appendChild(enableCb);
     hdr.appendChild(hdrLabel);
@@ -2213,9 +2410,12 @@ export class PropertiesPanel {
       loopRow.innerHTML = '<label>Loop:</label>';
       const loopCb = document.createElement('input');
       loopCb.type = 'checkbox';
-      loopCb.checked = !!(aw[loopKey]);
+      loopCb.checked = !!aw[loopKey];
       loopCb.style.width = 'auto';
-      loopCb.addEventListener('change', () => { (aw as unknown as Record<string, unknown>)[loopKey] = loopCb.checked || undefined; emit(); });
+      loopCb.addEventListener('change', () => {
+        (aw as unknown as Record<string, unknown>)[loopKey] = loopCb.checked || undefined;
+        emit();
+      });
       loopRow.appendChild(loopCb);
       body.appendChild(loopRow);
 
@@ -2251,7 +2451,13 @@ export class PropertiesPanel {
     enableCb.checked = !!aw;
     enableCb.addEventListener('change', () => {
       if (enableCb.checked) {
-        npc.autoWalk = { pattern: [{ dir: 'right', steps: 2, delay: 1 }, { dir: 'left', steps: 2, delay: 1 }], loop: true };
+        npc.autoWalk = {
+          pattern: [
+            { dir: 'right', steps: 2, delay: 1 },
+            { dir: 'left', steps: 2, delay: 1 },
+          ],
+          loop: true,
+        };
       } else {
         npc.autoWalk = null;
       }
@@ -2276,7 +2482,10 @@ export class PropertiesPanel {
     loopCb.type = 'checkbox';
     loopCb.checked = aw.loop !== false;
     loopCb.style.width = 'auto';
-    loopCb.addEventListener('change', () => { aw.loop = loopCb.checked; emit(); });
+    loopCb.addEventListener('change', () => {
+      aw.loop = loopCb.checked;
+      emit();
+    });
     loopRow.appendChild(loopCb);
     section.appendChild(loopRow);
 
@@ -2294,14 +2503,20 @@ export class PropertiesPanel {
     const trAny = tr as unknown as Record<string, unknown>;
 
     // From X/Y
-    for (const f of [{ label: 'From X', key: 'fromX', value: tr.fromX }, { label: 'From Y', key: 'fromY', value: tr.fromY }]) {
+    for (const f of [
+      { label: 'From X', key: 'fromX', value: tr.fromX },
+      { label: 'From Y', key: 'fromY', value: tr.fromY },
+    ]) {
       const row = document.createElement('div');
       row.className = 'prop-row';
       row.innerHTML = `<label>${f.label}:</label>`;
       const input = document.createElement('input');
       input.type = 'number';
       input.value = String(f.value);
-      input.addEventListener('change', () => { trAny[f.key] = parseInt(input.value, 10) || 0; emit(); });
+      input.addEventListener('change', () => {
+        trAny[f.key] = parseInt(input.value, 10) || 0;
+        emit();
+      });
       row.appendChild(input);
       body.appendChild(row);
     }
@@ -2331,7 +2546,10 @@ export class PropertiesPanel {
       const opt = document.createElement('option');
       opt.value = mapId;
       opt.textContent = mapId;
-      if (mapId === tr.toMapId) { opt.selected = true; foundCurrent = true; }
+      if (mapId === tr.toMapId) {
+        opt.selected = true;
+        foundCurrent = true;
+      }
       mapSel.appendChild(opt);
     }
     if (!foundCurrent && tr.toMapId) {
@@ -2341,7 +2559,10 @@ export class PropertiesPanel {
       opt.selected = true;
       mapSel.prepend(opt);
     }
-    mapSel.addEventListener('change', () => { trAny['toMapId'] = mapSel.value; emit(); });
+    mapSel.addEventListener('change', () => {
+      trAny['toMapId'] = mapSel.value;
+      emit();
+    });
     mapRow.appendChild(mapSel);
     destContainer.appendChild(mapRow);
 
@@ -2366,18 +2587,26 @@ export class PropertiesPanel {
 
     // To X/Y (only shown in custom mode)
     const toXYContainer = document.createElement('div');
-    for (const f of [{ label: 'To X', key: 'toX', value: tr.toX ?? 1 }, { label: 'To Y', key: 'toY', value: tr.toY ?? 1 }]) {
+    for (const f of [
+      { label: 'To X', key: 'toX', value: tr.toX ?? 1 },
+      { label: 'To Y', key: 'toY', value: tr.toY ?? 1 },
+    ]) {
       const row = document.createElement('div');
       row.className = 'prop-row';
       row.innerHTML = `<label>${f.label}:</label>`;
       const input = document.createElement('input');
       input.type = 'number';
       input.value = String(f.value);
-      input.addEventListener('change', () => { trAny[f.key] = parseInt(input.value, 10) || 0; emit(); });
+      input.addEventListener('change', () => {
+        trAny[f.key] = parseInt(input.value, 10) || 0;
+        emit();
+      });
       row.appendChild(input);
       toXYContainer.appendChild(row);
     }
-    const updateToXYVisibility = () => { toXYContainer.style.display = spawnSel.value === 'custom' ? '' : 'none'; };
+    const updateToXYVisibility = () => {
+      toXYContainer.style.display = spawnSel.value === 'custom' ? '' : 'none';
+    };
     updateToXYVisibility();
     spawnSel.addEventListener('change', () => {
       if (spawnSel.value === 'spawn') {
@@ -2393,7 +2622,9 @@ export class PropertiesPanel {
     destContainer.appendChild(toXYContainer);
 
     // Toggle destination fields visibility
-    const updateDestVisibility = () => { destContainer.style.display = cb.checked ? 'none' : ''; };
+    const updateDestVisibility = () => {
+      destContainer.style.display = cb.checked ? 'none' : '';
+    };
     updateDestVisibility();
     cb.addEventListener('change', () => {
       tr.returnToPrevious = cb.checked;
@@ -2411,14 +2642,17 @@ export class PropertiesPanel {
     // Warn if multiple transitions use returnToPrevious (only one entry point is saved at a time)
     const warnEl = document.createElement('div');
     warnEl.style.cssText = 'color:#ff6; font-size:11px; padding:4px 0; display:none;';
-    warnEl.textContent = '⚠ Multiple "return to prev" transitions on this map — only one entry point is tracked, this may cause loops.';
+    warnEl.textContent =
+      '⚠ Multiple "return to prev" transitions on this map — only one entry point is tracked, this may cause loops.';
     body.appendChild(warnEl);
     const checkReturnWarning = () => {
-      const count = (this.state.mapData.transitions || []).filter(t => t.returnToPrevious).length;
-      warnEl.style.display = (cb.checked && count > 1) ? '' : 'none';
+      const count = (this.state.mapData.transitions || []).filter((t) => t.returnToPrevious).length;
+      warnEl.style.display = cb.checked && count > 1 ? '' : 'none';
     };
     checkReturnWarning();
-    cb.addEventListener('change', () => { setTimeout(checkReturnWarning, 0); });
+    cb.addEventListener('change', () => {
+      setTimeout(checkReturnWarning, 0);
+    });
 
     const delBtn = document.createElement('button');
     delBtn.className = 'btn-danger';
@@ -2460,7 +2694,11 @@ export class PropertiesPanel {
     });
     areaRow.appendChild(areaLabel);
     areaRow.appendChild(areaInput);
-    areaRow.appendChild(this.makeInfo('Set to group with other maps (e.g. city buildings). Shared area maps appear in Related Maps below.'));
+    areaRow.appendChild(
+      this.makeInfo(
+        'Set to group with other maps (e.g. city buildings). Shared area maps appear in Related Maps below.',
+      ),
+    );
     body.appendChild(areaRow);
 
     this.container.appendChild(section);
@@ -2483,15 +2721,15 @@ export class PropertiesPanel {
     }
 
     // Live outgoing from current map's transitions (may include unsaved additions)
-    const liveOutgoing = (mapData.transitions ?? []).map(t => t.toMapId);
+    const liveOutgoing = (mapData.transitions ?? []).map((t) => t.toMapId);
     const related = mapRelationIndex.getRelated(mapId, area, liveOutgoing);
 
     if (related.length === 0) {
       body.innerHTML = '<div class="prop-empty">No related maps — set Area or add Transitions</div>';
     } else {
-      const areaItems  = related.filter(r => r.relation === 'area');
-      const outItems   = related.filter(r => r.relation === 'outgoing');
-      const inItems    = related.filter(r => r.relation === 'incoming');
+      const areaItems = related.filter((r) => r.relation === 'area');
+      const outItems = related.filter((r) => r.relation === 'outgoing');
+      const inItems = related.filter((r) => r.relation === 'incoming');
 
       if (areaItems.length > 0) {
         const hdr = document.createElement('div');
@@ -2534,7 +2772,8 @@ export class PropertiesPanel {
 
     if (name !== mapId) {
       const nameSpan = document.createElement('span');
-      nameSpan.style.cssText = 'font-size:11px; color:#c8d8e8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;';
+      nameSpan.style.cssText =
+        'font-size:11px; color:#c8d8e8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;';
       nameSpan.textContent = name;
       item.appendChild(nameSpan);
     }
@@ -2545,10 +2784,12 @@ export class PropertiesPanel {
         this.onNavigate(mapId);
       } else {
         // Fallback: load directly
-        loadMapFromProject(mapId).then(data => {
-          const cats = categorizeTiles(this.tiles as Record<string, never>);
-          this.state.loadMap(data, cats);
-        }).catch(err => console.error('Failed to load map:', err));
+        loadMapFromProject(mapId)
+          .then((data) => {
+            const cats = categorizeTiles(this.tiles as Record<string, never>);
+            this.state.loadMap(data, cats);
+          })
+          .catch((err) => console.error('Failed to load map:', err));
       }
     });
 
@@ -2654,9 +2895,12 @@ export class PropertiesPanel {
     }
 
     // Load or create encounter table entry
-    const tables = encounterTables as Record<string, { encounterRate: number; entries: { pokemonId: number; minLevel: number; maxLevel: number; weight: number }[] }>;
+    const tables = encounterTables as Record<
+      string,
+      { encounterRate: number; entries: { pokemonId: number; minLevel: number; maxLevel: number; weight: number }[] }
+    >;
     if (!tables[tableId]) {
-      (tables as Record<string, unknown>)[tableId] = { encounterRate: 0.10, entries: [] };
+      (tables as Record<string, unknown>)[tableId] = { encounterRate: 0.1, entries: [] };
     }
     const table = tables[tableId];
 
@@ -2665,9 +2909,15 @@ export class PropertiesPanel {
     rateRow.className = 'prop-row';
     rateRow.innerHTML = '<label>Rate:</label>';
     const rateInput = document.createElement('input');
-    rateInput.type = 'number'; rateInput.min = '0'; rateInput.max = '1'; rateInput.step = '0.01';
+    rateInput.type = 'number';
+    rateInput.min = '0';
+    rateInput.max = '1';
+    rateInput.step = '0.01';
     rateInput.value = String(table.encounterRate);
-    rateInput.addEventListener('change', () => { table.encounterRate = parseFloat(rateInput.value) || 0.1; emit(); });
+    rateInput.addEventListener('change', () => {
+      table.encounterRate = parseFloat(rateInput.value) || 0.1;
+      emit();
+    });
     rateRow.appendChild(rateInput);
     rateRow.appendChild(this.makeInfo('Chance of encounter per step on encounter tiles (0.10 = 10%)'));
     body.appendChild(rateRow);
@@ -2700,7 +2950,7 @@ export class PropertiesPanel {
       pkmnInput.type = 'text';
       pkmnInput.className = 'pokemon-search-input';
       pkmnInput.placeholder = 'Pokemon...';
-      const cur = pokemonList.find(p => p.id === entry.pokemonId);
+      const cur = pokemonList.find((p) => p.id === entry.pokemonId);
       pkmnInput.value = cur ? `#${cur.id} ${cur.name.en}` : `#${entry.pokemonId}`;
 
       const dropdown = document.createElement('div');
@@ -2710,9 +2960,9 @@ export class PropertiesPanel {
       const renderDD = (filter: string) => {
         dropdown.innerHTML = '';
         const lf = filter.toLowerCase();
-        const matches = pokemonList.filter(p =>
-          p.name.en.toLowerCase().includes(lf) || String(p.id).includes(lf)
-        ).slice(0, 20);
+        const matches = pokemonList
+          .filter((p) => p.name.en.toLowerCase().includes(lf) || String(p.id).includes(lf))
+          .slice(0, 20);
         for (const p of matches) {
           const item = document.createElement('div');
           item.className = 'pokemon-dropdown-item';
@@ -2727,38 +2977,73 @@ export class PropertiesPanel {
           dropdown.appendChild(item);
         }
       };
-      pkmnInput.addEventListener('focus', () => { pkmnInput.select(); renderDD(''); dropdown.style.display = 'block'; });
-      pkmnInput.addEventListener('input', () => { renderDD(pkmnInput.value); dropdown.style.display = 'block'; });
-      pkmnInput.addEventListener('blur', () => { setTimeout(() => { dropdown.style.display = 'none'; }, 150); });
+      pkmnInput.addEventListener('focus', () => {
+        pkmnInput.select();
+        renderDD('');
+        dropdown.style.display = 'block';
+      });
+      pkmnInput.addEventListener('input', () => {
+        renderDD(pkmnInput.value);
+        dropdown.style.display = 'block';
+      });
+      pkmnInput.addEventListener('blur', () => {
+        setTimeout(() => {
+          dropdown.style.display = 'none';
+        }, 150);
+      });
       pkmnWrapper.appendChild(pkmnInput);
       pkmnWrapper.appendChild(dropdown);
       row.appendChild(pkmnWrapper);
 
       // Level range
       const minLvl = document.createElement('input');
-      minLvl.type = 'number'; minLvl.min = '1'; minLvl.max = '100';
-      minLvl.value = String(entry.minLevel); minLvl.className = 'trainer-slot-level'; minLvl.title = 'Min Level';
-      minLvl.addEventListener('change', () => { entry.minLevel = parseInt(minLvl.value, 10) || 1; emit(); });
+      minLvl.type = 'number';
+      minLvl.min = '1';
+      minLvl.max = '100';
+      minLvl.value = String(entry.minLevel);
+      minLvl.className = 'trainer-slot-level';
+      minLvl.title = 'Min Level';
+      minLvl.addEventListener('change', () => {
+        entry.minLevel = parseInt(minLvl.value, 10) || 1;
+        emit();
+      });
       row.appendChild(minLvl);
 
       const maxLvl = document.createElement('input');
-      maxLvl.type = 'number'; maxLvl.min = '1'; maxLvl.max = '100';
-      maxLvl.value = String(entry.maxLevel); maxLvl.className = 'trainer-slot-level'; maxLvl.title = 'Max Level';
-      maxLvl.addEventListener('change', () => { entry.maxLevel = parseInt(maxLvl.value, 10) || 1; emit(); });
+      maxLvl.type = 'number';
+      maxLvl.min = '1';
+      maxLvl.max = '100';
+      maxLvl.value = String(entry.maxLevel);
+      maxLvl.className = 'trainer-slot-level';
+      maxLvl.title = 'Max Level';
+      maxLvl.addEventListener('change', () => {
+        entry.maxLevel = parseInt(maxLvl.value, 10) || 1;
+        emit();
+      });
       row.appendChild(maxLvl);
 
       // Weight
       const weightInput = document.createElement('input');
-      weightInput.type = 'number'; weightInput.min = '1'; weightInput.max = '100';
-      weightInput.value = String(entry.weight); weightInput.className = 'trainer-slot-qty'; weightInput.title = 'Weight (spawn chance)';
-      weightInput.addEventListener('change', () => { entry.weight = parseInt(weightInput.value, 10) || 10; emit(); });
+      weightInput.type = 'number';
+      weightInput.min = '1';
+      weightInput.max = '100';
+      weightInput.value = String(entry.weight);
+      weightInput.className = 'trainer-slot-qty';
+      weightInput.title = 'Weight (spawn chance)';
+      weightInput.addEventListener('change', () => {
+        entry.weight = parseInt(weightInput.value, 10) || 10;
+        emit();
+      });
       row.appendChild(weightInput);
 
       // Remove
       const rmBtn = document.createElement('button');
       rmBtn.className = 'btn-small btn-remove';
       rmBtn.textContent = 'x';
-      rmBtn.addEventListener('click', () => { table.entries.splice(i, 1); emit(); });
+      rmBtn.addEventListener('click', () => {
+        table.entries.splice(i, 1);
+        emit();
+      });
       row.appendChild(rmBtn);
 
       body.appendChild(row);
@@ -2771,10 +3056,13 @@ export class PropertiesPanel {
     exportBtn.className = 'btn-small';
     exportBtn.textContent = 'Copy Encounter JSON';
     exportBtn.addEventListener('click', () => {
-      const json = JSON.stringify({ [tableId]: table }, null, 2);
+      const exportKey = tableId.includes('/') ? tableId.split('/').pop()! : tableId;
+      const json = JSON.stringify({ [exportKey]: table }, null, 2);
       navigator.clipboard.writeText(json).then(() => {
         exportBtn.textContent = 'Copied!';
-        setTimeout(() => { exportBtn.textContent = 'Copy Encounter JSON'; }, 1500);
+        setTimeout(() => {
+          exportBtn.textContent = 'Copy Encounter JSON';
+        }, 1500);
       });
     });
     exportRow.appendChild(exportBtn);
@@ -2821,11 +3109,16 @@ export class PropertiesPanel {
 
     sel.addEventListener('change', () => {
       const v = parseInt(sel.value, 10) || 0;
-      if (v > 0) reward.badge = v; else delete (reward as unknown as Record<string, unknown>)['badge'];
+      if (v > 0) reward.badge = v;
+      else delete (reward as unknown as Record<string, unknown>)['badge'];
       emit();
     });
     row.appendChild(sel);
-    row.appendChild(this.makeInfo('Select a gym badge to award. Badges marked (⚠ assigned) are already given by another NPC on this map.'));
+    row.appendChild(
+      this.makeInfo(
+        'Select a gym badge to award. Badges marked (⚠ assigned) are already given by another NPC on this map.',
+      ),
+    );
     return row;
   }
 
@@ -2896,7 +3189,7 @@ export class PropertiesPanel {
 
     // Detect all item-type placed objects on the map
     const objects = mapData.objects ?? [];
-    const itemObjects = objects.filter(o => this.tiles[o.key]?.interactType?.id === 'item');
+    const itemObjects = objects.filter((o) => this.tiles[o.key]?.interactType?.id === 'item');
 
     // Group by tile key
     const byKey = new Map<string, typeof objects>();
@@ -2906,7 +3199,7 @@ export class PropertiesPanel {
     }
 
     // Keys in overrides with no matching objects on this map
-    const staleKeys = Object.keys(overrides).filter(k => !byKey.has(k));
+    const staleKeys = Object.keys(overrides).filter((k) => !byKey.has(k));
 
     if (byKey.size === 0 && staleKeys.length === 0) {
       const empty = document.createElement('div');
@@ -2918,13 +3211,15 @@ export class PropertiesPanel {
     }
 
     // Sorted items list for selects (TMs first, then alphabetical)
-    const allItems = getItemList().slice().sort((a, b) => {
-      const aTM = getTMEffect(a.id) !== null;
-      const bTM = getTMEffect(b.id) !== null;
-      if (aTM && !bTM) return -1;
-      if (!aTM && bTM) return 1;
-      return a.name.en.localeCompare(b.name.en);
-    });
+    const allItems = getItemList()
+      .slice()
+      .sort((a, b) => {
+        const aTM = getTMEffect(a.id) !== null;
+        const bTM = getTMEffect(b.id) !== null;
+        if (aTM && !bTM) return -1;
+        if (!aTM && bTM) return 1;
+        return a.name.en.localeCompare(b.name.en);
+      });
 
     // ── Per tile-key group ─────────────────────────────────────────
     for (const [tileKey, tileObjs] of byKey) {
@@ -2950,9 +3245,21 @@ export class PropertiesPanel {
 
       // Detected object info rows (read-only)
       const tileDef = this.tiles[tileKey];
-      const defItemId = (tileDef?.interactType as { id: string; args?: { itemId?: string | null; itemQty?: number | null } } | null | undefined)?.args?.itemId ?? null;
-      const defItemQty = (tileDef?.interactType as { id: string; args?: { itemId?: string | null; itemQty?: number | null } } | null | undefined)?.args?.itemQty ?? 1;
-      const defItemName = defItemId ? (allItems.find(i => i.id === defItemId)?.name.en ?? defItemId) : 'unknown';
+      const defItemId =
+        (
+          tileDef?.interactType as
+            | { id: string; args?: { itemId?: string | null; itemQty?: number | null } }
+            | null
+            | undefined
+        )?.args?.itemId ?? null;
+      const defItemQty =
+        (
+          tileDef?.interactType as
+            | { id: string; args?: { itemId?: string | null; itemQty?: number | null } }
+            | null
+            | undefined
+        )?.args?.itemQty ?? 1;
+      const defItemName = defItemId ? (allItems.find((i) => i.id === defItemId)?.name.en ?? defItemId) : 'unknown';
 
       for (const obj of tileObjs) {
         const infoRow = document.createElement('div');
@@ -2987,12 +3294,16 @@ export class PropertiesPanel {
           if (item.id === entry.itemId) opt.selected = true;
           itemSel.appendChild(opt);
         }
-        itemSel.addEventListener('change', () => { entry.itemId = itemSel.value; emit(); });
+        itemSel.addEventListener('change', () => {
+          entry.itemId = itemSel.value;
+          emit();
+        });
         row.appendChild(itemSel);
 
         // qty
         const qtyInput = document.createElement('input');
-        qtyInput.type = 'number'; qtyInput.min = '1';
+        qtyInput.type = 'number';
+        qtyInput.min = '1';
         qtyInput.value = String(entry.itemQty ?? 1);
         qtyInput.className = 'trainer-slot-qty';
         qtyInput.title = 'Quantity';
@@ -3006,7 +3317,8 @@ export class PropertiesPanel {
 
         // x coord (optional target)
         const xInput = document.createElement('input');
-        xInput.type = 'number'; xInput.min = '0';
+        xInput.type = 'number';
+        xInput.min = '0';
         xInput.value = entry.x !== undefined ? String(entry.x) : '';
         xInput.className = 'trainer-slot-qty';
         xInput.style.width = '42px';
@@ -3020,7 +3332,8 @@ export class PropertiesPanel {
 
         // y coord (optional target)
         const yInput = document.createElement('input');
-        yInput.type = 'number'; yInput.min = '0';
+        yInput.type = 'number';
+        yInput.min = '0';
         yInput.value = entry.y !== undefined ? String(entry.y) : '';
         yInput.className = 'trainer-slot-qty';
         yInput.style.width = '42px';

@@ -487,7 +487,7 @@ export function rollCriticalHit(
   const critRate = getMoveBattleData(moveId)?.critRate ?? 0;
   const focusBoost = attackerState?.critBoost ? 1 : 0;
   const effective = critRate + focusBoost;
-  const chance = effective >= 2 ? 50 : effective >= 1 ? 12.5 : 6.25;
+  const chance = effective >= 2 ? 50 : effective >= 1 ? 25 : 6.25;
   return random() * 100 < chance;
 }
 
