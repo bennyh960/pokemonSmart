@@ -304,6 +304,12 @@ export function getPokemonHeight(id: number): string {
   return (data.height / 10).toFixed(1);
 }
 
+/** Get Pokemon weight in kg as a number (data is in hectograms). Returns 0 if missing. */
+export function getPokemonWeightKg(id: number): number {
+  const data = pokemonById.get(id);
+  return data?.weight ? data.weight / 10 : 0;
+}
+
 /** Get Pokemon weight in kg (data is in hectograms). Returns just the number string, or '?' if missing. */
 export function getPokemonWeight(id: number): string {
   const data = pokemonById.get(id);

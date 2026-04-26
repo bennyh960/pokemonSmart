@@ -439,6 +439,27 @@ export function applyStatChanges(
   return applied;
 }
 
+/** Low Kick / Grass Knot — power based on target's weight. */
+export function getWeightTargetPower(weightKg: number): number {
+  if (weightKg >= 200) return 120;
+  if (weightKg >= 100) return 100;
+  if (weightKg >= 50) return 80;
+  if (weightKg >= 25) return 60;
+  if (weightKg >= 10) return 40;
+  return 20;
+}
+
+/** Heavy Slam / Heat Crash — power based on how much heavier the attacker is. */
+export function getWeightRatioPower(attackerKg: number, targetKg: number): number {
+  if (targetKg <= 0) return 40;
+  const ratio = attackerKg / targetKg;
+  if (ratio >= 5) return 120;
+  if (ratio >= 4) return 100;
+  if (ratio >= 3) return 80;
+  if (ratio >= 2) return 60;
+  return 40;
+}
+
 export function doesMoveHit(
   moveAccuracy: number,
   attackerState: BattlePokemonRuntimeState,

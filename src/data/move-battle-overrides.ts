@@ -322,6 +322,12 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Coil: userStages(['attack', 1], ['defense', 1], ['accuracy', 1]),
   'Focus Energy': { behaviorTags: ['focus-energy'], target: 'user' },
 
+  // --- Weight-based power ---
+  'Low Kick': { behaviorTags: ['weight-target'] },
+  'Grass Knot': { behaviorTags: ['weight-target'] },
+  'Heavy Slam': { behaviorTags: ['weight-ratio'] },
+  'Heat Crash': { behaviorTags: ['weight-ratio'] },
+
   // --- High crit rate ---
   'Psycho Cut': { critRate: 1 },
   'Night Slash': { critRate: 1 },

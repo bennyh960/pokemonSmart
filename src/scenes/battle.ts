@@ -76,6 +76,7 @@ import {
   getMove,
   getPokemon,
   getLocalizedName,
+  getPokemonWeightKg,
   type EvolutionStep,
 } from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp, type StatGains } from '../systems/encounter.js';
@@ -149,6 +150,8 @@ import {
   applyEntryHazards,
   clearEntryHazards,
   clearScreens,
+  getWeightTargetPower,
+  getWeightRatioPower,
   type EntryHazardResult,
 } from '../systems/battle-system.js';
 import charactersManifest from '../data/sprites/characters.json';
@@ -3032,6 +3035,8 @@ export function createBattleScene(
     const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
     const isDestinyBond = moveBattleData?.behaviorTags?.includes('destiny-bond') ?? false;
     const isFutureSight = moveBattleData?.behaviorTags?.includes('future-sight') ?? false;
+    const isWeightTarget = moveBattleData?.behaviorTags?.includes('weight-target') ?? false;
+    const isWeightRatio = moveBattleData?.behaviorTags?.includes('weight-ratio') ?? false;
     const healPercent = moveBattleData?.healingPercent ?? null;
     const hitCount = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -3302,17 +3307,22 @@ export function createBattleScene(
       : { hit: true, chance: 100 };
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
-    const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(enemy, m.type);
+    const movePower = isWeightTarget
+      ? getWeightTargetPower(getPokemonWeightKg(enemy.id))
+      : isWeightRatio
+        ? getWeightRatioPower(getPokemonWeightKg(player.id), getPokemonWeightKg(enemy.id))
+        : m.power;
+    const absorbed = hitResult.hit && !targetTypeImmune && movePower > 0 && doesAbilityAbsorbMove(enemy, m.type);
     // Dream Eater: blocked if target is not asleep
     const dreamEaterBlocked = isDreamEater && enemy.status !== 'sleep';
     const criticalHit =
-      hitResult.hit && !targetTypeImmune && !dreamEaterBlocked && m.power > 0 && !absorbed
+      hitResult.hit && !targetTypeImmune && !dreamEaterBlocked && movePower > 0 && !absorbed
         ? rollCriticalHit(m.id, enemy, Math.random, playerBattleState)
         : false;
     // Facade: double power when user has a status condition
     const facadeActive =
       isFacadeBoost && player.status !== null && ['burn', 'paralyze', 'poison'].includes(player.status as string);
-    const effectivePower = facadeActive ? m.power * 2 : m.power;
+    const effectivePower = facadeActive ? movePower * 2 : movePower;
     // Foul Play: use target's attack stat
     const foulPlayAttackStat = isFoulPlay ? getModifiedStatValue(enemy, enemyBattleState, 'attack') : undefined;
     // Compute animation profile to determine suppressAudio for multi-hit
@@ -3379,7 +3389,7 @@ export function createBattleScene(
     msgs.push(...turnEffectLines);
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
 
-    if (m.power > 0) {
+    if (effectivePower > 0) {
       if (!hitResult.hit) {
         msgs.push(t('battle.moveMissed', { name: attackerName }));
       } else {
@@ -3388,6 +3398,19 @@ export function createBattleScene(
         }
         const et = effText(m.type, enemy.types);
         if (et) msgs.push(et);
+        if (isWeightTarget || isWeightRatio) {
+          const moveName = getMoveDisplayName(m.id);
+          if (isWeightTarget) {
+            const wStr = getPokemonWeightKg(enemy.id).toFixed(1);
+            if (movePower <= 40) msgs.push(t('battle.weightTargetWeak', { target: defenderName, weight: wStr, move: moveName }));
+            else if (movePower <= 80) msgs.push(t('battle.weightTargetMedium', { target: defenderName, weight: wStr, move: moveName }));
+            else msgs.push(t('battle.weightTargetStrong', { target: defenderName, weight: wStr, move: moveName }));
+          } else {
+            if (movePower <= 40) msgs.push(t('battle.weightRatioWeak', { move: moveName }));
+            else if (movePower <= 80) msgs.push(t('battle.weightRatioMedium', { attacker: attackerName, move: moveName }));
+            else msgs.push(t('battle.weightRatioStrong', { attacker: attackerName, target: defenderName, move: moveName }));
+          }
+        }
       }
     } else if (isOhko && hitResult.hit && !targetTypeImmune) {
       msgs.push(t('battle.ohkoHit'));
@@ -3733,6 +3756,8 @@ export function createBattleScene(
     const isMagicCoatEnemy = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
     const isDestinyBondEnemy = moveBattleData?.behaviorTags?.includes('destiny-bond') ?? false;
     const isFutureSightEnemy = moveBattleData?.behaviorTags?.includes('future-sight') ?? false;
+    const isWeightTargetEnemy = moveBattleData?.behaviorTags?.includes('weight-target') ?? false;
+    const isWeightRatioEnemy = moveBattleData?.behaviorTags?.includes('weight-ratio') ?? false;
     const healPercentEnemy = moveBattleData?.healingPercent ?? null;
     const hitCountEnemy = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -4024,15 +4049,20 @@ export function createBattleScene(
       : { hit: true, chance: 100 };
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
-    const absorbed = hitResult.hit && !targetTypeImmune && m.power > 0 && doesAbilityAbsorbMove(player, m.type);
+    const movePowerEnemy = isWeightTargetEnemy
+      ? getWeightTargetPower(getPokemonWeightKg(player.id))
+      : isWeightRatioEnemy
+        ? getWeightRatioPower(getPokemonWeightKg(enemy.id), getPokemonWeightKg(player.id))
+        : m.power;
+    const absorbed = hitResult.hit && !targetTypeImmune && movePowerEnemy > 0 && doesAbilityAbsorbMove(player, m.type);
     const dreamEaterBlockedEnemy = isDreamEaterEnemy && player.status !== 'sleep';
     const criticalHit =
-      hitResult.hit && !targetTypeImmune && !dreamEaterBlockedEnemy && m.power > 0 && !absorbed
+      hitResult.hit && !targetTypeImmune && !dreamEaterBlockedEnemy && movePowerEnemy > 0 && !absorbed
         ? rollCriticalHit(m.id, player, Math.random, enemyBattleState)
         : false;
     const facadeActiveEnemy =
       isFacadeBoostEnemy && enemy.status !== null && ['burn', 'paralyze', 'poison'].includes(enemy.status as string);
-    const effectivePowerEnemy = facadeActiveEnemy ? m.power * 2 : m.power;
+    const effectivePowerEnemy = facadeActiveEnemy ? movePowerEnemy * 2 : movePowerEnemy;
     const foulPlayAttackStatEnemy = isFoulPlayEnemy
       ? getModifiedStatValue(player, playerBattleState, 'attack')
       : undefined;
@@ -4099,7 +4129,7 @@ export function createBattleScene(
     msgs.push(...turnEffectLines);
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
 
-    if (m.power > 0) {
+    if (effectivePowerEnemy > 0) {
       if (!hitResult.hit) {
         msgs.push(t('battle.moveMissed', { name: attackerName }));
       } else {
@@ -4108,6 +4138,19 @@ export function createBattleScene(
         }
         const et = effText(m.type, player.types);
         if (et) msgs.push(et);
+        if (isWeightTargetEnemy || isWeightRatioEnemy) {
+          const moveName = getMoveDisplayName(m.id);
+          if (isWeightTargetEnemy) {
+            const wStr = getPokemonWeightKg(player.id).toFixed(1);
+            if (movePowerEnemy <= 40) msgs.push(t('battle.weightTargetWeak', { target: defenderName, weight: wStr, move: moveName }));
+            else if (movePowerEnemy <= 80) msgs.push(t('battle.weightTargetMedium', { target: defenderName, weight: wStr, move: moveName }));
+            else msgs.push(t('battle.weightTargetStrong', { target: defenderName, weight: wStr, move: moveName }));
+          } else {
+            if (movePowerEnemy <= 40) msgs.push(t('battle.weightRatioWeak', { move: moveName }));
+            else if (movePowerEnemy <= 80) msgs.push(t('battle.weightRatioMedium', { attacker: attackerName, move: moveName }));
+            else msgs.push(t('battle.weightRatioStrong', { attacker: attackerName, target: defenderName, move: moveName }));
+          }
+        }
       }
     } else if (isOhkoEnemy && hitResult.hit && !targetTypeImmune) {
       msgs.push(t('battle.ohkoHit'));
