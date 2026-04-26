@@ -12,6 +12,7 @@
 import type { InputManager } from '../engine/input.js';
 import type { Move, Pokemon, PokemonType } from '../types/index.js';
 import { fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
+import { fontFor } from '../engine/fonts.js';
 import {
   getMoveDisplayName,
   getPokemonDisplayName,
@@ -229,6 +230,22 @@ export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenu
 
 // ─── Prompt Bar (y=85) ────────────────────────────────────────────
 
+function truncateToFit(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, fontSize: number): string {
+  ctx.save();
+  ctx.font = `${fontSize}px ${fontFor(text)}`;
+  if (ctx.measureText(text).width <= maxWidth) {
+    ctx.restore();
+    return text;
+  }
+  const ellipsis = '…';
+  let end = text.length;
+  while (end > 0 && ctx.measureText(text.slice(0, end) + ellipsis).width > maxWidth) {
+    end--;
+  }
+  ctx.restore();
+  return text.slice(0, end) + ellipsis;
+}
+
 function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void {
   const P = BTL.PROMPT_BG;
   fillRect(ctx, P.x, P.y, P.w, P.h, P.color);
@@ -250,6 +267,29 @@ function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): 
     color: BTL.COLORS.textDim,
     direction: 'rtl',
   });
+
+  // Selected move description — right of ESC area, truncated to fit one line
+  if (menu.mode === 'moves') {
+    const moveIdx = menu.movePage * 4 + menu.cursorIndex;
+    const move = menu.moves[moveIdx];
+    if (move) {
+      const rtl = isRTL();
+      const moveData = getMove(move.id);
+      const rawDesc = rtl ? moveData?.description?.he : moveData?.description?.en;
+      if (rawDesc) {
+        const DESC_START = 60;   // safe gap after ESC pill + label
+        const DESC_END = 236;    // 4px from right edge
+        const MAX_W = DESC_END - DESC_START;
+        const desc = truncateToFit(ctx, rawDesc, MAX_W, E.fs);
+        drawText(ctx, desc, rtl ? DESC_END : DESC_START, E.labelY, {
+          size: E.fs,
+          color: BTL.COLORS.textMuted,
+          align: rtl ? 'right' : 'left',
+          direction: rtl ? 'rtl' : 'ltr',
+        });
+      }
+    }
+  }
 }
 
 // ─── Action Tabs (y=94) ───────────────────────────────────────────
