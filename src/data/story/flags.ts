@@ -9,6 +9,9 @@
  *   { type: 'set-flag', flag: FLAGS.ACT0_INTRO_SEEN }
  *   spawnAfter: FLAGS.SUMVILLE_CRYSTAL_RETURNED  // in map JSON (copy the string value)
  *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * STATIC FLAGS — FLAGS enum below
+ * ─────────────────────────────────────────────────────────────────────────────
  * Naming conventions:
  *   VISITED_*         — first-visit bookmarks (set once, never cleared)
  *   ACT{N}_*          — act-scoped one-shot flags (cutscene seen, NPC met, etc.)
@@ -16,6 +19,126 @@
  *   STORY_*           — major story state (badge milestones, character arcs)
  *   ROCKET_*          — Team Rocket events
  *   SUMVILLE_*        — Sumville city arc flags
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * DYNAMIC FLAG PATTERNS — auto-generated at runtime, NOT in FLAGS enum
+ * ─────────────────────────────────────────────────────────────────────────────
+ * These live in pd.flags just like static flags and can be used in spawnAfter,
+ * despawnAfter, and story event conditions exactly the same way.
+ *
+ * 1. Trainer defeated
+ *      Key:     trainer-${trainerId}-defeated
+ *      Example: trainer-rocket-mb-10-defeated
+ *      Set by:  battle.ts on trainer win (also fires when isWildNpc flees)
+ *      Use for: despawnAfter on that specific NPC; story event conditions
+ *
+ * 2. All trainers defeated on a map
+ *      Key:     all-trainers-defeated-${mapId}
+ *      Example: all-trainers-defeated-minusburg
+ *      Set by:  story-engine.ts automatically after every trainer-defeated trigger,
+ *               when every NPC with type:"trainer" (and excludeFromMapClear != true)
+ *               on the current map is beaten
+ *      Helper:  allTrainersDefeatedFlag('minusburg') — use this in TS, never hand-type
+ *      Use for: despawnAfter on blocker NPCs; condition to set map infection to 'cleared'
+ *
+ * 3. Badge earned
+ *      Key:     story-badge-${N}    (N = 1..8)
+ *      Example: story-badge-3
+ *      Set by:  battle.ts automatically when reward.badge is awarded — guaranteed,
+ *               regardless of what reward.storyEvent the gym leader uses
+ *      Also in: FLAGS enum as STORY_BADGE_1..8 — same string, use the enum in TS
+ *      Use for: despawnAfter on post-gym NPCs; gate unlock conditions
+ *
+ * 4. Event done (internal — do not use directly)
+ *      Key:     __event-done-${eventId}
+ *      Example: __event-done-oak-warning
+ *      Set by:  story-engine.ts after a non-repeatable story event fires
+ *      Note:    Prevents re-firing. Override with event.completedFlag if you need
+ *               a named flag instead of the auto-key.
+ *
+ * 5. Item tile collected (overworld field item)
+ *      Key:     obj-${mapId}-${tileKey}-${x}-${y}-collected   (auto)
+ *               OR a custom flag set in the tile's interactArgs.flag   (manual)
+ *      Example: obj-route-3-item-ball-12-7-collected
+ *      Set by:  overworld.ts when player picks up an item tile
+ *      Note:    Object is filtered out of the map on load if this flag is set,
+ *               so the item never reappears. Use interactArgs.flag in the map
+ *               editor for a readable key; otherwise the auto-key is used.
+ *
+ * 6. Cut tree cleared
+ *      Key:     cut-${x}-${y}
+ *      Example: cut-14-3
+ *      Set by:  overworld.ts when HM Cut is used on a tree tile
+ *      Note:    Tree tile is removed from map on load if flag is set.
+ *               Coordinates are tile-grid positions, not pixels.
+ *
+ * 7. Strength boulder moved
+ *      Key:     strength-${x}-${y}
+ *      Example: strength-8-11
+ *      Set by:  overworld.ts when HM Strength moves a boulder
+ *      Note:    Same removal logic as cut trees.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * HOW spawnAfter / despawnAfter WORK
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Both fields on NPCData accept a flag STRING from pd.flags — nothing else.
+ * They do NOT accept trigger types or conditions.
+ *
+ *   spawnAfter:   NPC is invisible until pd.flags[flag] === true
+ *   despawnAfter: NPC is invisible once pd.flags[flag] === true
+ *
+ * To make an NPC react to a trigger (e.g. map-enter), wire a story event that
+ * listens to the trigger and does { type: 'set-flag', flag: '...' }, then put
+ * that flag string in spawnAfter/despawnAfter.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * AVAILABLE STORY TRIGGERS (what can fire story events)
+ * ─────────────────────────────────────────────────────────────────────────────
+ * These are the trigger types the engine listens for. Each can have multiple
+ * story events registered on the same trigger — all matching conditions fire
+ * independently. Events are one-shot by default (repeatable: false).
+ *
+ *   map-enter        { type: 'map-enter',       mapId: string }
+ *   map-exit         { type: 'map-exit',         mapId: string }
+ *   npc-interact     { type: 'npc-interact',     npcId: string }
+ *   trainer-defeated { type: 'trainer-defeated', trainerId: string }
+ *   badge-earned     { type: 'badge-earned',     badge: number }   (1–8)
+ *   gate-cleared     { type: 'gate-cleared',     gateId: string }
+ *   flag-set         { type: 'flag-set',         flag: string }    (chained — fires after any set-flag action)
+ *
+ * NOT YET WIRED (defined in events.ts but no firing site):
+ *   quest-complete, item-used, manual
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * AVAILABLE STORY CONDITIONS (checkable in event.conditions[])
+ * ─────────────────────────────────────────────────────────────────────────────
+ *   { type: 'flag',           flag: string, value?: boolean }
+ *   { type: 'flag-not',       flag: string }
+ *   { type: 'badge-count',    min: number }          — player has ≥ N badges
+ *   { type: 'badge-count-max',max: number }          — player has ≤ N badges
+ *   { type: 'quest-active',   questId: string }
+ *   { type: 'quest-complete', questId: string }
+ *   { type: 'infection-level',mapId: MapId, value: InfectionLevel }
+ *   { type: 'money-min',      amount: number }
+ *   { type: 'gate-locked',    gateId: string }
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * AVAILABLE STORY ACTIONS (executable in event.actions[])
+ * ─────────────────────────────────────────────────────────────────────────────
+ *   { type: 'set-flag',         flag: string, value?: boolean }
+ *   { type: 'set-infection',    mapId: MapId, value: InfectionLevel }
+ *   { type: 'set-quest',        questId: string }
+ *   { type: 'complete-quest',   questId: string }
+ *   { type: 'give-item',        itemId: string, quantity: number }
+ *   { type: 'give-money',       amount: number }
+ *   { type: 'start-cutscene',   cutsceneId: string }
+ *   { type: 'start-gate',       gateId: string }
+ *   { type: 'teleport',         mapId: string, x: number, y: number }
+ *   { type: 'play-music',       musicId: string }
+ *   { type: 'show-message',     lines: BilingualText[] }
+ *   { type: 'unlock-gate-timer',gateId: string, durationMs: number }
+ *
+ * InfectionLevel values: 'none' | 'low' | 'medium' | 'high' | 'critical' | 'cleared'
  */
 
 export const FLAGS = {

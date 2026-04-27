@@ -833,6 +833,7 @@ export function createBattleScene(
       if (!isRematch) {
         if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
           pd.badges |= 1 << (reward.badge - 1);
+          setFlag(pd, `story-badge-${reward.badge}`);
           audio.playBadgeEarned();
           fireStoryTrigger({ type: 'badge-earned', badge: reward.badge });
         }
