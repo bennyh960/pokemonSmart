@@ -875,24 +875,41 @@
       }
     },
     {
-      "id": "npc-1777283113990",
+      "id": "npc-1777282505096",
       "x": 10,
       "y": 71,
       "facing": "down",
-      "type": "wild-pokemon",
+      "type": "trainer",
       "dialogue": [
         {
           "en": "Hello!",
           "he": ""
         }
       ],
-      "spriteType": "npc-male",
-      "pokemonId": 150,
-      "level": 50,
-      "isGlitched": true,
-      "despawnOnDefeat": true,
-      "fleeAfterTurns": 5,
-      "fleeAtHpPct": 0.3
+      "spriteType": "char_485c6e",
+      "party": [
+        {
+          "pokemonId": 59,
+          "level": 30,
+          "moves": []
+        },
+        {
+          "pokemonId": 15,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 248,
+          "level": 40,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": [],
+      "isGlitched": true
     }
   ],
   "music": "route",

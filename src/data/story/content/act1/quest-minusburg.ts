@@ -39,6 +39,7 @@ import { FLAGS } from '../../flags.js';
 import { registerGate } from '../../gates.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
 import { ITEM_GAME_DATA } from '../../../item-defs.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 registerGate({
   id: 'gate-route2-minusburg',
@@ -458,7 +459,7 @@ registerStoryEvent({
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_MINUSBURG }],
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_MINUSBURG },
-    { type: 'set-infection', cityId: 'minusburg', value: 'low' },
+    { type: 'set-infection', mapId: MapId.MINUSBURG_MINUSBURG, value: 'low' },
     { type: 'start-cutscene', cutsceneId: 'act1-minusburg-arrival' },
   ],
 });
@@ -530,7 +531,7 @@ registerStoryEvent({
   trigger: { type: 'map-exit', mapId: 'minusburg/gym' },
   conditions: [{ type: 'flag', flag: FLAGS.STORY_BADGE_2 }],
   actions: [
-    { type: 'set-infection', cityId: 'minusburg', value: 'cleared' },
+    { type: 'set-infection', mapId: MapId.MINUSBURG_MINUSBURG, value: 'cleared' },
     { type: 'start-cutscene', cutsceneId: 'act1-minusburg-badge2-call' },
   ],
 });

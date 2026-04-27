@@ -43,7 +43,7 @@ export function createNewPlayer(name: string): PlayerData {
     playtime: 0,
     trainerEncounters: {},
     phoneContacts: [],
-    story: { gateUnlocks: {}, cityInfection: {}, activeQuestId: 'main-act0', completedQuestIds: [] },
+    story: { gateUnlocks: {}, mapInfection: {}, activeQuestId: 'main-act0', completedQuestIds: [] },
     pokedexBatteryCharges: 50,
     battleHelperBattles: 10,
     battleHelperEnabled: true,

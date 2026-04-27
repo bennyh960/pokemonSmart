@@ -25,6 +25,7 @@ import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -118,7 +119,7 @@ registerStoryEvent({
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_INTEGRALA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_INTEGRALA },
-    { type: 'set-infection', cityId: 'integrala', value: 'high' },
+    { type: 'set-infection', mapId: MapId.INTEGRALA_INTEGRALA, value: 'high' },
     { type: 'set-quest',     questId: 'main-act4-integrala' },
   ],
 });
@@ -142,7 +143,7 @@ registerStoryEvent({
   conditions: [],
   actions: [
     { type: 'set-flag',      flag: FLAGS.STORY_BADGE_7 },
-    { type: 'set-infection', cityId: 'integrala', value: 'cleared' },
+    { type: 'set-infection', mapId: MapId.INTEGRALA_INTEGRALA, value: 'cleared' },
     { type: 'set-quest',     questId: 'main-act4-absoluta' },
   ],
 });

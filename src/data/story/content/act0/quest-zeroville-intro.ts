@@ -18,6 +18,7 @@ import { registerQuest } from '../../quests.js';
 import { registerCutscene } from '../../cutscenes.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -178,7 +179,7 @@ registerStoryEvent({
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_ZEROVILLE }],
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_ZEROVILLE },
-    { type: 'set-infection', cityId: 'zeroville', value: 'none' },
+    { type: 'set-infection', mapId: MapId.ZEROVILLE_ZEROVILLE, value: 'none' },
     { type: 'set-quest', questId: 'main-act0' },
   ],
 });

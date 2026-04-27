@@ -443,5 +443,7 @@
   "battle.hazardNameToxicSpikes": "קוצי רעל",
   "battle.brickBreakShatter": "המחסום נשבר!",
   "battle.rapidSpinClear": "{name} פינה את המכשולים!",
-  "battle.defogClear": "הזירה נוקתה ממכשולים!"
+  "battle.defogClear": "הזירה נוקתה ממכשולים!",
+  "battle.glitchedCantCatch": "הפוקימון נגוע ע\"י NULL-X! לא ניתן ללכוד אותו!",
+  "battle.wildNpcFled": "{name} הפרא ברח!"
 }

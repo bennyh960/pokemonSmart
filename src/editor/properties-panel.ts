@@ -46,6 +46,20 @@ function getItemList(): ItemDef[] {
   return cachedItemList;
 }
 
+const POKEMON_TYPES = [
+  'normal', 'fire', 'water', 'grass', 'electric', 'ice',
+  'fighting', 'poison', 'ground', 'flying', 'psychic',
+  'bug', 'rock', 'ghost', 'dragon', 'dark', 'steel',
+];
+
+const TYPE_COLORS: Record<string, string> = {
+  normal: '#a8a878', fire: '#f08030', water: '#6890f0', grass: '#78c850',
+  electric: '#f8d030', ice: '#98d8d8', fighting: '#c03028', poison: '#a040a0',
+  ground: '#e0c068', flying: '#a890f0', psychic: '#f85888', bug: '#a8b820',
+  rock: '#b8a038', ghost: '#705898', dragon: '#7038f8', dark: '#705848',
+  steel: '#b8b8d0',
+};
+
 export class PropertiesPanel {
   private container: HTMLElement;
   private state: EditorState;
@@ -180,7 +194,7 @@ export class PropertiesPanel {
     addInput('X', 'x', String(npc.x), 'number');
     addInput('Y', 'y', String(npc.y), 'number');
     addSelect('Facing', 'facing', ['up', 'down', 'left', 'right'], npc.facing);
-    addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard'], npc.type);
+    addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard', 'wild-pokemon'], npc.type);
     addInput(
       'Interact Range',
       'interactRange',
@@ -248,6 +262,14 @@ export class PropertiesPanel {
     spriteSel.addEventListener('change', () => {
       npc.spriteType = spriteSel.value;
       updateSpritePreview();
+      // Auto-set isGlitched for villain characters on new trainer NPCs
+      if (npc.type === 'trainer') {
+        const charInfo = charList.find((c) => c.id === spriteSel.value);
+        const isVillain = charInfo?.roles?.includes('villain') ?? false;
+        const trainerAny = npc as unknown as Record<string, unknown>;
+        if (isVillain) trainerAny['isGlitched'] = true;
+        else if (trainerAny['isGlitched'] === true) delete trainerAny['isGlitched'];
+      }
       emit();
     });
     spriteRow.appendChild(spriteSel);
@@ -345,19 +367,24 @@ export class PropertiesPanel {
     // ── Story / Visibility ──
     this.renderStoryFieldsUI(body, npc);
 
-    // ── Reward (dialogue/shopkeeper/healer only — trainers and gate-guards don't use this) ──
-    if (npc.type !== 'trainer' && npc.type !== 'gate-guard') {
+    // ── Reward (dialogue/shopkeeper/healer only — trainers, gate-guards and wild-pokemon don't use this) ──
+    if (npc.type !== 'trainer' && npc.type !== 'gate-guard' && npc.type !== 'wild-pokemon') {
       this.renderDialogueRewardUI(body, npc);
     }
 
     // ── NPC Interaction ──
-    if (npc.type !== 'trainer' && npc.type !== 'gate-guard') {
+    if (npc.type === 'dialogue') {
       this.renderNpcInteractionUI(body, npc);
     }
 
     // ── Trainer-specific fields ──
     if (npc.type === 'trainer') {
       this.renderTrainerUI(body, npc as unknown as TrainerData);
+    }
+
+    // ── Wild Pokémon NPC fields ──
+    if (npc.type === 'wild-pokemon') {
+      this.renderWildPokemonUI(body, npc as unknown as import('../systems/npc.js').WildPokemonData);
     }
 
     // ── Gate-guard fields ──
@@ -389,6 +416,112 @@ export class PropertiesPanel {
     });
     body.appendChild(delBtn);
     this.container.appendChild(section);
+  }
+
+  // ── Wild Pokémon NPC ──
+  private renderWildPokemonUI(section: HTMLElement, npc: import('../systems/npc.js').WildPokemonData): void {
+    const emit = () => this.state.emit('map-modified');
+    const npcAny = npc as unknown as Record<string, unknown>;
+
+    const addRow = (label: string, input: HTMLElement, info?: string) => {
+      const row = document.createElement('div');
+      row.className = 'prop-row';
+      const lbl = document.createElement('label');
+      lbl.textContent = label;
+      row.appendChild(lbl);
+      row.appendChild(input);
+      if (info) row.appendChild(this.makeInfo(info));
+      section.appendChild(row);
+    };
+
+    // Pokémon ID
+    const pokemonIdInput = document.createElement('input');
+    pokemonIdInput.type = 'number';
+    pokemonIdInput.min = '1';
+    pokemonIdInput.max = '251';
+    pokemonIdInput.value = String(npc.pokemonId ?? 1);
+    pokemonIdInput.addEventListener('change', () => {
+      npcAny['pokemonId'] = parseInt(pokemonIdInput.value, 10) || 1;
+      emit();
+    });
+    addRow('Pokémon ID:', pokemonIdInput, 'National Pokédex number (1–251)');
+
+    // Level
+    const levelInput = document.createElement('input');
+    levelInput.type = 'number';
+    levelInput.min = '1';
+    levelInput.max = '100';
+    levelInput.value = String(npc.level ?? 5);
+    levelInput.addEventListener('change', () => {
+      npcAny['level'] = parseInt(levelInput.value, 10) || 5;
+      emit();
+    });
+    addRow('Level:', levelInput);
+
+    // Is Glitched
+    const glitchRow = document.createElement('div');
+    glitchRow.className = 'prop-row';
+    glitchRow.innerHTML = '<label>Is Glitched (NULL-X):</label>';
+    const glitchCb = document.createElement('input');
+    glitchCb.type = 'checkbox';
+    glitchCb.checked = !!npc.isGlitched;
+    glitchCb.title = 'Pokémon cannot be caught and has modified damage.';
+    glitchCb.addEventListener('change', () => {
+      if (glitchCb.checked) npcAny['isGlitched'] = true;
+      else delete npcAny['isGlitched'];
+      emit();
+    });
+    glitchRow.appendChild(glitchCb);
+    glitchRow.appendChild(this.makeInfo('Cannot be caught. Deals +5–15% dmg, takes -5–15% dmg.'));
+    section.appendChild(glitchRow);
+
+    // Despawn on defeat
+    const dodRow = document.createElement('div');
+    dodRow.className = 'prop-row';
+    dodRow.innerHTML = '<label>Despawn on defeat/flee:</label>';
+    const dodCb = document.createElement('input');
+    dodCb.type = 'checkbox';
+    dodCb.checked = !!npcAny['despawnOnDefeat'];
+    dodCb.addEventListener('change', () => {
+      if (dodCb.checked) npcAny['despawnOnDefeat'] = true;
+      else delete npcAny['despawnOnDefeat'];
+      emit();
+    });
+    dodRow.appendChild(dodCb);
+    section.appendChild(dodRow);
+
+    // Flee after turns
+    const fleeSection = document.createElement('div');
+    fleeSection.style.marginTop = '6px';
+    fleeSection.innerHTML = '<b style="font-size:10px">Flee Config</b>';
+    section.appendChild(fleeSection);
+
+    const fleeTurnsInput = document.createElement('input');
+    fleeTurnsInput.type = 'number';
+    fleeTurnsInput.min = '1';
+    fleeTurnsInput.placeholder = 'off';
+    fleeTurnsInput.value = npc.fleeAfterTurns != null ? String(npc.fleeAfterTurns) : '';
+    fleeTurnsInput.addEventListener('change', () => {
+      const v = parseInt(fleeTurnsInput.value, 10);
+      if (isNaN(v) || fleeTurnsInput.value === '') delete npcAny['fleeAfterTurns'];
+      else npcAny['fleeAfterTurns'] = v;
+      emit();
+    });
+    addRow('Flee after turns:', fleeTurnsInput, 'Leave blank to disable');
+
+    const fleeHpInput = document.createElement('input');
+    fleeHpInput.type = 'number';
+    fleeHpInput.min = '0';
+    fleeHpInput.max = '100';
+    fleeHpInput.placeholder = 'off';
+    fleeHpInput.value = npc.fleeAtHpPct != null ? String(Math.round(npc.fleeAtHpPct * 100)) : '';
+    fleeHpInput.addEventListener('change', () => {
+      const v = parseInt(fleeHpInput.value, 10);
+      if (isNaN(v) || fleeHpInput.value === '') delete npcAny['fleeAtHpPct'];
+      else npcAny['fleeAtHpPct'] = v / 100;
+      emit();
+    });
+    addRow('Flee at HP%:', fleeHpInput, 'e.g. 50 = flee when HP ≤ 50%');
   }
 
   // ── Gate-Guard: Gate ID and Passed Dialogue ──
@@ -716,6 +849,23 @@ export class PropertiesPanel {
     // Normalize reward (handles legacy number format)
     const reward: TrainerReward = normalizeReward(trainer.reward);
     trainerAny['reward'] = reward;
+
+    // ── Is Glitched (NULL-X infected) ──
+    const glitchRow = document.createElement('div');
+    glitchRow.className = 'prop-row';
+    glitchRow.innerHTML = '<label>Is Glitched (NULL-X):</label>';
+    const glitchCb = document.createElement('input');
+    glitchCb.type = 'checkbox';
+    glitchCb.checked = !!trainerAny['isGlitched'];
+    glitchCb.title = 'All party Pokémon deal more damage and take less damage. Cannot be caught if wild.';
+    glitchCb.addEventListener('change', () => {
+      if (glitchCb.checked) trainerAny['isGlitched'] = true;
+      else delete trainerAny['isGlitched'];
+      emit();
+    });
+    glitchRow.appendChild(glitchCb);
+    glitchRow.appendChild(this.makeInfo('Villain/NULL-X trainer. Party Pokémon are corrupted (+5-15% dmg dealt, -5-15% dmg taken).'));
+    section.appendChild(glitchRow);
 
     // ── Despawn on defeat ──
     const dodRow = document.createElement('div');
@@ -1485,58 +1635,98 @@ export class PropertiesPanel {
 
       if (kind === 'show-pokemon') {
         const cur = interaction?.kind === 'show-pokemon' ? interaction : null;
-        const idsRow = document.createElement('div');
-        idsRow.className = 'prop-row';
-        idsRow.innerHTML = '<label>Pokemon IDs:</label>';
-        const idsInput = document.createElement('input');
-        idsInput.type = 'text';
-        idsInput.placeholder = '1,4,7';
-        idsInput.value = cur ? cur.pokemonIds.join(',') : '';
-        idsInput.title = 'Comma-separated Pokemon IDs';
-        idsInput.addEventListener('change', () => {
-          const ids = idsInput.value
-            .split(',')
-            .map((s) => parseInt(s.trim(), 10))
-            .filter((n) => !isNaN(n));
-          const prev = npcAny['interaction'] as (NpcInteraction & { kind: 'show-pokemon' }) | undefined;
-          npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: ids, reward: prev?.reward ?? { money: 0 } };
-          emit();
+        const selectedIds: number[] = cur ? [...cur.pokemonIds] : [];
+        const pokemonList = getPokemonList();
+
+        const label = document.createElement('div');
+        label.className = 'prop-row';
+        label.innerHTML = '<label>Required Pokemon:</label>';
+        fields.appendChild(label);
+
+        // Chips container showing selected pokemon
+        const chipsEl = document.createElement('div');
+        chipsEl.className = 'intx-chips';
+        fields.appendChild(chipsEl);
+
+        const refreshChips = () => {
+          chipsEl.innerHTML = '';
+          for (const id of selectedIds) {
+            const p = pokemonList.find((x) => x.id === id);
+            const chip = document.createElement('span');
+            chip.className = 'intx-chip';
+            chip.textContent = p ? `#${p.id} ${p.name.en}` : `#${id}`;
+            const rm = document.createElement('span');
+            rm.className = 'intx-chip-rm';
+            rm.textContent = '×';
+            rm.addEventListener('click', () => {
+              selectedIds.splice(selectedIds.indexOf(id), 1);
+              npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: [...selectedIds] };
+              emit();
+              refreshChips();
+            });
+            chip.appendChild(rm);
+            chipsEl.appendChild(chip);
+          }
+        };
+        refreshChips();
+
+        // Search + dropdown to add more
+        const wrapper = this.makePokemonSearchWidget(pokemonList, 'Add Pokemon...', (p) => {
+          if (!selectedIds.includes(p.id)) {
+            selectedIds.push(p.id);
+            npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: [...selectedIds] };
+            emit();
+            refreshChips();
+          }
         });
-        idsRow.appendChild(idsInput);
-        fields.appendChild(idsRow);
-        this.renderInlineReward(fields, npcAny, 'show-pokemon', emit);
+        fields.appendChild(wrapper);
       }
 
       if (kind === 'show-types') {
         const cur = interaction?.kind === 'show-types' ? interaction : null;
-        const typesRow = document.createElement('div');
-        typesRow.className = 'prop-row';
-        typesRow.innerHTML = '<label>Types:</label>';
-        const typesInput = document.createElement('input');
-        typesInput.type = 'text';
-        typesInput.placeholder = 'fire,water';
-        typesInput.value = cur ? cur.types.join(',') : '';
-        typesInput.title = 'Comma-separated type names';
-        typesInput.addEventListener('change', () => {
-          const types = typesInput.value
-            .split(',')
-            .map((s) => s.trim().toLowerCase())
-            .filter(Boolean);
-          const prev = npcAny['interaction'] as (NpcInteraction & { kind: 'show-types' }) | undefined;
-          npcAny['interaction'] = {
-            kind: 'show-types',
-            types,
-            count: prev?.kind === 'show-types' ? prev.count : 1,
-            reward: prev?.kind === 'show-types' ? prev.reward : { money: 0 },
+        const selectedTypes: string[] = cur ? [...cur.types] : [];
+
+        const label = document.createElement('div');
+        label.className = 'prop-row';
+        label.innerHTML = '<label>Required Types:</label>';
+        fields.appendChild(label);
+
+        // Type badge buttons — click to toggle
+        const badgeRow = document.createElement('div');
+        badgeRow.className = 'intx-type-row';
+        for (const typeName of POKEMON_TYPES) {
+          const btn = document.createElement('button');
+          btn.className = 'intx-type-btn';
+          btn.textContent = typeName;
+          const color = TYPE_COLORS[typeName] ?? '#888';
+          const applyStyle = () => {
+            const active = selectedTypes.includes(typeName);
+            btn.style.background = active ? color : '#333';
+            btn.style.color = active ? '#fff' : '#aaa';
+            btn.style.borderColor = active ? color : '#555';
+            btn.style.opacity = active ? '1' : '0.6';
           };
-          emit();
-        });
-        typesRow.appendChild(typesInput);
-        fields.appendChild(typesRow);
+          applyStyle();
+          btn.addEventListener('click', () => {
+            const idx = selectedTypes.indexOf(typeName);
+            if (idx >= 0) selectedTypes.splice(idx, 1);
+            else selectedTypes.push(typeName);
+            const prev = npcAny['interaction'] as (NpcInteraction & { kind: 'show-types' }) | undefined;
+            npcAny['interaction'] = {
+              kind: 'show-types',
+              types: [...selectedTypes],
+              count: prev?.kind === 'show-types' ? prev.count : 1,
+            };
+            emit();
+            applyStyle();
+          });
+          badgeRow.appendChild(btn);
+        }
+        fields.appendChild(badgeRow);
 
         const countRow = document.createElement('div');
         countRow.className = 'prop-row';
-        countRow.innerHTML = '<label>Count:</label>';
+        countRow.innerHTML = '<label>Min count:</label>';
         const countInput = document.createElement('input');
         countInput.type = 'number';
         countInput.min = '1';
@@ -1550,7 +1740,6 @@ export class PropertiesPanel {
         });
         countRow.appendChild(countInput);
         fields.appendChild(countRow);
-        this.renderInlineReward(fields, npcAny, 'show-types', emit);
       }
 
       if (kind === 'trade-evolution') {
@@ -1563,33 +1752,47 @@ export class PropertiesPanel {
 
       if (kind === 'swap-pokemon') {
         const cur = interaction?.kind === 'swap-pokemon' ? interaction : null;
-        for (const [label, key, defaultVal] of [
-          ['Offers ID', 'offersId', '0'],
-          ['Level', 'level', '20'],
-          ['Wants ID', 'wantsId', '0'],
-        ] as const) {
+        const pokemonList = getPokemonList();
+
+        for (const [label, idKey, defaultId] of [
+          ['Offers (gives)', 'offersId', 0],
+          ['Wants (takes)', 'wantsId', 0],
+        ] as [string, 'offersId' | 'wantsId', number][]) {
           const row = document.createElement('div');
           row.className = 'prop-row';
           row.innerHTML = `<label>${label}:</label>`;
-          const inp = document.createElement('input');
-          inp.type = 'number';
-          inp.min = '0';
-          inp.value = String(cur ? ((cur as Record<string, unknown>)[key] ?? defaultVal) : defaultVal);
-          inp.addEventListener('change', () => {
-            const prev = (npcAny['interaction'] as Record<string, unknown> | undefined) ?? {};
-            npcAny['interaction'] = {
-              kind: 'swap-pokemon',
-              offersId: 0,
-              level: 20,
-              wantsId: 0,
-              ...prev,
-              [key]: parseInt(inp.value, 10) || 0,
-            };
-            emit();
-          });
-          row.appendChild(inp);
+          const currentId = cur ? cur[idKey] : defaultId;
+          const wrapper = this.makePokemonSearchWidget(
+            pokemonList,
+            'Search Pokemon...',
+            (p) => {
+              const prev = (npcAny['interaction'] as Record<string, unknown> | undefined) ?? {};
+              npcAny['interaction'] = { kind: 'swap-pokemon', offersId: 0, level: 20, wantsId: 0, ...prev, [idKey]: p.id };
+              emit();
+            },
+            currentId,
+          );
+          row.appendChild(wrapper);
           fields.appendChild(row);
         }
+
+        // Level stays as a plain number input
+        const lvlRow = document.createElement('div');
+        lvlRow.className = 'prop-row';
+        lvlRow.innerHTML = '<label>Level:</label>';
+        const lvlInput = document.createElement('input');
+        lvlInput.type = 'number';
+        lvlInput.min = '1';
+        lvlInput.max = '100';
+        lvlInput.value = String(cur?.level ?? 20);
+        lvlInput.addEventListener('change', () => {
+          const prev = (npcAny['interaction'] as Record<string, unknown> | undefined) ?? {};
+          const lvl = parseInt(lvlInput.value, 10) || 20;
+          npcAny['interaction'] = { kind: 'swap-pokemon', offersId: 0, wantsId: 0, ...prev, level: lvl };
+          emit();
+        });
+        lvlRow.appendChild(lvlInput);
+        fields.appendChild(lvlRow);
       }
     };
 
@@ -1599,14 +1802,9 @@ export class PropertiesPanel {
       } else if (kindSel.value === 'trade-evolution') {
         npcAny['interaction'] = { kind: 'trade-evolution' } satisfies NpcInteraction;
       } else if (kindSel.value === 'show-pokemon') {
-        npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: [], reward: { money: 0 } } satisfies NpcInteraction;
+        npcAny['interaction'] = { kind: 'show-pokemon', pokemonIds: [] } satisfies NpcInteraction;
       } else if (kindSel.value === 'show-types') {
-        npcAny['interaction'] = {
-          kind: 'show-types',
-          types: [],
-          count: 1,
-          reward: { money: 0 },
-        } satisfies NpcInteraction;
+        npcAny['interaction'] = { kind: 'show-types', types: [], count: 1 } satisfies NpcInteraction;
       } else if (kindSel.value === 'swap-pokemon') {
         npcAny['interaction'] = { kind: 'swap-pokemon', offersId: 0, level: 20, wantsId: 0 } satisfies NpcInteraction;
       }
@@ -1617,32 +1815,74 @@ export class PropertiesPanel {
     renderFields();
   }
 
-  /** Inline reward editor (money + flag) used inside interaction sub-panels. */
-  private renderInlineReward(
-    container: HTMLElement,
-    npcAny: Record<string, unknown>,
-    kind: string,
-    emit: () => void,
-  ): void {
-    const moneyRow = document.createElement('div');
-    moneyRow.className = 'prop-row';
-    moneyRow.innerHTML = '<label>Reward $:</label>';
-    const moneyInput = document.createElement('input');
-    moneyInput.type = 'number';
-    moneyInput.min = '0';
-    const cur = npcAny['interaction'] as Record<string, unknown> | undefined;
-    const reward = (cur?.['reward'] as Record<string, unknown> | undefined) ?? {};
-    moneyInput.value = String(reward['money'] ?? 0);
-    moneyInput.addEventListener('change', () => {
-      const intx = npcAny['interaction'] as Record<string, unknown> | undefined;
-      if (intx) {
-        (intx['reward'] as Record<string, unknown>)['money'] = parseInt(moneyInput.value, 10) || 0;
-        emit();
+  /**
+   * Creates a Pokémon search input + dropdown widget.
+   * @param list     Full Pokémon list
+   * @param placeholder  Input placeholder text
+   * @param onSelect Called with the chosen PokemonData
+   * @param initialId If provided, pre-fills the input with this Pokémon
+   */
+  private makePokemonSearchWidget(
+    list: PokemonData[],
+    placeholder: string,
+    onSelect: (p: PokemonData) => void,
+    initialId?: number,
+  ): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'pokemon-search-wrapper';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'pokemon-search-input';
+    input.placeholder = placeholder;
+    if (initialId !== undefined) {
+      const found = list.find((p) => p.id === initialId);
+      input.value = found ? `#${found.id} ${found.name.en}` : initialId > 0 ? `#${initialId}` : '';
+    }
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'pokemon-dropdown';
+    dropdown.style.display = 'none';
+
+    const renderItems = (filter: string) => {
+      dropdown.innerHTML = '';
+      const lower = filter.toLowerCase().replace(/^#\d+\s*/, '');
+      const matches = list
+        .filter((p) => p.name.en.toLowerCase().includes(lower) || String(p.id).includes(lower))
+        .slice(0, 30);
+      for (const p of matches) {
+        const item = document.createElement('div');
+        item.className = 'pokemon-dropdown-item';
+        item.textContent = `#${p.id} ${p.name.en}`;
+        item.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          onSelect(p);
+          input.value = initialId !== undefined ? `#${p.id} ${p.name.en}` : '';
+          dropdown.style.display = 'none';
+        });
+        dropdown.appendChild(item);
       }
+      if (matches.length === 0) {
+        dropdown.innerHTML = '<div class="pokemon-dropdown-empty">No matches</div>';
+      }
+    };
+
+    input.addEventListener('focus', () => {
+      input.select();
+      renderItems(input.value);
+      dropdown.style.display = 'block';
     });
-    moneyRow.appendChild(moneyInput);
-    container.appendChild(moneyRow);
-    void kind;
+    input.addEventListener('input', () => {
+      renderItems(input.value);
+      dropdown.style.display = 'block';
+    });
+    input.addEventListener('blur', () => {
+      setTimeout(() => { dropdown.style.display = 'none'; }, 150);
+    });
+
+    wrapper.appendChild(input);
+    wrapper.appendChild(dropdown);
+    return wrapper;
   }
 
   /** Reward editor for non-trainer NPCs (money, items, badge, storyEvent). */

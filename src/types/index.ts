@@ -1,4 +1,5 @@
 import type { MajorStatusId } from './battle-metadata.ts';
+import type { MapId } from '../data/maps/map-ids.js';
 
 /**
  * Shared TypeScript types and interfaces for Pokemon Math Adventure.
@@ -143,13 +144,13 @@ export interface TrainerEncounterState {
   lastDefeatedAt: number; // timestamp (ms) of last defeat
 }
 
-/** Story-mode infection level for a city. */
+/** Story-mode infection level for a map/region. */
 export type InfectionLevel = 'none' | 'low' | 'medium' | 'high' | 'critical' | 'cleared';
 
-/** Player story state — timed gates, city infection, active quest. */
+/** Player story state — timed gates, map infection, active quest. */
 export interface PlayerStoryState {
   gateUnlocks: Record<string, number>; // gateId → expiry ms (0 = permanent)
-  cityInfection: Record<string, InfectionLevel>;
+  mapInfection: Partial<Record<MapId, InfectionLevel>>;
   activeQuestId: string | null;
   completedQuestIds: string[];
 }

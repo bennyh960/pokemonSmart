@@ -1446,30 +1446,6 @@
         ]
       },
       "despawnAfter": "act1-bring-documents-to-algorithma"
-    },
-    {
-      "id": "npc-1777285976591",
-      "x": 29,
-      "y": 58,
-      "facing": "right",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "שלום! דרך 6 חסומה כעת מהכיוון הזה"
-        },
-        {
-          "en": "",
-          "he": "דרך 6 מובילה למולטיפילה . אפשר להגיע למולטיפילה דרך מיניסבורג העיר המזרחית"
-        }
-      ],
-      "spriteType": "char_a5abb0",
-      "name": {
-        "en": "Jenny",
-        "he": "ג'ניה"
-      },
-      "blocker": true,
-      "despawnAfter": "story-badge-3"
     }
   ],
   "music": "town",

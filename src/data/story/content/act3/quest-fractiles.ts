@@ -26,6 +26,7 @@ import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -154,11 +155,11 @@ registerCutscene({
 // First arrival in Primore
 registerStoryEvent({
   id: 'evt-primore-enter',
-  trigger: { type: 'map-enter', mapId: 'primore/primore' },
+  trigger: { type: 'map-enter', mapId: 'primore/primore' as MapId },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_PRIMORE }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_PRIMORE },
-    { type: 'set-infection', cityId: 'primore', value: 'high' },
+    { type: 'set-infection', mapId: 'primore/primore' as MapId as MapId, value: 'high' },
     { type: 'set-quest',     questId: 'main-act3-primore' },
   ],
 });
@@ -166,7 +167,7 @@ registerStoryEvent({
 // Remainder returns at Primore after badge 4 (and after being saved in Dividia)
 registerStoryEvent({
   id: 'evt-remainder-returns',
-  trigger: { type: 'map-enter', mapId: 'primore/primore' },
+  trigger: { type: 'map-enter', mapId: 'primore/primore' as MapId },
   conditions: [
     { type: 'flag',        flag: FLAGS.STORY_REMAINDER_SAVED },
     { type: 'flag-not',    flag: FLAGS.STORY_REMAINDER_ALLY },
@@ -182,7 +183,7 @@ registerStoryEvent({
   conditions: [],
   actions: [
     { type: 'set-flag',      flag: FLAGS.STORY_BADGE_5 },
-    { type: 'set-infection', cityId: 'primore', value: 'cleared' },
+    { type: 'set-infection', mapId: 'primore/primore' as MapId as MapId, value: 'cleared' },
     { type: 'set-quest',     questId: 'main-act3-symmetrika' },
     { type: 'set-flag',      flag: FLAGS.GATE_PRIMORE_PASS },
   ],

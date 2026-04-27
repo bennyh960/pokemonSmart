@@ -10,6 +10,7 @@ import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -183,7 +184,7 @@ registerStoryEvent({
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_DIVIDIA }],
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_DIVIDIA },
-    { type: 'set-infection', cityId: 'dividia', value: 'medium' },
+    { type: 'set-infection', mapId: MapId.DIVIDIA_DIVIDIA, value: 'medium' },
     { type: 'set-quest', questId: 'main-act2-dividia' },
   ],
 });
@@ -218,7 +219,7 @@ registerStoryEvent({
   conditions: [],
   actions: [
     { type: 'set-flag', flag: FLAGS.STORY_BADGE_4 },
-    { type: 'set-infection', cityId: 'dividia', value: 'cleared' },
+    { type: 'set-infection', mapId: MapId.DIVIDIA_DIVIDIA, value: 'cleared' },
     { type: 'start-cutscene', cutsceneId: 'act2-remainder-saved' },
   ],
 });

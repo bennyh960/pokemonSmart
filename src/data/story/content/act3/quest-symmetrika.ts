@@ -26,6 +26,7 @@ import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -134,7 +135,7 @@ registerCutscene({
     { type: 'screen-fade', direction: 'out', durationMs: 500 },
     { type: 'screen-fade', direction: 'in',  durationMs: 800 },
     { type: 'action', action: { type: 'set-flag',      flag: FLAGS.STORY_NULLX_FIRST_CONTACT } },
-    { type: 'action', action: { type: 'set-infection', cityId: 'symmetrika', value: 'critical' } },
+    { type: 'action', action: { type: 'set-infection', mapId: MapId.SYMMETRIKA_SYMMETRIKA, value: 'critical' } },
     { type: 'action', action: { type: 'set-quest',     questId: 'main-act3-gym6' } },
   ],
 });
@@ -148,7 +149,7 @@ registerStoryEvent({
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_SYMMETRIKA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_SYMMETRIKA },
-    { type: 'set-infection', cityId: 'symmetrika', value: 'high' },
+    { type: 'set-infection', mapId: MapId.SYMMETRIKA_SYMMETRIKA, value: 'high' },
     { type: 'set-quest',     questId: 'main-act3-symmetrika' },
   ],
 });
@@ -156,7 +157,7 @@ registerStoryEvent({
 // Entering the NULL-X terminal building → first contact cutscene
 registerStoryEvent({
   id: 'evt-nullx-terminal',
-  trigger: { type: 'map-enter', mapId: 'symmetrika-terminal' },
+  trigger: { type: 'map-enter', mapId: MapId.SYMMETRIKA_SYMMETRIKA_TERMINAL },
   conditions: [{ type: 'flag-not', flag: FLAGS.STORY_NULLX_FIRST_CONTACT }],
   actions: [{ type: 'start-cutscene', cutsceneId: 'act3-nullx-first-contact' }],
 });
@@ -168,7 +169,7 @@ registerStoryEvent({
   conditions: [],
   actions: [
     { type: 'set-flag',      flag: FLAGS.STORY_BADGE_6 },
-    { type: 'set-infection', cityId: 'symmetrika', value: 'cleared' },
+    { type: 'set-infection', mapId: MapId.SYMMETRIKA_SYMMETRIKA, value: 'cleared' },
     { type: 'set-quest',     questId: 'main-act4-integrala' },
   ],
 });

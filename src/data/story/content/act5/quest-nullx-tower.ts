@@ -34,6 +34,7 @@ import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -225,7 +226,7 @@ registerCutscene({
 // First entry into the tower — intro cutscene
 registerStoryEvent({
   id: 'evt-tower-enter',
-  trigger: { type: 'map-enter', mapId: 'nullx-tower' },
+  trigger: { type: 'map-enter', mapId: MapId.NULLX_NULLX_TOWER },
   conditions: [
     { type: 'flag',     flag: FLAGS.STORY_SERUM_COMPLETE },
     { type: 'flag-not', flag: FLAGS.VISITED_NULLX_TOWER },
@@ -239,7 +240,7 @@ registerStoryEvent({
 // Reaching floor 6 after defeating all four guardians → final confrontation
 registerStoryEvent({
   id: 'evt-nullx-floor6',
-  trigger: { type: 'map-enter', mapId: 'nullx-floor-6' },
+  trigger: { type: 'map-enter', mapId: MapId.NULLX_NULLX_FLOOR_6 },
   conditions: [
     { type: 'flag',     flag: FLAGS.GATE_ELITE_AXIOM_PASS },
     { type: 'flag-not', flag: FLAGS.STORY_NULLX_DEFEATED },

@@ -31,6 +31,7 @@ import { setBattleData, setTrainerBattleData, type TrainerBattleData, type Battl
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadCharacterSprites, getCharacterFrame, hasCharacter } from '../engine/character-sprites.js';
 import { loadMap, setCurrentMapId, getCachedMap, getCurrentMapId } from '../systems/map-manager.js';
+import type { MapId } from '../data/maps/map-ids.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
@@ -41,6 +42,7 @@ import {
   type NPCManager,
   type TrainerData,
   type GateGuardData,
+  type WildPokemonData,
   type NpcInteraction,
   checkTrainerLineOfSight,
   normalizeReward,
@@ -50,7 +52,13 @@ import {
 import { getItem } from '../data/items.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
-import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H, TILE_SIZE, ADMIN_NAME } from '../engine/config.js';
+import {
+  LOGICAL_WIDTH as SCREEN_W,
+  LOGICAL_HEIGHT as SCREEN_H,
+  TILE_SIZE,
+  ADMIN_NAME,
+  INFECTION_GLITCH_RATE,
+} from '../engine/config.js';
 import { findHMUser, canUseHM } from '../systems/hm.js';
 import { getReencounterStatus, buildReencounterParty } from '../systems/reencounter.js';
 import {
@@ -433,6 +441,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     flashTimer = 0;
     flashPhase = 'flash';
     const playerData = getPlayerData();
+    // Apply map infection → glitch chance
+    const mapInfection = playerData.story?.mapInfection[getCurrentMapId() as MapId];
+    if (mapInfection) {
+      const glitchRate = INFECTION_GLITCH_RATE[mapInfection] ?? 0;
+      if (Math.random() < glitchRate) wildPokemon.isGlitched = true;
+    }
     const playerPokemon = playerData.party.find((p) => p.hp > 0);
     if (playerPokemon) setBattleData(playerPokemon, wildPokemon, deriveBattleContext(), deriveBattleBackground());
   }
@@ -443,7 +457,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     for (const tr of currentMapData.transitions) {
       if (tr.fromX === player.gridX && tr.fromY === player.gridY) {
         if (currentMapData.id && hasActiveGame()) {
-          fireStoryTrigger({ type: 'map-exit', mapId: currentMapData.id });
+          fireStoryTrigger({ type: 'map-exit', mapId: currentMapData.id as MapId });
         }
         transitionState = 'fade-out';
         transitionTimer = 0;
@@ -555,6 +569,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // cooldown / max-reached: dialogue was already shown, nothing to do here
         }
       }
+    } else if (npc.type === 'wild-pokemon') {
+      startWildNpcBattle(npc as unknown as WildPokemonData);
     } else if (npc.type === 'gate-guard') {
       // Blocking dialogue finished — launch the gate scene
       const guard = npc as unknown as GateGuardData;
@@ -583,7 +599,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             container: appContainer,
           }).then(() => {
             npcOverlayActive = false;
-            if (npc.reward && hasActiveGame()) {
+            if (npc.reward && hasActiveGame() && !npc.interaction) {
               giveNPCReward(npc, npc.reward);
             }
             handleNpcInteraction(npc);
@@ -595,7 +611,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
 
-      if (npc.reward && hasActiveGame()) {
+      if (npc.reward && hasActiveGame() && !npc.interaction) {
         giveNPCReward(npc, npc.reward);
       }
       handleNpcInteraction(npc);
@@ -621,7 +637,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (pd.flags[flagKey]) return;
         const missing = interaction.pokemonIds.filter((id) => !party.some((p) => p.id === id));
         if (missing.length === 0) {
-          giveNPCReward(npc, { ...interaction.reward, flag: flagKey });
+          giveNPCReward(npc, { ...(npc.reward ?? {}), flag: flagKey });
         } else {
           const missingNames = missing.map((id) => getPokemonDisplayName(id)).join(', ');
           activeTextBox = createTextBox([t('npc.interaction.showPokemon.missing', { names: missingNames })], rtl);
@@ -636,7 +652,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           return data && data.types.some((type) => interaction.types.includes(type));
         }).length;
         if (matchCount >= interaction.count) {
-          giveNPCReward(npc, { ...interaction.reward, flag: flagKey });
+          giveNPCReward(npc, { ...(npc.reward ?? {}), flag: flagKey });
         } else {
           const typesStr = interaction.types.join(', ');
           activeTextBox = createTextBox(
@@ -884,7 +900,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       prebuiltParty ??
       trainer.party.map((p) => {
         const data = getPokemon(p.pokemonId);
-        return data ? createPokemonFromData(data, p.level, p.moves) : createPokemonFromData(getPokemon(19)!, p.level);
+        const pokemon = data
+          ? createPokemonFromData(data, p.level, p.moves)
+          : createPokemonFromData(getPokemon(19)!, p.level);
+        if (trainer.isGlitched) pokemon.isGlitched = true;
+        return pokemon;
       });
 
     // Register phone contact after first defeat (called lazily when building re-encounter data)
@@ -910,6 +930,38 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       bagItems: trainer.bagItems,
       trainerSpriteType: trainer.spriteType,
     };
+  }
+
+  /** Start a wild Pokémon NPC battle (no trainer intro, catch allowed, flee possible). */
+  function startWildNpcBattle(npc: WildPokemonData): void {
+    if (!hasActiveGame()) return;
+    const flags = getPlayerData().flags;
+    if (flags[`trainer-${npc.id}-defeated`]) return; // already despawned
+
+    const data = getPokemon(npc.pokemonId);
+    if (!data) return;
+    const wildPokemon = createPokemonFromData(data, npc.level, npc.moves);
+    wildPokemon.isGlitched = npc.isGlitched ?? false;
+
+    const playerData = getPlayerData();
+    const playerPokemon = playerData.party.find((p) => p.hp > 0);
+    if (!playerPokemon) return;
+
+    setTrainerBattleData(
+      playerPokemon,
+      {
+        trainerName: npc.name ?? { en: npc.id, he: npc.id },
+        trainerId: npc.id,
+        party: [wildPokemon],
+        reward: { money: 0 },
+        isWildNpc: true,
+        fleeAfterTurns: npc.fleeAfterTurns,
+        fleeAtHpPct: npc.fleeAtHpPct,
+      },
+      deriveBattleContext(),
+      deriveBattleBackground(),
+    );
+    stateMachine.change('BATTLE');
   }
 
   /** Draw cut slash effect. */
@@ -1199,7 +1251,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     audio.playMusic(currentMapData.music || 'town');
 
     // Fire map-enter story trigger
-    if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id });
+    if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id as MapId });
 
     // Reset interaction state
     activeTextBox = null;
@@ -1857,6 +1909,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (spotter) {
               startTrainerApproach(spotter);
               return;
+            }
+          }
+
+          // Check wild Pokémon NPC collision — battle starts on same tile
+          if (npcManager && hasActiveGame() && !encounterTriggered) {
+            const flags = getPlayerData().flags;
+            const _wParty = getPlayerData().party;
+            for (const npc of npcManager.getNPCs()) {
+              if (npc.type !== 'wild-pokemon') continue;
+              if (!isNPCVisible(npc, flags, _wParty)) continue;
+              if (flags[`trainer-${npc.id}-defeated`]) continue;
+              if (npc.x === player.gridX && npc.y === player.gridY) {
+                interactingNPC = npc;
+                startWildNpcBattle(npc as unknown as WildPokemonData);
+                return;
+              }
             }
           }
 

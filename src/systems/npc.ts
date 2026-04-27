@@ -105,7 +105,7 @@ export interface NPCData {
   x: number;
   y: number;
   facing: 'up' | 'down' | 'left' | 'right';
-  type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer' | 'gate-guard';
+  type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer' | 'gate-guard' | 'wild-pokemon';
   dialogue: BilingualText[];
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
@@ -144,8 +144,8 @@ export interface PostFlagDialogue {
 
 /** Special interaction triggered after NPC dialogue is dismissed. */
 export type NpcInteraction =
-  | { kind: 'show-pokemon'; pokemonIds: number[]; reward: DialogueReward }
-  | { kind: 'show-types'; types: string[]; count: number; reward: DialogueReward }
+  | { kind: 'show-pokemon'; pokemonIds: number[] }
+  | { kind: 'show-types'; types: string[]; count: number }
   | { kind: 'trade-evolution' }
   | { kind: 'swap-pokemon'; offersId: number; level: number; wantsId: number };
 
@@ -223,6 +223,24 @@ export interface TrainerData extends NPCData {
   aiLevel?: 1 | 2 | 3 | 4 | 5; // Override AI difficulty (auto-detected from spriteType if absent)
   bagItems?: string[]; // Item IDs trainer can use during battle (level 4+ only)
   location?: BilingualText; // Human-readable location for phone display (e.g. "Route 1")
+  /** All party Pokémon inherit the glitch infection (NULL-X corrupted trainer). */
+  isGlitched?: boolean;
+}
+
+/** Wild Pokémon placed directly on the map — battles like a trainer but catches are allowed. */
+export interface WildPokemonData extends NPCData {
+  type: 'wild-pokemon';
+  pokemonId: number;
+  level: number;
+  moves?: number[];
+  /** Pokémon cannot be caught and deals/takes modified damage. */
+  isGlitched?: boolean;
+  /** Pokémon despawns after being defeated or fleeing. */
+  despawnOnDefeat?: boolean;
+  /** Flee after this many turns (if set). */
+  fleeAfterTurns?: number;
+  /** Flee when HP drops at or below this percentage (0–1, e.g. 0.5 = 50%). */
+  fleeAtHpPct?: number;
 }
 
 /** Normalize a reward field that may be a legacy plain number. */
@@ -260,8 +278,9 @@ export function isNPCVisible(
     if (party.filter((p) => p.level >= minLevel).length >= count) return false;
   }
 
-  // Trainers with despawnOnDefeat vanish after the player beats them
-  if (npc.type === 'trainer' && (npc as TrainerData).despawnOnDefeat) {
+  // Trainers and wild Pokémon NPCs with despawnOnDefeat vanish after the player beats/flees them
+  if ((npc.type === 'trainer' || npc.type === 'wild-pokemon') &&
+      (npc as TrainerData | WildPokemonData).despawnOnDefeat) {
     if (flags[`trainer-${npc.id}-defeated`]) return false;
   }
 

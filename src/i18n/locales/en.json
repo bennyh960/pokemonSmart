@@ -443,5 +443,7 @@
   "battle.hazardNameToxicSpikes": "toxic spikes",
   "battle.brickBreakShatter": "The barrier was shattered!",
   "battle.rapidSpinClear": "{name} blew away the hazards!",
-  "battle.defogClear": "The arena was cleared of hazards!"
+  "battle.defogClear": "The arena was cleared of hazards!",
+  "battle.glitchedCantCatch": "The Pokemon is infected by NULL-X! It cannot be captured!",
+  "battle.wildNpcFled": "The wild {name} fled!"
 }

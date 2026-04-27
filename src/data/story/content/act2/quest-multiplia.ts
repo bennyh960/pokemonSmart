@@ -27,6 +27,7 @@ import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -173,11 +174,11 @@ registerCutscene({
 // First step onto Route 3
 registerStoryEvent({
   id: 'evt-route3-enter',
-  trigger: { type: 'map-enter', mapId: 'route-3' },
+  trigger: { type: 'map-enter', mapId: MapId.ROUTES_ROUTE_3 },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_ROUTE3 }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_ROUTE3 },
-    { type: 'set-infection', cityId: 'multiplia', value: 'medium' },
+    { type: 'set-infection', mapId: MapId.MULTIPLIA_MULTIPLIA, value: 'medium' },
   ],
 });
 
@@ -188,7 +189,7 @@ registerStoryEvent({
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_MULTIPLIA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_MULTIPLIA },
-    { type: 'set-infection', cityId: 'multiplia', value: 'medium' },
+    { type: 'set-infection', mapId: MapId.MULTIPLIA_MULTIPLIA, value: 'medium' },
     { type: 'set-quest',     questId: 'main-act2-multiplia' },
   ],
 });
@@ -207,7 +208,7 @@ registerStoryEvent({
 // Entering the fake Pokemon Center → Jessie reveal
 registerStoryEvent({
   id: 'evt-fake-pokecenter',
-  trigger: { type: 'map-enter', mapId: 'multiplia-pokecenter' },
+  trigger: { type: 'map-enter', mapId: MapId.SHARED_FAKE_POKECENTER },
   conditions: [
     { type: 'flag-not', flag: FLAGS.ROCKET_MULTIPLIA_NURSE_REVEALED },
     { type: 'flag',     flag: FLAGS.VISITED_MULTIPLIA },
@@ -222,7 +223,7 @@ registerStoryEvent({
   conditions: [],
   actions: [
     { type: 'set-flag',      flag: FLAGS.STORY_BADGE_3 },
-    { type: 'set-infection', cityId: 'multiplia', value: 'cleared' },
+    { type: 'set-infection', mapId: MapId.MULTIPLIA_MULTIPLIA, value: 'cleared' },
     { type: 'set-quest',     questId: 'main-act2-dividia' },
   ],
 });

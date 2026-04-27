@@ -26,6 +26,7 @@ import { registerGate }       from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS }              from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -151,11 +152,11 @@ registerCutscene({
 // First arrival in Absoluta
 registerStoryEvent({
   id: 'evt-absoluta-enter',
-  trigger: { type: 'map-enter', mapId: 'absoluta/absoluta' },
+  trigger: { type: 'map-enter', mapId: 'absoluta/absoluta' as MapId },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_ABSOLUTA }],
   actions: [
     { type: 'set-flag',      flag: FLAGS.VISITED_ABSOLUTA },
-    { type: 'set-infection', cityId: 'absoluta', value: 'critical' },
+    { type: 'set-infection', mapId: 'absoluta/absoluta' as MapId as MapId, value: 'critical' },
     { type: 'set-quest',     questId: 'main-act4-absoluta' },
   ],
 });
@@ -163,7 +164,7 @@ registerStoryEvent({
 // Jessie/James serum attempt fires when entering Absoluta with all 8 badges
 registerStoryEvent({
   id: 'evt-rocket-serum-attempt',
-  trigger: { type: 'map-enter', mapId: 'absoluta/absoluta' },
+  trigger: { type: 'map-enter', mapId: 'absoluta/absoluta' as MapId },
   conditions: [
     { type: 'badge-count', min: 8 },
     { type: 'flag-not',    flag: FLAGS.ROCKET_SERUM_ATTEMPT_FAILED },
@@ -178,7 +179,7 @@ registerStoryEvent({
   conditions: [],
   actions: [
     { type: 'set-flag',       flag: FLAGS.STORY_BADGE_8 },
-    { type: 'set-infection',  cityId: 'absoluta', value: 'cleared' },
+    { type: 'set-infection',  mapId: 'absoluta/absoluta' as MapId as MapId, value: 'cleared' },
     { type: 'start-cutscene', cutsceneId: 'act4-serum-assembled' },
   ],
 });

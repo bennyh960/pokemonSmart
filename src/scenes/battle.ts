@@ -3,6 +3,7 @@
  */
 
 import type { Scene, Pokemon, PokemonType } from '../types/index.js';
+import { GLITCH_DAMAGE_BONUS_MIN, GLITCH_DAMAGE_BONUS_MAX } from '../engine/config.js';
 import type { BattleStatId } from '../types/battle-metadata.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
@@ -277,6 +278,10 @@ export interface TrainerBattleData {
   aiLevel?: 1 | 2 | 3 | 4 | 5;
   bagItems?: string[];
   trainerSpriteType?: string; // used to auto-compute AI level from role
+  /** Wild Pokémon NPC battle — no trainer intro, catches allowed, flee possible. */
+  isWildNpc?: boolean;
+  fleeAfterTurns?: number;
+  fleeAtHpPct?: number;
 }
 
 export function setBattleData(
@@ -338,7 +343,10 @@ function calcDamage(
   const stab = atk.types.includes(moveType) ? 1.5 : 1;
   const critMultiplier = criticalHit ? 1.5 : 1;
   const rand = 0.7 + Math.random() * 0.3;
-  return Math.max(1, Math.floor(base * eff * stab * critMultiplier * defenderMultiplier * rand));
+  let damage = Math.max(1, Math.floor(base * eff * stab * critMultiplier * defenderMultiplier * rand));
+  if (atk.isGlitched) damage = Math.ceil(damage * (1 + GLITCH_DAMAGE_BONUS_MIN + Math.random() * (GLITCH_DAMAGE_BONUS_MAX - GLITCH_DAMAGE_BONUS_MIN)));
+  if (def.isGlitched) damage = Math.floor(damage * (1 - (GLITCH_DAMAGE_BONUS_MIN + Math.random() * (GLITCH_DAMAGE_BONUS_MAX - GLITCH_DAMAGE_BONUS_MIN))));
+  return Math.max(1, damage);
 }
 
 function effText(mt: PokemonType, dt: PokemonType[]): string | null {
@@ -611,6 +619,10 @@ export function createBattleScene(
   let isTrainerBattle = false;
   let trainerData: TrainerBattleData | null = null;
   let trainerPartyIndex = 0;
+  let isWildNpcBattle = false;
+  let wildNpcFleeAfterTurns: number | null = null;
+  let wildNpcFleeAtHpPct: number | null = null;
+  let pendingWildNpcEntrance = false;
   let battleContext: BattleContext = 'grass';
   let battleBackground: BattleBackgroundId | null = null;
   let bgImage: HTMLImageElement | null = null;
@@ -687,8 +699,14 @@ export function createBattleScene(
 
     // Capture items (pokeballs)
     if (def.effect.type === 'capture') {
-      if (isTrainerBattle) {
+      if (isTrainerBattle && !isWildNpcBattle) {
         textBox = createTextBox([t('battle.cantCatchTrainer')], isRTL());
+        phase = 'USE_ITEM';
+        phaseTimer = 0;
+        return;
+      }
+      if (enemy.isGlitched) {
+        textBox = createTextBox([t('battle.glitchedCantCatch')], isRTL());
         phase = 'USE_ITEM';
         phaseTimer = 0;
         return;
@@ -864,6 +882,10 @@ export function createBattleScene(
 
   function init(): void {
     isTrainerBattle = false;
+    isWildNpcBattle = false;
+    wildNpcFleeAfterTurns = null;
+    wildNpcFleeAtHpPct = null;
+    pendingWildNpcEntrance = false;
     trainerData = null;
     trainerPartyIndex = 0;
     showTrainerSprite = false;
@@ -872,7 +894,10 @@ export function createBattleScene(
       isTrainerBattle = true;
       trainerData = pendingTrainerBattle;
       trainerPartyIndex = 0;
-      showTrainerSprite = true; // Show trainer sprite during initial intro
+      isWildNpcBattle = pendingTrainerBattle.isWildNpc ?? false;
+      wildNpcFleeAfterTurns = pendingTrainerBattle.fleeAfterTurns ?? null;
+      wildNpcFleeAtHpPct = pendingTrainerBattle.fleeAtHpPct ?? null;
+      showTrainerSprite = !isWildNpcBattle; // No trainer intro for wild NPC
       pendingTrainerBattle = null;
       // Preload trainer sprite if available
       if (trainerData.trainerSprite) {
@@ -971,10 +996,13 @@ export function createBattleScene(
     // Initialize battle roster: player's first Pokemon is automatically registered
     battleRoster = new Set<number>([activePartyIndex]);
     battleTurnCounts = new Map<number, number>([[activePartyIndex, 0]]);
-    maxRosterSize = isTrainerBattle && trainerData ? trainerData.party.length : 6;
+    // Wild NPC: player uses full 6-slot roster (behaves like wild encounter)
+    maxRosterSize = (isTrainerBattle && !isWildNpcBattle && trainerData) ? trainerData.party.length : 6;
     activeBallId = null;
     pendingCaptureOutcome = null;
-    pendingEnemySendOutAnimation = isTrainerBattle;
+    // Wild NPC: skip Pokeball-throw animation, use scale-up entrance instead
+    pendingEnemySendOutAnimation = isTrainerBattle && !isWildNpcBattle;
+    pendingWildNpcEntrance = isWildNpcBattle;
     pendingPlayerSendOutAnimation = true;
     pendingPlayerEntryHazard = false;
     pendingEnemyEntryHazard = false;
@@ -1512,6 +1540,23 @@ export function createBattleScene(
       pendingTurnCredit = false;
     }
 
+    // Wild NPC flee check
+    if (isWildNpcBattle && trainerData) {
+      const fleeTurnsHit = wildNpcFleeAfterTurns !== null && turnNumber >= wildNpcFleeAfterTurns;
+      const fleeHpHit = wildNpcFleeAtHpPct !== null && enemy.hp / enemy.maxHp <= wildNpcFleeAtHpPct;
+      if (fleeTurnsHit || fleeHpHit) {
+        if (hasActiveGame()) {
+          const pd = getPlayerData();
+          setFlag(pd, `trainer-${trainerData.trainerId}-defeated`);
+          void fireStoryTrigger({ type: 'trainer-defeated', trainerId: trainerData.trainerId });
+          autoSave();
+        }
+        textBox = createTextBox([t('battle.wildNpcFled', { name: enemy.name })], isRTL());
+        phase = 'RUN';
+        return;
+      }
+    }
+
     pendingForcedPlayerMoveIndex = getForcedPlayerMoveIndex();
     if (playerBattleState.turnFlags.mustRecharge || pendingForcedPlayerMoveIndex !== null) {
       resolveForcedPlayerTurn();
@@ -1933,6 +1978,33 @@ export function createBattleScene(
             rotation: 0,
             visible: false,
           });
+        }),
+      ),
+    );
+  }
+
+  function startWildNpcEntranceAnimation(): void {
+    const target = getBallTargetPoint();
+    pendingWildNpcEntrance = false;
+    sendOutFx = null;
+    animationDirector.clear();
+    animationDirector.setActorState('enemy', {
+      x: 0,
+      y: 0,
+      scaleX: 0,
+      scaleY: 0,
+      alpha: 0,
+      rotation: 0,
+      visible: true,
+    });
+    animationDirector.play(
+      sequenceStep(
+        tweenActorStep('enemy', { scaleX: 1.08, scaleY: 1.08, alpha: 1 }, 0.22, 'easeOut'),
+        tweenActorStep('enemy', { scaleX: 1, scaleY: 1 }, 0.08, 'easeInOut'),
+        callStep(() => {
+          audio.playCry(enemy.id);
+          sendOutFx = createSendOutEffect(target.x, target.y - 2, '#b060ff', '#e8d0ff');
+          pendingEnemyEntryHazard = true;
         }),
       ),
     );
@@ -4638,6 +4710,10 @@ export function createBattleScene(
               if (!animationDirector.isBusy()) startEnemySendOutAnimation();
               break;
             }
+            if (pendingWildNpcEntrance) {
+              if (!animationDirector.isBusy()) startWildNpcEntranceAnimation();
+              break;
+            }
             if (pendingPlayerSendOutAnimation) {
               if (!animationDirector.isBusy()) startPlayerSendOutAnimation();
               break;
@@ -5330,6 +5406,11 @@ export function createBattleScene(
         const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
         if (enemySprite) {
           if (enemyBattleState?.substituteActive) ctx.globalAlpha = 0.45;
+          const glitchFlicker = enemy.isGlitched && Date.now() % 1800 < 90;
+          if (glitchFlicker) {
+            ctx.save();
+            ctx.translate((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 3);
+          }
           renderActorImage(
             ctx,
             'enemy',
@@ -5339,7 +5420,16 @@ export function createBattleScene(
             BTL.OPP_SPRITE.w,
             BTL.OPP_SPRITE.h,
           );
+          if (glitchFlicker) ctx.restore();
           ctx.globalAlpha = 1;
+          // Persistent glitch tint
+          if (enemy.isGlitched) {
+            ctx.save();
+            ctx.globalAlpha = 0.22;
+            ctx.fillStyle = '#7b00ff';
+            ctx.fillRect(BTL.OPP_SPRITE.x, BTL.OPP_SPRITE.y, BTL.OPP_SPRITE.w, BTL.OPP_SPRITE.h);
+            ctx.restore();
+          }
         }
       }
 

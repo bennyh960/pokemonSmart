@@ -114,7 +114,7 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
   if (!pd.story) {
     pd.story = {
       gateUnlocks: {},
-      cityInfection: {},
+      mapInfection: {},
       activeQuestId: null,
       completedQuestIds: [],
     };
@@ -256,7 +256,7 @@ function checkCondition(cond: StoryCondition, pd: ReturnType<typeof getPlayerDat
     case 'quest-complete':
       return pd.story?.completedQuestIds.includes(cond.questId) ?? false;
     case 'infection-level':
-      return pd.story?.cityInfection[cond.cityId] === cond.value;
+      return pd.story?.mapInfection[cond.mapId] === cond.value;
     case 'money-min':
       return pd.money >= cond.amount;
     case 'gate-locked':
@@ -278,7 +278,7 @@ function executeAction(action: StoryAction, pd: ReturnType<typeof getPlayerData>
 
     case 'set-infection':
       ensureStory(pd.story!);
-      pd.story!.cityInfection[action.cityId] = action.value;
+      pd.story!.mapInfection[action.mapId] = action.value;
       break;
 
     case 'set-quest':

@@ -21,14 +21,14 @@ export type StoryCondition =
   | { type: 'badge-count-max'; max: number }
   | { type: 'quest-active'; questId: string }
   | { type: 'quest-complete'; questId: string }
-  | { type: 'infection-level'; cityId: string; value: InfectionLevel }
+  | { type: 'infection-level'; mapId: MapId; value: InfectionLevel }
   | { type: 'money-min'; amount: number }
   /** True when the named gate is NOT currently unlocked (i.e. should re-check). */
   | { type: 'gate-locked'; gateId: string };
 
 export type StoryAction =
   | { type: 'set-flag'; flag: string; value?: boolean }
-  | { type: 'set-infection'; cityId: string; value: InfectionLevel }
+  | { type: 'set-infection'; mapId: MapId; value: InfectionLevel }
   | { type: 'start-cutscene'; cutsceneId: string }
   | { type: 'start-gate'; gateId: string }
   | { type: 'set-quest'; questId: string | null }

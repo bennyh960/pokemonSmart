@@ -174,7 +174,7 @@ export function createNewPlayerData(): PlayerData {
     playtime: 0,
     trainerEncounters: {},
     phoneContacts: [] as import('../types/index.js').PhoneContactInfo[],
-    story: { gateUnlocks: {}, cityInfection: {}, activeQuestId: null, completedQuestIds: [] },
+    story: { gateUnlocks: {}, mapInfection: {}, activeQuestId: null, completedQuestIds: [] },
     pokedexBatteryCharges: 50,
     battleHelperBattles: 10,
     battleHelperEnabled: true,

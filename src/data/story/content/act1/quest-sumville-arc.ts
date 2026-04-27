@@ -33,6 +33,7 @@ import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -262,7 +263,7 @@ registerStoryEvent({
   // repeatable: true,
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_SUMVILLE },
-    { type: 'set-infection', cityId: 'sumville', value: 'low' },
+    { type: 'set-infection', mapId: MapId.SUMVILLE_SUMVILLE, value: 'low' },
     { type: 'start-cutscene', cutsceneId: 'act1-oak-arrives' },
   ],
 });
@@ -274,7 +275,7 @@ registerStoryEvent({
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_SUMVILLE }],
   actions: [
     { type: 'set-flag', flag: FLAGS.VISITED_SUMVILLE },
-    { type: 'set-infection', cityId: 'sumville', value: 'low' },
+    { type: 'set-infection', mapId: MapId.SUMVILLE_SUMVILLE, value: 'low' },
     { type: 'complete-quest', questId: 'main-act1-sumville' },
   ],
 });
@@ -351,7 +352,7 @@ registerStoryEvent({
   conditions: [],
   actions: [
     { type: 'set-flag', flag: FLAGS.STORY_BADGE_1 },
-    { type: 'set-infection', cityId: 'sumville', value: 'cleared' },
+    { type: 'set-infection', mapId: MapId.SUMVILLE_SUMVILLE, value: 'cleared' },
     { type: 'set-quest', questId: 'main-act1-route2' },
   ],
 });

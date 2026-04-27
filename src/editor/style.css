@@ -388,6 +388,49 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
   font-style: italic;
 }
 
+/* ── NPC Interaction multi-select chips ── */
+.intx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 2px 0 4px;
+}
+.intx-chip {
+  display: inline-flex;
+  align-items: center;
+  background: #2a4a7a;
+  color: #cce;
+  border: 1px solid #4466aa;
+  border-radius: 3px;
+  font-size: 10px;
+  padding: 1px 4px;
+  gap: 3px;
+}
+.intx-chip-rm {
+  cursor: pointer;
+  color: #88a;
+  font-size: 12px;
+  line-height: 1;
+}
+.intx-chip-rm:hover { color: #f88; }
+
+/* ── NPC Interaction type badge buttons ── */
+.intx-type-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 2px 0 4px;
+}
+.intx-type-btn {
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  border: 1px solid #555;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.1s;
+}
+
 /* ── Party moves toggle ── */
 .party-moves {
   margin-bottom: 2px;

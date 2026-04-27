@@ -49,7 +49,8 @@ export type CharacterRole =
   | 'story' // key story NPCs (not fitting other roles)
   | 'trainer' // generic route trainers
   | 'townfolk' // regular town residents
-  | 'ranger'; // route / safari guides
+  | 'ranger' // route / safari guides
+  | 'wild-pokemon'; // overworld wild Pokémon sprites
 
 /** All valid character roles (for editor dropdowns). */
 export const CHARACTER_ROLES: CharacterRole[] = [
@@ -67,6 +68,7 @@ export const CHARACTER_ROLES: CharacterRole[] = [
   'trainer',
   'townfolk',
   'ranger',
+  'wild-pokemon',
 ];
 
 interface CharacterDef {
