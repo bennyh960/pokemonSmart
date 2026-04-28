@@ -186,6 +186,9 @@ export const FLAGS = {
 
   // ── Act 1: Route 3 ─────────────────────────────────────────────────────────
   ACT1_ROUTE3_MEET_MISTY: 'act1-route3-meet-misty', // First encounter with Misty on Route 3
+  ACT1_ROUTE3_REWARD_RECEIVED: 'npc-give-fishing-rod-rewarded', // this flag is set automaticly
+  ACT1_ROUTE_3_MISTY_JENNI_ARRIVED: 'act1-route3-misty-jenni-arrived', // Misty and Jenni arrived at Route 3 blocking path to Route 4
+  ACT1_ROUTE_3_MISTY_JENNI_GO: 'act1-route3-misty-jenni-go', // Misty and Jenni left Route 3
 
   // ── Act 2: Multiplia ────────────────────────────────────────────────────────
   VISITED_ROUTE3: 'visited-route3',

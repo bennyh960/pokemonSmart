@@ -47,17 +47,24 @@
       },
       "interaction": {
         "kind": "show-types",
-        "types": [
-          "water"
-        ],
+        "types": ["water"],
         "count": 1
       },
       "questions": {
         "count": 10,
-        "types": [
-          "+",
-          "-",
-          "×"
+        "types": ["+", "-", "×"]
+      },
+      "postFlagDialogue": {
+        "flag": "npc-give-fishing-rod-rewarded",
+        "dialogue": [
+          {
+            "en": "",
+            "he": "כמובן כדי שתוכלו לדוג צריך להשתמש בפיתיון - אפשר לקנות בחנות."
+          },
+          {
+            "en": "",
+            "he": "מתקרבים למים ולוחצים על האות F ו...מחכים"
+          }
         ]
       }
     },

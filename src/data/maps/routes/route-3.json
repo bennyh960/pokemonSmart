@@ -81,14 +81,18 @@
       "dialogue": [
         {
           "en": "Two times two is four — just like my team!",
-          "he": ""
+          "he": "אני אוהבת להלחם בפוקימונים פראיים - זה עוזר לי לחזק את הפוקימונים שלי שלא מאומנים מספיק."
+        },
+        {
+          "en": "",
+          "he": "לפעמים כשאני ממהרת אני משתמשת ב\"רפל\" - זה מרחיק פוקימונים לזמן מסויים . קניתי מהחנות כמה."
         }
       ],
       "spriteType": "char_962c1b",
       "party": [
         {
           "pokemonId": 35,
-          "level": 28,
+          "level": 32,
           "moves": []
         },
         {
@@ -98,7 +102,7 @@
         },
         {
           "pokemonId": 175,
-          "level": 30,
+          "level": 35,
           "moves": []
         },
         {
@@ -117,20 +121,7 @@
         ]
       },
       "lineOfSight": 5,
-      "postBattleDialogue": [
-        {
-          "en": "",
-          "he": "וואו איזה אזור מהמם! יש פה הרבה פוקימונים פראיים!"
-        },
-        {
-          "en": "",
-          "he": "אני אוהבת להלחם בפוקימונים פראיים - זה עוזר לי לחזק את הפוקימונים שלי שלא מאומנים מספיק."
-        },
-        {
-          "en": "",
-          "he": "לפעמים כשאני ממהרת אני משתמשת ב\"רפל\" - זה מרחיק פוקימונים לזמן מסויים . קניתי מהחנות כמה."
-        }
-      ],
+      "postBattleDialogue": [],
       "questions": {
         "count": 3,
         "types": ["×"]
@@ -175,7 +166,7 @@
         },
         {
           "pokemonId": 81,
-          "level": 28,
+          "level": 32,
           "moves": []
         }
       ],
@@ -208,14 +199,14 @@
       "dialogue": [
         {
           "en": "3 times 4 equals 12 — my lucky number!",
-          "he": ""
+          "he": "היי - אני כבר הרבה זמן מחפשת מישהו שיאתגר אותי"
         },
         {
           "en": "I've trained my Pokemon 12 times today!",
           "he": ""
         }
       ],
-      "spriteType": "dani",
+      "spriteType": "char_a5abb0",
       "party": [
         {
           "pokemonId": 20,
@@ -253,7 +244,12 @@
         ],
         "loop": true
       },
-      "postBattleDialogue": []
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "ידעת שיש דייג שמוכן לתת חכה בחינם למי שיצליח לפתור את החידות שלו?"
+        }
+      ]
     },
     {
       "id": "ace-route3",
@@ -291,16 +287,6 @@
         {
           "pokemonId": 136,
           "level": 34,
-          "moves": []
-        },
-        {
-          "pokemonId": 196,
-          "level": 36,
-          "moves": []
-        },
-        {
-          "pokemonId": 197,
-          "level": 38,
           "moves": []
         }
       ],
@@ -384,7 +370,7 @@
       },
       "x": 5,
       "y": 1,
-      "facing": "down",
+      "facing": "up",
       "type": "trainer",
       "spriteType": "char_c3dacc",
       "party": [
@@ -400,7 +386,7 @@
         },
         {
           "pokemonId": 164,
-          "level": 30,
+          "level": 33,
           "moves": []
         }
       ],
@@ -416,7 +402,7 @@
       "dialogue": [
         {
           "en": "You won't get past me!",
-          "he": "לא תעבור אותי!"
+          "he": "לא תעבור אותי ללא קרב!"
         }
       ],
       "lineOfSight": 2,
@@ -435,13 +421,8 @@
       "spriteType": "dana",
       "party": [
         {
-          "pokemonId": 35,
-          "level": 30,
-          "moves": []
-        },
-        {
           "pokemonId": 39,
-          "level": 25,
+          "level": 28,
           "moves": []
         },
         {
@@ -496,6 +477,10 @@
         {
           "en": "These rocks keep me strong!",
           "he": "האבנים האלה שומרות אותי חזק!"
+        },
+        {
+          "en": "",
+          "he": "חח אני צוחק! האימונים הם מה ששומרים אותנו חזקים"
         }
       ],
       "lineOfSight": 3,
@@ -515,17 +500,17 @@
       "party": [
         {
           "pokemonId": 117,
-          "level": 28,
+          "level": 30,
           "moves": []
         },
         {
           "pokemonId": 225,
-          "level": 30,
+          "level": 31,
           "moves": []
         },
         {
-          "pokemonId": 77,
-          "level": 30,
+          "pokemonId": 8,
+          "level": 32,
           "moves": []
         }
       ],
@@ -541,11 +526,20 @@
       "dialogue": [
         {
           "en": "",
-          "he": "שלום! רוצה קרב?"
+          "he": "שלום!"
         }
       ],
       "lineOfSight": 3,
-      "postBattleDialogue": [],
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "היי מה שלומך?"
+        },
+        {
+          "en": "",
+          "he": "אני מחפש מאמן שיכול לאתגר אותי בקרב"
+        }
+      ],
       "reencounter": {
         "count": 3,
         "lvlStep": 5,
@@ -567,12 +561,12 @@
       "party": [
         {
           "pokemonId": 43,
-          "level": 25,
+          "level": 28,
           "moves": []
         },
         {
           "pokemonId": 52,
-          "level": 25,
+          "level": 30,
           "moves": []
         },
         {
@@ -592,11 +586,20 @@
       "dialogue": [
         {
           "en": "Come battle me in the grass!",
-          "he": "בוא להילחם בי בעשב!"
+          "he": "בוא להילחם בי !"
         }
       ],
       "lineOfSight": 4,
-      "postBattleDialogue": []
+      "postBattleDialogue": [],
+      "postFlagDialogue": {
+        "flag": "",
+        "dialogue": [
+          {
+            "en": "",
+            "he": "הוו לא מאמין שניצחת!"
+          }
+        ]
+      }
     },
     {
       "id": "npc-1777188503410",
@@ -655,7 +658,7 @@
       "spriteType": "char_5b4066",
       "questions": {
         "count": 3,
-        "types": []
+        "types": ["+", "-"]
       },
       "party": [
         {
@@ -671,9 +674,18 @@
       ],
       "lineOfSight": 3,
       "reward": {
-        "money": 0
+        "money": 600
       },
-      "postBattleDialogue": [],
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "חייב לחזק את הפוקימונים שלי!"
+        },
+        {
+          "en": "",
+          "he": "אבל גם חייב לחזק את יכולות החישוב שלי כדי שאוכל לעבור בשערים!"
+        }
+      ],
       "name": {
         "en": "Bruno",
         "he": "ברונו"
@@ -726,8 +738,8 @@
     },
     {
       "id": "npc-1777213035012",
-      "x": 29,
-      "y": 54,
+      "x": 31,
+      "y": 52,
       "facing": "down",
       "type": "trainer",
       "dialogue": [
@@ -741,23 +753,9 @@
         "en": "Lisa",
         "he": "ליסה"
       },
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "down",
-            "steps": 5,
-            "delay": 2.5
-          },
-          {
-            "dir": "up",
-            "steps": 5,
-            "delay": 3
-          }
-        ],
-        "loop": true
-      },
+      "autoWalk": null,
       "reward": {
-        "money": 800,
+        "money": 1000,
         "items": [
           {
             "itemId": "sun-stone",
@@ -778,11 +776,11 @@
         },
         {
           "pokemonId": 31,
-          "level": 38,
+          "level": 35,
           "moves": []
         }
       ],
-      "lineOfSight": 3,
+      "lineOfSight": 4,
       "postBattleDialogue": [],
       "questions": {
         "count": 5,
@@ -834,7 +832,16 @@
           }
         ]
       },
-      "postBattleDialogue": [],
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "אתה מאמן פוקימונים?"
+        },
+        {
+          "en": "",
+          "he": "רוצה קרב מאתגר?"
+        }
+      ],
       "name": {
         "en": "Ben",
         "he": "בן"
@@ -867,30 +874,40 @@
     },
     {
       "id": "npc-1777283113990",
-      "x": 10,
-      "y": 71,
-      "facing": "down",
-      "type": "wild-pokemon",
+      "x": 4,
+      "y": 74,
+      "facing": "right",
+      "type": "dialogue",
       "dialogue": [
         {
           "en": "Hello!",
-          "he": ""
+          "he": "דרך 4 מאוד מסוכנת"
+        },
+        {
+          "en": "",
+          "he": "יש שם פוקימונים שנראו מוזר מאוד"
         }
       ],
-      "spriteType": "npc-male",
+      "spriteType": "char_45ba6c",
       "pokemonId": 150,
       "level": 50,
-      "isGlitched": true,
       "despawnOnDefeat": true,
-      "fleeAfterTurns": 5,
-      "fleeAtHpPct": 0.3
+      "name": {
+        "en": "Lisa",
+        "he": "ליסה"
+      },
+      "party": [],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": [],
+      "despawnAfter": "act1-route3-misty-jenni-go"
     },
     {
       "id": "fishing-rod-blocker",
-      "x": 35,
-      "y": 8,
-      "x1": 17,
-      "y1": 76,
+      "x": 17,
+      "y": 76,
       "facing": "up",
       "type": "dialogue",
       "dialogue": [
@@ -913,7 +930,52 @@
       ],
       "spriteType": "Misty",
       "blocker": true,
-      "despawnAfter": "npc-npc-give-fishing-rod-rewarded"
+      "despawnAfter": "npc-give-fishing-rod-rewarded"
+    },
+    {
+      "id": "npc-1777388553801",
+      "x": 2,
+      "y": 38,
+      "facing": "right",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "היי - יש שמועות שדרך 4 , הדרך הבאה מלאה בפוקימונים תוקפניים במיוחד! כדאי שתהיה מספיק חזק כדי לעבור"
+        }
+      ],
+      "spriteType": "char_c2b2c1",
+      "name": {
+        "en": "Silver",
+        "he": "סילבר"
+      },
+      "party": [
+        {
+          "pokemonId": 72,
+          "level": 28,
+          "moves": []
+        },
+        {
+          "pokemonId": 73,
+          "level": 33,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 500,
+        "items": [
+          {
+            "itemId": "super-repel",
+            "quantity": 2
+          }
+        ]
+      },
+      "postBattleDialogue": [],
+      "questions": {
+        "count": 3,
+        "types": ["-", "×", "÷"]
+      }
     }
   ],
   "music": "route",
@@ -10174,6 +10236,26 @@
       "key": "wallstrip2",
       "x": 38,
       "y": 10
+    },
+    {
+      "key": "g5",
+      "x": 27,
+      "y": 31
+    },
+    {
+      "key": "g5",
+      "x": 38,
+      "y": 34
+    },
+    {
+      "key": "g5",
+      "x": 41,
+      "y": 33
+    },
+    {
+      "key": "item-pokeball",
+      "x": 41,
+      "y": 31
     }
   ],
   "objectLayer": [

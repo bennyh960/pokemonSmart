@@ -724,7 +724,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     const badgeY = spriteY + spriteSize + 4;
     for (const type of data.types) {
       const color = TYPE_BADGE[type as PokemonType]?.color || '#a8a878';
-      const label = type.toUpperCase();
+
+      const label = TYPE_BADGE[type as PokemonType]?.[getLocale()] || type.toUpperCase();
       const badgeW = label.length * 5 + 6;
       fillRect(ctx, badgeX, badgeY, badgeW, 10, color);
       drawRect(ctx, badgeX, badgeY, badgeW, 10, '#00000044');

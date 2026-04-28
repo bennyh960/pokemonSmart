@@ -365,50 +365,50 @@
     "entries": [
       {
         "pokemonId": 23,
-        "minLevel": 20,
-        "maxLevel": 25,
+        "minLevel": 24,
+        "maxLevel": 28,
         "weight": 5
       },
       {
         "pokemonId": 32,
-        "minLevel": 15,
+        "minLevel": 24,
         "maxLevel": 20,
         "weight": 10
       },
       {
         "pokemonId": 29,
-        "minLevel": 15,
-        "maxLevel": 22,
+        "minLevel": 18,
+        "maxLevel": 26,
         "weight": 8
       },
       {
         "pokemonId": 17,
-        "minLevel": 20,
-        "maxLevel": 25,
+        "minLevel": 22,
+        "maxLevel": 28,
         "weight": 10
       },
       {
         "pokemonId": 43,
-        "minLevel": 17,
-        "maxLevel": 22,
+        "minLevel": 20,
+        "maxLevel": 24,
         "weight": 10
       },
       {
         "pokemonId": 66,
-        "minLevel": 17,
-        "maxLevel": 20,
+        "minLevel": 20,
+        "maxLevel": 24,
         "weight": 8
       },
       {
         "pokemonId": 81,
-        "minLevel": 18,
-        "maxLevel": 22,
+        "minLevel": 20,
+        "maxLevel": 24,
         "weight": 8
       },
       {
         "pokemonId": 74,
         "minLevel": 20,
-        "maxLevel": 21,
+        "maxLevel": 23,
         "weight": 8
       },
       {
@@ -419,33 +419,33 @@
       },
       {
         "pokemonId": 116,
-        "minLevel": 18,
-        "maxLevel": 22,
+        "minLevel": 20,
+        "maxLevel": 23,
         "weight": 5
       },
       {
         "pokemonId": 63,
-        "minLevel": 8,
+        "minLevel": 10,
         "maxLevel": 15,
-        "weight": 8
+        "weight": 5
       },
       {
         "pokemonId": 27,
-        "minLevel": 15,
-        "maxLevel": 22,
-        "weight": 10
+        "minLevel": 20,
+        "maxLevel": 24,
+        "weight": 5
       },
       {
         "pokemonId": 50,
-        "minLevel": 17,
-        "maxLevel": 22,
-        "weight": 10
+        "minLevel": 20,
+        "maxLevel": 24,
+        "weight": 7
       },
       {
         "pokemonId": 231,
-        "minLevel": 15,
-        "maxLevel": 22,
-        "weight": 8
+        "minLevel": 18,
+        "maxLevel": 24,
+        "weight": 6
       },
       {
         "pokemonId": 104,

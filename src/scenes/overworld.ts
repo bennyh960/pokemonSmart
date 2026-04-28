@@ -4,7 +4,7 @@
  * Supports dynamic map loading, transitions, NPC interaction, shop and heal.
  */
 
-import type { Scene, Pokemon } from '../types/index.js';
+import type { Scene, Pokemon, PokemonType } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
@@ -50,7 +50,6 @@ import {
 } from '../systems/npc.js';
 import { getItem } from '../data/items.js';
 import { getTypeName } from '../data/type-constants.js';
-import type { PokemonType } from '../data/type-constants.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
 import {
@@ -637,7 +636,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
           case 'show-types': {
             requestLine = t('npc.interaction.showTypes.request', {
-              types: interaction.types.join(', '),
+              types: interaction.types.map((t) => getTypeName(t as PokemonType)).join(', '),
               count: interaction.count,
             });
             break;
@@ -729,7 +728,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const data = getPokemon(p.id);
           return data && data.types.some((type) => interaction.types.includes(type));
         }).length;
-        const typesStr = interaction.types.join(', ');
+        const typesStr = interaction.types.map((tp) => getTypeName(tp as PokemonType)).join(', ');
         if (matchCount < interaction.count) {
           activeTextBox = createTextBox(
             [t('npc.interaction.showTypes.missing', { count: interaction.count, types: typesStr, has: matchCount })],
@@ -824,6 +823,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     // Mark as given
     setFlag(pd, flagKey);
+    void fireStoryTrigger({ type: 'flag-set', flag: flagKey });
     autoSave();
 
     // Show reward message
@@ -1500,11 +1500,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
-      // Check for pending cutscene queued by story engine
-      const pendingCutsceneId = consumePendingCutscene();
-      if (pendingCutsceneId) {
-        activateCutscene(pendingCutsceneId);
-        return;
+      // Check for pending cutscene queued by story engine.
+      // Guard: only activate once the map is fully visible (transition + fly done),
+      // otherwise the cutscene's return short-circuits the transition timer and
+      // the black fade-in overlay freezes on screen indefinitely.
+      if (transitionState === 'none' && !flyAnim) {
+        const pendingCutsceneId = consumePendingCutscene();
+        if (pendingCutsceneId) {
+          activateCutscene(pendingCutsceneId);
+          return;
+        }
       }
 
       // Check for pending message queued by story engine (show-message action)
