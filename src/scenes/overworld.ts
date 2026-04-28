@@ -67,6 +67,7 @@ import {
   fireStoryTrigger,
   consumePendingCutscene,
   consumePendingMessage,
+  checkAndRecoverInterruptedEvent,
 } from '../systems/story-engine.js';
 import {
   isCutsceneActive,
@@ -1435,6 +1436,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       loadAndSetMap(mapId, spawnX, spawnY)
         .then(() => {
           mapLoading = false;
+          // Check for a cutscene event interrupted by a page refresh and re-run it.
+          void checkAndRecoverInterruptedEvent();
         })
         .catch((err) => {
           console.error('Failed to load map, falling back to test-map:', err);

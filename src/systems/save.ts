@@ -201,3 +201,38 @@ export function hasSave(slot: number): boolean {
 export function deleteSave(slot: number): void {
   localStorage.removeItem(`${SAVE_KEY_PREFIX}${slot}`);
 }
+
+// ---------------------------------------------------------------------------
+// Event checkpoint — survives page refresh; cleared on cutscene completion.
+// If present on load it means the player refreshed mid-cutscene event, so the
+// game can roll back flags and re-run the event cleanly from the beginning.
+// ---------------------------------------------------------------------------
+
+const CHECKPOINT_KEY = 'pokemon-math-adventure-event-checkpoint';
+
+export interface EventCheckpoint {
+  /** ID of the story event that was interrupted. */
+  eventId: string;
+  /** ID of the cutscene that was running inside that event. */
+  cutsceneId: string;
+  /** Full copy of pd.flags taken before any of the event's actions ran. */
+  flagsSnapshot: Record<string, boolean>;
+}
+
+export function saveEventCheckpoint(checkpoint: EventCheckpoint): void {
+  localStorage.setItem(CHECKPOINT_KEY, JSON.stringify(checkpoint));
+}
+
+export function loadEventCheckpoint(): EventCheckpoint | null {
+  const raw = localStorage.getItem(CHECKPOINT_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as EventCheckpoint;
+  } catch {
+    return null;
+  }
+}
+
+export function clearEventCheckpoint(): void {
+  localStorage.removeItem(CHECKPOINT_KEY);
+}

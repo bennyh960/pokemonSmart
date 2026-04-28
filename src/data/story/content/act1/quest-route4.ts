@@ -173,7 +173,7 @@ registerCutscene({
     { type: 'move-npc', npcId: 'npc-r4-officer-blocker', path: ['up', 'left', 'left', 'left'], waitForComplete: true },
     { type: 'hide-npc', npcId: 'npc-r4-officer-blocker' },
     { type: 'hide-npc', npcId: 'rocket-grunt-r4-assembly' },
-
+    // todo: face player up
     // c. Officer Jenny walks in and asks what happened
     {
       type: 'move-npc',

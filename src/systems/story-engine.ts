@@ -17,6 +17,7 @@ import { getPlayerData, hasActiveGame, autoSave, setFlag } from './game-state.js
 import { getStoryEvents } from '../data/story/events.js';
 import type { StoryTrigger, StoryCondition, StoryAction } from '../data/story/events.js';
 import { awaitCutsceneCompletion } from './cutscene-runner.js';
+import { saveEventCheckpoint, loadEventCheckpoint, clearEventCheckpoint } from './save.js';
 import { getCurrentMapId, getCachedMap } from './map-manager.js';
 import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 
@@ -135,6 +136,20 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
     // Check conditions
     if (event.conditions && !allConditionsMet(event.conditions, pd)) continue;
 
+    // If this event starts a cutscene, snapshot the flags NOW (before any actions
+    // run) and persist to a dedicated localStorage key. On page refresh the game
+    // can detect the incomplete transaction and roll back cleanly.
+    const cutsceneAction = event.actions.find(
+      (a): a is Extract<StoryAction, { type: 'start-cutscene' }> => a.type === 'start-cutscene',
+    );
+    if (cutsceneAction && !event.repeatable) {
+      saveEventCheckpoint({
+        eventId: event.id,
+        cutsceneId: cutsceneAction.cutsceneId,
+        flagsSnapshot: { ...pd.flags },
+      });
+    }
+
     // Execute actions — if a cutscene is queued, await its completion before
     // marking the event done. This prevents the done-flag from being saved
     // before the cutscene's own set-flag actions run.
@@ -156,6 +171,15 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
     // Mark as done unless repeatable — happens AFTER cutscene completes
     if (!event.repeatable) {
       setFlag(pd, doneFlag);
+    }
+
+    // For cutscene events: explicitly save the done-flag now and remove the
+    // checkpoint. Must happen in this order so the done-flag is on disk before
+    // the checkpoint disappears (otherwise a crash here would just re-run the
+    // cutscene, which is safe, rather than skipping it).
+    if (cutsceneAction && !event.repeatable) {
+      autoSave();
+      clearEventCheckpoint();
     }
   }
 
@@ -408,4 +432,63 @@ function countBits(n: number): number {
 function ensureStory(story: PlayerStoryState): void {
   // story object must exist (caller already checked), this is a no-op type guard
   if (!story) throw new Error('story state missing — migration not applied');
+}
+
+// ---------------------------------------------------------------------------
+// Interrupted-event recovery
+// ---------------------------------------------------------------------------
+
+/**
+ * Call once after a saved game is loaded (e.g. from overworld.enter()).
+ *
+ * Detects a leftover event checkpoint from a previous session where the player
+ * refreshed mid-cutscene.  If found:
+ *   1. Rolls pd.flags back to the pre-event snapshot.
+ *   2. Re-executes the event's non-cutscene actions (restores intermediate flags
+ *      like ASSEMBLY_STARTED so NPC spawnAfter conditions are correct).
+ *   3. Queues the cutscene so the overworld picks it up on its next tick.
+ *   4. Awaits cutscene completion, then marks the event done and clears the
+ *      checkpoint — exactly as a normal first-run would.
+ */
+export async function checkAndRecoverInterruptedEvent(): Promise<void> {
+  const checkpoint = loadEventCheckpoint();
+  if (!checkpoint) return;
+  if (!hasActiveGame()) return;
+
+  const pd = getPlayerData();
+
+  console.warn(
+    `[StoryEngine] Interrupted event detected: "${checkpoint.eventId}". Rolling back flags and re-running.`,
+  );
+
+  // 1. Restore flags to the snapshot taken before the event's actions ran.
+  pd.flags = { ...checkpoint.flagsSnapshot };
+
+  // 2. Re-execute only the non-cutscene actions so intermediate flags (e.g.
+  //    ASSEMBLY_STARTED) are set correctly before the cutscene opens.
+  const event = getStoryEvents().find((e) => e.id === checkpoint.eventId);
+  if (event) {
+    for (const action of event.actions) {
+      if (action.type !== 'start-cutscene') {
+        executeAction(action, pd);
+      }
+    }
+  }
+
+  // 3. Queue the cutscene — the overworld polls consumePendingCutscene() and
+  //    will activate it on its next update tick once the map is ready.
+  _pendingCutsceneId = checkpoint.cutsceneId;
+  const cutscenePromise = awaitCutsceneCompletion();
+
+  autoSave(); // persist rolled-back flags + re-executed action flags
+
+  // 4. Wait for the cutscene to finish, then commit.
+  await cutscenePromise;
+
+  if (event && !event.repeatable) {
+    const doneFlag = event.completedFlag ?? `__event-done-${event.id}`;
+    setFlag(pd, doneFlag);
+  }
+  autoSave();
+  clearEventCheckpoint();
 }
