@@ -1,4 +1,3 @@
-import { registerCutscene } from '../../cutscenes';
 import { registerStoryEvent } from '../../events';
 import { FLAGS } from '../../flags';
 import { registerQuest } from '../../quests';
