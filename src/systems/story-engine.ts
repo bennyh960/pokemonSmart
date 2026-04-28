@@ -74,7 +74,9 @@ function _autoCheckMapTrainersCleared(pd: ReturnType<typeof getPlayerData>): voi
   const mapData = getCachedMap(mapId);
   if (!mapData?.npcs) return;
 
-  const trainers = mapData.npcs.filter((npc) => npc.type === 'trainer' && !npc.excludeFromMapClear);
+  const trainers = mapData.npcs.filter(
+    (npc) => (npc.type === 'trainer' || npc.type === 'wild-pokemon') && !npc.excludeFromMapClear,
+  );
   if (trainers.length === 0) return;
 
   if (trainers.every((npc) => pd.flags[`trainer-${npc.id}-defeated`])) {

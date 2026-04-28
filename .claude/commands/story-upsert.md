@@ -1,12 +1,13 @@
 # /story-upsert — Create or Update a Story Act
 
-You are implementing a **story act** for Pokemon Math Adventure (Numeria). A story act is one beat of the game's narrative — it may span one map or several maps, involve NPCs, cutscenes, trainer battles, and flag chains.
+You are implementing a **story quest** for Pokemon Math Adventure (Numeria). A story quest is 1 big part from 1 story act . while story act is one beat of the game's narrative — it may span one map or several maps, involve NPCs, cutscenes, trainer battles, and flag chains.
 
 ## Input
 
 The user invoked `/story-upsert $ARGUMENTS`.
 
 Parse the arguments as:
+
 - **Arg 1** — act name / short id (e.g. `rocket-raid-sumville`, `rival-first-battle`)
 - **Arg 2+** — free-text description of the act. May include the list of maps to use, or may ask you to suggest maps. May be empty.
 
@@ -25,6 +26,7 @@ Full lore in `docs/game-spec.md` (read only if the act requires lore you do not 
 ### Story engine — `src/data/story/events.ts`
 
 **Triggers:**
+
 - `map-enter` — entering a map (has `mapId`)
 - `map-exit` — leaving a map
 - `npc-interact` — talking to an NPC (has `npcId`)
@@ -37,6 +39,7 @@ Full lore in `docs/game-spec.md` (read only if the act requires lore you do not 
 - `manual` — manually fired
 
 **Actions:**
+
 - `set-flag` — set / unset a story flag
 - `set-infection` — adjust city infection level
 - `start-cutscene` — launch a cutscene by id
@@ -49,6 +52,7 @@ Full lore in `docs/game-spec.md` (read only if the act requires lore you do not 
 - `play-music`
 
 **Conditions:**
+
 - `flag` / `flag-not`
 - `badge-count` / `badge-count-max`
 - `quest-active` / `quest-complete`
@@ -59,6 +63,7 @@ Full lore in `docs/game-spec.md` (read only if the act requires lore you do not 
 ### Cutscene runner — `src/systems/cutscene-runner.ts`
 
 **Step types:**
+
 - Dialogue / UI: `dialogue`, `phone-ring`, `overlay`, `wait-input`
 - Camera: `camera-snap`, `camera-pan`
 - Screen: `screen-fade`
@@ -73,17 +78,20 @@ Full lore in `docs/game-spec.md` (read only if the act requires lore you do not 
 **NPC types:** `npc`, `trainer`, `shopkeeper`, `healer`, `gate-guard`
 
 **Spawn / despawn — reuse these, do not invent new ones:**
+
 - `spawnAfter: "<flag>"` — NPC appears once flag is set
 - `despawnAfter: "<flag>"` — NPC disappears once flag is set
 - `despawnWhenParty: { count, level }` — disappears when party has N Pokemon at level ≥ X
 - `despawnOnDefeat: true` — trainer auto-despawns after losing
 
 **Movement — reuse these, do not invent a new movement system:**
+
 - `autoWalk` — patrol pattern with directional steps, optional delay
 - `afterSpawnPattern` — one-time walk when NPC first appears (flag-persisted)
 - `beforeDespawnPattern` — one-time walk before despawn condition kicks in (flag-persisted)
 
 **Rewards:**
+
 - `DialogueReward` on dialogue NPC: `items`, `money`, `badge`, `storyEvent: "<flag>"`
 - `TrainerReward` on trainer NPC: same fields + `postBattleDialogue`
 
@@ -104,6 +112,7 @@ All player-visible strings must be `{ en: string, he: string }`. Hebrew can be a
 ## Step 1 — Ask clarifying questions (if needed)
 
 Before implementing, ask about anything unclear:
+
 - Which maps the act touches (if not specified)
 - Player's assumed starting state (badges, items, flags)
 - Act's success / completion conditions
@@ -116,6 +125,7 @@ Before implementing, ask about anything unclear:
 ## Step 2 — Design the act
 
 Break into a clear flow:
+
 1. **Entry point** — map-enter, NPC interact, flag-set, etc.
 2. **Progression** — ordered sequence of beats the player completes
 3. **Exit point** — what flag marks the act complete, and what does it unlock?
@@ -129,6 +139,7 @@ For each beat: cutscene needed? New NPC or reuse? Spawn/despawn? Auto-walk befor
 Write the code. **Open files only when writing a register call** — use the capability reference above instead of re-reading source to learn what exists.
 
 Files you typically edit:
+
 - `src/data/story/content/act{N}/<act-name>.ts` — quests, gates, cutscenes, story events
 - `src/data/story/flags.ts` — add any new flags
 - `src/data/maps/<MAP_ID>.json` — **see NPC placement rules below**
@@ -152,15 +163,19 @@ For every new NPC the act requires:
 ## Step 4 — Output summary (mandatory, in this exact order)
 
 ### 1. Act overview
+
 One or two sentences.
 
 ### 2. Cross-map flow
+
 Plain language. Example:
+
 > "Talk to Gary on `minusburg` → enter `gym-minusburg` → beat 10 Rocket grunts → finale cutscene"
 
 ### 3. NPCs added to maps
 
 For each map that received new NPCs, confirm:
+
 - **Map file**: `src/data/maps/<MAP_ID>.json`
 - List each NPC: `id`, placeholder coords, role, spawn/despawn flags
 
@@ -168,21 +183,26 @@ If a required map does not exist yet:
 
 > ⚠️ **Map `<MAP_ID>` does not exist**
 > The story event `<event-id>` targets this map. To unblock:
+>
 > 1. Create `src/data/maps/<MAP_ID>.json`
 > 2. Register it in `src/systems/map-manager.ts`
 > 3. Add a transition tile from `<SOURCE_MAP>` at approximately (x, y)
-> NPCs intended for this map are listed below — add them once the map exists.
+>    NPCs intended for this map are listed below — add them once the map exists.
 
 ### 4. Map-enter events
+
 For each `map-enter` trigger:
+
 - **Map ID**, **Conditions**, **Actions**
 
 ### 5. Resource list
+
 - Story event IDs, Cutscene IDs, Flag names, Quest IDs, Gate IDs
 
 ### 6. User TODO list
+
 - [ ] Move NPC `<id>` from placeholder (x, y) to real position on `<map>`
-- [ ] *(any missing maps or other manual work)*
+- [ ] _(any missing maps or other manual work)_
 
 ---
 

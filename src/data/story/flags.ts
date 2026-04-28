@@ -190,6 +190,12 @@ export const FLAGS = {
   ACT1_ROUTE_3_MISTY_JENNI_ARRIVED: 'act1-route3-misty-jenni-arrived', // Misty and Jenni arrived at Route 3 blocking path to Route 4
   ACT1_ROUTE_3_MISTY_JENNI_GO: 'act1-route3-misty-jenni-go', // Misty and Jenni left Route 3
 
+  // ── Act 1: Route 4 ─────────────────────────────────────────────────────────
+  ACT1_ROUTE4_ASSEMBLY_STARTED: 'act1-route4-assembly-started', // Big assembly cutscene triggered (all trainers defeated)
+  ACT1_ROUTE4_ASSEMBLY_DONE: 'act1-route4-assembly-done', // Assembly cutscene finished, all NPCs despawn
+  ACT1_SECRET_DOC_2_RECEIVED: 'act1-route4-secret-doc-2-received', // Leon handed Secret Document 2 to the player
+
+  //! dont use yet on the FLAGS after this line
   // ── Act 2: Multiplia ────────────────────────────────────────────────────────
   VISITED_ROUTE3: 'visited-route3',
   GATE_ROUTE3_PASS: 'gate-route3-pass',
@@ -310,6 +316,9 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.MINUSBURG_GYM_LEADER_FOUND]: 'Legacy flag — kept for save compatibility',
   [FLAGS.MINUSBURG_BLOCKER_PLACED]: 'Eastern-path blocker NPC spawned after city cleared',
   [FLAGS.ROCKET_MINUSBURG_ALL_DEFEATED]: 'All 10 Team Rocket grunts in Minusburg defeated',
+  [FLAGS.ACT1_ROUTE4_ASSEMBLY_STARTED]: 'Route 4 post-clear assembly cutscene started',
+  [FLAGS.ACT1_ROUTE4_ASSEMBLY_DONE]: 'Route 4 assembly cutscene finished, all cutscene NPCs despawned',
+  [FLAGS.ACT1_SECRET_DOC_2_RECEIVED]: 'Champion Leon gave Secret Document 2 to the player',
   [FLAGS.VISITED_ROUTE3]: 'First step onto Route 3',
   [FLAGS.GATE_ROUTE3_PASS]: 'Route 3 → Multiplia checkpoint passed',
   [FLAGS.VISITED_MULTIPLIA]: 'First arrival at Multiplia',

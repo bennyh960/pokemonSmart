@@ -2171,7 +2171,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "above": false,
+      "above": true,
       "interactType": null,
       "description": "stairs 1 for climbing 1/2 tile left"
     },
@@ -5747,8 +5747,7 @@
       "h": 64,
       "walkable": true,
       "above": true,
-      "category": "floor",
-      "interactType": null
+      "category": "floor"
     }
   ]
 }

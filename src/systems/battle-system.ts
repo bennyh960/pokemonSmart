@@ -538,8 +538,7 @@ export function isTargetImmuneToStatusEffectFromMoveType(
   effect: MoveStatusEffect | null,
 ): boolean {
   if (!effect) return false;
-  const statusImmuneType = SAME_TYPE_STATUS_IMMUNITY_BY_MOVE_TYPE[effect.status];
-  return statusImmuneType === moveType && target.types.includes(moveType);
+  return target.types.includes(moveType);
 }
 
 export function isTargetImmuneToVolatileEffectFromMoveType(

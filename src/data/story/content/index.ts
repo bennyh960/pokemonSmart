@@ -22,7 +22,7 @@ import './act1/quest-sumville-arc.js';
 import './act1/quest-route2.js';
 import './act1/quest-minusburg.js';
 import './act1/quest-route3.js';
-// import './act1/quest-route4.js';
+import './act1/quest-route4.js';
 
 // Act 2 — Trust Nobody: Multiplia, Dividia
 import './act2/quest-multiplia.js';

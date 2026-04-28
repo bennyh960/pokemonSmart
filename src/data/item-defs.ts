@@ -558,7 +558,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     name: { en: 'Secret Document', he: 'מסמך סודי' },
     description: {
       en: 'A classified document dropped by a Team Rocket grunt. Prof. Algorithma needs to analyse it.',
-      he: 'מסמך סודי שנשמט מסוכן של צוות רוקט. פרופ׳ אלגוריתמה צריכה לנתח אותו.',
+      he: 'מסמך סודי שנשמט מסוכן של צוות רוקט. פרופ׳ אלגוריתמה צריך לנתח אותו.',
     },
     keyFlag: 'key-secret-doc-obtained',
     usedFlag: 'key-secret-doc-analyzed',

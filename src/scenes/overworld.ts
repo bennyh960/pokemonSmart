@@ -276,20 +276,38 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
   }
 
-  /** Build a bilingual "X of Y trainers still standing" string for a mapClearBlocker NPC. */
-  function buildMapClearCountLine(locale: string): string {
+  /** Build bilingual count lines for a mapClearBlocker NPC — one line per category (trainers / wild Pokémon). */
+  function buildMapClearCountLines(locale: string): string[] {
     const mapId = getCurrentMapId();
-    if (!mapId) return '';
+    if (!mapId) return [];
     const mapData = getCachedMap(mapId);
-    if (!mapData?.npcs) return '';
-    const trainers = mapData.npcs.filter((npc) => npc.type === 'trainer' && !npc.excludeFromMapClear);
-    if (trainers.length === 0) return '';
+    if (!mapData?.npcs) return [];
     const pd = getPlayerData();
-    const defeated = trainers.filter((npc) => pd.flags[`trainer-${npc.id}-defeated`]).length;
-    const remaining = trainers.length - defeated;
-    return locale === 'he'
-      ? `${remaining} מתוך ${trainers.length} מאמנים עדיין עומדים.`
-      : `${remaining} of ${trainers.length} trainers still standing.`;
+    const lines: string[] = [];
+
+    const trainerNpcs = mapData.npcs.filter((npc) => npc.type === 'trainer' && !npc.excludeFromMapClear);
+    const trainerDefeated = trainerNpcs.filter((npc) => pd.flags[`trainer-${npc.id}-defeated`]).length;
+    const trainerRemaining = trainerNpcs.length - trainerDefeated;
+    if (trainerNpcs.length > 0 && trainerRemaining > 0) {
+      lines.push(
+        locale === 'he'
+          ? `${trainerRemaining} מתוך ${trainerNpcs.length} מאמנים עדיין עומדים.`
+          : `${trainerRemaining} of ${trainerNpcs.length} trainers still standing.`,
+      );
+    }
+
+    const wildNpcs = mapData.npcs.filter((npc) => npc.type === 'wild-pokemon' && !npc.excludeFromMapClear);
+    const wildDefeated = wildNpcs.filter((npc) => pd.flags[`trainer-${npc.id}-defeated`]).length;
+    const wildRemaining = wildNpcs.length - wildDefeated;
+    if (wildNpcs.length > 0 && wildRemaining > 0) {
+      lines.push(
+        locale === 'he'
+          ? `${wildRemaining} מתוך ${wildNpcs.length} פוקימוני בר חוסמים את הדרך.`
+          : `${wildRemaining} of ${wildNpcs.length} wild Pokémon blocking the path.`,
+      );
+    }
+
+    return lines;
   }
 
   /** Turn an NPC to face the player, saving its original facing for later restore. */
@@ -2427,8 +2445,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const locale = getLocale();
             const resolvedLines = resolveDialogue(dialogueLines, locale);
             if (npc.mapClearBlocker && hasActiveGame()) {
-              const countLine = buildMapClearCountLine(locale);
-              if (countLine) resolvedLines.push(countLine);
+              resolvedLines.push(...buildMapClearCountLines(locale));
             }
             activeTextBox = createTextBox(resolvedLines, isRTL(), npc.name ? getLocalizedName(npc.name) : undefined);
             interactingNPC = npc;

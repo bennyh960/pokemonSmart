@@ -166,27 +166,36 @@ describe('battle system helpers', () => {
     expect(isTargetImmuneToMoveType(createTestPokemon({ types: ['steel'] }), 'poison')).toBe(true);
   });
 
-  it('blocks same-type major-status effects without blocking damage by itself', () => {
+  it('blocks status effects from same-type moves (target type includes move type)', () => {
+    // Same-type → immune regardless of which status
     expect(isTargetImmuneToStatusEffectFromMoveType(
       createTestPokemon({ types: ['fire'] }),
       'fire',
       { status: 'burn', chance: 10, target: 'target' },
     )).toBe(true);
     expect(isTargetImmuneToStatusEffectFromMoveType(
-      createTestPokemon({ types: ['ice'] }),
-      'ice',
-      { status: 'freeze', chance: 10, target: 'target' },
-    )).toBe(true);
-    expect(isTargetImmuneToStatusEffectFromMoveType(
       createTestPokemon({ types: ['electric'] }),
       'electric',
       { status: 'paralyze', chance: 10, target: 'target' },
     )).toBe(true);
+    // Grass-type immune to sleep from Grass move (Sleep Powder)
     expect(isTargetImmuneToStatusEffectFromMoveType(
       createTestPokemon({ types: ['grass'] }),
       'grass',
       { status: 'sleep', chance: 100, target: 'target' },
     )).toBe(true);
+    // Dual-type: Venusaur (Grass/Poison) immune to Grass-type sleep
+    expect(isTargetImmuneToStatusEffectFromMoveType(
+      createTestPokemon({ types: ['grass', 'poison'] }),
+      'grass',
+      { status: 'sleep', chance: 100, target: 'target' },
+    )).toBe(true);
+    // Different type → not immune
+    expect(isTargetImmuneToStatusEffectFromMoveType(
+      createTestPokemon({ types: ['grass', 'poison'] }),
+      'psychic',
+      { status: 'sleep', chance: 100, target: 'target' },
+    )).toBe(false);
     expect(isTargetImmuneToStatusEffectFromMoveType(
       createTestPokemon({ types: ['water'] }),
       'fire',
