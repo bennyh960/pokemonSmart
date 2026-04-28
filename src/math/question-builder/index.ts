@@ -54,20 +54,23 @@ export { buildSnapshot } from './PokemonWorldContext.js';
 // Store templates
 export { SingleItemCostTemplate, MaxItemsBudgetTemplate, TwoItemsTotalTemplate, BudgetRemainingTemplate } from './templates/StoreTemplates.js';
 // Battle templates
-export { BasicDamageTemplate, AttackFormulaDamageTemplate, STABBonusTemplate, MoveEffectivenessTemplate } from './templates/BattleTemplates.js';
+export { BasicDamageTemplate, AttackFormulaDamageTemplate, STABBonusTemplate, MoveEffectivenessTemplate, HPRemainingTemplate, EffectivenessHPRemainingTemplate, PoisonSleepTemplate } from './templates/BattleTemplates.js';
 // Catch templates
 export { PokeBallsNeededTemplate, HPReductionTemplate, CatchCostTemplate } from './templates/CatchTemplates.js';
 // Fraction templates
 export { FractionOfHPTemplate, FractionOfBudgetTemplate, FractionCompareTemplate, FractionItemSplitTemplate } from './templates/FractionTemplates.js';
+// Healing templates
+export { PotionsNeededTemplate } from './templates/HealingTemplates.js';
 
 // ─── Auto-registration of built-in templates ──────────────────────────────────
 
 import { registry as _registry } from './TemplateRegistry.js';
 
 import { SingleItemCostTemplate, MaxItemsBudgetTemplate, TwoItemsTotalTemplate, BudgetRemainingTemplate } from './templates/StoreTemplates.js';
-import { BasicDamageTemplate, AttackFormulaDamageTemplate, STABBonusTemplate, MoveEffectivenessTemplate } from './templates/BattleTemplates.js';
+import { BasicDamageTemplate, AttackFormulaDamageTemplate, STABBonusTemplate, MoveEffectivenessTemplate, HPRemainingTemplate, EffectivenessHPRemainingTemplate, PoisonSleepTemplate } from './templates/BattleTemplates.js';
 import { PokeBallsNeededTemplate, HPReductionTemplate, CatchCostTemplate } from './templates/CatchTemplates.js';
 import { FractionOfHPTemplate, FractionOfBudgetTemplate, FractionCompareTemplate, FractionItemSplitTemplate } from './templates/FractionTemplates.js';
+import { PotionsNeededTemplate } from './templates/HealingTemplates.js';
 
 _registry.registerAll([
   // Store
@@ -80,6 +83,9 @@ _registry.registerAll([
   new AttackFormulaDamageTemplate(),
   new STABBonusTemplate(),
   new MoveEffectivenessTemplate(),
+  new HPRemainingTemplate(),
+  new EffectivenessHPRemainingTemplate(),
+  new PoisonSleepTemplate(),
   // Catch
   new PokeBallsNeededTemplate(),
   new HPReductionTemplate(),
@@ -89,6 +95,8 @@ _registry.registerAll([
   new FractionOfBudgetTemplate(),
   new FractionCompareTemplate(),
   new FractionItemSplitTemplate(),
+  // Healing
+  new PotionsNeededTemplate(),
 ]);
 
 // ─── QuestionFactory ──────────────────────────────────────────────────────────

@@ -137,7 +137,7 @@ export interface RichQuestion {
   classConfigId: GradeId;
 }
 
-export type QuestionCategory = 'store' | 'battle' | 'catch' | 'exploration';
+export type QuestionCategory = 'store' | 'battle' | 'catch' | 'exploration' | 'healing';
 
 // ─── Template internals ───────────────────────────────────────────────────────
 

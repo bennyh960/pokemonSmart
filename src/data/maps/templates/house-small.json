@@ -55,263 +55,24 @@
         "itemId": "pokedex-battery"
       }
     ]
-  },
+  }
+,
   "tiles": [
-    [
-      "w4-b1",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-2",
-      "w4-b2"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-r",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-l"
-    ],
-    [
-      "w4-b3",
-      "w4-1",
-      "w4-1",
-      "w4-1",
-      "w4-1",
-      "w4-1",
-      "f6-shadow",
-      "f6-shadow",
-      "w4-1",
-      "w4-1",
-      "w4-1",
-      "w4-1",
-      "w4-1",
-      "w4-1",
-      "w4-b4"
-    ]
+    ["w4-b1","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-2","w4-b2"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","w4b","w4b","w4b","w4b","w4b","w4b","w4b","w4b","w4b","w4b","w4b","w4b","w4b","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-r","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","f6-shadow","w4-l"],
+    ["w4-b3","w4-1","w4-1","w4-1","w4-1","w4-1","f6-shadow","f6-shadow","w4-1","w4-1","w4-1","w4-1","w4-1","w4-1","w4-b4"]
   ],
   "objects": [
     {
@@ -386,67 +147,47 @@
     },
     {
       "key": "stvoe2",
-      "x": 12,
-      "y": 3
+      "x": 11,
+      "y": 2
     },
     {
       "key": "home-frdige2",
-      "x": 11,
-      "y": 3
+      "x": 13,
+      "y": 2
     },
     {
       "key": "mat3",
-      "x": 10,
-      "y": 7
-    },
-    {
-      "key": "t2-12",
-      "x": 11,
-      "y": 9
-    },
-    {
-      "key": "t2-6",
-      "x": 11,
-      "y": 8
-    },
-    {
-      "key": "t2-11",
-      "x": 11,
-      "y": 8
-    },
-    {
-      "key": "t2-10",
-      "x": 11,
-      "y": 7
+      "x": 3,
+      "y": 3
     },
     {
       "key": "desk2",
-      "x": 1,
-      "y": 3
+      "x": 4,
+      "y": 2
     },
     {
       "key": "pc-2",
-      "x": 1,
-      "y": 3
+      "x": 4,
+      "y": 2
     },
     {
       "key": "bed6",
       "x": 1,
-      "y": 10
+      "y": 2
     },
     {
       "key": "chair2R",
-      "x": 10,
+      "x": 9,
       "y": 8
     },
     {
       "key": "chair2R",
-      "x": 10,
+      "x": 9,
       "y": 7
     },
     {
       "key": "chair2R",
-      "x": 10,
+      "x": 9,
       "y": 6
     },
     {
@@ -473,6 +214,46 @@
       "key": "item-generic",
       "x": 1,
       "y": 6
+    },
+    {
+      "key": "t2-1",
+      "x": 10,
+      "y": 7
+    },
+    {
+      "key": "t2-7",
+      "x": 10,
+      "y": 9
+    },
+    {
+      "key": "t2-4",
+      "x": 10,
+      "y": 8
+    },
+    {
+      "key": "t2-9",
+      "x": 11,
+      "y": 9
+    },
+    {
+      "key": "t2-3",
+      "x": 11,
+      "y": 8
+    },
+    {
+      "key": "t2-6",
+      "x": 11,
+      "y": 8
+    },
+    {
+      "key": "t2-3",
+      "x": 11,
+      "y": 7
+    },
+    {
+      "key": "img5",
+      "x": 6,
+      "y": 1
     }
   ]
 }

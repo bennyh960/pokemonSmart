@@ -1,0 +1,130 @@
+{
+  "id": "route-3-house",
+  "name": "house-small",
+  "template": "house-small",
+  "tileset": "interior",
+  "label": {
+    "he": "בקתת הדייגים",
+    "en": "Fisherman's Cottage"
+  },
+  "area": "Minusburg",
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 6,
+    "y": 13
+  },
+  "npcs": [
+    {
+      "id": "give-fishing-rod",
+      "x": 10,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "הוו שלום לך! האזור שלנו הוא אזור דייג מעולה ! אני אביא לך חכה אם תעמדו במשימה שלי!"
+        }
+      ],
+      "spriteType": "char_8c60a6",
+      "name": {
+        "en": "Bruno",
+        "he": "ברונו הדייג"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "fishing-rod",
+            "quantity": 1
+          },
+          {
+            "itemId": "fishing-bait",
+            "quantity": 10
+          }
+        ]
+      },
+      "interaction": {
+        "kind": "show-types",
+        "types": [
+          "water"
+        ],
+        "count": 1
+      },
+      "questions": {
+        "count": 10,
+        "types": [
+          "+",
+          "-",
+          "×"
+        ]
+      }
+    },
+    {
+      "id": "npc-1777378538710",
+      "x": 10,
+      "y": 4,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "היי אני פה בתור! לא לדחוף!"
+        }
+      ],
+      "spriteType": "char_485c6e",
+      "name": {
+        "en": "Elm",
+        "he": "אלם"
+      },
+      "despawnAfter": "act1-route3-meet-misty"
+    },
+    {
+      "id": "npc-1777378688137",
+      "x": 9,
+      "y": 3,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "היום זה יום המזל שלי! אני אזכה בחכת דייג! רק קודם צריך לפתור את המשימה של הדייג"
+        }
+      ],
+      "spriteType": "char_10af6a",
+      "name": {
+        "en": "Silver",
+        "he": "סילבר"
+      },
+      "despawnAfter": "act1-route3-meet-misty"
+    }
+  ],
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "super-potion",
+        "itemQty": 3
+      },
+      {
+        "itemId": "potion",
+        "itemQty": 6
+      },
+      {
+        "itemId": "poke-ball",
+        "itemQty": 5
+      },
+      {
+        "itemId": "great-ball",
+        "itemQty": 3
+      },
+      {
+        "itemId": "ultra-ball",
+        "itemQty": 1
+      },
+      {
+        "itemId": "pokedex-battery"
+      }
+    ]
+  }
+}

@@ -43,13 +43,14 @@ import {
   type TrainerData,
   type GateGuardData,
   type WildPokemonData,
-  type NpcInteraction,
   checkTrainerLineOfSight,
   normalizeReward,
   resolveDialogue,
   type DialogueReward,
 } from '../systems/npc.js';
 import { getItem } from '../data/items.js';
+import { getTypeName } from '../data/type-constants.js';
+import type { PokemonType } from '../data/type-constants.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
 import {
@@ -153,6 +154,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   // Dialogue state
   let activeTextBox: ReturnType<typeof createTextBox> | null = null;
   let interactingNPC: NPCData | null = null;
+  let pendingDialogueCallback: (() => void) | null = null;
 
   // Choice prompt state
   let choiceState: ChoiceState | null = null;
@@ -582,12 +584,99 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Dialogue / generic NPC
       restoreNPCFacing(npc);
       interactingNPC = null;
+      if (!hasActiveGame()) return;
 
-      // If this NPC has math questions, show them BEFORE giving the reward
       const npcQ = (npc as unknown as Record<string, unknown>).questions as
-        | { count: number; types?: string[] }
+        | { count: number; types?: string[]; repeated?: boolean }
         | undefined;
-      if (npcQ && npcQ.count > 0 && hasActiveGame()) {
+      const rewardedFlag = npc.reward?.flag ?? `npc-${npc.id}-rewarded`;
+      const alreadyRewarded = !!getPlayerData().flags[rewardedFlag];
+
+      // Already rewarded: only re-ask questions if repeated=true, then stop
+      if (alreadyRewarded) {
+        if (npcQ && npcQ.count > 0 && npcQ.repeated) {
+          const appContainer = document.getElementById('app');
+          if (appContainer) {
+            npcOverlayActive = true;
+            const gradeId = gradeFromBirthYear(getPlayerBirthYear());
+            mountInputMathOverlay({
+              count: npcQ.count,
+              types: npcQ.types as SimpleOpType[] | undefined,
+              gradeId,
+              container: appContainer,
+            }).then(() => {
+              npcOverlayActive = false;
+              if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+            });
+            return;
+          }
+        }
+        if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+        return;
+      }
+
+      // Not yet rewarded: run questions (if any), then show interaction request, check condition, reward
+      const resolveInteractionAndReward = () => {
+        if (!npc.interaction) {
+          // No interaction condition — give reward directly
+          giveNPCReward(npc, npc.reward ?? {});
+          if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+          return;
+        }
+
+        // Step A: show the request dialogue for this interaction kind
+        const rtl = isRTL();
+        const npcSpeaker = npc.name ? getLocalizedName(npc.name) : undefined;
+        const interaction = npc.interaction;
+        let requestLine: string;
+        switch (interaction.kind) {
+          case 'show-pokemon': {
+            const names = interaction.pokemonIds.map((id) => getPokemonDisplayName(id)).join(', ');
+            requestLine = t('npc.interaction.showPokemon.request', { names });
+            break;
+          }
+          case 'show-types': {
+            requestLine = t('npc.interaction.showTypes.request', {
+              types: interaction.types.join(', '),
+              count: interaction.count,
+            });
+            break;
+          }
+          case 'swap-pokemon': {
+            requestLine = t('npc.interaction.swap.request', {
+              want: getPokemonDisplayName(interaction.wantsId),
+              offer: getPokemonDisplayName(interaction.offersId),
+            });
+            break;
+          }
+          case 'trade-evolution':
+            requestLine = t('npc.interaction.tradeEvo.request');
+            break;
+        }
+        activeTextBox = createTextBox([requestLine], rtl, npcSpeaker);
+
+        // Step B: after request dismissed → check condition, show success/fail dialogue
+        pendingDialogueCallback = () => {
+          const conditionMet = checkNpcInteraction(npc);
+
+          // Step C: after success/fail dialogue dismissed → give reward (if met)
+          pendingDialogueCallback = () => {
+            if (conditionMet) {
+              giveNPCReward(npc, npc.reward ?? {});
+            }
+            if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+          };
+
+          // trade-evolution success has no dialogue — skip to step C immediately
+          if (!activeTextBox) {
+            const cb = pendingDialogueCallback;
+            pendingDialogueCallback = null;
+            cb();
+          }
+        };
+      };
+
+      if (npcQ && npcQ.count > 0) {
         const appContainer = document.getElementById('app');
         if (appContainer) {
           npcOverlayActive = true;
@@ -599,33 +688,25 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             container: appContainer,
           }).then(() => {
             npcOverlayActive = false;
-            if (npc.reward && hasActiveGame() && !npc.interaction) {
-              giveNPCReward(npc, npc.reward);
-            }
-            handleNpcInteraction(npc);
-            if (hasActiveGame()) {
-              fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
-            }
+            resolveInteractionAndReward();
           });
           return;
         }
       }
 
-      if (npc.reward && hasActiveGame() && !npc.interaction) {
-        giveNPCReward(npc, npc.reward);
-      }
-      handleNpcInteraction(npc);
-      // Fire npc-interact story trigger so story events can react to this NPC being talked to
-      if (hasActiveGame()) {
-        fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
-      }
+      resolveInteractionAndReward();
     }
   }
 
-  /** Handle special NPC interaction after dialogue is dismissed. */
-  function handleNpcInteraction(npc: NPCData): void {
-    const interaction = (npc as unknown as { interaction?: NpcInteraction }).interaction;
-    if (!interaction || !hasActiveGame()) return;
+  /**
+   * Check if the NPC's interaction condition is met.
+   * Shows the appropriate success/failure dialogue.
+   * Returns true if the condition is met (caller should give reward), false otherwise.
+   * Returns true when no interaction is defined.
+   */
+  function checkNpcInteraction(npc: NPCData): boolean {
+    const interaction = npc.interaction;
+    if (!interaction || !hasActiveGame()) return true;
 
     const pd = getPlayerData();
     const party = pd.party;
@@ -633,34 +714,34 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     switch (interaction.kind) {
       case 'show-pokemon': {
-        const flagKey = `npc-${npc.id}-show-pokemon-done`;
-        if (pd.flags[flagKey]) return;
         const missing = interaction.pokemonIds.filter((id) => !party.some((p) => p.id === id));
-        if (missing.length === 0) {
-          giveNPCReward(npc, { ...(npc.reward ?? {}), flag: flagKey });
-        } else {
+        if (missing.length > 0) {
           const missingNames = missing.map((id) => getPokemonDisplayName(id)).join(', ');
           activeTextBox = createTextBox([t('npc.interaction.showPokemon.missing', { names: missingNames })], rtl);
+          return false;
         }
-        break;
+        const presentNames = interaction.pokemonIds.map((id) => getPokemonDisplayName(id)).join(', ');
+        activeTextBox = createTextBox([t('npc.interaction.showPokemon.success', { names: presentNames })], rtl);
+        return true;
       }
       case 'show-types': {
-        const flagKey = `npc-${npc.id}-show-types-done`;
-        if (pd.flags[flagKey]) return;
         const matchCount = party.filter((p) => {
           const data = getPokemon(p.id);
           return data && data.types.some((type) => interaction.types.includes(type));
         }).length;
-        if (matchCount >= interaction.count) {
-          giveNPCReward(npc, { ...(npc.reward ?? {}), flag: flagKey });
-        } else {
-          const typesStr = interaction.types.join(', ');
+        const typesStr = interaction.types.join(', ');
+        if (matchCount < interaction.count) {
           activeTextBox = createTextBox(
             [t('npc.interaction.showTypes.missing', { count: interaction.count, types: typesStr, has: matchCount })],
             rtl,
           );
+          return false;
         }
-        break;
+        activeTextBox = createTextBox(
+          [t('npc.interaction.showTypes.success', { count: interaction.count, types: typesStr, has: matchCount })],
+          rtl,
+        );
+        return true;
       }
       case 'trade-evolution': {
         for (const pokemon of party) {
@@ -668,36 +749,32 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (evo && evo.trigger === 'trade') {
             setEvolutionData(pokemon, evo);
             stateMachine.push('EVOLUTION');
-            return;
+            return true;
           }
         }
         activeTextBox = createTextBox([t('npc.interaction.tradeEvo.nothing')], rtl);
-        break;
+        return false;
       }
       case 'swap-pokemon': {
-        const flagKey = `npc-${npc.id}-swap-done`;
-        if (pd.flags[flagKey]) return;
         const partyIdx = party.findIndex((p) => p.id === interaction.wantsId);
-        if (partyIdx >= 0) {
-          const givenName = getPokemonDisplayName(party[partyIdx].id);
-          party.splice(partyIdx, 1);
-          const offerData = getPokemon(interaction.offersId);
-          if (offerData) {
-            const newPokemon = createPokemonFromData(offerData, interaction.level);
-            party.push(newPokemon);
-            const receivedName = getPokemonDisplayName(interaction.offersId);
-            setFlag(pd, flagKey);
-            autoSave();
-            activeTextBox = createTextBox(
-              [t('npc.interaction.swap.done', { given: givenName, received: receivedName })],
-              rtl,
-            );
-          }
-        } else {
+        if (partyIdx < 0) {
           const wantedName = getPokemonDisplayName(interaction.wantsId);
           activeTextBox = createTextBox([t('npc.interaction.swap.missing', { name: wantedName })], rtl);
+          return false;
         }
-        break;
+        const givenName = getPokemonDisplayName(party[partyIdx].id);
+        party.splice(partyIdx, 1);
+        const offerData = getPokemon(interaction.offersId);
+        if (offerData) {
+          const newPokemon = createPokemonFromData(offerData, interaction.level);
+          party.push(newPokemon);
+          const receivedName = getPokemonDisplayName(interaction.offersId);
+          activeTextBox = createTextBox(
+            [t('npc.interaction.swap.done', { given: givenName, received: receivedName })],
+            rtl,
+          );
+        }
+        return true;
       }
     }
   }
@@ -1486,6 +1563,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const action = pendingHMAction;
             pendingHMAction = null;
             action();
+          } else if (pendingDialogueCallback) {
+            const cb = pendingDialogueCallback;
+            pendingDialogueCallback = null;
+            cb();
           } else if (interactingNPC) {
             onDialogueEnd();
           }

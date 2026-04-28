@@ -257,7 +257,9 @@ export class GateSession {
 
   private _bonusGradeId(): ReturnType<typeof getClassConfig>['id'] {
     const gradeNum = Number(this.gradeId.replace('grade', ''));
-    const bonusNum = Math.min(6, gradeNum + 1);
+    // Randomly boost by 1 or 2 grades — grade+2 is harder (true bonus challenge)
+    const boost = Math.random() < 0.5 ? 1 : 2;
+    const bonusNum = Math.min(6, gradeNum + boost);
     return `grade${bonusNum}` as ReturnType<typeof getClassConfig>['id'];
   }
 }

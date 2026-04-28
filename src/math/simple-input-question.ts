@@ -64,13 +64,30 @@ export function generateSimpleInputQuestion(
   const { min, max } = cfg.numberRange;
   const allowNegative = cfg.allowNegative;
 
+  // ×100-family bases: reinforces important fact families (20×5=100, 25×4=100, etc.)
+  // For grade 2-4, the first operand is biased toward these values 30% of the time
+  // when the first operator will be ×, so these key products appear more often.
+  const X100_BASES = [2, 4, 5, 10, 20, 25].filter(v => v >= min && v <= max);
+
   for (let attempt = 0; attempt < 80; attempt++) {
     const operators: SimpleOpType[] = Array.from(
       { length: termCount - 1 },
       () => validOps[Math.floor(Math.random() * validOps.length)],
     );
 
-    const operands: number[] = [randInt(min, max)];
+    // ×100-family bias: for grade 2-4, 30% of the time force the first operand
+    // to be a ×100-family base when the first operator is ×.
+    let firstOperand = randInt(min, max);
+    if (
+      gradeNum >= 2 && gradeNum <= 4 &&
+      operators[0] === '×' &&
+      X100_BASES.length > 0 &&
+      Math.random() < 0.30
+    ) {
+      firstOperand = X100_BASES[Math.floor(Math.random() * X100_BASES.length)];
+    }
+
+    const operands: number[] = [firstOperand];
     let current = operands[0];
     let valid = true;
 
@@ -97,7 +114,19 @@ export function generateSimpleInputQuestion(
         // Keep the multiplier small so the result stays in a reasonable range
         const mulMax = Math.min(12, Math.floor(max / Math.max(current, 1)));
         if (mulMax < 2) { valid = false; break; }
-        rhs = randInt(2, mulMax);
+        // If current is a ×100-family base, complete the pair (e.g. 5 → ×20 = 100)
+        const x100Partner = 100 / current;
+        if (
+          Number.isInteger(x100Partner) &&
+          x100Partner >= 2 &&
+          x100Partner <= mulMax &&
+          X100_BASES.includes(current) &&
+          Math.random() < 0.50
+        ) {
+          rhs = x100Partner;
+        } else {
+          rhs = randInt(2, mulMax);
+        }
       } else if (op === '-') {
         // Avoid negatives unless the grade allows them
         const subMax = allowNegative ? max : current - 1;

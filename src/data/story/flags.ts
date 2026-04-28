@@ -65,6 +65,8 @@
  *               so the item never reappears. Use interactArgs.flag in the map
  *               editor for a readable key; otherwise the auto-key is used.
  *
+ * NPC give reward => npc-{npc-id}-rewarded
+ *
  * 6. Cut tree cleared
  *      Key:     cut-${x}-${y}
  *      Example: cut-14-3
@@ -181,6 +183,9 @@ export const FLAGS = {
   ROCKET_MINUSBURG_ALL_DEFEATED: 'rocket-minusburg-all-defeated', // All 10 Rocket grunts driven out
   ACT1_COLLECT_DOCS_FROM_BEN: 'act1-collect-docs-from-ben', // Player collected Prof. Elm's documents from Ben in Minusburg
   ACT1_BRING_DOCUMENTS_TO_ALGORITHMA: 'act1-bring-documents-to-algorithma', // Player brought Prof. Elm's documents to Prof. Algorithma in Sumville
+
+  // ── Act 1: Route 3 ─────────────────────────────────────────────────────────
+  ACT1_ROUTE3_MEET_MISTY: 'act1-route3-meet-misty', // First encounter with Misty on Route 3
 
   // ── Act 2: Multiplia ────────────────────────────────────────────────────────
   VISITED_ROUTE3: 'visited-route3',

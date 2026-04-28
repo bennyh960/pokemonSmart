@@ -96,6 +96,11 @@ export interface NPCQuestionsConfig {
    * Example: ['+', '-'] restricts to addition and subtraction only.
    */
   types?: string[]; // SimpleOpType values: '+' | '-' | '×' | '÷'
+  /**
+   * Whether to re-ask questions on every interaction.
+   * Default false — questions are skipped once the NPC's reward has been given.
+   */
+  repeated?: boolean;
 }
 
 /** NPC data as stored in map JSON. */
