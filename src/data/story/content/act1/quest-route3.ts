@@ -64,41 +64,89 @@ registerCutscene({
         { en: '', he: 'אולי הגיע הזמן לקרב נוסף ביננו' },
       ],
     },
+
+    // Spawn Jenny and Misty, then walk them in from the left simultaneously
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_ROUTE_3_MISTY_JENNI_ARRIVED } },
     {
-      type: 'dialogue',
-      speakerId: "Officer Jenni/ג'ני השוטרת",
-      lines: [
-        { en: '', he: "שלום ילדים! אני השוטרת ג'ני מהעיר מולטיפילה" },
-        { he: 'הגיעו דיווחים לאזור על פוקימונים שמתנהגים מוזר - אם תשמעו על זה משהו תודיעו למשטרה תכף ומיד', en: '' },
-      ],
+      type: 'move-npc',
+      npcId: 'misty-route-4',
+      path: ['up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'right', 'right', 'right', 'right', 'right', 'right'],
+      waitForComplete: true,
     },
-    { type: 'face-npc', npcId: 'officer-jenny-route-4', dir: 'down' },
     {
       type: 'dialogue',
       speakerId: 'Misty/מיסטי',
       lines: [
         { he: 'היי , אני רואה שהצלחת להשיג חכה! מקווה שיהיה איתה דייג נפלא', en: '' },
-        { en: '', he: 'אבל כפי שהשוטרת גני אמרה - צריך לנקוט משנה זהירות , נתקלתי בפוקימונים פראיים מוזרים במיוחד' },
+        {
+          he: 'משהו מוזר קורה כאן - נתקלתי בפוקימוני פרא פראיים במיוחד , הם זזו בצורה מוזרה וגם היו ממש אגרסיביים',
+          en: '',
+        },
         {
           he: 'זה קרה ממש בשעה שסיימתי את הדיג שלי , הפוקימונים התנהגו מוזר מאוד , הם גם היו מופרעים מאוד וניסו לתקוף אותי',
           en: '',
         },
         {
           en: '',
-          he: 'בהצלחה בהמשך המסע - אני בטוחה שהכל יהיה בסדר! אולי עוד ניפגש ... להתראות',
+          he: 'אני חייבת להגיע למרכז הפוקימונים הקרוב להתאוששות , מקווה ניפגש שוב',
         },
+      ],
+    },
+    {
+      type: 'move-npc',
+      npcId: 'misty-route-4',
+      path: ['right', 'right', 'right', 'right', 'right', 'right'],
+      waitForComplete: false,
+    },
+    {
+      type: 'move-npc',
+      npcId: 'officer-jenny-route-4',
+      path: ['up', 'up', 'up', 'up', 'up', 'up', 'up', 'right', 'right', 'right', 'right'],
+      waitForComplete: false,
+    },
+
+    {
+      type: 'dialogue',
+      speakerId: "Officer Jenni/ג'ני השוטרת",
+      lines: [
+        { he: 'עצרו רגע...', en: '' },
+        { en: '', he: "שלום ! אני השוטרת ג'ני מהעיר מולטיפילה" },
+        { he: 'הגיעו דיווחים לאזור על פוקימונים שמתנהגים מוזר - אם תשמעו על זה משהו תודיעו למשטרה תכף ומיד', en: '' },
       ],
     },
 
     {
       type: 'dialogue',
-      speakerId: 'Reminder/ריי מיינדר',
+      speakerId: 'אני/Player',
       lines: [
-        { he: 'אוקיי - אנחנו נחקור את העניין ונדווח ', en: '' },
+        { he: 'אוקיי - אנחנו נהיה זהירים ונדווח אם נראה משהו חריג', en: '' },
         { en: '', he: 'תודה על המידע - להתראות!' },
       ],
     },
+
+    // Walk Jenny and Misty off-screen to the left simultaneously, then set the flag
+    {
+      type: 'move-npc',
+      npcId: 'officer-jenny-route-4',
+      path: [
+        'left',
+        'left',
+        'left',
+        'left',
+        'left',
+        'left',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+      ],
+      waitForComplete: false,
+    },
+
     {
       type: 'dialogue',
       speakerId: 'Reminder/ריי מיינדר',

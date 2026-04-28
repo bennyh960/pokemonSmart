@@ -163,8 +163,8 @@
     },
     {
       "id": "officer-jenny-route-4",
-      "x": 71,
-      "y": 10,
+      "x": 67,
+      "y": 3,
       "facing": "right",
       "type": "dialogue",
       "dialogue": [
@@ -179,8 +179,8 @@
     },
     {
       "id": "misty-route-4",
-      "x": 71,
-      "y": 11,
+      "x": 66,
+      "y": 3,
       "facing": "right",
       "type": "dialogue",
       "dialogue": [

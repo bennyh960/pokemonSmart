@@ -1458,8 +1458,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         // The main NPC update loop is skipped during cutscenes, so we run only
         // the walk-progress and cutscene-path-queue parts here.
         if (npcManager) {
+          const _csFlags = hasActiveGame() ? getPlayerData().flags : {};
+          const _csParty = hasActiveGame() ? getPlayerData().party : undefined;
           for (const npc of npcManager.getNPCs()) {
             const st = getNpcState(npc);
+            // Track when an NPC becomes visible during a cutscene (flag set via
+            // action step). Without this, wasPreviouslyVisible stays false, so
+            // the main loop never detects the visible→invisible transition when
+            // the cutscene ends, and beforeDespawnPattern never fires.
+            if (!st.wasPreviouslyVisible && isNPCVisible(npc, _csFlags, _csParty)) {
+              st.wasPreviouslyVisible = true;
+            }
             if (!st.cutsceneWalking && !st.moving) continue;
             if (st.moving) {
               st.moveProgress += dt / MOVE_DURATION;
