@@ -1,0 +1,16 @@
+{
+  "image": "/sprites/overworld/caves-tileset.png",
+  "tiles": [
+    {
+      "key": "www",
+      "sx": 64,
+      "sy": 32,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "water",
+      "description": "sad"
+    }
+  ]
+}

@@ -12,7 +12,7 @@ import './style.css';
  *   2. Add a case in loadTilesetManifest below
  *   3. Create src/data/tilesets/<name>.json with an `image` field pointing to the PNG
  */
-export const TILESET_NAMES = ['overworld', 'interior'] as const;
+export const TILESET_NAMES = ['overworld', 'interior', 'caves'] as const;
 export type TilesetName = (typeof TILESET_NAMES)[number];
 
 /** Vite-friendly static imports — Vite requires literal import() paths at build time. */
@@ -22,6 +22,8 @@ async function loadTilesetManifest(name: string): Promise<Record<string, unknown
       return (await import('../data/tilesets/overworld.json')) as unknown as Record<string, unknown>;
     case 'interior':
       return (await import('../data/tilesets/interior.json')) as unknown as Record<string, unknown>;
+    case 'caves':
+      return (await import('../data/tilesets/caves.json')) as unknown as Record<string, unknown>;
     default:
       throw new Error(`Unknown tileset: ${name}`);
   }

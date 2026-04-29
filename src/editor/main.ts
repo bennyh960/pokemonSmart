@@ -5,7 +5,15 @@ import { CanvasViewport } from './canvas-viewport.js';
 import { TilePalette, categorizeTiles } from './tile-palette.js';
 import { Toolbar } from './toolbar.js';
 import { PropertiesPanel } from './properties-panel.js';
-import { createBlankMap, saveMapWithType, loadMapFromProject, loadTemplateFromProject, loadMapRaw, getTemplateConsumers, getKnownMapIds } from './map-io.js';
+import {
+  createBlankMap,
+  saveMapWithType,
+  loadMapFromProject,
+  loadTemplateFromProject,
+  loadMapRaw,
+  getTemplateConsumers,
+  getKnownMapIds,
+} from './map-io.js';
 import type { EditorMode } from './toolbar.js';
 import { mapRelationIndex } from './map-relation-index.js';
 import { RegionMapOverlay } from './region-map.js';
@@ -17,9 +25,14 @@ import './style.css';
 /** Vite-friendly static imports for each known tileset manifest. */
 async function loadTilesetManifest(name: string): Promise<Record<string, unknown>> {
   switch (name) {
-    case 'overworld': return (await import('../data/tilesets/overworld.json')) as unknown as Record<string, unknown>;
-    case 'interior':  return (await import('../data/tilesets/interior.json')) as unknown as Record<string, unknown>;
-    default: throw new Error(`Unknown tileset: ${name}`);
+    case 'overworld':
+      return (await import('../data/tilesets/overworld.json')) as unknown as Record<string, unknown>;
+    case 'interior':
+      return (await import('../data/tilesets/interior.json')) as unknown as Record<string, unknown>;
+    case 'caves':
+      return (await import('../data/tilesets/caves.json')) as unknown as Record<string, unknown>;
+    default:
+      throw new Error(`Unknown tileset: ${name}`);
   }
 }
 
@@ -39,13 +52,38 @@ function parseManifestTiles(manifest: Record<string, unknown>): Record<string, T
     for (const raw of rawTiles as Array<Record<string, unknown>>) {
       const size = (raw.tileSize as number) ?? 16;
       const iRef = toInteractRef(raw.interactType, raw.destroy);
-      tiles[raw.key as string] = { sx: raw.sx as number, sy: raw.sy as number, w: (raw.w as number) ?? size, h: (raw.h as number) ?? size, walkable: raw.walkable as boolean, encounterTypes: (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined), above: (raw.above as boolean) ?? false, overlay: (raw.overlay as boolean) ?? false, category: (raw.category as string) ?? (iRef ? 'interactive' : undefined), interactType: iRef, cells: raw.cells as TileDef['cells'] };
+      tiles[raw.key as string] = {
+        sx: raw.sx as number,
+        sy: raw.sy as number,
+        w: (raw.w as number) ?? size,
+        h: (raw.h as number) ?? size,
+        walkable: raw.walkable as boolean,
+        encounterTypes:
+          (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined),
+        above: (raw.above as boolean) ?? false,
+        overlay: (raw.overlay as boolean) ?? false,
+        category: (raw.category as string) ?? (iRef ? 'interactive' : undefined),
+        interactType: iRef,
+        cells: raw.cells as TileDef['cells'],
+      };
     }
   } else if (rawTiles && typeof rawTiles === 'object') {
     const baseTileSize = (manifest.tileSize as number) ?? 16;
     for (const [id, raw] of Object.entries(rawTiles as Record<string, Record<string, unknown>>)) {
       const iRef = toInteractRef(raw.interactType, raw.destroy);
-      tiles[id] = { sx: raw.sx as number, sy: raw.sy as number, w: (raw.w as number) ?? baseTileSize, h: (raw.h as number) ?? baseTileSize, walkable: raw.walkable as boolean, encounterTypes: (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined), above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false, overlay: (raw.overlay as boolean) ?? false, category: (raw.category as string) ?? (iRef ? 'interactive' : undefined), interactType: iRef };
+      tiles[id] = {
+        sx: raw.sx as number,
+        sy: raw.sy as number,
+        w: (raw.w as number) ?? baseTileSize,
+        h: (raw.h as number) ?? baseTileSize,
+        walkable: raw.walkable as boolean,
+        encounterTypes:
+          (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined),
+        above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false,
+        overlay: (raw.overlay as boolean) ?? false,
+        category: (raw.category as string) ?? (iRef ? 'interactive' : undefined),
+        interactType: iRef,
+      };
     }
   }
   return tiles;
@@ -111,7 +149,14 @@ async function init() {
   // Declared early so switchTileset closure can reference it; assigned below after toolbar is built
   let tilesetSelector: HTMLSelectElement;
 
-  const palette = new TilePalette(paletteEl, state, initialManifest.image as string, tiles, tilesetImage.naturalWidth, tilesetImage);
+  const palette = new TilePalette(
+    paletteEl,
+    state,
+    initialManifest.image as string,
+    tiles,
+    tilesetImage.naturalWidth,
+    tilesetImage,
+  );
   const viewport = new CanvasViewport(canvasEl, state, tilesetImage, new Map(Object.entries(tiles)), toolSystem);
 
   // ── Palette lock overlay (shown when map uses a template) ──
@@ -119,11 +164,18 @@ async function init() {
   const paletteLock = document.createElement('div');
   paletteLock.id = 'palette-lock';
   paletteLock.style.cssText = [
-    'display:none', 'position:absolute', 'inset:0',
-    'background:rgba(10,10,20,0.90)', 'color:#ccc',
-    'z-index:10', 'flex-direction:column',
-    'align-items:center', 'justify-content:center',
-    'text-align:center', 'padding:24px', 'gap:10px',
+    'display:none',
+    'position:absolute',
+    'inset:0',
+    'background:rgba(10,10,20,0.90)',
+    'color:#ccc',
+    'z-index:10',
+    'flex-direction:column',
+    'align-items:center',
+    'justify-content:center',
+    'text-align:center',
+    'padding:24px',
+    'gap:10px',
   ].join(';');
   paletteEl.appendChild(paletteLock);
 
@@ -194,8 +246,13 @@ async function init() {
   const templatePanel = document.createElement('div');
   templatePanel.id = 'template-panel';
   templatePanel.style.cssText = [
-    'display:none', 'flex-shrink:0', 'max-height:55%', 'overflow-y:auto',
-    'padding:12px', 'font-size:12px', 'border-bottom:2px solid #3a3a66',
+    'display:none',
+    'flex-shrink:0',
+    'max-height:55%',
+    'overflow-y:auto',
+    'padding:12px',
+    'font-size:12px',
+    'border-bottom:2px solid #3a3a66',
   ].join(';');
   propsEl.appendChild(templatePanel);
 
@@ -206,7 +263,7 @@ async function init() {
   function renderTemplatePanel() {
     const templateId = state.mapData.id || '';
     const consumers = getTemplateConsumers(templateId);
-    const allMaps = getKnownMapIds().filter(id => !consumers.includes(id));
+    const allMaps = getKnownMapIds().filter((id) => !consumers.includes(id));
 
     templatePanel.innerHTML = `
       <div style="font-weight:bold;font-size:13px;margin-bottom:4px;color:#aac">
@@ -215,21 +272,27 @@ async function init() {
       <div style="color:#666;margin-bottom:12px">${consumers.length} connected map${consumers.length !== 1 ? 's' : ''}</div>
 
       <div id="tp-list">
-        ${consumers.length === 0
-          ? '<div style="color:#555;font-style:italic">No maps connected yet</div>'
-          : consumers.map(mapId => `
+        ${
+          consumers.length === 0
+            ? '<div style="color:#555;font-style:italic">No maps connected yet</div>'
+            : consumers
+                .map(
+                  (mapId) => `
               <div style="display:flex;align-items:center;gap:4px;margin-bottom:6px;padding:6px 8px;background:#252540;border-radius:4px;">
                 <span style="flex:1;font-family:monospace;color:#ccc">${mapId}</span>
                 <button class="tp-open" data-map="${mapId}" style="background:#2a3a66;color:#aac;border:1px solid #445;border-radius:3px;padding:2px 8px;cursor:pointer;font-size:11px">Open</button>
                 <button class="tp-unlink" data-map="${mapId}" style="background:#4a1a1a;color:#faa;border:1px solid #622;border-radius:3px;padding:2px 8px;cursor:pointer;font-size:11px">Unlink</button>
-              </div>`).join('')}
+              </div>`,
+                )
+                .join('')
+        }
       </div>
 
       <div style="margin-top:16px;border-top:1px solid #2a2a44;padding-top:12px;">
         <div style="color:#888;margin-bottom:6px">Connect a map to this template:</div>
         <select id="tp-connect-sel" style="width:100%;background:#252540;color:#ccc;border:1px solid #444;border-radius:4px;padding:4px;margin-bottom:6px;">
           <option value="">Choose map...</option>
-          ${allMaps.map(id => `<option value="${id}">${id}</option>`).join('')}
+          ${allMaps.map((id) => `<option value="${id}">${id}</option>`).join('')}
         </select>
         <button id="tp-connect-btn" style="width:100%;background:#1a3a1a;color:#afa;border:1px solid #262;border-radius:4px;padding:6px;cursor:pointer;">
           Link map to this template
@@ -243,7 +306,7 @@ async function init() {
       </div>
     `;
 
-    templatePanel.querySelectorAll('.tp-open').forEach(btn => {
+    templatePanel.querySelectorAll('.tp-open').forEach((btn) => {
       btn.addEventListener('click', async () => {
         // Switch to map mode first, then navigate
         toolbarEl.querySelector<HTMLElement>('.mode-btn[data-mode="map"]')?.click();
@@ -251,7 +314,7 @@ async function init() {
       });
     });
 
-    templatePanel.querySelectorAll('.tp-unlink').forEach(btn => {
+    templatePanel.querySelectorAll('.tp-unlink').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const mapId = (btn as HTMLElement).dataset.map!;
         if (!confirm(`Unlink "${mapId}" from this template?\n\nThe map will get its own copy of the tiles.`)) return;
@@ -261,7 +324,10 @@ async function init() {
           delete (merged as unknown as Record<string, unknown>).template;
           await saveMapWithType(merged, 'map');
           renderTemplatePanel(); // refresh list
-        } catch (err) { console.error('Unlink failed:', err); alert('Unlink failed — check console.'); }
+        } catch (err) {
+          console.error('Unlink failed:', err);
+          alert('Unlink failed — check console.');
+        }
       });
     });
 
@@ -269,14 +335,14 @@ async function init() {
       const sel = templatePanel.querySelector('#tp-connect-sel') as HTMLSelectElement;
       if (!sel.value) return;
       try {
-        const raw = await loadMapRaw(sel.value) as unknown as Record<string, unknown>;
+        const raw = (await loadMapRaw(sel.value)) as unknown as Record<string, unknown>;
         const templateTileset = state.mapData.tileset ?? 'overworld';
         const mapTileset = raw.tileset as string | undefined;
 
         if (mapTileset && mapTileset !== templateTileset) {
           const ok = confirm(
             `This map uses tileset "${mapTileset}" but the template uses "${templateTileset}".\n\n` +
-            `The map's tileset will be changed to "${templateTileset}". Proceed?`
+              `The map's tileset will be changed to "${templateTileset}". Proceed?`,
           );
           if (!ok) return;
         }
@@ -290,7 +356,10 @@ async function init() {
         raw.tileset = templateTileset;
         await saveMapWithType(raw as unknown as import('./types.js').TileMapData, 'map');
         renderTemplatePanel(); // refresh list
-      } catch (err) { console.error('Connect failed:', err); alert('Connect failed — check console.'); }
+      } catch (err) {
+        console.error('Connect failed:', err);
+        alert('Connect failed — check console.');
+      }
     });
 
     templatePanel.querySelector('#tp-save-btn')!.addEventListener('click', () => doSave());
@@ -366,7 +435,7 @@ async function init() {
   tilesetSelector.id = 'sel-tileset';
   tilesetSelector.title = 'Active Tileset';
   tilesetSelector.style.cssText = 'margin-left:8px;';
-  for (const name of ['overworld', 'interior']) {
+  for (const name of ['overworld', 'interior', 'caves']) {
     const opt = document.createElement('option');
     opt.value = name;
     opt.textContent = name;
@@ -395,7 +464,7 @@ async function init() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const npcTool = toolSystem.getTool('npc') as any;
   npcTool.onOpenDialog = (gx: number, gy: number) => {
-    const existing = state.mapData.npcs?.find(n => n.x === gx && n.y === gy);
+    const existing = state.mapData.npcs?.find((n) => n.x === gx && n.y === gy);
     if (existing) {
       state.selectNpc(existing.id);
       return;
@@ -421,7 +490,7 @@ async function init() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transTool = toolSystem.getTool('transition') as any;
   transTool.onOpenDialog = (gx: number, gy: number) => {
-    const existingIdx = state.mapData.transitions?.findIndex(t => t.fromX === gx && t.fromY === gy) ?? -1;
+    const existingIdx = state.mapData.transitions?.findIndex((t) => t.fromX === gx && t.fromY === gy) ?? -1;
     if (existingIdx >= 0) {
       state.selectTransition(existingIdx);
       return;
@@ -448,16 +517,24 @@ async function init() {
     const tile = state.activeLayer === 'ground' ? state.getGroundTile(gx, gy) : state.getObjectTile(gx, gy);
     statusTile.textContent = `Tile: ${tile ?? 'none'}`;
   });
-  state.on('layer-changed', () => { statusLayer.textContent = `Layer: ${state.activeLayer}`; });
-  state.on('tool-changed', () => { statusTool.textContent = `Tool: ${state.activeTool}`; });
+  state.on('layer-changed', () => {
+    statusLayer.textContent = `Layer: ${state.activeLayer}`;
+  });
+  state.on('tool-changed', () => {
+    statusTool.textContent = `Tool: ${state.activeTool}`;
+  });
   function formatStatusMap(modified = false): string {
     const md = state.mapData;
     const displayName = md.label?.en || md.id;
     const tmpl = md.template ? `  [tmpl: ${md.template}]` : '';
     return `${md.id} (${md.width}×${md.height})${displayName !== md.id ? ` · ${displayName}` : ''}${tmpl}${modified ? ' *' : ''}`;
   }
-  state.on('map-loaded',   () => { statusMap.textContent = formatStatusMap(false); });
-  state.on('map-modified', () => { statusMap.textContent = formatStatusMap(true); });
+  state.on('map-loaded', () => {
+    statusMap.textContent = formatStatusMap(false);
+  });
+  state.on('map-modified', () => {
+    statusMap.textContent = formatStatusMap(true);
+  });
 
   // 10. Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
@@ -466,29 +543,62 @@ async function init() {
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
 
     if (e.ctrlKey || e.metaKey) {
-      if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); history.undo(); }
-      else if ((e.key === 'z' && e.shiftKey) || e.key === 'y') { e.preventDefault(); history.redo(); }
-      else if (e.key === 's') { e.preventDefault(); void doSave(); }
-      else if (e.key === 'g') { e.preventDefault(); state.showGrid = !state.showGrid; state.emit('viewport-changed'); }
+      if (e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        history.undo();
+      } else if ((e.key === 'z' && e.shiftKey) || e.key === 'y') {
+        e.preventDefault();
+        history.redo();
+      } else if (e.key === 's') {
+        e.preventDefault();
+        void doSave();
+      } else if (e.key === 'g') {
+        e.preventDefault();
+        state.showGrid = !state.showGrid;
+        state.emit('viewport-changed');
+      }
       return;
     }
 
     switch (e.key.toLowerCase()) {
-      case 'b': state.setTool('paint'); break;
-      case 'e': state.setTool('erase'); break;
-      case 'g': state.setTool('fill'); break;
-      case 'i': state.setTool('eyedropper'); break;
-      case 's': state.setTool('select'); break;
-      case 'n': state.setTool('npc'); break;
-      case 't': state.setTool('transition'); break;
-      case '1': state.setLayer('ground'); break;
-      case '2': state.setLayer('object'); break;
-      case '=': case '+': state.setZoom(state.zoom + 0.5); break;
-      case '-': state.setZoom(state.zoom - 0.5); break;
+      case 'b':
+        state.setTool('paint');
+        break;
+      case 'e':
+        state.setTool('erase');
+        break;
+      case 'g':
+        state.setTool('fill');
+        break;
+      case 'i':
+        state.setTool('eyedropper');
+        break;
+      case 's':
+        state.setTool('select');
+        break;
+      case 'n':
+        state.setTool('npc');
+        break;
+      case 't':
+        state.setTool('transition');
+        break;
+      case '1':
+        state.setLayer('ground');
+        break;
+      case '2':
+        state.setLayer('object');
+        break;
+      case '=':
+      case '+':
+        state.setZoom(state.zoom + 0.5);
+        break;
+      case '-':
+        state.setZoom(state.zoom - 0.5);
+        break;
       case 'delete': {
         if (state.selectedNpcId) {
           const npcs = state.mapData.npcs || [];
-          const idx = npcs.findIndex(n => n.id === state.selectedNpcId);
+          const idx = npcs.findIndex((n) => n.id === state.selectedNpcId);
           if (idx >= 0) npcs.splice(idx, 1);
           state.selectNpc(null);
           state.emit('map-modified');
@@ -499,10 +609,18 @@ async function init() {
         }
         break;
       }
-      case 'arrowleft': state.setScroll(state.scrollX - 16 * state.zoom, state.scrollY); break;
-      case 'arrowright': state.setScroll(state.scrollX + 16 * state.zoom, state.scrollY); break;
-      case 'arrowup': state.setScroll(state.scrollX, state.scrollY - 16 * state.zoom); break;
-      case 'arrowdown': state.setScroll(state.scrollX, state.scrollY + 16 * state.zoom); break;
+      case 'arrowleft':
+        state.setScroll(state.scrollX - 16 * state.zoom, state.scrollY);
+        break;
+      case 'arrowright':
+        state.setScroll(state.scrollX + 16 * state.zoom, state.scrollY);
+        break;
+      case 'arrowup':
+        state.setScroll(state.scrollX, state.scrollY - 16 * state.zoom);
+        break;
+      case 'arrowdown':
+        state.setScroll(state.scrollX, state.scrollY + 16 * state.zoom);
+        break;
     }
   });
 }
