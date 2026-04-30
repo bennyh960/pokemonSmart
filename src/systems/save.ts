@@ -11,9 +11,84 @@ import { getDefaultHeroCharacterId, hasCharacter } from '../engine/character-spr
 import { ensurePersistentBattleFields } from './battle-state.js';
 
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
+const SLOT_INDEX_KEY = 'pokemon-math-adventure-slots-index';
+
+export const MAX_SAVE_SLOTS = 10;
+
+export interface SaveSlotMeta {
+  slot: number;
+  playerName: string;
+  heroCharacterId: string;
+  firstPokemonId: number | null;
+  savedAt: string;
+}
+
+export function getSlotIndex(): SaveSlotMeta[] {
+  const raw = localStorage.getItem(SLOT_INDEX_KEY);
+  if (raw) {
+    try { return JSON.parse(raw) as SaveSlotMeta[]; } catch { return []; }
+  }
+  // Migrate pre-index saves: if slot 0 exists, seed the index from it
+  const slot0Raw = localStorage.getItem(`${SAVE_KEY_PREFIX}0`);
+  if (slot0Raw) {
+    try {
+      const data = JSON.parse(slot0Raw);
+      const meta: SaveSlotMeta = {
+        slot: 0,
+        playerName: data.name ?? 'Player',
+        heroCharacterId: data.heroCharacterId ?? 'dani',
+        firstPokemonId: data.party?.[0]?.id ?? null,
+        savedAt: new Date().toISOString(),
+      };
+      const index = [meta];
+      localStorage.setItem(SLOT_INDEX_KEY, JSON.stringify(index));
+      return index;
+    } catch { return []; }
+  }
+  return [];
+}
+
+function persistSlotIndex(index: SaveSlotMeta[]): void {
+  localStorage.setItem(SLOT_INDEX_KEY, JSON.stringify(index));
+}
+
+function upsertSlotMeta(slot: number, data: PlayerData): void {
+  const index = getSlotIndex();
+  const meta: SaveSlotMeta = {
+    slot,
+    playerName: data.name,
+    heroCharacterId: data.heroCharacterId,
+    firstPokemonId: data.party[0]?.id ?? null,
+    savedAt: new Date().toISOString(),
+  };
+  const i = index.findIndex(m => m.slot === slot);
+  if (i >= 0) index[i] = meta;
+  else index.push(meta);
+  persistSlotIndex(index);
+}
+
+function removeSlotMeta(slot: number): void {
+  persistSlotIndex(getSlotIndex().filter(m => m.slot !== slot));
+}
+
+export function findFreeSlot(): number | null {
+  const used = new Set(getSlotIndex().map(m => m.slot));
+  for (let i = 0; i < MAX_SAVE_SLOTS; i++) {
+    if (!used.has(i)) return i;
+  }
+  return null;
+}
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 13;
+export const CURRENT_SAVE_VERSION = 15;
+
+function gaussianSizePercent(): number {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  return Math.max(-10, Math.min(10, z * 3.33));
+}
 
 function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Record<string, any>) => void): void {
   if (data.party) {
@@ -142,6 +217,20 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     }
     data.saveVersion = 13;
   },
+  // Version 13 → 14: assign size genetics (wPercent, hPercent) to all existing Pokemon
+  14: (data) => {
+    forEachStoredPokemon(data, (pokemon) => {
+      if (pokemon.wPercent === undefined) pokemon.wPercent = gaussianSizePercent();
+      if (pokemon.hPercent === undefined) pokemon.hPercent = gaussianSizePercent();
+    });
+    data.saveVersion = 14;
+  },
+  // Version 14 → 15: add optional surfing persistence fields
+  15: (data) => {
+    if (data.surfing === undefined) data.surfing = false;
+    if (data.surfingPokemonId === undefined) data.surfingPokemonId = null;
+    data.saveVersion = 15;
+  },
 };
 
 /** Apply all needed migrations to bring a save up to CURRENT_SAVE_VERSION. */
@@ -164,10 +253,10 @@ function migrateSave(data: Record<string, any>): PlayerData {
   return data as PlayerData;
 }
 
-/** Save player data to a slot. */
+/** Save player data to a slot and update the slot index. */
 export function saveGame(slot: number, data: PlayerData): void {
-  const key = `${SAVE_KEY_PREFIX}${slot}`;
-  localStorage.setItem(key, JSON.stringify(data));
+  localStorage.setItem(`${SAVE_KEY_PREFIX}${slot}`, JSON.stringify(data));
+  upsertSlotMeta(slot, data);
 }
 
 /** Load player data from a slot. Migrates old saves automatically. Returns null if no save exists. */
@@ -197,9 +286,10 @@ export function hasSave(slot: number): boolean {
   return localStorage.getItem(`${SAVE_KEY_PREFIX}${slot}`) !== null;
 }
 
-/** Delete a save slot. */
+/** Delete a save slot and remove it from the index. */
 export function deleteSave(slot: number): void {
   localStorage.removeItem(`${SAVE_KEY_PREFIX}${slot}`);
+  removeSlotMeta(slot);
 }
 
 // ---------------------------------------------------------------------------

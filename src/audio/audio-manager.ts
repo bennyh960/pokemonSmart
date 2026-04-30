@@ -40,6 +40,8 @@ const SFX_TRACKS: Record<string, string> = {
   'pokecenter-heal': toAssetUrl('audio/sfx/heal.mp3'),
   'item-found': toAssetUrl('audio/sfx/item-found.mp3'),
   'bump-wall': toAssetUrl('audio/sfx/bumpintowall.mp3'),
+  splash: toAssetUrl('audio/sfx/menu-select.wav'),
+  'pokeball-return': toAssetUrl('audio/sfx/menu-cancel.wav'),
 };
 
 /** Default crossfade duration in ms. */

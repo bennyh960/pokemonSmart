@@ -5749,6 +5749,181 @@
       "above": true,
       "category": "floor",
       "interactType": null
+    },
+    {
+      "key": "flx1",
+      "sx": 128,
+      "sy": 80,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx2",
+      "sx": 144,
+      "sy": 80,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx3",
+      "sx": 160,
+      "sy": 80,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx4",
+      "sx": 128,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx5",
+      "sx": 144,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx7",
+      "sx": 128,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx8",
+      "sx": 144,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx9",
+      "sx": 160,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx6",
+      "sx": 160,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx10",
+      "sx": 176,
+      "sy": 80,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx11",
+      "sx": 192,
+      "sy": 80,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx12",
+      "sx": 176,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx13",
+      "sx": 192,
+      "sy": 96,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx14",
+      "sx": 176,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "flx15",
+      "sx": 192,
+      "sy": 112,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "xtest",
+      "sx": 144,
+      "sy": 48,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "grass"
     }
   ]
 }

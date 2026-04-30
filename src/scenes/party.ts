@@ -16,8 +16,7 @@ import {
   getPokemonDisplayName,
   getMoveDisplayName,
   getMove,
-  getPokemonHeight,
-  getPokemonWeight,
+  computePokemonSize,
   getAbilityDisplayName,
   getNatureDisplayName,
   getNature,
@@ -489,8 +488,9 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     }
 
     // ── Level / Height / Weight (centered, y=46) ──
-    const hVal = getPokemonHeight(pokemon.id);
-    const wVal = getPokemonWeight(pokemon.id);
+    const size = computePokemonSize(pokemon);
+    const hVal = size.heightM > 0 ? size.heightM.toFixed(1) : '?';
+    const wVal = size.weightKg > 0 ? size.weightKg.toFixed(1) : '?';
     const lvStr = `${t('party.stats.level')} ${pokemon.level}`;
     const hStr = hVal !== '?' ? t('party.height', { value: hVal, unit: t('party.unit.meter') }) : '';
     const wStr = wVal !== '?' ? t('party.weight', { value: wVal, unit: t('party.unit.kg') }) : '';
@@ -539,9 +539,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     // ── XP row ──
     drawText(ctx, t('party.xpLabel'), 228, 80, { size: 6, color: C.TEXT_DIM, font: 'monospace', align: 'right' });
     drawText(ctx, `${pokemon.xp} / ${pokemon.xpToNext}`, 12, 80, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+    // XP bar
+    fillRect(ctx, 12, 87, 216, 2, C.BAR_TRACK);
+    const xpRatio = pokemon.xpToNext > 0 ? pokemon.xp / pokemon.xpToNext : 0;
+    const xpFillW = Math.round(216 * Math.max(0, Math.min(1, xpRatio)));
+    if (xpFillW > 0) fillRect(ctx, 12, 87, xpFillW, 2, C.BAR_XP);
 
     // ── Separator 2 ──
-    fillRect(ctx, 8, 87, 224, 1, C.SEP);
+    // fillRect(ctx, 8, 87, 224, 1, C.SEP);
 
     // ── Base Stats header ──
     drawText(ctx, t('party.baseStats'), 228, 90, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });

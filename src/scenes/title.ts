@@ -7,7 +7,8 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, drawText, fillRect } from '../engine/renderer.js';
-import { hasSavedGame, startNewGame, loadSavedGame } from '../systems/game-state.js';
+import { hasSavedGame, startNewGame } from '../systems/game-state.js';
+import { openSaveSlots } from './save-slots.js';
 import { t, isRTL, getLocale, setLocale, type Locale } from '../i18n/i18n.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const STAR_COUNT = 60;
@@ -35,7 +36,7 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
 
   function buildMenu(): void {
     menuItems = [];
-    if (hasSavedGame()) menuItems.push(t('title.continue'));
+    if (hasSavedGame()) menuItems.push(t('title.loadGame'));
     menuItems.push(t('title.newGame'));
     selectedIndex = 0;
     showMenu = false;
@@ -73,10 +74,14 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
       if (input.isKeyPressed('ArrowDown')) selectedIndex = (selectedIndex + 1) % menuItems.length;
       if (input.isKeyPressed('Enter') || input.isTapped()) {
         entered = true;
-        // If save exists, first item is Continue, otherwise it's New Game
-        const isContinue = hasSavedGame() && selectedIndex === 0;
-        if (isContinue) { loadSavedGame(); stateMachine.change('OVERWORLD'); }
-        else { startNewGame(); stateMachine.change('HERO_SELECT'); }
+        const isLoad = hasSavedGame() && selectedIndex === 0;
+        if (isLoad) {
+          openSaveSlots('load', true);
+          stateMachine.change('SAVE_SLOTS');
+        } else {
+          startNewGame();
+          stateMachine.change('HERO_SELECT');
+        }
       }
     },
     render(ctx: CanvasRenderingContext2D): void {

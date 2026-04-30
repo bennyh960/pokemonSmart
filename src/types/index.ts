@@ -33,7 +33,8 @@ export type SceneId =
   | 'EVOLUTION'
   | 'PHONE'
   | 'GATE'
-  | 'CUTSCENE';
+  | 'CUTSCENE'
+  | 'SAVE_SLOTS';
 
 /** Top-level game state snapshot. */
 export interface GameState {
@@ -66,6 +67,9 @@ export interface Pokemon {
   caughtBall?: string; // Item ID of the pokeball used to catch (e.g. 'poke-ball', 'great-ball')
   /** EV-like stat boosts from vitamins. Each stat capped at 31. Optional for save-file backwards-compat. */
   evs?: { hp: number; atk: number; def: number; spe: number; spa: number; spd: number };
+  /** Individual size genetics as % offset from species base. Set on creation, never changes. */
+  wPercent?: number;
+  hPercent?: number;
 }
 
 /** Pokemon elemental types (real Gen 2 types + Glitch). */
@@ -203,6 +207,8 @@ export interface PlayerData {
   battleHelperBattles: number; // remaining Battle Helper battles (shows type effectiveness on moves)
   battleHelperEnabled: boolean; // toggle: auto-consumes from battleHelperBattles each battle when ON
   repelStepsRemaining: number; // steps left on active repel (0 = no repel)
+  surfing?: boolean;            // player is currently surfing (survives battle transitions)
+  surfingPokemonId?: number | null; // id of the surf pokemon
 }
 
 /** Options for text rendering. */

@@ -59,7 +59,7 @@ import {
   ADMIN_NAME,
   INFECTION_GLITCH_RATE,
 } from '../engine/config.js';
-import { findHMUser, canUseHM } from '../systems/hm.js';
+import { findHMUser, canUseHM, checkSurfEligibility } from '../systems/hm.js';
 import { getReencounterStatus, buildReencounterParty } from '../systems/reencounter.js';
 import {
   isGateUnlocked,
@@ -78,6 +78,7 @@ import {
 } from '../systems/cutscene-runner.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { setFlyCallback, FLY_DESTINATIONS } from './world-map.js';
+import { openSaveSlots } from './save-slots.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
 import charactersManifest from '../data/sprites/characters.json';
 import type { SimpleOpType } from '../math/simple-input-question.js';
@@ -180,6 +181,33 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let hmAnim: HMAnimState | null = null;
   let pendingHMAction: (() => void) | null = null;
 
+  // Surf return animation (pokemon returning to pokeball on dismount)
+  interface SurfReturnAnimState {
+    timer: number;
+    pokemonId: number;
+    pokemonSprite: HTMLImageElement | null;
+    alpha: number;
+  }
+  let surfReturnAnim: SurfReturnAnimState | null = null;
+
+  // Surf mount animation (Pokemon appears at water tile then dives in)
+  interface SurfMountAnimState {
+    phase: 'pokemon-out' | 'dive' | 'done';
+    pokemonId: number;
+    pokemonSprite: HTMLImageElement | null;
+    waterGridX: number;
+    waterGridY: number;
+    timer: number;
+    alpha: number;
+    scale: number;
+    capturedPokemon: import('../types/index.js').Pokemon;
+  }
+  let surfMountAnim: SurfMountAnimState | null = null;
+
+  // Brief flash when surf sprite activates + wave timer while surfing
+  let surfFlashTimer = 0;
+  let surfWaveTimer = 0;
+
   // Fly animation state
   interface FlyAnimState {
     phase: 'mount' | 'rise' | 'fadeout' | 'fadein' | 'land' | 'done';
@@ -200,7 +228,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   // Surf state
   let isCurrentlySurfing = false;
   let surfPokemonId: number | null = null;
-  let surfPokemonSprite: HTMLImageElement | null = null;
 
   // Fishing state
   let fishingPhase: 'casting' | 'waiting' | 'bite' | null = null;
@@ -1194,28 +1221,65 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       });
   }
 
-  /** Start surfing on a Pokemon. */
-  function startSurfing(pokemon: import('../types/index.js').Pokemon): void {
+  /** Start surfing on a Pokemon — moves player onto the facing water tile. */
+  function startSurfing(pokemon: import('../types/index.js').Pokemon, skipFlash = false): void {
     isCurrentlySurfing = true;
     surfPokemonId = pokemon.id;
-    const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
-    surfPokemonSprite = getCachedImage(spritePath);
-    loadImage(spritePath)
-      .then((img) => {
-        if (surfPokemonId === pokemon.id) surfPokemonSprite = img;
-      })
-      .catch(() => {
-        /* non-fatal */
-      });
     audio.playSFX('splash');
+    if (!skipFlash) surfFlashTimer = 0.35;
+
+    // Step player forward onto the water tile they were facing
+    const faceVec = DIR_VECTORS[player.facing];
+    if (faceVec) {
+      player.gridX += faceVec.dx;
+      player.gridY += faceVec.dy;
+      player.pixelX = player.gridX * TILE_SIZE;
+      player.pixelY = player.gridY * TILE_SIZE;
+      player.targetGridX = player.gridX;
+      player.targetGridY = player.gridY;
+      player.moving = false;
+    }
+
+    // Persist so surf survives battle transitions (enter() re-runs on return from battle)
+    if (hasActiveGame()) {
+      const pd = getPlayerData();
+      pd.surfing = true;
+      pd.surfingPokemonId = pokemon.id;
+      pd.position.x = player.gridX;
+      pd.position.y = player.gridY;
+    }
   }
 
-  /** Stop surfing (dismount). */
+  /** Stop surfing (dismount) — clears runtime surf state. */
   function stopSurfing(): void {
     isCurrentlySurfing = false;
     surfPokemonId = null;
-    surfPokemonSprite = null;
+    surfWaveTimer = 0;
   }
+
+  /** Start the surf mount animation — Pokemon appears at water tile, then dives in as surf activates. */
+  function startSurfMountAnimation(
+    pokemon: import('../types/index.js').Pokemon,
+    waterX: number,
+    waterY: number,
+  ): void {
+    const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
+    surfMountAnim = {
+      phase: 'pokemon-out',
+      pokemonId: pokemon.id,
+      pokemonSprite: getCachedImage(spritePath),
+      waterGridX: waterX,
+      waterGridY: waterY,
+      timer: 0,
+      alpha: 0,
+      scale: 1,
+      capturedPokemon: pokemon,
+    };
+    loadImage(spritePath)
+      .then((img) => { if (surfMountAnim?.pokemonId === pokemon.id) surfMountAnim.pokemonSprite = img; })
+      .catch(() => { /* non-fatal */ });
+  }
+
 
   /** Returns true only if the tile itself is categorised as water (category === 'water').
    *  Walkable ground tiles (beach sand, cave sand) that happen to have water encounter
@@ -1337,6 +1401,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     npcStates.clear(); // reset runtime states for new map
     npcSavedFacing.clear();
 
+    // Detect whether this is a same-map re-entry (battle return) vs. a real map change
+    const _prevMapId = hasActiveGame() ? getPlayerData().position.mapId : null;
+    const _isSameMapEntry = _prevMapId !== null && _prevMapId === mapId;
+
     player = initPlayer(spawnX ?? data.spawn.x, spawnY ?? data.spawn.y);
     camera = createCamera(SCREEN_W, SCREEN_H);
     const cx = player.pixelX + TILE_SIZE / 2;
@@ -1362,9 +1430,30 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     playerHidden = false;
     hmAnim = null;
     pendingHMAction = null;
+    surfReturnAnim = null;
+    surfMountAnim = null;
 
-    // Stop surfing when map changes
+    // Clear runtime surf state (will be restored below if same-map re-entry on water)
     stopSurfing();
+    if (!_isSameMapEntry && hasActiveGame()) {
+      // Real map change — clear surf persistence too
+      const _mcPd = getPlayerData();
+      _mcPd.surfing = false;
+      _mcPd.surfingPokemonId = null;
+    }
+
+    // Restore surf state when returning from battle (same map, player still on water tile)
+    if (_isSameMapEntry && hasActiveGame()) {
+      const _rsPd = getPlayerData();
+      if (_rsPd.surfing && (_rsPd.surfingPokemonId ?? null) !== null && isTileWater(player.gridX, player.gridY)) {
+        isCurrentlySurfing = true;
+        surfPokemonId = _rsPd.surfingPokemonId!;
+      } else if (_rsPd.surfing) {
+        // Was surfing but not on water anymore (edge case) — clear
+        _rsPd.surfing = false;
+        _rsPd.surfingPokemonId = null;
+      }
+    }
 
     // Auto-save on area entry
     if (hasActiveGame()) {
@@ -1375,7 +1464,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       pd.previousMapReturn = previousMapReturn;
 
       // Track city visits for Fly destination list
-      // Track city visits for the Fly destination list
       if (FLY_DESTINATIONS.includes(mapId)) {
         setFlag(pd, `visited-${mapId}`);
       }
@@ -1417,7 +1505,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       hmAnim = null;
       pendingHMAction = null;
       flyAnim = null;
-      stopSurfing();
+      surfReturnAnim = null;
+      surfMountAnim = null;
+      surfFlashTimer = 0;
+      surfWaveTimer = 0;
+      // Reset runtime surf state only — pd.surfing is preserved so loadAndSetMap can restore it
+      isCurrentlySurfing = false;
+      surfPokemonId = null;
       mapLoading = true;
 
       // Determine which map to load
@@ -1944,7 +2038,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (anim.timer >= 0.5) {
             anim.pendingTileRemoval?.();
             anim.pendingTileRemoval = null;
-            audio.playSFX('hit');
+            audio.playSFX(anim.hmName === 'surf' ? 'splash' : 'hit');
             anim.phase = 'return';
             anim.timer = 0;
           }
@@ -1958,6 +2052,45 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
         return;
       }
+
+      // Surf mount animation — Pokemon appears at water tile then dives in
+      if (surfMountAnim) {
+        const ma = surfMountAnim;
+        ma.timer += dt;
+        if (ma.phase === 'pokemon-out') {
+          ma.alpha = Math.min(1, ma.timer / 0.4);
+          if (ma.timer >= 0.5) {
+            ma.phase = 'dive';
+            ma.timer = 0;
+            startSurfing(ma.capturedPokemon, true); // snap player to water tile, skip flash
+          }
+        } else if (ma.phase === 'dive') {
+          const t = ma.timer / 0.35;
+          ma.alpha = Math.max(0, 1 - t);
+          ma.scale = Math.max(0.05, 1 - t * 0.95);
+          if (ma.timer >= 0.35) ma.phase = 'done';
+        } else {
+          surfMountAnim = null;
+        }
+        // Camera follows player even during the animation (player snaps to water tile mid-anim)
+        if (tileMap) {
+          const _maCx = player.pixelX + TILE_SIZE / 2;
+          const _maCy = player.pixelY + TILE_SIZE / 2;
+          camera.follow(_maCx, _maCy, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE, dt);
+        }
+        return;
+      }
+
+      // Surf return animation tick (Pokemon fading back into its Poké Ball)
+      if (surfReturnAnim) {
+        surfReturnAnim.timer += dt;
+        surfReturnAnim.alpha = Math.max(0, 1 - surfReturnAnim.timer / 0.5);
+        if (surfReturnAnim.timer >= 0.5) surfReturnAnim = null;
+      }
+
+      // Surf transition flash + wave timer
+      if (surfFlashTimer > 0) surfFlashTimer = Math.max(0, surfFlashTimer - dt);
+      if (isCurrentlySurfing) surfWaveTimer += dt; else surfWaveTimer = 0;
 
       if (player.moving) {
         player.moveProgress += dt / MOVE_DURATION;
@@ -1979,14 +2112,33 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Check for map transition first
           if (checkTransition()) return;
 
-          // Auto-dismount surf when stepping onto non-water land
-          if (isCurrentlySurfing) {
-            const landEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
-            const isWaterTile = landEncTypes?.some(
-              (et) => et === 'water' || et.startsWith('water') || et.includes('/water'),
-            );
-            if (!isWaterTile) {
-              stopSurfing();
+          // Auto-dismount surf when stepping onto a non-water tile (category check, not encounter types)
+          if (isCurrentlySurfing && !isTileWater(player.gridX, player.gridY)) {
+            const dismountId = surfPokemonId;
+            stopSurfing();
+            if (hasActiveGame()) {
+              const _dmPd = getPlayerData();
+              _dmPd.surfing = false;
+              _dmPd.surfingPokemonId = null;
+            }
+            if (dismountId !== null) {
+              const spritePath = `/sprites/pokemon/front/${dismountId}.png`;
+              surfReturnAnim = {
+                timer: 0,
+                pokemonId: dismountId,
+                pokemonSprite: getCachedImage(spritePath),
+                alpha: 1,
+              };
+              loadImage(spritePath)
+                .then((img) => {
+                  if (surfReturnAnim?.pokemonId === dismountId) surfReturnAnim.pokemonSprite = img;
+                })
+                .catch(() => { /* non-fatal */ });
+              activeTextBox = createTextBox(
+                [t('hm.surf.returned', { name: getPokemonDisplayName(dismountId) })],
+                isRTL(),
+              );
+              audio.playSFX('pokeball-return');
             }
           }
 
@@ -2576,6 +2728,54 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
           }
         }
+
+        // Surf: face water tile + Enter/Space while not already surfing
+        if (tileMap && hasActiveGame() && !isCurrentlySurfing) {
+          const surfVec = DIR_VECTORS[player.facing];
+          if (surfVec && isTileWater(player.gridX + surfVec.dx, player.gridY + surfVec.dy)) {
+            const pd = getPlayerData();
+            const check = checkSurfEligibility(pd.party);
+
+            if (check.eligible.length === 0) {
+              let msg: string;
+              if (check.failReason === 'no-surf-move') {
+                msg = t('hm.cannotUse.surf');
+              } else {
+                const single = check.failPokemon.length === 1;
+                const names = check.failPokemon.map((p) => getPokemonDisplayName(p.id)).join(', ');
+                if (check.failReason === 'level') {
+                  msg = t(single ? 'hm.surf.failLevel.one' : 'hm.surf.failLevel.many', { names, level: check.minLevel });
+                } else if (check.failReason === 'height') {
+                  const height = (check.minHeight ?? 0).toFixed(1);
+                  msg = t(single ? 'hm.surf.failHeight.one' : 'hm.surf.failHeight.many', { names, height });
+                } else {
+                  const weight = (check.minWeight ?? 0).toFixed(1);
+                  msg = t(single ? 'hm.surf.failWeight.one' : 'hm.surf.failWeight.many', { names, weight });
+                }
+              }
+              activeTextBox = createTextBox([msg], isRTL());
+            } else {
+              const surfUser = check.eligible[Math.floor(Math.random() * check.eligible.length)];
+              const pokeName = getPokemonDisplayName(surfUser.id);
+              activeTextBox = createTextBox([t('hm.surf.prompt', { name: pokeName })], isRTL());
+              const capturedUser = surfUser;
+              const capturedWX = player.gridX + surfVec.dx;
+              const capturedWY = player.gridY + surfVec.dy;
+              pendingHMAction = () => {
+                showChoice((idx) => {
+                  if (idx === 0) {
+                    const chooseText = t('hm.surf.chooseYou', { name: getPokemonDisplayName(capturedUser.id) });
+                    activeTextBox = createTextBox([chooseText], isRTL());
+                    pendingHMAction = () => {
+                      startSurfMountAnimation(capturedUser, capturedWX, capturedWY);
+                    };
+                  }
+                });
+              };
+            }
+            return;
+          }
+        }
       }
 
       // P key → Party
@@ -2625,6 +2825,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (input.isKeyPressed('t') || input.isKeyPressed('T')) {
         if (hasActiveGame()) {
           stateMachine.push('PHONE');
+          return;
+        }
+      }
+
+      // S key → Save game (open save slot picker)
+      if (input.isKeyPressed('s') || input.isKeyPressed('S')) {
+        if (hasActiveGame()) {
+          openSaveSlots('save');
+          stateMachine.push('SAVE_SLOTS');
           return;
         }
       }
@@ -2706,34 +2915,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               if (isWater) walkable = true;
             }
 
-            if (!walkable && !isCurrentlySurfing && hasActiveGame()) {
-              // Check if blocked tile is water — offer surf
-              const encTypes = tileMap.getEncounterTypes(nx, ny);
-              const isWaterTile = encTypes?.some(
-                (et) => et === 'water' || et.startsWith('water') || et.includes('/water'),
-              );
-              if (isWaterTile) {
-                const pd = getPlayerData();
-                const surfUser = findHMUser('surf', pd.party);
-                if (surfUser) {
-                  const capturedSurfUser = surfUser;
-                  activeTextBox = createTextBox([t('hm.surf.prompt')], isRTL());
-                  pendingHMAction = () => {
-                    showChoice((idx) => {
-                      if (idx === 0 && capturedSurfUser) {
-                        startSurfing(capturedSurfUser);
-                        const mountMsg = t('hm.surf.mounted', { name: capturedSurfUser.name });
-                        activeTextBox = createTextBox([mountMsg], isRTL());
-                      }
-                    });
-                  };
-                } else {
-                  activeTextBox = createTextBox([t('hm.cannotUse.surf')], isRTL());
-                }
-              } else if (input.isKeyPressed(key)) {
-                // Bump into non-walkable wall — play once per keypress, not every frame
-                audio.playSFX('bump-wall');
-              }
+            if (!walkable && input.isKeyPressed(key)) {
+              // Bump into non-walkable tile — play once per keypress, not every frame
+              audio.playSFX('bump-wall');
             }
 
             const _movPd = hasActiveGame() ? getPlayerData() : null;
@@ -2793,25 +2977,33 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         y: player.pixelY,
         render: () => {
           if (playerHidden) return;
-          // Surfing: draw surf Pokemon sprite at player position
-          if (isCurrentlySurfing && surfPokemonSprite) {
-            ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(surfPokemonSprite, psx - TILE_SIZE / 2, psy - TILE_SIZE / 2, TILE_SIZE * 2, TILE_SIZE * 2);
-            // Draw small player on top
-            const spriteSheet = getPlayerSpriteSheet();
-            if (spriteSheet.complete && spriteSheet.naturalWidth > 0) {
-              const row = DIR_TO_ROW[player.facing] ?? 0;
+          // Surfing: show hero surf sprite with gentle bob
+          if (isCurrentlySurfing) {
+            const heroId = hasActiveGame() ? getPlayerData().heroCharacterId : '';
+            const facingDir = player.facing.replace('Arrow', '').toLowerCase();
+            const surfHeroFrame = heroId ? getCharacterFrame(`${heroId}-surf`, facingDir, 'stand') : null;
+            if (surfHeroFrame) {
+              const bob = Math.round(Math.sin(surfWaveTimer * 3.5) * 1.5);
+              ctx.imageSmoothingEnabled = false;
               ctx.drawImage(
-                spriteSheet,
-                player.walkFrame * 16,
-                row * 16,
-                16,
-                16,
+                surfHeroFrame.image,
+                surfHeroFrame.sx,
+                surfHeroFrame.sy,
+                surfHeroFrame.w,
+                surfHeroFrame.h,
                 psx,
-                psy - TILE_SIZE / 2,
+                psy + bob,
                 TILE_SIZE,
                 TILE_SIZE,
               );
+            }
+            // Blue-white flash overlay during sprite transition
+            if (surfFlashTimer > 0) {
+              ctx.save();
+              ctx.globalAlpha = (surfFlashTimer / 0.35) * 0.6;
+              ctx.fillStyle = '#88ddff';
+              ctx.fillRect(psx - TILE_SIZE / 2, psy - TILE_SIZE / 2, TILE_SIZE * 2, TILE_SIZE * 2);
+              ctx.restore();
             }
             return;
           }
@@ -3085,7 +3277,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           ctx.restore();
         }
 
-        // Draw slash/stomp effect during action and return phases
+        // Draw effect during action and return phases
         if (hmAnim.phase === 'action' || (hmAnim.phase === 'return' && hmAnim.slashProgress >= 1)) {
           const cx = screenX + TILE_SIZE / 2;
           const cy = screenY + TILE_SIZE / 2;
@@ -3124,6 +3316,66 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.globalAlpha = flyAnim.fadeAlpha;
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
+        ctx.restore();
+      }
+
+      // Surf mount animation — Pokemon appears at water tile then dives in
+      if (surfMountAnim && surfMountAnim.pokemonSprite && surfMountAnim.alpha > 0) {
+        const wx = surfMountAnim.waterGridX * TILE_SIZE - camera.x;
+        const wy = surfMountAnim.waterGridY * TILE_SIZE - camera.y;
+        const spriteSize = TILE_SIZE * 2 * surfMountAnim.scale;
+        ctx.save();
+        ctx.globalAlpha = surfMountAnim.alpha;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(
+          surfMountAnim.pokemonSprite,
+          wx - spriteSize / 4,
+          wy - spriteSize / 2,
+          spriteSize,
+          spriteSize,
+        );
+        // Expanding splash ring during dive phase
+        if (surfMountAnim.phase === 'dive') {
+          const progress = surfMountAnim.timer / 0.35;
+          ctx.globalAlpha = (1 - progress) * 0.75;
+          ctx.strokeStyle = '#88ccff';
+          ctx.lineWidth = 2;
+          const r = TILE_SIZE * 0.3 + TILE_SIZE * progress;
+          ctx.beginPath();
+          ctx.ellipse(wx + TILE_SIZE / 2, wy + TILE_SIZE * 0.65, r, r * 0.4, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // Surf return animation — Pokemon shrinks/fades back into its Poké Ball
+      if (surfReturnAnim && surfReturnAnim.alpha > 0 && surfReturnAnim.pokemonSprite) {
+        const scale = surfReturnAnim.alpha;
+        const spriteSize = TILE_SIZE * 2 * scale;
+        ctx.save();
+        ctx.globalAlpha = surfReturnAnim.alpha;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(
+          surfReturnAnim.pokemonSprite,
+          psx - spriteSize / 2,
+          psy - spriteSize / 2,
+          spriteSize,
+          spriteSize,
+        );
+        ctx.restore();
+      }
+
+      // Water wake — periodic ripple ring at player tile while surfing
+      if (isCurrentlySurfing) {
+        const wakePhase = (surfWaveTimer % 1.2) / 1.2;
+        ctx.save();
+        ctx.globalAlpha = (1 - wakePhase) * 0.45;
+        ctx.strokeStyle = '#88ccff';
+        ctx.lineWidth = 1;
+        const r = TILE_SIZE * 0.2 + TILE_SIZE * wakePhase * 1.1;
+        ctx.beginPath();
+        ctx.ellipse(psx + TILE_SIZE / 2, psy + TILE_SIZE, r, r * 0.35, 0, 0, Math.PI * 2);
+        ctx.stroke();
         ctx.restore();
       }
 

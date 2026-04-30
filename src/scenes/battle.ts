@@ -77,7 +77,7 @@ import {
   getMove,
   getPokemon,
   getLocalizedName,
-  getPokemonWeightKg,
+  computePokemonSize,
   type EvolutionStep,
 } from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp, type StatGains } from '../systems/encounter.js';
@@ -344,8 +344,14 @@ function calcDamage(
   const critMultiplier = criticalHit ? 1.5 : 1;
   const rand = 0.7 + Math.random() * 0.3;
   let damage = Math.max(1, Math.floor(base * eff * stab * critMultiplier * defenderMultiplier * rand));
-  if (atk.isGlitched) damage = Math.ceil(damage * (1 + GLITCH_DAMAGE_BONUS_MIN + Math.random() * (GLITCH_DAMAGE_BONUS_MAX - GLITCH_DAMAGE_BONUS_MIN)));
-  if (def.isGlitched) damage = Math.floor(damage * (1 - (GLITCH_DAMAGE_BONUS_MIN + Math.random() * (GLITCH_DAMAGE_BONUS_MAX - GLITCH_DAMAGE_BONUS_MIN))));
+  if (atk.isGlitched)
+    damage = Math.ceil(
+      damage * (1 + GLITCH_DAMAGE_BONUS_MIN + Math.random() * (GLITCH_DAMAGE_BONUS_MAX - GLITCH_DAMAGE_BONUS_MIN)),
+    );
+  if (def.isGlitched)
+    damage = Math.floor(
+      damage * (1 - (GLITCH_DAMAGE_BONUS_MIN + Math.random() * (GLITCH_DAMAGE_BONUS_MAX - GLITCH_DAMAGE_BONUS_MIN))),
+    );
   return Math.max(1, damage);
 }
 
@@ -998,7 +1004,7 @@ export function createBattleScene(
     battleRoster = new Set<number>([activePartyIndex]);
     battleTurnCounts = new Map<number, number>([[activePartyIndex, 0]]);
     // Wild NPC: player uses full 6-slot roster (behaves like wild encounter)
-    maxRosterSize = (isTrainerBattle && !isWildNpcBattle && trainerData) ? trainerData.party.length : 6;
+    maxRosterSize = isTrainerBattle && !isWildNpcBattle && trainerData ? trainerData.party.length : 6;
     activeBallId = null;
     pendingCaptureOutcome = null;
     // Wild NPC: skip Pokeball-throw animation, use scale-up entrance instead
@@ -1617,10 +1623,11 @@ export function createBattleScene(
   function getLossPenalty(outcome: LossOutcome, currentMoney: number): number {
     switch (outcome) {
       case 'trainer-whiteout':
+        return Math.max(10000, Math.floor(currentMoney / 5));
       case 'wild-whiteout':
-        return Math.floor(currentMoney / 2);
+        return Math.max(15000, Math.floor(currentMoney / 3));
       case 'trainer-roster':
-        return trainerData ? Math.min(currentMoney, trainerData.reward.money * 3) : 0;
+        return trainerData ? Math.min(currentMoney, trainerData.reward.money * trainerData.party.length) : 1000;
     }
   }
 
@@ -3153,7 +3160,16 @@ export function createBattleScene(
       if (playerSideState.futureSightTurnsRemaining > 0) {
         msgs.push(t('battle.futureSightAlreadyActive'));
       } else {
-        const damage = calcDamage(player, playerBattleState, enemy, enemyBattleState, enemySideState, 120, 'psychic', 'special');
+        const damage = calcDamage(
+          player,
+          playerBattleState,
+          enemy,
+          enemyBattleState,
+          enemySideState,
+          120,
+          'psychic',
+          'special',
+        );
         playerSideState.futureSightTurnsRemaining = 2;
         playerSideState.futureSightDamage = damage;
         msgs.push(t('battle.futureSightSet', { name: attackerName }));
@@ -3381,9 +3397,9 @@ export function createBattleScene(
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
     const movePower = isWeightTarget
-      ? getWeightTargetPower(getPokemonWeightKg(enemy.id))
+      ? getWeightTargetPower(computePokemonSize(enemy).weightKg)
       : isWeightRatio
-        ? getWeightRatioPower(getPokemonWeightKg(player.id), getPokemonWeightKg(enemy.id))
+        ? getWeightRatioPower(computePokemonSize(player).weightKg, computePokemonSize(enemy).weightKg)
         : m.power;
     const absorbed = hitResult.hit && !targetTypeImmune && movePower > 0 && doesAbilityAbsorbMove(enemy, m.type);
     // Dream Eater: blocked if target is not asleep
@@ -3474,14 +3490,20 @@ export function createBattleScene(
         if (isWeightTarget || isWeightRatio) {
           const moveName = getMoveDisplayName(m.id);
           if (isWeightTarget) {
-            const wStr = getPokemonWeightKg(enemy.id).toFixed(1);
-            if (movePower <= 40) msgs.push(t('battle.weightTargetWeak', { target: defenderName, weight: wStr, move: moveName }));
-            else if (movePower <= 80) msgs.push(t('battle.weightTargetMedium', { target: defenderName, weight: wStr, move: moveName }));
+            const wStr = computePokemonSize(enemy).weightKg.toFixed(1);
+            if (movePower <= 40)
+              msgs.push(t('battle.weightTargetWeak', { target: defenderName, weight: wStr, move: moveName }));
+            else if (movePower <= 80)
+              msgs.push(t('battle.weightTargetMedium', { target: defenderName, weight: wStr, move: moveName }));
             else msgs.push(t('battle.weightTargetStrong', { target: defenderName, weight: wStr, move: moveName }));
           } else {
             if (movePower <= 40) msgs.push(t('battle.weightRatioWeak', { move: moveName }));
-            else if (movePower <= 80) msgs.push(t('battle.weightRatioMedium', { attacker: attackerName, move: moveName }));
-            else msgs.push(t('battle.weightRatioStrong', { attacker: attackerName, target: defenderName, move: moveName }));
+            else if (movePower <= 80)
+              msgs.push(t('battle.weightRatioMedium', { attacker: attackerName, move: moveName }));
+            else
+              msgs.push(
+                t('battle.weightRatioStrong', { attacker: attackerName, target: defenderName, move: moveName }),
+              );
           }
         }
       }
@@ -3904,7 +3926,16 @@ export function createBattleScene(
       if (enemySideState.futureSightTurnsRemaining > 0) {
         msgs.push(t('battle.futureSightAlreadyActive'));
       } else {
-        const damage = calcDamage(enemy, enemyBattleState, player, playerBattleState, playerSideState, 120, 'psychic', 'special');
+        const damage = calcDamage(
+          enemy,
+          enemyBattleState,
+          player,
+          playerBattleState,
+          playerSideState,
+          120,
+          'psychic',
+          'special',
+        );
         enemySideState.futureSightTurnsRemaining = 2;
         enemySideState.futureSightDamage = damage;
         msgs.push(t('battle.futureSightSet', { name: attackerName }));
@@ -4123,9 +4154,9 @@ export function createBattleScene(
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
     const movePowerEnemy = isWeightTargetEnemy
-      ? getWeightTargetPower(getPokemonWeightKg(player.id))
+      ? getWeightTargetPower(computePokemonSize(player).weightKg)
       : isWeightRatioEnemy
-        ? getWeightRatioPower(getPokemonWeightKg(enemy.id), getPokemonWeightKg(player.id))
+        ? getWeightRatioPower(computePokemonSize(enemy).weightKg, computePokemonSize(player).weightKg)
         : m.power;
     const absorbed = hitResult.hit && !targetTypeImmune && movePowerEnemy > 0 && doesAbilityAbsorbMove(player, m.type);
     const dreamEaterBlockedEnemy = isDreamEaterEnemy && player.status !== 'sleep';
@@ -4214,14 +4245,20 @@ export function createBattleScene(
         if (isWeightTargetEnemy || isWeightRatioEnemy) {
           const moveName = getMoveDisplayName(m.id);
           if (isWeightTargetEnemy) {
-            const wStr = getPokemonWeightKg(player.id).toFixed(1);
-            if (movePowerEnemy <= 40) msgs.push(t('battle.weightTargetWeak', { target: defenderName, weight: wStr, move: moveName }));
-            else if (movePowerEnemy <= 80) msgs.push(t('battle.weightTargetMedium', { target: defenderName, weight: wStr, move: moveName }));
+            const wStr = computePokemonSize(player).weightKg.toFixed(1);
+            if (movePowerEnemy <= 40)
+              msgs.push(t('battle.weightTargetWeak', { target: defenderName, weight: wStr, move: moveName }));
+            else if (movePowerEnemy <= 80)
+              msgs.push(t('battle.weightTargetMedium', { target: defenderName, weight: wStr, move: moveName }));
             else msgs.push(t('battle.weightTargetStrong', { target: defenderName, weight: wStr, move: moveName }));
           } else {
             if (movePowerEnemy <= 40) msgs.push(t('battle.weightRatioWeak', { move: moveName }));
-            else if (movePowerEnemy <= 80) msgs.push(t('battle.weightRatioMedium', { attacker: attackerName, move: moveName }));
-            else msgs.push(t('battle.weightRatioStrong', { attacker: attackerName, target: defenderName, move: moveName }));
+            else if (movePowerEnemy <= 80)
+              msgs.push(t('battle.weightRatioMedium', { attacker: attackerName, move: moveName }));
+            else
+              msgs.push(
+                t('battle.weightRatioStrong', { attacker: attackerName, target: defenderName, move: moveName }),
+              );
           }
         }
       }

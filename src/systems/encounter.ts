@@ -116,6 +116,19 @@ const defaultMovesByType: Record<string, number[]> = {
   poison: [33, 40], // Tackle, Poison Sting
 };
 
+/** Box-Muller normal distribution sample (mean=0, sd=1). */
+function gaussianRandom(): number {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+/** Random size genetics offset in % — normal dist, std≈3.33 → 99.7% within ±10%. */
+function randomSizePercent(): number {
+  return Math.max(-10, Math.min(10, gaussianRandom() * 3.33));
+}
+
 /** Create a Pokemon instance from base data at a given level. */
 export function createPokemonFromData(data: PokemonData, level: number, moveIds?: number[]): Pokemon {
   // Assign random ability and nature
@@ -193,6 +206,8 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     status: null,
     caughtBall: 'poke-ball',
     evs: { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 },
+    wPercent: randomSizePercent(),
+    hPercent: randomSizePercent(),
   };
 }
 

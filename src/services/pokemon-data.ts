@@ -317,6 +317,70 @@ export function getPokemonWeight(id: number): string {
   return (data.weight / 10).toFixed(1);
 }
 
+/**
+ * Compute the current dynamic weight and height for a Pokemon instance.
+ *
+ * Growth model:
+ *  - startW = baseW × (1 + wPercent/100)         — weight at level 0
+ *  - maxW   = baseW × (1.5 + wPercent/100)        — absolute ceiling
+ *  - For Pokemon with a level-up evolution:
+ *      target = nextEvoBaseW × (1 + wPercent/100)
+ *      rate   = (target - startW) / evoLevel
+ *  - For final/no-evo Pokemon:
+ *      target = maxW,  horizon = 50 levels
+ *  - currentW = clamp(startW + rate × level, startW, maxW)
+ *
+ * wPercent/hPercent default to 0 if absent (legacy saves behave as base stats).
+ */
+export function computePokemonSize(pokemon: {
+  id: number;
+  level: number;
+  wPercent?: number;
+  hPercent?: number;
+}): { weightKg: number; heightM: number } {
+  const species = pokemonById.get(pokemon.id);
+  if (!species?.weight || !species?.height) return { weightKg: 0, heightM: 0 };
+
+  const wPct = pokemon.wPercent ?? 0;
+  const hPct = pokemon.hPercent ?? 0;
+
+  const baseW = species.weight / 10;
+  const baseH = species.height / 10;
+
+  const startW = baseW * (1 + wPct / 100);
+  const startH = baseH * (1 + hPct / 100);
+  const maxW = baseW * (1.5 + wPct / 100);
+  const maxH = baseH * (1.5 + hPct / 100);
+
+  const nextEvo = getNextEvolution(pokemon.id);
+  let targetW: number, targetH: number, horizon: number;
+
+  if (nextEvo?.trigger === 'level-up' && nextEvo.minLevel) {
+    const nextSpecies = pokemonById.get(nextEvo.id);
+    if (nextSpecies?.weight && nextSpecies?.height) {
+      targetW = (nextSpecies.weight / 10) * (1 + wPct / 100);
+      targetH = (nextSpecies.height / 10) * (1 + hPct / 100);
+      horizon = nextEvo.minLevel;
+    } else {
+      targetW = maxW;
+      targetH = maxH;
+      horizon = 50;
+    }
+  } else {
+    targetW = maxW;
+    targetH = maxH;
+    horizon = 50;
+  }
+
+  const rateW = (targetW - startW) / horizon;
+  const rateH = (targetH - startH) / horizon;
+
+  return {
+    weightKg: Math.max(0.1, Math.min(maxW, startW + rateW * pokemon.level)),
+    heightM: Math.max(0.1, Math.min(maxH, startH + rateH * pokemon.level)),
+  };
+}
+
 /** Get Pokemon category/species text. */
 export function getPokemonCategory(id: number): string {
   return pokemonById.get(id)?.category ?? '';

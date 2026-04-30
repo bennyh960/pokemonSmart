@@ -7,10 +7,14 @@
 
 import type { PlayerData } from '../types/index.js';
 import { getDefaultHeroCharacterId } from '../engine/character-sprites.js';
-import { saveGame, loadGame, hasSave, CURRENT_SAVE_VERSION } from './save.js';
+import { saveGame, loadGame, CURRENT_SAVE_VERSION, getSlotIndex, findFreeSlot } from './save.js';
 
-/** Default save slot. */
-const SAVE_SLOT = 0;
+/** Which slot the current session was loaded from / last saved to. */
+let currentSlot: number | null = null;
+
+export function getCurrentSlot(): number | null {
+  return currentSlot;
+}
 
 /** Create fresh PlayerData for a new game (party empty until starter is chosen). */
 export function createNewPlayerData(): PlayerData {
@@ -211,24 +215,33 @@ export function setFlag(pd: PlayerData, key: string): void {
   }
 }
 
-/** Check if a saved game exists. */
+/** Check if any saved slot exists. */
 export function hasSavedGame(): boolean {
-  return hasSave(SAVE_SLOT);
+  return getSlotIndex().length > 0;
 }
 
-/** Start a new game with fresh PlayerData. */
+/** Start a new game with fresh PlayerData. Slot is assigned on first save. */
 export function startNewGame(): PlayerData {
   currentPlayerData = createNewPlayerData();
+  currentSlot = null;
   return currentPlayerData;
 }
 
-/** Load saved game from localStorage. Returns null if no save exists. */
-export function loadSavedGame(): PlayerData | null {
-  const data = loadGame(SAVE_SLOT);
+/** Load player data from a specific slot and set it as the current slot. */
+export function loadGameFromSlot(slot: number): PlayerData | null {
+  const data = loadGame(slot);
   if (data) {
     currentPlayerData = data;
+    currentSlot = slot;
   }
   return data;
+}
+
+/** Save current player data to a specific slot and update the current slot. */
+export function saveToSlot(slot: number): void {
+  if (!currentPlayerData) return;
+  currentSlot = slot;
+  saveGame(slot, currentPlayerData);
 }
 
 /** Heal all Pokemon in the party: restore HP, PP, and persistent status. Also recharges Pokedex battery. */
@@ -250,9 +263,12 @@ export function updateLastPokemonCenter(mapId: string, x: number, y: number): vo
   pd.lastPokemonCenter = { mapId, x, y };
 }
 
-/** Auto-save the current game state. No-op if no active game. */
+/** Auto-save the current game state to the current slot (or first free slot for new games). */
 export function autoSave(): void {
-  if (currentPlayerData) {
-    saveGame(SAVE_SLOT, currentPlayerData);
+  if (!currentPlayerData) return;
+  if (currentSlot === null) {
+    const free = findFreeSlot();
+    currentSlot = free !== null ? free : 0;
   }
+  saveGame(currentSlot, currentPlayerData);
 }

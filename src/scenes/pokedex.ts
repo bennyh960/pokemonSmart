@@ -62,6 +62,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
   let movesCursor = 0;
   let movesDetailOpen = false;
   let openContext: PokedexContext = 'overworld';
+  let searchQuery = '';
 
   function getPokedex(): Record<number, boolean> {
     if (hasActiveGame()) return getPlayerData().pokedex;
@@ -81,11 +82,26 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     return getPokedex()[id] === true;
   }
 
+  function getFilteredIds(): number[] {
+    if (!searchQuery) {
+      return Array.from({ length: TOTAL_POKEMON }, (_, i) => i + 1);
+    }
+    const q = searchQuery.toLowerCase();
+    const results: number[] = [];
+    for (let id = 1; id <= TOTAL_POKEMON; id++) {
+      if (String(id).startsWith(q)) { results.push(id); continue; }
+      const name = getPokemonDisplayName(id).toLowerCase();
+      if (name.includes(q)) results.push(id);
+    }
+    return results;
+  }
+
   function preloadVisibleSprites(): void {
+    const filtered = getFilteredIds();
     const pdex = getPokedex();
-    for (let i = scrollOffset; i < Math.min(scrollOffset + VISIBLE_ENTRIES + 2, TOTAL_POKEMON); i++) {
-      const id = i + 1;
-      if (pdex[id]) {
+    for (let i = scrollOffset; i < Math.min(scrollOffset + VISIBLE_ENTRIES + 2, filtered.length); i++) {
+      const id = filtered[i];
+      if (id && pdex[id]) {
         loadImage(`/sprites/pokemon/front/${id}.png`).catch(() => {});
         loadImage(`/sprites/pokemon/icons/${id}.png`).catch(() => {});
       }
@@ -107,6 +123,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       movesScrollOffset = 0;
       movesCursor = 0;
       movesDetailOpen = false;
+      searchQuery = '';
       preloadVisibleSprites();
       if (pendingPokedexFocus?.openDetail) {
         const id = cursor + 1;
@@ -124,24 +141,28 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     exit(): void {},
 
     update(_dt: number): void {
-      // Toggle Battle Helper with H key (anywhere in Pokedex)
-      if (input.isKeyPressed('KeyH') && hasActiveGame()) {
-        const pd = getPlayerData();
-        if (pd.battleHelperBattles > 0 || pd.battleHelperEnabled) {
-          pd.battleHelperEnabled = !pd.battleHelperEnabled;
-          autoSave();
+      // H/B hotkeys only when not searching
+      if (!searchQuery) {
+        if (input.isKeyPressed('KeyH') && hasActiveGame()) {
+          input.clearTextInput();
+          const pd = getPlayerData();
+          if (pd.battleHelperBattles > 0 || pd.battleHelperEnabled) {
+            pd.battleHelperEnabled = !pd.battleHelperEnabled;
+            autoSave();
+          }
+          return;
         }
-        return;
-      }
 
-      // Badge case: B key from list or badges view
-      if (input.isKeyPressed('KeyB')) {
-        view = view === 'badges' ? 'list' : 'badges';
-        return;
+        if (input.isKeyPressed('KeyB')) {
+          input.clearTextInput();
+          view = view === 'badges' ? 'list' : 'badges';
+          return;
+        }
       }
 
       // Badges view: only Escape to close
       if (view === 'badges') {
+        input.clearTextInput();
         if (input.isKeyPressed('Escape')) {
           view = 'list';
         }
@@ -149,6 +170,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       }
 
       if (view === 'detail') {
+        input.clearTextInput();
         // Move detail popup: Escape closes it before any other navigation
         if (detailTab === 'moves' && movesDetailOpen) {
           if (input.isKeyPressed('Escape')) {
@@ -159,7 +181,6 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
         if (input.isKeyPressed('Escape')) {
           if (openContext === 'battle') {
-            // In battle mode, escape pops back to the battle scene
             stateMachine.pop();
           } else {
             view = 'list';
@@ -185,7 +206,6 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           }
         }
 
-        // 1/2 keys switch moves sub-tabs when on MOVES tab
         if (detailTab === 'moves') {
           if (input.isKeyPressed('1')) {
             movesSubTab = 'byLevel';
@@ -198,16 +218,15 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           }
         }
 
-        // Up/Down navigates move rows; Enter opens detail popup
         if (detailTab === 'moves') {
-          const pokemonId = cursor + 1;
+          const pokemonId = getFilteredIds()[cursor] ?? cursor + 1;
           const sorted =
             movesSubTab === 'byLevel'
               ? [...getLearnset(pokemonId)].sort((a, b) => a.levelLearned - b.levelLearned)
               : [...getTmLearnset(pokemonId)].sort((a, b) =>
                   getMoveDisplayName(a.moveId).localeCompare(getMoveDisplayName(b.moveId)),
                 );
-          const MAX_ROWS = 9; // matches maxVisibleRows in renderMovesTab
+          const MAX_ROWS = 9;
 
           if (input.isKeyPressed('ArrowUp') && movesCursor > 0) {
             movesCursor--;
@@ -225,11 +244,35 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         return;
       }
 
-      // List view controls — Escape always pops (both overworld and battle)
+      // List view — handle search input
+      const typed = input.getTextInput();
+      input.clearTextInput();
+      if (typed) {
+        searchQuery += typed;
+        cursor = 0;
+        scrollOffset = 0;
+        preloadVisibleSprites();
+      }
+
+      if (input.isKeyPressed('Backspace') && searchQuery.length > 0) {
+        searchQuery = searchQuery.slice(0, -1);
+        cursor = 0;
+        scrollOffset = 0;
+      }
+
+      // Escape: clear search first, then exit
       if (input.isKeyPressed('Escape')) {
-        stateMachine.pop();
+        if (searchQuery) {
+          searchQuery = '';
+          cursor = 0;
+          scrollOffset = 0;
+        } else {
+          stateMachine.pop();
+        }
         return;
       }
+
+      const filtered = getFilteredIds();
 
       if (input.isKeyPressed('ArrowUp')) {
         if (cursor > 0) {
@@ -242,7 +285,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       }
 
       if (input.isKeyPressed('ArrowDown')) {
-        if (cursor < TOTAL_POKEMON - 1) {
+        if (cursor < filtered.length - 1) {
           cursor++;
           if (cursor >= scrollOffset + VISIBLE_ENTRIES) {
             scrollOffset = cursor - VISIBLE_ENTRIES + 1;
@@ -252,8 +295,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       }
 
       if (input.isKeyPressed('Enter')) {
-        const id = cursor + 1;
-        if (isSeen(id)) {
+        const id = filtered[cursor];
+        if (id && isSeen(id)) {
           view = 'detail';
           detailTab = 'info';
           movesSubTab = 'byLevel';
@@ -261,7 +304,6 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           movesCursor = 0;
           movesDetailOpen = false;
           loadImage(`/sprites/pokemon/front/${id}.png`).catch(() => {});
-          // Preload evolution chain sprites
           const chain = getEvolutionChain(id);
           if (chain) {
             for (const stage of chain.stages) {
@@ -385,12 +427,13 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     }
 
     // List area (starts just below title bar)
+    const filtered = getFilteredIds();
     const listY = 23;
     for (let i = 0; i < VISIBLE_ENTRIES; i++) {
       const index = scrollOffset + i;
-      if (index >= TOTAL_POKEMON) break;
+      if (index >= filtered.length) break;
 
-      const id = index + 1;
+      const id = filtered[index];
       const y = listY + i * ENTRY_HEIGHT;
       const seen = isSeen(id);
       const isSelected = index === cursor;
@@ -448,7 +491,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     if (scrollOffset > 0) {
       drawText(ctx, '\u25b2', SCREEN_W - 10, listY - 1, { size: 8, color: '#f8a878', font: 'monospace' });
     }
-    if (scrollOffset + VISIBLE_ENTRIES < TOTAL_POKEMON) {
+    if (scrollOffset + VISIBLE_ENTRIES < filtered.length) {
       drawText(ctx, '\u25bc', SCREEN_W - 10, listY + VISIBLE_ENTRIES * ENTRY_HEIGHT - 2, {
         size: 8,
         color: '#f8a878',
@@ -456,9 +499,28 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       });
     }
 
-    // Bottom bar (two rows: navigation + shortcuts)
+    // Bottom bar \u2014 search bar when active, hints otherwise
     fillRect(ctx, 0, SCREEN_H - 20, SCREEN_W, 20, '#481818');
-    if (rtl) {
+    if (searchQuery) {
+      // Search bar
+      fillRect(ctx, 0, SCREEN_H - 20, SCREEN_W, 20, '#1a1a3a');
+      const countStr = `(${filtered.length})`;
+      const cursor_char = '\u2588'; // block cursor
+      if (rtl) {
+        drawText(ctx, countStr, 4, SCREEN_H - 17, { size: 6, color: '#a0a0ff', font: 'monospace' });
+        drawText(ctx, searchQuery + cursor_char, SCREEN_W - 4, SCREEN_H - 17, {
+          size: 6, color: '#ffffff', font: 'monospace', align: 'right',
+        });
+        const escHint = rtl ? 'ESC \u05e0\u05e7\u05d4' : 'ESC: clear';
+        drawText(ctx, escHint, SCREEN_W - 4, SCREEN_H - 9, { size: 5, color: '#6666aa', font: 'monospace', align: 'right' });
+      } else {
+        drawText(ctx, searchQuery + cursor_char, 4, SCREEN_H - 17, {
+          size: 6, color: '#ffffff', font: 'monospace',
+        });
+        drawText(ctx, countStr, SCREEN_W - 4, SCREEN_H - 17, { size: 6, color: '#a0a0ff', font: 'monospace', align: 'right' });
+        drawText(ctx, 'ESC: clear', 4, SCREEN_H - 9, { size: 5, color: '#6666aa', font: 'monospace' });
+      }
+    } else if (rtl) {
       drawText(
         ctx,
         'ESC \u2190 \u2190\u2192 \u05e0\u05d9\u05d5\u05d5\u05d8 / ENTER \u05e4\u05e8\u05d8\u05d9\u05dd',
