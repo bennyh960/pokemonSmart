@@ -52,6 +52,13 @@ export function setPokedexFocus(id: number, openDetail = true, tab?: DetailTab, 
   pendingPokedexFocus = { id, openDetail, tab, context };
 }
 
+let _openInBadgesMode = false;
+let _sessionBadgesMode = false;
+
+export function setPokedexBadgesMode(v: boolean): void {
+  _openInBadgesMode = v;
+}
+
 export function createPokedexScene(input: InputManager, stateMachine: StateMachine): Scene {
   let cursor = 0;
   let scrollOffset = 0;
@@ -89,7 +96,10 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     const q = searchQuery.toLowerCase();
     const results: number[] = [];
     for (let id = 1; id <= TOTAL_POKEMON; id++) {
-      if (String(id).startsWith(q)) { results.push(id); continue; }
+      if (String(id).startsWith(q)) {
+        results.push(id);
+        continue;
+      }
       const name = getPokemonDisplayName(id).toLowerCase();
       if (name.includes(q)) results.push(id);
     }
@@ -116,7 +126,9 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     enter(): void {
       cursor = pendingPokedexFocus ? Math.max(0, Math.min(TOTAL_POKEMON - 1, pendingPokedexFocus.id - 1)) : 0;
       scrollOffset = Math.max(0, Math.min(cursor, TOTAL_POKEMON - VISIBLE_ENTRIES));
-      view = pendingPokedexFocus?.openDetail ? 'detail' : 'list';
+      _sessionBadgesMode = _openInBadgesMode;
+      _openInBadgesMode = false;
+      view = _sessionBadgesMode ? 'badges' : pendingPokedexFocus?.openDetail ? 'detail' : 'list';
       detailTab = pendingPokedexFocus?.tab ?? 'info';
       openContext = pendingPokedexFocus?.context ?? 'overworld';
       movesSubTab = 'byLevel';
@@ -152,19 +164,17 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           }
           return;
         }
-
-        if (input.isKeyPressed('KeyB')) {
-          input.clearTextInput();
-          view = view === 'badges' ? 'list' : 'badges';
-          return;
-        }
       }
 
-      // Badges view: only Escape to close
+      // Badges view: Escape pops if opened directly from menu, else returns to list
       if (view === 'badges') {
         input.clearTextInput();
         if (input.isKeyPressed('Escape')) {
-          view = 'list';
+          if (_sessionBadgesMode) {
+            stateMachine.pop();
+          } else {
+            view = 'list';
+          }
         }
         return;
       }
@@ -509,15 +519,30 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       if (rtl) {
         drawText(ctx, countStr, 4, SCREEN_H - 17, { size: 6, color: '#a0a0ff', font: 'monospace' });
         drawText(ctx, searchQuery + cursor_char, SCREEN_W - 4, SCREEN_H - 17, {
-          size: 6, color: '#ffffff', font: 'monospace', align: 'right',
+          size: 6,
+          color: '#ffffff',
+          font: 'monospace',
+          align: 'right',
         });
         const escHint = rtl ? 'ESC \u05e0\u05e7\u05d4' : 'ESC: clear';
-        drawText(ctx, escHint, SCREEN_W - 4, SCREEN_H - 9, { size: 5, color: '#6666aa', font: 'monospace', align: 'right' });
+        drawText(ctx, escHint, SCREEN_W - 4, SCREEN_H - 9, {
+          size: 5,
+          color: '#6666aa',
+          font: 'monospace',
+          align: 'right',
+        });
       } else {
         drawText(ctx, searchQuery + cursor_char, 4, SCREEN_H - 17, {
-          size: 6, color: '#ffffff', font: 'monospace',
+          size: 6,
+          color: '#ffffff',
+          font: 'monospace',
         });
-        drawText(ctx, countStr, SCREEN_W - 4, SCREEN_H - 17, { size: 6, color: '#a0a0ff', font: 'monospace', align: 'right' });
+        drawText(ctx, countStr, SCREEN_W - 4, SCREEN_H - 17, {
+          size: 6,
+          color: '#a0a0ff',
+          font: 'monospace',
+          align: 'right',
+        });
         drawText(ctx, 'ESC: clear', 4, SCREEN_H - 9, { size: 5, color: '#6666aa', font: 'monospace' });
       }
     } else if (rtl) {
@@ -528,13 +553,11 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         SCREEN_H - 17,
         { size: 6, color: '#cccccc', font: 'monospace' },
       );
-      drawText(
-        ctx,
-        '[H] \u05e2\u05d5\u05d6\u05e8 \u05e7\u05e8\u05d1    [B] \u05ea\u05d2\u05d9\u05dd',
-        4,
-        SCREEN_H - 9,
-        { size: 5, color: '#888888', font: 'monospace' },
-      );
+      drawText(ctx, '[H] \u05e2\u05d5\u05d6\u05e8 \u05e7\u05e8\u05d1', 4, SCREEN_H - 9, {
+        size: 5,
+        color: '#888888',
+        font: 'monospace',
+      });
     } else {
       drawText(ctx, 'Up/Down: Navigate  Enter: Details  Esc: Back', 4, SCREEN_H - 17, {
         size: 6,
@@ -667,7 +690,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
     // Bottom bar
     fillRect(ctx, 0, SCREEN_H - 14, SCREEN_W, 14, '#1a3a1a');
-    const hint = rtl ? 'ESC / [B] \u05d7\u05d6\u05e8\u05d4' : 'ESC / [B] Back';
+    const hint = rtl ? 'ESC \u05d7\u05d6\u05e8\u05d4' : 'ESC Back';
     drawText(ctx, hint, 4, SCREEN_H - 11, { size: 6, color: '#aaaaaa', font: 'monospace' });
   }
 

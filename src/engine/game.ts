@@ -26,6 +26,7 @@ import { createWorldMapScene } from '../scenes/world-map.js';
 import { createPhoneScene } from '../scenes/phone.js';
 import { createGateScene } from '../scenes/gate-scene.js';
 import { createSaveSlotsScene } from '../scenes/save-slots.js';
+import { createStartMenuScene } from '../scenes/start-menu.js';
 import { initStoryEngine } from '../systems/story-engine.js';
 import { showHUD, hideHUD } from '../ui/hud-overlay.js';
 // Story content — single entry point; see content/index.ts for all quest files
@@ -78,6 +79,7 @@ export function createGame(container: HTMLElement) {
   stateMachine.register('PHONE', createPhoneScene(input, stateMachine));
   stateMachine.register('GATE', createGateScene(input, stateMachine));
   stateMachine.register('SAVE_SLOTS', createSaveSlotsScene(input, stateMachine));
+  stateMachine.register('START_MENU', createStartMenuScene(input, stateMachine));
 
   // Initialise story engine with the state machine so it can push scenes
   initStoryEngine(stateMachine);

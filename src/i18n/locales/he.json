@@ -471,5 +471,20 @@
   "battle.rapidSpinClear": "{name} פינה את המכשולים!",
   "battle.defogClear": "הזירה נוקתה ממכשולים!",
   "battle.glitchedCantCatch": "הפוקימון נגוע ע\"י NULL-X! לא ניתן ללכוד אותו!",
-  "battle.wildNpcFled": "{name} הפרא ברח!"
+  "battle.wildNpcFled": "{name} הפרא ברח!",
+  "menu.pokedex": "פוקדקס",
+  "menu.party": "קבוצה",
+  "menu.bag": "תיק",
+  "menu.map": "מפה",
+  "menu.trainerData": "נתוני מאמן",
+  "menu.save": "שמור",
+  "menu.actions": "פעולות",
+  "menu.settings": "הגדרות",
+  "menu.exit": "יציאה",
+  "menu.actions.fishing": "דיג",
+  "menu.actions.telephone": "טלפון",
+  "menu.actions.battleHelper": "עוזר קרב",
+  "menu.settings.language": "שפה",
+  "menu.settings.mute": "סאונד",
+  "menu.settings.legend": "מקרא"
 }

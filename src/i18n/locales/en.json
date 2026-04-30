@@ -471,5 +471,20 @@
   "battle.rapidSpinClear": "{name} blew away the hazards!",
   "battle.defogClear": "The arena was cleared of hazards!",
   "battle.glitchedCantCatch": "The Pokemon is infected by NULL-X! It cannot be captured!",
-  "battle.wildNpcFled": "The wild {name} fled!"
+  "battle.wildNpcFled": "The wild {name} fled!",
+  "menu.pokedex": "Pokédex",
+  "menu.party": "Party",
+  "menu.bag": "Bag",
+  "menu.map": "Map",
+  "menu.trainerData": "Trainer Data",
+  "menu.save": "Save",
+  "menu.actions": "Actions",
+  "menu.settings": "Settings",
+  "menu.exit": "Exit",
+  "menu.actions.fishing": "Fishing",
+  "menu.actions.telephone": "Telephone",
+  "menu.actions.battleHelper": "Battle Helper",
+  "menu.settings.language": "Language",
+  "menu.settings.mute": "Sound",
+  "menu.settings.legend": "Legend"
 }

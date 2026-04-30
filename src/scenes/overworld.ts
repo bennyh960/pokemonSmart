@@ -123,13 +123,21 @@ interface ChoiceState {
   callback: (idx: number) => void;
 }
 
+// Module-level state shared with the start menu scene
+let _pendingFishing = false;
+let _legendVisible = true;
+
+export function scheduleFishing(): void { _pendingFishing = true; }
+export function isLegendVisible(): boolean { return _legendVisible; }
+export function toggleLegend(): void { _legendVisible = !_legendVisible; }
+export function setupWorldMapFly(): void { setFlyCallback(null); }
+
 export function createOverworldScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
   let tileMap: TileMap | null = null;
   let currentMapData: TileMapData | null = null;
   let camera: Camera;
   let player: PlayerState;
   let encounterTriggered = false;
-  let showLegend = true;
   let flashTimer = 0;
   let flashPhase: 'none' | 'flash' | 'black' = 'none';
   let exclamationFlashTimer = -1; // -1 = inactive; counts up from 0 when any NPC spots player
@@ -1649,6 +1657,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // NPC question overlay blocks all game input while active
       if (npcOverlayActive) return;
 
+      // Fishing scheduled from the start menu
+      if (_pendingFishing && !fishingPhase) {
+        _pendingFishing = false;
+        tryStartFishing();
+        return;
+      }
+
       // Shop overlay takes priority
       if (shop.open) {
         updateShop(shop, input, dt);
@@ -2776,6 +2791,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             return;
           }
         }
+
+        // No interaction found — Enter opens the start menu
+        if (input.isKeyPressed('Enter') && hasActiveGame()) {
+          stateMachine.push('START_MENU');
+          return;
+        }
       }
 
       // P key → Party
@@ -2866,7 +2887,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // K key → Toggle keyboard legend
       if (input.isKeyPressed('k') || input.isKeyPressed('K')) {
-        showLegend = !showLegend;
+        _legendVisible = !_legendVisible;
         return;
       }
 
@@ -3384,7 +3405,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // Keyboard legend bar (bottom of screen, behind dialogues)
       if (
-        showLegend &&
+        _legendVisible &&
         !activeTextBox &&
         !choiceState &&
         !healTextBox &&

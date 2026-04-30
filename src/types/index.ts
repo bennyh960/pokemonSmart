@@ -34,7 +34,8 @@ export type SceneId =
   | 'PHONE'
   | 'GATE'
   | 'CUTSCENE'
-  | 'SAVE_SLOTS';
+  | 'SAVE_SLOTS'
+  | 'START_MENU';
 
 /** Top-level game state snapshot. */
 export interface GameState {
