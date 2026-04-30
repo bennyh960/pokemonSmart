@@ -486,5 +486,15 @@
   "menu.actions.battleHelper": "עוזר קרב",
   "menu.settings.language": "שפה",
   "menu.settings.mute": "סאונד",
-  "menu.settings.legend": "מקרא"
+  "menu.settings.legend": "מקרא",
+  "legend.party": "קבוצה",
+  "legend.dex": "פוקדקס",
+  "legend.bag": "תיק",
+  "legend.map": "מפה",
+  "legend.fish": "דיג",
+  "legend.mute": "סאונד",
+  "legend.keys": "מקשים",
+  "legend.menu": "תפריט",
+  "legend.shop": "חנות",
+  "legend.heal": "ריפוי"
 }

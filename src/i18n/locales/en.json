@@ -486,5 +486,15 @@
   "menu.actions.battleHelper": "Battle Helper",
   "menu.settings.language": "Language",
   "menu.settings.mute": "Sound",
-  "menu.settings.legend": "Legend"
+  "menu.settings.legend": "Legend",
+  "legend.party": "Party",
+  "legend.dex": "Dex",
+  "legend.bag": "Bag",
+  "legend.map": "Map",
+  "legend.fish": "Fish",
+  "legend.mute": "Mute",
+  "legend.keys": "Keys",
+  "legend.menu": "Menu",
+  "legend.shop": "Shop",
+  "legend.heal": "Heal"
 }

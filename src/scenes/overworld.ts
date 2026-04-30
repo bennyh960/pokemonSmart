@@ -127,10 +127,18 @@ interface ChoiceState {
 let _pendingFishing = false;
 let _legendVisible = true;
 
-export function scheduleFishing(): void { _pendingFishing = true; }
-export function isLegendVisible(): boolean { return _legendVisible; }
-export function toggleLegend(): void { _legendVisible = !_legendVisible; }
-export function setupWorldMapFly(): void { setFlyCallback(null); }
+export function scheduleFishing(): void {
+  _pendingFishing = true;
+}
+export function isLegendVisible(): boolean {
+  return _legendVisible;
+}
+export function toggleLegend(): void {
+  _legendVisible = !_legendVisible;
+}
+export function setupWorldMapFly(): void {
+  setFlyCallback(null);
+}
 
 export function createOverworldScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
   let tileMap: TileMap | null = null;
@@ -1266,11 +1274,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
 
   /** Start the surf mount animation — Pokemon appears at water tile, then dives in as surf activates. */
-  function startSurfMountAnimation(
-    pokemon: import('../types/index.js').Pokemon,
-    waterX: number,
-    waterY: number,
-  ): void {
+  function startSurfMountAnimation(pokemon: import('../types/index.js').Pokemon, waterX: number, waterY: number): void {
     const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
     surfMountAnim = {
       phase: 'pokemon-out',
@@ -1284,10 +1288,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       capturedPokemon: pokemon,
     };
     loadImage(spritePath)
-      .then((img) => { if (surfMountAnim?.pokemonId === pokemon.id) surfMountAnim.pokemonSprite = img; })
-      .catch(() => { /* non-fatal */ });
+      .then((img) => {
+        if (surfMountAnim?.pokemonId === pokemon.id) surfMountAnim.pokemonSprite = img;
+      })
+      .catch(() => {
+        /* non-fatal */
+      });
   }
-
 
   /** Returns true only if the tile itself is categorised as water (category === 'water').
    *  Walkable ground tiles (beach sand, cave sand) that happen to have water encounter
@@ -2105,7 +2112,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // Surf transition flash + wave timer
       if (surfFlashTimer > 0) surfFlashTimer = Math.max(0, surfFlashTimer - dt);
-      if (isCurrentlySurfing) surfWaveTimer += dt; else surfWaveTimer = 0;
+      if (isCurrentlySurfing) surfWaveTimer += dt;
+      else surfWaveTimer = 0;
 
       if (player.moving) {
         player.moveProgress += dt / MOVE_DURATION;
@@ -2148,7 +2156,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 .then((img) => {
                   if (surfReturnAnim?.pokemonId === dismountId) surfReturnAnim.pokemonSprite = img;
                 })
-                .catch(() => { /* non-fatal */ });
+                .catch(() => {
+                  /* non-fatal */
+                });
               activeTextBox = createTextBox(
                 [t('hm.surf.returned', { name: getPokemonDisplayName(dismountId) })],
                 isRTL(),
@@ -2744,8 +2754,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
         }
 
-        // Surf: face water tile + Enter/Space while not already surfing
-        if (tileMap && hasActiveGame() && !isCurrentlySurfing) {
+        // Surf: face water tile + Space only (Enter is reserved for the start menu)
+        if (tileMap && hasActiveGame() && !isCurrentlySurfing && input.isKeyPressed(' ')) {
           const surfVec = DIR_VECTORS[player.facing];
           if (surfVec && isTileWater(player.gridX + surfVec.dx, player.gridY + surfVec.dy)) {
             const pd = getPlayerData();
@@ -2759,7 +2769,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 const single = check.failPokemon.length === 1;
                 const names = check.failPokemon.map((p) => getPokemonDisplayName(p.id)).join(', ');
                 if (check.failReason === 'level') {
-                  msg = t(single ? 'hm.surf.failLevel.one' : 'hm.surf.failLevel.many', { names, level: check.minLevel });
+                  msg = t(single ? 'hm.surf.failLevel.one' : 'hm.surf.failLevel.many', {
+                    names,
+                    level: check.minLevel,
+                  });
                 } else if (check.failReason === 'height') {
                   const height = (check.minHeight ?? 0).toFixed(1);
                   msg = t(single ? 'hm.surf.failHeight.one' : 'hm.surf.failHeight.many', { names, height });
@@ -3348,13 +3361,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.save();
         ctx.globalAlpha = surfMountAnim.alpha;
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(
-          surfMountAnim.pokemonSprite,
-          wx - spriteSize / 4,
-          wy - spriteSize / 2,
-          spriteSize,
-          spriteSize,
-        );
+        ctx.drawImage(surfMountAnim.pokemonSprite, wx - spriteSize / 4, wy - spriteSize / 2, spriteSize, spriteSize);
         // Expanding splash ring during dive phase
         if (surfMountAnim.phase === 'dive') {
           const progress = surfMountAnim.timer / 0.35;
@@ -3376,13 +3383,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.save();
         ctx.globalAlpha = surfReturnAnim.alpha;
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(
-          surfReturnAnim.pokemonSprite,
-          psx - spriteSize / 2,
-          psy - spriteSize / 2,
-          spriteSize,
-          spriteSize,
-        );
+        ctx.drawImage(surfReturnAnim.pokemonSprite, psx - spriteSize / 2, psy - spriteSize / 2, spriteSize, spriteSize);
         ctx.restore();
       }
 
@@ -3415,15 +3416,23 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       ) {
         const barY = SCREEN_H - 11;
         fillRect(ctx, 0, barY, SCREEN_W, 11, '#00000088');
-        const isAdmin = hasActiveGame() && getPlayerData().name === ADMIN_NAME;
-        const hints = isAdmin
-          ? 'P:Party  D:Dex  B:Bag  W:Map  L:Lang  M:Mute  K:Keys  N:Shop  H:Heal'
-          : 'P:Party  D:Dex  B:Bag  W:Map  L:Lang  M:Mute  K:Keys';
-        drawText(ctx, hints, SCREEN_W / 2, barY + 2, {
+        const _lpd = hasActiveGame() ? getPlayerData() : null;
+        const _isAdmin = _lpd?.name === ADMIN_NAME;
+        const _hasFish = (_lpd?.items['fishing-rod'] ?? 0) > 0;
+        const _lparts = [
+          `P:${t('legend.party')}`,
+          `D:${t('legend.dex')}`,
+          `B:${t('legend.bag')}`,
+          `W:${t('legend.map')}`,
+        ];
+        if (_hasFish) _lparts.push(`F:${t('legend.fish')}`);
+        _lparts.push(`M:${t('legend.mute')}`, `K:${t('legend.keys')}`, `ENTER:${t('legend.menu')}`);
+        if (_isAdmin) _lparts.push(`N:${t('legend.shop')}`, `H:${t('legend.heal')}`);
+        drawText(ctx, _lparts.join(' '), SCREEN_W / 2, barY + 2, {
           size: 6,
           color: '#aaaaaa',
-          font: 'monospace',
           align: 'center',
+          direction: 'ltr',
         });
       }
 
