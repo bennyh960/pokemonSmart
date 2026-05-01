@@ -66,7 +66,9 @@ export function createHeroSelectScene(input: InputManager, stateMachine: StateMa
   return {
     enter(): void {
       loadCharacterSprites().catch(() => {});
-      heroes = getCharactersByRole('hero');
+      // todo: until we create surfable heros sprite - we stay hardcoded for ashKetchum
+      // heroes = getCharactersByRole('hero').filter((hero) => !hero.id.endsWith('-surf'));
+      heroes = getCharactersByRole('hero').filter((hero) => hero.id === 'ashKetchum');
       fadeAlpha = 1;
       fadeIn = true;
       fadeOut = false;
@@ -159,7 +161,17 @@ export function createHeroSelectScene(input: InputManager, stateMachine: StateMa
       });
       if (previewFrame) {
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(previewFrame.image, previewFrame.sx, previewFrame.sy, previewFrame.w, previewFrame.h, 38, 58, TILE_SIZE * 2, TILE_SIZE * 2);
+        ctx.drawImage(
+          previewFrame.image,
+          previewFrame.sx,
+          previewFrame.sy,
+          previewFrame.w,
+          previewFrame.h,
+          38,
+          58,
+          TILE_SIZE * 2,
+          TILE_SIZE * 2,
+        );
       }
 
       fillRect(ctx, 108, 28, 122, 112, '#202038');
@@ -177,10 +189,28 @@ export function createHeroSelectScene(input: InputManager, stateMachine: StateMa
         const cellFrame = getCharacterFrame(hero.id, 'down', 'stand');
 
         fillRect(ctx, cellX, cellY, HERO_CELL_SIZE, HERO_CELL_SIZE, isSelected ? '#2f3b72' : '#12121d');
-        drawRect(ctx, cellX, cellY, HERO_CELL_SIZE, HERO_CELL_SIZE, isSelected ? '#ffcb05' : '#5a669d', isSelected ? 2 : 1);
+        drawRect(
+          ctx,
+          cellX,
+          cellY,
+          HERO_CELL_SIZE,
+          HERO_CELL_SIZE,
+          isSelected ? '#ffcb05' : '#5a669d',
+          isSelected ? 2 : 1,
+        );
         if (cellFrame) {
           ctx.imageSmoothingEnabled = false;
-          ctx.drawImage(cellFrame.image, cellFrame.sx, cellFrame.sy, cellFrame.w, cellFrame.h, cellX + 6, cellY + 4, TILE_SIZE, TILE_SIZE);
+          ctx.drawImage(
+            cellFrame.image,
+            cellFrame.sx,
+            cellFrame.sy,
+            cellFrame.w,
+            cellFrame.h,
+            cellX + 6,
+            cellY + 4,
+            TILE_SIZE,
+            TILE_SIZE,
+          );
         }
       }
 
@@ -199,7 +229,9 @@ export function createHeroSelectScene(input: InputManager, stateMachine: StateMa
       });
 
       if (fadeAlpha > 0) {
-        const alpha = Math.floor(fadeAlpha * 255).toString(16).padStart(2, '0');
+        const alpha = Math.floor(fadeAlpha * 255)
+          .toString(16)
+          .padStart(2, '0');
         fillRect(ctx, 0, 0, SCREEN_W, SCREEN_H, `#000000${alpha}`);
       }
     },

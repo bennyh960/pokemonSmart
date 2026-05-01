@@ -26,13 +26,21 @@
     {
       "id": "algorithma",
       "x": 3,
-      "y": 6,
+      "y": 4,
       "facing": "down",
       "type": "healer",
       "dialogue": [
         {
           "en": "Now, go out there and explore! Your adventure awaits.",
           "he": "ההרפתקה הבאה מחכה לך!"
+        },
+        {
+          "en": "",
+          "he": "אל תשכח להשתמש בפקוידע שלך בלחיצה על 'D'"
+        },
+        {
+          "en": "",
+          "he": "תמיד תוכל לבדוק את מצב הפוקימונים שלך בלחיצה על P"
         }
       ],
       "spriteType": "Prof.Algorithma",
@@ -45,12 +53,12 @@
           },
           {
             "dir": "up",
-            "steps": 4,
+            "steps": 2,
             "delay": 5
           },
           {
             "dir": "down",
-            "steps": 4,
+            "steps": 2,
             "delay": 1
           },
           {
@@ -71,10 +79,6 @@
           {
             "itemId": "poke-ball",
             "quantity": 5
-          },
-          {
-            "itemId": "battle-helper",
-            "quantity": 50
           }
         ]
       },
@@ -87,21 +91,26 @@
       "id": "remainder-lab",
       "name": {
         "en": "Remainder",
-        "he": "ריי מיינדר"
+        "he": "ג'ואי שארית"
       },
       "x": 7,
-      "y": 3,
-      "facing": "up",
+      "y": 5,
+      "facing": "down",
       "type": "npc",
       "spriteType": "rival-reminder",
-      "dialogue": [],
+      "dialogue": [
+        {
+          "en": "Hey! You're the new trainer, right? Try not to fall behind.",
+          "he": "הי! אתה המאמן החדש, נכון? נסה לא להישאר מאחור."
+        }
+      ],
       "autoWalk": {
         "pattern": [],
         "loop": false,
         "beforeDespawnPattern": [
           {
             "dir": "down",
-            "steps": 8,
+            "steps": 6,
             "delay": 0
           }
         ]
@@ -112,21 +121,19 @@
   "music": "town4",
   "encounterTableId": null,
   "area": "Zeroville",
-  "interactiveItems": {}
-,
   "tiles": [
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"]
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"],
+    ["g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1", "g1"]
   ],
   "objects": [
     {
@@ -231,17 +238,17 @@
     }
   ],
   "objectLayer": [
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null]
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null]
   ]
 }

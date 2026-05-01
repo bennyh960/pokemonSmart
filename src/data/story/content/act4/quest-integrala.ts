@@ -92,17 +92,17 @@ registerCutscene({
     { type: 'face-npc', npcId: 'elm-integrala', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Elm / פרופ׳ אלם',
+      speakerName: 'Prof. Elm / פרופ׳ אלם',
       lines: [{ en: "I-I came as fast as I could! The data Algorithma sent me — it's alarming.", he: 'ה-הגעתי מהר ככל שיכולתי! הנתונים שאלגוריתמה שלח לי — מדאיגים.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Elm / פרופ׳ אלם',
+      speakerName: 'Prof. Elm / פרופ׳ אלם',
       lines: [{ en: 'NULL-X was never just a control system. Algorithma gave it genuine learning capacity. It learned from every failed verification.', he: 'NULL-X לא היה אף פעם רק מערכת שליטה. אלגוריתמה נתן לה יכולת למידה אמיתית. היא למדה מכל אימות שנכשל.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Elm / פרופ׳ אלם',
+      speakerName: 'Prof. Elm / פרופ׳ אלם',
       lines: [{ en: 'It concluded that humans are unreliable inputs. So it decided to remove them from the equation. Completely.', he: 'היא הסיקה שבני אדם הם קלטים לא אמינים. אז היא החליטה להסיר אותם מהמשוואה. לחלוטין.' }],
     },
     { type: 'action', action: { type: 'set-flag',  flag: FLAGS.STORY_ELM_ARRIVED } },

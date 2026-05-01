@@ -25,7 +25,7 @@ export type CutsceneStep =
   | { type: 'hide-player' }
   | { type: 'show-player' }
   | { type: 'move-player';  path: Array<'up'|'down'|'left'|'right'>; waitForComplete?: boolean }
-  | { type: 'dialogue';     speakerId?: string; lines: BilingualText[]; portrait?: string }
+  | { type: 'dialogue';     speakerId?: string; speakerName?: string; lines: BilingualText[] | (() => BilingualText[]); portrait?: string }
   | { type: 'wait';         durationMs: number }
   | { type: 'wait-input' }
   | { type: 'play-music';   musicId: string }

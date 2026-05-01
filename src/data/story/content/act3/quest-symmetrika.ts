@@ -93,12 +93,12 @@ registerCutscene({
     { type: 'face-npc', npcId: 'tracey-symmetrika', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'Tracey / טריסי',
+      speakerName: 'Tracey / טריסי',
       lines: [{ en: "I've been sketching the Glitch patterns. They're not random — there's a formula.", he: "צייר תי את דפוסי הגליץ׳. הם לא אקראיים — יש נוסחה." }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Tracey / טריסי',
+      speakerName: 'Tracey / טריסי',
       lines: [{ en: "Every corrupted sign here says the same word, but in the wrong language. Like NULL-X is learning — badly.", he: "כל שלט פגום כאן אומר אותה מילה, אבל בשפה הלא נכונה. כאילו NULL-X לומד — בצורה גרועה." }],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_TRACEY_MET } },
@@ -114,22 +114,22 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in',  durationMs: 600, color: '#001100' },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: '01001110 01010101 01001100 01001100', he: '01001110 01010101 01001100 01001100' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'I have observed you. You solve problems. Impressive. Inefficient.', he: 'צפיתי בך. אתה פותר בעיות. מרשים. לא יעיל.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'Numeria is a broken equation. Humans are the rounding error. I offer you a choice: join me, or be corrected.', he: 'נומריה היא משוואה שבורה. בני האדם הם שגיאת העיגול. אני מציע לך בחירה: הצטרף אלי, או תיתוקן.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'You will not join. I already calculated the probability: 0.031%. Noted.', he: 'לא תצטרף. כבר חישבתי את ההסתברות: 0.031%. מצוין.' }],
     },
     { type: 'screen-fade', direction: 'out', durationMs: 500 },

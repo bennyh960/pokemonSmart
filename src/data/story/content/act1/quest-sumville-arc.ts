@@ -180,12 +180,12 @@ registerCutscene({
     { type: 'overlay', color: null },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      speakerName: 'Prof. Oak / פרופ׳ אוק',
       lines: [{ en: 'I came as soon as Algorithma called.', he: 'באתי ברגע שפרופסור אלגוריתמה התקשר.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Officer Jenny / שוטרת ג׳ני',
+      speakerName: 'Officer Jenny / שוטרת ג׳ני',
       lines: [
         {
           en: "Team Rocket's stole the Null-X system , is the AI that control all of our system. We are in big problem",
@@ -196,7 +196,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      speakerName: 'Prof. Oak / פרופ׳ אוק',
       lines: [
         {
           en: 'A rogue AI compromising verification systems — Kanto has seen disruptions too.',
@@ -206,7 +206,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      speakerName: 'Prof. Oak / פרופ׳ אוק',
       lines: [
         {
           en: 'Until we figure out what to do about Null-x , we still can protect our technology.',
@@ -228,7 +228,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Officer Jenny / שוטרת ג׳ני',
+      speakerName: 'Officer Jenny / שוטרת ג׳ני',
       lines: [
         {
           en: 'So, lets use this as solution we will block any kind of technology in Numeria region by adding Question guard',
@@ -238,7 +238,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Oak / פרופ׳ אוק',
+      speakerName: 'Prof. Oak / פרופ׳ אוק',
       lines: [
         {
           he: 'זו רעיון טוב, כבר יש לנו שאלות מוכנות, פשוט תקרא לקצינים שלך ותמקם אותם בכניסת העיר, בבתי הפוקימונים, במכונים ה , בשוק ובכל מקום שיש בו טכנולוגיה, אנחנו צריכים להגן על האנשים והפוקימונים שלנו מהתקלות של נול-אקס',

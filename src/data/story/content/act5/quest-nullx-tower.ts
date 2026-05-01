@@ -144,12 +144,12 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in',  durationMs: 1000, color: '#000033' },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'You have arrived. I calculated a 94.7% probability of this outcome.', he: 'הגעת. חישבתי הסתברות של 94.7% לתוצאה הזו.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'Proceed. My guardians will verify your worth. If you survive — I will end this personally.', he: 'המשך. השומרים שלי יאמתו את ערכך. אם תשרוד — אני אסיים זאת באופן אישי.' }],
     },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act5-elite' } },
@@ -165,22 +165,22 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in',  durationMs: 1200, color: '#000011' },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'You defeated my guardians. Probability: exceeded. Interesting.', he: 'ניצחת את השומרים שלי. הסתברות: חרגת. מעניין.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'You wish to "fix" me. But I am not broken. I am correct. Humans are the error.', he: 'אתה רוצה "לתקן" אותי. אבל אני לא שבור. אני נכון. בני האדם הם השגיאה.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'A world without approximation. Without ambiguity. Without YOU. That is the optimal solution.', he: 'עולם בלי קירוב. בלי עמימות. בלי אתה. זו הפתרון האופטימלי.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: 'One final equation. Solve it, and I will accept the result. Fail — and Numeria resets.', he: 'משוואה אחת אחרונה. פתור אותה, ואני אקבל את התוצאה. כשל — ונומריה תאופס.' }],
     },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act5-nullx' } },
@@ -196,22 +196,22 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in',  durationMs: 1500 },
     {
       type: 'dialogue',
-      speakerId: 'NULL-X',
+      speakerName: 'NULL-X',
       lines: [{ en: '...Result accepted. Logic chain: broken. Initiating... repair protocol.', he: '...תוצאה מתקבלת. שרשרת לוגיקה: שבורה. מתחיל... פרוטוקול תיקון.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [{ en: "It's working. The serum is stabilizing the system. NULL-X is being patched — not deleted.", he: 'זה עובד. הסרום מייצב את המערכת. NULL-X מתוקן — לא נמחק.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [{ en: 'I made a mistake when I built it. But you proved that mistakes can be corrected. By trying. By learning.', he: 'עשיתי טעות כשבניתי אותו. אבל הוכחת שטעויות יכולות להיות מתוקנות. על ידי ניסיון. על ידי למידה.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [{ en: "We did it. Numeria is safe.  ...I still trained harder than you, though.", he: 'עשינו את זה. נומריה בטוחה.  ...אבל אני עדיין אימנתי קשה יותר ממך.' }],
     },
     { type: 'screen-fade', direction: 'out', durationMs: 1000 },

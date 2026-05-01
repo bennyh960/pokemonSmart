@@ -73,7 +73,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: 'Wait — before you leave Route 1, I need to tell you something.',
@@ -83,7 +83,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: 'Strange errors have been appearing in the verification systems. Corrupted logic. Contradictions.',
@@ -93,7 +93,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: "I fear something — or someone — is deliberately disrupting the region's knowledge gates.",
@@ -103,7 +103,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: "Be careful in Sumville. And keep growing stronger — you'll need it.",

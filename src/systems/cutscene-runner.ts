@@ -22,6 +22,7 @@ import { drawText, fillRect } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as W, LOGICAL_HEIGHT as H, TILE_SIZE } from '../engine/config.js';
 import { getLocale, isRTL } from '../i18n/i18n.js';
 import { getCutscene } from '../data/story/cutscenes.js';
+import CHARACTERS_DATA from '../data/sprites/characters.json';
 
 // ---------------------------------------------------------------------------
 // Context — callbacks the overworld provides so the runner can poke state
@@ -55,7 +56,8 @@ interface DialogueState {
   lineIndex: number;
   charIndex: number; // typewriter char counter
   charTimer: number;
-  speakerId?: string;
+  speakerDisplayName?: string; // resolved display name (from speakerId lookup, speakerName, or fallback)
+  speakerCharId?: string;      // character ID when resolved from characters.json (for sprite icon)
   waitingDismiss: boolean; // true once all chars revealed, waiting for Enter
 }
 
@@ -103,6 +105,21 @@ let _npcMoveWaiting: string | null = null; // npcId being waited on for animated
 let _completionResolve: (() => void) | null = null;
 
 const CHARS_PER_SEC = 40; // typewriter speed
+
+// Lazily loaded character spritesheet for dialogue portrait icons
+let _charSheetImg: HTMLImageElement | null = null;
+let _charSheetLoading = false;
+
+function getCharSheet(): HTMLImageElement | null {
+  if (_charSheetImg) return _charSheetImg;
+  if (!_charSheetLoading) {
+    _charSheetLoading = true;
+    const img = new Image();
+    img.src = CHARACTERS_DATA.image;
+    img.onload = () => { _charSheetImg = img; };
+  }
+  return null;
+}
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -376,13 +393,36 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
   switch (step.type) {
     case 'dialogue': {
       const locale = getLocale();
-      const lines = step.lines.map((l) => (locale === 'he' ? l.he : l.en) || l.en || '');
+      const resolvedLines = typeof step.lines === 'function' ? step.lines() : step.lines;
+      const lines = resolvedLines.map((l) => (locale === 'he' ? l.he : l.en) || l.en || '');
+
+      let speakerDisplayName: string | undefined;
+      let speakerCharId: string | undefined;
+
+      if (step.speakerId) {
+        type CharEntry = { name?: { en: string; he: string }; frames: Array<{ sx: number; sy: number } | null>; frameWidth: number; frameHeight: number };
+        const charEntry = (CHARACTERS_DATA.characters as unknown as Record<string, CharEntry>)[step.speakerId];
+        if (charEntry?.name) {
+          speakerDisplayName = locale === 'he' ? charEntry.name.he : charEntry.name.en;
+          speakerCharId = step.speakerId;
+        }
+      }
+
+      if (!speakerDisplayName && step.speakerName) {
+        speakerDisplayName = step.speakerName;
+      }
+
+      if (!speakerDisplayName) {
+        speakerDisplayName = locale === 'he' ? 'מישהו' : 'Someone';
+      }
+
       _dialogue = {
         lines,
         lineIndex: 0,
         charIndex: 0,
         charTimer: 0,
-        speakerId: step.speakerId,
+        speakerDisplayName,
+        speakerCharId,
         waitingDismiss: false,
       };
       // Don't advance _stepIndex — dialogue handler does it on dismiss
@@ -641,10 +681,31 @@ function renderDialogue(ctx: CanvasRenderingContext2D, d: DialogueState): void {
   fillRect(ctx, BOX_X, BOX_Y, BOX_W, 2, '#00d4ff'); // top accent
   fillRect(ctx, BOX_X, BOX_Y + BOX_H - 2, BOX_W, 2, '#00d4ff'); // bottom accent
 
-  // Speaker name
-  if (d.speakerId) {
-    const nameX = rtl ? BOX_X + BOX_W - PADDING : BOX_X + PADDING;
-    drawText(ctx, d.speakerId, nameX, BOX_Y + 4, {
+  // Speaker row: optional sprite icon + name
+  if (d.speakerDisplayName) {
+    const ICON_SIZE = 14;
+    let nameX: number;
+
+    if (d.speakerCharId) {
+      const img = getCharSheet();
+      if (img) {
+        type CharEntry = { name?: { en: string; he: string }; frames: Array<{ sx: number; sy: number } | null>; frameWidth: number; frameHeight: number };
+        const charEntry = (CHARACTERS_DATA.characters as unknown as Record<string, CharEntry>)[d.speakerCharId];
+        const downStandIdx = (CHARACTERS_DATA.dict as Record<string, number>)['down-stand'] ?? 3;
+        const frame = charEntry?.frames[downStandIdx];
+        if (frame && charEntry) {
+          const iconX = rtl ? BOX_X + BOX_W - PADDING - ICON_SIZE : BOX_X + PADDING;
+          ctx.drawImage(img, frame.sx, frame.sy, charEntry.frameWidth, charEntry.frameHeight, iconX, BOX_Y + 2, ICON_SIZE, ICON_SIZE);
+        }
+      }
+      nameX = rtl
+        ? BOX_X + BOX_W - PADDING - ICON_SIZE - 3
+        : BOX_X + PADDING + ICON_SIZE + 3;
+    } else {
+      nameX = rtl ? BOX_X + BOX_W - PADDING : BOX_X + PADDING;
+    }
+
+    drawText(ctx, d.speakerDisplayName, nameX, BOX_Y + 4, {
       size: 6,
       color: '#00d4ff',
       align: rtl ? 'right' : 'left',
@@ -656,7 +717,7 @@ function renderDialogue(ctx: CanvasRenderingContext2D, d: DialogueState): void {
   const currentLine = d.lines[d.lineIndex] ?? '';
   const visible = currentLine.slice(0, d.charIndex);
 
-  const textY = BOX_Y + (d.speakerId ? 14 : PADDING + 4);
+  const textY = BOX_Y + (d.speakerDisplayName ? 14 : PADDING + 4);
   const textX = rtl ? BOX_X + BOX_W - PADDING : BOX_X + PADDING;
 
   drawText(ctx, visible, textX, textY, {

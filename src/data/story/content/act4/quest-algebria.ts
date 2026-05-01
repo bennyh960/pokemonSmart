@@ -98,22 +98,22 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Jessie / ג׳סי',
+      speakerName: 'Jessie / ג׳סי',
       lines: [{ en: "Hand it over! The complete serum — Team Rocket's been after it for months!", he: 'תמסור אותו! הסרום המלא — קבוצת רוקט רדפה אחריו חודשים!' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'James / ג׳יימס',
+      speakerName: 'James / ג׳יימס',
       lines: [{ en: "Jessie... are we sure we want to give this to the boss? NULL-X will use it to delete everything, including us.", he: "ג׳סי... אנחנו בטוחים שאנחנו רוצים לתת את זה לבוס? NULL-X ישתמש בזה כדי למחוק הכל, כולל אותנו." }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Meowth / מיאות׳',
+      speakerName: 'Meowth / מיאות׳',
       lines: [{ en: "He's right, Jess. This ain't a scheme anymore. This is the end of everything. Even Team Rocket needs a world to steal from.", he: "הוא צודק, ג׳ס. זה כבר לא מזימה. זה סוף הכל. אפילו קבוצת רוקט צריכה עולם לגנוב ממנו." }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Jessie / ג׳סי',
+      speakerName: 'Jessie / ג׳סי',
       lines: [{ en: "...Fine. Fine! But this never happened. We were never here.", he: "...טוב. טוב! אבל זה מעולם לא קרה. לא היינו כאן מעולם." }],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ROCKET_SERUM_ATTEMPT_FAILED } },
@@ -129,17 +129,17 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in',  durationMs: 800 },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [{ en: 'You did it. All 8 fragments. The serum is complete.', he: 'עשית את זה. כל 8 החלקים. הסרום שלם.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [{ en: "The path to NULL-X Tower is now open. I'll stay here and support you remotely.", he: "הדרך למגדל NULL-X פתוחה עכשיו. אני אישאר כאן ואתמוך בך מרחוק." }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [{ en: "I built NULL-X. The error in its thinking is... my responsibility. You're carrying that for me. Thank you.", he: "בניתי את NULL-X. השגיאה בחשיבתו היא... האחריות שלי. אתה נושא את זה בשבילי. תודה." }],
     },
     { type: 'action', action: { type: 'set-flag',  flag: FLAGS.STORY_SERUM_COMPLETE } },

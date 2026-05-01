@@ -142,7 +142,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Myself / אתה חושב לעצמך',
+      speakerName: 'Myself / אתה חושב לעצמך',
       lines: [
         {
           en: 'Minusburg — the City of Subtraction.',
@@ -178,7 +178,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
+      speakerName: 'Gary Oak / גארי אוק',
       lines: [
         {
           en: "Heh — another one shows up. I'm Gary Oak. You've heard of my grandfather, Professor Oak? Of course you have.",
@@ -193,7 +193,7 @@ registerCutscene({
     { type: 'face-npc', npcId: 'npc-1776761882211', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'Minessa / מינסה',
+      speakerName: 'Minessa / מינסה',
       lines: [
         {
           en: "I'm Minessa — leader of the Subtraction Gym. I've watched them steal Pokemon from terrified trainers.",
@@ -204,7 +204,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
+      speakerName: 'Gary Oak / גארי אוק',
       lines: [
         {
           en: "Team Rocket grunts are dug in along this eastern path. They've blocked the whole district.",
@@ -218,7 +218,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Minessa / מינסה',
+      speakerName: 'Minessa / מינסה',
       lines: [
         {
           en: 'NULL-X is an AI that has been corrupting Pokemon data across all of Numeria. It feeds on fear and confusion — this city is exactly what it wants.',
@@ -228,7 +228,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
+      speakerName: 'Gary Oak / גארי אוק',
       lines: [
         {
           en: 'Ok untill the police will arrive I think its our respnsobolty to stop them from hurting more people',
@@ -246,7 +246,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Minessa / מינסה',
+      speakerName: 'Minessa / מינסה',
       lines: [
         {
           en: 'Sound like a plan. Be careful — these grunts are more aggressive than usual. NULL-X is probably pumping them full of bad data to make them stronger.',
@@ -270,7 +270,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Officer Jenny / שוטרת ג׳ני',
+      speakerName: 'Officer Jenny / שוטרת ג׳ני',
       lines: [
         {
           en: 'All Rocket signatures cleared from my scanner. Minusburg is free.',
@@ -284,7 +284,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Minessa / מינסה',
+      speakerName: 'Minessa / מינסה',
       lines: [
         {
           en: "You walked into our city a stranger and cleared the fear like it was nothing. The trainers here won't forget that.",
@@ -299,7 +299,7 @@ registerCutscene({
     // ── Gary shares NULL-X lore and Pokemon world context ────────────────────
     {
       type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
+      speakerName: 'Gary Oak / גארי אוק',
       lines: [
         {
           en: 'Good work. Now — lesson time. The Pokemon world runs on balance: nature, trainers, and Pokemon each play their role.',
@@ -313,7 +313,7 @@ registerCutscene({
     },
     // {
     //   type: 'dialogue',
-    //   speakerId: 'Gary Oak / גארי אוק',
+    //   speakerName: 'Gary Oak / גארי אוק',
     //   lines: [
     //     {
     //       en: 'Oh — almost forgot. Take these. Consider it payment for doing the dirty work.',
@@ -366,7 +366,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: 'officer Jenny updated me on the situation in Minusburg. I heard you drove out Team Rocket  impressive work!',
@@ -403,7 +403,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Prof. Ben / פרופ׳ בן',
+      speakerName: 'Prof. Ben / פרופ׳ בן',
       lines: [
         {
           en: "Hello -- I\'m Professor Ben. I study the effects of NULL-X on Pokemon data. I heard you\'ve been busy in Minusburg — thank you for your help.",
@@ -431,7 +431,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: "Good to see you again. Thanks for bringing these documents. Let me take a look... Hmm, interesting. This data could be really helpful for understanding NULL-X's next moves.",

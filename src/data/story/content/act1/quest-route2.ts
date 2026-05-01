@@ -50,7 +50,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: 'Congratulations on your progress. Adda the Gym Leader mentioned you were doing well.',
@@ -60,7 +60,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: 'You helped Sumvile return the bridge Crystal, you where brave to defeat team rocket but thier resources are vast and they will keep coming. I suggest you train harder and explore Route 2, there are some trainers there that can give you a good fight.',
@@ -70,7 +70,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: 'Rei Minder also should be in route 2. He also has been training hard and will provide a tough challenge.',
@@ -90,7 +90,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Rei Minder / ריי שארית',
+      speakerName: 'Rei Minder / ריי שארית',
       lines: [
         {
           en: 'Hey , I just saw you on the road , what talking you too long?',

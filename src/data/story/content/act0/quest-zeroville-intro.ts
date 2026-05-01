@@ -19,6 +19,43 @@ import { registerCutscene } from '../../cutscenes.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { MapId } from '../../../maps/map-ids.js';
+import type { BilingualText } from '../../../../systems/npc.js';
+import { getPlayerData } from '../../../../systems/game-state.js';
+
+const getStarterLines = (): BilingualText[] => {
+  const [starter] = getPlayerData().party;
+  switch (starter?.id) {
+    case 1:
+      return [
+        { en: 'Bulbasaur! A Grass type — strategic and resilient.', he: 'בלבזואר! סוג דשא — אסטרטגי ועמיד.' },
+        {
+          en: 'Grass type pokemon are strong against Water , Rock , Ground types. They can learn moves that sap the strength of their opponents, and even heal themselves! A great choice for new trainers.',
+          he: 'פוקמוני סוג דשא חזקים נגד סוגי מים, סלע ואדמה. הם יכולים ללמוד מהלכים שמחלישים את יריביהם ואפילו לרפא את עצמם! בחירה מצוינת לשותף הראשון .',
+        },
+      ];
+    case 4:
+      return [
+        { en: 'Charmander! Fire type — bold and fierce.', he: 'צ׳רמנדר! סוג אש — נועז ואמיץ בעל כח התקפה משובח.' },
+        {
+          en: 'Fire type pokemon are strong against Grass , Bug , Ice , Steel types. They can learn powerful moves that deal heavy damage, but watch out — they can be a bit fragile! A fiery choice for new trainers.',
+          he: 'פוקמוני סוג אש חזקים נגד סוגי דשא, חרק, קרח, פלדה. הם יכולים ללמוד מהלכים רבי עוצמה שגורמים נזק כבד, אבל שימו לב — הם יכולים להיות קצת פגיעים! בחירה לוהטת למאמנים חדשים.',
+        },
+      ];
+    case 7:
+      return [
+        {
+          en: 'Squirtle! Water type — adaptable and steady.',
+          he: 'סקווירטל! סוג מים — גמיש עם הגנה גבוהה בזכות השריון שלו .',
+        },
+        {
+          en: 'Water type pokemon are strong against Fire , Ground , Rock types. They can learn moves that control the battlefield and support their team. A reliable choice for new trainers.',
+          he: 'פוקמוני סוג מים חזקים נגד סוגי אש, אדמה וסלע. הם יכולים ללמוד מהלכים ששולטים בשדה הקרב ותומכים בקבוצה שלהם. בחירה אמינה למאמנים חדשים.',
+        },
+      ];
+    default:
+      return [{ en: 'A fine choice!', he: 'בחירה מצוינת!' }];
+  }
+};
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -49,61 +86,30 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in', durationMs: 500 },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerId: 'Prof.Algorithma',
       lines: [
         {
           en: "Ah, you're here! Welcome to my lab. I'm Professor Algorithma.",
           he: 'או, הגעת! ברוך הבא למעבדה שלי. אני פרופסור אלגוריתמה.',
         },
-      ],
-    },
-    {
-      type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
-      lines: [
         {
           en: 'This is Numeria — a region where knowledge and Pokemon go hand in hand.',
           he: 'זוהי נומריה — אזור שבו ידע ופוקמונים הולכים יד ביד.',
         },
-      ],
-    },
-    {
-      type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
-      lines: [
-        {
-          en: "You have a rare gift — an intuition for numbers and logic. I've been waiting for someone like you.",
-          he: ' שמעתי שיש לך כישרון נדיר — אינטואיציה למספרים ולוגיקה. חיכיתי למישהו כמוך.',
-        },
-      ],
-    },
-    {
-      type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
-      lines: [
         {
           en: "Every trainer in Numeria begins their journey by choosing a partner Pokemon. It's time for you to choose yours.",
-          he: 'כל מאמן בנומריה מתחיל את מסעו בבחירת פוקמון שותף. הגיע הזמן שגם אתה תבחר.',
+          he: 'כל מאמן ומאמנת בנומריה מתחילים את מסעם בבחירת פוקמון שותף. הגיע תורך לבחור.',
         },
       ],
     },
-    {
-      type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
-      lines: [
-        { en: "In your journey, you'll face many challenges.", he: 'במסע שלך, תתמודד עם אתגרים רבים.' },
-        {
-          en: 'Some will test your knowledge. Others will test your strength.',
-          he: 'חלקם יבדקו את הידע שלך. אחרים יבדקו את כוחך.',
-        },
-        { en: "But don't worry — you'll grow stronger with every step.", he: 'אבל אל תדאג — תתחזק עם כל צעד.' },
-      ],
-    },
+
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT0_INTRO_SEEN } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act0-starter' } },
-    // Transition to starter selection scene; resumes here when done
+    // start-scene calls deactivateCutscene() immediately — nothing after this line ever runs.
+    // Post-starter content (Algorithma reaction + Remainder encounter) is in
+    // act0-remainder-meets-player, which evt-act0-remainder queues while this cutscene
+    // is still active and the overworld fires it as soon as it resumes after STARTER_SELECT.
     { type: 'start-scene', sceneId: 'STARTER_SELECT' },
-    { type: 'action', action: { type: 'complete-quest', questId: 'main-act0-starter' } },
   ],
 });
 
@@ -111,19 +117,62 @@ registerCutscene({
   id: 'act0-remainder-meets-player',
   skippable: true,
   steps: [
+    // Fade in after returning from STARTER_SELECT (which fades to black before switching scenes)
+    { type: 'screen-fade', direction: 'in', durationMs: 400 },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act0-starter' } },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof.Algorithma',
+      lines: getStarterLines,
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof.Algorithma',
+      lines: [
+        {
+          en: 'In your Journey you will meet diferent types of pokemons',
+          he: 'במסע שלך תפגוש סוגים שונים של פוקמונים',
+        },
+        {
+          en: 'Some has 1 type only but some has 2 types. you will learn it soon enough.',
+          he: 'יש פוקמונים עם סוג אחד ויש עם שני סוגים. תלמד את זה בקרוב.',
+        },
+        {
+          en: "Each type has its strenghts and weaknesses. For example, your starter is strong against some types but weak against others. It's important to have a variety of pokemons in your team to be ready for any challenge!",
+          he: 'לכל סוג יש חוזקות וחולשות. למשל, הפוקמון ההתחלתי שלך חזק נגד סוגים מסוימים אבל חלש נגד אחרים. חשוב שיהיה לך מגוון פוקמונים בקבוצה שלך כדי להיות מוכן לכל אתגר!',
+        },
+        {
+          en: 'I strongly advice you use your pokedex to learn more about pokemons types and moves. It will be a great help in your journey.',
+          he: 'אני מאוד ממליץ לך להשתמש בפוקדקס שלך כדי ללמוד עוד על סוגי פוקמונים ומהלכים. זה יהיה עזר גדול במסע שלך.',
+        },
+        { en: 'Also, here are some items to help you get started:', he: 'בנוסף, הנה כמה פריטים שיעזרו לך להתחיל:' },
+        {
+          en: 'Pokeballs are essential for capturing and storing Pokemon.',
+          he: 'כדורי פוקבול הם חיוניים ללכידת פוקמונים ואחסונם.',
+        },
+        {
+          en: 'Potionsm are useful for healing your Pokemon after battles.',
+          he: 'שיקויים שימושיים לריפוי הפוקמונים שלך אחרי קרבות.',
+        },
+        {
+          en: ' Battle-Helper is very useful to new trainers. It gives you tips during battles and helps you understand type advantages.',
+          he: ' עוזר קרב - מאוד שימושי למאמנים חדשים. הוא נותן לך טיפים במהלך קרבות ועוזר לך להבין את היתרונות של סוגים שונים. אפשר לכבות ולהדליק אותו במידת הצורך.',
+        },
+        {
+          en: 'I want give you some rewards , came close to me please',
+          he: 'אני רוצה לתת לך את הפריטים האלה - , תבוא אליי בבקשה',
+        },
+      ],
+    },
     { type: 'face-npc', npcId: 'remainder-lab', dir: 'down' },
     { type: 'move-npc', npcId: 'remainder-lab', path: ['left'] },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerId: 'rival-reminder',
       lines: [
         { en: "Oh. YOU got chosen? I've been studying here for months.", he: 'או. אתה נבחרת? למדתי כאן חודשים שלמים.' },
+        { en: "Whatever. Don't expect any help from me on the road.", he: 'נו טוב. אל תצפה לעזרה ממני בדרך.' },
       ],
-    },
-    {
-      type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
-      lines: [{ en: "Whatever. Don't expect any help from me on the road.", he: 'נו טוב. אל תצפה לעזרה ממני בדרך.' }],
     },
     { type: 'face-npc', npcId: 'remainder-lab', dir: 'up' },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT0_REMAINDER_MET } },
@@ -136,7 +185,7 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
       lines: [
         {
           en: 'Heading to Route 1 already? Good. The trainers there will sharpen your skills.',
@@ -146,7 +195,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerId: 'Prof.Algorithma',
       lines: [
         {
           en: 'Sumville is at the other end. There is a Gym there. If you are strong enough, you will be able to earn a badge. Safe travels!',
@@ -193,7 +242,9 @@ registerStoryEvent({
   actions: [{ type: 'start-cutscene', cutsceneId: 'act0-intro' }],
 });
 
-// Returning to lab after starter chosen — Remainder reacts
+// After starter is chosen, OVERWORLD reloads the lab — fire Remainder encounter then.
+// Trigger: map-enter (fires fresh every time the lab loads, no cross-scene state to preserve).
+// Conditions guard against replaying: needs intro seen + starter picked + Remainder not met yet.
 registerStoryEvent({
   id: 'evt-act0-remainder',
   trigger: { type: 'map-enter', mapId: 'zeroville/algorithma-lab' },

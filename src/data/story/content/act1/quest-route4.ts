@@ -26,7 +26,7 @@ registerCutscene({
     { type: 'face-npc', npcId: 'rei-minder-route-4', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'Reminder/ריי מיינדר',
+      speakerName: 'Reminder/ריי מיינדר',
       lines: [
         { en: '', he: 'האא אתה פה ? מה שלומך?' },
         { en: '', he: 'אני חייב להיות כנה - לא האמנתי שתצליח להשיג תג מכון החיסור' },
@@ -45,7 +45,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Misty/מיסטי',
+      speakerName: 'Misty/מיסטי',
       lines: [
         { he: 'היי , אני רואה שהצלחת להשיג חכה! מקווה שיהיה איתה דייג נפלא', en: '' },
         {
@@ -77,7 +77,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerId: "Officer Jenni/ג'ני השוטרת",
+      speakerName: "Officer Jenni/ג'ני השוטרת",
       lines: [
         { he: 'עצרו רגע...', en: '' },
         { en: '', he: "שלום ! אני השוטרת ג'ני מהעיר מולטיפילה" },
@@ -89,7 +89,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerId: 'אני/Player',
+      speakerName: 'אני/Player',
       lines: [
         { he: 'אוקיי - אנחנו נהיה זהירים ונדווח אם נראה משהו חריג', en: '' },
         { en: '', he: 'תודה על המידע - להתראות!' },
@@ -121,7 +121,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerId: 'Reminder/ריי מיינדר',
+      speakerName: 'Reminder/ריי מיינדר',
       lines: [
         {
           en: '',
@@ -185,7 +185,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerId: "Officer Jenny/ג'ני השוטרת",
+      speakerName: "Officer Jenny/ג'ני השוטרת",
       lines: [
         { he: 'באתי מיד כשהתקבלה קריאה לגיבוי — מה קרה כאן?', en: '' },
         { he: 'ראיתי סוכן רוקט בורח. ספר לי הכול.', en: '' },
@@ -208,7 +208,7 @@ registerCutscene({
     // d. Player explains the glitch encounters,
     {
       type: 'dialogue',
-      speakerId: 'אני/Player',
+      speakerName: 'אני/Player',
       lines: [
         { he: 'היו פה שלושה יצורים... לא פוקימונים רגילים.', en: '' },
         { he: "הם ריצדו, דיברו ג'יבריש וחשו חזקים הרבה יותר מהרגיל.", en: '' },
@@ -217,7 +217,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Gary/גארי',
+      speakerName: 'Gary/גארי',
       lines: [
         { he: 'גם אנחנו נתקלנו בהם בדרך לכאן.', en: '' },
         { he: 'הצלחנו לנצח — אבל משהו בהם היה לא טבעי לגמרי.', en: '' },
@@ -225,7 +225,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Minessa/מינסה',
+      speakerName: 'Minessa/מינסה',
       lines: [
         { he: 'הם לא היו רשומים בפוקדקס. אפס מידע. כאילו... לא קיימים.', en: '' },
         { he: 'ואז בקרב הם כאילו הופיעו בפוקדקס כפוקימונים רגילים', en: '' },
@@ -235,7 +235,7 @@ registerCutscene({
     // g. Group: investigation + rockets near glitches
     {
       type: 'dialogue',
-      speakerId: "Officer Jenny/ג'ני השוטרת",
+      speakerName: "Officer Jenny/ג'ני השוטרת",
       lines: [
         { he: 'אנחנו חוקרים כבר כמה ימים. התמונה ברורה — זה מאורגן.', en: '' },
         { he: 'היו עדויות שראו בסמוך ליצורים האלה פעילות של סוכני צוות רוקט', en: '' },
@@ -246,7 +246,7 @@ registerCutscene({
     // h. Gary mentions NULL-X and secret docs
     {
       type: 'dialogue',
-      speakerId: 'Gary/גארי',
+      speakerName: 'Gary/גארי',
       lines: [
         { he: 'רגע — זה מסתדר עם מה שכתוב במסמכים הסודיים שמצאנו.', en: '' },
         { he: 'NULL-X יכולה לשלוט בפוקימונים דרך צוות רוקט ולגרום להם להשתבש.', en: '' },
@@ -276,7 +276,7 @@ registerCutscene({
     // Gary private moment
     {
       type: 'dialogue',
-      speakerId: 'Gary/גארי',
+      speakerName: 'Gary/גארי',
       lines: [
         { he: 'יש לי מסמך סודי   — נפל לידינו מסוכן רוקט בכיר.', en: '' },
         {
@@ -289,12 +289,12 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'אני/Player',
+      speakerName: 'אני/Player',
       lines: [{ he: 'אני אגיע לשם. מה שצריך.', en: '' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Gary/גארי',
+      speakerName: 'Gary/גארי',
       lines: [{ he: 'מצוין. זהירות בדרך —   צוות רוקט עדיין שם בחוץ.', en: '' }],
     },
 

@@ -77,7 +77,7 @@ registerCutscene({
     { type: 'face-npc', npcId: 'brock-dividia', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'Brock / ברוק',
+      speakerName: 'Brock / ברוק',
       lines: [
         {
           en: 'You must be the one Algorithma told me about. Good. This city needs solid help.',
@@ -87,7 +87,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Brock / ברוק',
+      speakerName: 'Brock / ברוק',
       lines: [
         {
           en: 'Think of logic like a good stew — every ingredient has its place. Leave one out and the whole thing falls apart.',
@@ -108,7 +108,7 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in', durationMs: 600, color: '#440000' },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [
         {
           en: "Something is... wrong. My Pokemon — it won't listen. Its eyes are glowing red.",
@@ -118,12 +118,12 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [{ en: "The Glitch. It got him. I don't know what to—", he: 'הגליץ׳. הוא תפס אותו. אני לא יודע מה ל—' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Brock / ברוק',
+      speakerName: 'Brock / ברוק',
       lines: [
         {
           en: 'Use the serum fragments! Quickly — before the infection spreads to the others!',
@@ -145,12 +145,12 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in', durationMs: 800 },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [{ en: '...It worked. You used your serum. For me.', he: '...זה עבד. השתמשת בסרום שלך. בשבילי.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [
         {
           en: "I've been nothing but difficult with you. And you still helped.",
@@ -160,7 +160,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [
         {
           en: "...I need to get stronger. I'll train and come back. Don't lose to that gym leader before I return.",

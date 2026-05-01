@@ -93,12 +93,12 @@ registerCutscene({
     { type: 'face-npc', npcId: 'gary-primore', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
+      speakerName: 'Gary Oak / גארי אוק',
       lines: [{ en: "So you're the one making waves across Numeria. Interesting.", he: 'אז אתה זה שגורם לגלים ברחבי נומריה. מעניין.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
+      speakerName: 'Gary Oak / גארי אוק',
       lines: [{ en: "My grandfather says you're talented. I'll believe it when I see it. Battle me.", he: 'הסבא שלי אומר שאתה מוכשר. אאמין בזה כשאראה. הלחם בי.' }],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_GARY_MET } },
@@ -112,12 +112,12 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
+      speakerName: 'Gary Oak / גארי אוק',
       lines: [{ en: "Hmm. You're ranked higher than I thought. Don't let it go to your head.", he: 'המממ. הדירוג שלך גבוה יותר ממה שחשבתי. אל תתן לזה לעלות לראשך.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Gary Oak / גארי אוק',
+      speakerName: 'Gary Oak / גארי אוק',
       lines: [{ en: "The NULL-X tower is beyond Symmetrika. Whatever's up there — be ready.", he: 'מגדל NULL-X נמצא מעבר לסימטריקה. מה שיש שם למעלה — היה מוכן.' }],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_GARY_BATTLE_DONE } },
@@ -132,17 +132,17 @@ registerCutscene({
     { type: 'face-npc', npcId: 'remainder-primore', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [{ en: "I'm back. And stronger. I've been training every day since Dividia.", he: 'חזרתי. וחזק יותר. אימנתי כל יום מאז דיווידיה.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [{ en: "I'm not here to compete with you anymore. I'm here to help stop NULL-X.", he: 'אני לא כאן כדי להתחרות איתך יותר. אני כאן כדי לעזור לעצור את NULL-X.' }],
     },
     {
       type: 'dialogue',
-      speakerId: 'Remainder / ריי-מיינדר',
+      speakerName: 'Remainder / ריי-מיינדר',
       lines: [{ en: "Let's go together. As partners. ...Don't make it weird.", he: 'בוא נלך ביחד. כשותפים. ...אל תהפוך את זה למוזר.' }],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.STORY_REMAINDER_ALLY } },
