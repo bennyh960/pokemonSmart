@@ -6,6 +6,7 @@ import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
+import { applyDirectItemEffect, consumeItem } from '../systems/item-effects.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setPokedexBadgesMode } from './pokedex.js';
 import { setBagMode } from './bag.js';
@@ -33,6 +34,9 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
   let mainIdx = 0;
   let actionsIdx = 0;
   let settingsIdx = 0;
+  let pendingBhConfirm = false;
+  let bhNotice: string | null = null;
+  let bhNoticeTimer = 0;
 
   function wrap(v: number, len: number): number { return ((v % len) + len) % len; }
 
@@ -73,11 +77,21 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       case 'telephone':
         stateMachine.pop(); stateMachine.push('PHONE'); break;
       case 'battleHelper':
-        if (hasActiveGame()) {
+        if (!hasActiveGame()) break;
+        if (pendingBhConfirm) break;
+        {
           const pd = getPlayerData();
-          if (pd.battleHelperBattles > 0 || pd.battleHelperEnabled) {
+          if (pd.battleHelperBattles > 0) {
             pd.battleHelperEnabled = !pd.battleHelperEnabled;
             autoSave();
+          } else {
+            const count = pd.items['battle-helper'] || 0;
+            if (count > 0) {
+              pendingBhConfirm = true;
+            } else {
+              bhNotice = t('menu.actions.battleHelper.noItems');
+              bhNoticeTimer = 2000;
+            }
           }
         }
         break;
@@ -179,20 +193,49 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
         });
       }
 
+      const bhPd = hasPill && hasActiveGame() ? getPlayerData() : null;
+      const bhBattles = bhPd?.battleHelperBattles ?? 0;
+      const hasCounter = hasPill && bhBattles > 0;
       const lx = rtl ? dropX + DROP_W - 13 : dropX + 13;
       drawText(ctx, t(`menu.actions.${key}`), lx, iy + 2, {
         size: 7,
         color: disabled ? '#555566' : sel ? '#ffffff' : '#aaaacc',
         align: rtl ? 'right' : 'left',
         direction: rtl ? 'rtl' : 'ltr',
-        maxWidth: DROP_W - 13 - (hasPill ? 28 : 4),
+        maxWidth: DROP_W - 13 - (hasPill ? (hasCounter ? 44 : 28) : 4),
       });
 
       if (hasPill) {
-        const on = hasActiveGame() && getPlayerData().battleHelperEnabled;
-        const px2 = rtl ? dropX + 4 : dropX + DROP_W - 26;
-        onOffPill(ctx, on, px2, iy + 2);
+        const on = bhPd?.battleHelperEnabled ?? false;
+        const pillX = rtl ? dropX + 4 : dropX + DROP_W - 26;
+        onOffPill(ctx, on, pillX, iy + 2);
+        if (hasCounter) {
+          const cntX = rtl ? pillX + 26 : pillX - 16;
+          pill(ctx, String(bhBattles), '#1a2a4a', '#88aaff', cntX, iy + 2, 14, 9);
+        }
       }
+    }
+
+    // Confirmation overlay
+    if (pendingBhConfirm && hasActiveGame()) {
+      const count = getPlayerData().items['battle-helper'] || 0;
+      const boxH = 36;
+      const boxY = dropY + (dropH - boxH) / 2;
+      fillRect(ctx, dropX, boxY, DROP_W, boxH, '#0d0d1a');
+      drawRect(ctx, dropX, boxY, DROP_W, boxH, '#88aaff', 1);
+      const cx = dropX + DROP_W / 2;
+      drawText(ctx, t('menu.actions.battleHelper.confirm'), cx, boxY + 6, { size: 6, color: '#ffffff', align: 'center' });
+      drawText(ctx, t('menu.actions.battleHelper.confirmSub', { count: String(count) }), cx, boxY + 16, { size: 5, color: '#88aaff', align: 'center' });
+      drawText(ctx, '↵ Yes   ESC No', cx, boxY + 26, { size: 5, color: '#aaaacc', align: 'center' });
+    }
+
+    // Brief notice (no items)
+    if (bhNotice) {
+      const nx = dropX + DROP_W / 2;
+      const ny = dropY + dropH + 5;
+      fillRect(ctx, dropX, ny, DROP_W, 12, '#2a0a0a');
+      drawRect(ctx, dropX, ny, DROP_W, 12, '#aa4444', 1);
+      drawText(ctx, bhNotice, nx, ny + 2, { size: 5, color: '#ffaaaa', align: 'center', maxWidth: DROP_W - 4 });
     }
   }
 
@@ -255,15 +298,33 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       mainIdx = 0;
       actionsIdx = 0;
       settingsIdx = 0;
+      pendingBhConfirm = false;
+      bhNotice = null;
+      bhNoticeTimer = 0;
     },
 
     exit(): void {},
 
-    update(_dt: number): void {
+    update(dt: number): void {
+      if (bhNoticeTimer > 0) { bhNoticeTimer -= dt * 1000; if (bhNoticeTimer <= 0) bhNotice = null; }
+
       const esc = input.isKeyPressed('Escape') || input.isKeyPressed('Backspace');
       const up = input.isKeyPressed('ArrowUp');
       const down = input.isKeyPressed('ArrowDown');
       const ok = input.isKeyPressed('Enter') || input.isKeyPressed(' ');
+
+      if (pendingBhConfirm) {
+        if (esc) { pendingBhConfirm = false; return; }
+        if (ok) {
+          const pd = getPlayerData();
+          applyDirectItemEffect('battle-helper');
+          consumeItem(pd.items, 'battle-helper');
+          pd.battleHelperEnabled = true;
+          pendingBhConfirm = false;
+          autoSave();
+        }
+        return;
+      }
 
       if (view === 'main') {
         if (esc) { stateMachine.pop(); return; }
