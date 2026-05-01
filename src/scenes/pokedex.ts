@@ -70,6 +70,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
   let movesDetailOpen = false;
   let openContext: PokedexContext = 'overworld';
   let searchQuery = '';
+  let selectedId = 1;
 
   function getPokedex(): Record<number, boolean> {
     if (hasActiveGame()) return getPlayerData().pokedex;
@@ -87,6 +88,17 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
   function isSeen(id: number): boolean {
     return getPokedex()[id] === true;
+  }
+
+  function syncCursorToSelectedId(filtered: number[]): void {
+    const idx = filtered.indexOf(selectedId);
+    if (idx >= 0) {
+      cursor = idx;
+    } else {
+      cursor = 0;
+      selectedId = filtered[0] ?? 1;
+    }
+    scrollOffset = Math.max(0, Math.min(cursor - Math.floor(VISIBLE_ENTRIES / 2), filtered.length - VISIBLE_ENTRIES));
   }
 
   function getFilteredIds(): number[] {
@@ -124,7 +136,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
   return {
     enter(): void {
-      cursor = pendingPokedexFocus ? Math.max(0, Math.min(TOTAL_POKEMON - 1, pendingPokedexFocus.id - 1)) : 0;
+      selectedId = pendingPokedexFocus?.id ?? 1;
+      cursor = selectedId - 1;
       scrollOffset = Math.max(0, Math.min(cursor, TOTAL_POKEMON - VISIBLE_ENTRIES));
       _sessionBadgesMode = _openInBadgesMode;
       _openInBadgesMode = false;
@@ -229,7 +242,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         }
 
         if (detailTab === 'moves') {
-          const pokemonId = getFilteredIds()[cursor] ?? cursor + 1;
+          const pokemonId = selectedId;
           const sorted =
             movesSubTab === 'byLevel'
               ? [...getLearnset(pokemonId)].sort((a, b) => a.levelLearned - b.levelLearned)
@@ -259,23 +272,20 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       input.clearTextInput();
       if (typed) {
         searchQuery += typed;
-        cursor = 0;
-        scrollOffset = 0;
+        syncCursorToSelectedId(getFilteredIds());
         preloadVisibleSprites();
       }
 
       if (input.isKeyPressed('Backspace') && searchQuery.length > 0) {
         searchQuery = searchQuery.slice(0, -1);
-        cursor = 0;
-        scrollOffset = 0;
+        syncCursorToSelectedId(getFilteredIds());
       }
 
-      // Escape: clear search first, then exit
+      // Escape: clear search first (restoring position), then exit
       if (input.isKeyPressed('Escape')) {
         if (searchQuery) {
           searchQuery = '';
-          cursor = 0;
-          scrollOffset = 0;
+          syncCursorToSelectedId(getFilteredIds());
         } else {
           stateMachine.pop();
         }
@@ -287,6 +297,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       if (input.isKeyPressed('ArrowUp')) {
         if (cursor > 0) {
           cursor--;
+          selectedId = filtered[cursor] ?? selectedId;
           if (cursor < scrollOffset) {
             scrollOffset = cursor;
             preloadVisibleSprites();
@@ -297,6 +308,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       if (input.isKeyPressed('ArrowDown')) {
         if (cursor < filtered.length - 1) {
           cursor++;
+          selectedId = filtered[cursor] ?? selectedId;
           if (cursor >= scrollOffset + VISIBLE_ENTRIES) {
             scrollOffset = cursor - VISIBLE_ENTRIES + 1;
             preloadVisibleSprites();
@@ -328,7 +340,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       clearScreen(ctx, BG_COLOR);
 
       if (view === 'detail') {
-        renderDetailView(ctx, cursor + 1);
+        renderDetailView(ctx, selectedId);
         return;
       }
 
