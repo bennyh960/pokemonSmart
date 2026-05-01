@@ -4,12 +4,12 @@
     "en": "Prof. Algorithma's Lab",
     "he": "המעבדה של פרופ׳ אלגוריתמה"
   },
-  "tileset": "interior",
+  "tileset": "overworld",
   "width": 25,
   "height": 20,
   "tileSize": 16,
   "spawn": {
-    "x": 12,
+    "x": 11,
     "y": 18
   },
   "transitions": [
@@ -30,8 +30,8 @@
   "npcs": [
     {
       "id": "algorithma",
-      "x": 12,
-      "y": 15,
+      "x": 3,
+      "y": 6,
       "facing": "down",
       "type": "healer",
       "dialogue": [
@@ -45,33 +45,23 @@
         "pattern": [
           {
             "dir": "right",
-            "steps": 8,
+            "steps": 1,
             "delay": 3
           },
           {
-            "dir": "left",
-            "steps": 2,
-            "delay": 0.5
-          },
-          {
             "dir": "up",
-            "steps": 3,
-            "delay": 3.5
-          },
-          {
-            "dir": "left",
-            "steps": 6,
-            "delay": 0.5
-          },
-          {
-            "dir": "up",
-            "steps": 8,
-            "delay": 10
+            "steps": 4,
+            "delay": 5
           },
           {
             "dir": "down",
-            "steps": 12,
-            "delay": 0.5
+            "steps": 4,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 1,
+            "delay": 4
           }
         ],
         "loop": true
@@ -104,9 +94,9 @@
         "en": "Remainder",
         "he": "ריי מיינדר"
       },
-      "x": 11,
-      "y": 15,
-      "facing": "down",
+      "x": 7,
+      "y": 3,
+      "facing": "up",
       "type": "npc",
       "spriteType": "rival-reminder",
       "dialogue": [],
@@ -116,58 +106,12 @@
         "beforeDespawnPattern": [
           {
             "dir": "down",
-            "steps": 4,
+            "steps": 8,
             "delay": 0
           }
         ]
       },
       "despawnAfter": "act0-remainder-met"
-    },
-    {
-      "id": "npc-trader",
-      "x": 21,
-      "y": 5,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "שלום!"
-        },
-        {
-          "en": "",
-          "he": "אני אלם עוזר המחקר של הפרופסור!"
-        },
-        {
-          "en": "",
-          "he": "המחקר שלי הוא על התפתחות פוקימונים!"
-        },
-        {
-          "en": "",
-          "he": "יש פוקימונים שמתפתחים על ב \"trade\" זה נקרא \"טרייד\" או בעברית \"החלפה!"
-        },
-        {
-          "en": "",
-          "he": "אני מכניס את הפויקמון למכונה - והוא מתפתח לך!"
-        },
-        {
-          "en": "",
-          "he": "אם יש לך פוקימון שכזה - אעזור לך לפתח אותו"
-        }
-      ],
-      "spriteType": "char_392694",
-      "name": {
-        "en": "Elm",
-        "he": "אלם"
-      },
-      "interaction": {
-        "kind": "trade-evolution"
-      },
-      "questions": {
-        "count": 3,
-        "types": []
-      },
-      "spawnAfter": "act1-collect-docs-from-ben"
     }
   ],
   "music": "town4",
@@ -414,13 +358,18 @@
       "y": 9
     },
     {
+      "key": "i4",
+      "x": 5,
+      "y": 9
+    },
+    {
       "key": "i123",
       "x": 6,
       "y": 14
     },
     {
       "key": "chair-x3",
-      "x": 4,
+      "x": 3,
       "y": 12
     },
     {

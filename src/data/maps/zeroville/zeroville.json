@@ -58,9 +58,7 @@
     {
       "fromX": 20,
       "fromY": 20,
-      "toMapId": "zeroville/algorithma-lab",
-      "toX": 6,
-      "toY": 11
+      "toMapId": "zeroville/algorithma-lab"
     },
     {
       "fromX": 8,

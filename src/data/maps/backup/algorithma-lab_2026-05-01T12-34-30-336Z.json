@@ -1,0 +1,247 @@
+{
+  "id": "algorithma-lab",
+  "label": {
+    "en": "Prof. Algorithma's Lab",
+    "he": "המעבדה של פרופ׳ אלגוריתמה"
+  },
+  "tileset": "overworld",
+  "width": 13,
+  "height": 12,
+  "tileSize": 16,
+  "spawn": {
+    "x": 6,
+    "y": 10
+  },
+  "transitions": [
+    {
+      "fromX": 6,
+      "fromY": 11,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [
+    {
+      "id": "algorithma",
+      "x": 3,
+      "y": 6,
+      "facing": "down",
+      "type": "healer",
+      "dialogue": [
+        {
+          "en": "Now, go out there and explore! Your adventure awaits.",
+          "he": "ההרפתקה הבאה מחכה לך!"
+        }
+      ],
+      "spriteType": "Prof.Algorithma",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 1,
+            "delay": 3
+          },
+          {
+            "dir": "up",
+            "steps": 4,
+            "delay": 5
+          },
+          {
+            "dir": "down",
+            "steps": 4,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 1,
+            "delay": 4
+          }
+        ],
+        "loop": true
+      },
+      "reward": {
+        "money": 1000,
+        "items": [
+          {
+            "itemId": "potion",
+            "quantity": 5
+          },
+          {
+            "itemId": "poke-ball",
+            "quantity": 5
+          },
+          {
+            "itemId": "battle-helper",
+            "quantity": 50
+          }
+        ]
+      },
+      "name": {
+        "en": "Prof. Algorithma",
+        "he": "Prof. Algorithma"
+      }
+    },
+    {
+      "id": "remainder-lab",
+      "name": {
+        "en": "Remainder",
+        "he": "ריי מיינדר"
+      },
+      "x": 7,
+      "y": 3,
+      "facing": "up",
+      "type": "npc",
+      "spriteType": "rival-reminder",
+      "dialogue": [],
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 8,
+            "delay": 0
+          }
+        ]
+      },
+      "despawnAfter": "act0-remainder-met"
+    }
+  ],
+  "music": "town4",
+  "encounterTableId": null,
+  "area": "Zeroville",
+  "interactiveItems": {}
+,
+  "tiles": [
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"]
+  ],
+  "objects": [
+    {
+      "key": "lab1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "freeze",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "key": "freeze",
+      "x": 10,
+      "y": 8
+    },
+    {
+      "key": "chair",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "key": "lab1-table",
+      "x": 8,
+      "y": 4
+    },
+    {
+      "key": "lab-equip",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 11,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 12,
+      "y": 2
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

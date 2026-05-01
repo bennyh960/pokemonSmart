@@ -159,15 +159,7 @@
       "name": {
         "en": "Elm",
         "he": "אלם"
-      },
-      "interaction": {
-        "kind": "trade-evolution"
-      },
-      "questions": {
-        "count": 3,
-        "types": []
-      },
-      "spawnAfter": "act1-collect-docs-from-ben"
+      }
     }
   ],
   "music": "town4",
