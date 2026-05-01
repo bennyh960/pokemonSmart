@@ -361,7 +361,7 @@
     ]
   },
   "route-3": {
-    "encounterRate": 0.15,
+    "encounterRate": 0.085,
     "entries": [
       {
         "pokemonId": 23,

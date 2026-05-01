@@ -500,6 +500,29 @@
       "spriteType": "gate-officer",
       "spawnAfter": "act1-route4-assembly-started",
       "despawnAfter": "act1-route4-assembly-done"
+    },
+    {
+      "id": "npc-1777578778923",
+      "x": 72,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "hm03",
+            "quantity": 1
+          }
+        ]
+      }
     }
   ],
   "music": "route",
