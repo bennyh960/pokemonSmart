@@ -1,6 +1,12 @@
 import type { Pokemon } from '../types/index.js';
-import type { BattleStatId, MajorStatusId, MoveBattleSideEffectId } from '../types/battle-metadata.js';
+import type { BattleStatId, MajorStatusId, MoveBattleSideEffectId, WeatherConditionId } from '../types/battle-metadata.js';
 import { normalizeMajorStatusId } from '../types/battle-metadata.js';
+
+export interface WeatherState {
+  type: WeatherConditionId;
+  turnsRemaining: number;
+  setter: 'player' | 'enemy' | null;
+}
 
 export const BATTLE_STAT_PERCENT_STEP = 50;
 export const MIN_BATTLE_STAT_PERCENT = -200;
@@ -37,6 +43,9 @@ export interface BattlePokemonRuntimeState {
   substituteActive: boolean;
   substituteHitsAbsorbed: number;
   destinyBonded: boolean;
+  weatherEvasionBonus: number;
+  hasWeatherStatBoost: boolean;
+  lastMoveUsedId: number | null;
 }
 
 export interface BattleSideRuntimeState {
@@ -103,6 +112,9 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     substituteActive: false,
     substituteHitsAbsorbed: 0,
     destinyBonded: false,
+    weatherEvasionBonus: 0,
+    hasWeatherStatBoost: false,
+    lastMoveUsedId: null,
   };
 }
 

@@ -2522,3 +2522,135 @@ function renderElectrowebEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
 export function clearAllPopups(): void {
   popups.length = 0;
 }
+
+// =============================================================================
+// WEATHER OVERLAY EFFECTS
+// =============================================================================
+
+type WeatherConditionId = 'sandstorm' | 'rain' | 'hail' | 'sun';
+
+export function renderWeatherOverlay(
+  ctx: CanvasRenderingContext2D,
+  weatherType: WeatherConditionId,
+  now: number,
+): void {
+  switch (weatherType) {
+    case 'sandstorm':
+      renderSandstormOverlay(ctx, now);
+      break;
+    case 'rain':
+      renderRainOverlay(ctx, now);
+      break;
+    case 'hail':
+      renderHailOverlay(ctx, now);
+      break;
+    case 'sun':
+      renderSunOverlay(ctx, now);
+      break;
+  }
+}
+
+function renderSandstormOverlay(ctx: CanvasRenderingContext2D, now: number): void {
+  const W = 240;
+  const H = 95;
+  ctx.save();
+  // Amber tint over the battlefield
+  ctx.globalAlpha = 0.13;
+  ctx.fillStyle = '#c89050';
+  ctx.fillRect(0, 0, W, H);
+  // Blowing sand streaks
+  ctx.lineWidth = 0.8;
+  for (let i = 0; i < 22; i++) {
+    const speed = 55 + (i % 5) * 14;
+    const x = ((i * 43 + now * speed) % (W + 40)) - 20;
+    const y = (i * 19 % H) + Math.sin(now * 1.4 + i * 0.9) * 2.5;
+    const len = 7 + (i % 4) * 5;
+    ctx.globalAlpha = 0.15 + (i % 5) * 0.06;
+    ctx.strokeStyle = i % 3 === 0 ? '#e0b870' : '#c8984a';
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + len, y + 1);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function renderRainOverlay(ctx: CanvasRenderingContext2D, now: number): void {
+  const W = 240;
+  const H = 95;
+  ctx.save();
+  // Blue tint
+  ctx.globalAlpha = 0.07;
+  ctx.fillStyle = '#3870b0';
+  ctx.fillRect(0, 0, W, H);
+  // Falling rain drops
+  ctx.strokeStyle = '#88c0e8';
+  ctx.lineWidth = 0.7;
+  for (let i = 0; i < 28; i++) {
+    const speed = 90 + (i % 4) * 22;
+    const x = (i * 31 + now * 18) % W;
+    const y = (i * 23 + now * speed) % H;
+    const len = 4 + (i % 3) * 2;
+    ctx.globalAlpha = 0.25 + (i % 4) * 0.07;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - 1, y + len);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function renderHailOverlay(ctx: CanvasRenderingContext2D, now: number): void {
+  const W = 240;
+  const H = 95;
+  ctx.save();
+  // Pale blue tint
+  ctx.globalAlpha = 0.08;
+  ctx.fillStyle = '#90b8d8';
+  ctx.fillRect(0, 0, W, H);
+  // Falling ice pellets
+  ctx.fillStyle = '#d8eeff';
+  for (let i = 0; i < 18; i++) {
+    const speed = 60 + (i % 4) * 18;
+    const x = (i * 37 + now * 22) % W;
+    const y = (i * 29 + now * speed) % H;
+    const r = 0.9 + (i % 3) * 0.5;
+    ctx.globalAlpha = 0.45 + (i % 4) * 0.1;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function renderSunOverlay(ctx: CanvasRenderingContext2D, now: number): void {
+  const W = 240;
+  const H = 95;
+  ctx.save();
+  // Warm golden tint pulsing gently
+  const pulse = 0.06 + Math.sin(now * 1.6) * 0.02;
+  ctx.globalAlpha = pulse;
+  ctx.fillStyle = '#ffd860';
+  ctx.fillRect(0, 0, W, H);
+  // Radial light beams from top-right corner
+  ctx.globalAlpha = 0.04 + Math.sin(now * 1.1) * 0.015;
+  ctx.fillStyle = '#fff8c0';
+  for (let i = 0; i < 5; i++) {
+    const baseAngle = Math.PI * 0.55 + i * (Math.PI * 0.12);
+    const spread = 0.055;
+    const len = 120;
+    ctx.beginPath();
+    ctx.moveTo(W, 0);
+    ctx.lineTo(
+      W + Math.cos(baseAngle - spread) * len,
+      Math.sin(baseAngle - spread) * len,
+    );
+    ctx.lineTo(
+      W + Math.cos(baseAngle + spread) * len,
+      Math.sin(baseAngle + spread) * len,
+    );
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}

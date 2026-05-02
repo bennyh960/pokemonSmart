@@ -2,6 +2,8 @@ import type { PokemonType } from './index.ts';
 
 export type MajorStatusId = 'poison' | 'burn' | 'paralyze' | 'sleep' | 'freeze';
 
+export type WeatherConditionId = 'sandstorm' | 'rain' | 'hail' | 'sun';
+
 export type BattleStatId = 'attack' | 'defense' | 'specialAttack' | 'specialDefense' | 'speed' | 'accuracy' | 'evasion';
 
 export type MoveBattleTarget =
@@ -45,7 +47,16 @@ export type MoveBattleBehaviorTag =
   | 'destiny-bond'
   | 'future-sight'
   | 'weight-target'
-  | 'weight-ratio';
+  | 'weight-ratio'
+  | 'sandstorm'
+  | 'rain'
+  | 'hail'
+  | 'sun'
+  | 'sleep-talk'
+  | 'metronome'
+  | 'assist'
+  | 'copycat'
+  | 'mirror-move';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 
@@ -130,6 +141,25 @@ export type AbilityBattleEffect =
     }
   | {
       kind: 'contraryStatChanges';
+    }
+  | {
+      kind: 'weatherSummon';
+      weather: WeatherConditionId;
+    }
+  | {
+      kind: 'weatherEvasionBoost';
+      weather: WeatherConditionId;
+    }
+  | {
+      kind: 'weatherSpeedBoost';
+      weather: WeatherConditionId;
+    }
+  | {
+      kind: 'weatherHealInstead';
+      weather: WeatherConditionId;
+    }
+  | {
+      kind: 'weatherImmunity';
     };
 
 export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {

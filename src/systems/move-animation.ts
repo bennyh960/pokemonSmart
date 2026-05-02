@@ -103,6 +103,10 @@ const TARGET_STATUS_KEYWORDS = [
 
 const PROTECT_SHIELD_MOVES = ['protect', 'detect', 'endure'];
 
+// Sleep-usable & random-call moves: self-targeting pulse
+const SLEEP_TALK_MOVES = ['snore', 'sleep talk'];
+const RANDOM_CALL_MOVES = ['metronome', 'assist', 'copycat', 'mirror move'];
+
 const HEAL_PULSE_MOVES = ['rest', 'recover', 'roost', 'soft-boiled', 'milk drink', 'morning sun', 'moonlight', 'synthesis'];
 
 const DRAGON_AURA_MOVES = [
@@ -242,6 +246,34 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
   const variant = getVariant(moveName, move.speciesId);
 
   // --- Specific move overrides (highest priority) ---
+
+  if (matchesAny(moveName, SLEEP_TALK_MOVES)) {
+    return {
+      family: 'heal-pulse',
+      color: '#b088ff',
+      accentColor: '#e0c8ff',
+      duration: 0.45,
+      impactTime: 0.15,
+      selfTarget: true,
+      shakeIntensity: 0,
+      flashColor: '#b088ff',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, RANDOM_CALL_MOVES)) {
+    return {
+      family: 'pulse',
+      color: '#ff80ff',
+      accentColor: '#ffffff',
+      duration: 0.4,
+      impactTime: 0.18,
+      selfTarget: true,
+      shakeIntensity: 0,
+      flashColor: '#ff80ff',
+      variant,
+    };
+  }
 
   if (matchesAny(moveName, PROTECT_SHIELD_MOVES)) {
     const isEndure = moveName === 'endure';

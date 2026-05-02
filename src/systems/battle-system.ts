@@ -7,6 +7,7 @@ import type {
   MoveBattleSideEffectId,
   MoveStatChange,
   MoveStatusEffect,
+  WeatherConditionId,
 } from '../types/battle-metadata.js';
 import type { BattlePokemonRuntimeState, BattleSideRuntimeState } from './battle-state.js';
 import {
@@ -154,10 +155,22 @@ export function chooseEnemyMoveIndex(enemy: Pokemon, random: () => number = Math
   return usableMoves[Math.floor(random() * usableMoves.length)].index;
 }
 
-export function getEffectiveSpeed(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): number {
+export function getEffectiveSpeed(
+  pokemon: Pokemon,
+  runtimeState: BattlePokemonRuntimeState,
+  weatherType?: WeatherConditionId | null,
+): number {
   let effectiveSpeed = Math.max(1, pokemon.speed * getBattleStatMultiplier(runtimeState.statModifiers.speed));
   if (runtimeState.majorStatus === 'paralyze') {
     effectiveSpeed = Math.max(1, effectiveSpeed * 0.5);
+  }
+  if (weatherType && pokemon.abilityId) {
+    const hasWeatherSpeedBoost = getAbilityBattleEffects(pokemon.abilityId).some(
+      (e) => e.kind === 'weatherSpeedBoost' && e.weather === weatherType,
+    );
+    if (hasWeatherSpeedBoost) {
+      effectiveSpeed *= 2;
+    }
   }
   return effectiveSpeed;
 }
@@ -619,11 +632,12 @@ export function determineTurnOrder(
   enemyRuntimeState: BattlePokemonRuntimeState,
   enemyMoveId: number,
   random: () => number = Math.random,
+  weatherType?: WeatherConditionId | null,
 ): TurnOrderDecision {
   const playerPriority = getMoveBattleData(playerMoveId)?.priority ?? 0;
   const enemyPriority = getMoveBattleData(enemyMoveId)?.priority ?? 0;
-  const playerEffectiveSpeed = getEffectiveSpeed(player, playerRuntimeState);
-  const enemyEffectiveSpeed = getEffectiveSpeed(enemy, enemyRuntimeState);
+  const playerEffectiveSpeed = getEffectiveSpeed(player, playerRuntimeState, weatherType);
+  const enemyEffectiveSpeed = getEffectiveSpeed(enemy, enemyRuntimeState, weatherType);
 
   if (enemyPriority !== playerPriority) {
     return {
@@ -676,10 +690,14 @@ export function calculateConfusionSelfHitDamage(
   return Math.max(1, Math.floor(base * rand));
 }
 
+// Move IDs that can be used while asleep (Snore=173, Sleep Talk=214)
+export const SLEEP_USABLE_MOVE_IDS = new Set([173, 214]);
+
 export function processStartOfTurnStatus(
   pokemon: Pokemon,
   runtimeState: BattlePokemonRuntimeState,
   random: () => number = Math.random,
+  moveId?: number,
 ): TurnStartStatusResult {
   switch (runtimeState.majorStatus) {
     case 'sleep': {
@@ -690,6 +708,9 @@ export function processStartOfTurnStatus(
       if (runtimeState.sleepTurnsRemaining <= 0) {
         clearMajorStatus(pokemon, runtimeState);
         return { canAct: true, event: 'woke-up' };
+      }
+      if (moveId !== undefined && SLEEP_USABLE_MOVE_IDS.has(moveId)) {
+        return { canAct: true, event: 'fast-asleep' };
       }
       return { canAct: false, event: 'fast-asleep' };
     }
@@ -715,8 +736,9 @@ export function processBeforeMoveEffects(
   pokemon: Pokemon,
   runtimeState: BattlePokemonRuntimeState,
   random: () => number = Math.random,
+  moveId?: number,
 ): BeforeMoveEffectResult {
-  const statusResult = processStartOfTurnStatus(pokemon, runtimeState, random);
+  const statusResult = processStartOfTurnStatus(pokemon, runtimeState, random, moveId);
   const events: BeforeMoveEffectResult['events'] = [];
   if (statusResult.event) {
     events.push(statusResult.event);
@@ -879,6 +901,48 @@ export function clearEntryHazards(sideState: BattleSideRuntimeState): void {
 export function clearScreens(sideState: BattleSideRuntimeState): void {
   sideState.reflectTurnsRemaining = 0;
   sideState.lightScreenTurnsRemaining = 0;
+}
+
+const WEATHER_DAMAGE_IMMUNE_TYPES: Partial<Record<WeatherConditionId, PokemonType[]>> = {
+  sandstorm: ['rock', 'ground', 'steel'],
+  hail: ['ice'],
+};
+
+export function isWeatherDamageImmune(pokemon: Pokemon, weather: WeatherConditionId): boolean {
+  const immuneTypes = WEATHER_DAMAGE_IMMUNE_TYPES[weather] ?? [];
+  if (immuneTypes.some((t) => (pokemon.types as string[]).includes(t))) return true;
+  if (!pokemon.abilityId) return false;
+  return getAbilityBattleEffects(pokemon.abilityId).some((e) => e.kind === 'weatherImmunity');
+}
+
+export interface WeatherDamageResult {
+  damage: number;
+  healed: number;
+  fainted: boolean;
+  immune: boolean;
+}
+
+export function applyWeatherDamage(pokemon: Pokemon, weather: WeatherConditionId): WeatherDamageResult {
+  if (weather !== 'sandstorm' && weather !== 'hail') {
+    return { damage: 0, healed: 0, fainted: false, immune: true };
+  }
+  if (isWeatherDamageImmune(pokemon, weather)) {
+    return { damage: 0, healed: 0, fainted: false, immune: true };
+  }
+  // Ice Body: heal in hail instead of taking damage
+  if (weather === 'hail' && pokemon.abilityId) {
+    const hasIceBody = getAbilityBattleEffects(pokemon.abilityId).some(
+      (e) => e.kind === 'weatherHealInstead' && e.weather === 'hail',
+    );
+    if (hasIceBody) {
+      const healed = Math.max(1, Math.floor(pokemon.maxHp / 16));
+      pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healed);
+      return { damage: 0, healed, fainted: false, immune: false };
+    }
+  }
+  const damage = Math.max(1, Math.floor(pokemon.maxHp / 16));
+  pokemon.hp = Math.max(0, pokemon.hp - damage);
+  return { damage, healed: 0, fainted: pokemon.hp <= 0, immune: false };
 }
 
 export interface EntryHazardResult {

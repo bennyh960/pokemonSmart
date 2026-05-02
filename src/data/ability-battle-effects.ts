@@ -46,4 +46,37 @@ export const ABILITY_BATTLE_EFFECTS: Record<string, AbilityBattleEffect[]> = {
   Contrary: [
     { kind: 'contraryStatChanges' },
   ],
+  'Sand Stream': [
+    { kind: 'weatherSummon', weather: 'sandstorm' },
+  ],
+  Drizzle: [
+    { kind: 'weatherSummon', weather: 'rain' },
+  ],
+  Drought: [
+    { kind: 'weatherSummon', weather: 'sun' },
+  ],
+  'Snow Warning': [
+    { kind: 'weatherSummon', weather: 'hail' },
+  ],
+  'Sand Veil': [
+    { kind: 'weatherEvasionBoost', weather: 'sandstorm' },
+  ],
+  'Snow Cloak': [
+    { kind: 'weatherEvasionBoost', weather: 'hail' },
+  ],
+  'Sand Rush': [
+    { kind: 'weatherSpeedBoost', weather: 'sandstorm' },
+  ],
+  'Swift Swim': [
+    { kind: 'weatherSpeedBoost', weather: 'rain' },
+  ],
+  Chlorophyll: [
+    { kind: 'weatherSpeedBoost', weather: 'sun' },
+  ],
+  'Ice Body': [
+    { kind: 'weatherHealInstead', weather: 'hail' },
+  ],
+  Overcoat: [
+    { kind: 'weatherImmunity' },
+  ],
 };

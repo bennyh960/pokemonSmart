@@ -82,7 +82,9 @@
       "Bash(mv zeroville/zeroville-house-tl.json zeroville/house-tl.json)",
       "Bash(mv zeroville/zeroville-house-tr.json zeroville/house-tr.json)",
       "Bash(mv \"sumville/sumvile-house I.json\" sumville/house-i.json)",
-      "Bash(mv sumville/sumville-gym.json sumville/gym.json)"
+      "Bash(mv sumville/sumville-gym.json sumville/gym.json)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\" -Recurse -Name -Include \"*.ts\", \"*.tsx\", \"*.json\")",
+      "Bash(Select-Object -First 50)"
     ]
   }
 }

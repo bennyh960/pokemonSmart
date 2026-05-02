@@ -93,6 +93,10 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Sky Attack': chargingMove(),
   'Razor Wind': chargingMove(),
   'Future Sight': { behaviorTags: ['future-sight'] },
+  Sandstorm: { behaviorTags: ['sandstorm'], target: 'entire-field' },
+  'Rain Dance': { behaviorTags: ['rain'], target: 'entire-field' },
+  'Sunny Day': { behaviorTags: ['sun'], target: 'entire-field' },
+  Hail: { behaviorTags: ['hail'], target: 'entire-field' },
   Reflect: usersFieldEffect('reflect'),
   'Light Screen': usersFieldEffect('light-screen'),
   Mist: usersFieldEffect('mist'),
@@ -192,6 +196,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
 
   Harden: userStages(['defense', 1]),
   Withdraw: userStages(['defense', 1]),
+  Barrier: userStages(['defense', 2]),
   'Defense Curl': userStages(['defense', 1]),
   Meditate: userStages(['attack', 1]),
   'Swords Dance': userStages(['attack', 2]),
@@ -243,6 +248,12 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Mystical Fire': { statChanges: [stageChange('specialAttack', -1, 'target', 100)] },
   'Breaking Swipe': targetStages(['attack', -1]),
   'Skitter Smack': { statChanges: [stageChange('specialAttack', -1, 'target', 100)] },
+  Psychic: { statChanges: [stageChange('specialDefense', -1, 'target', 20)] },
+  'Shadow Ball': { statChanges: [stageChange('specialDefense', -1, 'target', 20)] },
+  'Energy Ball': { statChanges: [stageChange('specialDefense', -1, 'target', 10)] },
+  Crunch: { statChanges: [stageChange('defense', -1, 'target', 20)] },
+  'Low Sweep': { statChanges: [stageChange('speed', -1, 'target', 100)] },
+  'High Horsepower': { statChanges: [stageChange('speed', -1, 'target', 100)] },
 
   // --- Status on hit ---
   'Zap Cannon': statusEffect('paralyze', 100),
@@ -341,6 +352,16 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Petal Dance': {
     effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }],
   },
+
+  // --- Sleep-usable moves ---
+  Snore: { flinchChance: 30 },
+  'Sleep Talk': { behaviorTags: ['sleep-talk'], target: 'user' },
+
+  // --- Random-call moves ---
+  Metronome: { behaviorTags: ['metronome'], target: 'user' },
+  Assist: { behaviorTags: ['assist'], target: 'user' },
+  Copycat: { behaviorTags: ['copycat'], target: 'user' },
+  'Mirror Move': { behaviorTags: ['mirror-move'], target: 'selected-pokemon' },
 
   // --- Multi-hit ---
   Bonemerang: { minHits: 2, maxHits: 2 },

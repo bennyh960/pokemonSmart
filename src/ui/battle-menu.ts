@@ -45,6 +45,8 @@ export interface BattleMenuState {
   enemyTypes: PokemonType[];
   /** When true, show type effectiveness multipliers on each move cell */
   battleHelperActive: boolean;
+  /** Active weather type (null if none) — used to show weather power/accuracy indicators */
+  activeWeather: string | null;
 }
 
 const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG', 'POKEDEX'];
@@ -61,6 +63,7 @@ export function createBattleMenu(moves: Move[]): BattleMenuState {
     party: [],
     enemyTypes: [],
     battleHelperActive: false,
+    activeWeather: null,
   };
 }
 
@@ -277,8 +280,8 @@ function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): 
       const moveData = getMove(move.id);
       const rawDesc = rtl ? moveData?.description?.he : moveData?.description?.en;
       if (rawDesc) {
-        const DESC_START = 60;   // safe gap after ESC pill + label
-        const DESC_END = 236;    // 4px from right edge
+        const DESC_START = 60; // safe gap after ESC pill + label
+        const DESC_END = 236; // 4px from right edge
         const MAX_W = DESC_END - DESC_START;
         const desc = truncateToFit(ctx, rawDesc, MAX_W, E.fs);
         drawText(ctx, desc, rtl ? DESC_END : DESC_START, E.labelY, {
@@ -341,7 +344,7 @@ function renderMoveGrid(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
     }
     const move = menu.moves[moveIdx];
     const isSelected = slotIdx === menu.cursorIndex;
-    renderMoveCell(ctx, slotIdx, move, isSelected, menu.battleHelperActive, menu.enemyTypes);
+    renderMoveCell(ctx, slotIdx, move, isSelected, menu.battleHelperActive, menu.enemyTypes, menu.activeWeather);
   }
 
   // Page indicator (if more than 4 moves)
@@ -359,6 +362,35 @@ function getEffectivenessLabel(mult: number, rtl: boolean): { text: string; colo
   return { text: rtl ? 'יעיל מאוד!' : 'x4 super!!', color: '#ffff40' };
 }
 
+function getWeatherColor(weather: string): string {
+  if (weather === 'rain') return '#50a0e8';
+  if (weather === 'sun') return '#f0a020';
+  if (weather === 'sandstorm') return '#c09828';
+  if (weather === 'hail') return '#70c8f0';
+  return '#ffffff';
+}
+
+function getWeatherPowerMult(moveType: string, weather: string): number {
+  if (weather === 'rain') {
+    if (moveType === 'water' || moveType === 'electric') return 1.25;
+    if (moveType === 'fire') return 0.75;
+  } else if (weather === 'sun') {
+    if (moveType === 'fire' || moveType === 'grass') return 1.25;
+    if (moveType === 'water' || moveType === 'steel' || moveType === 'ice') return 0.75;
+  } else if (weather === 'sandstorm') {
+    if (moveType === 'water' || moveType === 'fire') return 0.75;
+  } else if (weather === 'hail') {
+    if (moveType === 'ice') return 1.25;
+  }
+  return 1;
+}
+
+function getWeatherAccPerfect(moveId: number, weather: string): boolean {
+  if (weather === 'rain' && (moveId === 87 || moveId === 542)) return true; // Thunder, Hurricane
+  if (weather === 'hail' && moveId === 59) return true; // Blizzard
+  return false;
+}
+
 function renderMoveCell(
   ctx: CanvasRenderingContext2D,
   slotIdx: number,
@@ -366,6 +398,7 @@ function renderMoveCell(
   isSelected: boolean,
   helperActive = false,
   enemyTypes: PokemonType[] = [],
+  activeWeather: string | null = null,
 ): void {
   const M = BTL.MOVE;
   const cell = M.cells[slotIdx];
@@ -427,19 +460,41 @@ function renderMoveCell(
 
   // Power (BOTTOM-LEFT) — always shown
   const rtl = isRTL();
+  // Compute weather effects on this move
+  const weatherMult = activeWeather && move.type ? getWeatherPowerMult(move.type, activeWeather) : 1;
+  const weatherAccPerfect = activeWeather ? getWeatherAccPerfect(move.id, activeWeather) : false;
+  const weatherColor = activeWeather ? getWeatherColor(activeWeather) : '#ffffff';
+
   const powerStr = move.power ? (rtl ? `כוח: ${move.power}` : `Pow: ${move.power}`) : rtl ? 'כוח: —' : 'Pow: —';
   drawText(ctx, powerStr, cx + M.POWER_DX, cy + M.POWER_DY, {
     size: M.POWER_FS,
     color: BTL.COLORS.textDark,
   });
+  // Weather power multiplier badge (between power and accuracy)
+  if (move.power && weatherMult !== 1) {
+    const multStr = weatherMult > 1 ? `×${weatherMult}` : `×${weatherMult}`;
+    drawText(ctx, multStr, cx + M.ACC_DX - 3, cy + M.POWER_DY, {
+      size: 4,
+      color: weatherColor,
+      align: 'right',
+    });
+  }
 
   // Accuracy (BOTTOM, after power)
   const accVal = moveFullData?.accuracy;
-  const accStr = accVal != null ? (rtl ? `דיוק: ${accVal}%` : `Acc: ${accVal}%`) : rtl ? 'דיוק: —' : 'Acc: —';
-  drawText(ctx, accStr, cx + M.ACC_DX, cy + M.ACC_DY, {
-    size: M.ACC_FS,
-    color: BTL.COLORS.textDark,
-  });
+  if (weatherAccPerfect) {
+    const accStr = rtl ? 'דיוק: 100%★' : 'Acc:100%★';
+    drawText(ctx, accStr, cx + M.ACC_DX, cy + M.ACC_DY, {
+      size: M.ACC_FS,
+      color: weatherColor,
+    });
+  } else {
+    const accStr = accVal != null ? (rtl ? `דיוק: ${accVal}%` : `Acc: ${accVal}%`) : rtl ? 'דיוק: —' : 'Acc: —';
+    drawText(ctx, accStr, cx + M.ACC_DX, cy + M.ACC_DY, {
+      size: M.ACC_FS,
+      color: BTL.COLORS.textDark,
+    });
+  }
 
   // Effectiveness label (below power, size 4) — only when helper active and not a status move
   if (helperActive && enemyTypes.length > 0 && move.type && moveFullData?.damageClass !== 'status') {
