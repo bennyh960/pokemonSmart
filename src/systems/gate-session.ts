@@ -14,7 +14,8 @@
  */
 
 import { QuestionBuilder, buildSnapshot, getClassConfig, registry } from '../math/question-builder/index.js';
-import type { RichQuestion } from '../math/question-builder/index.js';
+import type { ClassConfig, GradeId, RichQuestion } from '../math/question-builder/index.js';
+import type { MathDifficulty } from '../types/index.js';
 import type { GateSessionConfig, GateReward } from '../data/story/gates.js';
 import { gradeFromBirthYear, getPlayerBirthYear } from '../data/story/global-gate-config.js';
 import {
@@ -109,9 +110,9 @@ export class GateSession {
    * (plain arithmetic, typed answer) depending on the session config.
    */
   nextQuestion(): AnyQuestion {
-    // Bonus phase always uses a rich question
+    // Bonus phase always uses a rich question at elevated difficulty
     if (this.phase === 'bonus') {
-      return this._nextRichQuestion(this._bonusGradeId());
+      return this._nextRichQuestion(this._buildBonusConfig());
     }
 
     // Decide whether to serve a simple input question.
@@ -128,12 +129,11 @@ export class GateSession {
     }
 
     this.lastQuestionType = 'rich';
-    return this._nextRichQuestion(this.gradeId);
+    return this._nextRichQuestion(getClassConfig(this.gradeId));
   }
 
-  private _nextRichQuestion(gradeId: ReturnType<typeof getClassConfig>['id']): RichQuestion {
-    const cfg = getClassConfig(gradeId);
-    const builder = new QuestionBuilder().withConfig(cfg).withSnapshot(this.snapshot);
+  private _nextRichQuestion(config: ClassConfig): RichQuestion {
+    const builder = new QuestionBuilder().withConfig(config).withSnapshot(this.snapshot);
     const q = builder.build();
     this.lastTemplateId = q.templateId;
     return q;
@@ -255,11 +255,23 @@ export class GateSession {
 
   // ── Private helpers ────────────────────────────────────────────────────────
 
-  private _bonusGradeId(): ReturnType<typeof getClassConfig>['id'] {
+  private _buildBonusConfig(): ClassConfig {
     const gradeNum = Number(this.gradeId.replace('grade', ''));
-    // Randomly boost by 1 or 2 grades — grade+2 is harder (true bonus challenge)
     const boost = Math.random() < 0.5 ? 1 : 2;
-    const bonusNum = Math.min(6, gradeNum + boost);
-    return `grade${bonusNum}` as ReturnType<typeof getClassConfig>['id'];
+    const bonusGradeId = `grade${Math.min(6, gradeNum + boost)}` as GradeId;
+    const bonusBase = getClassConfig(bonusGradeId);
+    const playerCfg = getClassConfig(this.gradeId);
+
+    // Raise difficultyRange[0] so that templates whose difficulty ceiling sits
+    // at the player's current level are excluded — they already appear in
+    // regular questions and feel the same difficulty to the player.
+    // min 4 is the lowest threshold that cuts out the four single-step templates
+    // (BasicDamage, PoisonSleep, PokeBallsNeeded, SingleItemCost all cap at 3).
+    const minDiff = Math.max(playerCfg.difficultyRange[1] + 1, 4) as MathDifficulty;
+
+    // Grade-6 players are already at the ceiling — fall back to the bonus grade base.
+    if (minDiff > bonusBase.difficultyRange[1]) return bonusBase;
+
+    return { ...bonusBase, difficultyRange: [minDiff, bonusBase.difficultyRange[1]] };
   }
 }

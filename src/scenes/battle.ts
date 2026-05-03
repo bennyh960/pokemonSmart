@@ -721,10 +721,17 @@ export function createBattleScene(
     sun: ['fire'],
   };
 
+  const WEATHER_BOOSTED_STATS: Record<WeatherConditionId, BattleStatId[]> = {
+    sandstorm: ['evasion', 'specialDefense', 'speed'],
+    hail: ['defense', 'specialDefense'],
+    sun: ['specialAttack', 'speed'],
+    rain: ['speed', 'specialDefense'],
+  };
+
   function applyWeatherStatBoost(state: BattlePokemonRuntimeState, pokemon: Pokemon, weatherType: WeatherConditionId): void {
     const matchingTypes = WEATHER_BOOST_TYPES[weatherType];
     if (!pokemon.types.some((t) => matchingTypes.includes(t))) return;
-    for (const stat of ['attack', 'defense', 'specialAttack', 'specialDefense', 'speed', 'accuracy', 'evasion'] as const) {
+    for (const stat of WEATHER_BOOSTED_STATS[weatherType]) {
       state.statModifiers[stat] = applyBattleStatDelta(state.statModifiers[stat], 1);
     }
     state.hasWeatherStatBoost = true;
@@ -1923,6 +1930,10 @@ export function createBattleScene(
         rotation: 0,
         visible: false,
       });
+      if (isWildNpcBattle && trainerData) {
+        setFlag(pd, `trainer-${trainerData.trainerId}-defeated`);
+        void fireStoryTrigger({ type: 'trainer-defeated', trainerId: trainerData.trainerId });
+      }
       enemy.caughtBall = outcome.itemId;
       pd.pokedex[enemy.id] = true;
       xpGained = getCaptureXpReward();
@@ -5134,7 +5145,10 @@ export function createBattleScene(
         phase = 'INTRO';
       }
     } else if (choice === 'RUN') {
-      if (isTrainerBattle) {
+      if (isWildNpcBattle) {
+        textBox = createTextBox([t('battle.wildNpcCantRun', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+        phase = 'INTRO';
+      } else if (isTrainerBattle) {
         textBox = createTextBox([t('battle.cantRunTrainer')], isRTL());
         phase = 'INTRO';
       } else if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState)) {
@@ -5158,7 +5172,9 @@ export function createBattleScene(
       if (hasActiveGame()) {
         getPlayerData().pokedex[enemy.id] = true;
       }
-      if (isTrainerBattle && trainerData) {
+      if (isWildNpcBattle) {
+        textBox = createTextBox([t('battle.wildAppeared', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+      } else if (isTrainerBattle && trainerData) {
         textBox = createTextBox(
           [
             t('battle.trainerWantsBattle', { name: getLocalizedName(trainerData.trainerName) }),
@@ -5424,13 +5440,16 @@ export function createBattleScene(
             // Apply entry hazards to the newly switched-in enemy Pokemon
             if (pendingEnemyEntryHazard) {
               pendingEnemyEntryHazard = false;
+              const weatherSummonMsgs = checkWeatherSummonAbility(enemy, 'enemy');
+              const weatherEntryBoostMsgs = applyWeatherEntryBoost(enemyBattleState, enemy);
               const hazardResult = applyEntryHazards(enemy, enemyBattleState, enemySideState);
               const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(enemy.id), enemySideState);
-              if (hazardMsgs.length > 0) {
+              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...hazardMsgs];
+              if (entryMsgs.length > 0) {
                 setHP(enemyHpBar, enemy.hp);
                 setStatus(enemyHpBar, enemy.status ?? '');
                 syncEnemyBar();
-                textBox = createTextBox(hazardMsgs, isRTL());
+                textBox = createTextBox(entryMsgs, isRTL());
                 break;
               }
             }
@@ -5792,13 +5811,16 @@ export function createBattleScene(
             // Apply entry hazards to the newly switched-in player Pokemon
             if (pendingPlayerEntryHazard) {
               pendingPlayerEntryHazard = false;
+              const weatherSummonMsgs = checkWeatherSummonAbility(player, 'player');
+              const weatherEntryBoostMsgs = applyWeatherEntryBoost(playerBattleState, player);
               const hazardResult = applyEntryHazards(player, playerBattleState, playerSideState);
               const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(player.id), playerSideState);
-              if (hazardMsgs.length > 0) {
+              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...hazardMsgs];
+              if (entryMsgs.length > 0) {
                 setHP(playerHpBar, player.hp);
                 setStatus(playerHpBar, player.status ?? '');
                 syncPlayerBar();
-                textBox = createTextBox(hazardMsgs, isRTL());
+                textBox = createTextBox(entryMsgs, isRTL());
                 break;
               }
             }

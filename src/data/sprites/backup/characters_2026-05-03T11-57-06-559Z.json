@@ -1234,6 +1234,10 @@
       "roles": ["story", "gym-leader"]
     },
     "champion_leon": {
+      "name": {
+        "en": "Leon",
+        "he": "ליאון"
+      },
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -1286,10 +1290,6 @@
           "sy": 928
         }
       ],
-      "name": {
-        "en": "Leon",
-        "he": "ליאון"
-      },
       "roles": ["story", "champion"]
     },
     "char_ca2fd2": {
@@ -4018,65 +4018,6 @@
         "he": "סוכן צוות רוקט"
       },
       "roles": ["trainer", "villain"]
-    },
-    "snorlax": {
-      "frameWidth": 64,
-      "frameHeight": 64,
-      "frames": [
-        {
-          "sx": 0,
-          "sy": 1632
-        },
-        {
-          "sx": 64,
-          "sy": 1632
-        },
-        {
-          "sx": 128,
-          "sy": 1632
-        },
-        {
-          "sx": 0,
-          "sy": 1696
-        },
-        {
-          "sx": 64,
-          "sy": 1696
-        },
-        {
-          "sx": 128,
-          "sy": 1696
-        },
-        {
-          "sx": 0,
-          "sy": 1760
-        },
-        {
-          "sx": 64,
-          "sy": 1760
-        },
-        {
-          "sx": 128,
-          "sy": 1760
-        },
-        {
-          "sx": 0,
-          "sy": 1824
-        },
-        {
-          "sx": 64,
-          "sy": 1824
-        },
-        {
-          "sx": 128,
-          "sy": 1824
-        }
-      ],
-      "name": {
-        "en": "Snorlax",
-        "he": "סנורלקס"
-      },
-      "roles": ["wild-pokemon"]
     }
   }
 }

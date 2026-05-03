@@ -212,6 +212,7 @@
   "battle.trainerWithdrew": "{trainer} withdrew {name}!",
   "battle.trainerUsedItem": "{trainer} used {item} on {name}!",
   "battle.cantRunTrainer": "Can't run from a trainer battle!",
+  "battle.wildNpcCantRun": "{name} won't let you run!",
   "battle.trainerReward": "You got ${money} for winning!",
   "battle.trainerRewardItem": "You received {qty}x {item}!",
   "battle.trainerRewardBadge": "You earned Badge #{badge}!",

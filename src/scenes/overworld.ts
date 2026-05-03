@@ -3123,11 +3123,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
 
           if (charFrame) {
-            // Source frames may be any size (e.g. 32×32) but are always
-            // rendered at TILE_SIZE×TILE_SIZE (16×16) in the game world.
-            // drawImage scales the source rect down to the destination rect.
-            const nx = Math.floor(npcPixelX - camera.x);
-            const ny = Math.floor(npcPixelY - camera.y);
+            // Scale destination proportionally: 32×32 source = 1 tile (16×16).
+            // Larger frames (e.g. wild Pokémon at 48×48) render at proportional size.
+            const destW = Math.round((charFrame.w / 32) * TILE_SIZE);
+            const destH = Math.round((charFrame.h / 32) * TILE_SIZE);
+            // Center horizontally on the tile; anchor bottom to the tile bottom row.
+            const nx = Math.floor(npcPixelX - camera.x) - Math.floor((destW - TILE_SIZE) / 2);
+            const ny = Math.floor(npcPixelY - camera.y) - (destH - TILE_SIZE);
 
             renderables.push({
               y: renderY,
@@ -3141,8 +3143,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   charFrame.h,
                   nx,
                   ny,
-                  TILE_SIZE,
-                  TILE_SIZE,
+                  destW,
+                  destH,
                 );
                 // "!" exclamation during trainer, gate-guard, or party-guard approach
                 const showExclamation =
@@ -3157,7 +3159,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   else if (partyGuardApproach?.npc === npc) excT = partyGuardApproach.timer;
                   const scl = excT < 0.12 ? (excT / 0.12) * 1.3 : excT < 0.22 ? 1.3 - ((excT - 0.12) / 0.1) * 0.3 : 1.0;
                   ctx.save();
-                  ctx.translate(nx + 8, ny - 7);
+                  ctx.translate(nx + Math.floor(destW / 2), ny - 7);
                   ctx.scale(scl, scl);
                   fillRect(ctx, -4, -5, 8, 10, '#ffffff');
                   drawText(ctx, '!', -3, -4, { size: 8, color: '#ff0000', font: 'monospace' });

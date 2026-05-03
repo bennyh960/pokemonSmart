@@ -911,7 +911,7 @@
       "sy": 736,
       "w": 16,
       "h": 16,
-      "walkable": false,
+      "walkable": true,
       "encounterTypes": [
         "*/flying,ground,rock,dragon,steel,normal"
       ],

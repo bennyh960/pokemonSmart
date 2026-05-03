@@ -1,10 +1,47 @@
 {
   "id": "pokecenter",
   "name": "Pokemon Center",
+  "template": "pokecenter-template",
+  "tileset": "overworld",
   "label": {
     "en": "Pokemon Center",
     "he": "מרכז פוקימונים"
   },
-  "template": "pokecenter-template",
-  "area": "Multiplia"
+  "area": "Multiplia",
+  "music": "pokecenter",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 4,
+    "y": 7
+  },
+  "npcs": [
+    {
+      "id": "npc-trader",
+      "x": 11,
+      "y": 5,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום!!! הפוקימונים שלי הם חברים אמיתיים!"
+        }
+      ],
+      "spriteType": "char_0502ea",
+      "interaction": {
+        "kind": "swap-pokemon",
+        "offersId": 133,
+        "level": 20,
+        "wantsId": 54
+      },
+      "name": {
+        "en": "Gold",
+        "he": "גולד"
+      },
+      "questions": {
+        "count": 5,
+        "types": []
+      }
+    }
+  ]
 }

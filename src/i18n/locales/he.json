@@ -208,6 +208,7 @@
   "battle.trainerWithdrew": "{trainer} החזיר את {name}!",
   "battle.trainerUsedItem": "{trainer} השתמש ב{item} על {name}!",
   "battle.cantRunTrainer": "אי אפשר לברוח מקרב מאמנים!",
+  "battle.wildNpcCantRun": "{name} לא מניח לך לברוח!",
   "battle.trainerReward": "קיבלת ${money} על הניצחון!",
   "battle.trainerRewardItem": "קיבלת {qty}x {item}!",
   "battle.trainerRewardBadge": "השגת תג #{badge}!",
