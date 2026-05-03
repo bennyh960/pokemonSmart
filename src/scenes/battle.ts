@@ -109,7 +109,12 @@ import {
 } from '../systems/move-learning.js';
 import { calculateCaptureChance } from '../systems/capture.js';
 import type { BattlePokemonRuntimeState, BattleSideRuntimeState, WeatherState } from '../systems/battle-state.js';
-import { BATTLE_STAT_PERCENT_STEP, applyBattleStatDelta, createBattleSideRuntimeState, createEmptyBattleStatModifiers } from '../systems/battle-state.js';
+import {
+  BATTLE_STAT_PERCENT_STEP,
+  applyBattleStatDelta,
+  createBattleSideRuntimeState,
+  createEmptyBattleStatModifiers,
+} from '../systems/battle-state.js';
 import {
   advanceSideEffectTurns,
   applyDrainHealing,
@@ -685,19 +690,27 @@ export function createBattleScene(
 
   function getWeatherStartedLine(weatherType: WeatherConditionId): string {
     switch (weatherType) {
-      case 'sandstorm': return t('battle.sandstormStarted');
-      case 'rain': return t('battle.rainStarted');
-      case 'sun': return t('battle.sunStarted');
-      case 'hail': return t('battle.hailStarted');
+      case 'sandstorm':
+        return t('battle.sandstormStarted');
+      case 'rain':
+        return t('battle.rainStarted');
+      case 'sun':
+        return t('battle.sunStarted');
+      case 'hail':
+        return t('battle.hailStarted');
     }
   }
 
   function getWeatherEndedLine(weatherType: WeatherConditionId): string {
     switch (weatherType) {
-      case 'sandstorm': return t('battle.sandstormEnded');
-      case 'rain': return t('battle.rainEnded');
-      case 'sun': return t('battle.sunEnded');
-      case 'hail': return t('battle.hailEnded');
+      case 'sandstorm':
+        return t('battle.sandstormEnded');
+      case 'rain':
+        return t('battle.rainEnded');
+      case 'sun':
+        return t('battle.sunEnded');
+      case 'hail':
+        return t('battle.hailEnded');
     }
   }
 
@@ -725,7 +738,11 @@ export function createBattleScene(
     rain: ['speed', 'specialDefense'],
   };
 
-  function applyWeatherStatBoost(state: BattlePokemonRuntimeState, pokemon: Pokemon, weatherType: WeatherConditionId): void {
+  function applyWeatherStatBoost(
+    state: BattlePokemonRuntimeState,
+    pokemon: Pokemon,
+    weatherType: WeatherConditionId,
+  ): void {
     const matchingTypes = WEATHER_BOOST_TYPES[weatherType];
     if (!pokemon.types.some((t) => matchingTypes.includes(t))) return;
     for (const stat of WEATHER_BOOSTED_STATS[weatherType]) {
@@ -747,7 +764,7 @@ export function createBattleScene(
   ): string[] {
     revertWeatherStatBoost(playerBattleState);
     revertWeatherStatBoost(enemyBattleState);
-    const turns = turnsOverride ?? (Math.floor(Math.random() * 5) + 2);
+    const turns = turnsOverride ?? Math.floor(Math.random() * 5) + 2;
     battleWeather = { type: newWeatherType, turnsRemaining: turns, setter };
     if (menu) menu.activeWeather = newWeatherType;
     applyWeatherStatBoost(playerBattleState, player, newWeatherType);
@@ -787,10 +804,12 @@ export function createBattleScene(
     }
     const prevWeatherType = battleWeather?.type ?? null;
     if (prevWeatherType) {
-      msgs.push(t('battle.weatherOverride', {
-        new: getWeatherDisplayName(summonEffect.weather),
-        old: getWeatherDisplayName(prevWeatherType),
-      }));
+      msgs.push(
+        t('battle.weatherOverride', {
+          new: getWeatherDisplayName(summonEffect.weather),
+          old: getWeatherDisplayName(prevWeatherType),
+        }),
+      );
     }
     const boostMsgs = activateWeather(summonEffect.weather, side, 5);
     const keyMap: Record<WeatherConditionId, string> = {
@@ -870,8 +889,9 @@ export function createBattleScene(
       }
       consumeItem(pd.items, itemId);
       const random = Math.random();
-      // console.log({ random });
-      startCaptureSequence(itemId, random < getCaptureChance(def.effect.rate));
+      const calcScore = getCaptureChance(def.effect.rate);
+      console.log({ captureMin: random, captureScore: calcScore });
+      startCaptureSequence(itemId, random < calcScore);
       phaseTimer = 0;
       return;
     }
@@ -3299,9 +3319,11 @@ export function createBattleScene(
 
     // --- Move Redirection (Sleep Talk / Metronome / Assist / Copycat / Mirror Move) ---
     const originalMoveName = getMoveDisplayName(m.id);
-    const redirectTag = moveBattleData?.behaviorTags?.find(
-      (tag) => tag === 'sleep-talk' || tag === 'metronome' || tag === 'assist' || tag === 'copycat' || tag === 'mirror-move',
-    ) ?? null;
+    const redirectTag =
+      moveBattleData?.behaviorTags?.find(
+        (tag) =>
+          tag === 'sleep-talk' || tag === 'metronome' || tag === 'assist' || tag === 'copycat' || tag === 'mirror-move',
+      ) ?? null;
     let isRedirected = false;
     let redirectMsg: string | null = null;
 
@@ -3311,7 +3333,11 @@ export function createBattleScene(
 
       if (redirectTag === 'sleep-talk') {
         if (playerBattleState.majorStatus !== 'sleep') {
-          const msgs = [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: originalMoveName }), t('battle.nothingHappened')];
+          const msgs = [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: originalMoveName }),
+            t('battle.nothingHappened'),
+          ];
           textBox = createTextBox(msgs, rtl);
           phase = 'PLAYER_ATTACK';
           phaseTimer = 0;
@@ -3345,7 +3371,11 @@ export function createBattleScene(
       }
 
       if (redirectId === null) {
-        const msgs = [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: originalMoveName }), t('battle.noMoveToCall')];
+        const msgs = [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: originalMoveName }),
+          t('battle.noMoveToCall'),
+        ];
         textBox = createTextBox(msgs, rtl);
         phase = 'PLAYER_ATTACK';
         phaseTimer = 0;
@@ -3354,7 +3384,14 @@ export function createBattleScene(
 
       const rmd = getMove(redirectId);
       if (rmd) {
-        m = { ...m, id: redirectId, name: rmd.name.en, type: rmd.type as PokemonType, power: rmd.power ?? 0, accuracy: rmd.accuracy ?? 100 };
+        m = {
+          ...m,
+          id: redirectId,
+          name: rmd.name.en,
+          type: rmd.type as PokemonType,
+          power: rmd.power ?? 0,
+          accuracy: rmd.accuracy ?? 100,
+        };
       }
       moveBattleData = getMoveBattleData(redirectId);
       if (redirectTag === 'copycat') {
@@ -3475,7 +3512,11 @@ export function createBattleScene(
 
     // Snore: fails if not asleep (move ID 173)
     if (m.id === 173 && playerBattleState.majorStatus !== 'sleep') {
-      const msgs = [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), t('battle.nothingHappened')];
+      const msgs = [
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+        t('battle.nothingHappened'),
+      ];
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
@@ -3710,9 +3751,10 @@ export function createBattleScene(
     const facadeActive =
       isFacadeBoost && player.status !== null && ['burn', 'paralyze', 'poison'].includes(player.status as string);
     const rawPower = facadeActive ? movePower * 2 : movePower;
-    const effectivePower = battleWeather && rawPower > 0
-      ? Math.max(1, Math.round(rawPower * getWeatherPowerMultiplier(m.type, battleWeather.type)))
-      : rawPower;
+    const effectivePower =
+      battleWeather && rawPower > 0
+        ? Math.max(1, Math.round(rawPower * getWeatherPowerMultiplier(m.type, battleWeather.type)))
+        : rawPower;
     // Foul Play: use target's attack stat
     const foulPlayAttackStat = isFoulPlay ? getModifiedStatValue(enemy, enemyBattleState, 'attack') : undefined;
     // Compute animation profile to determine suppressAudio for multi-hit
@@ -3786,9 +3828,12 @@ export function createBattleScene(
     if (battleWeather && doesMoveTargetOpponent(moveBattleData)) {
       const wName = getWeatherDisplayName(battleWeather.type);
       const wMult = getWeatherPowerMultiplier(m.type, battleWeather.type);
-      if (rawPower > 0 && wMult > 1) msgs.push(t('battle.weatherPowerBoosted', { weather: wName, move: getMoveDisplayName(m.id) }));
-      else if (rawPower > 0 && wMult < 1) msgs.push(t('battle.weatherPowerReduced', { weather: wName, move: getMoveDisplayName(m.id) }));
-      if (weatherAccOverride === 0) msgs.push(t('battle.weatherAccuracyMax', { weather: wName, move: getMoveDisplayName(m.id) }));
+      if (rawPower > 0 && wMult > 1)
+        msgs.push(t('battle.weatherPowerBoosted', { weather: wName, move: getMoveDisplayName(m.id) }));
+      else if (rawPower > 0 && wMult < 1)
+        msgs.push(t('battle.weatherPowerReduced', { weather: wName, move: getMoveDisplayName(m.id) }));
+      if (weatherAccOverride === 0)
+        msgs.push(t('battle.weatherAccuracyMax', { weather: wName, move: getMoveDisplayName(m.id) }));
     }
 
     if (effectivePower > 0) {
@@ -3876,10 +3921,12 @@ export function createBattleScene(
       } else {
         const prevWeatherType = battleWeather?.type ?? null;
         if (prevWeatherType) {
-          msgs.push(t('battle.weatherOverride', {
-            new: getWeatherDisplayName(newWeatherType),
-            old: getWeatherDisplayName(prevWeatherType),
-          }));
+          msgs.push(
+            t('battle.weatherOverride', {
+              new: getWeatherDisplayName(newWeatherType),
+              old: getWeatherDisplayName(prevWeatherType),
+            }),
+          );
         }
         const boostMsgs = activateWeather(newWeatherType, 'player');
         msgs.push(getWeatherStartedLine(newWeatherType));
@@ -4198,9 +4245,11 @@ export function createBattleScene(
 
     // --- Move Redirection (Sleep Talk / Metronome / Assist / Copycat / Mirror Move) ---
     const originalMoveNameEnemy = getMoveDisplayName(m.id);
-    const redirectTagEnemy = moveBattleData?.behaviorTags?.find(
-      (tag) => tag === 'sleep-talk' || tag === 'metronome' || tag === 'assist' || tag === 'copycat' || tag === 'mirror-move',
-    ) ?? null;
+    const redirectTagEnemy =
+      moveBattleData?.behaviorTags?.find(
+        (tag) =>
+          tag === 'sleep-talk' || tag === 'metronome' || tag === 'assist' || tag === 'copycat' || tag === 'mirror-move',
+      ) ?? null;
     let isRedirectedEnemy = false;
     let redirectMsgEnemy: string | null = null;
 
@@ -4210,7 +4259,12 @@ export function createBattleScene(
 
       if (redirectTagEnemy === 'sleep-talk') {
         if (enemyBattleState.majorStatus !== 'sleep') {
-          const msgs = [...prefix, ...turnEffectLines, t('battle.usedMove', { name: attackerName, move: originalMoveNameEnemy }), t('battle.nothingHappened')];
+          const msgs = [
+            ...prefix,
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: originalMoveNameEnemy }),
+            t('battle.nothingHappened'),
+          ];
           textBox = createTextBox(msgs, rtl);
           phase = 'ENEMY_TURN';
           phaseTimer = 0;
@@ -4233,7 +4287,12 @@ export function createBattleScene(
       }
 
       if (redirectIdEnemy === null) {
-        const msgs = [...prefix, ...turnEffectLines, t('battle.usedMove', { name: attackerName, move: originalMoveNameEnemy }), t('battle.noMoveToCall')];
+        const msgs = [
+          ...prefix,
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: originalMoveNameEnemy }),
+          t('battle.noMoveToCall'),
+        ];
         textBox = createTextBox(msgs, rtl);
         phase = 'ENEMY_TURN';
         phaseTimer = 0;
@@ -4242,7 +4301,14 @@ export function createBattleScene(
 
       const rmd = getMove(redirectIdEnemy);
       if (rmd) {
-        m = { ...m, id: redirectIdEnemy, name: rmd.name.en, type: rmd.type as PokemonType, power: rmd.power ?? 0, accuracy: rmd.accuracy ?? 100 };
+        m = {
+          ...m,
+          id: redirectIdEnemy,
+          name: rmd.name.en,
+          type: rmd.type as PokemonType,
+          power: rmd.power ?? 0,
+          accuracy: rmd.accuracy ?? 100,
+        };
       }
       moveBattleData = getMoveBattleData(redirectIdEnemy);
       if (redirectTagEnemy === 'copycat') {
@@ -4287,8 +4353,7 @@ export function createBattleScene(
     const isRainDanceMoveEnemy = moveBattleData?.behaviorTags?.includes('rain') ?? false;
     const isSunnyDayMoveEnemy = moveBattleData?.behaviorTags?.includes('sun') ?? false;
     const isHailMoveEnemy = moveBattleData?.behaviorTags?.includes('hail') ?? false;
-    const isWeatherMoveEnemy =
-      isSandstormMoveEnemy || isRainDanceMoveEnemy || isSunnyDayMoveEnemy || isHailMoveEnemy;
+    const isWeatherMoveEnemy = isSandstormMoveEnemy || isRainDanceMoveEnemy || isSunnyDayMoveEnemy || isHailMoveEnemy;
     const healPercentEnemy = moveBattleData?.healingPercent ?? null;
     const hitCountEnemy = (() => {
       const min = moveBattleData?.minHits ?? null;
@@ -4375,7 +4440,12 @@ export function createBattleScene(
 
     // Snore: fails if not asleep (move ID 173)
     if (m.id === 173 && enemyBattleState.majorStatus !== 'sleep') {
-      const msgs = [...prefix, ...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), t('battle.nothingHappened')];
+      const msgs = [
+        ...prefix,
+        ...turnEffectLines,
+        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+        t('battle.nothingHappened'),
+      ];
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
@@ -4599,9 +4669,10 @@ export function createBattleScene(
     const facadeActiveEnemy =
       isFacadeBoostEnemy && enemy.status !== null && ['burn', 'paralyze', 'poison'].includes(enemy.status as string);
     const rawPowerEnemy = facadeActiveEnemy ? movePowerEnemy * 2 : movePowerEnemy;
-    const effectivePowerEnemy = battleWeather && rawPowerEnemy > 0
-      ? Math.max(1, Math.round(rawPowerEnemy * getWeatherPowerMultiplier(m.type, battleWeather.type)))
-      : rawPowerEnemy;
+    const effectivePowerEnemy =
+      battleWeather && rawPowerEnemy > 0
+        ? Math.max(1, Math.round(rawPowerEnemy * getWeatherPowerMultiplier(m.type, battleWeather.type)))
+        : rawPowerEnemy;
     const foulPlayAttackStatEnemy = isFoulPlayEnemy
       ? getModifiedStatValue(player, playerBattleState, 'attack')
       : undefined;
@@ -4675,9 +4746,12 @@ export function createBattleScene(
     if (battleWeather && doesMoveTargetOpponent(moveBattleData)) {
       const wName = getWeatherDisplayName(battleWeather.type);
       const wMult = getWeatherPowerMultiplier(m.type, battleWeather.type);
-      if (rawPowerEnemy > 0 && wMult > 1) msgs.push(t('battle.weatherPowerBoosted', { weather: wName, move: getMoveDisplayName(m.id) }));
-      else if (rawPowerEnemy > 0 && wMult < 1) msgs.push(t('battle.weatherPowerReduced', { weather: wName, move: getMoveDisplayName(m.id) }));
-      if (weatherAccOverrideEnemy === 0) msgs.push(t('battle.weatherAccuracyMax', { weather: wName, move: getMoveDisplayName(m.id) }));
+      if (rawPowerEnemy > 0 && wMult > 1)
+        msgs.push(t('battle.weatherPowerBoosted', { weather: wName, move: getMoveDisplayName(m.id) }));
+      else if (rawPowerEnemy > 0 && wMult < 1)
+        msgs.push(t('battle.weatherPowerReduced', { weather: wName, move: getMoveDisplayName(m.id) }));
+      if (weatherAccOverrideEnemy === 0)
+        msgs.push(t('battle.weatherAccuracyMax', { weather: wName, move: getMoveDisplayName(m.id) }));
     }
 
     if (effectivePowerEnemy > 0) {
@@ -4761,10 +4835,12 @@ export function createBattleScene(
       } else {
         const prevWeatherType = battleWeather?.type ?? null;
         if (prevWeatherType) {
-          msgs.push(t('battle.weatherOverride', {
-            new: getWeatherDisplayName(newWeatherType),
-            old: getWeatherDisplayName(prevWeatherType),
-          }));
+          msgs.push(
+            t('battle.weatherOverride', {
+              new: getWeatherDisplayName(newWeatherType),
+              old: getWeatherDisplayName(prevWeatherType),
+            }),
+          );
         }
         const boostMsgs = activateWeather(newWeatherType, 'enemy');
         msgs.push(getWeatherStartedLine(newWeatherType));

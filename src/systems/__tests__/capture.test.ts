@@ -25,28 +25,28 @@ describe('capture helpers', () => {
     expect(getStatusCatchBonus(null)).toBe(0);
   });
 
-  it('caps level-difference bonus at ±20%', () => {
-    expect(getLevelDifferenceCatchBonus(40, 20)).toBeCloseTo(0.2, 5);
-    expect(getLevelDifferenceCatchBonus(20, 40)).toBeCloseTo(-0.2, 5);
+  it('caps level-difference bonus at ±10%', () => {
+    expect(getLevelDifferenceCatchBonus(40, 20)).toBeCloseTo(0.08, 5);
+    expect(getLevelDifferenceCatchBonus(20, 40)).toBeCloseTo(-0.08, 5);
     expect(getLevelDifferenceCatchBonus(30, 30)).toBe(0);
     // Beyond cap: still clamped
-    expect(getLevelDifferenceCatchBonus(100, 5)).toBeCloseTo(0.2, 5);
-    expect(getLevelDifferenceCatchBonus(5, 100)).toBeCloseTo(-0.2, 5);
+    expect(getLevelDifferenceCatchBonus(100, 5)).toBeCloseTo(0.1, 5);
+    expect(getLevelDifferenceCatchBonus(5, 100)).toBeCloseTo(-0.1, 5);
   });
 
-  it('gives a 5% turn bonus per turn after turn 1, capped at 30%', () => {
+  it('gives a 0.75% turn bonus per turn after turn 1, capped at 12%', () => {
     expect(getTurnCatchBonus(1)).toBe(0);
-    expect(getTurnCatchBonus(2)).toBeCloseTo(0.05, 5);
-    expect(getTurnCatchBonus(3)).toBeCloseTo(0.1, 5);
-    expect(getTurnCatchBonus(7)).toBeCloseTo(0.3, 5); // capped
-    expect(getTurnCatchBonus(100)).toBeCloseTo(0.3, 5); // still capped
+    expect(getTurnCatchBonus(2)).toBeCloseTo(0.0075, 5);
+    expect(getTurnCatchBonus(3)).toBeCloseTo(0.015, 5);
+    expect(getTurnCatchBonus(7)).toBeCloseTo(0.045, 5);
+    expect(getTurnCatchBonus(100)).toBeCloseTo(0.12, 5); // capped
   });
 
-  it('gives 3% per stat stage lowered, capped at 30%', () => {
+  it('gives 2% per stat stage lowered, capped at 20%', () => {
     expect(getStatReductionBonus(0)).toBe(0);
-    expect(getStatReductionBonus(2)).toBeCloseTo(0.06, 5);
-    expect(getStatReductionBonus(4)).toBeCloseTo(0.12, 5);
-    expect(getStatReductionBonus(10)).toBeCloseTo(0.3, 5); // capped
+    expect(getStatReductionBonus(2)).toBeCloseTo(0.04, 5);
+    expect(getStatReductionBonus(4)).toBeCloseTo(0.08, 5);
+    expect(getStatReductionBonus(10)).toBeCloseTo(0.2, 5); // capped
     expect(getStatReductionBonus(-1)).toBe(0); // negatives are ignored
   });
 
@@ -88,8 +88,8 @@ describe('capture helpers', () => {
       status: 'sleep',
     });
 
-    expect(base).toBeCloseTo(0.0141, 3);
-    expect(boosted).toBeCloseTo(0.299, 3);
+    expect(base).toBeCloseTo(0.0162, 3);
+    expect(boosted).toBeCloseTo(0.282, 3);
     expect(boosted).toBeGreaterThan(base);
     expect(boosted).toBeLessThanOrEqual(1);
   });

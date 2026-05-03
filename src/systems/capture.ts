@@ -30,19 +30,20 @@ const STATUS_SEVERE = 0.3; // sleep / freeze
 const STATUS_MODERATE = 0.25; // paralysis
 const STATUS_MILD = 0.2; // burn / poison
 
-// Turn bonus: +1% per turn after turn 1, capped at 30%
-const TURN_BONUS_PER_TURN = 0.02;
-const TURN_BONUS_MAX = 10;
+// Turn bonus: +0.75% per turn after turn 1, capped at 12%
+const TURN_BONUS_PER_TURN = 0.0075;
+const TURN_BONUS_MAX = 0.12;
 
-// Stat-reduction bonus: +3% per enemy stat stage lowered, capped at 30%
-const STAT_BONUS_PER_STAGE = 0.03;
-const STAT_BONUS_MAX = 0.3;
+// Stat-reduction bonus: +2% per enemy stat stage lowered, capped at 20%
+const STAT_BONUS_PER_STAGE = 0.02;
+const STAT_BONUS_MAX = 0.2;
 
-// Level-difference bonus/penalty: ±1% per level, capped at ±20%
-const LEVEL_BONUS_PER_LEVEL = 0.01;
-const LEVEL_BONUS_MAX = 0.15;
+// Level-difference bonus/penalty: ±0.4% per level, capped at ±10%
+const LEVEL_BONUS_PER_LEVEL = 0.004;
+const LEVEL_BONUS_MAX = 0.1;
 
-const SPECIES_FACTOR_REDUCER = 0.8; // reduces the impact of species catch rate on final probability to keep gameplay engaging across rarities
+const SPECIES_FACTOR_REDUCER = 0.8;
+const SPECIES_FACTOR_EXPONENT = 1.05; // slight curve so very rare species remain meaningfully harder
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -69,7 +70,7 @@ export function getStatusCatchBonus(status?: string | null): number {
 }
 
 /**
- * Additive turn bonus: +5% per turn after the first, capped at 30%.
+ * Additive turn bonus: +0.75% per turn after the first, capped at 12%.
  */
 export function getTurnCatchBonus(turnNumber: number): number {
   if (turnNumber <= 1) return 0;
@@ -78,15 +79,15 @@ export function getTurnCatchBonus(turnNumber: number): number {
 
 /**
  * Additive bonus from lowering the wild Pokemon's stats.
- * Each stat stage lowered contributes +3%, total capped at 30%.
+ * Each stat stage lowered contributes +2%, total capped at 20%.
  */
 export function getStatReductionBonus(statStagesReduced: number): number {
   return Math.min(STAT_BONUS_MAX, Math.max(0, statStagesReduced) * STAT_BONUS_PER_STAGE);
 }
 
 /**
- * Level-difference bonus/penalty: +1% per player level above wild, -1% if below.
- * Clamped to ±20%.
+ * Level-difference bonus/penalty: +0.4% per player level above wild, -0.4% if below.
+ * Clamped to ±10%.
  */
 export function getLevelDifferenceCatchBonus(playerLevel: number, wildLevel: number): number {
   return clamp((playerLevel - wildLevel) * LEVEL_BONUS_PER_LEVEL, -LEVEL_BONUS_MAX, LEVEL_BONUS_MAX);
@@ -108,7 +109,8 @@ export function calculateCaptureChance(input: CaptureChanceInput): number {
 
   const maxHp = Math.max(1, input.maxHp);
   const currentHp = clamp(input.currentHp, 0, maxHp);
-  const speciesFactor = clamp(input.speciesCatchRate / 255, 0, 1) / SPECIES_FACTOR_REDUCER;
+  const speciesFactor =
+    Math.pow(clamp(input.speciesCatchRate / 255, 0, 1), SPECIES_FACTOR_EXPONENT) / SPECIES_FACTOR_REDUCER;
 
   const hpComponent = HP_BASE + (1 - currentHp / maxHp) * HP_RANGE;
   const statusBonus = getStatusCatchBonus(input.status);
