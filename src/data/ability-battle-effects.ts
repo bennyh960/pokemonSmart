@@ -1,82 +1,32 @@
 import type { AbilityBattleEffect } from '../types/battle-metadata.js';
 
 export const ABILITY_BATTLE_EFFECTS: Record<string, AbilityBattleEffect[]> = {
-  'Thick Fat': [
-    { kind: 'damageTakenMultiplier', moveTypes: ['fire', 'ice'], multiplier: 0.5 },
-  ],
-  'Battle Armor': [
-    { kind: 'preventCriticalHits' },
-  ],
-  'Shell Armor': [
-    { kind: 'preventCriticalHits' },
-  ],
-  Limber: [
-    { kind: 'statusImmunity', statuses: ['paralyze'] },
-  ],
-  Immunity: [
-    { kind: 'statusImmunity', statuses: ['poison'] },
-  ],
-  'Water Veil': [
-    { kind: 'statusImmunity', statuses: ['burn'] },
-  ],
-  'Magma Armor': [
-    { kind: 'statusImmunity', statuses: ['freeze'] },
-  ],
-  Insomnia: [
-    { kind: 'statusImmunity', statuses: ['sleep'] },
-  ],
-  'Vital Spirit': [
-    { kind: 'statusImmunity', statuses: ['sleep'] },
-  ],
-  'Volt Absorb': [
-    { kind: 'typeAbsorbHeal', moveTypes: ['electric'], healPercent: 25 },
-  ],
-  'Water Absorb': [
-    { kind: 'typeAbsorbHeal', moveTypes: ['water'], healPercent: 25 },
-  ],
-  Static: [
-    { kind: 'contactStatusChance', status: 'paralyze', chance: 30 },
-  ],
-  'Poison Point': [
-    { kind: 'contactStatusChance', status: 'poison', chance: 30 },
-  ],
-  'Flame Body': [
-    { kind: 'contactStatusChance', status: 'burn', chance: 30 },
-  ],
-  Contrary: [
-    { kind: 'contraryStatChanges' },
-  ],
-  'Sand Stream': [
-    { kind: 'weatherSummon', weather: 'sandstorm' },
-  ],
-  Drizzle: [
-    { kind: 'weatherSummon', weather: 'rain' },
-  ],
-  Drought: [
-    { kind: 'weatherSummon', weather: 'sun' },
-  ],
-  'Snow Warning': [
-    { kind: 'weatherSummon', weather: 'hail' },
-  ],
-  'Sand Veil': [
-    { kind: 'weatherEvasionBoost', weather: 'sandstorm' },
-  ],
-  'Snow Cloak': [
-    { kind: 'weatherEvasionBoost', weather: 'hail' },
-  ],
-  'Sand Rush': [
-    { kind: 'weatherSpeedBoost', weather: 'sandstorm' },
-  ],
-  'Swift Swim': [
-    { kind: 'weatherSpeedBoost', weather: 'rain' },
-  ],
-  Chlorophyll: [
-    { kind: 'weatherSpeedBoost', weather: 'sun' },
-  ],
-  'Ice Body': [
-    { kind: 'weatherHealInstead', weather: 'hail' },
-  ],
-  Overcoat: [
-    { kind: 'weatherImmunity' },
-  ],
+  // Custom: activates when HP is below 50% (original activates at full HP).
+  Multiscale: [{ kind: 'hpConditionalDamageMultiplier', hpBelowPercent: 67, multiplier: 0.5 }],
+  'Thick Fat': [{ kind: 'damageTakenMultiplier', moveTypes: ['fire', 'ice'], multiplier: 0.5 }],
+  'Battle Armor': [{ kind: 'preventCriticalHits' }],
+  'Shell Armor': [{ kind: 'preventCriticalHits' }],
+  Limber: [{ kind: 'statusImmunity', statuses: ['paralyze'] }],
+  Immunity: [{ kind: 'statusImmunity', statuses: ['poison'] }],
+  'Water Veil': [{ kind: 'statusImmunity', statuses: ['burn'] }],
+  'Magma Armor': [{ kind: 'statusImmunity', statuses: ['freeze'] }],
+  Insomnia: [{ kind: 'statusImmunity', statuses: ['sleep'] }],
+  'Vital Spirit': [{ kind: 'statusImmunity', statuses: ['sleep'] }],
+  'Volt Absorb': [{ kind: 'typeAbsorbHeal', moveTypes: ['electric'], healPercent: 25 }],
+  'Water Absorb': [{ kind: 'typeAbsorbHeal', moveTypes: ['water'], healPercent: 25 }],
+  Static: [{ kind: 'contactStatusChance', status: 'paralyze', chance: 30 }],
+  'Poison Point': [{ kind: 'contactStatusChance', status: 'poison', chance: 30 }],
+  'Flame Body': [{ kind: 'contactStatusChance', status: 'burn', chance: 30 }],
+  Contrary: [{ kind: 'contraryStatChanges' }],
+  'Sand Stream': [{ kind: 'weatherSummon', weather: 'sandstorm' }],
+  Drizzle: [{ kind: 'weatherSummon', weather: 'rain' }],
+  Drought: [{ kind: 'weatherSummon', weather: 'sun' }],
+  'Snow Warning': [{ kind: 'weatherSummon', weather: 'hail' }],
+  'Sand Veil': [{ kind: 'weatherEvasionBoost', weather: 'sandstorm' }],
+  'Snow Cloak': [{ kind: 'weatherEvasionBoost', weather: 'hail' }],
+  'Sand Rush': [{ kind: 'weatherSpeedBoost', weather: 'sandstorm' }],
+  'Swift Swim': [{ kind: 'weatherSpeedBoost', weather: 'rain' }],
+  Chlorophyll: [{ kind: 'weatherSpeedBoost', weather: 'sun' }],
+  'Ice Body': [{ kind: 'weatherHealInstead', weather: 'hail' }],
+  Overcoat: [{ kind: 'weatherImmunity' }],
 };

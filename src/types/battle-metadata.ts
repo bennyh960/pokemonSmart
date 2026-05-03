@@ -123,6 +123,13 @@ export type AbilityBattleEffect =
       multiplier: number;
     }
   | {
+      // Triggers when HP% is below/at-or-above a threshold. Use for Multiscale-style abilities.
+      kind: 'hpConditionalDamageMultiplier';
+      hpBelowPercent?: number;
+      hpAtOrAbovePercent?: number;
+      multiplier: number;
+    }
+  | {
       kind: 'statusImmunity';
       statuses: MajorStatusId[];
     }

@@ -680,65 +680,93 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
-      // Not yet rewarded: run questions (if any), then show interaction request, check condition, reward
+      // Not yet rewarded: run questions (if any), then check condition, reward
       const resolveInteractionAndReward = () => {
         if (!npc.interaction) {
-          // No interaction condition — give reward directly
           giveNPCReward(npc, npc.reward ?? {});
           if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
           return;
         }
 
-        // Step A: show the request dialogue for this interaction kind
         const rtl = isRTL();
         const npcSpeaker = npc.name ? getLocalizedName(npc.name) : undefined;
         const interaction = npc.interaction;
-        let requestLine: string;
-        switch (interaction.kind) {
-          case 'show-pokemon': {
-            const names = interaction.pokemonIds.map((id) => getPokemonDisplayName(id)).join(', ');
-            requestLine = t('npc.interaction.showPokemon.request', { names });
-            break;
-          }
-          case 'show-types': {
-            requestLine = t('npc.interaction.showTypes.request', {
-              types: interaction.types.map((t) => getTypeName(t as PokemonType)).join(', '),
-              count: interaction.count,
-            });
-            break;
-          }
-          case 'swap-pokemon': {
-            requestLine = t('npc.interaction.swap.request', {
+
+        if (interaction.kind === 'swap-pokemon') {
+          // Step 1: show the request text immediately after dialogue/questions
+          activeTextBox = createTextBox(
+            [t('npc.interaction.swap.request', {
               want: getPokemonDisplayName(interaction.wantsId),
               offer: getPokemonDisplayName(interaction.offersId),
-            });
-            break;
-          }
-          case 'trade-evolution':
-            requestLine = t('npc.interaction.tradeEvo.request');
-            break;
-        }
-        activeTextBox = createTextBox([requestLine], rtl, npcSpeaker);
+            })],
+            rtl,
+            npcSpeaker,
+          );
 
-        // Step B: after request dismissed → check condition, show success/fail dialogue
-        pendingDialogueCallback = () => {
+          // Step 2: after request dismissed → auto-check party
+          pendingDialogueCallback = () => {
+            const pd = getPlayerData();
+            const party = pd.party;
+            const partyIdx = party.findIndex((p) => p.id === interaction.wantsId);
+
+            if (partyIdx < 0) {
+              const wantedName = getPokemonDisplayName(interaction.wantsId);
+              activeTextBox = createTextBox([t('npc.interaction.swap.missing', { name: wantedName })], rtl);
+              pendingDialogueCallback = () => {
+                if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+              };
+              return;
+            }
+
+            // Step 3: player has it — show permanent-warning confirmation
+            const yourPokemon = getPokemonDisplayName(party[partyIdx].id);
+            const offerPokemon = getPokemonDisplayName(interaction.offersId);
+            activeTextBox = createTextBox(
+              [t('npc.interaction.swap.confirm', { yourPokemon, offerPokemon })],
+              rtl,
+            );
+
+            pendingDialogueCallback = () => {
+              showChoice((idx) => {
+                if (idx === 0) {
+                  const givenName = getPokemonDisplayName(party[partyIdx].id);
+                  party.splice(partyIdx, 1);
+                  const offerData = getPokemon(interaction.offersId);
+                  if (offerData) {
+                    const newPokemon = createPokemonFromData(offerData, interaction.level);
+                    party.push(newPokemon);
+                    const receivedName = getPokemonDisplayName(interaction.offersId);
+                    activeTextBox = createTextBox(
+                      [t('npc.interaction.swap.done', { given: givenName, received: receivedName })],
+                      rtl,
+                    );
+                    pendingDialogueCallback = () => {
+                      giveNPCReward(npc, npc.reward ?? {});
+                      if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+                    };
+                  }
+                } else {
+                  if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+                }
+              });
+            };
+          };
+        } else {
+          // show-pokemon, show-types, trade-evolution: auto-check party, no request dialogue
           const conditionMet = checkNpcInteraction(npc);
-
-          // Step C: after success/fail dialogue dismissed → give reward (if met)
           pendingDialogueCallback = () => {
             if (conditionMet) {
               giveNPCReward(npc, npc.reward ?? {});
             }
             if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
           };
-
-          // trade-evolution success has no dialogue — skip to step C immediately
+          // trade-evolution success has no dialogue — skip to callback immediately
           if (!activeTextBox) {
             const cb = pendingDialogueCallback;
             pendingDialogueCallback = null;
             cb();
           }
-        };
+        }
       };
 
       if (npcQ && npcQ.count > 0) {
@@ -820,27 +848,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         activeTextBox = createTextBox([t('npc.interaction.tradeEvo.nothing')], rtl);
         return false;
       }
-      case 'swap-pokemon': {
-        const partyIdx = party.findIndex((p) => p.id === interaction.wantsId);
-        if (partyIdx < 0) {
-          const wantedName = getPokemonDisplayName(interaction.wantsId);
-          activeTextBox = createTextBox([t('npc.interaction.swap.missing', { name: wantedName })], rtl);
-          return false;
-        }
-        const givenName = getPokemonDisplayName(party[partyIdx].id);
-        party.splice(partyIdx, 1);
-        const offerData = getPokemon(interaction.offersId);
-        if (offerData) {
-          const newPokemon = createPokemonFromData(offerData, interaction.level);
-          party.push(newPokemon);
-          const receivedName = getPokemonDisplayName(interaction.offersId);
-          activeTextBox = createTextBox(
-            [t('npc.interaction.swap.done', { given: givenName, received: receivedName })],
-            rtl,
-          );
-        }
-        return true;
-      }
+      case 'swap-pokemon':
+        return false;
     }
   }
 

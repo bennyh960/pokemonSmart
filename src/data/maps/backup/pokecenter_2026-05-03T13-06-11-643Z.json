@@ -16,7 +16,7 @@
   },
   "npcs": [
     {
-      "id": "npc-trader-2",
+      "id": "npc-trader",
       "x": 11,
       "y": 5,
       "facing": "down",

@@ -190,6 +190,7 @@
   "npc.interaction.swap.request": "I really want {want}. If you have one, I'll trade you my {offer} for it!",
   "npc.interaction.swap.missing": "Come back with {name} and I'll make you a deal!",
   "npc.interaction.swap.done": "It's a deal! You got {received} for your {given}!",
+  "npc.interaction.swap.confirm": "Are you sure you want to replace {yourPokemon} with {offerPokemon}? This is permanent and you will not be able to get your Pokemon back!",
   "npc.choice.yes": "Yes",
   "npc.choice.no": "No",
   "npc.nurse.heal": "I'll heal your Pokemon!",

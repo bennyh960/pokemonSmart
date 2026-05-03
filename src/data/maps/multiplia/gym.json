@@ -1,0 +1,173 @@
+{
+  "id": "gym",
+  "tileset": "interior",
+  "width": 25,
+  "height": 20,
+  "tileSize": 16,
+  "spawn": {
+    "x": 13,
+    "y": 18
+  },
+  "transitions": [
+    {
+      "fromX": 12,
+      "fromY": 19,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 13,
+      "fromY": 19,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 14,
+      "fromY": 19,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 13,
+      "fromY": 14,
+      "toMapId": "multiplia/gym",
+      "toX": 22,
+      "toY": 1
+    },
+    {
+      "fromX": 18,
+      "fromY": 2,
+      "toMapId": "multiplia/gym",
+      "toX": 1,
+      "toY": 18
+    },
+    {
+      "fromX": 8,
+      "fromY": 17,
+      "toMapId": "multiplia/gym",
+      "toX": 1,
+      "toY": 9
+    },
+    {
+      "fromX": 8,
+      "fromY": 10,
+      "toMapId": "multiplia/gym",
+      "toX": 23,
+      "toY": 18
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-1777815917472",
+      "x": 1,
+      "y": 18,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male"
+    },
+    {
+      "id": "npc-1777815920959",
+      "x": 23,
+      "y": 1,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male"
+    },
+    {
+      "id": "npc-1777815950753",
+      "x": 1,
+      "y": 9,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male"
+    },
+    {
+      "id": "npc-1777816000237",
+      "x": 23,
+      "y": 18,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male"
+    }
+  ],
+  "music": "gym-battle",
+  "encounterTableId": null,
+  "interactiveItems": {},
+  "label": {
+    "en": "Multipila Gym",
+    "he": "מכון העיר מולטיפילה"
+  }
+,
+  "tiles": [
+    ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
+    ["w1-r","t","t","t","t","w4-x2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x2","t","t","t","t","t","w4-x2","black-non-walk","black-non-walk","w4-x2","t","t","t","t","w1-l"],
+    ["w1-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l"],
+    ["w1-r","t","t","t","t","w4-x1","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x1","t","t","t","t","t","w4-x1","black-non-walk","black-non-walk","w4-x1","t","t","t","t","w1-l"],
+    ["w1-r","t","t","t","t","w4-x","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x","t","t","t","t","t","w4-x","black-non-walk","black-non-walk","w4-x","t","t","t","t","w1-l"],
+    ["w1-r","w4-y3","t","w4-y2","w4-y2","w4-z4","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-z3","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-z4","black-non-walk","black-non-walk","w4-z3","w4-y2","w4-y2","t","w4-y2","w1-l"],
+    ["w1-r","black-non-walk","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","black-non-walk","w1-l"],
+    ["w1-r","black-non-walk","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-z1","w6-y2","w6-y2","w6-y2","w6-y2","w6-y2","w6-z2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","black-non-walk","w1-l"],
+    ["w1-r","w4-y3","t","w4-y2","w4-y2","w4-z2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-x","g1","g1","g1","g1","g1","w6-x","black-non-walk","black-non-walk","w4-z1","w4-y2","w4-y2","t","w4-y2","w1-l"],
+    ["w1-r","t","t","t","t","w4-x2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-x","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-x","black-non-walk","black-non-walk","w4-x2","t","t","t","t","w1-l"],
+    ["w1-r","t","t","t","t","t","t","t","t","t","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","t","t","t","t","t","t","t","w1-l"],
+    ["w1-r","t","t","t","t","w4-x","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-x","t","t","t","t","t","w6-x","black-non-walk","black-non-walk","w4-x1","t","t","t","t","w1-l"],
+    ["w1-r","w4-y3","t","w4-y2","w4-y2","w4-z4","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-z3","w6-y2","w6-y2","t","w6-y2","w6-y2","w6-z4","black-non-walk","black-non-walk","w4-z3","w4-y2","w4-y2","t","w4-y2","w1-l"],
+    ["w1-r","black-non-walk","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","black-non-walk","w1-l"],
+    ["w1-r","black-non-walk","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","black-non-walk","w1-l"],
+    ["w1-r","w4-y3","t","w4-y2","w4-y2","w4-z2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-z1","w4-y2","w4-y2","t","w4-y2","w4-y2","w4-z2","black-non-walk","black-non-walk","w4-z1","w4-y2","w4-y2","t","w4-y2","w1-l"],
+    ["w1-r","t","t","t","t","w4-x2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x2","t","t","t","t","t","w4-x2","black-non-walk","black-non-walk","w4-x2","t","t","t","t","w1-l"],
+    ["w1-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l"],
+    ["w1-r","t","t","t","t","w4-x1","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x1","w6-box","t","t","t","w6-box","w4-x1","black-non-walk","black-non-walk","w4-x1","t","t","t","t","w1-l"],
+    ["w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w6-box","t","t","t","w6-box","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-b4"]
+  ],
+  "objects": [
+    {
+      "key": "battle-arena",
+      "x": 11,
+      "y": 8
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

@@ -504,11 +504,13 @@ export function getPokemonAbilityDetails(pokemonId: number): PokemonAbilityDetai
     .filter((ability): ability is PokemonAbilityDetail => ability !== undefined);
 }
 
-/** Pick a random non-hidden ability for a Pokemon. */
+/** Pick a random ability for a Pokemon, including its hidden ability if any. */
 export function getRandomAbility(pokemonId: number): number | null {
   const mapping = pokemonAbilities[String(pokemonId)];
   if (!mapping || mapping.abilities.length === 0) return null;
-  return mapping.abilities[Math.floor(Math.random() * mapping.abilities.length)];
+  const pool = [...mapping.abilities];
+  if (mapping.hidden !== null) pool.push(mapping.hidden);
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 // --- Natures data ---

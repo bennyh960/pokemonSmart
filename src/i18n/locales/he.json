@@ -190,6 +190,7 @@
   "npc.interaction.swap.request": "אני ממש רוצה {want}. אם יש לך אחד, אחליף לך אותו ב-{offer} שלי!",
   "npc.interaction.swap.missing": "חזור עם {name} ואעשה לך עסקה!",
   "npc.interaction.swap.done": "סגור! קיבלת {received} תמורת {given}!",
+  "npc.interaction.swap.confirm": "האם אתה בטוח שברצונך להחליף את {yourPokemon} ב-{offerPokemon}? זה קבוע ולא תוכל לקבל את הפוקימון שלך בחזרה!",
   "npc.choice.yes": "כן",
   "npc.choice.no": "לא",
   "npc.nurse.heal": "אני ארפא את הפוקימונים שלך!",

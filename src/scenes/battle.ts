@@ -83,6 +83,7 @@ import {
   type EvolutionStep,
 } from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp, type StatGains } from '../systems/encounter.js';
+import { calcAbilityDamageTakenMultiplier } from '../systems/ability-processor.js';
 import { sendCaughtToBox } from '../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../systems/game-state.js';
@@ -338,12 +339,8 @@ function calcDamage(
   const attackStat = attackStatOverride ?? getModifiedStatValue(atk, atkState, isSpecial ? 'specialAttack' : 'attack');
   const defenseStat = getModifiedStatValue(def, defState, isSpecial ? 'specialDefense' : 'defense');
   let defenderMultiplier = 1;
-  if (def.abilityId) {
-    for (const effect of getAbilityBattleEffects(def.abilityId)) {
-      if (effect.kind === 'damageTakenMultiplier' && effect.moveTypes.includes(moveType)) {
-        defenderMultiplier *= effect.multiplier;
-      }
-    }
+  if (def.abilityId !== null) {
+    defenderMultiplier *= calcAbilityDamageTakenMultiplier(def, getAbilityBattleEffects(def.abilityId), moveType);
   }
   defenderMultiplier *= getSideDamageTakenMultiplier(defSideState, damageClass);
   const lf = (2 * atk.level) / 5 + 2;
