@@ -257,6 +257,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
 
   // --- Status on hit ---
   'Zap Cannon': statusEffect('paralyze', 100),
+  'Will O Wisp': statusEffect('burn', 100),
   'Lava Plume': statusEffect('burn', 30),
   Inferno: statusEffect('burn', 100),
   'Iron Head': { flinchChance: 30 },

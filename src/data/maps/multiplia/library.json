@@ -1,0 +1,181 @@
+{
+  "id": "library",
+  "name": "library1",
+  "template": "library1",
+  "tileset": "interior",
+  "label": {
+    "en": "Library",
+    "he": "ספרייה עירונית"
+  },
+  "music": "pokecenter",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 9,
+    "y": 18
+  },
+  "npcs": [
+    {
+      "id": "npc-multi-lib-oak",
+      "x": 10,
+      "y": 16,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "oak"
+    },
+    {
+      "id": "npc-captain-kefel-lib",
+      "x": 9,
+      "y": 16,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "gym-3-kafla"
+    },
+    {
+      "id": "npc-1777802169417",
+      "x": 4,
+      "y": 4,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "היי , מה שלומך?"
+        },
+        {
+          "en": "",
+          "he": "מה זה מה שקורה בחוץ? אני לא מוצא על זה שום מידע בספרים!"
+        }
+      ],
+      "spriteType": "char_8c60a6",
+      "name": {
+        "en": "Doc Jimmy",
+        "he": "דוקטור ג'ימי"
+      },
+      "questions": {
+        "count": 3,
+        "types": [
+          "+",
+          "-",
+          "×"
+        ]
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "rare-candy",
+            "quantity": 1
+          },
+          {
+            "itemId": "battle-helper",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1777802364246",
+      "x": 12,
+      "y": 7,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "הרבה מהחברים לא מגיעים לשיעור!"
+        },
+        {
+          "en": "",
+          "he": "הם מפחדים ממה שקורה בחוץ"
+        }
+      ],
+      "spriteType": "char_459058"
+    },
+    {
+      "id": "npc-1777802421387",
+      "x": 16,
+      "y": 7,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "קרבות פוקימונים זה מרתק ממש!"
+        },
+        {
+          "en": "",
+          "he": "נלחמתי בפוקימונים מוזרים מאוד לאחרונה ."
+        },
+        {
+          "en": "",
+          "he": "הם ניסו לתקוף אותי"
+        },
+        {
+          "en": "",
+          "he": "מזל שברחתי ברגע האחרון"
+        }
+      ],
+      "spriteType": "char_485c6e",
+      "name": {
+        "en": "Jake",
+        "he": "ג'ייק"
+      }
+    },
+    {
+      "id": "npc-1777802456519",
+      "x": 15,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום ! אני מלמד על קרבות פוקימונים."
+        },
+        {
+          "en": "",
+          "he": "חשוב לפתח קשר טוב עם הפוקימון שלך."
+        },
+        {
+          "en": "",
+          "he": "אבל חשוב מאוד גם להבין אסטרטגיות קרב"
+        }
+      ],
+      "spriteType": "char_304fc6",
+      "name": {
+        "en": "Mr Rick",
+        "he": "מר ריק"
+      }
+    }
+  ],
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "poke-ball",
+        "itemQty": 3
+      },
+      {
+        "itemId": "paralyze-heal"
+      },
+      {
+        "itemId": "super-repel"
+      },
+      {
+        "itemId": "repel",
+        "itemQty": 5
+      }
+    ]
+  }
+}

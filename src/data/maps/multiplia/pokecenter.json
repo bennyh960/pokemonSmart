@@ -1,0 +1,10 @@
+{
+  "id": "pokecenter",
+  "name": "Pokemon Center",
+  "label": {
+    "en": "Pokemon Center",
+    "he": "מרכז פוקימונים"
+  },
+  "template": "pokecenter-template",
+  "area": "Multiplia"
+}

@@ -217,7 +217,8 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerName: 'Gary/גארי',
+      // speakerName: 'Gary/גארי',
+      speakerId: 'gary-r4-assembly',
       lines: [
         { he: 'גם אנחנו נתקלנו בהם בדרך לכאן.', en: '' },
         { he: 'הצלחנו לנצח — אבל משהו בהם היה לא טבעי לגמרי.', en: '' },
@@ -225,7 +226,8 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerName: 'Minessa/מינסה',
+      // speakerName: 'Minessa/מינסה',
+      speakerId: 'minessa-r4-assembly',
       lines: [
         { he: 'הם לא היו רשומים בפוקדקס. אפס מידע. כאילו... לא קיימים.', en: '' },
         { he: 'ואז בקרב הם כאילו הופיעו בפוקדקס כפוקימונים רגילים', en: '' },
@@ -235,7 +237,8 @@ registerCutscene({
     // g. Group: investigation + rockets near glitches
     {
       type: 'dialogue',
-      speakerName: "Officer Jenny/ג'ני השוטרת",
+      // speakerName: "Officer Jenny/ג'ני השוטרת",
+      speakerId: 'jenny-r4-assembly',
       lines: [
         { he: 'אנחנו חוקרים כבר כמה ימים. התמונה ברורה — זה מאורגן.', en: '' },
         { he: 'היו עדויות שראו בסמוך ליצורים האלה פעילות של סוכני צוות רוקט', en: '' },
@@ -246,7 +249,8 @@ registerCutscene({
     // h. Gary mentions NULL-X and secret docs
     {
       type: 'dialogue',
-      speakerName: 'Gary/גארי',
+      // speakerName: 'Gary/גארי',
+      speakerId: 'gary-r4-assembly',
       lines: [
         { he: 'רגע — זה מסתדר עם מה שכתוב במסמכים הסודיים שמצאנו.', en: '' },
         { he: 'NULL-X יכולה לשלוט בפוקימונים דרך צוות רוקט ולגרום להם להשתבש.', en: '' },
@@ -276,26 +280,39 @@ registerCutscene({
     // Gary private moment
     {
       type: 'dialogue',
-      speakerName: 'Gary/גארי',
+      // speakerName: 'Gary/גארי',
+      speakerId: 'gary-r4-assembly',
       lines: [
         { he: 'יש לי מסמך סודי   — נפל לידינו מסוכן רוקט בכיר.', en: '' },
         {
           he: 'דיברתי עם סבא שלי פרופסור אוק לגבי המסמך והוא רוצה לחקור אותו , הפרופסור אמר שהוא יחכה לי בספריית מולטיפילה',
-          en: '',
+          en: 'I spoke with my grandfather, Professor Oak, about the document and he wants to investigate it. The professor said he will wait for me at the Multiplia Library.',
         },
-        { he: 'הוא חייב להגיע לפרופסור אוק בספריית מולטיפילה. הוא היחיד שיכול לפענח אותו.', en: '' },
-        { he: 'אני צריך לסייע למשטרה בחקירה ואני יודע שאפשר לסמוך עלייך שתעביר את המסמך.', en: '' },
+        {
+          he: 'הוא חייב להגיע לפרופסור אוק בספריית מולטיפילה. הוא היחיד שיכול לפענח אותו.',
+          en: 'He must reach Professor Oak at the Multiplia Library. He is the only one who can decipher it.',
+        },
+        {
+          he: 'אני צריך לסייע למשטרה בחקירה ואני יודע שאפשר לסמוך עלייך שתעביר את המסמך.',
+          en: 'I need to assist the police in the investigation and I know I can count on you to deliver the document.',
+        },
       ],
     },
     {
       type: 'dialogue',
       speakerName: 'אני/Player',
-      lines: [{ he: 'אני אגיע לשם. מה שצריך.', en: '' }],
+      lines: [{ he: 'אני אגיע לשם. מה שצריך.', en: 'I will get there. Whatever it takes.' }],
     },
     {
       type: 'dialogue',
-      speakerName: 'Gary/גארי',
-      lines: [{ he: 'מצוין. זהירות בדרך —   צוות רוקט עדיין שם בחוץ.', en: '' }],
+      // speakerName: 'Gary/גארי',
+      speakerId: 'gary-r4-assembly',
+      lines: [
+        {
+          he: 'מצוין. זהירות בדרך —   צוות רוקט עדיין שם בחוץ.',
+          en: 'Great. Be careful on the way — Team Rocket is still out there.',
+        },
+      ],
     },
 
     // Wrap-up: set flags, start quest

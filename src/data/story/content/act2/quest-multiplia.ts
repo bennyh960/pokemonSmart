@@ -21,67 +21,126 @@
  * NPC IDs:  'misty-multiplia', 'fake-nurse-joy', 'jessie-nurse', 'james-pokecenter'
  */
 
-import { registerQuest }      from '../../quests.js';
-import { registerCutscene }   from '../../cutscenes.js';
-import { registerGate }       from '../../gates.js';
+import { registerQuest } from '../../quests.js';
+import { registerCutscene } from '../../cutscenes.js';
+import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
-import { FLAGS }              from '../../flags.js';
+import { FLAGS } from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
 import { MapId } from '../../../maps/map-ids.js';
+import { ITEMS } from '../../../items.js';
+import { ITEM_SLUG_TO_ID } from '../../../item-defs.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
-
-registerQuest({
-  id: 'main-act2-multiplia',
-  title:     { en: 'Multiplia',             he: 'מולטיפליה' },
-  objective: { en: 'Reach Multiplia and investigate the Pokemon Center', he: 'הגע למולטיפליה וחקור את מרכז הפוקמון' },
-});
-
-registerQuest({
-  id: 'main-act2-gym3',
-  title:     { en: 'Multiplia Gym',         he: 'חדר הכושר של מולטיפליה' },
-  objective: { en: 'Defeat Mila at the Multiplication Gym', he: 'נצח את מילה בחדר הכושר של הכפל' },
-});
 
 // ── Gates ─────────────────────────────────────────────────────────────────────
 
 registerGate({
-  id: 'gate-route3-multiplia',
-  title: { en: 'Route 3 Checkpoint', he: 'מחסום שביל 3' },
+  id: 'gate-route4-multiplia',
+  title: { en: 'Route 4 Checkpoint', he: 'מחסום שביל 4' },
   description: {
-    en: 'The Glitch has warped the signs on this route. 3 questions to proceed.',
-    he: 'הגליץ׳ עיוות את השלטים בשביל הזה. 3 שאלות כדי להמשיך.',
+    en: 'The Glitch has warped the signs on this route. 6 questions to proceed.',
+    he: 'הגליץ׳ עיוות את השלטים בשביל הזה. 6 שאלות כדי להמשיך.',
   },
   triggerType: 'route-checkpoint',
-  questionSetIds: ['placeholder'],
+  questionSetIds: ['*'],
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
-    questionsRequired: 3,
-    penaltyAmount: 100,
+    questionsRequired: 7,
+    penaltyAmount: 500,
+    bonusEnabled: true,
+    bonusMultiplier: 3,
+    inputQuestions: { count: 2, types: ['×'] },
+    penaltyThreshold: 0.5,
+    rewardThreshold: 0.7,
+    rewards: [
+      { type: 'money', amount: 1500 },
+      { type: 'item', itemId: 'x-attack', amount: 1 },
+      { type: 'item', itemId: 'x-defense', amount: 1 },
+      { type: 'item', itemId: 'x-speed', amount: 1 },
+    ],
   },
-  reopenCooldownMs: 30 * 60 * 1000,
-  successActions: [
-    { type: 'set-flag', flag: FLAGS.GATE_ROUTE3_PASS },
-    { type: 'set-quest', questId: 'main-act2-multiplia' },
-  ],
+  reopenCooldownMs: 15 * 60 * 1000,
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ROUTE4_PASS }],
+});
+registerGate({
+  id: 'gate-route6-multiplia',
+  title: { en: 'Route 6 Checkpoint', he: 'מחסום שביל 6' },
+  description: {
+    en: 'The Glitch has warped the signs on this route. 10 questions to proceed.',
+    he: 'הגליץ׳ עיוות את השלטים בשביל הזה. 10 שאלות כדי להמשיך.',
+  },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['*', '+'],
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 10,
+    penaltyAmount: 1500,
+    bonusEnabled: true,
+    bonusMultiplier: 3,
+    inputQuestions: { count: 5, types: ['×'] },
+    penaltyThreshold: 0.5,
+    rewardThreshold: 0.8,
+    rewards: [
+      { type: 'money', amount: 3500 },
+      { type: 'item', itemId: 'great-ball', amount: 3 },
+    ],
+  },
+  reopenCooldownMs: 15 * 60 * 1000,
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ROUTE6_PASS }],
+});
+registerGate({
+  id: 'gate-route5-multiplia',
+  title: { en: 'Route 5 Checkpoint', he: 'מחסום שביל 5' },
+  description: {
+    en: 'The Glitch has warped the signs on this route. 8 questions to proceed.',
+    he: 'הגליץ׳ עיוות את השלטים בשביל הזה. 8 שאלות כדי להמשיך.',
+  },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['*', '+', '-'],
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 8,
+    penaltyAmount: 1500,
+    bonusEnabled: true,
+    bonusMultiplier: 3,
+    inputQuestions: { count: 5, types: ['×', '-', '+'] },
+    penaltyThreshold: 0.5,
+    rewardThreshold: 0.8,
+    rewards: [
+      { type: 'money', amount: 3500 },
+      { type: 'item', itemId: 'ultra-ball', amount: 2 },
+    ],
+  },
+  reopenCooldownMs: 15 * 60 * 1000,
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ROUTE5_PASS }],
 });
 
 registerGate({
-  id: 'gate-multiplia-gym',
-  title: { en: 'Multiplication Gym', he: 'חדר הכושר של הכפל' },
-  description: { en: 'Answer 4 questions to enter the gym.', he: 'ענה על 4 שאלות כדי להיכנס לחדר הכושר.' },
-  triggerType: 'gym-entry',
-  questionSetIds: ['placeholder'],
+  id: 'gate-route9-multiplia',
+  title: { en: 'Route 9 Checkpoint', he: 'מחסום שביל 9' },
+  description: {
+    en: 'The Glitch has warped the signs on this route. 8 questions to proceed.',
+    he: 'הגליץ׳ עיוות את השלטים בשביל הזה. 8 שאלות כדי להמשיך.',
+  },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['*', '+', '-'],
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
-    questionsRequired: 4,
-    penaltyAmount: 0,
+    questionsRequired: 8,
+    penaltyAmount: 1500,
+    bonusEnabled: true,
+    bonusMultiplier: 3,
+    inputQuestions: { count: 5, types: ['×', '-', '+'] },
+    penaltyThreshold: 0.5,
+    rewardThreshold: 0.8,
+    rewards: [
+      { type: 'money', amount: 3500 },
+      { type: 'item', itemId: 'max-repel', amount: 2 },
+    ],
   },
-  reopenCooldownMs: 0,
-  successActions: [
-    { type: 'set-flag', flag: FLAGS.GATE_MULTIPLIA_GYM_PASS },
-    { type: 'set-quest', questId: 'main-act2-multiplia' },
-  ],
+  reopenCooldownMs: 15 * 60 * 1000,
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ROUTE9_PASS }],
 });
 
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
@@ -95,17 +154,32 @@ registerCutscene({
     {
       type: 'dialogue',
       speakerName: 'Misty / מיסטי',
-      lines: [{ en: 'Oh — you made it through Route 3? Faster than I expected.', he: 'אוי — עברת את שביל 3? מהר יותר ממה שציפיתי.' }],
+      lines: [
+        {
+          en: 'Oh — you made it through Route 3? Faster than I expected.',
+          he: 'אוי — עברת את שביל 3? מהר יותר ממה שציפיתי.',
+        },
+      ],
     },
     {
       type: 'dialogue',
       speakerName: 'Misty / מיסטי',
-      lines: [{ en: "I'm here because the timing systems on the routes keep glitching. Random teleports. Missing bridges.", he: 'אני כאן כי מערכות התזמון בשבילים ממשיכות להשתגע. טלפורטים אקראיים. גשרים חסרים.' }],
+      lines: [
+        {
+          en: "I'm here because the timing systems on the routes keep glitching. Random teleports. Missing bridges.",
+          he: 'אני כאן כי מערכות התזמון בשבילים ממשיכות להשתגע. טלפורטים אקראיים. גשרים חסרים.',
+        },
+      ],
     },
     {
       type: 'dialogue',
       speakerName: 'Misty / מיסטי',
-      lines: [{ en: "Tip: when a gate gives you a time challenge — don't rush. Breathe. Work through it.", he: "טיפ: כשהשער נותן לך אתגר זמן — אל תמהר. נשום. עבוד דרכו." }],
+      lines: [
+        {
+          en: "Tip: when a gate gives you a time challenge — don't rush. Breathe. Work through it.",
+          he: 'טיפ: כשהשער נותן לך אתגר זמן — אל תמהר. נשום. עבוד דרכו.',
+        },
+      ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT2_MISTY_MET } },
   ],
@@ -119,27 +193,47 @@ registerCutscene({
     {
       type: 'dialogue',
       speakerName: 'Nurse Joy?',
-      lines: [{ en: 'Welcome! Your Pokemon will be... "healed" in no time!', he: 'ברוך הבא! הפוקמונים שלך יהיו... "מרפאים" תוך זמן קצר!' }],
+      lines: [
+        {
+          en: 'Welcome! Your Pokemon will be... "healed" in no time!',
+          he: 'ברוך הבא! הפוקמונים שלך יהיו... "מרפאים" תוך זמן קצר!',
+        },
+      ],
     },
     { type: 'wait', durationMs: 400 },
     {
       type: 'dialogue',
       speakerName: 'Nurse Joy?',
-      lines: [{ en: "Hmm... something seems off. That's not the standard healing chant...", he: 'המממ... משהו נראה לא בסדר. זה לא הנוסחה הרגילה לריפוי...' }],
+      lines: [
+        {
+          en: "Hmm... something seems off. That's not the standard healing chant...",
+          he: 'המממ... משהו נראה לא בסדר. זה לא הנוסחה הרגילה לריפוי...',
+        },
+      ],
     },
     { type: 'screen-fade', direction: 'out', durationMs: 400 },
-    { type: 'screen-fade', direction: 'in',  durationMs: 400 },
+    { type: 'screen-fade', direction: 'in', durationMs: 400 },
     { type: 'show-npc', npcId: 'jessie-nurse' },
     { type: 'hide-npc', npcId: 'fake-nurse-joy' },
     {
       type: 'dialogue',
       speakerName: 'Jessie / ג׳סי',
-      lines: [{ en: 'Prepare for trouble! And make it... actually we skipped the motto. Give us the Pokemon!', he: 'היכנסו לצרות! ותעשו את זה... בעצם דילגנו על המוטו. תנו לנו את הפוקמונים!' }],
+      lines: [
+        {
+          en: 'Prepare for trouble! And make it... actually we skipped the motto. Give us the Pokemon!',
+          he: 'היכנסו לצרות! ותעשו את זה... בעצם דילגנו על המוטו. תנו לנו את הפוקמונים!',
+        },
+      ],
     },
     {
       type: 'dialogue',
       speakerName: 'James / ג׳יימס',
-      lines: [{ en: 'Team Rocket never tires of a good disguise. Until it fails. Which is always.', he: 'קבוצת רוקט לעולם לא עייפת מתחפושת טובה. עד שהיא נכשלת. שזה תמיד.' }],
+      lines: [
+        {
+          en: 'Team Rocket never tires of a good disguise. Until it fails. Which is always.',
+          he: 'קבוצת רוקט לעולם לא עייפת מתחפושת טובה. עד שהיא נכשלת. שזה תמיד.',
+        },
+      ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ROCKET_MULTIPLIA_NURSE_REVEALED } },
   ],
@@ -153,18 +247,28 @@ registerCutscene({
     {
       type: 'dialogue',
       speakerName: 'Jessie / ג׳סי',
-      lines: [{ en: "We're blasting off again! But we'll be back. Team Rocket never quits!", he: 'אנחנו ממריאים שוב! אבל נחזור. קבוצת רוקט לא מוותרת לעולם!' }],
+      lines: [
+        {
+          en: "We're blasting off again! But we'll be back. Team Rocket never quits!",
+          he: 'אנחנו ממריאים שוב! אבל נחזור. קבוצת רוקט לא מוותרת לעולם!',
+        },
+      ],
     },
     { type: 'screen-fade', direction: 'out', durationMs: 300 },
     { type: 'hide-npc', npcId: 'jessie-nurse' },
     { type: 'hide-npc', npcId: 'james-pokecenter' },
-    { type: 'screen-fade', direction: 'in',  durationMs: 500 },
-    { type: 'action', action: { type: 'set-flag',  flag: FLAGS.ROCKET_MULTIPLIA_NURSE_EXPOSED } },
+    { type: 'screen-fade', direction: 'in', durationMs: 500 },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ROCKET_MULTIPLIA_NURSE_EXPOSED } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act2-gym3' } },
     {
       type: 'dialogue',
       speakerName: 'Misty / מיסטי',
-      lines: [{ en: 'I knew something was wrong here. Good work exposing them.', he: 'ידעתי שמשהו לא בסדר כאן. עבודה טובה בחשיפתם.' }],
+      lines: [
+        {
+          en: 'I knew something was wrong here. Good work exposing them.',
+          he: 'ידעתי שמשהו לא בסדר כאן. עבודה טובה בחשיפתם.',
+        },
+      ],
     },
   ],
 });
@@ -177,7 +281,7 @@ registerStoryEvent({
   trigger: { type: 'map-enter', mapId: MapId.ROUTES_ROUTE_3 },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_ROUTE3 }],
   actions: [
-    { type: 'set-flag',      flag: FLAGS.VISITED_ROUTE3 },
+    { type: 'set-flag', flag: FLAGS.VISITED_ROUTE3 },
     { type: 'set-infection', mapId: MapId.MULTIPLIA_MULTIPLIA, value: 'medium' },
   ],
 });
@@ -188,9 +292,9 @@ registerStoryEvent({
   trigger: { type: 'map-enter', mapId: 'multiplia/multiplia' },
   conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_MULTIPLIA }],
   actions: [
-    { type: 'set-flag',      flag: FLAGS.VISITED_MULTIPLIA },
+    { type: 'set-flag', flag: FLAGS.VISITED_MULTIPLIA },
     { type: 'set-infection', mapId: MapId.MULTIPLIA_MULTIPLIA, value: 'medium' },
-    { type: 'set-quest',     questId: 'main-act2-multiplia' },
+    { type: 'set-quest', questId: 'main-act2-multiplia' },
   ],
 });
 
@@ -199,7 +303,7 @@ registerStoryEvent({
   id: 'evt-misty-multiplia',
   trigger: { type: 'map-enter', mapId: 'multiplia/multiplia' },
   conditions: [
-    { type: 'flag',     flag: FLAGS.VISITED_MULTIPLIA },
+    { type: 'flag', flag: FLAGS.VISITED_MULTIPLIA },
     { type: 'flag-not', flag: FLAGS.ACT2_MISTY_MET },
   ],
   actions: [{ type: 'start-cutscene', cutsceneId: 'act2-misty-meets-player' }],
@@ -211,7 +315,7 @@ registerStoryEvent({
   trigger: { type: 'map-enter', mapId: MapId.SHARED_FAKE_POKECENTER },
   conditions: [
     { type: 'flag-not', flag: FLAGS.ROCKET_MULTIPLIA_NURSE_REVEALED },
-    { type: 'flag',     flag: FLAGS.VISITED_MULTIPLIA },
+    { type: 'flag', flag: FLAGS.VISITED_MULTIPLIA },
   ],
   actions: [{ type: 'start-cutscene', cutsceneId: 'act2-fake-nurse-reveal' }],
 });
@@ -222,8 +326,8 @@ registerStoryEvent({
   trigger: { type: 'badge-earned', badge: 3 },
   conditions: [],
   actions: [
-    { type: 'set-flag',      flag: FLAGS.STORY_BADGE_3 },
+    { type: 'set-flag', flag: FLAGS.STORY_BADGE_3 },
     { type: 'set-infection', mapId: MapId.MULTIPLIA_MULTIPLIA, value: 'cleared' },
-    { type: 'set-quest',     questId: 'main-act2-dividia' },
+    { type: 'set-quest', questId: 'main-act2-dividia' },
   ],
 });

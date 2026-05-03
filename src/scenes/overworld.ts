@@ -573,7 +573,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             updateLastPokemonCenter(currentMapData.id, player.gridX, player.gridY);
           }
           autoSave();
-          activeTextBox = createTextBox([t('npc.nurse.done')], isRTL());
+          activeTextBox = createTextBox(
+            [t('npc.nurse.done')],
+            isRTL(),
+            npc.name ? getLocalizedName(npc.name) : undefined,
+          );
           restoreNPCFacing(npc);
           interactingNPC = null;
           // Process reward after healing (first interaction only)
@@ -3479,7 +3483,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const optY = boxY + 8;
           const selected = i === choiceState.selected;
           if (selected) {
-            fillRect(ctx, optX - 2, optY - 2, 44, 14, '#384088');
+            fillRect(ctx, optX - 6, optY - 2, 44, 14, '#384088');
           }
           drawText(ctx, choiceState.options[i], optX, optY, {
             size: 8,

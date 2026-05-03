@@ -199,6 +199,7 @@ export const FLAGS = {
   // ── Act 2: Multiplia ────────────────────────────────────────────────────────
   VISITED_ROUTE3: 'visited-route3',
   GATE_ROUTE3_PASS: 'gate-route3-pass',
+  GATE_ROUTE9_PASS: 'gate-route9-pass',
   VISITED_MULTIPLIA: 'visited-multiplia',
   GATE_MULTIPLIA_GYM_PASS: 'gate-multiplia-gym-pass',
   ACT2_MISTY_MET: 'act2-misty-met',
