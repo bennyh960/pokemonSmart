@@ -46,6 +46,7 @@ export interface BattlePokemonRuntimeState {
   weatherEvasionBonus: number;
   hasWeatherStatBoost: boolean;
   lastMoveUsedId: number | null;
+  abilityActivationCount: number;
 }
 
 export interface BattleSideRuntimeState {
@@ -115,6 +116,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     weatherEvasionBonus: 0,
     hasWeatherStatBoost: false,
     lastMoveUsedId: null,
+    abilityActivationCount: 0,
   };
 }
 

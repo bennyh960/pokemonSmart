@@ -1,9 +1,31 @@
 import type { AbilityBattleEffect } from '../types/battle-metadata.js';
 
 export const ABILITY_BATTLE_EFFECTS: Record<string, AbilityBattleEffect[]> = {
-  // Custom: activates when HP is below 50% (original activates at full HP).
-  Multiscale: [{ kind: 'hpConditionalDamageMultiplier', hpBelowPercent: 67, multiplier: 0.5 }],
-  'Thick Fat': [{ kind: 'damageTakenMultiplier', moveTypes: ['fire', 'ice'], multiplier: 0.5 }],
+  // Custom: activates when HP is below 67% (original activates at full HP).
+  Multiscale: [{ kind: 'hpConditionalDamageMultiplier', hpBelowPercent: 67, multiplier: 0.5, messageKey: 'ability.multiscaleActivation', messageCooldown: 3 }],
+
+  // --- Damage reduction ---
+  'Thick Fat': [{ kind: 'damageTakenMultiplier', moveTypes: ['fire', 'ice'], multiplier: 0.5, messageKey: 'ability.thickFatActivation', messageCooldown: 3 }],
+  Heatproof: [{ kind: 'damageTakenMultiplier', moveTypes: ['fire'], multiplier: 0.5, messageKey: 'ability.heatproofActivation', messageCooldown: 3 }],
+  // Dry Skin: heals from water, takes extra fire damage
+  'Dry Skin': [
+    { kind: 'typeAbsorbHeal', moveTypes: ['water'], healPercent: 25 },
+    { kind: 'damageTakenMultiplier', moveTypes: ['fire'], multiplier: 1.25 },
+  ],
+
+  // --- Type immunities (absorb with no heal) ---
+  Levitate: [{ kind: 'typeAbsorbHeal', moveTypes: ['ground'], healPercent: 0 }],
+  'Flash Fire': [{ kind: 'typeAbsorbHeal', moveTypes: ['fire'], healPercent: 0 }],
+  'Sap Sipper': [{ kind: 'typeAbsorbHeal', moveTypes: ['grass'], healPercent: 0 }],
+  'Lightning Rod': [{ kind: 'typeAbsorbHeal', moveTypes: ['electric'], healPercent: 0 }],
+  'Storm Drain': [{ kind: 'typeAbsorbHeal', moveTypes: ['water'], healPercent: 0 }],
+
+  // --- Contact recoil (attacker loses % of their own max HP) ---
+  'Rough Skin': [{ kind: 'contactRecoilDamage', damagePercent: 12.5 }],
+  'Iron Barbs': [{ kind: 'contactRecoilDamage', damagePercent: 12.5 }],
+
+  // --- On switch-in stat changes ---
+  Intimidate: [{ kind: 'onSwitchInStatChange', target: 'opponent', stat: 'attack', stages: -1, messageKey: 'ability.intimidateActivation' }],
   'Battle Armor': [{ kind: 'preventCriticalHits' }],
   'Shell Armor': [{ kind: 'preventCriticalHits' }],
   Limber: [{ kind: 'statusImmunity', statuses: ['paralyze'] }],

@@ -121,6 +121,8 @@ export type AbilityBattleEffect =
       kind: 'damageTakenMultiplier';
       moveTypes: PokemonType[];
       multiplier: number;
+      messageKey?: string;
+      messageCooldown?: number;
     }
   | {
       // Triggers when HP% is below/at-or-above a threshold. Use for Multiscale-style abilities.
@@ -128,6 +130,8 @@ export type AbilityBattleEffect =
       hpBelowPercent?: number;
       hpAtOrAbovePercent?: number;
       multiplier: number;
+      messageKey?: string;
+      messageCooldown?: number;
     }
   | {
       kind: 'statusImmunity';
@@ -148,6 +152,19 @@ export type AbilityBattleEffect =
     }
   | {
       kind: 'contraryStatChanges';
+    }
+  | {
+      // Attacker takes % of their own max HP when they make physical contact (Rough Skin, Iron Barbs).
+      kind: 'contactRecoilDamage';
+      damagePercent: number;
+    }
+  | {
+      // Fires when this Pokémon enters battle. 'opponent' lowers/raises the foe; 'self' affects the user.
+      kind: 'onSwitchInStatChange';
+      target: 'opponent' | 'self';
+      stat: BattleStatId;
+      stages: number;
+      messageKey?: string;
     }
   | {
       kind: 'weatherSummon';

@@ -197,14 +197,9 @@ export const FLAGS = {
 
   //! dont use yet on the FLAGS after this line
   // ── Act 2: Multiplia ────────────────────────────────────────────────────────
-  VISITED_ROUTE3: 'visited-route3',
-  GATE_ROUTE3_PASS: 'gate-route3-pass',
   GATE_ROUTE9_PASS: 'gate-route9-pass',
   VISITED_MULTIPLIA: 'visited-multiplia',
   GATE_MULTIPLIA_GYM_PASS: 'gate-multiplia-gym-pass',
-  ACT2_MISTY_MET: 'act2-misty-met',
-  ROCKET_MULTIPLIA_NURSE_REVEALED: 'rocket-multiplia-nurse-revealed', // Jessie unmasked in pokecenter
-  ROCKET_MULTIPLIA_NURSE_EXPOSED: 'rocket-multiplia-nurse-exposed', // Jessie/James defeated and fled
 
   // ── Act 2: Dividia ──────────────────────────────────────────────────────────
   GATE_ROUTE4_PASS: 'gate-route4-pass',
@@ -320,13 +315,8 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT1_ROUTE4_ASSEMBLY_STARTED]: 'Route 4 post-clear assembly cutscene started',
   [FLAGS.ACT1_ROUTE4_ASSEMBLY_DONE]: 'Route 4 assembly cutscene finished, all cutscene NPCs despawned',
   [FLAGS.ACT1_SECRET_DOC_2_RECEIVED]: 'Champion Leon gave Secret Document 2 to the player',
-  [FLAGS.VISITED_ROUTE3]: 'First step onto Route 3',
-  [FLAGS.GATE_ROUTE3_PASS]: 'Route 3 → Multiplia checkpoint passed',
   [FLAGS.VISITED_MULTIPLIA]: 'First arrival at Multiplia',
   [FLAGS.GATE_MULTIPLIA_GYM_PASS]: 'Passed Multiplication Gym gate',
-  [FLAGS.ACT2_MISTY_MET]: 'Misty greeted the player at Multiplia',
-  [FLAGS.ROCKET_MULTIPLIA_NURSE_REVEALED]: 'Jessie unmasked in the Pokemon Center',
-  [FLAGS.ROCKET_MULTIPLIA_NURSE_EXPOSED]: 'Jessie/James defeated and fled',
   [FLAGS.GATE_ROUTE4_PASS]: 'Route 4 → Dividia checkpoint passed',
   [FLAGS.VISITED_DIVIDIA]: 'First arrival at Dividia',
   [FLAGS.GATE_DIVIDIA_GYM_PASS]: 'Passed Division Gym gate',

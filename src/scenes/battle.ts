@@ -83,7 +83,7 @@ import {
   type EvolutionStep,
 } from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp, type StatGains } from '../systems/encounter.js';
-import { calcAbilityDamageTakenMultiplier } from '../systems/ability-processor.js';
+import { calcAbilityDamageTakenMultiplier, getDefenderAbilityActivationMsg } from '../systems/ability-processor.js';
 import { sendCaughtToBox } from '../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../systems/game-state.js';
@@ -820,6 +820,38 @@ export function createBattleScene(
     };
     msgs.push(t(keyMap[summonEffect.weather], { name: pokemonName }));
     msgs.push(...boostMsgs);
+    return msgs;
+  }
+
+  function checkSwitchInStatAbility(
+    entering: Pokemon,
+    enteringState: BattlePokemonRuntimeState,
+    opponent: Pokemon,
+    opponentState: BattlePokemonRuntimeState,
+  ): string[] {
+    const msgs: string[] = [];
+    if (!entering.abilityId) return msgs;
+    const enteringName = getPokemonDisplayName(entering.id);
+    for (const effect of getAbilityBattleEffects(entering.abilityId)) {
+      if (effect.kind !== 'onSwitchInStatChange') continue;
+      const isOpponent = effect.target === 'opponent';
+      const targetState = isOpponent ? opponentState : enteringState;
+      const targetName = getPokemonDisplayName(isOpponent ? opponent.id : entering.id);
+      const current = targetState.statModifiers[effect.stat];
+      const next = applyBattleStatDelta(current, effect.stages);
+      if (next === current) continue;
+      targetState.statModifiers[effect.stat] = next;
+      if (effect.messageKey) {
+        msgs.push(t(effect.messageKey, { attacker: enteringName, target: targetName }));
+      }
+      const stat = getBattleStatLabel(effect.stat);
+      const sharply = Math.abs(effect.stages) >= 2;
+      msgs.push(
+        effect.stages > 0
+          ? t(sharply ? 'battle.statRoseSharply' : 'battle.statRose', { name: targetName, stat })
+          : t(sharply ? 'battle.statFellHarshly' : 'battle.statFell', { name: targetName, stat }),
+      );
+    }
     return msgs;
   }
 
@@ -2766,12 +2798,14 @@ export function createBattleScene(
             })
           : undefined;
       if (absorbEffect?.kind === 'typeAbsorbHeal') {
-        const healAmount = Math.max(1, Math.floor((defender.maxHp * absorbEffect.healPercent) / 100));
-        const healed = Math.max(0, Math.min(defender.maxHp, defender.hp + healAmount) - defender.hp);
-        defender.hp = Math.min(defender.maxHp, defender.hp + healAmount);
-        setHP(targetBar, defender.hp);
-        spawnDamageNumber(`+${healed}`, popupX, popupY, '#48d870');
-        audio.playSFX('heal');
+        const healAmount = Math.floor((defender.maxHp * absorbEffect.healPercent) / 100);
+        if (healAmount > 0) {
+          const healed = Math.max(0, Math.min(defender.maxHp, defender.hp + healAmount) - defender.hp);
+          defender.hp = Math.min(defender.maxHp, defender.hp + healAmount);
+          setHP(targetBar, defender.hp);
+          spawnDamageNumber(`+${healed}`, popupX, popupY, '#48d870');
+          audio.playSFX('heal');
+        }
         return 0;
       }
 
@@ -3845,6 +3879,10 @@ export function createBattleScene(
         }
         const et = effText(m.type, enemy.types);
         if (et) msgs.push(et);
+        if (plannedDamage > 0 && enemy.abilityId !== null) {
+          const abilityMsg = getDefenderAbilityActivationMsg(enemy, enemyBattleState, getAbilityBattleEffects(enemy.abilityId), m.type, defenderName);
+          if (abilityMsg) msgs.push(abilityMsg);
+        }
         if (isWeightTarget || isWeightRatio) {
           const moveName = getMoveDisplayName(m.id);
           if (isWeightTarget) {
@@ -3973,21 +4011,19 @@ export function createBattleScene(
       msgs.push(t('battle.defogClear'));
     }
 
-    // Contact ability: enemy ability may inflict status on player when hit by physical move
+    // Contact ability: enemy ability may inflict status or recoil on player when hit by physical move
     const contactEffectsOnPlayer: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
-    if (
-      hitResult.hit &&
-      damageClass === 'physical' &&
-      plannedDamage > 0 &&
-      !player.status &&
-      enemy.abilityId !== null
-    ) {
+    let playerContactRecoil = 0;
+    if (hitResult.hit && damageClass === 'physical' && plannedDamage > 0 && enemy.abilityId !== null) {
       const enemyAbilityEffects = getAbilityBattleEffects(enemy.abilityId);
       for (const effect of enemyAbilityEffects) {
-        if (effect.kind === 'contactStatusChance' && Math.random() * 100 < effect.chance) {
+        if (effect.kind === 'contactStatusChance' && !player.status && Math.random() * 100 < effect.chance) {
           contactEffectsOnPlayer.push({ status: effect.status });
           const statusLine = getStatusAppliedLine(attackerName, effect.status);
           if (statusLine) msgs.push(statusLine);
+        }
+        if (effect.kind === 'contactRecoilDamage') {
+          playerContactRecoil += Math.max(1, Math.floor((player.maxHp * effect.damagePercent) / 100));
         }
       }
     }
@@ -4147,6 +4183,18 @@ export function createBattleScene(
                 target: 'user',
               });
               setStatus(playerHpBar, player.status ?? '');
+            }
+            // Apply contact recoil damage to the attacking player (Rough Skin, Iron Barbs)
+            if (playerContactRecoil > 0 && player.hp > 0) {
+              player.hp = Math.max(0, player.hp - playerContactRecoil);
+              setHP(playerHpBar, player.hp);
+              spawnDamageNumber(
+                `-${playerContactRecoil}`,
+                BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+                BTL.PLY_SPRITE.y + 10,
+                '#f84038',
+              );
+              audio.playSFX('hit');
             }
           }
         }
@@ -4763,6 +4811,10 @@ export function createBattleScene(
         }
         const et = effText(m.type, player.types);
         if (et) msgs.push(et);
+        if (plannedDamage > 0 && player.abilityId !== null) {
+          const abilityMsg = getDefenderAbilityActivationMsg(player, playerBattleState, getAbilityBattleEffects(player.abilityId), m.type, defenderName);
+          if (abilityMsg) msgs.push(abilityMsg);
+        }
         if (isWeightTargetEnemy || isWeightRatioEnemy) {
           const moveName = getMoveDisplayName(m.id);
           if (isWeightTargetEnemy) {
@@ -4887,21 +4939,19 @@ export function createBattleScene(
       msgs.push(t('battle.defogClear'));
     }
 
-    // Contact ability: player ability may inflict status on enemy when enemy uses physical move
+    // Contact ability: player ability may inflict status or recoil on enemy when enemy uses physical move
     const contactEffectsOnEnemy: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
-    if (
-      hitResult.hit &&
-      damageClass === 'physical' &&
-      plannedDamage > 0 &&
-      !enemy.status &&
-      player.abilityId !== null
-    ) {
+    let enemyContactRecoil = 0;
+    if (hitResult.hit && damageClass === 'physical' && plannedDamage > 0 && player.abilityId !== null) {
       const playerAbilityEffects = getAbilityBattleEffects(player.abilityId);
       for (const effect of playerAbilityEffects) {
-        if (effect.kind === 'contactStatusChance' && Math.random() * 100 < effect.chance) {
+        if (effect.kind === 'contactStatusChance' && !enemy.status && Math.random() * 100 < effect.chance) {
           contactEffectsOnEnemy.push({ status: effect.status });
           const statusLine = getStatusAppliedLine(attackerName, effect.status);
           if (statusLine) msgs.push(statusLine);
+        }
+        if (effect.kind === 'contactRecoilDamage') {
+          enemyContactRecoil += Math.max(1, Math.floor((enemy.maxHp * effect.damagePercent) / 100));
         }
       }
     }
@@ -5059,6 +5109,18 @@ export function createBattleScene(
             for (const contactEffect of contactEffectsOnEnemy) {
               applyMajorStatus(enemy, enemyBattleState, { status: contactEffect.status, chance: 100, target: 'user' });
               setStatus(enemyHpBar, enemy.status ?? '');
+            }
+            // Apply contact recoil damage to the attacking enemy (Rough Skin, Iron Barbs)
+            if (enemyContactRecoil > 0 && enemy.hp > 0) {
+              enemy.hp = Math.max(0, enemy.hp - enemyContactRecoil);
+              setHP(enemyHpBar, enemy.hp);
+              spawnDamageNumber(
+                `-${enemyContactRecoil}`,
+                BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+                BTL.OPP_SPRITE.y + 10,
+                '#f84038',
+              );
+              audio.playSFX('hit');
             }
           }
         }
@@ -5319,9 +5381,10 @@ export function createBattleScene(
               pendingPlayerEntryHazard = false;
               const weatherSummonMsgs = checkWeatherSummonAbility(player, 'player');
               const weatherEntryBoostMsgs = applyWeatherEntryBoost(playerBattleState, player);
+              const switchInStatMsgs = checkSwitchInStatAbility(player, playerBattleState, enemy, enemyBattleState);
               const hazardResult = applyEntryHazards(player, playerBattleState, playerSideState);
               const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(player.id), playerSideState);
-              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...hazardMsgs];
+              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...switchInStatMsgs, ...hazardMsgs];
               if (entryMsgs.length > 0) {
                 setHP(playerHpBar, player.hp);
                 setStatus(playerHpBar, player.status ?? '');
@@ -5334,9 +5397,10 @@ export function createBattleScene(
               pendingEnemyEntryHazard = false;
               const weatherSummonMsgs = checkWeatherSummonAbility(enemy, 'enemy');
               const weatherEntryBoostMsgs = applyWeatherEntryBoost(enemyBattleState, enemy);
+              const switchInStatMsgs = checkSwitchInStatAbility(enemy, enemyBattleState, player, playerBattleState);
               const hazardResult = applyEntryHazards(enemy, enemyBattleState, enemySideState);
               const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(enemy.id), enemySideState);
-              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...hazardMsgs];
+              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...switchInStatMsgs, ...hazardMsgs];
               if (entryMsgs.length > 0) {
                 setHP(enemyHpBar, enemy.hp);
                 setStatus(enemyHpBar, enemy.status ?? '');
@@ -5515,9 +5579,10 @@ export function createBattleScene(
               pendingEnemyEntryHazard = false;
               const weatherSummonMsgs = checkWeatherSummonAbility(enemy, 'enemy');
               const weatherEntryBoostMsgs = applyWeatherEntryBoost(enemyBattleState, enemy);
+              const switchInStatMsgs = checkSwitchInStatAbility(enemy, enemyBattleState, player, playerBattleState);
               const hazardResult = applyEntryHazards(enemy, enemyBattleState, enemySideState);
               const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(enemy.id), enemySideState);
-              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...hazardMsgs];
+              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...switchInStatMsgs, ...hazardMsgs];
               if (entryMsgs.length > 0) {
                 setHP(enemyHpBar, enemy.hp);
                 setStatus(enemyHpBar, enemy.status ?? '');
@@ -5886,9 +5951,10 @@ export function createBattleScene(
               pendingPlayerEntryHazard = false;
               const weatherSummonMsgs = checkWeatherSummonAbility(player, 'player');
               const weatherEntryBoostMsgs = applyWeatherEntryBoost(playerBattleState, player);
+              const switchInStatMsgs = checkSwitchInStatAbility(player, playerBattleState, enemy, enemyBattleState);
               const hazardResult = applyEntryHazards(player, playerBattleState, playerSideState);
               const hazardMsgs = buildHazardMessages(hazardResult, getPokemonDisplayName(player.id), playerSideState);
-              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...hazardMsgs];
+              const entryMsgs = [...weatherSummonMsgs, ...weatherEntryBoostMsgs, ...switchInStatMsgs, ...hazardMsgs];
               if (entryMsgs.length > 0) {
                 setHP(playerHpBar, player.hp);
                 setStatus(playerHpBar, player.status ?? '');
