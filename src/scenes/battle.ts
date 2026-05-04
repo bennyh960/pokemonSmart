@@ -1432,6 +1432,10 @@ export function createBattleScene(
     }
     if (!playerHasAdvantage) return null;
 
+    // Don't switch away if the current Pokemon has net positive stat boosts
+    const statSum = Object.values(enemyBattleState.statModifiers).reduce((a, b) => a + b, 0);
+    if (statSum > 0) return null;
+
     let bestIdx = -1;
     let bestScore = -Infinity;
     for (let i = trainerPartyIndex + 1; i < trainerData.party.length; i++) {
