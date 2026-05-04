@@ -237,8 +237,8 @@ function computeAiLevel(spriteType: string, explicit?: AiLevel): AiLevel {
 
 function getDefaultBagItems(level: AiLevel): string[] {
   if (level >= 5)
-    return ['max-potion', 'max-potion', 'full-restore', 'full-heal', 'full-heal', 'x-attack', 'x-special'];
-  if (level >= 4) return ['hyper-potion', 'full-heal', 'x-attack'];
+    return ['max-potion', 'max-potion', 'full-restore', 'full-heal', 'full-heal', 'x-defense', 'x-sp-def'];
+  if (level >= 4) return ['hyper-potion', 'full-heal', 'x-attack', 'x-defense'];
   return [];
 }
 
