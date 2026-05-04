@@ -17,7 +17,7 @@
     {
       "id": "npc-multi-lib-oak",
       "x": 10,
-      "y": 16,
+      "y": 4,
       "facing": "down",
       "type": "dialogue",
       "despawnAfter": "act2-library-scene-done",
@@ -27,12 +27,23 @@
           "he": "אה, מצאת אותי. גארי שלח אותך? חיכיתי לך."
         }
       ],
-      "spriteType": "oak"
+      "spriteType": "oak",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 14,
+            "delay": 0
+          }
+        ]
+      }
     },
     {
       "id": "npc-captain-kefel-lib",
       "x": 9,
-      "y": 16,
+      "y": 4,
       "facing": "down",
       "type": "dialogue",
       "despawnAfter": "act2-library-scene-done",
@@ -42,7 +53,18 @@
           "he": "בוא למכון כשתוכל — אני מצפה לזה!"
         }
       ],
-      "spriteType": "gym-3-kafla"
+      "spriteType": "gym-3-kafla",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 14,
+            "delay": 0
+          }
+        ]
+      }
     },
     {
       "id": "npc-1777802169417",

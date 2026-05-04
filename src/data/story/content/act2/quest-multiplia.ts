@@ -162,7 +162,7 @@ registerQuest({
   title: { en: 'The Multiplication Gym', he: 'מכון הכפל' },
   objective: {
     en: 'Visit Kefel at the Multiplia Gym',
-    he: 'בקר את קפל במכון מולטיפילה',
+    he: 'בקר את קפטן קפל במכון מולטיפילה',
   },
 });
 
@@ -171,7 +171,7 @@ registerQuest({
   title: { en: 'Route 6 in Danger', he: 'שביל 6 בסכנה' },
   objective: {
     en: 'Help Kefel defeat Team Rocket grunts on Route 6',
-    he: 'עזור לקפל להביס את סוכני צוות רוקט בשביל 6',
+    he: 'עזור לקפטן קפל להביס את סוכני צוות רוקט בשביל 6',
   },
 });
 
@@ -186,10 +186,10 @@ registerQuest({
 
 registerQuest({
   id: 'main-act2-wife',
-  title: { en: "Kefel's Wife", he: 'אשת קפל' },
+  title: { en: "Kefel's Wife", he: 'אשת קפטן קפל' },
   objective: {
     en: "Bring the medicine to Kefel's wife at his house in Multiplia",
-    he: 'הבא את התרופה לאשת קפל בביתו במולטיפילה',
+    he: 'הבא את התרופה לאשת קפטן קפל בביתו במולטיפילה',
   },
 });
 
@@ -207,7 +207,7 @@ registerQuest({
   title: { en: 'Back to the Gym', he: 'בחזרה למכון' },
   objective: {
     en: 'Challenge Kefel at the Multiplia Gym',
-    he: 'אתגר את קפל במכון מולטיפילה',
+    he: 'אתגר את קפטן קפל במכון מולטיפילה',
   },
 });
 
@@ -295,7 +295,7 @@ registerCutscene({
         { en: 'Excellent — you made it. Gary told me to expect you.', he: 'מצוין — הגעת. גארי אמר לי לצפות לך.' },
         {
           en: "I've studied the document carefully. These creatures — the Glitches — are real Pokemon that have been infected by a virus.",
-          he: 'בחנתי את המסמך בקפידה. היצורים האלה — הגליץ׳ים — הם פוקימונים אמיתיים שנדבקו בווירוס.',
+          he: 'במסמך יש כתב סתרים דיי בסיסי. כתוב פה שהיצורים האלה — הגליצ׳ים — הם פוקימונים אמיתיים שנדבקו בווירוס.',
         },
         {
           en: 'The infection makes them aggressive, unpredictable, and completely impossible to capture with standard Pokéballs.',
@@ -311,9 +311,10 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'npc-multi-lib-oak',
       lines: [
+        { en: "Ohh theres some symbols here that i can't decipher.", he: 'אווה יש פה כמה סמלים שאני לא מצליח לפענח.' },
         {
           en: "I'm heading to Algorithma's lab right now. She must analyse this immediately.",
-          he: 'אני הולך למעבדה של אלגוריתמה עכשיו. היא חייבת לנתח את זה מיד.',
+          he: 'אני הולך למעבדה של אלגוריתמה עכשיו. נמשיך לנתח את זה ביחד.',
         },
       ],
     },
@@ -327,8 +328,12 @@ registerCutscene({
           he: 'תזמון טוב לפגוש אותך כאן. אני קפל — אני מנהל את מכון הכפל בעיר הזו.',
         },
         {
+          en: 'I heared about yout ! impressive , so young and so talent. not givven up and not afraid from challengs',
+          he: 'שמעתי עליך! מרשים, כל כך צעיר וכישרוני. לא ויתרת ולא פחדת מאתגרים',
+        },
+        {
           en: "You've been handling Team Rocket out there? Impressive. Come challenge me at the gym — I want to test you myself!",
-          he: 'התמודדת עם צוות רוקט שם בחוץ? מרשים. בוא לאתגר אותי במכון — אני רוצה לבדוק אותך בעצמי!',
+          he: ' בוא לאתגר אותי במכון — אני רוצה לבדוק אותך בעצמי!',
         },
       ],
     },
