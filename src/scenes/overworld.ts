@@ -101,6 +101,22 @@ const DIR_TO_ROW: Record<string, number> = {
   ArrowRight: 3,
 };
 
+type CutscenePathDir = 'up' | 'down' | 'left' | 'right';
+
+const CUTSCENE_DIR_TO_FACING: Record<CutscenePathDir, PlayerState['facing']> = {
+  up: 'ArrowUp',
+  down: 'ArrowDown',
+  left: 'ArrowLeft',
+  right: 'ArrowRight',
+};
+
+const CUTSCENE_DIR_TO_VEC: Record<CutscenePathDir, { dx: number; dy: number }> = {
+  up: { dx: 0, dy: -1 },
+  down: { dx: 0, dy: 1 },
+  left: { dx: -1, dy: 0 },
+  right: { dx: 1, dy: 0 },
+};
+
 interface PlayerState {
   gridX: number;
   gridY: number;
@@ -290,6 +306,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Cutscene: hide player sprite
   let playerHidden = false;
+  let playerCutscenePathQueue: CutscenePathDir[] = [];
+  let playerCutsceneWalking = false;
 
   // Pending push-back after gate scene dismissal without passing
   let pendingGateBack: { pushDx: number; pushDy: number; gateId: string } | null = null;
@@ -696,10 +714,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (interaction.kind === 'swap-pokemon') {
           // Step 1: show the request text immediately after dialogue/questions
           activeTextBox = createTextBox(
-            [t('npc.interaction.swap.request', {
-              want: getPokemonDisplayName(interaction.wantsId),
-              offer: getPokemonDisplayName(interaction.offersId),
-            })],
+            [
+              t('npc.interaction.swap.request', {
+                want: getPokemonDisplayName(interaction.wantsId),
+                offer: getPokemonDisplayName(interaction.offersId),
+              }),
+            ],
             rtl,
             npcSpeaker,
           );
@@ -722,10 +742,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             // Step 3: player has it — show permanent-warning confirmation
             const yourPokemon = getPokemonDisplayName(party[partyIdx].id);
             const offerPokemon = getPokemonDisplayName(interaction.offersId);
-            activeTextBox = createTextBox(
-              [t('npc.interaction.swap.confirm', { yourPokemon, offerPokemon })],
-              rtl,
-            );
+            activeTextBox = createTextBox([t('npc.interaction.swap.confirm', { yourPokemon, offerPokemon })], rtl);
 
             pendingDialogueCallback = () => {
               showChoice((idx) => {
@@ -967,6 +984,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         const npc = npcManager?.getNPCs().find((n) => n.id === id);
         if (!npc) return false;
         return getNpcState(npc).cutsceneWalking;
+      },
+      movePlayerAlongPath(path) {
+        playerCutscenePathQueue = [...path];
+        playerCutsceneWalking = path.length > 0;
+        if (path.length > 0) {
+          player.facing = CUTSCENE_DIR_TO_FACING[path[0]];
+        }
+      },
+      isPlayerWalking() {
+        return playerCutsceneWalking || player.moving;
       },
       snapCamera(x, y) {
         if (camera && tileMap) camera.snapTo(x, y, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
@@ -1599,6 +1626,53 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (isCutsceneActive()) {
         // hideHUD();
         updateCutscene(dt, input, buildCutsceneContext());
+
+        if (player.moving) {
+          player.moveProgress += dt / MOVE_DURATION;
+          player.walkTimer += dt;
+          if (player.walkTimer >= 0.1) {
+            player.walkTimer = 0;
+            player.walkFrame = player.walkFrame === 1 ? 2 : 1;
+          }
+
+          if (player.moveProgress >= 1) {
+            player.moveProgress = 1;
+            player.gridX = player.targetGridX;
+            player.gridY = player.targetGridY;
+            player.pixelX = player.gridX * TILE_SIZE;
+            player.pixelY = player.gridY * TILE_SIZE;
+            player.moving = false;
+            player.walkFrame = 0;
+            if (playerCutscenePathQueue.length === 0) {
+              playerCutsceneWalking = false;
+            }
+          } else {
+            player.pixelX =
+              player.startPixelX + (player.targetGridX * TILE_SIZE - player.startPixelX) * player.moveProgress;
+            player.pixelY =
+              player.startPixelY + (player.targetGridY * TILE_SIZE - player.startPixelY) * player.moveProgress;
+          }
+        }
+
+        if (playerCutsceneWalking && !player.moving && playerCutscenePathQueue.length > 0) {
+          const dir = playerCutscenePathQueue.shift()!;
+          const vec = CUTSCENE_DIR_TO_VEC[dir];
+
+          player.facing = CUTSCENE_DIR_TO_FACING[dir];
+          player.moving = true;
+          player.targetGridX = player.gridX + vec.dx;
+          player.targetGridY = player.gridY + vec.dy;
+          player.startPixelX = player.pixelX;
+          player.startPixelY = player.pixelY;
+          player.moveProgress = 0;
+          player.walkTimer = 0;
+          player.walkFrame = 1;
+        }
+
+        if (playerCutsceneWalking && !player.moving && playerCutscenePathQueue.length === 0) {
+          playerCutsceneWalking = false;
+        }
+
         // Advance NPC cutscene walk animations so move-npc steps can complete.
         // The main NPC update loop is skipped during cutscenes, so we run only
         // the walk-progress and cutscene-path-queue parts here.

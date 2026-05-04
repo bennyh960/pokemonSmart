@@ -2527,6 +2527,18 @@
       "description": "barn building"
     },
     {
+      "key": "barn2",
+      "sx": 0,
+      "sy": 5248,
+      "w": 80,
+      "h": 80,
+      "walkable": true,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "barn building"
+    },
+    {
       "key": "Bookcase",
       "sx": 0,
       "sy": 6080,
@@ -6133,114 +6145,6 @@
       "above": true,
       "category": "grass",
       "interactType": null
-    },
-    {
-      "key": "barn2",
-      "sx": 0,
-      "sy": 5248,
-      "w": 80,
-      "h": 80,
-      "walkable": false,
-      "above": false,
-      "category": "building",
-      "cells": [
-        {
-          "dx": 1,
-          "dy": 4
-        },
-        {
-          "dx": 0,
-          "dy": 4
-        },
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        },
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 2,
-          "dy": 3
-        },
-        {
-          "dx": 3,
-          "dy": 3
-        },
-        {
-          "dx": 4,
-          "dy": 3
-        },
-        {
-          "dx": 4,
-          "dy": 4
-        },
-        {
-          "dx": 3,
-          "dy": 4
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        }
-      ]
     }
   ]
 }

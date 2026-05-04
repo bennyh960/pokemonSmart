@@ -11,7 +11,7 @@
  *   hide-player, show-player, action, if-flag, play-music, stop-music, play-sfx,
  *   move-npc (instant teleport), camera-snap, camera-pan (snap for now)
  *
- * Not yet supported (deferred): start-battle, start-gate, move-player
+ * Not yet supported (deferred): start-battle, start-gate
  */
 
 import type { CutsceneDef, CutsceneStep } from '../data/story/cutscenes.js';
@@ -36,6 +36,10 @@ export interface CutsceneContext {
   moveNPCAlongPath(npc: NPCData, path: Array<'up' | 'down' | 'left' | 'right'>): void;
   /** Returns true while the NPC is still walking its cutscene path. */
   isNPCWalking(id: string): boolean;
+  /** Queue animated walking for the player along a path (one tile per step). */
+  movePlayerAlongPath(path: Array<'up' | 'down' | 'left' | 'right'>): void;
+  /** Returns true while the player is still walking its cutscene path. */
+  isPlayerWalking(): boolean;
   snapCamera(x: number, y: number): void;
   panCamera(x: number, y: number, durationMs: number): void;
   playMusic(id: string): void;
@@ -109,6 +113,7 @@ let _waitingInput = false; // for 'wait-input' steps
 let _phoneRing: PhoneRingState | null = null; // phone-ring intro phase
 
 let _npcMoveWaiting: string | null = null; // npcId being waited on for animated walk
+let _playerMoveWaiting = false;
 let _completionResolve: (() => void) | null = null;
 
 const CHARS_PER_SEC = 40; // typewriter speed
@@ -154,6 +159,7 @@ export function activateCutscene(id: string): boolean {
   _waitTimer = 0;
   _waitingInput = false;
   _npcMoveWaiting = null;
+  _playerMoveWaiting = false;
   _phoneRing = null;
 
   // If phoneCaller is set, enter the ring phase before executing any steps
@@ -183,6 +189,7 @@ export function deactivateCutscene(): void {
   _overlay = null;
   _waitingInput = false;
   _npcMoveWaiting = null;
+  _playerMoveWaiting = false;
   _phoneRing = null;
   _completionResolve?.();
   _completionResolve = null;
@@ -321,6 +328,15 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
   if (_npcMoveWaiting) {
     if (!ctx.isNPCWalking(_npcMoveWaiting)) {
       _npcMoveWaiting = null;
+      _stepIndex++;
+    }
+    return;
+  }
+
+  // ── Player animated walk wait ──
+  if (_playerMoveWaiting) {
+    if (!ctx.isPlayerWalking()) {
+      _playerMoveWaiting = false;
       _stepIndex++;
     }
     return;
@@ -592,11 +608,13 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     }
 
     case 'move-player': {
-      // Not yet implemented — player movement animation is not wired up.
-      throw new Error(
-        `[cutscene] step 'move-player' is not implemented yet. ` +
-          `Remove this step from the cutscene or implement player path animation.`,
-      );
+      ctx.movePlayerAlongPath(step.path);
+      if (step.waitForComplete !== false && step.path.length > 0) {
+        _playerMoveWaiting = true;
+      } else {
+        _stepIndex++;
+      }
+      break;
     }
 
     default: {

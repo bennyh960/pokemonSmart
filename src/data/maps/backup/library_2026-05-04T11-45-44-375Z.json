@@ -95,7 +95,7 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "",
+          "en": "Hello!",
           "he": "הרבה מהחברים לא מגיעים לשיעור!"
         },
         {
@@ -103,20 +103,7 @@
           "he": "הם מפחדים ממה שקורה בחוץ"
         }
       ],
-      "spriteType": "char_459058",
-      "reward": {
-        "money": 0,
-        "items": [
-          {
-            "itemId": "great-ball",
-            "quantity": 3
-          }
-        ]
-      },
-      "questions": {
-        "count": 3,
-        "types": []
-      }
+      "spriteType": "char_459058"
     },
     {
       "id": "npc-1777802421387",
@@ -146,23 +133,6 @@
       "name": {
         "en": "Jake",
         "he": "ג'ייק"
-      },
-      "questions": {
-        "count": 3,
-        "types": [
-          "+",
-          "-",
-          "×"
-        ]
-      },
-      "reward": {
-        "money": 0,
-        "items": [
-          {
-            "itemId": "max-potion",
-            "quantity": 1
-          }
-        ]
       }
     },
     {
@@ -189,23 +159,6 @@
       "name": {
         "en": "Mr Rick",
         "he": "מר ריק"
-      },
-      "reward": {
-        "money": 0,
-        "items": [
-          {
-            "itemId": "revive",
-            "quantity": 3
-          }
-        ]
-      },
-      "questions": {
-        "count": 3,
-        "types": [
-          "+",
-          "-",
-          "×"
-        ]
       }
     }
   ],
