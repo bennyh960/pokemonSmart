@@ -668,4 +668,11 @@ registerCutscene({
   ],
 });
 
+registerStoryEvent({
+  id: 'act2-gym-leader-post-battle',
+  trigger: { type: 'badge-earned', badge: 3 },
+  conditions: [{ type: 'badge-count', min: 2 }],
+  actions: [{ type: 'complete-quest', questId: 'main-act2-gym-battle' }],
+});
+
 //#endregion
