@@ -12,8 +12,9 @@
  */
 
 import type { GateSessionConfig, GateReward } from './gates.js';
-import { GATES, registerGate } from './gates.js';
+import { registerGate } from './gates.js';
 import type { GradeId } from '../../math/question-builder/index.js';
+import type { AutoGateMapOverride } from '../../systems/story-engine.js';
 import { registerAutoGateMap } from '../../systems/story-engine.js';
 import { getPlayerData } from '../../systems/game-state.js';
 
@@ -78,7 +79,7 @@ export const AUTO_GATE_TIME_LIMITS = {
 export const AUTO_GATE_COOLDOWNS = {
   pokecenter: 30 * 60 * 1000, // 30 minutes
   pokemarket: 15 * 60 * 1000, // 15 minutes
-  gym: 3 * 60 * 1000, // 3 minutes (use gym when preparing for badge)
+  gym: 30 * 60 * 1000, // 30 minutes (use gym when preparing for badge)
 } as const;
 
 /** Rewards per service type. */
@@ -195,6 +196,7 @@ registerGate({
     timeLimitPerQuestion: AUTO_GATE_TIME_LIMITS.gym,
     rewards: AUTO_GATE_REWARDS.gym,
     penaltyAmount: 0, // no money penalty at gym — you just can't enter
+    inputQuestions: { count: 5, types: ['+', '-', '×', '÷'] }, // gym requires manual input questions
   },
 });
 
@@ -210,11 +212,30 @@ registerAutoGateMap('multiplia-pokecenter', 'pokecenter');
 registerAutoGateMap('shared/mart-interior', 'pokemarket');
 
 // Gym interiors
-registerAutoGateMap('sumville/gym', 'gym');
-console.log({ GATES });
-// GATES['auto-gym-sumville/gym'].sessionConfig.inputQuestions = { count: 5, types: ['+'] };
-// GATES['auto-gym-sumville/gym'].questionSetIds = ['+'];
-registerAutoGateMap('minusburg/gym', 'gym');
-// GATES['auto-gym-minusburg-gym'].sessionConfig.inputQuestions = { count: 5, types: ['-'] };
-// GATES['auto-gym-minusburg-gym'].questionSetIds = ['-'];
-// registerAutoGateMap('multiplia-gym',          'gym');
+const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
+  'sumville/gym': {
+    questionSetIds: ['+'],
+    sessionConfig: {
+      inputQuestions: { count: 5, types: ['+'] },
+      rewards: [{ type: 'money', amount: 4500 }],
+    },
+  },
+  'minusburg/gym': {
+    questionSetIds: ['-'],
+    sessionConfig: {
+      inputQuestions: { count: 5, types: ['-'] },
+    },
+  },
+  'multiplia/gym': {
+    questionSetIds: ['×'],
+    sessionConfig: {
+      inputQuestions: { count: 5, types: ['×'] },
+      questionsRequired: 20,
+      timeLimitPerQuestion: 180,
+    },
+  },
+};
+
+registerAutoGateMap('sumville/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['sumville/gym']);
+registerAutoGateMap('minusburg/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['minusburg/gym']);
+registerAutoGateMap('multiplia/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['multiplia/gym']);

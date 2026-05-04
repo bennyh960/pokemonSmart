@@ -37,15 +37,19 @@ export interface SimpleInputQuestion {
 /**
  * Generate one simple arithmetic input question for the given grade.
  *
- * @param gradeId  - Which grade config to use
- * @param types    - Subset of op types to allow (undefined / empty = all grade-appropriate)
+ * @param gradeId   - Which grade config to use
+ * @param types     - Subset of op types to allow (undefined / empty = all grade-appropriate)
+ * @param birthYear - Player birth year; if ≥ 2018, applies a learner-friendly
+ *                    distribution for × and ÷ (results ≤ 100, round-number families, ×11)
  */
 export function generateSimpleInputQuestion(
   gradeId: GradeId,
   types?: SimpleOpType[],
+  birthYear?: number,
 ): SimpleInputQuestion {
   const cfg = getClassConfig(gradeId);
   const gradeNum = Number(gradeId.replace('grade', ''));
+  const isYoungLearner = birthYear !== undefined && birthYear >= 2018;
 
   // Keep only valid simple ops from the grade config (drop '()' which isn't a simple op)
   const gradeOps = cfg.allowedOperations.filter(
@@ -65,9 +69,14 @@ export function generateSimpleInputQuestion(
   const allowNegative = cfg.allowNegative;
 
   // ×100-family bases: reinforces important fact families (20×5=100, 25×4=100, etc.)
-  // For grade 2-4, the first operand is biased toward these values 30% of the time
-  // when the first operator will be ×, so these key products appear more often.
+  // For grade 2-4 (non-young-learner), the first operand is biased toward these values
+  // 30% of the time when the first operator will be ×.
   const X100_BASES = [2, 4, 5, 10, 20, 25].filter(v => v >= min && v <= max);
+
+  // Young-learner constant pools (birthYear ≥ 2018)
+  const YL_MUL_M5 = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+  const YL_DIV_M10 = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
+  const YL_DIV_M5  = [15, 25, 35, 45, 55, 65, 75, 85, 95]; // end-in-5, divisible by 5
 
   for (let attempt = 0; attempt < 80; attempt++) {
     const operators: SimpleOpType[] = Array.from(
@@ -75,11 +84,12 @@ export function generateSimpleInputQuestion(
       () => validOps[Math.floor(Math.random() * validOps.length)],
     );
 
-    // ×100-family bias: for grade 2-4, 30% of the time force the first operand
-    // to be a ×100-family base when the first operator is ×.
+    // ×100-family bias: for grade 2-4 (non-young-learner only — young learner
+    // has its own distribution that overrides operands anyway).
     let firstOperand = randInt(min, max);
     if (
       gradeNum >= 2 && gradeNum <= 4 &&
+      !isYoungLearner &&
       operators[0] === '×' &&
       X100_BASES.length > 0 &&
       Math.random() < 0.30
@@ -96,36 +106,101 @@ export function generateSimpleInputQuestion(
       let rhs: number;
 
       if (op === '÷') {
-        // Always require CLEAN integer division — the answer must be exact.
-        // Find all divisors of current in [2, min(current, 20)] that divide evenly.
+        // ── Young-learner division (birthYear ≥ 2018, first op of a 2-term question) ──
+        if (isYoungLearner && i === 0 && termCount === 2) {
+          const mode = Math.random();
+          if (mode < 0.90) {
+            // Dividend ≤ 100, divisor 2–10, clean integer result
+            const b = randInt(2, 10);
+            const maxQ = Math.floor(100 / b);
+            if (maxQ < 1) { valid = false; break; }
+            const q = randInt(1, maxQ);
+            operands[0] = q * b;
+            operands.push(b);
+            current = q;
+            continue;
+          } else if (mode < 0.95) {
+            // Multiples of 10 (10–200) ÷ 1–10, clean
+            const a = YL_DIV_M10[Math.floor(Math.random() * YL_DIV_M10.length)];
+            const validDivs: number[] = [];
+            for (let d = 1; d <= 10; d++) { if (a % d === 0) validDivs.push(d); }
+            if (validDivs.length === 0) { valid = false; break; }
+            const b = validDivs[Math.floor(Math.random() * validDivs.length)];
+            operands[0] = a;
+            operands.push(b);
+            current = a / b;
+            continue;
+          } else if (mode < 0.98) {
+            // Numbers ending in 5 (15–95) ÷ 5
+            const a = YL_DIV_M5[Math.floor(Math.random() * YL_DIV_M5.length)];
+            operands[0] = a;
+            operands.push(5);
+            current = a / 5;
+            continue;
+          }
+          // 2%: fall through to generic logic below
+        }
+        // ── Generic division — always clean integer result ──────────────────────
         if (current <= 1) { valid = false; break; }
         const divisors: number[] = [];
         const cap = Math.min(current, 20);
         for (let d = 2; d <= cap; d++) {
-          if (current % d === 0) divisors.push(d); // exact division only
+          if (current % d === 0) divisors.push(d);
         }
         if (divisors.length === 0) { valid = false; break; }
         rhs = divisors[Math.floor(Math.random() * divisors.length)];
-        // Result is guaranteed exact integer
         current = current / rhs;
         operands.push(rhs);
-        continue; // skip the generic update below
+        continue;
       } else if (op === '×') {
-        // Keep the multiplier small so the result stays in a reasonable range
-        const mulMax = Math.min(12, Math.floor(max / Math.max(current, 1)));
-        if (mulMax < 2) { valid = false; break; }
-        // If current is a ×100-family base, complete the pair (e.g. 5 → ×20 = 100)
-        const x100Partner = 100 / current;
-        if (
-          Number.isInteger(x100Partner) &&
-          x100Partner >= 2 &&
-          x100Partner <= mulMax &&
-          X100_BASES.includes(current) &&
-          Math.random() < 0.50
-        ) {
-          rhs = x100Partner;
+        // ── Young-learner multiplication (birthYear ≥ 2018, first op of 2-term) ──
+        if (isYoungLearner && i === 0 && termCount === 2) {
+          const mode = Math.random();
+          if (mode < 0.90) {
+            // Both factors 2–9; product is always < 100
+            const a = randInt(2, 9);
+            operands[0] = a;
+            current = a;
+            rhs = randInt(2, 9);
+          } else if (mode < 0.95) {
+            // Multiple of 5 (10–100) × 1–10
+            const a = YL_MUL_M5[Math.floor(Math.random() * YL_MUL_M5.length)];
+            operands[0] = a;
+            current = a;
+            rhs = randInt(1, 10);
+          } else if (mode < 0.98) {
+            // × 11; first factor kept 2–9 so product stays ≤ 99
+            const a = randInt(2, 9);
+            operands[0] = a;
+            current = a;
+            rhs = 11;
+          } else {
+            // 2%: generic logic (same as non-young-learner path below)
+            const mulMax = Math.min(12, Math.floor(max / Math.max(current, 1)));
+            if (mulMax < 2) { valid = false; break; }
+            const x100Partner = 100 / current;
+            if (Number.isInteger(x100Partner) && x100Partner >= 2 && x100Partner <= mulMax && X100_BASES.includes(current) && Math.random() < 0.50) {
+              rhs = x100Partner;
+            } else {
+              rhs = randInt(2, mulMax);
+            }
+          }
         } else {
-          rhs = randInt(2, mulMax);
+          // ── Generic multiplication ──────────────────────────────────────────────
+          const mulMax = Math.min(12, Math.floor(max / Math.max(current, 1)));
+          if (mulMax < 2) { valid = false; break; }
+          const x100Partner = 100 / current;
+          if (
+            Number.isInteger(x100Partner) &&
+            x100Partner >= 2 &&
+            x100Partner <= mulMax &&
+            X100_BASES.includes(current) &&
+            Math.random() < 0.50
+          ) {
+            rhs = x100Partner;
+          } else {
+            rhs = randInt(2, mulMax);
+          }
         }
       } else if (op === '-') {
         // Avoid negatives unless the grade allows them

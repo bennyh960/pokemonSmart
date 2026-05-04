@@ -3,6 +3,23 @@
     "encounterRate": 0.5,
     "entries": [
       {
+        "pokemonId": 15,
+        "minLevel": 3,
+        "maxLevel": 50,
+        "weight": 50
+      },
+      {
+        "pokemonId": 16,
+        "minLevel": 3,
+        "maxLevel": 50,
+        "weight": 50
+      }
+    ]
+  },
+  "test-legend-map": {
+    "encounterRate": 0.5,
+    "entries": [
+      {
         "pokemonId": 149,
         "minLevel": 50,
         "maxLevel": 50,
@@ -396,8 +413,102 @@
       }
     ]
   },
-  "minusburg": {
+  "bug-gym": {
     "encounterRate": 0.2,
+    "entries": [
+      {
+        "pokemonId": 12,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 8
+      },
+      {
+        "pokemonId": 15,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 8
+      },
+      {
+        "pokemonId": 166,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 10
+      },
+      {
+        "pokemonId": 168,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 10
+      },
+      {
+        "pokemonId": 193,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 10
+      },
+      {
+        "pokemonId": 204,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 15
+      },
+      {
+        "pokemonId": 213,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 10
+      },
+      {
+        "pokemonId": 49,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 8
+      },
+      {
+        "pokemonId": 46,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 15
+      },
+      {
+        "pokemonId": 47,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 10
+      },
+      {
+        "pokemonId": 214,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 2
+      },
+      {
+        "pokemonId": 123,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 2
+      },
+      {
+        "pokemonId": 127,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 5
+      },
+      {
+        "pokemonId": 167,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 10
+      },
+      {
+        "pokemonId": 11,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 10
+      }
+    ]
+  },
+  "minusburg": {
     "entries": [
       {
         "pokemonId": 16,

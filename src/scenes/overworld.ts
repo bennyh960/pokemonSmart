@@ -668,6 +668,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               count: npcQ.count,
               types: npcQ.types as SimpleOpType[] | undefined,
               gradeId,
+              birthYear: getPlayerBirthYear(),
               container: appContainer,
             }).then(() => {
               npcOverlayActive = false;
@@ -778,6 +779,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             count: npcQ.count,
             types: npcQ.types as SimpleOpType[] | undefined,
             gradeId,
+            birthYear: getPlayerBirthYear(),
             container: appContainer,
           }).then(() => {
             npcOverlayActive = false;

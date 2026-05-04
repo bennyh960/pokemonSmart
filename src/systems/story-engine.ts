@@ -16,6 +16,8 @@ import type { PlayerStoryState } from '../types/index.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from './game-state.js';
 import { getStoryEvents } from '../data/story/events.js';
 import type { StoryTrigger, StoryCondition, StoryAction } from '../data/story/events.js';
+import type { GateSessionConfig } from '../data/story/gates.js';
+import { GATES, registerGate } from '../data/story/gates.js';
 import { awaitCutsceneCompletion } from './cutscene-runner.js';
 import { saveEventCheckpoint, loadEventCheckpoint, clearEventCheckpoint } from './save.js';
 import { getCurrentMapId, getCachedMap } from './map-manager.js';
@@ -33,11 +35,35 @@ export function initStoryEngine(sm: StateMachine): void {
 // ---------------------------------------------------------------------------
 
 type AutoGateService = 'pokecenter' | 'pokemarket' | 'gym';
-const _autoGateMapRegistry = new Map<string, AutoGateService>();
+const _autoGateMapRegistry = new Map<string, { service: AutoGateService; gateId: string }>();
+
+export interface AutoGateMapOverride {
+  questionSetIds?: string[];
+  reopenCooldownMs?: number;
+  sessionConfig?: Partial<GateSessionConfig>;
+}
 
 /** Register a map ID → service type mapping so entering it triggers the auto-gate. */
-export function registerAutoGateMap(mapId: string, service: AutoGateService): void {
-  _autoGateMapRegistry.set(mapId, service);
+export function registerAutoGateMap(mapId: string, service: AutoGateService, overrides?: AutoGateMapOverride): void {
+  const gateId = service === 'gym' ? `auto-gym-${mapId}` : AUTO_GATE_IDS[service];
+
+  if (service === 'gym') {
+    const baseGate = GATES[AUTO_GATE_IDS.gym];
+    if (baseGate) {
+      registerGate({
+        ...baseGate,
+        id: gateId,
+        questionSetIds: overrides?.questionSetIds ? [...overrides.questionSetIds] : [...baseGate.questionSetIds],
+        reopenCooldownMs: overrides?.reopenCooldownMs ?? baseGate.reopenCooldownMs,
+        sessionConfig: {
+          ...baseGate.sessionConfig,
+          ...(overrides?.sessionConfig ?? {}),
+        },
+      });
+    }
+  }
+
+  _autoGateMapRegistry.set(mapId, { service, gateId });
 }
 
 const AUTO_GATE_IDS: Record<AutoGateService, string> = {
@@ -47,16 +73,13 @@ const AUTO_GATE_IDS: Record<AutoGateService, string> = {
 };
 
 function _checkAutoGate(mapId: string): void {
-  const service = _autoGateMapRegistry.get(mapId);
-  if (!service) return;
+  const entry = _autoGateMapRegistry.get(mapId);
+  if (!entry) return;
 
-  // Gyms get a per-map gate ID so each gym unlocks independently
-  const gateIdLockCheck = service === 'gym' ? `auto-gym-${mapId}` : AUTO_GATE_IDS[service];
-  if (isGateUnlocked(gateIdLockCheck)) return;
+  if (isGateUnlocked(entry.gateId)) return;
 
   if (_stateMachine) {
-    // Use per-map ID so unlock tracking is per-gym, not shared across all gyms
-    setActiveGate(gateIdLockCheck);
+    setActiveGate(entry.gateId);
     _stateMachine.push('GATE');
   }
 }
@@ -457,9 +480,7 @@ export async function checkAndRecoverInterruptedEvent(): Promise<void> {
 
   const pd = getPlayerData();
 
-  console.warn(
-    `[StoryEngine] Interrupted event detected: "${checkpoint.eventId}". Rolling back flags and re-running.`,
-  );
+  console.warn(`[StoryEngine] Interrupted event detected: "${checkpoint.eventId}". Rolling back flags and re-running.`);
 
   // 1. Restore flags to the snapshot taken before the event's actions ran.
   pd.flags = { ...checkpoint.flagsSnapshot };

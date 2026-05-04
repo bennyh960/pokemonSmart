@@ -33,6 +33,8 @@ export interface InputMathOverlayOptions {
   title?: { en: string; he: string };
   /** Locale override — defaults to getLocale(). */
   locale?: 'he' | 'en';
+  /** Player birth year — enables learner-friendly × and ÷ distribution for ≥ 2018. */
+  birthYear?: number;
 }
 
 export interface InputMathResult {
@@ -83,6 +85,7 @@ class InputMathOverlayController {
     this.currentQ = generateSimpleInputQuestion(
       this.opts.gradeId,
       this.opts.types as SimpleOpType[] | undefined,
+      this.opts.birthYear,
     );
     const q = this.currentQ;
     const loc = this.locale;

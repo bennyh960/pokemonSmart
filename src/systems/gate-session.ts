@@ -62,6 +62,7 @@ export class GateSession {
   private readonly config: GateSessionConfig;
   private readonly snapshot = buildSnapshot();
   private readonly gradeId = gradeFromBirthYear(getPlayerBirthYear());
+  private readonly birthYear = getPlayerBirthYear();
 
   private correctCount = 0;
   private totalAttempts = 0;
@@ -125,7 +126,7 @@ export class GateSession {
       this.inputQuestionsRemaining--;
       this.lastQuestionType = 'input';
       const types = this.config.inputQuestions?.types as SimpleOpType[] | undefined;
-      return generateSimpleInputQuestion(this.gradeId, types);
+      return generateSimpleInputQuestion(this.gradeId, types, this.birthYear);
     }
 
     this.lastQuestionType = 'rich';
@@ -189,7 +190,7 @@ export class GateSession {
 
     if (this.lastQuestionType === 'input') {
       const types = this.config.inputQuestions?.types as SimpleOpType[] | undefined;
-      retryQuestion = generateSimpleInputQuestion(this.gradeId, types);
+      retryQuestion = generateSimpleInputQuestion(this.gradeId, types, this.birthYear);
     } else {
       const cfg = getClassConfig(this.gradeId);
       const builder = new QuestionBuilder().withConfig(cfg).withSnapshot(this.snapshot);

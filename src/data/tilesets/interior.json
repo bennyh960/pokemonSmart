@@ -5271,7 +5271,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-
+      "encounterTypes": ["*"],
       "battleBackground": "forest",
       "above": false,
       "category": "grass"
