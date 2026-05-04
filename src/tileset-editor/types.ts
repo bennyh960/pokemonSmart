@@ -5,8 +5,10 @@ export interface TileEntry {
   key: string;
   sx: number;
   sy: number;
-  w: number;       // pixel width
-  h: number;       // pixel height
+  w: number; // pixel width
+  h: number; // pixel height
+  /** Optional render priority override. Higher values draw above lower/undefined. */
+  zOffset?: number;
   walkable: boolean;
   /** Encounter type filter: undefined = not encounterable, ['*'] = all, ['water'] = water only */
   encounterTypes?: string[];
@@ -40,6 +42,16 @@ export type TsEditorEvent =
 
 /** Preset categories for the dropdown. */
 export const TILE_CATEGORIES = [
-  'grass', 'ground', 'road', 'floor', 'wall', 'building',
-  'tree', 'water', 'decoration', 'interior', 'interactive', 'other',
+  'grass',
+  'ground',
+  'road',
+  'floor',
+  'wall',
+  'building',
+  'tree',
+  'water',
+  'decoration',
+  'interior',
+  'interactive',
+  'other',
 ] as const;

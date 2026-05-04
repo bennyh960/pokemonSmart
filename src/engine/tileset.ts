@@ -14,8 +14,10 @@ import { toAssetUrl } from './asset-path.js';
 export interface TileDef {
   sx: number;
   sy: number;
-  w: number;       // pixel width
-  h: number;       // pixel height
+  w: number; // pixel width
+  h: number; // pixel height
+  /** Optional render priority override. Higher values draw above lower/undefined. */
+  zOffset?: number;
   walkable: boolean;
   /**
    * Encounter types filter for this tile.
@@ -53,16 +55,17 @@ interface TileEntryRaw {
   sy: number;
   w?: number;
   h?: number;
-  tileSize?: number;  // legacy compat: square tile
+  zOffset?: number;
+  tileSize?: number; // legacy compat: square tile
   walkable: boolean;
-  encounter?: boolean;              // legacy: true/false
+  encounter?: boolean; // legacy: true/false
   encounterTypes?: string[] | null; // new: type filter array
   above: boolean;
   overlay?: boolean;
   category?: string;
   battleBackground?: string | null;
-  interactType?: unknown;  // string (legacy) or { id, args } (new) or null
-  destroy?: string;        // legacy — migrated to interactType on load
+  interactType?: unknown; // string (legacy) or { id, args } (new) or null
+  destroy?: string; // legacy — migrated to interactType on load
   cells?: Array<{ dx: number; dy: number }>;
 }
 
@@ -105,7 +108,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
   const cached = tilesetCache.get(name);
   if (cached) return cached;
 
-  const manifest = await importManifest(name) as Record<string, unknown>;
+  const manifest = (await importManifest(name)) as Record<string, unknown>;
   const image = await loadImage(manifest.image as string);
 
   const tiles = new Map<string, TileDef>();
@@ -122,6 +125,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
         sy: raw.sy,
         w: raw.w ?? size,
         h: raw.h ?? size,
+        zOffset: raw.zOffset,
         walkable: raw.walkable ?? true,
         encounterTypes: encTypes,
         above: raw.above ?? false,
@@ -138,12 +142,14 @@ export async function loadTileset(name: string): Promise<Tileset> {
     const base = (manifest.tileSize as number) ?? 16;
     for (const [id, raw] of Object.entries(manifest.tiles as Record<string, Record<string, unknown>>)) {
       const iRef2 = normalizeInteractRef(raw.interactType, raw.destroy as string | null);
-      const encTypes2 = (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined);
+      const encTypes2 =
+        (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined);
       tiles.set(id, {
         sx: raw.sx as number,
         sy: raw.sy as number,
         w: (raw.w as number) ?? (raw.tileSize as number) ?? base,
         h: (raw.h as number) ?? (raw.tileSize as number) ?? base,
+        zOffset: raw.zOffset as number | undefined,
         walkable: (raw.walkable as boolean) ?? true,
         encounterTypes: encTypes2,
         above: (raw.above as boolean) ?? (raw.renderAbove as boolean) ?? false,
@@ -158,7 +164,9 @@ export async function loadTileset(name: string): Promise<Tileset> {
   const tileset: Tileset = {
     image,
     tiles,
-    getTile(id: string): TileDef | undefined { return tiles.get(id); },
+    getTile(id: string): TileDef | undefined {
+      return tiles.get(id);
+    },
   };
 
   tilesetCache.set(name, tileset);

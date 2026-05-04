@@ -378,39 +378,55 @@ registerCutscene({
     {
       type: 'move-npc',
       npcId: 'jenny-r6',
-      path: ['right', 'right', 'right', 'right'],
+      path: ['down'],
       waitForComplete: true,
+    },
+    {
+      type: 'move-npc',
+      npcId: 'kafla-r6',
+      path: ['down'],
+      waitForComplete: false,
     },
     {
       type: 'dialogue',
       speakerId: 'jenny-r6',
       lines: [
-        { en: 'Officer Jenny — I got here as fast as I could.', he: "שוטרת ג'ני — הגעתי מהר ככל שיכולתי." },
+        { en: 'I got here as fast as I could.', he: 'הגעתי מהר ככל שיכולתי.' },
         {
           en: 'Good work taking down those Rocket operatives. But the situation is worse than it looks.',
           he: 'עבודה טובה להפיל את אנשי רוקט. אבל המצב גרוע ממה שנראה.',
         },
         {
           en: 'The infection is already at 50%. Half the wild Pokemon in the region have been exposed to the Glitch virus.',
-          he: 'ההדבקה כבר ב-50%. חצי מפוקימוני הפרא באזור נחשפו לוירוס הגליץ׳.',
+          he: 'ההדבקה כבר ב-50%. כלומר חצי מפוקימוני הפרא באזור נחשפו לוירוס הגליץ׳.',
         },
         {
           en: "Team Rocket's plan is to push that number to 100% — spreading Glitches into every city and town in Numeria.",
-          he: 'התכנית של צוות רוקט היא לדחוף את המספר הזה ל-100% — להפיץ גליץ׳ים לכל עיר וכפר בנומריה.',
+          he: 'התכנית של צוות רוקט היא להפיץ גליצ׳ים לכל עיר וכפר בנומריה. הם מנסים להשתלט על כל הפוקימונים',
+        },
+        {
+          en: 'Fortunately, we noticed that the virus does not affect Pokemon that have already been caught - meaning it only affects wild Pokemon.',
+          he: 'למזלנו שמנו לב שהוירוס לא משפיע על פוקימונים שכבר נתפסו - כלומר זה רק על פוקימוני בר ',
         },
       ],
     },
     {
       type: 'dialogue',
-      speakerName: 'Kefel / קפל',
+      speakerId: 'kafla-r6',
       lines: [
         {
-          en: 'Then we need to act fast. Trainer — catch as many Pokemon as you can before they get infected.',
-          he: 'אז אנחנו צריכים לפעול מהר. מאמן — תפוס כמה שיותר פוקימונים לפני שהם נדבקים.',
+          en: 'Ok - at least there is a silver lining - it means that at least half are not infected yet.',
+          he: 'אוקיי - לפחות יש צד טוב - זה אומר שלפחות חצי מהפוקימונים לא נדבקו עדיין בוירוס',
         },
+        { en: '', he: 'ואם לתפוס פוקימוני בר זה דבר טוב למאמנים כדי להתחזק ולהתפתח - אז עכשיו זה ממש הכרחי ' },
         {
           en: 'A Glitched Pokemon cannot be caught at all. Once they turn, they are gone forever.',
-          he: 'פוקימון שהפך לגליץ׳ לא ניתן לתפיסה בכלל. ברגע שהם הופכים, הם אבודים לנצח.',
+          he: 'פוקימון שהפך לגליץ׳ לא ניתן לתפיסה בכלל. ברגע שהם מודבקים בוירוס הגליץ׳ הם לא ניתנים ללכידה.',
+        },
+        { en: '', he: 'לפני שיהיה מאוחר מידי - כדאי לתפוס פוקימוני בר בהקדם האפשרי לפני שלא תוכל לתפוס שום פוקימון ' },
+        {
+          en: 'Then we need to act fast. Trainer — catch as many Pokemon as you can before they get infected.',
+          he: 'במקביל - אנחנו צריכים לפעול מהר ולסכל להם את התוכניות.',
         },
       ],
     },
@@ -420,19 +436,19 @@ registerCutscene({
       lines: [
         {
           en: "I'll radio for backup and secure this route. You two — stay sharp.",
-          he: 'אני אדווח לגיבוי ואבטיח את השביל הזה. שניכם — תישארו ערניים.',
+          he: 'אני אדווח הלאה!  שניכם — תישארו ערניים.',
         },
       ],
     },
     {
       type: 'move-npc',
       npcId: 'jenny-r6',
-      path: ['left', 'left', 'left', 'left', 'left'],
+      path: ['up', 'up', 'up'],
       waitForComplete: false,
     },
     {
       type: 'dialogue',
-      speakerName: 'Kefel / קפל',
+      speakerId: 'kafla-r6',
       lines: [
         {
           en: 'I still owe you a gym battle. Come find me at the gym soon.',
@@ -453,6 +469,10 @@ registerCutscene({
         {
           en: 'Please bring it to her. I will meet you at the gym as soon as I finish here.',
           he: 'בבקשה הבא לה אותה. אני אפגוש אותך במכון בהקדם שאסיים כאן.',
+        },
+        {
+          en: '',
+          he: 'אני ממשיך לחקור פה את פוקימוני הבר - כשאסיים אחכה לך במכון',
         },
       ],
     },

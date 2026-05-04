@@ -2,22 +2,77 @@
   "id": "route-6",
   "name": "Route 6",
   "tileset": "overworld",
+  "label": {
+    "en": "Route 6",
+    "he": "שביל 6"
+  },
   "width": 28,
   "height": 35,
   "tileSize": 16,
   "spawn": {
-    "x": 2,
-    "y": 9
+    "x": 14,
+    "y": 1
   },
-  "transitions": [],
+  "transitions": [
+    {
+      "fromX": 2,
+      "fromY": 34,
+      "toMapId": "multiplia/multiplia",
+      "toX": 39,
+      "toY": 1
+    },
+    {
+      "fromX": 3,
+      "fromY": 34,
+      "toMapId": "multiplia/multiplia",
+      "toX": 39,
+      "toY": 1
+    },
+    {
+      "fromX": 4,
+      "fromY": 34,
+      "returnToPrevious": false,
+      "toX": 40,
+      "toY": 1,
+      "toMapId": "multiplia/multiplia"
+    },
+    {
+      "fromX": 13,
+      "fromY": 0,
+      "toMapId": "zeroville/zeroville",
+      "toX": 8,
+      "toY": 23
+    },
+    {
+      "fromX": 14,
+      "fromY": 0,
+      "toMapId": "zeroville/zeroville",
+      "toX": 8,
+      "toY": 23
+    },
+    {
+      "fromX": 15,
+      "fromY": 0,
+      "toMapId": "zeroville/zeroville",
+      "toX": 9,
+      "toY": 23
+    },
+    {
+      "fromX": 16,
+      "fromY": 0,
+      "toMapId": "zeroville/zeroville",
+      "toX": 9,
+      "toY": 23
+    }
+  ],
   "music": "route",
   "encounterTableId": "route-6",
   "npcs": [
     {
       "id": "rocket-grunt-r6-1",
-      "x": 12,
+      "x": 17,
       "y": 4,
-      "facing": "right",
+      "facing": "down",
       "type": "trainer",
       "name": {
         "en": "Rocket Grunt",
@@ -54,7 +109,8 @@
       "reward": {
         "money": 1600
       },
-      "isGlitched": true
+      "isGlitched": true,
+      "despawnOnDefeat": true
     },
     {
       "id": "rocket-grunt-r6-2",
@@ -107,7 +163,7 @@
       "type": "trainer",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טוחן צוות רוקט"
+        "he": "סוכן צוות רוקט"
       },
       "spriteType": "char_7db1c5",
       "lineOfSight": 3,
@@ -150,7 +206,7 @@
       "type": "trainer",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טוחן צוות רוקט"
+        "he": "סוכן צוות רוקט"
       },
       "spriteType": "char_7db1c5",
       "lineOfSight": 5,
@@ -198,7 +254,7 @@
       "type": "trainer",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טוחן צוות רוקט"
+        "he": "סוכן צוות רוקט"
       },
       "spriteType": "char_7db1c5",
       "lineOfSight": 3,
@@ -246,7 +302,7 @@
       "type": "trainer",
       "name": {
         "en": "Rocket Grunt",
-        "he": "טוחן צוות רוקט"
+        "he": "סוכן צוות רוקט"
       },
       "spriteType": "char_7db1c5",
       "lineOfSight": 6,
@@ -327,8 +383,8 @@
     {
       "id": "jessie-r6",
       "x": 13,
-      "y": 2,
-      "facing": "down",
+      "y": 4,
+      "facing": "right",
       "type": "trainer",
       "name": {
         "en": "Jessie",
@@ -337,7 +393,6 @@
       "spriteType": "rocket-jessi",
       "lineOfSight": 3,
       "spawnAfter": "act2-gym-leader-called",
-      "despawnAfter": "act2-route6-jenny-done",
       "dialogue": [
         {
           "en": "Prepare for trouble!",
@@ -369,12 +424,34 @@
       "reward": {
         "money": 3200
       },
-      "isGlitched": true
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 5,
+            "delay": 0.5
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 0.5
+          },
+          {
+            "dir": "left",
+            "steps": 1,
+            "delay": 0.5
+          }
+        ]
+      }
     },
     {
       "id": "james-r6",
       "x": 16,
-      "y": 1,
+      "y": 3,
       "facing": "left",
       "type": "trainer",
       "name": {
@@ -416,7 +493,24 @@
       "reward": {
         "money": 3200
       },
-      "isGlitched": true
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 0.5
+          },
+          {
+            "dir": "left",
+            "steps": 15,
+            "delay": 0.5
+          }
+        ]
+      }
     },
     {
       "id": "jenny-r6",
@@ -437,7 +531,40 @@
           "en": "The situation is under control — for now.",
           "he": "המצב תחת שליטה — לעת עתה."
         }
-      ]
+      ],
+      "autoWalk": null
+    },
+    {
+      "id": "kafla-r6",
+      "x": 15,
+      "y": 0,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [],
+      "spriteType": "gym-3-kafla",
+      "spawnAfter": "all-trainers-defeated-routes/route-6",
+      "despawnAfter": "act2-route6-jenny-done",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 7,
+            "delay": 0.5
+          },
+          {
+            "dir": "right",
+            "steps": 8,
+            "delay": 0.5
+          },
+          {
+            "dir": "down",
+            "steps": 10,
+            "delay": 0.5
+          }
+        ]
+      }
     }
   ],
   "interactiveItems": {
@@ -1893,21 +2020,6 @@
     {
       "key": "s1-4",
       "x": 17,
-      "y": 1
-    },
-    {
-      "key": "s1-4",
-      "x": 17,
-      "y": 2
-    },
-    {
-      "key": "s1-4",
-      "x": 17,
-      "y": 3
-    },
-    {
-      "key": "s1-4",
-      "x": 17,
       "y": 4
     },
     {
@@ -2617,8 +2729,8 @@
     },
     {
       "key": "r2",
-      "x": 11,
-      "y": 4
+      "x": 12,
+      "y": 3
     },
     {
       "key": "r2",
@@ -2667,13 +2779,13 @@
     },
     {
       "key": "item-generic",
-      "x": 7,
-      "y": 3
+      "x": 9,
+      "y": 25
     },
     {
       "key": "item-generic",
-      "x": 8,
-      "y": 3
+      "x": 5,
+      "y": 10
     },
     {
       "key": "r3",
@@ -2709,6 +2821,126 @@
       "key": "mtcl1",
       "x": 6,
       "y": 28
+    },
+    {
+      "key": "r3",
+      "x": 17,
+      "y": 2
+    },
+    {
+      "key": "g3",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 9,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 9
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 10
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 4
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 5
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 6
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 4
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 5
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 6
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 7
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 9
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 10
     }
   ]
 }

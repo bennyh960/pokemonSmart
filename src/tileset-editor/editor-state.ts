@@ -1,7 +1,7 @@
 import type { TileEntry, TsEditorEvent } from './types.js';
 import { toAssetUrl } from '../engine/asset-path.js';
 
-const DEFAULT_TILE_SIZE = 16
+const DEFAULT_TILE_SIZE = 16;
 
 export class TilesetEditorState {
   // All defined tiles
@@ -63,7 +63,7 @@ export class TilesetEditorState {
   }
 
   emit(event: TsEditorEvent): void {
-    this.listeners.get(event)?.forEach(cb => cb());
+    this.listeners.get(event)?.forEach((cb) => cb());
   }
 
   // ── Selection ──
@@ -113,12 +113,24 @@ export class TilesetEditorState {
   }
 
   /** Selection in pixels. */
-  get selPixelX(): number { return this.selStartCol * DEFAULT_TILE_SIZE; }
-  get selPixelY(): number { return this.selStartRow * DEFAULT_TILE_SIZE; }
-  get selCols(): number { return this.selEndCol - this.selStartCol + 1; }
-  get selRows(): number { return this.selEndRow - this.selStartRow + 1; }
-  get selPixelW(): number { return this.selCols * DEFAULT_TILE_SIZE; }
-  get selPixelH(): number { return this.selRows * DEFAULT_TILE_SIZE; }
+  get selPixelX(): number {
+    return this.selStartCol * DEFAULT_TILE_SIZE;
+  }
+  get selPixelY(): number {
+    return this.selStartRow * DEFAULT_TILE_SIZE;
+  }
+  get selCols(): number {
+    return this.selEndCol - this.selStartCol + 1;
+  }
+  get selRows(): number {
+    return this.selEndRow - this.selStartRow + 1;
+  }
+  get selPixelW(): number {
+    return this.selCols * DEFAULT_TILE_SIZE;
+  }
+  get selPixelH(): number {
+    return this.selRows * DEFAULT_TILE_SIZE;
+  }
 
   // ── Crop lock ──
 
@@ -192,7 +204,11 @@ export class TilesetEditorState {
 
   updateTile(index: number, partial: Partial<TileEntry>): void {
     if (index < 0 || index >= this.tiles.length) return;
-    Object.assign(this.tiles[index], partial);
+    const tile = this.tiles[index] as TileEntry & Record<string, unknown>;
+    for (const [key, value] of Object.entries(partial)) {
+      if (value === undefined) delete tile[key];
+      else tile[key] = value;
+    }
     this.emit('items-changed');
   }
 

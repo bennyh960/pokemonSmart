@@ -128,6 +128,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Powder Snow': statusEffect('freeze', 10, { minTurns: 2, maxTurns: 5 }),
 
   Toxic: statusEffect('poison', 100, { badlyPoisoned: true }),
+  'Poison Gas': statusEffect('poison', 100, { badlyPoisoned: true }),
   'Poison Powder': statusEffect('poison', 100),
   'Poison Sting': statusEffect('poison', 30),
   Smog: statusEffect('poison', 40),

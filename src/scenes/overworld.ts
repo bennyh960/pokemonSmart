@@ -3083,12 +3083,36 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       interface Renderable {
         y: number;
         render: () => void;
+        zOffset?: number;
+        order?: number;
       }
+
+      const compareRenderables = (a: Renderable, b: Renderable): number => {
+        const aHasZ = typeof a.zOffset === 'number';
+        const bHasZ = typeof b.zOffset === 'number';
+        if (aHasZ !== bHasZ) return aHasZ ? 1 : -1;
+        if (aHasZ && bHasZ && a.zOffset !== b.zOffset) {
+          return (a.zOffset ?? 0) - (b.zOffset ?? 0);
+        }
+        if (a.y !== b.y) return a.y - b.y;
+        return (a.order ?? 0) - (b.order ?? 0);
+      };
+
+      const compareLayerRenderables = (a: Renderable, b: Renderable): number => {
+        const aHasZ = typeof a.zOffset === 'number';
+        const bHasZ = typeof b.zOffset === 'number';
+        if (aHasZ !== bHasZ) return aHasZ ? 1 : -1;
+        if (aHasZ && bHasZ && a.zOffset !== b.zOffset) {
+          return (a.zOffset ?? 0) - (b.zOffset ?? 0);
+        }
+        return (a.order ?? 0) - (b.order ?? 0);
+      };
       const renderables: Renderable[] = [];
 
       // Placed objects split into ground/body/above passes
       const objRenderables = tileMap.getObjectRenderables(ctx, camera.x, camera.y);
       // Ground-level objects (carpet, sand edges) render right after ground tiles
+      objRenderables.ground.sort(compareLayerRenderables);
       for (const r of objRenderables.ground) r.render();
       // Body objects (trees, buildings) participate in Y-sort
       renderables.push(...objRenderables.body);
@@ -3291,7 +3315,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       // Sort by Y and render
-      renderables.sort((a, b) => a.y - b.y);
+      renderables.sort(compareRenderables);
       for (const r of renderables) r.render();
 
       // ── Fishing rod world overlay ──
@@ -3371,6 +3395,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Render above layer (tree canopies, roof overhangs) on top of sprites
       tileMap.renderAbove(ctx, camera.x, camera.y);
       // Render placed object above rows (e.g. roof overhangs)
+      objRenderables.above.sort(compareLayerRenderables);
       for (const r of objRenderables.above) r.render();
 
       // HM animation overlay

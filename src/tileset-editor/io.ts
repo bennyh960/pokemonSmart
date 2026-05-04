@@ -68,6 +68,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         sy: t.sy,
         w: t.w ?? (t as unknown as Record<string, number>).tileSize ?? 16,
         h: t.h ?? (t as unknown as Record<string, number>).tileSize ?? 16,
+        zOffset: t.zOffset,
         walkable: t.walkable ?? true,
         encounterTypes: t.encounterTypes ?? ((t as any).encounter ? ['*'] : undefined),
         battleBackground:
@@ -91,6 +92,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         sy: raw.sy as number,
         w: (raw.w as number) ?? baseTileSize,
         h: (raw.h as number) ?? baseTileSize,
+        zOffset: raw.zOffset as number | undefined,
         walkable: (raw.walkable as boolean) ?? true,
         encounterTypes:
           (raw.encounterTypes as string[] | undefined) ?? ((raw.encounter as boolean) ? ['*'] : undefined),

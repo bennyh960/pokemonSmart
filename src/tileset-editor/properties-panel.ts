@@ -546,6 +546,8 @@ export class PropertiesPanel {
       <div class="prop-row" style="flex-direction:column;align-items:flex-start"><label>Encounter types:</label><div id="multi-enc-widget"></div></div>
       <div class="prop-row"><label>Above (2nd layer):</label><input id="multi-above" type="checkbox" /></div>
       <div class="prop-row"><label>Overlay (on top of player):</label><input id="multi-overlay" type="checkbox" /></div>
+      <div class="prop-row"><label>Use zOffset:</label><input id="multi-zoffset-enabled" type="checkbox" /></div>
+      <div class="prop-row"><label>zOffset:</label><input id="multi-zoffset" type="number" step="1" value="10" disabled /></div>
       <div class="prop-row"><label>Description:</label><input id="multi-desc" type="text" placeholder="optional note" /></div>
     `;
 
@@ -602,6 +604,12 @@ export class PropertiesPanel {
       });
     }
 
+    const multiZEnabled = section.querySelector('#multi-zoffset-enabled') as HTMLInputElement;
+    const multiZInput = section.querySelector('#multi-zoffset') as HTMLInputElement;
+    multiZEnabled.addEventListener('change', () => {
+      multiZInput.disabled = !multiZEnabled.checked;
+    });
+
     // Add Tile button
     const addBtn = document.createElement('button');
     addBtn.className = 'primary';
@@ -621,12 +629,15 @@ export class PropertiesPanel {
       }
 
       const catVal = (section.querySelector('#multi-cat') as HTMLSelectElement).value;
+      const parsedMultiZ = parseInt(multiZInput.value, 10);
+      const zOffset = multiZEnabled.checked ? (Number.isNaN(parsedMultiZ) ? 0 : parsedMultiZ) : undefined;
       this.state.addTile({
         key,
         sx,
         sy,
         w,
         h,
+        ...(typeof zOffset === 'number' ? { zOffset } : {}),
         walkable: (section.querySelector('#multi-walk') as HTMLInputElement).checked,
         encounterTypes: multiEncTypes.length > 0 ? multiEncTypes : undefined,
         above: (section.querySelector('#multi-above') as HTMLInputElement).checked,
@@ -679,6 +690,8 @@ export class PropertiesPanel {
       <div class="prop-row"><label>Battle background:</label><select id="add-battle-bg">${getBattleBackgroundOptionsHtml()}</select></div>
       <div class="prop-row"><label>Above (2nd layer):</label><input id="add-above" type="checkbox" /></div>
       <div class="prop-row"><label>Overlay (on top of player):</label><input id="add-overlay" type="checkbox" /></div>
+      <div class="prop-row"><label>Use zOffset:</label><input id="add-zoffset-enabled" type="checkbox" /></div>
+      <div class="prop-row"><label>zOffset:</label><input id="add-zoffset" type="number" step="1" value="10" disabled /></div>
       <div class="prop-row"><label>Description:</label><input id="add-desc" type="text" placeholder="optional note" /></div>
     `;
 
@@ -692,6 +705,12 @@ export class PropertiesPanel {
         addEncTypes = types;
       });
     }
+
+    const addZEnabled = section.querySelector('#add-zoffset-enabled') as HTMLInputElement;
+    const addZInput = section.querySelector('#add-zoffset') as HTMLInputElement;
+    addZEnabled.addEventListener('change', () => {
+      addZInput.disabled = !addZEnabled.checked;
+    });
 
     const addBtn = document.createElement('button');
     addBtn.className = 'primary';
@@ -712,12 +731,15 @@ export class PropertiesPanel {
       const catVal = (section.querySelector('#add-cat') as HTMLSelectElement).value;
       const battleBackground =
         normalizeBattleBackgroundId((section.querySelector('#add-battle-bg') as HTMLSelectElement).value) ?? undefined;
+      const parsedAddZ = parseInt(addZInput.value, 10);
+      const zOffset = addZEnabled.checked ? (Number.isNaN(parsedAddZ) ? 0 : parsedAddZ) : undefined;
       const entry: TileEntry = {
         key,
         sx,
         sy,
         w,
         h,
+        ...(typeof zOffset === 'number' ? { zOffset } : {}),
         walkable: (section.querySelector('#add-walk') as HTMLInputElement).checked,
         encounterTypes: addEncTypes.length > 0 ? addEncTypes : undefined,
         battleBackground,
@@ -781,6 +803,16 @@ export class PropertiesPanel {
         <label>Overlay (on top of player):</label>
         <input id="edit-overlay" type="checkbox" ${t.overlay ? 'checked' : ''} />
       </div>
+      <div class="prop-row">
+        <label>Use zOffset:</label>
+        <input id="edit-zoffset-enabled" type="checkbox" ${typeof t.zOffset === 'number' ? 'checked' : ''} />
+      </div>
+      <div class="prop-row">
+        <label>zOffset:</label>
+        <input id="edit-zoffset" type="number" step="1" value="${typeof t.zOffset === 'number' ? t.zOffset : 10}" ${
+          typeof t.zOffset === 'number' ? '' : 'disabled'
+        } />
+      </div>
       ${
         t.category === 'interactive'
           ? `
@@ -829,6 +861,21 @@ export class PropertiesPanel {
     });
     wire('#edit-above', 'above', 'check');
     wire('#edit-overlay', 'overlay', 'check');
+
+    const editZEnabled = section.querySelector('#edit-zoffset-enabled') as HTMLInputElement;
+    const editZInput = section.querySelector('#edit-zoffset') as HTMLInputElement;
+    const syncEditZ = () => {
+      if (!editZEnabled.checked) {
+        editZInput.disabled = true;
+        this.state.updateTile(index, { zOffset: undefined });
+        return;
+      }
+      editZInput.disabled = false;
+      const value = parseInt(editZInput.value, 10);
+      this.state.updateTile(index, { zOffset: Number.isNaN(value) ? 0 : value });
+    };
+    editZEnabled.addEventListener('change', syncEditZ);
+    editZInput.addEventListener('change', syncEditZ);
     // InteractType: dynamic dropdown from INTERACT_TYPE_IDS + args editor
     // Only rendered when category === 'interactive'
     const interactSel = section.querySelector('#edit-interactType-id') as HTMLSelectElement | null;

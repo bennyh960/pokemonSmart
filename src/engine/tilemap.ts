@@ -30,16 +30,18 @@ import type { InteractArgs } from '../data/interact-types.js';
 /** One entry in a map's interactiveItems override list. */
 export interface InteractiveItemEntry {
   itemId: string;
-  itemQty?: number;  // defaults to 1 if omitted
+  itemQty?: number; // defaults to 1 if omitted
   x?: number;
   y?: number;
 }
 
 /** A placed above-layer tile on the map. */
 export interface PlacedObject {
-  key: string;   // references TileDef in tileset
-  x: number;     // grid column (16px grid)
-  y: number;     // grid row (16px grid)
+  key: string; // references TileDef in tileset
+  x: number; // grid column (16px grid)
+  y: number; // grid row (16px grid)
+  /** Optional render tie-break inside the same render layer. Higher draws above lower/undefined. */
+  zOffset?: number;
   /** Optional per-instance overrides for interactive tiles (merges with tile's interactType.args). */
   interactArgs?: InteractArgs;
 }
@@ -49,11 +51,11 @@ export interface TileMapData {
   name: string;
   width: number;
   height: number;
-  tileSize: number;         // base grid size (always 16)
+  tileSize: number; // base grid size (always 16)
   spawn: { x: number; y: number };
   tiles: (number | string)[][];
   objects?: PlacedObject[];
-  objectLayer?: (string | null)[][];  // deprecated
+  objectLayer?: (string | null)[][]; // deprecated
   tileset?: string;
   id?: string;
   transitions?: MapTransition[];
@@ -91,32 +93,30 @@ export function mergeMapWithTemplate(
 ): TileMapData {
   const tc = {
     transitions: template.transitions?.length ?? 0,
-    npcs:        template.npcs?.length        ?? 0,
-    objects:     template.objects?.length     ?? 0,
+    npcs: template.npcs?.length ?? 0,
+    objects: template.objects?.length ?? 0,
   };
   return {
     // ── Layout: always from template ──────────────────────────────
-    tiles:       template.tiles,
+    tiles: template.tiles,
     objectLayer: template.objectLayer,
-    tileset:     template.tileset,
-    width:       template.width,
-    height:      template.height,
-    tileSize:    template.tileSize,
+    tileset: template.tileset,
+    width: template.width,
+    height: template.height,
+    tileSize: template.tileSize,
     // ── Arrays: concat (template first, instance appended) ────────
     transitions: [...(template.transitions ?? []), ...(instance.transitions ?? [])],
-    npcs:        [...(template.npcs        ?? []), ...(instance.npcs        ?? [])],
-    objects:     [...(template.objects     ?? []), ...(instance.objects     ?? [])],
+    npcs: [...(template.npcs ?? []), ...(instance.npcs ?? [])],
+    objects: [...(template.objects ?? []), ...(instance.objects ?? [])],
     // ── Scalars: instance wins, template as default ────────────────
-    music:            instance.music            ?? template.music,
-    encounterTableId: instance.encounterTableId !== undefined
-                        ? instance.encounterTableId
-                        : template.encounterTableId,
+    music: instance.music ?? template.music,
+    encounterTableId: instance.encounterTableId !== undefined ? instance.encounterTableId : template.encounterTableId,
     spawn: instance.spawn ?? template.spawn,
     // ── Identity: instance only ────────────────────────────────────
-    id:       instance.id,
-    name:     instance.name   ?? template.name,
-    label:    instance.label,
-    area:     instance.area,
+    id: instance.id,
+    name: instance.name ?? template.name,
+    label: instance.label,
+    area: instance.area,
     template: instance.template,
     // ── Map-level interact overrides: instance wins (shallow merge) ──
     interactiveItems: instance.interactiveItems ?? template.interactiveItems,
@@ -137,15 +137,28 @@ export const TILE_TALL_GRASS = 7;
 export const TILE_ROUTE_EXIT = 8;
 
 const TILE_COLORS: Record<number, string> = {
-  [TILE_EMPTY]: '#000000', [TILE_GRASS]: '#48A030', [TILE_PATH]: '#C8A870',
-  [TILE_WATER]: '#3080D0', [TILE_TREE]: '#206020', [TILE_BUILDING]: '#808080',
-  [TILE_DOOR]: '#8B4513', [TILE_TALL_GRASS]: '#68C048', [TILE_ROUTE_EXIT]: '#D8B870',
+  [TILE_EMPTY]: '#000000',
+  [TILE_GRASS]: '#48A030',
+  [TILE_PATH]: '#C8A870',
+  [TILE_WATER]: '#3080D0',
+  [TILE_TREE]: '#206020',
+  [TILE_BUILDING]: '#808080',
+  [TILE_DOOR]: '#8B4513',
+  [TILE_TALL_GRASS]: '#68C048',
+  [TILE_ROUTE_EXIT]: '#D8B870',
 };
 
 const BLOCKED_TILES = new Set([TILE_WATER, TILE_TREE, TILE_BUILDING]);
 
 /** Renderable for Y-sorting. */
-export interface Renderable { y: number; render: () => void; }
+export interface Renderable {
+  y: number;
+  render: () => void;
+  /** Optional render tie-break inside the same Y/layer. Higher values draw later (on top). */
+  zOffset?: number;
+  /** Stable fallback to preserve original insertion order. */
+  order?: number;
+}
 
 /**
  * Pre-compute which PlacedObject gets which item override.
@@ -159,14 +172,12 @@ function buildInteractOverrides(
   const result = new Map<PlacedObject, { itemId: string; itemQty: number }>();
 
   for (const [tileKey, entries] of Object.entries(interactiveItems)) {
-    const candidates = objects.filter(o => o.key === tileKey);
+    const candidates = objects.filter((o) => o.key === tileKey);
     if (!candidates.length) continue;
 
     const sorted = [...entries].sort((a, b) => {
       const score = (e: InteractiveItemEntry) =>
-        e.x !== undefined && e.y !== undefined ? 0 :
-        e.x !== undefined ? 1 :
-        e.y !== undefined ? 2 : 3;
+        e.x !== undefined && e.y !== undefined ? 0 : e.x !== undefined ? 1 : e.y !== undefined ? 2 : 3;
       return score(a) - score(b);
     });
 
@@ -176,11 +187,11 @@ function buildInteractOverrides(
     for (const entry of sorted) {
       let matched: PlacedObject | undefined;
       if (entry.x !== undefined && entry.y !== undefined) {
-        matched = candidates.find(o => !claimed.has(o) && o.x === entry.x && o.y === entry.y);
+        matched = candidates.find((o) => !claimed.has(o) && o.x === entry.x && o.y === entry.y);
       } else if (entry.x !== undefined) {
-        matched = candidates.find(o => !claimed.has(o) && o.x === entry.x);
+        matched = candidates.find((o) => !claimed.has(o) && o.x === entry.x);
       } else if (entry.y !== undefined) {
-        matched = candidates.find(o => !claimed.has(o) && o.y === entry.y);
+        matched = candidates.find((o) => !claimed.has(o) && o.y === entry.y);
       }
 
       if (matched) {
@@ -192,7 +203,7 @@ function buildInteractOverrides(
     }
 
     // Assign fallbacks to remaining unclaimed candidates
-    const unclaimed = candidates.filter(o => !claimed.has(o));
+    const unclaimed = candidates.filter((o) => !claimed.has(o));
     let assignable = fallbacks;
     if (fallbacks.length > unclaimed.length) {
       // y > x: randomly sample unclaimed.length overrides without replacement (Fisher-Yates)
@@ -220,7 +231,11 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
   const BASE = 16; // base grid unit
 
   return {
-    name, width, height, tileSize, spawn,
+    name,
+    width,
+    height,
+    tileSize,
+    spawn,
 
     /** Returns the item override for a placed object, or null if none. */
     getInteractOverride(obj: PlacedObject): { itemId: string; itemQty: number } | null {
@@ -243,7 +258,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
         const lx = gx - obj.x;
         const ly = gy - obj.y;
         if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-          if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+          if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
           return obj;
         }
       }
@@ -268,7 +283,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
         if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
           // For grouped tiles with cells, only block if this cell is included
           if (def.cells) {
-            if (!def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+            if (!def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
           }
           if (!def.walkable) return true;
         }
@@ -290,7 +305,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-            if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+            if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
             return def.walkable; // object tile is present — its walkable is the answer
           }
         }
@@ -327,7 +342,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-            if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+            if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
             return def.encounterTypes;
           }
         }
@@ -355,7 +370,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-            if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+            if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
             return def.category;
           }
         }
@@ -375,7 +390,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-            if (def.cells && !def.cells.some(c => c.dx === lx && c.dy === ly)) continue;
+            if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
             return def.battleBackground;
           }
         }
@@ -427,7 +442,11 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
      *  - body: tall objects (trees, buildings) — Y-sorted with player/NPCs
      *  - above: overlay tiles (tall grass) — drawn on top of all sprites
      */
-    getObjectRenderables(ctx: CanvasRenderingContext2D, cameraX: number, cameraY: number): {
+    getObjectRenderables(
+      ctx: CanvasRenderingContext2D,
+      cameraX: number,
+      cameraY: number,
+    ): {
       ground: Renderable[];
       body: Renderable[];
       above: Renderable[];
@@ -439,9 +458,10 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
 
       ctx.imageSmoothingEnabled = false;
 
-      for (const obj of placedObjects) {
+      for (const [objIndex, obj] of placedObjects.entries()) {
         const def = tileset.getTile(obj.key);
         if (!def) continue;
+        const effectiveZOffset = obj.zOffset ?? def.zOffset;
         const pixelX = obj.x * BASE;
         const pixelY = obj.y * BASE;
         const drawX = Math.floor(pixelX - cameraX);
@@ -450,6 +470,8 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
 
         const renderable: Renderable = {
           y: (obj.y + gridH - 1) * BASE,
+          zOffset: effectiveZOffset,
+          order: objIndex,
           render: () => {
             if (def.cells) {
               // Grouped tile: draw each cell individually
@@ -469,6 +491,9 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
         if (def.overlay) {
           // Overlay tiles (tall grass): always render on top of sprites
           above.push(renderable);
+        } else if (typeof effectiveZOffset === 'number') {
+          // zOffset objects must participate in body sorting so they can render above larger neighbors.
+          body.push(renderable);
         } else if (def.walkable) {
           // Flat walkable decorations (carpet, sand): render with ground layer
           ground.push(renderable);

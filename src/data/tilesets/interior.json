@@ -1256,6 +1256,7 @@
     },
     {
       "key": "notebook",
+      "zOffset": 10,
       "sx": 112,
       "sy": 2464,
       "w": 16,
@@ -3370,10 +3371,12 @@
       "walkable": false,
       "above": true,
       "category": "decoration",
-      "interactType": null
+      "interactType": null,
+      "zOffset": 10
     },
     {
       "key": "pc-2",
+      "zOffset": 10,
       "sx": 96,
       "sy": 656,
       "w": 16,
