@@ -12,7 +12,434 @@
   "transitions": [],
   "music": "route",
   "encounterTableId": "route-6",
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "rocket-grunt-r6-1",
+      "x": 12,
+      "y": 4,
+      "facing": "right",
+      "type": "trainer",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן  צוות רוקט"
+      },
+      "spriteType": "char_7db1c5",
+      "lineOfSight": 6,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "You won't stop Team Rocket!",
+          "he": "לא תעצור את צוות רוקט!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Retreat!",
+          "he": "נסוג!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 229,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 215,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "rocket-grunt-r6-2",
+      "x": 25,
+      "y": 11,
+      "facing": "left",
+      "type": "trainer",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "spriteType": "char_7db1c5",
+      "lineOfSight": 3,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "Hand over your Pokemon!",
+          "he": "מסור את הפוקימונים שלך!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "NULL-X will not forgive this!",
+          "he": "NULL-X לא יסלח על זה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 159,
+          "level": 33,
+          "moves": []
+        },
+        {
+          "pokemonId": 160,
+          "level": 37,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "rocket-grunt-r6-3",
+      "x": 21,
+      "y": 17,
+      "facing": "right",
+      "type": "trainer",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "טוחן צוות רוקט"
+      },
+      "spriteType": "char_7db1c5",
+      "lineOfSight": 3,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "The Glitches will take over this route!",
+          "he": "הגליץ׳ים ישתלטו על השביל הזה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Impossible...",
+          "he": "בלתי אפשרי..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 211,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 210,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "rocket-grunt-r6-4",
+      "x": 11,
+      "y": 18,
+      "facing": "down",
+      "type": "trainer",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "טוחן צוות רוקט"
+      },
+      "spriteType": "char_7db1c5",
+      "lineOfSight": 5,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "You dare challenge Team Rocket?",
+          "he": "אתה מעז לאתגר את צוות רוקט?"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "I underestimated you.",
+          "he": "זלזלתי בך."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 200,
+          "level": 32,
+          "moves": []
+        },
+        {
+          "pokemonId": 202,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 208,
+          "level": 38,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 2000
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "rocket-grunt-r6-5",
+      "x": 6,
+      "y": 25,
+      "facing": "up",
+      "type": "trainer",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "טוחן צוות רוקט"
+      },
+      "spriteType": "char_7db1c5",
+      "lineOfSight": 3,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "This territory belongs to Team Rocket!",
+          "he": "השטח הזה שייך לצוות רוקט!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "How did you get so strong?",
+          "he": "איך נהית כל כך חזק?"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 89,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 198,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "rocket-grunt-r6-6",
+      "x": 15,
+      "y": 25,
+      "facing": "up",
+      "type": "trainer",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "טוחן צוות רוקט"
+      },
+      "spriteType": "char_7db1c5",
+      "lineOfSight": 6,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "Our Glitches are unstoppable!",
+          "he": "הגליץ׳ים שלנו בלתי ניתנים לעצירה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Fall back!",
+          "he": "נסוג!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 70,
+          "level": 30,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 37,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "rocket-grunt-r6-7",
+      "x": 5,
+      "y": 28,
+      "facing": "left",
+      "type": "trainer",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "spriteType": "char_7db1c5",
+      "lineOfSight": 3,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "You can't fight all of us!",
+          "he": "אתה לא יכול להילחם בכולנו!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Retreat to base!",
+          "he": "נסוג לבסיס!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 15,
+          "level": 33,
+          "moves": []
+        },
+        {
+          "pokemonId": 49,
+          "level": 33,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "jessie-r6",
+      "x": 13,
+      "y": 2,
+      "facing": "down",
+      "type": "trainer",
+      "name": {
+        "en": "Jessie",
+        "he": "ג'סי"
+      },
+      "spriteType": "rocket-jessi",
+      "lineOfSight": 3,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "Prepare for trouble!",
+          "he": "היכון לצרה!"
+        },
+        {
+          "en": "This route is ours by order of NULL-X!",
+          "he": "השביל הזה שלנו בפקודת NULL-X!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "James — we need to pull back!",
+          "he": "ג'יימס — אנחנו צריכים לנסוג!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 24,
+          "level": 40,
+          "moves": []
+        },
+        {
+          "pokemonId": 202,
+          "level": 40,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 3200
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "james-r6",
+      "x": 16,
+      "y": 1,
+      "facing": "left",
+      "type": "trainer",
+      "name": {
+        "en": "James",
+        "he": "ג'יימס"
+      },
+      "spriteType": "rocket-james",
+      "lineOfSight": 3,
+      "spawnAfter": "act2-gym-leader-called",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "Make it double!",
+          "he": "תכפיל את זה!"
+        },
+        {
+          "en": "We are spreading the Glitch virus by order of Team Rocket!",
+          "he": "אנחנו מפיצים את וירוס הגליץ׳ בפקודת צוות רוקט!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "We were so close...",
+          "he": "היינו כל כך קרובים..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 110,
+          "level": 40,
+          "moves": []
+        },
+        {
+          "pokemonId": 71,
+          "level": 40,
+          "moves": []
+        }
+      ],
+      "reward": {
+        "money": 3200
+      },
+      "isGlitched": true
+    },
+    {
+      "id": "jenny-r6",
+      "x": 14,
+      "y": 0,
+      "facing": "down",
+      "type": "dialogue",
+      "name": {
+        "en": "Officer Jenny",
+        "he": "שוטרת ג'ני"
+      },
+      "spriteType": "officer-Jenny",
+      "excludeFromMapClear": true,
+      "spawnAfter": "all-trainers-defeated-routes/route-6",
+      "despawnAfter": "act2-route6-jenny-done",
+      "dialogue": [
+        {
+          "en": "The situation is under control — for now.",
+          "he": "המצב תחת שליטה — לעת עתה."
+        }
+      ]
+    }
+  ],
   "interactiveItems": {
     "item-generic": [
       {
@@ -812,11 +1239,6 @@
       "key": "mtcl1",
       "x": 6,
       "y": 29
-    },
-    {
-      "key": "mtcl1",
-      "x": 6,
-      "y": 28
     },
     {
       "key": "mtc1",
@@ -2195,8 +2617,8 @@
     },
     {
       "key": "r2",
-      "x": 8,
-      "y": 5
+      "x": 11,
+      "y": 4
     },
     {
       "key": "r2",
@@ -2215,8 +2637,8 @@
     },
     {
       "key": "r2",
-      "x": 5,
-      "y": 23
+      "x": 6,
+      "y": 26
     },
     {
       "key": "t7",
@@ -2252,6 +2674,41 @@
       "key": "item-generic",
       "x": 8,
       "y": 3
+    },
+    {
+      "key": "r3",
+      "x": 9,
+      "y": 23
+    },
+    {
+      "key": "r3",
+      "x": 7,
+      "y": 24
+    },
+    {
+      "key": "r1",
+      "x": 16,
+      "y": 25
+    },
+    {
+      "key": "r1",
+      "x": 18,
+      "y": 18
+    },
+    {
+      "key": "r1",
+      "x": 17,
+      "y": 26
+    },
+    {
+      "key": "r2",
+      "x": 15,
+      "y": 18
+    },
+    {
+      "key": "mtcl1",
+      "x": 6,
+      "y": 28
     }
   ]
 }

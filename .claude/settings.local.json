@@ -84,7 +84,9 @@
       "Bash(mv \"sumville/sumvile-house I.json\" sumville/house-i.json)",
       "Bash(mv sumville/sumville-gym.json sumville/gym.json)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\" -Recurse -Name -Include \"*.ts\", \"*.tsx\", \"*.json\")",
-      "Bash(Select-Object -First 50)"
+      "Bash(Select-Object -First 50)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\" -Recurse -Force)",
+      "Bash(Select-Object -Property FullName)"
     ]
   }
 }

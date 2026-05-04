@@ -40,6 +40,15 @@
           "he": "ההרפתקה הבאה מחכה לך!"
         }
       ],
+      "postFlagDialogue": {
+        "flag": "act2-lab-cutscene-done",
+        "dialogue": [
+          {
+            "en": "The detection machine is almost ready. The AI Cores are out there somewhere — find them all.",
+            "he": "מכונת הגילוי כמעט מוכנה. ליבות הבינה המלאכותית נמצאות שם איפשהו — מצא את כולן."
+          }
+        ]
+      },
       "spriteType": "Prof.Algorithma",
       "autoWalk": {
         "pattern": [
@@ -97,6 +106,67 @@
         "en": "Prof. Algorithma",
         "he": "Prof. Algorithma"
       }
+    },
+    {
+      "id": "npc-oak-algo-lab",
+      "x": 11,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "name": {
+        "en": "Prof. Oak",
+        "he": "פרופ' אוק"
+      },
+      "spriteType": "oak",
+      "spawnAfter": "act2-wife-helped",
+      "despawnAfter": "act2-lab-cutscene-done",
+      "dialogue": [
+        {
+          "en": "I have been waiting for you. We need to talk.",
+          "he": "טוב שאתה פה! אנחנו צריכים מאמנים אמיצים כמוך!"
+        },
+        {
+          "en": "",
+          "he": "מוח אומץ ותעוזה - זה המתכון לפענח כל דבר !"
+        }
+      ],
+      "questions": {
+        "count": 3,
+        "types": [
+          "+",
+          "-",
+          "×"
+        ]
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "tm36",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-lance-algo-lab",
+      "x": 12,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "name": {
+        "en": "Lance",
+        "he": "לאנס"
+      },
+      "spriteType": "char_919bca",
+      "spawnAfter": "act2-wife-helped",
+      "despawnAfter": "act2-lab-cutscene-done",
+      "dialogue": [
+        {
+          "en": "The situation is grave. Listen carefully.",
+          "he": "המצב חמור. הקשב בקפידה."
+        }
+      ]
     },
     {
       "id": "remainder-lab",

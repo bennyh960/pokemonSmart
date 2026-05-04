@@ -1,0 +1,37 @@
+{
+  "id": "gym-leader-house",
+  "label": {
+    "en": "Kefel's House",
+    "he": "בית קפל"
+  },
+  "template": "house-open",
+  "area": "Multiplia",
+  "music": "town",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "npc-kefel-wife",
+      "x": 6,
+      "y": 4,
+      "facing": "down",
+      "type": "dialogue",
+      "name": { "en": "Kefel's Wife", "he": "אשת קפל" },
+      "spriteType": "char_a5abb0",
+      "dialogue": [
+        {
+          "en": "I am not feeling well... my husband sent you?",
+          "he": "אני לא מרגישה טוב... בעלי שלח אותך?"
+        }
+      ],
+      "postFlagDialogue": {
+        "flag": "act2-wife-helped",
+        "dialogue": [
+          {
+            "en": "Thank you so much. I feel much better already. My husband will be so relieved.",
+            "he": "תודה רבה לך. אני כבר מרגישה הרבה יותר טוב. בעלי יהיה כל כך רגוע."
+          }
+        ]
+      }
+    }
+  ]
+}

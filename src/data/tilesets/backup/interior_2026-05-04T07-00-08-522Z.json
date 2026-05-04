@@ -5118,8 +5118,7 @@
       "h": 48,
       "walkable": false,
       "above": false,
-      "category": "interior",
-      "interactType": null
+      "category": "interior"
     },
     {
       "key": "lab2",
@@ -5129,8 +5128,7 @@
       "h": 48,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "lab3-1",
@@ -5142,7 +5140,6 @@
       "above": true,
       "overlay": true,
       "category": "decoration",
-      "interactType": null,
       "cells": [
         {
           "dx": 1,
@@ -5185,8 +5182,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "above": false,
-      "interactType": null
+      "above": false
     },
     {
       "key": "lab4",
@@ -5196,8 +5192,7 @@
       "h": 32,
       "walkable": true,
       "above": false,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "lab5",
@@ -5206,8 +5201,7 @@
       "w": 16,
       "h": 32,
       "walkable": false,
-      "above": false,
-      "interactType": null
+      "above": false
     },
     {
       "key": "lab-5",
@@ -5217,8 +5211,7 @@
       "h": 32,
       "walkable": false,
       "above": false,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "labx",
@@ -5228,8 +5221,7 @@
       "h": 64,
       "walkable": false,
       "above": false,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "pokdex",
@@ -5239,8 +5231,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "window-234",
@@ -5250,8 +5241,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "decoration",
-      "interactType": null
+      "category": "decoration"
     },
     {
       "key": "pc-x",
@@ -5261,20 +5251,7 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "interior",
-      "interactType": null
-    },
-    {
-      "key": "grass",
-      "sx": 16,
-      "sy": 4480,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-
-      "battleBackground": "forest",
-      "above": false,
-      "category": "grass"
+      "category": "interior"
     }
   ]
 }

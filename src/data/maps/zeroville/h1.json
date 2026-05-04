@@ -101,207 +101,77 @@
             "quantity": 3
           }
         ]
-      }
+      },
+      "despawnAfter": "visited-multiplia"
     },
     {
-      "id": "rival-reminder",
-      "x": 4,
-      "y": 2,
-      "facing": "down",
-      "type": "trainer",
+      "id": "npc-rick-medicine",
+      "x": 8,
+      "y": 10,
+      "facing": "up",
+      "type": "dialogue",
+      "name": {
+        "en": "Rick",
+        "he": "ריק"
+      },
+      "spriteType": "char_8c60a6",
+      "spawnAfter": "act2-route6-jenny-done",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "lets see u"
+          "en": "A special herbal remedy? For Kefel's wife? Of course — I keep a reserve for emergencies. Take this!",
+          "he": "תרופת עשבים מיוחדת? לאשת קפל? כמובן — אני שומר מלאי לחירום. קח את זה!"
         }
       ],
-      "spriteType": "rival-reminder",
-      "party": [
-        {
-          "pokemonId": 7,
-          "level": 5,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
       "reward": {
-        "money": 0
+        "items": [
+          {
+            "itemId": "full-restore",
+            "quantity": 1
+          }
+        ],
+        "flag": "act2-medicine-received"
       },
-      "postBattleDialogue": []
+      "questions": {
+        "count": 10,
+        "types": [
+          "+",
+          "-",
+          "×"
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "act2-medicine-received",
+        "dialogue": [
+          {
+            "en": "",
+            "he": "גאה בך מאוד! עברת דרך ארוכה ורואים כמה השתפרת!"
+          },
+          {
+            "en": "",
+            "he": "כל הכבוד"
+          }
+        ]
+      }
     }
   ],
   "music": "town",
   "encounterTableId": null,
   "area": "Zeroville",
+  "interactiveItems": {}
+,
   "tiles": [
-    [
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall"
-    ],
-    [
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "wall",
-      "tv1",
-      "wall",
-      "wall",
-      "wall"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "ca1tl",
-      "ca1t",
-      "ca1t",
-      "ca1t",
-      "ca1tr",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "ca1l",
-      "ca1c",
-      "ca1c",
-      "ca1c",
-      "ca1r",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "ca1l",
-      "ca1c",
-      "ca1c",
-      "ca1c",
-      "ca1r",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "ca1bl",
-      "ca1b",
-      "ca1b",
-      "ca1b",
-      "ca1br",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ],
-    [
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d",
-      "d"
-    ]
+    ["wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall"],
+    ["wall","wall","wall","wall","wall","wall","wall","wall","tv1","wall","wall","wall"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","ca1tl","ca1t","ca1t","ca1t","ca1tr","d"],
+    ["d","d","d","d","d","d","ca1l","ca1c","ca1c","ca1c","ca1r","d"],
+    ["d","d","d","d","d","d","ca1l","ca1c","ca1c","ca1c","ca1r","d"],
+    ["d","d","d","d","d","d","ca1bl","ca1b","ca1b","ca1b","ca1br","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"],
+    ["d","d","d","d","d","d","d","d","d","d","d","d"]
   ],
   "objects": [
     {

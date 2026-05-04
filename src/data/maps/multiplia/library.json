@@ -20,10 +20,11 @@
       "y": 16,
       "facing": "down",
       "type": "dialogue",
+      "despawnAfter": "act2-library-scene-done",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": ""
+          "en": "Ah, you found me. Did Gary send you? I have been waiting.",
+          "he": "אה, מצאת אותי. גארי שלח אותך? חיכיתי לך."
         }
       ],
       "spriteType": "oak"
@@ -34,10 +35,11 @@
       "y": 16,
       "facing": "down",
       "type": "dialogue",
+      "despawnAfter": "act2-library-scene-done",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": ""
+          "en": "Come by the gym when you get a chance — I am looking forward to it!",
+          "he": "בוא למכון כשתוכל — אני מצפה לזה!"
         }
       ],
       "spriteType": "gym-3-kafla"

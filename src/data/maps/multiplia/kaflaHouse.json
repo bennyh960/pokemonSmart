@@ -1,0 +1,75 @@
+{
+  "id": "kaflaHouse",
+  "name": "Someone House",
+  "template": "house-1",
+  "tileset": "interior",
+  "label": {
+    "en": "Kafla Family",
+    "he": "משפחת קפלה"
+  },
+  "music": "town4",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 11,
+    "y": 17
+  },
+  "npcs": [
+    {
+      "id": "npc-kafla-wife1",
+      "x": 4,
+      "y": 4,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "היי שלום לך!"
+        },
+        {
+          "en": "",
+          "he": "אני גיסתו של קפטין קפלה מנהיג מכון הכפל."
+        },
+        {
+          "en": "",
+          "he": "קפטיין קפלה גר בהמשך... אשתו אחותי לא מרגישה טוב"
+        }
+      ],
+      "spriteType": "char_a5abb0",
+      "name": {
+        "en": "Lisa",
+        "he": "ליסה"
+      }
+    },
+    {
+      "id": "npc-1777830592635",
+      "x": 3,
+      "y": 10,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "דוד שלי מנהיג מכון הכפל! הוא מאמן חזק ודוד טוב"
+        }
+      ],
+      "spriteType": "char_d152a6",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "hp-up",
+            "quantity": 1
+          },
+          {
+            "itemId": "potion",
+            "quantity": 5
+          }
+        ]
+      },
+      "questions": {
+        "count": 3,
+        "types": ["×"]
+      }
+    }
+  ]
+}

@@ -15,6 +15,8 @@ registerStoryEvent({
     { type: 'set-infection', mapId: 'minusburg/minusburg', value: 'medium' },
     { type: 'set-infection', mapId: 'routes/route-4', value: 'medium' },
     { type: 'set-infection', mapId: 'multiplia/multiplia', value: 'critical' },
+    { type: 'set-infection', mapId: 'routes/route-5', value: 'critical' },
+    { type: 'set-infection', mapId: 'routes/route-6', value: 'medium' },
     { type: 'start-cutscene', cutsceneId: 'act1-reminder-call-route4-enter' },
   ],
 });

@@ -531,7 +531,7 @@ registerStoryEvent({
   trigger: { type: 'map-exit', mapId: 'minusburg/gym' },
   conditions: [{ type: 'flag', flag: FLAGS.STORY_BADGE_2 }],
   actions: [
-    { type: 'set-infection', mapId: MapId.MINUSBURG_MINUSBURG, value: 'cleared' },
+    { type: 'set-infection', mapId: MapId.MINUSBURG_MINUSBURG, value: 'medium' },
     { type: 'start-cutscene', cutsceneId: 'act1-minusburg-badge2-call' },
   ],
 });
