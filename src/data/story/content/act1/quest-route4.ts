@@ -229,6 +229,7 @@ registerCutscene({
       waitForComplete: false,
     },
     // d. Player explains the glitch encounters,
+    { type: 'move-player', path: ['up'] },
     {
       type: 'dialogue',
       speakerName: 'אני/Player',

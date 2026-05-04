@@ -57,9 +57,16 @@ interface DialogueState {
   charIndex: number; // typewriter char counter
   charTimer: number;
   speakerDisplayName?: string; // resolved display name (from speakerId lookup, speakerName, or fallback)
-  speakerCharId?: string;      // character ID when resolved from characters.json (for sprite icon)
+  speakerCharId?: string; // character ID when resolved from characters.json (for sprite icon)
   waitingDismiss: boolean; // true once all chars revealed, waiting for Enter
 }
+
+type CharEntry = {
+  name?: { en: string; he: string };
+  frames: Array<{ sx: number; sy: number } | null>;
+  frameWidth: number;
+  frameHeight: number;
+};
 
 interface FadeState {
   direction: 'in' | 'out';
@@ -116,7 +123,9 @@ function getCharSheet(): HTMLImageElement | null {
     _charSheetLoading = true;
     const img = new Image();
     img.src = CHARACTERS_DATA.image;
-    img.onload = () => { _charSheetImg = img; };
+    img.onload = () => {
+      _charSheetImg = img;
+    };
   }
   return null;
 }
@@ -396,15 +405,25 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       const resolvedLines = typeof step.lines === 'function' ? step.lines() : step.lines;
       const lines = resolvedLines.map((l) => (locale === 'he' ? l.he : l.en) || l.en || '');
 
+      const chars = CHARACTERS_DATA.characters as unknown as Record<string, CharEntry>;
       let speakerDisplayName: string | undefined;
       let speakerCharId: string | undefined;
 
       if (step.speakerId) {
-        type CharEntry = { name?: { en: string; he: string }; frames: Array<{ sx: number; sy: number } | null>; frameWidth: number; frameHeight: number };
-        const charEntry = (CHARACTERS_DATA.characters as unknown as Record<string, CharEntry>)[step.speakerId];
-        if (charEntry?.name) {
-          speakerDisplayName = locale === 'he' ? charEntry.name.he : charEntry.name.en;
-          speakerCharId = step.speakerId;
+        const npcSpriteType = ctx.getNPCById(step.speakerId)?.spriteType;
+        const candidateIds = [step.speakerId, npcSpriteType].filter(
+          (id, idx, arr): id is string => typeof id === 'string' && !!id && arr.indexOf(id) === idx,
+        );
+
+        for (const candidateId of candidateIds) {
+          const charEntry = chars[candidateId];
+          if (!charEntry) continue;
+
+          speakerCharId = candidateId;
+          if (charEntry.name) {
+            speakerDisplayName = locale === 'he' ? charEntry.name.he : charEntry.name.en;
+            break;
+          }
         }
       }
 
@@ -689,18 +708,25 @@ function renderDialogue(ctx: CanvasRenderingContext2D, d: DialogueState): void {
     if (d.speakerCharId) {
       const img = getCharSheet();
       if (img) {
-        type CharEntry = { name?: { en: string; he: string }; frames: Array<{ sx: number; sy: number } | null>; frameWidth: number; frameHeight: number };
         const charEntry = (CHARACTERS_DATA.characters as unknown as Record<string, CharEntry>)[d.speakerCharId];
         const downStandIdx = (CHARACTERS_DATA.dict as Record<string, number>)['down-stand'] ?? 3;
         const frame = charEntry?.frames[downStandIdx];
         if (frame && charEntry) {
           const iconX = rtl ? BOX_X + BOX_W - PADDING - ICON_SIZE : BOX_X + PADDING;
-          ctx.drawImage(img, frame.sx, frame.sy, charEntry.frameWidth, charEntry.frameHeight, iconX, BOX_Y + 2, ICON_SIZE, ICON_SIZE);
+          ctx.drawImage(
+            img,
+            frame.sx,
+            frame.sy,
+            charEntry.frameWidth,
+            charEntry.frameHeight,
+            iconX,
+            BOX_Y + 2,
+            ICON_SIZE,
+            ICON_SIZE,
+          );
         }
       }
-      nameX = rtl
-        ? BOX_X + BOX_W - PADDING - ICON_SIZE - 3
-        : BOX_X + PADDING + ICON_SIZE + 3;
+      nameX = rtl ? BOX_X + BOX_W - PADDING - ICON_SIZE - 3 : BOX_X + PADDING + ICON_SIZE + 3;
     } else {
       nameX = rtl ? BOX_X + BOX_W - PADDING : BOX_X + PADDING;
     }
