@@ -13,7 +13,7 @@
 
 import type { StateMachine } from '../engine/state-machine.js';
 import type { PlayerStoryState } from '../types/index.js';
-import { getPlayerData, hasActiveGame, autoSave, setFlag } from './game-state.js';
+import { getPlayerData, hasActiveGame, autoSave, setFlag, getCurrentSlot } from './game-state.js';
 import { getStoryEvents } from '../data/story/events.js';
 import type { StoryTrigger, StoryCondition, StoryAction } from '../data/story/events.js';
 import type { GateSessionConfig } from '../data/story/gates.js';
@@ -165,8 +165,9 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
     const cutsceneAction = event.actions.find(
       (a): a is Extract<StoryAction, { type: 'start-cutscene' }> => a.type === 'start-cutscene',
     );
-    if (cutsceneAction && !event.repeatable) {
-      saveEventCheckpoint({
+    const checkpointSlot = resolveCheckpointSlot();
+    if (cutsceneAction && !event.repeatable && checkpointSlot !== null) {
+      saveEventCheckpoint(checkpointSlot, {
         eventId: event.id,
         cutsceneId: cutsceneAction.cutsceneId,
         flagsSnapshot: { ...pd.flags },
@@ -200,9 +201,9 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
     // checkpoint. Must happen in this order so the done-flag is on disk before
     // the checkpoint disappears (otherwise a crash here would just re-run the
     // cutscene, which is safe, rather than skipping it).
-    if (cutsceneAction && !event.repeatable) {
+    if (cutsceneAction && !event.repeatable && checkpointSlot !== null) {
       autoSave();
-      clearEventCheckpoint();
+      clearEventCheckpoint(checkpointSlot);
     }
   }
 
@@ -457,6 +458,14 @@ function ensureStory(story: PlayerStoryState): void {
   if (!story) throw new Error('story state missing — migration not applied');
 }
 
+function resolveCheckpointSlot(): number | null {
+  const slot = getCurrentSlot();
+  if (slot !== null) return slot;
+
+  autoSave();
+  return getCurrentSlot();
+}
+
 // ---------------------------------------------------------------------------
 // Interrupted-event recovery
 // ---------------------------------------------------------------------------
@@ -474,9 +483,20 @@ function ensureStory(story: PlayerStoryState): void {
  *      checkpoint — exactly as a normal first-run would.
  */
 export async function checkAndRecoverInterruptedEvent(): Promise<void> {
-  const checkpoint = loadEventCheckpoint();
-  if (!checkpoint) return;
   if (!hasActiveGame()) return;
+  const checkpointSlot = getCurrentSlot();
+  if (checkpointSlot === null) return;
+
+  const checkpoint = loadEventCheckpoint(checkpointSlot);
+  if (!checkpoint) return;
+
+  if (checkpoint.slot !== checkpointSlot) {
+    console.warn(
+      `[StoryEngine] Ignoring checkpoint from slot ${checkpoint.slot} while active slot is ${checkpointSlot}.`,
+    );
+    clearEventCheckpoint(checkpointSlot);
+    return;
+  }
 
   const pd = getPlayerData();
 
@@ -511,5 +531,5 @@ export async function checkAndRecoverInterruptedEvent(): Promise<void> {
     setFlag(pd, doneFlag);
   }
   autoSave();
-  clearEventCheckpoint();
+  clearEventCheckpoint(checkpointSlot);
 }

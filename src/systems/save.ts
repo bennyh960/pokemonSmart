@@ -26,7 +26,11 @@ export interface SaveSlotMeta {
 export function getSlotIndex(): SaveSlotMeta[] {
   const raw = localStorage.getItem(SLOT_INDEX_KEY);
   if (raw) {
-    try { return JSON.parse(raw) as SaveSlotMeta[]; } catch { return []; }
+    try {
+      return JSON.parse(raw) as SaveSlotMeta[];
+    } catch {
+      return [];
+    }
   }
   // Migrate pre-index saves: if slot 0 exists, seed the index from it
   const slot0Raw = localStorage.getItem(`${SAVE_KEY_PREFIX}0`);
@@ -43,7 +47,9 @@ export function getSlotIndex(): SaveSlotMeta[] {
       const index = [meta];
       localStorage.setItem(SLOT_INDEX_KEY, JSON.stringify(index));
       return index;
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }
   return [];
 }
@@ -61,18 +67,18 @@ function upsertSlotMeta(slot: number, data: PlayerData): void {
     firstPokemonId: data.party[0]?.id ?? null,
     savedAt: new Date().toISOString(),
   };
-  const i = index.findIndex(m => m.slot === slot);
+  const i = index.findIndex((m) => m.slot === slot);
   if (i >= 0) index[i] = meta;
   else index.push(meta);
   persistSlotIndex(index);
 }
 
 function removeSlotMeta(slot: number): void {
-  persistSlotIndex(getSlotIndex().filter(m => m.slot !== slot));
+  persistSlotIndex(getSlotIndex().filter((m) => m.slot !== slot));
 }
 
 export function findFreeSlot(): number | null {
-  const used = new Set(getSlotIndex().map(m => m.slot));
+  const used = new Set(getSlotIndex().map((m) => m.slot));
   for (let i = 0; i < MAX_SAVE_SLOTS; i++) {
     if (!used.has(i)) return i;
   }
@@ -83,7 +89,8 @@ export function findFreeSlot(): number | null {
 export const CURRENT_SAVE_VERSION = 15;
 
 function gaussianSizePercent(): number {
-  let u = 0, v = 0;
+  let u = 0,
+    v = 0;
   while (u === 0) u = Math.random();
   while (v === 0) v = Math.random();
   const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
@@ -298,9 +305,11 @@ export function deleteSave(slot: number): void {
 // game can roll back flags and re-run the event cleanly from the beginning.
 // ---------------------------------------------------------------------------
 
-const CHECKPOINT_KEY = 'pokemon-math-adventure-event-checkpoint';
+const CHECKPOINT_KEY_PREFIX = 'pokemon-math-adventure-event-checkpoint-';
 
 export interface EventCheckpoint {
+  /** Save slot this checkpoint belongs to. */
+  slot: number;
   /** ID of the story event that was interrupted. */
   eventId: string;
   /** ID of the cutscene that was running inside that event. */
@@ -309,12 +318,16 @@ export interface EventCheckpoint {
   flagsSnapshot: Record<string, boolean>;
 }
 
-export function saveEventCheckpoint(checkpoint: EventCheckpoint): void {
-  localStorage.setItem(CHECKPOINT_KEY, JSON.stringify(checkpoint));
+function getCheckpointKey(slot: number): string {
+  return `${CHECKPOINT_KEY_PREFIX}${slot}`;
 }
 
-export function loadEventCheckpoint(): EventCheckpoint | null {
-  const raw = localStorage.getItem(CHECKPOINT_KEY);
+export function saveEventCheckpoint(slot: number, checkpoint: Omit<EventCheckpoint, 'slot'>): void {
+  localStorage.setItem(getCheckpointKey(slot), JSON.stringify({ ...checkpoint, slot }));
+}
+
+export function loadEventCheckpoint(slot: number): EventCheckpoint | null {
+  const raw = localStorage.getItem(getCheckpointKey(slot));
   if (!raw) return null;
   try {
     return JSON.parse(raw) as EventCheckpoint;
@@ -323,6 +336,6 @@ export function loadEventCheckpoint(): EventCheckpoint | null {
   }
 }
 
-export function clearEventCheckpoint(): void {
-  localStorage.removeItem(CHECKPOINT_KEY);
+export function clearEventCheckpoint(slot: number): void {
+  localStorage.removeItem(getCheckpointKey(slot));
 }

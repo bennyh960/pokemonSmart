@@ -171,7 +171,6 @@ registerQuest({
 registerStoryEvent({
   id: 'act1-route4-all-clear',
   trigger: { type: 'flag-set', flag: allTrainersDefeatedFlag('routes/route-4') },
-  // repeatable: true,
   conditions: [{ type: 'flag-not', flag: FLAGS.ACT1_ROUTE4_ASSEMBLY_DONE }],
   actions: [
     { type: 'set-flag', flag: FLAGS.ACT1_ROUTE4_ASSEMBLY_STARTED },
