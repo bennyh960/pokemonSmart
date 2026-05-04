@@ -1024,7 +1024,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             pd.money += action.amount;
             break;
           case 'set-quest':
-            if (pd.story) pd.story.activeQuestId = action.questId;
+            if (pd.story) {
+              const prevQuestId = pd.story.activeQuestId;
+              pd.story.activeQuestId = action.questId;
+              if (action.questId && action.questId !== prevQuestId) {
+                setHUDTab(2);
+                updateHUD(buildHUDData());
+              }
+            }
             break;
           case 'complete-quest':
             if (pd.story) {
@@ -1461,6 +1468,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Detect whether this is a same-map re-entry (battle return) vs. a real map change
     const _prevMapId = hasActiveGame() ? getPlayerData().position.mapId : null;
     const _isSameMapEntry = _prevMapId !== null && _prevMapId === mapId;
+
+    if (!_isSameMapEntry) {
+      setHUDTab(0);
+    }
 
     player = initPlayer(spawnX ?? data.spawn.x, spawnY ?? data.spawn.y);
     camera = createCamera(SCREEN_W, SCREEN_H);
