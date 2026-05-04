@@ -47,16 +47,42 @@ function getItemList(): ItemDef[] {
 }
 
 const POKEMON_TYPES = [
-  'normal', 'fire', 'water', 'grass', 'electric', 'ice',
-  'fighting', 'poison', 'ground', 'flying', 'psychic',
-  'bug', 'rock', 'ghost', 'dragon', 'dark', 'steel',
+  'normal',
+  'fire',
+  'water',
+  'grass',
+  'electric',
+  'ice',
+  'fighting',
+  'poison',
+  'ground',
+  'flying',
+  'psychic',
+  'bug',
+  'rock',
+  'ghost',
+  'dragon',
+  'dark',
+  'steel',
 ];
 
 const TYPE_COLORS: Record<string, string> = {
-  normal: '#a8a878', fire: '#f08030', water: '#6890f0', grass: '#78c850',
-  electric: '#f8d030', ice: '#98d8d8', fighting: '#c03028', poison: '#a040a0',
-  ground: '#e0c068', flying: '#a890f0', psychic: '#f85888', bug: '#a8b820',
-  rock: '#b8a038', ghost: '#705898', dragon: '#7038f8', dark: '#705848',
+  normal: '#a8a878',
+  fire: '#f08030',
+  water: '#6890f0',
+  grass: '#78c850',
+  electric: '#f8d030',
+  ice: '#98d8d8',
+  fighting: '#c03028',
+  poison: '#a040a0',
+  ground: '#e0c068',
+  flying: '#a890f0',
+  psychic: '#f85888',
+  bug: '#a8b820',
+  rock: '#b8a038',
+  ghost: '#705898',
+  dragon: '#7038f8',
+  dark: '#705848',
   steel: '#b8b8d0',
 };
 
@@ -647,7 +673,7 @@ export class PropertiesPanel {
     const enableCb = document.createElement('input');
     enableCb.type = 'checkbox';
     enableCb.title = 'Player must solve arithmetic problems before this NPC starts talking';
-    const currentQ = npcAny['questions'] as { count: number; types?: string[] } | undefined;
+    const currentQ = npcAny['questions'] as { count: number; types?: string[]; repeated?: boolean } | undefined;
     enableCb.checked = !!currentQ;
 
     const configDiv = document.createElement('div');
@@ -658,7 +684,7 @@ export class PropertiesPanel {
 
     const rebuildConfig = () => {
       configDiv.innerHTML = '';
-      const q = npcAny['questions'] as { count: number; types?: string[] } | undefined;
+      const q = npcAny['questions'] as { count: number; types?: string[]; repeated?: boolean } | undefined;
       if (!q) return;
 
       // Count
@@ -717,6 +743,22 @@ export class PropertiesPanel {
         opsRow.appendChild(label);
       }
       configDiv.appendChild(opsRow);
+
+      // Repeat behavior
+      const repeatedRow = document.createElement('div');
+      repeatedRow.className = 'prop-row';
+      repeatedRow.innerHTML = '<label>Repeat Every Interaction:</label>';
+      const repeatedCb = document.createElement('input');
+      repeatedCb.type = 'checkbox';
+      repeatedCb.checked = q.repeated === true;
+      repeatedCb.title = 'When enabled, the player must answer these questions on every interaction with this NPC';
+      repeatedCb.addEventListener('change', () => {
+        if (repeatedCb.checked) q.repeated = true;
+        else delete q.repeated;
+        emit();
+      });
+      repeatedRow.appendChild(repeatedCb);
+      configDiv.appendChild(repeatedRow);
     };
 
     enableCb.addEventListener('change', () => {
@@ -864,7 +906,9 @@ export class PropertiesPanel {
       emit();
     });
     glitchRow.appendChild(glitchCb);
-    glitchRow.appendChild(this.makeInfo('Villain/NULL-X trainer. Party Pokémon are corrupted (+5-15% dmg dealt, -5-15% dmg taken).'));
+    glitchRow.appendChild(
+      this.makeInfo('Villain/NULL-X trainer. Party Pokémon are corrupted (+5-15% dmg dealt, -5-15% dmg taken).'),
+    );
     section.appendChild(glitchRow);
 
     // ── Despawn on defeat ──
@@ -1767,7 +1811,14 @@ export class PropertiesPanel {
             'Search Pokemon...',
             (p) => {
               const prev = (npcAny['interaction'] as Record<string, unknown> | undefined) ?? {};
-              npcAny['interaction'] = { kind: 'swap-pokemon', offersId: 0, level: 20, wantsId: 0, ...prev, [idKey]: p.id };
+              npcAny['interaction'] = {
+                kind: 'swap-pokemon',
+                offersId: 0,
+                level: 20,
+                wantsId: 0,
+                ...prev,
+                [idKey]: p.id,
+              };
               emit();
             },
             currentId,
@@ -1877,7 +1928,9 @@ export class PropertiesPanel {
       dropdown.style.display = 'block';
     });
     input.addEventListener('blur', () => {
-      setTimeout(() => { dropdown.style.display = 'none'; }, 150);
+      setTimeout(() => {
+        dropdown.style.display = 'none';
+      }, 150);
     });
 
     wrapper.appendChild(input);
