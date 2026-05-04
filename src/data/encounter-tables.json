@@ -509,6 +509,7 @@
     ]
   },
   "minusburg": {
+    "encounterRate": 0.1,
     "entries": [
       {
         "pokemonId": 16,
