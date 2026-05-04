@@ -255,23 +255,37 @@ registerStoryEvent({
   actions: [{ type: 'set-quest', questId: 'main-act2-wife' }],
 });
 
-// Step 4: Player interacts with wife while holding medicine → delivery cutscene
+// Step 4: Exit Revive House after taking medicine → Oak calls and redirects to lab
+registerStoryEvent({
+  id: 'act2-revive-house-exit-lab-call',
+  trigger: { type: 'map-exit', mapId: 'zeroville/h1' },
+  conditions: [
+    { type: 'flag', flag: FLAGS.ACT2_MEDICINE_RECEIVED },
+    { type: 'flag-not', flag: FLAGS.ACT2_LAB_CALL_RECEIVED },
+    { type: 'flag-not', flag: FLAGS.ACT2_LAB_CUTSCENE_DONE },
+  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'act2-oak-lab-call' }],
+});
+
+// Step 5: Player interacts with wife after lab visit while holding medicine → delivery cutscene
 registerStoryEvent({
   id: 'act2-wife-interact',
   trigger: { type: 'npc-interact', npcId: 'npc-kefel-wife' },
   conditions: [
     { type: 'flag', flag: FLAGS.ACT2_MEDICINE_RECEIVED },
+    { type: 'flag', flag: FLAGS.ACT2_LAB_CUTSCENE_DONE },
     { type: 'flag-not', flag: FLAGS.ACT2_WIFE_HELPED },
   ],
   actions: [{ type: 'start-cutscene', cutsceneId: 'act2-wife-medicine' }],
 });
 
-// Step 5: Enter Algorithma lab after wife helped → big reveal cutscene
+// Step 6: Enter Algorithma lab after Oak call → big reveal cutscene
 registerStoryEvent({
   id: 'act2-lab-enter',
   trigger: { type: 'map-enter', mapId: 'zeroville/algorithma-lab' },
   conditions: [
-    { type: 'flag', flag: FLAGS.ACT2_WIFE_HELPED },
+    { type: 'flag', flag: FLAGS.ACT2_MEDICINE_RECEIVED },
+    { type: 'flag', flag: FLAGS.ACT2_LAB_CALL_RECEIVED },
     { type: 'flag-not', flag: FLAGS.ACT2_LAB_CUTSCENE_DONE },
   ],
   actions: [{ type: 'start-cutscene', cutsceneId: 'act2-lab-cores-reveal' }],
@@ -483,6 +497,35 @@ registerCutscene({
 
 // ── Cutscene 4: Wife — medicine delivered ─────────────────────────────────────
 registerCutscene({
+  id: 'act2-oak-lab-call',
+  skippable: false,
+  phoneCaller: { en: 'Professor Oak', he: 'פרופסור אוק' },
+  steps: [
+    {
+      type: 'dialogue',
+      speakerName: 'Professor Oak / פרופסור אוק',
+      lines: [
+        {
+          en: "Perfect timing — I heard you picked up Rick's medicine.",
+          he: 'תזמון מעולה — שמעתי שאתה בזרוויל.',
+        },
+        {
+          en: "Before you return to Kefel's house, come to Algorithma's lab right away. We have urgent findings.",
+          he: 'לפני שתחזור למולטיפילה, בוא מיד למעבדה של אלגוריתמה. יש לנו ממצאים דחופים.',
+        },
+        {
+          en: 'It will only take a moment. Then you can continue your delivery.',
+          he: 'זה ייקח רגע קצר בלבד. אחר כך תוכל להמשיך עם המסירה.',
+        },
+      ],
+    },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT2_LAB_CALL_RECEIVED } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act2-visit-lab' } },
+  ],
+});
+
+// ── Cutscene 4: Wife — medicine delivered ─────────────────────────────────────
+registerCutscene({
   id: 'act2-wife-medicine',
   skippable: false,
   steps: [
@@ -506,7 +549,7 @@ registerCutscene({
       ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT2_WIFE_HELPED } },
-    { type: 'action', action: { type: 'set-quest', questId: 'main-act2-visit-lab' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act2-gym-battle' } },
   ],
 });
 
@@ -517,6 +560,8 @@ registerCutscene({
   steps: [
     { type: 'face-npc', npcId: 'npc-oak-algo-lab', dir: 'down' },
     { type: 'face-npc', npcId: 'npc-lance-algo-lab', dir: 'down' },
+    { type: 'move-npc', npcId: 'npc-oak-algo-lab', path: ['down'] },
+    { type: 'move-player', path: ['up', 'up'], waitForComplete: true },
     {
       type: 'dialogue',
       speakerId: 'npc-oak-algo-lab',
@@ -546,7 +591,7 @@ registerCutscene({
         },
         {
           en: 'For years we could not understand how Team Rocket gained control over it... until we found these documents.',
-          he: 'במשך שנים לא יכולנו להבין איך צוות רוקט השיג שליטה עליו... עד שמצאנו את המסמכים האלה.',
+          he: 'לא יכולנו להבין איך צוות רוקט השיג שליטה עליו... עד שמצאנו את המסמכים האלה.',
         },
       ],
     },
@@ -557,7 +602,7 @@ registerCutscene({
         { en: 'They stole the AI Cores.', he: 'הם גנבו את ליבות הבינה המלאכותית.' },
         {
           en: 'NULL-X was built around 8 Cores — each one a fragment of its intelligence and will. Together they form its soul.',
-          he: 'NULL-X נבנה סביב 8 ליבות — כל אחת שבר מהאינטליגנציה ורצון שלו. יחד הן מרכיבות את נשמתו.',
+          he: 'NULL-X נבנה סביב 8 ליבות — כל אחת מכילה חלק מהאינטליגנציה ורצון שלו. יחד הן מרכיבות את נשמתו.',
         },
         {
           en: 'Team Rocket stole the real Cores and placed fakes in their place. With the originals, they can direct NULL-X — and through it, control the Glitch virus across all of Numeria.',
@@ -567,15 +612,29 @@ registerCutscene({
     },
     {
       type: 'dialogue',
+      speakerName: 'Me/אני',
+      lines: [{ en: 'Thats sound bad... but wait , who are you?', he: 'זה נשמע רע... אבל רגע, מי אתה?' }],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'npc-lance-algo-lab',
+      lines: [{ en: 'I am Lance! Nice to meet you!', he: 'אני לאנס! נעים מאוד!' }],
+    },
+    {
+      type: 'dialogue',
       speakerId: 'npc-oak-algo-lab',
       lines: [
+        {
+          en: 'Lance is one of the Elite Four — the strongest trainers in the region. He has been fighting Team Rocket for years.',
+          he: 'לאנס הוא אחד מארבעת האלופים — המאמנים החזקים ביותר באזור. הוא נלחם בצוות רוקט כבר שנים.',
+        },
         {
           en: 'The 8 Cores were scattered across Numeria — hidden in different locations around the region.',
           he: '8 הליבות פוזרו ברחבי נומריה — מוסתרות במיקומים שונים ברחבי האזור.',
         },
         {
           en: "Algorithma is building a detection machine. Once complete, it will scan the region and notify you of each Core's location.",
-          he: 'אלגוריתמה בונה מכונת גילוי. ברגע שתהיה מוכנה, היא תסרוק את האזור ותודיע לך על מיקום כל ליבה.',
+          he: 'אלגוריתמה בונה מכונת גילוי. ברגע שתהיה מוכנה, היא תסרוק את האזור ונודיע לכל המאמנים שאנחנו סומכים עליהם על מיקום כל ליבה.',
         },
         {
           en: "Find the real Cores. Replace the fakes. It is the only way to break Team Rocket's control over NULL-X — and stop the Glitch infection for good.",
@@ -588,13 +647,14 @@ registerCutscene({
       speakerId: 'npc-lance-algo-lab',
       lines: [
         {
-          en: 'I must return to the Elite Four. We have our own preparations to make.',
-          he: 'אני חייב לחזור לאליטה הארבע. יש לנו הכנות משלנו לעשות.',
+          en: 'I will start my research to find the real Cores.',
+          he: 'אני אתחיל את המחקר שלי כדי למצוא את הליבות האמיתיות.',
         },
         {
-          en: 'Stay strong, trainer. The fate of Numeria is closer to your hands than you realise.',
-          he: 'תישאר חזק, מאמן. גורל נומריה קרוב לידיים שלך יותר ממה שאתה מבין.',
+          en: 'Please update us on any new findings you have in the field. We will need all the help we can get to stop Team Rocket.',
+          he: 'עדכן אותנו על כל ממצא חדש שיש לך בשטח. נצטרך את כל העזרה שנוכל לקבל כדי לעצור את צוות רוקט.',
         },
+        { en: 'Good luck, Trainer. We are counting on you.', he: 'בהצלחה, מאמן. אנחנו סומכים עליך.' },
       ],
     },
     {
@@ -604,7 +664,7 @@ registerCutscene({
       waitForComplete: false,
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT2_LAB_CUTSCENE_DONE } },
-    { type: 'action', action: { type: 'set-quest', questId: 'main-act2-gym-battle' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act2-wife' } },
   ],
 });
 

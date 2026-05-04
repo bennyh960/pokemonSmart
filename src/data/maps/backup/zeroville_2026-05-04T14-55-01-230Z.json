@@ -396,27 +396,6 @@
       },
       "blocker": true,
       "despawnAfter": "story-badge-7"
-    },
-    {
-      "id": "npc-act2-blocker1",
-      "x": 7,
-      "y": 23,
-      "facing": "right",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "היי - הפרופסור צריך אותך! הוא במעבדה"
-        }
-      ],
-      "spriteType": "char_3470af",
-      "name": {
-        "en": "Talia",
-        "he": "טליה"
-      },
-      "spawnAfter": "act2-lab-call-received",
-      "despawnAfter": "act2-lab-cutscene-done",
-      "blocker": true
     }
   ],
   "music": "town",

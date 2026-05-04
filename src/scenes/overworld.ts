@@ -1699,6 +1699,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (!st.wasPreviouslyVisible && isNPCVisible(npc, _csFlags, _csParty)) {
               st.wasPreviouslyVisible = true;
             }
+            // An NPC in isPreDespawning that isn't yet moving will never advance
+            // its walk pattern during a cutscene (the main loop is paused). Mark
+            // it done immediately so it stays hidden and doesn't reappear on re-entry.
+            if (st.isPreDespawning && !st.moving) {
+              st.isPreDespawning = false;
+              if (hasActiveGame() && !getPlayerData().flags[`npc-beforeDespawn-done-${npc.id}`]) {
+                setFlag(getPlayerData(), `npc-beforeDespawn-done-${npc.id}`);
+                autoSave();
+              }
+              continue;
+            }
             if (!st.cutsceneWalking && !st.moving) continue;
             if (st.moving) {
               st.moveProgress += dt / MOVE_DURATION;

@@ -118,11 +118,12 @@
         "he": "פרופ' אוק"
       },
       "spriteType": "oak",
-      "spawnAfter": "act2-lab-call-received",
+      "spawnAfter": "act2-wife-helped",
+      "despawnAfter": "act2-lab-cutscene-done",
       "dialogue": [
         {
           "en": "I have been waiting for you. We need to talk.",
-          "he": "טוב שאתה בצד שלנו! אנחנו צריכים מאמנים אמיצים כמוך!"
+          "he": "טוב שאתה פה! אנחנו צריכים מאמנים אמיצים כמוך!"
         },
         {
           "en": "",
@@ -158,40 +159,14 @@
         "he": "לאנס"
       },
       "spriteType": "char_919bca",
-      "spawnAfter": "act2-lab-call-received",
+      "spawnAfter": "act2-wife-helped",
       "despawnAfter": "act2-lab-cutscene-done",
       "dialogue": [
         {
           "en": "The situation is grave. Listen carefully.",
           "he": "המצב חמור. הקשב בקפידה."
         }
-      ],
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 1,
-            "delay": 0.5
-          },
-          {
-            "dir": "down",
-            "steps": 3,
-            "delay": 0.5
-          },
-          {
-            "dir": "left",
-            "steps": 1,
-            "delay": 0.5
-          },
-          {
-            "dir": "down",
-            "steps": 1,
-            "delay": 0.5
-          }
-        ]
-      }
+      ]
     },
     {
       "id": "remainder-lab",

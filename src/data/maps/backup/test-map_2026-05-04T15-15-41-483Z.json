@@ -12,14 +12,8 @@
   "transitions": [],
   "npcs": [],
   "music": "town",
-  "encounterTableId": "test-map",
-  "interactiveItems": {
-    "item-generic": [
-      {
-        "itemId": "thunder-stone"
-      }
-    ]
-  }
+  "encounterTableId": null,
+  "interactiveItems": {}
 ,
   "tiles": [
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
@@ -468,16 +462,7 @@
       "key": "g6-s",
       "x": 6,
       "y": 4
-    },
-    {
-      "key": "pcc6",
-      "x": 9,
-      "y": 0
-    },
-    {
-      "key": "item-generic",
-      "x": 11,
-      "y": 1
     }
   ]
+ 
 }

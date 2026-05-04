@@ -202,12 +202,13 @@ export const FLAGS = {
   GATE_MULTIPLIA_GYM_PASS: 'gate-multiplia-gym-pass',
 
   // ── Act 2: Multiplia quest arc ───────────────────────────────────────────────
-  ACT2_LIBRARY_SCENE_DONE: 'act2-library-scene-done',    // Library cutscene with Oak + Kefel seen
-  ACT2_GYM_LEADER_CALLED: 'act2-gym-leader-called',      // Gym entry phone call from Kefel done
-  ACT2_ROUTE6_JENNY_DONE: 'act2-route6-jenny-done',      // Route 6 — Jenny cutscene finished
-  ACT2_MEDICINE_RECEIVED: 'act2-medicine-received',      // Medicine from Rick in Zeroville received
-  ACT2_WIFE_HELPED: 'act2-wife-helped',                  // Medicine given to Kefel's wife
-  ACT2_LAB_CUTSCENE_DONE: 'act2-lab-cutscene-done',      // Oak + Algo + Lance lab reveal seen
+  ACT2_LIBRARY_SCENE_DONE: 'act2-library-scene-done', // Library cutscene with Oak + Kefel seen
+  ACT2_GYM_LEADER_CALLED: 'act2-gym-leader-called', // Gym entry phone call from Kefel done
+  ACT2_ROUTE6_JENNY_DONE: 'act2-route6-jenny-done', // Route 6 — Jenny cutscene finished
+  ACT2_MEDICINE_RECEIVED: 'act2-medicine-received', // Medicine from Rick in Zeroville received
+  ACT2_LAB_CALL_RECEIVED: 'act2-lab-call-received', // Oak called after Revive House exit and asked to visit the lab
+  ACT2_WIFE_HELPED: 'act2-wife-helped', // Medicine given to Kefel's wife
+  ACT2_LAB_CUTSCENE_DONE: 'act2-lab-cutscene-done', // Oak + Algo + Lance lab reveal seen
 
   // ── Act 2: Dividia ──────────────────────────────────────────────────────────
   GATE_ROUTE4_PASS: 'gate-route4-pass',
@@ -329,6 +330,8 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT2_GYM_LEADER_CALLED]: 'Kefel phone call on gym entry done — Route 6 quest started',
   [FLAGS.ACT2_ROUTE6_JENNY_DONE]: 'Route 6 — all Rocket defeated + Jenny cutscene finished',
   [FLAGS.ACT2_MEDICINE_RECEIVED]: 'Special medicine received from Rick in Zeroville h1',
+  [FLAGS.ACT2_LAB_CALL_RECEIVED]:
+    'Oak called after leaving Revive House — visit-lab phase active (use for Zeroville blocker spawnAfter)',
   [FLAGS.ACT2_WIFE_HELPED]: "Medicine delivered to Kefel's wife — gym blocker despawns",
   [FLAGS.ACT2_LAB_CUTSCENE_DONE]: 'Oak + Algo + Lance lab cutscene (AI Cores reveal) seen',
   [FLAGS.GATE_ROUTE4_PASS]: 'Route 4 → Dividia checkpoint passed',
