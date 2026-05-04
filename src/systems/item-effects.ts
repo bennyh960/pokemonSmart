@@ -9,7 +9,7 @@ import type { Pokemon } from '../types/index.js';
 import { getItemGameData, getItemGameDataBySlug, getTMEffect } from '../data/item-defs.js';
 import { getPlayerData } from './game-state.js';
 import { checkAndApplyLevelUp, recalcPokemonStats } from './encounter.js';
-import { getPokemonDisplayName, getMove, canLearnViaTM, type EvolutionStep } from '../services/pokemon-data.js';
+import { getPokemonDisplayName, getMove, canLearnViaTM, getNextEvolution, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
 import type { LevelUpMoveResult } from './move-learning.js';
 import { createMoveFromId } from './move-learning.js';
@@ -43,6 +43,7 @@ export function itemTargetsPokemon(itemId: string): boolean {
     case 'rare-candy':
     case 'vitamin':
     case 'tm':
+    case 'evolution-stone':
       return true;
     default:
       return false;
@@ -81,6 +82,13 @@ export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
       if (!canLearnViaTM(target.id, tmEffect.moveId)) return false;
       if (target.moves.some((m) => m.id === tmEffect.moveId)) return false;
       return true; // eligible even if move slots full — replacement flow handles that
+    }
+    case 'evolution-stone': {
+      if (target.hp <= 0) return false;
+      const stoneSlug = getItem(itemId)?.id;
+      if (!stoneSlug) return false;
+      const nextEvo = getNextEvolution(target.id);
+      return nextEvo?.trigger === 'use-item' && nextEvo.item === stoneSlug;
     }
     default:
       return false;
@@ -165,6 +173,21 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
       return { success: true, message: 'PP was restored!' };
     }
 
+    case 'pp-restore-one': {
+      if (target.hp <= 0) {
+        return { success: false, message: "Can't use on a fainted Pokemon!" };
+      }
+      // Restore the first move with depleted PP
+      const move = target.moves.find((m) => m.currentPp < m.pp);
+      if (!move) {
+        return { success: false, message: 'PP is already full for all moves!' };
+      }
+      const before = move.currentPp;
+      move.currentPp = effect.amount === 999 ? move.pp : Math.min(move.pp, move.currentPp + effect.amount);
+      const restored = move.currentPp - before;
+      return { success: true, message: `Restored ${restored} PP to ${move.id}!` };
+    }
+
     case 'stat-boost': {
       // Stat boosts are battle-only; handled separately in battle.ts
       return { success: false, message: 'Can only use in battle!' };
@@ -211,6 +234,25 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
       }
 
       return { success: true, message: 'learned' };
+    }
+
+    case 'evolution-stone': {
+      if (target.hp <= 0) {
+        return { success: false, message: "Can't use on a fainted Pokemon!" };
+      }
+      const stoneSlug = getItem(itemId)?.id;
+      if (!stoneSlug) {
+        return { success: false, message: "Unknown stone." };
+      }
+      const nextEvo = getNextEvolution(target.id);
+      if (!nextEvo || nextEvo.trigger !== 'use-item' || nextEvo.item !== stoneSlug) {
+        return { success: false, message: "It won't have any effect." };
+      }
+      return {
+        success: true,
+        message: `${getPokemonDisplayName(target.id)} is evolving!`,
+        evolution: nextEvo,
+      };
     }
 
     case 'capture': {

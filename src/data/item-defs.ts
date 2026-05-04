@@ -481,6 +481,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     effect: { type: 'evolution-stone' },
     usableInBattle: false,
     usableInOverworld: true,
+    name: { en: 'Sun Stone', he: 'אבן שמש' },
+    description: { en: 'Evolves certain Pokémon when used.', he: 'מפתח פוקימוני מסוימים בשימוש.' },
   }, // Sun Stone
   81: {
     category: 'evolution',
@@ -488,6 +490,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     effect: { type: 'evolution-stone' },
     usableInBattle: false,
     usableInOverworld: true,
+    name: { en: 'Moon Stone', he: 'אבן ירח' },
+    description: { en: 'Evolves certain Pokémon when used.', he: 'מפתח פוקימוני מסוימים בשימוש.' },
   }, // Moon Stone
   82: {
     category: 'evolution',
@@ -495,6 +499,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     effect: { type: 'evolution-stone' },
     usableInBattle: false,
     usableInOverworld: true,
+    name: { en: 'Fire Stone', he: 'אבן אש' },
+    description: { en: 'Evolves certain Pokémon when used.', he: 'מפתח פוקימוני מסוימים בשימוש.' },
   }, // Fire Stone
   83: {
     category: 'evolution',
@@ -502,6 +508,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     effect: { type: 'evolution-stone' },
     usableInBattle: false,
     usableInOverworld: true,
+    name: { en: 'Thunder Stone', he: 'אבן ברק' },
+    description: { en: 'Evolves certain Pokémon when used.', he: 'מפתח פוקימוני מסוימים בשימוש.' },
   }, // Thunder Stone
   84: {
     category: 'evolution',
@@ -509,6 +517,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     effect: { type: 'evolution-stone' },
     usableInBattle: false,
     usableInOverworld: true,
+    name: { en: 'Water Stone', he: 'אבן מים' },
+    description: { en: 'Evolves certain Pokémon when used.', he: 'מפתח פוקימוני מסוימים בשימוש.' },
   }, // Water Stone
   85: {
     category: 'evolution',
@@ -516,6 +526,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     effect: { type: 'evolution-stone' },
     usableInBattle: false,
     usableInOverworld: true,
+    name: { en: 'Leaf Stone', he: 'אבן עלה' },
+    description: { en: 'Evolves certain Pokémon when used.', he: 'מפתח פוקימוני מסוימים בשימוש.' },
   }, // Leaf Stone
 
   // ── Trade evolution items (holdable) ──

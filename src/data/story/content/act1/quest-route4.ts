@@ -47,6 +47,7 @@ registerCutscene({
     {
       type: 'dialogue',
       speakerName: 'Reminder/ריי מיינדר',
+      speakerId: 'rei-minder-route-4',
       lines: [
         { en: '', he: 'האא אתה פה ? מה שלומך?' },
         { en: '', he: 'אני חייב להיות כנה - לא האמנתי שתצליח להשיג תג מכון החיסור' },
@@ -65,6 +66,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
+      speakerId: 'misty-route-4',
       speakerName: 'Misty/מיסטי',
       lines: [
         { he: 'היי , אני רואה שהצלחת להשיג חכה! מקווה שיהיה איתה דייג נפלא', en: '' },
@@ -97,7 +99,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerName: "Officer Jenni/ג'ני השוטרת",
+      speakerId: 'officer-jenny-route-4',
       lines: [
         { he: 'עצרו רגע...', en: '' },
         { en: '', he: "שלום ! אני השוטרת ג'ני מהעיר מולטיפילה" },
@@ -141,7 +143,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerName: 'Reminder/ריי מיינדר',
+      speakerId: 'rei-minder-route-4',
       lines: [
         {
           en: '',
@@ -206,7 +208,7 @@ registerCutscene({
 
     {
       type: 'dialogue',
-      speakerName: "Officer Jenny/ג'ני השוטרת",
+      speakerId: 'jenny-r4-assembly',
       lines: [
         { he: 'באתי מיד כשהתקבלה קריאה לגיבוי — מה קרה כאן?', en: '' },
         { he: 'ראיתי סוכן רוקט בורח. ספר לי הכול.', en: '' },

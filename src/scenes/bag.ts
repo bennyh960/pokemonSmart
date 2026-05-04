@@ -91,12 +91,12 @@ interface BagTab {
 }
 
 const BAG_TABS: BagTab[] = [
-  { labelKey: 'bag.category.medicine', categories: ['healing', 'status-cure', 'revival'], x: 188, w: 46 },
+  { labelKey: 'bag.category.medicine', categories: ['healing', 'status-cure', 'revival', 'pp-restore'], x: 188, w: 46 },
   { labelKey: 'bag.category.balls', categories: ['pokeball'], x: 155, w: 30 },
-  { labelKey: 'bag.category.battle', categories: ['battle'], x: 124, w: 28 },
-  { labelKey: 'bag.category.vitamins', categories: ['vitamin'], x: 84, w: 38 },
-  { labelKey: 'bag.category.moves', categories: ['machine'], x: 46, w: 36 },
-  { labelKey: 'bag.category.key', categories: ['key'], x: 8, w: 36 },
+  { labelKey: 'bag.category.general', categories: ['battle', 'evolution', 'held'], x: 122, w: 30 },
+  { labelKey: 'bag.category.vitamins', categories: ['vitamin'], x: 82, w: 38 },
+  { labelKey: 'bag.category.moves', categories: ['machine'], x: 44, w: 36 },
+  { labelKey: 'bag.category.key', categories: ['key'], x: 6, w: 36 },
 ];
 
 /* ── Layout constants (from bag_coordinated.md) ───────────────────── */
