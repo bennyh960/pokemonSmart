@@ -593,26 +593,6 @@
       },
       "blocker": true,
       "despawnAfter": "story-badge-3"
-    },
-    {
-      "id": "npc-blocker-to-gym-call",
-      "x": 41,
-      "y": 1,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "ראיתי סוכני צוות רוקט באזור 6 - מסוכן ללכת לשם לבד כרגע"
-        }
-      ],
-      "spriteType": "char_962c1b",
-      "name": {
-        "en": "Whitney",
-        "he": "וויטני"
-      },
-      "blocker": true,
-      "despawnAfter": "act2-gym-leader-called"
     }
   ],
   "music": "town",
