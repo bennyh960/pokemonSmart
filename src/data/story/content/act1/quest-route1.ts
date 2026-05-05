@@ -56,7 +56,7 @@ registerGate({
     rewards: [{ type: 'money', amount: 500 }],
     penaltyAmount: 1250,
   },
-  reopenCooldownMs: 0,
+  reopenCooldownMs: 1000 * 60 * 15, // 15 min cooldown to retry if failed
   successActions: [
     { type: 'set-flag', flag: FLAGS.GATE_ROUTE1_PASS },
     { type: 'set-quest', questId: 'main-act1-sumville' },
