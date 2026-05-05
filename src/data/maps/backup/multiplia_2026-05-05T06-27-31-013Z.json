@@ -88,16 +88,6 @@
       "fromX": 20,
       "fromY": 23,
       "toMapId": "multiplia/h5"
-    },
-    {
-      "fromX": 63,
-      "fromY": 49,
-      "toMapId": "routes/route-5"
-    },
-    {
-      "fromX": 64,
-      "fromY": 49,
-      "toMapId": "routes/route-5"
     }
   ],
   "npcs": [
@@ -119,7 +109,7 @@
     {
       "id": "npc-route5-gate-keeper",
       "x": 62,
-      "y": 47,
+      "y": 48,
       "facing": "right",
       "type": "gate-guard",
       "dialogue": [
@@ -569,30 +559,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "npc-badge3-blocker1",
-      "x": 65,
-      "y": 48,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "אין לך עדיין תג הכפל?"
-        },
-        {
-          "en": "",
-          "he": "למה למהר? יש פה את מכון הכפל ... חבל לפספס"
-        }
-      ],
-      "spriteType": "char_459058",
-      "name": {
-        "en": "Tommy",
-        "he": "טומי"
-      },
-      "blocker": true,
-      "despawnAfter": "story-badge-3"
     }
   ],
   "music": "town",
@@ -8749,8 +8715,8 @@
     },
     {
       "key": "signx",
-      "x": 62,
-      "y": 45
+      "x": 66,
+      "y": 47
     },
     {
       "key": "r1",
@@ -9110,12 +9076,12 @@
     {
       "key": "r2",
       "x": 61,
-      "y": 48
+      "y": 49
     },
     {
       "key": "r2",
       "x": 60,
-      "y": 49
+      "y": 48
     },
     {
       "key": "g8t",
@@ -10680,17 +10646,17 @@
     {
       "key": "f1-7",
       "x": 60,
-      "y": 46
+      "y": 47
     },
     {
       "key": "f1-7",
       "x": 61,
-      "y": 46
+      "y": 47
     },
     {
       "key": "f1-2",
       "x": 62,
-      "y": 46
+      "y": 47
     },
     {
       "key": "f1-7",
@@ -10806,31 +10772,6 @@
       "key": "f1-5",
       "x": 41,
       "y": 3
-    },
-    {
-      "key": "r2",
-      "x": 66,
-      "y": 48
-    },
-    {
-      "key": "f1-7",
-      "x": 66,
-      "y": 46
-    },
-    {
-      "key": "f1-7",
-      "x": 65,
-      "y": 46
-    },
-    {
-      "key": "r2",
-      "x": 65,
-      "y": 49
-    },
-    {
-      "key": "r2",
-      "x": 62,
-      "y": 49
     }
   ]
 }

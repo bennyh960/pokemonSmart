@@ -17,6 +17,7 @@ import type { GradeId } from '../../math/question-builder/index.js';
 import type { AutoGateMapOverride } from '../../systems/story-engine.js';
 import { registerAutoGateMap } from '../../systems/story-engine.js';
 import { getPlayerData } from '../../systems/game-state.js';
+import { MapId } from '../maps/map-ids.js';
 
 // ─── Player grade resolution ──────────────────────────────────────────────────
 
@@ -206,7 +207,7 @@ registerGate({
 registerAutoGateMap('shared/pokecenter-mart-interior', 'pokecenter');
 registerAutoGateMap('shared/pokecenter-2', 'pokecenter');
 registerAutoGateMap('shared/fake-pokecenter', 'pokecenter');
-registerAutoGateMap('multiplia-pokecenter', 'pokecenter');
+registerAutoGateMap(MapId.MULTIPLIA_POKECENTER, 'pokecenter');
 
 // Pokemart interiors
 registerAutoGateMap('shared/mart-interior', 'pokemarket');
