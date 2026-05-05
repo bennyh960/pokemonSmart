@@ -570,7 +570,7 @@
       "id": "npc-1777927680765",
       "x": 25,
       "y": 13,
-      "facing": "left",
+      "facing": "down",
       "type": "trainer",
       "dialogue": [
         {

@@ -6,12 +6,12 @@
 import type { PokemonType, MathDifficulty } from '../types/index.ts';
 import { getLocale } from '../i18n/i18n.ts';
 import pokemonData from '../data/pokemon.json';
-import movesData from '../data/moves.json';
+import movesUrl from '../data/moves.json?url';
 import typeChartData from '../data/type-chart.json';
 import evolutionData from '../data/evolution-chains.json';
 import encounterData from '../data/encounter-tables.json';
-import learnsetData from '../data/learnsets.json';
-import tmLearnsetData from '../data/tm-learnsets.json';
+import learnsetUrl from '../data/learnsets.json?url';
+import tmLearnsetUrl from '../data/tm-learnsets.json?url';
 import abilitiesData from '../data/abilities.json';
 import pokemonAbilitiesData from '../data/pokemon-abilities.json';
 import naturesData from '../data/natures.json';
@@ -151,13 +151,9 @@ function normalizeMoveData(move: RawMoveData): MoveData {
   };
 }
 
-const allMoves = (movesData as unknown as RawMoveData[]).map(normalizeMoveData);
+let allMoves: MoveData[] = [];
 const moveById = new Map<number, MoveData>();
 const moveByName = new Map<string, MoveData>();
-for (const m of allMoves) {
-  moveById.set(m.id, m);
-  moveByName.set(m.name.en.toLowerCase(), m);
-}
 
 const typeChart = typeChartData as TypeChartData;
 
@@ -182,6 +178,34 @@ for (const [mapId, table] of Object.entries(encounters)) {
       maxLevel: entry.maxLevel,
     });
   }
+}
+
+// --- Lazy-loaded heavy data (moves, learnsets, tm-learnsets) ---
+// These 3 files are ~700 KB combined. They are fetched async during the loading
+// screen so they don't inflate the initial JS bundle. Call initHeavyData() once
+// at startup (main.ts) before any move/learnset lookups are needed.
+
+let learnsets: Record<string, { moveId: number; levelLearned: number }[]> = {};
+let tmLearnsets: Record<string, { moveId: number }[]> = {};
+
+export async function initHeavyData(onProgress?: (fraction: number) => void): Promise<void> {
+  let done = 0;
+  const step = (): void => { done++; onProgress?.(done / 3); };
+
+  const [movesRaw, learnsetRaw, tmLearnsetRaw] = await Promise.all([
+    fetch(movesUrl).then(r => r.json()).then((d: unknown) => { step(); return d; }),
+    fetch(learnsetUrl).then(r => r.json()).then((d: unknown) => { step(); return d; }),
+    fetch(tmLearnsetUrl).then(r => r.json()).then((d: unknown) => { step(); return d; }),
+  ]);
+
+  allMoves = (movesRaw as RawMoveData[]).map(normalizeMoveData);
+  for (const m of allMoves) {
+    moveById.set(m.id, m);
+    moveByName.set(m.name.en.toLowerCase(), m);
+  }
+
+  learnsets = learnsetRaw as Record<string, { moveId: number; levelLearned: number }[]>;
+  tmLearnsets = tmLearnsetRaw as Record<string, { moveId: number }[]>;
 }
 
 // --- Public API ---
@@ -279,16 +303,10 @@ export function getSpawnLocations(pokemonId: number): SpawnLocation[] {
   return spawnIndex[pokemonId] || [];
 }
 
-// --- Learnset data ---
-
-const learnsets = learnsetData as Record<string, { moveId: number; levelLearned: number }[]>;
-
 /** Get the learnset for a Pokemon (moves learned by level-up). */
 export function getLearnset(pokemonId: number): { moveId: number; levelLearned: number }[] {
   return learnsets[String(pokemonId)] || [];
 }
-
-const tmLearnsets = tmLearnsetData as Record<string, { moveId: number }[]>;
 
 /** Get the TM/HM learnable moves for a Pokemon. */
 export function getTmLearnset(pokemonId: number): { moveId: number }[] {

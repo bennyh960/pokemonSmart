@@ -1,14 +1,81 @@
 <!doctype html>
-<html lang="en">
+<html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pokemon Math Adventure</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik:wght@400;700&display=block" rel="stylesheet" />
+    <!-- display=swap: browser paints immediately with fallback, swaps font when ready -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik:wght@400;700&display=swap" rel="stylesheet" />
+    <!-- Preload critical overworld sprites so they fetch in parallel with JS parse -->
+    <link rel="preload" href="/sprites/overworld/tileset-grid.png" as="image" />
+    <link rel="preload" href="/sprites/overworld/player-down-0.png" as="image" />
+    <style>
+      #loading-screen {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        gap: 0;
+        user-select: none;
+      }
+      .ls-title {
+        font-family: 'Press Start 2P', 'Courier New', monospace;
+        font-size: clamp(10px, 2.8vw, 20px);
+        color: #ffe94d;
+        text-align: center;
+        letter-spacing: 2px;
+        line-height: 1.6;
+        text-shadow: 0 0 14px rgba(255, 233, 77, 0.45);
+      }
+      .ls-sub {
+        font-family: 'Rubik', 'Arial', sans-serif;
+        font-size: clamp(11px, 2.2vw, 17px);
+        color: #90b8e0;
+        margin-top: 6px;
+        margin-bottom: 36px;
+        direction: rtl;
+      }
+      #loading-bar-track {
+        width: clamp(200px, 48vw, 380px);
+        height: 12px;
+        background: #0d0d0d;
+        border: 2px solid #1e4020;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+      #loading-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #00a030, #00e060);
+        transition: width 0.22s ease-out;
+      }
+      #loading-label {
+        font-family: 'Rubik', 'Arial', sans-serif;
+        font-size: clamp(9px, 1.6vw, 13px);
+        color: #556677;
+        direction: rtl;
+        min-height: 18px;
+        letter-spacing: 0.5px;
+      }
+    </style>
   </head>
   <body>
+    <div id="loading-screen">
+      <div class="ls-title">POKEMON</div>
+      <div class="ls-title">MATH ADVENTURE</div>
+      <div class="ls-sub">הרפתקת המתמטיקה</div>
+      <div id="loading-bar-track">
+        <div id="loading-bar-fill"></div>
+      </div>
+      <div id="loading-label">טוען...</div>
+    </div>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>

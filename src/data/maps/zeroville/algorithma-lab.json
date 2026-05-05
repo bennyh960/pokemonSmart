@@ -166,32 +166,6 @@
           "he": "המצב חמור. הקשב בקפידה."
         }
       ],
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 1,
-            "delay": 0.5
-          },
-          {
-            "dir": "down",
-            "steps": 3,
-            "delay": 0.5
-          },
-          {
-            "dir": "left",
-            "steps": 1,
-            "delay": 0.5
-          },
-          {
-            "dir": "down",
-            "steps": 1,
-            "delay": 0.5
-          }
-        ]
-      }
     },
     {
       "id": "remainder-lab",
