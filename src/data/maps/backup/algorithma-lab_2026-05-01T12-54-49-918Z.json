@@ -165,8 +165,7 @@
   "music": "town4",
   "encounterTableId": null,
   "area": "Zeroville",
-  "interactiveItems": {}
-,
+  "interactiveItems": {},
   "tiles": [
     ["w5-b1","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-b2"],
     ["w5-r","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
