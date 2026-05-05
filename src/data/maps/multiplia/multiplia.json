@@ -83,6 +83,11 @@
       "toMapId": "routes/route-6",
       "toX": 3,
       "toY": 34
+    },
+    {
+      "fromX": 20,
+      "fromY": 23,
+      "toMapId": "multiplia/h5"
     }
   ],
   "npcs": [
@@ -178,6 +183,382 @@
           }
         ]
       }
+    },
+    {
+      "id": "npc-1777928116075",
+      "x": 70,
+      "y": 5,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "כאן במולטיפילה כולנו חיים בשלווה ובנחת."
+        },
+        {
+          "en": "",
+          "he": "הוירוס הרשע שמשתלט על העולם לא יהרוס את זה!"
+        }
+      ],
+      "spriteType": "char_1b9be7",
+      "name": {
+        "en": "Whitney",
+        "he": "וויטני"
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "left",
+            "steps": 8,
+            "delay": 2.5
+          },
+          {
+            "dir": "down",
+            "steps": 12,
+            "delay": 5
+          },
+          {
+            "dir": "left",
+            "steps": 7,
+            "delay": 6
+          },
+          {
+            "dir": "up",
+            "steps": 12,
+            "delay": 3
+          },
+          {
+            "dir": "right",
+            "steps": 15,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-1777928294237",
+      "x": 8,
+      "y": 6,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "מולטיפילה היא עיר מכון! המכון נמצא בגבעה הדרומית."
+        },
+        {
+          "en": "",
+          "he": "מנהיג המכון הוא קפאן כפלה! מנהיג פוקימוני חרק."
+        },
+        {
+          "en": "",
+          "he": "כדאי לך להצטייד בפוקימון אש או סלע - להם יש יתרון ענק נגד חרק"
+        }
+      ],
+      "spriteType": "char_45ba6c",
+      "name": {
+        "en": "Talia",
+        "he": "טליה"
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 6,
+            "delay": 6
+          },
+          {
+            "dir": "left",
+            "steps": 6,
+            "delay": 8
+          }
+        ],
+        "loop": true
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "tm27",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1777960899571",
+      "x": 38,
+      "y": 6,
+      "facing": "right",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "מממ אתה המאמן שעזר לקפטן קפלה? ...מעניין"
+        }
+      ],
+      "spriteType": "char_4b1e38",
+      "spawnAfter": "act2-lab-cutscene-done",
+      "name": {
+        "en": "Erika",
+        "he": "אריקה"
+      },
+      "party": [
+        {
+          "pokemonId": 231,
+          "level": 25,
+          "moves": []
+        },
+        {
+          "pokemonId": 240,
+          "level": 25,
+          "moves": []
+        },
+        {
+          "pokemonId": 236,
+          "level": 25,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 600,
+        "items": [
+          {
+            "itemId": "revive",
+            "quantity": 3
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "אני מבינה למה כולם מדברים עליך עכשיו!"
+        },
+        {
+          "en": "",
+          "he": "באמת הוכחת יכולות גבוהות - כל הכבוד"
+        }
+      ],
+      "questions": {
+        "count": 3,
+        "types": [
+          "×"
+        ],
+        "repeated": true
+      },
+      "reencounter": {
+        "count": 3,
+        "lvlStep": 5,
+        "timeInterval": 3
+      }
+    },
+    {
+      "id": "npc-1777960905438",
+      "x": 40,
+      "y": 9,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום"
+        }
+      ],
+      "spriteType": "char_485c6e",
+      "spawnAfter": "act2-lab-cutscene-done",
+      "name": {
+        "en": "Tommy",
+        "he": "טומי"
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 15,
+            "delay": 5
+          },
+          {
+            "dir": "up",
+            "steps": 15,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-1777960908007",
+      "x": 38,
+      "y": 13,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום - רוצה קרב?"
+        }
+      ],
+      "spriteType": "char_10af6a",
+      "spawnAfter": "act2-lab-cutscene-done",
+      "name": {
+        "en": "Silver",
+        "he": "סילבר"
+      },
+      "party": [
+        {
+          "pokemonId": 227,
+          "level": 33,
+          "moves": []
+        },
+        {
+          "pokemonId": 226,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 800,
+        "items": [
+          {
+            "itemId": "awakening",
+            "quantity": 1
+          }
+        ]
+      },
+      "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1777960912744",
+      "x": 41,
+      "y": 17,
+      "facing": "left",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "בדרך למכון הכפל?"
+        },
+        {
+          "en": "",
+          "he": "קפלה מאמן פוקימוני חרק חזקים במיוחד."
+        },
+        {
+          "en": "",
+          "he": "אוכל לתת לך אימון טוב - אם תנצח אותי אז יש לך סיכוי מול קפלה"
+        },
+        {
+          "en": "",
+          "he": "אם לא - תמשיך להתאמן"
+        }
+      ],
+      "spriteType": "char_2db5a7",
+      "name": {
+        "en": "Brock",
+        "he": "ברוק"
+      },
+      "spawnAfter": "act2-lab-cutscene-done",
+      "party": [
+        {
+          "pokemonId": 15,
+          "level": 30,
+          "moves": []
+        },
+        {
+          "pokemonId": 166,
+          "level": 33,
+          "moves": []
+        },
+        {
+          "pokemonId": 123,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1000,
+        "items": [
+          {
+            "itemId": "ether",
+            "quantity": 3
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "שמן אתרי יעזור לרענן את האנרגיה  לפוקימונים שלך ובעצם להחזיר להם את כמות המתקפות"
+        }
+      ],
+      "postFlagDialogue": {
+        "flag": "story-badge-3",
+        "dialogue": [
+          {
+            "en": "",
+            "he": "ידעתי שהאימונים יעזרו ! שמח שיכולתי לעזור . יש לך פוטנציאל גדול"
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1777960916211",
+      "x": 29,
+      "y": 17,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום! אני ברוק , מגדל פוקימונים."
+        },
+        {
+          "en": "",
+          "he": "אתה המתמודד שמאתגר את קפטן קפלה?"
+        },
+        {
+          "en": "",
+          "he": "קפךה מאמן פוקימוני חרק - תצטרף מתקפות אש , מעופף או סלע. זה ייתן לך יתרון."
+        },
+        {
+          "en": "",
+          "he": "אבל קודם צריך לפתור חידה כדי להגיע לקפטן קפלה."
+        },
+        {
+          "en": "",
+          "he": "בהצלחה"
+        }
+      ],
+      "spriteType": "char_d25760",
+      "spawnAfter": "act2-lab-cutscene-done",
+      "despawnAfter": "story-badge-3",
+      "questions": {
+        "count": 3,
+        "types": [
+          "+",
+          "-",
+          "×"
+        ]
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "max-potion",
+            "quantity": 1
+          },
+          {
+            "itemId": "max-ether",
+            "quantity": 1
+          },
+          {
+            "itemId": "metal-coat",
+            "quantity": 1
+          }
+        ]
+      }
     }
   ],
   "music": "town",
@@ -218,7 +599,7 @@
     ["gx5","gx5","gx5","gx5","gx5","mtcb2","gx5","gx5","gx5","gx5","gx5","gx5","gx5","gx5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","g2","g2","g2","g2","g2","mtcb2","g2","g2","g2","g2","mtcb2","g2","g2","s1-5","s1-5","g2","g2","mtcb2","mtcb2","mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
     ["gx5","mtcb2","gx5","gx5","gx5","mtcb2","gx5","gx5","gx5","gx5","gx5","gx5","mtcb2","gx5","gx5","gx5","gx5","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","door-gym","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mtcb2"],
     ["gx5","gx5","mtcb2","gx5","mtcb2","mtcb2","gx5","g1","gx5","gx5","mtcb2","mtcb2","mtcb2","gx5","g8c","g8c","gx5","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mtcb2"],
-    ["g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g1","g8c","g8c","gx5","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mtcb2","mtcb2"],
+    ["g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g1","g8c","g8c","gx5","g2","g2","g2","wallstrip2-door","g2","g2","g2","g2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mtcb2","mtcb2"],
     ["g2","g2","g2","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","gx5","g8c","g8c","gx5","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g2","g2","g2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
     ["g2","g2","g2","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","gx5","g8c","g8c","gx5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","s1-5","g2","g2","g2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
     ["g2","g2","g2","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","gx5","g8c","g8c","gx5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","s1-5","g2","g2","g2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],

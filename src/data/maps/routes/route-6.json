@@ -565,6 +565,104 @@
           }
         ]
       }
+    },
+    {
+      "id": "npc-1777927680765",
+      "x": 25,
+      "y": 13,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "וואי יש פה פוקימונים שווים! רק חבל שרובם מודבקים בוירוס"
+        }
+      ],
+      "spriteType": "char_459058",
+      "party": [
+        {
+          "pokemonId": 179,
+          "level": 25,
+          "moves": []
+        },
+        {
+          "pokemonId": 156,
+          "level": 25,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 800
+      },
+      "postBattleDialogue": [],
+      "name": {
+        "en": "Gold",
+        "he": "גולד"
+      },
+      "excludeFromMapClear": true,
+      "spawnAfter": "act2-lab-cutscene-done",
+      "questions": {
+        "count": 1,
+        "types": [
+          "+",
+          "-",
+          "÷"
+        ],
+        "repeated": true
+      },
+      "reencounter": {
+        "count": 3,
+        "lvlStep": 3,
+        "timeInterval": 3
+      }
+    },
+    {
+      "id": "npc-1777927918452",
+      "x": 16,
+      "y": 18,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום ! רוצה קרב?"
+        }
+      ],
+      "spriteType": "char_485c6e",
+      "name": {
+        "en": "Ben",
+        "he": "בן"
+      },
+      "spawnAfter": "act2-lab-cutscene-done",
+      "excludeFromMapClear": true,
+      "reward": {
+        "money": 700,
+        "items": [
+          {
+            "itemId": "poke-ball",
+            "quantity": 3
+          }
+        ]
+      },
+      "party": [
+        {
+          "pokemonId": 137,
+          "level": 30,
+          "moves": []
+        },
+        {
+          "pokemonId": 233,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "postBattleDialogue": [],
+      "questions": {
+        "count": 4,
+        "types": []
+      }
     }
   ],
   "interactiveItems": {
@@ -2941,6 +3039,46 @@
       "key": "g3",
       "x": 8,
       "y": 10
+    },
+    {
+      "key": "r3",
+      "x": 19,
+      "y": 0
+    },
+    {
+      "key": "r3",
+      "x": 21,
+      "y": 0
+    },
+    {
+      "key": "r3",
+      "x": 23,
+      "y": 0
+    },
+    {
+      "key": "r3",
+      "x": 25,
+      "y": 0
+    },
+    {
+      "key": "r3",
+      "x": 26,
+      "y": 2
+    },
+    {
+      "key": "r3",
+      "x": 11,
+      "y": 13
+    },
+    {
+      "key": "r2",
+      "x": 26,
+      "y": 4
+    },
+    {
+      "key": "r2",
+      "x": 25,
+      "y": 5
     }
   ]
 }
