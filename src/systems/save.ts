@@ -316,6 +316,8 @@ export interface EventCheckpoint {
   cutsceneId: string;
   /** Full copy of pd.flags taken before any of the event's actions ran. */
   flagsSnapshot: Record<string, boolean>;
+  /** Player position at the moment the checkpoint was created, so recovery can restore them to the right spot. */
+  playerPosition: { mapId: string; x: number; y: number };
 }
 
 function getCheckpointKey(slot: number): string {

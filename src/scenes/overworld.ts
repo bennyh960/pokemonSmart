@@ -142,6 +142,7 @@ interface ChoiceState {
 // Module-level state shared with the start menu scene
 let _pendingFishing = false;
 let _legendVisible = true;
+let _playerRef: PlayerState | null = null;
 
 export function scheduleFishing(): void {
   _pendingFishing = true;
@@ -154,6 +155,17 @@ export function toggleLegend(): void {
 }
 export function setupWorldMapFly(): void {
   setFlyCallback(null);
+}
+
+/** Instantly move the player to a grid position — used by checkpoint recovery. */
+export function teleportPlayerTo(x: number, y: number): void {
+  if (!_playerRef) return;
+  _playerRef.gridX = x;
+  _playerRef.gridY = y;
+  _playerRef.pixelX = x * TILE_SIZE;
+  _playerRef.pixelY = y * TILE_SIZE;
+  _playerRef.targetGridX = x;
+  _playerRef.targetGridY = y;
 }
 
 export function createOverworldScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
@@ -1474,6 +1486,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
 
     player = initPlayer(spawnX ?? data.spawn.x, spawnY ?? data.spawn.y);
+    _playerRef = player;
     camera = createCamera(SCREEN_W, SCREEN_H);
     const cx = player.pixelX + TILE_SIZE / 2;
     const cy = player.pixelY + TILE_SIZE / 2;
@@ -1599,7 +1612,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         .then(() => {
           mapLoading = false;
           // Check for a cutscene event interrupted by a page refresh and re-run it.
-          void checkAndRecoverInterruptedEvent();
+          // Pass a callback to restore the player's in-scene grid position without
+          // creating a circular import between overworld and story-engine.
+          void checkAndRecoverInterruptedEvent((x, y) => teleportPlayerTo(x, y));
         })
         .catch((err) => {
           console.error('Failed to load map, falling back to test-map:', err);
@@ -1654,6 +1669,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             player.pixelY = player.gridY * TILE_SIZE;
             player.moving = false;
             player.walkFrame = 0;
+            if (hasActiveGame()) {
+              const _stepPd = getPlayerData();
+              _stepPd.position.x = player.gridX;
+              _stepPd.position.y = player.gridY;
+            }
             if (playerCutscenePathQueue.length === 0) {
               playerCutsceneWalking = false;
             }
@@ -2242,6 +2262,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           player.pixelY = player.gridY * TILE_SIZE;
           player.moving = false;
           player.walkFrame = 0;
+
+          // Keep pd.position in sync so checkpoint saves capture the real position.
+          if (hasActiveGame()) {
+            const _stepPd = getPlayerData();
+            _stepPd.position.x = player.gridX;
+            _stepPd.position.y = player.gridY;
+          }
 
           // Check for map transition first
           if (checkTransition()) return;

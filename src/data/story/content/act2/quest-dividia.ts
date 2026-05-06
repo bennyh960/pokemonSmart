@@ -16,14 +16,14 @@ import { MapId } from '../../../maps/map-ids.js';
 
 registerQuest({
   id: 'main-act2-dividia',
-  title: { en: 'Save Remainder', he: 'הצל את ריי-מיינדר' },
-  objective: { en: 'Find Remainder at Dividia and cure the Glitch', he: 'מצא את ריי-מיינדר בדיווידיה ורפא את הגליץ׳' },
+  title: { en: 'Battle the wild glitch', he: 'הילחם בגליץ׳ הפראי' },
+  objective: { en: 'Defeat the wild glitch', he: 'נצח את הגליץ׳ הפראי' },
 });
 
 registerQuest({
   id: 'main-act2-gym4',
-  title: { en: 'Dividia Gym', he: 'חדר הכושר של דיווידיה' },
-  objective: { en: 'Defeat Divon at the Division Gym', he: 'נצח את דיבון בחדר הכושר של החילוק' },
+  title: { en: 'Dividia Gym', he: 'קרב מכון דיודיה' },
+  objective: { en: 'Defeat Divon at the Division Gym', he: 'נצח את מורטי דיבון מנהיג מכון החילוק' },
 });
 
 // ── Gates ─────────────────────────────────────────────────────────────────────
@@ -68,158 +68,152 @@ registerGate({
 });
 
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
-
-// Brock greets the player at Dividia
 registerCutscene({
-  id: 'act2-brock-meets-player',
-  skippable: true,
+  id: 'cutscene-glitch-snorlax-asemple',
   steps: [
-    { type: 'face-npc', npcId: 'brock-dividia', dir: 'down' },
+    { type: 'face-npc', npcId: 'npc-jenny-route5', dir: 'down' },
     {
       type: 'dialogue',
-      speakerName: 'Brock / ברוק',
+      speakerId: 'npc-jenny-route5',
       lines: [
+        { en: 'Ohh its you! Good to see you here!', he: 'הוו זה אתה ! כמה טוב לראות אותך כאן!' },
         {
-          en: 'You must be the one Algorithma told me about. Good. This city needs solid help.',
-          he: 'אתה חייב להיות זה שאלגוריתמה סיפר לי עליו. טוב. העיר הזו צריכה עזרה אמינה.',
+          en: 'This Snorlax try to enter to the dividia city - its been stoped by gate keeper',
+          he: 'סנורלקס הזה מנסה להיכנס לעיר דיוידיה - הוא נעצר על ידי שומר השער',
         },
       ],
     },
     {
       type: 'dialogue',
-      speakerName: 'Brock / ברוק',
+      speakerId: 'npc-ranger3-route5',
       lines: [
         {
-          en: 'Think of logic like a good stew — every ingredient has its place. Leave one out and the whole thing falls apart.',
-          he: 'תחשוב על לוגיקה כמו מרק טוב — לכל מרכיב יש מקומו. השמט אחד והכל מתפרק.',
+          en: "He couldn't answere math questions and we discover is a glitch",
+          he: 'הוא לא הצליח לענות על שאלות הגיון פשוטות וגילינו שזה גליץ',
         },
+        { en: 'We must prevent him from enter dividia city', he: 'עלינו למנוע ממנו להיכנס לעיר דיוידיה' },
       ],
     },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT2_BROCK_MET } },
+    { type: 'face-npc', npcId: 'npc-reminder-route-5', dir: 'down' },
+    {
+      type: 'dialogue',
+      speakerId: 'npc-reminder-route-5',
+      lines: [
+        {
+          he: 'היי,זה אתה! טוב שאתה כאן ,  כבר הוכחת את עצמך כמאמן חזק - בוא נעסוק בזה יחד',
+          en: 'Hi , You already prove yourself as strong trainer - lets deal with him together',
+        },
+        { en: 'I will block his path to the city', he: 'אני אחסום את דרכו לעיר' },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'npc-ranger3-route5',
+      lines: [{ en: 'I came to cover you!', he: 'היזהר, הוא נראה מסוכן! אני בא לגבות אותך' }],
+    },
+    {
+      type: 'move-npc',
+      npcId: 'npc-reminder-route-5',
+      path: ['right', 'right', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'right', 'down'],
+    },
+    {
+      type: 'move-npc',
+      npcId: 'npc-ranger3-route5',
+      path: [
+        'right',
+        'right',
+        'right',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'right',
+        'down',
+      ],
+    },
+    { type: 'face-npc', npcId: 'npc-ranger3-route5', dir: 'up' },
+    { type: 'face-npc', npcId: 'npc-reminder-route-5', dir: 'right' },
   ],
 });
 
-// Remainder's Pokemon gets infected by the Glitch
 registerCutscene({
-  id: 'act2-remainder-glitch',
-  skippable: false,
+  id: 'cutscene-reminder-defeat',
   steps: [
-    { type: 'screen-fade', direction: 'out', durationMs: 200 },
-    { type: 'screen-fade', direction: 'in', durationMs: 600, color: '#440000' },
     {
       type: 'dialogue',
-      speakerName: 'Remainder / ריי-מיינדר',
+      speakerId: 'npc-reminder-route-5',
       lines: [
+        { en: 'ohh that was amazing battle!', he: 'אווו זה היה קרב מעולה' },
         {
-          en: "Something is... wrong. My Pokemon — it won't listen. Its eyes are glowing red.",
-          he: 'משהו... לא בסדר. הפוקמון שלי — הוא לא מציית. עיניו זוהרות אדום.',
+          en: 'But I must say my pokemons energy was low after dealing with the glitch',
+          he: 'אבל אני חייב לומר שהאנרגיה של הפוקימונים שלי הייתה נמוכה אחרי ההתמודדות עם הבאג',
+        },
+        { en: 'Next time I will be more prepared..', he: 'בפעם הבאה אני אהיה יותר מוכן..' },
+        {
+          en: "I'm going to Dividia to earn my divider badge! see you later",
+          he: 'אני הולך לדיבידיה כדי להרוויח את תג החילוק שלי! נתראה מאוחר יותר',
         },
       ],
     },
     {
-      type: 'dialogue',
-      speakerName: 'Remainder / ריי-מיינדר',
-      lines: [{ en: "The Glitch. It got him. I don't know what to—", he: 'הגליץ׳. הוא תפס אותו. אני לא יודע מה ל—' }],
+      type: 'move-npc',
+      npcId: 'npc-jenny-route5',
+      path: [
+        'right',
+        'right',
+        'right',
+        'right',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+      ],
     },
     {
       type: 'dialogue',
-      speakerName: 'Brock / ברוק',
+      speakerId: 'npc-jenny-route5',
       lines: [
+        { en: 'Thanks you both young trainers', he: 'תודה רבה לשניכם מאמנים צעירים!' },
         {
-          en: 'Use the serum fragments! Quickly — before the infection spreads to the others!',
-          he: 'השתמש בחלקי הסרום! מהר — לפני שהזיהום מתפשט לאחרים!',
+          en: "I'm happy to see that you have left enough energy to challenge each other",
+          he: 'אני שמחה לראות שנשאר לכם מספיק אנרגיה לאתגר אחד את השני',
         },
+        { en: 'I hope we will meet again under better circumstances', he: 'אני מקווה שנפגש שוב בנסיבות טובות יותר' },
       ],
     },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.STORY_REMAINDER_GLITCHED } },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.STORY_REMAINDER_INFECTED } },
+    { type: 'move-npc', npcId: 'npc-jenny-route5', path: ['down'] },
+    { type: 'move-npc', npcId: 'npc-reminder-route-5', path: ['down'] },
+    { type: 'hide-npc', npcId: 'npc-reminder-route-5' },
+    { type: 'hide-npc', npcId: 'npc-jenny-route5' },
   ],
 });
-
-// Player uses serum — Remainder is cured and leaves to train
-registerCutscene({
-  id: 'act2-remainder-saved',
-  skippable: true,
-  steps: [
-    { type: 'screen-fade', direction: 'out', durationMs: 300 },
-    { type: 'screen-fade', direction: 'in', durationMs: 800 },
-    {
-      type: 'dialogue',
-      speakerName: 'Remainder / ריי-מיינדר',
-      lines: [{ en: '...It worked. You used your serum. For me.', he: '...זה עבד. השתמשת בסרום שלך. בשבילי.' }],
-    },
-    {
-      type: 'dialogue',
-      speakerName: 'Remainder / ריי-מיינדר',
-      lines: [
-        {
-          en: "I've been nothing but difficult with you. And you still helped.",
-          he: 'הייתי קשה עמך בכל דבר. ועדיין עזרת.',
-        },
-      ],
-    },
-    {
-      type: 'dialogue',
-      speakerName: 'Remainder / ריי-מיינדר',
-      lines: [
-        {
-          en: "...I need to get stronger. I'll train and come back. Don't lose to that gym leader before I return.",
-          he: '...אני צריך להתחזק. אני אאמן ואחזור. אל תפסיד לאותו מנהיג חדר כושר לפני שאחזור.',
-        },
-      ],
-    },
-    { type: 'face-npc', npcId: 'remainder-dividia', dir: 'up' },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.STORY_REMAINDER_SAVED } },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.STORY_REMAINDER_CURED } },
-    { type: 'action', action: { type: 'set-quest', questId: 'main-act2-gym4' } },
-  ],
-});
-
 // ── Story Events ──────────────────────────────────────────────────────────────
 
-// First arrival in Dividia
+// ACT2_ROUTE5_JENNY_TALKED
 registerStoryEvent({
-  id: 'evt-dividia-enter',
-  trigger: { type: 'map-enter', mapId: 'dividia/dividia' },
-  conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_DIVIDIA }],
+  id: 'evt-route5-jenny',
+  trigger: { type: 'npc-interact', npcId: 'npc-jenny-route5' },
+  // conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_DIVIDIA }],
   actions: [
-    { type: 'set-flag', flag: FLAGS.VISITED_DIVIDIA },
-    { type: 'set-infection', mapId: MapId.DIVIDIA_DIVIDIA, value: 'medium' },
-    { type: 'set-quest', questId: 'main-act2-dividia' },
+    { type: 'start-cutscene', cutsceneId: 'cutscene-glitch-snorlax-asemple' },
+    { type: 'set-flag', flag: FLAGS.ACT2_ROUTE5_JENNY_TALKED },
   ],
 });
 
-// Brock introduction on second entry (after visited flag set)
 registerStoryEvent({
-  id: 'evt-brock-dividia',
-  trigger: { type: 'map-enter', mapId: 'dividia/dividia' },
-  conditions: [
-    { type: 'flag', flag: FLAGS.VISITED_DIVIDIA },
-    { type: 'flag-not', flag: FLAGS.ACT2_BROCK_MET },
-  ],
-  actions: [{ type: 'start-cutscene', cutsceneId: 'act2-brock-meets-player' }],
-});
-
-// Remainder gets glitched when player has 3+ badges and re-enters Dividia
-registerStoryEvent({
-  id: 'evt-remainder-glitch',
-  trigger: { type: 'map-enter', mapId: 'dividia/dividia' },
-  conditions: [
-    { type: 'flag', flag: FLAGS.VISITED_DIVIDIA },
-    { type: 'flag-not', flag: FLAGS.STORY_REMAINDER_GLITCHED },
-    { type: 'badge-count', min: 3 },
-  ],
-  actions: [{ type: 'start-cutscene', cutsceneId: 'act2-remainder-glitch' }],
-});
-
-// Badge 4 earned → Dividia infection cleared + Remainder saved cutscene
-registerStoryEvent({
-  id: 'evt-badge4-clears-dividia',
-  trigger: { type: 'badge-earned', badge: 4 },
-  conditions: [],
+  id: 'evt-reminder-defeated',
+  trigger: { type: 'trainer-defeated', trainerId: 'npc-reminder-route-5' },
   actions: [
-    { type: 'set-flag', flag: FLAGS.STORY_BADGE_4 },
-    { type: 'set-infection', mapId: MapId.DIVIDIA_DIVIDIA, value: 'cleared' },
-    { type: 'start-cutscene', cutsceneId: 'act2-remainder-saved' },
+    { type: 'start-cutscene', cutsceneId: 'cutscene-reminder-defeat' },
+    { type: 'set-quest', questId: 'main-act2-gym4' },
   ],
 });

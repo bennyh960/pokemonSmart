@@ -1,6 +1,9 @@
 {
   "id": "route-5",
-  "name": "Route 5",
+  "label": {
+    "en": "Route 5",
+    "he": "דרך 5"
+  },
   "tileset": "overworld",
   "width": 60,
   "height": 30,
@@ -27,7 +30,183 @@
   ],
   "music": "route",
   "encounterTableId": "route-5",
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-reminder-route-5",
+      "x": 46,
+      "y": 19,
+      "facing": "right",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "טוב - עכשיו שהכל רגוע , לא נעשה קרב אימון ?8"
+        }
+      ],
+      "spriteType": "rival-reminder",
+      "reward": {
+        "money": 4000,
+        "items": [
+          {
+            "itemId": "max-elixir",
+            "quantity": 3
+          },
+          {
+            "itemId": "hyper-repel",
+            "quantity": 3
+          }
+        ]
+      },
+      "party": [
+        {
+          "pokemonId": 1,
+          "level": 5,
+          "moves": []
+        },
+        {
+          "pokemonId": 1,
+          "level": 5,
+          "moves": []
+        },
+        {
+          "pokemonId": 1,
+          "level": 5,
+          "moves": []
+        },
+        {
+          "pokemonId": 1,
+          "level": 5,
+          "moves": []
+        },
+        {
+          "pokemonId": 1,
+          "level": 5,
+          "moves": []
+        },
+        {
+          "pokemonId": 1,
+          "level": 5,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "טוב אני חייב להודות שהיה קרב מעולה! ללא ספק ניפגש שוב ..."
+        }
+      ],
+      "despawnOnDefeat": true,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 16,
+            "delay": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-snorlax-glitch",
+      "x": 49,
+      "y": 19,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "סנוררר"
+        },
+        {
+          "en": "",
+          "he": "סנוור"
+        }
+      ],
+      "spriteType": "snorlax",
+      "pokemonId": 143,
+      "level": 42,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "down",
+            "steps": 5,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 4,
+            "delay": 1.5
+          },
+          {
+            "dir": "up",
+            "steps": 4,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-ranger2-route5",
+      "x": 50,
+      "y": 28,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "הסנורלאקס הזה נגוע! אסור שהוא יכנס לעיר!"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Officer X",
+        "he": "ירחמיאל שומרטוב"
+      }
+    },
+    {
+      "id": "npc-jenny-route5",
+      "x": 46,
+      "y": 18,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום"
+        }
+      ],
+      "spriteType": "officer-Jenny"
+    },
+    {
+      "id": "npc-ranger3-route5",
+      "x": 45,
+      "y": 19,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שמרו מרחק ! יש פה פוקימון פראי נגוע בוירוס"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Officer X",
+        "he": "זרובבל שעריים"
+      }
+    }
+  ],
   "interactiveItems": {}
 ,
   "tiles": [
@@ -47,7 +226,7 @@
     ["g2","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","s1-5","g2","g2","g2","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["g2","g2","g2","mt2c","mt2c","mt2c","g2","g2","g2","g2","g2","g2","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","g2","g2","g2","s1-5","s1-5","g2","g2","g2","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","s1-5","s1-5","g2","g2","g2","mt2c","mt2c","mt2c","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","s1-5","s1-5","g2","g2","g2","mt2c","mt2c","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","s1-5","s1-5","g2","g2","g2","mt2c","mt2c","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g1","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","s1-5","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g2","g2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","mt2tl2","mt2c","mt2c","g1","g2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g2","g2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1"],
@@ -1995,11 +2174,6 @@
     },
     {
       "key": "mt2b",
-      "x": 48,
-      "y": 16
-    },
-    {
-      "key": "mt2b",
       "x": 49,
       "y": 16
     },
@@ -3639,11 +3813,6 @@
       "y": 22
     },
     {
-      "key": "item-masterBall",
-      "x": 11,
-      "y": 15
-    },
-    {
       "key": "s1-4",
       "x": 48,
       "y": 20
@@ -4227,6 +4396,26 @@
       "key": "item-revive",
       "x": 19,
       "y": 20
+    },
+    {
+      "key": "item-ultra ball",
+      "x": 10,
+      "y": 15
+    },
+    {
+      "key": "item-ultra ball",
+      "x": 2,
+      "y": 26
+    },
+    {
+      "key": "potion",
+      "x": 15,
+      "y": 26
+    },
+    {
+      "key": "mt2b",
+      "x": 48,
+      "y": 16
     }
   ]
 }

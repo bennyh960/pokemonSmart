@@ -171,6 +171,7 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
         eventId: event.id,
         cutsceneId: cutsceneAction.cutsceneId,
         flagsSnapshot: { ...pd.flags },
+        playerPosition: { ...pd.position },
       });
     }
 
@@ -476,13 +477,19 @@ function resolveCheckpointSlot(): number | null {
  * Detects a leftover event checkpoint from a previous session where the player
  * refreshed mid-cutscene.  If found:
  *   1. Rolls pd.flags back to the pre-event snapshot.
- *   2. Re-executes the event's non-cutscene actions (restores intermediate flags
+ *   2. Restores the player's position to where the cutscene started.
+ *   3. Re-executes the event's non-cutscene actions (restores intermediate flags
  *      like ASSEMBLY_STARTED so NPC spawnAfter conditions are correct).
- *   3. Queues the cutscene so the overworld picks it up on its next tick.
- *   4. Awaits cutscene completion, then marks the event done and clears the
+ *   4. Queues the cutscene so the overworld picks it up on its next tick.
+ *   5. Awaits cutscene completion, then marks the event done and clears the
  *      checkpoint — exactly as a normal first-run would.
+ *
+ * @param onRestorePosition  Called with (x, y) when the player's grid position
+ *   needs to be updated in-scene (avoids a circular import with overworld.ts).
  */
-export async function checkAndRecoverInterruptedEvent(): Promise<void> {
+export async function checkAndRecoverInterruptedEvent(
+  onRestorePosition?: (x: number, y: number) => void,
+): Promise<void> {
   if (!hasActiveGame()) return;
   const checkpointSlot = getCurrentSlot();
   if (checkpointSlot === null) return;
@@ -504,6 +511,12 @@ export async function checkAndRecoverInterruptedEvent(): Promise<void> {
 
   // 1. Restore flags to the snapshot taken before the event's actions ran.
   pd.flags = { ...checkpoint.flagsSnapshot };
+
+  // 1b. Restore player position to where the cutscene began.
+  if (checkpoint.playerPosition) {
+    pd.position = { ...checkpoint.playerPosition };
+    onRestorePosition?.(checkpoint.playerPosition.x, checkpoint.playerPosition.y);
+  }
 
   // 2. Re-execute only the non-cutscene actions so intermediate flags (e.g.
   //    ASSEMBLY_STARTED) are set correctly before the cutscene opens.

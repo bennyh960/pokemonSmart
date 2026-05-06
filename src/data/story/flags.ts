@@ -211,6 +211,7 @@ export const FLAGS = {
   ACT2_LAB_CUTSCENE_DONE: 'act2-lab-cutscene-done', // Oak + Algo + Lance lab reveal seen
 
   // ── Act 2: Dividia ──────────────────────────────────────────────────────────
+  ACT2_ROUTE5_JENNY_TALKED: 'act2-route5-jenny-talked', // First interaction with Jenny on Route 5
   GATE_ROUTE4_PASS: 'gate-route4-pass',
   VISITED_DIVIDIA: 'visited-dividia',
   GATE_DIVIDIA_GYM_PASS: 'gate-dividia-gym-pass',
