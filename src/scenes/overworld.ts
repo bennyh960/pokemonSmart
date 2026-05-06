@@ -68,6 +68,7 @@ import {
   consumePendingCutscene,
   consumePendingMessage,
   checkAndRecoverInterruptedEvent,
+  applyCompletedEventNpcPositions,
 } from '../systems/story-engine.js';
 import {
   isCutsceneActive,
@@ -1611,6 +1612,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       loadAndSetMap(mapId, spawnX, spawnY)
         .then(() => {
           mapLoading = false;
+          // Silently restore NPC positions for all completed cutscene events so
+          // a page refresh doesn't reset NPCs to their map-JSON starting coords.
+          applyCompletedEventNpcPositions(
+            (id) => {
+              const npc = npcManager?.getNPCs().find((n) => n.id === id) ?? null;
+              return npc ? { x: npc.x, y: npc.y } : null;
+            },
+            (id, x, y) => {
+              const npc = npcManager?.getNPCs().find((n) => n.id === id);
+              if (npc) { npc.x = x; npc.y = y; }
+            },
+          );
           // Check for a cutscene event interrupted by a page refresh and re-run it.
           // Pass a callback to restore the player's in-scene grid position without
           // creating a circular import between overworld and story-engine.

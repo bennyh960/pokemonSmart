@@ -19,6 +19,8 @@ import type { StoryTrigger, StoryCondition, StoryAction } from '../data/story/ev
 import type { GateSessionConfig } from '../data/story/gates.js';
 import { GATES, registerGate } from '../data/story/gates.js';
 import { awaitCutsceneCompletion } from './cutscene-runner.js';
+import { getCutscene } from '../data/story/cutscenes.js';
+import type { CutsceneStep } from '../data/story/cutscenes.js';
 import { saveEventCheckpoint, loadEventCheckpoint, clearEventCheckpoint } from './save.js';
 import { getCurrentMapId, getCachedMap } from './map-manager.js';
 import { allTrainersDefeatedFlag } from '../data/story/flags.js';
@@ -545,4 +547,87 @@ export async function checkAndRecoverInterruptedEvent(
   }
   autoSave();
   clearEventCheckpoint(checkpointSlot);
+}
+
+// ---------------------------------------------------------------------------
+// Silent NPC position restore after map load
+// ---------------------------------------------------------------------------
+
+const DIR_DELTAS: Record<string, { dx: number; dy: number }> = {
+  right: { dx: 1, dy: 0 },
+  left:  { dx: -1, dy: 0 },
+  down:  { dx: 0, dy: 1 },
+  up:    { dx: 0, dy: -1 },
+};
+
+/**
+ * After a map loads, silently reposition any NPCs that were moved by completed
+ * cutscene events — so a page refresh doesn't reset NPCs to their map-JSON
+ * starting positions.
+ *
+ * Events are processed in completion-timestamp order so chained moves (event A
+ * then event B moving the same NPC) always produce the correct final position.
+ * `if-flag` branches inside cutscenes are evaluated against current flags.
+ *
+ * Visibility (spawnAfter / hideAfter) is intentionally NOT touched here — the
+ * NPC manager's own flag checks handle that independently.
+ *
+ * @param findNpc  Return current {x, y} for an NPC by ID, or null if the NPC
+ *   is not present on the current map.
+ * @param moveNpc  Write a new {x, y} back to the NPC by ID.
+ */
+export function applyCompletedEventNpcPositions(
+  findNpc: (id: string) => { x: number; y: number } | null,
+  moveNpc: (id: string, x: number, y: number) => void,
+): void {
+  if (!hasActiveGame()) return;
+  const pd = getPlayerData();
+
+  // Collect all completed non-repeatable events that launched a cutscene
+  const completed: Array<{ cutsceneId: string; ts: number }> = [];
+  for (const event of getStoryEvents()) {
+    if (event.repeatable) continue;
+    const doneFlag = event.completedFlag ?? `__event-done-${event.id}`;
+    if (!pd.flags[doneFlag]) continue;
+    const cutsceneAction = event.actions.find(
+      (a): a is Extract<StoryAction, { type: 'start-cutscene' }> => a.type === 'start-cutscene',
+    );
+    if (!cutsceneAction) continue;
+    completed.push({
+      cutsceneId: cutsceneAction.cutsceneId,
+      ts: pd.flagTimestamps?.[doneFlag] ?? 0,
+    });
+  }
+
+  // Process in completion order so chained moves on the same NPC are correct
+  completed.sort((a, b) => a.ts - b.ts);
+
+  for (const { cutsceneId } of completed) {
+    const cutscene = getCutscene(cutsceneId);
+    if (!cutscene) continue;
+    applyMoveNpcSteps(cutscene.steps, pd.flags, findNpc, moveNpc);
+  }
+}
+
+function applyMoveNpcSteps(
+  steps: CutsceneStep[],
+  flags: Record<string, boolean>,
+  findNpc: (id: string) => { x: number; y: number } | null,
+  moveNpc: (id: string, x: number, y: number) => void,
+): void {
+  for (const step of steps) {
+    if (step.type === 'move-npc') {
+      const pos = findNpc(step.npcId);
+      if (!pos) continue;
+      let { x, y } = pos;
+      for (const dir of step.path) {
+        const delta = DIR_DELTAS[dir];
+        if (delta) { x += delta.dx; y += delta.dy; }
+      }
+      moveNpc(step.npcId, x, y);
+    } else if (step.type === 'if-flag') {
+      const branch = flags[step.flag] ? step.thenSteps : (step.elseSteps ?? []);
+      applyMoveNpcSteps(branch, flags, findNpc, moveNpc);
+    }
+  }
 }

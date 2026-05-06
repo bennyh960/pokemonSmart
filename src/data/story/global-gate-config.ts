@@ -80,7 +80,7 @@ export const AUTO_GATE_TIME_LIMITS = {
 export const AUTO_GATE_COOLDOWNS = {
   pokecenter: 30 * 60 * 1000, // 30 minutes
   pokemarket: 15 * 60 * 1000, // 15 minutes
-  gym: 30 * 60 * 1000, // 30 minutes (use gym when preparing for badge)
+  gym: 45 * 60 * 1000, // 45 minutes (use gym when preparing for badge)
 } as const;
 
 /** Rewards per service type. */
@@ -94,7 +94,7 @@ export const AUTO_GATE_REWARDS: Record<string, GateReward[]> = {
     { type: 'item', itemId: '48', quantity: 3 }, //carbos
     { type: 'item', itemId: '49', quantity: 3 }, // calcium
     { type: 'item', itemId: '47', quantity: 3 }, // iron
-    { type: 'item', itemId: '51', quantity: 3 }, // zinc
+    { type: 'item', itemId: '52', quantity: 3 }, // zinc
   ],
 };
 

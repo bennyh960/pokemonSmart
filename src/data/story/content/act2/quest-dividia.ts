@@ -10,7 +10,6 @@ import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
-import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
 
@@ -206,6 +205,7 @@ registerStoryEvent({
   actions: [
     { type: 'start-cutscene', cutsceneId: 'cutscene-glitch-snorlax-asemple' },
     { type: 'set-flag', flag: FLAGS.ACT2_ROUTE5_JENNY_TALKED },
+    { type: 'set-quest', questId: 'main-act2-dividia' },
   ],
 });
 
@@ -214,6 +214,7 @@ registerStoryEvent({
   trigger: { type: 'trainer-defeated', trainerId: 'npc-reminder-route-5' },
   actions: [
     { type: 'start-cutscene', cutsceneId: 'cutscene-reminder-defeat' },
+    { type: 'complete-quest', questId: 'main-act2-dividia' },
     { type: 'set-quest', questId: 'main-act2-gym4' },
   ],
 });
