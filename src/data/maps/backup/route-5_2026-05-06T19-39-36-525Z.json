@@ -170,8 +170,8 @@
     {
       "id": "npc-ranger2-route5",
       "x": 50,
-      "y": 27,
-      "facing": "up",
+      "y": 28,
+      "facing": "down",
       "type": "dialogue",
       "dialogue": [
         {
@@ -312,20 +312,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "npc-rangere-route5xtra",
-      "x": 51,
-      "y": 27,
-      "facing": "up",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "gate-officer"
     }
   ],
   "interactiveItems": {}

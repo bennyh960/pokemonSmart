@@ -68,7 +68,7 @@ registerGate({
 
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
 registerCutscene({
-  id: 'cutscene-glitch-snorlax-asemple',
+  id: 'route5-cutscene-glitch-snorlax-asemple',
   steps: [
     { type: 'face-npc', npcId: 'npc-jenny-route5', dir: 'down' },
     {
@@ -93,10 +93,10 @@ registerCutscene({
         { en: 'We must prevent him from enter dividia city', he: 'עלינו למנוע ממנו להיכנס לעיר דיוידיה' },
       ],
     },
-    { type: 'face-npc', npcId: 'npc-reminder-route-5', dir: 'down' },
+    { type: 'face-npc', npcId: 'reminder-route-5', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'npc-reminder-route-5',
+      speakerId: 'reminder-route-5',
       lines: [
         {
           he: 'היי,זה אתה! טוב שאתה כאן ,  כבר הוכחת את עצמך כמאמן חזק - בוא נעסוק בזה יחד',
@@ -112,39 +112,27 @@ registerCutscene({
     },
     {
       type: 'move-npc',
-      npcId: 'npc-reminder-route-5',
-      path: ['right', 'right', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'right', 'down'],
+      npcId: 'reminder-route-5',
+      path: ['right', 'right', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'right', 'down', 'down'],
+      waitForComplete: false,
     },
     {
       type: 'move-npc',
       npcId: 'npc-ranger3-route5',
-      path: [
-        'right',
-        'right',
-        'right',
-        'down',
-        'down',
-        'down',
-        'down',
-        'down',
-        'down',
-        'down',
-        'down',
-        'right',
-        'down',
-      ],
+      waitForComplete: false,
+      path: ['right', 'right', 'right', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'right', 'down'],
     },
     { type: 'face-npc', npcId: 'npc-ranger3-route5', dir: 'up' },
-    { type: 'face-npc', npcId: 'npc-reminder-route-5', dir: 'right' },
+    { type: 'face-npc', npcId: 'reminder-route-5', dir: 'right' },
   ],
 });
 
 registerCutscene({
-  id: 'cutscene-reminder-defeat',
+  id: 'route5-cutscene-reminder-defeat',
   steps: [
     {
       type: 'dialogue',
-      speakerId: 'npc-reminder-route-5',
+      speakerId: 'reminder-route-5',
       lines: [
         { en: 'ohh that was amazing battle!', he: 'אווו זה היה קרב מעולה' },
         {
@@ -190,8 +178,8 @@ registerCutscene({
       ],
     },
     { type: 'move-npc', npcId: 'npc-jenny-route5', path: ['down'] },
-    { type: 'move-npc', npcId: 'npc-reminder-route-5', path: ['down'] },
-    { type: 'hide-npc', npcId: 'npc-reminder-route-5' },
+    { type: 'move-npc', npcId: 'reminder-route-5', path: ['down'] },
+    { type: 'hide-npc', npcId: 'reminder-route-5' },
     { type: 'hide-npc', npcId: 'npc-jenny-route5' },
   ],
 });
@@ -203,17 +191,17 @@ registerStoryEvent({
   trigger: { type: 'npc-interact', npcId: 'npc-jenny-route5' },
   // conditions: [{ type: 'flag-not', flag: FLAGS.VISITED_DIVIDIA }],
   actions: [
-    { type: 'start-cutscene', cutsceneId: 'cutscene-glitch-snorlax-asemple' },
+    { type: 'start-cutscene', cutsceneId: 'route5-cutscene-glitch-snorlax-asemple' },
     { type: 'set-flag', flag: FLAGS.ACT2_ROUTE5_JENNY_TALKED },
     { type: 'set-quest', questId: 'main-act2-dividia' },
   ],
 });
 
 registerStoryEvent({
-  id: 'evt-reminder-defeated',
-  trigger: { type: 'trainer-defeated', trainerId: 'npc-reminder-route-5' },
+  id: 'evt-route5-reminder-defeated',
+  trigger: { type: 'trainer-defeated', trainerId: 'reminder-route-5' },
   actions: [
-    { type: 'start-cutscene', cutsceneId: 'cutscene-reminder-defeat' },
+    { type: 'start-cutscene', cutsceneId: 'route5-cutscene-reminder-defeat' },
     { type: 'complete-quest', questId: 'main-act2-dividia' },
     { type: 'set-quest', questId: 'main-act2-gym4' },
   ],

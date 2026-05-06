@@ -1,0 +1,15 @@
+{
+  "id": "route-5-cave1",
+  "label": {
+    "en": "Unknown Cave",
+    "he": "מערה מסתורית"
+  },
+  "template": "cave-1",
+  "area": "Dividia",
+  "music": "route",
+  "encounterTableId": null,
+  "npcs": [],
+  "interactiveItems": {},
+  "tiles": [],
+  "objects": []
+}

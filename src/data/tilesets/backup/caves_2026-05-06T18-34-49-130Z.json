@@ -1176,19 +1176,6 @@
       "above": false,
       "category": "other",
       "interactType": null
-    },
-    {
-      "key": "item",
-      "sx": 112,
-      "sy": 144,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "interactType": {
-        "id": "item"
-      }
     }
   ]
 }

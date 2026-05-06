@@ -61,7 +61,9 @@ let currentMapId: string | null = null;
 /** Load a map by ID. Returns cached data if already loaded. */
 export async function loadMap(id: string): Promise<TileMapData> {
   const cached = mapCache.get(id);
-  if (cached) return cached;
+  // Return a fresh copy each time so runtime mutations (npc.hidden, npc.x/y, etc.)
+  // from the previous session don't leak into the next map load.
+  if (cached) return { ...cached, npcs: cached.npcs?.map(npc => ({ ...npc })) ?? [] };
 
   const loader = mapModules[mapPathById[id]];
   if (!loader) {
@@ -90,7 +92,9 @@ export async function loadMap(id: string): Promise<TileMapData> {
 
   if (data.tileset) await loadTileset(data.tileset);
   mapCache.set(id, data);
-  return data;
+  // Return a clone so the caller's runtime mutations (npc.x/y, hidden, facing)
+  // don't pollute the cache — every load starts from clean JSON-original values.
+  return { ...data, npcs: data.npcs?.map(npc => ({ ...npc })) ?? [] };
 }
 
 /** Get all available map IDs (excludes templates and backups). */

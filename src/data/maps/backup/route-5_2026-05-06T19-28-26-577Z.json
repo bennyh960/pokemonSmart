@@ -26,27 +26,6 @@
       "toMapId": "multiplia/multiplia",
       "toX": 63,
       "toY": 48
-    },
-    {
-      "fromX": 49,
-      "fromY": 29,
-      "toMapId": "dividia/dividia",
-      "toX": 0,
-      "toY": 27
-    },
-    {
-      "fromX": 51,
-      "fromY": 29,
-      "toMapId": "dividia/dividia",
-      "toX": 0,
-      "toY": 29
-    },
-    {
-      "fromX": 50,
-      "fromY": 29,
-      "toMapId": "dividia/dividia",
-      "toX": 0,
-      "toY": 28
     }
   ],
   "music": "route",
@@ -170,8 +149,8 @@
     {
       "id": "npc-ranger2-route5",
       "x": 50,
-      "y": 27,
-      "facing": "up",
+      "y": 28,
+      "facing": "down",
       "type": "dialogue",
       "dialogue": [
         {
@@ -312,20 +291,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "npc-rangere-route5xtra",
-      "x": 51,
-      "y": 27,
-      "facing": "up",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "gate-officer"
     }
   ],
   "interactiveItems": {}
@@ -4532,11 +4497,6 @@
       "key": "t1b",
       "x": 48,
       "y": 27
-    },
-    {
-      "key": "t1b",
-      "x": 48,
-      "y": 28
     }
   ]
 }

@@ -1621,7 +1621,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             },
             (id, x, y) => {
               const npc = npcManager?.getNPCs().find((n) => n.id === id);
-              if (npc) { npc.x = x; npc.y = y; }
+              if (npc) {
+                npc.x = x;
+                npc.y = y;
+              }
             },
           );
           // Check for a cutscene event interrupted by a page refresh and re-run it.

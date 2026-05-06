@@ -42,7 +42,9 @@ function getReencounterKind(contact: PhoneContactInfo): StatusKind {
   const pd = getPlayerData();
   const state = pd.trainerEncounters[contact.trainerId];
   if (!state || !contact.reencounterConfig) return 'unknown';
-  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<typeof getReencounterStatus>[0];
+  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<
+    typeof getReencounterStatus
+  >[0];
   const status = getReencounterStatus(fakeTrainer);
   if (!status.eligible) return status.reason === 'max-reached' ? 'maxReached' : 'cooldown';
   return 'ready';
@@ -65,7 +67,9 @@ function getStatusLine(contact: PhoneContactInfo): string {
     return t('phone.status.battles', { count: state.count });
   }
 
-  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<typeof getReencounterStatus>[0];
+  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<
+    typeof getReencounterStatus
+  >[0];
   const status = getReencounterStatus(fakeTrainer);
 
   if (!status.eligible) {
@@ -81,25 +85,26 @@ function getStatusLine(contact: PhoneContactInfo): string {
   return t('phone.status.ready');
 }
 
-export function createPhoneScene(
-  input: InputManager,
-  stateMachine: StateMachine,
-): Scene {
+export function createPhoneScene(input: InputManager, stateMachine: StateMachine): Scene {
   let selectedIndex = 0;
   let contacts: PhoneContactInfo[] = [];
-  let dialogueLine: string | null = null;  // shown at bottom after selecting a contact
+  let dialogueLine: string | null = null; // shown at bottom after selecting a contact
 
   return {
     enter(): void {
       selectedIndex = 0;
       dialogueLine = null;
-      if (!hasActiveGame()) { contacts = []; return; }
+      if (!hasActiveGame()) {
+        contacts = [];
+        return;
+      }
       const pd = getPlayerData();
       // Resolve missing mapId for existing contacts by searching the loaded map cache
       for (const contact of pd.phoneContacts) {
         if (!contact.mapId) {
           const found = findMapForTrainer(contact.trainerId);
-          if (found) contact.mapId = found;  // patch in place — persists on next save
+          // console.debug(`[DEBUG] Resolving mapId for contact ${contact.trainerId} → ${found}`);
+          if (found) contact.mapId = found; // patch in place — persists on next save
         }
       }
       contacts = [...pd.phoneContacts];
@@ -189,7 +194,7 @@ export function createPhoneScene(
           color: selected ? '#ffffff' : '#cccccc',
           align: rtl ? 'right' : 'left',
           direction: rtl ? 'rtl' : 'ltr',
-          maxWidth: (SCREEN_W / 2) - 10,
+          maxWidth: SCREEN_W / 2 - 10,
         });
 
         // Map location (bottom line, same side as name)
@@ -219,7 +224,7 @@ export function createPhoneScene(
       // Scroll indicator
       if (contacts.length > VISIBLE) {
         const scrollText = `${selectedIndex + 1}/${contacts.length}`;
-        drawText(ctx, scrollText, SCREEN_W - 6, LIST_TOP + VISIBLE * ROW_H / 2, {
+        drawText(ctx, scrollText, SCREEN_W - 6, LIST_TOP + (VISIBLE * ROW_H) / 2, {
           size: 6,
           color: '#555',
           align: 'right',
@@ -269,7 +274,9 @@ function buildCallDialogue(contact: PhoneContactInfo): string {
     return loc ? t('phone.call.location', { name, location: loc }) : t('phone.call.ready', { name });
   }
 
-  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<typeof getReencounterStatus>[0];
+  const fakeTrainer = { id: contact.trainerId, reencounter: contact.reencounterConfig } as Parameters<
+    typeof getReencounterStatus
+  >[0];
   const status = getReencounterStatus(fakeTrainer);
 
   if (!status.eligible) {
