@@ -1,3 +1,4 @@
+import { initHeavyData } from '../services/pokemon-data.js';
 import { EditorState } from './editor-state.js';
 import { HistoryManager } from './history.js';
 import { ToolSystem } from './tool-system.js';
@@ -90,6 +91,9 @@ function parseManifestTiles(manifest: Record<string, unknown>): Record<string, T
 }
 
 async function init() {
+  // Load moves/learnsets so TM labels resolve in the properties panel
+  await initHeavyData();
+
   // 1. Load initial tileset (restores last-used from localStorage, defaults to overworld)
   const initialTilesetName = localStorage.getItem('editor-tileset') ?? 'overworld';
   const initialManifest = await loadTilesetManifest(initialTilesetName);

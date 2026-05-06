@@ -86,7 +86,7 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in', durationMs: 500 },
     {
       type: 'dialogue',
-      speakerId: 'Prof.Algorithma',
+      speakerId: 'algorithma',
       lines: [
         {
           en: "Ah, you're here! Welcome to my lab. I'm Professor Algorithma.",
@@ -122,12 +122,12 @@ registerCutscene({
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act0-starter' } },
     {
       type: 'dialogue',
-      speakerId: 'Prof.Algorithma',
+      speakerId: 'algorithma',
       lines: getStarterLines,
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof.Algorithma',
+      speakerId: 'algorithma',
       lines: [
         {
           en: 'In your Journey you will meet diferent types of pokemons',
@@ -195,7 +195,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'Prof.Algorithma',
+      speakerId: 'algorithma',
       lines: [
         {
           en: 'Sumville is at the other end. There is a Gym there. If you are strong enough, you will be able to earn a badge. Safe travels!',

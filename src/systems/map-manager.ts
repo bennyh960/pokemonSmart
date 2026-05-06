@@ -93,6 +93,11 @@ export async function loadMap(id: string): Promise<TileMapData> {
   return data;
 }
 
+/** Get all available map IDs (excludes templates and backups). */
+export function getAllMapIds(): string[] {
+  return Object.keys(mapPathById).sort();
+}
+
 /** Get the current map ID. */
 export function getCurrentMapId(): string | null {
   return currentMapId;

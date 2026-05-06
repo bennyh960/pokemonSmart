@@ -3009,6 +3009,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
 
+      // G key → Admin Map Teleport (dev-only, admin-only)
+      if (import.meta.env.DEV && (input.isKeyPressed('g') || input.isKeyPressed('G'))) {
+        if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
+          import('../admin/map-teleport').then(({ openAdminMapTeleport }) => {
+            openAdminMapTeleport(loadAndSetMap);
+          });
+          return;
+        }
+      }
+
       // K key → Toggle keyboard legend
       if (input.isKeyPressed('k') || input.isKeyPressed('K')) {
         _legendVisible = !_legendVisible;
@@ -3565,7 +3575,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ];
         if (_hasFish) _lparts.push(`F:${t('legend.fish')}`);
         _lparts.push(`M:${t('legend.mute')}`, `K:${t('legend.keys')}`, `ENTER:${t('legend.menu')}`);
-        if (_isAdmin) _lparts.push(`N:${t('legend.shop')}`, `H:${t('legend.heal')}`);
+        if (_isAdmin) _lparts.push(`N:${t('legend.shop')}`, `H:${t('legend.heal')}`, 'G:Teleport');
         drawText(ctx, _lparts.join(' '), SCREEN_W / 2, barY + 2, {
           size: 6,
           color: '#aaaaaa',

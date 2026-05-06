@@ -210,7 +210,7 @@
       "sy": 160,
       "w": 16,
       "h": 16,
-      "walkable": true,
+      "walkable": false,
       "above": true,
       "category": "decoration",
       "interactType": null,
@@ -222,7 +222,7 @@
       "sy": 160,
       "w": 16,
       "h": 16,
-      "walkable": true,
+      "walkable": false,
       "above": true,
       "category": "decoration",
       "interactType": null,
@@ -234,7 +234,7 @@
       "sy": 176,
       "w": 16,
       "h": 16,
-      "walkable": true,
+      "walkable": false,
       "above": true,
       "category": "decoration",
       "interactType": null,
@@ -246,7 +246,7 @@
       "sy": 176,
       "w": 16,
       "h": 16,
-      "walkable": true,
+      "walkable": false,
       "above": true,
       "interactType": null,
       "description": "fence 1 right"
@@ -6143,6 +6143,7 @@
       "walkable": false,
       "above": false,
       "category": "building",
+      "interactType": null,
       "cells": [
         {
           "dx": 1,
