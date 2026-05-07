@@ -1,13 +1,13 @@
 {
   "id": "cave-1",
-  "name": "New Map",
-  "tileset": "overworld",
+  "name": "Generic Cave1",
+  "tileset": "caves",
   "width": 50,
   "height": 50,
   "tileSize": 16,
   "spawn": {
-    "x": 12,
-    "y": 10
+    "x": 24,
+    "y": 7
   },
   "transitions": [
     {

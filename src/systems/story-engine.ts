@@ -575,10 +575,12 @@ const DIR_DELTAS: Record<string, { dx: number; dy: number }> = {
  * @param findNpc  Return current {x, y} for an NPC by ID, or null if the NPC
  *   is not present on the current map.
  * @param moveNpc  Write a new {x, y} back to the NPC by ID.
+ * @param hideNpc  Set an NPC hidden by ID (restores hide-npc cutscene steps).
  */
 export function applyCompletedEventNpcPositions(
   findNpc: (id: string) => { x: number; y: number } | null,
   moveNpc: (id: string, x: number, y: number) => void,
+  hideNpc?: (id: string) => void,
 ): void {
   if (!hasActiveGame()) return;
   const pd = getPlayerData();
@@ -605,7 +607,7 @@ export function applyCompletedEventNpcPositions(
   for (const { cutsceneId } of completed) {
     const cutscene = getCutscene(cutsceneId);
     if (!cutscene) continue;
-    applyMoveNpcSteps(cutscene.steps, pd.flags, findNpc, moveNpc);
+    applyMoveNpcSteps(cutscene.steps, pd.flags, findNpc, moveNpc, hideNpc);
   }
 }
 
@@ -614,6 +616,7 @@ function applyMoveNpcSteps(
   flags: Record<string, boolean>,
   findNpc: (id: string) => { x: number; y: number } | null,
   moveNpc: (id: string, x: number, y: number) => void,
+  hideNpc?: (id: string) => void,
 ): void {
   for (const step of steps) {
     if (step.type === 'move-npc') {
@@ -625,9 +628,11 @@ function applyMoveNpcSteps(
         if (delta) { x += delta.dx; y += delta.dy; }
       }
       moveNpc(step.npcId, x, y);
+    } else if (step.type === 'hide-npc') {
+      hideNpc?.(step.npcId);
     } else if (step.type === 'if-flag') {
       const branch = flags[step.flag] ? step.thenSteps : (step.elseSteps ?? []);
-      applyMoveNpcSteps(branch, flags, findNpc, moveNpc);
+      applyMoveNpcSteps(branch, flags, findNpc, moveNpc, hideNpc);
     }
   }
 }

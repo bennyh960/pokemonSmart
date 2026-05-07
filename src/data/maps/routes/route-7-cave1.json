@@ -1,10 +1,11 @@
 {
-  "id": "route-5-cave1",
+  "id": "route-7-cave1",
   "label": {
     "en": "Unknown Cave",
     "he": "מערה מסתורית"
   },
   "template": "cave-1",
+  "tileset": "caves",
   "area": "Dividia",
   "music": "route",
   "encounterTableId": null,

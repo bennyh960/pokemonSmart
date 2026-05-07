@@ -6,15 +6,54 @@
   "height": 50,
   "tileSize": 16,
   "spawn": {
-    "x": 2,
-    "y": 9
+    "x": 48,
+    "y": 11
   },
-  "transitions": [],
+  "transitions": [
+    {
+      "fromX": 49,
+      "fromY": 10,
+      "toMapId": "dividia/dividia",
+      "toX": 1,
+      "toY": 20
+    },
+    {
+      "fromX": 49,
+      "fromY": 11,
+      "toMapId": "dividia/dividia",
+      "toX": 1,
+      "toY": 21
+    },
+    {
+      "fromX": 49,
+      "fromY": 12,
+      "toMapId": "dividia/dividia",
+      "toX": 1,
+      "toY": 21
+    },
+    {
+      "fromX": 49,
+      "fromY": 13,
+      "returnToPrevious": false,
+      "toMapId": "dividia/dividia",
+      "toX": 1,
+      "toY": 22
+    },
+    {
+      "fromX": 24,
+      "fromY": 28,
+      "toMapId": "routes/route-7-cave2"
+    }
+  ],
   "music": "route",
   "encounterTableId": "route-7",
   "npcs": [],
   "interactiveItems": {},
-  "area": "Dividia"
+  "area": "Dividia",
+  "label": {
+    "en": "Route 7",
+    "he": "שביל 7"
+  }
 ,
   "tiles": [
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],

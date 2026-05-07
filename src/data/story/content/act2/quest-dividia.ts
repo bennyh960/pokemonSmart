@@ -28,42 +28,53 @@ registerQuest({
 // ── Gates ─────────────────────────────────────────────────────────────────────
 
 registerGate({
-  id: 'gate-route4-dividia',
-  title: { en: 'Route 4 Checkpoint', he: 'מחסום שביל 4' },
+  id: 'gate-route5-dividia',
+  title: { en: 'Route 5 Checkpoint', he: 'מחסום שביל 5' },
   description: {
     en: 'NULL-X interference detected. 5 questions — 3 correct to pass.',
     he: 'זוהתה הפרעה מ-NULL-X. 5 שאלות — 3 נכונות כדי לעבור.',
   },
   triggerType: 'route-checkpoint',
-  questionSetIds: ['placeholder'],
+  questionSetIds: ['÷'],
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
     questionsRequired: 5,
     penaltyAmount: 150,
   },
   reopenCooldownMs: 30 * 60 * 1000,
-  successActions: [
-    { type: 'set-flag', flag: FLAGS.GATE_ROUTE4_PASS },
-    { type: 'set-quest', questId: 'main-act2-dividia' },
-  ],
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ROUTE5_PASS }],
 });
 
 registerGate({
-  id: 'gate-dividia-gym',
-  title: { en: 'Division Gym', he: 'חדר הכושר של החילוק' },
-  description: { en: 'Answer 4 questions to enter the gym.', he: 'ענה על 4 שאלות כדי להיכנס לחדר הכושר.' },
-  triggerType: 'gym-entry',
-  questionSetIds: ['placeholder'],
+  id: 'gate-dividia-ocean1',
+  title: { en: 'Ocean Gate', he: 'מחסום ימי ' },
+  description: { en: 'Answer 6 questions to pass the gate.', he: 'ענה על 6 שאלות כדי לעבור את המחסום.' },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['÷'],
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
-    questionsRequired: 4,
-    penaltyAmount: 0,
+    questionsRequired: 6,
+    bonusEnabled: true,
+    bonusMultiplier: 2,
+    inputQuestions: { count: 4, types: ['÷'] },
   },
-  reopenCooldownMs: 0,
-  successActions: [
-    { type: 'set-flag', flag: FLAGS.GATE_DIVIDIA_GYM_PASS },
-    { type: 'set-quest', questId: 'main-act2-gym4' },
-  ],
+  reopenCooldownMs: 30 * 60 * 1000,
+});
+
+registerGate({
+  id: 'gate-dividia-route7',
+  title: { en: 'Route 7 Checkpoint', he: 'מחסום שביל 7' },
+  description: { en: 'Answer 5 questions to pass the gate.', he: 'ענה על 5 שאלות כדי לעבור את המחסום.' },
+  triggerType: 'route-checkpoint',
+  questionSetIds: ['÷'],
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 5,
+    bonusEnabled: true,
+    bonusMultiplier: 2,
+    inputQuestions: { count: 2, types: ['÷'] },
+  },
+  reopenCooldownMs: 30 * 60 * 1000,
 });
 
 // ── Cutscenes ─────────────────────────────────────────────────────────────────
@@ -205,4 +216,9 @@ registerStoryEvent({
     { type: 'complete-quest', questId: 'main-act2-dividia' },
     { type: 'set-quest', questId: 'main-act2-gym4' },
   ],
+});
+registerStoryEvent({
+  id: 'evt-dividia-gym-badge-earn',
+  trigger: { type: 'flag-set', flag: FLAGS.STORY_BADGE_4 },
+  actions: [{ type: 'complete-quest', questId: 'main-act2-gym4' }],
 });

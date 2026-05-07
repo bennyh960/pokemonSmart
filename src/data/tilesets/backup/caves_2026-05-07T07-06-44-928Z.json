@@ -459,9 +459,6 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
       "above": false,
       "category": "ground",
       "interactType": null

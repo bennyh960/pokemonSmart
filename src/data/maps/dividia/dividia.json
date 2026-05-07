@@ -16,7 +16,7 @@
     {
       "fromX": 13,
       "fromY": 15,
-      "toMapId": "shared/pokecenter-interior"
+      "toMapId": "shared/pokecenter-2"
     },
     {
       "fromX": 13,
@@ -47,6 +47,42 @@
       "fromX": 6,
       "fromY": 36,
       "toMapId": "dividia/gym"
+    },
+    {
+      "fromX": 27,
+      "fromY": 0,
+      "toMapId": "routes/route-5",
+      "toX": 50,
+      "toY": 28
+    },
+    {
+      "fromX": 28,
+      "fromY": 0,
+      "toMapId": "routes/route-5",
+      "toX": 50,
+      "toY": 28
+    },
+    {
+      "fromX": 29,
+      "fromY": 0,
+      "toMapId": "routes/route-5",
+      "toX": 50,
+      "toY": 28
+    },
+    {
+      "fromX": 0,
+      "fromY": 20,
+      "toMapId": "routes/route-7"
+    },
+    {
+      "fromX": 0,
+      "fromY": 21,
+      "toMapId": "routes/route-7"
+    },
+    {
+      "fromX": 0,
+      "fromY": 22,
+      "toMapId": "routes/route-7"
     }
   ],
   "npcs": [
@@ -109,6 +145,80 @@
           }
         ]
       }
+    },
+    {
+      "id": "npc-sea-guard",
+      "x": 36,
+      "y": 27,
+      "facing": "down",
+      "type": "gate-guard",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "זוהי נקודת בקורת! הזדהו בבקשה"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "lineOfSight": 5,
+      "gateId": "gate-dividia-ocean1"
+    },
+    {
+      "id": "npc-1778099943811",
+      "x": 26,
+      "y": 2,
+      "facing": "right",
+      "type": "gate-guard",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "הזדהו בבקשה!"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "gateId": "gate-route5-dividia"
+    },
+    {
+      "id": "npc-1778134649871",
+      "x": 3,
+      "y": 20,
+      "facing": "down",
+      "type": "gate-guard",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "gate-officer",
+      "gateId": "gate-dividia-route7"
+    },
+    {
+      "id": "npc-1778134767290",
+      "x": 5,
+      "y": 22,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "השגת כבר את תג מכון החילוק?"
+        },
+        {
+          "en": "",
+          "he": "עוד לא?"
+        },
+        {
+          "en": "",
+          "he": "כדאי לך - מורטי דיבון מנהיג המכון מחכה לך"
+        }
+      ],
+      "spriteType": "char_962c1b",
+      "name": {
+        "en": "Maya",
+        "he": "מאיה"
+      },
+      "blocker": true,
+      "despawnAfter": "story-badge-4"
     }
   ],
   "music": "town3",
@@ -143,9 +253,9 @@
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","cs1r2c2","s1-5","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","cs1r2c2","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","cs1r2c2","s1-5","s1-5","wt1bl","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1","wt1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","wt1-tl","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","cs1r2c2","s1-5","s1-5","wt1-tl","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","cs1r2c2","s1-5","s1-5","wt1-tl","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1","wt1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","cs1r2c2","s1-5","s1-5","s1-5","wt1-tl","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","wt1-tl","wt1t","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
@@ -457,8 +567,8 @@
     },
     {
       "key": "r3",
-      "x": 38,
-      "y": 26
+      "x": 36,
+      "y": 34
     },
     {
       "key": "b7",
@@ -1204,21 +1314,6 @@
       "key": "g3",
       "x": 8,
       "y": 26
-    },
-    {
-      "key": "g3",
-      "x": 2,
-      "y": 23
-    },
-    {
-      "key": "g3",
-      "x": 3,
-      "y": 23
-    },
-    {
-      "key": "g3",
-      "x": 4,
-      "y": 23
     },
     {
       "key": "g3",
@@ -2643,7 +2738,7 @@
     {
       "key": "r3",
       "x": 32,
-      "y": 0
+      "y": 1
     },
     {
       "key": "r3",
@@ -2737,8 +2832,8 @@
     },
     {
       "key": "r2",
-      "x": 26,
-      "y": 2
+      "x": 23,
+      "y": 6
     },
     {
       "key": "t8",
@@ -2833,11 +2928,11 @@
     {
       "key": "signx",
       "x": 26,
-      "y": 3
+      "y": 4
     },
     {
       "key": "signx",
-      "x": 2,
+      "x": 7,
       "y": 19
     },
     {
@@ -2994,6 +3089,136 @@
       "key": "t1b",
       "x": 19,
       "y": -1
+    },
+    {
+      "key": "br1vh",
+      "x": 29,
+      "y": 28
+    },
+    {
+      "key": "br1vh",
+      "x": 32,
+      "y": 28
+    },
+    {
+      "key": "br-deck1-new",
+      "x": 35,
+      "y": 26
+    },
+    {
+      "key": "r1",
+      "x": 34,
+      "y": 26
+    },
+    {
+      "key": "r1",
+      "x": 35,
+      "y": 25
+    },
+    {
+      "key": "r1",
+      "x": 35,
+      "y": 26
+    },
+    {
+      "key": "r1",
+      "x": 36,
+      "y": 26
+    },
+    {
+      "key": "r1",
+      "x": 37,
+      "y": 26
+    },
+    {
+      "key": "r2",
+      "x": 35,
+      "y": 29
+    },
+    {
+      "key": "r2",
+      "x": 36,
+      "y": 29
+    },
+    {
+      "key": "r2",
+      "x": 37,
+      "y": 29
+    },
+    {
+      "key": "r3",
+      "x": 38,
+      "y": 25
+    },
+    {
+      "key": "r3",
+      "x": 38,
+      "y": 27
+    },
+    {
+      "key": "f2c",
+      "x": 26,
+      "y": 3
+    },
+    {
+      "key": "f2c",
+      "x": 27,
+      "y": 3
+    },
+    {
+      "key": "f2r",
+      "x": 29,
+      "y": 1
+    },
+    {
+      "key": "f2r",
+      "x": 29,
+      "y": 2
+    },
+    {
+      "key": "f2r",
+      "x": 29,
+      "y": 3
+    },
+    {
+      "key": "f2br",
+      "x": 29,
+      "y": 3
+    },
+    {
+      "key": "f1-7",
+      "x": 2,
+      "y": 19
+    },
+    {
+      "key": "f1-7",
+      "x": 3,
+      "y": 19
+    },
+    {
+      "key": "f1-7",
+      "x": 2,
+      "y": 23
+    },
+    {
+      "key": "f1-7",
+      "x": 3,
+      "y": 23
+    },
+    {
+      "key": "f1-2",
+      "x": 4,
+      "y": 19
+    },
+    {
+      "key": "f1-4",
+      "x": 4,
+      "y": 20
+    },
+    {
+      "key": "f1-7",
+      "x": 4,
+      "y": 23
     }
   ]
 }

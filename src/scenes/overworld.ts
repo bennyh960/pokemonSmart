@@ -980,6 +980,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       setNPCHidden(id, hidden) {
         const npc = npcManager?.getNPCs().find((n) => n.id === id);
         if (npc) npc.hidden = hidden;
+        if (hasActiveGame()) {
+          const pd = getPlayerData();
+          if (hidden) {
+            setFlag(pd, `npc-hidden-${id}`);
+          } else {
+            delete pd.flags[`npc-hidden-${id}`];
+          }
+        }
       },
       setPlayerHidden(hidden) {
         playerHidden = hidden;
@@ -1478,6 +1486,25 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     npcStates.clear(); // reset runtime states for new map
     npcSavedFacing.clear();
 
+    // Replay completed cutscene steps (move-npc, hide-npc) on every map load so
+    // NPCs stay at their post-cutscene positions/visibility after transitions.
+    if (hasActiveGame()) {
+      applyCompletedEventNpcPositions(
+        (id) => {
+          const npc = npcManager.getNPCs().find((n) => n.id === id) ?? null;
+          return npc ? { x: npc.x, y: npc.y } : null;
+        },
+        (id, x, y) => {
+          const npc = npcManager.getNPCs().find((n) => n.id === id);
+          if (npc) { npc.x = x; npc.y = y; }
+        },
+        (id) => {
+          const npc = npcManager.getNPCs().find((n) => n.id === id);
+          if (npc) npc.hidden = true;
+        },
+      );
+    }
+
     // Detect whether this is a same-map re-entry (battle return) vs. a real map change
     const _prevMapId = hasActiveGame() ? getPlayerData().position.mapId : null;
     const _isSameMapEntry = _prevMapId !== null && _prevMapId === mapId;
@@ -1612,21 +1639,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       loadAndSetMap(mapId, spawnX, spawnY)
         .then(() => {
           mapLoading = false;
-          // Silently restore NPC positions for all completed cutscene events so
-          // a page refresh doesn't reset NPCs to their map-JSON starting coords.
-          applyCompletedEventNpcPositions(
-            (id) => {
-              const npc = npcManager?.getNPCs().find((n) => n.id === id) ?? null;
-              return npc ? { x: npc.x, y: npc.y } : null;
-            },
-            (id, x, y) => {
-              const npc = npcManager?.getNPCs().find((n) => n.id === id);
-              if (npc) {
-                npc.x = x;
-                npc.y = y;
-              }
-            },
-          );
           // Check for a cutscene event interrupted by a page refresh and re-run it.
           // Pass a callback to restore the player's in-scene grid position without
           // creating a circular import between overworld and story-engine.

@@ -288,6 +288,12 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           if (!def.walkable) return true;
         }
       }
+      // Also check deprecated objectLayer
+      const olTile = objectLayer?.[gy]?.[gx];
+      if (olTile) {
+        const def = tileset.getTile(olTile);
+        if (def && !def.walkable) return true;
+      }
       return false;
     },
 
@@ -308,6 +314,12 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
             if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
             return def.walkable; // object tile is present — its walkable is the answer
           }
+        }
+        // Also check deprecated objectLayer
+        const olTile = objectLayer?.[gy]?.[gx];
+        if (olTile) {
+          const def = tileset.getTile(olTile);
+          if (def) return def.walkable;
         }
       }
       // No object tile at this cell — base tile decides
@@ -526,7 +538,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           if (!def) continue;
           const drawX = Math.floor(col * BASE - cameraX);
           const drawY = Math.floor(row * BASE - cameraY);
-          ctx.drawImage(tileset.image, def.sx, def.sy, def.w, def.h, drawX, drawY, BASE, BASE);
+          ctx.drawImage(tileset.image, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w, def.h);
         }
       }
     },

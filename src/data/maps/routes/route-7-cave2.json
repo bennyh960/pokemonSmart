@@ -1,15 +1,14 @@
 {
-  "id": "route-5-cave2",
+  "id": "route-7-cave2",
   "label": {
     "en": "Bat Cave",
     "he": "מערת העטלפים"
   },
+  "tileset": "caves",
+
   "template": "cave-1",
-  "area": "Dividia",
   "music": "route",
-  "encounterTableId": null,
+  "encounterTableId": "cave-20-30",
   "npcs": [],
-  "interactiveItems": {},
-  "tiles": [],
-  "objects": []
+  "interactiveItems": {}
 }

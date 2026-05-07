@@ -4513,7 +4513,7 @@
       "sy": 176,
       "w": 16,
       "h": 16,
-      "walkable": false,
+      "walkable": true,
       "above": true,
       "category": "decoration",
       "interactType": null,

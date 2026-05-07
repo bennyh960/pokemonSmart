@@ -31,22 +31,22 @@
       "fromX": 49,
       "fromY": 29,
       "toMapId": "dividia/dividia",
-      "toX": 0,
-      "toY": 27
+      "toX": 27,
+      "toY": 0
     },
     {
       "fromX": 51,
       "fromY": 29,
       "toMapId": "dividia/dividia",
-      "toX": 0,
-      "toY": 29
+      "toX": 29,
+      "toY": 0
     },
     {
       "fromX": 50,
       "fromY": 29,
       "toMapId": "dividia/dividia",
-      "toX": 0,
-      "toY": 28
+      "toX": 28,
+      "toY": 0
     }
   ],
   "music": "route",
@@ -80,33 +80,33 @@
       },
       "party": [
         {
-          "pokemonId": 1,
-          "level": 5,
+          "pokemonId": 137,
+          "level": 35,
           "moves": []
         },
         {
-          "pokemonId": 1,
-          "level": 5,
+          "pokemonId": 247,
+          "level": 42,
           "moves": []
         },
         {
-          "pokemonId": 1,
-          "level": 5,
+          "pokemonId": 18,
+          "level": 42,
           "moves": []
         },
         {
-          "pokemonId": 1,
-          "level": 5,
+          "pokemonId": 59,
+          "level": 44,
           "moves": []
         },
         {
-          "pokemonId": 1,
-          "level": 5,
+          "pokemonId": 97,
+          "level": 45,
           "moves": []
         },
         {
-          "pokemonId": 1,
-          "level": 5,
+          "pokemonId": 3,
+          "level": 45,
           "moves": []
         }
       ],
@@ -319,13 +319,9 @@
       "y": 27,
       "facing": "up",
       "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "gate-officer"
+      "dialogue": [],
+      "spriteType": "gate-officer",
+      "despawnAfter": "trainer-route5-snorlax-glitch-defeated"
     }
   ],
   "interactiveItems": {}

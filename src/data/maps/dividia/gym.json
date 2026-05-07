@@ -28,7 +28,20 @@
       "y": 12,
       "facing": "down",
       "type": "trainer",
-      "dialogue": [],
+      "dialogue": [
+        {
+          "en": "",
+          "he": "ברוך הבא למכון החילוק!"
+        },
+        {
+          "en": "",
+          "he": "אני מורטי דיבון - מנהיג המכון."
+        },
+        {
+          "en": "",
+          "he": "אם תנצח אותי תזכה בתג החילוק! קרב 6 על 6"
+        }
+      ],
       "spriteType": "gym-4-divon",
       "party": [
         {
@@ -64,21 +77,51 @@
       ],
       "lineOfSight": 1,
       "reward": {
-        "money": 7000,
+        "money": 6000,
         "badge": 4,
         "items": [
           {
-            "itemId": "potion",
+            "itemId": "tm18",
+            "quantity": 1
+          },
+          {
+            "itemId": "tm11",
             "quantity": 1
           }
         ]
       },
-      "postBattleDialogue": [],
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "מרשים ביותר!"
+        },
+        {
+          "en": "",
+          "he": "יש פוקימונים שמתחזקים בהתאם למזג האוויר."
+        },
+        {
+          "en": "",
+          "he": "יום גשם - מחזק פוקימוני מים ועשב"
+        },
+        {
+          "en": "",
+          "he": "יום שמשי - מחזק פוקימוני אש"
+        }
+      ],
       "excludeFromMapClear": true,
       "questions": {
         "count": 5,
         "types": [
           "÷"
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "story-badge-4",
+        "dialogue": [
+          {
+            "en": "",
+            "he": "הרשמת אותי מאוד! מקווה ניפגש שוב"
+          }
         ]
       }
     },
@@ -97,17 +140,17 @@
       "party": [
         {
           "pokemonId": 15,
-          "level": 5,
+          "level": 35,
           "moves": []
         },
         {
           "pokemonId": 42,
-          "level": 5,
+          "level": 35,
           "moves": []
         },
         {
           "pokemonId": 24,
-          "level": 5,
+          "level": 35,
           "moves": []
         }
       ],
@@ -125,8 +168,8 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": ""
+          "en": "",
+          "he": "שלום! מכון החילוק לא עושה הנחות לאף אחד"
         }
       ],
       "spriteType": "char_485c6e",
@@ -162,6 +205,83 @@
         ]
       },
       "postBattleDialogue": [],
+      "questions": {
+        "count": 3,
+        "types": [
+          "÷"
+        ]
+      }
+    },
+    {
+      "id": "npc-1778102599114",
+      "x": 8,
+      "y": 7,
+      "facing": "up",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "קרב מכון?"
+        }
+      ],
+      "spriteType": "char_10af6a",
+      "name": {
+        "en": "Sam",
+        "he": "סם"
+      },
+      "party": [
+        {
+          "pokemonId": 89,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "postBattleDialogue": [],
+      "questions": {
+        "count": 1,
+        "types": [
+          "÷"
+        ]
+      }
+    },
+    {
+      "id": "npc-1778102692394",
+      "x": 9,
+      "y": 10,
+      "facing": "left",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "פוקימוני עשב שולטים"
+        }
+      ],
+      "spriteType": "char_ca2fd2",
+      "party": [
+        {
+          "pokemonId": 189,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 192,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "postBattleDialogue": [],
+      "name": {
+        "en": "Lisa",
+        "he": "ליסה"
+      },
       "questions": {
         "count": 3,
         "types": [
@@ -470,6 +590,346 @@
       "key": "t2u",
       "x": 15,
       "y": 2
+    },
+    {
+      "key": "t2",
+      "x": 1,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 2,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 3,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 4,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 5,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 6,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 7,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 8,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 9,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 10,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 11,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 12,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 16,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 17,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 14,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 13,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 15,
+      "y": 19
+    },
+    {
+      "key": "t2u",
+      "x": 1,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 2,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 3,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 4,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 5,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 6,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 7,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 8,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 9,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 10,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 12,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 11,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 13,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 14,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 15,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 16,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 17,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 9,
+      "y": 12
+    },
+    {
+      "key": "t2",
+      "x": 8,
+      "y": 12
+    },
+    {
+      "key": "t2",
+      "x": 7,
+      "y": 12
+    },
+    {
+      "key": "t2",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "key": "t2",
+      "x": 5,
+      "y": 12
+    },
+    {
+      "key": "t2u",
+      "x": 9,
+      "y": 11
+    },
+    {
+      "key": "t2u",
+      "x": 8,
+      "y": 11
+    },
+    {
+      "key": "t2u",
+      "x": 7,
+      "y": 11
+    },
+    {
+      "key": "t2u",
+      "x": 6,
+      "y": 11
+    },
+    {
+      "key": "t2u",
+      "x": 5,
+      "y": 11
+    },
+    {
+      "key": "t2b",
+      "x": 5,
+      "y": 12
+    },
+    {
+      "key": "t2b",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "key": "t2b",
+      "x": 7,
+      "y": 12
+    },
+    {
+      "key": "t2b",
+      "x": 8,
+      "y": 12
+    },
+    {
+      "key": "t2b",
+      "x": 9,
+      "y": 12
+    },
+    {
+      "key": "t2",
+      "x": 9,
+      "y": 9
+    },
+    {
+      "key": "t2",
+      "x": 8,
+      "y": 9
+    },
+    {
+      "key": "t2u",
+      "x": 9,
+      "y": 8
+    },
+    {
+      "key": "t2u",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "key": "t2u",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "key": "t2u",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "t2u",
+      "x": 7,
+      "y": 5
+    },
+    {
+      "key": "t2",
+      "x": 7,
+      "y": 6
+    },
+    {
+      "key": "t2",
+      "x": 6,
+      "y": 6
+    },
+    {
+      "key": "t2",
+      "x": 5,
+      "y": 6
+    },
+    {
+      "key": "t2b",
+      "x": 5,
+      "y": 6
+    },
+    {
+      "key": "t2b",
+      "x": 6,
+      "y": 6
+    },
+    {
+      "key": "t2b",
+      "x": 7,
+      "y": 6
+    },
+    {
+      "key": "t2b",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "key": "t2b",
+      "x": 6,
+      "y": 7
+    },
+    {
+      "key": "t2b",
+      "x": 5,
+      "y": 7
+    },
+    {
+      "key": "t2b",
+      "x": 5,
+      "y": 8
+    },
+    {
+      "key": "t2b",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "key": "t2b",
+      "x": 7,
+      "y": 8
     }
   ],
   "objectLayer": [
@@ -478,20 +938,20 @@
     ["t2b",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"t2b"],
     ["t2b",null,"t2b",null,null,null,null,null,null,null,null,null,null,null,null,null,"t2b","t2b",null,null,null,null,null,null,"t2b"],
     ["t2b",null,"t2b",null,null,null,null,null,null,null,null,null,null,null,null,null,"t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b"],
-    ["t2b",null,"t2b",null,null,"t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b"],
-    ["t2b",null,"t2b",null,null,"t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b"],
-    ["t2b",null,"t2b",null,null,"t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b",null,null,null,null,null,null,null,null,null,null,"t2b"],
-    ["t2b",null,"t2b",null,null,"t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b",null,null,null,null,null,null,null,null,null,null,"t2b"],
+    ["t2b",null,"t2b",null,null,null,null,null,null,null,"t2b","t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b"],
+    ["t2b",null,"t2b",null,null,null,null,null,null,null,"t2b","t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b"],
+    ["t2b",null,"t2b",null,null,null,null,null,null,null,"t2b","t2b","t2b","t2b",null,null,null,null,null,null,null,null,null,null,"t2b"],
+    ["t2b",null,"t2b",null,null,null,null,null,null,null,"t2b","t2b","t2b","t2b",null,null,null,null,null,null,null,null,null,null,"t2b"],
     ["t2b",null,"t2b",null,null,null,null,null,null,null,"t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b"],
     ["t2b",null,"t2b",null,null,null,null,null,null,null,"t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b"],
-    ["t2b",null,"t2b",null,null,"t2b","t2b","t2b","t2b","t2b","t2b","t2b",null,null,null,"t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b"],
-    ["t2b",null,"t2b",null,null,"t2b","t2b","t2b","t2b","t2b","t2b","t2b",null,null,null,"t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b"],
+    ["t2b",null,"t2b",null,null,null,null,null,null,null,"t2b","t2b",null,null,null,"t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b"],
+    ["t2b",null,"t2b",null,null,null,null,null,null,null,"t2b","t2b",null,null,null,"t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b"],
     ["t2b",null,"t2b",null,null,null,null,null,null,null,null,null,null,null,null,"t2b",null,null,"t2b","t2b","t2b","t2b",null,null,"t2b"],
     ["t2b",null,"t2b",null,null,null,null,null,null,null,null,null,null,null,null,"t2b",null,null,"t2b",null,null,null,null,null,null],
     ["t2b",null,"t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b",null,null,null,null,null,null],
     ["t2b",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"t2b",null,null,"t2b","t2b","t2b","t2b"],
     ["t2b",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"t2b",null,null,"t2b","t2b","t2b","t2b"],
-    ["t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b","t2b",null,null,"t2b","t2b","t2b","t2b"],
+    ["t2b",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"t2b",null,null,"t2b","t2b","t2b","t2b"],
     [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
   ]
 }

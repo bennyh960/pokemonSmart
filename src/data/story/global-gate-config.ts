@@ -54,7 +54,10 @@ export const DEFAULT_SESSION_CONFIG: Omit<GateSessionConfig, 'questionsRequired'
   rewardThreshold: 0.8, // ≥ 80% correct → earn rewards
   penaltyThreshold: 0.5, // < 50% correct → money penalty
   penaltyAmount: 500, // 500 PokeCoins deducted on penalty
-  rewards: [{ type: 'money', amount: 500 }],
+  rewards: [
+    { type: 'money', amount: 1500 },
+    { type: 'item', itemId: 'pokeball', quantity: 3 },
+  ],
   bonusEnabled: true,
   bonusMultiplier: 3,
   timeLimitPerQuestion: 0, // default to no time limit (override per location)
@@ -206,7 +209,6 @@ registerGate({
 // Pokecenter interiors
 registerAutoGateMap('shared/pokecenter-mart-interior', 'pokecenter');
 registerAutoGateMap('shared/pokecenter-2', 'pokecenter');
-registerAutoGateMap('shared/fake-pokecenter', 'pokecenter');
 registerAutoGateMap(MapId.MULTIPLIA_POKECENTER, 'pokecenter');
 
 // Pokemart interiors
