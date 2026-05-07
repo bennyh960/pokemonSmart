@@ -1491,15 +1491,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     if (hasActiveGame()) {
       applyCompletedEventNpcPositions(
         (id) => {
-          const npc = npcManager.getNPCs().find((n) => n.id === id) ?? null;
+          const npc = npcManager?.getNPCs().find((n) => n.id === id) ?? null;
           return npc ? { x: npc.x, y: npc.y } : null;
         },
         (id, x, y) => {
-          const npc = npcManager.getNPCs().find((n) => n.id === id);
-          if (npc) { npc.x = x; npc.y = y; }
+          const npc = npcManager?.getNPCs().find((n) => n.id === id);
+          if (npc) {
+            npc.x = x;
+            npc.y = y;
+          }
         },
         (id) => {
-          const npc = npcManager.getNPCs().find((n) => n.id === id);
+          const npc = npcManager?.getNPCs().find((n) => n.id === id);
           if (npc) npc.hidden = true;
         },
       );
