@@ -7,7 +7,7 @@
   "tileSize": 16,
   "spawn": {
     "x": 24,
-    "y": 7
+    "y": 47
   },
   "transitions": [
     {
