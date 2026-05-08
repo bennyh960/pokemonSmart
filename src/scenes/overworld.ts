@@ -1167,6 +1167,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       reward: normalizeReward(trainer.reward),
       trainerSprite: NPC_TO_TRAINER_SPRITE[trainer.spriteType],
       postBattleDialogue: trainer.postBattleDialogue,
+      postFlagDialogue: trainer.postFlagDialogue,
       reencounterIndex: encounterIndex,
       hasReencounter: !!trainer.reencounter,
       locationEn: trainer.location?.en,

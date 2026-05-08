@@ -287,6 +287,7 @@ export interface TrainerBattleData {
   reward: TrainerReward;
   trainerSprite?: string; // e.g., 'youngster', 'lass'
   postBattleDialogue?: BilingualText[]; // Dialogue shown after defeat
+  postFlagDialogue?: { flag?: string; dialogue: BilingualText[] }; // Shown immediately after first defeat (flag just set)
   reencounterIndex?: number; // 0 = first fight, 1+ = rematch (items skipped on rematch)
   hasReencounter?: boolean; // true if trainer has re-encounter config (for phone registration)
   locationEn?: string; // trainer location for phone display
@@ -1083,6 +1084,10 @@ export function createBattleScene(
     // Append post-battle dialogue if present (resolved to current locale)
     if (td.postBattleDialogue && td.postBattleDialogue.length > 0) {
       lines.push(...resolveDialogue(td.postBattleDialogue, getLocale()));
+    }
+    // Append postFlagDialogue immediately on first defeat (flag was just set above)
+    if (!isRematch && td.postFlagDialogue && td.postFlagDialogue.dialogue.length > 0) {
+      lines.push(...resolveDialogue(td.postFlagDialogue.dialogue, getLocale()));
     }
 
     textBox = createTextBox(lines, isRTL());
