@@ -1089,7 +1089,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM36', he: 'TM36' },
-    description: { en: 'Teaches Sludge Bomb', he: 'מלמד Sludge Bomb' },
+    description: { en: 'Teaches Sludge Bomb', he: 'מלמד פצצת בוץ' },
   },
   336: {
     category: 'machine',
