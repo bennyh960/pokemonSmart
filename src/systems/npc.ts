@@ -143,7 +143,7 @@ export interface NPCData {
 
 /** Dialogue shown instead of the default once a story flag is set. */
 export interface PostFlagDialogue {
-  flag: string;
+  flag?: string; // Optional for trainer NPCs — defaults to trainer-{id}-defeated
   dialogue: BilingualText[];
 }
 

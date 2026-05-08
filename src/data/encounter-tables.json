@@ -3,7 +3,7 @@
     "encounterRate": 0.5,
     "entries": [
       {
-        "pokemonId": 133,
+        "pokemonId": 7,
         "minLevel": 3,
         "maxLevel": 50,
         "weight": 50
@@ -1403,6 +1403,59 @@
         "minLevel": 29,
         "maxLevel": 25,
         "weight": 10
+      }
+    ]
+  },
+  "grass-gym-20-30": {
+    "encounterRate": 0.2,
+    "entries": [
+      {
+        "pokemonId": 1,
+        "minLevel": 14,
+        "maxLevel": 15,
+        "weight": 10
+      },
+      {
+        "pokemonId": 2,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 3
+      },
+      {
+        "pokemonId": 43,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 12
+      },
+      {
+        "pokemonId": 44,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 6
+      },
+      {
+        "pokemonId": 69,
+        "minLevel": 15,
+        "maxLevel": 20,
+        "weight": 10
+      },
+      {
+        "pokemonId": 70,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 5
+      },
+      {
+        "pokemonId": 114,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 20
+      },
+      {
+        "pokemonId": 152,
+        "minLevel": 15,
+        "maxLevel": 20,
+        "weight": 5
       }
     ]
   }

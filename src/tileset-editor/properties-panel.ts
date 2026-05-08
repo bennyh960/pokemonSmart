@@ -48,29 +48,36 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
 };
 
 // Parse encounterTypes array into UI state.
-//   ['*']             - allMode=true, exceptions=[]
-//   ['* /water,ice']  - allMode=true, exceptions=['water','ice']
-//   ['water','bug']   - allMode=false, includes=['water','bug']
-//   []                - allMode=false, includes=[]
-function parseEncounterTypesForUI(types: string[]): { allMode: boolean; includes: string[]; exceptions: string[] } {
+//   ['*']              - allMode=true, exceptions=[], excludeMode='every'
+//   ['*/water,ice']    - allMode=true, exceptions=['water','ice'], excludeMode='every' (loose)
+//   ['*/water,ice?']   - allMode=true, exceptions=['water','ice'], excludeMode='some'  (strict)
+//   ['water','bug']    - allMode=false, includes=['water','bug']
+//   []                 - allMode=false, includes=[]
+function parseEncounterTypesForUI(types: string[]): {
+  allMode: boolean;
+  includes: string[];
+  exceptions: string[];
+  excludeMode: 'some' | 'every';
+} {
   const wildcard = types.find((t) => t.startsWith('*'));
   if (wildcard) {
     const afterSlash = wildcard.split('/')[1];
-    const exceptions = afterSlash
-      ? afterSlash
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean)
-      : [];
-    return { allMode: true, includes: [], exceptions };
+    let raw = afterSlash ?? '';
+    let excludeMode: 'some' | 'every' = 'every';
+    if (raw.endsWith('?')) { excludeMode = 'some'; raw = raw.slice(0, -1); }
+    else if (raw.endsWith('!')) { raw = raw.slice(0, -1); }
+    const exceptions = raw ? raw.split(',').map((s) => s.trim()).filter(Boolean) : [];
+    return { allMode: true, includes: [], exceptions, excludeMode };
   }
-  return { allMode: false, includes: [...types], exceptions: [] };
+  return { allMode: false, includes: [...types], exceptions: [], excludeMode: 'every' };
 }
 
 /** Serialize UI state back to encounterTypes array. */
-function serializeEncounterTypes(allMode: boolean, includes: string[], exceptions: string[]): string[] {
+function serializeEncounterTypes(allMode: boolean, includes: string[], exceptions: string[], excludeMode: 'some' | 'every'): string[] {
   if (allMode) {
-    return exceptions.length > 0 ? [`*/${exceptions.join(',')}`] : ['*'];
+    if (exceptions.length === 0) return ['*'];
+    const suffix = excludeMode === 'some' ? '?' : '';
+    return [`*/${exceptions.join(',')}${suffix}`];
   }
   return [...includes];
 }
@@ -96,10 +103,10 @@ function createEncounterTypesPicker(
   initial: string[],
   onChange: (types: string[]) => void,
 ): void {
-  let { allMode, includes, exceptions } = parseEncounterTypesForUI(initial);
+  let { allMode, includes, exceptions, excludeMode } = parseEncounterTypesForUI(initial);
 
   function emit(): void {
-    onChange(serializeEncounterTypes(allMode, includes, exceptions));
+    onChange(serializeEncounterTypes(allMode, includes, exceptions, excludeMode));
   }
 
   function render(): void {
@@ -196,6 +203,36 @@ function createEncounterTypesPicker(
           render();
         });
         tagsRow.appendChild(tag);
+      }
+
+      // Strict/Loose toggle — only shown when there are exceptions
+      if (exceptions.length > 0) {
+        container.appendChild(tagsRow);
+        const modeRow = document.createElement('div');
+        modeRow.style.cssText = 'display:flex;gap:4px;align-items:center;margin-top:3px';
+        const modeLabel = document.createElement('span');
+        modeLabel.style.cssText = 'font-size:10px;color:#aaa';
+        modeLabel.textContent = 'Exclude mode:';
+        modeRow.appendChild(modeLabel);
+
+        for (const [val, label, title] of [
+          ['every', 'Loose (!)', 'Exclude only if ALL types are excluded (e.g. */water — pure Water only)'],
+          ['some', 'Strict (?)', 'Exclude if ANY type is excluded (e.g. */water? — any Water Pokemon)'],
+        ] as [string, string, string][]) {
+          const btn = document.createElement('button');
+          btn.textContent = label;
+          btn.title = title;
+          const active = excludeMode === val;
+          btn.style.cssText = `font-size:10px;padding:1px 6px;border-radius:3px;cursor:pointer;border:1px solid ${active ? '#88aaff' : '#555'};background:${active ? '#334466' : '#222'};color:${active ? '#aaccff' : '#aaa'}`;
+          btn.addEventListener('click', () => {
+            excludeMode = val as 'some' | 'every';
+            emit();
+            render();
+          });
+          modeRow.appendChild(btn);
+        }
+        container.appendChild(modeRow);
+        return;
       }
     } else {
       // Include tags (normal colored)

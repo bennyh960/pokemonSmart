@@ -4,29 +4,461 @@
     "en": "Fractalis",
     "he": "פרקטליס טאוון - עיר השברים"
   },
-  "width": 20,
-  "height": 15,
+  "width": 40,
+  "height": 40,
   "tileSize": 16,
-  "spawn": { "x": 10, "y": 7 },
+  "spawn": {
+    "x": 10,
+    "y": 7
+  },
   "transitions": [],
   "npcs": [],
   "music": "town",
   "encounterTableId": null,
+  "interactiveItems": {}
+,
   "tiles": [
-    [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-    [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1-tl","wt1t"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1-tl","wt1","wt1"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1-tl","wt1","wt1","wt1"],
+    ["cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1","wt1","wt1","wt1"],
+    ["cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1","wt1","wt1","wt1","wt1"],
+    ["cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1r","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["cs1r2c2","cs1r2c2","wt1-tl","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1t","wt1r","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1t","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"]
+  ],
+  "objects": [
+    {
+      "key": "r1",
+      "x": 3,
+      "y": 34
+    },
+    {
+      "key": "r1",
+      "x": 4,
+      "y": 33
+    },
+    {
+      "key": "r1",
+      "x": 5,
+      "y": 33
+    },
+    {
+      "key": "r1",
+      "x": 6,
+      "y": 34
+    },
+    {
+      "key": "r1",
+      "x": 7,
+      "y": 33
+    },
+    {
+      "key": "r1",
+      "x": 8,
+      "y": 33
+    },
+    {
+      "key": "r1",
+      "x": 9,
+      "y": 34
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 8
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 9
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 10
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 11
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 12
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 13
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 14
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 15
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 16
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 17
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 18
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 19
+    },
+    {
+      "key": "t2b",
+      "x": 39,
+      "y": 20
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 8
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 9
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 10
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 11
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 12
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 13
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 14
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 15
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 16
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 17
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 18
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 19
+    },
+    {
+      "key": "t2b",
+      "x": 38,
+      "y": 20
+    },
+    {
+      "key": "s1-2",
+      "x": 37,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 36,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 35,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 34,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 33,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 32,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 31,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 30,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 29,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 28,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 27,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 26,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 25,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 24,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 23,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 22,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 21,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 20,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 19,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 18,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 17,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 16,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 15,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 14,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 13,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 12,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 11,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 10,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 9,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 8,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 7,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 6,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 5,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 4,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 3,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 2,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 1,
+      "y": 21
+    },
+    {
+      "key": "s1-2",
+      "x": 0,
+      "y": 21
+    },
+    {
+      "key": "b8",
+      "x": 23,
+      "y": 2
+    },
+    {
+      "key": "b8",
+      "x": 17,
+      "y": 2
+    },
+    {
+      "key": "b8",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "key": "b8",
+      "x": 12,
+      "y": 2
+    },
+    {
+      "key": "b6",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "key": "b6",
+      "x": 15,
+      "y": 8
+    },
+    {
+      "key": "b6",
+      "x": 25,
+      "y": 8
+    },
+    {
+      "key": "market1",
+      "x": 9,
+      "y": 13
+    },
+    {
+      "key": "pc1",
+      "x": 16,
+      "y": 13
+    }
   ]
 }

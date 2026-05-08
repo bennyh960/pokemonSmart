@@ -84,6 +84,7 @@ import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
 import charactersManifest from '../data/sprites/characters.json';
 import type { SimpleOpType } from '../math/simple-input-question.js';
 import { getPlayerBirthYear, gradeFromBirthYear } from '../data/story/global-gate-config.js';
+import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -299,6 +300,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     originalY: number;
   }
   let trainerApproach: TrainerApproachState | null = null;
+  let pendingLOSBattle = false; // true when LOS-approach dialogue is showing; use flash transition in onDialogueEnd
 
   // Gate-guard approach state
   interface GateGuardApproachState {
@@ -641,16 +643,50 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       restoreNPCFacing(npc);
       interactingNPC = null;
       if (hasActiveGame()) {
+        const trainerQ = (trainer as unknown as Record<string, unknown>).questions as
+          | { count: number; types?: string[]; repeated?: boolean }
+          | undefined;
         const flags = getPlayerData().flags;
-        if (!flags[`trainer-${trainer.id}-defeated`]) {
-          // First encounter
-          const trainerBattleData = buildTrainerBattleData(trainer, 0);
-          const playerData = getPlayerData();
-          const playerPokemon = playerData.party.find((p) => p.hp > 0);
-          if (playerPokemon) {
-            setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
-            stateMachine.change('BATTLE');
+
+        const runQuestionsOverlay = (onComplete: () => void) => {
+          const appContainer = document.getElementById('app');
+          if (appContainer && trainerQ && trainerQ.count > 0) {
+            npcOverlayActive = true;
+            const gradeId = gradeFromBirthYear(getPlayerBirthYear());
+            mountInputMathOverlay({
+              count: trainerQ.count,
+              types: trainerQ.types as SimpleOpType[] | undefined,
+              gradeId,
+              birthYear: getPlayerBirthYear(),
+              container: appContainer,
+            }).then(() => {
+              npcOverlayActive = false;
+              onComplete();
+            });
+          } else {
+            onComplete();
           }
+        };
+
+        if (!flags[`trainer-${trainer.id}-defeated`]) {
+          // First encounter — run questions (if any) then start battle
+          runQuestionsOverlay(() => {
+            const trainerBattleData = buildTrainerBattleData(trainer, 0);
+            const playerData = getPlayerData();
+            const playerPokemon = playerData.party.find((p) => p.hp > 0);
+            if (playerPokemon) {
+              setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
+              if (pendingLOSBattle) {
+                // LOS-initiated: use flash transition to match the trainer-spotted feel
+                pendingLOSBattle = false;
+                encounterTriggered = true;
+                flashTimer = 0;
+                flashPhase = 'flash';
+              } else {
+                stateMachine.change('BATTLE');
+              }
+            }
+          });
         } else {
           // Already defeated — check re-encounter eligibility
           const status = getReencounterStatus(trainer);
@@ -664,7 +700,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               stateMachine.change('BATTLE');
             }
           }
-          // cooldown / max-reached: dialogue was already shown, nothing to do here
+          // else: postFlagDialogue/default message already handled at interaction time — do nothing
         }
       }
     } else if (npc.type === 'wild-pokemon') {
@@ -1483,6 +1519,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     // Load NPCs from map data
     npcManager = createNPCManager((data.npcs as NPCData[]) || []);
+    // mapClearBlocker: implicit blocker + despawnAfter all-trainers-defeated-{mapId}
+    {
+      const _clearFlag = allTrainersDefeatedFlag(mapId);
+      for (const npc of npcManager.getNPCs()) {
+        if ((npc as unknown as Record<string, unknown>).mapClearBlocker) {
+          if (!npc.blocker) npc.blocker = true;
+          if (!npc.despawnAfter) npc.despawnAfter = _clearFlag;
+        }
+      }
+    }
     npcStates.clear(); // reset runtime states for new map
     npcSavedFacing.clear();
 
@@ -1535,6 +1581,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     choiceState = null;
     healTextBox = null;
     trainerApproach = null;
+    pendingLOSBattle = false;
     gateGuardApproach = null;
     pendingGateBack = null;
     partyGuardApproach = null;
@@ -1614,6 +1661,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       choiceState = null;
       healTextBox = null;
       trainerApproach = null;
+      pendingLOSBattle = false;
       hmAnim = null;
       pendingHMAction = null;
       flyAnim = null;
@@ -2161,45 +2209,60 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             ta.trainerPixelY = ta.trainerStartY + (ta.trainerTargetY - ta.trainerStartY) * ta.walkProgress;
           }
         } else if (ta.phase === 'battle-start') {
-          // Fire npc-interact before the battle so story events can react (mirrors player-initiated flow)
+          // Push player back 1 step (opposite of facing direction) before dialogue/battle
+          const _tbFaceVec = DIR_VECTORS[player.facing];
+          if (_tbFaceVec) {
+            const _tbBackX = player.gridX - _tbFaceVec.dx;
+            const _tbBackY = player.gridY - _tbFaceVec.dy;
+            const _tbPd = hasActiveGame() ? getPlayerData() : null;
+            if (
+              tileMap &&
+              tileMap.isWalkable(_tbBackX, _tbBackY) &&
+              !npcManager?.isVisibleNPCAt(_tbBackX, _tbBackY, _tbPd?.flags ?? {}, _tbPd?.party)
+            ) {
+              player.gridX = _tbBackX;
+              player.gridY = _tbBackY;
+              player.pixelX = _tbBackX * TILE_SIZE;
+              player.pixelY = _tbBackY * TILE_SIZE;
+              player.targetGridX = _tbBackX;
+              player.targetGridY = _tbBackY;
+              player.moving = false;
+            }
+          }
+          // Reset trainer to original tile
+          ta.trainer.x = ta.originalX;
+          ta.trainer.y = ta.originalY;
+          trainerApproach = null;
+
+          // Fire npc-interact story trigger (mirrors player-initiated flow)
           if (hasActiveGame()) {
             fireStoryTrigger({ type: 'npc-interact', npcId: ta.trainer.id });
           }
-          // Start the battle (line-of-sight triggered — always first encounter)
-          const trainerBattleData = buildTrainerBattleData(ta.trainer, 0);
+
+          const _taTrainer = ta.trainer as unknown as NPCData;
           const playerData = getPlayerData();
           const playerPokemon = playerData.party.find((p) => p.hp > 0);
-          if (playerPokemon) {
-            setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
-            // Push player back 1 step (opposite of facing direction) before battle starts
-            const _tbFaceVec = DIR_VECTORS[player.facing];
-            if (_tbFaceVec) {
-              const _tbBackX = player.gridX - _tbFaceVec.dx;
-              const _tbBackY = player.gridY - _tbFaceVec.dy;
-              const _tbPd = hasActiveGame() ? getPlayerData() : null;
-              if (
-                tileMap &&
-                tileMap.isWalkable(_tbBackX, _tbBackY) &&
-                !npcManager?.isVisibleNPCAt(_tbBackX, _tbBackY, _tbPd?.flags ?? {}, _tbPd?.party)
-              ) {
-                player.gridX = _tbBackX;
-                player.gridY = _tbBackY;
-                player.pixelX = _tbBackX * TILE_SIZE;
-                player.pixelY = _tbBackY * TILE_SIZE;
-                player.targetGridX = _tbBackX;
-                player.targetGridY = _tbBackY;
-                player.moving = false;
-              }
-            }
-            // Reset trainer position back after battle
-            ta.trainer.x = ta.originalX;
-            ta.trainer.y = ta.originalY;
-            trainerApproach = null;
+          if (_taTrainer.dialogue.length > 0 && hasActiveGame()) {
+            // Show trainer's pre-battle dialogue; onDialogueEnd will handle questions + flash + battle
+            turnNPCToPlayer(_taTrainer);
+            interactingNPC = _taTrainer;
+            pendingLOSBattle = true;
+            activeTextBox = createTextBox(
+              resolveDialogue(_taTrainer.dialogue, getLocale()),
+              isRTL(),
+              _taTrainer.name ? getLocalizedName(_taTrainer.name) : undefined,
+            );
+          } else if (playerPokemon) {
+            // No dialogue — start battle directly with flash transition
+            setTrainerBattleData(
+              playerPokemon,
+              buildTrainerBattleData(ta.trainer, 0),
+              deriveBattleContext(),
+              deriveBattleBackground(),
+            );
             encounterTriggered = true;
             flashTimer = 0;
             flashPhase = 'flash';
-          } else {
-            trainerApproach = null;
           }
         }
         return;
@@ -2758,7 +2821,39 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 } else if (status.reason === 'max-reached') {
                   activeTextBox = createTextBox([t('trainer.reencounter.maxReached')], isRTL(), _trainerName);
                 } else {
-                  activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL(), _trainerName);
+                  // No reencounter — show postFlagDialogue (with questions before it if configured)
+                  const pfd = trainer.postFlagDialogue;
+                  if (pfd && pfd.dialogue.length > 0) {
+                    const trainerQ = (trainer as unknown as Record<string, unknown>).questions as
+                      | { count: number; types?: string[]; repeated?: boolean }
+                      | undefined;
+                    const showPFD = () => {
+                      activeTextBox = createTextBox(resolveDialogue(pfd.dialogue, getLocale()), isRTL(), _trainerName);
+                    };
+                    if (trainerQ && trainerQ.count > 0) {
+                      const appContainer = document.getElementById('app');
+                      if (appContainer) {
+                        npcOverlayActive = true;
+                        const gradeId = gradeFromBirthYear(getPlayerBirthYear());
+                        mountInputMathOverlay({
+                          count: trainerQ.count,
+                          types: trainerQ.types as SimpleOpType[] | undefined,
+                          gradeId,
+                          birthYear: getPlayerBirthYear(),
+                          container: appContainer,
+                        }).then(() => {
+                          npcOverlayActive = false;
+                          showPFD();
+                        });
+                      } else {
+                        showPFD();
+                      }
+                    } else {
+                      showPFD();
+                    }
+                  } else {
+                    activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL(), _trainerName);
+                  }
                 }
                 return;
               }
@@ -2790,7 +2885,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             // Use postFlagDialogue when present and its flag is set
             const pfd = npc.postFlagDialogue;
             const dialogueLines =
-              pfd && hasActiveGame() && getPlayerData().flags[pfd.flag] ? pfd.dialogue : npc.dialogue;
+              pfd && pfd.flag && hasActiveGame() && getPlayerData().flags[pfd.flag] ? pfd.dialogue : npc.dialogue;
             const locale = getLocale();
             const resolvedLines = resolveDialogue(dialogueLines, locale);
             if (npc.mapClearBlocker && hasActiveGame()) {

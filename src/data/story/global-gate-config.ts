@@ -232,9 +232,17 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
   'multiplia/gym': {
     questionSetIds: ['×'],
     sessionConfig: {
-      inputQuestions: { count: 5, types: ['×'] },
-      questionsRequired: 20,
+      inputQuestions: { count: 8, types: ['×'] },
+      questionsRequired: 15,
       timeLimitPerQuestion: 180,
+    },
+  },
+  'divida/gym': {
+    questionSetIds: ['÷'],
+    sessionConfig: {
+      inputQuestions: { count: 8, types: ['÷'] },
+      questionsRequired: 20,
+      timeLimitPerQuestion: 210,
     },
   },
 };
@@ -242,3 +250,4 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
 registerAutoGateMap('sumville/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['sumville/gym']);
 registerAutoGateMap('minusburg/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['minusburg/gym']);
 registerAutoGateMap('multiplia/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['multiplia/gym']);
+registerAutoGateMap('divida/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['divida/gym']);

@@ -227,23 +227,33 @@ export function generateWildEncounter(mapId: string, tileTypes?: string[] | null
 }
 
 // Parse encounter type filters into include/exclude lists.
-//   ['*']             - all types, no exclusions
-//   ['* /water,ice']  - all types except water and ice (no space in actual value)
-//   ['water','bug']   - only water and bug
-function parseEncounterFilter(tileTypes: string[]): { mode: 'all' | 'include'; include: string[]; exclude: string[] } {
-  // Check for wildcard with exclusions: '*/water,ice'
+//   ['*']               - all types, no exclusions
+//   ['*/water,ice']     - all except water/ice — loose: excludes only if ALL types match (every)
+//   ['*/water,ice?']    - all except water/ice — strict: excludes if ANY type matches (some)
+//   ['*/water,ice!']    - same as no suffix (loose, every) — explicit form
+//   ['water','bug']     - only water and bug
+function parseEncounterFilter(tileTypes: string[]): {
+  mode: 'all' | 'include';
+  include: string[];
+  exclude: string[];
+  excludeMode: 'some' | 'every';
+} {
   const wildcard = tileTypes.find((t) => t.startsWith('*'));
   if (wildcard) {
-    const afterSlash = wildcard.split('/')[1]; // 'water,ice' or undefined
-    const exclude = afterSlash
-      ? afterSlash
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean)
-      : [];
-    return { mode: 'all', include: [], exclude };
+    const afterSlash = wildcard.split('/')[1]; // e.g. 'water,ice?' or undefined
+    let raw = afterSlash ?? '';
+    let excludeMode: 'some' | 'every' = 'every';
+    if (raw.endsWith('?')) {
+      excludeMode = 'some';
+      raw = raw.slice(0, -1);
+    } else if (raw.endsWith('!')) {
+      excludeMode = 'every';
+      raw = raw.slice(0, -1);
+    }
+    const exclude = raw ? raw.split(',').map((s) => s.trim()).filter(Boolean) : [];
+    return { mode: 'all', include: [], exclude, excludeMode };
   }
-  return { mode: 'include', include: tileTypes, exclude: [] };
+  return { mode: 'include', include: tileTypes, exclude: [], excludeMode: 'every' };
 }
 
 /** Roll a Pokemon from the encounter table using weighted random, filtered by tile types. */
@@ -253,11 +263,14 @@ function rollEncounter(table: EncounterTable, tileTypes?: string[] | null): Poke
   if (tileTypes) {
     const filter = parseEncounterFilter(tileTypes);
     if (filter.mode === 'all' && filter.exclude.length > 0) {
-      // All types except excluded
       entries = entries.filter((e) => {
         const data = getPokemon(e.pokemonId);
         if (!data) return false;
-        // Exclude if ALL of the Pokemon's types are in the exclude list
+        if (filter.excludeMode === 'some') {
+          // Strict: exclude if ANY type is in the exclude list
+          return !data.types.some((t) => filter.exclude.includes(t));
+        }
+        // Loose (default): exclude only if ALL types are in the exclude list
         return !data.types.every((t) => filter.exclude.includes(t));
       });
     } else if (filter.mode === 'include') {

@@ -3662,7 +3662,7 @@
       "h": 16,
       "walkable": true,
       "encounterTypes": [
-        "*/water"
+        "*"
       ],
       "above": false,
       "category": "ground",
@@ -3725,7 +3725,7 @@
       "h": 16,
       "walkable": true,
       "encounterTypes": [
-        "*"
+        "*/water"
       ],
       "above": false,
       "category": "ground",
@@ -6242,6 +6242,16 @@
           "dy": 0
         }
       ]
+    },
+    {
+      "key": "t2-fake",
+      "sx": 16,
+      "sy": 512,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "tree"
     }
   ]
 }
