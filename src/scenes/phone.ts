@@ -23,6 +23,7 @@ import { t, isRTL, getLocale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import { getReencounterStatus } from '../systems/reencounter.js';
 import { getMapDisplayName, findMapForTrainer } from '../systems/map-manager.js';
+import { getDayCareEntry, getDayCarePhase } from '../systems/day-care.js';
 import type { PhoneContactInfo } from '../types/index.js';
 
 /** Resolve the trainer's location label for the current locale. */
@@ -39,6 +40,7 @@ type StatusKind = 'ready' | 'cooldown' | 'maxReached' | 'unknown';
 
 function getReencounterKind(contact: PhoneContactInfo): StatusKind {
   if (!hasActiveGame()) return 'unknown';
+  if (contact.contactType === 'day-care') return 'unknown';
   const pd = getPlayerData();
   const state = pd.trainerEncounters[contact.trainerId];
   if (!state || !contact.reencounterConfig) return 'unknown';
@@ -60,6 +62,16 @@ function getStatusColor(kind: StatusKind): string {
 function getStatusLine(contact: PhoneContactInfo): string {
   if (!hasActiveGame()) return '';
   const pd = getPlayerData();
+
+  if (contact.contactType === 'day-care') {
+    const entry = getDayCareEntry(pd, contact.trainerId);
+    if (!entry) return '–';
+    const phase = getDayCarePhase(pd, entry);
+    if (phase === 'stop-grow') return t('phone.daycare.status.stopGrow');
+    if (phase === 'doing-well') return t('phone.daycare.status.wellDoing');
+    return t('phone.daycare.status.adapting');
+  }
+
   const state = pd.trainerEncounters[contact.trainerId];
   if (!state) return t('phone.status.notDefeated');
 
@@ -263,11 +275,21 @@ export function createPhoneScene(input: InputManager, stateMachine: StateMachine
 function buildCallDialogue(contact: PhoneContactInfo): string {
   if (!hasActiveGame()) return '';
   const pd = getPlayerData();
-  const state = pd.trainerEncounters[contact.trainerId];
   const locale = getLocale();
   const name = contact.trainerName[locale as 'en' | 'he'] ?? contact.trainerName.en;
   const loc = getContactLocation(contact, locale);
 
+  if (contact.contactType === 'day-care') {
+    const entry = getDayCareEntry(pd, contact.trainerId);
+    if (!entry) return t('phone.daycare.call.adapting', { name, location: loc });
+    const pokeName = entry.pokemon.name;
+    const phase = getDayCarePhase(pd, entry);
+    if (phase === 'stop-grow') return t('phone.daycare.call.stopGrow', { name, pokeName, location: loc });
+    if (phase === 'doing-well') return t('phone.daycare.call.wellDoing', { name, pokeName, location: loc });
+    return t('phone.daycare.call.adapting', { name, pokeName, location: loc });
+  }
+
+  const state = pd.trainerEncounters[contact.trainerId];
   if (!state) return t('phone.call.notBeaten', { name });
 
   if (!contact.reencounterConfig) {

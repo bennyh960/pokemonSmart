@@ -267,3 +267,17 @@ registerStoryEvent({
   repeatable: true, // flag-not condition is the guard; cutscene sets ACT0_COMPLETE
   actions: [{ type: 'start-cutscene', cutsceneId: 'act0-leave-zeroville' }],
 });
+
+// ----------Tests
+
+registerStoryEvent({
+  id: 'test-event',
+  trigger: { type: 'npc-interact', npcId: 'thif-test123' },
+  actions: [{ type: 'start-cutscene', cutsceneId: 'test' }],
+});
+
+registerCutscene({
+  id: 'test',
+  skippable: true,
+  steps: [{ type: 'thief-npc', npcId: 'thif-test123', condition: { amount: 1, aboveLevel: 40 } }],
+});

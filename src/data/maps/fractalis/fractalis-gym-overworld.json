@@ -1,0 +1,408 @@
+{
+  "id": "fractalis-gym-overworld",
+  "name": "New Map",
+  "tileset": "overworld",
+  "width": 20,
+  "height": 15,
+  "tileSize": 16,
+  "spawn": {
+    "x": 2,
+    "y": 12
+  },
+  "transitions": [],
+  "npcs": [],
+  "music": "town3",
+  "encounterTableId": null,
+  "interactiveItems": {},
+  "label": {
+    "en": "Thunder Gym Garden",
+    "he": "גינת מכון החשמל"
+  }
+,
+  "tiles": [
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"]
+  ],
+  "objects": [
+    {
+      "key": "f2tl",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "b8",
+      "x": 1,
+      "y": 14
+    },
+    {
+      "key": "b8",
+      "x": 15,
+      "y": 14
+    },
+    {
+      "key": "market1",
+      "x": 8,
+      "y": 14
+    },
+    {
+      "key": "f2c",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 8,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 9,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 11,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 12,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 13,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 15,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 16,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 17,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 18,
+      "y": 0
+    },
+    {
+      "key": "f2c",
+      "x": 5,
+      "y": 14
+    },
+    {
+      "key": "f2c",
+      "x": 6,
+      "y": 14
+    },
+    {
+      "key": "f2c",
+      "x": 7,
+      "y": 14
+    },
+    {
+      "key": "f2c",
+      "x": 12,
+      "y": 14
+    },
+    {
+      "key": "f2c",
+      "x": 13,
+      "y": 14
+    },
+    {
+      "key": "f2c",
+      "x": 14,
+      "y": 14
+    },
+    {
+      "key": "gd-1",
+      "x": 6,
+      "y": 7
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 13
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 12
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 11
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 10
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 4
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "key": "f2l",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "f2bl",
+      "x": 0,
+      "y": 14
+    },
+    {
+      "key": "f2br",
+      "x": 19,
+      "y": 14
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 13
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 12
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 11
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 10
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 9
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 8
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 7
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 6
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 5
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 1
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 2
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 3
+    },
+    {
+      "key": "f2r",
+      "x": 19,
+      "y": 4
+    },
+    {
+      "key": "f2tr",
+      "x": 19,
+      "y": 0
+    },
+    {
+      "key": "sfl1",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "sfl1",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "sfl1",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "sfl1",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "key": "sfl1",
+      "x": 18,
+      "y": 0
+    },
+    {
+      "key": "g5",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "key": "g5",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "key": "g5",
+      "x": 1,
+      "y": 9
+    },
+    {
+      "key": "g5",
+      "x": 18,
+      "y": 3
+    },
+    {
+      "key": "g5",
+      "x": 17,
+      "y": 7
+    },
+    {
+      "key": "g5",
+      "x": 18,
+      "y": 10
+    },
+    {
+      "key": "gym1",
+      "x": 6,
+      "y": 2
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

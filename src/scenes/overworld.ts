@@ -44,11 +44,18 @@ import {
   type TrainerData,
   type GateGuardData,
   type WildPokemonData,
+  type DayCareData,
   checkTrainerLineOfSight,
   normalizeReward,
   resolveDialogue,
   type DialogueReward,
 } from '../systems/npc.js';
+import {
+  getDayCareEntry,
+  calcDayCareResult,
+  depositPokemon as dayCareDeposit,
+  withdrawPokemon as dayCareWithdraw,
+} from '../systems/day-care.js';
 import { getItem } from '../data/items.js';
 import { getTypeName } from '../data/type-constants.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
@@ -142,6 +149,13 @@ interface ChoiceState {
   callback: (idx: number) => void;
 }
 
+/** Vertical list menu (used for party picker, etc.). */
+interface ListChoiceState {
+  options: string[];
+  selected: number;
+  callback: (idx: number) => void;
+}
+
 // Module-level state shared with the start menu scene
 let _pendingFishing = false;
 let _legendVisible = true;
@@ -206,6 +220,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Choice prompt state
   let choiceState: ChoiceState | null = null;
+
+  // Vertical list choice (e.g. party picker)
+  let listChoiceState: ListChoiceState | null = null;
 
   // HM animation state
   interface HMAnimState {
@@ -589,6 +606,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
   }
 
+  /** Show a vertical list choice (Up/Down navigate, Enter confirm, Escape = last option). */
+  function showListChoice(options: string[], callback: (idx: number) => void): void {
+    listChoiceState = { options, selected: 0, callback };
+  }
+
   /** Handle NPC post-dialogue actions. */
   function onDialogueEnd(): void {
     if (!interactingNPC) return;
@@ -623,6 +645,86 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           interactingNPC = null;
         }
       });
+    } else if (npc.type === 'day-care') {
+      const dc = npc as unknown as DayCareData;
+      const pd = getPlayerData();
+      const rtl = isRTL();
+      const npcSpeaker = npc.name ? getLocalizedName(npc.name) : undefined;
+      restoreNPCFacing(npc);
+      interactingNPC = null;
+
+      const entry = getDayCareEntry(pd, npc.id);
+
+      if (!entry) {
+        // ── Deposit flow ──
+        if (pd.party.length <= 1) {
+          activeTextBox = createTextBox([t('npc.daycare.partyOnly')], rtl, npcSpeaker);
+          return;
+        }
+        activeTextBox = createTextBox([t('npc.daycare.pickPokemon1'), t('npc.daycare.pickPokemon2')], rtl, npcSpeaker);
+        pendingDialogueCallback = () => {
+          const options = pd.party.map((p) => getPokemonDisplayName(p.id));
+          options.push(t('npc.choice.cancel'));
+          showListChoice(options, (idx) => {
+            if (idx >= pd.party.length) return; // cancel
+            const deposited = pd.party[idx];
+            const pokeName = getPokemonDisplayName(deposited.id);
+            dayCareDeposit(pd, idx, dc);
+            // Register phone contact on first deposit
+            if (!pd.phoneContacts?.some((c) => c.trainerId === npc.id)) {
+              if (!pd.phoneContacts) pd.phoneContacts = [];
+              const route = dc.route ?? { en: '', he: '' };
+              pd.phoneContacts.push({
+                trainerId: npc.id,
+                trainerName: npc.name ?? { en: npc.id, he: npc.id },
+                contactType: 'day-care',
+                locationEn: route.en,
+                locationHe: route.he,
+              });
+            }
+            autoSave();
+            activeTextBox = createTextBox([t('npc.daycare.deposited', { name: pokeName })], rtl, npcSpeaker);
+          });
+        };
+      } else {
+        // ── Withdrawal flow ──
+        const result = calcDayCareResult(pd, entry, dc);
+        const pokeName = getPokemonDisplayName(entry.pokemon.id);
+        const costMsg =
+          result.levelsGained > 0
+            ? t('npc.daycare.costInfo', {
+                name: pokeName,
+                levels: result.levelsGained,
+                newLevel: result.newLevel,
+                cost: result.cost,
+              })
+            : t('npc.daycare.costInfoFree', { name: pokeName });
+
+        activeTextBox = createTextBox([costMsg], rtl, npcSpeaker);
+        pendingDialogueCallback = () => {
+          showChoice((idx) => {
+            if (idx !== 0) {
+              activeTextBox = createTextBox([t('npc.daycare.stayingOn')], rtl, npcSpeaker);
+              return;
+            }
+            if (pd.money < result.cost) {
+              activeTextBox = createTextBox(
+                [t('npc.daycare.noMoney', { cost: result.cost, name: pokeName })],
+                rtl,
+                npcSpeaker,
+              );
+              return;
+            }
+            const { sentToBox } = dayCareWithdraw(pd, entry, result);
+            autoSave();
+            audio.playSFX('pokemon-returned');
+            const msg = sentToBox
+              ? t('npc.daycare.withdrawnBox', { name: pokeName })
+              : t('npc.daycare.withdrawn', { name: pokeName });
+            activeTextBox = createTextBox([msg], rtl, npcSpeaker);
+          });
+        };
+      }
     } else if (npc.type === 'shopkeeper') {
       showChoice((idx) => {
         if (idx === 0) {
@@ -1147,7 +1249,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       party = prebuiltParty;
     } else if (trainer.party.length > 6) {
       // Pool mode: separate forced slots from random pool, then pick 6
-      type PartyMember = typeof trainer.party[0];
+      type PartyMember = (typeof trainer.party)[0];
       const forcedSlots: (PartyMember | null)[] = [null, null, null, null, null, null];
       const pool: PartyMember[] = [];
 
@@ -1157,9 +1259,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         else pool.push(m);
       }
 
-      const slotsNeeded = forcedSlots.filter(Boolean).length < 6
-        ? 6 - forcedSlots.filter(Boolean).length
-        : 0;
+      const slotsNeeded = forcedSlots.filter(Boolean).length < 6 ? 6 - forcedSlots.filter(Boolean).length : 0;
 
       // Shuffle pool and pick type-diverse members for remaining slots
       const shuffled = [...pool].sort(() => Math.random() - 0.5);
@@ -1636,6 +1736,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     activeTextBox = null;
     interactingNPC = null;
     choiceState = null;
+    listChoiceState = null;
     healTextBox = null;
     trainerApproach = null;
     pendingLOSBattle = false;
@@ -1716,6 +1817,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       activeTextBox = null;
       interactingNPC = null;
       choiceState = null;
+      listChoiceState = null;
       healTextBox = null;
       trainerApproach = null;
       pendingLOSBattle = false;
@@ -1932,6 +2034,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (!activeTextBox) {
         const restoreNotifs = consumeRestoreNotifications();
         if (restoreNotifs.length > 0) {
+          audio.playSFX('pokemon-returned');
           const lines = restoreNotifs.map((n) =>
             n.sentToBox
               ? t('battle.pokemonRestoredBox', { name: n.pokemonName })
@@ -1982,6 +2085,26 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const cb = choiceState.callback;
           choiceState = null;
           cb(1); // "No" on escape
+        }
+        return;
+      }
+
+      // Handle vertical list choice (party picker)
+      if (listChoiceState) {
+        if (input.isKeyPressed('ArrowUp')) {
+          listChoiceState.selected = Math.max(0, listChoiceState.selected - 1);
+        } else if (input.isKeyPressed('ArrowDown')) {
+          listChoiceState.selected = Math.min(listChoiceState.options.length - 1, listChoiceState.selected + 1);
+        } else if (input.isKeyPressed('Enter') || input.isKeyPressed(' ')) {
+          const cb = listChoiceState.callback;
+          const sel = listChoiceState.selected;
+          listChoiceState = null;
+          cb(sel);
+        } else if (input.isKeyPressed('Escape')) {
+          const cb = listChoiceState.callback;
+          const cancel = listChoiceState.options.length - 1;
+          listChoiceState = null;
+          cb(cancel);
         }
         return;
       }
@@ -3856,6 +3979,30 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
           drawText(ctx, choiceState.options[i], optX, optY, {
             size: 8,
+            color: selected ? '#f8f8f8' : '#a0a0a0',
+            font: 'monospace',
+          });
+        }
+      }
+
+      // Vertical list choice (party picker)
+      if (listChoiceState) {
+        const optH = 13;
+        const boxW = 96;
+        const boxH = listChoiceState.options.length * optH + 6;
+        const boxX = SCREEN_W - boxW - 4;
+        const boxY = SCREEN_H - boxH - 40;
+
+        fillRect(ctx, boxX, boxY, boxW, boxH, '#181820');
+        ctx.strokeStyle = '#585858';
+        ctx.strokeRect(boxX + 1, boxY + 1, boxW - 2, boxH - 2);
+
+        for (let i = 0; i < listChoiceState.options.length; i++) {
+          const optY = boxY + 4 + i * optH;
+          const selected = i === listChoiceState.selected;
+          if (selected) fillRect(ctx, boxX + 2, optY - 1, boxW - 4, optH - 1, '#384088');
+          drawText(ctx, listChoiceState.options[i], boxX + 8, optY + 2, {
+            size: 7,
             color: selected ? '#f8f8f8' : '#a0a0a0',
             font: 'monospace',
           });

@@ -221,7 +221,7 @@ export class PropertiesPanel {
     addInput('X', 'x', String(npc.x), 'number');
     addInput('Y', 'y', String(npc.y), 'number');
     addSelect('Facing', 'facing', ['up', 'down', 'left', 'right'], npc.facing);
-    addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard', 'wild-pokemon'], npc.type);
+    addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard', 'wild-pokemon', 'day-care'], npc.type);
     addInput(
       'Interact Range',
       'interactRange',
@@ -456,8 +456,8 @@ export class PropertiesPanel {
     // ── Story / Visibility ──
     this.renderStoryFieldsUI(body, npc);
 
-    // ── Reward (dialogue/shopkeeper/healer only — trainers, gate-guards and wild-pokemon don't use this) ──
-    if (npc.type !== 'trainer' && npc.type !== 'gate-guard' && npc.type !== 'wild-pokemon') {
+    // ── Reward (dialogue/shopkeeper/healer only) ──
+    if (npc.type !== 'trainer' && npc.type !== 'gate-guard' && npc.type !== 'wild-pokemon' && npc.type !== 'day-care') {
       this.renderDialogueRewardUI(body, npc);
     }
 
@@ -479,6 +479,11 @@ export class PropertiesPanel {
     // ── Gate-guard fields ──
     if (npc.type === 'gate-guard') {
       this.renderGateGuardUI(body, npc);
+    }
+
+    // ── Day-care fields ──
+    if (npc.type === 'day-care') {
+      this.renderDayCareUI(body, npc);
     }
 
     // ── Math Questions (all NPC types except gate-guard which uses its own gate) ──
@@ -717,6 +722,87 @@ export class PropertiesPanel {
       }
       emit();
     }
+  }
+
+  // ── Day-Care: route, stepsPerLevel, costPerLevel ──
+  private renderDayCareUI(section: HTMLElement, npc: NPCData): void {
+    const emit = () => this.state.emit('map-modified');
+    const npcAny = npc as unknown as Record<string, unknown>;
+
+    const label = document.createElement('div');
+    label.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:8px 0 3px;';
+    label.textContent = 'Day Care';
+    section.appendChild(label);
+
+    // Route EN
+    const routeEnRow = document.createElement('div');
+    routeEnRow.className = 'prop-row';
+    routeEnRow.innerHTML = '<label>Route (EN):</label>';
+    const routeEnInput = document.createElement('input');
+    routeEnInput.type = 'text';
+    const currentRoute = (npcAny['route'] as { en?: string; he?: string } | undefined) ?? {};
+    routeEnInput.value = currentRoute.en ?? '';
+    routeEnInput.placeholder = 'e.g. Route 3';
+    routeEnInput.addEventListener('change', () => {
+      npcAny['route'] = { ...(npcAny['route'] as object ?? {}), en: routeEnInput.value };
+      emit();
+    });
+    routeEnRow.appendChild(routeEnInput);
+    section.appendChild(routeEnRow);
+
+    // Route HE
+    const routeHeRow = document.createElement('div');
+    routeHeRow.className = 'prop-row';
+    routeHeRow.innerHTML = '<label>Route (HE):</label>';
+    const routeHeInput = document.createElement('input');
+    routeHeInput.type = 'text';
+    routeHeInput.dir = 'rtl';
+    routeHeInput.value = currentRoute.he ?? '';
+    routeHeInput.placeholder = 'מסלול 3';
+    routeHeInput.addEventListener('change', () => {
+      npcAny['route'] = { ...(npcAny['route'] as object ?? {}), he: routeHeInput.value };
+      emit();
+    });
+    routeHeRow.appendChild(routeHeInput);
+    section.appendChild(routeHeRow);
+
+    // stepsPerLevel
+    const splRow = document.createElement('div');
+    splRow.className = 'prop-row';
+    splRow.innerHTML = '<label>Steps/level:</label>';
+    const splInput = document.createElement('input');
+    splInput.type = 'number';
+    splInput.min = '1';
+    splInput.placeholder = '100';
+    splInput.value = (npcAny['stepsPerLevel'] as number | undefined) != null ? String(npcAny['stepsPerLevel']) : '';
+    splInput.addEventListener('change', () => {
+      const v = parseInt(splInput.value, 10);
+      if (isNaN(v) || splInput.value === '') delete npcAny['stepsPerLevel'];
+      else npcAny['stepsPerLevel'] = v;
+      emit();
+    });
+    splRow.appendChild(splInput);
+    splRow.appendChild(this.makeInfo('Steps needed per 1 level gained. Default: 100'));
+    section.appendChild(splRow);
+
+    // costPerLevel
+    const cplRow = document.createElement('div');
+    cplRow.className = 'prop-row';
+    cplRow.innerHTML = '<label>Cost/level ($):</label>';
+    const cplInput = document.createElement('input');
+    cplInput.type = 'number';
+    cplInput.min = '0';
+    cplInput.placeholder = '100';
+    cplInput.value = (npcAny['costPerLevel'] as number | undefined) != null ? String(npcAny['costPerLevel']) : '';
+    cplInput.addEventListener('change', () => {
+      const v = parseInt(cplInput.value, 10);
+      if (isNaN(v) || cplInput.value === '') delete npcAny['costPerLevel'];
+      else npcAny['costPerLevel'] = v;
+      emit();
+    });
+    cplRow.appendChild(cplInput);
+    cplRow.appendChild(this.makeInfo('Money charged per level gained on withdrawal. Default: 100'));
+    section.appendChild(cplRow);
   }
 
   // ── NPC Math Questions (pre-dialogue arithmetic challenge) ──

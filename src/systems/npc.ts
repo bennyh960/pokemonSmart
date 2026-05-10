@@ -112,7 +112,7 @@ export interface NPCData {
   x: number;
   y: number;
   facing: 'up' | 'down' | 'left' | 'right';
-  type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer' | 'gate-guard' | 'wild-pokemon';
+  type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer' | 'gate-guard' | 'wild-pokemon' | 'day-care';
   dialogue: BilingualText[];
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
@@ -234,6 +234,14 @@ export interface TrainerData extends NPCData {
   location?: BilingualText; // Human-readable location for phone display (e.g. "Route 1")
   /** All party Pokémon inherit the glitch infection (NULL-X corrupted trainer). */
   isGlitched?: boolean;
+}
+
+/** Day-care NPC — accepts one Pokémon, levels it up based on steps walked. */
+export interface DayCareData extends NPCData {
+  type: 'day-care';
+  route: BilingualText;       // Location name for phone display
+  stepsPerLevel?: number;     // Steps required per level gained (default 100)
+  costPerLevel?: number;      // ₪/level charged on withdrawal (default 100)
 }
 
 /** Wild Pokémon placed directly on the map — battles like a trainer but catches are allowed. */

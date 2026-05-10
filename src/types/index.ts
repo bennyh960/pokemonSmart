@@ -165,6 +165,8 @@ export interface PlayerStoryState {
 export interface PhoneContactInfo {
   trainerId: string;
   trainerName: { en: string; he: string };
+  /** 'day-care' marks a day-care NPC contact (vs a trainer re-encounter contact). */
+  contactType?: 'day-care';
   /** Map the trainer lives on — used to derive the display location at runtime (any locale). */
   mapId?: string;
   /** Legacy fallback: pre-stored English location (populated for contacts before mapId was introduced). */
@@ -199,6 +201,8 @@ export interface DayCareEntry {
   depositedAtSteps: number;
   npcId: string;
   route: { en: string; he: string };
+  /** Steps needed per level — stored at deposit so phone can compute phase without NPC config. */
+  stepsPerLevel: number;
 }
 
 export type AwayPokemonEntry = StolenEntry | DayCareEntry;
