@@ -1206,8 +1206,7 @@
       "battleBackground": "earthycave",
       "above": true,
       "overlay": true,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "cerb-1-1",
@@ -1218,7 +1217,6 @@
       "walkable": false,
       "above": true,
       "category": "wall",
-      "interactType": null,
       "description": "cave entrance right brown - part1",
       "cells": [
         {
@@ -1250,9 +1248,8 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "above": true,
-      "category": "wall",
-      "interactType": null
+      "above": false,
+      "category": "wall"
     },
     {
       "key": "cecb-2-1",
@@ -1262,7 +1259,6 @@
       "h": 48,
       "walkable": false,
       "above": true,
-      "interactType": null,
       "description": "cave entrance brown -front -part1",
       "cells": [
         {
@@ -1304,7 +1300,6 @@
       "walkable": true,
       "above": true,
       "category": "wall",
-      "interactType": null,
       "cells": [
         {
           "dx": 0,

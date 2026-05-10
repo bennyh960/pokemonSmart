@@ -4401,7 +4401,7 @@
     "power": 60,
     "accuracy": 100,
     "pp": 5,
-    "effectChance": 10,
+    "effectChance": 20,
     "mathDifficulty": 2,
     "damageClass": "special",
     "description": {

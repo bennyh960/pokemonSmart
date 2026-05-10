@@ -506,13 +506,14 @@
       "y": 18,
       "facing": "down",
       "type": "dialogue",
-      "dialogue": [],
-      "spriteType": "transparent",
-      "despawnAfter": "all-trainers-defeated-dividia/gym",
-      "name": {
-        "en": "",
-        "he": ""
-      }
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "spawnAfter": "all-trainers-defeated-dividia/gym"
     }
   ],
   "music": "gym-battle",

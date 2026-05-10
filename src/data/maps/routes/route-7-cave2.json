@@ -1,12 +1,12 @@
 {
   "id": "route-7-cave2",
   "label": {
-    "en": "Bat Cave",
-    "he": "מערת העטלפים"
+    "en": "Mysterious Cave",
+    "he": "מערה מסתורית"
   },
   "tileset": "caves",
 
-  "template": "cave-1",
+  "template": "cave-2",
   "music": "route",
   "encounterTableId": "cave-20-30",
   "npcs": [],

@@ -43,11 +43,6 @@
       "fromX": 24,
       "fromY": 28,
       "toMapId": "routes/route-7-cave2"
-    },
-    {
-      "fromX": 18,
-      "fromY": 6,
-      "toMapId": "routes/route-7-cave2"
     }
   ],
   "music": "route",

@@ -507,12 +507,8 @@
       "facing": "down",
       "type": "dialogue",
       "dialogue": [],
-      "spriteType": "transparent",
-      "despawnAfter": "all-trainers-defeated-dividia/gym",
-      "name": {
-        "en": "",
-        "he": ""
-      }
+      "spriteType": "npc-male",
+      "despawnAfter": "all-trainers-defeated-dividia/gym"
     }
   ],
   "music": "gym-battle",
