@@ -236,6 +236,9 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.destinyBonded) {
     effects.push('bond');
   }
+  if (runtimeState.disabledMoveId !== null) {
+    effects.push('disable');
+  }
   return effects;
 }
 
@@ -426,12 +429,19 @@ export function applyStatChanges(
   target: 'user' | 'target',
   random: () => number = Math.random,
   contraryActive = false,
+  groupedChance: number | null = null,
 ): AppliedStatChange[] {
+  const relevant = statChanges.filter((c) => c.target === target);
+  if (relevant.length === 0) return [];
+
+  // Grouped stat chance: roll once — all changes succeed or none do
+  if (groupedChance !== null && random() * 100 >= groupedChance) return [];
+
   const applied: AppliedStatChange[] = [];
 
   for (const change of statChanges) {
     if (change.target !== target) continue;
-    if (random() * 100 >= change.chance) continue;
+    if (groupedChance === null && random() * 100 >= change.chance) continue;
 
     const stages = contraryActive ? -change.stages : change.stages;
     const current = runtimeState.statModifiers[change.stat];

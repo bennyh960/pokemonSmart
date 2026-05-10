@@ -24,6 +24,7 @@ import { GATES } from '../data/story/gates.js';
 import { BADGES } from '../data/badges.js';
 import { getStoryEvents } from '../data/story/events.js';
 import { FLAGS, FLAG_DESCRIPTIONS } from '../data/story/flags.js';
+import { getAllCutscenes } from '../data/story/cutscenes.js';
 import encounterTables from '../data/encounter-tables.json';
 import { getKnownMapIds, loadMapFromProject } from './map-io.js';
 import { mapRelationIndex } from './map-relation-index.js';
@@ -327,6 +328,68 @@ export class PropertiesPanel {
     // Draw initial preview (may need retry after sprites load)
     updateSpritePreview();
     setTimeout(updateSpritePreview, 500);
+
+    // ── Random Sprite Roles ──
+    {
+      const rsLabel = document.createElement('div');
+      rsLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:8px 0 3px;';
+      rsLabel.textContent = 'Random Sprite';
+      body.appendChild(rsLabel);
+
+      const rsEnableRow = document.createElement('div');
+      rsEnableRow.className = 'prop-row';
+      rsEnableRow.innerHTML = '<label>Pick randomly on load:</label>';
+      const rsEnableCb = document.createElement('input');
+      rsEnableCb.type = 'checkbox';
+      rsEnableCb.checked = !!(npc.randomChars && npc.randomChars.length > 0);
+      rsEnableRow.appendChild(rsEnableCb);
+      body.appendChild(rsEnableRow);
+
+      const rsRolesContainer = document.createElement('div');
+      rsRolesContainer.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 6px;';
+      rsRolesContainer.style.display = rsEnableCb.checked ? 'flex' : 'none';
+      body.appendChild(rsRolesContainer);
+
+      const rebuildRoleChips = () => {
+        rsRolesContainer.innerHTML = '';
+        // Special sentinel '' = characters with no roles assigned
+        const allOptions: string[] = ['', ...CHARACTER_ROLES];
+        for (const role of allOptions) {
+          const chip = document.createElement('label');
+          chip.style.cssText =
+            'display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:10px;background:#1a2340;font-size:10px;cursor:pointer;border:1px solid #2a3560;';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.checked = !!(npc.randomChars?.includes(role));
+          cb.addEventListener('change', () => {
+            const existing = npc.randomChars ?? [];
+            if (cb.checked) {
+              npcAny['randomChars'] = [...existing.filter((r) => r !== role), role];
+            } else {
+              const updated = existing.filter((r) => r !== role);
+              if (updated.length === 0) delete npcAny['randomChars'];
+              else npcAny['randomChars'] = updated;
+            }
+            emit();
+          });
+          chip.appendChild(cb);
+          chip.appendChild(document.createTextNode(role === '' ? '(no role)' : role));
+          rsRolesContainer.appendChild(chip);
+        }
+      };
+      rebuildRoleChips();
+
+      rsEnableCb.addEventListener('change', () => {
+        if (rsEnableCb.checked) {
+          rsRolesContainer.style.display = 'flex';
+          rebuildRoleChips();
+        } else {
+          rsRolesContainer.style.display = 'none';
+          delete npcAny['randomChars'];
+          emit();
+        }
+      });
+    }
 
     // ── Name picker — initial value from character's name if defined ──
     const charInfo = getCharacterInfo(npc.spriteType);
@@ -1439,17 +1502,27 @@ export class PropertiesPanel {
   private renderPartyUI(section: HTMLElement, trainer: TrainerData, emit: () => void): void {
     const header = document.createElement('div');
     header.className = 'trainer-subsection-header';
-    header.innerHTML = '<span>Party</span>';
+    const isPool = trainer.party.length > 6;
+    const headerTitle = isPool
+      ? `<span>Party Pool (${trainer.party.length} → picks 6)</span>`
+      : '<span>Party</span>';
+    header.innerHTML = headerTitle;
     const addBtn = document.createElement('button');
     addBtn.className = 'btn-small btn-add';
     addBtn.textContent = '+ Pokemon';
     addBtn.addEventListener('click', () => {
-      if (trainer.party.length >= 6) return;
       trainer.party.push({ pokemonId: 1, level: 5 });
       emit();
     });
     header.appendChild(addBtn);
     section.appendChild(header);
+
+    if (isPool) {
+      const hint = document.createElement('div');
+      hint.style.cssText = 'font-size:10px;color:#aaa;margin:2px 0 6px;';
+      hint.textContent = 'Pool mode: battle picks 6 randomly (forced slots always included).';
+      section.appendChild(hint);
+    }
 
     if (trainer.party.length === 0) {
       const empty = document.createElement('div');
@@ -1538,6 +1611,31 @@ export class PropertiesPanel {
         emit();
       });
       slot.appendChild(lvlInput);
+
+      // mustInclude slot selector (visible only in pool mode)
+      if (isPool) {
+        const mustSel = document.createElement('select');
+        mustSel.title = 'Force into specific battle slot, or keep in random pool';
+        mustSel.style.cssText = 'font-size:10px;padding:1px 2px;max-width:72px;';
+        const poolOpt = document.createElement('option');
+        poolOpt.value = '';
+        poolOpt.textContent = 'Pool';
+        mustSel.appendChild(poolOpt);
+        for (let s = 0; s < 6; s++) {
+          const o = document.createElement('option');
+          o.value = String(s);
+          o.textContent = `Slot ${s + 1}`;
+          mustSel.appendChild(o);
+        }
+        const currentMust = (member as { mustInclude?: number | null }).mustInclude;
+        mustSel.value = currentMust != null ? String(currentMust) : '';
+        mustSel.addEventListener('change', () => {
+          const v = mustSel.value === '' ? null : parseInt(mustSel.value, 10);
+          (member as { mustInclude?: number | null }).mustInclude = v;
+          emit();
+        });
+        slot.appendChild(mustSel);
+      }
 
       // Remove button
       const rmBtn = document.createElement('button');
@@ -2063,7 +2161,20 @@ export class PropertiesPanel {
         )
       : [];
 
-    const hasAny = interactEvents.length || defeatEvents.length || spawnSources.length || despawnSources.length;
+    // Cutscenes that steal Pokemon and link to this NPC as the thief
+    const thiefCutscenes = getAllCutscenes().flatMap((c) => {
+      const thiefSteps = c.steps.filter(
+        (s): s is Extract<typeof s, { type: 'thief-npc' }> =>
+          s.type === 'thief-npc' && (s as { npcId?: string }).npcId === npc.id,
+      );
+      return thiefSteps.map((s) => ({
+        cutsceneId: c.id,
+        restoredFlag: (s as { restoredFlag?: string }).restoredFlag ?? `trainer-${npc.id}-defeated`,
+      }));
+    });
+
+    const hasAny =
+      interactEvents.length || defeatEvents.length || spawnSources.length || despawnSources.length || thiefCutscenes.length;
     if (!hasAny) return;
 
     // Section header
@@ -2135,6 +2246,14 @@ export class PropertiesPanel {
         '#ffaacc',
       );
       void desc;
+    }
+
+    if (thiefCutscenes.length) {
+      addGroup(
+        '⚔️ Thief — stolen Pokemon restored when:',
+        thiefCutscenes.map((t) => `cutscene "${t.cutsceneId}" → flag "${t.restoredFlag}"`),
+        '#ffcc44',
+      );
     }
 
     section.appendChild(container);

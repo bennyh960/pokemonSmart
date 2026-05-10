@@ -1560,6 +1560,7 @@ export function createBattleScene(
     const move = enemy.moves[moveIndex];
     if (!move) return -Infinity;
     if (move.currentPp <= 0) return -Infinity;
+    if (move.id === enemyBattleState.disabledMoveId) return -Infinity;
 
     const movePower = move.power ?? 0;
     const battleData = getMoveBattleData(move.id);
@@ -1647,6 +1648,14 @@ export function createBattleScene(
       // Status / utility move
       const ailment = battleData?.ailment ?? null;
       const effects = battleData?.effects ?? [];
+
+      // Disable: only useful if player has used a move and has no disabled move yet
+      const isDisableMove = battleData?.behaviorTags?.includes('disable') ?? false;
+      if (isDisableMove) {
+        if (playerBattleState.disabledMoveId !== null) return -Infinity;
+        if (playerBattleState.lastMoveUsedId === null) return -Infinity;
+        return 300;
+      }
 
       // Evasion-raising moves
       const raisesEvasion =
@@ -1782,6 +1791,7 @@ export function createBattleScene(
       resolveForcedPlayerTurn();
       return;
     }
+    menu.disabledMoveIds = playerBattleState.disabledMoveId !== null ? [playerBattleState.disabledMoveId] : [];
     phase = 'SELECT_MOVE';
     showMoveMenu(menu);
   }
@@ -2587,6 +2597,22 @@ export function createBattleScene(
       lines.push(getSideEffectEndedLine(getPokemonDisplayName(enemy.id), effectId));
     }
 
+    // Disable timer countdown
+    if (playerBattleState.disabledMoveTurnsRemaining > 0) {
+      playerBattleState.disabledMoveTurnsRemaining--;
+      if (playerBattleState.disabledMoveTurnsRemaining <= 0 && playerBattleState.disabledMoveId !== null) {
+        lines.push(t('battle.disableMoveEnd', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(playerBattleState.disabledMoveId) }));
+        playerBattleState.disabledMoveId = null;
+      }
+    }
+    if (enemyBattleState.disabledMoveTurnsRemaining > 0) {
+      enemyBattleState.disabledMoveTurnsRemaining--;
+      if (enemyBattleState.disabledMoveTurnsRemaining <= 0 && enemyBattleState.disabledMoveId !== null) {
+        lines.push(t('battle.disableMoveEnd', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(enemyBattleState.disabledMoveId) }));
+        enemyBattleState.disabledMoveId = null;
+      }
+    }
+
     // Weather end-of-turn: damage + decrement
     if (battleWeather) {
       if (player.hp > 0) {
@@ -2878,6 +2904,7 @@ export function createBattleScene(
       'user',
       Math.random,
       attackerHasContrary,
+      moveBattleData.groupedStatChance,
     );
     for (const change of userStatChanges) {
       lines.push(getStatChangeLine(attackerName, change));
@@ -3348,6 +3375,15 @@ export function createBattleScene(
       return;
     }
 
+    if (m.id === playerBattleState.disabledMoveId) {
+      const msgs = [...turnEffectLines];
+      msgs.push(t('battle.moveCantUseDisabled', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) }));
+      textBox = createTextBox(msgs, rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
+    }
+
     // ZzZ floating text when a sleep-usable move is used while asleep
     if (SLEEP_USABLE_MOVE_IDS.has(m.id) && startResult.events.includes('fast-asleep')) {
       const sx = BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2;
@@ -3433,7 +3469,7 @@ export function createBattleScene(
           name: rmd.name.en,
           type: rmd.type as PokemonType,
           power: rmd.power ?? 0,
-          accuracy: rmd.accuracy ?? 100,
+          accuracy: rmd.accuracy ?? 0,
         };
       }
       moveBattleData = getMoveBattleData(redirectId);
@@ -3476,6 +3512,7 @@ export function createBattleScene(
     const isFutureSight = moveBattleData?.behaviorTags?.includes('future-sight') ?? false;
     const isWeightTarget = moveBattleData?.behaviorTags?.includes('weight-target') ?? false;
     const isWeightRatio = moveBattleData?.behaviorTags?.includes('weight-ratio') ?? false;
+    const isDisable = moveBattleData?.behaviorTags?.includes('disable') ?? false;
     const isSandstormMove = moveBattleData?.behaviorTags?.includes('sandstorm') ?? false;
     const isRainDanceMove = moveBattleData?.behaviorTags?.includes('rain') ?? false;
     const isSunnyDayMove = moveBattleData?.behaviorTags?.includes('sun') ?? false;
@@ -3541,6 +3578,24 @@ export function createBattleScene(
         playerSideState.futureSightTurnsRemaining = 2;
         playerSideState.futureSightDamage = damage;
         msgs.push(t('battle.futureSightSet', { name: attackerName }));
+      }
+      textBox = createTextBox(msgs, rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
+    }
+
+    // Disable: disables the enemy's last used move for 3-6 turns
+    if (isDisable) {
+      const usedMove = getMoveDisplayName(m.id);
+      const msgs = [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove })];
+      if (enemyBattleState.disabledMoveId !== null || enemyBattleState.lastMoveUsedId === null) {
+        msgs.push(t('battle.nothingHappened'));
+      } else {
+        const disabledMoveName = getMoveDisplayName(enemyBattleState.lastMoveUsedId);
+        enemyBattleState.disabledMoveId = enemyBattleState.lastMoveUsedId;
+        enemyBattleState.disabledMoveTurnsRemaining = Math.floor(Math.random() * 4) + 3;
+        msgs.push(t('battle.disableSuccess', { name: getPokemonDisplayName(enemy.id), move: disabledMoveName }));
       }
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
@@ -4364,7 +4419,7 @@ export function createBattleScene(
           name: rmd.name.en,
           type: rmd.type as PokemonType,
           power: rmd.power ?? 0,
-          accuracy: rmd.accuracy ?? 100,
+          accuracy: rmd.accuracy ?? 0,
         };
       }
       moveBattleData = getMoveBattleData(redirectIdEnemy);
@@ -4406,6 +4461,7 @@ export function createBattleScene(
     const isFutureSightEnemy = moveBattleData?.behaviorTags?.includes('future-sight') ?? false;
     const isWeightTargetEnemy = moveBattleData?.behaviorTags?.includes('weight-target') ?? false;
     const isWeightRatioEnemy = moveBattleData?.behaviorTags?.includes('weight-ratio') ?? false;
+    const isDisableEnemy = moveBattleData?.behaviorTags?.includes('disable') ?? false;
     const isSandstormMoveEnemy = moveBattleData?.behaviorTags?.includes('sandstorm') ?? false;
     const isRainDanceMoveEnemy = moveBattleData?.behaviorTags?.includes('rain') ?? false;
     const isSunnyDayMoveEnemy = moveBattleData?.behaviorTags?.includes('sun') ?? false;
@@ -4426,6 +4482,15 @@ export function createBattleScene(
       }
       const msgs = [...prefix];
       msgs.push(...(turnEffectLines.length > 0 ? turnEffectLines : [t('battle.nothingHappened')]));
+      textBox = createTextBox(msgs, rtl);
+      phase = 'ENEMY_TURN';
+      phaseTimer = 0;
+      return;
+    }
+
+    if (m.id === enemyBattleState.disabledMoveId) {
+      const msgs = [...prefix, ...turnEffectLines];
+      msgs.push(t('battle.moveCantUseDisabled', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) }));
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
@@ -4483,6 +4548,24 @@ export function createBattleScene(
         enemySideState.futureSightTurnsRemaining = 2;
         enemySideState.futureSightDamage = damage;
         msgs.push(t('battle.futureSightSet', { name: attackerName }));
+      }
+      textBox = createTextBox(msgs, rtl);
+      phase = 'ENEMY_TURN';
+      phaseTimer = 0;
+      return;
+    }
+
+    // Disable: disables the player's last used move for 3-6 turns
+    if (isDisableEnemy) {
+      const usedMove = getMoveDisplayName(m.id);
+      const msgs = [...prefix, ...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove })];
+      if (playerBattleState.disabledMoveId !== null || playerBattleState.lastMoveUsedId === null) {
+        msgs.push(t('battle.nothingHappened'));
+      } else {
+        const disabledMoveName = getMoveDisplayName(playerBattleState.lastMoveUsedId);
+        playerBattleState.disabledMoveId = playerBattleState.lastMoveUsedId;
+        playerBattleState.disabledMoveTurnsRemaining = Math.floor(Math.random() * 4) + 3;
+        msgs.push(t('battle.disableSuccess', { name: getPokemonDisplayName(player.id), move: disabledMoveName }));
       }
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
@@ -5449,6 +5532,9 @@ export function createBattleScene(
               const m = player.moves[selMove];
               if (m.currentPp <= 0) {
                 textBox = createTextBox([t('battle.noPP')], isRTL());
+                phase = 'INTRO';
+              } else if (m.id === playerBattleState.disabledMoveId) {
+                textBox = createTextBox([t('battle.moveIsDisabled', { move: getMoveDisplayName(m.id) })], isRTL());
                 phase = 'INTRO';
               } else {
                 if (!handleTrainerTurnPriority()) {

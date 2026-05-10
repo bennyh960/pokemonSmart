@@ -1,0 +1,453 @@
+{
+  "id": "leauge-1",
+  "name": "New Map",
+  "tileset": "overworld",
+  "width": 25,
+  "height": 20,
+  "tileSize": 16,
+  "spawn": {
+    "x": 13,
+    "y": 17
+  },
+  "transitions": [],
+  "npcs": [],
+  "music": "victory",
+  "encounterTableId": null,
+  "interactiveItems": {},
+  "label": {
+    "en": "battle arena",
+    "he": "מתחם לחימה"
+  }
+,
+  "tiles": [
+    ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-r","t","t","w6-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
+    ["black-non-walk","w6-b1","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-c4","t","t","w6-c3","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-2","w6-b2","black-non-walk"],
+    ["black-non-walk","w6-r","w6","w6","w6","w6","w6","w6","w6","w6","w6","t","t","w6","w6","w6","w6","w6","w6","w6","w6","w6","w6","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","w6b","w6b","w6b","w6b","w6b","w6b","w6b","w6b","w6b","t","t","w6b","w6b","w6b","w6b","w6b","w6b","w6b","w6b","w6b","w6b","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w6-l","black-non-walk"],
+    ["black-non-walk","w6-b3","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-c2","t","t","w6-c1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-b4","black-non-walk"],
+    ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-r","t","t","w6-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"]
+  ],
+  "objects": [
+    {
+      "key": "mat-horizontal",
+      "x": 12,
+      "y": 19
+    },
+    {
+      "key": "battle-arena",
+      "x": 10,
+      "y": 6
+    },
+    {
+      "key": "mat-horizontal",
+      "x": 11,
+      "y": 0
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 9
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 10
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 11
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 12
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 13
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 14
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 15
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 16
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 9
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 10
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 13
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 14
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 15
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 16
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 6
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 7
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 9
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 10
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 11
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 13
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 14
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 15
+    },
+    {
+      "key": "chair1R",
+      "x": 6,
+      "y": 16
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 5
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 6
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 7
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 8
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 9
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 10
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 11
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 12
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 13
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 14
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 15
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 16
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 5
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 6
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 7
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 8
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 9
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 10
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 11
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 12
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 13
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 14
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 15
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 16
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 5
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 6
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 7
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 8
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 9
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 10
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 11
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 12
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 13
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 14
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 15
+    },
+    {
+      "key": "chair1L",
+      "x": 18,
+      "y": 16
+    },
+    {
+      "key": "tv3",
+      "x": 16,
+      "y": 2
+    },
+    {
+      "key": "tv3",
+      "x": 6,
+      "y": 2
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

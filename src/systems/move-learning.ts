@@ -48,7 +48,7 @@ export function createMoveFromId(moveId: number): Move | null {
     name: moveData.name.en,
     type: moveData.type as PokemonType,
     power: moveData.power ?? 0,
-    accuracy: moveData.accuracy ?? 100,
+    accuracy: moveData.accuracy ?? 0,
     pp: moveData.pp,
     currentPp: moveData.pp,
     mathDifficulty: movePowerToMathDifficulty(moveData.power) as MathDifficulty,

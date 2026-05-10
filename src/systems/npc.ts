@@ -8,6 +8,8 @@
  * Legacy maps with plain string[] are auto-normalized at load time.
  */
 
+import { getCharacterList } from '../engine/character-sprites.js';
+
 /** A single bilingual text line. */
 export interface BilingualText {
   en: string;
@@ -139,6 +141,8 @@ export interface NPCData {
   mapClearBlocker?: boolean;
   /** Special interaction triggered after dialogue is dismissed. */
   interaction?: NpcInteraction;
+  /** If set, sprite is randomly picked at map-load from characters that have any of these roles. */
+  randomChars?: string[];
 }
 
 /** Dialogue shown instead of the default once a story flag is set. */
@@ -217,7 +221,7 @@ export interface GateGuardData extends NPCData {
 /** Trainer NPC with party and battle data. */
 export interface TrainerData extends NPCData {
   type: 'trainer';
-  party: { pokemonId: number; level: number; moves?: number[] }[];
+  party: { pokemonId: number; level: number; moves?: number[]; mustInclude?: number | null }[];
   defeated?: boolean;
   /** When true the trainer sprite disappears from the map after the player wins. */
   despawnOnDefeat?: boolean;
@@ -292,6 +296,18 @@ export function isNPCVisible(
   return true;
 }
 
+/** Pick a random sprite at map-load time from characters whose roles match any in npc.randomChars.
+ *  '' (empty string) in the list means "include characters with no roles assigned". */
+function resolveRandomSprite(npc: NPCData): void {
+  const roles = npc.randomChars!;
+  const includeRoleless = roles.includes('');
+  const candidates = getCharacterList().filter(
+    (c) => c.roles.some((r) => roles.includes(r)) || (includeRoleless && c.roles.length === 0),
+  );
+  if (candidates.length === 0) return;
+  npc.spriteType = candidates[Math.floor(Math.random() * candidates.length)].id;
+}
+
 /** Create an NPC manager for a set of NPCs on a map. */
 export function createNPCManager(npcs: NPCData[]) {
   // Normalize legacy data at load time
@@ -302,6 +318,10 @@ export function createNPCManager(npcs: NPCData[]) {
       const nameStr = npc.name as unknown as string;
       const nameHeStr = (npc as unknown as Record<string, unknown>)['nameHe'] as string | undefined;
       npc.name = { en: nameStr, he: nameHeStr || nameStr };
+    }
+    // Random sprite: pick once at map-load from characters matching any of the listed roles
+    if (npc.randomChars && npc.randomChars.length > 0) {
+      resolveRandomSprite(npc);
     }
   }
 

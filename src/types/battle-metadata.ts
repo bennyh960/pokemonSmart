@@ -56,7 +56,8 @@ export type MoveBattleBehaviorTag =
   | 'metronome'
   | 'assist'
   | 'copycat'
-  | 'mirror-move';
+  | 'mirror-move'
+  | 'disable';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 
@@ -114,6 +115,7 @@ export interface MoveBattleMetadata {
   flags: string[];
   behaviorTags: MoveBattleBehaviorTag[];
   minimumDamage: number | null;
+  groupedStatChance: number | null;
 }
 
 export type AbilityBattleEffect =
@@ -208,6 +210,7 @@ export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
     flags: [],
     behaviorTags: [],
     minimumDamage: null,
+    groupedStatChance: null,
   };
 }
 

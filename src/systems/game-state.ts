@@ -5,7 +5,7 @@
  * The save system persists this data to localStorage.
  */
 
-import type { PlayerData } from '../types/index.js';
+import type { PlayerData, StolenEntry } from '../types/index.js';
 import { getDefaultHeroCharacterId } from '../engine/character-sprites.js';
 import { saveGame, loadGame, CURRENT_SAVE_VERSION, getSlotIndex, findFreeSlot } from './save.js';
 
@@ -25,6 +25,7 @@ export function createNewPlayerData(): PlayerData {
     heroCharacterId: getDefaultHeroCharacterId(),
     party: [
       {
+        uuid: crypto.randomUUID(),
         abilityId: 1,
         heldItemId: null,
         isGlitched: false,
@@ -183,6 +184,8 @@ export function createNewPlayerData(): PlayerData {
     battleHelperBattles: 10,
     battleHelperEnabled: true,
     repelStepsRemaining: 0,
+    awayPokemon: {},
+    totalSteps: 0,
   };
 }
 
@@ -202,6 +205,47 @@ export function hasActiveGame(): boolean {
   return currentPlayerData !== null;
 }
 
+/** Check if a Pokemon is currently stolen (absent from party, stored in awayPokemon). */
+export function isStolenPokemon(pd: PlayerData, pokemon: { uuid: string }): boolean {
+  return pd.awayPokemon?.[pokemon.uuid]?.kind === 'stolen';
+}
+
+/** Pending notifications for Pokemon that were restored after theft — consumed by the overworld scene. */
+export interface RestoreNotification {
+  pokemonName: string;
+  sentToBox: boolean;
+}
+const _pendingRestoreNotifications: RestoreNotification[] = [];
+
+export function consumeRestoreNotifications(): RestoreNotification[] {
+  return _pendingRestoreNotifications.splice(0);
+}
+
+function checkRestoreStolenPokemon(pd: PlayerData, flagKey: string): void {
+  if (!pd.awayPokemon || Object.keys(pd.awayPokemon).length === 0) return;
+  for (const [uuid, entry] of Object.entries(pd.awayPokemon)) {
+    if (entry.kind !== 'stolen') continue;
+    const stolenEntry = entry as StolenEntry;
+    if (stolenEntry.restoredFlag !== flagKey) continue;
+
+    const pokemon = stolenEntry.pokemon;
+    if (pokemon.hp === 0) { pokemon.hp = 1; pokemon.status = null; }
+    delete pd.awayPokemon[uuid];
+
+    const sentToBox = pd.party.length >= 6;
+    if (sentToBox) {
+      outer: for (const box of pd.boxes) {
+        for (let s = 0; s < box.pokemon.length; s++) {
+          if (!box.pokemon[s]) { box.pokemon[s] = pokemon; break outer; }
+        }
+      }
+    } else {
+      pd.party.push(pokemon);
+    }
+    _pendingRestoreNotifications.push({ pokemonName: pokemon.name, sentToBox });
+  }
+}
+
 /**
  * Set a story/progression flag on the player data and record its timestamp.
  * Always use this instead of `pd.flags[key] = true` so that flag-based
@@ -212,6 +256,7 @@ export function setFlag(pd: PlayerData, key: string): void {
     pd.flags[key] = true;
     if (!pd.flagTimestamps) pd.flagTimestamps = {};
     pd.flagTimestamps[key] = Date.now();
+    checkRestoreStolenPokemon(pd, key);
   }
 }
 

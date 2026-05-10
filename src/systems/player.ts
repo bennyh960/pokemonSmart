@@ -49,5 +49,7 @@ export function createNewPlayer(name: string): PlayerData {
     battleHelperEnabled: true,
     birthYear: getPlayerBirthYear(),
     repelStepsRemaining: 0,
+    awayPokemon: {},
+    totalSteps: 0,
   };
 }

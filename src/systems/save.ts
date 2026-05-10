@@ -86,7 +86,7 @@ export function findFreeSlot(): number | null {
 }
 
 /** Current schema version — bump this when PlayerData shape changes. */
-export const CURRENT_SAVE_VERSION = 15;
+export const CURRENT_SAVE_VERSION = 16;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -109,6 +109,11 @@ function forEachStoredPokemon(data: Record<string, any>, callback: (pokemon: Rec
       for (const pokemon of box.pokemon) {
         if (pokemon) callback(pokemon);
       }
+    }
+  }
+  if (data.awayPokemon) {
+    for (const entry of Object.values(data.awayPokemon) as Record<string, any>[]) {
+      if (entry?.pokemon) callback(entry.pokemon); // covers both 'stolen' and 'day-care'
     }
   }
 }
@@ -237,6 +242,15 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     if (data.surfing === undefined) data.surfing = false;
     if (data.surfingPokemonId === undefined) data.surfingPokemonId = null;
     data.saveVersion = 15;
+  },
+  // Version 15 → 16: add uuid to all Pokemon, awayPokemon map, totalSteps counter
+  16: (data) => {
+    forEachStoredPokemon(data, (pokemon) => {
+      if (!pokemon.uuid) pokemon.uuid = crypto.randomUUID();
+    });
+    if (!data.awayPokemon) data.awayPokemon = {};
+    if (data.totalSteps === undefined) data.totalSteps = 0;
+    data.saveVersion = 16;
   },
 };
 

@@ -52,7 +52,261 @@
   ],
   "music": "route",
   "encounterTableId": "route-7",
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-1778408602484",
+      "x": 45,
+      "y": 5,
+      "facing": "right",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "980983244 4982 49238 492389 430298 4329843234"
+        }
+      ],
+      "spriteType": "npc-male",
+      "pokemonId": 141,
+      "level": 40,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "name": {
+        "en": "",
+        "he": "$@#"
+      }
+    },
+    {
+      "id": "npc-1778408715189",
+      "x": 11,
+      "y": 10,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "98429 49238 492384 490238 42039482 304928398432$#@"
+        }
+      ],
+      "spriteType": "npc-male",
+      "isGlitched": true,
+      "pokemonId": 122,
+      "despawnOnDefeat": true,
+      "level": 40,
+      "name": {
+        "en": "42424",
+        "he": "43242"
+      }
+    },
+    {
+      "id": "npc-1778408774720",
+      "x": 11,
+      "y": 38,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "גשךלג232 32גדשד32! 5325423@#$ 46342#"
+        }
+      ],
+      "spriteType": "npc-male",
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "pokemonId": 80,
+      "level": 40,
+      "name": {
+        "en": "532",
+        "he": "5332"
+      }
+    },
+    {
+      "id": "npc-1778408914360",
+      "x": 35,
+      "y": 20,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "9482398 4239842 03984 20934823",
+          "he": "9482398 4239842 03984 20934823"
+        }
+      ],
+      "spriteType": "npc-male",
+      "name": {
+        "en": "6345",
+        "he": "432432"
+      },
+      "level": 40,
+      "pokemonId": 94,
+      "isGlitched": true,
+      "despawnOnDefeat": true
+    },
+    {
+      "id": "npc-1778409038701",
+      "x": 7,
+      "y": 17,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "עזור לנו למנוע מהגלי'צים להכנס לעיר השברים!"
+        }
+      ],
+      "spriteType": "officer-Jenny",
+      "mapClearBlocker": true
+    },
+    {
+      "id": "npc-1778409134628",
+      "x": 11,
+      "y": 11,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "זהירות!"
+        },
+        {
+          "en": "",
+          "he": "הפוקימון הזה הוא גליץ! אני מנסה לעצור אותו!"
+        },
+        {
+          "en": "",
+          "he": "האם אתה בן אדם או גלי'ץ?"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "antidote",
+            "quantity": 3
+          }
+        ]
+      },
+      "despawnAfter": "all-trainers-defeated-routes/route-7",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 7,
+            "delay": 0
+          },
+          {
+            "dir": "left",
+            "steps": 10,
+            "delay": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1778409315594",
+      "x": 39,
+      "y": 12,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "זהירות! יש כאן פוקימוני גליץ'"
+        },
+        {
+          "en": "",
+          "he": "עזור לנו למנוע מהם להכנס לעיר."
+        }
+      ],
+      "spriteType": "gate-officer",
+      "despawnAfter": "all-trainers-defeated-routes/route-7",
+      "name": {
+        "en": "Officer X",
+        "he": "שוטר רינג'ר"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "burn-heal",
+            "quantity": 1
+          }
+        ]
+      },
+      "questions": {
+        "count": 5,
+        "types": []
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "left",
+            "steps": 27,
+            "delay": 3
+          },
+          {
+            "dir": "down",
+            "steps": 24,
+            "delay": 2
+          },
+          {
+            "dir": "right",
+            "steps": 27,
+            "delay": 0.5
+          },
+          {
+            "dir": "up",
+            "steps": 24,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-1778409627089",
+      "x": 45,
+      "y": 6,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "זהו גליץ' ! עזור לי לעצור אותו"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Officer X",
+        "he": "שוטר"
+      },
+      "despawnAfter": "all-trainers-defeated-routes/route-7"
+    },
+    {
+      "id": "npc-1778410060674",
+      "x": 18,
+      "y": 31,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "NULLL NULL 0101 001 0011100 01010 0001"
+        }
+      ],
+      "spriteType": "npc-male",
+      "name": {
+        "en": "Null-x",
+        "he": "Null-x"
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "pokemonId": 217,
+      "level": 40
+    }
+  ],
   "interactiveItems": {},
   "area": "Dividia",
   "label": {
@@ -1891,11 +2145,6 @@
     {
       "key": "g3",
       "x": 12,
-      "y": 8
-    },
-    {
-      "key": "g3",
-      "x": 11,
       "y": 8
     },
     {
@@ -4185,11 +4434,6 @@
     },
     {
       "key": "g3",
-      "x": 11,
-      "y": 9
-    },
-    {
-      "key": "g3",
       "x": 12,
       "y": 9
     },
@@ -5337,6 +5581,26 @@
       "key": "rock1",
       "x": 5,
       "y": 47
+    },
+    {
+      "key": "r3",
+      "x": 2,
+      "y": 15
+    },
+    {
+      "key": "r3",
+      "x": 6,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 11,
+      "y": 8
+    },
+    {
+      "key": "g3",
+      "x": 11,
+      "y": 9
     }
   ]
 }

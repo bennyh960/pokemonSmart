@@ -117,6 +117,13 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(160,80,200,0.25)',
     textColor: '#c878f0',
   },
+  disable: {
+    label: 'מושבת',
+    shortLabel: 'מושבת',
+    bgColor: 'rgba(100,100,100,0.2)',
+    borderColor: 'rgba(160,160,160,0.35)',
+    textColor: '#aaaaaa',
+  },
   boost: {
     label: '',
     shortLabel: 'UP',

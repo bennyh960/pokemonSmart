@@ -185,6 +185,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
   }
 
   return {
+    uuid: crypto.randomUUID(),
     id: data.id,
     name: data.name.en,
     level,

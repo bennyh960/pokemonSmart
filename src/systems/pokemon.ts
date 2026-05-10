@@ -21,6 +21,7 @@ import { getXpToNextLevel } from './encounter.js';
 /** Create an empty/default Pokemon (placeholder). */
 export function createDefaultPokemon(): Pokemon {
   return {
+    uuid: crypto.randomUUID(),
     id: 0,
     name: 'MissingNo',
     level: 1,

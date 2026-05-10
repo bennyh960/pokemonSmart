@@ -21,6 +21,7 @@ import {
   healParty,
   updateLastPokemonCenter,
   setFlag,
+  consumeRestoreNotifications,
 } from '../systems/game-state.js';
 import { setPartyMode } from '../scenes/party.js';
 import { setBagMode } from '../scenes/bag.js';
@@ -1141,9 +1142,63 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     encounterIndex = 0,
     prebuiltParty?: import('../types/index.js').Pokemon[],
   ): TrainerBattleData {
-    const party =
-      prebuiltParty ??
-      trainer.party.map((p) => {
+    let party: import('../types/index.js').Pokemon[];
+    if (prebuiltParty) {
+      party = prebuiltParty;
+    } else if (trainer.party.length > 6) {
+      // Pool mode: separate forced slots from random pool, then pick 6
+      type PartyMember = typeof trainer.party[0];
+      const forcedSlots: (PartyMember | null)[] = [null, null, null, null, null, null];
+      const pool: PartyMember[] = [];
+
+      for (const m of trainer.party) {
+        const slot = (m as { mustInclude?: number | null }).mustInclude;
+        if (slot != null && slot >= 0 && slot <= 5) forcedSlots[slot] = m;
+        else pool.push(m);
+      }
+
+      const slotsNeeded = forcedSlots.filter(Boolean).length < 6
+        ? 6 - forcedSlots.filter(Boolean).length
+        : 0;
+
+      // Shuffle pool and pick type-diverse members for remaining slots
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const picked: PartyMember[] = [];
+      const seenTypes = new Set<string>();
+      for (const m of shuffled) {
+        if (picked.length >= slotsNeeded) break;
+        const data = getPokemon(m.pokemonId);
+        const memberTypes = data?.types ?? [];
+        if (memberTypes.some((t) => !seenTypes.has(t))) {
+          picked.push(m);
+          memberTypes.forEach((t) => seenTypes.add(t));
+        }
+      }
+      // Fill any remaining slots regardless of type
+      for (const m of shuffled) {
+        if (picked.length >= slotsNeeded) break;
+        if (!picked.includes(m)) picked.push(m);
+      }
+
+      // Build final 6-slot array: forced slots at their positions, pool fills gaps
+      const finalSlots: (PartyMember | null)[] = [...forcedSlots];
+      let pi = 0;
+      for (let s = 0; s < 6; s++) {
+        if (!finalSlots[s] && pi < picked.length) finalSlots[s] = picked[pi++];
+      }
+
+      party = finalSlots
+        .filter((m): m is PartyMember => m !== null)
+        .map((p) => {
+          const data = getPokemon(p.pokemonId);
+          const pokemon = data
+            ? createPokemonFromData(data, p.level, p.moves)
+            : createPokemonFromData(getPokemon(19)!, p.level);
+          if (trainer.isGlitched) pokemon.isGlitched = true;
+          return pokemon;
+        });
+    } else {
+      party = trainer.party.map((p) => {
         const data = getPokemon(p.pokemonId);
         const pokemon = data
           ? createPokemonFromData(data, p.level, p.moves)
@@ -1151,6 +1206,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (trainer.isGlitched) pokemon.isGlitched = true;
         return pokemon;
       });
+    }
 
     // Register phone contact after first defeat (called lazily when building re-encounter data)
     if (encounterIndex === 0 && trainer.reencounter) {
@@ -1872,6 +1928,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // Check for stolen Pokemon restoration notifications
+      if (!activeTextBox) {
+        const restoreNotifs = consumeRestoreNotifications();
+        if (restoreNotifs.length > 0) {
+          const lines = restoreNotifs.map((n) =>
+            n.sentToBox
+              ? t('battle.pokemonRestoredBox', { name: n.pokemonName })
+              : t('battle.pokemonRestored', { name: n.pokemonName }),
+          );
+          activeTextBox = createTextBox(lines, isRTL());
+          return;
+        }
+      }
+
       // NPC question overlay blocks all game input while active
       if (npcOverlayActive) return;
 
@@ -2418,6 +2488,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Decrement repel counter AFTER encounter check (so the last step still has protection)
           if (hasActiveGame()) {
             const _repPd = getPlayerData();
+            _repPd.totalSteps++;
             if (_repPd.repelStepsRemaining > 0) {
               _repPd.repelStepsRemaining--;
               if (_repPd.repelStepsRemaining === 0) {

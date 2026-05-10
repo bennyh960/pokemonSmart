@@ -349,10 +349,10 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Stone Edge': { critRate: 1 },
 
   // --- Thrash/Outrage/Petal Dance: 30% self-confusion post-use, no lock-in ---
-  Thrash: { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }] },
-  Outrage: { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }] },
+  Thrash: { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 2, maxTurns: 5 }] },
+  Outrage: { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 2, maxTurns: 5 }] },
   'Petal Dance': {
-    effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 1, maxTurns: 2 }],
+    effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 2, maxTurns: 5 }],
   },
 
   // --- Sleep-usable moves ---
@@ -364,6 +364,24 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Assist: { behaviorTags: ['assist'], target: 'user' },
   Copycat: { behaviorTags: ['copycat'], target: 'user' },
   'Mirror Move': { behaviorTags: ['mirror-move'], target: 'selected-pokemon' },
+
+  // --- Disable: disables target's last used move for 3-6 turns ---
+  Disable: { behaviorTags: ['disable'], target: 'selected-pokemon' },
+
+  // --- Foresight: raise user accuracy by 2 stages ---
+  Foresight: { statChanges: [stageChange('accuracy', 2, 'user', 100)], target: 'user' },
+
+  // --- Ancient Power: 20% chance to raise all stats by 1 stage (all-or-nothing roll) ---
+  'Ancient Power': {
+    groupedStatChance: 20,
+    statChanges: [
+      stageChange('attack', 1, 'user', 100),
+      stageChange('defense', 1, 'user', 100),
+      stageChange('specialAttack', 1, 'user', 100),
+      stageChange('specialDefense', 1, 'user', 100),
+      stageChange('speed', 1, 'user', 100),
+    ],
+  },
 
   // --- Multi-hit ---
   Bonemerang: { minHits: 2, maxHits: 2 },

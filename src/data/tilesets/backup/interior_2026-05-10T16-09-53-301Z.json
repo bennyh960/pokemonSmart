@@ -1256,11 +1256,11 @@
     },
     {
       "key": "notebook",
+      "zOffset": 10,
       "sx": 112,
       "sy": 2464,
       "w": 16,
       "h": 16,
-      "zOffset": 10,
       "walkable": true,
       "above": true,
       "interactType": null
@@ -3368,19 +3368,19 @@
       "sy": 656,
       "w": 16,
       "h": 16,
-      "zOffset": 10,
       "walkable": false,
       "above": true,
       "category": "decoration",
-      "interactType": null
+      "interactType": null,
+      "zOffset": 10
     },
     {
       "key": "pc-2",
+      "zOffset": 10,
       "sx": 96,
       "sy": 656,
       "w": 16,
       "h": 16,
-      "zOffset": 10,
       "walkable": false,
       "above": true,
       "interactType": null
@@ -5274,13 +5274,10 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*"
-      ],
+      "encounterTypes": ["*"],
       "battleBackground": "forest",
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     }
   ]
 }

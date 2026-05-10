@@ -44,6 +44,7 @@ import { createBattleSideRuntimeState } from '../battle-state.js';
 
 function createTestPokemon(overrides: Partial<Pokemon> = {}): Pokemon {
   return {
+    uuid: crypto.randomUUID(),
     id: 25,
     name: 'Pikachu',
     level: 20,

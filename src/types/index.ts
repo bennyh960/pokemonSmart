@@ -46,6 +46,7 @@ export interface GameState {
 
 /** A single Pokemon instance (real Pokemon from Gen 1-2). */
 export interface Pokemon {
+  uuid: string; // Unique instance ID — stable across party reordering / box transfers
   id: number; // PokeAPI ID (1-251)
   name: string; // e.g. "Cyndaquil"
   level: number;
@@ -182,6 +183,26 @@ export interface PhoneContactInfo {
   };
 }
 
+/** A Pokemon stolen by a thief NPC — removed from party and locked until thief is defeated. */
+export interface StolenEntry {
+  kind: 'stolen';
+  pokemon: Pokemon; // removed from party during theft
+  thiefSpriteType: string;
+  thiefName: { en: string; he: string };
+  restoredFlag: string;
+}
+
+/** A Pokemon deposited at a day-care NPC — removed from party, gains EXP per step. */
+export interface DayCareEntry {
+  kind: 'day-care';
+  pokemon: Pokemon;
+  depositedAtSteps: number;
+  npcId: string;
+  route: { en: string; he: string };
+}
+
+export type AwayPokemonEntry = StolenEntry | DayCareEntry;
+
 /** Persistent player data (saved to localStorage). */
 export interface PlayerData {
   saveVersion: number; // Schema version for migration (current: 11)
@@ -210,6 +231,9 @@ export interface PlayerData {
   repelStepsRemaining: number; // steps left on active repel (0 = no repel)
   surfing?: boolean;            // player is currently surfing (survives battle transitions)
   surfingPokemonId?: number | null; // id of the surf pokemon
+  /** Away Pokemon: key = Pokemon.uuid. Stolen entries lock the Pokemon in party; day-care entries hold the Pokemon object. */
+  awayPokemon: Record<string, AwayPokemonEntry>;
+  totalSteps: number; // cumulative steps walked — used for day-care EXP calculation
 }
 
 /** Options for text rendering. */

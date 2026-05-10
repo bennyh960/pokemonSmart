@@ -47,6 +47,8 @@ export interface BattleMenuState {
   battleHelperActive: boolean;
   /** Active weather type (null if none) — used to show weather power/accuracy indicators */
   activeWeather: string | null;
+  /** Move IDs currently disabled (player's Pokémon) — shown grayed in the move grid */
+  disabledMoveIds: number[];
 }
 
 const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG', 'POKEDEX'];
@@ -64,6 +66,7 @@ export function createBattleMenu(moves: Move[]): BattleMenuState {
     enemyTypes: [],
     battleHelperActive: false,
     activeWeather: null,
+    disabledMoveIds: [],
   };
 }
 
@@ -344,7 +347,8 @@ function renderMoveGrid(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
     }
     const move = menu.moves[moveIdx];
     const isSelected = slotIdx === menu.cursorIndex;
-    renderMoveCell(ctx, slotIdx, move, isSelected, menu.battleHelperActive, menu.enemyTypes, menu.activeWeather);
+    const isDisabled = menu.disabledMoveIds.includes(move.id);
+    renderMoveCell(ctx, slotIdx, move, isSelected, menu.battleHelperActive, menu.enemyTypes, menu.activeWeather, isDisabled);
   }
 
   // Page indicator (if more than 4 moves)
@@ -399,6 +403,7 @@ function renderMoveCell(
   helperActive = false,
   enemyTypes: PokemonType[] = [],
   activeWeather: string | null = null,
+  isDisabled = false,
 ): void {
   const M = BTL.MOVE;
   const cell = M.cells[slotIdx];
@@ -523,6 +528,20 @@ function renderMoveCell(
   const ppFillW = Math.round(ppRatio * M.PP_BAR_W);
   if (ppFillW > 0) {
     fillRect(ctx, ppBarX, ppBarY, ppFillW, M.PP_BAR_H, BTL.COLORS.ppFill);
+  }
+
+  // Disabled overlay
+  if (isDisabled) {
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = '#000000';
+    fillRoundRect(ctx, cx, cy, cw, ch, 2);
+    ctx.restore();
+    drawText(ctx, isRTL() ? 'מושבת' : 'DISABLED', cx + cw / 2, cy + ch / 2 - 1, {
+      size: 5,
+      color: '#ff4444',
+      align: 'center',
+    });
   }
 }
 

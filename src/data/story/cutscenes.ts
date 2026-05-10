@@ -35,7 +35,8 @@ export type CutsceneStep =
   | { type: 'if-flag';      flag: string; thenSteps: CutsceneStep[]; elseSteps?: CutsceneStep[] }
   | { type: 'start-battle'; trainerId: string }
   | { type: 'start-gate';   gateId: string }
-  | { type: 'start-scene';  sceneId: string };
+  | { type: 'start-scene';  sceneId: string }
+  | { type: 'thief-npc';   npcId: string; restoredFlag?: string; condition?: { amount?: number; aboveLevel?: number; belowLevel?: number } };
 
 export interface CutsceneDef {
   id: string;
@@ -59,4 +60,8 @@ export function registerCutscene(def: CutsceneDef): void {
 
 export function getCutscene(id: string): CutsceneDef | undefined {
   return CUTSCENES[id];
+}
+
+export function getAllCutscenes(): CutsceneDef[] {
+  return Object.values(CUTSCENES);
 }

@@ -5281,6 +5281,26 @@
       "above": false,
       "category": "grass",
       "interactType": null
+    },
+    {
+      "key": "stoper1",
+      "sx": 0,
+      "sy": 4512,
+      "w": 16,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "decoration"
+    },
+    {
+      "key": "stoper2",
+      "sx": 0,
+      "sy": 4544,
+      "w": 32,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "decoration"
     }
   ]
 }

@@ -7,7 +7,7 @@
  * Swap mode lets reorder party. P key from overworld pushes this scene; Escape pops back.
  */
 
-import type { Scene, Pokemon, PokemonType } from '../types/index.js';
+import type { Scene, Pokemon, PokemonType, StolenEntry } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
@@ -25,6 +25,7 @@ import { drawPokeballIcon } from '../ui/item-icons.js';
 import { TYPE_BADGE, getTypeName, getDamageClassLabel } from '../data/type-constants.js';
 import { STATUS_PILL_COLORS } from '../data/battle-constants.js';
 import { getPlayerData } from '../systems/game-state.js';
+import { getCharacterFrame } from '../engine/character-sprites.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { canUseItemOnPokemon } from '../systems/item-effects.js';
 import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } from '../systems/move-learning.js';
@@ -33,7 +34,7 @@ import { getTMEffect } from '../data/item-defs.js';
 
 const MAX_PARTY = 6;
 
-type ViewMode = 'list' | 'detail' | 'swap';
+type ViewMode = 'list' | 'detail' | 'swap' | 'diary';
 type DetailTab = 'stats' | 'moves';
 type MoveAction = 'swap' | 'delete' | 'cancel';
 type PartyMode = 'overworld' | 'battle' | 'select-target' | 'move-learning';
@@ -309,6 +310,87 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     });
   }
 
+  function renderDiaryView(ctx: CanvasRenderingContext2D): void {
+    const pd = getPlayerData();
+    const entries = Object.entries(pd.awayPokemon);
+
+    // Title bar
+    fillRect(ctx, 0, 0, 240, 12, '#0a1a10');
+    drawText(ctx, t('party.diary.title'), 112, 2, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+    drawText(ctx, `${entries.length}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
+
+    if (entries.length === 0) {
+      drawText(ctx, t('party.diary.empty'), 120, 80, { size: 8, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
+    } else {
+      let ey = 14;
+      for (const [, entry] of entries) {
+        const pokemon = entry.kind === 'stolen'
+          ? (entry as StolenEntry).pokemon
+          : (entry as import('../types/index.js').DayCareEntry).pokemon;
+        if (!pokemon) continue;
+
+        const entryH = 34;
+        const bg = '#0f2018';
+        fillRect(ctx, 4, ey, 232, entryH, bg);
+        drawRect(ctx, 4, ey, 232, entryH, '#1a4030');
+
+        // Pokemon icon (left)
+        const iconUrl = `/sprites/pokemon/icons/${pokemon.id}.png`;
+        const icon = getCachedImage(iconUrl);
+        if (icon && icon.complete && icon.naturalWidth > 0) {
+          ctx.save();
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(icon, 6, ey + 2, 28, 28);
+          ctx.restore();
+        }
+
+        // Pokemon name + level
+        drawText(ctx, getPokemonDisplayName(pokemon.id), 38, ey + 4, { size: 8, color: C.TEXT_PRI, font: 'monospace' });
+        drawText(ctx, `Lv.${pokemon.level}`, 228, ey + 4, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
+
+        if (entry.kind === 'stolen') {
+          const stolen = entry as StolenEntry;
+          // Lock icon + "Stolen by" label
+          drawText(ctx, t('party.diary.stolen'), 38, ey + 16, { size: 6, color: '#e06030', font: 'monospace' });
+
+          // Thief mini-sprite (16×16)
+          const frame = getCharacterFrame(stolen.thiefSpriteType, 'down', 'stand');
+          if (frame) {
+            ctx.save();
+            ctx.imageSmoothingEnabled = false;
+            const scale = 16 / frame.w;
+            ctx.drawImage(frame.image, frame.sx, frame.sy, frame.w, frame.h, 152, ey + 12, frame.w * scale, frame.h * scale);
+            ctx.restore();
+          }
+
+          // Thief name
+          const locale = getLocale();
+          const thiefDisplayName = locale === 'he' ? stolen.thiefName.he : stolen.thiefName.en;
+          drawText(ctx, thiefDisplayName, 172, ey + 16, { size: 6, color: '#bb8844', font: 'monospace' });
+        } else {
+          const dc = entry as import('../types/index.js').DayCareEntry;
+          const locale = getLocale();
+          const routeName = locale === 'he' ? dc.route.he : dc.route.en;
+          drawText(ctx, t('party.diary.daycare', { route: routeName }), 38, ey + 16, { size: 6, color: '#8888ff', font: 'monospace' });
+        }
+
+        ey += entryH + 2;
+        if (ey > 148) break; // stop before bottom bar
+      }
+    }
+
+    // Bottom bar
+    fillRect(ctx, 0, 150, 240, 10, '#0a1a10');
+    fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
+    drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
+    drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    fillRect(ctx, 100, 151, 40, 8, C.KEY_BG);
+    drawRect(ctx, 100, 151, 40, 8, C.KEY_BRD);
+    drawText(ctx, '◄ ►', 120, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, t('party.title'), 143, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+  }
+
   function renderListView(ctx: CanvasRenderingContext2D): void {
     const party = getParty();
     const tmFiltered = getSelectTargetFiltered();
@@ -418,8 +500,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawRect(ctx, 126, 151, 18, 8, C.KEY_BRD);
     drawText(ctx, '\u25b2\u25bc', 135, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('bag.hint.navigate') || 'Nav', 146, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-    // Space (reorder) — only if party > 1
-    if (party.length > 1) {
+    // Space (reorder) — only if party > 1 and no diary entries (diary hint takes that slot)
+    const hasDiaryEntries = partyMode === 'overworld' && Object.keys(getPlayerData().awayPokemon).length > 0;
+    if (hasDiaryEntries) {
+      fillRect(ctx, 178, 151, 14, 8, C.KEY_BG);
+      drawRect(ctx, 178, 151, 14, 8, C.KEY_BRD);
+      drawText(ctx, '◄►', 185, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+      drawText(ctx, t('party.hint.diary'), 195, 153, { size: 6, color: '#8888ff', font: 'monospace' });
+    } else if (party.length > 1) {
       fillRect(ctx, 178, 151, 28, 8, C.KEY_BG);
       drawRect(ctx, 178, 151, 28, 8, C.KEY_BRD);
       drawText(ctx, 'Space', 192, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
@@ -1371,6 +1459,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         return;
       }
 
+      // Diary view — view-only, ESC or Left/Right returns to list
+      if (viewMode === 'diary') {
+        if (input.isKeyPressed('Escape') || input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowRight')) {
+          viewMode = 'list';
+        }
+        return;
+      }
+
       // List or swap mode
       if (input.isKeyPressed('Escape')) {
         if (viewMode === 'swap') {
@@ -1380,6 +1476,15 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           stateMachine.pop();
         }
         return;
+      }
+
+      // Left/Right in list mode: open diary (overworld only, when entries exist)
+      if (partyMode === 'overworld' && !tmFiltered &&
+          (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowRight'))) {
+        if (Object.keys(getPlayerData().awayPokemon).length > 0) {
+          viewMode = 'diary';
+          return;
+        }
       }
 
       if (input.isKeyPressed('ArrowUp')) {
@@ -1460,6 +1565,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
       if (viewMode === 'detail') {
         renderDetailView(ctx);
+      } else if (viewMode === 'diary') {
+        renderDiaryView(ctx);
       } else {
         renderListView(ctx);
       }

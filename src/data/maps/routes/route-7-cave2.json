@@ -1,14 +1,196 @@
 {
   "id": "route-7-cave2",
+  "name": "cave-2",
+  "template": "cave-2",
+  "tileset": "caves",
   "label": {
     "en": "Mysterious Cave",
     "he": "מערה מסתורית"
   },
-  "tileset": "caves",
-
-  "template": "cave-2",
   "music": "route",
   "encounterTableId": "cave-20-30",
-  "npcs": [],
-  "interactiveItems": {}
+  "spawn": {
+    "x": 9,
+    "y": 72
+  },
+  "transitions": [
+    {
+      "fromX": 9,
+      "fromY": 73,
+      "toMapId": "routes/route-7",
+      "toX": 18,
+      "toY": 7
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-1778406032291",
+      "x": 2,
+      "y": 65,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום! אני איתן! חוקר מערות"
+        },
+        {
+          "en": "",
+          "he": "חלק מהמערה פה מעולם לא נחקר!"
+        },
+        {
+          "en": "",
+          "he": "יש טוענים שפוקימון אגדי מסתתר כאן."
+        }
+      ],
+      "spriteType": "char_899006"
+    },
+    {
+      "id": "npc-1778406057194",
+      "x": 16,
+      "y": 49,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "אני אהיה פוקימון מאסטר!"
+        },
+        {
+          "en": "",
+          "he": "לא מפחד מגליצ'ים!"
+        }
+      ],
+      "spriteType": "char_10af6a",
+      "name": {
+        "en": "Sam",
+        "he": "סם"
+      },
+      "party": [
+        {
+          "pokemonId": 28,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 51,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 42,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1200,
+        "items": [
+          {
+            "itemId": "poke-ball",
+            "quantity": 5
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "פששש מרשים!"
+        },
+        {
+          "en": "",
+          "he": "יש טוענים שפוקימון אגדי מסתתר במערה."
+        },
+        {
+          "en": "",
+          "he": "אם תוכל לחצות את הנהר אולי תצליח לפגוש אותו"
+        }
+      ]
+    },
+    {
+      "id": "npc-1778406063566",
+      "x": 38,
+      "y": 49,
+      "facing": "up",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "יש שם מערה פנימית באופק!"
+        },
+        {
+          "en": "",
+          "he": "המערה תחכה - קודם קרב!"
+        }
+      ],
+      "spriteType": "char_e38ab2",
+      "name": {
+        "en": "Elm",
+        "he": "אלם"
+      },
+      "party": [
+        {
+          "pokemonId": 79,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 80,
+          "level": 37,
+          "moves": []
+        },
+        {
+          "pokemonId": 199,
+          "level": 40,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1200
+      },
+      "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1778406074314",
+      "x": 43,
+      "y": 66,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "אני מוכן לכל אתגר"
+        }
+      ],
+      "spriteType": "char_5b4066",
+      "name": {
+        "en": "Erick",
+        "he": "אריק"
+      },
+      "party": [
+        {
+          "pokemonId": 162,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 210,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 185,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 800
+      },
+      "postBattleDialogue": []
+    }
+  ]
 }

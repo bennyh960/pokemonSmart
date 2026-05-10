@@ -10,53 +10,7 @@
     "y": 10
   },
   "transitions": [],
-  "npcs": [
-    {
-      "id": "npc-1778434910944",
-      "x": 11,
-      "y": 5,
-      "facing": "down",
-      "type": "wild-pokemon",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "char_86bf88"
-    },
-    {
-      "id": "npc-1778434926459",
-      "x": 16,
-      "y": 6,
-      "facing": "up",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "alice"
-    },
-    {
-      "id": "npc-1778434958432",
-      "x": 16,
-      "y": 2,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "npc-male",
-      "randomChars": [
-        "gym-leader"
-      ]
-    }
-  ],
+  "npcs": [],
   "music": "town",
   "encounterTableId": "test-map",
   "interactiveItems": {

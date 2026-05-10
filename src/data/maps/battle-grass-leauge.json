@@ -1,0 +1,253 @@
+{
+  "id": "battle-grass-leauge",
+  "name": "New Map",
+  "tileset": "overworld",
+  "width": 25,
+  "height": 20,
+  "tileSize": 16,
+  "spawn": {
+    "x": 12,
+    "y": 10
+  },
+  "transitions": [],
+  "npcs": [],
+  "music": "gym-battle",
+  "encounterTableId": null,
+  "interactiveItems": {},
+  "label": {
+    "en": "grass battle zone",
+    "he": "מתחם קרב עשב"
+  }
+,
+  "tiles": [
+    ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
+    ["black-non-walk","w2-b1","w2-2","w2-2","w2-2","w2-2","w2-2","w2-2","w2-2","w2-2","w2-c4","t","t","w2-c3","w2-2","w2-2","w2-2","w2-2","w2-2","w2-2","w2-2","w2-2","w2-2","w2-b2","black-non-walk"],
+    ["black-non-walk","w2-r","w2","w2","w2","w2","w2","w2","w2","w2","w2","t","t","w2","w2","w2","w2","w2","w2","w2","w2","w2","w2","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","w2b","w2b","w2b","w2b","w2b","w2b","w2b","w2b","w2b","t","t","w2b","w2b","w2b","w2b","w2b","w2b","w2b","w2b","w2b","w2b","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w2-l","black-non-walk"],
+    ["black-non-walk","w2-b3","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","g1","g1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-1","w2-b4","black-non-walk"],
+    ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"]
+  ],
+  "objects": [
+    {
+      "key": "battle-arena",
+      "x": 10,
+      "y": 8
+    },
+    {
+      "key": "mat-horizontal",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "key": "mat-horizontal",
+      "x": 11,
+      "y": 18
+    },
+    {
+      "key": "tv3",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "key": "tv3",
+      "x": 19,
+      "y": 2
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 9
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 10
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 11
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 12
+    },
+    {
+      "key": "chair1R",
+      "x": 2,
+      "y": 13
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 9
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 10
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "key": "chair1R",
+      "x": 4,
+      "y": 13
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 6
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 7
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 8
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 9
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 10
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 11
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 12
+    },
+    {
+      "key": "chair1L",
+      "x": 20,
+      "y": 13
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 6
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 7
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 8
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 9
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 10
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 11
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 12
+    },
+    {
+      "key": "chair1L",
+      "x": 22,
+      "y": 13
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

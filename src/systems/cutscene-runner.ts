@@ -15,9 +15,11 @@
  */
 
 import type { CutsceneDef, CutsceneStep } from '../data/story/cutscenes.js';
-import type { NPCData } from './npc.js';
+import type { NPCData, BilingualText } from './npc.js';
 import type { StoryAction } from '../data/story/events.js';
 import type { InputManager } from '../engine/input.js';
+import type { Pokemon } from '../types/index.js';
+import { hasActiveGame, getPlayerData } from './game-state.js';
 import { drawText, fillRect } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as W, LOGICAL_HEIGHT as H, TILE_SIZE } from '../engine/config.js';
 import { getLocale, isRTL } from '../i18n/i18n.js';
@@ -411,6 +413,50 @@ export function renderCutscene(canvas: CanvasRenderingContext2D): void {
 }
 
 // ---------------------------------------------------------------------------
+// Theft helpers
+// ---------------------------------------------------------------------------
+
+function selectStealTargets(
+  party: Pokemon[],
+  amount: number,
+  aboveLevel: number | undefined,
+  belowLevel: number | undefined,
+  maxStealable: number,
+): Pokemon[] {
+  const stolen: Pokemon[] = [];
+  const limit = Math.min(amount, maxStealable);
+  if (limit <= 0) return stolen;
+
+  const findNext = (): Pokemon | null => {
+    const remaining = party.filter((p) => !stolen.includes(p));
+    if (remaining.length <= 1) return null; // always leave at least 1
+    const matchesBoth = (p: Pokemon) =>
+      (aboveLevel === undefined || p.level > aboveLevel) &&
+      (belowLevel === undefined || p.level < belowLevel);
+    if (aboveLevel !== undefined || belowLevel !== undefined) {
+      const both = remaining.find(matchesBoth);
+      if (both) return both;
+      if (aboveLevel !== undefined) {
+        const above = remaining.find((p) => p.level > aboveLevel);
+        if (above) return above;
+      }
+      if (belowLevel !== undefined) {
+        const below = remaining.find((p) => p.level < belowLevel);
+        if (below) return below;
+      }
+    }
+    return remaining[0];
+  };
+
+  for (let i = 0; i < limit; i++) {
+    const candidate = findNext();
+    if (!candidate) break;
+    stolen.push(candidate);
+  }
+  return stolen;
+}
+
+// ---------------------------------------------------------------------------
 // Step execution
 // ---------------------------------------------------------------------------
 
@@ -614,6 +660,38 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       } else {
         _stepIndex++;
       }
+      break;
+    }
+
+    case 'thief-npc': {
+      if (hasActiveGame()) {
+        const pd = getPlayerData();
+        const npc = ctx.getNPCById(step.npcId);
+        const thiefSpriteType: string = (npc as unknown as Record<string, unknown>)?.spriteType as string ?? step.npcId;
+        const thiefName: BilingualText =
+          ((npc as unknown as Record<string, unknown>)?.name as BilingualText | undefined) ??
+          { en: step.npcId, he: step.npcId };
+        const resolvedFlag = step.restoredFlag ?? `trainer-${step.npcId}-defeated`;
+        const amount = step.condition?.amount ?? 1;
+        const targets = selectStealTargets(
+          pd.party,
+          amount,
+          step.condition?.aboveLevel,
+          step.condition?.belowLevel,
+          Math.max(0, pd.party.length - 1),
+        );
+        for (const pokemon of targets) {
+          pd.party = pd.party.filter((p) => p.uuid !== pokemon.uuid);
+          pd.awayPokemon[pokemon.uuid] = {
+            kind: 'stolen',
+            pokemon,
+            thiefSpriteType,
+            thiefName,
+            restoredFlag: resolvedFlag,
+          };
+        }
+      }
+      _stepIndex++;
       break;
     }
 
