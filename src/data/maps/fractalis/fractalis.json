@@ -32,6 +32,11 @@
       "fromX": 8,
       "fromY": 0,
       "toMapId": "routes/route-8"
+    },
+    {
+      "fromX": 13,
+      "fromY": 2,
+      "toMapId": "fractalis/gymHouse"
     }
   ],
   "npcs": [],

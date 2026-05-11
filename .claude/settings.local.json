@@ -86,7 +86,8 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\" -Recurse -Name -Include \"*.ts\", \"*.tsx\", \"*.json\")",
       "Bash(Select-Object -First 50)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\" -Recurse -Force)",
-      "Bash(Select-Object -Property FullName)"
+      "Bash(Select-Object -Property FullName)",
+      "Bash(Get-ChildItem *)"
     ]
   }
 }

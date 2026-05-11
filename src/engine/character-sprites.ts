@@ -26,6 +26,8 @@ export interface SpriteFrame {
   sy: number;
   w: number;
   h: number;
+  /** If true, render this frame mirrored on the X axis (left↔right direction fallback). */
+  flipX?: boolean;
 }
 
 /** Bilingual name used in character definitions. */
@@ -138,13 +140,27 @@ export async function loadCharacterSprites(): Promise<void> {
 
 // ── Frame lookup ──
 
+const DIR_BASE: Record<string, number> = { up: 0, down: 3, left: 6, right: 9 };
+const POSE_OFFSET: Record<string, number> = { stand: 0, 'walk-1': 1, 'walk-2': 2 };
+const OPPOSITE_DIR: Partial<Record<string, string>> = { left: 'right', right: 'left' };
+
+function isValidRawFrame(f: { sx: number; sy: number } | null): f is { sx: number; sy: number } {
+  return f !== null && f.sx >= 0 && f.sy >= 0;
+}
+
 /**
  * Get the sprite frame for a character.
+ *
+ * Null-frame fallbacks (no JSON changes required):
+ *   1. Within a direction: if the requested pose is null, steps back to an earlier pose
+ *      in the same direction (walk-2 → walk-1 → stand) to avoid animation flicker.
+ *   2. Entire direction missing (left/right only): mirrors the opposite direction and
+ *      sets `flipX: true` on the returned frame so the caller can apply ctx.scale(-1,1).
  *
  * @param id        Character id (e.g. "dani", "leon")
  * @param facing    Direction: "up" | "down" | "left" | "right"
  * @param pose      Animation pose: "stand" | "walk-1" | "walk-2"
- * @returns         SpriteFrame or null if not found / null slot
+ * @returns         SpriteFrame or null if not found
  */
 export function getCharacterFrame(id: string, facing: string, pose: string = 'stand'): SpriteFrame | null {
   if (!sheetImage || !loaded) return null;
@@ -152,20 +168,43 @@ export function getCharacterFrame(id: string, facing: string, pose: string = 'st
   const charDef = characters.get(id);
   if (!charDef) return null;
 
-  const label = `${facing}-${pose}`;
-  const frameIdx = manifest.dict[label];
-  if (frameIdx === undefined || frameIdx < 0) return null;
-  if (frameIdx >= charDef.frames.length) return null;
+  const base = DIR_BASE[facing];
+  if (base === undefined) return null;
 
-  const frame = charDef.frames[frameIdx];
-  if (!frame || frame.sx < 0 || frame.sy < 0) return null;
+  const poseOffset = POSE_OFFSET[pose] ?? 0;
+
+  // Walk back through poses in a direction to find the first valid frame.
+  const tryDir = (dirBase: number): { sx: number; sy: number } | null => {
+    for (let off = poseOffset; off >= 0; off--) {
+      const idx = dirBase + off;
+      if (idx < charDef.frames.length && isValidRawFrame(charDef.frames[idx])) {
+        return charDef.frames[idx] as { sx: number; sy: number };
+      }
+    }
+    return null;
+  };
+
+  let raw = tryDir(base);
+  let flipX = false;
+
+  // If the entire direction is missing and it's left/right, mirror the opposite side.
+  if (!raw) {
+    const oppDir = OPPOSITE_DIR[facing];
+    if (oppDir !== undefined) {
+      raw = tryDir(DIR_BASE[oppDir]!);
+      if (raw) flipX = true;
+    }
+  }
+
+  if (!raw) return null;
 
   return {
     image: sheetImage,
-    sx: frame.sx,
-    sy: frame.sy,
+    sx: raw.sx,
+    sy: raw.sy,
     w: charDef.frameWidth,
     h: charDef.frameHeight,
+    ...(flipX && { flipX: true }),
   };
 }
 

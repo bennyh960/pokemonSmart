@@ -38,6 +38,18 @@
       "toMapId": "fractalis/fractalis",
       "toX": 9,
       "toY": 1
+    },
+    {
+      "fromX": 15,
+      "fromY": 58,
+      "toMapId": "fractalis/gym"
+    },
+    {
+      "fromX": 13,
+      "fromY": 68,
+      "toMapId": "fractalis/gymHouse",
+      "toX": 8,
+      "toY": 1
     }
   ],
   "npcs": [],
@@ -104,17 +116,17 @@
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","wt1l","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtbr1-3","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","g8c","g8c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","g8c","g8c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","g8c","g8c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","g8c","g8c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","door-gym","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","wt1l","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtbr1-3","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","g8c","g8c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","g8c","g8c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","g8c","g8c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","g8c","g8c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"]
   ],
   "objects": [
@@ -10330,53 +10342,53 @@
     },
     {
       "key": "g5",
-      "x": 12,
-      "y": 68
-    },
-    {
-      "key": "g5",
-      "x": 12,
-      "y": 67
-    },
-    {
-      "key": "g5",
-      "x": 12,
-      "y": 66
-    },
-    {
-      "key": "g5",
-      "x": 12,
-      "y": 65
-    },
-    {
-      "key": "g5",
-      "x": 12,
+      "x": 19,
       "y": 64
     },
     {
       "key": "g5",
-      "x": 12,
-      "y": 62
+      "x": 18,
+      "y": 64
     },
     {
       "key": "g5",
-      "x": 12,
+      "x": 17,
+      "y": 64
+    },
+    {
+      "key": "g5",
+      "x": 16,
+      "y": 64
+    },
+    {
+      "key": "g5",
+      "x": 19,
       "y": 63
     },
     {
       "key": "g5",
-      "x": 12,
-      "y": 61
+      "x": 17,
+      "y": 63
     },
     {
       "key": "g5",
-      "x": 12,
-      "y": 59
+      "x": 18,
+      "y": 63
     },
     {
       "key": "g5",
-      "x": 12,
-      "y": 60
+      "x": 16,
+      "y": 63
+    },
+    {
+      "key": "g5",
+      "x": 15,
+      "y": 64
+    },
+    {
+      "key": "g5",
+      "x": 15,
+      "y": 63
     },
     {
       "key": "g5",
@@ -10397,21 +10409,6 @@
       "key": "g5",
       "x": 20,
       "y": 65
-    },
-    {
-      "key": "g5",
-      "x": 20,
-      "y": 59
-    },
-    {
-      "key": "g5",
-      "x": 20,
-      "y": 60
-    },
-    {
-      "key": "g5",
-      "x": 20,
-      "y": 62
     },
     {
       "key": "g5",
@@ -10422,11 +10419,6 @@
       "key": "g5",
       "x": 20,
       "y": 64
-    },
-    {
-      "key": "g4",
-      "x": 20,
-      "y": 61
     },
     {
       "key": "gd-1",
@@ -10442,6 +10434,236 @@
       "key": "signx",
       "x": 10,
       "y": 66
+    },
+    {
+      "key": "s1-6",
+      "x": 14,
+      "y": 63
+    },
+    {
+      "key": "s1-6",
+      "x": 14,
+      "y": 64
+    },
+    {
+      "key": "s1-6",
+      "x": 14,
+      "y": 65
+    },
+    {
+      "key": "s1-6",
+      "x": 14,
+      "y": 66
+    },
+    {
+      "key": "s1-6",
+      "x": 14,
+      "y": 67
+    },
+    {
+      "key": "s1-6",
+      "x": 14,
+      "y": 68
+    },
+    {
+      "key": "s1-2",
+      "x": 13,
+      "y": 60
+    },
+    {
+      "key": "s1-4",
+      "x": 14,
+      "y": 59
+    },
+    {
+      "key": "s1-6",
+      "x": 16,
+      "y": 59
+    },
+    {
+      "key": "s1-6",
+      "x": 16,
+      "y": 61
+    },
+    {
+      "key": "s1-6",
+      "x": 16,
+      "y": 60
+    },
+    {
+      "key": "s1jtl",
+      "x": 14,
+      "y": 60
+    },
+    {
+      "key": "s1jbr",
+      "x": 14,
+      "y": 62
+    },
+    {
+      "key": "s1-8",
+      "x": 15,
+      "y": 62
+    },
+    {
+      "key": "s1-9",
+      "x": 16,
+      "y": 62
+    },
+    {
+      "key": "s1-4",
+      "x": 12,
+      "y": 68
+    },
+    {
+      "key": "s1-4",
+      "x": 12,
+      "y": 67
+    },
+    {
+      "key": "s1-4",
+      "x": 12,
+      "y": 66
+    },
+    {
+      "key": "s1-4",
+      "x": 12,
+      "y": 65
+    },
+    {
+      "key": "s1-4",
+      "x": 12,
+      "y": 64
+    },
+    {
+      "key": "s1-4",
+      "x": 12,
+      "y": 63
+    },
+    {
+      "key": "s1-4",
+      "x": 12,
+      "y": 62
+    },
+    {
+      "key": "s1-4",
+      "x": 12,
+      "y": 61
+    },
+    {
+      "key": "s1",
+      "x": 12,
+      "y": 60
+    },
+    {
+      "key": "g5",
+      "x": 19,
+      "y": 65
+    },
+    {
+      "key": "g5",
+      "x": 18,
+      "y": 65
+    },
+    {
+      "key": "g5",
+      "x": 17,
+      "y": 65
+    },
+    {
+      "key": "g5",
+      "x": 16,
+      "y": 65
+    },
+    {
+      "key": "g5",
+      "x": 15,
+      "y": 65
+    },
+    {
+      "key": "g5",
+      "x": 15,
+      "y": 66
+    },
+    {
+      "key": "g5",
+      "x": 15,
+      "y": 67
+    },
+    {
+      "key": "g5",
+      "x": 15,
+      "y": 68
+    },
+    {
+      "key": "g5",
+      "x": 16,
+      "y": 68
+    },
+    {
+      "key": "g5",
+      "x": 17,
+      "y": 68
+    },
+    {
+      "key": "g5",
+      "x": 18,
+      "y": 68
+    },
+    {
+      "key": "g5",
+      "x": 19,
+      "y": 68
+    },
+    {
+      "key": "g5",
+      "x": 19,
+      "y": 67
+    },
+    {
+      "key": "g5",
+      "x": 19,
+      "y": 66
+    },
+    {
+      "key": "g5",
+      "x": 18,
+      "y": 66
+    },
+    {
+      "key": "g5",
+      "x": 17,
+      "y": 66
+    },
+    {
+      "key": "g5",
+      "x": 16,
+      "y": 66
+    },
+    {
+      "key": "g5",
+      "x": 16,
+      "y": 67
+    },
+    {
+      "key": "g5",
+      "x": 17,
+      "y": 67
+    },
+    {
+      "key": "g5",
+      "x": 18,
+      "y": 67
+    },
+    {
+      "key": "g4",
+      "x": 12,
+      "y": 59
+    },
+    {
+      "key": "g4",
+      "x": 13,
+      "y": 59
     }
   ]
 }

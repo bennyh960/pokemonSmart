@@ -84,10 +84,7 @@
         "en": "Rei Minder",
         "he": "ריי שארית"
       },
-      "roles": [
-        "rival",
-        "story"
-      ]
+      "roles": ["rival", "story"]
     },
     "dana": {
       "frameWidth": 32,
@@ -210,10 +207,7 @@
         "en": "Leon",
         "he": "ליאון"
       },
-      "roles": [
-        "elite-4",
-        "story"
-      ]
+      "roles": ["elite-4", "story"]
     },
     "mosh": {
       "frameWidth": 32,
@@ -330,9 +324,7 @@
         "en": "Cyntia",
         "he": "סינתיה"
       },
-      "roles": [
-        "elite-4"
-      ]
+      "roles": ["elite-4"]
     },
     "alice": {
       "frameWidth": 32,
@@ -391,10 +383,7 @@
         "en": "Alice",
         "he": "אליס"
       },
-      "roles": [
-        "story",
-        "elite-4"
-      ]
+      "roles": ["story", "elite-4"]
     },
     "char_45ba6c": {
       "frameWidth": 32,
@@ -1242,10 +1231,7 @@
         "en": "Adda",
         "he": "אדה פלוס"
       },
-      "roles": [
-        "story",
-        "gym-leader"
-      ]
+      "roles": ["story", "gym-leader"]
     },
     "champion_leon": {
       "frameWidth": 32,
@@ -1304,10 +1290,7 @@
         "en": "Leon",
         "he": "ליאון"
       },
-      "roles": [
-        "story",
-        "champion"
-      ]
+      "roles": ["story", "champion"]
     },
     "char_ca2fd2": {
       "frameWidth": 32,
@@ -1474,10 +1457,7 @@
         "en": "Miss Minessa",
         "he": "מינזה"
       },
-      "roles": [
-        "story",
-        "gym-leader"
-      ]
+      "roles": ["story", "gym-leader"]
     },
     "char_304fc6": {
       "frameWidth": 32,
@@ -1698,10 +1678,7 @@
         "en": "Prima Elgrabli",
         "he": "פרימה אלגרבלי"
       },
-      "roles": [
-        "story",
-        "gym-leader"
-      ]
+      "roles": ["story", "gym-leader"]
     },
     "char_c2b2c1": {
       "frameWidth": 32,
@@ -1922,10 +1899,7 @@
         "en": "Captain Kefel",
         "he": "קפטיין קפלה"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "roles": ["gym-leader", "story"]
     },
     "gym-5-fractalis": {
       "frameWidth": 32,
@@ -1984,10 +1958,7 @@
         "en": "Sir Fracti",
         "he": "דון שבריז"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "roles": ["gym-leader", "story"]
     },
     "char_d25760": {
       "frameWidth": 32,
@@ -2046,9 +2017,7 @@
         "en": "Brock",
         "he": "ברוק"
       },
-      "roles": [
-        "story"
-      ]
+      "roles": ["story"]
     },
     "ashKetchum": {
       "frameWidth": 32,
@@ -2107,9 +2076,7 @@
         "en": "Ash Ketchum",
         "he": "אש קאטצ'ם"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
     "ashKetchumBicycle": {
       "frameWidth": 32,
@@ -2226,10 +2193,7 @@
         "en": "James",
         "he": "ג'יימס"
       },
-      "roles": [
-        "story",
-        "villain"
-      ]
+      "roles": ["story", "villain"]
     },
     "rocket-jessi": {
       "frameWidth": 32,
@@ -2288,10 +2252,7 @@
         "en": "Jessi",
         "he": "ג'סי"
       },
-      "roles": [
-        "story",
-        "villain"
-      ]
+      "roles": ["story", "villain"]
     },
     "Misty": {
       "frameWidth": 32,
@@ -2350,9 +2311,7 @@
         "en": "Misty",
         "he": "מיסטי"
       },
-      "roles": [
-        "story"
-      ]
+      "roles": ["story"]
     },
     "oak": {
       "frameWidth": 32,
@@ -2411,10 +2370,7 @@
         "en": "Oak",
         "he": "אוק"
       },
-      "roles": [
-        "story",
-        "professor"
-      ]
+      "roles": ["story", "professor"]
     },
     "red": {
       "frameWidth": 32,
@@ -2473,9 +2429,7 @@
         "en": "Red",
         "he": "רד"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
     "char_fbf115": {
       "frameWidth": 32,
@@ -2696,10 +2650,7 @@
         "en": "Morty Divon",
         "he": "מורטי דיבון"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "roles": ["gym-leader", "story"]
     },
     "char_919bca": {
       "frameWidth": 32,
@@ -2758,10 +2709,7 @@
         "en": "Lance",
         "he": "לאנס"
       },
-      "roles": [
-        "story",
-        "elite-4"
-      ]
+      "roles": ["story", "elite-4"]
     },
     "char_424d3d": {
       "frameWidth": 32,
@@ -2994,11 +2942,9 @@
         "en": "Maya",
         "he": "מאיה"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
-    "char_d6a779": {
+    "gym_6_sima": {
       "frameWidth": 32,
       "frameHeight": 32,
       "frames": [
@@ -3052,9 +2998,10 @@
         }
       ],
       "name": {
-        "en": "Whitney",
-        "he": "וויטני"
-      }
+        "en": "Sima Tria",
+        "he": "סימה טריה"
+      },
+      "roles": ["gym-leader", "story"]
     },
     "char_c32979": {
       "frameWidth": 32,
@@ -3392,68 +3339,6 @@
         "he": "אלם"
       }
     },
-    "gym-6-sima": {
-      "frameWidth": 32,
-      "frameHeight": 32,
-      "frames": [
-        {
-          "sx": 192,
-          "sy": 1376
-        },
-        {
-          "sx": 224,
-          "sy": 1376
-        },
-        {
-          "sx": 256,
-          "sy": 1376
-        },
-        {
-          "sx": 192,
-          "sy": 1408
-        },
-        {
-          "sx": 224,
-          "sy": 1408
-        },
-        {
-          "sx": 256,
-          "sy": 1408
-        },
-        {
-          "sx": 192,
-          "sy": 1440
-        },
-        {
-          "sx": 224,
-          "sy": 1440
-        },
-        {
-          "sx": 256,
-          "sy": 1440
-        },
-        {
-          "sx": 192,
-          "sy": 1472
-        },
-        {
-          "sx": 224,
-          "sy": 1472
-        },
-        {
-          "sx": 256,
-          "sy": 1472
-        }
-      ],
-      "name": {
-        "en": "Sima Tria",
-        "he": "סימה טריה"
-      },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
-    },
     "char_899006": {
       "frameWidth": 32,
       "frameHeight": 32,
@@ -3518,61 +3403,58 @@
       "frames": [
         {
           "sx": 192,
-          "sy": 1504
+          "sy": 1376
         },
         {
           "sx": 224,
-          "sy": 1504
+          "sy": 1376
         },
         {
           "sx": 256,
-          "sy": 1504
+          "sy": 1376
         },
         {
           "sx": 192,
-          "sy": 1536
+          "sy": 1408
         },
         {
           "sx": 224,
-          "sy": 1536
+          "sy": 1408
         },
         {
           "sx": 256,
-          "sy": 1536
+          "sy": 1408
         },
         {
           "sx": 192,
-          "sy": 1568
+          "sy": 1440
         },
         {
           "sx": 224,
-          "sy": 1568
+          "sy": 1440
         },
         {
           "sx": 256,
-          "sy": 1568
+          "sy": 1440
         },
         {
           "sx": 192,
-          "sy": 1600
+          "sy": 1472
         },
         {
           "sx": 224,
-          "sy": 1600
+          "sy": 1472
         },
         {
           "sx": 256,
-          "sy": 1600
+          "sy": 1472
         }
       ],
       "name": {
         "en": "Max Formax",
         "he": "מקס פרבולה"
       },
-      "roles": [
-        "gym-leader",
-        "story"
-      ]
+      "roles": ["gym-leader", "story"]
     },
     "Prof.Algorithma": {
       "frameWidth": 32,
@@ -3631,10 +3513,7 @@
         "en": "Prof Algorithma",
         "he": "פרופסור אלגוריתם"
       },
-      "roles": [
-        "story",
-        "professor"
-      ]
+      "roles": ["story", "professor"]
     },
     "char_4007d6": {
       "frameWidth": 32,
@@ -3693,9 +3572,7 @@
         "en": "Jasmine",
         "he": "ג'סמין"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
     "char_615686": {
       "frameWidth": 32,
@@ -3812,11 +3689,7 @@
         "en": "Gary",
         "he": "גארי"
       },
-      "roles": [
-        "rival",
-        "trainer",
-        "story"
-      ]
+      "roles": ["rival", "trainer", "story"]
     },
     "char_3979e8": {
       "frameWidth": 32,
@@ -3875,9 +3748,7 @@
         "en": "Clown Hays",
         "he": "הייס הליצן"
       },
-      "roles": [
-        "townfolk"
-      ]
+      "roles": ["townfolk"]
     },
     "officer-Jenny": {
       "frameWidth": 32,
@@ -3936,10 +3807,7 @@
         "en": "Officer Jenny",
         "he": "השוטרת ג'ני"
       },
-      "roles": [
-        "story",
-        "ranger"
-      ]
+      "roles": ["story", "ranger"]
     },
     "gate-officer": {
       "frameWidth": 32,
@@ -3998,9 +3866,7 @@
         "en": "Officer X",
         "he": "שומר שער"
       },
-      "roles": [
-        "ranger"
-      ]
+      "roles": ["ranger"]
     },
     "ashKetchum-surf": {
       "frameWidth": 32,
@@ -4035,9 +3901,7 @@
         "en": "Ash-surf",
         "he": "אש-שחייה"
       },
-      "roles": [
-        "hero"
-      ]
+      "roles": ["hero"]
     },
     "char_7db1c5": {
       "frameWidth": 32,
@@ -4096,10 +3960,7 @@
         "en": "Rocket Grunt",
         "he": "סוכן צוות רוקט"
       },
-      "roles": [
-        "trainer",
-        "villain"
-      ]
+      "roles": ["trainer", "villain"]
     },
     "snorlax": {
       "frameWidth": 64,
@@ -4158,9 +4019,7 @@
         "en": "Snorlax",
         "he": "סנורלקס"
       },
-      "roles": [
-        "wild-pokemon"
-      ]
+      "roles": ["wild-pokemon"]
     },
     "char_86bf88": {
       "frameWidth": 96,
@@ -4219,9 +4078,7 @@
         "en": "Lugia",
         "he": "לוגיה"
       },
-      "roles": [
-        "wild-pokemon"
-      ]
+      "roles": ["wild-pokemon"]
     },
     "transparent": {
       "frameWidth": 32,
@@ -4268,9 +4125,7 @@
         "en": "transparent",
         "he": ""
       },
-      "roles": [
-        "story"
-      ]
+      "roles": ["story"]
     },
     "char_6f0793": {
       "frameWidth": 32,
@@ -4329,9 +4184,7 @@
         "en": "Lia",
         "he": "khv"
       },
-      "roles": [
-        "townfolk"
-      ]
+      "roles": ["townfolk"]
     },
     "char_22fdd1": {
       "frameWidth": 32,
@@ -4386,9 +4239,7 @@
         "en": "Tech",
         "he": "טכנאי חשמל"
       },
-      "roles": [
-        "gym-helper"
-      ]
+      "roles": ["gym-helper"]
     },
     "char_330791": {
       "frameWidth": 32,
@@ -4435,9 +4286,7 @@
         "en": "Segen",
         "he": "סגן ניצב"
       },
-      "roles": [
-        "ranger"
-      ]
+      "roles": ["ranger"]
     },
     "char_a8fbf3": {
       "frameWidth": 32,
@@ -4484,9 +4333,7 @@
         "en": "Martin",
         "he": "מרטין"
       },
-      "roles": [
-        "professor"
-      ]
+      "roles": ["professor"]
     },
     "char_24117d": {
       "frameWidth": 32,
@@ -4533,10 +4380,7 @@
         "en": "Hiker",
         "he": "הייקר"
       },
-      "roles": [
-        "trainer",
-        "townfolk"
-      ]
+      "roles": ["trainer", "townfolk"]
     },
     "char_0ade0c": {
       "frameWidth": 32,
@@ -4550,10 +4394,7 @@
           "sx": 192,
           "sy": 544
         },
-        {
-          "sx": 192,
-          "sy": 640
-        },
+        null,
         {
           "sx": 192,
           "sy": 576
@@ -4583,10 +4424,664 @@
         "en": "Walker",
         "he": "ווקר"
       },
-      "roles": [
-        "townfolk",
-        "trainer"
-      ]
+      "roles": ["townfolk", "trainer"]
+    },
+    "char_083dc8": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 288,
+          "sy": 160
+        },
+        {
+          "sx": 320,
+          "sy": 160
+        },
+        {
+          "sx": 352,
+          "sy": 160
+        },
+        {
+          "sx": 288,
+          "sy": 192
+        },
+        {
+          "sx": 320,
+          "sy": 192
+        },
+        {
+          "sx": 352,
+          "sy": 192
+        },
+        {
+          "sx": 288,
+          "sy": 224
+        },
+        {
+          "sx": 320,
+          "sy": 224
+        },
+        {
+          "sx": 352,
+          "sy": 224
+        },
+        {
+          "sx": 288,
+          "sy": 256
+        },
+        {
+          "sx": 320,
+          "sy": 256
+        },
+        {
+          "sx": 352,
+          "sy": 256
+        }
+      ],
+      "name": {
+        "en": "Mos",
+        "he": "משה"
+      }
+    },
+    "char_77d85f": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 160,
+          "sy": 160
+        },
+        {
+          "sx": 192,
+          "sy": 160
+        },
+        {
+          "sx": 192,
+          "sy": 256
+        },
+        {
+          "sx": 192,
+          "sy": 192
+        },
+        {
+          "sx": 160,
+          "sy": 192
+        },
+        null,
+        {
+          "sx": 160,
+          "sy": 256
+        },
+        {
+          "sx": 160,
+          "sy": 224
+        },
+        {
+          "sx": 192,
+          "sy": 224
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Clair",
+        "he": "קלייר"
+      }
+    },
+    "char_4d53b7": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 128,
+          "sy": 288
+        },
+        {
+          "sx": 160,
+          "sy": 288
+        },
+        {
+          "sx": 160,
+          "sy": 384
+        },
+        {
+          "sx": 160,
+          "sy": 320
+        },
+        {
+          "sx": 128,
+          "sy": 320
+        },
+        null,
+        {
+          "sx": 128,
+          "sy": 384
+        },
+        {
+          "sx": 128,
+          "sy": 352
+        },
+        {
+          "sx": 160,
+          "sy": 352
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Amy",
+        "he": "איימי"
+      }
+    },
+    "char_cfd98f": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 192,
+          "sy": 288
+        },
+        {
+          "sx": 224,
+          "sy": 288
+        },
+        {
+          "sx": 224,
+          "sy": 384
+        },
+        {
+          "sx": 224,
+          "sy": 320
+        },
+        {
+          "sx": 192,
+          "sy": 320
+        },
+        null,
+        {
+          "sx": 192,
+          "sy": 384
+        },
+        {
+          "sx": 192,
+          "sy": 352
+        },
+        {
+          "sx": 224,
+          "sy": 352
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Tommy",
+        "he": "טומי"
+      }
+    },
+    "char_338625": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 256,
+          "sy": 288
+        },
+        {
+          "sx": 288,
+          "sy": 288
+        },
+        {
+          "sx": 288,
+          "sy": 384
+        },
+        {
+          "sx": 288,
+          "sy": 320
+        },
+        {
+          "sx": 256,
+          "sy": 320
+        },
+        null,
+        {
+          "sx": 256,
+          "sy": 384
+        },
+        {
+          "sx": 256,
+          "sy": 352
+        },
+        {
+          "sx": 288,
+          "sy": 352
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Erika",
+        "he": "אריקה"
+      }
+    },
+    "char_75200a": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 0,
+          "sy": 416
+        },
+        {
+          "sx": 32,
+          "sy": 416
+        },
+        {
+          "sx": 32,
+          "sy": 512
+        },
+        {
+          "sx": 32,
+          "sy": 448
+        },
+        {
+          "sx": 0,
+          "sy": 448
+        },
+        null,
+        {
+          "sx": 0,
+          "sy": 512
+        },
+        {
+          "sx": 0,
+          "sy": 480
+        },
+        {
+          "sx": 32,
+          "sy": 480
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Crystal",
+        "he": "קריסטל"
+      }
+    },
+    "char_6f8e9b": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 640,
+          "sy": 672
+        },
+        {
+          "sx": 672,
+          "sy": 672
+        },
+        {
+          "sx": 672,
+          "sy": 768
+        },
+        {
+          "sx": 672,
+          "sy": 704
+        },
+        {
+          "sx": 640,
+          "sy": 704
+        },
+        null,
+        {
+          "sx": 640,
+          "sy": 768
+        },
+        {
+          "sx": 640,
+          "sy": 736
+        },
+        {
+          "sx": 672,
+          "sy": 736
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Jimmy",
+        "he": "ג'ימי"
+      }
+    },
+    "char_93367f": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 928,
+          "sy": 1216
+        },
+        {
+          "sx": 960,
+          "sy": 1216
+        },
+        {
+          "sx": 960,
+          "sy": 1312
+        },
+        {
+          "sx": 960,
+          "sy": 1248
+        },
+        {
+          "sx": 928,
+          "sy": 1248
+        },
+        null,
+        {
+          "sx": 928,
+          "sy": 1312
+        },
+        {
+          "sx": 928,
+          "sy": 1280
+        },
+        {
+          "sx": 960,
+          "sy": 1280
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Power Tech",
+        "he": "Power Tech"
+      },
+      "roles": ["gym-helper"]
+    },
+    "char_7ca291": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 608,
+          "sy": 160
+        },
+        {
+          "sx": 640,
+          "sy": 160
+        },
+        {
+          "sx": 640,
+          "sy": 256
+        },
+        {
+          "sx": 640,
+          "sy": 192
+        },
+        {
+          "sx": 608,
+          "sy": 192
+        },
+        null,
+        {
+          "sx": 608,
+          "sy": 256
+        },
+        {
+          "sx": 608,
+          "sy": 224
+        },
+        {
+          "sx": 640,
+          "sy": 224
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Grand Lea",
+        "he": "סבתא לאה"
+      }
+    },
+    "char_dc1a34": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 736,
+          "sy": 160
+        },
+        {
+          "sx": 768,
+          "sy": 160
+        },
+        {
+          "sx": 768,
+          "sy": 256
+        },
+        {
+          "sx": 768,
+          "sy": 192
+        },
+        {
+          "sx": 736,
+          "sy": 192
+        },
+        null,
+        {
+          "sx": 736,
+          "sy": 256
+        },
+        {
+          "sx": 736,
+          "sy": 224
+        },
+        {
+          "sx": 768,
+          "sy": 224
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Maya",
+        "he": "מאיה"
+      }
+    },
+    "char_46f643": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 288,
+          "sy": 0
+        },
+        {
+          "sx": 320,
+          "sy": 0
+        },
+        {
+          "sx": 320,
+          "sy": 96
+        },
+        {
+          "sx": 320,
+          "sy": 32
+        },
+        {
+          "sx": 288,
+          "sy": 32
+        },
+        null,
+        {
+          "sx": 288,
+          "sy": 96
+        },
+        {
+          "sx": 288,
+          "sy": 64
+        },
+        {
+          "sx": 320,
+          "sy": 64
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Tommy",
+        "he": "טומי"
+      }
+    },
+    "char_9db696": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 544,
+          "sy": 160
+        },
+        {
+          "sx": 576,
+          "sy": 160
+        },
+        {
+          "sx": 576,
+          "sy": 256
+        },
+        {
+          "sx": 576,
+          "sy": 192
+        },
+        {
+          "sx": 544,
+          "sy": 192
+        },
+        null,
+        {
+          "sx": 544,
+          "sy": 256
+        },
+        {
+          "sx": 544,
+          "sy": 224
+        },
+        {
+          "sx": 576,
+          "sy": 224
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Jake",
+        "he": "ג'ייק"
+      }
+    },
+    "char_9318f0": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 384,
+          "sy": 960
+        },
+        {
+          "sx": 416,
+          "sy": 960
+        },
+        {
+          "sx": 416,
+          "sy": 1056
+        },
+        {
+          "sx": 416,
+          "sy": 992
+        },
+        {
+          "sx": 384,
+          "sy": 992
+        },
+        null,
+        {
+          "sx": 384,
+          "sy": 1056
+        },
+        {
+          "sx": 384,
+          "sy": 1024
+        },
+        {
+          "sx": 416,
+          "sy": 1024
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Kalfon",
+        "he": "חכם כלפון"
+      }
+    },
+    "char_994b11": {
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": [
+        {
+          "sx": 960,
+          "sy": 288
+        },
+        {
+          "sx": 992,
+          "sy": 288
+        },
+        {
+          "sx": 992,
+          "sy": 384
+        },
+        {
+          "sx": 992,
+          "sy": 320
+        },
+        {
+          "sx": 960,
+          "sy": 320
+        },
+        null,
+        {
+          "sx": 960,
+          "sy": 384
+        },
+        {
+          "sx": 960,
+          "sy": 352
+        },
+        {
+          "sx": 992,
+          "sy": 352
+        },
+        null,
+        null,
+        null
+      ],
+      "name": {
+        "en": "Max",
+        "he": "מקס"
+      }
     }
   }
 }

@@ -1,1 +1,47 @@
-{}
+{
+  "id": "gymHouse",
+  "name": "2-entrance-2",
+  "template": "2-entrance-2",
+  "tileset": "interior",
+  "label": {
+    "en": "Gym House",
+    "he": "בית מנהיג המכון"
+  },
+  "area": "Fractalis",
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 9,
+    "y": 17
+  },
+  "transitions": [
+    {
+      "fromX": 8,
+      "fromY": 18,
+      "toMapId": "fractalis/fractalis",
+      "toX": 13,
+      "toY": 3
+    },
+    {
+      "fromX": 9,
+      "fromY": 18,
+      "toMapId": "fractalis/fractalis",
+      "toX": 13,
+      "toY": 3
+    },
+    {
+      "fromX": 9,
+      "fromY": 0,
+      "toMapId": "routes/route-8",
+      "toX": 13,
+      "toY": 67
+    },
+    {
+      "fromX": 8,
+      "fromY": 0,
+      "toMapId": "routes/route-8",
+      "toX": 13,
+      "toY": 67
+    }
+  ]
+}

@@ -1458,5 +1458,70 @@
         "weight": 5
       }
     ]
+  },
+  "electric-gym-30-40": {
+    "encounterRate": 0.1,
+    "entries": [
+      {
+        "pokemonId": 25,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 15
+      },
+      {
+        "pokemonId": 81,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 15
+      },
+      {
+        "pokemonId": 170,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 5
+      },
+      {
+        "pokemonId": 179,
+        "minLevel": 30,
+        "maxLevel": 35,
+        "weight": 15
+      },
+      {
+        "pokemonId": 100,
+        "minLevel": 30,
+        "maxLevel": 35,
+        "weight": 15
+      },
+      {
+        "pokemonId": 239,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 10
+      },
+      {
+        "pokemonId": 101,
+        "minLevel": 35,
+        "maxLevel": 40,
+        "weight": 5
+      },
+      {
+        "pokemonId": 82,
+        "minLevel": 3,
+        "maxLevel": 5,
+        "weight": 5
+      },
+      {
+        "pokemonId": 180,
+        "minLevel": 3,
+        "maxLevel": 5,
+        "weight": 5
+      },
+      {
+        "pokemonId": 172,
+        "minLevel": 3,
+        "maxLevel": 5,
+        "weight": 5
+      }
+    ]
   }
 }

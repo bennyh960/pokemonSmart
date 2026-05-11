@@ -3538,10 +3538,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const pose = poses[player.walkFrame % poses.length] || 'stand';
           const facingDir = player.facing.replace('Arrow', '').toLowerCase();
           const heroId = hasActiveGame() ? getPlayerData().heroCharacterId : '';
-          let heroFrame = heroId ? getCharacterFrame(heroId, facingDir, pose) : null;
-          if (!heroFrame && heroId && pose !== 'stand') {
-            heroFrame = getCharacterFrame(heroId, facingDir, 'stand');
-          }
+          const heroFrame = heroId ? getCharacterFrame(heroId, facingDir, pose) : null;
 
           // Hide player sprite during fly mount/rise/land phases
           if (flyAnim && (flyAnim.phase === 'mount' || flyAnim.phase === 'rise' || flyAnim.phase === 'land')) {
@@ -3550,17 +3547,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
           if (heroFrame) {
             ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(
-              heroFrame.image,
-              heroFrame.sx,
-              heroFrame.sy,
-              heroFrame.w,
-              heroFrame.h,
-              psx,
-              psy,
-              TILE_SIZE,
-              TILE_SIZE,
-            );
+            if (heroFrame.flipX) {
+              ctx.save();
+              ctx.scale(-1, 1);
+              ctx.drawImage(heroFrame.image, heroFrame.sx, heroFrame.sy, heroFrame.w, heroFrame.h, -(psx + TILE_SIZE), psy, TILE_SIZE, TILE_SIZE);
+              ctx.restore();
+            } else {
+              ctx.drawImage(heroFrame.image, heroFrame.sx, heroFrame.sy, heroFrame.w, heroFrame.h, psx, psy, TILE_SIZE, TILE_SIZE);
+            }
             return;
           }
 
@@ -3601,14 +3595,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const poses = ['stand', 'walk-1', 'walk-2'];
           const pose = poses[npcSt.walkFrame % poses.length] || 'stand';
 
-          // Try character sprite system first; if the walk frame is missing, use stand
-          let charFrame: ReturnType<typeof getCharacterFrame> = null;
-          if (hasCharacter(npc.spriteType)) {
-            charFrame = getCharacterFrame(npc.spriteType, facingDir, pose);
-            if (!charFrame && pose !== 'stand') {
-              charFrame = getCharacterFrame(npc.spriteType, facingDir, 'stand');
-            }
-          }
+          // Try character sprite system first
+          const charFrame = hasCharacter(npc.spriteType)
+            ? getCharacterFrame(npc.spriteType, facingDir, pose)
+            : null;
 
           if (charFrame) {
             // Scale destination proportionally: 32×32 source = 1 tile (16×16).
@@ -3623,17 +3613,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               y: renderY,
               render: () => {
                 ctx.imageSmoothingEnabled = false;
-                ctx.drawImage(
-                  charFrame.image,
-                  charFrame.sx,
-                  charFrame.sy,
-                  charFrame.w,
-                  charFrame.h,
-                  nx,
-                  ny,
-                  destW,
-                  destH,
-                );
+                if (charFrame.flipX) {
+                  ctx.save();
+                  ctx.scale(-1, 1);
+                  ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, -(nx + destW), ny, destW, destH);
+                  ctx.restore();
+                } else {
+                  ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, nx, ny, destW, destH);
+                }
                 // "!" exclamation during trainer, gate-guard, or party-guard approach
                 const showExclamation =
                   (trainerApproach && trainerApproach.trainer === npc && trainerApproach.phase === 'exclamation') ||

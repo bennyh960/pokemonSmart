@@ -55,6 +55,45 @@
       "randomChars": [
         "gym-leader"
       ]
+    },
+    {
+      "id": "npc-1778513608330",
+      "x": 10,
+      "y": 11,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_24117d",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 7,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 7,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 7,
+            "delay": 1
+          },
+          {
+            "dir": "down",
+            "steps": 7,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      }
     }
   ],
   "music": "town",

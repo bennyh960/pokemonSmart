@@ -89,6 +89,14 @@ export class PropertiesPanel {
   // Active context menu element (to dismiss)
   private activeContextMenu: HTMLElement | null = null;
 
+  // Whether to show fully-transparent frames as filled slots (default: hide them)
+  private showTransparent = false;
+
+  // Reusable offscreen canvas for transparency checks
+  private offscreenCanvas = document.createElement('canvas');
+  // Cache: "sx,sy,fw,fh" → isFullyTransparent
+  private transparencyCache = new Map<string, boolean>();
+
   constructor(container: HTMLElement, state: SpriteEditorState, image: HTMLImageElement) {
     this.container = container;
     this.state = state;
@@ -606,7 +614,31 @@ export class PropertiesPanel {
     // Frames with direction grouping + drag-and-drop
     const framesSection = document.createElement('div');
     framesSection.className = 'props-section';
-    framesSection.innerHTML = '<h3>Frame Map (drag to reorder)</h3>';
+
+    const frameHeader = document.createElement('div');
+    frameHeader.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;';
+    const frameTitle = document.createElement('h3');
+    frameTitle.textContent = 'Frame Map (drag to reorder)';
+    frameTitle.style.margin = '0';
+    frameHeader.appendChild(frameTitle);
+
+    const toggleBtn = document.createElement('button');
+    const syncToggleBtn = () => {
+      toggleBtn.textContent = this.showTransparent ? 'Hide Transparent' : 'Show Transparent';
+      toggleBtn.style.cssText = `font-size:10px;padding:2px 7px;border-radius:8px;cursor:pointer;
+        border:1px solid ${this.showTransparent ? '#6a6a2a' : '#444'};
+        background:${this.showTransparent ? '#2a2a1a' : '#1a1a1a'};
+        color:${this.showTransparent ? '#cc9' : '#777'};`;
+    };
+    syncToggleBtn();
+    toggleBtn.addEventListener('click', () => {
+      this.showTransparent = !this.showTransparent;
+      syncToggleBtn();
+      renderRows();
+    });
+    frameHeader.appendChild(toggleBtn);
+    framesSection.appendChild(frameHeader);
+
     const framesContainer = document.createElement('div');
     framesSection.appendChild(framesContainer);
 
@@ -655,8 +687,11 @@ export class PropertiesPanel {
 
         for (const slot of slots) {
           const f = slot.index >= 0 && slot.index < s.frames.length ? s.frames[slot.index] : null;
-          const isEmpty = !f || f.sx < 0 || f.sy < 0;
-          if (!isEmpty && f) {
+          const isNull = !f || f.sx < 0 || f.sy < 0;
+          const isTransparent = !isNull && !this.showTransparent
+            && this.isFrameTransparent(f!.sx, f!.sy, s.frameWidth, s.frameHeight);
+
+          if (!isNull && !isTransparent && f) {
             thumbs.appendChild(this.createDraggableThumb(f.sx, f.sy, s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap, editFrameUpdate));
           } else {
             thumbs.appendChild(this.createEmptySlot(s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap, editFrameUpdate));
@@ -1001,6 +1036,31 @@ export class PropertiesPanel {
     };
     // Use setTimeout so the current event doesn't immediately dismiss
     setTimeout(() => document.addEventListener('mousedown', dismiss), 0);
+  }
+
+  // ── Transparency check ──
+
+  /**
+   * Returns true if every pixel in the frame region has alpha = 0.
+   * Results are cached by coordinates so each unique frame is only read once.
+   */
+  private isFrameTransparent(sx: number, sy: number, fw: number, fh: number): boolean {
+    const key = `${sx},${sy},${fw},${fh}`;
+    if (this.transparencyCache.has(key)) return this.transparencyCache.get(key)!;
+
+    this.offscreenCanvas.width = fw;
+    this.offscreenCanvas.height = fh;
+    const ctx = this.offscreenCanvas.getContext('2d')!;
+    ctx.clearRect(0, 0, fw, fh);
+    ctx.drawImage(this.image, sx, sy, fw, fh, 0, 0, fw, fh);
+    const pixels = ctx.getImageData(0, 0, fw, fh).data;
+    let transparent = true;
+    for (let i = 3; i < pixels.length; i += 4) {
+      if (pixels[i] > 0) { transparent = false; break; }
+    }
+
+    this.transparencyCache.set(key, transparent);
+    return transparent;
   }
 
   private stopAnim(): void {
