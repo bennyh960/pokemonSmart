@@ -1660,10 +1660,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const flagKey = obj.interactArgs?.flag || `obj-${mapId}-${obj.key}-${obj.x}-${obj.y}-collected`;
           return !flags[flagKey];
         }
-        // Remove already-cut trees or already-moved boulders
-        if (flags[`cut-${obj.x}-${obj.y}`] || flags[`strength-${obj.x}-${obj.y}`]) {
-          return false;
-        }
+        // Guard by interactType so coordinate flags don't ghost-remove redesigned tiles at the same spot
+        if (flags[`cut-${obj.x}-${obj.y}`] && def?.interactType?.id === 'cut') return false;
+        if (flags[`strength-${obj.x}-${obj.y}`] && def?.interactType?.id === 'strength') return false;
         return true;
       });
     }
