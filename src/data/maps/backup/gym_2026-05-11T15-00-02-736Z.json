@@ -11,193 +11,37 @@
     "y": 11
   },
   "tileset": "interior",
-  "interactiveItems": {},
-  "npcs": [
-    {
-      "id": "npc-1778506849704-hint1",
-      "x": 31,
-      "y": 2,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "ברוכים הבאים לתחנת הכח של העיר פרקטליס!"
-        },
-        {
-          "en": "",
-          "he": "תחנת הכח מייצרת חשמל ומספקת חשמל לכל אזור נומריה."
-        },
-        {
-          "en": "",
-          "he": "בתחנת הכח יש 30 גנרטורים שנטענים באמצעות פוקימוני חשמל ואנרגיות מכאניות כמו שריפה או רוח וכד'."
-        }
-      ],
-      "spriteType": "npc-male"
-    },
-    {
-      "id": "npc-1778506856586-hint2",
-      "x": 36,
-      "y": 2,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "באת לקרב מכון ? מנהיג המכון שלנו הוא גם המהנדס הראשי ."
-        },
-        {
-          "en": "",
-          "he": "הוא אחראי על הגנרטורים שמחוברים לטעינת פוקימוני חשמל."
-        },
-        {
-          "en": "",
-          "he": "כדי להגיע אליו לך לחדר של הגנרטור האחרון שמחובר לפוקימוני החשמל."
-        }
-      ],
-      "spriteType": "npc-male"
-    },
-    {
-      "id": "npc-1778506863433-hint3",
-      "x": 40,
-      "y": 2,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "במכון אנחנו מפיקים חשמל מפוקימוני חשמל ומאנרגית שריפה ומאנרגית רוח."
-        },
-        {
-          "en": "",
-          "he": "רק 3/5 - כלומר שלוש חמישיות מהגנרטורים מוטענים ע\"י פוקימוני חשמל.  כל הגנרטורים של פוקימוני החשמל מתחילים בצד שמאל מהכניסה."
-        }
-      ],
-      "spriteType": "npc-male"
-    },
-    {
-      "id": "npc-1778510839424",
-      "x": 7,
-      "y": 2,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "תחנת הכח שלנו מסודרת בצורה של שבר - למעלה המונה ולמטה המכנה."
-        },
-        {
-          "en": "",
-          "he": "כל הגנרטורים מחוברים לחדרי טעינה ."
-        },
-        {
-          "en": "",
-          "he": "חלק מחדרי הטעינה הינם פוקימונים וחלק אנרגיה מכאנית."
-        }
-      ],
-      "spriteType": "npc-male"
-    },
-    {
-      "id": "npc-1778511081237-gym-helper1",
-      "x": 80,
-      "y": 3,
-      "facing": "left",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "הוא באת לקרב מכון ?"
-        },
-        {
-          "en": "",
-          "he": "לא כ\"כ מהר - קודם צריך לעבור אותי"
-        }
-      ],
-      "spriteType": "char_d6a779",
-      "party": [
-        {
-          "pokemonId": 101,
-          "level": 40,
-          "moves": []
-        },
-        {
-          "pokemonId": 82,
-          "level": 40,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 2000,
-        "items": [
-          {
-            "itemId": "max-repel",
-            "quantity": 3
-          }
-        ]
-      },
-      "postBattleDialogue": [
-        {
-          "en": "",
-          "he": "מעניין מאוד ! הרבה זמן לא נהנתי ככה בקרב פוקימונים."
-        },
-        {
-          "en": "",
-          "he": "מנהיג המכון שלנו ישמח לפגוש אותך."
-        },
-        {
-          "en": "",
-          "he": "בנוסף - תוכל להשתמש ברפלים כדי לא להתקל ביותר מידי פוקימונים."
-        }
-      ],
-      "despawnOnDefeat": true,
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "up",
-            "steps": 3,
-            "delay": 0
-          }
-        ]
-      },
-      "questions": {
-        "count": 3,
-        "types": []
-      }
-    }
-  ]
+  "interactiveItems": {}
 ,
   "tiles": [
     ["w1-b1","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w6-c3","w6-2","w6-c4","fe1","w6-c3","w6-2","w6-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-l"],
-    ["w1-r","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1","w1","w1","w1","fe1","w1","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1","w1","w1-l"],
-    ["w1-r","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1b","w1b","w1b","w1b","fe1","w1b","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1b","w1b","w1-l"],
-    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
-    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
-    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
-    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
-    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
-    ["w1-r","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","fe1","fe1","w1-l"],
+    ["w1-r","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1-x","w1","w1","fe1","w1","w1","w1-l"],
+    ["w1-r","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1-x","w1b","w1b","fe1","w1b","w1b","w1-l"],
+    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
+    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
+    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
+    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
+    ["w1-r","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","w1-x","fe1","fe1","fe1","fe1","fe1","w1-l"],
+    ["w1-r","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","w1-x2","fe1","fe1","fe1","fe1","fe1","w1-l"],
     ["w1-r","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","w1-l"],
     ["w1-r","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","w1-l"],
     ["w1-r","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","i10","w1-l"],
-    ["w1-b3","w1-1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-x1","i10","i10","w1-x1","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-1","i10","w1-c1","w1-1","w1-1","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-b4"],
+    ["w1-b3","w1-1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-box","i10","i10","w1-box","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-1","i10","w1-c1","w1-1","w1-1","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-c2","i10","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-b4"],
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
-    ["black-non-walk","black-non-walk","w6-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-box","t","w1-box","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-c4","i10","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","i10","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","i10","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","i10","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","i10","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","i10","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","i10","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2","black-non-walk","black-non-walk"],
-    ["black-non-walk","black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","t","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","i10","w1","w1","w1","w1","w1","w1","i10","w1","w1","w1","w1","w1","w1","i10","w1","w1","w1","w1","w1","w1","i10","w1","w1","w1","w1","w1","w1","i10","w1","w1","w1","w1","w1","w1","i10","w1","w1","w1","w1","w1","w1","i10","w1","w1","w1","w1","w1","w1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w6-l","black-non-walk","black-non-walk"],
-    ["black-non-walk","black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","t","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","i10","w1b","w1b","w1b","w1b","w1b","w1b","i10","w1b","w1b","w1b","w1b","w1b","w1b","i10","w1b","w1b","w1b","w1b","w1b","w1b","i10","w1b","w1b","w1b","w1b","w1b","w1b","i10","w1b","w1b","w1b","w1b","w1b","w1b","i10","w1b","w1b","w1b","w1b","w1b","w1b","i10","w1b","w1b","w1b","w1b","w1b","w1b","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w6-l","black-non-walk","black-non-walk"],
-    ["black-non-walk","black-non-walk","w1-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","lab3-2","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","lab3-2","fe1","fe1","fe1","fe1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w6-l","black-non-walk","black-non-walk"],
+    ["black-non-walk","black-non-walk","w6-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-box","t","w1-box","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-c4","fe1","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2","black-non-walk","black-non-walk"],
+    ["black-non-walk","black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","t","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","fe1","w1","w1","w1","w1","w1","w1","fe1","w1","w1","w1","w1","w1","w1","fe1","w1","w1","w1","w1","w1","w1","fe1","w1","w1","w1","w1","w1","w1","fe1","w1","w1","w1","w1","w1","w1","fe1","w1","w1","w1","w1","w1","w1","fe1","w1","w1","w1","w1","w1","w1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w6-l","black-non-walk","black-non-walk"],
+    ["black-non-walk","black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","t","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","fe1","w1b","w1b","w1b","w1b","w1b","w1b","fe1","w1b","w1b","w1b","w1b","w1b","w1b","fe1","w1b","w1b","w1b","w1b","w1b","w1b","fe1","w1b","w1b","w1b","w1b","w1b","w1b","fe1","w1b","w1b","w1b","w1b","w1b","w1b","fe1","w1b","w1b","w1b","w1b","w1b","w1b","fe1","w1b","w1b","w1b","w1b","w1b","w1b","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w6-l","black-non-walk","black-non-walk"],
+    ["black-non-walk","black-non-walk","w1-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w6-l","black-non-walk","black-non-walk"],
     ["w1-2","w1-2","w1-c4","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w6-l","black-non-walk","black-non-walk"],
     ["w1-box","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w6-l","black-non-walk","black-non-walk"],
     ["t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w6-l","black-non-walk","black-non-walk"],
     ["w1-1","w1-1","w1-c2","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w6-l","black-non-walk","black-non-walk"],
-    ["black-non-walk","black-non-walk","w1-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","lab3-2","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","lab3-2","fe1","fe1","fe1","fe1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w6-l","black-non-walk","black-non-walk"],
-    ["black-non-walk","black-non-walk","w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w1-b4","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-c2","fe1","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","fe1","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","fe1","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","fe1","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","fe1","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","fe1","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","fe1","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-b4","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b3","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-b4","black-non-walk","black-non-walk"]
+    ["black-non-walk","black-non-walk","w1-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w6-l","black-non-walk","black-non-walk"],
+    ["black-non-walk","black-non-walk","w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w1-b4","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-c2","t","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","t","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","t","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","t","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","t","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","t","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-c2","t","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-b4","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b3","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-1","w6-b4","black-non-walk","black-non-walk"]
   ],
   "objects": [
     {
@@ -391,6 +235,11 @@
       "y": 19
     },
     {
+      "key": "lab-5",
+      "x": 34,
+      "y": 20
+    },
+    {
       "key": "mat-horizontal",
       "x": 34,
       "y": 12
@@ -431,9 +280,19 @@
       "y": 23
     },
     {
+      "key": "lab-5",
+      "x": 104,
+      "y": 20
+    },
+    {
       "key": "i2",
       "x": 96,
       "y": 19
+    },
+    {
+      "key": "lab-5",
+      "x": 86,
+      "y": 20
     },
     {
       "key": "i2",
@@ -442,78 +301,18 @@
     },
     {
       "key": "lab-5",
-      "x": 42,
+      "x": 101,
       "y": 20
     },
     {
       "key": "lab-5",
-      "x": 50,
+      "x": 107,
       "y": 20
     },
     {
       "key": "lab-5",
-      "x": 56,
+      "x": 110,
       "y": 20
-    },
-    {
-      "key": "lab-5",
-      "x": 63,
-      "y": 20
-    },
-    {
-      "key": "lab-5",
-      "x": 70,
-      "y": 20
-    },
-    {
-      "key": "lab-5",
-      "x": 77,
-      "y": 20
-    },
-    {
-      "key": "labx",
-      "x": 86,
-      "y": 19
-    },
-    {
-      "key": "labx",
-      "x": 86,
-      "y": 23
-    },
-    {
-      "key": "lab3-1",
-      "x": 83,
-      "y": 19
-    },
-    {
-      "key": "lab3-1",
-      "x": 83,
-      "y": 24
-    },
-    {
-      "key": "lab3-1",
-      "x": 35,
-      "y": 19
-    },
-    {
-      "key": "lab3-1",
-      "x": 35,
-      "y": 24
-    },
-    {
-      "key": "lab2",
-      "x": 109,
-      "y": 19
-    },
-    {
-      "key": "lab2",
-      "x": 104,
-      "y": 19
-    },
-    {
-      "key": "i2",
-      "x": 100,
-      "y": 19
     }
   ]
 }

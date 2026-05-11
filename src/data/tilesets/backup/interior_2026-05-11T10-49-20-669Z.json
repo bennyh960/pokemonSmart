@@ -5281,19 +5281,6 @@
       "above": false,
       "category": "grass",
       "interactType": null
-    },
-    {
-      "key": "fe1",
-      "sx": 0,
-      "sy": 4400,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
-      "above": false,
-      "category": "floor"
     }
   ]
 }
