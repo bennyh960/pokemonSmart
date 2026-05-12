@@ -52,7 +52,187 @@
       "toY": 1
     }
   ],
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-engineer-volt-r8",
+      "x": 19,
+      "y": 52,
+      "facing": "left",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "אני מכוון את המתח לכיוון ההרים - נסה לעכב את זאפדוס במקום גבוה ! הוא בטוח יגיע לשם! המתן לו"
+        }
+      ],
+      "spriteType": "gym-5-fractalis",
+      "spawnAfter": "act3-fractalis-route8-entered",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "afterSpawnPattern": [
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 0
+          }
+        ]
+      },
+      "despawnAfter": "act3-fractalis-zapdos-defeated"
+    },
+    {
+      "id": "npc-zapdos-route8",
+      "x": 5,
+      "y": 64,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [],
+      "spriteType": "char_29f912",
+      "autoWalk": {
+        "floating": true,
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 23,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 19,
+            "delay": 4
+          },
+          {
+            "dir": "up",
+            "steps": 22,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 19,
+            "delay": 0.5
+          },
+          {
+            "dir": "down",
+            "steps": 45,
+            "delay": 0.5
+          }
+        ],
+        "loop": true,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 20,
+            "delay": 0.5
+          }
+        ]
+      },
+      "isGlitched": true,
+      "pokemonId": 145,
+      "level": 50,
+      "fleeAtHpPct": 0.7,
+      "spawnAfter": "act3-fractalis-route7-scene-done",
+      "despawnOnDefeat": true,
+      "fleeAfterTurns": 5
+    },
+    {
+      "id": "npc-1778598420169-blocker-fr-r8",
+      "x": 10,
+      "y": 67,
+      "facing": "left",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "היי , איזה אוויר נפלא יש בדרך 8 !"
+        },
+        {
+          "en": "",
+          "he": "עוד לא השגת את תג מכון החשמל?"
+        },
+        {
+          "en": "",
+          "he": "זה ממש בעיר פרקטליס ."
+        }
+      ],
+      "spriteType": "char_0ade0c",
+      "despawnAfter": "act3-fractalis-route7-scene-done",
+      "blocker": true
+    },
+    {
+      "id": "npc-engineer-volt-r8-temp1",
+      "x": 9,
+      "y": 67,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [],
+      "spriteType": "gym-5-fractalis",
+      "spawnAfter": "vact3-fractalis-route7-scene-done",
+      "despawnAfter": "act3-fractalis-route8-entered",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 25,
+            "delay": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1778599418970-1",
+      "x": 8,
+      "y": 67,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [],
+      "spriteType": "char_93367f",
+      "spawnAfter": "act3-fractalis-route7-scene-done",
+      "despawnAfter": "act3-fractalis-route8-entered",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 12,
+            "delay": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1778599418970-2",
+      "x": 10,
+      "y": 2,
+      "facing": "left",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "אסור לתת לזאפדוס לברוח !"
+        }
+      ],
+      "spriteType": "char_93367f",
+      "despawnAfter": "act3-fractalis-zapdos-defeated",
+      "blocker": true
+    },
+    {
+      "id": "npc-1778610709166",
+      "x": 6,
+      "y": 37,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "בשל זיהום הגליץ - כל אזור הספארי חסום. על מנת למנוע התפשטות של הזיהום"
+        }
+      ],
+      "spriteType": "char_330791"
+    }
+  ],
   "music": "town3",
   "encounterTableId": null,
   "interactiveItems": {}
@@ -66,9 +246,9 @@
     ["g1","gre-c","gre-c","g1","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","gre-c","gre-c","gre-c","g1","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","gre-c","g1","g1","gre-c","gre-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","gre-c","gre-c","g1","gre-c","gre-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
-    ["g1","gre-c","g1","gre-c","gre-c","g1","gre-c","gre-c","gre-c","mtcb2","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","gre-c","gre-c","g1","gre-c","gre-c","gre-c","gre-c","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","g1","g1","gre-c","gre-c","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","g1","g1","mtcb2","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","gre-c","gre-c","g1","gre-c","mtcb2","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
+    ["g1","gre-c","g1","gre-c","gre-c","g1","gre-c","gre-c","gre-c","mtcb2","g1","g1","g1","g1","mtcb2","cave-rock1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","gre-c","gre-c","g1","gre-c","gre-c","gre-c","gre-c","mtcb2","gre-c","gre-c","gre-c","mtcb2","gre-c","g1","g1","gre-c","gre-c","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","g1","g1","mtcb2","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["gre-c","g1","g1","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["gre-c","gre-c","g1","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["gre-c","gre-c","g1","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","g1","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
@@ -81,9 +261,9 @@
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","stairs","mtcb2","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","cave-rock1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","cave-rock1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","stairs","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
@@ -109,9 +289,9 @@
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
@@ -823,32 +1003,32 @@
     {
       "key": "f2c",
       "x": 5,
-      "y": 40
+      "y": 38
     },
     {
       "key": "f2c",
       "x": 4,
-      "y": 40
+      "y": 38
     },
     {
       "key": "f2c",
       "x": 3,
-      "y": 40
+      "y": 38
     },
     {
       "key": "f2c",
       "x": 2,
-      "y": 40
+      "y": 38
     },
     {
       "key": "f2c",
       "x": 1,
-      "y": 40
+      "y": 38
     },
     {
       "key": "f2c",
       "x": 0,
-      "y": 40
+      "y": 38
     },
     {
       "key": "b8",
@@ -1113,11 +1293,6 @@
     {
       "key": "f2c",
       "x": 20,
-      "y": 54
-    },
-    {
-      "key": "f2c",
-      "x": 19,
       "y": 54
     },
     {
@@ -2723,11 +2898,6 @@
     {
       "key": "t4",
       "x": 0,
-      "y": 33
-    },
-    {
-      "key": "t4",
-      "x": 0,
       "y": 34
     },
     {
@@ -3957,16 +4127,6 @@
     },
     {
       "key": "mtb2",
-      "x": 20,
-      "y": 25
-    },
-    {
-      "key": "mtb2",
-      "x": 21,
-      "y": 25
-    },
-    {
-      "key": "mtb2",
       "x": 22,
       "y": 25
     },
@@ -4388,51 +4548,6 @@
     {
       "key": "mtb2",
       "x": 19,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 20,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 21,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 22,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 23,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 24,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 25,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 26,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 27,
-      "y": 24
-    },
-    {
-      "key": "mtb2",
-      "x": 28,
       "y": 24
     },
     {
@@ -4542,21 +4657,6 @@
     },
     {
       "key": "mtb2",
-      "x": 26,
-      "y": 23
-    },
-    {
-      "key": "mtb2",
-      "x": 27,
-      "y": 23
-    },
-    {
-      "key": "mtb2",
-      "x": 28,
-      "y": 23
-    },
-    {
-      "key": "mtb2",
       "x": 29,
       "y": 23
     },
@@ -4652,16 +4752,6 @@
     },
     {
       "key": "mtc1",
-      "x": 14,
-      "y": 8
-    },
-    {
-      "key": "mtc1",
-      "x": 15,
-      "y": 8
-    },
-    {
-      "key": "mtc1",
       "x": 16,
       "y": 8
     },
@@ -4777,11 +4867,6 @@
     },
     {
       "key": "mtc1",
-      "x": 14,
-      "y": 9
-    },
-    {
-      "key": "mtc1",
       "x": 15,
       "y": 9
     },
@@ -4888,11 +4973,6 @@
     {
       "key": "mtc1",
       "x": 13,
-      "y": 10
-    },
-    {
-      "key": "mtc1",
-      "x": 14,
       "y": 10
     },
     {
@@ -7747,11 +7827,6 @@
     },
     {
       "key": "mt2b",
-      "x": 19,
-      "y": 53
-    },
-    {
-      "key": "mt2b",
       "x": 18,
       "y": 53
     },
@@ -8113,41 +8188,6 @@
     {
       "key": "mt2b",
       "x": 16,
-      "y": 52
-    },
-    {
-      "key": "mt2b",
-      "x": 17,
-      "y": 52
-    },
-    {
-      "key": "mt2b",
-      "x": 18,
-      "y": 52
-    },
-    {
-      "key": "mt2b",
-      "x": 19,
-      "y": 52
-    },
-    {
-      "key": "mt2b",
-      "x": 20,
-      "y": 52
-    },
-    {
-      "key": "mt2b",
-      "x": 21,
-      "y": 52
-    },
-    {
-      "key": "mt2b",
-      "x": 22,
-      "y": 52
-    },
-    {
-      "key": "mt2b",
-      "x": 23,
       "y": 52
     },
     {
@@ -8223,11 +8263,6 @@
     {
       "key": "mt2b",
       "x": 22,
-      "y": 51
-    },
-    {
-      "key": "mt2b",
-      "x": 21,
       "y": 51
     },
     {
@@ -9756,11 +9791,6 @@
       "y": 34
     },
     {
-      "key": "b2",
-      "x": 0,
-      "y": 33
-    },
-    {
       "key": "mttl1",
       "x": 43,
       "y": 62
@@ -9798,12 +9828,12 @@
     {
       "key": "f2tr",
       "x": 7,
-      "y": 40
+      "y": 38
     },
     {
       "key": "f2c",
       "x": 6,
-      "y": 40
+      "y": 38
     },
     {
       "key": "f2r",
@@ -10336,11 +10366,6 @@
       "y": 53
     },
     {
-      "key": "t7",
-      "x": 19,
-      "y": 54
-    },
-    {
       "key": "g5",
       "x": 19,
       "y": 64
@@ -10664,6 +10689,121 @@
       "key": "g4",
       "x": 13,
       "y": 59
+    },
+    {
+      "key": "mt2br",
+      "x": 18,
+      "y": 53
+    },
+    {
+      "key": "st1s",
+      "x": 19,
+      "y": 53
+    },
+    {
+      "key": "st1s",
+      "x": 21,
+      "y": 51
+    },
+    {
+      "key": "mt2lb",
+      "x": 23,
+      "y": 52
+    },
+    {
+      "key": "mt2br",
+      "x": 17,
+      "y": 52
+    },
+    {
+      "key": "mt2r",
+      "x": 18,
+      "y": 52
+    },
+    {
+      "key": "mtbl1",
+      "x": 29,
+      "y": 24
+    },
+    {
+      "key": "mtbl1",
+      "x": 28,
+      "y": 23
+    },
+    {
+      "key": "mtbr1",
+      "x": 26,
+      "y": 23
+    },
+    {
+      "key": "str1sb",
+      "x": 14,
+      "y": 9
+    },
+    {
+      "key": "str1sb",
+      "x": 14,
+      "y": 10
+    },
+    {
+      "key": "str1sb",
+      "x": 14,
+      "y": 8
+    },
+    {
+      "key": "mtc1",
+      "x": 15,
+      "y": 8
+    },
+    {
+      "key": "mtbr1",
+      "x": 20,
+      "y": 25
+    },
+    {
+      "key": "mtbr1",
+      "x": 19,
+      "y": 24
+    },
+    {
+      "key": "f2r",
+      "x": 7,
+      "y": 39
+    },
+    {
+      "key": "f2r",
+      "x": 7,
+      "y": 40
+    },
+    {
+      "key": "gre3",
+      "x": 6,
+      "y": 40
+    },
+    {
+      "key": "f2c",
+      "x": 0,
+      "y": 36
+    },
+    {
+      "key": "f2c",
+      "x": 5,
+      "y": 36
+    },
+    {
+      "key": "f2c",
+      "x": 6,
+      "y": 36
+    },
+    {
+      "key": "f2c",
+      "x": 7,
+      "y": 36
+    },
+    {
+      "key": "b2",
+      "x": 0,
+      "y": 33
     }
   ]
 }

@@ -1655,6 +1655,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     if (data.objects && tileset && hasActiveGame()) {
       const flags = getPlayerData().flags;
       data.objects = data.objects.filter((obj) => {
+        // spawnAfter: hide object until the named story flag is set
+        if (obj.interactArgs?.spawnAfter && !flags[obj.interactArgs.spawnAfter]) return false;
         const def = tileset.getTile(obj.key);
         if (def?.interactType?.id === 'item') {
           const flagKey = obj.interactArgs?.flag || `obj-${mapId}-${obj.key}-${obj.x}-${obj.y}-collected`;

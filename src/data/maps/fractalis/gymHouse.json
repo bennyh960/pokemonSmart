@@ -4,8 +4,8 @@
   "template": "2-entrance-2",
   "tileset": "interior",
   "label": {
-    "en": "Gym House",
-    "he": "בית מנהיג המכון"
+    "en": "Fracti House",
+    "he": "משפחת פרקטי"
   },
   "area": "Fractalis",
   "music": "town",
@@ -42,6 +42,108 @@
       "toMapId": "routes/route-8",
       "toX": 13,
       "toY": 67
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-fractalis-engineer-wife",
+      "x": 15,
+      "y": 12,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום!"
+        }
+      ],
+      "spriteType": "char_77d85f"
+    },
+    {
+      "id": "npc-1778595159232",
+      "x": 5,
+      "y": 5,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום! אבא שלי הוא איש מאוד חשוב ובכיר בעיר הזאת"
+        }
+      ],
+      "spriteType": "char_c3dacc",
+      "questions": {
+        "count": 3,
+        "types": [
+          "×",
+          "÷"
+        ]
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "burn-heal",
+            "quantity": 3
+          }
+        ]
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "down",
+            "steps": 7,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 6,
+            "delay": 3
+          },
+          {
+            "dir": "left",
+            "steps": 6,
+            "delay": 0.5
+          },
+          {
+            "dir": "up",
+            "steps": 7,
+            "delay": 0.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 2.5
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-1778595305312-blocker",
+      "x": 9,
+      "y": 1,
+      "facing": "left",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "מצטער אבל הדרך לתחנת הכח חסומה כעת!"
+        }
+      ],
+      "spriteType": "char_22fdd1",
+      "name": {
+        "en": "Alex",
+        "he": "אלכס"
+      },
+      "blocker": true,
+      "lineOfSight": 1,
+      "despawnAfter": "act3-fractalis-zapdos-defeated"
     }
   ]
 }

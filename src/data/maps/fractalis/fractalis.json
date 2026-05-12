@@ -37,9 +37,47 @@
       "fromX": 13,
       "fromY": 2,
       "toMapId": "fractalis/gymHouse"
+    },
+    {
+      "fromX": 39,
+      "fromY": 4,
+      "toMapId": "routes/route-7",
+      "toX": 1,
+      "toY": 18
     }
   ],
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-fractalis-engineer-volt",
+      "x": 32,
+      "y": 25,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום"
+        }
+      ],
+      "spriteType": "gym-5-fractalis",
+      "spawnAfter": "act3-fractalis-wife-talked",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 5,
+            "delay": 3
+          },
+          {
+            "dir": "down",
+            "steps": 5,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      }
+    }
+  ],
   "music": "town",
   "encounterTableId": null,
   "interactiveItems": {}

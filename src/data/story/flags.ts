@@ -238,6 +238,16 @@ export const FLAGS = {
   ACT3_TRACEY_MET: 'act3-tracey-met',
   STORY_NULLX_FIRST_CONTACT: 'story-nullx-first-contact', // NULL-X spoke to player at terminal
 
+  // ── Act 3: Fractalis arc ─────────────────────────────────────────────────────
+  VISITED_FRACTALIS: 'visited-fractalis',
+  ACT3_FRACTALIS_WIFE_TALKED: 'act3-fractalis-wife-talked',       // Wife gave item → engineer spawns at beach
+  ACT3_FRACTALIS_ENGINEER_MET: 'act3-fractalis-engineer-met',     // Beach cutscene done → heading to route-7
+  ACT3_FRACTALIS_ROUTE7_SCENE_DONE: 'act3-fractalis-route7-scene-done', // Jenny scene done → route-8 blocker removed
+  ACT3_FRACTALIS_ROUTE8_ENTERED: 'act3-fractalis-route8-entered', // Engineer arrival cutscene done
+  ACT3_FRACTALIS_ZAPDOS_DEFEATED: 'act3-fractalis-zapdos-defeated', // Zapdos battle done, core collected
+  ACT3_FRACTALIS_GYM_INVITE: 'act3-fractalis-gym-invite',         // Engineer invited player to gym
+  GATE_FRACTALIS_GYM_PASS: 'gate-fractalis-gym-pass',
+
   // ── Act 4: Integrala ────────────────────────────────────────────────────────
   GATE_ROUTE7_PASS: 'gate-route7-pass',
   VISITED_INTEGRALA: 'visited-integrala',
@@ -356,6 +366,14 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.GATE_SYMMETRIKA_GYM_PASS]: 'Passed Symmetry Gym gate',
   [FLAGS.ACT3_TRACEY_MET]: 'Tracey observed Glitch patterns',
   [FLAGS.STORY_NULLX_FIRST_CONTACT]: 'NULL-X spoke to player at terminal',
+  [FLAGS.VISITED_FRACTALIS]: 'First arrival at Fractalis',
+  [FLAGS.ACT3_FRACTALIS_WIFE_TALKED]: "Wife gave item → engineer spawns at beach",
+  [FLAGS.ACT3_FRACTALIS_ENGINEER_MET]: 'Beach cutscene done — player heads to route-7 with engineer',
+  [FLAGS.ACT3_FRACTALIS_ROUTE7_SCENE_DONE]: 'Jenny/Zapdos route-7 scene done — route-8 blocker removed',
+  [FLAGS.ACT3_FRACTALIS_ROUTE8_ENTERED]: 'Engineer arrival cutscene in route-8 done',
+  [FLAGS.ACT3_FRACTALIS_ZAPDOS_DEFEATED]: 'Zapdos defeated in route-8, NULL-X Core 5 collected',
+  [FLAGS.ACT3_FRACTALIS_GYM_INVITE]: 'Engineer invited player to power station gym',
+  [FLAGS.GATE_FRACTALIS_GYM_PASS]: 'Passed Electric Gym entry gate',
   [FLAGS.GATE_ROUTE7_PASS]: 'Route 7 → Integrala checkpoint passed',
   [FLAGS.VISITED_INTEGRALA]: 'First arrival at Integrala',
   [FLAGS.GATE_INTEGRALA_GYM_PASS]: 'Passed Formula Gym gate',

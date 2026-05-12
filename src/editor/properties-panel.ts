@@ -29,6 +29,7 @@ import encounterTables from '../data/encounter-tables.json';
 import { getKnownMapIds, loadMapFromProject } from './map-io.js';
 import { mapRelationIndex } from './map-relation-index.js';
 import { categorizeTiles } from './tile-palette.js';
+import type { InteractArgs } from '../data/interact-types.js';
 
 // Ensure character sprites are loaded for preview
 loadCharacterSprites().catch(() => {});
@@ -2417,6 +2418,13 @@ export class PropertiesPanel {
       if (n.postFlagDialogue?.flag) add(n.postFlagDialogue.flag, `NPC "${n.id}" → postFlagDialogue`);
     }
 
+    // Scan placed objects
+    for (const obj of this.state.mapData.objects ?? []) {
+      if (obj.interactArgs?.spawnAfter) {
+        add(obj.interactArgs.spawnAfter, `NPC "obj-${obj.key}-${obj.x}-${obj.y}" → spawnAfter`);
+      }
+    }
+
     // Seed with all registered FLAGS so they appear in autocomplete
     // even if not yet used anywhere. Existing entries are kept as-is.
     for (const flagValue of Object.values(FLAGS)) {
@@ -3773,6 +3781,8 @@ export class PropertiesPanel {
         return a.name.en.localeCompare(b.name.en);
       });
 
+    const allFlags = this.collectStoryFlags();
+
     // ── Per tile-key group ─────────────────────────────────────────
     for (const [tileKey, tileObjs] of byKey) {
       const keyEntries = overrides[tileKey] ?? [];
@@ -3814,10 +3824,38 @@ export class PropertiesPanel {
       const defItemName = defItemId ? (allItems.find((i) => i.id === defItemId)?.name.en ?? defItemId) : 'unknown';
 
       for (const obj of tileObjs) {
-        const infoRow = document.createElement('div');
-        infoRow.style.cssText = 'font-size:11px; color:#888; padding:1px 6px 1px 12px;';
-        infoRow.textContent = `(${obj.x},${obj.y}) default: ${defItemName} ×${defItemQty}`;
-        body.appendChild(infoRow);
+        const objId = `obj-${obj.key}-${obj.x}-${obj.y}`;
+        const objRow = document.createElement('div');
+        objRow.style.cssText =
+          'display:flex; align-items:flex-start; gap:6px; padding:2px 6px 4px 12px; border-bottom:1px solid #1e2530;';
+
+        const coordSpan = document.createElement('span');
+        coordSpan.style.cssText = 'font-size:11px; color:#888; white-space:nowrap; padding-top:4px; min-width:130px;';
+        coordSpan.textContent = `(${obj.x},${obj.y}) ${defItemName} ×${defItemQty}`;
+        objRow.appendChild(coordSpan);
+
+        const spawnLabel = document.createElement('span');
+        spawnLabel.style.cssText = 'font-size:11px; color:#8899bb; white-space:nowrap; padding-top:4px;';
+        spawnLabel.textContent = 'spawn after:';
+        objRow.appendChild(spawnLabel);
+
+        objRow.appendChild(this.makeFlagInput({
+          value: obj.interactArgs?.spawnAfter,
+          allFlags,
+          currentNpcId: objId,
+          roleLabel: 'spawnAfter',
+          onChange: (v) => {
+            if (v) {
+              obj.interactArgs = { ...(obj.interactArgs ?? {}), spawnAfter: v } as InteractArgs;
+            } else if (obj.interactArgs) {
+              const { spawnAfter: _sa, ...rest } = obj.interactArgs as Record<string, unknown>;
+              obj.interactArgs = Object.keys(rest).length ? (rest as InteractArgs) : undefined;
+            }
+            emit();
+          },
+        }));
+
+        body.appendChild(objRow);
       }
 
       // Override entry rows

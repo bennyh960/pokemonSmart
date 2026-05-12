@@ -27,7 +27,6 @@ import './act1/quest-route4.js';
 // Act 2 — Trust Nobody: Multiplia, Dividia
 import './act2/quest-multiplia.js';
 import './act2/quest-dividia.js';
-import './act2/quest-safari.js';
 
 // Act 3 — Language Layer: Primore, Symmetrika
 import './act3/quest-fractiles.js';

@@ -16,6 +16,8 @@ export interface InteractArgs {
   itemQty?: number | null;
   flag?: string | null;
   gateId?: string | null;   // QuestionGateDef ID — triggers a verification gate on interact
+  /** Story flag that must be true for this object to appear. Absent = always visible. */
+  spawnAfter?: string;
 }
 
 /** A full interact type definition with defaults. */
