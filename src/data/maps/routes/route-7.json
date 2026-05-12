@@ -305,6 +305,45 @@
       "despawnOnDefeat": true,
       "pokemonId": 217,
       "level": 40
+    },
+    {
+      "id": "npc-zapdos-route7",
+      "x": 7,
+      "y": 0,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [],
+      "spriteType": "char_29f912",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 10,
+            "delay": 0.5
+          },
+          {
+            "dir": "left",
+            "steps": 4,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 0.5
+          },
+          {
+            "dir": "up",
+            "steps": 10,
+            "delay": 0.5
+          },
+          {
+            "dir": "right",
+            "steps": 7,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      }
     }
   ],
   "interactiveItems": {},
@@ -415,11 +454,6 @@
     {
       "key": "t12",
       "x": 42,
-      "y": 0
-    },
-    {
-      "key": "t12",
-      "x": 5,
       "y": 0
     },
     {
@@ -1054,8 +1088,8 @@
     },
     {
       "key": "t7",
-      "x": 0,
-      "y": 3
+      "x": 1,
+      "y": 4
     },
     {
       "key": "s1-2",
@@ -1234,7 +1268,7 @@
     },
     {
       "key": "t8",
-      "x": 4,
+      "x": 5,
       "y": 3
     },
     {
@@ -4244,13 +4278,13 @@
     },
     {
       "key": "t1b",
-      "x": 7,
-      "y": 4
+      "x": 1,
+      "y": 1
     },
     {
       "key": "g5",
-      "x": 3,
-      "y": 5
+      "x": 6,
+      "y": 2
     },
     {
       "key": "g5",
@@ -5479,8 +5513,8 @@
     },
     {
       "key": "t7",
-      "x": 1,
-      "y": 0
+      "x": 3,
+      "y": 1
     },
     {
       "key": "gre7",
