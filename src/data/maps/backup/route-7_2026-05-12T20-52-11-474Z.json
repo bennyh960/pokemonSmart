@@ -227,14 +227,6 @@
             "delay": 0.5
           }
         ]
-      },
-      "questions": {
-        "count": 3,
-        "types": []
-      },
-      "postFlagDialogue": {
-        "flag": "trainer-npc-1778408715189-defeated",
-        "dialogue": []
       }
     },
     {
@@ -319,16 +311,7 @@
         "en": "Officer X",
         "he": "שוטר"
       },
-      "despawnAfter": "all-trainers-defeated-routes/route-7",
-      "postFlagDialogue": {
-        "flag": "trainer-npc-1778408602484-defeated",
-        "dialogue": [
-          {
-            "en": "",
-            "he": "תודה על העזרה  - אני מזהה פה את זאפדוס האגדי - הוא לא נראה ידידותי , צריך להיזהר"
-          }
-        ]
-      }
+      "despawnAfter": "all-trainers-defeated-routes/route-7"
     },
     {
       "id": "npc-1778410060674",
@@ -463,8 +446,7 @@
         "lvlStep": 10,
         "triggerFlag": "story-badge-5",
         "minPartyLevelBoost": 3
-      },
-      "excludeFromMapClear": true
+      }
     }
   ],
   "interactiveItems": {},

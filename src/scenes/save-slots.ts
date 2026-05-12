@@ -52,12 +52,23 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
   let savedFlash = 0;
 
   function rebuildSlots(): void {
-    allSlots = Array(MAX_SAVE_SLOTS).fill(null);
-    for (const meta of getSlotIndex()) {
-      if (meta.slot >= 0 && meta.slot < MAX_SAVE_SLOTS) {
-        allSlots[meta.slot] = meta;
-      }
+    const occupied = getSlotIndex()
+      .filter(m => m.slot >= 0 && m.slot < MAX_SAVE_SLOTS)
+      .sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime());
+    allSlots = [...occupied, ...Array(MAX_SAVE_SLOTS - occupied.length).fill(null)];
+  }
+
+  function firstFreeSlot(): number {
+    const used = new Set(allSlots.filter(Boolean).map(m => (m as SaveSlotMeta).slot));
+    for (let i = 0; i < MAX_SAVE_SLOTS; i++) {
+      if (!used.has(i)) return i;
     }
+    return 0;
+  }
+
+  function getActualSlot(displayIdx: number): number {
+    const m = allSlots[displayIdx];
+    return m ? m.slot : firstFreeSlot();
   }
 
   function clampScroll(): void {
@@ -200,7 +211,8 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
 
       const cur = getCurrentSlot();
       if (saveSlotsMode === 'save' && cur !== null) {
-        selectedIndex = cur;
+        const di = allSlots.findIndex(m => m?.slot === cur);
+        selectedIndex = di >= 0 ? di : 0;
       } else {
         const firstOccupied = allSlots.findIndex(s => s !== null);
         selectedIndex = firstOccupied >= 0 ? firstOccupied : 0;
@@ -243,7 +255,7 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
           const slot = allSlots[selectedIndex];
           if (saveSlotsMode === 'load') {
             if (slot) {
-              loadGameFromSlot(selectedIndex);
+              loadGameFromSlot(slot.slot);
               stateMachine.change('OVERWORLD');
             }
           } else {
@@ -251,7 +263,7 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
               subState = 'confirm_overwrite';
               confirmCursor = 0;
             } else {
-              doSave(selectedIndex);
+              doSave(getActualSlot(selectedIndex));
             }
           }
           return;
@@ -274,9 +286,9 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
         if (input.isKeyPressed('Enter')) {
           if (confirmCursor === 1) {
             if (subState === 'confirm_overwrite') {
-              doSave(selectedIndex);
+              doSave(getActualSlot(selectedIndex));
             } else {
-              deleteSave(selectedIndex);
+              deleteSave(getActualSlot(selectedIndex));
               rebuildSlots();
               subState = 'list';
             }

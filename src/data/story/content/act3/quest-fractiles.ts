@@ -109,6 +109,31 @@ registerGate({
   reopenCooldownMs: 20 * 60 * 1000,
   // successActions: [{ type: 'set-flag', flag: FLAGS.GATe_f }],
 });
+registerGate({
+  id: 'gate-fractalis-ocean',
+  title: { en: 'Fractalis-Ocean Blockade', he: 'מחסום  עיר השברים-ים' },
+  questionSetIds: ['*'],
+  triggerType: 'route-checkpoint',
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 10,
+    penaltyAmount: 2500,
+    bonusEnabled: true,
+    bonusMultiplier: 3,
+    inputQuestions: { count: 2, types: ['+', '-', '÷', '×'] },
+    penaltyThreshold: 0.6,
+    rewardThreshold: 0.8,
+    rewards: [
+      { type: 'money', amount: 3500 },
+      { type: 'item', itemId: 'protein', amount: 1 },
+      { type: 'item', itemId: 'hp-up', amount: 1 },
+      { type: 'item', itemId: 'zinc', amount: 1 },
+      { type: 'item', itemId: 'calcium', amount: 1 },
+    ],
+  },
+  reopenCooldownMs: 20 * 60 * 1000,
+  // successActions: [{ type: 'set-flag', flag: FLAGS.GATe_f }],
+});
 //# ── Gate End ──────────────────────────────────────────────────────────────────────
 
 //# ── Cutscene ──────────────────────────────────────────────────────────────────────
@@ -227,8 +252,8 @@ registerCutscene({
     },
     { type: 'hide-npc', npcId: 'npc-fractalis-engineer-volt' },
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act3-engineer-intro' } },
-    { type: 'action', action: { type: 'set-flag',       flag: FLAGS.ACT3_FRACTALIS_ENGINEER_MET } },
-    { type: 'action', action: { type: 'set-quest',      questId: 'main-act3-zapdos-chase' } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_FRACTALIS_ENGINEER_MET } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act3-zapdos-chase' } },
   ],
 });
 

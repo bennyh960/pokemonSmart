@@ -463,8 +463,7 @@
         "lvlStep": 10,
         "triggerFlag": "story-badge-5",
         "minPartyLevelBoost": 3
-      },
-      "excludeFromMapClear": true
+      }
     }
   ],
   "interactiveItems": {},
