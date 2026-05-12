@@ -528,12 +528,6 @@ body {
 .si-flag-set   { background: rgba(63,185,80,0.15); color: #3fb950; }
 .si-flag-unset { background: #21262d; color: #8b949e; }
 
-.si-slot-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
 .si-reset-btn {
   background: rgba(248,81,73,0.12);
   border-color: rgba(248,81,73,0.4);
@@ -541,18 +535,72 @@ body {
 }
 .si-reset-btn:hover { background: rgba(248,81,73,0.22); }
 
-/* NPC flag cell — spawnAfter / despawnAfter inline toggle */
-.si-npc-flag-cell {
+/* ── Flag section controls ── */
+.si-flag-controls {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 120px;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
+.si-flag-table-wrap { overflow-x: auto; }
+.si-flag-counter {
+  font-size: 11px;
+  color: #8b949e;
+  padding-top: 6px;
+}
+
+/* Flag rows */
+.si-table tbody tr.si-row-unset { opacity: 0.55; }
+.si-table tbody tr.si-row-act td { background: rgba(88,166,255,0.04); }
+.si-table tbody tr.si-row-act:hover td { background: rgba(88,166,255,0.08); }
+
+/* Flag value cell */
+.si-flag-val-cell { display: flex; flex-direction: column; gap: 2px; }
 .si-flag-code {
   font-family: monospace;
   font-size: 11px;
-  color: #8b949e;
+  color: #e6edf3;
   word-break: break-all;
+}
+.si-flag-code--unset { color: #8b949e; }
+.si-flag-enumkey {
+  font-size: 10px;
+  color: #58a6ff;
+  font-family: monospace;
+  opacity: 0.7;
+}
+
+/* Act star indicator */
+.si-act-star { font-size: 12px; color: transparent; }
+.si-act-star--on { color: #e3b341; }
+
+/* Type badges */
+.si-type-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.si-type-story      { background: rgba(88,166,255,0.15);  color: #58a6ff; }
+.si-type-event-done { background: rgba(188,140,255,0.15); color: #bc8cff; }
+.si-type-trainer    { background: rgba(255,166,87,0.15);  color: #ffa657; }
+.si-type-map-clear  { background: rgba(227,179,65,0.15);  color: #e3b341; }
+.si-type-badge      { background: rgba(212,164,76,0.15);  color: #d4a44c; }
+.si-type-npc-reward { background: rgba(86,211,100,0.15);  color: #56d364; }
+.si-type-item       { background: rgba(63,185,80,0.15);   color: #3fb950; }
+.si-type-world      { background: rgba(139,148,158,0.12); color: #8b949e; }
+.si-type-other      { background: rgba(72,79,88,0.3);     color: #6e7681; }
+
+/* NPC flag cell */
+.si-npc-flag-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 130px;
 }
 
 .si-addmap-row {

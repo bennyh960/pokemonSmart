@@ -57,6 +57,23 @@ interface ActInfo {
   flagEnumKeys: string[];
 }
 
+type FlagType = 'story' | 'event-done' | 'trainer' | 'map-clear' | 'badge' | 'npc-reward' | 'item' | 'world' | 'other';
+
+interface FlagItem {
+  val: string;
+  isSet: boolean;
+  type: FlagType;
+  isActRelevant: boolean;
+  enumKey?: string;
+  description: string;
+}
+
+// ── Reverse FLAGS lookup ──────────────────────────────────────────────────────
+
+const FLAG_VALUE_TO_KEY: Record<string, string> = {};
+for (const [k, v] of Object.entries(FLAGS as Record<string, string>))
+  FLAG_VALUE_TO_KEY[v] = k;
+
 // ── Source parsing ────────────────────────────────────────────────────────────
 
 function parseDocComment(source: string): string {
@@ -71,14 +88,13 @@ function parseDocComment(source: string): string {
 
 function parseIds(source: string, fnName: string): string[] {
   const ids: string[] = [];
-  let searchFrom = 0;
+  let from = 0;
   while (true) {
-    const callIdx = source.indexOf(`${fnName}(`, searchFrom);
-    if (callIdx === -1) break;
-    const chunk = source.slice(callIdx, callIdx + 800);
-    const match = chunk.match(/\bid:\s*['"`]([^'"`]+)['"`]/);
-    if (match) ids.push(match[1]);
-    searchFrom = callIdx + 1;
+    const idx = source.indexOf(`${fnName}(`, from);
+    if (idx === -1) break;
+    const m = source.slice(idx, idx + 800).match(/\bid:\s*['"`]([^'"`]+)['"`]/);
+    if (m) ids.push(m[1]);
+    from = idx + 1;
   }
   return ids;
 }
@@ -98,19 +114,15 @@ function buildActInfoList(): ActInfo[] {
     const parts = path.split('/');
     const fileName = parts[parts.length - 1]!;
     const actNum = parts[parts.length - 2] ?? 'unknown';
-    const actN = actNum.replace('act', '');
-    const questName = fileName.replace('quest-', '').replace('.ts', '');
     list.push({
-      path,
-      fileName,
-      actNum,
-      label: `Act ${actN} — ${questName}`,
+      path, fileName, actNum,
+      label: `Act ${actNum.replace('act', '')} — ${fileName.replace('quest-', '').replace('.ts', '')}`,
       source,
-      description: parseDocComment(source),
-      questIds:    parseIds(source, 'registerQuest'),
-      gateIds:     parseIds(source, 'registerGate'),
-      eventIds:    parseIds(source, 'registerStoryEvent'),
-      cutsceneIds: parseIds(source, 'registerCutscene'),
+      description:  parseDocComment(source),
+      questIds:     parseIds(source, 'registerQuest'),
+      gateIds:      parseIds(source, 'registerGate'),
+      eventIds:     parseIds(source, 'registerStoryEvent'),
+      cutsceneIds:  parseIds(source, 'registerCutscene'),
       flagEnumKeys: parseFlagEnumKeys(source),
     });
   }
@@ -118,6 +130,88 @@ function buildActInfoList(): ActInfo[] {
     a.actNum !== b.actNum ? a.actNum.localeCompare(b.actNum) : a.fileName.localeCompare(b.fileName),
   );
   return list;
+}
+
+// ── Flag helpers ──────────────────────────────────────────────────────────────
+
+function detectFlagType(val: string): FlagType {
+  if (val in FLAG_VALUE_TO_KEY)               return 'story';
+  if (val.startsWith('__event-done-'))         return 'event-done';
+  if (/^trainer-.+-defeated$/.test(val))       return 'trainer';
+  if (val.startsWith('all-trainers-defeated-'))return 'map-clear';
+  if (val.startsWith('story-badge-'))          return 'badge';
+  if (/^npc-.+-rewarded$/.test(val))           return 'npc-reward';
+  if (val.startsWith('obj-') || val.startsWith('gate-pass-')) return 'item';
+  if (val.startsWith('cut-') || val.startsWith('strength-')) return 'world';
+  return 'other';
+}
+
+const TYPE_ORDER: Record<FlagType, number> = {
+  'story': 0, 'event-done': 1, 'trainer': 2, 'map-clear': 3,
+  'badge': 4, 'npc-reward': 5, 'item': 6, 'world': 7, 'other': 8,
+};
+
+const TYPE_LABEL: Record<FlagType, string> = {
+  'story':      'story',
+  'event-done': 'event-done',
+  'trainer':    'trainer',
+  'map-clear':  'map-clear',
+  'badge':      'badge',
+  'npc-reward': 'npc-reward',
+  'item':       'item',
+  'world':      'world',
+  'other':      'other',
+};
+
+function buildFlagItems(
+  pd: PlayerData,
+  actRelevant: Set<string>,
+): FlagItem[] {
+  const items = new Map<string, FlagItem>();
+
+  // All flags currently in pd.flags
+  for (const [val, raw] of Object.entries(pd.flags as Record<string, unknown>)) {
+    const isSet = raw === true || raw === 1;
+    const enumKey = FLAG_VALUE_TO_KEY[val];
+    items.set(val, {
+      val, isSet,
+      type: detectFlagType(val),
+      isActRelevant: actRelevant.has(val),
+      enumKey,
+      description: FLAG_DESCRIPTIONS[val] ?? '',
+    });
+  }
+
+  // Act-relevant flags not yet in save (so they're visible even when unset)
+  for (const val of actRelevant) {
+    if (!items.has(val)) {
+      const enumKey = FLAG_VALUE_TO_KEY[val];
+      items.set(val, {
+        val, isSet: false,
+        type: detectFlagType(val),
+        isActRelevant: true,
+        enumKey,
+        description: FLAG_DESCRIPTIONS[val] ?? '',
+      });
+    }
+  }
+
+  return [...items.values()].sort((a, b) => {
+    if (a.isActRelevant !== b.isActRelevant) return a.isActRelevant ? -1 : 1;
+    if (a.isSet !== b.isSet) return a.isSet ? -1 : 1;
+    if (a.type !== b.type) return TYPE_ORDER[a.type] - TYPE_ORDER[b.type];
+    return a.val.localeCompare(b.val);
+  });
+}
+
+function computeActRelevant(act: ActInfo, eventIds: string[]): Set<string> {
+  const s = new Set<string>();
+  for (const key of act.flagEnumKeys) {
+    const v = (FLAGS as Record<string, string>)[key];
+    if (v) s.add(v);
+  }
+  for (const id of eventIds) s.add(`__event-done-${id}`);
+  return s;
 }
 
 // ── NPC helpers ───────────────────────────────────────────────────────────────
@@ -137,12 +231,8 @@ function collectNpcIds(cutscene: CutsceneDef): string[] {
     for (const step of steps) {
       if ('npcId' in step && typeof (step as { npcId: string }).npcId === 'string')
         ids.add((step as { npcId: string }).npcId);
-      if (step.type === 'dialogue' && step.speakerId)
-        ids.add(step.speakerId);
-      if (step.type === 'if-flag') {
-        walk(step.thenSteps);
-        if (step.elseSteps) walk(step.elseSteps);
-      }
+      if (step.type === 'dialogue' && step.speakerId) ids.add(step.speakerId);
+      if (step.type === 'if-flag') { walk(step.thenSteps); if (step.elseSteps) walk(step.elseSteps); }
     }
   }
   walk(cutscene.steps);
@@ -152,24 +242,20 @@ function collectNpcIds(cutscene: CutsceneDef): string[] {
 function findNpcsAcrossMaps(npcIds: string[], extraMapIds: string[]): Map<string, NpcEntry[]> {
   const result = new Map<string, NpcEntry[]>();
   const npcSet = new Set(npcIds);
-
   for (const [path, data] of Object.entries(MAP_DATA)) {
     const npcs = (data as { npcs?: NpcEntry[] }).npcs ?? [];
     const matching = npcs.filter(n => npcSet.has(n.id));
     if (matching.length > 0) {
-      const mapId = deriveMapId(path);
-      result.set(mapId, [...(result.get(mapId) ?? []), ...matching]);
+      const mid = deriveMapId(path);
+      result.set(mid, [...(result.get(mid) ?? []), ...matching]);
     }
   }
-
-  for (const mapId of extraMapIds) {
-    if (!result.has(mapId)) {
-      const key = `../../data/maps/${mapId}.json`;
-      const npcs = (MAP_DATA[key] as { npcs?: NpcEntry[] } | undefined)?.npcs ?? [];
-      result.set(mapId, npcs);
+  for (const mid of extraMapIds) {
+    if (!result.has(mid)) {
+      const npcs = (MAP_DATA[`../../data/maps/${mid}.json`] as { npcs?: NpcEntry[] } | undefined)?.npcs ?? [];
+      result.set(mid, npcs);
     }
   }
-
   return result;
 }
 
@@ -214,27 +300,20 @@ function subHeader(text: string): HTMLElement {
 }
 
 function makeTable(headers: string[]): HTMLTableElement {
-  const table = document.createElement('table');
-  table.className = 'si-table';
+  const t = document.createElement('table');
+  t.className = 'si-table';
   const thead = document.createElement('thead');
   const tr = document.createElement('tr');
-  for (const h of headers) {
-    const th = document.createElement('th');
-    th.textContent = h;
-    tr.appendChild(th);
-  }
-  thead.appendChild(tr);
-  table.appendChild(thead);
-  table.appendChild(document.createElement('tbody'));
-  return table;
+  for (const h of headers) { const th = document.createElement('th'); th.textContent = h; tr.appendChild(th); }
+  thead.appendChild(tr); t.appendChild(thead); t.appendChild(document.createElement('tbody'));
+  return t;
 }
 
 function addRow(table: HTMLTableElement, cells: (string | HTMLElement)[]): HTMLTableRowElement {
   const tr = document.createElement('tr');
   for (const c of cells) {
     const td = document.createElement('td');
-    if (typeof c === 'string') td.textContent = c;
-    else td.appendChild(c);
+    if (typeof c === 'string') td.textContent = c; else td.appendChild(c);
     tr.appendChild(td);
   }
   table.querySelector('tbody')!.appendChild(tr);
@@ -268,6 +347,219 @@ function fmtConditions(conds: { type: string; [k: string]: unknown }[]): string 
   }).join(', ');
 }
 
+function typeBadge(type: FlagType): HTMLElement {
+  const s = document.createElement('span');
+  s.className = `si-type-badge si-type-${type}`;
+  s.textContent = TYPE_LABEL[type];
+  return s;
+}
+
+// ── Flag section renderer ─────────────────────────────────────────────────────
+
+function renderFlagSection(
+  body: HTMLElement,
+  act: ActInfo,
+  actRelevant: Set<string>,
+  getPlayerData: () => PlayerData | null,
+  getSelectedSlot: () => number | null,
+  onSave: (pd: PlayerData) => void,
+) {
+  let searchQuery = '';
+  let typeFilter: FlagType | 'all' | 'act' = 'all';
+  let showUnset = true;
+
+  // ── Controls row ──
+  const controls = document.createElement('div');
+  controls.className = 'si-flag-controls';
+
+  const searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.className = 'form-input';
+  searchInput.placeholder = 'Search flags...';
+  searchInput.style.flex = '1';
+  searchInput.style.minWidth = '160px';
+
+  const typeSelect = document.createElement('select');
+  typeSelect.className = 'form-select';
+  const typeOptions: { value: string; label: string }[] = [
+    { value: 'all',        label: 'All types' },
+    { value: 'act',        label: '★ Act only' },
+    { value: 'story',      label: 'story' },
+    { value: 'event-done', label: 'event-done' },
+    { value: 'trainer',    label: 'trainer' },
+    { value: 'map-clear',  label: 'map-clear' },
+    { value: 'badge',      label: 'badge' },
+    { value: 'npc-reward', label: 'npc-reward' },
+    { value: 'item',       label: 'item' },
+    { value: 'world',      label: 'world' },
+    { value: 'other',      label: 'other' },
+  ];
+  for (const o of typeOptions) {
+    const opt = document.createElement('option');
+    opt.value = o.value; opt.textContent = o.label;
+    typeSelect.appendChild(opt);
+  }
+
+  const unsetToggle = document.createElement('button');
+  unsetToggle.className = 'btn btn-sm';
+  unsetToggle.textContent = 'Hide unset';
+  unsetToggle.title = 'Toggle showing act-relevant flags that are not yet set';
+
+  const resetBtn = document.createElement('button');
+  resetBtn.className = 'btn btn-sm si-reset-btn';
+  resetBtn.textContent = 'Reset act';
+  resetBtn.title = 'Clear all act-relevant flags from this save';
+
+  controls.appendChild(searchInput);
+  controls.appendChild(typeSelect);
+  controls.appendChild(unsetToggle);
+  controls.appendChild(resetBtn);
+  body.appendChild(controls);
+
+  // ── Add-flag row ──
+  const addRow_ = document.createElement('div');
+  addRow_.className = 'si-addmap-row';
+  const addInput = document.createElement('input');
+  addInput.type = 'text';
+  addInput.className = 'form-input';
+  addInput.placeholder = 'Set flag by value, e.g. __event-done-evt-wife-talked';
+  addInput.style.flex = '1';
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn btn-sm btn-primary';
+  addBtn.textContent = 'Set flag';
+  addRow_.appendChild(addInput);
+  addRow_.appendChild(addBtn);
+  body.appendChild(addRow_);
+
+  // ── Table container ──
+  const tableWrap = document.createElement('div');
+  tableWrap.className = 'si-flag-table-wrap';
+  body.appendChild(tableWrap);
+
+  // ── Counter ──
+  const counter = document.createElement('div');
+  counter.className = 'si-flag-counter';
+  body.appendChild(counter);
+
+  function rebuild() {
+    tableWrap.innerHTML = '';
+    const pd = getPlayerData();
+    if (!pd) {
+      const p = document.createElement('p');
+      p.className = 'text-muted';
+      p.textContent = 'No save data for this slot.';
+      tableWrap.appendChild(p);
+      counter.textContent = '';
+      return;
+    }
+
+    const allItems = buildFlagItems(pd, actRelevant);
+    const q = searchQuery.toLowerCase();
+    const filtered = allItems.filter(item => {
+      if (!showUnset && !item.isSet) return false;
+      if (typeFilter === 'act' && !item.isActRelevant) return false;
+      if (typeFilter !== 'all' && typeFilter !== 'act' && item.type !== typeFilter) return false;
+      if (q && !item.val.toLowerCase().includes(q) && !(item.description ?? '').toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    const setCount  = allItems.filter(i => i.isSet).length;
+    const total     = Object.keys((pd.flags as Record<string, unknown>)).length;
+    counter.textContent = `${setCount} set in save · ${allItems.filter(i => i.isActRelevant && i.isSet).length} act flags set · showing ${filtered.length}`;
+
+    if (filtered.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'text-muted';
+      p.style.padding = '12px 0';
+      p.textContent = 'No flags match the current filter.';
+      tableWrap.appendChild(p);
+      return;
+    }
+
+    const t = makeTable(['Flag value', 'Type', '', 'Description', '']);
+    for (const item of filtered) {
+      const valEl = document.createElement('div');
+      valEl.className = 'si-flag-val-cell';
+
+      const code = document.createElement('code');
+      code.className = `si-flag-code${item.isSet ? '' : ' si-flag-code--unset'}`;
+      code.textContent = item.val;
+      valEl.appendChild(code);
+
+      if (item.enumKey) {
+        const key = document.createElement('span');
+        key.className = 'si-flag-enumkey';
+        key.textContent = item.enumKey;
+        valEl.appendChild(key);
+      }
+
+      const actEl = document.createElement('span');
+      actEl.className = `si-act-star${item.isActRelevant ? ' si-act-star--on' : ''}`;
+      actEl.title = item.isActRelevant ? 'Relevant to this act' : '';
+      actEl.textContent = item.isActRelevant ? '★' : '';
+
+      const descEl = document.createElement('span');
+      descEl.className = 'text-muted';
+      descEl.style.fontSize = '11px';
+      descEl.textContent = item.description || '—';
+
+      const btn = document.createElement('button');
+      btn.className = `btn btn-sm${item.isSet ? '' : ' btn-primary'}`;
+      btn.textContent = item.isSet ? 'Clear' : 'Set';
+      btn.addEventListener('click', () => {
+        const slot = getSelectedSlot();
+        const pd2 = getPlayerData();
+        if (slot === null || !pd2) return;
+        if (item.isSet) delete (pd2.flags as Record<string, unknown>)[item.val];
+        else (pd2.flags as Record<string, boolean>)[item.val] = true;
+        onSave(pd2);
+        rebuild();
+      });
+
+      const tr = addRow(t, [valEl, typeBadge(item.type), actEl, descEl, btn]);
+      if (!item.isSet) tr.classList.add('si-row-unset');
+      else if (item.isActRelevant) tr.classList.add('si-row-act');
+      void total; // used in counter
+    }
+
+    tableWrap.appendChild(t);
+  }
+
+  // ── Wire controls ──
+  searchInput.addEventListener('input', () => { searchQuery = searchInput.value; rebuild(); });
+  typeSelect.addEventListener('change', () => { typeFilter = typeSelect.value as typeof typeFilter; rebuild(); });
+  unsetToggle.addEventListener('click', () => {
+    showUnset = !showUnset;
+    unsetToggle.textContent = showUnset ? 'Hide unset' : 'Show unset';
+    rebuild();
+  });
+  resetBtn.addEventListener('click', () => {
+    const slot = getSelectedSlot();
+    const pd = getPlayerData();
+    if (!pd || slot === null) return;
+    const toClear = [...actRelevant].filter(v => (pd.flags as Record<string, unknown>)[v] !== undefined);
+    if (!toClear.length) { alert('No act flags are currently set.'); return; }
+    if (!confirm(`Clear ${toClear.length} act flags from Slot ${slot}?`)) return;
+    for (const v of toClear) delete (pd.flags as Record<string, unknown>)[v];
+    onSave(pd);
+    rebuild();
+  });
+  addBtn.addEventListener('click', () => {
+    const slot = getSelectedSlot();
+    const pd = getPlayerData();
+    const val = addInput.value.trim();
+    if (!val || !pd || slot === null) return;
+    (pd.flags as Record<string, boolean>)[val] = true;
+    onSave(pd);
+    addInput.value = '';
+    rebuild();
+  });
+  addInput.addEventListener('keydown', e => { if (e.key === 'Enter') addBtn.click(); });
+
+  rebuild();
+  return { rebuild };
+}
+
 // ── Main renderer ─────────────────────────────────────────────────────────────
 
 export function renderStoryTab(container: HTMLElement): (() => void) | void {
@@ -278,18 +570,16 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
   let playerData: PlayerData | null = selectedSlot !== null ? loadPd(selectedSlot) : null;
   let extraMapIds: string[] = [];
 
-  // ── Root ──
   container.innerHTML = '';
   const root = document.createElement('div');
   root.className = 'si-root';
   container.appendChild(root);
 
-  // ── Persistent top bar: act + slot selectors ──
+  // ── Persistent top bar ──
   const topBar = document.createElement('div');
   topBar.className = 'si-topbar';
   root.appendChild(topBar);
 
-  // Act selector
   const actLabel = document.createElement('span');
   actLabel.className = 'si-topbar-label';
   actLabel.textContent = 'Act:';
@@ -300,48 +590,44 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
   actSelect.style.minWidth = '240px';
   for (const act of acts) {
     const opt = document.createElement('option');
-    opt.value = act.path;
-    opt.textContent = act.label;
+    opt.value = act.path; opt.textContent = act.label;
     actSelect.appendChild(opt);
   }
   topBar.appendChild(actSelect);
 
-  // Divider
-  const divider = document.createElement('span');
-  divider.style.cssText = 'width:1px;height:20px;background:#30363d;flex-shrink:0;';
-  topBar.appendChild(divider);
+  const div1 = document.createElement('span');
+  div1.style.cssText = 'width:1px;height:20px;background:#30363d;flex-shrink:0;';
+  topBar.appendChild(div1);
 
-  // Slot selector
   const slotLabel = document.createElement('span');
   slotLabel.className = 'si-topbar-label';
-  slotLabel.textContent = 'Save Slot:';
+  slotLabel.textContent = 'Slot:';
   topBar.appendChild(slotLabel);
 
   const slotSelect = document.createElement('select');
   slotSelect.className = 'form-select';
-  slotSelect.style.minWidth = '260px';
+  slotSelect.style.minWidth = '240px';
   topBar.appendChild(slotSelect);
 
   const reloadBtn = document.createElement('button');
   reloadBtn.className = 'btn btn-sm';
   reloadBtn.textContent = '↺';
-  reloadBtn.title = 'Reload save from localStorage';
+  reloadBtn.title = 'Reload save';
   topBar.appendChild(reloadBtn);
 
   function rebuildSlotSelect() {
     slotSelect.innerHTML = '';
-    if (slots.length === 0) {
-      const opt = document.createElement('option');
-      opt.textContent = 'No saves found';
-      opt.disabled = true;
-      slotSelect.appendChild(opt);
+    if (!slots.length) {
+      const o = document.createElement('option');
+      o.textContent = 'No saves found'; o.disabled = true;
+      slotSelect.appendChild(o);
     } else {
       for (const s of slots) {
-        const opt = document.createElement('option');
-        opt.value = String(s.slot);
-        opt.textContent = `Slot ${s.slot} — ${s.playerName} (${new Date(s.savedAt).toLocaleDateString()})`;
-        if (s.slot === selectedSlot) opt.selected = true;
-        slotSelect.appendChild(opt);
+        const o = document.createElement('option');
+        o.value = String(s.slot);
+        o.textContent = `Slot ${s.slot} — ${s.playerName} (${new Date(s.savedAt).toLocaleDateString()})`;
+        if (s.slot === selectedSlot) o.selected = true;
+        slotSelect.appendChild(o);
       }
     }
   }
@@ -364,52 +650,8 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     render();
   });
 
-  // ── Content area (rebuilt on act/slot change) ──
   const content = document.createElement('div');
   root.appendChild(content);
-
-  // ── Flag cell helper (used in both Flags section and NPC table) ──
-  function makeFlagCell(flagVal: string | undefined, onToggle: () => void): HTMLElement {
-    const wrap = document.createElement('div');
-    wrap.className = 'si-npc-flag-cell';
-
-    if (!flagVal) {
-      wrap.textContent = '—';
-      wrap.style.color = '#484f58';
-      return wrap;
-    }
-
-    const code = document.createElement('code');
-    code.className = 'si-flag-code';
-    code.textContent = flagVal;
-    wrap.appendChild(code);
-
-    if (!playerData) return wrap;
-
-    const pd = playerData;
-    const isSet = !!(pd.flags as Record<string, boolean | undefined>)[flagVal];
-
-    const badge = document.createElement('span');
-    badge.className = `si-flag-state ${isSet ? 'si-flag-set' : 'si-flag-unset'}`;
-    badge.textContent = isSet ? '✓' : '—';
-    wrap.appendChild(badge);
-
-    const btn = document.createElement('button');
-    btn.className = `btn btn-sm${isSet ? '' : ' btn-primary'}`;
-    btn.textContent = isSet ? 'Clear' : 'Set';
-    btn.addEventListener('click', () => {
-      if (selectedSlot === null || !playerData) return;
-      if (isSet) delete (playerData.flags as Record<string, unknown>)[flagVal];
-      else (playerData.flags as Record<string, boolean>)[flagVal] = true;
-      savePd(selectedSlot, playerData);
-      onToggle();
-    });
-    wrap.appendChild(btn);
-
-    return wrap;
-  }
-
-  // ── Render ────────────────────────────────────────────────────────────────────
 
   function render() {
     content.innerHTML = '';
@@ -418,6 +660,7 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
 
     const cutscenes = getAllCutscenes().filter(c => act.cutsceneIds.includes(c.id));
     const evts      = getStoryEvents().filter(e => act.eventIds.includes(e.id));
+    const actRelevant = computeActRelevant(act, evts.map(e => e.id));
 
     // ── 1. Description ──
     if (act.description) {
@@ -429,115 +672,44 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
       content.appendChild(s.el);
     }
 
-    // ── 2. Flags ──
+    // ── 2. Flags (full save state) ──
     const flagSec = section('Flags');
-
-    if (slots.length === 0) {
-      const msg = document.createElement('p');
-      msg.className = 'text-muted';
-      msg.textContent = 'No save slots found. Create a save in the game first.';
-      flagSec.body.appendChild(msg);
-    } else {
-      const resetBtn = document.createElement('button');
-      resetBtn.className = 'btn btn-sm si-reset-btn';
-      resetBtn.textContent = 'Reset all act flags';
-      resetBtn.title = 'Clear every flag in this act from the selected save';
-      resetBtn.addEventListener('click', () => {
-        if (!playerData || selectedSlot === null) return;
-        const count = act.flagEnumKeys.filter(k => (FLAGS as Record<string, string>)[k]).length;
-        if (!confirm(`Clear ${count} flags for "${act.label}" from Slot ${selectedSlot}?`)) return;
-        for (const key of act.flagEnumKeys) {
-          const val = (FLAGS as Record<string, string>)[key];
-          if (val) delete (playerData!.flags as Record<string, unknown>)[val];
-        }
-        savePd(selectedSlot, playerData!);
-        render();
-      });
-      flagSec.body.appendChild(resetBtn);
-
-      if (!playerData) {
-        const msg = document.createElement('p');
-        msg.className = 'text-muted';
-        msg.style.marginTop = '8px';
-        msg.textContent = 'No save data for this slot.';
-        flagSec.body.appendChild(msg);
-      } else {
-        const pd = playerData;
-        const flagsObj = pd.flags as Record<string, boolean | undefined>;
-        const t = makeTable(['Enum key', 'Flag value', 'Description', 'State', '']);
-
-        let hasAny = false;
-        for (const key of act.flagEnumKeys) {
-          const val = (FLAGS as Record<string, string>)[key];
-          if (!val) continue;
-          hasAny = true;
-          const isSet = !!flagsObj[val];
-          const desc = FLAG_DESCRIPTIONS[val] ?? '—';
-
-          const stateEl = document.createElement('span');
-          stateEl.className = `si-flag-state ${isSet ? 'si-flag-set' : 'si-flag-unset'}`;
-          stateEl.textContent = isSet ? '✓ set' : '— not set';
-
-          const actionBtn = document.createElement('button');
-          actionBtn.className = `btn btn-sm${isSet ? '' : ' btn-primary'}`;
-          actionBtn.textContent = isSet ? 'Clear' : 'Set';
-          actionBtn.addEventListener('click', () => {
-            if (selectedSlot === null || !playerData) return;
-            if (isSet) delete (playerData.flags as Record<string, unknown>)[val];
-            else (playerData.flags as Record<string, boolean>)[val] = true;
-            savePd(selectedSlot, playerData);
-            render();
-          });
-
-          const tr = addRow(t, [key, val, desc, stateEl, actionBtn]);
-          if (isSet) tr.classList.add('si-row-set');
-        }
-
-        if (!hasAny) {
-          const msg = document.createElement('p');
-          msg.className = 'text-muted';
-          msg.style.marginTop = '8px';
-          msg.textContent = 'No FLAGS.* references found in this act file.';
-          flagSec.body.appendChild(msg);
-        } else {
-          flagSec.body.appendChild(t);
-        }
-      }
-    }
-
+    renderFlagSection(
+      flagSec.body, act, actRelevant,
+      () => playerData,
+      () => selectedSlot,
+      (pd) => {
+        playerData = pd;
+        if (selectedSlot !== null) savePd(selectedSlot, pd);
+      },
+    );
     content.appendChild(flagSec.el);
 
     // ── 3. Summary ──
     const sumSec = section('Summary');
-
     const quests = act.questIds.map(id => getQuest(id)).filter(Boolean) as QuestDef[];
     if (quests.length) {
       sumSec.body.appendChild(subHeader(`Quests (${quests.length})`));
       const t = makeTable(['ID', 'Title', 'Objective']);
-      for (const q of quests)
-        addRow(t, [q.id, q.title.en, q.objective.en]);
+      for (const q of quests) addRow(t, [q.id, q.title.en, q.objective.en]);
       sumSec.body.appendChild(t);
     }
-
     const gates = act.gateIds.map(id => GATES[id]).filter(Boolean);
     if (gates.length) {
       sumSec.body.appendChild(subHeader(`Gates (${gates.length})`));
-      const t = makeTable(['ID', 'Type', 'Qs required', 'Bonus', 'Penalty']);
+      const t = makeTable(['ID', 'Type', 'Qs', 'Bonus', 'Penalty']);
       for (const g of gates) {
         const sc = g.sessionConfig;
         addRow(t, [
-          g.id,
-          g.triggerType,
-          String(sc.questionsRequired),
+          g.id, g.triggerType, String(sc.questionsRequired),
           sc.bonusEnabled ? `×${sc.bonusMultiplier}` : '—',
           sc.penaltyAmount ? `${sc.penaltyAmount} ₽ <${sc.penaltyThreshold * 100}%` : '—',
         ]);
       }
       sumSec.body.appendChild(t);
     }
-
     if (evts.length) {
-      sumSec.body.appendChild(subHeader(`Story Events (${evts.length})`));
+      sumSec.body.appendChild(subHeader(`Events (${evts.length})`));
       const t = makeTable(['ID', 'Trigger', 'Conditions']);
       for (const e of evts)
         addRow(t, [
@@ -547,7 +719,6 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
         ]);
       sumSec.body.appendChild(t);
     }
-
     if (cutscenes.length) {
       sumSec.body.appendChild(subHeader(`Cutscenes (${cutscenes.length})`));
       const t = makeTable(['ID', 'Steps', 'Phone caller', 'Skippable']);
@@ -555,19 +726,16 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
         addRow(t, [c.id, String(c.steps.length), c.phoneCaller?.en ?? '—', c.skippable ? 'Yes' : 'No']);
       sumSec.body.appendChild(t);
     }
-
     content.appendChild(sumSec.el);
 
     // ── 4. NPCs ──
     const npcSec = section('NPCs');
 
-    // Collect NPC IDs from cutscene steps + npc-interact triggers
     const cutsceneNpcIds = new Set<string>();
     for (const c of cutscenes) collectNpcIds(c).forEach(id => cutsceneNpcIds.add(id));
     for (const e of evts)
       if (e.trigger.type === 'npc-interact') cutsceneNpcIds.add(e.trigger.npcId);
 
-    // Extra map chips + add-map input
     if (extraMapIds.length) {
       const chips = document.createElement('div');
       chips.className = 'si-chips';
@@ -575,14 +743,10 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
         const chip = document.createElement('span');
         chip.className = 'si-chip';
         chip.textContent = mid;
-        const remove = document.createElement('button');
-        remove.className = 'si-chip-remove';
-        remove.textContent = '×';
-        remove.addEventListener('click', () => {
-          extraMapIds = extraMapIds.filter(m => m !== mid);
-          render();
-        });
-        chip.appendChild(remove);
+        const rm = document.createElement('button');
+        rm.className = 'si-chip-remove'; rm.textContent = '×';
+        rm.addEventListener('click', () => { extraMapIds = extraMapIds.filter(m => m !== mid); render(); });
+        chip.appendChild(rm);
         chips.appendChild(chip);
       }
       npcSec.body.appendChild(chips);
@@ -591,86 +755,60 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     const addMapRow = document.createElement('div');
     addMapRow.className = 'si-addmap-row';
     const mapInput = document.createElement('input');
-    mapInput.type = 'text';
-    mapInput.className = 'form-input';
+    mapInput.type = 'text'; mapInput.className = 'form-input';
     mapInput.placeholder = 'Add extra map, e.g. fractalis/beach';
     mapInput.style.flex = '1';
-    const addBtn = document.createElement('button');
-    addBtn.className = 'btn btn-sm';
-    addBtn.textContent = '+ Add Map';
-    addBtn.addEventListener('click', () => {
-      const val = mapInput.value.trim();
-      if (val && !extraMapIds.includes(val)) {
-        extraMapIds.push(val);
-        mapInput.value = '';
-        render();
-      }
+    const addMapBtn = document.createElement('button');
+    addMapBtn.className = 'btn btn-sm'; addMapBtn.textContent = '+ Add Map';
+    addMapBtn.addEventListener('click', () => {
+      const v = mapInput.value.trim();
+      if (v && !extraMapIds.includes(v)) { extraMapIds.push(v); mapInput.value = ''; render(); }
     });
-    mapInput.addEventListener('keydown', e => { if (e.key === 'Enter') addBtn.click(); });
+    mapInput.addEventListener('keydown', e => { if (e.key === 'Enter') addMapBtn.click(); });
     addMapRow.appendChild(mapInput);
-    addMapRow.appendChild(addBtn);
+    addMapRow.appendChild(addMapBtn);
     npcSec.body.appendChild(addMapRow);
 
-    // Build NPC map and render tables
     const npcMap = findNpcsAcrossMaps([...cutsceneNpcIds], extraMapIds);
 
     if (npcMap.size > 0) {
       for (const [mapId, npcs] of npcMap) {
         npcSec.body.appendChild(subHeader(`Map: ${mapId}`));
-        if (npcs.length === 0) {
-          const p = document.createElement('p');
-          p.className = 'text-muted';
-          p.style.padding = '4px 0 8px';
-          p.textContent = 'No NPCs found in this map.';
-          npcSec.body.appendChild(p);
-          continue;
+        if (!npcs.length) {
+          const p = document.createElement('p'); p.className = 'text-muted'; p.style.padding = '4px 0 8px';
+          p.textContent = 'No NPCs found.'; npcSec.body.appendChild(p); continue;
         }
         const t = makeTable(['NPC ID', 'Name', 'Type', 'Sprite', 'spawnAfter', 'despawnAfter', 'Coords']);
         for (const n of npcs) {
           addRow(t, [
-            n.id,
-            npcNameStr(n),
-            n.type ?? '—',
-            n.spriteType ?? '—',
-            makeFlagCell(n.spawnAfter, render),
-            makeFlagCell(n.despawnAfter, render),
+            n.id, npcNameStr(n), n.type ?? '—', n.spriteType ?? '—',
+            makeFlagCell(n.spawnAfter, getPlayerData, getSelectedSlot, render),
+            makeFlagCell(n.despawnAfter, getPlayerData, getSelectedSlot, render),
             n.x !== undefined ? `(${n.x}, ${n.y})` : '?',
           ]);
         }
         npcSec.body.appendChild(t);
       }
-
-      // List NPC IDs referenced in cutscenes but not found in any map
       const foundIds = new Set([...npcMap.values()].flat().map(n => n.id));
       const missing = [...cutsceneNpcIds].filter(id => !foundIds.has(id));
       if (missing.length) {
         npcSec.body.appendChild(subHeader('Not found in any map'));
-        const ul = document.createElement('ul');
-        ul.className = 'si-missing-list';
+        const ul = document.createElement('ul'); ul.className = 'si-missing-list';
         for (const id of missing) {
-          const li = document.createElement('li');
-          li.className = 'si-missing-item';
-          li.textContent = id;
+          const li = document.createElement('li'); li.className = 'si-missing-item'; li.textContent = id;
           ul.appendChild(li);
         }
         npcSec.body.appendChild(ul);
       }
-    } else if (cutsceneNpcIds.size === 0) {
-      const p = document.createElement('p');
-      p.className = 'text-muted';
-      p.textContent = 'No NPC references found in this act\'s cutscenes.';
-      npcSec.body.appendChild(p);
+    } else if (!cutsceneNpcIds.size) {
+      const p = document.createElement('p'); p.className = 'text-muted';
+      p.textContent = 'No NPC references found.'; npcSec.body.appendChild(p);
     } else {
-      const p = document.createElement('p');
-      p.className = 'text-muted';
-      p.textContent = 'NPC IDs found in cutscenes but not located in any map JSON:';
-      npcSec.body.appendChild(p);
-      const ul = document.createElement('ul');
-      ul.className = 'si-missing-list';
+      const p = document.createElement('p'); p.className = 'text-muted';
+      p.textContent = 'NPC IDs found in cutscenes but not in any map JSON:'; npcSec.body.appendChild(p);
+      const ul = document.createElement('ul'); ul.className = 'si-missing-list';
       for (const id of cutsceneNpcIds) {
-        const li = document.createElement('li');
-        li.className = 'si-missing-item';
-        li.textContent = id;
+        const li = document.createElement('li'); li.className = 'si-missing-item'; li.textContent = id;
         ul.appendChild(li);
       }
       npcSec.body.appendChild(ul);
@@ -679,5 +817,46 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     content.appendChild(npcSec.el);
   }
 
+  function getPlayerData() { return playerData; }
+  function getSelectedSlot() { return selectedSlot; }
+
   render();
+}
+
+function makeFlagCell(
+  flagVal: string | undefined,
+  getPlayerData: () => PlayerData | null,
+  getSelectedSlot: () => number | null,
+  onToggle: () => void,
+): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'si-npc-flag-cell';
+  if (!flagVal) { wrap.textContent = '—'; wrap.style.color = '#484f58'; return wrap; }
+
+  const code = document.createElement('code');
+  code.className = 'si-flag-code'; code.textContent = flagVal;
+  wrap.appendChild(code);
+
+  const pd = getPlayerData();
+  if (!pd) return wrap;
+
+  const isSet = !!(pd.flags as Record<string, boolean | undefined>)[flagVal];
+  const badge = document.createElement('span');
+  badge.className = `si-flag-state ${isSet ? 'si-flag-set' : 'si-flag-unset'}`;
+  badge.textContent = isSet ? '✓' : '—';
+  wrap.appendChild(badge);
+
+  const btn = document.createElement('button');
+  btn.className = `btn btn-sm${isSet ? '' : ' btn-primary'}`;
+  btn.textContent = isSet ? 'Clear' : 'Set';
+  btn.addEventListener('click', () => {
+    const slot = getSelectedSlot(); const pd2 = getPlayerData();
+    if (slot === null || !pd2) return;
+    if (isSet) delete (pd2.flags as Record<string, unknown>)[flagVal];
+    else (pd2.flags as Record<string, boolean>)[flagVal] = true;
+    localStorage.setItem(`${SAVE_KEY_PREFIX}${slot}`, JSON.stringify(pd2));
+    onToggle();
+  });
+  wrap.appendChild(btn);
+  return wrap;
 }
