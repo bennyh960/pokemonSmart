@@ -48,6 +48,8 @@ export interface StoryEventDef {
   actions: StoryAction[];
   repeatable?: boolean;
   completedFlag?: string;
+  /** Seconds to wait after trigger conditions are met before executing actions. Survives refresh. */
+  triggerDelayPostFlag?: number;
 }
 
 /** All registered story events. */

@@ -535,12 +535,25 @@ body {
   flex-wrap: wrap;
 }
 .si-reset-btn {
-  margin-left: auto;
   background: rgba(248,81,73,0.12);
   border-color: rgba(248,81,73,0.4);
   color: #f85149;
 }
 .si-reset-btn:hover { background: rgba(248,81,73,0.22); }
+
+/* NPC flag cell — spawnAfter / despawnAfter inline toggle */
+.si-npc-flag-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+.si-flag-code {
+  font-family: monospace;
+  font-size: 11px;
+  color: #8b949e;
+  word-break: break-all;
+}
 
 .si-addmap-row {
   display: flex;

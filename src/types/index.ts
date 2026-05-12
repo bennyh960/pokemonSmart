@@ -159,6 +159,8 @@ export interface PlayerStoryState {
   mapInfection: Partial<Record<MapId, InfectionLevel>>;
   activeQuestId: string | null;
   completedQuestIds: string[];
+  /** Pending delayed events: eventId → readyAt timestamp (ms). Persisted so refresh can resume. */
+  delayedEvents?: Record<string, number>;
 }
 
 /** A phone contact entry — saved when trainer is first defeated. */

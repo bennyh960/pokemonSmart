@@ -161,53 +161,13 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
     // Check conditions
     if (event.conditions && !allConditionsMet(event.conditions, pd)) continue;
 
-    // If this event starts a cutscene, snapshot the flags NOW (before any actions
-    // run) and persist to a dedicated localStorage key. On page refresh the game
-    // can detect the incomplete transaction and roll back cleanly.
-    const cutsceneAction = event.actions.find(
-      (a): a is Extract<StoryAction, { type: 'start-cutscene' }> => a.type === 'start-cutscene',
-    );
-    const checkpointSlot = resolveCheckpointSlot();
-    if (cutsceneAction && !event.repeatable && checkpointSlot !== null) {
-      saveEventCheckpoint(checkpointSlot, {
-        eventId: event.id,
-        cutsceneId: cutsceneAction.cutsceneId,
-        flagsSnapshot: { ...pd.flags },
-        playerPosition: { ...pd.position },
-      });
+    // If a delay is requested, schedule the event and skip immediate execution.
+    if (event.triggerDelayPostFlag) {
+      _scheduleDelayedEvent(event, pd);
+      continue;
     }
 
-    // Execute actions — if a cutscene is queued, await its completion before
-    // marking the event done. This prevents the done-flag from being saved
-    // before the cutscene's own set-flag actions run.
-    let cutscenePromise: Promise<void> | null = null;
-    for (const action of event.actions) {
-      if (action.type === 'start-cutscene') {
-        _pendingCutsceneId = action.cutsceneId;
-        cutscenePromise = awaitCutsceneCompletion();
-      } else {
-        executeAction(action, pd);
-      }
-    }
-
-    if (cutscenePromise) {
-      autoSave(); // persist intermediate flags (e.g. VISITED_SUMVILLE) before waiting
-      await cutscenePromise;
-    }
-
-    // Mark as done unless repeatable — happens AFTER cutscene completes
-    if (!event.repeatable) {
-      setFlag(pd, doneFlag);
-    }
-
-    // For cutscene events: explicitly save the done-flag now and remove the
-    // checkpoint. Must happen in this order so the done-flag is on disk before
-    // the checkpoint disappears (otherwise a crash here would just re-run the
-    // cutscene, which is safe, rather than skipping it).
-    if (cutsceneAction && !event.repeatable && checkpointSlot !== null) {
-      autoSave();
-      clearEventCheckpoint(checkpointSlot);
-    }
+    await _executeEvent(event, pd);
   }
 
   // ── Auto-gate check for service map entry ────────────────────────────────
@@ -254,6 +214,108 @@ export function unlockGateTimed(gateId: string, durationMs: number): void {
   ensureStory(pd.story!);
   pd.story!.gateUnlocks[gateId] = Date.now() + durationMs;
   autoSave();
+}
+
+// ---------------------------------------------------------------------------
+// Delayed event scheduling
+// ---------------------------------------------------------------------------
+
+function _scheduleDelayedEvent(event: import('../data/story/events.js').StoryEventDef, pd: ReturnType<typeof getPlayerData>): void {
+  ensureStory(pd.story!);
+  pd.story!.delayedEvents ??= {};
+
+  // Don't re-schedule if already pending
+  if (pd.story!.delayedEvents[event.id] !== undefined) return;
+
+  const readyAt = Date.now() + event.triggerDelayPostFlag! * 1000;
+  pd.story!.delayedEvents[event.id] = readyAt;
+  autoSave();
+
+  setTimeout(() => void _fireDelayedEvent(event.id), event.triggerDelayPostFlag! * 1000);
+}
+
+async function _fireDelayedEvent(eventId: string): Promise<void> {
+  if (!hasActiveGame()) return;
+  const pd = getPlayerData();
+  const event = getStoryEvents().find((e) => e.id === eventId);
+  if (!event) return;
+
+  // Remove from pending map before executing so refresh doesn't double-fire
+  if (pd.story?.delayedEvents) {
+    delete pd.story.delayedEvents[eventId];
+  }
+
+  await _executeEvent(event, pd);
+}
+
+/**
+ * Call once after a saved game is loaded. Resumes any pending delayed events
+ * that were scheduled before a refresh — fires immediately if ready, or sets
+ * a new setTimeout for the remaining duration.
+ */
+export async function checkAndResumeDelayedEvents(): Promise<void> {
+  if (!hasActiveGame()) return;
+  const pd = getPlayerData();
+  const pending = pd.story?.delayedEvents;
+  if (!pending) return;
+
+  const now = Date.now();
+
+  for (const [eventId, readyAt] of Object.entries(pending)) {
+    const remaining = readyAt - now;
+    if (remaining <= 0) {
+      // Already past due — fire immediately
+      void _fireDelayedEvent(eventId);
+    } else {
+      // Resume the countdown from wherever it left off
+      setTimeout(() => void _fireDelayedEvent(eventId), remaining);
+    }
+  }
+}
+
+async function _executeEvent(event: import('../data/story/events.js').StoryEventDef, pd: ReturnType<typeof getPlayerData>): Promise<void> {
+  const doneFlag = event.completedFlag ?? `__event-done-${event.id}`;
+
+  // If this event starts a cutscene, snapshot flags before any actions run so
+  // a mid-cutscene refresh can roll back and replay cleanly.
+  const cutsceneAction = event.actions.find(
+    (a): a is Extract<StoryAction, { type: 'start-cutscene' }> => a.type === 'start-cutscene',
+  );
+  const checkpointSlot = resolveCheckpointSlot();
+  if (cutsceneAction && !event.repeatable && checkpointSlot !== null) {
+    saveEventCheckpoint(checkpointSlot, {
+      eventId: event.id,
+      cutsceneId: cutsceneAction.cutsceneId,
+      flagsSnapshot: { ...pd.flags },
+      playerPosition: { ...pd.position },
+    });
+  }
+
+  // Execute actions — if a cutscene is queued, await its completion before
+  // marking the event done.
+  let cutscenePromise: Promise<void> | null = null;
+  for (const action of event.actions) {
+    if (action.type === 'start-cutscene') {
+      _pendingCutsceneId = action.cutsceneId;
+      cutscenePromise = awaitCutsceneCompletion();
+    } else {
+      executeAction(action, pd);
+    }
+  }
+
+  if (cutscenePromise) {
+    autoSave();
+    await cutscenePromise;
+  }
+
+  if (!event.repeatable) {
+    setFlag(pd, doneFlag);
+  }
+
+  if (cutsceneAction && !event.repeatable && checkpointSlot !== null) {
+    autoSave();
+    clearEventCheckpoint(checkpointSlot);
+  }
 }
 
 // ---------------------------------------------------------------------------

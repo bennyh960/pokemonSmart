@@ -231,64 +231,11 @@
         }
       ],
       "spriteType": "char_330791"
-    },
-    {
-      "id": "npc-1778621609543",
-      "x": 28,
-      "y": 22,
-      "facing": "down",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "אין כמו האוויר הצלול של ההרים"
-        }
-      ],
-      "spriteType": "char_24117d",
-      "spawnAfter": "story-badge-5",
-      "party": [
-        {
-          "pokemonId": 208,
-          "level": 40,
-          "moves": []
-        },
-        {
-          "pokemonId": 122,
-          "level": 40,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 500,
-        "items": [
-          {
-            "itemId": "potion",
-            "quantity": 1
-          }
-        ]
-      },
-      "postBattleDialogue": []
     }
   ],
   "music": "town3",
-  "encounterTableId": "electric-gym-30-40",
-  "interactiveItems": {
-    "item-generic": [
-      {
-        "itemId": "tm19"
-      },
-      {
-        "itemId": "thunder-stone"
-      },
-      {
-        "itemId": "thunder-stone"
-      },
-      {
-        "itemId": "antidote"
-      }
-    ]
-  }
+  "encounterTableId": null,
+  "interactiveItems": {}
 ,
   "tiles": [
     ["g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
@@ -315,7 +262,7 @@
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","stairs","mtcb2","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","cave-rock1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","cave-rock1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","cave-rock1","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","cave-rock1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","stairs","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
     ["g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","g1","g1","g1","g1","g1","g1"],
@@ -4591,6 +4538,16 @@
     {
       "key": "mtb2",
       "x": 17,
+      "y": 24
+    },
+    {
+      "key": "mtb2",
+      "x": 18,
+      "y": 24
+    },
+    {
+      "key": "mtb2",
+      "x": 19,
       "y": 24
     },
     {
@@ -10804,6 +10761,11 @@
       "y": 25
     },
     {
+      "key": "mtbr1",
+      "x": 19,
+      "y": 24
+    },
+    {
       "key": "f2r",
       "x": 7,
       "y": 39
@@ -10842,29 +10804,6 @@
       "key": "b2",
       "x": 0,
       "y": 33
-    },
-    {
-      "key": "mtcr",
-      "x": 17,
-      "y": 24
-    },
-    {
-      "key": "mtbr1",
-      "x": 17,
-      "y": 24
-    },
-    {
-      "key": "item-generic",
-      "x": 19,
-      "y": 24
-    },
-    {
-      "key": "item-ultra ball",
-      "x": 20,
-      "y": 24,
-      "interactArgs": {
-        "spawnAfter": "story-badge-5"
-      }
     }
   ]
 }

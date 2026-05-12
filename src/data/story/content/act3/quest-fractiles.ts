@@ -64,6 +64,16 @@ registerQuest({
   title: { en: 'Find the Missing Zapdos', he: 'מצא את זאפדוס הנעלם' },
   objective: { en: 'Follow the engineer to Route 7 and track Zapdos', he: 'עקוב אחר המהנדס לדרך 7 ועקוב אחר זאפדוס' },
 });
+registerQuest({
+  id: 'main-act3-zapdos-chase2',
+  title: { en: 'Find the Missing Zapdos', he: 'מצא את זאפדוס הנעלם' },
+  objective: { en: 'Follow the engineer to Route 8 and track Zapdos', he: 'עקוב אחר המהנדס לדרך 8 ועקוב אחר זאפדוס' },
+});
+registerQuest({
+  id: 'main-act3-zapdos-chase3',
+  title: { en: 'Find the Missing Zapdos', he: 'מצא את זאפדוס הנעלם' },
+  objective: { en: 'Climb on high mountain to track Zapdos', he: 'טפס על ההר הגבוה כדי לעקוב אחר זאפדוס' },
+});
 
 registerQuest({
   id: 'main-act3-electric-gym',
@@ -253,7 +263,8 @@ registerCutscene({
     { type: 'hide-npc', npcId: 'npc-fractalis-engineer-volt' },
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act3-engineer-intro' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_FRACTALIS_ENGINEER_MET } },
-    { type: 'action', action: { type: 'set-quest', questId: 'main-act3-zapdos-chase' } },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act3-zapdos-chase' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act3-zapdos-chase2' } },
   ],
 });
 
@@ -317,6 +328,7 @@ registerCutscene({
     { type: 'hide-npc', npcId: 'npc-jenny-zapdos-scene' },
     // setting this flag despawns the route-8 blocker in fractalis/fractalis
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_FRACTALIS_ROUTE7_SCENE_DONE } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act3-zapdos-chase' } },
   ],
 });
 
@@ -351,6 +363,8 @@ registerCutscene({
 
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_FRACTALIS_ROUTE8_ENTERED } },
     { type: 'wait', durationMs: 500 },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act3-zapdos-chase2' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act3-zapdos-chase3' } },
   ],
 });
 
@@ -364,6 +378,7 @@ registerCutscene({
     { type: 'overlay', color: '#000000' },
     { type: 'screen-fade', direction: 'in', durationMs: 600 },
 
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act3-zapdos-chase3' } },
     {
       type: 'dialogue',
       speakerId: 'gym-5-fractalis', // the original sprite id of enginner-team leader sir fracti don shavris
@@ -488,6 +503,7 @@ registerStoryEvent({
 registerStoryEvent({
   id: 'evt-zapdos-defeated',
   trigger: { type: 'trainer-defeated', trainerId: 'npc-zapdos-route8' },
+  triggerDelayPostFlag: 2, //2 seconds
   conditions: [{ type: 'flag-not', flag: FLAGS.ACT3_FRACTALIS_ZAPDOS_DEFEATED }], // blocker flag for gym entrance from house and route-8
   actions: [
     { type: 'set-flag', flag: FLAGS.ACT3_FRACTALIS_ZAPDOS_DEFEATED },

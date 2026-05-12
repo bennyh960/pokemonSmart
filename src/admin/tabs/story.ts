@@ -13,13 +13,11 @@ import type { QuestDef } from '../../data/story/quests';
 
 // ── Vite glob imports ─────────────────────────────────────────────────────────
 
-// Raw source text for doc-comment + ID parsing
 const ACT_SOURCES = import.meta.glob(
   '../../data/story/content/act*/quest-*.ts',
   { query: '?raw', eager: true },
 ) as Record<string, { default: string }>;
 
-// Map JSON data for NPC inspection
 const MAP_DATA = import.meta.glob(
   '../../data/maps/**/*.json',
   { eager: true },
@@ -109,9 +107,9 @@ function buildActInfoList(): ActInfo[] {
       label: `Act ${actN} — ${questName}`,
       source,
       description: parseDocComment(source),
-      questIds: parseIds(source, 'registerQuest'),
-      gateIds: parseIds(source, 'registerGate'),
-      eventIds: parseIds(source, 'registerStoryEvent'),
+      questIds:    parseIds(source, 'registerQuest'),
+      gateIds:     parseIds(source, 'registerGate'),
+      eventIds:    parseIds(source, 'registerStoryEvent'),
       cutsceneIds: parseIds(source, 'registerCutscene'),
       flagEnumKeys: parseFlagEnumKeys(source),
     });
@@ -168,8 +166,7 @@ function findNpcsAcrossMaps(npcIds: string[], extraMapIds: string[]): Map<string
     if (!result.has(mapId)) {
       const key = `../../data/maps/${mapId}.json`;
       const npcs = (MAP_DATA[key] as { npcs?: NpcEntry[] } | undefined)?.npcs ?? [];
-      if (npcs.length > 0) result.set(mapId, npcs);
-      else result.set(mapId, []);
+      result.set(mapId, npcs);
     }
   }
 
@@ -246,14 +243,14 @@ function addRow(table: HTMLTableElement, cells: (string | HTMLElement)[]): HTMLT
 
 function fmtTrigger(t: { type: string; [k: string]: unknown }): string {
   switch (t.type) {
-    case 'map-enter':      return `enter ${t['mapId']}`;
-    case 'map-exit':       return `exit ${t['mapId']}`;
-    case 'npc-interact':   return `talk → ${t['npcId']}`;
+    case 'map-enter':        return `enter ${t['mapId']}`;
+    case 'map-exit':         return `exit ${t['mapId']}`;
+    case 'npc-interact':     return `talk → ${t['npcId']}`;
     case 'trainer-defeated': return `defeated ${t['trainerId']}`;
-    case 'flag-set':       return `flag set: ${t['flag']}`;
-    case 'badge-earned':   return `badge ${t['badge']}`;
-    case 'gate-cleared':   return `gate: ${t['gateId']}`;
-    default:               return t.type;
+    case 'flag-set':         return `flag set: ${t['flag']}`;
+    case 'badge-earned':     return `badge ${t['badge']}`;
+    case 'gate-cleared':     return `gate: ${t['gateId']}`;
+    default:                 return t.type;
   }
 }
 
@@ -261,12 +258,12 @@ function fmtConditions(conds: { type: string; [k: string]: unknown }[]): string 
   if (!conds.length) return '—';
   return conds.map(c => {
     switch (c.type) {
-      case 'flag':          return `flag:${c['flag']}`;
-      case 'flag-not':      return `!${c['flag']}`;
-      case 'quest-active':  return `quest?${c['questId']}`;
-      case 'quest-complete':return `quest✓${c['questId']}`;
-      case 'badge-count':   return `badges≥${c['min']}`;
-      default:              return c.type;
+      case 'flag':           return `flag:${c['flag']}`;
+      case 'flag-not':       return `!${c['flag']}`;
+      case 'quest-active':   return `quest?${c['questId']}`;
+      case 'quest-complete': return `quest✓${c['questId']}`;
+      case 'badge-count':    return `badges≥${c['min']}`;
+      default:               return c.type;
     }
   }).join(', ');
 }
@@ -287,10 +284,12 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
   root.className = 'si-root';
   container.appendChild(root);
 
-  // ── Top bar: act selector ──
+  // ── Persistent top bar: act + slot selectors ──
   const topBar = document.createElement('div');
   topBar.className = 'si-topbar';
+  root.appendChild(topBar);
 
+  // Act selector
   const actLabel = document.createElement('span');
   actLabel.className = 'si-topbar-label';
   actLabel.textContent = 'Act:';
@@ -298,7 +297,7 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
 
   const actSelect = document.createElement('select');
   actSelect.className = 'form-select';
-  actSelect.style.minWidth = '260px';
+  actSelect.style.minWidth = '240px';
   for (const act of acts) {
     const opt = document.createElement('option');
     opt.value = act.path;
@@ -307,17 +306,108 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
   }
   topBar.appendChild(actSelect);
 
-  root.appendChild(topBar);
+  // Divider
+  const divider = document.createElement('span');
+  divider.style.cssText = 'width:1px;height:20px;background:#30363d;flex-shrink:0;';
+  topBar.appendChild(divider);
 
-  // ── Content area (rebuilt on act change) ──
-  const content = document.createElement('div');
-  root.appendChild(content);
+  // Slot selector
+  const slotLabel = document.createElement('span');
+  slotLabel.className = 'si-topbar-label';
+  slotLabel.textContent = 'Save Slot:';
+  topBar.appendChild(slotLabel);
 
+  const slotSelect = document.createElement('select');
+  slotSelect.className = 'form-select';
+  slotSelect.style.minWidth = '260px';
+  topBar.appendChild(slotSelect);
+
+  const reloadBtn = document.createElement('button');
+  reloadBtn.className = 'btn btn-sm';
+  reloadBtn.textContent = '↺';
+  reloadBtn.title = 'Reload save from localStorage';
+  topBar.appendChild(reloadBtn);
+
+  function rebuildSlotSelect() {
+    slotSelect.innerHTML = '';
+    if (slots.length === 0) {
+      const opt = document.createElement('option');
+      opt.textContent = 'No saves found';
+      opt.disabled = true;
+      slotSelect.appendChild(opt);
+    } else {
+      for (const s of slots) {
+        const opt = document.createElement('option');
+        opt.value = String(s.slot);
+        opt.textContent = `Slot ${s.slot} — ${s.playerName} (${new Date(s.savedAt).toLocaleDateString()})`;
+        if (s.slot === selectedSlot) opt.selected = true;
+        slotSelect.appendChild(opt);
+      }
+    }
+  }
+  rebuildSlotSelect();
+
+  slotSelect.addEventListener('change', () => {
+    selectedSlot = Number(slotSelect.value);
+    playerData = loadPd(selectedSlot);
+    render();
+  });
+  reloadBtn.addEventListener('click', () => {
+    slots = loadAllSlots();
+    if (selectedSlot !== null) playerData = loadPd(selectedSlot);
+    rebuildSlotSelect();
+    render();
+  });
   actSelect.addEventListener('change', () => {
     selectedAct = acts.find(a => a.path === actSelect.value) ?? null;
     extraMapIds = [];
     render();
   });
+
+  // ── Content area (rebuilt on act/slot change) ──
+  const content = document.createElement('div');
+  root.appendChild(content);
+
+  // ── Flag cell helper (used in both Flags section and NPC table) ──
+  function makeFlagCell(flagVal: string | undefined, onToggle: () => void): HTMLElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'si-npc-flag-cell';
+
+    if (!flagVal) {
+      wrap.textContent = '—';
+      wrap.style.color = '#484f58';
+      return wrap;
+    }
+
+    const code = document.createElement('code');
+    code.className = 'si-flag-code';
+    code.textContent = flagVal;
+    wrap.appendChild(code);
+
+    if (!playerData) return wrap;
+
+    const pd = playerData;
+    const isSet = !!(pd.flags as Record<string, boolean | undefined>)[flagVal];
+
+    const badge = document.createElement('span');
+    badge.className = `si-flag-state ${isSet ? 'si-flag-set' : 'si-flag-unset'}`;
+    badge.textContent = isSet ? '✓' : '—';
+    wrap.appendChild(badge);
+
+    const btn = document.createElement('button');
+    btn.className = `btn btn-sm${isSet ? '' : ' btn-primary'}`;
+    btn.textContent = isSet ? 'Clear' : 'Set';
+    btn.addEventListener('click', () => {
+      if (selectedSlot === null || !playerData) return;
+      if (isSet) delete (playerData.flags as Record<string, unknown>)[flagVal];
+      else (playerData.flags as Record<string, boolean>)[flagVal] = true;
+      savePd(selectedSlot, playerData);
+      onToggle();
+    });
+    wrap.appendChild(btn);
+
+    return wrap;
+  }
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
@@ -326,7 +416,10 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     if (!selectedAct) return;
     const act = selectedAct;
 
-    // ── Description ──
+    const cutscenes = getAllCutscenes().filter(c => act.cutsceneIds.includes(c.id));
+    const evts      = getStoryEvents().filter(e => act.eventIds.includes(e.id));
+
+    // ── 1. Description ──
     if (act.description) {
       const s = section('Description');
       const pre = document.createElement('pre');
@@ -336,10 +429,87 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
       content.appendChild(s.el);
     }
 
-    // ── Summary ──
+    // ── 2. Flags ──
+    const flagSec = section('Flags');
+
+    if (slots.length === 0) {
+      const msg = document.createElement('p');
+      msg.className = 'text-muted';
+      msg.textContent = 'No save slots found. Create a save in the game first.';
+      flagSec.body.appendChild(msg);
+    } else {
+      const resetBtn = document.createElement('button');
+      resetBtn.className = 'btn btn-sm si-reset-btn';
+      resetBtn.textContent = 'Reset all act flags';
+      resetBtn.title = 'Clear every flag in this act from the selected save';
+      resetBtn.addEventListener('click', () => {
+        if (!playerData || selectedSlot === null) return;
+        const count = act.flagEnumKeys.filter(k => (FLAGS as Record<string, string>)[k]).length;
+        if (!confirm(`Clear ${count} flags for "${act.label}" from Slot ${selectedSlot}?`)) return;
+        for (const key of act.flagEnumKeys) {
+          const val = (FLAGS as Record<string, string>)[key];
+          if (val) delete (playerData!.flags as Record<string, unknown>)[val];
+        }
+        savePd(selectedSlot, playerData!);
+        render();
+      });
+      flagSec.body.appendChild(resetBtn);
+
+      if (!playerData) {
+        const msg = document.createElement('p');
+        msg.className = 'text-muted';
+        msg.style.marginTop = '8px';
+        msg.textContent = 'No save data for this slot.';
+        flagSec.body.appendChild(msg);
+      } else {
+        const pd = playerData;
+        const flagsObj = pd.flags as Record<string, boolean | undefined>;
+        const t = makeTable(['Enum key', 'Flag value', 'Description', 'State', '']);
+
+        let hasAny = false;
+        for (const key of act.flagEnumKeys) {
+          const val = (FLAGS as Record<string, string>)[key];
+          if (!val) continue;
+          hasAny = true;
+          const isSet = !!flagsObj[val];
+          const desc = FLAG_DESCRIPTIONS[val] ?? '—';
+
+          const stateEl = document.createElement('span');
+          stateEl.className = `si-flag-state ${isSet ? 'si-flag-set' : 'si-flag-unset'}`;
+          stateEl.textContent = isSet ? '✓ set' : '— not set';
+
+          const actionBtn = document.createElement('button');
+          actionBtn.className = `btn btn-sm${isSet ? '' : ' btn-primary'}`;
+          actionBtn.textContent = isSet ? 'Clear' : 'Set';
+          actionBtn.addEventListener('click', () => {
+            if (selectedSlot === null || !playerData) return;
+            if (isSet) delete (playerData.flags as Record<string, unknown>)[val];
+            else (playerData.flags as Record<string, boolean>)[val] = true;
+            savePd(selectedSlot, playerData);
+            render();
+          });
+
+          const tr = addRow(t, [key, val, desc, stateEl, actionBtn]);
+          if (isSet) tr.classList.add('si-row-set');
+        }
+
+        if (!hasAny) {
+          const msg = document.createElement('p');
+          msg.className = 'text-muted';
+          msg.style.marginTop = '8px';
+          msg.textContent = 'No FLAGS.* references found in this act file.';
+          flagSec.body.appendChild(msg);
+        } else {
+          flagSec.body.appendChild(t);
+        }
+      }
+    }
+
+    content.appendChild(flagSec.el);
+
+    // ── 3. Summary ──
     const sumSec = section('Summary');
 
-    // Quests
     const quests = act.questIds.map(id => getQuest(id)).filter(Boolean) as QuestDef[];
     if (quests.length) {
       sumSec.body.appendChild(subHeader(`Quests (${quests.length})`));
@@ -349,7 +519,6 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
       sumSec.body.appendChild(t);
     }
 
-    // Gates
     const gates = act.gateIds.map(id => GATES[id]).filter(Boolean);
     if (gates.length) {
       sumSec.body.appendChild(subHeader(`Gates (${gates.length})`));
@@ -367,8 +536,6 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
       sumSec.body.appendChild(t);
     }
 
-    // Events
-    const evts = getStoryEvents().filter(e => act.eventIds.includes(e.id));
     if (evts.length) {
       sumSec.body.appendChild(subHeader(`Story Events (${evts.length})`));
       const t = makeTable(['ID', 'Trigger', 'Conditions']);
@@ -381,8 +548,6 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
       sumSec.body.appendChild(t);
     }
 
-    // Cutscenes
-    const cutscenes = getAllCutscenes().filter(c => act.cutsceneIds.includes(c.id));
     if (cutscenes.length) {
       sumSec.body.appendChild(subHeader(`Cutscenes (${cutscenes.length})`));
       const t = makeTable(['ID', 'Steps', 'Phone caller', 'Skippable']);
@@ -393,35 +558,16 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
 
     content.appendChild(sumSec.el);
 
-    // ── NPCs ──
+    // ── 4. NPCs ──
     const npcSec = section('NPCs');
 
-    // Collect all NPC IDs from cutscenes + npc-interact triggers
+    // Collect NPC IDs from cutscene steps + npc-interact triggers
     const cutsceneNpcIds = new Set<string>();
     for (const c of cutscenes) collectNpcIds(c).forEach(id => cutsceneNpcIds.add(id));
     for (const e of evts)
       if (e.trigger.type === 'npc-interact') cutsceneNpcIds.add(e.trigger.npcId);
 
-    // Add-map row
-    const addMapRow = document.createElement('div');
-    addMapRow.className = 'si-addmap-row';
-    const mapInput = document.createElement('input');
-    mapInput.type = 'text';
-    mapInput.className = 'form-input';
-    mapInput.placeholder = 'Add extra map, e.g. fractalis/beach';
-    mapInput.style.flex = '1';
-    const addBtn = document.createElement('button');
-    addBtn.className = 'btn btn-sm';
-    addBtn.textContent = '+ Add Map';
-    addBtn.addEventListener('click', () => {
-      const val = mapInput.value.trim();
-      if (val && !extraMapIds.includes(val)) {
-        extraMapIds.push(val);
-        mapInput.value = '';
-        render();
-      }
-    });
-    mapInput.addEventListener('keydown', e => { if (e.key === 'Enter') addBtn.click(); });
+    // Extra map chips + add-map input
     if (extraMapIds.length) {
       const chips = document.createElement('div');
       chips.className = 'si-chips';
@@ -441,21 +587,40 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
       }
       npcSec.body.appendChild(chips);
     }
+
+    const addMapRow = document.createElement('div');
+    addMapRow.className = 'si-addmap-row';
+    const mapInput = document.createElement('input');
+    mapInput.type = 'text';
+    mapInput.className = 'form-input';
+    mapInput.placeholder = 'Add extra map, e.g. fractalis/beach';
+    mapInput.style.flex = '1';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn btn-sm';
+    addBtn.textContent = '+ Add Map';
+    addBtn.addEventListener('click', () => {
+      const val = mapInput.value.trim();
+      if (val && !extraMapIds.includes(val)) {
+        extraMapIds.push(val);
+        mapInput.value = '';
+        render();
+      }
+    });
+    mapInput.addEventListener('keydown', e => { if (e.key === 'Enter') addBtn.click(); });
     addMapRow.appendChild(mapInput);
     addMapRow.appendChild(addBtn);
     npcSec.body.appendChild(addMapRow);
 
-    // NPC table
+    // Build NPC map and render tables
     const npcMap = findNpcsAcrossMaps([...cutsceneNpcIds], extraMapIds);
 
     if (npcMap.size > 0) {
-      // Show NPCs grouped by map
       for (const [mapId, npcs] of npcMap) {
         npcSec.body.appendChild(subHeader(`Map: ${mapId}`));
         if (npcs.length === 0) {
           const p = document.createElement('p');
           p.className = 'text-muted';
-          p.style.padding = '6px 0';
+          p.style.padding = '4px 0 8px';
           p.textContent = 'No NPCs found in this map.';
           npcSec.body.appendChild(p);
           continue;
@@ -467,17 +632,17 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
             npcNameStr(n),
             n.type ?? '—',
             n.spriteType ?? '—',
-            n.spawnAfter ?? '—',
-            n.despawnAfter ?? '—',
+            makeFlagCell(n.spawnAfter, render),
+            makeFlagCell(n.despawnAfter, render),
             n.x !== undefined ? `(${n.x}, ${n.y})` : '?',
           ]);
         }
         npcSec.body.appendChild(t);
       }
 
-      // Show not-found NPC IDs
-      const foundNpcIds = new Set([...npcMap.values()].flat().map(n => n.id));
-      const missing = [...cutsceneNpcIds].filter(id => !foundNpcIds.has(id));
+      // List NPC IDs referenced in cutscenes but not found in any map
+      const foundIds = new Set([...npcMap.values()].flat().map(n => n.id));
+      const missing = [...cutsceneNpcIds].filter(id => !foundIds.has(id));
       if (missing.length) {
         npcSec.body.appendChild(subHeader('Not found in any map'));
         const ul = document.createElement('ul');
@@ -498,7 +663,7 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     } else {
       const p = document.createElement('p');
       p.className = 'text-muted';
-      p.textContent = 'NPC IDs found in cutscenes but not located in any map JSON.';
+      p.textContent = 'NPC IDs found in cutscenes but not located in any map JSON:';
       npcSec.body.appendChild(p);
       const ul = document.createElement('ul');
       ul.className = 'si-missing-list';
@@ -512,141 +677,6 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     }
 
     content.appendChild(npcSec.el);
-
-    // ── Flags ──
-    const flagSec = section('Flags');
-
-    // Slot selector row
-    const slotRow = document.createElement('div');
-    slotRow.className = 'si-slot-row';
-
-    if (slots.length === 0) {
-      const msg = document.createElement('span');
-      msg.className = 'text-muted';
-      msg.textContent = 'No save slots found. Create a save in the game first.';
-      slotRow.appendChild(msg);
-    } else {
-      const slotLabel = document.createElement('span');
-      slotLabel.className = 'si-topbar-label';
-      slotLabel.textContent = 'Save Slot:';
-      slotRow.appendChild(slotLabel);
-
-      const slotSelect = document.createElement('select');
-      slotSelect.className = 'form-select';
-      slotSelect.style.minWidth = '280px';
-      for (const s of slots) {
-        const opt = document.createElement('option');
-        opt.value = String(s.slot);
-        opt.textContent = `Slot ${s.slot} — ${s.playerName} (${new Date(s.savedAt).toLocaleDateString()})`;
-        if (s.slot === selectedSlot) opt.selected = true;
-        slotSelect.appendChild(opt);
-      }
-      slotSelect.addEventListener('change', () => {
-        selectedSlot = Number(slotSelect.value);
-        playerData = loadPd(selectedSlot);
-        renderFlagTable();
-      });
-      slotRow.appendChild(slotSelect);
-
-      const reloadBtn = document.createElement('button');
-      reloadBtn.className = 'btn btn-sm';
-      reloadBtn.textContent = '↺ Reload save';
-      reloadBtn.addEventListener('click', () => {
-        slots = loadAllSlots();
-        if (selectedSlot !== null) playerData = loadPd(selectedSlot);
-        // Rebuild slot select options
-        slotSelect.innerHTML = '';
-        for (const s of slots) {
-          const opt = document.createElement('option');
-          opt.value = String(s.slot);
-          opt.textContent = `Slot ${s.slot} — ${s.playerName} (${new Date(s.savedAt).toLocaleDateString()})`;
-          if (s.slot === selectedSlot) opt.selected = true;
-          slotSelect.appendChild(opt);
-        }
-        renderFlagTable();
-      });
-      slotRow.appendChild(reloadBtn);
-
-      const resetBtn = document.createElement('button');
-      resetBtn.className = 'btn btn-sm si-reset-btn';
-      resetBtn.textContent = 'Reset all act flags';
-      resetBtn.title = 'Clear all flags defined in this act file from the selected save';
-      resetBtn.addEventListener('click', () => {
-        if (!playerData || selectedSlot === null) return;
-        const count = act.flagEnumKeys.filter(k => (FLAGS as Record<string, string>)[k]).length;
-        if (!confirm(`Clear ${count} flags for "${act.label}" from Slot ${selectedSlot}?`)) return;
-        for (const key of act.flagEnumKeys) {
-          const val = (FLAGS as Record<string, string>)[key];
-          if (val) delete (playerData!.flags as Record<string, unknown>)[val];
-        }
-        savePd(selectedSlot, playerData!);
-        renderFlagTable();
-      });
-      slotRow.appendChild(resetBtn);
-    }
-
-    flagSec.body.appendChild(slotRow);
-
-    // Flag table container
-    const flagTableWrap = document.createElement('div');
-    flagSec.body.appendChild(flagTableWrap);
-
-    function renderFlagTable() {
-      flagTableWrap.innerHTML = '';
-      if (!playerData) {
-        const p = document.createElement('p');
-        p.className = 'text-muted';
-        p.style.padding = '12px 0';
-        p.textContent = 'No save data loaded.';
-        flagTableWrap.appendChild(p);
-        return;
-      }
-      const pd = playerData;
-      const flagsObj = pd.flags as Record<string, boolean | undefined>;
-
-      const t = makeTable(['Enum key', 'Flag value', 'Description', 'State', '']);
-      let hasAny = false;
-
-      for (const key of act.flagEnumKeys) {
-        const val = (FLAGS as Record<string, string>)[key];
-        if (!val) continue;
-        hasAny = true;
-        const isSet = !!flagsObj[val];
-        const desc = FLAG_DESCRIPTIONS[val] ?? '—';
-
-        const stateEl = document.createElement('span');
-        stateEl.className = `si-flag-state ${isSet ? 'si-flag-set' : 'si-flag-unset'}`;
-        stateEl.textContent = isSet ? '✓ set' : '— not set';
-
-        const actionBtn = document.createElement('button');
-        actionBtn.className = `btn btn-sm${isSet ? '' : ' btn-primary'}`;
-        actionBtn.textContent = isSet ? 'Clear' : 'Set';
-        actionBtn.addEventListener('click', () => {
-          if (selectedSlot === null || !playerData) return;
-          if (isSet) delete (playerData.flags as Record<string, unknown>)[val];
-          else (playerData.flags as Record<string, boolean>)[val] = true;
-          savePd(selectedSlot, playerData);
-          renderFlagTable();
-        });
-
-        const tr = addRow(t, [key, val, desc, stateEl, actionBtn]);
-        if (isSet) tr.classList.add('si-row-set');
-      }
-
-      if (!hasAny) {
-        const p = document.createElement('p');
-        p.className = 'text-muted';
-        p.style.padding = '12px 0';
-        p.textContent = 'No FLAGS.* references found in this act file.';
-        flagTableWrap.appendChild(p);
-        return;
-      }
-
-      flagTableWrap.appendChild(t);
-    }
-
-    renderFlagTable();
-    content.appendChild(flagSec.el);
   }
 
   render();
