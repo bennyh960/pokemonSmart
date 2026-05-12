@@ -74,7 +74,44 @@ registerQuest({
   },
 });
 
-// ── Gate ──────────────────────────────────────────────────────────────────────
+//# ── Gate ──────────────────────────────────────────────────────────────────────
+registerGate({
+  id: 'gate-fractalis-route7',
+  title: { en: 'Fractalis-Route 7 Blockade', he: 'מחסום  עיר השברים-דרך 7' },
+  questionSetIds: ['*'],
+  triggerType: 'route-checkpoint',
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 5,
+  },
+  reopenCooldownMs: 20 * 60 * 1000,
+});
+registerGate({
+  id: 'gate-fractalis-route8',
+  title: { en: 'Fractalis-Route 8 Blockade', he: 'מחסום  עיר השברים-דרך 8' },
+  questionSetIds: ['*'],
+  triggerType: 'route-checkpoint',
+  sessionConfig: {
+    ...DEFAULT_SESSION_CONFIG,
+    questionsRequired: 8,
+    penaltyAmount: 2500,
+    bonusEnabled: true,
+    bonusMultiplier: 3,
+    inputQuestions: { count: 2, types: ['×', '÷'] },
+    penaltyThreshold: 0.6,
+    rewardThreshold: 0.8,
+    rewards: [
+      { type: 'money', amount: 2500 },
+      { type: 'item', itemId: 'x-accuracy', amount: 3 },
+      { type: 'item', itemId: 'hp-up', amount: 2 },
+    ],
+  },
+  reopenCooldownMs: 20 * 60 * 1000,
+  // successActions: [{ type: 'set-flag', flag: FLAGS.GATe_f }],
+});
+//# ── Gate End ──────────────────────────────────────────────────────────────────────
+
+//# ── Cutscene ──────────────────────────────────────────────────────────────────────
 // TODO: useAuto Register no need
 // registerGate({
 //   id: 'gate-fractalis-gym',

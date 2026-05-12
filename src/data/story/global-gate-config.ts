@@ -245,9 +245,18 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
       timeLimitPerQuestion: 210,
     },
   },
+  'fractalis/gym': {
+    questionSetIds: ['+', '-', '×', '÷'],
+    sessionConfig: {
+      inputQuestions: { count: 10, types: ['+', '-', '×', '÷'] },
+      questionsRequired: 25,
+      timeLimitPerQuestion: 180,
+    },
+  },
 };
 
 registerAutoGateMap('sumville/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['sumville/gym']);
 registerAutoGateMap('minusburg/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['minusburg/gym']);
 registerAutoGateMap('multiplia/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['multiplia/gym']);
 registerAutoGateMap('divida/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['divida/gym']);
+registerAutoGateMap('fractalis/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['fractalis/gym']);

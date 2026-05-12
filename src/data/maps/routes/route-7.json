@@ -400,6 +400,53 @@
       "dialogue": [],
       "spriteType": "gym-5-fractalis",
       "spawnAfter": "act3-fractalis-engineer-met"
+    },
+    {
+      "id": "npc-1778614072231",
+      "x": 16,
+      "y": 7,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום? רוצה קרב?"
+        }
+      ],
+      "spriteType": "char_0ade0c",
+      "reward": {
+        "money": 700
+      },
+      "spawnAfter": "act3-fractalis-zapdos-defeated",
+      "party": [
+        {
+          "pokemonId": 5,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 115,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 227,
+          "level": 35,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "postBattleDialogue": [],
+      "questions": {
+        "count": 3,
+        "types": []
+      },
+      "reencounter": {
+        "count": 3,
+        "lvlStep": 10,
+        "triggerFlag": "story-badge-5",
+        "minPartyLevelBoost": 3
+      }
     }
   ],
   "interactiveItems": {},

@@ -76,6 +76,161 @@
         ],
         "loop": true
       }
+    },
+    {
+      "id": "npc-townfolk-1-frac",
+      "x": 11,
+      "y": 19,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "עיר השברים היא ער השוכנת לאורך החוף הדרומי."
+        },
+        {
+          "en": "",
+          "he": "יש האומרים שישנם פוקימונים אגדים השוכנים באיים הדרומיים"
+        }
+      ],
+      "spriteType": "char_3979e8",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 15,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 20,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 15,
+            "delay": 5
+          },
+          {
+            "dir": "left",
+            "steps": 20,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      },
+      "questions": {
+        "count": 3,
+        "types": []
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "potion",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-townfolk-2-frac",
+      "x": 27,
+      "y": 7,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום! ביקרת כבר בתחנת הכח שלנו? פוקימוני חשמל ואנרגיה ירוקה עוזרים לספק חשמל בכל רחבי נומריה."
+        },
+        {
+          "en": "",
+          "he": "התחנה ממוקמת בדרך 8"
+        }
+      ],
+      "spriteType": "char_6f0793",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "ultra-ball",
+            "quantity": 1
+          }
+        ]
+      },
+      "questions": {
+        "count": 7,
+        "types": []
+      }
+    },
+    {
+      "id": "npc-1778613167556",
+      "x": 12,
+      "y": 10,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "מחפש את המכון ?"
+        },
+        {
+          "en": "",
+          "he": "הוא בתחנת הכח בדרך 8"
+        }
+      ],
+      "spriteType": "char_485c6e",
+      "questions": {
+        "count": 3,
+        "types": []
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "paralyze-heal",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-1778613278341",
+      "x": 7,
+      "y": 1,
+      "facing": "right",
+      "type": "gate-guard",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום ! שום גליץ' לא יכנס לפרקטליס במשמרת שלי"
+        }
+      ],
+      "spriteType": "gate-officer",
+      "gateId": "gate-fractalis-route8",
+      "lineOfSight": 4
+    },
+    {
+      "id": "npc-1778613847701",
+      "x": 34,
+      "y": 3,
+      "facing": "down",
+      "type": "gate-guard",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "gate-officer",
+      "gateId": "gate-fractalis-route7",
+      "lineOfSight": 1
     }
   ],
   "music": "town",
