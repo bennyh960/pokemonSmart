@@ -1,57 +1,219 @@
 # /story-upsert — Create or Update a Story Act
 
-You are implementing a **story quest** for Pokemon Math Adventure (Numeria). A story quest is 1 big part from 1 story act . while story act is one beat of the game's narrative — it may span one map or several maps, involve NPCs, cutscenes, trainer battles, and flag chains.
+You are implementing a **story quest** for Pokemon Math Adventure (Numeria).
+A story act is one narrative arc — it may span one map or several maps, involve NPCs, cutscenes, trainer battles, and flag chains.
 
 ## Input
 
 The user invoked `/story-upsert $ARGUMENTS`.
 
-Parse the arguments as:
+Parse as:
 
-- **Arg 1** — act name / short id (e.g. `rocket-raid-sumville`, `rival-first-battle`)
-- **Arg 2+** — free-text description of the act. May include the list of maps to use, or may ask you to suggest maps. May be empty.
+- **Arg 1** — act file name / short id (e.g. `fractalis`, `rocket-raid-sumville`)
+- **Arg 2+** — free-text description of the story. Read it carefully. The user may describe it in natural language with locations, characters, and events. Extract everything you need from it.
 
 ---
 
 ## Game Context
 
-The player is a new Pokemon trainer on a journey to meet other trainers, catch Pokemon, earn badges, and win the league. **Team Rocket controls a rogue AI called NULL-X** that causes chaos across Numeria. NULL-X's one weakness: it cannot solve math and logic problems — which is why **question gates** block its influence throughout the world.
+The player is a Pokemon trainer journeying across Numeria, earning badges, and fighting NULL-X — a rogue AI stolen and controled by Team Rocket. NULL-X has ability to create glitch virus (fake man / fake pokemons) those cannot solve math, so **question gates** block its influence.
 
-Full lore in `docs/game-spec.md` (read only if the act requires lore you do not already know).
+Full lore is still dynamic - if something missing - stop and ask the player (there is lore in spec but is not up-to-date)
 
 ---
 
-## System Capabilities (use this reference — do NOT re-read source files to learn what exists)
+## Step 1 — Read current state
 
-### Story engine — `src/data/story/events.ts`
+Before anything else, read:
 
-**Triggers:**
+1. The target quest file if it exists: `src/data/story/content/act{N}/<name>.ts`
+2. `src/data/story/flags.ts` — what flags already exist
+3. All map JSONs the story touches (`src/data/maps/<MAP_ID>.json`) — check existing NPCs, transitions, spawn/despawn fields
+4. Any adjacent quest files that reference the same maps or flags
 
-- `map-enter` — entering a map (has `mapId`)
-- `map-exit` — leaving a map
-- `npc-interact` — talking to an NPC (has `npcId`)
-- `flag-set` — any story flag being set (has `flag`) — **use this for post-trainer-defeat logic** (see below)
-- `badge-earned` — acquiring a gym badge
-- `gate-cleared` — passing a question gate
-- `quest-complete` — completing a quest
-- `item-used` — using an item
-- `trainer-defeated` — ⚠️ historically flaky, **do not use directly**
-- `manual` — manually fired
+---
 
-**Actions:**
+## Step 2 — Plan the arc (PRESENT BEFORE IMPLEMENTING)
 
-- `set-flag` — set / unset a story flag
-- `set-infection` — adjust city infection level
-- `start-cutscene` — launch a cutscene by id
-- `start-gate` — push a question gate onto the scene stack
+Break the story into **numbered phases**. Each phase = one trigger point (map-enter, npc-interact, etc.) that moves the story forward.
+
+Present the plan as a phase table:
+
+| #   | Trigger             | Condition flags            | Actions / Cutscene summary           | Sets flag         |
+| --- | ------------------- | -------------------------- | ------------------------------------ | ----------------- |
+| 1   | map-enter fractalis | flag-not VISITED_FRACTALIS | set quest, set infection             | VISITED_FRACTALIS |
+| 2   | npc-interact wife   | flag-not WIFE_TALKED       | cutscene: wife explains + gives item | WIFE_TALKED       |
+| …   | …                   | …                          | …                                    | …                 |
+
+Then list **every new NPC** per map in a table:
+
+| Map                | NPC ID            | spawnAfter | despawnAfter | type     | Notes                  |
+| ------------------ | ----------------- | ---------- | ------------ | -------- | ---------------------- |
+| fractalis/gymHouse | npc-engineer-wife | —          | —            | dialogue | triggers wife cutscene |
+| …                  | …                 | …          | …            | …        | …                      |
+
+Then list **new flags**:
+
+| Flag                       | Set by                   | Read by             |
+| -------------------------- | ------------------------ | ------------------- |
+| ACT3_FRACTALIS_WIFE_TALKED | act3-wife-intro cutscene | engineer spawnAfter |
+| …                          | …                        | …                   |
+
+**Wait for user confirmation** before implementing if the arc is complex (multi-map, >3 phases). For simple acts (1–2 maps, no branching) you may proceed directly.
+
+---
+
+## Step 3 — Implement
+
+### Files to edit
+
+| File                                      | What you do                                                        |
+| ----------------------------------------- | ------------------------------------------------------------------ |
+| `src/data/story/flags.ts`                 | Add new flags in the right act section + FLAG_DESCRIPTIONS entries |
+| `src/data/story/content/act{N}/<name>.ts` | Quests, gates, cutscenes, story events                             |
+| Map JSONs                                 | Add NPCs at placeholder coords (see rules below)                   |
+| `routes/route-7.json` etc.                | Edit existing NPCs (add despawnAfter, etc.)                        |
+
+### Flags.ts rules
+
+- Add flags in a clearly labeled section (e.g. `// ── Act 3: Fractalis arc ──`)
+- Add a matching entry in `FLAG_DESCRIPTIONS` for every new flag
+- Use naming convention: `ACT{N}_{MAP}_{EVENT}` (e.g. `ACT3_FRACTALIS_WIFE_TALKED`)
+
+### Quest lifecycle rule
+
+**Always complete the previous quest before starting the next one** inside a cutscene:
+
+```ts
+{ type: 'action', action: { type: 'complete-quest', questId: 'main-act3-prev' } },
+{ type: 'action', action: { type: 'set-quest',      questId: 'main-act3-next' } },
+```
+
+A quest that is started and never completed stays "active" forever.
+
+### Cutscene rules
+
+1. **Every `dialogue` step must have `speakerName`** — never omit it, even for player lines.
+   Format: `'Character Name / שם הדמות'` unless the dialouge already have speakerID . in such a case we have speakerID no need speakerName (the logic doing lookup to name)
+
+2. **`move-npc` followed by `hide-npc` or `set-flag` must use `waitForComplete: true`** — otherwise the NPC disappears before finishing the walk:
+
+   ```ts
+   { type: 'move-npc', npcId: 'npc-x', path: [...], waitForComplete: true },
+   { type: 'hide-npc', npcId: 'npc-x' },   // fires AFTER walk completes
+   ```
+
+3. **Flag set order in cutscenes** — set the "phase gate" flag AFTER all hide-npc/move-npc steps, so `despawnAfter` NPCs vanish at the right moment.
+
+4. **Use `phoneCaller: { en, he }`** on a cutscene to make it open as an incoming phone call.
+
+5. **`face-npc`** before every NPC's first dialogue step, so they look at the player.
+
+6. **`speakerId`** resolves portraits from NPCs in the CURRENT map only. If the NPC is in a different map (e.g. gym interior), omit `speakerId` or add `speakerName` as fallback.
+
+### NPC placement rules
+
+For every new NPC:
+
+1. Place it in the correct map JSON at **placeholder coords**: `"x": <story-index>, "y": 0` (first NPC gets x:0, second x:1, etc.).
+2. Fill every field fully: `id`, `name`, `type`, `spriteType`, `dialogue`, `spawnAfter`, `despawnAfter`, `facing`, and for trainers: `party`, `reward`.
+3. Default sprites: `npc-m` / `npc-f` (male/female civilian), `officer-Jenny` (Jenny), `gate-officer` (route officer).
+4. The user's only job is to **move the placeholder coords to the real position** — everything else is already set.
+
+For NPCs on **multiple maps**, add a separate entry to each map JSON.
+
+If the map JSON does not exist yet, add a ⚠️ block in the output (see Step 4).
+
+### Story events rules
+
+- **`map-enter`** — fires on every load of the map. Use `flag-not: VISITED_*` to make it one-shot.
+- **`npc-interact`** — fires when player talks to NPC. Use `flag-not` condition to make it one-shot.
+- **`trainer-defeated`** — valid to use directly for wild-pokemon NPC encounters (legendary battles etc.). For regular trainer NPCs, prefer the auto-set `trainer-<id>-defeated` flag via `flag-set` trigger.
+- **Every referenced flag must be set somewhere** in the flag chain. Verify this before finishing.
+
+### Flag chain verification (do before finishing)
+
+For each `spawnAfter: "X"` and `despawnAfter: "X"`, confirm:
+
+- [ ] Flag `X` is set somewhere (cutscene action, story event action, or NPC reward)
+- [ ] The flag is defined in `flags.ts`
+- [ ] The flag is NOT set BEFORE the NPC needs to be visible
+
+---
+
+## Step 4 — Output summary (mandatory, in this exact order)
+
+### 1. Arc overview
+
+One paragraph: what happens, which maps, what the player does.
+
+### 2. Phase flow
+
+Plain language, e.g.:
+
+> Talk to wife in gymHouse → engineer spawns at beach → interact with engineer → enter Route 7 (jenny scene + route-8 unlocks) → find Zapdos in Route 8 → defeat Zapdos → core reveal → gym opens
+
+### 3. NPCs added / modified per map
+
+For each map that was touched:
+
+- **Map file:** `src/data/maps/<MAP_ID>.json`
+- Table: `id` | placeholder coords | role | spawnAfter | despawnAfter
+
+If a map does not exist:
+
+> ⚠️ **Map `<MAP_ID>` does not exist**
+> Story event `<event-id>` targets this map.
+>
+> 1. Create `src/data/maps/<MAP_ID>.json`
+> 2. Register it in `src/systems/map-manager.ts`
+> 3. Add a transition from `<SOURCE_MAP>` at approx (x, y)
+>    NPCs intended for this map: [list]
+
+### 4. Flag chain summary
+
+| Flag | Set by | Read by (spawnAfter / despawnAfter / condition) |
+| ---- | ------ | ----------------------------------------------- |
+
+### 5. Resource IDs
+
+List: quest IDs, gate IDs, cutscene IDs, story event IDs, new flag names.
+
+### 6. User TODO
+
+- [ ] Move NPC `<id>` from placeholder (x, y) to real position on `<map>`
+- [ ] (any missing maps, sprite changes, or other manual work)
+
+---
+
+## System Capabilities Reference
+
+Use this — do NOT re-read engine source to learn capabilities.
+
+### Story triggers
+
+- `map-enter` — `{ mapId }`
+- `map-exit` — `{ mapId }`
+- `npc-interact` — `{ npcId }`
+- `flag-set` — `{ flag }` — use for chaining off trainer defeats
+- `trainer-defeated` — `{ trainerId }` — OK for wild/legendary NPC battles
+- `badge-earned` — `{ badge: 1–8 }`
+- `gate-cleared` — `{ gateId }`
+
+### Story actions
+
+- `set-flag` / `set-flag (value: false)`
+- `set-infection` — `{ mapId, value: 'none'|'low'|'medium'|'high'|'critical'|'cleared' }`
+- `start-cutscene` — `{ cutsceneId }`
+- `start-gate` — `{ gateId }`
 - `set-quest` / `complete-quest`
-- `give-item` / `give-money`
-- `unlock-gate-timer`
+- `give-item` — `{ itemId, quantity }`
+- `give-money` — `{ amount }`
 - `teleport` — `{ mapId, x, y }`
-- `show-message`
-- `play-music`
+- `show-message` — `{ lines: BilingualText[] }`
+- `play-music` — `{ musicId }`
 
-**Conditions:**
+### Story conditions
 
 - `flag` / `flag-not`
 - `badge-count` / `badge-count-max`
@@ -60,160 +222,52 @@ Full lore in `docs/game-spec.md` (read only if the act requires lore you do not 
 - `money-min`
 - `gate-locked`
 
-### Cutscene runner — `src/systems/cutscene-runner.ts`
+### Cutscene steps
 
-**Step types:**
+- `dialogue` — `{ speakerName, speakerId?, lines, portrait? }`
+- `face-npc` — `{ npcId, dir }`
+- `show-npc` / `hide-npc` — `{ npcId }`
+- `move-npc` — `{ npcId, path: dir[], waitForComplete? }`
+- `move-player` — `{ path, waitForComplete? }` (may be unimplemented — design around if not needed)
+- `hide-player` / `show-player`
+- `camera-pan` — `{ x, y, durationMs }`
+- `camera-snap` — `{ x, y }`
+- `screen-fade` — `{ direction: 'in'|'out', durationMs, color? }`
+- `overlay` — `{ color: string|null }`
+- `wait` — `{ durationMs }`
+- `wait-input`
+- `play-music` / `stop-music` / `play-sfx`
+- `if-flag` — `{ flag, thenSteps, elseSteps? }`
+- `action` — `{ action: StoryAction }` (any story action inline)
+- `start-battle` / `start-gate` / `start-scene`
 
-- Dialogue / UI: `dialogue`, `phone-ring`, `overlay`, `wait-input`
-- Camera: `camera-snap`, `camera-pan`
-- Screen: `screen-fade`
-- NPC control: `face-npc`, `show-npc`, `hide-npc`, `move-npc`
-- Player control: `hide-player`, `show-player`, `move-player` — ⚠️ may be **unimplemented**. If needed and the fix is small (a few lines), implement it. Otherwise design around it.
-- Audio: `play-music`, `stop-music`, `play-sfx`
-- Flow: `wait`, `if-flag`, `action` (executes any story action inline)
-- Transitions: `start-battle` (may be unimplemented), `start-gate` (may be unimplemented), `start-scene`
+### NPC spawn / despawn
 
-### NPC system — `src/systems/npc.ts`
+- `spawnAfter: "<flag>"` — appears once flag is true
+- `despawnAfter: "<flag>"` — disappears once flag is true
+- `despawnWhenParty: { count, level }` — based on party strength
+- `despawnOnDefeat: true` — auto-despawns trainer after loss
 
-**NPC types:** `npc`, `trainer`, `shopkeeper`, `healer`, `gate-guard`
+### NPC movement
 
-**Spawn / despawn — reuse these, do not invent new ones:**
+- `autoWalk` — looping patrol: `{ pattern: [{dir, steps, delay}], loop, floating? }`
+- `afterSpawnPattern` — one-time walk on first appearance
+- `beforeDespawnPattern` — one-time walk before despawn flag kicks in
 
-- `spawnAfter: "<flag>"` — NPC appears once flag is set
-- `despawnAfter: "<flag>"` — NPC disappears once flag is set
-- `despawnWhenParty: { count, level }` — disappears when party has N Pokemon at level ≥ X
-- `despawnOnDefeat: true` — trainer auto-despawns after losing
+### MapId type
 
-**Movement — reuse these, do not invent a new movement system:**
-
-- `autoWalk` — patrol pattern with directional steps, optional delay
-- `afterSpawnPattern` — one-time walk when NPC first appears (flag-persisted)
-- `beforeDespawnPattern` — one-time walk before despawn condition kicks in (flag-persisted)
-
-**Rewards:**
-
-- `DialogueReward` on dialogue NPC: `items`, `money`, `badge`, `storyEvent: "<flag>"`
-- `TrainerReward` on trainer NPC: same fields + `postBattleDialogue`
-
-### Post-trainer-defeat flag
-
-The engine auto-sets a flag when a trainer is defeated. **Use `flag-set` trigger on that auto-flag instead of `trainer-defeated`**. Before writing the event, open `src/systems/story-engine.ts` once to confirm the exact flag pattern (likely `trainer-<trainerId>-defeated`).
-
-### Map enter
-
-Overworld fires `fireStoryTrigger({ type: 'map-enter', mapId })` on every map load. Register a story event with `trigger: { type: 'map-enter', mapId: '<map>' }` + conditions to react to it.
-
-### Bilingual text
-
-All player-visible strings must be `{ en: string, he: string }`. Hebrew can be a copy of English for now — the structure must always be bilingual.
-
----
-
-## Step 1 — Ask clarifying questions (if needed)
-
-Before implementing, ask about anything unclear:
-
-- Which maps the act touches (if not specified)
-- Player's assumed starting state (badges, items, flags)
-- Act's success / completion conditions
-- Whether specific NPCs already exist or need to be created
-
-**Do not implement until ambiguity is resolved.**
-
----
-
-## Step 2 — Design the act
-
-Break into a clear flow:
-
-1. **Entry point** — map-enter, NPC interact, flag-set, etc.
-2. **Progression** — ordered sequence of beats the player completes
-3. **Exit point** — what flag marks the act complete, and what does it unlock?
-
-For each beat: cutscene needed? New NPC or reuse? Spawn/despawn? Auto-walk before/after? Trainer battle? Gate? Item?
-
----
-
-## Step 3 — Implement
-
-Write the code. **Open files only when writing a register call** — use the capability reference above instead of re-reading source to learn what exists.
-
-Files you typically edit:
-
-- `src/data/story/content/act{N}/<act-name>.ts` — quests, gates, cutscenes, story events
-- `src/data/story/flags.ts` — add any new flags
-- `src/data/maps/<MAP_ID>.json` — **see NPC placement rules below**
-
-**Every `despawnAfter` / `spawnAfter` / condition flag must be set somewhere in the chain.**
-
-### NPC placement rules
-
-For every new NPC the act requires:
-
-1. **Check if the target map JSON exists** (`src/data/maps/<MAP_ID>.json`).
-   - If the map **exists**: add the NPC to its `"npcs"` array with placeholder coordinates `x: <story-order-index>, y: 0` (first NPC gets x:0, second x:1, etc., all at y:0). Set all fields — `id`, `name`, `type`, `spriteType`, `dialogue`, `party` (trainers), `reward`, `spawnAfter`, `despawnAfter`, `lineOfSight`, `postBattleDialogue` — fully filled in. Use `spriteType: "npc-m"` / `"npc-f"` / `"trainer-m"` / `"trainer-f"` as defaults ("legacy sprites").
-   - If the map **does not exist**: do NOT create a map JSON. Instead, add a ⚠️ block to the output (see Step 4) explaining what map is missing and what the user needs to do.
-
-2. The user's only job for NPC placement is to **move the placeholder coordinates to the real map position**. Everything else — id, flags, dialogue, party, rewards — is already set.
-
-3. NPCs that appear on **multiple maps** get separate entries in each relevant map file.
-
----
-
-## Step 4 — Output summary (mandatory, in this exact order)
-
-### 1. Act overview
-
-One or two sentences.
-
-### 2. Cross-map flow
-
-Plain language. Example:
-
-> "Talk to Gary on `minusburg` → enter `gym-minusburg` → beat 10 Rocket grunts → finale cutscene"
-
-### 3. NPCs added to maps
-
-For each map that received new NPCs, confirm:
-
-- **Map file**: `src/data/maps/<MAP_ID>.json`
-- List each NPC: `id`, placeholder coords, role, spawn/despawn flags
-
-If a required map does not exist yet:
-
-> ⚠️ **Map `<MAP_ID>` does not exist**
-> The story event `<event-id>` targets this map. To unblock:
->
-> 1. Create `src/data/maps/<MAP_ID>.json`
-> 2. Register it in `src/systems/map-manager.ts`
-> 3. Add a transition tile from `<SOURCE_MAP>` at approximately (x, y)
->    NPCs intended for this map are listed below — add them once the map exists.
-
-### 4. Map-enter events
-
-For each `map-enter` trigger:
-
-- **Map ID**, **Conditions**, **Actions**
-
-### 5. Resource list
-
-- Story event IDs, Cutscene IDs, Flag names, Quest IDs, Gate IDs
-
-### 6. User TODO list
-
-- [ ] Move NPC `<id>` from placeholder (x, y) to real position on `<map>`
-- [ ] _(any missing maps or other manual work)_
+`MapId` is auto-generated from `src/data/maps/map-ids.ts`. Use `'some/map' as MapId` only when the string is not in the registry. Prefer the enum constants: `MapId.FRACTALIS_FRACTALIS` etc., but string literals with `as MapId` cast also work.
 
 ---
 
 ## Rules
 
-- **Ask first** if ambiguous
-- **Do not re-read engine source to learn capabilities** — use the reference above. Only open files when writing a register call.
-- **Bilingual `{ en, he }`** for every player-visible string
-- **Reuse existing auto-walk** — do not invent new movement
-- **Never use `trainer-defeated` trigger directly** — use the auto-set flag via `flag-set`
-- **Every referenced flag must be set somewhere** in the chain
-- **Always write NPCs into the map JSON at placeholder coords** — the user only moves them, never re-types them
-- **If a map is missing, say so clearly** with exact steps to create it — never silently skip
-- **Summary in the exact order shown**
+- **Plan first, confirm, then implement** (for arcs >2 maps or >3 phases)
+- **Always bilingual** `{ en, he }` for every player-visible string
+- **Every `spawnAfter`/`despawnAfter` flag must be set somewhere in the chain**
+- **Complete quests before starting the next one** (`complete-quest` → `set-quest`)
+- **`waitForComplete: true` on any `move-npc` that precedes a `hide-npc` or `set-flag`**
+- **`speakerName` on every `dialogue` step — never omit**
+- **Write NPCs into map JSONs at placeholder coords** — user only moves them
+- **If a map is missing, say so clearly** with exact steps — never silently skip
+- **`face-npc` before the NPC's first dialogue line** in any cutscene

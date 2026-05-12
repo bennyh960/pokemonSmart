@@ -211,6 +211,7 @@ registerCutscene({
     {
       type: 'dialogue',
       speakerId: 'npc-fractalis-engineer-volt',
+      speakerName: 'Engineer Volt / מהנדס וולט',
       lines: [
         {
           en: 'Wait — you say you saw a huge yellow bird flying in Route 7? That must be Zapdos!',
@@ -225,8 +226,9 @@ registerCutscene({
       path: ['right', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up'],
     },
     { type: 'hide-npc', npcId: 'npc-fractalis-engineer-volt' },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_FRACTALIS_ENGINEER_MET } },
-    { type: 'action', action: { type: 'set-quest', questId: 'main-act3-zapdos-chase' } },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act3-engineer-intro' } },
+    { type: 'action', action: { type: 'set-flag',       flag: FLAGS.ACT3_FRACTALIS_ENGINEER_MET } },
+    { type: 'action', action: { type: 'set-quest',      questId: 'main-act3-zapdos-chase' } },
   ],
 });
 
@@ -278,13 +280,13 @@ registerCutscene({
       type: 'move-npc',
       npcId: 'npc-engineer-volt-r7',
       path: ['left', 'left'],
-      waitForComplete: false,
+      waitForComplete: true,
     },
     {
       type: 'move-npc',
       npcId: 'npc-jenny-zapdos-scene',
       path: ['left', 'left', 'left'],
-      waitForComplete: false,
+      waitForComplete: true,
     },
     { type: 'hide-npc', npcId: 'npc-engineer-volt-r7' },
     { type: 'hide-npc', npcId: 'npc-jenny-zapdos-scene' },

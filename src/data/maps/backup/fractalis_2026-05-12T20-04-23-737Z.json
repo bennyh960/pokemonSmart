@@ -44,31 +44,6 @@
       "toMapId": "routes/route-7",
       "toX": 1,
       "toY": 18
-    },
-    {
-      "fromX": 10,
-      "fromY": 9,
-      "toMapId": "fractalis/house-small"
-    },
-    {
-      "fromX": 23,
-      "fromY": 9,
-      "toMapId": "fractalis/template-house-open"
-    },
-    {
-      "fromX": 10,
-      "fromY": 15,
-      "toMapId": "fractalis/house-1"
-    },
-    {
-      "fromX": 21,
-      "fromY": 2,
-      "toMapId": "shared/mart-interior"
-    },
-    {
-      "fromX": 23,
-      "fromY": 15,
-      "toMapId": "shared/pokecenter-2"
     }
   ],
   "npcs": [
@@ -265,20 +240,20 @@
   "tiles": [
     ["g1","g1","g1","g1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
-    ["s1-5","s1-5","s1-5","cs1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","b6-door","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","door-gym","gre-c","gre-c","gre-c","gre-c","gre-c","b6-door","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["s1-5","s1-5","s1-5","cs1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","b6-door","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","b6-door","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
     ["wt1t","wt1r","s1-5","cs1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
-    ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","b4-door","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","b4-door","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
+    ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","cs1","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","s1-5","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","s1-5","cs1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
-    ["wt1","wt1tr","s1-5","cs1","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","b4-door","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","door-gym","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
+    ["wt1","wt1tr","s1-5","cs1","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","s1-5","cs1","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","s1-5","cs1","cs1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","gre-c","s1-5","s1-5","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","s1-5","s1-5","cs1","cs1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],

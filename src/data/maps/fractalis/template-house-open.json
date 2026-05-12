@@ -1,0 +1,17 @@
+{
+  "id": "fractalis-template-house-open",
+  "template": "house-open",
+  "tileset": "interior",
+  "label": {
+    "he": "בית כלשהו",
+    "en": "Some House"
+  },
+  "area": "fractalis",
+  "music": "town4",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 9,
+    "y": 13
+  },
+  "transitions": []
+}

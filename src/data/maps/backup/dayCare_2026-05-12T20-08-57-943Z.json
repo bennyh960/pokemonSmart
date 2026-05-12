@@ -36,21 +36,5 @@
       "toX": 27,
       "toY": 67
     }
-  ],
-  "npcs": [
-    {
-      "id": "npc-1778616490150",
-      "x": 11,
-      "y": 8,
-      "facing": "right",
-      "type": "day-care",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "שלום!"
-        }
-      ],
-      "spriteType": "char_dbc673"
-    }
   ]
 }

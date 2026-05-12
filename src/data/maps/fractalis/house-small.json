@@ -1,0 +1,50 @@
+{
+  "id": "house-fractalis-small",
+  "area": "fractalis",
+  "template": "house-small",
+  "tileset": "interior",
+  "label": {
+    "en": "Turjeman House",
+    "he": "בית תורג'מן"
+  },
+  "music": "town3",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 6,
+    "y": 13
+  },
+  "npcs": [
+    {
+      "id": "npc-1776945791301",
+      "x": 11,
+      "y": 5,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שמעת על סבתא ג'ואי - היא מגדלת פוקימונים מקצועית. "
+        },
+        { "en": "", "he": "היא מאוד מומלצת - שווה לשים אצלה פוקימונים שקשה לאמן אותם. הם כבר יתחזקו אצלה" }
+      ],
+      "spriteType": "char_1b9be7",
+      "name": {
+        "en": "Dina",
+        "he": "דינה"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "protein",
+            "quantity": 3
+          }
+        ]
+      },
+      "questions": {
+        "count": 5,
+        "types": ["*"]
+      }
+    }
+  ]
+}
