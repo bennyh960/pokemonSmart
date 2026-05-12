@@ -176,6 +176,7 @@ export interface PhoneContactInfo {
   reencounterConfig?: {
     count: number;
     lvlStep: number;
+    infinite?: boolean;
     timeInterval?: number;
     triggerFlag?: string;
     triggerFlagDelayHours?: number;

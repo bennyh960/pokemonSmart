@@ -2753,11 +2753,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
               const nextX = npc.x + dx;
               const nextY = npc.y + dy;
+              const floating = !!npc.autoWalk?.floating;
               const blocked =
                 (nextX === player.gridX && nextY === player.gridY) ||
-                npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party) ||
-                !tileMap ||
-                !tileMap.isWalkable(nextX, nextY);
+                (!floating && npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party)) ||
+                (!floating && (!tileMap || !tileMap.isWalkable(nextX, nextY)));
               if (!blocked && steps < step.steps) {
                 st.startPixelX = st.pixelX;
                 st.startPixelY = st.pixelY;
@@ -2958,11 +2958,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 const dy = step.dir === 'down' ? 1 : step.dir === 'up' ? -1 : 0;
                 const nextX = npc.x + dx;
                 const nextY = npc.y + dy;
+                const floating = !!npc.autoWalk?.floating;
                 const blocked =
                   (nextX === player.gridX && nextY === player.gridY) ||
-                  npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party) ||
-                  !tileMap ||
-                  !tileMap.isWalkable(nextX, nextY);
+                  (!floating && npcManager!.isVisibleNPCAt(nextX, nextY, flags, _pd1?.party)) ||
+                  (!floating && (!tileMap || !tileMap.isWalkable(nextX, nextY)));
                 if (!blocked && st.stepsTaken < step.steps) {
                   st.startPixelX = st.pixelX;
                   st.startPixelY = st.pixelY;
@@ -3611,6 +3611,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
             renderables.push({
               y: renderY,
+              ...(npc.autoWalk?.floating && { zOffset: 1 }),
               render: () => {
                 ctx.imageSmoothingEnabled = false;
                 if (charFrame.flipX) {
@@ -3648,6 +3649,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const ny = Math.floor(npcPixelY - camera.y);
             renderables.push({
               y: renderY,
+              ...(npc.autoWalk?.floating && { zOffset: 1 }),
               render: () => {
                 const sprite = getNPCSpriteImage(npc.spriteType);
                 ctx.imageSmoothingEnabled = false;

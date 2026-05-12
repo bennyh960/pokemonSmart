@@ -43,6 +43,14 @@ export interface AutoWalkConfig {
    */
   beforeDespawnPattern?: WalkStep[];
   beforeDespawnLoop?: boolean; // default false
+
+  /**
+   * When true, the NPC ignores tile walkability and map boundary checks during
+   * auto-walk — it can cross water, rocks, walls, and move off-screen.
+   * It still stops if it reaches the player's tile so interaction works normally.
+   * Intended for flying/floating wild Pokémon whose path is planned to avoid the player.
+   */
+  floating?: boolean;
 }
 
 /** Legacy auto-walk format (horizontal/vertical axes). Converted at load time. */
@@ -174,8 +182,21 @@ export interface TrainerReward {
 
 /** Re-encounter configuration on a trainer NPC. */
 export interface ReencounterConfig {
-  count: number; // max additional encounters after the first (e.g. 3 = 4 total fights)
-  lvlStep: number; // level boost applied to all party members per re-encounter
+  /**
+   * Number of times the level boost applies before the level caps.
+   * e.g. count=3, lvlStep=5, base=30 → battles at 30 / 35 / 40 / 45 / 45 / 45 …
+   * Without infinite: only count+1 total fights are allowed.
+   */
+  count: number;
+  lvlStep: number; // level boost per boost step
+  /**
+   * When true, rematches are unlimited. All trigger conditions (time, flag, party gate)
+   * still apply after each defeat. Level is capped at the boost from the final step
+   * (encounterIndex = min(state.count, count)). Trainer is NOT added to phone.
+   *
+   * Conflict rule: if both infinite and a finite count are set, infinite wins.
+   */
+  infinite?: boolean;
   /**
    * Trigger conditions — any combination can be set; ALL enabled conditions must be satisfied.
    *

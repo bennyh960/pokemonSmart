@@ -43,8 +43,9 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
   if (!state) return { eligible: false, reason: 'no-config' };
 
   const rc = trainer.reencounter;
-  // count tracks total defeats; re-encounter count = total allowed additional fights
-  if (state.count > rc.count) return { eligible: false, reason: 'max-reached' };
+  // count tracks total defeats; re-encounter count = how many level-boost steps apply
+  // infinite overrides the max-reached cap — battles continue at the capped level
+  if (state.count > rc.count && !rc.infinite) return { eligible: false, reason: 'max-reached' };
 
   // All enabled conditions are checked independently — ALL must pass (AND logic).
 
@@ -85,7 +86,9 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
     if (elapsed < required) return cooldownStatus(required - elapsed);
   }
 
-  return { eligible: true, encounterIndex: state.count };
+  // Cap encounterIndex at rc.count so infinite battles stay at max boosted level
+  const encounterIndex = rc.infinite ? Math.min(state.count, rc.count) : state.count;
+  return { eligible: true, encounterIndex };
 }
 
 /**
@@ -156,6 +159,7 @@ export function recordTrainerDefeat(trainerId: string): void {
  */
 export function addTrainerToPhone(trainer: TrainerData): void {
   if (!hasActiveGame()) return;
+  if (trainer.reencounter?.infinite) return; // infinite trainers are never in phone
   if (trainer.reencounter?.addToPhone === false) return;
   const pd = getPlayerData();
   if (pd.phoneContacts.some((c) => c.trainerId === trainer.id)) return;
@@ -173,6 +177,7 @@ export function addTrainerToPhone(trainer: TrainerData): void {
       ? {
           count: rc.count,
           lvlStep: rc.lvlStep,
+          infinite: rc.infinite,
           timeInterval: rc.timeInterval,
           triggerFlag: rc.triggerFlag,
           triggerFlagDelayHours: rc.triggerFlagDelayHours,

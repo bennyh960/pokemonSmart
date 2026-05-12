@@ -308,8 +308,8 @@
     },
     {
       "id": "npc-zapdos-route7",
-      "x": 49,
-      "y": 4,
+      "x": 7,
+      "y": 0,
       "facing": "down",
       "type": "dialogue",
       "dialogue": [],
@@ -318,28 +318,23 @@
         "floating": true,
         "pattern": [
           {
-            "dir": "left",
-            "steps": 30,
-            "delay": 0.1
-          },
-          {
             "dir": "down",
-            "steps": 3,
-            "delay": 0.1
-          },
-          {
-            "dir": "left",
-            "steps": 15,
+            "steps": 10,
             "delay": 0.5
           },
           {
+            "dir": "left",
+            "steps": 7,
+            "delay": 0.1
+          },
+          {
             "dir": "up",
-            "steps": 3,
+            "steps": 10,
             "delay": 0.5
           },
           {
             "dir": "right",
-            "steps": 45,
+            "steps": 7,
             "delay": 0.5
           }
         ],
@@ -3009,7 +3004,7 @@
     {
       "key": "t12",
       "x": 47,
-      "y": -1
+      "y": 0
     },
     {
       "key": "mtb2",
@@ -6778,7 +6773,7 @@
     },
     {
       "key": "t2b",
-      "x": 48,
+      "x": 49,
       "y": 2
     },
     {

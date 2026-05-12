@@ -41,6 +41,7 @@ type StatusKind = 'ready' | 'cooldown' | 'maxReached' | 'unknown';
 function getReencounterKind(contact: PhoneContactInfo): StatusKind {
   if (!hasActiveGame()) return 'unknown';
   if (contact.contactType === 'day-care') return 'unknown';
+  if (contact.reencounterConfig?.infinite) return 'ready'; // infinite trainers are always ready
   const pd = getPlayerData();
   const state = pd.trainerEncounters[contact.trainerId];
   if (!state || !contact.reencounterConfig) return 'unknown';
@@ -74,6 +75,8 @@ function getStatusLine(contact: PhoneContactInfo): string {
 
   const state = pd.trainerEncounters[contact.trainerId];
   if (!state) return t('phone.status.notDefeated');
+
+  if (contact.reencounterConfig?.infinite) return t('phone.status.infinite');
 
   if (!contact.reencounterConfig) {
     return t('phone.status.battles', { count: state.count });
@@ -291,6 +294,10 @@ function buildCallDialogue(contact: PhoneContactInfo): string {
 
   const state = pd.trainerEncounters[contact.trainerId];
   if (!state) return t('phone.call.notBeaten', { name });
+
+  if (contact.reencounterConfig?.infinite) {
+    return loc ? t('phone.call.infinite', { name, location: loc }) : t('phone.call.ready', { name });
+  }
 
   if (!contact.reencounterConfig) {
     return loc ? t('phone.call.location', { name, location: loc }) : t('phone.call.ready', { name });

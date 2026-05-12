@@ -1225,16 +1225,31 @@ export class PropertiesPanel {
       const rc = trainer.reencounter;
       if (!rc) return;
 
-      // Count
+      // Infinite rematches toggle
+      const infiniteRow = document.createElement('div');
+      infiniteRow.className = 'prop-row';
+      infiniteRow.innerHTML = '<label>Infinite rematches:</label>';
+      const infiniteCb = document.createElement('input');
+      infiniteCb.type = 'checkbox';
+      infiniteCb.checked = !!rc.infinite;
+      infiniteCb.title =
+        'Allow unlimited rematches. Level boost applies for the first N fights (set by "Level boost count") then caps. Trainer will NOT be added to the phone.';
+      infiniteRow.appendChild(infiniteCb);
+      configDiv.appendChild(infiniteRow);
+
+      // Level boost count (how many times lvlStep applies before capping)
       const countRow = document.createElement('div');
       countRow.className = 'prop-row';
-      countRow.innerHTML = '<label>Max rematches:</label>';
+      countRow.innerHTML = '<label>Level boost count:</label>';
       const countInput = document.createElement('input');
       countInput.type = 'number';
       countInput.min = '1';
       countInput.max = '99';
       countInput.value = String(rc.count ?? 3);
-      countInput.title = 'Total extra battles allowed (e.g. 3 = up to 4 total fights)';
+      countInput.title =
+        rc.infinite
+          ? 'How many fights apply a level boost before the level caps (infinite battles continue at max level)'
+          : 'Total extra rematches allowed after the first defeat';
       countInput.addEventListener('change', () => {
         rc.count = Math.max(1, parseInt(countInput.value, 10) || 1);
         emit();
@@ -1245,13 +1260,13 @@ export class PropertiesPanel {
       // Level step
       const lvlRow = document.createElement('div');
       lvlRow.className = 'prop-row';
-      lvlRow.innerHTML = '<label>Level boost/rematch:</label>';
+      lvlRow.innerHTML = '<label>Level boost/step:</label>';
       const lvlInput = document.createElement('input');
       lvlInput.type = 'number';
       lvlInput.min = '0';
       lvlInput.max = '20';
       lvlInput.value = String(rc.lvlStep ?? 2);
-      lvlInput.title = 'Levels added to all party members for each subsequent fight';
+      lvlInput.title = 'Levels added to all party members per boost step';
       lvlInput.addEventListener('change', () => {
         rc.lvlStep = Math.max(0, parseInt(lvlInput.value, 10) || 0);
         emit();
@@ -1259,14 +1274,17 @@ export class PropertiesPanel {
       lvlRow.appendChild(lvlInput);
       configDiv.appendChild(lvlRow);
 
-      // Add to phone
+      // Add to phone — disabled when infinite
       const phoneRow = document.createElement('div');
       phoneRow.className = 'prop-row';
       phoneRow.innerHTML = '<label>Add to phone:</label>';
       const phoneCb = document.createElement('input');
       phoneCb.type = 'checkbox';
-      phoneCb.checked = rc.addToPhone !== false;
-      phoneCb.title = 'Trainer appears in the phone contacts after first defeat';
+      phoneCb.checked = !rc.infinite && rc.addToPhone !== false;
+      phoneCb.disabled = !!rc.infinite;
+      phoneCb.title = rc.infinite
+        ? 'Infinite trainers are never added to the phone'
+        : 'Trainer appears in the phone contacts after first defeat';
       phoneCb.addEventListener('change', () => {
         if (phoneCb.checked) delete (rc as unknown as Record<string, unknown>)['addToPhone'];
         else rc.addToPhone = false;
@@ -1274,6 +1292,26 @@ export class PropertiesPanel {
       });
       phoneRow.appendChild(phoneCb);
       configDiv.appendChild(phoneRow);
+
+      // Wire infinite toggle: update phone checkbox state and count label
+      infiniteCb.addEventListener('change', () => {
+        if (infiniteCb.checked) {
+          rc.infinite = true;
+          rc.addToPhone = false;
+          phoneCb.checked = false;
+          phoneCb.disabled = true;
+          phoneCb.title = 'Infinite trainers are never added to the phone';
+          countInput.title = 'How many fights apply a level boost before the level caps';
+        } else {
+          delete (rc as unknown as Record<string, unknown>)['infinite'];
+          delete (rc as unknown as Record<string, unknown>)['addToPhone'];
+          phoneCb.checked = true;
+          phoneCb.disabled = false;
+          phoneCb.title = 'Trainer appears in the phone contacts after first defeat';
+          countInput.title = 'Total extra rematches allowed after the first defeat';
+        }
+        emit();
+      });
 
       // ── Trigger conditions (all enabled must pass) ────────────────────────
       const triggerHeader = document.createElement('div');
@@ -2986,6 +3024,22 @@ export class PropertiesPanel {
     });
     loopRow.appendChild(loopCb);
     section.appendChild(loopRow);
+
+    // Floating checkbox
+    const floatingRow = document.createElement('div');
+    floatingRow.className = 'prop-row';
+    floatingRow.innerHTML = '<label>Floating:</label>';
+    const floatingCb = document.createElement('input');
+    floatingCb.type = 'checkbox';
+    floatingCb.checked = !!aw.floating;
+    floatingCb.style.width = 'auto';
+    floatingCb.addEventListener('change', () => {
+      aw.floating = floatingCb.checked || undefined;
+      emit();
+    });
+    floatingRow.appendChild(floatingCb);
+    floatingRow.appendChild(this.makeInfo('Ignores tile walkability and boundaries. Renders above all objects. Stops only at player tile.'));
+    section.appendChild(floatingRow);
 
     this.renderWalkSteps(section, aw.pattern, emit);
 
