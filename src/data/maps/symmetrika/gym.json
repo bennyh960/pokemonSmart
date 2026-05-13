@@ -1,0 +1,64 @@
+{
+  "id": "gym",
+  "tileset": "overworld",
+  "width": 14,
+  "height": 10,
+  "tileSize": 16,
+  "spawn": {
+    "x": 4,
+    "y": 7
+  },
+  "transitions": [
+    {
+      "fromX": 4,
+      "fromY": 8,
+      "toMapId": "symmetrika/symmetrika",
+      "toX": 15,
+      "toY": 14,
+      "returnToPrevious": false
+    },
+    {
+      "fromX": 5,
+      "fromY": 8,
+      "toMapId": "symmetrika/symmetrika",
+      "toX": 16,
+      "toY": 14,
+      "returnToPrevious": false
+    }
+  ],
+  "music": "cave",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "nullx-terminal",
+      "name": {
+        "en": "NULL-X Terminal",
+        "he": "NULL-X Terminal"
+      },
+      "x": 7,
+      "y": 2,
+      "facing": "down",
+      "type": "npc",
+      "spriteType": "char_a42849",
+      "dialogue": [
+        {
+          "en": "ERROR: SIGNAL CORRUPTED. ??? ??? ???",
+          "he": "שגיאה: האות פגום. ??? ??? ???"
+        }
+      ]
+    }
+  ],
+  "area": "Symmetrika",
+  "tiles": [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ]
+}
