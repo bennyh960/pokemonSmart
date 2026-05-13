@@ -98,27 +98,6 @@
       "fromX": 64,
       "fromY": 49,
       "toMapId": "routes/route-5"
-    },
-    {
-      "fromX": 0,
-      "fromY": 17,
-      "toMapId": "routes/route-9",
-      "toX": 38,
-      "toY": 10
-    },
-    {
-      "fromX": 0,
-      "fromY": 18,
-      "toMapId": "routes/route-9",
-      "toX": 38,
-      "toY": 10
-    },
-    {
-      "fromX": 0,
-      "fromY": 19,
-      "toMapId": "routes/route-9",
-      "toX": 38,
-      "toY": 10
     }
   ],
   "npcs": [

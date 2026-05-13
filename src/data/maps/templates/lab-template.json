@@ -1,0 +1,308 @@
+{
+  "id": "lab-template",
+  "tileset": "interior",
+  "width": 15,
+  "height": 15,
+  "tileSize": 16,
+  "spawn": {
+    "x": 7,
+    "y": 13
+  },
+  "transitions": [
+    {
+      "fromX": 7,
+      "fromY": 14,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 6,
+      "fromY": 14,
+      "returnToPrevious": true
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-1778705401882",
+      "x": 6,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום ! במעבדה שלנו חוקרים כל מה שקשור לעולם הפוקימונים"
+        }
+      ],
+      "spriteType": "char_a8fbf3",
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "battle-helper",
+            "quantity": 1
+          }
+        ]
+      },
+      "questions": {
+        "count": 3,
+        "types": ["+", "-"]
+      }
+    },
+    {
+      "id": "npc-1778705516015",
+      "x": 3,
+      "y": 6,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום!"
+        }
+      ],
+      "spriteType": "npc-male",
+      "randomChars": [""],
+      "name": {
+        "en": "Lior",
+        "he": "ליאור"
+      }
+    }
+  ],
+  "music": "town",
+  "encounterTableId": null,
+  "interactiveItems": {},
+  "tiles": [
+    [
+      "w3-r",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-up",
+      "w3-l"
+    ],
+    [
+      "w3-r",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-down",
+      "w3-l"
+    ],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    ["w3-r", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "i10", "w3-l"],
+    [
+      "w3-b3",
+      "w3-1",
+      "w3-1",
+      "w3-1",
+      "w3-1",
+      "w3-1",
+      "black-non-walk",
+      "black-non-walk",
+      "w3-1",
+      "w3-1",
+      "w3-1",
+      "w3-1",
+      "w3-1",
+      "w3-1",
+      "w3-b4"
+    ]
+  ],
+  "objects": [
+    {
+      "key": "labScreen",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "key": "lab5",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "lab5",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "lab4",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "tableworkRight",
+      "x": 1,
+      "y": 4
+    },
+    {
+      "key": "tool-1",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "item-generic",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "key": "box-2",
+      "x": 1,
+      "y": 11
+    },
+    {
+      "key": "box-2",
+      "x": 1,
+      "y": 12
+    },
+    {
+      "key": "i4",
+      "x": 12,
+      "y": 0
+    },
+    {
+      "key": "i4",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "t1-4",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "key": "t1-4",
+      "x": 12,
+      "y": 7
+    },
+    {
+      "key": "t1-4",
+      "x": 12,
+      "y": 8
+    },
+    {
+      "key": "t1-15",
+      "x": 12,
+      "y": 10
+    },
+    {
+      "key": "t1-8",
+      "x": 13,
+      "y": 10
+    },
+    {
+      "key": "t1-7",
+      "x": 12,
+      "y": 10
+    },
+    {
+      "key": "t1-1",
+      "x": 12,
+      "y": 5
+    },
+    {
+      "key": "t1-2",
+      "x": 13,
+      "y": 5
+    },
+    {
+      "key": "t1-5",
+      "x": 13,
+      "y": 6
+    },
+    {
+      "key": "t1-5",
+      "x": 13,
+      "y": 7
+    },
+    {
+      "key": "t1-5",
+      "x": 13,
+      "y": 8
+    },
+    {
+      "key": "t1-5",
+      "x": 13,
+      "y": 9
+    },
+    {
+      "key": "pc-1-back",
+      "x": 13,
+      "y": 8
+    },
+    {
+      "key": "mat-horizontal",
+      "x": 6,
+      "y": 14
+    },
+    {
+      "key": "chair-x1",
+      "x": 11,
+      "y": 9
+    },
+    {
+      "key": "chair-x2",
+      "x": 11,
+      "y": 6
+    },
+    {
+      "key": "laptopLeft",
+      "x": 13,
+      "y": 6
+    },
+    {
+      "key": "t1-5",
+      "x": 12,
+      "y": 9
+    },
+    {
+      "key": "t1-4",
+      "x": 12,
+      "y": 9
+    }
+  ],
+  "objectLayer": [
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+  ]
+}

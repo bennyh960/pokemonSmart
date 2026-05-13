@@ -539,7 +539,7 @@ function renderFlagSection(
     if (!pd || slot === null) return;
     const toClear = [...actRelevant].filter(v => (pd.flags as Record<string, unknown>)[v] !== undefined);
     if (!toClear.length) { alert('No act flags are currently set.'); return; }
-    if (!confirm(`Clear ${toClear.length} act flags from Slot ${slot}?`)) return;
+    if (!confirm(`Clear ${toClear.length} flags for "${act.label}" from Slot ${slot}?`)) return;
     for (const v of toClear) delete (pd.flags as Record<string, unknown>)[v];
     onSave(pd);
     rebuild();
@@ -656,7 +656,7 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
   function render() {
     content.innerHTML = '';
     if (!selectedAct) return;
-    const act = selectedAct;
+    const act: ActInfo = selectedAct;
 
     const cutscenes = getAllCutscenes().filter(c => act.cutsceneIds.includes(c.id));
     const evts      = getStoryEvents().filter(e => act.eventIds.includes(e.id));

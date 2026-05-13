@@ -98,27 +98,6 @@
       "fromX": 64,
       "fromY": 49,
       "toMapId": "routes/route-5"
-    },
-    {
-      "fromX": 0,
-      "fromY": 17,
-      "toMapId": "routes/route-9",
-      "toX": 38,
-      "toY": 10
-    },
-    {
-      "fromX": 0,
-      "fromY": 18,
-      "toMapId": "routes/route-9",
-      "toX": 38,
-      "toY": 10
-    },
-    {
-      "fromX": 0,
-      "fromY": 19,
-      "toMapId": "routes/route-9",
-      "toX": 38,
-      "toY": 10
     }
   ],
   "npcs": [
@@ -634,34 +613,6 @@
       },
       "blocker": true,
       "despawnAfter": "act2-gym-leader-called"
-    },
-    {
-      "id": "npc-1778697520379",
-      "x": 1,
-      "y": 17,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "שלום ! בדיוק באתי משביל 9 ."
-        },
-        {
-          "en": "",
-          "he": "בשל עבודות תשתית הדרך חסומה - לא כדאי לך לעבור מפה כעת."
-        },
-        {
-          "en": "",
-          "he": "אפשר ללכת לעיר מכון דרך שביל 5 שנמצא בדרום העיר."
-        },
-        {
-          "en": "",
-          "he": "שביל 5 יוביל אותך לדיבידיה - עיר מכון הבאה."
-        }
-      ],
-      "spriteType": "char_24117d",
-      "despawnAfter": "story-badge-6",
-      "blocker": true
     }
   ],
   "music": "town",

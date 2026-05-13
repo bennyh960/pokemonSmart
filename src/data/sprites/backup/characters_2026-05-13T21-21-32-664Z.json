@@ -2877,10 +2877,7 @@
       "name": {
         "en": "Swimmer Alex",
         "he": "אלכס השחיין"
-      },
-      "roles": [
-        "swimmers"
-      ]
+      }
     },
     "char_878b8c": {
       "frameWidth": 32,
@@ -2938,10 +2935,7 @@
       "name": {
         "en": "Swimmer Dikla",
         "he": "דקלה"
-      },
-      "roles": [
-        "swimmers"
-      ]
+      }
     },
     "char_fdd391": {
       "frameWidth": 32,

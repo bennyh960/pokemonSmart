@@ -1,0 +1,8 @@
+{
+  "id": "sumville/lab",
+  "template": "lab-template",
+  "label": {
+    "en": "Sumville Lab",
+    "he": "מעבדה סומוויל"
+  }
+}

@@ -30,7 +30,7 @@
         "he": "Collector Primo"
       },
       "x": 0,
-      "y": 2,
+      "y": 3,
       "facing": "right",
       "type": "npc",
       "dialogue": [
@@ -113,7 +113,7 @@
         "he": "Little Max"
       },
       "x": 2,
-      "y": 2,
+      "y": 3,
       "facing": "left",
       "type": "npc",
       "dialogue": [
