@@ -75,6 +75,18 @@ export interface TileMapData {
    * The list length caps how many objects of that key get overridden.
    */
   interactiveItems?: Record<string, InteractiveItemEntry[]>;
+  /** Moveable tile puzzles keyed by puzzle id. */
+  movablePuzzle?: Record<
+    string,
+    {
+      successFlag?: string; // better use Flag constant to set it
+      refRoom?: { x1: number; y1: number; x2: number; y2: number };
+      puzzleRoom: { x1: number; y1: number; x2: number; y2: number };
+      movableTileKeys: string[];
+      baseTile?: string;
+      dialogue?: { en: string; he: string };
+    }
+  >;
   /** Internal — tracks how many transitions/npcs/objects came from the template so saves strip them. */
   _templateCounts?: { transitions: number; npcs: number; objects: number };
 }

@@ -19,13 +19,28 @@
       "fromX": 14,
       "fromY": 31,
       "toMapId": "shared/mart-interior"
+    },
+    {
+      "fromX": 8,
+      "fromY": 16,
+      "toMapId": "symmetrika/gym",
+      "toX": 11,
+      "toY": 44
+    },
+    {
+      "fromX": 32,
+      "fromY": 16,
+      "toMapId": "symmetrika/gym",
+      "toX": 34,
+      "toY": 44
     }
   ],
   "music": "town",
   "encounterTableId": null,
   "npcs": [],
   "area": "Symmetrika",
-  "interactiveItems": {}
+  "interactiveItems": {},
+  "movablePuzzle": {}
 ,
   "tiles": [
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
@@ -44,7 +59,7 @@
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","mg1c","xtest","xtest","xtest","mg1c","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","mg1c","g1","g1","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
-    ["xtest","xtest","xtest","xtest","xtest","xtest","mg1c","xtest","xtest","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","xtest","xtest","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest"],
+    ["xtest","xtest","xtest","xtest","xtest","xtest","mg1c","xtest","bigBuildingXDoor","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","xtest","bigBuildingXDoor","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],

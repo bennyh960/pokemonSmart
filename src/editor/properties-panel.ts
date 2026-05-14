@@ -139,6 +139,9 @@ export class PropertiesPanel {
     // ── Map info (area field) ──
     this.renderMapInfo();
 
+    // ── Moveable puzzles ──
+    this.renderMovablePuzzlePanel();
+
     // ── Related maps ──
     this.renderRelatedMaps();
 
@@ -3261,6 +3264,209 @@ export class PropertiesPanel {
     );
     body.appendChild(areaRow);
 
+    this.container.appendChild(section);
+  }
+
+  private renderMovablePuzzlePanel(): void {
+    const mapData = this.state.mapData as import('../engine/tilemap.js').TileMapData;
+    const section = this.makeSection('Moveable Puzzles', false);
+    const body = PropertiesPanel.sectionBody(section);
+
+    if (!mapData.movablePuzzle) mapData.movablePuzzle = {};
+
+    const renderEntries = (): void => {
+      body.innerHTML = '';
+
+      for (const [id, cfg] of Object.entries(mapData.movablePuzzle!)) {
+        const entry = document.createElement('div');
+        entry.style.cssText = 'border:1px solid #3a4a5a; border-radius:4px; padding:8px; margin-bottom:8px;';
+
+        // ── Header row: ID + delete ──
+        const headerRow = document.createElement('div');
+        headerRow.style.cssText = 'display:flex; align-items:center; gap:6px; margin-bottom:6px;';
+
+        const idInput = document.createElement('input');
+        idInput.type = 'text';
+        idInput.value = id;
+        idInput.style.cssText = 'flex:1; font-family:monospace; font-size:11px;';
+        idInput.title = 'Puzzle ID (unique key)';
+        idInput.addEventListener('change', () => {
+          const newId = idInput.value.trim();
+          if (!newId || newId === id || mapData.movablePuzzle![newId]) return;
+          mapData.movablePuzzle![newId] = mapData.movablePuzzle![id];
+          delete mapData.movablePuzzle![id];
+          this.state.emit('map-modified');
+          renderEntries();
+        });
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '✕';
+        delBtn.title = 'Remove puzzle';
+        delBtn.style.cssText = 'padding:2px 6px; font-size:11px; cursor:pointer;';
+        delBtn.addEventListener('click', () => {
+          delete mapData.movablePuzzle![id];
+          this.state.emit('map-modified');
+          renderEntries();
+        });
+
+        headerRow.appendChild(idInput);
+        headerRow.appendChild(delBtn);
+        entry.appendChild(headerRow);
+
+        // ── Puzzle room bounds ──
+        const puzzleLabel = document.createElement('div');
+        puzzleLabel.style.cssText = 'font-size:11px; color:#8a9aaa; margin-bottom:3px;';
+        puzzleLabel.textContent = 'Puzzle room (x1,y1 → x2,y2):';
+        entry.appendChild(puzzleLabel);
+
+        const boundsRow = (label: string, obj: Record<string, number>, key: string): HTMLElement => {
+          const wrap = document.createElement('span');
+          const lbl = document.createElement('span');
+          lbl.textContent = label;
+          lbl.style.cssText = 'font-size:10px; color:#7a8a9a; margin-right:2px;';
+          const inp = document.createElement('input');
+          inp.type = 'number';
+          inp.value = String(obj[key] ?? 0);
+          inp.style.cssText = 'width:40px; font-size:11px;';
+          inp.addEventListener('change', () => {
+            obj[key] = parseInt(inp.value, 10) || 0;
+            this.state.emit('map-modified');
+          });
+          wrap.appendChild(lbl);
+          wrap.appendChild(inp);
+          return wrap;
+        };
+
+        const pz = cfg.puzzleRoom ?? (cfg.puzzleRoom = { x1: 0, y1: 0, x2: 0, y2: 0 });
+        const pzRow = document.createElement('div');
+        pzRow.style.cssText = 'display:flex; gap:6px; flex-wrap:wrap; margin-bottom:6px;';
+        pzRow.appendChild(boundsRow('x1:', pz as unknown as Record<string, number>, 'x1'));
+        pzRow.appendChild(boundsRow('y1:', pz as unknown as Record<string, number>, 'y1'));
+        pzRow.appendChild(boundsRow('x2:', pz as unknown as Record<string, number>, 'x2'));
+        pzRow.appendChild(boundsRow('y2:', pz as unknown as Record<string, number>, 'y2'));
+        entry.appendChild(pzRow);
+
+        // ── Moveable tile keys ──
+        const keysRow = document.createElement('div');
+        keysRow.className = 'prop-row';
+        const keysLabel = document.createElement('label');
+        keysLabel.textContent = 'Tile keys:';
+        const keysInput = document.createElement('input');
+        keysInput.type = 'text';
+        keysInput.value = (cfg.movableTileKeys ?? []).join(', ');
+        keysInput.placeholder = 'chair2F, home-flower';
+        keysInput.title = 'Comma-separated tile keys that are moveable in the puzzle room';
+        keysInput.addEventListener('change', () => {
+          cfg.movableTileKeys = keysInput.value.split(',').map((s) => s.trim()).filter(Boolean);
+          this.state.emit('map-modified');
+        });
+        keysRow.appendChild(keysLabel);
+        keysRow.appendChild(keysInput);
+        entry.appendChild(keysRow);
+
+        // ── Base tile (optional) ──
+        const baseRow = document.createElement('div');
+        baseRow.className = 'prop-row';
+        const baseLabel = document.createElement('label');
+        baseLabel.textContent = 'Base tile:';
+        const baseInput = document.createElement('input');
+        baseInput.type = 'text';
+        baseInput.value = cfg.baseTile ?? '';
+        baseInput.placeholder = 'e.g. f4 (optional)';
+        baseInput.title = 'Floor tile key placed under moveable objects when they slide off';
+        baseInput.addEventListener('change', () => {
+          const v = baseInput.value.trim();
+          cfg.baseTile = v || undefined;
+          this.state.emit('map-modified');
+        });
+        baseRow.appendChild(baseLabel);
+        baseRow.appendChild(baseInput);
+        entry.appendChild(baseRow);
+
+        // ── Success flag toggle ──
+        const flagRow = document.createElement('div');
+        flagRow.className = 'prop-row';
+        const flagCheck = document.createElement('input');
+        flagCheck.type = 'checkbox';
+        flagCheck.id = `puz-flag-${id}`;
+        flagCheck.checked = !!cfg.successFlag;
+        const flagCheckLabel = document.createElement('label');
+        flagCheckLabel.htmlFor = `puz-flag-${id}`;
+        flagCheckLabel.textContent = 'Success flag + ref room';
+        flagCheckLabel.style.cssText = 'font-size:11px; cursor:pointer;';
+        flagRow.appendChild(flagCheck);
+        flagRow.appendChild(flagCheckLabel);
+        entry.appendChild(flagRow);
+
+        // ── Success flag input + ref room (shown only when checkbox is on) ──
+        const flagDetails = document.createElement('div');
+        flagDetails.style.display = cfg.successFlag ? 'block' : 'none';
+
+        const flagInputRow = document.createElement('div');
+        flagInputRow.className = 'prop-row';
+        const flagLabel = document.createElement('label');
+        flagLabel.textContent = 'Flag key:';
+        const flagInput = document.createElement('input');
+        flagInput.type = 'text';
+        flagInput.value = cfg.successFlag ?? '';
+        flagInput.placeholder = 'puzzle-symetria-gym-f1';
+        flagInput.addEventListener('change', () => {
+          cfg.successFlag = flagInput.value.trim() || undefined;
+          this.state.emit('map-modified');
+        });
+        flagInputRow.appendChild(flagLabel);
+        flagInputRow.appendChild(flagInput);
+        flagDetails.appendChild(flagInputRow);
+
+        const refLabel = document.createElement('div');
+        refLabel.style.cssText = 'font-size:11px; color:#8a9aaa; margin-bottom:3px; margin-top:4px;';
+        refLabel.textContent = 'Ref room (x1,y1 → x2,y2):';
+        flagDetails.appendChild(refLabel);
+
+        const ref = cfg.refRoom ?? (cfg.refRoom = { x1: 0, y1: 0, x2: 0, y2: 0 });
+        const refRow = document.createElement('div');
+        refRow.style.cssText = 'display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px;';
+        refRow.appendChild(boundsRow('x1:', ref as unknown as Record<string, number>, 'x1'));
+        refRow.appendChild(boundsRow('y1:', ref as unknown as Record<string, number>, 'y1'));
+        refRow.appendChild(boundsRow('x2:', ref as unknown as Record<string, number>, 'x2'));
+        refRow.appendChild(boundsRow('y2:', ref as unknown as Record<string, number>, 'y2'));
+        flagDetails.appendChild(refRow);
+
+        entry.appendChild(flagDetails);
+
+        flagCheck.addEventListener('change', () => {
+          if (flagCheck.checked) {
+            flagDetails.style.display = 'block';
+            if (!cfg.successFlag) flagInput.focus();
+          } else {
+            flagDetails.style.display = 'none';
+            cfg.successFlag = undefined;
+            cfg.refRoom = undefined;
+            flagInput.value = '';
+            this.state.emit('map-modified');
+          }
+        });
+
+        body.appendChild(entry);
+      }
+
+      // ── Add puzzle button ──
+      const addBtn = document.createElement('button');
+      addBtn.textContent = '+ Add Puzzle';
+      addBtn.style.cssText = 'width:100%; padding:4px; font-size:11px; cursor:pointer; margin-top:2px;';
+      addBtn.addEventListener('click', () => {
+        const newId = `puzzle-${Date.now()}`;
+        mapData.movablePuzzle![newId] = {
+          puzzleRoom: { x1: 0, y1: 0, x2: 0, y2: 0 },
+          movableTileKeys: [],
+        };
+        this.state.emit('map-modified');
+        renderEntries();
+      });
+      body.appendChild(addBtn);
+    };
+
+    renderEntries();
     this.container.appendChild(section);
   }
 

@@ -107,6 +107,25 @@
         "itemId": "thunder-stone"
       }
     ]
+  },
+  "movablePuzzle": {
+    "puzzle-1778765538608": {
+      "puzzleRoom": {
+        "x1": 18,
+        "y1": 0,
+        "x2": 22,
+        "y2": 5
+      },
+      "movableTileKeys": [
+        "r1"
+      ],
+      "refRoom": {
+        "x1": 0,
+        "y1": 0,
+        "x2": 0,
+        "y2": 0
+      }
+    }
   }
 ,
   "tiles": [
@@ -565,6 +584,11 @@
     {
       "key": "item-generic",
       "x": 11,
+      "y": 1
+    },
+    {
+      "key": "r1",
+      "x": 20,
       "y": 1
     }
   ]

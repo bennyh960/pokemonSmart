@@ -93,6 +93,7 @@ import charactersManifest from '../data/sprites/characters.json';
 import type { SimpleOpType } from '../math/simple-input-question.js';
 import { getPlayerBirthYear, gradeFromBirthYear } from '../data/story/global-gate-config.js';
 import { allTrainersDefeatedFlag } from '../data/story/flags.js';
+import * as MovablePuzzle from '../systems/movable-puzzle.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -1651,6 +1652,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     currentMapData = data;
     const tileset = data.tileset ? getTileset(data.tileset) : null;
 
+    // Init moveable puzzle tiles before object filtering so they can be captured then removed
+    MovablePuzzle.init(data as import('../engine/tilemap.js').TileMapData, tileset ?? undefined);
+
     // Filter out collected item objects and already-cut/moved obstacles
     if (data.objects && tileset && hasActiveGame()) {
       const flags = getPlayerData().flags;
@@ -1668,6 +1672,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return true;
       });
     }
+
+    // Remove puzzle-room moveable tiles so tilemap treats those cells as walkable floor
+    if (data.objects) data.objects = MovablePuzzle.filterObjects(data.objects);
 
     tileMap = createTileMap(data as TileMapData, tileset);
     setCurrentMapId(mapId);
@@ -1879,6 +1886,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (mapLoading || !tileMap) {
         return;
       }
+
+      MovablePuzzle.update(dt);
 
       // console.log(stateMachine.currentId());
       // if (stateMachine.currentId() === 'OVERWORLD') {
@@ -3410,6 +3419,23 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const baseWalkable = tileMap.isWalkable(nx, ny);
             let walkable = baseWalkable;
 
+            // Moveable puzzle tile at target cell?
+            if (walkable) {
+              const movTile = MovablePuzzle.getTileAt(nx, ny);
+              if (movTile) {
+                const pushed = MovablePuzzle.tryPush(nx, ny, dir.dx, dir.dy, (x, y) => tileMap!.isWalkable(x, y));
+                if (pushed) {
+                  audio.playSFX('hit');
+                  if (hasActiveGame()) {
+                    const solved = MovablePuzzle.checkSymmetry(getPlayerData());
+                    if (solved) audio.playSFX('item-found');
+                  }
+                } else {
+                  walkable = false;
+                }
+              }
+            }
+
             if (!walkable && isCurrentlySurfing) {
               // While surfing, water tiles become walkable
               const encTypes = tileMap.getEncounterTypes(nx, ny);
@@ -3497,6 +3523,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       for (const r of objRenderables.ground) r.render();
       // Body objects (trees, buildings) participate in Y-sort
       renderables.push(...objRenderables.body);
+      // Moveable puzzle tiles participate in the same Y-sort as the player
+      renderables.push(...MovablePuzzle.getRenderables(ctx, camera.x, camera.y));
 
       // Player (hidden during cutscenes that call hide-player)
       const psx = Math.floor(player.pixelX - camera.x);
