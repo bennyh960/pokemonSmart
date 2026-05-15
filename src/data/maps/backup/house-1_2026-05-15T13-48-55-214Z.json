@@ -1,0 +1,22 @@
+{
+  "id": "dividia-house-1",
+  "name": "Riverside Cottage",
+  "template": "house-small",
+  "area": "Dividia",
+  "npcs": [
+    {
+      "id": "dividia-h1-npc",
+      "name": { "en": "River Watcher", "he": "River Watcher" },
+      "x": 1,
+      "y": 6,
+      "facing": "up",
+      "type": "npc",
+      "dialogue": [
+        { "en": "I watch the river from my window every day.", "he": "" },
+        { "en": "It divides the city, but the bridges unite us!", "he": "" },
+        { "en": "Did you know division and fractions are the same thing?", "he": "" }
+      ],
+      "spriteType": "npc-m"
+    }
+  ]
+}

@@ -1,22 +1,60 @@
 {
-  "id": "dividia-house-1",
+  "id": "house-1",
   "name": "Riverside Cottage",
   "template": "house-small",
+  "tileset": "interior",
   "area": "Dividia",
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 6,
+    "y": 13
+  },
   "npcs": [
     {
       "id": "dividia-h1-npc",
-      "name": { "en": "River Watcher", "he": "River Watcher" },
-      "x": 1,
+      "name": {
+        "en": "Bob",
+        "he": "בוב"
+      },
+      "x": 2,
       "y": 6,
       "facing": "up",
       "type": "npc",
       "dialogue": [
-        { "en": "I watch the river from my window every day.", "he": "" },
-        { "en": "It divides the city, but the bridges unite us!", "he": "" },
-        { "en": "Did you know division and fractions are the same thing?", "he": "" }
+        {
+          "en": "",
+          "he": "היי מה נשמע?"
+        }
       ],
-      "spriteType": "npc-m"
+      "spriteType": "char_6f0793"
     }
-  ]
+  ],
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "super-potion",
+        "itemQty": 3
+      },
+      {
+        "itemId": "potion",
+        "itemQty": 6
+      },
+      {
+        "itemId": "poke-ball",
+        "itemQty": 5
+      },
+      {
+        "itemId": "great-ball",
+        "itemQty": 3
+      },
+      {
+        "itemId": "ultra-ball",
+        "itemQty": 1
+      },
+      {
+        "itemId": "pokedex-battery"
+      }
+    ]
+  }
 }
