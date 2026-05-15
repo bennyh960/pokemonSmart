@@ -299,7 +299,8 @@ export class CanvasViewport {
 
   private renderLoop(): void {
     this.rafId = requestAnimationFrame(() => this.renderLoop());
-    if (!this.dirty) return;
+    const needsBlink = this.state.blinkSelectedTransition && this.state.selectedTransitionIndex !== null;
+    if (!this.dirty && !needsBlink) return;
     this.dirty = false;
     this.render();
   }
@@ -452,21 +453,46 @@ export class CanvasViewport {
 
     // ── Transition markers ──
     if (this.state.showTransitions && this.state.mapData.transitions) {
-      ctx.fillStyle = 'rgba(50, 100, 255, 0.35)';
       const selTIdx = this.state.selectedTransitionIndex;
+      const blinkActive = this.state.blinkSelectedTransition && selTIdx !== null;
+      const blinkOn = Math.floor(performance.now() / 500) % 2 === 0;
+      const fontSize = Math.max(7, tilePixels * 0.28);
+      ctx.font = `bold ${fontSize}px Inter`;
+
       this.state.mapData.transitions.forEach((t, i) => {
-        const drawX = Math.floor(t.fromX * tilePixels - scrollX);
-        const drawY = Math.floor(t.fromY * tilePixels - scrollY);
-        ctx.fillStyle = selTIdx === i ? 'rgba(80, 160, 255, 0.6)' : 'rgba(50, 100, 255, 0.35)';
-        ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
-        ctx.fillStyle = '#fff';
-        ctx.font = `${Math.max(8, tilePixels * 0.3)}px Inter`;
-        ctx.fillText('T', drawX + 2, drawY + tilePixels * 0.5);
-        // Selection outline
-        if (selTIdx === i) {
-          ctx.strokeStyle = '#55aaff';
-          ctx.lineWidth = 2;
-          ctx.strokeRect(drawX + 1, drawY + 1, tilePixels - 2, tilePixels - 2);
+        const label = `T${i + 1}`;
+        const isSelected = selTIdx === i;
+        const hidden = blinkActive && isSelected && !blinkOn;
+
+        // Source marker (blue)
+        if (!hidden) {
+          const drawX = Math.floor(t.fromX * tilePixels - scrollX);
+          const drawY = Math.floor(t.fromY * tilePixels - scrollY);
+          ctx.fillStyle = isSelected ? 'rgba(80, 160, 255, 0.65)' : 'rgba(50, 100, 255, 0.35)';
+          ctx.fillRect(drawX, drawY, tilePixels, tilePixels);
+          ctx.fillStyle = '#fff';
+          ctx.fillText(label, drawX + 2, drawY + tilePixels * 0.55);
+          if (isSelected) {
+            ctx.strokeStyle = '#55aaff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(drawX + 1, drawY + 1, tilePixels - 2, tilePixels - 2);
+          }
+        }
+
+        // Destination marker (orange) — shown when toX/toY are defined
+        if (t.toX != null && t.toY != null && !hidden) {
+          const dstLabel = `t${i + 1}`;
+          const dstX = Math.floor(t.toX * tilePixels - scrollX);
+          const dstY = Math.floor(t.toY * tilePixels - scrollY);
+          ctx.fillStyle = isSelected ? 'rgba(255, 140, 30, 0.65)' : 'rgba(220, 100, 20, 0.35)';
+          ctx.fillRect(dstX, dstY, tilePixels, tilePixels);
+          ctx.fillStyle = '#fff';
+          ctx.fillText(dstLabel, dstX + 2, dstY + tilePixels * 0.55);
+          if (isSelected) {
+            ctx.strokeStyle = '#ffaa44';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(dstX + 1, dstY + 1, tilePixels - 2, tilePixels - 2);
+          }
         }
       });
     }

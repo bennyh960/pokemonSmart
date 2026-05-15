@@ -60,6 +60,7 @@ export class Toolbar {
         <button id="btn-zoom-in" title="Zoom In (+)">+</button>
         <button id="btn-grid" class="toggle-btn active" title="Toggle Grid (Ctrl+G)">Grid</button>
         <button id="btn-walk" class="toggle-btn" title="Walkability Overlay">Walk</button>
+        <button id="btn-blink-trans" class="toggle-btn" title="Blink selected transition markers">Blink T</button>
         <button id="btn-resize" title="Resize Map">↔ Resize</button>
         <button id="btn-meta" title="Map Settings">⚙ Settings</button>
       </div>
@@ -271,6 +272,13 @@ export class Toolbar {
     btnWalk.addEventListener('click', () => {
       state.showWalkability = !state.showWalkability;
       btnWalk.classList.toggle('active', state.showWalkability);
+      state.emit('viewport-changed');
+    });
+
+    const btnBlinkTrans = container.querySelector('#btn-blink-trans') as HTMLElement;
+    btnBlinkTrans.addEventListener('click', () => {
+      state.blinkSelectedTransition = !state.blinkSelectedTransition;
+      btnBlinkTrans.classList.toggle('active', state.blinkSelectedTransition);
       state.emit('viewport-changed');
     });
 

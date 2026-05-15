@@ -24,6 +24,7 @@ export class EditorState {
   showGrid = true;
   showWalkability = false;
   showTransitions = true;
+  blinkSelectedTransition = false;
 
   // ── Selection ──
   selectedNpcId: string | null = null;
