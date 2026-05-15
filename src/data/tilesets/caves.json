@@ -1315,6 +1315,38 @@
           "dy": 0
         }
       ]
+    },
+    {
+      "key": "ladder-up-2",
+      "sx": 128,
+      "sy": 0,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "interactType": null
+    },
+    {
+      "key": "ladder-up-1",
+      "sx": 128,
+      "sy": 16,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "interactType": null
+    },
+    {
+      "key": "ladder-up-3",
+      "sx": 128,
+      "sy": 32,
+      "w": 32,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "interactType": null,
+      "description": "shadow"
     }
   ]
 }

@@ -42,7 +42,7 @@
     {
       "fromX": 24,
       "fromY": 28,
-      "toMapId": "routes/route-7-cave2"
+      "toMapId": "routes/route-7-cave1"
     },
     {
       "fromX": 18,
@@ -472,7 +472,9 @@
   "label": {
     "en": "Route 7",
     "he": "שביל 7"
-  }
+  },
+  "movablePuzzle": {},
+  "flagListeners": []
 ,
   "tiles": [
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],

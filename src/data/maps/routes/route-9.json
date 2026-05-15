@@ -47,6 +47,13 @@
       "toMapId": "symmetrika/symmetrika",
       "toX": 39,
       "toY": 18
+    },
+    {
+      "fromX": 21,
+      "fromY": 2,
+      "toMapId": "routes/route-9-cave",
+      "toX": 20,
+      "toY": 3
     }
   ],
   "npcs": [],
