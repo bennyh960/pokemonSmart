@@ -243,7 +243,7 @@
     },
     {
       "id": "npc-1778613847701",
-      "x": 37,
+      "x": 34,
       "y": 3,
       "facing": "down",
       "type": "gate-guard",
@@ -280,17 +280,15 @@
   ],
   "music": "town",
   "encounterTableId": null,
-  "interactiveItems": {},
-  "movablePuzzle": {},
-  "flagListeners": []
+  "interactiveItems": {}
 ,
   "tiles": [
     ["g1","g1","g1","g1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["s1-5","s1-5","s1-5","cs1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","b6-door","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","door-gym","gre-c","gre-c","gre-c","gre-c","gre-c","b6-door","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
-    ["wt1t","wt1r","s1-5","cs1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5"],
-    ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5"],
-    ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5"],
+    ["wt1t","wt1r","s1-5","cs1","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
     ["wt1","wt1tr","cs1","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","gre-c","gre-c","gre-c","xtest","xtest","xtest"],
@@ -476,6 +474,36 @@
       "key": "gre5",
       "x": 37,
       "y": 6
+    },
+    {
+      "key": "s1-2",
+      "x": 39,
+      "y": 3
+    },
+    {
+      "key": "s1-2",
+      "x": 38,
+      "y": 3
+    },
+    {
+      "key": "s1-2",
+      "x": 37,
+      "y": 3
+    },
+    {
+      "key": "s1-2",
+      "x": 36,
+      "y": 3
+    },
+    {
+      "key": "s1-2",
+      "x": 35,
+      "y": 3
+    },
+    {
+      "key": "s1-2",
+      "x": 34,
+      "y": 3
     },
     {
       "key": "s1-2",
@@ -715,6 +743,16 @@
     {
       "key": "s1-8",
       "x": 30,
+      "y": 5
+    },
+    {
+      "key": "s1-8",
+      "x": 36,
+      "y": 5
+    },
+    {
+      "key": "s1-8",
+      "x": 39,
       "y": 5
     },
     {
@@ -1273,6 +1311,11 @@
       "y": 5
     },
     {
+      "key": "s1jbr",
+      "x": 34,
+      "y": 5
+    },
+    {
       "key": "s1jbl",
       "x": 31,
       "y": 5
@@ -1416,6 +1459,16 @@
       "key": "gre5",
       "x": 37,
       "y": 20
+    },
+    {
+      "key": "gre5",
+      "x": 37,
+      "y": 5
+    },
+    {
+      "key": "s1-8",
+      "x": 37,
+      "y": 5
     },
     {
       "key": "g3",
@@ -1626,6 +1679,66 @@
       "key": "g5",
       "x": 8,
       "y": 11
+    },
+    {
+      "key": "f1-7",
+      "x": 39,
+      "y": 5
+    },
+    {
+      "key": "f1-7",
+      "x": 38,
+      "y": 5
+    },
+    {
+      "key": "f1-7",
+      "x": 37,
+      "y": 5
+    },
+    {
+      "key": "f1-7",
+      "x": 36,
+      "y": 5
+    },
+    {
+      "key": "f1-7",
+      "x": 35,
+      "y": 3
+    },
+    {
+      "key": "f1-7",
+      "x": 36,
+      "y": 3
+    },
+    {
+      "key": "f1-7",
+      "x": 37,
+      "y": 3
+    },
+    {
+      "key": "f1-7",
+      "x": 38,
+      "y": 3
+    },
+    {
+      "key": "f1-7",
+      "x": 39,
+      "y": 3
+    },
+    {
+      "key": "t8",
+      "x": 38,
+      "y": 5
+    },
+    {
+      "key": "s1-8",
+      "x": 35,
+      "y": 5
+    },
+    {
+      "key": "f1-7",
+      "x": 35,
+      "y": 5
     },
     {
       "key": "f2c",
@@ -2041,51 +2154,6 @@
       "key": "f1-7",
       "x": 21,
       "y": 39
-    },
-    {
-      "key": "s1-6",
-      "x": 34,
-      "y": 4
-    },
-    {
-      "key": "s1-6",
-      "x": 34,
-      "y": 5
-    },
-    {
-      "key": "gre5",
-      "x": 37,
-      "y": 5
-    },
-    {
-      "key": "gre5",
-      "x": 37,
-      "y": 4
-    },
-    {
-      "key": "gre5",
-      "x": 37,
-      "y": 3
-    },
-    {
-      "key": "f1-1",
-      "x": 38,
-      "y": 5
-    },
-    {
-      "key": "f1-7",
-      "x": 39,
-      "y": 5
-    },
-    {
-      "key": "t8",
-      "x": 38,
-      "y": 5
-    },
-    {
-      "key": "s1-3",
-      "x": 34,
-      "y": 3
     }
   ]
 }

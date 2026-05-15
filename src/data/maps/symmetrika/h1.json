@@ -1,0 +1,48 @@
+{
+  "id": "h-1-doo",
+  "template": "house-1",
+  "tileset": "interior",
+  "label": {
+    "en": "Some House",
+    "he": "בית מסוים"
+  },
+  "music": "town3",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 11,
+    "y": 18
+  },
+  "npcs": [
+    {
+      "id": "npc-1776945791301",
+      "x": 21,
+      "y": 10,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "הארכיטקרטורה שלנו היא סימטריה!"
+        }
+      ],
+      "spriteType": "char_1b9be7",
+      "name": {
+        "en": "Jenny",
+        "he": "ג'ני"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "pokedex-battery",
+            "quantity": 2
+          }
+        ]
+      },
+      "questions": {
+        "count": 2,
+        "types": ["*"]
+      }
+    }
+  ]
+}

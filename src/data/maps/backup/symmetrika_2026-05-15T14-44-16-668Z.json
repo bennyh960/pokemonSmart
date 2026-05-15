@@ -72,16 +72,6 @@
       "fromX": 40,
       "fromY": 19,
       "toMapId": "routes/route-9"
-    },
-    {
-      "fromX": 32,
-      "fromY": 23,
-      "toMapId": "symmetrika/h1"
-    },
-    {
-      "fromX": 8,
-      "fromY": 23,
-      "toMapId": "symmetrika/symmetrika"
     }
   ],
   "music": "town",
@@ -214,7 +204,7 @@
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
-    ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","wallstrip2-door","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","wallstrip2-door","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
+    ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mtcb2","mtcb2"],
     ["mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mtcb2","mtcb2"],
     ["mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mtcb2","mtcb2"],
