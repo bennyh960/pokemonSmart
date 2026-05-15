@@ -33,28 +33,12 @@
       "toMapId": "multiplia/multiplia",
       "toX": 1,
       "toY": 18
-    },
-    {
-      "fromX": 0,
-      "fromY": 4,
-      "toMapId": "symmetrika/symmetrika",
-      "toX": 39,
-      "toY": 18
-    },
-    {
-      "fromX": 0,
-      "fromY": 5,
-      "toMapId": "symmetrika/symmetrika",
-      "toX": 39,
-      "toY": 18
     }
   ],
   "npcs": [],
   "music": "route",
   "encounterTableId": null,
-  "interactiveItems": {},
-  "movablePuzzle": {},
-  "flagListeners": []
+  "interactiveItems": {}
 ,
   "tiles": [
     ["mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","g2","g2","g2","g2"],
@@ -63,10 +47,10 @@
     ["xtest","xtest","stairs","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mtbr1-3","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtbr1-2","mtcb2","mtcb2","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","g2","g2","g2","g2"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtbr1-2","mtcb2","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1br","g2","g2","g2","g2"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
-    ["s1-5","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-rock1","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
-    ["mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
-    ["mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
-    ["mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-rock1","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
+    ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
+    ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
+    ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
     ["mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
     ["mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-rock1","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-rock1","cave-eg","mtcb2","mtcb2","s1-5","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
     ["mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","g2","g2","s1-5","mtcb2","mtcb2","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","s1-5","g2","g2","g2","g2","g2","mtcb2","g2","g2","g2","g2","g2","g2","g2"],
@@ -671,6 +655,16 @@
     },
     {
       "key": "mtc1",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "key": "mtc1",
+      "x": 1,
+      "y": 9
+    },
+    {
+      "key": "mtc1",
       "x": 2,
       "y": 9
     },
@@ -1256,6 +1250,21 @@
     },
     {
       "key": "g3",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "g3",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "key": "g3",
+      "x": 1,
+      "y": 8
+    },
+    {
+      "key": "g3",
       "x": 2,
       "y": 8
     },
@@ -1298,6 +1307,11 @@
       "key": "t2b",
       "x": 37,
       "y": 4
+    },
+    {
+      "key": "g3",
+      "x": 1,
+      "y": 7
     },
     {
       "key": "g3",
@@ -1573,6 +1587,16 @@
       "key": "s1-2",
       "x": 36,
       "y": 8
+    },
+    {
+      "key": "s1-8",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "key": "s1-8",
+      "x": 1,
+      "y": 6
     },
     {
       "key": "s1-8",
@@ -2078,26 +2102,6 @@
       "key": "g8tr",
       "x": 38,
       "y": 17
-    },
-    {
-      "key": "mtcr",
-      "x": 1,
-      "y": 8
-    },
-    {
-      "key": "mtcr",
-      "x": 1,
-      "y": 7
-    },
-    {
-      "key": "mttr1",
-      "x": 1,
-      "y": 6
-    },
-    {
-      "key": "mtc1",
-      "x": 0,
-      "y": 6
     }
   ],
   "objectLayer": [
