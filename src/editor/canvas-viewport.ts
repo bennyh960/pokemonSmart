@@ -458,6 +458,7 @@ export class CanvasViewport {
       const blinkOn = Math.floor(performance.now() / 500) % 2 === 0;
       const fontSize = Math.max(7, tilePixels * 0.28);
       ctx.font = `bold ${fontSize}px Inter`;
+      const currentMapId = this.state.mapData.id;
 
       this.state.mapData.transitions.forEach((t, i) => {
         const label = `T${i + 1}`;
@@ -479,8 +480,8 @@ export class CanvasViewport {
           }
         }
 
-        // Destination marker (orange) — shown when toX/toY are defined
-        if (t.toX != null && t.toY != null && !hidden) {
+        // Same-map destination marker (orange) — only valid when toMapId matches this map
+        if (!hidden && t.toX != null && t.toY != null && t.toMapId === currentMapId) {
           const dstLabel = `t${i + 1}`;
           const dstX = Math.floor(t.toX * tilePixels - scrollX);
           const dstY = Math.floor(t.toY * tilePixels - scrollY);
