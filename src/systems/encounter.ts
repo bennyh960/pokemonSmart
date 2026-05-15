@@ -36,7 +36,7 @@ export interface EncounterTable {
   entries: EncounterEntry[];
 }
 
-const DEFAULT_ENCOUNTER_RATE = 0.1;
+const DEFAULT_ENCOUNTER_RATE = 0.05;
 const TRAINER_XP_MULTIPLIER = 1.5;
 const MAX_CATCH_RATE = 255;
 const MAX_RARITY_XP_BONUS = 0.15;
@@ -118,7 +118,8 @@ const defaultMovesByType: Record<string, number[]> = {
 
 /** Box-Muller normal distribution sample (mean=0, sd=1). */
 function gaussianRandom(): number {
-  let u = 0, v = 0;
+  let u = 0,
+    v = 0;
   while (u === 0) u = Math.random();
   while (v === 0) v = Math.random();
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
@@ -220,7 +221,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
 export function generateWildEncounter(mapId: string, tileTypes?: string[] | null): Pokemon | null {
   const table = encounterTables[mapId];
   if (!table || table.entries.length === 0) {
-    const fallback = encounterTables['test-map'];
+    const fallback = encounterTables['default-map'];
     if (!fallback) return null;
     return rollEncounter(fallback, tileTypes);
   }
@@ -251,7 +252,12 @@ function parseEncounterFilter(tileTypes: string[]): {
       excludeMode = 'every';
       raw = raw.slice(0, -1);
     }
-    const exclude = raw ? raw.split(',').map((s) => s.trim()).filter(Boolean) : [];
+    const exclude = raw
+      ? raw
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
     return { mode: 'all', include: [], exclude, excludeMode };
   }
   return { mode: 'include', include: tileTypes, exclude: [], excludeMode: 'every' };
