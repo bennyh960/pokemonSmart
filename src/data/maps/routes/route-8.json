@@ -50,6 +50,20 @@
       "toMapId": "fractalis/gymHouse",
       "toX": 8,
       "toY": 1
+    },
+    {
+      "fromX": 8,
+      "fromY": 0,
+      "toMapId": "symmetrika/symmetrika",
+      "toX": 20,
+      "toY": 38
+    },
+    {
+      "fromX": 9,
+      "fromY": 0,
+      "toMapId": "symmetrika/symmetrika",
+      "toX": 20,
+      "toY": 38
     }
   ],
   "npcs": [
@@ -269,6 +283,246 @@
         ]
       },
       "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1778832654140",
+      "x": 38,
+      "y": 6,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "אני מתאמן לקראת מכון סימטריה - מכון פוקימונים על חושיים ! מסוכן ללכת לשם ללא אימון מספק"
+        }
+      ],
+      "spriteType": "char_10af6a",
+      "party": [
+        {
+          "pokemonId": 217,
+          "level": 40,
+          "moves": []
+        },
+        {
+          "pokemonId": 112,
+          "level": 40,
+          "moves": []
+        },
+        {
+          "pokemonId": 125,
+          "level": 40,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 800
+      },
+      "postBattleDialogue": [],
+      "name": {
+        "en": "Rick",
+        "he": "ריק"
+      },
+      "spawnAfter": "story-badge-5",
+      "questions": {
+        "count": 4,
+        "types": []
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 20,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 20,
+            "delay": 2.5
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-1778832948715",
+      "x": 25,
+      "y": 39,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "נוף יפה ! לא?"
+        }
+      ],
+      "spriteType": "char_0502ea",
+      "name": {
+        "en": "Noa",
+        "he": "נועה"
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "poke-ball",
+            "quantity": 3
+          }
+        ]
+      },
+      "spawnAfter": "story-badge-5"
+    },
+    {
+      "id": "npc-1778833032814",
+      "x": 11,
+      "y": 28,
+      "facing": "right",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שביל 8 מחבר בין פרקטליס לסימטריה."
+        },
+        {
+          "en": "",
+          "he": "יש הרבה פוקימוני פרא באזור - אבל הרבה נדבקו בגליץ הנוראי. מקווה יום יבוא ונצליח למצוא תרופה"
+        }
+      ],
+      "spriteType": "char_c2b2c1",
+      "spawnAfter": "story-badge-5",
+      "despawnAfter": "story-badge-7",
+      "name": {
+        "en": "Joey",
+        "he": "ג'ואי"
+      },
+      "party": [
+        {
+          "pokemonId": 28,
+          "level": 35,
+          "moves": []
+        },
+        {
+          "pokemonId": 22,
+          "level": 37,
+          "moves": []
+        },
+        {
+          "pokemonId": 160,
+          "level": 40,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 900
+      },
+      "postBattleDialogue": [],
+      "questions": {
+        "count": 3,
+        "types": []
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 20,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 20,
+            "delay": 3
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-rival-route8",
+      "x": 8,
+      "y": 2,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום חבר!"
+        },
+        {
+          "en": "",
+          "he": "טוב שבאת - חייב לערוך קרב אימון לפני מכון סימטריה ."
+        }
+      ],
+      "spriteType": "rival-reminder",
+      "spawnAfter": "story-badge-5",
+      "party": [
+        {
+          "pokemonId": 18,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 247,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 97,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 59,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 3,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 128,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 3000,
+        "items": [
+          {
+            "itemId": "x-sp-atk",
+            "quantity": 1
+          },
+          {
+            "itemId": "x-speed",
+            "quantity": 1
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "בהחלט קרב אימון מעולה!"
+        },
+        {
+          "en": "",
+          "he": "טוב המבחן האמיתי יהיה הקרב מול מנהיגת המכון - שמעתי שהיא קשוחה ממש!"
+        }
+      ],
+      "despawnOnDefeat": true,
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 0
+          }
+        ]
+      }
     }
   ],
   "music": "town3",
@@ -288,7 +542,9 @@
         "itemId": "antidote"
       }
     ]
-  }
+  },
+  "movablePuzzle": {},
+  "flagListeners": []
 ,
   "tiles": [
     ["g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],

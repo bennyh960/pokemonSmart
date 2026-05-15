@@ -142,6 +142,9 @@ export class PropertiesPanel {
     // ── Moveable puzzles ──
     this.renderMovablePuzzlePanel();
 
+    // ── Flag listeners (reactive spawn/despawn) ──
+    this.renderFlagListenersPanel();
+
     // ── Related maps ──
     this.renderRelatedMaps();
 
@@ -3462,6 +3465,118 @@ export class PropertiesPanel {
         };
         this.state.emit('map-modified');
         renderEntries();
+      });
+      body.appendChild(addBtn);
+    };
+
+    renderEntries();
+    this.container.appendChild(section);
+  }
+
+  private renderFlagListenersPanel(): void {
+    type FL = NonNullable<import('../engine/tilemap.js').TileMapData['flagListeners']>[number];
+    const mapData = this.state.mapData as import('../engine/tilemap.js').TileMapData;
+    // startOpen=true so the section stays open after any field-triggered re-render
+    const section = this.makeSection('Flag Listeners', true);
+    const body = PropertiesPanel.sectionBody(section);
+
+    if (!mapData.flagListeners) mapData.flagListeners = [];
+    const listeners = mapData.flagListeners;
+
+    const lbl = (text: string, color = '#8a9aaa'): HTMLElement => {
+      const s = document.createElement('span');
+      s.style.cssText = `font-size:11px; color:${color}; white-space:nowrap; min-width:90px;`;
+      s.textContent = text;
+      return s;
+    };
+
+    const row = (children: HTMLElement[]): HTMLElement => {
+      const d = document.createElement('div');
+      d.style.cssText = 'display:flex; align-items:center; gap:6px;';
+      children.forEach(c => d.appendChild(c));
+      return d;
+    };
+
+    const inp = (value: string, placeholder: string, mono = false): HTMLInputElement => {
+      const i = document.createElement('input');
+      i.type = 'text';
+      i.value = value;
+      i.placeholder = placeholder;
+      i.style.cssText = `flex:1; font-size:11px;${mono ? ' font-family:monospace;' : ''}`;
+      return i;
+    };
+
+    const numInp = (value: number): HTMLInputElement => {
+      const i = document.createElement('input');
+      i.type = 'number';
+      i.value = String(value);
+      i.style.cssText = 'width:56px; font-size:11px;';
+      return i;
+    };
+
+    const renderEntries = (): void => {
+      body.innerHTML = '';
+
+      for (let i = 0; i < listeners.length; i++) {
+        const fl = listeners[i];
+
+        const card = document.createElement('div');
+        card.style.cssText = 'border:1px solid #3a4a5a; border-radius:4px; padding:7px 8px; margin-bottom:8px; display:flex; flex-direction:column; gap:5px;';
+
+        // ── Row 1: Tile key + ✕ ──────────────────────────────────────
+        const keyInp = inp(fl.key, 'tile key', true);
+        // Mutate data only — no emit, prevents DOM rebuild while editing
+        keyInp.addEventListener('change', () => { fl.key = keyInp.value.trim(); });
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '✕';
+        delBtn.title = 'Remove listener';
+        delBtn.style.cssText = 'padding:2px 6px; font-size:11px; cursor:pointer; flex-shrink:0;';
+        delBtn.addEventListener('click', () => {
+          mapData.flagListeners = listeners.filter((_, j) => j !== i);
+          this.state.emit('map-modified'); // structural: re-render needed
+        });
+
+        card.appendChild(row([lbl('Tile key:'), keyInp, delBtn]));
+
+        // ── Row 2: Coords ────────────────────────────────────────────
+        const xInp = numInp(fl.x);
+        xInp.addEventListener('change', () => { fl.x = parseInt(xInp.value) || 0; });
+
+        const yInp = numInp(fl.y);
+        yInp.addEventListener('change', () => { fl.y = parseInt(yInp.value) || 0; });
+
+        card.appendChild(row([lbl('Coords (x, y):'), xInp, yInp]));
+
+        // ── Row 3: despawnAfter ──────────────────────────────────────
+        const despawnInp = inp(fl.despawnAfter ?? '', 'flag key  (optional)', true);
+        despawnInp.style.color = '#d96';
+        despawnInp.addEventListener('change', () => {
+          const v = despawnInp.value.trim();
+          if (v) fl.despawnAfter = v; else delete fl.despawnAfter;
+        });
+
+        card.appendChild(row([lbl('Despawn after:', '#d96'), despawnInp]));
+
+        // ── Row 4: spawnAfter ────────────────────────────────────────
+        const spawnInp = inp(fl.spawnAfter ?? '', 'flag key  (optional)', true);
+        spawnInp.style.color = '#6d9';
+        spawnInp.addEventListener('change', () => {
+          const v = spawnInp.value.trim();
+          if (v) fl.spawnAfter = v; else delete fl.spawnAfter;
+        });
+
+        card.appendChild(row([lbl('Spawn after:', '#6d9'), spawnInp]));
+
+        body.appendChild(card);
+      }
+
+      const addBtn = document.createElement('button');
+      addBtn.textContent = '+ Add Listener';
+      addBtn.style.cssText = 'margin-top:2px; width:100%; font-size:12px;';
+      addBtn.addEventListener('click', () => {
+        (mapData.flagListeners as FL[]).push({ key: '', x: 0, y: 0 });
+        this.state.emit('map-modified'); // structural: re-render needed
       });
       body.appendChild(addBtn);
     };

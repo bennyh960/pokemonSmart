@@ -60,11 +60,11 @@
       ]
     },
     {
-      "id": "npc-1778513608330",
+      "id": "npc-127851360833022",
       "x": 10,
       "y": 11,
       "facing": "down",
-      "type": "dialogue",
+      "type": "trainer",
       "dialogue": [
         {
           "en": "Hello!",
@@ -96,7 +96,33 @@
           }
         ],
         "loop": true
-      }
+      },
+      "party": [
+        {
+          "pokemonId": 1,
+          "level": 5,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1778843420094",
+      "x": 14,
+      "y": 11,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male"
     }
   ],
   "music": "town",
@@ -126,7 +152,15 @@
         "y2": 0
       }
     }
-  }
+  },
+  "flagListeners": [
+    {
+      "key": "t3",
+      "x": 8,
+      "y": 8,
+      "despawnAfter": "trainer-npc-127851360833022-defeated"
+    }
+  ]
 ,
   "tiles": [
     ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
@@ -590,6 +624,16 @@
       "key": "r1",
       "x": 20,
       "y": 1
+    },
+    {
+      "key": "r1",
+      "x": 8,
+      "y": 11
+    },
+    {
+      "key": "t3",
+      "x": 8,
+      "y": 8
     }
   ]
 }

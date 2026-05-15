@@ -1679,6 +1679,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     tileMap = createTileMap(data as TileMapData, tileset);
     setCurrentMapId(mapId);
 
+    // Apply flagListeners for flags already set before this map loaded
+    tileMap.applyFlagListeners(hasActiveGame() ? getPlayerData().flags : {});
+
     // Load character spritesheets
     await loadCharacterSprites();
 
@@ -1888,6 +1891,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       MovablePuzzle.update(dt);
+
+      // Sync flagListeners — same pattern as isNPCVisible: reads live flags each frame
+      if (hasActiveGame()) tileMap.applyFlagListeners(getPlayerData().flags);
 
       // console.log(stateMachine.currentId());
       // if (stateMachine.currentId() === 'OVERWORLD') {
@@ -3428,7 +3434,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   audio.playSFX('hit');
                   if (hasActiveGame()) {
                     const solved = MovablePuzzle.checkSymmetry(getPlayerData());
-                    if (solved) audio.playSFX('item-found');
+                    if (solved) {
+                      audio.playSFX('item-found');
+                      autoSave();
+                    }
                   }
                 } else {
                   walkable = false;

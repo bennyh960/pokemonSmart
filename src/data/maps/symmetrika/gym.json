@@ -271,7 +271,57 @@
       },
       "successFlag": "puzzle-symetria-gym-f3"
     }
-  }
+  },
+  "flagListeners": [
+    {
+      "key": "bookCab1",
+      "x": 21,
+      "y": 23,
+      "despawnAfter": "puzzle-symetria-gym-f1"
+    },
+    {
+      "key": "bookCab1",
+      "x": 25,
+      "y": 23,
+      "despawnAfter": "puzzle-symetria-gym-f1"
+    },
+    {
+      "key": "box",
+      "x": 25,
+      "y": 49,
+      "despawnAfter": "puzzle-symetria-gym-f2"
+    },
+    {
+      "key": "box",
+      "x": 25,
+      "y": 50,
+      "despawnAfter": "puzzle-symetria-gym-f2"
+    },
+    {
+      "key": "box",
+      "x": 20,
+      "y": 50,
+      "despawnAfter": "puzzle-symetria-gym-f2"
+    },
+    {
+      "key": "box",
+      "x": 20,
+      "y": 49,
+      "despawnAfter": "puzzle-symetria-gym-f2"
+    },
+    {
+      "key": "bookCab3",
+      "x": 20,
+      "y": 76,
+      "despawnAfter": "puzzle-symetria-gym-f3"
+    },
+    {
+      "key": "bookCab3",
+      "x": 25,
+      "y": 76,
+      "despawnAfter": "puzzle-symetria-gym-f3"
+    }
+  ]
 ,
   "tiles": [
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
@@ -1113,11 +1163,6 @@
     },
     {
       "key": "box-2",
-      "x": 4,
-      "y": 53
-    },
-    {
-      "key": "box-2",
       "x": 6,
       "y": 53
     },
@@ -1158,11 +1203,6 @@
     },
     {
       "key": "box-2",
-      "x": 4,
-      "y": 58
-    },
-    {
-      "key": "box-2",
       "x": 6,
       "y": 58
     },
@@ -1184,11 +1224,6 @@
     {
       "key": "box-2",
       "x": 4,
-      "y": 62
-    },
-    {
-      "key": "box-2",
-      "x": 6,
       "y": 62
     },
     {
@@ -1228,11 +1263,6 @@
     },
     {
       "key": "box-2",
-      "x": 17,
-      "y": 53
-    },
-    {
-      "key": "box-2",
       "x": 15,
       "y": 54
     },
@@ -1268,11 +1298,6 @@
     },
     {
       "key": "box-2",
-      "x": 17,
-      "y": 58
-    },
-    {
-      "key": "box-2",
       "x": 19,
       "y": 58
     },
@@ -1290,11 +1315,6 @@
       "key": "box-2",
       "x": 19,
       "y": 61
-    },
-    {
-      "key": "box-2",
-      "x": 15,
-      "y": 62
     },
     {
       "key": "box-2",
@@ -1329,11 +1349,6 @@
     {
       "key": "box-2",
       "x": 17,
-      "y": 66
-    },
-    {
-      "key": "box-2",
-      "x": 19,
       "y": 66
     },
     {
@@ -1629,11 +1644,6 @@
     {
       "key": "box-2",
       "x": 28,
-      "y": 53
-    },
-    {
-      "key": "box-2",
-      "x": 28,
       "y": 54
     },
     {
@@ -1663,11 +1673,6 @@
     },
     {
       "key": "box-2",
-      "x": 28,
-      "y": 58
-    },
-    {
-      "key": "box-2",
       "x": 30,
       "y": 58
     },
@@ -1698,11 +1703,6 @@
     },
     {
       "key": "box-2",
-      "x": 30,
-      "y": 62
-    },
-    {
-      "key": "box-2",
       "x": 26,
       "y": 65
     },
@@ -1715,11 +1715,6 @@
       "key": "box-2",
       "x": 30,
       "y": 65
-    },
-    {
-      "key": "box-2",
-      "x": 26,
-      "y": 66
     },
     {
       "key": "box-2",
@@ -1993,11 +1988,6 @@
     },
     {
       "key": "box-2",
-      "x": 41,
-      "y": 53
-    },
-    {
-      "key": "box-2",
       "x": 43,
       "y": 53
     },
@@ -2038,11 +2028,6 @@
     },
     {
       "key": "box-2",
-      "x": 41,
-      "y": 58
-    },
-    {
-      "key": "box-2",
       "x": 43,
       "y": 58
     },
@@ -2055,11 +2040,6 @@
       "key": "box-2",
       "x": 43,
       "y": 61
-    },
-    {
-      "key": "box-2",
-      "x": 39,
-      "y": 62
     },
     {
       "key": "box-2",
@@ -2295,6 +2275,166 @@
       "key": "mat-horizontal",
       "x": 23,
       "y": 114
+    },
+    {
+      "key": "bookCab1",
+      "x": 21,
+      "y": 23
+    },
+    {
+      "key": "bookCab1",
+      "x": 25,
+      "y": 23
+    },
+    {
+      "key": "box",
+      "x": 25,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 25,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 20,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 20,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 29,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 31,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 30,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 38,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 40,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 39,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 44,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 44,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 16,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 14,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 15,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 7,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 5,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 6,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 1,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 1,
+      "y": 49
+    },
+    {
+      "key": "box-2",
+      "x": 6,
+      "y": 62
+    },
+    {
+      "key": "box-2",
+      "x": 39,
+      "y": 62
+    },
+    {
+      "key": "box",
+      "x": 10,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 10,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 33,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 36,
+      "y": 50
+    },
+    {
+      "key": "box",
+      "x": 37,
+      "y": 49
+    },
+    {
+      "key": "box",
+      "x": 32,
+      "y": 49
+    },
+    {
+      "key": "boockCab3",
+      "x": 25,
+      "y": 76
+    },
+    {
+      "key": "boockCab3",
+      "x": 20,
+      "y": 76
     }
   ]
 }

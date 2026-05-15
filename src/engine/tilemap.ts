@@ -87,6 +87,18 @@ export interface TileMapData {
       dialogue?: { en: string; he: string };
     }
   >;
+  /**
+   * Reactive spawn/despawn rules triggered when story flags are set.
+   * spawnAfter: object is hidden until the flag fires, then added.
+   * despawnAfter: object starts visible, then removed when the flag fires.
+   */
+  flagListeners?: Array<{
+    key: string;
+    x: number;
+    y: number;
+    spawnAfter?: string;
+    despawnAfter?: string;
+  }>;
   /** Internal — tracks how many transitions/npcs/objects came from the template so saves strip them. */
   _templateCounts?: { transitions: number; npcs: number; objects: number };
 }
@@ -241,6 +253,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
   const placedObjects = data.objects ?? [];
   const interactOverrides = buildInteractOverrides(data.interactiveItems ?? {}, placedObjects);
   const BASE = 16; // base grid unit
+  const flagListenerDefs = data.flagListeners ?? [];
 
   return {
     name,
@@ -252,6 +265,31 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
     /** Returns the item override for a placed object, or null if none. */
     getInteractOverride(obj: PlacedObject): { itemId: string; itemQty: number } | null {
       return interactOverrides.get(obj) ?? null;
+    },
+
+    /**
+     * Sync placed objects with current flags — call every frame (or at least after any flag change).
+     * Same pattern as isNPCVisible: reads live flags each call, no event system needed.
+     * - spawnAfter: object is added when the flag is set, removed when not.
+     * - despawnAfter: object is removed when the flag is set, added back when not.
+     * Fast no-op when this map has no flagListeners.
+     */
+    applyFlagListeners(flags: Record<string, boolean>): void {
+      if (flagListenerDefs.length === 0) return;
+      for (const fl of flagListenerDefs) {
+        if (fl.spawnAfter !== undefined) {
+          const shouldExist = !!flags[fl.spawnAfter];
+          const idx = placedObjects.findIndex(o => o.key === fl.key && o.x === fl.x && o.y === fl.y);
+          if (shouldExist && idx === -1) placedObjects.push({ key: fl.key, x: fl.x, y: fl.y });
+          else if (!shouldExist && idx !== -1) placedObjects.splice(idx, 1);
+        }
+        if (fl.despawnAfter !== undefined) {
+          const shouldExist = !flags[fl.despawnAfter];
+          const idx = placedObjects.findIndex(o => o.key === fl.key && o.x === fl.x && o.y === fl.y);
+          if (shouldExist && idx === -1) placedObjects.push({ key: fl.key, x: fl.x, y: fl.y });
+          else if (!shouldExist && idx !== -1) placedObjects.splice(idx, 1);
+        }
+      }
     },
 
     getTile(gx: number, gy: number): number | string {
