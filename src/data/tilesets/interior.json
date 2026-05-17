@@ -5188,7 +5188,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "above": false,
+      "above": true,
       "interactType": null
     },
     {
@@ -5293,7 +5293,8 @@
         "*/water"
       ],
       "above": false,
-      "category": "floor"
+      "category": "floor",
+      "interactType": null
     }
   ]
 }

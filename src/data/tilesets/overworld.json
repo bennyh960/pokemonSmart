@@ -4592,42 +4592,6 @@
       "description": "cave wall 1 top W shape"
     },
     {
-      "key": "cw1trc",
-      "sx": 144,
-      "sy": 7632,
-      "w": 64,
-      "h": 80,
-      "walkable": false,
-      "above": false,
-      "category": "wall",
-      "interactType": null,
-      "description": "cave wall 1 top right corner"
-    },
-    {
-      "key": "cw1l",
-      "sx": 48,
-      "sy": 7712,
-      "w": 48,
-      "h": 16,
-      "walkable": true,
-      "above": false,
-      "category": "wall",
-      "interactType": null,
-      "description": "cave wall 1 left side wall"
-    },
-    {
-      "key": "cw1r",
-      "sx": 160,
-      "sy": 7712,
-      "w": 48,
-      "h": 16,
-      "walkable": false,
-      "above": false,
-      "category": "wall",
-      "interactType": null,
-      "description": "cave wall 1 right side wall"
-    },
-    {
       "key": "c1g1",
       "sx": 0,
       "sy": 7680,
@@ -6263,6 +6227,7 @@
       "walkable": false,
       "above": false,
       "category": "building",
+      "interactType": null,
       "description": "pokecenter and market",
       "cells": [
         {
@@ -6370,7 +6335,596 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "above": false
+      "above": false,
+      "interactType": null
+    },
+    {
+      "key": "fl81",
+      "sx": 96,
+      "sy": 2928,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "fl811",
+      "sx": 80,
+      "sy": 2912,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "fl812",
+      "sx": 96,
+      "sy": 2912,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "fl813",
+      "sx": 112,
+      "sy": 2912,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "fl814",
+      "sx": 80,
+      "sy": 2928,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "fl815",
+      "sx": 112,
+      "sy": 2928,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "fl816",
+      "sx": 80,
+      "sy": 2944,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "fl817",
+      "sx": 96,
+      "sy": 2944,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "fl818",
+      "sx": 112,
+      "sy": 2944,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "f91",
+      "sx": 48,
+      "sy": 2928,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "f911",
+      "sx": 32,
+      "sy": 2912,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "f912",
+      "sx": 48,
+      "sy": 2912,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "f913",
+      "sx": 64,
+      "sy": 2912,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "f914",
+      "sx": 32,
+      "sy": 2928,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "f915",
+      "sx": 64,
+      "sy": 2928,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "כ916",
+      "sx": 32,
+      "sy": 2944,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "f916",
+      "sx": 48,
+      "sy": 2944,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "f917",
+      "sx": 64,
+      "sy": 2944,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "powerStation-1",
+      "sx": 0,
+      "sy": 2608,
+      "w": 112,
+      "h": 80,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "building",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 5,
+          "dy": 4
+        },
+        {
+          "dx": 6,
+          "dy": 4
+        }
+      ]
+    },
+    {
+      "key": "b192",
+      "sx": 32,
+      "sy": 4416,
+      "w": 96,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "cells": [
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 1
+        },
+        {
+          "dx": 5,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 3
+        },
+        {
+          "dx": 5,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        }
+      ]
+    },
+    {
+      "key": "tower1",
+      "sx": 0,
+      "sy": 5120,
+      "w": 80,
+      "h": 64,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "cells": [
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        }
+      ]
+    },
+    {
+      "key": "dor-tower",
+      "sx": 32,
+      "sy": 5168,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "building"
+    },
+    {
+      "key": "tower-2",
+      "sx": 0,
+      "sy": 5040,
+      "w": 80,
+      "h": 80,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "building",
+      "cells": [
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        }
+      ]
+    },
+    {
+      "key": "building-roof",
+      "sx": 0,
+      "sy": 3264,
+      "w": 80,
+      "h": 48,
+      "walkable": false,
+      "above": false,
+      "category": "building"
+    },
+    {
+      "key": "building-level",
+      "sx": 0,
+      "sy": 3312,
+      "w": 80,
+      "h": 16,
+      "walkable": false,
+      "above": false,
+      "category": "building"
+    },
+    {
+      "key": "building-bottom",
+      "sx": 0,
+      "sy": 3328,
+      "w": 80,
+      "h": 16,
+      "walkable": false,
+      "above": false,
+      "category": "building"
     }
   ]
 }
