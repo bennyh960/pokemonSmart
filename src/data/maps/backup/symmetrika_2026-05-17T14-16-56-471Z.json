@@ -103,25 +103,10 @@
       "toMapId": "routes/route-10",
       "toX": 12,
       "toY": 23
-    },
-    {
-      "fromX": 0,
-      "fromY": 17,
-      "toMapId": "routes/route-11"
-    },
-    {
-      "fromX": 0,
-      "fromY": 18,
-      "toMapId": "routes/route-11"
-    },
-    {
-      "fromX": 0,
-      "fromY": 19,
-      "toMapId": "routes/route-11"
     }
   ],
   "music": "town",
-  "encounterTableId": "psychic-gym-30-45",
+  "encounterTableId": null,
   "npcs": [
     {
       "id": "npc-gate-symetria-r8-1",
@@ -285,81 +270,6 @@
         ],
         "loop": true
       }
-    },
-    {
-      "id": "npc-1779028205888-blocker",
-      "x": 4,
-      "y": 17,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "שלום!"
-        },
-        {
-          "en": "",
-          "he": "באת לקרב מכון?"
-        },
-        {
-          "en": "",
-          "he": "סימה טריה היא מנהיגת המכון שלנו."
-        },
-        {
-          "en": "",
-          "he": "היא מחכה לך!"
-        }
-      ],
-      "spriteType": "char_24117d",
-      "despawnAfter": "story-badge-6",
-      "blocker": true
-    },
-    {
-      "id": "npc-1779028356243",
-      "x": 36,
-      "y": 17,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "שלום לך! דרך 9 תיקח אותך מובילה לעיר הכפל - היית שם?"
-        }
-      ],
-      "spriteType": "char_24117d",
-      "despawnAfter": "story-badge-6"
-    },
-    {
-      "id": "npc-1779028442919",
-      "x": 16,
-      "y": 21,
-      "facing": "right",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "שלום"
-        }
-      ],
-      "spriteType": "char_6bacac"
-    },
-    {
-      "id": "npc-1779028468095",
-      "x": 24,
-      "y": 21,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "שלום !"
-        }
-      ],
-      "spriteType": "char_6bacac",
-      "name": {
-        "en": "Naama",
-        "he": "נעמה"
-      }
     }
   ],
   "area": "Symmetrika",
@@ -373,14 +283,14 @@
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b"],
-    ["xtest","xtest","xtest","xtest","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g1"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","mg1c","mg1c","xtest","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["xtest","xtest","xtest","xtest","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g1"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","mg1c","mg1c","xtest","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
-    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","mg1c","xtest","xtest","xtest","mg1c","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","mg1c","g1","g1","xtest","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
@@ -1932,6 +1842,41 @@
     },
     {
       "key": "s1-8",
+      "x": 26,
+      "y": 13
+    },
+    {
+      "key": "s1-8",
+      "x": 27,
+      "y": 13
+    },
+    {
+      "key": "s1-2",
+      "x": 27,
+      "y": 11
+    },
+    {
+      "key": "s1-2",
+      "x": 26,
+      "y": 11
+    },
+    {
+      "key": "s1-2",
+      "x": 14,
+      "y": 11
+    },
+    {
+      "key": "s1-2",
+      "x": 13,
+      "y": 11
+    },
+    {
+      "key": "s1-2",
+      "x": 12,
+      "y": 11
+    },
+    {
+      "key": "s1-8",
       "x": 31,
       "y": 20
     },
@@ -3443,7 +3388,17 @@
     {
       "key": "mg1l",
       "x": 27,
+      "y": 11
+    },
+    {
+      "key": "mg1l",
+      "x": 27,
       "y": 12
+    },
+    {
+      "key": "mg1l",
+      "x": 27,
+      "y": 13
     },
     {
       "key": "mg1l",
@@ -3473,7 +3428,17 @@
     {
       "key": "mg1l",
       "x": 26,
+      "y": 11
+    },
+    {
+      "key": "mg1l",
+      "x": 26,
       "y": 12
+    },
+    {
+      "key": "mg1l",
+      "x": 26,
+      "y": 13
     },
     {
       "key": "mg1l",
@@ -3773,6 +3738,11 @@
     {
       "key": "mg1r",
       "x": 14,
+      "y": 11
+    },
+    {
+      "key": "mg1r",
+      "x": 14,
       "y": 10
     },
     {
@@ -4024,6 +3994,11 @@
       "key": "mg1r",
       "x": 13,
       "y": 10
+    },
+    {
+      "key": "mg1r",
+      "x": 13,
+      "y": 11
     },
     {
       "key": "mg1r",
@@ -4054,6 +4029,11 @@
       "key": "mg1r",
       "x": 12,
       "y": 10
+    },
+    {
+      "key": "mg1r",
+      "x": 12,
+      "y": 11
     },
     {
       "key": "mg1r",
@@ -4459,41 +4439,6 @@
       "key": "f1-4",
       "x": 18,
       "y": 39
-    },
-    {
-      "key": "mg1l",
-      "x": 26,
-      "y": 11
-    },
-    {
-      "key": "mg1l",
-      "x": 27,
-      "y": 11
-    },
-    {
-      "key": "mg1l",
-      "x": 27,
-      "y": 13
-    },
-    {
-      "key": "mg1l",
-      "x": 26,
-      "y": 13
-    },
-    {
-      "key": "mg1r",
-      "x": 14,
-      "y": 11
-    },
-    {
-      "key": "mg1r",
-      "x": 13,
-      "y": 11
-    },
-    {
-      "key": "mg1r",
-      "x": 12,
-      "y": 11
     }
   ],
   "objectLayer": [

@@ -9,36 +9,7 @@
     "x": 48,
     "y": 5
   },
-  "transitions": [
-    {
-      "fromX": 49,
-      "fromY": 5,
-      "toMapId": "symmetrika/symmetrika",
-      "toX": 1,
-      "toY": 18
-    },
-    {
-      "fromX": 49,
-      "fromY": 6,
-      "toMapId": "symmetrika/symmetrika",
-      "toX": 1,
-      "toY": 19
-    },
-    {
-      "fromX": 0,
-      "fromY": 8,
-      "toMapId": "symmetrika/symmetrika",
-      "toX": 49,
-      "toY": 20
-    },
-    {
-      "fromX": 0,
-      "fromY": 9,
-      "toMapId": "percentile/percentile",
-      "toX": 49,
-      "toY": 21
-    }
-  ],
+  "transitions": [],
   "npcs": [],
   "music": "route",
   "encounterTableId": null,
@@ -2596,8 +2567,8 @@
     },
     {
       "key": "signx",
-      "x": 0,
-      "y": 7
+      "x": 1,
+      "y": 6
     }
   ],
   "objectLayer": [

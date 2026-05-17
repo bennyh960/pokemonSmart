@@ -1606,5 +1606,88 @@
         "weight": 20
       }
     ]
+  },
+  "psychic-gym-30-45": {
+    "encounterRate": 0.1,
+    "entries": [
+      {
+        "pokemonId": 64,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 2
+      },
+      {
+        "pokemonId": 122,
+        "minLevel": 30,
+        "maxLevel": 35,
+        "weight": 10
+      },
+      {
+        "pokemonId": 124,
+        "minLevel": 30,
+        "maxLevel": 35,
+        "weight": 10
+      },
+      {
+        "pokemonId": 63,
+        "minLevel": 20,
+        "maxLevel": 25,
+        "weight": 20
+      },
+      {
+        "pokemonId": 96,
+        "minLevel": 30,
+        "maxLevel": 38,
+        "weight": 10
+      },
+      {
+        "pokemonId": 97,
+        "minLevel": 30,
+        "maxLevel": 35,
+        "weight": 1
+      },
+      {
+        "pokemonId": 102,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 10
+      },
+      {
+        "pokemonId": 103,
+        "minLevel": 30,
+        "maxLevel": 35,
+        "weight": 2
+      },
+      {
+        "pokemonId": 79,
+        "minLevel": 30,
+        "maxLevel": 35,
+        "weight": 5
+      },
+      {
+        "pokemonId": 80,
+        "minLevel": 30,
+        "maxLevel": 35,
+        "weight": 3
+      },
+      {
+        "pokemonId": 203,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 15
+      },
+      {
+        "pokemonId": 202,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 15
+      },
+      {
+        "pokemonId": 201,
+        "minLevel": 30,
+        "maxLevel": 45,
+        "weight": 30
+      }
+    ]
   }
 }
