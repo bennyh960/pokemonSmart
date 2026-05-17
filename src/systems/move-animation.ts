@@ -26,7 +26,8 @@ export type AttackAnimationFamily =
   | 'twister-spin'
   | 'icy-wind'
   | 'electroweb'
-  | 'protect-shield';
+  | 'protect-shield'
+  | 'earthquake';
 
 export interface AttackAnimationProfile {
   family: AttackAnimationFamily;
@@ -147,14 +148,14 @@ const ELECTROWEB_MOVES = ['electroweb'];
 
 const LIGHTNING_MOVES = ['thunderbolt', 'thunder', 'discharge', 'charge beam', 'zap cannon', 'supercell slam'];
 
+const EARTHQUAKE_MOVES = ['earthquake', 'magnitude'];
+
 // Generic fallback keyword lists (for moves not matched above)
 const BURST_KEYWORDS = [
   'bonemerang',
   'dig',
-  'earthquake',
   'explosion',
   'fissure',
-  'magnitude',
   'self-destruct',
   'skull bash',
 ];
@@ -538,6 +539,20 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       selfTarget: false,
       shakeIntensity: 2.0,
       flashColor,
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, EARTHQUAKE_MOVES)) {
+    return {
+      family: 'earthquake',
+      color: '#c89050',
+      accentColor: '#e8d090',
+      duration: 0.75,
+      impactTime: 0.22,
+      selfTarget: false,
+      shakeIntensity: 4.5,
+      flashColor: '#c8a060',
       variant,
     };
   }

@@ -217,7 +217,8 @@ export type AttackEffectKind =
   | 'twister-spin'
   | 'icy-wind'
   | 'electroweb'
-  | 'protect-shield';
+  | 'protect-shield'
+  | 'earthquake';
 
 interface AttackEffect {
   active: boolean;
@@ -564,6 +565,119 @@ function renderPulseEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
   ctx.restore();
 }
 
+function drawFissureLine(
+  ctx: CanvasRenderingContext2D,
+  startX: number,
+  startY: number,
+  angle: number,
+  length: number,
+  alpha: number,
+  rng: () => number,
+  groundTop: number,
+  groundBot: number,
+): void {
+  if (length <= 1) return;
+  const segments = Math.max(3, Math.floor(length / 9));
+  const pts: [number, number][] = [[startX, startY]];
+  let x = startX;
+  let y = startY;
+  for (let i = 0; i < segments; i++) {
+    const segLen = length / segments;
+    const perpAngle = angle + Math.PI / 2;
+    const wobble = (rng() - 0.5) * segLen * 0.45;
+    x += Math.cos(angle) * segLen + Math.cos(perpAngle) * wobble;
+    y = Math.max(groundTop + 1, Math.min(groundBot - 1, y + Math.sin(angle) * segLen * 0.18 + Math.sin(perpAngle) * wobble * 0.25));
+    pts.push([x, y]);
+  }
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.9;
+  ctx.strokeStyle = '#1a0c04';
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.stroke();
+  ctx.globalAlpha = alpha * 0.45;
+  ctx.strokeStyle = '#d4a840';
+  ctx.lineWidth = 0.7;
+  ctx.stroke();
+  ctx.restore();
+  if (length > 12) {
+    const midIdx = Math.max(1, Math.floor(pts.length / 2));
+    const [bStartX, bStartY] = pts[midIdx];
+    const branchAngle = angle + (rng() > 0.5 ? 0.55 : -0.55) * Math.PI * 0.6;
+    const branchLen = length * 0.38;
+    const bPts: [number, number][] = [[bStartX, bStartY]];
+    let bx = bStartX;
+    let by = bStartY;
+    const bSegs = Math.max(2, Math.floor(branchLen / 9));
+    for (let i = 0; i < bSegs; i++) {
+      const segLen = branchLen / bSegs;
+      const wobble2 = (rng() - 0.5) * 0.4;
+      bx += Math.cos(branchAngle + wobble2) * segLen;
+      by = Math.max(groundTop + 1, Math.min(groundBot - 1, by + Math.sin(branchAngle) * segLen * 0.18));
+      bPts.push([bx, by]);
+    }
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.6;
+    ctx.strokeStyle = '#1a0c04';
+    ctx.lineWidth = 1.0;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(bPts[0][0], bPts[0][1]);
+    for (let i = 1; i < bPts.length; i++) ctx.lineTo(bPts[i][0], bPts[i][1]);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function renderEarthquakeEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const alpha = t < 0.2 ? t / 0.2 : t < 0.65 ? 1.0 : Math.max(0, 1 - (t - 0.65) / 0.35);
+  const GROUND_TOP = 34;
+  const GROUND_BOT = 84;
+  const SCREEN_W_EQ = 240;
+  const crackProgress = Math.min(1, t / 0.4);
+  const rng = seededRng(effect.seed);
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.14;
+  ctx.fillStyle = '#8b6040';
+  ctx.fillRect(0, GROUND_TOP, SCREEN_W_EQ, GROUND_BOT - GROUND_TOP);
+  ctx.restore();
+  const epicX = SCREEN_W_EQ / 2;
+  const epicY = (GROUND_TOP + GROUND_BOT) / 2;
+  const maxLen = SCREEN_W_EQ * 0.55 * crackProgress;
+  if (maxLen > 2) {
+    const yOffsets = [0, -8, 8];
+    const angleOffsets = [0, 0.12, -0.12];
+    for (let c = 0; c < 3; c++) {
+      const crackY = epicY + yOffsets[c];
+      const ao = angleOffsets[c];
+      drawFissureLine(ctx, epicX, crackY, Math.PI + ao, maxLen * 0.55, alpha, seededRng(effect.seed + c * 31), GROUND_TOP, GROUND_BOT);
+      drawFissureLine(ctx, epicX, crackY, ao, maxLen * 0.55, alpha, seededRng(effect.seed + c * 31 + 1000), GROUND_TOP, GROUND_BOT);
+    }
+    drawFissureLine(ctx, epicX - 25, GROUND_TOP + 8, Math.PI * 0.38, maxLen * 0.28, alpha, seededRng(effect.seed + 200), GROUND_TOP, GROUND_BOT);
+    drawFissureLine(ctx, epicX + 25, GROUND_TOP + 8, Math.PI * 0.62, maxLen * 0.28, alpha, seededRng(effect.seed + 300), GROUND_TOP, GROUND_BOT);
+  }
+  for (let i = 0; i < 14; i++) {
+    const px = rng() * SCREEN_W_EQ;
+    const py0 = GROUND_TOP + 6 + rng() * (GROUND_BOT - GROUND_TOP - 12);
+    const rise = t * 18 * (0.5 + rng() * 0.5);
+    const pAlpha = alpha * Math.max(0, (1 - t * 1.1) * 0.65);
+    const pR = 1 + rng() * 2.2;
+    if (pAlpha <= 0) continue;
+    ctx.save();
+    ctx.globalAlpha = pAlpha;
+    ctx.fillStyle = rng() > 0.5 ? '#c8a070' : '#e8d0a0';
+    ctx.beginPath();
+    ctx.arc(px, py0 - rise, pR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
 function renderBurstEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
   const radius = 4 + t * 18;
@@ -606,6 +720,9 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'burst':
       renderBurstEffect(ctx, effect);
+      break;
+    case 'earthquake':
+      renderEarthquakeEffect(ctx, effect);
       break;
     case 'dragon-aura':
       renderDragonAuraEffect(ctx, effect);

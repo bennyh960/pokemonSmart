@@ -17,7 +17,7 @@
       "fromX": 2,
       "fromY": 45,
       "toMapId": "symmetrika/gym",
-      "toX": 12,
+      "toX": 2,
       "toY": 4
     },
     {
@@ -49,7 +49,7 @@
       "toY": 51
     },
     {
-      "fromX": 12,
+      "fromX": 2,
       "fromY": 3,
       "toMapId": "symmetrika/gym",
       "toX": 2,
@@ -319,9 +319,375 @@
         "types": [],
         "repeated": true
       }
+    },
+    {
+      "id": "npc-1779049429931",
+      "x": 6,
+      "y": 18,
+      "facing": "up",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "פוקימונים על חושיים אוהבים רוגע!"
+        },
+        {
+          "en": "",
+          "he": "כדי לשלוט בכוחות הטלפטיים - שמור על רוגע"
+        },
+        {
+          "en": "",
+          "he": "הדרך לפתור את חידת המכון היא להיות רגועים."
+        }
+      ],
+      "spriteType": "char_392694",
+      "reward": {
+        "money": 2000
+      },
+      "name": {
+        "en": "Ethan",
+        "he": "איתן"
+      },
+      "party": [
+        {
+          "pokemonId": 203,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 97,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1779049764621",
+      "x": 42,
+      "y": 18,
+      "facing": "up",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "אנחנו באזור שכולו אשליה!"
+        }
+      ],
+      "spriteType": "char_392694",
+      "party": [
+        {
+          "pokemonId": 122,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 103,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "postBattleDialogue": [],
+      "name": {
+        "en": "Joey",
+        "he": "ג'ואי"
+      }
+    },
+    {
+      "id": "npc-1779049878051",
+      "x": 19,
+      "y": 18,
+      "facing": "up",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "אומנות האשליה היא נחלתם של העל חושיים"
+        }
+      ],
+      "spriteType": "char_e19d22",
+      "name": {
+        "en": "Erika",
+        "he": "אריקה"
+      },
+      "party": [
+        {
+          "pokemonId": 64,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 97,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 80,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1779049925544",
+      "x": 30,
+      "y": 18,
+      "facing": "up",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "מתקפות על חושיות פוגעות בהגנה המיוחדת בדר\"כ ."
+        },
+        {
+          "en": "",
+          "he": "אם אין לך פוקימונים עם הגנה מיוחדת גבוהה - לא תוכל לשרוד"
+        }
+      ],
+      "spriteType": "char_e19d22",
+      "party": [
+        {
+          "pokemonId": 124,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 202,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 196,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "postBattleDialogue": [],
+      "name": {
+        "en": "Shira",
+        "he": "שירה"
+      }
+    },
+    {
+      "id": "npc-1779050154451",
+      "x": 11,
+      "y": 52,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "פוקימון על חושי יכול לשגר אותו ממקום למקום באמצועת כח המחשבה במתקפת טלפורט"
+        }
+      ],
+      "spriteType": "char_9ceeb2",
+      "name": {
+        "en": "Joey",
+        "he": "ג'ואי"
+      },
+      "spawnAfter": "puzzle-symetria-gym-f2",
+      "party": [
+        {
+          "pokemonId": 102,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 103,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1779050312271",
+      "x": 37,
+      "y": 52,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "יפה פענחת את חידת החדר!"
+        }
+      ],
+      "spriteType": "char_9ceeb2",
+      "party": [
+        {
+          "pokemonId": 79,
+          "level": 40,
+          "moves": []
+        },
+        {
+          "pokemonId": 80,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 199,
+          "level": 50,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "postBattleDialogue": [],
+      "name": {
+        "en": "Sam",
+        "he": "סם"
+      },
+      "spawnAfter": "puzzle-symetria-gym-f2"
+    },
+    {
+      "id": "npc-1779050531313",
+      "x": 19,
+      "y": 78,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "יפה! פתרת היטב את חידת הסימטריה . סימה טריה ממתינה לך במגדל השני ."
+        },
+        {
+          "en": "",
+          "he": "אך היא לא תלחם מולך לפני שתביס את כל העוזרים שלה."
+        }
+      ],
+      "spriteType": "char_c2b2c1",
+      "spawnAfter": "puzzle-symetria-gym-f3",
+      "blocker": true,
+      "mapClearBlocker": true,
+      "name": {
+        "en": "Leonid",
+        "he": "לאוניד"
+      }
+    },
+    {
+      "id": "npc-1779050544987",
+      "x": 29,
+      "y": 78,
+      "facing": "left",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "יפה - הצלחת לפתור את חידת המכון אך לא תוכל לעבור את הפתח עד שלא תלחם בכל המאמנים ב-2 המגדלים."
+        }
+      ],
+      "spriteType": "char_c2b2c1",
+      "spawnAfter": "puzzle-symetria-gym-f3",
+      "name": {
+        "en": "Kobi",
+        "he": "קובי"
+      }
+    },
+    {
+      "id": "npc-1779050769024",
+      "x": 24,
+      "y": 106,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום ! אני סימה טריה מנהיגת מכון הסימטריה."
+        },
+        {
+          "en": "",
+          "he": "שמחה לראות שהצלחת לפתור את חידת המכון - הרבה מאמנים מתייאשים ולא מצליחים."
+        },
+        {
+          "en": "",
+          "he": "מאמנים שמתמידים ולא מוותרים אלו מאמנים שעובדים קשה ."
+        },
+        {
+          "en": "",
+          "he": "ורק דרך עבודה קשה אפשר להפוך להיות מאסטרים."
+        },
+        {
+          "en": "",
+          "he": "עכשיו נראה אם תוכל לנצח בקרב מכון"
+        }
+      ],
+      "spriteType": "gym_6_sima",
+      "party": [
+        {
+          "pokemonId": 203,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 196,
+          "level": 48,
+          "moves": []
+        },
+        {
+          "pokemonId": 103,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 199,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 202,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 65,
+          "level": 50,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 1,
+      "reward": {
+        "money": 5000,
+        "items": [
+          {
+            "itemId": "calcium",
+            "quantity": 3
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "מרשים ביותר! הצלחת להשיג את תג הסימטריה ."
+        }
+      ],
+      "excludeFromMapClear": true,
+      "questions": {
+        "count": 5,
+        "types": []
+      }
     }
   ],
-  "music": "town",
+  "music": "gym-battle",
   "encounterTableId": "psychic-gym-30-45",
   "interactiveItems": {},
   "movablePuzzle": {
@@ -334,9 +700,9 @@
         "y2": 44
       },
       "puzzleRoom": {
-        "x1": 25,
+        "x1": 27,
         "y1": 25,
-        "x2": 45,
+        "x2": 47,
         "y2": 44
       },
       "movableTileKeys": [
@@ -347,9 +713,9 @@
     },
     "symetria-gym-f2": {
       "puzzleRoom": {
-        "x1": 25,
+        "x1": 27,
         "y1": 51,
-        "x2": 45,
+        "x2": 47,
         "y2": 70
       },
       "movableTileKeys": [
@@ -367,14 +733,15 @@
     },
     "symetria-gym-f3": {
       "puzzleRoom": {
-        "x1": 25,
+        "x1": 27,
         "y1": 78,
-        "x2": 45,
+        "x2": 47,
         "y2": 97
       },
       "movableTileKeys": [
         "decor1",
-        "decor2"
+        "decor2",
+        "sc1"
       ],
       "refRoom": {
         "x1": 1,
@@ -439,8 +806,8 @@
   "tiles": [
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2","black-non-walk"],
-    ["black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w3-up","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w3-up","w1-l","black-non-walk"],
-    ["black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","stairs","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","stairs","w1-l","black-non-walk"],
+    ["black-non-walk","w1-r","w3-up","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w3-up","w1-l","black-non-walk"],
+    ["black-non-walk","w1-r","stairs","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-r","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","stairs","w1-l","black-non-walk"],
     ["black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-c3","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w6-2","w6-2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-c4","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk"],
     ["black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1","w1","w1","w1","w1","w1","w1","w1","w1","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1","w1","w1","w1","w1","w1","w1","w1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk"],
     ["black-non-walk","w1-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w1b","w1b","w1b","w1b","w1b","w1b","w1b","w1b","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w1-l","black-non-walk"],

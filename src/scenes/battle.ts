@@ -1361,10 +1361,7 @@ export function createBattleScene(
         damageClass === 'physical'
           ? getModifiedStatValue(enemy, enemyBattleState, 'defense')
           : getModifiedStatValue(enemy, enemyBattleState, 'specialDefense');
-      const eff = getCombinedTypeEffectiveness(
-        pm.type,
-        enemy.types as import('../types/index.js').PokemonType[],
-      );
+      const eff = getCombinedTypeEffectiveness(pm.type, enemy.types as import('../types/index.js').PokemonType[]);
       if (eff === 0) continue;
       const stab = player.types.includes(pm.type) ? 1.5 : 1.0;
       const dmg = (((2 * player.level) / 5 + 2) * pm.power * atk) / def / 50 + 2;
@@ -1409,11 +1406,12 @@ export function createBattleScene(
     if (estIncoming >= enemy.hp * 0.5) return false;
 
     // Boost when AI has type advantage AND level parity — we can afford the setup turn
-    const hasTypeAdv = enemy.types.some((t) =>
-      getCombinedTypeEffectiveness(
-        t as import('../types/index.js').PokemonType,
-        player.types as import('../types/index.js').PokemonType[],
-      ) > 1,
+    const hasTypeAdv = enemy.types.some(
+      (t) =>
+        getCombinedTypeEffectiveness(
+          t as import('../types/index.js').PokemonType,
+          player.types as import('../types/index.js').PokemonType[],
+        ) > 1,
     );
     return hasTypeAdv && enemy.level >= player.level;
   }
@@ -1776,9 +1774,7 @@ export function createBattleScene(
       }
 
       // Screen moves (Reflect / Light Screen) — only worthwhile at good HP vs the right attacker type
-      const screenEffect = battleData?.sideEffects?.find(
-        (se) => se.id === 'reflect' || se.id === 'light-screen',
-      );
+      const screenEffect = battleData?.sideEffects?.find((se) => se.id === 'reflect' || se.id === 'light-screen');
       if (screenEffect) {
         if (enemyHpRatio < 0.25) return -Infinity; // Too low HP to benefit
         if (screenEffect.id === 'reflect' && enemySideState.reflectTurnsRemaining > 0) return -Infinity;
@@ -1790,17 +1786,14 @@ export function createBattleScene(
         const estIncomingScreen = estimatePlayerBestDamageToEnemy();
         if (estIncomingScreen >= enemy.hp) return -Infinity;
         let screenScore = 250;
-        if (playerBattleState.majorStatus === 'sleep' || playerBattleState.majorStatus === 'freeze')
-          screenScore += 300; // Free turns to let the screen pay off
+        if (playerBattleState.majorStatus === 'sleep' || playerBattleState.majorStatus === 'freeze') screenScore += 300; // Free turns to let the screen pay off
         return screenScore;
       }
 
       // Self stat-boost moves (Swords Dance, Calm Mind, Dragon Dance, etc.)
       // Only worthwhile when the player is weakened, slowed, or at a disadvantage
       const selfBoosts =
-        battleData?.statChanges?.filter(
-          (sc) => sc.target === 'user' && sc.stages > 0 && sc.stat !== 'evasion',
-        ) ?? [];
+        battleData?.statChanges?.filter((sc) => sc.target === 'user' && sc.stages > 0 && sc.stat !== 'evasion') ?? [];
       if (selfBoosts.length > 0) {
         if (enemyHpRatio < 0.3) return -Infinity;
         const estIncomingBoost = estimatePlayerBestDamageToEnemy();
@@ -1816,11 +1809,12 @@ export function createBattleScene(
           setupScore = player.attack > player.specialAttack * 1.1 ? 350 : 80;
         } else {
           // No status — only set up if we have type advantage or level advantage
-          const hasTypeAdv = enemy.types.some((t) =>
-            getCombinedTypeEffectiveness(
-              t as import('../types/index.js').PokemonType,
-              player.types as import('../types/index.js').PokemonType[],
-            ) > 1,
+          const hasTypeAdv = enemy.types.some(
+            (t) =>
+              getCombinedTypeEffectiveness(
+                t as import('../types/index.js').PokemonType,
+                player.types as import('../types/index.js').PokemonType[],
+              ) > 1,
           );
           if (!hasTypeAdv && enemy.level <= player.level) return -Infinity;
           setupScore = hasTypeAdv ? 220 : 120;
@@ -1847,11 +1841,12 @@ export function createBattleScene(
       if (ailment !== null) {
         if (player.status !== null) return -Infinity; // Already statused
         if (isTargetImmuneToStatusEffectFromMoveType(player, move.type, ailment)) return -Infinity; // Type immune
-        const hasTypeAdv = enemy.types.some((t) =>
-          getCombinedTypeEffectiveness(
-            t as import('../types/index.js').PokemonType,
-            player.types as import('../types/index.js').PokemonType[],
-          ) > 1,
+        const hasTypeAdv = enemy.types.some(
+          (t) =>
+            getCombinedTypeEffectiveness(
+              t as import('../types/index.js').PokemonType,
+              player.types as import('../types/index.js').PokemonType[],
+            ) > 1,
         );
         const hasLevelAdv = enemy.level >= player.level;
         if (enemyHpRatio > 0.5) {
@@ -2746,14 +2741,24 @@ export function createBattleScene(
     if (playerBattleState.disabledMoveTurnsRemaining > 0) {
       playerBattleState.disabledMoveTurnsRemaining--;
       if (playerBattleState.disabledMoveTurnsRemaining <= 0 && playerBattleState.disabledMoveId !== null) {
-        lines.push(t('battle.disableMoveEnd', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(playerBattleState.disabledMoveId) }));
+        lines.push(
+          t('battle.disableMoveEnd', {
+            name: getPokemonDisplayName(player.id),
+            move: getMoveDisplayName(playerBattleState.disabledMoveId),
+          }),
+        );
         playerBattleState.disabledMoveId = null;
       }
     }
     if (enemyBattleState.disabledMoveTurnsRemaining > 0) {
       enemyBattleState.disabledMoveTurnsRemaining--;
       if (enemyBattleState.disabledMoveTurnsRemaining <= 0 && enemyBattleState.disabledMoveId !== null) {
-        lines.push(t('battle.disableMoveEnd', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(enemyBattleState.disabledMoveId) }));
+        lines.push(
+          t('battle.disableMoveEnd', {
+            name: getPokemonDisplayName(enemy.id),
+            move: getMoveDisplayName(enemyBattleState.disabledMoveId),
+          }),
+        );
         enemyBattleState.disabledMoveId = null;
       }
     }
@@ -3448,7 +3453,12 @@ export function createBattleScene(
             )
           : waitStep(profile.impactTime),
         callStep(() => {
-          if (profile.family === 'pulse' || profile.family === 'burst' || profile.family === 'lunge') {
+          if (
+            profile.family === 'pulse' ||
+            profile.family === 'burst' ||
+            profile.family === 'lunge' ||
+            profile.family === 'earthquake'
+          ) {
             attackFx = createAttackEffect({
               kind: profile.family === 'lunge' ? 'burst' : profile.family,
               sourceX: source.x,
@@ -3457,7 +3467,8 @@ export function createBattleScene(
               targetY: target.y,
               color: profile.color,
               accentColor: profile.accentColor,
-              duration: profile.family === 'lunge' ? 0.2 : undefined,
+              duration:
+                profile.family === 'lunge' ? 0.2 : profile.family === 'earthquake' ? profile.duration : undefined,
             });
           }
           onImpact();
@@ -3522,7 +3533,9 @@ export function createBattleScene(
 
     if (m.id === playerBattleState.disabledMoveId) {
       const msgs = [...turnEffectLines];
-      msgs.push(t('battle.moveCantUseDisabled', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) }));
+      msgs.push(
+        t('battle.moveCantUseDisabled', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) }),
+      );
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
@@ -3650,6 +3663,7 @@ export function createBattleScene(
     const isRapidSpinClear = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
     const isSubstitute = moveBattleData?.behaviorTags?.includes('substitute') ?? false;
     const isBellyDrum = moveBattleData?.behaviorTags?.includes('belly-drum') ?? false;
+    const isMagnitude = moveBattleData?.behaviorTags?.includes('magnitude') ?? false;
     const isBatonPass = moveBattleData?.behaviorTags?.includes('baton-pass') ?? false;
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
@@ -3864,12 +3878,7 @@ export function createBattleScene(
             Math.random,
             playerHasContrary,
           );
-          spawnDamageNumber(
-            `-${cost}`,
-            BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
-            BTL.PLY_SPRITE.y + 10,
-            '#f8d858',
-          );
+          spawnDamageNumber(`-${cost}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
           flash = createFlash('#fff29a', 0.12);
           shake = createShake(1.4, 0.18);
           audio.playSFX('hit');
@@ -4036,6 +4045,26 @@ export function createBattleScene(
       : { hit: true, chance: 100 };
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
+    let magnitudeLevel = 0;
+    if (isMagnitude) {
+      const roll = Math.random() * 100;
+      if (roll < 20) {
+        magnitudeLevel = 1;
+        m = { ...m, power: 20 };
+      } else if (roll < 35) {
+        magnitudeLevel = 2;
+        m = { ...m, power: 30 };
+      } else if (roll < 75) {
+        magnitudeLevel = 3;
+        m = { ...m, power: 60 };
+      } else if (roll < 95) {
+        magnitudeLevel = 4;
+        m = { ...m, power: 90 };
+      } else {
+        magnitudeLevel = 5;
+        m = { ...m, power: 120 };
+      }
+    }
     const movePower = isWeightTarget
       ? getWeightTargetPower(computePokemonSize(enemy).weightKg)
       : isWeightRatio
@@ -4125,6 +4154,9 @@ export function createBattleScene(
       if (redirectMsg) msgs.push(redirectMsg);
     }
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
+    if (isMagnitude && magnitudeLevel > 0) {
+      msgs.push(t('battle.magnitudeLevel', { level: magnitudeLevel, power: m.power }));
+    }
     // Weather effect on this move
     if (battleWeather && doesMoveTargetOpponent(moveBattleData)) {
       const wName = getWeatherDisplayName(battleWeather.type);
@@ -4147,7 +4179,13 @@ export function createBattleScene(
         const et = effText(m.type, enemy.types);
         if (et) msgs.push(et);
         if (plannedDamage > 0 && enemy.abilityId !== null) {
-          const abilityMsg = getDefenderAbilityActivationMsg(enemy, enemyBattleState, getAbilityBattleEffects(enemy.abilityId), m.type, defenderName);
+          const abilityMsg = getDefenderAbilityActivationMsg(
+            enemy,
+            enemyBattleState,
+            getAbilityBattleEffects(enemy.abilityId),
+            m.type,
+            defenderName,
+          );
           if (abilityMsg) msgs.push(abilityMsg);
         }
         if (isWeightTarget || isWeightRatio) {
@@ -4658,6 +4696,7 @@ export function createBattleScene(
     const isRapidSpinClearEnemy = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
     const isSubstituteEnemy = moveBattleData?.behaviorTags?.includes('substitute') ?? false;
     const isBellyDrumEnemy = moveBattleData?.behaviorTags?.includes('belly-drum') ?? false;
+    const isMagnitudeEnemy = moveBattleData?.behaviorTags?.includes('magnitude') ?? false;
     const isCounterEnemy = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoatEnemy = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoatEnemy = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
@@ -4694,7 +4733,9 @@ export function createBattleScene(
 
     if (m.id === enemyBattleState.disabledMoveId) {
       const msgs = [...prefix, ...turnEffectLines];
-      msgs.push(t('battle.moveCantUseDisabled', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) }));
+      msgs.push(
+        t('battle.moveCantUseDisabled', { name: getPokemonDisplayName(enemy.id), move: getMoveDisplayName(m.id) }),
+      );
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
@@ -4895,12 +4936,7 @@ export function createBattleScene(
             Math.random,
             enemyHasContrary,
           );
-          spawnDamageNumber(
-            `-${cost}`,
-            BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
-            BTL.OPP_SPRITE.y + 10,
-            '#f8d858',
-          );
+          spawnDamageNumber(`-${cost}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#f8d858');
           const msgs = [
             ...prefix,
             ...turnEffectLines,
@@ -5054,6 +5090,26 @@ export function createBattleScene(
       : { hit: true, chance: 100 };
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
+    let magnitudeLevelEnemy = 0;
+    if (isMagnitudeEnemy) {
+      const roll = Math.random() * 100;
+      if (roll < 15) {
+        magnitudeLevelEnemy = 1;
+        m = { ...m, power: 20 };
+      } else if (roll < 35) {
+        magnitudeLevelEnemy = 2;
+        m = { ...m, power: 30 };
+      } else if (roll < 65) {
+        magnitudeLevelEnemy = 3;
+        m = { ...m, power: 60 };
+      } else if (roll < 85) {
+        magnitudeLevelEnemy = 4;
+        m = { ...m, power: 90 };
+      } else {
+        magnitudeLevelEnemy = 5;
+        m = { ...m, power: 120 };
+      }
+    }
     const movePowerEnemy = isWeightTargetEnemy
       ? getWeightTargetPower(computePokemonSize(player).weightKg)
       : isWeightRatioEnemy
@@ -5141,6 +5197,9 @@ export function createBattleScene(
       if (redirectMsgEnemy) msgs.push(redirectMsgEnemy);
     }
     msgs.push(t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }));
+    if (isMagnitudeEnemy && magnitudeLevelEnemy > 0) {
+      msgs.push(t('battle.magnitudeLevel', { level: magnitudeLevelEnemy, power: m.power }));
+    }
     // Weather effect on this move
     if (battleWeather && doesMoveTargetOpponent(moveBattleData)) {
       const wName = getWeatherDisplayName(battleWeather.type);
@@ -5163,7 +5222,13 @@ export function createBattleScene(
         const et = effText(m.type, player.types);
         if (et) msgs.push(et);
         if (plannedDamage > 0 && player.abilityId !== null) {
-          const abilityMsg = getDefenderAbilityActivationMsg(player, playerBattleState, getAbilityBattleEffects(player.abilityId), m.type, defenderName);
+          const abilityMsg = getDefenderAbilityActivationMsg(
+            player,
+            playerBattleState,
+            getAbilityBattleEffects(player.abilityId),
+            m.type,
+            defenderName,
+          );
           if (abilityMsg) msgs.push(abilityMsg);
         }
         if (isWeightTargetEnemy || isWeightRatioEnemy) {

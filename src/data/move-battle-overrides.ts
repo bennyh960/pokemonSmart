@@ -240,6 +240,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Brave Bird': { recoilPercent: 33 },
   'Wave Crash': { recoilPercent: 33 },
   'Belly Drum': { behaviorTags: ['belly-drum'], statChanges: [stageChange('attack', +6, 'user', 100)] },
+  'Magnitude': { behaviorTags: ['magnitude'] },
 
   // --- Target stat-down on hit (always) ---
   'Icy Wind': { statChanges: [stageChange('speed', -1, 'target', 100)] },

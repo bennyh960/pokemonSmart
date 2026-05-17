@@ -404,6 +404,7 @@
   "battle.destinyBondTrigger": "{name} נגרר לאבדון!",
   "battle.bellyDrumTooWeak": "ל{name} אין מספיק חיים להשתמש בBelly Drum!",
   "battle.bellyDrumCost": "{name} ויתר על חצי חיים ומקסם את ההתקפה!",
+  "battle.magnitudeLevel": "!{level} Magnitude (כוח: {power})",
   "battle.substituteCreated": "{name} התחבא מאחורי בובה!",
   "battle.substituteTooWeak": "{name} חלש מדי להכין בובה!",
   "battle.substituteAlreadyActive": "לְ{name} כבר יש בובה!",
