@@ -3008,7 +3008,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // NPC interaction: Enter/Space when not moving
       if (!player.moving && (input.isKeyPressed('Enter') || input.isKeyPressed(' '))) {
         if (npcManager) {
-          const npc = npcManager.getFacingNPC(player.gridX, player.gridY, player.facing);
+          // Prefer NPC in facing direction; fall back to any adjacent floating NPC
+          const npc =
+            npcManager.getFacingNPC(player.gridX, player.gridY, player.facing) ??
+            npcManager.getNearbyFloatingNPC(player.gridX, player.gridY);
           const _iPd = hasActiveGame() ? getPlayerData() : null;
           const iFlags = _iPd?.flags ?? {};
           if (npc && npc.dialogue.length > 0 && isNPCVisible(npc, iFlags, _iPd?.party)) {

@@ -395,6 +395,24 @@ export function createNPCManager(npcs: NPCData[]) {
       return undefined;
     },
 
+    /**
+     * Get a nearby floating NPC within 1 tile in any direction (including diagonals and
+     * the player's own tile). Used as a fallback when the player presses Space and no
+     * NPC is found in the facing direction — floating NPCs move freely so the player
+     * can't reliably face them.
+     */
+    getNearbyFloatingNPC(playerX: number, playerY: number): NPCData | undefined {
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const npc = npcs.find(
+            (n) => n.autoWalk?.floating && n.x === playerX + dx && n.y === playerY + dy,
+          );
+          if (npc) return npc;
+        }
+      }
+      return undefined;
+    },
+
     /** Get all trainer NPCs. */
     getTrainers(): TrainerData[] {
       return npcs.filter((npc): npc is TrainerData => npc.type === 'trainer');
