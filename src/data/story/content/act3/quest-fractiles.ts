@@ -83,6 +83,14 @@ registerQuest({
     he: 'בקר במכון החשמל בתחנת הכוח בדרך 8',
   },
 });
+registerQuest({
+  id: 'finish-act3-route8',
+  title: { en: 'Continue on Route-8', he: 'המשך בדרך 8' },
+  objective: {
+    en: 'Continue on Route-8 to Symetria city',
+    he: 'המשך בדרך 8 לעיר סימטריה',
+  },
+});
 
 //# ── Gate ──────────────────────────────────────────────────────────────────────
 registerGate({
@@ -508,5 +516,16 @@ registerStoryEvent({
   actions: [
     { type: 'set-flag', flag: FLAGS.ACT3_FRACTALIS_ZAPDOS_DEFEATED },
     { type: 'start-cutscene', cutsceneId: 'act3-zapdos-core-reveal' },
+  ],
+});
+
+registerStoryEvent({
+  id: 'act3-end',
+  trigger: { type: 'flag-set', flag: FLAGS.STORY_BADGE_5 },
+  conditions: [{ type: 'flag-not', flag: FLAGS.STORY_BADGE_5 }],
+  actions: [
+    { type: 'complete-quest', questId: 'main-act3-electric-gym' },
+    { type: 'set-quest', questId: 'finish-act3-route8' },
+    { type: 'set-flag', flag: FLAGS.STORY_BADGE_5 },
   ],
 });

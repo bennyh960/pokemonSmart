@@ -441,7 +441,7 @@
       "id": "npc-rival-route8",
       "x": 8,
       "y": 2,
-      "facing": "right",
+      "facing": "down",
       "type": "trainer",
       "dialogue": [
         {
@@ -580,7 +580,7 @@
 ,
   "tiles": [
     ["g1","g1","g1","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["gre-c","gre-c","gre-c","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g2","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["gre-c","gre-c","gre-c","g1","g1","g1","g1","g1","s1-5","s1-5","g1","g1","g1","g1","g1","g1","gre-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
@@ -639,8 +639,8 @@
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","gre-c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","door-gym","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","wt1l","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtbr1-3","mtcb2"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["g1","g1","g1","g1","gre-c","gre-c","g1","g1","s1-5","s1-5","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","gre-c","gre-c","gre-c","gre-c","wt1l","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
@@ -1997,6 +1997,36 @@
       "y": 57
     },
     {
+      "key": "t9",
+      "x": 22,
+      "y": 64
+    },
+    {
+      "key": "t9",
+      "x": 22,
+      "y": 62
+    },
+    {
+      "key": "t9",
+      "x": 22,
+      "y": 66
+    },
+    {
+      "key": "t9",
+      "x": 24,
+      "y": 62
+    },
+    {
+      "key": "t9",
+      "x": 24,
+      "y": 64
+    },
+    {
+      "key": "t9",
+      "x": 24,
+      "y": 66
+    },
+    {
       "key": "s1-4",
       "x": 26,
       "y": 62
@@ -2158,7 +2188,17 @@
     },
     {
       "key": "s1-8",
+      "x": 24,
+      "y": 62
+    },
+    {
+      "key": "s1-8",
       "x": 23,
+      "y": 62
+    },
+    {
+      "key": "s1-8",
+      "x": 22,
       "y": 62
     },
     {
@@ -7332,6 +7372,21 @@
       "y": 29
     },
     {
+      "key": "s1-6",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "s1-6",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "t3",
+      "x": 10,
+      "y": 0
+    },
+    {
       "key": "g5",
       "x": 12,
       "y": 13
@@ -11098,146 +11153,6 @@
       "interactArgs": {
         "spawnAfter": "story-badge-5"
       }
-    },
-    {
-      "key": "s1-8",
-      "x": 22,
-      "y": 62
-    },
-    {
-      "key": "s1-8",
-      "x": 24,
-      "y": 62
-    },
-    {
-      "key": "g3",
-      "x": 22,
-      "y": 63
-    },
-    {
-      "key": "g3",
-      "x": 22,
-      "y": 64
-    },
-    {
-      "key": "g3",
-      "x": 22,
-      "y": 65
-    },
-    {
-      "key": "g3",
-      "x": 22,
-      "y": 66
-    },
-    {
-      "key": "g3",
-      "x": 22,
-      "y": 67
-    },
-    {
-      "key": "g3",
-      "x": 22,
-      "y": 68
-    },
-    {
-      "key": "g3",
-      "x": 23,
-      "y": 68
-    },
-    {
-      "key": "g3",
-      "x": 23,
-      "y": 67
-    },
-    {
-      "key": "g3",
-      "x": 23,
-      "y": 66
-    },
-    {
-      "key": "g3",
-      "x": 23,
-      "y": 65
-    },
-    {
-      "key": "g3",
-      "x": 23,
-      "y": 64
-    },
-    {
-      "key": "g3",
-      "x": 23,
-      "y": 63
-    },
-    {
-      "key": "g3",
-      "x": 24,
-      "y": 63
-    },
-    {
-      "key": "g3",
-      "x": 24,
-      "y": 64
-    },
-    {
-      "key": "g3",
-      "x": 24,
-      "y": 65
-    },
-    {
-      "key": "g3",
-      "x": 24,
-      "y": 66
-    },
-    {
-      "key": "g3",
-      "x": 24,
-      "y": 67
-    },
-    {
-      "key": "g3",
-      "x": 24,
-      "y": 68
-    },
-    {
-      "key": "g3",
-      "x": 25,
-      "y": 68
-    },
-    {
-      "key": "g3",
-      "x": 25,
-      "y": 67
-    },
-    {
-      "key": "g3",
-      "x": 25,
-      "y": 66
-    },
-    {
-      "key": "g3",
-      "x": 25,
-      "y": 65
-    },
-    {
-      "key": "g3",
-      "x": 25,
-      "y": 64
-    },
-    {
-      "key": "g3",
-      "x": 25,
-      "y": 63
-    },
-    {
-      "key": "r1",
-      "x": 10,
-      "y": 0
-    },
-    {
-      "key": "t2b",
-      "x": 10,
-      "y": 0
     }
   ]
 }
