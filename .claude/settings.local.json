@@ -89,7 +89,8 @@
       "Bash(Select-Object -Property FullName)",
       "Bash(Get-ChildItem *)",
       "Bash(Select-Object -First 20)",
-      "Bash(xargs cat)"
+      "Bash(xargs cat)",
+      "Bash(Format-Table FullName)"
     ]
   }
 }

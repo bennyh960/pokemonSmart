@@ -1331,15 +1331,97 @@ export function createBattleScene(
 
   function getBestBoostItemId(bagItems: string[]): string | null {
     const preferred = enemy.attack >= enemy.specialAttack ? 'x-attack' : 'x-special';
-    for (const id of [preferred, 'x-defense', 'x-sp-def', 'x-speed']) {
+    // Prefer the defensive boost that counters the player's dominant attack type
+    const playerIsPhysical = player.attack > player.specialAttack * 1.1;
+    const defPreferred = playerIsPhysical ? 'x-defense' : 'x-sp-def';
+    const defAlternate = playerIsPhysical ? 'x-sp-def' : 'x-defense';
+    for (const id of [preferred, defPreferred, defAlternate, 'x-speed']) {
       if (bagItems.includes(id)) return id;
     }
     return null;
   }
 
+  function countPlayerAliveParty(): number {
+    if (!hasActiveGame()) return 1;
+    return getPlayerData().party.filter((p) => p.hp > 0).length;
+  }
+
+  /** Estimate the best damage the player can deal to the current enemy this turn. */
+  function estimatePlayerBestDamageToEnemy(): number {
+    let best = 0;
+    for (const pm of player.moves) {
+      if (pm.currentPp <= 0 || pm.power <= 0) continue;
+      const mFull = getMove(pm.id);
+      const damageClass = mFull?.damageClass ?? 'physical';
+      const atk =
+        damageClass === 'physical'
+          ? getModifiedStatValue(player, playerBattleState, 'attack')
+          : getModifiedStatValue(player, playerBattleState, 'specialAttack');
+      const def =
+        damageClass === 'physical'
+          ? getModifiedStatValue(enemy, enemyBattleState, 'defense')
+          : getModifiedStatValue(enemy, enemyBattleState, 'specialDefense');
+      const eff = getCombinedTypeEffectiveness(
+        pm.type,
+        enemy.types as import('../types/index.js').PokemonType[],
+      );
+      if (eff === 0) continue;
+      const stab = player.types.includes(pm.type) ? 1.5 : 1.0;
+      const dmg = (((2 * player.level) / 5 + 2) * pm.power * atk) / def / 50 + 2;
+      best = Math.max(best, dmg * eff * stab);
+    }
+    if (best === 0) {
+      const atk = Math.max(player.attack, player.specialAttack);
+      const def = player.attack >= player.specialAttack ? enemy.defense : enemy.specialDefense;
+      best = (((2 * player.level) / 5 + 2) * 80 * atk) / def / 50 + 2;
+    }
+    return best;
+  }
+
+  /**
+   * Returns true when using a stat-boost item makes strategic sense.
+   * Checks: player status, incoming damage pressure, type/level advantage.
+   */
+  function shouldUseBoostItem(): boolean {
+    const enemyHpRatio = enemy.hp / enemy.maxHp;
+    // Don't boost when almost fainted — we won't survive long enough to benefit
+    if (enemyHpRatio < 0.35) return false;
+
+    const playerStatus = playerBattleState.majorStatus;
+
+    // Player can't attack — perfect window to boost
+    if (playerStatus === 'sleep' || playerStatus === 'freeze') return true;
+
+    // Paralyzed player: boost if there are more matchups ahead (extended battle)
+    if (playerStatus === 'paralyze') {
+      const playerRemaining = countPlayerAliveParty();
+      const enemyRemaining = trainerData
+        ? trainerData.party.filter((p, i) => i >= trainerPartyIndex && p.hp > 0).length
+        : 1;
+      return playerRemaining > 1 || enemyRemaining > 1;
+    }
+
+    // Burned physical attacker: their main damage is halved — safe to boost
+    if (playerStatus === 'burn' && player.attack > player.specialAttack * 1.1) return true;
+
+    // If player deals heavy damage, we risk being KO'd before the boost pays off
+    const estIncoming = estimatePlayerBestDamageToEnemy();
+    if (estIncoming >= enemy.hp * 0.5) return false;
+
+    // Boost when AI has type advantage AND level parity — we can afford the setup turn
+    const hasTypeAdv = enemy.types.some((t) =>
+      getCombinedTypeEffectiveness(
+        t as import('../types/index.js').PokemonType,
+        player.types as import('../types/index.js').PokemonType[],
+      ) > 1,
+    );
+    return hasTypeAdv && enemy.level >= player.level;
+  }
+
   function checkTrainerItemUse(): { itemId: string; itemName: string } | null {
     const ai = trainerAIState;
     if (!ai || ai.level < 4) return null;
+    if (isWildNpcBattle && !enemy.isGlitched) return null;
     const remaining = trainerData ? trainerData.party.filter((_, i) => i >= trainerPartyIndex).length : 0;
     if (ai.level === 4 && remaining > 3) return null;
 
@@ -1354,8 +1436,8 @@ export function createBattleScene(
       return d ? getLocalizedName(d.name) : id;
     };
 
-    // Priority 1: stat boost on this Pokemon's first trainer action
-    if (!usedByThis.has('boost')) {
+    // Priority 1: stat boost — only when strategically sound (not when HP low, player is dominating, etc.)
+    if (!usedByThis.has('boost') && shouldUseBoostItem()) {
       const boostId = getBestBoostItemId(bag);
       if (boostId) return { itemId: boostId, itemName: def(boostId) };
     }
@@ -1693,6 +1775,59 @@ export function createBattleScene(
         return 300;
       }
 
+      // Screen moves (Reflect / Light Screen) — only worthwhile at good HP vs the right attacker type
+      const screenEffect = battleData?.sideEffects?.find(
+        (se) => se.id === 'reflect' || se.id === 'light-screen',
+      );
+      if (screenEffect) {
+        if (enemyHpRatio < 0.25) return -Infinity; // Too low HP to benefit
+        if (screenEffect.id === 'reflect' && enemySideState.reflectTurnsRemaining > 0) return -Infinity;
+        if (screenEffect.id === 'light-screen' && enemySideState.lightScreenTurnsRemaining > 0) return -Infinity;
+        // Reflect only helps vs physical attackers; Light Screen only vs special attackers
+        if (screenEffect.id === 'reflect' && player.specialAttack > player.attack * 1.2) return -Infinity;
+        if (screenEffect.id === 'light-screen' && player.attack > player.specialAttack * 1.2) return -Infinity;
+        // Don't set up a screen when player can KO us this turn
+        const estIncomingScreen = estimatePlayerBestDamageToEnemy();
+        if (estIncomingScreen >= enemy.hp) return -Infinity;
+        let screenScore = 250;
+        if (playerBattleState.majorStatus === 'sleep' || playerBattleState.majorStatus === 'freeze')
+          screenScore += 300; // Free turns to let the screen pay off
+        return screenScore;
+      }
+
+      // Self stat-boost moves (Swords Dance, Calm Mind, Dragon Dance, etc.)
+      // Only worthwhile when the player is weakened, slowed, or at a disadvantage
+      const selfBoosts =
+        battleData?.statChanges?.filter(
+          (sc) => sc.target === 'user' && sc.stages > 0 && sc.stat !== 'evasion',
+        ) ?? [];
+      if (selfBoosts.length > 0) {
+        if (enemyHpRatio < 0.3) return -Infinity;
+        const estIncomingBoost = estimatePlayerBestDamageToEnemy();
+        if (estIncomingBoost >= enemy.hp * 0.45) return -Infinity; // Too risky to set up
+        const playerStatus = playerBattleState.majorStatus;
+        let setupScore = 0;
+        if (playerStatus === 'sleep' || playerStatus === 'freeze') {
+          setupScore = 500; // Multiple free turns — ideal setup window
+        } else if (playerStatus === 'paralyze') {
+          setupScore = 300;
+        } else if (playerStatus === 'burn') {
+          // Burn is most disruptive to physical attackers
+          setupScore = player.attack > player.specialAttack * 1.1 ? 350 : 80;
+        } else {
+          // No status — only set up if we have type advantage or level advantage
+          const hasTypeAdv = enemy.types.some((t) =>
+            getCombinedTypeEffectiveness(
+              t as import('../types/index.js').PokemonType,
+              player.types as import('../types/index.js').PokemonType[],
+            ) > 1,
+          );
+          if (!hasTypeAdv && enemy.level <= player.level) return -Infinity;
+          setupScore = hasTypeAdv ? 220 : 120;
+        }
+        return setupScore;
+      }
+
       // Volatile status (confusion, leech-seed, trap) — don't reapply, and respect type immunity
       const appliesConfusion = effects.some((e) => e.id === 'confusion' && e.target === 'target');
       const appliesLeechSeed = effects.some((e) => e.id === 'leech-seed' && e.target === 'target');
@@ -1708,12 +1843,22 @@ export function createBattleScene(
         score += 300; // Volatile statuses are valuable
       }
 
-      // Major status ailment moves — check type immunity before scoring
+      // Major status ailment moves — more valuable when we have type/level advantage
       if (ailment !== null) {
         if (player.status !== null) return -Infinity; // Already statused
         if (isTargetImmuneToStatusEffectFromMoveType(player, move.type, ailment)) return -Infinity; // Type immune
-        if (enemyHpRatio > 0.5) score += 250;
-        else score += 100; // Lower priority when enemy is struggling
+        const hasTypeAdv = enemy.types.some((t) =>
+          getCombinedTypeEffectiveness(
+            t as import('../types/index.js').PokemonType,
+            player.types as import('../types/index.js').PokemonType[],
+          ) > 1,
+        );
+        const hasLevelAdv = enemy.level >= player.level;
+        if (enemyHpRatio > 0.5) {
+          score += hasTypeAdv && hasLevelAdv ? 380 : 250;
+        } else {
+          score += 80; // Low HP — risky to spend a turn on status
+        }
       }
     }
 
@@ -3504,6 +3649,7 @@ export function createBattleScene(
     const isToxicSpikes = moveBattleData?.behaviorTags?.includes('toxic-spikes') ?? false;
     const isRapidSpinClear = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
     const isSubstitute = moveBattleData?.behaviorTags?.includes('substitute') ?? false;
+    const isBellyDrum = moveBattleData?.behaviorTags?.includes('belly-drum') ?? false;
     const isBatonPass = moveBattleData?.behaviorTags?.includes('baton-pass') ?? false;
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
@@ -3675,6 +3821,63 @@ export function createBattleScene(
             ...turnEffectLines,
             t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
             t('battle.substituteCreated', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'PLAYER_ATTACK';
+          phaseTimer = 0;
+        },
+        false,
+      );
+      return;
+    }
+
+    // Belly Drum: costs 50% max HP, raises Attack to max — fails if HP ≤ 50%
+    if (isBellyDrum) {
+      const cost = Math.floor(player.maxHp / 2);
+      if (player.hp <= cost) {
+        const msgs = [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.bellyDrumTooWeak', { name: attackerName }),
+        ];
+        audio.playSFX('menu-cancel');
+        textBox = createTextBox(msgs, rtl);
+        phase = 'PLAYER_ATTACK';
+        phaseTimer = 0;
+        return;
+      }
+      playAttackAnimation(
+        'player',
+        'enemy',
+        m,
+        () => {
+          player.hp = Math.max(1, player.hp - cost);
+          setHP(playerHpBar, player.hp);
+          syncPlayerBar();
+          const playerHasContrary = player.abilityId
+            ? getAbilityBattleEffects(player.abilityId).some((e) => e.kind === 'contraryStatChanges')
+            : false;
+          const statChanges = applyStatChanges(
+            playerBattleState,
+            moveBattleData!.statChanges,
+            'user',
+            Math.random,
+            playerHasContrary,
+          );
+          spawnDamageNumber(
+            `-${cost}`,
+            BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+            BTL.PLY_SPRITE.y + 10,
+            '#f8d858',
+          );
+          flash = createFlash('#fff29a', 0.12);
+          shake = createShake(1.4, 0.18);
+          audio.playSFX('hit');
+          const msgs = [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.bellyDrumCost', { name: attackerName }),
+            ...statChanges.map((c) => getStatChangeLine(attackerName, c)),
           ];
           textBox = createTextBox(msgs, rtl);
           phase = 'PLAYER_ATTACK';
@@ -4454,6 +4657,7 @@ export function createBattleScene(
     const isToxicSpikesEnemy = moveBattleData?.behaviorTags?.includes('toxic-spikes') ?? false;
     const isRapidSpinClearEnemy = moveBattleData?.behaviorTags?.includes('rapid-spin-clear') ?? false;
     const isSubstituteEnemy = moveBattleData?.behaviorTags?.includes('substitute') ?? false;
+    const isBellyDrumEnemy = moveBattleData?.behaviorTags?.includes('belly-drum') ?? false;
     const isCounterEnemy = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoatEnemy = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoatEnemy = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
@@ -4648,6 +4852,61 @@ export function createBattleScene(
             ...turnEffectLines,
             t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
             t('battle.substituteCreated', { name: attackerName }),
+          ];
+          textBox = createTextBox(msgs, rtl);
+          phase = 'ENEMY_TURN';
+          phaseTimer = 0;
+        },
+        false,
+      );
+      return;
+    }
+
+    // Belly Drum: costs 50% max HP, raises Attack to max — fails if HP ≤ 50%
+    if (isBellyDrumEnemy) {
+      const cost = Math.floor(enemy.maxHp / 2);
+      if (enemy.hp <= cost) {
+        const msgs = [
+          ...prefix,
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.bellyDrumTooWeak', { name: attackerName }),
+        ];
+        textBox = createTextBox(msgs, rtl);
+        phase = 'ENEMY_TURN';
+        phaseTimer = 0;
+        return;
+      }
+      playAttackAnimation(
+        'enemy',
+        'player',
+        m,
+        () => {
+          enemy.hp = Math.max(1, enemy.hp - cost);
+          setHP(enemyHpBar, enemy.hp);
+          syncEnemyBar();
+          const enemyHasContrary = enemy.abilityId
+            ? getAbilityBattleEffects(enemy.abilityId).some((e) => e.kind === 'contraryStatChanges')
+            : false;
+          const statChanges = applyStatChanges(
+            enemyBattleState,
+            moveBattleData!.statChanges,
+            'user',
+            Math.random,
+            enemyHasContrary,
+          );
+          spawnDamageNumber(
+            `-${cost}`,
+            BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+            BTL.OPP_SPRITE.y + 10,
+            '#f8d858',
+          );
+          const msgs = [
+            ...prefix,
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.bellyDrumCost', { name: attackerName }),
+            ...statChanges.map((c) => getStatChangeLine(attackerName, c)),
           ];
           textBox = createTextBox(msgs, rtl);
           phase = 'ENEMY_TURN';

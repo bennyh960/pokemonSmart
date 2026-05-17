@@ -190,7 +190,7 @@
       "id": "gate-symetrica-route10-1",
       "x": 18,
       "y": 5,
-      "facing": "right",
+      "facing": "down",
       "type": "gate-guard",
       "dialogue": [
         {
@@ -205,7 +205,7 @@
       "id": "gate-symetrica-route10-2",
       "x": 22,
       "y": 5,
-      "facing": "left",
+      "facing": "down",
       "type": "dialogue",
       "dialogue": [
         {

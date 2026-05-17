@@ -12,7 +12,7 @@
   "transitions": [],
   "npcs": [
     {
-      "id": "npc-149109442",
+      "id": "npc-17784349109442",
       "x": 11,
       "y": 5,
       "facing": "down",
@@ -25,7 +25,22 @@
       ],
       "spriteType": "char_86bf88",
       "level": 50,
-      "pokemonId": 250
+      "pokemonId": 250,
+      "fleeAfterTurns": 5
+    },
+    {
+      "id": "npc-1778434926459",
+      "x": 16,
+      "y": 6,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "alice"
     },
     {
       "id": "npc-1778434958432",
@@ -45,9 +60,9 @@
       ]
     },
     {
-      "id": "npc-1779047504865",
-      "x": 14,
-      "y": 5,
+      "id": "npc-127851360833022",
+      "x": 10,
+      "y": 11,
       "facing": "down",
       "type": "trainer",
       "dialogue": [
@@ -56,26 +71,36 @@
           "he": ""
         }
       ],
-      "spriteType": "leon",
+      "spriteType": "char_24117d",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 7,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 7,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 7,
+            "delay": 1
+          },
+          {
+            "dir": "down",
+            "steps": 7,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      },
       "party": [
         {
-          "pokemonId": 144,
-          "level": 49,
-          "moves": []
-        },
-        {
-          "pokemonId": 145,
-          "level": 50,
-          "moves": []
-        },
-        {
-          "pokemonId": 146,
-          "level": 50,
-          "moves": []
-        },
-        {
-          "pokemonId": 248,
-          "level": 50,
+          "pokemonId": 1,
+          "level": 5,
           "moves": []
         }
       ],
@@ -84,6 +109,20 @@
         "money": 0
       },
       "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1778843420094",
+      "x": 14,
+      "y": 11,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male"
     }
   ],
   "music": "town",

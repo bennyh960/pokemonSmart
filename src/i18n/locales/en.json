@@ -402,6 +402,8 @@
   "battle.magicCoatReflect": "{name}'s Magic Coat reflected the move!",
   "battle.destinyBondActive": "{name} is sealed in a destiny bond!",
   "battle.destinyBondTrigger": "{name} was dragged down by the bond!",
+  "battle.bellyDrumTooWeak": "{name} doesn't have enough HP to use Belly Drum!",
+  "battle.bellyDrumCost": "{name} cut its own HP and maximized its Attack!",
   "battle.substituteCreated": "{name} withdrew behind a substitute!",
   "battle.substituteTooWeak": "{name} is too weak to make a substitute!",
   "battle.substituteAlreadyActive": "{name} already has a substitute!",

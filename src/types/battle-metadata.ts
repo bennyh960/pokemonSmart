@@ -57,7 +57,8 @@ export type MoveBattleBehaviorTag =
   | 'assist'
   | 'copycat'
   | 'mirror-move'
-  | 'disable';
+  | 'disable'
+  | 'belly-drum';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 
