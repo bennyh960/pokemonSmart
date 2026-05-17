@@ -523,38 +523,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "npc-1779snoralx",
-      "x": 22,
-      "y": 3,
-      "facing": "right",
-      "type": "wild-pokemon",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "סנוררר"
-        }
-      ],
-      "spriteType": "snorlax",
-      "despawnOnDefeat": true,
-      "level": 30,
-      "pokemonId": 143,
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "right",
-            "steps": 15,
-            "delay": 3
-          },
-          {
-            "dir": "left",
-            "steps": 15,
-            "delay": 1
-          }
-        ],
-        "loop": true
-      }
     }
   ],
   "music": "town3",
