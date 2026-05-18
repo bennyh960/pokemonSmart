@@ -16,11 +16,21 @@ Parse as:
 
 ## Game Context
 
-The player is a Pokemon trainer journeying across Numeria, earning badges, and fighting NULL-X — a rogue AI stolen and controled by Team Rocket. NULL-X has ability to create glitch virus (fake man / fake pokemons) those cannot solve math, so **question gates** block its influence.
+In the region of Numeria, trainers journey to earn badges while facing a growing threat from NULL‑X, a rogue AI originally created by Professors Oak and Algorithima. After being stolen and corrupted by Team Rocket, NULL‑X began spreading glitch phenomena—creating fake NPCs and unstable Pokémon that cannot be captured.
+These glitches have a key weakness: they cannot solve logic or math, which is why Question Gates are used to block their spread.
+NULL‑X’s power is divided into eight cores, now hidden within powerful legendary Pokémon controlled by Team Rocket. These Pokémon appear as unstable glitch encounters across the region.
+The player’s mission is to:
 
-Full lore is still dynamic - if something missing - stop and ask the player (there is lore in spec but is not up-to-date)
+Progress through gyms
+Investigate glitch outbreaks
+Encounter and weaken corrupted legendary Pokémon
+Recover the NULL‑X cores (cors tasks i want make the elite4 join espacily Lance)
 
----
+By collecting all cores, the professors aim to either restore or' stop NULL‑X, preventing it from fully reassembling and taking over Numeria.
+
+## Full lore is still dynamic - if something missing - stop and ask the player
+
+for Story characters from characters json has 'story' role - in cutscene i prefer use speakerId and point to the id of those story character which automaticly join the name and sprite . for player itself or non story character its ok to staticly make "player/שחקן" or any other speakerName hardcoded.
 
 ## Step 1 — Read current state
 
@@ -72,7 +82,7 @@ Then list **new flags**:
 | `src/data/story/flags.ts`                 | Add new flags in the right act section + FLAG_DESCRIPTIONS entries |
 | `src/data/story/content/act{N}/<name>.ts` | Quests, gates, cutscenes, story events                             |
 | Map JSONs                                 | Add NPCs at placeholder coords (see rules below)                   |
-| `routes/route-7.json` etc.                | Edit existing NPCs (add despawnAfter, etc.)                        |
+| `routes/route-7.json` etc. (as example)   | Edit existing NPCs (add despawnAfter, etc.)                        |
 
 ### Flags.ts rules
 
@@ -93,8 +103,7 @@ A quest that is started and never completed stays "active" forever.
 
 ### Cutscene rules
 
-1. **Every `dialogue` step must have `speakerName`** — never omit it, even for player lines.
-   Format: `'Character Name / שם הדמות'` unless the dialouge already have speakerID . in such a case we have speakerID no need speakerName (the logic doing lookup to name)
+1. **Every dialouge step should have `speakerId` or `speakerName`** speakerId resolves portraits from NPCs in the CURRENT map only. If the NPC is in a different map (e.g. gym interior), omit `speakerId` or add `speakerName` as fallback (format : `'Character Name / שם הדמות'`).
 
 2. **`move-npc` followed by `hide-npc` or `set-flag` must use `waitForComplete: true`** — otherwise the NPC disappears before finishing the walk:
 
@@ -105,19 +114,16 @@ A quest that is started and never completed stays "active" forever.
 
 3. **Flag set order in cutscenes** — set the "phase gate" flag AFTER all hide-npc/move-npc steps, so `despawnAfter` NPCs vanish at the right moment.
 
-4. **Use `phoneCaller: { en, he }`** on a cutscene to make it open as an incoming phone call.
-
-5. **`face-npc`** before every NPC's first dialogue step, so they look at the player.
-
-6. **`speakerId`** resolves portraits from NPCs in the CURRENT map only. If the NPC is in a different map (e.g. gym interior), omit `speakerId` or add `speakerName` as fallback.
+4. **`face-npc`** before every NPC's first dialogue step, so they look at the player.
 
 ### NPC placement rules
 
+\*\* You focus on flags and NPC names characters ID's and story line - me as human focus on correctly place them on the map
 For every new NPC:
 
 1. Place it in the correct map JSON at **placeholder coords**: `"x": <story-index>, "y": 0` (first NPC gets x:0, second x:1, etc.).
 2. Fill every field fully: `id`, `name`, `type`, `spriteType`, `dialogue`, `spawnAfter`, `despawnAfter`, `facing`, and for trainers: `party`, `reward`.
-3. Default sprites: `npc-m` / `npc-f` (male/female civilian), `officer-Jenny` (Jenny), `gate-officer` (route officer).
+3. Default sprites: `npc-m` / `npc-f` (male/female civilian) used for glitchs only!!!, `officer-Jenny` (Jenny), `gate-officer` (route officer) (you can see in characters.json for all relevant roles per NPC's).
 4. The user's only job is to **move the placeholder coords to the real position** — everything else is already set.
 
 For NPCs on **multiple maps**, add a separate entry to each map JSON.
@@ -189,16 +195,6 @@ List: quest IDs, gate IDs, cutscene IDs, story event IDs, new flag names.
 ## System Capabilities Reference
 
 Use this — do NOT re-read engine source to learn capabilities.
-
-### Story triggers
-
-- `map-enter` — `{ mapId }`
-- `map-exit` — `{ mapId }`
-- `npc-interact` — `{ npcId }`
-- `flag-set` — `{ flag }` — use for chaining off trainer defeats
-- `trainer-defeated` — `{ trainerId }` — OK for wild/legendary NPC battles
-- `badge-earned` — `{ badge: 1–8 }`
-- `gate-cleared` — `{ gateId }`
 
 ### Story actions
 

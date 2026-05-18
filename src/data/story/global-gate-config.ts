@@ -83,7 +83,7 @@ export const AUTO_GATE_TIME_LIMITS = {
 export const AUTO_GATE_COOLDOWNS = {
   pokecenter: 30 * 60 * 1000, // 30 minutes
   pokemarket: 15 * 60 * 1000, // 15 minutes
-  gym: 45 * 60 * 1000, // 45 minutes (use gym when preparing for badge)
+  gym: 60 * 60 * 1000, // 60 minutes (use gym when preparing for badge)
 } as const;
 
 /** Rewards per service type. */
@@ -253,6 +253,14 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
       timeLimitPerQuestion: 180,
     },
   },
+  'symmetrika/gym': {
+    questionSetIds: ['+', '-', '×', '÷'],
+    sessionConfig: {
+      inputQuestions: { count: 10, types: ['+', '-', '×', '÷'] },
+      questionsRequired: 25,
+      timeLimitPerQuestion: 150,
+    },
+  },
 };
 
 registerAutoGateMap('sumville/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['sumville/gym']);
@@ -260,3 +268,4 @@ registerAutoGateMap('minusburg/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['minusburg/g
 registerAutoGateMap('multiplia/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['multiplia/gym']);
 registerAutoGateMap('divida/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['divida/gym']);
 registerAutoGateMap('fractalis/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['fractalis/gym']);
+registerAutoGateMap('symmetrika/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['symmetrika/gym']);
