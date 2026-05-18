@@ -62,9 +62,24 @@ export function createAudioManager() {
   /** Cached SFX Howl instances. */
   const sfxCache = new Map<string, Howl>();
 
+  /** Lazy-loaded letter phonics (null = file missing, use SpeechSynthesis). */
+  const letterCache = new Map<string, Howl | null>();
+  /** Lazy-loaded word audio (null = file missing, use SpeechSynthesis). */
+  const wordCache = new Map<string, Howl | null>();
+
   let musicVolume = 0.5;
   let sfxVolume = 0.7;
   let muted = localStorage.getItem('muted') === 'true'; 
+
+  function speakText(text: string, rate: number): void {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'en-US';
+    utt.rate = rate;
+    utt.volume = sfxVolume;
+    window.speechSynthesis.speak(utt);
+  }
 
   function withSynthContext(run: (actx: AudioContext) => void): void {
     if (muted) return;
@@ -597,6 +612,75 @@ export function createAudioManager() {
         gain: 0.22,
         spacing: 0.02,
       });
+    },
+
+    playLetter(letter: string): void {
+      if (muted) return;
+      const key = letter.toLowerCase();
+      if (!letterCache.has(key)) {
+        const src = toAssetUrl(`audio/phonics/${key}.mp3`);
+        const h = new Howl({
+          src: [src],
+          preload: false,
+          format: ['mp3'],
+          volume: sfxVolume,
+          onloaderror: () => {
+            letterCache.set(key, null);
+            speakText(key, 0.75);
+          },
+        });
+        letterCache.set(key, h);
+        h.load();
+        h.once('load', () => { if (!muted) h.play(); });
+        // Immediate SpeechSynthesis fallback — replaced by Howl on second call
+        speakText(key, 0.75);
+        return;
+      }
+      const howl = letterCache.get(key);
+      if (howl) howl.play(); else speakText(key, 0.75);
+    },
+
+    preloadLetters(letters: string[]): void {
+      for (const letter of letters) {
+        const key = letter.toLowerCase();
+        if (!letterCache.has(key)) {
+          const src = toAssetUrl(`audio/phonics/${key}.mp3`);
+          const h = new Howl({
+            src: [src],
+            preload: false,
+            format: ['mp3'],
+            volume: sfxVolume,
+            onloaderror: () => { letterCache.set(key, null); },
+          });
+          letterCache.set(key, h);
+          h.load();
+        }
+      }
+    },
+
+    playWord(word: string): void {
+      if (muted) return;
+      const key = word.toLowerCase();
+      if (!wordCache.has(key)) {
+        const src = toAssetUrl(`audio/words/${key}.mp3`);
+        const h = new Howl({
+          src: [src],
+          preload: false,
+          format: ['mp3'],
+          volume: sfxVolume,
+          onloaderror: () => {
+            wordCache.set(key, null);
+            speakText(word, 0.85);
+          },
+        });
+        wordCache.set(key, h);
+        h.load();
+        h.once('load', () => { if (!muted) h.play(); });
+        speakText(word, 0.85);
+        return;
+      }
+      const howl = wordCache.get(key);
+      if (howl) howl.play(); else speakText(word, 0.85);
     },
 
     setMuted(value: boolean): void {

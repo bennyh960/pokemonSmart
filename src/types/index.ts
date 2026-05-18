@@ -35,7 +35,8 @@ export type SceneId =
   | 'GATE'
   | 'CUTSCENE'
   | 'SAVE_SLOTS'
-  | 'START_MENU';
+  | 'START_MENU'
+  | 'ENGLISH_LEARNING';
 
 /** Top-level game state snapshot. */
 export interface GameState {

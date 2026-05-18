@@ -24,7 +24,7 @@ const ITEM_H = 14;
 const PAD_V = 4;
 
 const MAIN_KEYS = ['pokedex', 'party', 'bag', 'map', 'trainerData', 'save', 'actions', 'settings', 'exit'] as const;
-const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper'] as const;
+const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper', 'learn'] as const;
 const SETTINGS_KEYS = ['language', 'mute', 'legend'] as const;
 
 const ACTIONS_IDX = 6; // index of 'actions' in MAIN_KEYS
@@ -76,6 +76,8 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
         break;
       case 'telephone':
         stateMachine.pop(); stateMachine.push('PHONE'); break;
+      case 'learn':
+        stateMachine.pop(); stateMachine.push('ENGLISH_LEARNING'); break;
       case 'battleHelper':
         if (!hasActiveGame()) break;
         if (pendingBhConfirm) break;

@@ -559,6 +559,7 @@
   "menu.actions.fishing": "Fishing",
   "menu.actions.telephone": "Telephone",
   "menu.actions.battleHelper": "Battle Helper",
+  "menu.actions.learn": "English Learning",
   "menu.actions.battleHelper.confirm": "Use 1 Battle Helper?",
   "menu.actions.battleHelper.confirmSub": "{count} in bag",
   "menu.actions.battleHelper.noItems": "No Battle Helpers in bag!",
