@@ -1,7 +1,8 @@
-import type { PlayerData, DayCareEntry, Pokemon } from '../types/index.js';
+import type { PlayerData, DayCareEntry, Pokemon, Move } from '../types/index.js';
 import type { DayCareData } from './npc.js';
-import { getNextEvolution } from '../services/pokemon-data.js';
+import { getNextEvolution, getLearnset } from '../services/pokemon-data.js';
 import { recalcPokemonStats } from './encounter.js';
+import { createMoveFromId, MAX_POKEMON_MOVES } from './move-learning.js';
 
 const DEFAULT_STEPS_PER_LEVEL = 100;
 const DEFAULT_COST_PER_LEVEL = 100;
@@ -63,6 +64,40 @@ export function getDayCarePhase(pd: PlayerData, entry: DayCareEntry): DayCarePha
   return 'doing-well';
 }
 
+/** Compute moves the Pokémon learns while leveling from `fromLevel` to `toLevel` at day care.
+ *  Moves are applied in learnset order; slots below MAX fill automatically, the rest are pending. */
+function calcDayCareNewMoves(
+  pokemon: Pokemon,
+  fromLevel: number,
+  toLevel: number,
+): { autoLearned: Move[]; pending: number[] } {
+  const learnset = getLearnset(pokemon.id);
+  const movesInRange = learnset
+    .filter((e) => e.levelLearned > fromLevel && e.levelLearned <= toLevel)
+    .sort((a, b) => a.levelLearned - b.levelLearned);
+
+  const autoLearned: Move[] = [];
+  const pending: number[] = [];
+  const knownIds = new Set(pokemon.moves.map((m) => m.id));
+  let moveCount = pokemon.moves.length;
+
+  for (const entry of movesInRange) {
+    if (knownIds.has(entry.moveId)) continue;
+    if (moveCount < MAX_POKEMON_MOVES) {
+      const move = createMoveFromId(entry.moveId);
+      if (move) {
+        autoLearned.push(move);
+        knownIds.add(entry.moveId);
+        moveCount++;
+      }
+    } else {
+      pending.push(entry.moveId);
+    }
+  }
+
+  return { autoLearned, pending };
+}
+
 /** Remove Pokémon from party slot `idx` and create a day-care entry. */
 export function depositPokemon(pd: PlayerData, partyIndex: number, npc: DayCareData): Pokemon {
   const pokemon = pd.party.splice(partyIndex, 1)[0];
@@ -77,15 +112,22 @@ export function depositPokemon(pd: PlayerData, partyIndex: number, npc: DayCareD
   return pokemon;
 }
 
-/** Apply earned levels, deduct money, and return Pokémon to party or first free PC box. */
+/** Apply earned levels, deduct money, and return Pokémon to party or first free PC box.
+ *  Returns auto-learned moves (already applied) and pending move IDs that need player choice. */
 export function withdrawPokemon(
   pd: PlayerData,
   entry: DayCareEntry,
   result: DayCareResult,
-): { sentToBox: boolean } {
+): { sentToBox: boolean; pendingMoves: number[] } {
   const pokemon = entry.pokemon;
+  let pendingMoves: number[] = [];
 
   if (result.levelsGained > 0) {
+    const moveResult = calcDayCareNewMoves(pokemon, pokemon.level, result.newLevel);
+    for (const move of moveResult.autoLearned) {
+      pokemon.moves.push(move);
+    }
+    pendingMoves = moveResult.pending;
     pokemon.level = result.newLevel;
     recalcPokemonStats(pokemon);
   }
@@ -99,7 +141,7 @@ export function withdrawPokemon(
 
   if (pd.party.length < 6) {
     pd.party.push(pokemon);
-    return { sentToBox: false };
+    return { sentToBox: false, pendingMoves };
   }
 
   // Party full — place in first free PC box slot
@@ -111,5 +153,5 @@ export function withdrawPokemon(
       }
     }
   }
-  return { sentToBox: true };
+  return { sentToBox: true, pendingMoves };
 }

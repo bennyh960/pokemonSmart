@@ -24,6 +24,13 @@ import {
   consumeRestoreNotifications,
 } from '../systems/game-state.js';
 import { setPartyMode } from '../scenes/party.js';
+import {
+  createMoveLearningQueueState,
+  initializeMoveLearningQueue,
+  nextMoveLearningQueueStep,
+  resetMoveLearningQueueState,
+  setMoveLearningSession,
+} from '../systems/move-learning.js';
 import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
 import { getPokemon, getPokemonDisplayName, getLocalizedName, getNextEvolution } from '../services/pokemon-data.js';
@@ -159,7 +166,7 @@ interface ListChoiceState {
 
 // Module-level state shared with the start menu scene
 let _pendingFishing = false;
-let _legendVisible = true;
+let _legendVisible = false;
 let _playerRef: PlayerState | null = null;
 
 export function scheduleFishing(): void {
@@ -218,6 +225,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let activeTextBox: ReturnType<typeof createTextBox> | null = null;
   let interactingNPC: NPCData | null = null;
   let pendingDialogueCallback: (() => void) | null = null;
+
+  // Day-care move learning queue (pending moves shown one-by-one after withdrawal)
+  const pendingDayCareMoveLearning = createMoveLearningQueueState();
 
   // Choice prompt state
   let choiceState: ChoiceState | null = null;
@@ -716,13 +726,25 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               );
               return;
             }
-            const { sentToBox } = dayCareWithdraw(pd, entry, result);
+            const { sentToBox, pendingMoves } = dayCareWithdraw(pd, entry, result);
             autoSave();
             audio.playSFX('pokemon-returned');
             const msg = sentToBox
               ? t('npc.daycare.withdrawnBox', { name: pokeName })
               : t('npc.daycare.withdrawn', { name: pokeName });
             activeTextBox = createTextBox([msg], rtl, npcSpeaker);
+            if (pendingMoves.length > 0 && !sentToBox) {
+              const partyIdx = pd.party.length - 1;
+              pendingDialogueCallback = () => {
+                initializeMoveLearningQueue(
+                  pendingDayCareMoveLearning,
+                  partyIdx,
+                  entry.pokemon.id,
+                  pendingMoves.map((moveId) => ({ moveId, learned: false })),
+                  null,
+                );
+              };
+            }
           });
         };
       }
@@ -2145,6 +2167,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // Process pending day-care move-learning (moves learned while leveling at day care)
+      if (pendingDayCareMoveLearning.partyIndex !== null) {
+        const step = nextMoveLearningQueueStep(pendingDayCareMoveLearning, () => autoSave());
+        if (step.kind === 'show-message') {
+          activeTextBox = createTextBox([step.message], isRTL());
+          return;
+        }
+        if (step.kind === 'open-session') {
+          setPartyMode('move-learning');
+          setMoveLearningSession(step.session);
+          stateMachine.push('PARTY');
+          return;
+        }
+        resetMoveLearningQueueState(pendingDayCareMoveLearning);
+      }
+
       // Fishing animation — freeze movement while casting / waiting
       if (fishingPhase === 'casting' || fishingPhase === 'waiting') {
         if (input.isKeyPressed('Escape')) {
@@ -3442,6 +3480,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                       autoSave();
                     }
                   }
+                  // Settle AFTER symmetry check so teleport can't invalidate the solved state
+                  MovablePuzzle.settlePush((x, y) => tileMap!.isWalkable(x, y));
                 } else {
                   walkable = false;
                 }
@@ -3592,10 +3632,30 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (heroFrame.flipX) {
               ctx.save();
               ctx.scale(-1, 1);
-              ctx.drawImage(heroFrame.image, heroFrame.sx, heroFrame.sy, heroFrame.w, heroFrame.h, -(psx + TILE_SIZE), psy, TILE_SIZE, TILE_SIZE);
+              ctx.drawImage(
+                heroFrame.image,
+                heroFrame.sx,
+                heroFrame.sy,
+                heroFrame.w,
+                heroFrame.h,
+                -(psx + TILE_SIZE),
+                psy,
+                TILE_SIZE,
+                TILE_SIZE,
+              );
               ctx.restore();
             } else {
-              ctx.drawImage(heroFrame.image, heroFrame.sx, heroFrame.sy, heroFrame.w, heroFrame.h, psx, psy, TILE_SIZE, TILE_SIZE);
+              ctx.drawImage(
+                heroFrame.image,
+                heroFrame.sx,
+                heroFrame.sy,
+                heroFrame.w,
+                heroFrame.h,
+                psx,
+                psy,
+                TILE_SIZE,
+                TILE_SIZE,
+              );
             }
             return;
           }
@@ -3638,9 +3698,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const pose = poses[npcSt.walkFrame % poses.length] || 'stand';
 
           // Try character sprite system first
-          const charFrame = hasCharacter(npc.spriteType)
-            ? getCharacterFrame(npc.spriteType, facingDir, pose)
-            : null;
+          const charFrame = hasCharacter(npc.spriteType) ? getCharacterFrame(npc.spriteType, facingDir, pose) : null;
 
           if (charFrame) {
             // Scale destination proportionally: 32×32 source = 1 tile (16×16).
@@ -3659,10 +3717,30 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 if (charFrame.flipX) {
                   ctx.save();
                   ctx.scale(-1, 1);
-                  ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, -(nx + destW), ny, destW, destH);
+                  ctx.drawImage(
+                    charFrame.image,
+                    charFrame.sx,
+                    charFrame.sy,
+                    charFrame.w,
+                    charFrame.h,
+                    -(nx + destW),
+                    ny,
+                    destW,
+                    destH,
+                  );
                   ctx.restore();
                 } else {
-                  ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, nx, ny, destW, destH);
+                  ctx.drawImage(
+                    charFrame.image,
+                    charFrame.sx,
+                    charFrame.sy,
+                    charFrame.w,
+                    charFrame.h,
+                    nx,
+                    ny,
+                    destW,
+                    destH,
+                  );
                 }
                 // "!" exclamation during trainer, gate-guard, or party-guard approach
                 const showExclamation =

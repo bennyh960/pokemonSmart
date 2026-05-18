@@ -37,6 +37,7 @@ interface ActivePuzzle {
 
 let puzzles: ActivePuzzle[] = [];
 let activeTileset: Tileset | null = null;
+let pendingSettle: { tile: MovableTile; puzzle: ActivePuzzle } | null = null;
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -73,7 +74,9 @@ export function init(data: TileMapData, tileset: Tileset | null | undefined): vo
         : [],
     );
 
-    puzzles.push({ id, config, tiles, solved: false, refTileSet, axisSum: refRoom ? refRoom.x2 + puzzleRoom.x1 : 0 });
+    const axisSum = refRoom ? refRoom.x2 + puzzleRoom.x1 : 0;
+    console.log(`[puzzle init] ${id} — axisSum=${axisSum} movableTiles=${tiles.length} refTiles=${refTileSet.size}`, [...refTileSet]);
+    puzzles.push({ id, config, tiles, solved: false, refTileSet, axisSum });
   }
 }
 
@@ -135,7 +138,8 @@ export function tryPush(
   tile.x = nx;
   tile.y = ny;
 
-  checkStuck(tile, ownerPuzzle, isWalkableFn);
+  // Store for settling AFTER the caller has had a chance to check symmetry
+  pendingSettle = { tile, puzzle: ownerPuzzle };
   return true;
 }
 
@@ -152,16 +156,30 @@ export function checkSymmetry(pd: PlayerData): boolean {
     const allMatch = p.tiles.every(tile => {
       const gridW = tileGridW(tile.key);
       const refX = p.axisSum - tile.x - (gridW - 1);
-      return p.refTileSet.has(`${tile.key},${refX},${tile.y}`);
+      const hit = p.refTileSet.has(`${tile.key},${refX},${tile.y}`);
+      if (!hit) console.log(`[puzzle ${p.id}] MISMATCH: ${tile.key} at (${tile.x},${tile.y}) needs mirror refX=${refX} → looking for "${tile.key},${refX},${tile.y}" in refSet`);
+      return hit;
     });
 
     if (allMatch) {
       p.solved = true;
       setFlag(pd, p.config.successFlag);
       anySolved = true;
+      console.log(`[puzzle ${p.id}] SOLVED → flag "${p.config.successFlag}" set`);
     }
   }
   return anySolved;
+}
+
+/**
+ * Settle the tile that was most recently pushed: teleport it if stuck.
+ * Must be called AFTER checkSymmetry so the symmetry check sees the correct position.
+ */
+export function settlePush(isWalkableFn: (x: number, y: number) => boolean): void {
+  if (!pendingSettle) return;
+  const { tile, puzzle } = pendingSettle;
+  pendingSettle = null;
+  checkStuck(tile, puzzle, isWalkableFn);
 }
 
 /** Advance slide animations. Call every frame from the overworld update loop. */
@@ -230,6 +248,7 @@ export function getRenderables(
 export function reset(): void {
   puzzles = [];
   activeTileset = null;
+  pendingSettle = null;
 }
 
 // ─── Internal helpers ─────────────────────────────────────────────────────────

@@ -561,7 +561,7 @@
     },
     {
       "id": "npc-1779050531313",
-      "x": 20,
+      "x": 19,
       "y": 78,
       "facing": "right",
       "type": "dialogue",
@@ -582,12 +582,11 @@
       "name": {
         "en": "Leonid",
         "he": "לאוניד"
-      },
-      "lineOfSight": 1
+      }
     },
     {
       "id": "npc-1779050544987",
-      "x": 28,
+      "x": 29,
       "y": 78,
       "facing": "left",
       "type": "dialogue",
@@ -602,9 +601,7 @@
       "name": {
         "en": "Kobi",
         "he": "קובי"
-      },
-      "mapClearBlocker": true,
-      "blocker": true
+      }
     },
     {
       "id": "npc-1779050769024",
