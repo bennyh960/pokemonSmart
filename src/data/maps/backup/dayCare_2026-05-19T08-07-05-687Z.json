@@ -54,23 +54,19 @@
     },
     {
       "id": "npc-lance-daycare",
-      "x": 8,
-      "y": 5,
-      "facing": "up",
+      "x": 0,
+      "y": 0,
+      "facing": "down",
       "type": "dialogue",
       "spriteType": "char_919bca",
-      "name": {
-        "en": "Lance",
-        "he": "לאנס"
-      },
+      "name": { "en": "Lance", "he": "לאנס" },
       "dialogue": [
         {
           "en": "The DayCare is a good place to think. Have you spoken to Sima about Zapdos?",
           "he": "בית הגידול הוא מקום טוב לחשוב. דיברת עם סימה על זאפדוס?"
         }
       ],
-      "despawnAfter": "act3-sym-lance-daycare-met",
-      "spawnAfter": "story-badge-6"
+      "despawnAfter": "act3-sym-lance-daycare-met"
     }
   ]
 }

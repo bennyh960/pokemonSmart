@@ -632,8 +632,6 @@ export function createAudioManager() {
         letterCache.set(key, h);
         h.load();
         h.once('load', () => { if (!muted) h.play(); });
-        // Immediate SpeechSynthesis fallback — replaced by Howl on second call
-        speakText(key, 0.75);
         return;
       }
       const howl = letterCache.get(key);
@@ -676,7 +674,6 @@ export function createAudioManager() {
         wordCache.set(key, h);
         h.load();
         h.once('load', () => { if (!muted) h.play(); });
-        speakText(word, 0.85);
         return;
       }
       const howl = wordCache.get(key);

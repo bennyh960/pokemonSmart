@@ -9,7 +9,163 @@
   "area": "Dividia",
   "music": "route",
   "encounterTableId": null,
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-rocket-cave2-g1",
+      "x": 1,
+      "y": 0,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [
+        {
+          "en": "You followed us into the second cave? Impressive — and foolish!",
+          "he": "עקבת אחרינו למערה השנייה? מרשים — ומטופש!"
+        }
+      ],
+      "party": [
+        { "pokemonId": 109, "level": 33, "moves": [] },
+        { "pokemonId": 52, "level": 33, "moves": [] },
+        { "pokemonId": 19, "level": 33, "moves": [] }
+      ],
+      "lineOfSight": 3,
+      "reward": { "money": 1000 },
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "despawnOnDefeat": true
+    },
+    {
+      "id": "npc-rocket-cave2-g2",
+      "x": 2,
+      "y": 0,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [{ "en": "You won't lay a hand on the boss!", "he": "לא תגע בבוס!" }],
+      "party": [
+        { "pokemonId": 42, "level": 34, "moves": [] },
+        { "pokemonId": 41, "level": 34, "moves": [] },
+        { "pokemonId": 88, "level": 34, "moves": [] }
+      ],
+      "lineOfSight": 3,
+      "reward": { "money": 1050 },
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "despawnOnDefeat": true
+    },
+    {
+      "id": "npc-rocket-cave2-g3",
+      "x": 3,
+      "y": 0,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [
+        {
+          "en": "Turn back now and we'll let you keep your remaining Pokemon!",
+          "he": "חזור עכשיו ונאפשר לך לשמור על הפוקימונים שנותרו לך!"
+        }
+      ],
+      "party": [
+        { "pokemonId": 24, "level": 35, "moves": [] },
+        { "pokemonId": 20, "level": 34, "moves": [] },
+        { "pokemonId": 23, "level": 34, "moves": [] }
+      ],
+      "lineOfSight": 3,
+      "reward": { "money": 1100 },
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "despawnOnDefeat": true
+    },
+    {
+      "id": "npc-rocket-cave2-g4",
+      "x": 4,
+      "y": 0,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [
+        {
+          "en": "James gave us orders — stop any trainer who reaches this far!",
+          "he": "ג'יימס נתן לנו פקודות — עצרו כל מאמן שמגיע עד לכאן!"
+        }
+      ],
+      "party": [
+        { "pokemonId": 110, "level": 35, "moves": [] },
+        { "pokemonId": 53, "level": 35, "moves": [] },
+        { "pokemonId": 89, "level": 34, "moves": [] }
+      ],
+      "lineOfSight": 3,
+      "reward": { "money": 1150 },
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "despawnOnDefeat": true
+    },
+    {
+      "id": "npc-rocket-cave2-g5",
+      "x": 5,
+      "y": 0,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [
+        {
+          "en": "The boss is right behind me! You'll have to go through me first!",
+          "he": "הבוס ממש מאחוריי! תצטרך לעבור דרכי קודם!"
+        }
+      ],
+      "party": [
+        { "pokemonId": 42, "level": 35, "moves": [] },
+        { "pokemonId": 110, "level": 35, "moves": [] },
+        { "pokemonId": 20, "level": 35, "moves": [] }
+      ],
+      "lineOfSight": 3,
+      "reward": { "money": 1150 },
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "despawnOnDefeat": true
+    },
+    {
+      "id": "npc-rocket-thief-james",
+      "x": 6,
+      "y": 0,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "rocket-james",
+      "name": { "en": "Jessie & James", "he": "ג'סי וג'יימס" },
+      "dialogue": [
+        {
+          "en": "Prepare for trouble!",
+          "he": "הכן לצרות!"
+        },
+        {
+          "en": "And make it double! So you tracked us all the way here... impressive. But those Pokemon are ours now!",
+          "he": "ועשה אותן כפולות! אז עקבת אחרינו עד לכאן... מרשים. אבל הפוקימונים האלה שלנו עכשיו!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Jessie! He beat us again! Those Pokemon... take them back.",
+          "he": "ג'סי! הוא ניצח אותנו שוב! הפוקימונים האלה... קח אותם בחזרה."
+        },
+        {
+          "en": "Team Rocket will rise again — this isn't over!",
+          "he": "צוות רוקט יקום שוב — זה עדיין לא נגמר!"
+        }
+      ],
+      "party": [
+        { "pokemonId": 52, "level": 42, "moves": [] },
+        { "pokemonId": 24, "level": 40, "moves": [] },
+        { "pokemonId": 110, "level": 42, "moves": [] },
+        { "pokemonId": 42, "level": 38, "moves": [] },
+        { "pokemonId": 53, "level": 40, "moves": [] }
+      ],
+      "lineOfSight": 4,
+      "reward": { "money": 3500 },
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "despawnAfter": "act3-sym-thief-defeated"
+    }
+  ],
   "interactiveItems": {},
   "tiles": [],
   "objects": []

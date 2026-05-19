@@ -238,6 +238,17 @@ export const FLAGS = {
   ACT3_TRACEY_MET: 'act3-tracey-met',
   STORY_NULLX_FIRST_CONTACT: 'story-nullx-first-contact', // NULL-X spoke to player at terminal
 
+  // ── Act 3: Symmetrika story arc ──────────────────────────────────────────────
+  ACT3_SYM_BADGE_CUTSCENE_DONE: 'act3-sym-badge-cutscene-done',   // Sima post-badge cutscene done → quest: meet Lance at DayCare
+  ACT3_SYM_LANCE_DAYCARE_MET: 'act3-sym-lance-daycare-met',       // Lance gave HM Surf at DayCare → quest: go to cave
+  ACT3_SYM_ROCKET_AMBUSH_DONE: 'act3-sym-rocket-ambush-done',     // Ambush cutscene done → grunts spawn in both caves
+  ACT3_SYM_POKEMON_STOLEN: 'act3-sym-pokemon-stolen',             // 3 Pokemon stolen by Jesse/James
+  ACT3_SYM_THIEF_DEFEATED: 'act3-sym-thief-defeated',             // Jesse/James defeated → Pokemon restored
+  ACT3_SYM_POKEMON_RESTORED: 'act3-sym-pokemon-restored',         // Stolen Pokemon returned → Lance-return spawns
+  ACT3_SYM_LANCE_CAVE_RETURN: 'act3-sym-lance-cave-return',       // Investigate cutscene done → Zapdos spawns
+  ACT3_SYM_ZAPDOS_CAVE_DEFEATED: 'act3-sym-zapdos-cave-defeated', // Zapdos fled, NULL-X Core X1 collected
+  ACT3_SYM_ARC_COMPLETE: 'act3-sym-arc-complete',                 // Full Symmetrika arc done → head to Percentile
+
   // ── Act 3: Fractalis arc ─────────────────────────────────────────────────────
   VISITED_FRACTALIS: 'visited-fractalis',
   ACT3_FRACTALIS_WIFE_TALKED: 'act3-fractalis-wife-talked',       // Wife gave item → engineer spawns at beach
@@ -366,6 +377,15 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.GATE_SYMMETRIKA_GYM_PASS]: 'Passed Symmetry Gym gate',
   [FLAGS.ACT3_TRACEY_MET]: 'Tracey observed Glitch patterns',
   [FLAGS.STORY_NULLX_FIRST_CONTACT]: 'NULL-X spoke to player at terminal',
+  [FLAGS.ACT3_SYM_BADGE_CUTSCENE_DONE]: 'Sima post-badge cutscene done — quest: meet Lance at DayCare',
+  [FLAGS.ACT3_SYM_LANCE_DAYCARE_MET]: 'Lance gave HM Surf at DayCare — quest: go to cave route-7',
+  [FLAGS.ACT3_SYM_ROCKET_AMBUSH_DONE]: 'Ambush cutscene done — Rocket grunts spawn in both caves',
+  [FLAGS.ACT3_SYM_POKEMON_STOLEN]: '3 Pokemon stolen by Jesse/James in cave ambush',
+  [FLAGS.ACT3_SYM_THIEF_DEFEATED]: 'Jesse/James defeated — Pokemon restoration triggered',
+  [FLAGS.ACT3_SYM_POKEMON_RESTORED]: 'Stolen Pokemon returned to player — Lance-return spawns in cave1',
+  [FLAGS.ACT3_SYM_LANCE_CAVE_RETURN]: 'Investigate cutscene done — Zapdos spawns in cave1',
+  [FLAGS.ACT3_SYM_ZAPDOS_CAVE_DEFEATED]: 'Zapdos fled cave, NULL-X Core X1 collected',
+  [FLAGS.ACT3_SYM_ARC_COMPLETE]: 'Full Symmetrika story arc complete — player heads to Percentile',
   [FLAGS.VISITED_FRACTALIS]: 'First arrival at Fractalis',
   [FLAGS.ACT3_FRACTALIS_WIFE_TALKED]: "Wife gave item → engineer spawns at beach",
   [FLAGS.ACT3_FRACTALIS_ENGINEER_MET]: 'Beach cutscene done — player heads to route-7 with engineer',

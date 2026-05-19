@@ -1357,8 +1357,7 @@
       "walkable": true,
       "above": true,
       "overlay": true,
-      "category": "other",
-      "interactType": null
+      "category": "other"
     },
     {
       "key": "ladder-2-down-bottom",
@@ -1368,8 +1367,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "other",
-      "interactType": null
+      "category": "other"
     },
     {
       "key": "r5",
@@ -1379,8 +1377,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "other",
-      "interactType": null
+      "category": "other"
     },
     {
       "key": "r6",
@@ -1390,29 +1387,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "other",
-      "interactType": null
-    },
-    {
-      "key": "tree1-top",
-      "sx": 32,
-      "sy": 208,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "overlay": true,
-      "category": "tree"
-    },
-    {
-      "key": "tree1-bottom",
-      "sx": 32,
-      "sy": 224,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "tree"
+      "category": "other"
     }
   ]
 }

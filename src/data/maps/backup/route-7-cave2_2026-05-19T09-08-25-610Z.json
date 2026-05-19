@@ -43,8 +43,7 @@
           "he": "יש טוענים שפוקימון אגדי מסתתר כאן."
         }
       ],
-      "spriteType": "char_899006",
-      "despawnAfter": "story-badge-6"
+      "spriteType": "char_899006"
     },
     {
       "id": "npc-1778406057194",
@@ -107,8 +106,7 @@
           "en": "",
           "he": "אם תוכל לחצות את הנהר אולי תצליח לפגוש אותו"
         }
-      ],
-      "despawnAfter": "story-badge-6"
+      ]
     },
     {
       "id": "npc-1778406063566",
@@ -152,8 +150,7 @@
       "reward": {
         "money": 1200
       },
-      "postBattleDialogue": [],
-      "despawnAfter": "story-badge-6"
+      "postBattleDialogue": []
     },
     {
       "id": "npc-1778406074314",
@@ -193,8 +190,7 @@
       "reward": {
         "money": 800
       },
-      "postBattleDialogue": [],
-      "despawnAfter": "story-badge-6"
+      "postBattleDialogue": []
     },
     {
       "id": "npc-rocket-cave1-g1",
@@ -203,16 +199,8 @@
       "facing": "down",
       "type": "trainer",
       "spriteType": "char_7db1c5",
-      "name": {
-        "en": "Rocket Grunt",
-        "he": "סוכן צוות רוקט"
-      },
-      "dialogue": [
-        {
-          "en": "This cave is Team Rocket territory now!",
-          "he": "המערה הזו היא שטח צוות רוקט עכשיו!"
-        }
-      ],
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [{ "en": "This cave is Team Rocket territory now!", "he": "המערה הזו היא שטח צוות רוקט עכשיו!" }],
       "postBattleDialogue": [
         {
           "en": "Those Pokemon of yours... the boss took them deeper into the cave system. Somewhere in these tunnels.",
@@ -220,26 +208,12 @@
         }
       ],
       "party": [
-        {
-          "pokemonId": 109,
-          "level": 30,
-          "moves": []
-        },
-        {
-          "pokemonId": 41,
-          "level": 31,
-          "moves": []
-        },
-        {
-          "pokemonId": 19,
-          "level": 30,
-          "moves": []
-        }
+        { "pokemonId": 109, "level": 30, "moves": [] },
+        { "pokemonId": 41, "level": 31, "moves": [] },
+        { "pokemonId": 19, "level": 30, "moves": [] }
       ],
       "lineOfSight": 3,
-      "reward": {
-        "money": 900
-      },
+      "reward": { "money": 900 },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "despawnOnDefeat": true
     },
@@ -250,16 +224,8 @@
       "facing": "right",
       "type": "trainer",
       "spriteType": "char_7db1c5",
-      "name": {
-        "en": "Rocket Grunt",
-        "he": "סוכן צוות רוקט"
-      },
-      "dialogue": [
-        {
-          "en": "Hand over your remaining Pokemon!",
-          "he": "תמסור את הפוקימונים שנשארו לך!"
-        }
-      ],
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [{ "en": "Hand over your remaining Pokemon!", "he": "תמסור את הפוקימונים שנשארו לך!" }],
       "postBattleDialogue": [
         {
           "en": "Ohh dont tell me to the police ! i will tell you what you need...",
@@ -271,26 +237,12 @@
         }
       ],
       "party": [
-        {
-          "pokemonId": 23,
-          "level": 32,
-          "moves": []
-        },
-        {
-          "pokemonId": 109,
-          "level": 32,
-          "moves": []
-        },
-        {
-          "pokemonId": 88,
-          "level": 31,
-          "moves": []
-        }
+        { "pokemonId": 23, "level": 32, "moves": [] },
+        { "pokemonId": 109, "level": 32, "moves": [] },
+        { "pokemonId": 88, "level": 31, "moves": [] }
       ],
       "lineOfSight": 3,
-      "reward": {
-        "money": 950
-      },
+      "reward": { "money": 950 },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "despawnOnDefeat": true
     },
@@ -301,15 +253,9 @@
       "facing": "left",
       "type": "trainer",
       "spriteType": "char_7db1c5",
-      "name": {
-        "en": "Rocket Grunt",
-        "he": "סוכן צוות רוקט"
-      },
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
       "dialogue": [
-        {
-          "en": "You won't leave this cave with all your Pokemon!",
-          "he": "לא תצא מהמערה הזו עם כל הפוקימונים שלך!"
-        }
+        { "en": "You won't leave this cave with all your Pokemon!", "he": "לא תצא מהמערה הזו עם כל הפוקימונים שלך!" }
       ],
       "postBattleDialogue": [
         {
@@ -318,26 +264,12 @@
         }
       ],
       "party": [
-        {
-          "pokemonId": 42,
-          "level": 33,
-          "moves": []
-        },
-        {
-          "pokemonId": 20,
-          "level": 33,
-          "moves": []
-        },
-        {
-          "pokemonId": 41,
-          "level": 32,
-          "moves": []
-        }
+        { "pokemonId": 42, "level": 33, "moves": [] },
+        { "pokemonId": 20, "level": 33, "moves": [] },
+        { "pokemonId": 41, "level": 32, "moves": [] }
       ],
       "lineOfSight": 3,
-      "reward": {
-        "money": 1000
-      },
+      "reward": { "money": 1000 },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "despawnOnDefeat": true
     },
@@ -348,16 +280,8 @@
       "facing": "down",
       "type": "trainer",
       "spriteType": "char_7db1c5",
-      "name": {
-        "en": "Rocket Grunt",
-        "he": "סוכן צוות רוקט"
-      },
-      "dialogue": [
-        {
-          "en": "Team Rocket will rule Numeria!",
-          "he": "צוות רוקט ישלוט בנומריה!"
-        }
-      ],
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [{ "en": "Team Rocket will rule Numeria!", "he": "צוות רוקט ישלוט בנומריה!" }],
       "postBattleDialogue": [
         {
           "en": "...You beat me. so shame that your pokemon not in this cave! there is other caves and you will not find them.",
@@ -365,26 +289,12 @@
         }
       ],
       "party": [
-        {
-          "pokemonId": 110,
-          "level": 33,
-          "moves": []
-        },
-        {
-          "pokemonId": 88,
-          "level": 33,
-          "moves": []
-        },
-        {
-          "pokemonId": 52,
-          "level": 34,
-          "moves": []
-        }
+        { "pokemonId": 110, "level": 33, "moves": [] },
+        { "pokemonId": 88, "level": 33, "moves": [] },
+        { "pokemonId": 52, "level": 34, "moves": [] }
       ],
       "lineOfSight": 3,
-      "reward": {
-        "money": 1050
-      },
+      "reward": { "money": 1050 },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "despawnOnDefeat": true
     },
@@ -395,16 +305,8 @@
       "facing": "right",
       "type": "trainer",
       "spriteType": "char_7db1c5",
-      "name": {
-        "en": "Rocket Grunt",
-        "he": "סוכן צוות רוקט"
-      },
-      "dialogue": [
-        {
-          "en": "Protect the boss at all costs!",
-          "he": "הגן על הבוס בכל מחיר!"
-        }
-      ],
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [{ "en": "Protect the boss at all costs!", "he": "הגן על הבוס בכל מחיר!" }],
       "postBattleDialogue": [
         {
           "en": "Fine... You will never bring you pokemon back ! they team rocket property now",
@@ -412,31 +314,13 @@
         }
       ],
       "party": [
-        {
-          "pokemonId": 24,
-          "level": 34,
-          "moves": []
-        },
-        {
-          "pokemonId": 42,
-          "level": 34,
-          "moves": []
-        },
-        {
-          "pokemonId": 109,
-          "level": 33,
-          "moves": []
-        },
-        {
-          "pokemonId": 52,
-          "level": 33,
-          "moves": []
-        }
+        { "pokemonId": 24, "level": 34, "moves": [] },
+        { "pokemonId": 42, "level": 34, "moves": [] },
+        { "pokemonId": 109, "level": 33, "moves": [] },
+        { "pokemonId": 52, "level": 33, "moves": [] }
       ],
       "lineOfSight": 3,
-      "reward": {
-        "money": 1100
-      },
+      "reward": { "money": 1100 },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "despawnOnDefeat": true
     },
@@ -447,16 +331,8 @@
       "facing": "down",
       "type": "trainer",
       "spriteType": "char_7db1c5",
-      "name": {
-        "en": "Rocket Grunt",
-        "he": "סוכן צוות רוקט"
-      },
-      "dialogue": [
-        {
-          "en": "NULL-X's power will crush you!",
-          "he": "כוחו של NULL-X ישמיד אותך!"
-        }
-      ],
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [{ "en": "NULL-X's power will crush you!", "he": "כוחו של NULL-X ישמיד אותך!" }],
       "postBattleDialogue": [
         {
           "en": "You're stronger than I expected...",
@@ -464,26 +340,12 @@
         }
       ],
       "party": [
-        {
-          "pokemonId": 20,
-          "level": 34,
-          "moves": []
-        },
-        {
-          "pokemonId": 42,
-          "level": 35,
-          "moves": []
-        },
-        {
-          "pokemonId": 110,
-          "level": 34,
-          "moves": []
-        }
+        { "pokemonId": 20, "level": 34, "moves": [] },
+        { "pokemonId": 42, "level": 35, "moves": [] },
+        { "pokemonId": 110, "level": 34, "moves": [] }
       ],
       "lineOfSight": 3,
-      "reward": {
-        "money": 1100
-      },
+      "reward": { "money": 1100 },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "despawnOnDefeat": true
     },
@@ -494,43 +356,18 @@
       "facing": "left",
       "type": "trainer",
       "spriteType": "char_7db1c5",
-      "name": {
-        "en": "Rocket Grunt",
-        "he": "סוכן צוות רוקט"
-      },
-      "dialogue": [
-        {
-          "en": "Stay out of Team Rocket's business!",
-          "he": "אל תתערב בענייני צוות רוקט!"
-        }
-      ],
+      "name": { "en": "Rocket Grunt", "he": "סוכן צוות רוקט" },
+      "dialogue": [{ "en": "Stay out of Team Rocket's business!", "he": "אל תתערב בענייני צוות רוקט!" }],
       "postBattleDialogue": [
-        {
-          "en": "Ughhh how did i lost to you! dont follow me",
-          "he": "אוי איך הפסדתי לך! אל תלך אחרי"
-        }
+        { "en": "Ughhh how did i lost to you! dont follow me", "he": "אוי איך הפסדתי לך! אל תלך אחרי" }
       ],
       "party": [
-        {
-          "pokemonId": 110,
-          "level": 35,
-          "moves": []
-        },
-        {
-          "pokemonId": 24,
-          "level": 35,
-          "moves": []
-        },
-        {
-          "pokemonId": 42,
-          "level": 35,
-          "moves": []
-        }
+        { "pokemonId": 110, "level": 35, "moves": [] },
+        { "pokemonId": 24, "level": 35, "moves": [] },
+        { "pokemonId": 42, "level": 35, "moves": [] }
       ],
       "lineOfSight": 3,
-      "reward": {
-        "money": 1150
-      },
+      "reward": { "money": 1150 },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "despawnOnDefeat": true
     },
@@ -541,10 +378,7 @@
       "facing": "down",
       "type": "dialogue",
       "spriteType": "char_919bca",
-      "name": {
-        "en": "Lance",
-        "he": "לאנס"
-      },
+      "name": { "en": "Lance", "he": "לאנס" },
       "dialogue": [
         {
           "en": "I've got these three covered — go! Find the others and get your Pokemon back!",
@@ -565,10 +399,7 @@
       "facing": "down",
       "type": "dialogue",
       "spriteType": "char_919bca",
-      "name": {
-        "en": "Lance",
-        "he": "לאנס"
-      },
+      "name": { "en": "Lance", "he": "לאנס" },
       "dialogue": [
         {
           "en": "Good — you're back with your Pokemons. I knew you can do it!.",
@@ -601,26 +432,10 @@
       "autoWalk": {
         "floating": true,
         "pattern": [
-          {
-            "dir": "up",
-            "steps": 8,
-            "delay": 1
-          },
-          {
-            "dir": "right",
-            "steps": 6,
-            "delay": 2
-          },
-          {
-            "dir": "down",
-            "steps": 8,
-            "delay": 1
-          },
-          {
-            "dir": "left",
-            "steps": 6,
-            "delay": 2
-          }
+          { "dir": "up", "steps": 8, "delay": 1 },
+          { "dir": "right", "steps": 6, "delay": 2 },
+          { "dir": "down", "steps": 8, "delay": 1 },
+          { "dir": "left", "steps": 6, "delay": 2 }
         ],
         "loop": true
       },
