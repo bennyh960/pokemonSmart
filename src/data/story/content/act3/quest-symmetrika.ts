@@ -407,8 +407,8 @@ registerCutscene({
           he: 'אל תזוז! אתה מוקף!',
         },
         {
-          en: 'Team Rocket has been tracking you across Numeria, trainer. We knew you would come here.',
-          he: 'צוות רוקט עקב אחריך בכל נומריה, מאמן. ידענו שתגיע לכאן.',
+          en: 'You not suppose to be here ! you came to far!.',
+          he: 'אתה לא אמור להיות כאן! הגעת רחוק מדי!',
         },
       ],
     },
@@ -418,12 +418,10 @@ registerCutscene({
       lines: [
         {
           en: 'Prepare for trouble — and make it double! Think your Pokemon can protect you here?',
-          he: 'הכן לצרות — ועשה אותן כפולות! אתה חושב שהפוקימונים שלך יגנו עליך כאן?',
+          he: 'היכונו לצרות — ועשה אותן כפולות ומכופלות!',
         },
-        {
-          en: 'We have something special waiting in this cave. Something even the Elite Four fears.',
-          he: 'יש לנו משהו מיוחד שמחכה במערה הזו. משהו שאפילו ארבעת האליטה מפחדים ממנו.',
-        },
+
+        { en: 'I recognize you! anoying trainer! its time to pay!', he: 'אני מזהה אותך! מאמן מעצבן! הגיע הזמן לשלם!' },
       ],
     },
     { type: 'play-sfx', sfxId: 'thunder' },
@@ -435,15 +433,16 @@ registerCutscene({
       speakerName: 'Jesse / ג׳סי',
       lines: [
         {
-          en: 'Zapdos! The legendary Zapdos — under Team Rocket control! It has been patrolling this cave for us.',
-          he: 'זאפדוס! זאפדוס האגדי — תחת שליטת צוות רוקט! הוא סייר במערה הזו עבורנו.',
+          en: 'Zapdos! The legendary Zapdos — under Team Rocket control!',
+          he: 'זאפדוס! זאפדוס האגדי — תחת שליטת צוות רוקט!.',
         },
         {
-          en: 'Now hand over your strongest Pokemon — or Zapdos will handle the rest!',
-          he: 'עכשיו תמסור את הפוקימונים החזקים שלך — אחרת זאפדוס יטפל בשאר!',
+          en: 'Everyone! Attack!!!',
+          he: 'כולם! תתקפו!!!',
         },
       ],
     },
+    { type: 'move-npc', npcId: '', path: ['down'], waitForComplete: true },
     { type: 'thief-npc', npcId: 'npc-rocket-thief-james', condition: { amount: 3, aboveLevel: 40 } },
     { type: 'play-sfx', sfxId: 'thunder' },
     {

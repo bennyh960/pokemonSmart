@@ -20,11 +20,6 @@
       "toMapId": "routes/route-7",
       "toX": 18,
       "toY": 7
-    },
-    {
-      "fromX": 59,
-      "fromY": 1,
-      "toMapId": "route-7-cave2-exit"
     }
   ],
   "npcs": [
@@ -246,23 +241,7 @@
         "money": 900
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
-      "despawnOnDefeat": true,
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "up",
-            "steps": 3,
-            "delay": 0.5
-          },
-          {
-            "dir": "right",
-            "steps": 20,
-            "delay": 0.5
-          }
-        ]
-      }
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-rocket-cave1-g2",
@@ -313,22 +292,7 @@
         "money": 950
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
-      "despawnOnDefeat": true,
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "down",
-            "steps": 2,
-            "delay": 1
-          },
-          {
-            "dir": "right",
-            "steps": 15,
-            "delay": 1
-          }
-        ],
-        "loop": true
-      }
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-rocket-cave1-g3",
@@ -375,18 +339,7 @@
         "money": 1000
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
-      "despawnOnDefeat": true,
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 20,
-            "delay": 0.5
-          }
-        ]
-      }
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-rocket-cave1-g4",
@@ -433,18 +386,7 @@
         "money": 1050
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
-      "despawnOnDefeat": true,
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 13,
-            "delay": 0.5
-          }
-        ]
-      }
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-rocket-cave1-g5",
@@ -496,23 +438,7 @@
         "money": 1100
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
-      "despawnOnDefeat": true,
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "down",
-            "steps": 2,
-            "delay": 0
-          },
-          {
-            "dir": "right",
-            "steps": 19,
-            "delay": 0.5
-          }
-        ]
-      }
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-rocket-cave1-g6",
@@ -559,24 +485,13 @@
         "money": 1100
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
-      "despawnOnDefeat": true,
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 12,
-            "delay": 0.5
-          }
-        ]
-      }
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-rocket-cave1-g7",
-      "x": 47,
-      "y": 7,
-      "facing": "up",
+      "x": 6,
+      "y": 0,
+      "facing": "left",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -612,32 +527,17 @@
           "moves": []
         }
       ],
-      "lineOfSight": 5,
+      "lineOfSight": 3,
       "reward": {
         "money": 1150
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
-      "despawnOnDefeat": true,
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "right",
-            "steps": 13,
-            "delay": 0.5
-          },
-          {
-            "dir": "up",
-            "steps": 6,
-            "delay": 0.5
-          }
-        ],
-        "loop": true
-      }
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-lance-cave1-guard",
-      "x": 9,
-      "y": 50,
+      "x": 7,
+      "y": 0,
       "facing": "down",
       "type": "dialogue",
       "spriteType": "char_919bca",
@@ -660,8 +560,8 @@
     },
     {
       "id": "npc-lance-cave1-return",
-      "x": 22,
-      "y": 26,
+      "x": 8,
+      "y": 0,
       "facing": "down",
       "type": "dialogue",
       "spriteType": "char_919bca",
@@ -692,8 +592,8 @@
     },
     {
       "id": "npc-zapdos-cave",
-      "x": 59,
-      "y": 4,
+      "x": 9,
+      "y": 0,
       "facing": "down",
       "type": "wild-pokemon",
       "dialogue": [],
@@ -702,24 +602,24 @@
         "floating": true,
         "pattern": [
           {
-            "dir": "down",
-            "steps": 15,
-            "delay": 2
-          },
-          {
-            "dir": "left",
-            "steps": 35,
-            "delay": 0.5
-          },
-          {
             "dir": "up",
-            "steps": 15,
-            "delay": 0.5
+            "steps": 8,
+            "delay": 1
           },
           {
             "dir": "right",
-            "steps": 35,
-            "delay": 0.5
+            "steps": 6,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 8,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 6,
+            "delay": 2
           }
         ],
         "loop": true

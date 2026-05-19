@@ -47,20 +47,6 @@
       "toMapId": "dividia/dividia",
       "toX": 28,
       "toY": 0
-    },
-    {
-      "fromX": 4,
-      "fromY": 29,
-      "toMapId": "route-7-cave2-exit",
-      "toX": 21,
-      "toY": 1
-    },
-    {
-      "fromX": 5,
-      "fromY": 29,
-      "toMapId": "route-7-cave2-exit",
-      "toX": 22,
-      "toY": 1
     }
   ],
   "music": "route",
