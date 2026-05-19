@@ -56,6 +56,7 @@ import {
   normalizeReward,
   resolveDialogue,
   type DialogueReward,
+  getNPCInteractionSfx,
 } from '../systems/npc.js';
 import {
   getDayCareEntry,
@@ -3052,6 +3053,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             npcManager.getNearbyFloatingNPC(player.gridX, player.gridY);
           const _iPd = hasActiveGame() ? getPlayerData() : null;
           const iFlags = _iPd?.flags ?? {};
+          // Floating wild-pokemon: start battle immediately on Space — no dialogue needed
+          if (npc && npc.type === 'wild-pokemon' && isNPCVisible(npc, iFlags, _iPd?.party) && hasActiveGame()) {
+            const _wpFlags = getPlayerData().flags;
+            if (!_wpFlags[`trainer-${npc.id}-defeated`]) {
+              startWildNpcBattle(npc as unknown as WildPokemonData);
+              return;
+            }
+          }
           if (npc && npc.dialogue.length > 0 && isNPCVisible(npc, iFlags, _iPd?.party)) {
             // Defeated trainers: show re-encounter dialogue or "already beaten" message
             if (npc.type === 'trainer' && hasActiveGame()) {
@@ -3143,6 +3152,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             if (npc.mapClearBlocker && hasActiveGame()) {
               resolvedLines.push(...buildMapClearCountLines(locale));
             }
+            const interactSfx = getNPCInteractionSfx(npc);
+            if (interactSfx) audio.playSFX(interactSfx);
             activeTextBox = createTextBox(resolvedLines, isRTL(), npc.name ? getLocalizedName(npc.name) : undefined);
             interactingNPC = npc;
             turnNPCToPlayer(npc);

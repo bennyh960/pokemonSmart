@@ -9,9 +9,10 @@
 import { Howl, Howler } from 'howler';
 import { toAssetUrl } from '../engine/asset-path.js';
 
-type AudioWindow = Window & typeof globalThis & {
-  webkitAudioContext?: typeof AudioContext;
-};
+type AudioWindow = Window &
+  typeof globalThis & {
+    webkitAudioContext?: typeof AudioContext;
+  };
 
 /** Track definitions: key → file path under public/audio/ */
 const MUSIC_TRACKS: Record<string, string> = {
@@ -26,6 +27,8 @@ const MUSIC_TRACKS: Record<string, string> = {
   victory: toAssetUrl('audio/music/victory.mp3'),
   pokecenter: toAssetUrl('audio/music/pokecenter.mp3'),
   shop: toAssetUrl('audio/music/shop.mp3'),
+  'team-rocket-bgm': toAssetUrl('audio/music/team-rocket-bgm.mp3'),
+  'team-rocket-grunt': toAssetUrl('audio/music/team-rocket-grunt.mp3'),
 };
 
 /** Exported list of music track keys — used by map editor settings. */
@@ -69,7 +72,7 @@ export function createAudioManager() {
 
   let musicVolume = 0.5;
   let sfxVolume = 0.7;
-  let muted = localStorage.getItem('muted') === 'true'; 
+  let muted = localStorage.getItem('muted') === 'true';
 
   function speakText(text: string, rate: number): void {
     if (!('speechSynthesis' in window)) return;
@@ -87,7 +90,10 @@ export function createAudioManager() {
     if (!synthContext) return;
 
     if (synthContext.state === 'suspended') {
-      void synthContext.resume().then(() => run(synthContext!)).catch(() => {});
+      void synthContext
+        .resume()
+        .then(() => run(synthContext!))
+        .catch(() => {});
       return;
     }
 
@@ -115,10 +121,13 @@ export function createAudioManager() {
       return null;
     }
     if (!sfxCache.has(key)) {
-      sfxCache.set(key, new Howl({
-        src: [src],
-        volume: muted ? 0 : sfxVolume,
-      }));
+      sfxCache.set(
+        key,
+        new Howl({
+          src: [src],
+          volume: muted ? 0 : sfxVolume,
+        }),
+      );
     }
     return sfxCache.get(key)!;
   }
@@ -131,7 +140,7 @@ export function createAudioManager() {
       vol.connect(actx.destination);
 
       // Ascending notes: C5 → E5 → G5 → C6 (classic level-up feel)
-      const notes = [523.25, 659.25, 783.99, 1046.50];
+      const notes = [523.25, 659.25, 783.99, 1046.5];
       const noteLen = 0.12;
       notes.forEach((freq, i) => {
         const osc = actx.createOscillator();
@@ -147,7 +156,7 @@ export function createAudioManager() {
       });
 
       const chordTime = notes.length * noteLen;
-      [523.25, 783.99, 1046.50].forEach(freq => {
+      [523.25, 783.99, 1046.5].forEach((freq) => {
         const osc = actx.createOscillator();
         const env = actx.createGain();
         osc.type = 'square';
@@ -391,6 +400,167 @@ export function createAudioManager() {
     });
   }
 
+  function playAlert(): void {
+    playToneSequence({
+      notes: [880, 1100, 880],
+      durations: [0.07, 0.07, 0.1],
+      type: 'square',
+      gain: 0.22,
+      spacing: 0.06,
+    });
+  }
+
+  function playThunder(): void {
+    withSynthContext((actx) => {
+      const vol = actx.createGain();
+      vol.gain.value = sfxVolume * 0.25;
+      vol.connect(actx.destination);
+      const bursts: [number, number][] = [
+        [1200, 200],
+        [900, 150],
+        [600, 80],
+      ];
+      bursts.forEach(([from, to], i) => {
+        const start = actx.currentTime + i * 0.08;
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(from, start);
+        osc.frequency.exponentialRampToValueAtTime(to, start + 0.12);
+        env.gain.setValueAtTime(0.001, start);
+        env.gain.exponentialRampToValueAtTime(0.6, start + 0.01);
+        env.gain.exponentialRampToValueAtTime(0.01, start + 0.15);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(start);
+        osc.stop(start + 0.18);
+      });
+    });
+  }
+
+  function playPhoneRing(): void {
+    withSynthContext((actx) => {
+      const vol = actx.createGain();
+      vol.gain.value = sfxVolume * 0.2;
+      vol.connect(actx.destination);
+      [0, 0.6].forEach((offset) => {
+        [480, 620].forEach((freq) => {
+          const osc = actx.createOscillator();
+          const env = actx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          env.gain.setValueAtTime(0.001, actx.currentTime + offset);
+          env.gain.exponentialRampToValueAtTime(0.5, actx.currentTime + offset + 0.02);
+          env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + offset + 0.35);
+          osc.connect(env);
+          env.connect(vol);
+          osc.start(actx.currentTime + offset);
+          osc.stop(actx.currentTime + offset + 0.38);
+        });
+      });
+    });
+  }
+
+  function playRivalEncounter(): void {
+    withSynthContext((actx) => {
+      const vol = actx.createGain();
+      vol.gain.value = sfxVolume * 0.28;
+      vol.connect(actx.destination);
+      const steps = [
+        { freq: 1320, dur: 0.04, t: 0 },
+        { freq: 660, dur: 0.08, t: 0.06 },
+        { freq: 494, dur: 0.08, t: 0.15 },
+        { freq: 370, dur: 0.18, t: 0.24 },
+      ];
+      steps.forEach(({ freq, dur, t }) => {
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.001, actx.currentTime + t);
+        env.gain.exponentialRampToValueAtTime(0.55, actx.currentTime + t + 0.01);
+        env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + t + dur);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(actx.currentTime + t);
+        osc.stop(actx.currentTime + t + dur + 0.01);
+      });
+    });
+  }
+
+  function playTeamRocketEncounter(): void {
+    withSynthContext((actx) => {
+      const vol = actx.createGain();
+      vol.gain.value = sfxVolume * 0.3;
+      vol.connect(actx.destination);
+      const steps: { freq: number; dur: number; t: number; oscType: OscillatorType }[] = [
+        { freq: 110, dur: 0.22, t: 0, oscType: 'sawtooth' },
+        { freq: 146, dur: 0.18, t: 0.02, oscType: 'sawtooth' },
+        { freq: 220, dur: 0.12, t: 0.18, oscType: 'square' },
+        { freq: 185, dur: 0.16, t: 0.18, oscType: 'square' },
+      ];
+      steps.forEach(({ freq, dur, t, oscType }) => {
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = oscType;
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.001, actx.currentTime + t);
+        env.gain.exponentialRampToValueAtTime(0.5, actx.currentTime + t + 0.015);
+        env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + t + dur);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(actx.currentTime + t);
+        osc.stop(actx.currentTime + t + dur + 0.01);
+      });
+    });
+  }
+
+  function playGymLeaderEncounter(): void {
+    withSynthContext((actx) => {
+      const vol = actx.createGain();
+      vol.gain.value = sfxVolume * 0.32;
+      vol.connect(actx.destination);
+      const arpNotes = [261.63, 329.63, 392.0, 523.25];
+      const arpLen = 0.1;
+      arpNotes.forEach((freq, i) => {
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.001, actx.currentTime + i * arpLen);
+        env.gain.exponentialRampToValueAtTime(0.5, actx.currentTime + i * arpLen + 0.015);
+        env.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + i * arpLen + arpLen * 0.9);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(actx.currentTime + i * arpLen);
+        osc.stop(actx.currentTime + i * arpLen + arpLen);
+      });
+      const chordStart = actx.currentTime + arpNotes.length * arpLen + 0.03;
+      [261.63, 392.0, 659.25].forEach((freq) => {
+        const osc = actx.createOscillator();
+        const env = actx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.001, chordStart);
+        env.gain.exponentialRampToValueAtTime(0.42, chordStart + 0.02);
+        env.gain.exponentialRampToValueAtTime(0.01, chordStart + 0.55);
+        osc.connect(env);
+        env.connect(vol);
+        osc.start(chordStart);
+        osc.stop(chordStart + 0.6);
+      });
+    });
+  }
+
+  const SYNTH_DISPATCH: Record<string, () => void> = {
+    alert: playAlert,
+    thunder: playThunder,
+    'phone-ring': playPhoneRing,
+    'rival-encounter': playRivalEncounter,
+    'team-rocket-encounter': playTeamRocketEncounter,
+    'gym-leader-encounter': playGymLeaderEncounter,
+  };
+
   function playAttackFamilyCue(family: 'lunge' | 'projectile' | 'beam' | 'pulse' | 'burst'): void {
     switch (family) {
       case 'lunge':
@@ -467,7 +637,10 @@ export function createAudioManager() {
       if (fadeMs > 0 && currentHowl.playing()) {
         const h = currentHowl;
         h.fade(h.volume(), 0, fadeMs);
-        h.once('fade', () => { h.stop(); h.unload(); });
+        h.once('fade', () => {
+          h.stop();
+          h.unload();
+        });
       } else {
         currentHowl.stop();
         currentHowl.unload();
@@ -477,6 +650,10 @@ export function createAudioManager() {
     },
 
     playSFX(sfxKey: string): void {
+      if (SYNTH_DISPATCH[sfxKey]) {
+        SYNTH_DISPATCH[sfxKey]();
+        return;
+      }
       const howl = getSfxHowl(sfxKey);
       if (!howl) return;
       howl.volume(muted ? 0 : sfxVolume);
@@ -488,7 +665,10 @@ export function createAudioManager() {
       if (currentHowl && currentHowl.playing()) {
         const old = currentHowl;
         old.fade(old.volume(), 0, durationMs);
-        old.once('fade', () => { old.stop(); old.unload(); });
+        old.once('fade', () => {
+          old.stop();
+          old.unload();
+        });
       } else if (currentHowl) {
         currentHowl.stop();
         currentHowl.unload();
@@ -604,6 +784,25 @@ export function createAudioManager() {
       playTrainerStep();
     },
 
+    playAlert(): void {
+      playAlert();
+    },
+    playThunder(): void {
+      playThunder();
+    },
+    playPhoneRing(): void {
+      playPhoneRing();
+    },
+    playRivalEncounter(): void {
+      playRivalEncounter();
+    },
+    playTeamRocketEncounter(): void {
+      playTeamRocketEncounter();
+    },
+    playGymLeaderEncounter(): void {
+      playGymLeaderEncounter();
+    },
+
     playGateSuccess(): void {
       playToneSequence({
         notes: [523.25, 659.25, 783.99, 1046.5, 1318.51],
@@ -631,11 +830,14 @@ export function createAudioManager() {
         });
         letterCache.set(key, h);
         h.load();
-        h.once('load', () => { if (!muted) h.play(); });
+        h.once('load', () => {
+          if (!muted) h.play();
+        });
         return;
       }
       const howl = letterCache.get(key);
-      if (howl) howl.play(); else speakText(key, 0.75);
+      if (howl) howl.play();
+      else speakText(key, 0.75);
     },
 
     preloadLetters(letters: string[]): void {
@@ -648,7 +850,9 @@ export function createAudioManager() {
             preload: false,
             format: ['mp3'],
             volume: sfxVolume,
-            onloaderror: () => { letterCache.set(key, null); },
+            onloaderror: () => {
+              letterCache.set(key, null);
+            },
           });
           letterCache.set(key, h);
           h.load();
@@ -673,11 +877,14 @@ export function createAudioManager() {
         });
         wordCache.set(key, h);
         h.load();
-        h.once('load', () => { if (!muted) h.play(); });
+        h.once('load', () => {
+          if (!muted) h.play();
+        });
         return;
       }
       const howl = wordCache.get(key);
-      if (howl) howl.play(); else speakText(word, 0.85);
+      if (howl) howl.play();
+      else speakText(word, 0.85);
     },
 
     setMuted(value: boolean): void {
@@ -706,5 +913,9 @@ export type AudioManager = ReturnType<typeof createAudioManager>;
 
 /** Global audio instance — set by game.ts on init, accessible from any module. */
 let globalAudio: AudioManager | null = null;
-export function setGlobalAudio(audio: AudioManager): void { globalAudio = audio; }
-export function getGlobalAudio(): AudioManager | null { return globalAudio; }
+export function setGlobalAudio(audio: AudioManager): void {
+  globalAudio = audio;
+}
+export function getGlobalAudio(): AudioManager | null {
+  return globalAudio;
+}

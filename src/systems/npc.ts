@@ -151,6 +151,8 @@ export interface NPCData {
   interaction?: NpcInteraction;
   /** If set, sprite is randomly picked at map-load from characters that have any of these roles. */
   randomChars?: string[];
+  /** SFX key to play when the player opens dialogue with this NPC. Overrides role-based default. */
+  interactionSfx?: string;
 }
 
 /** Dialogue shown instead of the default once a story flag is set. */
@@ -469,3 +471,29 @@ export function resolveDialogue(lines: BilingualText[], locale: 'en' | 'he'): st
 
 /** Return type for use in type annotations. */
 export type NPCManager = ReturnType<typeof createNPCManager>;
+
+/** Maps character sprite roles to their default interaction SFX. */
+const ROLE_SFX: Record<string, string> = {
+  'rival': 'rival-encounter',
+  'villain': 'team-rocket-encounter',
+  'gym-leader': 'gym-leader-encounter',
+};
+
+/**
+ * Returns the SFX key to play when the player opens dialogue with this NPC.
+ * Checks explicit `interactionSfx` first, then declared `randomChars` roles,
+ * then the resolved sprite's character roles.
+ */
+export function getNPCInteractionSfx(npc: NPCData): string | null {
+  if (npc.interactionSfx) return npc.interactionSfx;
+  if (npc.randomChars) {
+    for (const role of npc.randomChars) {
+      if (ROLE_SFX[role]) return ROLE_SFX[role];
+    }
+  }
+  const charRoles = getCharacterList().find((c) => c.id === npc.spriteType)?.roles ?? [];
+  for (const role of charRoles) {
+    if (ROLE_SFX[role]) return ROLE_SFX[role];
+  }
+  return null;
+}

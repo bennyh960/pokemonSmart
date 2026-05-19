@@ -11,7 +11,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t, getLocale, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
-import { ITEMS, type ItemDef, type ItemCategory } from '../data/items.js';
+import { ITEMS, getItem, type ItemDef, type ItemCategory } from '../data/items.js';
 import { drawItemIcon, getItemIconStyle } from '../ui/item-icons.js';
 import {
   applyItemEffect,
@@ -131,7 +131,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     const result: { id: string; def: ItemDef; qty: number }[] = [];
     for (const [id, qty] of Object.entries(player.items)) {
       if (qty <= 0) continue;
-      const def = ITEMS[id];
+      const def = ITEMS[id] ?? getItem(id);
       if (!def) continue;
       if (!tab.categories.includes(def.category)) continue;
       if (bagMode === 'battle' && !def.usableInBattle) continue;

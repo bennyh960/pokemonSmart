@@ -10,11 +10,11 @@
  */
 
 export interface BadgeDef {
-  id: number;              // 1-8
+  id: number; // 1-8
   name: { en: string; he: string };
   city: { en: string; he: string };
   leader: { en: string; he: string };
-  type: string;            // Pokemon type of the gym
+  type: string; // Pokemon type of the gym
   mathTopic: { en: string; he: string };
 }
 
@@ -47,17 +47,17 @@ export const BADGES: BadgeDef[] = [
     id: 4,
     name: { en: 'Quotient Badge', he: 'תג המנה' },
     city: { en: 'Divideburg', he: 'דיווידבורג' },
-    leader: { en: 'Divider', he: 'דיווידר' },
+    leader: { en: 'Divider', he: 'מורטי דיבון' },
     type: 'psychic',
     mathTopic: { en: 'Division', he: 'חילוק' },
   },
   {
     id: 5,
-    name: { en: 'Prime Badge', he: 'תג הראשוני' },
-    city: { en: 'Prime City', he: 'פריים סיטי' },
-    leader: { en: 'Prima', he: 'פריימה' },
+    name: { en: 'Fraction Badge', he: 'תג השבר' },
+    city: { en: 'Fractalis City', he: 'עיר השבר' },
+    leader: { en: 'Sir Fract', he: 'דון שבריז' },
     type: 'steel',
-    mathTopic: { en: 'Prime Numbers', he: 'מספרים ראשוניים' },
+    mathTopic: { en: 'Fractions', he: 'שברים' },
   },
   {
     id: 6,
@@ -87,7 +87,7 @@ export const BADGES: BadgeDef[] = [
 
 /** Get a badge definition by ID (1-8). */
 export function getBadge(id: number): BadgeDef | undefined {
-  return BADGES.find(b => b.id === id);
+  return BADGES.find((b) => b.id === id);
 }
 
 /** Check if a player has a specific badge (from bitmask). */
@@ -97,7 +97,7 @@ export function hasBadge(badgesBitmask: number, badgeId: number): boolean {
 
 /** Get all badges a player has earned (from bitmask). */
 export function getEarnedBadges(badgesBitmask: number): BadgeDef[] {
-  return BADGES.filter(b => hasBadge(badgesBitmask, b.id));
+  return BADGES.filter((b) => hasBadge(badgesBitmask, b.id));
 }
 
 /** Count how many badges a player has earned. */

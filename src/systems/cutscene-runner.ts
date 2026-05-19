@@ -23,6 +23,7 @@ import { hasActiveGame, getPlayerData } from './game-state.js';
 import { drawText, fillRect } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as W, LOGICAL_HEIGHT as H, TILE_SIZE } from '../engine/config.js';
 import { getLocale, isRTL } from '../i18n/i18n.js';
+import { getItem } from '../data/items.js';
 import { getCutscene } from '../data/story/cutscenes.js';
 import CHARACTERS_DATA from '../data/sprites/characters.json';
 
@@ -616,6 +617,25 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     }
 
     case 'action': {
+      if (step.action.type === 'give-item') {
+        ctx.executeStoryAction(step.action);
+        ctx.playSFX('item-found');
+        const itemDef = getItem(step.action.itemId);
+        const locale = getLocale();
+        const name = locale === 'he' ? (itemDef?.name.he ?? itemDef?.name.en ?? step.action.itemId) : (itemDef?.name.en ?? step.action.itemId);
+        const qty = step.action.quantity ?? 1;
+        _dialogue = {
+          lines: [locale === 'he' ? `קיבלת ${name} ×${qty}!` : `Received ${name} ×${qty}!`],
+          lineIndex: 0,
+          charIndex: 0,
+          charTimer: 0,
+          speakerDisplayName: undefined,
+          speakerCharId: undefined,
+          waitingDismiss: false,
+        };
+        // Don't advance _stepIndex — dialogue handler does it on dismiss
+        break;
+      }
       ctx.executeStoryAction(step.action);
       _stepIndex++;
       break;

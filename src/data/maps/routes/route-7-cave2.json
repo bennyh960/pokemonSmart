@@ -637,7 +637,7 @@
     {
       "id": "npc-lance-cave1-guard",
       "x": 9,
-      "y": 50,
+      "y": 56,
       "facing": "down",
       "type": "dialogue",
       "spriteType": "char_919bca",
@@ -655,7 +655,7 @@
           "he": "הם התפשטו בשתי המערות. ג'סי וג'יימס עם הפוקימונים שלך — מצא אותם."
         }
       ],
-      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "spawnAfter": "act3-sym-lance-daycare-met",
       "despawnAfter": "act3-sym-pokemon-restored"
     },
     {
@@ -732,6 +732,196 @@
       "spawnAfter": "act3-sym-lance-cave-return",
       "despawnAfter": "act3-sym-zapdos-cave-defeated",
       "despawnOnDefeat": true
+    },
+    {
+      "id": "r7-c2-fake-rocket4",
+      "x": 11,
+      "y": 68,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_7db1c5",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 15,
+            "delay": 0
+          }
+        ]
+      },
+      "despawnAfter": "act3-sym-rocket-ambush-done",
+      "spawnAfter": "act3-sym-lance-daycare-met"
+    },
+    {
+      "id": "r7-c2-fake-rocket6",
+      "x": 11,
+      "y": 69,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_7db1c5",
+      "spawnAfter": "act3-sym-lance-daycare-met",
+      "despawnAfter": "act3-sym-rocket-ambush-done",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 10,
+            "delay": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "r7-c2-fake-rocket-2-james",
+      "x": 10,
+      "y": 67,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "rocket-james",
+      "spawnAfter": "act3-sym-lance-daycare-met",
+      "despawnAfter": "act3-sym-rocket-ambush-done"
+    },
+    {
+      "id": "r7-c2-fake-rocket-jessi",
+      "x": 8,
+      "y": 67,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "rocket-jessi",
+      "spawnAfter": "act3-sym-lance-daycare-met",
+      "despawnAfter": "act3-sym-rocket-ambush-done"
+    },
+    {
+      "id": "r7-c2-fake-rocket3",
+      "x": 6,
+      "y": 68,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_7db1c5",
+      "spawnAfter": "act3-sym-lance-daycare-met",
+      "despawnAfter": "act3-sym-pokemon-restored"
+    },
+    {
+      "id": "r7-c2-fake-rocket5",
+      "x": 8,
+      "y": 70,
+      "facing": "up",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_7db1c5",
+      "spawnAfter": "act3-sym-lance-daycare-met",
+      "despawnAfter": "act3-sym-pokemon-restored"
+    },
+    {
+      "id": "act3-zap-ambush",
+      "x": 9,
+      "y": 68,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "char_29f912",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 15,
+            "delay": 0.5
+          }
+        ]
+      },
+      "despawnAfter": "act3-sym-rocket-ambush-done",
+      "spawnAfter": "act3-sym-lance-daycare-met"
+    },
+    {
+      "id": "npc-1779187854320",
+      "x": 53,
+      "y": 9,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "234123das dsad",
+          "he": "231d234121"
+        }
+      ],
+      "spriteType": "npc-male",
+      "name": {
+        "en": "3213123",
+        "he": "3123213"
+      },
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "level": 40,
+      "isGlitched": true,
+      "pokemonId": 142,
+      "despawnOnDefeat": true
+    },
+    {
+      "id": "npc-1779187981695",
+      "x": 65,
+      "y": 9,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "123451",
+          "he": "423123"
+        }
+      ],
+      "spriteType": "npc-male",
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "name": {
+        "en": "32123",
+        "he": "321123"
+      },
+      "despawnOnDefeat": true,
+      "pokemonId": 141,
+      "level": 40
     }
   ]
 }

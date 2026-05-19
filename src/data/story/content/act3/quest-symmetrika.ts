@@ -24,7 +24,7 @@
  *   ACT3_SYM_ARC_COMPLETE
  *
  * NPC IDs (cutscene-referenced):
- *   npc-1779050769024       symmetrika/gym      (Sima the gym leader — existing)
+ *   symetria-gym-leader-npc       symmetrika/gym      (Sima the gym leader — existing)
  *   npc-lance-daycare       fractalis/dayCare   (Lance gives Surf)
  *   npc-lance-cave1-guard   routes/route-7-cave1 (Lance holds grunts after ambush)
  *   npc-rocket-cave1-g1..7  routes/route-7-cave1 (Team Rocket trainers)
@@ -35,12 +35,11 @@
  */
 
 import { registerQuest } from '../../quests.js';
-import { registerCutscene } from '../../cutscenes.js';
+import { registerCutscene, TEAM_ROCKET_LINES } from '../../cutscenes.js';
 import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
-import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ────────────────────────────────────────────────────────────────────
 
@@ -168,12 +167,10 @@ registerCutscene({
   id: 'act3-sym-sima-reveal',
   skippable: true,
   steps: [
-    { type: 'face-npc', npcId: 'npc-1779050769024', dir: 'down' },
+    { type: 'face-npc', npcId: 'symetria-gym-leader-npc', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'npc-1779050769024',
-      // speakerId: 'gym_6_sima',
-      speakerName: 'Sima Tria / סימה טריה',
+      speakerId: 'symetria-gym-leader-npc',
       lines: [
         {
           en: "You're remarkable. Most trainers can't even reach me — the mirror puzzles alone defeat them.",
@@ -197,7 +194,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'npc-1779050769024',
+      speakerId: 'symetria-gym-leader-npc',
       speakerName: 'Sima Tria / סימה טריה',
       lines: [
         {
@@ -222,7 +219,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'npc-1779050769024',
+      speakerId: 'symetria-gym-leader-npc',
       speakerName: 'Sima Tria / סימה טריה',
       lines: [
         {
@@ -247,7 +244,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerId: 'npc-1779050769024',
+      speakerId: 'symetria-gym-leader-npc',
       speakerName: 'Sima Tria / סימה טריה',
       lines: [
         {
@@ -271,12 +268,6 @@ registerCutscene({
   id: 'act3-sym-lance-daycare',
   skippable: false,
   steps: [
-    {
-      type: 'move-npc',
-      npcId: 'npc-lance-daycare',
-      path: ['down', 'down', 'right', 'right', 'down', 'down', 'down'],
-      waitForComplete: true,
-    },
     { type: 'face-npc', npcId: 'npc-lance-daycare', dir: 'down' },
     {
       type: 'dialogue',
@@ -325,7 +316,7 @@ registerCutscene({
         },
       ],
     },
-    { type: 'action', action: { type: 'give-item', itemId: '307', quantity: 1 } },
+    { type: 'action', action: { type: 'give-item', itemId: 'hm03', quantity: 1 } },
     {
       type: 'dialogue',
       speakerName: 'Player / שחקן',
@@ -397,10 +388,26 @@ registerCutscene({
   id: 'act3-sym-cave-ambush',
   skippable: false,
   steps: [
-    { type: 'play-sfx', sfxId: 'alert' },
+    { type: 'move-player', path: ['up', 'up', 'up'] },
+
+    ...TEAM_ROCKET_LINES,
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket6', path: ['left'] },
+    { type: 'move-player', path: ['left'] },
+    {
+      type: 'move-npc',
+      npcId: 'act3-zap-ambush',
+      path: ['down', 'down', 'right', 'right', 'up', 'up', 'up', 'up', 'left', 'left', 'down'],
+      waitForComplete: false,
+    },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket6', path: ['left'] },
+    { type: 'move-player', path: ['left'] },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket5', path: ['right'] },
+    { type: 'face-npc', npcId: 'r7-c2-fake-rocket5', dir: 'up' },
+    { type: 'move-player', path: ['right'] },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket3', path: ['down', 'right'] },
     {
       type: 'dialogue',
-      speakerName: 'Team Rocket Grunt / סוכן צוות רוקט',
+      speakerId: 'r7-c2-fake-rocket6',
       lines: [
         {
           en: "Don't move! You're surrounded!",
@@ -412,59 +419,75 @@ registerCutscene({
         },
       ],
     },
+    { type: 'play-music', musicId: 'battle' },
+
     {
       type: 'dialogue',
-      speakerName: 'Jesse / ג׳סי',
+      speakerId: 'r7-c2-fake-rocket-jessi',
       lines: [
-        {
-          en: 'Prepare for trouble — and make it double! Think your Pokemon can protect you here?',
-          he: 'היכונו לצרות — ועשה אותן כפולות ומכופלות!',
-        },
-
+        { en: 'Surrender now or face the consequences!', he: 'היכנעו עכשיו או שתאלצו להילחם' },
         { en: 'I recognize you! anoying trainer! its time to pay!', he: 'אני מזהה אותך! מאמן מעצבן! הגיע הזמן לשלם!' },
+        {
+          en: 'Zapdos! The legendary Zapdos — under Team Rocket control!',
+          he: 'זאפדוס! זאפדוס האגדי — תחת שליטת צוות רוקט!.',
+        },
       ],
     },
     { type: 'play-sfx', sfxId: 'thunder' },
     { type: 'overlay', color: '#ffff0033' },
     { type: 'wait', durationMs: 300 },
+    { type: 'overlay', color: '#5f5f2d4f' },
+    { type: 'wait', durationMs: 300 },
+    { type: 'overlay', color: '#16161533' },
+    { type: 'wait', durationMs: 1600 },
+    { type: 'overlay', color: '#5f5f2d4f' },
+    { type: 'wait', durationMs: 300 },
     { type: 'overlay', color: null },
     {
       type: 'dialogue',
-      speakerName: 'Jesse / ג׳סי',
-      lines: [
-        {
-          en: 'Zapdos! The legendary Zapdos — under Team Rocket control!',
-          he: 'זאפדוס! זאפדוס האגדי — תחת שליטת צוות רוקט!.',
-        },
-        {
-          en: 'Everyone! Attack!!!',
-          he: 'כולם! תתקפו!!!',
-        },
-      ],
-    },
-    { type: 'move-npc', npcId: '', path: ['down'], waitForComplete: true },
-    { type: 'thief-npc', npcId: 'npc-rocket-thief-james', condition: { amount: 3, aboveLevel: 40 } },
-    { type: 'play-sfx', sfxId: 'thunder' },
-    {
-      type: 'dialogue',
-      speakerName: 'Jesse / ג׳סי',
-      lines: [
-        {
-          en: 'Ha! Three of your strongest — taken! James, take them and run to the inner cave. Go!',
-          he: "הא! שלושה מהחזקים שלך — נלקחו! ג'יימס, קח אותם ורוץ למערה הפנימית. לך!",
-        },
-      ],
-    },
-    {
-      type: 'dialogue',
-      speakerName: 'James / ג׳יימס',
+      speakerId: 'r7-c2-fake-rocket-2',
       lines: [
         {
           en: "On it! You'll never catch me!",
-          he: 'בדרך! לעולם לא תתפוס אותי!',
+          he: 'הפסדת בקרב! הפוקימונים שלך מותשים ועכשיו הם אצלי! ',
         },
       ],
     },
+    { type: 'stop-music' },
+    { type: 'play-sfx', sfxId: 'alert' },
+    { type: 'thief-npc', npcId: 'npc-rocket-thief-james', condition: { amount: 3, aboveLevel: 40 } },
+    {
+      type: 'move-npc',
+      npcId: 'npc-lance-cave1-guard',
+      path: ['down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down'],
+      waitForComplete: false,
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'r7-c2-fake-rocket-2',
+      lines: [{ en: 'ohhh its Lance! lets split and run', he: 'אווו זה לאנס! בואו נתפצל ונברח' }],
+    },
+    {
+      type: 'move-npc',
+      npcId: 'r7-c2-fake-rocket-2-james',
+      path: ['down', 'down', 'down', 'down', 'left', 'down', 'down'],
+      waitForComplete: false,
+    },
+    {
+      type: 'move-npc',
+      npcId: 'r7-c2-fake-rocket-jessi',
+      path: ['down', 'down', 'down', 'down', 'right', 'down', 'down'],
+      waitForComplete: false,
+    },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket3', path: ['left', 'left', 'left', 'left', 'left', 'down', 'down'] },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket5', path: ['left', 'left', 'left', 'left', 'left', 'down'] },
+    { type: 'face-npc', npcId: 'r7-c2-fake-rocket3', dir: 'right' },
+    { type: 'face-npc', npcId: 'r7-c2-fake-rocket3', dir: 'right' },
+    { type: 'move-npc', npcId: 'npc-lance-cave1-guard', path: ['left', 'left', 'left', 'left', 'left', 'down'] },
+    { type: 'face-npc', npcId: 'r7-c2-fake-rocket3', dir: 'right' },
+    { type: 'face-npc', npcId: 'r7-c2-fake-rocket5', dir: 'up' },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket4', path: ['up', 'up', 'up', 'up', 'up', 'up', 'up', 'up'] },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket6', path: ['up', 'up', 'up', 'up', 'up', 'up', 'up', 'up'] },
     {
       type: 'dialogue',
       speakerName: 'Team Rocket Grunt / סוכן צוות רוקט',
@@ -475,10 +498,6 @@ registerCutscene({
         },
       ],
     },
-    { type: 'play-sfx', sfxId: 'thunder' },
-    { type: 'overlay', color: '#ffff0055' },
-    { type: 'wait', durationMs: 200 },
-    { type: 'overlay', color: null },
     {
       type: 'dialogue',
       speakerName: 'Lance / לאנס',
@@ -507,13 +526,10 @@ registerCutscene({
           en: 'Zapdos too... they really did it. They put a core on it.',
           he: 'גם זאפדוס... הם באמת עשו את זה. הם שמו עליו ליבה.',
         },
-        {
-          en: "Three on one and a corrupted legendary in the same cave. I've had worse.",
-          he: 'שלושה נגד אחד ועם אגדי מושחת באותה מערה. היו לי יותר גרועים.',
-        },
+
         {
           en: "Go — now! Chase James into the inner cave, get your Pokemon back, and defeat every Rocket in both caves. I'll keep these three busy and hold Zapdos off.",
-          he: "לך — עכשיו! רדוף אחרי ג'יימס למערה הפנימית, קח את הפוקימונים שלך בחזרה, ונצח כל רוקט בשתי המערות. אני אעסיק את השלושה האלה ואחסום את זאפדוס.",
+          he: "לך — עכשיו! רדוף אחרי ג'יימס הוא בטח לא הספיק להתרחק הרבה. אני אטפל בשלושה האלה ואחסום את זאפדוס.",
         },
       ],
     },

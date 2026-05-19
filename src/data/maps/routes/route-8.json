@@ -70,7 +70,7 @@
     {
       "id": "npc-engineer-volt-r8",
       "x": 19,
-      "y": 52,
+      "y": 55,
       "facing": "left",
       "type": "dialogue",
       "dialogue": [
@@ -87,8 +87,18 @@
         "afterSpawnPattern": [
           {
             "dir": "down",
-            "steps": 3,
+            "steps": 5,
             "delay": 0
+          },
+          {
+            "dir": "left",
+            "steps": 4,
+            "delay": 0.5
+          },
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 0.5
           }
         ]
       },
@@ -97,7 +107,7 @@
     {
       "id": "npc-zapdos-route8",
       "x": 5,
-      "y": 64,
+      "y": 58,
       "facing": "down",
       "type": "wild-pokemon",
       "dialogue": [],
@@ -107,7 +117,7 @@
         "pattern": [
           {
             "dir": "up",
-            "steps": 23,
+            "steps": 20,
             "delay": 1
           },
           {
@@ -117,7 +127,7 @@
           },
           {
             "dir": "up",
-            "steps": 22,
+            "steps": 20,
             "delay": 1.5
           },
           {
@@ -127,7 +137,7 @@
           },
           {
             "dir": "down",
-            "steps": 45,
+            "steps": 40,
             "delay": 0.5
           }
         ],
@@ -175,13 +185,13 @@
     {
       "id": "npc-engineer-volt-r8-temp1",
       "x": 9,
-      "y": 67,
+      "y": 64,
       "facing": "down",
       "type": "dialogue",
       "dialogue": [],
       "spriteType": "gym-5-fractalis",
-      "spawnAfter": "vact3-fractalis-route7-scene-done",
-      "despawnAfter": "act3-fractalis-route8-entered",
+      "spawnAfter": "act3-fractalis-route8-entered",
+      "despawnAfter": "act3-fractalis-route7-scene-done",
       "autoWalk": {
         "pattern": [],
         "loop": false,
@@ -197,7 +207,7 @@
     {
       "id": "npc-1778599418970-1",
       "x": 8,
-      "y": 67,
+      "y": 64,
       "facing": "down",
       "type": "dialogue",
       "dialogue": [],

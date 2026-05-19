@@ -58,16 +58,15 @@ registerQuest({
     he: 'חפש את המהנדס הראשי ולמד על תחנת הכוח',
   },
 });
-
 registerQuest({
   id: 'main-act3-zapdos-chase',
   title: { en: 'Find the Missing Zapdos', he: 'מצא את זאפדוס הנעלם' },
-  objective: { en: 'Follow the engineer to Route 7 and track Zapdos', he: 'עקוב אחר המהנדס לדרך 7 ועקוב אחר זאפדוס' },
+  objective: { en: 'Follow the engineer to Route 8 and track Zapdos', he: 'עקוב אחר המהנדס לדרך 8 ועקוב אחר זאפדוס' },
 });
 registerQuest({
   id: 'main-act3-zapdos-chase2',
   title: { en: 'Find the Missing Zapdos', he: 'מצא את זאפדוס הנעלם' },
-  objective: { en: 'Follow the engineer to Route 8 and track Zapdos', he: 'עקוב אחר המהנדס לדרך 8 ועקוב אחר זאפדוס' },
+  objective: { en: 'Follow the engineer to Route 7 and track Zapdos', he: 'עקוב אחר המהנדס לדרך 7 ועקוב אחר זאפדוס' },
 });
 registerQuest({
   id: 'main-act3-zapdos-chase3',
@@ -521,8 +520,7 @@ registerStoryEvent({
 
 registerStoryEvent({
   id: 'act3-end',
-  trigger: { type: 'flag-set', flag: FLAGS.STORY_BADGE_5 },
-  conditions: [{ type: 'flag-not', flag: FLAGS.STORY_BADGE_5 }],
+  trigger: { type: 'trainer-defeated', trainerId: 'npc-gym-leader-fractalis' },
   actions: [
     { type: 'complete-quest', questId: 'main-act3-electric-gym' },
     { type: 'set-quest', questId: 'finish-act3-route8' },
