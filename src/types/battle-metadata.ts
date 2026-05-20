@@ -59,7 +59,13 @@ export type MoveBattleBehaviorTag =
   | 'mirror-move'
   | 'disable'
   | 'belly-drum'
-  | 'magnitude';
+  | 'magnitude'
+  | 'two-turn-fly'
+  | 'two-turn-dig'
+  | 'lock-in-outrage'
+  | 'lock-in-rollout'
+  | 'lock-in-rage'
+  | 'lock-in-uproar';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 

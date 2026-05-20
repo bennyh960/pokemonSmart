@@ -330,7 +330,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     originalY: number;
   }
   let trainerApproach: TrainerApproachState | null = null;
-  let pendingLOSBattle = false; // true when LOS-approach dialogue is showing; use flash transition in onDialogueEnd
 
   // Gate-guard approach state
   interface GateGuardApproachState {
@@ -393,8 +392,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     const lines: string[] = [];
 
     const trainerNpcs = mapData.npcs.filter((npc) => npc.type === 'trainer' && !npc.excludeFromMapClear);
-    const trainerDefeated = trainerNpcs.filter((npc) => pd.flags[`trainer-${npc.id}-defeated`]).length;
-    const trainerRemaining = trainerNpcs.length - trainerDefeated;
+    const trainerDefeated = trainerNpcs.filter((npc) => pd.flags[`trainer-${npc.id}-defeated`]);
+    const trainerDefeatedLength = trainerDefeated.length;
+    // debug
+    trainerNpcs.forEach((n) => {
+      if (!trainerDefeated.find((d) => d.id === n.id)) {
+        console.debug(`Trainer NPC ${n.id} not defeated yet`);
+      }
+    });
+
+    const trainerRemaining = trainerNpcs.length - trainerDefeatedLength;
     if (trainerNpcs.length > 0 && trainerRemaining > 0) {
       lines.push(
         locale === 'he'
@@ -404,8 +411,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
 
     const wildNpcs = mapData.npcs.filter((npc) => npc.type === 'wild-pokemon' && !npc.excludeFromMapClear);
-    const wildDefeated = wildNpcs.filter((npc) => pd.flags[`trainer-${npc.id}-defeated`]).length;
-    const wildRemaining = wildNpcs.length - wildDefeated;
+    const wildDefeated = wildNpcs.filter((npc) => pd.flags[`trainer-${npc.id}-defeated`]);
+    const wildDefeatedLength = wildDefeated.length;
+    // debug
+    // wildNpcs.forEach((n) => {
+    //   if (!wildDefeated.find((d) => d.id === n.id)) {
+    //     console.debug(`Wild NPC ${n.id} not defeated yet`);
+    //   }
+    // });
+    const wildRemaining = wildNpcs.length - wildDefeatedLength;
     if (wildNpcs.length > 0 && wildRemaining > 0) {
       lines.push(
         locale === 'he'
@@ -803,15 +817,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const playerPokemon = playerData.party.find((p) => p.hp > 0);
             if (playerPokemon) {
               setTrainerBattleData(playerPokemon, trainerBattleData, deriveBattleContext(), deriveBattleBackground());
-              if (pendingLOSBattle) {
-                // LOS-initiated: use flash transition to match the trainer-spotted feel
-                pendingLOSBattle = false;
-                encounterTriggered = true;
-                flashTimer = 0;
-                flashPhase = 'flash';
-              } else {
-                stateMachine.change('BATTLE');
-              }
+              stateMachine.change('BATTLE');
             }
           });
         } else {
@@ -1626,7 +1632,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     }
     fishingPhase = 'casting';
     fishingTimer = 0;
-    fishingWaitDuration = 1.5 + Math.random() * 2.5;
+    fishingWaitDuration = 0.5 + Math.random() * 2.5;
     fishingBobberOffset = 0;
   }
 
@@ -1645,7 +1651,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     if (fishingPhase === 'waiting') {
       fishingBobberOffset = Math.sin(fishingTimer * 3.5) * 2;
-      const FISHING_RANDOMNESS = 0.5; // adjust to make bites more or less frequent
+      const FISHING_RANDOMNESS = 0.75; // adjust to make bites more or less frequent
       if (fishingTimer >= fishingWaitDuration) {
         if (Math.random() < FISHING_RANDOMNESS) {
           fishingPhase = 'bite';
@@ -1773,7 +1779,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     listChoiceState = null;
     healTextBox = null;
     trainerApproach = null;
-    pendingLOSBattle = false;
+
     gateGuardApproach = null;
     pendingGateBack = null;
     partyGuardApproach = null;
@@ -1854,7 +1860,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       listChoiceState = null;
       healTextBox = null;
       trainerApproach = null;
-      pendingLOSBattle = false;
+
       hmAnim = null;
       pendingHMAction = null;
       flyAnim = null;
@@ -2493,25 +2499,23 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const playerPokemon = playerData.party.find((p) => p.hp > 0);
           if (_taTrainer.dialogue.length > 0 && hasActiveGame()) {
             // Show trainer's pre-battle dialogue; onDialogueEnd will handle questions + flash + battle
+            audio.playMusic('challenger');
             turnNPCToPlayer(_taTrainer);
             interactingNPC = _taTrainer;
-            pendingLOSBattle = true;
             activeTextBox = createTextBox(
               resolveDialogue(_taTrainer.dialogue, getLocale()),
               isRTL(),
               _taTrainer.name ? getLocalizedName(_taTrainer.name) : undefined,
             );
           } else if (playerPokemon) {
-            // No dialogue — start battle directly with flash transition
+            audio.playMusic('challenger');
             setTrainerBattleData(
               playerPokemon,
               buildTrainerBattleData(ta.trainer, 0),
               deriveBattleContext(),
               deriveBattleBackground(),
             );
-            encounterTriggered = true;
-            flashTimer = 0;
-            flashPhase = 'flash';
+            stateMachine.change('BATTLE');
           }
         }
         return;
@@ -3142,6 +3146,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             // Fire npc-interact before trainer dialogue starts (first encounter only)
             if (npc.type === 'trainer' && hasActiveGame()) {
               fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+              audio.playMusic('challenger');
             }
             // Use postFlagDialogue when present and its flag is set
             const pfd = npc.postFlagDialogue;
@@ -3500,12 +3505,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
 
             if (!walkable && isCurrentlySurfing) {
-              // While surfing, water tiles become walkable
-              const encTypes = tileMap.getEncounterTypes(nx, ny);
-              const isWater = encTypes?.some(
-                (et) => et === 'water' || et.startsWith('water') || et.includes('/water') || et === '*',
-              );
-              if (isWater) walkable = true;
+              // While surfing, any tile with category 'water' is walkable.
+              // Cave tilesets use category:water without encounterTypes, so we check
+              // category directly rather than encounter types alone.
+              if (tileMap.getTileCategory(nx, ny) === 'water') walkable = true;
             }
 
             if (!walkable && input.isKeyPressed(key)) {

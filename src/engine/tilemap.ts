@@ -125,6 +125,7 @@ export function mergeMapWithTemplate(
     tiles: template.tiles,
     objectLayer: template.objectLayer,
     tileset: template.tileset,
+    flagListeners: [...(template.flagListeners ?? []), ...(instance.flagListeners ?? [])], // defensive copy since we mutate this array in-place
     width: template.width,
     height: template.height,
     tileSize: template.tileSize,
@@ -277,18 +278,14 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
     applyFlagListeners(flags: Record<string, boolean>): void {
       if (flagListenerDefs.length === 0) return;
       for (const fl of flagListenerDefs) {
-        if (fl.spawnAfter !== undefined) {
-          const shouldExist = !!flags[fl.spawnAfter];
-          const idx = placedObjects.findIndex(o => o.key === fl.key && o.x === fl.x && o.y === fl.y);
-          if (shouldExist && idx === -1) placedObjects.push({ key: fl.key, x: fl.x, y: fl.y });
-          else if (!shouldExist && idx !== -1) placedObjects.splice(idx, 1);
-        }
-        if (fl.despawnAfter !== undefined) {
-          const shouldExist = !flags[fl.despawnAfter];
-          const idx = placedObjects.findIndex(o => o.key === fl.key && o.x === fl.x && o.y === fl.y);
-          if (shouldExist && idx === -1) placedObjects.push({ key: fl.key, x: fl.x, y: fl.y });
-          else if (!shouldExist && idx !== -1) placedObjects.splice(idx, 1);
-        }
+        // All conditions must be satisfied — AND them together so spawnAfter + despawnAfter
+        // don't fight each other when both are present on the same entry.
+        let shouldExist = true;
+        if (fl.spawnAfter !== undefined) shouldExist = shouldExist && !!flags[fl.spawnAfter];
+        if (fl.despawnAfter !== undefined) shouldExist = shouldExist && !flags[fl.despawnAfter];
+        const idx = placedObjects.findIndex((o) => o.key === fl.key && o.x === fl.x && o.y === fl.y);
+        if (shouldExist && idx === -1) placedObjects.push({ key: fl.key, x: fl.x, y: fl.y });
+        else if (!shouldExist && idx !== -1) placedObjects.splice(idx, 1);
       }
     },
 

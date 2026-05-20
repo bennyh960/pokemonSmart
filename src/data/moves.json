@@ -1021,8 +1021,8 @@
     "mathDifficulty": 4,
     "damageClass": "special",
     "description": {
-      "en": "A strong water- type attack.",
-      "he": "התקפה חזקה מסוג מים."
+      "en": "A strong water- type attack. Allow large pokemon above level 45 , 0.85m and 25kg to carry his trainer on water.",
+      "he": "מתקפת מים חזקה המאפשרת לפוקימון לשאת את המאמן שלו מעל המים - התנאים (רמה: 45, גובה: 0.85 מטר, משקל: 25 ק''ג)"
     }
   },
   {
@@ -3567,7 +3567,7 @@
     "id": 200,
     "name": {
       "en": "Outrage",
-      "he": "זעם"
+      "he": "זעם שיגעון"
     },
     "type": "dragon",
     "power": 120,
@@ -6267,7 +6267,7 @@
     "id": 355,
     "name": {
       "en": "Roost",
-      "he": "נחיתה"
+      "he": "נחיתה ומנוחה"
     },
     "type": "flying",
     "power": null,

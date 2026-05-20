@@ -88,6 +88,7 @@ export function swapPartyAndBox(partyIndex: number, boxIndex: number, slotIndex:
  */
 export function sendCaughtToBox(pokemon: Pokemon): number {
   const pd = getPlayerData();
+  pokemon.hp = pokemon.maxHp;
   for (let b = 0; b < pd.boxes.length; b++) {
     const slot = pd.boxes[b].pokemon.indexOf(null);
     if (slot >= 0) {
@@ -102,7 +103,7 @@ export function sendCaughtToBox(pokemon: Pokemon): number {
 export function getBoxCount(boxIndex: number): number {
   const pd = getPlayerData();
   if (boxIndex < 0 || boxIndex >= pd.boxes.length) return 0;
-  return pd.boxes[boxIndex].pokemon.filter(p => p !== null).length;
+  return pd.boxes[boxIndex].pokemon.filter((p) => p !== null).length;
 }
 
 /** Find the first empty slot in a box. Returns index or -1 if full. */

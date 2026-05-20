@@ -92,6 +92,8 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Skull Bash': chargingMove(stageChange('defense', 1, 'user')),
   'Sky Attack': chargingMove(),
   'Razor Wind': chargingMove(),
+  Fly: { behaviorTags: ['requires-charge-turn', 'two-turn-fly'] },
+  Dig: { behaviorTags: ['requires-charge-turn', 'two-turn-dig'] },
   'Future Sight': { behaviorTags: ['future-sight'] },
   Sandstorm: { behaviorTags: ['sandstorm'], target: 'entire-field' },
   'Rain Dance': { behaviorTags: ['rain'], target: 'entire-field' },
@@ -349,12 +351,20 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Leaf Blade': { critRate: 1 },
   'Stone Edge': { critRate: 1 },
 
-  // --- Thrash/Outrage/Petal Dance: 30% self-confusion post-use, no lock-in ---
-  Thrash: { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 2, maxTurns: 5 }] },
-  Outrage: { effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 2, maxTurns: 5 }] },
-  'Petal Dance': {
-    effects: [{ id: 'confusion' as const, target: 'user' as const, chance: 30, minTurns: 2, maxTurns: 5 }],
-  },
+  // --- Lock-in rampage moves (2-3 turns, guaranteed confusion at end) ---
+  Thrash: { behaviorTags: ['lock-in-outrage'] },
+  Outrage: { behaviorTags: ['lock-in-outrage'] },
+  'Petal Dance': { behaviorTags: ['lock-in-outrage'] },
+
+  // --- Rollout/Ice Ball: lock up to 5 turns, power doubles each turn ---
+  Rollout: { behaviorTags: ['lock-in-rollout'] },
+  'Ice Ball': { behaviorTags: ['lock-in-rollout'] },
+
+  // --- Rage: lock-in indefinitely, Attack +1 each time hit ---
+  Rage: { behaviorTags: ['lock-in-rage'] },
+
+  // --- Uproar: lock 3-5 turns ---
+  Uproar: { behaviorTags: ['lock-in-uproar'] },
 
   // --- Sleep-usable moves ---
   Snore: { flinchChance: 30 },

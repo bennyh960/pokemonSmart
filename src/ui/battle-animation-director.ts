@@ -11,7 +11,7 @@ export interface BattleActorState {
 }
 
 export type BattleActorTweenTarget = Partial<BattleActorState>;
-export type BattleAnimationEasing = 'linear' | 'easeOut' | 'easeInOut';
+export type BattleAnimationEasing = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut';
 
 export interface BattleAnimationDirector {
   clear(): void;
@@ -324,6 +324,8 @@ function applyEasing(progress: number, easing: BattleAnimationEasing): number {
   switch (easing) {
     case 'linear':
       return progress;
+    case 'easeIn':
+      return progress * progress;
     case 'easeOut':
       return 1 - Math.pow(1 - progress, 2);
     case 'easeInOut':

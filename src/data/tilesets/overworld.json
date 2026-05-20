@@ -828,6 +828,7 @@
         "water",
         "ice"
       ],
+      "battleBackground": "orassea",
       "above": false,
       "category": "water",
       "interactType": null,
@@ -1876,6 +1877,7 @@
       "encounterTypes": [
         "*/water,ice"
       ],
+      "battleBackground": "desert",
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -2075,6 +2077,7 @@
         "electric",
         "flying"
       ],
+      "battleBackground": "skypillar",
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3664,6 +3667,7 @@
       "encounterTypes": [
         "*"
       ],
+      "battleBackground": "beach",
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3727,6 +3731,7 @@
       "encounterTypes": [
         "*/water"
       ],
+      "battleBackground": "beach",
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -4625,6 +4630,7 @@
       "encounterTypes": [
         "*/water"
       ],
+      "battleBackground": "library",
       "above": true,
       "category": "grass",
       "interactType": null,
@@ -6546,6 +6552,7 @@
       "above": true,
       "overlay": true,
       "category": "building",
+      "interactType": null,
       "cells": [
         {
           "dx": 1,
@@ -6614,6 +6621,7 @@
       "walkable": false,
       "above": true,
       "category": "building",
+      "interactType": null,
       "cells": [
         {
           "dx": 0,
@@ -6734,6 +6742,7 @@
       "walkable": false,
       "above": true,
       "category": "building",
+      "interactType": null,
       "cells": [
         {
           "dx": 0,
@@ -6821,7 +6830,8 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "building"
+      "category": "building",
+      "interactType": null
     },
     {
       "key": "tower-2",
@@ -6833,6 +6843,7 @@
       "above": true,
       "overlay": true,
       "category": "building",
+      "interactType": null,
       "cells": [
         {
           "dx": 0,
@@ -6904,7 +6915,8 @@
       "h": 48,
       "walkable": false,
       "above": false,
-      "category": "building"
+      "category": "building",
+      "interactType": null
     },
     {
       "key": "building-level",
@@ -6914,7 +6926,8 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "building"
+      "category": "building",
+      "interactType": null
     },
     {
       "key": "building-bottom",
@@ -6924,7 +6937,8 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "building"
+      "category": "building",
+      "interactType": null
     }
   ]
 }

@@ -7,7 +7,7 @@
     "en": "Mysterious Cave",
     "he": "מערה מסתורית"
   },
-  "music": "route",
+  "music": "title",
   "encounterTableId": "cave-20-30",
   "spawn": {
     "x": 9,
@@ -24,7 +24,7 @@
     {
       "fromX": 59,
       "fromY": 1,
-      "toMapId": "route-7-cave2-exit"
+      "toMapId": "routes/route-7-cave2-exit"
     }
   ],
   "npcs": [
@@ -113,7 +113,8 @@
           "he": "אם תוכל לחצות את הנהר אולי תצליח לפגוש אותו"
         }
       ],
-      "despawnAfter": "story-badge-6"
+      "despawnAfter": "story-badge-6",
+      "excludeFromMapClear": true
     },
     {
       "id": "npc-1778406063566",
@@ -158,7 +159,8 @@
         "money": 1200
       },
       "postBattleDialogue": [],
-      "despawnAfter": "story-badge-6"
+      "despawnAfter": "story-badge-6",
+      "excludeFromMapClear": true
     },
     {
       "id": "npc-1778406074314",
@@ -199,7 +201,8 @@
         "money": 800
       },
       "postBattleDialogue": [],
-      "despawnAfter": "story-badge-6"
+      "despawnAfter": "story-badge-6",
+      "excludeFromMapClear": true
     },
     {
       "id": "npc-rocket-cave1-g1",
@@ -334,7 +337,7 @@
       "id": "npc-rocket-cave1-g3",
       "x": 37,
       "y": 6,
-      "facing": "left",
+      "facing": "up",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -518,7 +521,7 @@
       "id": "npc-rocket-cave1-g6",
       "x": 43,
       "y": 6,
-      "facing": "down",
+      "facing": "up",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -574,9 +577,9 @@
     },
     {
       "id": "npc-rocket-cave1-g7",
-      "x": 47,
-      "y": 7,
-      "facing": "up",
+      "x": 49,
+      "y": 9,
+      "facing": "right",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -612,26 +615,27 @@
           "moves": []
         }
       ],
-      "lineOfSight": 5,
+      "lineOfSight": 22,
       "reward": {
         "money": 1150
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "despawnOnDefeat": true,
       "autoWalk": {
-        "pattern": [
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
           {
             "dir": "right",
             "steps": 13,
-            "delay": 0.5
+            "delay": 0
           },
           {
             "dir": "up",
             "steps": 6,
             "delay": 0.5
           }
-        ],
-        "loop": true
+        ]
       }
     },
     {
@@ -645,24 +649,26 @@
         "en": "Lance",
         "he": "לאנס"
       },
-      "dialogue": [
-        {
-          "en": "I've got these three covered — go! Find the others and get your Pokemon back!",
-          "he": "אני מטפל בשלושה האלה — לך! מצא את השאר וקח את הפוקימונים שלך בחזרה!"
-        },
-        {
-          "en": "They spread through both caves. Jesse and James have your Pokemon — find them.",
-          "he": "הם התפשטו בשתי המערות. ג'סי וג'יימס עם הפוקימונים שלך — מצא אותם."
-        }
-      ],
+      "dialogue": [],
       "spawnAfter": "act3-sym-lance-daycare-met",
-      "despawnAfter": "act3-sym-pokemon-restored"
+      "despawnAfter": "act3-sym-rocket-ambush-done",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 15,
+            "delay": 0
+          }
+        ]
+      }
     },
     {
-      "id": "npc-lance-cave1-return",
-      "x": 22,
+      "id": "npc-lance-c2-return",
+      "x": 20,
       "y": 26,
-      "facing": "down",
+      "facing": "up",
       "type": "dialogue",
       "spriteType": "char_919bca",
       "name": {
@@ -671,29 +677,17 @@
       },
       "dialogue": [
         {
-          "en": "Good — you're back with your Pokemons. I knew you can do it!.",
-          "he": "טוב — חזרת עם הפוקימונים שלך. ידעתי שאתה יכול לעשות את זה!."
-        },
-        {
-          "en": "Dont afraid from team rocket - they not treat thier pokemons like partners. they treat them as slaves and tools. they will never understand the bond between you and your pokemons.",
-          "he": "אל תפחד מצוות רוקט - הם לא מתייחסים לפוקימונים שלהם כשותפים. הם מתייחסים אליהם כאל עבדים וכלים. הם לעולם לא יבינו את הקשר בינך לבין הפוקימונים שלך.  "
-        },
-        {
-          "en": "Trainers who want to be master must see their pokemons as friends and partners, not tools or slaves. you have proven that you are a true trainer, and your bond with your pokemons is strong. keep going and you will be able to defeat team rocket once and for all!",
-          "he": "מאמנים שרוצים להיות מאסטרים חייבים לראות את הפוקימונים שלהם כחברים ושותפים, לא ככלים או עבדים. הוכחת שאתה מאמן אמיתי, והקשר שלך עם הפוקימונים שלך חזק. המשך ותוכל לנצח את צוות רוקט אחת ולתמיד!"
-        },
-        {
-          "en": "Now lets focus on Zapdos - he must be here , team rocket appear allwyes close to storng glitches",
-          "he": "עכשיו בוא נתמקד בזפדוס - הוא חייב להיות כאן, צוות רוקט מופיע תמיד קרוב לפוקימוני גליץ' חזקים"
+          "en": "!",
+          "he": "!היי"
         }
       ],
       "spawnAfter": "act3-sym-pokemon-restored",
-      "despawnAfter": "act3-sym-zapdos-cave-defeated"
+      "despawnAfter": "act3-sym-lance-cave-return"
     },
     {
       "id": "npc-zapdos-cave",
-      "x": 59,
-      "y": 4,
+      "x": 58,
+      "y": 21,
       "facing": "down",
       "type": "wild-pokemon",
       "dialogue": [],
@@ -702,36 +696,44 @@
         "floating": true,
         "pattern": [
           {
+            "dir": "right",
+            "steps": 4,
+            "delay": 0.5
+          },
+          {
             "dir": "down",
-            "steps": 15,
-            "delay": 2
+            "steps": 5,
+            "delay": 0.5
           },
           {
             "dir": "left",
-            "steps": 35,
+            "steps": 4,
             "delay": 0.5
           },
           {
             "dir": "up",
-            "steps": 15,
-            "delay": 0.5
-          },
-          {
-            "dir": "right",
-            "steps": 35,
+            "steps": 5,
             "delay": 0.5
           }
         ],
-        "loop": true
+        "loop": true,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 20,
+            "delay": 0
+          }
+        ]
       },
       "isGlitched": true,
       "pokemonId": 145,
       "level": 50,
-      "fleeAtHpPct": 0.7,
-      "fleeAfterTurns": 5,
+      "fleeAtHpPct": 0.6,
+      "fleeAfterTurns": 10,
       "spawnAfter": "act3-sym-lance-cave-return",
       "despawnAfter": "act3-sym-zapdos-cave-defeated",
-      "despawnOnDefeat": true
+      "despawnOnDefeat": true,
+      "excludeFromMapClear": true
     },
     {
       "id": "r7-c2-fake-rocket4",
@@ -857,32 +859,21 @@
       "y": 68,
       "facing": "down",
       "type": "wild-pokemon",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
+      "dialogue": [],
       "spriteType": "char_29f912",
       "autoWalk": {
         "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 15,
-            "delay": 0.5
-          }
-        ]
+        "loop": false
       },
       "despawnAfter": "act3-sym-rocket-ambush-done",
-      "spawnAfter": "act3-sym-lance-daycare-met"
+      "spawnAfter": "act3-sym-lance-daycare-met",
+      "excludeFromMapClear": true
     },
     {
       "id": "npc-1779187854320",
-      "x": 53,
-      "y": 9,
-      "facing": "down",
+      "x": 58,
+      "y": 16,
+      "facing": "right",
       "type": "wild-pokemon",
       "dialogue": [
         {
@@ -893,7 +884,7 @@
       "spriteType": "npc-male",
       "name": {
         "en": "3213123",
-        "he": "3123213"
+        "he": "3123213 נל-איקס"
       },
       "spawnAfter": "act3-sym-rocket-ambush-done",
       "level": 40,
@@ -903,9 +894,9 @@
     },
     {
       "id": "npc-1779187981695",
-      "x": 65,
-      "y": 9,
-      "facing": "down",
+      "x": 58,
+      "y": 18,
+      "facing": "right",
       "type": "wild-pokemon",
       "dialogue": [
         {
@@ -921,7 +912,273 @@
       },
       "despawnOnDefeat": true,
       "pokemonId": 141,
-      "level": 40
+      "level": 40,
+      "isGlitched": true
+    },
+    {
+      "id": "npc-1779221600884-blocker",
+      "x": 11,
+      "y": 53,
+      "facing": "left",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "הו יש פה מצב חירום! צוות רוקט ברחו לעומק המערה!"
+        },
+        {
+          "en": "",
+          "he": "לאנס המאמן האגדי רדף אחריהם ונראה שהוא נלחם בזאפדוס!"
+        },
+        {
+          "en": "",
+          "he": "מסוכן פה - חזור לעזור ללאנס אחרי שתשיב את הפוקימונים שנגנבו לך!"
+        },
+        {
+          "en": "",
+          "he": "צוות רוקט מתחבא במערה הקטנה בדרך 7"
+        }
+      ],
+      "spriteType": "char_24117d",
+      "blocker": true,
+      "despawnAfter": "act3-sym-pokemon-restored",
+      "lineOfSight": 9,
+      "spawnAfter": "act3-sym-lance-daycare-met"
+    },
+    {
+      "id": "npc-1779260939290",
+      "x": 58,
+      "y": 17,
+      "facing": "right",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "482398423",
+          "he": "43247392"
+        }
+      ],
+      "spriteType": "npc-female",
+      "isGlitched": true,
+      "pokemonId": 208,
+      "level": 40,
+      "despawnOnDefeat": true,
+      "name": {
+        "en": "null-x glitch",
+        "he": "null-x גליץ"
+      }
+    },
+    {
+      "id": "npc-1779260943259x",
+      "x": 58,
+      "y": 15,
+      "facing": "right",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "31298321",
+          "he": "3298219892819"
+        }
+      ],
+      "spriteType": "npc-female",
+      "isGlitched": true,
+      "level": 40,
+      "pokemonId": 130,
+      "despawnOnDefeat": true,
+      "name": {
+        "en": "null-x secure",
+        "he": "גליץ אבטחת NULL-X"
+      }
+    },
+    {
+      "id": "npc-17792621016812",
+      "x": 45,
+      "y": 19,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "האנרגיה של הגליצ'ים והסוכנים באזור חוסמת את המעבר לזאפדוס! לא ניתן לעבור"
+        }
+      ],
+      "spriteType": "transparent",
+      "blocker": true,
+      "mapClearBlocker": true,
+      "lineOfSight": 28,
+      "name": {
+        "en": "NULL-X PROTECTION",
+        "he": "מחסום הגנת NULL-X"
+      },
+      "spawnAfter": "act3-sym-lance-cave-return"
+    },
+    {
+      "id": "npc-lance-c2-zapdos-end",
+      "x": 61,
+      "y": 18,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "הצלחתי להחליש את זאפדוס."
+        },
+        {
+          "en": "",
+          "he": "אבל מערכת אבטחת גליצ'ים הופעלה - זאפדוס נסוג לאחור."
+        },
+        {
+          "en": "",
+          "he": "אני אטפל בגליצים האלה."
+        },
+        {
+          "en": "",
+          "he": "אתה תטפל בגל'יצים האחרים."
+        },
+        {
+          "en": "",
+          "he": "נסה בכל הזדמנות שיש לפגוע בליבה שעל זאפדוס."
+        },
+        {
+          "en": "",
+          "he": "היא לא תישבר אבל היא כן תנתק ממנו"
+        }
+      ],
+      "spriteType": "char_919bca",
+      "spawnAfter": "act3-sym-lance-cave-return",
+      "despawnAfter": "act3-sym-arc-complete",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 0.5
+          }
+        ],
+        "loop": true,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 12,
+            "delay": 0
+          }
+        ]
+      },
+      "excludeFromMapClear": true
+    },
+    {
+      "id": "npc-1779264894976",
+      "x": 62,
+      "y": 15,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "43243",
+          "he": "48298423 אבטחה"
+        }
+      ],
+      "spriteType": "npc-male",
+      "name": {
+        "en": "432",
+        "he": "4234"
+      },
+      "despawnAfter": "act3-sym-zapdos-cave-defeated",
+      "excludeFromMapClear": true
+    },
+    {
+      "id": "npc-1779264897004",
+      "x": 62,
+      "y": 16,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "א989ב787ט989ח90ה"
+        }
+      ],
+      "spriteType": "npc-male",
+      "name": {
+        "en": "8998",
+        "he": "787"
+      },
+      "despawnAfter": "act3-sym-zapdos-cave-defeated",
+      "excludeFromMapClear": true
+    },
+    {
+      "id": "npc-1779264898355",
+      "x": 62,
+      "y": 17,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "98092"
+        }
+      ],
+      "spriteType": "npc-male",
+      "name": {
+        "en": "53234",
+        "he": "3432"
+      },
+      "despawnAfter": "act3-sym-zapdos-cave-defeated",
+      "excludeFromMapClear": true
+    },
+    {
+      "id": "npc-1779264900048",
+      "x": 62,
+      "y": 18,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "99987897"
+        }
+      ],
+      "spriteType": "npc-male",
+      "name": {
+        "en": "4324",
+        "he": "432"
+      },
+      "despawnAfter": "act3-sym-zapdos-cave-defeated",
+      "excludeFromMapClear": true
+    },
+    {
+      "id": "npc-1779268171025-blocker",
+      "x": 0,
+      "y": 19,
+      "facing": "right",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "דבר עם לאנס - לא להתקדם בלעדיו"
+        }
+      ],
+      "spriteType": "transparent",
+      "blocker": true,
+      "despawnAfter": "act3-sym-lance-cave-return",
+      "spawnAfter": "act3-sym-rocket-ambush-done",
+      "name": {
+        "en": "Mission memo",
+        "he": "תזכורת משימה"
+      },
+      "lineOfSight": 30
+    }
+  ]
+,
+  "objects": [
+    {
+      "key": "null-x-core-5",
+      "x": 58,
+      "y": 21
     }
   ]
 }

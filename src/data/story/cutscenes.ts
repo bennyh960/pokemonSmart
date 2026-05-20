@@ -134,4 +134,9 @@ export const TEAM_ROCKET_LINES: CutsceneStep[] = [
     speakerId: 'rocket-james',
     lines: [{ en: 'James', he: "ג'יימס" }],
   },
+  {
+    type: 'dialogue',
+    speakerId: 'rocket-jessi',
+    lines: [{ en: 'Surrender now or face the consequences!', he: 'היכנעו עכשיו או שתאלצו להילחם' }],
+  },
 ];

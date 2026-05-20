@@ -4,6 +4,7 @@ import { ADMIN_NAME, SAVE_KEY_PREFIX, SLOT_INDEX_KEY } from '../constants';
 import movesRaw from '../../data/moves.json';
 import naturesRaw from '../../data/natures.json';
 
+const ADMIN_MAX_MOVES = 16;
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface MoveJson {
@@ -55,14 +56,20 @@ function loadAdminSlots(): SaveMeta[] {
   if (!raw) return [];
   try {
     const all = JSON.parse(raw) as SaveMeta[];
-    return all.filter(s => s.playerName === ADMIN_NAME);
-  } catch { return []; }
+    return all.filter((s) => s.playerName === ADMIN_NAME);
+  } catch {
+    return [];
+  }
 }
 
 function loadPlayerData(slot: number): PlayerData | null {
   const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${slot}`);
   if (!raw) return null;
-  try { return JSON.parse(raw) as PlayerData; } catch { return null; }
+  try {
+    return JSON.parse(raw) as PlayerData;
+  } catch {
+    return null;
+  }
 }
 
 function buildMove(m: MoveJson): Move {
@@ -133,13 +140,20 @@ function createMoveSearch(initialMove: Move | null): MoveSearchWidget {
   }
 
   function showDropdown(query: string) {
-    if (!query.trim()) { dropdown.style.display = 'none'; return; }
+    if (!query.trim()) {
+      dropdown.style.display = 'none';
+      return;
+    }
     const q = query.toLowerCase();
-    const results = ALL_MOVES.filter(m =>
-      m.name.en.toLowerCase().includes(q) || m.name.he.includes(query)
-    ).slice(0, 15);
+    const results = ALL_MOVES.filter((m) => m.name.en.toLowerCase().includes(q) || m.name.he.includes(query)).slice(
+      0,
+      15,
+    );
 
-    if (results.length === 0) { dropdown.style.display = 'none'; return; }
+    if (results.length === 0) {
+      dropdown.style.display = 'none';
+      return;
+    }
 
     dropdown.innerHTML = '';
     for (const m of results) {
@@ -150,7 +164,7 @@ function createMoveSearch(initialMove: Move | null): MoveSearchWidget {
         <span class="type-badge type-${m.type}">${m.type}</span>
         <span class="text-muted">${m.damageClass} · PP ${m.pp}${m.power ? ` · Pow ${m.power}` : ''}</span>
       `;
-      li.addEventListener('mousedown', e => {
+      li.addEventListener('mousedown', (e) => {
         e.preventDefault(); // keep input focused
         currentMove = buildMove(m);
         input.value = '';
@@ -163,9 +177,14 @@ function createMoveSearch(initialMove: Move | null): MoveSearchWidget {
   }
 
   input.addEventListener('input', () => showDropdown(input.value));
-  input.addEventListener('focus', () => { if (input.value) showDropdown(input.value); });
+  input.addEventListener('focus', () => {
+    if (input.value) showDropdown(input.value);
+  });
   input.addEventListener('blur', () => {
-    setTimeout(() => { dropdown.style.display = 'none'; input.value = ''; }, 120);
+    setTimeout(() => {
+      dropdown.style.display = 'none';
+      input.value = '';
+    }, 120);
   });
 
   refreshChip();
@@ -175,10 +194,7 @@ function createMoveSearch(initialMove: Move | null): MoveSearchWidget {
 
 // ── Edit modal ────────────────────────────────────────────────────────────────
 
-function openEditModal(
-  pokemon: Pokemon,
-  onSave: (updated: Pokemon) => void,
-): void {
+function openEditModal(pokemon: Pokemon, onSave: (updated: Pokemon) => void): void {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
 
@@ -186,8 +202,12 @@ function openEditModal(
   modal.className = 'modal';
   overlay.appendChild(modal);
 
-  function close() { overlay.remove(); }
-  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  function close() {
+    overlay.remove();
+  }
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) close();
+  });
 
   // ── Header ──
   const header = document.createElement('div');
@@ -241,7 +261,9 @@ function openEditModal(
   const healBtn = document.createElement('button');
   healBtn.className = 'btn btn-sm';
   healBtn.textContent = 'Full Heal';
-  healBtn.addEventListener('click', () => { hpInput.value = maxHpInput.value; });
+  healBtn.addEventListener('click', () => {
+    hpInput.value = maxHpInput.value;
+  });
 
   const hpRow = document.createElement('div');
   hpRow.className = 'form-row';
@@ -313,11 +335,11 @@ function openEditModal(
   movesHeader.appendChild(restorePpBtn);
   movesSection.appendChild(movesHeader);
 
-  // Build 4 move slots
+  // Build ADMIN_MAX_MOVES move slots
   const moveSlots: MoveSearchWidget[] = [];
   const ppLabels: HTMLSpanElement[] = [];
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < ADMIN_MAX_MOVES; i++) {
     const existing = pokemon.moves[i] ?? null;
     const widget = createMoveSearch(existing);
     moveSlots.push(widget);
@@ -342,7 +364,7 @@ function openEditModal(
   }
 
   restorePpBtn.addEventListener('click', () => {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < ADMIN_MAX_MOVES; i++) {
       const m = moveSlots[i].getValue();
       if (m) {
         m.currentPp = m.pp;
@@ -366,7 +388,7 @@ function openEditModal(
   applyBtn.className = 'btn btn-primary';
   applyBtn.textContent = 'Apply Changes';
   applyBtn.addEventListener('click', () => {
-    const moves = moveSlots.map(s => s.getValue()).filter((m): m is Move => m !== null);
+    const moves = moveSlots.map((s) => s.getValue()).filter((m): m is Move => m !== null);
     const updated: Pokemon = {
       ...pokemon,
       level: Math.min(100, Math.max(1, Number(levelInput.value) || pokemon.level)),
@@ -438,7 +460,8 @@ export function renderPokemonTab(container: HTMLElement): void {
   container.appendChild(toolbar);
 
   if (adminSlots.length === 0) {
-    toolbar.innerHTML = '<span class="text-muted">No admin saves found. Make a save named <strong>adminBenny</strong> in the game.</span>';
+    toolbar.innerHTML =
+      '<span class="text-muted">No admin saves found. Make a save named <strong>adminBenny</strong> in the game.</span>';
   } else {
     const label = document.createElement('label');
     label.className = 'save-selector';
@@ -450,7 +473,7 @@ export function renderPokemonTab(container: HTMLElement): void {
     const select = document.createElement('select');
     select.id = 'save-slot';
     select.className = 'form-select';
-    adminSlots.forEach(s => {
+    adminSlots.forEach((s) => {
       const opt = document.createElement('option');
       opt.value = String(s.slot);
       opt.textContent = `Slot ${s.slot}  —  ${new Date(s.savedAt).toLocaleString()}`;
@@ -521,15 +544,17 @@ export function renderPokemonTab(container: HTMLElement): void {
     partyGrid.className = 'party-grid';
     for (let i = 0; i < 6; i++) {
       const poke = pd.party[i] ?? null;
-      partyGrid.appendChild(makePokemonSlot(poke, () => {
-        if (!poke) return;
-        openEditModal(poke, updated => {
-          pd.party[i] = updated;
-          dirty = true;
-          rebuildGrid();
-          updateSaveBtn();
-        });
-      }));
+      partyGrid.appendChild(
+        makePokemonSlot(poke, () => {
+          if (!poke) return;
+          openEditModal(poke, (updated) => {
+            pd.party[i] = updated;
+            dirty = true;
+            rebuildGrid();
+            updateSaveBtn();
+          });
+        }),
+      );
     }
     partySection.appendChild(partyGrid);
     grid.appendChild(partySection);
@@ -546,9 +571,7 @@ export function renderPokemonTab(container: HTMLElement): void {
       btn.textContent = box.name;
       btn.addEventListener('click', () => {
         activeBox = i;
-        boxTabsEl.querySelectorAll('.box-tab').forEach((b, j) =>
-          b.classList.toggle('active', j === i)
-        );
+        boxTabsEl.querySelectorAll('.box-tab').forEach((b, j) => b.classList.toggle('active', j === i));
         renderBoxSlots();
       });
       boxTabsEl.appendChild(btn);
@@ -564,15 +587,17 @@ export function renderPokemonTab(container: HTMLElement): void {
       boxGrid.className = 'box-grid';
       for (let i = 0; i < 30; i++) {
         const poke = pd.boxes[activeBox]?.pokemon[i] ?? null;
-        boxGrid.appendChild(makePokemonSlot(poke, () => {
-          if (!poke) return;
-          openEditModal(poke, updated => {
-            pd.boxes[activeBox].pokemon[i] = updated;
-            dirty = true;
-            renderBoxSlots();
-            updateSaveBtn();
-          });
-        }));
+        boxGrid.appendChild(
+          makePokemonSlot(poke, () => {
+            if (!poke) return;
+            openEditModal(poke, (updated) => {
+              pd.boxes[activeBox].pokemon[i] = updated;
+              dirty = true;
+              renderBoxSlots();
+              updateSaveBtn();
+            });
+          }),
+        );
       }
       boxSlotsEl.appendChild(boxGrid);
     }

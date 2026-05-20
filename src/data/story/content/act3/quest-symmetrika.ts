@@ -28,7 +28,7 @@
  *   npc-lance-daycare       fractalis/dayCare   (Lance gives Surf)
  *   npc-lance-cave1-guard   routes/route-7-cave1 (Lance holds grunts after ambush)
  *   npc-rocket-cave1-g1..7  routes/route-7-cave1 (Team Rocket trainers)
- *   npc-lance-cave1-return  routes/route-7-cave1 (Lance repositioned deeper)
+ *   npc-lance-c2-return  routes/route-7-cave1 (Lance repositioned deeper)
  *   npc-zapdos-cave         routes/route-7-cave1 (Zapdos legendary battle)
  *   npc-rocket-cave2-g1..5  routes/route-7-cave2 (Team Rocket trainers)
  *   npc-rocket-thief-james  routes/route-7-cave2 (Jesse+James boss — thief)
@@ -307,7 +307,7 @@ registerCutscene({
           he: 'אוי אחותי הקטנה , פגשת אותה! היא מאוד חזקה וחכמה  , אני שמח שאתה מסתדר איתה',
         },
         {
-          en: 'If you want to learn Surf you need raise your pokemon to level 40 at least , and his size must be appropite so he will be able to carry you. It doesnt have to be water type pokemon only but mostly it will be water type',
+          en: 'If you want to learn Surf you need raise your pokemon to level 45 at least , and his size must be appropite so he will be able to carry you. It doesnt have to be water type pokemon only but mostly it will be water type',
           he: 'אם אתה רוצה ללמוד גלישה אתה צריך להעלות את הפוקימון שלך לפחות לרמה 40 , והגודל שלו חייב להיות מתאים כדי שיוכל לשאת אותך. לא חייב להיות פוקימון מסוג מים בלבד אבל ברוב המקרים יהיה מסוג מים',
         },
         {
@@ -392,16 +392,12 @@ registerCutscene({
 
     ...TEAM_ROCKET_LINES,
     { type: 'move-npc', npcId: 'r7-c2-fake-rocket6', path: ['left'] },
+    { type: 'play-sfx', sfxId: 'bump-wall' },
     { type: 'move-player', path: ['left'] },
-    {
-      type: 'move-npc',
-      npcId: 'act3-zap-ambush',
-      path: ['down', 'down', 'right', 'right', 'up', 'up', 'up', 'up', 'left', 'left', 'down'],
-      waitForComplete: false,
-    },
+
     { type: 'move-npc', npcId: 'r7-c2-fake-rocket6', path: ['left'] },
+    { type: 'play-sfx', sfxId: 'bump-wall' },
     { type: 'move-player', path: ['left'] },
-    { type: 'move-npc', npcId: 'r7-c2-fake-rocket5', path: ['right'] },
     { type: 'face-npc', npcId: 'r7-c2-fake-rocket5', dir: 'up' },
     { type: 'move-player', path: ['right'] },
     { type: 'move-npc', npcId: 'r7-c2-fake-rocket3', path: ['down', 'right'] },
@@ -419,33 +415,36 @@ registerCutscene({
         },
       ],
     },
-    { type: 'play-music', musicId: 'battle' },
 
     {
       type: 'dialogue',
       speakerId: 'r7-c2-fake-rocket-jessi',
       lines: [
-        { en: 'Surrender now or face the consequences!', he: 'היכנעו עכשיו או שתאלצו להילחם' },
         { en: 'I recognize you! anoying trainer! its time to pay!', he: 'אני מזהה אותך! מאמן מעצבן! הגיע הזמן לשלם!' },
         {
           en: 'Zapdos! The legendary Zapdos — under Team Rocket control!',
           he: 'זאפדוס! זאפדוס האגדי — תחת שליטת צוות רוקט!.',
         },
+        { en: 'Zapdos use Thunder', he: '!!!זאפדוס מכת ברק' },
       ],
+    },
+    {
+      type: 'move-npc',
+      npcId: 'act3-zap-ambush',
+      path: ['down', 'down', 'right', 'right', 'up', 'up', 'up', 'up', 'left', 'left', 'down'],
+      waitForComplete: false,
     },
     { type: 'play-sfx', sfxId: 'thunder' },
     { type: 'overlay', color: '#ffff0033' },
     { type: 'wait', durationMs: 300 },
     { type: 'overlay', color: '#5f5f2d4f' },
     { type: 'wait', durationMs: 300 },
-    { type: 'overlay', color: '#16161533' },
+    { type: 'overlay', color: '#000000ec' },
+    { type: 'thief-npc', npcId: 'npc-rocket-thief-james', condition: { amount: 3, aboveLevel: 40 } },
     { type: 'wait', durationMs: 1600 },
-    { type: 'overlay', color: '#5f5f2d4f' },
-    { type: 'wait', durationMs: 300 },
-    { type: 'overlay', color: null },
     {
       type: 'dialogue',
-      speakerId: 'r7-c2-fake-rocket-2',
+      speakerId: 'r7-c2-fake-rocket-2-james',
       lines: [
         {
           en: "On it! You'll never catch me!",
@@ -453,19 +452,33 @@ registerCutscene({
         },
       ],
     },
-    { type: 'stop-music' },
-    { type: 'play-sfx', sfxId: 'alert' },
-    { type: 'thief-npc', npcId: 'npc-rocket-thief-james', condition: { amount: 3, aboveLevel: 40 } },
+    { type: 'overlay', color: '#5f5f2d4f' },
+    { type: 'wait', durationMs: 1300 },
+    { type: 'overlay', color: null },
     {
-      type: 'move-npc',
-      npcId: 'npc-lance-cave1-guard',
-      path: ['down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down'],
-      waitForComplete: false,
+      type: 'dialogue',
+      speakerName: 'Somone / מישהו',
+      lines: [
+        {
+          en: 'STOP! Everyone back away from that trainer — NOW.',
+          he: 'עצרו! כולם להסתלק מהמאמן הזה — עכשיו.',
+        },
+      ],
     },
     {
       type: 'dialogue',
-      speakerId: 'r7-c2-fake-rocket-2',
+      speakerId: 'r7-c2-fake-rocket-2-james',
       lines: [{ en: 'ohhh its Lance! lets split and run', he: 'אווו זה לאנס! בואו נתפצל ונברח' }],
+    },
+    {
+      type: 'dialogue',
+      speakerId: 'r7-c2-fake-rocket-jessi',
+      lines: [
+        {
+          en: 'The rest of you — spread out! Make sure no one follows the boss!',
+          he: ' התפצלו! ודאו שאף אחד לא עוקב אחרינו!',
+        },
+      ],
     },
     {
       type: 'move-npc',
@@ -479,58 +492,61 @@ registerCutscene({
       path: ['down', 'down', 'down', 'down', 'right', 'down', 'down'],
       waitForComplete: false,
     },
-    { type: 'move-npc', npcId: 'r7-c2-fake-rocket3', path: ['left', 'left', 'left', 'left', 'left', 'down', 'down'] },
-    { type: 'move-npc', npcId: 'r7-c2-fake-rocket5', path: ['left', 'left', 'left', 'left', 'left', 'down'] },
-    { type: 'face-npc', npcId: 'r7-c2-fake-rocket3', dir: 'right' },
-    { type: 'face-npc', npcId: 'r7-c2-fake-rocket3', dir: 'right' },
-    { type: 'move-npc', npcId: 'npc-lance-cave1-guard', path: ['left', 'left', 'left', 'left', 'left', 'down'] },
-    { type: 'face-npc', npcId: 'r7-c2-fake-rocket3', dir: 'right' },
-    { type: 'face-npc', npcId: 'r7-c2-fake-rocket5', dir: 'up' },
+    {
+      type: 'move-npc',
+      npcId: 'act3-zap-ambush',
+      path: ['right', 'right', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'right'],
+      waitForComplete: true,
+    },
+    { type: 'hide-npc', npcId: 'r7-c2-fake-rocket-2-james' },
+    { type: 'hide-npc', npcId: 'r7-c2-fake-rocket-jessi' },
+    { type: 'hide-npc', npcId: 'act3-zap-ambush' },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket3', path: ['left', 'left', 'left', 'up', 'up', 'up', 'up'] },
+    { type: 'hide-npc', npcId: 'r7-c2-fake-rocket3' },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket5', path: ['left', 'up', 'up', 'up', 'up', 'up'] },
+    { type: 'hide-npc', npcId: 'r7-c2-fake-rocket5' },
+    {
+      type: 'move-npc',
+      npcId: 'npc-lance-cave1-guard',
+      path: ['down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down'],
+      waitForComplete: false,
+    },
     { type: 'move-npc', npcId: 'r7-c2-fake-rocket4', path: ['up', 'up', 'up', 'up', 'up', 'up', 'up', 'up'] },
-    { type: 'move-npc', npcId: 'r7-c2-fake-rocket6', path: ['up', 'up', 'up', 'up', 'up', 'up', 'up', 'up'] },
+    { type: 'hide-npc', npcId: 'r7-c2-fake-rocket4' },
+    { type: 'move-npc', npcId: 'r7-c2-fake-rocket6', path: ['down', 'down', 'down', 'down'] },
+    { type: 'hide-npc', npcId: 'r7-c2-fake-rocket6' },
+    { type: 'hide-npc', npcId: 'act3-zap-ambush' },
+
     {
       type: 'dialogue',
-      speakerName: 'Team Rocket Grunt / סוכן צוות רוקט',
+      speakerId: 'npc-lance-c2-return',
+      speakerName: 'Lance / לאנס',
+      lines: [{ en: 'Are you Ok?', he: 'הכל בסדר?' }],
+    },
+    {
+      type: 'dialogue',
+      speakerName: 'player/שחקן',
       lines: [
+        { en: 'No - They ambush me and Zapdos attack me ', he: 'לא - הם הפתיעו אותי וזאפדוס תקף אותי ' },
         {
-          en: 'The rest of you — spread out! Make sure no one follows the boss!',
-          he: 'שאר האנשים — התפשטו! ודאו שאף אחד לא עוקב אחרי הבוס!',
+          en: 'They took my pokemons when I was weak and now they are gone!',
+          he: 'הם לקחו את הפוקימונים שלי כשהתעלפתי מהמתקפה של זאפדוס ועכשיו הם נעלמו!',
         },
       ],
     },
     {
       type: 'dialogue',
+      speakerId: 'npc-lance-c2-return',
       speakerName: 'Lance / לאנס',
       lines: [
-        {
-          en: 'STOP! Everyone back away from that trainer — NOW.',
-          he: 'עצרו! כולם להסתלק מהמאמן הזה — עכשיו.',
-        },
-      ],
-    },
-    {
-      type: 'dialogue',
-      speakerName: 'Team Rocket Grunt / חייל רוקט',
-      lines: [
-        {
-          en: 'Lance of the Elite Four — here?! Get him! Three on one!',
-          he: 'לאנס מארבעת האליטה — כאן?! תפסו אותו! שלושה נגד אחד!',
-        },
-      ],
-    },
-    {
-      type: 'dialogue',
-      speakerName: 'Lance / לאנס',
-      lines: [
-        {
-          en: 'Zapdos too... they really did it. They put a core on it.',
-          he: 'גם זאפדוס... הם באמת עשו את זה. הם שמו עליו ליבה.',
-        },
+        { en: '', he: 'הו אז זה נכון ! הם באמת שולטים על זאפדוס' },
+        { en: '', he: 'מסוכן ביותר! אבל לאנס לא מתכוון לוותר עליך ועל הפוקימונים שלך ככה בקלות' },
 
         {
-          en: "Go — now! Chase James into the inner cave, get your Pokemon back, and defeat every Rocket in both caves. I'll keep these three busy and hold Zapdos off.",
-          he: "לך — עכשיו! רדוף אחרי ג'יימס הוא בטח לא הספיק להתרחק הרבה. אני אטפל בשלושה האלה ואחסום את זאפדוס.",
+          en: "Don't let them run - chase james he proably hiding close by. I will chase Zapdos deeper in the cave",
+          he: 'אל תתן להם לברוח - הם יצאו מהמערה לדרך 7 כנראה הם מסתתרים קרוב לכאן - זאפדוס ברח לכיוון השני - בלעדיו הם חלשים. אני ארדוף אחרי זאפדוס עמוק יותר במערה',
         },
+        { en: '', he: 'אני מניח שיקח לי קצת זמן פה - אז אם תסיים מוקדם , אשמח שתבוא לחפות עליי' },
       ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_SYM_POKEMON_STOLEN } },
@@ -550,12 +566,12 @@ registerCutscene({
       speakerName: 'James / ג׳יימס',
       lines: [
         {
-          en: "Jessie! He beat us! Those Pokemon... they're stronger than I thought.",
-          he: "ג'סי! הוא ניצח אותנו! הפוקימונים האלה... הם חזקים יותר ממה שחשבתי.",
+          en: 'You beat us! You are stronger than I thought.',
+          he: 'ניצחת אותנו! אתה חזק יותר ממה שחשבתי.',
         },
         {
-          en: "Fine! Take your Pokemon back. But Team Rocket will rise again — this isn't over!",
-          he: 'בסדר! קח את הפוקימונים שלך בחזרה. אבל צוות רוקט יקום שוב — זה עדיין לא נגמר!',
+          en: 'Ohh no - the pokemon I stole are back to thier trainer. Time to run... we will be back!',
+          he: 'הוו לא - הפוקימונים שגנבתי חזרו למאמן שלהם. הגיע הזמן לברוח... אנחנו עוד נחזור!!',
         },
       ],
     },
@@ -565,7 +581,7 @@ registerCutscene({
       lines: [
         {
           en: 'My Pokemon are back! Now I need to find Lance.',
-          he: 'הפוקימונים שלי חזרו! עכשיו אני צריך למצוא את לאנס.',
+          he: 'הפוקימונים שלי חזרו! עכשיו אני צריך לחזור ללאנס במערה השנייה.',
         },
       ],
     },
@@ -580,23 +596,31 @@ registerCutscene({
   id: 'act3-sym-lance-cave-investigate',
   skippable: false,
   steps: [
-    { type: 'face-npc', npcId: 'npc-lance-cave1-return', dir: 'down' },
+    { type: 'face-npc', npcId: 'npc-lance-c2-return', dir: 'down' },
     {
       type: 'dialogue',
-      speakerId: 'npc-lance-cave1-return',
+      speakerId: 'npc-lance-c2-return',
       speakerName: 'Lance / לאנס',
       lines: [
         {
-          en: "You got your Pokemon back. Good. Those three grunts won't be causing trouble anymore.",
-          he: 'קיבלת את הפוקימונים שלך בחזרה. טוב. שלושת החיילים האלה לא יגרמו צרות יותר.',
+          en: "Good — you're back with your Pokemons. I knew you can do it!.",
+          he: 'טוב — חזרת עם הפוקימונים שלך. ידעתי שאתה יכול לעשות את זה!.',
         },
         {
-          en: 'Look at these walls — electric burn marks. Deep scoring into the rock. Zapdos has been through this cave very recently.',
-          he: 'תסתכל על הקירות האלה — סימני שרפה חשמלית. חריתות עמוקות בתוך הסלע. זאפדוס עבר דרך המערה הזו לאחרונה מאוד.',
+          en: 'Dont afraid from team rocket - they not treat thier pokemons like partners. they treat them as slaves and tools. they will never understand the bond between you and your pokemons.',
+          he: 'אל תפחד מצוות רוקט - הם לא מתייחסים לפוקימונים שלהם כשותפים. הם מתייחסים אליהם כאל עבדים וכלים. הם לעולם לא יבינו את הקשר בינך לבין הפוקימונים שלך.  ',
         },
         {
-          en: "If it's still here... the core is still on it. Come — let's go deeper.",
-          he: 'אם הוא עדיין כאן... הליבה עדיין עליו. בוא — נלך עמוק יותר.',
+          en: 'Trainers who want to be master must see their pokemons as friends and partners, not tools or slaves. you have proven that you are a true trainer, and your bond with your pokemons is strong. keep going and you will be able to defeat team rocket once and for all!',
+          he: 'מאמנים שרוצים להיות מאסטרים חייבים לראות את הפוקימונים שלהם כחברים ושותפים, לא ככלים או עבדים. הוכחת שאתה מאמן אמיתי, והקשר שלך עם הפוקימונים שלך חזק. המשך ותוכל לנצח את צוות רוקט אחת ולתמיד!',
+        },
+        {
+          en: 'Now lets focus on Zapdos - he must be here , team rocket appear allwyes close to storng glitches',
+          he: "עכשיו בוא נתמקד בזפדוס - הוא חייב להיות כאן, צוות רוקט מופיע תמיד קרוב לפוקימוני גליץ' חזקים",
+        },
+        {
+          en: 'While you were away, I fought 10 Team Rocket agents, but they keep coming - they do not give up',
+          he: 'בזמן שנעדרת נלחמתי ב10 סוכני רוקט אבל הם ממשיכים להגיע - הם לא מתייאשים',
         },
       ],
     },
@@ -605,26 +629,30 @@ registerCutscene({
       speakerName: 'Player / שחקן',
       lines: [
         {
-          en: 'Team Rocket was hiding here to set a trap. Do you think they knew we were coming?',
-          he: 'צוות רוקט התחבא כאן כדי לשים מלכודת. אתה חושב שהם ידעו שאנחנו באים?',
+          en: 'We will not give up either!',
+          he: 'גם אנחנו לא נתייאש!',
         },
       ],
     },
     {
       type: 'dialogue',
-      speakerId: 'npc-lance-cave1-return',
+      speakerId: 'npc-lance-c2-return',
       speakerName: 'Lance / לאנס',
       lines: [
         {
-          en: "They've been watching every strong trainer who earns a badge at Symmetrika. You were a target the moment you entered that gym.",
-          he: 'הם עקבו אחרי כל מאמן חזק שמרוויח תג בסימטריקה. היית מטרה ברגע שנכנסת למכון הזה.',
-        },
-        {
-          en: "Wait — do you feel that? The air is charged. There's something ahead...",
-          he: 'רגע — אתה מרגיש את זה? האוויר טעון. יש משהו לפנינו...',
+          en: 'This area is clear - lets continue deepr into the cave. They all run this way ... follow me.',
+          he: 'האזור הזה נקי - בוא נמשיך עמוק יותר לתוך המערה. הם כולם רצו לכיוון הזה... תעקוב אחריי.',
         },
       ],
     },
+    {
+      type: 'move-npc',
+      npcId: 'npc-lance-c2-return',
+      path: ['up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up', 'up'],
+      waitForComplete: true,
+    },
+    { type: 'hide-npc', npcId: 'npc-lance-c2-return' },
+    { type: 'play-music', musicId: 'team-rocket-grunt' },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_SYM_LANCE_CAVE_RETURN } },
   ],
 });
@@ -639,7 +667,7 @@ registerCutscene({
     { type: 'screen-fade', direction: 'in', durationMs: 500 },
     {
       type: 'dialogue',
-      speakerName: 'Lance / לאנס',
+      speakerId: 'npc-lance-c2-zapdos-end',
       lines: [
         {
           en: 'It fled again... but look — on the ground!',
@@ -647,32 +675,32 @@ registerCutscene({
         },
         {
           en: "The device fell off Zapdos as it retreated. It's free of it now.",
-          he: 'המכשיר נפל מזאפדוס כשנסוג. הוא חופשי ממנו עכשיו.',
+          he: 'המכשיר נפל מזאפדוס כשנסוג. הוא חופשי ממנו עכשיו. אני רוצה שתשמור עליו!',
         },
       ],
     },
     { type: 'action', action: { type: 'give-item', itemId: '9004', quantity: 1 } },
+    { type: 'action', action: { type: 'set-flag', flag: 'hide-null-x-core5' } },
+
     {
       type: 'dialogue',
-      speakerName: 'Player / שחקן',
+      speakerId: 'npc-lance-c2-zapdos-end',
       lines: [
         {
-          en: 'A NULL-X Core. One of the eight that Oak and Algorithma talked about!',
-          he: 'ליבת NULL-X. אחת משמונה שאוק ואלגוריתמה דיברו עליהן!',
-        },
-      ],
-    },
-    {
-      type: 'dialogue',
-      speakerName: 'Lance / לאנס',
-      lines: [
-        {
-          en: 'So Team Rocket really did hide the cores inside legendary Pokemon. Zapdos was carrying one this entire time — that explains everything. The erratic behavior, the reluctance to come to the power station, the attacks...',
-          he: 'אז צוות רוקט באמת הסתיר את הליבות בתוך פוקימוני אגדות. זאפדוס נשא אחת כל הזמן הזה — זה מסביר הכל. ההתנהגות הלא יציבה, ההיסוס לבוא לתחנת הכוח, ההתקפות...',
+          en: 'Ok so we find our first null-x core . There is 7 left.',
+          he: 'טוב אז מצאנו את ליבת הנול-אקס הראשונה שלנו. נשארו עוד 7.',
         },
         {
           en: "But I noticed something strange — this cave. This isn't Zapdos's natural habitat at all. Zapdos lives on a remote island, far from civilization. What was it doing here?",
           he: 'אבל שמתי לב למשהו מוזר — המערה הזו. זו בכלל לא בית הגידול הטבעי של זאפדוס. זאפדוס חי באי מרוחק, רחוק מהציביליזציה. מה הוא עשה כאן?',
+        },
+        {
+          en: 'How team Rocket get access to Zapdos? We saw that zapdos ressit to thier control . They even kept distance from him.',
+          he: 'איך צוות רוקט קיבל גישה לזאפדוס? ראינו שזאפדוס התנגד לשליטתם. הם אפילו שמרו מרחק ממנו.',
+        },
+        {
+          en: 'All of the rocket grunt run - we dont have much clue where the other cores are.',
+          he: 'כל סוכני צוות רוקט ברחו - אין לנו הרבה מושג איפה שאר הליבות.',
         },
       ],
     },
@@ -696,19 +724,20 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerName: 'Lance / לאנס',
+      speakerId: 'npc-lance-c2-zapdos-end',
       lines: [
         {
-          en: "Incredible. Zapdos was protecting its home even while being controlled. The legendary Pokemon of Numeria... they're not just victims. They're resisting.",
-          he: 'מדהים. זאפדוס הגן על ביתו גם בזמן שנשלט. פוקימוני האגדות של נומריה... הם לא רק קורבנות. הם מתנגדים.',
+          en: '',
+          he: 'זאפדוס הוא פוקימון אגדי - הדחף הטבעי שלו הוא להגן ולא להרוס! אפילו תחת שליטת NULL-X זאפדוס הצליח להתנגד מעט',
         },
-        {
-          en: 'This changes everything. I need to report to Oak and Algorithma immediately — and find the other seven cores. Each one is hidden in a powerful legendary Pokemon somewhere in Numeria.',
-          he: 'זה משנה הכל. אני צריך לדווח לאוק ולאלגוריתמה מיד — ולמצוא את שבע הליבות האחרות. כל אחת מוסתרת בפוקימון אגדות חזק אי שם בנומריה.',
-        },
+
         {
           en: "You've done well today. Continue your journey — head to Percentile city via route-11 east of Symmetrika. The next gym awaits.",
-          he: 'עשית היום עבודה טובה. המשך במסעך — לך לעיר פרסנטייל דרך דרך 11 מזרחית לסימטריקה. המכון הבא מחכה.',
+          he: 'עשית היום עבודה טובה. המשך במסעך , — לך לעיר פרסנטייל דרך דרך 11 מזרחית לסימטריקה. המכון הבא מחכה.',
+        },
+        {
+          en: 'I will follow Zapdos to see if it is safe - if he back to his nature or still controlled by the glitch.',
+          he: 'אני אלך בעקבות זאפדוס כדי לראות אם הוא חוזר לטבעו או עדיין נשלט על ידי הגליץ.',
         },
       ],
     },
@@ -762,7 +791,7 @@ registerStoryEvent({
 // Lance-return in cave1 — one-shot investigate cutscene
 registerStoryEvent({
   id: 'evt-sym-lance-cave-return',
-  trigger: { type: 'npc-interact', npcId: 'npc-lance-cave1-return' },
+  trigger: { type: 'npc-interact', npcId: 'npc-lance-c2-return' },
   conditions: [
     { type: 'flag', flag: FLAGS.ACT3_SYM_POKEMON_RESTORED },
     { type: 'flag-not', flag: FLAGS.ACT3_SYM_LANCE_CAVE_RETURN },

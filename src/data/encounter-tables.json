@@ -1329,13 +1329,13 @@
   },
 
   "cave-20-30": {
-    "encounterRate": 0.2,
+    "encounterRate": 0.1,
     "entries": [
       {
         "pokemonId": 41,
         "minLevel": 20,
         "maxLevel": 25,
-        "weight": 13
+        "weight": 33
       },
       {
         "pokemonId": 42,
@@ -1347,7 +1347,7 @@
         "pokemonId": 50,
         "minLevel": 20,
         "maxLevel": 25,
-        "weight": 13
+        "weight": 33
       },
       {
         "pokemonId": 27,

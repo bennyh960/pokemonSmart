@@ -9,6 +9,8 @@
  *   ITEM_GAME_DATA[id]   → effect, price, category, usability (our game logic)
  */
 
+import { HM_CONFIG } from '../systems/hm';
+
 // ─── Types ───
 
 export type ItemCategory =
@@ -807,7 +809,10 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'HM03 Surf', he: 'HM03 גלישה' },
-    description: { en: 'Teaches Surf. Reusable.', he: 'מלמד גלישה. שימוש חוזר.' },
+    description: {
+      en: `Powerfull water move - also used to surf on water. (conditions: level ${HM_CONFIG.surf.minLevel} , weight ${HM_CONFIG.surf.minWeight}, height ${HM_CONFIG.surf.minHeight}) m.`,
+      he: `מהלך מים חזק - משמש גם לגלישה על מים. (תנאים: רמה ${HM_CONFIG.surf.minLevel}, משקל ${HM_CONFIG.surf.minWeight} ק"ג, גובה ${HM_CONFIG.surf.minHeight} מטר).`,
+    },
   },
   308: {
     category: 'machine',

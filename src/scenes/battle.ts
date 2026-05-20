@@ -88,7 +88,8 @@ import { sendCaughtToBox } from '../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../systems/game-state.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-import { getBattleBackground } from '../engine/asset-generator.js';
+import { getBattleBackground, getNPCSpriteImage } from '../engine/asset-generator.js';
+import { getCharacterFrame } from '../engine/character-sprites.js';
 import { t, isRTL, getLocale } from '../i18n/i18n.js';
 import { getItem } from '../data/items.js';
 import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
@@ -243,6 +244,7 @@ function getDefaultBagItems(level: AiLevel): string[] {
 }
 
 type BattlePhase =
+  | 'TRAINER_CINEMATIC'
   | 'INTRO'
   | 'SELECT_ACTION'
   | 'SELECT_MOVE'
@@ -633,6 +635,7 @@ export function createBattleScene(
   let shake: ReturnType<typeof createShake> | null = null;
   let fade: ReturnType<typeof createFade> | null = null;
   let phaseTimer = 0;
+  let trainerCinematicTimer = 0;
   let xpGained = 0;
   let levelUpFx: ReturnType<typeof createLevelUpEffect> | null = null;
   let statGainsPopup: StatGains | null = null;
@@ -1300,8 +1303,11 @@ export function createBattleScene(
 
   function getForcedPlayerMoveIndex(): number | null {
     const chargingMoveId = getChargingMoveId(playerBattleState);
-    if (chargingMoveId === null) return null;
-    return findMoveIndexById(player, chargingMoveId);
+    if (chargingMoveId !== null) return findMoveIndexById(player, chargingMoveId);
+    if (playerBattleState.lockedInMoveId !== null) {
+      return findMoveIndexById(player, playerBattleState.lockedInMoveId);
+    }
+    return null;
   }
 
   // --- Trainer AI item helpers ---
@@ -1865,6 +1871,10 @@ export function createBattleScene(
     if (chargingMoveId !== null) {
       const chargingMoveIndex = findMoveIndexById(enemy, chargingMoveId);
       if (chargingMoveIndex !== null) return chargingMoveIndex;
+    }
+    if (enemyBattleState.lockedInMoveId !== null) {
+      const lockedIndex = findMoveIndexById(enemy, enemyBattleState.lockedInMoveId);
+      if (lockedIndex !== null) return lockedIndex;
     }
 
     // Randomness: AI level determines how often a random move is chosen instead of optimal
@@ -3645,6 +3655,8 @@ export function createBattleScene(
     const isChargeRelease = !isRedirected && pendingChargeMoveId !== null && pendingChargeMoveId === m.id;
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease && !isRedirected;
+    const isTwoTurnFly = moveBattleData?.behaviorTags?.includes('two-turn-fly') ?? false;
+    const isTwoTurnDig = moveBattleData?.behaviorTags?.includes('two-turn-dig') ?? false;
     const leaveUserAtOneHp = moveBattleData?.behaviorTags?.includes('leave-user-at-1-hp') ?? false;
     const isRest = moveBattleData?.behaviorTags?.includes('rest') ?? false;
     const isFocusEnergy = moveBattleData?.behaviorTags?.includes('focus-energy') ?? false;
@@ -3695,9 +3707,52 @@ export function createBattleScene(
     playerBattleState.lastMoveUsedId = m.id;
     lastMoveUsedInBattle = m.id;
 
+    // Lock-in behavior tags
+    const isLockInOutrage = moveBattleData?.behaviorTags?.includes('lock-in-outrage') ?? false;
+    const isLockInRollout = moveBattleData?.behaviorTags?.includes('lock-in-rollout') ?? false;
+    const isLockInRage = moveBattleData?.behaviorTags?.includes('lock-in-rage') ?? false;
+    const isLockInUproar = moveBattleData?.behaviorTags?.includes('lock-in-uproar') ?? false;
+    if (isLockInOutrage) {
+      if (playerBattleState.lockedInMoveId === null) {
+        playerBattleState.lockedInMoveId = m.id;
+        playerBattleState.lockInTurnsRemaining = Math.floor(Math.random() * 2) + 1;
+      } else {
+        playerBattleState.lockInTurnsRemaining--;
+      }
+    }
+    if (isLockInRollout) {
+      if (playerBattleState.lockedInMoveId === null) {
+        playerBattleState.lockedInMoveId = m.id;
+        playerBattleState.rolloutTurnsActive = 1;
+      } else {
+        playerBattleState.rolloutTurnsActive = Math.min(5, playerBattleState.rolloutTurnsActive + 1);
+      }
+      m = { ...m, power: Math.round(30 * Math.pow(2, playerBattleState.rolloutTurnsActive - 1)) };
+    }
+    if (isLockInRage && playerBattleState.lockedInMoveId === null) {
+      playerBattleState.lockedInMoveId = m.id;
+      playerBattleState.rageActive = true;
+    }
+    if (isLockInUproar) {
+      if (playerBattleState.lockedInMoveId === null) {
+        playerBattleState.lockedInMoveId = m.id;
+        playerBattleState.uproarTurnsRemaining = Math.floor(Math.random() * 3) + 2; // 2-4 remaining = 3-5 total
+      } else {
+        playerBattleState.uproarTurnsRemaining--;
+      }
+    }
+    const lockInOutrageFinalTurn = isLockInOutrage && playerBattleState.lockInTurnsRemaining === 0;
+    const lockInRolloutFinalTurn = isLockInRollout && playerBattleState.rolloutTurnsActive >= 5;
+    const lockInUproarFinalTurn = isLockInUproar && playerBattleState.uproarTurnsRemaining === 0;
+
     const moveData = getMove(m.id);
     if (isChargeStart) {
       startChargingMove(playerBattleState, m.id);
+      if (isTwoTurnFly) {
+        playerBattleState.invulnerableState = 'airborne';
+      } else if (isTwoTurnDig) {
+        playerBattleState.invulnerableState = 'underground';
+      }
       const playerHasContrary = player.abilityId
         ? getAbilityBattleEffects(player.abilityId).some((e) => e.kind === 'contraryStatChanges')
         : false;
@@ -3716,6 +3771,43 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
+      if (isTwoTurnFly) {
+        animationDirector.play(
+          sequenceStep(
+            callStep(() => {
+              attackFx = createAttackEffect({
+                kind: 'fly-vanish',
+                sourceX: BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+                sourceY: BTL.PLY_SPRITE.y + BTL.PLY_SPRITE.h / 2,
+                targetX: BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+                targetY: BTL.PLY_SPRITE.y + BTL.PLY_SPRITE.h / 2,
+                color: '#a8d8ff',
+                accentColor: '#ffffff',
+                duration: 0.7,
+              });
+            }),
+            tweenActorStep('player', { y: -20, scaleX: 0.18, scaleY: 0.18, alpha: 0 }, 0.7, 'easeIn'),
+          ),
+        );
+      } else if (isTwoTurnDig) {
+        animationDirector.play(
+          sequenceStep(
+            callStep(() => {
+              attackFx = createAttackEffect({
+                kind: 'dig-vanish',
+                sourceX: BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+                sourceY: BTL.PLY_SPRITE.y + BTL.PLY_SPRITE.h / 2,
+                targetX: BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2,
+                targetY: BTL.PLY_SPRITE.y + BTL.PLY_SPRITE.h / 2,
+                color: '#a07840',
+                accentColor: '#c89850',
+                duration: 0.5,
+              });
+            }),
+            tweenActorStep('player', { y: 8, scaleX: 0.1, scaleY: 0.1, alpha: 0 }, 0.5, 'easeIn'),
+          ),
+        );
+      }
       return;
     }
 
@@ -3765,6 +3857,10 @@ export function createBattleScene(
 
     if (isChargeRelease) {
       clearChargingMove(playerBattleState);
+      if (playerBattleState.invulnerableState !== null) {
+        playerBattleState.invulnerableState = null;
+        animationDirector.setActorState('player', { x: 0, y: 0, alpha: 1, scaleX: 1, scaleY: 1, rotation: 0 });
+      }
     }
     applyPostMoveTurnFlags(playerBattleState, m.id);
 
@@ -4040,9 +4136,19 @@ export function createBattleScene(
 
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const weatherAccOverride = battleWeather ? getWeatherAccuracyOverride(m.id, battleWeather.type) : null;
-    const hitResult = doesMoveTargetOpponent(moveBattleData)
+    let hitResult = doesMoveTargetOpponent(moveBattleData)
       ? doesMoveHit(weatherAccOverride ?? m.accuracy, playerBattleState, enemyBattleState)
       : { hit: true, chance: 100 };
+    // Invulnerability check (Fly / Dig charge turn)
+    if (hitResult.hit && enemyBattleState.invulnerableState !== null) {
+      const isDigBypass = m.id === 89 || m.id === 90 || isMagnitude; // Earthquake, Fissure, Magnitude
+      const neverMisses = m.accuracy <= 0;
+      const bothAirborne = playerBattleState.invulnerableState === 'airborne'
+        && enemyBattleState.invulnerableState === 'airborne';
+      if (!neverMisses && !(enemyBattleState.invulnerableState === 'underground' && isDigBypass) && !bothAirborne) {
+        hitResult = { hit: false, chance: 0 };
+      }
+    }
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
     let magnitudeLevel = 0;
@@ -4081,10 +4187,12 @@ export function createBattleScene(
     const facadeActive =
       isFacadeBoost && player.status !== null && ['burn', 'paralyze', 'poison'].includes(player.status as string);
     const rawPower = facadeActive ? movePower * 2 : movePower;
+    const digPowerBoost = rawPower > 0 && enemyBattleState.invulnerableState === 'underground'
+      && (m.id === 89 || m.id === 90 || isMagnitude) ? 2 : 1;
     const effectivePower =
-      battleWeather && rawPower > 0
+      (battleWeather && rawPower > 0
         ? Math.max(1, Math.round(rawPower * getWeatherPowerMultiplier(m.type, battleWeather.type)))
-        : rawPower;
+        : rawPower) * digPowerBoost;
     // Foul Play: use target's attack stat
     const foulPlayAttackStat = isFoulPlay ? getModifiedStatValue(enemy, enemyBattleState, 'attack') : undefined;
     // Compute animation profile to determine suppressAudio for multi-hit
@@ -4295,6 +4403,19 @@ export function createBattleScene(
     }
     msgs.push(...resolvedEffectLines);
 
+    // Lock-in teardown messages
+    if (lockInOutrageFinalTurn) {
+      msgs.push(t('battle.lockInOutrageStopped', { name: attackerName }));
+    }
+    if (lockInUproarFinalTurn) {
+      msgs.push(t('battle.lockInUproarStopped', { name: attackerName }));
+    }
+    // Enemy Rage: if enemy is raging and was hit, its Attack rises
+    const enemyRageBoost = hitResult.hit && plannedDamage > 0 && enemyBattleState.rageActive;
+    if (enemyRageBoost) {
+      msgs.push(t('battle.lockInRageBoost', { name: defenderName }));
+    }
+
     // Brick Break: will shatter enemy screens on impact
     if (isBrickBreak && hitResult.hit && plannedDamage > 0) {
       const hadScreens = enemySideState.reflectTurnsRemaining > 0 || enemySideState.lightScreenTurnsRemaining > 0;
@@ -4454,6 +4575,10 @@ export function createBattleScene(
             enemyBattleState.turnFlags.tookDamageThisTurn = true;
             if (damageClass === 'physical') enemyBattleState.turnFlags.physicalDamageTakenThisTurn += actualDamage;
             else if (damageClass === 'special') enemyBattleState.turnFlags.specialDamageTakenThisTurn += actualDamage;
+            // Rage: enemy is in Rage and was hit — boost its Attack
+            if (enemyRageBoost) {
+              enemyBattleState.statModifiers.attack = applyBattleStatDelta(enemyBattleState.statModifiers.attack, 1);
+            }
             const drained = applyDrainHealing(player, actualDamage, moveBattleData?.drainPercent ?? null);
             if (drained > 0) {
               setHP(playerHpBar, player.hp);
@@ -4544,6 +4669,22 @@ export function createBattleScene(
           clearScreens(enemySideState);
           syncPlayerBar();
           syncEnemyBar();
+        }
+        // Lock-in teardown after move completes
+        if (lockInOutrageFinalTurn) {
+          playerBattleState.lockedInMoveId = null;
+          playerBattleState.lockInTurnsRemaining = 0;
+          playerBattleState.confusionTurnsRemaining = Math.floor(Math.random() * 4) + 2;
+        }
+        if (isLockInRollout) {
+          if (lockInRolloutFinalTurn || !hitResult.hit) {
+            playerBattleState.lockedInMoveId = null;
+            playerBattleState.rolloutTurnsActive = 0;
+          }
+        }
+        if (lockInUproarFinalTurn) {
+          playerBattleState.lockedInMoveId = null;
+          playerBattleState.uproarTurnsRemaining = 0;
         }
       },
       hitResult.hit && !absorbed && plannedDamage > 0,
@@ -4678,6 +4819,8 @@ export function createBattleScene(
     const isChargeRelease = !isRedirectedEnemy && chargingMoveId !== null && chargingMoveId === m.id;
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease && !isRedirectedEnemy;
+    const isTwoTurnFlyEnemy = moveBattleData?.behaviorTags?.includes('two-turn-fly') ?? false;
+    const isTwoTurnDigEnemy = moveBattleData?.behaviorTags?.includes('two-turn-dig') ?? false;
     const leaveUserAtOneHp = moveBattleData?.behaviorTags?.includes('leave-user-at-1-hp') ?? false;
     const isRestEnemy = moveBattleData?.behaviorTags?.includes('rest') ?? false;
     const isFocusEnergyEnemy = moveBattleData?.behaviorTags?.includes('focus-energy') ?? false;
@@ -4750,9 +4893,52 @@ export function createBattleScene(
     enemyBattleState.lastMoveUsedId = m.id;
     lastMoveUsedInBattle = m.id;
 
+    // Lock-in behavior tags (enemy)
+    const isLockInOutrageEnemy = moveBattleData?.behaviorTags?.includes('lock-in-outrage') ?? false;
+    const isLockInRolloutEnemy = moveBattleData?.behaviorTags?.includes('lock-in-rollout') ?? false;
+    const isLockInRageEnemy = moveBattleData?.behaviorTags?.includes('lock-in-rage') ?? false;
+    const isLockInUproarEnemy = moveBattleData?.behaviorTags?.includes('lock-in-uproar') ?? false;
+    if (isLockInOutrageEnemy) {
+      if (enemyBattleState.lockedInMoveId === null) {
+        enemyBattleState.lockedInMoveId = m.id;
+        enemyBattleState.lockInTurnsRemaining = Math.floor(Math.random() * 2) + 1;
+      } else {
+        enemyBattleState.lockInTurnsRemaining--;
+      }
+    }
+    if (isLockInRolloutEnemy) {
+      if (enemyBattleState.lockedInMoveId === null) {
+        enemyBattleState.lockedInMoveId = m.id;
+        enemyBattleState.rolloutTurnsActive = 1;
+      } else {
+        enemyBattleState.rolloutTurnsActive = Math.min(5, enemyBattleState.rolloutTurnsActive + 1);
+      }
+      m = { ...m, power: Math.round(30 * Math.pow(2, enemyBattleState.rolloutTurnsActive - 1)) };
+    }
+    if (isLockInRageEnemy && enemyBattleState.lockedInMoveId === null) {
+      enemyBattleState.lockedInMoveId = m.id;
+      enemyBattleState.rageActive = true;
+    }
+    if (isLockInUproarEnemy) {
+      if (enemyBattleState.lockedInMoveId === null) {
+        enemyBattleState.lockedInMoveId = m.id;
+        enemyBattleState.uproarTurnsRemaining = Math.floor(Math.random() * 3) + 2; // 2-4 remaining = 3-5 total
+      } else {
+        enemyBattleState.uproarTurnsRemaining--;
+      }
+    }
+    const lockInOutrageFinalTurnEnemy = isLockInOutrageEnemy && enemyBattleState.lockInTurnsRemaining === 0;
+    const lockInRolloutFinalTurnEnemy = isLockInRolloutEnemy && enemyBattleState.rolloutTurnsActive >= 5;
+    const lockInUproarFinalTurnEnemy = isLockInUproarEnemy && enemyBattleState.uproarTurnsRemaining === 0;
+
     const moveData = getMove(m.id);
     if (isChargeStart) {
       startChargingMove(enemyBattleState, m.id);
+      if (isTwoTurnFlyEnemy) {
+        enemyBattleState.invulnerableState = 'airborne';
+      } else if (isTwoTurnDigEnemy) {
+        enemyBattleState.invulnerableState = 'underground';
+      }
       const enemyHasContrary = enemy.abilityId
         ? getAbilityBattleEffects(enemy.abilityId).some((e) => e.kind === 'contraryStatChanges')
         : false;
@@ -4771,6 +4957,43 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
+      if (isTwoTurnFlyEnemy) {
+        animationDirector.play(
+          sequenceStep(
+            callStep(() => {
+              attackFx = createAttackEffect({
+                kind: 'fly-vanish',
+                sourceX: BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+                sourceY: BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h / 2,
+                targetX: BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+                targetY: BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h / 2,
+                color: '#a8d8ff',
+                accentColor: '#ffffff',
+                duration: 0.7,
+              });
+            }),
+            tweenActorStep('enemy', { y: -20, scaleX: 0.18, scaleY: 0.18, alpha: 0 }, 0.7, 'easeIn'),
+          ),
+        );
+      } else if (isTwoTurnDigEnemy) {
+        animationDirector.play(
+          sequenceStep(
+            callStep(() => {
+              attackFx = createAttackEffect({
+                kind: 'dig-vanish',
+                sourceX: BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+                sourceY: BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h / 2,
+                targetX: BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2,
+                targetY: BTL.OPP_SPRITE.y + BTL.OPP_SPRITE.h / 2,
+                color: '#a07840',
+                accentColor: '#c89850',
+                duration: 0.5,
+              });
+            }),
+            tweenActorStep('enemy', { y: 8, scaleX: 0.1, scaleY: 0.1, alpha: 0 }, 0.5, 'easeIn'),
+          ),
+        );
+      }
       return;
     }
 
@@ -4820,6 +5043,10 @@ export function createBattleScene(
 
     if (isChargeRelease) {
       clearChargingMove(enemyBattleState);
+      if (enemyBattleState.invulnerableState !== null) {
+        enemyBattleState.invulnerableState = null;
+        animationDirector.setActorState('enemy', { x: 0, y: 0, alpha: 1, scaleX: 1, scaleY: 1, rotation: 0 });
+      }
     }
     applyPostMoveTurnFlags(enemyBattleState, m.id);
 
@@ -5085,9 +5312,19 @@ export function createBattleScene(
 
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const weatherAccOverrideEnemy = battleWeather ? getWeatherAccuracyOverride(m.id, battleWeather.type) : null;
-    const hitResult = doesMoveTargetOpponent(moveBattleData)
+    let hitResult = doesMoveTargetOpponent(moveBattleData)
       ? doesMoveHit(weatherAccOverrideEnemy ?? m.accuracy, enemyBattleState, playerBattleState)
       : { hit: true, chance: 100 };
+    // Invulnerability check (Fly / Dig charge turn)
+    if (hitResult.hit && playerBattleState.invulnerableState !== null) {
+      const isDigBypassEnemy = m.id === 89 || m.id === 90 || isMagnitudeEnemy; // Earthquake, Fissure, Magnitude
+      const neverMisses = m.accuracy <= 0;
+      const bothAirborne = enemyBattleState.invulnerableState === 'airborne'
+        && playerBattleState.invulnerableState === 'airborne';
+      if (!neverMisses && !(playerBattleState.invulnerableState === 'underground' && isDigBypassEnemy) && !bothAirborne) {
+        hitResult = { hit: false, chance: 0 };
+      }
+    }
     const targetTypeImmune =
       hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
     let magnitudeLevelEnemy = 0;
@@ -5124,10 +5361,12 @@ export function createBattleScene(
     const facadeActiveEnemy =
       isFacadeBoostEnemy && enemy.status !== null && ['burn', 'paralyze', 'poison'].includes(enemy.status as string);
     const rawPowerEnemy = facadeActiveEnemy ? movePowerEnemy * 2 : movePowerEnemy;
+    const digPowerBoostEnemy = rawPowerEnemy > 0 && playerBattleState.invulnerableState === 'underground'
+      && (m.id === 89 || m.id === 90 || isMagnitudeEnemy) ? 2 : 1;
     const effectivePowerEnemy =
-      battleWeather && rawPowerEnemy > 0
+      (battleWeather && rawPowerEnemy > 0
         ? Math.max(1, Math.round(rawPowerEnemy * getWeatherPowerMultiplier(m.type, battleWeather.type)))
-        : rawPowerEnemy;
+        : rawPowerEnemy) * digPowerBoostEnemy;
     const foulPlayAttackStatEnemy = isFoulPlayEnemy
       ? getModifiedStatValue(player, playerBattleState, 'attack')
       : undefined;
@@ -5334,6 +5573,19 @@ export function createBattleScene(
     }
     msgs.push(...resolvedEffectLines);
 
+    // Lock-in teardown messages (enemy)
+    if (lockInOutrageFinalTurnEnemy) {
+      msgs.push(t('battle.lockInOutrageStopped', { name: attackerName }));
+    }
+    if (lockInUproarFinalTurnEnemy) {
+      msgs.push(t('battle.lockInUproarStopped', { name: attackerName }));
+    }
+    // Player Rage: if player is raging and was hit, their Attack rises
+    const playerRageBoost = hitResult.hit && plannedDamage > 0 && playerBattleState.rageActive;
+    if (playerRageBoost) {
+      msgs.push(t('battle.lockInRageBoost', { name: defenderName }));
+    }
+
     // Brick Break: will shatter player screens on impact
     if (isBrickBreakEnemy && hitResult.hit && plannedDamage > 0) {
       const hadScreens = playerSideState.reflectTurnsRemaining > 0 || playerSideState.lightScreenTurnsRemaining > 0;
@@ -5495,6 +5747,10 @@ export function createBattleScene(
             playerBattleState.turnFlags.tookDamageThisTurn = true;
             if (damageClass === 'physical') playerBattleState.turnFlags.physicalDamageTakenThisTurn += actualDamage;
             else if (damageClass === 'special') playerBattleState.turnFlags.specialDamageTakenThisTurn += actualDamage;
+            // Rage: player is in Rage and was hit — boost their Attack
+            if (playerRageBoost) {
+              playerBattleState.statModifiers.attack = applyBattleStatDelta(playerBattleState.statModifiers.attack, 1);
+            }
             const drained = applyDrainHealing(enemy, actualDamage, moveBattleData?.drainPercent ?? null);
             if (drained > 0) {
               setHP(enemyHpBar, enemy.hp);
@@ -5581,6 +5837,22 @@ export function createBattleScene(
           clearScreens(enemySideState);
           syncPlayerBar();
           syncEnemyBar();
+        }
+        // Lock-in teardown after move completes (enemy)
+        if (lockInOutrageFinalTurnEnemy) {
+          enemyBattleState.lockedInMoveId = null;
+          enemyBattleState.lockInTurnsRemaining = 0;
+          enemyBattleState.confusionTurnsRemaining = Math.floor(Math.random() * 4) + 2;
+        }
+        if (isLockInRolloutEnemy) {
+          if (lockInRolloutFinalTurnEnemy || !hitResult.hit) {
+            enemyBattleState.lockedInMoveId = null;
+            enemyBattleState.rolloutTurnsActive = 0;
+          }
+        }
+        if (lockInUproarFinalTurnEnemy) {
+          enemyBattleState.lockedInMoveId = null;
+          enemyBattleState.uproarTurnsRemaining = 0;
         }
       },
       hitResult.hit && !absorbed && plannedDamage > 0,
@@ -5723,21 +5995,27 @@ export function createBattleScene(
       if (hasActiveGame()) {
         getPlayerData().pokedex[enemy.id] = true;
       }
-      if (isWildNpcBattle) {
-        textBox = createTextBox([t('battle.wildAppeared', { name: getPokemonDisplayName(enemy.id) })], isRTL());
-      } else if (isTrainerBattle && trainerData) {
-        textBox = createTextBox(
-          [
-            t('battle.trainerWantsBattle', { name: getLocalizedName(trainerData.trainerName) }),
-            t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
-          ],
-          isRTL(),
-        );
+      if (isTrainerBattle && trainerData && !isWildNpcBattle) {
+        // Cinematic intro: challenger music continues playing; textBox + battle music created after animation
+        trainerCinematicTimer = 0;
+        phase = 'TRAINER_CINEMATIC';
       } else {
-        textBox = createTextBox([t('battle.wildAppeared', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+        if (isWildNpcBattle) {
+          textBox = createTextBox([t('battle.wildAppeared', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+        } else if (isTrainerBattle && trainerData) {
+          textBox = createTextBox(
+            [
+              t('battle.trainerWantsBattle', { name: getLocalizedName(trainerData.trainerName) }),
+              t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
+            ],
+            isRTL(),
+          );
+        } else {
+          textBox = createTextBox([t('battle.wildAppeared', { name: getPokemonDisplayName(enemy.id) })], isRTL());
+        }
+        phase = 'INTRO';
+        audio.playMusic('battle');
       }
-      phase = 'INTRO';
-      audio.playMusic('battle');
     },
     exit(): void {
       clearAllPopups();
@@ -5772,6 +6050,23 @@ export function createBattleScene(
       updatePopups(dt);
 
       switch (phase) {
+        case 'TRAINER_CINEMATIC': {
+          trainerCinematicTimer += dt;
+          if (trainerCinematicTimer >= 1.65) {
+            if (isTrainerBattle && trainerData) {
+              textBox = createTextBox(
+                [
+                  t('battle.trainerWantsBattle', { name: getLocalizedName(trainerData.trainerName) }),
+                  t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
+                ],
+                isRTL(),
+              );
+            }
+            phase = 'INTRO';
+            audio.playMusic('battle');
+          }
+          break;
+        }
         case 'INTRO': {
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
@@ -6445,6 +6740,145 @@ export function createBattleScene(
       clearScreen(ctx, BTL.COLORS.bg);
       if (shake) applyShake(ctx, shake);
       ctx.imageSmoothingEnabled = false;
+
+      // ── Trainer cinematic intro ──
+      if (phase === 'TRAINER_CINEMATIC') {
+        // Phase durations
+        const C_SLIDE  = 0.55; // trainer slides in
+        const C_HOLD   = 0.20; // pause before throw
+        const C_THROW  = 0.60; // ball arc
+        const C_FLASH  = 0.30; // white flash at end
+
+        const t0 = trainerCinematicTimer;
+        const slideT  = Math.min(1, t0 / C_SLIDE);
+        const slideE  = 1 - Math.pow(1 - slideT, 3); // ease-out cubic
+        const holdT   = Math.min(1, Math.max(0, (t0 - C_SLIDE) / C_HOLD));
+        const throwT  = Math.min(1, Math.max(0, (t0 - C_SLIDE - C_HOLD) / C_THROW));
+        const flashT  = Math.min(1, Math.max(0, (t0 - C_SLIDE - C_HOLD - C_THROW) / C_FLASH));
+
+        // Battle background
+        if (bgImage && bgImage.complete && bgImage.naturalWidth > 0) {
+          ctx.drawImage(bgImage, 0, 0, 240, BTL.FIELD_H);
+        } else {
+          const bgImg = getBattleBackground();
+          if (bgImg.complete && bgImg.naturalWidth > 0) {
+            ctx.drawImage(bgImg, 0, 0, 240, BTL.FIELD_H);
+          } else {
+            const BG = BTL.BG;
+            const sg = ctx.createLinearGradient(0, BG.SKY.y, 0, BG.SKY.y + BG.SKY.h);
+            sg.addColorStop(0, BG.SKY.from); sg.addColorStop(0.5, BG.SKY.mid); sg.addColorStop(1, BG.SKY.to);
+            ctx.fillStyle = sg; ctx.fillRect(BG.SKY.x, BG.SKY.y, BG.SKY.w, BG.SKY.h);
+            const gg = ctx.createLinearGradient(0, BG.GROUND.y, 0, BG.GROUND.y + BG.GROUND.h);
+            gg.addColorStop(0, BG.GROUND.from); gg.addColorStop(0.4, BG.GROUND.mid1);
+            gg.addColorStop(0.7, BG.GROUND.mid2); gg.addColorStop(1, BG.GROUND.to);
+            ctx.fillStyle = gg; ctx.fillRect(BG.GROUND.x, BG.GROUND.y, BG.GROUND.w, BG.GROUND.h);
+          }
+        }
+
+        // Lower panel
+        fillRect(ctx, 0, BTL.FIELD_H, 240, 160 - BTL.FIELD_H, BTL.COLORS.bg);
+        fillRect(ctx, 0, BTL.FIELD_H, 240, 1, '#20d860');
+
+        // Trainer sprite — 3× tile scale (48×48), standing on the ground line
+        const DEST = 48; // 3 × 16 px logical tile
+        const S_TARGET_X = 12;
+        const S_START_X  = -DEST - 16;
+        const S_Y = BTL.FIELD_H - DEST; // feet flush with field bottom
+        const spriteX = Math.round(S_START_X + (S_TARGET_X - S_START_X) * slideE);
+
+        // Throw-lean: sprite shifts forward (+x) as arm swings
+        const leanX = throwT > 0 ? Math.round(Math.sin(throwT * Math.PI) * 8) : 0;
+        // Bob during hold: gentle up-down
+        const bobY = holdT > 0 && throwT === 0 ? Math.round(-Math.sin(holdT * Math.PI) * 2) : 0;
+
+        // Resolve sprite: character sheet frame → NPC generated image fallback
+        const cinFrame = trainerData?.trainerSpriteType
+          ? getCharacterFrame(trainerData.trainerSpriteType, 'down', 'stand')
+          : null;
+        const fallbackImg: HTMLImageElement | null = trainerData?.trainerSpriteType
+          ? getNPCSpriteImage(trainerData.trainerSpriteType)
+          : null;
+
+        const dx = spriteX + leanX;
+        const dy = S_Y + bobY;
+
+        if (cinFrame) {
+          ctx.save();
+          ctx.globalAlpha = Math.min(1, slideT * 3);
+          if (cinFrame.flipX) {
+            ctx.translate(dx + DEST, dy);
+            ctx.scale(-1, 1);
+            ctx.drawImage(cinFrame.image, cinFrame.sx, cinFrame.sy, cinFrame.w, cinFrame.h, 0, 0, DEST, DEST);
+          } else {
+            ctx.drawImage(cinFrame.image, cinFrame.sx, cinFrame.sy, cinFrame.w, cinFrame.h, dx, dy, DEST, DEST);
+          }
+          ctx.restore();
+        } else if (fallbackImg) {
+          ctx.save();
+          ctx.globalAlpha = Math.min(1, slideT * 3);
+          ctx.drawImage(fallbackImg, dx, dy, DEST, DEST);
+          ctx.restore();
+        }
+
+        // Pokéball throw
+        if (throwT > 0) {
+          const BX0 = S_TARGET_X + DEST - 4; // start near trainer's right hand
+          const BY0 = S_Y + DEST * 0.3;
+          const BX1 = 210;
+          const BY1 = 22;
+          const ballX = BX0 + (BX1 - BX0) * throwT;
+          // Parabolic arc: peaks at midpoint
+          const ballY = BY0 + (BY1 - BY0) * throwT - 50 * Math.sin(throwT * Math.PI);
+          const ballR  = throwT * Math.PI * 5; // spin
+          const ballSz = 10;
+
+          ctx.save();
+          ctx.translate(ballX, ballY);
+          ctx.rotate(ballR);
+          // Simple hand-drawn Pokéball (red top / white bottom / black line)
+          ctx.beginPath();
+          ctx.arc(0, 0, ballSz / 2, Math.PI, 0);
+          ctx.fillStyle = '#e03030'; ctx.fill();
+          ctx.beginPath();
+          ctx.arc(0, 0, ballSz / 2, 0, Math.PI);
+          ctx.fillStyle = '#f0f0f0'; ctx.fill();
+          ctx.beginPath();
+          ctx.arc(0, 0, ballSz / 2, 0, Math.PI * 2);
+          ctx.strokeStyle = '#202020'; ctx.lineWidth = 1; ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(-ballSz / 2, 0); ctx.lineTo(ballSz / 2, 0);
+          ctx.strokeStyle = '#202020'; ctx.lineWidth = 1; ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(0, 0, 2, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff'; ctx.fill();
+          ctx.beginPath();
+          ctx.arc(0, 0, 2, 0, Math.PI * 2);
+          ctx.strokeStyle = '#202020'; ctx.lineWidth = 0.5; ctx.stroke();
+          ctx.restore();
+        }
+
+        // Trainer name — fades in at 60% of slide
+        if (trainerData && slideT > 0.5) {
+          const nameAlpha = Math.min(1, (slideT - 0.5) * 2.5);
+          ctx.save();
+          ctx.globalAlpha = nameAlpha;
+          const name = getLocalizedName(trainerData.trainerName);
+          drawText(ctx, isRTL() ? 'מאמן' : 'TRAINER', 120, 140, { size: 5, color: '#667766', font: 'monospace', align: 'center' });
+          drawText(ctx, name, 120, 150, { size: 7, color: '#20d860', font: 'monospace', align: 'center' });
+          ctx.restore();
+        }
+
+        // White flash at end
+        if (flashT > 0) {
+          ctx.save();
+          ctx.globalAlpha = Math.sin(flashT * Math.PI) * 0.85;
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, 240, 160);
+          ctx.restore();
+        }
+
+        return;
+      }
 
       // ── Battle field background (y=0..83) ──
       if (bgImage && bgImage.complete && bgImage.naturalWidth > 0) {

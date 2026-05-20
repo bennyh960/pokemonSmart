@@ -51,10 +51,15 @@
       "sy": 32,
       "w": 16,
       "h": 16,
-      "walkable": false,
+      "walkable": true,
+      "encounterTypes": [
+        "water"
+      ],
+      "battleBackground": "darkbeach",
       "above": false,
       "category": "water",
-      "interactType": null
+      "interactType": null,
+      "description": "cave water"
     },
     {
       "key": "w6",
@@ -150,10 +155,15 @@
       "sy": 32,
       "w": 16,
       "h": 16,
-      "walkable": false,
+      "walkable": true,
+      "encounterTypes": [
+        "water"
+      ],
+      "battleBackground": "orassea",
       "above": false,
       "category": "water",
-      "interactType": null
+      "interactType": null,
+      "description": "water for overworld"
     },
     {
       "key": "w15",
@@ -1402,7 +1412,8 @@
       "walkable": true,
       "above": true,
       "overlay": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
     },
     {
       "key": "tree1-bottom",
@@ -1412,7 +1423,28 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "tree"
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "null-x-core-5",
+      "sx": 64,
+      "sy": 224,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "interactive",
+      "interactType": {
+        "id": "item",
+        "args": {
+          "label": {
+            "en": "Null-X Core-5",
+            "he": "ליבת NULL-X #5"
+          },
+          "itemId": "core-x5"
+        }
+      }
     }
   ]
 }

@@ -218,7 +218,9 @@ export type AttackEffectKind =
   | 'icy-wind'
   | 'electroweb'
   | 'protect-shield'
-  | 'earthquake';
+  | 'earthquake'
+  | 'fly-vanish'
+  | 'dig-vanish';
 
 interface AttackEffect {
   active: boolean;
@@ -461,7 +463,12 @@ export function createAttackEffect(options: {
   duration?: number;
   variant?: string;
 }): AttackEffect {
-  const defaultDuration = options.kind === 'beam' ? 0.2 : options.kind === 'pulse' ? 0.3 : 0.34;
+  const defaultDuration =
+    options.kind === 'beam' ? 0.2
+    : options.kind === 'pulse' ? 0.3
+    : options.kind === 'fly-vanish' ? 0.7
+    : options.kind === 'dig-vanish' ? 0.5
+    : 0.34;
   return {
     active: true,
     timer: 0,
@@ -705,6 +712,78 @@ function renderBurstEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
   ctx.restore();
 }
 
+function renderFlyVanishEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const rng = seededRng(effect.seed);
+  const count = 12;
+  for (let i = 0; i < count; i++) {
+    const angle = rng() * Math.PI * 2;
+    const speed = 14 + rng() * 18;
+    const startX = effect.sourceX + (rng() - 0.5) * 12;
+    const startY = effect.sourceY + (rng() - 0.5) * 12;
+    const px = startX + Math.cos(angle) * speed * t;
+    const py = startY + Math.sin(angle) * speed * t - t * 14;
+    const featherAngle = rng() * Math.PI;
+    const size = 1.8 + rng() * 2.2;
+    const alpha = Math.max(0, 1 - t * 1.15) * 0.92;
+    if (alpha <= 0) continue;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = rng() > 0.5 ? '#ffffff' : '#c0e8ff';
+    ctx.translate(px, py);
+    ctx.rotate(featherAngle);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, size, size * 0.35, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  // Faint glow ring at source
+  const glow = Math.max(0, 1 - t * 1.4) * 0.35;
+  if (glow > 0) {
+    ctx.save();
+    ctx.globalAlpha = glow;
+    ctx.strokeStyle = '#a0d0ff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(effect.sourceX, effect.sourceY, 6 + t * 12, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function renderDigVanishEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const rng = seededRng(effect.seed);
+  const count = 16;
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count + rng() * 0.5;
+    const speed = 9 + rng() * 15;
+    const px = effect.sourceX + Math.cos(angle) * speed * t;
+    const py = effect.sourceY + Math.sin(angle) * speed * t + t * 10;
+    const size = 1.2 + rng() * 2.8;
+    const alpha = Math.max(0, 1 - t * 1.2) * 0.88;
+    if (alpha <= 0) continue;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = rng() > 0.5 ? '#a07840' : '#c89858';
+    ctx.beginPath();
+    ctx.arc(px, py, size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  // Dirt cloud at base
+  const cloudAlpha = Math.max(0, 1 - t * 1.1) * 0.28;
+  if (cloudAlpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = cloudAlpha;
+    ctx.fillStyle = '#b89060';
+    ctx.beginPath();
+    ctx.ellipse(effect.sourceX, effect.sourceY + 4, 10 + t * 8, 5 + t * 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
 export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   if (!effect.active) return;
 
@@ -780,6 +859,12 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'electroweb':
       renderElectrowebEffect(ctx, effect);
+      break;
+    case 'fly-vanish':
+      renderFlyVanishEffect(ctx, effect);
+      break;
+    case 'dig-vanish':
+      renderDigVanishEffect(ctx, effect);
       break;
   }
 }

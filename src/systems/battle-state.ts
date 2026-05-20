@@ -37,6 +37,12 @@ export interface BattlePokemonRuntimeState {
   trappedTurnsRemaining: number;
   trapDamagePercent: number | null;
   chargingMoveId: number | null;
+  invulnerableState: 'airborne' | 'underground' | null;
+  lockedInMoveId: number | null;
+  lockInTurnsRemaining: number;
+  rolloutTurnsActive: number;
+  rageActive: boolean;
+  uproarTurnsRemaining: number;
   statModifiers: BattleStatModifiers;
   turnFlags: BattleTurnFlags;
   critBoost: boolean;
@@ -109,6 +115,12 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     trappedTurnsRemaining: 0,
     trapDamagePercent: null,
     chargingMoveId: null,
+    invulnerableState: null,
+    lockedInMoveId: null,
+    lockInTurnsRemaining: 0,
+    rolloutTurnsActive: 0,
+    rageActive: false,
+    uproarTurnsRemaining: 0,
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),
     critBoost: false,

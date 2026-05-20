@@ -29,6 +29,7 @@ const MUSIC_TRACKS: Record<string, string> = {
   shop: toAssetUrl('audio/music/shop.mp3'),
   'team-rocket-bgm': toAssetUrl('audio/music/team-rocket-bgm.mp3'),
   'team-rocket-grunt': toAssetUrl('audio/music/team-rocket-grunt.mp3'),
+  challenger: toAssetUrl('audio/music/challenger.mp3'),
 };
 
 /** Exported list of music track keys — used by map editor settings. */
