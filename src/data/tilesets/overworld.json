@@ -487,22 +487,6 @@
       "description": "tree pink leaf bigger"
     },
     {
-      "key": "g6",
-      "sx": 80,
-      "sy": 1296,
-      "w": 48,
-      "h": 48,
-      "walkable": true,
-      "encounterTypes": [
-        "*/ice,water,fire,poison"
-      ],
-      "above": true,
-      "overlay": true,
-      "category": "grass",
-      "interactType": null,
-      "description": "grass pink should be next pink tree"
-    },
-    {
       "key": "g6-s",
       "sx": 80,
       "sy": 1344,
@@ -6939,6 +6923,148 @@
       "above": false,
       "category": "building",
       "interactType": null
+    },
+    {
+      "key": "t7-top",
+      "sx": 0,
+      "sy": 528,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t7-bottom",
+      "sx": 0,
+      "sy": 560,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t10top",
+      "sx": 80,
+      "sy": 1408,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t10bottom",
+      "sx": 80,
+      "sy": 1440,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "g6",
+      "sx": 96,
+      "sy": 1312,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "encounterTypes": [
+        "dragon",
+        "flying",
+        "bug",
+        "grass"
+      ],
+      "above": false,
+      "category": "ground"
+    },
+    {
+      "key": "g61",
+      "sx": 80,
+      "sy": 1296,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground"
+    },
+    {
+      "key": "g62",
+      "sx": 96,
+      "sy": 1296,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground"
+    },
+    {
+      "key": "g63",
+      "sx": 112,
+      "sy": 1296,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground"
+    },
+    {
+      "key": "g64",
+      "sx": 80,
+      "sy": 1312,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground"
+    },
+    {
+      "key": "g65",
+      "sx": 112,
+      "sy": 1312,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground"
+    },
+    {
+      "key": "g66",
+      "sx": 80,
+      "sy": 1328,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground"
+    },
+    {
+      "key": "g67",
+      "sx": 96,
+      "sy": 1328,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground"
+    },
+    {
+      "key": "g68",
+      "sx": 112,
+      "sy": 1328,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground"
     }
   ]
 }

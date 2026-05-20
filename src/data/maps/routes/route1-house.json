@@ -1,5 +1,5 @@
 {
-  "id": "routes/route1-house",
+  "id": "route1-house",
   "name": "house-small",
   "template": "house-small",
   "tileset": "interior",
@@ -48,6 +48,25 @@
           }
         ]
       }
+    },
+    {
+      "id": "npc-1779306140205",
+      "x": 10,
+      "y": 11,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "ישנם פוקימונים נדירים במורד הנהר! ..."
+        }
+      ],
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Misty",
+        "he": "מיסטי"
+      },
+      "spawnAfter": "story-badge-5"
     }
   ],
   "interactiveItems": {
