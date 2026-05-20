@@ -1790,25 +1790,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     surfReturnAnim = null;
     surfMountAnim = null;
 
-    // Clear runtime surf state (will be restored below if same-map re-entry on water)
+    // Clear runtime surf state, then restore if the landing tile is water (handles both
+    // same-map battle returns and cross-map water transitions).
     stopSurfing();
-    if (!_isSameMapEntry && hasActiveGame()) {
-      // Real map change — clear surf persistence too
-      const _mcPd = getPlayerData();
-      _mcPd.surfing = false;
-      _mcPd.surfingPokemonId = null;
-    }
-
-    // Restore surf state when returning from battle (same map, player still on water tile)
-    if (_isSameMapEntry && hasActiveGame()) {
-      const _rsPd = getPlayerData();
-      if (_rsPd.surfing && (_rsPd.surfingPokemonId ?? null) !== null && isTileWater(player.gridX, player.gridY)) {
+    if (hasActiveGame()) {
+      const _surfPd = getPlayerData();
+      if (_surfPd.surfing && (_surfPd.surfingPokemonId ?? null) !== null && isTileWater(player.gridX, player.gridY)) {
         isCurrentlySurfing = true;
-        surfPokemonId = _rsPd.surfingPokemonId!;
-      } else if (_rsPd.surfing) {
-        // Was surfing but not on water anymore (edge case) — clear
-        _rsPd.surfing = false;
-        _rsPd.surfingPokemonId = null;
+        surfPokemonId = _surfPd.surfingPokemonId!;
+      } else if (_surfPd.surfing) {
+        // Landed on non-water — dismount and clear persistence
+        _surfPd.surfing = false;
+        _surfPd.surfingPokemonId = null;
       }
     }
 

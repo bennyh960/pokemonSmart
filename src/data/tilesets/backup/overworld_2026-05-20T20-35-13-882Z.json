@@ -493,8 +493,11 @@
       "w": 16,
       "h": 16,
       "walkable": true,
+      "encounterTypes": [
+        "*/fire,water,ice,rock"
+      ],
       "above": true,
-      "overlay": false,
+      "overlay": true,
       "category": "grass",
       "interactType": null,
       "description": "grass pink next pink tree smaller"
@@ -506,9 +509,11 @@
       "w": 16,
       "h": 16,
       "walkable": true,
+      "encounterTypes": [
+        "*"
+      ],
       "above": true,
-      "overlay": false,
-      "category": "grass",
+      "overlay": true,
       "interactType": null,
       "description": "grass pink should be next pink tree"
     },
@@ -6979,8 +6984,7 @@
         "grass"
       ],
       "above": false,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "g61",
@@ -6990,8 +6994,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "g62",
@@ -7001,8 +7004,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "g63",
@@ -7012,8 +7014,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "g64",
@@ -7023,8 +7024,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "g65",
@@ -7034,8 +7034,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "g66",
@@ -7045,8 +7044,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "g67",
@@ -7056,8 +7054,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     },
     {
       "key": "g68",
@@ -7067,8 +7064,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "ground",
-      "interactType": null
+      "category": "ground"
     }
   ]
 }
