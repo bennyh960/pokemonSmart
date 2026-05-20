@@ -26,7 +26,7 @@ registerStoryEvent({
     { type: 'set-infection', mapId: 'symmetrika/symmetrika', value: 'critical' },
     { type: 'set-infection', mapId: 'routes/route-10', value: 'critical' },
     // { type: 'set-infection', mapId: 'routes/route-11', value: 'critical' },
-    { type: 'set-infection', mapId: 'integrala/integrala', value: 'critical' },
+    { type: 'set-infection', mapId: 'percentile/percentile', value: 'critical' },
     // { type: 'set-infection', mapId: 'routes/route-12', value: 'critical' },
     { type: 'set-infection', mapId: 'algebria/algebria', value: 'critical' },
     // { type: 'set-infection', mapId: 'routes/route-13', value: 'critical' },
