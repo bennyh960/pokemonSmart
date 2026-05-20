@@ -291,7 +291,7 @@
       "spriteType": "char_0502ea",
       "lineOfSight": 3,
       "blocker": true,
-      "despawnAfter": "TODO"
+      "despawnAfter": "story-badge-6"
     },
     {
       "id": "route9-guard",
