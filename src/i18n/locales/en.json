@@ -17,6 +17,8 @@
   "saveSlots.saved": "Game Saved!",
   "saveSlots.hintLoad": "↑↓ Navigate   ENTER Load   R Delete   ESC Back",
   "saveSlots.hintSave": "↑↓ Navigate   ENTER Save   R Delete   ESC Back",
+  "saveSlots.badges": "{count} badges",
+  "saveSlots.noQuest": "Investigate...",
   "heroSelect.title": "Choose your hero",
   "heroSelect.subtitle": "Pick the trainer sprite you want to play with.",
   "heroSelect.trainerLabel": "Current trainer name",

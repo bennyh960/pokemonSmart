@@ -17,6 +17,8 @@
   "saveSlots.saved": "!המשחק נשמר",
   "saveSlots.hintLoad": "↑↓ ניווט   ENTER טעינה   R מחיקה   ESC חזור",
   "saveSlots.hintSave": "↑↓ ניווט   ENTER שמירה   R מחיקה   ESC חזור",
+  "saveSlots.badges": "{count} תגים",
+  "saveSlots.noQuest": "חקור...",
   "heroSelect.title": "בחר את הגיבור שלך",
   "heroSelect.subtitle": "בחר את ספרייט המאמן שאיתו תשחק.",
   "heroSelect.trainerLabel": "שם המאמן הנוכחי",

@@ -77,10 +77,7 @@ registerStoryEvent({
 registerStoryEvent({
   id: 'evt-frac-raikou-core-collect',
   trigger: { type: 'flag-set', flag: 'key-core-x4-obtained' }, // key item auto flag
-  conditions: [
-    { type: 'flag', flag: FLAGS.ACT3_POWER_RAIKOU_ARC_FLEE },
-    { type: 'flag-not', flag: 'key-core-x4-obtained' },
-  ],
+  conditions: [{ type: 'flag', flag: FLAGS.ACT3_POWER_RAIKOU_ARC_FLEE }],
   actions: [
     { type: 'start-cutscene', cutsceneId: 'act3-raikou-sirFracti-call2' },
     { type: 'complete-quest', questId: 'quest-raikou' },
@@ -118,3 +115,34 @@ registerCutscene({
     },
   ],
 });
+// const PREFIX = 'pokemon-math-adventure-save-';
+
+//   for (let slot = 0; slot < 3; slot++) {
+//     const key = PREFIX + slot;
+//     const raw = localStorage.getItem(key);
+//     if (!raw) continue;
+
+//     const save = JSON.parse(raw);
+
+//     // Reset Raikou battle (brings Raikou NPC back, hides core tile until re-defeated)
+//     delete save.flags?.['trainer-wild-r8-raikou-en1-defeated'];
+
+//     // Reset core pickup
+//     delete save.items?.['core-x4'];
+//     delete save.flags?.['key-core-x4-obtained'];
+//     delete save.flags?.['obj-route-8-null-x-core-i-21-41-collected'];
+
+//     // Reset story event done-flags so they can re-fire
+//     delete save.flags?.['__event-done-evt-auto-repel-for-raikou'];
+//     delete save.flags?.['__event-done-evt-frac-raikou-core-collect'];
+
+//     // Undo quest completion if it ran
+//     if (save.story?.completedQuestIds) {
+//       save.story.completedQuestIds = save.story.completedQuestIds.filter(q => q !== 'quest-raikou');
+//     }
+
+//     localStorage.setItem(key, JSON.stringify(save));
+//     console.log(`Slot ${slot}: reset.`);
+//   }
+
+//   console.log('Done. Reload the game.');

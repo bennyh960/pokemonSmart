@@ -14,6 +14,8 @@ import { loadCharacterSprites, getCharacterFrame } from '../engine/character-spr
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { LOGICAL_WIDTH as W, LOGICAL_HEIGHT as H, ADMIN_NAME } from '../engine/config.js';
+import { getQuest } from '../data/story/quests.js';
+import { fontFor } from '../engine/fonts.js';
 
 const VISIBLE = 5;
 const SLOT_H = 26;
@@ -41,6 +43,16 @@ function formatAge(isoStr: string): string {
   const h = Math.floor(m / 60);
   if (h < 24) return `${h}h`;
   return `${Math.floor(h / 24)}d`;
+}
+
+function truncateText(ctx: CanvasRenderingContext2D, text: string, maxPx: number, fontSize: number): string {
+  ctx.save();
+  ctx.font = `${fontSize}px ${fontFor(text)}`;
+  if (ctx.measureText(text).width <= maxPx) { ctx.restore(); return text; }
+  let s = text;
+  while (s.length > 0 && ctx.measureText(s + '…').width > maxPx) s = s.slice(0, -1);
+  ctx.restore();
+  return s + '…';
 }
 
 export function createSaveSlotsScene(input: InputManager, stateMachine: StateMachine): Scene {
@@ -135,9 +147,11 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
         }
       }
 
-      // Slot number (dim) + dev hint: actual localStorage index
+      // Top row: slot number (+ ls: index for admin), badge count on the right
       const slotLabel = isAdminSession ? `#${si + 1}  ls:${meta.slot}` : `#${si + 1}`;
       drawText(ctx, slotLabel, SLOT_X + 38, slotY + 3, { size: 5, color: '#444466' });
+      const badgeLabel = t('saveSlots.badges', { count: meta.badgeCount ?? 0 });
+      drawText(ctx, badgeLabel, SLOT_X + SLOT_W - 27, slotY + 3, { size: 5, color: '#556677', align: 'right' });
 
       // Player name
       const rtl = isRTL();
@@ -154,9 +168,17 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
         color: '#6688aa',
       });
 
+      // Quest title (bottom row) — active quest name or "Investigate..." placeholder
+      const questDef = meta.activeQuestId ? getQuest(meta.activeQuestId) : null;
+      const rawQuest = questDef
+        ? (rtl ? questDef.title.he : questDef.title.en)
+        : t('saveSlots.noQuest');
+      const questText = truncateText(ctx, rawQuest, SLOT_W - 38 - 26, 5);
+      drawText(ctx, questText, SLOT_X + 38, slotY + 19, { size: 5, color: '#667788' });
+
       // R=delete hint (only on selected)
       if (isSelected) {
-        drawText(ctx, '[R]', SLOT_X + SLOT_W - 18, slotY + 18, {
+        drawText(ctx, '[R]', SLOT_X + SLOT_W - 18, slotY + 19, {
           size: 5,
           color: '#993333',
         });

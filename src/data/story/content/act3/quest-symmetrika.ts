@@ -813,5 +813,8 @@ registerStoryEvent({
   trigger: { type: 'trainer-defeated', trainerId: 'npc-zapdos-cave' },
   triggerDelayPostFlag: 2,
   conditions: [{ type: 'flag-not', flag: FLAGS.ACT3_SYM_ZAPDOS_CAVE_DEFEATED }],
-  actions: [{ type: 'start-cutscene', cutsceneId: 'act3-sym-zapdos-core-obtained' }],
+  actions: [
+    { type: 'set-repel', steps: 80 },
+    { type: 'start-cutscene', cutsceneId: 'act3-sym-zapdos-core-obtained' },
+  ],
 });

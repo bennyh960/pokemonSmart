@@ -21,6 +21,8 @@ export interface SaveSlotMeta {
   heroCharacterId: string;
   firstPokemonId: number | null;
   savedAt: string;
+  badgeCount?: number;
+  activeQuestId?: string | null;
 }
 
 export function getSlotIndex(): SaveSlotMeta[] {
@@ -60,12 +62,17 @@ function persistSlotIndex(index: SaveSlotMeta[]): void {
 
 function upsertSlotMeta(slot: number, data: PlayerData): void {
   const index = getSlotIndex();
+  let b = data.badges >>> 0;
+  let badgeCount = 0;
+  while (b) { badgeCount += b & 1; b >>>= 1; }
   const meta: SaveSlotMeta = {
     slot,
     playerName: data.name,
     heroCharacterId: data.heroCharacterId,
     firstPokemonId: data.party[0]?.id ?? null,
     savedAt: new Date().toISOString(),
+    badgeCount,
+    activeQuestId: data.story?.activeQuestId ?? null,
   };
   const i = index.findIndex((m) => m.slot === slot);
   if (i >= 0) index[i] = meta;
