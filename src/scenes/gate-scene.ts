@@ -172,9 +172,11 @@ export function createGateScene(
       case 'set-flag':
         pd.flags[action.flag] = action.value ?? true;
         break;
-      case 'give-item':
-        pd.items[action.itemId] = (pd.items[action.itemId] ?? 0) + action.quantity;
+      case 'give-item': {
+        const slug = getItem(action.itemId)?.id ?? action.itemId;
+        pd.items[slug] = (pd.items[slug] ?? 0) + action.quantity;
         break;
+      }
       case 'give-money':
         pd.money += action.amount;
         break;

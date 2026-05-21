@@ -31,6 +31,7 @@ import './act2/quest-dividia.js';
 // Act 3 — Language Layer: Primore, Symmetrika
 import './act3/quest-fractiles.js';
 import './act3/quest-symmetrika.js';
+import './act3/quest-raikou.js';
 
 // Act 4 — Rocket Escalation: Integrala, Absoluta
 import './act4/quest-percentiles.js';

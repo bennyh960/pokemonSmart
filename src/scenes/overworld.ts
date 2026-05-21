@@ -1207,9 +1207,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           case 'set-flag':
             pd.flags[action.flag] = action.value ?? true;
             break;
-          case 'give-item':
-            pd.items[action.itemId] = (pd.items[action.itemId] || 0) + action.quantity;
+          case 'give-item': {
+            const slug = getItem(action.itemId)?.id ?? action.itemId;
+            pd.items[slug] = (pd.items[slug] || 0) + action.quantity;
             break;
+          }
           case 'give-money':
             pd.money += action.amount;
             break;
@@ -3203,16 +3205,21 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                       const flagKey = flag || `obj-${currentMapData?.id}-${obj.key}-${obj.x}-${obj.y}-collected`;
                       if (!pd.flags[flagKey]) {
                         const qty = itemQty || 1;
-                        pd.items[itemId] = (pd.items[itemId] || 0) + qty;
+                        const normId = getItem(itemId)?.id ?? itemId;
+                        pd.items[normId] = (pd.items[normId] || 0) + qty;
                         setFlag(pd, flagKey);
+                        const itemDef = getItem(normId);
+                        if (itemDef?.keyFlag) {
+                          setFlag(pd, itemDef.keyFlag);
+                          void fireStoryTrigger({ type: 'flag-set', flag: itemDef.keyFlag });
+                        }
                         // Remove from map so it disappears immediately
                         if (currentMapData?.objects) {
                           const idx = currentMapData.objects.indexOf(obj);
                           if (idx >= 0) currentMapData.objects.splice(idx, 1);
                         }
                         audio.playItemFound();
-                        const itemDef = getItem(itemId);
-                        const displayName = itemDef ? getLocalizedName(itemDef.name) : itemId;
+                        const displayName = itemDef ? getLocalizedName(itemDef.name) : normId;
                         activeTextBox = createTextBox([t('npc.reward.item', { item: displayName, qty })], isRTL());
                         autoSave();
                       }

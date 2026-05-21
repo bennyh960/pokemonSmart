@@ -536,7 +536,7 @@
       }
     },
     {
-      "id": "wild-r8-raikou-en1",
+      "id": "npc-r8-raikou-en1",
       "x": 18,
       "y": 45,
       "facing": "up",
@@ -638,9 +638,8 @@
         }
       ],
       "spriteType": "char_22fdd1",
-      "despawnAfter": "key-core-x4-obtained",
-      "blocker": true,
-      "spawnAfter": "act3-sym-zapdos-cave-defeated"
+      "despawnAfter": "act3-sym-raikou-arc-complete",
+      "blocker": true
     },
     {
       "id": "system-blocker-raikou",
@@ -662,13 +661,13 @@
       "blocker": true,
       "lineOfSight": 13,
       "despawnAfter": "key-core-x4-obtained",
-      "spawnAfter": "trainer-wild-r8-raikou-en1-defeated"
+      "spawnAfter": "act3-sym-raikou-arc-complete"
     },
     {
       "id": "sys-blocker2-raikou-corex4",
       "x": 44,
       "y": 52,
-      "facing": "left",
+      "facing": "down",
       "type": "dialogue",
       "dialogue": [
         {
@@ -679,7 +678,7 @@
       "spriteType": "transparent",
       "blocker": true,
       "despawnAfter": "key-core-x4-obtained",
-      "spawnAfter": "trainer-wild-r8-raikou-en1-defeated",
+      "spawnAfter": "act3-sym-raikou-arc-complete",
       "lineOfSight": 25,
       "name": {
         "en": "Warning",
@@ -11374,7 +11373,7 @@
       "x": 21,
       "y": 41,
       "interactArgs": {
-        "spawnAfter": "trainer-wild-r8-raikou-en1-defeated"
+        "spawnAfter": "act3-sym-raikou-arc-complete"
       }
     },
     {

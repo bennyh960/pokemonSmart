@@ -249,6 +249,7 @@ export const FLAGS = {
   ACT3_SYM_ZAPDOS_CAVE_DEFEATED: 'act3-sym-zapdos-cave-defeated', // Zapdos fled, NULL-X Core X1 collected
   ACT3_SYM_NULLX_CORE5_COLLECTED: 'hide-null-x-core5', // (internal flag) Core 5 collected → hide it from the cave
   ACT3_SYM_ARC_COMPLETE: 'act3-sym-arc-complete', // Full Symmetrika arc done → head to Percentile
+  ACT3_POWER_RAIKOU_ARC_FLEE: 'trainer-wild-r8-raikou-en1-defeated', // Raikou arc done → key-core-x4-obtained
 
   // ── Act 3: Fractalis arc ─────────────────────────────────────────────────────
   VISITED_FRACTALIS: 'visited-fractalis',

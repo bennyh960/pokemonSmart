@@ -668,7 +668,7 @@
       "id": "sys-blocker2-raikou-corex4",
       "x": 44,
       "y": 52,
-      "facing": "left",
+      "facing": "down",
       "type": "dialogue",
       "dialogue": [
         {

@@ -13,7 +13,7 @@ import { getCurrentSlot, loadGameFromSlot, saveToSlot } from '../systems/game-st
 import { loadCharacterSprites, getCharacterFrame } from '../engine/character-sprites.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { t, isRTL } from '../i18n/i18n.js';
-import { LOGICAL_WIDTH as W, LOGICAL_HEIGHT as H } from '../engine/config.js';
+import { LOGICAL_WIDTH as W, LOGICAL_HEIGHT as H, ADMIN_NAME } from '../engine/config.js';
 
 const VISIBLE = 5;
 const SLOT_H = 26;
@@ -50,12 +50,14 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
   let subState: SubState = 'list';
   let confirmCursor = 0;
   let savedFlash = 0;
+  let isAdminSession = false;
 
   function rebuildSlots(): void {
     const occupied = getSlotIndex()
       .filter(m => m.slot >= 0 && m.slot < MAX_SAVE_SLOTS)
       .sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime());
     allSlots = [...occupied, ...Array(MAX_SAVE_SLOTS - occupied.length).fill(null)];
+    isAdminSession = occupied.some(m => m.playerName === ADMIN_NAME);
   }
 
   function firstFreeSlot(): number {
@@ -133,8 +135,9 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
         }
       }
 
-      // Slot number (dim)
-      drawText(ctx, `#${si + 1}`, SLOT_X + 38, slotY + 3, { size: 5, color: '#444466' });
+      // Slot number (dim) + dev hint: actual localStorage index
+      const slotLabel = isAdminSession ? `#${si + 1}  ls:${meta.slot}` : `#${si + 1}`;
+      drawText(ctx, slotLabel, SLOT_X + 38, slotY + 3, { size: 5, color: '#444466' });
 
       // Player name
       const rtl = isRTL();

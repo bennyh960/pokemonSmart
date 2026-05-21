@@ -536,7 +536,7 @@
       }
     },
     {
-      "id": "wild-r8-raikou-en1",
+      "id": "npc-r8-raikou-en1",
       "x": 18,
       "y": 45,
       "facing": "up",
@@ -607,7 +607,7 @@
       ],
       "spriteType": "gym-5-fractalis",
       "spawnAfter": "act3-sym-zapdos-cave-defeated",
-      "despawnAfter": "key-core-x4-obtained"
+      "despawnAfter": "act3-sym-raikou-arc-complete"
     },
     {
       "id": "npc-1779351438659",
@@ -622,8 +622,7 @@
         }
       ],
       "spriteType": "char_22fdd1",
-      "spawnAfter": "act3-sym-zapdos-cave-defeated",
-      "despawnAfter": "key-core-x4-obtained"
+      "spawnAfter": "act3-sym-zapdos-cave-defeated"
     },
     {
       "id": "blocker-raikou-1",
@@ -638,53 +637,8 @@
         }
       ],
       "spriteType": "char_22fdd1",
-      "despawnAfter": "key-core-x4-obtained",
-      "blocker": true,
-      "spawnAfter": "act3-sym-zapdos-cave-defeated"
-    },
-    {
-      "id": "system-blocker-raikou",
-      "x": 44,
-      "y": 43,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "אסוף את הליבה שנשמטה מגופו של ראיקו"
-        }
-      ],
-      "spriteType": "transparent",
-      "name": {
-        "en": "Quest Warning",
-        "he": "תזכור משימה:"
-      },
-      "blocker": true,
-      "lineOfSight": 13,
-      "despawnAfter": "key-core-x4-obtained",
-      "spawnAfter": "trainer-wild-r8-raikou-en1-defeated"
-    },
-    {
-      "id": "sys-blocker2-raikou-corex4",
-      "x": 44,
-      "y": 52,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "אסוף את הליבה שנשמטה מגופו של ראיקו"
-        }
-      ],
-      "spriteType": "transparent",
-      "blocker": true,
-      "despawnAfter": "key-core-x4-obtained",
-      "spawnAfter": "trainer-wild-r8-raikou-en1-defeated",
-      "lineOfSight": 25,
-      "name": {
-        "en": "Warning",
-        "he": "אזהרה"
-      }
+      "despawnAfter": "act3-sym-raikou-arc-complete",
+      "blocker": true
     }
   ],
   "music": "town3",
@@ -11368,19 +11322,6 @@
       "key": "t2b",
       "x": 10,
       "y": 0
-    },
-    {
-      "key": "null-x-core-i",
-      "x": 21,
-      "y": 41,
-      "interactArgs": {
-        "spawnAfter": "trainer-wild-r8-raikou-en1-defeated"
-      }
-    },
-    {
-      "key": "tra",
-      "x": 44,
-      "y": 42
     }
   ]
 }

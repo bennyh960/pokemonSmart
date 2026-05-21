@@ -38,7 +38,8 @@ export type StoryAction =
   | { type: 'unlock-gate-timer'; gateId: string; durationMs: number }
   | { type: 'teleport'; mapId: MapId; x: number; y: number }
   | { type: 'show-message'; lines: BilingualText[] }
-  | { type: 'play-music'; musicId: string };
+  | { type: 'play-music'; musicId: string }
+  | { type: 'set-repel'; steps: number };
 
 export interface StoryEventDef {
   id: string;

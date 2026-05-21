@@ -7069,26 +7069,6 @@
       "above": true,
       "category": "ground",
       "interactType": null
-    },
-    {
-      "key": "null-x-core-i",
-      "sx": 144,
-      "sy": 256,
-      "w": 16,
-      "h": 16,
-      "walkable": false,
-      "above": true,
-      "category": "interactive",
-      "interactType": {
-        "id": "item",
-        "args": {
-          "itemId": "core-x4",
-          "label": {
-            "en": "Null-X core X4",
-            "he": "ליבת נאל-איקס"
-          }
-        }
-      }
     }
   ]
 }

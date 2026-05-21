@@ -24,6 +24,7 @@ import type { CutsceneStep } from '../data/story/cutscenes.js';
 import { saveEventCheckpoint, loadEventCheckpoint, clearEventCheckpoint } from './save.js';
 import { getCurrentMapId, getCachedMap } from './map-manager.js';
 import { allTrainersDefeatedFlag } from '../data/story/flags.js';
+import { getItem } from '../data/items.js';
 
 let _stateMachine: StateMachine | null = null;
 
@@ -411,9 +412,11 @@ function executeAction(action: StoryAction, pd: ReturnType<typeof getPlayerData>
       }
       break;
 
-    case 'give-item':
-      pd.items[action.itemId] = (pd.items[action.itemId] || 0) + action.quantity;
+    case 'give-item': {
+      const slug = getItem(action.itemId)?.id ?? action.itemId;
+      pd.items[slug] = (pd.items[slug] || 0) + action.quantity;
       break;
+    }
 
     case 'give-money':
       pd.money += action.amount;
@@ -449,6 +452,10 @@ function executeAction(action: StoryAction, pd: ReturnType<typeof getPlayerData>
     case 'unlock-gate-timer':
       ensureStory(pd.story!);
       pd.story!.gateUnlocks[action.gateId] = Date.now() + action.durationMs;
+      break;
+
+    case 'set-repel':
+      pd.repelStepsRemaining = action.steps;
       break;
   }
 }

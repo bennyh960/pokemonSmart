@@ -380,8 +380,7 @@
           }
         ]
       },
-      "spawnAfter": "story-badge-5",
-      "despawnAfter": "act3-sym-zapdos-cave-defeated"
+      "spawnAfter": "story-badge-5"
     },
     {
       "id": "npc-1778833032814",
@@ -533,157 +532,6 @@
             "delay": 0
           }
         ]
-      }
-    },
-    {
-      "id": "wild-r8-raikou-en1",
-      "x": 18,
-      "y": 45,
-      "facing": "up",
-      "type": "wild-pokemon",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "רררררר ררררר רררר"
-        }
-      ],
-      "spriteType": "raikou",
-      "spawnAfter": "act3-sym-zapdos-cave-defeated",
-      "autoWalk": {
-        "pattern": [
-          {
-            "dir": "up",
-            "steps": 8,
-            "delay": 0.5
-          },
-          {
-            "dir": "right",
-            "steps": 8,
-            "delay": 0.5
-          },
-          {
-            "dir": "down",
-            "steps": 8,
-            "delay": 0.5
-          },
-          {
-            "dir": "left",
-            "steps": 8,
-            "delay": 0.5
-          }
-        ],
-        "loop": true,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 30,
-            "delay": 0
-          }
-        ],
-        "floating": true
-      },
-      "pokemonId": 243,
-      "level": 50,
-      "isGlitched": true,
-      "despawnOnDefeat": true,
-      "fleeAfterTurns": 5,
-      "fleeAtHpPct": 0.6
-    },
-    {
-      "id": "npc-gym-leader-raikou1",
-      "x": 19,
-      "y": 56,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "ראיקו לא אמור להיות פה בזמן הזה בשנה! אני משנה את התדרים."
-        },
-        {
-          "en": "",
-          "he": "נראה שראיקו צריך לפרוק מתח."
-        }
-      ],
-      "spriteType": "gym-5-fractalis",
-      "spawnAfter": "act3-sym-zapdos-cave-defeated",
-      "despawnAfter": "key-core-x4-obtained"
-    },
-    {
-      "id": "npc-1779351438659",
-      "x": 15,
-      "y": 59,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "המכון סגור לעת עתה - ראיקו משתולל פה"
-        }
-      ],
-      "spriteType": "char_22fdd1",
-      "spawnAfter": "act3-sym-zapdos-cave-defeated",
-      "despawnAfter": "key-core-x4-obtained"
-    },
-    {
-      "id": "blocker-raikou-1",
-      "x": 8,
-      "y": 1,
-      "facing": "right",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "דון שבריז זקוק לעזרתך עם ראיקו"
-        }
-      ],
-      "spriteType": "char_22fdd1",
-      "despawnAfter": "key-core-x4-obtained",
-      "blocker": true,
-      "spawnAfter": "act3-sym-zapdos-cave-defeated"
-    },
-    {
-      "id": "system-blocker-raikou",
-      "x": 44,
-      "y": 43,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "אסוף את הליבה שנשמטה מגופו של ראיקו"
-        }
-      ],
-      "spriteType": "transparent",
-      "name": {
-        "en": "Quest Warning",
-        "he": "תזכור משימה:"
-      },
-      "blocker": true,
-      "lineOfSight": 13,
-      "despawnAfter": "key-core-x4-obtained",
-      "spawnAfter": "trainer-wild-r8-raikou-en1-defeated"
-    },
-    {
-      "id": "sys-blocker2-raikou-corex4",
-      "x": 44,
-      "y": 52,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "אסוף את הליבה שנשמטה מגופו של ראיקו"
-        }
-      ],
-      "spriteType": "transparent",
-      "blocker": true,
-      "despawnAfter": "key-core-x4-obtained",
-      "spawnAfter": "trainer-wild-r8-raikou-en1-defeated",
-      "lineOfSight": 25,
-      "name": {
-        "en": "Warning",
-        "he": "אזהרה"
       }
     }
   ],
@@ -11368,19 +11216,6 @@
       "key": "t2b",
       "x": 10,
       "y": 0
-    },
-    {
-      "key": "null-x-core-i",
-      "x": 21,
-      "y": 41,
-      "interactArgs": {
-        "spawnAfter": "trainer-wild-r8-raikou-en1-defeated"
-      }
-    },
-    {
-      "key": "tra",
-      "x": 44,
-      "y": 42
     }
   ]
 }

@@ -691,8 +691,12 @@ registerCutscene({
           he: 'טוב אז מצאנו את ליבת הנול-אקס הראשונה שלנו. נשארו עוד 7.',
         },
         {
+          en: 'There is no point to deliver them yet! The proffesor can not do nothing untill will give them all . till then it will be dangerous.',
+          he: 'אין טעם למסור את הליבה לפרופסורים עדיין! הפרופסורים לא יכולים לעשות כלום עד שנמסור להם את כולם. עד אז זה יהיה מסוכן. זה יחשוף אותם להתקפות מצוות רוקט',
+        },
+        {
           en: "But I noticed something strange — this cave. This isn't Zapdos's natural habitat at all. Zapdos lives on a remote island, far from civilization. What was it doing here?",
-          he: 'אבל שמתי לב למשהו מוזר — המערה הזו. זו בכלל לא בית הגידול הטבעי של זאפדוס. זאפדוס חי באי מרוחק, רחוק מהציביליזציה. מה הוא עשה כאן?',
+          he: 'אגב שמתי לב למשהו מוזר — המערה הזו. זו בכלל לא בית הגידול הטבעי של זאפדוס. זאפדוס חי באי מרוחק, רחוק מהציביליזציה. מה הוא עשה כאן?',
         },
         {
           en: 'How team Rocket get access to Zapdos? We saw that zapdos ressit to thier control . They even kept distance from him.',
@@ -728,20 +732,20 @@ registerCutscene({
       lines: [
         {
           en: '',
-          he: 'זאפדוס הוא פוקימון אגדי - הדחף הטבעי שלו הוא להגן ולא להרוס! אפילו תחת שליטת NULL-X זאפדוס הצליח להתנגד מעט',
+          he: 'זאפדוס הוא פוקימון אגדי - הדחף הטבעי שלו הוא להגן ולא להרוס! אפילו תחת שליטת נאל-איקס זאפדוס הצליח להראות התנגדות',
         },
 
         {
-          en: "You've done well today. Continue your journey — head to Percentile city via route-11 east of Symmetrika. The next gym awaits.",
-          he: 'עשית היום עבודה טובה. המשך במסעך , — לך לעיר פרסנטייל דרך דרך 11 מזרחית לסימטריקה. המכון הבא מחכה.',
+          en: "You've done well today. Continue your journey — Save yourself and dont tell to no one about the cores.",
+          he: 'עשית עבודה טובה היום. המשך את המסע שלך — הציל את עצמך ואל תגיד לאף אחד על הליבות.',
         },
         {
-          en: '',
-          he: 'יש פה קיצור דרך - צא מהפתח השני של המערה - תוכל לשחות לדרך 5 - משם תעבור דרך מולטיפילה דרך דרך 9 לסימטריקה ',
+          en: 'Currently only us - me , you , the professors and Sir Fracti know about the cores - lets keep it that way',
+          he: 'קשה לדעת על מי ניתן לסמוך - כרגע רק הפרופסורים, דון שבריז, אני ואתה יודעים על הליבות - בוא נשמור את זה ככה',
         },
         {
           en: 'I will follow Zapdos to see if it is safe - if he back to his nature or still controlled by the glitch.',
-          he: 'אני אלך בעקבות זאפדוס כדי לראות אם הוא חוזר לטבעו או עדיין נשלט על ידי הגליץ.',
+          he: ' נהיה בקשר! - אני אלך בעקבות זאפדוס כדי לראות אם הוא חוזר לטבעו או עדיין נשלט על ידי הגליץ.',
         },
       ],
     },
