@@ -20,7 +20,7 @@ export function calcHappiness(pokemon: Pokemon, party: Pokemon[]): number {
   const partyBonus = partyIndex >= 0 ? (PARTY_BONUS[partyIndex] ?? 0) : 0;
 
   const evs = pokemon.evs ?? { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 };
-  const evsSum = evs.hp + evs.atk + evs.def + evs.spe + evs.spa + evs.spd;
+  const evsSum = 2 * (evs.hp + evs.atk + evs.def + evs.spe + evs.spa + evs.spd);
 
   const hpBonus = pokemon.maxHp > 0 ? Math.round((pokemon.hp / pokemon.maxHp) * 20) : 0;
 
@@ -49,18 +49,10 @@ export function getHappinessCritBonus(happiness: number): number {
 /** Threshold for happiness-based evolutions (Espeon, Umbreon). */
 export const HAPPINESS_EVOLUTION_THRESHOLD = 220;
 
-const happinesLevels = {
-  255: { en: 'Delighted', he: 'מאושר מאוד' },
-  200: { en: 'Happy', he: 'מאושר' },
-  100: { en: 'Neutral', he: 'ניטרלי' },
-  50: { en: 'Disappointed', he: 'מאוכזב' },
-  0: { en: 'Frustrated', he: 'מתוסכל' },
-};
-
 export const getHappinessLabel = (happiness: number) => {
-  if (happiness >= 220) return happinesLevels[255];
-  if (happiness >= 150) return happinesLevels[200];
-  if (happiness >= 75) return happinesLevels[100];
-  if (happiness >= 25) return happinesLevels[50];
-  return happinesLevels[0];
+  if (happiness >= 220) return { en: 'Delighted', he: 'מאושר מאוד' };
+  if (happiness >= 150) return { en: 'Happy', he: 'מאושר' };
+  if (happiness >= 75) return { en: 'Neutral', he: 'ניטרלי' };
+  if (happiness >= 25) return { en: 'Disappointed', he: 'מאוכזב' };
+  return { en: 'Frustrated', he: 'מתוסכל' };
 };

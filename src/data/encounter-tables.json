@@ -839,6 +839,12 @@
     "encounterRate": 0.08,
     "entries": [
       {
+        "pokemonId": 133,
+        "minLevel": 15,
+        "maxLevel": 25,
+        "weight": 6
+      },
+      {
         "pokemonId": 111,
         "minLevel": 25,
         "maxLevel": 30,

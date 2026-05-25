@@ -123,7 +123,7 @@
   "party.stats.spAtk": "הת. מיוחדת",
   "party.stats.spDef": "הג. מיוחדת",
   "party.stats.speed": "מהירות",
-  "party.stats.happiness": "אושר: {label}",
+  "party.stats.happiness": "מנטליות: {label}",
   "party.xp": "ניסיון: {current}/{next}",
   "party.swap": "בחר פוקימון להחלפה",
   "party.hint.back": "חזרה",
