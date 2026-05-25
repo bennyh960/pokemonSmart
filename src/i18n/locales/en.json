@@ -123,6 +123,7 @@
   "party.stats.spAtk": "Sp.Atk",
   "party.stats.spDef": "Sp.Def",
   "party.stats.speed": "Speed",
+  "party.stats.happiness": "Happiness: {label}",
   "party.xp": "XP: {current}/{next}",
   "party.swap": "Select Pokemon to swap",
   "party.hint.back": "Back",

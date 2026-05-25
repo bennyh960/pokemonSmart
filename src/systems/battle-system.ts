@@ -520,6 +520,7 @@ export function rollCriticalHit(
   defender: Pokemon,
   random: () => number = Math.random,
   attackerState?: BattlePokemonRuntimeState,
+  happinessBonus: number = 0,
 ): boolean {
   if (defender.abilityId) {
     const preventsCrit = getAbilityBattleEffects(defender.abilityId).some(
@@ -531,8 +532,8 @@ export function rollCriticalHit(
   const critRate = getMoveBattleData(moveId)?.critRate ?? 0;
   const focusBoost = attackerState?.critBoost ? 1 : 0;
   const effective = critRate + focusBoost;
-  const chance = effective >= 2 ? 50 : effective >= 1 ? 25 : 6.25;
-  return random() * 100 < chance;
+  const baseChance = effective >= 2 ? 50 : effective >= 1 ? 25 : 6.25;
+  return random() * 100 < baseChance + happinessBonus;
 }
 
 function getEffectDurationRange(effect: MoveBattleEffect): { min: number; max: number } {

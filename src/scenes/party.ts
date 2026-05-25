@@ -30,6 +30,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { canUseItemOnPokemon } from '../systems/item-effects.js';
 import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } from '../systems/move-learning.js';
 import { getTMEffect } from '../data/item-defs.js';
+import { calcHappiness, getHappinessLabel } from '../systems/happiness.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
@@ -320,13 +321,19 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawText(ctx, `${entries.length}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
 
     if (entries.length === 0) {
-      drawText(ctx, t('party.diary.empty'), 120, 80, { size: 8, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
+      drawText(ctx, t('party.diary.empty'), 120, 80, {
+        size: 8,
+        color: C.TEXT_MUT,
+        font: 'monospace',
+        align: 'center',
+      });
     } else {
       let ey = 14;
       for (const [, entry] of entries) {
-        const pokemon = entry.kind === 'stolen'
-          ? (entry as StolenEntry).pokemon
-          : (entry as import('../types/index.js').DayCareEntry).pokemon;
+        const pokemon =
+          entry.kind === 'stolen'
+            ? (entry as StolenEntry).pokemon
+            : (entry as import('../types/index.js').DayCareEntry).pokemon;
         if (!pokemon) continue;
 
         const entryH = 34;
@@ -346,7 +353,12 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
         // Pokemon name + level
         drawText(ctx, getPokemonDisplayName(pokemon.id), 38, ey + 4, { size: 8, color: C.TEXT_PRI, font: 'monospace' });
-        drawText(ctx, `Lv.${pokemon.level}`, 228, ey + 4, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
+        drawText(ctx, `Lv.${pokemon.level}`, 228, ey + 4, {
+          size: 7,
+          color: C.TEXT_MUT,
+          font: 'monospace',
+          align: 'right',
+        });
 
         if (entry.kind === 'stolen') {
           const stolen = entry as StolenEntry;
@@ -359,7 +371,17 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
             ctx.save();
             ctx.imageSmoothingEnabled = false;
             const scale = 16 / frame.w;
-            ctx.drawImage(frame.image, frame.sx, frame.sy, frame.w, frame.h, 152, ey + 12, frame.w * scale, frame.h * scale);
+            ctx.drawImage(
+              frame.image,
+              frame.sx,
+              frame.sy,
+              frame.w,
+              frame.h,
+              152,
+              ey + 12,
+              frame.w * scale,
+              frame.h * scale,
+            );
             ctx.restore();
           }
 
@@ -371,7 +393,11 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           const dc = entry as import('../types/index.js').DayCareEntry;
           const locale = getLocale();
           const routeName = locale === 'he' ? dc.route.he : dc.route.en;
-          drawText(ctx, t('party.diary.daycare', { route: routeName }), 38, ey + 16, { size: 6, color: '#8888ff', font: 'monospace' });
+          drawText(ctx, t('party.diary.daycare', { route: routeName }), 38, ey + 16, {
+            size: 6,
+            color: '#8888ff',
+            font: 'monospace',
+          });
         }
 
         ey += entryH + 2;
@@ -639,14 +665,13 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     // ── Base Stats header ──
     drawText(ctx, t('party.baseStats'), 228, 90, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
 
-    // ── Stat rows ──
+    // ── Stat rows (HP row removed — shown above) ──
     const statRows: [string, number, string, number][] = [
-      [t('party.stats.hp'), pokemon.maxHp, '#20d860', 99],
-      [t('party.stats.attack'), pokemon.attack, '#f08030', 107],
-      [t('party.stats.defense'), pokemon.defense, '#6890f0', 115],
-      [t('party.stats.spAtk'), pokemon.specialAttack, '#a040a0', 123],
-      [t('party.stats.spDef'), pokemon.specialDefense, '#f8d030', 131],
-      [t('party.stats.speed'), pokemon.speed, '#f85888', 139],
+      [t('party.stats.attack'), pokemon.attack, '#f08030', 99],
+      [t('party.stats.defense'), pokemon.defense, '#6890f0', 107],
+      [t('party.stats.spAtk'), pokemon.specialAttack, '#a040a0', 115],
+      [t('party.stats.spDef'), pokemon.specialDefense, '#f8d030', 123],
+      [t('party.stats.speed'), pokemon.speed, '#f85888', 131],
     ];
 
     for (const [label, value, color, rowY] of statRows) {
@@ -659,6 +684,27 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       // Label (right-aligned at x=228)
       drawText(ctx, label, 228, rowY, { size: 7, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
     }
+
+    // ── Happiness bar ──
+    const party = getPlayerData().party;
+    const happiness = calcHappiness(pokemon, party);
+    const happinessLabel = getHappinessLabel(happiness);
+    const happinessRowY = 139;
+    fillRect(ctx, 12, happinessRowY + 2, 124, 3, C.BAR_TRACK);
+    const happinessFill = Math.max(1, Math.round((happiness / 255) * 124));
+    fillRect(ctx, 12, happinessRowY + 2, happinessFill, 3, '#ff9040');
+    drawText(ctx, String(happiness), 154, happinessRowY, {
+      size: 7,
+      color: C.TEXT_PRI,
+      font: 'monospace',
+      align: 'center',
+    });
+    drawText(ctx, t('party.stats.happiness', { label: happinessLabel[getLocale()] }), 228, happinessRowY, {
+      size: 7,
+      color: C.TEXT_SEC,
+      font: 'monospace',
+      align: 'right',
+    });
   }
 
   function renderDetailMovesTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
@@ -1479,8 +1525,11 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       }
 
       // Left/Right in list mode: open diary (overworld only, when entries exist)
-      if (partyMode === 'overworld' && !tmFiltered &&
-          (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowRight'))) {
+      if (
+        partyMode === 'overworld' &&
+        !tmFiltered &&
+        (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowRight'))
+      ) {
         if (Object.keys(getPlayerData().awayPokemon).length > 0) {
           viewMode = 'diary';
           return;

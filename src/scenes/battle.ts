@@ -98,6 +98,14 @@ import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../
 import { setPokedexFocus } from '../scenes/pokedex.js';
 import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
 import { setEvolutionData } from './evolution.js';
+import {
+  calcHappiness,
+  getReturnPower,
+  getFrustrationPower,
+  getHappinessCritBonus,
+  RETURN_MOVE_ID,
+  FRUSTRATION_MOVE_ID,
+} from '../systems/happiness.js';
 import { getAttackAnimationProfile } from '../systems/move-animation.js';
 import { fireStoryTrigger } from '../systems/story-engine.js';
 import {
@@ -4171,6 +4179,12 @@ export function createBattleScene(
         m = { ...m, power: 120 };
       }
     }
+    // Return / Frustration: power derived from happiness
+    if (m.id === RETURN_MOVE_ID || m.id === FRUSTRATION_MOVE_ID) {
+      const pd = getPlayerData();
+      const h = calcHappiness(player, pd.party);
+      m = { ...m, power: m.id === RETURN_MOVE_ID ? getReturnPower(h) : getFrustrationPower(h) };
+    }
     const movePower = isWeightTarget
       ? getWeightTargetPower(computePokemonSize(enemy).weightKg)
       : isWeightRatio
@@ -4179,9 +4193,10 @@ export function createBattleScene(
     const absorbed = hitResult.hit && !targetTypeImmune && movePower > 0 && doesAbilityAbsorbMove(enemy, m.type);
     // Dream Eater: blocked if target is not asleep
     const dreamEaterBlocked = isDreamEater && enemy.status !== 'sleep';
+    const playerHappiness = hasActiveGame() ? calcHappiness(player, getPlayerData().party) : 0;
     const criticalHit =
       hitResult.hit && !targetTypeImmune && !dreamEaterBlocked && movePower > 0 && !absorbed
-        ? rollCriticalHit(m.id, enemy, Math.random, playerBattleState)
+        ? rollCriticalHit(m.id, enemy, Math.random, playerBattleState, getHappinessCritBonus(playerHappiness))
         : false;
     // Facade: double power when user has a status condition
     const facadeActive =
@@ -5347,6 +5362,11 @@ export function createBattleScene(
         m = { ...m, power: 120 };
       }
     }
+    // Return / Frustration: power derived from happiness (enemy has no party)
+    if (m.id === RETURN_MOVE_ID || m.id === FRUSTRATION_MOVE_ID) {
+      const h = calcHappiness(enemy, [enemy]);
+      m = { ...m, power: m.id === RETURN_MOVE_ID ? getReturnPower(h) : getFrustrationPower(h) };
+    }
     const movePowerEnemy = isWeightTargetEnemy
       ? getWeightTargetPower(computePokemonSize(player).weightKg)
       : isWeightRatioEnemy
@@ -5354,9 +5374,10 @@ export function createBattleScene(
         : m.power;
     const absorbed = hitResult.hit && !targetTypeImmune && movePowerEnemy > 0 && doesAbilityAbsorbMove(player, m.type);
     const dreamEaterBlockedEnemy = isDreamEaterEnemy && player.status !== 'sleep';
+    const enemyHappiness = calcHappiness(enemy, [enemy]);
     const criticalHit =
       hitResult.hit && !targetTypeImmune && !dreamEaterBlockedEnemy && movePowerEnemy > 0 && !absorbed
-        ? rollCriticalHit(m.id, player, Math.random, enemyBattleState)
+        ? rollCriticalHit(m.id, player, Math.random, enemyBattleState, getHappinessCritBonus(enemyHappiness))
         : false;
     const facadeActiveEnemy =
       isFacadeBoostEnemy && enemy.status !== null && ['burn', 'paralyze', 'poison'].includes(enemy.status as string);
