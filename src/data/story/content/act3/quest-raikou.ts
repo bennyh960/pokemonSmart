@@ -31,27 +31,43 @@ registerCutscene({
     {
       type: 'dialogue',
       speakerId: 'gym-5-fractalis',
-      lines: [{ en: '', he: 'היי מה שלומך?' }],
+      lines: [{ en: 'Hello , how are you?', he: 'היי מה שלומך?' }],
     },
-    { type: 'dialogue', speakerName: 'Player/שחקן', lines: [{ en: '', he: "ב''ה הכל בסדר! מה איתך?" }] },
+    {
+      type: 'dialogue',
+      speakerName: 'Player/שחקן',
+      lines: [{ en: 'I am fine, thank you! How about you?', he: "ב''ה הכל בסדר! מה איתך?" }],
+    },
     {
       type: 'dialogue',
       speakerId: 'gym-5-fractalis',
       lines: [
-        { en: '', he: 'משהו מוזר קורה ליד תחנת הכח' },
+        { en: 'Something strange is happening near the power plant.', he: 'משהו מוזר קורה ליד תחנת הכח' },
         {
-          en: '',
+          en: 'Raikou! - The legendary Pokémon Raikou has arrived at the mountain. It seems to be drawn by the frequencies we set to attract Zapdos.',
           he: 'ראיקו! - ראיקו הפוקימון האגדי הגיע להר. ככל הנראה הוא נמשך מהתדרים שכיוונו כדי למשוך את זאפדוס',
         },
-        { en: '', he: 'ראיקו גם מגיע כל כמה שנים לפרוק מתח - אבל זה לא הזמן שלו להגיע.' },
-        { en: '', he: 'הוא אגרסיבי ותוקפני - אבל גם נראה שהוא נלחם במשהו' },
-        { en: '', he: 'נראה שהוא גם נדבק בגליץ' },
         {
-          en: '',
+          en: 'Raikou also comes every few years to release energy - but this is not its time to arrive.',
+          he: 'ראיקו גם מגיע כל כמה שנים לפרוק מתח - אבל זה לא הזמן שלו להגיע.',
+        },
+        {
+          en: 'It is aggressive and hostile - but it also seems to be fighting something.',
+          he: 'הוא אגרסיבי ותוקפני - אבל גם נראה שהוא נלחם במשהו',
+        },
+        { en: 'It also seems to be affected by the glitch.', he: 'נראה שהוא גם נדבק בגליץ' },
+        {
+          en: 'I will need your help - we will do exactly as we did before. I will direct the frequencies to the hill - you will try to free it from the glitch.',
           he: "אצטרך את עזרתך - נעשה בדיוק כמו שעשינו לפני. אני אכוון את התדרים לגבעה - אתה תנסה לשחרר אותו מאחיזת הגליץ'",
         },
-        { en: '', he: "נראה שיש עליו פריט דומה שהיה על זאפדוס - אולי זה קשור לגליץ'?" },
-        { en: '', he: 'אני מחכה לך ליד תחנת הכח - תגיע בהקדם , לא יודע כמה זמן אצליח להחזיק אותו על הגבעה' },
+        {
+          en: 'It seems to have an item similar to the one Zapdos had - maybe it is related to the glitch?',
+          he: "נראה שיש עליו פריט דומה שהיה על זאפדוס - אולי זה קשור לגליץ'?",
+        },
+        {
+          en: "I am waiting for you near the power plant - come as soon as possible, I don't know how long I can keep it on the hill.",
+          he: 'אני מחכה לך ליד תחנת הכח - תגיע בהקדם , לא יודע כמה זמן אצליח להחזיק אותו על הגבעה',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-quest', questId: 'quest-raikou' } },
@@ -93,25 +109,44 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'gym-5-fractalis',
       lines: [
-        { en: '', he: 'עבודה טובה! התדרים הותאמו בהצלחה' },
-        { en: '', he: "ראיקו נכנס לתחנה ונראה שהוא מתמודד עם הגליץ' - הוא נראה פחות אגרסיבי עכשיו" },
-        { en: '', he: 'הוא הגיע לתחנה אבל הפריט שהיה עליו נעלם - ראית אותו? ' },
+        { en: 'Good job! The frequencies have been successfully adjusted.', he: 'עבודה טובה! התדרים הותאמו בהצלחה' },
+        {
+          en: 'Raikou has entered the station and seems to be dealing with the glitch - it looks less aggressive now.',
+          he: "ראיקו נכנס לתחנה ונראה שהוא מתמודד עם הגליץ' - הוא נראה פחות אגרסיבי עכשיו",
+        },
+        {
+          en: 'It reached the station, but the item it had is gone - did you see it?',
+          he: 'הוא הגיע לתחנה אבל הפריט שהיה עליו נעלם - ראית אותו? ',
+        },
       ],
     },
     {
       type: 'dialogue',
       speakerName: 'Player/שחקן',
       lines: [
-        { en: '', he: 'כן ראיתי  - זו ליבת נאל-איקס . ' },
-        { en: '', he: 'אסור שידעו שהליבה אצלי - אני אסתיר אותה טוב טוב' },
+        { en: "Yes, I saw it - it's a NULL-X Core.", he: 'כן ראיתי  - זו ליבת נאל-איקס . ' },
+        {
+          en: 'They must not know the core is with me - I will hide it well.',
+          he: 'אסור שידעו שהליבה אצלי - אני אסתיר אותה טוב טוב',
+        },
+        {
+          en: "But now I already hold 2 cores - I can't risk the power plant to keep it here.",
+          he: 'אבל עכשיו אני כבר מחזיק 2 ליבות - אני לא יכול לסכן את תחנת הכוח כדי לשמור אותה כאן.',
+        },
       ],
     },
     {
       type: 'dialogue',
       speakerId: 'gym-5-fractalis',
       lines: [
-        { en: '', he: 'אני אעדכן את לאנס - אתה תמשיך במסע שלך. שמור על פרופיל נמוך' },
-        { en: '', he: 'תודה רבה על העזרה והרבה הצלחה בהמשך! מקווה שניפגש שוב. להתראות' },
+        {
+          en: 'You right ! keep it here is risky. I will update Lance - you continue your journey. Keep a low profile.',
+          he: 'אתה צודק! לשמור את זה כאן מסוכן. אני אעדכן את לאנס - אתה תמשיך במסע שלך. שמור על פרופיל נמוך',
+        },
+        {
+          en: 'Thank you very much for the help and good luck in the future! I hope we meet again. Goodbye.',
+          he: 'תודה רבה על העזרה והרבה הצלחה בהמשך! מקווה שניפגש שוב. להתראות',
+        },
       ],
     },
   ],

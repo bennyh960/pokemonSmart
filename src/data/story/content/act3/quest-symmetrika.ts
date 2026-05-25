@@ -673,9 +673,27 @@ registerCutscene({
           en: 'It fled again... but look — on the ground!',
           he: 'הוא ברח שוב... אבל תסתכל — על הקרקע!',
         },
+
         {
-          en: "The device fell off Zapdos as it retreated. It's free of it now.",
-          he: 'המכשיר נפל מזאפדוס כשנסוג. הוא חופשי ממנו עכשיו. אני רוצה שתשמור עליו!',
+          en: "Take it. We can't risk bringing it back to the professors yet.",
+          he: 'קח את זה. אי אפשר לקחת את זה לפרופסורים כרגע – זה מסוכן מדי.',
+        },
+        {
+          en: "If Team Rocket realizes we have it, they'll go after them again. They won't be able to defend themselves.",
+          he: 'אם צוות רוקט יבינו שזה בידיים שלנו – הם יתקפו שוב את הפרופסורים. ואין להם איך להגן על עצמם.',
+        },
+
+        {
+          en: "I'll stay on Zapdos's trail. I need to know if it's truly free… or still glitch.",
+          he: "אני אמשיך לעקוב אחרי זאפדוס. אני חייב לדעת אם הוא באמת חופשי… או עדיין גליץ'.",
+        },
+        {
+          en: "And I can't move freely while carrying something this dangerous.",
+          he: 'וגם אני לא יכול להסתובב חופשי עם משהו כזה עליי.',
+        },
+        {
+          en: 'One core alone won’t help the professors anyway. Until we find more… it’s safer with you.',
+          he: 'ליבה אחת גם ככה לא תעזור לפרופסורים. עד שנמצא עוד… עדיף שהיא תהיה אצלך.',
         },
       ],
     },
@@ -687,24 +705,24 @@ registerCutscene({
       speakerId: 'npc-lance-c2-zapdos-end',
       lines: [
         {
-          en: 'Ok so we find our first null-x core . There is 7 left.',
-          he: 'טוב אז מצאנו את ליבת הנול-אקס הראשונה שלנו. נשארו עוד 7.',
+          en: 'So... this is it. Our first NULL‑X Core. Seven more to go.',
+          he: 'אז... זו היא. ליבת הנול-אקס הראשונה שלנו. נשארו עוד שבע.',
         },
         {
-          en: 'There is no point to deliver them yet! The proffesor can not do nothing untill will give them all . till then it will be dangerous.',
-          he: 'אין טעם למסור את הליבה לפרופסורים עדיין! הפרופסורים לא יכולים לעשות כלום עד שנמסור להם את כולם. עד אז זה יהיה מסוכן. זה יחשוף אותם להתקפות מצוות רוקט',
+          en: 'But something doesn’t add up. This cave… it’s not where Zapdos belongs.',
+          he: 'אבל משהו לא מסתדר לי. המערה הזו… זה לא המקום של זאפדוס.',
         },
         {
-          en: "But I noticed something strange — this cave. This isn't Zapdos's natural habitat at all. Zapdos lives on a remote island, far from civilization. What was it doing here?",
-          he: 'אגב שמתי לב למשהו מוזר — המערה הזו. זו בכלל לא בית הגידול הטבעי של זאפדוס. זאפדוס חי באי מרוחק, רחוק מהציביליזציה. מה הוא עשה כאן?',
+          en: 'Zapdos lives far from here, on a remote island. Why would it come all the way here?',
+          he: 'זאפדוס חי באי מרוחק. למה שהוא יגיע עד לכאן?',
         },
         {
-          en: 'How team Rocket get access to Zapdos? We saw that zapdos ressit to thier control . They even kept distance from him.',
-          he: 'איך צוות רוקט קיבל גישה לזאפדוס? ראינו שזאפדוס התנגד לשליטתם. הם אפילו שמרו מרחק ממנו.',
+          en: 'And Team Rocket… they kept their distance. Like they couldn’t fully control it.',
+          he: 'וצוות רוקט… הם שמרו ממנו מרחק. כאילו הם לא באמת שלטו בו לגמרי.',
         },
         {
-          en: 'All of the rocket grunt run - we dont have much clue where the other cores are.',
-          he: 'כל סוכני צוות רוקט ברחו - אין לנו הרבה מושג איפה שאר הליבות.',
+          en: 'Now they’re gone. And we’re left with more questions than answers.',
+          he: 'ועכשיו הם נעלמו. ונשארנו עם יותר שאלות מתשובות.',
         },
       ],
     },
@@ -713,16 +731,37 @@ registerCutscene({
       speakerName: 'Player / שחקן',
       lines: [
         {
-          en: "Wait... think about it. Zapdos never truly attacked anyone. On route-7 it fled. At the power station it fought, but always hesitated — like something was holding it back. It didn't act like a regular glitch.",
-          he: "רגע... תחשוב על זה. זאפדוס לא תקף אף אחד באמת. בדרך 7 הוא ברח. בתחנת הכוח הוא נלחם, אבל תמיד היסס — כאילו משהו עצר אותו. הוא לא התנהג כמו גליץ' רגיל.",
+          en: 'Wait… think about it. Zapdos never truly attacked anyone.',
+          he: 'רגע… תחשוב על זה. זאפדוס אף פעם לא באמת תקף.',
         },
         {
-          en: "Maybe it was fighting the core's control — but it deliberately chose to stay near the power plant instead of going back to its island. Near familiar electric energy. Not near its home Pokemon.",
-          he: 'אולי הוא נלחם בשליטת הליבה — אבל הוא בחר בכוונה להישאר ליד תחנת הכוח במקום לחזור לאי שלו. ליד אנרגיה חשמלית מוכרת. לא ליד הפוקימונים של ביתו.',
+          en: 'On Route 7—it ran. At the power plant—it fought, but hesitated.',
+          he: 'בדרך 7 הוא ברח. בתחנת הכוח הוא נלחם — אבל היסס.',
         },
         {
-          en: "It didn't want to go back to its island while carrying the core... because it was afraid of attacking the Pokemon it lives with.",
-          he: 'הוא לא רצה לחזור לאי שלו בזמן שנשא את הליבה... כי הוא פחד לתקוף את הפוקימונים שהוא חי איתם.',
+          en: 'Like something inside it was holding back.',
+          he: 'כאילו משהו בתוכו עצר אותו.',
+        },
+        {
+          en: 'Maybe the core was controlling it… but it resisted.',
+          he: 'אולי הליבה שלטה בו… אבל הוא התנגד.',
+        },
+        {
+          en: 'And instead of returning home, it stayed near the power plant.',
+          he: 'ובמקום לחזור הביתה — הוא נשאר ליד תחנת הכוח.',
+        },
+        {
+          en: 'Close to familiar electric energy… but away from other Pokémon.',
+          he: 'קרוב לאנרגיה חשמלית מוכרת… אבל רחוק מפוקימונים אחרים.',
+        },
+
+        {
+          en: 'It was afraid.',
+          he: 'הוא פחד.',
+        },
+        {
+          en: 'Afraid it might hurt the ones it protects.',
+          he: 'פחד לפגוע במי שהוא אמור להגן עליהם.',
         },
       ],
     },
@@ -731,13 +770,13 @@ registerCutscene({
       speakerId: 'npc-lance-c2-zapdos-end',
       lines: [
         {
-          en: '',
+          en: 'A legendary Pokémon… even under control… still fought back.',
           he: 'זאפדוס הוא פוקימון אגדי - הדחף הטבעי שלו הוא להגן ולא להרוס! אפילו תחת שליטת נאל-איקס זאפדוס הצליח להראות התנגדות',
         },
 
         {
           en: "You've done well today. Continue your journey — Save yourself and dont tell to no one about the cores.",
-          he: 'עשית עבודה טובה היום. המשך את המסע שלך — הציל את עצמך ואל תגיד לאף אחד על הליבות.',
+          he: 'עשית עבודה טובה היום. המשך את המסע שלך — הציל את עצמך ואל תגיד לאף אחד על הליבות. גם לא בטלפון - נאל איקס מאזין לכל שיחה',
         },
         {
           en: 'Currently only us - me , you , the professors and Sir Fracti know about the cores - lets keep it that way',

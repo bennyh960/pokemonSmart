@@ -856,9 +856,9 @@ export class PoisonSleepTemplate extends QuestionTemplate {
         `${attacker.name.en} faces ${pokemon.name.en}, but ${attacker.name.en} is ${condition.en} for ${turns} turns.\n` +
         `How much total HP does ${pokemon.name.en} lose from poison?`,
       he:
-        `${pokemon.name.he} מורעל — הוא מאבד ${poisonDmg} HP בכל תור!\n` +
+        `${pokemon.name.he} מורעל — הוא מאבד ${poisonDmg} נקודות חיים בכל תור!\n` +
         `${attacker.name.he} עומד מול ${pokemon.name.he}, אבל ${attacker.name.he} ${condition.he} למשך ${turns} תורות.\n` +
-        `כמה HP בסך הכל מאבד ${pokemon.name.he} מהרעל?`,
+        `כמה נקודות חיים בסך הכל מאבד ${pokemon.name.he} מהרעל?`,
     };
   }
 }
