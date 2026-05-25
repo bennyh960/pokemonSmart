@@ -14419,5 +14419,10 @@
       null,
       null
     ]
-  ]
+  ],
+  "outside": {
+    "rain": 0.25,
+    "sun": 0.15,
+    "sandstorm": 0.05
+  }
 }

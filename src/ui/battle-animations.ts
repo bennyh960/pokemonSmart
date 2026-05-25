@@ -2756,24 +2756,56 @@ function renderSandstormOverlay(ctx: CanvasRenderingContext2D, now: number): voi
   const W = 240;
   const H = 95;
   ctx.save();
-  // Amber tint over the battlefield
-  ctx.globalAlpha = 0.13;
+
+  // Base amber haze
+  ctx.globalAlpha = 0.15;
   ctx.fillStyle = '#c89050';
   ctx.fillRect(0, 0, W, H);
-  // Blowing sand streaks
-  ctx.lineWidth = 0.8;
-  for (let i = 0; i < 22; i++) {
-    const speed = 55 + (i % 5) * 14;
-    const x = ((i * 43 + now * speed) % (W + 40)) - 20;
-    const y = (i * 19 % H) + Math.sin(now * 1.4 + i * 0.9) * 2.5;
-    const len = 7 + (i % 4) * 5;
-    ctx.globalAlpha = 0.15 + (i % 5) * 0.06;
-    ctx.strokeStyle = i % 3 === 0 ? '#e0b870' : '#c8984a';
+
+  // Large slow dust blobs
+  for (let i = 0; i < 5; i++) {
+    const speed = 14 + (i % 4) * 7;
+    const cx = ((i * 79 + now * speed) % (W + 100)) - 50;
+    const cy = (i * 31 % H) + Math.sin(now * 0.35 + i * 1.4) * 8;
+    const rx = 18 + (i % 3) * 12;
+    const ry = 5 + (i % 3) * 4;
+    ctx.globalAlpha = 0.06 + (i % 3) * 0.025;
+    ctx.fillStyle = i % 2 === 0 ? '#d4a060' : '#ba8840';
     ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + len, y + 1);
+    ctx.ellipse(cx, cy, rx, ry, Math.sin(now * 0.25 + i * 0.8) * 0.25, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Medium curved streaks
+  ctx.lineCap = 'round';
+  for (let i = 0; i < 20; i++) {
+    const speed = 52 + (i % 5) * 15;
+    const x0 = ((i * 43 + now * speed) % (W + 40)) - 20;
+    const y0 = (i * 19 % H) + Math.sin(now * 1.3 + i * 0.9) * 2.5;
+    const len = 8 + (i % 4) * 5;
+    const dip = Math.sin(now * 2.2 + i * 1.1) * 2.5;
+    ctx.globalAlpha = 0.18 + (i % 5) * 0.055;
+    ctx.strokeStyle = i % 3 === 0 ? '#e0b870' : (i % 3 === 1 ? '#c8984a' : '#d4a858');
+    ctx.lineWidth = 0.5 + (i % 3) * 0.25;
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.quadraticCurveTo(x0 + len * 0.55, y0 + dip, x0 + len, y0 + 1.5);
     ctx.stroke();
   }
+
+  // Fine fast particles
+  for (let i = 0; i < 38; i++) {
+    const speed = 95 + (i % 7) * 16;
+    const px = ((i * 31 + now * speed) % (W + 16)) - 8;
+    const py = (i * 17 % H) + Math.sin(now * 2.8 + i * 1.3) * 3.5;
+    const r = 0.35 + (i % 4) * 0.28;
+    ctx.globalAlpha = 0.18 + (i % 5) * 0.065;
+    ctx.fillStyle = i % 4 === 0 ? '#f0c878' : (i % 4 === 1 ? '#d49838' : (i % 4 === 2 ? '#c89050' : '#e8b060'));
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   ctx.restore();
 }
 

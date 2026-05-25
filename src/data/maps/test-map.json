@@ -88,6 +88,7 @@
   ],
   "music": "town",
   "encounterTableId": "test-map",
+  "outside": { "rain": 0.4, "sandstorm": 0.1 },
   "interactiveItems": {
     "item-generic": [
       {
