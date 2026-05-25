@@ -1030,7 +1030,7 @@
         },
         "minLevel": null,
         "trigger": "trade",
-        "item": null
+        "item": "kings-rock"
       }
     ]
   },
@@ -1230,7 +1230,7 @@
         },
         "minLevel": null,
         "trigger": "trade",
-        "item": null
+        "item": "metal-coat"
       }
     ]
   },
@@ -1530,7 +1530,7 @@
         },
         "minLevel": null,
         "trigger": "trade",
-        "item": null
+        "item": "dragon-scale"
       }
     ]
   },
@@ -1605,7 +1605,7 @@
         },
         "minLevel": null,
         "trigger": "trade",
-        "item": null
+        "item": "metal-coat"
       }
     ]
   },

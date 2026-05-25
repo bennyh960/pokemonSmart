@@ -3470,5 +3470,20 @@
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/razor-fang.png",
     "holdable": true,
     "flingPower": 30
+  },
+  "9018": {
+    "name": {
+      "en": "Dragon Scale",
+      "he": "Dragon Scale"
+    },
+    "slug": "dragon-scale",
+    "description": {
+      "en": "A thick and tough scale from a Dragon-type Pokémon. Attach it to an item for trade-evolution.",
+      "he": "A thick and tough scale from a Dragon-type Pokémon. Attach it to an item for trade-evolution."
+    },
+    "category": "held-items",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dragon-scale.png",
+    "holdable": true,
+    "flingPower": 30
   }
 }

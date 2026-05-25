@@ -163,6 +163,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   // Trade evolution held items
   'kings-rock': 198,
   'metal-coat': 210,
+  'dragon-scale': 9018,
   // Custom game items (no PokeAPI equivalent)
   'pokedex-battery': 9001,
   'battle-helper': 9002,
@@ -349,7 +350,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   }, // Revive
   29: {
     category: 'revival',
-    price: 0,
+    price: 3500,
     effect: { type: 'revive', hpPercent: 100 },
     usableInBattle: true,
     usableInOverworld: true,
@@ -535,6 +536,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   // ── Trade evolution items (holdable) ──
   198: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // King's Rock
   210: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // Metal Coat
+  9018: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // Dragon Scale
 
   // ── Custom game items ──
   9001: {
@@ -634,8 +636,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: false,
     name: { en: 'NULL-X Core X4', he: 'ליבת נאל-איקס - X4' },
     description: {
-      en: "A fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
-      he: 'שבר מקוד הליבה של נאל-איקס. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
+      en: "A fragment of NULL-X's core code. Found on Raikou.",
+      he: 'שבר מקוד הליבה של נאל-איקס. נמצא על ראיקו האגדי',
     },
     keyFlag: 'key-core-x4-obtained',
     usedFlag: 'key-core-x4-used',

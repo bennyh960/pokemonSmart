@@ -65,6 +65,7 @@ import {
   withdrawPokemon as dayCareWithdraw,
 } from '../systems/day-care.js';
 import { getItem } from '../data/items.js';
+import { ITEM_SLUG_TO_ID } from '../data/item-defs.js';
 import { getTypeName } from '../data/type-constants.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
@@ -1041,6 +1042,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         for (const pokemon of party) {
           const evo = getNextEvolution(pokemon.id);
           if (evo && evo.trigger === 'trade') {
+            if (evo.item) {
+              const requiredId = ITEM_SLUG_TO_ID[evo.item];
+              if (requiredId == null || pokemon.heldItemId !== requiredId) continue;
+            }
             setEvolutionData(pokemon, evo);
             stateMachine.push('EVOLUTION');
             return true;
