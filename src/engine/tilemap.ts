@@ -101,6 +101,15 @@ export interface TileMapData {
   }>;
   /** Internal — tracks how many transitions/npcs/objects came from the template so saves strip them. */
   _templateCounts?: { transitions: number; npcs: number; objects: number };
+  /**
+   * Outdoor weather/time-of-day settings.
+   * undefined / null = interior — no night overlay, no weather effects.
+   * true             = outdoor with day/night but no weather (always clear).
+   * object           = outdoor with day/night + weighted weather probabilities.
+   *                    Keys are WeatherConditionId; remaining weight = clear.
+   *                    Example: { "rain": 0.5, "sandstorm": 0.1 } → 50% rain, 10% sand, 40% clear.
+   */
+  outside?: true | Record<string, number> | null;
 }
 
 /**

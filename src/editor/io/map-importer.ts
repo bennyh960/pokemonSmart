@@ -48,6 +48,7 @@ export function importMap(jsonString: string): boolean {
       })),
       music: data.music || '',
       encounterTableId: data.encounterTableId || '',
+      outside: data.outside !== undefined ? data.outside : undefined,
     };
 
     editorState.selectedEntityType = null;

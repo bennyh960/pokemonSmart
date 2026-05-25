@@ -5,6 +5,8 @@
 import type { Scene, Pokemon, PokemonType } from '../types/index.js';
 import { GLITCH_DAMAGE_BONUS_MIN, GLITCH_DAMAGE_BONUS_MAX } from '../engine/config.js';
 import type { BattleStatId, WeatherConditionId } from '../types/battle-metadata.js';
+import { getMapWeather, isDaytime, renderNightOverlay } from '../systems/weather-system.js';
+import { getCurrentMapId, getCachedMap } from '../systems/map-manager.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
@@ -698,6 +700,8 @@ export function createBattleScene(
   let pendingDestinyBondMsg: string | null = null;
   let substituteDollFlash: { timer: number; duration: number; color: string; side: 'player' | 'enemy' } | null = null;
   let battleWeather: WeatherState | null = null;
+  let mapWeatherBase: WeatherConditionId | null = null;
+  let battleIsOutdoor = false;
   const animationDirector = createBattleAnimationDirector();
 
   function getWeatherStartedLine(weatherType: WeatherConditionId): string {
@@ -1203,7 +1207,22 @@ export function createBattleScene(
     sendOutFx = null;
     attackFx = null;
     statusTurnFx = [];
-    battleWeather = null;
+    mapWeatherBase = null;
+    battleIsOutdoor = false;
+    const _mapId = getCurrentMapId();
+    if (_mapId) {
+      const _mapData = getCachedMap(_mapId);
+      if (_mapData?.outside != null) {
+        battleIsOutdoor = true;
+        if (typeof _mapData.outside === 'object') {
+          mapWeatherBase = getMapWeather(_mapId, _mapData.outside);
+        }
+      }
+    }
+    battleWeather = mapWeatherBase
+      ? { type: mapWeatherBase, turnsRemaining: Infinity, setter: null }
+      : null;
+    if (menu) menu.activeWeather = mapWeatherBase ?? null;
     waitingForBag = false;
     waitingForParty = false;
     waitingForPokedex = false;
@@ -2818,8 +2837,15 @@ export function createBattleScene(
         lines.push(getWeatherEndedLine(battleWeather.type));
         revertWeatherStatBoost(playerBattleState);
         revertWeatherStatBoost(enemyBattleState);
-        battleWeather = null;
-        if (menu) menu.activeWeather = null;
+        if (mapWeatherBase) {
+          battleWeather = { type: mapWeatherBase, turnsRemaining: Infinity, setter: null };
+          lines.push(getWeatherStartedLine(mapWeatherBase));
+          applyWeatherStatBoost(playerBattleState, player, mapWeatherBase);
+          applyWeatherStatBoost(enemyBattleState, enemy, mapWeatherBase);
+        } else {
+          battleWeather = null;
+        }
+        if (menu) menu.activeWeather = mapWeatherBase ?? null;
       }
     }
 
@@ -2857,7 +2883,7 @@ export function createBattleScene(
   }
 
   function startLevelUp(levelPhase: BattlePhase): boolean {
-    const result = checkAndApplyLevelUp(player);
+    const result = checkAndApplyLevelUp(player, hasActiveGame() ? getPlayerData().party : [player]);
     if (!result.leveledUp) return false;
 
     syncPlayerBar(true);
@@ -7004,6 +7030,11 @@ export function createBattleScene(
       }
       for (const effect of statusTurnFx) {
         renderStatusTurnEffect(ctx, effect);
+      }
+
+      // Night overlay — covers battle field only, not HP bars / menu below
+      if (battleIsOutdoor && !isDaytime()) {
+        renderNightOverlay(ctx, 240, BTL.FIELD_H);
       }
 
       // ── Info panels ──

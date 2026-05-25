@@ -288,6 +288,15 @@ export function getNextEvolution(pokemonId: number): EvolutionStep | undefined {
   return stages[currentIndex + 1];
 }
 
+/** Returns ALL possible next evolutions from this Pokemon — handles branching chains like Eevee. */
+export function getAllNextEvolutions(pokemonId: number): EvolutionStep[] {
+  const chain = evolutionByPokemonId.get(pokemonId);
+  if (!chain) return [];
+  const currentIndex = chain.stages.findIndex((s) => s.id === pokemonId);
+  if (currentIndex === -1 || currentIndex >= chain.stages.length - 1) return [];
+  return chain.stages.slice(currentIndex + 1);
+}
+
 export function movePowerToMathDifficulty(power: number | null): MathDifficulty {
   if (power === null || power === 0) return 1;
   if (power <= 40) return 1;

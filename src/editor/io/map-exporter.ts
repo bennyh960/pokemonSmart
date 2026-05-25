@@ -29,6 +29,7 @@ export function exportMapData(): object {
   if (map.objects && map.objects.length > 0) result.objects = map.objects;
   if (map.music) result.music = map.music;
   if (map.encounterTableId) result.encounterTableId = map.encounterTableId;
+  if (map.outside !== undefined) result.outside = map.outside ?? null;
   return result;
 }
 

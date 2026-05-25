@@ -3,7 +3,10 @@
  */
 
 import { editorState } from '../state/editor-state.js';
+import type { MapData } from '../state/editor-state.js';
 import { GAME_MAPS, loadGameMap } from '../io/map-browser.js';
+
+const WEATHER_TYPES = ['rain', 'hail', 'sandstorm', 'sun'] as const;
 
 export function createPropertiesPanel(): HTMLElement {
   const panel = document.createElement('div');
@@ -21,6 +24,7 @@ export function createPropertiesPanel(): HTMLElement {
     mapSection.appendChild(createField('Encounters', map.encounterTableId, (v) => { map.encounterTableId = v; }));
     mapSection.appendChild(createReadonly('Size', `${map.width} × ${map.height}`));
     mapSection.appendChild(createReadonly('Spawn', `(${map.spawn.x}, ${map.spawn.y})`));
+    mapSection.appendChild(createOutsideEditor(map, () => editorState.notify()));
     panel.appendChild(mapSection);
 
     // ─── Selected Entity ─────────────────────────────────────
@@ -250,4 +254,119 @@ function createReadonly(label: string, value: string): HTMLElement {
   row.appendChild(lbl);
   row.appendChild(span);
   return row;
+}
+
+/**
+ * Inline editor for the `outside` map property.
+ * Mode select: Interior | Outdoor | Climate
+ * Climate mode shows per-weather weight inputs + a live "clear %" readout.
+ */
+function createOutsideEditor(map: MapData, onChange: () => void): HTMLElement {
+  const container = document.createElement('div');
+  container.className = 'prop-row prop-row-full';
+  container.style.cssText = 'flex-direction:column;gap:4px;';
+
+  const header = document.createElement('label');
+  header.textContent = 'Outside';
+  header.style.cssText = 'font-weight:600;margin-bottom:2px;';
+  container.appendChild(header);
+
+  // Determine current mode
+  const getMode = (): 'interior' | 'outdoor' | 'climate' => {
+    if (map.outside == null) return 'interior';
+    if (map.outside === true) return 'outdoor';
+    return 'climate';
+  };
+
+  // Mode selector row
+  const modeRow = document.createElement('div');
+  modeRow.style.cssText = 'display:flex;gap:4px;';
+  const modeSelect = document.createElement('select');
+  modeSelect.style.cssText = 'flex:1;';
+  for (const [val, lbl] of [['interior', 'Interior (no effects)'], ['outdoor', 'Outdoor (day/night only)'], ['climate', 'Outdoor + Weather']] as const) {
+    const o = document.createElement('option');
+    o.value = val;
+    o.textContent = lbl;
+    if (val === getMode()) o.selected = true;
+    modeSelect.appendChild(o);
+  }
+  modeRow.appendChild(modeSelect);
+  container.appendChild(modeRow);
+
+  // Climate weights section (shown only in climate mode)
+  const weightsDiv = document.createElement('div');
+  weightsDiv.style.cssText = 'display:flex;flex-direction:column;gap:3px;padding-left:8px;border-left:2px solid #384;';
+
+  const clearInfo = document.createElement('div');
+  clearInfo.style.cssText = 'font-size:10px;color:#8ab;margin-top:2px;';
+
+  const updateClearInfo = () => {
+    if (typeof map.outside !== 'object' || map.outside === null) return;
+    const total = Object.values(map.outside as Record<string, number>).reduce((s, v) => s + v, 0);
+    const clear = Math.max(0, 1 - total);
+    clearInfo.textContent = `Clear: ~${Math.round(clear * 100)}%  (sun excluded at night)`;
+  };
+
+  const buildWeightInputs = () => {
+    weightsDiv.innerHTML = '';
+    const climate = (typeof map.outside === 'object' && map.outside !== null)
+      ? (map.outside as Record<string, number>)
+      : {};
+
+    for (const wType of WEATHER_TYPES) {
+      const wr = document.createElement('div');
+      wr.style.cssText = 'display:flex;align-items:center;gap:6px;';
+      const lbl = document.createElement('label');
+      lbl.textContent = wType;
+      lbl.style.cssText = 'width:68px;font-size:11px;text-transform:capitalize;';
+      const inp = document.createElement('input');
+      inp.type = 'number';
+      inp.min = '0';
+      inp.max = '1';
+      inp.step = '0.05';
+      inp.style.cssText = 'width:60px;';
+      inp.value = String(climate[wType] ?? 0);
+      inp.addEventListener('input', () => {
+        const val = Math.min(1, Math.max(0, parseFloat(inp.value) || 0));
+        const c = (typeof map.outside === 'object' && map.outside !== null)
+          ? (map.outside as Record<string, number>)
+          : {};
+        if (val === 0) delete c[wType];
+        else c[wType] = val;
+        map.outside = Object.keys(c).length > 0 ? c : {};
+        updateClearInfo();
+        onChange();
+      });
+      wr.appendChild(lbl);
+      wr.appendChild(inp);
+      weightsDiv.appendChild(wr);
+    }
+    weightsDiv.appendChild(clearInfo);
+    updateClearInfo();
+  };
+
+  const refreshVisibility = () => {
+    const mode = getMode();
+    weightsDiv.style.display = mode === 'climate' ? 'flex' : 'none';
+    weightsDiv.style.flexDirection = 'column';
+  };
+
+  modeSelect.addEventListener('change', () => {
+    const m = modeSelect.value as 'interior' | 'outdoor' | 'climate';
+    if (m === 'interior') map.outside = null;
+    else if (m === 'outdoor') map.outside = true;
+    else {
+      map.outside = typeof map.outside === 'object' && map.outside !== null
+        ? map.outside
+        : {};
+      buildWeightInputs();
+    }
+    refreshVisibility();
+    onChange();
+  });
+
+  buildWeightInputs();
+  refreshVisibility();
+  container.appendChild(weightsDiv);
+  return container;
 }

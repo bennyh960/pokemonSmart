@@ -39,6 +39,7 @@ export interface MapData {
   warps: WarpPlacement[];
   music: string;
   encounterTableId: string;
+  outside?: true | Record<string, number> | null;
 }
 
 type Listener = () => void;

@@ -16,9 +16,12 @@ import {
   getRandomNatureId,
   getNatureMultiplier,
   getNextEvolution,
+  getAllNextEvolutions,
   getPokemonAbilities,
 } from '../services/pokemon-data.js';
 import type { PokemonData, EvolutionStep } from '../services/pokemon-data.js';
+import { calcHappiness, HAPPINESS_EVOLUTION_THRESHOLD } from './happiness.js';
+import { isDaytime } from './weather-system.js';
 import encounterTablesJson from '../data/encounter-tables.json';
 import { createMoveFromId, MAX_POKEMON_MOVES, type LevelUpMoveResult } from './move-learning.js';
 
@@ -357,7 +360,7 @@ export interface LevelUpResult {
 }
 
 /** Check if a Pokemon should level up, and apply level-up if so. */
-export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
+export function checkAndApplyLevelUp(pokemon: Pokemon, party: Pokemon[] = []): LevelUpResult {
   if (pokemon.xp < pokemon.xpToNext) return { leveledUp: false };
 
   pokemon.xp -= pokemon.xpToNext;
@@ -437,7 +440,7 @@ export function checkAndApplyLevelUp(pokemon: Pokemon): LevelUpResult {
     leveledUp: true,
     newLevel: pokemon.level,
     newMoves,
-    evolution: getPendingLevelEvolution(pokemon),
+    evolution: getPendingLevelEvolution(pokemon) ?? getPendingHappinessEvolution(pokemon, party),
     statGains,
   };
 }
@@ -448,6 +451,28 @@ export function getPendingLevelEvolution(pokemon: Pokemon): EvolutionStep | unde
   if (nextEvolution.trigger !== 'level-up') return undefined;
   if (nextEvolution.minLevel === null) return undefined;
   return pokemon.level >= nextEvolution.minLevel ? nextEvolution : undefined;
+}
+
+/**
+ * Returns Espeon or Umbreon if Eevee (or any happiness-evolving Pokemon) has
+ * reached the happiness threshold. Day → Espeon (196), night → Umbreon (197).
+ */
+export function getPendingHappinessEvolution(pokemon: Pokemon, party: Pokemon[]): EvolutionStep | undefined {
+  const candidates = getAllNextEvolutions(pokemon.id).filter(
+    (s) => s.trigger === 'level-up' && s.minLevel === null,
+  );
+  if (candidates.length === 0) return undefined;
+
+  const happiness = calcHappiness(pokemon, party);
+  if (happiness < HAPPINESS_EVOLUTION_THRESHOLD) return undefined;
+
+  const day = isDaytime();
+  const espeon = candidates.find((s) => s.id === 196);
+  const umbreon = candidates.find((s) => s.id === 197);
+
+  if (day && espeon) return espeon;
+  if (!day && umbreon) return umbreon;
+  return candidates[0];
 }
 
 export function applyEvolution(pokemon: Pokemon, evolvedId: number): boolean {

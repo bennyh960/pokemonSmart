@@ -103,6 +103,8 @@ import type { SimpleOpType } from '../math/simple-input-question.js';
 import { getPlayerBirthYear, gradeFromBirthYear } from '../data/story/global-gate-config.js';
 import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 import * as MovablePuzzle from '../systems/movable-puzzle.js';
+import { getMapWeather, isDaytime, renderNightOverlay, renderOverworldWeather } from '../systems/weather-system.js';
+import type { WeatherConditionId } from '../types/battle-metadata.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -284,6 +286,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   // Brief flash when surf sprite activates + wave timer while surfing
   let surfFlashTimer = 0;
   let surfWaveTimer = 0;
+
+  // Weather and day/night state
+  let currentMapWeather: WeatherConditionId | null = null;
+  let weatherAnimTimer = 0;
 
   // Fly animation state
   interface FlyAnimState {
@@ -1686,6 +1692,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   async function loadAndSetMap(mapId: string, spawnX?: number, spawnY?: number): Promise<void> {
     const data = await loadMap(mapId);
     currentMapData = data;
+    currentMapWeather = (typeof data.outside === 'object' && data.outside !== null)
+      ? getMapWeather(data.id ?? mapId, data.outside)
+      : null;
     const tileset = data.tileset ? getTileset(data.tileset) : null;
 
     // Init moveable puzzle tiles before object filtering so they can be captured then removed
@@ -2592,6 +2601,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (surfFlashTimer > 0) surfFlashTimer = Math.max(0, surfFlashTimer - dt);
       if (isCurrentlySurfing) surfWaveTimer += dt;
       else surfWaveTimer = 0;
+      weatherAnimTimer += dt;
 
       if (player.moving) {
         player.moveProgress += dt / MOVE_DURATION;
@@ -4022,6 +4032,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.ellipse(psx + TILE_SIZE / 2, psy + TILE_SIZE, r, r * 0.35, 0, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
+      }
+
+      // Day/night overlay + ambient weather (outdoor maps only — outside: true or object)
+      if (currentMapData?.outside != null && currentMapData.outside !== undefined) {
+        const _day = isDaytime();
+        if (!_day) renderNightOverlay(ctx, SCREEN_W, SCREEN_H);
+        // Skip sun particles at night even if cached from a daytime session
+        if (currentMapWeather && (_day || currentMapWeather !== 'sun')) {
+          renderOverworldWeather(ctx, currentMapWeather, weatherAnimTimer, SCREEN_W, SCREEN_H);
+        }
       }
 
       // HUD — HTML overlay (updated every frame, skips DOM write if unchanged)
