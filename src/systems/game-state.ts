@@ -153,10 +153,10 @@ export function loadGameFromSlot(slot: number): PlayerData | null {
 }
 
 /** Save current player data to a specific slot and update the current slot. */
-export function saveToSlot(slot: number): void {
+export function saveToSlot(slot: number, force = false): void {
   if (!currentPlayerData) return;
   currentSlot = slot;
-  saveGame(slot, currentPlayerData);
+  saveGame(slot, currentPlayerData, force);
 }
 
 /** Heal all Pokemon in the party: restore HP, PP, and persistent status. Also recharges Pokedex battery. */

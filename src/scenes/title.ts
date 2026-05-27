@@ -7,8 +7,10 @@ import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, drawText, fillRect } from '../engine/renderer.js';
-import { hasSavedGame, startNewGame } from '../systems/game-state.js';
+import { startNewGame } from '../systems/game-state.js';
 import { openSaveSlots } from './save-slots.js';
+import { getSlotIndex, MAX_SAVE_SLOTS } from '../systems/save.js';
+import { signOut } from '../auth/auth-service.js';
 import { t, isRTL, getLocale, setLocale, type Locale } from '../i18n/i18n.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 const STAR_COUNT = 60;
@@ -33,17 +35,26 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
   let selectedIndex = 0;
   let showMenu = false;
   let showPrompt = true;
+  let redirectToSlots = false;
 
   function buildMenu(): void {
     menuItems = [];
-    if (hasSavedGame()) menuItems.push(t('title.loadGame'));
-    menuItems.push(t('title.newGame'));
+    const slotCount = getSlotIndex().length;
+    if (slotCount > 0) menuItems.push(t('title.loadGame'));
+    if (slotCount < MAX_SAVE_SLOTS) menuItems.push(t('title.newGame'));
     selectedIndex = 0;
     showMenu = false;
   }
 
   return {
     enter(): void {
+      const slotCount = getSlotIndex().length;
+      if (slotCount >= MAX_SAVE_SLOTS) {
+        // All slots full — redirect to slot selection on first update tick
+        redirectToSlots = true;
+        return;
+      }
+      redirectToSlots = false;
       stars = Array.from({ length: STAR_COUNT }, createStar);
       blinkTimer = 0; showPrompt = true; titleY = -20; entered = false;
       buildMenu();
@@ -51,6 +62,12 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
     },
     exit(): void {},
     update(dt: number): void {
+      if (redirectToSlots) {
+        redirectToSlots = false;
+        openSaveSlots('load', true);
+        stateMachine.change('SAVE_SLOTS');
+        return;
+      }
       if (titleY < titleTargetY) { titleY += 40 * dt; if (titleY > titleTargetY) titleY = titleTargetY; }
       blinkTimer += dt;
       if (blinkTimer >= 0.5) { blinkTimer = 0; showPrompt = !showPrompt; }
@@ -66,6 +83,11 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
         setLocale(next);
         buildMenu();
       }
+      // Logout with Q key
+      if (input.isKeyPressed('q') || input.isKeyPressed('Q')) {
+        signOut().then(() => window.location.reload()).catch(() => window.location.reload());
+        return;
+      }
       if (!showMenu) {
         if (input.isKeyPressed('Enter') || input.isTapped()) showMenu = true;
         return;
@@ -74,7 +96,7 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
       if (input.isKeyPressed('ArrowDown')) selectedIndex = (selectedIndex + 1) % menuItems.length;
       if (input.isKeyPressed('Enter') || input.isTapped()) {
         entered = true;
-        const isLoad = hasSavedGame() && selectedIndex === 0;
+        const isLoad = getSlotIndex().length > 0 && selectedIndex === 0;
         if (isLoad) {
           openSaveSlots('load', true);
           stateMachine.change('SAVE_SLOTS');
@@ -96,6 +118,7 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
       // Language toggle indicator
       const langLabel = getLocale() === 'he' ? 'EN' : 'עב';
       drawText(ctx, `[L] ${langLabel}`, 4, SCREEN_H - 10, { size: 6, color: '#666688' });
+      drawText(ctx, '[Q] logout', SCREEN_W / 2, SCREEN_H - 10, { size: 6, color: '#444455', align: 'center' });
       if (!showMenu) {
         if (showPrompt) drawText(ctx, t('title.pressEnter'), SCREEN_W / 2, 130, { size: 8, color: '#ffffff', align: 'center' });
       } else {
