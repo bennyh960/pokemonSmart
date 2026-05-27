@@ -83,7 +83,7 @@ export const AUTO_GATE_TIME_LIMITS = {
 export const AUTO_GATE_COOLDOWNS = {
   pokecenter: 30 * 60 * 1000, // 30 minutes
   pokemarket: 15 * 60 * 1000, // 15 minutes
-  gym: 60 * 60 * 1000, // 60 minutes (use gym when preparing for badge)
+  gym: 90 * 60 * 1000, // 60 minutes (use gym when preparing for badge)
 } as const;
 
 /** Rewards per service type. */

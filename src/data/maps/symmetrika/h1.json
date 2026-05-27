@@ -1,6 +1,7 @@
 {
-  "id": "h-1-doo",
-  "template": "house-1",
+  "id": "h1",
+  "name": "lab-template",
+  "template": "lab-template",
   "tileset": "interior",
   "label": {
     "en": "Some House",
@@ -9,15 +10,15 @@
   "music": "town3",
   "encounterTableId": null,
   "spawn": {
-    "x": 11,
-    "y": 18
+    "x": 7,
+    "y": 13
   },
   "npcs": [
     {
       "id": "npc-1776945791301",
-      "x": 21,
-      "y": 10,
-      "facing": "up",
+      "x": 11,
+      "y": 7,
+      "facing": "right",
       "type": "dialogue",
       "dialogue": [
         {
@@ -41,7 +42,9 @@
       },
       "questions": {
         "count": 2,
-        "types": ["*"]
+        "types": [
+          "*"
+        ]
       }
     }
   ]

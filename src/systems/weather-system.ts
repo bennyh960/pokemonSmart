@@ -6,7 +6,7 @@ const sessionKey = (mapId: string) => `wx:${mapId}`;
 
 export function isDaytime(): boolean {
   // return false; // Force night for testing
-  return new Date().getHours() >= 6 && new Date().getHours() < 18;
+  return new Date().getHours() >= 6 && new Date().getHours() < 19;
 }
 
 /**
