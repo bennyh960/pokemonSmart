@@ -95,7 +95,8 @@
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(Select-Object -First 30)",
       "Bash(curl -s http://localhost:5173)",
-      "Bash(dir /s /b \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\public\\\\audio\\\\*challenger*\")"
+      "Bash(dir /s /b \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\public\\\\audio\\\\*challenger*\")",
+      "Bash(del *)"
     ]
   }
 }

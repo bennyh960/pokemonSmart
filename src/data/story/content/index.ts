@@ -32,6 +32,7 @@ import './act2/quest-dividia.js';
 import './act3/quest-fractiles.js';
 import './act3/quest-symmetrika.js';
 import './act3/quest-raikou.js';
+import './act3/quest-route9.js';
 
 // Act 4 — Rocket Escalation: Integrala, Absoluta
 import './act4/quest-percentiles.js';

@@ -50,26 +50,10 @@
       ],
       "spriteType": "char_7db1c5",
       "party": [
-        {
-          "pokemonId": 93,
-          "level": 38,
-          "moves": []
-        },
-        {
-          "pokemonId": 110,
-          "level": 40,
-          "moves": []
-        },
-        {
-          "pokemonId": 215,
-          "level": 40,
-          "moves": []
-        },
-        {
-          "pokemonId": 64,
-          "level": 42,
-          "moves": []
-        }
+        { "pokemonId": 93, "level": 38, "moves": [] },
+        { "pokemonId": 110, "level": 40, "moves": [] },
+        { "pokemonId": 215, "level": 40, "moves": [] },
+        { "pokemonId": 64, "level": 42, "moves": [] }
       ],
       "lineOfSight": 3,
       "reward": {
@@ -103,8 +87,8 @@
     },
     {
       "id": "npc-r9-reminder-cave",
-      "x": 18,
-      "y": 4,
+      "x": 0,
+      "y": 0,
       "facing": "down",
       "type": "dialogue",
       "dialogue": [

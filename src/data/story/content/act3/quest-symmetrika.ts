@@ -83,8 +83,8 @@ registerQuest({
   id: 'main-act3-sym-to-percentile',
   title: { en: 'Onward to Percentile', he: 'קדימה לפרסנטייל' },
   objective: {
-    en: 'Head to Percentile city via route-11',
-    he: 'לך לעיר פרסנטייל דרך דרך 11',
+    en: 'Head to Percentile city',
+    he: 'המשך המסע - קדימה לעיר פרסנטייל ',
   },
 });
 

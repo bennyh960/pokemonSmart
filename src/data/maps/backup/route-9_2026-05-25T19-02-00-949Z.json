@@ -155,7 +155,23 @@
       "spriteType": "rival-reminder",
       "blocker": true,
       "spawnAfter": "act3-r9-reminder-called",
-      "despawnAfter": "act3-r9-grunt-defeated"
+      "despawnAfter": "act3-r9-reminder-talked"
+    },
+    {
+      "id": "npc-r9-reminder-thanks",
+      "x": 0,
+      "y": 0,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "...",
+          "he": "..."
+        }
+      ],
+      "spriteType": "rival-reminder",
+      "spawnAfter": "act3-r9-grunt-defeated",
+      "despawnAfter": "act3-r9-arc-complete"
     }
   ],
   "music": "route",

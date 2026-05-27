@@ -116,7 +116,7 @@
       "id": "elder-zero",
       "name": {
         "en": "Elder Zero",
-        "he": "Elder Zero"
+        "he": "אלדד זירו"
       },
       "x": 23,
       "y": 6,
@@ -129,7 +129,7 @@
         },
         {
           "en": "Her lab is in the south of town. Go speak with her first!",
-          "he": "המעבדה שלה נמצאת בדרום העיר. לך לדבר איתה קודם!"
+          "he": "המעבדה שלו נמצאת בדרום העיר. לך לדבר איתה קודם!"
         }
       ],
       "spriteType": "char_a5abb0",
@@ -142,7 +142,7 @@
       "id": "kid-origin",
       "name": {
         "en": "Little Null",
-        "he": "Little Null"
+        "he": "ליטל נול"
       },
       "x": 5,
       "y": 16,
@@ -177,15 +177,11 @@
       "dialogue": [
         {
           "en": "Welcome to the Mart! We have everything a new trainer needs.",
-          "he": "תצטייד לפני שאתה יוצא לדרך 1 — פוקימון פראיים יכולים להפתיע אותך שם בחוץ!"
+          "he": "תצטייד לפני שאתה יוצא לדרך  — פוקימון פראיים יכולים להפתיע אותך שם בחוץ!"
         },
         {
           "en": "A Potion restores 20 HP to your Pokemon. Think of it as a healing spray!",
-          "he": "תדאג תמיד למלאי של שיקויים ופוקדורים."
-        },
-        {
-          "en": "Stock up before heading to Route 1 — wild Pokemon can surprise you out there!",
-          "he": ""
+          "he": "תדאג תמיד למלאי של שיקויים ופוכדורים."
         }
       ],
       "spriteType": "char_95ee55",
@@ -228,7 +224,7 @@
       "id": "helpful-npc-1",
       "name": {
         "en": "Kind Kara",
-        "he": "Kind Kara"
+        "he": "קארה הנדיבה"
       },
       "x": 12,
       "y": 10,
@@ -284,7 +280,7 @@
           "he": "פוקימוני הבר שם פראיים."
         },
         {
-          "en": "",
+          "en": "You can back use this path only after proving yourself in gym battles. At least 6 badges!",
           "he": "חזרו אחרי שתוכיחו את עצמכם בקרבות מכון. לפחות 6 תגים!"
         }
       ],
@@ -352,7 +348,7 @@
       "id": "pokecenter-hint",
       "name": {
         "en": "Nurse Joy",
-        "he": "Nurse Joy"
+        "he": "האחות ג'ואי"
       },
       "x": 12,
       "y": 15,
@@ -396,8 +392,8 @@
       ],
       "spriteType": "char_962c1b",
       "name": {
-        "en": "Whitney",
-        "he": "וויטני"
+        "en": "Rebekah",
+        "he": "רבקה"
       },
       "blocker": true,
       "despawnAfter": "story-badge-7",

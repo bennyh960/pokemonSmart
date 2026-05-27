@@ -94,7 +94,7 @@ registerStoryEvent({
   id: 'evt-frac-raikou-core-collect',
   trigger: { type: 'flag-set', flag: 'key-core-x4-obtained' }, // key item auto flag
   conditions: [{ type: 'flag', flag: FLAGS.ACT3_POWER_RAIKOU_ARC_FLEE }],
-  triggerDelayPostFlag: 1500,
+  triggerDelayPostFlag: 2,
   actions: [
     { type: 'start-cutscene', cutsceneId: 'act3-raikou-sirFracti-call2' },
     { type: 'complete-quest', questId: 'quest-raikou' },

@@ -251,6 +251,12 @@ export const FLAGS = {
   ACT3_SYM_ARC_COMPLETE: 'act3-sym-arc-complete', // Full Symmetrika arc done → head to Percentile
   ACT3_POWER_RAIKOU_ARC_FLEE: 'trainer-wild-r8-raikou-en1-defeated', // Raikou arc done → key-core-x4-obtained
 
+  // ── Act 3: Route 9 arc ──────────────────────────────────────────────────────
+  ACT3_R9_REMINDER_CALLED: 'act3-r9-reminder-called',   // Phone call received — Pidgeot stolen, quest starts
+  ACT3_R9_REMINDER_TALKED: 'act3-r9-reminder-talked',   // Talked on R9 — bird/device lore revealed, head to cave
+  ACT3_R9_GRUNT_DEFEATED: 'act3-r9-grunt-defeated',     // Rocket grunt fled — Reminder spawns in cave
+  ACT3_R9_ARC_COMPLETE: 'act3-r9-arc-complete',         // Arc done — Reminder thanked player, left for Percentile
+
   // ── Act 3: Fractalis arc ─────────────────────────────────────────────────────
   VISITED_FRACTALIS: 'visited-fractalis',
   ACT3_FRACTALIS_WIFE_TALKED: 'act3-fractalis-wife-talked', // Wife gave item → engineer spawns at beach
@@ -389,6 +395,10 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT3_SYM_ZAPDOS_CAVE_DEFEATED]: 'Zapdos fled cave, NULL-X Core X1 collected',
   [FLAGS.ACT3_SYM_NULLX_CORE5_COLLECTED]: 'Core 5 collected — hide it from the cave with this internal flag',
   [FLAGS.ACT3_SYM_ARC_COMPLETE]: 'Full Symmetrika story arc complete — player heads to Percentile',
+  [FLAGS.ACT3_R9_REMINDER_CALLED]: 'Phone call from Reminder received — Pidgeot stolen, player heads to Route 9',
+  [FLAGS.ACT3_R9_REMINDER_TALKED]: 'Talked to Reminder on Route 9 — glitched bird lore revealed, player heads to cave',
+  [FLAGS.ACT3_R9_GRUNT_DEFEATED]: 'Rocket grunt in Route-9 cave defeated and fled — Reminder spawns in cave',
+  [FLAGS.ACT3_R9_ARC_COMPLETE]: 'Route-9 arc complete — Reminder thanked player and left for Percentile City',
   [FLAGS.VISITED_FRACTALIS]: 'First arrival at Fractalis',
   [FLAGS.ACT3_FRACTALIS_WIFE_TALKED]: 'Wife gave item → engineer spawns at beach',
   [FLAGS.ACT3_FRACTALIS_ENGINEER_MET]: 'Beach cutscene done — player heads to route-7 with engineer',

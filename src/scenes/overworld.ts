@@ -85,6 +85,7 @@ import {
   consumePendingCutscene,
   consumePendingMessage,
   checkAndRecoverInterruptedEvent,
+  checkAndResumeDelayedEvents,
   applyCompletedEventNpcPositions,
 } from '../systems/story-engine.js';
 import {
@@ -1902,6 +1903,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           // Pass a callback to restore the player's in-scene grid position without
           // creating a circular import between overworld and story-engine.
           void checkAndRecoverInterruptedEvent((x, y) => teleportPlayerTo(x, y));
+          void checkAndResumeDelayedEvents();
         })
         .catch((err) => {
           console.error('Failed to load map, falling back to test-map:', err);
