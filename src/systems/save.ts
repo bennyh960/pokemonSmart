@@ -87,7 +87,7 @@ function syncToCloud(force = false): void {
   (async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
-    await supabase.from('saves').upsert({
+    await supabase.from('profiles').upsert({
       user_id: user.id,
       slots: getAllSlotsForCloud(),
       updated_at: new Date().toISOString(),

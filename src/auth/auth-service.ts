@@ -11,7 +11,7 @@ export async function isAccountActive(userId: string): Promise<boolean> {
   const { data } = await supabase
     .from('profiles')
     .select('active')
-    .eq('id', userId)
+    .eq('user_id', userId)
     .single();
   return data?.active === true;
 }
@@ -35,7 +35,7 @@ export async function initSavesFromCloud(): Promise<void> {
   if (!user) return;
 
   const { data } = await supabase
-    .from('saves')
+    .from('profiles')
     .select('slots')
     .eq('user_id', user.id)
     .single();
@@ -53,7 +53,7 @@ export async function syncSlotsToCloud(): Promise<void> {
   if (!user) return;
 
   const slots = getAllSlotsForCloud();
-  await supabase.from('saves').upsert({
+  await supabase.from('profiles').upsert({
     user_id: user.id,
     slots,
     updated_at: new Date().toISOString(),
