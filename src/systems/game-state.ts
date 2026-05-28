@@ -179,11 +179,11 @@ export function updateLastPokemonCenter(mapId: string, x: number, y: number): vo
 }
 
 /** Auto-save the current game state to the current slot (or first free slot for new games). */
-export function autoSave(): void {
+export function autoSave(syncCloudForce?: boolean): void {
   if (!currentPlayerData) return;
   if (currentSlot === null) {
     const free = findFreeSlot();
     currentSlot = free !== null ? free : 0;
   }
-  saveGame(currentSlot, currentPlayerData);
+  saveGame(currentSlot, currentPlayerData, syncCloudForce);
 }

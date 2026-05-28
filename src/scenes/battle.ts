@@ -1219,9 +1219,7 @@ export function createBattleScene(
         }
       }
     }
-    battleWeather = mapWeatherBase
-      ? { type: mapWeatherBase, turnsRemaining: Infinity, setter: null }
-      : null;
+    battleWeather = mapWeatherBase ? { type: mapWeatherBase, turnsRemaining: Infinity, setter: null } : null;
     if (menu) menu.activeWeather = mapWeatherBase ?? null;
     waitingForBag = false;
     waitingForParty = false;
@@ -2197,7 +2195,7 @@ export function createBattleScene(
       }
       catchMessages.push(t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }));
 
-      autoSave();
+      autoSave(true);
       textBox = createTextBox(catchMessages, isRTL());
       audio.playMusic('victory');
       phase = 'XP_GAIN';
@@ -3494,6 +3492,7 @@ export function createBattleScene(
               accentColor: profile.accentColor,
               duration: profile.duration,
               variant: profile.variant,
+              power: move.power > 0 ? move.power : undefined,
             });
           }
         }),
@@ -3912,7 +3911,9 @@ export function createBattleScene(
       syncPlayerBar();
       syncEnemyBar();
       playAttackAnimation(
-        'player', 'enemy', m,
+        'player',
+        'enemy',
+        m,
         () => {
           textBox = createTextBox(
             [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove }), t('battle.hazeCleared')],
@@ -4214,8 +4215,8 @@ export function createBattleScene(
     if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && enemyBattleState.invulnerableState !== null) {
       const isDigBypass = m.id === 89 || m.id === 90 || isMagnitude; // Earthquake, Fissure, Magnitude
       const neverMisses = m.accuracy <= 0;
-      const bothAirborne = playerBattleState.invulnerableState === 'airborne'
-        && enemyBattleState.invulnerableState === 'airborne';
+      const bothAirborne =
+        playerBattleState.invulnerableState === 'airborne' && enemyBattleState.invulnerableState === 'airborne';
       if (!neverMisses && !(enemyBattleState.invulnerableState === 'underground' && isDigBypass) && !bothAirborne) {
         hitResult = { hit: false, chance: 0 };
       }
@@ -4265,8 +4266,12 @@ export function createBattleScene(
     const facadeActive =
       isFacadeBoost && player.status !== null && ['burn', 'paralyze', 'poison'].includes(player.status as string);
     const rawPower = facadeActive ? movePower * 2 : movePower;
-    const digPowerBoost = rawPower > 0 && enemyBattleState.invulnerableState === 'underground'
-      && (m.id === 89 || m.id === 90 || isMagnitude) ? 2 : 1;
+    const digPowerBoost =
+      rawPower > 0 &&
+      enemyBattleState.invulnerableState === 'underground' &&
+      (m.id === 89 || m.id === 90 || isMagnitude)
+        ? 2
+        : 1;
     const effectivePower =
       (battleWeather && rawPower > 0
         ? Math.max(1, Math.round(rawPower * getWeatherPowerMultiplier(m.type, battleWeather.type)))
@@ -5133,10 +5138,17 @@ export function createBattleScene(
       syncPlayerBar();
       syncEnemyBar();
       playAttackAnimation(
-        'enemy', 'player', m,
+        'enemy',
+        'player',
+        m,
         () => {
           textBox = createTextBox(
-            [...prefix, ...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove }), t('battle.hazeCleared')],
+            [
+              ...prefix,
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: usedMove }),
+              t('battle.hazeCleared'),
+            ],
             rtl,
           );
           phase = 'ENEMY_TURN';
@@ -5425,9 +5437,13 @@ export function createBattleScene(
     if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && playerBattleState.invulnerableState !== null) {
       const isDigBypassEnemy = m.id === 89 || m.id === 90 || isMagnitudeEnemy; // Earthquake, Fissure, Magnitude
       const neverMisses = m.accuracy <= 0;
-      const bothAirborne = enemyBattleState.invulnerableState === 'airborne'
-        && playerBattleState.invulnerableState === 'airborne';
-      if (!neverMisses && !(playerBattleState.invulnerableState === 'underground' && isDigBypassEnemy) && !bothAirborne) {
+      const bothAirborne =
+        enemyBattleState.invulnerableState === 'airborne' && playerBattleState.invulnerableState === 'airborne';
+      if (
+        !neverMisses &&
+        !(playerBattleState.invulnerableState === 'underground' && isDigBypassEnemy) &&
+        !bothAirborne
+      ) {
         hitResult = { hit: false, chance: 0 };
       }
     }
@@ -5473,8 +5489,12 @@ export function createBattleScene(
     const facadeActiveEnemy =
       isFacadeBoostEnemy && enemy.status !== null && ['burn', 'paralyze', 'poison'].includes(enemy.status as string);
     const rawPowerEnemy = facadeActiveEnemy ? movePowerEnemy * 2 : movePowerEnemy;
-    const digPowerBoostEnemy = rawPowerEnemy > 0 && playerBattleState.invulnerableState === 'underground'
-      && (m.id === 89 || m.id === 90 || isMagnitudeEnemy) ? 2 : 1;
+    const digPowerBoostEnemy =
+      rawPowerEnemy > 0 &&
+      playerBattleState.invulnerableState === 'underground' &&
+      (m.id === 89 || m.id === 90 || isMagnitudeEnemy)
+        ? 2
+        : 1;
     const effectivePowerEnemy =
       (battleWeather && rawPowerEnemy > 0
         ? Math.max(1, Math.round(rawPowerEnemy * getWeatherPowerMultiplier(m.type, battleWeather.type)))
@@ -6860,17 +6880,17 @@ export function createBattleScene(
       // ── Trainer cinematic intro ──
       if (phase === 'TRAINER_CINEMATIC') {
         // Phase durations
-        const C_SLIDE  = 0.55; // trainer slides in
-        const C_HOLD   = 0.20; // pause before throw
-        const C_THROW  = 0.60; // ball arc
-        const C_FLASH  = 0.30; // white flash at end
+        const C_SLIDE = 0.55; // trainer slides in
+        const C_HOLD = 0.2; // pause before throw
+        const C_THROW = 0.6; // ball arc
+        const C_FLASH = 0.3; // white flash at end
 
         const t0 = trainerCinematicTimer;
-        const slideT  = Math.min(1, t0 / C_SLIDE);
-        const slideE  = 1 - Math.pow(1 - slideT, 3); // ease-out cubic
-        const holdT   = Math.min(1, Math.max(0, (t0 - C_SLIDE) / C_HOLD));
-        const throwT  = Math.min(1, Math.max(0, (t0 - C_SLIDE - C_HOLD) / C_THROW));
-        const flashT  = Math.min(1, Math.max(0, (t0 - C_SLIDE - C_HOLD - C_THROW) / C_FLASH));
+        const slideT = Math.min(1, t0 / C_SLIDE);
+        const slideE = 1 - Math.pow(1 - slideT, 3); // ease-out cubic
+        const holdT = Math.min(1, Math.max(0, (t0 - C_SLIDE) / C_HOLD));
+        const throwT = Math.min(1, Math.max(0, (t0 - C_SLIDE - C_HOLD) / C_THROW));
+        const flashT = Math.min(1, Math.max(0, (t0 - C_SLIDE - C_HOLD - C_THROW) / C_FLASH));
 
         // Battle background
         if (bgImage && bgImage.complete && bgImage.naturalWidth > 0) {
@@ -6882,12 +6902,18 @@ export function createBattleScene(
           } else {
             const BG = BTL.BG;
             const sg = ctx.createLinearGradient(0, BG.SKY.y, 0, BG.SKY.y + BG.SKY.h);
-            sg.addColorStop(0, BG.SKY.from); sg.addColorStop(0.5, BG.SKY.mid); sg.addColorStop(1, BG.SKY.to);
-            ctx.fillStyle = sg; ctx.fillRect(BG.SKY.x, BG.SKY.y, BG.SKY.w, BG.SKY.h);
+            sg.addColorStop(0, BG.SKY.from);
+            sg.addColorStop(0.5, BG.SKY.mid);
+            sg.addColorStop(1, BG.SKY.to);
+            ctx.fillStyle = sg;
+            ctx.fillRect(BG.SKY.x, BG.SKY.y, BG.SKY.w, BG.SKY.h);
             const gg = ctx.createLinearGradient(0, BG.GROUND.y, 0, BG.GROUND.y + BG.GROUND.h);
-            gg.addColorStop(0, BG.GROUND.from); gg.addColorStop(0.4, BG.GROUND.mid1);
-            gg.addColorStop(0.7, BG.GROUND.mid2); gg.addColorStop(1, BG.GROUND.to);
-            ctx.fillStyle = gg; ctx.fillRect(BG.GROUND.x, BG.GROUND.y, BG.GROUND.w, BG.GROUND.h);
+            gg.addColorStop(0, BG.GROUND.from);
+            gg.addColorStop(0.4, BG.GROUND.mid1);
+            gg.addColorStop(0.7, BG.GROUND.mid2);
+            gg.addColorStop(1, BG.GROUND.to);
+            ctx.fillStyle = gg;
+            ctx.fillRect(BG.GROUND.x, BG.GROUND.y, BG.GROUND.w, BG.GROUND.h);
           }
         }
 
@@ -6898,7 +6924,7 @@ export function createBattleScene(
         // Trainer sprite — 3× tile scale (48×48), standing on the ground line
         const DEST = 48; // 3 × 16 px logical tile
         const S_TARGET_X = 12;
-        const S_START_X  = -DEST - 16;
+        const S_START_X = -DEST - 16;
         const S_Y = BTL.FIELD_H - DEST; // feet flush with field bottom
         const spriteX = Math.round(S_START_X + (S_TARGET_X - S_START_X) * slideE);
 
@@ -6945,7 +6971,7 @@ export function createBattleScene(
           const ballX = BX0 + (BX1 - BX0) * throwT;
           // Parabolic arc: peaks at midpoint
           const ballY = BY0 + (BY1 - BY0) * throwT - 50 * Math.sin(throwT * Math.PI);
-          const ballR  = throwT * Math.PI * 5; // spin
+          const ballR = throwT * Math.PI * 5; // spin
           const ballSz = 10;
 
           ctx.save();
@@ -6954,22 +6980,32 @@ export function createBattleScene(
           // Simple hand-drawn Pokéball (red top / white bottom / black line)
           ctx.beginPath();
           ctx.arc(0, 0, ballSz / 2, Math.PI, 0);
-          ctx.fillStyle = '#e03030'; ctx.fill();
+          ctx.fillStyle = '#e03030';
+          ctx.fill();
           ctx.beginPath();
           ctx.arc(0, 0, ballSz / 2, 0, Math.PI);
-          ctx.fillStyle = '#f0f0f0'; ctx.fill();
+          ctx.fillStyle = '#f0f0f0';
+          ctx.fill();
           ctx.beginPath();
           ctx.arc(0, 0, ballSz / 2, 0, Math.PI * 2);
-          ctx.strokeStyle = '#202020'; ctx.lineWidth = 1; ctx.stroke();
+          ctx.strokeStyle = '#202020';
+          ctx.lineWidth = 1;
+          ctx.stroke();
           ctx.beginPath();
-          ctx.moveTo(-ballSz / 2, 0); ctx.lineTo(ballSz / 2, 0);
-          ctx.strokeStyle = '#202020'; ctx.lineWidth = 1; ctx.stroke();
+          ctx.moveTo(-ballSz / 2, 0);
+          ctx.lineTo(ballSz / 2, 0);
+          ctx.strokeStyle = '#202020';
+          ctx.lineWidth = 1;
+          ctx.stroke();
           ctx.beginPath();
           ctx.arc(0, 0, 2, 0, Math.PI * 2);
-          ctx.fillStyle = '#ffffff'; ctx.fill();
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
           ctx.beginPath();
           ctx.arc(0, 0, 2, 0, Math.PI * 2);
-          ctx.strokeStyle = '#202020'; ctx.lineWidth = 0.5; ctx.stroke();
+          ctx.strokeStyle = '#202020';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
           ctx.restore();
         }
 
@@ -6979,7 +7015,12 @@ export function createBattleScene(
           ctx.save();
           ctx.globalAlpha = nameAlpha;
           const name = getLocalizedName(trainerData.trainerName);
-          drawText(ctx, isRTL() ? 'מאמן' : 'TRAINER', 120, 140, { size: 5, color: '#667766', font: 'monospace', align: 'center' });
+          drawText(ctx, isRTL() ? 'מאמן' : 'TRAINER', 120, 140, {
+            size: 5,
+            color: '#667766',
+            font: 'monospace',
+            align: 'center',
+          });
           drawText(ctx, name, 120, 150, { size: 7, color: '#20d860', font: 'monospace', align: 'center' });
           ctx.restore();
         }

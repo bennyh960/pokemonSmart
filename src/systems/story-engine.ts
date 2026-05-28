@@ -21,7 +21,7 @@ import { GATES, registerGate } from '../data/story/gates.js';
 import { awaitCutsceneCompletion } from './cutscene-runner.js';
 import { getCutscene } from '../data/story/cutscenes.js';
 import type { CutsceneStep } from '../data/story/cutscenes.js';
-import { saveEventCheckpoint, loadEventCheckpoint, clearEventCheckpoint } from './save.js';
+import { saveEventCheckpoint, loadEventCheckpoint, clearEventCheckpoint, syncToCloud } from './save.js';
 import { getCurrentMapId, getCachedMap } from './map-manager.js';
 import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 import { getItem } from '../data/items.js';
@@ -284,6 +284,7 @@ async function _executeEvent(event: import('../data/story/events.js').StoryEvent
   );
   const checkpointSlot = resolveCheckpointSlot();
   if (cutsceneAction && !event.repeatable && checkpointSlot !== null) {
+    syncToCloud(true);
     saveEventCheckpoint(checkpointSlot, {
       eventId: event.id,
       cutsceneId: cutsceneAction.cutsceneId,

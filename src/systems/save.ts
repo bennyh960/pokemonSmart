@@ -79,13 +79,15 @@ export function migrateFromLocalStorage(): void {
 const CLOUD_SYNC_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
 let lastCloudSyncAt = 0;
 
-function syncToCloud(force = false): void {
+export function syncToCloud(force = false): void {
   const now = Date.now();
   if (!force && now - lastCloudSyncAt < CLOUD_SYNC_INTERVAL_MS) return;
   lastCloudSyncAt = now;
 
   (async () => {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return;
     await supabase.from('profiles').upsert({
       user_id: user.id,

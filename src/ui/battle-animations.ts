@@ -245,6 +245,7 @@ interface AttackEffect {
   variant?: string;
   seed: number;
   spriteImage?: HTMLImageElement | null;
+  power?: number;
 }
 
 interface StatusTurnEffect {
@@ -473,13 +474,18 @@ export function createAttackEffect(options: {
   duration?: number;
   variant?: string;
   spriteImage?: HTMLImageElement | null;
+  power?: number;
 }): AttackEffect {
   const defaultDuration =
-    options.kind === 'beam' ? 0.2
-    : options.kind === 'pulse' ? 0.3
-    : options.kind === 'fly-vanish' ? 0.7
-    : options.kind === 'dig-vanish' ? 0.5
-    : 0.34;
+    options.kind === 'beam'
+      ? 0.2
+      : options.kind === 'pulse'
+        ? 0.3
+        : options.kind === 'fly-vanish'
+          ? 0.7
+          : options.kind === 'dig-vanish'
+            ? 0.5
+            : 0.34;
   return {
     active: true,
     timer: 0,
@@ -494,7 +500,13 @@ export function createAttackEffect(options: {
     variant: options.variant,
     seed: Math.floor(Math.random() * 99999),
     spriteImage: options.spriteImage,
+    power: options.power,
   };
+}
+
+function getPowerScale(power?: number): number {
+  if (!power || power <= 0) return 1.0;
+  return Math.min(2.0, Math.max(0.5, power / 60));
 }
 
 export function updateAttackEffect(effect: AttackEffect, dt: number): void {
@@ -507,21 +519,22 @@ export function updateAttackEffect(effect: AttackEffect, dt: number): void {
 
 function renderProjectileEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const ps = getPowerScale(effect.power);
   const eased = 1 - Math.pow(1 - t, 2);
   const x = effect.sourceX + (effect.targetX - effect.sourceX) * eased;
   const yBase = effect.sourceY + (effect.targetY - effect.sourceY) * eased;
-  const arc = Math.sin(eased * Math.PI) * 12;
+  const arc = Math.sin(eased * Math.PI) * 12 * ps;
   const y = yBase - arc;
 
   for (let i = 0; i < 3; i++) {
     const trailT = Math.max(0, eased - i * 0.12);
     const tx = effect.sourceX + (effect.targetX - effect.sourceX) * trailT;
-    const ty = effect.sourceY + (effect.targetY - effect.sourceY) * trailT - Math.sin(trailT * Math.PI) * 12;
+    const ty = effect.sourceY + (effect.targetY - effect.sourceY) * trailT - Math.sin(trailT * Math.PI) * 12 * ps;
     ctx.save();
     ctx.globalAlpha = 0.18 + (1 - i * 0.28);
     ctx.fillStyle = i === 0 ? effect.accentColor : effect.color;
     ctx.beginPath();
-    ctx.arc(tx, ty, 4 - i, 0, Math.PI * 2);
+    ctx.arc(tx, ty, (4 - i) * ps, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
@@ -530,24 +543,25 @@ function renderProjectileEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
   ctx.globalAlpha = 0.9;
   ctx.fillStyle = effect.color;
   ctx.beginPath();
-  ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+  ctx.arc(x, y, 4.5 * ps, 0, Math.PI * 2);
   ctx.fill();
   ctx.globalAlpha = 0.85;
   ctx.fillStyle = effect.accentColor;
   ctx.beginPath();
-  ctx.arc(x, y, 2, 0, Math.PI * 2);
+  ctx.arc(x, y, 2 * ps, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }
 
 function renderBeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const ps = getPowerScale(effect.power);
   const alpha = t < 0.45 ? t / 0.45 : Math.max(0, 1 - (t - 0.45) / 0.55);
 
   ctx.save();
   ctx.globalAlpha = alpha * 0.55;
   ctx.strokeStyle = effect.color;
-  ctx.lineWidth = 6;
+  ctx.lineWidth = 6 * ps;
   ctx.beginPath();
   ctx.moveTo(effect.sourceX, effect.sourceY);
   ctx.lineTo(effect.targetX, effect.targetY);
@@ -555,7 +569,7 @@ function renderBeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): 
 
   ctx.globalAlpha = alpha * 0.95;
   ctx.strokeStyle = effect.accentColor;
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2 * ps;
   ctx.beginPath();
   ctx.moveTo(effect.sourceX, effect.sourceY);
   ctx.lineTo(effect.targetX, effect.targetY);
@@ -565,7 +579,8 @@ function renderBeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): 
 
 function renderPulseEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
-  const radius = 6 + t * 18;
+  const ps = getPowerScale(effect.power);
+  const radius = (6 + t * 18) * ps;
   const alpha = Math.max(0, 1 - t);
 
   ctx.save();
@@ -605,7 +620,10 @@ function drawFissureLine(
     const perpAngle = angle + Math.PI / 2;
     const wobble = (rng() - 0.5) * segLen * 0.45;
     x += Math.cos(angle) * segLen + Math.cos(perpAngle) * wobble;
-    y = Math.max(groundTop + 1, Math.min(groundBot - 1, y + Math.sin(angle) * segLen * 0.18 + Math.sin(perpAngle) * wobble * 0.25));
+    y = Math.max(
+      groundTop + 1,
+      Math.min(groundBot - 1, y + Math.sin(angle) * segLen * 0.18 + Math.sin(perpAngle) * wobble * 0.25),
+    );
     pts.push([x, y]);
   }
   ctx.save();
@@ -674,11 +692,51 @@ function renderEarthquakeEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
     for (let c = 0; c < 3; c++) {
       const crackY = epicY + yOffsets[c];
       const ao = angleOffsets[c];
-      drawFissureLine(ctx, epicX, crackY, Math.PI + ao, maxLen * 0.55, alpha, seededRng(effect.seed + c * 31), GROUND_TOP, GROUND_BOT);
-      drawFissureLine(ctx, epicX, crackY, ao, maxLen * 0.55, alpha, seededRng(effect.seed + c * 31 + 1000), GROUND_TOP, GROUND_BOT);
+      drawFissureLine(
+        ctx,
+        epicX,
+        crackY,
+        Math.PI + ao,
+        maxLen * 0.55,
+        alpha,
+        seededRng(effect.seed + c * 31),
+        GROUND_TOP,
+        GROUND_BOT,
+      );
+      drawFissureLine(
+        ctx,
+        epicX,
+        crackY,
+        ao,
+        maxLen * 0.55,
+        alpha,
+        seededRng(effect.seed + c * 31 + 1000),
+        GROUND_TOP,
+        GROUND_BOT,
+      );
     }
-    drawFissureLine(ctx, epicX - 25, GROUND_TOP + 8, Math.PI * 0.38, maxLen * 0.28, alpha, seededRng(effect.seed + 200), GROUND_TOP, GROUND_BOT);
-    drawFissureLine(ctx, epicX + 25, GROUND_TOP + 8, Math.PI * 0.62, maxLen * 0.28, alpha, seededRng(effect.seed + 300), GROUND_TOP, GROUND_BOT);
+    drawFissureLine(
+      ctx,
+      epicX - 25,
+      GROUND_TOP + 8,
+      Math.PI * 0.38,
+      maxLen * 0.28,
+      alpha,
+      seededRng(effect.seed + 200),
+      GROUND_TOP,
+      GROUND_BOT,
+    );
+    drawFissureLine(
+      ctx,
+      epicX + 25,
+      GROUND_TOP + 8,
+      Math.PI * 0.62,
+      maxLen * 0.28,
+      alpha,
+      seededRng(effect.seed + 300),
+      GROUND_TOP,
+      GROUND_BOT,
+    );
   }
   for (let i = 0; i < 14; i++) {
     const px = rng() * SCREEN_W_EQ;
@@ -699,7 +757,8 @@ function renderEarthquakeEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
 
 function renderBurstEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
-  const radius = 4 + t * 18;
+  const ps = getPowerScale(effect.power);
+  const radius = (4 + t * 18) * ps;
   const alpha = Math.max(0, 1 - t);
 
   ctx.save();
@@ -813,10 +872,12 @@ function renderCloudEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
   ctx.save();
 
   const NUM_PUFFS = 7;
-  const origins = isHaze ? [
-    { x: effect.sourceX, y: effect.sourceY },
-    { x: effect.targetX, y: effect.targetY },
-  ] : [{ x: cx, y: cy }];
+  const origins = isHaze
+    ? [
+        { x: effect.sourceX, y: effect.sourceY },
+        { x: effect.targetX, y: effect.targetY },
+      ]
+    : [{ x: cx, y: cy }];
 
   for (const origin of origins) {
     for (let i = 0; i < NUM_PUFFS; i++) {
@@ -979,7 +1040,6 @@ function renderPunchEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
     ctx.shadowBlur = 0;
 
     ctx.restore();
-
   } else {
     const pt = (t - IMPACT) / (1 - IMPACT);
     const fade = Math.max(0, 1 - pt);
@@ -1031,7 +1091,9 @@ function renderPunchEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
         ctx.arc(
           effect.targetX + Math.cos(fa) * fd,
           effect.targetY + Math.sin(fa) * fd - pt * 10,
-          1.5 + rng() * 2.5, 0, Math.PI * 2,
+          1.5 + rng() * 2.5,
+          0,
+          Math.PI * 2,
         );
         ctx.fill();
       }
@@ -1047,13 +1109,13 @@ function renderPunchEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
         ctx.globalAlpha = fade * 0.85;
         ctx.fillStyle = rng() > 0.5 ? '#80d8ff' : '#ffffff';
         ctx.save();
-        ctx.translate(
-          effect.targetX + Math.cos(ia) * id,
-          effect.targetY + Math.sin(ia) * id,
-        );
+        ctx.translate(effect.targetX + Math.cos(ia) * id, effect.targetY + Math.sin(ia) * id);
         ctx.rotate(ia + pt * 1.5);
         ctx.beginPath();
-        ctx.moveTo(0, -3.5); ctx.lineTo(1.2, 0); ctx.lineTo(0, 3.5); ctx.lineTo(-1.2, 0);
+        ctx.moveTo(0, -3.5);
+        ctx.lineTo(1.2, 0);
+        ctx.lineTo(0, 3.5);
+        ctx.lineTo(-1.2, 0);
         ctx.closePath();
         ctx.fill();
         ctx.restore();
@@ -1070,11 +1132,7 @@ function renderPunchEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
         ctx.globalAlpha = fade * 0.65;
         ctx.fillStyle = i % 2 === 0 ? '#7030c0' : '#4010a0';
         ctx.beginPath();
-        ctx.arc(
-          effect.targetX + Math.cos(ga) * gd,
-          effect.targetY + Math.sin(ga) * gd,
-          3, 0, Math.PI * 2,
-        );
+        ctx.arc(effect.targetX + Math.cos(ga) * gd, effect.targetY + Math.sin(ga) * gd, 3, 0, Math.PI * 2);
         ctx.fill();
       }
     } else {
@@ -1085,11 +1143,7 @@ function renderPunchEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
         ctx.globalAlpha = fade * 0.75;
         ctx.fillStyle = effect.accentColor;
         ctx.beginPath();
-        ctx.arc(
-          effect.targetX + Math.cos(sa) * sd,
-          effect.targetY + Math.sin(sa) * sd,
-          2, 0, Math.PI * 2,
-        );
+        ctx.arc(effect.targetX + Math.cos(sa) * sd, effect.targetY + Math.sin(sa) * sd, 2, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -1124,11 +1178,7 @@ function renderSurfWaveEffect(ctx: CanvasRenderingContext2D, effect: AttackEffec
         ctx.globalAlpha = pt * 0.7;
         ctx.fillStyle = rng() > 0.5 ? '#2888ff' : '#90d0ff';
         ctx.beginPath();
-        ctx.arc(
-          effect.sourceX + Math.cos(a) * d,
-          effect.sourceY + Math.sin(a) * d,
-          1.5 + rng() * 2, 0, Math.PI * 2,
-        );
+        ctx.arc(effect.sourceX + Math.cos(a) * d, effect.sourceY + Math.sin(a) * d, 1.5 + rng() * 2, 0, Math.PI * 2);
         ctx.fill();
       }
       // Charging glow
@@ -1236,7 +1286,6 @@ function renderSurfWaveEffect(ctx: CanvasRenderingContext2D, effect: AttackEffec
       ctx.beginPath();
       ctx.ellipse(effect.sourceX, effect.sourceY - waveH * 0.45, waveW * 0.55, waveH * 0.14, 0, Math.PI, Math.PI * 2);
       ctx.fill();
-
     } else if (t < TRAVEL) {
       // Phase 2: wave travels from source to target, growing
       const pt = (t - RISE) / (TRAVEL - RISE);
@@ -1286,12 +1335,13 @@ function renderSurfWaveEffect(ctx: CanvasRenderingContext2D, effect: AttackEffec
         ctx.arc(
           waveX + (dRng() - 0.35) * waveW * 2.2 * pt,
           waveY - waveH * 0.3 - dRng() * waveH * 0.9,
-          1.2 + dRng() * 2.2, 0, Math.PI * 2,
+          1.2 + dRng() * 2.2,
+          0,
+          Math.PI * 2,
         );
         ctx.fill();
       }
       void rng;
-
     } else {
       // Phase 3: crash at target
       const pt = (t - TRAVEL) / (1 - TRAVEL);
@@ -1377,8 +1427,10 @@ function renderPowderEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect)
       ctx.globalAlpha = fade * 0.75;
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.moveTo(0, -r * 1.4); ctx.lineTo(r * 0.7, 0);
-      ctx.lineTo(0, r * 1.4); ctx.lineTo(-r * 0.7, 0);
+      ctx.moveTo(0, -r * 1.4);
+      ctx.lineTo(r * 0.7, 0);
+      ctx.lineTo(0, r * 1.4);
+      ctx.lineTo(-r * 0.7, 0);
       ctx.closePath();
       ctx.fill();
     }
@@ -1491,11 +1543,7 @@ function renderShadowBallEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
       ctx.globalAlpha = fade * 0.65;
       ctx.fillStyle = i % 2 === 0 ? '#5828b0' : '#2c0a78';
       ctx.beginPath();
-      ctx.arc(
-        effect.targetX + Math.cos(wAngle) * dist,
-        effect.targetY + Math.sin(wAngle) * dist,
-        wR, 0, Math.PI * 2,
-      );
+      ctx.arc(effect.targetX + Math.cos(wAngle) * dist, effect.targetY + Math.sin(wAngle) * dist, wR, 0, Math.PI * 2);
       ctx.fill();
     }
   }
@@ -1561,7 +1609,6 @@ function renderBiteEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): 
       ctx.lineTo(tx2 + 1.8, jy + gape * 12 - 2);
       ctx.fill();
     }
-
   } else if (t < SNAP) {
     // Snapping shut
     const pt = (t - APPROACH) / (SNAP - APPROACH);
@@ -1601,7 +1648,6 @@ function renderBiteEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): 
         ctx.fill();
       }
     }
-
   } else {
     // Recoil + type burst
     const pt = (t - SNAP) / (1 - SNAP);
@@ -1648,7 +1694,9 @@ function renderBiteEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): 
         ctx.arc(
           effect.targetX + Math.cos(fa) * fd,
           effect.targetY + Math.sin(fa) * fd - pt * 8,
-          1.5 + rng() * 2, 0, Math.PI * 2,
+          1.5 + rng() * 2,
+          0,
+          Math.PI * 2,
         );
         ctx.fill();
       }
@@ -1659,13 +1707,13 @@ function renderBiteEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): 
         ctx.globalAlpha = fade * 0.8;
         ctx.fillStyle = rng() > 0.5 ? '#88d8ff' : '#c8f0ff';
         ctx.save();
-        ctx.translate(
-          effect.targetX + Math.cos(ia) * id,
-          effect.targetY + Math.sin(ia) * id,
-        );
+        ctx.translate(effect.targetX + Math.cos(ia) * id, effect.targetY + Math.sin(ia) * id);
         ctx.rotate(ia + pt * 2);
         ctx.beginPath();
-        ctx.moveTo(0, -3.5); ctx.lineTo(1.2, 0); ctx.lineTo(0, 3.5); ctx.lineTo(-1.2, 0);
+        ctx.moveTo(0, -3.5);
+        ctx.lineTo(1.2, 0);
+        ctx.lineTo(0, 3.5);
+        ctx.lineTo(-1.2, 0);
         ctx.closePath();
         ctx.fill();
         ctx.restore();
@@ -1680,7 +1728,9 @@ function renderBiteEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): 
         ctx.arc(
           effect.targetX + Math.cos(va) * vd,
           effect.targetY + Math.sin(va) * vd + pt * 6,
-          1.5 + rng() * 2, 0, Math.PI * 2,
+          1.5 + rng() * 2,
+          0,
+          Math.PI * 2,
         );
         ctx.fill();
       }
@@ -1750,7 +1800,6 @@ function renderNightShadeEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
       ctx.arc(bx + perpX * off, by + perpY * off, 1.5 + rng() * 2, 0, Math.PI * 2);
       ctx.fill();
     }
-
   } else {
     const pt = (t - 0.45) / 0.55;
     const fade = Math.max(0, 1 - pt);
@@ -1777,11 +1826,7 @@ function renderNightShadeEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
       ctx.globalAlpha = fade * 0.6;
       ctx.fillStyle = '#7030c0';
       ctx.beginPath();
-      ctx.arc(
-        effect.targetX + Math.cos(wa) * wd,
-        effect.targetY + Math.sin(wa) * wd,
-        2 + rng() * 1.5, 0, Math.PI * 2,
-      );
+      ctx.arc(effect.targetX + Math.cos(wa) * wd, effect.targetY + Math.sin(wa) * wd, 2 + rng() * 1.5, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -2811,7 +2856,7 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       const thick = i === 0 ? 2.2 : 1.2;
 
       ctx.globalAlpha = 0.85 - i * 0.1;
-      ctx.strokeStyle = i === 0 ? '#60ff60' : (i < 3 ? '#38c038' : '#207020');
+      ctx.strokeStyle = i === 0 ? '#60ff60' : i < 3 ? '#38c038' : '#207020';
       ctx.lineWidth = thick;
       ctx.lineJoin = 'round';
       ctx.beginPath();
@@ -2835,7 +2880,6 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       ctx.arc(tipX, tipY, 2.5, 0, Math.PI * 2);
       ctx.fill();
     }
-
   } else {
     // Phase 2: orbs stream from target back to source
     const pt = (t - SPLIT) / (1 - SPLIT);
@@ -2909,11 +2953,7 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
         ctx.globalAlpha = absorbAlpha * (0.5 + rng() * 0.4);
         ctx.fillStyle = '#b0ffb0';
         ctx.beginPath();
-        ctx.arc(
-          effect.sourceX + Math.cos(sa) * sd,
-          effect.sourceY + Math.sin(sa) * sd - pt * 6,
-          1.5, 0, Math.PI * 2,
-        );
+        ctx.arc(effect.sourceX + Math.cos(sa) * sd, effect.sourceY + Math.sin(sa) * sd - pt * 6, 1.5, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -3320,7 +3360,7 @@ function renderProtectShieldEffect(ctx: CanvasRenderingContext2D, effect: Attack
   if (t < 0.25) {
     alpha = t / 0.25;
   } else if (t < 0.85) {
-    alpha = 1.0 - Math.sin((t - 0.25) / 0.6 * Math.PI) * 0.1; // gentle breathe
+    alpha = 1.0 - Math.sin(((t - 0.25) / 0.6) * Math.PI) * 0.1; // gentle breathe
   } else {
     alpha = Math.max(0, 1 - (t - 0.85) / 0.15);
   }
@@ -3515,10 +3555,7 @@ function renderSolarBeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       ctx.strokeStyle = effect.accentColor;
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(
-        effect.sourceX + Math.cos(angle) * glowR * 0.7,
-        effect.sourceY + Math.sin(angle) * glowR * 0.7,
-      );
+      ctx.moveTo(effect.sourceX + Math.cos(angle) * glowR * 0.7, effect.sourceY + Math.sin(angle) * glowR * 0.7);
       ctx.lineTo(
         effect.sourceX + Math.cos(angle) * (glowR + rayLen),
         effect.sourceY + Math.sin(angle) * (glowR + rayLen),
@@ -3573,14 +3610,8 @@ function renderSolarBeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       ctx.strokeStyle = effect.color;
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(
-        effect.targetX + Math.cos(angle) * inner,
-        effect.targetY + Math.sin(angle) * inner,
-      );
-      ctx.lineTo(
-        effect.targetX + Math.cos(angle) * outer,
-        effect.targetY + Math.sin(angle) * outer,
-      );
+      ctx.moveTo(effect.targetX + Math.cos(angle) * inner, effect.targetY + Math.sin(angle) * inner);
+      ctx.lineTo(effect.targetX + Math.cos(angle) * outer, effect.targetY + Math.sin(angle) * outer);
       ctx.stroke();
     }
     ctx.lineCap = 'butt';
@@ -3854,8 +3885,8 @@ function renderElectrowebEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
     // Small lightning arcs between nodes
     for (let i = 0; i < 3; i++) {
       if (rng() > 0.5 * crackleT) continue;
-      const a1 = ((Math.PI * 2 * i) / 6) - Math.PI / 6;
-      const a2 = ((Math.PI * 2 * (i + 2)) / 6) - Math.PI / 6;
+      const a1 = (Math.PI * 2 * i) / 6 - Math.PI / 6;
+      const a2 = (Math.PI * 2 * (i + 2)) / 6 - Math.PI / 6;
       const x1 = cx + Math.cos(a1) * maxRadius * 0.7;
       const y1 = cy + Math.sin(a1) * maxRadius * 0.7 * 0.6;
       const x2 = cx + Math.cos(a2) * maxRadius * 0.7;
@@ -3915,7 +3946,7 @@ function renderSandstormOverlay(ctx: CanvasRenderingContext2D, now: number): voi
   for (let i = 0; i < 5; i++) {
     const speed = 14 + (i % 4) * 7;
     const cx = ((i * 79 + now * speed) % (W + 100)) - 50;
-    const cy = (i * 31 % H) + Math.sin(now * 0.35 + i * 1.4) * 8;
+    const cy = ((i * 31) % H) + Math.sin(now * 0.35 + i * 1.4) * 8;
     const rx = 18 + (i % 3) * 12;
     const ry = 5 + (i % 3) * 4;
     ctx.globalAlpha = 0.06 + (i % 3) * 0.025;
@@ -3930,11 +3961,11 @@ function renderSandstormOverlay(ctx: CanvasRenderingContext2D, now: number): voi
   for (let i = 0; i < 20; i++) {
     const speed = 52 + (i % 5) * 15;
     const x0 = ((i * 43 + now * speed) % (W + 40)) - 20;
-    const y0 = (i * 19 % H) + Math.sin(now * 1.3 + i * 0.9) * 2.5;
+    const y0 = ((i * 19) % H) + Math.sin(now * 1.3 + i * 0.9) * 2.5;
     const len = 8 + (i % 4) * 5;
     const dip = Math.sin(now * 2.2 + i * 1.1) * 2.5;
     ctx.globalAlpha = 0.18 + (i % 5) * 0.055;
-    ctx.strokeStyle = i % 3 === 0 ? '#e0b870' : (i % 3 === 1 ? '#c8984a' : '#d4a858');
+    ctx.strokeStyle = i % 3 === 0 ? '#e0b870' : i % 3 === 1 ? '#c8984a' : '#d4a858';
     ctx.lineWidth = 0.5 + (i % 3) * 0.25;
     ctx.beginPath();
     ctx.moveTo(x0, y0);
@@ -3946,10 +3977,10 @@ function renderSandstormOverlay(ctx: CanvasRenderingContext2D, now: number): voi
   for (let i = 0; i < 38; i++) {
     const speed = 95 + (i % 7) * 16;
     const px = ((i * 31 + now * speed) % (W + 16)) - 8;
-    const py = (i * 17 % H) + Math.sin(now * 2.8 + i * 1.3) * 3.5;
+    const py = ((i * 17) % H) + Math.sin(now * 2.8 + i * 1.3) * 3.5;
     const r = 0.35 + (i % 4) * 0.28;
     ctx.globalAlpha = 0.18 + (i % 5) * 0.065;
-    ctx.fillStyle = i % 4 === 0 ? '#f0c878' : (i % 4 === 1 ? '#d49838' : (i % 4 === 2 ? '#c89050' : '#e8b060'));
+    ctx.fillStyle = i % 4 === 0 ? '#f0c878' : i % 4 === 1 ? '#d49838' : i % 4 === 2 ? '#c89050' : '#e8b060';
     ctx.beginPath();
     ctx.arc(px, py, r, 0, Math.PI * 2);
     ctx.fill();
@@ -4024,14 +4055,8 @@ function renderSunOverlay(ctx: CanvasRenderingContext2D, now: number): void {
     const len = 120;
     ctx.beginPath();
     ctx.moveTo(W, 0);
-    ctx.lineTo(
-      W + Math.cos(baseAngle - spread) * len,
-      Math.sin(baseAngle - spread) * len,
-    );
-    ctx.lineTo(
-      W + Math.cos(baseAngle + spread) * len,
-      Math.sin(baseAngle + spread) * len,
-    );
+    ctx.lineTo(W + Math.cos(baseAngle - spread) * len, Math.sin(baseAngle - spread) * len);
+    ctx.lineTo(W + Math.cos(baseAngle + spread) * len, Math.sin(baseAngle + spread) * len);
     ctx.closePath();
     ctx.fill();
   }
