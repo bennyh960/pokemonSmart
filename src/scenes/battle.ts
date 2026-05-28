@@ -1251,7 +1251,9 @@ export function createBattleScene(
     pendingWildNpcEntrance = isWildNpcBattle;
     pendingPlayerSendOutAnimation = true;
     pendingPlayerEntryHazard = false;
-    pendingEnemyEntryHazard = false;
+    // Trainer/wildNPC battles: animation callback sets this. Regular wild encounters: enemy is
+    // already on field, so entry effects (weather boost, ability summon) must fire immediately.
+    pendingEnemyEntryHazard = !isTrainerBattle;
     pendingSubstituteCarryover = null;
     substituteDollFlash = null;
     trainerAIState =
