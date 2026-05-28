@@ -66,9 +66,8 @@ export function createHeroSelectScene(input: InputManager, stateMachine: StateMa
   return {
     enter(): void {
       loadCharacterSprites().catch(() => {});
-      // todo: until we create surfable heros sprite - we stay hardcoded for ashKetchum
-      // heroes = getCharactersByRole('hero').filter((hero) => !hero.id.endsWith('-surf'));
-      heroes = getCharactersByRole('hero').filter((hero) => hero.id === 'ashKetchum');
+      heroes = getCharactersByRole('hero').filter((hero) => !hero.id.endsWith('-surf'));
+
       fadeAlpha = 1;
       fadeIn = true;
       fadeOut = false;
