@@ -102,6 +102,10 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Reflect: usersFieldEffect('reflect'),
   'Light Screen': usersFieldEffect('light-screen'),
   Mist: usersFieldEffect('mist'),
+  Haze: { target: 'entire-field', behaviorTags: ['haze'] },
+  'Night Shade': { behaviorTags: ['night-shade'] },
+  'Super Fang': { behaviorTags: ['super-fang'] },
+  'Hyper Fang': { behaviorTags: ['super-fang'], flinchChance: 10 },
   Safeguard: usersFieldEffect('safeguard'),
   'Mach Punch': { priority: 1 },
   'Aqua Jet': { priority: 1 },
@@ -172,7 +176,6 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Stomp: { flinchChance: 30 },
   'Rock Slide': { flinchChance: 30 },
   'Rolling Kick': { flinchChance: 30 },
-  'Hyper Fang': { flinchChance: 10 },
   'Bone Club': { flinchChance: 10 },
 
   Absorb: { drainPercent: 50 },

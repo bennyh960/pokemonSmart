@@ -3270,6 +3270,7 @@ export function createBattleScene(
     'flamethrower',
     'leaf-spray',
     'water-flow',
+    'surf-wave',
     'psychic-wave',
     'rock-throw',
     'rock-slide',
@@ -3285,6 +3286,14 @@ export function createBattleScene(
     'icy-wind',
     'electroweb',
     'protect-shield',
+    'smoke-screen',
+    'mist-veil',
+    'haze-clear',
+    'punch',
+    'powder',
+    'shadow-ball',
+    'bite',
+    'night-shade',
   ]);
 
   function playAttackAnimation(
@@ -3444,6 +3453,7 @@ export function createBattleScene(
 
     // --- Special: Double Team — ghost clone burst, attacker briefly fades ---
     if (profile.family === 'double-team') {
+      const dtSprite = getCachedImage(`/sprites/pokemon/back/${attackerPokemon.id}.png`) ?? null;
       animationDirector.play(
         sequenceStep(
           callStep(() => {
@@ -3456,6 +3466,7 @@ export function createBattleScene(
               color: profile.color,
               accentColor: profile.accentColor,
               duration: profile.duration,
+              spriteImage: dtSprite,
             });
           }),
           parallelStep(tweenActorStep(attackerActor, { alpha: 0.45 }, 0.18, 'easeInOut')),
@@ -3721,6 +3732,9 @@ export function createBattleScene(
     const isWeightTarget = moveBattleData?.behaviorTags?.includes('weight-target') ?? false;
     const isWeightRatio = moveBattleData?.behaviorTags?.includes('weight-ratio') ?? false;
     const isDisable = moveBattleData?.behaviorTags?.includes('disable') ?? false;
+    const isHaze = moveBattleData?.behaviorTags?.includes('haze') ?? false;
+    const isNightShade = moveBattleData?.behaviorTags?.includes('night-shade') ?? false;
+    const isSuperFang = moveBattleData?.behaviorTags?.includes('super-fang') ?? false;
     const isSandstormMove = moveBattleData?.behaviorTags?.includes('sandstorm') ?? false;
     const isRainDanceMove = moveBattleData?.behaviorTags?.includes('rain') ?? false;
     const isSunnyDayMove = moveBattleData?.behaviorTags?.includes('sun') ?? false;
@@ -3888,6 +3902,27 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = 'PLAYER_ATTACK';
       phaseTimer = 0;
+      return;
+    }
+
+    if (isHaze) {
+      const usedMove = getMoveDisplayName(m.id);
+      playerBattleState.statModifiers = createEmptyBattleStatModifiers();
+      enemyBattleState.statModifiers = createEmptyBattleStatModifiers();
+      syncPlayerBar();
+      syncEnemyBar();
+      playAttackAnimation(
+        'player', 'enemy', m,
+        () => {
+          textBox = createTextBox(
+            [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove }), t('battle.hazeCleared')],
+            rtl,
+          );
+          phase = 'PLAYER_ATTACK';
+          phaseTimer = 0;
+        },
+        true,
+      );
       return;
     }
 
@@ -4175,8 +4210,8 @@ export function createBattleScene(
     let hitResult = doesMoveTargetOpponent(moveBattleData)
       ? doesMoveHit(weatherAccOverride ?? m.accuracy, playerBattleState, enemyBattleState)
       : { hit: true, chance: 100 };
-    // Invulnerability check (Fly / Dig charge turn)
-    if (hitResult.hit && enemyBattleState.invulnerableState !== null) {
+    // Invulnerability check (Fly / Dig charge turn) — only for moves that target opponent
+    if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && enemyBattleState.invulnerableState !== null) {
       const isDigBypass = m.id === 89 || m.id === 90 || isMagnitude; // Earthquake, Fissure, Magnitude
       const neverMisses = m.accuracy <= 0;
       const bothAirborne = playerBattleState.invulnerableState === 'airborne'
@@ -4253,6 +4288,8 @@ export function createBattleScene(
     const plannedDamage = (() => {
       if (!hitResult.hit || targetTypeImmune || absorbed || dreamEaterBlocked) return 0;
       if (isOhko) return enemy.hp;
+      if (isNightShade) return player.level;
+      if (isSuperFang) return Math.max(1, Math.floor(enemy.hp / 2));
       if (effectivePower <= 0) return 0;
       const base = calcDamage(
         player,
@@ -4361,6 +4398,8 @@ export function createBattleScene(
       }
     } else if (isOhko && hitResult.hit && !targetTypeImmune) {
       msgs.push(t('battle.ohkoHit'));
+    } else if ((isSuperFang || isNightShade) && hitResult.hit && !targetTypeImmune) {
+      if (isSuperFang) msgs.push(t('battle.superFangHit'));
     } else if (!hitResult.hit) {
       msgs.push(t('battle.moveMissed', { name: attackerName }));
     } else if (targetTypeImmune) {
@@ -4891,6 +4930,9 @@ export function createBattleScene(
     const isWeightTargetEnemy = moveBattleData?.behaviorTags?.includes('weight-target') ?? false;
     const isWeightRatioEnemy = moveBattleData?.behaviorTags?.includes('weight-ratio') ?? false;
     const isDisableEnemy = moveBattleData?.behaviorTags?.includes('disable') ?? false;
+    const isHazeEnemy = moveBattleData?.behaviorTags?.includes('haze') ?? false;
+    const isNightShadeEnemy = moveBattleData?.behaviorTags?.includes('night-shade') ?? false;
+    const isSuperFangEnemy = moveBattleData?.behaviorTags?.includes('super-fang') ?? false;
     const isSandstormMoveEnemy = moveBattleData?.behaviorTags?.includes('sandstorm') ?? false;
     const isRainDanceMoveEnemy = moveBattleData?.behaviorTags?.includes('rain') ?? false;
     const isSunnyDayMoveEnemy = moveBattleData?.behaviorTags?.includes('sun') ?? false;
@@ -5081,6 +5123,27 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = 'ENEMY_TURN';
       phaseTimer = 0;
+      return;
+    }
+
+    if (isHazeEnemy) {
+      const usedMove = getMoveDisplayName(m.id);
+      enemyBattleState.statModifiers = createEmptyBattleStatModifiers();
+      playerBattleState.statModifiers = createEmptyBattleStatModifiers();
+      syncPlayerBar();
+      syncEnemyBar();
+      playAttackAnimation(
+        'enemy', 'player', m,
+        () => {
+          textBox = createTextBox(
+            [...prefix, ...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove }), t('battle.hazeCleared')],
+            rtl,
+          );
+          phase = 'ENEMY_TURN';
+          phaseTimer = 0;
+        },
+        true,
+      );
       return;
     }
 
@@ -5358,8 +5421,8 @@ export function createBattleScene(
     let hitResult = doesMoveTargetOpponent(moveBattleData)
       ? doesMoveHit(weatherAccOverrideEnemy ?? m.accuracy, enemyBattleState, playerBattleState)
       : { hit: true, chance: 100 };
-    // Invulnerability check (Fly / Dig charge turn)
-    if (hitResult.hit && playerBattleState.invulnerableState !== null) {
+    // Invulnerability check (Fly / Dig charge turn) — only for moves that target opponent
+    if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && playerBattleState.invulnerableState !== null) {
       const isDigBypassEnemy = m.id === 89 || m.id === 90 || isMagnitudeEnemy; // Earthquake, Fissure, Magnitude
       const neverMisses = m.accuracy <= 0;
       const bothAirborne = enemyBattleState.invulnerableState === 'airborne'
@@ -5433,6 +5496,8 @@ export function createBattleScene(
     const plannedDamage = (() => {
       if (!hitResult.hit || targetTypeImmune || absorbed || dreamEaterBlockedEnemy) return 0;
       if (isOhkoEnemy) return player.hp;
+      if (isNightShadeEnemy) return enemy.level;
+      if (isSuperFangEnemy) return Math.max(1, Math.floor(player.hp / 2));
       if (effectivePowerEnemy <= 0) return 0;
       const base = calcDamage(
         enemy,
@@ -5541,6 +5606,8 @@ export function createBattleScene(
       }
     } else if (isOhkoEnemy && hitResult.hit && !targetTypeImmune) {
       msgs.push(t('battle.ohkoHit'));
+    } else if ((isSuperFangEnemy || isNightShadeEnemy) && hitResult.hit && !targetTypeImmune) {
+      if (isSuperFangEnemy) msgs.push(t('battle.superFangHit'));
     } else if (!hitResult.hit) {
       msgs.push(t('battle.moveMissed', { name: attackerName }));
     } else if (targetTypeImmune) {

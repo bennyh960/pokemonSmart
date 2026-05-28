@@ -157,9 +157,7 @@
   "music": "town",
   "encounterTableId": null,
   "area": "Zeroville",
-  "interactiveItems": {},
-  "movablePuzzle": {},
-  "flagListeners": []
+  "interactiveItems": {}
 ,
   "tiles": [
     ["wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall"],
@@ -173,7 +171,7 @@
     ["d","d","d","d","d","d","d","d","d","d","d","d"],
     ["d","d","d","d","d","d","d","d","d","d","d","d"],
     ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","ca1tl","ca1tr","d","d","d","d","d","d","d"]
+    ["d","d","d","d","d","d","d","d","d","d","d","d"]
   ],
   "objects": [
     {

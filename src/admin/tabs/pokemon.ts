@@ -1,6 +1,7 @@
 import type { PlayerData, Pokemon, Move } from '../../types/index';
 import type { MajorStatusId } from '../../types/battle-metadata';
-import { ADMIN_NAME, SAVE_KEY_PREFIX, SLOT_INDEX_KEY } from '../constants';
+import { ADMIN_NAME } from '../constants';
+import { getSlotIndex, loadGame, saveGame, type SaveSlotMeta } from '../../systems/save';
 import movesRaw from '../../data/moves.json';
 import naturesRaw from '../../data/natures.json';
 
@@ -26,12 +27,6 @@ interface NatureEntry {
   decreasedStat: string | null;
 }
 
-interface SaveMeta {
-  slot: number;
-  playerName: string;
-  savedAt: string;
-}
-
 // ── Static data ───────────────────────────────────────────────────────────────
 
 const ALL_MOVES = movesRaw as unknown as MoveJson[];
@@ -51,25 +46,9 @@ const STATUS_OPTIONS: { value: string; label: string }[] = [
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function loadAdminSlots(): SaveMeta[] {
-  const raw = localStorage.getItem(SLOT_INDEX_KEY);
-  if (!raw) return [];
-  try {
-    const all = JSON.parse(raw) as SaveMeta[];
-    return all.filter((s) => s.playerName === ADMIN_NAME);
-  } catch {
-    return [];
-  }
-}
-
-function loadPlayerData(slot: number): PlayerData | null {
-  const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${slot}`);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as PlayerData;
-  } catch {
-    return null;
-  }
+function loadAdminSlots(): SaveSlotMeta[] {
+  console.log(getSlotIndex());
+  return getSlotIndex().filter((s) => s.playerName === ADMIN_NAME);
 }
 
 function buildMove(m: MoveJson): Move {
@@ -436,12 +415,12 @@ function makePokemonSlot(pokemon: Pokemon | null | undefined, onClick: () => voi
 export function renderPokemonTab(container: HTMLElement): void {
   let adminSlots = loadAdminSlots();
   let selectedSlot: number | null = adminSlots[0]?.slot ?? null;
-  let playerData: PlayerData | null = selectedSlot !== null ? loadPlayerData(selectedSlot) : null;
+  let playerData: PlayerData | null = selectedSlot !== null ? loadGame(selectedSlot) : null;
   let dirty = false;
 
   function saveToStorage() {
     if (selectedSlot === null || !playerData) return;
-    localStorage.setItem(`${SAVE_KEY_PREFIX}${selectedSlot}`, JSON.stringify(playerData));
+    saveGame(selectedSlot, playerData, true);
     dirty = false;
     updateSaveBtn();
   }
@@ -482,7 +461,7 @@ export function renderPokemonTab(container: HTMLElement): void {
     });
     select.addEventListener('change', () => {
       selectedSlot = Number(select.value);
-      playerData = loadPlayerData(selectedSlot);
+      playerData = loadGame(selectedSlot);
       dirty = false;
       rebuildGrid();
       updateSaveBtn();
@@ -494,11 +473,11 @@ export function renderPokemonTab(container: HTMLElement): void {
     const refreshBtn = document.createElement('button');
     refreshBtn.className = 'btn btn-sm';
     refreshBtn.textContent = '↺ Reload saves';
-    refreshBtn.title = 'Reload save list from localStorage';
+    refreshBtn.title = 'Reload save list from session';
     refreshBtn.addEventListener('click', () => {
       adminSlots = loadAdminSlots();
       if (selectedSlot !== null) {
-        playerData = loadPlayerData(selectedSlot);
+        playerData = loadGame(selectedSlot);
         dirty = false;
       }
       rebuildGrid();

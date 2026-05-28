@@ -457,6 +457,8 @@
   "battle.mistEnded": "{name}'s Mist faded!",
   "battle.safeguardEnded": "{name}'s Safeguard faded!",
   "battle.mistBlocked": "{name} is protected by Mist!",
+  "battle.hazeCleared": "All stat changes were eliminated!",
+  "battle.superFangHit": "It cut the target's HP in half!",
   "battle.safeguardBlocked": "{name} is protected by Safeguard!",
   "battle.hurtByPoison": "{name} is hurt by poison!",
   "battle.hurtByBurn": "{name} is hurt by its burn!",

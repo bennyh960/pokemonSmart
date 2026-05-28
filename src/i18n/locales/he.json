@@ -457,6 +457,8 @@
   "battle.mistEnded": "הערפל של {name} התפוגג!",
   "battle.safeguardEnded": "ה-Safeguard של {name} התפוגג!",
   "battle.mistBlocked": "{name} מוגן על ידי Mist!",
+  "battle.hazeCleared": "כל שינויי הסטטיסטיקה בוטלו!",
+  "battle.superFangHit": "זה הפחית את נקודות החיים לחצי!",
   "battle.safeguardBlocked": "{name} מוגן על ידי Safeguard!",
   "battle.hurtByPoison": "{name} נפגע מהרעל!",
   "battle.hurtByBurn": "{name} נפגע מהכווייה!",

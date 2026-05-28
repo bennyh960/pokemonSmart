@@ -12,6 +12,7 @@ export type AttackAnimationFamily =
   | 'flamethrower'
   | 'leaf-spray'
   | 'water-flow'
+  | 'surf-wave'
   | 'psychic-wave'
   | 'rock-throw'
   | 'rock-slide'
@@ -27,7 +28,15 @@ export type AttackAnimationFamily =
   | 'icy-wind'
   | 'electroweb'
   | 'protect-shield'
-  | 'earthquake';
+  | 'earthquake'
+  | 'smoke-screen'
+  | 'mist-veil'
+  | 'haze-clear'
+  | 'punch'
+  | 'powder'
+  | 'shadow-ball'
+  | 'bite'
+  | 'night-shade';
 
 export interface AttackAnimationProfile {
   family: AttackAnimationFamily;
@@ -125,7 +134,8 @@ const FLAMETHROWER_MOVES = ['flamethrower', 'fire spin', 'heat wave', 'blast bur
 
 const LEAF_SPRAY_MOVES = ['razor leaf', 'leaf blade', 'petal dance', 'magic leaf', 'leaf tornado', 'petal blizzard', 'leaf storm'];
 
-const WATER_FLOW_MOVES = ['water gun', 'surf', 'waterfall', 'aqua tail', 'whirlpool'];
+const WATER_FLOW_MOVES = ['water gun', 'waterfall', 'aqua tail', 'whirlpool'];
+const SURF_WAVE_MOVES = ['surf', 'hydro pump', 'hydro cannon'];
 
 const PSYCHIC_WAVE_MOVES = ['psychic', 'psywave', 'confusion', 'future sight', 'extrasensory', 'luster purge'];
 
@@ -149,6 +159,28 @@ const ELECTROWEB_MOVES = ['electroweb'];
 const LIGHTNING_MOVES = ['thunderbolt', 'thunder', 'discharge', 'charge beam', 'zap cannon', 'supercell slam'];
 
 const EARTHQUAKE_MOVES = ['earthquake', 'magnitude'];
+
+const SMOKE_SCREEN_MOVES = ['smokescreen', 'smoke screen'];
+const MIST_MOVES = ['mist'];
+const HAZE_MOVES = ['haze'];
+const PUNCH_MOVES = [
+  'thunder punch', 'fire punch', 'ice punch', 'mach punch', 'mega punch',
+  'dynamic punch', 'focus punch', 'shadow punch', 'drain punch', 'hammer arm',
+  'sky uppercut', 'dizzy punch', 'comet punch', 'bullet punch', 'sucker punch',
+  'vacuum wave', 'superpower',
+];
+const POWDER_MOVES = [
+  'sleep powder', 'poison powder', 'stun spore', 'cotton spore',
+  'spore', 'rage powder', 'magic powder', 'powder',
+];
+const SHADOW_BALL_MOVES = [
+  'shadow ball', 'ominous wind', 'shadow sneak', 'shadow force',
+];
+const NIGHT_SHADE_MOVES = ['night shade', 'seismic toss', 'psywave'];
+const BITE_MOVES = [
+  'bite', 'crunch', 'hyper fang', 'super fang',
+  'ice fang', 'thunder fang', 'fire fang', 'poison fang',
+];
 
 // Generic fallback keyword lists (for moves not matched above)
 const BURST_KEYWORDS = [
@@ -431,6 +463,20 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
     };
   }
 
+  if (matchesAny(moveName, PUNCH_MOVES) || moveName.includes('punch')) {
+    return {
+      family: 'punch',
+      color,
+      accentColor: WHITE,
+      duration: 0.45,
+      impactTime: 0.22,
+      selfTarget: false,
+      shakeIntensity: 2.5,
+      flashColor,
+      variant: type,
+    };
+  }
+
   if (matchesAny(moveName, LIGHTNING_MOVES)) {
     return {
       family: 'lightning',
@@ -540,6 +586,125 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       shakeIntensity: 2.0,
       flashColor,
       variant,
+    };
+  }
+
+  if (matchesAny(moveName, SMOKE_SCREEN_MOVES)) {
+    return {
+      family: 'smoke-screen',
+      color: '#404040',
+      accentColor: '#909090',
+      duration: 0.65,
+      impactTime: 0.1,
+      selfTarget: false,
+      shakeIntensity: 0,
+      flashColor: '#606060',
+      variant: 'smoke',
+    };
+  }
+
+  if (matchesAny(moveName, MIST_MOVES)) {
+    return {
+      family: 'mist-veil',
+      color: '#c0e8ff',
+      accentColor: '#ffffff',
+      duration: 0.65,
+      impactTime: 0.1,
+      selfTarget: true,
+      shakeIntensity: 0,
+      flashColor: '#d8f0ff',
+      variant: 'mist',
+    };
+  }
+
+  if (matchesAny(moveName, HAZE_MOVES)) {
+    return {
+      family: 'haze-clear',
+      color: '#508860',
+      accentColor: '#a0d888',
+      duration: 0.7,
+      impactTime: 0.1,
+      selfTarget: false,
+      shakeIntensity: 0,
+      flashColor: '#80c880',
+      variant: 'haze',
+    };
+  }
+
+  if (matchesAny(moveName, BITE_MOVES)) {
+    const isCrunch = moveName.includes('crunch');
+    let typeVar = isCrunch ? 'crunch' : 'bite';
+    if (moveName.includes('ice fang')) typeVar = 'ice';
+    else if (moveName.includes('thunder fang')) typeVar = 'electric';
+    else if (moveName.includes('fire fang')) typeVar = 'fire';
+    else if (moveName.includes('poison fang')) typeVar = 'poison';
+    return {
+      family: 'bite',
+      color,
+      accentColor: WHITE,
+      duration: 0.45,
+      impactTime: 0.28,
+      selfTarget: false,
+      shakeIntensity: isCrunch ? 3.0 : 2.0,
+      flashColor,
+      variant: typeVar,
+    };
+  }
+
+  if (matchesAny(moveName, NIGHT_SHADE_MOVES)) {
+    return {
+      family: 'night-shade',
+      color: '#280850',
+      accentColor: '#8840d0',
+      duration: 0.5,
+      impactTime: 0.22,
+      selfTarget: false,
+      shakeIntensity: 1.5,
+      flashColor: '#6020a8',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, SHADOW_BALL_MOVES)) {
+    return {
+      family: 'shadow-ball',
+      color: '#7038c8',
+      accentColor: '#c090ff',
+      duration: 0.55,
+      impactTime: 0.28,
+      selfTarget: false,
+      shakeIntensity: 2.5,
+      flashColor: '#9050e0',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, POWDER_MOVES)) {
+    return {
+      family: 'powder',
+      color,
+      accentColor: WHITE,
+      duration: 0.55,
+      impactTime: 0.25,
+      selfTarget: false,
+      shakeIntensity: 0,
+      flashColor,
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, SURF_WAVE_MOVES)) {
+    const isHydro = moveName.includes('hydro');
+    return {
+      family: 'surf-wave',
+      color: '#2870e8',
+      accentColor: '#90d8ff',
+      duration: isHydro ? 0.55 : 0.65,
+      impactTime: isHydro ? 0.2 : 0.28,
+      selfTarget: false,
+      shakeIntensity: isHydro ? 3.0 : 3.5,
+      flashColor: '#60b8ff',
+      variant: isHydro ? 'hydro-pump' : 'surf',
     };
   }
 

@@ -100,7 +100,9 @@
       "PowerShell(cd \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\"; npx tsc --noEmit 2>&1; echo \"EXIT:$LASTEXITCODE\")",
       "Bash(Remove-Item \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\.github\\\\workflows\\\\deploy.yml\")",
       "Bash(Remove-Item \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\.github\\\\workflows\")",
-      "Bash(Remove-Item \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\.github\")"
+      "Bash(Remove-Item \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\.github\")",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(node_modules/.bin/tsx -e ' *)"
     ]
   }
 }

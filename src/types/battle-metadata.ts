@@ -65,7 +65,10 @@ export type MoveBattleBehaviorTag =
   | 'lock-in-outrage'
   | 'lock-in-rollout'
   | 'lock-in-rage'
-  | 'lock-in-uproar';
+  | 'lock-in-uproar'
+  | 'haze'
+  | 'night-shade'
+  | 'super-fang';
 
 export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
 

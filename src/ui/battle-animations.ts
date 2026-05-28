@@ -220,7 +220,16 @@ export type AttackEffectKind =
   | 'protect-shield'
   | 'earthquake'
   | 'fly-vanish'
-  | 'dig-vanish';
+  | 'dig-vanish'
+  | 'smoke-screen'
+  | 'mist-veil'
+  | 'haze-clear'
+  | 'punch'
+  | 'surf-wave'
+  | 'powder'
+  | 'shadow-ball'
+  | 'bite'
+  | 'night-shade';
 
 interface AttackEffect {
   active: boolean;
@@ -235,6 +244,7 @@ interface AttackEffect {
   targetY: number;
   variant?: string;
   seed: number;
+  spriteImage?: HTMLImageElement | null;
 }
 
 interface StatusTurnEffect {
@@ -462,6 +472,7 @@ export function createAttackEffect(options: {
   accentColor?: string;
   duration?: number;
   variant?: string;
+  spriteImage?: HTMLImageElement | null;
 }): AttackEffect {
   const defaultDuration =
     options.kind === 'beam' ? 0.2
@@ -482,6 +493,7 @@ export function createAttackEffect(options: {
     targetY: options.targetY,
     variant: options.variant,
     seed: Math.floor(Math.random() * 99999),
+    spriteImage: options.spriteImage,
   };
 }
 
@@ -784,6 +796,1006 @@ function renderDigVanishEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
   }
 }
 
+// --- Smoke Screen / Mist-Veil / Haze-Clear ---
+// One render function handles all three; color + target position drive the visual difference.
+// variant='smoke': dark cloud at foe, black veil
+// variant='mist':  white/blue cloud at user, sparkle ring
+// variant='haze':  green murk spanning both sides
+function renderCloudEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const isMist = effect.variant === 'mist';
+  const isHaze = effect.variant === 'haze';
+  const cx = isMist ? effect.sourceX : effect.targetX;
+  const cy = isMist ? effect.sourceY : effect.targetY;
+  const fieldCx = (effect.sourceX + effect.targetX) / 2;
+  const fieldCy = (effect.sourceY + effect.targetY) / 2;
+
+  ctx.save();
+
+  const NUM_PUFFS = 7;
+  const origins = isHaze ? [
+    { x: effect.sourceX, y: effect.sourceY },
+    { x: effect.targetX, y: effect.targetY },
+  ] : [{ x: cx, y: cy }];
+
+  for (const origin of origins) {
+    for (let i = 0; i < NUM_PUFFS; i++) {
+      const pRng = seededRng(effect.seed + i * 31 + (origin === origins[1] ? 500 : 0));
+      const delay = i * 0.06;
+      const pt = Math.max(0, Math.min(1, (t - delay) / (1 - delay)));
+      if (pt <= 0) continue;
+      const ox = (pRng() - 0.5) * 32;
+      const oy = (pRng() - 0.5) * 16 - pt * (isMist ? 18 : 12);
+      const radius = 5 + pt * 20;
+      const fadeIn = Math.min(1, pt * 3);
+      const fadeOut = Math.max(0, 1 - Math.max(0, pt - 0.35) / 0.65);
+      const alpha = fadeIn * fadeOut * 0.5;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = effect.color;
+      ctx.beginPath();
+      ctx.arc(origin.x + ox, origin.y + oy, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = alpha * 0.35;
+      ctx.strokeStyle = effect.accentColor;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(origin.x + ox, origin.y + oy, radius * 0.85, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  // Per-variant accent
+  const peak = Math.sin(t * Math.PI);
+  if (isMist) {
+    // Sparkle ring around user
+    ctx.globalAlpha = peak * 0.22;
+    ctx.strokeStyle = '#a0d8ff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 16 + t * 10, 0, Math.PI * 2);
+    ctx.stroke();
+  } else if (isHaze) {
+    // Wide murky cloud across the field
+    ctx.globalAlpha = peak * 0.18;
+    ctx.fillStyle = effect.color;
+    ctx.beginPath();
+    ctx.ellipse(fieldCx, fieldCy, 40, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    // Smoke: dark veil at foe
+    const veilPeak = Math.min(t / 0.4, (1 - t) / 0.3);
+    if (veilPeak > 0) {
+      ctx.globalAlpha = veilPeak * 0.2;
+      ctx.fillStyle = '#000000';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 28, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+}
+
+function renderSmokeScreenEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  renderCloudEffect(ctx, effect);
+}
+function renderMistVeilEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  renderCloudEffect(ctx, effect);
+}
+function renderHazeClearEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  renderCloudEffect(ctx, effect);
+}
+
+// --- Punch ---
+// Fist rushes toward target, type-specific impact burst (electric/fire/ice/fighting/ghost)
+function renderPunchEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const IMPACT = 0.42;
+  const dx = effect.targetX - effect.sourceX;
+  const dy = effect.targetY - effect.sourceY;
+  const angle = Math.atan2(dy, dx);
+
+  ctx.save();
+
+  if (t < IMPACT) {
+    const pt = t / IMPACT;
+    const eased = 1 - Math.pow(1 - pt, 2);
+    const fx = effect.sourceX + dx * eased;
+    const fy = effect.sourceY + dy * eased;
+
+    // Motion blur streaks
+    for (let tr = 5; tr >= 1; tr--) {
+      const trEased = Math.max(0, eased - tr * 0.09);
+      const trX = effect.sourceX + dx * trEased;
+      const trY = effect.sourceY + dy * trEased;
+      ctx.globalAlpha = (0.04 + (6 - tr) * 0.02) * eased;
+      ctx.strokeStyle = effect.color;
+      ctx.lineWidth = 2 - tr * 0.2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(trX - Math.cos(angle) * 4, trY - Math.sin(angle) * 4);
+      ctx.lineTo(trX + Math.cos(angle) * 4, trY + Math.sin(angle) * 4);
+      ctx.stroke();
+    }
+
+    // Type-energy aura around fist
+    ctx.globalAlpha = 0.35 * pt;
+    ctx.fillStyle = effect.color;
+    ctx.beginPath();
+    ctx.arc(fx, fy, 13 + pt * 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // --- Fist shape ---
+    ctx.save();
+    ctx.translate(fx, fy);
+    ctx.rotate(angle);
+
+    // Palm (main body of fist)
+    ctx.globalAlpha = 0.95;
+    ctx.fillStyle = '#b87840';
+    ctx.beginPath();
+    ctx.roundRect(-8, -5, 11, 10, 2);
+    ctx.fill();
+
+    // Knuckles row (3 bumps across the front)
+    for (let k = 0; k < 3; k++) {
+      ctx.globalAlpha = 0.9;
+      ctx.fillStyle = '#d09050';
+      ctx.beginPath();
+      ctx.arc(3, -3.5 + k * 3.5, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+      // Knuckle crease
+      ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = '#805020';
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.arc(3, -3.5 + k * 3.5, 1.5, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Thumb (side)
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = '#c08040';
+    ctx.beginPath();
+    ctx.ellipse(-5, -6.5, 2.5, 4, -0.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Wrist
+    ctx.globalAlpha = 0.8;
+    ctx.fillStyle = '#a06830';
+    ctx.beginPath();
+    ctx.roundRect(-9, -4, 4, 8, 1);
+    ctx.fill();
+
+    // Type-color glow outline
+    ctx.globalAlpha = 0.5 * pt;
+    ctx.strokeStyle = effect.color;
+    ctx.lineWidth = 2.5;
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = effect.color;
+    ctx.beginPath();
+    ctx.roundRect(-9, -6, 14, 12, 3);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    ctx.restore();
+
+  } else {
+    const pt = (t - IMPACT) / (1 - IMPACT);
+    const fade = Math.max(0, 1 - pt);
+
+    // Impact rings
+    for (let ring = 0; ring < 3; ring++) {
+      const rT = Math.max(0, pt - ring * 0.1);
+      const rR = rT * (16 + ring * 6);
+      const rA = Math.max(0, 1 - rT) * fade * (ring === 0 ? 0.75 : 0.4);
+      if (rA <= 0 || rR <= 0) continue;
+      ctx.globalAlpha = rA;
+      ctx.strokeStyle = ring === 0 ? effect.accentColor : effect.color;
+      ctx.lineWidth = ring === 0 ? 2.5 : 1.5;
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, rR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    const typeVar = effect.variant ?? 'normal';
+    const rng = seededRng(effect.seed);
+
+    if (typeVar === 'electric') {
+      for (let i = 0; i < 6; i++) {
+        const sa = (i / 6) * Math.PI * 2 + 0.3;
+        const sd = 6 + rng() * 12 * pt;
+        const mx = effect.targetX + Math.cos(sa) * sd * 0.5 + (rng() - 0.5) * 5;
+        const my = effect.targetY + Math.sin(sa) * sd * 0.5 + (rng() - 0.5) * 5;
+        ctx.globalAlpha = fade * 0.85;
+        ctx.strokeStyle = '#ffe030';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(effect.targetX, effect.targetY);
+        ctx.lineTo(mx, my);
+        ctx.lineTo(effect.targetX + Math.cos(sa) * sd, effect.targetY + Math.sin(sa) * sd);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = fade * 0.3;
+      ctx.fillStyle = '#fff080';
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, 10, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (typeVar === 'fire') {
+      for (let i = 0; i < 9; i++) {
+        const fa = rng() * Math.PI * 2;
+        const fd = 3 + rng() * 14 * pt;
+        ctx.globalAlpha = fade * (0.55 + rng() * 0.4);
+        ctx.fillStyle = rng() > 0.45 ? '#ff5010' : '#ffaa20';
+        ctx.beginPath();
+        ctx.arc(
+          effect.targetX + Math.cos(fa) * fd,
+          effect.targetY + Math.sin(fa) * fd - pt * 10,
+          1.5 + rng() * 2.5, 0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
+      ctx.globalAlpha = fade * 0.25;
+      ctx.fillStyle = '#ff8020';
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, 12, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (typeVar === 'ice') {
+      for (let i = 0; i < 6; i++) {
+        const ia = (i / 6) * Math.PI * 2 + 0.5;
+        const id = 5 + pt * 12;
+        ctx.globalAlpha = fade * 0.85;
+        ctx.fillStyle = rng() > 0.5 ? '#80d8ff' : '#ffffff';
+        ctx.save();
+        ctx.translate(
+          effect.targetX + Math.cos(ia) * id,
+          effect.targetY + Math.sin(ia) * id,
+        );
+        ctx.rotate(ia + pt * 1.5);
+        ctx.beginPath();
+        ctx.moveTo(0, -3.5); ctx.lineTo(1.2, 0); ctx.lineTo(0, 3.5); ctx.lineTo(-1.2, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.globalAlpha = fade * 0.2;
+      ctx.fillStyle = '#c0eeff';
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, 11, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (typeVar === 'ghost') {
+      for (let i = 0; i < 5; i++) {
+        const ga = (i / 5) * Math.PI * 2;
+        const gd = 4 + pt * 14;
+        ctx.globalAlpha = fade * 0.65;
+        ctx.fillStyle = i % 2 === 0 ? '#7030c0' : '#4010a0';
+        ctx.beginPath();
+        ctx.arc(
+          effect.targetX + Math.cos(ga) * gd,
+          effect.targetY + Math.sin(ga) * gd,
+          3, 0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
+    } else {
+      // Normal / fighting: starburst
+      for (let i = 0; i < 5; i++) {
+        const sa = (i / 5) * Math.PI * 2 + 0.3;
+        const sd = 5 + pt * 13;
+        ctx.globalAlpha = fade * 0.75;
+        ctx.fillStyle = effect.accentColor;
+        ctx.beginPath();
+        ctx.arc(
+          effect.targetX + Math.cos(sa) * sd,
+          effect.targetY + Math.sin(sa) * sd,
+          2, 0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
+    }
+
+    // Central white flash
+    ctx.globalAlpha = fade * (1 - pt) * 0.7;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, 4.5 * (1 - pt * 0.6), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+// --- Surf Wave ---
+// variant='surf': massive wave sweeps across and crashes
+// variant='hydro-pump': high-pressure column blasts target
+function renderSurfWaveEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const isHydro = effect.variant === 'hydro-pump';
+  ctx.save();
+
+  if (isHydro) {
+    if (t < 0.22) {
+      // Gather water at source
+      const pt = t / 0.22;
+      const rng = seededRng(effect.seed);
+      for (let i = 0; i < 12; i++) {
+        const a = rng() * Math.PI * 2;
+        const d = (1 - pt) * (8 + rng() * 14);
+        ctx.globalAlpha = pt * 0.7;
+        ctx.fillStyle = rng() > 0.5 ? '#2888ff' : '#90d0ff';
+        ctx.beginPath();
+        ctx.arc(
+          effect.sourceX + Math.cos(a) * d,
+          effect.sourceY + Math.sin(a) * d,
+          1.5 + rng() * 2, 0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
+      // Charging glow
+      ctx.globalAlpha = pt * 0.4;
+      ctx.fillStyle = '#1060d0';
+      ctx.beginPath();
+      ctx.arc(effect.sourceX, effect.sourceY, 4 + pt * 12, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      const pt = (t - 0.22) / 0.78;
+      const fade = pt > 0.72 ? Math.max(0, 1 - (pt - 0.72) / 0.28) : 1;
+      const dx = effect.targetX - effect.sourceX;
+      const dy = effect.targetY - effect.sourceY;
+      const angle = Math.atan2(dy, dx);
+      const perpX = -Math.sin(angle);
+      const perpY = Math.cos(angle);
+
+      // Outer column
+      ctx.globalAlpha = 0.55 * fade;
+      ctx.strokeStyle = '#1060d0';
+      ctx.lineWidth = 14;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(effect.sourceX, effect.sourceY);
+      ctx.lineTo(effect.targetX, effect.targetY);
+      ctx.stroke();
+
+      // Middle
+      ctx.globalAlpha = 0.75 * fade;
+      ctx.strokeStyle = '#3090ff';
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(effect.sourceX, effect.sourceY);
+      ctx.lineTo(effect.targetX, effect.targetY);
+      ctx.stroke();
+
+      // Bright core
+      ctx.globalAlpha = 0.9 * fade;
+      ctx.strokeStyle = '#b8e4ff';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(effect.sourceX, effect.sourceY);
+      ctx.lineTo(effect.targetX, effect.targetY);
+      ctx.stroke();
+
+      // Side sprays
+      const rng = seededRng(effect.seed + Math.floor(t * 10));
+      for (let i = 0; i < 7; i++) {
+        const sp = rng() * 0.85 + 0.08;
+        const side = rng() > 0.5 ? 1 : -1;
+        const spLen = 5 + rng() * 10;
+        ctx.globalAlpha = fade * rng() * 0.55;
+        ctx.strokeStyle = '#70c0ff';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        const bx = effect.sourceX + dx * sp;
+        const by = effect.sourceY + dy * sp;
+        ctx.moveTo(bx, by);
+        ctx.lineTo(bx + perpX * spLen * side, by + perpY * spLen * side);
+        ctx.stroke();
+      }
+
+      // Impact explosion
+      if (pt > 0.18) {
+        const impPt = Math.min(1, (pt - 0.18) / 0.45);
+        ctx.globalAlpha = (1 - impPt) * 0.7 * fade;
+        ctx.fillStyle = '#1868cc';
+        ctx.beginPath();
+        ctx.arc(effect.targetX, effect.targetY, 6 + impPt * 22, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = (1 - impPt) * 0.8 * fade;
+        ctx.strokeStyle = '#c8ecff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(effect.targetX, effect.targetY, 5 + impPt * 16, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+  } else {
+    // Surf: wave rises from user's position then sweeps to target
+    const RISE = 0.2;
+    const TRAVEL = 0.65;
+
+    if (t < RISE) {
+      // Phase 1: wave rises at user's position
+      const pt = t / RISE;
+      const eased = 1 - Math.pow(1 - pt, 2);
+      const waveH = 8 + eased * 16;
+      const waveW = 12 + eased * 14;
+
+      ctx.globalAlpha = 0.78 * eased;
+      ctx.fillStyle = '#1868cc';
+      ctx.beginPath();
+      ctx.ellipse(effect.sourceX, effect.sourceY, waveW, waveH * 0.62, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.88 * eased;
+      ctx.fillStyle = '#d0eeff';
+      ctx.beginPath();
+      ctx.ellipse(effect.sourceX, effect.sourceY - waveH * 0.28, waveW * 0.88, waveH * 0.32, 0, Math.PI, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.7 * eased;
+      ctx.fillStyle = '#eef8ff';
+      ctx.beginPath();
+      ctx.ellipse(effect.sourceX, effect.sourceY - waveH * 0.45, waveW * 0.55, waveH * 0.14, 0, Math.PI, Math.PI * 2);
+      ctx.fill();
+
+    } else if (t < TRAVEL) {
+      // Phase 2: wave travels from source to target, growing
+      const pt = (t - RISE) / (TRAVEL - RISE);
+      const eased = 1 - Math.pow(1 - pt, 1.6);
+      const waveX = effect.sourceX + (effect.targetX - effect.sourceX) * eased;
+      const waveY = effect.sourceY + (effect.targetY - effect.sourceY) * eased;
+      const growFactor = 0.8 + pt * 0.45;
+      const waveH = (18 + pt * 16) * growFactor;
+      const waveW = (22 + pt * 14) * growFactor;
+
+      ctx.globalAlpha = 0.15 * pt;
+      ctx.fillStyle = '#0030a8';
+      ctx.beginPath();
+      ctx.ellipse(waveX, waveY + waveH * 0.55, waveW * 0.9, 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.78;
+      ctx.fillStyle = '#1868cc';
+      ctx.beginPath();
+      ctx.ellipse(waveX, waveY, waveW, waveH * 0.62, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = '#0040a0';
+      ctx.beginPath();
+      ctx.ellipse(waveX, waveY + waveH * 0.1, waveW * 0.6, waveH * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.88;
+      ctx.fillStyle = '#d0eeff';
+      ctx.beginPath();
+      ctx.ellipse(waveX, waveY - waveH * 0.28, waveW * 0.88, waveH * 0.32, 0, Math.PI, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = '#eef8ff';
+      ctx.beginPath();
+      ctx.ellipse(waveX, waveY - waveH * 0.45, waveW * 0.55, waveH * 0.14, 0, Math.PI, Math.PI * 2);
+      ctx.fill();
+
+      const rng = seededRng(effect.seed);
+      for (let i = 0; i < 14; i++) {
+        const dRng = seededRng(effect.seed + i * 17);
+        ctx.globalAlpha = 0.65 * (1 - dRng() * 0.4);
+        ctx.fillStyle = '#50a8ff';
+        ctx.beginPath();
+        ctx.arc(
+          waveX + (dRng() - 0.35) * waveW * 2.2 * pt,
+          waveY - waveH * 0.3 - dRng() * waveH * 0.9,
+          1.2 + dRng() * 2.2, 0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
+      void rng;
+
+    } else {
+      // Phase 3: crash at target
+      const pt = (t - TRAVEL) / (1 - TRAVEL);
+      const fade = Math.max(0, 1 - pt);
+      const rng = seededRng(effect.seed);
+
+      for (let i = 0; i < 22; i++) {
+        const a = rng() * Math.PI * 2;
+        const speed = 10 + rng() * 18;
+        const dropX = effect.targetX + Math.cos(a) * speed * pt;
+        const dropY = effect.targetY + Math.sin(a) * speed * pt - pt * pt * 18;
+        ctx.globalAlpha = fade * (0.5 + rng() * 0.5);
+        ctx.fillStyle = rng() > 0.45 ? '#3898e8' : '#b0e0ff';
+        ctx.beginPath();
+        ctx.arc(dropX, dropY, 1.4 + rng() * 2.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = fade * 0.45;
+      ctx.fillStyle = '#1060c0';
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, 12 + pt * 16, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = fade * 0.65;
+      ctx.strokeStyle = '#b8e8ff';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, 9 + pt * 18, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.globalAlpha = fade * 0.35;
+      ctx.strokeStyle = '#80c8ff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, 5 + pt * 24, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
+// --- Powder ---
+// Colorful powder particles fan toward target
+function renderPowderEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  ctx.save();
+
+  const NUM = 28;
+  const dx = effect.targetX - effect.sourceX;
+  const dy = effect.targetY - effect.sourceY;
+
+  for (let i = 0; i < NUM; i++) {
+    const pRng = seededRng(effect.seed + i * 13);
+    const delay = pRng() * 0.28;
+    const pt = Math.max(0, Math.min(1, (t - delay) / (0.9 - delay)));
+    if (pt <= 0) continue;
+
+    const speed = 0.55 + pRng() * 0.45;
+    const spread = (pRng() - 0.5) * 36;
+    const drift = 3 + pRng() * 8;
+    const spin = pRng() * Math.PI * 2;
+
+    const bx = effect.sourceX + dx * pt * speed + spread * pt;
+    const by = effect.sourceY + dy * pt * speed - drift * pt;
+
+    const fade = pt > 0.68 ? Math.max(0, 1 - (pt - 0.68) / 0.32) : 1;
+    ctx.globalAlpha = fade * (0.6 + pRng() * 0.35);
+
+    // Mix between main color and white sparkle
+    ctx.fillStyle = pRng() > 0.35 ? effect.color : effect.accentColor;
+    const r = 1.2 + pRng() * 2.2;
+    ctx.save();
+    ctx.translate(bx, by);
+    ctx.rotate(spin + pt * 3);
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Some particles are tiny diamond shapes
+    if (pRng() > 0.65) {
+      ctx.globalAlpha = fade * 0.75;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(0, -r * 1.4); ctx.lineTo(r * 0.7, 0);
+      ctx.lineTo(0, r * 1.4); ctx.lineTo(-r * 0.7, 0);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+// --- Shadow Ball ---
+// Large dark/purple orb flies toward target, orbiting wisps, dark explosion
+function renderShadowBallEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const IMPACT = 0.5;
+  ctx.save();
+
+  if (t < IMPACT) {
+    const pt = t / IMPACT;
+    const eased = 1 - Math.pow(1 - pt, 2);
+    const bx = effect.sourceX + (effect.targetX - effect.sourceX) * eased;
+    const by = effect.sourceY + (effect.targetY - effect.sourceY) * eased;
+
+    // Shadow trail
+    for (let tr = 3; tr >= 1; tr--) {
+      const trEased = Math.max(0, eased - tr * 0.14);
+      const trX = effect.sourceX + (effect.targetX - effect.sourceX) * trEased;
+      const trY = effect.sourceY + (effect.targetY - effect.sourceY) * trEased;
+      ctx.globalAlpha = 0.04 + (4 - tr) * 0.04;
+      ctx.fillStyle = '#4a18a0';
+      ctx.beginPath();
+      ctx.arc(trX, trY, 9 - tr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Outer dark haze
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = '#280870';
+    ctx.beginPath();
+    ctx.arc(bx, by, 17, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Main orb
+    ctx.globalAlpha = 0.92;
+    ctx.fillStyle = '#18082c';
+    ctx.beginPath();
+    ctx.arc(bx, by, 10.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Purple mid-layer
+    ctx.globalAlpha = 0.78;
+    ctx.fillStyle = '#5820a8';
+    ctx.beginPath();
+    ctx.arc(bx, by, 7.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bright highlight
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = '#9850e8';
+    ctx.beginPath();
+    ctx.arc(bx - 2.5, by - 2.5, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = '#d090ff';
+    ctx.beginPath();
+    ctx.arc(bx - 1.5, by - 1.5, 1.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Orbiting wisps
+    for (let w = 0; w < 6; w++) {
+      const wAngle = (w / 6) * Math.PI * 2 + pt * Math.PI * 5;
+      const wDist = 12 + Math.sin(pt * Math.PI * 4 + w * 0.8) * 2.5;
+      ctx.globalAlpha = 0.55 - w * 0.04;
+      ctx.fillStyle = w % 2 === 0 ? '#5020b0' : '#2c0a78';
+      ctx.beginPath();
+      ctx.arc(bx + Math.cos(wAngle) * wDist, by + Math.sin(wAngle) * wDist, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else {
+    // Impact
+    const pt = (t - IMPACT) / (1 - IMPACT);
+    const fade = Math.max(0, 1 - pt);
+
+    // Dark fill pulse
+    ctx.globalAlpha = (1 - pt) * 0.4;
+    ctx.fillStyle = '#18082c';
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, 16 + pt * 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Expanding rings
+    for (let ring = 0; ring < 4; ring++) {
+      const rT = Math.max(0, pt - ring * 0.07);
+      const rR = rT * (20 + ring * 7);
+      const rA = Math.max(0, 1 - rT) * fade * (ring === 0 ? 0.7 : 0.35);
+      if (rA <= 0 || rR <= 0) continue;
+      ctx.globalAlpha = rA;
+      ctx.strokeStyle = ring % 2 === 0 ? '#7030c8' : '#3a1070';
+      ctx.lineWidth = ring === 0 ? 3 : 1.5;
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, rR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Shadow wisps fly outward
+    for (let i = 0; i < 7; i++) {
+      const wAngle = (i / 7) * Math.PI * 2 + 0.45;
+      const dist = 5 + pt * 18;
+      const wR = Math.max(0.1, 3 * (1 - pt * 0.85));
+      ctx.globalAlpha = fade * 0.65;
+      ctx.fillStyle = i % 2 === 0 ? '#5828b0' : '#2c0a78';
+      ctx.beginPath();
+      ctx.arc(
+        effect.targetX + Math.cos(wAngle) * dist,
+        effect.targetY + Math.sin(wAngle) * dist,
+        wR, 0, Math.PI * 2,
+      );
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+}
+
+// --- Bite ---
+// Jaws open → rush toward target → snap shut with type burst
+function renderBiteEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const isCrunch = effect.variant === 'crunch';
+  const typeVar = effect.variant ?? 'bite';
+  const APPROACH = 0.38;
+  const SNAP = 0.62;
+
+  const dx = effect.targetX - effect.sourceX;
+  const dy = effect.targetY - effect.sourceY;
+
+  ctx.save();
+
+  if (t < APPROACH) {
+    // Jaws opening + rushing to target
+    const pt = t / APPROACH;
+    const eased = 1 - Math.pow(1 - pt, 2);
+    const jx = effect.sourceX + dx * eased;
+    const jy = effect.sourceY + dy * eased;
+    const gape = 0.45 * Math.min(1, pt * 2);
+    const jawSize = isCrunch ? 13 : 9;
+
+    ctx.globalAlpha = 0.88;
+    const jawColor = isCrunch ? '#1a1a2a' : '#2a2a2a';
+    const toothColor = '#f0edd0';
+
+    // Upper jaw
+    ctx.fillStyle = jawColor;
+    ctx.beginPath();
+    ctx.ellipse(jx, jy - gape * 12, jawSize, jawSize * 0.45, 0, Math.PI, Math.PI * 2);
+    ctx.fill();
+
+    // Lower jaw
+    ctx.beginPath();
+    ctx.ellipse(jx, jy + gape * 12, jawSize, jawSize * 0.45, 0, 0, Math.PI);
+    ctx.fill();
+
+    // Teeth
+    const numTeeth = isCrunch ? 5 : 3;
+    ctx.fillStyle = toothColor;
+    const toothH = isCrunch ? 5 : 3.5;
+    for (let tooth = 0; tooth < numTeeth; tooth++) {
+      const tx2 = jx - (numTeeth - 1) * 3 + tooth * 6;
+      ctx.globalAlpha = 0.9;
+      // Upper teeth
+      ctx.beginPath();
+      ctx.moveTo(tx2 - 1.8, jy - gape * 12 + 2);
+      ctx.lineTo(tx2, jy - gape * 12 + 2 - toothH);
+      ctx.lineTo(tx2 + 1.8, jy - gape * 12 + 2);
+      ctx.fill();
+      // Lower teeth
+      ctx.beginPath();
+      ctx.moveTo(tx2 - 1.8, jy + gape * 12 - 2);
+      ctx.lineTo(tx2, jy + gape * 12 - 2 + toothH);
+      ctx.lineTo(tx2 + 1.8, jy + gape * 12 - 2);
+      ctx.fill();
+    }
+
+  } else if (t < SNAP) {
+    // Snapping shut
+    const pt = (t - APPROACH) / (SNAP - APPROACH);
+    const closeT = 1 - Math.pow(1 - pt, 3);
+    const gape = (1 - closeT) * 0.45;
+    const jawSize = isCrunch ? 13 : 9;
+
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = isCrunch ? '#1a1a2a' : '#2a2a2a';
+
+    ctx.beginPath();
+    ctx.ellipse(effect.targetX, effect.targetY - gape * 12, jawSize, jawSize * 0.45, 0, Math.PI, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(effect.targetX, effect.targetY + gape * 12, jawSize, jawSize * 0.45, 0, 0, Math.PI);
+    ctx.fill();
+
+    // Impact cracks at snap
+    if (pt > 0.65) {
+      const crackPt = (pt - 0.65) / 0.35;
+      for (let i = 0; i < 4; i++) {
+        const ca = (i / 4) * Math.PI * 2 + 0.4;
+        const cl = 5 + crackPt * (isCrunch ? 10 : 6);
+        ctx.globalAlpha = crackPt * 0.65;
+        ctx.strokeStyle = effect.accentColor;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(effect.targetX, effect.targetY);
+        ctx.lineTo(effect.targetX + Math.cos(ca) * cl, effect.targetY + Math.sin(ca) * cl);
+        ctx.stroke();
+      }
+      if (isCrunch) {
+        ctx.globalAlpha = crackPt * 0.4;
+        ctx.fillStyle = '#5030b0';
+        ctx.beginPath();
+        ctx.arc(effect.targetX, effect.targetY, 8 + crackPt * 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+  } else {
+    // Recoil + type burst
+    const pt = (t - SNAP) / (1 - SNAP);
+    const fade = Math.max(0, 1 - pt);
+
+    ctx.globalAlpha = fade * 0.55;
+    ctx.strokeStyle = effect.color;
+    ctx.lineWidth = isCrunch ? 3 : 2;
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, 4 + pt * (isCrunch ? 20 : 15), 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.globalAlpha = fade * 0.3;
+    ctx.strokeStyle = effect.accentColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, 3 + pt * (isCrunch ? 14 : 10), 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Type effects for elemental fangs
+    const rng = seededRng(effect.seed);
+    if (typeVar === 'electric') {
+      for (let i = 0; i < 4; i++) {
+        const sa = rng() * Math.PI * 2;
+        const sd = 4 + rng() * 12 * pt;
+        const mx = effect.targetX + Math.cos(sa) * sd * 0.5 + (rng() - 0.5) * 4;
+        const my = effect.targetY + Math.sin(sa) * sd * 0.5 + (rng() - 0.5) * 4;
+        ctx.globalAlpha = fade * 0.85;
+        ctx.strokeStyle = '#ffe030';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(effect.targetX, effect.targetY);
+        ctx.lineTo(mx, my);
+        ctx.lineTo(effect.targetX + Math.cos(sa) * sd, effect.targetY + Math.sin(sa) * sd);
+        ctx.stroke();
+      }
+    } else if (typeVar === 'fire') {
+      for (let i = 0; i < 7; i++) {
+        const fa = rng() * Math.PI * 2;
+        const fd = 3 + rng() * 12 * pt;
+        ctx.globalAlpha = fade * 0.7;
+        ctx.fillStyle = rng() > 0.5 ? '#ff5010' : '#ffaa20';
+        ctx.beginPath();
+        ctx.arc(
+          effect.targetX + Math.cos(fa) * fd,
+          effect.targetY + Math.sin(fa) * fd - pt * 8,
+          1.5 + rng() * 2, 0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
+    } else if (typeVar === 'ice') {
+      for (let i = 0; i < 5; i++) {
+        const ia = (i / 5) * Math.PI * 2;
+        const id = 4 + pt * 12;
+        ctx.globalAlpha = fade * 0.8;
+        ctx.fillStyle = rng() > 0.5 ? '#88d8ff' : '#c8f0ff';
+        ctx.save();
+        ctx.translate(
+          effect.targetX + Math.cos(ia) * id,
+          effect.targetY + Math.sin(ia) * id,
+        );
+        ctx.rotate(ia + pt * 2);
+        ctx.beginPath();
+        ctx.moveTo(0, -3.5); ctx.lineTo(1.2, 0); ctx.lineTo(0, 3.5); ctx.lineTo(-1.2, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    } else if (typeVar === 'poison') {
+      for (let i = 0; i < 8; i++) {
+        const va = rng() * Math.PI * 2;
+        const vd = 3 + rng() * 14 * pt;
+        ctx.globalAlpha = fade * 0.75;
+        ctx.fillStyle = rng() > 0.5 ? '#9030c0' : '#48c030';
+        ctx.beginPath();
+        ctx.arc(
+          effect.targetX + Math.cos(va) * vd,
+          effect.targetY + Math.sin(va) * vd + pt * 6,
+          1.5 + rng() * 2, 0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
+    }
+  }
+
+  ctx.restore();
+}
+
+// --- Night Shade ---
+// Spectral dark beam — distinct ghostly apparition, not a solid orb
+function renderNightShadeEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  ctx.save();
+
+  const dx = effect.targetX - effect.sourceX;
+  const dy = effect.targetY - effect.sourceY;
+  const angle = Math.atan2(dy, dx);
+  const dist = Math.hypot(dx, dy);
+  const perpX = -Math.sin(angle);
+  const perpY = Math.cos(angle);
+
+  if (t < 0.45) {
+    const pt = t / 0.45;
+    const beamLen = dist * pt;
+    const tipX = effect.sourceX + Math.cos(angle) * beamLen;
+    const tipY = effect.sourceY + Math.sin(angle) * beamLen;
+    const rng = seededRng(effect.seed + Math.floor(t * 8));
+
+    // Outer dark shroud
+    ctx.globalAlpha = 0.5 * pt;
+    ctx.strokeStyle = '#180828';
+    ctx.lineWidth = 10;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(effect.sourceX, effect.sourceY);
+    ctx.lineTo(tipX, tipY);
+    ctx.stroke();
+
+    // Mid spectral beam
+    ctx.globalAlpha = 0.7 * pt;
+    ctx.strokeStyle = '#6020a8';
+    ctx.lineWidth = 4.5;
+    ctx.beginPath();
+    ctx.moveTo(effect.sourceX, effect.sourceY);
+    ctx.lineTo(tipX, tipY);
+    ctx.stroke();
+
+    // Bright ghostly core
+    ctx.globalAlpha = 0.9 * pt;
+    ctx.strokeStyle = '#c890ff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(effect.sourceX, effect.sourceY);
+    ctx.lineTo(tipX, tipY);
+    ctx.stroke();
+
+    // Ghostly wisps drifting off the beam
+    for (let i = 0; i < 8; i++) {
+      const sp = rng() * pt;
+      const bx = effect.sourceX + Math.cos(angle) * dist * sp;
+      const by = effect.sourceY + Math.sin(angle) * dist * sp;
+      const off = (rng() - 0.5) * 8;
+      ctx.globalAlpha = rng() * 0.6 * pt;
+      ctx.fillStyle = rng() > 0.5 ? '#7030c0' : '#3010a0';
+      ctx.beginPath();
+      ctx.arc(bx + perpX * off, by + perpY * off, 1.5 + rng() * 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+  } else {
+    const pt = (t - 0.45) / 0.55;
+    const fade = Math.max(0, 1 - pt);
+    const rng = seededRng(effect.seed);
+
+    // Dark expanding ring
+    ctx.globalAlpha = fade * 0.5;
+    ctx.fillStyle = '#2a0850';
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, 5 + pt * 22, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalAlpha = fade * 0.75;
+    ctx.strokeStyle = '#9040e0';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, 4 + pt * 18, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Spectral wisps radiating outward
+    for (let i = 0; i < 6; i++) {
+      const wa = (i / 6) * Math.PI * 2 + t * 4;
+      const wd = 6 + pt * 16;
+      ctx.globalAlpha = fade * 0.6;
+      ctx.fillStyle = '#7030c0';
+      ctx.beginPath();
+      ctx.arc(
+        effect.targetX + Math.cos(wa) * wd,
+        effect.targetY + Math.sin(wa) * wd,
+        2 + rng() * 1.5, 0, Math.PI * 2,
+      );
+      ctx.fill();
+    }
+
+    // Inner glow fade
+    ctx.globalAlpha = fade * 0.35;
+    ctx.fillStyle = '#5010a8';
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, 3 + pt * 10, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
 export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   if (!effect.active) return;
 
@@ -865,6 +1877,33 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'dig-vanish':
       renderDigVanishEffect(ctx, effect);
+      break;
+    case 'smoke-screen':
+      renderSmokeScreenEffect(ctx, effect);
+      break;
+    case 'mist-veil':
+      renderMistVeilEffect(ctx, effect);
+      break;
+    case 'haze-clear':
+      renderHazeClearEffect(ctx, effect);
+      break;
+    case 'punch':
+      renderPunchEffect(ctx, effect);
+      break;
+    case 'surf-wave':
+      renderSurfWaveEffect(ctx, effect);
+      break;
+    case 'powder':
+      renderPowderEffect(ctx, effect);
+      break;
+    case 'shadow-ball':
+      renderShadowBallEffect(ctx, effect);
+      break;
+    case 'bite':
+      renderBiteEffect(ctx, effect);
+      break;
+    case 'night-shade':
+      renderNightShadeEffect(ctx, effect);
       break;
   }
 }
@@ -1732,7 +2771,7 @@ function renderFireBlastEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
 
 function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = effect.timer / effect.duration;
-  const SPLIT = 0.5;
+  const SPLIT = 0.48;
   const dx = effect.sourceX - effect.targetX;
   const dy = effect.sourceY - effect.targetY;
   const len = Math.hypot(dx, dy) || 1;
@@ -1740,74 +2779,143 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
   const uy = dy / len;
   const perpX = -uy;
   const perpY = ux;
-  const numTendrils = 3;
+  const numTendrils = 5;
 
   ctx.save();
 
-  // Target sickly glow throughout
-  const glowAlpha = t < SPLIT ? (t / SPLIT) * 0.22 : (1 - (t - SPLIT) / SPLIT) * 0.22;
+  // Target sickly glow + pulsing ring while draining
+  const glowAlpha = t < SPLIT ? (t / SPLIT) * 0.3 : Math.max(0, 1 - (t - SPLIT) / (1 - SPLIT)) * 0.2;
   ctx.globalAlpha = glowAlpha;
-  ctx.fillStyle = '#40d040';
+  ctx.fillStyle = '#28b828';
   ctx.beginPath();
-  ctx.arc(effect.targetX, effect.targetY, 14, 0, Math.PI * 2);
+  ctx.arc(effect.targetX, effect.targetY, 16, 0, Math.PI * 2);
   ctx.fill();
 
   if (t < SPLIT) {
+    // Phase 1: tendrils reach toward target, color being "pulled out"
     const pt = t / SPLIT;
+
+    // Pulsing ring at target (energy being pulled)
+    const ringAlpha = 0.35 * Math.sin(pt * Math.PI * 5) * 0.5 + 0.2;
+    ctx.globalAlpha = ringAlpha;
+    ctx.strokeStyle = '#70ff70';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(effect.targetX, effect.targetY, 10 + Math.sin(pt * Math.PI * 6) * 3, 0, Math.PI * 2);
+    ctx.stroke();
 
     for (let i = 0; i < numTendrils; i++) {
       const rng = seededRng(effect.seed + i * 19);
-      const reach = pt * (0.65 + rng() * 0.3);
-      const segs = 8;
+      const reach = pt * (0.6 + rng() * 0.35);
+      const segs = 10;
+      const thick = i === 0 ? 2.2 : 1.2;
 
-      ctx.globalAlpha = 0.78 - i * 0.1;
-      ctx.strokeStyle = i === 0 ? '#50e050' : '#30a830';
-      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.85 - i * 0.1;
+      ctx.strokeStyle = i === 0 ? '#60ff60' : (i < 3 ? '#38c038' : '#207020');
+      ctx.lineWidth = thick;
+      ctx.lineJoin = 'round';
       ctx.beginPath();
 
       for (let s = 0; s <= segs; s++) {
         const sp = (s / segs) * reach;
-        const tx = effect.targetX + ux * len * sp;
-        const ty = effect.targetY + uy * len * sp;
-        const wobble = Math.sin(sp * Math.PI * 4 + t * 14 + i * 2.1) * 4;
-        if (s === 0) ctx.moveTo(tx + perpX * wobble, ty + perpY * wobble);
-        else ctx.lineTo(tx + perpX * wobble, ty + perpY * wobble);
+        const tx2 = effect.targetX + ux * len * sp;
+        const ty2 = effect.targetY + uy * len * sp;
+        const wobble = Math.sin(sp * Math.PI * 5 + t * 16 + i * 2.4) * (4 + i * 0.8);
+        if (s === 0) ctx.moveTo(tx2 + perpX * wobble, ty2 + perpY * wobble);
+        else ctx.lineTo(tx2 + perpX * wobble, ty2 + perpY * wobble);
       }
       ctx.stroke();
-    }
-  } else {
-    const pt = (t - SPLIT) / (1 - SPLIT);
 
-    for (let i = 0; i < numTendrils; i++) {
-      const delay = i * 0.12;
-      const orbT = Math.max(0, Math.min(1, (pt - delay) / (1 - delay)));
+      // Glowing tip
+      const tipX = effect.targetX + ux * len * reach;
+      const tipY = effect.targetY + uy * len * reach;
+      ctx.globalAlpha = 0.7 - i * 0.08;
+      ctx.fillStyle = '#90ff90';
+      ctx.beginPath();
+      ctx.arc(tipX, tipY, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+  } else {
+    // Phase 2: orbs stream from target back to source
+    const pt = (t - SPLIT) / (1 - SPLIT);
+    const numOrbs = 5;
+
+    for (let i = 0; i < numOrbs; i++) {
+      const delay = i * 0.1;
+      const orbT = Math.max(0, Math.min(1, (pt - delay) / (1 - Math.min(delay, 0.9))));
       if (orbT <= 0) continue;
 
       const eased = 1 - Math.pow(1 - orbT, 2);
       const x = effect.targetX + dx * eased;
       const y = effect.targetY + dy * eased;
-      const alpha = orbT < 0.88 ? 0.85 : ((1 - orbT) / 0.12) * 0.85;
+      const alpha = orbT < 0.85 ? 0.88 : Math.max(0, (1 - orbT) / 0.15) * 0.88;
 
+      // Orb glow aura
+      ctx.globalAlpha = alpha * 0.35;
+      ctx.fillStyle = '#30c030';
+      ctx.beginPath();
+      ctx.arc(x, y, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Main orb
       ctx.globalAlpha = alpha;
-      ctx.fillStyle = '#60f060';
+      ctx.fillStyle = '#70ff70';
       ctx.beginPath();
-      ctx.arc(x, y, 3.2, 0, Math.PI * 2);
+      ctx.arc(x, y, 3.5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.globalAlpha = alpha * 0.7;
-      ctx.fillStyle = '#b0ffb0';
+
+      // Bright core
+      ctx.globalAlpha = alpha * 0.85;
+      ctx.fillStyle = '#d0ffd0';
       ctx.beginPath();
-      ctx.arc(x, y, 1.4, 0, Math.PI * 2);
+      ctx.arc(x, y, 1.5, 0, Math.PI * 2);
       ctx.fill();
+
+      // Small trailing particle
+      if (orbT > 0.08) {
+        const trailEased = 1 - Math.pow(1 - Math.max(0, orbT - 0.08), 2);
+        const tx3 = effect.targetX + dx * trailEased;
+        const ty3 = effect.targetY + dy * trailEased;
+        ctx.globalAlpha = alpha * 0.35;
+        ctx.fillStyle = '#50dd50';
+        ctx.beginPath();
+        ctx.arc(tx3, ty3, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
-    // Absorb glow on source
-    const absorbAlpha = Math.min(1, pt * 4) * Math.max(0, 1 - (pt - 0.65) / 0.35);
+    // Absorb burst at source — grows then fades
+    const absorbAlpha = Math.min(1, pt * 3.5) * Math.max(0, 1 - (pt - 0.55) / 0.45);
     if (absorbAlpha > 0) {
-      ctx.globalAlpha = absorbAlpha * 0.28;
+      ctx.globalAlpha = absorbAlpha * 0.4;
       ctx.fillStyle = '#40ff40';
       ctx.beginPath();
-      ctx.arc(effect.sourceX, effect.sourceY, 8 + pt * 7, 0, Math.PI * 2);
+      ctx.arc(effect.sourceX, effect.sourceY, 10 + pt * 10, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.globalAlpha = absorbAlpha * 0.7;
+      ctx.strokeStyle = '#90ff90';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(effect.sourceX, effect.sourceY, 7 + pt * 7, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Sparkles rising from source
+      const rng = seededRng(effect.seed + 9000);
+      for (let s = 0; s < 4; s++) {
+        const sa = rng() * Math.PI * 2;
+        const sd = 5 + rng() * 8;
+        ctx.globalAlpha = absorbAlpha * (0.5 + rng() * 0.4);
+        ctx.fillStyle = '#b0ffb0';
+        ctx.beginPath();
+        ctx.arc(
+          effect.sourceX + Math.cos(sa) * sd,
+          effect.sourceY + Math.sin(sa) * sd - pt * 6,
+          1.5, 0, Math.PI * 2,
+        );
+        ctx.fill();
+      }
     }
   }
 
@@ -2289,41 +3397,82 @@ function renderProtectShieldEffect(ctx: CanvasRenderingContext2D, effect: Attack
 }
 
 // --- Double Team ---
-// Ghost clones fanning out from user position then fading
+// Ghost clones burst outward from center. Uses the Pokemon's actual sprite when available.
 function renderDoubleTeamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = effect.timer / effect.duration;
   const cx = effect.sourceX;
   const cy = effect.sourceY;
+  const img = effect.spriteImage ?? null;
 
   ctx.save();
 
   const CLONES = 4;
-  const offsets = [-20, -10, 10, 20];
+  const finalOffsets = [-30, -15, 15, 30];
 
   for (let i = 0; i < CLONES; i++) {
-    const delay = i * 0.07;
-    const pt = Math.max(0, Math.min(1, (t - delay) / 0.6));
+    const delay = i * 0.06;
+    const pt = Math.max(0, Math.min(1, (t - delay) / (1 - delay)));
     if (pt <= 0) continue;
 
-    // Clone moves outward then fades
-    const spreadT = Math.min(1, pt * 1.4);
-    const fadeT = Math.max(0, (pt - 0.5) / 0.5);
-    const alpha = Math.max(0, (0.55 - fadeT * 0.55));
-    const ox = offsets[i] * spreadT;
+    const slideT = Math.min(1, pt * 2.2);
+    const eased = 1 - Math.pow(1 - slideT, 3);
+    const ox = finalOffsets[i] * eased;
 
-    // Render as a blueish silhouette ellipse (suggests body shape)
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = i % 2 === 0 ? effect.accentColor : effect.color;
-    ctx.beginPath();
-    ctx.ellipse(cx + ox, cy, 10, 16, 0, 0, Math.PI * 2);
-    ctx.fill();
+    const fadeIn = Math.min(1, pt * 5);
+    const fadeOut = Math.max(0, 1 - Math.max(0, pt - 0.55) / 0.45);
+    const alpha = fadeIn * fadeOut * 0.55;
+    if (alpha <= 0) continue;
 
-    // Inner lighter ring for ghost feel
-    ctx.globalAlpha = alpha * 0.5;
+    if (img) {
+      // Draw the actual sprite as a blueish ghost clone
+      const sprW = 38;
+      const sprH = 38;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      // Tint blue by drawing sprite then applying a colored overlay
+      ctx.drawImage(img, cx + ox - sprW / 2, cy - sprH / 2, sprW, sprH);
+      ctx.globalCompositeOperation = 'source-atop';
+      ctx.globalAlpha = alpha * 0.45;
+      ctx.fillStyle = '#a0c8ff';
+      ctx.fillRect(cx + ox - sprW / 2, cy - sprH / 2, sprW, sprH);
+      ctx.restore();
+    } else {
+      // Fallback: silhouette
+      const bodyW = 10;
+      const bodyH = 15;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = i % 2 === 0 ? effect.accentColor : '#b8d8ff';
+      ctx.beginPath();
+      ctx.ellipse(cx + ox, cy, bodyW, bodyH, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx + ox, cy - bodyH * 0.7, 7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Speed streak
+    if (eased < 0.85) {
+      const streakAlpha = alpha * (1 - eased / 0.85) * 0.35;
+      ctx.globalAlpha = streakAlpha;
+      ctx.strokeStyle = effect.accentColor;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 3]);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + ox, cy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Flash ring at activation
+  if (t < 0.25) {
+    const flashPt = t / 0.25;
+    ctx.globalAlpha = (1 - flashPt) * 0.5;
     ctx.strokeStyle = effect.accentColor;
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.ellipse(cx + ox, cy, 9, 14, 0, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 4 + flashPt * 18, 0, Math.PI * 2);
     ctx.stroke();
   }
 

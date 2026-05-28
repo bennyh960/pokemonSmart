@@ -2037,7 +2037,7 @@
     "id": 114,
     "name": {
       "en": "Haze",
-      "he": "ערפל"
+      "he": "אובך"
     },
     "type": "ice",
     "power": null,
@@ -4045,8 +4045,8 @@
     "mathDifficulty": 1,
     "damageClass": "status",
     "description": {
-      "en": "Switches while keeping effects.",
-      "he": "מתגים תוך שמירה על אפקטים."
+      "en": "Switch pokemon while keeping effects, also keeps substitutes.",
+      "he": "מאפשר החלפת פוקימון תוך שמירה על אפקטים - שומר על מצב בובה"
     }
   },
   {
