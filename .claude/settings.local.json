@@ -102,7 +102,8 @@
       "Bash(Remove-Item \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\.github\\\\workflows\")",
       "Bash(Remove-Item \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\.github\")",
       "Bash(node_modules/.bin/tsc --noEmit)",
-      "Bash(node_modules/.bin/tsx -e ' *)"
+      "Bash(node_modules/.bin/tsx -e ' *)",
+      "PowerShell(ls -Recurse \"C:\\\\Users\\\\behassan\\\\Desktop\\\\Projects\\\\Practice\\\\mehunan\\\\pokemon\\\\src\\\\data\\\\maps\" -Directory | ForEach-Object { [System.IO.Path]::GetFileName\\($_.FullName\\) } | Sort-Object -Unique)"
     ]
   }
 }

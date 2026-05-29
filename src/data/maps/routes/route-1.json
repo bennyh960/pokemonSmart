@@ -5,7 +5,7 @@
     "he": "דרך 1"
   },
   "tileset": "overworld",
-  "width": 35,
+  "width": 70,
   "height": 20,
   "tileSize": 16,
   "spawn": {
@@ -35,21 +35,21 @@
       "toY": 8
     },
     {
-      "fromX": 34,
+      "fromX": 69,
       "fromY": 6,
       "toMapId": "sumville/sumville",
       "toX": 1,
       "toY": 29
     },
     {
-      "fromX": 34,
+      "fromX": 69,
       "fromY": 7,
       "toMapId": "sumville/sumville",
       "toX": 1,
       "toY": 30
     },
     {
-      "fromX": 34,
+      "fromX": 69,
       "fromY": 8,
       "toMapId": "sumville/sumville",
       "toX": 1,
@@ -79,8 +79,8 @@
     {
       "id": "bug-catcher-1",
       "name": {
-        "en": "Bug Catcher Ben",
-        "he": "Bug Catcher Ben"
+        "en": "Dana",
+        "he": "באגסי איינשטיין"
       },
       "x": 5,
       "y": 5,
@@ -89,7 +89,7 @@
       "dialogue": [
         {
           "en": "Hey! You have Pokemon! Let's battle!",
-          "he": ""
+          "he": "היי - יש לך פוקימון? קדימה לקרב!"
         }
       ],
       "spriteType": "dana",
@@ -100,13 +100,8 @@
           "moves": []
         },
         {
-          "pokemonId": 13,
-          "level": 4,
-          "moves": []
-        },
-        {
           "pokemonId": 11,
-          "level": 6,
+          "level": 5,
           "moves": []
         }
       ],
@@ -141,14 +136,19 @@
       "dialogue": [
         {
           "en": "My Rattata is in the top percentage!",
-          "he": ""
+          "he": "הרטטה שלי יעשה ממך קציצות!"
         }
       ],
       "spriteType": "char_7ba749",
       "party": [
         {
           "pokemonId": 19,
-          "level": 6,
+          "level": 5,
+          "moves": []
+        },
+        {
+          "pokemonId": 152,
+          "level": 5,
           "moves": []
         }
       ],
@@ -160,74 +160,80 @@
       "postBattleDialogue": [
         {
           "en": "I dont know how to catch pokemon!",
-          "he": "אתה יודע איך לתפוס פוקימונים?"
+          "he": "אתה יודע איך לתפוס פוקימונים? צריך להחליש אותם תחילה ואז לזרוק עליהם פוכדור"
         }
       ]
     },
     {
       "id": "lass-1",
       "name": {
-        "en": "Lass Sally",
-        "he": "Lass Sally"
+        "en": "Shifra",
+        "he": "שפרה שוילי"
       },
-      "x": 29,
+      "x": 36,
       "y": 5,
-      "facing": "left",
+      "facing": "right",
       "type": "trainer",
       "dialogue": [
         {
-          "en": "Let me test your skills!",
-          "he": ""
+          "en": "",
+          "he": "הגיע הזמן לבחון את הכישורים שלך"
         }
       ],
       "spriteType": "char_e19d22",
       "party": [
         {
           "pokemonId": 16,
-          "level": 4,
+          "level": 6,
           "moves": []
         },
         {
           "pokemonId": 161,
-          "level": 5,
+          "level": 6,
+          "moves": []
+        },
+        {
+          "pokemonId": 155,
+          "level": 6,
           "moves": []
         }
       ],
       "reward": {
         "money": 150
       },
-      "lineOfSight": 3,
-      "postBattleDialogue": []
+      "lineOfSight": 11,
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "הרשמת מאוד! סוף השביל מוביל לסאמויל עיר החיבור - יש שם גם מכון פוקימונים"
+        }
+      ]
     },
     {
       "id": "hiker-1",
       "name": {
-        "en": "Hiker Rock",
-        "he": "מטפסת הרים ג'ני"
+        "en": "Jenni",
+        "he": "ג'ני"
       },
-      "x": 21,
-      "y": 3,
-      "facing": "down",
+      "x": 27,
+      "y": 10,
+      "facing": "up",
       "type": "trainer",
       "dialogue": [
         {
-          "en": "These rocks remind me of my home in the mountains!",
-          "he": ""
-        },
-        {
-          "en": "Count them — there are exactly seven!",
-          "he": ""
+          "en": "",
+          "he": "שמעתי שהנהר כאן מוביל לאזור מסתורי עם פוקימונים נדירים!"
         }
       ],
       "spriteType": "char_0502ea",
       "party": [
         {
-          "pokemonId": 74,
+          "pokemonId": 11,
           "level": 5,
           "moves": []
         },
         {
-          "pokemonId": 95,
+          "pokemonId": 14,
           "level": 6,
           "moves": []
         }
@@ -245,93 +251,39 @@
         "en": "Picnicker Daisy",
         "he": "ניקולה טסלה"
       },
-      "x": 14,
-      "y": 10,
+      "x": 40,
+      "y": 12,
       "facing": "up",
       "type": "trainer",
       "dialogue": [
         {
-          "en": "I'm counting all the Pokemon I see on this route!",
-          "he": ""
-        },
-        {
           "en": "So far I've counted... too many to remember!",
-          "he": ""
+          "he": "שלום! רוצה לערוך קרב אימון?"
         }
       ],
       "spriteType": "char_8c60a6",
       "party": [
         {
           "pokemonId": 43,
-          "level": 5,
+          "level": 6,
           "moves": []
         },
         {
           "pokemonId": 163,
-          "level": 5,
+          "level": 6,
+          "moves": []
+        },
+        {
+          "pokemonId": 158,
+          "level": 6,
           "moves": []
         }
       ],
       "reward": {
         "money": 140
       },
-      "lineOfSight": 16,
+      "lineOfSight": 6,
       "postBattleDialogue": []
-    },
-    {
-      "id": "npc-1774550276085",
-      "x": 32,
-      "y": 5,
-      "facing": "down",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "בוא נילחם חבר!"
-        }
-      ],
-      "spriteType": "char_459058",
-      "party": [
-        {
-          "pokemonId": 1,
-          "level": 8,
-          "moves": []
-        },
-        {
-          "pokemonId": 7,
-          "level": 8,
-          "moves": []
-        },
-        {
-          "pokemonId": 4,
-          "level": 8,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 100,
-        "items": [
-          {
-            "itemId": "potion",
-            "quantity": 3
-          }
-        ]
-      },
-      "postBattleDialogue": [
-        {
-          "en": "good luck in your journy",
-          "he": "בהצלחה במסע חבר!"
-        },
-        {
-          "en": "",
-          "he": "מקווה שניפגש שוב."
-        }
-      ],
-      "name": {
-        "en": "Ethan",
-        "he": "איתן"
-      }
     },
     {
       "id": "r1-extra1",
@@ -339,20 +291,20 @@
         "en": "Youngster Amos",
         "he": "Youngster Amos"
       },
-      "x": 28,
-      "y": 10,
-      "facing": "up",
+      "x": 55,
+      "y": 2,
+      "facing": "down",
       "type": "trainer",
       "spriteType": "char_10af6a",
       "party": [
         {
           "pokemonId": 19,
-          "level": 4,
+          "level": 6,
           "moves": []
         },
         {
           "pokemonId": 21,
-          "level": 5,
+          "level": 7,
           "moves": []
         }
       ],
@@ -365,38 +317,8 @@
           "he": "אני תמיד מתאמן ליד העשב הגבוה!"
         }
       ],
-      "lineOfSight": 3,
+      "lineOfSight": 2,
       "postBattleDialogue": []
-    },
-    {
-      "id": "route1-exit-npc",
-      "name": {
-        "en": "Lab Researcher",
-        "he": "עוזר מחקר דני"
-      },
-      "x": 32,
-      "y": 7,
-      "facing": "left",
-      "type": "dialogue",
-      "spriteType": "char_392694",
-      "spawnAfter": "act0-complete",
-      "despawnAfter": "act1-nullx-intro-seen",
-      "autoWalk": {
-        "pattern": [],
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 3,
-            "delay": 0
-          }
-        ]
-      },
-      "dialogue": [
-        {
-          "en": "Hey, wait! The professor sent me — he has an urgent message for you!",
-          "he": "היי, רגע! הפרופסור שלח אותי — יש לו הודעה דחופה בשבילך!"
-        }
-      ]
     },
     {
       "id": "r1-extra2",
@@ -411,13 +333,8 @@
       "spriteType": "dana",
       "party": [
         {
-          "pokemonId": 10,
-          "level": 4,
-          "moves": []
-        },
-        {
           "pokemonId": 13,
-          "level": 4,
+          "level": 5,
           "moves": []
         },
         {
@@ -438,6 +355,173 @@
       "lineOfSight": 3,
       "postBattleDialogue": [],
       "autoWalk": null
+    },
+    {
+      "id": "npc-1780037341200",
+      "x": 13,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "היי מה נשמע? שמעתי שזה אזור רבייה של סקווירטלים. אדמת החוף הסמוכה למים לפעמים מפתיעה בפוקימוני המים שלה."
+        }
+      ],
+      "spriteType": "char_10af6a",
+      "name": {
+        "en": "Alex",
+        "he": "אלכס"
+      }
+    },
+    {
+      "id": "npc-r1-blocker",
+      "x": 68,
+      "y": 5,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "בדרכך לסאמויל עיר החיבור?"
+        },
+        {
+          "en": "",
+          "he": "נראה לי שהפוקימונים שלך עדיין לא מספיק מאומנים. יש פה מספיק מאמנים להביס קודם"
+        }
+      ],
+      "spriteType": "char_24117d",
+      "blocker": true,
+      "mapClearBlocker": true,
+      "lineOfSight": 4
+    },
+    {
+      "id": "route1-exit-npc",
+      "x": 60,
+      "y": 5,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "בדיוק הגעתי מעיר החיבור  סאמויל - אני חושב שאני צריך להאתמן עוד לפני קרב המכון שלי"
+        }
+      ],
+      "spriteType": "char_1f9b7d",
+      "party": [
+        {
+          "pokemonId": 1,
+          "level": 8,
+          "moves": []
+        },
+        {
+          "pokemonId": 7,
+          "level": 9,
+          "moves": []
+        },
+        {
+          "pokemonId": 4,
+          "level": 10,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 300,
+        "items": [
+          {
+            "itemId": "potion",
+            "quantity": 5
+          }
+        ]
+      },
+      "postBattleDialogue": [
+        {
+          "en": "",
+          "he": "תפסתי את הפוקימונים שלי באזור הזה ."
+        }
+      ]
+    },
+    {
+      "id": "npc-1780039076227",
+      "x": 23,
+      "y": 7,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "היי - בעיר זירוויל אין מרכז פוקימונים אבל פרופסור אלגורתמיה יכול לרפא את הפוקימונים שלך"
+        }
+      ],
+      "spriteType": "char_6f0793",
+      "name": {
+        "en": "Lia",
+        "he": "לאה"
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 8,
+            "delay": 2.5
+          },
+          {
+            "dir": "left",
+            "steps": 8,
+            "delay": 2.5
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-r1-b2-pyParty",
+      "x": 49,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "שלום ! אני רואה שיש לך רק פוקימון 1 - לא כדאי לך להמשיך."
+        },
+        {
+          "en": "",
+          "he": "תפוס קודם פוקימון 1 לפחות שיהיה לך לגיבוי"
+        },
+        {
+          "en": "",
+          "he": "פשוט החלש פוקימון פראי - וזרוק עליו פוכדור."
+        },
+        {
+          "en": "",
+          "he": "כדי להכנס לתיק לחץ על 3"
+        },
+        {
+          "en": "",
+          "he": "שם עם החצים צריך לבחור כדורים - ואז זרוק פוכדור"
+        }
+      ],
+      "spriteType": "char_4d53b7",
+      "blocker": true,
+      "despawnWhenParty": {
+        "count": 2,
+        "minLevel": 1
+      },
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "poke-ball",
+            "quantity": 10
+          },
+          {
+            "itemId": "potion",
+            "quantity": 1
+          }
+        ]
+      }
     }
   ],
   "music": "route",
@@ -445,747 +529,32 @@
   "interactiveItems": {},
   "movablePuzzle": {},
   "flagListeners": [],
+  "outside": {
+    "rain": 0.05,
+    "sun": 0.2
+  }
+,
   "tiles": [
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "g1",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "g1",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5"
-    ],
-    [
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5"
-    ],
-    [
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "cs1r2c2",
-      "cs1r2c2",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "s1-5",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "cs1r2c2",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1t",
-      "wt1r",
-      "cs1r2c2",
-      "cs1r2c2",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1tr",
-      "cs1r2c2",
-      "cs1r2c2",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1tr",
-      "cs1r2c2",
-      "cs1r2c2",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1tr",
-      "cs1r2c2",
-      "cs1r2c2",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ],
-    [
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1",
-      "wt1tr",
-      "cs1r2c2",
-      "cs1r2c2",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "g1",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c",
-      "gre-c"
-    ]
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","g1","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","g1","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mt2c","mt2c","mt2c","mt2c","mt2c","gre-c","gre-c","mt2br2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mt2tl2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mt2tl2","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1r","cs1r2c2","cs1r2c2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","cs1r2c2","cs1r2c2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","cs1r2c2","cs1r2c2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","cs1r2c2","cs1r2c2","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","cs1r2c2","g1","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","g2tl","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"]
   ],
   "objects": [
     {
@@ -1210,33 +579,13 @@
     },
     {
       "key": "r1",
-      "x": 31,
-      "y": 6
-    },
-    {
-      "key": "r1",
       "x": 8,
       "y": 2
     },
     {
       "key": "r1",
       "x": 12,
-      "y": 11
-    },
-    {
-      "key": "r1",
-      "x": 12,
       "y": 3
-    },
-    {
-      "key": "r1",
-      "x": 11,
-      "y": 11
-    },
-    {
-      "key": "r1",
-      "x": 34,
-      "y": 18
     },
     {
       "key": "r1",
@@ -1246,12 +595,7 @@
     {
       "key": "r1",
       "x": 29,
-      "y": 8
-    },
-    {
-      "key": "r1",
-      "x": 32,
-      "y": 8
+      "y": 14
     },
     {
       "key": "r1",
@@ -1309,11 +653,6 @@
       "y": 3
     },
     {
-      "key": "r3",
-      "x": 33,
-      "y": 1
-    },
-    {
       "key": "g3",
       "x": 3,
       "y": 3
@@ -1510,17 +849,7 @@
     },
     {
       "key": "g3",
-      "x": 26,
-      "y": 17
-    },
-    {
-      "key": "g3",
       "x": 27,
-      "y": 17
-    },
-    {
-      "key": "g3",
-      "x": 28,
       "y": 17
     },
     {
@@ -1615,33 +944,8 @@
     },
     {
       "key": "signx",
-      "x": 34,
-      "y": 5
-    },
-    {
-      "key": "signx",
       "x": 2,
       "y": 6
-    },
-    {
-      "key": "r3",
-      "x": 33,
-      "y": 15
-    },
-    {
-      "key": "r3",
-      "x": 33,
-      "y": 13
-    },
-    {
-      "key": "r3",
-      "x": 33,
-      "y": 11
-    },
-    {
-      "key": "r3",
-      "x": 33,
-      "y": 3
     },
     {
       "key": "g3",
@@ -1654,11 +958,6 @@
       "y": 1
     },
     {
-      "key": "r2",
-      "x": 33,
-      "y": 17
-    },
-    {
       "key": "r3",
       "x": 0,
       "y": 18
@@ -1666,26 +965,6 @@
     {
       "key": "r3",
       "x": 4,
-      "y": 18
-    },
-    {
-      "key": "r3",
-      "x": 6,
-      "y": 18
-    },
-    {
-      "key": "r3",
-      "x": 12,
-      "y": 18
-    },
-    {
-      "key": "r3",
-      "x": 10,
-      "y": 18
-    },
-    {
-      "key": "r3",
-      "x": 8,
       "y": 18
     },
     {
@@ -1747,21 +1026,6 @@
       "key": "s1-6",
       "x": 14,
       "y": 17
-    },
-    {
-      "key": "s1-6",
-      "x": 14,
-      "y": 18
-    },
-    {
-      "key": "s1-6",
-      "x": 14,
-      "y": 19
-    },
-    {
-      "key": "r3",
-      "x": 14,
-      "y": 18
     },
     {
       "key": "s1-3",
@@ -2114,11 +1378,6 @@
       "y": 9
     },
     {
-      "key": "r3",
-      "x": 33,
-      "y": 9
-    },
-    {
       "key": "s1-8",
       "x": 1,
       "y": 9
@@ -2145,11 +1404,6 @@
     },
     {
       "key": "g3",
-      "x": 30,
-      "y": 17
-    },
-    {
-      "key": "g3",
       "x": 31,
       "y": 15
     },
@@ -2172,11 +1426,6 @@
       "key": "g3",
       "x": 32,
       "y": 15
-    },
-    {
-      "key": "g3",
-      "x": 32,
-      "y": 17
     },
     {
       "key": "t8",
@@ -2469,253 +1718,2601 @@
       "y": 12
     },
     {
-      "key": "mg1t",
-      "x": 17,
-      "y": 19
-    },
-    {
-      "key": "mg1t",
-      "x": 18,
-      "y": 19
-    },
-    {
-      "key": "mg1t",
-      "x": 19,
-      "y": 19
-    },
-    {
-      "key": "mg1t",
-      "x": 20,
-      "y": 19
-    },
-    {
-      "key": "mg1t",
-      "x": 21,
-      "y": 19
-    },
-    {
-      "key": "mg1t",
-      "x": 22,
-      "y": 19
-    },
-    {
-      "key": "mg1t",
-      "x": 23,
-      "y": 19
-    },
-    {
-      "key": "mg1t",
+      "key": "g3",
       "x": 24,
+      "y": 18
+    },
+    {
+      "key": "g3",
+      "x": 23,
+      "y": 18
+    },
+    {
+      "key": "g3",
+      "x": 22,
+      "y": 18
+    },
+    {
+      "key": "g3",
+      "x": 21,
+      "y": 18
+    },
+    {
+      "key": "g3",
+      "x": 20,
+      "y": 18
+    },
+    {
+      "key": "g3",
+      "x": 19,
+      "y": 18
+    },
+    {
+      "key": "g3",
+      "x": 18,
+      "y": 18
+    },
+    {
+      "key": "g3",
+      "x": 17,
+      "y": 18
+    },
+    {
+      "key": "g3",
+      "x": 17,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 18,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 21,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 19,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 20,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 20,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 19,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 17,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 20,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 17,
+      "y": 15
+    },
+    {
+      "key": "t2",
+      "x": 36,
       "y": 19
     },
     {
-      "key": "mg1t",
-      "x": 25,
+      "key": "t2",
+      "x": 35,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 37,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 38,
       "y": 19
     },
     {
-      "key": "mg1t",
-      "x": 26,
+      "key": "t2",
+      "x": 39,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 40,
       "y": 19
     },
     {
-      "key": "mg1t",
-      "x": 27,
+      "key": "t2",
+      "x": 41,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 42,
       "y": 19
     },
     {
-      "key": "mg1t",
-      "x": 28,
+      "key": "t2",
+      "x": 43,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 44,
       "y": 19
     },
     {
-      "key": "mg1t",
-      "x": 29,
+      "key": "t2",
+      "x": 45,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 46,
       "y": 19
     },
     {
-      "key": "mg1t",
-      "x": 30,
-      "y": 19
+      "key": "t2u",
+      "x": 35,
+      "y": 17
+    },
+    {
+      "key": "t2u",
+      "x": 36,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 37,
+      "y": 17
+    },
+    {
+      "key": "t2u",
+      "x": 38,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 39,
+      "y": 17
+    },
+    {
+      "key": "t2u",
+      "x": 40,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 41,
+      "y": 17
+    },
+    {
+      "key": "t2u",
+      "x": 42,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 43,
+      "y": 17
+    },
+    {
+      "key": "t2u",
+      "x": 44,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 45,
+      "y": 17
+    },
+    {
+      "key": "t2u",
+      "x": 46,
+      "y": 18
     },
     {
       "key": "mg1t",
-      "x": 31,
-      "y": 19
+      "x": 49,
+      "y": 5
     },
     {
       "key": "mg1t",
-      "x": 32,
-      "y": 19
+      "x": 50,
+      "y": 5
     },
     {
       "key": "mg1t",
-      "x": 33,
-      "y": 19
+      "x": 51,
+      "y": 5
+    },
+    {
+      "key": "mg1t",
+      "x": 52,
+      "y": 5
+    },
+    {
+      "key": "mg1t",
+      "x": 53,
+      "y": 5
+    },
+    {
+      "key": "mg1t",
+      "x": 54,
+      "y": 5
+    },
+    {
+      "key": "mg1t",
+      "x": 55,
+      "y": 5
+    },
+    {
+      "key": "mg1t",
+      "x": 56,
+      "y": 5
+    },
+    {
+      "key": "mg1t",
+      "x": 57,
+      "y": 5
+    },
+    {
+      "key": "mg1t",
+      "x": 58,
+      "y": 5
     },
     {
       "key": "mg1tr",
-      "x": 34,
-      "y": 19
+      "x": 59,
+      "y": 5
     },
     {
       "key": "mg1tl",
+      "x": 48,
+      "y": 5
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 6
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 7
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 8
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 9
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 10
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 11
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 12
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 13
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 14
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 15
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 16
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 17
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 18
+    },
+    {
+      "key": "mg1l",
+      "x": 48,
+      "y": 19
+    },
+    {
+      "key": "mg1r",
+      "x": 59,
+      "y": 6
+    },
+    {
+      "key": "mg1r",
+      "x": 59,
+      "y": 7
+    },
+    {
+      "key": "mg1r",
+      "x": 59,
+      "y": 8
+    },
+    {
+      "key": "mg1r",
+      "x": 59,
+      "y": 9
+    },
+    {
+      "key": "mg1tl",
+      "x": 50,
+      "y": 7
+    },
+    {
+      "key": "mg1t",
+      "x": 51,
+      "y": 7
+    },
+    {
+      "key": "mg1t",
+      "x": 52,
+      "y": 7
+    },
+    {
+      "key": "mg1t",
+      "x": 53,
+      "y": 7
+    },
+    {
+      "key": "mg1t",
+      "x": 54,
+      "y": 7
+    },
+    {
+      "key": "mg1t",
+      "x": 55,
+      "y": 7
+    },
+    {
+      "key": "mg1t",
+      "x": 56,
+      "y": 7
+    },
+    {
+      "key": "mg1tr",
+      "x": 57,
+      "y": 7
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 8
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 9
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 10
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 11
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 12
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 13
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 14
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 15
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 16
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 17
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 18
+    },
+    {
+      "key": "mg1l",
+      "x": 50,
+      "y": 19
+    },
+    {
+      "key": "mg1r",
+      "x": 57,
+      "y": 8
+    },
+    {
+      "key": "mg1r",
+      "x": 57,
+      "y": 9
+    },
+    {
+      "key": "mg1r",
+      "x": 57,
+      "y": 10
+    },
+    {
+      "key": "mg1r",
+      "x": 57,
+      "y": 11
+    },
+    {
+      "key": "mg1r",
+      "x": 57,
+      "y": 12
+    },
+    {
+      "key": "mg1r",
+      "x": 57,
+      "y": 13
+    },
+    {
+      "key": "mg1r",
+      "x": 57,
+      "y": 14
+    },
+    {
+      "key": "mg1r",
+      "x": 57,
+      "y": 15
+    },
+    {
+      "key": "mg1r",
+      "x": 67,
+      "y": 17
+    },
+    {
+      "key": "mg1r",
+      "x": 67,
+      "y": 18
+    },
+    {
+      "key": "mg1r",
+      "x": 67,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 58,
+      "y": 16
+    },
+    {
+      "key": "mg1t",
+      "x": 59,
+      "y": 16
+    },
+    {
+      "key": "mg1t",
+      "x": 60,
+      "y": 16
+    },
+    {
+      "key": "mg1t",
+      "x": 61,
+      "y": 16
+    },
+    {
+      "key": "mg1t",
+      "x": 62,
+      "y": 16
+    },
+    {
+      "key": "mg1t",
+      "x": 63,
+      "y": 16
+    },
+    {
+      "key": "mg1t",
+      "x": 64,
+      "y": 16
+    },
+    {
+      "key": "mg1t",
+      "x": 65,
+      "y": 16
+    },
+    {
+      "key": "mg1t",
+      "x": 66,
+      "y": 16
+    },
+    {
+      "key": "mg1tr",
+      "x": 67,
+      "y": 16
+    },
+    {
+      "key": "mg1tl",
+      "x": 52,
+      "y": 9
+    },
+    {
+      "key": "mg1t",
+      "x": 53,
+      "y": 9
+    },
+    {
+      "key": "mg1t",
+      "x": 54,
+      "y": 9
+    },
+    {
+      "key": "mg1tr",
+      "x": 55,
+      "y": 9
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 10
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 11
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 12
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 13
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 14
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 15
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 16
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 17
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 18
+    },
+    {
+      "key": "mg1l",
+      "x": 52,
+      "y": 19
+    },
+    {
+      "key": "mg1r",
+      "x": 55,
+      "y": 10
+    },
+    {
+      "key": "mg1r",
+      "x": 55,
+      "y": 11
+    },
+    {
+      "key": "mg1r",
+      "x": 55,
+      "y": 12
+    },
+    {
+      "key": "mg1r",
+      "x": 55,
+      "y": 13
+    },
+    {
+      "key": "mg1r",
+      "x": 55,
+      "y": 14
+    },
+    {
+      "key": "mg1r",
+      "x": 55,
+      "y": 15
+    },
+    {
+      "key": "mg1r",
+      "x": 55,
+      "y": 16
+    },
+    {
+      "key": "mg1r",
+      "x": 55,
+      "y": 17
+    },
+    {
+      "key": "mg1t",
+      "x": 56,
+      "y": 18
+    },
+    {
+      "key": "mg1t",
+      "x": 57,
+      "y": 18
+    },
+    {
+      "key": "mg1t",
+      "x": 58,
+      "y": 18
+    },
+    {
+      "key": "mg1t",
+      "x": 59,
+      "y": 18
+    },
+    {
+      "key": "mg1t",
+      "x": 60,
+      "y": 18
+    },
+    {
+      "key": "mg1t",
+      "x": 61,
+      "y": 18
+    },
+    {
+      "key": "mg1t",
+      "x": 62,
+      "y": 18
+    },
+    {
+      "key": "mg1t",
+      "x": 63,
+      "y": 18
+    },
+    {
+      "key": "mg1tr",
+      "x": 64,
+      "y": 18
+    },
+    {
+      "key": "mg1r",
+      "x": 64,
+      "y": 19
+    },
+    {
+      "key": "g3",
+      "x": 33,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 33,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 33,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 30,
+      "y": 4
+    },
+    {
+      "key": "g3",
+      "x": 31,
+      "y": 4
+    },
+    {
+      "key": "g3",
+      "x": 32,
+      "y": 4
+    },
+    {
+      "key": "g3",
+      "x": 33,
+      "y": 4
+    },
+    {
+      "key": "g3",
+      "x": 33,
+      "y": 3
+    },
+    {
+      "key": "g3",
+      "x": 32,
+      "y": 3
+    },
+    {
+      "key": "g3",
+      "x": 31,
+      "y": 3
+    },
+    {
+      "key": "g3",
+      "x": 30,
+      "y": 3
+    },
+    {
+      "key": "s1-2",
+      "x": 46,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 47,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 48,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 49,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 50,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 51,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 52,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 53,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 54,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 55,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 56,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 57,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 58,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 60,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 61,
+      "y": 2
+    },
+    {
+      "key": "s1-2",
+      "x": 63,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 64,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 65,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 66,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 67,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 68,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 69,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 34,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 35,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 36,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 37,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 38,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 39,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 40,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 41,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 42,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 43,
+      "y": 5
+    },
+    {
+      "key": "s1-2",
+      "x": 44,
+      "y": 5
+    },
+    {
+      "key": "s1-8",
+      "x": 35,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 36,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 37,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 38,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 39,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 40,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 41,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 42,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 43,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 44,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 45,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 46,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 47,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 60,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 61,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 62,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 63,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 64,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 65,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 66,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 67,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 68,
+      "y": 9
+    },
+    {
+      "key": "s1-8",
+      "x": 69,
+      "y": 9
+    },
+    {
+      "key": "s1jtr",
+      "x": 62,
+      "y": 5
+    },
+    {
+      "key": "s1jtl",
+      "x": 45,
+      "y": 5
+    },
+    {
+      "key": "s1-6",
+      "x": 62,
+      "y": 4
+    },
+    {
+      "key": "s1-6",
+      "x": 62,
+      "y": 3
+    },
+    {
+      "key": "s1-4",
+      "x": 45,
+      "y": 4
+    },
+    {
+      "key": "s1-4",
+      "x": 45,
+      "y": 3
+    },
+    {
+      "key": "s1-3",
+      "x": 62,
+      "y": 2
+    },
+    {
+      "key": "s1",
+      "x": 45,
+      "y": 2
+    },
+    {
+      "key": "mt2l",
+      "x": 34,
+      "y": 0
+    },
+    {
+      "key": "mt2l",
+      "x": 34,
+      "y": 1
+    },
+    {
+      "key": "mt2l",
+      "x": 34,
+      "y": 2
+    },
+    {
+      "key": "mt2l",
+      "x": 34,
+      "y": 3
+    },
+    {
+      "key": "mt2lb",
+      "x": 34,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 35,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 36,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 37,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 38,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 39,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 40,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 41,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 42,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 43,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 44,
+      "y": 4
+    },
+    {
+      "key": "mt2br",
+      "x": 44,
+      "y": 4
+    },
+    {
+      "key": "mt2r",
+      "x": 44,
+      "y": 3
+    },
+    {
+      "key": "mt2r",
+      "x": 44,
+      "y": 2
+    },
+    {
+      "key": "mt2b",
+      "x": 45,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 46,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 47,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 48,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 49,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 50,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 51,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 52,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 53,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 54,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 55,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 56,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 57,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 58,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 59,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 60,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 61,
+      "y": 1
+    },
+    {
+      "key": "mt2b",
+      "x": 62,
+      "y": 1
+    },
+    {
+      "key": "mt2l",
+      "x": 63,
+      "y": 2
+    },
+    {
+      "key": "mt2l",
+      "x": 63,
+      "y": 3
+    },
+    {
+      "key": "mt2lb",
+      "x": 63,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 64,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 65,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 66,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 67,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 68,
+      "y": 4
+    },
+    {
+      "key": "mt2b",
+      "x": 69,
+      "y": 4
+    },
+    {
+      "key": "mt2lb",
+      "x": 35,
+      "y": 3
+    },
+    {
+      "key": "mt2b",
+      "x": 36,
+      "y": 3
+    },
+    {
+      "key": "mt2b",
+      "x": 37,
+      "y": 3
+    },
+    {
+      "key": "mt2b",
+      "x": 38,
+      "y": 3
+    },
+    {
+      "key": "mt2b",
+      "x": 39,
+      "y": 3
+    },
+    {
+      "key": "mt2b",
+      "x": 40,
+      "y": 3
+    },
+    {
+      "key": "mt2b",
+      "x": 41,
+      "y": 3
+    },
+    {
+      "key": "mt2b",
+      "x": 42,
+      "y": 3
+    },
+    {
+      "key": "mt2l",
+      "x": 35,
+      "y": 2
+    },
+    {
+      "key": "mt2l",
+      "x": 35,
+      "y": 1
+    },
+    {
+      "key": "mt2l",
+      "x": 35,
+      "y": 0
+    },
+    {
+      "key": "mt2r",
+      "x": 43,
+      "y": 2
+    },
+    {
+      "key": "mt2r",
+      "x": 43,
+      "y": 1
+    },
+    {
+      "key": "mt2br",
+      "x": 43,
+      "y": 3
+    },
+    {
+      "key": "mt2r",
+      "x": 43,
+      "y": 0
+    },
+    {
+      "key": "mt2l",
+      "x": 36,
+      "y": 0
+    },
+    {
+      "key": "mt2l",
+      "x": 36,
+      "y": 1
+    },
+    {
+      "key": "mt2r",
+      "x": 42,
+      "y": 0
+    },
+    {
+      "key": "mt2r",
+      "x": 42,
+      "y": 1
+    },
+    {
+      "key": "mt2lb",
+      "x": 36,
+      "y": 2
+    },
+    {
+      "key": "mt2br",
+      "x": 42,
+      "y": 2
+    },
+    {
+      "key": "mt2b",
+      "x": 41,
+      "y": 2
+    },
+    {
+      "key": "mt2b",
+      "x": 40,
+      "y": 2
+    },
+    {
+      "key": "mt2b",
+      "x": 39,
+      "y": 2
+    },
+    {
+      "key": "mt2b",
+      "x": 38,
+      "y": 2
+    },
+    {
+      "key": "mt2b",
+      "x": 37,
+      "y": 2
+    },
+    {
+      "key": "gre7",
+      "x": 44,
+      "y": 0
+    },
+    {
+      "key": "gre7",
+      "x": 64,
+      "y": 3
+    },
+    {
+      "key": "gre7",
+      "x": 65,
+      "y": 3
+    },
+    {
+      "key": "gre7",
+      "x": 66,
+      "y": 3
+    },
+    {
+      "key": "gre7",
+      "x": 67,
+      "y": 3
+    },
+    {
+      "key": "gre7",
+      "x": 68,
+      "y": 3
+    },
+    {
+      "key": "gre7",
+      "x": 63,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 62,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 61,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 60,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 59,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 58,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 57,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 56,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 55,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 54,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 53,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 52,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 51,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 50,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 49,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 48,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 47,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 46,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 45,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 41,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 40,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 39,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 38,
+      "y": 1
+    },
+    {
+      "key": "gre7",
+      "x": 37,
+      "y": 1
+    },
+    {
+      "key": "gre5",
+      "x": 41,
+      "y": 0
+    },
+    {
+      "key": "gre5",
+      "x": 42,
+      "y": 0
+    },
+    {
+      "key": "gre4",
+      "x": 36,
+      "y": 0
+    },
+    {
+      "key": "gre6",
+      "x": 36,
+      "y": 1
+    },
+    {
+      "key": "gre8",
+      "x": 42,
+      "y": 1
+    },
+    {
+      "key": "gre4",
+      "x": 63,
+      "y": 3
+    },
+    {
+      "key": "gre4",
+      "x": 63,
+      "y": 2
+    },
+    {
+      "key": "gre4",
+      "x": 63,
+      "y": 1
+    },
+    {
+      "key": "t4",
+      "x": 64,
+      "y": 2
+    },
+    {
+      "key": "t4",
+      "x": 67,
+      "y": 1
+    },
+    {
+      "key": "t4",
+      "x": 65,
+      "y": 1
+    },
+    {
+      "key": "t1b",
+      "x": 40,
+      "y": 0
+    },
+    {
+      "key": "t1b",
+      "x": 37,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 44,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 45,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 46,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 50,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 51,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 52,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 53,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 59,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 60,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 61,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 69,
+      "y": 3
+    },
+    {
+      "key": "g3",
+      "x": 68,
+      "y": 3
+    },
+    {
+      "key": "g3",
+      "x": 67,
+      "y": 3
+    },
+    {
+      "key": "g3",
+      "x": 66,
+      "y": 3
+    },
+    {
+      "key": "g3",
+      "x": 65,
+      "y": 3
+    },
+    {
+      "key": "g3",
+      "x": 66,
+      "y": 2
+    },
+    {
+      "key": "g3",
+      "x": 66,
+      "y": 1
+    },
+    {
+      "key": "g3",
+      "x": 66,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 68,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 68,
+      "y": 1
+    },
+    {
+      "key": "g3",
+      "x": 68,
+      "y": 2
+    },
+    {
+      "key": "g3",
+      "x": 69,
+      "y": 2
+    },
+    {
+      "key": "g3",
+      "x": 69,
+      "y": 1
+    },
+    {
+      "key": "g3",
+      "x": 69,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 64,
+      "y": 1
+    },
+    {
+      "key": "g3",
+      "x": 64,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 63,
+      "y": 0
+    },
+    {
+      "key": "g3",
+      "x": 62,
+      "y": 0
+    },
+    {
+      "key": "g5",
+      "x": 39,
+      "y": 0
+    },
+    {
+      "key": "g5",
+      "x": 48,
+      "y": 0
+    },
+    {
+      "key": "g5",
+      "x": 55,
+      "y": 0
+    },
+    {
+      "key": "g5",
+      "x": 56,
+      "y": 0
+    },
+    {
+      "key": "g5",
+      "x": 65,
+      "y": 0
+    },
+    {
+      "key": "g5",
+      "x": 67,
+      "y": 0
+    },
+    {
+      "key": "rock1",
+      "x": 47,
+      "y": 0
+    },
+    {
+      "key": "rock1",
+      "x": 49,
+      "y": 0
+    },
+    {
+      "key": "rock1",
+      "x": 55,
+      "y": 0
+    },
+    {
+      "key": "rock1",
+      "x": 57,
+      "y": 0
+    },
+    {
+      "key": "rock1",
+      "x": 58,
+      "y": 0
+    },
+    {
+      "key": "rock1",
+      "x": 54,
+      "y": 0
+    },
+    {
+      "key": "gre7",
+      "x": 69,
+      "y": 4
+    },
+    {
+      "key": "gre7",
+      "x": 68,
+      "y": 4
+    },
+    {
+      "key": "gre7",
+      "x": 67,
+      "y": 4
+    },
+    {
+      "key": "gre7",
+      "x": 66,
+      "y": 4
+    },
+    {
+      "key": "gre7",
+      "x": 65,
+      "y": 4
+    },
+    {
+      "key": "gre7",
+      "x": 64,
+      "y": 4
+    },
+    {
+      "key": "gre6",
+      "x": 63,
+      "y": 4
+    },
+    {
+      "key": "mg1t",
+      "x": 60,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 61,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 62,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 63,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 64,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 65,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 66,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 67,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 68,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 69,
+      "y": 10
+    },
+    {
+      "key": "signx",
+      "x": 69,
+      "y": 5
+    },
+    {
+      "key": "rock1",
+      "x": 61,
+      "y": 11
+    },
+    {
+      "key": "rock1",
+      "x": 66,
+      "y": 13
+    },
+    {
+      "key": "rock1",
+      "x": 69,
+      "y": 11
+    },
+    {
+      "key": "rock1",
+      "x": 69,
+      "y": 9
+    },
+    {
+      "key": "rock1",
+      "x": 54,
+      "y": 6
+    },
+    {
+      "key": "rock1",
+      "x": 47,
+      "y": 12
+    },
+    {
+      "key": "rock1",
+      "x": 42,
+      "y": 14
+    },
+    {
+      "key": "g4",
+      "x": 39,
+      "y": 12
+    },
+    {
+      "key": "g4",
+      "x": 43,
+      "y": 12
+    },
+    {
+      "key": "g4",
+      "x": 45,
+      "y": 14
+    },
+    {
+      "key": "g4",
+      "x": 38,
+      "y": 15
+    },
+    {
+      "key": "g6-s",
+      "x": 49,
+      "y": 6
+    },
+    {
+      "key": "g6-s",
+      "x": 64,
+      "y": 11
+    },
+    {
+      "key": "g6-s",
+      "x": 59,
+      "y": 11
+    },
+    {
+      "key": "g3",
+      "x": 34,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 34,
+      "y": 16
+    },
+    {
+      "key": "t2",
+      "x": 47,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 47,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 35,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 36,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 37,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 39,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 40,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 41,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 42,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 43,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 44,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 45,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 46,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 47,
+      "y": 15
+    },
+    {
+      "key": "g3",
+      "x": 47,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 46,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 45,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 44,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 43,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 42,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 41,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 40,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 39,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 38,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 37,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 36,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 35,
+      "y": 16
+    },
+    {
+      "key": "g3",
+      "x": 36,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 38,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 40,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 42,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 44,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 46,
+      "y": 17
+    },
+    {
+      "key": "g3",
+      "x": 47,
+      "y": 19
+    },
+    {
+      "key": "g3",
+      "x": 45,
+      "y": 19
+    },
+    {
+      "key": "g3",
+      "x": 43,
+      "y": 19
+    },
+    {
+      "key": "g3",
+      "x": 41,
+      "y": 19
+    },
+    {
+      "key": "g3",
+      "x": 39,
+      "y": 19
+    },
+    {
+      "key": "g3",
+      "x": 37,
+      "y": 19
+    },
+    {
+      "key": "g3",
+      "x": 35,
+      "y": 19
+    },
+    {
+      "key": "s1-2",
+      "x": 59,
+      "y": 2
+    },
+    {
+      "key": "t2",
+      "x": 38,
+      "y": 12
+    },
+    {
+      "key": "t2",
+      "x": 41,
+      "y": 13
+    },
+    {
+      "key": "t2",
+      "x": 46,
+      "y": 12
+    },
+    {
+      "key": "t2",
+      "x": 35,
+      "y": 13
+    },
+    {
+      "key": "t2",
+      "x": 36,
+      "y": 12
+    },
+    {
+      "key": "t2",
+      "x": 34,
+      "y": 11
+    },
+    {
+      "key": "t2u",
+      "x": 34,
+      "y": 10
+    },
+    {
+      "key": "t2u",
+      "x": 36,
+      "y": 11
+    },
+    {
+      "key": "t2u",
+      "x": 35,
+      "y": 12
+    },
+    {
+      "key": "t2u",
+      "x": 38,
+      "y": 11
+    },
+    {
+      "key": "t2u",
+      "x": 41,
+      "y": 12
+    },
+    {
+      "key": "t2u",
+      "x": 46,
+      "y": 11
+    },
+    {
+      "key": "item-pokeball",
+      "x": 23,
+      "y": 14
+    },
+    {
+      "key": "item-revive",
+      "x": 47,
+      "y": 14
+    },
+    {
+      "key": "flowerX",
+      "x": 20,
+      "y": 14
+    },
+    {
+      "key": "flowerX",
+      "x": 31,
+      "y": 14
+    },
+    {
+      "key": "mg1t",
+      "x": 8,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 9,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 10,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 11,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 12,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 13,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 14,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 15,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
       "x": 16,
       "y": 19
     },
     {
-      "key": "g3",
-      "x": 33,
+      "key": "mg1t",
+      "x": 17,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 18,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 19,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 20,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 21,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 22,
+      "y": 19
+    },
+    {
+      "key": "mg1t",
+      "x": 23,
+      "y": 19
+    },
+    {
+      "key": "mg1tr",
+      "x": 24,
+      "y": 19
+    },
+    {
+      "key": "g6-s2",
+      "x": 11,
+      "y": 19
+    },
+    {
+      "key": "g6-s2",
+      "x": 14,
+      "y": 19
+    },
+    {
+      "key": "g6-s2",
+      "x": 15,
       "y": 18
     },
     {
-      "key": "g3",
-      "x": 32,
+      "key": "s1-6",
+      "x": 14,
       "y": 18
     },
     {
-      "key": "g3",
-      "x": 31,
-      "y": 18
+      "key": "t2",
+      "x": 25,
+      "y": 19
     },
     {
-      "key": "g3",
-      "x": 30,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 29,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 28,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 27,
-      "y": 18
-    },
-    {
-      "key": "g3",
+      "key": "t2",
       "x": 26,
       "y": 18
     },
     {
-      "key": "g3",
+      "key": "t2",
+      "x": 27,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 28,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 29,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 30,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 31,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 32,
+      "y": 18
+    },
+    {
+      "key": "t2",
+      "x": 33,
+      "y": 19
+    },
+    {
+      "key": "t2",
+      "x": 34,
+      "y": 18
+    },
+    {
+      "key": "t2u",
       "x": 25,
       "y": 18
     },
     {
-      "key": "g3",
-      "x": 24,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 23,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 22,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 21,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 20,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 19,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 18,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 17,
-      "y": 18
-    },
-    {
-      "key": "g3",
-      "x": 17,
+      "key": "t2u",
+      "x": 26,
       "y": 17
     },
     {
-      "key": "g3",
-      "x": 18,
+      "key": "t2u",
+      "x": 27,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 28,
       "y": 17
     },
     {
-      "key": "g3",
-      "x": 21,
+      "key": "t2u",
+      "x": 29,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 30,
       "y": 17
     },
     {
-      "key": "g3",
-      "x": 19,
-      "y": 17
-    },
-    {
-      "key": "g3",
-      "x": 20,
-      "y": 17
-    },
-    {
-      "key": "g3",
-      "x": 20,
-      "y": 16
-    },
-    {
-      "key": "g3",
-      "x": 19,
-      "y": 16
-    },
-    {
-      "key": "g3",
-      "x": 17,
-      "y": 16
-    },
-    {
-      "key": "g3",
-      "x": 20,
-      "y": 15
-    },
-    {
-      "key": "g3",
-      "x": 17,
-      "y": 15
-    },
-    {
-      "key": "g6-s2",
-      "x": 18,
-      "y": 19
-    },
-    {
-      "key": "g6-s2",
-      "x": 21,
-      "y": 19
-    },
-    {
-      "key": "g6-s2",
+      "key": "t2u",
       "x": 31,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 32,
+      "y": 17
+    },
+    {
+      "key": "t2u",
+      "x": 33,
+      "y": 18
+    },
+    {
+      "key": "t2u",
+      "x": 34,
+      "y": 17
+    },
+    {
+      "key": "g5",
+      "x": 26,
+      "y": 19
+    },
+    {
+      "key": "g5",
+      "x": 28,
+      "y": 19
+    },
+    {
+      "key": "g5",
+      "x": 30,
+      "y": 19
+    },
+    {
+      "key": "g5",
+      "x": 32,
+      "y": 19
+    },
+    {
+      "key": "g5",
+      "x": 34,
+      "y": 19
+    },
+    {
+      "key": "g5",
+      "x": 35,
+      "y": 14
+    },
+    {
+      "key": "g5",
+      "x": 41,
+      "y": 10
+    },
+    {
+      "key": "mg1t",
+      "x": 7,
+      "y": 19
+    },
+    {
+      "key": "mg1tl",
+      "x": 6,
       "y": 19
     }
   ],
-  "outside": {
-    "rain": 0.05,
-    "sun": 0.2
-  }
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
 }

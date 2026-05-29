@@ -145,6 +145,10 @@ registerCutscene({
           en: 'I strongly advice you use your pokedex to learn more about pokemons types and moves. It will be a great help in your journey.',
           he: 'אני מאוד ממליץ לך להשתמש בפוקדקס שלך כדי ללמוד עוד על סוגי פוקמונים ומהלכים. זה יהיה עזר גדול במסע שלך.',
         },
+        {
+          en: ' As you progress through the journey - the game will automatically save for you at certain points - but it is recommended to initiate saving by pressing the ENTER button - and then save manually before important challenges or before exiting the game.',
+          he: ' ככל שתתקדם במסע - המשחק ישמר עבורך בנקודות שונות בצורה אוטומטית - אבל מומלץ ליזום שמירה בעזרת לחיצה על לחצן ENTER - ואז שמור ידני לפני אתגרים חשובים או לפני יציאה מהמשחק. ',
+        },
         { en: 'Also, here are some items to help you get started:', he: 'בנוסף, הנה כמה פריטים שיעזרו לך להתחיל:' },
         {
           en: 'Pokeballs are essential for capturing and storing Pokemon.',
@@ -165,7 +169,7 @@ registerCutscene({
       ],
     },
     { type: 'face-npc', npcId: 'remainder-lab', dir: 'down' },
-    { type: 'move-npc', npcId: 'remainder-lab', path: ['left'] },
+
     {
       type: 'dialogue',
       speakerId: 'rival-reminder',
@@ -185,28 +189,73 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerName: 'דרך 1 ',
       lines: [
         {
-          en: 'Heading to Route 1 already? Good. The trainers there will sharpen your skills.',
-          he: 'כבר הולך לשביל 1? טוב מאוד. תוכל לפגוש מאמנים צעירים כמוך! וללכוד פוקימונים חדשים .',
+          en: 'Welcome to Route 1 — the path connecting Zeroville and Sumville, the City of Connection.',
+          he: 'ברוכים הבאים לשביל 1 — השביל שמחבר בין זירוויל לסאמוויל, עיר החיבור.',
+        },
+        {
+          en: 'Along the way, you can encounter wild Pokémon, young trainers, and surprises.',
+          he: 'לאורך הדרך ניתן לפגוש פוקימונים פראיים, מאמנים צעירים והפתעות.',
+        },
+        {
+          en: 'Spend some time here to grow stronger before continuing to Sumville.',
+          he: 'מומלץ להקדיש זמן לאזור ולהתחזק לפני שממשיכים אל סאמוויל.',
+        },
+        {
+          en: 'Sumville lies at the end of the route. It has a Pokémon Gym.',
+          he: 'סאמוויל נמצאת בקצה הדרך ובה ממוקם מכון פוקימונים. - במכון נמצאים מאמנים חזקים שתצטרכו להתמודד מולם',
+        },
+        {
+          en: 'If your skills are strong enough, you can earn a Gym Badge.',
+          he: 'אם היכולות מספיקות — ניתן לזכות בתג מכון.',
+        },
+        {
+          en: 'Trainers who collect all 8 badges can enter the Numeria League Championship.',
+          he: 'איסוף של 8 תגים מאפשר השתתפות באליפות ליגת נומריה.',
+        },
+        {
+          en: 'That goal is far ahead — for now, focus on your journey.',
+          he: 'זה יעד רחוק — בינתיים, כדאי להתמקד במסע.',
+        },
+        {
+          en: 'The journey is not easy — many challenges and strong trainers await.',
+          he: 'הדרך אינה פשוטה — מחכים אתגרים וקרבות מול מאמנים חזקים.',
+        },
+        {
+          en: 'Explore bushes, mountains, beaches, and seas to find wild Pokémon that you can catch and add to your team.',
+          he: 'בשיחים, הרים, חופים והים ניתן למצוא פוקימונים פראיים שניתן לתפוס ולצרף לצוות שלך.',
+        },
+
+        {
+          en: 'Pokémon gain experience from battles and become stronger over time - as they level up, they learn new moves and grow as partners.',
+          he: 'פוקימונים צוברים ניסיון מקרבות ומתחזקים בהדרגה - עם העלייה ברמות נלמדות מתקפות חדשות וגם הכח של הפוקימונים גדל.',
+        },
+
+        {
+          en: 'Train your Pokémon to be ready for upcoming challenges.',
+          he: 'אימון קבוע יעזור להיות מוכנים לאתגרים בהמשך.',
+        },
+        {
+          en: 'To catch Pokémon, weaken them first before using a Poké Ball.',
+          he: 'כדי לתפוס פוקימון יש להחליש אותו לפני שימוש בפוכדור. החלשה יכולה להיעשות באמצעות קרבות או מהלכים שמחלישים את היריב.',
+        },
+        {
+          en: 'If it fails, weaken it further and try again.',
+          he: 'אם לא הצליח — המשך להחליש ונסה שוב.',
+        },
+        {
+          en: 'Pokémon Centers in every city can heal your team.',
+          he: 'מרכזי פוקימונים בכל עיר מאפשרים ריפוי לצוות.',
+        },
+        {
+          en: 'Professor Algoritmia in Zeroville can also help heal Pokémon.',
+          he: 'פרופסור אלגוריתמיה בזירוויל יכול גם לסייע בריפוי.',
         },
       ],
     },
-    {
-      type: 'dialogue',
-      speakerId: 'algorithma',
-      lines: [
-        {
-          en: 'Sumville is at the other end. There is a Gym there. If you are strong enough, you will be able to earn a badge. Safe travels!',
-          he: 'סאמוויל נמצאת בצד השני. יש שם מכון פוקימונים . אם אתה מספיק חזק, תוכל לזכות בתג מכון. נסיעה טובה!',
-        },
-        {
-          en: 'The best trainers who collected all the 8 badges can particpate in the Numeria League Championship! But that is a long way ahead, for now, focus on your journey.',
-          he: 'המאמנים הטובים ביותר שאספו את כל 8 התגים יכולים להשתתף באליפות ליגת נומריה! אבל זה עוד דרך ארוכה, לעכשיו, תתמקד במסע שלך.',
-        },
-      ],
-    },
+
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-route1' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT0_COMPLETE } },
   ],

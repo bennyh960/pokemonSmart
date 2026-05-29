@@ -1,9 +1,17 @@
 /**
- * WorldMapScene - Overworld world map with fly destination selection.
+ * WorldMapScene — Image-based world map with fly destination selection.
  *
- * Shows visited cities/towns. If a fly callback is set (player has a Pokemon
- * that can use Fly), the player can navigate the list and press Enter to fly
- * to a destination. Otherwise it is read-only.
+ * Background image + map-manifest.ts drive all rendering:
+ *   - Image drawn at manifest.scale, centred on screen
+ *   - Route labels drawn at their title positions
+ *   - City labels + fly-mode highlight rects drawn for each city
+ *   - Player dot placed by mapping pd.position to the location's tile-grid rect;
+ *     for indoor maps the dot falls back to the parent folder's city rect centre
+ *
+ * Fly mode (activated by setFlyCallback before pushing this scene):
+ *   - Only visited cities are selectable (highlighted rect + border)
+ *   - Arrow keys cycle through visited cities
+ *   - Enter triggers the fly callback and pops the scene
  */
 
 import type { InputManager } from '../engine/input.js';
@@ -13,58 +21,103 @@ import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 import { getMapDisplayName, loadMap } from '../systems/map-manager.js';
+import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
+import mapManifest from '../data/maps/map-manifest.js';
+import type { TileMapData } from '../engine/tilemap.js';
 import type { Scene } from '../types/index.js';
 
 // ─── Fly destination registry ─────────────────────────────────────────────────
-/**
- * Manually-maintained list of map IDs that are valid Fly destinations.
- * Add new cities here as the world expands. Uses path-based IDs.
- * Labels and spawn coordinates are read from the map data itself.
- */
-export const FLY_DESTINATIONS: string[] = [
-  'zeroville/zeroville',
-  'sumville/sumville',
-  'minusburg/minusburg',
-];
+/** All city mapIds from the manifest are valid Fly destinations. */
+export const FLY_DESTINATIONS: string[] = mapManifest.cities.map(c => c.id);
 
 // ─── Fly callback ─────────────────────────────────────────────────────────────
-
-/** Set by overworld.ts before pushing WORLD_MAP scene. Null = cannot fly. */
+/** Set by overworld.ts before pushing WORLD_MAP. Null = read-only map view. */
 let pendingFlyCallback: ((destinationMapId: string) => void) | null = null;
 
 export function setFlyCallback(cb: ((destinationMapId: string) => void) | null): void {
   pendingFlyCallback = cb;
 }
 
+// ─── Coord helpers ────────────────────────────────────────────────────────────
+
+/** Offset that centres the scaled image on the logical screen. */
+function imageOffset(scale: number): { x: number; y: number } {
+  return {
+    x: Math.round((SCREEN_W - mapManifest.imageData.width * scale) / 2),
+    y: Math.round((SCREEN_H - mapManifest.imageData.height * scale) / 2),
+  };
+}
+
+/**
+ * Convert original-image pixel coords to logical screen coords.
+ * ox/oy are in unscaled image pixels.
+ */
+function toScreen(
+  ox: number, oy: number,
+  scale: number, off: { x: number; y: number },
+): { x: number; y: number } {
+  return { x: off.x + ox * scale, y: off.y + oy * scale };
+}
+
+/**
+ * Resolve which manifest location a mapId belongs to.
+ * Returns the location + whether the match is precise (direct mapId match) or
+ * approximate (matched on parent folder — player is in a building).
+ */
+function resolveLocation(mapId: string) {
+  const all = [...mapManifest.cities, ...mapManifest.routes];
+
+  const direct = all.find(l => l.id === mapId);
+  if (direct) return { loc: direct, precise: true };
+
+  // Indoor map: strip filename, keep folder, find first matching city/route
+  const folder = mapId.split('/')[0];
+  const parent = all.find(l => l.id.startsWith(folder + '/'));
+  return parent ? { loc: parent, precise: false } : null;
+}
+
 // ─── Scene factory ────────────────────────────────────────────────────────────
 
-export function createWorldMapScene(
-  input: InputManager,
-  stateMachine: StateMachine,
-): Scene {
-  let selectedIndex = 0;
+export function createWorldMapScene(input: InputManager, stateMachine: StateMachine): Scene {
   let visitedCities: string[] = [];
+  let selectedIndex = 0;
+  let elapsed = 0;
+  const mapDataCache = new Map<string, TileMapData>();
+
+  function preloadMapData(ids: string[]): void {
+    for (const id of ids) {
+      if (!mapDataCache.has(id)) {
+        loadMap(id)
+          .then(data => mapDataCache.set(id, data))
+          .catch(() => undefined);
+      }
+    }
+  }
 
   return {
     enter(): void {
+      elapsed = 0;
       selectedIndex = 0;
 
-      if (hasActiveGame()) {
-        const pd = getPlayerData();
-        visitedCities = FLY_DESTINATIONS.filter(id => pd.flags[`visited-${id}`]);
-      } else {
+      loadImage(mapManifest.imageData.path).catch(() => undefined);
+
+      if (!hasActiveGame()) {
         visitedCities = [];
+        return;
       }
 
-      // Default selection to current map if it's a fly destination
-      if (hasActiveGame()) {
-        const pd = getPlayerData();
-        const currentIdx = visitedCities.indexOf(pd.position.mapId);
-        if (currentIdx >= 0) selectedIndex = currentIdx;
-      }
+      const pd = getPlayerData();
+      visitedCities = mapManifest.cities
+        .map(c => c.id)
+        .filter(id => pd.flags[`visited-${id}`]);
 
-      // Background-preload visited destinations so label + spawn are in cache
-      visitedCities.forEach(id => loadMap(id).catch(() => undefined));
+      // Default cursor to current city
+      const folder = pd.position.mapId.split('/')[0];
+      const idx = visitedCities.findIndex(id => id.startsWith(folder + '/'));
+      if (idx >= 0) selectedIndex = idx;
+
+      // Preload map data for precise player-dot placement
+      preloadMapData([pd.position.mapId, ...visitedCities]);
     },
 
     exit(): void {
@@ -72,20 +125,22 @@ export function createWorldMapScene(
     },
 
     update(dt: number): void {
-      void dt;
+      elapsed += dt;
 
-      const canFly = pendingFlyCallback !== null;
-
-      if (input.isKeyPressed('Escape') || input.isKeyPressed('w') || input.isKeyPressed('W') ||
-          input.isKeyPressed('m') || input.isKeyPressed('M')) {
+      if (
+        input.isKeyPressed('Escape') ||
+        input.isKeyPressed('w') || input.isKeyPressed('W') ||
+        input.isKeyPressed('m') || input.isKeyPressed('M')
+      ) {
         stateMachine.pop();
         return;
       }
 
+      const canFly = pendingFlyCallback !== null;
       if (canFly && visitedCities.length > 0) {
-        if (input.isKeyPressed('ArrowUp')) {
+        if (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowUp')) {
           selectedIndex = (selectedIndex - 1 + visitedCities.length) % visitedCities.length;
-        } else if (input.isKeyPressed('ArrowDown')) {
+        } else if (input.isKeyPressed('ArrowRight') || input.isKeyPressed('ArrowDown')) {
           selectedIndex = (selectedIndex + 1) % visitedCities.length;
         } else if (input.isKeyPressed('Enter')) {
           const destId = visitedCities[selectedIndex];
@@ -100,85 +155,139 @@ export function createWorldMapScene(
     },
 
     render(ctx: CanvasRenderingContext2D): void {
+      const { imageData, scale } = mapManifest;
+      // Fit image to screen first, then apply manifest scale as zoom multiplier
+      const fitScale = Math.min(SCREEN_W / imageData.width, SCREEN_H / imageData.height);
+      const finalScale = fitScale * scale;
+      const off = imageOffset(finalScale);
       const rtl = isRTL();
+      const canFly = pendingFlyCallback !== null;
 
+      // ── Background ───────────────────────────────────────────────────────
       fillRect(ctx, 0, 0, SCREEN_W, SCREEN_H, '#0a0a1a');
 
-      ctx.save();
-      ctx.strokeStyle = '#1a1a2e';
-      ctx.lineWidth = 0.5;
-      for (let x = 0; x < SCREEN_W; x += 16) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, SCREEN_H); ctx.stroke();
-      }
-      for (let y = 0; y < SCREEN_H; y += 16) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(SCREEN_W, y); ctx.stroke();
-      }
-      ctx.restore();
-
-      fillRect(ctx, 0, 0, SCREEN_W, 16, '#1a1a3a');
-      drawText(ctx, t('worldMap.title'), SCREEN_W / 2, 4, {
-        size: 8, color: '#88aaff', align: 'center', font: 'monospace', direction: rtl ? 'rtl' : 'ltr',
-      });
-
-      const canFly = pendingFlyCallback !== null;
-      const currentMapId = hasActiveGame() ? getPlayerData().position.mapId : '';
-
-      if (visitedCities.length === 0) {
-        drawText(ctx, rtl ? 'לא ביקרת בשום עיר עדיין' : 'No cities visited yet', SCREEN_W / 2, SCREEN_H / 2, {
-          size: 7, color: '#556688', align: 'center', font: 'monospace',
-        });
+      // ── World map image ──────────────────────────────────────────────────
+      const img = getCachedImage(imageData.path);
+      if (img) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, 0, SCREEN_W, SCREEN_H);
+        ctx.clip();
+        ctx.drawImage(img, off.x, off.y, imageData.width * finalScale, imageData.height * finalScale);
+        ctx.restore();
       } else {
-        const listStartY = 24;
-        const rowH = 16;
+        drawText(ctx, '...', SCREEN_W / 2, SCREEN_H / 2, {
+          size: 7, color: '#335566', align: 'center', font: 'monospace',
+        });
+      }
 
-        for (let i = 0; i < visitedCities.length; i++) {
-          const id = visitedCities[i];
-          const displayName = getMapDisplayName(id);
-          const rowY = listStartY + i * rowH;
-          const isSelected = canFly && i === selectedIndex;
-          const isCurrent = id === currentMapId;
+      // ── Routes ───────────────────────────────────────────────────────────
+      for (const route of mapManifest.routes) {
+        const { x1, y1, x2, y2, title } = route;
+        const anchor = toScreen(
+          x1 + (title[0] / 100) * (x2 - x1),
+          y1 + (title[1] / 100) * (y2 - y1),
+          finalScale, off,
+        );
+        const name = getMapDisplayName(route.id);
+        drawText(ctx, rtl ? name.he : name.en, anchor.x, anchor.y, {
+          size: 5, color: '#aaccdd', align: 'center', font: 'monospace',
+        });
+      }
 
+      // ── Cities ───────────────────────────────────────────────────────────
+      for (const city of mapManifest.cities) {
+        const { x1, y1, x2, y2, title } = city;
+        const sx = off.x + x1 * finalScale;
+        const sy = off.y + y1 * finalScale;
+        const sw = (x2 - x1) * finalScale;
+        const sh = (y2 - y1) * finalScale;
+
+        const isVisited = visitedCities.includes(city.id);
+        const isSelected = canFly && visitedCities[selectedIndex] === city.id;
+
+        // Fly-mode highlight rect
+        if (canFly && isVisited) {
+          const pulse = 0.55 + 0.45 * Math.sin(elapsed * 3);
+          ctx.save();
+          ctx.globalAlpha = isSelected ? 0.5 : pulse * 0.25;
+          fillRect(ctx, sx, sy, sw, sh, isSelected ? '#88ddff' : '#4488aa');
+          ctx.globalAlpha = 1;
           if (isSelected) {
-            fillRect(ctx, 8, rowY - 1, SCREEN_W - 16, rowH - 2, '#2a3060');
-          } else if (isCurrent) {
-            fillRect(ctx, 8, rowY - 1, SCREEN_W - 16, rowH - 2, '#1a2a1a');
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(sx, sy, sw, sh);
+          }
+          ctx.restore();
+        }
+
+        // City label
+        const anchor = toScreen(
+          x1 + (title[0] / 100) * (x2 - x1),
+          y1 + (title[1] / 100) * (y2 - y1),
+          finalScale, off,
+        );
+        const name = getMapDisplayName(city.id);
+        const labelColor = isSelected ? '#ffffff' : (isVisited ? '#eeeebb' : '#556677');
+        drawText(ctx, rtl ? name.he : name.en, anchor.x, anchor.y, {
+          size: 6, color: labelColor, align: 'center', font: 'monospace',
+        });
+      }
+
+      // ── Player dot ───────────────────────────────────────────────────────
+      if (hasActiveGame()) {
+        const pd = getPlayerData();
+        const resolved = resolveLocation(pd.position.mapId);
+
+        if (resolved) {
+          const { loc, precise } = resolved;
+          let dotX: number;
+          let dotY: number;
+
+          if (precise && mapDataCache.has(pd.position.mapId)) {
+            const mapData = mapDataCache.get(pd.position.mapId)!;
+            const rx = mapData.width  > 0 ? pd.position.x / mapData.width  : 0.5;
+            const ry = mapData.height > 0 ? pd.position.y / mapData.height : 0.5;
+            dotX = off.x + (loc.x1 + rx * (loc.x2 - loc.x1)) * finalScale;
+            dotY = off.y + (loc.y1 + ry * (loc.y2 - loc.y1)) * finalScale;
+          } else {
+            // Indoor map or not yet loaded — show centre of parent city rect
+            dotX = off.x + ((loc.x1 + loc.x2) / 2) * finalScale;
+            dotY = off.y + ((loc.y1 + loc.y2) / 2) * finalScale;
           }
 
-          const dotColor = isCurrent ? '#88ff88' : (isSelected ? '#aabbff' : '#445577');
-          fillRect(ctx, 14, rowY + 4, 4, 4, dotColor);
-
-          const cityName = rtl ? displayName.he : displayName.en;
-          const nameColor = isSelected ? '#ffffff' : (isCurrent ? '#88ff88' : '#9999bb');
-          drawText(ctx, cityName, 24, rowY + 3, {
-            size: 7, color: nameColor, font: 'monospace', direction: rtl ? 'rtl' : 'ltr',
-          });
-
-          if (isCurrent) {
-            drawText(ctx, t('worldMap.currentLocation'), SCREEN_W - 12, rowY + 3, {
-              size: 6, color: '#88ff88', font: 'monospace', align: 'right',
-            });
-          }
-
-          if (isSelected && canFly) {
-            drawText(ctx, '>', 8, rowY + 3, { size: 7, color: '#aabbff', font: 'monospace' });
-          }
+          const pulse = 0.5 + 0.5 * Math.sin(elapsed * 4);
+          const r = 2 + pulse * 0.8;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(dotX, dotY, r + 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(0,0,0,0.5)';
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(dotX, dotY, r, 0, Math.PI * 2);
+          ctx.fillStyle = '#ff4444';
+          ctx.fill();
+          ctx.restore();
         }
       }
 
-      const barY = SCREEN_H - 12;
-      fillRect(ctx, 0, barY, SCREEN_W, 12, '#0a0a1a');
+      // ── Header ───────────────────────────────────────────────────────────
+      fillRect(ctx, 0, 0, SCREEN_W, 14, 'rgba(0,0,0,0.6)');
+      drawText(ctx, t('worldMap.title'), SCREEN_W / 2, 3, {
+        size: 7, color: '#ccddff', align: 'center', font: 'monospace',
+        direction: rtl ? 'rtl' : 'ltr',
+      });
 
-      let hints: string;
-      if (canFly && visitedCities.length > 0) {
-        hints = `${t('worldMap.flyHint')}  ${t('worldMap.hint')}`;
-      } else if (!canFly) {
-        hints = `${t('worldMap.noFly')}  ${t('worldMap.hint')}`;
-      } else {
-        hints = t('worldMap.hint');
-      }
+      // ── Footer hints ─────────────────────────────────────────────────────
+      const barY = SCREEN_H - 11;
+      fillRect(ctx, 0, barY, SCREEN_W, 11, 'rgba(0,0,0,0.6)');
+
+      const hints = canFly && visitedCities.length > 0
+        ? `${t('worldMap.flyHint')}  ${t('worldMap.hint')}`
+        : t('worldMap.hint');
 
       drawText(ctx, hints, SCREEN_W / 2, barY + 2, {
-        size: 6, color: '#555577', align: 'center', font: 'monospace',
+        size: 5, color: '#667788', align: 'center', font: 'monospace',
       });
     },
   };

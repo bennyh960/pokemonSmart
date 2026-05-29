@@ -73,27 +73,31 @@ registerCutscene({
   steps: [
     {
       type: 'dialogue',
-      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerId: 'Prof.Algorithma',
       lines: [
         {
-          en: 'Wait — before you leave Route 1, I need to tell you something.',
-          he: 'רגע — לפני שתעזוב את שביל 1, יש לי משהו לספר לך.',
+          en: 'Wait — You still on Route 1, I need to tell you something.',
+          he: 'היי , מה שלומך? עדיין בשביל 1 ? אני צריך לספר לך משהו.',
         },
       ],
     },
     {
       type: 'dialogue',
-      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerId: 'Prof.Algorithma',
       lines: [
+        {
+          he: 'הגיעו כל מיני דיווחים  על הפרעות טכנולוגיות בכל רחבי האזור ',
+          en: 'There have been all sorts of reports of technological disruptions across the region.',
+        },
         {
           en: 'Strange errors have been appearing in the verification systems. Corrupted logic. Contradictions.',
-          he: 'שגיאות מוזרות מופיעות במערכות האימות. לוגיקה פגומה. סתירות.',
+          he: 'שגיאות מוזרות מופיעות במערכות האימות. לוגיקה פגומה וכל מיני סתירות.',
         },
       ],
     },
     {
       type: 'dialogue',
-      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerId: 'Prof.Algorithma',
       lines: [
         {
           en: "I fear something — or someone — is deliberately disrupting the region's knowledge gates.",
@@ -103,7 +107,7 @@ registerCutscene({
     },
     {
       type: 'dialogue',
-      speakerName: 'Prof. Algorithma / פרופ׳ אלגוריתמה',
+      speakerId: 'Prof.Algorithma',
       lines: [
         {
           en: "Be careful in Sumville. And keep growing stronger — you'll need it.",
@@ -121,13 +125,14 @@ registerCutscene({
 // Talking to the Route 1 exit NPC → NULL-X warning (first time only)
 registerStoryEvent({
   id: 'evt-route1-exit-npc',
-  trigger: { type: 'npc-interact', npcId: 'route1-exit-npc' },
+  trigger: { type: 'trainer-defeated', trainerId: 'route1-exit-npc' },
   conditions: [
     { type: 'flag', flag: FLAGS.ACT0_COMPLETE },
     { type: 'flag-not', flag: FLAGS.ACT1_NULLX_INTRO_SEEN },
   ],
   // repeatable: flag-not condition is the guard; cutscene sets ACT1_NULLX_INTRO_SEEN
   repeatable: true,
+  triggerDelayPostFlag: 1,
   actions: [{ type: 'start-cutscene', cutsceneId: 'act1-nullx-intro' }],
 });
 

@@ -1044,25 +1044,25 @@
   "flagListeners": []
 ,
   "tiles": [
-    ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","mg1c","s1-5","s1-5","st1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","st1","st1","st1","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["g1","g1","wt1b","g1","g1","g1","g1","wt1b","g1","g1","g1","g1","g1","g1","g1","g1","mtcb2","g1","wt1l","wt1","wt1tr","g1","mtcb2","mtcb2","mtcb2","mtcb2","wt1b","wt1b","g1","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["s1-5","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1l","wt1","wt1tr","g1","mtcb2","mtcb2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["s1-5","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1l","wt1","wt1tr","g1","mtcb2","mtcb2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1t","wt1t","wt1t","wt1t","wt1t"],
+    ["s1-5","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1l","wt1","wt1tr","g1","mtcb2","mtcb2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["s1-5","mtcb2","s1-5","s1-5","st1","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["s1-5","mtcb2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","st1","st1","st1","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["s1-5","mtcb2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","wt1l","wt1","wt1tr","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","wt1l","wt1","wt1tr","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","g1","g1","g1","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","wallstrip2-door","s1-5","s1-5","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1t","wt1t","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1"],
     ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1"],
     ["s1-5","mg1c","mg1c","mg1c","mg1c","mg1c","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wt1","wt1","wt1"],
@@ -1097,31 +1097,31 @@
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1bl","wt1b","wt1b","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg1","wg2","wg2","wg3","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg4","wg5","wg5","wg6","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg4","wg5","wg5","wg6","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg4","wg5","wg5","wg6","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg4","wg5","wg5","wg6","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg7","wg8","wg8","wg9","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1-tl","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg1","wg2","wg2","wg3","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg4","wg5","wg5","wg6","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg4","wg5","wg5","wg6","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","s1-5","s1-5","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg4","wg5","wg5","wg6","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg4","wg5","wg5","wg6","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg7","wg8","wg8","wg9","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","s1-5","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","s1-5","s1-5","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","cs1r2c2","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","wt1-tl","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","cs1r2c2","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","s1-5","cs1r2c2","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","s1-5","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","s1-5","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","s1-5","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","wt1l","wt1","wt1tr","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","g8c","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1tr","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","s1-5","s1-5","s1-5","s1-5","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["wg0","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","wg0","wt1l","wt1","wt1","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
     ["wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wg0","wt1l","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"]
   ],
@@ -1267,56 +1267,6 @@
       "y": 5
     },
     {
-      "key": "mg1tl",
-      "x": 0,
-      "y": 1
-    },
-    {
-      "key": "mg1tb",
-      "x": 1,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 2,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 3,
-      "y": 0
-    },
-    {
-      "key": "mg1l",
-      "x": 0,
-      "y": 2
-    },
-    {
-      "key": "mg1l",
-      "x": 0,
-      "y": 3
-    },
-    {
-      "key": "mg1bl",
-      "x": 0,
-      "y": 7
-    },
-    {
-      "key": "mg1b",
-      "x": 5,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 6,
-      "y": 4
-    },
-    {
-      "key": "mg1br",
-      "x": 17,
-      "y": 4
-    },
-    {
       "key": "g3",
       "x": 14,
       "y": 5
@@ -1325,41 +1275,6 @@
       "key": "g3",
       "x": 14,
       "y": 6
-    },
-    {
-      "key": "g8t",
-      "x": 1,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 2,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 3,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 4,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 5,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 6,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 7,
-      "y": 8
     },
     {
       "key": "signx",
@@ -1405,16 +1320,6 @@
       "key": "mg1r",
       "x": 38,
       "y": 2
-    },
-    {
-      "key": "t4",
-      "x": 25,
-      "y": 0
-    },
-    {
-      "key": "t4",
-      "x": 26,
-      "y": 0
     },
     {
       "key": "r3",
@@ -1535,196 +1440,6 @@
       "key": "r3",
       "x": 36,
       "y": 78
-    },
-    {
-      "key": "mg1tb",
-      "x": 4,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 5,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 6,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 7,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 8,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 9,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 10,
-      "y": 0
-    },
-    {
-      "key": "mg1b",
-      "x": 1,
-      "y": 7
-    },
-    {
-      "key": "mg1br",
-      "x": 2,
-      "y": 7
-    },
-    {
-      "key": "mg1r",
-      "x": 2,
-      "y": 6
-    },
-    {
-      "key": "mg1r",
-      "x": 2,
-      "y": 5
-    },
-    {
-      "key": "mg1r",
-      "x": 2,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 3,
-      "y": 4
-    },
-    {
-      "key": "mg1l",
-      "x": 0,
-      "y": 4
-    },
-    {
-      "key": "mg1l",
-      "x": 0,
-      "y": 5
-    },
-    {
-      "key": "mg1l",
-      "x": 0,
-      "y": 6
-    },
-    {
-      "key": "mg1b",
-      "x": 7,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 8,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 9,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 10,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 11,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 12,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 13,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 14,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 15,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 16,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 18,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 19,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 20,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 21,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 22,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 23,
-      "y": 4
-    },
-    {
-      "key": "mg1b",
-      "x": 24,
-      "y": 4
-    },
-    {
-      "key": "mg1tr",
-      "x": 24,
-      "y": 1
-    },
-    {
-      "key": "mg1br",
-      "x": 24,
-      "y": 4
-    },
-    {
-      "key": "mg1r",
-      "x": 24,
-      "y": 2
-    },
-    {
-      "key": "mg1r",
-      "x": 24,
-      "y": 3
-    },
-    {
-      "key": "t4",
-      "x": 27,
-      "y": 0
     },
     {
       "key": "t4",
@@ -2687,11 +2402,6 @@
       "y": 65
     },
     {
-      "key": "g8t",
-      "x": 0,
-      "y": 8
-    },
-    {
       "key": "mt2tl",
       "x": 7,
       "y": 31
@@ -2935,146 +2645,6 @@
       "key": "item-generic",
       "x": 19,
       "y": 31
-    },
-    {
-      "key": "g8b",
-      "x": 0,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 1,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 2,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 3,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 4,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 5,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 6,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 7,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 8,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 9,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 10,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 11,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 12,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 13,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 14,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 15,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 16,
-      "y": 11
-    },
-    {
-      "key": "g8b",
-      "x": 17,
-      "y": 11
-    },
-    {
-      "key": "g8t",
-      "x": 8,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 9,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 10,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 11,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 12,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 13,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 14,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 15,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 16,
-      "y": 8
-    },
-    {
-      "key": "g8t",
-      "x": 17,
-      "y": 8
     },
     {
       "key": "g8t",
@@ -3938,21 +3508,6 @@
     },
     {
       "key": "rock1",
-      "x": 18,
-      "y": 0
-    },
-    {
-      "key": "rock1",
-      "x": 19,
-      "y": 0
-    },
-    {
-      "key": "rock1",
-      "x": 20,
-      "y": 0
-    },
-    {
-      "key": "rock1",
       "x": 29,
       "y": 2
     },
@@ -4015,106 +3570,6 @@
       "key": "mg1tl",
       "x": 24,
       "y": 29
-    },
-    {
-      "key": "mg1tb",
-      "x": 11,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 12,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 13,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 14,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 15,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 16,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 17,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 18,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 19,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 20,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 21,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 22,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 23,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 29,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 30,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 31,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 32,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 33,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 34,
-      "y": 0
-    },
-    {
-      "key": "mg1tb",
-      "x": 35,
-      "y": 0
     },
     {
       "key": "mg1tb",
@@ -4415,11 +3870,6 @@
       "key": "mg1tb",
       "x": 7,
       "y": 26
-    },
-    {
-      "key": "mg1b",
-      "x": 17,
-      "y": 4
     },
     {
       "key": "mg1tb",
@@ -5583,8 +5033,8 @@
     },
     {
       "key": "item-generic",
-      "x": 22,
-      "y": 1
+      "x": 25,
+      "y": 20
     },
     {
       "key": "g3",
@@ -6205,6 +5655,386 @@
       "key": "item-pokeball",
       "x": 41,
       "y": 31
+    },
+    {
+      "key": "mtb2",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 8,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 9,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 11,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 12,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 13,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 24,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 26,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 27,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 28,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 29,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 30,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 31,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 32,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 33,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 34,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 35,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 36,
+      "y": 0
+    },
+    {
+      "key": "mtb2",
+      "x": 37,
+      "y": 0
+    },
+    {
+      "key": "mtbr1",
+      "x": 38,
+      "y": 0
+    },
+    {
+      "key": "mtcl1",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "mtcl1",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "key": "mtcl1",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "mtcl1",
+      "x": 0,
+      "y": 4
+    },
+    {
+      "key": "mtcl1",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "key": "mtcl1",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "key": "mtcr",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "key": "mtcr",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "key": "mtcr",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "key": "mtbl1",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "mtb2",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "key": "mtbr1",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "key": "mtb2",
+      "x": 3,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 5,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 6,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 7,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 8,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 9,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 10,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 11,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 12,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 13,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 14,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 15,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 16,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 22,
+      "y": 4
+    },
+    {
+      "key": "mtb2",
+      "x": 23,
+      "y": 4
+    },
+    {
+      "key": "mtbr1",
+      "x": 24,
+      "y": 4
+    },
+    {
+      "key": "mtcr",
+      "x": 24,
+      "y": 3
+    },
+    {
+      "key": "mtcr",
+      "x": 24,
+      "y": 2
+    },
+    {
+      "key": "mtcr",
+      "x": 24,
+      "y": 1
+    },
+    {
+      "key": "mtcr",
+      "x": 24,
+      "y": 0
+    },
+    {
+      "key": "mtbl1",
+      "x": 25,
+      "y": 0
+    },
+    {
+      "key": "mtbr1",
+      "x": 17,
+      "y": 4
+    },
+    {
+      "key": "mtcr",
+      "x": 17,
+      "y": 3
+    },
+    {
+      "key": "mtcr",
+      "x": 17,
+      "y": 2
+    },
+    {
+      "key": "mtcr",
+      "x": 17,
+      "y": 1
+    },
+    {
+      "key": "mtcr",
+      "x": 17,
+      "y": 0
+    },
+    {
+      "key": "mtbr1",
+      "x": 15,
+      "y": 0
+    },
+    {
+      "key": "r2",
+      "x": 18,
+      "y": 0
+    },
+    {
+      "key": "r2",
+      "x": 19,
+      "y": 1
+    },
+    {
+      "key": "r2",
+      "x": 20,
+      "y": 0
+    },
+    {
+      "key": "mtbl1",
+      "x": 21,
+      "y": 4
+    },
+    {
+      "key": "mtcl1",
+      "x": 21,
+      "y": 3
+    },
+    {
+      "key": "mtcl1",
+      "x": 21,
+      "y": 2
+    },
+    {
+      "key": "mtcl1",
+      "x": 21,
+      "y": 1
+    },
+    {
+      "key": "mtcl1",
+      "x": 21,
+      "y": 0
     }
   ],
   "objectLayer": [
