@@ -30,9 +30,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "meadow",
       "above": true,
       "overlay": true,
@@ -47,13 +45,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "poison",
-        "grass",
-        "bug",
-        "flying",
-        "psychic"
-      ],
+      "encounterTypes": ["poison", "grass", "bug", "flying", "psychic"],
       "above": true,
       "overlay": false,
       "category": "grass",
@@ -720,10 +712,11 @@
       "sy": 1600,
       "w": 32,
       "h": 32,
-      "walkable": true,
+      "walkable": false,
       "above": false,
       "category": "tree",
       "interactType": null,
+      "zOffset": 10,
       "description": "tree decorative"
     },
     {
@@ -757,9 +750,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -772,9 +763,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -787,10 +776,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water",
-        "flying"
-      ],
+      "encounterTypes": ["water", "flying"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -803,10 +789,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "ice"
-      ],
+      "encounterTypes": ["water", "ice"],
       "battleBackground": "orassea",
       "above": false,
       "category": "water",
@@ -820,9 +803,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -835,9 +816,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -850,9 +829,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -865,9 +842,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -892,9 +867,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "*/flying,ground,rock,dragon,steel,normal"
-      ],
+      "encounterTypes": ["*/flying,ground,rock,dragon,steel,normal"],
       "above": true,
       "category": "ground",
       "interactType": null,
@@ -1279,9 +1252,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -1853,9 +1824,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water,ice"
-      ],
+      "encounterTypes": ["*/water,ice"],
       "battleBackground": "desert",
       "above": false,
       "category": "ground",
@@ -2049,13 +2018,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "steel",
-        "dragon",
-        "rock",
-        "electric",
-        "flying"
-      ],
+      "encounterTypes": ["steel", "dragon", "rock", "electric", "flying"],
       "battleBackground": "skypillar",
       "above": false,
       "category": "ground",
@@ -3552,9 +3515,7 @@
       "w": 32,
       "h": 32,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3579,9 +3540,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3643,9 +3602,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*"
-      ],
+      "encounterTypes": ["*"],
       "battleBackground": "beach",
       "above": false,
       "category": "ground",
@@ -3707,9 +3664,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "beach",
       "above": false,
       "category": "ground",
@@ -4606,9 +4561,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "library",
       "above": true,
       "category": "grass",
@@ -4622,9 +4575,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/fire,ice,poison,bug"
-      ],
+      "encounterTypes": ["*/fire,ice,poison,bug"],
       "above": true,
       "category": "grass",
       "interactType": null,
@@ -6972,12 +6923,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "dragon",
-        "flying",
-        "bug",
-        "grass"
-      ],
+      "encounterTypes": ["dragon", "flying", "bug", "grass"],
       "above": false,
       "category": "ground",
       "interactType": null
@@ -7097,10 +7043,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
       "category": "grass"
     },
@@ -7141,9 +7084,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "battleBackground": "leaderwallace",
       "above": false,
       "category": "grass"
@@ -7195,10 +7136,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
       "category": "grass"
     },
@@ -7219,10 +7157,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
       "category": "grass"
     },
@@ -7234,10 +7169,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "encounterTypes": [
-        "grass",
-        "water"
-      ]
+      "encounterTypes": ["grass", "water"]
     },
     {
       "key": "wg0",
