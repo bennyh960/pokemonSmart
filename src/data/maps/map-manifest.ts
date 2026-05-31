@@ -53,7 +53,7 @@ const mapManifest: MapManifest = {
   imageData: {
     width: 720,
     height: 495,
-    path: 'public\\sprites\\overworld\\map.png',
+    path: 'sprites/overworld/map.png',
   },
   scale: 1,
   cities: [
