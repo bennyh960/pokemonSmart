@@ -73,12 +73,75 @@ function resolveLocation(mapId: string) {
   return parent ? { loc: parent, precise: false } : null;
 }
 
+// ─── Label chip util ─────────────────────────────────────────────────────────
+
+/**
+ * Draw a map-label chip: rounded-rect background + text centred at (x, y).
+ *
+ * kind='city'  → warm cream text on dark-blue plate  (name-sign feel)
+ * kind='route' → muted green text on dark-green plate (road-sign feel)
+ */
+function drawLocationLabel(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  kind: 'city' | 'route',
+  visited: boolean,
+  selected: boolean,
+): void {
+  const size = kind === 'city' ? 4 : 3;
+
+  ctx.save();
+  ctx.font = `${size}px monospace`;
+  const tw = Math.ceil(ctx.measureText(text).width);
+  ctx.restore();
+
+  const padX = 2;
+  const padY = 1;
+  const chipX = x - tw / 2 - padX;
+  const chipY = y - padY;
+  const chipW = tw + padX * 2;
+  const chipH = size + padY * 2 + 1;
+
+  // Drop shadow
+  ctx.save();
+  ctx.globalAlpha = 0.28;
+  ctx.fillStyle = '#000000';
+  fillRoundRect(ctx, chipX, chipY + 1, chipW, chipH, 3);
+  ctx.restore();
+
+  // Background plate
+  let bgColor: string;
+  let bgAlpha: number;
+  let textColor: string;
+
+  if (kind === 'city') {
+    bgColor = selected ? '#102638' : '#071018';
+    bgAlpha = selected ? 0.78 : visited ? 0.66 : 0.56;
+    textColor = selected ? '#f3ef12' : visited ? '#f2f20e' : '#3d87d0';
+  } else {
+    bgColor = selected ? '#0e2010' : '#081208';
+    bgAlpha = selected ? 0.75 : visited ? 0.62 : 0.48;
+    textColor = selected ? '#d5f8d5' : visited ? '#9bc68d' : '#16dc16';
+  }
+
+  ctx.save();
+  ctx.globalAlpha = bgAlpha;
+  ctx.fillStyle = bgColor;
+  fillRoundRect(ctx, chipX, chipY, chipW, chipH, 3);
+  ctx.restore();
+
+  drawText(ctx, text, x, y, { size, color: textColor, align: 'center', font: 'monospace' });
+}
+
 // ─── Scene factory ────────────────────────────────────────────────────────────
 
 export function createWorldMapScene(input: InputManager, stateMachine: StateMachine): Scene {
   let visitedCities: string[] = [];
   let selectedIndex = 0;
   let elapsed = 0;
+  let showLabels = false;
   const mapDataCache = new Map<string, TileMapData>();
 
   function preloadMapData(ids: string[]): void {
@@ -95,6 +158,7 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
     enter(): void {
       elapsed = 0;
       selectedIndex = 0;
+      showLabels = false;
 
       loadImage(mapManifest.imageData.path).catch(() => undefined);
 
@@ -131,6 +195,10 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
       ) {
         stateMachine.pop();
         return;
+      }
+
+      if (input.isKeyPressed('x') || input.isKeyPressed('X')) {
+        showLabels = !showLabels;
       }
 
       const canFly = pendingFlyCallback !== null;
@@ -181,17 +249,21 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
         });
       }
 
-      // ── Routes ───────────────────────────────────────────────────────────
-      for (const route of mapManifest.routes) {
-        const { x1, y1, x2, y2, title } = route;
-        const anchor = toScreen(x1 + (title[0] / 100) * (x2 - x1), y1 + (title[1] / 100) * (y2 - y1), finalScale, off);
-        const name = getMapDisplayName(route.id);
-        drawText(ctx, rtl ? name.he : name.en, anchor.x, anchor.y, {
-          size: 5,
-          color: '#aaccdd',
-          align: 'center',
-          font: 'monospace',
-        });
+      // ── Routes (shown only when showLabels is on) ─────────────────────────
+      if (showLabels) {
+        const pd = hasActiveGame() ? getPlayerData() : null;
+        for (const route of mapManifest.routes) {
+          const { x1, y1, x2, y2, title } = route;
+          const anchor = toScreen(
+            x1 + (title[0] / 100) * (x2 - x1),
+            y1 + (title[1] / 100) * (y2 - y1),
+            finalScale,
+            off,
+          );
+          const isVisited = pd ? !!pd.flags[`visited-${route.id}`] : false;
+          const name = route.label ?? getMapDisplayName(route.id);
+          drawLocationLabel(ctx, rtl ? name.he : name.en, anchor.x, anchor.y, 'route', isVisited, false);
+        }
       }
 
       // ── Cities ───────────────────────────────────────────────────────────
@@ -223,46 +295,7 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
         // City label
         const anchor = toScreen(x1 + (title[0] / 100) * (x2 - x1), y1 + (title[1] / 100) * (y2 - y1), finalScale, off);
         const name = city.label ?? getMapDisplayName(city.id);
-        const labelText = rtl ? name.he : name.en;
-        let labelColor = '#556677';
-        if (isVisited) labelColor = '#eeeebb';
-        if (isSelected) labelColor = '#ffffff';
-        const labelSize = 5;
-        const labelPadX = 3;
-        const labelPadY = 1;
-
-        ctx.save();
-        ctx.font = `${labelSize}px monospace`;
-        const labelWidth = Math.ceil(ctx.measureText(labelText).width);
-        ctx.restore();
-
-        const chipX = anchor.x - labelWidth / 2 - labelPadX;
-        const chipY = anchor.y - labelPadY;
-        const chipW = labelWidth + labelPadX * 2;
-        const chipH = labelSize + labelPadY * 2 + 1;
-
-        ctx.save();
-        ctx.fillStyle = '#000000';
-        ctx.globalAlpha = 0.28;
-        fillRoundRect(ctx, chipX, chipY + 1, chipW, chipH, 3);
-        ctx.restore();
-
-        let labelBgAlpha = 0.56;
-        if (isVisited) labelBgAlpha = 0.66;
-        if (isSelected) labelBgAlpha = 0.78;
-
-        ctx.save();
-        ctx.globalAlpha = labelBgAlpha;
-        ctx.fillStyle = isSelected ? '#102638' : '#071018';
-        fillRoundRect(ctx, chipX, chipY, chipW, chipH, 3);
-        ctx.restore();
-
-        drawText(ctx, labelText, anchor.x, anchor.y, {
-          size: labelSize,
-          color: labelColor,
-          align: 'center',
-          font: 'monospace',
-        });
+        drawLocationLabel(ctx, rtl ? name.he : name.en, anchor.x, anchor.y, 'city', isVisited, isSelected);
       }
 
       // ── Player dot ───────────────────────────────────────────────────────
@@ -316,8 +349,9 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
       const barY = SCREEN_H - 11;
       fillRect(ctx, 0, barY, SCREEN_W, 11, 'rgba(0,0,0,0.6)');
 
-      const hints =
-        canFly && visitedCities.length > 0 ? `${t('worldMap.flyHint')}  ${t('worldMap.hint')}` : t('worldMap.hint');
+      const labelHint = `${t('worldMap.labelsHint')}${showLabels ? ' ●' : ''}`;
+      const flyPart = canFly && visitedCities.length > 0 ? `${t('worldMap.flyHint')}  ` : '';
+      const hints = `${flyPart}${labelHint}  ${t('worldMap.hint')}`;
 
       drawText(ctx, hints, SCREEN_W / 2, barY + 2, {
         size: 5,

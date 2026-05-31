@@ -516,6 +516,7 @@
   "battle.trainerWaitsRecover": "רפא את הפוקימונים שלך וחזור לריבאנץ'!",
   "worldMap.title": "מפת נומריה",
   "worldMap.hint": "ESC/W: סגור",
+  "worldMap.labelsHint": "X: תוויות נוספות",
   "worldMap.badge.earned": "תג הושג",
   "worldMap.currentLocation": "אתה כאן",
   "hm.chooseYou": "קדימה, {name}! בבקשה {action} את ה{tileName} הזה!",

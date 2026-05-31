@@ -516,6 +516,7 @@
   "battle.trainerWaitsRecover": "Recover your Pokemon and come back for a rematch!",
   "worldMap.title": "WORLD MAP — Numeria",
   "worldMap.hint": "ESC/W: Close",
+  "worldMap.labelsHint": "X: Labels",
   "worldMap.badge.earned": "Badge earned",
   "worldMap.currentLocation": "You are here",
   "hm.chooseYou": "Go, {name}! Please {action} this {tileName}!",
