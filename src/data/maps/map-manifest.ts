@@ -50,13 +50,13 @@ type MapManifest = {
 
 const mapManifest: MapManifest = {
   imageData: {
-    width: 878,
-    height: 689,
-    path: 'public\\sprites\\overworld\\testMap.png',
+    width: 720,
+    height: 495,
+    path: 'public\\sprites\\overworld\\map.png',
   },
   scale: 1,
   cities: [
-    { id: 'zeroville/zeroville', x1: 300, x2: 400, y1: 240, y2: 290, title: [-20, 10] },
+    { id: 'zeroville/zeroville', x1: 190, x2: 220, y1: 130, y2: 150, title: [0, -50] },
     { id: 'multiplia/multiplia', x1: 508, y1: 400, x2: 657, y2: 450, title: [0, 0] },
     { id: 'sumville/sumville', x1: 482, y1: 240, x2: 630, y2: 390, title: [10, 20] },
   ],
