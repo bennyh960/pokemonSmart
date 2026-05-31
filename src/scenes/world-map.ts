@@ -24,7 +24,7 @@ import { getMapDisplayName, loadMap } from '../systems/map-manager.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import mapManifest from '../data/maps/map-manifest.js';
 import type { TileMapData } from '../engine/tilemap.js';
-import type { Scene } from '../types/index.js';
+import type { Scene, Pokemon } from '../types/index.js';
 
 // ─── Fly destination registry ─────────────────────────────────────────────────
 /** All city mapIds from the manifest are valid Fly destinations. */
@@ -33,9 +33,24 @@ export const FLY_DESTINATIONS: string[] = mapManifest.cities.map((c) => c.id);
 // ─── Fly callback ─────────────────────────────────────────────────────────────
 /** Set by overworld.ts before pushing WORLD_MAP. Null = read-only map view. */
 let pendingFlyCallback: ((destinationMapId: string) => void) | null = null;
+let flyPokemon: Pokemon | null = null;
 
-export function setFlyCallback(cb: ((destinationMapId: string) => void) | null): void {
+/** Pass the pokemon that will fly alongside the callback so the map can render it. */
+export function setFlyCallback(cb: ((destinationMapId: string) => void) | null, pokemon?: Pokemon): void {
   pendingFlyCallback = cb;
+  flyPokemon = pokemon ?? null;
+}
+
+/**
+ * Return a landing spawn for the given city, or null to fall back to the
+ * map's own spawn field.  If flySpawn has multiple entries one is picked
+ * at random so cities can have several valid landing spots.
+ */
+export function resolveFlySpawn(mapId: string): { x: number; y: number } | null {
+  const city = mapManifest.cities.find((c) => c.id === mapId);
+  if (!city?.flySpawn?.length) return null;
+  const idx = Math.floor(Math.random() * city.flySpawn.length);
+  return city.flySpawn[idx]!;
 }
 
 // ─── Coord helpers ────────────────────────────────────────────────────────────
@@ -161,6 +176,9 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
       showLabels = false;
 
       loadImage(mapManifest.imageData.path).catch(() => undefined);
+      if (flyPokemon) {
+        loadImage(`/sprites/pokemon/front/${flyPokemon.id}.png`).catch(() => undefined);
+      }
 
       if (!hasActiveGame()) {
         visitedCities = [];
@@ -290,6 +308,22 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
             ctx.strokeRect(sx, sy, sw, sh);
           }
           ctx.restore();
+        }
+
+        // Fly Pokémon sprite — bobbing on the selected city
+        if (isSelected && flyPokemon) {
+          const sprite = getCachedImage(`/sprites/pokemon/front/${flyPokemon.id}.png`);
+          if (sprite) {
+            const sprW = 20;
+            const sprH = 20;
+            const cx = sx + sw / 2;
+            const cy = sy + sh / 2;
+            const bob = Math.sin(elapsed * 4) * 1.5;
+            ctx.save();
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(sprite, cx - sprW / 2, cy - sprH / 2 + bob, sprW, sprH);
+            ctx.restore();
+          }
         }
 
         // City label

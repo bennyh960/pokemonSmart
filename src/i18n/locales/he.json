@@ -546,7 +546,7 @@
   "repel.active": "הרפל הופעל! מפגשים פראיים חסומים ל-{steps} צעדים.",
   "repel.woreOff": "הרפל פקע!",
   "repel.already": "רפל כבר פעיל!",
-  "worldMap.flyHint": "Enter: טוס לכאן",
+  "worldMap.flyHint": "← → בחר יעד  Enter: טוס",
   "worldMap.noFly": "אין פוקימון שיכול לטוס כרגע",
   "battle.stealthRockSet": "אבנים חדות מרחפות באוויר סביב היריב!",
   "battle.spikesSet": "קוצים פוזרו מסביב לרגלי היריב!",

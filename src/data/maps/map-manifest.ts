@@ -27,7 +27,7 @@ type Location = {
  * If flySpawn is omitted the map's own `spawn` field is used when landing.
  */
 type CityLocation = Location & {
-  flySpawn?: { x: number; y: number };
+  flySpawn?: { x: number; y: number }[];
 };
 
 /**
@@ -92,6 +92,12 @@ const mapManifest: MapManifest = {
       y2: 240,
       title: [40, 110],
       label: { en: 'Multiplia', he: 'מולטיפליה' },
+      flySpawn: [
+        { x: 39, y: 1 },
+        { x: 78, y: 32 },
+        { x: 63, y: 48 },
+        { x: 1, y: 18 },
+      ],
     },
     {
       id: 'dividia/dividia',
@@ -101,6 +107,10 @@ const mapManifest: MapManifest = {
       y2: 380,
       title: [115, 15],
       label: { en: 'Dividia', he: 'דיבידיה' },
+      flySpawn: [
+        { x: 28, y: 1 },
+        { x: 2, y: 21 },
+      ],
     },
     {
       id: 'fractalis/fractalis',
@@ -110,6 +120,7 @@ const mapManifest: MapManifest = {
       y2: 450,
       title: [70, 20],
       label: { en: 'Fractalis', he: 'פרקטליס' },
+      flySpawn: [{ x: 75, y: 12 }],
     },
     {
       id: 'symmetrika/symmetrika',
@@ -119,6 +130,11 @@ const mapManifest: MapManifest = {
       y2: 310,
       title: [50, -20],
       label: { en: 'Symmetrika', he: 'סימטריקה' },
+      flySpawn: [
+        { x: 25, y: 37 },
+        { x: 39, y: 18 },
+        { x: 1, y: 18 },
+      ],
     },
     {
       id: 'percentile/percentile',
@@ -128,6 +144,7 @@ const mapManifest: MapManifest = {
       y2: 320,
       title: [0, 0],
       label: { en: 'Percentile', he: 'פרסנטייל' },
+      flySpawn: [{ x: 48, y: 21 }],
     },
     {
       id: 'algebria/algebria',

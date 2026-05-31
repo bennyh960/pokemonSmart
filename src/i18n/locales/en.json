@@ -546,7 +546,7 @@
   "repel.active": "Repel took effect! Wild encounters blocked for {steps} steps.",
   "repel.woreOff": "Repel wore off!",
   "repel.already": "A Repel is already in effect!",
-  "worldMap.flyHint": "Enter: Fly here",
+  "worldMap.flyHint": "← → select  Enter: fly",
   "worldMap.noFly": "No Pokémon can Fly right now",
   "battle.stealthRockSet": "Pointed stones float in the air around the foe!",
   "battle.spikesSet": "Spikes were scattered all around the foe's feet!",

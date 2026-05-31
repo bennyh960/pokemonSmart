@@ -800,8 +800,11 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     effect: { type: 'tm', moveId: 19, isHM: true },
     usableInBattle: false,
     usableInOverworld: true,
-    name: { en: 'HM02 Fly', he: 'HM02 טיסה' },
-    description: { en: 'Teaches Fly. Reusable.', he: 'מלמד טיסה. שימוש חוזר.' },
+    name: { en: 'HM02 Fly', he: 'HM02 תעופה' },
+    description: {
+      en: 'Allows the Pokémon to fly from one location to another on the map.',
+      he: 'מאפשר לעוף עם הפוקימון ממקום למקום על גבי המפה',
+    },
   },
   307: {
     category: 'machine',

@@ -96,7 +96,7 @@ import {
   type CutsceneContext,
 } from '../systems/cutscene-runner.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-import { setFlyCallback, FLY_DESTINATIONS } from './world-map.js';
+import { setFlyCallback, FLY_DESTINATIONS, resolveFlySpawn } from './world-map.js';
 import { openSaveSlots } from './save-slots.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
 import charactersManifest from '../data/sprites/characters.json';
@@ -173,6 +173,7 @@ interface ListChoiceState {
 let _pendingFishing = false;
 let _legendVisible = false;
 let _playerRef: PlayerState | null = null;
+let _flySetup: (() => void) | null = null;
 
 export function scheduleFishing(): void {
   _pendingFishing = true;
@@ -184,7 +185,7 @@ export function toggleLegend(): void {
   _legendVisible = !_legendVisible;
 }
 export function setupWorldMapFly(): void {
-  setFlyCallback(null);
+  _flySetup ? _flySetup() : setFlyCallback(null);
 }
 
 /** Instantly move the player to a grid position — used by checkpoint recovery. */
@@ -1519,7 +1520,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   /** Start the Fly animation sequence. */
   function startFlyAnimation(pokemon: import('../types/index.js').Pokemon, destMapId: string): void {
-    const destSpawn = getCachedMap(destMapId)?.spawn ?? { x: 5, y: 5 };
+    const destSpawn = resolveFlySpawn(destMapId) ?? getCachedMap(destMapId)?.spawn ?? { x: 5, y: 5 };
     const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
     flyAnim = {
       phase: 'mount',
@@ -1543,6 +1544,29 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         /* non-fatal */
       });
   }
+
+  // Register module-level fly-setup so setupWorldMapFly() (called from start menu) can use it
+  _flySetup = function activateFly(): void {
+    if (!hasActiveGame()) {
+      setFlyCallback(null);
+      return;
+    }
+    const pd = getPlayerData();
+    // Fly is only usable from outdoor city maps — not interiors, caves, or routes
+    if (!FLY_DESTINATIONS.includes(pd.position.mapId)) {
+      setFlyCallback(null);
+      return;
+    }
+    const flyUser = canUseHM('fly', pd.party) ? findHMUser('fly', pd.party) : null;
+    if (flyUser) {
+      const capturedFlyUser = flyUser;
+      setFlyCallback((destMapId: string) => {
+        startFlyAnimation(capturedFlyUser, destMapId);
+      }, capturedFlyUser);
+    } else {
+      setFlyCallback(null);
+    }
+  };
 
   /** Start surfing on a Pokemon — moves player onto the facing water tile. */
   function startSurfing(pokemon: import('../types/index.js').Pokemon, skipFlash = false): void {
@@ -1693,9 +1717,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   async function loadAndSetMap(mapId: string, spawnX?: number, spawnY?: number): Promise<void> {
     const data = await loadMap(mapId);
     currentMapData = data;
-    currentMapWeather = (typeof data.outside === 'object' && data.outside !== null)
-      ? getMapWeather(data.id ?? mapId, data.outside)
-      : null;
+    currentMapWeather =
+      typeof data.outside === 'object' && data.outside !== null ? getMapWeather(data.id ?? mapId, data.outside) : null;
     const tileset = data.tileset ? getTileset(data.tileset) : null;
 
     // Init moveable puzzle tiles before object filtering so they can be captured then removed
@@ -3386,20 +3409,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // W key → World Map (with Fly if available)
       if (input.isKeyPressed('w') || input.isKeyPressed('W')) {
-        if (hasActiveGame()) {
-          const pd = getPlayerData();
-          const flyUser = canUseHM('fly', pd.party) ? findHMUser('fly', pd.party) : null;
-          if (flyUser) {
-            const capturedFlyUser = flyUser;
-            setFlyCallback((destMapId: string) => {
-              startFlyAnimation(capturedFlyUser, destMapId);
-            });
-          } else {
-            setFlyCallback(null);
-          }
-        } else {
-          setFlyCallback(null);
-        }
+        _flySetup?.();
         stateMachine.push('WORLD_MAP');
         return;
       }
