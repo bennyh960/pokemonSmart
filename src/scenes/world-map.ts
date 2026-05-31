@@ -15,7 +15,7 @@
  */
 
 import type { InputManager } from '../engine/input.js';
-import { drawText, fillRect } from '../engine/renderer.js';
+import { drawText, fillRect, fillRoundRect } from '../engine/renderer.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
@@ -222,10 +222,43 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
 
         // City label
         const anchor = toScreen(x1 + (title[0] / 100) * (x2 - x1), y1 + (title[1] / 100) * (y2 - y1), finalScale, off);
-        const name = getMapDisplayName(city.id);
-        const labelColor = isSelected ? '#ffffff' : isVisited ? '#eeeebb' : '#556677';
-        drawText(ctx, rtl ? name.he : name.en, anchor.x, anchor.y, {
-          size: 6,
+        const name = city.label ?? getMapDisplayName(city.id);
+        const labelText = rtl ? name.he : name.en;
+        let labelColor = '#556677';
+        if (isVisited) labelColor = '#eeeebb';
+        if (isSelected) labelColor = '#ffffff';
+        const labelSize = 5;
+        const labelPadX = 3;
+        const labelPadY = 1;
+
+        ctx.save();
+        ctx.font = `${labelSize}px monospace`;
+        const labelWidth = Math.ceil(ctx.measureText(labelText).width);
+        ctx.restore();
+
+        const chipX = anchor.x - labelWidth / 2 - labelPadX;
+        const chipY = anchor.y - labelPadY;
+        const chipW = labelWidth + labelPadX * 2;
+        const chipH = labelSize + labelPadY * 2 + 1;
+
+        ctx.save();
+        ctx.fillStyle = '#000000';
+        ctx.globalAlpha = 0.28;
+        fillRoundRect(ctx, chipX, chipY + 1, chipW, chipH, 3);
+        ctx.restore();
+
+        let labelBgAlpha = 0.56;
+        if (isVisited) labelBgAlpha = 0.66;
+        if (isSelected) labelBgAlpha = 0.78;
+
+        ctx.save();
+        ctx.globalAlpha = labelBgAlpha;
+        ctx.fillStyle = isSelected ? '#102638' : '#071018';
+        fillRoundRect(ctx, chipX, chipY, chipW, chipH, 3);
+        ctx.restore();
+
+        drawText(ctx, labelText, anchor.x, anchor.y, {
+          size: labelSize,
           color: labelColor,
           align: 'center',
           font: 'monospace',

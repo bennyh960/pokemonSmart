@@ -29,7 +29,7 @@ function templateIdFromPath(path: string): string {
 
 // Fast id → module-path lookup built once at module init
 const mapPathById: Record<string, string> = Object.fromEntries(
-  Object.keys(mapModules).map(k => [mapIdFromPath(k), k])
+  Object.keys(mapModules).map((k) => [mapIdFromPath(k), k]),
 );
 
 /** Return bilingual display name for a map ID.
@@ -40,7 +40,7 @@ export function getMapDisplayName(mapId: string): { en: string; he: string } {
   if (cached?.label?.en || cached?.label?.he) {
     return { en: cached.label.en ?? mapId, he: cached.label.he ?? mapId };
   }
-  if (cached?.name) return { en: cached.name, he: cached.name };  // TODO: remove once all maps use label
+  if (cached?.name) return { en: cached.name, he: cached.name }; // TODO: remove once all maps use label
   return { en: mapId, he: mapId };
 }
 
@@ -63,7 +63,7 @@ export async function loadMap(id: string): Promise<TileMapData> {
   const cached = mapCache.get(id);
   // Return a fresh copy each time so runtime mutations (npc.hidden, npc.x/y, etc.)
   // from the previous session don't leak into the next map load.
-  if (cached) return { ...cached, npcs: cached.npcs?.map(npc => ({ ...npc })) ?? [] };
+  if (cached) return { ...cached, npcs: cached.npcs?.map((npc) => ({ ...npc })) ?? [] };
 
   const loader = mapModules[mapPathById[id]];
   if (!loader) {
@@ -75,7 +75,7 @@ export async function loadMap(id: string): Promise<TileMapData> {
   let data = module.default as TileMapData & { template?: string };
 
   if (data.template) {
-    const templatePath = Object.keys(templateModules).find(k => templateIdFromPath(k) === data.template);
+    const templatePath = Object.keys(templateModules).find((k) => templateIdFromPath(k) === data.template);
     if (!templatePath) throw new Error(`Map template "${data.template}" not found in templates/ folder.`);
     const templateModule = await templateModules[templatePath]();
     data = mergeMapWithTemplate(data, templateModule.default);
@@ -94,7 +94,7 @@ export async function loadMap(id: string): Promise<TileMapData> {
   mapCache.set(id, data);
   // Return a clone so the caller's runtime mutations (npc.x/y, hidden, facing)
   // don't pollute the cache — every load starts from clean JSON-original values.
-  return { ...data, npcs: data.npcs?.map(npc => ({ ...npc })) ?? [] };
+  return { ...data, npcs: data.npcs?.map((npc) => ({ ...npc })) ?? [] };
 }
 
 /** Get all available map IDs (excludes templates and backups). */

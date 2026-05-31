@@ -19,6 +19,7 @@ type Location = {
   x2: number;
   y2: number;
   title: [number, number];
+  label?: { en: string; he: string };
 };
 
 /**
@@ -56,11 +57,102 @@ const mapManifest: MapManifest = {
   },
   scale: 1,
   cities: [
-    { id: 'zeroville/zeroville', x1: 190, x2: 220, y1: 130, y2: 150, title: [0, -50] },
-    { id: 'multiplia/multiplia', x1: 508, y1: 400, x2: 657, y2: 450, title: [0, 0] },
-    { id: 'sumville/sumville', x1: 482, y1: 240, x2: 630, y2: 390, title: [10, 20] },
+    {
+      id: 'zeroville/zeroville',
+      x1: 190,
+      x2: 220,
+      y1: 130,
+      y2: 150,
+      title: [50, -150],
+      label: { en: 'Zeroville', he: 'זירוויל' },
+    },
+    {
+      id: 'sumville/sumville',
+      x1: 400,
+      y1: 80,
+      x2: 480,
+      y2: 150,
+      title: [30, -30],
+      label: { en: 'Sumville', he: 'סומוויל' },
+    },
+    {
+      id: 'minusburg/minusburg',
+      x1: 580,
+      y1: 80,
+      x2: 650,
+      y2: 120,
+      title: [30, -60],
+      label: { en: 'Minusburg', he: 'מינוסבורג' },
+    },
+    {
+      id: 'multiplia/multiplia',
+      x1: 370,
+      y1: 210,
+      x2: 480,
+      y2: 240,
+      title: [40, -60],
+      label: { en: 'Multiplia', he: 'מולטיפליה' },
+    },
+    {
+      id: 'dividia/dividia',
+      x1: 480,
+      y1: 320,
+      x2: 520,
+      y2: 380,
+      title: [20, -40],
+      label: { en: 'Dividia', he: 'דיבידיה' },
+    },
+    {
+      id: 'fractalis/fractalis',
+      x1: 190,
+      x2: 310,
+      y1: 390,
+      y2: 450,
+      title: [-30, 0],
+      label: { en: 'Fractalis', he: 'פרקטליס' },
+    },
+    {
+      id: 'symmetrika/symmetrika',
+      x1: 170,
+      x2: 220,
+      y1: 250,
+      y2: 310,
+      title: [30, -20],
+      label: { en: 'Symmetrika', he: 'סימטריקה' },
+    },
+    {
+      id: 'percentile/percentile',
+      x1: 30,
+      y1: 250,
+      x2: 100,
+      y2: 320,
+      title: [0, 0],
+      label: { en: 'Percentile', he: 'פרסנטייל' },
+    },
+    {
+      id: 'algebria/algebria',
+      x1: 60,
+      x2: 120,
+      y1: 30,
+      y2: 90,
+      title: [20, -30],
+      label: { en: 'Algebria', he: 'אלגבריה' },
+    },
   ],
-  routes: [{ id: 'routes/route-1', x1: 410, y1: 240, x2: 480, y2: 260, title: [-5, 0] }],
+  routes: [
+    { id: 'routes/route-1', x1: 220, y1: 130, x2: 390, y2: 110, title: [50, -10] },
+    { id: 'routes/route-2', x1: 480, y1: 130, x2: 580, y2: 90, title: [0, -20] },
+    { id: 'routes/route-3', x1: 650, y1: 80, x2: 720, y2: 200, title: [0, -20] },
+    { id: 'routes/route-4', x1: 530, y1: 180, x2: 630, y2: 220, title: [0, -20] },
+    { id: 'routes/route-5', x1: 450, y1: 280, x2: 530, y2: 325, title: [50, -20] },
+    { id: 'routes/route-6', x1: 420, y1: 150, x2: 460, y2: 215, title: [0, -20] },
+    { id: 'routes/route-7', x1: 470, y1: 320, x2: 400, y2: 400, title: [50, -20] },
+    { id: 'routes/route-8', x1: 180, y1: 400, x2: 245, y2: 300, title: [50, -20] },
+    { id: 'routes/route-9', x1: 220, y1: 280, x2: 320, y2: 305, title: [50, -20] },
+    { id: 'routes/route-10', x1: 190, y1: 160, x2: 240, y2: 240, title: [-20, 50] },
+    { id: 'routes/route-11', x1: 90, y1: 270, x2: 170, y2: 300, title: [50, -20] },
+    { id: 'routes/route-12', x1: 255, y1: 270, x2: 140, y2: 300, title: [-20, 50] },
+  ],
 };
 
 export default mapManifest;
