@@ -40,59 +40,9 @@
       "toMapId": "percentile/percentile",
       "toX": 49,
       "toY": 21
-    },
-    {
-      "fromX": 19,
-      "fromY": 3,
-      "toMapId": "routes/route-11-cave"
     }
   ],
-  "npcs": [
-    {
-      "id": "npc-r11-blocker",
-      "x": 1,
-      "y": 6,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "",
-          "he": "אפשר לסמוך עליך?"
-        }
-      ],
-      "spriteType": "char_75200a",
-      "party": [],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 0
-      },
-      "postBattleDialogue": [],
-      "blocker": true,
-      "despawnAfter": "todo"
-    },
-    {
-      "id": "npc-1780259899152",
-      "x": 18,
-      "y": 3,
-      "facing": "down",
-      "type": "wild-pokemon",
-      "dialogue": [
-        {
-          "en": "01001 029321",
-          "he": "312098 029381"
-        }
-      ],
-      "spriteType": "npc-male",
-      "level": 50,
-      "pokemonId": 217,
-      "isGlitched": true,
-      "despawnOnDefeat": true,
-      "name": {
-        "en": "8329108",
-        "he": "38210989"
-      }
-    }
-  ],
+  "npcs": [],
   "music": "route",
   "encounterTableId": null,
   "movablePuzzle": {},
@@ -106,12 +56,12 @@
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
-    ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
-    ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
-    ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
-    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
-    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","xtest","xtest","xtest","xtest","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
-    ["s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
+    ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
+    ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","xtest","xtest","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
+    ["s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","xtest","xtest","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
+    ["s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","mtcb2","xtest","mtcb2","mtcb2","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mtcb2","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","xtest","xtest","xtest","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2"],
@@ -844,6 +794,61 @@
       "y": 3
     },
     {
+      "key": "g8l",
+      "x": 16,
+      "y": 4
+    },
+    {
+      "key": "g8l",
+      "x": 16,
+      "y": 5
+    },
+    {
+      "key": "g8l",
+      "x": 16,
+      "y": 6
+    },
+    {
+      "key": "g8l",
+      "x": 16,
+      "y": 7
+    },
+    {
+      "key": "g8l",
+      "x": 16,
+      "y": 8
+    },
+    {
+      "key": "g8l",
+      "x": 16,
+      "y": 9
+    },
+    {
+      "key": "g8b",
+      "x": 17,
+      "y": 10
+    },
+    {
+      "key": "g8b",
+      "x": 18,
+      "y": 11
+    },
+    {
+      "key": "g8l",
+      "x": 17,
+      "y": 10
+    },
+    {
+      "key": "g8bl",
+      "x": 16,
+      "y": 10
+    },
+    {
+      "key": "g8bl",
+      "x": 17,
+      "y": 11
+    },
+    {
       "key": "g8t",
       "x": 42,
       "y": 17
@@ -960,7 +965,72 @@
     },
     {
       "key": "t4",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "key": "t4",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "key": "t4",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "key": "t4",
+      "x": 10,
+      "y": 3
+    },
+    {
+      "key": "t4",
+      "x": 12,
+      "y": 3
+    },
+    {
+      "key": "t4",
+      "x": 14,
+      "y": 3
+    },
+    {
+      "key": "t4",
       "x": 1,
+      "y": 4
+    },
+    {
+      "key": "t4",
+      "x": 3,
+      "y": 4
+    },
+    {
+      "key": "t4",
+      "x": 5,
+      "y": 4
+    },
+    {
+      "key": "t4",
+      "x": 7,
+      "y": 4
+    },
+    {
+      "key": "t4",
+      "x": 9,
+      "y": 4
+    },
+    {
+      "key": "t4",
+      "x": 11,
+      "y": 4
+    },
+    {
+      "key": "t4",
+      "x": 13,
+      "y": 4
+    },
+    {
+      "key": "t4",
+      "x": 15,
       "y": 4
     },
     {
@@ -2532,256 +2602,6 @@
       "key": "cave-entrance-l",
       "x": 19,
       "y": 3
-    },
-    {
-      "key": "g8b",
-      "x": 18,
-      "y": 5
-    },
-    {
-      "key": "g8b",
-      "x": 17,
-      "y": 5
-    },
-    {
-      "key": "g8l",
-      "x": 16,
-      "y": 4
-    },
-    {
-      "key": "g8bl",
-      "x": 16,
-      "y": 5
-    },
-    {
-      "key": "t4",
-      "x": 17,
-      "y": 5
-    },
-    {
-      "key": "t4",
-      "x": 18,
-      "y": 6
-    },
-    {
-      "key": "t4",
-      "x": 16,
-      "y": 7
-    },
-    {
-      "key": "t4",
-      "x": 17,
-      "y": 7
-    },
-    {
-      "key": "t4",
-      "x": 17,
-      "y": 9
-    },
-    {
-      "key": "t4",
-      "x": 16,
-      "y": 10
-    },
-    {
-      "key": "t4",
-      "x": 16,
-      "y": 5
-    },
-    {
-      "key": "t2",
-      "x": 5,
-      "y": 5
-    },
-    {
-      "key": "t2",
-      "x": 7,
-      "y": 5
-    },
-    {
-      "key": "t2",
-      "x": 9,
-      "y": 5
-    },
-    {
-      "key": "t2",
-      "x": 11,
-      "y": 5
-    },
-    {
-      "key": "t2",
-      "x": 13,
-      "y": 5
-    },
-    {
-      "key": "t2",
-      "x": 15,
-      "y": 5
-    },
-    {
-      "key": "t2u",
-      "x": 5,
-      "y": 4
-    },
-    {
-      "key": "t2u",
-      "x": 7,
-      "y": 4
-    },
-    {
-      "key": "t2u",
-      "x": 9,
-      "y": 4
-    },
-    {
-      "key": "t2u",
-      "x": 11,
-      "y": 4
-    },
-    {
-      "key": "t2u",
-      "x": 13,
-      "y": 4
-    },
-    {
-      "key": "t2u",
-      "x": 15,
-      "y": 4
-    },
-    {
-      "key": "flowerX",
-      "x": 5,
-      "y": 6
-    },
-    {
-      "key": "flowerX",
-      "x": 6,
-      "y": 3
-    },
-    {
-      "key": "flowerX",
-      "x": 10,
-      "y": 4
-    },
-    {
-      "key": "flowerX",
-      "x": 18,
-      "y": 10
-    },
-    {
-      "key": "g5",
-      "x": 4,
-      "y": 3
-    },
-    {
-      "key": "g5",
-      "x": 15,
-      "y": 6
-    },
-    {
-      "key": "g5",
-      "x": 18,
-      "y": 8
-    },
-    {
-      "key": "g3",
-      "x": 3,
-      "y": 4
-    },
-    {
-      "key": "g3",
-      "x": 4,
-      "y": 4
-    },
-    {
-      "key": "g3",
-      "x": 3,
-      "y": 5
-    },
-    {
-      "key": "g3",
-      "x": 3,
-      "y": 6
-    },
-    {
-      "key": "g3",
-      "x": 6,
-      "y": 4
-    },
-    {
-      "key": "g3",
-      "x": 8,
-      "y": 4
-    },
-    {
-      "key": "g3",
-      "x": 8,
-      "y": 3
-    },
-    {
-      "key": "g3",
-      "x": 10,
-      "y": 3
-    },
-    {
-      "key": "g3",
-      "x": 9,
-      "y": 6
-    },
-    {
-      "key": "g3",
-      "x": 7,
-      "y": 6
-    },
-    {
-      "key": "g3",
-      "x": 11,
-      "y": 6
-    },
-    {
-      "key": "g3",
-      "x": 12,
-      "y": 4
-    },
-    {
-      "key": "g3",
-      "x": 12,
-      "y": 3
-    },
-    {
-      "key": "g3",
-      "x": 14,
-      "y": 3
-    },
-    {
-      "key": "g3",
-      "x": 14,
-      "y": 4
-    },
-    {
-      "key": "g3",
-      "x": 18,
-      "y": 9
-    },
-    {
-      "key": "g3",
-      "x": 16,
-      "y": 9
-    },
-    {
-      "key": "g3",
-      "x": 18,
-      "y": 11
-    },
-    {
-      "key": "g3",
-      "x": 17,
-      "y": 11
-    },
-    {
-      "key": "g4",
-      "x": 13,
-      "y": 6
     }
   ],
   "objectLayer": [

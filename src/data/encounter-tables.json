@@ -1467,6 +1467,95 @@
     ]
   },
 
+  "cave-30-40": {
+    "encounterRate": 0.05,
+    "entries": [
+      {
+        "pokemonId": 41,
+        "minLevel": 30,
+        "maxLevel": 32,
+        "weight": 40
+      },
+      {
+        "pokemonId": 42,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 3
+      },
+      {
+        "pokemonId": 50,
+        "minLevel": 30,
+        "maxLevel": 32,
+        "weight": 40
+      },
+      {
+        "pokemonId": 27,
+        "minLevel": 30,
+        "maxLevel": 32,
+        "weight": 10
+      },
+      {
+        "pokemonId": 51,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 3
+      },
+      {
+        "pokemonId": 95,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 5
+      },
+      {
+        "pokemonId": 104,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 10
+      },
+      {
+        "pokemonId": 231,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 10
+      }
+    ]
+  },
+
+  "r11-rocket-base": {
+    "encounterRate": 0.05,
+    "entries": [
+      {
+        "pokemonId": 23,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 40
+      },
+      {
+        "pokemonId": 109,
+        "minLevel": 25,
+        "maxLevel": 30,
+        "weight": 40
+      },
+      {
+        "pokemonId": 92,
+        "minLevel": 15,
+        "maxLevel": 20,
+        "weight": 10
+      },
+      {
+        "pokemonId": 228,
+        "minLevel": 20,
+        "maxLevel": 30,
+        "weight": 10
+      },
+      {
+        "pokemonId": 202,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 10
+      }
+    ]
+  },
   "route-9": {
     "encounterRate": 0.1,
     "entries": [

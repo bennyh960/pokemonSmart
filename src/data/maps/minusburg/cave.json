@@ -1,0 +1,696 @@
+{
+  "id": "cave",
+  "name": "New Map",
+  "tileset": "overworld",
+  "width": 80,
+  "height": 40,
+  "tileSize": 16,
+  "spawn": {
+    "x": 40,
+    "y": 20
+  },
+  "transitions": [],
+  "npcs": [],
+  "music": "town",
+  "encounterTableId": null,
+  "movablePuzzle": {},
+  "flagListeners": [],
+  "interactiveItems": {}
+,
+  "tiles": [
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","mx3","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","w14","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"],
+    ["e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!","e7!"]
+  ],
+  "objects": [
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 1
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 2
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 3
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 4
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 5
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 6
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 7
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 8
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 9
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 10
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 11
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 13
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 14
+    },
+    {
+      "key": "m4",
+      "x": 36,
+      "y": 15
+    },
+    {
+      "key": "m2",
+      "x": 35,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 34,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 33,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 32,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 31,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 30,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 29,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 28,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 27,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 26,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 25,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 24,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 23,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 22,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 21,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 20,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 19,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 18,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 17,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 16,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 15,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 14,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 13,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 12,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 11,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 10,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 9,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 8,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 7,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 6,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 5,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 4,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 3,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 2,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 1,
+      "y": 16
+    },
+    {
+      "key": "m2",
+      "x": 0,
+      "y": 16
+    },
+    {
+      "key": "m8",
+      "x": 35,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 34,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 33,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 32,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 31,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 30,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 29,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 28,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 27,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 26,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 25,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 24,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 23,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 22,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 21,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 20,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 19,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 18,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 17,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 16,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 15,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 13,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 12,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 11,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 9,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 8,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "m8",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 4
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 10
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 11
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 12
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 13
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 14
+    },
+    {
+      "key": "m6",
+      "x": 0,
+      "y": 15
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 0
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 1
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 2
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 3
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 4
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 5
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 6
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 7
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 8
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 9
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 10
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 11
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 12
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 13
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 14
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 15
+    },
+    {
+      "key": "m4",
+      "x": 37,
+      "y": 16
+    }
+  ],
+  "objectLayer": [
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+  ]
+}

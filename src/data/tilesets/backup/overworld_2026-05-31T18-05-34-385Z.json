@@ -30,9 +30,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "meadow",
       "above": true,
       "overlay": true,
@@ -47,13 +45,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "poison",
-        "grass",
-        "bug",
-        "flying",
-        "psychic"
-      ],
+      "encounterTypes": ["poison", "grass", "bug", "flying", "psychic"],
       "above": true,
       "overlay": false,
       "category": "grass",
@@ -720,11 +712,11 @@
       "sy": 1600,
       "w": 32,
       "h": 32,
-      "zOffset": 10,
       "walkable": false,
       "above": false,
       "category": "tree",
       "interactType": null,
+      "zOffset": 10,
       "description": "tree decorative"
     },
     {
@@ -758,9 +750,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -773,9 +763,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -788,10 +776,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water",
-        "flying"
-      ],
+      "encounterTypes": ["water", "flying"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -804,10 +789,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "ice"
-      ],
+      "encounterTypes": ["water", "ice"],
       "battleBackground": "orassea",
       "above": false,
       "category": "water",
@@ -821,9 +803,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -836,9 +816,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -851,9 +829,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -866,9 +842,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -893,9 +867,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "*/flying,ground,rock,dragon,steel,normal"
-      ],
+      "encounterTypes": ["*/flying,ground,rock,dragon,steel,normal"],
       "above": true,
       "category": "ground",
       "interactType": null,
@@ -1280,9 +1252,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -1854,9 +1824,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water,ice"
-      ],
+      "encounterTypes": ["*/water,ice"],
       "battleBackground": "desert",
       "above": false,
       "category": "ground",
@@ -2050,13 +2018,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "steel",
-        "dragon",
-        "rock",
-        "electric",
-        "flying"
-      ],
+      "encounterTypes": ["steel", "dragon", "rock", "electric", "flying"],
       "battleBackground": "skypillar",
       "above": false,
       "category": "ground",
@@ -3553,9 +3515,7 @@
       "w": 32,
       "h": 32,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3580,9 +3540,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3644,9 +3602,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*"
-      ],
+      "encounterTypes": ["*"],
       "battleBackground": "beach",
       "above": false,
       "category": "ground",
@@ -3708,9 +3664,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "beach",
       "above": false,
       "category": "ground",
@@ -4607,9 +4561,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "library",
       "above": true,
       "category": "grass",
@@ -4623,9 +4575,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/fire,ice,poison,bug"
-      ],
+      "encounterTypes": ["*/fire,ice,poison,bug"],
       "above": true,
       "category": "grass",
       "interactType": null,
@@ -6973,12 +6923,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "dragon",
-        "flying",
-        "bug",
-        "grass"
-      ],
+      "encounterTypes": ["dragon", "flying", "bug", "grass"],
       "above": false,
       "category": "ground",
       "interactType": null
@@ -7098,13 +7043,9 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg2",
@@ -7114,8 +7055,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg3",
@@ -7125,8 +7065,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg4",
@@ -7136,8 +7075,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg5",
@@ -7146,13 +7084,10 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "battleBackground": "leaderwallace",
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg6",
@@ -7162,8 +7097,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg7",
@@ -7173,8 +7107,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg8",
@@ -7184,8 +7117,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg9",
@@ -7195,8 +7127,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg10",
@@ -7205,13 +7136,9 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg11",
@@ -7221,8 +7148,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg12",
@@ -7231,13 +7157,9 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
-      "category": "grass",
-      "interactType": null
+      "category": "grass"
     },
     {
       "key": "wg13",
@@ -7246,12 +7168,8 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "grass",
-        "water"
-      ],
       "above": false,
-      "interactType": null
+      "encounterTypes": ["grass", "water"]
     },
     {
       "key": "wg0",
@@ -7262,173 +7180,7 @@
       "walkable": true,
       "battleBackground": "leaderwallace",
       "above": false,
-      "category": "grass",
-      "interactType": null
-    },
-    {
-      "key": "powerStation-3",
-      "sx": 0,
-      "sy": 2720,
-      "w": 112,
-      "h": 64,
-      "walkable": false,
-      "above": true,
-      "category": "building",
-      "interactType": null,
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 3
-        },
-        {
-          "dx": 1,
-          "dy": 3
-        },
-        {
-          "dx": 2,
-          "dy": 3
-        },
-        {
-          "dx": 2,
-          "dy": 2
-        },
-        {
-          "dx": 3,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 2
-        },
-        {
-          "dx": 4,
-          "dy": 3
-        },
-        {
-          "dx": 5,
-          "dy": 3
-        },
-        {
-          "dx": 6,
-          "dy": 3
-        },
-        {
-          "dx": 6,
-          "dy": 2
-        },
-        {
-          "dx": 5,
-          "dy": 2
-        },
-        {
-          "dx": 6,
-          "dy": 1
-        },
-        {
-          "dx": 5,
-          "dy": 1
-        },
-        {
-          "dx": 4,
-          "dy": 1
-        },
-        {
-          "dx": 3,
-          "dy": 1
-        },
-        {
-          "dx": 2,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 1
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 2,
-          "dy": 0
-        },
-        {
-          "dx": 3,
-          "dy": 0
-        },
-        {
-          "dx": 4,
-          "dy": 0
-        },
-        {
-          "dx": 5,
-          "dy": 0
-        },
-        {
-          "dx": 6,
-          "dy": 0
-        }
-      ]
-    },
-    {
-      "key": "powerStation-2",
-      "sx": 0,
-      "sy": 2688,
-      "w": 112,
-      "h": 32,
-      "walkable": true,
-      "above": true,
-      "overlay": true,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "powerStation-door",
-      "sx": 48,
-      "sy": 2768,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "building",
-      "interactType": null
-    },
-    {
-      "key": "cave-entrance-l",
-      "sx": 0,
-      "sy": 688,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "wall",
-      "interactType": null
-    },
-    {
-      "key": "cave-entrance-2",
-      "sx": 0,
-      "sy": 656,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "wall"
+      "category": "grass"
     }
   ]
 }

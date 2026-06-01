@@ -1489,6 +1489,16 @@
       "above": true,
       "category": "wall",
       "interactType": null
+    },
+    {
+      "key": "cj1",
+      "sx": 160,
+      "sy": 48,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall"
     }
   ]
 }

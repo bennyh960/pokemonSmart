@@ -7423,7 +7423,7 @@
     {
       "key": "cave-entrance-2",
       "sx": 0,
-      "sy": 656,
+      "sy": 688,
       "w": 16,
       "h": 16,
       "walkable": true,

@@ -1445,50 +1445,6 @@
           "itemId": "core-x5"
         }
       }
-    },
-    {
-      "key": "cave-exit-l-1",
-      "sx": 80,
-      "sy": 496,
-      "w": 32,
-      "h": 48,
-      "walkable": false,
-      "above": true,
-      "category": "wall",
-      "interactType": null,
-      "cells": [
-        {
-          "dx": 0,
-          "dy": 0
-        },
-        {
-          "dx": 1,
-          "dy": 0
-        },
-        {
-          "dx": 0,
-          "dy": 1
-        },
-        {
-          "dx": 0,
-          "dy": 2
-        },
-        {
-          "dx": 1,
-          "dy": 2
-        }
-      ]
-    },
-    {
-      "key": "cave-exit-l-2",
-      "sx": 96,
-      "sy": 512,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "wall",
-      "interactType": null
     }
   ]
 }

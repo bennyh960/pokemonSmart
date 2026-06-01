@@ -7417,18 +7417,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "wall",
-      "interactType": null
-    },
-    {
-      "key": "cave-entrance-2",
-      "sx": 0,
-      "sy": 656,
-      "w": 16,
-      "h": 16,
-      "walkable": true,
-      "above": true,
-      "category": "wall"
+      "category": "floor"
     }
   ]
 }

@@ -1455,7 +1455,6 @@
       "walkable": false,
       "above": true,
       "category": "wall",
-      "interactType": null,
       "cells": [
         {
           "dx": 0,
@@ -1487,8 +1486,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "wall",
-      "interactType": null
+      "category": "wall"
     }
   ]
 }

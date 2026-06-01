@@ -80,7 +80,7 @@ const mapManifest: MapManifest = {
       x1: 580,
       y1: 80,
       x2: 650,
-      y2: 120,
+      y2: 155,
       title: [30, -60],
       label: { en: 'Minusburg', he: 'מינוסבורג' },
     },
