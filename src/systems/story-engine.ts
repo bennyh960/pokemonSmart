@@ -81,6 +81,11 @@ function _checkAutoGate(mapId: string): void {
 
   if (isGateUnlocked(entry.gateId)) return;
 
+  // If the player's saved position is already inside this map, they passed the gate in a
+  // prior session. pd.position.mapId hasn't been updated yet when map-enter fires, so this
+  // correctly distinguishes a resume-inside from a real entry from an adjacent map.
+  if (hasActiveGame() && getPlayerData().position.mapId === mapId) return;
+
   if (_stateMachine) {
     setActiveGate(entry.gateId);
     _stateMachine.push('GATE');
@@ -221,7 +226,10 @@ export function unlockGateTimed(gateId: string, durationMs: number): void {
 // Delayed event scheduling
 // ---------------------------------------------------------------------------
 
-function _scheduleDelayedEvent(event: import('../data/story/events.js').StoryEventDef, pd: ReturnType<typeof getPlayerData>): void {
+function _scheduleDelayedEvent(
+  event: import('../data/story/events.js').StoryEventDef,
+  pd: ReturnType<typeof getPlayerData>,
+): void {
   ensureStory(pd.story!);
   pd.story!.delayedEvents ??= {};
 
@@ -274,7 +282,10 @@ export async function checkAndResumeDelayedEvents(): Promise<void> {
   }
 }
 
-async function _executeEvent(event: import('../data/story/events.js').StoryEventDef, pd: ReturnType<typeof getPlayerData>): Promise<void> {
+async function _executeEvent(
+  event: import('../data/story/events.js').StoryEventDef,
+  pd: ReturnType<typeof getPlayerData>,
+): Promise<void> {
   const doneFlag = event.completedFlag ?? `__event-done-${event.id}`;
 
   // If this event starts a cutscene, snapshot flags before any actions run so
@@ -625,9 +636,9 @@ export async function checkAndRecoverInterruptedEvent(
 
 const DIR_DELTAS: Record<string, { dx: number; dy: number }> = {
   right: { dx: 1, dy: 0 },
-  left:  { dx: -1, dy: 0 },
-  down:  { dx: 0, dy: 1 },
-  up:    { dx: 0, dy: -1 },
+  left: { dx: -1, dy: 0 },
+  down: { dx: 0, dy: 1 },
+  up: { dx: 0, dy: -1 },
 };
 
 /**
@@ -695,7 +706,10 @@ function applyMoveNpcSteps(
       let { x, y } = pos;
       for (const dir of step.path) {
         const delta = DIR_DELTAS[dir];
-        if (delta) { x += delta.dx; y += delta.dy; }
+        if (delta) {
+          x += delta.dx;
+          y += delta.dy;
+        }
       }
       moveNpc(step.npcId, x, y);
     } else if (step.type === 'hide-npc') {

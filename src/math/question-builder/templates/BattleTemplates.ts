@@ -238,8 +238,46 @@ export class AttackFormulaDamageTemplate extends QuestionTemplate {
       ],
       hint,
       assets: [pokemonAsset(attacker), pokemonAsset(defender)],
-      distractors: [answer + atk, Math.max(1, answer - 1), answer * 2],
+      distractors: this._distractors(strategy, atk, power, answer),
     };
+  }
+
+  /**
+   * Builds distractors that are pedagogically meaningful per strategy.
+   *
+   * For approximate strategies (def≈power / def≈atk):
+   *   - wrongDir  : mirror of the answer past the pivot (catches kids who reason in
+   *                 the wrong direction). Clamped to be at least 3 away from answer.
+   *   - moderate  : 10% of the answer further in the SAME direction as answer from
+   *                 pivot (catches kids who get the direction right but overshoot).
+   *   - far       : pivot × 2 (clear anchor far from the correct ballpark).
+   */
+  private _distractors(strategy: string, atk: number, power: number, answer: number): number[] {
+    const safe = (arr: number[]) =>
+      [...new Set(arr.map(Math.round).filter((v) => v >= 1 && v !== answer))].slice(0, 3);
+
+    const approxCase = (pivot: number) => {
+      // Moderate: 10% of the answer further in the same direction as answer from pivot.
+      // Using the answer (not pivot) makes the gap proportional to what kids must judge.
+      // e.g. answer=66 → gap=7 → moderate=73; answer=111 → gap=11 → moderate=122.
+      const gap = Math.max(3, Math.round(answer * 0.1));
+      const moderate = answer >= pivot ? answer + gap : Math.max(1, answer - gap);
+
+      // WrongDir: goes in the OPPOSITE direction from moderate.
+      // Distance = 2×delta+1 (the exact mirror distance past pivot), min 3.
+      // This ensures wrongDir and moderate never collide regardless of delta.
+      const delta = Math.abs(answer - pivot);
+      const oppGap = Math.max(3, 2 * delta + 1);
+      const wrongDir = Math.max(1, moderate > answer ? answer - oppGap : answer + oppGap);
+
+      return safe([wrongDir, moderate, pivot * 2]);
+    };
+
+    if (strategy === 'def≈power') return approxCase(atk);
+    if (strategy === 'def≈atk') return approxCase(power);
+
+    // Exact ratio strategies (def=power×2 etc.) — keep spread around the answer
+    return safe([answer + atk, Math.max(1, answer - 1), answer * 2]);
   }
 
   protected questionText(params: TemplateParams): BilingualText {
