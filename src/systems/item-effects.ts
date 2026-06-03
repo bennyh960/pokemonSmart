@@ -111,14 +111,6 @@ export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
  * This does NOT handle capture or stat-boost in battle (those are battle-specific).
  */
 
-const e = {
-  'item.effect.hpFull': 'HP is already full!',
-};
-
-const h = {
-  'item.effect.cantUse': 'לא ניתן להשתמש על פוקימון מעולף!',
-};
-
 export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult {
   // Support both numeric ID strings and legacy slugs
   const def = getItemDef(itemId);
