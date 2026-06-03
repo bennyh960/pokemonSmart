@@ -4214,7 +4214,7 @@ export function createBattleScene(
     // Invulnerability check (Fly / Dig charge turn) — only for moves that target opponent
     if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && enemyBattleState.invulnerableState !== null) {
       const isDigBypass = m.id === 89 || m.id === 90 || isMagnitude; // Earthquake, Fissure, Magnitude
-      const neverMisses = m.accuracy <= 0;
+      const neverMisses = m.accuracy <= 0 || m.accuracy === null;
       const bothAirborne =
         playerBattleState.invulnerableState === 'airborne' && enemyBattleState.invulnerableState === 'airborne';
       if (!neverMisses && !(enemyBattleState.invulnerableState === 'underground' && isDigBypass) && !bothAirborne) {
