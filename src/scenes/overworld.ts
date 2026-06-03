@@ -2312,9 +2312,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Handle map transitions
       if (transitionState !== 'none') {
         if (transitionTarget?.mapId !== currentMapData?.id) {
-          console.log('before', cacheNPCSprites);
           cacheNPCSprites.clear();
-          console.log('after', cacheNPCSprites);
         }
         transitionTimer += dt;
         if (transitionState === 'fade-out' && transitionTimer >= TRANSITION_FADE_TIME) {
