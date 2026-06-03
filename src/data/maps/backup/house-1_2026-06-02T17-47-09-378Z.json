@@ -1,21 +1,29 @@
 {
-  "id": "house-1",
+  "id": "sumville-house-1",
   "label": {
     "en": "Sumville House 1",
     "he": "בית בסומוויל 1"
   },
-  "tileset": "interior",
-  "width": 15,
-  "height": 15,
+  "tileset": "overworld",
+  "width": 9,
+  "height": 8,
   "tileSize": 16,
   "spawn": {
-    "x": 6,
-    "y": 13
+    "x": 4,
+    "y": 6
   },
   "transitions": [
     {
-      "fromX": 6,
-      "fromY": 14,
+      "fromX": 4,
+      "fromY": 7,
+      "toMapId": null,
+      "toX": null,
+      "toY": null,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 3,
+      "fromY": 7,
       "toMapId": null,
       "toX": null,
       "toY": null,
@@ -29,9 +37,9 @@
         "en": "Teacher Adda",
         "he": "Teacher Adda"
       },
-      "x": 11,
-      "y": 8,
-      "facing": "right",
+      "x": 1,
+      "y": 4,
+      "facing": "up",
       "type": "npc",
       "dialogue": [
         {
@@ -105,102 +113,71 @@
   "music": "town",
   "encounterTableId": null,
   "area": "Sumville",
-  "movablePuzzle": {},
-  "flagListeners": [],
-  "interactiveItems": {}
-,
   "tiles": [
-    ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
-    ["w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1-l"],
-    ["w1-r","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-r","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","f3","w1-l"],
-    ["w1-b3","w1-1","w1-1","w1-1","w1-1","w1-c2","f3","w1-c1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-b4"]
+    ["wall", "pic1", "wall", "tv1", "wall", "wall", "flh1", "books", "wall"],
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "d", "d", "ca1tl", "ca1t", "ca1t", "ca1tr"],
+    ["d", "d", "d", "d", "d", "ca1l", "ca1c", "ca1c", "ca1r"],
+    ["d", "d", "d", "d", "d", "ca1bl", "ca1b", "ca1b", "ca1br"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d"]
   ],
   "objects": [
     {
-      "key": "fur1-3",
+      "key": "library1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "dt1",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "library1",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "df1",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "key": "ctc",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "ch1",
       "x": 4,
       "y": 2
     },
     {
-      "key": "piano1",
-      "x": 12,
-      "y": 7
-    },
-    {
-      "key": "sof-1",
-      "x": 5,
-      "y": 8
-    },
-    {
-      "key": "sof-1-2",
-      "x": 5,
-      "y": 7
-    },
-    {
-      "key": "chair-x3",
-      "x": 11,
-      "y": 7
-    },
-    {
-      "key": "fur1-3",
-      "x": 5,
-      "y": 2
-    },
-    {
-      "key": "fur1-3",
-      "x": 7,
-      "y": 2
-    },
-    {
-      "key": "fur1-3",
+      "key": "tr1",
       "x": 8,
-      "y": 2
+      "y": 0
     },
     {
-      "key": "furn1-1",
-      "x": 6,
-      "y": 2
-    },
-    {
-      "key": "tv-screen1",
-      "x": 5,
-      "y": 1
-    },
-    {
-      "key": "mat1",
-      "x": 5,
-      "y": 4
-    },
-    {
-      "key": "window-1",
-      "x": 2,
-      "y": 1
-    },
-    {
-      "key": "window-1",
-      "x": 12,
-      "y": 1
-    },
-    {
-      "key": "light2",
+      "key": "ehb1",
       "x": 3,
-      "y": 1
+      "y": 7
     },
     {
-      "key": "light2",
-      "x": 9,
-      "y": 1
+      "key": "f2",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "f2",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "pic5",
+      "x": 3,
+      "y": 0
     }
   ]
 }

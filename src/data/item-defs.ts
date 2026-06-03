@@ -28,7 +28,8 @@ export type ItemCategory =
 
 export type ItemEffect =
   | { type: 'heal'; amount: number }
-  | { type: 'heal-full' }
+  | { type: 'heal-full' } // Heals all HP
+  | { type: 'restore-full'; status: string | 'all' } // Heals all HP and status conditions (e.g. Full Restore)
   | { type: 'revive'; hpPercent: number }
   | { type: 'status-cure'; status: string | 'all' }
   | { type: 'pp-restore'; amount: number | 'all' }
@@ -261,7 +262,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   23: {
     category: 'healing',
     price: 3000,
-    effect: { type: 'heal-full' },
+    effect: { type: 'restore-full', status: 'all' },
     usableInBattle: true,
     usableInOverworld: true,
   }, // Full Restore

@@ -9,9 +9,9 @@
         "weight": 50
       },
       {
-        "pokemonId": 16,
-        "minLevel": 3,
-        "maxLevel": 50,
+        "pokemonId": 2,
+        "minLevel": 25,
+        "maxLevel": 35,
         "weight": 50
       }
     ]

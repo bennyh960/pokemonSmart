@@ -2,7 +2,7 @@
   "id": "test-map",
   "name": "New Map",
   "tileset": "overworld",
-  "width": 26,
+  "width": 40,
   "height": 20,
   "tileSize": 16,
   "spawn": {
@@ -84,11 +84,350 @@
         "money": 0
       },
       "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1780423199302",
+      "x": 29,
+      "y": 2,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "party": [
+        {
+          "pokemonId": 3,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 6,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 9,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 157,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 160,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 154,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 208,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 248,
+          "level": 50,
+          "moves": [],
+          "mustInclude": 5
+        },
+        {
+          "pokemonId": 149,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 230,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 199,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 65,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 68,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 1,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 143,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 217,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 130,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 131,
+          "level": 50,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 1,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": [],
+      "randomChars": [
+        "gym-helper",
+        "townfolk",
+        "trainer"
+      ],
+      "reencounter": {
+        "count": 5,
+        "lvlStep": 3,
+        "infinite": true,
+        "addToPhone": false
+      }
+    },
+    {
+      "id": "npc-1780423464977",
+      "x": 36,
+      "y": 2,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "randomChars": [
+        "trainer"
+      ],
+      "party": [
+        {
+          "pokemonId": 76,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 208,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 248,
+          "level": 50,
+          "moves": [],
+          "mustInclude": 5
+        },
+        {
+          "pokemonId": 75,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 95,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 105,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 112,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 232,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 141,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 139,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 142,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 185,
+          "level": 50,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 1,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1780423620396",
+      "x": 29,
+      "y": 9,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "randomChars": [
+        ""
+      ],
+      "party": [
+        {
+          "pokemonId": 197,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 248,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 94,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 215,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 93,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 198,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 200,
+          "level": 50,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": []
+    },
+    {
+      "id": "npc-1780423760387",
+      "x": 36,
+      "y": 9,
+      "facing": "down",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "party": [
+        {
+          "pokemonId": 68,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 181,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 106,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 107,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 237,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 57,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 62,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 186,
+          "level": 50,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0
+      },
+      "postBattleDialogue": [],
+      "randomChars": [
+        "rival"
+      ]
     }
   ],
   "music": "town",
   "encounterTableId": "test-map",
-  "outside": { "rain": 0.4, "sandstorm": 0.1 },
+  "outside": {
+    "rain": 0.4,
+    "sandstorm": 0.1
+  },
   "interactiveItems": {
     "item-generic": [
       {
@@ -125,26 +464,26 @@
   ]
 ,
   "tiles": [
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
-    ["mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g8c","g8c","g8c","g8c","g8c","g8c","g1","g1","g1","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
-    ["mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g8c","g8c","g8c","g8c","g8c","g8c","g1","g1","g1","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
-    ["mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g8c","g8c","g8c","g8c","g8c","g8c","g1","g1","g1","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"]
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","cs1r2c2","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g8c","g8c","g8c","g8c","g8c","g8c","g1","g1","g1","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g8c","g8c","g8c","g8c","g8c","g8c","g1","g1","g1","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g8c","g8c","g8c","g8c","g8c","g8c","g1","g1","g1","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"]
   ],
   "objects": [
     {
@@ -596,6 +935,36 @@
       "key": "t3",
       "x": 8,
       "y": 8
+    },
+    {
+      "key": "gym-gb",
+      "x": 27,
+      "y": 1
+    },
+    {
+      "key": "gym-gb",
+      "x": 34,
+      "y": 1
+    },
+    {
+      "key": "gym-gb",
+      "x": 27,
+      "y": 8
+    },
+    {
+      "key": "gym-gb",
+      "x": 34,
+      "y": 8
+    },
+    {
+      "key": "gym-gb",
+      "x": 27,
+      "y": 14
+    },
+    {
+      "key": "gym-gb",
+      "x": 34,
+      "y": 14
     }
   ]
 }

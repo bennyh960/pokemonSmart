@@ -75,7 +75,9 @@
     {
       "fromX": 14,
       "fromY": 16,
-      "toMapId": "sumville/house-1"
+      "toMapId": "sumville/house-1",
+      "toX": 4,
+      "toY": 6
     },
     {
       "fromX": 39,

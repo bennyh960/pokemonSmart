@@ -1,5 +1,6 @@
-Step 3 — Resend (for admin email, can skip for now):
+fix:
 
-1. Go to resend.com → sign up free
-2. Dashboard → API Keys → Create API Key → copy it
-3. Supabase dashboard → Edge Functions → Secrets → add RESEND_API_KEY = <your key>
+1. [bug][in progress] full- restore - is just cure hp but not status
+2. [bug][?] move call "התעלות" should mimic all status from the foe - not work
+3. [bug][?] swift was missed on aerodctly when it was sandstream
+4. [bug][?] confusion status is stay as long as the pokemon didnt use any move (need to think if its bug or not actualy its more realistic)
