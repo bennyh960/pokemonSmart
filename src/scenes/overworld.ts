@@ -21,6 +21,7 @@ import {
   healParty,
   updateLastPokemonCenter,
   setFlag,
+  clearFlagInGameState,
   consumeRestoreNotifications,
 } from '../systems/game-state.js';
 import { setPartyMode } from '../scenes/party.js';
@@ -110,6 +111,8 @@ import type { WeatherConditionId } from '../types/battle-metadata.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
+
+const DEFAULT_MAP = 'default-map';
 
 const DIR_VECTORS: Record<string, { dx: number; dy: number }> = {
   ArrowUp: { dx: 0, dy: -1 },
@@ -1114,6 +1117,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Mark as given
     setFlag(pd, flagKey);
     void fireStoryTrigger({ type: 'flag-set', flag: flagKey });
+
+    if (npc.clearFlags?.length) {
+      for (const clearFlag of npc.clearFlags) {
+        clearFlagInGameState(pd, clearFlag);
+      }
+    }
     autoSave();
 
     // Show reward message
@@ -1697,7 +1706,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           fishingTimer = 0;
           activeTextBox = createTextBox([t('fishing.bite')], isRTL());
           pendingHMAction = () => {
-            const encId = (currentMapData?.encounterTableId ?? currentMapData?.id) || 'test-map';
+            const encId = (currentMapData?.encounterTableId ?? currentMapData?.id) || DEFAULT_MAP;
             const wild = generateWildEncounter(encId, ['water']);
             fishingPhase = null;
             if (wild) {
@@ -1931,8 +1940,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           void checkAndResumeDelayedEvents();
         })
         .catch((err) => {
-          console.error('Failed to load map, falling back to test-map:', err);
-          loadAndSetMap('test-map', 10, 10).then(() => {
+          console.error('Failed to load map, falling back to default-map:', err);
+          loadAndSetMap(DEFAULT_MAP, 10, 10).then(() => {
             mapLoading = false;
           });
         });
@@ -1944,7 +1953,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         const pd = getPlayerData();
         pd.position.x = player.gridX;
         pd.position.y = player.gridY;
-        pd.position.mapId = currentMapData.id || 'test-map';
+        pd.position.mapId = currentMapData.id || DEFAULT_MAP;
         autoSave();
       }
     },
@@ -2694,9 +2703,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
           const tileEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
           if (tileEncTypes) {
-            const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || 'test-map';
+            const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || DEFAULT_MAP;
             const repelActive = hasActiveGame() && getPlayerData().repelStepsRemaining > 0;
-            if (!repelActive && Math.random() < getEncounterRate(encounterId)) {
+            const rand = Math.random();
+            if (!repelActive && rand < getEncounterRate(encounterId)) {
               // Pass water encounter filter when surfing
               const encFilter = isCurrentlySurfing ? ['water'] : tileEncTypes;
               const wild = generateWildEncounter(encounterId, encFilter);

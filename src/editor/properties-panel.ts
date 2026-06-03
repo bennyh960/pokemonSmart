@@ -228,7 +228,12 @@ export class PropertiesPanel {
     addInput('X', 'x', String(npc.x), 'number');
     addInput('Y', 'y', String(npc.y), 'number');
     addSelect('Facing', 'facing', ['up', 'down', 'left', 'right'], npc.facing);
-    addSelect('Type', 'type', ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard', 'wild-pokemon', 'day-care'], npc.type);
+    addSelect(
+      'Type',
+      'type',
+      ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard', 'wild-pokemon', 'day-care'],
+      npc.type,
+    );
     addInput(
       'Interact Range',
       'interactRange',
@@ -367,7 +372,7 @@ export class PropertiesPanel {
             'display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:10px;background:#1a2340;font-size:10px;cursor:pointer;border:1px solid #2a3560;';
           const cb = document.createElement('input');
           cb.type = 'checkbox';
-          cb.checked = !!(npc.randomChars?.includes(role));
+          cb.checked = !!npc.randomChars?.includes(role);
           cb.addEventListener('change', () => {
             const existing = npc.randomChars ?? [];
             if (cb.checked) {
@@ -751,7 +756,7 @@ export class PropertiesPanel {
     routeEnInput.value = currentRoute.en ?? '';
     routeEnInput.placeholder = 'e.g. Route 3';
     routeEnInput.addEventListener('change', () => {
-      npcAny['route'] = { ...(npcAny['route'] as object ?? {}), en: routeEnInput.value };
+      npcAny['route'] = { ...((npcAny['route'] as object) ?? {}), en: routeEnInput.value };
       emit();
     });
     routeEnRow.appendChild(routeEnInput);
@@ -767,7 +772,7 @@ export class PropertiesPanel {
     routeHeInput.value = currentRoute.he ?? '';
     routeHeInput.placeholder = 'מסלול 3';
     routeHeInput.addEventListener('change', () => {
-      npcAny['route'] = { ...(npcAny['route'] as object ?? {}), he: routeHeInput.value };
+      npcAny['route'] = { ...((npcAny['route'] as object) ?? {}), he: routeHeInput.value };
       emit();
     });
     routeHeRow.appendChild(routeHeInput);
@@ -1253,10 +1258,9 @@ export class PropertiesPanel {
       countInput.min = '1';
       countInput.max = '99';
       countInput.value = String(rc.count ?? 3);
-      countInput.title =
-        rc.infinite
-          ? 'How many fights apply a level boost before the level caps (infinite battles continue at max level)'
-          : 'Total extra rematches allowed after the first defeat';
+      countInput.title = rc.infinite
+        ? 'How many fights apply a level boost before the level caps (infinite battles continue at max level)'
+        : 'Total extra rematches allowed after the first defeat';
       countInput.addEventListener('change', () => {
         rc.count = Math.max(1, parseInt(countInput.value, 10) || 1);
         emit();
@@ -1634,9 +1638,7 @@ export class PropertiesPanel {
     const header = document.createElement('div');
     header.className = 'trainer-subsection-header';
     const isPool = trainer.party.length > 6;
-    const headerTitle = isPool
-      ? `<span>Party Pool (${trainer.party.length} → picks 6)</span>`
-      : '<span>Party</span>';
+    const headerTitle = isPool ? `<span>Party Pool (${trainer.party.length} → picks 6)</span>` : '<span>Party</span>';
     header.innerHTML = headerTitle;
     const addBtn = document.createElement('button');
     addBtn.className = 'btn-small btn-add';
@@ -2305,7 +2307,11 @@ export class PropertiesPanel {
     });
 
     const hasAny =
-      interactEvents.length || defeatEvents.length || spawnSources.length || despawnSources.length || thiefCutscenes.length;
+      interactEvents.length ||
+      defeatEvents.length ||
+      spawnSources.length ||
+      despawnSources.length ||
+      thiefCutscenes.length;
     if (!hasAny) return;
 
     // Section header
@@ -2607,6 +2613,53 @@ export class PropertiesPanel {
       }),
     );
     section.appendChild(despawnRow);
+
+    // clear flags
+    const clearFlagsRow = document.createElement('div');
+    clearFlagsRow.className = 'prop-row';
+    clearFlagsRow.style.alignItems = 'flex-start';
+    const clearFlagsLabel = document.createElement('label');
+    clearFlagsLabel.textContent = 'Clear Flags:';
+    clearFlagsRow.appendChild(clearFlagsLabel);
+    const clearFlagInput = document.createElement('input');
+    clearFlagInput.type = 'text';
+    console.log(npc.clearFlags);
+    clearFlagInput.value = npc.clearFlags?.length ? (npc.clearFlags as string[]).join(', ') : '';
+    clearFlagInput.placeholder = 'flag1, flag2, ...';
+    clearFlagsRow.appendChild(clearFlagInput);
+    clearFlagInput.addEventListener('change', () => {
+      const value = clearFlagInput.value.trim();
+      if (value) {
+        const flagsToClear = value.split(',').map((s) => s.trim());
+
+        const npcPattern = `npc-${npc.id}-rewarded`;
+        if (!flagsToClear.includes(npcPattern)) {
+          flagsToClear.push(npcPattern);
+        }
+        npcAny['clearFlags'] = flagsToClear;
+      } else {
+        delete npcAny['clearFlags'];
+      }
+      emit();
+    });
+
+    // clearFlagsRow.appendChild(
+    //   this.makeFlagInput({
+    //     value: npc.clearFlags ? (npc.clearFlags as string[]).join(', ') : undefined,
+    //     allFlags,
+    //     currentNpcId: npc.id,
+    //     roleLabel: 'clearFlags',
+    //     onChange: (v) => {
+    //       if (v) {
+    //         npcAny['clearFlags'] = v.split(',').map((s) => s.trim());
+    //       } else {
+    //         delete npcAny['clearFlags'];
+    //       }
+    //       emit();
+    //     },
+    //   }),
+    // );
+    section.appendChild(clearFlagsRow);
 
     // ── Blocker NPC ──
     const blockerHdr = document.createElement('div');
@@ -3052,7 +3105,9 @@ export class PropertiesPanel {
       emit();
     });
     floatingRow.appendChild(floatingCb);
-    floatingRow.appendChild(this.makeInfo('Ignores tile walkability and boundaries. Renders above all objects. Stops only at player tile.'));
+    floatingRow.appendChild(
+      this.makeInfo('Ignores tile walkability and boundaries. Renders above all objects. Stops only at player tile.'),
+    );
     section.appendChild(floatingRow);
 
     this.renderWalkSteps(section, aw.pattern, emit);
@@ -3308,7 +3363,8 @@ export class PropertiesPanel {
 
     // Climate weights section
     const weightsDiv = document.createElement('div');
-    weightsDiv.style.cssText = 'display:flex;flex-direction:column;gap:3px;padding-left:10px;border-left:2px solid #384;margin-top:2px;';
+    weightsDiv.style.cssText =
+      'display:flex;flex-direction:column;gap:3px;padding-left:10px;border-left:2px solid #384;margin-top:2px;';
 
     const clearInfo = document.createElement('div');
     clearInfo.style.cssText = 'font-size:10px;color:#8ab;margin-top:2px;';
@@ -3322,9 +3378,10 @@ export class PropertiesPanel {
 
     const buildWeightInputs = () => {
       weightsDiv.innerHTML = '';
-      const climate = (typeof mapData.outside === 'object' && mapData.outside !== null)
-        ? (mapData.outside as Record<string, number>)
-        : {};
+      const climate =
+        typeof mapData.outside === 'object' && mapData.outside !== null
+          ? (mapData.outside as Record<string, number>)
+          : {};
 
       for (const wType of WEATHER_TYPES) {
         const wr = document.createElement('div');
@@ -3341,9 +3398,10 @@ export class PropertiesPanel {
         inp.value = String(climate[wType] ?? 0);
         inp.addEventListener('input', () => {
           const val = Math.min(1, Math.max(0, parseFloat(inp.value) || 0));
-          const c = (typeof mapData.outside === 'object' && mapData.outside !== null)
-            ? (mapData.outside as Record<string, number>)
-            : {};
+          const c =
+            typeof mapData.outside === 'object' && mapData.outside !== null
+              ? (mapData.outside as Record<string, number>)
+              : {};
           if (val === 0) delete c[wType];
           else c[wType] = val;
           mapData.outside = Object.keys(c).length > 0 ? c : {};
@@ -3368,9 +3426,7 @@ export class PropertiesPanel {
       if (m === 'interior') mapData.outside = null;
       else if (m === 'outdoor') mapData.outside = true;
       else {
-        mapData.outside = (typeof mapData.outside === 'object' && mapData.outside !== null)
-          ? mapData.outside
-          : {};
+        mapData.outside = typeof mapData.outside === 'object' && mapData.outside !== null ? mapData.outside : {};
         buildWeightInputs();
       }
       refreshVisibility();
@@ -3473,7 +3529,10 @@ export class PropertiesPanel {
         keysInput.placeholder = 'chair2F, home-flower';
         keysInput.title = 'Comma-separated tile keys that are moveable in the puzzle room';
         keysInput.addEventListener('change', () => {
-          cfg.movableTileKeys = keysInput.value.split(',').map((s) => s.trim()).filter(Boolean);
+          cfg.movableTileKeys = keysInput.value
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean);
           this.state.emit('map-modified');
         });
         keysRow.appendChild(keysLabel);
@@ -3606,7 +3665,7 @@ export class PropertiesPanel {
     const row = (children: HTMLElement[]): HTMLElement => {
       const d = document.createElement('div');
       d.style.cssText = 'display:flex; align-items:center; gap:6px;';
-      children.forEach(c => d.appendChild(c));
+      children.forEach((c) => d.appendChild(c));
       return d;
     };
 
@@ -3634,12 +3693,15 @@ export class PropertiesPanel {
         const fl = listeners[i];
 
         const card = document.createElement('div');
-        card.style.cssText = 'border:1px solid #3a4a5a; border-radius:4px; padding:7px 8px; margin-bottom:8px; display:flex; flex-direction:column; gap:5px;';
+        card.style.cssText =
+          'border:1px solid #3a4a5a; border-radius:4px; padding:7px 8px; margin-bottom:8px; display:flex; flex-direction:column; gap:5px;';
 
         // ── Row 1: Tile key + ✕ ──────────────────────────────────────
         const keyInp = inp(fl.key, 'tile key', true);
         // Mutate data only — no emit, prevents DOM rebuild while editing
-        keyInp.addEventListener('change', () => { fl.key = keyInp.value.trim(); });
+        keyInp.addEventListener('change', () => {
+          fl.key = keyInp.value.trim();
+        });
 
         const delBtn = document.createElement('button');
         delBtn.textContent = '✕';
@@ -3654,10 +3716,14 @@ export class PropertiesPanel {
 
         // ── Row 2: Coords ────────────────────────────────────────────
         const xInp = numInp(fl.x);
-        xInp.addEventListener('change', () => { fl.x = parseInt(xInp.value) || 0; });
+        xInp.addEventListener('change', () => {
+          fl.x = parseInt(xInp.value) || 0;
+        });
 
         const yInp = numInp(fl.y);
-        yInp.addEventListener('change', () => { fl.y = parseInt(yInp.value) || 0; });
+        yInp.addEventListener('change', () => {
+          fl.y = parseInt(yInp.value) || 0;
+        });
 
         card.appendChild(row([lbl('Coords (x, y):'), xInp, yInp]));
 
@@ -3666,7 +3732,8 @@ export class PropertiesPanel {
         despawnInp.style.color = '#d96';
         despawnInp.addEventListener('change', () => {
           const v = despawnInp.value.trim();
-          if (v) fl.despawnAfter = v; else delete fl.despawnAfter;
+          if (v) fl.despawnAfter = v;
+          else delete fl.despawnAfter;
         });
 
         card.appendChild(row([lbl('Despawn after:', '#d96'), despawnInp]));
@@ -3676,7 +3743,8 @@ export class PropertiesPanel {
         spawnInp.style.color = '#6d9';
         spawnInp.addEventListener('change', () => {
           const v = spawnInp.value.trim();
-          if (v) fl.spawnAfter = v; else delete fl.spawnAfter;
+          if (v) fl.spawnAfter = v;
+          else delete fl.spawnAfter;
         });
 
         card.appendChild(row([lbl('Spawn after:', '#6d9'), spawnInp]));
@@ -4273,21 +4341,23 @@ export class PropertiesPanel {
         spawnLabel.textContent = 'spawn after:';
         objRow.appendChild(spawnLabel);
 
-        objRow.appendChild(this.makeFlagInput({
-          value: obj.interactArgs?.spawnAfter,
-          allFlags,
-          currentNpcId: objId,
-          roleLabel: 'spawnAfter',
-          onChange: (v) => {
-            if (v) {
-              obj.interactArgs = { ...(obj.interactArgs ?? {}), spawnAfter: v } as InteractArgs;
-            } else if (obj.interactArgs) {
-              const { spawnAfter: _sa, ...rest } = obj.interactArgs as Record<string, unknown>;
-              obj.interactArgs = Object.keys(rest).length ? (rest as InteractArgs) : undefined;
-            }
-            emit();
-          },
-        }));
+        objRow.appendChild(
+          this.makeFlagInput({
+            value: obj.interactArgs?.spawnAfter,
+            allFlags,
+            currentNpcId: objId,
+            roleLabel: 'spawnAfter',
+            onChange: (v) => {
+              if (v) {
+                obj.interactArgs = { ...(obj.interactArgs ?? {}), spawnAfter: v } as InteractArgs;
+              } else if (obj.interactArgs) {
+                const { spawnAfter: _sa, ...rest } = obj.interactArgs as Record<string, unknown>;
+                obj.interactArgs = Object.keys(rest).length ? (rest as InteractArgs) : undefined;
+              }
+              emit();
+            },
+          }),
+        );
 
         body.appendChild(objRow);
       }

@@ -1,7 +1,7 @@
 {
   "id": "battle-grass-leauge",
   "name": "New Map",
-  "tileset": "overworld",
+  "tileset": "interior",
   "width": 25,
   "height": 20,
   "tileSize": 16,
@@ -10,14 +10,70 @@
     "y": 10
   },
   "transitions": [],
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-1780495330633",
+      "x": 6,
+      "y": 7,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "clearFlags": [
+        "testFlag",
+        "npc-npc-1780495509603-rewarded",
+        "npc-npc-1780495330633-rewarded"
+      ]
+    },
+    {
+      "id": "npc-will-remove-testFlag",
+      "x": 8,
+      "y": 6,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "despawnAfter": "testFlag"
+    },
+    {
+      "id": "npc-1780495509603",
+      "x": 6,
+      "y": 10,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שתדבר איתי החבר יעלם"
+        }
+      ],
+      "spriteType": "leon",
+      "lineOfSight": 3,
+      "reward": {
+        "money": 0,
+        "storyEvent": "testFlag"
+      }
+    }
+  ],
   "music": "gym-battle",
   "encounterTableId": null,
   "interactiveItems": {},
   "label": {
     "en": "grass battle zone",
     "he": "מתחם קרב עשב"
-  }
+  },
+  "movablePuzzle": {},
+  "flagListeners": []
 ,
   "tiles": [
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],

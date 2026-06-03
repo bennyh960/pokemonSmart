@@ -39,7 +39,7 @@ export interface EncounterTable {
   entries: EncounterEntry[];
 }
 
-const DEFAULT_ENCOUNTER_RATE = 0.05;
+const DEFAULT_ENCOUNTER_RATE = 0.005;
 const TRAINER_XP_MULTIPLIER = 1.5;
 const MAX_CATCH_RATE = 255;
 const MAX_RARITY_XP_BONUS = 0.15;
@@ -458,9 +458,7 @@ export function getPendingLevelEvolution(pokemon: Pokemon): EvolutionStep | unde
  * reached the happiness threshold. Day → Espeon (196), night → Umbreon (197).
  */
 export function getPendingHappinessEvolution(pokemon: Pokemon, party: Pokemon[]): EvolutionStep | undefined {
-  const candidates = getAllNextEvolutions(pokemon.id).filter(
-    (s) => s.trigger === 'level-up' && s.minLevel === null,
-  );
+  const candidates = getAllNextEvolutions(pokemon.id).filter((s) => s.trigger === 'level-up' && s.minLevel === null);
   if (candidates.length === 0) return undefined;
 
   const happiness = calcHappiness(pokemon, party);

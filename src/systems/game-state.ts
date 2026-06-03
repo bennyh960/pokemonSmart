@@ -130,6 +130,13 @@ export function setFlag(pd: PlayerData, key: string): void {
   }
 }
 
+export function clearFlagInGameState(pd: PlayerData, key: string): void {
+  if (pd.flags[key]) {
+    delete pd.flags[key];
+    if (pd.flagTimestamps) delete pd.flagTimestamps[key];
+  }
+}
+
 /** Check if any saved slot exists. */
 export function hasSavedGame(): boolean {
   return getSlotIndex().length > 0;

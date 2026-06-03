@@ -153,6 +153,9 @@ export interface NPCData {
   randomChars?: string[];
   /** SFX key to play when the player opens dialogue with this NPC. Overrides role-based default. */
   interactionSfx?: string;
+
+  // list of exising flags that will be clear after interacting with this NPC , like resolve puzzle or even re-enter to league after beating elite 4
+  clearFlags?: string[];
 }
 
 /** Dialogue shown instead of the default once a story flag is set. */
