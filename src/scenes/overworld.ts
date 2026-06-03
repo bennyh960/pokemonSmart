@@ -3126,7 +3126,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 interactingNPC = npc;
                 const _trainerName = npc.name ? getLocalizedName(npc.name) : undefined;
                 if (status.eligible) {
-                  activeTextBox = createTextBox([t('trainer.reencounter.ready')], isRTL(), _trainerName);
+                  const rand = Math.random();
+                  let textKey = 'trainer.reencounter.ready';
+                  if (rand < 0.33) {
+                    textKey = 'trainer.reencounter.ready';
+                  } else if (rand < 0.66) {
+                    textKey = 'trainer.reencounter.ready2';
+                  } else {
+                    textKey = 'trainer.reencounter.ready3';
+                  }
+                  activeTextBox = createTextBox([t(textKey)], isRTL(), _trainerName);
                 } else if (status.reason === 'cooldown') {
                   const cooldownMsg =
                     status.minutesLeft != null
@@ -3167,7 +3176,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                       showPFD();
                     }
                   } else {
-                    activeTextBox = createTextBox([t('trainer.defeated.dialogue')], isRTL(), _trainerName);
+                    const rand = Math.random();
+                    let textKey = 'trainer.defeated.dialogue';
+                    if (rand < 0.33) {
+                      textKey = 'trainer.defeated.dialogue';
+                    } else if (rand < 0.66) {
+                      textKey = 'trainer.defeated.dialogue2';
+                    } else {
+                      textKey = 'trainer.defeated.dialogue3';
+                    }
+                    activeTextBox = createTextBox([t(textKey)], isRTL(), _trainerName);
                   }
                 }
                 return;

@@ -1067,6 +1067,9 @@ export function createBattleScene(
         }
         setFlag(pd, `trainer-${td.trainerId}-defeated`);
         fireStoryTrigger({ type: 'trainer-defeated', trainerId: td.trainerId });
+      } else if (reward.storyEvent) {
+        // rare-case , basicly design for leauge -> we clear the story event but we can let rematcher set flag again for reapet leauge
+        setFlag(pd, reward.storyEvent);
       }
       // Always record the defeat for re-encounter tracking
       recordTrainerDefeat(td.trainerId);
