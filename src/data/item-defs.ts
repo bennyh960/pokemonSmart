@@ -346,14 +346,14 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     category: 'revival',
     price: 1500,
     effect: { type: 'revive', hpPercent: 50 },
-    usableInBattle: true,
+    usableInBattle: false, // currently we block it cause it use on the pokemon that out that is not fainted
     usableInOverworld: true,
   }, // Revive
   29: {
     category: 'revival',
     price: 3500,
     effect: { type: 'revive', hpPercent: 100 },
-    usableInBattle: true,
+    usableInBattle: false, // currently we block it cause it use on the pokemon that out that is not fainted
     usableInOverworld: true,
   }, // Max Revive
 
