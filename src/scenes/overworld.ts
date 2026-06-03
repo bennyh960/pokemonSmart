@@ -893,7 +893,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (hasActiveGame()) fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
         return;
       }
-
       // Not yet rewarded: run questions (if any), then check condition, reward
       const resolveInteractionAndReward = () => {
         if (!npc.interaction) {

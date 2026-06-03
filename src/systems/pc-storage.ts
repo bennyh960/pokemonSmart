@@ -59,7 +59,8 @@ export function releaseFromBox(boxIndex: number, slotIndex: number): Pokemon | n
 /** Release a Pokemon from the party. Must keep at least 1. Returns the released Pokemon or null. */
 export function releaseFromParty(partyIndex: number): Pokemon | null {
   const pd = getPlayerData();
-  if (pd.party.length <= 1) return null;
+  // 2 cause route-1 has a mandatory catch blocker , npc give poekball and npc clear flags -> if player stay with 1 pokemon this blocker respawn but those giving pokeball not
+  if (pd.party.length <= 2) return null;
   if (partyIndex < 0 || partyIndex >= pd.party.length) return null;
 
   return pd.party.splice(partyIndex, 1)[0];
