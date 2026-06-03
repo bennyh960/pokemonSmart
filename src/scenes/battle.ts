@@ -3092,6 +3092,19 @@ export function createBattleScene(
       lines.push(t('battle.magicCoatReflect', { name: defenderName }));
     }
 
+    //todo : consider handle it in group way -  psyh up move
+    const isPsychUp = moveBattleData.behaviorTags.includes('psych-up');
+    if (isPsychUp) {
+      Object.entries(defenderState.statModifiers).forEach(([stat, stage]) => {
+        moveBattleData.statChanges.push({
+          stat: stat as BattleStatId,
+          stages: stage / 50, // stage is -200 to +200, convert to -4 to +4 for stat change application
+          target: 'user',
+          chance: 100,
+        });
+      });
+    }
+
     const userStatChanges = applyStatChanges(
       attackerState,
       moveBattleData.statChanges,

@@ -245,7 +245,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Brave Bird': { recoilPercent: 33 },
   'Wave Crash': { recoilPercent: 33 },
   'Belly Drum': { behaviorTags: ['belly-drum'], statChanges: [stageChange('attack', +6, 'user', 100)] },
-  'Magnitude': { behaviorTags: ['magnitude'] },
+  Magnitude: { behaviorTags: ['magnitude'] },
 
   // --- Target stat-down on hit (always) ---
   'Icy Wind': { statChanges: [stageChange('speed', -1, 'target', 100)] },
@@ -332,6 +332,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Power Up Punch': { statChanges: [stageChange('attack', 1, 'user', 100)] },
   'Drain Punch': { drainPercent: 50 },
   'Meteor Beam': chargingMove(stageChange('specialAttack', 1, 'user', 100)),
+  'Psych Up': { behaviorTags: ['psych-up'], target: 'user' },
 
   // --- Status move self-boosts ---
   Growth: userStages(['specialAttack', 1]),
@@ -377,6 +378,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Metronome: { behaviorTags: ['metronome'], target: 'user' },
   Assist: { behaviorTags: ['assist'], target: 'user' },
   Copycat: { behaviorTags: ['copycat'], target: 'user' },
+
   'Mirror Move': { behaviorTags: ['mirror-move'], target: 'selected-pokemon' },
 
   // --- Disable: disables target's last used move for 3-6 turns ---

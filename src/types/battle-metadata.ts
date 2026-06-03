@@ -24,6 +24,7 @@ export type MoveBattleBehaviorTag =
   | 'requires-charge-turn'
   | 'leave-user-at-1-hp'
   | 'rest'
+  | 'psych-up'
   | 'focus-energy'
   | 'burning-jealousy'
   | 'focus-punch'
