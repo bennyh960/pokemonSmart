@@ -57,6 +57,7 @@ import {
   resolveDialogue,
   type DialogueReward,
   getNPCInteractionSfx,
+  cacheNPCSprites,
 } from '../systems/npc.js';
 import {
   getDayCareEntry,
@@ -1715,6 +1716,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   /** Load a map and set up the scene. */
   async function loadAndSetMap(mapId: string, spawnX?: number, spawnY?: number): Promise<void> {
+    console.log(`Loading map ${mapId}...`);
     const data = await loadMap(mapId);
     currentMapData = data;
     currentMapWeather =
@@ -1807,7 +1809,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     camera.snapTo(cx, cy, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
 
     // Play map music
-    audio.playMusic(currentMapData.music || 'town');
+    audio.playMusic(currentMapData.music || 'town3');
 
     // Fire map-enter story trigger
     if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id as MapId });
@@ -2309,6 +2311,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // Handle map transitions
       if (transitionState !== 'none') {
+        if (transitionTarget?.mapId !== currentMapData?.id) {
+          console.log('before', cacheNPCSprites);
+          cacheNPCSprites.clear();
+          console.log('after', cacheNPCSprites);
+        }
         transitionTimer += dt;
         if (transitionState === 'fade-out' && transitionTimer >= TRANSITION_FADE_TIME) {
           transitionState = 'loading';

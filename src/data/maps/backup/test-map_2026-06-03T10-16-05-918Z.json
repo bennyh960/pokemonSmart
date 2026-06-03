@@ -205,8 +205,7 @@
         "count": 5,
         "lvlStep": 3,
         "infinite": true,
-        "addToPhone": false,
-        "minPartyLevelBoost": 1
+        "addToPhone": false
       }
     },
     {

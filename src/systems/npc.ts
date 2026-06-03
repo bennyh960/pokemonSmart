@@ -262,9 +262,9 @@ export interface TrainerData extends NPCData {
 /** Day-care NPC — accepts one Pokémon, levels it up based on steps walked. */
 export interface DayCareData extends NPCData {
   type: 'day-care';
-  route: BilingualText;       // Location name for phone display
-  stepsPerLevel?: number;     // Steps required per level gained (default 100)
-  costPerLevel?: number;      // ₪/level charged on withdrawal (default 100)
+  route: BilingualText; // Location name for phone display
+  stepsPerLevel?: number; // Steps required per level gained (default 100)
+  costPerLevel?: number; // ₪/level charged on withdrawal (default 100)
 }
 
 /** Wild Pokémon placed directly on the map — battles like a trainer but catches are allowed. */
@@ -319,8 +319,10 @@ export function isNPCVisible(
   }
 
   // Trainers and wild Pokémon NPCs with despawnOnDefeat vanish after the player beats/flees them
-  if ((npc.type === 'trainer' || npc.type === 'wild-pokemon') &&
-      (npc as TrainerData | WildPokemonData).despawnOnDefeat) {
+  if (
+    (npc.type === 'trainer' || npc.type === 'wild-pokemon') &&
+    (npc as TrainerData | WildPokemonData).despawnOnDefeat
+  ) {
     if (flags[`trainer-${npc.id}-defeated`]) return false;
   }
 
@@ -339,6 +341,10 @@ function resolveRandomSprite(npc: NPCData): void {
   npc.spriteType = candidates[Math.floor(Math.random() * candidates.length)].id;
 }
 
+// old bug - when npc is trainer and it start with spriteX -> after battle end it switch to spriteY which is bug
+
+export const cacheNPCSprites = new Map<string, string>();
+
 /** Create an NPC manager for a set of NPCs on a map. */
 export function createNPCManager(npcs: NPCData[]) {
   // Normalize legacy data at load time
@@ -350,9 +356,14 @@ export function createNPCManager(npcs: NPCData[]) {
       const nameHeStr = (npc as unknown as Record<string, unknown>)['nameHe'] as string | undefined;
       npc.name = { en: nameStr, he: nameHeStr || nameStr };
     }
-    // Random sprite: pick once at map-load from characters matching any of the listed roles
+    // Random sprite: pick once at map-load (on transision only) from characters matching any of the listed roles
     if (npc.randomChars && npc.randomChars.length > 0) {
-      resolveRandomSprite(npc);
+      if (!cacheNPCSprites.has(npc.id)) {
+        resolveRandomSprite(npc);
+        cacheNPCSprites.set(npc.id, npc.spriteType);
+      } else {
+        npc.spriteType = cacheNPCSprites.get(npc.id)!;
+      }
     }
   }
 
@@ -406,9 +417,7 @@ export function createNPCManager(npcs: NPCData[]) {
     getNearbyFloatingNPC(playerX: number, playerY: number): NPCData | undefined {
       for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
-          const npc = npcs.find(
-            (n) => n.autoWalk?.floating && n.x === playerX + dx && n.y === playerY + dy,
-          );
+          const npc = npcs.find((n) => n.autoWalk?.floating && n.x === playerX + dx && n.y === playerY + dy);
           if (npc) return npc;
         }
       }
@@ -474,8 +483,8 @@ export type NPCManager = ReturnType<typeof createNPCManager>;
 
 /** Maps character sprite roles to their default interaction SFX. */
 const ROLE_SFX: Record<string, string> = {
-  'rival': 'rival-encounter',
-  'villain': 'team-rocket-encounter',
+  rival: 'rival-encounter',
+  villain: 'team-rocket-encounter',
   'gym-leader': 'gym-leader-encounter',
 };
 

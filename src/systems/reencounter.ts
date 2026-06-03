@@ -58,12 +58,12 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
     const rcAny = rc as ReencounterConfig & { maxBasePartyLevel?: number };
     let trainerBaseMax = 0;
     if (trainer.party && trainer.party.length > 0) {
-      trainerBaseMax = Math.max(...trainer.party.map(p => p.level));
+      trainerBaseMax = Math.max(...trainer.party.map((p) => p.level));
     } else if (rcAny.maxBasePartyLevel != null) {
       trainerBaseMax = rcAny.maxBasePartyLevel;
     }
     const threshold = trainerBaseMax + rc.lvlStep * state.count - rc.minPartyLevelBoost;
-    const playerMaxLevel = pd.party.length > 0 ? Math.max(...pd.party.map(p => p.level)) : 0;
+    const playerMaxLevel = pd.party.length > 0 ? Math.max(...pd.party.map((p) => p.level)) : 0;
     if (playerMaxLevel < threshold) return { eligible: false, reason: 'cooldown' };
   }
 
@@ -110,6 +110,52 @@ export function resolveSpeciesAtLevel(basePokemonId: number, level: number): num
   return resolved;
 }
 
+const getRandomParty = (trainer: TrainerData) => {
+  if (trainer.party.length <= 6) return trainer.party;
+  const selected: any[] = [];
+
+  const pokemonTypes: Record<string, any[]> = {};
+  for (const slot of trainer.party) {
+    if (slot.mustInclude) selected.push(slot);
+
+    const data = getPokemon(slot.pokemonId);
+    if (data) {
+      for (const type of data.types) {
+        if (!pokemonTypes[type]) pokemonTypes[type] = [];
+        pokemonTypes[type].push(slot);
+      }
+    }
+  }
+
+  // shuffle randomly each type
+  for (const type in pokemonTypes) {
+    pokemonTypes[type] = pokemonTypes[type].sort(() => Math.random() - 0.5);
+  }
+
+  // select randomly from each type until we have 6 pokemon and filter duplicates
+  while (selected.length < 6) {
+    const types = Object.keys(pokemonTypes).filter((type) => pokemonTypes[type].length > 0);
+    if (types.length === 0) break;
+    const randomType = types[Math.floor(Math.random() * types.length)];
+    const pokemon = pokemonTypes[randomType].shift();
+    if (!selected.some((p) => p.pokemonId === pokemon.pokemonId)) {
+      selected.push(pokemon);
+    }
+  }
+  // keep must include at the index (must include is index in party )
+  return selected.sort((a, b) => {
+    if (a.mustInclude && b.mustInclude) {
+      return (
+        trainer.party.findIndex((p) => p.pokemonId === a.pokemonId) -
+        trainer.party.findIndex((p) => p.pokemonId === b.pokemonId)
+      );
+    }
+    if (a.mustInclude) return -1;
+    if (b.mustInclude) return 1;
+    return 0;
+  });
+};
+
 /**
  * Build the scaled party for a re-encounter.
  * - Original party members get `lvlStep * encounterIndex` added to their base level.
@@ -121,6 +167,10 @@ export function buildReencounterParty(trainer: TrainerData, encounterIndex: numb
   const boost = rc.lvlStep * encounterIndex;
 
   const party: Pokemon[] = [];
+
+  if (trainer.party.length > 6) {
+    trainer.party = getRandomParty(trainer);
+  }
 
   for (const slot of trainer.party) {
     const boostedLevel = slot.level + boost;
@@ -184,9 +234,8 @@ export function addTrainerToPhone(trainer: TrainerData): void {
           minPartyLevelBoost: rc.minPartyLevelBoost,
           // Store max base party level so the phone scene can compute level-gate checks
           // without having access to the full trainer data.
-          maxBasePartyLevel: trainer.party && trainer.party.length > 0
-            ? Math.max(...trainer.party.map(p => p.level))
-            : undefined,
+          maxBasePartyLevel:
+            trainer.party && trainer.party.length > 0 ? Math.max(...trainer.party.map((p) => p.level)) : undefined,
         }
       : undefined,
   });
