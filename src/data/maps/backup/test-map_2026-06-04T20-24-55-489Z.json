@@ -442,12 +442,6 @@
         "x": 13,
         "y": 13,
         "itemQty": 3
-      },
-      {
-        "itemId": "life-orb",
-        "x": 8,
-        "y": 13,
-        "itemQty": 3
       }
     ]
   },
@@ -985,11 +979,6 @@
     {
       "key": "item-generic",
       "x": 13,
-      "y": 13
-    },
-    {
-      "key": "item-generic",
-      "x": 8,
       "y": 13
     }
   ]

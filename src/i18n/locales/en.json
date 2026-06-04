@@ -97,6 +97,7 @@
   "battle.menu.bagHint": "Use an item from your bag",
   "battle.menu.runHint": "Try to escape from battle",
   "battle.leftoversHeal": "{name} restored {amount}HP with Leftovers!",
+  "battle.lifeOrbDamage": "{name} is hurt by {amount}HP from the Life Orb!",
 
   "hp.label": "HP",
   "hp.level": "Lv{level}",

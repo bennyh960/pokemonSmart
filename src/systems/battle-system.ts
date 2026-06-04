@@ -521,9 +521,6 @@ export function doesMoveHit(
     (MAX_SPEED_EFFECT * (AttkcerspeedMultiplier - DefenderspeedMultiplier)) /
     Math.max(AttkcerspeedMultiplier, DefenderspeedMultiplier);
   const finalChance = Math.max(0, Math.min(100, chance + speedDeltaFactor));
-  // console.log(
-  //   `Move accuracy: ${moveAccuracy}, Accuracy multiplier: ${accuracyMultiplier.toFixed(2)}, Evasion multiplier: ${evasionMultiplier.toFixed(2)}, Final hit chance: ${finalChance.toFixed(2)}%`,
-  // );
 
   return {
     hit: random() * 100 < finalChance,
@@ -952,7 +949,6 @@ export interface WeatherDamageResult {
 export function applyWeatherDamage(pokemon: Pokemon, weather: WeatherConditionId): WeatherDamageResult {
   // Ice Body: heal in hail instead of taking damage
   if (['hail', 'rain'].includes(weather) && pokemon.abilityId) {
-    console.log({ pokemon });
     const hasIceBody = getAbilityBattleEffects(pokemon.abilityId).some(
       (e) => e.kind === 'weatherHealInstead' && e.weather === 'hail',
     );

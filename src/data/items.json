@@ -1742,7 +1742,7 @@
   "197": {
     "name": {
       "en": "Choice Band",
-      "he": "Choice Band"
+      "he": "חגורת בחירה"
     },
     "slug": "choice-band",
     "description": {
@@ -1952,7 +1952,7 @@
   "211": {
     "name": {
       "en": "Leftovers",
-      "he": "Leftovers"
+      "he": "שאריות מזון"
     },
     "slug": "leftovers",
     "description": {
@@ -1982,11 +1982,11 @@
   "214": {
     "name": {
       "en": "Soft Sand",
-      "he": "Soft Sand"
+      "he": "חול רך"
     },
     "slug": "soft-sand",
     "description": {
-      "he": "A hold item that raises the power of GROUND-type moves.",
+      "he": "פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג אדמה",
       "en": "A hold item that raises the power of GROUND-type moves."
     },
     "category": "type-enhancement",
@@ -1997,11 +1997,11 @@
   "215": {
     "name": {
       "en": "Hard Stone",
-      "he": "Hard Stone"
+      "he": "סלע קשיח"
     },
     "slug": "hard-stone",
     "description": {
-      "he": "A hold item that raises the power of ROCK-type moves.",
+      "he": "פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג סלע",
       "en": "A hold item that raises the power of ROCK-type moves."
     },
     "category": "type-enhancement",
@@ -2012,11 +2012,11 @@
   "216": {
     "name": {
       "en": "Miracle Seed",
-      "he": "Miracle Seed"
+      "he": "זרע קסום"
     },
     "slug": "miracle-seed",
     "description": {
-      "he": "A hold item that raises the power of GRASS-type moves.",
+      "he": "פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג עשב",
       "en": "A hold item that raises the power of GRASS-type moves."
     },
     "category": "type-enhancement",
@@ -2027,11 +2027,11 @@
   "217": {
     "name": {
       "en": "Black Glasses",
-      "he": "Black Glasses"
+      "he": "עדשות שחורות"
     },
     "slug": "black-glasses",
     "description": {
-      "he": "A hold item that raises the power of DARK-type moves.",
+      "he": "משקפי שחור - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג אפל",
       "en": "A hold item that raises the power of DARK-type moves."
     },
     "category": "type-enhancement",
@@ -2042,11 +2042,11 @@
   "218": {
     "name": {
       "en": "Black Belt",
-      "he": "Black Belt"
+      "he": "חגורה שחורה"
     },
     "slug": "black-belt",
     "description": {
-      "he": "A hold item that boosts FIGHTING- type moves.",
+      "he": "חגורה שחורה - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג לחימה",
       "en": "A hold item that boosts FIGHTING- type moves."
     },
     "category": "type-enhancement",
@@ -2057,11 +2057,11 @@
   "219": {
     "name": {
       "en": "Magnet",
-      "he": "Magnet"
+      "he": "מגנט"
     },
     "slug": "magnet",
     "description": {
-      "he": "A hold item that boosts ELECTRIC- type moves.",
+      "he": "מגנט - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג חשמל",
       "en": "A hold item that boosts ELECTRIC- type moves."
     },
     "category": "type-enhancement",
@@ -2072,11 +2072,11 @@
   "220": {
     "name": {
       "en": "Mystic Water",
-      "he": "Mystic Water"
+      "he": "מים מסתוריים"
     },
     "slug": "mystic-water",
     "description": {
-      "he": "A hold item that raises the power of WATER-type moves.",
+      "he": "מים מסתוריים - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג מים",
       "en": "A hold item that raises the power of WATER-type moves."
     },
     "category": "type-enhancement",
@@ -2087,11 +2087,11 @@
   "221": {
     "name": {
       "en": "Sharp Beak",
-      "he": "Sharp Beak"
+      "he": "מקור חד"
     },
     "slug": "sharp-beak",
     "description": {
-      "he": "A hold item that raises the power of FLYING-type moves.",
+      "he": "פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג מעופף",
       "en": "A hold item that raises the power of FLYING-type moves."
     },
     "category": "type-enhancement",
@@ -2102,11 +2102,11 @@
   "222": {
     "name": {
       "en": "Poison Barb",
-      "he": "Poison Barb"
+      "he": "בר ארס"
     },
     "slug": "poison-barb",
     "description": {
-      "he": "A hold item that raises the power of POISON-type moves.",
+      "he": "בר ארס - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג ארס",
       "en": "A hold item that raises the power of POISON-type moves."
     },
     "category": "type-enhancement",
@@ -2117,11 +2117,11 @@
   "223": {
     "name": {
       "en": "Never Melt Ice",
-      "he": "Never Melt Ice"
+      "he": "חנקן יבש"
     },
     "slug": "never-melt-ice",
     "description": {
-      "he": "A hold item that raises the power of ICE-type moves.",
+      "he": "Never Melt Ice - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג קרח",
       "en": "A hold item that raises the power of ICE-type moves."
     },
     "category": "type-enhancement",
@@ -2132,11 +2132,11 @@
   "224": {
     "name": {
       "en": "Spell Tag",
-      "he": "Spell Tag"
+      "he": "תווית קסם"
     },
     "slug": "spell-tag",
     "description": {
-      "he": "A hold item that raises the power of GHOST-type moves.",
+      "he": "תווית קסם - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג רוח",
       "en": "A hold item that raises the power of GHOST-type moves."
     },
     "category": "type-enhancement",
@@ -2147,11 +2147,11 @@
   "225": {
     "name": {
       "en": "Twisted Spoon",
-      "he": "Twisted Spoon"
+      "he": "כף כפופה"
     },
     "slug": "twisted-spoon",
     "description": {
-      "he": "A hold item that boosts PSYCHIC- type moves.",
+      "he": "כף כפופה - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג פסיכי",
       "en": "A hold item that boosts PSYCHIC- type moves."
     },
     "category": "type-enhancement",
@@ -2162,11 +2162,11 @@
   "226": {
     "name": {
       "en": "Charcoal",
-      "he": "Charcoal"
+      "he": "פחם"
     },
     "slug": "charcoal",
     "description": {
-      "he": "A hold item that raises the power of FIRE-type moves.",
+      "he": "פחם - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג אש",
       "en": "A hold item that raises the power of FIRE-type moves."
     },
     "category": "type-enhancement",
@@ -2177,11 +2177,11 @@
   "227": {
     "name": {
       "en": "Dragon Fang",
-      "he": "Dragon Fang"
+      "he": "שן דרקון"
     },
     "slug": "dragon-fang",
     "description": {
-      "he": "A hold item that raises the power of DRAGON-type moves.",
+      "he": "שן דרקון - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג דרקון",
       "en": "A hold item that raises the power of DRAGON-type moves."
     },
     "category": "type-enhancement",
@@ -2192,11 +2192,11 @@
   "228": {
     "name": {
       "en": "Silk Scarf",
-      "he": "Silk Scarf"
+      "he": "צעיף משי"
     },
     "slug": "silk-scarf",
     "description": {
-      "he": "A hold item that raises the power of NORMAL-type moves.",
+      "he": "צעיף משי - פריט שמוחזק בידי פוקימון ומחזק לו מתקפות מסוג נורמלי",
       "en": "A hold item that raises the power of NORMAL-type moves."
     },
     "category": "type-enhancement",
@@ -2204,36 +2204,7 @@
     "holdable": true,
     "flingPower": 10
   },
-  "230": {
-    "name": {
-      "en": "Shell Bell",
-      "he": "Shell Bell"
-    },
-    "slug": "shell-bell",
-    "description": {
-      "he": "פריט שמוחזק בידי הפוקימון - ומשחזר לו נקודות חיים כאשר הוא פוגע באויב.",
-      "en": "A hold item that restores HP upon striking the foe."
-    },
-    "category": "held-items",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shell-bell.png",
-    "holdable": true,
-    "flingPower": 30
-  },
-  "231": {
-    "name": {
-      "en": "Sea Incense",
-      "he": "Sea Incense"
-    },
-    "slug": "sea-incense",
-    "description": {
-      "he": "פריט שמוחזק בידי הפוקימון - ומחזק לו מעט את המתקפות מסוג מים.",
-      "en": "A hold item that slightly boosts WATER-type moves."
-    },
-    "category": "type-enhancement",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sea-incense.png",
-    "holdable": true,
-    "flingPower": 10
-  },
+
   "232": {
     "name": {
       "en": "Lax Incense",
@@ -2249,29 +2220,15 @@
     "holdable": true,
     "flingPower": 10
   },
-  "233": {
-    "name": {
-      "en": "Lucky Punch",
-      "he": "Lucky Punch"
-    },
-    "slug": "lucky-punch",
-    "description": {
-      "he": "A hold item that raises CHANSEY’s critical-hit rate.",
-      "en": "A hold item that raises CHANSEY’s critical-hit rate."
-    },
-    "category": "species-specific",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lucky-punch.png",
-    "holdable": true,
-    "flingPower": 40
-  },
+
   "234": {
     "name": {
       "en": "Metal Powder",
-      "he": "Metal Powder"
+      "he": "אבקת מתכת"
     },
     "slug": "metal-powder",
     "description": {
-      "he": "A hold item that raises DEFENSE.",
+      "he": "פריט שמוחזק בידי פוקימון ומעלה את ההגנה.",
       "en": "A hold item that raises DEFENSE."
     },
     "category": "species-specific",
@@ -2279,119 +2236,14 @@
     "holdable": true,
     "flingPower": 10
   },
-  "235": {
-    "name": {
-      "en": "Thick Club",
-      "he": "Thick Club"
-    },
-    "slug": "thick-club",
-    "description": {
-      "he": "A bone of some sort. It can be sold cheaply.",
-      "en": "A bone of some sort. It can be sold cheaply."
-    },
-    "category": "species-specific",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/thick-club.png",
-    "holdable": true,
-    "flingPower": 90
-  },
-  "236": {
-    "name": {
-      "en": "Stick",
-      "he": "Stick"
-    },
-    "slug": "stick",
-    "description": {
-      "he": "A stick of leek. It can be sold cheaply.",
-      "en": "A stick of leek. It can be sold cheaply."
-    },
-    "category": "species-specific",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/stick.png",
-    "holdable": true,
-    "flingPower": 60
-  },
-  "237": {
-    "name": {
-      "en": "Red Scarf",
-      "he": "Red Scarf"
-    },
-    "slug": "red-scarf",
-    "description": {
-      "he": "A hold item that raises COOL in CONTESTS.",
-      "en": "A hold item that raises COOL in CONTESTS."
-    },
-    "category": "scarves",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/red-scarf.png",
-    "holdable": true,
-    "flingPower": 10
-  },
-  "238": {
-    "name": {
-      "en": "Blue Scarf",
-      "he": "Blue Scarf"
-    },
-    "slug": "blue-scarf",
-    "description": {
-      "he": "A hold item that raises BEAUTY in CONTESTS.",
-      "en": "A hold item that raises BEAUTY in CONTESTS."
-    },
-    "category": "scarves",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/blue-scarf.png",
-    "holdable": true,
-    "flingPower": 10
-  },
-  "239": {
-    "name": {
-      "en": "Pink Scarf",
-      "he": "Pink Scarf"
-    },
-    "slug": "pink-scarf",
-    "description": {
-      "he": "A hold item that raises CUTE in CONTESTS.",
-      "en": "A hold item that raises CUTE in CONTESTS."
-    },
-    "category": "scarves",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pink-scarf.png",
-    "holdable": true,
-    "flingPower": 10
-  },
-  "240": {
-    "name": {
-      "en": "Green Scarf",
-      "he": "Green Scarf"
-    },
-    "slug": "green-scarf",
-    "description": {
-      "he": "A hold item that raises SMART in CONTESTS.",
-      "en": "A hold item that raises SMART in CONTESTS."
-    },
-    "category": "scarves",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/green-scarf.png",
-    "holdable": true,
-    "flingPower": 10
-  },
-  "241": {
-    "name": {
-      "en": "Yellow Scarf",
-      "he": "Yellow Scarf"
-    },
-    "slug": "yellow-scarf",
-    "description": {
-      "he": "A hold item that raises TOUGH in CONTESTS.",
-      "en": "A hold item that raises TOUGH in CONTESTS."
-    },
-    "category": "scarves",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yellow-scarf.png",
-    "holdable": true,
-    "flingPower": 10
-  },
   "242": {
     "name": {
       "en": "Wide Lens",
-      "he": "Wide Lens"
+      "he": "עדשת רוחב"
     },
     "slug": "wide-lens",
     "description": {
-      "he": "An item to be held by a Pokémon. It is a magnifying lens that slightly boosts the accuracy of moves.",
+      "he": "פריט שמוחזק בידי פוקימון ומגביר מעט את הדיוק של מהלכים.",
       "en": "An item to be held by a Pokémon. It is a magnifying lens that slightly boosts the accuracy of moves."
     },
     "category": "held-items",
@@ -2402,11 +2254,11 @@
   "243": {
     "name": {
       "en": "Muscle Band",
-      "he": "Muscle Band"
+      "he": "חגורת שרירים"
     },
     "slug": "muscle-band",
     "description": {
-      "he": "An item to be held by a Pokémon. It is a headband that slightly boosts the power of physical moves.",
+      "he": "פריט שמוחזק בידי פוקימון ומחזק מעט את כוח המהלכים הפיזיים.",
       "en": "An item to be held by a Pokémon. It is a headband that slightly boosts the power of physical moves."
     },
     "category": "held-items",
@@ -2417,11 +2269,11 @@
   "244": {
     "name": {
       "en": "Wise Glasses",
-      "he": "Wise Glasses"
+      "he": "משקפיים חכמים"
     },
     "slug": "wise-glasses",
     "description": {
-      "he": "An item to be held by a Pokémon. It is a thick pair of glasses that slightly boosts the power of special moves.",
+      "he": "פריט שמוחזק בידי פוקימון ומחזק מעט את כוח המהלכים המיוחדים.",
       "en": "An item to be held by a Pokémon. It is a thick pair of glasses that slightly boosts the power of special moves."
     },
     "category": "held-items",
@@ -2432,11 +2284,11 @@
   "245": {
     "name": {
       "en": "Expert Belt",
-      "he": "Expert Belt"
+      "he": "חגורת מומחה"
     },
     "slug": "expert-belt",
     "description": {
-      "he": "An item to be held by a Pokémon. It is a well-worn belt that slightly boosts the power of supereffective moves.",
+      "he": "פריט שמוחזק בידי פוקימון ומחזק מעט את כוח המהלכים היעילים במיוחד.",
       "en": "An item to be held by a Pokémon. It is a well-worn belt that slightly boosts the power of supereffective moves."
     },
     "category": "held-items",
@@ -2447,11 +2299,11 @@
   "246": {
     "name": {
       "en": "Light Clay",
-      "he": "Light Clay"
+      "he": "חימר בהיר"
     },
     "slug": "light-clay",
     "description": {
-      "he": "A Pokémon hold item that extends the duration of barrier moves like Light Screen and Reflect used by the holder.",
+      "he": "פריט שמוחזק בידי פוקימון ומאריך את משך הזמן של מהלכי מחסום כמו מסך אור והחזרה בשימוש על ידי המחזיק.",
       "en": "A Pokémon hold item that extends the duration of barrier moves like Light Screen and Reflect used by the holder."
     },
     "category": "held-items",
@@ -2462,11 +2314,11 @@
   "247": {
     "name": {
       "en": "Life Orb",
-      "he": "Life Orb"
+      "he": "כדור חיים"
     },
     "slug": "life-orb",
     "description": {
-      "he": "An item to be held by a Pokémon. It boosts the power of moves, but at the cost of some HP on each hit.",
+      "he": "פריט שמוחזק בידי פוקימון ומחזק את כוח המהלכים, אך במחיר של חלק מנקודות החיים בכל פגיעה.",
       "en": "An item to be held by a Pokémon. It boosts the power of moves, but at the cost of some HP on each hit."
     },
     "category": "held-items",
@@ -2579,51 +2431,7 @@
     "holdable": true,
     "flingPower": 30
   },
-  "255": {
-    "name": {
-      "en": "Iron Ball",
-      "he": "Iron Ball"
-    },
-    "slug": "iron-ball",
-    "description": {
-      "he": "A Pokémon hold item that cuts Speed. It makes Flying-type and levitating holders susceptible to Ground moves.",
-      "en": "A Pokémon hold item that cuts Speed. It makes Flying-type and levitating holders susceptible to Ground moves."
-    },
-    "category": "bad-held-items",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iron-ball.png",
-    "holdable": true,
-    "flingPower": 130
-  },
-  "256": {
-    "name": {
-      "en": "Lagging Tail",
-      "he": "Lagging Tail"
-    },
-    "slug": "lagging-tail",
-    "description": {
-      "he": "An item to be held by a Pokémon. It is tremendously heavy and makes the holder move slower than usual.",
-      "en": "An item to be held by a Pokémon. It is tremendously heavy and makes the holder move slower than usual."
-    },
-    "category": "bad-held-items",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lagging-tail.png",
-    "holdable": true,
-    "flingPower": 10
-  },
-  "257": {
-    "name": {
-      "en": "Destiny Knot",
-      "he": "Destiny Knot"
-    },
-    "slug": "destiny-knot",
-    "description": {
-      "he": "A long, thin, bright red string to be held by a Pokémon. If the holder becomes infatuated, the foe does too.",
-      "en": "A long, thin, bright red string to be held by a Pokémon. If the holder becomes infatuated, the foe does too."
-    },
-    "category": "held-items",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/destiny-knot.png",
-    "holdable": true,
-    "flingPower": 10
-  },
+
   "258": {
     "name": {
       "en": "Black Sludge",
@@ -2717,7 +2525,7 @@
   "264": {
     "name": {
       "en": "Choice Scarf",
-      "he": "Choice Scarf"
+      "he": "צעיף בחירה"
     },
     "slug": "choice-scarf",
     "description": {
@@ -2732,11 +2540,11 @@
   "265": {
     "name": {
       "en": "Sticky Barb",
-      "he": "Sticky Barb"
+      "he": "ברזל דביק"
     },
     "slug": "sticky-barb",
     "description": {
-      "he": "A hold item that damages the holder on every turn. It may latch on to foes that touch the holder.",
+      "he": "פריט שמוחזק בידי הפוקימון ופוגע בו בכל תור. הוא עשוי להידבק לאויבים שנוגעים בו.",
       "en": "A hold item that damages the holder on every turn. It may latch on to foes that touch the holder."
     },
     "category": "bad-held-items",
@@ -2867,7 +2675,7 @@
   "274": {
     "name": {
       "en": "Choice Specs",
-      "he": "Choice Specs"
+      "he": "משקפי בחירה"
     },
     "slug": "choice-specs",
     "description": {

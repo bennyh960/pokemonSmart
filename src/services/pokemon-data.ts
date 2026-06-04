@@ -62,7 +62,7 @@ interface RawMoveData {
   pp: number;
   effectChance: number | null;
   mathDifficulty: number;
-  damageClass: string;
+  damageClass: string; // "physical", "special", or "status"
   description: { en: string; he: string };
   battle?: Partial<MoveBattleMetadata>;
 }
@@ -190,12 +190,30 @@ let tmLearnsets: Record<string, { moveId: number }[]> = {};
 
 export async function initHeavyData(onProgress?: (fraction: number) => void): Promise<void> {
   let done = 0;
-  const step = (): void => { done++; onProgress?.(done / 3); };
+  const step = (): void => {
+    done++;
+    onProgress?.(done / 3);
+  };
 
   const [movesRaw, learnsetRaw, tmLearnsetRaw] = await Promise.all([
-    fetch(movesUrl).then(r => r.json()).then((d: unknown) => { step(); return d; }),
-    fetch(learnsetUrl).then(r => r.json()).then((d: unknown) => { step(); return d; }),
-    fetch(tmLearnsetUrl).then(r => r.json()).then((d: unknown) => { step(); return d; }),
+    fetch(movesUrl)
+      .then((r) => r.json())
+      .then((d: unknown) => {
+        step();
+        return d;
+      }),
+    fetch(learnsetUrl)
+      .then((r) => r.json())
+      .then((d: unknown) => {
+        step();
+        return d;
+      }),
+    fetch(tmLearnsetUrl)
+      .then((r) => r.json())
+      .then((d: unknown) => {
+        step();
+        return d;
+      }),
   ]);
 
   allMoves = (movesRaw as RawMoveData[]).map(normalizeMoveData);
@@ -359,12 +377,10 @@ export function getPokemonWeight(id: number): string {
  *
  * wPercent/hPercent default to 0 if absent (legacy saves behave as base stats).
  */
-export function computePokemonSize(pokemon: {
-  id: number;
-  level: number;
-  wPercent?: number;
-  hPercent?: number;
-}): { weightKg: number; heightM: number } {
+export function computePokemonSize(pokemon: { id: number; level: number; wPercent?: number; hPercent?: number }): {
+  weightKg: number;
+  heightM: number;
+} {
   const species = pokemonById.get(pokemon.id);
   if (!species?.weight || !species?.height) return { weightKg: 0, heightM: 0 };
 

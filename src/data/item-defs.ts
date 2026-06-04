@@ -9,7 +9,8 @@
  *   ITEM_GAME_DATA[id]   → effect, price, category, usability (our game logic)
  */
 
-import type { BattleStatModifiers } from '../systems/battle-state';
+import { getMove, type MoveData } from '../services/pokemon-data';
+import type { BattlePokemonRuntimeState, BattleStatModifiers } from '../systems/battle-state';
 import { HM_CONFIG } from '../systems/hm';
 import type { PokemonType } from '../types';
 
@@ -54,11 +55,11 @@ export type ItemEffect =
       config: {
         isEndOfTurn: boolean;
         localMessage?: string;
-        heal?: number;
-        damage?: number;
+        hpAmount?: number; // +/-
         stats?: Partial<BattleStatModifiers>; // e.g. {atk: +1, def: -1}
-        moveTypeBoost?: { moveType: PokemonType; boost: number };
+        moveTypeBoost?: { moveType: PokemonType | 'all'; boost: number };
         category?: 'choice' | 'damage-boost' | 'defense-boost' | 'other';
+        condition?: (args?: { runtimeState?: BattlePokemonRuntimeState }) => boolean; // additional condition for activation (e.g. Life Orb doesn't activate on status moves or if it would faint the holder)
       };
     };
 
@@ -209,7 +210,24 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'choice-band': 197,
   'choice-spec': 274,
   'choice-scarf': 264,
-  'zoom-lens': 253,
+  // 'zoom-lens': 253, // not wired up yet
+  'wide-lens': 242,
+  'life-orb': 247,
+  'soft-sand': 214,
+  'hard-stone': 215,
+  'miracle-seed': 216,
+  'black-glasses': 217,
+  'black-belt': 218,
+  magnet: 219,
+  'mystic-water': 220,
+  'sharp-beak': 221,
+  'poison-barb': 222,
+  'never-melt-ice': 223,
+  'spell-tag': 224,
+  'twisted-spoon': 225,
+  charcoal: 226,
+  'dragon-fang': 227,
+  'silk-scarf': 228,
 };
 
 // Reverse lookup
@@ -560,6 +578,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
 
   // ── Trade evolution items (holdable) ──
   198: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // King's Rock
+  // Metal Coat
   210: {
     category: 'held',
     price: 0,
@@ -573,7 +592,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     },
     usableInBattle: false,
     usableInOverworld: false,
-  }, // Metal Coat
+  },
   9018: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // Dragon Scale
 
   // held items
@@ -581,7 +600,10 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   211: {
     category: 'held',
     price: 0,
-    effect: { type: 'battle', config: { isEndOfTurn: true, heal: 1 / 16, localMessage: 'battle.leftoversHeal' } },
+    effect: {
+      type: 'battle',
+      config: { condition: () => true, isEndOfTurn: true, hpAmount: 1 / 16, localMessage: 'battle.leftoversHeal' },
+    },
     usableInBattle: false,
     usableInOverworld: false,
   },
@@ -609,11 +631,244 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: false,
   },
-  // zoom lens
+  // zoom lens - not worked yet
   253: {
     category: 'held',
     price: 0,
     effect: { type: 'battle', config: { isEndOfTurn: false, category: 'other', stats: { accuracy: 1 } } },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  214: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'ground', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  215: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'rock', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  216: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'grass', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  217: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'dark', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  218: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'fighting', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  219: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'electric', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  220: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'water', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  221: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'flying', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  222: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'poison', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  223: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'ice', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  224: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'ghost', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  225: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'psychic', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  226: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'fire', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  227: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'dragon', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  228: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'normal', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  // life orb
+  247: {
+    category: 'held',
+    price: 5000,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: true,
+        localMessage: 'battle.lifeOrbDamage',
+        hpAmount: -1 / 10,
+        category: 'damage-boost',
+        moveTypeBoost: { moveType: 'all', boost: 1.3 },
+        condition: ({ runtimeState } = {}) => {
+          if (!runtimeState?.lastMoveUsedId) return false;
+          const move = getMove(runtimeState.lastMoveUsedId);
+          if (!move) return false;
+          if (runtimeState.turnFlags.charging || runtimeState.turnFlags.flinched) return false; // don't activate if the pokemon is currently charging a move or flinched (i.e. didn't actually use the move)
+          return move?.damageClass !== 'status';
+        },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  242: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+
+        stats: { accuracy: 1 },
+      },
+    },
     usableInBattle: false,
     usableInOverworld: false,
   },

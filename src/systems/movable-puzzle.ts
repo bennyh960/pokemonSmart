@@ -55,27 +55,37 @@ export function init(data: TileMapData, tileset: Tileset | null | undefined): vo
     const keySet = new Set(movableTileKeys);
 
     const tiles: MovableTile[] = data.objects
-      .filter(o =>
-        keySet.has(o.key) &&
-        o.x >= puzzleRoom.x1 && o.x <= puzzleRoom.x2 &&
-        o.y >= puzzleRoom.y1 && o.y <= puzzleRoom.y2,
+      .filter(
+        (o) =>
+          keySet.has(o.key) &&
+          o.x >= puzzleRoom.x1 &&
+          o.x <= puzzleRoom.x2 &&
+          o.y >= puzzleRoom.y1 &&
+          o.y <= puzzleRoom.y2,
       )
-      .map(o => ({ key: o.key, x: o.x, y: o.y, initX: o.x, initY: o.y, animFromX: o.x, animFromY: o.y, animProgress: 1 }));
+      .map((o) => ({
+        key: o.key,
+        x: o.x,
+        y: o.y,
+        initX: o.x,
+        initY: o.y,
+        animFromX: o.x,
+        animFromY: o.y,
+        animProgress: 1,
+      }));
 
     const refTileSet = new Set(
       refRoom
         ? data.objects
-          .filter(o =>
-            keySet.has(o.key) &&
-            o.x >= refRoom.x1 && o.x <= refRoom.x2 &&
-            o.y >= refRoom.y1 && o.y <= refRoom.y2,
-          )
-          .map(o => `${o.key},${o.x},${o.y}`)
+            .filter(
+              (o) =>
+                keySet.has(o.key) && o.x >= refRoom.x1 && o.x <= refRoom.x2 && o.y >= refRoom.y1 && o.y <= refRoom.y2,
+            )
+            .map((o) => `${o.key},${o.x},${o.y}`)
         : [],
     );
 
     const axisSum = refRoom ? refRoom.x2 + puzzleRoom.x1 : 0;
-    console.log(`[puzzle init] ${id} — axisSum=${axisSum} movableTiles=${tiles.length} refTiles=${refTileSet.size}`, [...refTileSet]);
     puzzles.push({ id, config, tiles, solved: false, refTileSet, axisSum });
   }
 }
@@ -83,13 +93,18 @@ export function init(data: TileMapData, tileset: Tileset | null | undefined): vo
 /** Remove puzzle-room moveable tiles from the static placed objects so tilemap doesn't own them. */
 export function filterObjects(objects: PlacedObject[]): PlacedObject[] {
   if (puzzles.length === 0) return objects;
-  return objects.filter(obj =>
-    !puzzles.some(p => {
-      const { puzzleRoom, movableTileKeys } = p.config;
-      return movableTileKeys.includes(obj.key) &&
-        obj.x >= puzzleRoom.x1 && obj.x <= puzzleRoom.x2 &&
-        obj.y >= puzzleRoom.y1 && obj.y <= puzzleRoom.y2;
-    }),
+  return objects.filter(
+    (obj) =>
+      !puzzles.some((p) => {
+        const { puzzleRoom, movableTileKeys } = p.config;
+        return (
+          movableTileKeys.includes(obj.key) &&
+          obj.x >= puzzleRoom.x1 &&
+          obj.x <= puzzleRoom.x2 &&
+          obj.y >= puzzleRoom.y1 &&
+          obj.y <= puzzleRoom.y2
+        );
+      }),
   );
 }
 
@@ -108,8 +123,10 @@ export function getTileAt(gx: number, gy: number): MovableTile | null {
  * Returns true if the push succeeded — caller should then allow the player to step forward.
  */
 export function tryPush(
-  tx: number, ty: number,
-  dx: number, dy: number,
+  tx: number,
+  ty: number,
+  dx: number,
+  dy: number,
   isWalkableFn: (x: number, y: number) => boolean,
 ): boolean {
   let ownerPuzzle: ActivePuzzle | null = null;
@@ -117,7 +134,11 @@ export function tryPush(
 
   outer: for (const p of puzzles) {
     for (const t of p.tiles) {
-      if (t.x === tx && t.y === ty) { tile = t; ownerPuzzle = p; break outer; }
+      if (t.x === tx && t.y === ty) {
+        tile = t;
+        ownerPuzzle = p;
+        break outer;
+      }
     }
   }
   if (!tile || !ownerPuzzle) return false;
@@ -153,19 +174,17 @@ export function checkSymmetry(pd: PlayerData): boolean {
     if (p.solved) continue;
     if (!p.config.successFlag || !p.config.refRoom) continue;
 
-    const allMatch = p.tiles.every(tile => {
+    const allMatch = p.tiles.every((tile) => {
       const gridW = tileGridW(tile.key);
       const refX = p.axisSum - tile.x - (gridW - 1);
       const hit = p.refTileSet.has(`${tile.key},${refX},${tile.y}`);
-      if (!hit) console.log(`[puzzle ${p.id}] MISMATCH: ${tile.key} at (${tile.x},${tile.y}) needs mirror refX=${refX} → looking for "${tile.key},${refX},${tile.y}" in refSet`);
-      return hit;
+      if (!hit) return hit;
     });
 
     if (allMatch) {
       p.solved = true;
       setFlag(pd, p.config.successFlag);
       anySolved = true;
-      console.log(`[puzzle ${p.id}] SOLVED → flag "${p.config.successFlag}" set`);
     }
   }
   return anySolved;
@@ -194,11 +213,7 @@ export function update(dt: number): void {
 }
 
 /** Returns body-layer renderables for all moveable tiles (call each render frame). */
-export function getRenderables(
-  ctx: CanvasRenderingContext2D,
-  cameraX: number,
-  cameraY: number,
-): Renderable[] {
+export function getRenderables(ctx: CanvasRenderingContext2D, cameraX: number, cameraY: number): Renderable[] {
   if (!activeTileset || puzzles.length === 0) return [];
 
   ctx.imageSmoothingEnabled = false;
@@ -219,19 +234,24 @@ export function getRenderables(
         render: () => {
           // Interpolate pixel position between animFrom and target
           const progress = t.animProgress;
-          const px = progress < 1
-            ? t.animFromX * BASE + (t.x * BASE - t.animFromX * BASE) * progress
-            : t.x * BASE;
-          const py = progress < 1
-            ? t.animFromY * BASE + (t.y * BASE - t.animFromY * BASE) * progress
-            : t.y * BASE;
+          const px = progress < 1 ? t.animFromX * BASE + (t.x * BASE - t.animFromX * BASE) * progress : t.x * BASE;
+          const py = progress < 1 ? t.animFromY * BASE + (t.y * BASE - t.animFromY * BASE) * progress : t.y * BASE;
           const drawX = Math.floor(px - cameraX);
           const drawY = Math.floor(py - cameraY);
 
           if (def.cells) {
             for (const cell of def.cells) {
-              ctx.drawImage(ts.image, def.sx + cell.dx * BASE, def.sy + cell.dy * BASE, BASE, BASE,
-                drawX + cell.dx * BASE, drawY + cell.dy * BASE, BASE, BASE);
+              ctx.drawImage(
+                ts.image,
+                def.sx + cell.dx * BASE,
+                def.sy + cell.dy * BASE,
+                BASE,
+                BASE,
+                drawX + cell.dx * BASE,
+                drawY + cell.dy * BASE,
+                BASE,
+                BASE,
+              );
             }
           } else {
             ctx.drawImage(ts.image, def.sx, def.sy, def.w, def.h, drawX, drawY, def.w, def.h);
@@ -259,31 +279,32 @@ function tileGridW(key: string): number {
   return def ? Math.max(1, Math.round(def.w / BASE)) : 1;
 }
 
-function checkStuck(
-  tile: MovableTile,
-  puzzle: ActivePuzzle,
-  isWalkableFn: (x: number, y: number) => boolean,
-): void {
+function checkStuck(tile: MovableTile, puzzle: ActivePuzzle, isWalkableFn: (x: number, y: number) => boolean): void {
   const { x1, y1, x2, y2 } = puzzle.config.puzzleRoom;
-  const dirs = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
+  const dirs = [
+    { dx: 1, dy: 0 },
+    { dx: -1, dy: 0 },
+    { dx: 0, dy: 1 },
+    { dx: 0, dy: -1 },
+  ];
 
-  const canMove = dirs.some(d => {
+  const canMove = dirs.some((d) => {
     const nx = tile.x + d.dx;
     const ny = tile.y + d.dy;
-    return nx >= x1 && nx <= x2 && ny >= y1 && ny <= y2 &&
-      isWalkableFn(nx, ny) && !getTileAt(nx, ny);
+    return nx >= x1 && nx <= x2 && ny >= y1 && ny <= y2 && isWalkableFn(nx, ny) && !getTileAt(nx, ny);
   });
 
   if (!canMove) teleport(tile, puzzle, isWalkableFn);
 }
 
-function teleport(
-  tile: MovableTile,
-  puzzle: ActivePuzzle,
-  isWalkableFn: (x: number, y: number) => boolean,
-): void {
+function teleport(tile: MovableTile, puzzle: ActivePuzzle, isWalkableFn: (x: number, y: number) => boolean): void {
   const { x1, y1, x2, y2 } = puzzle.config.puzzleRoom;
-  const dirs = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
+  const dirs = [
+    { dx: 1, dy: 0 },
+    { dx: -1, dy: 0 },
+    { dx: 0, dy: 1 },
+    { dx: 0, dy: -1 },
+  ];
   const candidates: { x: number; y: number }[] = [];
 
   for (let y = y1; y <= y2; y++) {
@@ -291,11 +312,10 @@ function teleport(
       if (x === tile.x && y === tile.y) continue;
       if (!isWalkableFn(x, y)) continue;
       if (getTileAt(x, y)) continue;
-      const notStuck = dirs.some(d => {
+      const notStuck = dirs.some((d) => {
         const nx = x + d.dx;
         const ny = y + d.dy;
-        return nx >= x1 && nx <= x2 && ny >= y1 && ny <= y2 &&
-          isWalkableFn(nx, ny) && !getTileAt(nx, ny);
+        return nx >= x1 && nx <= x2 && ny >= y1 && ny <= y2 && isWalkableFn(nx, ny) && !getTileAt(nx, ny);
       });
       if (notStuck) candidates.push({ x, y });
     }

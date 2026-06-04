@@ -444,10 +444,9 @@
         "itemQty": 3
       },
       {
-        "itemId": "life-orb",
+        "itemId": "hm01",
         "x": 8,
-        "y": 13,
-        "itemQty": 3
+        "y": 13
       }
     ]
   },

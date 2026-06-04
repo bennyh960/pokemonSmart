@@ -208,7 +208,6 @@ function getCharacterRoles(spriteType: string): string[] {
 function computeAiLevel(spriteType: string, explicit?: AiLevel): AiLevel {
   if (explicit) return explicit;
   const roles = getCharacterRoles(spriteType);
-  // console.log({ spriteType, explicit, roles });
 
   if (roles.includes('elite-4') || roles.includes('champion')) return 5;
   if (roles.includes('gym-leader')) return Math.random() < 0.5 ? 4 : 5;
@@ -268,6 +267,7 @@ type BattlePhase =
   | 'LOSE'
   | 'RUN'
   | 'USE_ITEM'
+  | 'TRAINER_USE_ITEM'
   | 'TRAINER_NEXT_POKEMON'
   | 'TRAINER_NEXT_XP'
   | 'TRAINER_NEXT_LEVEL_UP'
@@ -353,15 +353,18 @@ function calcDamage(
 ): number {
   if (power <= 0) return 0;
 
-  // const atkHeldItem = atk.heldItemId ? getItem(atk.heldItemId) : null;
-  // const defHeldItem = def.heldItemId ? getItem(def.heldItemId) : null;
+  const atkHeldItem = atk.heldItemId ? getItem(atk.heldItemId) : null;
 
-  // const getItemData = (item: ItemDef) => {
-  //   if (item.category === 'held' && item.effect.type === 'battle') {
-  //     return item.effect.config;
-  //   }
-  //   return {isEndOfTurn:false,damage:1,heal:1,localMessage:'',moveTypeBoost:null,statMinues:null,statPlus:null};
-  // };
+  if (
+    atkHeldItem?.category === 'held' &&
+    atkHeldItem.effect.type === 'battle' &&
+    atkHeldItem.effect.config.moveTypeBoost
+  ) {
+    const moveTypeBoost = atkHeldItem.effect.config.moveTypeBoost;
+    if (moveTypeBoost.moveType === moveType || moveTypeBoost.moveType === 'all') {
+      power = Math.floor(power * moveTypeBoost.boost);
+    }
+  }
 
   const isSpecial = damageClass === 'special';
   const burnMultiplier = damageClass === 'physical' && atk.status === 'burn' ? 0.5 : 1;
@@ -949,7 +952,6 @@ export function createBattleScene(
       consumeItem(pd.items, itemId);
       const random = Math.random();
       const calcScore = getCaptureChance(def.effect.rate);
-      console.log({ captureMin: random, captureScore: calcScore });
       startCaptureSequence(itemId, random < calcScore);
       phaseTimer = 0;
       return;
@@ -1669,6 +1671,8 @@ export function createBattleScene(
     const itemAction = checkTrainerItemUse();
     if (itemAction) {
       executeTrainerItemUse(itemAction.itemId, itemAction.itemName);
+      phase = 'TRAINER_USE_ITEM';
+      enemyBattleState.lastMoveUsedId = null; // Clear last move to avoid confusion with item use
       return true;
     }
 
@@ -2827,12 +2831,13 @@ export function createBattleScene(
     const playerHeldItem = player.heldItemId ? getItem(player.heldItemId) : null;
     const enemyHeldItem = enemy.heldItemId ? getItem(enemy.heldItemId) : null;
 
+    // Held Item end-of-turn effects
     if (playerHeldItem?.effect.type === 'battle') {
-      // todo : handle later damage, statPlus, statMinues
-      const { isEndOfTurn, localMessage, heal, category } = playerHeldItem.effect.config;
+      const { isEndOfTurn, localMessage, hpAmount, category, condition } = playerHeldItem.effect.config;
       if (isEndOfTurn) {
-        if (heal) {
-          const healAmount = Math.floor(player.maxHp * heal);
+        const isConditionMet = condition ? condition({ runtimeState: playerBattleState }) : true;
+        if (hpAmount && isConditionMet) {
+          const healAmount = Math.floor(player.maxHp * hpAmount);
           player.hp = Math.min(player.maxHp, player.hp + healAmount);
           queueStatusTurnEffect('player', playerHeldItem.id);
           lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(player.id), amount: healAmount }));
@@ -2846,10 +2851,10 @@ export function createBattleScene(
     }
 
     if (enemyHeldItem?.effect.type === 'battle') {
-      const { isEndOfTurn, localMessage, heal, category } = enemyHeldItem.effect.config;
+      const { isEndOfTurn, localMessage, hpAmount, category } = enemyHeldItem.effect.config;
       if (isEndOfTurn) {
-        if (heal) {
-          const healAmount = Math.floor(enemy.maxHp * heal);
+        if (hpAmount) {
+          const healAmount = Math.floor(enemy.maxHp * hpAmount);
           enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
           queueStatusTurnEffect('enemy', enemyHeldItem.id);
           lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(enemy.id), amount: healAmount }));
@@ -6939,6 +6944,7 @@ export function createBattleScene(
         case 'USE_ITEM': {
           if (textBox && updateTextBox(textBox, input, dt)) textBox = null;
           if (!textBox && !isHPAnimating(playerHpBar)) enemyTurn();
+          playerBattleState.lastMoveUsedId = null;
           break;
         }
         case 'CAPTURE_ANIM': {
