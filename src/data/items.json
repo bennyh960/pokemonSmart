@@ -1746,8 +1746,8 @@
     },
     "slug": "choice-band",
     "description": {
-      "he": "Raises a move’s power, but permits only that move.",
-      "en": "Raises a move’s power, but permits only that move."
+      "he": "מחזק את ההתקפה הפיזית, אך מאפשר להשתמש רק במתקפה 1 בלבד.",
+      "en": "Raises a Attack power state, but permits only that move."
     },
     "category": "choice",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/choice-band.png",
@@ -1942,7 +1942,7 @@
     "slug": "metal-coat",
     "description": {
       "en": "A hold item that raises the power of STEEL-type moves.",
-      "he": "מתכת נדירה - יכולה לגרום לפוקימונים מסוימים להתפתח"
+      "he": "מתכת נדירה - יכולה לגרום לפוקימונים מסוימים להתפתח ומחזקת מתקפות מתכת"
     },
     "category": "type-enhancement",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metal-coat.png",
@@ -1971,7 +1971,7 @@
     },
     "slug": "light-ball",
     "description": {
-      "he": "A hold item that raises the SP. ATK of PIKACHU.",
+      "he": "פריט שמוחזק בידי הפוקימון - ומחזק לו את המתקפה המיוחדת אם הוא מסוג חשמל",
       "en": "A hold item that raises the SP. ATK of PIKACHU."
     },
     "category": "species-specific",
@@ -2211,7 +2211,7 @@
     },
     "slug": "shell-bell",
     "description": {
-      "he": "A hold item that restores HP upon striking the foe.",
+      "he": "פריט שמוחזק בידי הפוקימון - ומשחזר לו נקודות חיים כאשר הוא פוגע באויב.",
       "en": "A hold item that restores HP upon striking the foe."
     },
     "category": "held-items",
@@ -2226,7 +2226,7 @@
     },
     "slug": "sea-incense",
     "description": {
-      "he": "A hold item that slightly boosts WATER-type moves.",
+      "he": "פריט שמוחזק בידי הפוקימון - ומחזק לו מעט את המתקפות מסוג מים.",
       "en": "A hold item that slightly boosts WATER-type moves."
     },
     "category": "type-enhancement",
@@ -2556,8 +2556,8 @@
     },
     "slug": "zoom-lens",
     "description": {
-      "he": "An item to be held by a Pokémon. If the holder moves after the foe, its critical-hit ratio will be boosted.",
-      "en": "An item to be held by a Pokémon. If the holder moves after the foe, its critical-hit ratio will be boosted."
+      "he": "פריט שמוחזק בידי הפוקימון - מעלה את הסיכוי לפגיעה קריטית.",
+      "en": "An item to be held by a Pokémon.  its critical-hit ratio will be boosted."
     },
     "category": "held-items",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/zoom-lens.png",
@@ -2721,7 +2721,7 @@
     },
     "slug": "choice-scarf",
     "description": {
-      "he": "An item to be held by a Pokémon. This scarf boosts Speed, but allows the use of only one kind of move.",
+      "he": "פריט שמוחזק בידי הפוקימון , מעלה לו את המהירות, אך מאפשר להשתמש רק במתקפה אחת.",
       "en": "An item to be held by a Pokémon. This scarf boosts Speed, but allows the use of only one kind of move."
     },
     "category": "choice",
@@ -2871,7 +2871,7 @@
     },
     "slug": "choice-specs",
     "description": {
-      "he": "An item to be held by a Pokémon. These distinctive glasses boost Sp. Atk, but allow only one kind of move to be used.",
+      "he": "פריט שמוחזק בידי הפוקימון - ומשפר את התקפות המיוחדות שלו, אך מאפשר להשתמש רק בסוג אחד של מתקפה.",
       "en": "An item to be held by a Pokémon. These distinctive glasses boost Sp. Atk, but allow only one kind of move to be used."
     },
     "category": "choice",
@@ -2886,7 +2886,7 @@
     },
     "slug": "flame-plate",
     "description": {
-      "he": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Fire-type moves.",
+      "he": "פריט שמוחזק בידי הפוקימון - זהו לוח אבן שמגביר את כוח המתקפות מסוג אש.",
       "en": "An item to be held by a Pokémon. It is a stone tablet that boosts the power of Fire-type moves."
     },
     "category": "plates",

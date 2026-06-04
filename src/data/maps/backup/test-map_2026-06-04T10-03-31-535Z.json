@@ -433,14 +433,6 @@
     "item-generic": [
       {
         "itemId": "leftovers",
-        "itemQty": 3,
-        "x": 11,
-        "y": 13
-      },
-      {
-        "itemId": "choice-specs",
-        "x": 13,
-        "y": 13,
         "itemQty": 3
       }
     ]
@@ -929,7 +921,7 @@
     {
       "key": "item-generic",
       "x": 11,
-      "y": 13
+      "y": 1
     },
     {
       "key": "r1",
@@ -975,11 +967,6 @@
       "key": "gym-gb",
       "x": 34,
       "y": 14
-    },
-    {
-      "key": "item-generic",
-      "x": 13,
-      "y": 13
     }
   ]
 }

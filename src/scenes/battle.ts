@@ -352,6 +352,17 @@ function calcDamage(
   attackStatOverride?: number,
 ): number {
   if (power <= 0) return 0;
+
+  // const atkHeldItem = atk.heldItemId ? getItem(atk.heldItemId) : null;
+  // const defHeldItem = def.heldItemId ? getItem(def.heldItemId) : null;
+
+  // const getItemData = (item: ItemDef) => {
+  //   if (item.category === 'held' && item.effect.type === 'battle') {
+  //     return item.effect.config;
+  //   }
+  //   return {isEndOfTurn:false,damage:1,heal:1,localMessage:'',moveTypeBoost:null,statMinues:null,statPlus:null};
+  // };
+
   const isSpecial = damageClass === 'special';
   const burnMultiplier = damageClass === 'physical' && atk.status === 'burn' ? 0.5 : 1;
   const attackStat = attackStatOverride ?? getModifiedStatValue(atk, atkState, isSpecial ? 'specialAttack' : 'attack');
@@ -1971,7 +1982,16 @@ export function createBattleScene(
       resolveForcedPlayerTurn();
       return;
     }
-    menu.disabledMoveIds = playerBattleState.disabledMoveId !== null ? [playerBattleState.disabledMoveId] : [];
+
+    if (playerBattleState.softLockedInMovesId?.length) {
+      menu.disabledMoveIds = playerBattleState.softLockedInMovesId;
+    }
+    if (playerBattleState.disabledMoveId !== null && menu.disabledMoveIds.length > 0) {
+      menu.disabledMoveIds.push(playerBattleState.disabledMoveId);
+    } else if (playerBattleState.disabledMoveId !== null) {
+      menu.disabledMoveIds = [playerBattleState.disabledMoveId];
+    }
+
     phase = 'SELECT_MOVE';
     showMoveMenu(menu);
   }
@@ -2708,6 +2728,7 @@ export function createBattleScene(
     const lines: string[] = [];
     clearEndOfTurnFlags(playerBattleState);
     clearEndOfTurnFlags(enemyBattleState);
+
     const playerResult = applyEndOfTurnStatusEffects(player, playerBattleState);
     const enemyResult = applyEndOfTurnStatusEffects(enemy, enemyBattleState);
 
@@ -2803,6 +2824,44 @@ export function createBattleScene(
       }
     }
 
+    const playerHeldItem = player.heldItemId ? getItem(player.heldItemId) : null;
+    const enemyHeldItem = enemy.heldItemId ? getItem(enemy.heldItemId) : null;
+
+    if (playerHeldItem?.effect.type === 'battle') {
+      // todo : handle later damage, statPlus, statMinues
+      const { isEndOfTurn, localMessage, heal, category } = playerHeldItem.effect.config;
+      if (isEndOfTurn) {
+        if (heal) {
+          const healAmount = Math.floor(player.maxHp * heal);
+          player.hp = Math.min(player.maxHp, player.hp + healAmount);
+          queueStatusTurnEffect('player', playerHeldItem.id);
+          lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(player.id), amount: healAmount }));
+        }
+      }
+
+      if (category === 'choice' && playerBattleState.lastMoveUsedId) {
+        const movesToLock = player.moves.map((m) => m.id).filter((id) => id !== playerBattleState.lastMoveUsedId);
+        playerBattleState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
+      }
+    }
+
+    if (enemyHeldItem?.effect.type === 'battle') {
+      const { isEndOfTurn, localMessage, heal, category } = enemyHeldItem.effect.config;
+      if (isEndOfTurn) {
+        if (heal) {
+          const healAmount = Math.floor(enemy.maxHp * heal);
+          enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+          queueStatusTurnEffect('enemy', enemyHeldItem.id);
+          lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(enemy.id), amount: healAmount }));
+        }
+      }
+
+      if (category === 'choice' && enemyBattleState.lastMoveUsedId) {
+        const movesToLock = enemy.moves.map((m) => m.id).filter((id) => id !== enemyBattleState.lastMoveUsedId);
+        enemyBattleState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
+      }
+    }
+
     // Weather end-of-turn: damage + decrement
     if (battleWeather) {
       if (player.hp > 0) {
@@ -2816,7 +2875,7 @@ export function createBattleScene(
               }),
             );
           } else if (wr.healed > 0) {
-            lines.push(t('battle.iceBodyHeal', { name: getPokemonDisplayName(player.id) }));
+            lines.push(t('battle.weatherHeal', { name: getPokemonDisplayName(player.id) }));
           }
         }
       }
@@ -2831,7 +2890,7 @@ export function createBattleScene(
               }),
             );
           } else if (wr.healed > 0) {
-            lines.push(t('battle.iceBodyHeal', { name: getPokemonDisplayName(enemy.id) }));
+            lines.push(t('battle.weatherHeal', { name: getPokemonDisplayName(enemy.id) }));
           }
         }
       }
@@ -2854,9 +2913,9 @@ export function createBattleScene(
 
     syncPlayerBar();
     syncEnemyBar();
-
     if (lines.length > 0) {
       textBox = createTextBox(lines, isRTL());
+
       phase = 'END_TURN_STATUS';
       phaseTimer = 0;
       return;
@@ -3603,7 +3662,7 @@ export function createBattleScene(
       return;
     }
 
-    if (m.id === playerBattleState.disabledMoveId) {
+    if (m.id === playerBattleState.disabledMoveId || playerBattleState.softLockedInMovesId?.includes(m.id)) {
       const msgs = [...turnEffectLines];
       msgs.push(
         t('battle.moveCantUseDisabled', { name: getPokemonDisplayName(player.id), move: getMoveDisplayName(m.id) }),

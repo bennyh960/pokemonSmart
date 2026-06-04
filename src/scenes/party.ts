@@ -52,7 +52,12 @@ let onSelectCallback: ((index: number) => void) | null = null;
 export let selectedPartyIndex: number = -1;
 
 /** Context info shown when party is in select-target mode (item use). */
-let selectTargetContext: { itemId: string; itemName: string; description: string } | null = null;
+let selectTargetContext: {
+  itemId: string;
+  itemName: string;
+  description: string;
+  isEligible?: (pokemon: Pokemon) => boolean;
+} | null = null;
 
 /** Battle roster context: tracks which party slots are committed and the max allowed. */
 let battleRosterCtx: { roster: Set<number>; maxSize: number } | null = null;
@@ -60,7 +65,7 @@ let battleRosterCtx: { roster: Set<number>; maxSize: number } | null = null;
 export function setPartyMode(
   mode: PartyMode,
   callback?: (index: number) => void,
-  context?: { itemId: string; itemName: string; description: string },
+  context?: { itemId: string; itemName: string; description: string; isEligible?: (pokemon: Pokemon) => boolean },
   rosterCtx?: { roster: Set<number>; maxSize: number },
 ): void {
   partyMode = mode;
@@ -138,6 +143,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     }
     if (partyMode === 'select-target') {
       if (!selectTargetContext) return true;
+      if (selectTargetContext.isEligible?.(pokemon)) return true;
       return canUseItemOnPokemon(selectTargetContext.itemId, pokemon);
     }
     return true;

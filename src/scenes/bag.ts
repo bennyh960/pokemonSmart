@@ -706,6 +706,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
               itemId: item.id,
               itemName: getLocalizedName(item.def.name),
               description: getLocalizedName(item.def.description),
+              isEligible: (pokemon: any) => !pokemon.heldItemId,
             },
           );
           stateMachine.push('PARTY');

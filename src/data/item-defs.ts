@@ -9,7 +9,9 @@
  *   ITEM_GAME_DATA[id]   → effect, price, category, usability (our game logic)
  */
 
+import type { BattleStatModifiers } from '../systems/battle-state';
 import { HM_CONFIG } from '../systems/hm';
+import type { PokemonType } from '../types';
 
 // ─── Types ───
 
@@ -26,6 +28,8 @@ export type ItemCategory =
   | 'key'
   | 'machine';
 
+type pokemonStates = 'hp' | 'atk' | 'def' | 'spe' | 'spa' | 'spd';
+
 export type ItemEffect =
   | { type: 'heal'; amount: number }
   | { type: 'heal-full' } // Heals all HP
@@ -39,11 +43,24 @@ export type ItemEffect =
   | { type: 'rare-candy' }
   | { type: 'evolution-stone' }
   | { type: 'tm'; moveId: number; isHM: boolean }
-  | { type: 'vitamin'; stat: 'hp' | 'atk' | 'def' | 'spe' | 'spa' | 'spd' }
+  | { type: 'vitamin'; stat: pokemonStates }
   | { type: 'pokedex-battery'; amount: number }
   | { type: 'battle-helper'; battles: number }
   | { type: 'repel'; steps: number }
-  | { type: 'none' };
+  | { type: 'none' }
+  // held items
+  | {
+      type: 'battle';
+      config: {
+        isEndOfTurn: boolean;
+        localMessage?: string;
+        heal?: number;
+        damage?: number;
+        stats?: Partial<BattleStatModifiers>; // e.g. {atk: +1, def: -1}
+        moveTypeBoost?: { moveType: PokemonType; boost: number };
+        category?: 'choice' | 'damage-boost' | 'defense-boost' | 'other';
+      };
+    };
 
 export interface ItemGameDef {
   category: ItemCategory;
@@ -186,6 +203,13 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'super-repel': 9015,
   'hyper-repel': 9016,
   'max-repel': 9017,
+
+  // held items
+  leftovers: 211,
+  'choice-band': 197,
+  'choice-spec': 274,
+  'choice-scarf': 264,
+  'zoom-lens': 253,
 };
 
 // Reverse lookup
@@ -536,8 +560,63 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
 
   // ── Trade evolution items (holdable) ──
   198: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // King's Rock
-  210: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // Metal Coat
+  210: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        localMessage: 'battle.metalCoatBoost',
+        moveTypeBoost: { moveType: 'steel', boost: 1.2 },
+      },
+    },
+    usableInBattle: false,
+    usableInOverworld: false,
+  }, // Metal Coat
   9018: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // Dragon Scale
+
+  // held items
+  // leftovers
+  211: {
+    category: 'held',
+    price: 0,
+    effect: { type: 'battle', config: { isEndOfTurn: true, heal: 1 / 16, localMessage: 'battle.leftoversHeal' } },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  //choise spec
+  274: {
+    category: 'held',
+    price: 0,
+    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { specialAttack: 1 } } },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  //choise-band
+  197: {
+    category: 'held',
+    price: 0,
+    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { attack: 1 } } },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  //choise scarf
+  264: {
+    category: 'held',
+    price: 0,
+    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { speed: 1 } } },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  // zoom lens
+  253: {
+    category: 'held',
+    price: 0,
+    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'other', stats: { accuracy: 1 } } },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
 
   // ── Custom game items ──
   9001: {

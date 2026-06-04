@@ -1,5 +1,10 @@
 import type { Pokemon } from '../types/index.js';
-import type { BattleStatId, MajorStatusId, MoveBattleSideEffectId, WeatherConditionId } from '../types/battle-metadata.js';
+import type {
+  BattleStatId,
+  MajorStatusId,
+  MoveBattleSideEffectId,
+  WeatherConditionId,
+} from '../types/battle-metadata.js';
 import { normalizeMajorStatusId } from '../types/battle-metadata.js';
 
 export interface WeatherState {
@@ -39,6 +44,7 @@ export interface BattlePokemonRuntimeState {
   chargingMoveId: number | null;
   invulnerableState: 'airborne' | 'underground' | null;
   lockedInMoveId: number | null;
+  softLockedInMovesId: number[] | null; // e.g. choice spec
   lockInTurnsRemaining: number;
   rolloutTurnsActive: number;
   rageActive: boolean;
@@ -63,7 +69,7 @@ export interface BattleSideRuntimeState {
   mistTurnsRemaining: number;
   safeguardTurnsRemaining: number;
   stealthRockActive: boolean;
-  spikesLayers: number;      // 0–3
+  spikesLayers: number; // 0–3
   toxicSpikesLayers: number; // 0–2
   futureSightTurnsRemaining: number;
   futureSightDamage: number;
@@ -101,7 +107,7 @@ export function clampBattleStatModifier(percent: number): number {
 }
 
 export function applyBattleStatDelta(currentPercent: number, stageDelta: number): number {
-  return clampBattleStatModifier(currentPercent + (stageDelta * BATTLE_STAT_PERCENT_STEP));
+  return clampBattleStatModifier(currentPercent + stageDelta * BATTLE_STAT_PERCENT_STEP);
 }
 
 export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>): BattlePokemonRuntimeState {
@@ -111,6 +117,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     freezeTurnsRemaining: 0,
     badlyPoisonTurns: 0,
     confusionTurnsRemaining: 0,
+    softLockedInMovesId: null,
     leechSeeded: false,
     trappedTurnsRemaining: 0,
     trapDamagePercent: null,
@@ -196,10 +203,7 @@ export function ensurePersistentBattleFields(pokemon: Record<string, any> | null
   pokemon.status = normalizePersistentPokemonStatus(pokemon.status);
 }
 
-export function canCurePersistentStatus(
-  currentStatus: MajorStatusId | null,
-  cureStatus: string | 'all',
-): boolean {
+export function canCurePersistentStatus(currentStatus: MajorStatusId | null, cureStatus: string | 'all'): boolean {
   if (!currentStatus) return false;
   if (cureStatus === 'all') return true;
   return normalizeMajorStatusId(cureStatus) === currentStatus;

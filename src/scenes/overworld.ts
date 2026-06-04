@@ -1054,8 +1054,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const evo = getNextEvolution(pokemon.id);
           if (evo && evo.trigger === 'trade') {
             if (evo.item) {
-              const requiredId = ITEM_SLUG_TO_ID[evo.item];
-              if (requiredId == null || pokemon.heldItemId !== requiredId) continue;
+              const itemData = getItem(evo.item);
+
+              if (!itemData || pokemon.heldItemId !== itemData.id) continue;
+              pokemon.heldItemId = null;
             }
             setEvolutionData(pokemon, evo);
             stateMachine.push('EVOLUTION');

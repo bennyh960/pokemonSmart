@@ -96,6 +96,8 @@
   "battle.menu.switchHint": "Switch to another Pokemon",
   "battle.menu.bagHint": "Use an item from your bag",
   "battle.menu.runHint": "Try to escape from battle",
+  "battle.leftoversHeal": "{name} restored {amount}HP with Leftovers!",
+
   "hp.label": "HP",
   "hp.level": "Lv{level}",
   "math.answer": "Answer: {answer}",
@@ -521,7 +523,7 @@
   "battle.weatherAccuracyMax": "{move} has perfect accuracy in the {weather}!",
   "battle.sandstormDamage": "{name} is buffeted by the sandstorm!",
   "battle.hailDamage": "{name} is buffeted by hail!",
-  "battle.iceBodyHeal": "{name} is healed by the hail!",
+  "battle.weatherHeal": "{name} is healed by the weather!",
   "battle.sandstormEnded": "The sandstorm subsided.",
   "battle.rainEnded": "The rain stopped.",
   "battle.sunEnded": "The harsh sunlight faded.",

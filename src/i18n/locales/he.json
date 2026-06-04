@@ -414,7 +414,7 @@
   "bag.heldItem.equippedAlready": "{name} כבר מחזיק פריט!",
   "bag.heldItem.unequipped": "{name} הסיר את {item}!",
 
-  "battle.goName": "קדימה, {name}!",
+  "battle.goName": "אני בוחר אותך, {name}!",
   "battle.comeBack": "חזור, {name}!",
   "battle.alreadyActive": "הפוקימון הזה כבר בקרב!",
   "battle.pokemonFainted": "הפוקימון הזה התעלף!",
@@ -521,7 +521,7 @@
   "battle.weatherAccuracyMax": "ל{move} יש דיוק מושלם ב{weather}!",
   "battle.sandstormDamage": "{name} סופג נזק מסופת החול!",
   "battle.hailDamage": "{name} סופג נזק מהברד!",
-  "battle.iceBodyHeal": "{name} מחלים מהברד!",
+  "battle.weatherHeal": "{name} מחלים ממזג האוויר!",
   "battle.sandstormEnded": "סופת החול שקטה.",
   "battle.rainEnded": "הגשם פסק.",
   "battle.sunEnded": "אור השמש החריף דעך.",
@@ -553,6 +553,8 @@
   "battle.whiteout": "אין לך פוקימון זמין! אתה מתעלף...",
   "battle.recoverMessage": "הועברת למרכז פוקימון להתאוששות...",
   "battle.trainerWaitsRecover": "רפא את הפוקימונים שלך וחזור לריבאנץ'!",
+  "battle.leftoversHeal": "{name} מחלים ב{amount} נקודות חיים מהשאריות!",
+
   "worldMap.title": "מפת נומריה",
   "worldMap.hint": "ESC/W: סגור",
   "worldMap.labelsHint": "X: תוויות נוספות",

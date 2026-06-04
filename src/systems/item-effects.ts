@@ -420,3 +420,13 @@ export function isItemConsumable(itemId: string): boolean {
   if (!def) return false;
   return def.effect.type !== 'tm';
 }
+
+// Held Items strategy
+// leftovers: restore 1/16 max HP each turn in battle
+// metal coat: boosts power of steel moves by 20%
+// scope lens: boosts critical hit rate by 1 stage
+
+// categories: type-enhancement
+// export function applyHeldItemEffects(pokemon: Pokemon): void {
+
+// }

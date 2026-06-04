@@ -17,6 +17,7 @@ import {
   setBattleSideEffectTurnsRemaining,
 } from './battle-state.js';
 import { getAbilityBattleEffects, getCombinedTypeEffectiveness, getMoveBattleData } from '../services/pokemon-data.js';
+import { getItem } from '../data/items.js';
 
 export interface TurnOrderDecision {
   enemyActsFirst: boolean;
@@ -146,6 +147,21 @@ export function createBattleRuntimeStateForPokemon(
   if (state.majorStatus === 'freeze' && state.freezeTurnsRemaining <= 0) {
     state.freezeTurnsRemaining = randomTurnCount(2, 5, random);
   }
+
+  if (pokemon.heldItemId) {
+    const itemData = getItem(pokemon.heldItemId);
+    if (itemData?.category === 'held' && itemData.effect.type === 'battle') {
+      const { stats } = itemData.effect.config;
+      if (stats) {
+        for (const [stat, stages] of Object.entries(stats)) {
+          const statId = stat as BattleStatId;
+          state.statModifiers[statId] = applyBattleStatDelta(state.statModifiers[statId], stages);
+        }
+        // lock is happens in the end of the turn, so we don't need to track it here in the runtime state
+      }
+    }
+  }
+
   return state;
 }
 
@@ -934,22 +950,28 @@ export interface WeatherDamageResult {
 }
 
 export function applyWeatherDamage(pokemon: Pokemon, weather: WeatherConditionId): WeatherDamageResult {
-  if (weather !== 'sandstorm' && weather !== 'hail') {
-    return { damage: 0, healed: 0, fainted: false, immune: true };
-  }
-  if (isWeatherDamageImmune(pokemon, weather)) {
-    return { damage: 0, healed: 0, fainted: false, immune: true };
-  }
   // Ice Body: heal in hail instead of taking damage
-  if (weather === 'hail' && pokemon.abilityId) {
+  if (['hail', 'rain'].includes(weather) && pokemon.abilityId) {
+    console.log({ pokemon });
     const hasIceBody = getAbilityBattleEffects(pokemon.abilityId).some(
       (e) => e.kind === 'weatherHealInstead' && e.weather === 'hail',
     );
-    if (hasIceBody) {
+    const hasRainDish = getAbilityBattleEffects(pokemon.abilityId).some(
+      (e) => e.kind === 'weatherHealInstead' && e.weather === 'rain',
+    );
+    if (hasIceBody || hasRainDish) {
       const healed = Math.max(1, Math.floor(pokemon.maxHp / 16));
       pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healed);
       return { damage: 0, healed, fainted: false, immune: false };
     }
+  }
+
+  if (weather !== 'sandstorm' && weather !== 'hail') {
+    return { damage: 0, healed: 0, fainted: false, immune: true };
+  }
+
+  if (isWeatherDamageImmune(pokemon, weather)) {
+    return { damage: 0, healed: 0, fainted: false, immune: true };
   }
   const damage = Math.max(1, Math.floor(pokemon.maxHp / 16));
   pokemon.hp = Math.max(0, pokemon.hp - damage);
