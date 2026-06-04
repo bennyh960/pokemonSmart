@@ -65,7 +65,7 @@ export interface Pokemon {
   isGlitched: boolean; // Infected by NULL-X virus
   abilityId: number | null; // PokeAPI ability ID — lookup in abilities.json
   natureId: number | null; // PokeAPI nature ID (1-25) — lookup in natures.json
-  heldItemId: number | null; // PokeAPI item ID — lookup in items.json + item-defs.ts
+  heldItemId: string | null; // PokeAPI item ID — lookup in items.json + item-defs.ts
   status: MajorStatusId | null; // Persistent major status between battles/items/healers
   caughtBall?: string; // Item ID of the pokeball used to catch (e.g. 'poke-ball', 'great-ball')
   /** EV-like stat boosts from vitamins. Each stat capped at 31. Optional for save-file backwards-compat. */
@@ -237,7 +237,7 @@ export interface PlayerData {
   battleHelperBattles: number; // remaining Battle Helper battles (shows type effectiveness on moves)
   battleHelperEnabled: boolean; // toggle: auto-consumes from battleHelperBattles each battle when ON
   repelStepsRemaining: number; // steps left on active repel (0 = no repel)
-  surfing?: boolean;            // player is currently surfing (survives battle transitions)
+  surfing?: boolean; // player is currently surfing (survives battle transitions)
   surfingPokemonId?: number | null; // id of the surf pokemon
   /** Away Pokemon: key = Pokemon.uuid. Stolen entries lock the Pokemon in party; day-care entries hold the Pokemon object. */
   awayPokemon: Record<string, AwayPokemonEntry>;

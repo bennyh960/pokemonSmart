@@ -827,11 +827,11 @@
   "68": {
     "name": {
       "en": "Black Flute",
-      "he": "Black Flute"
+      "he": "חליל שחור"
     },
     "slug": "black-flute",
     "description": {
-      "he": "A glass flute that keeps away wild POKéMON.",
+      "he": "חליל זכוכית שמרחיק פוקימונים פראיים.",
       "en": "A glass flute that keeps away wild POKéMON."
     },
     "category": "spelunking",
@@ -842,11 +842,11 @@
   "69": {
     "name": {
       "en": "White Flute",
-      "he": "White Flute"
+      "he": "חליל לבן"
     },
     "slug": "white-flute",
     "description": {
-      "he": "A glass flute that lures wild POKéMON.",
+      "he": "חליל זכוכית שמושך פוקימונים פראיים.",
       "en": "A glass flute that lures wild POKéMON."
     },
     "category": "spelunking",
@@ -861,7 +861,7 @@
     },
     "slug": "sun-stone",
     "description": {
-      "he": "Makes certain species of POKéMON evolve.",
+      "he": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח.",
       "en": "Makes certain species of POKéMON evolve."
     },
     "category": "evolution",
@@ -876,7 +876,7 @@
     },
     "slug": "moon-stone",
     "description": {
-      "he": "Makes certain species of POKéMON evolve.",
+      "he": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח.",
       "en": "Makes certain species of POKéMON evolve."
     },
     "category": "evolution",
@@ -892,7 +892,7 @@
     "slug": "fire-stone",
     "description": {
       "he": "Makes certain species of POKéMON evolve.",
-      "en": "Makes certain species of POKéMON evolve."
+      "en": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח."
     },
     "category": "evolution",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fire-stone.png",
@@ -902,12 +902,12 @@
   "83": {
     "name": {
       "en": "Thunder Stone",
-      "he": "Thunder Stone"
+      "he": "אבן ברק"
     },
     "slug": "thunder-stone",
     "description": {
-      "he": "Makes certain species of POKéMON evolve.",
-      "en": "Makes certain species of POKéMON evolve."
+      "he": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח.",
+      "en": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח."
     },
     "category": "evolution",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/thunder-stone.png",
@@ -917,12 +917,12 @@
   "84": {
     "name": {
       "en": "Water Stone",
-      "he": "Water Stone"
+      "he": "אבן מים"
     },
     "slug": "water-stone",
     "description": {
-      "he": "Makes certain species of POKéMON evolve.",
-      "en": "Makes certain species of POKéMON evolve."
+      "he": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח.",
+      "en": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח."
     },
     "category": "evolution",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/water-stone.png",
@@ -932,12 +932,12 @@
   "85": {
     "name": {
       "en": "Leaf Stone",
-      "he": "Leaf Stone"
+      "he": "אבן עלה"
     },
     "slug": "leaf-stone",
     "description": {
-      "he": "Makes certain species of POKéMON evolve.",
-      "en": "Makes certain species of POKéMON evolve."
+      "he": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח.",
+      "en": "אבן נדירה שעשויה לגרום למינים מסוימים של פוקימון להתפתח."
     },
     "category": "evolution",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leaf-stone.png",
@@ -1926,7 +1926,7 @@
     },
     "slug": "scope-lens",
     "description": {
-      "he": "A hold item that raises the critical- hit rate.",
+      "he": "פריט שמחזיק פוקימון ומעלה את הסיכוי למכה קריטית.",
       "en": "A hold item that raises the critical- hit rate."
     },
     "category": "held-items",
@@ -1937,12 +1937,12 @@
   "210": {
     "name": {
       "en": "Metal Coat",
-      "he": "Metal Coat"
+      "he": "כיסוי מתכת נדיר"
     },
     "slug": "metal-coat",
     "description": {
-      "he": "A hold item that raises the power of STEEL-type moves.",
-      "en": "A hold item that raises the power of STEEL-type moves."
+      "en": "A hold item that raises the power of STEEL-type moves.",
+      "he": "מתכת נדירה - יכולה לגרום לפוקימונים מסוימים להתפתח"
     },
     "category": "type-enhancement",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metal-coat.png",
@@ -1956,7 +1956,7 @@
     },
     "slug": "leftovers",
     "description": {
-      "he": "A hold item that gradually restores HP in battle.",
+      "he": "שאריות מזון - פריט שמחזיק פוקימון ומחזיר לו נקודות חיים בכל סיבוב בקרב",
       "en": "A hold item that gradually restores HP in battle."
     },
     "category": "held-items",

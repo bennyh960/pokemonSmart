@@ -1,7 +1,20 @@
 {
   "test-map": {
-    "encounterRate": 0.005,
-    "entries": []
+    "encounterRate": 0.5,
+    "entries": [
+      {
+        "pokemonId": 123,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 50
+      },
+      {
+        "pokemonId": 95,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 50
+      }
+    ]
   },
   "default-map": {
     "encounterRate": 0.0,

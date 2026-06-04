@@ -162,13 +162,13 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
 
     if (!canLearnViaTM(pokemon.id, tmEffect.moveId)) {
       message = t('bag.tm.cantLearn', { name: pokemonName, move: moveName });
-      messageTimer = 2.0;
+      messageTimer = 1.0;
       return;
     }
 
     if (pokemon.moves.some((m) => m.id === tmEffect.moveId)) {
       message = t('bag.tm.alreadyKnows', { name: pokemonName, move: moveName });
-      messageTimer = 2.0;
+      messageTimer = 1.0;
       return;
     }
 
@@ -202,15 +202,15 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       const moveName = getMoveDisplayName(tmEffect.moveId);
       const pokeName = getPokemonDisplayName(pokemon.id);
       message = t('bag.tm.learned', { name: pokeName, move: moveName });
-      messageTimer = 2.5;
+      messageTimer = 1.5;
     } else if (result.message === 'no-space') {
       const pokeName = getPokemonDisplayName(pokemon.id);
       const moveName = getMoveDisplayName(tmEffect.moveId);
       message = t('bag.tm.noSpace', { name: pokeName, move: moveName });
-      messageTimer = 2.0;
+      messageTimer = 1.5;
     } else {
       message = result.message;
-      messageTimer = 2.0;
+      messageTimer = 1.5;
     }
     // Suppress unused var warning
     void pd;
@@ -317,7 +317,11 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         } else {
           // Qty × symbol + number (left side)
           drawText(ctx, '\u00d7', 8, cy + 2, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-          drawText(ctx, `${item.qty}`, 14, cy + 1, { size: 8, color: isSel ? C.SEL_BAR : C.TEXT_SEC, font: 'monospace' });
+          drawText(ctx, `${item.qty}`, 14, cy + 1, {
+            size: 8,
+            color: isSel ? C.SEL_BAR : C.TEXT_SEC,
+            font: 'monospace',
+          });
         }
       }
 
@@ -642,9 +646,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
               const pd = getPlayerData();
               const moveName = getMoveDisplayName(tmCheckEffect.moveId);
               const anyCanLearn = pd.party.some(
-                (p) =>
-                  canLearnViaTM(p.id, tmCheckEffect.moveId) &&
-                  !p.moves.some((m) => m.id === tmCheckEffect.moveId),
+                (p) => canLearnViaTM(p.id, tmCheckEffect.moveId) && !p.moves.some((m) => m.id === tmCheckEffect.moveId),
               );
               if (!anyCanLearn) {
                 message = t('bag.tm.noneCanLearn', { move: moveName });
@@ -677,6 +679,37 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             message = t('bag.cantUseHere');
             messageTimer = 1.5;
           }
+        } else if (item.def.category === 'held') {
+          waitingForPartyTarget = true;
+          setPartyMode(
+            'select-target',
+            (index) => {
+              const pd = getPlayerData();
+              const pokemon = pd.party[index];
+              if (!pokemon) return false;
+              if (pokemon.heldItemId) {
+                message = t('bag.heldItem.equippedAlready', { name: getPokemonDisplayName(pokemon.id) });
+                messageTimer = 2.0;
+                return false;
+              }
+
+              pokemon.heldItemId = item.id;
+              consumeItem(pd.items, item.id);
+              autoSave();
+              const pokeName = getPokemonDisplayName(pokemon.id);
+              const itemName = getLocalizedName(item.def.name);
+              message = t('bag.heldItem.equipped', { name: pokeName, item: itemName });
+              messageTimer = 2.0;
+              return true;
+            },
+            {
+              itemId: item.id,
+              itemName: getLocalizedName(item.def.name),
+              description: getLocalizedName(item.def.description),
+            },
+          );
+          stateMachine.push('PARTY');
+          return;
         } else {
           message = t('bag.cantUseHere');
           messageTimer = 1.5;

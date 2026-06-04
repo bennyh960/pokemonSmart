@@ -151,6 +151,7 @@
   "party.hint.swapMode": "ENTER:החלף כאן  ESC:ביטול",
   "party.hint.detailNav": "שמאל/ימין:לשונית  ESC:חזור",
   "party.hint.moves": "ENTER:אפשרויות  D:מחק",
+  "party.hint.removeItem": "להוריד {item} ולשים בתיק",
   "party.hint.diary": "יומן",
   "party.diary.title": "יומן",
   "party.diary.empty": "אין פוקימונים בחוץ",
@@ -407,6 +408,12 @@
   "bag.tm.noneCanLearn": "אף פוקימון בקבוצה שלך לא יכול ללמוד את {move}!",
   "party.selectTarget.tmTitle": "יכולים ללמוד {move}",
   "bag.tm.fullMoveset": "{name} כבר יודע 8 מהלכים. להחליף אחד?",
+
+  "bag.heldItem.equipped": "{name} מצויד ב{item}.",
+  "bag.heldItem.cantEquip": "{name} לא יכול להחזיק {item}!",
+  "bag.heldItem.equippedAlready": "{name} כבר מחזיק פריט!",
+  "bag.heldItem.unequipped": "{name} הסיר את {item}!",
+
   "battle.goName": "קדימה, {name}!",
   "battle.comeBack": "חזור, {name}!",
   "battle.alreadyActive": "הפוקימון הזה כבר בקרב!",

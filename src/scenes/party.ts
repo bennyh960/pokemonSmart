@@ -24,13 +24,14 @@ import {
 import { drawPokeballIcon } from '../ui/item-icons.js';
 import { TYPE_BADGE, getTypeName, getDamageClassLabel } from '../data/type-constants.js';
 import { STATUS_PILL_COLORS } from '../data/battle-constants.js';
-import { getPlayerData } from '../systems/game-state.js';
+import { autoSave, getPlayerData } from '../systems/game-state.js';
 import { getCharacterFrame } from '../engine/character-sprites.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { canUseItemOnPokemon } from '../systems/item-effects.js';
 import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } from '../systems/move-learning.js';
 import { getTMEffect } from '../data/item-defs.js';
 import { calcHappiness, getHappinessLabel } from '../systems/happiness.js';
+import { getItem } from '../data/items.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
@@ -86,6 +87,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
   let moveSwapFrom = -1;
   let moveMessage = '';
   let moveMessageTimer = 0;
+  let actionMessage = '';
+  let actionMessageTimer = 0;
   let moveDeleteConfirm = false;
   let moveDeleteConfirmCursor = 1; // 0 = yes, 1 = no (default to no)
   let moveLearningActionCursor = 0;
@@ -224,6 +227,11 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(sprite, 193, sy - 1, 23, 23);
       ctx.imageSmoothingEnabled = false;
+    }
+
+    // draw held item
+    if (pokemon.heldItemId) {
+      drawHeldItem(ctx, pokemon.heldItemId, { x: 194, y: sy + 1 + 14, w: 6, h: 6 });
     }
 
     // Name (right-aligned)
@@ -570,13 +578,17 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
   function renderDetailStatsTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
     // ── Sprite container (right side) ──
-    fillRect(ctx, 184, 18, 44, 44, '#0a2a1a');
-    drawRect(ctx, 184, 18, 44, 44, C.BORDER);
+    fillRect(ctx, 184, 16, 44, 44, '#0a2a1a');
+    drawRect(ctx, 184, 16, 44, 44, C.BORDER);
     const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
     const sprite = getCachedImage(spriteUrl);
     if (sprite && sprite.complete && sprite.naturalWidth > 0) {
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(sprite, 186, 20, 40, 40);
+      ctx.drawImage(sprite, 186, 16, 40, 40);
+    }
+
+    if (pokemon.heldItemId) {
+      drawHeldItem(ctx, pokemon.heldItemId, { x: 185, y: 50, w: 9, h: 9 });
     }
 
     // ── Name (centered in left 168px area) ──
@@ -1156,6 +1168,30 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       color: C.TEXT_MUT,
       font: 'monospace',
     });
+
+    // held item removal
+    if (pokemon.heldItemId) {
+      fillRect(ctx, 111, 151, 10, 8, C.KEY_BG);
+      drawRect(ctx, 111, 151, 10, 8, C.KEY_BRD);
+      drawText(ctx, 'D', 114, 152, {
+        size: 6,
+        color: C.TEXT_MUT,
+        font: 'monospace',
+      });
+      drawText(
+        ctx,
+        t('party.hint.removeItem', {
+          item: getItem(pokemon.heldItemId)?.name.he || '???',
+        }),
+        122,
+        153,
+        {
+          size: 6,
+          color: C.TEXT_MUT,
+          font: 'monospace',
+        },
+      );
+    }
     // Enter pill (only on moves tab)
     if (detailTab === 'moves') {
       fillRect(ctx, 114, 151, 26, 8, C.KEY_BG);
@@ -1166,6 +1202,11 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         color: C.TEXT_MUT,
         font: 'monospace',
       });
+    }
+
+    if (actionMessage && actionMessageTimer > 0) {
+      fillRect(ctx, 8, 136, 224, 10, '#2a6a40');
+      drawText(ctx, actionMessage, 120, 137, { size: 7, color: '#20d860', align: 'center' });
     }
   }
 
@@ -1180,6 +1221,13 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       if (moveMessageTimer <= 0) {
         moveMessage = '';
         moveMessageTimer = 0;
+      }
+    }
+    if (actionMessageTimer > 0) {
+      actionMessageTimer -= dt;
+      if (actionMessageTimer <= 0) {
+        actionMessage = '';
+        actionMessageTimer = 0;
       }
     }
 
@@ -1441,6 +1489,27 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         }
       }
     }
+
+    // handle remove item from pokemon on stats tab with D key
+    if (detailTab === 'stats') {
+      if (pokemon.heldItemId && (input.isKeyPressed('d') || input.isKeyPressed('D'))) {
+        // Remove held item
+        const item = getItem(pokemon.heldItemId);
+        if (item) {
+          pokemon.heldItemId = null;
+          const pd = getPlayerData();
+          pd.items[item.id] = (pd.items[item.id] || 0) + 1;
+          actionMessage = t('bag.heldItem.unequipped', {
+            item: item.name.he || '???',
+            name: getPokemonDisplayName(pokemon.id),
+          });
+          actionMessageTimer = 1.5;
+
+          autoSave();
+          // !bug : actionMessage is not shoing
+        }
+      }
+    }
   }
 
   return {
@@ -1622,3 +1691,33 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     },
   };
 }
+
+// utility functions
+
+const drawHeldItem = (
+  ctx: CanvasRenderingContext2D,
+  heldItemId: string,
+  coords: { x: number; y: number; w: number; h: number },
+) => {
+  const itemData = getItem(heldItemId);
+  const itemSpriteUrl = itemData?.sprite ?? `/sprites/items/${heldItemId}.png`;
+  let itemSprite = getCachedImage(itemSpriteUrl);
+
+  if (!itemSprite) {
+    loadImage(itemSpriteUrl)
+      .then((img) => {
+        itemSprite = img;
+      })
+      .catch(() => {});
+  }
+
+  const { x, y, w, h } = coords;
+
+  if (itemSprite && itemSprite.complete && itemSprite.naturalWidth > 0) {
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(itemSprite, x, y, w, h);
+    ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingQuality = 'low';
+  }
+};

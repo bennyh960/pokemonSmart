@@ -151,6 +151,7 @@
   "party.hint.swapMode": "ENTER:Swap here  ESC:Cancel",
   "party.hint.detailNav": "L/R:Tab  ESC:Back",
   "party.hint.moves": "ENTER:Options  D:Delete",
+  "party.hint.removeItem": "Take off {item} and put it in bag",
   "party.hint.diary": "Diary",
   "party.diary.title": "DIARY",
   "party.diary.empty": "Nothing away",
@@ -407,6 +408,12 @@
   "bag.tm.noneCanLearn": "No Pokemon in your party can learn {move}!",
   "party.selectTarget.tmTitle": "Can learn {move}",
   "bag.tm.fullMoveset": "{name} already knows 4-8 moves. Replace one?",
+
+  "bag.heldItem.equipped": "{name} is equipped with {item}.",
+  "bag.heldItem.cantEquip": "{name} can't hold {item}!",
+  "bag.heldItem.equippedAlready": "{name} is already holding an item!",
+  "bag.heldItem.unequipped": "{name} removed {item}!",
+
   "battle.goName": "Go, {name}!",
   "battle.comeBack": "Come back, {name}!",
   "battle.alreadyActive": "That Pokemon is already out!",
