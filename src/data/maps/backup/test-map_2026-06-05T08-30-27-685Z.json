@@ -59,28 +59,23 @@
       "spriteType": "leon",
       "party": [
         {
+          "pokemonId": 144,
+          "level": 49,
+          "moves": []
+        },
+        {
           "pokemonId": 145,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 146,
           "level": 50,
-          "moves": [
-            104,
-            97,
-            86,
-            65
-          ]
-        },
-        {
-          "pokemonId": 145,
-          "level": 60,
           "moves": []
         },
         {
-          "pokemonId": 1,
-          "level": 5,
-          "moves": []
-        },
-        {
-          "pokemonId": 1,
-          "level": 5,
+          "pokemonId": 248,
+          "level": 50,
           "moves": []
         }
       ],

@@ -119,7 +119,12 @@ import {
   type MoveLearningResolution,
 } from '../systems/move-learning.js';
 import { calculateCaptureChance } from '../systems/capture.js';
-import type { BattlePokemonRuntimeState, BattleSideRuntimeState, WeatherState } from '../systems/battle-state.js';
+import type {
+  BattlePokemonRuntimeState,
+  BattleSideRuntimeState,
+  BattleStatModifiers,
+  WeatherState,
+} from '../systems/battle-state.js';
 import {
   BATTLE_STAT_PERCENT_STEP,
   applyBattleStatDelta,
@@ -1481,25 +1486,24 @@ export function createBattleScene(
    */
   function shouldUseBoostItem(): boolean {
     const enemyHpRatio = enemy.hp / enemy.maxHp;
-    // Don't boost when almost fainted — we won't survive long enough to benefit
-    if (enemyHpRatio < 0.35) return false;
 
     const playerStatus = playerBattleState.majorStatus;
 
     // Player can't attack — perfect window to boost
     if (playerStatus === 'sleep' || playerStatus === 'freeze') return true;
 
+    // Don't boost when almost fainted — we won't survive long enough to benefit
+    if (enemyHpRatio < 0.85) return false;
+
     // Paralyzed player: boost if there are more matchups ahead (extended battle)
     if (playerStatus === 'paralyze') {
       const playerRemaining = countPlayerAliveParty();
-      const enemyRemaining = trainerData
-        ? trainerData.party.filter((p, i) => i >= trainerPartyIndex && p.hp > 0).length
-        : 1;
-      return playerRemaining > 1 || enemyRemaining > 1;
+      return playerRemaining > 1;
     }
 
     // Burned physical attacker: their main damage is halved — safe to boost
-    if (playerStatus === 'burn' && player.attack > player.specialAttack * 1.1) return true;
+    if (playerStatus === 'burn' && player.attack > player.specialAttack * 1.1 && player.level > enemy.level * 0.9)
+      return true;
 
     // If player deals heavy damage, we risk being KO'd before the boost pays off
     const estIncoming = estimatePlayerBestDamageToEnemy();
@@ -1521,7 +1525,6 @@ export function createBattleScene(
     if (!ai || ai.level < 4) return null;
     if (isWildNpcBattle && !enemy.isGlitched) return null;
     const remaining = trainerData ? trainerData.party.filter((_, i) => i >= trainerPartyIndex).length : 0;
-    console.log({ remaining, ai });
     if (ai.level >= 4 && remaining > 3) return null;
 
     const idx = trainerPartyIndex;
@@ -1758,6 +1761,13 @@ export function createBattleScene(
     const enemyHpRatio = enemy.hp / enemy.maxHp;
     const playerHpRatio = player.hp / player.maxHp;
 
+    // Get Player remaining slots
+    const playerParty = getPlayerData().party;
+    const confirmedAlive = [...battleRoster].filter((i) => playerParty[i].hp > 0).length;
+    const unseenSlots = maxRosterSize - battleRoster.size;
+    const estimatedRemaining = confirmedAlive + unseenSlots;
+    const playerPartyRemainingScore = estimatedRemaining / maxRosterSize;
+
     // --- OHKO moves (Horn Drill, Fissure, etc.): gamble — only worthwhile on a healthy opponent ---
     if (isOhko) {
       if (playerHpRatio < 0.7) return -Infinity;
@@ -1783,7 +1793,7 @@ export function createBattleScene(
     // --- Other self-heal moves (Recover, Roost): only below 50% HP ---
     if (isSelfHeal) {
       if (enemyHpRatio >= 0.5) return -Infinity;
-      return (1 - enemyHpRatio) * 600;
+      return (1 - enemyHpRatio) * 700;
     }
 
     let score = 0;
@@ -1823,7 +1833,7 @@ export function createBattleScene(
       }
 
       // Prefer higher accuracy moves when player is nearly dead
-      if (playerHpRatio < 0.3) {
+      if (playerHpRatio < 0.45) {
         const accuracy = moveFullData?.accuracy ?? 100;
         if (accuracy < 100) score -= (100 - accuracy) * 5;
       }
@@ -1838,14 +1848,6 @@ export function createBattleScene(
         if (playerBattleState.disabledMoveId !== null) return -Infinity;
         if (playerBattleState.lastMoveUsedId === null) return -Infinity;
         return 300;
-      }
-
-      // Evasion-raising moves
-      const raisesEvasion =
-        battleData?.statChanges?.some((sc) => sc.stat === 'evasion' && sc.target === 'user' && sc.stages > 0) ?? false;
-      if (raisesEvasion) {
-        if (enemyBattleState.statModifiers.evasion >= 100) return -Infinity; // Already +2 stages
-        score += 350;
       }
 
       // Substitute blocks all opponent-targeting effects — skip moves that would be completely wasted
@@ -1865,21 +1867,22 @@ export function createBattleScene(
       const isEntryHazardToxicSpikes = battleData?.behaviorTags?.includes('toxic-spikes') ?? false;
       if (isEntryHazardSR) {
         if (playerSideState.stealthRockActive) return -Infinity;
-        return 400;
+        return 400 * playerPartyRemainingScore;
       }
       if (isEntryHazardSpikes) {
         if (playerSideState.spikesLayers >= 3) return -Infinity;
-        return 350;
+        return 350 * playerPartyRemainingScore;
       }
       if (isEntryHazardToxicSpikes) {
         if (playerSideState.toxicSpikesLayers >= 2) return -Infinity;
-        return 300;
+        return 300 * playerPartyRemainingScore;
       }
 
       // Screen moves (Reflect / Light Screen) — only worthwhile at good HP vs the right attacker type
       const screenEffect = battleData?.sideEffects?.find((se) => se.id === 'reflect' || se.id === 'light-screen');
       if (screenEffect) {
-        if (enemyHpRatio < 0.25) return -Infinity; // Too low HP to benefit
+        if (playerPartyRemainingScore <= 1 / maxRosterSize) return -Infinity; // Too low HP to benefit
+        if (enemyHpRatio < 0.25 && playerPartyRemainingScore < 0.5) return -Infinity; // Too low HP to benefit
         if (screenEffect.id === 'reflect' && enemySideState.reflectTurnsRemaining > 0) return -Infinity;
         if (screenEffect.id === 'light-screen' && enemySideState.lightScreenTurnsRemaining > 0) return -Infinity;
         // Reflect only helps vs physical attackers; Light Screen only vs special attackers
@@ -1889,20 +1892,44 @@ export function createBattleScene(
         const estIncomingScreen = estimatePlayerBestDamageToEnemy();
         if (estIncomingScreen >= enemy.hp) return -Infinity;
         let screenScore = 250;
-        if (playerBattleState.majorStatus === 'sleep' || playerBattleState.majorStatus === 'freeze') screenScore += 300; // Free turns to let the screen pay off
-        return screenScore;
+        if (playerBattleState.majorStatus === 'sleep' || playerBattleState.majorStatus === 'freeze') screenScore += 400; // Free turns to let the screen pay off
+        return screenScore * playerPartyRemainingScore;
       }
 
       // Self stat-boost moves (Swords Dance, Calm Mind, Dragon Dance, etc.)
       // Only worthwhile when the player is weakened, slowed, or at a disadvantage
-      const selfBoosts =
-        battleData?.statChanges?.filter((sc) => sc.target === 'user' && sc.stages > 0 && sc.stat !== 'evasion') ?? [];
+      const selfBoosts = battleData?.statChanges?.filter((sc) => sc.target === 'user' && sc.stages > 0) ?? [];
+      const playerStatesReduce = battleData?.statChanges?.filter((sc) => sc.target === 'target' && sc.stages > 0) ?? [];
+      let trainerBoostedScore = 0;
+      let playerReducedScore = 0;
+
       if (selfBoosts.length > 0) {
-        if (enemyHpRatio < 0.3) return -Infinity;
+        selfBoosts.forEach(
+          (sc) => (trainerBoostedScore += enemyBattleState.statModifiers[sc.stat as keyof BattleStatModifiers]),
+        );
+        playerStatesReduce.forEach(
+          (sc) => (playerReducedScore -= playerBattleState.statModifiers[sc.stat as keyof BattleStatModifiers]),
+        );
+
+        // ? Dont delete - this is good debug
+        // if (moveFullData && ['Double Team'].includes(moveFullData?.name.en)) {
+        //   console.debug(`Evaluating self-boost move ${moveFullData?.name.en}:`, {
+        //     selfBoosts,
+        //     playerStatesReduce,
+        //     battleData,
+        //     score,
+        //     rosterSize: battleRoster.size,
+        //     maxRosterSize,
+        //     trainerBoostedScore,
+        //     playerReducedScore,
+        //   });
+        // }
+        if (trainerBoostedScore > 50 || playerReducedScore < 0) return -Infinity; // Already boosted — don't boost again
+        if (enemyHpRatio < 0.5) return -Infinity;
         const estIncomingBoost = estimatePlayerBestDamageToEnemy();
         if (estIncomingBoost >= enemy.hp * 0.45) return -Infinity; // Too risky to set up
         const playerStatus = playerBattleState.majorStatus;
-        let setupScore = 0;
+        let setupScore = trainerBoostedScore / 2;
         if (playerStatus === 'sleep' || playerStatus === 'freeze') {
           setupScore = 500; // Multiple free turns — ideal setup window
         } else if (playerStatus === 'paralyze') {
@@ -1983,12 +2010,14 @@ export function createBattleScene(
     // Score each move and pick the best one
     let bestIndex = -1;
     let bestScore = -Infinity;
+
     for (let i = 0; i < enemy.moves.length; i++) {
       const s = scoreMoveForEnemy(i);
       if (s > bestScore) {
         bestScore = s;
         bestIndex = i;
       }
+      // console.debug(`Enemy move ${i} (${getMove(enemy.moves[i].id)?.name.en}): score ${s}`);
     }
 
     // If all moves are -Infinity, fall back to random selection
@@ -1996,7 +2025,7 @@ export function createBattleScene(
       return chooseEnemyMoveIndex(enemy);
     }
 
-    // Track charging move initiations to enforce the cap
+    // Track charging move initiatio-ns to enforce the cap
     if (trainerAIState && bestIndex >= 0) {
       const selectedMove = enemy.moves[bestIndex];
       if (selectedMove) {

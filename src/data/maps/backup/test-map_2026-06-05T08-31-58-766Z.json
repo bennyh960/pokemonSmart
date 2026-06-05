@@ -67,21 +67,6 @@
             86,
             65
           ]
-        },
-        {
-          "pokemonId": 145,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 1,
-          "level": 5,
-          "moves": []
-        },
-        {
-          "pokemonId": 1,
-          "level": 5,
-          "moves": []
         }
       ],
       "lineOfSight": 3,
