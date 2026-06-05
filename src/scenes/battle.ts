@@ -177,6 +177,7 @@ import {
   type EntryHazardResult,
 } from '../systems/battle-system.js';
 import charactersManifest from '../data/sprites/characters.json';
+import { ITEM_GAME_DATA, ITEM_SLUG_TO_ID } from '../data/item-defs.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -252,6 +253,52 @@ function getDefaultBagItems(level: AiLevel): string[] {
   return [];
 }
 
+function addHeldItemsToAiParty(party: Pokemon[], level: AiLevel) {
+  if (level < 3) return;
+  const itemsToUse = [
+    // special
+    'leftovers',
+    'life-orb',
+    'wide-lens',
+    // type-boosting
+    'soft-sand',
+    'hard-stone',
+    'miracle-seed',
+    'black-glasses',
+    'black-belt',
+    'magnet',
+    'mystic-water',
+    'sharp-beak',
+    'poison-barb',
+    'never-melt-ice',
+    'spell-tag',
+    'twisted-spoon',
+    'charcoal',
+    'dragon-fang',
+    'silk-scarf',
+  ];
+
+  const itemsData = itemsToUse.map((slug) => getItem(slug));
+  let maxLeftoversAssigned = 3; //
+  let maxLifeOrbAssigned = 2; //
+  party.forEach((p) => {
+    if (p.heldItemId) return; // don't overwrite existing held items
+    const typeBoostItem = itemsData.find(
+      (i) => i?.effect.type === 'battle' && p.types.includes(i.effect.config.moveTypeBoost?.moveType as PokemonType),
+    );
+
+    if (typeBoostItem) {
+      p.heldItemId = typeBoostItem.id;
+    } else if (maxLeftoversAssigned > 0) {
+      p.heldItemId = 'leftovers';
+      maxLeftoversAssigned--;
+    } else if (maxLifeOrbAssigned > 0) {
+      p.heldItemId = 'life-orb';
+      maxLifeOrbAssigned--;
+    }
+  });
+}
+
 type BattlePhase =
   | 'TRAINER_CINEMATIC'
   | 'INTRO'
@@ -267,7 +314,6 @@ type BattlePhase =
   | 'LOSE'
   | 'RUN'
   | 'USE_ITEM'
-  | 'TRAINER_USE_ITEM'
   | 'TRAINER_NEXT_POKEMON'
   | 'TRAINER_NEXT_XP'
   | 'TRAINER_NEXT_LEVEL_UP'
@@ -1281,6 +1327,11 @@ export function createBattleScene(
             itemUsesTotalCure: 0,
           }
         : null;
+
+    if (isTrainerBattle && trainerData) {
+      addHeldItemsToAiParty(trainerData.party, trainerAIState?.level ?? 3);
+    }
+
     animationDirector.clear();
     animationDirector.resetActors();
     animationDirector.setActorState('ball', { visible: false });
@@ -1470,7 +1521,8 @@ export function createBattleScene(
     if (!ai || ai.level < 4) return null;
     if (isWildNpcBattle && !enemy.isGlitched) return null;
     const remaining = trainerData ? trainerData.party.filter((_, i) => i >= trainerPartyIndex).length : 0;
-    if (ai.level === 4 && remaining > 3) return null;
+    console.log({ remaining, ai });
+    if (ai.level >= 4 && remaining > 3) return null;
 
     const idx = trainerPartyIndex;
     const usedByThis = ai.itemsUsedByPartyIdx.get(idx) ?? new Set<string>();
@@ -1671,7 +1723,6 @@ export function createBattleScene(
     const itemAction = checkTrainerItemUse();
     if (itemAction) {
       executeTrainerItemUse(itemAction.itemId, itemAction.itemName);
-      phase = 'TRAINER_USE_ITEM';
       enemyBattleState.lastMoveUsedId = null; // Clear last move to avoid confusion with item use
       return true;
     }
@@ -1683,6 +1734,7 @@ export function createBattleScene(
         return true;
       }
     }
+    // enemyBattleState.lastMoveUsedId = null; // Clear last move to avoid confusion with item use
 
     return false;
   }
@@ -2830,6 +2882,8 @@ export function createBattleScene(
 
     const playerHeldItem = player.heldItemId ? getItem(player.heldItemId) : null;
     const enemyHeldItem = enemy.heldItemId ? getItem(enemy.heldItemId) : null;
+
+    console.log({ enemyHeldItem });
 
     // Held Item end-of-turn effects
     if (playerHeldItem?.effect.type === 'battle') {
@@ -6264,7 +6318,6 @@ export function createBattleScene(
       updateHPBar(playerHpBar, dt);
       updateHPBar(enemyHpBar, dt);
       updatePopups(dt);
-
       switch (phase) {
         case 'TRAINER_CINEMATIC': {
           trainerCinematicTimer += dt;
