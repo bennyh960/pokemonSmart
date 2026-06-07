@@ -9,7 +9,7 @@
  *   ITEM_GAME_DATA[id]   → effect, price, category, usability (our game logic)
  */
 
-import { getMove, type MoveData } from '../services/pokemon-data';
+import { getMove } from '../services/pokemon-data';
 import type { BattlePokemonRuntimeState, BattleStatModifiers } from '../systems/battle-state';
 import { HM_CONFIG } from '../systems/hm';
 import type { PokemonType } from '../types';

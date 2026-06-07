@@ -67,7 +67,6 @@ import {
   withdrawPokemon as dayCareWithdraw,
 } from '../systems/day-care.js';
 import { getItem } from '../data/items.js';
-import { ITEM_SLUG_TO_ID } from '../data/item-defs.js';
 import { getTypeName } from '../data/type-constants.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { resolveInteract } from '../data/interact-types.js';
