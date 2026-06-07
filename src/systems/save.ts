@@ -6,7 +6,7 @@
  * On each major save, a fire-and-forget upsert syncs to Supabase.
  */
 
-import type { PlayerData } from '../types/index.js';
+import type { PlayerData, Pokemon } from '../types/index.js';
 import { getDefaultHeroCharacterId, hasCharacter } from '../engine/character-sprites.js';
 import { ensurePersistentBattleFields } from './battle-state.js';
 import { supabase } from '../auth/supabase-client.js';
@@ -50,6 +50,8 @@ export function getAllSlotsForCloud(): CloudSlot[] {
 export function populateSessionFromCloud(slots: CloudSlot[]): void {
   const index: SaveSlotMeta[] = [];
   for (const s of slots) {
+    // TODO : DELETE AFTER MIGRATION
+    ItemsToMigrate(s.data.items, s.data.party as Pokemon[]);
     sessionStorage.setItem(`${SAVE_KEY_PREFIX}${s.slot}`, JSON.stringify(s.data));
     index.push(s.meta);
   }
@@ -397,4 +399,26 @@ export function loadEventCheckpoint(slot: number): EventCheckpoint | null {
 
 export function clearEventCheckpoint(slot: number): void {
   localStorage.removeItem(getCheckpointKey(slot));
+}
+
+// Migrate Items
+function ItemsToMigrate(items: any, party: Pokemon[]) {
+  {
+    const itemsToAdd = [
+      'leftovers',
+      'twisted-spoon',
+      'silver-powder',
+      'mystic-water',
+      'miracle-seed',
+      'silk-scarf',
+      'magnet',
+    ];
+
+    for (const slug of itemsToAdd) {
+      const isInParty = party.some((p) => p.heldItemId === slug);
+      if (!items[slug] && !isInParty) {
+        items[slug] = 1;
+      }
+    }
+  }
 }

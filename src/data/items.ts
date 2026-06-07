@@ -141,6 +141,7 @@ export const applyHeldItemEffectInBattle = ({
       }
     }
 
+    //! choice not working on enemy pokemon since we don't track their lastMoveUsedId in runtimeState — would need to add that for this to work properly on enemy-held items. For now, just apply the lock-in effect to player pokemon.
     if (category === 'choice' && runtimeState.lastMoveUsedId) {
       const movesToLock = pokemon.moves.map((m) => m.id).filter((id) => id !== runtimeState.lastMoveUsedId);
       runtimeState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;

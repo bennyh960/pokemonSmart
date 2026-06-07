@@ -314,7 +314,6 @@ function addHeldItemsToAiParty(party: Pokemon[], level: AiLevel) {
 
     if (typeBoostItem) {
       p.heldItemId = typeBoostItem.id;
-      p.heldItemId = 'leftovers';
     } else if (maxLeftoversAssigned > 0) {
       p.heldItemId = 'leftovers';
       maxLeftoversAssigned--;
@@ -1499,7 +1498,6 @@ export function createBattleScene(
         moveFullData?.damageClass ?? 'physical',
         false,
       );
-      // console.log({ base, best, move: moveFullData?.name });
 
       best = Math.max(best, base);
     }
@@ -1977,10 +1975,7 @@ export function createBattleScene(
                 player.types as import('../types/index.js').PokemonType[],
               ) > 1,
           );
-          // console.log(
-          //   '!hasTypeAdv && enemy.level / player.level < 0.8',
-          //   !hasTypeAdv && enemy.level / player.level < 0.8,
-          // );
+
           if (!hasTypeAdv && enemy.level / player.level < 0.8) return -Infinity;
           if (enemy.level / player.level < 0.6) return -Infinity;
           setupScore = hasTypeAdv ? 220 : 150;

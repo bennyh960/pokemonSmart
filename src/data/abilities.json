@@ -600,7 +600,7 @@
     },
     "description": {
       "en": "Heals the body by shedding.",
-      "he": "מרפא את הגוף על ידי התקלפות."
+      "he": "מרפא את הגוף על ידי התקלפות. - בכל סיבוב, יש סיכוי של 1 מתוך 3 שהפוקימון ירפא את עצמו ממצב סטטוס כלשהו."
     },
     "generationIntroduced": "generation-iii"
   },

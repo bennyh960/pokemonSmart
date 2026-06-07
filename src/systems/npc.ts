@@ -276,6 +276,7 @@ export interface WildPokemonData extends NPCData {
   pokemonId: number;
   level: number;
   moves?: number[];
+  heldItemId?: string;
   /** Pokémon cannot be caught and deals/takes modified damage. */
   isGlitched?: boolean;
   /** Pokémon despawns after being defeated or fleeing. */

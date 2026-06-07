@@ -134,7 +134,12 @@ function randomSizePercent(): number {
 }
 
 /** Create a Pokemon instance from base data at a given level. */
-export function createPokemonFromData(data: PokemonData, level: number, moveIds?: number[]): Pokemon {
+export function createPokemonFromData(
+  data: PokemonData,
+  level: number,
+  moveIds?: number[],
+  heldItemId?: string,
+): Pokemon {
   // Assign random ability and nature
   const abilityId = getRandomAbility(data.id);
   const natureId = getRandomNatureId();
@@ -207,7 +212,7 @@ export function createPokemonFromData(data: PokemonData, level: number, moveIds?
     isGlitched: false,
     abilityId,
     natureId,
-    heldItemId: null,
+    heldItemId: heldItemId ?? null,
     status: null,
     caughtBall: 'poke-ball',
     evs: { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 },

@@ -1357,8 +1357,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       party = trainer.party.map((p) => {
         const data = getPokemon(p.pokemonId);
         const pokemon = data
-          ? createPokemonFromData(data, p.level, p.moves)
-          : createPokemonFromData(getPokemon(19)!, p.level);
+          ? createPokemonFromData(data, p.level, p.moves, p.heldItemId)
+          : createPokemonFromData(getPokemon(19)!, p.level, p.moves, p.heldItemId);
         if (trainer.isGlitched) pokemon.isGlitched = true;
         return pokemon;
       });
@@ -1398,7 +1398,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
     const data = getPokemon(npc.pokemonId);
     if (!data) return;
-    const wildPokemon = createPokemonFromData(data, npc.level, npc.moves);
+    const wildPokemon = createPokemonFromData(data, npc.level, npc.moves, npc.heldItemId);
+    // console.log('Starting wild NPC battle with', wildPokemon, npc);
     wildPokemon.isGlitched = npc.isGlitched ?? false;
 
     const playerData = getPlayerData();
