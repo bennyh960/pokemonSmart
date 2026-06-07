@@ -15,7 +15,7 @@ const RATE_LIMIT_MS = 150;
 const MAX_RETRIES = 3;
 
 function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function fetchWithRetry(url: string): Promise<Response> {
@@ -40,7 +40,6 @@ interface MoveEntry {
   accuracy: number | null;
   pp: number;
   effectChance: number | null;
-  mathDifficulty: number;
   damageClass?: string;
   description?: string;
 }
@@ -97,7 +96,7 @@ async function main() {
   console.log(`Done! Updated ${MOVES_PATH}`);
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('Fatal error:', err);
   process.exit(1);
 });

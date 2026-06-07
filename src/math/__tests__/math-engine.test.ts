@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateProblem, validateAnswer, movePowerToMathDifficulty } from '../math-engine.js';
+import { generateProblem, validateAnswer } from '../math-engine.js';
 import { createAdaptiveState, updateAdaptiveState } from '../adaptive-difficulty.js';
 import type { MathDifficulty, MathResult } from '../../types/index.js';
 
@@ -98,7 +98,7 @@ describe('generateProblem', () => {
 
     it('division has no remainders', () => {
       const problems = generateMany(4, 200);
-      const divProblems = problems.filter(p => p.question.includes('÷'));
+      const divProblems = problems.filter((p) => p.question.includes('÷'));
       expect(divProblems.length).toBeGreaterThan(0);
       for (const p of divProblems) {
         const nums = p.question.match(/\d+/g)!.map(Number);
@@ -130,7 +130,7 @@ describe('generateProblem', () => {
 
     it('fraction problems produce integer answers', () => {
       const problems = generateMany(6, 300);
-      const fracProblems = problems.filter(p => p.question.includes('/'));
+      const fracProblems = problems.filter((p) => p.question.includes('/'));
       expect(fracProblems.length).toBeGreaterThan(0);
       for (const p of fracProblems) {
         expect(Number.isInteger(p.correctAnswer)).toBe(true);
@@ -150,38 +150,6 @@ describe('validateAnswer', () => {
     const problem = generateProblem(1);
     const result = validateAnswer(problem, problem.correctAnswer + 999);
     expect(result.correct).toBe(false);
-  });
-});
-
-describe('movePowerToMathDifficulty', () => {
-  it('maps power 1-40 to difficulty 1', () => {
-    expect(movePowerToMathDifficulty(1)).toBe(1);
-    expect(movePowerToMathDifficulty(40)).toBe(1);
-  });
-
-  it('maps power 41-60 to difficulty 2', () => {
-    expect(movePowerToMathDifficulty(41)).toBe(2);
-    expect(movePowerToMathDifficulty(60)).toBe(2);
-  });
-
-  it('maps power 61-80 to difficulty 3', () => {
-    expect(movePowerToMathDifficulty(61)).toBe(3);
-    expect(movePowerToMathDifficulty(80)).toBe(3);
-  });
-
-  it('maps power 81-100 to difficulty 4', () => {
-    expect(movePowerToMathDifficulty(81)).toBe(4);
-    expect(movePowerToMathDifficulty(100)).toBe(4);
-  });
-
-  it('maps power 101-120 to difficulty 5', () => {
-    expect(movePowerToMathDifficulty(101)).toBe(5);
-    expect(movePowerToMathDifficulty(120)).toBe(5);
-  });
-
-  it('maps power 121+ to difficulty 6', () => {
-    expect(movePowerToMathDifficulty(121)).toBe(6);
-    expect(movePowerToMathDifficulty(250)).toBe(6);
   });
 });
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateProblem, validateAnswer, movePowerToMathDifficulty } from '../math-engine.js';
+import { generateProblem, validateAnswer } from '../math-engine.js';
 import { createAdaptiveState, updateAdaptiveState } from '../adaptive-difficulty.js';
 import type { MathDifficulty } from '../../types/index.js';
 
@@ -49,7 +49,7 @@ describe('QA: No negative results at levels 1-2', () => {
 describe('QA: Clean division at level 4', () => {
   it('all division problems have integer answers (300 problems sampled)', () => {
     const problems = generate(4, 300);
-    const divProblems = problems.filter(p => p.question.includes('÷'));
+    const divProblems = problems.filter((p) => p.question.includes('÷'));
     expect(divProblems.length).toBeGreaterThan(0);
     for (const p of divProblems) {
       expect(Number.isInteger(p.correctAnswer)).toBe(true);
@@ -95,7 +95,7 @@ describe('QA: Numbers within specified ranges', () => {
 
   it('Level 4: multiplication operands up to 12', () => {
     const problems = generate(4, 200);
-    const mulProblems = problems.filter(p => p.question.includes('×'));
+    const mulProblems = problems.filter((p) => p.question.includes('×'));
     for (const p of mulProblems) {
       const nums = p.question.match(/\d+/g)!.map(Number);
       for (const n of nums) {
@@ -107,29 +107,12 @@ describe('QA: Numbers within specified ranges', () => {
 
   it('Level 6: fraction problems produce integer answers', () => {
     const problems = generate(6, 500);
-    const fracProblems = problems.filter(p => p.question.includes('/'));
+    const fracProblems = problems.filter((p) => p.question.includes('/'));
     expect(fracProblems.length).toBeGreaterThan(0);
     for (const p of fracProblems) {
       expect(Number.isInteger(p.correctAnswer)).toBe(true);
     }
   });
-});
-
-describe('QA: movePowerToMathDifficulty mapping', () => {
-  const cases: [number, MathDifficulty][] = [
-    [1, 1], [20, 1], [40, 1],
-    [41, 2], [50, 2], [60, 2],
-    [61, 3], [70, 3], [80, 3],
-    [81, 4], [90, 4], [100, 4],
-    [101, 5], [110, 5], [120, 5],
-    [121, 6], [150, 6], [250, 6],
-  ];
-
-  for (const [power, expected] of cases) {
-    it(`power ${power} → difficulty ${expected}`, () => {
-      expect(movePowerToMathDifficulty(power)).toBe(expected);
-    });
-  }
 });
 
 describe('QA: Adaptive difficulty behavior', () => {

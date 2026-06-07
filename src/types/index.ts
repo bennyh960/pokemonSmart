@@ -105,7 +105,6 @@ export interface Move {
   accuracy: number; // 0-100
   pp: number;
   currentPp: number;
-  mathDifficulty: MathDifficulty; // Derived from power: 1-40→1, 41-60→2, 61-80→3, 81-100→4, 101-120→5, 121+→6
 }
 
 /** Difficulty levels for math problems (1-6, mapped to game progression). */

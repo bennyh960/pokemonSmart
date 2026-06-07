@@ -16,13 +16,7 @@
  *   const snapshot = buildSnapshot({ maxPokemonId: 151 }); // Gen 1 only
  */
 
-import type {
-  PokemonWorldSnapshot,
-  StoreItem,
-  QuestionPokemon,
-  QuestionMove,
-  BilingualText,
-} from './types.js';
+import type { PokemonWorldSnapshot, StoreItem, QuestionPokemon, QuestionMove, BilingualText } from './types.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 import ITEMS_RAW from '../../data/items.json';
@@ -75,7 +69,6 @@ interface RawMove {
   pp?: number;
   damageClass?: string;
   description?: string;
-  mathDifficulty?: number;
 }
 
 // ─── Snapshot build options ───────────────────────────────────────────────────
@@ -112,8 +105,7 @@ export function buildSnapshot(opts: SnapshotOptions = {}): PokemonWorldSnapshot 
 
 // ─── Items ────────────────────────────────────────────────────────────────────
 
-const ITEM_SPRITE_BASE =
-  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+const ITEM_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
 
 function buildItems(opts: Required<SnapshotOptions>): StoreItem[] {
   const items: StoreItem[] = [];
@@ -151,8 +143,7 @@ function resolveItemName(raw: RawItemEntry, fallback: string): BilingualText {
 
 // ─── Pokemon ──────────────────────────────────────────────────────────────────
 
-const POKEMON_SPRITE_BASE =
-  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+const POKEMON_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
 
 function buildPokemon(opts: Required<SnapshotOptions>): QuestionPokemon[] {
   const pokemon: QuestionPokemon[] = [];
@@ -208,10 +199,7 @@ function buildMoves(opts: Required<SnapshotOptions>): QuestionMove[] {
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
 
-function resolveBilingualName(
-  raw: { en?: string; he?: string } | string | undefined,
-  fallback: string,
-): BilingualText {
+function resolveBilingualName(raw: { en?: string; he?: string } | string | undefined, fallback: string): BilingualText {
   if (!raw) return { en: prettifySlug(fallback), he: prettifySlug(fallback) };
   if (typeof raw === 'string') return { en: raw, he: raw };
   const en = raw.en ?? prettifySlug(fallback);
@@ -223,6 +211,6 @@ function resolveBilingualName(
 function prettifySlug(slug: string): string {
   return slug
     .split('-')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
 }

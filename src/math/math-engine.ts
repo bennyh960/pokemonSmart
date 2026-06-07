@@ -132,7 +132,11 @@ function generateLevel6(): MathProblem {
     question = `${a} × (${b} + ${c}) + ${d}`;
     answer = a * (b + c) + d;
   } else {
-    const fractions: [number, number][] = [[1, 2], [1, 4], [3, 4]];
+    const fractions: [number, number][] = [
+      [1, 2],
+      [1, 4],
+      [3, 4],
+    ];
     const [num, den] = pickRandom(fractions);
     const multiplier = randInt(2, 8);
     const c = den * multiplier;
@@ -171,13 +175,4 @@ export function validateAnswer(problem: MathProblem, answer: number): MathResult
     bonusMultiplier: correct ? 1.0 : 0.5,
     answer,
   };
-}
-
-export function movePowerToMathDifficulty(power: number): MathDifficulty {
-  if (power <= 40) return 1;
-  if (power <= 60) return 2;
-  if (power <= 80) return 3;
-  if (power <= 100) return 4;
-  if (power <= 120) return 5;
-  return 6;
 }

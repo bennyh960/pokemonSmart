@@ -3,7 +3,7 @@
  * Provides type-safe access to pokemon, moves, type effectiveness, and evolution chains.
  */
 
-import type { PokemonType, MathDifficulty } from '../types/index.ts';
+import type { PokemonType } from '../types/index.ts';
 import { getLocale } from '../i18n/i18n.ts';
 import pokemonData from '../data/pokemon.json';
 import movesUrl from '../data/moves.json?url';
@@ -61,7 +61,6 @@ interface RawMoveData {
   accuracy: number | null;
   pp: number;
   effectChance: number | null;
-  mathDifficulty: number;
   damageClass: string; // "physical", "special", or "status"
   description: { en: string; he: string };
   battle?: Partial<MoveBattleMetadata>;
@@ -313,16 +312,6 @@ export function getAllNextEvolutions(pokemonId: number): EvolutionStep[] {
   const currentIndex = chain.stages.findIndex((s) => s.id === pokemonId);
   if (currentIndex === -1 || currentIndex >= chain.stages.length - 1) return [];
   return chain.stages.slice(currentIndex + 1);
-}
-
-export function movePowerToMathDifficulty(power: number | null): MathDifficulty {
-  if (power === null || power === 0) return 1;
-  if (power <= 40) return 1;
-  if (power <= 60) return 2;
-  if (power <= 80) return 3;
-  if (power <= 100) return 4;
-  if (power <= 120) return 5;
-  return 6;
 }
 
 /** Get locations where a Pokemon can be encountered. */

@@ -1,4 +1,5 @@
 # Sprint 1 - Foundation
+
 **תאריך:** 2026-03-19
 **מטרה:** בניית הבסיס הטכני - מנוע מתמטיקה, pipeline דאטה, מערכת overworld, ומערכת קרב בסיסית
 
@@ -6,12 +7,12 @@
 
 ## סטטוס כללי
 
-| סוכן | משימה | בראנצ' | סטטוס | QA |
-|-------|--------|--------|--------|-----|
-| math-engine-developer | מנוע מתמטיקה מלא | `feature/math-engine` | ✅ הושלם | ✅ |
-| game-engine-developer | מערכת Overworld + תנועה | `feature/overworld` | ⬜ לא התחיל | ⬜ |
-| asset-manager | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ✅ הושלם | ✅ |
-| frontend-developer | Battle UI + Math Input | `feature/battle-ui` | ⬜ לא התחיל | ⬜ |
+| סוכן                  | משימה                           | בראנצ'                     | סטטוס       | QA  |
+| --------------------- | ------------------------------- | -------------------------- | ----------- | --- |
+| math-engine-developer | מנוע מתמטיקה מלא                | `feature/math-engine`      | ✅ הושלם    | ✅  |
+| game-engine-developer | מערכת Overworld + תנועה         | `feature/overworld`        | ⬜ לא התחיל | ⬜  |
+| asset-manager         | PokeAPI data pipeline + sprites | `feature/pokeapi-pipeline` | ✅ הושלם    | ✅  |
+| frontend-developer    | Battle UI + Math Input          | `feature/battle-ui`        | ⬜ לא התחיל | ⬜  |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
 
@@ -20,9 +21,11 @@
 ## 1. math-engine-developer → `feature/math-engine`
 
 ### תיאור
+
 בנה את מנוע ייצור התרגילים המלא עם כל 6 רמות הקושי, adaptive difficulty, ומיפוי לנזק קרב.
 
 ### משימות
+
 - [x] **1.1** יצירת `src/math/math-engine.ts` עם פונקציית `generateProblem(difficulty: MathDifficulty)` שמייצרת תרגילים דינמיים
 - [x] **1.2** רמה 1: חיבור וחיסור חד-ספרתי (0-9, ללא תוצאות שליליות)
 - [x] **1.3** רמה 2: חיבור וחיסור דו-ספרתי (10-99)
@@ -33,14 +36,7 @@
 - [x] **1.8** יצירת `src/math/adaptive-difficulty.ts` - מערכת קושי אדפטיבי:
   - 3 תשובות נכונות ברצף → הגדלת מורכבות
   - 2 שגויות ברצף → הקטנת מורכבות
-  - מעקב אחר streak ו-success rate
-- [x] **1.9** מיפוי `movePowerToMathDifficulty(power: number): MathDifficulty`:
-  - power 1-40 → difficulty 1
-  - power 41-60 → difficulty 2
-  - power 61-80 → difficulty 3
-  - power 81-100 → difficulty 4
-  - power 101-120 → difficulty 5
-  - power 121+ → difficulty 6
+
 - [x] **1.10** יצירת `src/math/math-engine.test.ts` - טסטים:
   - 100 תרגילים לכל רמה → כל התשובות נכונות
   - אין תוצאות שליליות ברמות 1-2
@@ -48,12 +44,12 @@
   - מספרים בטווח המוגדר
 
 ### Interfaces
+
 ```typescript
 generateProblem(difficulty: MathDifficulty, adaptiveState?: AdaptiveState): MathProblem
 validateAnswer(problem: MathProblem, answer: number): MathResult
 createAdaptiveState(): AdaptiveState
 updateAdaptiveState(state: AdaptiveState, result: MathResult): AdaptiveState
-movePowerToMathDifficulty(power: number): MathDifficulty
 ```
 
 ### בסיום: בקש מ-QA לבדוק את הבראנצ'
@@ -63,9 +59,11 @@ movePowerToMathDifficulty(power: number): MathDifficulty
 ## 2. game-engine-developer → `feature/overworld`
 
 ### תיאור
+
 בנה את מערכת ה-overworld: טעינת מפה מ-tilemap, תנועה grid-based של השחקן, collision detection, ומעברים בין אזורים.
 
 ### משימות
+
 - [ ] **2.1** יצירת `src/engine/tilemap.ts`:
   - טעינת tilemap מ-JSON (מבנה: layers, tilesets, collision)
   - רינדור שכבות tiles על ה-canvas
@@ -93,6 +91,7 @@ movePowerToMathDifficulty(power: number): MathDifficulty
   - שחקן מופיע על המפה וניתן להזיזו עם חצים
 
 ### Technical Notes
+
 - Tile size: 16×16 px
 - Player moves 1 tile per step (grid-based like Pokemon)
 - Movement animation: ~200ms per tile (smooth interpolation)
@@ -105,9 +104,11 @@ movePowerToMathDifficulty(power: number): MathDifficulty
 ## 3. asset-manager → `feature/pokeapi-pipeline`
 
 ### תיאור
+
 בנה סקריפט אוטומטי שמוריד את כל הדאטה מ-PokeAPI (251 פוקימונים Gen 1+2) ושומר כ-JSON + sprites מקומיים.
 
 ### משימות
+
 - [x] **3.1** יצירת `scripts/fetch-pokemon-data.ts`:
   - שליפת כל 251 פוקימונים (GET /api/v2/pokemon/{1..251})
   - שמירת: id, name, types, stats (hp, attack, defense, sp.atk, sp.def, speed), base_experience
@@ -144,6 +145,7 @@ movePowerToMathDifficulty(power: number): MathDifficulty
   - Type-safe עם הממשקים מ-`types/index.ts`
 
 ### Dependencies להתקנה
+
 ```bash
 npm install -D tsx  # להרצת TypeScript scripts
 ```
@@ -155,9 +157,11 @@ npm install -D tsx  # להרצת TypeScript scripts
 ## 4. frontend-developer → `feature/battle-ui`
 
 ### תיאור
+
 בנה את ממשק הקרב המלא: HP bars, תצוגת פוקימונים, תפריט מתקפות, ומסך פתרון תרגיל מתמטיקה עם number pad.
 
 ### משימות
+
 - [ ] **4.1** יצירת `src/ui/hp-bar.ts`:
   - HP bar עם שינוי צבע (ירוק > צהוב > אדום)
   - אנימציית ירידה/עליה חלקה
@@ -194,6 +198,7 @@ npm install -D tsx  # להרצת TypeScript scripts
   - Text popup (damage numbers, "Super Effective!", "Critical Hit!")
 
 ### Visual Reference
+
 ```
 +------------------------------------------+
 |  [Rival Pokemon]        LV 12            |
@@ -259,6 +264,7 @@ npm install -D tsx  # להרצת TypeScript scripts
 ### בדיקות ספציפיות לכל בראנצ'
 
 **feature/math-engine:**
+
 - [ ] `tsc --noEmit` = 0 errors
 - [ ] Math tests pass (if vitest installed)
 - [x] Generate 100 problems per level, verify all answers are correct
@@ -267,6 +273,7 @@ npm install -D tsx  # להרצת TypeScript scripts
 - [x] All numbers within specified ranges
 
 **feature/overworld:**
+
 - [ ] `tsc --noEmit` = 0 errors
 - [ ] Title screen → ENTER → overworld loads
 - [ ] Player moves with arrow keys (grid-based)
@@ -275,6 +282,7 @@ npm install -D tsx  # להרצת TypeScript scripts
 - [ ] No visual glitches or gaps in tilemap
 
 **feature/pokeapi-pipeline:**
+
 - [x] `tsc --noEmit` = 0 errors
 - [x] `npm run fetch-data` completes without errors — NOTE: npm script not in package.json, but `scripts/run-all.ts` exists and all JSON data files are present and valid
 - [x] pokemon.json has 251 entries with valid data — 251 entries (Bulbasaur #1 to Celebi #251), all fields present
@@ -284,6 +292,7 @@ npm install -D tsx  # להרצת TypeScript scripts
 - [x] `pokemon-data.ts` service returns correct data — exports getPokemon, getPokemonByName, getMove, getMoveByName, getTypeEffectiveness, getEvolutionChain + more
 
 **feature/battle-ui:**
+
 - [ ] `tsc --noEmit` = 0 errors
 - [ ] Battle screen renders (even with placeholder sprites)
 - [ ] HP bars animate correctly
@@ -297,6 +306,7 @@ npm install -D tsx  # להרצת TypeScript scripts
 ## QA Findings Log
 
 ### feature/math-engine
+
 ```
 Status: ✅ Passed (2026-03-19)
 vitest: 62/62 tests, tsc: 0 errors
@@ -304,12 +314,14 @@ Findings: All checks passed
 ```
 
 ### feature/overworld
+
 ```
 Status: ⬜ Not tested
 Findings: -
 ```
 
 ### feature/pokeapi-pipeline
+
 ```
 Status: ✅ Passed (2026-03-19)
 Tested by: QA Agent
@@ -329,7 +341,7 @@ Results:
    checkout. scripts/fetch-sprites.ts exists for downloading them.
 7. pokemon-data.ts: PASS — exports: getPokemon, getPokemonByName, getAllPokemon, getMove,
    getMoveByName, getAllMoves, getTypeEffectiveness, getCombinedTypeEffectiveness, getAllTypes,
-   getEvolutionChain, getNextEvolution, movePowerToMathDifficulty
+   getEvolutionChain, getNextEvolution
 
 Minor finding:
 - package.json is missing the "fetch-data" npm script. The run-all.ts script exists but
@@ -337,6 +349,7 @@ Minor finding:
 ```
 
 ### feature/battle-ui
+
 ```
 Status: ⬜ Not tested
 Findings: -
@@ -345,6 +358,7 @@ Findings: -
 ---
 
 ## Notes
+
 - כל הסוכנים עובדים **במקביל** על branches נפרדים
 - **אין תלויות בין הבראנצ'ים** בספרינט הזה - כל אחד עובד עצמאי
 - Merge order doesn't matter - all branches are independent

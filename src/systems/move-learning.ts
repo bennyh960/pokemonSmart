@@ -1,5 +1,5 @@
-import type { Move, PokemonType, MathDifficulty } from '../types/index.js';
-import { getMove, getMoveDisplayName, getPokemonDisplayName, movePowerToMathDifficulty, type EvolutionStep } from '../services/pokemon-data.js';
+import type { Move, PokemonType } from '../types/index.js';
+import { getMove, getMoveDisplayName, getPokemonDisplayName, type EvolutionStep } from '../services/pokemon-data.js';
 import { t } from '../i18n/i18n.js';
 
 export const MAX_POKEMON_MOVES = 8;
@@ -51,7 +51,6 @@ export function createMoveFromId(moveId: number): Move | null {
     accuracy: moveData.accuracy ?? 0,
     pp: moveData.pp,
     currentPp: moveData.pp,
-    mathDifficulty: movePowerToMathDifficulty(moveData.power) as MathDifficulty,
   };
 }
 
@@ -139,10 +138,7 @@ export function getMoveLearningAnnouncementLines(pokemonId: number, moveResult: 
   if (moveResult.learned) {
     return [t('battle.learnedMove', { name, move: moveName })];
   }
-  return [
-    t('battle.wantsLearnMove', { name, move: moveName }),
-    t('battle.moveCapReached', { max: MAX_POKEMON_MOVES }),
-  ];
+  return [t('battle.wantsLearnMove', { name, move: moveName }), t('battle.moveCapReached', { max: MAX_POKEMON_MOVES })];
 }
 
 export function getMoveLearningResolutionMessage(pokemonId: number, resolution: MoveLearningResolution): string | null {

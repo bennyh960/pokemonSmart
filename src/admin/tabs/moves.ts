@@ -14,7 +14,6 @@ interface MoveJson {
   accuracy: number | null;
   pp: number;
   effectChance: number | null;
-  mathDifficulty: number;
   damageClass: string;
   description: { en: string; he: string };
 }
@@ -84,7 +83,6 @@ function buildMove(m: MoveJson): Move {
     accuracy: m.accuracy ?? 0,
     pp: m.pp,
     currentPp: m.pp,
-    mathDifficulty: m.mathDifficulty as Move['mathDifficulty'],
   };
 }
 

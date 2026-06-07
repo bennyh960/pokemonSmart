@@ -1,6 +1,5 @@
 /**
  * Fetches moves data for Gen 1-2 Pokemon from PokeAPI.
- * Calculates mathDifficulty from power.
  * Saves to src/data/moves.json
  *
  * NOTE: After fetching, run `npx tsx scripts/add-hebrew-move-names.ts`
@@ -24,9 +23,8 @@ export interface MoveEntry {
   accuracy: number | null;
   pp: number;
   effectChance: number | null;
-  mathDifficulty: number;
-  damageClass: string;      // "physical" | "special" | "status"
-  description: string;      // English flavor text
+  damageClass: string; // "physical" | "special" | "status"
+  description: string; // English flavor text
   battle: {
     priority: number;
     target: string;
@@ -77,17 +75,7 @@ function inferChangeTarget(target: string | undefined): 'user' | 'target' {
 }
 
 function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function powerToMathDifficulty(power: number | null): number {
-  if (power === null || power === 0) return 1;
-  if (power <= 40) return 1;
-  if (power <= 60) return 2;
-  if (power <= 80) return 3;
-  if (power <= 100) return 4;
-  if (power <= 120) return 5;
-  return 6;
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function fetchMovesData(): Promise<MoveEntry[]> {
@@ -121,7 +109,10 @@ export async function fetchMovesData(): Promise<MoveEntry[]> {
     if (!res.ok) throw new Error(`Failed to fetch move ${url}: ${res.status}`);
     const data = await res.json();
 
-    const enName = data.name.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    const enName = data.name
+      .split('-')
+      .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
     // Extract damage class
     const damageClass: string = data.damage_class?.name ?? 'status';
 
@@ -131,13 +122,15 @@ export async function fetchMovesData(): Promise<MoveEntry[]> {
     const gsEntry = englishEntries.find((e: any) => e.version_group.name === 'gold-silver');
     const flavorText = (gsEntry ?? englishEntries[0])?.flavor_text?.replace(/\n/g, ' ') ?? '';
     const ailmentStatus = normalizeStatus(data.meta?.ailment?.name);
-    const ailment = ailmentStatus ? {
-      status: ailmentStatus,
-      chance: data.meta?.ailment_chance ?? data.effect_chance ?? 100,
-      target: inferChangeTarget(data.target?.name),
-      minTurns: data.meta?.min_turns ?? null,
-      maxTurns: data.meta?.max_turns ?? null,
-    } : null;
+    const ailment = ailmentStatus
+      ? {
+          status: ailmentStatus,
+          chance: data.meta?.ailment_chance ?? data.effect_chance ?? 100,
+          target: inferChangeTarget(data.target?.name),
+          minTurns: data.meta?.min_turns ?? null,
+          maxTurns: data.meta?.max_turns ?? null,
+        }
+      : null;
     const changeTarget = inferChangeTarget(data.target?.name);
 
     moves.push({
@@ -148,7 +141,6 @@ export async function fetchMovesData(): Promise<MoveEntry[]> {
       accuracy: data.accuracy,
       pp: data.pp,
       effectChance: data.effect_chance,
-      mathDifficulty: powerToMathDifficulty(data.power),
       damageClass,
       description: flavorText,
       battle: {

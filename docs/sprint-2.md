@@ -1,4 +1,5 @@
 # Sprint 2 - Integration & Visual Upgrade ✅ COMPLETE
+
 **תאריך:** 2026-03-19 — 2026-03-20
 **מטרה:** חיבור כל חלקי Sprint 1 למשחק עובד + שדרוג ויזואלי ותיקון גופנים
 
@@ -6,13 +7,13 @@
 
 ## סטטוס כללי
 
-| סוכן | משימה | בראנצ' | סטטוס | QA |
-|-------|--------|--------|--------|-----|
-| frontend-developer | גופן פיקסל + תיקון עברית | `feature/pixel-font` | ✅ | ✅ |
-| asset-manager | ספרייטים אמיתיים + tilesets | `feature/real-assets` | ✅ | ✅ |
-| game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅ | ✅ |
-| game-engine-developer | Save/Load system | `feature/save-system` | ✅ | ✅ |
-| frontend-developer | Audio manager + BGM | `feature/audio` | ✅ | ✅ |
+| סוכן                  | משימה                          | בראנצ'                   | סטטוס | QA  |
+| --------------------- | ------------------------------ | ------------------------ | ----- | --- |
+| frontend-developer    | גופן פיקסל + תיקון עברית       | `feature/pixel-font`     | ✅    | ✅  |
+| asset-manager         | ספרייטים אמיתיים + tilesets    | `feature/real-assets`    | ✅    | ✅  |
+| game-engine-developer | Wild encounter → battle → back | `feature/encounter-flow` | ✅    | ✅  |
+| game-engine-developer | Save/Load system               | `feature/save-system`    | ✅    | ✅  |
+| frontend-developer    | Audio manager + BGM            | `feature/audio`          | ✅    | ✅  |
 
 **מקרא:** ⬜ לא התחיל | 🔄 בעבודה | ✅ הושלם | ❌ נכשל - דורש תיקון
 
@@ -21,9 +22,11 @@
 ## 1. frontend-developer → `feature/pixel-font` ⭐ HIGH PRIORITY
 
 ### תיאור
+
 תיקון הגופן - נראות טובה יותר, תמיכה בעברית קריאה. זה דחוף כי כרגע הטקסט כמעט לא קריא.
 
 ### משימות
+
 - [x] **1.1** מצא/הורד pixel font שתומך בעברית + אנגלית:
   - Option A: Google Fonts - "Press Start 2P" (אנגלית) + "Rubik" / "Assistant" (עברית, נראה טוב בגודל קטן)
   - Option B: מצא bitmap font שתומך Unicode Hebrew range
@@ -37,6 +40,7 @@
 - [x] **1.5** הוסף font loading ב-game.ts - שהפונט נטען לפני שהמשחק מתחיל (prevent FOUT)
 
 ### Acceptance Criteria
+
 - [x] טקסט אנגלי קריא וברור בסגנון פיקסל
 - [x] טקסט עברי קריא וברור, RTL תקין
 - [x] כל הטקסט במשחק משתמש בפונט החדש
@@ -46,9 +50,11 @@
 ## 2. asset-manager → `feature/real-assets` ⭐ HIGH PRIORITY
 
 ### תיאור
+
 החלפת כל ה-placeholder מלבנים בספרייטים אמיתיים מ-PokeAPI ו-Spriters Resource.
 
 ### משימות
+
 - [x] **2.1** עדכן את ה-battle scene לטעון Pokemon sprites אמיתיים:
   - Front sprite לפוקימון יריב מ-`public/sprites/pokemon/front/{id}.png`
   - Back sprite לפוקימון שחקן מ-`public/sprites/pokemon/back/{id}.png`
@@ -70,6 +76,7 @@
   - עדכן battle scene להציג רקע
 
 ### Acceptance Criteria
+
 - [x] קרבות מציגים Pokemon sprites אמיתיים (לא מלבנים)
 - [x] השחקן ב-overworld הוא ספרייט אמיתי עם אנימציית הליכה
 - [x] Tiles ב-overworld הם גרפיקה אמיתית (לא מלבנים צבעוניים)
@@ -80,9 +87,11 @@
 ## 3. game-engine-developer → `feature/encounter-flow`
 
 ### תיאור
+
 חיבור overworld → battle → חזרה. כשהשחקן דורך על tall grass ויש encounter, נכנסים לקרב אמיתי עם פוקימון אקראי, ובסיום חוזרים ל-overworld.
 
 ### משימות
+
 - [x] **3.1** יצירת `src/systems/encounter.ts`:
   - Encounter table per area (מאיזה פוקימונים ובאיזה levels)
   - פונקציה שמגרילה פוקימון פראי לפי האזור
@@ -96,12 +105,11 @@
   - הפסד: חזרה ל-Pokemon Center (לעת עתה חזרה ל-spawn)
   - בריחה: חזרה ל-overworld
 - [x] **3.4** Battle עם נתונים אמיתיים:
-  - Math difficulty לפי power של ה-move (משתמש ב-movePowerToMathDifficulty)
   - Damage formula עם stats אמיתיים
   - Type effectiveness מ-type-chart.json
 - [x] **3.5** XP & Level up:
   - XP gain after winning battle
-  - Level up check (simple formula: need level*100 XP)
+  - Level up check (simple formula: need level\*100 XP)
   - Stat increase on level up
   - Move learning placeholder (just log it for now)
 - [x] **3.6** Starter Pokemon:
@@ -110,6 +118,7 @@
   - הפוקימון הנבחר נכנס ל-party של השחקן
 
 ### Acceptance Criteria
+
 - [x] הליכה על tall grass → encounter → קרב אמיתי
 - [x] קרב עם math problems לפי רמת ה-move
 - [x] ניצחון נותן XP, הפסד מחזיר ל-spawn
@@ -120,9 +129,11 @@
 ## 4. game-engine-developer → `feature/save-system`
 
 ### תיאור
+
 שמירה וטעינה של מצב המשחק ב-localStorage.
 
 ### משימות
+
 - [x] **4.1** עדכון `src/systems/save.ts`:
   - `saveGame(state: PlayerData): void` — serialize to JSON, save to localStorage
   - `loadGame(): PlayerData | null` — load from localStorage, deserialize
@@ -143,6 +154,7 @@
   - Playtime
 
 ### Acceptance Criteria
+
 - [x] שחקן יכול לסגור ולפתוח מחדש - המשחק ממשיך מאיפה שהפסיק
 - [x] Title screen מציג Continue כשיש save
 
@@ -151,9 +163,11 @@
 ## 5. frontend-developer → `feature/audio`
 
 ### תיאור
+
 מוזיקת רקע ואפקטי סאונד בסיסיים עם Howler.js.
 
 ### משימות
+
 - [x] **5.1** יצירת `src/audio/audio-manager.ts` מלא:
   - `playMusic(trackName)` — play + loop
   - `stopMusic(fade?)` — stop with optional fade
@@ -184,6 +198,7 @@
   - Mute button (M key)
 
 ### Acceptance Criteria
+
 - [x] מוזיקה מתנגנת ב-title screen
 - [x] מוזיקה משתנה בין overworld ו-battle
 - [x] SFX בסיסיים עובדים (menu, hit)
@@ -194,18 +209,21 @@
 ## QA Checklist
 
 ### feature/pixel-font
+
 - [x] `tsc --noEmit` = 0 errors
 - [x] טקסט אנגלי קריא (Press Start 2P pixel font)
 - [x] טקסט עברי קריא + RTL (Rubik font, auto-detected)
 - [x] פונט נטען לפני תחילת משחק (loadFonts() in main.ts)
 
 ### feature/real-assets ✅
+
 - [x] `tsc --noEmit` = 0 errors
 - [x] Pokemon sprites נטענים בקרב
 - [x] Player sprite עם אנימציית הליכה
 - [x] Tiles אמיתיים ב-overworld
 
 ### feature/encounter-flow ✅
+
 - [x] `tsc --noEmit` = 0 errors
 - [x] `npm test` passes
 - [x] Tall grass → encounter → battle → back to overworld
@@ -214,11 +232,13 @@
 - [x] Starter selection works
 
 ### feature/save-system
+
 - [x] `tsc --noEmit` = 0 errors
 - [x] Save → close → reopen → Continue → same position
 - [x] New Game works when save exists
 
 ### feature/audio
+
 - [x] `tsc --noEmit` = 0 errors
 - [x] Music plays on title + overworld + battle
 - [x] Crossfade between scenes
@@ -229,6 +249,7 @@
 ## QA Findings Log
 
 ### feature/pixel-font
+
 ```
 Status: ✅ Passed
 Tested: 2026-03-19
@@ -244,6 +265,7 @@ Findings:
 ```
 
 ### feature/real-assets
+
 ```
 Status: ✅ PASS
 Date: 2026-03-20
@@ -267,6 +289,7 @@ Minor notes (non-blocking):
 ```
 
 ### feature/encounter-flow
+
 ```
 Status: ✅ PASS
 Date: 2026-03-19
@@ -286,6 +309,7 @@ Minor notes (non-blocking):
 ```
 
 ### feature/save-system
+
 ```
 Status: ✅ PASS
 Date: 2026-03-19
@@ -306,6 +330,7 @@ Minor notes (non-blocking):
 ```
 
 ### feature/audio
+
 ```
 Status: ✅ PASS
 Date: 2026-03-19
@@ -333,11 +358,13 @@ Minor notes (non-blocking):
 השינויים הבאים בוצעו ישירות על main אחרי דמו מוצלח של Sprint 2:
 
 ### 1. Starters → דור ראשון
+
 - **לפני:** Cyndaquil (155), Totodile (158), Chikorita (152)
 - **אחרי:** Bulbasaur (1), Charmander (4), Squirtle (7)
 - **קבצים:** `starter-select.ts`, `battle.ts` (fallback)
 
 ### 2. 8 מתקפות לכל פוקימון (במקום 4)
+
 - Bulbasaur: Tackle, Vine Whip, Growl, Leech Seed, Poison Powder, Razor Leaf, Mega Drain, Take Down
 - Charmander: Scratch, Ember, Leer, Smokescreen, Fire Spin, Slash, Flamethrower, Dragon Rage
 - Squirtle: Tackle, Water Gun, Tail Whip, Withdraw, Bite, Rapid Spin, Skull Bash, Icy Wind
@@ -345,6 +372,7 @@ Minor notes (non-blocking):
 - **קבצים:** `starter-select.ts`, `battle-menu.ts`
 
 ### 3. ביטול תרגילי מתמטיקה בקרב
+
 - הוסר ה-MATH phase מלוגיקת הקרב — בחירת מתקפה → התקפה ישירה
 - הוסר math multiplier מנוסחת הנזק (100% damage תמיד)
 - הוסרו imports: `createMathInput`, `generateProblem`, `renderMathInput`
@@ -352,6 +380,7 @@ Minor notes (non-blocking):
 - **קבצים:** `battle.ts`
 
 ### 4. מערכת i18n (עברית + אנגלית)
+
 - **קבצים חדשים:** `src/i18n/i18n.ts`, `src/i18n/locales/en.json`, `src/i18n/locales/he.json`
 - ~25 מחרוזות מתורגמות: title, starter select, battle, menus, HP bar
 - ברירת מחדל: **עברית** — כל הטקסטים RTL
@@ -361,10 +390,12 @@ Minor notes (non-blocking):
 - **קבצים שעודכנו:** `main.ts`, `title.ts`, `starter-select.ts`, `battle.ts`, `battle-menu.ts`, `hp-bar.ts`, `overworld.ts`, `math-input.ts`
 
 ### 5. Sprites שקופים — אין שינוי נדרש
+
 - אומת: כל ה-PNGs מ-PokeAPI (front + back) כבר שקופים (alpha channel תקין)
 - מסך בחירת starter עודכן להציג sprites אמיתיים (במקום מלבנים צבעוניים)
 
 ### TODOs שנשארו
+
 - [x] Turn order לפי speed stat + move priority → moved to Sprint 4 backlog
 - [x] להחליף placeholder audio ב-MP3 אמיתיים → done
 - [x] לחשוב על מכניקת מתמטיקה חדשה → will be planned as part of story mode (Sprint 5)
