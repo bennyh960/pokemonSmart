@@ -1197,7 +1197,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM06', he: 'TM06' },
-    description: { en: 'Teaches Toxic', he: 'מלמד Toxic' },
+    description: { en: 'Teaches Toxic', he: 'מלמד מתקפת רעל' },
   },
   311: {
     category: 'machine',
@@ -1207,7 +1207,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM09', he: 'TM09' },
-    description: { en: 'Teaches Psych Up', he: 'מלמד Psych Up' },
+    description: { en: 'Teaches Psych Up', he: 'מלמד מתקפת חיזוק פסיכולוגי' },
   },
   312: {
     category: 'machine',
@@ -1217,7 +1217,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM10', he: 'TM10' },
-    description: { en: 'Teaches Hidden Power', he: 'מלמד Hidden Power' },
+    description: { en: 'Teaches Hidden Power', he: 'מלמד מתקפת כוח נסתר' },
   },
   313: {
     category: 'machine',
@@ -1227,7 +1227,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM11', he: 'TM11' },
-    description: { en: 'Teaches Sunny Day', he: 'מלמד Sunny Day' },
+    description: { en: 'Teaches Sunny Day', he: 'מלמד מתקפת יום שמש' },
   },
   314: {
     category: 'machine',
@@ -1237,7 +1237,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM13', he: 'TM13' },
-    description: { en: 'Teaches Snore', he: 'מלמד Snore' },
+    description: { en: 'Teaches Snore', he: 'מלמד מתקפת נחירה' },
   },
   315: {
     category: 'machine',
@@ -1247,7 +1247,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM14', he: 'TM14' },
-    description: { en: 'Teaches Blizzard', he: 'מלמד Blizzard' },
+    description: { en: 'Teaches Blizzard', he: 'מלמד מתקפת סופת שלג' },
   },
   316: {
     category: 'machine',
@@ -1257,7 +1257,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM15', he: 'TM15' },
-    description: { en: 'Teaches Hyper Beam', he: 'מלמד Hyper Beam' },
+    description: { en: 'Teaches Hyper Beam', he: 'מלמד מתקפת קרן על' },
   },
   317: {
     category: 'machine',
@@ -1267,7 +1267,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM17', he: 'TM17' },
-    description: { en: 'Teaches Protect', he: 'מלמד Protect' },
+    description: { en: 'Teaches Protect', he: 'מלמד הגנה' },
   },
   318: {
     category: 'machine',
@@ -1277,7 +1277,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM18', he: 'TM18' },
-    description: { en: 'Teaches Rain Dance', he: 'מלמד Rain Dance' },
+    description: { en: 'Teaches Rain Dance', he: 'מלמד מתקפת ריקוד גשם' },
   },
   319: {
     category: 'machine',
@@ -1287,7 +1287,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM19', he: 'TM19' },
-    description: { en: 'Teaches Giga Drain', he: 'מלמד Giga Drain' },
+    description: { en: 'Teaches Giga Drain', he: 'מלמד מתקפת יניקת אנרגיה' },
   },
   320: {
     category: 'machine',
@@ -1297,7 +1297,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM20', he: 'TM20' },
-    description: { en: 'Teaches Endure', he: 'מלמד Endure' },
+    description: { en: 'Teaches Endure', he: 'מלמד יכולת שרידה' },
   },
   321: {
     category: 'machine',
@@ -1307,7 +1307,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM21', he: 'TM21' },
-    description: { en: 'Teaches Frustration', he: 'מלמד Frustration' },
+    description: { en: 'Teaches Frustration', he: 'מלמד מתקפת תסכול' },
   },
   322: {
     category: 'machine',
@@ -1317,7 +1317,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM22', he: 'TM22' },
-    description: { en: 'Teaches Solar Beam', he: 'מלמד Solar Beam' },
+    description: { en: 'Teaches Solar Beam', he: 'מלמד מתקפת קרן סולארית' },
   },
   323: {
     category: 'machine',
@@ -1327,7 +1327,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM23', he: 'TM23' },
-    description: { en: 'Teaches Iron Tail', he: 'מלמד Iron Tail' },
+    description: { en: 'Teaches Iron Tail', he: 'מלמד מתקפת זנב ברזל' },
   },
   324: {
     category: 'machine',
@@ -1337,7 +1337,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM24', he: 'TM24' },
-    description: { en: 'Teaches Dragon Breath', he: 'מלמד Dragon Breath' },
+    description: { en: 'Teaches Dragon Breath', he: 'מלמד מתקפת נשימת דרקון' },
   },
   325: {
     category: 'machine',
@@ -1347,7 +1347,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM25', he: 'TM25' },
-    description: { en: 'Teaches Thunder', he: 'מלמד Thunder' },
+    description: { en: 'Teaches Thunder', he: 'מלמד מתקפת רעם' },
   },
   326: {
     category: 'machine',
@@ -1357,7 +1357,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM26', he: 'TM26' },
-    description: { en: 'Teaches Earthquake', he: 'מלמד Earthquake' },
+    description: { en: 'Teaches Earthquake', he: 'מלמד מתקפת רעידת אדמה' },
   },
   327: {
     category: 'machine',
@@ -1367,7 +1367,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM27', he: 'TM27' },
-    description: { en: 'Teaches Return', he: 'מלמד Return' },
+    description: { en: 'Teaches Return', he: 'מלמד מתקפת חזרה' },
   },
   328: {
     category: 'machine',
@@ -1377,7 +1377,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM28', he: 'TM28' },
-    description: { en: 'Teaches Dig', he: 'מלמד Dig' },
+    description: { en: 'Teaches Dig', he: 'מלמד מתקפת חפירה' },
   },
   329: {
     category: 'machine',
@@ -1387,7 +1387,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM29', he: 'TM29' },
-    description: { en: 'Teaches Psychic', he: 'מלמד Psychic' },
+    description: { en: 'Teaches Psychic', he: 'מלמד מתקפה על חושית' },
   },
   330: {
     category: 'machine',
@@ -1397,7 +1397,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM30', he: 'TM30' },
-    description: { en: 'Teaches Shadow Ball', he: 'מלמד Shadow Ball' },
+    description: { en: 'Teaches Shadow Ball', he: 'מלמד מתקפת כדור צל' },
   },
   331: {
     category: 'machine',
@@ -1407,7 +1407,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM31', he: 'TM31' },
-    description: { en: 'Teaches Mud-Slap', he: 'מלמד Mud-Slap' },
+    description: { en: 'Teaches Mud-Slap', he: 'מלמד מתקפת חבטת בוץ' },
   },
   332: {
     category: 'machine',
@@ -1417,7 +1417,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM32', he: 'TM32' },
-    description: { en: 'Teaches Double Team', he: 'מלמד Double Team' },
+    description: { en: 'Teaches Double Team', he: 'מלמד צוות כפול' },
   },
   333: {
     category: 'machine',
@@ -1427,7 +1427,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM34', he: 'TM34' },
-    description: { en: 'Teaches Swagger', he: 'מלמד Swagger' },
+    description: { en: 'Teaches Swagger', he: 'מלמד התהדרות' },
   },
   334: {
     category: 'machine',
@@ -1437,7 +1437,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM35', he: 'TM35' },
-    description: { en: 'Teaches Sleep Talk', he: 'מלמד Sleep Talk' },
+    description: { en: 'Teaches Sleep Talk', he: 'מלמד נדודי שינה' },
   },
   335: {
     category: 'machine',
@@ -1457,7 +1457,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM37', he: 'TM37' },
-    description: { en: 'Teaches Sandstorm', he: 'מלמד Sandstorm' },
+    description: { en: 'Teaches Sandstorm', he: 'מלמד סופת חול' },
   },
   337: {
     category: 'machine',
@@ -1467,7 +1467,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM38', he: 'TM38' },
-    description: { en: 'Teaches Fire Blast', he: 'מלמד Fire Blast' },
+    description: { en: 'Teaches Fire Blast', he: 'מלמד מתקפת פיצוץ אש' },
   },
   338: {
     category: 'machine',
@@ -1477,7 +1477,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM39', he: 'TM39' },
-    description: { en: 'Teaches Swift', he: 'מלמד Swift' },
+    description: { en: 'Teaches Swift', he: 'מלמד מתקפת ירי כוכבים' },
   },
   339: {
     category: 'machine',
@@ -1487,7 +1487,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM44', he: 'TM44' },
-    description: { en: 'Teaches Rest', he: 'מלמד Rest' },
+    description: { en: 'Teaches Rest', he: 'מלמד מהלך מנוחה' },
   },
   340: {
     category: 'machine',
@@ -1497,7 +1497,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM45', he: 'TM45' },
-    description: { en: 'Teaches Attract', he: 'מלמד Attract' },
+    description: { en: 'Teaches Attract', he: 'מלמד מהלך משיכה' },
   },
   341: {
     category: 'machine',
@@ -1507,7 +1507,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM46', he: 'TM46' },
-    description: { en: 'Teaches Thief', he: 'מלמד Thief' },
+    description: { en: 'Teaches Thief', he: 'מלמד מהלך גניבה' },
   },
   342: {
     category: 'machine',
@@ -1517,7 +1517,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: true,
     name: { en: 'TM47', he: 'TM47' },
-    description: { en: 'Teaches Steel Wing', he: 'מלמד Steel Wing' },
+    description: { en: 'Teaches Steel Wing', he: 'מלמד כנף פלדה' },
   },
 };
 
