@@ -6,7 +6,7 @@
  * On each major save, a fire-and-forget upsert syncs to Supabase.
  */
 
-import type { PlayerData, Pokemon } from '../types/index.js';
+import type { PlayerData } from '../types/index.js';
 import { getDefaultHeroCharacterId, hasCharacter } from '../engine/character-sprites.js';
 import { ensurePersistentBattleFields } from './battle-state.js';
 import { supabase } from '../auth/supabase-client.js';
