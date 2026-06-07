@@ -169,7 +169,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 16;
+export const CURRENT_SAVE_VERSION = 17;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -305,6 +305,26 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     if (!data.awayPokemon) data.awayPokemon = {};
     if (data.totalSteps === undefined) data.totalSteps = 0;
     data.saveVersion = 16;
+  },
+  17: (data) => {
+    data.party.forEach((pokemon: Record<string, any>) => {
+      pokemon.moves.forEach((move: any) => {
+        delete move.accuracy;
+        delete move.mathDifficulty;
+      });
+    });
+
+    data.boxes.forEach((box: any) => {
+      box.pokemon.forEach((pokemon: any) => {
+        if (!pokemon) return;
+        pokemon.moves.forEach((move: any) => {
+          delete move.accuracy;
+          delete move.mathDifficulty;
+        });
+      });
+    });
+    data.saveVersion = 17;
+    console.log('Migrated save to version 17: removed move accuracy and mathDifficulty fields.');
   },
 };
 
