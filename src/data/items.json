@@ -1772,11 +1772,11 @@
   "199": {
     "name": {
       "en": "Silver Powder",
-      "he": "Silver Powder"
+      "he": "אבקה כסופה"
     },
     "slug": "silver-powder",
     "description": {
-      "he": "A hold item that raises the power of BUG-type moves.",
+      "he": "פריט שמחזיק מעלה את כוח המהלכים מסוג חרק.",
       "en": "A hold item that raises the power of BUG-type moves."
     },
     "category": "type-enhancement",

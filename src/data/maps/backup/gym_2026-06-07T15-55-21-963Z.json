@@ -147,10 +147,6 @@
           {
             "itemId": "tm11",
             "quantity": 1
-          },
-          {
-            "itemId": "miracle-seed",
-            "quantity": 1
           }
         ]
       },
@@ -169,11 +165,7 @@
         },
         {
           "en": "",
-          "he": "יום שמשי - מחזק פוקימוני אש."
-        },
-        {
-          "en": "",
-          "he": "זרע קסום - פריט שמחזק מתקפות עשב"
+          "he": "יום שמשי - מחזק פוקימוני אש"
         }
       ],
       "excludeFromMapClear": true,
@@ -188,11 +180,7 @@
         "dialogue": [
           {
             "en": "",
-            "he": "הרשמת אותי מאוד! מקווה ניפגש שוב."
-          },
-          {
-            "en": "",
-            "he": "אם תרצה לחזק את מתקפות העשב שלך - שים על הפוקימון שיודע מתקפות עשב \"זרע קסום\" ."
+            "he": "הרשמת אותי מאוד! מקווה ניפגש שוב"
           }
         ]
       }
@@ -533,9 +521,7 @@
   "label": {
     "en": "Dividia Gym",
     "he": "מכון העיר דיבידיה"
-  },
-  "movablePuzzle": {},
-  "flagListeners": []
+  }
 ,
   "tiles": [
     ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g1","g1","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black"],

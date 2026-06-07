@@ -213,7 +213,8 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   // 'zoom-lens': 253, // not wired up yet
   'wide-lens': 242,
   'life-orb': 247,
-  'soft-sand': 214,
+  'soft-sand': 199,
+  'silver-powder': 214,
   'hard-stone': 215,
   'miracle-seed': 216,
   'black-glasses': 217,
@@ -636,6 +637,19 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     category: 'held',
     price: 0,
     effect: { type: 'battle', config: { isEndOfTurn: false, category: 'other', stats: { accuracy: 1 } } },
+    usableInBattle: false,
+    usableInOverworld: false,
+  },
+  199: {
+    category: 'held',
+    price: 0,
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        moveTypeBoost: { moveType: 'bug', boost: 1.2 },
+      },
+    },
     usableInBattle: false,
     usableInOverworld: false,
   },
