@@ -3726,6 +3726,7 @@ export function createBattleScene(
     const attackerName = getPokemonDisplayName(player.id);
     const moveIndex = forcedMoveIndex ?? selMove;
     let m = player.moves[moveIndex];
+    console.log(m);
     const pendingChargeMoveId = getChargingMoveId(playerBattleState);
     const forcedChargeRelease =
       forcedMoveIndex !== undefined &&
@@ -3918,7 +3919,7 @@ export function createBattleScene(
       if (min !== null && max !== null) return Math.floor(Math.random() * (max - min + 1)) + min;
       return 1;
     })();
-    const selfCostAmount = leaveUserAtOneHp ? Math.max(0, player.hp - 1) : 0;
+    const selfCostAmount = leaveUserAtOneHp && player.hp ? Math.max(0, player.hp - 1) : 0;
 
     if (!isRedirected && !isChargeRelease && m.currentPp > 0) {
       m.currentPp--;
@@ -4383,6 +4384,7 @@ export function createBattleScene(
     let hitResult = doesMoveTargetOpponent(moveBattleData)
       ? doesMoveHit(weatherAccOverride ?? m.accuracy, playerBattleState, enemyBattleState)
       : { hit: true, chance: 100 };
+    console.log({ hitResult, weatherAccOverride });
     // Invulnerability check (Fly / Dig charge turn) — only for moves that target opponent
     if (hitResult.hit && doesMoveTargetOpponent(moveBattleData) && enemyBattleState.invulnerableState !== null) {
       const isDigBypass = m.id === 89 || m.id === 90 || isMagnitude; // Earthquake, Fissure, Magnitude

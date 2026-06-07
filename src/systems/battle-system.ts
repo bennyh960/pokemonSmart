@@ -500,12 +500,12 @@ export function getWeightRatioPower(attackerKg: number, targetKg: number): numbe
 }
 
 export function doesMoveHit(
-  moveAccuracy: number,
+  moveAccuracy: number | null,
   attackerState: BattlePokemonRuntimeState,
   defenderState: BattlePokemonRuntimeState,
   random: () => number = Math.random,
 ): MoveHitResult {
-  if (moveAccuracy <= 0) {
+  if (!moveAccuracy || moveAccuracy <= 0) {
     return { hit: true, chance: 100 };
   }
 

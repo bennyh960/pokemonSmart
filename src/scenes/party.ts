@@ -775,7 +775,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       fillRect(ctx, 97, cy + 2, 22, 7, typeColor);
       drawText(ctx, typeLabel, 108, cy + 4, { size: 5, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
 
-      const accVal = move.accuracy > 0 ? move.accuracy : 100;
+      const accVal = move.accuracy > 0 ? move.accuracy : 0;
       const powVal = move.power > 0 ? move.power : 0;
       drawText(ctx, `${t('party.moves.header.acc')}: ${accVal}%`, 185, cy + 9, {
         size: 5,
@@ -857,7 +857,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         font: 'monospace',
         align: 'right',
       });
-      drawText(ctx, `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : 100}%`, mx + mw - 110, ry, {
+      drawText(ctx, `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : '-'}%`, mx + mw - 110, ry, {
         size: 6,
         color: C.TEXT_SEC,
         font: 'monospace',
@@ -1004,7 +1004,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         });
         drawText(
           ctx,
-          `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : 100}%`,
+          `${t('party.moves.header.acc')}: ${move.accuracy > 0 ? move.accuracy : '-'}%`,
           mx + mw - 110,
           ry,
           {

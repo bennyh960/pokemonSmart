@@ -57,7 +57,7 @@ function buildMove(m: MoveJson): Move {
     name: m.name.en,
     type: m.type as Move['type'],
     power: m.power ?? 0,
-    accuracy: m.accuracy ?? 100,
+    accuracy: m.accuracy ?? 0,
     pp: m.pp,
     currentPp: m.pp,
     mathDifficulty: m.mathDifficulty as Move['mathDifficulty'],
