@@ -247,7 +247,7 @@ export interface GateGuardData extends NPCData {
 /** Trainer NPC with party and battle data. */
 export interface TrainerData extends NPCData {
   type: 'trainer';
-  party: { pokemonId: number; level: number; moves?: number[]; mustInclude?: number | null }[];
+  party: { pokemonId: number; level: number; moves?: number[]; mustInclude?: number | null; heldItemId?: string }[];
   defeated?: boolean;
   /** When true the trainer sprite disappears from the map after the player wins. */
   despawnOnDefeat?: boolean;

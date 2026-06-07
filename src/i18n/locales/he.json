@@ -554,7 +554,7 @@
   "battle.recoverMessage": "הועברת למרכז פוקימון להתאוששות...",
   "battle.trainerWaitsRecover": "רפא את הפוקימונים שלך וחזור לריבאנץ'!",
   "battle.leftoversHeal": "{name} מחלים ב{amount} נקודות חיים מהשאריות!",
-  "battle.lifeOrbDamage": "{name} סופג {amount} נקודות חיים מהפריט שהוא מחזיק!",
+  "battle.lifeOrbDamage": "הפריט שעל {name} מאמץ אותו לתקוף חזק יותר! ההתקפה באמת התחזקה אבל נראה שזה עולה לו ב{amount} נקודות חיים!",
 
   "worldMap.title": "מפת נומריה",
   "worldMap.hint": "ESC/W: סגור",

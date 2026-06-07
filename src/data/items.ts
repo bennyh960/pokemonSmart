@@ -7,7 +7,10 @@
  *   - item-defs.ts:  effect, price, usableInBattle, usableInOverworld, topColor (game logic)
  */
 
-import type { LocalizedName } from '../services/pokemon-data.js';
+import { t } from '../i18n/i18n.js';
+import { getPokemonDisplayName, type LocalizedName } from '../services/pokemon-data.js';
+import type { BattlePokemonRuntimeState } from '../systems/battle-state.js';
+import type { Pokemon } from '../types/index.js';
 import { ITEM_GAME_DATA, ITEM_ID_TO_SLUG, type ItemCategory, type ItemEffect } from './item-defs.js';
 import itemsJson from './items.json';
 
@@ -106,3 +109,39 @@ export function getItemsByCategory(category: ItemCategory): ItemDef[] {
 export function getShopItems(): ItemDef[] {
   return Object.values(ITEMS).filter((i) => i.price > 0 && i.category !== 'key');
 }
+
+export const applyHeldItemEffectInBattle = ({
+  pokemon,
+  runtimeState,
+  actor,
+  when,
+  lines,
+  queueStatusTurnEffect,
+}: {
+  pokemon: Pokemon;
+  runtimeState: BattlePokemonRuntimeState;
+  actor: 'player' | 'enemy';
+  when: 'endOfTurn' | 'onSwitchOut';
+  lines: string[];
+  queueStatusTurnEffect: (actor: 'player' | 'enemy', itemId: string) => void;
+}) => {
+  const heldItem = pokemon.heldItemId ? getItem(pokemon.heldItemId) : null;
+  console.log({ heldItem });
+  if (heldItem?.effect.type === 'battle') {
+    const { isEndOfTurn, localMessage, hpAmount, category, condition } = heldItem.effect.config;
+    if ((when === 'endOfTurn' && isEndOfTurn) || (when === 'onSwitchOut' && !isEndOfTurn)) {
+      const isConditionMet = condition ? condition({ runtimeState: runtimeState }) : true;
+      if (hpAmount && isConditionMet) {
+        const healAmount = Math.floor(pokemon.maxHp * hpAmount);
+        pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
+        queueStatusTurnEffect(actor, heldItem.id);
+        lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(pokemon.id), amount: healAmount }));
+      }
+    }
+
+    if (category === 'choice' && runtimeState.lastMoveUsedId) {
+      const movesToLock = pokemon.moves.map((m) => m.id).filter((id) => id !== runtimeState.lastMoveUsedId);
+      runtimeState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
+    }
+  }
+};

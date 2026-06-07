@@ -259,11 +259,11 @@ function getDefaultBagItems(level: AiLevel): string[] {
 }
 
 function addHeldItemsToAiParty(party: Pokemon[], level: AiLevel) {
-  if (level < 3) return;
+  if (level < 2) return;
   const itemsToUse = [
     // special
-    'leftovers',
     'life-orb',
+    'leftovers',
     'wide-lens',
     // type-boosting
     'soft-sand',
@@ -284,22 +284,44 @@ function addHeldItemsToAiParty(party: Pokemon[], level: AiLevel) {
   ];
 
   const itemsData = itemsToUse.map((slug) => getItem(slug));
-  let maxLeftoversAssigned = 3; //
-  let maxLifeOrbAssigned = 2; //
+  let maxLeftoversAssigned = level; //
+  let maxLifeOrb = Math.floor(level / 2); //
+
+  function getDominantMoveType(pokemon: Pokemon) {
+    const typeCounts: Record<string, number> = {};
+    pokemon.moves
+      .map((m) => getMove(m.id))
+      .filter((m) => m?.power && m.power > 0)
+      .forEach((m) => {
+        if (!m) return;
+        typeCounts[m.type] = (typeCounts[m.type] ?? 0) + 1;
+      });
+
+    if (Object.keys(typeCounts).length === 0) return null;
+
+    return Object.entries(typeCounts).reduce((best, [type, count]) => (count > best[1] ? [type, count] : best));
+  }
+
   party.forEach((p) => {
     if (p.heldItemId) return; // don't overwrite existing held items
+    const dominantMoveType = getDominantMoveType(p);
     const typeBoostItem = itemsData.find(
-      (i) => i?.effect.type === 'battle' && p.types.includes(i.effect.config.moveTypeBoost?.moveType as PokemonType),
+      (i) =>
+        i?.effect.type === 'battle' &&
+        dominantMoveType &&
+        dominantMoveType[1] >= 2 &&
+        dominantMoveType[0] === i.effect.config.moveTypeBoost?.moveType,
     );
 
     if (typeBoostItem) {
       p.heldItemId = typeBoostItem.id;
+      p.heldItemId = 'life-orb';
     } else if (maxLeftoversAssigned > 0) {
       p.heldItemId = 'leftovers';
       maxLeftoversAssigned--;
-    } else if (maxLifeOrbAssigned > 0) {
+    } else if (maxLifeOrb > 0) {
       p.heldItemId = 'life-orb';
-      maxLifeOrbAssigned--;
+      maxLifeOrb--;
     }
   });
 }
@@ -1456,21 +1478,30 @@ export function createBattleScene(
     let best = 0;
     for (const pm of player.moves) {
       if (pm.currentPp <= 0 || pm.power <= 0) continue;
-      const mFull = getMove(pm.id);
-      const damageClass = mFull?.damageClass ?? 'physical';
-      const atk =
-        damageClass === 'physical'
-          ? getModifiedStatValue(player, playerBattleState, 'attack')
-          : getModifiedStatValue(player, playerBattleState, 'specialAttack');
-      const def =
-        damageClass === 'physical'
-          ? getModifiedStatValue(enemy, enemyBattleState, 'defense')
-          : getModifiedStatValue(enemy, enemyBattleState, 'specialDefense');
-      const eff = getCombinedTypeEffectiveness(pm.type, enemy.types as import('../types/index.js').PokemonType[]);
-      if (eff === 0) continue;
-      const stab = player.types.includes(pm.type) ? 1.5 : 1.0;
-      const dmg = (((2 * player.level) / 5 + 2) * pm.power * atk) / def / 50 + 2;
-      best = Math.max(best, dmg * eff * stab);
+      const moveFullData = getMove(pm.id);
+      const battleData = getMoveBattleData(pm.id);
+
+      const isOhkoMove = battleData?.behaviorTags?.includes('ohko');
+      const isCharging = battleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
+      const isFutureSight = battleData?.behaviorTags?.includes('future-sight') ?? false;
+      const hasTurns = battleData?.minTurns && battleData?.minTurns > 1;
+
+      if (isOhkoMove || isCharging || hasTurns || isFutureSight) continue;
+
+      const base = calcDamage(
+        player,
+        playerBattleState,
+        enemy,
+        enemyBattleState,
+        enemySideState,
+        pm.power,
+        pm.type,
+        moveFullData?.damageClass ?? 'physical',
+        false,
+      );
+      // console.log({ base, best, move: moveFullData?.name });
+
+      best = Math.max(best, base);
     }
     if (best === 0) {
       const atk = Math.max(player.attack, player.specialAttack);
@@ -1507,7 +1538,7 @@ export function createBattleScene(
 
     // If player deals heavy damage, we risk being KO'd before the boost pays off
     const estIncoming = estimatePlayerBestDamageToEnemy();
-    if (estIncoming >= enemy.hp * 0.5) return false;
+    if (estIncoming >= enemy.hp * 0.65 && enemy.hp < enemy.maxHp * 0.85) return false;
 
     // Boost when AI has type advantage AND level parity — we can afford the setup turn
     const hasTypeAdv = enemy.types.some(
@@ -1890,7 +1921,7 @@ export function createBattleScene(
         if (screenEffect.id === 'light-screen' && player.attack > player.specialAttack * 1.2) return -Infinity;
         // Don't set up a screen when player can KO us this turn
         const estIncomingScreen = estimatePlayerBestDamageToEnemy();
-        if (estIncomingScreen >= enemy.hp) return -Infinity;
+        if (estIncomingScreen >= enemy.hp && playerPartyRemainingScore <= 0.5) return -Infinity;
         let screenScore = 250;
         if (playerBattleState.majorStatus === 'sleep' || playerBattleState.majorStatus === 'freeze') screenScore += 400; // Free turns to let the screen pay off
         return screenScore * playerPartyRemainingScore;
@@ -1912,7 +1943,7 @@ export function createBattleScene(
         );
 
         // ? Dont delete - this is good debug
-        // if (moveFullData && ['Double Team'].includes(moveFullData?.name.en)) {
+        // 'if (moveFullData && ['Double Team'].includes(moveFullData?.name.en)) {
         //   console.debug(`Evaluating self-boost move ${moveFullData?.name.en}:`, {
         //     selfBoosts,
         //     playerStatesReduce,
@@ -1923,11 +1954,11 @@ export function createBattleScene(
         //     trainerBoostedScore,
         //     playerReducedScore,
         //   });
-        // }
+        // }'
         if (trainerBoostedScore > 50 || playerReducedScore < 0) return -Infinity; // Already boosted — don't boost again
         if (enemyHpRatio < 0.5) return -Infinity;
         const estIncomingBoost = estimatePlayerBestDamageToEnemy();
-        if (estIncomingBoost >= enemy.hp * 0.45) return -Infinity; // Too risky to set up
+        if (estIncomingBoost >= enemy.hp * 0.65 && enemy.hp < enemy.maxHp * 0.85) return -Infinity; // Too risky to set up
         const playerStatus = playerBattleState.majorStatus;
         let setupScore = trainerBoostedScore / 2;
         if (playerStatus === 'sleep' || playerStatus === 'freeze') {
@@ -1946,8 +1977,13 @@ export function createBattleScene(
                 player.types as import('../types/index.js').PokemonType[],
               ) > 1,
           );
-          if (!hasTypeAdv && enemy.level <= player.level) return -Infinity;
-          setupScore = hasTypeAdv ? 220 : 120;
+          // console.log(
+          //   '!hasTypeAdv && enemy.level / player.level < 0.8',
+          //   !hasTypeAdv && enemy.level / player.level < 0.8,
+          // );
+          if (!hasTypeAdv && enemy.level / player.level < 0.8) return -Infinity;
+          if (enemy.level / player.level < 0.6) return -Infinity;
+          setupScore = hasTypeAdv ? 220 : 150;
         }
         return setupScore;
       }
@@ -2909,10 +2945,40 @@ export function createBattleScene(
       }
     }
 
+    const applyHeldItemEffectInBattle = ({
+      pokemon,
+      runtimeState,
+      isPlayer,
+      when,
+    }: {
+      pokemon: Pokemon;
+      runtimeState: BattlePokemonRuntimeState;
+      isPlayer: boolean;
+      when: 'endOfTurn' | 'onSwitchOut';
+    }) => {
+      const heldItem = pokemon.heldItemId ? getItem(pokemon.heldItemId) : null;
+      console.log({ heldItem });
+      if (heldItem?.effect.type === 'battle') {
+        const { isEndOfTurn, localMessage, hpAmount, category, condition } = heldItem.effect.config;
+        if ((when === 'endOfTurn' && isEndOfTurn) || (when === 'onSwitchOut' && !isEndOfTurn)) {
+          const isConditionMet = condition ? condition({ runtimeState: runtimeState }) : true;
+          if (hpAmount && isConditionMet) {
+            const healAmount = Math.floor(pokemon.maxHp * hpAmount);
+            pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
+            queueStatusTurnEffect(isPlayer ? 'player' : 'enemy', heldItem.id);
+            lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(pokemon.id), amount: healAmount }));
+          }
+        }
+
+        if (category === 'choice' && runtimeState.lastMoveUsedId) {
+          const movesToLock = pokemon.moves.map((m) => m.id).filter((id) => id !== runtimeState.lastMoveUsedId);
+          runtimeState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
+        }
+      }
+    };
+
     const playerHeldItem = player.heldItemId ? getItem(player.heldItemId) : null;
     const enemyHeldItem = enemy.heldItemId ? getItem(enemy.heldItemId) : null;
-
-    console.log({ enemyHeldItem });
 
     // Held Item end-of-turn effects
     if (playerHeldItem?.effect.type === 'battle') {
@@ -2934,9 +3000,11 @@ export function createBattleScene(
     }
 
     if (enemyHeldItem?.effect.type === 'battle') {
-      const { isEndOfTurn, localMessage, hpAmount, category } = enemyHeldItem.effect.config;
+      const { isEndOfTurn, localMessage, hpAmount, category, condition } = enemyHeldItem.effect.config;
       if (isEndOfTurn) {
-        if (hpAmount) {
+        const isConditionMet = condition ? condition({ runtimeState: enemyBattleState }) : true;
+
+        if (hpAmount && isConditionMet) {
           const healAmount = Math.floor(enemy.maxHp * hpAmount);
           enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
           queueStatusTurnEffect('enemy', enemyHeldItem.id);
@@ -6369,6 +6437,13 @@ export function createBattleScene(
           if (textBox && updateTextBox(textBox, input, dt)) {
             textBox = null;
             showTrainerSprite = false;
+          }
+
+          if (player.heldItemId && player.hp > 0) {
+            // todo
+            const playerHeldItem = player.heldItemId ? getItem(player.heldItemId) : null;
+            const enemyHeldItem = enemy.heldItemId ? getItem(enemy.heldItemId) : null;
+            const { isEndOfTurn, localMessage, hpAmount, category, condition } = player.effect.config;
           }
           if (!textBox) {
             if (pendingEnemySendOutAnimation) {

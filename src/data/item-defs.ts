@@ -865,7 +865,6 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
       type: 'battle',
       config: {
         isEndOfTurn: false,
-
         stats: { accuracy: 1 },
       },
     },

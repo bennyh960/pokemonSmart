@@ -59,6 +59,7 @@
       "spriteType": "leon",
       "party": [
         {
+          "heldItemId": "life-orb",
           "pokemonId": 145,
           "level": 50,
           "moves": [
