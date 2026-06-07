@@ -110,6 +110,8 @@ export function getShopItems(): ItemDef[] {
   return Object.values(ITEMS).filter((i) => i.price > 0 && i.category !== 'key');
 }
 
+// moveTypeBoost - is private case handle in calcDamage
+// rest for now seems works by this func
 export const applyHeldItemEffectInBattle = ({
   pokemon,
   runtimeState,
@@ -126,8 +128,8 @@ export const applyHeldItemEffectInBattle = ({
   queueStatusTurnEffect: (actor: 'player' | 'enemy', itemId: string) => void;
 }) => {
   const heldItem = pokemon.heldItemId ? getItem(pokemon.heldItemId) : null;
-  console.log({ heldItem });
-  if (heldItem?.effect.type === 'battle') {
+  if (!heldItem) return;
+  if (heldItem.effect.type === 'battle' && heldItem.category === 'held') {
     const { isEndOfTurn, localMessage, hpAmount, category, condition } = heldItem.effect.config;
     if ((when === 'endOfTurn' && isEndOfTurn) || (when === 'onSwitchOut' && !isEndOfTurn)) {
       const isConditionMet = condition ? condition({ runtimeState: runtimeState }) : true;

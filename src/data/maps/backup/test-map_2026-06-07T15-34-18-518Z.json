@@ -458,12 +458,6 @@
       {
         "itemId": "wide-lens",
         "itemQty": 3
-      },
-      {
-        "itemId": "wide-lens",
-        "x": 8,
-        "y": 15,
-        "itemQty": 2
       }
     ]
   },
@@ -1012,11 +1006,6 @@
       "key": "item-generic",
       "x": 15,
       "y": 13
-    },
-    {
-      "key": "item-generic",
-      "x": 8,
-      "y": 15
     }
   ]
 }

@@ -93,7 +93,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { getBattleBackground, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { getCharacterFrame } from '../engine/character-sprites.js';
 import { t, isRTL, getLocale } from '../i18n/i18n.js';
-import { getItem } from '../data/items.js';
+import { applyHeldItemEffectInBattle, getItem } from '../data/items.js';
 import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText } from '../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../scenes/bag.js';
@@ -182,7 +182,6 @@ import {
   type EntryHazardResult,
 } from '../systems/battle-system.js';
 import charactersManifest from '../data/sprites/characters.json';
-import { ITEM_GAME_DATA, ITEM_SLUG_TO_ID } from '../data/item-defs.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -315,7 +314,7 @@ function addHeldItemsToAiParty(party: Pokemon[], level: AiLevel) {
 
     if (typeBoostItem) {
       p.heldItemId = typeBoostItem.id;
-      p.heldItemId = 'life-orb';
+      p.heldItemId = 'leftovers';
     } else if (maxLeftoversAssigned > 0) {
       p.heldItemId = 'leftovers';
       maxLeftoversAssigned--;
@@ -426,6 +425,7 @@ function calcDamage(
 ): number {
   if (power <= 0) return 0;
 
+  //private case of  applyHeldItemEffectInBattle
   const atkHeldItem = atk.heldItemId ? getItem(atk.heldItemId) : null;
 
   if (
@@ -2945,78 +2945,24 @@ export function createBattleScene(
       }
     }
 
-    const applyHeldItemEffectInBattle = ({
-      pokemon,
-      runtimeState,
-      isPlayer,
-      when,
-    }: {
-      pokemon: Pokemon;
-      runtimeState: BattlePokemonRuntimeState;
-      isPlayer: boolean;
-      when: 'endOfTurn' | 'onSwitchOut';
-    }) => {
-      const heldItem = pokemon.heldItemId ? getItem(pokemon.heldItemId) : null;
-      console.log({ heldItem });
-      if (heldItem?.effect.type === 'battle') {
-        const { isEndOfTurn, localMessage, hpAmount, category, condition } = heldItem.effect.config;
-        if ((when === 'endOfTurn' && isEndOfTurn) || (when === 'onSwitchOut' && !isEndOfTurn)) {
-          const isConditionMet = condition ? condition({ runtimeState: runtimeState }) : true;
-          if (hpAmount && isConditionMet) {
-            const healAmount = Math.floor(pokemon.maxHp * hpAmount);
-            pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
-            queueStatusTurnEffect(isPlayer ? 'player' : 'enemy', heldItem.id);
-            lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(pokemon.id), amount: healAmount }));
-          }
-        }
+    // End Of turn held items effect
+    applyHeldItemEffectInBattle({
+      pokemon: player,
+      runtimeState: playerBattleState,
+      actor: 'player',
+      when: 'endOfTurn',
+      lines,
+      queueStatusTurnEffect,
+    });
 
-        if (category === 'choice' && runtimeState.lastMoveUsedId) {
-          const movesToLock = pokemon.moves.map((m) => m.id).filter((id) => id !== runtimeState.lastMoveUsedId);
-          runtimeState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
-        }
-      }
-    };
-
-    const playerHeldItem = player.heldItemId ? getItem(player.heldItemId) : null;
-    const enemyHeldItem = enemy.heldItemId ? getItem(enemy.heldItemId) : null;
-
-    // Held Item end-of-turn effects
-    if (playerHeldItem?.effect.type === 'battle') {
-      const { isEndOfTurn, localMessage, hpAmount, category, condition } = playerHeldItem.effect.config;
-      if (isEndOfTurn) {
-        const isConditionMet = condition ? condition({ runtimeState: playerBattleState }) : true;
-        if (hpAmount && isConditionMet) {
-          const healAmount = Math.floor(player.maxHp * hpAmount);
-          player.hp = Math.min(player.maxHp, player.hp + healAmount);
-          queueStatusTurnEffect('player', playerHeldItem.id);
-          lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(player.id), amount: healAmount }));
-        }
-      }
-
-      if (category === 'choice' && playerBattleState.lastMoveUsedId) {
-        const movesToLock = player.moves.map((m) => m.id).filter((id) => id !== playerBattleState.lastMoveUsedId);
-        playerBattleState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
-      }
-    }
-
-    if (enemyHeldItem?.effect.type === 'battle') {
-      const { isEndOfTurn, localMessage, hpAmount, category, condition } = enemyHeldItem.effect.config;
-      if (isEndOfTurn) {
-        const isConditionMet = condition ? condition({ runtimeState: enemyBattleState }) : true;
-
-        if (hpAmount && isConditionMet) {
-          const healAmount = Math.floor(enemy.maxHp * hpAmount);
-          enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
-          queueStatusTurnEffect('enemy', enemyHeldItem.id);
-          lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(enemy.id), amount: healAmount }));
-        }
-      }
-
-      if (category === 'choice' && enemyBattleState.lastMoveUsedId) {
-        const movesToLock = enemy.moves.map((m) => m.id).filter((id) => id !== enemyBattleState.lastMoveUsedId);
-        enemyBattleState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
-      }
-    }
+    applyHeldItemEffectInBattle({
+      pokemon: enemy,
+      runtimeState: enemyBattleState,
+      actor: 'enemy',
+      when: 'endOfTurn',
+      lines,
+      queueStatusTurnEffect,
+    });
 
     // Weather end-of-turn: damage + decrement
     if (battleWeather) {
@@ -6439,12 +6385,28 @@ export function createBattleScene(
             showTrainerSprite = false;
           }
 
+          // held items on switch out
           if (player.heldItemId && player.hp > 0) {
-            // todo
-            const playerHeldItem = player.heldItemId ? getItem(player.heldItemId) : null;
-            const enemyHeldItem = enemy.heldItemId ? getItem(enemy.heldItemId) : null;
-            const { isEndOfTurn, localMessage, hpAmount, category, condition } = player.effect.config;
+            applyHeldItemEffectInBattle({
+              pokemon: player,
+              runtimeState: playerBattleState,
+              actor: 'player',
+              when: 'onSwitchOut',
+              lines: [],
+              queueStatusTurnEffect: () => {},
+            });
           }
+          if (enemy.heldItemId && enemy.hp > 0) {
+            applyHeldItemEffectInBattle({
+              pokemon: enemy,
+              runtimeState: enemyBattleState,
+              actor: 'enemy',
+              when: 'onSwitchOut',
+              lines: [],
+              queueStatusTurnEffect: () => {},
+            });
+          }
+
           if (!textBox) {
             if (pendingEnemySendOutAnimation) {
               if (!animationDirector.isBusy()) startEnemySendOutAnimation();
