@@ -126,6 +126,10 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   tm45: 340,
   tm46: 341,
   tm47: 342,
+  tm48: 343, //dream-eater
+  tm49: 344, //spore
+  tm50: 345, //hypnosis
+  tm51: 349, // dragon dance
   // Pokeballs
   'master-ball': 1,
   'ultra-ball': 2,
@@ -1518,6 +1522,46 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: true,
     name: { en: 'TM47', he: 'TM47' },
     description: { en: 'Teaches Steel Wing', he: 'מלמד כנף פלדה' },
+  },
+  343: {
+    category: 'machine',
+    price: 3000,
+    sellPrice: 1500,
+    effect: { type: 'tm', moveId: 138, isHM: false },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'TM48', he: 'TM48' },
+    description: { en: 'Teaches Dream Eater', he: 'מלמד אוכלי חלומות' },
+  },
+  344: {
+    category: 'machine',
+    price: 3000,
+    sellPrice: 1500,
+    effect: { type: 'tm', moveId: 147, isHM: false },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'TM49', he: 'TM49' },
+    description: { en: 'Teaches Spore', he: 'מלמד נבג שינה' },
+  },
+  345: {
+    category: 'machine',
+    price: 3000,
+    sellPrice: 1500,
+    effect: { type: 'tm', moveId: 95, isHM: false },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'TM50', he: 'TM50' },
+    description: { en: 'Teaches Hypnosis', he: 'מלמד היפנוזה' },
+  },
+  349: {
+    category: 'machine',
+    price: 3000,
+    sellPrice: 1500,
+    effect: { type: 'tm', moveId: 349, isHM: false },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'TM51', he: 'TM51' },
+    description: { en: 'Teaches Dragon Dance', he: 'מלמד ריקוד דרקון' },
   },
 };
 

@@ -5418,7 +5418,11 @@
     },
     {
       "moveId": 17,
-      "levelLearned": 55
+      "levelLearned": 56
+    },
+    {
+      "moveId": 349,
+      "levelLearned": 58
     },
     {
       "moveId": 200,
@@ -7078,7 +7082,7 @@
     },
     {
       "moveId": 109,
-      "levelLearned": 30
+      "levelLearned": 34
     },
     {
       "moveId": 185,

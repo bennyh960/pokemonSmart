@@ -7,3 +7,5 @@ fix:
 [move] - struggle for AI and for Player
 
 [bug] - swift move should never miss but it miss
+
+[bug] [move] - bide - not works (המתנה)

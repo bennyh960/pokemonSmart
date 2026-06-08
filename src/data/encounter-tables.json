@@ -13,6 +13,36 @@
         "minLevel": 30,
         "maxLevel": 40,
         "weight": 50
+      },
+      {
+        "pokemonId": 143,
+        "minLevel": 45,
+        "maxLevel": 50,
+        "weight": 50
+      },
+      {
+        "pokemonId": 149,
+        "minLevel": 45,
+        "maxLevel": 50,
+        "weight": 50
+      },
+      {
+        "pokemonId": 248,
+        "minLevel": 45,
+        "maxLevel": 50,
+        "weight": 50
+      },
+      {
+        "pokemonId": 251,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 50
+      },
+      {
+        "pokemonId": 250,
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 50
       }
     ]
   },

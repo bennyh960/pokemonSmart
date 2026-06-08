@@ -442,9 +442,6 @@
       },
       {
         "itemId": "tm25"
-      },
-      {
-        "itemId": "tm51"
       }
     ]
   },
@@ -982,11 +979,6 @@
     {
       "key": "item-generic",
       "x": 11,
-      "y": 2
-    },
-    {
-      "key": "item-generic",
-      "x": 12,
       "y": 2
     }
   ]

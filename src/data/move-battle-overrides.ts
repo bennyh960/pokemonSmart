@@ -340,6 +340,8 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Sharpen: userStages(['attack', 1]),
   'Acid Armor': userStages(['defense', 2]),
   Coil: userStages(['attack', 1], ['defense', 1], ['accuracy', 1]),
+  'Dragon Dance': userStages(['attack', 1], ['speed', 1]),
+  Curse: userStages(['attack', 1], ['defense', 1], ['speed', -1]), // todo : for ghost type its should have other
   'Focus Energy': { behaviorTags: ['focus-energy'], target: 'user' },
 
   // --- Weight-based power ---

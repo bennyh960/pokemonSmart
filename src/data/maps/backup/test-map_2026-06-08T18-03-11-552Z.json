@@ -438,13 +438,34 @@
   "interactiveItems": {
     "item-generic": [
       {
-        "itemId": "tm36"
+        "itemId": "leftovers",
+        "itemQty": 3,
+        "x": 11,
+        "y": 13
       },
       {
-        "itemId": "tm25"
+        "itemId": "choice-specs",
+        "x": 13,
+        "y": 13,
+        "itemQty": 3
       },
       {
-        "itemId": "tm51"
+        "itemId": "life-orb",
+        "x": 8,
+        "y": 13,
+        "itemQty": 3
+      },
+      {
+        "itemId": "wide-lens",
+        "x": 8,
+        "y": 15,
+        "itemQty": 2
+      },
+      {
+        "itemId": "rare-candy",
+        "itemQty": 999,
+        "x": 7,
+        "y": 8
       }
     ]
   },
@@ -930,6 +951,11 @@
       "y": 0
     },
     {
+      "key": "item-generic",
+      "x": 11,
+      "y": 13
+    },
+    {
       "key": "r1",
       "x": 20,
       "y": 1
@@ -976,18 +1002,28 @@
     },
     {
       "key": "item-generic",
-      "x": 10,
-      "y": 2
+      "x": 13,
+      "y": 13
     },
     {
       "key": "item-generic",
-      "x": 11,
-      "y": 2
+      "x": 8,
+      "y": 13
     },
     {
       "key": "item-generic",
-      "x": 12,
-      "y": 2
+      "x": 15,
+      "y": 13
+    },
+    {
+      "key": "item-generic",
+      "x": 8,
+      "y": 15
+    },
+    {
+      "key": "item-generic",
+      "x": 7,
+      "y": 8
     }
   ]
 }
