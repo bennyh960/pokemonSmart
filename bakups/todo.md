@@ -9,3 +9,7 @@ fix:
 [bug] - swift move should never miss but it miss
 
 [bug] [move] - bide - not works (המתנה)
+
+<!-- TASK -->
+
+[npc] - add npc.type = swap-abilites to percentile lab or algebria lab + small stories around it

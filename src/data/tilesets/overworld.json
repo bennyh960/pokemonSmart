@@ -7428,7 +7428,654 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "wall"
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-1",
+      "sx": 144,
+      "sy": 1024,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-2",
+      "sx": 160,
+      "sy": 1024,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-3",
+      "sx": 176,
+      "sy": 1024,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-4",
+      "sx": 144,
+      "sy": 1040,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-6",
+      "sx": 176,
+      "sy": 1040,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-7",
+      "sx": 144,
+      "sy": 1056,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-8",
+      "sx": 160,
+      "sy": 1056,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-9",
+      "sx": 176,
+      "sy": 1056,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-10",
+      "sx": 160,
+      "sy": 1072,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-11",
+      "sx": 144,
+      "sy": 1072,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-12",
+      "sx": 176,
+      "sy": 1072,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-13",
+      "sx": 144,
+      "sy": 1088,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-14",
+      "sx": 176,
+      "sy": 1088,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-15",
+      "sx": 160,
+      "sy": 1088,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "f9",
+      "sx": 144,
+      "sy": 1104,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "w5-16",
+      "sx": 176,
+      "sy": 1008,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "interactType": null
+    },
+    {
+      "key": "w5-17",
+      "sx": 144,
+      "sy": 1008,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null
+    },
+    {
+      "key": "w5-stairs",
+      "sx": 144,
+      "sy": 1136,
+      "w": 48,
+      "h": 32,
+      "walkable": false,
+      "above": true,
+      "category": "wall",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        }
+      ]
+    },
+    {
+      "key": "w5-stairs-walkable",
+      "sx": 144,
+      "sy": 1136,
+      "w": 48,
+      "h": 48,
+      "walkable": true,
+      "above": false,
+      "category": "wall",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        }
+      ]
+    },
+    {
+      "key": "t30",
+      "sx": 96,
+      "sy": 1728,
+      "w": 32,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t30-snow",
+      "sx": 96,
+      "sy": 1696,
+      "w": 32,
+      "h": 32,
+      "zOffset": 10,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t30-bottom",
+      "sx": 96,
+      "sy": 1744,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t30-snow2",
+      "sx": 128,
+      "sy": 1696,
+      "w": 32,
+      "h": 32,
+      "zOffset": 10,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t31",
+      "sx": 128,
+      "sy": 1728,
+      "w": 32,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t31-bottom",
+      "sx": 128,
+      "sy": 1744,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "interactType": null
+    },
+    {
+      "key": "t32-bottom",
+      "sx": 112,
+      "sy": 1664,
+      "w": 16,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t32-up",
+      "sx": 112,
+      "sy": 1648,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t32-snow",
+      "sx": 144,
+      "sy": 1648,
+      "w": 16,
+      "h": 32,
+      "zOffset": 10,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "t32-snow-2",
+      "sx": 160,
+      "sy": 1648,
+      "w": 16,
+      "h": 32,
+      "zOffset": 10,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null
+    },
+    {
+      "key": "f30",
+      "sx": 112,
+      "sy": 1104,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "floor",
+      "interactType": null
+    },
+    {
+      "key": "market-snow",
+      "sx": 144,
+      "sy": 1264,
+      "w": 64,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        }
+      ]
+    },
+    {
+      "key": "market-snow-door",
+      "sx": 160,
+      "sy": 1328,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "interactType": null
+    },
+    {
+      "key": "pokecenter-snow-top",
+      "sx": 128,
+      "sy": 1360,
+      "w": 80,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "pokecenter-snow-bottom",
+      "sx": 128,
+      "sy": 1440,
+      "w": 80,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "cells": [
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        }
+      ]
+    },
+    {
+      "key": "pokcenter-snow-door",
+      "sx": 160,
+      "sy": 1440,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "building",
+      "interactType": null
+    },
+    {
+      "key": "house-snow",
+      "sx": 128,
+      "sy": 1472,
+      "w": 80,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "cells": [
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        }
+      ]
+    },
+    {
+      "key": "house-snow-door",
+      "sx": 144,
+      "sy": 1536,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "building"
     }
   ]
 }
