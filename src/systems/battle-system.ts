@@ -17,8 +17,14 @@ import {
   getBattleSideEffectTurnsRemaining,
   setBattleSideEffectTurnsRemaining,
 } from './battle-state.js';
-import { getAbilityBattleEffects, getCombinedTypeEffectiveness, getMoveBattleData } from '../services/pokemon-data.js';
+import {
+  getAbilityBattleEffects,
+  getCombinedTypeEffectiveness,
+  getMoveBattleData,
+  getPokemonDisplayName,
+} from '../services/pokemon-data.js';
 import { getItem } from '../data/items.js';
+import { getLocale, t } from '../i18n/i18n.js';
 
 export interface TurnOrderDecision {
   enemyActsFirst: boolean;
@@ -54,6 +60,7 @@ export interface StatusApplicationResult {
   applied: boolean;
   status: MajorStatusId | null;
   reason: 'applied' | 'already-has-status' | 'immune' | 'chance-failed' | 'no-status';
+  lines?: string[];
 }
 
 export interface EndOfTurnStatusResult {
@@ -808,6 +815,8 @@ export function applyMajorStatus(
   runtimeState: BattlePokemonRuntimeState,
   effect: MoveStatusEffect | null,
   random: () => number = Math.random,
+  attacker?: Pokemon,
+  attackerRuntimeState?: BattlePokemonRuntimeState,
 ): StatusApplicationResult {
   if (!effect) return { applied: false, status: null, reason: 'no-status' };
   if (target.status || runtimeState.majorStatus) {
@@ -831,8 +840,27 @@ export function applyMajorStatus(
     const { min, max } = getStatusDurationRange(effect);
     runtimeState.freezeTurnsRemaining = randomTurnCount(min, max, random);
   }
+  const lines: string[] = [];
+  //  synchronise
+  if (attacker && target.abilityId === 28) {
+    const attackerName = getPokemonDisplayName(attacker.id);
+    const targetName = getPokemonDisplayName(target.id);
+    const syncResult = applyMajorStatus(attacker, attackerRuntimeState!, effect, () => 0);
+    if (syncResult.applied) {
+      const statusName = t(`battle.status${effect.status[0].toUpperCase()}${effect.status.slice(1)}`);
+      lines.push(
+        t('battle.synchronizeActivated', {
+          target: targetName,
+          attacker: attackerName,
+          status: statusName.replace('{name}', ''),
+        }),
+      );
+    } else {
+      lines.push(t('battle.synchronizeFailed', { attacker: attackerName }));
+    }
+  }
 
-  return { applied: true, status: effect.status, reason: 'applied' };
+  return { applied: true, status: effect.status, reason: 'applied', lines };
 }
 
 export function applyEndOfTurnStatusEffects(

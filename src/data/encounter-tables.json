@@ -3,46 +3,10 @@
     "encounterRate": 0.5,
     "entries": [
       {
-        "pokemonId": 9,
-        "minLevel": 30,
-        "maxLevel": 40,
-        "weight": 50
-      },
-      {
-        "pokemonId": 6,
-        "minLevel": 30,
-        "maxLevel": 40,
-        "weight": 50
-      },
-      {
-        "pokemonId": 143,
+        "pokemonId": 197,
         "minLevel": 45,
         "maxLevel": 50,
-        "weight": 50
-      },
-      {
-        "pokemonId": 149,
-        "minLevel": 45,
-        "maxLevel": 50,
-        "weight": 50
-      },
-      {
-        "pokemonId": 248,
-        "minLevel": 45,
-        "maxLevel": 50,
-        "weight": 50
-      },
-      {
-        "pokemonId": 251,
-        "minLevel": 30,
-        "maxLevel": 40,
-        "weight": 50
-      },
-      {
-        "pokemonId": 250,
-        "minLevel": 30,
-        "maxLevel": 40,
-        "weight": 50
+        "weight": 100
       }
     ]
   },

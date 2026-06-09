@@ -493,6 +493,8 @@
   "battle.statusParalyze": "{name} was paralyzed!",
   "battle.statusSleep": "{name} fell asleep!",
   "battle.statusFreeze": "{name} was frozen solid!",
+  "battle.synchronizeActivated": "{target}'s Synchronize activated! {attacker} is now {status}!",
+  "battle.synchronizeFailed": "{attacker} was unaffected by Synchronize.",
   "battle.wokeUp": "{name} woke up!",
   "battle.fastAsleep": "{name} is fast asleep!",
   "battle.thawedOut": "{name} thawed out!",

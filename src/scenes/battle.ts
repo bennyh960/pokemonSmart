@@ -3299,6 +3299,7 @@ export function createBattleScene(
       if (statusResult.applied) {
         const statusLine = getStatusAppliedLine(attackerName, statusResult.status);
         if (statusLine) lines.push(statusLine);
+        if (statusResult.lines) lines.push(...statusResult.lines);
       } else if (statusResult.reason === 'immune') {
         lines.push(getEffectImmuneLine(attackerName));
       }
@@ -3337,6 +3338,7 @@ export function createBattleScene(
           const statusResult = applyMajorStatus(attacker, attackerState, moveBattleData.ailment);
           if (statusResult.applied) {
             const statusLine = getStatusAppliedLine(attackerName, statusResult.status);
+
             if (statusLine) lines.push(statusLine);
           } else if (statusResult.reason === 'immune') {
             lines.push(getEffectImmuneLine(attackerName));
@@ -3387,10 +3389,18 @@ export function createBattleScene(
           } else if (isTargetImmuneToStatusEffectFromMoveType(defender, move.type, moveBattleData.ailment)) {
             lines.push(getEffectImmuneLine(defenderName));
           } else {
-            const statusResult = applyMajorStatus(defender, defenderState, moveBattleData.ailment);
+            const statusResult = applyMajorStatus(
+              defender,
+              defenderState,
+              moveBattleData.ailment,
+              () => Math.random(),
+              attacker,
+              attackerState,
+            );
             if (statusResult.applied) {
               const statusLine = getStatusAppliedLine(defenderName, statusResult.status);
               if (statusLine) lines.push(statusLine);
+              if (statusResult.lines) lines.push(...statusResult.lines);
             } else if (statusResult.reason === 'immune') {
               lines.push(getEffectImmuneLine(defenderName));
             }

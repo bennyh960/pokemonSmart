@@ -490,6 +490,8 @@
   "battle.statusParalyze": "{name} משותק!",
   "battle.statusSleep": "{name} נרדם!",
   "battle.statusFreeze": "{name} קפא לגמרי!",
+  "battle.synchronizeActivated": "סינכרוניזציה של {target} הופעלה! {attacker} עכשיו {status}!",
+  "battle.synchronizeFailed": "{attacker} לא הושפע מסינכרוניזציה.",
   "battle.wokeUp": "{name} התעורר!",
   "battle.fastAsleep": "{name} ישן חזק!",
   "battle.thawedOut": "{name} הפשיר!",
