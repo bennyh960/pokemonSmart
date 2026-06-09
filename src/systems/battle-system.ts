@@ -24,6 +24,7 @@ import {
   getPokemonDisplayName,
 } from '../services/pokemon-data.js';
 import { getItem } from '../data/items.js';
+import { t } from '../i18n/i18n.js';
 
 export interface TurnOrderDecision {
   enemyActsFirst: boolean;
