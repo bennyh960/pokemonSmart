@@ -226,6 +226,21 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Rest: { behaviorTags: ['rest'], target: 'user' },
   Recover: { healingPercent: 50, target: 'user' },
   Roost: { healingPercent: 50, target: 'user' },
+  Moonlight: {
+    healingPercent: 75,
+    target: 'user',
+    behaviorTags: ['moonlight'],
+  },
+  'Morning Sun': {
+    healingPercent: 75,
+    target: 'user',
+    behaviorTags: ['morning-sun'],
+  },
+  Synthesis: {
+    healingPercent: 75,
+    target: 'user',
+    behaviorTags: ['synthesis'],
+  },
   'Milk Drink': { healingPercent: 50, target: 'user' },
   'Soft-Boiled': { healingPercent: 50, target: 'user' },
 

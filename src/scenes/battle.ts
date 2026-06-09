@@ -4874,7 +4874,9 @@ export function createBattleScene(
         }
         // Heal % moves (Recover, Roost, Milk Drink, etc.)
         if (healPercent !== null) {
-          const healed = applyHealPercent(player, healPercent);
+          const tags = moveBattleData?.behaviorTags;
+
+          const healed = applyHealPercent(player, healPercent, tags);
           if (healed > 0) {
             setHP(playerHpBar, player.hp);
             spawnDamageNumber(`+${healed}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#48d870');
@@ -6095,7 +6097,8 @@ export function createBattleScene(
         }
         // Heal % moves (Recover, Roost, Milk Drink, etc.)
         if (healPercentEnemy !== null) {
-          const healed = applyHealPercent(enemy, healPercentEnemy);
+          const tags = moveBattleData?.behaviorTags;
+          const healed = applyHealPercent(enemy, healPercentEnemy, tags);
           if (healed > 0) {
             setHP(enemyHpBar, enemy.hp);
             spawnDamageNumber(`+${healed}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#48d870');

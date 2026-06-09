@@ -2,6 +2,7 @@ import type { Pokemon, PokemonType } from '../types/index.js';
 import type {
   BattleStatId,
   MajorStatusId,
+  MoveBattleBehaviorTag,
   MoveBattleEffect,
   MoveBattleSideEffect,
   MoveBattleSideEffectId,
@@ -891,7 +892,27 @@ export function applyRestEffect(pokemon: Pokemon, runtimeState: BattlePokemonRun
   return healed;
 }
 
-export function applyHealPercent(pokemon: Pokemon, percent: number): number {
+export function applyHealPercent(pokemon: Pokemon, percent: number, tags?: MoveBattleBehaviorTag[]): number {
+  const hours = new Date().getHours();
+  const isMorning = hours >= 5 && hours < 12;
+  const isEvening = hours >= 17 && hours < 21;
+  const isNoon = hours >= 10 && hours < 14;
+
+  // moonlight
+  if (tags?.includes('moonlight')) {
+    if (!isEvening) {
+      percent *= 0.5;
+    }
+  } else if (tags?.includes('synthesis')) {
+    if (!isMorning && !isNoon) {
+      percent *= 0.5;
+    }
+  } else if (tags?.includes('morning-sun')) {
+    if (!isMorning) {
+      percent *= 0.5;
+    }
+  }
+
   const healAmount = Math.max(1, Math.floor((pokemon.maxHp * percent) / 100));
   const healed = Math.min(healAmount, pokemon.maxHp - pokemon.hp);
   pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
