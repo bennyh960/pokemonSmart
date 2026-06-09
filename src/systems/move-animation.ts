@@ -36,7 +36,9 @@ export type AttackAnimationFamily =
   | 'powder'
   | 'shadow-ball'
   | 'bite'
-  | 'night-shade';
+  | 'night-shade'
+  | 'self-boost'
+  | 'self-boost-cooler';
 
 export interface AttackAnimationProfile {
   family: AttackAnimationFamily;
@@ -117,7 +119,44 @@ const PROTECT_SHIELD_MOVES = ['protect', 'detect', 'endure'];
 const SLEEP_TALK_MOVES = ['snore', 'sleep talk'];
 const RANDOM_CALL_MOVES = ['metronome', 'assist', 'copycat', 'mirror move'];
 
-const HEAL_PULSE_MOVES = ['rest', 'recover', 'roost', 'soft-boiled', 'milk drink', 'morning sun', 'moonlight', 'synthesis'];
+const SELF_BOOST_MOVES = [
+  'harden',
+  'defense curl',
+  'withdraw',
+  'iron defense',
+  'barrier',
+  'acid armor',
+  'amnesia',
+  'growth',
+  'minimize',
+  'stockpile',
+];
+
+const COOL_BOOST_MOVES = [
+  'dragon dance',
+  'quiver dance',
+  'shell smash',
+  'swords dance',
+  'nasty plot',
+  'calm mind',
+  'bulk up',
+  'agility',
+  'rock polish',
+  'coil',
+  'no retreat',
+  'victory dance',
+];
+
+const HEAL_PULSE_MOVES = [
+  'rest',
+  'recover',
+  'roost',
+  'soft-boiled',
+  'milk drink',
+  'morning sun',
+  'moonlight',
+  'synthesis',
+];
 
 const DRAGON_AURA_MOVES = [
   'dragon rage',
@@ -132,7 +171,15 @@ const DRAGON_AURA_MOVES = [
 
 const FLAMETHROWER_MOVES = ['flamethrower', 'fire spin', 'heat wave', 'blast burn', 'inferno'];
 
-const LEAF_SPRAY_MOVES = ['razor leaf', 'leaf blade', 'petal dance', 'magic leaf', 'leaf tornado', 'petal blizzard', 'leaf storm'];
+const LEAF_SPRAY_MOVES = [
+  'razor leaf',
+  'leaf blade',
+  'petal dance',
+  'magic leaf',
+  'leaf tornado',
+  'petal blizzard',
+  'leaf storm',
+];
 
 const WATER_FLOW_MOVES = ['water gun', 'waterfall', 'aqua tail', 'whirlpool'];
 const SURF_WAVE_MOVES = ['surf', 'hydro pump', 'hydro cannon'];
@@ -164,33 +211,49 @@ const SMOKE_SCREEN_MOVES = ['smokescreen', 'smoke screen'];
 const MIST_MOVES = ['mist'];
 const HAZE_MOVES = ['haze'];
 const PUNCH_MOVES = [
-  'thunder punch', 'fire punch', 'ice punch', 'mach punch', 'mega punch',
-  'dynamic punch', 'focus punch', 'shadow punch', 'drain punch', 'hammer arm',
-  'sky uppercut', 'dizzy punch', 'comet punch', 'bullet punch', 'sucker punch',
-  'vacuum wave', 'superpower',
+  'thunder punch',
+  'fire punch',
+  'ice punch',
+  'mach punch',
+  'mega punch',
+  'dynamic punch',
+  'focus punch',
+  'shadow punch',
+  'drain punch',
+  'hammer arm',
+  'sky uppercut',
+  'dizzy punch',
+  'comet punch',
+  'bullet punch',
+  'sucker punch',
+  'vacuum wave',
+  'superpower',
 ];
 const POWDER_MOVES = [
-  'sleep powder', 'poison powder', 'stun spore', 'cotton spore',
-  'spore', 'rage powder', 'magic powder', 'powder',
+  'sleep powder',
+  'poison powder',
+  'stun spore',
+  'cotton spore',
+  'spore',
+  'rage powder',
+  'magic powder',
+  'powder',
 ];
-const SHADOW_BALL_MOVES = [
-  'shadow ball', 'ominous wind', 'shadow sneak', 'shadow force',
-];
+const SHADOW_BALL_MOVES = ['shadow ball', 'ominous wind', 'shadow sneak', 'shadow force'];
 const NIGHT_SHADE_MOVES = ['night shade', 'seismic toss', 'psywave'];
 const BITE_MOVES = [
-  'bite', 'crunch', 'hyper fang', 'super fang',
-  'ice fang', 'thunder fang', 'fire fang', 'poison fang',
+  'bite',
+  'crunch',
+  'hyper fang',
+  'super fang',
+  'ice fang',
+  'thunder fang',
+  'fire fang',
+  'poison fang',
 ];
 
 // Generic fallback keyword lists (for moves not matched above)
-const BURST_KEYWORDS = [
-  'bonemerang',
-  'dig',
-  'explosion',
-  'fissure',
-  'self-destruct',
-  'skull bash',
-];
+const BURST_KEYWORDS = ['bonemerang', 'dig', 'explosion', 'fissure', 'self-destruct', 'skull bash'];
 
 const BEAM_KEYWORDS = [
   'aurora beam',
@@ -718,6 +781,34 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       selfTarget: false,
       shakeIntensity: 4.5,
       flashColor: '#c8a060',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, SELF_BOOST_MOVES)) {
+    return {
+      family: 'self-boost',
+      color: '#c8d8ff',
+      accentColor: '#ffffff',
+      duration: 0.46,
+      impactTime: 0.1,
+      selfTarget: true,
+      shakeIntensity: 0,
+      flashColor: '#ffffff',
+      variant,
+    };
+  }
+
+  if (matchesAny(moveName, COOL_BOOST_MOVES)) {
+    return {
+      family: 'self-boost-cooler',
+      color: getTypeColor(type), // use the move's type color
+      accentColor: '#ffffff',
+      duration: 0.62,
+      impactTime: 0.28,
+      selfTarget: true,
+      shakeIntensity: 0,
+      flashColor: getFlashColor(type, getTypeColor(type)),
       variant,
     };
   }

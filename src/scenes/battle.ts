@@ -1879,14 +1879,27 @@ export function createBattleScene(
         return 300;
       }
 
-      // Substitute blocks all opponent-targeting effects — skip moves that would be completely wasted
-      if (playerBattleState.substituteActive) {
-        const ailment = battleData?.ailment ?? null;
-        const hasOpponentTarget =
-          (ailment !== null && ailment.target === 'target') ||
-          effects.some((e) => e.target === 'target') ||
-          (battleData?.statChanges?.some((sc) => sc.target === 'target' && sc.stages < 0) ?? false);
-        if (hasOpponentTarget) return -Infinity;
+      const isSafeGuardActive = isSafeguardActive(playerSideState);
+
+      if (playerBattleState.substituteActive || isSafeGuardActive) {
+        const ailmentTargetsOpponent = battleData?.ailment?.target === 'target';
+        const hasTargetedEffects = effects.some((e) => e.target === 'target');
+        const hasTargetedStatDrop =
+          battleData?.statChanges?.some((sc) => sc.target === 'target' && sc.stages < 0) ?? false;
+
+        // Substitute blocks: ailments, targeted effects, and targeted stat drops
+        if (playerBattleState.substituteActive) {
+          if (ailmentTargetsOpponent || hasTargetedEffects || hasTargetedStatDrop) {
+            return -Infinity;
+          }
+        }
+
+        // Safeguard blocks: ailments and targeted effects (NOT stat drops — those bypass Safeguard)
+        if (isSafeGuardActive) {
+          if (ailmentTargetsOpponent || hasTargetedEffects) {
+            return -Infinity;
+          }
+        }
       }
 
       // Entry hazard moves — set up once, never repeat
@@ -3236,6 +3249,7 @@ export function createBattleScene(
     const defenderHasContrary = defender.abilityId
       ? getAbilityBattleEffects(defender.abilityId).some((e) => e.kind === 'contraryStatChanges')
       : false;
+
     const isReflectable =
       move.power <= 0 &&
       (moveBattleData.ailment?.target === 'target' ||
@@ -3645,6 +3659,85 @@ export function createBattleScene(
             onImpact();
           }),
           waitStep(0.15),
+        ),
+      );
+      return;
+    }
+
+    // --- Self-boost (harden/defense curl) — quick white flash, subtle scale pulse ---
+    if (profile.family === 'self-boost') {
+      animationDirector.play(
+        sequenceStep(
+          parallelStep(
+            tweenActorStep(
+              attackerActor,
+              { scaleX: attackerStart.scaleX * 1.08, scaleY: attackerStart.scaleY * 1.08 },
+              0.1,
+              'easeOut',
+            ),
+            callStep(() => {
+              flash = createFlash('#ffffff', 0.18);
+              attackFx = createAttackEffect({
+                kind: 'pulse',
+                sourceX: source.x,
+                sourceY: source.y,
+                targetX: source.x,
+                targetY: source.y,
+                color: '#e8e8ff',
+                accentColor: '#ffffff',
+                duration: 0.28,
+              });
+            }),
+          ),
+          tweenActorStep(attackerActor, attackerStart, 0.18, 'easeInOut'),
+          callStep(() => {
+            onImpact();
+          }),
+          waitStep(0.1),
+        ),
+      );
+      return;
+    }
+
+    // --- Cool self boost (dragon dance etc.) — slow spin with sparkle burst ---
+    if (profile.family === 'self-boost-cooler') {
+      animationDirector.play(
+        sequenceStep(
+          callStep(() => {
+            attackFx = createAttackEffect({
+              kind: 'dragon-aura',
+              sourceX: source.x,
+              sourceY: source.y,
+              targetX: source.x,
+              targetY: source.y,
+              color: profile.color,
+              accentColor: profile.accentColor,
+              duration: 0.55,
+            });
+          }),
+          parallelStep(
+            tweenActorStep(
+              attackerActor,
+              {
+                rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.25 : 0.25),
+                scaleX: attackerStart.scaleX * 1.12,
+                scaleY: attackerStart.scaleY * 1.12,
+              },
+              0.28,
+              'easeOut',
+            ),
+            sequenceStep(
+              waitStep(0.1),
+              callStep(() => {
+                flash = createFlash(profile.color, 0.22);
+              }),
+            ),
+          ),
+          parallelStep(tweenActorStep(attackerActor, attackerStart, 0.22, 'easeInOut')),
+          callStep(() => {
+            onImpact();
+          }),
+          waitStep(0.12),
         ),
       );
       return;
