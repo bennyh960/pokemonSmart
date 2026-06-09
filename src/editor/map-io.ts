@@ -16,15 +16,14 @@ const templateModules = import.meta.glob<{ default: any }>('../data/maps/templat
 
 // Auto-discover all map JSONs (recursive, excludes templates/ and backup/)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const allMapModules = import.meta.glob<{ default: any }>([
-  '../data/maps/**/*.json',
-  '!../data/maps/templates/**',
-  '!../data/maps/backup/**',
-], { eager: true });
+const allMapModules = import.meta.glob<{ default: any }>(
+  ['../data/maps/**/*.json', '!../data/maps/templates/**', '!../data/maps/backup/**'],
+  { eager: true },
+);
 
 // ID → path lookup
 const mapPathById: Record<string, string> = Object.fromEntries(
-  Object.keys(allMapModules).map(k => [mapIdFromPath(k), k])
+  Object.keys(allMapModules).map((k) => [mapIdFromPath(k), k]),
 );
 
 /** All map IDs — derived from files in src/data/maps/ (recursive). */
@@ -52,10 +51,14 @@ export function getTemplateConsumers(templateId: string): string[] {
 
 /** Load a raw template JSON (unmerged). Injects id/name so the editor knows what to call the file. */
 export async function loadTemplateFromProject(templateId: string): Promise<TileMapData> {
-  const path = Object.keys(templateModules).find(k => templateIdFromPath(k) === templateId);
+  const path = Object.keys(templateModules).find((k) => templateIdFromPath(k) === templateId);
   if (!path) throw new Error(`Template "${templateId}" not found in templates/ folder.`);
   const raw = (await templateModules[path]()).default as Record<string, unknown>;
-  return { ...raw, id: (raw.id as string) || templateId, name: (raw.name as string) || templateId } as unknown as TileMapData;
+  return {
+    ...raw,
+    id: (raw.id as string) || templateId,
+    name: (raw.name as string) || templateId,
+  } as unknown as TileMapData;
 }
 
 /** Load a map JSON without merging its template (returns raw instance data). */
@@ -127,30 +130,35 @@ export function exportMapJSON(data: TileMapData): string {
   if (hasTemplate && tc) {
     const clone: Record<string, unknown> = {};
     // Identity — write only the short name (last segment), not the full folder/name path
-    if (raw.id)       clone.id       = (raw.id as string).split('/').pop() ?? raw.id;
-    if (raw.name)     clone.name     = raw.name;
+    if (raw.id) clone.id = (raw.id as string).split('/').pop() ?? raw.id;
+    if (raw.name) clone.name = raw.name;
     clone.template = raw.template;
-    if (raw.tileset)  clone.tileset  = raw.tileset;   // explicit for readability
-    if (raw.label)    clone.label    = raw.label;
-    if (raw.area)     clone.area     = raw.area;
-    if (raw.music)    clone.music    = raw.music;
+    if (raw.tileset) clone.tileset = raw.tileset; // explicit for readability
+    if (raw.label) clone.label = raw.label;
+    if (raw.area) clone.area = raw.area;
+    if (raw.music) clone.music = raw.music;
     if (raw.encounterTableId !== undefined) clone.encounterTableId = raw.encounterTableId;
-    if (raw.spawn)    clone.spawn    = raw.spawn;
-    if (raw.music)    clone.music    = raw.music;
+    if (raw.spawn) clone.spawn = raw.spawn;
+    if (raw.music) clone.music = raw.music;
 
     // Slice to instance-only array portions
     const instTransitions = (data.transitions ?? []).slice(tc.transitions);
-    const instNpcs        = (data.npcs        ?? []).slice(tc.npcs);
-    const instObjects     = (data.objects     ?? []).slice(tc.objects);
+    const instNpcs = (data.npcs ?? []).slice(tc.npcs);
+    const instObjects = (data.objects ?? []).slice(tc.objects);
     if (instTransitions.length) clone.transitions = instTransitions;
-    if (instNpcs.length)        clone.npcs        = instNpcs;
+    if (instNpcs.length) clone.npcs = instNpcs;
     if (raw.interactiveItems && Object.keys(raw.interactiveItems as object).length > 0)
       clone.interactiveItems = raw.interactiveItems;
 
     let json = JSON.stringify(clone, null, 2);
     if (instObjects.length) {
-      json = json.slice(0, -1) + ',\n  "objects": ' +
-        JSON.stringify(instObjects, null, 2).split('\n').map((l, i) => i === 0 ? l : '  ' + l).join('\n') +
+      json =
+        json.slice(0, -1) +
+        ',\n  "objects": ' +
+        JSON.stringify(instObjects, null, 2)
+          .split('\n')
+          .map((l, i) => (i === 0 ? l : '  ' + l))
+          .join('\n') +
         '\n}';
     }
     return json;
@@ -158,7 +166,7 @@ export function exportMapJSON(data: TileMapData): string {
 
   // ── Normal map (no template) ──────────────────────────────────────────────
   const clone = { ...data } as Record<string, unknown>;
-  const tiles  = data.tiles;
+  const tiles = data.tiles;
   const objects = data.objects;
   const objLayer = data.objectLayer;
   delete clone._templateCounts;
@@ -174,8 +182,12 @@ export function exportMapJSON(data: TileMapData): string {
   json = json.slice(0, -1) + ',\n  "tiles": [\n' + tileRows.join(',\n') + '\n  ]';
 
   if (objects && objects.length > 0) {
-    json += ',\n  "objects": ' +
-      JSON.stringify(objects, null, 2).split('\n').map((l, i) => i === 0 ? l : '  ' + l).join('\n');
+    json +=
+      ',\n  "objects": ' +
+      JSON.stringify(objects, null, 2)
+        .split('\n')
+        .map((l, i) => (i === 0 ? l : '  ' + l))
+        .join('\n');
   }
 
   if (objLayer) {

@@ -129,6 +129,7 @@ export function mergeMapWithTemplate(
     npcs: template.npcs?.length ?? 0,
     objects: template.objects?.length ?? 0,
   };
+
   return {
     // ── Layout: always from template ──────────────────────────────
     tiles: template.tiles,

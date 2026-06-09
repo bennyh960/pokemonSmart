@@ -1,0 +1,28 @@
+{
+  "id": "e43-t-e44",
+  "name": "League Pass I",
+  "template": "league-pass-i",
+  "tileset": "interior",
+  "label": {
+    "en": "Elite 4 - Cynthia to Lance",
+    "he": "הדרך לגמר הגדול"
+  },
+  "music": "victory",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 3,
+    "y": 7
+  },
+  "transitions": [
+    {
+      "fromX": 11,
+      "fromY": 4,
+      "toMapId": "league/e4-4"
+    },
+    {
+      "fromX": 11,
+      "fromY": 5,
+      "toMapId": "league/e4-4"
+    }
+  ]
+}

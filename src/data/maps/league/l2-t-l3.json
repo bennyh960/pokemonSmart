@@ -1,0 +1,28 @@
+{
+  "id": "l2-t-l3",
+  "name": "League Pass II",
+  "template": "league-pass-i",
+  "tileset": "interior",
+  "label": {
+    "en": "League 3",
+    "he": "מעבר לשלב ג'"
+  },
+  "music": "victory",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 3,
+    "y": 7
+  },
+  "transitions": [
+    {
+      "fromX": 11,
+      "fromY": 4,
+      "toMapId": "league/l3"
+    },
+    {
+      "fromX": 11,
+      "fromY": 5,
+      "toMapId": "league/l3"
+    }
+  ]
+}

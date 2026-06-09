@@ -1,0 +1,28 @@
+{
+  "id": "e41-t-e42",
+  "name": "League Pass I",
+  "template": "league-pass-i",
+  "tileset": "interior",
+  "label": {
+    "en": "Path to Elite 4 - Cynthia",
+    "he": "הדרך לרבע הגמר"
+  },
+  "music": "victory",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 3,
+    "y": 7
+  },
+  "transitions": [
+    {
+      "fromX": 11,
+      "fromY": 4,
+      "toMapId": "league/e4-2"
+    },
+    {
+      "fromX": 11,
+      "fromY": 5,
+      "toMapId": "league/e4-2"
+    }
+  ]
+}

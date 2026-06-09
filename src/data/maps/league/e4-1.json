@@ -1,0 +1,120 @@
+{
+  "id": "e4-1",
+  "name": "Elite 4 - Alice",
+  "template": "league-i",
+  "tileset": "interior",
+  "label": {
+    "en": "Elite 4 - Alice",
+    "he": "ארבעת הנבחרים - אליס"
+  },
+  "music": "victory",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 5,
+    "y": 8
+  },
+  "transitions": [
+    {
+      "fromX": 10,
+      "fromY": 4,
+      "toMapId": "league/e41-t-e42"
+    },
+    {
+      "fromX": 11,
+      "fromY": 4,
+      "toMapId": "league/e41-t-e42"
+    }
+  ],
+  "npcs": [
+    {
+      "id": "leauge-e4-alice",
+      "x": 14,
+      "y": 7,
+      "facing": "left",
+      "type": "trainer",
+      "dialogue": [
+        {
+          "en": "!",
+          "he": ""
+        }
+      ],
+      "spriteType": "alice",
+      "party": [
+        {
+          "pokemonId": 53,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 94,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 36,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 149,
+          "level": 62,
+          "moves": [],
+          "mustInclude": 5
+        },
+        {
+          "pokemonId": 112,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 143,
+          "level": 62,
+          "moves": [],
+          "mustInclude": 4
+        },
+        {
+          "pokemonId": 131,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 99,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 230,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 6,
+          "level": 62,
+          "moves": [],
+          "mustInclude": 3
+        },
+        {
+          "pokemonId": 176,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 103,
+          "level": 62,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 10000
+      },
+      "postBattleDialogue": [],
+      "reencounter": {
+        "count": 19,
+        "lvlStep": 2,
+        "infinite": true,
+        "addToPhone": false
+      }
+    }
+  ]
+}
