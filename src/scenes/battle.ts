@@ -85,7 +85,11 @@ import {
   type EvolutionStep,
 } from '../services/pokemon-data.js';
 import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp, type StatGains } from '../systems/encounter.js';
-import { calcAbilityDamageTakenMultiplier, getDefenderAbilityActivationMsg } from '../systems/ability-processor.js';
+import {
+  activateSwitchingOutAbilities,
+  calcAbilityDamageTakenMultiplier,
+  getDefenderAbilityActivationMsg,
+} from '../systems/ability-processor.js';
 import { sendCaughtToBox } from '../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../systems/game-state.js';
@@ -3886,7 +3890,12 @@ export function createBattleScene(
     let redirectMsg: string | null = null;
 
     if (redirectTag !== null) {
-      if (m.currentPp > 0) m.currentPp--;
+      if (m.currentPp > 0) {
+        if (enemy.abilityId === 46) {
+          m.currentPp--; // Pressure ability: additional PP reduction on foe's move
+        }
+        m.currentPp--;
+      }
       let redirectId: number | null = null;
 
       if (redirectTag === 'sleep-talk') {
@@ -7041,6 +7050,9 @@ export function createBattleScene(
               const prevPokemon = pd.party.find((p) => p.id === previousLeadId);
               if (prevPokemon && prevPokemon.hp > 0) {
                 switchMsgs.push(t('battle.comeBack', { name: getPokemonDisplayName(previousLeadId!) }));
+                // activate abilities of switching out such as regenerator or refresh
+                const switchOutMsgs = activateSwitchingOutAbilities(prevPokemon);
+                switchMsgs.push(...switchOutMsgs);
               }
               switchMsgs.push(t('battle.goName', { name: getPokemonDisplayName(player.id) }));
               textBox = createTextBox(switchMsgs, isRTL());
@@ -7082,6 +7094,7 @@ export function createBattleScene(
               startPlayerSendOutAnimation();
             }
           }
+
           if (!textBox && !animationDirector.isBusy()) {
             // Apply entry hazards to the newly switched-in player Pokemon
             if (pendingPlayerEntryHazard) {

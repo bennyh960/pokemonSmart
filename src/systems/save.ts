@@ -326,6 +326,19 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     data.saveVersion = 17;
     console.log('Migrated save to version 17: removed move accuracy and mathDifficulty fields.');
   },
+  // 18: (data) => {
+  //   data.party.forEach((pokemon: Record<string, any>) => {
+  //     const pokId = pokemon.id;
+  //     const abilites = getPokemonAbilities(pokId);
+  //     if (pokId === 149) {
+  //       pokemon.abilityId = abilites?.hidden ?? abilites?.abilities[0] ?? null;
+  //     }
+  //     if (pokId === 151) {
+  //       pokemon.abilityId = abilites?.hidden ?? abilites?.abilities[0] ?? null;
+  //     }
+  //     console.log({ pokId, abilites, name: getPokemonDisplayName(pokId) });
+  //   });
+  // },
 };
 
 function migrateSave(data: Record<string, any>): PlayerData {

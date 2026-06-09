@@ -2,6 +2,7 @@ import type { Pokemon, PokemonType } from '../types/index.js';
 import type { AbilityBattleEffect } from '../types/battle-metadata.js';
 import type { BattlePokemonRuntimeState } from './battle-state.js';
 import { t } from '../i18n/i18n.js';
+import { getPokemonDisplayName } from '../services/pokemon-data.js';
 
 /**
  * Returns the combined damage-taken multiplier from a defender's ability effects.
@@ -79,4 +80,25 @@ export function getDefenderAbilityActivationMsg(
     return t(messageKey, { name: defName });
   }
   return null;
+}
+
+// currently there is  no message box to render
+export function activateSwitchingOutAbilities(pokemon: Pokemon): string[] {
+  const messages: string[] = [];
+
+  // Regenerator heals 1/3 max HP on switch out
+  if (pokemon.abilityId === 144) {
+    pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + Math.floor(pokemon.maxHp / 3));
+    messages.push(t('ability.regenerator', { name: getPokemonDisplayName(pokemon.id) }));
+  }
+
+  // natural cure heals status on switch out
+  else if (pokemon.abilityId === 30) {
+    if (pokemon.status) {
+      pokemon.status = null;
+      messages.push(t('ability.naturalCure', { name: getPokemonDisplayName(pokemon.id) }));
+    }
+  }
+
+  return messages;
 }

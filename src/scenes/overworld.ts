@@ -34,7 +34,15 @@ import {
 } from '../systems/move-learning.js';
 import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
-import { getPokemon, getPokemonDisplayName, getLocalizedName, getNextEvolution } from '../services/pokemon-data.js';
+import {
+  getPokemon,
+  getPokemonDisplayName,
+  getLocalizedName,
+  getNextEvolution,
+  getPokemonAbilities,
+  getAbilityDisplayName,
+  getAbilityDisplayNameAndDescription,
+} from '../services/pokemon-data.js';
 import { setEvolutionData } from '../scenes/evolution.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
@@ -775,6 +783,94 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           });
         };
       }
+    } else if (npc.type === 'abilities-swap') {
+      const pd = getPlayerData();
+      const rtl = isRTL();
+      const npcSpeaker = npc.name ? getLocalizedName(npc.name) : undefined;
+      restoreNPCFacing(npc);
+      interactingNPC = null;
+
+      // ── Step 1: Pick a Pokémon ──
+      activeTextBox = createTextBox(
+        [
+          t('npc.abilitiesSwap.intro1'),
+          t('npc.abilitiesSwap.intro2'),
+          t('npc.abilitiesSwap.intro3'),
+          t('npc.abilitiesSwap.intro4'),
+        ],
+        rtl,
+        npcSpeaker,
+      );
+      pendingDialogueCallback = () => {
+        const options = pd.party.map((p) => getPokemonDisplayName(p.id));
+        options.push(t('npc.choice.cancel'));
+
+        showListChoice(options, (pokIdx) => {
+          if (pokIdx >= pd.party.length) return; // cancel
+
+          const pokemon = pd.party[pokIdx];
+          const abilitiesData = getPokemonAbilities(pokemon.id);
+          const allAbilities = abilitiesData ? [...abilitiesData.abilities] : [];
+          if (abilitiesData?.hidden) {
+            allAbilities.push(abilitiesData.hidden);
+          }
+          const swappable = allAbilities.filter((a) => a !== pokemon.abilityId);
+
+          if (swappable.length === 0) {
+            activeTextBox = createTextBox([t('npc.abilitiesSwap.noOptions')], rtl, npcSpeaker);
+            return;
+          }
+
+          // ── Step 2: Pick an ability ──
+          const abilityOptions = swappable.map((a) => getAbilityDisplayName(a)); // however you localize ability names
+          abilityOptions.push(t('npc.choice.cancel'));
+
+          showListChoice(abilityOptions, (abilIdx) => {
+            if (abilIdx >= swappable.length) return; // cancel
+
+            const chosen = swappable[abilIdx];
+            const pokeName = getPokemonDisplayName(pokemon.id);
+            const [currentAbilityName, currentAbilityDesc] = getAbilityDisplayNameAndDescription(
+              pokemon.abilityId ?? 0,
+            );
+            const [abilityName, abilityDescription] = getAbilityDisplayNameAndDescription(chosen);
+            const cost = 1e4; // your constant, e.g. 5000
+
+            // ── Step 3: Confirm + pay ──
+            activeTextBox = createTextBox(
+              [
+                t('npc.abilitiesSwap.currentAbility', { name: currentAbilityName, desc: currentAbilityDesc }),
+                t('npc.abilitiesSwap.altAbility', { name: abilityName, desc: abilityDescription }),
+                t('npc.abilitiesSwap.confirm', { name: pokeName, ability: abilityName, cost }),
+              ],
+              rtl,
+              npcSpeaker,
+            );
+            pendingDialogueCallback = () => {
+              showChoice((confirmIdx) => {
+                if (confirmIdx !== 0) {
+                  activeTextBox = createTextBox([t('npc.abilitiesSwap.cancelled')], rtl, npcSpeaker);
+                  return;
+                }
+                if (pd.money < cost) {
+                  activeTextBox = createTextBox([t('npc.abilitiesSwap.noMoney', { cost })], rtl, npcSpeaker);
+                  return;
+                }
+
+                pd.money -= cost;
+                pokemon.abilityId = chosen;
+                autoSave();
+
+                activeTextBox = createTextBox(
+                  [t('npc.abilitiesSwap.success', { name: pokeName, ability: abilityName })],
+                  rtl,
+                  npcSpeaker,
+                );
+              });
+            };
+          });
+        });
+      };
     } else if (npc.type === 'shopkeeper') {
       showChoice((idx) => {
         if (idx === 0) {

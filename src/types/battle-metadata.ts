@@ -181,6 +181,12 @@ export type AbilityBattleEffect =
       messageKey?: string;
     }
   | {
+      // Fires when this Pokémon leaves battle. 'opponent' (regenerator or ).
+      kind: 'onSwitchOutChange';
+      target: 'opponent' | 'self';
+      messageKey?: string;
+    }
+  | {
       kind: 'weatherSummon';
       weather: WeatherConditionId;
     }

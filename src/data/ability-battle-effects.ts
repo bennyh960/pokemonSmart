@@ -85,3 +85,8 @@ export const ABILITY_BATTLE_EFFECTS: Record<string, AbilityBattleEffect[]> = {
   'Rain Dish': [{ kind: 'weatherHealInstead', weather: 'rain' }],
   Overcoat: [{ kind: 'weatherImmunity' }],
 };
+
+// export const ABILITY_SWITCHING_OUT_EFFECTS: Record<string, AbilityBattleEffect[]> = {
+//   Regenerator: [{ kind: 'onSwitchOutChange', messageKey: 'ability.regeneratorActivation', target: 'self' }],
+//   'Natural Cure': [{ kind: 'onSwitchOutChange', messageKey: 'ability.naturalCure', target: 'self', }],
+// };

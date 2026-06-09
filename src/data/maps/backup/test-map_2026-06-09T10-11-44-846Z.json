@@ -427,20 +427,6 @@
       "randomChars": [
         "rival"
       ]
-    },
-    {
-      "id": "npc-1780999885383",
-      "x": 11,
-      "y": 10,
-      "facing": "down",
-      "type": "abilities-swap",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": "היי"
-        }
-      ],
-      "spriteType": "dana"
     }
   ],
   "music": "town",

@@ -120,7 +120,15 @@ export interface NPCData {
   x: number;
   y: number;
   facing: 'up' | 'down' | 'left' | 'right';
-  type: 'dialogue' | 'trainer' | 'shopkeeper' | 'healer' | 'gate-guard' | 'wild-pokemon' | 'day-care';
+  type:
+    | 'dialogue'
+    | 'trainer'
+    | 'shopkeeper'
+    | 'healer'
+    | 'gate-guard'
+    | 'wild-pokemon'
+    | 'day-care'
+    | 'abilities-swap';
   dialogue: BilingualText[];
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;

@@ -507,7 +507,11 @@ export function getAbilityDisplayName(id: number): string {
   if (!a) return '???';
   return a.name[getLocale()];
 }
-
+export function getAbilityDisplayNameAndDescription(id: number): [string, string] {
+  const a = abilities[String(id)];
+  if (!a) return ['???', ''];
+  return [a.name[getLocale()], a.description[getLocale()]];
+}
 /** Get the ability mapping for a Pokemon (regular + hidden abilities). */
 export function getPokemonAbilities(pokemonId: number): PokemonAbilityMapping | undefined {
   return pokemonAbilities[String(pokemonId)];
