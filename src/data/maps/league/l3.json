@@ -346,7 +346,9 @@
         "money": 7000
       },
       "postBattleDialogue": [],
-      "randomChars": [""],
+      "randomChars": [
+        "league3"
+      ],
       "reencounter": {
         "count": 15,
         "lvlStep": 2,

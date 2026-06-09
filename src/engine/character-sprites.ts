@@ -52,6 +52,8 @@ export type CharacterRole =
   | 'trainer' // generic route trainers
   | 'townfolk' // regular town residents
   | 'ranger' // route / safari guides
+  | 'league2' // league randoms group 2
+  | 'league3' // league randoms group 3
   | 'wild-pokemon' // overworld wild Pokémon sprites
   | 'swimmers'; // swimmers and beachgoers (often sharing frames with wild Pokémon)
 
@@ -73,6 +75,8 @@ export const CHARACTER_ROLES: CharacterRole[] = [
   'ranger',
   'wild-pokemon',
   'swimmers',
+  'league2',
+  'league3',
 ];
 
 interface CharacterDef {

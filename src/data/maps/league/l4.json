@@ -27,244 +27,23 @@
   ],
   "npcs": [
     {
-      "id": "league-rand-4",
+      "id": "league-rival",
       "x": 14,
       "y": 7,
       "facing": "left",
       "type": "trainer",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": ""
+          "en": "",
+          "he": "יפה יפה ! הגעת עד לכאן?!"
+        },
+        {
+          "en": "",
+          "he": "המנצח ביננו יזכה לעבור לשלב הבא."
         }
       ],
-      "spriteType": "npc-male",
+      "spriteType": "rival-reminder",
       "party": [
-        {
-          "pokemonId": 3,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 6,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 9,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 26,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 125,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 126,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 157,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 160,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 154,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 182,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 217,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 94,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 85,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 15,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 71,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 45,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 206,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 128,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 31,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 31,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 168,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 121,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 89,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 241,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 82,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 208,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 106,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 107,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 237,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 68,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 62,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 164,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 176,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 178,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 181,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 185,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 196,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 202,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 124,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 227,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 115,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 110,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 131,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 22,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 18,
-          "level": 60,
-          "moves": []
-        },
         {
           "pokemonId": 78,
           "level": 60,
@@ -346,9 +125,6 @@
         "money": 8000
       },
       "postBattleDialogue": [],
-      "randomChars": [
-        ""
-      ],
       "reencounter": {
         "count": 20,
         "lvlStep": 2,

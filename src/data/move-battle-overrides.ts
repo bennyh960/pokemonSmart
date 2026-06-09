@@ -220,6 +220,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
 
   // Hazard/screen interactions
   'Brick Break': { behaviorTags: ['brick-break'] },
+  Reversal: { behaviorTags: ['reversal'] },
   Defog: { behaviorTags: ['defog'], statChanges: [stageChange('evasion', -1, 'target', 100)] },
 
   // Healing moves

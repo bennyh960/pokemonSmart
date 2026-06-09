@@ -182,7 +182,11 @@ export function healParty(): void {
 /** Record the current location as the last Pokemon Center visited. */
 export function updateLastPokemonCenter(mapId: string, x: number, y: number): void {
   const pd = getPlayerData();
-  pd.lastPokemonCenter = { mapId, x, y };
+  if (mapId.startsWith('league/')) {
+    pd.lastPokemonCenter = { mapId: 'zeroville/zeroville', x: 4, y: 5 };
+  } else {
+    pd.lastPokemonCenter = { mapId, x, y };
+  }
 }
 
 /** Auto-save the current game state to the current slot (or first free slot for new games). */

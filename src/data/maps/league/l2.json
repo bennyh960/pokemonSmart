@@ -346,13 +346,15 @@
         "money": 6000
       },
       "postBattleDialogue": [],
-      "randomChars": [""],
       "reencounter": {
         "count": 15,
         "lvlStep": 2,
         "infinite": true,
         "addToPhone": false
-      }
+      },
+      "randomChars": [
+        "league2"
+      ]
     }
   ]
 }

@@ -533,7 +533,8 @@
           "sx": 64,
           "sy": 256
         }
-      ]
+      ],
+      "roles": ["league2"]
     },
     "char_485c6e": {
       "frameWidth": 32,
@@ -587,7 +588,8 @@
           "sx": 480,
           "sy": 96
         }
-      ]
+      ],
+      "roles": ["league2"]
     },
     "char_c3dacc": {
       "frameWidth": 32,
@@ -641,7 +643,8 @@
           "sx": 768,
           "sy": 96
         }
-      ]
+      ],
+      "roles": ["league2"]
     },
     "char_459058": {
       "frameWidth": 32,
@@ -695,7 +698,8 @@
           "sx": 864,
           "sy": 96
         }
-      ]
+      ],
+      "roles": ["league3"]
     },
     "char_10af6a": {
       "frameWidth": 32,
@@ -749,7 +753,8 @@
           "sx": 960,
           "sy": 96
         }
-      ]
+      ],
+      "roles": ["league3"]
     },
     "char_0502ea": {
       "frameWidth": 32,
@@ -803,7 +808,8 @@
           "sx": 992,
           "sy": 256
         }
-      ]
+      ],
+      "roles": ["league2"]
     },
     "char_392694": {
       "frameWidth": 32,
@@ -911,7 +917,8 @@
           "sx": 64,
           "sy": 640
         }
-      ]
+      ],
+      "roles": ["league3"]
     },
     "char_2db5a7": {
       "frameWidth": 32,
@@ -1118,7 +1125,8 @@
           "sx": 512,
           "sy": 768
         }
-      ]
+      ],
+      "roles": ["league2"]
     },
     "char_4b1e38": {
       "frameWidth": 32,
@@ -1172,7 +1180,8 @@
           "sx": 768,
           "sy": 768
         }
-      ]
+      ],
+      "roles": ["league2"]
     },
     "gym-1-adda": {
       "frameWidth": 32,
@@ -1619,7 +1628,8 @@
           "sx": 864,
           "sy": 384
         }
-      ]
+      ],
+      "roles": ["league3"]
     },
     "gym-8-algebria": {
       "frameWidth": 32,
@@ -1732,7 +1742,8 @@
           "sx": 704,
           "sy": 1056
         }
-      ]
+      ],
+      "roles": ["league3"]
     },
     "char_3470af": {
       "frameWidth": 32,
@@ -1786,7 +1797,8 @@
           "sx": 800,
           "sy": 1056
         }
-      ]
+      ],
+      "roles": ["league3"]
     },
     "char_5b4066": {
       "frameWidth": 32,
@@ -1840,7 +1852,8 @@
           "sx": 896,
           "sy": 1056
         }
-      ]
+      ],
+      "roles": ["league3"]
     },
     "gym-3-kafla": {
       "frameWidth": 32,
@@ -2533,7 +2546,8 @@
       "name": {
         "en": "Ben",
         "he": "בן"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_d152a6": {
       "frameWidth": 32,
@@ -3061,7 +3075,8 @@
       "name": {
         "en": "Ethan",
         "he": "איתן"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_1f9b7d": {
       "frameWidth": 32,
@@ -3119,7 +3134,8 @@
       "name": {
         "en": "Joey",
         "he": "ג'ואי"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_6bacac": {
       "frameWidth": 32,
@@ -3177,7 +3193,8 @@
       "name": {
         "en": "Noa",
         "he": "נועה"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_a8bd41": {
       "frameWidth": 32,
@@ -3235,7 +3252,8 @@
       "name": {
         "en": "Ben",
         "he": "בן"
-      }
+      },
+      "roles": ["league2"]
     },
     "char_4c0f36": {
       "frameWidth": 32,
@@ -3339,7 +3357,8 @@
       "name": {
         "en": "Elm",
         "he": "אלם"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_899006": {
       "frameWidth": 32,
@@ -3397,7 +3416,8 @@
       "name": {
         "en": "Ethan",
         "he": "איתן"
-      }
+      },
+      "roles": ["league3"]
     },
     "gym-7-integrala": {
       "frameWidth": 32,
@@ -3632,7 +3652,8 @@
       "name": {
         "en": "Joey",
         "he": "ג'ואי"
-      }
+      },
+      "roles": ["league3"]
     },
     "rival-story-gary": {
       "frameWidth": 32,
@@ -4186,7 +4207,7 @@
         "en": "Lia",
         "he": "khv"
       },
-      "roles": ["townfolk"]
+      "roles": ["townfolk", "league2"]
     },
     "char_22fdd1": {
       "frameWidth": 32,
@@ -4241,7 +4262,7 @@
         "en": "Tech",
         "he": "טכנאי חשמל"
       },
-      "roles": ["gym-helper"]
+      "roles": ["gym-helper", "league2"]
     },
     "char_330791": {
       "frameWidth": 32,
@@ -4484,7 +4505,8 @@
       "name": {
         "en": "Mos",
         "he": "משה"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_77d85f": {
       "frameWidth": 32,
@@ -4576,7 +4598,8 @@
       "name": {
         "en": "Amy",
         "he": "איימי"
-      }
+      },
+      "roles": ["league2"]
     },
     "char_cfd98f": {
       "frameWidth": 32,
@@ -4668,7 +4691,8 @@
       "name": {
         "en": "Erika",
         "he": "אריקה"
-      }
+      },
+      "roles": ["league2"]
     },
     "char_75200a": {
       "frameWidth": 32,
@@ -4714,7 +4738,8 @@
       "name": {
         "en": "Crystal",
         "he": "קריסטל"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_6f8e9b": {
       "frameWidth": 32,
@@ -4760,7 +4785,8 @@
       "name": {
         "en": "Jimmy",
         "he": "ג'ימי"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_93367f": {
       "frameWidth": 32,
@@ -4807,7 +4833,7 @@
         "en": "Power Tech",
         "he": "Power Tech"
       },
-      "roles": ["gym-helper"]
+      "roles": ["gym-helper", "league2"]
     },
     "char_7ca291": {
       "frameWidth": 32,
@@ -4853,7 +4879,8 @@
       "name": {
         "en": "Grand Lea",
         "he": "סבתא לאה"
-      }
+      },
+      "roles": ["league2"]
     },
     "char_dc1a34": {
       "frameWidth": 32,
@@ -4899,7 +4926,8 @@
       "name": {
         "en": "Maya",
         "he": "מאיה"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_46f643": {
       "frameWidth": 32,
@@ -4945,7 +4973,8 @@
       "name": {
         "en": "Tommy",
         "he": "טומי"
-      }
+      },
+      "roles": ["league3"]
     },
     "char_9db696": {
       "frameWidth": 32,
