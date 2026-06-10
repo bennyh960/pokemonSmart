@@ -25,6 +25,13 @@ export interface TypeBadgeStyle {
 }
 
 export const TYPE_BADGE: Record<PokemonType, TypeBadgeStyle> = {
+  struggle: {
+    bg: 'rgba(136,136,136,0.12)',
+    border: 'rgba(136,136,136,0.2)',
+    color: '#888888',
+    en: 'Struggle',
+    he: 'מאבק',
+  },
   normal: {
     en: 'Normal',
     he: 'רגיל',
