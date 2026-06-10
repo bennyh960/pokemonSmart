@@ -81,6 +81,13 @@ export interface ShopState {
   messageTimer: number;
   quantitySelection: boolean; // האם חלונית הכמות פתוחה
   quantity: number;
+
+  // ─── שדות חדשים למנגנון ההנחה ───
+  sessionDiscount: number; // אחוז ההנחה הנוכחי לחנות זו (0, 10, 20, 30)
+  quizActive: boolean; // האם מסך השאלה פתוח כעת
+  quizInputStr: string; // התשובה שהשחקן מציע למחיר הסופי
+  quizResult: 'correct' | 'wrong' | null; // תוצאת המענה
+  quizResultTimer: number; // טיימר להמתנה של ה-2 שניות
 }
 
 export function createShopState(): ShopState {
@@ -94,6 +101,11 @@ export function createShopState(): ShopState {
     messageTimer: 0,
     quantitySelection: false,
     quantity: 1,
+    sessionDiscount: rollSessionDiscount(), // גלגול הנחה אקראית בתחילת כל ביקור בחנות
+    quizActive: false,
+    quizInputStr: '',
+    quizResult: null,
+    quizResultTimer: 0,
   };
 }
 
@@ -105,6 +117,12 @@ export function openShop(shop: ShopState): void {
   shop.message = null;
   shop.messageTimer = 0;
   shop.items = getShopItemsForCategory(CATEGORIES[0].id);
+  // אתחול מערכת ההנחות
+  shop.sessionDiscount = rollSessionDiscount();
+  shop.quizActive = false;
+  shop.quizInputStr = '';
+  shop.quizResult = null;
+  shop.quizResultTimer = 0;
 }
 
 export function closeShop(shop: ShopState): void {
@@ -133,7 +151,100 @@ function buyItem(itemId: string, quantity: number): boolean {
 export function updateShop(shop: ShopState, input: InputManager, dt: number): boolean {
   if (!shop.open) return false;
 
-  // 1. טיימר הודעות (נשאר כרגיל)
+  const pd = getPlayerData();
+  const currentItem = shop.items[shop.selectedItem];
+  const baseTotalPrice = currentItem ? currentItem.price * shop.quantity : 0;
+  const correctAnswer = calculateDiscountedPrice(baseTotalPrice, shop.sessionDiscount);
+
+  // ─── 1. מצב הצגת תוצאה (נעול ל-2 שניות, קניות אוטומטיות בסיום) ───
+  if (shop.quizActive && shop.quizResult !== null) {
+    shop.quizResultTimer += dt;
+    if (shop.quizResultTimer >= 2.0) {
+      const finalPrice = shop.quizResult === 'correct' ? correctAnswer : baseTotalPrice;
+
+      if (pd.money >= finalPrice) {
+        pd.money -= finalPrice;
+        pd.items[currentItem.id] = (pd.items[currentItem.id] || 0) + shop.quantity;
+        autoSave();
+        shop.message = shop.quizResult === 'correct' ? t('shop.bought') : 'הרכישה בוצעה במחיר מלא';
+      } else {
+        shop.message = t('shop.cantAfford');
+      }
+
+      // איפוס מוחלט של כל תתי-המסכים וחזרה לחנות הראשית
+      shop.quizActive = false;
+      shop.quizResult = null;
+      shop.quantitySelection = false;
+      shop.messageTimer = 0;
+    }
+    return true; // עוצר אינפוטים אחרים ברקע
+  }
+
+  // ─── 2. מצב אתגר ההנחה (הזנת מספרים חופשית - חיצים משוחררים!) ───
+  if (shop.quizActive && currentItem) {
+    if (input.isKeyPressed('Escape')) {
+      shop.quizActive = false;
+      return true;
+    }
+
+    // קריאה לפונקציית קליטת הספרות
+    handleKeyboardNumericInput(shop, input);
+
+    // בדיקת התשובה בלחיצה על Enter
+    if (input.isKeyPressed('Enter')) {
+      shop.quizResultTimer = 0;
+      const playerNum = parseInt(shop.quizInputStr, 10) || 0; // המרה למספר (ברירת מחדל 0 אם ריק)
+
+      if (playerNum === correctAnswer) {
+        shop.quizResult = 'correct';
+        // // playSound('success');
+      } else {
+        shop.quizResult = 'wrong';
+        // // playSound('fail');
+      }
+    }
+    return true;
+  }
+
+  // ─── 3. מצב בחירת כמות חפצים (לפני הקנייה) ───
+  if (shop.quantitySelection && currentItem) {
+    const maxAffordable = Math.min(99, Math.floor(pd.money / currentItem.price));
+
+    if (input.isKeyPressed('Escape')) {
+      shop.quantitySelection = false;
+      return true;
+    }
+
+    // מעבר לאתגר ההנחה בלחיצה על SPACE
+    if (input.isKeyPressed(' ') && shop.sessionDiscount > 0 && maxAffordable > 0) {
+      shop.quizActive = true;
+      shop.quizInputStr = ''; // מתחיל ריק כדי שהשחקן יקליד מאפס
+      shop.quizResult = null;
+      return true;
+    }
+
+    // שינוי כמות (רק במצב זה החיצים משנים כמות!)
+    if (input.isKeyPressed('ArrowUp') || input.isKeyPressed('ArrowRight')) {
+      if (shop.quantity < maxAffordable) shop.quantity++;
+    }
+    if (input.isKeyPressed('ArrowDown') || input.isKeyPressed('ArrowLeft')) {
+      if (shop.quantity > 1) shop.quantity--;
+    }
+
+    // קנייה רגילה ישירה ללא הנחה (מחיר מלא)
+    if (input.isKeyPressed('Enter')) {
+      if (shop.quantity > 0 && buyItemDirect(currentItem.id, shop.quantity)) {
+        shop.message = t('shop.bought');
+      } else {
+        shop.message = t('shop.cantAfford');
+      }
+      shop.quantitySelection = false;
+      shop.messageTimer = 0;
+    }
+    return true;
+  }
+
+  // ─── 4. טיימר הודעות רגיל של החנות ───
   if (shop.message) {
     shop.messageTimer += dt;
     if (shop.messageTimer >= 1.2) {
@@ -143,52 +254,7 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
     return true;
   }
 
-  const pd = getPlayerData();
-  const currentItem = shop.items[shop.selectedItem];
-
-  // 2. לוגיקה כאשר חלונית בחירת הכמות פתוחה
-  if (shop.quantitySelection && currentItem) {
-    // חישוב גבול מקסימלי לפי הנוסחה שביקשת
-    const maxAffordable = Math.min(99, Math.floor(pd.money / currentItem.price));
-
-    if (input.isKeyPressed('Escape')) {
-      shop.quantitySelection = false; // ביטול וחזרה לחנות
-      return true;
-    }
-
-    // חץ למעלה או חץ ימינה מעלים כמות
-    if (input.isKeyPressed('ArrowUp') || input.isKeyPressed('ArrowRight')) {
-      if (shop.quantity < maxAffordable) {
-        shop.quantity++;
-      } else {
-        shop.quantity = 1; // גלילה חזרה להתחלה (אופציונלי)
-      }
-    }
-
-    // חץ למטה או חץ שמאלה מורידים כמות
-    if (input.isKeyPressed('ArrowDown') || input.isKeyPressed('ArrowLeft')) {
-      if (shop.quantity > 1) {
-        shop.quantity--;
-      } else {
-        shop.quantity = maxAffordable > 0 ? maxAffordable : 1; // גלילה לסוף (אופציונלי)
-      }
-    }
-
-    // אישור הרכישה עם הכמות שנבחרה
-    if (input.isKeyPressed('Enter')) {
-      if (shop.quantity > 0 && buyItem(currentItem.id, shop.quantity)) {
-        shop.message = t('shop.bought', { item: getLocalizedName(currentItem.name) });
-      } else {
-        shop.message = t('shop.cantAfford');
-      }
-      shop.quantitySelection = false; // סגירת חלונית הכמות
-      shop.messageTimer = 0;
-    }
-
-    return true; // עוצר כאן כדי שלא ינווט ברשימה מאחורי הקלעים
-  }
-
-  // 3. לוגיקה רגילה של החנות (ניווט וטאבים - נשאר כפי שכתבת)
+  // ─── 5. החנות הראשית והניווט הבסיסי (חזר לעבוד כרגיל ללא חסימות!) ───
   if (input.isKeyPressed('Escape')) {
     closeShop(shop);
     return true;
@@ -209,9 +275,7 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
 
   if (input.isKeyPressed('ArrowUp') && shop.selectedItem > 0) {
     shop.selectedItem--;
-    if (shop.selectedItem < shop.scrollOffset) {
-      shop.scrollOffset = shop.selectedItem;
-    }
+    if (shop.selectedItem < shop.scrollOffset) shop.scrollOffset = shop.selectedItem;
   }
   if (input.isKeyPressed('ArrowDown') && shop.selectedItem < shop.items.length - 1) {
     shop.selectedItem++;
@@ -220,19 +284,29 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
     }
   }
 
-  // לחיצה על Enter פותחת את חלונית הכמות (במקום לקנות מיד 1)
+  // פתיחת חלונית בחירת הכמות
   if (input.isKeyPressed('Enter') && shop.items.length > 0) {
     const maxAffordable = Math.min(99, Math.floor(pd.money / currentItem.price));
     if (maxAffordable > 0) {
       shop.quantitySelection = true;
-      shop.quantity = 1; // ברירת מחדל
+      shop.quantity = 1;
     } else {
-      // אם אין כסף אפילו לפריט אחד, נציג מיד שגיאה
       shop.message = t('shop.cantAfford');
       shop.messageTimer = 0;
     }
   }
 
+  return true;
+}
+
+// פונקציית עזר לקנייה רגילה
+function buyItemDirect(itemId: string, quantity: number): boolean {
+  const pd = getPlayerData();
+  const item = getItem(itemId);
+  if (!item || pd.money < item.price * quantity) return false;
+  pd.money -= item.price * quantity;
+  pd.items[itemId] = (pd.items[itemId] || 0) + quantity;
+  autoSave();
   return true;
 }
 
@@ -533,43 +607,144 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
     ctx.fillText(shop.message, 120, 76);
   }
 
-  // select amount overlay
-  if (shop.open && shop.quantitySelection && shop.items.length > 0) {
+  // ── QUIZ RESULT OVERLAY ──
+  // ─── 1. חלונית בחירת כמות (נפתחת בלחיצה ראשונה על Enter בחנות) ───
+  if (shop.open && shop.quantitySelection && !shop.quizActive && shop.items.length > 0) {
     const item = shop.items[shop.selectedItem];
     const totalCost = item.price * shop.quantity;
 
-    // רקע כהה לחלונית (ממורכזת, מעל הרשימה)
-    fillRect(ctx, 20, 50, 200, 55, 'rgba(5, 15, 10, 0.95)');
+    // רקע חלונית כמות
+    fillRect(ctx, 20, 45, 200, 65, 'rgba(5, 15, 10, 0.98)');
     ctx.strokeStyle = '#2a6a40';
     ctx.lineWidth = 1;
-    strokeRoundRect(ctx, 20, 50, 200, 55, 4);
+    strokeRoundRect(ctx, 20, 45, 200, 65, 4);
 
-    // כותרת החלונית
-    ctx.fillStyle = '#667766';
-    ctx.font = `5px ${FONT_HE}`;
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
-    ctx.fillText('בחירת כמות לרכישה', 120, 55);
 
-    // שם הפריט במרכז
+    // כותרת ושם החפץ
     ctx.fillStyle = '#ffffff';
     ctx.font = `7px ${FONT_HE}`;
-    ctx.fillText(getLocalizedName(item.name), 120, 65);
+    ctx.fillText(`${getLocalizedName(item.name)}`, 120, 52);
 
-    // מחוון כמות אינטראקטיבי (כולל חיצים ויזואליים)
+    // מחוון כמות (כאן משתמשים בחצים למעלה/למטה לבחירת כמות)
     ctx.fillStyle = '#20d860';
-    ctx.font = `bold 10px ${FONT_HE}`;
-    ctx.textAlign = 'center';
-    ctx.direction = 'ltr'; // מספרים עדיף משמאל לימין
-    ctx.fillText(`▲  ${String(shop.quantity).padStart(2, '0')}  ▼`, 120, 78);
+    ctx.font = `bold 9px ${FONT_HE}`;
+    ctx.fillText(`▲ כמות: ${shop.quantity} ▼`, 120, 68);
 
-    // הצגת עלות מחושבת בזמן אמת (RTL לשילוב עברית ומטבע)
+    // עלות מחושבת בזמן אמת
     ctx.font = `6px ${FONT_HE}`;
     ctx.fillStyle = '#f8d030';
+    ctx.fillText(`עלות כוללת: ₪${totalCost}`, 120, 82);
+
+    // מחוון מבצע / הנחה זמינה לסשן
+    if (shop.sessionDiscount > 0) {
+      ctx.fillStyle = '#ffb000';
+      ctx.fillText(`[SPACE] הפעלת אתגר הנחה של ${shop.sessionDiscount}%!`, 120, 96);
+    } else {
+      ctx.fillStyle = '#556655';
+      ctx.fillText('אין הנחות זמינות בחנות כרגע', 120, 96);
+    }
+  }
+
+  // ─── 2. חלונית אתגר ההנחה וקלט המקלדת (נפתחת בלחיצה על SPACE) ───
+  if (shop.open && shop.quizActive && shop.items.length > 0) {
+    const item = shop.items[shop.selectedItem];
+    const baseTotalPrice = item.price * shop.quantity;
+
+    // נוסחת חישוב המחיר המופחת הנכון (מעוגל)
+    const correctAnswer = Math.round(baseTotalPrice * (1 - shop.sessionDiscount / 100));
+
+    // רקע חלונית שאלה
+    fillRect(ctx, 15, 35, 210, 90, '#05100a');
+    ctx.strokeStyle = '#ffb000';
+    ctx.lineWidth = 1;
+    strokeRoundRect(ctx, 15, 35, 210, 90, 4);
+
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
-    ctx.fillText(`סך הכל: ₪${totalCost}`, 120, 92);
+
+    if (shop.quizResult === null) {
+      // ── מצב א': הצגת השאלה וקליטת המספרים מהמקלדת ──
+      ctx.fillStyle = '#ffb000';
+      ctx.font = `bold 7px ${FONT_HE}`;
+      ctx.fillText('אתגר חישוב הנחה!', 120, 44);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `6px ${FONT_HE}`;
+      ctx.fillText(`קניית ${shop.quantity} יח' של ${getLocalizedName(item.name)}`, 120, 56);
+      ctx.fillText(`מחיר מלא: ₪${baseTotalPrice}`, 120, 66);
+
+      ctx.fillStyle = '#20d860';
+      ctx.fillText(`מה המחיר המדויק לאחר ${shop.sessionDiscount}% הנחה?`, 120, 78);
+
+      // אינפוט טקסטואלי שמציג את מה שהשחקן מקליד (בסטרינג shop.quizInputStr)
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold 10px ${FONT_HE}`;
+      ctx.direction = 'ltr'; // מספרים מוצגים משמאל לימין
+
+      // אם עוד לא הקליד כלום, נראה קו תחתון ריק
+      const displayText = shop.quizInputStr === '' ? '₪_____' : `₪${shop.quizInputStr}`;
+      ctx.fillText(displayText, 120, 96);
+
+      ctx.fillStyle = '#557766';
+      ctx.font = `5px ${FONT_HE}`;
+      ctx.direction = 'rtl';
+      ctx.fillText('הקש מספרים במקלדת | Backspace למחיקה | Enter לבדיקה', 120, 114);
+    } else {
+      // ── מצב ב': השחקן לחץ Enter וכרגע מוצג פידבק (למשך 2 שניות) ──
+      ctx.font = `bold 10px ${FONT_HE}`;
+
+      if (shop.quizResult === 'correct') {
+        ctx.fillStyle = '#20d860';
+        ctx.fillText('תשובה נכונה!', 120, 65);
+        ctx.font = `7px ${FONT_HE}`;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(`זכית במחיר המוזל: ₪${correctAnswer}`, 120, 85);
+      } else {
+        ctx.fillStyle = '#ff4444';
+        ctx.fillText('טעות בחישוב!', 120, 60);
+        ctx.font = `7px ${FONT_HE}`;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(`התשובה הנכונה היא: ₪${correctAnswer}`, 120, 78);
+        ctx.fillStyle = '#888888';
+        ctx.fillText('מבצע רכישה אוטומטית במחיר מלא...', 120, 96);
+      }
+    }
   }
 
   ctx.restore();
+}
+
+// Quiz for discount
+function rollSessionDiscount(): number {
+  const rand = Math.random(); // מספר בין 0 ל-1
+  if (rand < 0.5) return 0; // 50% סיכוי ל-0% הנחה
+  if (rand < 0.7) return 10; // 20% סיכוי ל-10% הנחה (0.50 עד 0.70)
+  if (rand < 0.9) return 20; // 20% סיכוי ל-20% הנחה (0.70 עד 0.90)
+  return 30; // 10% סיכוי ל-30% הנחה (0.90 עד 1.00)
+}
+
+function calculateDiscountedPrice(totalPrice: number, discountPercent: number): number {
+  return Math.round(totalPrice * (1 - discountPercent / 100));
+}
+
+function handleKeyboardNumericInput(shop: ShopState, input: InputManager): void {
+  // בדיקת מקשי מספרים 0-9
+  for (let i = 0; i <= 9; i++) {
+    if (input.isKeyPressed(String(i))) {
+      // מניעת הקלדת אפס בהתחלה סתם
+      if (shop.quizInputStr === '' && i === 0) continue;
+
+      // הגבלת אורך מקסימלי (למשל עד 6 ספרות, כדי שלא יגלוש מהמסך)
+      if (shop.quizInputStr.length < 6) {
+        shop.quizInputStr += String(i);
+      }
+    }
+  }
+
+  // תמיכה במחיקה (Backspace)
+  if (input.isKeyPressed('Backspace') && shop.quizInputStr.length > 0) {
+    shop.quizInputStr = shop.quizInputStr.slice(0, -1);
+  }
 }
