@@ -249,7 +249,7 @@
   "shop.buy": "קנה",
   "shop.owned": "ברשותך: {count}",
   "shop.cantAfford": "אין מספיק כסף!",
-  "shop.bought": "קנית {item}!",
+  "shop.bought": "קנית {item}! (כמות : {quantity})",
   "battle.noItems": "אין פריטים!",
   "battle.usedItem": "השתמשת ב{item} על {name}!",
   "battle.trainerWantsBattle": "{name} רוצה להילחם!",

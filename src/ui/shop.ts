@@ -133,20 +133,6 @@ function getShopItemsForCategory(cat: ItemCategory): ItemDef[] {
   return getItemsByCategory(cat).filter((i) => i.price > 0 && i.category !== 'key');
 }
 
-function buyItem(itemId: string, quantity: number): boolean {
-  const pd = getPlayerData();
-  const item = getItem(itemId);
-  if (!item) return false;
-
-  const totalCost = item.price * quantity;
-  if (pd.money < totalCost) return false;
-
-  pd.money -= totalCost;
-  pd.items[itemId] = (pd.items[itemId] || 0) + quantity;
-  autoSave();
-  return true;
-}
-
 // ─── Update ─────────────────────────────────────────────────────────
 export function updateShop(shop: ShopState, input: InputManager, dt: number): boolean {
   if (!shop.open) return false;
@@ -166,7 +152,10 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
         pd.money -= finalPrice;
         pd.items[currentItem.id] = (pd.items[currentItem.id] || 0) + shop.quantity;
         autoSave();
-        shop.message = shop.quizResult === 'correct' ? t('shop.bought') : 'הרכישה בוצעה במחיר מלא';
+        shop.message =
+          shop.quizResult === 'correct'
+            ? t('shop.bought', { item: getLocalizedName(currentItem.name), quantity: shop.quantity })
+            : 'הרכישה בוצעה במחיר מלא';
       } else {
         shop.message = t('shop.cantAfford');
       }
@@ -234,7 +223,7 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
     // קנייה רגילה ישירה ללא הנחה (מחיר מלא)
     if (input.isKeyPressed('Enter')) {
       if (shop.quantity > 0 && buyItemDirect(currentItem.id, shop.quantity)) {
-        shop.message = t('shop.bought');
+        shop.message = t('shop.bought', { item: getLocalizedName(currentItem.name), quantity: shop.quantity });
       } else {
         shop.message = t('shop.cantAfford');
       }

@@ -252,7 +252,7 @@
   "shop.buy": "Buy",
   "shop.owned": "Owned: {count}",
   "shop.cantAfford": "Not enough money!",
-  "shop.bought": "Bought {item}!",
+  "shop.bought": "Bought {item} X {quantity}!",
   "item.potion.name": "Potion",
   "item.potion.desc": "Restores 20 HP",
   "item.superPotion.name": "Super Potion",
