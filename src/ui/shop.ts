@@ -79,6 +79,8 @@ export interface ShopState {
   items: ItemDef[];
   message: string | null;
   messageTimer: number;
+  quantitySelection: boolean; // האם חלונית הכמות פתוחה
+  quantity: number;
 }
 
 export function createShopState(): ShopState {
@@ -90,6 +92,8 @@ export function createShopState(): ShopState {
     items: [],
     message: null,
     messageTimer: 0,
+    quantitySelection: false,
+    quantity: 1,
   };
 }
 
@@ -111,12 +115,16 @@ function getShopItemsForCategory(cat: ItemCategory): ItemDef[] {
   return getItemsByCategory(cat).filter((i) => i.price > 0 && i.category !== 'key');
 }
 
-function buyItem(itemId: string): boolean {
+function buyItem(itemId: string, quantity: number): boolean {
   const pd = getPlayerData();
   const item = getItem(itemId);
-  if (!item || pd.money < item.price) return false;
-  pd.money -= item.price;
-  pd.items[itemId] = (pd.items[itemId] || 0) + 1;
+  if (!item) return false;
+
+  const totalCost = item.price * quantity;
+  if (pd.money < totalCost) return false;
+
+  pd.money -= totalCost;
+  pd.items[itemId] = (pd.items[itemId] || 0) + quantity;
   autoSave();
   return true;
 }
@@ -125,7 +133,7 @@ function buyItem(itemId: string): boolean {
 export function updateShop(shop: ShopState, input: InputManager, dt: number): boolean {
   if (!shop.open) return false;
 
-  // Message display timer
+  // 1. טיימר הודעות (נשאר כרגיל)
   if (shop.message) {
     shop.messageTimer += dt;
     if (shop.messageTimer >= 1.2) {
@@ -135,12 +143,57 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
     return true;
   }
 
+  const pd = getPlayerData();
+  const currentItem = shop.items[shop.selectedItem];
+
+  // 2. לוגיקה כאשר חלונית בחירת הכמות פתוחה
+  if (shop.quantitySelection && currentItem) {
+    // חישוב גבול מקסימלי לפי הנוסחה שביקשת
+    const maxAffordable = Math.min(99, Math.floor(pd.money / currentItem.price));
+
+    if (input.isKeyPressed('Escape')) {
+      shop.quantitySelection = false; // ביטול וחזרה לחנות
+      return true;
+    }
+
+    // חץ למעלה או חץ ימינה מעלים כמות
+    if (input.isKeyPressed('ArrowUp') || input.isKeyPressed('ArrowRight')) {
+      if (shop.quantity < maxAffordable) {
+        shop.quantity++;
+      } else {
+        shop.quantity = 1; // גלילה חזרה להתחלה (אופציונלי)
+      }
+    }
+
+    // חץ למטה או חץ שמאלה מורידים כמות
+    if (input.isKeyPressed('ArrowDown') || input.isKeyPressed('ArrowLeft')) {
+      if (shop.quantity > 1) {
+        shop.quantity--;
+      } else {
+        shop.quantity = maxAffordable > 0 ? maxAffordable : 1; // גלילה לסוף (אופציונלי)
+      }
+    }
+
+    // אישור הרכישה עם הכמות שנבחרה
+    if (input.isKeyPressed('Enter')) {
+      if (shop.quantity > 0 && buyItem(currentItem.id, shop.quantity)) {
+        shop.message = t('shop.bought', { item: getLocalizedName(currentItem.name) });
+      } else {
+        shop.message = t('shop.cantAfford');
+      }
+      shop.quantitySelection = false; // סגירת חלונית הכמות
+      shop.messageTimer = 0;
+    }
+
+    return true; // עוצר כאן כדי שלא ינווט ברשימה מאחורי הקלעים
+  }
+
+  // 3. לוגיקה רגילה של החנות (ניווט וטאבים - נשאר כפי שכתבת)
   if (input.isKeyPressed('Escape')) {
     closeShop(shop);
     return true;
   }
 
-  // Category switching: Left/Right or Tab
   if (input.isKeyPressed('ArrowLeft')) {
     shop.selectedCategory = (shop.selectedCategory + 1) % CATEGORIES.length;
     shop.items = getShopItemsForCategory(CATEGORIES[shop.selectedCategory].id);
@@ -154,7 +207,6 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
     shop.scrollOffset = 0;
   }
 
-  // Item navigation
   if (input.isKeyPressed('ArrowUp') && shop.selectedItem > 0) {
     shop.selectedItem--;
     if (shop.selectedItem < shop.scrollOffset) {
@@ -168,15 +220,17 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
     }
   }
 
-  // Buy
+  // לחיצה על Enter פותחת את חלונית הכמות (במקום לקנות מיד 1)
   if (input.isKeyPressed('Enter') && shop.items.length > 0) {
-    const item = shop.items[shop.selectedItem];
-    if (buyItem(item.id)) {
-      shop.message = t('shop.bought', { item: getLocalizedName(item.name) });
+    const maxAffordable = Math.min(99, Math.floor(pd.money / currentItem.price));
+    if (maxAffordable > 0) {
+      shop.quantitySelection = true;
+      shop.quantity = 1; // ברירת מחדל
     } else {
+      // אם אין כסף אפילו לפריט אחד, נציג מיד שגיאה
       shop.message = t('shop.cantAfford');
+      shop.messageTimer = 0;
     }
-    shop.messageTimer = 0;
   }
 
   return true;
@@ -477,6 +531,44 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
     ctx.fillText(shop.message, 120, 76);
+  }
+
+  // select amount overlay
+  if (shop.open && shop.quantitySelection && shop.items.length > 0) {
+    const item = shop.items[shop.selectedItem];
+    const totalCost = item.price * shop.quantity;
+
+    // רקע כהה לחלונית (ממורכזת, מעל הרשימה)
+    fillRect(ctx, 20, 50, 200, 55, 'rgba(5, 15, 10, 0.95)');
+    ctx.strokeStyle = '#2a6a40';
+    ctx.lineWidth = 1;
+    strokeRoundRect(ctx, 20, 50, 200, 55, 4);
+
+    // כותרת החלונית
+    ctx.fillStyle = '#667766';
+    ctx.font = `5px ${FONT_HE}`;
+    ctx.textAlign = 'center';
+    ctx.direction = 'rtl';
+    ctx.fillText('בחירת כמות לרכישה', 120, 55);
+
+    // שם הפריט במרכז
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `7px ${FONT_HE}`;
+    ctx.fillText(getLocalizedName(item.name), 120, 65);
+
+    // מחוון כמות אינטראקטיבי (כולל חיצים ויזואליים)
+    ctx.fillStyle = '#20d860';
+    ctx.font = `bold 10px ${FONT_HE}`;
+    ctx.textAlign = 'center';
+    ctx.direction = 'ltr'; // מספרים עדיף משמאל לימין
+    ctx.fillText(`▲  ${String(shop.quantity).padStart(2, '0')}  ▼`, 120, 78);
+
+    // הצגת עלות מחושבת בזמן אמת (RTL לשילוב עברית ומטבע)
+    ctx.font = `6px ${FONT_HE}`;
+    ctx.fillStyle = '#f8d030';
+    ctx.textAlign = 'center';
+    ctx.direction = 'rtl';
+    ctx.fillText(`סך הכל: ₪${totalCost}`, 120, 92);
   }
 
   ctx.restore();
