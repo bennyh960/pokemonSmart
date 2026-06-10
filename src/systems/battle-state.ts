@@ -6,6 +6,7 @@ import type {
   WeatherConditionId,
 } from '../types/battle-metadata.js';
 import { normalizeMajorStatusId } from '../types/battle-metadata.js';
+import type { HeldItemDef } from '../data/item-defs.js';
 
 export interface WeatherState {
   type: WeatherConditionId;
@@ -62,6 +63,7 @@ export interface BattlePokemonRuntimeState {
   disabledMoveId: number | null;
   disabledMoveTurnsRemaining: number;
   abilityActivationCount: number;
+  heldItem: HeldItemDef | null;
 }
 
 export interface BattleSideRuntimeState {
@@ -142,6 +144,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     disabledMoveTurnsRemaining: 0,
     abilityActivationCount: 0,
     isStruggleMode: false,
+    heldItem: null,
   };
 }
 

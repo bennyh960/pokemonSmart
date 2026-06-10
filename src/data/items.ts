@@ -127,18 +127,17 @@ export const applyHeldItemEffectInBattle = ({
   lines: string[];
   queueStatusTurnEffect: (actor: 'player' | 'enemy', itemId: string) => void;
 }) => {
-  const heldItem = pokemon.heldItemId ? getItem(pokemon.heldItemId) : null;
+  const heldItem = runtimeState.heldItem;
   if (!heldItem) return;
-  if (heldItem.effect.type === 'battle' && heldItem.category === 'held') {
-    const { isEndOfTurn, localMessage, hpAmount, category, condition } = heldItem.effect.config;
-    if ((when === 'endOfTurn' && isEndOfTurn) || (when === 'onSwitchOut' && !isEndOfTurn)) {
-      const isConditionMet = condition ? condition({ runtimeState: runtimeState }) : true;
-      if (hpAmount && isConditionMet) {
-        const healAmount = Math.floor(pokemon.maxHp * hpAmount);
-        pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
-        queueStatusTurnEffect(actor, heldItem.id);
-        lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(pokemon.id), amount: healAmount }));
-      }
+  const { isEndOfTurn, localMessage, hpAmount, category, condition } = heldItem.effect.config;
+
+  if ((when === 'endOfTurn' && isEndOfTurn) || (when === 'onSwitchOut' && !isEndOfTurn)) {
+    const isConditionMet = condition ? condition({ runtimeState: runtimeState }) : true;
+    if (hpAmount && isConditionMet) {
+      const healAmount = Math.floor(pokemon.maxHp * hpAmount);
+      pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
+      queueStatusTurnEffect(actor, heldItem.id);
+      lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(pokemon.id), amount: healAmount }));
     }
 
     //! choice not working on enemy pokemon since we don't track their lastMoveUsedId in runtimeState — would need to add that for this to work properly on enemy-held items. For now, just apply the lock-in effect to player pokemon.

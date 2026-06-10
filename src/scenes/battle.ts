@@ -288,6 +288,7 @@ function addHeldItemsToAiParty(party: Pokemon[], level: AiLevel) {
 
   const itemsData = itemsToUse.map((slug) => getItem(slug));
   let maxLeftoversAssigned = level; //
+  let maxZoomLensAssigned = level - 2; //
   let maxLifeOrb = Math.floor(level / 2); //
 
   function getDominantMoveType(pokemon: Pokemon) {
@@ -321,6 +322,9 @@ function addHeldItemsToAiParty(party: Pokemon[], level: AiLevel) {
     } else if (maxLeftoversAssigned > 0) {
       p.heldItemId = 'leftovers';
       maxLeftoversAssigned--;
+    } else if (maxZoomLensAssigned > 0) {
+      p.heldItemId = 'zoom-lens';
+      maxZoomLensAssigned--;
     } else if (maxLifeOrb > 0) {
       p.heldItemId = 'life-orb';
       maxLifeOrb--;
@@ -439,13 +443,9 @@ function calcDamage(
   if (power <= 0) return 0;
 
   //private case of  applyHeldItemEffectInBattle
-  const atkHeldItem = atk.heldItemId ? getItem(atk.heldItemId) : null;
+  const atkHeldItem = atkState.heldItem ?? null;
 
-  if (
-    atkHeldItem?.category === 'held' &&
-    atkHeldItem.effect.type === 'battle' &&
-    atkHeldItem.effect.config.moveTypeBoost
-  ) {
+  if (atkHeldItem?.effect.config.moveTypeBoost) {
     const moveTypeBoost = atkHeldItem.effect.config.moveTypeBoost;
     if (moveTypeBoost.moveType === moveType || moveTypeBoost.moveType === 'all') {
       power = Math.floor(power * moveTypeBoost.boost);
@@ -1272,6 +1272,7 @@ export function createBattleScene(
       player.xpToNext,
     );
     playerBattleState = createBattleRuntimeStateForPokemon(player);
+
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     playerSideState = createBattleSideRuntimeState();
     enemySideState = createBattleSideRuntimeState();
@@ -1769,7 +1770,7 @@ export function createBattleScene(
     const itemAction = checkTrainerItemUse();
     if (itemAction) {
       executeTrainerItemUse(itemAction.itemId, itemAction.itemName);
-      enemyBattleState.lastMoveUsedId = null; // Clear last move to avoid confusion with item use
+      enemyBattleState.lastMoveUsedId = null; // Clear last move to avoid confusion with item use like life orb . but it clear the effect of choise
       return true;
     }
 
@@ -3874,6 +3875,10 @@ export function createBattleScene(
       m = { ...STRUGGLE_MOVE };
     }
 
+    // Track last move used (for Copycat / Mirror Move also for choice item)
+    playerBattleState.lastMoveUsedId = m.id;
+    lastMoveUsedInBattle = m.id;
+
     const pendingChargeMoveId = getChargingMoveId(playerBattleState);
     const forcedChargeRelease =
       forcedMoveIndex !== undefined &&
@@ -4076,10 +4081,6 @@ export function createBattleScene(
     if (!isRedirected && !isChargeRelease && m.currentPp > 0) {
       m.currentPp--;
     }
-
-    // Track last move used (for Copycat / Mirror Move)
-    playerBattleState.lastMoveUsedId = m.id;
-    lastMoveUsedInBattle = m.id;
 
     // Lock-in behavior tags
     const isLockInOutrage = moveBattleData?.behaviorTags?.includes('lock-in-outrage') ?? false;

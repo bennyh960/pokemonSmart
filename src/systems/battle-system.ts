@@ -25,6 +25,7 @@ import {
 } from '../services/pokemon-data.js';
 import { getItem } from '../data/items.js';
 import { t } from '../i18n/i18n.js';
+import type { HeldItemDef } from '../data/item-defs.js';
 
 export interface TurnOrderDecision {
   enemyActsFirst: boolean;
@@ -158,8 +159,10 @@ export function createBattleRuntimeStateForPokemon(
 
   if (pokemon.heldItemId) {
     const itemData = getItem(pokemon.heldItemId);
+
     if (itemData?.category === 'held' && itemData.effect.type === 'battle') {
-      const { stats } = itemData.effect.config;
+      state.heldItem = itemData as HeldItemDef;
+      const { stats } = state.heldItem.effect.config;
       if (stats) {
         for (const [stat, stages] of Object.entries(stats)) {
           const statId = stat as BattleStatId;
@@ -550,9 +553,15 @@ export function rollCriticalHit(
     if (preventsCrit) return false;
   }
 
+  let itemBoost = 0;
+
+  if (attackerState?.heldItem?.effect.config.category === 'crit-boost') {
+    itemBoost = 2;
+  }
+
   const critRate = getMoveBattleData(moveId)?.critRate ?? 0;
   const focusBoost = attackerState?.critBoost ? 1 : 0;
-  const effective = critRate + focusBoost;
+  const effective = critRate + focusBoost + itemBoost;
   const baseChance = effective >= 2 ? 50 : effective >= 1 ? 25 : 6.25;
   return random() * 100 < baseChance + happinessBonus;
 }

@@ -13,6 +13,7 @@ import { getMove } from '../services/pokemon-data';
 import type { BattlePokemonRuntimeState, BattleStatModifiers } from '../systems/battle-state';
 import { HM_CONFIG } from '../systems/hm';
 import type { PokemonType } from '../types';
+import type { ItemDef } from './items';
 
 // ─── Types ───
 
@@ -30,6 +31,23 @@ export type ItemCategory =
   | 'machine';
 
 type pokemonStates = 'hp' | 'atk' | 'def' | 'spe' | 'spa' | 'spd';
+
+//#region Held items in battle types
+type BattleItemConfig = {
+  isEndOfTurn: boolean;
+  localMessage?: string;
+  hpAmount?: number; // +/-
+  stats?: Partial<BattleStatModifiers>; // e.g. {atk: +1, def: -1}
+  moveTypeBoost?: { moveType: PokemonType | 'all'; boost: number };
+  category?: 'choice' | 'damage-boost' | 'defense-boost' | 'crit-boost';
+  condition?: (args?: { runtimeState?: BattlePokemonRuntimeState }) => boolean; // additional condition for activation (e.g. Life Orb doesn't activate on status moves or if it would faint the holder)
+};
+
+export interface HeldItemDef extends Omit<ItemDef, 'effect'> {
+  category: 'held';
+  effect: Extract<ItemEffect, { type: 'battle' }>;
+}
+// #endregion
 
 export type ItemEffect =
   | { type: 'heal'; amount: number }
@@ -52,15 +70,7 @@ export type ItemEffect =
   // held items
   | {
       type: 'battle';
-      config: {
-        isEndOfTurn: boolean;
-        localMessage?: string;
-        hpAmount?: number; // +/-
-        stats?: Partial<BattleStatModifiers>; // e.g. {atk: +1, def: -1}
-        moveTypeBoost?: { moveType: PokemonType | 'all'; boost: number };
-        category?: 'choice' | 'damage-boost' | 'defense-boost' | 'other';
-        condition?: (args?: { runtimeState?: BattlePokemonRuntimeState }) => boolean; // additional condition for activation (e.g. Life Orb doesn't activate on status moves or if it would faint the holder)
-      };
+      config: BattleItemConfig;
     };
 
 export interface ItemGameDef {
@@ -214,7 +224,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'choice-band': 197,
   'choice-spec': 274,
   'choice-scarf': 264,
-  // 'zoom-lens': 253, // not wired up yet
+  'zoom-lens': 253,
   'wide-lens': 242,
   'life-orb': 247,
   'soft-sand': 199,
@@ -640,11 +650,11 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInBattle: false,
     usableInOverworld: false,
   },
-  // zoom lens - not worked yet
+  // zoom lens
   253: {
     category: 'held',
-    price: 15000,
-    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'other', stats: { accuracy: 1 } } },
+    price: 25000,
+    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'crit-boost' } },
     usableInBattle: false,
     usableInOverworld: false,
   },
