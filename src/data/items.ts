@@ -129,7 +129,7 @@ export const applyHeldItemEffectInBattle = ({
 }) => {
   const heldItem = runtimeState.heldItem;
   if (!heldItem) return;
-  const { isEndOfTurn, localMessage, hpAmount, category, condition } = heldItem.effect.config;
+  const { isEndOfTurn, localMessage, hpAmount, condition } = heldItem.effect.config;
 
   if ((when === 'endOfTurn' && isEndOfTurn) || (when === 'onSwitchOut' && !isEndOfTurn)) {
     const isConditionMet = condition ? condition({ runtimeState: runtimeState }) : true;
@@ -138,12 +138,6 @@ export const applyHeldItemEffectInBattle = ({
       pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
       queueStatusTurnEffect(actor, heldItem.id);
       lines.push(t(localMessage ?? '', { name: getPokemonDisplayName(pokemon.id), amount: healAmount }));
-    }
-
-    //! choice not working on enemy pokemon since we don't track their lastMoveUsedId in runtimeState — would need to add that for this to work properly on enemy-held items. For now, just apply the lock-in effect to player pokemon.
-    if (category === 'choice' && runtimeState.lastMoveUsedId) {
-      const movesToLock = pokemon.moves.map((m) => m.id).filter((id) => id !== runtimeState.lastMoveUsedId);
-      runtimeState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
     }
   }
 };

@@ -6702,6 +6702,10 @@ export function createBattleScene(
             } else {
               phase = 'CHECK_WIN';
             }
+            playerBattleState.heldItem?.effect.config?.condition?.({
+              runtimeState: playerBattleState,
+              pokemon: player,
+            });
           }
           break;
         }

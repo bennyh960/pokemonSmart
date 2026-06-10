@@ -12,7 +12,7 @@
 import { getMove } from '../services/pokemon-data';
 import type { BattlePokemonRuntimeState, BattleStatModifiers } from '../systems/battle-state';
 import { HM_CONFIG } from '../systems/hm';
-import type { PokemonType } from '../types';
+import type { Pokemon, PokemonType } from '../types';
 import type { ItemDef } from './items';
 
 // ─── Types ───
@@ -40,13 +40,31 @@ type BattleItemConfig = {
   stats?: Partial<BattleStatModifiers>; // e.g. {atk: +1, def: -1}
   moveTypeBoost?: { moveType: PokemonType | 'all'; boost: number };
   category?: 'choice' | 'damage-boost' | 'defense-boost' | 'crit-boost';
-  condition?: (args?: { runtimeState?: BattlePokemonRuntimeState }) => boolean; // additional condition for activation (e.g. Life Orb doesn't activate on status moves or if it would faint the holder)
+  condition?: (args?: { runtimeState?: BattlePokemonRuntimeState; pokemon?: Pokemon }) => boolean; // additional condition for activation (e.g. Life Orb doesn't activate on status moves or if it would faint the holder)
 };
 
 export interface HeldItemDef extends Omit<ItemDef, 'effect'> {
   category: 'held';
   effect: Extract<ItemEffect, { type: 'battle' }>;
 }
+
+// cb for items
+// choice:
+const choiceItemCB = (args?: Parameters<NonNullable<BattleItemConfig['condition']>>[0]) => {
+  // stats changes is from createBattleRuntimeStateForPokemon
+  // choice item not given to Enemy
+
+  if (!args?.pokemon || !args?.runtimeState) return false;
+
+  if (!args.runtimeState.lastMoveUsedId) return false;
+  if (!(args.runtimeState.heldItem?.effect.config.category === 'choice')) return false;
+
+  const { pokemon, runtimeState } = args;
+  const movesToLock = pokemon.moves.map((m) => m.id).filter((id) => id !== runtimeState.lastMoveUsedId);
+  runtimeState.softLockedInMovesId = movesToLock.length > 0 ? movesToLock : null;
+  return true;
+};
+
 // #endregion
 
 export type ItemEffect =
@@ -630,7 +648,10 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   274: {
     category: 'held',
     price: 15000,
-    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { specialAttack: 1 } } },
+    effect: {
+      type: 'battle',
+      config: { condition: choiceItemCB, isEndOfTurn: false, category: 'choice', stats: { specialAttack: 1 } },
+    },
     usableInBattle: false,
     usableInOverworld: false,
   },
@@ -638,7 +659,15 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   197: {
     category: 'held',
     price: 15000,
-    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { attack: 1 } } },
+    effect: {
+      type: 'battle',
+      config: {
+        isEndOfTurn: false,
+        category: 'choice',
+        stats: { attack: 1 },
+        condition: choiceItemCB,
+      },
+    },
     usableInBattle: false,
     usableInOverworld: false,
   },
@@ -646,7 +675,10 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   264: {
     category: 'held',
     price: 15000,
-    effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { speed: 1 } } },
+    effect: {
+      type: 'battle',
+      config: { condition: choiceItemCB, isEndOfTurn: false, category: 'choice', stats: { speed: 1 } },
+    },
     usableInBattle: false,
     usableInOverworld: false,
   },
