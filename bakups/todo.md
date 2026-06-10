@@ -4,8 +4,6 @@ fix:
 
 [bug]-> encounter table id = null has fallback , which i want to remove . when we on map without encounter table id it should not continue
 
-[move] - struggle for AI and for Player
-
 [bug] [move] - bide - not works (המתנה)
 
 <!-- TASK -->
