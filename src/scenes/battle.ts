@@ -219,8 +219,8 @@ function computeAiLevel(spriteType: string, explicit?: AiLevel): AiLevel {
   const roles = getCharacterRoles(spriteType);
 
   if (roles.includes('elite-4') || roles.includes('champion')) return 5;
-  if (roles.includes('gym-leader')) return Math.random() < 0.5 ? 4 : 5;
-  if (roles.includes('story') || roles.includes('rival')) {
+  if (roles.includes('gym-leader') || roles.includes('league3')) return Math.random() < 0.5 ? 4 : 5;
+  if (roles.includes('story') || roles.includes('rival') || roles.includes('league2')) {
     const r = Math.random();
     if (r < 0.333) return 3;
     if (r < 0.667) return 4;
@@ -1789,6 +1789,11 @@ export function createBattleScene(
     const isCharging = battleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isRest = battleData?.behaviorTags?.includes('rest') ?? false;
     const isSelfHeal = (battleData?.healingPercent ?? 0) > 0 && battleData?.target === 'user';
+    const isReversal = battleData?.behaviorTags?.includes('reversal') ?? false;
+    if (isReversal) {
+      const power = Math.max(1, player.maxHp - player.hp);
+      move.power = power;
+    }
 
     const ai = trainerAIState;
     const enemyHpRatio = enemy.hp / enemy.maxHp;
@@ -4527,6 +4532,13 @@ export function createBattleScene(
         m = { ...m, power: 120 };
       }
     }
+
+    const isReversal = moveBattleData?.behaviorTags?.includes('reversal') ?? false;
+    if (isReversal) {
+      const power = Math.max(1, player.maxHp - player.hp);
+      m = { ...m, power };
+    }
+
     // Return / Frustration: power derived from happiness
     if (m.id === RETURN_MOVE_ID || m.id === FRUSTRATION_MOVE_ID) {
       const pd = getPlayerData();
@@ -5714,6 +5726,12 @@ export function createBattleScene(
       return;
     }
 
+    const isReversal = moveBattleData?.behaviorTags?.includes('reversal') ?? false;
+    if (isReversal) {
+      const power = Math.max(1, enemy.maxHp - enemy.hp);
+      m.power = power;
+    }
+
     const damageClass = moveData?.damageClass ?? (m.power > 0 ? 'physical' : 'status');
     const weatherAccOverrideEnemy = battleWeather ? getWeatherAccuracyOverride(m.id, battleWeather.type) : null;
     let hitResult = doesMoveTargetOpponent(moveBattleData)
@@ -5805,6 +5823,7 @@ export function createBattleScene(
       if (isNightShadeEnemy) return enemy.level;
       if (isSuperFangEnemy) return Math.max(1, Math.floor(player.hp / 2));
       if (effectivePowerEnemy <= 0) return 0;
+
       const base = calcDamage(
         enemy,
         enemyBattleState,

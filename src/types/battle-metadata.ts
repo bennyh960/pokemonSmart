@@ -29,6 +29,7 @@ export type MoveBattleBehaviorTag =
   | 'synthesis'
   | 'psych-up'
   | 'focus-energy'
+  | 'reversal'
   | 'burning-jealousy'
   | 'focus-punch'
   | 'facade-boost'

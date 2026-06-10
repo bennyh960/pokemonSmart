@@ -7,12 +7,6 @@
         "minLevel": 45,
         "maxLevel": 50,
         "weight": 100
-      },
-      {
-        "pokemonId": 171,
-        "minLevel": 45,
-        "maxLevel": 50,
-        "weight": 100
       }
     ]
   },
