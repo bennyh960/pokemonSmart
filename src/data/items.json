@@ -426,7 +426,7 @@
     },
     "slug": "max-elixir",
     "description": {
-      "he": "Fully restores the PP of a POKéMON’s moves.",
+      "he": "משחזר את כל נקודות ה-PP של כל המהלכים",
       "en": "Fully restores the PP of a POKéMON’s moves."
     },
     "category": "pp-recovery",

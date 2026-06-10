@@ -878,6 +878,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (npc.reward && hasActiveGame()) {
             giveNPCReward(npc, npc.reward);
           }
+
+          shop.categoriesToExclude = npc.categoriesToExclude ?? [];
           openShop(shop);
           hideHUD();
           restoreNPCFacing(npc);

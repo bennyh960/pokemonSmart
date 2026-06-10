@@ -23,16 +23,30 @@ interface CategoryDef {
   w: number;
   dotColor: string;
   dotX?: number;
+  extraCategories?: ItemCategory[]; // additional categories to include in this tab (e.g. 'pp-restore' items also show in 'healing')
 }
 
 const CATEGORIES: CategoryDef[] = [
   { id: 'healing', text: 'ריפוי', x: 198, w: 36, dotColor: '#20d860' },
-  { id: 'status-cure', text: 'ריפוי מצב', x: 142, w: 28, dotColor: '#5080ff', dotX: 172 },
+  {
+    id: 'status-cure',
+    text: 'ריפוי מצב',
+    x: 142,
+    w: 28,
+    dotColor: '#5080ff',
+    dotX: 172,
+    extraCategories: ['pp-restore'],
+  },
   { id: 'revival', text: 'החייאה', x: 104, w: 20, dotColor: '#f8d030', dotX: 126 },
   { id: 'pokeball', text: 'כדורים', x: 66, w: 22, dotColor: '#e85858', dotX: 90 },
   { id: 'battle', text: 'קרב', x: 38, w: 14, dotColor: '#f08030', dotX: 54 },
   { id: 'vitamin', text: 'ויטמינים', x: 4, w: 18, dotColor: '#a040a0', dotX: 24 },
+  { id: 'held', text: 'אביזרי קרב', x: 0, w: 28, dotColor: '#4d40a0', dotX: 2 },
 ];
+
+const getActualCategories = (categoriesToExclude: ItemCategory[]) => {
+  return CATEGORIES.filter((cat) => !categoriesToExclude.includes(cat.id));
+};
 
 // Icon color mapping per item id
 const ICON_COLORS: Record<string, { color: string; type: string }> = {
@@ -88,6 +102,9 @@ export interface ShopState {
   quizInputStr: string; // התשובה שהשחקן מציע למחיר הסופי
   quizResult: 'correct' | 'wrong' | null; // תוצאת המענה
   quizResultTimer: number; // טיימר להמתנה של ה-2 שניות
+
+  // exclude categroies
+  categoriesToExclude: ItemCategory[];
 }
 
 export function createShopState(): ShopState {
@@ -106,6 +123,7 @@ export function createShopState(): ShopState {
     quizInputStr: '',
     quizResult: null,
     quizResultTimer: 0,
+    categoriesToExclude: [],
   };
 }
 
@@ -116,7 +134,7 @@ export function openShop(shop: ShopState): void {
   shop.scrollOffset = 0;
   shop.message = null;
   shop.messageTimer = 0;
-  shop.items = getShopItemsForCategory(CATEGORIES[0].id);
+  shop.items = getShopItemsForCategory(getActualCategories(shop.categoriesToExclude)[0]);
   // אתחול מערכת ההנחות
   shop.sessionDiscount = rollSessionDiscount();
   shop.quizActive = false;
@@ -129,8 +147,15 @@ export function closeShop(shop: ShopState): void {
   shop.open = false;
 }
 
-function getShopItemsForCategory(cat: ItemCategory): ItemDef[] {
-  return getItemsByCategory(cat).filter((i) => i.price > 0 && i.category !== 'key');
+function getShopItemsForCategory(cat: CategoryDef): ItemDef[] {
+  const mainItems = getItemsByCategory(cat.id).filter((i) => i.price > 0 && i.category !== 'key');
+  if (cat.extraCategories) {
+    const extraItems = cat.extraCategories.flatMap((extraCat) =>
+      getItemsByCategory(extraCat).filter((i) => i.price > 0 && i.category !== 'key'),
+    );
+    return [...mainItems, ...extraItems];
+  }
+  return mainItems;
 }
 
 // ─── Update ─────────────────────────────────────────────────────────
@@ -141,6 +166,8 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
   const currentItem = shop.items[shop.selectedItem];
   const baseTotalPrice = currentItem ? currentItem.price * shop.quantity : 0;
   const correctAnswer = calculateDiscountedPrice(baseTotalPrice, shop.sessionDiscount);
+
+  const ACTUAL_CATEGORIES = getActualCategories(shop.categoriesToExclude);
 
   // ─── 1. מצב הצגת תוצאה (נעול ל-2 שניות, קניות אוטומטיות בסיום) ───
   if (shop.quizActive && shop.quizResult !== null) {
@@ -250,14 +277,14 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
   }
 
   if (input.isKeyPressed('ArrowLeft')) {
-    shop.selectedCategory = (shop.selectedCategory + 1) % CATEGORIES.length;
-    shop.items = getShopItemsForCategory(CATEGORIES[shop.selectedCategory].id);
+    shop.selectedCategory = (shop.selectedCategory + 1) % ACTUAL_CATEGORIES.length;
+    shop.items = getShopItemsForCategory(ACTUAL_CATEGORIES[shop.selectedCategory]);
     shop.selectedItem = 0;
     shop.scrollOffset = 0;
   }
   if (input.isKeyPressed('ArrowRight')) {
-    shop.selectedCategory = (shop.selectedCategory - 1 + CATEGORIES.length) % CATEGORIES.length;
-    shop.items = getShopItemsForCategory(CATEGORIES[shop.selectedCategory].id);
+    shop.selectedCategory = (shop.selectedCategory - 1 + ACTUAL_CATEGORIES.length) % ACTUAL_CATEGORIES.length;
+    shop.items = getShopItemsForCategory(ACTUAL_CATEGORIES[shop.selectedCategory]);
     shop.selectedItem = 0;
     shop.scrollOffset = 0;
   }
@@ -413,44 +440,61 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
   ctx.fillText(String(pd.money), 6, 2);
 
   // ── CATEGORY TABS (y=13, h=9) ──
-  // Tab track background
+  // Track background
   ctx.fillStyle = '#0a2a1a';
   fillRoundRect(ctx, 4, 13, 232, 9, 2);
   ctx.strokeStyle = '#1a4a30';
   ctx.lineWidth = 1;
   strokeRoundRect(ctx, 4, 13, 232, 9, 2);
 
-  for (let i = 0; i < CATEGORIES.length; i++) {
-    const cat = CATEGORIES[i];
+  // גזירת הקטגוריות הקיימות - מקסימום 7 קטגוריות לתצוגה
+  const ACTUAL_CATEGORIES = getActualCategories(shop.categoriesToExclude).slice(0, 7);
+
+  // הגדרת רוחב קבוע ואחיד לכל טאב ומרווח ביניהם
+  const FIXED_TAB_W = 32;
+  const TAB_SPACING = 4;
+
+  // מתחילים מהקצה הימני של הבר (X=236) ונעים שמאלה
+  let currentX = 236;
+
+  for (let i = 0; i < ACTUAL_CATEGORIES.length; i++) {
+    const cat = ACTUAL_CATEGORIES[i];
     const isActive = i === shop.selectedCategory;
+
+    // חישוב ה-X הדינמי לפי הרוחב הקבוע האחיד
+    const dynamicX = currentX - FIXED_TAB_W;
 
     if (isActive) {
       // Active tab pill
       ctx.fillStyle = '#1a5a35';
-      fillRoundRect(ctx, cat.x, 13, cat.w, 9, 2);
+      fillRoundRect(ctx, dynamicX, 13, FIXED_TAB_W, 9, 2);
       ctx.strokeStyle = '#1a4a30';
-      strokeRoundRect(ctx, cat.x, 13, cat.w, 9, 2);
+      strokeRoundRect(ctx, dynamicX, 13, FIXED_TAB_W, 9, 2);
 
-      // Active text
+      // Active text (ממורכז לחלוטין בתוך הריבוע הקבוע)
       ctx.fillStyle = '#20d860';
       ctx.font = `6px ${FONT_HE}`;
       ctx.textAlign = 'center';
       ctx.direction = 'rtl';
-      ctx.fillText(cat.text, cat.x + cat.w / 2, 14);
+      ctx.fillText(cat.text, dynamicX + FIXED_TAB_W / 2, 14);
     } else {
-      // Inactive: small colored dot
-      if (cat.dotX !== undefined) {
-        ctx.fillStyle = cat.dotColor;
-        ctx.fillRect(cat.dotX, 16, 3, 3);
-      }
-
-      // Inactive text
+      // Inactive text (ממורכז לחלוטין בתוך הריבוע הקבוע)
       ctx.fillStyle = '#445544';
       ctx.font = `5px ${FONT_HE}`;
       ctx.textAlign = 'center';
       ctx.direction = 'rtl';
-      ctx.fillText(cat.text, cat.x + cat.w / 2, 14);
+      ctx.fillText(cat.text, dynamicX + FIXED_TAB_W / 2, 14);
+
+      // Inactive: small colored dot
+      // כיוון שהכל קבוע, הנקודה ממוקמת תמיד 4 פיקסלים מהקצה השמאלי של הטאב הקבוע
+      if (cat.dotColor) {
+        ctx.fillStyle = cat.dotColor;
+        ctx.fillRect(dynamicX + 3, 15, 3, 3);
+      }
     }
+
+    // עדכון נקודת המוצא לטאב הבא בתור (תזוזה שמאלה)
+    currentX = dynamicX - TAB_SPACING;
   }
 
   // ── ITEM CARDS (y=24 to y=143) ──

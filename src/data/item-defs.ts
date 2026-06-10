@@ -405,34 +405,38 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   }, // Max Revive
 
   // ── PP recovery ──
+  // Ether
   38: {
     category: 'pp-restore',
-    price: 0,
+    price: 300,
     effect: { type: 'pp-restore-one', amount: 10 },
     usableInBattle: true,
     usableInOverworld: true,
-  }, // Ether
+  },
+  // Max Ether
   39: {
     category: 'pp-restore',
-    price: 0,
+    price: 700,
     effect: { type: 'pp-restore-one', amount: 999 },
     usableInBattle: true,
     usableInOverworld: true,
-  }, // Max Ether
+  },
+  // Elixir
   40: {
     category: 'pp-restore',
-    price: 0,
+    price: 2000,
     effect: { type: 'pp-restore', amount: 10 },
     usableInBattle: true,
     usableInOverworld: true,
-  }, // Elixir
+  },
+  // Max Elixir
   41: {
     category: 'pp-restore',
-    price: 0,
+    price: 4000,
     effect: { type: 'pp-restore', amount: 'all' },
     usableInBattle: true,
     usableInOverworld: true,
-  }, // Max Elixir
+  },
 
   // ── Vitamins ──
   45: {
@@ -604,7 +608,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   // leftovers
   211: {
     category: 'held',
-    price: 0,
+    price: 20000,
     effect: {
       type: 'battle',
       config: { condition: () => true, isEndOfTurn: true, hpAmount: 1 / 16, localMessage: 'battle.leftoversHeal' },
@@ -615,7 +619,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   //choise spec
   274: {
     category: 'held',
-    price: 0,
+    price: 15000,
     effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { specialAttack: 1 } } },
     usableInBattle: false,
     usableInOverworld: false,
@@ -623,7 +627,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   //choise-band
   197: {
     category: 'held',
-    price: 0,
+    price: 15000,
     effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { attack: 1 } } },
     usableInBattle: false,
     usableInOverworld: false,
@@ -631,7 +635,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   //choise scarf
   264: {
     category: 'held',
-    price: 0,
+    price: 15000,
     effect: { type: 'battle', config: { isEndOfTurn: false, category: 'choice', stats: { speed: 1 } } },
     usableInBattle: false,
     usableInOverworld: false,
@@ -639,14 +643,14 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   // zoom lens - not worked yet
   253: {
     category: 'held',
-    price: 0,
+    price: 15000,
     effect: { type: 'battle', config: { isEndOfTurn: false, category: 'other', stats: { accuracy: 1 } } },
     usableInBattle: false,
     usableInOverworld: false,
   },
   199: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -659,7 +663,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   214: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -672,7 +676,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   215: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -685,7 +689,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   216: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -698,7 +702,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   217: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -711,7 +715,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   218: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -724,7 +728,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   219: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -737,7 +741,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   220: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -750,7 +754,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   221: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -763,7 +767,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   222: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -776,7 +780,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   223: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -789,7 +793,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   224: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -802,7 +806,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   225: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -815,7 +819,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   226: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -828,7 +832,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   227: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -841,7 +845,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   228: {
     category: 'held',
-    price: 0,
+    price: 10000,
     effect: {
       type: 'battle',
       config: {
@@ -855,7 +859,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   // life orb
   247: {
     category: 'held',
-    price: 5000,
+    price: 15000,
     effect: {
       type: 'battle',
       config: {
@@ -878,7 +882,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   },
   242: {
     category: 'held',
-    price: 0,
+    price: 15000,
     effect: {
       type: 'battle',
       config: {

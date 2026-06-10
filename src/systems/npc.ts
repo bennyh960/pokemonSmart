@@ -8,6 +8,7 @@
  * Legacy maps with plain string[] are auto-normalized at load time.
  */
 
+import type { ItemCategory } from '../data/item-defs.js';
 import { getCharacterList } from '../engine/character-sprites.js';
 
 /** A single bilingual text line. */
@@ -135,6 +136,9 @@ export interface NPCData {
   reward?: DialogueReward; // Optional reward on first interaction (any NPC type)
   interactRange?: number; // Max interaction distance in tiles (default 1 = adjacent)
   lineOfSight?: number; // Used by gate-guards and blocker NPCs (default 3)
+
+  // for shopkeeper
+  categoriesToExclude?: ItemCategory[];
   // Story-ready fields
   hidden?: boolean; // NPC exists but not rendered/interactable until triggered
   spawnAfter?: string; // Flag — NPC appears only after this flag is set

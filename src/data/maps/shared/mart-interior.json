@@ -38,6 +38,7 @@
       "y": 3,
       "facing": "down",
       "type": "shopkeeper",
+      "categoriesToExclude": ["held"],
       "dialogue": [
         {
           "en": "Hello! How can i help you?",
