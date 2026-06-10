@@ -9,3 +9,5 @@ fix:
 <!-- TASK -->
 
 [npc] - add npc.type = swap-abilites to percentile lab or algebria lab + small stories around it
+
+[store]: diferent stores sellers and more items

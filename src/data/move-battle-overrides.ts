@@ -75,20 +75,14 @@ function usersFieldEffect(id: MoveBattleSideEffectId, turns = 5): MoveOverride {
   };
 }
 
-function leavesUserAtOneHp(): MoveOverride {
-  return {
-    behaviorTags: ['leave-user-at-1-hp'],
-  };
-}
-
 export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Struggle: { recoilPercent: 25 },
   'Dragon Rage': { minimumDamage: 40 },
   'Quick Attack': { priority: 1 },
   'Extreme Speed': { priority: 2 },
   'Hyper Beam': { behaviorTags: ['must-recharge'] },
-  'Self Destruct': leavesUserAtOneHp(),
-  Explosion: leavesUserAtOneHp(),
+  'Self Destruct': { behaviorTags: ['leave-user-at-1-hp'] },
+  Explosion: { behaviorTags: ['leave-user-at-1-hp'] },
   'Solar Beam': chargingMove(),
   'Skull Bash': chargingMove(stageChange('defense', 1, 'user')),
   'Sky Attack': chargingMove(),

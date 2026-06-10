@@ -912,7 +912,7 @@ export function applyRestEffect(pokemon: Pokemon, runtimeState: BattlePokemonRun
   pokemon.hp = pokemon.maxHp;
   pokemon.status = 'sleep';
   runtimeState.majorStatus = 'sleep';
-  runtimeState.sleepTurnsRemaining = 2;
+  runtimeState.sleepTurnsRemaining = 3;
   runtimeState.badlyPoisonTurns = 0;
   for (const move of pokemon.moves) {
     move.currentPp = move.pp;

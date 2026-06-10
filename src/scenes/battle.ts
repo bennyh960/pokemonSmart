@@ -1802,6 +1802,8 @@ export function createBattleScene(
     const isRest = battleData?.behaviorTags?.includes('rest') ?? false;
     const isSelfHeal = (battleData?.healingPercent ?? 0) > 0 && battleData?.target === 'user';
     const isReversal = battleData?.behaviorTags?.includes('reversal') ?? false;
+    const leaveUserAtOneHp = battleData?.behaviorTags?.includes('leave-user-at-1-hp') ?? false;
+
     if (isReversal) {
       const power = Math.max(1, player.maxHp - player.hp);
       move.power = power;
@@ -1817,6 +1819,15 @@ export function createBattleScene(
     const unseenSlots = maxRosterSize - battleRoster.size;
     const estimatedRemaining = confirmedAlive + unseenSlots;
     const playerPartyRemainingScore = estimatedRemaining / maxRosterSize;
+
+    // self destruct /explosion
+    if (leaveUserAtOneHp) {
+      if (enemyHpRatio > 0.5) {
+        return -Infinity;
+      } else if (playerHpRatio < 0.3 && playerPartyRemainingScore > 0.5) {
+        return -Infinity;
+      }
+    }
 
     // --- OHKO moves (Horn Drill, Fissure, etc.): gamble — only worthwhile on a healthy opponent ---
     if (isOhko) {
@@ -5116,7 +5127,7 @@ export function createBattleScene(
     if (!m) {
       m = { ...STRUGGLE_MOVE };
     }
-    console.log({ mi, enemySelectedMoveIndex, planned: getPlannedEnemyMoveIndex(), move: m.name });
+    // console.log({ mi, enemySelectedMoveIndex, planned: getPlannedEnemyMoveIndex(), move: m.name });
     const rtl = isRTL();
     const attackerName = getPokemonDisplayName(enemy.id);
     const defenderName = getPokemonDisplayName(player.id);
