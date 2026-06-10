@@ -82,6 +82,7 @@ function leavesUserAtOneHp(): MoveOverride {
 }
 
 export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
+  Struggle: { recoilPercent: 25 },
   'Dragon Rage': { minimumDamage: 40 },
   'Quick Attack': { priority: 1 },
   'Extreme Speed': { priority: 2 },

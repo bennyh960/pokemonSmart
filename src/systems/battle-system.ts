@@ -175,7 +175,7 @@ export function createBattleRuntimeStateForPokemon(
 
 export function chooseEnemyMoveIndex(enemy: Pokemon, random: () => number = Math.random): number {
   const usableMoves = enemy.moves.map((move, index) => ({ move, index })).filter(({ move }) => move.currentPp > 0);
-  if (usableMoves.length === 0) return 0;
+  if (usableMoves.length === 0) return -2; // signal to use struggle
   return usableMoves[Math.floor(random() * usableMoves.length)].index;
 }
 

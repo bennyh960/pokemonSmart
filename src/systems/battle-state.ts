@@ -50,6 +50,7 @@ export interface BattlePokemonRuntimeState {
   rageActive: boolean;
   uproarTurnsRemaining: number;
   statModifiers: BattleStatModifiers;
+  isStruggleMode: boolean;
   turnFlags: BattleTurnFlags;
   critBoost: boolean;
   substituteActive: boolean;
@@ -140,6 +141,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     disabledMoveId: null,
     disabledMoveTurnsRemaining: 0,
     abilityActivationCount: 0,
+    isStruggleMode: false,
   };
 }
 

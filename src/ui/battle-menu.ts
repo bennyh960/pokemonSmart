@@ -49,6 +49,8 @@ export interface BattleMenuState {
   activeWeather: string | null;
   /** Move IDs currently disabled (player's Pokémon) — shown grayed in the move grid */
   disabledMoveIds: number[];
+  /** SturggleMode*/
+  isStruggleMode?: boolean;
 }
 
 const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG', 'POKEDEX'];
@@ -67,6 +69,7 @@ export function createBattleMenu(moves: Move[]): BattleMenuState {
     battleHelperActive: false,
     activeWeather: null,
     disabledMoveIds: [],
+    isStruggleMode: false,
   };
 }
 
@@ -280,7 +283,7 @@ function renderPromptBar(ctx: CanvasRenderingContext2D, menu: BattleMenuState): 
     const move = menu.moves[moveIdx];
     if (move) {
       const rtl = isRTL();
-      const moveData = getMove(move.id);
+      const moveData = getMove(menu.isStruggleMode ? -1 : move.id);
       const rawDesc = rtl ? moveData?.description?.he : moveData?.description?.en;
       if (rawDesc) {
         const DESC_START = 60; // safe gap after ESC pill + label
@@ -348,7 +351,17 @@ function renderMoveGrid(ctx: CanvasRenderingContext2D, menu: BattleMenuState): v
     const move = menu.moves[moveIdx];
     const isSelected = slotIdx === menu.cursorIndex;
     const isDisabled = menu.disabledMoveIds.includes(move.id);
-    renderMoveCell(ctx, slotIdx, move, isSelected, menu.battleHelperActive, menu.enemyTypes, menu.activeWeather, isDisabled);
+    renderMoveCell(
+      ctx,
+      slotIdx,
+      move,
+      isSelected,
+      menu.battleHelperActive,
+      menu.enemyTypes,
+      menu.activeWeather,
+      isDisabled,
+      menu.isStruggleMode,
+    );
   }
 
   // Page indicator (if more than 4 moves)
@@ -404,6 +417,7 @@ function renderMoveCell(
   enemyTypes: PokemonType[] = [],
   activeWeather: string | null = null,
   isDisabled = false,
+  isStruggleMode = false,
 ): void {
   const M = BTL.MOVE;
   const cell = M.cells[slotIdx];
@@ -455,10 +469,10 @@ function renderMoveCell(
   }
 
   // Move name (TOP-RIGHT)
-  const moveName = getMoveDisplayName(move.id);
+  const moveName = getMoveDisplayName(isStruggleMode ? -1 : move.id);
   drawText(ctx, moveName, cx + cw - 4, cy + M.NAME_DY, {
     size: M.NAME_FS,
-    color: BTL.COLORS.text,
+    color: isStruggleMode ? 'red' : BTL.COLORS.text,
     align: 'right',
     direction: 'rtl',
   });

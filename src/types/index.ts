@@ -94,13 +94,14 @@ export type PokemonType =
   | 'dragon'
   | 'dark'
   | 'steel'
-  | 'glitch';
+  | 'glitch'
+  | 'struggle';
 
 /** A move that a Pokemon can use in battle (real moves from PokeAPI). */
 export interface Move {
   id: number; // PokeAPI move ID
   name: string; // e.g. "Flamethrower"
-  type: PokemonType;
+  type: PokemonType; //| 'struggle';
   power: number; // 0-250 (from PokeAPI)
   accuracy: number; // 0-100
   pp: number;

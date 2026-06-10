@@ -1,5 +1,22 @@
 [
   {
+    "id": -1,
+    "name": {
+      "en": "Struggle",
+      "he": "מאבק כפוי"
+    },
+    "type": "struggle",
+    "power": 50,
+    "accuracy": 100,
+    "pp": 9999,
+    "effectChance": null,
+    "damageClass": "physical",
+    "description": {
+      "en": "Pounds with fore­ legs or tail. User takes recoil damage.",
+      "he": "מתקפה שנוצרת כאשר פוקימון נותר ללא תנועות לשימוש. גורמת נזק לפוקימון היריב וגם לפוקימון המשתמש."
+    }
+  },
+  {
     "id": 1,
     "name": {
       "en": "Pound",

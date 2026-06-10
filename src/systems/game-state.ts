@@ -63,7 +63,11 @@ export function getPlayerData(): PlayerData {
   }
   return currentPlayerData;
 }
-
+if (import.meta.env.DEV) {
+  // @ts-ignore
+  window.getPlayerData = getPlayerData; // for debugging
+  console.log('You are in development mode 🛠️');
+}
 /** Check if a game is currently active. */
 export function hasActiveGame(): boolean {
   return currentPlayerData !== null;

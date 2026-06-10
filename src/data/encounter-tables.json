@@ -4,8 +4,8 @@
     "entries": [
       {
         "pokemonId": 214,
-        "minLevel": 45,
-        "maxLevel": 50,
+        "minLevel": 2,
+        "maxLevel": 3,
         "weight": 100
       }
     ]

@@ -2,7 +2,7 @@
  * BattleScene - Turn-based battle with math challenges, type effectiveness, and XP.
  */
 
-import type { Scene, Pokemon, PokemonType } from '../types/index.js';
+import type { Scene, Pokemon, PokemonType, Move } from '../types/index.js';
 import { GLITCH_DAMAGE_BONUS_MIN, GLITCH_DAMAGE_BONUS_MAX } from '../engine/config.js';
 import type { BattleStatId, WeatherConditionId } from '../types/battle-metadata.js';
 import { getMapWeather, isDaytime, renderNightOverlay } from '../systems/weather-system.js';
@@ -327,6 +327,16 @@ function addHeldItemsToAiParty(party: Pokemon[], level: AiLevel) {
     }
   });
 }
+
+const STRUGGLE_MOVE: Move = {
+  accuracy: 100,
+  power: 50,
+  pp: 9999,
+  type: 'struggle',
+  currentPp: 9999,
+  name: 'Struggle',
+  id: -1,
+};
 
 type BattlePhase =
   | 'TRAINER_CINEMATIC'
@@ -1778,7 +1788,9 @@ export function createBattleScene(
   function scoreMoveForEnemy(moveIndex: number): number {
     const move = enemy.moves[moveIndex];
     if (!move) return -Infinity;
-    if (move.currentPp <= 0) return -Infinity;
+    if (move.currentPp <= 0) {
+      return -Infinity;
+    }
     if (move.id === enemyBattleState.disabledMoveId) return -Infinity;
 
     const movePower = move.power ?? 0;
@@ -2128,6 +2140,14 @@ export function createBattleScene(
       menu.disabledMoveIds.push(playerBattleState.disabledMoveId);
     } else if (playerBattleState.disabledMoveId !== null) {
       menu.disabledMoveIds = [playerBattleState.disabledMoveId];
+    }
+
+    if (player.moves.every((m) => m.currentPp <= 0)) {
+      menu.isStruggleMode = true;
+      playerBattleState.isStruggleMode = true;
+    } else {
+      menu.isStruggleMode = false;
+      playerBattleState.isStruggleMode = false;
     }
 
     phase = 'SELECT_MOVE';
@@ -3838,6 +3858,11 @@ export function createBattleScene(
     const attackerName = getPokemonDisplayName(player.id);
     const moveIndex = forcedMoveIndex ?? selMove;
     let m = player.moves[moveIndex];
+
+    if (playerBattleState.isStruggleMode) {
+      m = { ...STRUGGLE_MOVE };
+    }
+
     const pendingChargeMoveId = getChargingMoveId(playerBattleState);
     const forcedChargeRelease =
       forcedMoveIndex !== undefined &&
@@ -5088,6 +5113,10 @@ export function createBattleScene(
     const mi = enemySelectedMoveIndex >= 0 ? enemySelectedMoveIndex : getPlannedEnemyMoveIndex();
     enemySelectedMoveIndex = -1;
     let m = enemy.moves[mi];
+    if (!m) {
+      m = { ...STRUGGLE_MOVE };
+    }
+    console.log({ mi, enemySelectedMoveIndex, planned: getPlannedEnemyMoveIndex(), move: m.name });
     const rtl = isRTL();
     const attackerName = getPokemonDisplayName(enemy.id);
     const defenderName = getPokemonDisplayName(player.id);
@@ -6613,7 +6642,8 @@ export function createBattleScene(
               selMove = r.index;
               pendingForcedPlayerMoveIndex = null;
               const m = player.moves[selMove];
-              if (m.currentPp <= 0) {
+
+              if (m.currentPp <= 0 && !playerBattleState.isStruggleMode) {
                 textBox = createTextBox([t('battle.noPP')], isRTL());
                 phase = 'INTRO';
               } else if (m.id === playerBattleState.disabledMoveId) {
