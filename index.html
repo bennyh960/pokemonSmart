@@ -1,82 +1,144 @@
 <!doctype html>
 <html lang="he" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokemon Math Adventure</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- display=swap: browser paints immediately with fallback, swaps font when ready -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <!-- Preload critical overworld sprites so they fetch in parallel with JS parse -->
-    <link rel="preload" href="/sprites/characters/characters_overworld.png" as="image" />
-    <style>
-      #loading-screen {
-        position: fixed;
-        inset: 0;
-        background: #000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        gap: 0;
-        user-select: none;
-      }
-      .ls-title {
-        font-family: 'Press Start 2P', 'Courier New', monospace;
-        font-size: clamp(10px, 2.8vw, 20px);
-        color: #ffe94d;
-        text-align: center;
-        letter-spacing: 2px;
-        line-height: 1.6;
-        text-shadow: 0 0 14px rgba(255, 233, 77, 0.45);
-      }
-      .ls-sub {
-        font-family: 'Rubik', 'Arial', sans-serif;
-        font-size: clamp(11px, 2.2vw, 17px);
-        color: #90b8e0;
-        margin-top: 6px;
-        margin-bottom: 36px;
-        direction: rtl;
-      }
-      #loading-bar-track {
-        width: clamp(200px, 48vw, 380px);
-        height: 12px;
-        background: #0d0d0d;
-        border: 2px solid #1e4020;
-        border-radius: 2px;
-        overflow: hidden;
-        margin-bottom: 10px;
-      }
-      #loading-bar-fill {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #00a030, #00e060);
-        transition: width 0.22s ease-out;
-      }
-      #loading-label {
-        font-family: 'Rubik', 'Arial', sans-serif;
-        font-size: clamp(9px, 1.6vw, 13px);
-        color: #556677;
-        direction: rtl;
-        min-height: 18px;
-        letter-spacing: 0.5px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="loading-screen">
-      <div class="ls-title">POKEMON</div>
-      <div class="ls-title">MATH ADVENTURE</div>
-      <div class="ls-sub">הרפתקת המתמטיקה</div>
-      <div id="loading-bar-track">
-        <div id="loading-bar-fill"></div>
-      </div>
-      <div id="loading-label">טוען...</div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>פוקימון הרפתקה בנומריה</title>
+  <link rel="preconnect" href="https://googleapis.com" />
+  <link rel="preconnect" href="https://gstatic.com" crossorigin />
+  <link href="https://googleapis.com" rel="stylesheet" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/sprites/characters/characters_overworld.png" as="image" />
+  <style>
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      gap: 0;
+      user-select: none;
+      direction: rtl;
+    }
+
+    .ls-title {
+      font-family: 'Press Start 2P', 'Courier New', monospace;
+      font-size: clamp(10px, 2.8vw, 20px);
+      color: #ffe94d;
+      text-align: center;
+      letter-spacing: 2px;
+      line-height: 1.6;
+      text-shadow: 0 0 14px rgba(255, 233, 77, 0.45);
+    }
+
+    .ls-sub {
+      font-family: 'Rubik', 'Arial', sans-serif;
+      font-size: clamp(11px, 2.2vw, 17px);
+      color: #90b8e0;
+      margin-top: 6px;
+      margin-bottom: 36px;
+    }
+
+    #loading-bar-track {
+      width: clamp(200px, 48vw, 380px);
+      height: 12px;
+      background: #0d0d0d;
+      border: 2px solid #1e4020;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    #loading-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00a030, #00e060);
+      transition: width 0.22s ease-out;
+    }
+
+    #loading-label {
+      font-family: 'Rubik', 'Arial', sans-serif;
+      font-size: clamp(9px, 1.6vw, 13px);
+      color: #556677;
+      min-height: 18px;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* אלמנט הטיפים המשופר */
+    #loading-hint {
+      font-family: 'Rubik', 'Arial', sans-serif;
+      font-size: clamp(11px, 1.9vw, 14px);
+      color: #fff;
+      text-align: center;
+      max-width: clamp(260px, 65vw, 480px);
+      min-height: 55px;
+      line-height: 1.6;
+      background: rgba(30, 64, 32, 0.15);
+      border: 1px dashed #1e4020;
+      padding: 12px 18px;
+      border-radius: 6px;
+      box-sizing: border-box;
+      /* הוסר opacity: 0 כדי למנוע השהיית נראות */
+    }
+
+    .key-cap {
+      background: #222;
+      border: 1px solid #555;
+      border-bottom: 3px solid #111;
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-family: monospace;
+      font-size: 0.85em;
+      color: #ffe94d;
+      margin: 0 3px;
+      display: inline-block;
+      line-height: 1;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading-screen">
+    <div class="ls-title">POKEMON</div>
+    <div class="ls-title"> הרפתקה בנומריה</div>
+    <div class="ls-sub">הרפתקאה לוגית לכל הגילאים</div>
+    <div id="loading-bar-track">
+      <div id="loading-bar-fill"></div>
     </div>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+    <div id="loading-label">טוען...</div>
+    <div id="loading-hint"></div>
+  </div>
+
+  <script>
+    (function () {
+      const hints = [
+        "⌨️ רוב המשחק מבוסס על המקלדת! חפשו תמיד את מקרא המקשים המופיע בתחתית כל מסך.",
+        "🎮 המקשים העיקריים הם <span class='key-cap'>ENTER</span> ו-<span class='key-cap'>SPACE</span> לבחירה ואישור, ו-<span class='key-cap'>ESC</span> ליציאה. לחיצה על <span class='key-cap'>ENTER</span> תפתח את התפריט!",
+        "🌿 פוקימונים פראיים מסתתרים בעשב, במים, בהרים הגבוהים ובמערות עמוקות. הצטיידו בפוכדורים וצאו לתפוס אותם!",
+        "🔴 כדי לתפוס פוקימון בהצלחה, כדאי להחליש אותו בקרב תחילה, ורק אז לזרוק עליו פוכדור.",
+        "💤 סיכויי הלכידה של פוקימון עולים משמעותית אם הוא נמצא במצב סטטוס לא תקין (מורדם, מורעל או שרוף).",
+        "❤️ פוקימון שמח הוא פוקימון חזק יותר! בדקו את המצב המנטלי שלו, חזקו אותו בקרבות, שימו אותו ראשון ברשימה ותנו לו ויטמינים.",
+        "⚔️ ככל שהפוקימון שלכם ישתתף ביותר קרבות, הרמה שלו תעלה, הוא יתחזק וילמד מתקפות חדשות ועוצמתיות!",
+        "✨ חלק מהפוקימונים מתפתחים בעליית רמה, חלק באמצעות חפצים מיוחדים, וחלק ככל שהם הופכים לשמחים יותר!",
+        "🎁 העולם מלא בהפתעות, סודות ומשימות מתמטיות מאתגרות. הצטרפו להרפתקה!"
+      ];
+      const hintEl = document.getElementById('loading-hint');
+      if (hintEl) {
+        const randomIndex = Math.floor(Math.random() * hints.length);
+        hintEl.innerHTML = hints[randomIndex];
+      }
+    })();
+  </script>
+
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

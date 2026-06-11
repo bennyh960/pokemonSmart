@@ -13,7 +13,7 @@ if (!app) throw new Error('Could not find #app container element.');
 
 initLocale();
 initLoadingScreen();
-setLoadingProgress(0.05, 'טוען...');
+setLoadingProgress(0.1, 'טוען...');
 
 // Fonts are tiny (~30 KB) and load in parallel — start early, don't block
 const fontPromise = loadFonts().catch(() => {});
@@ -21,23 +21,29 @@ const fontPromise = loadFonts().catch(() => {});
 Promise.all([
   // Heavy JSON data: moves (301 KB) + learnsets (126 KB) + tm-learnsets (277 KB)
   // fetched separately so the initial JS bundle is ~700 KB lighter
-  initHeavyData((p) => setLoadingProgress(0.05 + p * 0.55, 'טוען נתוני פוקמון...')),
+  initHeavyData((p) => setLoadingProgress(0.1 + p * 0.5, 'טוען נתוני פוקמון...')),
   // Overworld sprites: tileset + player frames + NPC sprites
-  preloadOverworldAssets().then(() => setLoadingProgress(0.85, 'טוען גרפיקה...')),
+  preloadOverworldAssets().then(() => setLoadingProgress(0.7, 'טוען גרפיקה...')),
   fontPromise,
 ]).then(async () => {
-  setLoadingProgress(1, 'מוכן!');
-  await hideLoadingScreen();
+  setLoadingProgress(0.75, 'טוען חשבון...');
 
   async function startGame(): Promise<void> {
-    try { await initSavesFromCloud(); } catch { /* network error — start with empty session */ }
+    try {
+      await initSavesFromCloud();
+    } catch {
+      /* network error — start with empty session */
+    }
     const game = createGame(app!);
     game.start();
-    window.addEventListener('beforeunload', () => { syncSlotsToCloud().catch(() => {}); });
+    window.addEventListener('beforeunload', () => {
+      syncSlotsToCloud().catch(() => {});
+    });
   }
 
   const session = await getSession();
   if (session) {
+    setLoadingProgress(0.95, 'טוען משחק...');
     const active = await isAccountActive(session.user.id);
     if (active) {
       await startGame();
@@ -47,4 +53,6 @@ Promise.all([
   } else {
     showLoginScreen(startGame);
   }
+  setLoadingProgress(1, 'מוכן!');
+  await hideLoadingScreen();
 });
