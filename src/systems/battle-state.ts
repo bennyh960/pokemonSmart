@@ -40,6 +40,7 @@ export interface BattlePokemonRuntimeState {
   badlyPoisonTurns: number;
   confusionTurnsRemaining: number;
   leechSeeded: boolean;
+  curseActive: boolean;
   trappedTurnsRemaining: number;
   trapDamagePercent: number | null;
   chargingMoveId: number | null;
@@ -116,6 +117,7 @@ export function applyBattleStatDelta(currentPercent: number, stageDelta: number)
 export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>): BattlePokemonRuntimeState {
   return {
     majorStatus: pokemon.status,
+    curseActive: false,
     sleepTurnsRemaining: 0,
     freezeTurnsRemaining: 0,
     badlyPoisonTurns: 0,

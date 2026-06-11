@@ -254,6 +254,9 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.leechSeeded) {
     effects.push('seed');
   }
+  if (runtimeState.curseActive) {
+    effects.push('curse');
+  }
   if (runtimeState.trappedTurnsRemaining > 0) {
     effects.push('trap');
   }
@@ -914,6 +917,15 @@ export function applyLeechSeedEffect(
   const healed = Math.max(0, Math.min(recipient.maxHp, recipient.hp + damage) - recipient.hp);
   recipient.hp = Math.min(recipient.maxHp, recipient.hp + damage);
   return { applied: true, damage, healed, fainted: target.hp <= 0 };
+}
+
+export function applyGhostCurseEffect(target: Pokemon, runtimeState: BattlePokemonRuntimeState) {
+  if (target.hp <= 0 || !runtimeState.curseActive) {
+    return { applied: false, damage: 0, fainted: true };
+  }
+  const damage = Math.max(1, Math.floor(target.maxHp / 5));
+  target.hp = Math.max(0, target.hp - damage);
+  return { applied: true, damage, fainted: target.hp <= 0 };
 }
 
 export function applyRestEffect(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): number {

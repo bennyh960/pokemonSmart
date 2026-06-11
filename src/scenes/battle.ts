@@ -184,6 +184,7 @@ import {
   getWeightRatioPower,
   applyWeatherDamage,
   type EntryHazardResult,
+  applyGhostCurseEffect,
 } from '../systems/battle-system.js';
 import charactersManifest from '../data/sprites/characters.json';
 
@@ -2922,12 +2923,24 @@ export function createBattleScene(
         queueStatusTurnEffect('player', 'seed');
         lines.push(t('battle.leechSeedDrain', { name: getPokemonDisplayName(player.id) }));
       }
+
+      const curseResult = applyGhostCurseEffect(player, playerBattleState);
+      if (curseResult.applied) {
+        queueStatusTurnEffect('player', 'curse');
+        lines.push(t('battle.curseDamage', { name: getPokemonDisplayName(player.id) }));
+      }
     }
     if (enemy.hp > 0) {
       const leechSeedResult = applyLeechSeedEffect(enemy, enemyBattleState, player);
       if (leechSeedResult.applied) {
         queueStatusTurnEffect('enemy', 'seed');
         lines.push(t('battle.leechSeedDrain', { name: getPokemonDisplayName(enemy.id) }));
+      }
+
+      const curseResult = applyGhostCurseEffect(enemy, enemyBattleState);
+      if (curseResult.applied) {
+        queueStatusTurnEffect('enemy', 'curse');
+        lines.push(t('battle.curseDamage', { name: getPokemonDisplayName(enemy.id) }));
       }
     }
 
@@ -4031,6 +4044,7 @@ export function createBattleScene(
     // --- End Redirection ---
 
     const isChargeRelease = !isRedirected && pendingChargeMoveId !== null && pendingChargeMoveId === m.id;
+    const isCurse = moveBattleData?.behaviorTags?.includes('curse') ?? false;
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease && !isRedirected;
     const isTwoTurnFly = moveBattleData?.behaviorTags?.includes('two-turn-fly') ?? false;
@@ -4082,6 +4096,23 @@ export function createBattleScene(
 
     if (!isRedirected && !isChargeRelease && m.currentPp > 0) {
       m.currentPp--;
+    }
+
+    if (isCurse && player.types.includes('ghost')) {
+      if (enemyBattleState.curseActive) {
+        textBox = createTextBox([t('battle.alreadyCursed', { name: defenderName })], rtl);
+        m.currentPp++;
+        phase = 'PLAYER_ATTACK';
+        phaseTimer = 0;
+        return;
+      }
+      moveBattleData!.statChanges = [];
+      player.hp = Math.max(1, player.hp - player.maxHp / 2);
+      enemyBattleState.curseActive = true;
+      textBox = createTextBox([t('battle.curseGhost', { attacker: attackerName, target: defenderName })], rtl);
+      phase = 'PLAYER_ATTACK';
+      phaseTimer = 0;
+      return;
     }
 
     // Lock-in behavior tags
@@ -5249,6 +5280,7 @@ export function createBattleScene(
     }
     // --- End Redirection ---
 
+    const isCurse = moveBattleData?.behaviorTags?.includes('curse') ?? false;
     const isChargeRelease = !isRedirectedEnemy && chargingMoveId !== null && chargingMoveId === m.id;
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease && !isRedirectedEnemy;
@@ -5366,6 +5398,23 @@ export function createBattleScene(
     const lockInOutrageFinalTurnEnemy = isLockInOutrageEnemy && enemyBattleState.lockInTurnsRemaining === 0;
     const lockInRolloutFinalTurnEnemy = isLockInRolloutEnemy && enemyBattleState.rolloutTurnsActive >= 5;
     const lockInUproarFinalTurnEnemy = isLockInUproarEnemy && enemyBattleState.uproarTurnsRemaining === 0;
+
+    if (isCurse && enemy.types.includes('ghost')) {
+      if (playerBattleState.curseActive) {
+        textBox = createTextBox([t('battle.alreadyCursed', { name: defenderName })], rtl);
+        m.currentPp++;
+        phase = 'ENEMY_TURN';
+        phaseTimer = 0;
+        return;
+      }
+      moveBattleData!.statChanges = [];
+      enemy.hp = Math.max(1, enemy.hp - enemy.maxHp / 2);
+      enemyBattleState.curseActive = true;
+      textBox = createTextBox([t('battle.curseGhost', { attacker: attackerName, target: defenderName })], rtl);
+      phase = 'ENEMY_TURN';
+      phaseTimer = 0;
+      return;
+    }
 
     const moveData = getMove(m.id);
     if (isChargeStart) {

@@ -293,7 +293,11 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const hpW = Math.round(56 * Math.max(0, Math.min(1, hpRatio)));
     if (hpW > 0) fillRect(ctx, 30, sy + 11, hpW, 3, getHpColor(hpRatio));
     // HP value
-    drawText(ctx, `${pokemon.hp}/${pokemon.maxHp}`, 8, sy + 9, { size: 5, color: C.TEXT_SEC, font: 'monospace' });
+    drawText(ctx, `${Math.round(pokemon.hp)}/${pokemon.maxHp}`, 8, sy + 9, {
+      size: 5,
+      color: C.TEXT_SEC,
+      font: 'monospace',
+    });
 
     // Disabled overlay (semi-transparent dark green)
     if (disabled) {
@@ -660,7 +664,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
     // ── HP section ──
     drawText(ctx, 'HP', 228, 64, { size: 7, color: C.TEXT_SEC, font: 'monospace', align: 'right' });
-    drawText(ctx, `${pokemon.hp}`, 12, 63, { size: 10, color: C.TEXT_PRI, font: 'monospace' });
+    drawText(ctx, `${Math.round(pokemon.hp)}`, 12, 63, { size: 10, color: C.TEXT_PRI, font: 'monospace' });
     drawText(ctx, `/ ${pokemon.maxHp}`, 30, 65, { size: 7, color: C.TEXT_MUT, font: 'monospace' });
     // HP bar
     fillRect(ctx, 12, 74, 216, 3, C.BAR_TRACK);

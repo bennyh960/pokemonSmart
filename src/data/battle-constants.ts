@@ -26,6 +26,13 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(160,64,160,0.25)',
     textColor: '#c070c0',
   },
+  curse: {
+    label: 'קללה',
+    shortLabel: 'קללה',
+    bgColor: 'rgba(0, 0, 0, 0.15)',
+    borderColor: 'rgba(160,64,160,0.25)',
+    textColor: '#c070c0',
+  },
   burn: {
     label: 'שריפה',
     shortLabel: 'שרוף',

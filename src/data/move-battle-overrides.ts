@@ -352,7 +352,17 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Acid Armor': userStages(['defense', 2]),
   Coil: userStages(['attack', 1], ['defense', 1], ['accuracy', 1]),
   'Dragon Dance': userStages(['attack', 1], ['speed', 1]),
-  Curse: userStages(['attack', 1], ['defense', 1], ['speed', -1]), // todo : for ghost type its should have other
+  // Curse2: userStages(['attack', 1], ['defense', 1], ['speed', -1]), // todo : for ghost type its should have other
+  Curse: {
+    effects: [{ bayPassImuunity: true, chance: 100, id: 'curse', target: 'user' }],
+    statChanges: [
+      stageChange('attack', 1, 'user', 100),
+      stageChange('defense', 1, 'user', 100),
+      stageChange('speed', -1, 'user', 100),
+    ],
+    behaviorTags: ['curse'],
+    target: 'user',
+  },
   'Focus Energy': { behaviorTags: ['focus-energy'], target: 'user' },
 
   // --- Weight-based power ---

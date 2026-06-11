@@ -36,6 +36,7 @@ export type MoveBattleBehaviorTag =
   | 'foul-play'
   | 'dream-eater'
   | 'ohko'
+  | 'curse'
   | 'protect'
   | 'endure'
   | 'stealth-rock'
@@ -75,7 +76,7 @@ export type MoveBattleBehaviorTag =
   | 'night-shade'
   | 'super-fang';
 
-export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap';
+export type MoveBattleEffectId = 'confusion' | 'leech-seed' | 'trap' | 'curse';
 
 export type MoveBattleSideEffectId = 'reflect' | 'light-screen' | 'mist' | 'safeguard';
 
