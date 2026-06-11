@@ -207,29 +207,29 @@ registerGate({
 // ─── Service map registrations ────────────────────────────────────────────────
 
 // Pokecenter interiors
-registerAutoGateMap('shared/pokecenter-mart-interior', 'pokecenter');
-registerAutoGateMap('shared/pokecenter-2', 'pokecenter');
+registerAutoGateMap(MapId.SHARED_POKECENTER_MART_INTERIOR, 'pokecenter');
+registerAutoGateMap(MapId.SHARED_POKECENTER_2, 'pokecenter');
 registerAutoGateMap(MapId.MULTIPLIA_POKECENTER, 'pokecenter');
 
 // Pokemart interiors
-registerAutoGateMap('shared/mart-interior', 'pokemarket');
+registerAutoGateMap(MapId.SHARED_MART_INTERIOR, 'pokemarket');
 
 // Gym interiors
 const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
-  'sumville/gym': {
+  [MapId.SUMVILLE_GYM]: {
     questionSetIds: ['+'],
     sessionConfig: {
       inputQuestions: { count: 5, types: ['+'] },
       rewards: [{ type: 'money', amount: 4500 }],
     },
   },
-  'minusburg/gym': {
+  [MapId.MINUSBURG_GYM]: {
     questionSetIds: ['-'],
     sessionConfig: {
       inputQuestions: { count: 5, types: ['-'] },
     },
   },
-  'multiplia/gym': {
+  [MapId.MULTIPLIA_GYM]: {
     questionSetIds: ['×'],
     sessionConfig: {
       inputQuestions: { count: 8, types: ['×'] },
@@ -237,7 +237,7 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
       timeLimitPerQuestion: 180,
     },
   },
-  'divida/gym': {
+  [MapId.DIVIDIA_GYM]: {
     questionSetIds: ['÷'],
     sessionConfig: {
       inputQuestions: { count: 8, types: ['÷'] },
@@ -245,7 +245,7 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
       timeLimitPerQuestion: 210,
     },
   },
-  'fractalis/gym': {
+  [MapId.FRACTALIS_GYM]: {
     questionSetIds: ['+', '-', '×', '÷'],
     sessionConfig: {
       inputQuestions: { count: 10, types: ['+', '-', '×', '÷'] },
@@ -253,7 +253,7 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
       timeLimitPerQuestion: 180,
     },
   },
-  'symmetrika/gym': {
+  [MapId.SYMMETRIKA_GYM]: {
     questionSetIds: ['+', '-', '×', '÷'],
     sessionConfig: {
       inputQuestions: { count: 10, types: ['+', '-', '×', '÷'] },
@@ -263,9 +263,9 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
   },
 };
 
-registerAutoGateMap('sumville/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['sumville/gym']);
-registerAutoGateMap('minusburg/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['minusburg/gym']);
-registerAutoGateMap('multiplia/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['multiplia/gym']);
-registerAutoGateMap('divida/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['divida/gym']);
-registerAutoGateMap('fractalis/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['fractalis/gym']);
-registerAutoGateMap('symmetrika/gym', 'gym', GYM_AUTO_GATE_OVERRIDES['symmetrika/gym']);
+registerAutoGateMap(MapId.SUMVILLE_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.SUMVILLE_GYM]);
+registerAutoGateMap(MapId.MINUSBURG_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.MINUSBURG_GYM]);
+registerAutoGateMap(MapId.MULTIPLIA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.MULTIPLIA_GYM]);
+registerAutoGateMap(MapId.DIVIDIA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.DIVIDIA_GYM]);
+registerAutoGateMap(MapId.FRACTALIS_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.FRACTALIS_GYM]);
+registerAutoGateMap(MapId.SYMMETRIKA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.SYMMETRIKA_GYM]);
