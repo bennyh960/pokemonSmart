@@ -102,6 +102,7 @@ export interface MoveBattleEffect {
   minTurns?: number | null;
   maxTurns?: number | null;
   damagePercent?: number | null;
+  bayPassImuunity?: boolean;
 }
 
 export interface MoveBattleSideEffect {

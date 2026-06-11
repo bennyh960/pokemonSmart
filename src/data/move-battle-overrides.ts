@@ -152,7 +152,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Spore: statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
   'Lovely Kiss': statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
 
-  'Confuse Ray': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
+  'Confuse Ray': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5, bayPassImuunity: true }),
   Supersonic: volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
   'Sweet Kiss': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
   Confusion: volatileEffect('confusion', 10, { minTurns: 2, maxTurns: 5 }),

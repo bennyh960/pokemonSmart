@@ -1964,7 +1964,7 @@
     "id": 109,
     "name": {
       "en": "Confuse Ray",
-      "he": "קרן בלבול"
+      "he": "קרינת בלבול"
     },
     "type": "ghost",
     "power": null,
@@ -1974,8 +1974,8 @@
     "mathDifficulty": 1,
     "damageClass": "status",
     "description": {
-      "en": "A move that causes confusion.",
-      "he": "מהלך שגורם לבלבול."
+      "en": "A move that causes confusion (bypasses type immunity).",
+      "he": "מהלך שגורם לבלבול (מתעלם מחסינות סוג)."
     }
   },
   {
@@ -3584,7 +3584,7 @@
     "id": 200,
     "name": {
       "en": "Outrage",
-      "he": "זעם שיגעון"
+      "he": "התפרצות דרקון"
     },
     "type": "dragon",
     "power": 120,
@@ -3836,7 +3836,7 @@
     "id": 214,
     "name": {
       "en": "Sleep Talk",
-      "he": "דיבור בשינה"
+      "he": "נדודי שינה"
     },
     "type": "normal",
     "power": null,

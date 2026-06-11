@@ -1860,7 +1860,9 @@ export function createBattleScene(
 
     let score = 0;
 
-    const effectiveness = getCombinedTypeEffectiveness(move.type, player.types);
+    const bayPassImmunity = battleData?.effects.find((e) => e.bayPassImuunity);
+    const effectivenessScore = getCombinedTypeEffectiveness(move.type, player.types);
+    const effectiveness = effectivenessScore === 0 && bayPassImmunity ? 1 : effectivenessScore;
     if (effectiveness === 0) return -Infinity;
 
     if (movePower > 0) {
@@ -4547,8 +4549,13 @@ export function createBattleScene(
         hitResult = { hit: false, chance: 0 };
       }
     }
+
+    const hasBypassImmunity = moveBattleData?.effects?.find((effect) => effect.bayPassImuunity) ?? false;
     const targetTypeImmune =
-      hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(enemy, m.type);
+      hitResult.hit &&
+      doesMoveTargetOpponent(moveBattleData) &&
+      isTargetImmuneToMoveType(enemy, m.type) &&
+      !hasBypassImmunity;
     let magnitudeLevel = 0;
     if (isMagnitude) {
       const roll = Math.random() * 100;
@@ -5792,8 +5799,14 @@ export function createBattleScene(
         hitResult = { hit: false, chance: 0 };
       }
     }
+
+    const bayPassImmunity = moveBattleData?.effects.find((e) => e.bayPassImuunity);
+
     const targetTypeImmune =
-      hitResult.hit && doesMoveTargetOpponent(moveBattleData) && isTargetImmuneToMoveType(player, m.type);
+      hitResult.hit &&
+      doesMoveTargetOpponent(moveBattleData) &&
+      isTargetImmuneToMoveType(player, m.type) &&
+      !bayPassImmunity;
     let magnitudeLevelEnemy = 0;
     if (isMagnitudeEnemy) {
       const roll = Math.random() * 100;
