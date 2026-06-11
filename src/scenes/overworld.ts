@@ -47,7 +47,13 @@ import { setEvolutionData } from '../scenes/evolution.js';
 import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadCharacterSprites, getCharacterFrame, hasCharacter } from '../engine/character-sprites.js';
-import { loadMap, setCurrentMapId, getCachedMap, getCurrentMapId } from '../systems/map-manager.js';
+import {
+  loadMap,
+  setCurrentMapId,
+  getCachedMap,
+  getCurrentMapId,
+  prefetchNeighborMaps,
+} from '../systems/map-manager.js';
 import type { MapId } from '../data/maps/map-ids.js';
 import { getTileset } from '../engine/tileset.js';
 import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
@@ -1824,7 +1830,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   /** Load a map and set up the scene. */
   async function loadAndSetMap(mapId: string, spawnX?: number, spawnY?: number): Promise<void> {
-    console.log(`Loading map ${mapId}...`);
     const data = await loadMap(mapId);
     currentMapData = data;
     currentMapWeather =
@@ -1970,6 +1975,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       autoSave();
     }
+    // fire and forgot to load transistion relevant
+    prefetchNeighborMaps(currentMapData).catch(() => {});
   }
 
   /** Build the data payload for the HTML HUD overlay. */

@@ -4,6 +4,10 @@ import { rmSync, existsSync } from 'fs';
 import { glob } from 'glob';
 
 export default defineConfig(({ mode }) => ({
+  preview: {
+    port: 4173,
+    strictPort: true,
+  },
   esbuild: {
     drop: mode === 'production' ? ['debugger'] : [],
     pure: mode === 'production' ? ['console.debug'] : [],
@@ -14,7 +18,6 @@ export default defineConfig(({ mode }) => ({
       name: 'remove-backup-folders',
       closeBundle() {
         const backupDirs = glob.sync('dist/**/backup', { onlyDirectories: true });
-        8;
         for (const dir of backupDirs) {
           if (existsSync(dir)) {
             rmSync(dir, { recursive: true, force: true });

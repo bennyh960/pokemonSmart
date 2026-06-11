@@ -63,7 +63,9 @@ export async function loadMap(id: string): Promise<TileMapData> {
   const cached = mapCache.get(id);
   // Return a fresh copy each time so runtime mutations (npc.hidden, npc.x/y, etc.)
   // from the previous session don't leak into the next map load.
-  if (cached) return { ...cached, npcs: cached.npcs?.map((npc) => ({ ...npc })) ?? [] };
+  if (cached) {
+    return { ...cached, npcs: cached.npcs?.map((npc) => ({ ...npc })) ?? [] };
+  }
 
   const loader = mapModules[mapPathById[id]];
   if (!loader) {
@@ -92,9 +94,28 @@ export async function loadMap(id: string): Promise<TileMapData> {
 
   if (data.tileset) await loadTileset(data.tileset);
   mapCache.set(id, data);
+
   // Return a clone so the caller's runtime mutations (npc.x/y, hidden, facing)
   // don't pollute the cache — every load starts from clean JSON-original values.
   return { ...data, npcs: data.npcs?.map((npc) => ({ ...npc })) ?? [] };
+}
+
+// After map loads, prefetch neighbors in background
+// Track in-flight prefetches to prevent re-fetching
+const prefetchInFlight = new Set<string>();
+
+export async function prefetchNeighborMaps(mapData: TileMapData) {
+  const neighborIds = mapData.transitions?.filter((e) => e.toMapId).map((e) => e.toMapId) ?? [];
+
+  for (const id of neighborIds) {
+    // Skip if already cached or already being prefetched
+    if (mapCache.has(id) || prefetchInFlight.has(id)) continue;
+
+    prefetchInFlight.add(id);
+    loadMap(id)
+      .catch(() => {})
+      .finally(() => prefetchInFlight.delete(id));
+  }
 }
 
 /** Get all available map IDs (excludes templates and backups). */
