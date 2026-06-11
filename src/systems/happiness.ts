@@ -50,9 +50,9 @@ export function getHappinessCritBonus(happiness: number): number {
 export const HAPPINESS_EVOLUTION_THRESHOLD = 220;
 
 export const getHappinessLabel = (happiness: number) => {
-  if (happiness >= 220) return { en: 'Delighted', he: 'מאושר מאוד' };
-  if (happiness >= 150) return { en: 'Happy', he: 'מאושר' };
-  if (happiness >= 75) return { en: 'Neutral', he: 'ניטרלי' };
-  if (happiness >= 25) return { en: 'Disappointed', he: 'מאוכזב' };
-  return { en: 'Frustrated', he: 'מתוסכל' };
+  if (happiness >= 220) return { en: 'Delighted', he: 'מאושר מאוד', color: '#63ff47' };
+  if (happiness >= 150) return { en: 'Happy', he: 'מאושר', color: '#ccff80' };
+  if (happiness >= 75) return { en: 'Neutral', he: 'ניטרלי', color: '#fff' };
+  if (happiness >= 25) return { en: 'Disappointed', he: 'מאוכזב', color: '#ff6666' };
+  return { en: 'Frustrated', he: 'מתוסכל', color: '#ff0000' };
 };

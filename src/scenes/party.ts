@@ -11,7 +11,7 @@ import type { Scene, Pokemon, PokemonType, StolenEntry } from '../types/index.js
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
-import { getLocale, t } from '../i18n/i18n.js';
+import { getLocale, isRTL, t } from '../i18n/i18n.js';
 import {
   getPokemonDisplayName,
   getMoveDisplayName,
@@ -31,13 +31,13 @@ import { canUseItemOnPokemon } from '../systems/item-effects.js';
 import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } from '../systems/move-learning.js';
 import { getTMEffect } from '../data/item-defs.js';
 import { calcHappiness, getHappinessLabel } from '../systems/happiness.js';
-import { getItem } from '../data/items.js';
+import { getItem, type ItemDef } from '../data/items.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
 
 type ViewMode = 'list' | 'detail' | 'swap' | 'diary';
-type DetailTab = 'stats' | 'moves';
+type DetailTab = 'stats' | 'moves' | 'item';
 type MoveAction = 'swap' | 'delete' | 'cancel';
 type PartyMode = 'overworld' | 'battle' | 'select-target' | 'move-learning';
 type MoveLearningConfirmAction = 'replace' | 'skip' | null;
@@ -684,6 +684,9 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawText(ctx, t('party.baseStats'), 228, 90, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'right' });
 
     // ── Stat rows (HP row removed — shown above) ──
+    const STAT_MAX = 255; // true Pokémon stat cap
+    const BAR_W = 124;
+
     const statRows: [string, number, string, number][] = [
       [t('party.stats.attack'), pokemon.attack, '#f08030', 99],
       [t('party.stats.defense'), pokemon.defense, '#6890f0', 107],
@@ -695,7 +698,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     for (const [label, value, color, rowY] of statRows) {
       // Bar track + fill
       fillRect(ctx, 12, rowY + 2, 124, 3, C.BAR_TRACK);
-      const fill = Math.max(1, Math.round((value / 150) * 124));
+      const fill = Math.max(1, Math.round((value / STAT_MAX) * BAR_W));
       fillRect(ctx, 12, rowY + 2, fill, 3, color);
       // Value (centered at x=154)
       drawText(ctx, String(value), 154, rowY, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
@@ -710,7 +713,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const happinessRowY = 139;
     fillRect(ctx, 12, happinessRowY + 2, 124, 3, C.BAR_TRACK);
     const happinessFill = Math.max(1, Math.round((happiness / 255) * 124));
-    fillRect(ctx, 12, happinessRowY + 2, happinessFill, 3, '#ff9040');
+    fillRect(ctx, 12, happinessRowY + 2, happinessFill, 3, happinessLabel.color);
     drawText(ctx, String(happiness), 154, happinessRowY, {
       size: 7,
       color: C.TEXT_PRI,
@@ -1121,101 +1124,6 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     }
   }
 
-  function renderDetailView(ctx: CanvasRenderingContext2D): void {
-    const party = getParty();
-    const pokemon = party[cursor];
-    if (!pokemon) return;
-
-    // Tab bar — exact from canvas_coordinates.md
-    fillRect(ctx, 0, 0, 240, 14, C.BG);
-    fillRect(ctx, 44, 2, 152, 10, C.TAB_BG);
-    drawRect(ctx, 44, 2, 152, 10, C.BORDER);
-    if (detailTab === 'stats') {
-      fillRect(ctx, 118, 2, 76, 10, C.TAB_ACT);
-      drawText(ctx, t('party.baseStats'), 156, 3, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
-      drawText(ctx, t('party.moves.title'), 81, 3, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
-    } else {
-      fillRect(ctx, 46, 2, 70, 10, C.TAB_ACT);
-      drawText(ctx, t('party.moves.title'), 81, 3, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
-      drawText(ctx, t('party.baseStats'), 156, 3, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
-    }
-
-    // Tab content
-    if (detailTab === 'stats') {
-      renderDetailStatsTab(ctx, pokemon);
-    } else {
-      renderDetailMovesTab(ctx, pokemon);
-    }
-
-    const learningMode = isMoveLearningMode();
-
-    // Bottom hint bar — exact from canvas_coordinates.md
-    fillRect(ctx, 0, 150, 240, 10, C.BTM_BG);
-    // ESC pill
-    fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
-    drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
-    drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, learningMode ? t('party.moves.cancel') : t('party.hint.back'), 30, 153, {
-      size: 6,
-      color: C.TEXT_MUT,
-      font: 'monospace',
-    });
-    // Arrows pill
-    fillRect(ctx, 62, 151, 18, 8, C.KEY_BG);
-    drawRect(ctx, 62, 151, 18, 8, C.KEY_BRD);
-    drawText(ctx, learningMode ? '\u25b2\u25bc' : '\u25c0\u25b6', 71, 152, {
-      size: 6,
-      color: C.TEXT_SEC,
-      font: 'monospace',
-      align: 'center',
-    });
-    drawText(ctx, learningMode ? t('bag.hint.navigate') : t('party.hint.switchTab'), 82, 153, {
-      size: 6,
-      color: C.TEXT_MUT,
-      font: 'monospace',
-    });
-
-    // held item removal
-    if (pokemon.heldItemId) {
-      fillRect(ctx, 111, 151, 10, 8, C.KEY_BG);
-      drawRect(ctx, 111, 151, 10, 8, C.KEY_BRD);
-      drawText(ctx, 'D', 114, 152, {
-        size: 6,
-        color: C.TEXT_MUT,
-        font: 'monospace',
-      });
-      drawText(
-        ctx,
-        t('party.hint.removeItem', {
-          item: getItem(pokemon.heldItemId)?.name.he || '???',
-        }),
-        122,
-        153,
-        {
-          size: 6,
-          color: C.TEXT_MUT,
-          font: 'monospace',
-        },
-      );
-    }
-    // Enter pill (only on moves tab)
-    if (detailTab === 'moves') {
-      fillRect(ctx, 114, 151, 26, 8, C.KEY_BG);
-      drawRect(ctx, 114, 151, 26, 8, C.KEY_BRD);
-      drawText(ctx, 'Enter', 127, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-      drawText(ctx, learningMode ? t('party.moveLearning.actionHint') : t('party.hint.action'), 142, 153, {
-        size: 6,
-        color: C.TEXT_MUT,
-        font: 'monospace',
-      });
-    }
-
-    if (actionMessage && actionMessageTimer > 0) {
-      fillRect(ctx, 8, 136, 224, 10, '#2a6a40');
-      drawText(ctx, actionMessage, 120, 137, { size: 7, color: '#20d860', align: 'center' });
-    }
-  }
-
   function updateDetailView(dt: number): void {
     const party = getParty();
     const pokemon = party[cursor];
@@ -1448,8 +1356,13 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
     // Tab switching with Left/Right arrows (not affected by RTL — always physical direction)
     if (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowRight')) {
-      // Toggle between stats and moves regardless of direction
-      detailTab = detailTab === 'stats' ? 'moves' : 'stats';
+      const tabs = ['moves', 'stats', 'item'] as const;
+      const currentIndex = tabs.indexOf(detailTab);
+      if (input.isKeyPressed('ArrowLeft')) {
+        detailTab = tabs[(currentIndex - 1 + tabs.length) % tabs.length];
+      } else {
+        detailTab = tabs[(currentIndex + 1) % tabs.length];
+      }
       moveCursor = 0;
       moveSwapFrom = -1;
       return;
@@ -1494,10 +1407,59 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           moveDeleteConfirmCursor = 1; // default to "No"
         }
       }
+    } else if (detailTab === 'stats') {
+      if (input.isKeyPressed('ArrowUp')) {
+        cursor = cursor > 0 ? cursor - 1 : getParty().length - 1;
+      }
+      if (input.isKeyPressed('ArrowDown')) {
+        cursor = cursor < getParty().length - 1 ? cursor + 1 : 0;
+      }
+    } else if (detailTab === 'item') {
+      const MAX_VISIBLE = 3; // match the value in renderDetailHeldItemTab
+
+      if (heldItems.length > 0 && input.isKeyPressed('ArrowUp')) {
+        heldItemCursor = (heldItemCursor - 1 + Math.max(1, heldItems.length)) % Math.max(1, heldItems.length);
+        if (heldItemCursor < heldItemScrollOffset) {
+          heldItemScrollOffset = heldItemCursor;
+        } else if (heldItemCursor === heldItems.length - 1) {
+          // wrapped around to bottom
+          heldItemScrollOffset = Math.max(0, heldItems.length - MAX_VISIBLE);
+        }
+      }
+
+      if (heldItems.length > 0 && input.isKeyPressed('ArrowDown')) {
+        heldItemCursor = (heldItemCursor + 1) % Math.max(1, heldItems.length);
+        if (heldItemCursor === 0) {
+          // wrapped around to top
+          heldItemScrollOffset = 0;
+        } else if (heldItemCursor >= heldItemScrollOffset + MAX_VISIBLE) {
+          heldItemScrollOffset = heldItemCursor - MAX_VISIBLE + 1;
+        }
+      }
+
+      if (input.isKeyPressed('Enter')) {
+        const selected = heldItems[heldItemCursor];
+        if (selected) {
+          console.log(selected, pokemon);
+          const pd = getPlayerData();
+
+          pd.items[selected.id] = (pd.items[selected.id] || 0) - 1;
+          if (pokemon.heldItemId) {
+            pd.items[pokemon.heldItemId] = (pd.items[pokemon.heldItemId] || 0) + 1;
+          }
+
+          actionMessage = t('bag.heldItem.equipped', {
+            item: getItem(selected.id)?.name.he || '???',
+            name: getPokemonDisplayName(pokemon.id),
+          });
+          pokemon.heldItemId = selected.id;
+          actionMessageTimer = 1.5;
+        }
+      }
     }
 
     // handle remove item from pokemon on stats tab with D key
-    if (detailTab === 'stats') {
+    if (detailTab === 'item') {
       if (pokemon.heldItemId && (input.isKeyPressed('d') || input.isKeyPressed('D'))) {
         // Remove held item
         const item = getItem(pokemon.heldItemId);
@@ -1515,6 +1477,400 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           // !bug : actionMessage is not shoing
         }
       }
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // SHARED HEADER — extracted from renderDetailStatsTab so both Stats and
+  // HeldItem tabs can reuse the top sprite/name/types/level block.
+  // ─────────────────────────────────────────────────────────────────────────────
+  function renderDetailPokemonHeader(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
+    // ── Sprite container (right side) ──
+    fillRect(ctx, 184, 16, 44, 44, '#0a2a1a');
+    drawRect(ctx, 184, 16, 44, 44, C.BORDER);
+    const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
+    const sprite = getCachedImage(spriteUrl);
+    if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(sprite, 186, 16, 40, 40);
+    }
+
+    if (pokemon.heldItemId) {
+      drawHeldItem(ctx, pokemon.heldItemId, { x: 185, y: 50, w: 9, h: 9 });
+    }
+
+    // ── Name (centered in left 168px area) ──
+    drawText(ctx, getPokemonDisplayName(pokemon.id), 96, 22, {
+      size: 10,
+      color: C.TEXT_PRI,
+      font: 'monospace',
+      align: 'center',
+    });
+
+    // ── Type badges (centered, y=34) ──
+    const typeLabels = pokemon.types.map((pt) => ({ type: pt, label: getTypeName(pt) }));
+    const badgeW = 28;
+    const badgeGap = 4;
+    const totalW = typeLabels.length * badgeW + (typeLabels.length - 1) * badgeGap;
+    let bx = Math.floor(96 - totalW / 2);
+    for (const tl of typeLabels) {
+      const color = TYPE_BADGE[tl.type]?.color || '#888888';
+      fillRect(ctx, bx, 34, badgeW, 9, color);
+      drawText(ctx, tl.label, bx + badgeW / 2, 35, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      bx += badgeW + badgeGap;
+    }
+
+    // ── Level / Height / Weight ──
+    const size = computePokemonSize(pokemon);
+    const hVal = size.heightM > 0 ? size.heightM.toFixed(1) : '?';
+    const wVal = size.weightKg > 0 ? size.weightKg.toFixed(1) : '?';
+    const lvStr = `${t('party.stats.level')} ${pokemon.level}`;
+    const hStr = hVal !== '?' ? t('party.height', { value: hVal, unit: t('party.unit.meter') }) : '';
+    const wStr = wVal !== '?' ? t('party.weight', { value: wVal, unit: t('party.unit.kg') }) : '';
+    const hwLine = [lvStr, hStr, wStr].filter(Boolean).join('  ·  ');
+    if (hwLine) {
+      drawText(ctx, hwLine, 96, 46, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
+    }
+
+    // ── Ability & Nature ──
+    const abilityStr = pokemon.abilityId ? getAbilityDisplayName(pokemon.abilityId) : '';
+    let natureStr = '';
+    if (pokemon.natureId) {
+      const natureName = getNatureDisplayName(pokemon.natureId);
+      const natureDef = getNature(pokemon.natureId);
+      let natureHint = '';
+      if (natureDef?.increasedStat && natureDef?.decreasedStat) {
+        const statShort: Record<string, string> = {
+          attack: 'Atk',
+          defense: 'Def',
+          specialAttack: 'SpA',
+          specialDefense: 'SpD',
+          speed: 'Spe',
+        };
+        natureHint = ` (+${statShort[natureDef.increasedStat] ?? '?'} -${statShort[natureDef.decreasedStat] ?? '?'})`;
+      }
+      natureStr = `${natureName}${natureHint}`;
+    }
+    const anLine = [abilityStr, natureStr].filter(Boolean).join('  ·  ');
+    if (anLine) {
+      drawText(ctx, anLine, 96, 54, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // HELD ITEM TAB — state (add alongside your existing detailTab state)
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  let heldItemCursor = 0; // index into the available-items list
+  let heldItemScrollOffset = 0; // top visible row index
+  let heldItems: Array<{ id: string; quantity: number; itemDef: ItemDef | undefined }> = [];
+  //
+  // Stub — replace with real bag item lookup
+  function getEquippableItems(): Array<{ id: string; quantity: number; itemDef: ItemDef | undefined }> {
+    // e.g. return getPlayerBag().filter(entry => isEquippable(entry.id));
+    const pd = getPlayerData();
+    const allItems = Object.entries(pd.items).map(([id, quantity]) => ({ id, quantity, itemDef: getItem(id) }));
+    return allItems.filter((item) => item.itemDef?.category === 'held');
+  }
+
+  function renderDetailHeldItemTab(
+    ctx: CanvasRenderingContext2D,
+    pokemon: Pokemon,
+    heldItemCursor: number,
+    heldItemScrollOffset: number,
+  ): void {
+    const rtl = isRTL();
+    // ── Shared top header (sprite, name, types, level, ability/nature) ──
+    renderDetailPokemonHeader(ctx, pokemon);
+
+    // ── Separator after header ──
+    fillRect(ctx, 8, 60, 224, 1, C.SEP);
+
+    // ── Currently held-item panel (y 62–84) ──
+    const PANEL_Y = 62;
+    const PANEL_H = 22;
+
+    if (pokemon.heldItemId) {
+      const itemDef = getItem(pokemon.heldItemId);
+      const itemName = itemDef?.name?.[getLocale()] ?? pokemon.heldItemId;
+      const itemDesc = itemDef?.description?.[getLocale()] ?? '';
+      const pokemonName = getPokemonDisplayName(pokemon.id);
+
+      fillRect(ctx, 8, PANEL_Y, 224, PANEL_H, '#0a2a1a');
+      drawRect(ctx, 8, PANEL_Y, 224, PANEL_H, C.BORDER);
+
+      // Item icon (16×16 box, left-aligned)
+      const ICON_X = 12;
+      const ICON_Y = PANEL_Y + 3;
+      const ICON_SIZE = 16;
+      fillRect(ctx, ICON_X, ICON_Y, ICON_SIZE, ICON_SIZE, '#152a1e');
+      drawRect(ctx, ICON_X, ICON_Y, ICON_SIZE, ICON_SIZE, C.BORDER);
+      if (itemDef?.sprite) {
+        const itemSprite = getCachedImage(itemDef.sprite);
+        if (itemSprite && itemSprite.complete && itemSprite.naturalWidth > 0) {
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(itemSprite, ICON_X + 1, ICON_Y + 1, ICON_SIZE - 2, ICON_SIZE - 2);
+        }
+      }
+
+      // "Pokémon holds Item" line
+      const textX = rtl ? 228 : 32;
+      const textAlign = rtl ? 'right' : 'left';
+
+      const holdsLine = t('party.heldItem.holds', { pokemon: pokemonName, item: itemName });
+      drawText(ctx, holdsLine, textX, PANEL_Y + 4, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: textAlign });
+
+      // Description (clipped to ~30 chars on one line)
+      const descClip = itemDesc.length > 300 ? itemDesc.slice(0, 28) + '…' : itemDesc;
+      if (descClip) {
+        drawText(ctx, descClip, textX, PANEL_Y + 13, {
+          size: 5,
+          color: C.TEXT_MUT,
+          font: 'monospace',
+          align: textAlign,
+        });
+      }
+    } else {
+      // No item held — placeholder row
+      fillRect(ctx, 8, PANEL_Y, 224, PANEL_H, '#0a1a12');
+      drawRect(ctx, 8, PANEL_Y, 224, PANEL_H, C.BORDER);
+      drawText(ctx, t('party.heldItem.noneHeld'), 120, PANEL_Y + 7, {
+        size: 6,
+        color: C.TEXT_DIM,
+        font: 'monospace',
+        align: 'center',
+      });
+    }
+
+    // ── Separator before list ──
+    fillRect(ctx, 8, PANEL_Y + PANEL_H + 1, 224, 1, C.SEP);
+
+    // ── Available-items list header ──
+    const LIST_HEADER_Y = PANEL_Y + PANEL_H + 4;
+    drawText(ctx, t('party.heldItem.bagItems'), 228, LIST_HEADER_Y, {
+      size: 6,
+      color: C.TEXT_MUT,
+      font: 'monospace',
+      align: 'right',
+    });
+
+    // ── Item rows ──
+    // Each row is 13px tall; we have space from LIST_CONTENT_Y to y=148 (above hint bar)
+    const LIST_CONTENT_Y = LIST_HEADER_Y + 8;
+    const ROW_H = 13;
+    const MAX_VISIBLE = Math.floor((148 - LIST_CONTENT_Y) / ROW_H); // ~5 rows typically
+
+    const items = getEquippableItems();
+    heldItems = items;
+
+    if (items.length === 0) {
+      drawText(ctx, t('party.heldItem.bagEmpty'), 120, LIST_CONTENT_Y + 6, {
+        size: 6,
+        color: C.TEXT_DIM,
+        font: 'monospace',
+        align: 'center',
+      });
+    } else {
+      const ROW_H = 20;
+      const visibleCount = Math.min(items.length, MAX_VISIBLE);
+
+      // Icon is on the left for LTR, right for RTL
+      const ICON_X = rtl ? 219 : 7;
+      const ICON_SIZE = 10;
+
+      // Text starts after icon (LTR) or before icon (RTL)
+      const nameX = rtl ? 215 : 21;
+      const nameAlign = rtl ? 'right' : 'left';
+
+      // Quantity on the opposite side from icon
+      const qtyX = rtl ? 21 : 228;
+      const qtyAlign = rtl ? 'left' : 'right';
+
+      for (let vi = 0; vi < visibleCount; vi++) {
+        const itemIndex = heldItemScrollOffset + vi;
+        const entry = items[itemIndex];
+        if (!entry) continue;
+
+        const itemDef = entry.itemDef;
+        const itemName = itemDef?.name?.[getLocale()] ?? entry.id;
+        const itemDesc = itemDef?.description?.[getLocale()] ?? '';
+
+        const ry = LIST_CONTENT_Y + vi * ROW_H;
+        const isSelected = itemIndex === heldItemCursor;
+
+        // Row background
+        fillRect(ctx, 4, ry, 232, ROW_H - 1, isSelected ? C.CARD_SEL : C.CARD_BG);
+        drawRect(ctx, 4, ry, 232, ROW_H - 1, isSelected ? C.BORDER_SEL : C.BORDER);
+
+        // Item icon
+        fillRect(ctx, ICON_X, ry + 2, ICON_SIZE, ICON_SIZE, '#0a2a1a');
+        if (itemDef?.sprite) {
+          const itemSprite = getCachedImage(itemDef.sprite);
+          if (itemSprite && itemSprite.complete && itemSprite.naturalWidth > 0) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(itemSprite, ICON_X, ry + 2, ICON_SIZE, ICON_SIZE);
+          }
+        }
+
+        // Row 1 — name (size 6) + quantity on opposite side
+        drawText(ctx, itemName, nameX, ry + 3, { size: 6, color: C.TEXT_PRI, font: 'monospace', align: nameAlign });
+        drawText(ctx, `×${entry.quantity}`, qtyX, ry + 3, {
+          size: 6,
+          color: C.TEXT_DIM,
+          font: 'monospace',
+          align: qtyAlign,
+        });
+
+        // Row 2 — description always visible, size 5, muted
+        if (itemDesc) {
+          const maxChars = 360;
+          const descClip = itemDesc.length > maxChars ? itemDesc.slice(0, maxChars - 2) + '…' : itemDesc;
+          drawText(ctx, descClip, nameX, ry + 12, { size: 5, color: C.TEXT_MUT, font: 'monospace', align: nameAlign });
+        }
+      }
+
+      // Scroll indicator dots (far right, vertically centered on the list area)
+      if (items.length > MAX_VISIBLE) {
+        const dotAreaY = LIST_CONTENT_Y;
+        const dotAreaH = MAX_VISIBLE * ROW_H;
+        const totalDots = Math.min(items.length, 8);
+        const dotStep = Math.floor(dotAreaH / totalDots);
+        // Dots hug the edge opposite to the icon
+        const dotX = rtl ? 2 : 236;
+        for (let d = 0; d < totalDots; d++) {
+          const isActiveDot = Math.floor((heldItemCursor / items.length) * totalDots) === d;
+          fillRect(ctx, dotX, dotAreaY + d * dotStep + dotStep / 2, 2, 2, isActiveDot ? C.TEXT_SEC : C.TEXT_DIM);
+        }
+      }
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // UPDATED renderDetailView — adds third tab + ↑↓ party-switch hint on all tabs
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  function renderDetailView(ctx: CanvasRenderingContext2D): void {
+    const party = getParty();
+    const pokemon = party[cursor];
+    if (!pokemon) return;
+
+    // ── Tab bar ──
+    fillRect(ctx, 0, 0, 240, 14, C.BG);
+
+    // Three tabs: Moves | Stats | Item  (left → right)
+    // Each tab is ~50px wide inside a 152px container starting at x=44
+    // Layout: [44..94] Moves  [94..144] Stats  [144..196] Item
+    const tabs: Array<{ key: typeof detailTab; labelKey: string; x: number; w: number; cx: number }> = [
+      { key: 'moves', labelKey: 'party.moves.title', x: 46, w: 48, cx: 70 },
+      { key: 'stats', labelKey: 'party.baseStats', x: 94, w: 48, cx: 118 },
+      { key: 'item', labelKey: 'party.heldItemTab', x: 142, w: 52, cx: 168 },
+    ];
+
+    // Tab container
+    fillRect(ctx, 44, 2, 152, 10, C.TAB_BG);
+    drawRect(ctx, 44, 2, 152, 10, C.BORDER);
+
+    for (const tab of tabs) {
+      const isActive = detailTab === tab.key;
+      if (isActive) fillRect(ctx, tab.x, 2, tab.w, 10, C.TAB_ACT);
+      drawText(ctx, t(tab.labelKey), tab.cx, 3, {
+        size: 7,
+        color: isActive ? C.TEXT_PRI : C.TEXT_MUT,
+        font: 'monospace',
+        align: 'center',
+      });
+    }
+
+    // ── Tab content ──
+    if (detailTab === 'stats') {
+      renderDetailStatsTab(ctx, pokemon);
+    } else if (detailTab === 'moves') {
+      renderDetailMovesTab(ctx, pokemon);
+    } else {
+      renderDetailHeldItemTab(ctx, pokemon, heldItemCursor, heldItemScrollOffset);
+    }
+
+    const learningMode = isMoveLearningMode();
+
+    // ── Bottom hint bar ──
+    fillRect(ctx, 0, 150, 240, 10, C.BTM_BG);
+
+    // ESC — back
+    fillRect(ctx, 2, 151, 20, 8, C.KEY_BG);
+    drawRect(ctx, 2, 151, 20, 8, C.KEY_BRD);
+    drawText(ctx, 'ESC', 12, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, learningMode ? t('party.moves.cancel') : t('party.hint.back'), 24, 153, {
+      size: 6,
+      color: C.TEXT_MUT,
+      font: 'monospace',
+    });
+
+    // ◀▶ — switch tab
+    fillRect(ctx, 54, 151, 16, 8, C.KEY_BG);
+    drawRect(ctx, 54, 151, 16, 8, C.KEY_BRD);
+    drawText(ctx, '\u25c0\u25b6', 62, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    drawText(ctx, learningMode ? t('bag.hint.navigate') : t('party.hint.switchTab'), 72, 153, {
+      size: 6,
+      color: C.TEXT_MUT,
+      font: 'monospace',
+    });
+
+    // ▲▼ — switch party member (all tabs, but not during move-learning)
+    if (detailTab !== 'moves') {
+      fillRect(ctx, 100, 151, 16, 8, C.KEY_BG);
+      drawRect(ctx, 100, 151, 16, 8, C.KEY_BRD);
+      drawText(ctx, '\u25b2\u25bc', 108, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+      drawText(ctx, t('party.hint.switchMember'), 120, 153, {
+        size: 6,
+        color: C.TEXT_MUT,
+        font: 'monospace',
+      });
+    }
+
+    // D — remove item (stats tab with held item, OR item tab)
+    const showRemoveHint = pokemon.heldItemId && detailTab === 'item' && !learningMode;
+
+    if (showRemoveHint) {
+      // Position D pill right of ▲▼, or right of tab-switch if in learning mode
+      const dPillX = learningMode ? 122 : 176;
+      fillRect(ctx, dPillX, 151, 10, 8, C.KEY_BG);
+      drawRect(ctx, dPillX, 151, 10, 8, C.KEY_BRD);
+      drawText(ctx, 'D', dPillX + 5, 152, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
+      const removedItemName =
+        getItem(pokemon.heldItemId!)?.name?.[getLocale()] ?? getItem(pokemon.heldItemId!)?.name.he ?? '???';
+      drawText(ctx, t('party.hint.removeItem', { item: removedItemName }), dPillX + 12, 153, {
+        size: 6,
+        color: C.TEXT_MUT,
+        font: 'monospace',
+      });
+    }
+
+    // Enter — action (moves tab, or item tab when list has items)
+    const showEnterHint = detailTab === 'moves' || (detailTab === 'item' && getEquippableItems().length > 0);
+
+    if (showEnterHint) {
+      // Only show if we have room — skip if D pill is already there and overlapping
+      if (!showRemoveHint || detailTab === 'moves') {
+        fillRect(ctx, 114, 151, 26, 8, C.KEY_BG);
+        drawRect(ctx, 114, 151, 26, 8, C.KEY_BRD);
+        drawText(ctx, 'Enter', 127, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+        drawText(
+          ctx,
+          detailTab === 'moves'
+            ? learningMode
+              ? t('party.moveLearning.actionHint')
+              : t('party.hint.action')
+            : t('party.heldItem.equipHint'),
+          142,
+          153,
+          { size: 6, color: C.TEXT_MUT, font: 'monospace' },
+        );
+      }
+    }
+
+    if (actionMessage && actionMessageTimer > 0) {
+      fillRect(ctx, 8, 136, 224, 10, '#2a6a40');
+      drawText(ctx, actionMessage, 120, 137, { size: 7, color: '#20d860', align: 'center' });
     }
   }
 
