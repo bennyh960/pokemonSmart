@@ -1860,10 +1860,10 @@ export function createBattleScene(
 
     let score = 0;
 
-    if (movePower > 0) {
-      const effectiveness = getCombinedTypeEffectiveness(move.type, player.types);
-      if (effectiveness === 0) return -Infinity;
+    const effectiveness = getCombinedTypeEffectiveness(move.type, player.types);
+    if (effectiveness === 0) return -Infinity;
 
+    if (movePower > 0) {
       const stab = enemy.types.includes(move.type) ? 1.5 : 1;
 
       // Physical/Special preference

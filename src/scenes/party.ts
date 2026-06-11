@@ -1437,10 +1437,9 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         }
       }
 
-      if (input.isKeyPressed('Enter')) {
+      if (heldItems.length > 0 && (input.isKeyPressed('Enter') || input.isKeyPressed(' '))) {
         const selected = heldItems[heldItemCursor];
         if (selected) {
-          console.log(selected, pokemon);
           const pd = getPlayerData();
 
           pd.items[selected.id] = (pd.items[selected.id] || 0) - 1;
