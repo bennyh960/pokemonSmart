@@ -25,7 +25,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import mapManifest from '../data/maps/map-manifest.js';
 import type { TileMapData } from '../engine/tilemap.js';
 import type { Scene, Pokemon } from '../types/index.js';
-
+import { getWildLocations } from './pokedex/tabs/location.js';
 // ─── Fly destination registry ─────────────────────────────────────────────────
 /** All city mapIds from the manifest are valid Fly destinations. */
 export const FLY_DESTINATIONS: string[] = mapManifest.cities.map((c) => c.id);
@@ -39,6 +39,13 @@ let flyPokemon: Pokemon | null = null;
 export function setFlyCallback(cb: ((destinationMapId: string) => void) | null, pokemon?: Pokemon): void {
   pendingFlyCallback = cb;
   flyPokemon = pokemon ?? null;
+}
+
+// Utility for location
+let pokedexMapContext: { pokemonId: number; onReturn: () => void } | null = null;
+
+export function setPokedexMapContext(pokemonId: number, onReturn: () => void): void {
+  pokedexMapContext = { pokemonId, onReturn };
 }
 
 /**
@@ -199,6 +206,7 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
 
     exit(): void {
       pendingFlyCallback = null;
+      pokedexMapContext = null;
     },
 
     update(dt: number): void {
@@ -211,7 +219,14 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
         input.isKeyPressed('m') ||
         input.isKeyPressed('M')
       ) {
-        stateMachine.pop();
+        if (pokedexMapContext) {
+          const cb = pokedexMapContext.onReturn;
+          pokedexMapContext = null;
+          stateMachine.pop();
+          cb();
+        } else {
+          stateMachine.pop();
+        }
         return;
       }
 
@@ -219,7 +234,7 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
         showLabels = !showLabels;
       }
 
-      const canFly = pendingFlyCallback !== null;
+      const canFly = pendingFlyCallback !== null && pokedexMapContext === null;
       if (canFly && visitedCities.length > 0) {
         if (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowUp')) {
           selectedIndex = (selectedIndex - 1 + visitedCities.length) % visitedCities.length;
@@ -244,7 +259,7 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
       const finalScale = fitScale * scale;
       const off = imageOffset(finalScale);
       const rtl = isRTL();
-      const canFly = pendingFlyCallback !== null;
+      const canFly = pendingFlyCallback !== null && pokedexMapContext === null;
 
       // ── Background ───────────────────────────────────────────────────────
       fillRect(ctx, 0, 0, SCREEN_W, SCREEN_H, '#0a0a1a');
@@ -330,6 +345,51 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
         const anchor = toScreen(x1 + (title[0] / 100) * (x2 - x1), y1 + (title[1] / 100) * (y2 - y1), finalScale, off);
         const name = city.label ?? getMapDisplayName(city.id);
         drawLocationLabel(ctx, rtl ? name.he : name.en, anchor.x, anchor.y, 'city', isVisited, isSelected);
+      }
+
+      // ── Pokédex location indicators ──────────────────────────────────────────
+      if (pokedexMapContext) {
+        const locs = getWildLocations(pokedexMapContext.pokemonId);
+        for (const loc of locs) {
+          const city = mapManifest.cities.find((c) => c.id === loc.mapId || c.id.endsWith('/' + loc.mapId));
+
+          const route = city
+            ? null
+            : mapManifest.routes.find((r) => r.id === loc.mapId || r.id.endsWith('/' + loc.mapId));
+          const entry = city ?? route;
+          if (!entry) continue;
+
+          const sx = off.x + entry.x1 * finalScale;
+          const sy = off.y + entry.y1 * finalScale;
+          const sw = (entry.x2 - entry.x1) * finalScale;
+          const sh = (entry.y2 - entry.y1) * finalScale;
+          const cx = sx + sw / 2;
+          const cy = sy + sh / 2;
+
+          const sprite = getCachedImage(`/sprites/pokemon/front/${pokedexMapContext.pokemonId}.png`);
+          const sprW = 14;
+          const sprH = 14;
+          const pad = 3;
+          const blink = 0.55 + 0.45 * Math.sin(elapsed * 3);
+
+          ctx.save();
+          // Blinking background pill
+          ctx.globalAlpha = 0.75 * blink;
+          fillRect(ctx, cx - sprW / 2 - pad, cy - sprH / 2 - pad, sprW + pad * 2, sprH + pad * 2, '#000000');
+          ctx.globalAlpha = 0.5 * blink;
+          ctx.strokeStyle = '#ffdd44';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(cx - sprW / 2 - pad, cy - sprH / 2 - pad, sprW + pad * 2, sprH + pad * 2);
+          ctx.globalAlpha = 1;
+          if (sprite) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(sprite, cx - sprW / 2, cy - sprH / 2, sprW, sprH);
+          } else {
+            ctx.globalAlpha = blink;
+            fillRect(ctx, cx - sprW / 2, cy - sprH / 2, sprW, sprH, '#ffdd44');
+          }
+          ctx.restore();
+        }
       }
 
       // ── Player dot ───────────────────────────────────────────────────────

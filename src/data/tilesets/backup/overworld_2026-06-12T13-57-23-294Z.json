@@ -30,15 +30,13 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "meadow",
       "above": true,
       "overlay": true,
       "category": "grass",
       "interactType": null,
-      "description": "אזור צמחי"
+      "description": "grass for encounter"
     },
     {
       "key": "g4",
@@ -47,17 +45,12 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "poison",
-        "grass",
-        "bug",
-        "flying",
-        "psychic"
-      ],
+      "encounterTypes": ["poison", "grass", "bug", "flying", "psychic"],
       "above": true,
       "overlay": false,
       "category": "grass",
-      "interactType": null
+      "interactType": null,
+      "description": "High grass"
     },
     {
       "key": "g5",
@@ -757,13 +750,11 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
-      "description": "מים רדודים"
+      "description": "water 1 top"
     },
     {
       "key": "wt1r",
@@ -772,13 +763,11 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
-      "description": "מים רדודים"
+      "description": "water 1 top right corner"
     },
     {
       "key": "wt1l",
@@ -787,14 +776,11 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water",
-        "flying"
-      ],
+      "encounterTypes": ["water", "flying"],
       "above": false,
       "category": "water",
       "interactType": null,
-      "description": "מים רדודים"
+      "description": "water 1 left"
     },
     {
       "key": "wt1",
@@ -803,15 +789,12 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "ice"
-      ],
+      "encounterTypes": ["water", "ice"],
       "battleBackground": "orassea",
       "above": false,
       "category": "water",
       "interactType": null,
-      "description": "מים עמוקים"
+      "description": "water 1"
     },
     {
       "key": "wt1tr",
@@ -820,9 +803,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -835,9 +816,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -850,9 +829,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -865,9 +842,7 @@
       "w": 16,
       "h": 16,
       "walkable": false,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "above": false,
       "category": "water",
       "interactType": null,
@@ -892,10 +867,11 @@
       "w": 16,
       "h": 16,
       "walkable": false,
+      "encounterTypes": ["*/flying,ground,rock,dragon,steel,normal"],
       "above": true,
       "category": "ground",
       "interactType": null,
-      "description": "א"
+      "description": "mt1 interior overlay — walkable mountain 1 floor with encounter. Place as object on mtcb2 base tile inside mt1 mountain borders. Has encounters for non-flying/ground/rock/dragon/steel/normal types"
     },
     {
       "key": "mttr1",
@@ -1276,13 +1252,11 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "הרים סלעיים"
+      "description": "mt2 walkable interior — brown mountain center floor. Use as base tile inside mt2 border rectangles (mt2tl..mt2br). No encounters. Distinct brown color from mtcb2"
     },
     {
       "key": "mt2r",
@@ -1850,14 +1824,12 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water,ice"
-      ],
+      "encounterTypes": ["*/water,ice"],
       "battleBackground": "desert",
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "ביצות"
+      "description": "dark dirt ground center — use as base tile for encounter patches. Place g8tl/g8t/g8tr/g8l/g8r/g8bl/g8b/g8br border objects around the edges where g8c meets other ground types (grass, sand, mountain floor). Forms a coherent dark-earth zone"
     },
     {
       "key": "g8tr",
@@ -2046,18 +2018,12 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "steel",
-        "dragon",
-        "rock",
-        "electric",
-        "flying"
-      ],
+      "encounterTypes": ["steel", "dragon", "rock", "electric", "flying"],
       "battleBackground": "skypillar",
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "הרים"
+      "description": "mg1 walkable interior — gray mountain center floor with encounters (steel/dragon/rock/electric/flying). Use as base tile inside mg1 border rectangles (mg1tl..mg1br). Distinct gray color"
     },
     {
       "key": "mg1r",
@@ -3549,13 +3515,11 @@
       "w": 32,
       "h": 32,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "מערות"
+      "description": "cave ground decoraion"
     },
     {
       "key": "cave-sign",
@@ -3576,9 +3540,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "above": false,
       "category": "ground",
       "interactType": null,
@@ -3640,14 +3602,12 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*"
-      ],
+      "encounterTypes": ["*"],
       "battleBackground": "beach",
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "חוף הים"
+      "description": "cave 1 sand row 2 col 2"
     },
     {
       "key": "cs1r2c3",
@@ -3704,14 +3664,12 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "beach",
       "above": false,
       "category": "ground",
       "interactType": null,
-      "description": "חוף"
+      "description": "cave 1 sand - can be place around cs1ricj tiles where i.j are indices"
     },
     {
       "key": "cs1r1c1",
@@ -4603,9 +4561,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/water"
-      ],
+      "encounterTypes": ["*/water"],
       "battleBackground": "library",
       "above": true,
       "category": "grass",
@@ -4619,9 +4575,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "*/fire,ice,poison,bug"
-      ],
+      "encounterTypes": ["*/fire,ice,poison,bug"],
       "above": true,
       "category": "grass",
       "interactType": null,
@@ -6969,12 +6923,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "dragon",
-        "flying",
-        "bug",
-        "grass"
-      ],
+      "encounterTypes": ["dragon", "flying", "bug", "grass"],
       "above": false,
       "category": "ground",
       "interactType": null
@@ -7094,10 +7043,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
       "category": "grass",
       "interactType": null
@@ -7142,9 +7088,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water"
-      ],
+      "encounterTypes": ["water"],
       "battleBackground": "leaderwallace",
       "above": false,
       "category": "grass",
@@ -7201,10 +7145,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
       "category": "grass",
       "interactType": null
@@ -7227,10 +7168,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "water",
-        "grass"
-      ],
+      "encounterTypes": ["water", "grass"],
       "above": false,
       "category": "grass",
       "interactType": null
@@ -7242,10 +7180,7 @@
       "w": 16,
       "h": 16,
       "walkable": true,
-      "encounterTypes": [
-        "grass",
-        "water"
-      ],
+      "encounterTypes": ["grass", "water"],
       "above": false,
       "interactType": null
     },
@@ -7964,7 +7899,6 @@
       "h": 80,
       "walkable": false,
       "above": true,
-      "interactType": null,
       "cells": [
         {
           "dx": 4,
@@ -8072,8 +8006,7 @@
       "h": 16,
       "walkable": true,
       "above": true,
-      "category": "building",
-      "interactType": null
+      "category": "building"
     }
   ]
 }

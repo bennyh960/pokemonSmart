@@ -642,6 +642,8 @@
   "menu.party": "Party",
   "menu.bag": "Bag",
   "menu.map": "Map",
+  "pokedex.tab.location": "Locations",
+  "pokedex.location.none": "No locations found.",
   "menu.trainerData": "Trainer Data",
   "menu.save": "Save",
   "menu.actions": "Actions",
@@ -666,5 +668,10 @@
   "legend.keys": "Keys",
   "legend.menu": "Menu",
   "legend.shop": "Shop",
-  "legend.heal": "Heal"
+  "legend.heal": "Heal",
+  "encounter.method.grass": "Grass",
+  "encounter.method.water": "Surfing",
+  "encounter.method.ground": "Ground",
+  "encounter.method.cave": "Cave",
+  "encounter.method.sand": "Sand"
 }

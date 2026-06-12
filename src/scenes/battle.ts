@@ -4,7 +4,7 @@
 
 import type { Scene, Pokemon, PokemonType, Move } from '../types/index.js';
 import { GLITCH_DAMAGE_BONUS_MIN, GLITCH_DAMAGE_BONUS_MAX } from '../engine/config.js';
-import type { BattleStatId, WeatherConditionId } from '../types/battle-metadata.js';
+import type { BattleStatId, MoveBattleEffectId, WeatherConditionId } from '../types/battle-metadata.js';
 import { getMapWeather, isDaytime, renderNightOverlay } from '../systems/weather-system.js';
 import { getCurrentMapId, getCachedMap } from '../systems/map-manager.js';
 import type { InputManager } from '../engine/input.js';
@@ -583,7 +583,7 @@ function getTurnEffectLine(
   }
 }
 
-function getMoveEffectAppliedLine(name: string, effectId: 'confusion' | 'leech-seed' | 'trap'): string {
+function getMoveEffectAppliedLine(name: string, effectId: MoveBattleEffectId): string {
   switch (effectId) {
     case 'confusion':
       return t('battle.confused', { name });
@@ -591,6 +591,8 @@ function getMoveEffectAppliedLine(name: string, effectId: 'confusion' | 'leech-s
       return t('battle.leechSeeded', { name });
     case 'trap':
       return t('battle.trapped', { name });
+    case 'curse':
+      return t('battle.cursed', { name });
   }
 }
 

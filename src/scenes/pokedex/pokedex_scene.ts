@@ -35,6 +35,8 @@ import { getTypeColor } from '../../data/type-constants.js';
 import { getTMLabelForMoveId } from '../../data/item-defs.js';
 import { drawPokeballIcon } from '../../ui/item-icons.js';
 import { drawListTypeBadges, isPokemonStillWithPlayer } from './utils/helpers.js';
+import { setPokedexMapContext } from '../world-map.js';
+import { getWildLocations, renderLocationTab } from './tabs/location.js';
 
 const BG_COLOR = '#301818';
 const ENTRY_HEIGHT = 26;
@@ -42,11 +44,11 @@ const VISIBLE_ENTRIES = 5;
 const TOTAL_POKEMON = 251;
 
 type PokedexView = 'list' | 'detail' | 'badges';
-export type DetailTab = 'info' | 'evolution' | 'type' | 'moves';
+export type DetailTab = 'info' | 'evolution' | 'type' | 'moves' | 'location';
 type MovesSubTab = 'byLevel' | 'canLearn';
 type PokedexContext = 'overworld' | 'battle';
 
-const DETAIL_TABS: DetailTab[] = ['info', 'evolution', 'type', 'moves'];
+const DETAIL_TABS: DetailTab[] = ['info', 'evolution', 'type', 'moves', 'location'];
 
 let pendingPokedexFocus: { id: number; openDetail: boolean; tab?: DetailTab; context?: PokedexContext } | null = null;
 
@@ -263,6 +265,17 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
           }
           if (input.isKeyPressed('Enter') && sorted.length > 0) {
             movesDetailOpen = true;
+          }
+        }
+
+        if (detailTab === 'location') {
+          if (input.isKeyPressed('Enter')) {
+            const locs = getWildLocations(selectedId);
+            if (locs.length > 0) {
+              loadImage(`/sprites/pokemon/front/${selectedId}.png`).catch(() => {});
+              setPokedexMapContext(selectedId, () => {});
+              stateMachine.push('WORLD_MAP');
+            }
           }
         }
 
@@ -747,6 +760,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       ['evolution', t('pokedex.tab.evolution')],
       ['type', t('pokedex.tab.type')],
       ['moves', t('pokedex.tab.moves')],
+      ['location', t('pokedex.tab.location')],
     ];
     const tabW = Math.floor(SCREEN_W / tabLabels.length);
     for (let i = 0; i < tabLabels.length; i++) {
@@ -776,6 +790,8 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       renderTypeTab(ctx, data, contentY, contentH);
     } else if (detailTab === 'moves') {
       renderMovesTab(ctx, id, contentY, contentH);
+    } else if (detailTab === 'location') {
+      renderLocationTab(ctx, id, contentY, contentH, SCREEN_W);
     }
 
     // Bottom bar
@@ -788,6 +804,10 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       helpText = rtl
         ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1 / 1-2 \u05ea\u05ea-\u05d8\u05d0\u05d1 / \u2191\u2193 \u05e9\u05d5\u05e8\u05d4 / Enter \u05e4\u05e8\u05d8\u05d9\u05dd'
         : 'Esc:Back  L/R:Tab  1/2:Sub  \u2191\u2193:Row  Enter:Info';
+    } else if (detailTab === 'location') {
+      helpText = rtl
+        ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1 / Enter \u05e4\u05ea\u05d7 \u05de\u05e4\u05d4'
+        : 'Esc: Back  L/R: Tab  Enter: Show on map';
     } else {
       helpText = rtl
         ? 'ESC \u05d7\u05d6\u05e8\u05d4 / \u2190\u2192 \u05d8\u05d0\u05d1'

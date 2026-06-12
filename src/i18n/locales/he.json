@@ -642,6 +642,8 @@
   "menu.party": "קבוצה",
   "menu.bag": "תיק",
   "menu.map": "מפה",
+  "pokedex.tab.location": "מיקומים",
+  "pokedex.location.none": "לא נמצאו מיקומים.",
   "menu.trainerData": "נתוני מאמן",
   "menu.save": "שמור",
   "menu.actions": "פעולות",
@@ -666,5 +668,10 @@
   "legend.keys": "מקשים",
   "legend.menu": "תפריט",
   "legend.shop": "חנות",
-  "legend.heal": "ריפוי"
+  "legend.heal": "ריפוי",
+  "encounter.method.grass": "דשא",
+  "encounter.method.water": "גלישה",
+  "encounter.method.ground": "קרקע",
+  "encounter.method.cave": "מערה",
+  "encounter.method.sand": "חול"
 }
