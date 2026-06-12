@@ -156,6 +156,9 @@ export function getWildLocations(pokemonId: number): WildLocation[] {
     for (const key of mapTileKeys) {
       const cached = tileKeyCache.get(key);
       if (!cached) continue;
+      if (cached) {
+        console.log(`tile key: ${key}, category: ${cached.description}, encounterTypes: ${cached.encounterTypes}`);
+      }
       if (pokemonMatchesEncounterTypes(pokemonTypes, cached.encounterTypes)) {
         methods.add(cached.description ?? '');
       }
