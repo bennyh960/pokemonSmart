@@ -5,13 +5,17 @@ import type { AudioManager } from '../audio/audio-manager.js';
 import type { EvolutionStep } from '../services/pokemon-data.js';
 import { drawText, fillRect } from '../engine/renderer.js';
 import { createTextBox, renderTextBox, updateTextBox } from '../ui/text-box.js';
-import { createCaptureSuccessEffect, renderCaptureSuccessEffect, updateCaptureSuccessEffect } from '../ui/battle-animations.js';
+import {
+  createCaptureSuccessEffect,
+  renderCaptureSuccessEffect,
+  updateCaptureSuccessEffect,
+} from '../ui/battle-animations.js';
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
 import { applyEvolution } from '../systems/encounter.js';
 import { autoSave, getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import { getCachedImage, loadImage } from '../engine/sprite-loader.js';
 import { isRTL, t } from '../i18n/i18n.js';
-import { setPokedexFocus } from './pokedex.js';
+import { setPokedexFocus } from './pokedex';
 
 interface EvolutionRequest {
   evolution: EvolutionStep;
@@ -21,21 +25,13 @@ interface EvolutionRequest {
 
 let pendingEvolutionRequest: EvolutionRequest | null = null;
 
-export function setEvolutionData(
-  pokemon: Pokemon,
-  evolution: EvolutionStep,
-  onComplete?: () => void,
-): void {
+export function setEvolutionData(pokemon: Pokemon, evolution: EvolutionStep, onComplete?: () => void): void {
   pendingEvolutionRequest = { pokemon, evolution, onComplete };
 }
 
 type EvolutionPhase = 'animating' | 'message';
 
-export function createEvolutionScene(
-  input: InputManager,
-  stateMachine: StateMachine,
-  audio: AudioManager,
-): Scene {
+export function createEvolutionScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
   let request: EvolutionRequest | null = null;
   let phase: EvolutionPhase = 'animating';
   let timer = 0;
@@ -193,13 +189,16 @@ export function createEvolutionScene(
         }
         if (timer >= MESSAGE_AT) {
           phase = 'message';
-          textBox = createTextBox([
-            t('evolution.congrats', {
-              from: getPokemonDisplayName(fromId),
-              to: getPokemonDisplayName(toId),
-            }),
-            t('evolution.openPokedex'),
-          ], isRTL());
+          textBox = createTextBox(
+            [
+              t('evolution.congrats', {
+                from: getPokemonDisplayName(fromId),
+                to: getPokemonDisplayName(toId),
+              }),
+              t('evolution.openPokedex'),
+            ],
+            isRTL(),
+          );
         }
         return;
       }

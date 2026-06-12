@@ -8,7 +8,7 @@ import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { applyDirectItemEffect, consumeItem } from '../systems/item-effects.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
-import { setPokedexBadgesMode } from './pokedex.js';
+import { setPokedexBadgesMode } from './pokedex';
 import { setBagMode } from './bag.js';
 import { setPartyMode } from './party';
 import { openSaveSlots } from './save-slots.js';

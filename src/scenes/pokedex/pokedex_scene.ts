@@ -6,14 +6,14 @@
  * MOVES tab has two sub-tabs: BY LEVEL, CAN LEARN (TM)
  */
 
-import type { Scene } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
-import type { StateMachine } from '../engine/state-machine.js';
-import { clearScreen, fillRect, drawRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
-import { t, isRTL, getLocale } from '../i18n/i18n.js';
-import { drawTypeBadge } from '../ui/type-badge.js';
-import { TYPE_BADGE } from '../data/type-constants.js';
-import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
+import type { Scene } from '../../types/index.js';
+import type { InputManager } from '../../engine/input.js';
+import type { StateMachine } from '../../engine/state-machine.js';
+import { clearScreen, fillRect, drawRect, drawText, fillRoundRect, strokeRoundRect } from '../../engine/renderer.js';
+import { t, isRTL, getLocale } from '../../i18n/i18n.js';
+import { drawTypeBadge } from '../../ui/type-badge.js';
+import { TYPE_BADGE } from '../../data/type-constants.js';
+import { getPlayerData, hasActiveGame, autoSave } from '../../systems/game-state.js';
 import {
   getPokemon,
   getPokemonDisplayName,
@@ -26,13 +26,15 @@ import {
   getEvolutionChain,
   getPokemonAbilityDetails,
   getLocalizedName,
-} from '../services/pokemon-data.js';
-import type { PokemonType } from '../types/index.js';
-import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
-import { BADGES, hasBadge, countBadges } from '../data/badges.js';
-import { getTypeColor } from '../data/type-constants.js';
-import { getTMLabelForMoveId } from '../data/item-defs.js';
+} from '../../services/pokemon-data.js';
+import type { PokemonType } from '../../types/index.js';
+import { loadImage, getCachedImage } from '../../engine/sprite-loader.js';
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../../engine/config.js';
+import { BADGES, hasBadge, countBadges } from '../../data/badges.js';
+import { getTypeColor } from '../../data/type-constants.js';
+import { getTMLabelForMoveId } from '../../data/item-defs.js';
+import { drawPokeballIcon } from '../../ui/item-icons.js';
+import { drawListTypeBadges, isPokemonStillWithPlayer } from './utils/helpers.js';
 
 const BG_COLOR = '#301818';
 const ENTRY_HEIGHT = 26;
@@ -488,16 +490,13 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
         drawText(ctx, name, 54, y + 3, { size: 8, color: '#ffffff', font: 'monospace' });
 
         // Type dots
+        // Type badges
         if (data?.types) {
-          let tx = 54 + ctx.measureText(name).width + 4;
-          // measureText won't work without setting font, so use fixed offset
-          tx = Math.max(tx, 140);
-          for (const type of data.types) {
-            const color = TYPE_BADGE[type as PokemonType]?.color || '#a8a878';
-            fillRect(ctx, tx, y + 5, 6, 6, color);
-            drawRect(ctx, tx, y + 5, 6, 6, '#00000044');
-            tx += 9;
-          }
+          drawListTypeBadges(ctx, data.types, 140, y + 7);
+        }
+        // Pokeball indicator if still in party/box
+        if (isPokemonStillWithPlayer(id)) {
+          drawPokeballIcon(ctx, undefined, SCREEN_W - 14, y + 6, 6);
         }
       } else {
         // Unknown sprite placeholder
