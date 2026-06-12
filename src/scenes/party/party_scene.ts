@@ -7,11 +7,11 @@
  * Swap mode lets reorder party. P key from overworld pushes this scene; Escape pops back.
  */
 
-import type { Scene, Pokemon, PokemonType, StolenEntry } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
-import type { StateMachine } from '../engine/state-machine.js';
-import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
-import { getLocale, isRTL, t } from '../i18n/i18n.js';
+import type { Scene, Pokemon, PokemonType, StolenEntry } from '../../types/index.js';
+import type { InputManager } from '../../engine/input.js';
+import type { StateMachine } from '../../engine/state-machine.js';
+import { clearScreen, fillRect, drawText, drawRect } from '../../engine/renderer.js';
+import { getLocale, isRTL, t } from '../../i18n/i18n.js';
 import {
   getPokemonDisplayName,
   getMoveDisplayName,
@@ -20,18 +20,18 @@ import {
   getAbilityDisplayName,
   getNatureDisplayName,
   getNature,
-} from '../services/pokemon-data.js';
-import { drawPokeballIcon } from '../ui/item-icons.js';
-import { TYPE_BADGE, getTypeName, getDamageClassLabel } from '../data/type-constants.js';
-import { STATUS_PILL_COLORS } from '../data/battle-constants.js';
-import { autoSave, getPlayerData } from '../systems/game-state.js';
-import { getCharacterFrame } from '../engine/character-sprites.js';
-import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-import { canUseItemOnPokemon } from '../systems/item-effects.js';
-import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } from '../systems/move-learning.js';
-import { getTMEffect } from '../data/item-defs.js';
-import { calcHappiness, getHappinessLabel } from '../systems/happiness.js';
-import { getItem, type ItemDef } from '../data/items.js';
+} from '../../services/pokemon-data.js';
+import { drawPokeballIcon } from '../../ui/item-icons.js';
+import { TYPE_BADGE, getTypeName, getDamageClassLabel } from '../../data/type-constants.js';
+import { STATUS_PILL_COLORS } from '../../data/battle-constants.js';
+import { autoSave, getPlayerData } from '../../systems/game-state.js';
+import { getCharacterFrame } from '../../engine/character-sprites.js';
+import { loadImage, getCachedImage } from '../../engine/sprite-loader.js';
+import { canUseItemOnPokemon } from '../../systems/item-effects.js';
+import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } from '../../systems/move-learning.js';
+import { getTMEffect } from '../../data/item-defs.js';
+import { calcHappiness, getHappinessLabel } from '../../systems/happiness.js';
+import { getItem, type ItemDef } from '../../data/items.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
@@ -351,7 +351,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         const pokemon =
           entry.kind === 'stolen'
             ? (entry as StolenEntry).pokemon
-            : (entry as import('../types/index.js').DayCareEntry).pokemon;
+            : (entry as import('../../types/index.js').DayCareEntry).pokemon;
         if (!pokemon) continue;
 
         const entryH = 34;
@@ -408,7 +408,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           const thiefDisplayName = locale === 'he' ? stolen.thiefName.he : stolen.thiefName.en;
           drawText(ctx, thiefDisplayName, 172, ey + 16, { size: 6, color: '#bb8844', font: 'monospace' });
         } else {
-          const dc = entry as import('../types/index.js').DayCareEntry;
+          const dc = entry as import('../../types/index.js').DayCareEntry;
           const locale = getLocale();
           const routeName = locale === 'he' ? dc.route.he : dc.route.en;
           drawText(ctx, t('party.diary.daycare', { route: routeName }), 38, ey + 16, {

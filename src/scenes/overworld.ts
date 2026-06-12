@@ -24,7 +24,7 @@ import {
   clearFlagInGameState,
   consumeRestoreNotifications,
 } from '../systems/game-state.js';
-import { setPartyMode } from '../scenes/party.js';
+import { setPartyMode } from './party';
 import {
   createMoveLearningQueueState,
   initializeMoveLearningQueue,

@@ -17,7 +17,7 @@ import { createOverworldScene } from '../scenes/overworld.js';
 import { createStarterSelectScene } from '../scenes/starter-select.js';
 import { createHeroSelectScene } from '../scenes/hero-select.js';
 import { createHeroNameSelectScene } from '../scenes/hero-name-select.js';
-import { createPartyScene } from '../scenes/party.js';
+import { createPartyScene } from '../scenes/party';
 import { createPokedexScene } from '../scenes/pokedex.js';
 import { createEvolutionScene } from '../scenes/evolution.js';
 import { createBagScene } from '../scenes/bag.js';

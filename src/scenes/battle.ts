@@ -102,7 +102,7 @@ import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText } from '../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../scenes/bag.js';
 import { setPokedexFocus } from '../scenes/pokedex.js';
-import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
+import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from './party';
 import { setEvolutionData } from './evolution.js';
 import {
   calcHappiness,

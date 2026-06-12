@@ -10,7 +10,7 @@ import { applyDirectItemEffect, consumeItem } from '../systems/item-effects.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setPokedexBadgesMode } from './pokedex.js';
 import { setBagMode } from './bag.js';
-import { setPartyMode } from './party.js';
+import { setPartyMode } from './party';
 import { openSaveSlots } from './save-slots.js';
 import { scheduleFishing, toggleLegend, isLegendVisible, setupWorldMapFly } from './overworld.js';
 
@@ -19,7 +19,7 @@ import { scheduleFishing, toggleLegend, isLegendVisible, setupWorldMapFly } from
 type MenuView = 'main' | 'actionsDropdown' | 'settings';
 
 const PANEL_W = 100;
-const DROP_W = 88;   // actions dropdown width
+const DROP_W = 88; // actions dropdown width
 const ITEM_H = 14;
 const PAD_V = 4;
 
@@ -38,7 +38,9 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
   let bhNotice: string | null = null;
   let bhNoticeTimer = 0;
 
-  function wrap(v: number, len: number): number { return ((v % len) + len) % len; }
+  function wrap(v: number, len: number): number {
+    return ((v % len) + len) % len;
+  }
 
   function hasFishingRod(): boolean {
     if (!hasActiveGame()) return false;
@@ -48,36 +50,66 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
   function confirmMain(): void {
     switch (MAIN_KEYS[mainIdx]) {
       case 'pokedex':
-        stateMachine.pop(); stateMachine.push('POKEDEX'); break;
+        stateMachine.pop();
+        stateMachine.push('POKEDEX');
+        break;
       case 'party':
-        setPartyMode('overworld'); stateMachine.pop(); stateMachine.push('PARTY'); break;
+        setPartyMode('overworld');
+        stateMachine.pop();
+        stateMachine.push('PARTY');
+        break;
       case 'bag':
-        setBagMode('overworld'); stateMachine.pop(); stateMachine.push('BAG'); break;
+        setBagMode('overworld');
+        stateMachine.pop();
+        stateMachine.push('BAG');
+        break;
       case 'map':
-        setupWorldMapFly(); stateMachine.pop(); stateMachine.push('WORLD_MAP'); break;
+        setupWorldMapFly();
+        stateMachine.pop();
+        stateMachine.push('WORLD_MAP');
+        break;
       case 'trainerData':
-        setPokedexBadgesMode(true); stateMachine.pop(); stateMachine.push('POKEDEX'); break;
+        setPokedexBadgesMode(true);
+        stateMachine.pop();
+        stateMachine.push('POKEDEX');
+        break;
       case 'save':
-        if (hasActiveGame()) { openSaveSlots('save'); stateMachine.pop(); stateMachine.push('SAVE_SLOTS'); }
+        if (hasActiveGame()) {
+          openSaveSlots('save');
+          stateMachine.pop();
+          stateMachine.push('SAVE_SLOTS');
+        }
         break;
       case 'actions':
-        view = 'actionsDropdown'; actionsIdx = 0; break;
+        view = 'actionsDropdown';
+        actionsIdx = 0;
+        break;
       case 'settings':
-        view = 'settings'; settingsIdx = 0; break;
+        view = 'settings';
+        settingsIdx = 0;
+        break;
       case 'exit':
-        stateMachine.pop(); break;
+        stateMachine.pop();
+        break;
     }
   }
 
   function confirmAction(): void {
     switch (ACTIONS_KEYS[actionsIdx]) {
       case 'fishing':
-        if (hasFishingRod()) { scheduleFishing(); stateMachine.pop(); }
+        if (hasFishingRod()) {
+          scheduleFishing();
+          stateMachine.pop();
+        }
         break;
       case 'telephone':
-        stateMachine.pop(); stateMachine.push('PHONE'); break;
+        stateMachine.pop();
+        stateMachine.push('PHONE');
+        break;
       case 'learn':
-        stateMachine.pop(); stateMachine.push('ENGLISH_LEARNING'); break;
+        stateMachine.pop();
+        stateMachine.push('ENGLISH_LEARNING');
+        break;
       case 'battleHelper':
         if (!hasActiveGame()) break;
         if (pendingBhConfirm) break;
@@ -103,22 +135,29 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
   function confirmSetting(): void {
     switch (SETTINGS_KEYS[settingsIdx]) {
       case 'language':
-        setLocale(getLocale() === 'he' ? 'en' : ('he' as Locale)); break;
+        setLocale(getLocale() === 'he' ? 'en' : ('he' as Locale));
+        break;
       case 'mute': {
         const audio = getGlobalAudio();
         if (audio) audio.toggleMute();
         break;
       }
       case 'legend':
-        toggleLegend(); break;
+        toggleLegend();
+        break;
     }
   }
 
   // Draw a pill badge. fillRoundRect uses current ctx.fillStyle.
   function pill(
     ctx: CanvasRenderingContext2D,
-    label: string, bg: string, fg: string,
-    px: number, py: number, pw = 22, ph = 9,
+    label: string,
+    bg: string,
+    fg: string,
+    px: number,
+    py: number,
+    pw = 22,
+    ph = 9,
   ): void {
     ctx.fillStyle = bg;
     fillRoundRect(ctx, px, py, pw, ph, 3);
@@ -131,12 +170,19 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
 
   // ── Render helpers ──────────────────────────────────────────────────────────
 
-  function renderMainPanel(ctx: CanvasRenderingContext2D, rtl: boolean, px: number, py: number, cursorIdx: number, showCursor: boolean): void {
+  function renderMainPanel(
+    ctx: CanvasRenderingContext2D,
+    rtl: boolean,
+    px: number,
+    py: number,
+    cursorIdx: number,
+    showCursor: boolean,
+  ): void {
     const ph = PAD_V * 2 + MAIN_KEYS.length * ITEM_H;
 
-    fillRect(ctx, px + 2, py + 2, PANEL_W, ph, '#000000');        // shadow
-    fillRect(ctx, px, py, PANEL_W, ph, '#1a1a2e');                 // bg
-    drawRect(ctx, px, py, PANEL_W, ph, '#6060a0', 1);              // border
+    fillRect(ctx, px + 2, py + 2, PANEL_W, ph, '#000000'); // shadow
+    fillRect(ctx, px, py, PANEL_W, ph, '#1a1a2e'); // bg
+    drawRect(ctx, px, py, PANEL_W, ph, '#6060a0', 1); // border
 
     for (let i = 0; i < MAIN_KEYS.length; i++) {
       const key = MAIN_KEYS[i];
@@ -147,7 +193,9 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
 
       if (sel && showCursor) {
         drawText(ctx, rtl ? '◄' : '►', rtl ? px + PANEL_W - 5 : px + 5, iy + 2, {
-          size: 6, color: '#ffff00', align: rtl ? 'right' : 'left',
+          size: 6,
+          color: '#ffff00',
+          align: rtl ? 'right' : 'left',
         });
       }
 
@@ -162,7 +210,9 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
     }
 
     drawText(ctx, 'ESC', rtl ? px + 5 : px + PANEL_W - 5, py + ph - 8, {
-      size: 5, color: '#3a3a5a', align: rtl ? 'left' : 'right',
+      size: 5,
+      color: '#3a3a5a',
+      align: rtl ? 'left' : 'right',
     });
   }
 
@@ -176,9 +226,9 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
     const bridgeY = dropY + ITEM_H / 2 - 1;
     fillRect(ctx, bridgeX, bridgeY, 3, 2, '#5050a0');
 
-    fillRect(ctx, dropX + 2, dropY + 2, DROP_W, dropH, '#000000');   // shadow
-    fillRect(ctx, dropX, dropY, DROP_W, dropH, '#161628');            // bg
-    drawRect(ctx, dropX, dropY, DROP_W, dropH, '#5050a0', 1);         // border
+    fillRect(ctx, dropX + 2, dropY + 2, DROP_W, dropH, '#000000'); // shadow
+    fillRect(ctx, dropX, dropY, DROP_W, dropH, '#161628'); // bg
+    drawRect(ctx, dropX, dropY, DROP_W, dropH, '#5050a0', 1); // border
 
     for (let i = 0; i < ACTIONS_KEYS.length; i++) {
       const key = ACTIONS_KEYS[i];
@@ -191,7 +241,9 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
 
       if (sel) {
         drawText(ctx, rtl ? '◄' : '►', rtl ? dropX + DROP_W - 5 : dropX + 5, iy + 2, {
-          size: 6, color: '#ffff00', align: rtl ? 'right' : 'left',
+          size: 6,
+          color: '#ffff00',
+          align: rtl ? 'right' : 'left',
         });
       }
 
@@ -226,8 +278,16 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       fillRect(ctx, dropX, boxY, DROP_W, boxH, '#0d0d1a');
       drawRect(ctx, dropX, boxY, DROP_W, boxH, '#88aaff', 1);
       const cx = dropX + DROP_W / 2;
-      drawText(ctx, t('menu.actions.battleHelper.confirm'), cx, boxY + 6, { size: 6, color: '#ffffff', align: 'center' });
-      drawText(ctx, t('menu.actions.battleHelper.confirmSub', { count: String(count) }), cx, boxY + 16, { size: 5, color: '#88aaff', align: 'center' });
+      drawText(ctx, t('menu.actions.battleHelper.confirm'), cx, boxY + 6, {
+        size: 6,
+        color: '#ffffff',
+        align: 'center',
+      });
+      drawText(ctx, t('menu.actions.battleHelper.confirmSub', { count: String(count) }), cx, boxY + 16, {
+        size: 5,
+        color: '#88aaff',
+        align: 'center',
+      });
       drawText(ctx, '↵ Yes   ESC No', cx, boxY + 26, { size: 5, color: '#aaaacc', align: 'center' });
     }
 
@@ -263,7 +323,9 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
 
       if (sel) {
         drawText(ctx, rtl ? '◄' : '►', rtl ? SCREEN_W - 6 : 6, iy + ROW_H / 2 - 3, {
-          size: 6, color: '#ffff00', align: rtl ? 'right' : 'left',
+          size: 6,
+          color: '#ffff00',
+          align: rtl ? 'right' : 'left',
         });
       }
 
@@ -308,7 +370,10 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
     exit(): void {},
 
     update(dt: number): void {
-      if (bhNoticeTimer > 0) { bhNoticeTimer -= dt * 1000; if (bhNoticeTimer <= 0) bhNotice = null; }
+      if (bhNoticeTimer > 0) {
+        bhNoticeTimer -= dt * 1000;
+        if (bhNoticeTimer <= 0) bhNotice = null;
+      }
 
       const esc = input.isKeyPressed('Escape') || input.isKeyPressed('Backspace');
       const up = input.isKeyPressed('ArrowUp');
@@ -316,7 +381,10 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       const ok = input.isKeyPressed('Enter') || input.isKeyPressed(' ');
 
       if (pendingBhConfirm) {
-        if (esc) { pendingBhConfirm = false; return; }
+        if (esc) {
+          pendingBhConfirm = false;
+          return;
+        }
         if (ok) {
           const pd = getPlayerData();
           applyDirectItemEffect('battle-helper');
@@ -329,19 +397,46 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       }
 
       if (view === 'main') {
-        if (esc) { stateMachine.pop(); return; }
-        if (up) { mainIdx = wrap(mainIdx - 1, MAIN_KEYS.length); return; }
-        if (down) { mainIdx = wrap(mainIdx + 1, MAIN_KEYS.length); return; }
+        if (esc) {
+          stateMachine.pop();
+          return;
+        }
+        if (up) {
+          mainIdx = wrap(mainIdx - 1, MAIN_KEYS.length);
+          return;
+        }
+        if (down) {
+          mainIdx = wrap(mainIdx + 1, MAIN_KEYS.length);
+          return;
+        }
         if (ok) confirmMain();
       } else if (view === 'actionsDropdown') {
-        if (esc) { view = 'main'; return; }
-        if (up) { actionsIdx = wrap(actionsIdx - 1, ACTIONS_KEYS.length); return; }
-        if (down) { actionsIdx = wrap(actionsIdx + 1, ACTIONS_KEYS.length); return; }
+        if (esc) {
+          view = 'main';
+          return;
+        }
+        if (up) {
+          actionsIdx = wrap(actionsIdx - 1, ACTIONS_KEYS.length);
+          return;
+        }
+        if (down) {
+          actionsIdx = wrap(actionsIdx + 1, ACTIONS_KEYS.length);
+          return;
+        }
         if (ok) confirmAction();
       } else {
-        if (esc) { view = 'main'; return; }
-        if (up) { settingsIdx = wrap(settingsIdx - 1, SETTINGS_KEYS.length); return; }
-        if (down) { settingsIdx = wrap(settingsIdx + 1, SETTINGS_KEYS.length); return; }
+        if (esc) {
+          view = 'main';
+          return;
+        }
+        if (up) {
+          settingsIdx = wrap(settingsIdx - 1, SETTINGS_KEYS.length);
+          return;
+        }
+        if (down) {
+          settingsIdx = wrap(settingsIdx + 1, SETTINGS_KEYS.length);
+          return;
+        }
         if (ok) confirmSetting();
       }
     },

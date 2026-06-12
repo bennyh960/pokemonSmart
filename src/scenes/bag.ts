@@ -21,7 +21,7 @@ import {
   itemTargetsPokemon,
   isDirectUseItem,
 } from '../systems/item-effects.js';
-import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '../scenes/party.js';
+import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from './party';
 import {
   getPokemonDisplayName,
   getLocalizedName,
