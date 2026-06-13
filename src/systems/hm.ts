@@ -19,7 +19,7 @@ export interface HMRequirement {
 /** HM configuration table. */
 export const HM_CONFIG: Record<string, HMRequirement> = {
   cut: { moveId: 15, minLevel: 20, minWeight: null, minHeight: null },
-  strength: { moveId: 70, minLevel: 40, minWeight: 20, minHeight: null },
+  strength: { moveId: 70, minLevel: 40, minWeight: 20, minHeight: null }, //not in use yet
   surf: { moveId: 57, minLevel: 40, minWeight: 25, minHeight: 0.85 },
   fly: { moveId: 19, minLevel: 60, minWeight: 35, minHeight: 1.4 },
 };

@@ -7,13 +7,14 @@ import { getAllMapIds, getCachedMap } from '../../../systems/map-manager';
 // RENDER
 export function renderLocationTab(
   ctx: CanvasRenderingContext2D,
-  id: number,
   contentY: number,
   contentH: number,
   SCREEN_W: number,
+  cachedWildLocations: WildLocation[] = [],
 ): void {
   const rtl = isRTL();
-  const locs = getWildLocations(id);
+
+  const locs = cachedWildLocations;
 
   if (locs.length === 0) {
     drawText(ctx, t('pokedex.location.none'), SCREEN_W / 2, contentY + 40, {

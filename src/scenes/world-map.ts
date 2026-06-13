@@ -25,7 +25,7 @@ import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import mapManifest from '../data/maps/map-manifest.js';
 import type { TileMapData } from '../engine/tilemap.js';
 import type { Scene, Pokemon } from '../types/index.js';
-import { getWildLocations } from './pokedex/tabs/location.js';
+import { getWildLocations, type WildLocation } from './pokedex/tabs/location.js';
 // ─── Fly destination registry ─────────────────────────────────────────────────
 /** All city mapIds from the manifest are valid Fly destinations. */
 export const FLY_DESTINATIONS: string[] = mapManifest.cities.map((c) => c.id);
@@ -42,10 +42,10 @@ export function setFlyCallback(cb: ((destinationMapId: string) => void) | null, 
 }
 
 // Utility for location
-let pokedexMapContext: { pokemonId: number; onReturn: () => void } | null = null;
+let pokedexMapContext: { pokemonId: number; onReturn: () => void; locations: WildLocation[] } | null = null;
 
-export function setPokedexMapContext(pokemonId: number, onReturn: () => void): void {
-  pokedexMapContext = { pokemonId, onReturn };
+export function setPokedexMapContext(pokemonId: number, onReturn: () => void, locations: WildLocation[]): void {
+  pokedexMapContext = { pokemonId, onReturn, locations };
 }
 
 /**
@@ -349,7 +349,7 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
 
       // ── Pokédex location indicators ──────────────────────────────────────────
       if (pokedexMapContext) {
-        const locs = getWildLocations(pokedexMapContext.pokemonId);
+        const locs = pokedexMapContext.locations;
         for (const loc of locs) {
           const city = mapManifest.cities.find((c) => c.id === loc.mapId || c.id.endsWith('/' + loc.mapId));
 

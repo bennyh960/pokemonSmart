@@ -36,7 +36,7 @@ import { getTMLabelForMoveId } from '../../data/item-defs.js';
 import { drawPokeballIcon } from '../../ui/item-icons.js';
 import { drawListTypeBadges, isPokemonStillWithPlayer } from './utils/helpers.js';
 import { setPokedexMapContext } from '../world-map.js';
-import { getWildLocations, renderLocationTab } from './tabs/location.js';
+import { getWildLocations, renderLocationTab, type WildLocation } from './tabs/location.js';
 
 const BG_COLOR = '#301818';
 const ENTRY_HEIGHT = 26;
@@ -75,6 +75,10 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
   let openContext: PokedexContext = 'overworld';
   let searchQuery = '';
   let selectedId = 1;
+
+  // pokemon locations
+  let cachedWildLocations: WildLocation[] | null = null;
+  let cachedWildLocationsFor: number = -1;
 
   function getPokedex(): Record<number, boolean> {
     if (hasActiveGame()) return getPlayerData().pokedex;
@@ -167,7 +171,10 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
       pendingPokedexFocus = null;
     },
 
-    exit(): void {},
+    exit(): void {
+      cachedWildLocations = null;
+      cachedWildLocationsFor = -1;
+    },
 
     update(_dt: number): void {
       // H/B hotkeys only when not searching
@@ -273,7 +280,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
             const locs = getWildLocations(selectedId);
             if (locs.length > 0) {
               loadImage(`/sprites/pokemon/front/${selectedId}.png`).catch(() => {});
-              setPokedexMapContext(selectedId, () => {});
+              setPokedexMapContext(selectedId, () => {}, cachedWildLocations ?? []);
               stateMachine.push('WORLD_MAP');
             }
           }
@@ -791,7 +798,13 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     } else if (detailTab === 'moves') {
       renderMovesTab(ctx, id, contentY, contentH);
     } else if (detailTab === 'location') {
-      renderLocationTab(ctx, id, contentY, contentH, SCREEN_W);
+      // pokemon locations
+      if (cachedWildLocationsFor !== id) {
+        cachedWildLocations = getWildLocations(id);
+        cachedWildLocationsFor = id;
+      }
+
+      renderLocationTab(ctx, contentY, contentH, SCREEN_W, cachedWildLocations || []);
     }
 
     // Bottom bar
