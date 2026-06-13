@@ -20,7 +20,7 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
-import { getMapDisplayName, loadMap, mapCache } from '../systems/map-manager.js';
+import { getCachedMap, getMapDisplayName, loadMap, mapCache } from '../systems/map-manager.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import mapManifest from '../data/maps/map-manifest.js';
 import type { TileMapData } from '../engine/tilemap.js';
@@ -164,14 +164,11 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
   let selectedIndex = 0;
   let elapsed = 0;
   let showLabels = false;
-  const mapDataCache = new Map<string, TileMapData>();
 
   function preloadMapData(ids: string[]): void {
     for (const id of ids) {
-      if (!mapDataCache.has(id)) {
-        loadMap(id)
-          .then((data) => mapDataCache.set(id, data))
-          .catch(() => undefined);
+      if (!getCachedMap(id)) {
+        loadMap(id);
       }
     }
   }
@@ -402,8 +399,8 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
           let dotX: number;
           let dotY: number;
 
-          if (precise && mapDataCache.has(pd.position.mapId)) {
-            const mapData = mapDataCache.get(pd.position.mapId)!;
+          if (precise && getCachedMap(pd.position.mapId)) {
+            const mapData = getCachedMap(pd.position.mapId)!;
             const rx = mapData.width > 0 ? pd.position.x / mapData.width : 0.5;
             const ry = mapData.height > 0 ? pd.position.y / mapData.height : 0.5;
             dotX = off.x + (loc.x1 + rx * (loc.x2 - loc.x1)) * finalScale;

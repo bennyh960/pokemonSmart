@@ -1,8 +1,10 @@
+import mapManifest from '../../../data/maps/map-manifest';
 import { drawRect, drawText, fillRect } from '../../../engine/renderer';
 import { getTileset } from '../../../engine/tileset';
 import { getLocale, isRTL, t } from '../../../i18n/i18n';
 import { getPokemon, getSpawnLocations } from '../../../services/pokemon-data';
-import { getAllMapIds, getCachedMap, mapCache } from '../../../systems/map-manager';
+import { getPlayerData } from '../../../systems/game-state';
+import { getAllMapIds, getCachedMap, loadMap, mapCache } from '../../../systems/map-manager';
 
 // RENDER
 export function renderLocationTab(
@@ -118,8 +120,8 @@ export function getWildLocations(pokemonId: number): WildLocation[] {
 
   const results: WildLocation[] = [];
   const locale = getLocale();
-  const allMapsIds = getAllMapIds();
-  console.log('xxx', mapCache);
+  const allMapsIds = preLoadVisitedMaps(); // getAllMapIds();
+
   for (const spawn of spawnLocations) {
     const resolvedMapId = allMapsIds.find((id) => id.endsWith('/' + spawn.mapId));
     const map = resolvedMapId ? getCachedMap(resolvedMapId) : undefined;
@@ -180,6 +182,19 @@ export function getWildLocations(pokemonId: number): WildLocation[] {
   }
 
   return results;
+}
+
+function preLoadVisitedMaps() {
+  const pd = getPlayerData();
+  const visitedCities = mapManifest.cities.map((c) => c.id).filter((id) => pd.flags[`visited-${id}`]);
+  const visitedRoutes = mapManifest.routes.map((c) => c.id).filter((id) => pd.flags[`visited-${id}`]);
+  const visitedLocations = [...visitedCities, ...visitedRoutes];
+  for (const id of visitedLocations) {
+    if (!getCachedMap(id)) {
+      loadMap(id);
+    }
+  }
+  return visitedLocations;
 }
 
 /**

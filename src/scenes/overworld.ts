@@ -1927,6 +1927,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Fire map-enter story trigger
     if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id as MapId });
 
+    // test : till now we didnt set visited automaticly - i dont remmber why
+    setFlag(getPlayerData(), `visited-${mapId}`);
+
     // Reset interaction state
     activeTextBox = null;
     interactingNPC = null;
