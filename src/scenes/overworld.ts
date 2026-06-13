@@ -1928,7 +1928,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id as MapId });
 
     // test : till now we didnt set visited automaticly - i dont remmber why
-    setFlag(getPlayerData(), `visited-${mapId}`);
+    // we will auto flag for routes and cities only
+    // cities : mapFolder === mapPath
+    // routes : route-i but we need exclude route-i-someDescription like caves etc
+    const [mapFolder, mapPath] = mapId.split('/');
+    if (mapFolder === mapPath || (mapPath.startsWith('route') && mapPath.length < 'route-ij'.length)) {
+      setFlag(getPlayerData(), `visited-${mapId}`);
+    }
 
     // Reset interaction state
     activeTextBox = null;
