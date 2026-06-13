@@ -80,7 +80,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "rock",
+      "category": "decoration",
       "interactType": null,
       "description": "small rock decoration (16x16). Non-walkable obstacle, placed as object. Scatter sparsely on open ground for visual variety in mountain/route maps"
     },
@@ -92,7 +92,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "rock",
+      "category": "decoration",
       "interactType": null,
       "description": "medium rock decoration (16x16). Non-walkable obstacle, placed as object. Visual variant of r1 for variety when scattering rocks"
     },

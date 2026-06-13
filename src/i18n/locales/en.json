@@ -670,8 +670,10 @@
   "legend.shop": "Shop",
   "legend.heal": "Heal",
   "encounter.method.grass": "Grass",
-  "encounter.method.water": "Surfing",
+  "encounter.method.water": "Water",
   "encounter.method.ground": "Ground",
   "encounter.method.cave": "Cave",
-  "encounter.method.sand": "Sand"
+  "encounter.method.beach": "Beach Sand",
+  "encounter.method.mountain": "Mountains",
+  "pokedex.location.cacheHint": "Locations update as you explore"
 }

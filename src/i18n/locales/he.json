@@ -670,8 +670,10 @@
   "legend.shop": "חנות",
   "legend.heal": "ריפוי",
   "encounter.method.grass": "דשא",
-  "encounter.method.water": "גלישה",
-  "encounter.method.ground": "קרקע",
+  "encounter.method.water": "אזור המים",
+  "encounter.method.ground": "במרחב הפתוח",
   "encounter.method.cave": "מערה",
-  "encounter.method.sand": "חול"
+  "encounter.method.beach": "חוף הים ושפת המים",
+  "encounter.method.mountain": "הרים",
+  "pokedex.location.cacheHint": "הפוקדקס סורק אזורים ומעדכן מיקומים בזמן אמת."
 }

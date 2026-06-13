@@ -53,7 +53,7 @@ export function findMapForTrainer(trainerId: string): string | null {
 }
 
 /** Cache of already-loaded map data. */
-const mapCache = new Map<string, TileMapData>();
+export const mapCache = new Map<string, TileMapData>();
 
 /** The currently active map ID. */
 let currentMapId: string | null = null;

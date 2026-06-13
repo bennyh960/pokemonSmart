@@ -29,6 +29,7 @@ export default defineConfig(({ mode }) => ({
   ],
   base: './',
   build: {
+    sourcemap: mode === 'development', // for debugger
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),

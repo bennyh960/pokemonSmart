@@ -39,19 +39,3 @@ export type TsEditorEvent =
   | 'viewport-changed'
   | 'crop-mode-changed'
   | 'crop-target-changed';
-
-/** Preset categories for the dropdown. */
-export const TILE_CATEGORIES = [
-  'grass',
-  'ground',
-  'road',
-  'floor',
-  'wall',
-  'building',
-  'tree',
-  'water',
-  'decoration',
-  'interior',
-  'interactive',
-  'other',
-] as const;

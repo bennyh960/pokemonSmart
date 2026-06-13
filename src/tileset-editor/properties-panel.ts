@@ -1,10 +1,10 @@
 import type { TilesetEditorState } from './editor-state.js';
 import type { TileEntry } from './types.js';
-import { TILE_CATEGORIES } from './types.js';
 import { applyCrop, saveTilesetImage } from './io.js';
 import { BATTLE_BACKGROUNDS, normalizeBattleBackgroundId } from '../data/battle-backgrounds.js';
 import { INTERACT_TYPE_IDS, getInteractType } from '../data/interact-types.js';
 import { getAllItems } from '../data/items.js';
+import { TILE_CATEGORIES } from '../engine/tileset.js';
 
 // ─── Pokemon types for encounter picker ───
 const POKEMON_TYPES = [
@@ -64,16 +64,30 @@ function parseEncounterTypesForUI(types: string[]): {
     const afterSlash = wildcard.split('/')[1];
     let raw = afterSlash ?? '';
     let excludeMode: 'some' | 'every' = 'every';
-    if (raw.endsWith('?')) { excludeMode = 'some'; raw = raw.slice(0, -1); }
-    else if (raw.endsWith('!')) { raw = raw.slice(0, -1); }
-    const exceptions = raw ? raw.split(',').map((s) => s.trim()).filter(Boolean) : [];
+    if (raw.endsWith('?')) {
+      excludeMode = 'some';
+      raw = raw.slice(0, -1);
+    } else if (raw.endsWith('!')) {
+      raw = raw.slice(0, -1);
+    }
+    const exceptions = raw
+      ? raw
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
     return { allMode: true, includes: [], exceptions, excludeMode };
   }
   return { allMode: false, includes: [...types], exceptions: [], excludeMode: 'every' };
 }
 
 /** Serialize UI state back to encounterTypes array. */
-function serializeEncounterTypes(allMode: boolean, includes: string[], exceptions: string[], excludeMode: 'some' | 'every'): string[] {
+function serializeEncounterTypes(
+  allMode: boolean,
+  includes: string[],
+  exceptions: string[],
+  excludeMode: 'some' | 'every',
+): string[] {
   if (allMode) {
     if (exceptions.length === 0) return ['*'];
     const suffix = excludeMode === 'some' ? '?' : '';

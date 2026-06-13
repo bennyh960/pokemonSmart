@@ -80,7 +80,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "rock",
+      "category": "decoration",
       "interactType": null,
       "description": "small rock decoration (16x16). Non-walkable obstacle, placed as object. Scatter sparsely on open ground for visual variety in mountain/route maps"
     },
@@ -92,7 +92,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "rock",
+      "category": "decoration",
       "interactType": null,
       "description": "medium rock decoration (16x16). Non-walkable obstacle, placed as object. Visual variant of r1 for variety when scattering rocks"
     },
@@ -881,7 +881,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt1 border: top-left corner of a mountain 1 formation. Non-walkable, placed as object. Use with mttr1, mtcl1, mtcr, mtbl1, mtb2, mtbr1 to form a complete mt1 rectangle. Interior uses mtcb2 (base) + mtc1 (object overlay)"
     },
@@ -893,7 +893,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "א"
     },
@@ -905,7 +905,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt1 border: top-right corner of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -917,7 +917,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt1 border: left wall of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -929,7 +929,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mountain 1 dark floor — use as default base tile for mountain/cave areas. Walkable, no encounters, above:false. Good universal ground for mountain zones; place mt1/mt2/mg1 border objects and mtc1 encounter overlays on top of it"
     },
@@ -941,7 +941,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt1 border: right wall of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -953,7 +953,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt1 border: bottom-left corner of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -965,7 +965,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt1 border: bottom wall of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base. Use between mtbl1 and mtbr1"
     },
@@ -977,7 +977,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt1 border: bottom-right corner of a mountain 1 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -1229,7 +1229,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt2 border: top-left corner of a mountain 2 formation. Non-walkable, placed as object. Use with mt2t, mt2tr, mt2l, mt2r, mt2lb, mt2b, mt2br to form a complete brown mountain rectangle. Interior uses mt2c as base tile"
     },
@@ -1241,7 +1241,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt2 border: top wall of a mountain 2 formation. Non-walkable, placed as object between mt2tl and mt2tr"
     },
@@ -1253,7 +1253,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt2 border: top-right corner of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -1265,7 +1265,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt2 border: left wall of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -1280,7 +1280,7 @@
         "*/water"
       ],
       "above": false,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "הרים סלעיים"
     },
@@ -1292,7 +1292,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt2 border: right wall of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -1304,7 +1304,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt2 border: bottom-left corner of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -1316,7 +1316,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt2 border: bottom wall of a mountain 2 formation. Non-walkable, placed as object between mt2lb and mt2br"
     },
@@ -1328,7 +1328,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mt2 border: bottom-right corner of a mountain 2 formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -1999,7 +1999,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mg1 border: top-left corner of a gray mountain formation. Non-walkable, placed as object. Use with mg1t, mg1tr, mg1l, mg1r, mg1bl, mg1b, mg1br to form a complete gray mountain rectangle. Interior uses mg1c as base tile"
     },
@@ -2011,7 +2011,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mg1 border: top wall of a gray mountain formation. Non-walkable, placed as object between mg1tl and mg1tr"
     },
@@ -2023,7 +2023,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mg1 border: top-right corner of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -2035,7 +2035,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mg1 border: left wall of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -2055,7 +2055,7 @@
       ],
       "battleBackground": "skypillar",
       "above": false,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "הרים"
     },
@@ -2067,7 +2067,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mg1 border: right wall of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -2079,7 +2079,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mg1 border: bottom-left corner of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -2091,7 +2091,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mg1 border: bottom wall of a gray mountain formation. Non-walkable, placed as object between mg1bl and mg1br"
     },
@@ -2103,7 +2103,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mg1 border: bottom-right corner of a gray mountain formation. Non-walkable, placed as object on mtcb2 base"
     },
@@ -2675,7 +2675,7 @@
       "h": 16,
       "walkable": false,
       "above": true,
-      "category": "rock",
+      "category": "ground",
       "interactType": null,
       "description": "just a gray rock"
     },
@@ -3645,7 +3645,7 @@
       ],
       "battleBackground": "beach",
       "above": false,
-      "category": "beach",
+      "category": "ground",
       "interactType": null,
       "description": "חוף הים"
     },
@@ -3709,7 +3709,7 @@
       ],
       "battleBackground": "beach",
       "above": false,
-      "category": "beach",
+      "category": "ground",
       "interactType": null,
       "description": "חוף"
     },
@@ -4635,7 +4635,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mountain 2 connection botom right"
     },
@@ -4647,7 +4647,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mountain 2 bottom left connection"
     },
@@ -4659,7 +4659,7 @@
       "h": 16,
       "walkable": true,
       "above": false,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null,
       "description": "mountain connection top right i thibk"
     },
@@ -5868,7 +5868,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null
     },
     {
@@ -5879,7 +5879,7 @@
       "h": 16,
       "walkable": false,
       "above": false,
-      "category": "mountain",
+      "category": "ground",
       "interactType": null
     },
     {

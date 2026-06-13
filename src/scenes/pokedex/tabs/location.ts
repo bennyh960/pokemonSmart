@@ -2,7 +2,7 @@ import { drawRect, drawText, fillRect } from '../../../engine/renderer';
 import { getTileset } from '../../../engine/tileset';
 import { getLocale, isRTL, t } from '../../../i18n/i18n';
 import { getPokemon, getSpawnLocations } from '../../../services/pokemon-data';
-import { getAllMapIds, getCachedMap } from '../../../systems/map-manager';
+import { getAllMapIds, getCachedMap, mapCache } from '../../../systems/map-manager';
 
 // RENDER
 export function renderLocationTab(
@@ -31,7 +31,6 @@ export function renderLocationTab(
 
   for (const loc of locs) {
     const displayName = loc.mapLabel;
-    // console.log(loc);
 
     fillRect(ctx, 4, y, SCREEN_W - 8, rowH - 2, '#241010');
     drawRect(ctx, 4, y, SCREEN_W - 8, rowH - 2, '#5a3030');
@@ -77,6 +76,15 @@ export function renderLocationTab(
   }
 
   const hintY = contentY + contentH - 14;
+
+  const hintY2 = hintY - 14;
+  drawText(ctx, t('pokedex.location.cacheHint'), SCREEN_W / 2, hintY2, {
+    size: 5,
+    color: '#555566',
+    font: 'monospace',
+    align: 'center',
+  });
+
   fillRect(ctx, 4, hintY, SCREEN_W - 8, 12, '#1a1a2a');
   drawRect(ctx, 4, hintY, SCREEN_W - 8, 12, '#3a3a5a');
   drawText(
@@ -111,9 +119,11 @@ export function getWildLocations(pokemonId: number): WildLocation[] {
   const results: WildLocation[] = [];
   const locale = getLocale();
   const allMapsIds = getAllMapIds();
+  console.log('xxx', mapCache);
   for (const spawn of spawnLocations) {
-    const resolvedMapId = allMapsIds.find((id) => id === spawn.mapId || id.endsWith('/' + spawn.mapId));
+    const resolvedMapId = allMapsIds.find((id) => id.endsWith('/' + spawn.mapId));
     const map = resolvedMapId ? getCachedMap(resolvedMapId) : undefined;
+    if (!map) continue;
     const mapLabel = map?.label ? (locale === 'he' ? map.label.he : map.label.en) : (resolvedMapId ?? spawn.mapId);
     // Skip if map not cached yet, wrong tileset, or no encounter table
     if (!map || map.tileset !== 'overworld' || !map.encounterTableId || !mapLabel) {
@@ -157,9 +167,6 @@ export function getWildLocations(pokemonId: number): WildLocation[] {
     for (const key of mapTileKeys) {
       const cached = tileKeyCache.get(key);
       if (!cached) continue;
-      if (cached) {
-        console.log(`tile key: ${key}, category: ${cached.description}, encounterTypes: ${cached.encounterTypes}`);
-      }
       if (pokemonMatchesEncounterTypes(pokemonTypes, cached.encounterTypes)) {
         methods.add(cached.description ?? '');
       }

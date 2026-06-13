@@ -10,6 +10,25 @@ import type { InteractTypeRef } from '../data/interact-types.js';
 import { normalizeBattleBackgroundId, type BattleBackgroundId } from '../data/battle-backgrounds.js';
 import { toAssetUrl } from './asset-path.js';
 
+/** Preset categories for the dropdown. */
+export const TILE_CATEGORIES = [
+  'grass',
+  'ground',
+  'road',
+  'floor',
+  'wall',
+  'building',
+  'tree',
+  'water',
+  'decoration',
+  'interior',
+  'interactive',
+  'rock',
+  'beach',
+  'mountain',
+  'other',
+] as const;
+
 /** Definition of a single tile within a tileset. */
 export interface TileDef {
   sx: number;
