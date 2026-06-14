@@ -96,14 +96,29 @@ const handleEvolutionChains = async () => {
   console.log(`Fetching evolution chain for Pokemon ${pokemonId}...`);
   const evolutionChain = await fetchEvolutionChainByPokemonId(pokemonId);
 
-  // Check if chainId already exists in your file to avoid duplicates
-  const chainExists = evolutionChains.some((c: any) => c.chainId === evolutionChain.chainId);
-  if (!chainExists) {
+  // אוסף את כל מזהי הפוקימונים שקיימים בשרשרת החדשה ששלפנו עכשיו
+  const newChainPokemonIds = evolutionChain.stages.map((stage: any) => stage.id);
+
+  // מחפש האם יש שרשרת קיימת בקובץ שמכילה לפחות את אחד מהפוקימונים האלו (למשל מכילה את Rhydon או Electabuzz)
+  const existingChainIndex = evolutionChains.findIndex((existingChain: any) =>
+    existingChain.stages.some((stage: any) => newChainPokemonIds.includes(stage.id)),
+  );
+
+  if (existingChainIndex !== -1) {
+    // מצאנו שרשרת קיימת! נעדכן אותה לשרשרת המלאה והחדשה
+    const oldChainId = evolutionChains[existingChainIndex].chainId;
+    console.log(`  ℹ Found existing evolution chain (ID: ${oldChainId}) containing related Pokémon.`);
+
+    // מעדכנים את האינדקס הקיים בנתונים החדשים
+    evolutionChains[existingChainIndex] = evolutionChain;
+
+    saveJson(evolutionChainsPath, evolutionChains);
+    console.log(`  ✓ Updated existing evolution chain (ID: ${evolutionChain.chainId}) with new evolutionary stages.`);
+  } else {
+    // שרשרת חדשה לחלוטין (כמו בלדום או גארצ'ומפ) - פשוט דוחפים לסוף
     evolutionChains.push(evolutionChain);
     saveJson(evolutionChainsPath, evolutionChains);
-    console.log(`  ✓ Added evolution chain (ID: ${evolutionChain.chainId}) to evolution-chains.json`);
-  } else {
-    console.log(`  ℹ Evolution chain (ID: ${evolutionChain.chainId}) already exists in file. Skipping.`);
+    console.log(`  ✓ Added brand new evolution chain (ID: ${evolutionChain.chainId}) to evolution-chains.json`);
   }
 };
 
