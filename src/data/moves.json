@@ -6780,8 +6780,8 @@
     "mathDifficulty": 1,
     "damageClass": "status",
     "description": {
-      "en": "The user tries to cut ahead of the foe to steal and use the foe's intended move with greater power.",
-      "he": "אם המשתמש נע ראשון, הוא גונב ומבצע את המהלך של היריב."
+      "en": "The user tries to cut ahead of the foe to steal and use the foe's intended move with greater power. TODO",
+      "he": "אם המשתמש נע ראשון, הוא גונב ומבצע את המהלך של היריב.TODO"
     }
   },
   {
@@ -11117,6 +11117,24 @@
     "description": {
       "en": "The user strikes the target with its palm. This may also leave the target with paralysis.",
       "he": "המשתמש מכה את המטרה בכף ידו. זה עלול גם להשאיר את המטרה משותקת."
+    }
+  },
+  {
+    "id": 586,
+    "name": {
+      "en": "Boomburst",
+      "he": "בום-ברסט"
+    },
+    "type": "normal",
+    "power": 140,
+    "accuracy": 100,
+    "pp": 10,
+    "effectChance": null,
+    "mathDifficulty": 4,
+    "damageClass": "special",
+    "description": {
+      "en": "The user attacks everything around it by emitting a powerful, ultrasonic wave. Bypasses substitutes.",
+      "he": "המשתמש תוקף את כל מה שמסביבו על ידי פליטת גל אולטרסוני עוצמתי. זה גם פוגע בתחליף."
     }
   }
 ]

@@ -495,13 +495,7 @@
       "reward": {
         "money": 0
       },
-      "postBattleDialogue": [],
-      "reencounter": {
-        "count": 1,
-        "lvlStep": 1,
-        "infinite": true,
-        "addToPhone": false
-      }
+      "postBattleDialogue": []
     },
     {
       "id": "npc-1781429124198",
@@ -552,13 +546,7 @@
       "reward": {
         "money": 0
       },
-      "postBattleDialogue": [],
-      "reencounter": {
-        "count": 2,
-        "lvlStep": 2,
-        "infinite": true,
-        "addToPhone": false
-      }
+      "postBattleDialogue": []
     }
   ],
   "music": "town",

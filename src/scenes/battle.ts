@@ -199,6 +199,8 @@ interface TrainerAIState {
   itemsUsedByPartyIdx: Map<number, Set<string>>;
   itemUsesTotalHeal: number;
   itemUsesTotalCure: number;
+  justSwitchedIn: boolean;
+  seenPokemonIds: Set<string>;
 }
 
 /** Randomness factors per AI level: higher = more random suboptimal picks. */
@@ -1070,6 +1072,33 @@ export function createBattleScene(
     phaseTimer = 0;
   }
 
+  function calculateAIPokemonScore(candidate: Pokemon): number {
+    let score = 0;
+
+    for (const pType of player.types) {
+      const eff = getCombinedTypeEffectiveness(pType as any, candidate.types as any);
+      if (eff < 1) score += 200;
+      else if (eff > 1) score -= 100;
+    }
+    for (const cType of candidate.types) {
+      const eff = getCombinedTypeEffectiveness(cType as any, player.types as any);
+      if (eff > 1) score += 150;
+    }
+
+    score += (candidate.hp / candidate.maxHp) * 50;
+
+    const candidateIsFaster = (candidate.speed ?? 0) > (player.speed ?? 0);
+    const hasSuperEffectiveMove = candidate.moves?.some(
+      (move) => getCombinedTypeEffectiveness(move.type as any, player.types as any) > 1,
+    );
+
+    if (candidateIsFaster && (hasSuperEffectiveMove || player.hp / player.maxHp < 0.3)) score += 100;
+    else if (!candidateIsFaster && hasSuperEffectiveMove && enemy.hp / enemy.maxHp > 0.5) score += 30;
+    else if (!candidateIsFaster && !hasSuperEffectiveMove) score -= 50;
+
+    return score;
+  }
+
   function arrangeNextTrainerPokemon(): void {
     if (!trainerData || !trainerAIState || trainerAIState.level < 3) return;
     const party = trainerData.party;
@@ -1081,23 +1110,7 @@ export function createBattleScene(
     for (let i = nextIdx; i < party.length; i++) {
       const candidate = party[i];
       if (!candidate || candidate.hp <= 0) continue;
-      let score = 0;
-      for (const pType of player.types) {
-        const eff = getCombinedTypeEffectiveness(
-          pType as import('../types/index.js').PokemonType,
-          candidate.types as import('../types/index.js').PokemonType[],
-        );
-        if (eff < 1) score += 200;
-        else if (eff > 1) score -= 100;
-      }
-      for (const cType of candidate.types) {
-        const eff = getCombinedTypeEffectiveness(
-          cType as import('../types/index.js').PokemonType,
-          player.types as import('../types/index.js').PokemonType[],
-        );
-        if (eff > 1) score += 150;
-      }
-      score += (candidate.hp / candidate.maxHp) * 50;
+      const score = calculateAIPokemonScore(candidate);
       if (score > bestScore) {
         bestScore = score;
         bestIdx = i;
@@ -1115,6 +1128,10 @@ export function createBattleScene(
     arrangeNextTrainerPokemon();
     trainerPartyIndex++;
     enemy = trainerData!.party[trainerPartyIndex];
+    trainerAIState!.justSwitchedIn = true;
+    trainerAIState!.seenPokemonIds.add(enemy.uuid);
+
+    console.log(enemy);
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     enemySelectedMoveIndex = -1;
     // Update enemy types for battle helper display
@@ -1369,6 +1386,8 @@ export function createBattleScene(
             itemsUsedByPartyIdx: new Map(),
             itemUsesTotalHeal: 0,
             itemUsesTotalCure: 0,
+            justSwitchedIn: false,
+            seenPokemonIds: new Set([trainerData.party[0].uuid]),
           }
         : null;
 
@@ -1652,55 +1671,40 @@ export function createBattleScene(
     if (!ai || !isTrainerBattle || !trainerData) return null;
     const maxSwitches = ai.level >= 5 ? 3 : ai.level >= 4 ? 2 : 1;
     if (ai.switchesUsed >= maxSwitches) return null;
+    if (ai.justSwitchedIn) return null; // 👈 no switching turn you came in
 
-    // Only switch when player has type advantage against current enemy
+    // Only switch when player has type advantage
     let playerHasAdvantage = false;
     for (const pType of player.types) {
-      if (
-        getCombinedTypeEffectiveness(
-          pType as import('../types/index.js').PokemonType,
-          enemy.types as import('../types/index.js').PokemonType[],
-        ) > 1
-      ) {
+      if (getCombinedTypeEffectiveness(pType as any, enemy.types as any) > 1) {
         playerHasAdvantage = true;
         break;
       }
     }
     if (!playerHasAdvantage) return null;
 
-    // Don't switch away if the current Pokemon has net positive stat boosts
+    // Don't switch away if current has net positive stat boosts
     const statSum = Object.values(enemyBattleState.statModifiers).reduce((a, b) => a + b, 0);
     if (statSum > 0) return null;
+
+    // Don't switch away if current HP is low and enemy is slower (stay and finish)
+    const enemyIsFaster = (enemy.speed ?? 0) > (player.speed ?? 0);
+    if (enemy.hp / enemy.maxHp < 0.3 && !enemyIsFaster) return null;
 
     let bestIdx = -1;
     let bestScore = -Infinity;
     for (let i = trainerPartyIndex + 1; i < trainerData.party.length; i++) {
       const candidate = trainerData.party[i];
       if (!candidate || candidate.hp <= 0) continue;
-      let score = 0;
-      for (const pType of player.types) {
-        const eff = getCombinedTypeEffectiveness(
-          pType as import('../types/index.js').PokemonType,
-          candidate.types as import('../types/index.js').PokemonType[],
-        );
-        if (eff < 1) score += 200;
-        else if (eff > 1) score -= 100;
-      }
-      for (const cType of candidate.types) {
-        const eff = getCombinedTypeEffectiveness(
-          cType as import('../types/index.js').PokemonType,
-          player.types as import('../types/index.js').PokemonType[],
-        );
-        if (eff > 1) score += 150;
-      }
-      score += (candidate.hp / candidate.maxHp) * 50;
+      const score = calculateAIPokemonScore(candidate);
       if (score > bestScore) {
         bestScore = score;
         bestIdx = i;
       }
     }
 
-    return bestIdx >= 0 && bestScore > 0 ? bestIdx : null;
+    const SWITCH_THRESHOLD = 150;
+    return bestIdx >= 0 && bestScore > SWITCH_THRESHOLD ? bestIdx : null;
   }
 
   function executeTrainerItemUse(itemId: string, itemName: string): void {
@@ -1721,11 +1725,13 @@ export function createBattleScene(
     const target = party[targetPartyIdx];
 
     // Rearrange party: insert target at current position, shift current to right after
-    party.splice(targetPartyIdx, 1);
-    party.splice(trainerPartyIndex, 0, target);
+    party[targetPartyIdx] = current;
+    party[trainerPartyIndex] = target;
     // Now party[trainerPartyIndex] = target, party[trainerPartyIndex+1] = current (withdrawn, available later)
 
     enemy = party[trainerPartyIndex];
+    trainerAIState!.seenPokemonIds.add(enemy.uuid);
+
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     enemySelectedMoveIndex = -1;
     if (menu) menu.enemyTypes = (enemy.types ?? []) as import('../types/index.js').PokemonType[];
@@ -1762,6 +1768,7 @@ export function createBattleScene(
       ],
       isRTL(),
     );
+    trainerAIState!.justSwitchedIn = true;
 
     phase = 'TRAINER_VOLUNTARY_SWITCH';
     enemyGoesFirst = true; // Player attacks after switch animation resolves
@@ -6726,6 +6733,8 @@ export function createBattleScene(
                 textBox = createTextBox([t('battle.moveIsDisabled', { move: getMoveDisplayName(m.id) })], isRTL());
                 phase = 'INTRO';
               } else {
+                if (trainerAIState) trainerAIState.justSwitchedIn = false;
+
                 if (!handleTrainerTurnPriority()) {
                   enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
                   const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
@@ -7597,7 +7606,11 @@ export function createBattleScene(
         ctx,
         enemyHpBar,
         isTrainerBattle && trainerData
-          ? { party: trainerData.party, totalSlots: trainerData.party.length, revealedCount: trainerPartyIndex }
+          ? {
+              party: trainerData.party,
+              totalSlots: trainerData.party.length,
+              revealedCount: trainerAIState?.seenPokemonIds.size ?? 1,
+            }
           : undefined,
       );
       renderHPBar(ctx, playerHpBar, playerParty ? { party: playerParty, totalSlots: 6 } : undefined);

@@ -8943,9 +8943,19 @@
   ],
   "328": [
     {
-      "moveId": 11,
+      "moveId": 44,
       "gen": 1,
       "levelLearned": 1
+    },
+    {
+      "moveId": 310,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 673,
+      "gen": 1,
+      "levelLearned": 4
     },
     {
       "moveId": 28,
@@ -8953,58 +8963,373 @@
       "levelLearned": 9
     },
     {
-      "moveId": 44,
+      "moveId": 189,
+      "gen": 1,
+      "levelLearned": 13
+    },
+    {
+      "moveId": 117,
       "gen": 1,
       "levelLearned": 17
     },
     {
-      "moveId": 89,
+      "moveId": 185,
+      "gen": 1,
+      "levelLearned": 17
+    },
+    {
+      "moveId": 523,
+      "gen": 1,
+      "levelLearned": 21
+    },
+    {
+      "moveId": 157,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 328,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 91,
       "gen": 1,
       "levelLearned": 41
+    },
+    {
+      "moveId": 201,
+      "gen": 1,
+      "levelLearned": 49
+    },
+    {
+      "moveId": 63,
+      "gen": 1,
+      "levelLearned": 57
+    },
+    {
+      "moveId": 414,
+      "gen": 1,
+      "levelLearned": 65
+    },
+    {
+      "moveId": 276,
+      "gen": 1,
+      "levelLearned": 67
+    },
+    {
+      "moveId": 89,
+      "gen": 1,
+      "levelLearned": 73
+    },
+    {
+      "moveId": 364,
+      "gen": 1,
+      "levelLearned": 81
+    },
+    {
+      "moveId": 90,
+      "gen": 1,
+      "levelLearned": 89
     }
   ],
   "329": [
-    {
-      "moveId": 11,
-      "gen": 1,
-      "levelLearned": 1
-    },
     {
       "moveId": 28,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 235,
-      "gen": 2,
-      "levelLearned": 22
-    },
-    {
-      "moveId": 242,
-      "gen": 2,
-      "levelLearned": 35
-    }
-  ],
-  "330": [
-    {
-      "moveId": 11,
+      "moveId": 44,
       "gen": 1,
       "levelLearned": 1
     },
     {
+      "moveId": 49,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 90,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 91,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 185,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 276,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 310,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 328,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 673,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 189,
+      "gen": 1,
+      "levelLearned": 13
+    },
+    {
+      "moveId": 117,
+      "gen": 1,
+      "levelLearned": 17
+    },
+    {
+      "moveId": 525,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 523,
+      "gen": 1,
+      "levelLearned": 21
+    },
+    {
+      "moveId": 157,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 405,
+      "gen": 1,
+      "levelLearned": 29
+    },
+    {
+      "moveId": 48,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
       "moveId": 89,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 225,
       "gen": 1,
       "levelLearned": 35
     },
     {
-      "moveId": 242,
-      "gen": 2,
-      "levelLearned": 45
+      "moveId": 414,
+      "gen": 1,
+      "levelLearned": 39
+    },
+    {
+      "moveId": 253,
+      "gen": 1,
+      "levelLearned": 40
+    },
+    {
+      "moveId": 103,
+      "gen": 1,
+      "levelLearned": 41
+    },
+    {
+      "moveId": 586,
+      "gen": 1,
+      "levelLearned": 47
+    },
+    {
+      "moveId": 201,
+      "gen": 1,
+      "levelLearned": 49
+    },
+    {
+      "moveId": 407,
+      "gen": 1,
+      "levelLearned": 56
     },
     {
       "moveId": 63,
       "gen": 1,
-      "levelLearned": 53
+      "levelLearned": 57
+    }
+  ],
+  "330": [
+    {
+      "moveId": 28,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 49,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 90,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 91,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 185,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 276,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 310,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 328,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 349,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 364,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 673,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 189,
+      "gen": 1,
+      "levelLearned": 13
+    },
+    {
+      "moveId": 117,
+      "gen": 1,
+      "levelLearned": 17
+    },
+    {
+      "moveId": 523,
+      "gen": 1,
+      "levelLearned": 21
+    },
+    {
+      "moveId": 157,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 405,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 48,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 89,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 35
+    },
+    {
+      "moveId": 414,
+      "gen": 1,
+      "levelLearned": 39
+    },
+    {
+      "moveId": 253,
+      "gen": 1,
+      "levelLearned": 40
+    },
+    {
+      "moveId": 103,
+      "gen": 1,
+      "levelLearned": 41
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
+      "levelLearned": 45
+    },
+    {
+      "moveId": 407,
+      "gen": 1,
+      "levelLearned": 47
+    },
+    {
+      "moveId": 201,
+      "gen": 1,
+      "levelLearned": 49
+    },
+    {
+      "moveId": 63,
+      "gen": 1,
+      "levelLearned": 57
+    },
+    {
+      "moveId": 525,
+      "gen": 1,
+      "levelLearned": 65
+    },
+    {
+      "moveId": 586,
+      "gen": 1,
+      "levelLearned": 68
     }
   ],
   "349": [
@@ -9020,8 +9345,8 @@
     },
     {
       "moveId": 175,
-      "gen": 2,
-      "levelLearned": 25
+      "gen": 1,
+      "levelLearned": 30
     }
   ],
   "350": [
@@ -9031,217 +9356,487 @@
       "levelLearned": 1
     },
     {
-      "moveId": 105,
+      "moveId": 35,
       "gen": 1,
-      "levelLearned": 1
-    },
-    {
-      "moveId": 110,
-      "gen": 1,
-      "levelLearned": 1
-    },
-    {
-      "moveId": 252,
-      "gen": 2,
       "levelLearned": 1
     },
     {
       "moveId": 55,
       "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 150,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 175,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 346,
+      "gen": 1,
       "levelLearned": 5
     },
     {
-      "moveId": 114,
+      "moveId": 287,
       "gen": 1,
       "levelLearned": 9
     },
     {
-      "moveId": 240,
-      "gen": 2,
+      "moveId": 574,
+      "gen": 1,
       "levelLearned": 11
     },
     {
-      "moveId": 182,
-      "gen": 2,
-      "levelLearned": 14
-    },
-    {
-      "moveId": 332,
-      "gen": 3,
-      "levelLearned": 17
-    },
-    {
-      "moveId": 218,
-      "gen": 2,
-      "levelLearned": 20
-    },
-    {
-      "moveId": 98,
-      "gen": 1,
-      "levelLearned": 23
-    },
-    {
-      "moveId": 226,
-      "gen": 2,
-      "levelLearned": 25
-    },
-    {
-      "moveId": 329,
-      "gen": 3,
-      "levelLearned": 29
-    },
-    {
-      "moveId": 56,
-      "gen": 1,
-      "levelLearned": 32
-    },
-    {
-      "moveId": 251,
-      "gen": 2,
-      "levelLearned": 35
-    },
-    {
-      "moveId": 58,
-      "gen": 1,
-      "levelLearned": 38
-    },
-    {
-      "moveId": 219,
-      "gen": 2,
-      "levelLearned": 41
-    },
-    {
-      "moveId": 372,
-      "gen": 4,
-      "levelLearned": 44
-    },
-    {
-      "moveId": 153,
-      "gen": 2,
-      "levelLearned": 47
-    },
-    {
-      "moveId": 362,
-      "gen": 3,
-      "levelLearned": 51
-    },
-    {
-      "moveId": 115,
-      "gen": 1,
-      "levelLearned": 55
-    }
-  ],
-  "359": [
-    {
-      "moveId": 43,
-      "gen": 1,
-      "levelLearned": 1
-    },
-    {
-      "moveId": 98,
-      "gen": 1,
-      "levelLearned": 7
-    },
-    {
-      "moveId": 14,
+      "moveId": 352,
       "gen": 1,
       "levelLearned": 13
     },
     {
-      "moveId": 211,
-      "gen": 2,
+      "moveId": 239,
+      "gen": 1,
+      "levelLearned": 17
+    },
+    {
+      "moveId": 791,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 105,
+      "gen": 1,
+      "levelLearned": 21
+    },
+    {
+      "moveId": 445,
+      "gen": 1,
       "levelLearned": 25
     },
     {
-      "moveId": 163,
-      "gen": 2,
+      "moveId": 525,
+      "gen": 1,
+      "levelLearned": 27
+    },
+    {
+      "moveId": 401,
+      "gen": 1,
+      "levelLearned": 29
+    },
+    {
+      "moveId": 240,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 56,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 57,
+      "gen": 1,
+      "levelLearned": 40
+    },
+    {
+      "moveId": 213,
+      "gen": 1,
+      "levelLearned": 41
+    },
+    {
+      "moveId": 489,
+      "gen": 1,
       "levelLearned": 44
+    },
+    {
+      "moveId": 219,
+      "gen": 1,
+      "levelLearned": 45
+    },
+    {
+      "moveId": 392,
+      "gen": 1,
+      "levelLearned": 49
     }
   ],
-  "371": [
+  "359": [
     {
-      "moveId": 33,
+      "moveId": 10,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 364,
       "gen": 1,
       "levelLearned": 1
     },
     {
       "moveId": 43,
       "gen": 1,
-      "levelLearned": 5
+      "levelLearned": 4
     },
     {
-      "moveId": 116,
+      "moveId": 269,
       "gen": 1,
-      "levelLearned": 11
+      "levelLearned": 9
     },
     {
-      "moveId": 242,
-      "gen": 2,
-      "levelLearned": 21
-    }
-  ],
-  "372": [
-    {
-      "moveId": 33,
-      "gen": 1,
-      "levelLearned": 1
-    },
-    {
-      "moveId": 116,
-      "gen": 1,
-      "levelLearned": 1
-    },
-    {
-      "moveId": 110,
-      "gen": 1,
-      "levelLearned": 32
-    },
-    {
-      "moveId": 242,
-      "gen": 2,
-      "levelLearned": 38
-    }
-  ],
-  "373": [
-    {
-      "moveId": 33,
-      "gen": 1,
-      "levelLearned": 1
-    },
-    {
-      "moveId": 116,
-      "gen": 1,
-      "levelLearned": 1
-    },
-    {
-      "moveId": 242,
-      "gen": 2,
-      "levelLearned": 38
-    },
-    {
-      "moveId": 56,
-      "gen": 1,
-      "levelLearned": 50
-    }
-  ],
-  "374": [
-    {
-      "moveId": 36,
-      "gen": 1,
-      "levelLearned": 1
-    },
-    {
-      "moveId": 428,
+      "moveId": 282,
       "gen": 1,
       "levelLearned": 10
     },
     {
-      "moveId": 93,
+      "moveId": 98,
+      "gen": 1,
+      "levelLearned": 12
+    },
+    {
+      "moveId": 13,
+      "gen": 1,
+      "levelLearned": 17
+    },
+    {
+      "moveId": 228,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 14,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 104,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 116,
+      "gen": 1,
+      "levelLearned": 35
+    },
+    {
+      "moveId": 163,
+      "gen": 1,
+      "levelLearned": 36
+    },
+    {
+      "moveId": 248,
+      "gen": 1,
+      "levelLearned": 41
+    },
+    {
+      "moveId": 389,
+      "gen": 1,
+      "levelLearned": 44
+    },
+    {
+      "moveId": 197,
+      "gen": 1,
+      "levelLearned": 49
+    },
+    {
+      "moveId": 400,
+      "gen": 1,
+      "levelLearned": 52
+    },
+    {
+      "moveId": 382,
+      "gen": 1,
+      "levelLearned": 57
+    },
+    {
+      "moveId": 427,
+      "gen": 1,
+      "levelLearned": 60
+    },
+    {
+      "moveId": 195,
+      "gen": 1,
+      "levelLearned": 65
+    }
+  ],
+  "371": [
+    {
+      "moveId": 99,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 5
+    },
+    {
+      "moveId": 43,
+      "gen": 1,
+      "levelLearned": 10
+    },
+    {
+      "moveId": 29,
       "gen": 1,
       "levelLearned": 16
+    },
+    {
+      "moveId": 116,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 52,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 31
+    },
+    {
+      "moveId": 428,
+      "gen": 1,
+      "levelLearned": 35
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 40
+    },
+    {
+      "moveId": 53,
+      "gen": 1,
+      "levelLearned": 44
+    },
+    {
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 46
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 50
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
+      "levelLearned": 50
+    },
+    {
+      "moveId": 38,
+      "gen": 1,
+      "levelLearned": 55
+    }
+  ],
+  "372": [
+    {
+      "moveId": 29,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 43,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 99,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 116,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 52,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 182,
+      "gen": 1,
+      "levelLearned": 30
+    },
+    {
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 32
+    },
+    {
+      "moveId": 428,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 43
+    },
+    {
+      "moveId": 53,
+      "gen": 1,
+      "levelLearned": 49
+    },
+    {
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 50
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
+      "levelLearned": 55
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 60
+    },
+    {
+      "moveId": 38,
+      "gen": 1,
+      "levelLearned": 61
+    }
+  ],
+  "373": [
+    {
+      "moveId": 29,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 43,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 99,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 355,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 422,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 424,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 814,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 116,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 52,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 182,
+      "gen": 1,
+      "levelLearned": 30
+    },
+    {
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 32
+    },
+    {
+      "moveId": 428,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 43
+    },
+    {
+      "moveId": 53,
+      "gen": 1,
+      "levelLearned": 49
+    },
+    {
+      "moveId": 19,
+      "gen": 1,
+      "levelLearned": 50
+    },
+    {
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 53
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
+      "levelLearned": 61
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 64
+    },
+    {
+      "moveId": 38,
+      "gen": 1,
+      "levelLearned": 70
+    },
+    {
+      "moveId": 525,
+      "gen": 1,
+      "levelLearned": 80
+    }
+  ],
+  "374": [
+    {
+      "moveId": 33,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 36,
+      "gen": 1,
+      "levelLearned": 1
     }
   ],
   "375": [
+    {
+      "moveId": 33,
+      "gen": 1,
+      "levelLearned": 1
+    },
     {
       "moveId": 36,
       "gen": 1,
@@ -9254,27 +9849,82 @@
     },
     {
       "moveId": 232,
-      "gen": 2,
-      "levelLearned": 20
+      "gen": 1,
+      "levelLearned": 1
     },
     {
-      "moveId": 334,
-      "gen": 2,
+      "moveId": 393,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 468,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 430,
+      "gen": 1,
+      "levelLearned": 18
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 357,
+      "gen": 1,
+      "levelLearned": 26
+    },
+    {
+      "moveId": 228,
+      "gen": 1,
       "levelLearned": 28
     },
     {
-      "moveId": 60,
+      "moveId": 418,
       "gen": 1,
-      "levelLearned": 38
+      "levelLearned": 32
     },
     {
-      "moveId": 242,
-      "gen": 2,
+      "moveId": 94,
+      "gen": 1,
+      "levelLearned": 36
+    },
+    {
+      "moveId": 334,
+      "gen": 1,
+      "levelLearned": 40
+    },
+    {
+      "moveId": 97,
+      "gen": 1,
+      "levelLearned": 44
+    },
+    {
+      "moveId": 309,
+      "gen": 1,
+      "levelLearned": 48
+    },
+    {
+      "moveId": 428,
+      "gen": 1,
+      "levelLearned": 52
+    },
+    {
+      "moveId": 63,
+      "gen": 1,
       "levelLearned": 56
     }
   ],
   "376": [
     {
+      "moveId": 33,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
       "moveId": 36,
       "gen": 1,
       "levelLearned": 1
@@ -9286,58 +9936,163 @@
     },
     {
       "moveId": 232,
-      "gen": 2,
-      "levelLearned": 20
-    },
-    {
-      "moveId": 153,
-      "gen": 2,
-      "levelLearned": 45
-    },
-    {
-      "moveId": 60,
-      "gen": 1,
-      "levelLearned": 48
-    },
-    {
-      "moveId": 309,
-      "gen": 1,
-      "levelLearned": 50
-    },
-    {
-      "moveId": 94,
-      "gen": 1,
-      "levelLearned": 55
-    },
-    {
-      "moveId": 242,
-      "gen": 2,
-      "levelLearned": 66
-    }
-  ],
-  "442": [
-    {
-      "moveId": 107,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 92,
+      "moveId": 393,
       "gen": 1,
-      "levelLearned": 5
+      "levelLearned": 1
+    },
+    {
+      "moveId": 430,
+      "gen": 1,
+      "levelLearned": 16
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 357,
+      "gen": 1,
+      "levelLearned": 26
+    },
+    {
+      "moveId": 228,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 418,
+      "gen": 1,
+      "levelLearned": 32
+    },
+    {
+      "moveId": 94,
+      "gen": 1,
+      "levelLearned": 36
+    },
+    {
+      "moveId": 334,
+      "gen": 1,
+      "levelLearned": 40
+    },
+    {
+      "moveId": 97,
+      "gen": 1,
+      "levelLearned": 44
+    },
+    {
+      "moveId": 359,
+      "gen": 1,
+      "levelLearned": 45
+    },
+    {
+      "moveId": 309,
+      "gen": 1,
+      "levelLearned": 53
+    },
+    {
+      "moveId": 428,
+      "gen": 1,
+      "levelLearned": 62
+    },
+    {
+      "moveId": 63,
+      "gen": 1,
+      "levelLearned": 71
+    }
+  ],
+  "442": [
+    {
+      "moveId": 101,
+      "gen": 1,
+      "levelLearned": 1
     },
     {
       "moveId": 109,
       "gen": 1,
-      "levelLearned": 11
+      "levelLearned": 1
     },
     {
-      "moveId": 247,
-      "gen": 2,
-      "levelLearned": 31
+      "moveId": 174,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 180,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 228,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 425,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 185,
+      "gen": 1,
+      "levelLearned": 7
+    },
+    {
+      "moveId": 95,
+      "gen": 1,
+      "levelLearned": 13
+    },
+    {
+      "moveId": 371,
+      "gen": 1,
+      "levelLearned": 15
     },
     {
       "moveId": 138,
+      "gen": 1,
+      "levelLearned": 19
+    },
+    {
+      "moveId": 326,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 466,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 506,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 389,
+      "gen": 1,
+      "levelLearned": 31
+    },
+    {
+      "moveId": 417,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 262,
+      "gen": 1,
+      "levelLearned": 43
+    },
+    {
+      "moveId": 247,
+      "gen": 1,
+      "levelLearned": 45
+    },
+    {
+      "moveId": 399,
       "gen": 1,
       "levelLearned": 49
     }
@@ -9349,29 +10104,49 @@
       "levelLearned": 1
     },
     {
-      "moveId": 45,
+      "moveId": 28,
       "gen": 1,
       "levelLearned": 3
     },
     {
-      "moveId": 116,
+      "moveId": 239,
+      "gen": 1,
+      "levelLearned": 5
+    },
+    {
+      "moveId": 82,
       "gen": 1,
       "levelLearned": 7
     },
     {
-      "moveId": 242,
-      "gen": 2,
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 12
+    },
+    {
+      "moveId": 201,
+      "gen": 1,
       "levelLearned": 13
     },
     {
-      "moveId": 182,
-      "gen": 2,
+      "moveId": 36,
+      "gen": 1,
       "levelLearned": 15
     },
     {
-      "moveId": 28,
+      "moveId": 523,
+      "gen": 1,
+      "levelLearned": 18
+    },
+    {
+      "moveId": 328,
       "gen": 1,
       "levelLearned": 19
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 25
     },
     {
       "moveId": 163,
@@ -9379,51 +10154,91 @@
       "levelLearned": 25
     },
     {
-      "moveId": 250,
-      "gen": 2,
+      "moveId": 337,
+      "gen": 1,
       "levelLearned": 27
     },
     {
-      "moveId": 89,
+      "moveId": 414,
+      "gen": 1,
+      "levelLearned": 29
+    },
+    {
+      "moveId": 91,
       "gen": 1,
       "levelLearned": 31
     },
     {
-      "moveId": 200,
-      "gen": 2,
+      "moveId": 38,
+      "gen": 1,
       "levelLearned": 37
+    },
+    {
+      "moveId": 407,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 47
     }
   ],
   "444": [
+    {
+      "moveId": 28,
+      "gen": 1,
+      "levelLearned": 1
+    },
     {
       "moveId": 33,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 45,
+      "moveId": 225,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 116,
+      "moveId": 239,
       "gen": 1,
-      "levelLearned": 1
+      "levelLearned": 5
     },
     {
-      "moveId": 242,
-      "gen": 2,
+      "moveId": 82,
+      "gen": 1,
+      "levelLearned": 7
+    },
+    {
+      "moveId": 201,
+      "gen": 1,
       "levelLearned": 13
     },
     {
-      "moveId": 182,
-      "gen": 2,
+      "moveId": 36,
+      "gen": 1,
       "levelLearned": 15
     },
     {
-      "moveId": 28,
+      "moveId": 523,
+      "gen": 1,
+      "levelLearned": 18
+    },
+    {
+      "moveId": 328,
       "gen": 1,
       "levelLearned": 19
+    },
+    {
+      "moveId": 530,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 27
     },
     {
       "moveId": 163,
@@ -9431,51 +10246,96 @@
       "levelLearned": 28
     },
     {
-      "moveId": 250,
-      "gen": 2,
+      "moveId": 414,
+      "gen": 1,
+      "levelLearned": 29
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
       "levelLearned": 33
     },
     {
-      "moveId": 89,
+      "moveId": 38,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 91,
       "gen": 1,
       "levelLearned": 40
     },
     {
       "moveId": 200,
-      "gen": 2,
+      "gen": 1,
+      "levelLearned": 47
+    },
+    {
+      "moveId": 407,
+      "gen": 1,
       "levelLearned": 49
     }
   ],
   "445": [
     {
+      "moveId": 28,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
       "moveId": 33,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 45,
+      "moveId": 82,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 116,
+      "moveId": 201,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 242,
-      "gen": 2,
-      "levelLearned": 13
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 1
     },
     {
-      "moveId": 182,
-      "gen": 2,
+      "moveId": 424,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 239,
+      "gen": 1,
+      "levelLearned": 5
+    },
+    {
+      "moveId": 36,
+      "gen": 1,
       "levelLearned": 15
     },
     {
-      "moveId": 28,
+      "moveId": 523,
+      "gen": 1,
+      "levelLearned": 18
+    },
+    {
+      "moveId": 328,
       "gen": 1,
       "levelLearned": 19
+    },
+    {
+      "moveId": 530,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 27
     },
     {
       "moveId": 163,
@@ -9483,23 +10343,38 @@
       "levelLearned": 28
     },
     {
-      "moveId": 250,
-      "gen": 2,
+      "moveId": 414,
+      "gen": 1,
+      "levelLearned": 29
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
       "levelLearned": 33
     },
     {
-      "moveId": 89,
+      "moveId": 38,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 91,
       "gen": 1,
       "levelLearned": 40
     },
     {
-      "moveId": 162,
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 47
+    },
+    {
+      "moveId": 242,
       "gen": 1,
       "levelLearned": 48
     },
     {
-      "moveId": 200,
-      "gen": 2,
+      "moveId": 407,
+      "gen": 1,
       "levelLearned": 55
     }
   ],
@@ -9644,63 +10519,338 @@
       "levelLearned": 1
     },
     {
-      "moveId": 98,
+      "moveId": 97,
       "gen": 1,
-      "levelLearned": 18
+      "levelLearned": 1
     },
     {
-      "moveId": 211,
-      "gen": 2,
-      "levelLearned": 28
+      "moveId": 98,
+      "gen": 1,
+      "levelLearned": 1
     },
     {
       "moveId": 163,
-      "gen": 2,
-      "levelLearned": 45
-    }
-  ],
-  "464": [
+      "gen": 1,
+      "levelLearned": 1
+    },
     {
-      "moveId": 31,
+      "moveId": 251,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 269,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 279,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 372,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 373,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 420,
       "gen": 1,
       "levelLearned": 1
     },
     {
       "moveId": 103,
       "gen": 1,
-      "levelLearned": 9
+      "levelLearned": 10
     },
     {
-      "moveId": 89,
+      "moveId": 129,
+      "gen": 1,
+      "levelLearned": 11
+    },
+    {
+      "moveId": 185,
+      "gen": 1,
+      "levelLearned": 14
+    },
+    {
+      "moveId": 154,
+      "gen": 1,
+      "levelLearned": 21
+    },
+    {
+      "moveId": 417,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 398,
       "gen": 1,
       "levelLearned": 25
     },
     {
-      "moveId": 157,
-      "gen": 2,
+      "moveId": 196,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 14,
+      "gen": 1,
+      "levelLearned": 34
+    },
+    {
+      "moveId": 400,
+      "gen": 1,
+      "levelLearned": 35
+    },
+    {
+      "moveId": 468,
+      "gen": 1,
+      "levelLearned": 35
+    },
+    {
+      "moveId": 374,
+      "gen": 1,
+      "levelLearned": 38
+    },
+    {
+      "moveId": 289,
+      "gen": 1,
+      "levelLearned": 40
+    },
+    {
+      "moveId": 232,
+      "gen": 1,
       "levelLearned": 42
     },
     {
-      "moveId": 63,
+      "moveId": 59,
       "gen": 1,
-      "levelLearned": 61
+      "levelLearned": 43
+    },
+    {
+      "moveId": 386,
+      "gen": 1,
+      "levelLearned": 44
+    },
+    {
+      "moveId": 399,
+      "gen": 1,
+      "levelLearned": 49
+    }
+  ],
+  "464": [
+    {
+      "moveId": 23,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 30,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 31,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 33,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 39,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 398,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 249,
+      "gen": 1,
+      "levelLearned": 11
+    },
+    {
+      "moveId": 479,
+      "gen": 1,
+      "levelLearned": 13
+    },
+    {
+      "moveId": 446,
+      "gen": 1,
+      "levelLearned": 18
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 21
+    },
+    {
+      "moveId": 523,
+      "gen": 1,
+      "levelLearned": 21
+    },
+    {
+      "moveId": 157,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 350,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 498,
+      "gen": 1,
+      "levelLearned": 30
+    },
+    {
+      "moveId": 36,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 667,
+      "gen": 1,
+      "levelLearned": 34
+    },
+    {
+      "moveId": 32,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 359,
+      "gen": 1,
+      "levelLearned": 42
+    },
+    {
+      "moveId": 38,
+      "gen": 1,
+      "levelLearned": 43
+    },
+    {
+      "moveId": 444,
+      "gen": 1,
+      "levelLearned": 45
+    },
+    {
+      "moveId": 529,
+      "gen": 1,
+      "levelLearned": 47
+    },
+    {
+      "moveId": 89,
+      "gen": 1,
+      "levelLearned": 49
+    },
+    {
+      "moveId": 416,
+      "gen": 1,
+      "levelLearned": 52
+    },
+    {
+      "moveId": 224,
+      "gen": 1,
+      "levelLearned": 57
     }
   ],
   "466": [
+    {
+      "moveId": 7,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 43,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 67,
+      "gen": 1,
+      "levelLearned": 1
+    },
     {
       "moveId": 84,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 9,
+      "moveId": 98,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 268,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 528,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 569,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 604,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 209,
       "gen": 1,
       "levelLearned": 11
     },
     {
-      "moveId": 25,
+      "moveId": 129,
+      "gen": 1,
+      "levelLearned": 16
+    },
+    {
+      "moveId": 86,
+      "gen": 1,
+      "levelLearned": 19
+    },
+    {
+      "moveId": 351,
+      "gen": 1,
+      "levelLearned": 19
+    },
+    {
+      "moveId": 113,
       "gen": 1,
       "levelLearned": 25
+    },
+    {
+      "moveId": 9,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 486,
+      "gen": 1,
+      "levelLearned": 32
+    },
+    {
+      "moveId": 435,
+      "gen": 1,
+      "levelLearned": 37
     },
     {
       "moveId": 85,
@@ -9708,46 +10858,211 @@
       "levelLearned": 43
     },
     {
-      "moveId": 63,
+      "moveId": 103,
       "gen": 1,
-      "levelLearned": 55
+      "levelLearned": 52
+    },
+    {
+      "moveId": 87,
+      "gen": 1,
+      "levelLearned": 58
+    },
+    {
+      "moveId": 416,
+      "gen": 1,
+      "levelLearned": 67
     }
   ],
   "467": [
+    {
+      "moveId": 9,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 43,
+      "gen": 1,
+      "levelLearned": 1
+    },
     {
       "moveId": 52,
       "gen": 1,
       "levelLearned": 1
     },
     {
-      "moveId": 7,
+      "moveId": 108,
       "gen": 1,
-      "levelLearned": 11
+      "levelLearned": 1
     },
     {
-      "moveId": 53,
+      "moveId": 123,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 33,
+      "gen": 1,
+      "levelLearned": 6
+    },
+    {
+      "moveId": 172,
+      "gen": 1,
+      "levelLearned": 16
+    },
+    {
+      "moveId": 185,
+      "gen": 1,
+      "levelLearned": 16
+    },
+    {
+      "moveId": 139,
+      "gen": 1,
+      "levelLearned": 18
+    },
+    {
+      "moveId": 83,
+      "gen": 1,
+      "levelLearned": 19
+    },
+    {
+      "moveId": 499,
+      "gen": 1,
+      "levelLearned": 19
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 109,
       "gen": 1,
       "levelLearned": 25
     },
     {
-      "moveId": 126,
+      "moveId": 7,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 481,
+      "gen": 1,
+      "levelLearned": 32
+    },
+    {
+      "moveId": 436,
+      "gen": 1,
+      "levelLearned": 37
+    },
+    {
+      "moveId": 67,
+      "gen": 1,
+      "levelLearned": 40
+    },
+    {
+      "moveId": 53,
       "gen": 1,
       "levelLearned": 43
     },
     {
-      "moveId": 58,
+      "moveId": 241,
       "gen": 1,
-      "levelLearned": 55
+      "levelLearned": 52
+    },
+    {
+      "moveId": 126,
+      "gen": 1,
+      "levelLearned": 58
+    },
+    {
+      "moveId": 63,
+      "gen": 1,
+      "levelLearned": 67
     }
   ],
   "468": [
+    {
+      "moveId": 1,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 33,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 38,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 45,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 118,
+      "gen": 1,
+      "levelLearned": 1
+    },
     {
       "moveId": 143,
       "gen": 1,
       "levelLearned": 1
     },
     {
+      "moveId": 161,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 186,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 204,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 219,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 226,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
       "moveId": 245,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 246,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 266,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 273,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 281,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 387,
       "gen": 1,
       "levelLearned": 1
     },
@@ -9760,13 +11075,63 @@
       "moveId": 403,
       "gen": 1,
       "levelLearned": 1
+    },
+    {
+      "moveId": 495,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 584,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 791,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 314,
+      "gen": 1,
+      "levelLearned": 11
+    },
+    {
+      "moveId": 577,
+      "gen": 1,
+      "levelLearned": 11
+    },
+    {
+      "moveId": 347,
+      "gen": 1,
+      "levelLearned": 18
+    },
+    {
+      "moveId": 608,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 326,
+      "gen": 1,
+      "levelLearned": 34
+    },
+    {
+      "moveId": 585,
+      "gen": 1,
+      "levelLearned": 43
     }
   ],
   "610": [
     {
-      "moveId": 33,
+      "moveId": 10,
       "gen": 1,
       "levelLearned": 1
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 3
     },
     {
       "moveId": 43,
@@ -9774,73 +11139,318 @@
       "levelLearned": 4
     },
     {
-      "moveId": 184,
-      "gen": 2,
+      "moveId": 372,
+      "gen": 1,
+      "levelLearned": 7
+    },
+    {
+      "moveId": 82,
+      "gen": 1,
       "levelLearned": 10
     },
     {
-      "moveId": 242,
-      "gen": 2,
+      "moveId": 530,
+      "gen": 1,
+      "levelLearned": 13
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 16
+    },
+    {
+      "moveId": 163,
+      "gen": 1,
       "levelLearned": 20
+    },
+    {
+      "moveId": 206,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 784,
+      "gen": 1,
+      "levelLearned": 30
+    },
+    {
+      "moveId": 349,
+      "gen": 1,
+      "levelLearned": 32
+    },
+    {
+      "moveId": 116,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 673,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 269,
+      "gen": 1,
+      "levelLearned": 36
+    },
+    {
+      "moveId": 406,
+      "gen": 1,
+      "levelLearned": 41
+    },
+    {
+      "moveId": 14,
+      "gen": 1,
+      "levelLearned": 46
+    },
+    {
+      "moveId": 12,
+      "gen": 1,
+      "levelLearned": 51
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 56
+    },
+    {
+      "moveId": 416,
+      "gen": 1,
+      "levelLearned": 61
     }
   ],
   "611": [
     {
-      "moveId": 33,
+      "moveId": 10,
       "gen": 1,
       "levelLearned": 1
     },
     {
       "moveId": 43,
       "gen": 1,
-      "levelLearned": 4
+      "levelLearned": 1
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 82,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 372,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 530,
+      "gen": 1,
+      "levelLearned": 13
     },
     {
       "moveId": 184,
-      "gen": 2,
-      "levelLearned": 10
+      "gen": 1,
+      "levelLearned": 16
     },
     {
       "moveId": 163,
-      "gen": 2,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 206,
+      "gen": 1,
       "levelLearned": 24
     },
     {
       "moveId": 242,
-      "gen": 2,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 784,
+      "gen": 1,
+      "levelLearned": 30
+    },
+    {
+      "moveId": 349,
+      "gen": 1,
       "levelLearned": 32
+    },
+    {
+      "moveId": 116,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 673,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 269,
+      "gen": 1,
+      "levelLearned": 36
+    },
+    {
+      "moveId": 406,
+      "gen": 1,
+      "levelLearned": 42
+    },
+    {
+      "moveId": 14,
+      "gen": 1,
+      "levelLearned": 48
+    },
+    {
+      "moveId": 12,
+      "gen": 1,
+      "levelLearned": 54
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 60
+    },
+    {
+      "moveId": 416,
+      "gen": 1,
+      "levelLearned": 66
     }
   ],
   "612": [
     {
-      "moveId": 33,
+      "moveId": 10,
       "gen": 1,
       "levelLearned": 1
     },
     {
       "moveId": 43,
       "gen": 1,
-      "levelLearned": 4
+      "levelLearned": 1
+    },
+    {
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 82,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 372,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 530,
+      "gen": 1,
+      "levelLearned": 13
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 16
     },
     {
       "moveId": 163,
-      "gen": 2,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 206,
+      "gen": 1,
       "levelLearned": 24
     },
     {
       "moveId": 242,
-      "gen": 2,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 337,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 784,
+      "gen": 1,
+      "levelLearned": 30
+    },
+    {
+      "moveId": 349,
+      "gen": 1,
       "levelLearned": 32
     },
     {
-      "moveId": 63,
+      "moveId": 116,
       "gen": 1,
-      "levelLearned": 48
+      "levelLearned": 33
+    },
+    {
+      "moveId": 673,
+      "gen": 1,
+      "levelLearned": 33
+    },
+    {
+      "moveId": 269,
+      "gen": 1,
+      "levelLearned": 36
+    },
+    {
+      "moveId": 406,
+      "gen": 1,
+      "levelLearned": 42
+    },
+    {
+      "moveId": 14,
+      "gen": 1,
+      "levelLearned": 50
+    },
+    {
+      "moveId": 12,
+      "gen": 1,
+      "levelLearned": 58
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 66
+    },
+    {
+      "moveId": 416,
+      "gen": 1,
+      "levelLearned": 74
     }
   ],
   "633": [
     {
       "moveId": 33,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 82,
       "gen": 1,
       "levelLearned": 1
     },
@@ -9855,14 +11465,74 @@
       "levelLearned": 9
     },
     {
-      "moveId": 242,
-      "gen": 2,
+      "moveId": 29,
+      "gen": 1,
+      "levelLearned": 12
+    },
+    {
+      "moveId": 372,
+      "gen": 1,
+      "levelLearned": 16
+    },
+    {
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 17
+    },
+    {
+      "moveId": 46,
+      "gen": 1,
       "levelLearned": 20
     },
     {
-      "moveId": 163,
-      "gen": 2,
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 21,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 406,
+      "gen": 1,
       "levelLearned": 32
+    },
+    {
+      "moveId": 526,
+      "gen": 1,
+      "levelLearned": 38
+    },
+    {
+      "moveId": 407,
+      "gen": 1,
+      "levelLearned": 42
+    },
+    {
+      "moveId": 34,
+      "gen": 1,
+      "levelLearned": 48
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 52
+    },
+    {
+      "moveId": 417,
+      "gen": 1,
+      "levelLearned": 56
+    },
+    {
+      "moveId": 304,
+      "gen": 1,
+      "levelLearned": 58
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 62
     }
   ],
   "634": [
@@ -9874,22 +11544,92 @@
     {
       "moveId": 44,
       "gen": 1,
-      "levelLearned": 9
+      "levelLearned": 1
     },
     {
-      "moveId": 242,
-      "gen": 2,
-      "levelLearned": 20
+      "moveId": 82,
+      "gen": 1,
+      "levelLearned": 1
     },
     {
-      "moveId": 163,
-      "gen": 2,
-      "levelLearned": 32
+      "moveId": 116,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 458,
+      "gen": 1,
+      "levelLearned": 1
     },
     {
       "moveId": 29,
       "gen": 1,
+      "levelLearned": 12
+    },
+    {
+      "moveId": 372,
+      "gen": 1,
+      "levelLearned": 16
+    },
+    {
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 17
+    },
+    {
+      "moveId": 46,
+      "gen": 1,
+      "levelLearned": 20
+    },
+    {
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 21,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 406,
+      "gen": 1,
+      "levelLearned": 32
+    },
+    {
+      "moveId": 526,
+      "gen": 1,
+      "levelLearned": 38
+    },
+    {
+      "moveId": 407,
+      "gen": 1,
+      "levelLearned": 42
+    },
+    {
+      "moveId": 34,
+      "gen": 1,
+      "levelLearned": 48
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
       "levelLearned": 55
+    },
+    {
+      "moveId": 417,
+      "gen": 1,
+      "levelLearned": 60
+    },
+    {
+      "moveId": 304,
+      "gen": 1,
+      "levelLearned": 64
+    },
+    {
+      "moveId": 200,
+      "gen": 1,
+      "levelLearned": 71
     }
   ],
   "635": [
@@ -9899,22 +11639,102 @@
       "levelLearned": 1
     },
     {
-      "moveId": 242,
-      "gen": 2,
+      "moveId": 44,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 82,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 116,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 161,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 458,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 29,
+      "gen": 1,
+      "levelLearned": 12
+    },
+    {
+      "moveId": 372,
+      "gen": 1,
+      "levelLearned": 16
+    },
+    {
+      "moveId": 225,
+      "gen": 1,
+      "levelLearned": 17
+    },
+    {
+      "moveId": 46,
+      "gen": 1,
       "levelLearned": 20
     },
     {
-      "moveId": 163,
-      "gen": 2,
+      "moveId": 242,
+      "gen": 1,
+      "levelLearned": 25
+    },
+    {
+      "moveId": 21,
+      "gen": 1,
+      "levelLearned": 28
+    },
+    {
+      "moveId": 406,
+      "gen": 1,
       "levelLearned": 32
     },
     {
-      "moveId": 56,
+      "moveId": 526,
+      "gen": 1,
+      "levelLearned": 38
+    },
+    {
+      "moveId": 407,
+      "gen": 1,
+      "levelLearned": 42
+    },
+    {
+      "moveId": 34,
+      "gen": 1,
+      "levelLearned": 48
+    },
+    {
+      "moveId": 184,
+      "gen": 1,
+      "levelLearned": 55
+    },
+    {
+      "moveId": 417,
+      "gen": 1,
+      "levelLearned": 60
+    },
+    {
+      "moveId": 304,
       "gen": 1,
       "levelLearned": 68
     },
     {
       "moveId": 63,
+      "gen": 1,
+      "levelLearned": 76
+    },
+    {
+      "moveId": 200,
       "gen": 1,
       "levelLearned": 79
     }

@@ -221,6 +221,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   // Healing moves
   Rest: { behaviorTags: ['rest'], target: 'user' },
   Recover: { healingPercent: 50, target: 'user' },
+  'Life Dew': { healingPercent: 25, target: 'user' },
   Roost: { healingPercent: 50, target: 'user' },
   Moonlight: {
     healingPercent: 75,
@@ -250,6 +251,9 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Leaf Storm': { statChanges: [stageChange('specialAttack', -2, 'user', 100)] },
   Superpower: { statChanges: [stageChange('attack', -1, 'user', 100), stageChange('defense', -1, 'user', 100)] },
   'Hammer Arm': { statChanges: [stageChange('speed', -1, 'user', 100)] },
+  'Close Combat': {
+    statChanges: [stageChange('defense', -1, 'user', 100), stageChange('specialDefense', -1, 'user', 100)],
+  },
 
   // --- Recoil moves ---
   'Flare Blitz': { recoilPercent: 33, ...statusEffect('burn', 10) },

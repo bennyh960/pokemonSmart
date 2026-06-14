@@ -85,16 +85,24 @@ export async function fetchTmLearnsetByPokemonId(pokemonId: number): Promise<TmL
 
   for (const move of data.moves) {
     const moveId = extractIdFromUrl(move.move.url);
-
-    // Find the best matching version group detail for machine (TM/HM) moves
     let found = false;
+
+    // שלב א': חיפוש לפי סדר העדיפויות של הגרסאות שלך
     for (const versionGroup of VERSION_GROUP_PRIORITY) {
-      const detail = move.version_group_details.find(
+      const match = move.version_group_details.find(
         (d: any) => d.version_group.name === versionGroup && d.move_learn_method.name === 'machine',
       );
-      if (detail) {
+      if (match) {
         found = true;
-        break;
+        break; // מצאנו התאמה שבה הוא לומד את המהלך כ-TM בדור מועדף
+      }
+    }
+
+    // שלב ב' (גיבוי): אם המהלך נלמד כ-TM בדור אחר לגמרי (למשל דור 5 ומעלה) שאינו ברשימה שלך
+    if (!found) {
+      const fallbackMatch = move.version_group_details.some((d: any) => d.move_learn_method.name === 'machine');
+      if (fallbackMatch) {
+        found = true;
       }
     }
 
@@ -103,7 +111,6 @@ export async function fetchTmLearnsetByPokemonId(pokemonId: number): Promise<TmL
     }
   }
 
-  // Sort by moveId for consistent ordering
   entries.sort((a, b) => a.moveId - b.moveId);
   return entries;
 }

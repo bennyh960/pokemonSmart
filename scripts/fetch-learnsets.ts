@@ -88,16 +88,25 @@ export async function fetchLearnsetByPokemonId(pokemonId: number): Promise<Learn
 
   for (const move of data.moves) {
     const moveId = extractIdFromUrl(move.move.url);
-
-    // Find the best matching version group detail for level-up moves
     let bestDetail: any = null;
+
+    // שלב א': חיפוש לפי סדר העדיפויות הרגיל שלך
     for (const versionGroup of VERSION_GROUP_PRIORITY) {
-      bestDetail = move.version_group_details.find(
+      const match = move.version_group_details.find(
         (d: any) => d.version_group.name === versionGroup && d.move_learn_method.name === 'level-up',
       );
-      if (bestDetail) break;
+      if (match) {
+        bestDetail = match;
+        break;
+      }
     }
 
+    // שלב ב' (גיבוי): אם הפוקימון לא קיים בדורות האלו או שהמהלך נלמד ברמה רק בדור אחר
+    if (!bestDetail) {
+      bestDetail = move.version_group_details.find((d: any) => d.move_learn_method.name === 'level-up');
+    }
+
+    // אם מצאנו (באחת משתי הדרכים) - נוסיף
     if (bestDetail) {
       entries.push({
         moveId,
@@ -106,9 +115,7 @@ export async function fetchLearnsetByPokemonId(pokemonId: number): Promise<Learn
     }
   }
 
-  // Sort by levelLearned ascending, then by moveId ascending for ties
   entries.sort((a, b) => a.levelLearned - b.levelLearned || a.moveId - b.moveId);
-
   return entries;
 }
 

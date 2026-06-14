@@ -23,10 +23,6 @@ if (isNaN(pokemonId) || pokemonId <= 0) {
   console.error('Please provide a valid Pokemon ID as an argument.');
   process.exit(1);
 }
-if (pokemonId <= 251 || EXTRA_POKEMONS_IDS.includes(pokemonId)) {
-  console.error(`That pokemon (${pokemonId}) already exists in the data.`);
-  process.exit(1);
-}
 
 const pokemonDataPath = path.join(__dirname, '../src/data/pokemon.json');
 const pokemonAbilitiesPath = path.join(__dirname, '../src/data/pokemon-abilities.json');
@@ -134,6 +130,10 @@ const handleLearnsetsByLevel = async () => {
   const learnset = await fetchLearnsetByPokemonId(pokemonId);
   validateMoves(learnset, 'Level-Up');
 
+  if (learnsetByLevel[pokemonId]) {
+    console.log(`  ℹ️  Note: Overwriting existing level-up learnset for Pokemon ID ${pokemonId} in learnsets.json`);
+  }
+
   learnsetByLevel[pokemonId] = learnset.map((e) => ({
     moveId: e.moveId,
     gen: (e as any).gen ?? 1,
@@ -191,6 +191,11 @@ const syncExtraPokemonIdsArray = () => {
 
 const main = async () => {
   console.log(`=== Processing Pokemon ID: ${pokemonId} ===`);
+  if (pokemonId <= 251 || EXTRA_POKEMONS_IDS.includes(pokemonId)) {
+    console.error(`That pokemon (${pokemonId}) already exists in the data.`);
+    process.exit(1);
+  }
+
   try {
     await handlePokemonData();
     await handlePokemonAbilities();
