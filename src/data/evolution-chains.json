@@ -3406,7 +3406,7 @@
         "id": 447,
         "name": {
           "en": "Riolu",
-          "he": "ריולו"
+          "he": "Riolu"
         },
         "minLevel": null,
         "trigger": null,
@@ -3416,7 +3416,7 @@
         "id": 448,
         "name": {
           "en": "Lucario",
-          "he": "לוקאריו"
+          "he": "Lucario"
         },
         "minLevel": null,
         "trigger": "level-up",

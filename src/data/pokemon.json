@@ -5,7 +5,10 @@
       "en": "Bulbasaur",
       "he": "בולבזאור"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 45,
       "attack": 49,
@@ -26,7 +29,10 @@
       "en": "Ivysaur",
       "he": "איוויזאור"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 60,
       "attack": 62,
@@ -47,7 +53,10 @@
       "en": "Venusaur",
       "he": "ונוזאור"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 80,
       "attack": 82,
@@ -68,7 +77,9 @@
       "en": "Charmander",
       "he": "צ'רמנדר"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 39,
       "attack": 52,
@@ -89,7 +100,9 @@
       "en": "Charmeleon",
       "he": "צ'רמיליון"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 58,
       "attack": 64,
@@ -110,7 +123,10 @@
       "en": "Charizard",
       "he": "צ'ריזארד"
     },
-    "types": ["fire", "flying"],
+    "types": [
+      "fire",
+      "flying"
+    ],
     "stats": {
       "hp": 78,
       "attack": 84,
@@ -131,7 +147,9 @@
       "en": "Squirtle",
       "he": "סקווירטל"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 44,
       "attack": 48,
@@ -152,7 +170,9 @@
       "en": "Wartortle",
       "he": "וורטורטל"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 59,
       "attack": 63,
@@ -173,7 +193,9 @@
       "en": "Blastoise",
       "he": "בלסטויז"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 79,
       "attack": 83,
@@ -194,7 +216,9 @@
       "en": "Caterpie",
       "he": "קטרפי"
     },
-    "types": ["bug"],
+    "types": [
+      "bug"
+    ],
     "stats": {
       "hp": 45,
       "attack": 30,
@@ -215,7 +239,9 @@
       "en": "Metapod",
       "he": "מטאפוד"
     },
-    "types": ["bug"],
+    "types": [
+      "bug"
+    ],
     "stats": {
       "hp": 50,
       "attack": 20,
@@ -236,7 +262,10 @@
       "en": "Butterfree",
       "he": "באטרפרי"
     },
-    "types": ["bug", "flying"],
+    "types": [
+      "bug",
+      "flying"
+    ],
     "stats": {
       "hp": 60,
       "attack": 45,
@@ -257,7 +286,10 @@
       "en": "Weedle",
       "he": "וידל"
     },
-    "types": ["bug", "poison"],
+    "types": [
+      "bug",
+      "poison"
+    ],
     "stats": {
       "hp": 40,
       "attack": 35,
@@ -278,7 +310,10 @@
       "en": "Kakuna",
       "he": "קאקונה"
     },
-    "types": ["bug", "poison"],
+    "types": [
+      "bug",
+      "poison"
+    ],
     "stats": {
       "hp": 45,
       "attack": 25,
@@ -299,7 +334,10 @@
       "en": "Beedrill",
       "he": "בידריל"
     },
-    "types": ["bug", "poison"],
+    "types": [
+      "bug",
+      "poison"
+    ],
     "stats": {
       "hp": 65,
       "attack": 90,
@@ -320,7 +358,10 @@
       "en": "Pidgey",
       "he": "פידג'י"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 40,
       "attack": 45,
@@ -341,7 +382,10 @@
       "en": "Pidgeotto",
       "he": "פידג'אוטו"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 63,
       "attack": 60,
@@ -362,7 +406,10 @@
       "en": "Pidgeot",
       "he": "פידג'ט"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 83,
       "attack": 80,
@@ -383,7 +430,9 @@
       "en": "Rattata",
       "he": "ראטאטה"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 30,
       "attack": 56,
@@ -404,7 +453,9 @@
       "en": "Raticate",
       "he": "ראטיקייט"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 55,
       "attack": 81,
@@ -425,7 +476,10 @@
       "en": "Spearow",
       "he": "ספירו"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 40,
       "attack": 60,
@@ -446,7 +500,10 @@
       "en": "Fearow",
       "he": "פירו"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 65,
       "attack": 90,
@@ -467,7 +524,9 @@
       "en": "Ekans",
       "he": "אקנס"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 35,
       "attack": 60,
@@ -488,7 +547,9 @@
       "en": "Arbok",
       "he": "ארבוק"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 60,
       "attack": 95,
@@ -509,7 +570,9 @@
       "en": "Pikachu",
       "he": "פיקאצ'ו"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 35,
       "attack": 55,
@@ -530,7 +593,9 @@
       "en": "Raichu",
       "he": "ראיצ'ו"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 60,
       "attack": 90,
@@ -551,7 +616,9 @@
       "en": "Sandshrew",
       "he": "סנדשרו"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 50,
       "attack": 75,
@@ -572,7 +639,9 @@
       "en": "Sandslash",
       "he": "סנדסלאש"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 75,
       "attack": 100,
@@ -593,7 +662,9 @@
       "en": "Nidoran-f",
       "he": "נידוראן"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 55,
       "attack": 47,
@@ -614,7 +685,9 @@
       "en": "Nidorina",
       "he": "נידורינה"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 70,
       "attack": 62,
@@ -635,7 +708,10 @@
       "en": "Nidoqueen",
       "he": "נידוקווין"
     },
-    "types": ["poison", "ground"],
+    "types": [
+      "poison",
+      "ground"
+    ],
     "stats": {
       "hp": 90,
       "attack": 92,
@@ -656,7 +732,9 @@
       "en": "Nidoran-m",
       "he": "נידוראן"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 46,
       "attack": 57,
@@ -677,7 +755,9 @@
       "en": "Nidorino",
       "he": "נידורינו"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 61,
       "attack": 72,
@@ -698,7 +778,10 @@
       "en": "Nidoking",
       "he": "נידוקינג"
     },
-    "types": ["poison", "ground"],
+    "types": [
+      "poison",
+      "ground"
+    ],
     "stats": {
       "hp": 81,
       "attack": 102,
@@ -719,7 +802,9 @@
       "en": "Clefairy",
       "he": "קלפיירי"
     },
-    "types": ["fairy"],
+    "types": [
+      "fairy"
+    ],
     "stats": {
       "hp": 70,
       "attack": 45,
@@ -740,7 +825,9 @@
       "en": "Clefable",
       "he": "קלפייבל"
     },
-    "types": ["fairy"],
+    "types": [
+      "fairy"
+    ],
     "stats": {
       "hp": 95,
       "attack": 70,
@@ -761,7 +848,9 @@
       "en": "Vulpix",
       "he": "וולפיקס"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 38,
       "attack": 41,
@@ -782,7 +871,9 @@
       "en": "Ninetales",
       "he": "ניינטיילס"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 73,
       "attack": 76,
@@ -803,7 +894,10 @@
       "en": "Jigglypuff",
       "he": "ג'יגליפאף"
     },
-    "types": ["normal", "fairy"],
+    "types": [
+      "normal",
+      "fairy"
+    ],
     "stats": {
       "hp": 115,
       "attack": 45,
@@ -824,7 +918,10 @@
       "en": "Wigglytuff",
       "he": "וויגליטאף"
     },
-    "types": ["normal", "fairy"],
+    "types": [
+      "normal",
+      "fairy"
+    ],
     "stats": {
       "hp": 140,
       "attack": 70,
@@ -845,7 +942,10 @@
       "en": "Zubat",
       "he": "זובאט"
     },
-    "types": ["poison", "flying"],
+    "types": [
+      "poison",
+      "flying"
+    ],
     "stats": {
       "hp": 40,
       "attack": 45,
@@ -866,7 +966,10 @@
       "en": "Golbat",
       "he": "גולבאט"
     },
-    "types": ["poison", "flying"],
+    "types": [
+      "poison",
+      "flying"
+    ],
     "stats": {
       "hp": 75,
       "attack": 80,
@@ -887,7 +990,10 @@
       "en": "Oddish",
       "he": "אודיש"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 45,
       "attack": 50,
@@ -908,7 +1014,10 @@
       "en": "Gloom",
       "he": "גלום"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 60,
       "attack": 65,
@@ -929,7 +1038,10 @@
       "en": "Vileplume",
       "he": "ויילפלום"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 75,
       "attack": 80,
@@ -950,7 +1062,10 @@
       "en": "Paras",
       "he": "פאראס"
     },
-    "types": ["bug", "grass"],
+    "types": [
+      "bug",
+      "grass"
+    ],
     "stats": {
       "hp": 35,
       "attack": 70,
@@ -971,7 +1086,10 @@
       "en": "Parasect",
       "he": "פאראסקט"
     },
-    "types": ["bug", "grass"],
+    "types": [
+      "bug",
+      "grass"
+    ],
     "stats": {
       "hp": 60,
       "attack": 95,
@@ -992,7 +1110,10 @@
       "en": "Venonat",
       "he": "ונונאט"
     },
-    "types": ["bug", "poison"],
+    "types": [
+      "bug",
+      "poison"
+    ],
     "stats": {
       "hp": 60,
       "attack": 55,
@@ -1013,7 +1134,10 @@
       "en": "Venomoth",
       "he": "ונומות'"
     },
-    "types": ["bug", "poison"],
+    "types": [
+      "bug",
+      "poison"
+    ],
     "stats": {
       "hp": 70,
       "attack": 65,
@@ -1034,7 +1158,9 @@
       "en": "Diglett",
       "he": "דיגלט"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 10,
       "attack": 55,
@@ -1055,7 +1181,9 @@
       "en": "Dugtrio",
       "he": "דאגטריו"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 35,
       "attack": 100,
@@ -1076,7 +1204,9 @@
       "en": "Meowth",
       "he": "מיאות'"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 40,
       "attack": 45,
@@ -1097,7 +1227,9 @@
       "en": "Persian",
       "he": "פרשיאן"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 65,
       "attack": 70,
@@ -1118,7 +1250,9 @@
       "en": "Psyduck",
       "he": "פסיידאק"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 50,
       "attack": 52,
@@ -1139,7 +1273,9 @@
       "en": "Golduck",
       "he": "גולדאק"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 80,
       "attack": 82,
@@ -1160,7 +1296,9 @@
       "en": "Mankey",
       "he": "מאנקי"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 40,
       "attack": 80,
@@ -1181,7 +1319,9 @@
       "en": "Primeape",
       "he": "פריימייפ"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 65,
       "attack": 105,
@@ -1202,7 +1342,9 @@
       "en": "Growlithe",
       "he": "גראוליט'"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 55,
       "attack": 70,
@@ -1223,7 +1365,9 @@
       "en": "Arcanine",
       "he": "ארקניין"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 90,
       "attack": 110,
@@ -1244,7 +1388,9 @@
       "en": "Poliwag",
       "he": "פוליוואג"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 40,
       "attack": 50,
@@ -1265,7 +1411,9 @@
       "en": "Poliwhirl",
       "he": "פוליווירל"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 65,
       "attack": 65,
@@ -1286,7 +1434,10 @@
       "en": "Poliwrath",
       "he": "פוליראט'"
     },
-    "types": ["water", "fighting"],
+    "types": [
+      "water",
+      "fighting"
+    ],
     "stats": {
       "hp": 90,
       "attack": 95,
@@ -1307,7 +1458,9 @@
       "en": "Abra",
       "he": "אברה"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 25,
       "attack": 20,
@@ -1328,7 +1481,9 @@
       "en": "Kadabra",
       "he": "קדברה"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 40,
       "attack": 35,
@@ -1349,7 +1504,9 @@
       "en": "Alakazam",
       "he": "אלקזם"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 55,
       "attack": 50,
@@ -1370,7 +1527,9 @@
       "en": "Machop",
       "he": "מאצ'ופ"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 70,
       "attack": 80,
@@ -1391,7 +1550,9 @@
       "en": "Machoke",
       "he": "מאצ'וק"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 80,
       "attack": 100,
@@ -1412,7 +1573,9 @@
       "en": "Machamp",
       "he": "מאצ'אמפ"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 90,
       "attack": 130,
@@ -1433,7 +1596,10 @@
       "en": "Bellsprout",
       "he": "בלספראוט"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 50,
       "attack": 75,
@@ -1454,7 +1620,10 @@
       "en": "Weepinbell",
       "he": "וויפינבל"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 65,
       "attack": 90,
@@ -1475,7 +1644,10 @@
       "en": "Victreebel",
       "he": "ויקטריבל"
     },
-    "types": ["grass", "poison"],
+    "types": [
+      "grass",
+      "poison"
+    ],
     "stats": {
       "hp": 80,
       "attack": 105,
@@ -1496,7 +1668,10 @@
       "en": "Tentacool",
       "he": "טנטאקול"
     },
-    "types": ["water", "poison"],
+    "types": [
+      "water",
+      "poison"
+    ],
     "stats": {
       "hp": 40,
       "attack": 40,
@@ -1517,7 +1692,10 @@
       "en": "Tentacruel",
       "he": "טנטאקרואל"
     },
-    "types": ["water", "poison"],
+    "types": [
+      "water",
+      "poison"
+    ],
     "stats": {
       "hp": 80,
       "attack": 70,
@@ -1538,7 +1716,10 @@
       "en": "Geodude",
       "he": "ג'יאודוד"
     },
-    "types": ["rock", "ground"],
+    "types": [
+      "rock",
+      "ground"
+    ],
     "stats": {
       "hp": 40,
       "attack": 80,
@@ -1559,7 +1740,10 @@
       "en": "Graveler",
       "he": "גרוולר"
     },
-    "types": ["rock", "ground"],
+    "types": [
+      "rock",
+      "ground"
+    ],
     "stats": {
       "hp": 55,
       "attack": 95,
@@ -1580,7 +1764,10 @@
       "en": "Golem",
       "he": "גולם"
     },
-    "types": ["rock", "ground"],
+    "types": [
+      "rock",
+      "ground"
+    ],
     "stats": {
       "hp": 80,
       "attack": 120,
@@ -1601,7 +1788,9 @@
       "en": "Ponyta",
       "he": "פוניטה"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 50,
       "attack": 85,
@@ -1622,7 +1811,9 @@
       "en": "Rapidash",
       "he": "רפידאש"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 65,
       "attack": 100,
@@ -1643,7 +1834,10 @@
       "en": "Slowpoke",
       "he": "סלופוק"
     },
-    "types": ["water", "psychic"],
+    "types": [
+      "water",
+      "psychic"
+    ],
     "stats": {
       "hp": 90,
       "attack": 65,
@@ -1664,7 +1858,10 @@
       "en": "Slowbro",
       "he": "סלוברו"
     },
-    "types": ["water", "psychic"],
+    "types": [
+      "water",
+      "psychic"
+    ],
     "stats": {
       "hp": 95,
       "attack": 75,
@@ -1685,7 +1882,10 @@
       "en": "Magnemite",
       "he": "מגנמייט"
     },
-    "types": ["electric", "steel"],
+    "types": [
+      "electric",
+      "steel"
+    ],
     "stats": {
       "hp": 25,
       "attack": 35,
@@ -1706,7 +1906,10 @@
       "en": "Magneton",
       "he": "מגנטון"
     },
-    "types": ["electric", "steel"],
+    "types": [
+      "electric",
+      "steel"
+    ],
     "stats": {
       "hp": 50,
       "attack": 60,
@@ -1727,7 +1930,10 @@
       "en": "Farfetchd",
       "he": "פארפצ'ד"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 52,
       "attack": 90,
@@ -1748,7 +1954,10 @@
       "en": "Doduo",
       "he": "דודואו"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 35,
       "attack": 85,
@@ -1769,7 +1978,10 @@
       "en": "Dodrio",
       "he": "דודריו"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 60,
       "attack": 110,
@@ -1790,7 +2002,9 @@
       "en": "Seel",
       "he": "סיל"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 65,
       "attack": 45,
@@ -1811,7 +2025,10 @@
       "en": "Dewgong",
       "he": "דיוגונג"
     },
-    "types": ["water", "ice"],
+    "types": [
+      "water",
+      "ice"
+    ],
     "stats": {
       "hp": 90,
       "attack": 70,
@@ -1832,7 +2049,9 @@
       "en": "Grimer",
       "he": "גריימר"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 80,
       "attack": 80,
@@ -1853,7 +2072,9 @@
       "en": "Muk",
       "he": "מאק"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 105,
       "attack": 105,
@@ -1874,7 +2095,9 @@
       "en": "Shellder",
       "he": "שלדר"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 30,
       "attack": 65,
@@ -1895,7 +2118,10 @@
       "en": "Cloyster",
       "he": "קלויסטר"
     },
-    "types": ["water", "ice"],
+    "types": [
+      "water",
+      "ice"
+    ],
     "stats": {
       "hp": 50,
       "attack": 95,
@@ -1916,7 +2142,10 @@
       "en": "Gastly",
       "he": "גאסטלי"
     },
-    "types": ["ghost", "poison"],
+    "types": [
+      "ghost",
+      "poison"
+    ],
     "stats": {
       "hp": 30,
       "attack": 35,
@@ -1937,7 +2166,10 @@
       "en": "Haunter",
       "he": "האנטר"
     },
-    "types": ["ghost", "poison"],
+    "types": [
+      "ghost",
+      "poison"
+    ],
     "stats": {
       "hp": 45,
       "attack": 50,
@@ -1958,7 +2190,10 @@
       "en": "Gengar",
       "he": "גנגאר"
     },
-    "types": ["ghost", "poison"],
+    "types": [
+      "ghost",
+      "poison"
+    ],
     "stats": {
       "hp": 60,
       "attack": 65,
@@ -1979,7 +2214,10 @@
       "en": "Onix",
       "he": "אוניקס"
     },
-    "types": ["rock", "ground"],
+    "types": [
+      "rock",
+      "ground"
+    ],
     "stats": {
       "hp": 35,
       "attack": 45,
@@ -2000,7 +2238,9 @@
       "en": "Drowzee",
       "he": "דראוזי"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 60,
       "attack": 48,
@@ -2021,7 +2261,9 @@
       "en": "Hypno",
       "he": "היפנו"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 85,
       "attack": 73,
@@ -2042,7 +2284,9 @@
       "en": "Krabby",
       "he": "קראבי"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 30,
       "attack": 105,
@@ -2063,7 +2307,9 @@
       "en": "Kingler",
       "he": "קינגלר"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 55,
       "attack": 130,
@@ -2084,7 +2330,9 @@
       "en": "Voltorb",
       "he": "וולטורב"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 40,
       "attack": 30,
@@ -2105,7 +2353,9 @@
       "en": "Electrode",
       "he": "אלקטרוד"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 60,
       "attack": 50,
@@ -2126,7 +2376,10 @@
       "en": "Exeggcute",
       "he": "אקסגקיוט"
     },
-    "types": ["grass", "psychic"],
+    "types": [
+      "grass",
+      "psychic"
+    ],
     "stats": {
       "hp": 60,
       "attack": 40,
@@ -2147,7 +2400,10 @@
       "en": "Exeggutor",
       "he": "אקסגיוטור"
     },
-    "types": ["grass", "psychic"],
+    "types": [
+      "grass",
+      "psychic"
+    ],
     "stats": {
       "hp": 95,
       "attack": 95,
@@ -2168,7 +2424,9 @@
       "en": "Cubone",
       "he": "קיובון"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 50,
       "attack": 50,
@@ -2189,7 +2447,9 @@
       "en": "Marowak",
       "he": "מארוואק"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 60,
       "attack": 80,
@@ -2210,7 +2470,9 @@
       "en": "Hitmonlee",
       "he": "היטמונלי"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 50,
       "attack": 120,
@@ -2231,7 +2493,9 @@
       "en": "Hitmonchan",
       "he": "היטמונצ'אן"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 50,
       "attack": 105,
@@ -2252,7 +2516,9 @@
       "en": "Lickitung",
       "he": "ליקיטאנג"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 90,
       "attack": 55,
@@ -2273,7 +2539,9 @@
       "en": "Koffing",
       "he": "קופינג"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 40,
       "attack": 65,
@@ -2294,7 +2562,9 @@
       "en": "Weezing",
       "he": "וויזינג"
     },
-    "types": ["poison"],
+    "types": [
+      "poison"
+    ],
     "stats": {
       "hp": 65,
       "attack": 90,
@@ -2315,7 +2585,10 @@
       "en": "Rhyhorn",
       "he": "ריהורן"
     },
-    "types": ["ground", "rock"],
+    "types": [
+      "ground",
+      "rock"
+    ],
     "stats": {
       "hp": 80,
       "attack": 85,
@@ -2336,7 +2609,10 @@
       "en": "Rhydon",
       "he": "ריידון"
     },
-    "types": ["ground", "rock"],
+    "types": [
+      "ground",
+      "rock"
+    ],
     "stats": {
       "hp": 105,
       "attack": 130,
@@ -2357,7 +2633,9 @@
       "en": "Chansey",
       "he": "צ'נסי"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 250,
       "attack": 5,
@@ -2378,7 +2656,9 @@
       "en": "Tangela",
       "he": "טנג'לה"
     },
-    "types": ["grass"],
+    "types": [
+      "grass"
+    ],
     "stats": {
       "hp": 65,
       "attack": 55,
@@ -2399,7 +2679,9 @@
       "en": "Kangaskhan",
       "he": "קנגסקאן"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 105,
       "attack": 95,
@@ -2420,7 +2702,9 @@
       "en": "Horsea",
       "he": "הורסי"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 30,
       "attack": 40,
@@ -2441,7 +2725,9 @@
       "en": "Seadra",
       "he": "סידרה"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 55,
       "attack": 65,
@@ -2462,7 +2748,9 @@
       "en": "Goldeen",
       "he": "גולדין"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 45,
       "attack": 67,
@@ -2483,7 +2771,9 @@
       "en": "Seaking",
       "he": "סיקינג"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 80,
       "attack": 92,
@@ -2504,7 +2794,9 @@
       "en": "Staryu",
       "he": "סטארו"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 30,
       "attack": 45,
@@ -2525,7 +2817,10 @@
       "en": "Starmie",
       "he": "סטארמי"
     },
-    "types": ["water", "psychic"],
+    "types": [
+      "water",
+      "psychic"
+    ],
     "stats": {
       "hp": 60,
       "attack": 75,
@@ -2546,7 +2841,10 @@
       "en": "Mr-mime",
       "he": "מר מיים"
     },
-    "types": ["psychic", "fairy"],
+    "types": [
+      "psychic",
+      "fairy"
+    ],
     "stats": {
       "hp": 40,
       "attack": 45,
@@ -2567,7 +2865,10 @@
       "en": "Scyther",
       "he": "סייט'ר"
     },
-    "types": ["bug", "flying"],
+    "types": [
+      "bug",
+      "flying"
+    ],
     "stats": {
       "hp": 70,
       "attack": 110,
@@ -2588,7 +2889,10 @@
       "en": "Jynx",
       "he": "ג'ינקס"
     },
-    "types": ["ice", "psychic"],
+    "types": [
+      "ice",
+      "psychic"
+    ],
     "stats": {
       "hp": 65,
       "attack": 50,
@@ -2609,7 +2913,9 @@
       "en": "Electabuzz",
       "he": "אלקטבאז"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 65,
       "attack": 83,
@@ -2630,7 +2936,9 @@
       "en": "Magmar",
       "he": "מגמר"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 65,
       "attack": 95,
@@ -2651,7 +2959,9 @@
       "en": "Pinsir",
       "he": "פינסיר"
     },
-    "types": ["bug"],
+    "types": [
+      "bug"
+    ],
     "stats": {
       "hp": 65,
       "attack": 125,
@@ -2672,7 +2982,9 @@
       "en": "Tauros",
       "he": "טאורוס"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 75,
       "attack": 100,
@@ -2693,7 +3005,9 @@
       "en": "Magikarp",
       "he": "מג'יקארפ"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 20,
       "attack": 10,
@@ -2714,7 +3028,10 @@
       "en": "Gyarados",
       "he": "גיאראדוס"
     },
-    "types": ["water", "flying"],
+    "types": [
+      "water",
+      "flying"
+    ],
     "stats": {
       "hp": 95,
       "attack": 125,
@@ -2735,7 +3052,10 @@
       "en": "Lapras",
       "he": "לפראס"
     },
-    "types": ["water", "ice"],
+    "types": [
+      "water",
+      "ice"
+    ],
     "stats": {
       "hp": 130,
       "attack": 85,
@@ -2756,7 +3076,9 @@
       "en": "Ditto",
       "he": "דיטו"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 48,
       "attack": 48,
@@ -2777,7 +3099,9 @@
       "en": "Eevee",
       "he": "איווי"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 55,
       "attack": 55,
@@ -2798,7 +3122,9 @@
       "en": "Vaporeon",
       "he": "ואפוריאון"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 130,
       "attack": 65,
@@ -2819,7 +3145,9 @@
       "en": "Jolteon",
       "he": "ג'ולטיאון"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 65,
       "attack": 65,
@@ -2840,7 +3168,9 @@
       "en": "Flareon",
       "he": "פלאריאון"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 65,
       "attack": 130,
@@ -2861,7 +3191,9 @@
       "en": "Porygon",
       "he": "פוריגון"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 65,
       "attack": 60,
@@ -2882,7 +3214,10 @@
       "en": "Omanyte",
       "he": "אומנייט"
     },
-    "types": ["rock", "water"],
+    "types": [
+      "rock",
+      "water"
+    ],
     "stats": {
       "hp": 35,
       "attack": 40,
@@ -2903,7 +3238,10 @@
       "en": "Omastar",
       "he": "אומסטאר"
     },
-    "types": ["rock", "water"],
+    "types": [
+      "rock",
+      "water"
+    ],
     "stats": {
       "hp": 70,
       "attack": 60,
@@ -2924,7 +3262,10 @@
       "en": "Kabuto",
       "he": "קבוטו"
     },
-    "types": ["rock", "water"],
+    "types": [
+      "rock",
+      "water"
+    ],
     "stats": {
       "hp": 30,
       "attack": 80,
@@ -2945,7 +3286,10 @@
       "en": "Kabutops",
       "he": "קבוטופס"
     },
-    "types": ["rock", "water"],
+    "types": [
+      "rock",
+      "water"
+    ],
     "stats": {
       "hp": 60,
       "attack": 115,
@@ -2966,7 +3310,10 @@
       "en": "Aerodactyl",
       "he": "אירודקטיל"
     },
-    "types": ["rock", "flying"],
+    "types": [
+      "rock",
+      "flying"
+    ],
     "stats": {
       "hp": 80,
       "attack": 105,
@@ -2987,7 +3334,9 @@
       "en": "Snorlax",
       "he": "סנורלקס"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 160,
       "attack": 110,
@@ -3008,7 +3357,10 @@
       "en": "Articuno",
       "he": "ארטיקונו"
     },
-    "types": ["ice", "flying"],
+    "types": [
+      "ice",
+      "flying"
+    ],
     "stats": {
       "hp": 90,
       "attack": 85,
@@ -3029,7 +3381,10 @@
       "en": "Zapdos",
       "he": "זאפדוס"
     },
-    "types": ["electric", "flying"],
+    "types": [
+      "electric",
+      "flying"
+    ],
     "stats": {
       "hp": 90,
       "attack": 90,
@@ -3050,7 +3405,10 @@
       "en": "Moltres",
       "he": "מולטרס"
     },
-    "types": ["fire", "flying"],
+    "types": [
+      "fire",
+      "flying"
+    ],
     "stats": {
       "hp": 90,
       "attack": 100,
@@ -3071,7 +3429,9 @@
       "en": "Dratini",
       "he": "דרטיני"
     },
-    "types": ["dragon"],
+    "types": [
+      "dragon"
+    ],
     "stats": {
       "hp": 41,
       "attack": 64,
@@ -3092,7 +3452,9 @@
       "en": "Dragonair",
       "he": "דרגונאייר"
     },
-    "types": ["dragon"],
+    "types": [
+      "dragon"
+    ],
     "stats": {
       "hp": 61,
       "attack": 84,
@@ -3113,7 +3475,10 @@
       "en": "Dragonite",
       "he": "דרגונייט"
     },
-    "types": ["dragon", "flying"],
+    "types": [
+      "dragon",
+      "flying"
+    ],
     "stats": {
       "hp": 91,
       "attack": 134,
@@ -3134,7 +3499,9 @@
       "en": "Mewtwo",
       "he": "מיוטו"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 106,
       "attack": 110,
@@ -3155,7 +3522,9 @@
       "en": "Mew",
       "he": "מיו"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 100,
       "attack": 100,
@@ -3176,7 +3545,9 @@
       "en": "Chikorita",
       "he": "צ'יקוריטה"
     },
-    "types": ["grass"],
+    "types": [
+      "grass"
+    ],
     "stats": {
       "hp": 45,
       "attack": 49,
@@ -3197,7 +3568,9 @@
       "en": "Bayleef",
       "he": "ביילף"
     },
-    "types": ["grass"],
+    "types": [
+      "grass"
+    ],
     "stats": {
       "hp": 60,
       "attack": 62,
@@ -3218,7 +3591,9 @@
       "en": "Meganium",
       "he": "מגניום"
     },
-    "types": ["grass"],
+    "types": [
+      "grass"
+    ],
     "stats": {
       "hp": 80,
       "attack": 82,
@@ -3239,7 +3614,9 @@
       "en": "Cyndaquil",
       "he": "סינדקוויל"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 39,
       "attack": 52,
@@ -3260,7 +3637,9 @@
       "en": "Quilava",
       "he": "קווילאווה"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 58,
       "attack": 64,
@@ -3281,7 +3660,9 @@
       "en": "Typhlosion",
       "he": "טייפלוז'ן"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 78,
       "attack": 84,
@@ -3302,7 +3683,9 @@
       "en": "Totodile",
       "he": "טוטודייל"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 50,
       "attack": 65,
@@ -3323,7 +3706,9 @@
       "en": "Croconaw",
       "he": "קרוקונאו"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 65,
       "attack": 80,
@@ -3344,7 +3729,9 @@
       "en": "Feraligatr",
       "he": "פראליגייטר"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 85,
       "attack": 105,
@@ -3365,7 +3752,9 @@
       "en": "Sentret",
       "he": "סנטרט"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 35,
       "attack": 46,
@@ -3386,7 +3775,9 @@
       "en": "Furret",
       "he": "פארט"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 85,
       "attack": 76,
@@ -3407,7 +3798,10 @@
       "en": "Hoothoot",
       "he": "הותהוט"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 60,
       "attack": 30,
@@ -3428,7 +3822,10 @@
       "en": "Noctowl",
       "he": "נוקטאול"
     },
-    "types": ["normal", "flying"],
+    "types": [
+      "normal",
+      "flying"
+    ],
     "stats": {
       "hp": 100,
       "attack": 50,
@@ -3449,7 +3846,10 @@
       "en": "Ledyba",
       "he": "לדיבה"
     },
-    "types": ["bug", "flying"],
+    "types": [
+      "bug",
+      "flying"
+    ],
     "stats": {
       "hp": 40,
       "attack": 20,
@@ -3470,7 +3870,10 @@
       "en": "Ledian",
       "he": "לדיאן"
     },
-    "types": ["bug", "flying"],
+    "types": [
+      "bug",
+      "flying"
+    ],
     "stats": {
       "hp": 55,
       "attack": 35,
@@ -3491,7 +3894,10 @@
       "en": "Spinarak",
       "he": "ספינארק"
     },
-    "types": ["bug", "poison"],
+    "types": [
+      "bug",
+      "poison"
+    ],
     "stats": {
       "hp": 40,
       "attack": 60,
@@ -3512,7 +3918,10 @@
       "en": "Ariados",
       "he": "אריאדוס"
     },
-    "types": ["bug", "poison"],
+    "types": [
+      "bug",
+      "poison"
+    ],
     "stats": {
       "hp": 70,
       "attack": 90,
@@ -3533,7 +3942,10 @@
       "en": "Crobat",
       "he": "קרובאט"
     },
-    "types": ["poison", "flying"],
+    "types": [
+      "poison",
+      "flying"
+    ],
     "stats": {
       "hp": 85,
       "attack": 90,
@@ -3554,7 +3966,10 @@
       "en": "Chinchou",
       "he": "צ'ינצ'או"
     },
-    "types": ["water", "electric"],
+    "types": [
+      "water",
+      "electric"
+    ],
     "stats": {
       "hp": 75,
       "attack": 38,
@@ -3575,7 +3990,10 @@
       "en": "Lanturn",
       "he": "לנטורן"
     },
-    "types": ["water", "electric"],
+    "types": [
+      "water",
+      "electric"
+    ],
     "stats": {
       "hp": 125,
       "attack": 58,
@@ -3596,7 +4014,9 @@
       "en": "Pichu",
       "he": "פיצ'ו"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 20,
       "attack": 40,
@@ -3617,7 +4037,9 @@
       "en": "Cleffa",
       "he": "קלפה"
     },
-    "types": ["fairy"],
+    "types": [
+      "fairy"
+    ],
     "stats": {
       "hp": 50,
       "attack": 25,
@@ -3638,7 +4060,10 @@
       "en": "Igglybuff",
       "he": "איגליבאף"
     },
-    "types": ["normal", "fairy"],
+    "types": [
+      "normal",
+      "fairy"
+    ],
     "stats": {
       "hp": 90,
       "attack": 30,
@@ -3659,7 +4084,9 @@
       "en": "Togepi",
       "he": "טוגפי"
     },
-    "types": ["fairy"],
+    "types": [
+      "fairy"
+    ],
     "stats": {
       "hp": 35,
       "attack": 20,
@@ -3680,7 +4107,10 @@
       "en": "Togetic",
       "he": "טוגטיק"
     },
-    "types": ["fairy", "flying"],
+    "types": [
+      "fairy",
+      "flying"
+    ],
     "stats": {
       "hp": 55,
       "attack": 40,
@@ -3701,7 +4131,10 @@
       "en": "Natu",
       "he": "נאטו"
     },
-    "types": ["psychic", "flying"],
+    "types": [
+      "psychic",
+      "flying"
+    ],
     "stats": {
       "hp": 40,
       "attack": 50,
@@ -3722,7 +4155,10 @@
       "en": "Xatu",
       "he": "זאטו"
     },
-    "types": ["psychic", "flying"],
+    "types": [
+      "psychic",
+      "flying"
+    ],
     "stats": {
       "hp": 65,
       "attack": 75,
@@ -3743,7 +4179,9 @@
       "en": "Mareep",
       "he": "מריפ"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 55,
       "attack": 40,
@@ -3764,7 +4202,9 @@
       "en": "Flaaffy",
       "he": "פלאפי"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 70,
       "attack": 55,
@@ -3785,7 +4225,9 @@
       "en": "Ampharos",
       "he": "אמפארוס"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 90,
       "attack": 75,
@@ -3806,7 +4248,9 @@
       "en": "Bellossom",
       "he": "בלוסום"
     },
-    "types": ["grass"],
+    "types": [
+      "grass"
+    ],
     "stats": {
       "hp": 75,
       "attack": 80,
@@ -3827,7 +4271,10 @@
       "en": "Marill",
       "he": "מריל"
     },
-    "types": ["water", "fairy"],
+    "types": [
+      "water",
+      "fairy"
+    ],
     "stats": {
       "hp": 70,
       "attack": 20,
@@ -3848,7 +4295,10 @@
       "en": "Azumarill",
       "he": "אזומריל"
     },
-    "types": ["water", "fairy"],
+    "types": [
+      "water",
+      "fairy"
+    ],
     "stats": {
       "hp": 100,
       "attack": 50,
@@ -3869,7 +4319,9 @@
       "en": "Sudowoodo",
       "he": "סודווודו"
     },
-    "types": ["rock"],
+    "types": [
+      "rock"
+    ],
     "stats": {
       "hp": 70,
       "attack": 100,
@@ -3890,7 +4342,9 @@
       "en": "Politoed",
       "he": "פוליטואד"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 90,
       "attack": 75,
@@ -3911,7 +4365,10 @@
       "en": "Hoppip",
       "he": "הופיפ"
     },
-    "types": ["grass", "flying"],
+    "types": [
+      "grass",
+      "flying"
+    ],
     "stats": {
       "hp": 35,
       "attack": 35,
@@ -3932,7 +4389,10 @@
       "en": "Skiploom",
       "he": "סקיפלום"
     },
-    "types": ["grass", "flying"],
+    "types": [
+      "grass",
+      "flying"
+    ],
     "stats": {
       "hp": 55,
       "attack": 45,
@@ -3953,7 +4413,10 @@
       "en": "Jumpluff",
       "he": "ג'אמפלאף"
     },
-    "types": ["grass", "flying"],
+    "types": [
+      "grass",
+      "flying"
+    ],
     "stats": {
       "hp": 75,
       "attack": 55,
@@ -3974,7 +4437,9 @@
       "en": "Aipom",
       "he": "אייפום"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 55,
       "attack": 70,
@@ -3995,7 +4460,9 @@
       "en": "Sunkern",
       "he": "סאנקרן"
     },
-    "types": ["grass"],
+    "types": [
+      "grass"
+    ],
     "stats": {
       "hp": 30,
       "attack": 30,
@@ -4016,7 +4483,9 @@
       "en": "Sunflora",
       "he": "סנפלורה"
     },
-    "types": ["grass"],
+    "types": [
+      "grass"
+    ],
     "stats": {
       "hp": 75,
       "attack": 75,
@@ -4037,7 +4506,10 @@
       "en": "Yanma",
       "he": "יאנמה"
     },
-    "types": ["bug", "flying"],
+    "types": [
+      "bug",
+      "flying"
+    ],
     "stats": {
       "hp": 65,
       "attack": 65,
@@ -4058,7 +4530,10 @@
       "en": "Wooper",
       "he": "ווופר"
     },
-    "types": ["water", "ground"],
+    "types": [
+      "water",
+      "ground"
+    ],
     "stats": {
       "hp": 55,
       "attack": 45,
@@ -4079,7 +4554,10 @@
       "en": "Quagsire",
       "he": "קוואגסייר"
     },
-    "types": ["water", "ground"],
+    "types": [
+      "water",
+      "ground"
+    ],
     "stats": {
       "hp": 95,
       "attack": 85,
@@ -4100,7 +4578,9 @@
       "en": "Espeon",
       "he": "אספיאון"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 65,
       "attack": 65,
@@ -4121,7 +4601,9 @@
       "en": "Umbreon",
       "he": "אמבריאון"
     },
-    "types": ["dark"],
+    "types": [
+      "dark"
+    ],
     "stats": {
       "hp": 95,
       "attack": 65,
@@ -4142,7 +4624,10 @@
       "en": "Murkrow",
       "he": "מרקרו"
     },
-    "types": ["dark", "flying"],
+    "types": [
+      "dark",
+      "flying"
+    ],
     "stats": {
       "hp": 60,
       "attack": 85,
@@ -4163,7 +4648,10 @@
       "en": "Slowking",
       "he": "סלוקינג"
     },
-    "types": ["water", "psychic"],
+    "types": [
+      "water",
+      "psychic"
+    ],
     "stats": {
       "hp": 95,
       "attack": 75,
@@ -4184,7 +4672,9 @@
       "en": "Misdreavus",
       "he": "מיסדרוס"
     },
-    "types": ["ghost"],
+    "types": [
+      "ghost"
+    ],
     "stats": {
       "hp": 60,
       "attack": 60,
@@ -4205,7 +4695,9 @@
       "en": "Unown",
       "he": "אנואון"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 48,
       "attack": 72,
@@ -4226,7 +4718,9 @@
       "en": "Wobbuffet",
       "he": "ווובאפט"
     },
-    "types": ["psychic"],
+    "types": [
+      "psychic"
+    ],
     "stats": {
       "hp": 190,
       "attack": 33,
@@ -4247,7 +4741,10 @@
       "en": "Girafarig",
       "he": "ג'יראפריג"
     },
-    "types": ["normal", "psychic"],
+    "types": [
+      "normal",
+      "psychic"
+    ],
     "stats": {
       "hp": 70,
       "attack": 80,
@@ -4268,7 +4765,9 @@
       "en": "Pineco",
       "he": "פינקו"
     },
-    "types": ["bug"],
+    "types": [
+      "bug"
+    ],
     "stats": {
       "hp": 50,
       "attack": 65,
@@ -4289,7 +4788,10 @@
       "en": "Forretress",
       "he": "פורטרס"
     },
-    "types": ["bug", "steel"],
+    "types": [
+      "bug",
+      "steel"
+    ],
     "stats": {
       "hp": 75,
       "attack": 90,
@@ -4310,7 +4812,9 @@
       "en": "Dunsparce",
       "he": "דאנספארס"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 100,
       "attack": 70,
@@ -4331,7 +4835,10 @@
       "en": "Gligar",
       "he": "גלייגר"
     },
-    "types": ["ground", "flying"],
+    "types": [
+      "ground",
+      "flying"
+    ],
     "stats": {
       "hp": 65,
       "attack": 75,
@@ -4352,7 +4859,10 @@
       "en": "Steelix",
       "he": "סטיליקס"
     },
-    "types": ["steel", "ground"],
+    "types": [
+      "steel",
+      "ground"
+    ],
     "stats": {
       "hp": 75,
       "attack": 85,
@@ -4373,7 +4883,9 @@
       "en": "Snubbull",
       "he": "סנאבול"
     },
-    "types": ["fairy"],
+    "types": [
+      "fairy"
+    ],
     "stats": {
       "hp": 60,
       "attack": 80,
@@ -4394,7 +4906,9 @@
       "en": "Granbull",
       "he": "גרנבול"
     },
-    "types": ["fairy"],
+    "types": [
+      "fairy"
+    ],
     "stats": {
       "hp": 90,
       "attack": 120,
@@ -4415,7 +4929,10 @@
       "en": "Qwilfish",
       "he": "קווילפיש"
     },
-    "types": ["water", "poison"],
+    "types": [
+      "water",
+      "poison"
+    ],
     "stats": {
       "hp": 65,
       "attack": 95,
@@ -4436,7 +4953,10 @@
       "en": "Scizor",
       "he": "סיזור"
     },
-    "types": ["bug", "steel"],
+    "types": [
+      "bug",
+      "steel"
+    ],
     "stats": {
       "hp": 70,
       "attack": 130,
@@ -4457,7 +4977,10 @@
       "en": "Shuckle",
       "he": "שאקל"
     },
-    "types": ["bug", "rock"],
+    "types": [
+      "bug",
+      "rock"
+    ],
     "stats": {
       "hp": 20,
       "attack": 10,
@@ -4478,7 +5001,10 @@
       "en": "Heracross",
       "he": "הראקרוס"
     },
-    "types": ["bug", "fighting"],
+    "types": [
+      "bug",
+      "fighting"
+    ],
     "stats": {
       "hp": 80,
       "attack": 125,
@@ -4499,7 +5025,10 @@
       "en": "Sneasel",
       "he": "סניזל"
     },
-    "types": ["dark", "ice"],
+    "types": [
+      "dark",
+      "ice"
+    ],
     "stats": {
       "hp": 55,
       "attack": 95,
@@ -4520,7 +5049,9 @@
       "en": "Teddiursa",
       "he": "טדיאורסה"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 60,
       "attack": 80,
@@ -4541,7 +5072,9 @@
       "en": "Ursaring",
       "he": "אורסרינג"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 90,
       "attack": 130,
@@ -4562,7 +5095,9 @@
       "en": "Slugma",
       "he": "סלאגמה"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 40,
       "attack": 40,
@@ -4583,7 +5118,10 @@
       "en": "Magcargo",
       "he": "מגקארגו"
     },
-    "types": ["fire", "rock"],
+    "types": [
+      "fire",
+      "rock"
+    ],
     "stats": {
       "hp": 60,
       "attack": 50,
@@ -4604,7 +5142,10 @@
       "en": "Swinub",
       "he": "סווינאב"
     },
-    "types": ["ice", "ground"],
+    "types": [
+      "ice",
+      "ground"
+    ],
     "stats": {
       "hp": 50,
       "attack": 50,
@@ -4625,7 +5166,10 @@
       "en": "Piloswine",
       "he": "פילוסוויין"
     },
-    "types": ["ice", "ground"],
+    "types": [
+      "ice",
+      "ground"
+    ],
     "stats": {
       "hp": 100,
       "attack": 100,
@@ -4646,7 +5190,10 @@
       "en": "Corsola",
       "he": "קורסולה"
     },
-    "types": ["water", "rock"],
+    "types": [
+      "water",
+      "rock"
+    ],
     "stats": {
       "hp": 65,
       "attack": 55,
@@ -4667,7 +5214,9 @@
       "en": "Remoraid",
       "he": "רמוריד"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 35,
       "attack": 65,
@@ -4688,7 +5237,9 @@
       "en": "Octillery",
       "he": "אוקטילרי"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 75,
       "attack": 105,
@@ -4709,7 +5260,10 @@
       "en": "Delibird",
       "he": "דליבירד"
     },
-    "types": ["ice", "flying"],
+    "types": [
+      "ice",
+      "flying"
+    ],
     "stats": {
       "hp": 45,
       "attack": 55,
@@ -4730,7 +5284,10 @@
       "en": "Mantine",
       "he": "מנטיין"
     },
-    "types": ["water", "flying"],
+    "types": [
+      "water",
+      "flying"
+    ],
     "stats": {
       "hp": 85,
       "attack": 40,
@@ -4751,7 +5308,10 @@
       "en": "Skarmory",
       "he": "סקארמורי"
     },
-    "types": ["steel", "flying"],
+    "types": [
+      "steel",
+      "flying"
+    ],
     "stats": {
       "hp": 65,
       "attack": 80,
@@ -4772,7 +5332,10 @@
       "en": "Houndour",
       "he": "האונדור"
     },
-    "types": ["dark", "fire"],
+    "types": [
+      "dark",
+      "fire"
+    ],
     "stats": {
       "hp": 45,
       "attack": 60,
@@ -4793,7 +5356,10 @@
       "en": "Houndoom",
       "he": "האונדום"
     },
-    "types": ["dark", "fire"],
+    "types": [
+      "dark",
+      "fire"
+    ],
     "stats": {
       "hp": 75,
       "attack": 90,
@@ -4814,7 +5380,10 @@
       "en": "Kingdra",
       "he": "קינגדרה"
     },
-    "types": ["water", "dragon"],
+    "types": [
+      "water",
+      "dragon"
+    ],
     "stats": {
       "hp": 75,
       "attack": 95,
@@ -4835,7 +5404,9 @@
       "en": "Phanpy",
       "he": "פנפי"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 90,
       "attack": 60,
@@ -4856,7 +5427,9 @@
       "en": "Donphan",
       "he": "דונפן"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 90,
       "attack": 120,
@@ -4877,7 +5450,9 @@
       "en": "Porygon2",
       "he": "פוריגון2"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 85,
       "attack": 80,
@@ -4898,7 +5473,9 @@
       "en": "Stantler",
       "he": "סטנטלר"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 73,
       "attack": 95,
@@ -4919,7 +5496,9 @@
       "en": "Smeargle",
       "he": "סמירגל"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 55,
       "attack": 20,
@@ -4940,7 +5519,9 @@
       "en": "Tyrogue",
       "he": "טיירוג"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 35,
       "attack": 35,
@@ -4961,7 +5542,9 @@
       "en": "Hitmontop",
       "he": "היטמונטופ"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 50,
       "attack": 95,
@@ -4982,7 +5565,10 @@
       "en": "Smoochum",
       "he": "סמוצ'ום"
     },
-    "types": ["ice", "psychic"],
+    "types": [
+      "ice",
+      "psychic"
+    ],
     "stats": {
       "hp": 45,
       "attack": 30,
@@ -5003,7 +5589,9 @@
       "en": "Elekid",
       "he": "אלקיד"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 45,
       "attack": 63,
@@ -5024,7 +5612,9 @@
       "en": "Magby",
       "he": "מגבי"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 45,
       "attack": 75,
@@ -5045,7 +5635,9 @@
       "en": "Miltank",
       "he": "מילטנק"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 95,
       "attack": 80,
@@ -5066,7 +5658,9 @@
       "en": "Blissey",
       "he": "בליסי"
     },
-    "types": ["normal"],
+    "types": [
+      "normal"
+    ],
     "stats": {
       "hp": 255,
       "attack": 10,
@@ -5087,7 +5681,9 @@
       "en": "Raikou",
       "he": "ראיקו"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 90,
       "attack": 85,
@@ -5108,7 +5704,9 @@
       "en": "Entei",
       "he": "אנטיי"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 115,
       "attack": 115,
@@ -5129,7 +5727,9 @@
       "en": "Suicune",
       "he": "סויקון"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 100,
       "attack": 75,
@@ -5150,7 +5750,10 @@
       "en": "Larvitar",
       "he": "לרוויטאר"
     },
-    "types": ["rock", "ground"],
+    "types": [
+      "rock",
+      "ground"
+    ],
     "stats": {
       "hp": 50,
       "attack": 64,
@@ -5171,7 +5774,10 @@
       "en": "Pupitar",
       "he": "פיופיטאר"
     },
-    "types": ["rock", "ground"],
+    "types": [
+      "rock",
+      "ground"
+    ],
     "stats": {
       "hp": 70,
       "attack": 84,
@@ -5192,7 +5798,10 @@
       "en": "Tyranitar",
       "he": "טירניטאר"
     },
-    "types": ["rock", "dark"],
+    "types": [
+      "rock",
+      "dark"
+    ],
     "stats": {
       "hp": 100,
       "attack": 134,
@@ -5213,7 +5822,10 @@
       "en": "Lugia",
       "he": "לוגיאה"
     },
-    "types": ["psychic", "flying"],
+    "types": [
+      "psychic",
+      "flying"
+    ],
     "stats": {
       "hp": 106,
       "attack": 90,
@@ -5234,7 +5846,10 @@
       "en": "Ho-oh",
       "he": "הו-או"
     },
-    "types": ["fire", "flying"],
+    "types": [
+      "fire",
+      "flying"
+    ],
     "stats": {
       "hp": 106,
       "attack": 130,
@@ -5255,7 +5870,10 @@
       "en": "Celebi",
       "he": "סלבי"
     },
-    "types": ["psychic", "grass"],
+    "types": [
+      "psychic",
+      "grass"
+    ],
     "stats": {
       "hp": 100,
       "attack": 100,
@@ -5276,7 +5894,9 @@
       "en": "Trapinch",
       "he": "טראפינץ'"
     },
-    "types": ["ground"],
+    "types": [
+      "ground"
+    ],
     "stats": {
       "hp": 45,
       "attack": 100,
@@ -5297,7 +5917,10 @@
       "en": "Vibrava",
       "he": "ויבראבה"
     },
-    "types": ["ground", "dragon"],
+    "types": [
+      "ground",
+      "dragon"
+    ],
     "stats": {
       "hp": 50,
       "attack": 70,
@@ -5318,7 +5941,10 @@
       "en": "Flygon",
       "he": "פלאיגון"
     },
-    "types": ["ground", "dragon"],
+    "types": [
+      "ground",
+      "dragon"
+    ],
     "stats": {
       "hp": 80,
       "attack": 100,
@@ -5339,7 +5965,9 @@
       "en": "Feebas",
       "he": "פיבאס"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 20,
       "attack": 15,
@@ -5360,7 +5988,9 @@
       "en": "Milotic",
       "he": "מילוטיק"
     },
-    "types": ["water"],
+    "types": [
+      "water"
+    ],
     "stats": {
       "hp": 95,
       "attack": 60,
@@ -5381,7 +6011,9 @@
       "en": "Absol",
       "he": "אבסול"
     },
-    "types": ["dark"],
+    "types": [
+      "dark"
+    ],
     "stats": {
       "hp": 65,
       "attack": 130,
@@ -5402,7 +6034,9 @@
       "en": "Bagon",
       "he": "בייגון"
     },
-    "types": ["dragon"],
+    "types": [
+      "dragon"
+    ],
     "stats": {
       "hp": 45,
       "attack": 75,
@@ -5423,7 +6057,9 @@
       "en": "Shelgon",
       "he": "שלגון"
     },
-    "types": ["dragon"],
+    "types": [
+      "dragon"
+    ],
     "stats": {
       "hp": 65,
       "attack": 95,
@@ -5444,7 +6080,10 @@
       "en": "Salamence",
       "he": "סלמנס"
     },
-    "types": ["dragon", "flying"],
+    "types": [
+      "dragon",
+      "flying"
+    ],
     "stats": {
       "hp": 95,
       "attack": 135,
@@ -5465,7 +6104,10 @@
       "en": "Beldum",
       "he": "בלדום"
     },
-    "types": ["steel", "psychic"],
+    "types": [
+      "steel",
+      "psychic"
+    ],
     "stats": {
       "hp": 40,
       "attack": 55,
@@ -5486,7 +6128,10 @@
       "en": "Metang",
       "he": "מטאנג"
     },
-    "types": ["steel", "psychic"],
+    "types": [
+      "steel",
+      "psychic"
+    ],
     "stats": {
       "hp": 60,
       "attack": 75,
@@ -5507,7 +6152,10 @@
       "en": "Metagross",
       "he": "מטאגרוס"
     },
-    "types": ["steel", "psychic"],
+    "types": [
+      "steel",
+      "psychic"
+    ],
     "stats": {
       "hp": 80,
       "attack": 135,
@@ -5528,7 +6176,10 @@
       "en": "Spiritomb",
       "he": "ספיריטומב"
     },
-    "types": ["ghost", "dark"],
+    "types": [
+      "ghost",
+      "dark"
+    ],
     "stats": {
       "hp": 50,
       "attack": 92,
@@ -5549,7 +6200,10 @@
       "en": "Gible",
       "he": "גיבל"
     },
-    "types": ["dragon", "ground"],
+    "types": [
+      "dragon",
+      "ground"
+    ],
     "stats": {
       "hp": 58,
       "attack": 70,
@@ -5570,7 +6224,10 @@
       "en": "Gabite",
       "he": "גבייט"
     },
-    "types": ["dragon", "ground"],
+    "types": [
+      "dragon",
+      "ground"
+    ],
     "stats": {
       "hp": 68,
       "attack": 90,
@@ -5591,7 +6248,10 @@
       "en": "Garchomp",
       "he": "גארצ'ומפ"
     },
-    "types": ["dragon", "ground"],
+    "types": [
+      "dragon",
+      "ground"
+    ],
     "stats": {
       "hp": 108,
       "attack": 130,
@@ -5612,7 +6272,9 @@
       "en": "Riolu",
       "he": "ריולו"
     },
-    "types": ["fighting"],
+    "types": [
+      "fighting"
+    ],
     "stats": {
       "hp": 40,
       "attack": 70,
@@ -5628,12 +6290,39 @@
     "description": "?"
   },
   {
+    "id": 448,
+    "name": {
+      "en": "Lucario",
+      "he": "Lucario"
+    },
+    "types": [
+      "fighting",
+      "steel"
+    ],
+    "stats": {
+      "hp": 70,
+      "attack": 110,
+      "defense": 70,
+      "specialAttack": 115,
+      "specialDefense": 70,
+      "speed": 90
+    },
+    "baseExperience": 184,
+    "height": 12,
+    "weight": 540,
+    "category": "?",
+    "description": "?"
+  },
+  {
     "id": 461,
     "name": {
       "en": "Weavile",
       "he": "וויביל"
     },
-    "types": ["dark", "ice"],
+    "types": [
+      "dark",
+      "ice"
+    ],
     "stats": {
       "hp": 70,
       "attack": 120,
@@ -5654,7 +6343,10 @@
       "en": "Rhyperior",
       "he": "רייפיריור"
     },
-    "types": ["ground", "rock"],
+    "types": [
+      "ground",
+      "rock"
+    ],
     "stats": {
       "hp": 115,
       "attack": 140,
@@ -5675,7 +6367,9 @@
       "en": "Electivire",
       "he": "אלקטיבייר"
     },
-    "types": ["electric"],
+    "types": [
+      "electric"
+    ],
     "stats": {
       "hp": 75,
       "attack": 123,
@@ -5696,7 +6390,9 @@
       "en": "Magmortar",
       "he": "מאגמורטר"
     },
-    "types": ["fire"],
+    "types": [
+      "fire"
+    ],
     "stats": {
       "hp": 75,
       "attack": 95,
@@ -5717,7 +6413,10 @@
       "en": "Togekiss",
       "he": "טוגקיס"
     },
-    "types": ["fairy", "flying"],
+    "types": [
+      "fairy",
+      "flying"
+    ],
     "stats": {
       "hp": 85,
       "attack": 50,
@@ -5738,7 +6437,9 @@
       "en": "Axew",
       "he": "אקסיו"
     },
-    "types": ["dragon"],
+    "types": [
+      "dragon"
+    ],
     "stats": {
       "hp": 46,
       "attack": 87,
@@ -5759,7 +6460,9 @@
       "en": "Fraxure",
       "he": "פראקשור"
     },
-    "types": ["dragon"],
+    "types": [
+      "dragon"
+    ],
     "stats": {
       "hp": 66,
       "attack": 117,
@@ -5780,7 +6483,9 @@
       "en": "Haxorus",
       "he": "האקסורוס"
     },
-    "types": ["dragon"],
+    "types": [
+      "dragon"
+    ],
     "stats": {
       "hp": 76,
       "attack": 147,
@@ -5801,7 +6506,10 @@
       "en": "Deino",
       "he": "דיינו"
     },
-    "types": ["dark", "dragon"],
+    "types": [
+      "dark",
+      "dragon"
+    ],
     "stats": {
       "hp": 52,
       "attack": 65,
@@ -5822,7 +6530,10 @@
       "en": "Zweilous",
       "he": "צוואילוס"
     },
-    "types": ["dark", "dragon"],
+    "types": [
+      "dark",
+      "dragon"
+    ],
     "stats": {
       "hp": 72,
       "attack": 85,
@@ -5843,7 +6554,10 @@
       "en": "Hydreigon",
       "he": "היידרייגון"
     },
-    "types": ["dark", "dragon"],
+    "types": [
+      "dark",
+      "dragon"
+    ],
     "stats": {
       "hp": 92,
       "attack": 105,
