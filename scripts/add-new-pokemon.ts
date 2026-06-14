@@ -13,8 +13,7 @@ import { fetchLearnsetByPokemonId } from './fetch-learnsets.js';
 import { fetchPokemonSpritesById } from './fetch-sprites.js';
 
 const EXTRA_POKEMONS_IDS = [
-  349, 350, 374, 375, 376, 443, 444, 445, 610, 611, 612, 328, 329, 330, 371, 372, 373, 442, 359, 633, 634, 635, 461,
-  464, 466, 467,
+  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611, 612, 633, 634, 635
 ];
 
 const pokemonId = parseInt(process.argv[2], 10);
@@ -137,7 +136,9 @@ const handleSprites = async () => {
 const syncExtraPokemonIdsArray = () => {
   EXTRA_POKEMONS_IDS.push(pokemonId);
   EXTRA_POKEMONS_IDS.sort((a, b) => a - b);
-  const updatedArrayString = `const EXTRA_POKEMONS_IDS = [\n  ${EXTRA_POKEMONS_IDS.join(', ')}\n];`;
+  const updatedArrayString = `const EXTRA_POKEMONS_IDS = [
+  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611, 612, 633, 634, 635
+];`;
 
   let scriptContent = fs.readFileSync(__filename, 'utf-8');
   scriptContent = scriptContent.replace(/const EXTRA_POKEMONS_IDS = \[\s*[\s\S]*?\];/g, updatedArrayString);

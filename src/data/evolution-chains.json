@@ -1469,7 +1469,10 @@
       },
       {
         "id": 464,
-        "name": { "en": "Rhyperior", "he": "רייפיריור" },
+        "name": {
+          "en": "Rhyperior",
+          "he": "רייפיריור"
+        },
         "minLevel": 55,
         "trigger": "level-up",
         "item": null
@@ -2293,6 +2296,16 @@
         "minLevel": null,
         "trigger": "level-up",
         "item": null
+      },
+      {
+        "id": 468,
+        "name": {
+          "en": "Togekiss",
+          "he": "טוגקיס"
+        },
+        "minLevel": null,
+        "trigger": "use-item",
+        "item": "moon-stone"
       }
     ]
   },
@@ -3102,21 +3115,30 @@
     "stages": [
       {
         "id": 610,
-        "name": { "en": "Axew", "he": "אקסיו" },
+        "name": {
+          "en": "Axew",
+          "he": "אקסיו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 611,
-        "name": { "en": "Fraxure", "he": "פרקשור" },
+        "name": {
+          "en": "Fraxure",
+          "he": "פרקשור"
+        },
         "minLevel": 38,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 612,
-        "name": { "en": "Haxorus", "he": "האקסורוס" },
+        "name": {
+          "en": "Haxorus",
+          "he": "האקסורוס"
+        },
         "minLevel": 48,
         "trigger": "level-up",
         "item": null
@@ -3129,21 +3151,30 @@
     "stages": [
       {
         "id": 328,
-        "name": { "en": "Trapinch", "he": "טראפינץ'" },
+        "name": {
+          "en": "Trapinch",
+          "he": "טראפינץ'"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 329,
-        "name": { "en": "Vibrava", "he": "ויבראבה" },
+        "name": {
+          "en": "Vibrava",
+          "he": "ויבראבה"
+        },
         "minLevel": 35,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 330,
-        "name": { "en": "Flygon", "he": "פלאיגון" },
+        "name": {
+          "en": "Flygon",
+          "he": "פלאיגון"
+        },
         "minLevel": 45,
         "trigger": "level-up",
         "item": null
@@ -3156,21 +3187,30 @@
     "stages": [
       {
         "id": 371,
-        "name": { "en": "Bagon", "he": "בייגון" },
+        "name": {
+          "en": "Bagon",
+          "he": "בייגון"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 372,
-        "name": { "en": "Shelgon", "he": "שלגון" },
+        "name": {
+          "en": "Shelgon",
+          "he": "שלגון"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 373,
-        "name": { "en": "Salamence", "he": "סלמנס" },
+        "name": {
+          "en": "Salamence",
+          "he": "סלמנס"
+        },
         "minLevel": 50,
         "trigger": "level-up",
         "item": null
@@ -3183,7 +3223,10 @@
     "stages": [
       {
         "id": 442,
-        "name": { "en": "Spiritomb", "he": "ספיריטומב" },
+        "name": {
+          "en": "Spiritomb",
+          "he": "ספיריטומב"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -3196,7 +3239,10 @@
     "stages": [
       {
         "id": 359,
-        "name": { "en": "Absol", "he": "אבסול" },
+        "name": {
+          "en": "Absol",
+          "he": "אבסול"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
@@ -3209,21 +3255,30 @@
     "stages": [
       {
         "id": 633,
-        "name": { "en": "Deino", "he": "דיינו" },
+        "name": {
+          "en": "Deino",
+          "he": "דיינו"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 634,
-        "name": { "en": "Welsh", "he": "זווילאוס" },
+        "name": {
+          "en": "Welsh",
+          "he": "זווילאוס"
+        },
         "minLevel": 50,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 635,
-        "name": { "en": "Hydreigon", "he": "היידרייגון" },
+        "name": {
+          "en": "Hydreigon",
+          "he": "היידרייגון"
+        },
         "minLevel": 64,
         "trigger": "level-up",
         "item": null
@@ -3236,14 +3291,20 @@
     "stages": [
       {
         "id": 125,
-        "name": { "en": "Electabuzz", "he": "אלקטבז" },
+        "name": {
+          "en": "Electabuzz",
+          "he": "אלקטבז"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 466,
-        "name": { "en": "Electivire", "he": "אלקטיבייר" },
+        "name": {
+          "en": "Electivire",
+          "he": "אלקטיבייר"
+        },
         "minLevel": 45,
         "trigger": "level-up",
         "item": null
@@ -3256,14 +3317,20 @@
     "stages": [
       {
         "id": 126,
-        "name": { "en": "Magmar", "he": "מאגמר" },
+        "name": {
+          "en": "Magmar",
+          "he": "מאגמר"
+        },
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 467,
-        "name": { "en": "Magmortar", "he": "מאגמורטר" },
+        "name": {
+          "en": "Magmortar",
+          "he": "מאגמורטר"
+        },
         "minLevel": 45,
         "trigger": "level-up",
         "item": null
@@ -3276,14 +3343,20 @@
     "stages": [
       {
         "id": 215,
-        "name": { "en": "Sneasel", "he": "סניזל" },
+        "name": {
+          "en": "Sneasel",
+          "he": "סניזל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 461,
-        "name": { "en": "Weavile", "he": "וויביל" },
+        "name": {
+          "en": "Weavile",
+          "he": "וויביל"
+        },
         "minLevel": 35,
         "trigger": "level-up",
         "item": null
@@ -3296,21 +3369,30 @@
     "stages": [
       {
         "id": 443,
-        "name": { "en": "Gible", "he": "גיבל" },
+        "name": {
+          "en": "Gible",
+          "he": "גיבל"
+        },
         "minLevel": null,
         "trigger": null,
         "item": null
       },
       {
         "id": 444,
-        "name": { "en": "Gabite", "he": "גבייט" },
+        "name": {
+          "en": "Gabite",
+          "he": "גבייט"
+        },
         "minLevel": 24,
         "trigger": "level-up",
         "item": null
       },
       {
         "id": 445,
-        "name": { "en": "Garchomp", "he": "גארצ'ומפ" },
+        "name": {
+          "en": "Garchomp",
+          "he": "גארצ'ומפ"
+        },
         "minLevel": 48,
         "trigger": "level-up",
         "item": null
