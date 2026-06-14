@@ -17,11 +17,12 @@
     "dragon",
     "dark",
     "steel",
-    "glitch"
+    "glitch",
+    "fairy"
   ],
   "effectiveness": {
     "normal": {
-      "normal": 1,
+      "normal": 0.75,
       "fire": 1,
       "water": 1,
       "grass": 1,
@@ -58,7 +59,8 @@
       "dragon": 0.5,
       "dark": 1,
       "steel": 2,
-      "glitch": 0.5
+      "glitch": 0.5,
+      "fairy": 1.5
     },
     "water": {
       "normal": 1,
@@ -78,6 +80,7 @@
       "dragon": 0.5,
       "dark": 1,
       "steel": 1,
+      "fairy": 1,
       "glitch": 0.5
     },
     "grass": {
@@ -98,6 +101,7 @@
       "dragon": 0.5,
       "dark": 1,
       "steel": 0.5,
+      "fairy": 1,
       "glitch": 0.5
     },
     "electric": {
@@ -118,6 +122,7 @@
       "dragon": 0.5,
       "dark": 1,
       "steel": 1,
+      "fairy": 1,
       "glitch": 0.5
     },
     "ice": {
@@ -138,6 +143,7 @@
       "dragon": 2,
       "dark": 1,
       "steel": 0.5,
+      "fairy": 1,
       "glitch": 0.5
     },
     "fighting": {
@@ -158,6 +164,7 @@
       "dragon": 1,
       "dark": 2,
       "steel": 2,
+      "fairy": 0.5,
       "glitch": 0.5
     },
     "poison": {
@@ -178,6 +185,7 @@
       "dragon": 1,
       "dark": 1,
       "steel": 0,
+      "fairy": 2,
       "glitch": 0.5
     },
     "ground": {
@@ -198,6 +206,7 @@
       "dragon": 1,
       "dark": 1,
       "steel": 2,
+      "fairy": 1,
       "glitch": 0.5
     },
     "flying": {
@@ -218,6 +227,7 @@
       "dragon": 1,
       "dark": 1,
       "steel": 0.5,
+      "fairy": 1,
       "glitch": 0.5
     },
     "psychic": {
@@ -238,6 +248,7 @@
       "dragon": 1,
       "dark": 0,
       "steel": 0.5,
+      "fairy": 1,
       "glitch": 0.5
     },
     "bug": {
@@ -258,6 +269,7 @@
       "dragon": 1,
       "dark": 2,
       "steel": 0.5,
+      "fairy": 1,
       "glitch": 0.5
     },
     "rock": {
@@ -278,6 +290,7 @@
       "dragon": 1,
       "dark": 1,
       "steel": 0.5,
+      "fairy": 1,
       "glitch": 0.5
     },
     "ghost": {
@@ -298,6 +311,7 @@
       "dragon": 1,
       "dark": 0.5,
       "steel": 1,
+      "fairy": 1,
       "glitch": 0.5
     },
     "dragon": {
@@ -318,6 +332,7 @@
       "dragon": 2,
       "dark": 1,
       "steel": 0.5,
+      "fairy": 0,
       "glitch": 0.5
     },
     "dark": {
@@ -338,6 +353,7 @@
       "dragon": 1,
       "dark": 0.5,
       "steel": 1,
+      "fairy": 0.5,
       "glitch": 0.5
     },
     "steel": {
@@ -358,6 +374,7 @@
       "dragon": 1,
       "dark": 1,
       "steel": 0.5,
+      "fairy": 0.5,
       "glitch": 0.5
     },
     "glitch": {
@@ -378,6 +395,7 @@
       "dragon": 1,
       "dark": 0.5,
       "steel": 0.5,
+      "fairy": 1,
       "glitch": 1
     }
   }

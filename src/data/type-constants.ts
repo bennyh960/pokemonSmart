@@ -80,6 +80,7 @@ export const TYPE_BADGE: Record<PokemonType, TypeBadgeStyle> = {
   dark: { en: 'Dark', he: 'אופל', color: '#705848', bg: 'rgba(112,88,72,0.12)', border: 'rgba(112,88,72,0.2)' },
   steel: { en: 'Steel', he: 'פלדה', color: '#b8b8d0', bg: 'rgba(184,184,208,0.12)', border: 'rgba(184,184,208,0.2)' },
   glitch: { en: 'Glitch', he: "גליץ'", color: '#00ff88', bg: 'rgba(0,255,136,0.12)', border: 'rgba(0,255,136,0.2)' },
+  fairy: { en: 'Fairy', he: 'פייה', color: '#ee99ac', bg: 'rgba(238,153,172,0.12)', border: 'rgba(238,153,172,0.2)' },
 };
 
 // ─── Convenience helpers (derived from TYPE_BADGE) ─────────────────

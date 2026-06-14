@@ -95,6 +95,7 @@ export type PokemonType =
   | 'dark'
   | 'steel'
   | 'glitch'
+  | 'fairy'
   | 'struggle';
 
 /** A move that a Pokemon can use in battle (real moves from PokeAPI). */
