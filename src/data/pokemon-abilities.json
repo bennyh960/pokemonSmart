@@ -1002,5 +1002,55 @@
   "251": {
     "abilities": [30],
     "hidden": null
+  },
+  "349": {
+    "abilities": ["Swift Swim", "Oblivious"],
+    "hidden": "Adaptability"
+  },
+  "350": {
+    "abilities": ["Marvel Scale", "Competitive"],
+    "hidden": "Cute Charm"
+  },
+  "374": {
+    "abilities": [29],
+    "hidden": 135
+  },
+  "375": {
+    "abilities": [29],
+    "hidden": 135
+  },
+  "376": {
+    "abilities": [29],
+    "hidden": 135
+  },
+  "610": { "abilities": ["Rivalry", "Mold Breaker"], "hidden": "Unnerve" },
+  "611": { "abilities": ["Rivalry", "Mold Breaker"], "hidden": "Unnerve" },
+  "612": { "abilities": ["Rivalry", "Mold Breaker"], "hidden": "Unnerve" },
+  "328": { "abilities": ["Hyper Cutter", "Arena Trap"], "hidden": "Sheer Force" },
+  "329": { "abilities": ["Levitate"], "hidden": null },
+  "330": { "abilities": ["Levitate"], "hidden": null },
+  "371": { "abilities": ["Rock Head"], "hidden": "Sheer Force" },
+  "372": { "abilities": ["Rock Head"], "hidden": "Overcoat" },
+  "373": { "abilities": ["Intimidate"], "hidden": "Moxie" },
+  "442": { "abilities": ["Pressure"], "hidden": "Infiltrator" },
+  "461": { "abilities": ["Pressure", "Annihilate"], "hidden": "Pickpocket" },
+  "466": { "abilities": ["Motor Drive"], "hidden": "Vital Spirit" },
+  "464": { "abilities": ["Lightning Rod", "Solid Rock"], "hidden": "Reckless" },
+  "467": { "abilities": ["Flame Body"], "hidden": "Vital Spirit" },
+  "359": { "abilities": ["Pressure", "Super Luck"], "hidden": "Justified" },
+  "633": { "abilities": ["Hustle"], "hidden": null },
+  "634": { "abilities": ["Hustle"], "hidden": null },
+  "635": { "abilities": ["Levitate"], "hidden": null },
+  "443": {
+    "abilities": ["Sand Veil"],
+    "hidden": "Rough Skin"
+  },
+  "444": {
+    "abilities": ["Sand Veil"],
+    "hidden": "Rough Skin"
+  },
+  "445": {
+    "abilities": ["Sand Veil"],
+    "hidden": "Rough Skin"
   }
 }

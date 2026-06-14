@@ -1082,7 +1082,7 @@
     "id": 60,
     "name": {
       "en": "Psybeam",
-      "he": "קרן פסי"
+      "he": "קרן על חושית"
     },
     "type": "psychic",
     "power": 65,
@@ -2684,7 +2684,7 @@
     "id": 149,
     "name": {
       "en": "Psywave",
-      "he": "גל פסי"
+      "he": "גל על חושי"
     },
     "type": "psychic",
     "power": null,

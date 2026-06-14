@@ -24,7 +24,7 @@ export interface LearnsetEntry {
 export type LearnsetData = Record<string, LearnsetEntry[]>;
 
 function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function fetchWithRetry(url: string): Promise<Response> {
@@ -50,39 +50,7 @@ export async function fetchLearnsets(): Promise<LearnsetData> {
   const learnsets: LearnsetData = {};
 
   for (let id = 1; id <= TOTAL_POKEMON; id++) {
-    const res = await fetchWithRetry(`${API_BASE}/pokemon/${id}`);
-    if (!res.ok) throw new Error(`Failed to fetch pokemon ${id}: ${res.status}`);
-    const data = await res.json();
-
-    const enName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-    console.log(`Fetching learnset for Pokemon ${id}/${TOTAL_POKEMON} (${enName})...`);
-
-    const entries: LearnsetEntry[] = [];
-
-    for (const move of data.moves) {
-      const moveId = extractIdFromUrl(move.move.url);
-
-      // Find the best matching version group detail for level-up moves
-      let bestDetail: any = null;
-      for (const versionGroup of VERSION_GROUP_PRIORITY) {
-        bestDetail = move.version_group_details.find(
-          (d: any) =>
-            d.version_group.name === versionGroup &&
-            d.move_learn_method.name === 'level-up'
-        );
-        if (bestDetail) break;
-      }
-
-      if (bestDetail) {
-        entries.push({
-          moveId,
-          levelLearned: bestDetail.level_learned_at,
-        });
-      }
-    }
-
-    // Sort by levelLearned ascending, then by moveId ascending for ties
-    entries.sort((a, b) => a.levelLearned - b.levelLearned || a.moveId - b.moveId);
+    const entries = await fetchLearnsetByPokemonId(id);
 
     learnsets[String(id)] = entries;
 
@@ -90,6 +58,42 @@ export async function fetchLearnsets(): Promise<LearnsetData> {
   }
 
   return learnsets;
+}
+
+export async function fetchLearnsetByPokemonId(pokemonId: number): Promise<LearnsetEntry[]> {
+  const res = await fetchWithRetry(`${API_BASE}/pokemon/${pokemonId}`);
+  if (!res.ok) throw new Error(`Failed to fetch pokemon ${pokemonId}: ${res.status}`);
+  const data = await res.json();
+
+  const enName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+  console.log(`Fetching learnset for Pokemon ${pokemonId}/${TOTAL_POKEMON} (${enName})...`);
+
+  const entries: LearnsetEntry[] = [];
+
+  for (const move of data.moves) {
+    const moveId = extractIdFromUrl(move.move.url);
+
+    // Find the best matching version group detail for level-up moves
+    let bestDetail: any = null;
+    for (const versionGroup of VERSION_GROUP_PRIORITY) {
+      bestDetail = move.version_group_details.find(
+        (d: any) => d.version_group.name === versionGroup && d.move_learn_method.name === 'level-up',
+      );
+      if (bestDetail) break;
+    }
+
+    if (bestDetail) {
+      entries.push({
+        moveId,
+        levelLearned: bestDetail.level_learned_at,
+      });
+    }
+  }
+
+  // Sort by levelLearned ascending, then by moveId ascending for ties
+  entries.sort((a, b) => a.levelLearned - b.levelLearned || a.moveId - b.moveId);
+
+  return entries;
 }
 
 // Standalone runner
@@ -109,7 +113,7 @@ async function main(): Promise<void> {
   console.log(`\n✓ Wrote learnsets for ${count} Pokemon to ${outPath} in ${elapsed}s`);
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('\nFATAL:', err);
   process.exit(1);
 });

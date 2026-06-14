@@ -1466,6 +1466,13 @@
         "minLevel": 42,
         "trigger": "level-up",
         "item": null
+      },
+      {
+        "id": 464,
+        "name": { "en": "Rhyperior", "he": "רייפיריור" },
+        "minLevel": 55,
+        "trigger": "level-up",
+        "item": null
       }
     ]
   },
@@ -3025,6 +3032,287 @@
         },
         "minLevel": null,
         "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 133,
+    "stages": [
+      {
+        "id": 374,
+        "name": {
+          "en": "Beldum",
+          "he": "בלדום"
+        },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 375,
+        "name": {
+          "en": "Metang",
+          "he": "מטאנג"
+        },
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 376,
+        "name": {
+          "en": "Metagross",
+          "he": "מטאגרוס"
+        },
+        "minLevel": 45,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 178,
+    "stages": [
+      {
+        "id": 349,
+        "name": {
+          "en": "Feebas",
+          "he": "פיבאס"
+        },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 350,
+        "name": {
+          "en": "Milotic",
+          "he": "מילוטיק"
+        },
+        "minLevel": 20,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 311,
+    "comment": "Axew Evolution Line",
+    "stages": [
+      {
+        "id": 610,
+        "name": { "en": "Axew", "he": "אקסיו" },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 611,
+        "name": { "en": "Fraxure", "he": "פרקשור" },
+        "minLevel": 38,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 612,
+        "name": { "en": "Haxorus", "he": "האקסורוס" },
+        "minLevel": 48,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 165,
+    "comment": "Trapinch Evolution Line (Flygon)",
+    "stages": [
+      {
+        "id": 328,
+        "name": { "en": "Trapinch", "he": "טראפינץ'" },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 329,
+        "name": { "en": "Vibrava", "he": "ויבראבה" },
+        "minLevel": 35,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 330,
+        "name": { "en": "Flygon", "he": "פלאיגון" },
+        "minLevel": 45,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 191,
+    "comment": "Bagon Evolution Line (Salamence)",
+    "stages": [
+      {
+        "id": 371,
+        "name": { "en": "Bagon", "he": "בייגון" },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 372,
+        "name": { "en": "Shelgon", "he": "שלגון" },
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 373,
+        "name": { "en": "Salamence", "he": "סלמנס" },
+        "minLevel": 50,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 222,
+    "comment": "Spiritomb (Single Stage)",
+    "stages": [
+      {
+        "id": 442,
+        "name": { "en": "Spiritomb", "he": "ספיריטומב" },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 182,
+    "comment": "Absol (Single Stage)",
+    "stages": [
+      {
+        "id": 359,
+        "name": { "en": "Absol", "he": "אבסול" },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 324,
+    "comment": "Deino Evolution Line",
+    "stages": [
+      {
+        "id": 633,
+        "name": { "en": "Deino", "he": "דיינו" },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 634,
+        "name": { "en": "Welsh", "he": "זווילאוס" },
+        "minLevel": 50,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 635,
+        "name": { "en": "Hydreigon", "he": "היידרייגון" },
+        "minLevel": 64,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 61,
+    "comment": "UPDATED: Electabuzz Line with Electivire",
+    "stages": [
+      {
+        "id": 125,
+        "name": { "en": "Electabuzz", "he": "אלקטבז" },
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 466,
+        "name": { "en": "Electivire", "he": "אלקטיבייר" },
+        "minLevel": 45,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 62,
+    "comment": "UPDATED: Magmar Line with Magmortar",
+    "stages": [
+      {
+        "id": 126,
+        "name": { "en": "Magmar", "he": "מאגמר" },
+        "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 467,
+        "name": { "en": "Magmortar", "he": "מאגמורטר" },
+        "minLevel": 45,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 114,
+    "comment": "UPDATED: Sneasel Line with Weavile",
+    "stages": [
+      {
+        "id": 215,
+        "name": { "en": "Sneasel", "he": "סניזל" },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 461,
+        "name": { "en": "Weavile", "he": "וויביל" },
+        "minLevel": 35,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
+  },
+  {
+    "chainId": 223,
+    "comment": "Garchomp Evolution Line",
+    "stages": [
+      {
+        "id": 443,
+        "name": { "en": "Gible", "he": "גיבל" },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 444,
+        "name": { "en": "Gabite", "he": "גבייט" },
+        "minLevel": 24,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 445,
+        "name": { "en": "Garchomp", "he": "גארצ'ומפ" },
+        "minLevel": 48,
+        "trigger": "level-up",
         "item": null
       }
     ]

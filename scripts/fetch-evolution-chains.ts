@@ -26,7 +26,7 @@ export interface EvolutionChain {
 }
 
 function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function extractIdFromUrl(url: string): number {
@@ -95,4 +95,20 @@ export async function fetchEvolutionChains(): Promise<EvolutionChain[]> {
 
   chains.sort((a, b) => a.chainId - b.chainId);
   return chains;
+}
+
+export async function fetchEvolutionChainByPokemonId(pokemonId: number): Promise<EvolutionChain> {
+  const res = await fetch(`${API_BASE}/pokemon-species/${pokemonId}`);
+  if (!res.ok) throw new Error(`Failed to fetch species ${pokemonId}: ${res.status}`);
+  const data = await res.json();
+  const chainUrl = data.evolution_chain.url;
+
+  const chainRes = await fetch(chainUrl);
+  if (!chainRes.ok) throw new Error(`Failed to fetch evolution chain ${chainUrl}: ${chainRes.status}`);
+  const chainData = await chainRes.json();
+
+  const stages: EvolutionStep[] = [];
+  flattenChain(chainData.chain, stages);
+
+  return { chainId: chainData.id, stages };
 }

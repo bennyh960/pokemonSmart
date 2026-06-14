@@ -23,7 +23,7 @@ export interface TmLearnsetEntry {
 export type TmLearnsetData = Record<string, TmLearnsetEntry[]>;
 
 function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function fetchWithRetry(url: string): Promise<Response> {
@@ -49,46 +49,48 @@ export async function fetchTmLearnsets(): Promise<TmLearnsetData> {
   const tmLearnsets: TmLearnsetData = {};
 
   for (let id = 1; id <= TOTAL_POKEMON; id++) {
-    const res = await fetchWithRetry(`${API_BASE}/pokemon/${id}`);
-    if (!res.ok) throw new Error(`Failed to fetch pokemon ${id}: ${res.status}`);
-    const data = await res.json();
-
-    const enName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-    console.log(`Fetching TM/HM moves for Pokemon ${id}/${TOTAL_POKEMON} (${enName})...`);
-
-    const entries: TmLearnsetEntry[] = [];
-
-    for (const move of data.moves) {
-      const moveId = extractIdFromUrl(move.move.url);
-
-      // Find the best matching version group detail for machine (TM/HM) moves
-      let found = false;
-      for (const versionGroup of VERSION_GROUP_PRIORITY) {
-        const detail = move.version_group_details.find(
-          (d: any) =>
-            d.version_group.name === versionGroup &&
-            d.move_learn_method.name === 'machine'
-        );
-        if (detail) {
-          found = true;
-          break;
-        }
-      }
-
-      if (found) {
-        entries.push({ moveId });
-      }
-    }
-
-    // Sort by moveId for consistent ordering
-    entries.sort((a, b) => a.moveId - b.moveId);
-
+    const entries = await fetchTmLearnsetByPokemonId(id);
     tmLearnsets[String(id)] = entries;
 
     await sleep(RATE_LIMIT_MS);
   }
 
   return tmLearnsets;
+}
+
+export async function fetchTmLearnsetByPokemonId(pokemonId: number): Promise<TmLearnsetEntry[]> {
+  const res = await fetchWithRetry(`${API_BASE}/pokemon/${pokemonId}`);
+  if (!res.ok) throw new Error(`Failed to fetch pokemon ${pokemonId}: ${res.status}`);
+  const data = await res.json();
+
+  const enName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+  console.log(`Fetching TM/HM moves for Pokemon ${pokemonId}/${TOTAL_POKEMON} (${enName})...`);
+
+  const entries: TmLearnsetEntry[] = [];
+
+  for (const move of data.moves) {
+    const moveId = extractIdFromUrl(move.move.url);
+
+    // Find the best matching version group detail for machine (TM/HM) moves
+    let found = false;
+    for (const versionGroup of VERSION_GROUP_PRIORITY) {
+      const detail = move.version_group_details.find(
+        (d: any) => d.version_group.name === versionGroup && d.move_learn_method.name === 'machine',
+      );
+      if (detail) {
+        found = true;
+        break;
+      }
+    }
+
+    if (found) {
+      entries.push({ moveId });
+    }
+  }
+
+  // Sort by moveId for consistent ordering
+  entries.sort((a, b) => a.moveId - b.moveId);
+  return entries;
 }
 
 // Standalone runner
@@ -106,10 +108,12 @@ async function main(): Promise<void> {
   const count = Object.keys(data).length;
   const totalMoves = Object.values(data).reduce((sum, entries) => sum + entries.length, 0);
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`\n✓ Wrote TM/HM learnsets for ${count} Pokemon (${totalMoves} total entries) to ${outPath} in ${elapsed}s`);
+  console.log(
+    `\n✓ Wrote TM/HM learnsets for ${count} Pokemon (${totalMoves} total entries) to ${outPath} in ${elapsed}s`,
+  );
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('\nFATAL:', err);
   process.exit(1);
 });

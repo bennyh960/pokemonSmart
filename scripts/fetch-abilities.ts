@@ -36,7 +36,7 @@ export type AbilitiesData = Record<string, AbilityDef>;
 export type PokemonAbilitiesData = Record<string, PokemonAbilityMapping>;
 
 function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function fetchWithRetry(url: string): Promise<Response> {
@@ -59,7 +59,39 @@ function extractIdFromUrl(url: string): number {
 }
 
 function formatName(apiName: string): string {
-  return apiName.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  return apiName
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+export async function fetchPokemobAbilitesByPokemonId(
+  pokemonId: number,
+  abilityIds?: Set<number>,
+): Promise<PokemonAbilityMapping> {
+  const res = await fetchWithRetry(`${API_BASE}/pokemon/${pokemonId}`);
+  if (!res.ok) throw new Error(`Failed to fetch pokemon ${pokemonId}: ${res.status}`);
+  const data = await res.json();
+
+  const regular: number[] = [];
+  let hidden: number | null = null;
+
+  for (const a of data.abilities) {
+    const abilityId = extractIdFromUrl(a.ability.url);
+
+    // set its only when run in loop
+    if (abilityIds) abilityIds.add(abilityId);
+
+    if (a.is_hidden) {
+      hidden = abilityId;
+    } else {
+      regular.push(abilityId);
+    }
+  }
+
+  // Sort regular abilities by slot for deterministic order
+  regular.sort((a, b) => a - b);
+  return { abilities: regular, hidden };
 }
 
 export async function fetchAbilities(): Promise<{
@@ -72,26 +104,7 @@ export async function fetchAbilities(): Promise<{
   // Step 1: Collect ability mappings from all 251 Pokemon
   console.log('  Step 1: Collecting ability mappings from Pokemon...');
   for (let id = 1; id <= TOTAL_POKEMON; id++) {
-    const res = await fetchWithRetry(`${API_BASE}/pokemon/${id}`);
-    if (!res.ok) throw new Error(`Failed to fetch pokemon ${id}: ${res.status}`);
-    const data = await res.json();
-
-    const regular: number[] = [];
-    let hidden: number | null = null;
-
-    for (const a of data.abilities) {
-      const abilityId = extractIdFromUrl(a.ability.url);
-      abilityIds.add(abilityId);
-
-      if (a.is_hidden) {
-        hidden = abilityId;
-      } else {
-        regular.push(abilityId);
-      }
-    }
-
-    // Sort regular abilities by slot for deterministic order
-    regular.sort((a, b) => a - b);
+    const { abilities: regular, hidden } = await fetchPokemobAbilitesByPokemonId(id, abilityIds);
 
     pokemonAbilities[String(id)] = { abilities: regular, hidden };
 
@@ -117,8 +130,8 @@ export async function fetchAbilities(): Promise<{
     // Extract English flavor text, preferring gold-silver era
     const flavorEntries = data.flavor_text_entries ?? [];
     const englishEntries = flavorEntries.filter((e: any) => e.language.name === 'en');
-    const gsEntry = englishEntries.find((e: any) =>
-      e.version_group?.name === 'gold-silver' || e.version_group?.name === 'ruby-sapphire'
+    const gsEntry = englishEntries.find(
+      (e: any) => e.version_group?.name === 'gold-silver' || e.version_group?.name === 'ruby-sapphire',
     );
     const description = (gsEntry ?? englishEntries[0])?.flavor_text?.replace(/\n/g, ' ')?.trim() ?? '';
 
@@ -165,7 +178,7 @@ async function main(): Promise<void> {
   console.log(`\nDone in ${elapsed}s`);
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('\nFATAL:', err);
   process.exit(1);
 });

@@ -1932,7 +1932,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // cities : mapFolder === mapPath
     // routes : route-i but we need exclude route-i-someDescription like caves etc
     const [mapFolder, mapPath] = mapId.split('/');
-    if (mapFolder === mapPath || (mapPath.startsWith('route') && mapPath.length < 'route-ij'.length)) {
+    if (mapFolder === mapPath || (mapPath?.startsWith('route') && mapPath.length < 'route-ij'.length)) {
       setFlag(getPlayerData(), `visited-${mapId}`);
     }
 

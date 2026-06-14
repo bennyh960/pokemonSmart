@@ -41,7 +41,14 @@ import { getWildLocations, renderLocationTab, type WildLocation } from './tabs/l
 const BG_COLOR = '#301818';
 const ENTRY_HEIGHT = 26;
 const VISIBLE_ENTRIES = 5;
-const TOTAL_POKEMON = 251;
+const TOTAL_POKEMON_COUNT = 251;
+
+const EXTRA_POKEMONS_IDS = [
+  349, 350, 374, 375, 376, 443, 444, 445, 610, 611, 612, 328, 329, 330, 371, 372, 373, 442, 359, 633, 634, 635, 461,
+  464, 466, 467,
+];
+
+const TOTAL_POKEMON = Array.from({ length: TOTAL_POKEMON_COUNT }, (_, i) => i + 1).concat(EXTRA_POKEMONS_IDS);
 
 type PokedexView = 'list' | 'detail' | 'badges';
 export type DetailTab = 'info' | 'evolution' | 'type' | 'moves' | 'location';
@@ -88,9 +95,11 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
   function getSeenCount(): number {
     const pdex = getPokedex();
     let count = 0;
-    for (let i = 1; i <= TOTAL_POKEMON; i++) {
-      if (pdex[i]) count++;
+
+    for (const id of TOTAL_POKEMON) {
+      if (pdex[id]) count++;
     }
+
     return count;
   }
 
@@ -111,11 +120,11 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
 
   function getFilteredIds(): number[] {
     if (!searchQuery) {
-      return Array.from({ length: TOTAL_POKEMON }, (_, i) => i + 1);
+      return TOTAL_POKEMON;
     }
     const q = searchQuery.toLowerCase();
     const results: number[] = [];
-    for (let id = 1; id <= TOTAL_POKEMON; id++) {
+    for (const id of TOTAL_POKEMON) {
       if (String(id).startsWith(q)) {
         results.push(id);
         continue;
@@ -146,7 +155,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     enter(): void {
       selectedId = pendingPokedexFocus?.id ?? 1;
       cursor = selectedId - 1;
-      scrollOffset = Math.max(0, Math.min(cursor, TOTAL_POKEMON - VISIBLE_ENTRIES));
+      scrollOffset = Math.max(0, Math.min(cursor, TOTAL_POKEMON.length - VISIBLE_ENTRIES));
       _sessionBadgesMode = _openInBadgesMode;
       _openInBadgesMode = false;
       view = _sessionBadgesMode ? 'badges' : pendingPokedexFocus?.openDetail ? 'detail' : 'list';

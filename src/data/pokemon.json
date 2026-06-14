@@ -5269,5 +5269,372 @@
     "weight": 50,
     "category": "Time Travel Pokémon",
     "description": "This POKéMON wan­ ders across time. Grass and trees flourish in the forests in which it has appeared."
+  },
+  {
+    "id": 374,
+    "name": {
+      "en": "Beldum",
+      "he": "בלדום"
+    },
+    "types": ["steel", "psychic"],
+    "stats": {
+      "hp": 40,
+      "attack": 55,
+      "defense": 80,
+      "specialAttack": 35,
+      "specialDefense": 60,
+      "speed": 30
+    },
+    "baseExperience": 60,
+    "height": 6,
+    "weight": 952,
+    "category": "Iron Ball Pokémon",
+    "description": "It converses with others by using magnetic pulses. In a group, they move in perfect synchronization."
+  },
+  {
+    "id": 375,
+    "name": {
+      "en": "Metang",
+      "he": "מטאנג"
+    },
+    "types": ["steel", "psychic"],
+    "stats": {
+      "hp": 60,
+      "attack": 75,
+      "defense": 100,
+      "specialAttack": 55,
+      "specialDefense": 80,
+      "speed": 50
+    },
+    "baseExperience": 147,
+    "height": 12,
+    "weight": 2025,
+    "category": "Iron Claw Pokémon",
+    "description": "It is formed by two Beldum joining together. Its steel body won't be scratched even if it crashes into a jet."
+  },
+  {
+    "id": 376,
+    "name": {
+      "en": "Metagross",
+      "he": "מטאגרוס"
+    },
+    "types": ["steel", "psychic"],
+    "stats": {
+      "hp": 80,
+      "attack": 135,
+      "defense": 130,
+      "specialAttack": 95,
+      "specialDefense": 90,
+      "speed": 70
+    },
+    "baseExperience": 300,
+    "height": 16,
+    "weight": 5500,
+    "category": "Iron Leg Pokémon",
+    "description": "It is formed by two Metang fusing together. With its four brains, it has the intelligence of a supercomputer."
+  },
+
+  {
+    "id": 349,
+    "name": {
+      "en": "Feebas",
+      "he": "פיבאס"
+    },
+    "types": ["water"],
+    "stats": {
+      "hp": 20,
+      "attack": 15,
+      "defense": 20,
+      "specialAttack": 10,
+      "specialDefense": 55,
+      "speed": 80
+    },
+    "baseExperience": 40,
+    "height": 6,
+    "weight": 74,
+    "category": "Fish Pokémon",
+    "description": "It is famous for its shabby appearance. While it is populous and hardy, it is also slow and simple, making it an easy catch."
+  },
+  {
+    "id": 350,
+    "name": {
+      "en": "Milotic",
+      "he": "מילוטיק"
+    },
+    "types": ["water"],
+    "stats": {
+      "hp": 95,
+      "attack": 60,
+      "defense": 79,
+      "specialAttack": 100,
+      "specialDefense": 125,
+      "speed": 81
+    },
+    "baseExperience": 189,
+    "height": 62,
+    "weight": 1620,
+    "category": "Tender Pokémon",
+    "description": "Milotic is said to be the most beautiful of all the Pokémon. It has the power to becalm such emotions as anger and hostility to quell bitter feuding."
+  },
+  {
+    "id": 610,
+    "name": { "en": "Axew", "he": "אקסיו" },
+    "types": ["dragon"],
+    "stats": { "hp": 46, "attack": 87, "defense": 60, "specialAttack": 30, "specialDefense": 40, "speed": 57 },
+    "baseExperience": 64,
+    "height": 6,
+    "weight": 180,
+    "category": "Tusk Pokémon",
+    "description": "They use their tusks to crush berries. Repeated regrowth makes their tusks exceptionally sharp and strong."
+  },
+  {
+    "id": 611,
+    "name": { "en": "Fraxure", "he": "פראקשור" },
+    "types": ["dragon"],
+    "stats": { "hp": 66, "attack": 117, "defense": 70, "specialAttack": 40, "specialDefense": 50, "speed": 67 },
+    "baseExperience": 144,
+    "height": 10,
+    "weight": 360,
+    "category": "Axe Jaw Pokémon",
+    "description": "A broken tusk will not grow back. Usually, it won't fight until its tusks are fully broken in."
+  },
+  {
+    "id": 612,
+    "name": { "en": "Haxorus", "he": "האקסורוס" },
+    "types": ["dragon"],
+    "stats": { "hp": 76, "attack": 147, "defense": 90, "specialAttack": 60, "specialDefense": 70, "speed": 97 },
+    "baseExperience": 270,
+    "height": 18,
+    "weight": 1055,
+    "category": "Axe Jaw Pokémon",
+    "description": "They are kind but can be relentless when defending territory. They can cut through steel with their tusks."
+  },
+  {
+    "id": 328,
+    "name": { "en": "Trapinch", "he": "טראפינץ'" },
+    "types": ["ground"],
+    "stats": { "hp": 45, "attack": 100, "defense": 45, "specialAttack": 45, "specialDefense": 45, "speed": 10 },
+    "baseExperience": 58,
+    "height": 7,
+    "weight": 150,
+    "category": "Ant Pit Pokémon",
+    "description": "Its giant jaws have enough crush power to break boulders. It builds conical pits in desert sands."
+  },
+  {
+    "id": 329,
+    "name": { "en": "Vibrava", "he": "ויבראבה" },
+    "types": ["ground", "dragon"],
+    "stats": { "hp": 50, "attack": 70, "defense": 50, "specialAttack": 50, "specialDefense": 50, "speed": 70 },
+    "baseExperience": 119,
+    "height": 11,
+    "weight": 153,
+    "category": "Vibration Pokémon",
+    "description": "It vibrates its wings to generate sonic waves that cause severe headaches to opponents."
+  },
+  {
+    "id": 330,
+    "name": { "en": "Flygon", "he": "פלאיגון" },
+    "types": ["ground", "dragon"],
+    "stats": { "hp": 80, "attack": 100, "defense": 80, "specialAttack": 80, "specialDefense": 80, "speed": 100 },
+    "baseExperience": 260,
+    "height": 20,
+    "weight": 820,
+    "category": "Mystic Pokémon",
+    "description": "It hides inside sandstorms it creates by flapping its wings. It is nicknamed 'The Desert Spirit.'"
+  },
+  {
+    "id": 371,
+    "name": { "en": "Bagon", "he": "בייגון" },
+    "types": ["dragon"],
+    "stats": { "hp": 45, "attack": 75, "defense": 60, "specialAttack": 40, "specialDefense": 30, "speed": 50 },
+    "baseExperience": 60,
+    "height": 6,
+    "weight": 421,
+    "category": "Rock Head Pokémon",
+    "description": "Dreaming of flight, it throws itself off cliffs and headbutts rocks, tempering its hard skull."
+  },
+  {
+    "id": 372,
+    "name": { "en": "Shelgon", "he": "שלגון" },
+    "types": ["dragon"],
+    "stats": { "hp": 65, "attack": 95, "defense": 100, "specialAttack": 60, "specialDefense": 50, "speed": 50 },
+    "baseExperience": 147,
+    "height": 11,
+    "weight": 1105,
+    "category": "Endurance Pokémon",
+    "description": "Its shell is like armor. Inside the shell, its cells are changing rapidly to prepare for evolution."
+  },
+  {
+    "id": 373,
+    "name": { "en": "Salamence", "he": "סלמנס" },
+    "types": ["dragon", "flying"],
+    "stats": { "hp": 95, "attack": 135, "defense": 80, "specialAttack": 110, "specialDefense": 80, "speed": 100 },
+    "baseExperience": 300,
+    "height": 15,
+    "weight": 1026,
+    "category": "Dragon Pokémon",
+    "description": "Its great desire to fly triggered a mutation that allowed it to grow magnificent wings."
+  },
+  {
+    "id": 442,
+    "name": { "en": "Spiritomb", "he": "ספיריטומב" },
+    "types": ["ghost", "dark"],
+    "stats": { "hp": 50, "attack": 92, "defense": 108, "specialAttack": 92, "specialDefense": 108, "speed": 35 },
+    "baseExperience": 170,
+    "height": 10,
+    "weight": 1080,
+    "category": "Forbidden Pokémon",
+    "description": "It was bound to a fissure in an Odd Keystone as punishment for misdeeds 500 years ago."
+  },
+  {
+    "id": 461,
+    "name": { "en": "Weavile", "he": "וויביל" },
+    "types": ["dark", "ice"],
+    "stats": { "hp": 70, "attack": 120, "defense": 65, "specialAttack": 45, "specialDefense": 85, "speed": 125 },
+    "baseExperience": 179,
+    "height": 11,
+    "weight": 340,
+    "category": "Sharp Claw Pokémon",
+    "description": "They live in cold regions and hunt in packs, leaving scratches on trees as signals to allies."
+  },
+  {
+    "id": 466,
+    "name": { "en": "Electivire", "he": "אלקטיבייר" },
+    "types": ["electric"],
+    "stats": { "hp": 75, "attack": 123, "defense": 67, "specialAttack": 95, "specialDefense": 85, "speed": 95 },
+    "baseExperience": 270,
+    "height": 18,
+    "weight": 1386,
+    "category": "Thunderbolt Pokémon",
+    "description": "It pushes its dual tails against opponents to shock them with over 20,000 volts of electricity."
+  },
+  {
+    "id": 464,
+    "name": { "en": "Rhyperior", "he": "רייפיריור" },
+    "types": ["ground", "rock"],
+    "stats": { "hp": 115, "attack": 140, "defense": 130, "specialAttack": 55, "specialDefense": 55, "speed": 40 },
+    "baseExperience": 268,
+    "height": 24,
+    "weight": 2828,
+    "category": "Drill Pokémon",
+    "description": "It loads rocks into the holes in its palms and fires them using its internal muscular force."
+  },
+  {
+    "id": 467,
+    "name": { "en": "Magmortar", "he": "מאגמורטר" },
+    "types": ["fire"],
+    "stats": { "hp": 75, "attack": 95, "defense": 67, "specialAttack": 125, "specialDefense": 95, "speed": 83 },
+    "baseExperience": 270,
+    "height": 16,
+    "weight": 680,
+    "category": "Blast Pokémon",
+    "description": "It fires fireballs from its arm cannons that top 3,600 degrees Fahrenheit, melting anything."
+  },
+  {
+    "id": 359,
+    "name": { "en": "Absol", "he": "אבסול" },
+    "types": ["dark"],
+    "stats": { "hp": 65, "attack": 130, "defense": 60, "specialAttack": 75, "specialDefense": 60, "speed": 75 },
+    "baseExperience": 163,
+    "height": 12,
+    "weight": 470,
+    "category": "Disaster Pokémon",
+    "description": "It senses upcoming natural disasters using its horn and appears to warn humans, though misunderstood."
+  },
+  {
+    "id": 633,
+    "name": { "en": "Deino", "he": "דיינו" },
+    "types": ["dark", "dragon"],
+    "stats": { "hp": 52, "attack": 65, "defense": 50, "specialAttack": 45, "specialDefense": 50, "speed": 38 },
+    "baseExperience": 60,
+    "height": 8,
+    "weight": 173,
+    "category": "Irate Pokémon",
+    "description": "Because it cannot see, it bites and tackles everything around it to learn about its environment."
+  },
+  {
+    "id": 634,
+    "name": { "en": "Zweilous", "he": "צוואילוס" },
+    "types": ["dark", "dragon"],
+    "stats": { "hp": 72, "attack": 85, "defense": 70, "specialAttack": 65, "specialDefense": 70, "speed": 58 },
+    "baseExperience": 147,
+    "height": 14,
+    "weight": 500,
+    "category": "Hostile Pokémon",
+    "description": "Its two heads do not get along. They always compete with each other to eat more food."
+  },
+  {
+    "id": 635,
+    "name": { "en": "Hydreigon", "he": "היידרייגון" },
+    "types": ["dark", "dragon"],
+    "stats": { "hp": 92, "attack": 105, "defense": 90, "specialAttack": 125, "specialDefense": 90, "speed": 98 },
+    "baseExperience": 300,
+    "height": 18,
+    "weight": 1600,
+    "category": "Brutal Pokémon",
+    "description": "The heads on its arms do not have brains. It uses all three heads to consume and destroy everything."
+  },
+  {
+    "id": 443,
+    "name": {
+      "en": "Gible",
+      "he": "גיבל"
+    },
+    "types": ["dragon", "ground"],
+    "stats": {
+      "hp": 58,
+      "attack": 70,
+      "defense": 45,
+      "specialAttack": 40,
+      "specialDefense": 45,
+      "speed": 42
+    },
+    "baseExperience": 60,
+    "height": 7,
+    "weight": 205,
+    "category": "Land Shark Pokémon",
+    "description": "It nests in small, horizontal holes in cave walls. It pounces to catch prey that strays too close."
+  },
+  {
+    "id": 444,
+    "name": {
+      "en": "Gabite",
+      "he": "גבייט"
+    },
+    "types": ["dragon", "ground"],
+    "stats": {
+      "hp": 68,
+      "attack": 90,
+      "defense": 65,
+      "specialAttack": 50,
+      "specialDefense": 55,
+      "speed": 82
+    },
+    "baseExperience": 144,
+    "height": 14,
+    "weight": 560,
+    "category": "Cave Pokémon",
+    "description": "It hoards yellow gems mined from caves. It loves shiny things and will raid Sableye nests to steal gems."
+  },
+  {
+    "id": 445,
+    "name": {
+      "en": "Garchomp",
+      "he": "גארצ'ומפ"
+    },
+    "types": ["dragon", "ground"],
+    "stats": {
+      "hp": 108,
+      "attack": 130,
+      "defense": 95,
+      "specialAttack": 80,
+      "specialDefense": 85,
+      "speed": 102
+    },
+    "baseExperience": 300,
+    "height": 19,
+    "weight": 950,
+    "category": "Mach Pokémon",
+    "description": "When it folds up its body and extends its wings, it flies at the speed of sound. It never allows its prey to escape."
   }
 ]
