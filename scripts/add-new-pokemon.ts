@@ -13,7 +13,8 @@ import { fetchLearnsetByPokemonId } from './fetch-learnsets.js';
 import { fetchPokemonSpritesById } from './fetch-sprites.js';
 
 const EXTRA_POKEMONS_IDS = [
-  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611, 612, 633, 634, 635
+  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611,
+  612, 633, 634, 635,
 ];
 
 const pokemonId = parseInt(process.argv[2], 10);
@@ -137,17 +138,20 @@ const handleSprites = async () => {
 };
 
 const syncExtraPokemonIdsArray = () => {
+  // Push and sort are already handling the live memory update correctly
   EXTRA_POKEMONS_IDS.push(pokemonId);
   EXTRA_POKEMONS_IDS.sort((a, b) => a - b);
-  const updatedArrayString = `const EXTRA_POKEMONS_IDS = [
-  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611, 612, 633, 634, 635
-];`;
 
+  // Generating the array string dynamically based on the updated in-memory array
+  const updatedArrayString = `const EXTRA_POKEMONS_IDS = [\n  ${EXTRA_POKEMONS_IDS.join(', ')}\n];`;
+
+  // 1. Sync the script file itself for subsequent executions
   let scriptContent = fs.readFileSync(__filename, 'utf-8');
   scriptContent = scriptContent.replace(/const EXTRA_POKEMONS_IDS = \[\s*[\s\S]*?\];/g, updatedArrayString);
   fs.writeFileSync(__filename, scriptContent, 'utf-8');
   console.log(`  ✓ Updated EXTRA_POKEMONS_IDS inside script file.`);
 
+  // 2. Sync the actual game scene using the exact same dynamic string
   if (fs.existsSync(pokedexScenePath)) {
     let pokedexContent = fs.readFileSync(pokedexScenePath, 'utf-8');
     pokedexContent = pokedexContent.replace(/const EXTRA_POKEMONS_IDS = \[\s*[\s\S]*?\];/g, updatedArrayString);
