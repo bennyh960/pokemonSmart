@@ -6733,9 +6733,8 @@ export function createBattleScene(
                 textBox = createTextBox([t('battle.moveIsDisabled', { move: getMoveDisplayName(m.id) })], isRTL());
                 phase = 'INTRO';
               } else {
-                if (trainerAIState) trainerAIState.justSwitchedIn = false;
-
                 if (!handleTrainerTurnPriority()) {
+                  if (trainerAIState) trainerAIState.justSwitchedIn = false;
                   enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
                   const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
                   const turnOrder = determineTurnOrder(
