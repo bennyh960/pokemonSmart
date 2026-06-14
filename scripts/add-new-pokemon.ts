@@ -13,7 +13,8 @@ import { fetchLearnsetByPokemonId } from './fetch-learnsets.js';
 import { fetchPokemonSpritesById } from './fetch-sprites.js';
 
 const EXTRA_POKEMONS_IDS = [
-  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611, 612, 633, 634, 635
+  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611,
+  612, 633, 634, 635,
 ];
 
 const pokemonId = parseInt(process.argv[2], 10);
@@ -67,7 +68,10 @@ function validateMoves(moves: { moveId: number }[], section: string) {
 const handlePokemonData = async () => {
   const pokemonEntry = await fetchPokemonDataById(pokemonId);
   pokemonData.push(pokemonEntry);
-  saveJson(pokemonDataPath, pokemonData);
+  saveJson(
+    pokemonDataPath,
+    pokemonData.sort((a, b) => a.id - b.id),
+  );
   console.log(`  ✓ Added basic stats to pokemon.json`);
 };
 
@@ -166,6 +170,10 @@ const main = async () => {
     await handleSprites();
     syncExtraPokemonIdsArray();
     console.log(`\n=== Done processing Pokemon ${pokemonId} Successfully ===`);
+
+    console.log(
+      `\n  📢  [REMINDER]: Please translate the Hebrew name (ID: ${pokemonId}) in both files. pokemon.json and evolution-chains.json`,
+    );
   } catch (error) {
     console.error(`\n❌ Error occurred in pipeline:`, error);
   }
