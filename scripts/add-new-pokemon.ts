@@ -4,6 +4,8 @@
 // need update in pokdex schene the EXTRA_POKEMONS_IDS by adding the new pokemon id if its id above 251
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
 import { fetchPokemobAbilitesByPokemonId } from './fetch-abilities';
 import { fetchPokemonDataById } from './fetch-pokemon-data';
 import { fetchEvolutionChainByPokemonId } from './fetch-evolution-chains';
@@ -13,8 +15,7 @@ import { fetchPokemonSpritesById } from './fetch-sprites';
 
 // alwyes make sync this with the pokdex scene EXTRA_POKEMONS_IDS
 const EXTRA_POKEMONS_IDS = [
-  349, 350, 374, 375, 376, 443, 444, 445, 610, 611, 612, 328, 329, 330, 371, 372, 373, 442, 359, 633, 634, 635, 461,
-  464, 466, 467,
+  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611, 612, 633, 634, 635
 ];
 
 const pokemonId = parseInt(process.argv[2], 10);
@@ -30,14 +31,15 @@ if (pokemonId <= 251 || EXTRA_POKEMONS_IDS.includes(pokemonId)) {
   process.exit(1);
 }
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const pokemonDataPath = path.join(__dirname, '../src/data/pokemon.json');
 const pokemonAbilitiesPath = path.join(__dirname, '../src/data/pokemon-abilities.json');
 const learnsetByLevelPath = path.join(__dirname, '../src/data/learnsets.json');
 const learnsetByTMPath = path.join(__dirname, '../src/data/tm-learnsets.json');
 const evolutionChainsPath = path.join(__dirname, '../src/data/evolution-chains.json');
 const exisitingMovesPath = path.join(__dirname, '../src/data/moves.json');
-
-// Spites base directory - matching your fetchPokemonSpritesById structure
 const spritesDir = path.join(__dirname, '../public/sprites/pokemon');
 
 // Read existing files
@@ -177,7 +179,9 @@ const syncExtraPokemonIdsArray = () => {
   EXTRA_POKEMONS_IDS.sort((a, b) => a - b);
 
   // Regex to target and update the literal array inside this file
-  const updatedArrayString = `const EXTRA_POKEMONS_IDS = [\n  ${EXTRA_POKEMONS_IDS.join(', ')}\n];`;
+  const updatedArrayString = `const EXTRA_POKEMONS_IDS = [
+  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611, 612, 633, 634, 635
+];`;
   scriptContent = scriptContent.replace(/const EXTRA_POKEMONS_IDS = \[\s*[\s\S]*?\];/g, updatedArrayString);
 
   fs.writeFileSync(currentScriptPath, scriptContent, 'utf-8');
