@@ -1131,7 +1131,7 @@ export function createBattleScene(
     trainerAIState!.justSwitchedIn = true;
     trainerAIState!.seenPokemonIds.add(enemy.uuid);
 
-    console.log(enemy);
+    console.log({ enemy, trainerAIState });
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     enemySelectedMoveIndex = -1;
     // Update enemy types for battle helper display
@@ -7609,7 +7609,7 @@ export function createBattleScene(
           ? {
               party: trainerData.party,
               totalSlots: trainerData.party.length,
-              revealedCount: trainerAIState?.seenPokemonIds.size ?? 1,
+              revealedCount: trainerAIState?.seenPokemonIds.size ?? 0,
             }
           : undefined,
       );

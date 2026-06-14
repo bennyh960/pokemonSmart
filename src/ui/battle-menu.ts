@@ -687,7 +687,7 @@ export function renderPartyBalls(
     if (i >= party.length) {
       fillColor = BTL.BALL_EMPTY.fill;
       borderColor = BTL.BALL_EMPTY.border;
-    } else if (side === 'opponent' && revealedCount !== undefined && i > revealedCount) {
+    } else if (side === 'opponent' && revealedCount !== undefined && i >= revealedCount) {
       fillColor = BTL.BALL_EMPTY.fill;
       borderColor = BTL.BALL_EMPTY.border;
     } else if (party[i].hp > 0) {
