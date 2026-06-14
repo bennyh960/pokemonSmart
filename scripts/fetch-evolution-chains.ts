@@ -34,9 +34,9 @@ function extractIdFromUrl(url: string): number {
   return parseInt(parts[parts.length - 1], 10);
 }
 
-function flattenChain(node: any, stages: EvolutionStep[]): void {
+function flattenChain(node: any, stages: EvolutionStep[], skipEarlyReturn: boolean = false): void {
   const speciesId = extractIdFromUrl(node.species.url);
-  if (speciesId > TOTAL_POKEMON) return;
+  if (speciesId > TOTAL_POKEMON && !skipEarlyReturn) return;
 
   const detail = node.evolution_details[0];
   const enName = node.species.name.charAt(0).toUpperCase() + node.species.name.slice(1);
@@ -49,7 +49,7 @@ function flattenChain(node: any, stages: EvolutionStep[]): void {
   });
 
   for (const child of node.evolves_to) {
-    flattenChain(child, stages);
+    flattenChain(child, stages, skipEarlyReturn);
   }
 }
 
@@ -97,7 +97,10 @@ export async function fetchEvolutionChains(): Promise<EvolutionChain[]> {
   return chains;
 }
 
-export async function fetchEvolutionChainByPokemonId(pokemonId: number): Promise<EvolutionChain> {
+export async function fetchEvolutionChainByPokemonId(
+  pokemonId: number,
+  skipEarlyReturn: boolean = false,
+): Promise<EvolutionChain> {
   const res = await fetch(`${API_BASE}/pokemon-species/${pokemonId}`);
   if (!res.ok) throw new Error(`Failed to fetch species ${pokemonId}: ${res.status}`);
   const data = await res.json();
@@ -108,7 +111,7 @@ export async function fetchEvolutionChainByPokemonId(pokemonId: number): Promise
   const chainData = await chainRes.json();
 
   const stages: EvolutionStep[] = [];
-  flattenChain(chainData.chain, stages);
+  flattenChain(chainData.chain, stages, skipEarlyReturn);
 
   return { chainId: chainData.id, stages };
 }
