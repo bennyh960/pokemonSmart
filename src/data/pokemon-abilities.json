@@ -1769,6 +1769,13 @@
     ],
     "hidden": "Rough Skin"
   },
+  "447": {
+    "abilities": [
+      39,
+      80
+    ],
+    "hidden": 158
+  },
   "461": {
     "abilities": [
       "Pressure",

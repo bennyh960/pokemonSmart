@@ -3398,5 +3398,30 @@
         "item": null
       }
     ]
+  },
+  {
+    "chainId": 232,
+    "stages": [
+      {
+        "id": 447,
+        "name": {
+          "en": "Riolu",
+          "he": "ריולו"
+        },
+        "minLevel": null,
+        "trigger": null,
+        "item": null
+      },
+      {
+        "id": 448,
+        "name": {
+          "en": "Lucario",
+          "he": "לוקאריו"
+        },
+        "minLevel": null,
+        "trigger": "level-up",
+        "item": null
+      }
+    ]
   }
 ]

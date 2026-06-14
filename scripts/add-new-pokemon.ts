@@ -13,8 +13,7 @@ import { fetchLearnsetByPokemonId } from './fetch-learnsets.js';
 import { fetchPokemonSpritesById } from './fetch-sprites.js';
 
 const EXTRA_POKEMONS_IDS = [
-  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611,
-  612, 633, 634, 635,
+  328, 329, 330, 349, 350, 359, 371, 372, 373, 374, 375, 376, 442, 443, 444, 445, 461, 464, 466, 467, 468, 610, 611, 612, 633, 634, 635
 ];
 
 const pokemonId = parseInt(process.argv[2], 10);

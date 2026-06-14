@@ -285,6 +285,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Extrasensory: { flinchChance: 10 },
   'Dark Pulse': { flinchChance: 20 },
   'Icicle Crash': { flinchChance: 30 },
+  'Force Palm': { ...statusEffect('paralyze', 30), flinchChance: 10 },
   'Fire Fang': { ...statusEffect('burn', 10), flinchChance: 10 },
   'Ice Fang': { ...statusEffect('freeze', 10, { minTurns: 2, maxTurns: 5 }), flinchChance: 10 },
   'Thunder Fang': { ...statusEffect('paralyze', 10), flinchChance: 10 },

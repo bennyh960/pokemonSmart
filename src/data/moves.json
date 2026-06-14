@@ -11103,5 +11103,20 @@
       "en": "The user reacts to the target's movement and strikes with the heel of its palm, making the target flinch. This move fails if the target is not readying a priority move.",
       "he": "פוגע ראשון ביריב שמנסה להשתמש במהלך עדיפות."
     }
+  },
+  {
+    "id": 395,
+    "name": { "en": "Force Palm", "he": "כף כוח" },
+    "type": "fighting",
+    "power": 60,
+    "accuracy": 100,
+    "pp": 10,
+    "effectChance": 30,
+    "mathDifficulty": 3,
+    "damageClass": "physical",
+    "description": {
+      "en": "The user strikes the target with its palm. This may also leave the target with paralysis.",
+      "he": "המשתמש מכה את המטרה בכף ידו. זה עלול גם להשאיר את המטרה משותקת."
+    }
   }
 ]

@@ -9503,6 +9503,53 @@
       "levelLearned": 55
     }
   ],
+  "447": [
+    {
+      "moveId": 98,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 193,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 203,
+      "gen": 1,
+      "levelLearned": 1
+    },
+    {
+      "moveId": 68,
+      "gen": 1,
+      "levelLearned": 6
+    },
+    {
+      "moveId": 395,
+      "gen": 1,
+      "levelLearned": 11
+    },
+    {
+      "moveId": 364,
+      "gen": 1,
+      "levelLearned": 15
+    },
+    {
+      "moveId": 179,
+      "gen": 1,
+      "levelLearned": 19
+    },
+    {
+      "moveId": 103,
+      "gen": 1,
+      "levelLearned": 24
+    },
+    {
+      "moveId": 383,
+      "gen": 1,
+      "levelLearned": 29
+    }
+  ],
   "461": [
     {
       "moveId": 10,
