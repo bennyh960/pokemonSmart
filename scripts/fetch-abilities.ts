@@ -157,28 +157,28 @@ export async function fetchAbilities(): Promise<{
 }
 
 // Standalone runner
-async function main(): Promise<void> {
-  console.log('=== Fetching Abilities ===\n');
-  const startTime = Date.now();
+// async function main(): Promise<void> {
+//   console.log('=== Fetching Abilities ===\n');
+//   const startTime = Date.now();
 
-  const { abilities, pokemonAbilities } = await fetchAbilities();
+//   const { abilities, pokemonAbilities } = await fetchAbilities();
 
-  const dataDir = join(process.cwd(), 'src', 'data');
-  mkdirSync(dataDir, { recursive: true });
+//   const dataDir = join(process.cwd(), 'src', 'data');
+//   mkdirSync(dataDir, { recursive: true });
 
-  const abilitiesPath = join(dataDir, 'abilities.json');
-  writeFileSync(abilitiesPath, JSON.stringify(abilities, null, 2));
-  console.log(`\n✓ Wrote ${Object.keys(abilities).length} abilities to abilities.json`);
+//   const abilitiesPath = join(dataDir, 'abilities.json');
+//   writeFileSync(abilitiesPath, JSON.stringify(abilities, null, 2));
+//   console.log(`\n✓ Wrote ${Object.keys(abilities).length} abilities to abilities.json`);
 
-  const mappingPath = join(dataDir, 'pokemon-abilities.json');
-  writeFileSync(mappingPath, JSON.stringify(pokemonAbilities, null, 2));
-  console.log(`✓ Wrote ability mappings for ${Object.keys(pokemonAbilities).length} Pokemon to pokemon-abilities.json`);
+//   const mappingPath = join(dataDir, 'pokemon-abilities.json');
+//   writeFileSync(mappingPath, JSON.stringify(pokemonAbilities, null, 2));
+//   console.log(`✓ Wrote ability mappings for ${Object.keys(pokemonAbilities).length} Pokemon to pokemon-abilities.json`);
 
-  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`\nDone in ${elapsed}s`);
-}
+//   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+//   console.log(`\nDone in ${elapsed}s`);
+// }
 
-main().catch((err) => {
-  console.error('\nFATAL:', err);
-  process.exit(1);
-});
+// main().catch((err) => {
+//   console.error('\nFATAL:', err);
+//   process.exit(1);
+// });

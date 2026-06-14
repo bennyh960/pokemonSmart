@@ -14,7 +14,23 @@ const TOTAL_POKEMON = 251;
 const MAX_RETRIES = 3;
 
 /** Preferred version groups in priority order */
-const VERSION_GROUP_PRIORITY = ['gold-silver', 'crystal', 'red-blue'];
+const VERSION_GROUP_PRIORITY = [
+  // דור 4 (עבור פוקימונים חדשים כמו טוגקיס ואלקטיבייר)
+  'diamond-pearl',
+  'platinum',
+  'heartgold-soulsilver',
+
+  // דור 3 (עבור פוקימונים כמו בלדום, סלמנס, פלאיגון)
+  'ruby-sapphire',
+  'emerald',
+  'firered-leafgreen',
+
+  // דור 2 ו-1 (עבור הפוקימונים המקוריים של המשחק שלך)
+  'gold-silver',
+  'crystal',
+  'red-blue',
+  'yellow',
+];
 
 export interface LearnsetEntry {
   moveId: number;
@@ -97,23 +113,23 @@ export async function fetchLearnsetByPokemonId(pokemonId: number): Promise<Learn
 }
 
 // Standalone runner
-async function main(): Promise<void> {
-  console.log('=== Fetching Learnsets ===\n');
-  const startTime = Date.now();
+// async function main(): Promise<void> {
+//   console.log('=== Fetching Learnsets ===\n');
+//   const startTime = Date.now();
 
-  const data = await fetchLearnsets();
+//   const data = await fetchLearnsets();
 
-  const dataDir = join(process.cwd(), 'src', 'data');
-  mkdirSync(dataDir, { recursive: true });
-  const outPath = join(dataDir, 'learnsets.json');
-  writeFileSync(outPath, JSON.stringify(data, null, 2));
+//   const dataDir = join(process.cwd(), 'src', 'data');
+//   mkdirSync(dataDir, { recursive: true });
+//   const outPath = join(dataDir, 'learnsets.json');
+//   writeFileSync(outPath, JSON.stringify(data, null, 2));
 
-  const count = Object.keys(data).length;
-  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`\n✓ Wrote learnsets for ${count} Pokemon to ${outPath} in ${elapsed}s`);
-}
+//   const count = Object.keys(data).length;
+//   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+//   console.log(`\n✓ Wrote learnsets for ${count} Pokemon to ${outPath} in ${elapsed}s`);
+// }
 
-main().catch((err) => {
-  console.error('\nFATAL:', err);
-  process.exit(1);
-});
+// main().catch((err) => {
+//   console.error('\nFATAL:', err);
+//   process.exit(1);
+// });

@@ -14,8 +14,23 @@ const TOTAL_POKEMON = 251;
 const MAX_RETRIES = 3;
 
 /** Preferred version groups in priority order (Gen 2 → Gen 1) */
-const VERSION_GROUP_PRIORITY = ['gold-silver', 'crystal', 'red-blue'];
+const VERSION_GROUP_PRIORITY = [
+  // דור 4 (עבור פוקימונים חדשים כמו טוגקיס ואלקטיבייר)
+  'diamond-pearl',
+  'platinum',
+  'heartgold-soulsilver',
 
+  // דור 3 (עבור פוקימונים כמו בלדום, סלמנס, פלאיגון)
+  'ruby-sapphire',
+  'emerald',
+  'firered-leafgreen',
+
+  // דור 2 ו-1 (עבור הפוקימונים המקוריים של המשחק שלך)
+  'gold-silver',
+  'crystal',
+  'red-blue',
+  'yellow',
+];
 export interface TmLearnsetEntry {
   moveId: number;
 }
@@ -94,26 +109,26 @@ export async function fetchTmLearnsetByPokemonId(pokemonId: number): Promise<TmL
 }
 
 // Standalone runner
-async function main(): Promise<void> {
-  console.log('=== Fetching TM/HM Learnsets ===\n');
-  const startTime = Date.now();
+// async function main(): Promise<void> {
+//   console.log('=== Fetching TM/HM Learnsets ===\n');
+//   const startTime = Date.now();
 
-  const data = await fetchTmLearnsets();
+//   const data = await fetchTmLearnsets();
 
-  const dataDir = join(process.cwd(), 'src', 'data');
-  mkdirSync(dataDir, { recursive: true });
-  const outPath = join(dataDir, 'tm-learnsets.json');
-  writeFileSync(outPath, JSON.stringify(data, null, 2));
+//   const dataDir = join(process.cwd(), 'src', 'data');
+//   mkdirSync(dataDir, { recursive: true });
+//   const outPath = join(dataDir, 'tm-learnsets.json');
+//   writeFileSync(outPath, JSON.stringify(data, null, 2));
 
-  const count = Object.keys(data).length;
-  const totalMoves = Object.values(data).reduce((sum, entries) => sum + entries.length, 0);
-  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(
-    `\n✓ Wrote TM/HM learnsets for ${count} Pokemon (${totalMoves} total entries) to ${outPath} in ${elapsed}s`,
-  );
-}
+//   const count = Object.keys(data).length;
+//   const totalMoves = Object.values(data).reduce((sum, entries) => sum + entries.length, 0);
+//   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+//   console.log(
+//     `\n✓ Wrote TM/HM learnsets for ${count} Pokemon (${totalMoves} total entries) to ${outPath} in ${elapsed}s`,
+//   );
+// }
 
-main().catch((err) => {
-  console.error('\nFATAL:', err);
-  process.exit(1);
-});
+// main().catch((err) => {
+//   console.error('\nFATAL:', err);
+//   process.exit(1);
+// });
