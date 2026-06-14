@@ -94,19 +94,63 @@ export function getReencounterStatus(trainer: TrainerData): ReencounterStatus {
 /**
  * Resolve which Pokemon species a base species becomes at a given level,
  * following level-up evolution chains (e.g. Charmander→Charmeleon at 16).
+ * item use and happines use treshold
+ * baranch - if its randmom chars it will select renadom if not it will select the firtst available
  * Returns the evolved species ID.
  */
-export function resolveSpeciesAtLevel(basePokemonId: number, level: number): number {
+const ITEM_EVOLUTION_LEVEL_THRESHOLD = 36;
+const HAPPINESS_EVOLUTION_LEVEL_THRESHOLD = 30;
+
+export function resolveSpeciesAtLevel(basePokemonId: number, level: number, randomChars = false): number {
   const chain = getEvolutionChain(basePokemonId);
   if (!chain) return basePokemonId;
 
-  // Walk the chain stages in order — last stage with minLevel <= target level wins
+  // Find which stage the basePokemonId is at
+  const baseStageIndex = chain.stages.findIndex((s) => s.id === basePokemonId);
+  if (baseStageIndex === -1) return basePokemonId;
+
+  // Collect all stages after the base that are eligible at this level
+  const remainingStages = chain.stages.slice(baseStageIndex + 1);
+
+  // Walk stage by stage — for linear chains this resolves all the way
+  // (e.g. Nidoran → Nidorino at 16 → Nidoking at 36)
   let resolved = basePokemonId;
-  for (const stage of chain.stages) {
-    if (stage.trigger === 'level-up' && stage.minLevel !== null && level >= stage.minLevel) {
-      resolved = stage.id;
+  let currentStages = remainingStages;
+
+  while (currentStages.length > 0) {
+    const eligible = currentStages.filter((stage) => {
+      if (!stage.trigger) return false;
+
+      if (stage.trigger === 'level-up') {
+        if (stage.minLevel !== null) {
+          return level >= stage.minLevel;
+        }
+        // happiness/time-based level-up (Espeon, Umbreon)
+        return level >= HAPPINESS_EVOLUTION_LEVEL_THRESHOLD;
+      }
+
+      // use-item, trade, or anything else
+      return level >= ITEM_EVOLUTION_LEVEL_THRESHOLD;
+    });
+
+    if (eligible.length === 0) break;
+
+    // Pick which evolution to use
+    let chosen;
+    if (eligible.length === 1) {
+      chosen = eligible[0];
+    } else {
+      // Branching chain (Eevee etc.)
+      chosen = randomChars ? eligible[Math.floor(Math.random() * eligible.length)] : eligible[0];
     }
+
+    resolved = chosen.id;
+
+    // Continue walking from chosen stage for further evolutions
+    const chosenIdx = chain.stages.findIndex((s) => s.id === chosen.id);
+    currentStages = chain.stages.slice(chosenIdx + 1);
   }
+
   return resolved;
 }
 
@@ -172,9 +216,11 @@ export function buildReencounterParty(trainer: TrainerData, encounterIndex: numb
     trainer.party = getRandomParty(trainer);
   }
 
+  const isRandomTrainer = trainer.randomChars && trainer.randomChars.length > 0;
+
   for (const slot of trainer.party) {
     const boostedLevel = slot.level + boost;
-    const speciesId = resolveSpeciesAtLevel(slot.pokemonId, boostedLevel);
+    const speciesId = resolveSpeciesAtLevel(slot.pokemonId, boostedLevel, isRandomTrainer);
     const data = getPokemon(speciesId);
     if (data) party.push(createPokemonFromData(data, boostedLevel));
   }
@@ -182,7 +228,7 @@ export function buildReencounterParty(trainer: TrainerData, encounterIndex: numb
   if (rc.partyExtra && encounterIndex >= 1) {
     for (const extra of rc.partyExtra) {
       const boostedLevel = extra.level + boost;
-      const speciesId = resolveSpeciesAtLevel(extra.pokemonId, boostedLevel);
+      const speciesId = resolveSpeciesAtLevel(extra.pokemonId, boostedLevel, isRandomTrainer);
       const data = getPokemon(speciesId);
       if (data) party.push(createPokemonFromData(data, boostedLevel));
     }

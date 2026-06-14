@@ -1131,7 +1131,6 @@ export function createBattleScene(
     trainerAIState!.justSwitchedIn = true;
     trainerAIState!.seenPokemonIds.add(enemy.uuid);
 
-    console.log({ enemy, trainerAIState });
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     enemySelectedMoveIndex = -1;
     // Update enemy types for battle helper display
