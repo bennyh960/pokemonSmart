@@ -1366,7 +1366,7 @@
   "154": {
     "name": {
       "en": "Justified",
-      "he": "צודק"
+      "he": "צדק נכון"
     },
     "description": {
       "en": "Raises Attack when hit by a Dark-type move.",
@@ -1450,5 +1450,16 @@
       "he": "אם הפוקימון עם גז מנטרל נמצא בקרב, ההשפעות של כל היכולות של הפוקימונים יבוטלו או לא יופעלו. "
     },
     "generationIntroduced": "generation-viii"
+  },
+  "257": {
+    "name": {
+      "en": "Rough Skin",
+      "he": "עור מחוספס"
+    },
+    "description": {
+      "en": "Inflicts damage to the attacker on contact.",
+      "he": "גורם נזק לתוקף במגע."
+    },
+    "generationIntroduced": "generation-iii"
   }
 }

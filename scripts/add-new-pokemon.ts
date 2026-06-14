@@ -34,6 +34,7 @@ const learnsetByLevelPath = path.join(__dirname, '../src/data/learnsets.json');
 const learnsetByTMPath = path.join(__dirname, '../src/data/tm-learnsets.json');
 const evolutionChainsPath = path.join(__dirname, '../src/data/evolution-chains.json');
 const exisitingMovesPath = path.join(__dirname, '../src/data/moves.json');
+const exisitingAbilitiesPath = path.join(__dirname, '../src/data/abilities.json');
 const spritesDir = path.join(__dirname, '../public/sprites/pokemon');
 const pokedexScenePath = path.join(__dirname, '../src/scenes/pokedex/pokedex_scene.ts');
 
@@ -46,6 +47,13 @@ const evolutionChains = JSON.parse(fs.readFileSync(evolutionChainsPath, 'utf-8')
 const existingMovesRaw = JSON.parse(fs.readFileSync(exisitingMovesPath, 'utf-8'));
 const existingMoveIds = new Set<number>(
   Array.isArray(existingMovesRaw) ? existingMovesRaw.map((m: any) => m.id) : Object.keys(existingMovesRaw).map(Number),
+);
+
+const existingAbilitiesRaw = JSON.parse(fs.readFileSync(exisitingAbilitiesPath, 'utf-8'));
+const existingAbilityIds = new Set<number>(
+  Array.isArray(existingAbilitiesRaw)
+    ? existingAbilitiesRaw.map((a: any) => a.id)
+    : Object.keys(existingAbilitiesRaw).map(Number),
 );
 
 function saveJson(filePath: string, data: unknown): void {
@@ -64,6 +72,20 @@ function validateMoves(moves: { moveId: number }[], section: string) {
     console.log(`  ✓ All [${section}] moves verified inside moves.json.`);
   }
 }
+function validateAbilities(abilities: { abilityId: number }[], section: string) {
+  let hasMissing = false;
+  for (const ability of abilities) {
+    if (!existingAbilityIds.has(ability.abilityId)) {
+      console.warn(
+        `  ⚠️  WARNING: Ability ID [${ability.abilityId}] learned via [${section}] is missing from abilities.json!`,
+      );
+      hasMissing = true;
+    }
+  }
+  if (!hasMissing) {
+    console.log(`  ✓ All [${section}] abilities verified inside abilities.json.`);
+  }
+}
 
 const handlePokemonData = async () => {
   const pokemonEntry = await fetchPokemonDataById(pokemonId);
@@ -80,6 +102,11 @@ const handlePokemonAbilities = async () => {
   pokemonAbilities[pokemonId] = { abilities: regular, hidden };
   saveJson(pokemonAbilitiesPath, pokemonAbilities);
   console.log(`  ✓ Added abilities to pokemon-abilities.json`);
+
+  // extract current abilitlies data to check if ability id is there.
+  // if not - console.warn
+  const allAbilities = [...regular, hidden].filter((id) => id !== null).map((id) => ({ abilityId: id }));
+  validateAbilities(allAbilities, 'Abilities');
 };
 
 const handleEvolutionChains = async () => {

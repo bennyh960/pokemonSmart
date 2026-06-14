@@ -20,10 +20,9 @@ import type { StateMachine } from '../engine/state-machine.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
-import { getCachedMap, getMapDisplayName, loadMap, mapCache } from '../systems/map-manager.js';
+import { getCachedMap, getMapDisplayName, loadMap } from '../systems/map-manager.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import mapManifest from '../data/maps/map-manifest.js';
-import type { TileMapData } from '../engine/tilemap.js';
 import type { Scene, Pokemon } from '../types/index.js';
 import { type WildLocation } from './pokedex/tabs/location.js';
 // ─── Fly destination registry ─────────────────────────────────────────────────

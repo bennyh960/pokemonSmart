@@ -4,7 +4,7 @@ import { getTileset } from '../../../engine/tileset';
 import { getLocale, isRTL, t } from '../../../i18n/i18n';
 import { getPokemon, getSpawnLocations } from '../../../services/pokemon-data';
 import { getPlayerData } from '../../../systems/game-state';
-import { getAllMapIds, getCachedMap, loadMap, mapCache } from '../../../systems/map-manager';
+import { getCachedMap, loadMap } from '../../../systems/map-manager';
 
 // RENDER
 export function renderLocationTab(
