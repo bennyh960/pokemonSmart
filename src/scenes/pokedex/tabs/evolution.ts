@@ -252,7 +252,7 @@ function renderRadialTreeLayout(
   const radiusX = 74;
 
   // STEP 1: Render structural wire vectors FIRST with asymmetric vertical scaling
-  evolutions.forEach((stage, idx) => {
+  evolutions.forEach((_, idx) => {
     const angle = (idx / evolutions.length) * Math.PI * 2 - Math.PI / 2;
 
     // 🌟 DYNAMIC RADIUS: Large radius for top nodes, small compact radius for bottom nodes

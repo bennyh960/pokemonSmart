@@ -71,7 +71,7 @@ function drawBG0(ctx: CanvasRenderingContext2D, t: number) {
   }
 }
 
-export function renderStyle0(ctx: CanvasRenderingContext2D, state: CinematicState, progress: number) {
+export function renderStyle0(ctx: CanvasRenderingContext2D, state: CinematicState) {
   drawBG0(ctx, state.vsTimer);
   drawVSText(ctx, state.vsScale, state.vsAngle, '#ffdd00', '#ff8800');
 }
@@ -117,7 +117,7 @@ function drawBG1(ctx: CanvasRenderingContext2D, t: number) {
   ctx.restore();
 }
 
-export function renderStyle1(ctx: CanvasRenderingContext2D, state: CinematicState, progress: number) {
+export function renderStyle1(ctx: CanvasRenderingContext2D, state: CinematicState) {
   drawBG1(ctx, state.vsTimer);
 
   ctx.save();
@@ -199,7 +199,7 @@ function drawBG2(ctx: CanvasRenderingContext2D, t: number) {
   }
 }
 
-export function renderStyle2(ctx: CanvasRenderingContext2D, state: CinematicState, progress: number) {
+export function renderStyle2(ctx: CanvasRenderingContext2D, state: CinematicState) {
   drawBG2(ctx, state.vsTimer);
   drawVSText(ctx, state.vsScale, state.vsAngle, '#ffff00', '#00ffff', 1, true);
 }

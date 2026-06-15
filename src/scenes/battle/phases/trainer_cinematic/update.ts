@@ -5,7 +5,6 @@
 
 import type { TrainerBattleData } from '../..';
 import type { InputManager } from '../../../../engine/input';
-import { createPlaceholder, getCachedImage, loadImage } from '../../../../engine/sprite-loader';
 import { isRTL, t } from '../../../../i18n/i18n';
 import { getLocalizedName } from '../../../../services/pokemon-data';
 import { createTextBox, updateTextBox, type TextBoxState } from '../../../../ui/text-box';
@@ -85,22 +84,6 @@ export function updateTrainerCinematic(
       );
     }
   }
-
-  const enemyImg = getCachedImage(state.enemyPath) ?? createPlaceholder(48, 68, 'magenta');
-  const playerImg = getCachedImage(state.playerPath) ?? createPlaceholder(48, 68, 'blue');
-  // If sync asset query still returns null, track loading delay time up to a maximum threshold
-  // if (!enemyImg || !playerImg) {
-  //   state.isLoaded = false;
-  //   state.vsTimer += dt;
-
-  //   // Timeout release switch ensuring gameplay never halts if server routes are physically missing
-  //   if (state.vsTimer < 1.2) {
-  //     return { done: false, textBox };
-  //   } else {
-  //     console.warn('Trainer Cinematic: Asset fetching timed out. Running backup silhouette matrices.');
-  //     state.vsTimer = 0;
-  //   }
-  // }
 
   state.isLoaded = true;
   state.timer += dt;

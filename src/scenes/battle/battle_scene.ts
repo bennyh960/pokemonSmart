@@ -1150,7 +1150,7 @@ export function createBattleScene(
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     enemySelectedMoveIndex = -1;
     // Update enemy types for battle helper display
-    if (menu) menu.enemyTypes = (enemy.types ?? []) as import('../types/index.js').PokemonType[];
+    if (menu) menu.enemyTypes = (enemy.types ?? []) as import('../../types/index.js').PokemonType[];
     enemyAlreadyAttacked = false;
     enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
     setStatus(enemyHpBar, enemy.status ?? '');
@@ -1320,7 +1320,7 @@ export function createBattleScene(
     menu = createBattleMenu(player.moves);
     menu.playerPokemon = player;
     menu.party = hasActiveGame() ? getPlayerData().party : [player];
-    menu.enemyTypes = (enemy.types ?? []) as import('../types/index.js').PokemonType[];
+    menu.enemyTypes = (enemy.types ?? []) as import('../../types/index.js').PokemonType[];
     // Consume one Battle Helper charge if enabled
     if (hasActiveGame()) {
       const pd = getPlayerData();
@@ -1590,8 +1590,8 @@ export function createBattleScene(
     const hasTypeAdv = enemy.types.some(
       (t) =>
         getCombinedTypeEffectiveness(
-          t as import('../types/index.js').PokemonType,
-          player.types as import('../types/index.js').PokemonType[],
+          t as import('../../types/index.js').PokemonType,
+          player.types as import('../../types/index.js').PokemonType[],
         ) > 1,
     );
     return hasTypeAdv && enemy.level >= player.level;
@@ -1745,7 +1745,7 @@ export function createBattleScene(
 
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
     enemySelectedMoveIndex = -1;
-    if (menu) menu.enemyTypes = (enemy.types ?? []) as import('../types/index.js').PokemonType[];
+    if (menu) menu.enemyTypes = (enemy.types ?? []) as import('../../types/index.js').PokemonType[];
     enemyAlreadyAttacked = false;
     enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
     setStatus(enemyHpBar, enemy.status ?? '');
@@ -2040,8 +2040,8 @@ export function createBattleScene(
           const hasTypeAdv = enemy.types.some(
             (t) =>
               getCombinedTypeEffectiveness(
-                t as import('../types/index.js').PokemonType,
-                player.types as import('../types/index.js').PokemonType[],
+                t as import('../../types/index.js').PokemonType,
+                player.types as import('../../types/index.js').PokemonType[],
               ) > 1,
           );
 
@@ -2074,8 +2074,8 @@ export function createBattleScene(
         const hasTypeAdv = enemy.types.some(
           (t) =>
             getCombinedTypeEffectiveness(
-              t as import('../types/index.js').PokemonType,
-              player.types as import('../types/index.js').PokemonType[],
+              t as import('../../types/index.js').PokemonType,
+              player.types as import('../../types/index.js').PokemonType[],
             ) > 1,
         );
         const hasLevelAdv = enemy.level >= player.level;
@@ -4916,7 +4916,7 @@ export function createBattleScene(
     }
 
     // Contact ability: enemy ability may inflict status or recoil on player when hit by physical move
-    const contactEffectsOnPlayer: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
+    const contactEffectsOnPlayer: Array<{ status: import('../../types/battle-metadata.js').MajorStatusId }> = [];
     let playerContactRecoil = 0;
     if (hitResult.hit && damageClass === 'physical' && plannedDamage > 0 && enemy.abilityId !== null) {
       const enemyAbilityEffects = getAbilityBattleEffects(enemy.abilityId);
@@ -6172,7 +6172,7 @@ export function createBattleScene(
     }
 
     // Contact ability: player ability may inflict status or recoil on enemy when enemy uses physical move
-    const contactEffectsOnEnemy: Array<{ status: import('../types/battle-metadata.js').MajorStatusId }> = [];
+    const contactEffectsOnEnemy: Array<{ status: import('../../types/battle-metadata.js').MajorStatusId }> = [];
     let enemyContactRecoil = 0;
     if (hitResult.hit && damageClass === 'physical' && plannedDamage > 0 && player.abilityId !== null) {
       const playerAbilityEffects = getAbilityBattleEffects(player.abilityId);
@@ -7342,7 +7342,7 @@ export function createBattleScene(
       // ── Trainer cinematic intro ──
       if (phase === 'TRAINER_CINEMATIC') {
         if (cinematicState) {
-          renderTrainerCinematic(ctx, cinematicState, trainerData, bgImage);
+          renderTrainerCinematic(ctx, cinematicState, trainerData);
         }
         if (textBox) {
           renderTextBox(ctx, textBox);

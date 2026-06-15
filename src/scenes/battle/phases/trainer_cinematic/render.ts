@@ -10,7 +10,6 @@ import { CINEMATIC_PHASE_CONSTANTS } from './update';
 import type { TrainerBattleData } from '../../battle_scene';
 import { getPlayerData } from '../../../../systems/game-state';
 import { getLocale } from '../../../../i18n/i18n';
-import { getNPCSpriteImage } from '../../../../engine/asset-generator';
 import { getCharacterFrame } from '../../../../engine/character-sprites';
 
 const W = 240;
@@ -64,7 +63,6 @@ export function renderTrainerCinematic(
   ctx: CanvasRenderingContext2D,
   state: CinematicState,
   trainerData: TrainerBattleData | null,
-  bgImage: HTMLImageElement | null,
 ) {
   // ─── Phase B: Dual Quadrant Arena Field Deployment ───────────────────────────
   if (state.battleSceneActive) {
@@ -168,7 +166,7 @@ export function renderTrainerCinematic(
   }
   // ─── Phase A: Primary Dual Duelist Slide & VS Presentation ───────────────────
   else {
-    INTRO_STYLE_RENDERERS[state.introStyle](ctx, state, state.timer);
+    INTRO_STYLE_RENDERERS[state.introStyle](ctx, state);
 
     if (!state.isLoaded) return;
 
