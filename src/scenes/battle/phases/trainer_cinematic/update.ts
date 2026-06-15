@@ -4,7 +4,11 @@
  */
 
 import type { TrainerBattleData } from '../..';
+import type { InputManager } from '../../../../engine/input';
 import { getCachedImage, loadImage } from '../../../../engine/sprite-loader';
+import { isRTL, t } from '../../../../i18n/i18n';
+import { getLocalizedName } from '../../../../services/pokemon-data';
+import { createTextBox, updateTextBox, type TextBoxState } from '../../../../ui/text-box';
 
 import type { CinematicState } from './state';
 
@@ -60,7 +64,13 @@ const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
 // ── Main Update Lifecycle ──────────────────────────────────────────────────────
 
-export function updateTrainerCinematic(state: CinematicState, dt: number, trainerData: TrainerBattleData): boolean {
+export function updateTrainerCinematic(
+  state: CinematicState,
+  dt: number,
+  trainerData: TrainerBattleData,
+  textBox: TextBoxState | null,
+  input: InputManager,
+) {
   const W = 240;
 
   const enemyPath = `/sprites/trainers/${trainerData?.trainerSpriteType}.png`;
@@ -75,6 +85,13 @@ export function updateTrainerCinematic(state: CinematicState, dt: number, traine
       loadImage(enemyPath).catch((err) => console.warn(`Cinematic Enemy Asset Load Failure: ${err.message}`));
     }
     loadImage(playerPath).catch(() => {});
+
+    if (!textBox) {
+      textBox = createTextBox(
+        [t('battle.trainerWantsBattle', { name: getLocalizedName(trainerData.trainerName) })],
+        isRTL(),
+      );
+    }
   }
 
   const enemyImg = enemyPath ? getCachedImage(enemyPath) : true;
@@ -86,7 +103,7 @@ export function updateTrainerCinematic(state: CinematicState, dt: number, traine
 
     // Timeout release switch ensuring gameplay never halts if server routes are physically missing
     if (state.vsTimer < 1.2) {
-      return false;
+      return { done: false, textBox };
     } else {
       console.warn('Trainer Cinematic: Asset fetching timed out. Running backup silhouette matrices.');
       state.vsTimer = 0;
@@ -98,13 +115,20 @@ export function updateTrainerCinematic(state: CinematicState, dt: number, traine
 
   // ── Mode 1: Central Duel Screen ──
   if (!state.battleSceneActive) {
+    const maxVsTime = CINEMATIC_PHASE_CONSTANTS.VS_END - 0.01;
+
+    // Hard-clamp the timer: Ensure it stops ticking completely at 1.99s
+    if (state.timer > maxVsTime) {
+      state.timer = maxVsTime;
+    }
+
     const slideProg = clamp(state.timer / CINEMATIC_PHASE_CONSTANTS.INTRO_SLIDE_DURATION, 0, 1);
     const ep = easeOut(slideProg);
 
     state.p1x = lerp(-50, W * 0.22, ep);
     state.p2x = lerp(W + 50, W * 0.78, ep);
 
-    if (state.timer >= CINEMATIC_PHASE_CONSTANTS.VS_START && state.timer < CINEMATIC_PHASE_CONSTANTS.VS_END) {
+    if (state.timer >= CINEMATIC_PHASE_CONSTANTS.VS_START) {
       state.vsActive = true;
       state.vsTimer += dt;
 
@@ -122,7 +146,16 @@ export function updateTrainerCinematic(state: CinematicState, dt: number, traine
           : Math.sin(state.vsTimer * 5) * 0.03 * (1 - vsProgress);
     }
 
-    if (state.timer >= CINEMATIC_PHASE_CONSTANTS.VS_END) {
+    // NATIVELY UPDATE AND INTERRUPT WITH THE TEXTBOX LIFECYCLE
+    let textDismissed = false;
+
+    if (textBox) {
+      textDismissed = updateTextBox(textBox, input, dt);
+    }
+
+    // THE SEPARATION GATE: Only transition when the time is ripe OR the user has dismissed the box
+    if (state.timer >= maxVsTime || textDismissed) {
+      state.timer = CINEMATIC_PHASE_CONSTANTS.VS_END; // Advance global timer past the gate explicitly
       state.vsActive = false;
       state.battleSceneActive = true;
       state.particles = [];
@@ -135,5 +168,5 @@ export function updateTrainerCinematic(state: CinematicState, dt: number, traine
 
   tickParticles(state, dt);
 
-  return state.timer >= CINEMATIC_TOTAL;
+  return { done: state.timer >= CINEMATIC_TOTAL, textBox };
 }

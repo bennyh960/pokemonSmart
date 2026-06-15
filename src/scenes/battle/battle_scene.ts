@@ -105,8 +105,7 @@ import { sendCaughtToBox } from '../../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../../systems/game-state.js';
 import { loadImage, getCachedImage } from '../../engine/sprite-loader.js';
-import { getBattleBackground, getNPCSpriteImage } from '.././../engine/asset-generator.js';
-import { getCharacterFrame } from '../../engine/character-sprites.js';
+import { getBattleBackground } from '.././../engine/asset-generator.js';
 import { t, isRTL, getLocale } from '../../i18n/i18n.js';
 import { applyHeldItemEffectInBattle, getItem } from '../../data/items.js';
 import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
@@ -6623,17 +6622,13 @@ export function createBattleScene(
       switch (phase) {
         case 'TRAINER_CINEMATIC': {
           if (!cinematicState || !trainerData) break;
-          const done = updateTrainerCinematic(cinematicState, dt, trainerData);
-          if (done) {
+          const trainerCinematicResule = updateTrainerCinematic(cinematicState, dt, trainerData, textBox, input);
+          textBox = trainerCinematicResule.textBox;
+
+          if (trainerCinematicResule.done) {
             cinematicState = null;
             if (isTrainerBattle && trainerData) {
-              textBox = createTextBox(
-                [
-                  t('battle.trainerWantsBattle', { name: getLocalizedName(trainerData.trainerName) }),
-                  t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
-                ],
-                isRTL(),
-              );
+              textBox = createTextBox([t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) })], isRTL());
             }
             phase = 'INTRO';
             audio.playMusic('battle');
@@ -7352,6 +7347,9 @@ export function createBattleScene(
       if (phase === 'TRAINER_CINEMATIC') {
         if (cinematicState) {
           renderTrainerCinematic(ctx, cinematicState, trainerData, bgImage);
+        }
+        if (textBox) {
+          renderTextBox(ctx, textBox);
         }
         return;
       }

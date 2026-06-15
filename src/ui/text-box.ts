@@ -15,7 +15,7 @@ const TEXT_X = 8;
 const TEXT_Y = BOX_Y + 6;
 const CHARS_PER_SECOND = 30;
 
-interface TextBoxState {
+export interface TextBoxState {
   lines: string[];
   currentLine: number;
   revealedChars: number;
@@ -99,15 +99,12 @@ export function renderTextBox(ctx: CanvasRenderingContext2D, state: TextBoxState
     fillRect(ctx, tabX, tabY, nameW, NAME_TAB_H + 2, '#181820');
     drawRect(ctx, tabX, tabY, nameW, NAME_TAB_H, '#585858');
     drawRect(ctx, tabX - 1, tabY - 1, nameW + 2, NAME_TAB_H + 1, '#383848');
-    drawText(ctx, state.speakerName,
-      state.isRtl ? tabX + nameW - NAME_PAD_X : tabX + NAME_PAD_X,
-      tabY + NAME_PAD_Y,
-      {
-        size: NAME_FONT_SIZE,
-        color: '#ffe878',
-        direction: state.isRtl ? 'rtl' : 'ltr',
-        align: state.isRtl ? 'right' : 'left',
-      });
+    drawText(ctx, state.speakerName, state.isRtl ? tabX + nameW - NAME_PAD_X : tabX + NAME_PAD_X, tabY + NAME_PAD_Y, {
+      size: NAME_FONT_SIZE,
+      color: '#ffe878',
+      direction: state.isRtl ? 'rtl' : 'ltr',
+      align: state.isRtl ? 'right' : 'left',
+    });
   }
 
   // Box background
