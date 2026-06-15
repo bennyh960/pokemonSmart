@@ -87,7 +87,7 @@ export function renderTrainerCinematic(
     drawPlatform(ctx, ex + 24, ey + 44, 24, 5, 'rgba(80,80,200,0.25)', 'rgba(120,120,255,0.3)');
 
     if (trainerData?.trainerSpriteType) {
-      const tImg = getCachedImage(`/sprites/trainers/${trainerData.trainerSpriteType}.png`);
+      const tImg = getCachedImage(state.enemyPath);
       if (tImg) {
         ctx.save();
         ctx.translate(ex + 24, ey + 24);
@@ -103,7 +103,7 @@ export function renderTrainerCinematic(
 
     drawPlatform(ctx, px + 24, py + 30, 26, 6, 'rgba(80,200,80,0.25)', 'rgba(120,255,120,0.3)');
 
-    const pImg = getCachedImage(`/sprites/trainers/player.png`);
+    const pImg = getCachedImage(state.playerPath);
     if (pImg) {
       ctx.save();
       ctx.drawImage(pImg, px + 12, py, 24, 32);
@@ -168,7 +168,7 @@ export function renderTrainerCinematic(
 
     let enemyImg: HTMLImageElement | null = null;
     if (trainerData?.trainerSpriteType) {
-      enemyImg = getCachedImage(`/sprites/trainers/${trainerData.trainerSpriteType}.png`);
+      enemyImg = getCachedImage(state.enemyPath);
     }
 
     if (enemyImg && enemyImg.complete && enemyImg.naturalWidth > 0) {
@@ -198,7 +198,7 @@ export function renderTrainerCinematic(
     ctx.translate(state.p1x, spriteY + 16);
     ctx.scale(1.1, 1.1);
 
-    const pImg = getCachedImage(`/sprites/trainers/player.png`);
+    const pImg = getCachedImage(state.playerPath);
     if (pImg && pImg.complete && pImg.naturalWidth > 0) {
       ctx.save();
       ctx.shadowColor = '#44ffff';

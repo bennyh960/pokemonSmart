@@ -3,6 +3,10 @@
  * Manages runtime timeline variables, coordinates, and rendering layout profiles.
  */
 
+import type { TrainerBattleData } from '../..';
+import { loadImage } from '../../../../engine/sprite-loader';
+import { getPlayerData } from '../../../../systems/game-state';
+
 export type IntroStyle = 0 | 1 | 2; // 0 = Radial Speed lines, 1 = Fire/Water Split, 2 = Electric Storm
 
 export interface Particle {
@@ -38,9 +42,29 @@ export interface CinematicState {
   // Global Particle Array
   particles: Particle[];
   particlesSpawned: boolean;
+
+  // sprite paths
+  playerPath: string;
+  enemyPath: string;
 }
 
-export function createCinematicState(): CinematicState {
+const trainerSprites = import.meta.glob('/public/sprites/trainers/*.png', { eager: true });
+
+export function checkTrainerSpriteExists(spriteType?: string): boolean {
+  if (!spriteType) return false;
+  const fullPath = `/public/sprites/trainers/${spriteType}.png`;
+  return fullPath in trainerSprites;
+}
+
+export function createCinematicState(trainerData: TrainerBattleData | null): CinematicState {
+  const enemyPath =
+    trainerData && checkTrainerSpriteExists(trainerData.trainerSpriteType)
+      ? `/sprites/trainers/${trainerData.trainerSpriteType}.png`
+      : `/sprites/trainers/default.png`;
+  loadImage(enemyPath).catch(() => {
+    console.log(`Cinematic State Initialization: Enemy sprite path set to ${enemyPath}`);
+  });
+
   return {
     timer: 0,
     introStyle: Math.floor(Math.random() * 3) as IntroStyle,
@@ -56,5 +80,7 @@ export function createCinematicState(): CinematicState {
     battleTimer: 0,
     particles: [],
     particlesSpawned: false,
+    playerPath: `/sprites/trainers/${getPlayerData().heroCharacterId}.png`,
+    enemyPath: enemyPath,
   };
 }

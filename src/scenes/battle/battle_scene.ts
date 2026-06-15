@@ -1266,10 +1266,6 @@ export function createBattleScene(
       wildNpcFleeAtHpPct = pendingTrainerBattle.fleeAtHpPct ?? null;
       showTrainerSprite = !isWildNpcBattle; // No trainer intro for wild NPC
       pendingTrainerBattle = null;
-      // Preload trainer sprite if available
-      if (trainerData.trainerSpriteType) {
-        loadImage(`/sprites/trainers/${trainerData.trainerSpriteType}.png`).catch(() => {});
-      }
     }
 
     if (pendingPlayer && pendingEnemy) {
@@ -6567,7 +6563,8 @@ export function createBattleScene(
       audio.playMusic('battle');
       if (isTrainerBattle && trainerData && !isWildNpcBattle) {
         // Cinematic intro: challenger music continues playing; textBox + battle music created after animation
-        cinematicState = createCinematicState();
+        cinematicState = createCinematicState(trainerData);
+        // Preload trainer sprite if available
 
         phase = 'TRAINER_CINEMATIC';
       } else {

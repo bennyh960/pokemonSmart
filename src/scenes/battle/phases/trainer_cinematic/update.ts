@@ -5,7 +5,7 @@
 
 import type { TrainerBattleData } from '../..';
 import type { InputManager } from '../../../../engine/input';
-import { getCachedImage, loadImage } from '../../../../engine/sprite-loader';
+import { createPlaceholder, getCachedImage, loadImage } from '../../../../engine/sprite-loader';
 import { isRTL, t } from '../../../../i18n/i18n';
 import { getLocalizedName } from '../../../../services/pokemon-data';
 import { createTextBox, updateTextBox, type TextBoxState } from '../../../../ui/text-box';
@@ -73,18 +73,13 @@ export function updateTrainerCinematic(
 ) {
   const W = 240;
 
-  const enemyPath = `/sprites/trainers/${trainerData?.trainerSpriteType}.png`;
-  const playerPath = `/sprites/trainers/player.png`;
-
   // ── Single Execution Network Guard ──
   if (!state.loadDispatched) {
     state.loadDispatched = true; // Block subsequent frames from entering this conditional block
 
     // Fire the asset network retrieval requests exactly ONCE
-    if (enemyPath) {
-      loadImage(enemyPath).catch((err) => console.warn(`Cinematic Enemy Asset Load Failure: ${err.message}`));
-    }
-    loadImage(playerPath).catch(() => {});
+    loadImage(state.enemyPath).catch((err) => console.warn(`Cinematic Enemy Asset Load Failure: ${err.message}`));
+    loadImage(state.playerPath).catch(() => {});
 
     if (!textBox) {
       textBox = createTextBox(
@@ -94,8 +89,8 @@ export function updateTrainerCinematic(
     }
   }
 
-  const enemyImg = enemyPath ? getCachedImage(enemyPath) : true;
-  const playerImg = getCachedImage(playerPath);
+  const enemyImg = getCachedImage(state.enemyPath) ?? createPlaceholder(48, 68, 'magenta');
+  const playerImg = getCachedImage(state.playerPath) ?? createPlaceholder(48, 68, 'blue');
   // If sync asset query still returns null, track loading delay time up to a maximum threshold
   if (!enemyImg || !playerImg) {
     state.isLoaded = false;

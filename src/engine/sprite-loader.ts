@@ -17,7 +17,6 @@ const loading = new Set<string>();
 /** Pending promises for in-flight loads. */
 const pending = new Map<string, Promise<HTMLImageElement>>();
 
-
 /** Load an image from a URL, returning from cache if available. */
 export async function loadImage(url: string): Promise<HTMLImageElement> {
   const resolvedUrl = toAssetUrl(url);
@@ -26,7 +25,6 @@ export async function loadImage(url: string): Promise<HTMLImageElement> {
 
   const inflight = pending.get(resolvedUrl);
   if (inflight) return inflight;
-
 
   const promise = new Promise<HTMLImageElement>((resolve, reject) => {
     loading.add(resolvedUrl);
