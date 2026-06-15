@@ -78,9 +78,6 @@ export function updateTrainerCinematic(
     state.loadDispatched = true; // Block subsequent frames from entering this conditional block
 
     // Fire the asset network retrieval requests exactly ONCE
-    loadImage(state.enemyPath).catch((err) => console.warn(`Cinematic Enemy Asset Load Failure: ${err.message}`));
-    loadImage(state.playerPath).catch(() => {});
-
     if (!textBox) {
       textBox = createTextBox(
         [t('battle.trainerWantsBattle', { name: getLocalizedName(trainerData.trainerName) })],
@@ -92,18 +89,18 @@ export function updateTrainerCinematic(
   const enemyImg = getCachedImage(state.enemyPath) ?? createPlaceholder(48, 68, 'magenta');
   const playerImg = getCachedImage(state.playerPath) ?? createPlaceholder(48, 68, 'blue');
   // If sync asset query still returns null, track loading delay time up to a maximum threshold
-  if (!enemyImg || !playerImg) {
-    state.isLoaded = false;
-    state.vsTimer += dt;
+  // if (!enemyImg || !playerImg) {
+  //   state.isLoaded = false;
+  //   state.vsTimer += dt;
 
-    // Timeout release switch ensuring gameplay never halts if server routes are physically missing
-    if (state.vsTimer < 1.2) {
-      return { done: false, textBox };
-    } else {
-      console.warn('Trainer Cinematic: Asset fetching timed out. Running backup silhouette matrices.');
-      state.vsTimer = 0;
-    }
-  }
+  //   // Timeout release switch ensuring gameplay never halts if server routes are physically missing
+  //   if (state.vsTimer < 1.2) {
+  //     return { done: false, textBox };
+  //   } else {
+  //     console.warn('Trainer Cinematic: Asset fetching timed out. Running backup silhouette matrices.');
+  //     state.vsTimer = 0;
+  //   }
+  // }
 
   state.isLoaded = true;
   state.timer += dt;

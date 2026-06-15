@@ -45,7 +45,7 @@ export interface CinematicState {
 
   // sprite paths
   playerPath: string;
-  enemyPath: string;
+  enemyPath: string | null;
 }
 
 const trainerSprites = import.meta.glob('/public/sprites/trainers/*.png', { eager: true });
@@ -57,13 +57,19 @@ export function checkTrainerSpriteExists(spriteType?: string): boolean {
 }
 
 export function createCinematicState(trainerData: TrainerBattleData | null): CinematicState {
-  const enemyPath =
-    trainerData && checkTrainerSpriteExists(trainerData.trainerSpriteType)
-      ? `/sprites/trainers/${trainerData.trainerSpriteType}.png`
-      : `/sprites/trainers/default.png`;
-  loadImage(enemyPath).catch(() => {
-    console.log(`Cinematic State Initialization: Enemy sprite path set to ${enemyPath}`);
-  });
+  let enemyPath: string | null = null;
+
+  if (trainerData && checkTrainerSpriteExists(trainerData.trainerSpriteType)) {
+    enemyPath = `/sprites/trainers/${trainerData.trainerSpriteType}.png`;
+    loadImage(enemyPath).catch(() => {
+      console.log(
+        `Cinematic State Initialization: Enemy sprite path set to ${enemyPath} , fallback to use overworld sprite`,
+      );
+    });
+  }
+
+  const playerPath = `/sprites/trainers/${getPlayerData().heroCharacterId}.png`;
+  loadImage(playerPath).catch(() => {});
 
   return {
     timer: 0,
@@ -80,7 +86,7 @@ export function createCinematicState(trainerData: TrainerBattleData | null): Cin
     battleTimer: 0,
     particles: [],
     particlesSpawned: false,
-    playerPath: `/sprites/trainers/${getPlayerData().heroCharacterId}.png`,
+    playerPath: playerPath,
     enemyPath: enemyPath,
   };
 }

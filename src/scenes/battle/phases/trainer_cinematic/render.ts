@@ -10,6 +10,8 @@ import { CINEMATIC_PHASE_CONSTANTS } from './update';
 import type { TrainerBattleData } from '../../battle_scene';
 import { getPlayerData } from '../../../../systems/game-state';
 import { getLocale } from '../../../../i18n/i18n';
+import { getNPCSpriteImage } from '../../../../engine/asset-generator';
+import { getCharacterFrame } from '../../../../engine/character-sprites';
 
 const W = 240;
 const H = 83; // BTL.FIELD_H reference resolution size
@@ -42,6 +44,19 @@ function drawPlatform(
   ctx.beginPath();
   ctx.ellipse(x, y, rX, rY, 0, 0, Math.PI * 2);
   ctx.stroke();
+  ctx.restore();
+}
+
+function renderFallBackCharacter(ctx: CanvasRenderingContext2D, x: number, y: number, trainerSpriteType: string) {
+  const charFrame = getCharacterFrame(trainerSpriteType, 'down', 'stand') ?? null;
+  if (!charFrame) return;
+  const destW = 24;
+  const destH = 32;
+  const nx = x - destW / 2;
+  const ny = y - destH;
+  ctx.save();
+  ctx.scale(-1, 1);
+  ctx.drawImage(charFrame.image, charFrame.sx, charFrame.sy, charFrame.w, charFrame.h, -(nx + destW), ny, destW, destH);
   ctx.restore();
 }
 
@@ -86,7 +101,7 @@ export function renderTrainerCinematic(
 
     drawPlatform(ctx, ex + 24, ey + 44, 24, 5, 'rgba(80,80,200,0.25)', 'rgba(120,120,255,0.3)');
 
-    if (trainerData?.trainerSpriteType) {
+    if (trainerData?.trainerSpriteType && state.enemyPath) {
       const tImg = getCachedImage(state.enemyPath);
       if (tImg) {
         ctx.save();
@@ -95,6 +110,8 @@ export function renderTrainerCinematic(
         ctx.drawImage(tImg, -12, -16, 24, 32);
         ctx.restore();
       }
+    } else if (trainerData?.trainerSpriteType) {
+      renderFallBackCharacter(ctx, ex + 24, ey + 30, trainerData.trainerSpriteType);
     }
 
     // 2. Player Component Array (Bottom-Left sliding target position = W * 0.12)
@@ -167,7 +184,7 @@ export function renderTrainerCinematic(
     ctx.translate(state.p2x, spriteY + 16);
 
     let enemyImg: HTMLImageElement | null = null;
-    if (trainerData?.trainerSpriteType) {
+    if (state.enemyPath) {
       enemyImg = getCachedImage(state.enemyPath);
     }
 
@@ -178,6 +195,8 @@ export function renderTrainerCinematic(
       ctx.scale(-1.1, 1.1);
       ctx.drawImage(enemyImg, -12, -16, 24, 32);
       ctx.restore();
+    } else if (trainerData?.trainerSpriteType) {
+      renderFallBackCharacter(ctx, 0, 20, trainerData.trainerSpriteType);
     }
     ctx.restore();
 
