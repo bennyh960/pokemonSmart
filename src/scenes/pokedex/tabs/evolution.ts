@@ -153,9 +153,10 @@ function renderGridPipelineLayout(
     const nodeY = col2Nodes.length > 1 ? contentY + 6 + idx * 36 : centerY;
     drawNode(ctx, node, col2X, nodeY, spriteSize, currentId === node.id);
 
-    // Draw primary linking navigation arrow
-    drawText(ctx, '\u2192', col1X + spriteSize + 4, centerY + 10, { size: 7, color: '#f8a878' });
-    drawDescription(ctx, node, col1X + spriteSize + 6, centerY + 18, 'left');
+    drawText(ctx, '\u2192', col1X + spriteSize + 4, centerY + 4, { size: 8, color: '#f8a878' });
+
+    // Adjusted this vertical offset slightly so description doesn't overlap the larger arrow
+    drawDescription(ctx, node, col1X + spriteSize + 6, centerY + 16, 'left');
   });
 
   // Column 3: Split variants (e.g. Poliwrath & Politoed)
@@ -195,15 +196,15 @@ function renderStackedSplitLayout(
 ): void {
   const leafBranches = stages.filter((s) => s.id !== rootNode.id);
   const spriteSize = 24;
-  const horizontalGap = 16;
+  const horizontalGap = 36;
 
   const rootX = Math.floor(LOGICAL_WIDTH / 2 - spriteSize / 2);
-  const rootY = contentY + 4;
+  const rootY = contentY + 10;
   drawNode(ctx, rootNode, rootX, rootY, spriteSize, currentId === rootNode.id);
 
   const totalLeafWidth = leafBranches.length * spriteSize + (leafBranches.length - 1) * horizontalGap;
   const leavesStartX = Math.max(4, Math.floor((LOGICAL_WIDTH - totalLeafWidth) / 2));
-  const leafRowY = contentY + 36;
+  const leafRowY = contentY + 50;
 
   leafBranches.forEach((stage, idx) => {
     const nodeX = leavesStartX + idx * (spriteSize + horizontalGap);
@@ -211,7 +212,7 @@ function renderStackedSplitLayout(
     ctx.strokeStyle = '#402020';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(LOGICAL_WIDTH / 2, rootY + spriteSize + 4);
+    ctx.moveTo(LOGICAL_WIDTH / 2, rootY + spriteSize + 10);
     ctx.lineTo(nodeX + spriteSize / 2, leafRowY - 2);
     ctx.stroke();
 
@@ -223,7 +224,8 @@ function renderStackedSplitLayout(
 }
 
 /**
- * Layout: Radial Spreading Layout (Eevee Shape)
+ * Layout 3: Radial Spreading Layout (Eevee Shape)
+ * Fixed: Maximized ellipse space and dynamic safety margins to prevent all collisions.
  */
 function renderRadialTreeLayout(
   ctx: CanvasRenderingContext2D,
@@ -233,22 +235,16 @@ function renderRadialTreeLayout(
   contentY: number,
 ): void {
   const evolutions = stages.filter((s) => s.id !== rootNode.id);
+
   const centerChunksX = LOGICAL_WIDTH / 2;
-  const centerChunksY = contentY + 35;
+  // Position parent perfectly in center of active content zone
+  const centerChunksY = contentY + 66;
 
-  const baseSize = 24;
-  const radiusX = 65;
-  const radiusY = 26;
+  const baseSize = 22; // Slightly smaller node frame maximizes spacing gap
+  const radiusX = 74; // Expanded horizontal width to prevent name collisions
+  const radiusY = 45; // Stretched vertical radius to clear the top/bottom boxes
 
-  drawNode(
-    ctx,
-    rootNode,
-    centerChunksX - baseSize / 2,
-    centerChunksY - baseSize / 2,
-    baseSize,
-    currentId === rootNode.id,
-  );
-
+  // STEP 1: Render structural wire vectors FIRST (Puts them background-layer)
   evolutions.forEach((stage, idx) => {
     const angle = (idx / evolutions.length) * Math.PI * 2 - Math.PI / 2;
     const targetX = centerChunksX + Math.cos(angle) * radiusX;
@@ -260,10 +256,43 @@ function renderRadialTreeLayout(
     ctx.moveTo(centerChunksX, centerChunksY);
     ctx.lineTo(targetX, targetY);
     ctx.stroke();
+  });
 
+  // STEP 2: Draw the center parent node OVER the background line origins
+  drawNode(
+    ctx,
+    rootNode,
+    centerChunksX - baseSize / 2,
+    centerChunksY - baseSize / 2,
+    baseSize,
+    currentId === rootNode.id,
+  );
+
+  // STEP 3: Draw external branch nodes and custom context text
+  evolutions.forEach((stage, idx) => {
+    const angle = (idx / evolutions.length) * Math.PI * 2 - Math.PI / 2;
+    const targetX = centerChunksX + Math.cos(angle) * radiusX;
+    const targetY = centerChunksY + Math.sin(angle) * radiusY;
+
+    // Draw the Pokémon Box Node
     drawNode(ctx, stage, targetX - baseSize / 2, targetY - baseSize / 2, baseSize, currentId === stage.id);
 
-    const textOffset = angle > 0 && angle < Math.PI ? 18 : -10;
+    // Dynamic Text Safety Padding Logic
+    // Detects if node is on the top half, bottom half, or horizontal extremes
+    const isTopHalf = angle < 0 || angle > Math.PI;
+    const isExtremeVertical = Math.abs(Math.sin(angle)) > 0.8;
+
+    let textOffset = 14; // Default safe bottom offset
+
+    if (isTopHalf) {
+      // Top nodes push their evolution descriptions ABOVE the box so they never collide with the center
+      textOffset = isExtremeVertical ? -22 : -18;
+    } else {
+      // Bottom nodes push descriptions extra low down out of the way
+      textOffset = isExtremeVertical ? 20 : 16;
+    }
+
+    // Render the evolution requirement cleanly
     drawDescription(ctx, stage, targetX, targetY + textOffset, 'center');
   });
 }
