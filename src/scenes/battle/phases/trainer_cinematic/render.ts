@@ -129,6 +129,21 @@ export function renderTrainerCinematic(
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 0.5;
       ctx.strokeText('BATTLE START!', 0, 0);
+      const eCount = trainerData?.party?.length;
+
+      if (eCount) {
+        ctx.direction = 'ltr';
+        const partyText = `${eCount} VS ${eCount}`;
+
+        ctx.font = 'bold 8px monospace'; // Smaller text size for clean visual hierarchy
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 2;
+
+        // Drawn exactly 12 pixels below the main banner text line
+        ctx.fillText(partyText, 0, 12);
+      }
+
       ctx.restore();
     }
 

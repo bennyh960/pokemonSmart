@@ -1388,12 +1388,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     gateGuardApproach = { guard, phase: 'exclamation', timer: 0 };
   }
 
-  /** Map NPC spriteType to Showdown trainer sprite name. */
-  const NPC_TO_TRAINER_SPRITE: Record<string, string> = {
-    'trainer-m': 'youngster',
-    'trainer-f': 'lass',
-  };
-
   /** Build TrainerBattleData from a TrainerData NPC.
    * @param encounterIndex 0 = first fight, 1+ = rematch
    * @param prebuiltParty  optional pre-scaled party (from buildReencounterParty)
@@ -1480,7 +1474,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       trainerId: trainer.id,
       party,
       reward: normalizeReward(trainer.reward),
-      trainerSprite: NPC_TO_TRAINER_SPRITE[trainer.spriteType],
       postBattleDialogue: trainer.postBattleDialogue,
       postFlagDialogue: trainer.postFlagDialogue,
       reencounterIndex: encounterIndex,

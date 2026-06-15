@@ -405,7 +405,6 @@ export interface TrainerBattleData {
   trainerId: string;
   party: Pokemon[];
   reward: TrainerReward;
-  trainerSprite?: string; // e.g., 'youngster', 'lass'
   postBattleDialogue?: BilingualText[]; // Dialogue shown after defeat
   postFlagDialogue?: { flag?: string; dialogue: BilingualText[] }; // Shown immediately after first defeat (flag just set)
   reencounterIndex?: number; // 0 = first fight, 1+ = rematch (items skipped on rematch)
@@ -1268,8 +1267,8 @@ export function createBattleScene(
       showTrainerSprite = !isWildNpcBattle; // No trainer intro for wild NPC
       pendingTrainerBattle = null;
       // Preload trainer sprite if available
-      if (trainerData.trainerSprite) {
-        loadImage(`/sprites/trainers/${trainerData.trainerSprite}.png`).catch(() => {});
+      if (trainerData.trainerSpriteType) {
+        loadImage(`/sprites/trainers/${trainerData.trainerSpriteType}.png`).catch(() => {});
       }
     }
 
@@ -7387,20 +7386,7 @@ export function createBattleScene(
       }
 
       // ── Trainer sprites on sides (trainer battles) ──
-      const showingTrainer = showTrainerSprite && isTrainerBattle && trainerData?.trainerSprite;
-      if (isTrainerBattle && trainerData?.trainerSprite) {
-        const tImg = getCachedImage(`/sprites/trainers/${trainerData.trainerSprite}.png`);
-        if (tImg) {
-          if (showingTrainer) {
-            renderActorImage(ctx, 'trainer', tImg, BTL.OPP_SPRITE.x, 4, 48, 68);
-          } else {
-            ctx.save();
-            ctx.globalAlpha = 0.85;
-            ctx.drawImage(tImg, 222, 28, 16, 32);
-            ctx.restore();
-          }
-        }
-      }
+      const showingTrainer = showTrainerSprite && isTrainerBattle;
 
       // ── Enemy Pokemon sprite (right side) ──
       if (!showingTrainer) {
