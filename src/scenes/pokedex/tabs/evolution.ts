@@ -1,7 +1,8 @@
+import { getItemGameDataBySlug } from '../../../data/item-defs';
 import { LOGICAL_WIDTH } from '../../../engine/config';
 import { drawRect, drawText, fillRect } from '../../../engine/renderer';
 import { getCachedImage, loadImage } from '../../../engine/sprite-loader';
-import { t } from '../../../i18n/i18n';
+import { getLocale, t } from '../../../i18n/i18n';
 import { getEvolutionChain, getPokemonDisplayName } from '../../../services/pokemon-data';
 
 interface EvolutionStage {
@@ -104,10 +105,16 @@ function drawDescription(
   align: 'center' | 'left' | 'right' = 'left',
 ): void {
   let text = '';
+
   if (stage.minLevel) {
     text = `Lv.${stage.minLevel}`;
   } else if (stage.item) {
-    text = stage.item.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    const itemData = getItemGameDataBySlug(stage.item);
+    if (itemData) {
+      text = itemData.name ? itemData.name[getLocale()] || itemData.name.en : '';
+    } else {
+      text = stage.item.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    }
   } else if (stage.trigger) {
     text = stage.trigger.replace(/-/g, ' ');
   }
@@ -227,6 +234,7 @@ function renderStackedSplitLayout(
  * Layout 3: Radial Spreading Layout (Eevee Shape)
  * Fixed: Maximized ellipse space and dynamic safety margins to prevent all collisions.
  */
+
 function renderRadialTreeLayout(
   ctx: CanvasRenderingContext2D,
   stages: EvolutionStage[],
@@ -237,18 +245,21 @@ function renderRadialTreeLayout(
   const evolutions = stages.filter((s) => s.id !== rootNode.id);
 
   const centerChunksX = LOGICAL_WIDTH / 2;
-  // Position parent perfectly in center of active content zone
-  const centerChunksY = contentY + 66;
+  // 🌟 Pulled back up slightly so bottom nodes don't go off-screen
+  const centerChunksY = contentY + 62;
 
-  const baseSize = 22; // Slightly smaller node frame maximizes spacing gap
-  const radiusX = 74; // Expanded horizontal width to prevent name collisions
-  const radiusY = 45; // Stretched vertical radius to clear the top/bottom boxes
+  const baseSize = 22;
+  const radiusX = 74;
 
-  // STEP 1: Render structural wire vectors FIRST (Puts them background-layer)
+  // STEP 1: Render structural wire vectors FIRST with asymmetric vertical scaling
   evolutions.forEach((stage, idx) => {
     const angle = (idx / evolutions.length) * Math.PI * 2 - Math.PI / 2;
+
+    // 🌟 DYNAMIC RADIUS: Large radius for top nodes, small compact radius for bottom nodes
+    const currentRadiusY = Math.sin(angle) < -0.2 ? 42 : 22;
+
     const targetX = centerChunksX + Math.cos(angle) * radiusX;
-    const targetY = centerChunksY + Math.sin(angle) * radiusY;
+    const targetY = centerChunksY + Math.sin(angle) * currentRadiusY;
 
     ctx.strokeStyle = '#402020';
     ctx.lineWidth = 1;
@@ -268,28 +279,31 @@ function renderRadialTreeLayout(
     currentId === rootNode.id,
   );
 
-  // STEP 3: Draw external branch nodes and custom context text
+  // STEP 3: Draw external branch nodes and descriptions
   evolutions.forEach((stage, idx) => {
     const angle = (idx / evolutions.length) * Math.PI * 2 - Math.PI / 2;
+
+    // 🌟 Use identical dynamic radius logic here to match the lines
+    const currentRadiusY = Math.sin(angle) < -0.2 ? 42 : 22;
+
     const targetX = centerChunksX + Math.cos(angle) * radiusX;
-    const targetY = centerChunksY + Math.sin(angle) * radiusY;
+    const targetY = centerChunksY + Math.sin(angle) * currentRadiusY;
 
     // Draw the Pokémon Box Node
     drawNode(ctx, stage, targetX - baseSize / 2, targetY - baseSize / 2, baseSize, currentId === stage.id);
 
     // Dynamic Text Safety Padding Logic
-    // Detects if node is on the top half, bottom half, or horizontal extremes
     const isTopHalf = angle < 0 || angle > Math.PI;
     const isExtremeVertical = Math.abs(Math.sin(angle)) > 0.8;
 
-    let textOffset = 14; // Default safe bottom offset
+    let textOffset = 14;
 
     if (isTopHalf) {
-      // Top nodes push their evolution descriptions ABOVE the box so they never collide with the center
-      textOffset = isExtremeVertical ? -22 : -18;
+      // Top nodes push their evolution descriptions ABOVE the box
+      textOffset = isExtremeVertical ? -20 : -16;
     } else {
-      // Bottom nodes push descriptions extra low down out of the way
-      textOffset = isExtremeVertical ? 20 : 16;
+      // Bottom nodes are closer to the center now, so their descriptions fit safely below them
+      textOffset = isExtremeVertical ? 18 : 14;
     }
 
     // Render the evolution requirement cleanly
