@@ -48,11 +48,11 @@ export interface CinematicState {
   enemyPath: string | null;
 }
 
-const trainerSprites = import.meta.glob('/public/sprites/trainers/*.png', { eager: true, query: '?url' });
+const trainerSprites = import.meta.glob('/sprites/trainers/*.png', { eager: true, query: '?url' });
 
 export function checkTrainerSpriteExists(spriteType?: string): boolean {
   if (!spriteType) return false;
-  const fullPath = `/public/sprites/trainers/${spriteType}.png`;
+  const fullPath = `/sprites/trainers/${spriteType}.png?url`;
   return fullPath in trainerSprites;
 }
 

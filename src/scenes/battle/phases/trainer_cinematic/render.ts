@@ -109,7 +109,7 @@ export function renderTrainerCinematic(
         ctx.restore();
       }
     } else if (trainerData?.trainerSpriteType) {
-      renderFallBackCharacter(ctx, ex + 24, ey + 30, trainerData.trainerSpriteType);
+      renderFallBackCharacter(ctx, ex + 24, ey + 40, trainerData.trainerSpriteType);
     }
 
     // 2. Player Component Array (Bottom-Left sliding target position = W * 0.12)
