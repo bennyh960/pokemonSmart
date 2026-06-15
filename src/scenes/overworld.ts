@@ -44,7 +44,7 @@ import {
   getAbilityDisplayNameAndDescription,
 } from '../services/pokemon-data.js';
 import { setEvolutionData } from '../scenes/evolution.js';
-import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle.js';
+import { setBattleData, setTrainerBattleData, type TrainerBattleData, type BattleContext } from './battle';
 import { getPlayerSpriteSheet, getNPCSpriteImage } from '../engine/asset-generator.js';
 import { loadCharacterSprites, getCharacterFrame, hasCharacter } from '../engine/character-sprites.js';
 import {

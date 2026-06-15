@@ -12,7 +12,7 @@ import { createStateMachine } from './state-machine.js';
 import { createInputManager } from './input.js';
 import { createAudioManager, setGlobalAudio } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
-import { createBattleScene } from '../scenes/battle.js';
+import { createBattleScene } from '../scenes/battle';
 import { createOverworldScene } from '../scenes/overworld.js';
 import { createStarterSelectScene } from '../scenes/starter-select.js';
 import { createHeroSelectScene } from '../scenes/hero-select.js';

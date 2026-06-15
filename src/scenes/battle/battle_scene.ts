@@ -2,15 +2,15 @@
  * BattleScene - Turn-based battle with math challenges, type effectiveness, and XP.
  */
 
-import type { Scene, Pokemon, PokemonType, Move } from '../types/index.js';
-import { GLITCH_DAMAGE_BONUS_MIN, GLITCH_DAMAGE_BONUS_MAX } from '../engine/config.js';
-import type { BattleStatId, MoveBattleEffectId, WeatherConditionId } from '../types/battle-metadata.js';
-import { getMapWeather, isDaytime, renderNightOverlay } from '../systems/weather-system.js';
-import { getCurrentMapId, getCachedMap } from '../systems/map-manager.js';
-import type { InputManager } from '../engine/input.js';
-import type { StateMachine } from '../engine/state-machine.js';
-import type { AudioManager } from '../audio/audio-manager.js';
-import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
+import type { Scene, Pokemon, PokemonType, Move } from '../../types/index.js';
+import { GLITCH_DAMAGE_BONUS_MIN, GLITCH_DAMAGE_BONUS_MAX } from '../../engine/config.js';
+import type { BattleStatId, MoveBattleEffectId, WeatherConditionId } from '../../types/battle-metadata.js';
+import { getMapWeather, isDaytime, renderNightOverlay } from '../../systems/weather-system.js';
+import { getCurrentMapId, getCachedMap } from '../../systems/map-manager.js';
+import type { InputManager } from '../../engine/input.js';
+import type { StateMachine } from '../../engine/state-machine.js';
+import type { AudioManager } from '../../audio/audio-manager.js';
+import { clearScreen, fillRect, drawText } from '../../engine/renderer.js';
 import {
   createHPBar,
   updateHPBar,
@@ -22,12 +22,18 @@ import {
   setVolatileStatuses,
   isHPAnimating,
   isXPAnimating,
-} from '../ui/hp-bar.js';
-import { createBattleMenu, showMainMenu, showMoveMenu, updateBattleMenu, renderBattleMenu } from '../ui/battle-menu.js';
-import type { MainMenuChoice } from '../ui/battle-menu.js';
-import { resolveBattleBackgroundPath, type BattleBackgroundId } from '../data/battle-backgrounds.js';
-import { BTL } from '../data/battle-constants.js';
-import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
+} from '../../ui/hp-bar.js';
+import {
+  createBattleMenu,
+  showMainMenu,
+  showMoveMenu,
+  updateBattleMenu,
+  renderBattleMenu,
+} from '../../ui/battle-menu.js';
+import type { MainMenuChoice } from '../../ui/battle-menu.js';
+import { resolveBattleBackgroundPath, type BattleBackgroundId } from '../../data/battle-backgrounds.js';
+import { BTL } from '../../data/battle-constants.js';
+import { createTextBox, updateTextBox, renderTextBox } from '../../ui/text-box.js';
 import {
   createFlash,
   updateFlash,
@@ -59,7 +65,7 @@ import {
   updateStatusTurnEffect,
   renderStatusTurnEffect,
   renderWeatherOverlay,
-} from '../ui/battle-animations.js';
+} from '../../ui/battle-animations.js';
 import {
   createBattleAnimationDirector,
   callStep,
@@ -68,8 +74,8 @@ import {
   tweenActorStep,
   waitStep,
   type BattleAnimationStep,
-} from '../ui/battle-animation-director.js';
-import { drawPokeballIcon } from '../ui/item-icons.js';
+} from '../../ui/battle-animation-director.js';
+import { drawPokeballIcon } from '../../ui/item-icons.js';
 import {
   getCombinedTypeEffectiveness,
   getAbilityBattleEffects,
@@ -83,27 +89,32 @@ import {
   computePokemonSize,
   getAllMoves,
   type EvolutionStep,
-} from '../services/pokemon-data.js';
-import { createPokemonFromData, calculateXpGain, checkAndApplyLevelUp, type StatGains } from '../systems/encounter.js';
+} from '../../services/pokemon-data.js';
+import {
+  createPokemonFromData,
+  calculateXpGain,
+  checkAndApplyLevelUp,
+  type StatGains,
+} from '../../systems/encounter.js';
 import {
   activateSwitchingOutAbilities,
   calcAbilityDamageTakenMultiplier,
   getDefenderAbilityActivationMsg,
-} from '../systems/ability-processor.js';
-import { sendCaughtToBox } from '../systems/pc-storage.js';
-import { recordTrainerDefeat } from '../systems/reencounter.js';
-import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../systems/game-state.js';
-import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
-import { getBattleBackground, getNPCSpriteImage } from '../engine/asset-generator.js';
-import { getCharacterFrame } from '../engine/character-sprites.js';
-import { t, isRTL, getLocale } from '../i18n/i18n.js';
-import { applyHeldItemEffectInBattle, getItem } from '../data/items.js';
-import { applyItemEffect, consumeItem } from '../systems/item-effects.js';
-import { resolveDialogue, type TrainerReward, type BilingualText } from '../systems/npc.js';
-import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../scenes/bag.js';
-import { setPokedexFocus } from './pokedex';
-import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from './party';
-import { setEvolutionData } from './evolution.js';
+} from '../../systems/ability-processor.js';
+import { sendCaughtToBox } from '../../systems/pc-storage.js';
+import { recordTrainerDefeat } from '../../systems/reencounter.js';
+import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../../systems/game-state.js';
+import { loadImage, getCachedImage } from '../../engine/sprite-loader.js';
+import { getBattleBackground, getNPCSpriteImage } from '.././../engine/asset-generator.js';
+import { getCharacterFrame } from '../../engine/character-sprites.js';
+import { t, isRTL, getLocale } from '../../i18n/i18n.js';
+import { applyHeldItemEffectInBattle, getItem } from '../../data/items.js';
+import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
+import { resolveDialogue, type TrainerReward, type BilingualText } from '../../systems/npc.js';
+import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenes/bag.js';
+import { setPokedexFocus } from '.././pokedex';
+import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '.././party';
+import { setEvolutionData } from '.././evolution.js';
 import {
   calcHappiness,
   getReturnPower,
@@ -111,9 +122,9 @@ import {
   getHappinessCritBonus,
   RETURN_MOVE_ID,
   FRUSTRATION_MOVE_ID,
-} from '../systems/happiness.js';
-import { getAttackAnimationProfile } from '../systems/move-animation.js';
-import { fireStoryTrigger } from '../systems/story-engine.js';
+} from '../../systems/happiness.js';
+import { getAttackAnimationProfile } from '../../systems/move-animation.js';
+import { fireStoryTrigger } from '../../systems/story-engine.js';
 import {
   createMoveLearningSession,
   getMoveLearningAnnouncementLines,
@@ -121,20 +132,20 @@ import {
   setMoveLearningSession,
   type LevelUpMoveResult,
   type MoveLearningResolution,
-} from '../systems/move-learning.js';
-import { calculateCaptureChance } from '../systems/capture.js';
+} from '../../systems/move-learning.js';
+import { calculateCaptureChance } from '../../systems/capture.js';
 import type {
   BattlePokemonRuntimeState,
   BattleSideRuntimeState,
   BattleStatModifiers,
   WeatherState,
-} from '../systems/battle-state.js';
+} from '../../systems/battle-state.js';
 import {
   BATTLE_STAT_PERCENT_STEP,
   applyBattleStatDelta,
   createBattleSideRuntimeState,
   createEmptyBattleStatModifiers,
-} from '../systems/battle-state.js';
+} from '../../systems/battle-state.js';
 import {
   advanceSideEffectTurns,
   applyDrainHealing,
@@ -185,10 +196,16 @@ import {
   applyWeatherDamage,
   type EntryHazardResult,
   applyGhostCurseEffect,
-} from '../systems/battle-system.js';
-import charactersManifest from '../data/sprites/characters.json';
+} from '../../systems/battle-system.js';
+import charactersManifest from '../../data/sprites/characters.json';
+
+// TRAINER_CINEMATIC phase imports
+import { createCinematicState, type CinematicState } from './phases/trainer_cinematic';
+import { renderTrainerCinematic } from './phases/trainer_cinematic';
+import { updateTrainerCinematic } from './phases/trainer_cinematic';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
+
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
 type AiLevel = 1 | 2 | 3 | 4 | 5;
 
@@ -750,7 +767,8 @@ export function createBattleScene(
   let shake: ReturnType<typeof createShake> | null = null;
   let fade: ReturnType<typeof createFade> | null = null;
   let phaseTimer = 0;
-  let trainerCinematicTimer = 0;
+  let cinematicState: CinematicState | null = null;
+
   let xpGained = 0;
   let levelUpFx: ReturnType<typeof createLevelUpEffect> | null = null;
   let statGainsPopup: StatGains | null = null;
@@ -6548,9 +6566,11 @@ export function createBattleScene(
       if (hasActiveGame()) {
         getPlayerData().pokedex[enemy.id] = true;
       }
+      audio.playMusic('battle');
       if (isTrainerBattle && trainerData && !isWildNpcBattle) {
         // Cinematic intro: challenger music continues playing; textBox + battle music created after animation
-        trainerCinematicTimer = 0;
+        cinematicState = createCinematicState();
+
         phase = 'TRAINER_CINEMATIC';
       } else {
         if (isWildNpcBattle) {
@@ -6567,7 +6587,6 @@ export function createBattleScene(
           textBox = createTextBox([t('battle.wildAppeared', { name: getPokemonDisplayName(enemy.id) })], isRTL());
         }
         phase = 'INTRO';
-        audio.playMusic('battle');
       }
     },
     exit(): void {
@@ -6603,8 +6622,10 @@ export function createBattleScene(
       updatePopups(dt);
       switch (phase) {
         case 'TRAINER_CINEMATIC': {
-          trainerCinematicTimer += dt;
-          if (trainerCinematicTimer >= 1.65) {
+          if (!cinematicState || !trainerData) break;
+          const done = updateTrainerCinematic(cinematicState, dt, trainerData);
+          if (done) {
+            cinematicState = null;
             if (isTrainerBattle && trainerData) {
               textBox = createTextBox(
                 [
@@ -7329,161 +7350,9 @@ export function createBattleScene(
 
       // ── Trainer cinematic intro ──
       if (phase === 'TRAINER_CINEMATIC') {
-        // Phase durations
-        const C_SLIDE = 0.55; // trainer slides in
-        const C_HOLD = 0.2; // pause before throw
-        const C_THROW = 0.6; // ball arc
-        const C_FLASH = 0.3; // white flash at end
-
-        const t0 = trainerCinematicTimer;
-        const slideT = Math.min(1, t0 / C_SLIDE);
-        const slideE = 1 - Math.pow(1 - slideT, 3); // ease-out cubic
-        const holdT = Math.min(1, Math.max(0, (t0 - C_SLIDE) / C_HOLD));
-        const throwT = Math.min(1, Math.max(0, (t0 - C_SLIDE - C_HOLD) / C_THROW));
-        const flashT = Math.min(1, Math.max(0, (t0 - C_SLIDE - C_HOLD - C_THROW) / C_FLASH));
-
-        // Battle background
-        if (bgImage && bgImage.complete && bgImage.naturalWidth > 0) {
-          ctx.drawImage(bgImage, 0, 0, 240, BTL.FIELD_H);
-        } else {
-          const bgImg = getBattleBackground();
-          if (bgImg.complete && bgImg.naturalWidth > 0) {
-            ctx.drawImage(bgImg, 0, 0, 240, BTL.FIELD_H);
-          } else {
-            const BG = BTL.BG;
-            const sg = ctx.createLinearGradient(0, BG.SKY.y, 0, BG.SKY.y + BG.SKY.h);
-            sg.addColorStop(0, BG.SKY.from);
-            sg.addColorStop(0.5, BG.SKY.mid);
-            sg.addColorStop(1, BG.SKY.to);
-            ctx.fillStyle = sg;
-            ctx.fillRect(BG.SKY.x, BG.SKY.y, BG.SKY.w, BG.SKY.h);
-            const gg = ctx.createLinearGradient(0, BG.GROUND.y, 0, BG.GROUND.y + BG.GROUND.h);
-            gg.addColorStop(0, BG.GROUND.from);
-            gg.addColorStop(0.4, BG.GROUND.mid1);
-            gg.addColorStop(0.7, BG.GROUND.mid2);
-            gg.addColorStop(1, BG.GROUND.to);
-            ctx.fillStyle = gg;
-            ctx.fillRect(BG.GROUND.x, BG.GROUND.y, BG.GROUND.w, BG.GROUND.h);
-          }
+        if (cinematicState) {
+          renderTrainerCinematic(ctx, cinematicState, trainerData, bgImage);
         }
-
-        // Lower panel
-        fillRect(ctx, 0, BTL.FIELD_H, 240, 160 - BTL.FIELD_H, BTL.COLORS.bg);
-        fillRect(ctx, 0, BTL.FIELD_H, 240, 1, '#20d860');
-
-        // Trainer sprite — 3× tile scale (48×48), standing on the ground line
-        const DEST = 48; // 3 × 16 px logical tile
-        const S_TARGET_X = 12;
-        const S_START_X = -DEST - 16;
-        const S_Y = BTL.FIELD_H - DEST; // feet flush with field bottom
-        const spriteX = Math.round(S_START_X + (S_TARGET_X - S_START_X) * slideE);
-
-        // Throw-lean: sprite shifts forward (+x) as arm swings
-        const leanX = throwT > 0 ? Math.round(Math.sin(throwT * Math.PI) * 8) : 0;
-        // Bob during hold: gentle up-down
-        const bobY = holdT > 0 && throwT === 0 ? Math.round(-Math.sin(holdT * Math.PI) * 2) : 0;
-
-        // Resolve sprite: character sheet frame → NPC generated image fallback
-        const cinFrame = trainerData?.trainerSpriteType
-          ? getCharacterFrame(trainerData.trainerSpriteType, 'down', 'stand')
-          : null;
-        const fallbackImg: HTMLImageElement | null = trainerData?.trainerSpriteType
-          ? getNPCSpriteImage(trainerData.trainerSpriteType)
-          : null;
-
-        const dx = spriteX + leanX;
-        const dy = S_Y + bobY;
-
-        if (cinFrame) {
-          ctx.save();
-          ctx.globalAlpha = Math.min(1, slideT * 3);
-          if (cinFrame.flipX) {
-            ctx.translate(dx + DEST, dy);
-            ctx.scale(-1, 1);
-            ctx.drawImage(cinFrame.image, cinFrame.sx, cinFrame.sy, cinFrame.w, cinFrame.h, 0, 0, DEST, DEST);
-          } else {
-            ctx.drawImage(cinFrame.image, cinFrame.sx, cinFrame.sy, cinFrame.w, cinFrame.h, dx, dy, DEST, DEST);
-          }
-          ctx.restore();
-        } else if (fallbackImg) {
-          ctx.save();
-          ctx.globalAlpha = Math.min(1, slideT * 3);
-          ctx.drawImage(fallbackImg, dx, dy, DEST, DEST);
-          ctx.restore();
-        }
-
-        // Pokéball throw
-        if (throwT > 0) {
-          const BX0 = S_TARGET_X + DEST - 4; // start near trainer's right hand
-          const BY0 = S_Y + DEST * 0.3;
-          const BX1 = 210;
-          const BY1 = 22;
-          const ballX = BX0 + (BX1 - BX0) * throwT;
-          // Parabolic arc: peaks at midpoint
-          const ballY = BY0 + (BY1 - BY0) * throwT - 50 * Math.sin(throwT * Math.PI);
-          const ballR = throwT * Math.PI * 5; // spin
-          const ballSz = 10;
-
-          ctx.save();
-          ctx.translate(ballX, ballY);
-          ctx.rotate(ballR);
-          // Simple hand-drawn Pokéball (red top / white bottom / black line)
-          ctx.beginPath();
-          ctx.arc(0, 0, ballSz / 2, Math.PI, 0);
-          ctx.fillStyle = '#e03030';
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(0, 0, ballSz / 2, 0, Math.PI);
-          ctx.fillStyle = '#f0f0f0';
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(0, 0, ballSz / 2, 0, Math.PI * 2);
-          ctx.strokeStyle = '#202020';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(-ballSz / 2, 0);
-          ctx.lineTo(ballSz / 2, 0);
-          ctx.strokeStyle = '#202020';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(0, 0, 2, 0, Math.PI * 2);
-          ctx.fillStyle = '#ffffff';
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(0, 0, 2, 0, Math.PI * 2);
-          ctx.strokeStyle = '#202020';
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-          ctx.restore();
-        }
-
-        // Trainer name — fades in at 60% of slide
-        if (trainerData && slideT > 0.5) {
-          const nameAlpha = Math.min(1, (slideT - 0.5) * 2.5);
-          ctx.save();
-          ctx.globalAlpha = nameAlpha;
-          const name = getLocalizedName(trainerData.trainerName);
-          drawText(ctx, isRTL() ? 'מאמן' : 'TRAINER', 120, 140, {
-            size: 5,
-            color: '#667766',
-            font: 'monospace',
-            align: 'center',
-          });
-          drawText(ctx, name, 120, 150, { size: 7, color: '#20d860', font: 'monospace', align: 'center' });
-          ctx.restore();
-        }
-
-        // White flash at end
-        if (flashT > 0) {
-          ctx.save();
-          ctx.globalAlpha = Math.sin(flashT * Math.PI) * 0.85;
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, 240, 160);
-          ctx.restore();
-        }
-
         return;
       }
 
