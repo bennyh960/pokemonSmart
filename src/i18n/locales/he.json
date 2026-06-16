@@ -463,7 +463,7 @@
   "battle.trapDamage": "{name} נפגע מהמלכודת!",
   "battle.drainHeal": "{name} החזיר {amount} חיים!",
   "battle.healedHp": "{name} שחזר חיים!",
-  "battle.restSleep": "{name} ישן והחזיר את כל החיים!",
+  "battle.restSleep": "{name} נרדם , ונראה שהוא החזיר לעצמו את האנרגיה!",
   "battle.multiHit": "הוא פגע {count} פעם(ים)!",
   "battle.focusEnergy": "{name} מתרכז!",
   "battle.weightTargetWeak": "{target} קל מדי — {move} לא יכול לבנות תנופה אמיתית.",

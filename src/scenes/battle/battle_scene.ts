@@ -220,7 +220,7 @@ interface TrainerAIState {
 }
 
 /** Randomness factors per AI level: higher = more random suboptimal picks. */
-const AI_RANDOMNESS: [number, number, number, number, number] = [0.65, 0.45, 0.28, 0.15, 0.06];
+const AI_RANDOMNESS: [number, number, number, number, number] = [0.45, 0.35, 0.25, 0.15, 0.06];
 
 // Moves excluded from Metronome's random pool (recursive/special selection moves)
 const METRONOME_EXCLUDED_MOVE_IDS = new Set([118, 119, 214, 274, 383]); // Metronome, Mirror Move, Sleep Talk, Assist, Copycat
@@ -1825,6 +1825,8 @@ export function createBattleScene(
     const isSelfHeal = (battleData?.healingPercent ?? 0) > 0 && battleData?.target === 'user';
     const isReversal = battleData?.behaviorTags?.includes('reversal') ?? false;
     const leaveUserAtOneHp = battleData?.behaviorTags?.includes('leave-user-at-1-hp') ?? false;
+    const isDreamEaterEnemy = battleData?.behaviorTags?.includes('dream-eater') ?? false;
+    const isBellyDrumEnemy = battleData?.behaviorTags?.includes('belly-drum') ?? false;
 
     if (isReversal) {
       const power = Math.max(1, player.maxHp - player.hp);
@@ -1841,6 +1843,20 @@ export function createBattleScene(
     const unseenSlots = maxRosterSize - battleRoster.size;
     const estimatedRemaining = confirmedAlive + unseenSlots;
     const playerPartyRemainingScore = estimatedRemaining / maxRosterSize;
+
+    // dream eater works only on sleeping targets — worthless otherwise
+    if (isDreamEaterEnemy) {
+      if (playerBattleState.majorStatus !== 'sleep') {
+        return -Infinity;
+      }
+    }
+
+    // belly drum works only when enough HP — worthless otherwise
+    if (isBellyDrumEnemy) {
+      if (enemyHpRatio <= 0.85 || enemyBattleState.statModifiers.attack >= 3) {
+        return -Infinity;
+      }
+    }
 
     // self destruct /explosion
     if (leaveUserAtOneHp) {

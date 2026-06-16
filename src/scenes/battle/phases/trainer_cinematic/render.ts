@@ -98,7 +98,6 @@ export function renderTrainerCinematic(
     const ey = 4;
 
     drawPlatform(ctx, ex + 24, ey + 44, 24, 5, 'rgba(80,80,200,0.25)', 'rgba(120,120,255,0.3)');
-    console.log(trainerData?.trainerSpriteType, state.enemyPath);
     if (trainerData?.trainerSpriteType && state.enemyPath) {
       const tImg = getCachedImage(state.enemyPath);
       if (tImg) {

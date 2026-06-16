@@ -559,32 +559,6 @@
         "infinite": true,
         "addToPhone": false
       }
-    },
-    {
-      "id": "npc-1781642214893",
-      "x": 14,
-      "y": 9,
-      "facing": "down",
-      "type": "trainer",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "red#hero",
-      "party": [
-        {
-          "pokemonId": 468,
-          "level": 60,
-          "moves": []
-        }
-      ],
-      "lineOfSight": 3,
-      "reward": {
-        "money": 0
-      },
-      "postBattleDialogue": []
     }
   ],
   "music": "town",

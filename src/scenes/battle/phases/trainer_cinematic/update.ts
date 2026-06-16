@@ -75,7 +75,6 @@ export function updateTrainerCinematic(
   // ── Single Execution Network Guard ──
   if (!state.loadDispatched) {
     state.loadDispatched = true; // Block subsequent frames from entering this conditional block
-    console.log({ state });
 
     // Fire the asset network retrieval requests exactly ONCE
     if (!textBox) {
