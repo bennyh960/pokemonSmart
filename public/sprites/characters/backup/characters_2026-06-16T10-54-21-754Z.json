@@ -271,10 +271,7 @@
       "name": {
         "en": "Mosh",
         "he": "מוש"
-      },
-      "roles": [
-        "trainer"
-      ]
+      }
     },
     "cyntia": {
       "frameWidth": 32,
@@ -1561,6 +1558,13 @@
           "sx": 960,
           "sy": 640
         }
+      ],
+      "name": {
+        "en": "Irena",
+        "he": "אירנה"
+      },
+      "roles": [
+        "professor"
       ]
     },
     "char_9ceeb2": {

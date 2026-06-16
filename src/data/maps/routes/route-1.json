@@ -79,7 +79,7 @@
     {
       "id": "bug-catcher-1",
       "name": {
-        "en": "Dana",
+        "en": "Bug Catcher Gus",
         "he": "באגסי איינשטיין"
       },
       "x": 5,
@@ -88,11 +88,19 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "Hey! You have Pokemon! Let's battle!",
-          "he": "היי - יש לך פוקימון? קדימה לקרב!"
+          "en": "Are you a pokemon trainer? My name is Bug Catcher Gus.",
+          "he": "אתה מאמן פוקימונים? שמי באג קצ'ר גאס."
+        },
+        {
+          "en": "I just started my journey and I like bug type pokemon.",
+          "he": "אני רק התחלתי את המסע שלי ואני אוהב פוקימונים מסוג חרק."
+        },
+        {
+          "en": "I have two pokemon, wanna battle?",
+          "he": "יש לי שני פוקימונים, רוצה לקרב?"
         }
       ],
-      "spriteType": "dana",
+      "spriteType": "char_46f643",
       "party": [
         {
           "pokemonId": 10,
@@ -330,7 +338,7 @@
       "y": 10,
       "facing": "up",
       "type": "trainer",
-      "spriteType": "dana",
+      "spriteType": "char_4d53b7",
       "party": [
         {
           "pokemonId": 13,
