@@ -271,7 +271,10 @@
       "name": {
         "en": "Mosh",
         "he": "מוש"
-      }
+      },
+      "roles": [
+        "trainer"
+      ]
     },
     "cyntia": {
       "frameWidth": 32,
@@ -4594,7 +4597,8 @@
         "he": "ווקר"
       },
       "roles": [
-        "townfolk"
+        "townfolk",
+        "trainer"
       ]
     },
     "char_083dc8": {
