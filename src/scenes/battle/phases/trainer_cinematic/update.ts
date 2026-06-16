@@ -75,6 +75,7 @@ export function updateTrainerCinematic(
   // ── Single Execution Network Guard ──
   if (!state.loadDispatched) {
     state.loadDispatched = true; // Block subsequent frames from entering this conditional block
+    console.log({ state });
 
     // Fire the asset network retrieval requests exactly ONCE
     if (!textBox) {
@@ -91,7 +92,6 @@ export function updateTrainerCinematic(
   // ── Mode 1: Central Duel Screen ──
   if (!state.battleSceneActive) {
     const maxVsTime = CINEMATIC_PHASE_CONSTANTS.VS_END - 0.01;
-
     // Hard-clamp the timer: Ensure it stops ticking completely at 1.99s
     if (state.timer > maxVsTime) {
       state.timer = maxVsTime;

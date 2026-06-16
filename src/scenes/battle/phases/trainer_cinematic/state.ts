@@ -7,6 +7,8 @@ import type { TrainerBattleData } from '../..';
 import { loadImage } from '../../../../engine/sprite-loader';
 import { getPlayerData } from '../../../../systems/game-state';
 
+import { trainerSprites } from 'virtual:trainer-sprites';
+
 export type IntroStyle = 0 | 1 | 2; // 0 = Radial Speed lines, 1 = Fire/Water Split, 2 = Electric Storm
 
 export interface Particle {
@@ -48,12 +50,10 @@ export interface CinematicState {
   enemyPath: string | null;
 }
 
-const trainerSprites = import.meta.glob('/sprites/trainers/*.png', { eager: true, query: '?url' });
-
+// trainerSprites is created by vite plugin
 export function checkTrainerSpriteExists(spriteType?: string): boolean {
   if (!spriteType) return false;
-  const fullPath = `/sprites/trainers/${spriteType}.png?url`;
-  return fullPath in trainerSprites;
+  return trainerSprites.has(spriteType);
 }
 
 export function createCinematicState(trainerData: TrainerBattleData | null): CinematicState {
