@@ -1,14 +1,27 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; color: #ddd; overflow: hidden; height: 100vh; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  background: #0f0f1a;
+  color: #ddd;
+  overflow: hidden;
+  height: 100vh;
+}
 
 #editor-root {
   display: grid;
   grid-template-rows: 42px 1fr 26px;
   grid-template-columns: 240px 1fr 300px;
   grid-template-areas:
-    "toolbar toolbar toolbar"
-    "list    canvas  props"
-    "status  status  status";
+    'toolbar toolbar toolbar'
+    'list    canvas  props'
+    'status  status  status';
   height: 100vh;
   gap: 1px;
   background: #1a1a2e;
@@ -24,16 +37,45 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
   padding: 0 8px;
   border-bottom: 1px solid #333;
 }
-.toolbar-group { display: flex; align-items: center; gap: 3px; padding: 0 8px; border-right: 1px solid #333; }
-.toolbar-group:last-child { border-right: none; }
-.toolbar-group button {
-  background: #2a2a44; color: #ccc; border: 1px solid #444; border-radius: 4px;
-  padding: 4px 10px; font-size: 12px; cursor: pointer; white-space: nowrap;
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 8px;
+  border-right: 1px solid #333;
 }
-.toolbar-group button:hover { background: #3a3a55; }
-.toolbar-group button.active { background: #4466aa; color: #fff; border-color: #5577bb; }
-.toolbar-group button#btn-crop.active { background: #aa6622; border-color: #cc8833; }
-.toolbar-label { color: #888; font-size: 12px; padding: 0 4px; min-width: 30px; text-align: center; }
+.toolbar-group:last-child {
+  border-right: none;
+}
+.toolbar-group button {
+  background: #2a2a44;
+  color: #ccc;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.toolbar-group button:hover {
+  background: #3a3a55;
+}
+.toolbar-group button.active {
+  background: #4466aa;
+  color: #fff;
+  border-color: #5577bb;
+}
+.toolbar-group button#btn-crop.active {
+  background: #aa6622;
+  border-color: #cc8833;
+}
+.toolbar-label {
+  color: #888;
+  font-size: 12px;
+  padding: 0 4px;
+  min-width: 30px;
+  text-align: center;
+}
 
 /* ── Sprite List (left) ── */
 .ts-list {
@@ -71,8 +113,13 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
   border-radius: 3px;
   color: #aaa;
 }
-.list-item:hover { background: #2a2a44; }
-.list-item.selected { background: #3355aa; color: #fff; }
+.list-item:hover {
+  background: #2a2a44;
+}
+.list-item.selected {
+  background: #3355aa;
+  color: #fff;
+}
 .list-category-header {
   font-size: 10px;
   font-weight: 600;
@@ -90,6 +137,10 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
   border: 1px solid #444;
   border-radius: 2px;
   flex-shrink: 0;
+}
+
+.tile-mini-preview:hover {
+  zoom: 2;
 }
 .tile-label {
   flex: 1;
@@ -118,28 +169,83 @@ body { font-family: 'Inter', sans-serif; font-size: 13px; background: #0f0f1a; c
   border-left: 1px solid #333;
   padding: 10px;
 }
-.props-section { margin-bottom: 12px; }
-.props-section h3 { font-size: 12px; font-weight: 600; color: #8899bb; border-bottom: 1px solid #2a2a44; padding-bottom: 4px; margin-bottom: 8px; }
-.prop-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 12px; }
-.prop-row label { color: #888; min-width: 90px; flex-shrink: 0; }
-.prop-row input[type="text"], .prop-row input[type="number"], .prop-row select {
-  flex: 1; background: #2a2a44; color: #ddd; border: 1px solid #444; border-radius: 3px;
-  padding: 4px 6px; font-size: 12px; font-family: inherit;
+.props-section {
+  margin-bottom: 12px;
 }
-.prop-row input[type="checkbox"] { width: auto; accent-color: #4488ff; }
-.prop-empty { color: #555; font-size: 12px; font-style: italic; line-height: 1.6; }
-.val-highlight { color: #88bbff; font-weight: 500; }
+.props-section h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8899bb;
+  border-bottom: 1px solid #2a2a44;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+.prop-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+.prop-row label {
+  color: #888;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+.prop-row input[type='text'],
+.prop-row input[type='number'],
+.prop-row select {
+  flex: 1;
+  background: #2a2a44;
+  color: #ddd;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-family: inherit;
+}
+.prop-row input[type='checkbox'] {
+  width: auto;
+  accent-color: #4488ff;
+}
+.prop-empty {
+  color: #555;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.6;
+}
+.val-highlight {
+  color: #88bbff;
+  font-weight: 500;
+}
 
 button.primary {
-  background: #4466aa; color: #fff; border: 1px solid #5577bb; border-radius: 4px;
-  padding: 6px 16px; font-size: 12px; cursor: pointer; width: 100%; margin-top: 8px;
+  background: #4466aa;
+  color: #fff;
+  border: 1px solid #5577bb;
+  border-radius: 4px;
+  padding: 6px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 8px;
 }
-button.primary:hover { background: #5577cc; }
+button.primary:hover {
+  background: #5577cc;
+}
 .btn-danger {
-  background: #882233; color: #fff; border: 1px solid #993344; border-radius: 4px;
-  padding: 5px 12px; font-size: 12px; cursor: pointer; width: 100%;
+  background: #882233;
+  color: #fff;
+  border: 1px solid #993344;
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100%;
 }
-.btn-danger:hover { background: #aa3344; }
+.btn-danger:hover {
+  background: #aa3344;
+}
 
 /* ── Direction Rows ── */
 .dir-row {
@@ -182,9 +288,13 @@ button.primary:hover { background: #5577cc; }
   border: 1px solid #333;
   border-radius: 4px;
   cursor: grab;
-  transition: border-color 0.15s, transform 0.15s;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
 }
-.frame-item:hover { border-color: #556; }
+.frame-item:hover {
+  border-color: #556;
+}
 .frame-item.dragging {
   opacity: 0.4;
   transform: scale(0.9);
@@ -219,43 +329,95 @@ button.primary:hover { background: #5577cc; }
 .frame-thumb-empty {
   border: 1px dashed #555;
   border-radius: 2px;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 4px,
-    #1a1a2e 4px,
-    #1a1a2e 8px
-  );
+  background: repeating-linear-gradient(45deg, transparent, transparent 4px, #1a1a2e 4px, #1a1a2e 8px);
 }
 
 /* ── Name Picker ── */
-.name-picker { margin-bottom: 6px; }
-.name-picker-search-row { display: flex; gap: 4px; margin-bottom: 4px; }
-.name-picker-search-wrapper { flex: 1; position: relative; }
+.name-picker {
+  margin-bottom: 6px;
+}
+.name-picker-search-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.name-picker-search-wrapper {
+  flex: 1;
+  position: relative;
+}
 .name-picker-search {
-  width: 100%; background: #2a2a44; color: #ddd; border: 1px solid #444;
-  border-radius: 3px; padding: 3px 6px; font-size: 12px; font-family: inherit;
+  width: 100%;
+  background: #2a2a44;
+  color: #ddd;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-family: inherit;
 }
 .name-picker-dropdown {
-  position: absolute; top: 100%; left: 0; right: 0; max-height: 150px;
-  overflow-y: auto; background: #1e1e32; border: 1px solid #555;
-  border-top: none; border-radius: 0 0 3px 3px; z-index: 50;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  background: #1e1e32;
+  border: 1px solid #555;
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+  z-index: 50;
 }
-.name-picker-item { padding: 3px 6px; font-size: 11px; color: #ccc; cursor: pointer; }
-.name-picker-item:hover { background: #3355aa; color: #fff; }
-.name-picker-empty { padding: 4px 6px; font-size: 11px; color: #555; font-style: italic; }
+.name-picker-item {
+  padding: 3px 6px;
+  font-size: 11px;
+  color: #ccc;
+  cursor: pointer;
+}
+.name-picker-item:hover {
+  background: #3355aa;
+  color: #fff;
+}
+.name-picker-empty {
+  padding: 4px 6px;
+  font-size: 11px;
+  color: #555;
+  font-style: italic;
+}
 .name-picker-random {
-  background: #2a2a44; border: 1px solid #444; border-radius: 3px;
-  padding: 2px 6px; cursor: pointer; font-size: 14px; line-height: 1;
+  background: #2a2a44;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
 }
-.name-picker-random:hover { background: #3a3a55; }
+.name-picker-random:hover {
+  background: #3a3a55;
+}
 .name-picker-field {
-  display: flex; align-items: center; gap: 4px; margin-bottom: 3px; font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 3px;
+  font-size: 12px;
 }
-.name-picker-field label { color: #888; min-width: 24px; flex-shrink: 0; font-size: 11px; }
+.name-picker-field label {
+  color: #888;
+  min-width: 24px;
+  flex-shrink: 0;
+  font-size: 11px;
+}
 .name-picker-field input {
-  flex: 1; background: #2a2a44; color: #ddd; border: 1px solid #444;
-  border-radius: 3px; padding: 2px 5px; font-size: 12px; font-family: inherit;
+  flex: 1;
+  background: #2a2a44;
+  color: #ddd;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 2px 5px;
+  font-size: 12px;
+  font-family: inherit;
 }
 
 /* ── Frame Context Menu ── */
@@ -267,7 +429,7 @@ button.primary:hover { background: #5577cc; }
   padding: 3px 0;
   min-width: 110px;
   z-index: 200;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 .frame-ctx-item {
   padding: 5px 12px;
@@ -275,11 +437,26 @@ button.primary:hover { background: #5577cc; }
   color: #ccc;
   cursor: pointer;
 }
-.frame-ctx-item:hover { background: #3355aa; color: #fff; }
-.frame-ctx-danger { color: #e66; }
-.frame-ctx-danger:hover { background: #662233; color: #fff; }
-.frame-ctx-disabled { color: #555; cursor: default; font-style: italic; }
-.frame-ctx-disabled:hover { background: transparent; color: #555; }
+.frame-ctx-item:hover {
+  background: #3355aa;
+  color: #fff;
+}
+.frame-ctx-danger {
+  color: #e66;
+}
+.frame-ctx-danger:hover {
+  background: #662233;
+  color: #fff;
+}
+.frame-ctx-disabled {
+  color: #555;
+  cursor: default;
+  font-style: italic;
+}
+.frame-ctx-disabled:hover {
+  background: transparent;
+  color: #555;
+}
 
 /* ── Status Bar ── */
 .ts-status {

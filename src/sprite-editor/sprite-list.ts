@@ -18,7 +18,10 @@ export class SpriteList {
     search.type = 'text';
     search.placeholder = 'Search sprites...';
     search.className = 'ts-search';
-    search.addEventListener('input', () => { this.filterText = search.value.toLowerCase(); this.build(); });
+    search.addEventListener('input', () => {
+      this.filterText = search.value.toLowerCase();
+      this.build();
+    });
     container.appendChild(search);
 
     // Role filter dropdown
@@ -26,14 +29,19 @@ export class SpriteList {
     roleSel.className = 'ts-search';
     roleSel.style.marginTop = '4px';
     const allOpt = document.createElement('option');
-    allOpt.value = ''; allOpt.textContent = 'All roles';
+    allOpt.value = '';
+    allOpt.textContent = 'All roles';
     roleSel.appendChild(allOpt);
     for (const role of CHARACTER_ROLES) {
       const opt = document.createElement('option');
-      opt.value = role; opt.textContent = role;
+      opt.value = role;
+      opt.textContent = role;
       roleSel.appendChild(opt);
     }
-    roleSel.addEventListener('change', () => { this.filterRole = roleSel.value; this.build(); });
+    roleSel.addEventListener('change', () => {
+      this.filterRole = roleSel.value;
+      this.build();
+    });
     container.appendChild(roleSel);
 
     // List container
@@ -56,9 +64,7 @@ export class SpriteList {
       // Text search
       if (!this.filterText) return true;
       const q = this.filterText;
-      return s.id.toLowerCase().includes(q) ||
-        s.name.en.toLowerCase().includes(q) ||
-        s.name.he.includes(q);
+      return s.id.toLowerCase().includes(q) || s.name.en.toLowerCase().includes(q) || s.name.he.includes(q);
     });
 
     for (const s of filtered) {
@@ -69,7 +75,8 @@ export class SpriteList {
       item.dataset.idx = String(idx);
 
       // Mini preview — show first valid frame
-      const firstFrame = s.frames.find(f => f.sx >= 0 && f.sy >= 0);
+      const frames = s.frames.filter((f) => f.sx >= 0 && f.sy >= 0);
+      const firstFrame = frames[4] ?? frames[0];
       if (firstFrame) {
         const maxDim = Math.max(s.frameWidth, s.frameHeight);
         const scale = 24 / maxDim;
@@ -103,7 +110,7 @@ export class SpriteList {
 
   private updateHighlight(): void {
     const listEl = this.container.querySelector('.ts-tile-list')!;
-    listEl.querySelectorAll('.list-item').forEach(el => {
+    listEl.querySelectorAll('.list-item').forEach((el) => {
       const idx = parseInt((el as HTMLElement).dataset.idx || '-1', 10);
       (el as HTMLElement).classList.toggle('selected', idx === this.state.selectedIndex);
     });
