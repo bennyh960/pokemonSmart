@@ -13,7 +13,7 @@ import {
   getPokemonDisplayName,
   getMove,
   canLearnViaTM,
-  getNextEvolution,
+  getRegularNextEvolution,
   type EvolutionStep,
 } from '../services/pokemon-data.js';
 import { getLocale, t } from '../i18n/i18n.js';
@@ -96,7 +96,7 @@ export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
       if (target.hp <= 0) return false;
       const stoneSlug = getItem(itemId)?.id;
       if (!stoneSlug) return false;
-      const nextEvo = getNextEvolution(target.id);
+      const nextEvo = getRegularNextEvolution(target.id);
       return nextEvo?.trigger === 'use-item' && nextEvo.item === stoneSlug;
     }
     default:
@@ -283,7 +283,7 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
       if (!stoneSlug) {
         return { success: false, message: '???-באג' };
       }
-      const nextEvo = getNextEvolution(target.id);
+      const nextEvo = getRegularNextEvolution(target.id);
       if (!nextEvo || nextEvo.trigger !== 'use-item' || nextEvo.item !== stoneSlug) {
         return { success: false, message: t('item.effect.noEffect') };
       }

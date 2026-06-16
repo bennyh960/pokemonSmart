@@ -1,6 +1,6 @@
 import type { PlayerData, DayCareEntry, Pokemon, Move } from '../types/index.js';
 import type { DayCareData } from './npc.js';
-import { getNextEvolution, getLearnset } from '../services/pokemon-data.js';
+import { getRegularNextEvolution, getLearnset } from '../services/pokemon-data.js';
 import { recalcPokemonStats } from './encounter.js';
 import { createMoveFromId, MAX_POKEMON_MOVES } from './move-learning.js';
 
@@ -23,7 +23,7 @@ export function getDayCareEntry(pd: PlayerData, npcId: string): DayCareEntry | n
 
 /** Return the level cap: one below the next level-up evolution, or 100. */
 function evoCap(pokemonId: number, currentLevel: number): number {
-  const evo = getNextEvolution(pokemonId);
+  const evo = getRegularNextEvolution(pokemonId);
   if (evo?.trigger === 'level-up' && evo.minLevel != null && evo.minLevel > currentLevel) {
     return evo.minLevel - 1;
   }
@@ -31,11 +31,7 @@ function evoCap(pokemonId: number, currentLevel: number): number {
 }
 
 /** Lazily calculate levels gained and withdrawal cost (does NOT mutate anything). */
-export function calcDayCareResult(
-  pd: PlayerData,
-  entry: DayCareEntry,
-  npc: DayCareData,
-): DayCareResult {
+export function calcDayCareResult(pd: PlayerData, entry: DayCareEntry, npc: DayCareData): DayCareResult {
   const steps = Math.max(0, pd.totalSteps - entry.depositedAtSteps);
   const stepsPerLevel = npc.stepsPerLevel ?? DEFAULT_STEPS_PER_LEVEL;
   const costPerLevel = npc.costPerLevel ?? DEFAULT_COST_PER_LEVEL;

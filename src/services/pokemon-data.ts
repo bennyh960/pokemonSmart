@@ -294,7 +294,9 @@ export function getEvolutionChain(pokemonId: number): EvolutionChainData | undef
   return evolutionByPokemonId.get(pokemonId);
 }
 
-export function getNextEvolution(pokemonId: number): EvolutionStep | undefined {
+// very minour evolution resolver
+// will not work for politod that need trade - it
+export function getRegularNextEvolution(pokemonId: number): EvolutionStep | undefined {
   const chain = evolutionByPokemonId.get(pokemonId);
   if (!chain) return undefined;
 
@@ -384,7 +386,7 @@ export function computePokemonSize(pokemon: { id: number; level: number; wPercen
   const maxW = baseW * (1.5 + wPct / 100);
   const maxH = baseH * (1.5 + hPct / 100);
 
-  const nextEvo = getNextEvolution(pokemon.id);
+  const nextEvo = getRegularNextEvolution(pokemon.id);
   let targetW: number, targetH: number, horizon: number;
 
   if (nextEvo?.trigger === 'level-up' && nextEvo.minLevel) {

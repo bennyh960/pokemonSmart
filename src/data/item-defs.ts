@@ -630,6 +630,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     },
     usableInBattle: false,
     usableInOverworld: false,
+    name: { en: 'Metal Coat', he: 'מעיל מתכת' },
   },
   9018: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // Dragon Scale
 

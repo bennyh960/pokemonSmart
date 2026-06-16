@@ -15,7 +15,7 @@ import {
   getRandomAbility,
   getRandomNatureId,
   getNatureMultiplier,
-  getNextEvolution,
+  getRegularNextEvolution,
   getAllNextEvolutions,
   getPokemonAbilities,
 } from '../services/pokemon-data.js';
@@ -434,9 +434,9 @@ export function checkAndApplyLevelUp(pokemon: Pokemon, party: Pokemon[] = []): L
     newMoves.push({ moveId: entry.moveId, learned: false });
   }
 
-  console.log(`${pokemon.name} grew to level ${pokemon.level}!`);
+  console.debug(`${pokemon.name} grew to level ${pokemon.level}!`);
   if (newMoves.length > 0) {
-    console.log(
+    console.debug(
       `Move learning events: ${newMoves.map((move) => `${move.moveId}:${move.learned ? 'learned' : 'pending'}`).join(', ')}`,
     );
   }
@@ -451,15 +451,35 @@ export function checkAndApplyLevelUp(pokemon: Pokemon, party: Pokemon[] = []): L
 }
 
 export function getPendingLevelEvolution(pokemon: Pokemon): EvolutionStep | undefined {
-  const nextEvolution = getNextEvolution(pokemon.id);
+  // special cases
+  const tyrougeNext = getTyrougeChain(pokemon);
+  if (tyrougeNext) return tyrougeNext;
+
+  const nextEvolution = getRegularNextEvolution(pokemon.id);
   if (!nextEvolution) return undefined;
   if (nextEvolution.trigger !== 'level-up') return undefined;
   if (nextEvolution.minLevel === null) return undefined;
   return pokemon.level >= nextEvolution.minLevel ? nextEvolution : undefined;
 }
 
+// tyrouge to hitmonlee/chan/top
+function getTyrougeChain(pokemon: Pokemon) {
+  // tyrouge = 236
+  if (pokemon.id !== 236) return undefined;
+  const candidates = getAllNextEvolutions(pokemon.id).filter((c) => c.minLevel && pokemon.level >= c.minLevel);
+  if (candidates.length === 0) return undefined;
+
+  if (pokemon.attack === pokemon.defense) {
+    return candidates.find((c) => c.id === 237);
+  } else if (pokemon.attack > pokemon.defense) {
+    return candidates.find((c) => c.id === 106);
+  } else {
+    return candidates.find((c) => c.id === 107);
+  }
+}
+
 /**
- * Returns Espeon or Umbreon if Eevee (or any happiness-evolving Pokemon) has
+ * Returns Espeon/Umbreon if Eevee (or any happiness-evolving Pokemon) has
  * reached the happiness threshold. Day → Espeon (196), night → Umbreon (197).
  */
 export function getPendingHappinessEvolution(pokemon: Pokemon, party: Pokemon[]): EvolutionStep | undefined {
@@ -472,9 +492,13 @@ export function getPendingHappinessEvolution(pokemon: Pokemon, party: Pokemon[])
   const day = isDaytime();
   const espeon = candidates.find((s) => s.id === 196);
   const umbreon = candidates.find((s) => s.id === 197);
+  const lucario = candidates.find((s) => s.id === 448);
 
+  if (day && lucario) return lucario;
   if (day && espeon) return espeon;
   if (!day && umbreon) return umbreon;
+
+  // togetic , crobat , blissy
   return candidates[0];
 }
 

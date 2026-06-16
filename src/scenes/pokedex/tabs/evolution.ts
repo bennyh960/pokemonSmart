@@ -1,8 +1,8 @@
 import { getItemGameDataBySlug } from '../../../data/item-defs';
-import { LOGICAL_WIDTH } from '../../../engine/config';
+import { LOGICAL_HEIGHT, LOGICAL_WIDTH } from '../../../engine/config';
 import { drawRect, drawText, fillRect } from '../../../engine/renderer';
 import { getCachedImage, loadImage } from '../../../engine/sprite-loader';
-import { getLocale, t } from '../../../i18n/i18n';
+import { getLocale, isRTL, t } from '../../../i18n/i18n';
 import { getEvolutionChain, getPokemonDisplayName } from '../../../services/pokemon-data';
 
 interface EvolutionStage {
@@ -12,6 +12,7 @@ interface EvolutionStage {
   trigger: string | null;
   item: string | null;
   evolvesFromId?: number | null;
+  special?: { en: string; he: string };
 }
 
 export function renderEvolutionTab(ctx: CanvasRenderingContext2D, id: number, contentY: number): void {
@@ -92,41 +93,6 @@ function drawNode(
     font: 'monospace',
     align: 'center',
   });
-}
-
-/**
- * Shared Graphics Component: Evolution Instruction Label
- */
-function drawDescription(
-  ctx: CanvasRenderingContext2D,
-  stage: EvolutionStage,
-  x: number,
-  y: number,
-  align: 'center' | 'left' | 'right' = 'left',
-): void {
-  let text = '';
-
-  if (stage.minLevel) {
-    text = `Lv.${stage.minLevel}`;
-  } else if (stage.item) {
-    const itemData = getItemGameDataBySlug(stage.item);
-    if (itemData) {
-      text = itemData.name ? itemData.name[getLocale()] || itemData.name.en : '';
-    } else {
-      text = stage.item.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-    }
-  } else if (stage.trigger) {
-    text = stage.trigger.replace(/-/g, ' ');
-  }
-
-  if (text) {
-    drawText(ctx, text, x, y, {
-      size: 5,
-      color: '#a08080',
-      font: 'monospace',
-      align: align,
-    });
-  }
 }
 
 /**
@@ -341,5 +307,114 @@ function renderStandardChain(
       drawText(ctx, '\u2192', arrowX + 4, arrowY, { size: 8, color: '#f8a878', font: 'monospace' });
       drawDescription(ctx, nextStage, arrowX + 4, arrowY + 11, 'left');
     }
+  }
+}
+
+// helper function to wrap long text into multiple lines based on a max character limit
+function wrapText(text: string, maxChars: number): string[] {
+  const spliter = text.includes('\n') ? '\n' : '+';
+  const manualLines = text.split(spliter);
+  const finalLines: string[] = [];
+
+  for (const manualLine of manualLines) {
+    const words = manualLine.trim().split(' ');
+    let currentLine = '';
+
+    for (const word of words) {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      if (testLine.length <= maxChars) {
+        currentLine = testLine;
+      } else {
+        if (currentLine) finalLines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    if (currentLine) finalLines.push(currentLine);
+  }
+
+  return finalLines;
+}
+
+/**
+ * Shared Graphics Component: Evolution Instruction Label
+ */
+function drawDescription(
+  ctx: CanvasRenderingContext2D,
+  stage: EvolutionStage,
+  x: number,
+  y: number,
+  align: 'center' | 'left' | 'right' = 'left',
+): void {
+  const local = getLocale(); // 'en' | 'he'
+  let text = '';
+
+  // 1. if exists , use it only
+  if (stage.special) {
+    text = stage.special[local] || stage.special.en || '';
+  }
+  // 2. Regular evolution chain structure
+  else if (stage.trigger === 'trade') {
+    // Trade with held item
+    if (stage.item) {
+      const itemData = getItemGameDataBySlug(stage.item);
+      const itemName = itemData ? (itemData.name ? itemData.name[local] || itemData.name.en : stage.item) : stage.item;
+
+      text = local === 'he' ? `החלפה* + ${itemName}` : `*Trade + ${itemName}`;
+    }
+    // החלפה פשוטה (בלי חפץ)
+    else {
+      text = local === 'he' ? 'החלפה*' : '*Trade';
+    }
+  }
+  // שימוש ישיר בחפץ (אבולוציה מיידית כמו אבני פיתוח)
+  else if (stage.trigger === 'use-item' && stage.item) {
+    const itemData = getItemGameDataBySlug(stage.item);
+    const itemName = itemData ? (itemData.name ? itemData.name[local] || itemData.name.en : stage.item) : stage.item;
+    text = itemName;
+  }
+  // עליית רמה עם חפץ מוחזק (trigger הוא level-up אבל יש item)
+  else if (stage.trigger === 'level-up' && stage.item) {
+    const itemData = getItemGameDataBySlug(stage.item);
+    const itemName = itemData ? (itemData.name ? itemData.name[local] || itemData.name.en : stage.item) : stage.item;
+
+    text = local === 'he' ? `עליית רמה עם ${itemName}` : `Lv. Up holding ${itemName}`;
+  }
+  // עליית רמה רגילה (הדרך הנפוצה ביותר)
+  else if (stage.minLevel) {
+    text = local === 'he' ? `רמה ${stage.minLevel}` : `Lv.${stage.minLevel}`;
+  }
+  // גיבוי למקרים כלליים של טריגרים אחרים
+  else if (stage.trigger) {
+    text = stage.trigger.replace(/-/g, ' ');
+  }
+
+  // הדפסת הטקסט במידה וקיים, כולל מנגנון שבירת שורות דינמי
+  if (text) {
+    const MAX_CHARS = 30; // משתנה דינמי להתאמה אישית
+    const lines = wrapText(text, MAX_CHARS);
+    const lineHeight = 6; // המרחק האנכי בין השורות שנשברו
+
+    lines.forEach((line, index) => {
+      drawText(ctx, line, x, y + index * lineHeight, {
+        size: 5,
+        color: '#a08080',
+        font: 'monospace',
+        align: align,
+      });
+    });
+  }
+
+  if (text.includes('*')) {
+    const hintEnglish =
+      '*Trade Tech : You should search in labs , you might find some scientists that might trigger your trade evolution.';
+    const hintHebrew = 'החלפה: חפשו במעבדות, ייתכן שתמצאו מדענים שיכולים להפעיל את אבולוציית ההחלפה שלכם*';
+    const hintText = getLocale() === 'he' ? hintHebrew : hintEnglish;
+    const dynamicX = isRTL() ? LOGICAL_WIDTH - 20 - hintText.length : 10; // Dynamic X based on text length and alignment
+    drawText(ctx, hintText, dynamicX, LOGICAL_HEIGHT - 20, {
+      size: 5,
+      color: '#a08080',
+      font: 'monospace',
+      align: 'center',
+    });
   }
 }

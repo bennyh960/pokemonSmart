@@ -38,7 +38,7 @@ import {
   getPokemon,
   getPokemonDisplayName,
   getLocalizedName,
-  getNextEvolution,
+  getRegularNextEvolution,
   getPokemonAbilities,
   getAbilityDisplayName,
   getAbilityDisplayNameAndDescription,
@@ -1154,7 +1154,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
       case 'trade-evolution': {
         for (const pokemon of party) {
-          const evo = getNextEvolution(pokemon.id);
+          const evo = getRegularNextEvolution(pokemon.id);
           if (evo && evo.trigger === 'trade') {
             if (evo.item) {
               const itemData = getItem(evo.item);
