@@ -27,7 +27,7 @@
   ],
   "npcs": [
     {
-      "id": "league-e4-leon",
+      "id": "league-e4-alder",
       "x": 14,
       "y": 7,
       "facing": "left",
@@ -38,7 +38,7 @@
           "he": ""
         }
       ],
-      "spriteType": "leon",
+      "spriteType": "alder",
       "party": [
         {
           "pokemonId": 53,

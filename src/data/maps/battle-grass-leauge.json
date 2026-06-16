@@ -63,7 +63,7 @@
           "he": "שתדבר איתי החבר יעלם"
         }
       ],
-      "spriteType": "leon",
+      "spriteType": "alder",
       "lineOfSight": 3,
       "reward": {
         "money": 0,
@@ -99,7 +99,7 @@
           "he": ""
         }
       ],
-      "spriteType": "leon",
+      "spriteType": "alder",
       "party": [
         {
           "pokemonId": 1,

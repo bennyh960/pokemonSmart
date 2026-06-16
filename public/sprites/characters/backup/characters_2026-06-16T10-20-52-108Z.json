@@ -84,7 +84,10 @@
         "en": "Rei Minder",
         "he": "ריי שארית"
       },
-      "roles": ["rival", "story"]
+      "roles": [
+        "rival",
+        "story"
+      ]
     },
     "dana": {
       "frameWidth": 32,
@@ -207,7 +210,10 @@
         "en": "Alder",
         "he": "אלדר"
       },
-      "roles": ["elite-4", "story"]
+      "roles": [
+        "elite-4",
+        "story"
+      ]
     },
     "mosh": {
       "frameWidth": 32,
@@ -324,7 +330,9 @@
         "en": "Cyntia",
         "he": "סינתיה"
       },
-      "roles": ["elite-4"]
+      "roles": [
+        "elite-4"
+      ]
     },
     "alice": {
       "frameWidth": 32,
@@ -383,7 +391,10 @@
         "en": "Alice",
         "he": "אליס"
       },
-      "roles": ["story", "elite-4"]
+      "roles": [
+        "story",
+        "elite-4"
+      ]
     },
     "char_45ba6c": {
       "frameWidth": 32,
@@ -534,7 +545,9 @@
           "sy": 256
         }
       ],
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_485c6e": {
       "frameWidth": 32,
@@ -589,7 +602,9 @@
           "sy": 96
         }
       ],
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_c3dacc": {
       "frameWidth": 32,
@@ -644,7 +659,9 @@
           "sy": 96
         }
       ],
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_459058": {
       "frameWidth": 32,
@@ -699,7 +716,9 @@
           "sy": 96
         }
       ],
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_10af6a": {
       "frameWidth": 32,
@@ -754,7 +773,9 @@
           "sy": 96
         }
       ],
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_0502ea": {
       "frameWidth": 32,
@@ -809,7 +830,9 @@
           "sy": 256
         }
       ],
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_392694": {
       "frameWidth": 32,
@@ -918,7 +941,9 @@
           "sy": 640
         }
       ],
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_2db5a7": {
       "frameWidth": 32,
@@ -1126,7 +1151,9 @@
           "sy": 768
         }
       ],
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_4b1e38": {
       "frameWidth": 32,
@@ -1181,7 +1208,9 @@
           "sy": 768
         }
       ],
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "gym-1-adda": {
       "frameWidth": 32,
@@ -1240,7 +1269,10 @@
         "en": "Adda",
         "he": "אדה פלוס"
       },
-      "roles": ["story", "gym-leader"]
+      "roles": [
+        "story",
+        "gym-leader"
+      ]
     },
     "champion_leon": {
       "frameWidth": 32,
@@ -1299,7 +1331,10 @@
         "en": "Leon",
         "he": "ליאון"
       },
-      "roles": ["story", "champion"]
+      "roles": [
+        "story",
+        "champion"
+      ]
     },
     "char_ca2fd2": {
       "frameWidth": 32,
@@ -1466,7 +1501,10 @@
         "en": "Miss Minessa",
         "he": "מינזה"
       },
-      "roles": ["story", "gym-leader"]
+      "roles": [
+        "story",
+        "gym-leader"
+      ]
     },
     "char_304fc6": {
       "frameWidth": 32,
@@ -1574,6 +1612,13 @@
           "sx": 640,
           "sy": 512
         }
+      ],
+      "name": {
+        "en": "Shamay",
+        "he": "שמאי הנגן"
+      },
+      "roles": [
+        "trainer"
       ]
     },
     "char_7ba749": {
@@ -1629,7 +1674,9 @@
           "sy": 384
         }
       ],
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "gym-8-algebria": {
       "frameWidth": 32,
@@ -1688,7 +1735,10 @@
         "en": "Prima Elgrabli",
         "he": "פרימה אלגרבלי"
       },
-      "roles": ["story", "gym-leader"]
+      "roles": [
+        "story",
+        "gym-leader"
+      ]
     },
     "char_c2b2c1": {
       "frameWidth": 32,
@@ -1743,7 +1793,9 @@
           "sy": 1056
         }
       ],
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_3470af": {
       "frameWidth": 32,
@@ -1798,7 +1850,9 @@
           "sy": 1056
         }
       ],
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_5b4066": {
       "frameWidth": 32,
@@ -1853,7 +1907,9 @@
           "sy": 1056
         }
       ],
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "gym-3-kafla": {
       "frameWidth": 32,
@@ -1912,7 +1968,10 @@
         "en": "Captain Kefel",
         "he": "קפטיין קפלה"
       },
-      "roles": ["gym-leader", "story"]
+      "roles": [
+        "gym-leader",
+        "story"
+      ]
     },
     "gym-5-fractalis": {
       "frameWidth": 32,
@@ -1971,7 +2030,10 @@
         "en": "Sir Fracti",
         "he": "דון שבריז"
       },
-      "roles": ["gym-leader", "story"]
+      "roles": [
+        "gym-leader",
+        "story"
+      ]
     },
     "char_d25760": {
       "frameWidth": 32,
@@ -2030,7 +2092,9 @@
         "en": "Brock",
         "he": "ברוק"
       },
-      "roles": ["story"]
+      "roles": [
+        "story"
+      ]
     },
     "ashKetchum": {
       "frameWidth": 32,
@@ -2089,7 +2153,9 @@
         "en": "Ash Ketchum",
         "he": "אש קאטצ'ם"
       },
-      "roles": ["hero"]
+      "roles": [
+        "hero"
+      ]
     },
     "ashKetchumBicycle": {
       "frameWidth": 32,
@@ -2206,7 +2272,10 @@
         "en": "James",
         "he": "ג'יימס"
       },
-      "roles": ["story", "villain"]
+      "roles": [
+        "story",
+        "villain"
+      ]
     },
     "rocket-jessi": {
       "frameWidth": 32,
@@ -2265,7 +2334,10 @@
         "en": "Jessi",
         "he": "ג'סי"
       },
-      "roles": ["story", "villain"]
+      "roles": [
+        "story",
+        "villain"
+      ]
     },
     "Misty": {
       "frameWidth": 32,
@@ -2324,7 +2396,9 @@
         "en": "Misty",
         "he": "מיסטי"
       },
-      "roles": ["story"]
+      "roles": [
+        "story"
+      ]
     },
     "oak": {
       "frameWidth": 32,
@@ -2383,7 +2457,10 @@
         "en": "Oak",
         "he": "אוק"
       },
-      "roles": ["story", "professor"]
+      "roles": [
+        "story",
+        "professor"
+      ]
     },
     "red#hero": {
       "frameWidth": 32,
@@ -2442,7 +2519,9 @@
         "en": "Red",
         "he": "רד"
       },
-      "roles": ["hero"]
+      "roles": [
+        "hero"
+      ]
     },
     "char_fbf115": {
       "frameWidth": 32,
@@ -2547,7 +2626,9 @@
         "en": "Ben",
         "he": "בן"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_d152a6": {
       "frameWidth": 32,
@@ -2664,7 +2745,10 @@
         "en": "Morty Divon",
         "he": "מורטי דיבון"
       },
-      "roles": ["gym-leader", "story"]
+      "roles": [
+        "gym-leader",
+        "story"
+      ]
     },
     "char_919bca": {
       "frameWidth": 32,
@@ -2723,7 +2807,10 @@
         "en": "Lance",
         "he": "לאנס"
       },
-      "roles": ["story", "elite-4"]
+      "roles": [
+        "story",
+        "elite-4"
+      ]
     },
     "char_424d3d": {
       "frameWidth": 32,
@@ -2840,7 +2927,9 @@
         "en": "Swimmer Alex",
         "he": "אלכס השחיין"
       },
-      "roles": ["swimmers"]
+      "roles": [
+        "swimmers"
+      ]
     },
     "char_878b8c": {
       "frameWidth": 32,
@@ -2899,7 +2988,9 @@
         "en": "Swimmer Dikla",
         "he": "דקלה"
       },
-      "roles": ["swimmers"]
+      "roles": [
+        "swimmers"
+      ]
     },
     "maya#hero": {
       "frameWidth": 32,
@@ -2958,7 +3049,9 @@
         "en": "Maya",
         "he": "מאיה"
       },
-      "roles": ["hero"]
+      "roles": [
+        "hero"
+      ]
     },
     "gym_6_sima": {
       "frameWidth": 32,
@@ -3017,7 +3110,10 @@
         "en": "Sima Tria",
         "he": "סימה טריה"
       },
-      "roles": ["gym-leader", "story"]
+      "roles": [
+        "gym-leader",
+        "story"
+      ]
     },
     "char_c32979": {
       "frameWidth": 32,
@@ -3076,7 +3172,9 @@
         "en": "Ethan",
         "he": "איתן"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_1f9b7d": {
       "frameWidth": 32,
@@ -3135,7 +3233,9 @@
         "en": "Joey",
         "he": "ג'ואי"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_6bacac": {
       "frameWidth": 32,
@@ -3194,7 +3294,9 @@
         "en": "Noa",
         "he": "נועה"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_a8bd41": {
       "frameWidth": 32,
@@ -3253,7 +3355,9 @@
         "en": "Ben",
         "he": "בן"
       },
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_4c0f36": {
       "frameWidth": 32,
@@ -3358,7 +3462,9 @@
         "en": "Elm",
         "he": "אלם"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_899006": {
       "frameWidth": 32,
@@ -3417,7 +3523,9 @@
         "en": "Ethan",
         "he": "איתן"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "gym-7-integrala": {
       "frameWidth": 32,
@@ -3476,7 +3584,10 @@
         "en": "Max Formax",
         "he": "מקס פרבולה"
       },
-      "roles": ["gym-leader", "story"]
+      "roles": [
+        "gym-leader",
+        "story"
+      ]
     },
     "Prof.Algorithma": {
       "frameWidth": 32,
@@ -3535,7 +3646,10 @@
         "en": "Prof Algorithma",
         "he": "פרופסור אלגוריתם"
       },
-      "roles": ["story", "professor"]
+      "roles": [
+        "story",
+        "professor"
+      ]
     },
     "jasmine#hero": {
       "frameWidth": 32,
@@ -3594,7 +3708,9 @@
         "en": "jasmine",
         "he": "ג'סמין"
       },
-      "roles": ["hero"]
+      "roles": [
+        "hero"
+      ]
     },
     "char_615686": {
       "frameWidth": 32,
@@ -3653,7 +3769,9 @@
         "en": "Joey",
         "he": "ג'ואי"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "rival-story-gary": {
       "frameWidth": 32,
@@ -3712,7 +3830,11 @@
         "en": "Gary",
         "he": "גארי"
       },
-      "roles": ["rival", "trainer", "story"]
+      "roles": [
+        "rival",
+        "trainer",
+        "story"
+      ]
     },
     "char_3979e8": {
       "frameWidth": 32,
@@ -3771,7 +3893,9 @@
         "en": "Clown Hays",
         "he": "הייס הליצן"
       },
-      "roles": ["townfolk"]
+      "roles": [
+        "townfolk"
+      ]
     },
     "officer-Jenny": {
       "frameWidth": 32,
@@ -3830,7 +3954,10 @@
         "en": "Officer Jenny",
         "he": "השוטרת ג'ני"
       },
-      "roles": ["story", "ranger"]
+      "roles": [
+        "story",
+        "ranger"
+      ]
     },
     "gate-officer": {
       "frameWidth": 32,
@@ -3889,7 +4016,9 @@
         "en": "Officer X",
         "he": "שומר שער"
       },
-      "roles": ["ranger"]
+      "roles": [
+        "ranger"
+      ]
     },
     "ashKetchum-surf": {
       "frameWidth": 32,
@@ -3924,7 +4053,9 @@
         "en": "Ash-surf",
         "he": "אש-שחייה"
       },
-      "roles": ["hero"]
+      "roles": [
+        "hero"
+      ]
     },
     "char_7db1c5": {
       "frameWidth": 32,
@@ -3983,7 +4114,10 @@
         "en": "Rocket Grunt",
         "he": "סוכן צוות רוקט"
       },
-      "roles": ["trainer", "villain"]
+      "roles": [
+        "trainer",
+        "villain"
+      ]
     },
     "snorlax": {
       "frameWidth": 64,
@@ -4042,7 +4176,9 @@
         "en": "Snorlax",
         "he": "סנורלקס"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "char_86bf88": {
       "frameWidth": 96,
@@ -4101,7 +4237,9 @@
         "en": "Lugia",
         "he": "לוגיה"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "transparent": {
       "frameWidth": 32,
@@ -4148,7 +4286,9 @@
         "en": "transparent",
         "he": ""
       },
-      "roles": ["story"]
+      "roles": [
+        "story"
+      ]
     },
     "char_6f0793": {
       "frameWidth": 32,
@@ -4207,7 +4347,10 @@
         "en": "Lia",
         "he": "khv"
       },
-      "roles": ["townfolk", "league2"]
+      "roles": [
+        "townfolk",
+        "league2"
+      ]
     },
     "char_22fdd1": {
       "frameWidth": 32,
@@ -4262,7 +4405,10 @@
         "en": "Tech",
         "he": "טכנאי חשמל"
       },
-      "roles": ["gym-helper", "league2"]
+      "roles": [
+        "gym-helper",
+        "league2"
+      ]
     },
     "char_330791": {
       "frameWidth": 32,
@@ -4309,7 +4455,9 @@
         "en": "Segen",
         "he": "סגן ניצב"
       },
-      "roles": ["ranger"]
+      "roles": [
+        "ranger"
+      ]
     },
     "char_a8fbf3": {
       "frameWidth": 32,
@@ -4356,7 +4504,9 @@
         "en": "Martin",
         "he": "מרטין"
       },
-      "roles": ["professor"]
+      "roles": [
+        "professor"
+      ]
     },
     "char_24117d": {
       "frameWidth": 32,
@@ -4403,7 +4553,10 @@
         "en": "Hiker",
         "he": "הייקר"
       },
-      "roles": ["trainer", "townfolk"]
+      "roles": [
+        "trainer",
+        "townfolk"
+      ]
     },
     "char_0ade0c": {
       "frameWidth": 32,
@@ -4447,7 +4600,10 @@
         "en": "Walker",
         "he": "ווקר"
       },
-      "roles": ["townfolk", "trainer"]
+      "roles": [
+        "townfolk",
+        "trainer"
+      ]
     },
     "char_083dc8": {
       "frameWidth": 32,
@@ -4506,7 +4662,9 @@
         "en": "Mos",
         "he": "משה"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_77d85f": {
       "frameWidth": 32,
@@ -4599,7 +4757,9 @@
         "en": "Amy",
         "he": "איימי"
       },
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_cfd98f": {
       "frameWidth": 32,
@@ -4692,7 +4852,9 @@
         "en": "Erika",
         "he": "אריקה"
       },
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_75200a": {
       "frameWidth": 32,
@@ -4739,7 +4901,9 @@
         "en": "Crystal",
         "he": "קריסטל"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_6f8e9b": {
       "frameWidth": 32,
@@ -4786,7 +4950,9 @@
         "en": "Jimmy",
         "he": "ג'ימי"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_93367f": {
       "frameWidth": 32,
@@ -4833,7 +4999,10 @@
         "en": "Power Tech",
         "he": "Power Tech"
       },
-      "roles": ["gym-helper", "league2"]
+      "roles": [
+        "gym-helper",
+        "league2"
+      ]
     },
     "char_7ca291": {
       "frameWidth": 32,
@@ -4880,7 +5049,9 @@
         "en": "Grand Lea",
         "he": "סבתא לאה"
       },
-      "roles": ["league2"]
+      "roles": [
+        "league2"
+      ]
     },
     "char_dc1a34": {
       "frameWidth": 32,
@@ -4927,7 +5098,9 @@
         "en": "Maya",
         "he": "מאיה"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_46f643": {
       "frameWidth": 32,
@@ -4974,7 +5147,9 @@
         "en": "Tommy",
         "he": "טומי"
       },
-      "roles": ["league3"]
+      "roles": [
+        "league3"
+      ]
     },
     "char_9db696": {
       "frameWidth": 32,
@@ -5171,7 +5346,9 @@
         "en": "Zapdos",
         "he": "זאפדוס"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "char_dbc673": {
       "frameWidth": 32,
@@ -5230,7 +5407,9 @@
         "en": "Joi",
         "he": "סבתא ג'ואי"
       },
-      "roles": ["nurse"]
+      "roles": [
+        "nurse"
+      ]
     },
     "raikou": {
       "frameWidth": 64,
@@ -5289,7 +5468,9 @@
         "en": "Raikou",
         "he": "ראיקו"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "suicune": {
       "frameWidth": 64,
@@ -5348,7 +5529,9 @@
         "en": "Suicune",
         "he": "סויקון"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "entei": {
       "frameWidth": 64,
@@ -5407,7 +5590,9 @@
         "en": "Entei",
         "he": "אנטאיי"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "hooh": {
       "frameWidth": 96,
@@ -5466,7 +5651,9 @@
         "en": "Ho-Oh",
         "he": "הו-הו"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "char_00bce9": {
       "frameWidth": 64,
@@ -5525,7 +5712,9 @@
         "en": "Articuno",
         "he": "ארטיקונו"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "char_ade75b": {
       "frameWidth": 64,
@@ -5584,7 +5773,9 @@
         "en": "Moltres",
         "he": "מולטרס"
       },
-      "roles": ["wild-pokemon"]
+      "roles": [
+        "wild-pokemon"
+      ]
     },
     "jasmine#hero-surf": {
       "frameWidth": 32,
@@ -5619,7 +5810,9 @@
         "en": "Jasmin-surf",
         "he": "ג'סמין-שחייה"
       },
-      "roles": ["hero"]
+      "roles": [
+        "hero"
+      ]
     },
     "maya#hero-surf": {
       "frameWidth": 32,
@@ -5654,7 +5847,9 @@
         "en": "Maya-surf",
         "he": "מאיה שחייה"
       },
-      "roles": ["hero"]
+      "roles": [
+        "hero"
+      ]
     },
     "red#hero-surf": {
       "frameWidth": 32,
@@ -5689,7 +5884,9 @@
         "en": "Red-surf",
         "he": "רד שחייה"
       },
-      "roles": ["hero"]
+      "roles": [
+        "hero"
+      ]
     }
   }
 }

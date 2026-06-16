@@ -7,10 +7,10 @@ import { applyCrop, saveSpriteImage } from './io.js';
 
 /** Direction arrows for visual grouping. */
 const DIR_ARROWS: Record<string, string> = {
-  down: '\u2193',   // ↓
-  up: '\u2191',     // ↑
-  left: '\u2190',   // ←
-  right: '\u2192',  // →
+  down: '\u2193', // ↓
+  up: '\u2191', // ↑
+  left: '\u2190', // ←
+  right: '\u2192', // →
 };
 
 /** Ordered directions for display (up first — matches spritesheet layout). */
@@ -21,8 +21,8 @@ const DIR_POSES = ['stand', 'walk-1', 'walk-2'];
 
 /** A slot in the direction grid — either filled or empty (null). */
 interface FrameSlot {
-  index: number;   // index in the frames array (-1 = empty)
-  pose: string;    // label like "stand", "walk-1"
+  index: number; // index in the frames array (-1 = empty)
+  pose: string; // label like "stand", "walk-1"
   filled: boolean; // true if a real frame exists at this index
 }
 
@@ -135,7 +135,8 @@ export class PropertiesPanel {
       } else if (this.state.cropSelValid) {
         this.renderCropSelectForm();
       } else {
-        this.container.innerHTML = '<div class="prop-empty">Crop mode is active.<br><br>Select a region on the spritesheet to crop/resize it in-place. Selection is pixel-level (1px steps).</div>';
+        this.container.innerHTML =
+          '<div class="prop-empty">Crop mode is active.<br><br>Select a region on the spritesheet to crop/resize it in-place. Selection is pixel-level (1px steps).</div>';
       }
       return;
     }
@@ -150,7 +151,8 @@ export class PropertiesPanel {
       return;
     }
 
-    this.container.innerHTML = '<div class="prop-empty">Select a region on the spritesheet to define a sprite, or click an existing sprite in the list to edit it.<br><br>Drag to select the full area of all frames for one character, then set sprite size.</div>';
+    this.container.innerHTML =
+      '<div class="prop-empty">Select a region on the spritesheet to define a sprite, or click an existing sprite in the list to edit it.<br><br>Drag to select the full area of all frames for one character, then set sprite size.</div>';
   }
 
   // ── Crop forms ──
@@ -258,7 +260,7 @@ export class PropertiesPanel {
       pctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       for (let y = 0; y < previewCanvas.height; y += 8) {
         for (let x = 0; x < previewCanvas.width; x += 8) {
-          pctx.fillStyle = ((x / 8 + y / 8) % 2 === 0) ? '#222' : '#333';
+          pctx.fillStyle = (x / 8 + y / 8) % 2 === 0 ? '#222' : '#333';
           pctx.fillRect(x, y, 8, 8);
         }
       }
@@ -286,13 +288,26 @@ export class PropertiesPanel {
     applyBtn.addEventListener('click', async () => {
       const tw = s.cropTargetW;
       const th = s.cropTargetH;
-      if (tw < 1 || th < 1) { alert('Invalid target size'); return; }
+      if (tw < 1 || th < 1) {
+        alert('Invalid target size');
+        return;
+      }
 
       applyBtn.disabled = true;
       applyBtn.textContent = 'Applying...';
 
       try {
-        const blob = await applyCrop(this.image, s.cropSrcX, s.cropSrcY, s.cropSrcW, s.cropSrcH, tw, th, s.cropTargetX, s.cropTargetY);
+        const blob = await applyCrop(
+          this.image,
+          s.cropSrcX,
+          s.cropSrcY,
+          s.cropSrcW,
+          s.cropSrcH,
+          tw,
+          th,
+          s.cropTargetX,
+          s.cropTargetY,
+        );
         await saveSpriteImage(blob);
 
         const url = URL.createObjectURL(blob);
@@ -330,7 +345,14 @@ export class PropertiesPanel {
   }
 
   /** Draw grid lines on a preview canvas aligned to the original grid. */
-  private drawGridOnCanvas(ctx: CanvasRenderingContext2D, cw: number, ch: number, originX: number, originY: number, scale: number): void {
+  private drawGridOnCanvas(
+    ctx: CanvasRenderingContext2D,
+    cw: number,
+    ch: number,
+    originX: number,
+    originY: number,
+    scale: number,
+  ): void {
     const gs = this.state.gridSize;
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
     ctx.lineWidth = 1;
@@ -340,11 +362,17 @@ export class PropertiesPanel {
 
     for (let x = gridPx - offsetX; x < cw; x += gridPx) {
       if (x <= 0) continue;
-      ctx.beginPath(); ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, ch); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x + 0.5, 0);
+      ctx.lineTo(x + 0.5, ch);
+      ctx.stroke();
     }
     for (let y = gridPx - offsetY; y < ch; y += gridPx) {
       if (y <= 0) continue;
-      ctx.beginPath(); ctx.moveTo(0, y + 0.5); ctx.lineTo(cw, y + 0.5); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, y + 0.5);
+      ctx.lineTo(cw, y + 0.5);
+      ctx.stroke();
     }
   }
 
@@ -370,7 +398,7 @@ export class PropertiesPanel {
       pctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       for (let y2 = 0; y2 < previewCanvas.height; y2 += 8) {
         for (let x2 = 0; x2 < previewCanvas.width; x2 += 8) {
-          pctx.fillStyle = ((x2 / 8 + y2 / 8) % 2 === 0) ? '#222' : '#333';
+          pctx.fillStyle = (x2 / 8 + y2 / 8) % 2 === 0 ? '#222' : '#333';
           pctx.fillRect(x2, y2, 8, 8);
         }
       }
@@ -414,9 +442,13 @@ export class PropertiesPanel {
     nameLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
     nameLabel.textContent = 'Name';
     section.appendChild(nameLabel);
-    section.appendChild(createNamePicker({
-      onChange: (name) => { pendingName = name; },
-    }));
+    section.appendChild(
+      createNamePicker({
+        onChange: (name) => {
+          pendingName = name;
+        },
+      }),
+    );
 
     const fwInput = section.querySelector('#add-fw') as HTMLInputElement;
     const fhInput = section.querySelector('#add-fh') as HTMLInputElement;
@@ -490,7 +522,9 @@ export class PropertiesPanel {
           if (slot.filled && slot.index >= 0) {
             const f = pendingFrames[slot.index];
             if (f) {
-              thumbs.appendChild(this.createDraggableThumb(f.sx, f.sy, fw, fh, slot.index, slot.pose, onSwap, onFrameUpdate));
+              thumbs.appendChild(
+                this.createDraggableThumb(f.sx, f.sy, fw, fh, slot.index, slot.pose, onSwap, onFrameUpdate),
+              );
             } else {
               thumbs.appendChild(this.createEmptySlot(fw, fh, slot.index, slot.pose, onSwap, onFrameUpdate));
             }
@@ -520,7 +554,7 @@ export class PropertiesPanel {
 
       // Keep nulls in array — they represent empty slots
       // The game engine should handle null frames gracefully
-      const frames: FramePos[] = pendingFrames.map(f => f ?? { sx: -1, sy: -1 });
+      const frames: FramePos[] = pendingFrames.map((f) => f ?? { sx: -1, sy: -1 });
 
       const entry: SpriteEntry = {
         id: autoId,
@@ -569,13 +603,15 @@ export class PropertiesPanel {
     nameLabel.style.cssText = 'font-size:11px;color:#8899bb;font-weight:600;margin:6px 0 3px;';
     nameLabel.textContent = 'Name';
     section.appendChild(nameLabel);
-    section.appendChild(createNamePicker({
-      initialEn: s.name.en,
-      initialHe: s.name.he,
-      onChange: (name) => {
-        this.state.updateSprite(index, { name: { en: name.en, he: name.he } });
-      },
-    }));
+    section.appendChild(
+      createNamePicker({
+        initialEn: s.name.en,
+        initialHe: s.name.he,
+        onChange: (name) => {
+          this.state.updateSprite(index, { name: { en: name.en, he: name.he } });
+        },
+      }),
+    );
 
     // Roles multi-select
     const rolesLabel = document.createElement('div');
@@ -599,9 +635,7 @@ export class PropertiesPanel {
           color:${active ? '#8df' : '#888'};
         `;
         chip.addEventListener('click', () => {
-          const newRoles = active
-            ? s.roles.filter(r => r !== role)
-            : [...s.roles, role];
+          const newRoles = active ? s.roles.filter((r) => r !== role) : [...s.roles, role];
           this.state.updateSprite(index, { roles: newRoles });
           buildRoleChips();
         });
@@ -688,13 +722,26 @@ export class PropertiesPanel {
         for (const slot of slots) {
           const f = slot.index >= 0 && slot.index < s.frames.length ? s.frames[slot.index] : null;
           const isNull = !f || f.sx < 0 || f.sy < 0;
-          const isTransparent = !isNull && !this.showTransparent
-            && this.isFrameTransparent(f!.sx, f!.sy, s.frameWidth, s.frameHeight);
+          const isTransparent =
+            !isNull && !this.showTransparent && this.isFrameTransparent(f!.sx, f!.sy, s.frameWidth, s.frameHeight);
 
           if (!isNull && !isTransparent && f) {
-            thumbs.appendChild(this.createDraggableThumb(f.sx, f.sy, s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap, editFrameUpdate));
+            thumbs.appendChild(
+              this.createDraggableThumb(
+                f.sx,
+                f.sy,
+                s.frameWidth,
+                s.frameHeight,
+                slot.index,
+                slot.pose,
+                editSwap,
+                editFrameUpdate,
+              ),
+            );
           } else {
-            thumbs.appendChild(this.createEmptySlot(s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap, editFrameUpdate));
+            thumbs.appendChild(
+              this.createEmptySlot(s.frameWidth, s.frameHeight, slot.index, slot.pose, editSwap, editFrameUpdate),
+            );
           }
         }
 
@@ -725,9 +772,12 @@ export class PropertiesPanel {
   // ── Draggable frame thumbnail ──
 
   private createDraggableThumb(
-    frameSx: number, frameSy: number,
-    fw: number, fh: number,
-    index: number, pose: string,
+    frameSx: number,
+    frameSy: number,
+    fw: number,
+    fh: number,
+    index: number,
+    pose: string,
     onSwap: (from: number, to: number) => void,
     onUpdate?: (index: number, frame: FramePos | null) => void,
   ): HTMLElement {
@@ -750,7 +800,7 @@ export class PropertiesPanel {
       // Checkerboard
       for (let y = 0; y < thumb.height; y += 6) {
         for (let x = 0; x < thumb.width; x += 6) {
-          ctx.fillStyle = ((x / 6 + y / 6) % 2 === 0) ? '#222' : '#333';
+          ctx.fillStyle = (x / 6 + y / 6) % 2 === 0 ? '#222' : '#333';
           ctx.fillRect(x, y, 6, 6);
         }
       }
@@ -785,7 +835,7 @@ export class PropertiesPanel {
       item.classList.remove('dragging');
       this.dragSrcIndex = -1;
       // Clean up all drag-over highlights
-      this.container.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+      this.container.querySelectorAll('.drag-over').forEach((el) => el.classList.remove('drag-over'));
     });
 
     item.addEventListener('dragover', (e) => {
@@ -814,8 +864,10 @@ export class PropertiesPanel {
   // ── Empty slot placeholder (for missing frames) ──
 
   private createEmptySlot(
-    fw: number, fh: number,
-    index: number, pose: string,
+    fw: number,
+    fh: number,
+    index: number,
+    pose: string,
     onSwap: (from: number, to: number) => void,
     onUpdate?: (index: number, frame: FramePos | null) => void,
   ): HTMLElement {
@@ -863,6 +915,34 @@ export class PropertiesPanel {
     return item;
   }
 
+  private addTrainerStaticPreview(container: HTMLElement, id: string): void {
+    const previewBox = document.createElement('div');
+
+    const safeId = id.replace('#', '_');
+    const primaryPath = `/sprites/trainers/${safeId}.png`;
+    const fallbackPath = `/sprites/trainers/default.png`;
+
+    const img = document.createElement('img');
+    img.src = primaryPath;
+    img.loading = 'lazy';
+    img.alt = 'Trainer Asset';
+    img.style.cssText = 'max-width:100%; max-height:120px; object-fit:contain; image-rendering:pixelated;';
+
+    // Clean fallback pattern to prevent infinite loops if both fail
+    img.onerror = function () {
+      this.onerror = null;
+      this.src = fallbackPath;
+    };
+
+    const label = document.createElement('div');
+    label.style.cssText = 'font-size:10px; color:#666; margin-top:4px; text-align:center;';
+    label.textContent = 'Static Asset';
+
+    previewBox.appendChild(img);
+    previewBox.appendChild(label);
+    container.appendChild(previewBox);
+  }
+
   // ── Animated preview ──
 
   private addAnimatedPreview(container: HTMLElement, s: SpriteEntry): void {
@@ -884,11 +964,12 @@ export class PropertiesPanel {
     }
 
     if (directions.size === 0) {
-      const validFrames = s.frames
-        .map((f, i) => ({ f, i }))
-        .filter(({ f }) => !isNullFrame(f));
+      const validFrames = s.frames.map((f, i) => ({ f, i })).filter(({ f }) => !isNullFrame(f));
       if (validFrames.length === 0) return; // nothing to animate
-      directions.set('all', validFrames.map(({ i }) => ({ index: i, label: `frame ${i}` })));
+      directions.set(
+        'all',
+        validFrames.map(({ i }) => ({ index: i, label: `frame ${i}` })),
+      );
     }
 
     // Direction selector with arrows
@@ -896,7 +977,8 @@ export class PropertiesPanel {
     dirRow.className = 'prop-row';
     dirRow.innerHTML = '<label>Direction:</label>';
     const dirSelect = document.createElement('select');
-    dirSelect.style.cssText = 'flex:1;background:#2a2a44;color:#ddd;border:1px solid #444;border-radius:3px;padding:4px 6px;font-size:12px;';
+    dirSelect.style.cssText =
+      'flex:1;background:#2a2a44;color:#ddd;border:1px solid #444;border-radius:3px;padding:4px 6px;font-size:12px;';
     for (const [dir] of directions) {
       const opt = document.createElement('option');
       opt.value = dir;
@@ -936,24 +1018,42 @@ export class PropertiesPanel {
       pctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
       for (let y = 0; y < previewCanvas.height; y += 8) {
         for (let x = 0; x < previewCanvas.width; x += 8) {
-          pctx.fillStyle = ((x / 8 + y / 8) % 2 === 0) ? '#222' : '#333';
+          pctx.fillStyle = (x / 8 + y / 8) % 2 === 0 ? '#222' : '#333';
           pctx.fillRect(x, y, 8, 8);
         }
       }
-      pctx.drawImage(this.image, f.sx, f.sy, s.frameWidth, s.frameHeight, 0, 0, previewCanvas.width, previewCanvas.height);
+      pctx.drawImage(
+        this.image,
+        f.sx,
+        f.sy,
+        s.frameWidth,
+        s.frameHeight,
+        0,
+        0,
+        previewCanvas.width,
+        previewCanvas.height,
+      );
       frameLabel.textContent = `${info.label} (index ${info.index})`;
     };
 
     this.animFrame = 0;
     drawFrame();
-    dirSelect.addEventListener('change', () => { this.animFrame = 0; drawFrame(); });
+    dirSelect.addEventListener('change', () => {
+      this.animFrame = 0;
+      drawFrame();
+    });
 
     this.animTimer = window.setInterval(() => {
       this.animFrame++;
       drawFrame();
     }, 250);
 
-    section.appendChild(previewCanvas);
+    const canvasWrapper = document.createElement('div');
+    canvasWrapper.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
+    section.appendChild(canvasWrapper);
+    canvasWrapper.appendChild(previewCanvas);
+    this.addTrainerStaticPreview(canvasWrapper, s.id);
+
     section.appendChild(frameLabel);
     container.appendChild(section);
   }
@@ -1056,7 +1156,10 @@ export class PropertiesPanel {
     const pixels = ctx.getImageData(0, 0, fw, fh).data;
     let transparent = true;
     for (let i = 3; i < pixels.length; i += 4) {
-      if (pixels[i] > 0) { transparent = false; break; }
+      if (pixels[i] > 0) {
+        transparent = false;
+        break;
+      }
     }
 
     this.transparencyCache.set(key, transparent);
