@@ -202,8 +202,7 @@ import charactersManifest from '../../data/sprites/characters.json';
 import { createCinematicState, type CinematicState } from './phases/trainer_cinematic';
 import { renderTrainerCinematic } from './phases/trainer_cinematic';
 import { updateTrainerCinematic } from './phases/trainer_cinematic';
-import { playAttackAnimation } from './animations/animations.js';
-
+import { playAttackAnimation, type BattleAnimationContext } from './animations/animations.js';
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -825,6 +824,48 @@ export function createBattleScene(
   let mapWeatherBase: WeatherConditionId | null = null;
   let battleIsOutdoor = false;
   const animationDirector = createBattleAnimationDirector();
+
+  const battleAnimationContext: BattleAnimationContext = {
+    get attackFx() {
+      return attackFx;
+    },
+    set attackFx(v) {
+      attackFx = v;
+    },
+    get flash() {
+      return flash;
+    },
+    set flash(v) {
+      flash = v;
+    },
+    get shake() {
+      return shake;
+    },
+    set shake(v) {
+      shake = v;
+    },
+    get textBox() {
+      return textBox;
+    },
+    set textBox(v) {
+      textBox = v;
+    },
+    get phase() {
+      return phase;
+    },
+    set phase(v) {
+      phase = v;
+    },
+    get phaseTimer() {
+      return phaseTimer;
+    },
+    set phaseTimer(v) {
+      phaseTimer = v;
+    },
+    animationDirector,
+    audio,
+    rtl: isRTL(),
+  };
 
   function getWeatherStartedLine(weatherType: WeatherConditionId): string {
     switch (weatherType) {
@@ -3944,15 +3985,13 @@ export function createBattleScene(
       syncPlayerBar();
       syncEnemyBar();
       playAttackAnimation(
-        attackFx,
         player,
         'player',
         'enemy',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           textBox = createTextBox(
             [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove }), t('battle.hazeCleared')],
@@ -4029,15 +4068,13 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
-        attackFx,
         player,
         'player',
         'enemy',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           player.hp -= cost;
           setHP(playerHpBar, player.hp);
@@ -4074,15 +4111,13 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
-        attackFx,
         player,
         'player',
         'enemy',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           player.hp = Math.max(1, player.hp - cost);
           setHP(playerHpBar, player.hp);
@@ -4135,15 +4170,13 @@ export function createBattleScene(
     // Magic Coat: player cloaks themselves to reflect status moves this turn
     if (isMagicCoat) {
       playAttackAnimation(
-        attackFx,
         player,
         'player',
         'enemy',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           playerBattleState.turnFlags.magicCoatActive = true;
           const msgs = [
@@ -4163,15 +4196,13 @@ export function createBattleScene(
     // Destiny Bond: mark the enemy with the bond — if enemy kills player before player acts again, enemy also faints
     if (isDestinyBond) {
       playAttackAnimation(
-        attackFx,
         player,
         'player',
         'enemy',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           enemyBattleState.destinyBonded = true;
           syncEnemyBar();
@@ -4192,15 +4223,13 @@ export function createBattleScene(
     // Protect / Endure: player sets its own shield flag for this turn
     if (isProtect || isEndure) {
       playAttackAnimation(
-        attackFx,
         player,
         'player',
         'enemy',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           if (isProtect) {
             playerBattleState.turnFlags.protected = true;
@@ -4253,15 +4282,13 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
-        attackFx,
         player,
         'player',
         'enemy',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           applyMoveImpact(
             enemy,
@@ -4668,15 +4695,13 @@ export function createBattleScene(
 
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation(
-      attackFx,
       player,
       'player',
       'enemy',
       m,
       animationDirector,
       audio,
-      flash,
-      shake,
+      battleAnimationContext,
       () => {
         // Rest: full heal + sleep 2 turns + all PP restored
         if (isRest) {
@@ -5255,15 +5280,13 @@ export function createBattleScene(
       syncPlayerBar();
       syncEnemyBar();
       playAttackAnimation(
-        attackFx,
         enemy,
         'enemy',
         'player',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           textBox = createTextBox(
             [
@@ -5347,15 +5370,13 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
-        attackFx,
         enemy,
         'enemy',
         'player',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           enemy.hp -= cost;
           setHP(enemyHpBar, enemy.hp);
@@ -5393,15 +5414,13 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
-        attackFx,
         enemy,
         'enemy',
         'player',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           enemy.hp = Math.max(1, enemy.hp - cost);
           setHP(enemyHpBar, enemy.hp);
@@ -5436,15 +5455,13 @@ export function createBattleScene(
     // Magic Coat: enemy cloaks itself to reflect status moves this turn
     if (isMagicCoatEnemy) {
       playAttackAnimation(
-        attackFx,
         enemy,
         'enemy',
         'player',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           enemyBattleState.turnFlags.magicCoatActive = true;
           const msgs = [
@@ -5465,15 +5482,13 @@ export function createBattleScene(
     // Destiny Bond: mark the player with the bond — if player kills enemy before enemy acts again, player also faints
     if (isDestinyBondEnemy) {
       playAttackAnimation(
-        attackFx,
         enemy,
         'enemy',
         'player',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           playerBattleState.destinyBonded = true;
           syncPlayerBar();
@@ -5508,15 +5523,13 @@ export function createBattleScene(
         isProtectEnemy ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }),
       ];
       playAttackAnimation(
-        attackFx,
         enemy,
         'enemy',
         'player',
         m,
         animationDirector,
         audio,
-        flash,
-        shake,
+        battleAnimationContext,
         () => {
           textBox = createTextBox(msgs, rtl);
           phase = 'ENEMY_TURN';
@@ -5559,13 +5572,13 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
-        attackFx,
         enemy,
         'enemy',
         'player',
         m,
         animationDirector,
         audio,
+        battleAnimationContext,
         () => {
           applyMoveImpact(
             player,
@@ -5972,13 +5985,13 @@ export function createBattleScene(
 
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation(
-      attackFx,
       enemy,
       'enemy',
       'player',
       m,
       animationDirector,
       audio,
+      battleAnimationContext,
       () => {
         // Rest: full heal + sleep 2 turns + all PP restored
         if (isRestEnemy) {
