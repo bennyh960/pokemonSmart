@@ -122,7 +122,10 @@ export function fillRect(
 /** Draw a filled rounded rectangle. Radius can be a single number or [TL, TR, BR, BL]. */
 export function fillRoundRect(
   ctx: CanvasRenderingContext2D,
-  x: number, y: number, w: number, h: number,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
   r: number | number[],
 ): void {
   const radii = typeof r === 'number' ? [r, r, r, r] : r;
@@ -143,7 +146,10 @@ export function fillRoundRect(
 /** Stroke a rounded rectangle. Radius can be a single number or [TL, TR, BR, BL]. */
 export function strokeRoundRect(
   ctx: CanvasRenderingContext2D,
-  x: number, y: number, w: number, h: number,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
   r: number | number[],
 ): void {
   const radii = typeof r === 'number' ? [r, r, r, r] : r;
@@ -159,4 +165,23 @@ export function strokeRoundRect(
   ctx.quadraticCurveTo(x, y, x + radii[0], y);
   ctx.closePath();
   ctx.stroke();
+}
+// currently for volume in menu
+export function slider(ctx: CanvasRenderingContext2D, volume: number, px: number, py: number, pw = 28, ph = 12): void {
+  // רקע ריק של האזור
+  ctx.fillStyle = '#1a1a2e';
+  fillRoundRect(ctx, px, py, pw, ph, 2);
+
+  // קו המסילה של הסליידר
+  const lineY = py + ph / 2;
+  ctx.fillStyle = '#444466';
+  ctx.fillRect(px + 3, lineY - 1, pw - 6, 2);
+
+  // ידית האחיזה (החלק הזז) לפי אחוז הווליום
+  const minX = px + 3;
+  const maxX = px + pw - 6;
+  const handleX = minX + volume * (maxX - minX);
+
+  ctx.fillStyle = '#88ccff';
+  ctx.fillRect(handleX - 1, py + 2, 3, ph - 4);
 }

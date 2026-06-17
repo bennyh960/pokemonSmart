@@ -1,7 +1,7 @@
 import type { Scene } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
-import { clearScreen, fillRect, drawRect, drawText, fillRoundRect } from '../engine/renderer.js';
+import { clearScreen, fillRect, drawRect, drawText, fillRoundRect, slider } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
@@ -25,7 +25,7 @@ const PAD_V = 4;
 
 const MAIN_KEYS = ['pokedex', 'party', 'bag', 'map', 'trainerData', 'save', 'actions', 'settings', 'exit'] as const;
 const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper', 'learn'] as const;
-const SETTINGS_KEYS = ['language', 'mute', 'legend'] as const;
+const SETTINGS_KEYS = ['language', 'music_volume', 'music_mute', 'sfx_volume', 'sfx_mute', 'legend'] as const;
 
 const ACTIONS_IDX = 6; // index of 'actions' in MAIN_KEYS
 
@@ -133,18 +133,25 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
   }
 
   function confirmSetting(): void {
-    switch (SETTINGS_KEYS[settingsIdx]) {
-      case 'language':
-        setLocale(getLocale() === 'he' ? 'en' : ('he' as Locale));
-        break;
-      case 'mute': {
-        const audio = getGlobalAudio();
-        if (audio) audio.toggleMute();
-        break;
+    const audio = getGlobalAudio();
+    if (!audio) return;
+
+    const currentKey = SETTINGS_KEYS[settingsIdx];
+    const isMasterMuted = audio.isMasterMuted();
+
+    if (currentKey === 'language') {
+      setLocale(getLocale() === 'he' ? 'en' : ('he' as Locale));
+    } else if (currentKey === 'music_mute') {
+      // משנים את המצב רק אם ה-Master Mute לא פעיל וכופה השתקה
+      if (!isMasterMuted) {
+        audio.setMusicMuted(!audio.isMusicMuted());
       }
-      case 'legend':
-        toggleLegend();
-        break;
+    } else if (currentKey === 'sfx_mute') {
+      if (!isMasterMuted) {
+        audio.setSFXMuted(!audio.isSFXMuted());
+      }
+    } else if (currentKey === 'legend') {
+      toggleLegend();
     }
   }
 
@@ -301,7 +308,7 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
     }
   }
 
-  function renderSettings(ctx: CanvasRenderingContext2D, rtl: boolean): void {
+  function renderSettings2(ctx: CanvasRenderingContext2D, rtl: boolean): void {
     clearScreen(ctx, '#0d0d1a');
 
     // Title bar
@@ -353,6 +360,96 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
 
     drawText(ctx, 'ESC', SCREEN_W / 2, SCREEN_H - 10, { size: 6, color: '#3a3a6a', align: 'center' });
   }
+  function renderSettings(ctx: CanvasRenderingContext2D, rtl: boolean): void {
+    clearScreen(ctx, '#0d0d1a');
+    const audio = getGlobalAudio();
+    const isMasterMuted = audio ? audio.isMasterMuted() : false;
+
+    // Title bar
+    fillRect(ctx, 0, 0, 240, 20, '#161630');
+    drawText(ctx, t('menu.settings'), 120, 11, { size: 8, color: '#aaaaff', align: 'center' });
+    fillRect(ctx, 0, 19, 240, 1, '#3030a0');
+
+    // שינוי גובה השורה ל-20 פיקסלים כדי שהכל ייכנס בתוך מסך של 160 פיקסלים
+    const ROW_H = 18;
+    const startY = 26;
+    const PILL_W = 28;
+    const PILL_H = 12;
+
+    for (let i = 0; i < SETTINGS_KEYS.length; i++) {
+      const key = SETTINGS_KEYS[i];
+      const sel = i === settingsIdx;
+      const iy = startY + i * ROW_H;
+
+      if (sel) fillRect(ctx, 0, iy, 240, ROW_H - 1, '#1a1a40');
+
+      if (sel) {
+        drawText(ctx, rtl ? '◄' : '►', rtl ? 240 - 6 : 6, iy + ROW_H / 2 - 4, {
+          size: 6,
+          color: '#ffff00',
+          align: rtl ? 'right' : 'left',
+        });
+      }
+
+      const lx = rtl ? 240 - 16 : 16;
+      drawText(ctx, t(`menu.settings.${key}`), lx, iy + ROW_H / 2 - 4, {
+        size: 8,
+        color: sel ? '#ffffff' : '#aaaacc',
+        align: rtl ? 'right' : 'left',
+        direction: rtl ? 'rtl' : 'ltr',
+      });
+
+      const pillX = rtl ? 8 : 240 - PILL_W - 8;
+      const pillY = iy + ROW_H / 2 - PILL_H / 2;
+
+      // רינדור דינמי לפי סוג ה-Key
+      if (key === 'language') {
+        const loc = getLocale();
+        pill(ctx, loc === 'he' ? 'HE' : 'EN', '#1a3a5a', '#88ccff', pillX, pillY, PILL_W, PILL_H);
+      } else if (key === 'music_volume') {
+        const vol = audio ? audio.getMusicVolume() : 0.5;
+        slider(ctx, vol, pillX, pillY, PILL_W, PILL_H);
+      } else if (key === 'music_mute') {
+        // אם יש Master Mute - הכפתור מושבת וצבוע באפור כהה
+        if (isMasterMuted) {
+          pill(ctx, 'MUTE', '#222222', '#555555', pillX, pillY, PILL_W, PILL_H);
+        } else {
+          const isMuted = audio ? audio.isMusicMuted() : false;
+          onOffPill(ctx, !isMuted, pillX, pillY, PILL_W, PILL_H);
+        }
+      } else if (key === 'sfx_volume') {
+        const vol = audio ? audio.getSFXVolume() : 0.7;
+        slider(ctx, vol, pillX, pillY, PILL_W, PILL_H);
+      } else if (key === 'sfx_mute') {
+        if (isMasterMuted) {
+          pill(ctx, 'MUTE', '#222222', '#555555', pillX, pillY, PILL_W, PILL_H);
+        } else {
+          const isMuted = audio ? audio.isSFXMuted() : false;
+          onOffPill(ctx, !isMuted, pillX, pillY, PILL_W, PILL_H);
+        }
+      } else if (key === 'legend') {
+        onOffPill(ctx, isLegendVisible(), pillX, pillY, PILL_W, PILL_H);
+      }
+    }
+
+    // --- מקרא וכיתוב גלובלי לתחתית המסך (Legend) ---
+    const footerY = 160 - 24;
+
+    // ציור מדד ה-Master Mute הגלובלי
+    fillRect(ctx, 0, footerY - 4, 240, 1, '#222244');
+    if (isMasterMuted) {
+      drawText(ctx, '⚠️ MASTER MUTED (All Sound Off)', 120, footerY, { size: 6, color: '#ff5555', align: 'center' });
+    } else {
+      drawText(ctx, '🎵 Sound System Active', 120, footerY, { size: 6, color: '#55ff55', align: 'center' });
+    }
+
+    // שורת כפתורי ניווט
+    drawText(ctx, `[M] ${t('menu.settings.music_mute')}  |  [ESC] ${t('menu.exit')}`, 120, 160 - 10, {
+      size: 6,
+      color: '#44447a',
+      align: 'center',
+    });
+  }
 
   // ── Scene ───────────────────────────────────────────────────────────────────
 
@@ -378,6 +475,8 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       const esc = input.isKeyPressed('Escape') || input.isKeyPressed('Backspace');
       const up = input.isKeyPressed('ArrowUp');
       const down = input.isKeyPressed('ArrowDown');
+      const left = input.isKeyPressed('ArrowLeft'); // <-- הוספה של חץ שמאלה
+      const right = input.isKeyPressed('ArrowRight'); // <-- הוספה של חץ ימינה
       const ok = input.isKeyPressed('Enter') || input.isKeyPressed(' ');
 
       if (pendingBhConfirm) {
@@ -425,6 +524,7 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
         }
         if (ok) confirmAction();
       } else {
+        // --- אנחנו במסך ההגדרות (view === 'settings') ---
         if (esc) {
           view = 'main';
           return;
@@ -437,6 +537,35 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
           settingsIdx = wrap(settingsIdx + 1, SETTINGS_KEYS.length);
           return;
         }
+
+        // שינוי סליידרים באמצעות חצים ימינה ושמאלה
+        const audio = getGlobalAudio();
+        if (audio) {
+          const currentKey = SETTINGS_KEYS[settingsIdx];
+
+          if (left) {
+            if (currentKey === 'music_volume') {
+              const newVol = Math.max(0, Math.round((audio.getMusicVolume() - 0.1) * 10) / 10);
+              audio.setMusicVolume(newVol);
+            } else if (currentKey === 'sfx_volume') {
+              const newVol = Math.max(0, Math.round((audio.getSFXVolume() - 0.1) * 10) / 10);
+              audio.setSFXVolume(newVol);
+              audio.playSFX('confirm'); // השמעת צליל קטן לבדיקת העוצמה בזמן אמת
+            }
+          }
+
+          if (right) {
+            if (currentKey === 'music_volume') {
+              const newVol = Math.min(1, Math.round((audio.getMusicVolume() + 0.1) * 10) / 10);
+              audio.setMusicVolume(newVol);
+            } else if (currentKey === 'sfx_volume') {
+              const newVol = Math.min(1, Math.round((audio.getSFXVolume() + 0.1) * 10) / 10);
+              audio.setSFXVolume(newVol);
+              audio.playSFX('confirm'); // השמעת צליל קטן לבדיקת העוצמה בזמן אמת
+            }
+          }
+        }
+
         if (ok) confirmSetting();
       }
     },

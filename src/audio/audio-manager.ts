@@ -71,9 +71,12 @@ export function createAudioManager() {
   /** Lazy-loaded word audio (null = file missing, use SpeechSynthesis). */
   const wordCache = new Map<string, Howl | null>();
 
-  let musicVolume = 0.5;
-  let sfxVolume = 0.7;
-  let muted = localStorage.getItem('muted') === 'true';
+  let musicVolume = Number(localStorage.getItem('musicVolume') ?? '0.5');
+  let sfxVolume = Number(localStorage.getItem('sfxVolume') ?? '0.7');
+
+  let masterMuted = localStorage.getItem('masterMuted') === 'true';
+  let musicMuted = localStorage.getItem('musicMuted') === 'true';
+  let sfxMuted = localStorage.getItem('sfxMuted') === 'true';
 
   function speakText(text: string, rate: number): void {
     if (!('speechSynthesis' in window)) return;
@@ -86,7 +89,7 @@ export function createAudioManager() {
   }
 
   function withSynthContext(run: (actx: AudioContext) => void): void {
-    if (muted) return;
+    if (masterMuted || sfxMuted) return;
     synthContext ??= createWebAudioContext();
     if (!synthContext) return;
 
@@ -111,7 +114,7 @@ export function createAudioManager() {
     return new Howl({
       src: [src],
       loop: true,
-      volume: muted ? 0 : musicVolume,
+      volume: masterMuted || musicMuted ? 0 : musicVolume,
     });
   }
 
@@ -126,7 +129,7 @@ export function createAudioManager() {
         key,
         new Howl({
           src: [src],
-          volume: muted ? 0 : sfxVolume,
+          volume: masterMuted || sfxMuted ? 0 : sfxVolume,
         }),
       );
     }
@@ -657,12 +660,12 @@ export function createAudioManager() {
       }
       const howl = getSfxHowl(sfxKey);
       if (!howl) return;
-      howl.volume(muted ? 0 : sfxVolume);
+      howl.volume(masterMuted || sfxMuted ? 0 : sfxVolume);
       howl.play();
     },
 
     playMoveSFX(moveName: string): void {
-      if (muted) return;
+      if (masterMuted || sfxMuted) return;
       const key = moveToSfxKey(moveName);
       const src = toAssetUrl(`audio/movesSFX/${key}.mp3`);
       console.log(`[MoveSFX] Attempting to play: "${key}" from ${src}`);
@@ -701,7 +704,7 @@ export function createAudioManager() {
       if (howl) {
         howl.volume(0);
         howl.play();
-        howl.fade(0, muted ? 0 : musicVolume, durationMs);
+        howl.fade(0, masterMuted || musicMuted ? 0 : musicVolume, durationMs);
         currentHowl = howl;
       } else {
         currentHowl = null;
@@ -711,13 +714,21 @@ export function createAudioManager() {
 
     setMusicVolume(volume: number): void {
       musicVolume = Math.max(0, Math.min(1, volume));
-      if (currentHowl) currentHowl.volume(muted ? 0 : musicVolume);
+      localStorage.setItem('musicVolume', musicVolume.toString());
+
+      if (currentHowl) {
+        const isMuted = masterMuted || musicMuted;
+        currentHowl.volume(isMuted ? 0 : musicVolume);
+      }
     },
 
     setSFXVolume(volume: number): void {
       sfxVolume = Math.max(0, Math.min(1, volume));
+      localStorage.setItem('sfxVolume', sfxVolume.toString());
+
+      const isMuted = masterMuted || sfxMuted;
       for (const howl of sfxCache.values()) {
-        howl.volume(muted ? 0 : sfxVolume);
+        howl.volume(isMuted ? 0 : sfxVolume);
       }
     },
 
@@ -725,18 +736,55 @@ export function createAudioManager() {
       Howler.volume(Math.max(0, Math.min(1, volume)));
     },
 
-    toggleMute(): boolean {
-      muted = !muted;
-      if (currentHowl) currentHowl.volume(muted ? 0 : musicVolume);
-      for (const howl of sfxCache.values()) {
-        howl.volume(muted ? 0 : sfxVolume);
+    setMusicMuted(value: boolean): void {
+      if (musicMuted === value) return;
+      musicMuted = value;
+      localStorage.setItem('musicMuted', String(value));
+
+      if (currentHowl) {
+        const shouldMute = masterMuted || musicMuted;
+        currentHowl.volume(shouldMute ? 0 : musicVolume);
       }
-      return muted;
+    },
+
+    setSFXMuted(value: boolean): void {
+      if (sfxMuted === value) return;
+      sfxMuted = value;
+      localStorage.setItem('sfxMuted', String(value));
+
+      const shouldMute = masterMuted || sfxMuted;
+      for (const howl of sfxCache.values()) {
+        howl.volume(shouldMute ? 0 : sfxVolume);
+      }
+    },
+    setMasterMuted(value: boolean): void {
+      if (masterMuted === value) return;
+      masterMuted = value;
+      localStorage.setItem('masterMuted', String(value));
+
+      // עדכון מוזיקה
+      if (currentHowl) {
+        currentHowl.volume(masterMuted || musicMuted ? 0 : musicVolume);
+      }
+      // עדכון אפקטים
+      const shouldMuteSFX = masterMuted || sfxMuted;
+      for (const howl of sfxCache.values()) {
+        howl.volume(shouldMuteSFX ? 0 : sfxVolume);
+      }
+    },
+
+    toggleMute(): boolean {
+      masterMuted = !masterMuted;
+      if (currentHowl) currentHowl.volume(masterMuted || musicMuted ? 0 : musicVolume);
+      for (const howl of sfxCache.values()) {
+        howl.volume(masterMuted || sfxMuted ? 0 : sfxVolume);
+      }
+      return masterMuted;
     },
 
     /** Play a Pokemon cry by pokedex number (ogg files from PokeAPI). */
     playCry(pokedexId: number): void {
-      if (muted) return;
+      if (masterMuted || sfxMuted) return;
       const src = toAssetUrl(`audio/cries/${pokedexId}.ogg`);
       const howl = new Howl({ src: [src], volume: sfxVolume });
       howl.play();
@@ -836,7 +884,7 @@ export function createAudioManager() {
     },
 
     playLetter(letter: string): void {
-      if (muted) return;
+      if (masterMuted || sfxMuted) return;
       const key = letter.toLowerCase();
       if (!letterCache.has(key)) {
         const src = toAssetUrl(`audio/phonics/${key}.mp3`);
@@ -853,7 +901,7 @@ export function createAudioManager() {
         letterCache.set(key, h);
         h.load();
         h.once('load', () => {
-          if (!muted) h.play();
+          if (!masterMuted && !sfxMuted) h.play();
         });
         return;
       }
@@ -883,7 +931,7 @@ export function createAudioManager() {
     },
 
     playWord(word: string): void {
-      if (muted) return;
+      if (masterMuted || sfxMuted) return;
       const key = word.toLowerCase();
       if (!wordCache.has(key)) {
         const src = toAssetUrl(`audio/words/${key}.mp3`);
@@ -900,7 +948,7 @@ export function createAudioManager() {
         wordCache.set(key, h);
         h.load();
         h.once('load', () => {
-          if (!muted) h.play();
+          if (!masterMuted && !sfxMuted) h.play();
         });
         return;
       }
@@ -910,16 +958,31 @@ export function createAudioManager() {
     },
 
     setMuted(value: boolean): void {
-      if (muted === value) return;
-      muted = value;
-      if (currentHowl) currentHowl.volume(muted ? 0 : musicVolume);
+      if (masterMuted === value) return;
+      masterMuted = value;
+      if (currentHowl) currentHowl.volume(masterMuted || musicMuted ? 0 : musicVolume);
       for (const howl of sfxCache.values()) {
-        howl.volume(muted ? 0 : sfxVolume);
+        howl.volume(masterMuted || sfxMuted ? 0 : sfxVolume);
       }
     },
 
     isMuted(): boolean {
-      return muted;
+      return masterMuted;
+    },
+    isMusicMuted(): boolean {
+      return musicMuted || masterMuted;
+    },
+    isSFXMuted(): boolean {
+      return sfxMuted || masterMuted;
+    },
+    isMasterMuted(): boolean {
+      return masterMuted;
+    },
+    getMusicVolume(): number {
+      return musicVolume;
+    },
+    getSFXVolume(): number {
+      return sfxVolume;
     },
 
     currentMusic(): string | null {
