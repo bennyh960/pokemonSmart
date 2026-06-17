@@ -1,10 +1,15 @@
-import type { AudioManager } from '../../../audio/audio-manager';
-import { BTL } from '../../../data/battle-constants';
-import { getMove } from '../../../services/pokemon-data';
-import { getAttackAnimationProfile } from '../../../systems/move-animation';
-import type { Pokemon } from '../../../types';
+// scenes/battle/animations/play-attack-animation.ts
+import type { AudioManager } from '../../../audio/audio-manager.js';
+import { BTL } from '../../../data/battle-constants.js';
+import { getMove } from '../../../services/pokemon-data.js';
+import type { BattlePokemonRuntimeState } from '../../../systems/battle-state.js';
+import { getAttackAnimationProfile } from '../../../systems/move-animation.js';
+import type { Pokemon } from '../../../types/index.js';
 import type { BattleAnimationDirector } from '../../../ui/battle-animation-director.js';
 import type { createAttackEffect, createFlash, createShake } from '../../../ui/battle-animations.js';
+import type { createHPBar } from '../../../ui/hp-bar.js';
+import type { createTextBox } from '../../../ui/text-box.js';
+import type { BattlePhase } from '../battle_scene.js';
 import { ANIMATION_FAMILIES, playDefaultFamilyAnimation, type AnimationArgs } from './animation-families.js';
 
 function getAttackAnchor(
@@ -24,14 +29,26 @@ function getAttackAnchor(
   };
 }
 
-// battle/animation/play-attack-animation.ts
 export interface BattleAnimationContext {
+  // Visual states
   attackFx: ReturnType<typeof createAttackEffect> | null;
   flash: ReturnType<typeof createFlash> | null;
   shake: ReturnType<typeof createShake> | null;
-  textBox: any;
-  phase: string;
+
+  // Scene orchestration states
+  textBox: ReturnType<typeof createTextBox> | null;
+  phase: BattlePhase;
   phaseTimer: number;
+
+  // Game state dependencies
+  player: Pokemon;
+  enemy: Pokemon;
+  playerBattleState: BattlePokemonRuntimeState;
+  enemyBattleState: BattlePokemonRuntimeState;
+  playerHpBar: ReturnType<typeof createHPBar>;
+  enemyHpBar: ReturnType<typeof createHPBar>;
+
+  // Infrastructure engines
   animationDirector: BattleAnimationDirector;
   audio: AudioManager;
   rtl: boolean;
@@ -58,10 +75,8 @@ export function playAttackAnimation(
     speciesId: attackerPokemon.id,
   });
 
-  // הפעלת האודיו ב-0ms למהלכים רגילים (כפי שתיקנו קודם)
   if (hitCount <= 1) audio.playMoveSFX(move.name);
 
-  // הכנת הארגומנטים המשותפים
   const args: AnimationArgs = {
     attackerActor,
     defenderActor,
@@ -81,7 +96,6 @@ export function playAttackAnimation(
     context: battleAnimationContext,
   };
 
-  // שליפה מה-Registry והפעלה
   const specialAnimation = ANIMATION_FAMILIES[profile.family];
 
   if (specialAnimation) {

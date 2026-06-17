@@ -12,7 +12,7 @@ import {
   type BattleAnimationStep,
 } from '../../../ui/battle-animation-director';
 import { createAttackEffect, createFlash, createShake } from '../../../ui/battle-animations';
-import type { BattleAnimationContext } from './animations';
+import type { BattleAnimationContext } from './play-attack-animation';
 
 // Families that create the effect at animation start (not at impact time)
 export const START_FX_FAMILIES = new Set([

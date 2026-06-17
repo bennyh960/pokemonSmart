@@ -8,10 +8,10 @@ type TabId = 'pokemon' | 'moves' | 'story';
 
 function hasAdminAccess(): boolean {
   try {
-    const raw = localStorage.getItem(SLOT_INDEX_KEY);
+    const raw = sessionStorage.getItem(SLOT_INDEX_KEY);
     if (!raw) return false;
     const slots = JSON.parse(raw) as { playerName: string }[];
-    return slots.some(s => s.playerName === ADMIN_NAME);
+    return slots.some((s) => s.playerName === ADMIN_NAME);
   } catch {
     return false;
   }
@@ -52,14 +52,14 @@ function mount() {
   function switchTab(tabId: TabId) {
     if (cleanup) cleanup();
     cleanup = undefined;
-    tabBtns.forEach(b => b.classList.toggle('active', b.dataset['tab'] === tabId));
+    tabBtns.forEach((b) => b.classList.toggle('active', b.dataset['tab'] === tabId));
     tabContent.innerHTML = '';
     if (tabId === 'pokemon') cleanup = renderPokemonTab(tabContent);
     else if (tabId === 'moves') cleanup = renderMovesTab(tabContent);
     else cleanup = renderStoryTab(tabContent);
   }
 
-  tabBtns.forEach(btn => {
+  tabBtns.forEach((btn) => {
     btn.addEventListener('click', () => switchTab(btn.dataset['tab'] as TabId));
   });
 

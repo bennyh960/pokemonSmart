@@ -202,7 +202,8 @@ import charactersManifest from '../../data/sprites/characters.json';
 import { createCinematicState, type CinematicState } from './phases/trainer_cinematic';
 import { renderTrainerCinematic } from './phases/trainer_cinematic';
 import { updateTrainerCinematic } from './phases/trainer_cinematic';
-import { playAttackAnimation, type BattleAnimationContext } from './animations/animations.js';
+import { playAttackAnimation, type BattleAnimationContext } from './animations/play-attack-animation.js';
+import { runMoveLifecycle } from './animations/move-lifecycle.js';
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -361,7 +362,7 @@ const STRUGGLE_MOVE: Move = {
   id: -1,
 };
 
-type BattlePhase =
+export type BattlePhase =
   | 'TRAINER_CINEMATIC'
   | 'INTRO'
   | 'SELECT_ACTION'
@@ -826,6 +827,7 @@ export function createBattleScene(
   const animationDirector = createBattleAnimationDirector();
 
   const battleAnimationContext: BattleAnimationContext = {
+    // --- Reactive UI and Visual States (Getters + Setters) ---
     get attackFx() {
       return attackFx;
     },
@@ -862,6 +864,28 @@ export function createBattleScene(
     set phaseTimer(v) {
       phaseTimer = v;
     },
+
+    // --- Live Dynamic Game Core Data (Getters) ---
+    get player() {
+      return player;
+    },
+    get enemy() {
+      return enemy;
+    },
+    get playerBattleState() {
+      return playerBattleState;
+    },
+    get enemyBattleState() {
+      return enemyBattleState;
+    },
+    get playerHpBar() {
+      return playerHpBar;
+    },
+    get enemyHpBar() {
+      return enemyHpBar;
+    },
+
+    // --- Core Infrastructure Engines ---
     animationDirector,
     audio,
     rtl: isRTL(),
@@ -3979,29 +4003,32 @@ export function createBattleScene(
     }
 
     if (isHaze) {
-      const usedMove = getMoveDisplayName(m.id);
-      playerBattleState.statModifiers = createEmptyBattleStatModifiers();
-      enemyBattleState.statModifiers = createEmptyBattleStatModifiers();
-      syncPlayerBar();
-      syncEnemyBar();
-      playAttackAnimation(
-        player,
-        'player',
-        'enemy',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
-          textBox = createTextBox(
-            [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove }), t('battle.hazeCleared')],
-            rtl,
-          );
-          phase = 'PLAYER_ATTACK';
-          phaseTimer = 0;
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'player',
+        defenderActor: 'enemy',
+        context: battleAnimationContext,
+        hitTarget: true,
+        overrideNextPhase: 'PLAYER_ATTACK',
+
+        onImpact: () => {
+          playerBattleState.statModifiers = createEmptyBattleStatModifiers();
+          enemyBattleState.statModifiers = createEmptyBattleStatModifiers();
+
+          syncPlayerBar();
+          syncEnemyBar();
+
+          return {
+            endMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.hazeCleared'),
+            ],
+          };
         },
-        true,
-      );
+      });
       return;
     }
 
@@ -4043,88 +4070,102 @@ export function createBattleScene(
     // Substitute: player creates a doll at 1/4 max HP cost
     if (isSubstitute) {
       const cost = Math.floor(player.maxHp / 4);
-      if (playerBattleState.substituteActive) {
-        const msgs = [
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          t('battle.substituteAlreadyActive', { name: attackerName }),
-        ];
-        audio.playSFX('menu-cancel');
-        textBox = createTextBox(msgs, rtl);
-        phase = 'PLAYER_ATTACK';
-        phaseTimer = 0;
-        return;
-      }
-      if (player.hp <= cost) {
-        const msgs = [
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          t('battle.substituteTooWeak', { name: attackerName }),
-        ];
-        audio.playSFX('menu-cancel');
-        textBox = createTextBox(msgs, rtl);
-        phase = 'PLAYER_ATTACK';
-        phaseTimer = 0;
-        return;
-      }
-      playAttackAnimation(
-        player,
-        'player',
-        'enemy',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'player',
+        defenderActor: 'enemy',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'PLAYER_ATTACK',
+
+        canExecute: () => {
+          if (playerBattleState.substituteActive) {
+            audio.playSFX('menu-cancel');
+            return {
+              success: false,
+              errorMessages: [
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+                t('battle.substituteAlreadyActive', { name: attackerName }),
+              ],
+            };
+          }
+          if (player.hp <= cost) {
+            audio.playSFX('menu-cancel');
+            return {
+              success: false,
+              errorMessages: [
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+                t('battle.substituteTooWeak', { name: attackerName }),
+              ],
+            };
+          }
+          return null;
+        },
+
+        // 2. All state updates and UI bar refreshes execute cleanly on impact
+        onImpact: () => {
           player.hp -= cost;
           setHP(playerHpBar, player.hp);
           playerBattleState.substituteActive = true;
           playerBattleState.substituteHitsAbsorbed = 0;
+
+          // Fully safe execution of your scene variables!
           syncPlayerBar();
-          const msgs = [
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            t('battle.substituteCreated', { name: attackerName }),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'PLAYER_ATTACK';
-          phaseTimer = 0;
+
+          return {
+            endMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+              t('battle.substituteCreated', { name: attackerName }),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
     // Belly Drum: costs 50% max HP, raises Attack to max — fails if HP ≤ 50%
     if (isBellyDrum) {
       const cost = Math.floor(player.maxHp / 2);
-      if (player.hp <= cost) {
-        const msgs = [
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          t('battle.bellyDrumTooWeak', { name: attackerName }),
-        ];
-        audio.playSFX('menu-cancel');
-        textBox = createTextBox(msgs, rtl);
-        phase = 'PLAYER_ATTACK';
-        phaseTimer = 0;
-        return;
-      }
-      playAttackAnimation(
-        player,
-        'player',
-        'enemy',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'player',
+        defenderActor: 'enemy',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'PLAYER_ATTACK',
+        canExecute: () => {
+          if (player.hp <= cost) {
+            audio.playSFX('menu-cancel');
+
+            return {
+              success: false,
+              errorMessages: [
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: moveName }),
+                t('battle.bellyDrumTooWeak', { name: attackerName }),
+              ],
+            };
+          }
+          return null;
+        },
+
+        onImpact: () => {
+          // 1. Deduct HP and update UI elements
           player.hp = Math.max(1, player.hp - cost);
           setHP(playerHpBar, player.hp);
           syncPlayerBar();
+
+          // 2. Compute ability effects and apply stat modifications
           const playerHasContrary = player.abilityId
             ? getAbilityBattleEffects(player.abilityId).some((e) => e.kind === 'contraryStatChanges')
             : false;
+
           const statChanges = applyStatChanges(
             playerBattleState,
             moveBattleData!.statChanges,
@@ -4132,22 +4173,25 @@ export function createBattleScene(
             Math.random,
             playerHasContrary,
           );
+
+          // 3. Trigger immediate floating text feedback
           spawnDamageNumber(`-${cost}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
-          // audio.playMoveSFX(m.name);
+
+          // 4. Trigger visual screen feedback unique to the player path
           flash = createFlash('#fff29a', 0.12);
           shake = createShake(1.4, 0.18);
-          const msgs = [
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            t('battle.bellyDrumCost', { name: attackerName }),
-            ...statChanges.map((c) => getStatChangeLine(attackerName, c)),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'PLAYER_ATTACK';
-          phaseTimer = 0;
+
+          // 5. Return array of final UI text lines to progress to PLAYER_ATTACK
+          return {
+            endMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.bellyDrumCost', { name: attackerName }),
+              ...statChanges.map((c) => getStatChangeLine(attackerName, c)),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
@@ -4169,68 +4213,69 @@ export function createBattleScene(
 
     // Magic Coat: player cloaks themselves to reflect status moves this turn
     if (isMagicCoat) {
-      playAttackAnimation(
-        player,
-        'player',
-        'enemy',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'player',
+        defenderActor: 'enemy',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'PLAYER_ATTACK',
+        onImpact: () => {
           playerBattleState.turnFlags.magicCoatActive = true;
-          const msgs = [
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            t('battle.magicCoatActive', { name: attackerName }),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'PLAYER_ATTACK';
-          phaseTimer = 0;
+          return {
+            endMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.magicCoatActive', { name: attackerName }),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
     // Destiny Bond: mark the enemy with the bond — if enemy kills player before player acts again, enemy also faints
     if (isDestinyBond) {
-      playAttackAnimation(
-        player,
-        'player',
-        'enemy',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'player',
+        defenderActor: 'enemy',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'PLAYER_ATTACK',
+
+        onImpact: () => {
           enemyBattleState.destinyBonded = true;
           syncEnemyBar();
-          const msgs = [
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            t('battle.destinyBondActive', { name: defenderName }),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'PLAYER_ATTACK';
-          phaseTimer = 0;
+
+          return {
+            endMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.destinyBondActive', { name: defenderName }),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
-    // Protect / Endure: player sets its own shield flag for this turn
     if (isProtect || isEndure) {
-      playAttackAnimation(
-        player,
-        'player',
-        'enemy',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'player',
+        defenderActor: 'enemy',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'PLAYER_ATTACK',
+
+        onImpact: () => {
           if (isProtect) {
             playerBattleState.turnFlags.protected = true;
             syncPlayerBar();
@@ -4238,17 +4283,16 @@ export function createBattleScene(
           if (isEndure) {
             playerBattleState.turnFlags.endured = true;
           }
-          const msgs = [
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            isProtect ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'PLAYER_ATTACK';
-          phaseTimer = 0;
+
+          return {
+            endMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              isProtect ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
@@ -4265,31 +4309,36 @@ export function createBattleScene(
       return;
     }
 
-    // Counter / Mirror Coat: deal 2× the damage received this turn of the matching class
     if (isCounter || isMirrorCoat) {
+      const moveName = getMoveDisplayName(m.id);
       const counterDamage = isCounter
         ? playerBattleState.turnFlags.physicalDamageTakenThisTurn * 2
         : playerBattleState.turnFlags.specialDamageTakenThisTurn * 2;
-      const msgsBase = [
-        ...turnEffectLines,
-        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-      ];
-      if (counterDamage <= 0 || enemy.hp <= 0) {
-        audio.playSFX('menu-cancel');
-        textBox = createTextBox([...msgsBase, t('battle.counterFailed', { name: attackerName })], rtl);
-        phase = 'PLAYER_ATTACK';
-        phaseTimer = 0;
-        return;
-      }
-      playAttackAnimation(
-        player,
-        'player',
-        'enemy',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'player',
+        defenderActor: 'enemy',
+        context: battleAnimationContext,
+        hitTarget: true,
+        overrideNextPhase: 'PLAYER_ATTACK',
+
+        canExecute: () => {
+          if (counterDamage <= 0 || enemy.hp <= 0) {
+            audio.playSFX('menu-cancel');
+            return {
+              success: false,
+              errorMessages: [
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: moveName }),
+                t('battle.counterFailed', { name: attackerName }),
+              ],
+            };
+          }
+          return null;
+        },
+
+        onImpact: () => {
           applyMoveImpact(
             enemy,
             m,
@@ -4299,12 +4348,12 @@ export function createBattleScene(
             counterDamage,
             false,
           );
-          textBox = createTextBox(msgsBase, rtl);
-          phase = 'PLAYER_ATTACK';
-          phaseTimer = 0;
+
+          return {
+            endMessages: [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: moveName })],
+          };
         },
-        true,
-      );
+      });
       return;
     }
 
@@ -5274,34 +5323,33 @@ export function createBattleScene(
     }
 
     if (isHazeEnemy) {
-      const usedMove = getMoveDisplayName(m.id);
-      enemyBattleState.statModifiers = createEmptyBattleStatModifiers();
-      playerBattleState.statModifiers = createEmptyBattleStatModifiers();
-      syncPlayerBar();
-      syncEnemyBar();
-      playAttackAnimation(
-        enemy,
-        'enemy',
-        'player',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
-          textBox = createTextBox(
-            [
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'enemy',
+        defenderActor: 'player',
+        context: battleAnimationContext,
+        hitTarget: true, //
+        overrideNextPhase: 'ENEMY_TURN', //
+
+        onImpact: () => {
+          enemyBattleState.statModifiers = createEmptyBattleStatModifiers();
+          playerBattleState.statModifiers = createEmptyBattleStatModifiers();
+
+          syncPlayerBar();
+          syncEnemyBar();
+
+          return {
+            endMessages: [
               ...prefix,
               ...turnEffectLines,
-              t('battle.usedMove', { name: attackerName, move: usedMove }),
+              t('battle.usedMove', { name: attackerName, move: moveName }),
               t('battle.hazeCleared'),
             ],
-            rtl,
-          );
-          phase = 'ENEMY_TURN';
-          phaseTimer = 0;
+          };
         },
-        true,
-      );
+      });
       return;
     }
 
@@ -5345,89 +5393,103 @@ export function createBattleScene(
     // Substitute: enemy creates a doll at 1/4 max HP cost
     if (isSubstituteEnemy) {
       const cost = Math.floor(enemy.maxHp / 4);
-      if (enemyBattleState.substituteActive) {
-        const msgs = [
-          ...prefix,
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          t('battle.substituteAlreadyActive', { name: attackerName }),
-        ];
-        textBox = createTextBox(msgs, rtl);
-        phase = 'ENEMY_TURN';
-        phaseTimer = 0;
-        return;
-      }
-      if (enemy.hp <= cost) {
-        const msgs = [
-          ...prefix,
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          t('battle.substituteTooWeak', { name: attackerName }),
-        ];
-        textBox = createTextBox(msgs, rtl);
-        phase = 'ENEMY_TURN';
-        phaseTimer = 0;
-        return;
-      }
-      playAttackAnimation(
-        enemy,
-        'enemy',
-        'player',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'enemy',
+        defenderActor: 'player',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'ENEMY_TURN',
+        // 1. Guard conditions evaluated locally on the enemy state scope
+        canExecute: () => {
+          if (enemyBattleState.substituteActive) {
+            return {
+              success: false,
+              errorMessages: [
+                ...prefix,
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+                t('battle.substituteAlreadyActive', { name: attackerName }),
+              ],
+            };
+          }
+          if (enemy.hp <= cost) {
+            return {
+              success: false,
+              errorMessages: [
+                ...prefix,
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+                t('battle.substituteTooWeak', { name: attackerName }),
+              ],
+            };
+          }
+          return null;
+        },
+
+        // 2. State modifications and UI rendering pipelines triggered cleanly on impact
+        onImpact: () => {
           enemy.hp -= cost;
           setHP(enemyHpBar, enemy.hp);
           enemyBattleState.substituteActive = true;
           enemyBattleState.substituteHitsAbsorbed = 0;
+
+          // Dynamic local view frame updates work natively here!
           syncEnemyBar();
-          const msgs = [
-            ...prefix,
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            t('battle.substituteCreated', { name: attackerName }),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'ENEMY_TURN';
-          phaseTimer = 0;
+
+          return {
+            endMessages: [
+              ...prefix,
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+              t('battle.substituteCreated', { name: attackerName }),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
     // Belly Drum: costs 50% max HP, raises Attack to max — fails if HP ≤ 50%
     if (isBellyDrumEnemy) {
       const cost = Math.floor(enemy.maxHp / 2);
-      if (enemy.hp <= cost) {
-        const msgs = [
-          ...prefix,
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          t('battle.bellyDrumTooWeak', { name: attackerName }),
-        ];
-        textBox = createTextBox(msgs, rtl);
-        phase = 'ENEMY_TURN';
-        phaseTimer = 0;
-        return;
-      }
-      playAttackAnimation(
-        enemy,
-        'enemy',
-        'player',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'enemy',
+        defenderActor: 'player',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'ENEMY_TURN',
+
+        canExecute: () => {
+          if (enemy.hp <= cost) {
+            return {
+              success: false,
+              errorMessages: [
+                ...prefix,
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: moveName }),
+                t('battle.bellyDrumTooWeak', { name: attackerName }),
+              ],
+            };
+          }
+          return null;
+        },
+
+        onImpact: () => {
+          // 1. Deduct HP and update UI elements
           enemy.hp = Math.max(1, enemy.hp - cost);
           setHP(enemyHpBar, enemy.hp);
           syncEnemyBar();
+
+          // 2. Compute ability effects and apply stat modifications
           const enemyHasContrary = enemy.abilityId
             ? getAbilityBattleEffects(enemy.abilityId).some((e) => e.kind === 'contraryStatChanges')
             : false;
+
           const statChanges = applyStatChanges(
             enemyBattleState,
             moveBattleData!.statChanges,
@@ -5435,108 +5497,114 @@ export function createBattleScene(
             Math.random,
             enemyHasContrary,
           );
+
+          // 3. Trigger immediate floating text feedback
           spawnDamageNumber(`-${cost}`, BTL.OPP_SPRITE.x + BTL.OPP_SPRITE.w / 2, BTL.OPP_SPRITE.y + 10, '#f8d858');
-          const msgs = [
-            ...prefix,
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            t('battle.bellyDrumCost', { name: attackerName }),
-            ...statChanges.map((c) => getStatChangeLine(attackerName, c)),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'ENEMY_TURN';
-          phaseTimer = 0;
+
+          // 4. Return array of final UI text lines to progress to NEXT_PHASE
+          return {
+            endMessages: [
+              ...prefix,
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.bellyDrumCost', { name: attackerName }),
+              ...statChanges.map((c) => getStatChangeLine(attackerName, c)),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
-    // Magic Coat: enemy cloaks itself to reflect status moves this turn
+    // Magic Coat: enemy cloaks themselves to reflect status moves this turn
     if (isMagicCoatEnemy) {
-      playAttackAnimation(
-        enemy,
-        'enemy',
-        'player',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'enemy',
+        defenderActor: 'player',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'ENEMY_TURN', // שומר על פאזת האויב וממתין לסגירת הטקסט בלולאה
+
+        onImpact: () => {
           enemyBattleState.turnFlags.magicCoatActive = true;
-          const msgs = [
-            ...prefix,
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            t('battle.magicCoatActive', { name: attackerName }),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'ENEMY_TURN';
-          phaseTimer = 0;
+
+          return {
+            endMessages: [
+              ...prefix,
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.magicCoatActive', { name: attackerName }),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
     // Destiny Bond: mark the player with the bond — if player kills enemy before enemy acts again, player also faints
     if (isDestinyBondEnemy) {
-      playAttackAnimation(
-        enemy,
-        'enemy',
-        'player',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'enemy',
+        defenderActor: 'player',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'ENEMY_TURN',
+
+        onImpact: () => {
           playerBattleState.destinyBonded = true;
           syncPlayerBar();
-          const msgs = [
-            ...prefix,
-            ...turnEffectLines,
-            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-            t('battle.destinyBondActive', { name: defenderName }),
-          ];
-          textBox = createTextBox(msgs, rtl);
-          phase = 'ENEMY_TURN';
-          phaseTimer = 0;
+
+          return {
+            endMessages: [
+              ...prefix,
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.destinyBondActive', { name: defenderName }),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
-    // Protect / Endure: enemy sets its own shield flag for this turn
     if (isProtectEnemy || isEndureEnemy) {
-      if (isProtectEnemy) {
-        enemyBattleState.turnFlags.protected = true;
-        syncEnemyBar();
-      }
-      if (isEndureEnemy) {
-        enemyBattleState.turnFlags.endured = true;
-      }
-      const msgs = [
-        ...prefix,
-        ...turnEffectLines,
-        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-        isProtectEnemy ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }),
-      ];
-      playAttackAnimation(
-        enemy,
-        'enemy',
-        'player',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
-          textBox = createTextBox(msgs, rtl);
-          phase = 'ENEMY_TURN';
-          phaseTimer = 0;
+      const moveName = getMoveDisplayName(m.id);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'enemy',
+        defenderActor: 'player',
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: 'ENEMY_TURN',
+
+        onImpact: () => {
+          if (isProtectEnemy) {
+            enemyBattleState.turnFlags.protected = true;
+            syncEnemyBar();
+          }
+          if (isEndureEnemy) {
+            enemyBattleState.turnFlags.endured = true;
+          }
+
+          return {
+            endMessages: [
+              ...prefix,
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              isProtectEnemy
+                ? t('battle.protected', { name: attackerName })
+                : t('battle.endured', { name: attackerName }),
+            ],
+          };
         },
-        false,
-      );
+      });
       return;
     }
 
@@ -5554,32 +5622,37 @@ export function createBattleScene(
       return;
     }
 
-    // Counter / Mirror Coat: enemy deals 2× the damage it received this turn
     if (isCounterEnemy || isMirrorCoatEnemy) {
+      const moveName = getMoveDisplayName(m.id);
       const counterDamage = isCounterEnemy
         ? enemyBattleState.turnFlags.physicalDamageTakenThisTurn * 2
         : enemyBattleState.turnFlags.specialDamageTakenThisTurn * 2;
-      const msgsBase = [
-        ...prefix,
-        ...turnEffectLines,
-        t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-      ];
-      if (counterDamage <= 0 || player.hp <= 0) {
-        audio.playSFX('menu-cancel');
-        textBox = createTextBox([...msgsBase, t('battle.counterFailed', { name: attackerName })], rtl);
-        phase = 'ENEMY_TURN';
-        phaseTimer = 0;
-        return;
-      }
-      playAttackAnimation(
-        enemy,
-        'enemy',
-        'player',
-        m,
-        animationDirector,
-        audio,
-        battleAnimationContext,
-        () => {
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: 'enemy',
+        defenderActor: 'player',
+        context: battleAnimationContext,
+        hitTarget: true,
+        overrideNextPhase: 'ENEMY_TURN',
+
+        canExecute: () => {
+          if (counterDamage <= 0 || player.hp <= 0) {
+            audio.playSFX('menu-cancel');
+            return {
+              success: false,
+              errorMessages: [
+                ...prefix,
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: moveName }),
+                t('battle.counterFailed', { name: attackerName }),
+              ],
+            };
+          }
+          return null;
+        },
+
+        onImpact: () => {
           applyMoveImpact(
             player,
             m,
@@ -5589,12 +5662,12 @@ export function createBattleScene(
             counterDamage,
             false,
           );
-          textBox = createTextBox(msgsBase, rtl);
-          phase = 'ENEMY_TURN';
-          phaseTimer = 0;
+
+          return {
+            endMessages: [...prefix, ...turnEffectLines, t('battle.usedMove', { name: attackerName, move: moveName })],
+          };
         },
-        true,
-      );
+      });
       return;
     }
 
