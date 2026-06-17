@@ -680,7 +680,9 @@ export function createAudioManager() {
             console.log(`[MoveSFX Preload] Loaded and cached: "${key}"`);
           },
           onloaderror: () => {
-            sfxCache.set(key, null as any);
+            // To prevent load this to cache again
+            const SILENT_HOWL = new Howl({ src: ['data:audio/mp3;base64,SUQzBA=='], volume: 0 });
+            sfxCache.set(key, SILENT_HOWL);
           },
         });
 

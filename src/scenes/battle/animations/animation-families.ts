@@ -306,7 +306,17 @@ export const ANIMATION_FAMILIES: Record<string, (args: AnimationArgs) => void> =
 };
 
 export function playDefaultFamilyAnimation(args: AnimationArgs): void {
-  const lungeOffset = args.attackerActor === 'player' ? 12 : -12;
+  // 1. Calculate a dynamic multiplier based on move power (base power ranges roughly from 40 to 120+)
+  // A power of 40 yields a 1.0x multiplier, while a power of 100 yields a 2.0x multiplier.
+  const powerScale = args.move.power > 0 ? Math.max(1, args.move.power / 50) : 1;
+
+  // 2. Base distance is 12 pixels, multiplied by our dynamic power rating
+  const baseLungeDistance = 12 * powerScale;
+  const lungeOffset = args.attackerActor === 'player' ? baseLungeDistance : -baseLungeDistance;
+
+  // 3. Scale rotation slightly based on the impact force as well
+  const rotationOffset = 0.08 * Math.min(1.5, powerScale);
+  const rotationDirection = args.attackerActor === 'player' ? -rotationOffset : rotationOffset;
 
   args.animationDirector.play(
     sequenceStep(
@@ -331,8 +341,8 @@ export function playDefaultFamilyAnimation(args: AnimationArgs): void {
             args.attackerActor,
             {
               x: args.attackerStart.x + lungeOffset,
-              y: args.attackerStart.y - 2,
-              rotation: args.attackerStart.rotation + (args.attackerActor === 'player' ? -0.08 : 0.08),
+              y: args.attackerStart.y - 2 * powerScale, // Slight windup height scaling
+              rotation: args.attackerStart.rotation + rotationDirection,
             },
             args.profile.impactTime,
             'easeInOut',
@@ -341,6 +351,18 @@ export function playDefaultFamilyAnimation(args: AnimationArgs): void {
       callStep(() => {
         args.onImpact();
       }),
+      args.profile.family === 'lunge'
+        ? tweenActorStep(
+            args.attackerActor,
+            {
+              x: args.attackerStart.x,
+              y: args.attackerStart.y,
+              rotation: args.attackerStart.rotation,
+            },
+            args.profile.impactTime * 0.6, // Snappy recovery speed
+            'easeInOut',
+          )
+        : waitStep(0),
     ),
   );
 }

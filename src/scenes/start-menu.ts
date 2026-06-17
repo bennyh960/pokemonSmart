@@ -2,7 +2,7 @@ import type { Scene } from '../types/index.js';
 import type { InputManager } from '../engine/input.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawRect, drawText, fillRoundRect, slider } from '../engine/renderer.js';
-import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
@@ -308,58 +308,6 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
     }
   }
 
-  function renderSettings2(ctx: CanvasRenderingContext2D, rtl: boolean): void {
-    clearScreen(ctx, '#0d0d1a');
-
-    // Title bar
-    fillRect(ctx, 0, 0, SCREEN_W, 20, '#161630');
-    drawText(ctx, t('menu.settings'), SCREEN_W / 2, 11, { size: 8, color: '#aaaaff', align: 'center' });
-    fillRect(ctx, 0, 19, SCREEN_W, 1, '#3030a0');
-
-    const ROW_H = 30;
-    const startY = 36;
-    const PILL_W = 28;
-    const PILL_H = 12;
-
-    for (let i = 0; i < SETTINGS_KEYS.length; i++) {
-      const key = SETTINGS_KEYS[i];
-      const sel = i === settingsIdx;
-      const iy = startY + i * ROW_H;
-
-      if (sel) fillRect(ctx, 0, iy, SCREEN_W, ROW_H - 2, '#1a1a40');
-
-      if (sel) {
-        drawText(ctx, rtl ? '◄' : '►', rtl ? SCREEN_W - 6 : 6, iy + ROW_H / 2 - 3, {
-          size: 6,
-          color: '#ffff00',
-          align: rtl ? 'right' : 'left',
-        });
-      }
-
-      const lx = rtl ? SCREEN_W - 16 : 16;
-      drawText(ctx, t(`menu.settings.${key}`), lx, iy + ROW_H / 2 - 3, {
-        size: 8,
-        color: sel ? '#ffffff' : '#aaaacc',
-        align: rtl ? 'right' : 'left',
-        direction: rtl ? 'rtl' : 'ltr',
-      });
-
-      const pillX = rtl ? 8 : SCREEN_W - PILL_W - 8;
-      const pillY = iy + ROW_H / 2 - PILL_H / 2;
-
-      if (key === 'language') {
-        const loc = getLocale();
-        pill(ctx, loc === 'he' ? 'HE' : 'EN', '#1a3a5a', '#88ccff', pillX, pillY, PILL_W, PILL_H);
-      } else if (key === 'mute') {
-        const audio = getGlobalAudio();
-        onOffPill(ctx, audio ? !audio.isMuted() : true, pillX, pillY, PILL_W, PILL_H);
-      } else if (key === 'legend') {
-        onOffPill(ctx, isLegendVisible(), pillX, pillY, PILL_W, PILL_H);
-      }
-    }
-
-    drawText(ctx, 'ESC', SCREEN_W / 2, SCREEN_H - 10, { size: 6, color: '#3a3a6a', align: 'center' });
-  }
   function renderSettings(ctx: CanvasRenderingContext2D, rtl: boolean): void {
     clearScreen(ctx, '#0d0d1a');
     const audio = getGlobalAudio();
@@ -402,7 +350,6 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       const pillX = rtl ? 8 : 240 - PILL_W - 8;
       const pillY = iy + ROW_H / 2 - PILL_H / 2;
 
-      // רינדור דינמי לפי סוג ה-Key
       if (key === 'language') {
         const loc = getLocale();
         pill(ctx, loc === 'he' ? 'HE' : 'EN', '#1a3a5a', '#88ccff', pillX, pillY, PILL_W, PILL_H);

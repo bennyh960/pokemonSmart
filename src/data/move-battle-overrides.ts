@@ -439,4 +439,4 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Triple Kick': { minHits: 3, maxHits: 3 },
 };
 
-console.log(Object.keys(MOVE_BATTLE_OVERRIDES));
+// console.log(Object.keys(MOVE_BATTLE_OVERRIDES));
