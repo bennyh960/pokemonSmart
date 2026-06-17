@@ -3600,6 +3600,10 @@ export function createBattleScene(
       speciesId: attackerPokemon.id,
     });
 
+    if (hitCount <= 1) {
+      audio.playMoveSFX(move.name);
+    }
+
     const attackerStart = { ...animationDirector.getActorState(attackerActor) };
     const defenderStart = { ...animationDirector.getActorState(defenderActor) };
     const source = getAttackAnchor(attackerActor);
@@ -3608,6 +3612,7 @@ export function createBattleScene(
     const recoilOffset = defenderActor === 'player' ? -6 : 6;
     const recoveryDuration = Math.max(0.12, profile.duration - profile.impactTime);
 
+    // the state variable responsible for the animation itself
     attackFx = null;
 
     // --- Multi-hit lunge: repeat lunge+sfx N times, then call onImpact ---
@@ -3632,10 +3637,10 @@ export function createBattleScene(
         steps.push(
           callStep(() => {
             if (hitTarget) {
+              audio.playMoveSFX(move.name);
               flash = createFlash(profile.flashColor, 0.1);
               shake = createShake(profile.shakeIntensity * 0.75, 0.15);
               // audio.playSFX('hit');
-              audio.playMoveSFX(move.name);
             }
             if (capturedIsLast) onImpact();
           }),
@@ -3952,7 +3957,6 @@ export function createBattleScene(
         '#f8d858',
       );
       audio.playSFX('hit');
-      // audio.playMoveSFX(m.name);
     }
 
     if (!startResult.canAct) {
@@ -4444,9 +4448,9 @@ export function createBattleScene(
             playerHasContrary,
           );
           spawnDamageNumber(`-${cost}`, BTL.PLY_SPRITE.x + BTL.PLY_SPRITE.w / 2, BTL.PLY_SPRITE.y + 10, '#f8d858');
+          // audio.playMoveSFX(m.name);
           flash = createFlash('#fff29a', 0.12);
           shake = createShake(1.4, 0.18);
-          audio.playMoveSFX(m.name);
           const msgs = [
             ...turnEffectLines,
             t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
@@ -5040,11 +5044,11 @@ export function createBattleScene(
                 enemyBattleState.substituteActive = false;
                 enemyBattleState.substituteHitsAbsorbed = 0;
                 substituteDollFlash = { timer: 0, duration: 0.4, color: '#ff4040', side: 'enemy' };
-                audio.playMoveSFX(m.name);
+                // audio.playMoveSFX(m.name);
               } else {
                 enemyBattleState.substituteHitsAbsorbed++;
                 substituteDollFlash = { timer: 0, duration: 0.3, color: '#ffffff', side: 'enemy' };
-                audio.playMoveSFX(m.name);
+                // audio.playMoveSFX(m.name);
                 if (enemyBattleState.substituteHitsAbsorbed >= 2) {
                   enemyBattleState.substituteActive = false;
                   enemyBattleState.substituteHitsAbsorbed = 0;
@@ -5100,7 +5104,7 @@ export function createBattleScene(
               );
               flash = createFlash('#fff29a', 0.12);
               shake = createShake(1.4, 0.18);
-              audio.playMoveSFX(m.name);
+              audio.playSFX('hit');
             }
 
             // Apply contact ability status effects to the attacking player
@@ -5122,7 +5126,7 @@ export function createBattleScene(
                 BTL.PLY_SPRITE.y + 10,
                 '#f84038',
               );
-              audio.playMoveSFX(m.name);
+              audio.playSFX('hit');
             }
           }
         }
@@ -5138,7 +5142,7 @@ export function createBattleScene(
             );
             flash = createFlash('#fff29a', 0.12);
             shake = createShake(1.4, 0.18);
-            audio.playMoveSFX(m.name);
+            audio.playSFX('hit');
           }
         }
         // Destiny Bond: if player killed enemy and player has the bond (enemy set it), player also faints
@@ -5224,7 +5228,7 @@ export function createBattleScene(
         BTL.OPP_SPRITE.y + 10,
         '#f8d858',
       );
-      audio.playMoveSFX(m.name);
+      audio.playSFX('hit');
     }
     const prefix: string[] = showFasterMsg ? [t('battle.enemyMovesFirst', { name: attackerName })] : [];
 
@@ -6297,11 +6301,11 @@ export function createBattleScene(
                 playerBattleState.substituteActive = false;
                 playerBattleState.substituteHitsAbsorbed = 0;
                 substituteDollFlash = { timer: 0, duration: 0.4, color: '#ff4040', side: 'player' };
-                audio.playMoveSFX(m.name);
+                // audio.playMoveSFX(m.name);
               } else {
                 playerBattleState.substituteHitsAbsorbed++;
                 substituteDollFlash = { timer: 0, duration: 0.3, color: '#ffffff', side: 'player' };
-                audio.playMoveSFX(m.name);
+                // audio.playMoveSFX(m.name);
                 if (playerBattleState.substituteHitsAbsorbed >= 2) {
                   playerBattleState.substituteActive = false;
                   playerBattleState.substituteHitsAbsorbed = 0;
@@ -6357,7 +6361,7 @@ export function createBattleScene(
               );
               flash = createFlash('#fff29a', 0.12);
               shake = createShake(1.4, 0.18);
-              audio.playMoveSFX(m.name);
+              audio.playSFX('hit');
             }
 
             // Apply contact ability status effects to the attacking enemy
@@ -6375,7 +6379,7 @@ export function createBattleScene(
                 BTL.OPP_SPRITE.y + 10,
                 '#f84038',
               );
-              audio.playMoveSFX(m.name);
+              audio.playSFX('hit');
             }
           }
         }
@@ -6391,7 +6395,7 @@ export function createBattleScene(
             );
             flash = createFlash('#fff29a', 0.12);
             shake = createShake(1.4, 0.18);
-            audio.playMoveSFX(m.name);
+            audio.playSFX('hit');
           }
         }
         // Destiny Bond: if enemy killed player and enemy has the bond (player set it), enemy also faints
