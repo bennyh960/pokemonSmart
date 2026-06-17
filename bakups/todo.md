@@ -8,8 +8,6 @@ fix:
 
 [bug] [move] - bide - not works (המתנה)
 [bug] - ariados immune to sleep powder somehow
-[move] - need to wire => Draining Kiss ,
-[type Effect] - need see why fairy moves not trigger super effective on dragon
-[task]- make some dialouge optional or even random options . like "x must act first"
 
+[task]- make some dialouge optional or even random options . like "x must act first"
 [leauge][rival] - rival in leauge has too many umbreons
