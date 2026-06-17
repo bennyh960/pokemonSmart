@@ -661,6 +661,27 @@ export function createAudioManager() {
       howl.play();
     },
 
+    playMoveSFX(moveName: string): void {
+      if (muted) return;
+      const key = moveToSfxKey(moveName);
+      const src = toAssetUrl(`audio/movesSFX/${key}.mp3`);
+      console.log(`[MoveSFX] Attempting to play: "${key}" from ${src}`);
+      const howl = new Howl({
+        src: [src],
+        volume: sfxVolume,
+        onload: () => console.log(`[MoveSFX] Loaded OK: "${key}"`),
+        onplay: () => console.log(`[MoveSFX] Playing: "${key}"`),
+        onloaderror: (_id, err) => {
+          console.warn(`[MoveSFX] Load error for "${key}":`, err, '→ falling back to hit');
+          getSfxHowl('hit')?.play();
+        },
+        onplayerror: (_id, err) => {
+          console.warn(`[MoveSFX] Play error for "${key}":`, err);
+        },
+      });
+      howl.play();
+    },
+
     crossfade(_fromTrack: string, toTrack: string, durationMs = DEFAULT_CROSSFADE_MS): void {
       // Fade out old
       if (currentHowl && currentHowl.playing()) {
@@ -919,4 +940,9 @@ export function setGlobalAudio(audio: AudioManager): void {
 }
 export function getGlobalAudio(): AudioManager | null {
   return globalAudio;
+}
+
+/** MUST BE SYNC WITH THE DOWNLOAD MOVE SCRIPT. Normalizes a move name to match the SFX filename convention. */
+function moveToSfxKey(moveName: string): string {
+  return moveName.replaceAll(/ /g, '').toLowerCase();
 }

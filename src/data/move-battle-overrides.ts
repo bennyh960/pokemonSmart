@@ -438,3 +438,5 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Twineedle: { minHits: 2, maxHits: 2, ...statusEffect('poison', 20) },
   'Triple Kick': { minHits: 3, maxHits: 3 },
 };
+
+console.log(Object.keys(MOVE_BATTLE_OVERRIDES));

@@ -12,6 +12,7 @@
     "generate-mapIds": "tsx scripts/generate-map-ids.ts",
     "deploy": "tsx scripts/deploy-gh-pages.ts",
     "add-pokemon": "tsx scripts/add-new-pokemon.ts",
+    "download-moves-sfx": "tsx scripts/download-move-sfx.ts",
     "cicd": "npm run build && npm run deploy"
   },
   "devDependencies": {
