@@ -202,6 +202,7 @@ import charactersManifest from '../../data/sprites/characters.json';
 import { createCinematicState, type CinematicState } from './phases/trainer_cinematic';
 import { renderTrainerCinematic } from './phases/trainer_cinematic';
 import { updateTrainerCinematic } from './phases/trainer_cinematic';
+import { playAttackAnimation } from './animations/animations.js';
 
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
@@ -3548,375 +3549,6 @@ export function createBattleScene(
     return lines;
   }
 
-  // Families that create the effect at animation start (not at impact time)
-  const START_FX_FAMILIES = new Set([
-    'projectile',
-    'beam',
-    'dragon-aura',
-    'flamethrower',
-    'leaf-spray',
-    'water-flow',
-    'surf-wave',
-    'psychic-wave',
-    'rock-throw',
-    'rock-slide',
-    'fire-blast',
-    'giga-drain',
-    'lightning',
-    'vine-whip',
-    'heal-pulse',
-    'double-team',
-    'solar-beam',
-    'rapid-spin',
-    'twister-spin',
-    'icy-wind',
-    'electroweb',
-    'protect-shield',
-    'smoke-screen',
-    'mist-veil',
-    'haze-clear',
-    'punch',
-    'powder',
-    'shadow-ball',
-    'bite',
-    'night-shade',
-  ]);
-
-  function playAttackAnimation(
-    attackerActor: 'player' | 'enemy',
-    defenderActor: 'player' | 'enemy',
-    move: Pokemon['moves'][number],
-    onImpact: () => void,
-    hitTarget = true,
-    hitCount = 1,
-  ): void {
-    const moveData = getMove(move.id);
-    const attackerPokemon = attackerActor === 'player' ? player : enemy;
-    const profile = getAttackAnimationProfile({
-      name: moveData?.name ?? { en: move.name, he: move.name },
-      type: move.type,
-      power: move.power,
-      damageClass: moveData?.damageClass ?? (move.power > 0 ? 'physical' : 'status'),
-      speciesId: attackerPokemon.id,
-    });
-
-    if (hitCount <= 1) {
-      audio.playMoveSFX(move.name);
-    }
-
-    const attackerStart = { ...animationDirector.getActorState(attackerActor) };
-    const defenderStart = { ...animationDirector.getActorState(defenderActor) };
-    const source = getAttackAnchor(attackerActor);
-    const target = profile.selfTarget ? getAttackAnchor(attackerActor) : getAttackAnchor(defenderActor);
-    const lungeOffset = attackerActor === 'player' ? 12 : -12;
-    const recoilOffset = defenderActor === 'player' ? -6 : 6;
-    const recoveryDuration = Math.max(0.12, profile.duration - profile.impactTime);
-
-    // the state variable responsible for the animation itself
-    attackFx = null;
-
-    // --- Multi-hit lunge: repeat lunge+sfx N times, then call onImpact ---
-    if (hitCount > 1 && profile.family === 'lunge') {
-      const hitTime = Math.max(0.07, profile.impactTime * 0.6);
-      const steps: BattleAnimationStep[] = [];
-      for (let i = 0; i < hitCount; i++) {
-        const isLastHit = i === hitCount - 1;
-        steps.push(
-          tweenActorStep(
-            attackerActor,
-            {
-              x: attackerStart.x + lungeOffset,
-              y: attackerStart.y - 2,
-              rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.06 : 0.06),
-            },
-            hitTime,
-            'easeInOut',
-          ),
-        );
-        const capturedIsLast = isLastHit;
-        steps.push(
-          callStep(() => {
-            if (hitTarget) {
-              audio.playMoveSFX(move.name);
-              flash = createFlash(profile.flashColor, 0.1);
-              shake = createShake(profile.shakeIntensity * 0.75, 0.15);
-              // audio.playSFX('hit');
-            }
-            if (capturedIsLast) onImpact();
-          }),
-        );
-        steps.push(
-          parallelStep(
-            hitTarget
-              ? sequenceStep(
-                  tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.06, 'easeInOut'),
-                  tweenActorStep(defenderActor, defenderStart, 0.07, 'easeInOut'),
-                )
-              : waitStep(0.13),
-            tweenActorStep(attackerActor, attackerStart, 0.09, 'easeInOut'),
-          ),
-        );
-      }
-      animationDirector.play(sequenceStep(...steps));
-      return;
-    }
-
-    // --- Special: Rapid Spin — attacker pokemon spins fast ---
-    if (profile.family === 'rapid-spin') {
-      animationDirector.play(
-        sequenceStep(
-          callStep(() => {
-            attackFx = createAttackEffect({
-              kind: 'rapid-spin',
-              sourceX: source.x,
-              sourceY: source.y,
-              targetX: target.x,
-              targetY: target.y,
-              color: profile.color,
-              accentColor: profile.accentColor,
-              duration: profile.duration,
-            });
-          }),
-          parallelStep(
-            tweenActorStep(
-              attackerActor,
-              {
-                scaleX: attackerStart.scaleX * 0.82,
-                scaleY: attackerStart.scaleY * 0.82,
-                rotation: attackerStart.rotation + Math.PI * 6,
-              },
-              profile.impactTime,
-              'linear',
-            ),
-          ),
-          callStep(() => {
-            onImpact();
-          }),
-          parallelStep(
-            hitTarget
-              ? sequenceStep(
-                  tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.07, 'easeInOut'),
-                  tweenActorStep(defenderActor, defenderStart, 0.1, 'easeInOut'),
-                )
-              : waitStep(0.17),
-            tweenActorStep(attackerActor, { ...attackerStart, rotation: attackerStart.rotation }, 0.15, 'easeOut'),
-          ),
-        ),
-      );
-      return;
-    }
-
-    // --- Special: Twister Spin — target pokemon spins, vortex effect ---
-    if (profile.family === 'twister-spin') {
-      animationDirector.play(
-        sequenceStep(
-          callStep(() => {
-            attackFx = createAttackEffect({
-              kind: 'twister-spin',
-              sourceX: source.x,
-              sourceY: source.y,
-              targetX: target.x,
-              targetY: target.y,
-              color: profile.color,
-              accentColor: profile.accentColor,
-              duration: profile.duration,
-            });
-          }),
-          parallelStep(
-            tweenActorStep(
-              defenderActor,
-              {
-                scaleX: defenderStart.scaleX * 0.85,
-                scaleY: defenderStart.scaleY * 0.85,
-                rotation: defenderStart.rotation + Math.PI * 4,
-              },
-              profile.impactTime,
-              'linear',
-            ),
-          ),
-          callStep(() => {
-            onImpact();
-          }),
-          tweenActorStep(defenderActor, { ...defenderStart, rotation: defenderStart.rotation }, 0.18, 'easeOut'),
-        ),
-      );
-      return;
-    }
-
-    // --- Special: Double Team — ghost clone burst, attacker briefly fades ---
-    if (profile.family === 'double-team') {
-      const dtSprite = getCachedImage(`/sprites/pokemon/back/${attackerPokemon.id}.png`) ?? null;
-      animationDirector.play(
-        sequenceStep(
-          callStep(() => {
-            attackFx = createAttackEffect({
-              kind: 'double-team',
-              sourceX: source.x,
-              sourceY: source.y,
-              targetX: source.x,
-              targetY: source.y,
-              color: profile.color,
-              accentColor: profile.accentColor,
-              duration: profile.duration,
-              spriteImage: dtSprite,
-            });
-          }),
-          parallelStep(tweenActorStep(attackerActor, { alpha: 0.45 }, 0.18, 'easeInOut')),
-          tweenActorStep(attackerActor, attackerStart, 0.2, 'easeInOut'),
-          callStep(() => {
-            onImpact();
-          }),
-          waitStep(0.15),
-        ),
-      );
-      return;
-    }
-
-    // --- Self-boost (harden/defense curl) — quick white flash, subtle scale pulse ---
-    if (profile.family === 'self-boost') {
-      animationDirector.play(
-        sequenceStep(
-          parallelStep(
-            tweenActorStep(
-              attackerActor,
-              { scaleX: attackerStart.scaleX * 1.08, scaleY: attackerStart.scaleY * 1.08 },
-              0.1,
-              'easeOut',
-            ),
-            callStep(() => {
-              flash = createFlash('#ffffff', 0.18);
-              attackFx = createAttackEffect({
-                kind: 'pulse',
-                sourceX: source.x,
-                sourceY: source.y,
-                targetX: source.x,
-                targetY: source.y,
-                color: '#e8e8ff',
-                accentColor: '#ffffff',
-                duration: 0.28,
-              });
-            }),
-          ),
-          tweenActorStep(attackerActor, attackerStart, 0.18, 'easeInOut'),
-          callStep(() => {
-            onImpact();
-          }),
-          waitStep(0.1),
-        ),
-      );
-      return;
-    }
-
-    // --- Cool self boost (dragon dance etc.) — slow spin with sparkle burst ---
-    if (profile.family === 'self-boost-cooler') {
-      animationDirector.play(
-        sequenceStep(
-          callStep(() => {
-            attackFx = createAttackEffect({
-              kind: 'dragon-aura',
-              sourceX: source.x,
-              sourceY: source.y,
-              targetX: source.x,
-              targetY: source.y,
-              color: profile.color,
-              accentColor: profile.accentColor,
-              duration: 0.55,
-            });
-          }),
-          parallelStep(
-            tweenActorStep(
-              attackerActor,
-              {
-                rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.25 : 0.25),
-                scaleX: attackerStart.scaleX * 1.12,
-                scaleY: attackerStart.scaleY * 1.12,
-              },
-              0.28,
-              'easeOut',
-            ),
-            sequenceStep(
-              waitStep(0.1),
-              callStep(() => {
-                flash = createFlash(profile.color, 0.22);
-              }),
-            ),
-          ),
-          parallelStep(tweenActorStep(attackerActor, attackerStart, 0.22, 'easeInOut')),
-          callStep(() => {
-            onImpact();
-          }),
-          waitStep(0.12),
-        ),
-      );
-      return;
-    }
-
-    animationDirector.play(
-      sequenceStep(
-        callStep(() => {
-          if (START_FX_FAMILIES.has(profile.family)) {
-            attackFx = createAttackEffect({
-              kind: profile.family as Parameters<typeof createAttackEffect>[0]['kind'],
-              sourceX: source.x,
-              sourceY: source.y,
-              targetX: target.x,
-              targetY: target.y,
-              color: profile.color,
-              accentColor: profile.accentColor,
-              duration: profile.duration,
-              variant: profile.variant,
-              power: move.power > 0 ? move.power : undefined,
-            });
-          }
-        }),
-        profile.family === 'lunge'
-          ? tweenActorStep(
-              attackerActor,
-              {
-                x: attackerStart.x + lungeOffset,
-                y: attackerStart.y - 2,
-                rotation: attackerStart.rotation + (attackerActor === 'player' ? -0.08 : 0.08),
-              },
-              profile.impactTime,
-              'easeInOut',
-            )
-          : waitStep(profile.impactTime),
-        callStep(() => {
-          if (
-            profile.family === 'pulse' ||
-            profile.family === 'burst' ||
-            profile.family === 'lunge' ||
-            profile.family === 'earthquake'
-          ) {
-            attackFx = createAttackEffect({
-              kind: profile.family === 'lunge' ? 'burst' : profile.family,
-              sourceX: source.x,
-              sourceY: source.y,
-              targetX: target.x,
-              targetY: target.y,
-              color: profile.color,
-              accentColor: profile.accentColor,
-              duration:
-                profile.family === 'lunge' ? 0.2 : profile.family === 'earthquake' ? profile.duration : undefined,
-            });
-          }
-          onImpact();
-        }),
-        parallelStep(
-          move.power > 0 && hitTarget && !profile.selfTarget
-            ? sequenceStep(
-                tweenActorStep(defenderActor, { x: defenderStart.x + recoilOffset }, 0.07, 'easeInOut'),
-                tweenActorStep(defenderActor, defenderStart, 0.1, 'easeInOut'),
-              )
-            : waitStep(0.17),
-          profile.family === 'lunge'
-            ? tweenActorStep(attackerActor, attackerStart, recoveryDuration, 'easeInOut')
-            : waitStep(recoveryDuration),
-        ),
-      ),
-    );
-  }
-
   function doAttack(forcedMoveIndex?: number): void {
     // Clear Destiny Bond from enemy when player acts (bond expires on user's next turn)
     if (enemyBattleState.destinyBonded) {
@@ -4312,9 +3944,15 @@ export function createBattleScene(
       syncPlayerBar();
       syncEnemyBar();
       playAttackAnimation(
+        attackFx,
+        player,
         'player',
         'enemy',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           textBox = createTextBox(
             [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: usedMove }), t('battle.hazeCleared')],
@@ -4391,9 +4029,15 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
+        attackFx,
+        player,
         'player',
         'enemy',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           player.hp -= cost;
           setHP(playerHpBar, player.hp);
@@ -4430,9 +4074,15 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
+        attackFx,
+        player,
         'player',
         'enemy',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           player.hp = Math.max(1, player.hp - cost);
           setHP(playerHpBar, player.hp);
@@ -4485,9 +4135,15 @@ export function createBattleScene(
     // Magic Coat: player cloaks themselves to reflect status moves this turn
     if (isMagicCoat) {
       playAttackAnimation(
+        attackFx,
+        player,
         'player',
         'enemy',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           playerBattleState.turnFlags.magicCoatActive = true;
           const msgs = [
@@ -4507,9 +4163,15 @@ export function createBattleScene(
     // Destiny Bond: mark the enemy with the bond — if enemy kills player before player acts again, enemy also faints
     if (isDestinyBond) {
       playAttackAnimation(
+        attackFx,
+        player,
         'player',
         'enemy',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           enemyBattleState.destinyBonded = true;
           syncEnemyBar();
@@ -4530,9 +4192,15 @@ export function createBattleScene(
     // Protect / Endure: player sets its own shield flag for this turn
     if (isProtect || isEndure) {
       playAttackAnimation(
+        attackFx,
+        player,
         'player',
         'enemy',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           if (isProtect) {
             playerBattleState.turnFlags.protected = true;
@@ -4585,9 +4253,15 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
+        attackFx,
+        player,
         'player',
         'enemy',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           applyMoveImpact(
             enemy,
@@ -4994,9 +4668,15 @@ export function createBattleScene(
 
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation(
+      attackFx,
+      player,
       'player',
       'enemy',
       m,
+      animationDirector,
+      audio,
+      flash,
+      shake,
       () => {
         // Rest: full heal + sleep 2 turns + all PP restored
         if (isRest) {
@@ -5575,9 +5255,15 @@ export function createBattleScene(
       syncPlayerBar();
       syncEnemyBar();
       playAttackAnimation(
+        attackFx,
+        enemy,
         'enemy',
         'player',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           textBox = createTextBox(
             [
@@ -5661,9 +5347,15 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
+        attackFx,
+        enemy,
         'enemy',
         'player',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           enemy.hp -= cost;
           setHP(enemyHpBar, enemy.hp);
@@ -5701,9 +5393,15 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
+        attackFx,
+        enemy,
         'enemy',
         'player',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           enemy.hp = Math.max(1, enemy.hp - cost);
           setHP(enemyHpBar, enemy.hp);
@@ -5738,9 +5436,15 @@ export function createBattleScene(
     // Magic Coat: enemy cloaks itself to reflect status moves this turn
     if (isMagicCoatEnemy) {
       playAttackAnimation(
+        attackFx,
+        enemy,
         'enemy',
         'player',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           enemyBattleState.turnFlags.magicCoatActive = true;
           const msgs = [
@@ -5761,9 +5465,15 @@ export function createBattleScene(
     // Destiny Bond: mark the player with the bond — if player kills enemy before enemy acts again, player also faints
     if (isDestinyBondEnemy) {
       playAttackAnimation(
+        attackFx,
+        enemy,
         'enemy',
         'player',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           playerBattleState.destinyBonded = true;
           syncPlayerBar();
@@ -5798,9 +5508,15 @@ export function createBattleScene(
         isProtectEnemy ? t('battle.protected', { name: attackerName }) : t('battle.endured', { name: attackerName }),
       ];
       playAttackAnimation(
+        attackFx,
+        enemy,
         'enemy',
         'player',
         m,
+        animationDirector,
+        audio,
+        flash,
+        shake,
         () => {
           textBox = createTextBox(msgs, rtl);
           phase = 'ENEMY_TURN';
@@ -5843,9 +5559,13 @@ export function createBattleScene(
         return;
       }
       playAttackAnimation(
+        attackFx,
+        enemy,
         'enemy',
         'player',
         m,
+        animationDirector,
+        audio,
         () => {
           applyMoveImpact(
             player,
@@ -6252,9 +5972,13 @@ export function createBattleScene(
 
     textBox = createTextBox(msgs, rtl);
     playAttackAnimation(
+      attackFx,
+      enemy,
       'enemy',
       'player',
       m,
+      animationDirector,
+      audio,
       () => {
         // Rest: full heal + sleep 2 turns + all PP restored
         if (isRestEnemy) {

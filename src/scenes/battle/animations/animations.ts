@@ -12,42 +12,41 @@ import {
   type BattleAnimationDirector,
   type BattleAnimationStep,
 } from '../../../ui/battle-animation-director';
-import { createAttackEffect } from '../../../ui/battle-animations';
+import { createAttackEffect, createFlash, createShake } from '../../../ui/battle-animations';
 
-  // Families that create the effect at animation start (not at impact time)
-  const START_FX_FAMILIES = new Set([
-    'projectile',
-    'beam',
-    'dragon-aura',
-    'flamethrower',
-    'leaf-spray',
-    'water-flow',
-    'surf-wave',
-    'psychic-wave',
-    'rock-throw',
-    'rock-slide',
-    'fire-blast',
-    'giga-drain',
-    'lightning',
-    'vine-whip',
-    'heal-pulse',
-    'double-team',
-    'solar-beam',
-    'rapid-spin',
-    'twister-spin',
-    'icy-wind',
-    'electroweb',
-    'protect-shield',
-    'smoke-screen',
-    'mist-veil',
-    'haze-clear',
-    'punch',
-    'powder',
-    'shadow-ball',
-    'bite',
-    'night-shade',
-  ]);
-
+// Families that create the effect at animation start (not at impact time)
+const START_FX_FAMILIES = new Set([
+  'projectile',
+  'beam',
+  'dragon-aura',
+  'flamethrower',
+  'leaf-spray',
+  'water-flow',
+  'surf-wave',
+  'psychic-wave',
+  'rock-throw',
+  'rock-slide',
+  'fire-blast',
+  'giga-drain',
+  'lightning',
+  'vine-whip',
+  'heal-pulse',
+  'double-team',
+  'solar-beam',
+  'rapid-spin',
+  'twister-spin',
+  'icy-wind',
+  'electroweb',
+  'protect-shield',
+  'smoke-screen',
+  'mist-veil',
+  'haze-clear',
+  'punch',
+  'powder',
+  'shadow-ball',
+  'bite',
+  'night-shade',
+]);
 
 function getAttackAnchor(
   actor: 'player' | 'enemy',
@@ -67,19 +66,20 @@ function getAttackAnchor(
 }
 
 export function playAttackAnimation(
+  attackFx: ReturnType<typeof createAttackEffect> | null,
+  attackerPokemon: Pokemon,
   attackerActor: 'player' | 'enemy',
   defenderActor: 'player' | 'enemy',
   move: Pokemon['moves'][number],
+  animationDirector: BattleAnimationDirector,
+  audio: AudioManager,
+  flash: ReturnType<typeof createFlash> | null,
+  shake: ReturnType<typeof createShake> | null,
   onImpact: () => void,
   hitTarget = true,
-    hitCount = 1,
-  attackerPokemon: Pokemon,
-  animationDirector: BattleAnimationDirector,
-    audio: AudioManager,
-  attackFx: ReturnType<typeof createAttackEffect> | null = null;
+  hitCount = 1,
 ): void {
   const moveData = getMove(move.id);
-//   const attackerPokemon = attackerActor === 'player' ? player : enemy;
   const profile = getAttackAnimationProfile({
     name: moveData?.name ?? { en: move.name, he: move.name },
     type: move.type,
