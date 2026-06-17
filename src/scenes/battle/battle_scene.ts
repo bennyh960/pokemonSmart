@@ -6576,8 +6576,15 @@ export function createBattleScene(
       init();
       // Mark enemy Pokemon as seen in Pokedex
       if (hasActiveGame()) {
-        getPlayerData().pokedex[enemy.id] = true;
+        const pd = getPlayerData();
+        pd.pokedex[enemy.id] = true;
+        if (trainerData) {
+          const playerMovesNames = player.moves.map((m) => m.name);
+          const trainerMovesNames = trainerData.party.map((p) => p.moves.map((m) => m.name)).flat();
+          audio.preloadMoveSFX([...playerMovesNames, ...trainerMovesNames]);
+        }
       }
+
       audio.playMusic('battle');
       if (isTrainerBattle && trainerData && !isWildNpcBattle) {
         // Cinematic intro: challenger music continues playing; textBox + battle music created after animation

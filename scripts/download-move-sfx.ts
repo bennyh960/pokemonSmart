@@ -128,23 +128,23 @@ async function main() {
   const allLinks = parseSongLinks(albumHtml);
   console.log(`Found ${allLinks.length} tracks on the album page.`);
   // ─── ADD THIS DEBUGGING BLOCK ──────────────────────────────────────────────
-  // console.log('\n--- RUNNING FILTER DIAGNOSTICS ---');
-  // const sampleLinks = allLinks.filter((l) => l.toLowerCase().includes('slash') || l.toLowerCase().includes('air'));
-  // console.log(`Total raw links containing 'slash' or 'air': ${sampleLinks.length}`);
+  console.log('\n--- RUNNING FILTER DIAGNOSTICS ---');
+  const sampleLinks = allLinks.filter((l) => l.toLowerCase().includes('vine') || l.toLowerCase().includes('whip'));
+  console.log(`Total raw links containing 'vine' or 'whip': ${sampleLinks.length}`);
 
-  // sampleLinks.forEach((link) => {
-  //   const rawBase = path.basename(link, '.mp3');
-  //   const decodedBase = decodeURIComponent(rawBase);
-  //   const generatedKey = moveToSfxKey(decodedBase);
-  //   const isMatched = wantSet.has(generatedKey);
+  sampleLinks.forEach((link) => {
+    const rawBase = path.basename(link, '.mp3');
+    const decodedBase = decodeURIComponent(rawBase);
+    const generatedKey = moveToSfxKey(decodedBase);
+    const isMatched = wantSet.has(generatedKey);
 
-  //   console.log(`\nRaw Link: ${link}`);
-  //   console.log(`  -> Extracted Basename: "${rawBase}"`);
-  //   console.log(`  -> Decoded Basename:  "${decodedBase}"`);
-  //   console.log(`  -> Generated SFX Key: "${generatedKey}"`);
-  //   console.log(`  -> Match Status:       ${isMatched ? '✅ MATCHED' : '❌ SKIPPED'}`);
-  // });
-  // console.log('-----------------------------------\n');
+    console.log(`\nRaw Link: ${link}`);
+    console.log(`  -> Extracted Basename: "${rawBase}"`);
+    console.log(`  -> Decoded Basename:  "${decodedBase}"`);
+    console.log(`  -> Generated SFX Key: "${generatedKey}"`);
+    console.log(`  -> Match Status:       ${isMatched ? '✅ MATCHED' : '❌ SKIPPED'}`);
+  });
+  console.log('-----------------------------------\n');
   // ─── END OF DEBUGGING BLOCK ────────────────────────────────────────────────
 
   // Filter to only the ones we want

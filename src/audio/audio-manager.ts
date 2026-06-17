@@ -664,6 +664,30 @@ export function createAudioManager() {
       howl.play();
     },
 
+    preloadMoveSFX(moveNames: string[]): void {
+      for (const moveName of moveNames) {
+        const key = moveToSfxKey(moveName);
+
+        if (sfxCache.has(key)) continue;
+
+        const src = toAssetUrl(`audio/movesSFX/${key}.mp3`);
+
+        const howl = new Howl({
+          src: [src],
+          preload: true, // כופה על דפדפן להוריד את הקובץ מיד
+          volume: sfxVolume,
+          onload: () => {
+            console.log(`[MoveSFX Preload] Loaded and cached: "${key}"`);
+          },
+          onloaderror: () => {
+            sfxCache.set(key, null as any);
+          },
+        });
+
+        sfxCache.set(key, howl);
+      }
+    },
+
     playMoveSFX(moveName: string): void {
       if (masterMuted || sfxMuted) return;
       const key = moveToSfxKey(moveName);
