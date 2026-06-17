@@ -50,6 +50,7 @@ export interface AttackAnimationProfile {
   shakeIntensity: number;
   flashColor: string;
   variant?: string;
+  soundEffect?: string;
 }
 
 type MoveLike = Pick<MoveData, 'name' | 'type' | 'power' | 'damageClass'> & { speciesId?: number };
@@ -194,7 +195,7 @@ const FIRE_BLAST_MOVES = ['fire blast', 'sacred fire', 'v-create'];
 
 const VINE_WHIP_MOVES = ['vine whip'];
 
-const GIGA_DRAIN_MOVES = ['giga drain', 'mega drain', 'absorb', 'leech life'];
+const GIGA_DRAIN_MOVES = ['giga drain', 'mega drain', 'absorb', 'leech life', 'draining kiss'];
 
 const SOLAR_BEAM_MOVES = ['solar beam'];
 const RAPID_SPIN_MOVES = ['rapid spin'];
@@ -559,8 +560,8 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       family: 'psychic-wave',
       color,
       accentColor: WHITE,
-      duration: 0.55,
-      impactTime: 0.38,
+      duration: 1,
+      impactTime: 1,
       selfTarget: false,
       shakeIntensity: 2.0,
       flashColor,

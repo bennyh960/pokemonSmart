@@ -5,6 +5,58 @@
 import { fillRect, drawText } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 
+/**
+ // utility function that get a color profile from a hex color, returning lighter and darker variants
+ * Generates an 11-step color palette array from an input hex color.
+ * Index 0 is the brightest (near white core), index 5 is the exact base color,
+ * and index 10 is the darkest shadow tone.
+ * 
+ * Perfect for dynamic Canvas rendering, gradients, and particle systems.
+ */
+function getHexColorProfileArray(hex: string): string[] {
+  // Normalize and parse the hex string
+  const cleanHex = hex.replace('#', '');
+  const n = parseInt(cleanHex, 16);
+
+  // Extract RGB components
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+
+  // Blends toward pure white (255) for highlight tints
+  const tint = (channel: number, factor: number) => Math.round(channel + (255 - channel) * factor);
+
+  // Blends toward pure black (0) for shadow shades
+  const shade = (channel: number, factor: number) => Math.round(channel * factor);
+
+  // Format numbers back to standard Hex strings
+  const toHex = (rNum: number, gNum: number, bNum: number) => {
+    const clamp = (v: number) => Math.min(255, Math.max(0, v));
+    return '#' + [rNum, gNum, bNum].map((v) => clamp(v).toString(16).padStart(2, '0')).join('');
+  };
+
+  const formattedBase = hex.startsWith('#') ? hex : `#${hex}`;
+
+  return [
+    // --- LIGHT TINTS (Indexes 0 to 4) ---
+    toHex(tint(r, 0.9), tint(g, 0.9), tint(b, 0.9)), // 0: Ultra-bright core / flash
+    toHex(tint(r, 0.72), tint(g, 0.72), tint(b, 0.72)), // 1: Inner core aura
+    toHex(tint(r, 0.54), tint(g, 0.54), tint(b, 0.54)), // 2: High-energy sparkle
+    toHex(tint(r, 0.36), tint(g, 0.36), tint(b, 0.36)), // 3: Bright particle stream
+    toHex(tint(r, 0.18), tint(g, 0.18), tint(b, 0.18)), // 4: Soft edge highlight
+
+    // --- BASE COLOR (Index 5) ---
+    formattedBase, // 5: Middle / Base Move Type Color
+
+    // --- DARK SHADES (Indexes 6 to 10) ---
+    toHex(shade(r, 0.82), shade(g, 0.82), shade(b, 0.82)), // 6: Soft ambient glow ring
+    toHex(shade(r, 0.64), shade(g, 0.64), shade(b, 0.64)), // 7: Secondary tendril fill
+    toHex(shade(r, 0.46), shade(g, 0.46), shade(b, 0.46)), // 8: Dark outline / shadow hull
+    toHex(shade(r, 0.28), shade(g, 0.28), shade(b, 0.28)), // 9: Low-visibility void color
+    toHex(shade(r, 0.1), shade(g, 0.1), shade(b, 0.1)), // 10: Near-black contrast border
+  ];
+}
+
 // --- Flash Effect ---
 
 interface FlashEffect {
@@ -2542,67 +2594,145 @@ function renderPsychicWaveEffect(ctx: CanvasRenderingContext2D, effect: AttackEf
   const len = Math.hypot(dx, dy) || 1;
   const ux = dx / len;
   const uy = dy / len;
-  const travelAngle = Math.atan2(dy, dx);
-  const SPLIT = 0.52;
+
+  // Perpendicular vectors to calculate the wavy distortion offsets
+  const perpX = -uy;
+  const perpY = ux;
+
+  const SPLIT = 0.45; // Wave travels, then control aura takes over
+  const colorProfile = getHexColorProfileArray(effect.color);
 
   ctx.save();
 
   if (t < SPLIT) {
+    // --- PHASE 1: THE TRAVELLING PSYCHIC WAVE ---
     const pt = t / SPLIT;
-    const numRings = 3;
-    for (let i = 0; i < numRings; i++) {
-      const ringT = (pt + i / numRings) % 1.0;
-      if (ringT > 0.96) continue;
-      const rx = effect.sourceX + ux * len * ringT;
-      const ry = effect.sourceY + uy * len * ringT;
-      const ringAlpha = (1 - ringT) * 0.72;
-      const ringR = 3.5 + ringT * 7;
 
-      ctx.globalAlpha = ringAlpha;
-      ctx.strokeStyle = i % 2 === 0 ? '#e050d8' : '#b070f8';
-      ctx.lineWidth = 1.5;
-      ctx.save();
-      ctx.translate(rx, ry);
-      ctx.rotate(travelAngle);
-      ctx.scale(1, 0.38);
+    // We render multiple parallel waves slightly offset for a dense, distorted beam look
+    const numWaves = 3;
+    for (let w = 0; w < numWaves; w++) {
       ctx.beginPath();
-      ctx.arc(0, 0, ringR, 0, Math.PI * 2);
+
+      const waveOffset = w * 0.15;
+      ctx.lineWidth = w === 1 ? 2.5 : 1.2;
+      ctx.strokeStyle = w === 1 ? colorProfile[1] : w === 0 ? colorProfile[3] : colorProfile[5];
+      ctx.globalAlpha = (0.8 - w * 0.2) * Math.sin(pt * Math.PI); // Smooth fade-in/out
+      ctx.lineJoin = 'round';
+
+      // Draw the wave along the path using segments
+      const segments = 30;
+      // The head of the wave travels from source to target based on progress (pt)
+      const currentLength = len * pt;
+
+      for (let s = 0; s <= segments; s++) {
+        const segRatio = s / segments;
+        const currentDist = currentLength * segRatio;
+
+        // Linear position along the direct path
+        const lx = effect.sourceX + ux * currentDist;
+        const ly = effect.sourceY + uy * currentDist;
+
+        // Sine wave calculations: frequent oscillation, diminishing at tail, expanding at head
+        const frequency = 0.12;
+        const amplitude = 12 * Math.sin(segRatio * Math.PI) * (1 + w * 0.3);
+        const wavePhase = pt * 35 - currentDist * frequency + waveOffset;
+        const displacement = Math.sin(wavePhase) * amplitude;
+
+        // Displace the coordinate perpendicular to the direction of travel
+        const finalX = lx + perpX * displacement;
+        const finalY = ly + perpY * displacement;
+
+        if (s === 0) {
+          ctx.moveTo(finalX, finalY);
+        } else {
+          ctx.lineTo(finalX, finalY);
+        }
+      }
+      ctx.stroke();
+    }
+
+    // High energy distortion flare at the front tip of the wave
+    const headX = effect.sourceX + ux * len * pt;
+    const headY = effect.sourceY + uy * len * pt;
+    ctx.globalAlpha = 0.6 * Math.sin(pt * Math.PI);
+    ctx.fillStyle = colorProfile[0];
+    ctx.beginPath();
+    ctx.arc(headX, headY, 8, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    // --- PHASE 2: TELEKINETIC CONTROL AURA & DEFENDER FLASH ---
+    const pt = (t - SPLIT) / (1 - SPLIT);
+    const auraAlpha = Math.sin(pt * Math.PI); // Fades in smoothly and fades out at end
+
+    // 1. Psychic Telekinetic Aura Rings rising around defender
+    const numAuraRings = 4;
+    for (let i = 0; i < numAuraRings; i++) {
+      const rng = seededRng(effect.seed + i * 53);
+      // Individual ring lifecycle offset
+      const ringProgress = (pt * 1.5 + i / numAuraRings) % 1.0;
+
+      // Animate rings starting low, scaling outward, and lifting upward slightly
+      const radius = 10 + ringProgress * 18;
+      const liftY = ringProgress * -15;
+      const currentAlpha = auraAlpha * (1 - ringProgress);
+
+      ctx.globalAlpha = currentAlpha * 0.7;
+      ctx.strokeStyle = i % 2 === 0 ? colorProfile[2] : colorProfile[4];
+      ctx.lineWidth = 2.0 - ringProgress * 1.0;
+
+      ctx.save();
+      // Position center of ring on defender
+      ctx.translate(effect.targetX, effect.targetY + liftY);
+
+      // Squish the circle on the Y-axis to give it an immersive 3D horizontal ring perspective
+      ctx.scale(1.2, 0.4);
+
+      // Introduce an erratic mental wobble factor to the ring path
+      const wobble = Math.sin(pt * 25 + i) * 2;
+      ctx.beginPath();
+      ctx.arc(wobble, 0, radius, 0, Math.PI * 2);
       ctx.restore();
       ctx.stroke();
-    }
-  } else {
-    const pt = (t - SPLIT) / (1 - SPLIT);
-    const alpha = Math.max(0, 1 - pt);
 
-    // 3 expanding rings at target
-    for (let r = 0; r < 3; r++) {
-      const rT = (pt + r * 0.33) % 1.0;
-      ctx.globalAlpha = (1 - rT) * alpha * 0.65;
-      ctx.strokeStyle = r % 2 === 0 ? '#e050d8' : '#b070f8';
-      ctx.lineWidth = 1.3;
+      // Small sparks lifting out of the rings
+      ctx.globalAlpha = currentAlpha * 0.8;
+      ctx.fillStyle = colorProfile[0];
+      const sparkAngle = rng() * Math.PI * 2 + pt * 4;
+      const sparkX = effect.targetX + Math.cos(sparkAngle) * (radius * 0.8);
+      const sparkY = effect.targetY + liftY + Math.sin(sparkAngle) * (radius * 0.3);
       ctx.beginPath();
-      ctx.arc(effect.targetX, effect.targetY, 3 + rT * 18, 0, Math.PI * 2);
-      ctx.stroke();
+      ctx.arc(sparkX, sparkY, 1.5, 0, Math.PI * 2);
+      ctx.fill();
     }
 
-    // Shimmer fill
-    ctx.globalAlpha = alpha * 0.18;
-    ctx.fillStyle = '#d080f8';
+    // 2. High-Frequency Psychic Flash Layer overlapping defender sprite
+    // This creates an intense flickering silhouette effect over the opponent
+    const flashFlicker = Math.sin(pt * Math.PI * 18) > 0;
+    if (flashFlicker) {
+      ctx.globalAlpha = auraAlpha * 0.22;
+      ctx.fillStyle = colorProfile[3];
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Bright core overlay
+      ctx.globalAlpha = auraAlpha * 0.35;
+      ctx.fillStyle = colorProfile[1];
+      ctx.beginPath();
+      ctx.arc(effect.targetX, effect.targetY, 14, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 3. Heavy Ambient Control Glow underneath defender
+    ctx.globalAlpha = auraAlpha * 0.15;
+    const gradient = ctx.createRadialGradient(effect.targetX, effect.targetY, 5, effect.targetX, effect.targetY, 32);
+    gradient.addColorStop(0, colorProfile[4]);
+    gradient.addColorStop(0.6, colorProfile[7]);
+    gradient.addColorStop(1, 'transparent');
+    ctx.fillStyle = gradient;
     ctx.beginPath();
-    ctx.arc(effect.targetX, effect.targetY, 12 + pt * 8, 0, Math.PI * 2);
+    ctx.arc(effect.targetX, effect.targetY, 32, 0, Math.PI * 2);
     ctx.fill();
-
-    // Rotating inner spokes
-    for (let s = 0; s < 6; s++) {
-      const angle = (Math.PI * 2 * s) / 6 + pt * Math.PI;
-      ctx.globalAlpha = alpha * 0.4;
-      ctx.strokeStyle = '#f080e8';
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(effect.targetX + Math.cos(angle) * 3, effect.targetY + Math.sin(angle) * 3);
-      ctx.lineTo(effect.targetX + Math.cos(angle) * (8 + pt * 10), effect.targetY + Math.sin(angle) * (8 + pt * 10));
-      ctx.stroke();
-    }
   }
 
   ctx.restore();
@@ -2825,13 +2955,14 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
   const perpX = -uy;
   const perpY = ux;
   const numTendrils = 5;
+  const colorProfile = getHexColorProfileArray(effect.color);
 
   ctx.save();
 
   // Target sickly glow + pulsing ring while draining
   const glowAlpha = t < SPLIT ? (t / SPLIT) * 0.3 : Math.max(0, 1 - (t - SPLIT) / (1 - SPLIT)) * 0.2;
   ctx.globalAlpha = glowAlpha;
-  ctx.fillStyle = '#28b828';
+  ctx.fillStyle = colorProfile[8]; // Original '#28b828'
   ctx.beginPath();
   ctx.arc(effect.targetX, effect.targetY, 16, 0, Math.PI * 2);
   ctx.fill();
@@ -2843,7 +2974,7 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     // Pulsing ring at target (energy being pulled)
     const ringAlpha = 0.35 * Math.sin(pt * Math.PI * 5) * 0.5 + 0.2;
     ctx.globalAlpha = ringAlpha;
-    ctx.strokeStyle = '#70ff70';
+    ctx.strokeStyle = colorProfile[3]; // Original '#70ff70'
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(effect.targetX, effect.targetY, 10 + Math.sin(pt * Math.PI * 6) * 3, 0, Math.PI * 2);
@@ -2856,7 +2987,9 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       const thick = i === 0 ? 2.2 : 1.2;
 
       ctx.globalAlpha = 0.85 - i * 0.1;
-      ctx.strokeStyle = i === 0 ? '#60ff60' : i < 3 ? '#38c038' : '#207020';
+
+      // Dynamic tendril styling going deeper down the palette based on trendril index
+      ctx.strokeStyle = i === 0 ? colorProfile[4] : i < 3 ? colorProfile[7] : colorProfile[10];
       ctx.lineWidth = thick;
       ctx.lineJoin = 'round';
       ctx.beginPath();
@@ -2875,7 +3008,7 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
       const tipX = effect.targetX + ux * len * reach;
       const tipY = effect.targetY + uy * len * reach;
       ctx.globalAlpha = 0.7 - i * 0.08;
-      ctx.fillStyle = '#90ff90';
+      ctx.fillStyle = colorProfile[3]; // Original '#90ff90'
       ctx.beginPath();
       ctx.arc(tipX, tipY, 2.5, 0, Math.PI * 2);
       ctx.fill();
@@ -2897,21 +3030,21 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
 
       // Orb glow aura
       ctx.globalAlpha = alpha * 0.35;
-      ctx.fillStyle = '#30c030';
+      ctx.fillStyle = colorProfile[8]; // Original '#30c030'
       ctx.beginPath();
       ctx.arc(x, y, 6, 0, Math.PI * 2);
       ctx.fill();
 
       // Main orb
       ctx.globalAlpha = alpha;
-      ctx.fillStyle = '#70ff70';
+      ctx.fillStyle = colorProfile[3]; // Original '#70ff70'
       ctx.beginPath();
       ctx.arc(x, y, 3.5, 0, Math.PI * 2);
       ctx.fill();
 
       // Bright core
       ctx.globalAlpha = alpha * 0.85;
-      ctx.fillStyle = '#d0ffd0';
+      ctx.fillStyle = colorProfile[0]; // Original '#d0ffd0'
       ctx.beginPath();
       ctx.arc(x, y, 1.5, 0, Math.PI * 2);
       ctx.fill();
@@ -2922,7 +3055,7 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
         const tx3 = effect.targetX + dx * trailEased;
         const ty3 = effect.targetY + dy * trailEased;
         ctx.globalAlpha = alpha * 0.35;
-        ctx.fillStyle = '#50dd50';
+        ctx.fillStyle = colorProfile[6]; // Original '#50dd50'
         ctx.beginPath();
         ctx.arc(tx3, ty3, 1.8, 0, Math.PI * 2);
         ctx.fill();
@@ -2933,13 +3066,13 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     const absorbAlpha = Math.min(1, pt * 3.5) * Math.max(0, 1 - (pt - 0.55) / 0.45);
     if (absorbAlpha > 0) {
       ctx.globalAlpha = absorbAlpha * 0.4;
-      ctx.fillStyle = '#40ff40';
+      ctx.fillStyle = colorProfile[7]; // Original '#40ff40'
       ctx.beginPath();
       ctx.arc(effect.sourceX, effect.sourceY, 10 + pt * 10, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.globalAlpha = absorbAlpha * 0.7;
-      ctx.strokeStyle = '#90ff90';
+      ctx.strokeStyle = colorProfile[3]; // Original '#90ff90'
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(effect.sourceX, effect.sourceY, 7 + pt * 7, 0, Math.PI * 2);
@@ -2951,7 +3084,7 @@ function renderGigaDrainEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
         const sa = rng() * Math.PI * 2;
         const sd = 5 + rng() * 8;
         ctx.globalAlpha = absorbAlpha * (0.5 + rng() * 0.4);
-        ctx.fillStyle = '#b0ffb0';
+        ctx.fillStyle = colorProfile[2]; // Original '#b0ffb0'
         ctx.beginPath();
         ctx.arc(effect.sourceX + Math.cos(sa) * sd, effect.sourceY + Math.sin(sa) * sd - pt * 6, 1.5, 0, Math.PI * 2);
         ctx.fill();

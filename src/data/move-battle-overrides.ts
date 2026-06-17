@@ -177,6 +177,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Mega Drain': { drainPercent: 50 },
   'Giga Drain': { drainPercent: 50 },
   'Leech Life': { drainPercent: 50 },
+  'Draining Kiss': { drainPercent: 50 },
 
   'Take Down': { recoilPercent: 25 },
   'Double Edge': { recoilPercent: 25 },
@@ -274,6 +275,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Shadow Ball': { statChanges: [stageChange('specialDefense', -1, 'target', 20)] },
   'Energy Ball': { statChanges: [stageChange('specialDefense', -1, 'target', 10)] },
   Crunch: { statChanges: [stageChange('defense', -1, 'target', 20)] },
+  Moonblast: { statChanges: [stageChange('specialAttack', -1, 'target', 30)] },
   'Low Sweep': { statChanges: [stageChange('speed', -1, 'target', 100)] },
   'High Horsepower': { statChanges: [stageChange('speed', -1, 'target', 100)] },
 
