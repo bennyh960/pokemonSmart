@@ -72,7 +72,7 @@ export function createAudioManager() {
   const wordCache = new Map<string, Howl | null>();
 
   let musicVolume = Number(localStorage.getItem('musicVolume') ?? '0.5');
-  let sfxVolume = Number(localStorage.getItem('sfxVolume') ?? '0.7');
+  let sfxVolume = Number(localStorage.getItem('sfxVolume') ?? '0.6');
 
   let masterMuted = localStorage.getItem('masterMuted') === 'true';
   let musicMuted = localStorage.getItem('musicMuted') === 'true';
@@ -739,7 +739,8 @@ export function createAudioManager() {
     },
 
     setMusicVolume(volume: number): void {
-      musicVolume = Math.max(0, Math.min(1, volume));
+      console.debug(`[AudioManager] Setting music volume to ${volume}`);
+      musicVolume = Math.max(0.025, Math.min(1, volume));
       localStorage.setItem('musicVolume', musicVolume.toString());
 
       if (currentHowl) {

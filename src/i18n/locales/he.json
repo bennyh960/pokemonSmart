@@ -443,7 +443,6 @@
   "battle.cantSwitchTrapped": "{name} לא יכול להתחלף כשהוא לכוד!",
   "battle.rosterFull": "אי אפשר להשתמש ביותר פוקימונים בקרב הזה!",
   "battle.enemyFaster": "{name} היריב מהיר יותר!",
-  "battle.enemyMovesFirst": "{name} היריב פועל ראשון!",
   "battle.moveMissed": "המהלך של {name} פספס!",
   "battle.criticalHit": "פגיעה קריטית!",
   "battle.statRose": "ה{stat} של {name} עלתה!",

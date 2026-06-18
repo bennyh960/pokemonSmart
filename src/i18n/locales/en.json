@@ -446,7 +446,6 @@
   "battle.cantSwitchTrapped": "{name} can't switch out while trapped!",
   "battle.rosterFull": "You can't use more Pokemon in this battle!",
   "battle.enemyFaster": "Enemy {name} is faster!",
-  "battle.enemyMovesFirst": "Enemy {name} moves first!",
   "battle.moveMissed": "{name}'s move missed!",
   "battle.criticalHit": "A critical hit!",
   "battle.statRose": "{name}'s {stat} rose!",
