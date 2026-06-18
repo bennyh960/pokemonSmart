@@ -1,6 +1,7 @@
 // battle/animation/animation-families.ts
 
 import { getCachedImage } from '../../../engine/sprite-loader';
+import type { AttackAnimationProfile } from '../../../systems/move-animation';
 import type { Pokemon } from '../../../types';
 import {
   callStep,
@@ -8,57 +9,24 @@ import {
   sequenceStep,
   tweenActorStep,
   waitStep,
+  type BattleActorState,
   type BattleAnimationDirector,
   type BattleAnimationStep,
 } from '../../../ui/battle-animation-director';
 import { createAttackEffect, createFlash, createShake } from '../../../ui/battle-animations';
 import type { BattleAnimationContext } from './play-attack-animation';
 
-// Families that create the effect at animation start (not at impact time)
-export const START_FX_FAMILIES = new Set([
-  'projectile',
-  'beam',
-  'dragon-aura',
-  'flamethrower',
-  'leaf-spray',
-  'water-flow',
-  'surf-wave',
-  'psychic-wave',
-  'rock-throw',
-  'rock-slide',
-  'fire-blast',
-  'giga-drain',
-  'lightning',
-  'vine-whip',
-  'heal-pulse',
-  'double-team',
-  'solar-beam',
-  'rapid-spin',
-  'twister-spin',
-  'icy-wind',
-  'electroweb',
-  'protect-shield',
-  'smoke-screen',
-  'mist-veil',
-  'haze-clear',
-  'punch',
-  'powder',
-  'shadow-ball',
-  'bite',
-  'night-shade',
-]);
-
 export interface AnimationArgs {
   attackerActor: 'player' | 'enemy';
   defenderActor: 'player' | 'enemy';
-  profile: any;
-  move: any;
+  profile: AttackAnimationProfile;
+  move: Pokemon['moves'][number];
   animationDirector: BattleAnimationDirector;
   attackerPokemon: Pokemon;
   source: { x: number; y: number };
   target: { x: number; y: number };
-  attackerStart: any;
-  defenderStart: any;
+  attackerStart: BattleActorState;
+  defenderStart: BattleActorState;
   context: BattleAnimationContext;
   onImpact: () => void;
   hitTarget: boolean;
@@ -225,7 +193,7 @@ export const ANIMATION_FAMILIES: Record<string, (args: AnimationArgs) => void> =
             targetY: args.source.y,
             color: args.profile.color,
             accentColor: args.profile.accentColor,
-            duration: 0.55,
+            duration: args.profile.duration,
           });
         }),
         parallelStep(
@@ -236,21 +204,56 @@ export const ANIMATION_FAMILIES: Record<string, (args: AnimationArgs) => void> =
               scaleX: args.attackerStart.scaleX * 1.12,
               scaleY: args.attackerStart.scaleY * 1.12,
             },
-            0.28,
+            args.profile.duration * 0.5,
             'easeOut',
           ),
           sequenceStep(
             waitStep(0.1),
             callStep(() => {
-              args.context.flash = createFlash(args.profile.color, 0.22);
+              args.context.flash = createFlash(args.profile.color, args.profile.duration * 0.45);
             }),
           ),
         ),
-        parallelStep(tweenActorStep(args.attackerActor, args.attackerStart, 0.22, 'easeInOut')),
+        parallelStep(tweenActorStep(args.attackerActor, args.attackerStart, args.profile.duration * 0.5, 'easeInOut')),
         callStep(() => {
           args.onImpact();
         }),
         waitStep(0.12),
+      ),
+    );
+  },
+  pulse: (args) => playImpactSpawnAnimation(args),
+  burst: (args) => playImpactSpawnAnimation(args),
+
+  earthquake: (args) => {
+    const { recoilOffset } = buildRecoilValues(args);
+
+    args.animationDirector.play(
+      sequenceStep(
+        // Step A: nothing — earthquake has no start fx
+
+        // Step B: spawn with full duration + impact
+        callStep(() => {
+          args.context.shake = createShake(5, args.profile.duration);
+
+          args.context.attackFx = createAttackEffect({
+            kind: 'earthquake',
+            sourceX: args.source.x,
+            sourceY: args.source.y,
+            targetX: args.target.x,
+            targetY: args.target.y,
+            color: args.profile.color,
+            power: args.move.power,
+            accentColor: args.profile.accentColor,
+            duration: args.profile.duration, // <-- full duration, unlike pulse/burst
+          });
+          args.onImpact();
+        }),
+        // Step C: wait for impact point
+        waitStep(args.profile.impactTime),
+        // Step D: recoil only (no attacker movement to undo)
+        buildRecoilStep(args, recoilOffset, 0.17),
+        // args.context.audio.stop
       ),
     );
   },
@@ -306,63 +309,80 @@ export const ANIMATION_FAMILIES: Record<string, (args: AnimationArgs) => void> =
 };
 
 export function playDefaultFamilyAnimation(args: AnimationArgs): void {
-  // 1. Calculate a dynamic multiplier based on move power (base power ranges roughly from 40 to 120+)
-  // A power of 40 yields a 1.0x multiplier, while a power of 100 yields a 2.0x multiplier.
-  const powerScale = args.move.power > 0 ? Math.max(1, args.move.power / 50) : 1;
-
-  // 2. Base distance is 12 pixels, multiplied by our dynamic power rating
-  const baseLungeDistance = 12 * powerScale;
-  const lungeOffset = args.attackerActor === 'player' ? baseLungeDistance : -baseLungeDistance;
-
-  // 3. Scale rotation slightly based on the impact force as well
-  const rotationOffset = 0.08 * Math.min(1.5, powerScale);
-  const rotationDirection = args.attackerActor === 'player' ? -rotationOffset : rotationOffset;
+  const { recoilOffset } = buildRecoilValues(args);
 
   args.animationDirector.play(
     sequenceStep(
+      // Step A: spawn start fx (beam, wave, projectile, etc.)
       callStep(() => {
-        if (START_FX_FAMILIES.has(args.profile.family)) {
-          args.context.attackFx = createAttackEffect({
-            kind: args.profile.family,
-            sourceX: args.source.x,
-            sourceY: args.source.y,
-            targetX: args.target.x,
-            targetY: args.target.y,
-            color: args.profile.color,
-            accentColor: args.profile.accentColor,
-            duration: args.profile.duration,
-            variant: args.profile.variant,
-            power: args.move.power > 0 ? args.move.power : undefined,
-          });
-        }
+        args.context.attackFx = createAttackEffect({
+          kind: args.profile.family,
+          sourceX: args.source.x,
+          sourceY: args.source.y,
+          targetX: args.target.x,
+          targetY: args.target.y,
+          color: args.profile.color,
+          accentColor: args.profile.accentColor,
+          duration: args.profile.duration,
+          variant: args.profile.variant,
+          power: args.move.power > 0 ? args.move.power : undefined,
+        });
       }),
-      args.profile.family === 'lunge'
-        ? tweenActorStep(
-            args.attackerActor,
-            {
-              x: args.attackerStart.x + lungeOffset,
-              y: args.attackerStart.y - 2 * powerScale, // Slight windup height scaling
-              rotation: args.attackerStart.rotation + rotationDirection,
-            },
-            args.profile.impactTime,
-            'easeInOut',
-          )
-        : waitStep(args.profile.impactTime),
+      // Step B: wait
+      waitStep(args.profile.impactTime),
+      // Step C: impact only — no secondary fx
+      callStep(() => args.onImpact()),
+      // Step D: recoil
+      buildRecoilStep(args, recoilOffset, 0.17),
+    ),
+  );
+}
+
+// ─── Shared helpers ───────────────────────────────────────────────────────────
+
+function buildRecoilValues(args: AnimationArgs) {
+  const powerScale = args.move.power > 0 ? Math.max(1, args.move.power / 50) : 1;
+  const recoilDistance = 8 * Math.min(1.5, powerScale);
+  const recoilOffset = args.attackerActor === 'player' ? recoilDistance : -recoilDistance;
+  return { powerScale, recoilOffset };
+}
+
+function buildRecoilStep(args: AnimationArgs, recoilOffset: number, recoveryDuration: number): BattleAnimationStep {
+  return parallelStep(
+    args.move.power > 0 && args.hitTarget && !args.profile.selfTarget
+      ? sequenceStep(
+          tweenActorStep(args.defenderActor, { x: args.defenderStart.x + recoilOffset }, 0.07, 'easeInOut'),
+          tweenActorStep(args.defenderActor, args.defenderStart, 0.1, 'easeInOut'),
+        )
+      : waitStep(0.17),
+    waitStep(recoveryDuration),
+  );
+}
+
+// ─── pulse + burst: no start fx, only spawn at impact point ──────────────────
+
+function playImpactSpawnAnimation(args: AnimationArgs): void {
+  const { recoilOffset } = buildRecoilValues(args);
+
+  args.animationDirector.play(
+    sequenceStep(
+      // Step A: nothing — pulse/burst have no start fx
+      waitStep(args.profile.impactTime),
+      // Step B: spawn fx at target + impact
       callStep(() => {
+        args.context.attackFx = createAttackEffect({
+          kind: args.profile.family,
+          sourceX: args.source.x,
+          sourceY: args.source.y,
+          targetX: args.target.x,
+          targetY: args.target.y,
+          color: args.profile.color,
+          accentColor: args.profile.accentColor,
+        });
         args.onImpact();
       }),
-      args.profile.family === 'lunge'
-        ? tweenActorStep(
-            args.attackerActor,
-            {
-              x: args.attackerStart.x,
-              y: args.attackerStart.y,
-              rotation: args.attackerStart.rotation,
-            },
-            args.profile.impactTime * 0.6, // Snappy recovery speed
-            'easeInOut',
-          )
-        : waitStep(0),
+      // Step C: recoil
+      buildRecoilStep(args, recoilOffset, 0.17),
     ),
   );
 }

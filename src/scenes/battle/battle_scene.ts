@@ -3333,6 +3333,7 @@ export function createBattleScene(
       power: move.power,
       damageClass,
     });
+    console.log({ profile });
 
     if (move.power > 0 || resolvedDamage > 0) {
       const absorbEffect =

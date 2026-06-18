@@ -46,6 +46,7 @@ const SFX_TRACKS: Record<string, string> = {
   'pokemon-returned': toAssetUrl('audio/sfx/item-found.mp3'),
   'bump-wall': toAssetUrl('audio/sfx/bumpintowall.mp3'),
   splash: toAssetUrl('audio/sfx/menu-select.wav'),
+  confirm: toAssetUrl('audio/sfx/confirm.mp3'),
   'pokeball-return': toAssetUrl('audio/sfx/menu-cancel.wav'),
 };
 
@@ -71,8 +72,8 @@ export function createAudioManager() {
   /** Lazy-loaded word audio (null = file missing, use SpeechSynthesis). */
   const wordCache = new Map<string, Howl | null>();
 
-  let musicVolume = Number(localStorage.getItem('musicVolume') ?? '0.5');
-  let sfxVolume = Number(localStorage.getItem('sfxVolume') ?? '0.6');
+  let musicVolume = Number(localStorage.getItem('musicVolume') ?? '0.6');
+  let sfxVolume = Number(localStorage.getItem('sfxVolume') ?? '0.3');
 
   let masterMuted = localStorage.getItem('masterMuted') === 'true';
   let musicMuted = localStorage.getItem('musicMuted') === 'true';
@@ -677,7 +678,7 @@ export function createAudioManager() {
           preload: true, // כופה על דפדפן להוריד את הקובץ מיד
           volume: sfxVolume,
           onload: () => {
-            console.log(`[MoveSFX Preload] Loaded and cached: "${key}"`);
+            // console.log(`[MoveSFX Preload] Loaded and cached: "${key}"`);
           },
           onloaderror: () => {
             // To prevent load this to cache again
@@ -694,18 +695,12 @@ export function createAudioManager() {
       if (masterMuted || sfxMuted) return;
       const key = moveToSfxKey(moveName);
       const src = toAssetUrl(`audio/movesSFX/${key}.mp3`);
-      console.log(`[MoveSFX] Attempting to play: "${key}" from ${src}`);
       const howl = new Howl({
         src: [src],
         volume: sfxVolume,
-        onload: () => console.log(`[MoveSFX] Loaded OK: "${key}"`),
-        onplay: () => console.log(`[MoveSFX] Playing: "${key}"`),
         onloaderror: (_id, err) => {
           console.warn(`[MoveSFX] Load error for "${key}":`, err, '→ falling back to hit');
           getSfxHowl('hit')?.play();
-        },
-        onplayerror: (_id, err) => {
-          console.warn(`[MoveSFX] Play error for "${key}":`, err);
         },
       });
       howl.play();

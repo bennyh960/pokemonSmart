@@ -97,6 +97,7 @@ export function playAttackAnimation(
   };
 
   const specialAnimation = ANIMATION_FAMILIES[profile.family];
+  console.log('DEBUG ROCK SLIDE FROM PLAY ATTACK ANIMATION', { args, specialAnimation });
 
   if (specialAnimation) {
     specialAnimation(args);

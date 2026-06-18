@@ -1,47 +1,10 @@
 import { getTypeColor } from '../data/type-constants.js';
 import type { PokemonType } from '../types/index.js';
 import type { LocalizedName, MoveData } from '../services/pokemon-data.js';
-
-export type AttackAnimationFamily =
-  | 'lunge'
-  | 'projectile'
-  | 'beam'
-  | 'pulse'
-  | 'burst'
-  | 'dragon-aura'
-  | 'flamethrower'
-  | 'leaf-spray'
-  | 'water-flow'
-  | 'surf-wave'
-  | 'psychic-wave'
-  | 'rock-throw'
-  | 'rock-slide'
-  | 'fire-blast'
-  | 'giga-drain'
-  | 'lightning'
-  | 'vine-whip'
-  | 'heal-pulse'
-  | 'double-team'
-  | 'solar-beam'
-  | 'rapid-spin'
-  | 'twister-spin'
-  | 'icy-wind'
-  | 'electroweb'
-  | 'protect-shield'
-  | 'earthquake'
-  | 'smoke-screen'
-  | 'mist-veil'
-  | 'haze-clear'
-  | 'punch'
-  | 'powder'
-  | 'shadow-ball'
-  | 'bite'
-  | 'night-shade'
-  | 'self-boost'
-  | 'self-boost-cooler';
+import type { AttackEffectKind } from '../ui/battle-animations.js';
 
 export interface AttackAnimationProfile {
-  family: AttackAnimationFamily;
+  family: AttackEffectKind;
   color: string;
   accentColor: string;
   duration: number;
@@ -490,8 +453,8 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       family: 'dragon-aura',
       color,
       accentColor: WHITE,
-      duration: 0.75,
-      impactTime: 0.56,
+      duration: 1.75,
+      impactTime: 0.86,
       selfTarget: false,
       shakeIntensity: 3.0,
       flashColor,
@@ -546,8 +509,8 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       family: 'lightning',
       color,
       accentColor: WHITE,
-      duration: 0.42,
-      impactTime: 0.18,
+      duration: 2.42,
+      impactTime: 1.18,
       selfTarget: false,
       shakeIntensity: 3.0,
       flashColor,
@@ -777,10 +740,10 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       family: 'earthquake',
       color: '#c89050',
       accentColor: '#e8d090',
-      duration: 0.75,
-      impactTime: 0.22,
+      duration: 5,
+      impactTime: 1,
       selfTarget: false,
-      shakeIntensity: 4.5,
+      shakeIntensity: 10.5,
       flashColor: '#c8a060',
       variant,
     };
@@ -791,7 +754,7 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       family: 'self-boost',
       color: '#c8d8ff',
       accentColor: '#ffffff',
-      duration: 0.46,
+      duration: 0.66,
       impactTime: 0.1,
       selfTarget: true,
       shakeIntensity: 0,
@@ -805,7 +768,7 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       family: 'self-boost-cooler',
       color: getTypeColor(type), // use the move's type color
       accentColor: '#ffffff',
-      duration: 0.62,
+      duration: 1.2,
       impactTime: 0.28,
       selfTarget: true,
       shakeIntensity: 0,

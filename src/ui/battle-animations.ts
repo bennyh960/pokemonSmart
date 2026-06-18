@@ -281,7 +281,10 @@ export type AttackEffectKind =
   | 'powder'
   | 'shadow-ball'
   | 'bite'
-  | 'night-shade';
+  | 'night-shade'
+  | 'lunge'
+  | 'self-boost'
+  | 'self-boost-cooler';
 
 interface AttackEffect {
   active: boolean;
@@ -722,6 +725,7 @@ function drawFissureLine(
   }
 }
 
+let earthequakeShake: ShakeEffect | null = null;
 function renderEarthquakeEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
   const alpha = t < 0.2 ? t / 0.2 : t < 0.65 ? 1.0 : Math.max(0, 1 - (t - 0.65) / 0.35);
@@ -731,10 +735,14 @@ function renderEarthquakeEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
   const crackProgress = Math.min(1, t / 0.4);
   const rng = seededRng(effect.seed);
   ctx.save();
+  earthequakeShake = createShake(0.5, effect.duration);
+  applyShake(ctx, earthequakeShake);
   ctx.globalAlpha = alpha * 0.14;
   ctx.fillStyle = '#8b6040';
   ctx.fillRect(0, GROUND_TOP, SCREEN_W_EQ, GROUND_BOT - GROUND_TOP);
   ctx.restore();
+  updateShake(earthequakeShake, 0.016);
+
   const epicX = SCREEN_W_EQ / 2;
   const epicY = (GROUND_TOP + GROUND_BOT) / 2;
   const maxLen = SCREEN_W_EQ * 0.55 * crackProgress;
@@ -789,8 +797,10 @@ function renderEarthquakeEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
       GROUND_TOP,
       GROUND_BOT,
     );
+    resetShake(ctx, earthequakeShake);
   }
-  for (let i = 0; i < 14; i++) {
+
+  for (let i = 0; i < 100; i++) {
     const px = rng() * SCREEN_W_EQ;
     const py0 = GROUND_TOP + 6 + rng() * (GROUND_BOT - GROUND_TOP - 12);
     const rise = t * 18 * (0.5 + rng() * 0.5);
@@ -1906,9 +1916,6 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
     case 'pulse':
       renderPulseEffect(ctx, effect);
       break;
-    case 'burst':
-      renderBurstEffect(ctx, effect);
-      break;
     case 'earthquake':
       renderEarthquakeEffect(ctx, effect);
       break;
@@ -2002,6 +2009,14 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
     case 'night-shade':
       renderNightShadeEffect(ctx, effect);
       break;
+    case 'burst':
+      renderBurstEffect(ctx, effect);
+      break;
+
+    default:
+      // case 'lunge':
+      console.warn(`Unknown attack effect kind: ${(effect as any).kind}`);
+      renderBurstEffect(ctx, effect);
   }
 }
 
