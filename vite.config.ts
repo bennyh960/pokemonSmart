@@ -30,6 +30,7 @@ export default defineConfig(({ mode }) => ({
       },
     },
     {
+      // virtual module to load all names of trainers to be pre load in trainer cinematic
       name: 'trainer-sprites',
       resolveId(id) {
         if (id === virtualModuleId) return '\0' + virtualModuleId;
@@ -45,10 +46,30 @@ export default defineConfig(({ mode }) => ({
         }
       },
     },
+    {
+      // strip out the admin move hacker code in production build since it's only meant for development/testing and can be a security risk if left in
+      name: 'strip-admin-hacker',
+      resolveId(id, importer) {
+        if (mode === 'production' && id.includes('admin-move-hacker')) {
+          return '\0admin-move-hacker-stub';
+        }
+      },
+      load(id) {
+        if (id === '\0admin-move-hacker-stub') {
+          return `
+        export function openMoveHacker() {}
+        export function closeMoveHacker() {}
+        export function isMoveHackerOpen() { return false; }
+        export function handleMoveHackerKey() { return false; }
+      `;
+        }
+      },
+    },
   ],
   base: './',
   build: {
     sourcemap: mode === 'development', // for debugger
+    // explicitly set what will include in the bundle (currently index.html and question-builder.html)
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),

@@ -24,6 +24,7 @@ import { BTL, TYPE_BADGE, getHpColor } from '../data/battle-constants.js';
 import { getTypeName } from '../data/type-constants.js';
 import { getCachedImage } from '../engine/sprite-loader.js';
 import { t, isRTL } from '../i18n/i18n.js';
+import { isMoveHackerOpen, openMoveHacker } from './admin-moves-hack.js';
 
 export type MainMenuChoice = 'FIGHT' | 'BAG' | 'POKEMON' | 'RUN' | 'POKEDEX';
 
@@ -136,6 +137,16 @@ function updateMoveMode(
   menu: BattleMenuState,
   input: InputManager,
 ): { type: 'main'; choice: MainMenuChoice } | { type: 'move'; index: number } | null {
+  // Admin move hacker — must be first
+  if (import.meta.env.DEV && input.isKeyPressed('Digit9')) {
+    const actualIndex = menu.movePage * 4 + menu.cursorIndex;
+    openMoveHacker(actualIndex);
+    return null;
+  }
+
+  // Block all input while hacker modal is open
+  if (isMoveHackerOpen()) return null;
+
   // Number shortcuts from move mode: 2=switch, 3=bag, 4=pokedex (1=already in moves)
   if (input.isKeyPressed('Digit2')) return { type: 'main', choice: 'POKEMON' };
   if (input.isKeyPressed('Digit3')) return { type: 'main', choice: 'BAG' };
