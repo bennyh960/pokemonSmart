@@ -172,7 +172,7 @@ export const BTL = {
   },
 
   // ===== SPRITES =====
-  OPP_SPRITE: { x: 150, y: 16, w: 46, h: 46 },
+  OPP_SPRITE: { x: 150, y: 20, w: 46, h: 46 },
   PLY_SPRITE: { x: 18, y: 24, w: 56, h: 56 },
 
   // ===== OPPONENT INFO BAR (tall enough for party balls) =====
