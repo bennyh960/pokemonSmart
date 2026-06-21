@@ -284,7 +284,8 @@ export type AttackEffectKind =
   | 'night-shade'
   | 'lunge'
   | 'self-boost'
-  | 'self-boost-cooler';
+  | 'self-boost-cooler'
+  | 'celestial'; // moon,sun
 
 interface AttackEffect {
   active: boolean;
@@ -1806,97 +1807,151 @@ function renderBiteEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): 
 // Spectral dark beam — distinct ghostly apparition, not a solid orb
 function renderNightShadeEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = effect.timer / effect.duration;
+  const variant = effect.variant || 'night shade';
+  const img = effect.spriteImage ?? null;
+
   ctx.save();
+  // שימוש ב-lighter/screen ליצירת אנרגיית רוחות רפאים זוהרת
+  ctx.globalCompositeOperation = 'screen';
 
-  const dx = effect.targetX - effect.sourceX;
-  const dy = effect.targetY - effect.sourceY;
-  const angle = Math.atan2(dy, dx);
-  const dist = Math.hypot(dx, dy);
-  const perpX = -Math.sin(angle);
-  const perpY = Math.cos(angle);
+  const sprW = 38;
+  const sprH = 38;
 
-  if (t < 0.45) {
-    const pt = t / 0.45;
-    const beamLen = dist * pt;
-    const tipX = effect.sourceX + Math.cos(angle) * beamLen;
-    const tipY = effect.sourceY + Math.sin(angle) * beamLen;
-    const rng = seededRng(effect.seed + Math.floor(t * 8));
-
-    // Outer dark shroud
-    ctx.globalAlpha = 0.5 * pt;
-    ctx.strokeStyle = '#180828';
-    ctx.lineWidth = 10;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(effect.sourceX, effect.sourceY);
-    ctx.lineTo(tipX, tipY);
-    ctx.stroke();
-
-    // Mid spectral beam
-    ctx.globalAlpha = 0.7 * pt;
-    ctx.strokeStyle = '#6020a8';
-    ctx.lineWidth = 4.5;
-    ctx.beginPath();
-    ctx.moveTo(effect.sourceX, effect.sourceY);
-    ctx.lineTo(tipX, tipY);
-    ctx.stroke();
-
-    // Bright ghostly core
-    ctx.globalAlpha = 0.9 * pt;
-    ctx.strokeStyle = '#c890ff';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(effect.sourceX, effect.sourceY);
-    ctx.lineTo(tipX, tipY);
-    ctx.stroke();
-
-    // Ghostly wisps drifting off the beam
-    for (let i = 0; i < 8; i++) {
-      const sp = rng() * pt;
-      const bx = effect.sourceX + Math.cos(angle) * dist * sp;
-      const by = effect.sourceY + Math.sin(angle) * dist * sp;
-      const off = (rng() - 0.5) * 8;
-      ctx.globalAlpha = rng() * 0.6 * pt;
-      ctx.fillStyle = rng() > 0.5 ? '#7030c0' : '#3010a0';
+  // פונקציית עזר פנימית לציור צללית הפוקימון בגוון סגול/אפלולי עמוק
+  const drawShadowSilhouette = (x: number, y: number, scaleX: number, scaleY: number, alpha: number) => {
+    if (!img) {
+      // פולבק במקרה והתמונה לא נטענה
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = '#301050';
       ctx.beginPath();
-      ctx.arc(bx + perpX * off, by + perpY * off, 1.5 + rng() * 2, 0, Math.PI * 2);
+      ctx.ellipse(x, y, 12 * scaleX, 16 * scaleY, 0, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
+      return;
     }
-  } else {
-    const pt = (t - 0.45) / 0.55;
-    const fade = Math.max(0, 1 - pt);
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(x, y);
+    ctx.scale(scaleX, scaleY);
+
+    // שלב א': ציור הספריט המקורי במרכז המקומי
+    ctx.drawImage(img, -sprW / 2, -sprH / 2, sprW, sprH);
+
+    // שלב ב': צביעה מעל הפיקסלים הקיימים בלבד (כמו ב-Double Team)
+    ctx.globalCompositeOperation = 'source-atop';
+    ctx.globalAlpha = alpha * 0.85;
+    ctx.fillStyle = '#18042c'; // סגול כהה מאוד, כמעט שחור
+    ctx.fillRect(-sprW / 2, -sprH / 2, sprW, sprH);
+
+    ctx.restore();
+  };
+
+  // 1. NIGHT SHADE - צל עולה מהרצפה ונע לעבר האויב
+  if (variant === 'night shade') {
+    const pt = Math.min(1, t / 0.75); // מגיע ליעד ב-75% מהזמן
+    const currX = effect.sourceX + (effect.targetX - effect.sourceX) * pt;
+    const currY = effect.sourceY + (effect.targetY - effect.sourceY) * pt;
+
+    // צל פחוס אופקית על האדמה שנעלם בהדרגה בסוף
+    const scaleX = 1.3;
+    const scaleY = 0.35 + Math.sin(t * Math.PI) * 0.15;
+    const alpha = t < 0.15 ? (t / 0.15) * 0.6 : Math.max(0, 1 - t) * 0.6;
+
+    // הוספת עיוות גלי קל לרצפה
+    const waveX = Math.sin(t * 12) * 4;
+    drawShadowSilhouette(currX + waveX, currY + 15, scaleX, scaleY, alpha);
+  }
+
+  // 2. SPITE - הצל קטן במטרה, מתפצל ל-4 ונע בחזרה אל המשתמש
+  else if (variant === 'spite') {
+    const shrinkDuration = 0.35;
+
+    if (t < shrinkDuration) {
+      // שלב א': הצל של האויב מתכווץ וקטן על המטרה שלו
+      const pt = t / shrinkDuration;
+      const scale = Math.max(0.1, 1.0 - pt * 0.8);
+      const alpha = (1 - pt) * 0.7;
+      drawShadowSilhouette(effect.targetX, effect.targetY, scale, scale, alpha);
+    } else {
+      // שלב ב': התפצלות ל-4 צלליות קטנות שחוזרות אל התוקף
+      const pt = (t - shrinkDuration) / (1 - shrinkDuration);
+      const alpha = Math.sin(pt * Math.PI) * 0.65; // פייד אין ואאוט חלק
+
+      const offsets = [
+        { x: -20, y: -20 },
+        { x: 20, y: -20 },
+        { x: -20, y: 20 },
+        { x: 20, y: 20 },
+      ];
+
+      offsets.forEach((off) => {
+        // נקודת התחלה מסביב למטרה
+        const startX = effect.targetX + off.x;
+        const startY = effect.targetY + off.y;
+        // תנועה אל עבר ה-source
+        const currX = startX + (effect.sourceX - startX) * pt;
+        const currY = startY + (effect.sourceY - startY) * pt;
+
+        drawShadowSilhouette(currX, currY, 0.45, 0.45, alpha);
+      });
+    }
+  }
+
+  // 3. SHADOW SNEAK - כמו נייטשייד, קטן משמעותית ומהיר בהרבה
+  else if (variant === 'shadow sneak') {
+    const pt = Math.min(1, t / 0.35); // מהיר מאוד, מגיע למטרה ב-35% מהזמן
+    const currX = effect.sourceX + (effect.targetX - effect.sourceX) * pt;
+    const currY = effect.sourceY + (effect.targetY - effect.sourceY) * pt;
+
+    const alpha = t < 0.35 ? 0.75 : Math.max(0, 1 - t) * 0.75;
+    // צל קטן מאוד ומתוח, צמוד לקרקע
+    drawShadowSilhouette(currX, currY + 18, 0.6, 0.15, alpha);
+
+    // קו שובל קטן ומהיר מאחוריו
+    if (pt < 1) {
+      ctx.strokeStyle = '#401070';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(effect.sourceX, effect.sourceY + 18);
+      ctx.lineTo(currX, currY + 18);
+      ctx.stroke();
+    }
+  }
+
+  // 4. OMINOUS WIND - סופה של המון צללים בגדלים, מהירויות ועיקולים שונים
+  else if (variant === 'ominous wind') {
     const rng = seededRng(effect.seed);
+    const totalShadows = 10;
 
-    // Dark expanding ring
-    ctx.globalAlpha = fade * 0.5;
-    ctx.fillStyle = '#2a0850';
-    ctx.beginPath();
-    ctx.arc(effect.targetX, effect.targetY, 5 + pt * 22, 0, Math.PI * 2);
-    ctx.fill();
+    for (let i = 0; i < totalShadows; i++) {
+      // פרמטרים ייחודיים לכל צללית המבוססים על ה-Seed
+      const speedModifier = 0.6 + rng() * 0.8;
+      const size = 0.3 + rng() * 0.5; // חלק קטנים מאוד, חלק בינוניים
+      const delay = rng() * 0.2; // דיליי קטן בכניסה ליצירת רצף של סופה
 
-    ctx.globalAlpha = fade * 0.75;
-    ctx.strokeStyle = '#9040e0';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.arc(effect.targetX, effect.targetY, 4 + pt * 18, 0, Math.PI * 2);
-    ctx.stroke();
+      const pt = Math.max(0, Math.min(1, (t - delay) * speedModifier));
+      if (pt <= 0 || pt >= 1) continue;
 
-    // Spectral wisps radiating outward
-    for (let i = 0; i < 6; i++) {
-      const wa = (i / 6) * Math.PI * 2 + t * 4;
-      const wd = 6 + pt * 16;
-      ctx.globalAlpha = fade * 0.6;
-      ctx.fillStyle = '#7030c0';
-      ctx.beginPath();
-      ctx.arc(effect.targetX + Math.cos(wa) * wd, effect.targetY + Math.sin(wa) * wd, 2 + rng() * 1.5, 0, Math.PI * 2);
-      ctx.fill();
+      // תנועה במסלול גלי (סינוס) באוויר מהמקור ליעד
+      const currX = effect.sourceX + (effect.targetX - effect.sourceX) * pt;
+      const waveY = Math.sin(pt * Math.PI * 2 + i) * 25;
+      const currY = effect.sourceY + (effect.targetY - effect.sourceY) * pt + waveY;
+
+      const alpha = Math.sin(pt * Math.PI) * 0.55;
+      drawShadowSilhouette(currX, currY, size, size, alpha);
     }
+  }
 
-    // Inner glow fade
-    ctx.globalAlpha = fade * 0.35;
-    ctx.fillStyle = '#5010a8';
+  // אפקט פגיעה/אימפקט קוסמטי קטן במטרה עבור המהלכים ההתקפיים
+  if (t > 0.35 && variant !== 'spite') {
+    const impactPt = (t - 0.35) / 0.65;
+    const fade = Math.max(0, 1 - impactPt);
+    ctx.fillStyle = '#2a0848';
+    ctx.globalAlpha = fade * 0.4;
     ctx.beginPath();
-    ctx.arc(effect.targetX, effect.targetY, 3 + pt * 10, 0, Math.PI * 2);
+    ctx.arc(effect.targetX, effect.targetY, 8 + impactPt * 20, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -1912,6 +1967,9 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'beam':
       renderBeamEffect(ctx, effect);
+      break;
+    case 'celestial':
+      renderCelestialEffect(ctx, effect);
       break;
     case 'pulse':
       renderPulseEffect(ctx, effect);
@@ -4208,5 +4266,209 @@ function renderSunOverlay(ctx: CanvasRenderingContext2D, now: number): void {
     ctx.closePath();
     ctx.fill();
   }
+  ctx.restore();
+}
+
+function renderCelestialEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = effect.timer / effect.duration;
+  const variant = effect.variant || 'sunny day';
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+
+  // 1. פונקציית עזר לציור שמש קורנת וזוהרת
+  const drawSun = (x: number, y: number, radius: number, alpha: number) => {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    // הילה זוהרת מסביב לשמש
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, radius * 2.5);
+    grad.addColorStop(0, 'rgba(255, 240, 180, 1)');
+    grad.addColorStop(0.2, 'rgba(255, 140, 0, 0.6)');
+    grad.addColorStop(1, 'rgba(255, 60, 0, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(x, y, radius * 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // הליבה הלבנה/צהובה של השמש
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // קרני שמש קטנות שמסתובבות קצת עם הזמן
+    ctx.strokeStyle = 'rgba(255, 200, 50, 0.7)';
+    ctx.lineWidth = 2;
+    const rays = 8;
+    for (let i = 0; i < rays; i++) {
+      const angle = (i / rays) * Math.PI * 2 + t * 2;
+      ctx.beginPath();
+      ctx.moveTo(x + Math.cos(angle) * (radius + 2), y + Math.sin(angle) * (radius + 2));
+      ctx.lineTo(x + Math.cos(angle) * (radius + 10), y + Math.sin(angle) * (radius + 10));
+      ctx.stroke();
+    }
+    ctx.restore();
+  };
+
+  // 2. פונקציית עזר לציור ירח (סהר) זוהר ונקי
+  const drawMoon = (x: number, y: number, radius: number, alpha: number) => {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    // הילה כחלחלה/סגולה רכה מסביב לירח
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, radius * 2);
+    grad.addColorStop(0, 'rgba(220, 240, 255, 0.8)');
+    grad.addColorStop(0.4, 'rgba(140, 100, 255, 0.3)');
+    grad.addColorStop(1, 'rgba(50, 0, 150, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(x, y, radius * 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // יצירת צורת סהר (Crescent) באמצעות חיסור של עיגול פנימי מוסט
+    ctx.fillStyle = '#eef5ff';
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // "מחיקה" באמצעות שינוי מצב המיזוג כדי ליצור חיתוך של סהר
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x - radius * 0.4, y - radius * 0.2, radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  };
+
+  // -------------------------------------------------------------
+  // מימוש המהלכים הספציפיים
+  // -------------------------------------------------------------
+
+  // SUNNY DAY - שמש גדולה וזוהרת במרכז השמיים שמאירה את כל הזירה
+  if (variant === 'sunny day') {
+    const alpha = Math.sin(t * Math.PI) * 0.8;
+    // נצייר את השמש גבוה במרכז (ממוצע בין השחקן לאויב, אבל למעלה)
+    const midX = (effect.sourceX + effect.targetX) / 2;
+    const topY = Math.min(effect.sourceY, effect.targetY) - 50;
+
+    drawSun(midX, topY, 16, alpha);
+
+    // אפקט פלש קל על כל המסך ברקע שמתגבר ונחלש
+    ctx.fillStyle = 'rgba(255, 200, 100, 0.08)';
+    ctx.globalAlpha = alpha;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+
+  // MOONLIGHT / MORNING SUN /synthesis - ספיגת אנרגיה מהירח או השמש אל המשתמש
+  else if (variant === 'moonlight' || variant === 'morning sun' || variant === 'synthesis') {
+    const isMoon = variant === 'moonlight';
+    const alpha = Math.sin(t * Math.PI);
+
+    // גרם השמיים מופיע מעט מעל המשתמש (source)
+    const skyX = effect.sourceX;
+    const skyY = effect.sourceY - 60;
+
+    if (isMoon) {
+      drawMoon(skyX, skyY, 14, alpha * 0.8);
+    } else {
+      drawSun(skyX, skyY, 14, alpha * 0.8);
+    }
+
+    // אפקט שאיבת אנרגיה: חלקיקים שנופלים/נמשכים מגרם השמיים אל תוך המשתמש
+    const rng = seededRng(effect.seed);
+    const particleCount = 12;
+    ctx.globalAlpha = alpha * 0.7;
+    ctx.fillStyle = isMoon ? '#d0e0ff' : '#ffda90';
+
+    for (let i = 0; i < particleCount; i++) {
+      const pOffset = rng() * 0.3; // דיליי קטן לכל חלקיק
+      const pt = ((t + pOffset) % 0.5) / 0.5; // חלקיקים רצים בלולאה מהירה
+
+      // החלקיק נע מקו השמיים (skyY) למטה אל הפוקימון (sourceY)
+      const px = skyX + (rng() - 0.5) * 30 * (1 - pt);
+      const py = skyY + (effect.sourceY - skyY) * pt;
+
+      ctx.beginPath();
+      ctx.arc(px, py, 1.5 * (1 - pt), 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // MOONBLAST / SUNBLAST - טעינת כוח בשמיים וירי קרן אנרגיה מסיבית למטרה
+  else if (variant === 'moonblast' || variant === 'sunblast') {
+    const isMoon = variant === 'moonblast';
+
+    // נקודת הטעינה בשמיים מעל התוקף
+    const skyX = effect.sourceX;
+    const skyY = effect.sourceY - 50;
+
+    if (t < 0.4) {
+      // שלב א': טעינת אנרגיה (גרם השמיים מופיע ומתעצם)
+      const pt = t / 0.4;
+      if (isMoon) drawMoon(skyX, skyY, 12 * pt, pt);
+      else drawSun(skyX, skyY, 12 * pt, pt);
+
+      // חלקיקי טעינה שנשאבים מהצדדים אל המרכז השמימי
+      const rng = seededRng(effect.seed + 5);
+      ctx.fillStyle = isMoon ? '#b0cfff' : '#ffaa44';
+      ctx.globalAlpha = pt * 0.6;
+      for (let i = 0; i < 8; i++) {
+        const pPt = 1 - ((t * 2 + rng()) % 1.0);
+        const radius = 25 * pPt;
+        const angle = rng() * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(skyX + Math.cos(angle) * radius, skyY + Math.sin(angle) * radius, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else {
+      // שלב ב': ירי קרן האנרגיה מהשמיים אל עבר היעד (target)
+      const pt = (t - 0.4) / 0.6;
+      const fade = Math.max(0, 1 - pt);
+
+      // השארת גרם השמיים דועך קצת בשמיים
+      if (isMoon) drawMoon(skyX, skyY, 12, fade);
+      else drawSun(skyX, skyY, 12, fade);
+
+      // ציור הקרן המורכבת (לא קו ישר פשוט, אלא שרשרת כדורי אנרגיה זוהרים עוקבים)
+      const beamDx = effect.targetX - skyX;
+      const beamDy = effect.targetY - skyY;
+      const beamDist = Math.hypot(beamDx, beamDy);
+      const beamAngle = Math.atan2(beamDy, beamDx);
+
+      // אורך הקרן המתקדמת בזמן
+      const currentLength = beamDist * Math.min(1, pt * 2);
+
+      ctx.save();
+      // הילה ראשית לקרן
+      ctx.strokeStyle = isMoon ? '#90b0ff' : '#ff7733';
+      ctx.lineWidth = 8 * fade;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = isMoon ? '#5080ff' : '#ff3300';
+      ctx.beginPath();
+      ctx.moveTo(skyX, skyY);
+      ctx.lineTo(skyX + Math.cos(beamAngle) * currentLength, skyY + Math.sin(beamAngle) * currentLength);
+      ctx.stroke();
+
+      // ליבה לבנה חדה במרכז הקרן
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.5 * fade;
+      ctx.shadowBlur = 0;
+      ctx.stroke();
+      ctx.restore();
+
+      // אם הקרן הגיעה ליעד, ניצור אפקט אימפקט מתרחב של חלקיקים זוהרים
+      if (pt * 2 >= 1) {
+        const impactPt = Math.min(1, pt * 2 - 1);
+        const impactFade = 1 - impactPt;
+
+        ctx.fillStyle = isMoon ? '#c0daff' : '#ffcc66';
+        ctx.globalAlpha = impactFade * 0.8;
+        ctx.beginPath();
+        ctx.arc(effect.targetX, effect.targetY, 4 + impactPt * 22, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
   ctx.restore();
 }

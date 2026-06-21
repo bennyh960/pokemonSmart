@@ -4146,6 +4146,51 @@ export function createBattleScene(
       return;
     }
 
+    // spite
+    const isCutPP = moveBattleData?.behaviorTags?.includes('cut-pp') ?? false;
+
+    if (isCutPP) {
+      const moveName = getMoveDisplayName(m.id);
+      const lastMoveUsedId = defenderBattleState.lastMoveUsedId;
+      const lastMove = defender.moves.find((mv) => mv.id === lastMoveUsedId);
+
+      runMoveLifecycle({
+        move: m,
+        attackerActor: actor,
+        defenderActor,
+        context: battleAnimationContext,
+        hitTarget: true,
+        overrideNextPhase: attackerPhase,
+        canExecute: () => {
+          if (lastMoveUsedId !== null || (lastMove && lastMove.currentPp > 0)) {
+            return null;
+          }
+
+          return {
+            success: false,
+            errorMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.noMoveToCut'),
+            ],
+          };
+        },
+        onImpact: () => {
+          if (!lastMove || lastMove.currentPp <= 0) return { endMessages: [] };
+          const cutAmount = Math.min(4, lastMove!.currentPp);
+          lastMove.currentPp -= cutAmount;
+          return {
+            endMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.cutPP', { name: defenderName, move: getMoveDisplayName(lastMove.id), amount: cutAmount }),
+            ],
+          };
+        },
+      });
+      return;
+    }
+
     // Belly Drum: costs 50% max HP, raises Attack to max — fails if HP ≤ 50%
     if (isBellyDrum) {
       const cost = Math.floor(attacker.maxHp / 2);

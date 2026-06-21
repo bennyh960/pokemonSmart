@@ -257,6 +257,64 @@ export const ANIMATION_FAMILIES: Record<string, (args: AnimationArgs) => void> =
       ),
     );
   },
+  'night-shade': (args) => {
+    const isSpite = args.move.name.toLowerCase() === 'spite';
+    const pokemonId = args.attackerPokemon.id;
+    const actorSide = isSpite ? args.defenderActor : args.attackerActor;
+
+    const spritePath =
+      actorSide === 'player' ? `/sprites/pokemon/back/${pokemonId}.png` : `/sprites/pokemon/${pokemonId}.png`;
+
+    const shadowSprite = getCachedImage(spritePath) ?? null;
+
+    args.animationDirector.play(
+      sequenceStep(
+        callStep(() => {
+          args.context.attackFx = createAttackEffect({
+            kind: 'night-shade',
+            sourceX: args.source.x,
+            sourceY: args.source.y,
+            targetX: args.target.x,
+            targetY: args.target.y,
+            color: args.profile.color,
+            accentColor: args.profile.accentColor,
+            duration: args.profile.duration,
+            spriteImage: shadowSprite,
+            variant: args.move.name.toLowerCase(),
+          });
+        }),
+        waitStep(args.profile.impactTime),
+        callStep(() => {
+          args.onImpact();
+        }),
+        waitStep(Math.max(0.1, args.profile.duration - args.profile.impactTime)),
+      ),
+    );
+  },
+  celestial: (args) => {
+    args.animationDirector.play(
+      sequenceStep(
+        callStep(() => {
+          args.context.attackFx = createAttackEffect({
+            kind: 'celestial',
+            sourceX: args.source.x,
+            sourceY: args.source.y,
+            targetX: args.target.x,
+            targetY: args.target.y,
+            color: args.profile.color,
+            accentColor: args.profile.accentColor,
+            duration: args.profile.duration,
+            variant: args.move.name.toLowerCase(),
+          });
+        }),
+        waitStep(args.profile.impactTime),
+        callStep(() => {
+          args.onImpact();
+        }),
+        waitStep(Math.max(0.1, args.profile.duration - args.profile.impactTime)),
+      ),
+    );
+  },
 
   lunge: (args) => {
     if (args.hitCount <= 1) {

@@ -80,6 +80,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Dragon Rage': { minimumDamage: 40 },
   'Quick Attack': { priority: 1 },
   'Extreme Speed': { priority: 2 },
+  Spite: { behaviorTags: ['cut-pp'], effects: [{ bayPassImuunity: true, chance: 100, target: 'target', id: 'other' }] },
   'Hyper Beam': { behaviorTags: ['must-recharge'] },
   'Giga Impact': { behaviorTags: ['must-recharge'] },
   'Self Destruct': { behaviorTags: ['leave-user-at-1-hp'] },

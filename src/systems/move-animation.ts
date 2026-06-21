@@ -111,16 +111,10 @@ const COOL_BOOST_MOVES = [
   'victory dance',
 ];
 
-const HEAL_PULSE_MOVES = [
-  'rest',
-  'recover',
-  'roost',
-  'soft-boiled',
-  'milk drink',
-  'morning sun',
-  'moonlight',
-  'synthesis',
-];
+// 'morning sun',
+// 'moonlight',
+// 'synthesis',
+const HEAL_PULSE_MOVES = ['rest', 'recover', 'roost', 'soft-boiled', 'milk drink'];
 
 const DRAGON_AURA_MOVES = [
   'dragon rage',
@@ -203,8 +197,10 @@ const POWDER_MOVES = [
   'magic powder',
   'powder',
 ];
-const SHADOW_BALL_MOVES = ['shadow ball', 'ominous wind', 'shadow sneak', 'shadow force'];
-const NIGHT_SHADE_MOVES = ['night shade', 'seismic toss', 'psywave'];
+const CELESTIAL_MOVES = ['moonlight', 'morning sun', 'sunny day', 'moonblast', 'sunblast', 'synthesis'];
+
+const SHADOW_BALL_MOVES = ['shadow ball', 'shadow force'];
+const NIGHT_SHADE_MOVES = ['night shade', 'spite', 'shadow sneak', 'ominous wind'];
 const BITE_MOVES = [
   'bite',
   'crunch',
@@ -369,8 +365,8 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       family: 'solar-beam',
       color: '#f8d030',
       accentColor: '#ffffff',
-      duration: 0.52,
-      impactTime: 0.18,
+      duration: 3.52,
+      impactTime: 2.58,
       selfTarget: false,
       shakeIntensity: 2.5,
       flashColor: '#ffffa0',
@@ -681,14 +677,14 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
   if (matchesAny(moveName, NIGHT_SHADE_MOVES)) {
     return {
       family: 'night-shade',
-      color: '#280850',
+      color,
       accentColor: '#8840d0',
-      duration: 0.5,
-      impactTime: 0.22,
+      duration: 1.5,
+      impactTime: 1.22,
       selfTarget: false,
       shakeIntensity: 1.5,
       flashColor: '#6020a8',
-      variant,
+      variant: moveName,
     };
   }
 
@@ -717,6 +713,19 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       shakeIntensity: 0,
       flashColor,
       variant,
+    };
+  }
+  if (matchesAny(moveName, CELESTIAL_MOVES)) {
+    return {
+      family: 'celestial',
+      color,
+      accentColor: WHITE,
+      duration: 2.55,
+      impactTime: 1.25,
+      selfTarget: ['sunlight', 'moonlight'].includes(moveName) ? true : false,
+      shakeIntensity: 0,
+      flashColor,
+      variant: moveName,
     };
   }
 

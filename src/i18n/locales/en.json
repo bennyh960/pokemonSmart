@@ -460,6 +460,8 @@
   "battle.leechSeedDrain": "{name}'s health was sapped by Leech Seed!",
   "battle.curseDamage": "{name} is afflicted by the curse!",
   "battle.curseGhost": "{attacker} cut its own HP and laid a curse on {target}!",
+  "battle.noMoveToCut": "But there was no move to cut!",
+  "battle.cutPP": "{name}'s {move} lost {amount} PP!",
   "battle.alreadyCursed": "{name} is already cursed!",
   "battle.trapped": "{name} was trapped!",
   "battle.trapDamage": "{name} is hurt by the trap!",

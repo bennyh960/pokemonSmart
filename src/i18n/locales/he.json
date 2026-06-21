@@ -457,6 +457,8 @@
   "battle.leechSeedDrain": "החיים של {name} נשאבו על ידי זרע העלוקה!",
   "battle.curseDamage": "{name} נפגע מהקללה!",
   "battle.curseGhost": "{attacker} הקריב מדמי החיים שלו והטיל קללה על {target}!",
+  "battle.noMoveToCut": "אבל לא היה מהלך לחתוך!",
+  "battle.cutPP": "{name} איבד {amount} PP מהמהלך {move}!",
   "battle.alreadyCursed": "{name} כבר מקולל!",
   "battle.trapped": "{name} נלכד!",
   "battle.trapDamage": "{name} נפגע מהמלכודת!",
