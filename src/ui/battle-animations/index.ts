@@ -4275,8 +4275,8 @@ function renderCelestialEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     const alpha = Math.sin(t * Math.PI);
 
     // גרם השמיים מופיע מעט מעל המשתמש (source)
-    const skyX = effect.sourceX;
-    const skyY = effect.sourceY - 30;
+    const skyX = 20; //effect.sourceX;
+    const skyY = 0; //effect.sourceY - 30;
 
     if (isMoon) {
       drawMoon(skyX, skyY, 14, alpha * 0.8);
@@ -4309,8 +4309,8 @@ function renderCelestialEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     const isMoon = variant === 'moonblast';
 
     // נקודת הטעינה בשמיים מעל התוקף
-    const skyX = effect.sourceX;
-    const skyY = effect.sourceY - 50;
+    const skyX = 20; //effect.sourceX;
+    const skyY = 0; //effect.sourceY - 10;
 
     if (t < 0.4) {
       // שלב א': טעינת אנרגיה (גרם השמיים מופיע ומתעצם)

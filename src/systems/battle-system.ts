@@ -637,6 +637,7 @@ export function applyVolatileMoveEffects(
           applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
           break;
         }
+        // TODO: consider to add attacker id so as long as attacker out is not longer traped
         const { min, max } = getEffectDurationRange(effect);
         runtimeState.trappedTurnsRemaining = randomTurnCount(min, max, random);
         runtimeState.trapDamagePercent = effect.damagePercent ?? 6.25;
