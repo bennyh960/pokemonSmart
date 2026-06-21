@@ -2249,6 +2249,8 @@ export function createBattleScene(
       return;
     }
 
+    // We have several of disabling moves : disable move from oponnent, choice item , struggle
+    // softLockedInMovesId for choice items ,disabledMoveId from disable move , and struggle used the disabledMoveIds
     if (playerBattleState.softLockedInMovesId?.length) {
       menu.disabledMoveIds = playerBattleState.softLockedInMovesId;
     }
@@ -3095,6 +3097,7 @@ export function createBattleScene(
           }),
         );
         playerBattleState.disabledMoveId = null;
+        menu.disabledMoveIds = menu.disabledMoveIds.filter((id) => id !== playerBattleState.disabledMoveId);
       }
     }
     if (enemyBattleState.disabledMoveTurnsRemaining > 0) {
@@ -3107,6 +3110,7 @@ export function createBattleScene(
           }),
         );
         enemyBattleState.disabledMoveId = null;
+        // menu.disabledMoveIds = menu.disabledMoveIds.filter((id) => id !== enemyBattleState.disabledMoveId);
       }
     }
 

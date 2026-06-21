@@ -131,7 +131,7 @@
           "moves": []
         },
         {
-          "pokemonId": 31,
+          "pokemonId": 34,
           "level": 60,
           "moves": []
         },
@@ -220,11 +220,7 @@
           "level": 60,
           "moves": []
         },
-        {
-          "pokemonId": 196,
-          "level": 60,
-          "moves": []
-        },
+
         {
           "pokemonId": 202,
           "level": 60,
@@ -346,9 +342,7 @@
         "money": 7000
       },
       "postBattleDialogue": [],
-      "randomChars": [
-        "league3"
-      ],
+      "randomChars": ["league3"],
       "reencounter": {
         "count": 15,
         "lvlStep": 2,

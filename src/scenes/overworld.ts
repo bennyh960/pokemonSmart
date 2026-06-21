@@ -1401,43 +1401,63 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     if (prebuiltParty) {
       party = prebuiltParty;
     } else if (trainer.party.length > 6) {
-      // Pool mode: separate forced slots from random pool, then pick 6
       type PartyMember = (typeof trainer.party)[0];
+
+      // 1. Separate forced slots from the random pool
       const forcedSlots: (PartyMember | null)[] = [null, null, null, null, null, null];
       const pool: PartyMember[] = [];
 
       for (const m of trainer.party) {
-        const slot = (m as { mustInclude?: number | null }).mustInclude;
-        if (slot != null && slot >= 0 && slot <= 5) forcedSlots[slot] = m;
-        else pool.push(m);
+        const slot = m.mustInclude;
+        if (slot != null && slot >= 0 && slot <= 5) {
+          forcedSlots[slot] = m;
+        } else {
+          pool.push(m);
+        }
       }
 
-      const slotsNeeded = forcedSlots.filter(Boolean).length < 6 ? 6 - forcedSlots.filter(Boolean).length : 0;
+      const forcedCount = forcedSlots.filter(Boolean).length;
+      const slotsNeeded = 6 - forcedCount;
 
-      // Shuffle pool and pick type-diverse members for remaining slots
-      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      // IDs already committed (forced slots) — pool members with these IDs are skipped entirely
+      const usedIds = new Set<number | string>(
+        forcedSlots.filter((m): m is PartyMember => m !== null).map((m) => m.pokemonId),
+      );
+
+      // 2. Shuffle pool (excluding any ID already in a forced slot)
+      const eligiblePool = pool.filter((m) => !usedIds.has(m.pokemonId));
+      const shuffled = [...eligiblePool].sort(() => Math.random() - 0.5);
+
+      // 3. Type-diverse pass: pick members that introduce a new type
       const picked: PartyMember[] = [];
       const seenTypes = new Set<string>();
+
       for (const m of shuffled) {
         if (picked.length >= slotsNeeded) break;
-        const data = getPokemon(m.pokemonId);
-        const memberTypes = data?.types ?? [];
+        const memberTypes = getPokemon(m.pokemonId)?.types ?? [];
         if (memberTypes.some((t) => !seenTypes.has(t))) {
           picked.push(m);
+          usedIds.add(m.pokemonId);
           memberTypes.forEach((t) => seenTypes.add(t));
         }
       }
-      // Fill any remaining slots regardless of type
+
+      // 4. Fill pass: top up to slotsNeeded with any unused ID (types don't matter now)
       for (const m of shuffled) {
         if (picked.length >= slotsNeeded) break;
-        if (!picked.includes(m)) picked.push(m);
+        if (!usedIds.has(m.pokemonId)) {
+          picked.push(m);
+          usedIds.add(m.pokemonId);
+        }
       }
 
-      // Build final 6-slot array: forced slots at their positions, pool fills gaps
+      // 5. Place picked members into empty forced-slot gaps
       const finalSlots: (PartyMember | null)[] = [...forcedSlots];
       let pi = 0;
       for (let s = 0; s < 6; s++) {
-        if (!finalSlots[s] && pi < picked.length) finalSlots[s] = picked[pi++];
+        if (!finalSlots[s] && pi < picked.length) {
+          finalSlots[s] = picked[pi++];
+        }
       }
 
       party = finalSlots
@@ -1445,7 +1465,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         .map((p) => {
           const data = getPokemon(p.pokemonId);
           const pokemon = data
-            ? createPokemonFromData(data, p.level, p.moves)
+            ? createPokemonFromData(data, p.level, p.moves, p.heldItemId)
             : createPokemonFromData(getPokemon(19)!, p.level);
           if (trainer.isGlitched) pokemon.isGlitched = true;
           return pokemon;

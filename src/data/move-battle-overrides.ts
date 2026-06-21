@@ -81,6 +81,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Quick Attack': { priority: 1 },
   'Extreme Speed': { priority: 2 },
   'Hyper Beam': { behaviorTags: ['must-recharge'] },
+  'Giga Impact': { behaviorTags: ['must-recharge'] },
   'Self Destruct': { behaviorTags: ['leave-user-at-1-hp'] },
   Explosion: { behaviorTags: ['leave-user-at-1-hp'] },
   'Solar Beam': chargingMove(),
@@ -182,7 +183,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Take Down': { recoilPercent: 25 },
   'Double Edge': { recoilPercent: 25 },
   Submission: { recoilPercent: 25 },
-
+  'Baby Doll Eyes': { statChanges: [stageChange('attack', -1, 'target', 100)], priority: 1 },
   Growl: targetStages(['attack', -1]),
   'Tail Whip': targetStages(['defense', -1]),
   Leer: targetStages(['defense', -1]),
