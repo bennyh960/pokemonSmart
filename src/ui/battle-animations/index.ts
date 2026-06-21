@@ -4,6 +4,7 @@
 
 import { fillRect, drawText } from '../../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../../engine/config.js';
+export * from './status_effect_animation.js';
 
 /**
  // utility function that get a color profile from a hex color, returning lighter and darker variants
@@ -287,7 +288,7 @@ export type AttackEffectKind =
   | 'self-boost-cooler'
   | 'celestial'; // moon,sun
 
-interface AttackEffect {
+export interface AttackEffect {
   active: boolean;
   timer: number;
   duration: number;
@@ -302,17 +303,6 @@ interface AttackEffect {
   seed: number;
   spriteImage?: HTMLImageElement | null;
   power?: number;
-}
-
-interface StatusTurnEffect {
-  active: boolean;
-  timer: number;
-  duration: number;
-  status: string;
-  centerX: number;
-  centerY: number;
-  width: number;
-  height: number;
 }
 
 const SPARKLE_COLORS = ['#ffd700', '#fff176', '#ffab00', '#ffffff', '#ffe082'];
@@ -2083,7 +2073,7 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
 // =============================================================================
 
 /** Simple seeded LCG random number generator — returns same sequence for same seed. */
-function seededRng(seed: number): () => number {
+export function seededRng(seed: number): () => number {
   let s = (seed * 1664525 + 1013904223) & 0x7fffffff;
   return (): number => {
     s = (s * 1664525 + 1013904223) & 0x7fffffff;
@@ -3238,259 +3228,6 @@ function renderLightningEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
   ctx.restore();
 }
 
-export function createStatusTurnEffect(
-  status: string,
-  centerX: number,
-  centerY: number,
-  width: number,
-  height: number,
-): StatusTurnEffect {
-  return {
-    active: true,
-    timer: 0,
-    duration: 0.75,
-    status,
-    centerX,
-    centerY,
-    width,
-    height,
-  };
-}
-
-export function updateStatusTurnEffect(effect: StatusTurnEffect, dt: number): void {
-  if (!effect.active) return;
-  effect.timer += dt;
-  if (effect.timer >= effect.duration) {
-    effect.active = false;
-  }
-}
-
-function renderBurnStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
-  const pulse = 0.75 + Math.sin(effect.timer * 18) * 0.15;
-  ctx.save();
-  ctx.globalAlpha = fade * 0.2;
-  ctx.fillStyle = '#ff7a3d';
-  ctx.beginPath();
-  ctx.ellipse(
-    effect.centerX,
-    effect.centerY + effect.height * 0.15,
-    effect.width * 0.28,
-    effect.height * 0.22,
-    0,
-    0,
-    Math.PI * 2,
-  );
-  ctx.fill();
-
-  for (let i = 0; i < 3; i++) {
-    const flameX = effect.centerX + (i - 1) * effect.width * 0.16;
-    const flameY = effect.centerY + effect.height * 0.18 - Math.sin(effect.timer * 12 + i) * 2;
-    const flameH = effect.height * (0.18 + i * 0.02) * pulse;
-    const flameW = effect.width * 0.1;
-    ctx.globalAlpha = fade * (0.42 - i * 0.06);
-    ctx.fillStyle = i === 1 ? '#ffd27a' : '#ff5c3d';
-    ctx.beginPath();
-    ctx.moveTo(flameX, flameY - flameH);
-    ctx.lineTo(flameX + flameW, flameY + flameH * 0.2);
-    ctx.lineTo(flameX, flameY + flameH * 0.5);
-    ctx.lineTo(flameX - flameW, flameY + flameH * 0.2);
-    ctx.closePath();
-    ctx.fill();
-  }
-  ctx.restore();
-}
-
-function renderPoisonStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
-  ctx.save();
-  for (let i = 0; i < 4; i++) {
-    const phase = (effect.timer * 1.8 + i * 0.18) % 1;
-    const x = effect.centerX - effect.width * 0.16 + i * effect.width * 0.11;
-    const y = effect.centerY + effect.height * 0.18 - phase * effect.height * 0.45;
-    const radius = 2 + (1 - phase) * 2;
-    ctx.globalAlpha = fade * (0.24 + (1 - phase) * 0.18);
-    ctx.fillStyle = i % 2 === 0 ? '#a86cf0' : '#d080f0';
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-}
-
-function renderParalyzeStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
-  ctx.save();
-  ctx.globalAlpha = fade * 0.85;
-  ctx.strokeStyle = '#ffd84a';
-  ctx.lineWidth = 2;
-  for (let i = 0; i < 3; i++) {
-    const startX = effect.centerX - effect.width * 0.22 + i * effect.width * 0.22;
-    const startY = effect.centerY - effect.height * 0.18 + Math.sin(effect.timer * 14 + i) * 3;
-    ctx.beginPath();
-    ctx.moveTo(startX, startY);
-    ctx.lineTo(startX + 3, startY + 5);
-    ctx.lineTo(startX - 1, startY + 5);
-    ctx.lineTo(startX + 4, startY + 11);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-function renderSleepStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
-  const chars = ['Z', 'z', 'z'];
-  ctx.save();
-  for (let i = 0; i < chars.length; i++) {
-    const phase = (effect.timer * 1.4 + i * 0.16) % 1;
-    const x = effect.centerX + effect.width * 0.08 + i * 5;
-    const y = effect.centerY - effect.height * 0.34 - phase * 10;
-    ctx.globalAlpha = fade * (0.35 + (1 - phase) * 0.35);
-    drawText(ctx, chars[i], x, y, {
-      size: 6 - i,
-      color: '#d8dcff',
-      align: 'center',
-      direction: 'ltr',
-    });
-  }
-  ctx.restore();
-}
-
-function renderFreezeStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
-  const blocks = [
-    { x: -0.22, y: -0.15, w: 0.16, h: 0.2 },
-    { x: -0.02, y: 0.05, w: 0.18, h: 0.22 },
-    { x: 0.16, y: -0.08, w: 0.14, h: 0.18 },
-  ];
-
-  ctx.save();
-  ctx.globalAlpha = fade * 0.16;
-  ctx.fillStyle = '#8fe6ff';
-  ctx.beginPath();
-  ctx.ellipse(effect.centerX, effect.centerY, effect.width * 0.34, effect.height * 0.3, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  for (const block of blocks) {
-    const x = effect.centerX + effect.width * block.x;
-    const y = effect.centerY + effect.height * block.y;
-    const w = effect.width * block.w;
-    const h = effect.height * block.h;
-    ctx.globalAlpha = fade * 0.42;
-    ctx.fillStyle = '#bff6ff';
-    ctx.fillRect(x, y, w, h);
-    ctx.globalAlpha = fade * 0.9;
-    ctx.strokeStyle = '#e8ffff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(x, y, w, h);
-  }
-  ctx.restore();
-}
-
-function renderConfuseStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
-  ctx.save();
-  for (let i = 0; i < 4; i++) {
-    const phase = effect.timer * 2.2 + i * (Math.PI / 2);
-    const orbitX = Math.cos(phase) * effect.width * 0.16;
-    const orbitY = Math.sin(phase) * effect.height * 0.12;
-    const x = effect.centerX + orbitX;
-    const y = effect.centerY - effect.height * 0.16 + orbitY;
-    ctx.globalAlpha = fade * (0.4 + i * 0.08);
-    ctx.fillStyle = i % 2 === 0 ? '#ff9cc0' : '#f070c8';
-    ctx.beginPath();
-    ctx.arc(x, y, 2.2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalAlpha = fade * 0.85;
-    ctx.strokeStyle = '#fff2a6';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(x - 1.5, y);
-    ctx.lineTo(x + 1.5, y);
-    ctx.moveTo(x, y - 1.5);
-    ctx.lineTo(x, y + 1.5);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-function renderSeedStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
-  ctx.save();
-  ctx.globalAlpha = fade * 0.12;
-  ctx.strokeStyle = '#7ccf5c';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(effect.centerX, effect.centerY + effect.height * 0.08, effect.width * 0.24, Math.PI * 0.15, Math.PI * 0.85);
-  ctx.stroke();
-
-  for (let i = 0; i < 3; i++) {
-    const phase = (effect.timer * 1.5 + i * 0.22) % 1;
-    const x = effect.centerX - effect.width * 0.18 + i * effect.width * 0.18;
-    const y = effect.centerY + effect.height * 0.18 - phase * effect.height * 0.38;
-    ctx.globalAlpha = fade * (0.28 + (1 - phase) * 0.22);
-    ctx.fillStyle = i === 1 ? '#a8e070' : '#78c850';
-    ctx.beginPath();
-    ctx.ellipse(x, y, 2.2, 1.5, i === 1 ? -0.6 : 0.6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#d8f8c8';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x, y + 2);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-function renderTrapStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
-  ctx.save();
-  ctx.globalAlpha = fade * 0.75;
-  ctx.strokeStyle = '#f0a060';
-  ctx.lineWidth = 2;
-  for (let i = 0; i < 3; i++) {
-    const y = effect.centerY - effect.height * 0.08 + i * effect.height * 0.12;
-    ctx.beginPath();
-    for (let step = 0; step <= 12; step++) {
-      const progress = step / 12;
-      const x = effect.centerX - effect.width * 0.24 + progress * effect.width * 0.48;
-      const offsetY = Math.sin(progress * Math.PI * 2 + effect.timer * 10 + i) * 2.5;
-      if (step === 0) {
-        ctx.moveTo(x, y + offsetY);
-      } else {
-        ctx.lineTo(x, y + offsetY);
-      }
-    }
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect): void {
-  if (!effect.active) return;
-
-  const fade = Math.max(0, 1 - effect.timer / effect.duration);
-  switch (effect.status) {
-    case 'burn':
-      renderBurnStatusEffect(ctx, effect, fade);
-      break;
-    case 'poison':
-      renderPoisonStatusEffect(ctx, effect, fade);
-      break;
-    case 'paralyze':
-      renderParalyzeStatusEffect(ctx, effect, fade);
-      break;
-    case 'sleep':
-      renderSleepStatusEffect(ctx, effect, fade);
-      break;
-    case 'freeze':
-      renderFreezeStatusEffect(ctx, effect, fade);
-      break;
-    case 'confuse':
-      renderConfuseStatusEffect(ctx, effect, fade);
-      break;
-    case 'seed':
-      renderSeedStatusEffect(ctx, effect, fade);
-      break;
-    case 'trap':
-      renderTrapStatusEffect(ctx, effect, fade);
-      break;
-  }
-}
-
 // =============================================================================
 // NEW MOVE ANIMATION RENDER FUNCTIONS
 // =============================================================================
@@ -4268,7 +4005,7 @@ function renderSunOverlay(ctx: CanvasRenderingContext2D, now: number): void {
   }
   ctx.restore();
 }
-
+// todo: moonl;ight and sunlight - if the sun/moon is can visible a bit cause its much above
 function renderCelestialEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   const t = effect.timer / effect.duration;
   const variant = effect.variant || 'sunny day';
@@ -4276,7 +4013,6 @@ function renderCelestialEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
 
-  // 1. פונקציית עזר לציור שמש קורנת וזוהרת
   const drawSun = (x: number, y: number, radius: number, alpha: number) => {
     ctx.save();
     ctx.globalAlpha = alpha;
@@ -4311,7 +4047,6 @@ function renderCelestialEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     ctx.restore();
   };
 
-  // 2. פונקציית עזר לציור ירח (סהר) זוהר ונקי
   const drawMoon = (x: number, y: number, radius: number, alpha: number) => {
     ctx.save();
     ctx.globalAlpha = alpha;
@@ -4366,7 +4101,7 @@ function renderCelestialEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
 
     // גרם השמיים מופיע מעט מעל המשתמש (source)
     const skyX = effect.sourceX;
-    const skyY = effect.sourceY - 60;
+    const skyY = effect.sourceY - 30;
 
     if (isMoon) {
       drawMoon(skyX, skyY, 14, alpha * 0.8);
@@ -4394,8 +4129,8 @@ function renderCelestialEffect(ctx: CanvasRenderingContext2D, effect: AttackEffe
     }
   }
 
-  // MOONBLAST / SUNBLAST - טעינת כוח בשמיים וירי קרן אנרגיה מסיבית למטרה
-  else if (variant === 'moonblast' || variant === 'sunblast') {
+  // MOONBLAST - טעינת כוח בשמיים וירי קרן אנרגיה מסיבית למטרה
+  else if (variant === 'moonblast') {
     const isMoon = variant === 'moonblast';
 
     // נקודת הטעינה בשמיים מעל התוקף

@@ -16,26 +16,9 @@ fix:
 
 [bug] snorlax use curse but nothing happens
 [bug] => Tina ??? what is is move
-{
-"id": 180,
-"name": {
-"en": "Spite",
-"he": "טינה"
-},
-"type": "ghost",
-"power": null,
-"accuracy": 100,
-"pp": 10,
-"effectChance": null,
-"mathDifficulty": 1,
-"damageClass": "status",
-"description": {
-"en": "Cuts the PP of the foe's last move.",
-"he": "חותך את ה-PP של המהלך האחרון של האויב."
-}
-},
+
+[bug]- disabled move when disabled disapper in logic - is not disaper in the ui
 
 <!-- fixed - need qa -->
 
 [bug] steel wing not so effective on togekiss
-[bug]- disabled move when disabled disapper in logic - is not disaper in the ui
