@@ -3652,11 +3652,17 @@ export function createBattleScene(
       forcedMoveIndex !== undefined &&
       pendingChargeMoveId !== null &&
       attacker.moves[forcedMoveIndex]?.id === pendingChargeMoveId;
-    triggerStatusTurnEffects(actor, attacker, attackerBattleState);
+
     const startResult = processBeforeMoveEffects(attacker, attackerBattleState, Math.random, m.id);
+
     const turnEffectLines = startResult.events
       .map((event) => getTurnEffectLine(attackerName, event))
       .filter((line): line is string => line !== null);
+
+    if (!startResult.canAct) {
+      triggerStatusTurnEffects(actor, attacker, attackerBattleState);
+    }
+
     syncAttackerBar();
     if (startResult.selfDamage > 0) {
       flash = createFlash('#fff29a', 0.12);
