@@ -2,6 +2,7 @@
 
 import { seededRng, type AttackEffect } from '..';
 
+// TODO
 /**
  * מייצר אפקט של חצים עולים (חיזוק) או יורדים (החלשה) סביב פוקימון
  * @param isBoost - true עבור עליית סטט, false עבור ירידה
@@ -50,29 +51,5 @@ export function renderStatChangeEffect(ctx: CanvasRenderingContext2D, effect: At
     ctx.restore();
   }
 
-  ctx.restore();
-}
-
-// 🌀 CONFUSION: כוכבים קטנים ומסתובבים מעל הראש של הפוקימון שמבולבל
-function renderConfusionOverlay(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
-  const t = effect.timer / effect.duration;
-  const cx = effect.targetX;
-  const cy = effect.targetY - 25; // מעל הראש של הפוקימון
-
-  ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-  ctx.fillStyle = '#ffff99';
-  ctx.globalAlpha = Math.sin(t * Math.PI) * 0.8;
-
-  const stars = 3;
-  for (let i = 0; i < stars; i++) {
-    const angle = (i / stars) * Math.PI * 2 + t * 6; // מסתובב מהר
-    const sx = cx + Math.cos(angle) * 12;
-    const sy = cy + Math.sin(angle) * 5; // אליפסה בשמיים
-
-    ctx.beginPath();
-    ctx.arc(sx, sy, 1.5, 0, Math.PI * 2);
-    ctx.fill();
-  }
   ctx.restore();
 }

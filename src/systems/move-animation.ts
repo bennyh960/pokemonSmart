@@ -163,7 +163,7 @@ const ELECTROWEB_MOVES = ['electroweb'];
 
 const LIGHTNING_MOVES = ['thunderbolt', 'thunder', 'discharge', 'charge beam', 'zap cannon', 'supercell slam'];
 
-const EARTHQUAKE_MOVES = ['earthquake', 'magnitude'];
+const EARTHQUAKE_MOVES = ['earthquake', 'magnitude', 'fissure'];
 
 const SMOKE_SCREEN_MOVES = ['smokescreen', 'smoke screen'];
 const MIST_MOVES = ['mist'];
@@ -745,14 +745,19 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
   }
 
   if (matchesAny(moveName, EARTHQUAKE_MOVES)) {
+    const config: Record<string, { duration: number; impactTime: number; shakeIntensity: number }> = {
+      fissure: { duration: 0.88, impactTime: 0.2, shakeIntensity: 1 },
+      magnitude: { duration: 3, impactTime: 0.5, shakeIntensity: 3 },
+      earthquake: { duration: 5, impactTime: 1, shakeIntensity: 7 },
+    };
     return {
       family: 'earthquake',
       color: '#c89050',
       accentColor: '#e8d090',
-      duration: 5,
-      impactTime: 1,
+      duration: config[moveName].duration,
+      impactTime: config[moveName].impactTime,
       selfTarget: false,
-      shakeIntensity: 10.5,
+      shakeIntensity: config[moveName].shakeIntensity,
       flashColor: '#c8a060',
       variant,
     };

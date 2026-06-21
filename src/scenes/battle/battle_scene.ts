@@ -4604,8 +4604,16 @@ export function createBattleScene(
     }
 
     if (effectivePower > 0) {
-      if (!hitResult.hit) {
-        msgs.push(t('battle.moveMissed', { name: attackerName }));
+      if (dreamEaterBlocked) {
+        msgs.push(t('battle.dreamEaterFailed'));
+        audio.playSFX('menu-cancel');
+      } else if (!hitResult.hit) {
+        const messages = [
+          { msg: 'battle.moveMissed', name: attackerName },
+          { msg: 'battle.targetDogged', name: defenderName },
+        ];
+        const randomIndex = Math.random() > 0.5 ? 0 : 1;
+        msgs.push(t(messages[randomIndex].msg, { name: messages[randomIndex].name }));
       } else {
         if (criticalHit) {
           msgs.push(t('battle.criticalHit'));
@@ -4647,12 +4655,14 @@ export function createBattleScene(
     } else if ((isSuperFang || isNightShade) && hitResult.hit && !targetTypeImmune) {
       if (isSuperFang) msgs.push(t('battle.superFangHit'));
     } else if (!hitResult.hit) {
-      msgs.push(t('battle.moveMissed', { name: attackerName }));
+      const messages = [
+        { msg: 'battle.moveMissed', name: attackerName },
+        { msg: 'battle.targetDogged', name: defenderName },
+      ];
+      const randomIndex = Math.random() > 0.5 ? 0 : 1;
+      msgs.push(t(messages[randomIndex].msg, { name: messages[randomIndex].name }));
     } else if (targetTypeImmune) {
       msgs.push(t('battle.noEffect'));
-    } else if (dreamEaterBlocked) {
-      msgs.push(t('battle.dreamEaterFailed'));
-      audio.playSFX('menu-cancel');
     } else if (isRest) {
       msgs.push(t('battle.restSleep', { name: attackerName }));
     } else if (isFocusEnergy) {

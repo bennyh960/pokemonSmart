@@ -444,6 +444,8 @@
   "battle.rosterFull": "אי אפשר להשתמש ביותר פוקימונים בקרב הזה!",
   "battle.enemyFaster": "{name} היריב מהיר יותר!",
   "battle.moveMissed": "המהלך של {name} פספס!",
+  "battle.targetDogged": "{name} התחמק מהמהלך!",
+
   "battle.criticalHit": "פגיעה קריטית!",
   "battle.statRose": "ה{stat} של {name} עלתה!",
   "battle.statRoseSharply": "ה{stat} של {name} עלתה מאוד!",
