@@ -286,6 +286,7 @@ export type AttackEffectKind =
   | 'lunge'
   | 'self-boost'
   | 'self-boost-cooler'
+  | 'sound-based'
   | 'celestial'; // moon,sun
 
 export interface AttackEffect {
@@ -833,6 +834,177 @@ function renderBurstEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect):
     ctx.lineTo(effect.targetX + Math.cos(angle) * outer, effect.targetY + Math.sin(angle) * outer);
     ctx.stroke();
   }
+  ctx.restore();
+}
+
+export function renderSoundBasedEffect(ctx: CanvasRenderingContext2D, effect: any): void {
+  if (!effect.active) return;
+
+  const currentTimer = effect.timer && effect.timer > 0 ? effect.timer : 0;
+  const progress = Math.min(1, currentTimer / effect.duration);
+  const fade = Math.max(0, 1 - progress);
+  const variant = effect.variant ?? 'blast';
+
+  ctx.save();
+
+  // 1. EXTRACT COORDINATES WITH SAFE BACKUPS
+  const srcX = effect.sourceX ?? 150;
+  const srcY = effect.sourceY ?? 250;
+  const dstX = effect.targetX ?? 450;
+  const dstY = effect.targetY ?? 150;
+
+  const dx = dstX - srcX;
+  const dy = dstY - srcY;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  const angleToTarget = Math.atan2(dy, dx);
+
+  // 2. CRITICAL COLOR FIX: If effect.color is missing or invalid, force high-contrast visibility
+  let waveColor = effect.color;
+  if (!waveColor || waveColor === 'undefined' || waveColor === 'null' || waveColor === '') {
+    // Fallback colors based on variant if getTypeColor(type) failed or returned empty
+    waveColor = variant === 'screech' ? '#ff3333' : variant === 'sing' ? '#33ff33' : '#3333ff';
+  }
+  const accentColor = effect.accentColor ?? '#ffffff';
+
+  // ==========================================
+  // EMERGENCY DIAGNOSTIC VISUAL:
+  // If you see this bright yellow line, it means your coordinates are perfect
+  // and the wave canvas drawing state is actively rendering!
+  // ==========================================
+  ctx.globalAlpha = 0.4;
+  ctx.strokeStyle = '#ffff00';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(srcX, srcY);
+  ctx.lineTo(dstX, dstY);
+  ctx.stroke();
+  // ==========================================
+
+  // --- VARIANT 1: BLAST (Massive expanding ripple shockwaves) ---
+  if (variant === 'blast') {
+    const ringCount = 4;
+    const maxRadius = distance > 20 ? distance * 1.1 : 150;
+
+    for (let i = 0; i < ringCount; i++) {
+      const ringProgress = (progress + i / ringCount) % 1;
+      const currentRadius = Math.pow(ringProgress, 0.8) * maxRadius;
+      const ringAlpha = fade * (1 - ringProgress);
+
+      if (currentRadius <= 0 || ringAlpha <= 0) continue;
+
+      ctx.globalAlpha = ringAlpha;
+      ctx.strokeStyle = waveColor;
+      ctx.lineWidth = 5 * (1 - ringProgress);
+
+      ctx.beginPath();
+      ctx.arc(srcX, srcY, currentRadius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = accentColor;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(srcX, srcY, Math.max(0.1, currentRadius - 3), 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  // --- VARIANT 2: SCREECH (Jagged rapid cone vibrations) ---
+  else if (variant === 'screech') {
+    const waveCount = 5;
+    const maxDistance = distance > 20 ? distance * 0.9 : 120;
+
+    ctx.strokeStyle = waveColor;
+    ctx.lineWidth = 3;
+
+    for (let w = 0; w < waveCount; w++) {
+      const waveProgress = (progress + w / waveCount) % 1;
+      const currentRadius = waveProgress * maxDistance;
+      const waveAlpha = fade * (1 - waveProgress);
+
+      if (currentRadius <= 0 || waveAlpha <= 0) continue;
+
+      ctx.globalAlpha = waveAlpha;
+      ctx.beginPath();
+
+      const arcSpread = 0.8;
+      let firstPoint = true;
+
+      for (let a = -arcSpread; a <= arcSpread; a += 0.08) {
+        const currentAngle = angleToTarget + a;
+        const jitter = Math.sin(currentTimer * 65 + a * 15 + w * 4) * 6;
+        const radius = Math.max(0.1, currentRadius + jitter);
+
+        const arcX = srcX + Math.cos(currentAngle) * radius;
+        const arcY = srcY + Math.sin(currentAngle) * radius;
+
+        if (firstPoint) {
+          ctx.moveTo(arcX, arcY);
+          firstPoint = false;
+        } else {
+          ctx.lineTo(arcX, arcY);
+        }
+      }
+      ctx.stroke();
+    }
+  }
+
+  // --- VARIANT 3: SING (Hypnotic music lines & notes) ---
+  else if (variant === 'sing') {
+    ctx.globalAlpha = fade * 0.7;
+    ctx.lineWidth = 1.5;
+
+    for (let r = -1; r <= 1; r++) {
+      ctx.strokeStyle = r === 0 ? accentColor : waveColor;
+      ctx.beginPath();
+
+      for (let p = 0; p <= 1; p += 0.05) {
+        const interpolationDist = p * distance;
+        const waveOffset = Math.sin(p * Math.PI * 3.5 - currentTimer * 8) * 20;
+        const parallelOffset = r * 8;
+
+        const waveX =
+          srcX + Math.cos(angleToTarget) * interpolationDist - Math.sin(angleToTarget) * (waveOffset + parallelOffset);
+        const waveY =
+          srcY + Math.sin(angleToTarget) * interpolationDist + Math.cos(angleToTarget) * (waveOffset + parallelOffset);
+
+        if (p === 0) ctx.moveTo(waveX, waveY);
+        else ctx.lineTo(waveX, waveY);
+      }
+      ctx.stroke();
+    }
+
+    const activeNotes = 3;
+    ctx.fillStyle = waveColor;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+
+    for (let n = 0; n < activeNotes; n++) {
+      const noteProgress = (progress + n / activeNotes) % 1;
+      const noteDist = noteProgress * distance;
+
+      const hoverY = Math.sin(noteProgress * Math.PI * 4 + n) * 15;
+      const noteX = srcX + Math.cos(angleToTarget) * noteDist - Math.sin(angleToTarget) * hoverY;
+      const noteY = srcY + Math.sin(angleToTarget) * noteDist + Math.cos(angleToTarget) * hoverY - 15;
+
+      ctx.globalAlpha = fade * (1 - noteProgress);
+
+      ctx.save();
+      ctx.translate(noteX, noteY);
+      ctx.rotate(-Math.PI / 8);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 5, 3.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.moveTo(noteX + 4, noteY - 1);
+      ctx.lineTo(noteX + 4, noteY - 14);
+      ctx.lineTo(noteX + 11, noteY - 11);
+      ctx.stroke();
+    }
+  }
+
   ctx.restore();
 }
 
@@ -2059,6 +2231,9 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'burst':
       renderBurstEffect(ctx, effect);
+      break;
+    case 'sound-based':
+      renderSoundBasedEffect(ctx, effect);
       break;
 
     default:

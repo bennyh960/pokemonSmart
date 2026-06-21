@@ -83,6 +83,55 @@ export const ANIMATION_FAMILIES: Record<string, (args: AnimationArgs) => void> =
       ),
     );
   },
+  'sound-based': (args) => {
+    const recoilOffset = args.defenderActor === 'player' ? -5 : 5;
+
+    args.animationDirector.play(
+      sequenceStep(
+        // Step A: Spawn sound effect + lunge attacker slightly forward to mimic shouting
+        callStep(() => {
+          if (args.profile.shakeIntensity > 0) {
+            args.context.shake = createShake(args.profile.shakeIntensity, args.profile.duration);
+          }
+
+          args.context.attackFx = createAttackEffect({
+            kind: 'sound-based',
+            sourceX: args.source.x,
+            sourceY: args.source.y,
+            targetX: args.target.x,
+            targetY: args.target.y,
+            color: args.profile.color,
+            accentColor: args.profile.accentColor,
+            duration: args.profile.duration,
+            variant: args.profile.variant, // passed directly down to drawing loops
+          });
+        }),
+        parallelStep(
+          tweenActorStep(
+            args.attackerActor,
+            {
+              scaleX: args.attackerStart.scaleX * 1.1, // Shouting swell
+              scaleY: args.attackerStart.scaleY * 1.1,
+            },
+            args.profile.impactTime,
+            'easeOut',
+          ),
+        ),
+        // Step B: Sound waves land on target
+        callStep(() => args.onImpact()),
+        parallelStep(
+          args.hitTarget
+            ? sequenceStep(
+                tweenActorStep(args.defenderActor, { x: args.defenderStart.x + recoilOffset }, 0.08, 'easeInOut'),
+                tweenActorStep(args.defenderActor, args.defenderStart, 0.12, 'easeInOut'),
+              )
+            : waitStep(0.2),
+          tweenActorStep(args.attackerActor, args.attackerStart, 0.15, 'easeIn'), // shrink back to normal
+        ),
+        waitStep(Math.max(0.1, args.profile.duration - args.profile.impactTime)),
+      ),
+    );
+  },
 
   'twister-spin': (args) => {
     args.animationDirector.play(

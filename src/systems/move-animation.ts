@@ -54,21 +54,21 @@ const SELF_STATUS_KEYWORDS = [
   'withdraw',
 ];
 
+// 'growl' moved to sound ,
+// 'screech',
+// 'supersonic',
 const TARGET_STATUS_KEYWORDS = [
   'confuse',
-  'growl',
   'leer',
   'poison',
   'powder',
   'roar',
   'sand-attack',
-  'screech',
   'sing',
   'sleep',
   'smoke',
   'spore',
   'stun',
-  'supersonic',
   'tail whip',
   'thunder wave',
   'toxic',
@@ -109,6 +109,44 @@ const COOL_BOOST_MOVES = [
   'coil',
   'no retreat',
   'victory dance',
+];
+
+export const SOUND_BASED_MOVES = [
+  // Generation 1
+  'growl',
+  'roar',
+  'sing',
+  'screech',
+  'supersonic',
+  'sonic boom',
+
+  // Generation 2
+  'heal bell',
+  'perish song',
+  'snore',
+
+  // Generation 3
+  'grass whistle',
+  'hyper voice',
+  'metal sound',
+  'uproar',
+
+  // Generation 4
+  'bug buzz',
+  'chatter',
+
+  // Generation 5
+  'echoed voice',
+  'relic song',
+  'round',
+  'snarl',
+
+  // Generation 6
+  'boomburst',
+  'confide',
+  'disarming voice',
+  'noble roar',
+  'parting shot',
 ];
 
 // 'morning sun',
@@ -788,6 +826,29 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       shakeIntensity: 0,
       flashColor: getFlashColor(type, getTypeColor(type)),
       variant,
+    };
+  }
+
+  if (matchesAny(moveName, SOUND_BASED_MOVES)) {
+    let internalVariant = 'blast';
+    if (['growl', 'screech', 'supersonic', 'sonic boom', 'metal-sound', 'snarl', 'confide'].includes(moveName)) {
+      internalVariant = 'screech';
+    } else if (['sing', 'perish-song', 'grass-whistle', 'relic-song', 'heal-bell'].includes(moveName)) {
+      internalVariant = 'sing';
+    }
+
+    const duration = internalVariant === 'sing' ? 1.4 : internalVariant === 'screech' ? 0.9 : 1.2;
+    const shakeIntensity = internalVariant === 'blast' ? 4 : internalVariant === 'screech' ? 2 : 0;
+    return {
+      family: 'sound-based',
+      color: getTypeColor(type), // use the move's type color
+      accentColor: '#ffffff',
+      duration,
+      impactTime: 0.28,
+      selfTarget: true,
+      shakeIntensity,
+      flashColor: getFlashColor(type, getTypeColor(type)),
+      variant: internalVariant,
     };
   }
 

@@ -26,6 +26,7 @@ import {
 import { getItem } from '../data/items.js';
 import { t } from '../i18n/i18n.js';
 import type { HeldItemDef } from '../data/item-defs.js';
+import { SOUND_BASED_MOVES } from './move-animation.js';
 
 export interface TurnOrderDecision {
   enemyActsFirst: boolean;
@@ -309,29 +310,7 @@ export function clearChargingMove(runtimeState: BattlePokemonRuntimeState): void
   runtimeState.chargingMoveId = null;
 }
 
-const SOUND_MOVE_NAMES = new Set([
-  'bug buzz',
-  'hyper voice',
-  'supersonic',
-  'uproar',
-  'torch song',
-  'roar',
-  'whirlwind',
-  'snore',
-  'screech',
-  'sing',
-  'boomburst',
-  'chatter',
-  'echoed voice',
-  'round',
-  'relic song',
-  'sparkling aria',
-  'noble roar',
-  'disarming voice',
-  'parting shot',
-  'confide',
-  'snarl',
-]);
+const SOUND_MOVE_NAMES = new Set(SOUND_BASED_MOVES);
 
 export function isSubstituteBypass(moveName: string, attackerAbilityId: number | null | undefined): boolean {
   return SOUND_MOVE_NAMES.has(moveName.toLowerCase()) || attackerAbilityId === 151;

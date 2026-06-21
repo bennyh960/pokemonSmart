@@ -610,6 +610,8 @@ function getMoveEffectAppliedLine(name: string, effectId: MoveBattleEffectId): s
       return t('battle.trapped', { name });
     case 'curse':
       return t('battle.cursed', { name });
+    default:
+      return '';
   }
 }
 
