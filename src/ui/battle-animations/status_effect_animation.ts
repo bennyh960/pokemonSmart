@@ -329,6 +329,74 @@ function renderTrapStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTur
   ctx.restore();
 }
 
+function renderCurseStatusEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect, fade: number): void {
+  ctx.save();
+
+  // 1. GHOSTLY RISING SHADOWS (3 dark tendrils)
+  for (let i = 0; i < 3; i++) {
+    // Each shadow wave has a unique speed, height variation, and horizontal offset
+    const waveOffset = Math.sin(effect.timer * 6 + i * 2) * (effect.width * 0.08);
+
+    // Progressively moves upwards relative to the timer
+    const riseProgress = effect.timer / effect.duration;
+    const startY = effect.centerY + effect.height * 0.3;
+    const currentY = startY - riseProgress * effect.height * 0.5;
+
+    // Dynamic horizontal distribution
+    const baseXOffset = (i - 1) * (effect.width * 0.22);
+    const x = effect.centerX + baseXOffset + waveOffset;
+
+    // Soft blob radius that shrinks as it rises
+    const radius = Math.max(1, effect.width * 0.12 * (1 - riseProgress * 0.5));
+
+    ctx.globalAlpha = fade * 0.35;
+    ctx.fillStyle = i === 1 ? '#2c1035' : '#4a154b'; // Deep shadow purple shades
+
+    ctx.beginPath();
+    ctx.arc(x, currentY, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Inner glowing core for the shadow blobs
+    ctx.globalAlpha = fade * 0.2;
+    ctx.fillStyle = '#7a1f8a';
+    ctx.beginPath();
+    ctx.arc(x, currentY, radius * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 2. SCARY GLOWING EYES (Appear in the upper-middle section of the bounds)
+  const eyeCenterY = effect.centerY - effect.height * 0.05;
+  const eyeSpacing = effect.width * 0.18; // Distance between left and right eye
+
+  // Custom eye-blink/scale scaling factor based on the lifespan
+  // Eyes open quickly, stay wide, and dissolve into the fade
+  const eyeScaleY = Math.sin(Math.min(1, (effect.timer / effect.duration) * 1.5) * Math.PI);
+
+  const leftEyeX = effect.centerX - eyeSpacing;
+  const rightEyeX = effect.centerX + eyeSpacing;
+
+  // Render both left and right eye
+  [leftEyeX, rightEyeX].forEach((eyeX) => {
+    if (eyeScaleY <= 0) return;
+
+    // Glowing outer red aura
+    ctx.globalAlpha = fade * 0.6;
+    ctx.fillStyle = '#ff1e56';
+    ctx.beginPath();
+    ctx.ellipse(eyeX, eyeCenterY, 7, 3.5 * eyeScaleY, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Sharp inner evil yellow slit pupil
+    ctx.globalAlpha = fade * 0.9;
+    ctx.fillStyle = '#fffc32';
+    ctx.beginPath();
+    ctx.ellipse(eyeX, eyeCenterY, 3, 2 * eyeScaleY, 0, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
 export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: StatusTurnEffect): void {
   if (!effect.active) return;
 
@@ -359,7 +427,7 @@ export function renderStatusTurnEffect(ctx: CanvasRenderingContext2D, effect: St
       renderTrapStatusEffect(ctx, effect, fade);
       break;
     case 'curse':
-      //   todo
+      renderCurseStatusEffect(ctx, effect, fade);
       break;
   }
 }

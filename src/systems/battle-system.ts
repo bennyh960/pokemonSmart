@@ -38,6 +38,7 @@ export interface TurnOrderDecision {
 export interface TurnStartStatusResult {
   canAct: boolean;
   event: 'woke-up' | 'fast-asleep' | 'thawed-out' | 'frozen-solid' | 'fully-paralyzed' | null;
+  skipAnimation?: boolean;
 }
 
 export interface BeforeMoveEffectResult {
@@ -55,6 +56,7 @@ export interface BeforeMoveEffectResult {
     | 'hurt-itself-confusion'
   >;
   selfDamage: number;
+  skipAnimation?: boolean;
 }
 
 export interface StatusApplicationResult {
@@ -770,7 +772,9 @@ export function processStartOfTurnStatus(
       return { canAct: false, event: 'frozen-solid' };
     }
     case 'paralyze':
-      return random() < 0.25 ? { canAct: false, event: 'fully-paralyzed' } : { canAct: true, event: null };
+      return random() < 0.25
+        ? { canAct: false, event: 'fully-paralyzed' }
+        : { canAct: true, event: null, skipAnimation: true };
     default:
       return { canAct: true, event: null };
   }
@@ -791,7 +795,7 @@ export function processBeforeMoveEffects(
     if (runtimeState.turnFlags.mustRecharge) {
       runtimeState.turnFlags.mustRecharge = false;
     }
-    return { canAct: false, events, selfDamage: 0 };
+    return { canAct: false, events, selfDamage: 0, skipAnimation: statusResult.skipAnimation };
   }
 
   if (runtimeState.turnFlags.mustRecharge) {
@@ -819,7 +823,7 @@ export function processBeforeMoveEffects(
     }
   }
 
-  return { canAct: true, events, selfDamage: 0 };
+  return { canAct: true, events, selfDamage: 0, skipAnimation: statusResult.skipAnimation };
 }
 
 export function applyMajorStatus(

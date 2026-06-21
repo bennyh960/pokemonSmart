@@ -3311,11 +3311,14 @@ export function createBattleScene(
     actor: 'player' | 'enemy',
     pokemon: Pokemon,
     runtimeState: BattlePokemonRuntimeState,
+    skipAnimation = false,
   ): void {
-    if (pokemon.status) {
+    if (pokemon.status && !skipAnimation) {
       queueStatusTurnEffect(actor, pokemon.status);
     }
+    const skipEndOFTurnVolatileStatuses = ['seed', 'curse', 'trap'];
     for (const effectId of getDisplayedVolatileStatuses(runtimeState)) {
+      if (skipEndOFTurnVolatileStatuses.includes(effectId)) continue;
       queueStatusTurnEffect(actor, effectId);
     }
   }
@@ -3659,9 +3662,8 @@ export function createBattleScene(
       .map((event) => getTurnEffectLine(attackerName, event))
       .filter((line): line is string => line !== null);
 
-    if (!startResult.canAct) {
-      triggerStatusTurnEffects(actor, attacker, attackerBattleState);
-    }
+    // problematic due to paralyze should not render effect unless is fully paralyze. also flinch
+    triggerStatusTurnEffects(actor, attacker, attackerBattleState, startResult.skipAnimation);
 
     syncAttackerBar();
     if (startResult.selfDamage > 0) {
