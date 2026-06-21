@@ -1,7 +1,7 @@
 import { getTypeColor } from '../data/type-constants.js';
 import type { PokemonType } from '../types/index.js';
 import type { LocalizedName, MoveData } from '../services/pokemon-data.js';
-import type { AttackEffectKind } from '../ui/battle-animations.js';
+import type { AttackEffectKind } from '../ui/battle-animations';
 
 export interface AttackAnimationProfile {
   family: AttackEffectKind;

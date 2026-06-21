@@ -9,7 +9,7 @@ import {
   createCaptureSuccessEffect,
   renderCaptureSuccessEffect,
   updateCaptureSuccessEffect,
-} from '../ui/battle-animations.js';
+} from '../ui/battle-animations';
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
 import { applyEvolution } from '../systems/encounter.js';
 import { autoSave, getPlayerData, hasActiveGame } from '../systems/game-state.js';

@@ -6,7 +6,7 @@ import type { BattlePokemonRuntimeState } from '../../../systems/battle-state.js
 import { getAttackAnimationProfile } from '../../../systems/move-animation.js';
 import type { Pokemon } from '../../../types/index.js';
 import type { BattleAnimationDirector } from '../../../ui/battle-animation-director.js';
-import type { createAttackEffect, createFlash, createShake } from '../../../ui/battle-animations.js';
+import type { createAttackEffect, createFlash, createShake } from '../../../ui/battle-animations';
 import type { createHPBar } from '../../../ui/hp-bar.js';
 import type { createTextBox } from '../../../ui/text-box.js';
 import type { BattlePhase } from '../battle_scene.js';

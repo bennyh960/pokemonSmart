@@ -2,8 +2,8 @@
  * BattleAnimations - Visual effects for battle: flash, shake, fade, damage numbers.
  */
 
-import { fillRect, drawText } from '../engine/renderer.js';
-import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+import { fillRect, drawText } from '../../engine/renderer.js';
+import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../../engine/config.js';
 
 /**
  // utility function that get a color profile from a hex color, returning lighter and darker variants

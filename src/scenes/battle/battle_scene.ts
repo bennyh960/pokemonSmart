@@ -65,7 +65,7 @@ import {
   updateStatusTurnEffect,
   renderStatusTurnEffect,
   renderWeatherOverlay,
-} from '../../ui/battle-animations.js';
+} from '../../ui/battle-animations';
 import {
   createBattleAnimationDirector,
   callStep,
