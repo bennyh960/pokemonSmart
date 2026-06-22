@@ -162,7 +162,7 @@
   "party.heldItem.bagEmpty": "!אין לך בתיק פריטים שפוקימון יכול לשאת עליו עדיין",
   "party.heldItem.noneHeld": ".לא מחזיק פריט",
   "party.heldItem.holds": "{pokemon} מחזיק {item}",
-  "party.heldItem.bagItems": ":פריטים בתיק שיכולים להחזיק פוקימון",
+  "party.heldItem.bagItems": "פריטי נשיאה מהתיק שלך:",
 
   "battle.pokemonRestored": "{name} חזר אליך!",
   "battle.pokemonRestoredBox": "{name} חזר! (נשלח לתיבת PC)",

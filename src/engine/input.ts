@@ -126,6 +126,12 @@ export function createInputManager(canvas: HTMLCanvasElement) {
   /** Physical codes that should prevent default browser behavior. */
   const PREVENTED_CODES = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Space']);
 
+  function injectNumberBuffer(numStr: string): void {
+    if (numStr >= '0' && numStr <= '9') {
+      state.numberBuffer += numStr;
+    }
+  }
+
   function handleKeyDown(e: KeyboardEvent): void {
     const code = e.code;
 
@@ -136,9 +142,8 @@ export function createInputManager(canvas: HTMLCanvasElement) {
 
     // Number buffer uses e.key so it works with any layout
     const { key } = e;
-    if (key >= '0' && key <= '9') {
-      state.numberBuffer += key;
-    }
+    injectNumberBuffer(key);
+    console.log('Key pressed:', key, 'Code:', code, 'Number buffer:', state.numberBuffer);
 
     if (key === 'Backspace' && state.numberBuffer.length > 0) {
       state.numberBuffer = state.numberBuffer.slice(0, -1);
@@ -189,6 +194,8 @@ export function createInputManager(canvas: HTMLCanvasElement) {
     releaseVirtualKey(key: string): void {
       state.virtualDown.delete(toCode(key));
     },
+
+    injectNumberBuffer,
 
     /** Returns true if the key is currently held down. Accepts key char ('p') or code ('KeyP'). */
     isKeyDown(key: string): boolean {
