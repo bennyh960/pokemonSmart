@@ -15,6 +15,8 @@ interface InputState {
   keysDown: Set<string>;
   /** Physical keys pressed this frame only (e.code values). */
   keysPressed: Set<string>;
+  virtualDown: Set<string>;
+  virtualPressed: Set<string>;
   numberBuffer: string;
   textBuffer: string;
   tapDetected: boolean;
@@ -113,6 +115,8 @@ export function createInputManager(canvas: HTMLCanvasElement) {
   const state: InputState = {
     keysDown: new Set(),
     keysPressed: new Set(),
+    virtualDown: new Set(),
+    virtualPressed: new Set(),
     numberBuffer: '',
     textBuffer: '',
     tapDetected: false,
@@ -174,19 +178,36 @@ export function createInputManager(canvas: HTMLCanvasElement) {
   canvas.addEventListener('click', handleClick);
 
   return {
+    pressVirtualKey(key: string): void {
+      const code = toCode(key);
+      if (!state.virtualDown.has(code)) {
+        state.virtualPressed.add(code);
+      }
+      state.virtualDown.add(code);
+    },
+
+    releaseVirtualKey(key: string): void {
+      state.virtualDown.delete(toCode(key));
+    },
+
     /** Returns true if the key is currently held down. Accepts key char ('p') or code ('KeyP'). */
     isKeyDown(key: string): boolean {
-      return state.keysDown.has(toCode(key));
+      const code = toCode(key);
+
+      return state.keysDown.has(code) || state.virtualDown.has(code);
     },
 
     /** Returns true only on the first frame the key is pressed. Accepts key char ('p') or code ('KeyP'). */
     isKeyPressed(key: string): boolean {
-      return state.keysPressed.has(toCode(key));
+      const code = toCode(key);
+      return state.keysPressed.has(code) || state.virtualPressed.has(code);
     },
 
     /** Consume a key press so no other handler sees it this frame. */
     consumeKey(key: string): void {
-      state.keysPressed.delete(toCode(key));
+      const code = toCode(key);
+      state.keysPressed.delete(code);
+      state.virtualPressed.delete(code);
     },
 
     /** Returns the current number input buffer (digits typed so far). */
@@ -225,6 +246,7 @@ export function createInputManager(canvas: HTMLCanvasElement) {
       state.textBuffer = '';
       state.tapDetected = false;
       state.tapPosition = null;
+      state.virtualPressed.clear();
     },
 
     /** Remove all event listeners (cleanup). */
