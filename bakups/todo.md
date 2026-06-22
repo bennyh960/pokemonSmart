@@ -11,3 +11,5 @@
 <!-- fixed - need qa -->
 
 [leauge][rival] - rival in leauge has too many umbreons
+[bug] charing move like solar beam should not charge as long as weather solar
+[abiliti] lighting rod , water-absorb , water-absrob ,Storm Drain, Motor Drive,Sap Sipper , Flash Fire

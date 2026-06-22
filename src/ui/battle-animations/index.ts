@@ -287,6 +287,7 @@ export type AttackEffectKind =
   | 'self-boost'
   | 'self-boost-cooler'
   | 'sound-based'
+  | 'elemental-dash'
   | 'celestial'; // moon,sun
 
 export interface AttackEffect {
@@ -2120,12 +2121,177 @@ function renderNightShadeEffect(ctx: CanvasRenderingContext2D, effect: AttackEff
   ctx.restore();
 }
 
+export function renderElementalDashEffect(ctx: CanvasRenderingContext2D, effect: any): void {
+  if (!effect.active) return;
+
+  const progress = effect.timer / effect.duration;
+  const fade = Math.max(0, 1 - progress);
+  const colorProfile = getHexColorProfileArray(effect.color);
+
+  // Extract custom forced multi-color profile palette
+  const colors = colorProfile ?? [effect.color, '#ffffff', '#ffffff', '#ffffff', '#ffffff', effect.color];
+  const isLightning = effect.isLightning ?? true;
+
+  ctx.save();
+
+  const srcX = effect.sourceX ?? 150;
+  const srcY = effect.sourceY ?? 250;
+  const dstX = effect.targetX ?? 450;
+  const dstY = effect.targetY ?? 150;
+
+  // Split timeline: Charging phase runs up to 45% duration, then dashing kicks off
+  const isCharging = progress < 0.45;
+
+  if (isCharging) {
+    // ==========================================
+    // PHASE A: DENSE CHARGING BALL (Aura Swirls around Source)
+    // ==========================================
+    const chargeProgress = progress / 0.45;
+    const maxAuraRadius = 35 + chargeProgress * 15; // Grow larger as charge mounts
+
+    // Draw 3 layers of nesting elemental orbits
+    for (let layer = 0; layer < 3; layer++) {
+      ctx.globalAlpha = fade * (0.4 + layer * 0.2);
+      ctx.strokeStyle = colors[5 - layer]; // uses base color up to highlights
+      ctx.lineWidth = 2 + layer;
+
+      ctx.beginPath();
+      // Swirling expanding/shrinking concentric boundaries
+      const pulseRadius = maxAuraRadius - layer * 8 + Math.sin(effect.timer * 20 + layer) * 4;
+      ctx.arc(srcX, srcY, Math.max(1, pulseRadius), 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Spawn crackling internal details inside the ball core
+    const detailCount = isLightning ? 6 : 8;
+    ctx.globalAlpha = fade * 0.9;
+
+    for (let d = 0; d < detailCount; d++) {
+      ctx.strokeStyle = colors[layerIndexSelector(d, isLightning)];
+      ctx.lineWidth = isLightning ? 1.5 : 3;
+      ctx.beginPath();
+
+      const angle = (d / detailCount) * Math.PI * 2 + effect.timer * 4;
+      const length = 10 + Math.random() * 20;
+
+      if (isLightning) {
+        // Draw small lightning forks bursting out from the core
+        ctx.moveTo(srcX, srcY);
+        const midX = srcX + Math.cos(angle) * (length * 0.5) + (Math.random() - 0.5) * 8;
+        const midY = srcY + Math.sin(angle) * (length * 0.5) + (Math.random() - 0.5) * 8;
+        const endX = srcX + Math.cos(angle) * length;
+        const endY = srcY + Math.sin(angle) * length;
+        ctx.lineTo(midX, midY);
+        ctx.lineTo(endX, endY);
+      } else {
+        // Draw fire flame tongues expanding upward and out
+        ctx.moveTo(srcX + (Math.random() - 0.5) * 10, srcY + 10);
+        ctx.quadraticCurveTo(
+          srcX + Math.cos(angle) * length * 0.5,
+          srcY + Math.sin(angle) * length * 0.5 - 15,
+          srcX + Math.cos(angle) * length,
+          srcY + Math.sin(angle) * length - 20,
+        );
+      }
+      ctx.stroke();
+    }
+  } else {
+    // ==========================================
+    // PHASE B: DASH ATTACK STREAM (Progressing straight to Target)
+    // ==========================================
+    const dashProgress = Math.min(1, (progress - 0.45) / 0.55);
+
+    // Smooth trailing interpolation path tracking behind the lunging sprite
+    const currentX = srcX + (dstX - srcX) * dashProgress;
+    const currentY = srcY + (dstY - srcY) * dashProgress;
+
+    const dx = currentX - srcX;
+    const dy = currentY - srcY;
+    const segmentLength = Math.sqrt(dx * dx + dy * dy);
+    const angleToTarget = Math.atan2(dy, dx);
+
+    if (isLightning) {
+      // VOLT TACKLE: Jagged electricity streaks following the lunge vector
+      const lightningBolts = 4;
+      for (let b = 0; b < lightningBolts; b++) {
+        ctx.globalAlpha = fade * 0.9;
+        ctx.strokeStyle = colors[b % 4]; // cycle bright tint index rings
+        ctx.lineWidth = b === 0 ? 3 : 1.5; // thick main line with thin extra forks
+
+        ctx.beginPath();
+        ctx.moveTo(srcX, srcY);
+
+        // Break the current travel path distance down into 6 chaotic zig-zag nodes
+        const nodes = 6;
+        let lastX = srcX;
+        let lastY = srcY;
+
+        for (let n = 1; n <= nodes; n++) {
+          const nodeRatio = n / nodes;
+          const targetNodeX = srcX + Math.cos(angleToTarget) * (segmentLength * nodeRatio);
+          const targetNodeY = srcY + Math.sin(angleToTarget) * (segmentLength * nodeRatio);
+
+          // Force jagged perpendicular electricity shifts via random offsets
+          const jitterMagnitude = (1 - nodeRatio) * 25 + 10;
+          const offsetX = -Math.sin(angleToTarget) * ((Math.random() - 0.5) * jitterMagnitude);
+          const offsetY = Math.cos(angleToTarget) * ((Math.random() - 0.5) * jitterMagnitude);
+
+          // The final node snaps cleanly directly on the moving attacker coordinate
+          const finalX = n === nodes ? currentX : targetNodeX + offsetX;
+          const finalY = n === nodes ? currentY : targetNodeY + offsetY;
+
+          ctx.lineTo(finalX, finalY);
+          lastX = finalX;
+          lastY = finalY;
+        }
+        ctx.stroke();
+      }
+    } else {
+      // FLARE BLITZ: Heavy trailing explosion smoke and multi-tint flame plumes
+      const particleCount = 15;
+      for (let p = 0; p < particleCount; p++) {
+        // Distribute flame clusters along the wake of the movement path vector
+        const particleRatio = p / particleCount;
+        const trailX = srcX + (currentX - srcX) * particleRatio + (Math.random() - 0.5) * 30;
+        const trailY = srcY + (currentY - srcY) * particleRatio + (Math.random() - 0.5) * 30;
+
+        // Choose random colors from dark shades to ultra-bright cores
+        ctx.fillStyle = colors[Math.floor(Math.random() * 8)];
+        ctx.globalAlpha = fade * (1 - particleRatio) * 0.6;
+
+        ctx.beginPath();
+        const size = (1 - particleRatio) * 16 + 4;
+        ctx.arc(trailX, trailY, Math.max(1, size), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Draw high energy white hot impact shock core head directly over the lunge point
+    ctx.globalAlpha = fade;
+    ctx.fillStyle = colors[0]; // Pure white highlight tint core
+    ctx.beginPath();
+    ctx.arc(currentX, currentY, isLightning ? 12 : 22, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+// Simple helper array selector to manage index safely
+function layerIndexSelector(index: number, isLightning: boolean): number {
+  if (isLightning) return index % 4; // keep to white/yellow highlights
+  return Math.min(10, Math.max(0, 2 + (index % 6))); // flame mix includes dark orange outlines
+}
+
 export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   if (!effect.active) return;
 
   switch (effect.kind) {
     case 'projectile':
       renderProjectileEffect(ctx, effect);
+      break;
+    case 'elemental-dash':
+      renderElementalDashEffect(ctx, effect);
       break;
     case 'beam':
       renderBeamEffect(ctx, effect);

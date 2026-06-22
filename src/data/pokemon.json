@@ -511,12 +511,12 @@
     },
     "types": ["electric"],
     "stats": {
-      "hp": 35,
-      "attack": 55,
-      "defense": 40,
-      "specialAttack": 50,
-      "specialDefense": 50,
-      "speed": 90
+      "hp": 45,
+      "attack": 65,
+      "defense": 55,
+      "specialAttack": 60,
+      "specialDefense": 55,
+      "speed": 95
     },
     "baseExperience": 112,
     "height": 4,
@@ -533,10 +533,10 @@
     "types": ["electric"],
     "stats": {
       "hp": 60,
-      "attack": 90,
-      "defense": 55,
-      "specialAttack": 90,
-      "specialDefense": 80,
+      "attack": 100,
+      "defense": 75,
+      "specialAttack": 100,
+      "specialDefense": 90,
       "speed": 110
     },
     "baseExperience": 218,

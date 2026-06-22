@@ -106,18 +106,17 @@
           "pokemonId": 10,
           "level": 4,
           "moves": []
-        },
-        {
-          "pokemonId": 11,
-          "level": 5,
-          "moves": []
         }
       ],
       "reward": {
-        "money": 100,
+        "money": 500,
         "items": [
           {
             "itemId": "potion",
+            "quantity": 3
+          },
+          {
+            "itemId": "pokeball",
             "quantity": 3
           }
         ]

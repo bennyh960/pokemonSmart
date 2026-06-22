@@ -740,6 +740,21 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
     };
   }
 
+  if (['volt tackle', 'flare blitz', 'wild charge', 'head smash'].includes(moveName.toLowerCase())) {
+    const isElectric = ['volt tackle', 'wild charge'].includes(moveName.toLowerCase());
+
+    return {
+      family: 'elemental-dash',
+      color: getTypeColor(type) || (isElectric ? '#fcd34d' : '#ef4444'), // fallback to nice yellow or red
+      accentColor: '#ffffff',
+      duration: 2.4, // 1.4 seconds total lifecycle
+      impactTime: 2.2, // The exact moment the lunge collides with the target
+      selfTarget: false,
+      shakeIntensity: isElectric ? 4 : 6, // Flare blitz shakes a bit heavier
+      flashColor: getFlashColor(type, getTypeColor(type)),
+    };
+  }
+
   if (matchesAny(moveName, POWDER_MOVES)) {
     return {
       family: 'powder',

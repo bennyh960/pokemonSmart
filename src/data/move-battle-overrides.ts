@@ -180,7 +180,9 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Giga Drain': { drainPercent: 50 },
   'Leech Life': { drainPercent: 50 },
   'Draining Kiss': { drainPercent: 50 },
-
+  'Volt Tackle': { recoilPercent: 25, ...statusEffect('paralyze', 10) },
+  'Wild Charge': { recoilPercent: 25, ...statusEffect('paralyze', 10) },
+  'Wood Hammer': { recoilPercent: 25 },
   'Take Down': { recoilPercent: 25 },
   'Double Edge': { recoilPercent: 25 },
   Submission: { recoilPercent: 25 },

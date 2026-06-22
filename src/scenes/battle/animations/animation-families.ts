@@ -364,6 +364,73 @@ export const ANIMATION_FAMILIES: Record<string, (args: AnimationArgs) => void> =
       ),
     );
   },
+  'elemental-dash': (args) => {
+    const lungeX = args.defenderActor === 'player' ? -40 : 40;
+    const lungeY = args.defenderActor === 'player' ? 20 : -20;
+
+    args.animationDirector.play(
+      sequenceStep(
+        // Phase 1: Spawn effect object + vibrate attacker in place during charging
+        callStep(() => {
+          if (args.profile.shakeIntensity > 0) {
+            args.context.shake = createShake(args.profile.shakeIntensity, args.profile.duration);
+          }
+
+          // 1. Create the effect by passing ALL required properties inside the initial object to satisfy TypeScript
+          const fx = createAttackEffect({
+            kind: 'elemental-dash',
+            sourceX: args.source.x,
+            sourceY: args.source.y,
+            targetX: args.target.x,
+            targetY: args.target.y,
+            color: args.profile.color,
+            accentColor: args.profile.accentColor,
+            duration: args.profile.duration,
+          });
+
+          // 2. Inject your special extra fields onto the object right after instantiation
+          Object.assign(fx, {
+            // colorProfile: getHexColorProfileArray(args.profile.color),
+            isLightning: ['volt tackle', 'wild charge'].includes(args.move.name.toLowerCase()),
+          });
+
+          args.context.attackFx = fx;
+        }),
+        // Tiny micro-shakes back and forth to simulate charging tension
+        tweenActorStep(args.attackerActor, { x: args.attackerStart.x + 3 }, 0.08, 'linear'),
+        tweenActorStep(args.attackerActor, { x: args.attackerStart.x - 3 }, 0.08, 'linear'),
+        tweenActorStep(args.attackerActor, { x: args.attackerStart.x + 2 }, 0.08, 'linear'),
+        waitStep(0.36), // wait out the rest of the 0.6s charge period
+
+        // Phase 2: EXTREME SPEED DASH! Attacker flies directly into target
+        tweenActorStep(
+          args.attackerActor,
+          { x: args.attackerStart.x + lungeX, y: args.attackerStart.y + lungeY },
+          0.15, // 0.15s ultra-fast dash
+          'easeIn',
+        ),
+
+        // Phase 3: Impact! Trigger screen shake, target recoil, and damage frames
+        callStep(() => {
+          args.onImpact();
+          if (args.profile.shakeIntensity > 0) {
+            args.context.shake = createShake(args.profile.shakeIntensity, 0.4);
+          }
+        }),
+
+        // Phase 4: Target reaction and attacker snaps back to original position
+        parallelStep(
+          args.hitTarget
+            ? sequenceStep(
+                tweenActorStep(args.defenderActor, { x: args.defenderStart.x + lungeX * 0.4 }, 0.08, 'easeOut'),
+                tweenActorStep(args.defenderActor, args.defenderStart, 0.12, 'easeIn'),
+              )
+            : waitStep(0.2),
+          tweenActorStep(args.attackerActor, args.attackerStart, 0.25, 'easeOut'),
+        ),
+      ),
+    );
+  },
 
   lunge: (args) => {
     if (args.hitCount <= 1) {

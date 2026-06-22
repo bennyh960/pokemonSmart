@@ -1945,7 +1945,10 @@ export function createBattleScene(
     }
 
     // --- Charging moves: cap at 2 initiations ---
-    if (isCharging && enemyBattleState.chargingMoveId === null && (ai?.chargingMovesStarted ?? 0) >= 2)
+    if (
+      (ai?.level ?? 0 > 3) ||
+      (isCharging && enemyBattleState.chargingMoveId === null && (ai?.chargingMovesStarted ?? 0) >= 2)
+    )
       return -Infinity;
 
     // --- Rest: only when very low HP ---
