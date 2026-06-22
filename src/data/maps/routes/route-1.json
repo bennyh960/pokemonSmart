@@ -96,8 +96,8 @@
           "he": "אני רק התחלתי את המסע שלי ואני אוהב פוקימונים מסוג חרק."
         },
         {
-          "en": "I have two pokemon, wanna battle?",
-          "he": "יש לי שני פוקימונים, רוצה לקרב?"
+          "en": "Wanna battle?",
+          "he": "רוצה קרב?"
         }
       ],
       "spriteType": "char_46f643",
@@ -160,7 +160,7 @@
         }
       ],
       "reward": {
-        "money": 120
+        "money": 620
       },
       "lineOfSight": 15,
       "autoWalk": null,
@@ -206,7 +206,7 @@
         }
       ],
       "reward": {
-        "money": 150
+        "money": 500
       },
       "lineOfSight": 11,
       "postBattleDialogue": [
@@ -246,7 +246,7 @@
         }
       ],
       "reward": {
-        "money": 180
+        "money": 380
       },
       "lineOfSight": 7,
       "postBattleDialogue": [],
@@ -287,7 +287,7 @@
         }
       ],
       "reward": {
-        "money": 140
+        "money": 400
       },
       "lineOfSight": 6,
       "postBattleDialogue": []
@@ -316,7 +316,7 @@
         }
       ],
       "reward": {
-        "money": 140
+        "money": 400
       },
       "dialogue": [
         {
