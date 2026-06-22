@@ -2400,7 +2400,7 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
 
     default:
       // case 'lunge':
-      console.warn(`Unknown attack effect kind: ${(effect as any).kind}`);
+      console.warn(`Unknown attack effect kind: ${(effect as any).kind}, using default burst effect`);
       renderBurstEffect(ctx, effect);
   }
 }
