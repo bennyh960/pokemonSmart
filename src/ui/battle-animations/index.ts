@@ -2239,8 +2239,6 @@ export function renderElementalDashEffect(ctx: CanvasRenderingContext2D, effect:
           const finalY = n === nodes ? currentY : targetNodeY + offsetY;
 
           ctx.lineTo(finalX, finalY);
-          lastX = finalX;
-          lastY = finalY;
         }
         ctx.stroke();
       }
