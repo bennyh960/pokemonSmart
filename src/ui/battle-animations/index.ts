@@ -2223,8 +2223,6 @@ export function renderElementalDashEffect(ctx: CanvasRenderingContext2D, effect:
 
         // Break the current travel path distance down into 6 chaotic zig-zag nodes
         const nodes = 6;
-        let lastX = srcX;
-        let lastY = srcY;
 
         for (let n = 1; n <= nodes; n++) {
           const nodeRatio = n / nodes;
