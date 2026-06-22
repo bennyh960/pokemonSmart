@@ -9,7 +9,7 @@
  * Reference: screens_examples_coords/battle_canvas_coordinates_v2.md
  */
 
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { Move, Pokemon, PokemonType } from '../types/index.js';
 import { fillRect, drawText, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
 import { fontFor } from '../engine/fonts.js';

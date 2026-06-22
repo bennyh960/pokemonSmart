@@ -1,5 +1,5 @@
 import type { Scene } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { clearScreen, fillRect, drawRect, drawText } from '../engine/renderer.js';
@@ -20,7 +20,7 @@ const KB_ROWS_Y = [100, 115, 130, 145] as const;
 const KB_ROWS = ['ABCDEFGHIJKLM', 'NOPQRSTUVWXYZ', 'abcdefghijklm', 'nopqrstuvwxyz'] as const;
 
 // Exclude 'glitch' — not a real teachable type
-const SPELL_TYPES = (Object.keys(TYPE_BADGE) as PokemonType[]).filter(t => t !== 'glitch');
+const SPELL_TYPES = (Object.keys(TYPE_BADGE) as PokemonType[]).filter((t) => t !== 'glitch');
 
 type View = 'menu' | 'board' | 'spelling';
 type Feedback = 'idle' | 'wrong' | 'complete';
@@ -63,8 +63,8 @@ export function createEnglishLearningScene(
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     return {
-      x: (tap.x - rect.left) * scaleX / RES_SCALE,
-      y: (tap.y - rect.top) * scaleY / RES_SCALE,
+      x: ((tap.x - rect.left) * scaleX) / RES_SCALE,
+      y: ((tap.y - rect.top) * scaleY) / RES_SCALE,
     };
   }
 
@@ -100,16 +100,16 @@ export function createEnglishLearningScene(
     completionTimer = 0;
     pressedBtn = '';
 
-    const pool = getAllPokemon().filter(p => p.types.includes(currentType));
+    const pool = getAllPokemon().filter((p) => p.types.includes(currentType));
     const picks = pickRandom(pool, 3);
-    hintPokemon = picks.map(p => ({
+    hintPokemon = picks.map((p) => ({
       id: p.id,
       name: p.name.he || p.name.en,
       sprite: getCachedImage(`/sprites/pokemon/front/${p.id}.png`),
     }));
-    picks.forEach(p => {
-      void loadImage(`/sprites/pokemon/front/${p.id}.png`).then(img => {
-        const h = hintPokemon.find(hp => hp.id === p.id);
+    picks.forEach((p) => {
+      void loadImage(`/sprites/pokemon/front/${p.id}.png`).then((img) => {
+        const h = hintPokemon.find((hp) => hp.id === p.id);
         if (h) h.sprite = img;
       });
     });
@@ -253,7 +253,10 @@ export function createEnglishLearningScene(
     ctx.fillStyle = typeData.color;
     ctx.fill();
     drawText(ctx, 'מה הסוג של הפוקמונים?', SW - 8, 4, {
-      size: 5, color: '#d8d8f0', align: 'right', direction: 'rtl',
+      size: 5,
+      color: '#d8d8f0',
+      align: 'right',
+      direction: 'rtl',
     });
 
     // Pokemon hint sprites
@@ -270,7 +273,10 @@ export function createEnglishLearningScene(
         drawRect(ctx, hx, 17, SPRITE, SPRITE, '#303050');
       }
       drawText(ctx, p.name, hx + SPRITE / 2, 48, {
-        size: 5, color: '#9898c0', align: 'center', direction: 'rtl',
+        size: 5,
+        color: '#9898c0',
+        align: 'center',
+        direction: 'rtl',
       });
       hx += SPRITE + GAP;
     }
@@ -287,8 +293,13 @@ export function createEnglishLearningScene(
       const isCurrent = i === currentSlot && feedback === 'idle';
       let slotBg = '#111126';
       let slotBorder = '#303050';
-      if (filled) { slotBg = '#182e28'; slotBorder = '#30a060'; }
-      else if (isCurrent) { slotBg = '#1c1240'; slotBorder = '#6040c0'; }
+      if (filled) {
+        slotBg = '#182e28';
+        slotBorder = '#30a060';
+      } else if (isCurrent) {
+        slotBg = '#1c1240';
+        slotBorder = '#6040c0';
+      }
 
       fillRect(ctx, sx, sy, SLOT_W, SLOT_H, slotBg);
       drawRect(ctx, sx, sy, SLOT_W, SLOT_H, slotBorder);
@@ -330,7 +341,10 @@ export function createEnglishLearningScene(
     update(dt: number): void {
       if (pressedTimer > 0) {
         pressedTimer -= dt;
-        if (pressedTimer <= 0) { pressedTimer = 0; pressedBtn = ''; }
+        if (pressedTimer <= 0) {
+          pressedTimer = 0;
+          pressedBtn = '';
+        }
       }
 
       const esc = input.isKeyPressed('Escape');
@@ -342,25 +356,45 @@ export function createEnglishLearningScene(
       const tap = rawTap ? canvasToLogical(rawTap) : null;
 
       if (view === 'menu') {
-        if (esc) { stateMachine.pop(); return; }
-        if (up || down) { menuIdx = 1 - menuIdx; return; }
+        if (esc) {
+          stateMachine.pop();
+          return;
+        }
+        if (up || down) {
+          menuIdx = 1 - menuIdx;
+          return;
+        }
 
         if (tapped && tap) {
           for (let i = 0; i < 2; i++) {
             const oy = 68 + i * 26;
             if (tap.x >= 34 && tap.x <= SW - 34 && tap.y >= oy && tap.y <= oy + 20) {
-              if (i === 0) { view = 'board'; boardLetter = ''; return; }
-              view = 'spelling'; startNewRound(); return;
+              if (i === 0) {
+                view = 'board';
+                boardLetter = '';
+                return;
+              }
+              view = 'spelling';
+              startNewRound();
+              return;
             }
           }
         }
 
         if (enter) {
-          if (menuIdx === 0) { view = 'board'; boardLetter = ''; }
-          else { view = 'spelling'; startNewRound(); }
+          if (menuIdx === 0) {
+            view = 'board';
+            boardLetter = '';
+          } else {
+            view = 'spelling';
+            startNewRound();
+          }
         }
       } else if (view === 'board') {
-        if (esc) { view = 'menu'; return; }
+        if (esc) {
+          view = 'menu';
+          return;
+        }
 
         // Physical key detection (layout-independent)
         for (const letter of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
@@ -384,11 +418,17 @@ export function createEnglishLearningScene(
         }
       } else {
         // Spelling view
-        if (esc) { view = 'menu'; return; }
+        if (esc) {
+          view = 'menu';
+          return;
+        }
 
         if (feedbackTimer > 0) {
           feedbackTimer -= dt;
-          if (feedbackTimer <= 0) { feedbackTimer = 0; feedback = 'idle'; }
+          if (feedbackTimer <= 0) {
+            feedbackTimer = 0;
+            feedback = 'idle';
+          }
         }
 
         if (completionTimer > 0) {

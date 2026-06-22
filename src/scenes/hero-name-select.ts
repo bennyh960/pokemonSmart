@@ -3,7 +3,7 @@
  */
 
 import type { Scene } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, drawRect, drawText, fillRect } from '../engine/renderer.js';
 import { getCharacterFrame, getCharacterInfo, loadCharacterSprites } from '../engine/character-sprites.js';

@@ -6,7 +6,7 @@
  */
 
 import type { Scene, Pokemon } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t, getLocale, isRTL } from '../i18n/i18n.js';

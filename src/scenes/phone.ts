@@ -15,7 +15,7 @@
  */
 
 import type { Scene } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import { drawText, fillRect } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';

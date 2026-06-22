@@ -1,5 +1,5 @@
-import type { InputManager } from './input';
-import styles from '../ui/styles/mobileControls.module.css';
+import type { InputManager } from '.';
+import styles from './mobileControls.module.css';
 
 export function setupMobileControls(input: InputManager) {
   const mapping = [
@@ -83,3 +83,5 @@ export function createVirtualUI() {
   `;
   return uiOverlay;
 }
+
+//

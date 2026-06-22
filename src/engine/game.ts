@@ -9,7 +9,7 @@
  */
 
 import { createStateMachine } from './state-machine.js';
-import { createInputManager } from './input.js';
+import { createInputManager, createVirtualUI, setupMobileControls } from './input';
 import { createAudioManager, setGlobalAudio } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle';
@@ -35,7 +35,6 @@ import '../data/story/content/index.js';
 // Global auto-gate config — registers the auto-pokecenter/pokemarket/gym gates + map service tags
 import '../data/story/global-gate-config.js';
 import { LOGICAL_WIDTH, LOGICAL_HEIGHT, RES_SCALE, CANVAS_WIDTH, CANVAS_HEIGHT } from './config.js';
-import { createVirtualUI, setupMobileControls } from './touchpad.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement) {

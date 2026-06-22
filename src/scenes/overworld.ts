@@ -5,7 +5,7 @@
  */
 
 import type { Scene, Pokemon, PokemonType } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
 import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';

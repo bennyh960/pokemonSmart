@@ -11,7 +11,7 @@ import { t } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { getItemsByCategory, getItem, type ItemDef, type ItemCategory } from '../data/items.js';
 import { getLocalizedName } from '../services/pokemon-data.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import { LOGICAL_WIDTH as SW, LOGICAL_HEIGHT as SH } from '../engine/config.js';
 import { FONT_HE } from '../engine/fonts.js';
 

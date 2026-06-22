@@ -6,7 +6,7 @@
  * Green flash for correct, red shake + show answer for wrong.
  */
 
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { MathProblem } from '../types/index.js';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
@@ -66,16 +66,13 @@ export function createMathInput(problem: MathProblem): MathInputState {
 }
 
 /** Convert canvas-space tap position to native coords. */
-function canvasToNative(
-  tapPos: { x: number; y: number },
-  canvas: HTMLCanvasElement,
-): { x: number; y: number } {
+function canvasToNative(tapPos: { x: number; y: number }, canvas: HTMLCanvasElement): { x: number; y: number } {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
   return {
-    x: (tapPos.x - rect.left) * scaleX / RES_SCALE,
-    y: (tapPos.y - rect.top) * scaleY / RES_SCALE,
+    x: ((tapPos.x - rect.left) * scaleX) / RES_SCALE,
+    y: ((tapPos.y - rect.top) * scaleY) / RES_SCALE,
   };
 }
 
@@ -222,8 +219,7 @@ export function renderMathInput(ctx: CanvasRenderingContext2D, state: MathInputS
 
   // Answer field
   const answerDisplay = state.answer || '_';
-  const answerColor =
-    state.feedback === 'correct' ? '#20d860' : state.feedback === 'wrong' ? '#f84038' : '#f8f8f8';
+  const answerColor = state.feedback === 'correct' ? '#20d860' : state.feedback === 'wrong' ? '#f84038' : '#f8f8f8';
   drawText(ctx, `= ${answerDisplay}`, SCREEN_W / 2 + shakeX, boxY + 26, {
     size: 12,
     color: answerColor,

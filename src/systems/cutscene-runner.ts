@@ -17,7 +17,7 @@
 import type { CutsceneDef, CutsceneStep } from '../data/story/cutscenes.js';
 import type { NPCData, BilingualText } from './npc.js';
 import type { StoryAction } from '../data/story/events.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { Pokemon } from '../types/index.js';
 import { hasActiveGame, getPlayerData } from './game-state.js';
 import { drawText, fillRect } from '../engine/renderer.js';
@@ -432,8 +432,7 @@ function selectStealTargets(
     const remaining = party.filter((p) => !stolen.includes(p));
     if (remaining.length <= 1) return null; // always leave at least 1
     const matchesBoth = (p: Pokemon) =>
-      (aboveLevel === undefined || p.level > aboveLevel) &&
-      (belowLevel === undefined || p.level < belowLevel);
+      (aboveLevel === undefined || p.level > aboveLevel) && (belowLevel === undefined || p.level < belowLevel);
     if (aboveLevel !== undefined || belowLevel !== undefined) {
       const both = remaining.find(matchesBoth);
       if (both) return both;
@@ -622,7 +621,10 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
         ctx.playSFX('item-found');
         const itemDef = getItem(step.action.itemId);
         const locale = getLocale();
-        const name = locale === 'he' ? (itemDef?.name.he ?? itemDef?.name.en ?? step.action.itemId) : (itemDef?.name.en ?? step.action.itemId);
+        const name =
+          locale === 'he'
+            ? (itemDef?.name.he ?? itemDef?.name.en ?? step.action.itemId)
+            : (itemDef?.name.en ?? step.action.itemId);
         const qty = step.action.quantity ?? 1;
         _dialogue = {
           lines: [locale === 'he' ? `קיבלת ${name} ×${qty}!` : `Received ${name} ×${qty}!`],
@@ -687,10 +689,11 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       if (hasActiveGame()) {
         const pd = getPlayerData();
         const npc = ctx.getNPCById(step.npcId);
-        const thiefSpriteType: string = (npc as unknown as Record<string, unknown>)?.spriteType as string ?? step.npcId;
-        const thiefName: BilingualText =
-          ((npc as unknown as Record<string, unknown>)?.name as BilingualText | undefined) ??
-          { en: step.npcId, he: step.npcId };
+        const thiefSpriteType: string =
+          ((npc as unknown as Record<string, unknown>)?.spriteType as string) ?? step.npcId;
+        const thiefName: BilingualText = ((npc as unknown as Record<string, unknown>)?.name as
+          | BilingualText
+          | undefined) ?? { en: step.npcId, he: step.npcId };
         const resolvedFlag = step.restoredFlag ?? `trainer-${step.npcId}-defeated`;
         const amount = step.condition?.amount ?? 1;
         const targets = selectStealTargets(

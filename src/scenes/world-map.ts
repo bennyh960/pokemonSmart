@@ -14,7 +14,7 @@
  *   - Enter triggers the fly callback and pops the scene
  */
 
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import { drawText, fillRect, fillRoundRect } from '../engine/renderer.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { t, isRTL } from '../i18n/i18n.js';

@@ -8,7 +8,7 @@
  */
 
 import type { Scene, Pokemon, PokemonType, StolenEntry } from '../../types/index.js';
-import type { InputManager } from '../../engine/input.js';
+import type { InputManager } from '../../engine/input';
 import type { StateMachine } from '../../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../../engine/renderer.js';
 import { getLocale, isRTL, t } from '../../i18n/i18n.js';

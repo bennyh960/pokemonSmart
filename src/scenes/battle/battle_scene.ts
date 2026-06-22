@@ -7,7 +7,7 @@ import { GLITCH_DAMAGE_BONUS_MIN, GLITCH_DAMAGE_BONUS_MAX } from '../../engine/c
 import type { BattleStatId, MoveBattleEffectId, WeatherConditionId } from '../../types/battle-metadata.js';
 import { getMapWeather, isDaytime, renderNightOverlay } from '../../systems/weather-system.js';
 import { getCurrentMapId, getCachedMap } from '../../systems/map-manager.js';
-import type { InputManager } from '../../engine/input.js';
+import type { InputManager } from '../../engine/input';
 import type { StateMachine } from '../../engine/state-machine.js';
 import type { AudioManager } from '../../audio/audio-manager.js';
 import { clearScreen, fillRect, drawText } from '../../engine/renderer.js';

@@ -4,7 +4,7 @@
  */
 
 import type { Scene } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, drawText, fillRect, fillRoundRect, strokeRoundRect } from '../engine/renderer.js';
 import { getSlotIndex, deleteSave, MAX_SAVE_SLOTS, setSlotPin, type SaveSlotMeta } from '../systems/save.js';
@@ -28,13 +28,7 @@ const MAX_PIN_ATTEMPTS = 5;
 const PIN_FREEZE_MS = 10 * 60 * 1000;
 const FREEZE_KEY_PREFIX = 'pokemon-math-pin-freeze-';
 
-type SubState =
-  | 'list'
-  | 'confirm_overwrite'
-  | 'confirm_delete'
-  | 'pin_prompt'
-  | 'pin_setup'
-  | 'pin_setup_confirm';
+type SubState = 'list' | 'confirm_overwrite' | 'confirm_delete' | 'pin_prompt' | 'pin_setup' | 'pin_setup_confirm';
 
 export type SaveSlotsMode = 'load' | 'save';
 
@@ -84,7 +78,10 @@ function formatAge(isoStr: string): string {
 function truncateText(ctx: CanvasRenderingContext2D, text: string, maxPx: number, fontSize: number): string {
   ctx.save();
   ctx.font = `${fontSize}px ${fontFor(text)}`;
-  if (ctx.measureText(text).width <= maxPx) { ctx.restore(); return text; }
+  if (ctx.measureText(text).width <= maxPx) {
+    ctx.restore();
+    return text;
+  }
   let s = text;
   while (s.length > 0 && ctx.measureText(s + '…').width > maxPx) s = s.slice(0, -1);
   ctx.restore();
@@ -126,7 +123,9 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
 
   function firstFreeSlot(): number {
     const used = new Set(allSlots.filter(Boolean).map((m) => (m as SaveSlotMeta).slot));
-    for (let i = 0; i < MAX_SAVE_SLOTS; i++) { if (!used.has(i)) return i; }
+    for (let i = 0; i < MAX_SAVE_SLOTS; i++) {
+      if (!used.has(i)) return i;
+    }
     return 0;
   }
 
@@ -173,7 +172,10 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
   }
 
   function stopPinInput(): void {
-    if (pinListener) { window.removeEventListener('keydown', pinListener); pinListener = null; }
+    if (pinListener) {
+      window.removeEventListener('keydown', pinListener);
+      pinListener = null;
+    }
   }
 
   function enterPinPrompt(meta: SaveSlotMeta, onSuccess: () => void): void {
@@ -214,16 +216,22 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
   // Rendering helpers
   // ---------------------------------------------------------------------------
 
-  function drawSlotBox(ctx: CanvasRenderingContext2D, vi: number, meta: SaveSlotMeta | null, si: number, isSelected: boolean): void {
+  function drawSlotBox(
+    ctx: CanvasRenderingContext2D,
+    vi: number,
+    meta: SaveSlotMeta | null,
+    si: number,
+    isSelected: boolean,
+  ): void {
     const slotY = SLOTS_START_Y + vi * SLOT_H;
     const isSaveTarget = saveSlotsMode === 'save' && isSelected && !meta;
 
-    const bgColor = meta ? (isSelected ? '#1e2e5a' : '#141e3a') : (isSelected ? '#111e30' : '#0e0e1e');
+    const bgColor = meta ? (isSelected ? '#1e2e5a' : '#141e3a') : isSelected ? '#111e30' : '#0e0e1e';
     ctx.fillStyle = bgColor;
     fillRoundRect(ctx, SLOT_X, slotY + 1, SLOT_W, SLOT_H - 2, 3);
 
     if (isSelected) {
-      ctx.strokeStyle = meta ? '#ffcb05' : (saveSlotsMode === 'save' ? '#44cc88' : '#445577');
+      ctx.strokeStyle = meta ? '#ffcb05' : saveSlotsMode === 'save' ? '#44cc88' : '#445577';
       ctx.lineWidth = 1;
       strokeRoundRect(ctx, SLOT_X + 0.5, slotY + 1.5, SLOT_W - 1, SLOT_H - 3, 3);
     }
@@ -246,7 +254,12 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
       drawText(ctx, badgeLabel, SLOT_X + SLOT_W - 27, slotY + 3, { size: 5, color: '#556677', align: 'right' });
 
       const rtl = isRTL();
-      drawText(ctx, meta.playerName, SLOT_X + 38, slotY + 11, { size: 7, color: isSelected ? '#ffffff' : '#bbccee', maxWidth: 100, direction: rtl ? 'rtl' : 'ltr' });
+      drawText(ctx, meta.playerName, SLOT_X + 38, slotY + 11, {
+        size: 7,
+        color: isSelected ? '#ffffff' : '#bbccee',
+        maxWidth: 100,
+        direction: rtl ? 'rtl' : 'ltr',
+      });
       drawText(ctx, formatAge(meta.savedAt), SLOT_X + SLOT_W - 26, slotY + 8, { size: 6, color: '#6688aa' });
 
       const questDef = meta.activeQuestId ? getQuest(meta.activeQuestId) : null;
@@ -260,7 +273,11 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
       }
     } else {
       const label = isSaveTarget ? t('saveSlots.saveHere') : `#${si + 1}  ${t('saveSlots.empty')}`;
-      drawText(ctx, label, W / 2, slotY + 10, { size: 6, color: isSaveTarget ? '#44cc88' : '#2a3a4a', align: 'center' });
+      drawText(ctx, label, W / 2, slotY + 10, {
+        size: 6,
+        color: isSaveTarget ? '#44cc88' : '#2a3a4a',
+        align: 'center',
+      });
     }
   }
 
@@ -269,19 +286,28 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
     ctx.fillRect(0, 0, W, H);
 
     const question = subState === 'confirm_overwrite' ? t('saveSlots.confirmOverwrite') : t('saveSlots.confirmDelete');
-    const dlgW = 160; const dlgH = 52;
-    const dlgX = (W - dlgW) / 2; const dlgY = (H - dlgH) / 2;
+    const dlgW = 160;
+    const dlgH = 52;
+    const dlgX = (W - dlgW) / 2;
+    const dlgY = (H - dlgH) / 2;
 
     ctx.fillStyle = '#141428';
     fillRoundRect(ctx, dlgX, dlgY, dlgW, dlgH, 5);
-    ctx.strokeStyle = '#3355aa'; ctx.lineWidth = 1;
+    ctx.strokeStyle = '#3355aa';
+    ctx.lineWidth = 1;
     strokeRoundRect(ctx, dlgX + 0.5, dlgY + 0.5, dlgW - 1, dlgH - 1, 5);
 
     drawText(ctx, question, W / 2, dlgY + 10, { size: 7, color: '#ffffff', align: 'center' });
     const noCol = confirmCursor === 0 ? '#ffcb05' : '#777799';
     const yesCol = confirmCursor === 1 ? '#ffcb05' : '#777799';
-    drawText(ctx, (confirmCursor === 0 ? '▶ ' : '  ') + t('saveSlots.no'), dlgX + 30, dlgY + 30, { size: 8, color: noCol });
-    drawText(ctx, (confirmCursor === 1 ? '▶ ' : '  ') + t('saveSlots.yes'), dlgX + 95, dlgY + 30, { size: 8, color: yesCol });
+    drawText(ctx, (confirmCursor === 0 ? '▶ ' : '  ') + t('saveSlots.no'), dlgX + 30, dlgY + 30, {
+      size: 8,
+      color: noCol,
+    });
+    drawText(ctx, (confirmCursor === 1 ? '▶ ' : '  ') + t('saveSlots.yes'), dlgX + 95, dlgY + 30, {
+      size: 8,
+      color: yesCol,
+    });
   }
 
   function drawPinModal(ctx: CanvasRenderingContext2D): void {
@@ -296,7 +322,8 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
 
     ctx.fillStyle = '#141428';
     fillRoundRect(ctx, dlgX, dlgY, dlgW, dlgH, 5);
-    ctx.strokeStyle = '#3355aa'; ctx.lineWidth = 1;
+    ctx.strokeStyle = '#3355aa';
+    ctx.lineWidth = 1;
     strokeRoundRect(ctx, dlgX + 0.5, dlgY + 0.5, dlgW - 1, dlgH - 1, 5);
 
     // Title
@@ -308,7 +335,11 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
 
     // Frozen state
     if (subState === 'pin_prompt' && isFrozen(pinSlot)) {
-      drawText(ctx, t('saveSlots.pinFrozen', { min: String(freezeMinutesLeft(pinSlot)) }), W / 2, dlgY + 28, { size: 5, color: '#ff8844', align: 'center' });
+      drawText(ctx, t('saveSlots.pinFrozen', { min: String(freezeMinutesLeft(pinSlot)) }), W / 2, dlgY + 28, {
+        size: 5,
+        color: '#ff8844',
+        align: 'center',
+      });
       drawText(ctx, t('saveSlots.pinCancel'), W / 2, dlgY + 40, { size: 5, color: '#445566', align: 'center' });
       return;
     }
@@ -331,13 +362,22 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
     } else if (isSetup) {
       // Bilingual "save your PIN" reminder
       drawText(ctx, 'Save this PIN!', W / 2, dlgY + 38, { size: 5, color: '#ffaa33', align: 'center' });
-      drawText(ctx, '!שמור את הקוד', W / 2, dlgY + 47, { size: 5, color: '#ffaa33', align: 'center', direction: 'rtl' });
+      drawText(ctx, '!שמור את הקוד', W / 2, dlgY + 47, {
+        size: 5,
+        color: '#ffaa33',
+        align: 'center',
+        direction: 'rtl',
+      });
     }
 
     if (subState === 'pin_setup') {
       drawText(ctx, t('saveSlots.pinSkip'), W / 2, dlgY + dlgH - 14, { size: 5, color: '#446688', align: 'center' });
     }
-    drawText(ctx, t('saveSlots.pinConfirmFooter'), W / 2, dlgY + dlgH - 6, { size: 5, color: '#334455', align: 'center' });
+    drawText(ctx, t('saveSlots.pinConfirmFooter'), W / 2, dlgY + dlgH - 6, {
+      size: 5,
+      color: '#334455',
+      align: 'center',
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -391,18 +431,25 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
       // ------ PIN PROMPT ------
       if (subState === 'pin_prompt') {
         if (isFrozen(pinSlot)) {
-          if (input.isKeyPressed('Escape')) { subState = 'list'; pinOnSuccess = null; }
+          if (input.isKeyPressed('Escape')) {
+            subState = 'list';
+            pinOnSuccess = null;
+          }
           return;
         }
         if (input.isKeyPressed('Escape')) {
-          stopPinInput(); subState = 'list'; pinOnSuccess = null; pinError = '';
+          stopPinInput();
+          subState = 'list';
+          pinOnSuccess = null;
+          pinError = '';
           return;
         }
         if (input.isKeyPressed('Enter')) {
           const meta = allSlots.find((m) => m?.slot === pinSlot);
           if (meta?.pin === pinBuffer) {
             stopPinInput();
-            const cb = pinOnSuccess; pinOnSuccess = null;
+            const cb = pinOnSuccess;
+            pinOnSuccess = null;
             subState = 'list';
             cb?.();
           } else {
@@ -412,7 +459,8 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
               setFreeze(pinSlot);
               stopPinInput();
               pinError = '';
-              subState = 'list'; pinOnSuccess = null;
+              subState = 'list';
+              pinOnSuccess = null;
             } else {
               pinError = t('saveSlots.pinWrong', { left: String(MAX_PIN_ATTEMPTS - pinAttempts) });
             }
@@ -425,16 +473,20 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
       if (subState === 'pin_setup') {
         if (input.isKeyPressed('Escape')) {
           stopPinInput();
-          const cb = pinOnSetupDone; pinOnSetupDone = null;
-          subState = 'list'; cb?.(undefined); // undefined = cancelled (distinct from null = skip/remove)
+          const cb = pinOnSetupDone;
+          pinOnSetupDone = null;
+          subState = 'list';
+          cb?.(undefined); // undefined = cancelled (distinct from null = skip/remove)
           return;
         }
         if (input.isKeyPressed('Enter')) {
           if (pinBuffer.length === 0) {
             // Skip — save without PIN
             stopPinInput();
-            const cb = pinOnSetupDone; pinOnSetupDone = null;
-            subState = 'list'; cb?.(null);
+            const cb = pinOnSetupDone;
+            pinOnSetupDone = null;
+            subState = 'list';
+            cb?.(null);
           } else if (pinBuffer.length === 4) {
             pinSetupFirst = pinBuffer;
             startPinInput();
@@ -449,15 +501,19 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
       // ------ PIN SETUP CONFIRM ------
       if (subState === 'pin_setup_confirm') {
         if (input.isKeyPressed('Escape')) {
-          startPinInput(); pinError = ''; subState = 'pin_setup';
+          startPinInput();
+          pinError = '';
+          subState = 'pin_setup';
           return;
         }
         if (input.isKeyPressed('Enter')) {
           if (pinBuffer === pinSetupFirst) {
             const pin = pinBuffer;
             stopPinInput();
-            const cb = pinOnSetupDone; pinOnSetupDone = null;
-            subState = 'list'; cb?.(pin);
+            const cb = pinOnSetupDone;
+            pinOnSetupDone = null;
+            subState = 'list';
+            cb?.(pin);
           } else {
             pinError = t('saveSlots.pinMismatch');
             startPinInput();
@@ -470,7 +526,10 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
       // ------ CONFIRM DIALOGS ------
       if (subState === 'confirm_overwrite' || subState === 'confirm_delete') {
         if (input.isKeyPressed('ArrowLeft') || input.isKeyPressed('ArrowRight')) confirmCursor = 1 - confirmCursor;
-        if (input.isKeyPressed('Escape') || input.isKeyPressed('Backspace')) { subState = 'list'; return; }
+        if (input.isKeyPressed('Escape') || input.isKeyPressed('Backspace')) {
+          subState = 'list';
+          return;
+        }
         if (input.isKeyPressed('Enter')) {
           if (confirmCursor === 1) {
             if (subState === 'confirm_overwrite') {
@@ -489,16 +548,30 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
       }
 
       // ------ LIST ------
-      if (input.isKeyPressed('ArrowUp')) { selectedIndex = (selectedIndex - 1 + MAX_SAVE_SLOTS) % MAX_SAVE_SLOTS; clampScroll(); }
-      if (input.isKeyPressed('ArrowDown')) { selectedIndex = (selectedIndex + 1) % MAX_SAVE_SLOTS; clampScroll(); }
-      if (input.isKeyPressed('Escape') || input.isKeyPressed('Backspace')) { goBack(); return; }
+      if (input.isKeyPressed('ArrowUp')) {
+        selectedIndex = (selectedIndex - 1 + MAX_SAVE_SLOTS) % MAX_SAVE_SLOTS;
+        clampScroll();
+      }
+      if (input.isKeyPressed('ArrowDown')) {
+        selectedIndex = (selectedIndex + 1) % MAX_SAVE_SLOTS;
+        clampScroll();
+      }
+      if (input.isKeyPressed('Escape') || input.isKeyPressed('Backspace')) {
+        goBack();
+        return;
+      }
       if (input.isKeyPressed('q') || input.isKeyPressed('Q')) {
-        signOut().then(() => window.location.reload()).catch(() => window.location.reload());
+        signOut()
+          .then(() => window.location.reload())
+          .catch(() => window.location.reload());
         return;
       }
 
       if (input.isKeyPressed('r') || input.isKeyPressed('R')) {
-        if (allSlots[selectedIndex]) { subState = 'confirm_delete'; confirmCursor = 0; }
+        if (allSlots[selectedIndex]) {
+          subState = 'confirm_delete';
+          confirmCursor = 0;
+        }
         return;
       }
       if (input.isKeyPressed('e') || input.isKeyPressed('E')) {
@@ -521,7 +594,6 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
             loadGameFromSlot(meta.slot);
             stateMachine.change('OVERWORLD');
           }
-
         } else {
           // save mode
           const currentSlot = getCurrentSlot();
@@ -529,19 +601,23 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
           if (!meta) {
             // Empty slot — PIN setup then save
             const actualSlot = getActualSlot(selectedIndex);
-            enterPinSetup(actualSlot, (pin) => { doSave(actualSlot, pin); });
-
+            enterPinSetup(actualSlot, (pin) => {
+              doSave(actualSlot, pin);
+            });
           } else if (meta.slot === currentSlot) {
             // Same slot — no PIN needed
-            subState = 'confirm_overwrite'; confirmCursor = 0;
-
+            subState = 'confirm_overwrite';
+            confirmCursor = 0;
           } else if (meta.pin) {
             // Different occupied slot with PIN
-            enterPinPrompt(meta, () => { subState = 'confirm_overwrite'; confirmCursor = 0; });
-
+            enterPinPrompt(meta, () => {
+              subState = 'confirm_overwrite';
+              confirmCursor = 0;
+            });
           } else {
             // Different occupied slot, no PIN
-            subState = 'confirm_overwrite'; confirmCursor = 0;
+            subState = 'confirm_overwrite';
+            confirmCursor = 0;
           }
         }
       }
@@ -555,7 +631,8 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
       drawText(ctx, title, W / 2, 3, { size: 8, color: '#ffcb05', align: 'center' });
 
       if (scrollOffset > 0) drawText(ctx, '▲', W - 10, SLOTS_START_Y + 1, { size: 6, color: '#666688' });
-      if (scrollOffset + VISIBLE < MAX_SAVE_SLOTS) drawText(ctx, '▼', W - 10, FOOTER_Y - 8, { size: 6, color: '#666688' });
+      if (scrollOffset + VISIBLE < MAX_SAVE_SLOTS)
+        drawText(ctx, '▼', W - 10, FOOTER_Y - 8, { size: 6, color: '#666688' });
 
       for (let vi = 0; vi < VISIBLE; vi++) {
         const si = scrollOffset + vi;

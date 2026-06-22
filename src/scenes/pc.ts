@@ -11,13 +11,20 @@
  */
 
 import type { Scene, Pokemon, PokemonType } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import { fillRect, drawRect, drawText } from '../engine/renderer.js';
 import { t } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { getPokemonDisplayName } from '../services/pokemon-data.js';
-import { depositPokemon, withdrawPokemon, releaseFromBox, releaseFromParty, getBoxCount, findEmptySlot } from '../systems/pc-storage.js';
+import {
+  depositPokemon,
+  withdrawPokemon,
+  releaseFromBox,
+  releaseFromParty,
+  getBoxCount,
+  findEmptySlot,
+} from '../systems/pc-storage.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { TYPE_BADGE } from '../data/type-constants.js';
 import { LOGICAL_WIDTH as SW, LOGICAL_HEIGHT as SH } from '../engine/config.js';
@@ -70,8 +77,8 @@ const C = {
 
 const MODE_COLORS: Record<PCMode, { active: string; bg: string; text: string }> = {
   withdraw: { active: '#1a5a35', bg: '#1a5a35', text: '#20d860' },
-  deposit:  { active: '#1a3a5a', bg: '#1a3a5a', text: '#5080ff' },
-  release:  { active: '#3a1a1a', bg: '#3a1a1a', text: '#d84040' },
+  deposit: { active: '#1a3a5a', bg: '#1a3a5a', text: '#5080ff' },
+  release: { active: '#3a1a1a', bg: '#3a1a1a', text: '#d84040' },
 };
 
 export function createPCScene(input: InputManager, stateMachine: StateMachine): Scene {
@@ -81,7 +88,13 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
   let gridCol = 0;
   let gridRow = 0;
   let partyIndex = 0;
-  let confirmRelease: { pokemon: Pokemon; zone: 'grid' | 'party'; boxIdx: number; slotIdx: number; partyIdx: number } | null = null;
+  let confirmRelease: {
+    pokemon: Pokemon;
+    zone: 'grid' | 'party';
+    boxIdx: number;
+    slotIdx: number;
+    partyIdx: number;
+  } | null = null;
   let message = '';
   let messageTimer = 0;
 
@@ -195,15 +208,24 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
     update(dt: number): void {
       if (messageTimer > 0) {
         messageTimer -= dt;
-        if (messageTimer <= 0) { message = ''; messageTimer = 0; }
+        if (messageTimer <= 0) {
+          message = '';
+          messageTimer = 0;
+        }
       }
 
       // Release confirmation dialog
       if (confirmRelease) {
-        if (input.isKeyPressed('Escape')) { confirmReleaseAction(false); return; }
+        if (input.isKeyPressed('Escape')) {
+          confirmReleaseAction(false);
+          return;
+        }
         if (input.isKeyPressed('ArrowLeft')) return; // stay on current selection
         if (input.isKeyPressed('ArrowRight')) return;
-        if (input.isKeyPressed('Enter')) { confirmReleaseAction(true); return; }
+        if (input.isKeyPressed('Enter')) {
+          confirmReleaseAction(true);
+          return;
+        }
         return;
       }
 
@@ -238,7 +260,10 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
         }
         if (input.isKeyPressed('ArrowLeft')) {
           if (gridCol > 0) gridCol--;
-          else { cursorZone = 'party'; partyIndex = 0; } // Move to party
+          else {
+            cursorZone = 'party';
+            partyIndex = 0;
+          } // Move to party
         }
         if (input.isKeyPressed('ArrowDown')) {
           if (gridRow < GRID_ROWS - 1) gridRow++;
@@ -298,7 +323,7 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
       const modePositions = [
         { x: 84, w: 38, key: 'withdraw' as PCMode },
         { x: 44, w: 38, key: 'deposit' as PCMode },
-        { x: 6,  w: 36, key: 'release' as PCMode },
+        { x: 6, w: 36, key: 'release' as PCMode },
       ];
       for (const mp of modePositions) {
         const isActive = mode === mp.key;
@@ -308,7 +333,10 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
           drawRect(ctx, mp.x, 1, mp.w, 8, '#1a4a30');
         }
         drawText(ctx, t(`pc.mode.${mp.key}`), mp.x + mp.w / 2, 2, {
-          size: 6, color: isActive ? mc.text : C.TEXT_MUTED, font: 'monospace', align: 'center',
+          size: 6,
+          color: isActive ? mc.text : C.TEXT_MUTED,
+          font: 'monospace',
+          align: 'center',
         });
       }
 
@@ -352,7 +380,10 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
           }
           // Name
           drawText(ctx, getPokemonDisplayName(pokemon.id), C.PARTY_X + 38, sy + 2, {
-            size: 5, color: C.TEXT, font: 'monospace', align: 'right',
+            size: 5,
+            color: C.TEXT,
+            font: 'monospace',
+            align: 'right',
           });
           // HP bar
           const hpRatio = pokemon.hp / pokemon.maxHp;
@@ -364,7 +395,10 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
           }
         } else {
           drawText(ctx, '\u2014', C.PARTY_X + C.PARTY_W / 2, sy + 5, {
-            size: 5, color: '#1a2a1a', font: 'monospace', align: 'center',
+            size: 5,
+            color: '#1a2a1a',
+            font: 'monospace',
+            align: 'center',
           });
         }
       }
@@ -399,7 +433,8 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
           // Selection cursor corner marks
           if (isSelected) {
             ctx.fillStyle = C.CURSOR;
-            const w = C.CELL_W, h = C.CELL_H;
+            const w = C.CELL_W,
+              h = C.CELL_H;
             // Top-left
             ctx.fillRect(cx + 1, cy + 1, 3, 1);
             ctx.fillRect(cx + 1, cy + 1, 1, 3);
@@ -438,18 +473,26 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
 
         // Name
         drawText(ctx, getPokemonDisplayName(selected.id), 212, 126, {
-          size: 7, color: modeColor.text, font: 'monospace', align: 'right',
+          size: 7,
+          color: modeColor.text,
+          font: 'monospace',
+          align: 'right',
         });
         // Level
         drawText(ctx, `Lv.${selected.level}`, 126, 126, {
-          size: 5, color: C.TEXT_DIM, font: 'monospace',
+          size: 5,
+          color: C.TEXT_DIM,
+          font: 'monospace',
         });
         // Type badge
         if (selected.types.length > 0) {
           const typeColor = TYPE_BADGE[selected.types[0] as PokemonType]?.color || '#888';
           fillRect(ctx, 182, 134, 16, 6, typeColor);
           drawText(ctx, selected.types[0].slice(0, 3).toUpperCase(), 190, 134, {
-            size: 5, color: C.TEXT, font: 'monospace', align: 'center',
+            size: 5,
+            color: C.TEXT,
+            font: 'monospace',
+            align: 'center',
           });
         }
         // HP
@@ -461,33 +504,43 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
           fillRect(ctx, 44, 137, hpW, 2, C.GREEN);
         }
         drawText(ctx, `${selected.hp}/${selected.maxHp}`, 10, 135, {
-          size: 5, color: '#aaccaa', font: 'monospace',
+          size: 5,
+          color: '#aaccaa',
+          font: 'monospace',
         });
         // Action button
         const btnColors = MODE_COLORS[mode];
         fillRect(ctx, 116, 134, 28, 8, btnColors.bg);
         drawRect(ctx, 116, 134, 28, 8, C.CARD_SEL_BORDER);
         drawText(ctx, t(`pc.mode.${mode}`), 130, 135, {
-          size: 5, color: btnColors.text, font: 'monospace', align: 'center',
+          size: 5,
+          color: btnColors.text,
+          font: 'monospace',
+          align: 'center',
         });
       }
 
       // ── BOTTOM BAR ──
       fillRect(ctx, 0, 150, SW, 10, '#0a1a10');
       const keys = [
-        { pillX: 4,   pillW: 18, text: 'ESC',   hintKey: 'pc.hint.back' },
-        { pillX: 52,  pillW: 24, text: 'Enter',  hintKey: 'pc.hint.select' },
-        { pillX: 108, pillW: 14, text: 'Q/E',    hintKey: 'pc.hint.box' },
-        { pillX: 152, pillW: 18, text: '1-3',    hintKey: 'pc.hint.mode' },
+        { pillX: 4, pillW: 18, text: 'ESC', hintKey: 'pc.hint.back' },
+        { pillX: 52, pillW: 24, text: 'Enter', hintKey: 'pc.hint.select' },
+        { pillX: 108, pillW: 14, text: 'Q/E', hintKey: 'pc.hint.box' },
+        { pillX: 152, pillW: 18, text: '1-3', hintKey: 'pc.hint.mode' },
       ];
       for (const k of keys) {
         fillRect(ctx, k.pillX, 151, k.pillW, 8, '#1a3a2a');
         drawRect(ctx, k.pillX, 151, k.pillW, 8, '#2a5a3a');
         drawText(ctx, k.text, k.pillX + k.pillW / 2, 152, {
-          size: 5, color: '#aaccaa', font: 'monospace', align: 'center',
+          size: 5,
+          color: '#aaccaa',
+          font: 'monospace',
+          align: 'center',
         });
         drawText(ctx, t(k.hintKey), k.pillX + k.pillW + 2, 153, {
-          size: 5, color: C.TEXT_DIM, font: 'monospace',
+          size: 5,
+          color: C.TEXT_DIM,
+          font: 'monospace',
         });
       }
 
@@ -496,7 +549,10 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
         fillRect(ctx, 40, 70, 160, 20, '#1a1a1a');
         drawRect(ctx, 40, 70, 160, 20, '#444444');
         drawText(ctx, message, 120, 75, {
-          size: 7, color: '#ff8888', font: 'monospace', align: 'center',
+          size: 7,
+          color: '#ff8888',
+          font: 'monospace',
+          align: 'center',
         });
       }
 
@@ -507,19 +563,31 @@ export function createPCScene(input: InputManager, stateMachine: StateMachine): 
         drawRect(ctx, 30, 50, 180, 50, '#cc4444');
         const name = getPokemonDisplayName(confirmRelease.pokemon.id);
         drawText(ctx, t('pc.confirmRelease', { name }), 120, 58, {
-          size: 7, color: C.TEXT, font: 'monospace', align: 'center',
+          size: 7,
+          color: C.TEXT,
+          font: 'monospace',
+          align: 'center',
         });
         drawText(ctx, t('pc.releaseWarning'), 120, 70, {
-          size: 6, color: '#ff8888', font: 'monospace', align: 'center',
+          size: 6,
+          color: '#ff8888',
+          font: 'monospace',
+          align: 'center',
         });
         // Enter = yes, Escape = no
         fillRect(ctx, 55, 82, 50, 12, '#cc4444');
         drawText(ctx, 'Enter: ' + t('pc.yes'), 80, 84, {
-          size: 6, color: C.TEXT, font: 'monospace', align: 'center',
+          size: 6,
+          color: C.TEXT,
+          font: 'monospace',
+          align: 'center',
         });
         fillRect(ctx, 135, 82, 50, 12, '#2a6a40');
         drawText(ctx, 'ESC: ' + t('pc.no'), 160, 84, {
-          size: 6, color: C.TEXT, font: 'monospace', align: 'center',
+          size: 6,
+          color: C.TEXT,
+          font: 'monospace',
+          align: 'center',
         });
       }
     },

@@ -7,7 +7,7 @@
  */
 
 import type { Scene } from '../../types/index.js';
-import type { InputManager } from '../../engine/input.js';
+import type { InputManager } from '../../engine/input';
 import type { StateMachine } from '../../engine/state-machine.js';
 import { clearScreen, fillRect, drawRect, drawText, fillRoundRect, strokeRoundRect } from '../../engine/renderer.js';
 import { t, isRTL, getLocale } from '../../i18n/i18n.js';

@@ -5,7 +5,7 @@
  * Reveals text character-by-character. ENTER to advance or skip.
  */
 
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import { fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 import { fontFor } from '../engine/fonts.js';

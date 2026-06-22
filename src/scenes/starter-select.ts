@@ -6,7 +6,7 @@
  */
 
 import type { Scene } from '../types/index.js';
-import type { InputManager } from '../engine/input.js';
+import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js';
 import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
@@ -25,10 +25,7 @@ const STARTERS = [
   { id: 7, type: 'water' as PokemonType },
 ] as const;
 
-export function createStarterSelectScene(
-  input: InputManager,
-  stateMachine: StateMachine,
-): Scene {
+export function createStarterSelectScene(input: InputManager, stateMachine: StateMachine): Scene {
   let selectedIndex = 0;
   let confirmed = false;
   let fadeAlpha = 1;
@@ -204,7 +201,9 @@ export function createStarterSelectScene(
 
       // Fade overlay
       if (fadeAlpha > 0) {
-        const alpha = Math.floor(fadeAlpha * 255).toString(16).padStart(2, '0');
+        const alpha = Math.floor(fadeAlpha * 255)
+          .toString(16)
+          .padStart(2, '0');
         fillRect(ctx, 0, 0, SCREEN_W, SCREEN_H, `#000000${alpha}`);
       }
     },
