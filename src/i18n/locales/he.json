@@ -143,7 +143,7 @@
   "party.hint.switchMember": "הקודם/הבא",
   "party.hint.action": "פעולה",
   "party.hint.details": "פרטים",
-  "party.hint.reorder": "החלף",
+  "party.hint.reorder": "שנה מיקום",
   "party.hint.switchIn": "שלח",
   "party.stats.level": "רמה",
   "party.hint.overworld": "ESC:חזור  ENTER:פרטים  S:החלף",
@@ -163,6 +163,7 @@
   "party.heldItem.noneHeld": ".לא מחזיק פריט",
   "party.heldItem.holds": "{pokemon} מחזיק {item}",
   "party.heldItem.bagItems": "פריטי נשיאה מהתיק שלך:",
+  "party.heldItem.equipHint": "החזק פריט",
 
   "battle.pokemonRestored": "{name} חזר אליך!",
   "battle.pokemonRestoredBox": "{name} חזר! (נשלח לתיבת PC)",

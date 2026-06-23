@@ -166,6 +166,7 @@
   "party.heldItem.noneHeld": "Not holding any item.",
   "party.heldItem.holds": "{pokemon} holding {item}.",
   "party.heldItem.bagItems": "Items in bag that can be held by a Pokemon:",
+  "party.heldItem.equipHint": "Equip item",
 
   "battle.pokemonRestored": "{name} is back!",
   "battle.pokemonRestoredBox": "{name} is back! (Sent to PC Box)",

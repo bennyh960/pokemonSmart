@@ -35,6 +35,7 @@ import '../data/story/content/index.js';
 // Global auto-gate config — registers the auto-pokecenter/pokemarket/gym gates + map service tags
 import '../data/story/global-gate-config.js';
 import { LOGICAL_WIDTH, LOGICAL_HEIGHT, RES_SCALE, CANVAS_WIDTH, CANVAS_HEIGHT } from './config.js';
+import { uiRegistry } from './input/uiRegistry.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement) {
@@ -48,9 +49,10 @@ export function createGame(container: HTMLElement) {
   if (!ctx) throw new Error('Failed to get 2D rendering context.');
 
   ctx.imageSmoothingEnabled = false;
-  const uiOverlay = createVirtualUI();
-  container.appendChild(uiOverlay);
+  // const uiOverlay = createVirtualUI();
+  // container.appendChild(uiOverlay);
   const input = createInputManager(canvas);
+
   setupMobileControls(input);
   const stateMachine = createStateMachine();
   const audio = createAudioManager();
@@ -115,6 +117,8 @@ export function createGame(container: HTMLElement) {
     if (input.isKeyPressed('m') || input.isKeyPressed('M')) {
       audio.toggleMute();
     }
+
+    uiRegistry.clear();
 
     stateMachine.update(dt);
 

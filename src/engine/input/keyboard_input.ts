@@ -1,5 +1,5 @@
 /**
- * InputManager - Handles keyboard and basic touch input.
+ * KeyboardInput - Handles keyboard input only.
  *
  * Tracks key states per-frame to distinguish between
  * "key is held down" vs "key was just pressed this frame".
@@ -9,11 +9,8 @@
  * keys (Enter, Escape, arrows) and number input.
  */
 
-/** Input state snapshot for the current frame. */
-interface InputState {
-  /** Physical keys currently held (e.code values, e.g. 'KeyP', 'ArrowUp'). */
+export interface InputState {
   keysDown: Set<string>;
-  /** Physical keys pressed this frame only (e.code values). */
   keysPressed: Set<string>;
   virtualDown: Set<string>;
   virtualPressed: Set<string>;
@@ -23,13 +20,9 @@ interface InputState {
   tapPosition: { x: number; y: number } | null;
 }
 
-/**
- * Maps legacy key strings to physical code strings.
- * Callers can use either 'p'/'P' (old style) or 'KeyP' (new style) —
- * this map normalizes old-style calls to physical codes.
- */
+/** Input state snapshot for the current frame. */
+
 const KEY_TO_CODE: Record<string, string> = {
-  // Letters (both cases map to same code)
   a: 'KeyA',
   A: 'KeyA',
   b: 'KeyB',
@@ -82,7 +75,6 @@ const KEY_TO_CODE: Record<string, string> = {
   Y: 'KeyY',
   z: 'KeyZ',
   Z: 'KeyZ',
-  // Digits
   '0': 'Digit0',
   '1': 'Digit1',
   '2': 'Digit2',
@@ -93,7 +85,6 @@ const KEY_TO_CODE: Record<string, string> = {
   '7': 'Digit7',
   '8': 'Digit8',
   '9': 'Digit9',
-  // Special keys (already match e.code or e.key — pass through)
   ' ': 'Space',
   Tab: 'Tab',
   Escape: 'Escape',
@@ -105,45 +96,25 @@ const KEY_TO_CODE: Record<string, string> = {
   ArrowRight: 'ArrowRight',
 };
 
-/** Normalize a key query to its physical code. */
-function toCode(key: string): string {
+export function toCode(key: string): string {
   return KEY_TO_CODE[key] ?? key;
 }
 
-/** Creates and returns an InputManager bound to the given canvas. */
-export function createInputManager(canvas: HTMLCanvasElement) {
-  const state: InputState = {
-    keysDown: new Set(),
-    keysPressed: new Set(),
-    virtualDown: new Set(),
-    virtualPressed: new Set(),
-    numberBuffer: '',
-    textBuffer: '',
-    tapDetected: false,
-    tapPosition: null,
-  };
+const PREVENTED_CODES = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Space']);
 
-  /** Physical codes that should prevent default browser behavior. */
-  const PREVENTED_CODES = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Space']);
-
-  function injectNumberBuffer(numStr: string): void {
-    if (numStr >= '0' && numStr <= '9') {
-      state.numberBuffer += numStr;
-    }
-  }
-
+export function createKeyboardInput(state: InputState) {
   function handleKeyDown(e: KeyboardEvent): void {
     const code = e.code;
-
     if (!state.keysDown.has(code)) {
       state.keysPressed.add(code);
     }
     state.keysDown.add(code);
 
-    // Number buffer uses e.key so it works with any layout
     const { key } = e;
-    injectNumberBuffer(key);
-    console.log('Key pressed:', key, 'Code:', code, 'Number buffer:', state.numberBuffer);
+
+    if (key >= '0' && key <= '9') {
+      state.numberBuffer += key;
+    }
 
     if (key === 'Backspace' && state.numberBuffer.length > 0) {
       state.numberBuffer = state.numberBuffer.slice(0, -1);
@@ -162,109 +133,13 @@ export function createInputManager(canvas: HTMLCanvasElement) {
     state.keysDown.delete(e.code);
   }
 
-  function handleTouchStart(e: TouchEvent): void {
-    e.preventDefault();
-    const touch = e.touches[0];
-    if (touch) {
-      state.tapDetected = true;
-      state.tapPosition = { x: touch.clientX, y: touch.clientY };
-    }
-  }
-
-  function handleClick(e: MouseEvent): void {
-    state.tapDetected = true;
-    state.tapPosition = { x: e.clientX, y: e.clientY };
-  }
-
-  // Bind event listeners
   window.addEventListener('keydown', handleKeyDown);
   window.addEventListener('keyup', handleKeyUp);
-  canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-  canvas.addEventListener('click', handleClick);
 
   return {
-    pressVirtualKey(key: string): void {
-      const code = toCode(key);
-      if (!state.virtualDown.has(code)) {
-        state.virtualPressed.add(code);
-      }
-      state.virtualDown.add(code);
-    },
-
-    releaseVirtualKey(key: string): void {
-      state.virtualDown.delete(toCode(key));
-    },
-
-    injectNumberBuffer,
-
-    /** Returns true if the key is currently held down. Accepts key char ('p') or code ('KeyP'). */
-    isKeyDown(key: string): boolean {
-      const code = toCode(key);
-
-      return state.keysDown.has(code) || state.virtualDown.has(code);
-    },
-
-    /** Returns true only on the first frame the key is pressed. Accepts key char ('p') or code ('KeyP'). */
-    isKeyPressed(key: string): boolean {
-      const code = toCode(key);
-      return state.keysPressed.has(code) || state.virtualPressed.has(code);
-    },
-
-    /** Consume a key press so no other handler sees it this frame. */
-    consumeKey(key: string): void {
-      const code = toCode(key);
-      state.keysPressed.delete(code);
-      state.virtualPressed.delete(code);
-    },
-
-    /** Returns the current number input buffer (digits typed so far). */
-    getNumberInput(): string {
-      return state.numberBuffer;
-    },
-
-    /** Clears the number input buffer (call after submitting an answer). */
-    clearNumberInput(): void {
-      state.numberBuffer = '';
-    },
-
-    /** Returns printable text typed this frame using the active keyboard layout. */
-    getTextInput(): string {
-      return state.textBuffer;
-    },
-
-    /** Clears the per-frame text buffer manually if needed. */
-    clearTextInput(): void {
-      state.textBuffer = '';
-    },
-
-    /** Returns true if a tap/click happened this frame. */
-    isTapped(): boolean {
-      return state.tapDetected;
-    },
-
-    /** Returns the position of the last tap, or null. */
-    getTapPosition(): { x: number; y: number } | null {
-      return state.tapPosition;
-    },
-
-    /** Call at the END of each frame to reset single-frame states. */
-    endFrame(): void {
-      state.keysPressed.clear();
-      state.textBuffer = '';
-      state.tapDetected = false;
-      state.tapPosition = null;
-      state.virtualPressed.clear();
-    },
-
-    /** Remove all event listeners (cleanup). */
-    destroy(): void {
+    destroy() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
-      canvas.removeEventListener('touchstart', handleTouchStart);
-      canvas.removeEventListener('click', handleClick);
     },
   };
 }
-
-/** The return type of createInputManager, for use in type annotations. */
-export type InputManager = ReturnType<typeof createInputManager>;

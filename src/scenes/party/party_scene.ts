@@ -32,6 +32,7 @@ import { createMoveFromId, getMoveLearningSession, resolveMoveLearningSession } 
 import { getTMEffect } from '../../data/item-defs.js';
 import { calcHappiness, getHappinessLabel } from '../../systems/happiness.js';
 import { getItem, type ItemDef } from '../../data/items.js';
+import { uiRegistry } from '../../engine/input/uiRegistry.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
 const MAX_PARTY = 6;
@@ -433,8 +434,29 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawRect(ctx, 100, 151, 40, 8, C.KEY_BRD);
     drawText(ctx, '◄ ►', 120, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('party.title'), 143, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+
+    // ESC button
+    uiRegistry.registerRegion({
+      id: 'diary-esc',
+      x: 8,
+      y: 151,
+      width: 20,
+      height: 8,
+      onSelect: () => input.pressVirtualKey('Escape'),
+    });
+
+    // ◄► button
+    uiRegistry.registerRegion({
+      id: 'diary-arrows',
+      x: 100,
+      y: 151,
+      width: 40,
+      height: 8,
+      onSelect: () => input.pressVirtualKey('ArrowLeft'),
+    });
   }
 
+  // Party list view
   function renderListView(ctx: CanvasRenderingContext2D): void {
     const party = getParty();
     const tmFiltered = getSelectTargetFiltered();
@@ -492,6 +514,17 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       for (let i = 0; i < tmFiltered.length; i++) {
         const sy = getSlotY(i, tmFiltered.length);
         renderFilledSlot(ctx, tmFiltered[i].pokemon, i + 1, sy, i === cursor, false, false);
+        uiRegistry.registerRegion({
+          id: i,
+          x: 4,
+          y: sy,
+          width: 232,
+          height: 22, // match the card coords from renderFilledSlot
+          onSelect: () => {
+            cursor = i;
+            input.pressVirtualKey('Enter');
+          },
+        });
       }
     } else {
       for (let i = 0; i < MAX_PARTY; i++) {
@@ -503,6 +536,23 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           const disabled = (partyMode === 'select-target' || partyMode === 'battle') && !isPokemonEligible(party[i], i);
           const committed = isBattleCommitted(i);
           renderFilledSlot(ctx, party[i], i + 1, sy, isSel, isSwap, disabled, committed);
+          if (!disabled) {
+            uiRegistry.registerRegion({
+              id: i,
+              x: 4,
+              y: sy,
+              width: 232,
+              height: 22,
+              onSelect: ({ isDoubleClick }) => {
+                if (isDoubleClick || partyMode === 'select-target' || partyMode === 'battle') {
+                  input.pressVirtualKey('Enter');
+                } else if (cursor !== i) {
+                  input.pressVirtualKey(' ');
+                }
+                cursor = i;
+              },
+            });
+          }
         } else {
           renderEmptySlot(ctx, i + 1, sy, isSel);
         }
@@ -528,22 +578,58 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
     drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    uiRegistry.registerRegion({
+      id: 'list-esc',
+      x: 8,
+      y: 151,
+      width: 20,
+      height: 8,
+      onSelect: () => input.pressVirtualKey('Escape'),
+    });
+
     // Enter — context-aware label
     fillRect(ctx, 62, 151, 26, 8, C.KEY_BG);
     drawRect(ctx, 62, 151, 26, 8, C.KEY_BRD);
     drawText(ctx, 'Enter', 75, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    const enterHint =
-      partyMode === 'select-target'
-        ? t('bag.hint.use') || 'Use'
-        : partyMode === 'battle'
-          ? t('party.hint.switchIn') || 'Switch'
-          : t('party.hint.details') || 'Details';
+    // Enter use for details , battle switch, swap pokemon or item use
+    let enterHint: string;
+
+    if (partyMode === 'select-target') {
+      enterHint = t('bag.hint.use');
+    } else if (partyMode === 'battle') {
+      enterHint = t('party.hint.switchIn');
+    } else if (viewMode === 'swap') {
+      enterHint = t('party.hint.action');
+    } else {
+      enterHint = t('party.hint.details');
+    }
+
     drawText(ctx, enterHint, 90, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    uiRegistry.registerRegion({
+      id: 'list-enter',
+      x: 62,
+      y: 151,
+      width: 26,
+      height: 8,
+      onSelect: () => input.pressVirtualKey('Enter'),
+    });
+
     // Arrows
     fillRect(ctx, 126, 151, 18, 8, C.KEY_BG);
     drawRect(ctx, 126, 151, 18, 8, C.KEY_BRD);
     drawText(ctx, '\u25b2\u25bc', 135, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('bag.hint.navigate') || 'Nav', 146, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+    uiRegistry.registerRegion({
+      id: 'list-nav',
+      x: 126,
+      y: 151,
+      width: 18,
+      height: 8,
+      onSelect: ({ gamePos, x, width }) => {
+        gamePos.x < x + width / 2 ? input.pressVirtualKey('ArrowUp') : input.pressVirtualKey('ArrowDown');
+      },
+    });
+
     // Space (reorder) — only if party > 1 and no diary entries (diary hint takes that slot)
     const hasDiaryEntries = partyMode === 'overworld' && Object.keys(getPlayerData().awayPokemon).length > 0;
     if (hasDiaryEntries) {
@@ -551,17 +637,34 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       drawRect(ctx, 178, 151, 14, 8, C.KEY_BRD);
       drawText(ctx, '◄►', 185, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
       drawText(ctx, t('party.hint.diary'), 195, 153, { size: 6, color: '#8888ff', font: 'monospace' });
-    } else if (party.length > 1) {
+      uiRegistry.registerRegion({
+        id: 'list-diary',
+        x: 178,
+        y: 151,
+        width: 14,
+        height: 8,
+        onSelect: () => input.pressVirtualKey('ArrowLeft'),
+      });
+    } else if (party.length > 1 && partyMode !== 'battle') {
       fillRect(ctx, 178, 151, 28, 8, C.KEY_BG);
       drawRect(ctx, 178, 151, 28, 8, C.KEY_BRD);
       drawText(ctx, 'Space', 192, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-      drawText(ctx, t('party.hint.reorder') || 'Swap', 208, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+      drawText(ctx, t('party.hint.reorder'), 208, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+      uiRegistry.registerRegion({
+        id: 'list-swap',
+        x: 178,
+        y: 151,
+        width: 28,
+        height: 8,
+        onSelect: () => input.pressVirtualKey(' '),
+      });
     }
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // COLORS — from canvas_coordinates.md
   // ═══════════════════════════════════════════════════════════════════
+
   const C = {
     BG: '#0d1a14',
     CARD_BG: '#0f2a1a',
@@ -766,6 +869,20 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       fillRect(ctx, 4, cy, 232, 14, isSelected ? C.CARD_SEL : C.CARD_BG);
       drawRect(ctx, 4, cy, 232, 14, borderColor);
 
+      if (!moveActionMenuOpen && !moveDeleteConfirm && !moveLearningConfirmAction && !isMoveLearningMode()) {
+        uiRegistry.registerRegion({
+          id: `move-row-${moveIndex}`,
+          x: 4,
+          y: cy,
+          width: 232,
+          height: 14,
+          onSelect: () => {
+            moveCursor = moveIndex;
+            input.pressVirtualKey('Enter');
+          },
+        });
+      }
+
       const moveData = getMove(move.id);
       const dc = moveData?.damageClass || (move.power > 0 ? 'physical' : 'status');
       const dcInfo = getDamageClassLabel(dc);
@@ -826,6 +943,19 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       fillRect(ctx, 0, 14, 240, 136, '#000000aa');
       fillRect(ctx, mx, my, mw, mh, C.BG);
       drawRect(ctx, mx, my, mw, mh, '#2a6a40');
+
+      if (!moveLearningConfirmAction) {
+        uiRegistry.registerRegion({
+          id: 'move-learning-scroll',
+          x: mx,
+          y: my,
+          width: mw,
+          height: mh - 20,
+          onScroll: (delta) => {
+            delta > 0 ? input.pressVirtualKey('ArrowDown') : input.pressVirtualKey('ArrowUp');
+          },
+        });
+      }
 
       const moveName = getMoveDisplayName(move.id);
       drawText(ctx, moveName, mx + mw - 6, my + 4, { size: 8, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
@@ -910,6 +1040,17 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           font: 'monospace',
           align: 'center',
         });
+        uiRegistry.registerRegion({
+          id: `move-learning-action-${i}`,
+          x: bx,
+          y: btnY,
+          width: btnW - 4,
+          height: 12,
+          onSelect: () => {
+            moveLearningActionCursor = i;
+            input.pressVirtualKey('Enter');
+          },
+        });
       }
 
       if (moveLearningConfirmAction) {
@@ -965,6 +1106,28 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           color: !yesSelected ? '#ffffff' : '#888888',
           font: 'monospace',
           align: 'center',
+        });
+        uiRegistry.registerRegion({
+          id: 'move-learning-confirm-yes',
+          x: yesX,
+          y: confirmBtnY,
+          width: confirmBtnW,
+          height: confirmBtnH,
+          onSelect: () => {
+            moveLearningConfirmCursor = 0;
+            input.pressVirtualKey('Enter');
+          },
+        });
+        uiRegistry.registerRegion({
+          id: 'move-learning-confirm-no',
+          x: noX,
+          y: confirmBtnY,
+          width: confirmBtnW,
+          height: confirmBtnH,
+          onSelect: () => {
+            moveLearningConfirmCursor = 1;
+            input.pressVirtualKey('Enter');
+          },
         });
       }
     } else if (moveActionMenuOpen) {
@@ -1060,6 +1223,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           fillRect(ctx, bx, btnY, btnW - 4, 12, C.CARD_SEL);
           drawRect(ctx, bx, btnY, btnW - 4, 12, '#2a6a40');
         }
+
         const label =
           action === 'swap'
             ? t('party.moves.swap')
@@ -1071,6 +1235,17 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           color: isSel ? C.TEXT_PRI : C.TEXT_MUT,
           font: 'monospace',
           align: 'center',
+        });
+        uiRegistry.registerRegion({
+          id: `move-action-${i}`,
+          x: bx,
+          y: btnY,
+          width: btnW - 4,
+          height: 12,
+          onSelect: () => {
+            moveActionCursor = i;
+            input.pressVirtualKey('Enter');
+          },
         });
       }
     }
@@ -1120,7 +1295,43 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         font: 'monospace',
         align: 'center',
       });
+      uiRegistry.registerRegion({
+        id: 'move-delete-yes',
+        x: yesX,
+        y: btnY,
+        width: btnW,
+        height: btnH,
+        onSelect: () => {
+          moveDeleteConfirmCursor = 0;
+          input.pressVirtualKey('Enter');
+        },
+      });
+      uiRegistry.registerRegion({
+        id: 'move-delete-no',
+        x: noX,
+        y: btnY,
+        width: btnW,
+        height: btnH,
+        onSelect: () => {
+          moveDeleteConfirmCursor = 1;
+          input.pressVirtualKey('Enter');
+        },
+      });
     }
+
+    // seems no need scroll here
+    // if (!moveActionMenuOpen && !moveDeleteConfirm && !isMoveLearningMode()) {
+    //   uiRegistry.registerRegion({
+    //     id: 'moves-scroll',
+    //     x: 0,
+    //     y: 14,
+    //     width: 240,
+    //     height: 136,
+    //     onScroll: (delta) => {
+    //       delta > 0 ? input.pressVirtualKey('ArrowDown') : input.pressVirtualKey('ArrowUp');
+    //     },
+    //   });
+    // }
 
     if (moveMessage && moveMessageTimer > 0) {
       fillRect(ctx, 8, 136, 224, 10, '#3a1a1a');
@@ -1576,12 +1787,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     return allItems.filter((item) => item.itemDef?.category === 'held');
   }
 
-  function renderDetailHeldItemTab(
-    ctx: CanvasRenderingContext2D,
-    pokemon: Pokemon,
-    heldItemCursor: number,
-    heldItemScrollOffset: number,
-  ): void {
+  function renderDetailHeldItemTab(ctx: CanvasRenderingContext2D, pokemon: Pokemon): void {
     const rtl = isRTL();
     // ── Shared top header (sprite, name, types, level, ability/nature) ──
     renderDetailPokemonHeader(ctx, pokemon);
@@ -1704,6 +1910,18 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         // Row background
         fillRect(ctx, 4, ry, 232, ROW_H - 1, isSelected ? C.CARD_SEL : C.CARD_BG);
         drawRect(ctx, 4, ry, 232, ROW_H - 1, isSelected ? C.BORDER_SEL : C.BORDER);
+        // condition to avoid collision with the hint bar at the bottom of the screen (y=148)
+        uiRegistry.registerRegion({
+          id: `held-item-row-${itemIndex}`,
+          x: 4,
+          y: ry,
+          width: 232,
+          height: ry + ROW_H - 1 < 148 ? ROW_H - 1 : ROW_H / 2,
+          onSelect: ({ isDoubleClick }) => {
+            heldItemCursor = itemIndex;
+            if (isDoubleClick) input.pressVirtualKey('Enter');
+          },
+        });
 
         // Item icon
         fillRect(ctx, ICON_X, ry + 2, ICON_SIZE, ICON_SIZE, '#0a2a1a');
@@ -1744,6 +1962,16 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           const isActiveDot = Math.floor((heldItemCursor / items.length) * totalDots) === d;
           fillRect(ctx, dotX, dotAreaY + d * dotStep + dotStep / 2, 2, 2, isActiveDot ? C.TEXT_SEC : C.TEXT_DIM);
         }
+        uiRegistry.registerRegion({
+          id: 'held-item-scroll',
+          x: 4,
+          y: LIST_CONTENT_Y,
+          width: 232,
+          height: (MAX_VISIBLE * ROW_H) / 2,
+          onScroll: (delta) => {
+            delta > 0 ? input.pressVirtualKey('ArrowDown') : input.pressVirtualKey('ArrowUp');
+          },
+        });
       }
     }
   }
@@ -1782,6 +2010,16 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         font: 'monospace',
         align: 'center',
       });
+      uiRegistry.registerRegion({
+        id: `detail-tab-${tab.key}`,
+        x: tab.x,
+        y: 2,
+        width: tab.w,
+        height: 10,
+        onSelect: () => {
+          detailTab = tab.key;
+        },
+      });
     }
 
     // ── Tab content ──
@@ -1790,7 +2028,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     } else if (detailTab === 'moves') {
       renderDetailMovesTab(ctx, pokemon);
     } else {
-      renderDetailHeldItemTab(ctx, pokemon, heldItemCursor, heldItemScrollOffset);
+      renderDetailHeldItemTab(ctx, pokemon);
     }
 
     const learningMode = isMoveLearningMode();
@@ -1807,6 +2045,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       color: C.TEXT_MUT,
       font: 'monospace',
     });
+    uiRegistry.registerRegion({
+      id: 'detail-esc',
+      x: 2,
+      y: 151,
+      width: 20,
+      height: 8,
+      onSelect: () => input.pressVirtualKey('Escape'),
+    });
 
     // ◀▶ — switch tab
     fillRect(ctx, 54, 151, 16, 8, C.KEY_BG);
@@ -1816,6 +2062,16 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       size: 6,
       color: C.TEXT_MUT,
       font: 'monospace',
+    });
+    uiRegistry.registerRegion({
+      id: 'detail-tabs-switch',
+      x: 54,
+      y: 151,
+      width: 16,
+      height: 8,
+      onSelect: ({ x, width, gamePos }) => {
+        return gamePos.x < x + width / 2 ? input.pressVirtualKey('ArrowLeft') : input.pressVirtualKey('ArrowRight');
+      },
     });
 
     // ▲▼ — switch party member (all tabs, but not during move-learning)
@@ -1827,6 +2083,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         size: 6,
         color: C.TEXT_MUT,
         font: 'monospace',
+      });
+      uiRegistry.registerRegion({
+        id: 'detail-member-switch',
+        x: 100,
+        y: 151,
+        width: 16,
+        height: 8,
+        onSelect: () => input.pressVirtualKey('ArrowDown'),
       });
     }
 
@@ -1845,6 +2109,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         size: 6,
         color: C.TEXT_MUT,
         font: 'monospace',
+      });
+      uiRegistry.registerRegion({
+        id: 'detail-remove-item',
+        x: dPillX,
+        y: 151,
+        width: 10,
+        height: 8,
+        onSelect: () => input.pressVirtualKey('d'),
       });
     }
 
@@ -1868,6 +2140,14 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           153,
           { size: 6, color: C.TEXT_MUT, font: 'monospace' },
         );
+        uiRegistry.registerRegion({
+          id: 'detail-enter',
+          x: 114,
+          y: 151,
+          width: 26,
+          height: 8,
+          onSelect: () => input.pressVirtualKey('Enter'),
+        });
       }
     }
 
@@ -1946,6 +2226,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         }
         return;
       }
+      // console.log({ partyMode, tmFiltered, listLen, cursor, swapFrom, viewMode });
 
       // List or swap mode
       if (input.isKeyPressed('Escape')) {
@@ -2045,7 +2326,6 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
     render(ctx: CanvasRenderingContext2D): void {
       clearScreen(ctx, '#0d1a14');
-
       if (viewMode === 'detail') {
         renderDetailView(ctx);
       } else if (viewMode === 'diary') {
