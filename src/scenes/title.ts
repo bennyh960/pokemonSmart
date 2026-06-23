@@ -13,6 +13,7 @@ import { getSlotIndex, MAX_SAVE_SLOTS } from '../systems/save.js';
 import { signOut } from '../auth/auth-service.js';
 import { t, isRTL, getLocale, setLocale, type Locale } from '../i18n/i18n.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
+import { uiRegistry } from '../engine/input/uiRegistry.js';
 const STAR_COUNT = 60;
 
 interface Star {
@@ -155,10 +156,46 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
       // Language toggle indicator
       const langLabel = getLocale() === 'he' ? 'EN' : 'עב';
       drawText(ctx, `[L] ${langLabel}`, 4, SCREEN_H - 10, { size: 6, color: '#666688' });
+      uiRegistry.registerRegion({
+        id: 'lang-toggle',
+        x: 0,
+        y: SCREEN_H - 20,
+        width: 50,
+        height: 20,
+        onSelect: () => {
+          input.pressVirtualKey('l');
+        },
+      });
+
+      // logout button
       drawText(ctx, '[Q] logout', SCREEN_W / 2, SCREEN_H - 10, { size: 6, color: '#444455', align: 'center' });
+      uiRegistry.registerRegion({
+        id: 'logout-button',
+        x: SCREEN_W / 2 - 25,
+        y: SCREEN_H - 20,
+        width: 50,
+        height: 20,
+        onSelect: () => {
+          input.pressVirtualKey('q');
+        },
+      });
+
       if (!showMenu) {
-        if (showPrompt)
+        if (showPrompt) {
+          const txtLength = t('title.pressEnter').length;
+          const txtWidth = txtLength * 8;
           drawText(ctx, t('title.pressEnter'), SCREEN_W / 2, 130, { size: 8, color: '#ffffff', align: 'center' });
+          uiRegistry.registerRegion({
+            id: 'press-enter',
+            x: SCREEN_W / 2 - txtWidth / 2,
+            y: 120,
+            width: txtWidth,
+            height: 20,
+            onSelect: () => {
+              input.pressVirtualKey('Enter');
+            },
+          });
+        }
       } else {
         const rtl = isRTL();
         for (let i = 0; i < menuItems.length; i++) {
@@ -176,9 +213,20 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
             align: 'center',
             direction: rtl ? 'rtl' : 'ltr',
           });
+          uiRegistry.registerRegion({
+            id: `menu-item-${i}`,
+            x: SCREEN_W / 2 - 50,
+            y: y - 10,
+            width: 100,
+            height: 14,
+            onSelect: () => {
+              selectedIndex = i;
+              input.pressVirtualKey('Enter');
+            },
+          });
         }
       }
-      drawText(ctx, 'v0.2.0', SCREEN_W - 4, SCREEN_H - 10, { size: 6, color: '#444466', align: 'right' });
+      drawText(ctx, 'v1.0.0', SCREEN_W - 4, SCREEN_H - 10, { size: 6, color: '#444466', align: 'right' });
     },
   };
 }
