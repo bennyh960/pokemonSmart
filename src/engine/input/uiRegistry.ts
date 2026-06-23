@@ -15,6 +15,7 @@ export interface ClickableRegion {
     gamePos: { x: number; y: number };
   }) => void;
   onScroll?: (delta: number) => void;
+  showCursor?: boolean; // defaults to true
 }
 
 class UIRegistryManager {
@@ -64,6 +65,21 @@ class UIRegistryManager {
     if (!hit?.onScroll) return false;
     hit.onScroll(delta);
     return true;
+  }
+
+  // for hover
+  public hitTest(canvas: HTMLCanvasElement, screenX: number, screenY: number): ClickableRegion | null {
+    const gamePos = getCanvasCoordinates(canvas, screenX, screenY);
+    return (
+      this.regions.find(
+        (r) =>
+          r.showCursor !== false &&
+          gamePos.x >= r.x &&
+          gamePos.x <= r.x + r.width &&
+          gamePos.y >= r.y &&
+          gamePos.y <= r.y + r.height,
+      ) ?? null
+    );
   }
 }
 

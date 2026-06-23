@@ -951,6 +951,7 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           y: my,
           width: mw,
           height: mh - 20,
+          showCursor: false,
           onScroll: (delta) => {
             delta > 0 ? input.pressVirtualKey('ArrowDown') : input.pressVirtualKey('ArrowUp');
           },

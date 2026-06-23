@@ -53,7 +53,13 @@ export function createGame(container: HTMLElement) {
   // container.appendChild(uiOverlay);
   const input = createInputManager(canvas);
 
-  setupMobileControls(input);
+  // Hover effect
+  canvas.addEventListener('mousemove', (e: MouseEvent) => {
+    const hit = uiRegistry.hitTest(canvas, e.clientX, e.clientY);
+    canvas.style.cursor = hit ? 'pointer' : 'default';
+  });
+
+  // setupMobileControls(input);
   const stateMachine = createStateMachine();
   const audio = createAudioManager();
   setGlobalAudio(audio);
