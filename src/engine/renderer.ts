@@ -19,6 +19,10 @@ const DEFAULT_TEXT_OPTIONS: Required<TextOptions> = {
   direction: 'ltr',
   maxWidth: 0,
   lineHeight: 10,
+  paddingX: 0,
+  paddingY: 0,
+  bgColor: 'transparent',
+  borderColor: 'transparent',
 };
 
 /** Clear the entire canvas with a solid color. */
@@ -53,42 +57,87 @@ export function drawText(
 ): void {
   const opts = { ...DEFAULT_TEXT_OPTIONS, ...options };
 
-  // Auto-detect Hebrew text and switch font
   if (!options.font) {
     opts.font = fontFor(text);
   }
 
   ctx.save();
   ctx.font = `${opts.size}px ${opts.font}`;
+  ctx.imageSmoothingEnabled = false;
+
+  // --- Word wrap with punctuation-priority breaks ---
+  const lines = opts.maxWidth > 0 ? wrapText(ctx, text, opts.maxWidth) : [text];
+
+  // --- Dynamic rect height ---
+  const textBlockHeight = lines.length * opts.lineHeight;
+  const rectW = opts.maxWidth > 0 ? opts.maxWidth + opts.paddingX * 2 : 0;
+  const rectH = textBlockHeight + opts.paddingY * 2;
+
+  // --- Draw bg/border rect if requested ---
+  const hasBg = opts.bgColor !== 'transparent';
+  const hasBorder = opts.borderColor !== 'transparent';
+
+  if ((hasBg || hasBorder) && rectW > 0) {
+    // x is the text anchor; back-calculate rect origin based on alignment
+    let rectX = x - opts.paddingX;
+    if (opts.align === 'center') rectX = x - rectW / 2;
+    else if (opts.align === 'right') rectX = x - rectW + opts.paddingX;
+
+    const rectY = y - opts.paddingY;
+
+    if (hasBg) {
+      fillRect(ctx, rectX, rectY, rectW, rectH, opts.bgColor);
+    }
+    if (hasBorder) {
+      drawRect(ctx, rectX, rectY, rectW, rectH, opts.borderColor);
+    }
+  }
+
+  // --- Draw text lines ---
   ctx.fillStyle = opts.color;
   ctx.textAlign = opts.align;
   ctx.textBaseline = opts.baseline;
   ctx.direction = opts.direction;
-  ctx.imageSmoothingEnabled = false;
 
-  if (opts.maxWidth > 0) {
-    const words = text.split(' ');
-    let line = '';
-    let lineY = y;
-
-    for (const word of words) {
-      const testLine = line + (line ? ' ' : '') + word;
-      const metrics = ctx.measureText(testLine);
-
-      if (metrics.width > opts.maxWidth && line) {
-        ctx.fillText(line, x, lineY);
-        line = word;
-        lineY += opts.lineHeight;
-      } else {
-        line = testLine;
-      }
-    }
+  let lineY = y;
+  for (const line of lines) {
     ctx.fillText(line, x, lineY);
-  } else {
-    ctx.fillText(text, x, y);
+    lineY += opts.lineHeight;
   }
 
   ctx.restore();
+}
+
+function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+  const lines: string[] = [];
+
+  // Split on punctuation boundaries first (after . or :), then spaces within
+  // e.g. "Hello: world foo. bar baz" → ["Hello:", "world foo.", "bar baz"]
+  const chunks = text.split(/(?<=[.:])(?=\s|\S)/);
+
+  let line = '';
+
+  for (const chunk of chunks) {
+    // Within each chunk, split on spaces
+    const words = chunk.trim().split(' ');
+
+    for (const word of words) {
+      const candidate = line + (line ? ' ' : '') + word;
+      if (ctx.measureText(candidate).width > maxWidth && line) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = candidate;
+      }
+    }
+
+    // After a punctuation chunk, prefer to break here if it fits on its own line
+    // i.e. don't force a break, but the next chunk starts fresh consideration
+    // (the inner word-wrap already handles overflow; this is enough)
+  }
+
+  if (line) lines.push(line);
+  return lines;
 }
 
 /** Draw a stroked rectangle outline. */

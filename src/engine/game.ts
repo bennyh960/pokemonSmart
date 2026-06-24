@@ -53,12 +53,6 @@ export function createGame(container: HTMLElement) {
   // container.appendChild(uiOverlay);
   const input = createInputManager(canvas);
 
-  // Hover effect
-  canvas.addEventListener('mousemove', (e: MouseEvent) => {
-    const hit = uiRegistry.hitTest(canvas, e.clientX, e.clientY);
-    canvas.style.cursor = hit ? 'pointer' : 'default';
-  });
-
   // setupMobileControls(input);
   const stateMachine = createStateMachine();
   const audio = createAudioManager();
@@ -75,13 +69,13 @@ export function createGame(container: HTMLElement) {
     }
   });
 
-  stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio));
+  stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio)); // input done
   stateMachine.register('HERO_SELECT', createHeroSelectScene(input, stateMachine));
   stateMachine.register('HERO_NAME_SELECT', createHeroNameSelectScene(input, stateMachine));
   stateMachine.register('BATTLE', createBattleScene(input, stateMachine, canvas, audio));
   stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine, audio));
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
-  stateMachine.register('PARTY', createPartyScene(input, stateMachine));
+  stateMachine.register('PARTY', createPartyScene(input, stateMachine)); // input done
   stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
   stateMachine.register('EVOLUTION', createEvolutionScene(input, stateMachine, audio));
   stateMachine.register('BAG', createBagScene(input, stateMachine));

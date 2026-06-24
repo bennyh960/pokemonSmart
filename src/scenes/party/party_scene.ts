@@ -426,24 +426,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
 
     // Bottom bar
     fillRect(ctx, 0, 150, 240, 10, '#0a1a10');
-    fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
-    drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
-    drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
     fillRect(ctx, 100, 151, 40, 8, C.KEY_BG);
     drawRect(ctx, 100, 151, 40, 8, C.KEY_BRD);
     drawText(ctx, '◄ ►', 120, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     drawText(ctx, t('party.title'), 143, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-
-    // ESC button
-    uiRegistry.registerRegion({
-      id: 'diary-esc',
-      x: 8,
-      y: 151,
-      width: 20,
-      height: 8,
-      onSelect: () => input.pressVirtualKey('Escape'),
-    });
 
     // ◄► button
     uiRegistry.registerRegion({
@@ -471,7 +457,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       drawText(ctx, `${tmFiltered.length}`, 200, 4, { size: 6, color: C.TEXT_DIM, font: 'monospace' });
     } else {
       const title = viewMode === 'swap' ? t('party.swap') : t('party.title');
-      drawText(ctx, title, 112, 2, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+      const centerX = 240 / 2;
+      drawText(ctx, title, centerX, 2, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
       if (partyMode === 'battle' && battleRosterCtx) {
         // Battle team slots: tiny Pokemon sprites for committed, dim placeholder for open slots
         const { roster, maxSize } = battleRosterCtx;
@@ -524,6 +511,9 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
             cursor = i;
             input.pressVirtualKey('Enter');
           },
+          onHover: () => {
+            cursor = i;
+          },
         });
       }
     } else {
@@ -543,13 +533,17 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
               y: sy,
               width: 232,
               height: 22,
+              onHover: () => {
+                if (cursor !== i) {
+                  cursor = i;
+                }
+              },
               onSelect: ({ isDoubleClick }) => {
-                if (isDoubleClick || partyMode === 'select-target' || partyMode === 'battle') {
+                if (isDoubleClick || partyMode === 'select-target' || partyMode === 'battle' || viewMode === 'swap') {
                   input.pressVirtualKey('Enter');
-                } else if (cursor !== i) {
+                } else if (!isDoubleClick) {
                   input.pressVirtualKey(' ');
                 }
-                cursor = i;
               },
             });
           }
@@ -572,25 +566,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     }
 
     // ── Bottom bar ──
-    fillRect(ctx, 0, 150, 240, 10, '#0a1a10');
-    // ESC
-    fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
-    drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
-    drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-    uiRegistry.registerRegion({
-      id: 'list-esc',
-      x: 8,
-      y: 151,
-      width: 20,
-      height: 8,
-      onSelect: () => input.pressVirtualKey('Escape'),
-    });
 
     // Enter — context-aware label
-    fillRect(ctx, 62, 151, 26, 8, C.KEY_BG);
-    drawRect(ctx, 62, 151, 26, 8, C.KEY_BRD);
-    drawText(ctx, 'Enter', 75, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
     // Enter use for details , battle switch, swap pokemon or item use
     let enterHint: string;
 
@@ -604,60 +581,90 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       enterHint = t('party.hint.details');
     }
 
-    drawText(ctx, enterHint, 90, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-    uiRegistry.registerRegion({
-      id: 'list-enter',
-      x: 62,
-      y: 151,
-      width: 26,
-      height: 8,
-      onSelect: () => input.pressVirtualKey('Enter'),
-    });
+    uiRegistry
+      .registerRegion({
+        id: 'list-enter',
+        x: 62,
+        y: 151,
+        width: 26,
+        height: 8,
+        onSelect: () => input.pressVirtualKey('Enter'),
+      })
+      .render(({ x, y, width, height, isHovered }) => {
+        const bg = isHovered ? C.KEY_BG_HOV : C.KEY_BG;
+        const brd = isHovered ? C.KEY_BRD_HOV : C.KEY_BRD;
+        fillRect(ctx, x, y, width, height, bg);
+        drawRect(ctx, x, y, width, height, brd);
+        drawText(ctx, 'Enter', x + 13, y + 1, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+        drawText(ctx, enterHint, x + 28, y + 2, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+      });
 
     // Arrows
-    fillRect(ctx, 126, 151, 18, 8, C.KEY_BG);
-    drawRect(ctx, 126, 151, 18, 8, C.KEY_BRD);
-    drawText(ctx, '\u25b2\u25bc', 135, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, t('bag.hint.navigate') || 'Nav', 146, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-    uiRegistry.registerRegion({
-      id: 'list-nav',
-      x: 126,
-      y: 151,
-      width: 18,
-      height: 8,
-      onSelect: ({ gamePos, x, width }) => {
-        gamePos.x < x + width / 2 ? input.pressVirtualKey('ArrowUp') : input.pressVirtualKey('ArrowDown');
-      },
-    });
+    uiRegistry
+      .registerRegion({
+        id: 'list-nav',
+        x: 126,
+        y: 151,
+        width: 18,
+        height: 8,
+        onSelect: ({ gamePos, x, width }) => {
+          gamePos.x < x + width / 2 ? input.pressVirtualKey('ArrowUp') : input.pressVirtualKey('ArrowDown');
+        },
+      })
+      .render(({ x, y, width, height, isHovered }) => {
+        const bg = isHovered ? C.KEY_BG_HOV : C.KEY_BG;
+        const brd = isHovered ? C.KEY_BRD_HOV : C.KEY_BRD;
+
+        fillRect(ctx, x, y, width, height, bg);
+        drawRect(ctx, x, y, width, height, brd);
+        drawText(ctx, '\u25b2\u25bc', x + 9, y + 1, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+        drawText(ctx, t('bag.hint.navigate') || 'Nav', x + 20, y + 2, {
+          size: 6,
+          color: C.TEXT_MUT,
+          font: 'monospace',
+        });
+      });
 
     // Space (reorder) — only if party > 1 and no diary entries (diary hint takes that slot)
     const hasDiaryEntries = partyMode === 'overworld' && Object.keys(getPlayerData().awayPokemon).length > 0;
     if (hasDiaryEntries) {
-      fillRect(ctx, 178, 151, 14, 8, C.KEY_BG);
-      drawRect(ctx, 178, 151, 14, 8, C.KEY_BRD);
-      drawText(ctx, '◄►', 185, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-      drawText(ctx, t('party.hint.diary'), 195, 153, { size: 6, color: '#8888ff', font: 'monospace' });
-      uiRegistry.registerRegion({
-        id: 'list-diary',
-        x: 178,
-        y: 151,
-        width: 14,
-        height: 8,
-        onSelect: () => input.pressVirtualKey('ArrowLeft'),
-      });
+      uiRegistry
+        .registerRegion({
+          id: 'list-diary',
+          x: 178,
+          y: 151,
+          width: 14,
+          height: 8,
+          onSelect: () => input.pressVirtualKey('ArrowLeft'),
+        })
+        .render(({ x, y, width, height, isHovered }) => {
+          const bg = isHovered ? C.KEY_BG_HOV : C.KEY_BG;
+          const brd = isHovered ? C.KEY_BRD_HOV : C.KEY_BRD;
+
+          fillRect(ctx, x, y, width, height, bg);
+          drawRect(ctx, x, y, width, height, brd);
+          drawText(ctx, '◄►', x + 7, y + 1, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+          drawText(ctx, t('party.hint.diary'), x + 17, y + 2, { size: 6, color: '#8888ff', font: 'monospace' });
+        });
     } else if (party.length > 1 && partyMode !== 'battle') {
-      fillRect(ctx, 178, 151, 28, 8, C.KEY_BG);
-      drawRect(ctx, 178, 151, 28, 8, C.KEY_BRD);
-      drawText(ctx, 'Space', 192, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-      drawText(ctx, t('party.hint.reorder'), 208, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-      uiRegistry.registerRegion({
-        id: 'list-swap',
-        x: 178,
-        y: 151,
-        width: 28,
-        height: 8,
-        onSelect: () => input.pressVirtualKey(' '),
-      });
+      //  On SPACE click
+      uiRegistry
+        .registerRegion({
+          id: 'list-swap',
+          x: 178,
+          y: 151,
+          width: 28,
+          height: 8,
+          onSelect: () => input.pressVirtualKey(' '),
+        })
+        .render(({ x, y, width, height, isHovered }) => {
+          const bg = isHovered ? C.KEY_BG_HOV : C.KEY_BG;
+          const brd = isHovered ? C.KEY_BRD_HOV : C.KEY_BRD;
+          fillRect(ctx, x, y, width, height, bg);
+          drawRect(ctx, x, y, width, height, brd);
+          drawText(ctx, 'Space', x + 14, y + 1, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+          drawText(ctx, t('party.hint.reorder'), x + 30, y + 2, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+        });
     }
   }
 
@@ -683,6 +690,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     TAB_ACT: '#1a5a35',
     BTM_BG: '#0a1a10',
     KEY_BG: '#1a3a2a',
+    KEY_BG_HOV: '#2a5a3a',
+    KEY_BRD_HOV: '#2a6a40',
     KEY_BRD: '#2a5a3a',
     BORDER_SEL: '#f8c030',
   };
@@ -876,8 +885,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           y: cy,
           width: 232,
           height: 14,
-          onSelect: () => {
+          onHover: () => {
             moveCursor = moveIndex;
+          },
+          onSelect: () => {
             input.pressVirtualKey('Enter');
           },
         });
@@ -1029,29 +1040,35 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const actionLabels = getMoveLearningActionLabels();
       const btnW = Math.floor((mw - 16) / actionLabels.length);
       for (let i = 0; i < actionLabels.length; i++) {
-        const isSel = i === moveLearningActionCursor;
         const bx = mx + 6 + i * btnW;
-        if (isSel) {
-          fillRect(ctx, bx, btnY, btnW - 4, 12, C.CARD_SEL);
-          drawRect(ctx, bx, btnY, btnW - 4, 12, '#2a6a40');
-        }
-        drawText(ctx, actionLabels[i], bx + (btnW - 4) / 2, btnY + 2, {
-          size: 7,
-          color: isSel ? C.TEXT_PRI : C.TEXT_MUT,
-          font: 'monospace',
-          align: 'center',
-        });
-        uiRegistry.registerRegion({
-          id: `move-learning-action-${i}`,
-          x: bx,
-          y: btnY,
-          width: btnW - 4,
-          height: 12,
-          onSelect: () => {
-            moveLearningActionCursor = i;
-            input.pressVirtualKey('Enter');
-          },
-        });
+        uiRegistry
+          .registerRegion({
+            id: `move-learning-action-${i}`,
+            x: bx,
+            y: btnY,
+            width: btnW - 4,
+            height: 12,
+            onSelect: () => {
+              moveLearningActionCursor = i;
+              input.pressVirtualKey('Enter');
+            },
+          })
+          .render(({ x, y, isHovered, width, height }) => {
+            const isSel = i === moveLearningActionCursor;
+            if (isSel) {
+              fillRect(ctx, x, y, width, height, C.CARD_SEL);
+              drawRect(ctx, x, y, width, height, '#2a6a40');
+            }
+            if (isHovered) {
+              drawRect(ctx, x, y, width, height, '#55a77281');
+            }
+            drawText(ctx, actionLabels[i], x + width / 2, y + 2, {
+              size: 7,
+              color: isSel || isHovered ? C.TEXT_PRI : C.TEXT_MUT,
+              font: 'monospace',
+              align: 'center',
+            });
+          });
       }
 
       if (moveLearningConfirmAction) {
@@ -1092,44 +1109,56 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         const noX = dx + dw / 2 + btnGap / 2;
         const confirmBtnY = dy + 34;
         const yesSelected = moveLearningConfirmCursor === 0;
-        fillRect(ctx, yesX, confirmBtnY, confirmBtnW, confirmBtnH, yesSelected ? '#2a6a40' : '#333333');
-        drawRect(ctx, yesX, confirmBtnY, confirmBtnW, confirmBtnH, '#2a6a40');
-        drawText(ctx, t('party.moves.forgetYes'), yesX + confirmBtnW / 2, confirmBtnY + 2, {
-          size: 7,
-          color: yesSelected ? '#ffffff' : '#888888',
-          font: 'monospace',
-          align: 'center',
-        });
-        fillRect(ctx, noX, confirmBtnY, confirmBtnW, confirmBtnH, !yesSelected ? '#cc4444' : '#333333');
-        drawRect(ctx, noX, confirmBtnY, confirmBtnW, confirmBtnH, '#cc4444');
-        drawText(ctx, t('party.moves.forgetNo'), noX + confirmBtnW / 2, confirmBtnY + 2, {
-          size: 7,
-          color: !yesSelected ? '#ffffff' : '#888888',
-          font: 'monospace',
-          align: 'center',
-        });
-        uiRegistry.registerRegion({
-          id: 'move-learning-confirm-yes',
-          x: yesX,
-          y: confirmBtnY,
-          width: confirmBtnW,
-          height: confirmBtnH,
-          onSelect: () => {
-            moveLearningConfirmCursor = 0;
-            input.pressVirtualKey('Enter');
-          },
-        });
-        uiRegistry.registerRegion({
-          id: 'move-learning-confirm-no',
-          x: noX,
-          y: confirmBtnY,
-          width: confirmBtnW,
-          height: confirmBtnH,
-          onSelect: () => {
-            moveLearningConfirmCursor = 1;
-            input.pressVirtualKey('Enter');
-          },
-        });
+
+        uiRegistry
+          .registerRegion({
+            id: 'move-learning-confirm-yes',
+            x: yesX,
+            y: confirmBtnY,
+            width: confirmBtnW,
+            height: confirmBtnH,
+            onSelect: () => {
+              moveLearningConfirmCursor = 0;
+              input.pressVirtualKey('Enter');
+            },
+          })
+          .render(({ x, y, width, height, isHovered }) => {
+            const bg = isHovered ? '#4e9768' : yesSelected ? '#2a6a40' : '#333333';
+            const brd = isHovered ? '#2a6a40' : '#2a6a40';
+            drawRect(ctx, x, y, width, height, brd);
+            fillRect(ctx, x, y, width, height, bg);
+            drawText(ctx, t('party.moves.forgetYes'), x + width / 2, y + 2, {
+              size: 7,
+              color: yesSelected || isHovered ? '#ffffff' : '#888888',
+              font: 'monospace',
+              align: 'center',
+            });
+          });
+        uiRegistry
+          .registerRegion({
+            id: 'move-learning-confirm-no',
+            x: noX,
+            y: confirmBtnY,
+            width: confirmBtnW,
+            height: confirmBtnH,
+            onSelect: () => {
+              moveLearningConfirmCursor = 1;
+              input.pressVirtualKey('Enter');
+            },
+          })
+          .render(({ x, y, width, height, isHovered }) => {
+            const bg = isHovered ? '#e66262' : !yesSelected ? '#cc4444' : '#333333';
+            const brd = isHovered ? '#cc4444' : '#cc4444';
+
+            fillRect(ctx, x, y, width, height, bg);
+            drawRect(ctx, x, y, width, height, brd);
+            drawText(ctx, t('party.moves.forgetNo'), x + width / 2, y + height / 2 - 3, {
+              size: 7,
+              color: !yesSelected || isHovered ? '#ffffff' : '#888888',
+              font: 'monospace',
+              align: 'center',
+            });
+          });
       }
     } else if (moveActionMenuOpen) {
       const move = pokemon.moves[moveCursor];
@@ -1244,8 +1273,10 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           width: btnW - 4,
           height: 12,
           onSelect: () => {
-            moveActionCursor = i;
             input.pressVirtualKey('Enter');
+          },
+          onHover: () => {
+            moveActionCursor = i;
           },
         });
       }
@@ -1280,59 +1311,59 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       const noX = dx + dw / 2 + btnGap / 2;
       const btnY = dy + 33;
       const yesSelected = moveDeleteConfirmCursor === 0;
-      fillRect(ctx, yesX, btnY, btnW, btnH, yesSelected ? '#cc4444' : '#333333');
-      drawRect(ctx, yesX, btnY, btnW, btnH, '#cc4444');
-      drawText(ctx, t('party.moves.forgetYes'), yesX + btnW / 2, btnY + 2, {
-        size: 7,
-        color: yesSelected ? '#ffffff' : '#888888',
-        font: 'monospace',
-        align: 'center',
-      });
-      fillRect(ctx, noX, btnY, btnW, btnH, !yesSelected ? '#2a6a40' : '#333333');
-      drawRect(ctx, noX, btnY, btnW, btnH, '#2a6a40');
-      drawText(ctx, t('party.moves.forgetNo'), noX + btnW / 2, btnY + 2, {
-        size: 7,
-        color: !yesSelected ? '#ffffff' : '#888888',
-        font: 'monospace',
-        align: 'center',
-      });
-      uiRegistry.registerRegion({
-        id: 'move-delete-yes',
-        x: yesX,
-        y: btnY,
-        width: btnW,
-        height: btnH,
-        onSelect: () => {
-          moveDeleteConfirmCursor = 0;
-          input.pressVirtualKey('Enter');
-        },
-      });
-      uiRegistry.registerRegion({
-        id: 'move-delete-no',
-        x: noX,
-        y: btnY,
-        width: btnW,
-        height: btnH,
-        onSelect: () => {
-          moveDeleteConfirmCursor = 1;
-          input.pressVirtualKey('Enter');
-        },
-      });
-    }
 
-    // seems no need scroll here
-    // if (!moveActionMenuOpen && !moveDeleteConfirm && !isMoveLearningMode()) {
-    //   uiRegistry.registerRegion({
-    //     id: 'moves-scroll',
-    //     x: 0,
-    //     y: 14,
-    //     width: 240,
-    //     height: 136,
-    //     onScroll: (delta) => {
-    //       delta > 0 ? input.pressVirtualKey('ArrowDown') : input.pressVirtualKey('ArrowUp');
-    //     },
-    //   });
-    // }
+      //  Yes button
+      uiRegistry
+        .registerRegion({
+          id: 'move-delete-yes',
+          x: yesX,
+          y: btnY,
+          width: btnW,
+          height: btnH,
+          onSelect: () => {
+            moveDeleteConfirmCursor = 0;
+            input.pressVirtualKey('Enter');
+          },
+        })
+        .render(({ x, y, width, height, isHovered }) => {
+          const bg = isHovered ? '#4e9768' : yesSelected ? '#2a6a40' : '#333333';
+          const brd = isHovered ? '#2a6a40' : '#2a6a40';
+          drawRect(ctx, x, y, width, height, brd);
+          fillRect(ctx, x, y, width, height, bg);
+          drawText(ctx, t('party.moves.forgetYes'), x + width / 2, y + 2, {
+            size: 7,
+            color: yesSelected ? '#ffffff' : '#888888',
+            font: 'monospace',
+            align: 'center',
+          });
+        });
+      // No button
+      uiRegistry
+        .registerRegion({
+          id: 'move-delete-no',
+          x: noX,
+          y: btnY,
+          width: btnW,
+          height: btnH,
+          onSelect: () => {
+            moveDeleteConfirmCursor = 1;
+            input.pressVirtualKey('Enter');
+          },
+        })
+        .render(({ x, y, width, height, isHovered }) => {
+          const bg = isHovered ? '#e66262' : !yesSelected ? '#cc4444' : '#333333';
+          const brd = isHovered ? '#cc4444' : '#cc4444';
+
+          fillRect(ctx, x, y, width, height, bg);
+          drawRect(ctx, x, y, width, height, brd);
+          drawText(ctx, t('party.moves.forgetNo'), x + width / 2, y + 2, {
+            size: 7,
+            color: !yesSelected ? '#ffffff' : '#888888',
+            font: 'monospace',
+            align: 'center',
+          });
+        });
+    }
 
     if (moveMessage && moveMessageTimer > 0) {
       fillRect(ctx, 8, 136, 224, 10, '#3a1a1a');
@@ -1918,9 +1949,12 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
           y: ry,
           width: 232,
           height: ry + ROW_H - 1 < 148 ? ROW_H - 1 : ROW_H / 2,
+
           onSelect: ({ isDoubleClick }) => {
-            heldItemCursor = itemIndex;
             if (isDoubleClick) input.pressVirtualKey('Enter');
+          },
+          onHover() {
+            heldItemCursor = itemIndex;
           },
         });
 
@@ -1951,25 +1985,16 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
         }
       }
 
-      // Scroll indicator dots (far right, vertically centered on the list area)
+      // Scroll held items
       if (items.length > MAX_VISIBLE) {
-        const dotAreaY = LIST_CONTENT_Y;
-        const dotAreaH = MAX_VISIBLE * ROW_H;
-        const totalDots = Math.min(items.length, 8);
-        const dotStep = Math.floor(dotAreaH / totalDots);
-        // Dots hug the edge opposite to the icon
-        const dotX = rtl ? 2 : 236;
-        for (let d = 0; d < totalDots; d++) {
-          const isActiveDot = Math.floor((heldItemCursor / items.length) * totalDots) === d;
-          fillRect(ctx, dotX, dotAreaY + d * dotStep + dotStep / 2, 2, 2, isActiveDot ? C.TEXT_SEC : C.TEXT_DIM);
-        }
         uiRegistry.registerRegion({
           id: 'held-item-scroll',
           x: 4,
           y: LIST_CONTENT_Y,
           width: 232,
-          height: (MAX_VISIBLE * ROW_H) / 2,
+          height: ROW_H / 2 + (MAX_VISIBLE * ROW_H) / 2,
           onScroll: (delta) => {
+            console.log('scroll delta', delta);
             delta > 0 ? input.pressVirtualKey('ArrowDown') : input.pressVirtualKey('ArrowUp');
           },
         });
@@ -1995,32 +2020,36 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const tabs: Array<{ key: typeof detailTab; labelKey: string; x: number; w: number; cx: number }> = [
       { key: 'moves', labelKey: 'party.moves.title', x: 46, w: 48, cx: 70 },
       { key: 'stats', labelKey: 'party.baseStats', x: 94, w: 48, cx: 118 },
-      { key: 'item', labelKey: 'party.heldItemTab', x: 142, w: 52, cx: 168 },
+      { key: 'item', labelKey: 'party.heldItemTab', x: 142, w: 48, cx: 168 },
     ];
 
     // Tab container
-    fillRect(ctx, 44, 2, 152, 10, C.TAB_BG);
-    drawRect(ctx, 44, 2, 152, 10, C.BORDER);
+    fillRect(ctx, 45, 2, 2 + 48 * 3, 10, C.TAB_BG);
+    drawRect(ctx, 45, 2, 2 + 48 * 3, 10, C.BORDER);
 
     for (const tab of tabs) {
-      const isActive = detailTab === tab.key;
-      if (isActive) fillRect(ctx, tab.x, 2, tab.w, 10, C.TAB_ACT);
-      drawText(ctx, t(tab.labelKey), tab.cx, 3, {
-        size: 7,
-        color: isActive ? C.TEXT_PRI : C.TEXT_MUT,
-        font: 'monospace',
-        align: 'center',
-      });
-      uiRegistry.registerRegion({
-        id: `detail-tab-${tab.key}`,
-        x: tab.x,
-        y: 2,
-        width: tab.w,
-        height: 10,
-        onSelect: () => {
-          detailTab = tab.key;
-        },
-      });
+      uiRegistry
+        .registerRegion({
+          id: `detail-tab-${tab.key}`,
+          x: tab.x,
+          y: 2,
+          width: tab.w,
+          height: 10,
+          onSelect: () => {
+            detailTab = tab.key;
+          },
+        })
+        .render((c) => {
+          const isHovered = c.isHovered;
+          const isActive = detailTab === tab.key;
+          if (isActive) fillRect(ctx, tab.x, 2, tab.w, 10, C.TAB_ACT);
+          drawText(ctx, t(tab.labelKey), tab.cx, 3, {
+            size: 7,
+            color: isActive || isHovered ? C.TEXT_PRI : C.TEXT_MUT,
+            font: 'monospace',
+            align: 'center',
+          });
+        });
     }
 
     // ── Tab content ──
@@ -2035,64 +2064,68 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     const learningMode = isMoveLearningMode();
 
     // ── Bottom hint bar ──
-    fillRect(ctx, 0, 150, 240, 10, C.BTM_BG);
-
-    // ESC — back
-    fillRect(ctx, 2, 151, 20, 8, C.KEY_BG);
-    drawRect(ctx, 2, 151, 20, 8, C.KEY_BRD);
-    drawText(ctx, 'ESC', 12, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, learningMode ? t('party.moves.cancel') : t('party.hint.back'), 24, 153, {
-      size: 6,
-      color: C.TEXT_MUT,
-      font: 'monospace',
-    });
-    uiRegistry.registerRegion({
-      id: 'detail-esc',
-      x: 2,
-      y: 151,
-      width: 20,
-      height: 8,
-      onSelect: () => input.pressVirtualKey('Escape'),
-    });
 
     // ◀▶ — switch tab
-    fillRect(ctx, 54, 151, 16, 8, C.KEY_BG);
-    drawRect(ctx, 54, 151, 16, 8, C.KEY_BRD);
-    drawText(ctx, '\u25c0\u25b6', 62, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, learningMode ? t('bag.hint.navigate') : t('party.hint.switchTab'), 72, 153, {
-      size: 6,
-      color: C.TEXT_MUT,
-      font: 'monospace',
-    });
-    uiRegistry.registerRegion({
-      id: 'detail-tabs-switch',
-      x: 54,
-      y: 151,
-      width: 16,
-      height: 8,
-      onSelect: ({ x, width, gamePos }) => {
-        return gamePos.x < x + width / 2 ? input.pressVirtualKey('ArrowLeft') : input.pressVirtualKey('ArrowRight');
-      },
-    });
+    uiRegistry
+      .registerRegion({
+        id: 'detail-tabs-switch',
+        x: 54,
+        y: 151,
+        width: 16,
+        height: 8,
+        onSelect: ({ x, width, gamePos }) => {
+          return gamePos.x < x + width / 2 ? input.pressVirtualKey('ArrowLeft') : input.pressVirtualKey('ArrowRight');
+        },
+      })
+      .render(({ x, y, width, height, isHovered }) => {
+        fillRect(ctx, 0, 150, 240, 10, C.BTM_BG);
+
+        const color = isHovered ? C.TEXT_SEC : C.TEXT_MUT;
+        const bg = isHovered ? C.KEY_BG_HOV : C.KEY_BG;
+        const brd = isHovered ? C.KEY_BRD_HOV : C.KEY_BRD;
+
+        fillRect(ctx, x, y, width, height, bg);
+        drawRect(ctx, x, y, width, height, brd);
+        drawText(ctx, '\u25c0\u25b6', x + width / 2, y + 1, {
+          size: 6,
+          color: color,
+          font: 'monospace',
+          align: 'center',
+        });
+        drawText(ctx, learningMode ? t('bag.hint.navigate') : t('party.hint.switchTab'), x + width + 10, y + 2, {
+          size: 6,
+          color: C.TEXT_MUT,
+          font: 'monospace',
+        });
+      });
 
     // ▲▼ — switch party member (all tabs, but not during move-learning)
     if (detailTab !== 'moves') {
-      fillRect(ctx, 100, 151, 16, 8, C.KEY_BG);
-      drawRect(ctx, 100, 151, 16, 8, C.KEY_BRD);
-      drawText(ctx, '\u25b2\u25bc', 108, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
       drawText(ctx, t('party.hint.switchMember'), 120, 153, {
         size: 6,
         color: C.TEXT_MUT,
         font: 'monospace',
       });
-      uiRegistry.registerRegion({
-        id: 'detail-member-switch',
-        x: 100,
-        y: 151,
-        width: 16,
-        height: 8,
-        onSelect: () => input.pressVirtualKey('ArrowDown'),
-      });
+      uiRegistry
+        .registerRegion({
+          id: 'detail-member-switch',
+          x: 100,
+          y: 151,
+          width: 16,
+          height: 8,
+          onSelect: () => input.pressVirtualKey('ArrowDown'),
+        })
+        .render(({ x, y, width, height, isHovered }) => {
+          const color = isHovered ? C.TEXT_SEC : C.TEXT_MUT;
+          fillRect(ctx, x, y, width, height, isHovered ? C.KEY_BG_HOV : C.KEY_BG);
+          drawRect(ctx, x, y, width, height, isHovered ? C.KEY_BRD_HOV : C.KEY_BRD);
+          drawText(ctx, '\u25b2\u25bc', x + width / 2, y + 1, {
+            size: 6,
+            color: color,
+            font: 'monospace',
+            align: 'center',
+          });
+        });
     }
 
     // D — remove item (stats tab with held item, OR item tab)
@@ -2101,24 +2134,29 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
     if (showRemoveHint) {
       // Position D pill right of ▲▼, or right of tab-switch if in learning mode
       const dPillX = learningMode ? 122 : 176;
-      fillRect(ctx, dPillX, 151, 10, 8, C.KEY_BG);
-      drawRect(ctx, dPillX, 151, 10, 8, C.KEY_BRD);
-      drawText(ctx, 'D', dPillX + 5, 152, { size: 6, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
-      const removedItemName =
-        getItem(pokemon.heldItemId!)?.name?.[getLocale()] ?? getItem(pokemon.heldItemId!)?.name.he ?? '???';
-      drawText(ctx, t('party.hint.removeItem', { item: removedItemName }), dPillX + 12, 153, {
-        size: 6,
-        color: C.TEXT_MUT,
-        font: 'monospace',
-      });
-      uiRegistry.registerRegion({
-        id: 'detail-remove-item',
-        x: dPillX,
-        y: 151,
-        width: 10,
-        height: 8,
-        onSelect: () => input.pressVirtualKey('d'),
-      });
+
+      uiRegistry
+        .registerRegion({
+          id: 'detail-remove-item',
+          x: dPillX,
+          y: 151,
+          width: 10,
+          height: 8,
+          onSelect: () => input.pressVirtualKey('d'),
+        })
+        .render((c) => {
+          const color = c.isHovered ? C.TEXT_SEC : C.TEXT_MUT;
+          fillRect(ctx, dPillX, 151, 10, 8, C.KEY_BG);
+          drawRect(ctx, dPillX, 151, 10, 8, C.KEY_BRD);
+          drawText(ctx, 'D', dPillX + 5, 152, { size: 6, color: color, font: 'monospace', align: 'center' });
+          const removedItemName =
+            getItem(pokemon.heldItemId!)?.name?.[getLocale()] ?? getItem(pokemon.heldItemId!)?.name.he ?? '???';
+          drawText(ctx, t('party.hint.removeItem', { item: removedItemName }), dPillX + 12, 153, {
+            size: 6,
+            color: color,
+            font: 'monospace',
+          });
+        });
     }
 
     // Enter — action (moves tab, or item tab when list has items)
@@ -2156,6 +2194,32 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       fillRect(ctx, 8, 136, 224, 10, '#2a6a40');
       drawText(ctx, actionMessage, 120, 137, { size: 7, color: '#20d860', align: 'center' });
     }
+  }
+
+  function renderButtonESC(ctx: CanvasRenderingContext2D) {
+    uiRegistry
+      .registerRegion({
+        id: 'party-global-esc',
+        x: 8,
+        y: 151,
+        width: 20,
+        height: 8,
+        onSelect: () => input.pressVirtualKey('Escape'),
+      })
+      .render(({ x, y, width, height, isHovered }) => {
+        const bg = isHovered ? C.KEY_BG_HOV : C.KEY_BG;
+        const brd = isHovered ? C.KEY_BRD_HOV : C.KEY_BRD;
+        // hide
+        // fillRect(ctx, 0, 150, 240, 10, '#0a1a10');
+
+        const learningMode = isMoveLearningMode();
+        const hintText = learningMode ? t('party.moves.cancel') : t('party.hint.back');
+
+        fillRect(ctx, x, y, width, height, bg);
+        drawRect(ctx, x, y, width, height, brd);
+        drawText(ctx, 'ESC', x + 10, y + 1, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+        drawText(ctx, hintText, x + 22, y + 2, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
+      });
   }
 
   return {
@@ -2334,6 +2398,8 @@ export function createPartyScene(input: InputManager, stateMachine: StateMachine
       } else {
         renderListView(ctx);
       }
+
+      renderButtonESC(ctx);
     },
   };
 }

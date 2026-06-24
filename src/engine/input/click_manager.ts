@@ -1,5 +1,5 @@
 import { uiRegistry } from './uiRegistry';
-import { type InputState, toCode } from './keyboard_input';
+import { type InputState } from './keyboard_input';
 
 function handleCanvasInteraction(
   canvas: HTMLCanvasElement,
@@ -15,8 +15,6 @@ function handleCanvasInteraction(
     const { region, isDoubleClick, gamePos } = hit;
 
     if (isDoubleClick) {
-      //   state.virtualPressed.add(toCode('Enter'));
-      //   state.virtualDown.add(toCode('Enter'));
       region.onSelect?.({
         x: region.x,
         y: region.y,
@@ -49,17 +47,20 @@ export function createClickManager(canvas: HTMLCanvasElement, state: InputState)
   const onInteraction = handleCanvasInteraction(canvas, state);
 
   function handleClick(e: MouseEvent) {
-    console.log('[clickManager] click fired', e.clientX, e.clientY);
-
     onInteraction(e.clientX, e.clientY);
+  }
+  function handleMouseMove(e: MouseEvent) {
+    uiRegistry.processCanvasHover(canvas, e.clientX, e.clientY);
   }
 
   canvas.addEventListener('click', handleClick);
+  canvas.addEventListener('mousemove', handleMouseMove);
 
   return {
     onInteraction, // exposed so touch_manager can reuse it
     destroy() {
       canvas.removeEventListener('click', handleClick);
+      canvas.removeEventListener('mousemove', handleMouseMove);
     },
   };
 }

@@ -122,7 +122,7 @@ export function createHeroSelectScene(input: InputManager, stateMachine: StateMa
         selectedIndex = moveSelection(selectedIndex, 0, 1, heroes.length);
       }
 
-      if (input.isKeyPressed('Enter') || input.isTapped()) {
+      if (input.isKeyPressed('Enter')) {
         getPlayerData().heroCharacterId = getSelectedHeroId();
         fadeOut = true;
       }

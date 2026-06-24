@@ -12,7 +12,7 @@ import { clearScreen, fillRect, drawText, drawRect } from '../engine/renderer.js
 import { getPokemon, getPokemonDisplayName } from '../services/pokemon-data.js';
 import { createPokemonFromData } from '../systems/encounter.js';
 import { getPlayerData } from '../systems/game-state.js';
-import { t, isRTL } from '../i18n/i18n.js';
+import { t, isRTL, getLocale } from '../i18n/i18n.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
 import { TYPE_BADGE } from '../data/type-constants.js';
@@ -165,9 +165,10 @@ export function createStarterSelectScene(input: InputManager, stateMachine: Stat
         });
 
         // Type badge
-        const typeColor = TYPE_BADGE[starter.type]?.color || '#888888';
+        const starteType = TYPE_BADGE[starter.type];
+        const typeColor = starteType?.color || '#888888';
         fillRect(ctx, cx - 16, cardY + 54, 32, 10, typeColor);
-        drawText(ctx, starter.type.toUpperCase(), cx, cardY + 56, {
+        drawText(ctx, starteType?.[getLocale()] || starter.type, cx, cardY + 56, {
           size: 8,
           color: '#ffffff',
           align: 'center',

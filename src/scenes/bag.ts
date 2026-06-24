@@ -41,6 +41,7 @@ import {
   resetMoveLearningQueueState,
   setMoveLearningSession,
 } from '../systems/move-learning.js';
+import { uiRegistry } from '../engine/input/uiRegistry.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 
 /* ── Battle integration exports ────────────────────────────────────── */
@@ -76,6 +77,8 @@ const C = {
   BTM_BG: '#0a1a10',
   KEY_BG: '#1a3a2a',
   KEY_BRD: '#2a5a3a',
+  KEY_BG_HOVER: '#1a5a35',
+  KEY_BRD_HOVER: '#2a6a40',
   SEL_BAR: '#20d860',
   USE_BTN_BG: '#1a5a35',
   USE_BTN_BRD: '#2a6a40',
@@ -423,27 +426,101 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
 
     // ── Bottom bar (y=150, h=10) ──
     fillRect(ctx, 0, 150, 240, 10, C.BTM_BG);
+    // drawRect(ctx, 18, 152, 10, 8, '#b74772');
+    // drawRect(ctx, 9, 152, 11, 8, '#4750b7');
     // ESC pill
-    fillRect(ctx, 8, 151, 20, 8, C.KEY_BG);
-    drawRect(ctx, 8, 151, 20, 8, C.KEY_BRD);
-    drawText(ctx, 'ESC', 18, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, t('party.hint.back'), 30, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-    // Enter pill
-    fillRect(ctx, 62, 151, 26, 8, C.KEY_BG);
-    drawRect(ctx, 62, 151, 26, 8, C.KEY_BRD);
-    drawText(ctx, 'Enter', 75, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
-    drawText(ctx, t('bag.hint.use') || 'Use', 90, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
-    // Arrows pill
-    fillRect(ctx, 126, 151, 18, 8, C.KEY_BG);
-    drawRect(ctx, 126, 151, 18, 8, C.KEY_BRD);
-    drawText(ctx, '\u25c0\u25b6', 135, 152, { size: 6, color: C.TEXT_SEC, font: 'monospace', align: 'center' });
+    uiRegistry
+      .registerRegion({
+        id: 'esc-pill-bag',
+        x: 9,
+        y: 152,
+        width: 20,
+        height: 8,
+        onSelect() {
+          input.pressVirtualKey('Escape');
+        },
+      })
+      .render(({ isHovered, x, y, width }) => {
+        drawText(ctx, 'ESC', 2 * x, y, {
+          size: 6,
+          color: C.TEXT_SEC,
+          font: 'monospace',
+          align: 'center',
+          bgColor: isHovered ? C.KEY_BG_HOVER : C.KEY_BG,
+          borderColor: isHovered ? C.KEY_BRD_HOVER : C.KEY_BRD,
+          paddingX: 0,
+          paddingY: 1,
+          maxWidth: width,
+          lineHeight: 6,
+        });
+        drawText(ctx, t('party.hint.back'), 30, y + 1, {
+          size: 6,
+          color: C.TEXT_MUT,
+          font: 'monospace',
+        });
+      });
+    // Enter Button pill (use item) — hidden for key items
+    uiRegistry
+      .registerRegion({
+        id: 'enter-pill-bag',
+        x: 75,
+        y: 152,
+        width: 26,
+        height: 8,
+        onSelect() {
+          input.pressVirtualKey('Enter');
+        },
+      })
+      .render(({ isHovered, x, y, width }) => {
+        const bgColor = isHovered ? C.KEY_BG_HOVER : C.KEY_BG;
+        const borderColor = isHovered ? C.KEY_BRD_HOVER : C.KEY_BRD;
+        drawText(ctx, 'Enter', x, y, {
+          size: 6,
+          color: C.TEXT_SEC,
+          font: 'monospace',
+          align: 'center',
+          bgColor: bgColor,
+          borderColor: borderColor,
+          paddingX: 0,
+          paddingY: 1,
+          maxWidth: width,
+          lineHeight: 6,
+        });
+        drawText(ctx, t('bag.hint.use'), 90, 153, {
+          size: 6,
+          color: C.TEXT_MUT,
+          font: 'monospace',
+        });
+      });
+
+    // Arrows pill button
+    drawText(ctx, '\u25c0\u25b6', 135, 152, {
+      size: 6,
+      color: C.TEXT_SEC,
+      font: 'monospace',
+      align: 'center',
+      bgColor: C.KEY_BG,
+      borderColor: C.KEY_BRD,
+      paddingX: 0,
+      paddingY: 1,
+      maxWidth: 18,
+      lineHeight: 6,
+    });
     drawText(ctx, t('bag.hint.navigate') || 'Nav', 146, 153, { size: 6, color: C.TEXT_MUT, font: 'monospace' });
 
     // ── Message overlay ──
     if (messageTimer > 0) {
-      fillRect(ctx, 20, 70, 200, 20, C.BG);
-      drawRect(ctx, 20, 70, 200, 20, C.BORDER_SEL);
-      drawText(ctx, message, 120, 75, { size: 7, color: C.TEXT_PRI, font: 'monospace', align: 'center' });
+      drawText(ctx, message, 120, 75, {
+        maxWidth: 190,
+        size: 7,
+        color: C.TEXT_PRI,
+        font: 'monospace',
+        align: 'center',
+        bgColor: C.BG,
+        borderColor: C.BORDER_SEL,
+        paddingX: 5,
+        paddingY: 5,
+      });
     }
 
     // ── TM natural-level warning overlay ──
@@ -518,7 +595,8 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       });
       if (moveLearningStep.kind === 'show-message') {
         message = moveLearningStep.message;
-        messageTimer = 2.0;
+        // todo: when wire mouse click set timer to 0.5
+        messageTimer = 1.5;
         return;
       }
       if (moveLearningStep.kind === 'open-session') {

@@ -154,31 +154,45 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
         direction: 'rtl',
       });
       // Language toggle indicator
-      const langLabel = getLocale() === 'he' ? 'EN' : 'עב';
-      drawText(ctx, `[L] ${langLabel}`, 4, SCREEN_H - 10, { size: 6, color: '#666688' });
-      uiRegistry.registerRegion({
-        id: 'lang-toggle',
-        x: 0,
-        y: SCREEN_H - 20,
-        width: 50,
-        height: 20,
-        onSelect: () => {
-          input.pressVirtualKey('l');
-        },
-      });
+      uiRegistry
+        .registerRegion({
+          id: 'lang-toggle',
+          x: 0,
+          y: SCREEN_H - 20,
+          width: 50,
+          height: 20,
+          onSelect: () => {
+            input.pressVirtualKey('l');
+          },
+        })
+        .render((config) => {
+          const langLabel = getLocale() === 'he' ? 'EN' : 'עב';
+          drawText(ctx, `[L] ${langLabel}`, config.x + 4, config.y + 10, {
+            size: 6,
+            color: config.isHovered ? '#ffffff' : '#666688',
+            align: 'left',
+          });
+        });
 
       // logout button
-      drawText(ctx, '[Q] logout', SCREEN_W / 2, SCREEN_H - 10, { size: 6, color: '#444455', align: 'center' });
-      uiRegistry.registerRegion({
-        id: 'logout-button',
-        x: SCREEN_W / 2 - 25,
-        y: SCREEN_H - 20,
-        width: 50,
-        height: 20,
-        onSelect: () => {
-          input.pressVirtualKey('q');
-        },
-      });
+      uiRegistry
+        .registerRegion({
+          id: 'logout-button',
+          x: SCREEN_W / 2 - 25,
+          y: SCREEN_H - 20,
+          width: 50,
+          height: 20,
+          onSelect: () => {
+            input.pressVirtualKey('q');
+          },
+        })
+        .render((config) => {
+          drawText(ctx, '[Q] logout', SCREEN_W / 2, SCREEN_H - 10, {
+            size: 6,
+            color: config.isHovered ? '#ffffff' : '#444455',
+            align: 'center',
+          });
+        });
 
       if (!showMenu) {
         if (showPrompt) {
@@ -207,23 +221,30 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
               color: '#ffcb05',
               align: rtl ? 'right' : 'left',
             });
-          drawText(ctx, menuItems[i], SCREEN_W / 2, y, {
-            size: 8,
-            color: sel ? '#ffcb05' : '#aaaaaa',
-            align: 'center',
-            direction: rtl ? 'rtl' : 'ltr',
-          });
-          uiRegistry.registerRegion({
-            id: `menu-item-${i}`,
-            x: SCREEN_W / 2 - 50,
-            y: y - 10,
-            width: 100,
-            height: 14,
-            onSelect: () => {
-              selectedIndex = i;
-              input.pressVirtualKey('Enter');
-            },
-          });
+
+          uiRegistry
+            .registerRegion({
+              id: `menu-item-${i}`,
+              x: SCREEN_W / 2 - 50,
+              y: y - 10,
+              width: 100,
+              height: 14,
+              onSelect: () => {
+                selectedIndex = i;
+                input.pressVirtualKey('Enter');
+              },
+              onHover: (isHovering) => {
+                if (isHovering) selectedIndex = i;
+              },
+            })
+            .render((config) => {
+              drawText(ctx, menuItems[i], config.x + 50, config.y + 10, {
+                size: 8,
+                color: sel ? '#ffcb05' : '#aaaaaa',
+                align: 'center',
+                direction: rtl ? 'rtl' : 'ltr',
+              });
+            });
         }
       }
       drawText(ctx, 'v1.0.0', SCREEN_W - 4, SCREEN_H - 10, { size: 6, color: '#444466', align: 'right' });

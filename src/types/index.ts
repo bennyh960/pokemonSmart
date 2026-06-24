@@ -255,4 +255,8 @@ export interface TextOptions {
   direction?: 'ltr' | 'rtl';
   maxWidth?: number;
   lineHeight?: number;
+  paddingX?: number;
+  paddingY?: number;
+  bgColor?: string;
+  borderColor?: string;
 }

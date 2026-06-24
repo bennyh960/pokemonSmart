@@ -74,6 +74,7 @@ export function createHeroNameSelectScene(input: InputManager, stateMachine: Sta
         }
         return;
       }
+      console.log('draftName:', draftName, 'draftBirthYear:', draftBirthYear, 'step:', step);
 
       if (step === 'name') {
         let typedText = input.getTextInput();
@@ -92,7 +93,7 @@ export function createHeroNameSelectScene(input: InputManager, stateMachine: Sta
           draftName = removeLastPlayerNameChar(draftName);
         }
 
-        if (input.isKeyPressed('Enter') || input.isTapped()) {
+        if (input.isKeyPressed('Enter')) {
           const playerData = getPlayerData();
           playerData.name = finalizePlayerName(draftName, playerData.name || 'Player');
           step = 'birthYear';
@@ -118,7 +119,7 @@ export function createHeroNameSelectScene(input: InputManager, stateMachine: Sta
           birthYearError = false;
         }
 
-        if (input.isKeyPressed('Enter') || (draftBirthYear.length === 4 && input.isTapped())) {
+        if (input.isKeyPressed('Enter') || draftBirthYear.length === 4) {
           const year = parseInt(draftBirthYear, 10);
           if (draftBirthYear.length === 4 && year >= BIRTH_YEAR_MIN && year <= BIRTH_YEAR_MAX) {
             const playerData = getPlayerData();
