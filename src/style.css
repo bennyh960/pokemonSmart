@@ -1,12 +1,8 @@
-/**
- * Minimal CSS for canvas centering and pixel-perfect rendering.
- */
-
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
+  /* margin: 0; */
+  /* padding: 0; */
   box-sizing: border-box;
 }
 
@@ -40,7 +36,16 @@ canvas {
 
 #ui-overlay {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  /* Force the constraints */
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+
   z-index: 10;
   pointer-events: none;
 }
@@ -91,10 +96,7 @@ canvas {
   cursor: pointer;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition:
-    background 0.12s,
-    color 0.12s,
-    border-color 0.12s;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
 .hud-tab--active {

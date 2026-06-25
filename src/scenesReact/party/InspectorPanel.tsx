@@ -1,61 +1,30 @@
-/**
- * InspectorPanel.tsx
- * Right-side (or bottom-sheet) detail panel for a selected Pokémon.
- *
- * Tabs: Moves (drag-drop 2×4 grid) | Stats (bars) | Held Item
- *
- * Top section always visible: large sprite, name, level, types, ball, status, nature/ability line.
- */
 import { useState, useEffect } from 'react';
-import { loadImage, getCachedImage } from '../../engine/sprite-loader.js';
-import { useDragSort } from '../../ui-react/hooks/useDragSort.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
-import { STATUS_LABEL, hpColor } from './PokemonCard.js';
-import type { Pokemon, Move } from '../../types/index.js';
+import { getCachedImage, loadImage } from '../../engine/sprite-loader.js';
 import { TYPE_BADGE } from '../../data/type-constants.js';
+import { hpColor } from './utils.js';
+import type { Pokemon } from '../../types/index.js';
 
-// ─── move category icons (unicode stand-ins) ─────────────────────────────────
-const CATEGORY_ICON: Record<string, string> = {
-  physical: '⚔️',
-  special: '✨',
-  status: '○',
-};
+// Mocks for tabs as requested
+import StatsTab from './tabs/StatsTab';
+import MovesetTab from './tabs/MovesetTab';
+import HeldItemsTab from './tabs/HeldItemsTab';
+import { getNature, getPokemonDisplayName } from '../../services/pokemon-data.js';
 
-// ─── stat config ─────────────────────────────────────────────────────────────
-const STATS = [
-  { key: 'hp', label: 'HP', color: '#4ade80' },
-  { key: 'attack', label: 'ATK', color: '#f87171' },
-  { key: 'defense', label: 'DEF', color: '#fb923c' },
-  { key: 'specialAttack', label: 'SPA', color: '#818cf8' },
-  { key: 'specialDefense', label: 'SPD', color: '#34d399' },
-  { key: 'speed', label: 'SPE', color: '#facc15' },
-] as const;
-
-const MAX_STAT = 400; // visual ceiling for bar width
-
-// ─── tabs ─────────────────────────────────────────────────────────────────────
-type Tab = 'moves' | 'stats' | 'item';
+type Tab = 'stats' | 'moveset' | 'held_items';
 
 interface Props {
   pokemon: Pokemon;
-  party: Pokemon[];
-  onMoveReorder: (moves: Move[]) => void;
 }
 
-export function InspectorPanel({ pokemon, onMoveReorder }: Props) {
-  const { t, locale, isRTL } = useI18n();
-  const [tab, setTab] = useState<Tab>('moves');
-  const [moves, setMoves] = useState<Move[]>([...pokemon.moves]);
+export function InspectorPanel({ pokemon }: Props) {
+  const { t, locale } = useI18n();
+  const [tab, setTab] = useState<Tab>('stats');
   const [sprite, setSprite] = useState<string | null>(
     getCachedImage(`/sprites/pokemon/front/${pokemon.id}.png`)?.src ?? null,
   );
 
-  const loadMoveData = () => {};
-
-  // reset when selected pokémon changes
   useEffect(() => {
-    setMoves([...pokemon.moves]);
-    setTab('moves');
     let dead = false;
     loadImage(`/sprites/pokemon/front/${pokemon.id}.png`)
       .then((img) => {
@@ -65,238 +34,150 @@ export function InspectorPanel({ pokemon, onMoveReorder }: Props) {
     return () => {
       dead = true;
     };
-  }, [pokemon.uuid, pokemon.id]);
+  }, [pokemon.id]);
 
-  // move drag-drop
-  const handleMoveReorder = (next: Move[]) => {
-    setMoves(next);
-    onMoveReorder(next);
-  };
-  const { onDragStart, onDragOver, onDragEnd } = useDragSort(moves, handleMoveReorder);
-
-  const isFainted = pokemon.hp === 0;
   const primaryType = TYPE_BADGE[pokemon.types[0]];
+  const hpPct = Math.max(0, pokemon.hp / pokemon.maxHp);
+  const isMale = true; // Mock gender
+
+  // Resolve Nature info
+  const natureDef = pokemon.natureId ? getNature(pokemon.natureId) : null;
+  const natureName = natureDef ? (locale === 'he' ? natureDef.name.he : natureDef.name.en) : '---';
+  const statShort: Record<string, string> = {
+    attack: 'Atk',
+    defense: 'Def',
+    specialAttack: 'SpA',
+    specialDefense: 'SpD',
+    speed: 'Spe',
+  };
 
   return (
-    <div className="flex flex-col w-full h-full bg-slate-900" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* ── TOP: always-visible header ────────────────────────────────── */}
-      <div className="shrink-0 p-5 relative overflow-hidden">
-        {/* type glow bg */}
+    <div className="flex flex-col h-full w-full bg-[#111218] rounded-xl border border-slate-800 overflow-hidden">
+      {/* --- HEADER BLOCK --- */}
+      <div className="relative shrink-0 border-b border-slate-800">
+        {/* Background gradient overlay based on type */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: `radial-gradient(ellipse at 60% 0%, ${primaryType.color}18, transparent 70%)` }}
+          className="absolute inset-0 pointer-events-none opacity-20"
+          style={{ background: `radial-gradient(circle at top left, ${primaryType.color}, transparent 80%)` }}
         />
 
-        <div className="relative flex items-start gap-4">
-          {/* large sprite */}
-          <div
-            className={`w-24 h-24 shrink-0 flex items-center justify-center
-                           rounded-xl bg-slate-800/60 border border-slate-700/40
-                           ${isFainted ? 'grayscale opacity-50' : ''}`}
-          >
-            {sprite ? (
+        <div className="relative p-8 flex items-start gap-8">
+          {/* Column 1: Large Sprite */}
+          <div className="w-40 h-40 shrink-0 flex items-center justify-center drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+            {sprite && (
               <img
                 src={sprite}
                 alt={pokemon.name}
-                className="w-full h-full object-contain p-1"
+                className="w-full h-full object-contain"
                 style={{ imageRendering: 'pixelated' }}
               />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-slate-700 animate-pulse" />
             )}
           </div>
 
-          {/* name / level / types */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-baseline gap-2 mb-1">
-              <h2 className="text-white text-xl font-bold truncate">{pokemon.name}</h2>
-              <span className="text-slate-400 text-sm shrink-0">Lv.{pokemon.level}</span>
+          {/* Column 2: Core Info */}
+          <div className="flex-1 flex flex-col justify-center pt-2">
+            <div className="flex items-center gap-2 mb-2">
+              <h2 className="text-3xl font-bold text-white tracking-wide">{getPokemonDisplayName(pokemon.id)}</h2>
+              <span className={isMale ? 'text-blue-400 text-xl' : 'text-pink-400 text-xl'}>{isMale ? '♂' : '♀'}</span>
             </div>
 
-            {/* types */}
-            <div className="flex gap-1.5 flex-wrap mb-2">
-              {pokemon.types.map((type) => {
-                const b = TYPE_BADGE[type];
+            <span className="text-slate-300 text-base font-medium mb-3">Lv. {pokemon.level}</span>
+
+            <div className="flex items-center gap-2 mb-8">
+              {pokemon.types.map((t) => {
+                const b = TYPE_BADGE[t];
                 return (
                   <span
-                    key={type}
-                    className="text-xs px-3 py-1 rounded-full font-medium"
-                    style={{ background: b.bg, border: `1px solid ${b.border}`, color: b.color }}
+                    key={t}
+                    className="px-3 py-1 text-xs font-bold rounded-md text-white"
+                    style={{ backgroundColor: b.bg }}
                   >
                     {locale === 'he' ? b.he : b.en}
                   </span>
                 );
               })}
-              {pokemon.status && (
-                <span
-                  className="text-xs px-3 py-1 rounded-full font-bold"
-                  style={{
-                    background: STATUS_LABEL[pokemon.status].color + '22',
-                    border: `1px solid ${STATUS_LABEL[pokemon.status].color}55`,
-                    color: STATUS_LABEL[pokemon.status].color,
-                  }}
-                >
-                  {locale === 'he' ? STATUS_LABEL[pokemon.status].he : STATUS_LABEL[pokemon.status].en}
-                </span>
-              )}
             </div>
 
-            {/* HP bar */}
-            <div className="flex items-center gap-2">
-              <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+            {/* Header HP Bar */}
+            <div className="flex items-center gap-3">
+              <span className="text-slate-400 font-semibold w-6">HP</span>
+              <div className="w-32 h-2 bg-slate-800 rounded-full overflow-hidden shrink-0">
                 <div
-                  className="h-full rounded-full transition-all duration-300"
-                  style={{
-                    width: `${Math.max(0, pokemon.hp / pokemon.maxHp) * 100}%`,
-                    backgroundColor: hpColor(pokemon.hp, pokemon.maxHp),
-                    boxShadow: `0 0 8px ${hpColor(pokemon.hp, pokemon.maxHp)}88`,
-                  }}
+                  className="h-full rounded-full transition-all"
+                  style={{ width: `${hpPct * 100}%`, backgroundColor: hpColor(pokemon.hp, pokemon.maxHp) }}
                 />
               </div>
-              <span className="text-slate-400 text-xs tabular-nums shrink-0">
-                {pokemon.hp}/{pokemon.maxHp}
-              </span>
+            </div>
+            <div className="text-slate-300 text-sm font-mono tabular-nums ml-10 mt-1">
+              {pokemon.hp} / {pokemon.maxHp}
+            </div>
+          </div>
+
+          {/* Column 3: Metadata List */}
+          <div className="w-64 shrink-0 flex flex-col gap-4 text-sm pt-2">
+            <div>
+              <div className="text-slate-400 mb-1">Nature</div>
+              <div className="text-slate-200 flex gap-1">
+                {natureName}
+                {natureDef?.increasedStat && natureDef?.decreasedStat && (
+                  <span className="text-slate-400">
+                    (<span className="text-green-400">+{statShort[natureDef.increasedStat]}</span>,{' '}
+                    <span className="text-red-400">-{statShort[natureDef.decreasedStat]}</span>)
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <div className="text-slate-400 mb-1">ID No.</div>
+              <div className="text-slate-200 font-mono">123456</div>
+            </div>
+
+            <div>
+              <div className="text-slate-400 mb-1">Held Item</div>
+              {pokemon.heldItemId ? (
+                <div className="flex items-center justify-between bg-slate-800/50 border border-slate-700/50 rounded-lg px-3 py-1.5 mt-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">🪨</span> {/* Mock icon */}
+                    <span className="text-slate-200">{pokemon.heldItemId}</span>
+                  </div>
+                  <button className="text-slate-500 hover:text-white transition-colors">✕</button>
+                </div>
+              ) : (
+                <div className="text-slate-500">None</div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── TABS ─────────────────────────────────────────────────────── */}
-      <div className="shrink-0 flex border-b border-slate-700/50 px-4">
-        {(['moves', 'stats', 'item'] as Tab[]).map((tabId) => (
+      {/* --- TABS NAV --- */}
+      <div className="flex px-8 border-b border-slate-800 shrink-0">
+        {[
+          { id: 'stats', label: 'Stats' },
+          { id: 'moveset', label: 'Moveset' },
+          { id: 'held_items', label: 'Held Items' },
+        ].map((t) => (
           <button
-            key={tabId}
-            onClick={() => setTab(tabId)}
-            className={[
-              'px-4 py-2.5 text-sm font-medium border-b-2 transition-all',
-              tab === tabId
-                ? 'border-indigo-400 text-indigo-300'
-                : 'border-transparent text-slate-500 hover:text-slate-300',
-            ].join(' ')}
+            key={t.id}
+            onClick={() => setTab(t.id as Tab)}
+            className={`px-8 py-4 text-sm font-semibold transition-colors relative ${
+              tab === t.id ? 'text-white' : 'text-slate-500 hover:text-slate-300'
+            }`}
           >
-            {t(`party.tab.${tabId}`)}
+            {t.label}
+            {tab === t.id && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5" style={{ backgroundColor: primaryType.color }} />
+            )}
           </button>
         ))}
       </div>
 
-      {/* ── TAB CONTENT ─────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {/* MOVES TAB — 2×4 drag-drop grid */}
-        {tab === 'moves' && (
-          <div className="grid grid-cols-2 gap-2">
-            {moves.map((move, i) => {
-              const moveType = move.type ? TYPE_BADGE[move.type as keyof typeof TYPE_BADGE] : null;
-              return (
-                <div
-                  key={`${move.id}-${i}`}
-                  draggable
-                  onDragStart={() => onDragStart(i)}
-                  onDragOver={(e) => onDragOver(e, i)}
-                  onDragEnd={onDragEnd}
-                  className="flex flex-col gap-1 rounded-lg p-3 border border-slate-700/50
-                             bg-slate-800/60 cursor-grab active:cursor-grabbing
-                             hover:border-slate-600/60 transition-all select-none"
-                  style={{
-                    touchAction: 'none',
-                    borderColor: moveType ? `${moveType.color}44` : undefined,
-                  }}
-                >
-                  <div className="flex items-start justify-between gap-1">
-                    <span className="text-white text-sm font-semibold leading-tight truncate">{move.name}</span>
-                    <span className="text-base shrink-0 leading-none">
-                      {/* @ts-ignore */}
-                      {move.category ? (CATEGORY_ICON[move.category] ?? '○') : '○'}
-                    </span>
-                  </div>
-                  {moveType && (
-                    <span
-                      className="text-[10px] px-2 py-0.5 rounded-full self-start font-medium"
-                      style={{ background: moveType.bg, border: `1px solid ${moveType.border}`, color: moveType.color }}
-                    >
-                      {locale === 'he' ? moveType.he : moveType.en}
-                    </span>
-                  )}
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <div className="flex-1 h-1 bg-slate-700 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{
-                          width: `${(move.currentPp / move.pp) * 100}%`,
-                          backgroundColor: moveType?.color ?? '#64748b',
-                        }}
-                      />
-                    </div>
-                    <span className="text-[10px] text-slate-500 tabular-nums shrink-0">
-                      {move.currentPp}/{move.pp}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* STATS TAB */}
-        {tab === 'stats' && (
-          <div className="flex flex-col gap-3">
-            {STATS.map(({ key, label, color }) => {
-              const val = (pokemon[key as keyof Pokemon] as number) ?? 0;
-              const pct = Math.min(1, val / MAX_STAT);
-              return (
-                <div key={key} className="flex items-center gap-3">
-                  <span className="text-slate-500 text-xs w-8 shrink-0 text-end">{label}</span>
-                  <div className="flex-1 h-2.5 bg-slate-700/60 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{
-                        width: `${pct * 100}%`,
-                        backgroundColor: color,
-                        boxShadow: `0 0 8px ${color}66`,
-                      }}
-                    />
-                  </div>
-                  <span className="text-white text-sm tabular-nums w-8 shrink-0">{val}</span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* HELD ITEM TAB */}
-        {tab === 'item' && (
-          <div className="flex flex-col items-center justify-center gap-4 py-8">
-            {pokemon.heldItemId ? (
-              <>
-                <div
-                  className="w-16 h-16 rounded-xl bg-slate-800 border border-slate-700
-                                flex items-center justify-center text-3xl"
-                >
-                  🎒
-                </div>
-                <div className="text-center">
-                  <p className="text-white font-semibold">{pokemon.heldItemId}</p>
-                  <p className="text-slate-500 text-sm mt-1">{t('party.item.equipped')}</p>
-                </div>
-                <button
-                  className="px-4 py-2 rounded-lg bg-red-900/30 border border-red-700/40
-                                   text-red-300 text-sm hover:bg-red-800/40 transition-colors"
-                >
-                  {t('party.item.remove')}
-                </button>
-              </>
-            ) : (
-              <div className="text-center">
-                <div
-                  className="w-16 h-16 rounded-xl bg-slate-800 border border-slate-700/40
-                                flex items-center justify-center text-slate-600 text-3xl mx-auto mb-3"
-                >
-                  ○
-                </div>
-                <p className="text-slate-500 text-sm">{t('party.item.empty')}</p>
-              </div>
-            )}
-          </div>
-        )}
+      {/* --- TAB CONTENT AREA --- */}
+      <div className="flex-1 overflow-y-auto p-8 bg-[#111218]">
+        {tab === 'stats' && <StatsTab pokemon={pokemon} />}
+        {tab === 'moveset' && <MovesetTab pokemon={pokemon} />}
+        {tab === 'held_items' && <HeldItemsTab pokemon={pokemon} />}
       </div>
     </div>
   );

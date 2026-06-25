@@ -1,47 +1,35 @@
 import { useEffect, useState } from 'react';
-import type { Pokemon } from '../../types';
-import type { MajorStatusId } from '../../types/battle-metadata';
-import { useI18n } from '../../ui-react/context/i18n-context';
-import { getCachedImage, loadImage } from '../../engine/sprite-loader';
-import { TYPE_BADGE } from '../../data/type-constants';
-
-export const STATUS_LABEL: Record<MajorStatusId, { en: string; he: string; color: string }> = {
-  poison: { en: 'PSN', he: 'רעל', color: '#a040a0' },
-  //   tox:  { en: 'TOX',  he: 'רעל+',  color: '#6a006a' },
-  paralyze: { en: 'PAR', he: 'שיתוק', color: '#f8d030' },
-  sleep: { en: 'SLP', he: 'שינה', color: '#7038f8' },
-  burn: { en: 'BRN', he: 'כוויה', color: '#f08030' },
-  freeze: { en: 'FRZ', he: 'קפוא', color: '#98d8d8' },
-  //   faint:  { en: 'FNT',  he: 'עלפון', color: '#e83030' },
-};
-
-export function hpColor(hp: number, maxHp: number): string {
-  const pct = hp / maxHp;
-  if (pct > 0.5) return '#4ade80'; // green
-  if (pct > 0.2) return '#facc15'; // yellow
-  return '#f87171'; // red
-}
+import type { Pokemon } from '../../types/index.js';
+import { useI18n } from '../../ui-react/context/i18n-context.js';
+import { getCachedImage, loadImage } from '../../engine/sprite-loader.js';
+import { TYPE_BADGE } from '../../data/type-constants.js';
+import { STATUS_LABEL, hpColor } from './utils.js';
+import { getPokemonDisplayName } from '../../services/pokemon-data.js';
 
 export interface CardProps {
   pokemon: Pokemon;
   index: number;
   isSelected: boolean;
   isDragging: boolean;
-  dragHandlers: {
-    onDragStart: (i: number) => void;
-    onDragOver: (e: React.DragEvent, i: number) => void;
-    onDragEnd: () => void;
-  };
-  onClick: (p: Pokemon) => void;
+  dragHandlers: any;
+  onClick: () => void;
 }
 
+// ─── Glow CSS vars derived from the primary type colour ───────────────────────
+function glowStyle(hex: string): React.CSSProperties {
+  return {
+    '--glow': hex,
+    '--glow-dim': hex + '60',
+    '--glow-inner': hex + '22',
+    '--glow-blob': hex + '55',
+  } as React.CSSProperties;
+}
+
+// ─── Component ───────────────────────────────────────────────────────────────
 export function PokemonCard({ pokemon, index, isSelected, isDragging, dragHandlers, onClick }: CardProps) {
   const { locale } = useI18n();
   const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
-  const ballUrl = pokemon.caughtBall ? `/sprites/items/${pokemon.caughtBall}.png` : null;
-
   const [sprite, setSprite] = useState<string | null>(getCachedImage(spriteUrl)?.src ?? null);
-  const [ballImg, setBallImg] = useState<string | null>(ballUrl ? (getCachedImage(ballUrl)?.src ?? null) : null);
 
   useEffect(() => {
     let dead = false;
@@ -50,22 +38,18 @@ export function PokemonCard({ pokemon, index, isSelected, isDragging, dragHandle
         if (!dead) setSprite(img.src);
       })
       .catch(() => {});
-    if (ballUrl)
-      loadImage(ballUrl)
-        .then((img) => {
-          if (!dead) setBallImg(img.src);
-        })
-        .catch(() => {});
     return () => {
       dead = true;
     };
-  }, [pokemon.id, ballUrl, spriteUrl]);
+  }, [pokemon.id, spriteUrl]);
 
   const isFainted = pokemon.hp === 0;
   const hpPct = Math.max(0, pokemon.hp / pokemon.maxHp);
   const xpPct = Math.min(1, pokemon.xp / pokemon.xpToNext);
-  const typeColor = TYPE_BADGE[pokemon.types[0]].color;
-  const primaryBadge = TYPE_BADGE[pokemon.types[0]];
+  const primaryType = TYPE_BADGE[pokemon.types[0]];
+
+  // TODO: wire up real gender from the pokemon object when available
+  const isMale = true;
 
   return (
     <div
@@ -73,125 +57,132 @@ export function PokemonCard({ pokemon, index, isSelected, isDragging, dragHandle
       onDragStart={() => dragHandlers.onDragStart(index)}
       onDragOver={(e) => dragHandlers.onDragOver(e, index)}
       onDragEnd={dragHandlers.onDragEnd}
-      onClick={() => onClick(pokemon)}
+      onClick={onClick}
       className={[
-        'relative flex items-center gap-3 rounded-xl p-3 cursor-pointer select-none',
-        'border transition-all duration-150 overflow-hidden animate-fade-in-up',
-        isFainted
-          ? 'bg-red-950/20 border-red-900/30 grayscale opacity-50'
-          : isSelected
-            ? 'border-slate-400/60 bg-slate-800'
-            : 'bg-slate-800/70 border-slate-700/40 hover:bg-slate-700/70 hover:border-slate-600/60',
-        isDragging ? 'opacity-30 scale-95' : '',
+        'relative flex flex-col rounded-[10px] cursor-pointer select-none',
+        'bg-[#12141f] border-2 overflow-hidden',
+        'px-[12px] pt-[10px] pb-[8px]',
+        'w-full',
+        isFainted ? 'grayscale opacity-60 border-[#2a2d42]' : 'border-[#2a2d42]',
+        isDragging ? 'opacity-50 scale-95' : '',
+        isSelected && !isFainted ? 'border-[var(--glow)]' : '',
       ].join(' ')}
       style={{
-        touchAction: 'none',
-        animationDelay: `${index * 55}ms`,
-        boxShadow: isSelected ? `0 0 0 1px ${typeColor}55, 0 0 20px ${typeColor}18` : undefined,
+        // direction: 'ltr',
+        ...(isSelected && !isFainted ? glowStyle(primaryType.color) : {}),
+        ...(isSelected && !isFainted
+          ? {
+              boxShadow: '0 0 0 1px var(--glow-dim), inset 0 0 28px var(--glow-inner)',
+            }
+          : {}),
       }}
     >
-      {/* type-color accent bar on the leading edge */}
-      <div className="absolute start-0 top-0 bottom-0 w-1 rounded-s-xl" style={{ background: typeColor }} />
-
-      {/* drag handle */}
-      <span className="text-slate-600 cursor-grab active:cursor-grabbing text-base shrink-0 ms-1">⠿</span>
-
-      {/* sprite */}
-      <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
-        {sprite ? (
-          <img
-            src={sprite}
-            alt={pokemon.name}
-            className="w-full h-full object-contain"
-            style={{ imageRendering: 'pixelated' }}
-          />
-        ) : (
-          <div className="w-10 h-10 rounded-full bg-slate-700 animate-pulse" />
-        )}
-        {ballImg && (
-          <img
-            src={ballImg}
-            alt=""
-            className="absolute bottom-0 end-0 w-3.5 h-3.5 object-contain"
-            style={{ imageRendering: 'pixelated' }}
-          />
-        )}
-      </div>
-
-      {/* info */}
-      <div className="flex-1 min-w-0">
-        {/* name + level + status */}
-        <div className="flex items-center justify-between gap-1 mb-1">
-          <span className="text-white font-semibold text-sm truncate">{pokemon.name}</span>
-          <div className="flex items-center gap-1 shrink-0">
-            {pokemon.status && (
-              <span
-                className="text-[10px] px-1.5 py-0.5 rounded font-bold"
-                style={{
-                  background: STATUS_LABEL[pokemon.status].color + '25',
-                  color: STATUS_LABEL[pokemon.status].color,
-                }}
-              >
-                {locale === 'he' ? STATUS_LABEL[pokemon.status].he : STATUS_LABEL[pokemon.status].en}
-              </span>
-            )}
-            <span className="text-slate-400 text-xs">Lv.{pokemon.level}</span>
-          </div>
-        </div>
-
-        {/* HP bar */}
-        <div className="flex items-center gap-1.5 mb-1">
-          <span className="text-[10px] text-slate-500 shrink-0 w-4">HP</span>
-          <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-300"
-              style={{
-                width: `${hpPct * 100}%`,
-                backgroundColor: hpColor(pokemon.hp, pokemon.maxHp),
-                boxShadow: `0 0 6px ${hpColor(pokemon.hp, pokemon.maxHp)}88`,
-              }}
-            />
-          </div>
-          <span className="text-[10px] text-slate-500 tabular-nums shrink-0">
-            {pokemon.hp}/{pokemon.maxHp}
-          </span>
-        </div>
-
-        {/* EXP bar */}
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <span className="text-[10px] text-slate-500 shrink-0 w-4">XP</span>
-          <div className="flex-1 h-0.5 bg-slate-700 rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-300"
-              style={{ width: `${xpPct * 100}%`, backgroundColor: '#818cf8' }}
-            />
-          </div>
-        </div>
-
-        {/* types */}
-        <div className="flex gap-1 flex-wrap">
-          {pokemon.types.map((type) => {
-            const b = TYPE_BADGE[type];
-            return (
-              <span
-                key={type}
-                className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                style={{ background: b.bg, border: `1px solid ${b.border}`, color: b.color }}
-              >
-                {locale === 'he' ? b.he : b.en}
-              </span>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* selected glow overlay */}
+      {/* Radial wash anchored to the left (sprite side) */}
       {isSelected && !isFainted && (
         <div
-          className="absolute inset-0 rounded-xl pointer-events-none"
-          style={{ background: `radial-gradient(ellipse at 80% 50%, ${primaryBadge.color}12, transparent 70%)` }}
+          className="pointer-events-none absolute inset-0 rounded-[8px]"
+          style={{
+            background: 'radial-gradient(ellipse 60% 80% at 28% 50%, var(--glow-inner) 0%, transparent 70%)',
+          }}
         />
       )}
+
+      {/* ── Top meta row ── */}
+      <div className="flex flex-row items-center justify-between mb-[6px] relative z-10">
+        <span className="font-mono text-[9px] text-[#4a4f6e]">#{String(pokemon.id).padStart(3, '0')}</span>
+        <span className="font-mono text-[9px] text-[#7880a8]">Lv. {pokemon.level}</span>
+      </div>
+
+      {/* ── Main body ── */}
+      <div className="flex flex-row items-center gap-[8px] relative z-10">
+        {/* Sprite — always left */}
+        <div className="w-[90px] h-[90px] shrink-0 flex items-center justify-center relative">
+          {isSelected && !isFainted && (
+            <div
+              className="absolute w-[80px] h-[80px] rounded-full z-0"
+              style={{ background: 'var(--glow-blob)', filter: 'blur(18px)' }}
+            />
+          )}
+          {sprite ? (
+            <img
+              src={sprite}
+              alt={pokemon.name}
+              className="w-[90px] h-[90px] object-contain relative z-10"
+              style={{ imageRendering: 'pixelated' }}
+            />
+          ) : (
+            <div className="w-[64px] h-[64px] bg-[#1a1d2e] animate-pulse" />
+          )}
+        </div>
+
+        {/* Info panel — always right */}
+        <div className="flex-1 flex flex-col gap-[5px] min-w-0">
+          {/* Name + gender */}
+          <div className="flex flex-row items-center gap-[5px]">
+            <h3 className="font-mono text-[13px] text-[#e8eaf6] whitespace-nowrap overflow-hidden text-ellipsis">
+              {getPokemonDisplayName(pokemon.id)}
+            </h3>
+            <span className={`font-mono text-[11px] ${isMale ? 'text-blue-400' : 'text-pink-400'}`}>
+              {isMale ? '♂' : '♀'}
+            </span>
+          </div>
+
+          {/* Types — own line */}
+          <div className="flex flex-row items-center gap-[4px] flex-wrap">
+            {pokemon.types.map((t) => {
+              const b = TYPE_BADGE[t];
+              return (
+                <span
+                  key={t}
+                  className="font-mono text-[9px] px-[6px] py-[2px] rounded-[3px] text-white uppercase tracking-[0.3px]"
+                  style={{ backgroundColor: b.bg, border: `1px solid ${b.border}`, color: b.color }}
+                >
+                  {b[locale]}
+                </span>
+              );
+            })}
+          </div>
+
+          {/* HP bar */}
+          <div className="flex flex-col gap-[3px]">
+            <div className="flex flex-row items-center gap-[5px]">
+              <span className="font-mono text-[9px] text-[#546478] shrink-0">HP</span>
+              <div className="flex-1 h-[6px] bg-[#0c0e18] rounded-[3px] overflow-hidden border border-[#1e2130]">
+                <div
+                  className="h-full rounded-[3px] transition-all"
+                  style={{
+                    width: `${hpPct * 100}%`,
+                    backgroundColor: hpColor(pokemon.hp, pokemon.maxHp),
+                    marginLeft: 0,
+                  }}
+                />
+              </div>
+            </div>
+            <span className="font-mono text-[10px] text-[#c8d0f0]" style={{ textAlign: 'right' }}>
+              {pokemon.hp} / {pokemon.maxHp}
+            </span>
+          </div>
+
+          {/* Status tags — solid filled, same style as type badges */}
+          {pokemon.status && (
+            <div className="flex flex-row items-center gap-[4px] flex-wrap">
+              <span
+                className="font-mono text-[9px] px-[6px] py-[2px] rounded-[3px] text-white uppercase tracking-[0.5px]"
+                style={{
+                  backgroundColor: STATUS_LABEL[pokemon.status].color,
+                }}
+              >
+                {STATUS_LABEL[pokemon.status][locale]}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── EXP bar — always fills left→right ── */}
+      <div className="w-full h-[3px] bg-[#0c0e18] rounded-[2px] overflow-hidden mt-[8px] relative z-10">
+        <div className="h-full bg-[#3d6bce] rounded-[2px]" style={{ width: `${xpPct * 100}%` }} />
+      </div>
     </div>
   );
 }
