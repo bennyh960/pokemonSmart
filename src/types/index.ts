@@ -26,6 +26,7 @@ export type SceneId =
   | 'MENU'
   | 'DIALOGUE'
   | 'PARTY'
+  | 'PARTY2'
   | 'POKEDEX'
   | 'SHOP'
   | 'BAG'

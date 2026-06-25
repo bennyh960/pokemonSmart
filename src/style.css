@@ -10,6 +10,8 @@
   box-sizing: border-box;
 }
 
+@import 'tailwindcss';
+
 html,
 body {
   width: 100%;
@@ -24,7 +26,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;  /* needed for gate-overlay absolute positioning */
+  position: relative; /* needed for gate-overlay absolute positioning */
 }
 
 canvas {
@@ -32,6 +34,33 @@ canvas {
   image-rendering: crisp-edges;
   display: block;
   cursor: default;
+}
+
+/* ------------------------------------ react ----------------------------------------- */
+
+#ui-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#ui-overlay:not(:empty) {
+  pointer-events: all;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.25s ease-out both;
 }
 
 /* ── Overworld HUD overlay ────────────────────────────────────────────────── */
@@ -55,23 +84,45 @@ canvas {
   align-items: center;
   gap: calc(2px * var(--s));
   padding: calc(2px * var(--s)) calc(4px * var(--s));
-  background: rgba(5, 8, 22, 0.80);
+  background: rgba(5, 8, 22, 0.8);
   border: 1px solid rgba(70, 100, 210, 0.35);
   border-radius: calc(3px * var(--s));
   color: rgba(140, 145, 170, 0.55);
   cursor: pointer;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  transition:
+    background 0.12s,
+    color 0.12s,
+    border-color 0.12s;
 }
 
-.hud-tab--active        { border-color: rgba(100, 140, 255, 0.65); }
-.hud-tab--active.hud-tab--map   { background: rgba(40,65,160,0.60); color: #a8c8ff; }
-.hud-tab--active.hud-tab--lead  { background: rgba(30,100,50,0.60); color: #7edc7e; }
-.hud-tab--active.hud-tab--quest { background: rgba(120,90,10,0.60); color: #ffd060; }
+.hud-tab--active {
+  border-color: rgba(100, 140, 255, 0.65);
+}
+.hud-tab--active.hud-tab--map {
+  background: rgba(40, 65, 160, 0.6);
+  color: #a8c8ff;
+}
+.hud-tab--active.hud-tab--lead {
+  background: rgba(30, 100, 50, 0.6);
+  color: #7edc7e;
+}
+.hud-tab--active.hud-tab--quest {
+  background: rgba(120, 90, 10, 0.6);
+  color: #ffd060;
+}
 
-.hud-sym { font-size: calc(7px * var(--s)); line-height: 1; font-family: monospace; }
-.hud-num { font-size: calc(4px * var(--s)); color: rgba(120,125,160,0.45); font-family: 'Press Start 2P', monospace; }
+.hud-sym {
+  font-size: calc(7px * var(--s));
+  line-height: 1;
+  font-family: monospace;
+}
+.hud-num {
+  font-size: calc(4px * var(--s));
+  color: rgba(120, 125, 160, 0.45);
+  font-family: 'Press Start 2P', monospace;
+}
 
 #hud-content {
   background: rgba(5, 8, 22, 0.82);
@@ -90,23 +141,49 @@ canvas {
   white-space: nowrap;
 }
 
-.hud-map          { color: #a8c8ff; }
-.hud-lead-name    { color: #7edc7e; }
-.hud-lv           { color: #99bb99; }
-.hud-hp-num       { color: #5a8a5a; font-size: calc(4px * var(--s)); }
-.hud-quest-title  { color: #ffd060; }
-.hud-quest-obj    { color: #9090b8; font-size: calc(4px * var(--s)); margin-top: calc(2px * var(--s)); }
-.hud-empty        { color: #444; }
+.hud-map {
+  color: #a8c8ff;
+}
+.hud-lead-name {
+  color: #7edc7e;
+}
+.hud-lv {
+  color: #99bb99;
+}
+.hud-hp-num {
+  color: #5a8a5a;
+  font-size: calc(4px * var(--s));
+}
+.hud-quest-title {
+  color: #ffd060;
+}
+.hud-quest-obj {
+  color: #9090b8;
+  font-size: calc(4px * var(--s));
+  margin-top: calc(2px * var(--s));
+}
+.hud-empty {
+  color: #444;
+}
 
 .hud-bar-wrap {
   height: calc(3px * var(--s));
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: calc(1.5px * var(--s));
   margin: calc(2px * var(--s)) 0;
   overflow: hidden;
 }
-.hud-bar { height: 100%; transition: width 0.3s ease; }
-.hp-high { background: #38c038; }
-.hp-mid  { background: #c8c030; }
-.hp-low  { background: #c03030; }
+.hud-bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+.hp-high {
+  background: #38c038;
+}
+.hp-mid {
+  background: #c8c030;
+}
+.hp-low {
+  background: #c03030;
+}

@@ -37,9 +37,12 @@ import '../data/story/global-gate-config.js';
 import { LOGICAL_WIDTH, LOGICAL_HEIGHT, RES_SCALE, CANVAS_WIDTH, CANVAS_HEIGHT } from './config.js';
 import { uiRegistry } from './input/uiRegistry.js';
 import { createTestScene } from '../scenes/test.scene.js';
+import { initReactHost } from './react/react-scene-host.js';
+import { createPartyReactScene } from '../scenesReact/party/index.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
-export function createGame(container: HTMLElement) {
+export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
+  initReactHost(reactOverlay);
   const canvas = document.createElement('canvas');
   canvas.width = CANVAS_WIDTH;
   canvas.height = CANVAS_HEIGHT;
@@ -77,7 +80,8 @@ export function createGame(container: HTMLElement) {
   stateMachine.register('BATTLE', createBattleScene(input, stateMachine, canvas, audio));
   stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine, audio));
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
-  stateMachine.register('PARTY', createPartyScene(input, stateMachine)); // input done
+  stateMachine.register('PARTY2', createPartyScene(input, stateMachine)); // input done
+  stateMachine.register('PARTY', createPartyReactScene(stateMachine)); // ongoing
   stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
   stateMachine.register('EVOLUTION', createEvolutionScene(input, stateMachine, audio));
   stateMachine.register('BAG', createBagScene(input, stateMachine));
