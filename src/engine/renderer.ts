@@ -1,3 +1,5 @@
+import { FONT_EN, fontFor } from './fonts.js';
+import { LOGICAL_WIDTH, LOGICAL_HEIGHT } from './config.js';
 /**
  * Renderer - Pure utility functions for Canvas 2D rendering.
  *
@@ -5,12 +7,78 @@
  * All coordinates are in native resolution (240x160).
  */
 
-import type { TextOptions } from '../types/index.js';
-import { FONT_EN, fontFor } from './fonts.js';
-import { LOGICAL_WIDTH, LOGICAL_HEIGHT } from './config.js';
+// PARTY
+const C = {};
+
+export const COLORS = {
+  BG: '#0d1a14',
+  CARD_BG: '#0f2a1a',
+  CARD_SEL: '#1a3a2a',
+  BORDER: '#1a4a30',
+  BORDER_SEL: '#2a6a40',
+  SEP: '#1a3a2a',
+  TEXT_PRI: '#ffffff',
+  TEXT_SEC: '#aaccaa',
+  TEXT_MUT: '#667766',
+  TEXT_DIM: '#445544',
+  TAB_BG: '#0a2a1a',
+  TAB_ACT: '#1a5a35',
+  TITLE_BG: '#0a1a10',
+  BTM_BG: '#0a1a10',
+  KEY_BG: '#1a3a2a',
+  KEY_BRD: '#2a5a3a',
+  KEY_BG_HOVER: '#1a5a35',
+  KEY_BRD_HOVER: '#2a6a40',
+  KEY_BG_ACTIVE: '#1a7a55',
+  KEY_BRD_ACTIVE: '#2a8a60',
+  SEL_BAR: '#20d860',
+  BAR_HP: '#20d860',
+  USE_BTN_BG: '#1a5a35',
+  USE_BTN_BRD: '#2a6a40',
+  BAR_TRACK: '#1a3a2a',
+  BAR_XP: '#5080ff',
+  BAR_PP: '#20a0d8',
+  KEY_BG_HOV: '#2a5a3a',
+  KEY_BRD_HOV: '#2a6a40',
+  // New explicit colors
+  ORANGE: '#f8c030',
+};
+
+/** Options for text rendering. */
+interface RectOptions {
+  bgColor?: string;
+  borderColor?: string;
+  borderStyle?: 'solid' | 'button' | 'none';
+  paddingX?: number;
+  paddingY?: number;
+  isHovered?: boolean;
+  isActive?: boolean;
+}
+
+interface TextOptions {
+  size?: number;
+  color?: string;
+  align?: CanvasTextAlign;
+  baseline?: CanvasTextBaseline;
+  font?: string;
+  direction?: 'ltr' | 'rtl';
+  maxWidth?: number;
+  lineHeight?: number;
+  rect?: RectOptions;
+}
+
+const DEFAULT_RECT_OPTIONS: Required<RectOptions> = {
+  bgColor: 'transparent',
+  borderColor: 'transparent',
+  borderStyle: 'button',
+  paddingX: 0,
+  paddingY: 0,
+  isHovered: false,
+  isActive: false,
+};
 
 /** Default text rendering options. */
-const DEFAULT_TEXT_OPTIONS: Required<TextOptions> = {
+const DEFAULT_TEXT_OPTIONS: Required<Omit<TextOptions, 'rect'>> = {
   size: 8,
   color: '#ffffff',
   align: 'left',
@@ -19,10 +87,6 @@ const DEFAULT_TEXT_OPTIONS: Required<TextOptions> = {
   direction: 'ltr',
   maxWidth: 0,
   lineHeight: 10,
-  paddingX: 0,
-  paddingY: 0,
-  bgColor: 'transparent',
-  borderColor: 'transparent',
 };
 
 /** Clear the entire canvas with a solid color. */
@@ -65,47 +129,122 @@ export function drawText(
   ctx.font = `${opts.size}px ${opts.font}`;
   ctx.imageSmoothingEnabled = false;
 
-  // --- Word wrap with punctuation-priority breaks ---
+  // --- Word wrap (only if maxWidth set) ---
   const lines = opts.maxWidth > 0 ? wrapText(ctx, text, opts.maxWidth) : [text];
-
-  // --- Dynamic rect height ---
   const textBlockHeight = lines.length * opts.lineHeight;
-  const rectW = opts.maxWidth > 0 ? opts.maxWidth + opts.paddingX * 2 : 0;
-  const rectH = textBlockHeight + opts.paddingY * 2;
 
-  // --- Draw bg/border rect if requested ---
-  const hasBg = opts.bgColor !== 'transparent';
-  const hasBorder = opts.borderColor !== 'transparent';
+  // --- Rect path ---
+  let textX = x;
+  let textY = y;
 
-  if ((hasBg || hasBorder) && rectW > 0) {
-    // x is the text anchor; back-calculate rect origin based on alignment
-    let rectX = x - opts.paddingX;
-    if (opts.align === 'center') rectX = x - rectW / 2;
-    else if (opts.align === 'right') rectX = x - rectW + opts.paddingX;
+  if (opts.rect) {
+    let { bgColor, borderColor, borderStyle, paddingX, paddingY, isHovered, isActive } = {
+      ...DEFAULT_RECT_OPTIONS,
+      ...opts.rect,
+    };
+    // Derive rect width: maxWidth if provided, otherwise measure the text
+    const contentW = opts.maxWidth > 0 ? opts.maxWidth : Math.max(...lines.map((l) => ctx.measureText(l).width));
 
-    const rectY = y - opts.paddingY;
+    const rectW = contentW + paddingX * 2;
+    const rectH = textBlockHeight + paddingY * 2;
+
+    let hasBg = bgColor !== 'transparent';
+    let hasBorder = borderColor !== 'transparent';
+
+    if (!hasBg && (isActive !== undefined || isHovered !== undefined)) {
+      bgColor = isActive ? COLORS.KEY_BG_ACTIVE : isHovered ? COLORS.KEY_BG_HOVER : COLORS.KEY_BG;
+      hasBg = true;
+    }
+
+    if (!hasBorder && (isActive !== undefined || isHovered !== undefined)) {
+      borderColor = isActive ? COLORS.KEY_BRD_ACTIVE : isHovered ? COLORS.KEY_BRD_HOVER : COLORS.KEY_BRD;
+      hasBorder = true;
+    }
 
     if (hasBg) {
-      fillRect(ctx, rectX, rectY, rectW, rectH, opts.bgColor);
+      fillRect(ctx, x, y, rectW, rectH, bgColor);
     }
-    if (hasBorder) {
-      drawRect(ctx, rectX, rectY, rectW, rectH, opts.borderColor);
+
+    if (hasBorder && borderStyle !== 'none') {
+      if (borderStyle === 'button') {
+        drawButtonBorder(ctx, x, y, rectW, rectH, borderColor);
+      } else {
+        drawRect(ctx, x, y, rectW, rectH, borderColor);
+      }
+    }
+
+    // x,y is rect top-left — derive text anchor inside it
+    textY = y + paddingY;
+    if (opts.align === 'center') {
+      textX = x + paddingX + contentW / 2;
+    } else if (opts.align === 'right') {
+      textX = x + paddingX + contentW;
+    } else {
+      textX = x + paddingX;
     }
   }
 
-  // --- Draw text lines ---
+  // --- Draw text ---
   ctx.fillStyle = opts.color;
   ctx.textAlign = opts.align;
   ctx.textBaseline = opts.baseline;
   ctx.direction = opts.direction;
 
-  let lineY = y;
+  let lineY = textY;
   for (const line of lines) {
-    ctx.fillText(line, x, lineY);
+    ctx.fillText(line, textX, lineY);
     lineY += opts.lineHeight;
   }
 
   ctx.restore();
+}
+
+// Pixel-art style button border: bright top-left, dark bottom-right (inset highlight)
+function drawButtonBorder(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  color: string,
+): void {
+  // Outer border
+  drawRect(ctx, x, y, w, h, color);
+
+  // Top + left highlight (lighter)
+  ctx.save();
+  ctx.strokeStyle = lightenColor(color, 0.4);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x, y + h);
+  ctx.lineTo(x, y);
+  ctx.lineTo(x + w, y);
+  ctx.stroke();
+
+  // Bottom + right shadow (darker)
+  ctx.strokeStyle = darkenColor(color, 0.4);
+  ctx.beginPath();
+  ctx.moveTo(x, y + h);
+  ctx.lineTo(x + w, y + h);
+  ctx.lineTo(x + w, y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function lightenColor(hex: string, amount: number): string {
+  return shiftColor(hex, amount);
+}
+
+function darkenColor(hex: string, amount: number): string {
+  return shiftColor(hex, -amount);
+}
+
+function shiftColor(hex: string, amount: number): string {
+  const n = parseInt(hex.replace('#', ''), 16);
+  const r = Math.min(255, Math.max(0, (n >> 16) + Math.round(255 * amount)));
+  const g = Math.min(255, Math.max(0, ((n >> 8) & 0xff) + Math.round(255 * amount)));
+  const b = Math.min(255, Math.max(0, (n & 0xff) + Math.round(255 * amount)));
+  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
 }
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {

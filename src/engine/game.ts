@@ -36,6 +36,7 @@ import '../data/story/content/index.js';
 import '../data/story/global-gate-config.js';
 import { LOGICAL_WIDTH, LOGICAL_HEIGHT, RES_SCALE, CANVAS_WIDTH, CANVAS_HEIGHT } from './config.js';
 import { uiRegistry } from './input/uiRegistry.js';
+import { createTestScene } from '../scenes/test.scene.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement) {
@@ -69,6 +70,7 @@ export function createGame(container: HTMLElement) {
     }
   });
 
+  stateMachine.register('TEST', createTestScene(input, stateMachine, audio)); // input done
   stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio)); // input done
   stateMachine.register('HERO_SELECT', createHeroSelectScene(input, stateMachine));
   stateMachine.register('HERO_NAME_SELECT', createHeroNameSelectScene(input, stateMachine));
@@ -138,6 +140,7 @@ export function createGame(container: HTMLElement) {
       if (running) return;
       running = true;
       stateMachine.change('TITLE');
+      // stateMachine.change('TEST');
       lastTime = performance.now();
       requestAnimationFrame(loop);
     },

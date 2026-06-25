@@ -26,28 +26,52 @@ class UIRegistryManager {
   private DOUBLE_CLICK_DELAY = 300;
   private currentlyHoveredRegion: ClickableRegion | null = null;
 
+  private currentlyActiveRegion: ClickableRegion | null = null;
+  private activeTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
   public registerRegion(region: ClickableRegion) {
     this.regions.push(region);
 
     return {
       render: (
-        callback: (config: { x: number; y: number; width: number; height: number; isHovered: boolean }) => void,
+        callback: (config: {
+          x: number;
+          y: number;
+          width: number;
+          height: number;
+          isHovered: boolean;
+          isActive: boolean;
+        }) => void,
       ) => {
         const isHovered = this.currentlyHoveredRegion?.id === region.id;
+        const isActive = this.currentlyActiveRegion?.id === region.id;
+
         callback({
           x: region.x,
           y: region.y,
           width: region.width,
           height: region.height,
           isHovered,
+          isActive,
         });
       },
     };
   }
 
+  public setActiveRegion(id: string | number | null, durationMs = 150) {
+    if (this.activeTimeoutId !== null) clearTimeout(this.activeTimeoutId);
+    this.currentlyActiveRegion = this.regions.find((r) => r.id === id) ?? null;
+
+    if (id !== null) {
+      this.activeTimeoutId = setTimeout(() => {
+        this.currentlyActiveRegion = null;
+        this.activeTimeoutId = null;
+      }, durationMs);
+    }
+  }
+
   public clear() {
     this.regions = [];
-    // this.currentlyHoveredRegion = null;
   }
 
   public processCanvasClick(

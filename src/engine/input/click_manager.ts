@@ -12,6 +12,8 @@ function handleCanvasInteraction(
     const hit = uiRegistry.processCanvasClick(canvas, clientX, clientY);
     if (!hit) return;
 
+    uiRegistry.setActiveRegion(hit.region.id);
+
     const { region, isDoubleClick, gamePos } = hit;
 
     if (isDoubleClick) {
@@ -30,7 +32,6 @@ function handleCanvasInteraction(
           state.numberBuffer += digit;
         }
       }
-      //   state.virtualPressed.add(toCode('ArrowDown'));
       region.onSelect?.({
         x: region.x,
         y: region.y,

@@ -16,6 +16,7 @@ export interface Scene {
 
 /** Scene identifiers used by the state machine. */
 export type SceneId =
+  | 'TEST'
   | 'TITLE'
   | 'HERO_SELECT'
   | 'HERO_NAME_SELECT'
@@ -243,20 +244,4 @@ export interface PlayerData {
   /** Away Pokemon: key = Pokemon.uuid. Stolen entries lock the Pokemon in party; day-care entries hold the Pokemon object. */
   awayPokemon: Record<string, AwayPokemonEntry>;
   totalSteps: number; // cumulative steps walked — used for day-care EXP calculation
-}
-
-/** Options for text rendering. */
-export interface TextOptions {
-  size?: number;
-  color?: string;
-  align?: CanvasTextAlign;
-  baseline?: CanvasTextBaseline;
-  font?: string;
-  direction?: 'ltr' | 'rtl';
-  maxWidth?: number;
-  lineHeight?: number;
-  paddingX?: number;
-  paddingY?: number;
-  bgColor?: string;
-  borderColor?: string;
 }
