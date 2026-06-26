@@ -1,37 +1,24 @@
-import React, { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { PokemonCard } from '../PokemonCard';
 import { useDragSort } from '../../../../ui-react/hooks/useDragSort';
-import type { PlayerData, Pokemon } from '../../../../types';
-import { autoSave } from '../../../../systems/game-state';
+import type { Pokemon } from '../../../../types';
 
 interface IPartySquadPanel {
   party: Pokemon[];
-  selected: Pokemon;
-  setSelected: (pokemon: Pokemon) => void;
-  setParty: (party: Pokemon[]) => void;
-  pd: PlayerData;
+  selectedUuid: string;
+  onSelect: (uuid: string) => void;
+  onReorder: (next: Pokemon[]) => void;
 }
 
-const PartySquadPanel = ({ party, selected, setSelected, setParty, pd }: IPartySquadPanel) => {
+const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder }: IPartySquadPanel) => {
   const slots = Array.from({ length: 6 }).map((_, i) => party[i] || null);
-
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
-  const handleReorder = useCallback(
-    (next: Pokemon[]) => {
-      setParty(next);
-      pd.party.splice(0, pd.party.length, ...next);
-      setDraggingIndex(null);
-      autoSave();
-      if (selected) {
-        const updated = next.find((p) => p.uuid === selected.uuid);
-        if (updated) {
-          setSelected(updated);
-        }
-      }
-    },
-    [pd, selected],
-  );
+  // useDragSort calls this with the fully reordered array on drop.
+  const handleReorder = (next: Pokemon[]) => {
+    setDraggingIndex(null);
+    onReorder(next);
+  };
 
   const { onDragStart, onDragOver, onDragEnd } = useDragSort(party, handleReorder);
 
@@ -68,10 +55,10 @@ const PartySquadPanel = ({ party, selected, setSelected, setParty, pd }: IPartyS
               key={pokemon.uuid}
               pokemon={pokemon}
               index={i}
-              isSelected={selected?.uuid === pokemon.uuid}
+              isSelected={selectedUuid === pokemon.uuid}
               isDragging={draggingIndex === i}
               dragHandlers={{ onDragStart: wrappedDragStart, onDragOver, onDragEnd: wrappedDragEnd }}
-              onClick={() => setSelected(pokemon)}
+              onClick={() => onSelect(pokemon.uuid)}
             />
           );
         })}
