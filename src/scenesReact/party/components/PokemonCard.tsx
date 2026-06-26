@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import type { Pokemon } from '../../types/index.js';
-import { useI18n } from '../../ui-react/context/i18n-context.js';
-import { getCachedImage, loadImage } from '../../engine/sprite-loader.js';
-import { TYPE_BADGE } from '../../data/type-constants.js';
-import { STATUS_LABEL, hpColor } from './utils.js';
-import { getPokemonDisplayName } from '../../services/pokemon-data.js';
+import type { Pokemon } from '../../../types/index.js';
+import { useI18n } from '../../../ui-react/context/i18n-context.js';
+import { getCachedImage, loadImage } from '../../../engine/sprite-loader.js';
+import { TYPE_BADGE } from '../../../data/type-constants.js';
+import { STATUS_LABEL, glowStyle, hpColor } from '../../../utils/util';
+import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
+import { getPokemonSpriteUrl } from '../../../utils/util.js';
 
 export interface CardProps {
   pokemon: Pokemon;
@@ -15,20 +16,10 @@ export interface CardProps {
   onClick: () => void;
 }
 
-// ─── Glow CSS vars derived from the primary type colour ───────────────────────
-function glowStyle(hex: string): React.CSSProperties {
-  return {
-    '--glow': hex,
-    '--glow-dim': hex + '60',
-    '--glow-inner': hex + '22',
-    '--glow-blob': hex + '55',
-  } as React.CSSProperties;
-}
-
 // ─── Component ───────────────────────────────────────────────────────────────
 export function PokemonCard({ pokemon, index, isSelected, isDragging, dragHandlers, onClick }: CardProps) {
   const { locale } = useI18n();
-  const spriteUrl = `/sprites/pokemon/front/${pokemon.id}.png`;
+  const spriteUrl = getPokemonSpriteUrl(pokemon.id);
   const [sprite, setSprite] = useState<string | null>(getCachedImage(spriteUrl)?.src ?? null);
 
   useEffect(() => {
@@ -47,9 +38,6 @@ export function PokemonCard({ pokemon, index, isSelected, isDragging, dragHandle
   const hpPct = Math.max(0, pokemon.hp / pokemon.maxHp);
   const xpPct = Math.min(1, pokemon.xp / pokemon.xpToNext);
   const primaryType = TYPE_BADGE[pokemon.types[0]];
-
-  // TODO: wire up real gender from the pokemon object when available
-  const isMale = true;
 
   return (
     <div
@@ -122,9 +110,6 @@ export function PokemonCard({ pokemon, index, isSelected, isDragging, dragHandle
             <h3 className="font-mono text-[13px] text-[#e8eaf6] whitespace-nowrap overflow-hidden text-ellipsis">
               {getPokemonDisplayName(pokemon.id)}
             </h3>
-            <span className={`font-mono text-[11px] ${isMale ? 'text-blue-400' : 'text-pink-400'}`}>
-              {isMale ? '♂' : '♀'}
-            </span>
           </div>
 
           {/* Types — own line */}

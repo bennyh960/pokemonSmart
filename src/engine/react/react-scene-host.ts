@@ -9,10 +9,10 @@ export function initReactHost(el: HTMLElement): void {
   overlay = el;
 }
 
-export function mountReactScene(Component: ComponentType<{ onClose: () => void }>, onClose: () => void): void {
-  if (!overlay) throw new Error('ReactHost not initialized. Call initReactHost() first.');
+export function mountReactScene<P extends { onClose: () => void }>(Component: ComponentType<P>, props: P): void {
+  if (!overlay) throw new Error('ReactHost not initialized.');
   root = createRoot(overlay);
-  root.render(createElement(I18nProvider, null, createElement(Component, { onClose })));
+  root.render(createElement(I18nProvider, null, createElement(Component, props)));
 }
 
 export function unmountReactScene(): void {

@@ -43,6 +43,7 @@ import {
 } from '../systems/move-learning.js';
 import { uiRegistry } from '../engine/input/uiRegistry.js';
 import { CANVAS_WIDTH, LOGICAL_WIDTH } from '../engine/config.js';
+import { createPartyReactScene } from '../scenesReact/party/index.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 
 /* ── Battle integration exports ────────────────────────────────────── */
@@ -624,6 +625,11 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       if (moveLearningStep.kind === 'open-session') {
         setPartyMode('move-learning');
         setMoveLearningSession(moveLearningStep.session);
+        const partyScene = createPartyReactScene(stateMachine, {
+          kind: 'move-learning',
+          session: moveLearningStep.session,
+        });
+        stateMachine.register('PARTY', partyScene);
         stateMachine.push('PARTY');
         return;
       }
@@ -756,11 +762,25 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             }
             pendingOverworldItemId = item.id;
             waitingForPartyTarget = true;
-            setPartyMode('select-target', undefined, {
+            // canvas version
+            // setPartyMode('select-target', undefined, {
+            //   itemId: item.id,
+            //   itemName: getLocalizedName(item.def.name),
+            //   description: getLocalizedName(item.def.description),
+            // });
+            // stateMachine.push('PARTY');
+
+            // React version
+            const partyScene = createPartyReactScene(stateMachine, {
+              kind: 'select-target',
               itemId: item.id,
               itemName: getLocalizedName(item.def.name),
               description: getLocalizedName(item.def.description),
+
+              // isEligible: (p) => !p.heldItemId,
             });
+            // Register it transiently and push
+            stateMachine.register('PARTY', partyScene);
             stateMachine.push('PARTY');
           } else if (isDirectUseItem(item.id)) {
             // Direct-use items (e.g. pokedex-battery, battle-helper) — no Pokemon target needed
@@ -781,9 +801,44 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           }
         } else if (item.def.category === 'held') {
           waitingForPartyTarget = true;
-          setPartyMode(
-            'select-target',
-            (index) => {
+          // old version
+          // setPartyMode(
+          //   'select-target',
+          //   (index) => {
+          //     const pd = getPlayerData();
+          //     const pokemon = pd.party[index];
+          //     if (!pokemon) return false;
+          //     if (pokemon.heldItemId) {
+          //       message = t('bag.heldItem.equippedAlready', { name: getPokemonDisplayName(pokemon.id) });
+          //       messageTimer = 2.0;
+          //       return false;
+          //     }
+
+          //     pokemon.heldItemId = item.id;
+          //     consumeItem(pd.items, item.id);
+          //     autoSave();
+          //     const pokeName = getPokemonDisplayName(pokemon.id);
+          //     const itemName = getLocalizedName(item.def.name);
+          //     message = t('bag.heldItem.equipped', { name: pokeName, item: itemName });
+          //     messageTimer = 2.0;
+          //     return true;
+          //   },
+          //   {
+          //     itemId: item.id,
+          //     itemName: getLocalizedName(item.def.name),
+          //     description: getLocalizedName(item.def.description),
+          //     isEligible: (pokemon: any) => !pokemon.heldItemId,
+          //   },
+          // );
+          // stateMachine.push('PARTY');
+
+          const partyScene = createPartyReactScene(stateMachine, {
+            kind: 'select-target',
+            itemId: item.id,
+            itemName: getLocalizedName(item.def.name),
+            description: getLocalizedName(item.def.description),
+            isEligible: (pokemon) => !pokemon.heldItemId,
+            onSelect: (index) => {
               const pd = getPlayerData();
               const pokemon = pd.party[index];
               if (!pokemon) return false;
@@ -792,23 +847,18 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
                 messageTimer = 2.0;
                 return false;
               }
-
               pokemon.heldItemId = item.id;
               consumeItem(pd.items, item.id);
               autoSave();
-              const pokeName = getPokemonDisplayName(pokemon.id);
-              const itemName = getLocalizedName(item.def.name);
-              message = t('bag.heldItem.equipped', { name: pokeName, item: itemName });
+              message = t('bag.heldItem.equipped', {
+                name: getPokemonDisplayName(pokemon.id),
+                item: getLocalizedName(item.def.name),
+              });
               messageTimer = 2.0;
               return true;
             },
-            {
-              itemId: item.id,
-              itemName: getLocalizedName(item.def.name),
-              description: getLocalizedName(item.def.description),
-              isEligible: (pokemon: any) => !pokemon.heldItemId,
-            },
-          );
+          });
+          stateMachine.register('PARTY', partyScene);
           stateMachine.push('PARTY');
           return;
         } else {
