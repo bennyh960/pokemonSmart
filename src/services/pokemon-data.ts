@@ -333,26 +333,6 @@ export function getTmLearnset(pokemonId: number): { moveId: number }[] {
 
 // --- Pokemon metadata helpers ---
 
-/** Get Pokemon height in meters (data is in decimeters). Returns just the number string, or '?' if missing. */
-export function getPokemonHeight(id: number): string {
-  const data = pokemonById.get(id);
-  if (!data?.height) return '?';
-  return (data.height / 10).toFixed(1);
-}
-
-/** Get Pokemon weight in kg as a number (data is in hectograms). Returns 0 if missing. */
-export function getPokemonWeightKg(id: number): number {
-  const data = pokemonById.get(id);
-  return data?.weight ? data.weight / 10 : 0;
-}
-
-/** Get Pokemon weight in kg (data is in hectograms). Returns just the number string, or '?' if missing. */
-export function getPokemonWeight(id: number): string {
-  const data = pokemonById.get(id);
-  if (!data?.weight) return '?';
-  return (data.weight / 10).toFixed(1);
-}
-
 /**
  * Compute the current dynamic weight and height for a Pokemon instance.
  *

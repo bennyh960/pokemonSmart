@@ -10,6 +10,21 @@ import type { PartyMode } from '../..';
 import { getItem } from '../../../../data/items';
 import { getPlayerData } from '../../../../systems/game-state';
 import type { PlayerData, Pokemon } from '../../../../types';
+import ActionButton from '../../../../ui-react/componenets/ActionButton';
+
+// review mode -> overworld / battle only will show quick actions
+// if battle - revive not allowed
+// not in battle - if full hp show vitamins buttons (protein / iron / calcium / zinc / hp up / pp up) + description
+
+// first check if the pokemon is fainted, then show revive buttons (revive / max revive) + description
+// if not fainted, show heal buttons (potion / super potion / hyper potion / max potion) + description
+// if not fainted, show status heal buttons (antidote / paralyze heal / awaken / burn heal / ice heal) + description
+// if in battle show also x-items (x attack / x defense / x speed / x special) + description
+// if eligble to evelove show evolution stone buttons (fire stone / water stone / thunder stone / leaf stone / moon stone / sun stone) + description
+
+// flow : we using our react pd to read data items.
+// we have mode.kind to check if we are in battle or overworld
+// we have ready functions for some logics:
 
 // -----------------------------
 function PartyQuickActions() {
@@ -35,6 +50,11 @@ function PartyQuickActions() {
           </kbd>
           <span className="text-slate-300 text-sm font-medium">Send to PC</span>
         </button>
+        <ActionButton btn={{ color: 'blue', icon: '', name: 'Potion', desc: 'heal 20hp', qty: 3 }} />
+        <ActionButton btn={{ color: 'red', icon: '', name: 'Hyper Potion', desc: 'heal 200hp', qty: 3 }} />
+        <ActionButton
+          btn={{ color: 'green', icon: '', name: 'Full Restore', desc: 'heal to max HP and heal status', qty: 3 }}
+        />
       </div>
     </div>
   );

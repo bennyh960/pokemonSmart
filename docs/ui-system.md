@@ -18,6 +18,7 @@ We use an **external HTML model** to generate pixel-perfect screen mockups at 24
 6. Implement in canvas code using the exact coordinates
 
 ### Existing screen coordinate files:
+
 - `screens_examples_coords/canvas_coordinates.md` — Party detail (Stats + Moves tabs)
 - `screens_examples_coords/bag_coordinated.md` — Bag screen
 - `screens_examples_coords/party_coordinated.md` — Party list screen
@@ -28,28 +29,28 @@ We use an **external HTML model** to generate pixel-perfect screen mockups at 24
 
 All screens use a consistent dark green palette:
 
-| Name | Hex | Usage |
-|------|-----|-------|
-| BG | `#0d1a14` | Main background |
-| CARD_BG | `#0f2a1a` | Card/panel backgrounds |
-| CARD_SEL | `#1a3a2a` | Selected card background |
-| BORDER | `#1a4a30` | Default borders |
-| BORDER_SEL | `#2a6a40` | Selected item borders |
-| SEP | `#1a3a2a` | Separator lines |
-| TEXT_PRI | `#ffffff` | Primary text |
-| TEXT_SEC | `#aaccaa` | Secondary text (labels) |
-| TEXT_MUT | `#667766` | Muted text (headers, hints) |
-| TEXT_DIM | `#445544` | Dim text (counts, sub-info) |
-| TAB_BG | `#0a2a1a` | Tab track background |
-| TAB_ACT | `#1a5a35` | Active tab fill |
-| BTM_BG | `#0a1a10` | Bottom bar / title bar |
-| KEY_BG | `#1a3a2a` | Key pill background |
-| KEY_BRD | `#2a5a3a` | Key pill border |
-| SEL_BAR | `#20d860` | Selection indicator, HP full |
-| HP_MID | `#d8a020` | HP 25-49% |
-| HP_LOW | `#d84040` | HP <25% |
-| BAR_XP | `#5080ff` | XP bar fill |
-| BAR_PP | `#20a0d8` | PP bar fill |
+| Name       | Hex       | Usage                        |
+| ---------- | --------- | ---------------------------- |
+| BG         | `#0d1a14` | Main background              |
+| CARD_BG    | `#0f2a1a` | Card/panel backgrounds       |
+| CARD_SEL   | `#1a3a2a` | Selected card background     |
+| BORDER     | `#1a4a30` | Default borders              |
+| BORDER_SEL | `#2a6a40` | Selected item borders        |
+| SEP        | `#1a3a2a` | Separator lines              |
+| TEXT_PRI   | `#ffffff` | Primary text                 |
+| TEXT_SEC   | `#aaccaa` | Secondary text (labels)      |
+| TEXT_MUT   | `#667766` | Muted text (headers, hints)  |
+| TEXT_DIM   | `#445544` | Dim text (counts, sub-info)  |
+| TAB_BG     | `#0a2a1a` | Tab track background         |
+| TAB_ACT    | `#1a5a35` | Active tab fill              |
+| BTM_BG     | `#0a1a10` | Bottom bar / title bar       |
+| KEY_BG     | `#1a3a2a` | Key pill background          |
+| KEY_BRD    | `#2a5a3a` | Key pill border              |
+| SEL_BAR    | `#20d860` | Selection indicator, HP full |
+| HP_MID     | `#d8a020` | HP 25-49%                    |
+| HP_LOW     | `#d84040` | HP <25%                      |
+| BAR_XP     | `#5080ff` | XP bar fill                  |
+| BAR_PP     | `#20a0d8` | PP bar fill                  |
 
 ---
 
@@ -100,8 +101,6 @@ getDefaultPokeball(): PokeballDef
 ```ts
 getPokemon(id): PokemonData               // stats, types, height, weight, category, description
 getPokemonDisplayName(id): string          // Localized name
-getPokemonHeight(id): string               // Number only (e.g. "0.7")
-getPokemonWeight(id): string               // Number only (e.g. "6.9")
 getPokemonCategory(id): string             // e.g. "Seed Pokémon"
 getPokemonDescription(id): string          // English flavor text
 getMove(id): MoveData                      // name, type, power, accuracy, pp, damageClass, description
@@ -117,6 +116,7 @@ getTypeEffectiveness(atk, def): number
 ## Font Sizes
 
 Only these sizes are used across all screens:
+
 - **10px** — Large titles, Pokemon names, big HP numbers
 - **8px** — Section headers, item names in detail panels
 - **7px** — Regular text, stat labels, move names, tab labels
@@ -130,36 +130,43 @@ All fonts: `monospace`.
 ## Common UI Patterns
 
 ### Bottom Hint Bar
+
 Every screen has a bottom bar at y=150, h=10 with key pills:
+
 ```
 [ESC] חזרה  [Enter] פרטים  [▲▼] ניווט  [Space] החלף
 ```
+
 Each pill: `KEY_BG` fill + `KEY_BRD` border, 6px text. Hint text in `TEXT_MUT`.
 
 ### Tab Bar (Pill-Style)
+
 Centered container at y=2 or y=14, contains pill-shaped tabs. Active tab gets `TAB_ACT` fill. Tab text 6-7px.
 
 ### Card Rows
+
 Items/Pokemon rendered as card rows: `CARD_BG` fill, `BORDER` stroke. Selected: `CARD_SEL` + `BORDER_SEL` + green left bar (2px, `#20d860`).
 
 ### i18n
+
 All UI chrome text uses `t(key)` from `src/i18n/i18n.ts`. Hebrew (default) + English. Type names use `getTypeName()`. Move names use `getMoveDisplayName()`. Units: `t('party.unit.meter')` = מ', `t('party.unit.kg')` = ק"ג.
 
 ---
 
 ## Screens Implemented
 
-| Screen | File | Status |
-|--------|------|--------|
-| Party List | `src/scenes/party.ts` | ✅ Pixel-perfect |
-| Party Detail — Stats | `src/scenes/party.ts` | ✅ Pixel-perfect |
-| Party Detail — Moves | `src/scenes/party.ts` | ✅ Pixel-perfect |
-| Bag | `src/scenes/bag.ts` | ✅ Pixel-perfect |
-| Pokedex | `src/scenes/pokedex.ts` | ✅ Functional (needs coordinate pass) |
-| Battle | `src/scenes/battle.ts` | ✅ Functional |
-| Overworld | `src/scenes/overworld.ts` | ✅ Functional |
+| Screen               | File                      | Status                                |
+| -------------------- | ------------------------- | ------------------------------------- |
+| Party List           | `src/scenes/party.ts`     | ✅ Pixel-perfect                      |
+| Party Detail — Stats | `src/scenes/party.ts`     | ✅ Pixel-perfect                      |
+| Party Detail — Moves | `src/scenes/party.ts`     | ✅ Pixel-perfect                      |
+| Bag                  | `src/scenes/bag.ts`       | ✅ Pixel-perfect                      |
+| Pokedex              | `src/scenes/pokedex.ts`   | ✅ Functional (needs coordinate pass) |
+| Battle               | `src/scenes/battle.ts`    | ✅ Functional                         |
+| Overworld            | `src/scenes/overworld.ts` | ✅ Functional                         |
 
 ## Screens TODO (need design + coordinate pass)
+
 - Battle UI redesign
 - Shop screen redesign
 - Settings screen
