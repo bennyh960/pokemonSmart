@@ -65,11 +65,11 @@ export function PokemonCard({
       className={[
         'relative flex flex-col rounded-[10px] cursor-pointer select-none',
         'bg-[#12141f] border-2 overflow-hidden',
-        'px-[12px] pt-[10px] pb-[8px]',
+        'px-[12px] pt-[10px] pb-[8px] hover:bg-[#1a1d2e] transition-alls',
         'w-full',
-        isFainted ? 'grayscale opacity-60 border-[#2a2d42d8]' : 'border-[#2a2d42]',
+        isFainted ? 'grayscale opacity-60 border-[#1a31ded8]' : 'border-[#2a2d42]',
         isDragging ? 'opacity-50 scale-95' : '',
-        isSelected && !isFainted ? 'border-[var(--glow)]' : '',
+        isSelected ? 'border-[var(--glow)]' : '',
       ].join(' ')}
       style={{
         // direction: 'ltr',

@@ -1885,6 +1885,12 @@ export function createBattleScene(
 
     const movePower = move.power ?? 0;
     const battleData = getMoveBattleData(move.id);
+
+    const bayPassImmunity = battleData?.effects.find((e) => e.bayPassImuunity);
+    const effectivenessScore = getCombinedTypeEffectiveness(move.type, player.types);
+    const effectiveness = effectivenessScore === 0 && bayPassImmunity ? 1 : effectivenessScore;
+    if (effectiveness === 0) return -Infinity;
+
     const moveFullData = getMove(move.id);
     const damageClass = moveFullData?.damageClass ?? (movePower > 0 ? 'physical' : 'status');
     const isOhko = battleData?.behaviorTags?.includes('ohko') ?? false;
@@ -1967,11 +1973,6 @@ export function createBattleScene(
     }
 
     let score = 0;
-
-    const bayPassImmunity = battleData?.effects.find((e) => e.bayPassImuunity);
-    const effectivenessScore = getCombinedTypeEffectiveness(move.type, player.types);
-    const effectiveness = effectivenessScore === 0 && bayPassImmunity ? 1 : effectivenessScore;
-    if (effectiveness === 0) return -Infinity;
 
     if (movePower > 0) {
       const stab = enemy.types.includes(move.type) ? 1.5 : 1;

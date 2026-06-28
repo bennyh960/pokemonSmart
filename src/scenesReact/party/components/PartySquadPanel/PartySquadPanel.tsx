@@ -4,6 +4,7 @@ import { useDragSort } from '../../../../ui-react/hooks/useDragSort';
 import type { Pokemon } from '../../../../types';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import type { PartyMode } from '../..';
+import { useKeyPress } from '../../../../ui-react/hooks/useKeyboard';
 
 interface IPartySquadPanel {
   party: Pokemon[];
@@ -18,6 +19,7 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
   const { t } = useI18n();
   const slots = Array.from({ length: 6 }).map((_, i) => party[i] || null);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
+  const [softSelectedUuid, setSoftSelectedUuid] = useState<string | null>(null);
 
   // useDragSort calls this with the fully reordered array on drop.
   const handleReorder = (next: Pokemon[]) => {
@@ -36,12 +38,38 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
     onDragEnd();
   };
 
+  useKeyPress([' ', 'Enter'], (e) => {
+    if (mode.kind === 'battle') return;
+    if (mode.kind === 'select-target') return;
+    if (e.key === ' ') {
+      e.preventDefault();
+      if (!softSelectedUuid) {
+        setSoftSelectedUuid(selectedUuid);
+      } else {
+        setSoftSelectedUuid(null);
+      }
+    } else if (e.key === 'Enter' && softSelectedUuid) {
+      // do manual reorder
+      const softSelectedIndex = party.findIndex((p) => p.uuid === softSelectedUuid);
+      const selectedIndex = party.findIndex((p) => p.uuid === selectedUuid);
+      if (softSelectedIndex !== -1 && selectedIndex !== -1 && softSelectedIndex !== selectedIndex) {
+        const next = [...party];
+        // swap the two
+        const temp = next[softSelectedIndex];
+        next[softSelectedIndex] = next[selectedIndex];
+        next[selectedIndex] = temp;
+        onReorder(next);
+        setSoftSelectedUuid(null);
+      }
+    }
+  });
+
   return (
     <>
       <div className="px-5 pt-4 pb-1">
         <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">{t('party.squad')}</h3>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center" dir="ltr">
         {slots.map((pokemon, i) => {
           if (!pokemon) {
             return (
@@ -60,14 +88,17 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
               key={pokemon.uuid}
               pokemon={pokemon}
               index={i}
-              isSelected={selectedUuid === pokemon.uuid}
+              isSelected={selectedUuid === pokemon.uuid || softSelectedUuid === pokemon.uuid}
               isDragging={mode.kind === 'battle' ? false : draggingIndex === i}
               dragHandlers={
                 mode.kind === 'battle'
                   ? undefined
                   : { onDragStart: wrappedDragStart, onDragOver, onDragEnd: wrappedDragEnd }
               }
-              onClick={() => onSelect(pokemon.uuid)}
+              onClick={() => {
+                onSelect(pokemon.uuid);
+                setSoftSelectedUuid(null);
+              }}
               onDoubleClick={() => onDoubleClick(pokemon)}
             />
           );

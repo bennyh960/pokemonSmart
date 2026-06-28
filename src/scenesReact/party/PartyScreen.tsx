@@ -63,7 +63,6 @@ export function PartyScreen({ onClose, mode }: Props) {
       setPartyIndex(party.indexOf(pokemon));
       onClose();
     }
-    console.log('double click', pokemon);
   }
 
   // useDragSort produces the full reordered array; we apply it through the funnel.
@@ -101,10 +100,16 @@ export function PartyScreen({ onClose, mode }: Props) {
     });
   }
 
-  useKeyPress(['Escape', 'ArrowDown', 'ArrowUp', 'Enter'], (e) => {
+  // Global ESC
+  useKeyPress(['Escape'], (e) => {
     if (e.key === 'Escape') {
       onClose();
-    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    }
+  });
+
+  // party squad pannel
+  useKeyPress(['ArrowDown', 'ArrowUp', 'Enter'], (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       const currentIndex = party.findIndex((p) => p.uuid === selected.uuid);
       const nextIndex = (currentIndex + 1) % party.length;
       const prevIndex = (currentIndex - 1 + party.length) % party.length;
@@ -118,7 +123,6 @@ export function PartyScreen({ onClose, mode }: Props) {
   useEffect(() => {
     getGlobalAudio()?.playCry(selected?.id ?? 0);
   }, [selected]);
-  console.log(mode);
 
   return (
     <div

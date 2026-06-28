@@ -13,10 +13,13 @@ export function useDragSort<T>(items: T[], onReorder: (next: T[]) => void) {
     (e: React.DragEvent, i: number) => {
       e.preventDefault();
       if (dragIndex.current === null || dragIndex.current === i) return;
+      // swap :
       const next = [...items];
-      const [moved] = next.splice(dragIndex.current, 1);
-      next.splice(i, 0, moved);
+      const temp = next[dragIndex.current];
+      next[dragIndex.current] = next[i];
+      next[i] = temp;
       dragIndex.current = i;
+
       onReorder(next);
     },
     [items, onReorder],

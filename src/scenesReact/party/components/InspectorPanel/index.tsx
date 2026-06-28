@@ -7,6 +7,7 @@ import { t } from '../../../../i18n/i18n.js';
 import { MovesetTab } from './tabs/MovesetTab.js';
 import { TYPE_BADGE } from '../../../../data/type-constants.js';
 import type { PartyMode } from '../../index.js';
+import { useKeyPress } from '../../../../ui-react/hooks/useKeyboard.js';
 
 interface Props {
   mode: PartyMode;
@@ -16,10 +17,20 @@ interface Props {
   onMoveReorder?: (moves: Move[]) => void;
   onEquipItem: (uuid: string, itemId: string) => void;
   isPokedexMode?: boolean;
+  defaultTab?: 'stats' | 'moveset' | 'items';
 }
 
-export function InspectorPanel({ mode, pokemon, party, pd, onMoveReorder, onEquipItem, isPokedexMode = false }: Props) {
-  const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>('stats');
+export function InspectorPanel({
+  mode,
+  pokemon,
+  party,
+  pd,
+  onMoveReorder,
+  onEquipItem,
+  isPokedexMode = false,
+  defaultTab = 'stats',
+}: Props) {
+  const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>(defaultTab);
 
   const primaryType = TYPE_BADGE[pokemon.types[0]];
   const secondaryType = TYPE_BADGE[pokemon.types[1]] ?? primaryType;
@@ -34,6 +45,17 @@ export function InspectorPanel({ mode, pokemon, party, pd, onMoveReorder, onEqui
       ? { color: primaryType.color, borderColor: secondaryType.color, boxShadow: `0 2px 8px ${primaryType.bg}` }
       : {};
 
+  // inspector pannel
+  useKeyPress(['ArrowLeft', 'ArrowRight'], (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const tabs = ['stats', 'moveset', 'items'];
+      const currentIndex = tabs.indexOf(activeTab);
+      const nextIndex =
+        e.key === 'ArrowRight' ? (currentIndex - 1 + tabs.length) % tabs.length : (currentIndex + 1) % tabs.length;
+      setActiveTab(tabs[nextIndex] as 'stats' | 'moveset' | 'items');
+    }
+  });
+
   return (
     <div className="w-full h-full flex flex-col">
       <div className="px-5 pt-4 pb-1">
@@ -42,7 +64,7 @@ export function InspectorPanel({ mode, pokemon, party, pd, onMoveReorder, onEqui
 
       <InspectorHeader pokemon={pokemon} isPokedexMode={isPokedexMode} />
 
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 outline-none flex flex-col min-h-0">
         <div className="flex px-4 border-b border-slate-800">
           <button onClick={() => setActiveTab('stats')} className={getTabClass('stats')} style={getTabStyle('stats')}>
             {t('party.baseStats')}
