@@ -67,7 +67,7 @@ export function PokemonCard({
         'bg-[#12141f] border-2 overflow-hidden',
         'px-[12px] pt-[10px] pb-[8px]',
         'w-full',
-        isFainted ? 'grayscale opacity-60 border-[#2a2d42]' : 'border-[#2a2d42]',
+        isFainted ? 'grayscale opacity-60 border-[#2a2d42d8]' : 'border-[#2a2d42]',
         isDragging ? 'opacity-50 scale-95' : '',
         isSelected && !isFainted ? 'border-[var(--glow)]' : '',
       ].join(' ')}

@@ -3278,6 +3278,8 @@ export function createBattleScene(
       }),
     );
     phase = 'WAITING_MOVE_LEARN';
+    // !TODO: Implement a React-based party scene for move learning instead of using the old scene system
+    // const partyScene = createPartyReactScene(stateMachine, {kind:'move-learning',session:})
     stateMachine.push('PARTY');
     return true;
   }
@@ -5131,8 +5133,7 @@ export function createBattleScene(
             roster: battleRoster,
             maxSize: maxRosterSize,
           });
-          stateMachine.register('PARTY', partyScene);
-          stateMachine.push('PARTY');
+          stateMachine.pushDirect('PARTY', partyScene);
         }
       } else {
         textBox = createTextBox([t('battle.cantDoThat')], isRTL());
@@ -5759,8 +5760,7 @@ export function createBattleScene(
               maxSize: maxRosterSize,
               roster: battleRoster,
             });
-            stateMachine.register('PARTY', partyScene);
-            stateMachine.push('PARTY');
+            stateMachine.pushDirect('PARTY', partyScene);
           }
           break;
         }
@@ -5867,11 +5867,18 @@ export function createBattleScene(
             clearSelectedPartyIndex();
             if (player.hp <= 0) {
               // Active Pokemon is fainted — must switch, can't cancel
-              setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
+              // !depercated : delete after finish reacr refactor
+              // setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
               clearSelectedPartyIndex();
               waitingForParty = true;
               isForcedFaintSwitch = true;
-              stateMachine.push('PARTY');
+              const partyScene = createPartyReactScene(stateMachine, {
+                kind: 'battle',
+                maxSize: maxRosterSize,
+                roster: battleRoster,
+              });
+              // !refactor react: todo- test it
+              stateMachine.pushDirect('PARTY', partyScene);
             } else {
               // No selection (user pressed Esc in party)
               enterSelectMovePhase();

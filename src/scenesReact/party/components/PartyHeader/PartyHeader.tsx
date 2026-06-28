@@ -82,6 +82,7 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
         </div>
       );
     }
+    return null;
   }, [mode, pd]);
 
   return (

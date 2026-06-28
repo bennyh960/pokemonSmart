@@ -623,7 +623,9 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         return;
       }
       if (moveLearningStep.kind === 'open-session') {
+        // !CANVAS DEPERCATED : TODO : DELETE WHEN REACT END
         setPartyMode('move-learning');
+        // !REACT NEW REFACTOR: DIDNT TESTED YET
         setMoveLearningSession(moveLearningStep.session);
         const partyScene = createPartyReactScene(stateMachine, {
           kind: 'move-learning',
@@ -762,7 +764,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             }
             pendingOverworldItemId = item.id;
             waitingForPartyTarget = true;
-            // canvas version
+            //! canvas version : delete when finish with react
             // setPartyMode('select-target', undefined, {
             //   itemId: item.id,
             //   itemName: getLocalizedName(item.def.name),
@@ -770,7 +772,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             // });
             // stateMachine.push('PARTY');
 
-            // React version
+            //! React version : TODO : test it
             const partyScene = createPartyReactScene(stateMachine, {
               kind: 'select-target',
               itemId: item.id,
@@ -801,7 +803,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           }
         } else if (item.def.category === 'held') {
           waitingForPartyTarget = true;
-          // old version
+          //! canvas : old version (delete after react version is tested)
           // setPartyMode(
           //   'select-target',
           //   (index) => {
@@ -831,7 +833,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           //   },
           // );
           // stateMachine.push('PARTY');
-
+          // ! React version : TODO : test it
           const partyScene = createPartyReactScene(stateMachine, {
             kind: 'select-target',
             itemId: item.id,

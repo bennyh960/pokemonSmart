@@ -118,6 +118,7 @@ export function PartyScreen({ onClose, mode }: Props) {
   useEffect(() => {
     getGlobalAudio()?.playCry(selected?.id ?? 0);
   }, [selected]);
+  console.log(mode);
 
   return (
     <div
