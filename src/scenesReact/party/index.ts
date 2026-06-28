@@ -29,6 +29,11 @@ export function createPartyReactScene(stateMachine: StateMachine, mode: PartyMod
           unmountReactScene();
           stateMachine.pop();
         },
+        goToBag: () => {
+          unmountReactScene();
+          stateMachine.pop();
+          stateMachine.push('BAG');
+        },
       });
     },
     exit() {

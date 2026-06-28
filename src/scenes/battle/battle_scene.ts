@@ -5799,6 +5799,7 @@ export function createBattleScene(
 
           // quick actions buttons - on consume it continues to the next phase (switch or cancel)
           if (bagPendingItem) {
+            console.info('Bag item selected while in PARTY phase, switching to WAITING_BAG');
             waitingForBag = true;
             phase = 'WAITING_BAG';
             return;

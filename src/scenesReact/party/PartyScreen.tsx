@@ -6,8 +6,8 @@ import type { PartyMode } from './index.js';
 import { useKeyPress } from '../../ui-react/hooks/useKeyboard.tsx';
 import PartySquadPanel from './components/PartySquadPanel/PartySquadPanel.tsx';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.ts';
-import { getQuickActions } from './lib/helpers.ts';
-import QuickActions from './components/QuickActions';
+import { getQuickActions } from './components/QuickActions/helpers.ts';
+import QuickActions from './components/QuickActions/QuickActions.tsx';
 import { canUseItemOnPokemon } from '../../systems/item-effects.ts';
 import PartyHeader from './components/PartyHeader/PartyHeader.tsx';
 import { setPartyIndex } from '../../scenes/party/party_scene.ts';
@@ -19,9 +19,10 @@ import { getItem } from '../../data/items.ts';
 interface Props {
   onClose: () => void;
   mode: PartyMode;
+  goToBag: () => void;
 }
 
-export function PartyScreen({ onClose, mode }: Props) {
+export function PartyScreen({ onClose, mode, goToBag }: Props) {
   const { t, isRTL, locale } = useI18n();
   const [pd, editPlayerData] = usePlayerData();
   const [notification, setNotification] = useState<GameNotificationProps | null>(null);
@@ -34,7 +35,6 @@ export function PartyScreen({ onClose, mode }: Props) {
     mode.kind === 'battle' && mode.inBattleUUID ? mode.inBattleUUID : party[0].uuid,
   );
   const selected = party.find((p) => p.uuid === selectedUuid) ?? party[0];
-  const quickActionsItems = getQuickActions(selected, mode, pd.items);
 
   /** Check if a Pokemon is eligible for selection in the current mode. */
   function isPokemonEligible(index: number) {
@@ -174,7 +174,16 @@ export function PartyScreen({ onClose, mode }: Props) {
           />
         </div>
       </div>
-      <QuickActions mode={mode} onClose={onClose} pd={pd} editPlayerData={editPlayerData} selected={selected} />
+      <QuickActions
+        mode={mode}
+        onClose={onClose}
+        pd={pd}
+        editPlayerData={editPlayerData}
+        selected={selected}
+        quickActionItems={getQuickActions(selected, mode, pd.items)}
+        locale={locale}
+        onBagClick={goToBag}
+      />
       {notification && <GameNotification {...notification} onClose={() => setNotification(null)} />}
     </div>
   );
