@@ -7,6 +7,7 @@
 [bug] - ariados immune to sleep powder somehow
 [bug] snorlax use curse but nothing happens
 [bug]- disabled move when disabled disapper in logic - is not disaper in the ui
+[bug][move] - perish song not have any effect
 
 <!-- fixed - need qa -->
 

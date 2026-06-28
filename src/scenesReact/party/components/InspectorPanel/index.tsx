@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { InspectorHeader } from './Header.js';
-import { InspectorFooter } from './Footer.js';
-import { InspectorStatsTab } from '../tabs/StatsTab.js';
+import { InspectorStatsTab } from './tabs/StatsTab.js';
 import type { Move, PlayerData, Pokemon } from '../../../../types/index.js';
-import HeldItemsTab from '../tabs/HeldItemsTab.js';
+import HeldItemsTab from './tabs/HeldItemsTab.js';
 import { t } from '../../../../i18n/i18n.js';
-import { MovesetTab } from '../tabs/MovesetTab.js';
+import { MovesetTab } from './tabs/MovesetTab.js';
+import { TYPE_BADGE } from '../../../../data/type-constants.js';
+import type { PartyMode } from '../../index.js';
 
 interface Props {
+  mode: PartyMode;
   pokemon: Pokemon;
   party: Pokemon[];
   pd: PlayerData;
@@ -16,59 +18,57 @@ interface Props {
   isPokedexMode?: boolean;
 }
 
-export function InspectorPanel({ pokemon, party, pd, onMoveReorder, onEquipItem, isPokedexMode = false }: Props) {
+export function InspectorPanel({ mode, pokemon, party, pd, onMoveReorder, onEquipItem, isPokedexMode = false }: Props) {
   const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>('stats');
+
+  const primaryType = TYPE_BADGE[pokemon.types[0]];
+  const secondaryType = TYPE_BADGE[pokemon.types[1]] ?? primaryType;
+
+  const baseTabClass = 'flex-1 pb-3 text-sm font-semibold transition-colors border-b-2';
+  const inactiveTabClass = `${baseTabClass} text-slate-500 border-transparent hover:text-slate-300 cursor-pointer`;
+
+  const getTabClass = (tab: string) => (activeTab === tab ? baseTabClass : inactiveTabClass);
+
+  const getTabStyle = (tab: string): React.CSSProperties =>
+    activeTab === tab
+      ? { color: primaryType.color, borderColor: secondaryType.color, boxShadow: `0 2px 8px ${primaryType.bg}` }
+      : {};
 
   return (
     <div className="w-full h-full flex flex-col">
       <div className="px-5 pt-4 pb-1">
-        <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">Live Inspector</h3>
+        <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">{t('party.inspector')}</h3>
       </div>
 
       <InspectorHeader pokemon={pokemon} isPokedexMode={isPokedexMode} />
 
       <div className="flex-1 flex flex-col min-h-0">
         <div className="flex px-4 border-b border-slate-800">
-          <button
-            onClick={() => setActiveTab('stats')}
-            className={`flex-1 pb-3 text-sm font-semibold transition-colors border-b-2 ${
-              activeTab === 'stats'
-                ? 'text-purple-400 border-purple-500'
-                : 'text-slate-500 border-transparent hover:text-slate-300'
-            }`}
-          >
-            Stats
+          <button onClick={() => setActiveTab('stats')} className={getTabClass('stats')} style={getTabStyle('stats')}>
+            {t('party.baseStats')}
           </button>
           <button
             onClick={() => setActiveTab('moveset')}
-            className={`flex-1 pb-3 text-sm font-semibold transition-colors border-b-2 ${
-              activeTab === 'moveset'
-                ? 'text-purple-400 border-purple-500'
-                : 'text-slate-500 border-transparent hover:text-slate-300'
-            }`}
+            className={getTabClass('moveset')}
+            style={getTabStyle('moveset')}
           >
-            Moveset
+            {t('party.moves.title')}
           </button>
-          <button
-            onClick={() => setActiveTab('items')}
-            className={`flex-1 pb-3 text-sm font-semibold transition-colors border-b-2 ${
-              activeTab === 'items'
-                ? 'text-purple-400 border-purple-500'
-                : 'text-slate-500 border-transparent hover:text-slate-300'
-            }`}
-          >
-            {t('party.heldItem.bagItems')}
-          </button>
+          {mode.kind !== 'battle' && (
+            <button onClick={() => setActiveTab('items')} className={getTabClass('items')} style={getTabStyle('items')}>
+              {t('party.heldItem.bagItems')}
+            </button>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto game-scrollbar">
           {activeTab === 'stats' && <InspectorStatsTab pokemon={pokemon} party={party} />}
           {activeTab === 'moveset' && <MovesetTab pokemon={pokemon} onMoveReorder={onMoveReorder} />}
-          {activeTab === 'items' && <HeldItemsTab pd={pd} pokemon={pokemon} onEquipItem={onEquipItem} />}
+          {mode.kind !== 'battle' && activeTab === 'items' && (
+            <HeldItemsTab pd={pd} pokemon={pokemon} onEquipItem={onEquipItem} />
+          )}
         </div>
       </div>
-
-      <InspectorFooter />
     </div>
   );
 }

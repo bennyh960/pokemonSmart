@@ -1,16 +1,10 @@
 import { useState } from 'react';
-import type { Move, Pokemon } from '../../../../types/index.js';
-import { TYPE_BADGE } from '../../../../data/type-constants.js';
-import { useDragSort } from '../../../../ui-react/hooks/useDragSort.js';
-import { useI18n } from '../../../../ui-react/context/i18n-context.js';
-import { getMove } from '../../../../services/pokemon-data.js';
-
-// ── Damage class pill ────────────────────────────────────────────────────────
-const DAMAGE_CLASS: Record<string, { label: string; color: string }> = {
-  physical: { label: 'Physical', color: '#e07040' },
-  special: { label: 'Special', color: '#8060e0' },
-  status: { label: 'Status', color: '#5080a0' },
-};
+import type { Move, Pokemon } from '../../../../../types/index.js';
+import { TYPE_BADGE } from '../../../../../data/type-constants.js';
+import { useDragSort } from '../../../../../ui-react/hooks/useDragSort.js';
+import { useI18n } from '../../../../../ui-react/context/i18n-context.js';
+import { getMove, getMoveDisplayName } from '../../../../../services/pokemon-data.js';
+import { DAMAGE_CLASS_ICON } from '../../../../../utils/util.js';
 
 // ── Empty slot ───────────────────────────────────────────────────────────────
 function EmptyMoveSlot() {
@@ -40,6 +34,7 @@ function MoveCard({
   };
   onClick: () => void;
 }) {
+  const { t, isRTL, locale } = useI18n();
   const badge = TYPE_BADGE[move.type] ?? TYPE_BADGE['normal'];
   const ppPct = move.pp > 0 ? move.currentPp / move.pp : 0;
   const ppColor = ppPct > 0.5 ? '#4ade80' : ppPct > 0.25 ? '#facc15' : '#f87171';
@@ -72,7 +67,7 @@ function MoveCard({
       {/* Top row: name + type badge — matches image 1 layout */}
       <div className="flex items-start justify-between gap-2">
         <span className="text-white font-bold text-[13px] leading-tight drop-shadow-sm line-clamp-2 flex-1">
-          {move.name}
+          {getMoveDisplayName(move.id)}
         </span>
         <span
           className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wide shrink-0 mt-0.5"
@@ -82,7 +77,7 @@ function MoveCard({
             color: '#fff',
           }}
         >
-          {badge.en}
+          {badge[locale]}
         </span>
       </div>
 
@@ -104,7 +99,7 @@ function MoveCard({
 
 // ── Metadata panel ────────────────────────────────────────────────────────────
 function MoveMetaPanel({ move }: { move: Move | null }) {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
 
   if (!move) {
     return (
@@ -116,7 +111,7 @@ function MoveMetaPanel({ move }: { move: Move | null }) {
 
   const badge = TYPE_BADGE[move.type] ?? TYPE_BADGE['normal'];
   const data = getMove(move.id);
-  const dmgData = DAMAGE_CLASS[data?.damageClass ?? 'status'];
+  const dmgData = DAMAGE_CLASS_ICON[data?.damageClass ?? 'status'];
 
   return (
     <div
@@ -132,9 +127,12 @@ function MoveMetaPanel({ move }: { move: Move | null }) {
         style={{ background: `linear-gradient(90deg, ${badge.bg}cc, ${badge.bg}44)` }}
       >
         <div className="flex items-center justify-between gap-2">
-          <span className="text-white font-bold text-sm drop-shadow-sm truncate">{move.name}</span>
-          <span className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wide shrink-0 bg-black/30 text-white/90">
-            {badge.en}
+          <span className="text-white font-bold text-sm drop-shadow-sm truncate">{getMoveDisplayName(move.id)}</span>
+          <span
+            className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wide shrink-0"
+            style={{ backgroundColor: `${badge.color}44`, border: `1px solid ${badge.color}66`, color: '#fff' }}
+          >
+            {badge[locale]}
           </span>
         </div>
       </div>
@@ -143,29 +141,29 @@ function MoveMetaPanel({ move }: { move: Move | null }) {
       <div className="grid grid-cols-2 gap-2 px-4 pt-3 pb-2 shrink-0">
         {/* Power */}
         <div className="flex flex-col bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-800/60">
-          <span className="text-[9px] text-slate-500 uppercase tracking-wider">Power</span>
+          <span className="text-[9px] text-slate-500 uppercase tracking-wider">{t('party.moves.header.pow')}</span>
           <span className="text-white font-mono font-bold text-sm mt-0.5">{data?.power ?? '—'}</span>
         </div>
         {/* PP */}
         <div className="flex flex-col bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-800/60">
-          <span className="text-[9px] text-slate-500 uppercase tracking-wider">PP</span>
+          <span className="text-[9px] text-slate-500 uppercase tracking-wider">{t('party.moves.header.pp')}</span>
           <span className="text-white font-mono font-bold text-sm mt-0.5">
             {move.currentPp}/{move.pp}
           </span>
         </div>
         {/* Accuracy */}
         <div className="flex flex-col bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-800/60">
-          <span className="text-[9px] text-slate-500 uppercase tracking-wider">Accuracy</span>
+          <span className="text-[9px] text-slate-500 uppercase tracking-wider">{t('party.moves.header.acc')}</span>
           <span className="text-white font-mono font-bold text-sm mt-0.5">
             {data?.accuracy != null ? `${data.accuracy}%` : '—'}
           </span>
         </div>
         {/* Damage class */}
         <div className="flex flex-col bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-800/60">
-          <span className="text-[9px] text-slate-500 uppercase tracking-wider">Class</span>
-          <span className="font-bold text-sm mt-0.5" style={{ color: dmgData.color }}>
-            {dmgData.label}
+          <span className="text-[9px] text-slate-500 uppercase tracking-wider">
+            {t('party.moves.header.class')} {dmgData.icon}
           </span>
+          <span className="font-bold text-sm mt-0.5">{dmgData.label[locale]}</span>
         </div>
       </div>
 

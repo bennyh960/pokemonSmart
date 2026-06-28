@@ -12,12 +12,27 @@ export interface CardProps {
   index: number;
   isSelected: boolean;
   isDragging: boolean;
-  dragHandlers: any;
+  dragHandlers:
+    | {
+        onDragStart: (index: number) => void;
+        onDragOver: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
+        onDragEnd: () => void;
+      }
+    | undefined;
   onClick: () => void;
+  onDoubleClick: () => void;
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
-export function PokemonCard({ pokemon, index, isSelected, isDragging, dragHandlers, onClick }: CardProps) {
+export function PokemonCard({
+  pokemon,
+  index,
+  isSelected,
+  isDragging,
+  dragHandlers,
+  onClick,
+  onDoubleClick,
+}: CardProps) {
   const { locale } = useI18n();
   const spriteUrl = getPokemonSpriteUrl(pokemon.id);
   const [sprite, setSprite] = useState<string | null>(getCachedImage(spriteUrl)?.src ?? null);
@@ -42,9 +57,10 @@ export function PokemonCard({ pokemon, index, isSelected, isDragging, dragHandle
   return (
     <div
       draggable
-      onDragStart={() => dragHandlers.onDragStart(index)}
-      onDragOver={(e) => dragHandlers.onDragOver(e, index)}
-      onDragEnd={dragHandlers.onDragEnd}
+      onDoubleClick={onDoubleClick}
+      onDragStart={() => dragHandlers?.onDragStart(index)}
+      onDragOver={(e) => dragHandlers?.onDragOver(e, index)}
+      onDragEnd={dragHandlers?.onDragEnd}
       onClick={onClick}
       className={[
         'relative flex flex-col rounded-[10px] cursor-pointer select-none',

@@ -52,6 +52,10 @@ let onSelectCallback: ((index: number) => void) | null = null;
 /** Index of the Pokemon selected in battle/select-target mode (-1 = none). */
 export let selectedPartyIndex: number = -1;
 
+export function setPartyIndex(index: number): void {
+  selectedPartyIndex = index;
+}
+
 /** Context info shown when party is in select-target mode (item use). */
 let selectTargetContext: {
   itemId: string;

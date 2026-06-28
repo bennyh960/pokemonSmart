@@ -203,6 +203,7 @@ import { renderTrainerCinematic } from './phases/trainer_cinematic';
 import { updateTrainerCinematic } from './phases/trainer_cinematic';
 import { playAttackAnimation, type BattleAnimationContext } from './animations/play-attack-animation.js';
 import { runMoveLifecycle } from './animations/move-lifecycle.js';
+import { createPartyReactScene } from '../../scenesReact/party/index.js';
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -5125,6 +5126,12 @@ export function createBattleScene(
           previousLeadId = player.id;
           waitingForParty = true;
           phase = 'WAITING_PARTY';
+          const partyScene = createPartyReactScene(stateMachine, {
+            kind: 'battle',
+            roster: battleRoster,
+            maxSize: maxRosterSize,
+          });
+          stateMachine.register('PARTY', partyScene);
           stateMachine.push('PARTY');
         }
       } else {
@@ -5747,6 +5754,12 @@ export function createBattleScene(
             waitingForParty = true;
             isForcedFaintSwitch = true; // don't give enemy a free attack after faint switch
             phase = 'WAITING_PARTY';
+            const partyScene = createPartyReactScene(stateMachine, {
+              kind: 'battle',
+              maxSize: maxRosterSize,
+              roster: battleRoster,
+            });
+            stateMachine.register('PARTY', partyScene);
             stateMachine.push('PARTY');
           }
           break;

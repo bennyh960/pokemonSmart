@@ -1,7 +1,18 @@
 // -----------------------------
 // 3. FOOTER COMPONENT
+// quick actions buttons for specifc pokemon
+// heal hp , heal pp , heal status , vitamins , revives ,elixer etc.
+// rules:
+// 1. only show buttons that are relevant to the current pokemon state
+// if faint - revive/max revive
+
+import type { PartyMode } from '../..';
+import { getItem } from '../../../../data/items';
+import { getPlayerData } from '../../../../systems/game-state';
+import type { PlayerData, Pokemon } from '../../../../types';
+
 // -----------------------------
-export function InspectorFooter() {
+function PartyQuickActions() {
   return (
     <div className="p-4 border-t border-slate-800 bg-slate-900/80">
       <div className="text-xs text-slate-500 font-bold tracking-wider mb-3">QUICK ACTIONS</div>
@@ -28,3 +39,5 @@ export function InspectorFooter() {
     </div>
   );
 }
+
+export default PartyQuickActions;

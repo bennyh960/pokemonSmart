@@ -2,15 +2,20 @@ import { useState } from 'react';
 import { PokemonCard } from '../PokemonCard';
 import { useDragSort } from '../../../../ui-react/hooks/useDragSort';
 import type { Pokemon } from '../../../../types';
+import { useI18n } from '../../../../ui-react/context/i18n-context';
+import type { PartyMode } from '../..';
 
 interface IPartySquadPanel {
   party: Pokemon[];
   selectedUuid: string;
   onSelect: (uuid: string) => void;
   onReorder: (next: Pokemon[]) => void;
+  mode: PartyMode;
+  onDoubleClick: (pokemon: Pokemon) => void;
 }
 
-const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder }: IPartySquadPanel) => {
+const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDoubleClick }: IPartySquadPanel) => {
+  const { t } = useI18n();
   const slots = Array.from({ length: 6 }).map((_, i) => party[i] || null);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
@@ -34,7 +39,7 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder }: IPartySqu
   return (
     <>
       <div className="px-5 pt-4 pb-1">
-        <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">Party Squad</h3>
+        <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">{t('party.squad')}</h3>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center">
         {slots.map((pokemon, i) => {
@@ -56,9 +61,14 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder }: IPartySqu
               pokemon={pokemon}
               index={i}
               isSelected={selectedUuid === pokemon.uuid}
-              isDragging={draggingIndex === i}
-              dragHandlers={{ onDragStart: wrappedDragStart, onDragOver, onDragEnd: wrappedDragEnd }}
+              isDragging={mode.kind === 'battle' ? false : draggingIndex === i}
+              dragHandlers={
+                mode.kind === 'battle'
+                  ? undefined
+                  : { onDragStart: wrappedDragStart, onDragOver, onDragEnd: wrappedDragEnd }
+              }
               onClick={() => onSelect(pokemon.uuid)}
+              onDoubleClick={() => onDoubleClick(pokemon)}
             />
           );
         })}

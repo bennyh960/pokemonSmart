@@ -3,11 +3,11 @@ import {
   computePokemonSize,
   getAbilityDisplayName,
   getAbilityDisplayNameAndDescription,
-} from '../../../../services/pokemon-data';
-import { calcHappiness, getHappinessLabel } from '../../../../systems/happiness';
-import type { Pokemon } from '../../../../types';
-import { useI18n } from '../../../../ui-react/context/i18n-context';
-import { getStatConfig } from '../../../../utils/util';
+} from '../../../../../services/pokemon-data';
+import { calcHappiness, getHappinessLabel } from '../../../../../systems/happiness';
+import type { Pokemon } from '../../../../../types';
+import { useI18n } from '../../../../../ui-react/context/i18n-context';
+import { getStatConfig } from '../../../../../utils/util';
 
 export function InspectorStatsTab({ pokemon, party }: { pokemon: Pokemon; party: Pokemon[] }) {
   const { t, locale } = useI18n();

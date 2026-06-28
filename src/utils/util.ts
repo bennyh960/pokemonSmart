@@ -24,11 +24,18 @@ export function hpColor(hp: number, maxHp: number): string {
   return '#f87171';
 }
 
-// ─── move category icons (unicode stand-ins) ─────────────────────────────────
-export const CATEGORY_ICON: Record<string, string> = {
-  physical: '⚔️',
-  special: '✨',
-  status: '○',
+// ─── move category/damage class icons (unicode stand-ins) ─────────────────────────────────
+export const DAMAGE_CLASS_ICON: Record<string, { icon: string; label: { en: string; he: string } }> = {
+  physical: { icon: '⚔️', label: { en: 'Physical', he: 'פיזי' } },
+  special: { icon: '✨', label: { en: 'Special', he: 'מיוחד' } },
+  status: { icon: '○', label: { en: 'Status', he: 'סטטוס' } },
+};
+
+// ── Damage class pill ────────────────────────────────────────────────────────
+const DAMAGE_CLASS: Record<string, { label: string; color: string }> = {
+  physical: { label: 'Physical', color: '#e07040' },
+  special: { label: 'Special', color: '#8060e0' },
+  status: { label: 'Status', color: '#5080a0' },
 };
 
 // ─── Glow CSS vars derived from the primary type colour ───────────────────────

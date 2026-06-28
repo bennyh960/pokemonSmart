@@ -1,6 +1,6 @@
-import { getItem, type ItemDef } from '../../../../data/items';
-import type { PlayerData, Pokemon } from '../../../../types';
-import { useI18n } from '../../../../ui-react/context/i18n-context';
+import { getItem, type ItemDef } from '../../../../../data/items';
+import type { PlayerData, Pokemon } from '../../../../../types';
+import { useI18n } from '../../../../../ui-react/context/i18n-context';
 
 function getEquipAbleItems(pd: PlayerData): Array<{ id: string; quantity: number; itemDef: ItemDef | undefined }> {
   return Object.entries(pd.items)

@@ -1,11 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Move, PlayerData, Pokemon } from '../../types/index.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
-import { InspectorPanel } from './components/InspectorPanel/index.js';
+import { InspectorPanel } from './components/InspectorPanel/index';
 import type { PartyMode } from './index.js';
 import { useKeyPress } from '../../ui-react/hooks/useKeyboard.tsx';
 import PartySquadPanel from './components/PartySquadPanel/PartySquadPanel.tsx';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.ts';
+import { getQuickActions } from './lib/helpers.ts';
+import QuickActions from './components/QuickActions';
+import { canUseItemOnPokemon } from '../../systems/item-effects.ts';
+import { countBadges } from '../../data/badges.ts';
+import { getQuest } from '../../data/story/quests.ts';
+import PartyHeader from './components/PartyHeader/PartyHeader.tsx';
+import { selectedPartyIndex, setPartyIndex } from '../../scenes/party/party_scene.ts';
+import { GameNotification, type GameNotificationProps } from '../../ui-react/componenets/GameNotification.tsx';
+import { getGlobalAudio } from '../../audio/audio-manager.ts';
 
 interface Props {
   onClose: () => void;
@@ -15,7 +24,7 @@ interface Props {
 export function PartyScreen({ onClose, mode }: Props) {
   const { t, isRTL } = useI18n();
   const [pd, editPlayerData] = usePlayerData();
-
+  const [notification, setNotification] = useState<GameNotificationProps | null>(null);
   // party is a LIVE read — not state. Re-renders come from the store.
   const party = pd.party;
 
@@ -23,16 +32,43 @@ export function PartyScreen({ onClose, mode }: Props) {
   // so it survives reorders/heals without going stale.
   const [selectedUuid, setSelectedUuid] = useState<string>(party[0]?.uuid ?? '');
   const selected = party.find((p) => p.uuid === selectedUuid) ?? party[0];
+  const quickActionsItems = getQuickActions(selected, mode, pd.items);
 
-  function handleSelectPokemon(index: number) {
-    if (mode.kind === 'select-target') {
-      // const success = mode.onSelect?.(index);
-      // if (success) onClose();
+  /** Check if a Pokemon is eligible for selection in the current mode. */
+  function isPokemonEligible(index: number) {
+    if (mode.kind === 'battle') {
+      const roster = mode.roster;
+      if (!roster.has(index) && roster.size >= mode.maxSize) {
+        setNotification({
+          position: 'top-center',
+          text: t('battle.rosterFull', { max: mode.maxSize, count: mode.maxSize }),
+          type: 'warning',
+          duration: 4000,
+        });
+        return false;
+      }
+      return true;
+    } else if (mode.kind === 'select-target') {
+      if (mode.isEligible?.(selected)) return true;
+      return canUseItemOnPokemon(mode.itemId, selected);
     }
+  }
+
+  function onDoubleClick(pokemon: Pokemon) {
+    const isEligible = isPokemonEligible(party.indexOf(pokemon));
+    if (!isEligible) {
+      return;
+    }
+    if (mode.kind === 'battle') {
+      setPartyIndex(party.indexOf(pokemon));
+      onClose();
+    }
+    console.log('double click', pokemon);
   }
 
   // useDragSort produces the full reordered array; we apply it through the funnel.
   function applyPartyOrder(next: Pokemon[]) {
+    if (mode.kind === 'battle') return;
     editPlayerData((pd) => {
       pd.party.splice(0, pd.party.length, ...next);
     });
@@ -45,6 +81,7 @@ export function PartyScreen({ onClose, mode }: Props) {
     });
   }
 
+  // Held Items only
   function equipItem(uuid: string, itemId: string) {
     editPlayerData((pd) => {
       const mon = pd.party.find((p) => p.uuid === uuid);
@@ -64,7 +101,7 @@ export function PartyScreen({ onClose, mode }: Props) {
     });
   }
 
-  useKeyPress(['Escape', 'ArrowDown', 'ArrowUp'], (e) => {
+  useKeyPress(['Escape', 'ArrowDown', 'ArrowUp', 'Enter'], (e) => {
     if (e.key === 'Escape') {
       onClose();
     } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -72,66 +109,22 @@ export function PartyScreen({ onClose, mode }: Props) {
       const nextIndex = (currentIndex + 1) % party.length;
       const prevIndex = (currentIndex - 1 + party.length) % party.length;
       setSelectedUuid(party[e.key === 'ArrowDown' ? nextIndex : prevIndex].uuid);
+    } else if (e.key === 'Enter') {
+      console.log('double click', selected);
+      onDoubleClick(selected);
     }
   });
 
-  let b = pd.badges >>> 0;
-  let badgeCount = 0;
-  while (b) {
-    badgeCount += b & 1;
-    b >>>= 1;
-  }
+  useEffect(() => {
+    getGlobalAudio()?.playCry(selected?.id ?? 0);
+  }, [selected]);
 
   return (
     <div
       className="w-full h-full flex flex-col bg-slate-950 text-slate-100 font-sans select-none overflow-hidden"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <header className="shrink-0 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md z-10">
-        <div className="flex items-center justify-between px-4 h-12 gap-4">
-          {/* LEFT: back + title + count */}
-          <div className="flex items-center gap-3 min-w-0">
-            <button
-              onClick={onClose}
-              className="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wider shrink-0"
-            >
-              <span className="text-lg leading-none">←</span>
-              <span className="hidden sm:inline">{t('common.back')}</span>
-            </button>
-            <div className="h-4 w-px bg-slate-800 shrink-0" />
-            <h1 className="text-white font-bold text-sm tracking-wide shrink-0">{t('party.title')}</h1>
-            <span className="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-2 py-0.5 rounded-md font-medium shrink-0">
-              {party.length}/6
-            </span>
-          </div>
-
-          {/* CENTRE: active quest — only when present */}
-          {pd.story?.activeQuestId && (
-            <div className="hidden md:flex items-center gap-1.5 min-w-0 flex-1 justify-center">
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider shrink-0">Quest</span>
-              <span className="text-[11px] text-slate-300 font-medium truncate">{pd.story.activeQuestId}</span>
-            </div>
-          )}
-
-          {/* RIGHT: badges + money */}
-          <div className="flex items-center gap-3 shrink-0">
-            {/* Badge pips */}
-            <div className="hidden sm:flex items-center gap-1">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-2 h-2 rounded-full border transition-colors ${
-                    i < badgeCount ? 'bg-yellow-400 border-yellow-500' : 'bg-slate-800 border-slate-700'
-                  }`}
-                />
-              ))}
-            </div>
-            <div className="h-4 w-px bg-slate-800 hidden sm:block" />
-            {/* Money */}
-            <span className="text-slate-300 text-xs font-mono font-bold">₽{pd.money.toLocaleString()}</span>
-          </div>
-        </div>
-      </header>
+      <PartyHeader onClose={onClose} t={t} pd={pd} mode={mode} onDoubleClick={onDoubleClick} />
 
       <div className="flex-1 w-full flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden p-4 md:p-6 gap-6">
         {/* PANEL: PARTY SQUAD */}
@@ -141,6 +134,8 @@ export function PartyScreen({ onClose, mode }: Props) {
             selectedUuid={selected?.uuid ?? ''}
             onSelect={setSelectedUuid}
             onReorder={applyPartyOrder}
+            mode={mode}
+            onDoubleClick={onDoubleClick}
           />
         </div>
 
@@ -149,12 +144,15 @@ export function PartyScreen({ onClose, mode }: Props) {
           <InspectorPanel
             pokemon={selected}
             party={party}
+            mode={mode}
             onMoveReorder={(moves) => setMoves(selected.uuid, moves)}
             onEquipItem={equipItem}
             pd={pd}
           />
         </div>
       </div>
+      <QuickActions />
+      {notification && <GameNotification {...notification} onClose={() => setNotification(null)} />}
     </div>
   );
 }
