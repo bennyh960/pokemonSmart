@@ -5133,6 +5133,7 @@ export function createBattleScene(
             kind: 'battle',
             roster: battleRoster,
             maxSize: maxRosterSize,
+            inBattleUUID: player.uuid,
           });
           stateMachine.pushDirect('PARTY', partyScene);
         }
@@ -5760,6 +5761,7 @@ export function createBattleScene(
               kind: 'battle',
               maxSize: maxRosterSize,
               roster: battleRoster,
+              inBattleUUID: null,
             });
             stateMachine.pushDirect('PARTY', partyScene);
           }
@@ -5794,7 +5796,15 @@ export function createBattleScene(
           // Battle is in this phase while the PARTY scene is pushed on top.
           if (!waitingForParty) break;
           waitingForParty = false;
-          if (selectedPartyIndex >= 0 && hasActiveGame()) {
+
+          // quick actions buttons - on consume it continues to the next phase (switch or cancel)
+          if (bagPendingItem) {
+            waitingForBag = true;
+            phase = 'WAITING_BAG';
+            return;
+          }
+
+          if (selectedPartyIndex >= 0 && hasActiveGame() && !bagPendingItem) {
             const pd = getPlayerData();
             const chosenIndex = selectedPartyIndex;
             const chosen = pd.party[chosenIndex];
@@ -5877,6 +5887,7 @@ export function createBattleScene(
                 kind: 'battle',
                 maxSize: maxRosterSize,
                 roster: battleRoster,
+                inBattleUUID: null,
               });
               // !refactor react: todo- test it
               stateMachine.pushDirect('PARTY', partyScene);
@@ -5885,6 +5896,7 @@ export function createBattleScene(
               enterSelectMovePhase();
             }
           }
+
           previousLeadId = null;
           break;
         }

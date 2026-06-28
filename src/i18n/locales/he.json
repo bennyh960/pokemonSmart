@@ -436,7 +436,7 @@
   "bag.heldItem.equipped": "{name} מצויד ב{item}.",
   "bag.heldItem.cantEquip": "{name} לא יכול להחזיק {item}!",
   "bag.heldItem.equippedAlready": "{name} כבר מחזיק פריט!",
-  "bag.heldItem.unequipped": "{name} הסיר את {item}!",
+  "bag.heldItem.unequipped": " {name} כבר לא מחזיק ב{item}!",
 
   "battle.goName": "אני בוחר אותך, {name}!",
   "battle.comeBack": "חזור, {name}!",

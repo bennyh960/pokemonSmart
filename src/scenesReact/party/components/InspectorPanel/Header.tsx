@@ -5,13 +5,16 @@ import { getPokemonDisplayName } from '../../../../services/pokemon-data';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import { getItem } from '../../../../data/items';
 import { useMemo, type CSSProperties } from 'react';
+import type { PartyMode } from '../..';
 
 interface InspectorHeaderProps {
   pokemon: Pokemon;
   isPokedexMode: boolean;
+  mode: PartyMode;
+  onEquipItem: (uuid: string, itemId: string) => void;
 }
 
-export function InspectorHeader({ pokemon, isPokedexMode }: InspectorHeaderProps) {
+export function InspectorHeader({ pokemon, isPokedexMode, mode, onEquipItem }: InspectorHeaderProps) {
   const { locale, t } = useI18n();
 
   const spriteUrl = getPokemonSpriteUrl(pokemon.id);
@@ -20,9 +23,9 @@ export function InspectorHeader({ pokemon, isPokedexMode }: InspectorHeaderProps
   const types = pokemon.types ?? [];
   const natureString = getNatureStrings(pokemon);
 
-  const primaryColor = types[0] ? TYPE_BADGE[types[0]]?.color ?? '#a855f7' : '#a855f7';
+  const primaryColor = types[0] ? (TYPE_BADGE[types[0]]?.color ?? '#a855f7') : '#a855f7';
 
-  const secondaryColor = types[1] ? TYPE_BADGE[types[1]]?.color ?? primaryColor : primaryColor;
+  const secondaryColor = types[1] ? (TYPE_BADGE[types[1]]?.color ?? primaryColor) : primaryColor;
 
   const hpPercentage = pokemon.maxHp > 0 ? Math.max(0, Math.min(100, (pokemon.hp / pokemon.maxHp) * 100)) : 0;
   const pulseFrequency = 0.5 + (hpPercentage / 100) * 3;
@@ -186,7 +189,7 @@ export function InspectorHeader({ pokemon, isPokedexMode }: InspectorHeaderProps
             <div className="text-slate-200">#{pokemon.id}</div>
           </div>
 
-          {item && (
+          {item && mode.kind !== 'battle' && (
             <div>
               <div className="text-slate-500 text-xs">{t('party.heldItem.equipHint')}</div>
 
@@ -208,7 +211,14 @@ export function InspectorHeader({ pokemon, isPokedexMode }: InspectorHeaderProps
                   <span className="text-slate-300 text-xs font-medium">{itemData.name}</span>
                 </div>
 
-                <button type="button" className="text-slate-500 hover:text-white text-xs font-bold">
+                <button
+                  onClick={() => {
+                    console.log(pokemon.uuid, item.id);
+                    onEquipItem(pokemon.uuid, item.id);
+                  }}
+                  type="button"
+                  className="text-slate-500 hover:text-white text-xs font-bold"
+                >
                   ✕
                 </button>
               </div>

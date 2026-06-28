@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { Move, PlayerData, Pokemon } from '../../types/index.js';
+import { useEffect, useState } from 'react';
+import type { Move, Pokemon } from '../../types/index.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { InspectorPanel } from './components/InspectorPanel/index';
 import type { PartyMode } from './index.js';
@@ -9,12 +9,12 @@ import { usePlayerData } from '../../ui-react/hooks/usePlayerData.ts';
 import { getQuickActions } from './lib/helpers.ts';
 import QuickActions from './components/QuickActions';
 import { canUseItemOnPokemon } from '../../systems/item-effects.ts';
-import { countBadges } from '../../data/badges.ts';
-import { getQuest } from '../../data/story/quests.ts';
 import PartyHeader from './components/PartyHeader/PartyHeader.tsx';
-import { selectedPartyIndex, setPartyIndex } from '../../scenes/party/party_scene.ts';
+import { setPartyIndex } from '../../scenes/party/party_scene.ts';
 import { GameNotification, type GameNotificationProps } from '../../ui-react/componenets/GameNotification.tsx';
 import { getGlobalAudio } from '../../audio/audio-manager.ts';
+import { getPokemonDisplayName } from '../../services/pokemon-data.ts';
+import { getItem } from '../../data/items.ts';
 
 interface Props {
   onClose: () => void;
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function PartyScreen({ onClose, mode }: Props) {
-  const { t, isRTL } = useI18n();
+  const { t, isRTL, locale } = useI18n();
   const [pd, editPlayerData] = usePlayerData();
   const [notification, setNotification] = useState<GameNotificationProps | null>(null);
   // party is a LIVE read — not state. Re-renders come from the store.
@@ -30,7 +30,9 @@ export function PartyScreen({ onClose, mode }: Props) {
 
   // Selection tracked by identity (uuid), re-resolved against live pd each render
   // so it survives reorders/heals without going stale.
-  const [selectedUuid, setSelectedUuid] = useState<string>(party[0]?.uuid ?? '');
+  const [selectedUuid, setSelectedUuid] = useState<string>(
+    mode.kind === 'battle' && mode.inBattleUUID ? mode.inBattleUUID : party[0].uuid,
+  );
   const selected = party.find((p) => p.uuid === selectedUuid) ?? party[0];
   const quickActionsItems = getQuickActions(selected, mode, pd.items);
 
@@ -90,11 +92,27 @@ export function PartyScreen({ onClose, mode }: Props) {
         // unequip: return the item to the bag
         pd.items[itemId] = (pd.items[itemId] ?? 0) + 1;
         mon.heldItemId = null;
+        setNotification({
+          position: 'top-center',
+          text: t('bag.heldItem.unequipped', {
+            item: getItem(itemId)?.name[locale] ?? '???',
+            name: getPokemonDisplayName(mon.id),
+          }),
+          type: 'danger',
+        });
       } else {
         // return any currently-held item, then equip the new one
         if (mon.heldItemId) pd.items[mon.heldItemId] = (pd.items[mon.heldItemId] ?? 0) + 1;
         mon.heldItemId = itemId;
         pd.items[itemId] = (pd.items[itemId] ?? 0) - 1;
+        setNotification({
+          position: 'top-center',
+          text: t('bag.heldItem.equipped', {
+            item: getItem(itemId)?.name[locale] ?? '???',
+            name: getPokemonDisplayName(mon.id),
+          }),
+          type: 'success',
+        });
       }
       if (pd.items[itemId] !== undefined && pd.items[itemId] <= 0) delete pd.items[itemId];
     });
@@ -156,7 +174,7 @@ export function PartyScreen({ onClose, mode }: Props) {
           />
         </div>
       </div>
-      <QuickActions />
+      <QuickActions mode={mode} onClose={onClose} pd={pd} editPlayerData={editPlayerData} selected={selected} />
       {notification && <GameNotification {...notification} onClose={() => setNotification(null)} />}
     </div>
   );

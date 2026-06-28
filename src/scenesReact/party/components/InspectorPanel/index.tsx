@@ -48,7 +48,7 @@ export function InspectorPanel({
   // inspector pannel
   useKeyPress(['ArrowLeft', 'ArrowRight'], (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      const tabs = ['stats', 'moveset', 'items'];
+      const tabs = ['stats', 'moveset', 'items'].filter((tab) => mode.kind !== 'battle' || tab !== 'items');
       const currentIndex = tabs.indexOf(activeTab);
       const nextIndex =
         e.key === 'ArrowRight' ? (currentIndex - 1 + tabs.length) % tabs.length : (currentIndex + 1) % tabs.length;
@@ -62,7 +62,7 @@ export function InspectorPanel({
         <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">{t('party.inspector')}</h3>
       </div>
 
-      <InspectorHeader pokemon={pokemon} isPokedexMode={isPokedexMode} />
+      <InspectorHeader pokemon={pokemon} isPokedexMode={isPokedexMode} mode={mode} onEquipItem={onEquipItem} />
 
       <div className="flex-1 outline-none flex flex-col min-h-0">
         <div className="flex px-4 border-b border-slate-800">

@@ -9,7 +9,7 @@ type MoveLearningConfirmAction = 'replace' | 'skip' | null;
 
 export type PartyMode =
   | { kind: 'overworld' }
-  | { kind: 'battle'; roster: Set<number>; maxSize: number }
+  | { kind: 'battle'; roster: Set<number>; maxSize: number; inBattleUUID: null | string }
   | {
       kind: 'select-target';
       itemId: string;

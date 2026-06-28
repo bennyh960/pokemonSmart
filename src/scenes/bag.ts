@@ -53,6 +53,14 @@ let bagMode: BagMode = 'overworld';
 
 export let pendingItem: { itemId: string; def: ItemDef } | null = null;
 
+export const setBagPendingItem = (itemId: string) => {
+  const itemDef = getItem(itemId);
+  if (!itemDef) {
+    return null;
+  }
+  return (pendingItem = { itemId, def: itemDef });
+};
+
 export function setBagMode(mode: BagMode): void {
   bagMode = mode;
 }
