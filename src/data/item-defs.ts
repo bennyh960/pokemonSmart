@@ -13,6 +13,7 @@ import { getMove } from '../services/pokemon-data';
 import type { BattlePokemonRuntimeState, BattleStatModifiers } from '../systems/battle-state';
 import { HM_CONFIG } from '../systems/hm';
 import type { Pokemon, PokemonType } from '../types';
+import type { MajorStatusId } from '../types/battle-metadata';
 import type { ItemDef } from './items';
 
 // ─── Types ───
@@ -70,9 +71,9 @@ const choiceItemCB = (args?: Parameters<NonNullable<BattleItemConfig['condition'
 export type ItemEffect =
   | { type: 'heal'; amount: number }
   | { type: 'heal-full' } // Heals all HP
-  | { type: 'restore-full'; status: string | 'all' } // Heals all HP and status conditions (e.g. Full Restore)
+  | { type: 'restore-full'; status: MajorStatusId | 'all' } // Heals all HP and status conditions (e.g. Full Restore)
   | { type: 'revive'; hpPercent: number }
-  | { type: 'status-cure'; status: string | 'all' }
+  | { type: 'status-cure'; status: MajorStatusId | 'all' }
   | { type: 'pp-restore'; amount: number | 'all' }
   | { type: 'pp-restore-one'; amount: number }
   | { type: 'stat-boost'; stat: string; stages: number }

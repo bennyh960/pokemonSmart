@@ -95,7 +95,12 @@ export const getQuickActions = (
 
     // Status Cure
     if (itemDef.category === 'status-cure' && pokemon.status) {
-      return itemsToShow.push(entry);
+      if (
+        itemDef.effect.type === 'status-cure' &&
+        (itemDef.effect.status === 'all' || itemDef.effect.status === pokemon.status)
+      ) {
+        return itemsToShow.push(entry);
+      }
     }
 
     // PP Restore

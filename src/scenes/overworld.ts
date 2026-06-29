@@ -3549,7 +3549,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (input.isKeyPressed('p') || input.isKeyPressed('P')) {
         setPartyMode('overworld');
         stateMachine.push('PARTY');
-        // hideHUD();
         return;
       }
 
