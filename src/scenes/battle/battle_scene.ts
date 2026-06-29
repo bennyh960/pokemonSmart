@@ -127,7 +127,6 @@ import {
   createMoveLearningSession,
   getMoveLearningAnnouncementLines,
   getMoveLearningResolutionMessage,
-  setMoveLearningSession,
   type LevelUpMoveResult,
   type MoveLearningResolution,
 } from '../../systems/move-learning.js';

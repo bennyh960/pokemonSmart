@@ -6,7 +6,6 @@ import type { AudioManager } from '../audio/audio-manager';
 import type { InputManager } from '../engine/input';
 import { drawText } from '../engine/renderer';
 import type { StateMachine } from '../engine/state-machine';
-import { t } from '../i18n/i18n';
 import { loadGameFromSlot } from '../systems/game-state';
 import type { Scene } from '../types';
 
@@ -34,7 +33,7 @@ const C = {
   USE_BTN_BRD: '#2a6a40',
 };
 
-export function createTestScene(input: InputManager, stateMachine: StateMachine, audio: AudioManager): Scene {
+export function createTestScene(input: InputManager, stateMachine: StateMachine, _: AudioManager): Scene {
   return {
     enter(): void {
       loadGameFromSlot(0);

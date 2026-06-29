@@ -38,7 +38,7 @@ export function MoveCard({
   isMoveToDelete,
   onClick,
 }: MoveCardProps) {
-  const { t, isRTL, locale } = useI18n();
+  const { locale } = useI18n();
   const badge = TYPE_BADGE[move.type] ?? TYPE_BADGE['normal'];
   const ppPct = move.pp > 0 ? move.currentPp / move.pp : 0;
   const ppColor = ppPct > 0.5 ? '#4ade80' : ppPct > 0.25 ? '#facc15' : '#f87171';

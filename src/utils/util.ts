@@ -10,6 +10,7 @@ export const getPokemonSpriteUrl = (pokemonId: number, side: 'front' | 'back' = 
 export const STATUS_LABEL: Record<MajorStatusId, { en: string; he: string; color: string }> = {
   poison: { en: 'PSN', he: 'רעל', color: '#a040a0' },
   //   tox:  { en: 'TOX',  he: 'רעל+',  color: '#6a006a' },
+  paralysis: { en: 'PAR', he: 'שיתוק', color: '#f8d030' },
   paralyze: { en: 'PAR', he: 'שיתוק', color: '#f8d030' },
   sleep: { en: 'SLP', he: 'ישן', color: '#7038f8' },
   burn: { en: 'BRN', he: 'כוויה', color: '#f08030' },

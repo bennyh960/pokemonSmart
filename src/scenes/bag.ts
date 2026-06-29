@@ -43,7 +43,7 @@ import {
   setMoveLearningSession,
 } from '../systems/move-learning.js';
 import { uiRegistry } from '../engine/input/uiRegistry.js';
-import { CANVAS_WIDTH, LOGICAL_WIDTH } from '../engine/config.js';
+import { LOGICAL_WIDTH } from '../engine/config.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 

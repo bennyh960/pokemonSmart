@@ -7,9 +7,6 @@ import { LOGICAL_WIDTH, LOGICAL_HEIGHT } from './config.js';
  * All coordinates are in native resolution (240x160).
  */
 
-// PARTY
-const C = {};
-
 export const COLORS = {
   BG: '#0d1a14',
   CARD_BG: '#0f2a1a',

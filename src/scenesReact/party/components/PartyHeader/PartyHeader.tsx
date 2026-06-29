@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { getQuest } from '../../../../data/story/quests';
 import { countBadges } from '../../../../data/badges';
 import type { PlayerData, Pokemon } from '../../../../types';
 import type { PartyMode } from '../..';
 import { getPokemonSpriteUrl } from '../../../../utils/util';
-import { selectedPartyIndex } from '../../../../scenes/party';
 
 interface PartyHeaderProps {
   onClose: () => void;

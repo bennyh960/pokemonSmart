@@ -3,7 +3,6 @@ import { setBagPendingItem } from '../../../../scenes/bag';
 import type { PlayerData, Pokemon } from '../../../../types';
 import type { QuickActionItem } from './helpers';
 import { useKeyPress, type Key } from '../../../../ui-react/hooks/useKeyboard';
-import type { Locale } from '../../../../i18n/i18n';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 
 interface IQuickActionsProps {
