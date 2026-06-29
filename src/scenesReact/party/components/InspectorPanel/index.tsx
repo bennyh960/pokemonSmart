@@ -3,33 +3,35 @@ import { InspectorHeader } from './Header.js';
 import { InspectorStatsTab } from './tabs/StatsTab.js';
 import type { Move, PlayerData, Pokemon } from '../../../../types/index.js';
 import HeldItemsTab from './tabs/HeldItemsTab.js';
-import { t } from '../../../../i18n/i18n.js';
 import { MovesetTab } from './tabs/MovesetTab.js';
 import { TYPE_BADGE } from '../../../../data/type-constants.js';
 import type { PartyMode } from '../../index.js';
 import { useKeyPress } from '../../../../ui-react/hooks/useKeyboard.js';
+import { getPokemonDisplayName } from '../../../../services/pokemon-data.js';
+import type { GameNotificationProps } from '../../../../ui-react/componenets/GameNotification.js';
+import { getItem } from '../../../../data/items.js';
+import { useI18n } from '../../../../ui-react/context/i18n-context.js';
 
 interface Props {
   mode: PartyMode;
   pokemon: Pokemon;
-  party: Pokemon[];
   pd: PlayerData;
-  onMoveReorder?: (moves: Move[]) => void;
-  onEquipItem: (uuid: string, itemId: string) => void;
+  editPlayerData: (callback: (pd: PlayerData) => void) => void;
   isPokedexMode?: boolean;
   defaultTab?: 'stats' | 'moveset' | 'items';
+  setNotification: (notification: GameNotificationProps | null) => void;
 }
 
 export function InspectorPanel({
   mode,
   pokemon,
-  party,
   pd,
-  onMoveReorder,
-  onEquipItem,
+  editPlayerData,
   isPokedexMode = false,
   defaultTab = 'stats',
+  setNotification,
 }: Props) {
+  const { t, locale } = useI18n();
   const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>(defaultTab);
 
   const primaryType = TYPE_BADGE[pokemon.types[0]];
@@ -55,6 +57,51 @@ export function InspectorPanel({
       setActiveTab(tabs[nextIndex] as 'stats' | 'moveset' | 'items');
     }
   });
+
+  // ------------------------ component callbacks ------------------------
+
+  function onMoveReorder(uuid: string, moves: Move[]) {
+    editPlayerData((pd) => {
+      const mon = pd.party.find((p) => p.uuid === uuid);
+      if (mon) mon.moves = moves;
+    });
+  }
+
+  // Held Items only
+  function onEquipItem(uuid: string, itemId: string) {
+    editPlayerData((pd) => {
+      const mon = pd.party.find((p) => p.uuid === uuid);
+      if (!mon) return;
+
+      if (mon.heldItemId === itemId) {
+        // unequip: return the item to the bag
+        pd.items[itemId] = (pd.items[itemId] ?? 0) + 1;
+        mon.heldItemId = null;
+        setNotification({
+          position: 'top-center',
+          text: t('bag.heldItem.unequipped', {
+            item: getItem(itemId)?.name[locale] ?? '???',
+            name: getPokemonDisplayName(mon.id),
+          }),
+          type: 'danger',
+        });
+      } else {
+        // return any currently-held item, then equip the new one
+        if (mon.heldItemId) pd.items[mon.heldItemId] = (pd.items[mon.heldItemId] ?? 0) + 1;
+        mon.heldItemId = itemId;
+        pd.items[itemId] = (pd.items[itemId] ?? 0) - 1;
+        setNotification({
+          position: 'top-center',
+          text: t('bag.heldItem.equipped', {
+            item: getItem(itemId)?.name[locale] ?? '???',
+            name: getPokemonDisplayName(mon.id),
+          }),
+          type: 'success',
+        });
+      }
+      if (pd.items[itemId] !== undefined && pd.items[itemId] <= 0) delete pd.items[itemId];
+    });
+  }
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -84,7 +131,7 @@ export function InspectorPanel({
         </div>
 
         <div className="flex-1 overflow-y-auto game-scrollbar">
-          {activeTab === 'stats' && <InspectorStatsTab pokemon={pokemon} party={party} />}
+          {activeTab === 'stats' && <InspectorStatsTab pokemon={pokemon} party={pd.party} />}
           {activeTab === 'moveset' && <MovesetTab pokemon={pokemon} onMoveReorder={onMoveReorder} />}
           {mode.kind !== 'battle' && activeTab === 'items' && (
             <HeldItemsTab pd={pd} pokemon={pokemon} onEquipItem={onEquipItem} />

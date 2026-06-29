@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Move, Pokemon } from '../../types/index.js';
+import type { Pokemon } from '../../types/index.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { InspectorPanel } from './components/InspectorPanel/index';
 import type { PartyMode } from './index.js';
@@ -13,8 +13,6 @@ import PartyHeader from './components/PartyHeader/PartyHeader.tsx';
 import { setPartyIndex } from '../../scenes/party/party_scene.ts';
 import { GameNotification, type GameNotificationProps } from '../../ui-react/componenets/GameNotification.tsx';
 import { getGlobalAudio } from '../../audio/audio-manager.ts';
-import { getPokemonDisplayName } from '../../services/pokemon-data.ts';
-import { getItem } from '../../data/items.ts';
 
 interface Props {
   onClose: () => void;
@@ -23,7 +21,7 @@ interface Props {
 }
 
 export function PartyScreen({ onClose, mode, goToBag }: Props) {
-  const { t, isRTL, locale } = useI18n();
+  const { t, isRTL } = useI18n();
   const [pd, editPlayerData] = usePlayerData();
   const [notification, setNotification] = useState<GameNotificationProps | null>(null);
   // party is a LIVE read — not state. Re-renders come from the store.
@@ -75,49 +73,6 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
     });
   }
 
-  function setMoves(uuid: string, moves: Move[]) {
-    editPlayerData((pd) => {
-      const mon = pd.party.find((p) => p.uuid === uuid);
-      if (mon) mon.moves = moves;
-    });
-  }
-
-  // Held Items only
-  function equipItem(uuid: string, itemId: string) {
-    editPlayerData((pd) => {
-      const mon = pd.party.find((p) => p.uuid === uuid);
-      if (!mon) return;
-
-      if (mon.heldItemId === itemId) {
-        // unequip: return the item to the bag
-        pd.items[itemId] = (pd.items[itemId] ?? 0) + 1;
-        mon.heldItemId = null;
-        setNotification({
-          position: 'top-center',
-          text: t('bag.heldItem.unequipped', {
-            item: getItem(itemId)?.name[locale] ?? '???',
-            name: getPokemonDisplayName(mon.id),
-          }),
-          type: 'danger',
-        });
-      } else {
-        // return any currently-held item, then equip the new one
-        if (mon.heldItemId) pd.items[mon.heldItemId] = (pd.items[mon.heldItemId] ?? 0) + 1;
-        mon.heldItemId = itemId;
-        pd.items[itemId] = (pd.items[itemId] ?? 0) - 1;
-        setNotification({
-          position: 'top-center',
-          text: t('bag.heldItem.equipped', {
-            item: getItem(itemId)?.name[locale] ?? '???',
-            name: getPokemonDisplayName(mon.id),
-          }),
-          type: 'success',
-        });
-      }
-      if (pd.items[itemId] !== undefined && pd.items[itemId] <= 0) delete pd.items[itemId];
-    });
-  }
-
   // Global ESC
   useKeyPress(['Escape'], (e) => {
     if (e.key === 'Escape') {
@@ -166,24 +121,24 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
         <div className="flex-[6] flex flex-col bg-slate-900/20 border border-slate-800/60 rounded-3xl overflow-hidden backdrop-blur-xl relative min-h-[600px] lg:min-h-0 lg:h-full shadow-2xl">
           <InspectorPanel
             pokemon={selected}
-            party={party}
             mode={mode}
-            onMoveReorder={(moves) => setMoves(selected.uuid, moves)}
-            onEquipItem={equipItem}
+            editPlayerData={editPlayerData}
             pd={pd}
+            setNotification={setNotification}
           />
         </div>
       </div>
-      <QuickActions
-        mode={mode}
-        onClose={onClose}
-        pd={pd}
-        editPlayerData={editPlayerData}
-        selected={selected}
-        quickActionItems={getQuickActions(selected, mode, pd.items)}
-        locale={locale}
-        onBagClick={goToBag}
-      />
+      {(mode.kind === 'battle' || mode.kind === 'overworld') && (
+        <QuickActions
+          mode={mode}
+          onClose={onClose}
+          pd={pd}
+          editPlayerData={editPlayerData}
+          selected={selected}
+          quickActionItems={getQuickActions(selected, mode, pd.items)}
+          onBagClick={goToBag}
+        />
+      )}
       {notification && <GameNotification {...notification} onClose={() => setNotification(null)} />}
     </div>
   );

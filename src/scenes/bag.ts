@@ -786,6 +786,10 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
               itemId: item.id,
               itemName: getLocalizedName(item.def.name),
               description: getLocalizedName(item.def.description),
+              onSelect: (index) => {
+                console.log('onSelect called with index:', index);
+                return true;
+              },
 
               // isEligible: (p) => !p.heldItemId,
             });
