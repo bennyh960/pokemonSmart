@@ -13,9 +13,7 @@ import PartyHeader from './components/PartyHeader/PartyHeader.tsx';
 import { setPartyIndex } from '../../scenes/party/party_scene.ts';
 import { GameNotification, type GameNotificationProps } from '../../ui-react/componenets/GameNotification.tsx';
 import { getGlobalAudio } from '../../audio/audio-manager.ts';
-import { MoveCard, MoveMetaPanel } from './components/InspectorPanel/tabs/MovesetTab.tsx';
 import MoveLearning from './components/MoveLearning/MoveLearning.tsx';
-import { getItem } from '../../data/items.ts';
 
 interface Props {
   onClose: () => void;

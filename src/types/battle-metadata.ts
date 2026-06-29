@@ -1,6 +1,6 @@
 import type { PokemonType } from './index.ts';
 
-export type MajorStatusId = 'poison' | 'burn' | 'paralyze' | 'sleep' | 'freeze';
+export type MajorStatusId = 'poison' | 'burn' | 'paralyze' | 'paralysis' | 'sleep' | 'freeze';
 
 export type WeatherConditionId = 'sandstorm' | 'rain' | 'hail' | 'sun';
 

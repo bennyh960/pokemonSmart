@@ -9,7 +9,7 @@
  */
 
 import { createStateMachine } from './state-machine.js';
-import { createInputManager, createVirtualUI, setupMobileControls } from './input';
+import { createInputManager } from './input';
 import { createAudioManager, setGlobalAudio } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle';
@@ -17,7 +17,6 @@ import { createOverworldScene } from '../scenes/overworld.js';
 import { createStarterSelectScene } from '../scenes/starter-select.js';
 import { createHeroSelectScene } from '../scenes/hero-select.js';
 import { createHeroNameSelectScene } from '../scenes/hero-name-select.js';
-import { createPartyScene } from '../scenes/party';
 import { createPokedexScene } from '../scenes/pokedex';
 import { createEvolutionScene } from '../scenes/evolution.js';
 import { createBagScene } from '../scenes/bag.js';

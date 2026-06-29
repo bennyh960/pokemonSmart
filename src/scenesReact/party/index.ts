@@ -5,7 +5,7 @@ import { mountReactScene, unmountReactScene } from '../../engine/react/react-sce
 import { PartyScreen } from './PartyScreen.js';
 import type { MoveLearningSession } from '../../systems/move-learning.js';
 
-type MoveLearningConfirmAction = 'replace' | 'skip' | null;
+// type MoveLearningConfirmAction = 'replace' | 'skip' | null;
 
 export type PartyMode =
   | { kind: 'overworld' }

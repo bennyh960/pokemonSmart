@@ -31,13 +31,6 @@ export const DAMAGE_CLASS_ICON: Record<string, { icon: string; label: { en: stri
   status: { icon: '○', label: { en: 'Status', he: 'סטטוס' } },
 };
 
-// ── Damage class pill ────────────────────────────────────────────────────────
-const DAMAGE_CLASS: Record<string, { label: string; color: string }> = {
-  physical: { label: 'Physical', color: '#e07040' },
-  special: { label: 'Special', color: '#8060e0' },
-  status: { label: 'Status', color: '#5080a0' },
-};
-
 // ─── Glow CSS vars derived from the primary type colour ───────────────────────
 export function glowStyle(hex: string): React.CSSProperties {
   return {

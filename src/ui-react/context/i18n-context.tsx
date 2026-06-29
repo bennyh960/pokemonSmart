@@ -1,5 +1,5 @@
 // src/ui/i18n-context.tsx
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import { getLocale, setLocale, isRTL, type Locale, t } from '../../i18n/i18n';
 
 interface I18nContextValue {
