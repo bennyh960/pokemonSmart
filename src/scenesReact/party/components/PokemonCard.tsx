@@ -12,6 +12,7 @@ export interface CardProps {
   index: number;
   isSelected: boolean;
   isDragging: boolean;
+  disabled: boolean;
   dragHandlers:
     | {
         onDragStart: (index: number) => void;
@@ -30,6 +31,7 @@ export function PokemonCard({
   isSelected,
   isDragging,
   dragHandlers,
+  disabled,
   onClick,
   onDoubleClick,
 }: CardProps) {
@@ -61,15 +63,18 @@ export function PokemonCard({
       onDragStart={() => dragHandlers?.onDragStart(index)}
       onDragOver={(e) => dragHandlers?.onDragOver(e, index)}
       onDragEnd={dragHandlers?.onDragEnd}
-      onClick={onClick}
+      onClick={() => {
+        if (!disabled) onClick();
+      }}
       className={[
-        'relative flex flex-col rounded-[10px] cursor-pointer select-none',
+        'relative flex flex-col rounded-[10px] select-none',
         'bg-[#12141f] border-2 overflow-hidden',
         'px-[12px] pt-[10px] pb-[8px] hover:bg-[#1a1d2e] transition-alls',
         'w-full',
         isFainted ? 'grayscale opacity-60 border-[#1a31ded8]' : 'border-[#2a2d42]',
         isDragging ? 'opacity-50 scale-95' : '',
         isSelected ? 'border-[var(--glow)]' : '',
+        disabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer',
       ].join(' ')}
       style={{
         // direction: 'ltr',

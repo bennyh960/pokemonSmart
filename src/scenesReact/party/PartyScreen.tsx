@@ -15,6 +15,7 @@ import { GameNotification, type GameNotificationProps } from '../../ui-react/com
 import { getGlobalAudio } from '../../audio/audio-manager.ts';
 import { MoveCard, MoveMetaPanel } from './components/InspectorPanel/tabs/MovesetTab.tsx';
 import MoveLearning from './components/MoveLearning/MoveLearning.tsx';
+import { getItem } from '../../data/items.ts';
 
 interface Props {
   onClose: () => void;
@@ -27,7 +28,7 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
   const [pd, editPlayerData] = usePlayerData();
   const [notification, setNotification] = useState<GameNotificationProps | null>(null);
   // party is a LIVE read — not state. Re-renders come from the store.
-  const party = pd.party;
+  const party = pd.party; //.filter((p) => (mode.kind == 'select-target' ? (mode.isEligible?.(p) ?? true) : true));
 
   // Selection tracked by identity (uuid), re-resolved against live pd each render
   // so it survives reorders/heals without going stale.
@@ -44,16 +45,7 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
   });
   const selected = party.find((p) => p.uuid === selectedUuid) ?? party[0];
 
-  const test = () => {
-    if (mode.kind === 'select-target') {
-      mode.onSelect(selected.uuid);
-      const res = mode.isEligible?.(selected);
-      console.log('select-target', selected, res);
-    }
-  };
-  test();
-
-  // Move learning session state
+  // Move learning session state (TODO: CONTINUE)
   const [selectedMoveToDelete, setSelectedMoveToDelete] = useState<null | Move>(null);
 
   /** Check if a Pokemon is eligible for selection in the current mode. */
@@ -72,18 +64,34 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
       }
       return true;
     } else if (mode.kind === 'select-target') {
-      if (mode.isEligible?.(selected)) return true;
-      return canUseItemOnPokemon(mode.itemId, selected);
+      // we can't filter party due to many dependecies on other components.
+      const isEligible = mode.isEligible?.(pokemon) ?? canUseItemOnPokemon(mode.itemId, selected);
+      if (!isEligible) {
+        setNotification({
+          position: 'top-center',
+          text: t('bag.cantUseHere'),
+          type: 'warning',
+          duration: 4000,
+        });
+      }
+      return isEligible;
     }
   }
 
   function onDoubleClick(pokemon: Pokemon) {
     const isEligible = isPokemonEligible(pokemon);
     if (!isEligible) {
+      getGlobalAudio()?.playSFX('alert');
       return;
     }
     if (mode.kind === 'battle') {
       setPartyIndex(party.indexOf(pokemon));
+      onClose();
+    } else if (mode.kind === 'select-target') {
+      // pd.party due to in this mode we filter not eligible pokemon, so the index may be wrong if we use party.indexOf
+      const index = pd.party.indexOf(pokemon);
+      setPartyIndex(index);
+
       onClose();
     }
   }
@@ -119,7 +127,6 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
   useEffect(() => {
     getGlobalAudio()?.playCry(selected?.id ?? 0);
   }, [selected]);
-  console.log(mode);
 
   return (
     <div

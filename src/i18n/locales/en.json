@@ -416,7 +416,7 @@
   "bag.title": "BAG",
   "bag.noItems": "No items in this category",
   "bag.cantUseHere": "Can't use this here!",
-  "bag.selectPokemon": "Select a Pokemon to use on",
+  "bag.selectPokemon": "Select a Pokemon to use on {itemName}",
   "bag.hint": "ESC:Back  ENTER:Use  ◀▶:Navigate",
   "bag.hint.use": "Use",
   "bag.hint.navigate": "Nav",

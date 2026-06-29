@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { PokemonCard } from '../PokemonCard';
 import { useDragSort } from '../../../../ui-react/hooks/useDragSort';
 import type { Pokemon } from '../../../../types';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import type { PartyMode } from '../..';
 import { useKeyPress } from '../../../../ui-react/hooks/useKeyboard';
+import { getItem } from '../../../../data/items';
 
 interface IPartySquadPanel {
   party: Pokemon[];
@@ -16,7 +17,7 @@ interface IPartySquadPanel {
 }
 
 const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDoubleClick }: IPartySquadPanel) => {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const slots = Array.from({ length: 6 }).map((_, i) => party[i] || null);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [softSelectedUuid, setSoftSelectedUuid] = useState<string | null>(null);
@@ -64,11 +65,24 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
     }
   });
 
+  const itemRef = useRef(mode.kind === 'select-target' ? getItem(mode.itemId) : null);
+
   return (
     <>
       <div className="px-5 pt-4 pb-1">
-        <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">{t('party.squad')}</h3>
+        <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">
+          {mode.kind === 'select-target'
+            ? t('bag.selectPokemon', { itemName: itemRef.current?.name[locale] ?? '' })
+            : t('party.squad')}
+        </h3>
       </div>
+
+      {itemRef.current && (
+        <div className="px-5 pb-2 text-slate-400 text-xs font-medium tracking-wide">
+          {itemRef.current?.description[locale]}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center" dir="ltr">
         {slots.map((pokemon, i) => {
           if (!pokemon) {
@@ -87,6 +101,7 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
             <PokemonCard
               key={pokemon.uuid}
               pokemon={pokemon}
+              disabled={mode.kind === 'select-target' && !mode.isEligible?.(pokemon)}
               index={i}
               isSelected={selectedUuid === pokemon.uuid || softSelectedUuid === pokemon.uuid}
               isDragging={mode.kind === 'battle' ? false : draggingIndex === i}

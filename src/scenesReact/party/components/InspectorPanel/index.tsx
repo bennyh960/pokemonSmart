@@ -12,7 +12,7 @@ import type { GameNotificationProps } from '../../../../ui-react/componenets/Gam
 import { getItem } from '../../../../data/items.js';
 import { useI18n } from '../../../../ui-react/context/i18n-context.js';
 
-interface Props {
+interface IInspectorPanelProps {
   mode: PartyMode;
   pokemon: Pokemon;
   pd: PlayerData;
@@ -30,7 +30,7 @@ export function InspectorPanel({
   isPokedexMode = false,
   defaultTab = 'stats',
   setNotification,
-}: Props) {
+}: IInspectorPanelProps) {
   const { t, locale } = useI18n();
   const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>(defaultTab);
 
