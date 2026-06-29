@@ -3272,16 +3272,22 @@ export function createBattleScene(
     activeMoveLearningPrompt = null;
     pendingMoveLearningResolution = null;
     pendingMoveLearningPhase = phaseAfterResolution;
-    setPartyMode('move-learning');
-    setMoveLearningSession(
-      createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
-        pendingMoveLearningResolution = resolution;
-      }),
-    );
-    phase = 'WAITING_MOVE_LEARN';
+    // setPartyMode('move-learning');
+    // setMoveLearningSession(
+    //   createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
+    //     pendingMoveLearningResolution = resolution;
+    //   }),
+    // );
+    // stateMachine.push('PARTY');
     // !TODO: Implement a React-based party scene for move learning instead of using the old scene system
-    // const partyScene = createPartyReactScene(stateMachine, {kind:'move-learning',session:})
-    stateMachine.push('PARTY');
+
+    const session = createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
+      pendingMoveLearningResolution = resolution;
+    });
+    phase = 'WAITING_MOVE_LEARN';
+    const partyScene = createPartyReactScene(stateMachine, { kind: 'move-learning', session });
+    stateMachine.pushDirect('PARTY', partyScene);
+
     return true;
   }
 

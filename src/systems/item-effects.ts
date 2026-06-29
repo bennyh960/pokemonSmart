@@ -97,7 +97,7 @@ export function canUseItemOnPokemon(itemId: string, target: Pokemon): boolean {
       const stoneSlug = getItem(itemId)?.id;
       if (!stoneSlug) return false;
       const nextEvo = getRegularNextEvolution(target.id);
-      return nextEvo?.trigger === 'use-item' && nextEvo.item === stoneSlug;
+      return nextEvo.some((e) => e.trigger === 'use-item' && e.item === stoneSlug);
     }
     default:
       return false;
@@ -284,13 +284,15 @@ export function applyItemEffect(itemId: string, target: Pokemon): ItemUseResult 
         return { success: false, message: '???-באג' };
       }
       const nextEvo = getRegularNextEvolution(target.id);
-      if (!nextEvo || nextEvo.trigger !== 'use-item' || nextEvo.item !== stoneSlug) {
+      const stoneEvo = nextEvo.find((e) => e.trigger === 'use-item' && e.item === stoneSlug);
+      if (!stoneEvo) {
         return { success: false, message: t('item.effect.noEffect') };
       }
+
       return {
         success: true,
         message: `${getPokemonDisplayName(target.id)} ` + t('item.effect.evolvedInto'),
-        evolution: nextEvo,
+        evolution: stoneEvo,
       };
     }
 

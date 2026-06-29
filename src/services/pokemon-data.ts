@@ -26,6 +26,7 @@ import {
   type MoveBattleMetadata,
   type MoveBattleTarget,
 } from '../types/battle-metadata.js';
+import type { EvolutionStage } from '../scenes/pokedex/tabs/evolution.ts';
 
 // --- Types matching the JSON shapes ---
 
@@ -294,18 +295,24 @@ export function getEvolutionChain(pokemonId: number): EvolutionChainData | undef
   return evolutionByPokemonId.get(pokemonId);
 }
 
-// very minour evolution resolver
-// will not work for politod that need trade - it
-export function getRegularNextEvolution(pokemonId: number): EvolutionStep | undefined {
-  const chain = evolutionByPokemonId.get(pokemonId);
-  if (!chain) return undefined;
+// CURRENT VERIFIED GLOBAL EVOLUTION LOGIC (HANDLES BRANCHING EVOLUTIONS LIKE EEVEE, TYROUGE, ETC.)
+// EEVEE AND TYROUGE ALREADY HAVE THIER RESOLVER DUE TO WE DIDNT WIRE IT BUT IT HANDLE ALL
+export const getRegularNextEvolution = (pokemonId: number) => {
+  const chain = getEvolutionChain(pokemonId);
+  if (!chain) return [];
 
-  const stages = chain.stages;
+  const stages = chain.stages as EvolutionStage[];
   const currentIndex = stages.findIndex((s) => s.id === pokemonId);
-  if (currentIndex === -1 || currentIndex >= stages.length - 1) return undefined;
+  const forkingStartIndex = stages.findIndex((s) => stages.filter((child) => child.evolvesFromId === s.id).length > 1);
 
-  return stages[currentIndex + 1];
-}
+  if (forkingStartIndex !== currentIndex && currentIndex !== -1 && currentIndex < stages.length - 1) {
+    return [stages[currentIndex + 1]];
+  } else if (forkingStartIndex !== -1 && currentIndex !== -1) {
+    return stages.filter((s) => s.evolvesFromId === pokemonId);
+  }
+
+  return [];
+};
 
 /** Returns ALL possible next evolutions from this Pokemon — handles branching chains like Eevee. */
 export function getAllNextEvolutions(pokemonId: number): EvolutionStep[] {
@@ -366,15 +373,17 @@ export function computePokemonSize(pokemon: { id: number; level: number; wPercen
   const maxW = baseW * (1.5 + wPct / 100);
   const maxH = baseH * (1.5 + hPct / 100);
 
-  const nextEvo = getRegularNextEvolution(pokemon.id);
+  const nextEvo = getRegularNextEvolution(pokemon.id).find(
+    (e) => e.minLevel && e.trigger === 'level-up' && pokemon.level >= e.minLevel,
+  );
   let targetW: number, targetH: number, horizon: number;
 
-  if (nextEvo?.trigger === 'level-up' && nextEvo.minLevel) {
+  if (nextEvo) {
     const nextSpecies = pokemonById.get(nextEvo.id);
     if (nextSpecies?.weight && nextSpecies?.height) {
       targetW = (nextSpecies.weight / 10) * (1 + wPct / 100);
       targetH = (nextSpecies.height / 10) * (1 + hPct / 100);
-      horizon = nextEvo.minLevel;
+      horizon = nextEvo.minLevel ? nextEvo.minLevel - pokemon.level : 50;
     } else {
       targetW = maxW;
       targetH = maxH;

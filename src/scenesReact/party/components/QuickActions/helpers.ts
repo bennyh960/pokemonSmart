@@ -66,7 +66,8 @@ export const getQuickActions = (
     // Evolution Stones
     if (itemDef.category === 'evolution') {
       const nextEvo = getRegularNextEvolution(pokemon.id);
-      if (nextEvo?.trigger === 'use-item' && nextEvo.item === itemDef.id) {
+      const stoneEvo = nextEvo.find((e) => e.trigger === 'use-item' && e.item === itemDef.id);
+      if (stoneEvo) {
         return itemsToShow.push(entry); // Return early to prevent duplicate array pushing
       }
     }

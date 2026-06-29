@@ -15,14 +15,7 @@ function EmptyMoveSlot() {
   );
 }
 
-function MoveCard({
-  move,
-  index,
-  isSelected,
-  isDragging,
-  dragHandlers,
-  onClick,
-}: {
+interface MoveCardProps {
   move: Move;
   index: number;
   isSelected: boolean;
@@ -32,8 +25,19 @@ function MoveCard({
     onDragOver: (e: React.DragEvent, i: number) => void;
     onDragEnd: () => void;
   };
-  onClick: () => void;
-}) {
+  onClick?: () => void;
+  isMoveToDelete?: boolean;
+}
+
+export function MoveCard({
+  move,
+  index,
+  isSelected,
+  isDragging,
+  dragHandlers,
+  isMoveToDelete,
+  onClick,
+}: MoveCardProps) {
   const { t, isRTL, locale } = useI18n();
   const badge = TYPE_BADGE[move.type] ?? TYPE_BADGE['normal'];
   const ppPct = move.pp > 0 ? move.currentPp / move.pp : 0;
@@ -42,6 +46,8 @@ function MoveCard({
   // badge.bg is rgba(..., 0.15) — too subtle for a background.
   // Use badge.color (the solid hue) at controlled opacity instead.
   const solidColor = badge.color; // e.g. '#a8a878'
+
+  const isDeleteSelected = isMoveToDelete && isSelected;
 
   return (
     <button
@@ -56,6 +62,7 @@ function MoveCard({
         'border-2 transition-all duration-150',
         isDragging ? 'opacity-40 scale-95' : '',
         isSelected ? 'scale-[1.02]' : 'hover:brightness-110',
+        isDeleteSelected ? 'blur-xs' : '',
       ].join(' ')}
       style={{
         // Use the solid color at readable opacity — matches image 1 style
@@ -98,17 +105,25 @@ function MoveCard({
 }
 
 // ── Metadata panel ────────────────────────────────────────────────────────────
-function MoveMetaPanel({ move }: { move: Move | null }) {
+export function MoveMetaPanel({ move, deleteMode }: { deleteMode?: boolean; move: Move | null }) {
   const { locale, t } = useI18n();
 
   if (!move) {
     const dict = {
-      en: 'Select a move to see details',
-      he: 'בחר מהלך כדי לראות פרטים',
+      normalMode: {
+        en: 'Select a move to see details',
+        he: 'בחר מהלך כדי לראות פרטים',
+      },
+      deleteMode: {
+        en: 'Select a move to delete',
+        he: 'בחר מהלך למחיקה',
+      },
     };
     return (
       <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-slate-800/50 bg-slate-900/20">
-        <span className="text-slate-600 text-xs text-center px-4">{dict[locale]}</span>
+        <span className="text-slate-600 text-xs text-center px-4">
+          {dict[deleteMode ? 'deleteMode' : 'normalMode'][locale]}
+        </span>
       </div>
     );
   }

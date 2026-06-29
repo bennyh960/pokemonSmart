@@ -455,11 +455,9 @@ export function getPendingLevelEvolution(pokemon: Pokemon): EvolutionStep | unde
   const tyrougeNext = getTyrougeChain(pokemon);
   if (tyrougeNext) return tyrougeNext;
 
-  const nextEvolution = getRegularNextEvolution(pokemon.id);
-  if (!nextEvolution) return undefined;
-  if (nextEvolution.trigger !== 'level-up') return undefined;
-  if (nextEvolution.minLevel === null) return undefined;
-  return pokemon.level >= nextEvolution.minLevel ? nextEvolution : undefined;
+  const nextEvolutions = getRegularNextEvolution(pokemon.id);
+  if (!nextEvolutions.length) return undefined;
+  return nextEvolutions.find((e) => e.minLevel && e.trigger === 'level-up' && pokemon.level >= e.minLevel);
 }
 
 // tyrouge to hitmonlee/chan/top

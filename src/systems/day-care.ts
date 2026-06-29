@@ -24,8 +24,12 @@ export function getDayCareEntry(pd: PlayerData, npcId: string): DayCareEntry | n
 /** Return the level cap: one below the next level-up evolution, or 100. */
 function evoCap(pokemonId: number, currentLevel: number): number {
   const evo = getRegularNextEvolution(pokemonId);
-  if (evo?.trigger === 'level-up' && evo.minLevel != null && evo.minLevel > currentLevel) {
-    return evo.minLevel - 1;
+  const evolutionsByLvLUp = evo.filter(
+    (e) => e.trigger === 'level-up' && e.minLevel != null && e.minLevel > currentLevel,
+  );
+  if (evolutionsByLvLUp.length > 0) {
+    const minLevel = Math.min(...evolutionsByLvLUp.map((e) => e.minLevel!));
+    return minLevel - 1;
   }
   return 100;
 }

@@ -41,52 +41,65 @@
       "spriteType": "cyntia",
       "party": [
         {
-          "pokemonId": 468,
+          "pokemonId": 53,
           "level": 62,
-          "moves": [],
-          "mustInclude": 4
+          "moves": []
         },
         {
-          "pokemonId": 445,
+          "pokemonId": 94,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 36,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 149,
           "level": 62,
           "moves": [],
           "mustInclude": 5
         },
         {
-          "pokemonId": 448,
+          "pokemonId": 112,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 143,
+          "level": 62,
+          "moves": [],
+          "mustInclude": 4
+        },
+        {
+          "pokemonId": 131,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 99,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 230,
+          "level": 62,
+          "moves": []
+        },
+        {
+          "pokemonId": 6,
           "level": 62,
           "moves": [],
           "mustInclude": 3
         },
         {
-          "pokemonId": 350,
-          "level": 61,
-          "moves": [],
-          "mustInclude": 2
-        },
-        {
-          "pokemonId": 442,
+          "pokemonId": 176,
           "level": 62,
-          "moves": [],
-          "mustInclude": 1
-        },
-        {
-          "pokemonId": 154,
-          "level": 60,
           "moves": []
         },
         {
-          "pokemonId": 157,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 160,
-          "level": 60,
-          "moves": []
-        },
-        {
-          "pokemonId": 241,
+          "pokemonId": 103,
           "level": 62,
           "moves": []
         }

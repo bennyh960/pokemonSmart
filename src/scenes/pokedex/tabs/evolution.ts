@@ -5,7 +5,7 @@ import { getCachedImage, loadImage } from '../../../engine/sprite-loader';
 import { getLocale, isRTL, t } from '../../../i18n/i18n';
 import { getEvolutionChain, getPokemonDisplayName } from '../../../services/pokemon-data';
 
-interface EvolutionStage {
+export interface EvolutionStage {
   id: number;
   name: { en: string; he: string };
   minLevel: number | null;
@@ -16,6 +16,7 @@ interface EvolutionStage {
 }
 
 export function renderEvolutionTab(ctx: CanvasRenderingContext2D, id: number, contentY: number): void {
+  // const res = getNextEvolutionData(id);
   const chain = getEvolutionChain(id);
 
   if (!chain || chain.stages.length <= 1) {

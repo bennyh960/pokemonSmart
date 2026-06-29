@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Pokemon } from '../../types/index.js';
+import type { Move, Pokemon } from '../../types/index.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { InspectorPanel } from './components/InspectorPanel/index';
 import type { PartyMode } from './index.js';
@@ -13,6 +13,8 @@ import PartyHeader from './components/PartyHeader/PartyHeader.tsx';
 import { setPartyIndex } from '../../scenes/party/party_scene.ts';
 import { GameNotification, type GameNotificationProps } from '../../ui-react/componenets/GameNotification.tsx';
 import { getGlobalAudio } from '../../audio/audio-manager.ts';
+import { MoveCard, MoveMetaPanel } from './components/InspectorPanel/tabs/MovesetTab.tsx';
+import MoveLearning from './components/MoveLearning/MoveLearning.tsx';
 
 interface Props {
   onClose: () => void;
@@ -29,15 +31,36 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
 
   // Selection tracked by identity (uuid), re-resolved against live pd each render
   // so it survives reorders/heals without going stale.
-  const [selectedUuid, setSelectedUuid] = useState<string>(
-    mode.kind === 'battle' && mode.inBattleUUID ? mode.inBattleUUID : party[0].uuid,
-  );
+  const [selectedUuid, setSelectedUuid] = useState<string>(() => {
+    if (mode.kind === 'battle' && mode.inBattleUUID) {
+      return mode.inBattleUUID;
+    } else if (mode.kind === 'move-learning') {
+      return party[mode.session.partyIndex]?.uuid;
+    } else if (mode.kind === 'select-target') {
+      const eligiblePokemon = party.filter((p) => mode.isEligible?.(p) ?? true);
+      return eligiblePokemon[0]?.uuid ?? party[0]?.uuid;
+    }
+    return party[0]?.uuid;
+  });
   const selected = party.find((p) => p.uuid === selectedUuid) ?? party[0];
 
+  const test = () => {
+    if (mode.kind === 'select-target') {
+      mode.onSelect(selected.uuid);
+      const res = mode.isEligible?.(selected);
+      console.log('select-target', selected, res);
+    }
+  };
+  test();
+
+  // Move learning session state
+  const [selectedMoveToDelete, setSelectedMoveToDelete] = useState<null | Move>(null);
+
   /** Check if a Pokemon is eligible for selection in the current mode. */
-  function isPokemonEligible(index: number) {
+  function isPokemonEligible(pokemon: Pokemon) {
     if (mode.kind === 'battle') {
       const roster = mode.roster;
+      const index = party.indexOf(pokemon);
       if (!roster.has(index) && roster.size >= mode.maxSize) {
         setNotification({
           position: 'top-center',
@@ -55,7 +78,7 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
   }
 
   function onDoubleClick(pokemon: Pokemon) {
-    const isEligible = isPokemonEligible(party.indexOf(pokemon));
+    const isEligible = isPokemonEligible(pokemon);
     if (!isEligible) {
       return;
     }
@@ -96,6 +119,7 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
   useEffect(() => {
     getGlobalAudio()?.playCry(selected?.id ?? 0);
   }, [selected]);
+  console.log(mode);
 
   return (
     <div
@@ -107,14 +131,26 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
       <div className="flex-1 w-full flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden p-4 md:p-6 gap-6">
         {/* PANEL: PARTY SQUAD */}
         <div className="flex-[4] flex flex-col px-3 gap-5 bg-slate-900/20 border border-slate-800/60 rounded-3xl overflow-hidden backdrop-blur-xl relative min-h-[520px] lg:min-h-0 lg:h-full shadow-2xl">
-          <PartySquadPanel
-            party={party} // read-only → display boundary
-            selectedUuid={selected?.uuid ?? ''}
-            onSelect={setSelectedUuid}
-            onReorder={applyPartyOrder}
-            mode={mode}
-            onDoubleClick={onDoubleClick}
-          />
+          {mode.kind === 'move-learning' ? (
+            <MoveLearning
+              pokemon={selected}
+              newMoveId={mode.session.moveId}
+              selectedMoveToDelete={selectedMoveToDelete}
+              onConfirmReplace={() => onClose()}
+              onConfirmSkip={() => {
+                onClose();
+              }}
+            />
+          ) : (
+            <PartySquadPanel
+              party={party} // read-only → display boundary
+              selectedUuid={selected?.uuid ?? ''}
+              onSelect={setSelectedUuid}
+              onReorder={applyPartyOrder}
+              mode={mode}
+              onDoubleClick={onDoubleClick}
+            />
+          )}
         </div>
 
         {/* PANEL: LIVE INSPECTOR — wider on desktop, taller when stacked */}

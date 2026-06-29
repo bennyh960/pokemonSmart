@@ -1154,15 +1154,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
       case 'trade-evolution': {
         for (const pokemon of party) {
-          const evo = getRegularNextEvolution(pokemon.id);
-          if (evo && evo.trigger === 'trade') {
-            if (evo.item) {
-              const itemData = getItem(evo.item);
+          const allNNextEvo = getRegularNextEvolution(pokemon.id);
+          const tradeEvoNoItem = allNNextEvo.find((evo) => evo.trigger === 'trade' && !evo.item);
+          const tradeEvoAndItem = allNNextEvo.find((evo) => evo.trigger === 'trade' && evo.item);
 
-              if (!itemData || pokemon.heldItemId !== itemData.id) continue;
-              pokemon.heldItemId = null;
-            }
-            setEvolutionData(pokemon, evo);
+          if (tradeEvoNoItem) {
+            setEvolutionData(pokemon, tradeEvoNoItem);
+            stateMachine.push('EVOLUTION');
+            return true;
+          } else if (tradeEvoAndItem && tradeEvoAndItem.item === pokemon.heldItemId) {
+            setEvolutionData(pokemon, tradeEvoAndItem);
+            pokemon.heldItemId = null;
             stateMachine.push('EVOLUTION');
             return true;
           }

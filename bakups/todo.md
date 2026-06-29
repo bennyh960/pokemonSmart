@@ -9,6 +9,8 @@
 [bug]- disabled move when disabled disapper in logic - is not disaper in the ui
 [bug][move] - perish song not have any effect
 [bug][move] - אגירה? יש מתקפה שלא עושה כלום
+[bug][move] - זכרון? יש מתקפה שלא עושה כלום
+[bug][move] - טבעת מים? יש מתקפה שלא עושה כלום
 
 <!-- fixed - need qa -->
 
