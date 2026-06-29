@@ -60,9 +60,9 @@ export function InspectorPanel({
 
   // ------------------------ component callbacks ------------------------
 
-  function onMoveReorder(uuid: string, moves: Move[]) {
+  function onMoveReorder(moves: Move[]) {
     editPlayerData((pd) => {
-      const mon = pd.party.find((p) => p.uuid === uuid);
+      const mon = pd.party.find((p) => p.uuid === pokemon.uuid);
       if (mon) mon.moves = moves;
     });
   }

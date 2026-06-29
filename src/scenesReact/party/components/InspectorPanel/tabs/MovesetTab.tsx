@@ -27,7 +27,7 @@ function MoveCard({
   index: number;
   isSelected: boolean;
   isDragging: boolean;
-  dragHandlers: {
+  dragHandlers: null | {
     onDragStart: (i: number) => void;
     onDragOver: (e: React.DragEvent, i: number) => void;
     onDragEnd: () => void;
@@ -44,11 +44,11 @@ function MoveCard({
   const solidColor = badge.color; // e.g. '#a8a878'
 
   return (
-    <div
+    <button
       draggable
-      onDragStart={() => dragHandlers.onDragStart(index)}
-      onDragOver={(e) => dragHandlers.onDragOver(e, index)}
-      onDragEnd={dragHandlers.onDragEnd}
+      onDragStart={() => dragHandlers?.onDragStart(index)}
+      onDragOver={(e) => dragHandlers?.onDragOver(e, index)}
+      onDragEnd={dragHandlers?.onDragEnd}
       onClick={onClick}
       className={[
         'relative rounded-xl cursor-pointer select-none overflow-hidden',
@@ -93,7 +93,7 @@ function MoveCard({
           PP: {move.currentPp}/{move.pp}
         </span>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -102,9 +102,13 @@ function MoveMetaPanel({ move }: { move: Move | null }) {
   const { locale, t } = useI18n();
 
   if (!move) {
+    const dict = {
+      en: 'Select a move to see details',
+      he: 'בחר מהלך כדי לראות פרטים',
+    };
     return (
       <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-slate-800/50 bg-slate-900/20">
-        <span className="text-slate-600 text-xs text-center px-4">Select a move to see details</span>
+        <span className="text-slate-600 text-xs text-center px-4">{dict[locale]}</span>
       </div>
     );
   }
