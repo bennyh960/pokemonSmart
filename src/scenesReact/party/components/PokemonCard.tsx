@@ -7,11 +7,12 @@ import { STATUS_LABEL, glowStyle, hpColor } from '../../../utils/util';
 import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
 import { getPokemonSpriteUrl } from '../../../utils/util.js';
 
-export interface CardProps {
+export interface PokemonCardProps {
   pokemon: Pokemon;
   index: number;
   isSelected: boolean;
   isDragging: boolean;
+  isLeader: boolean;
   disabled: boolean;
   dragHandlers:
     | {
@@ -30,11 +31,12 @@ export function PokemonCard({
   index,
   isSelected,
   isDragging,
+  isLeader,
   dragHandlers,
   disabled,
   onClick,
   onDoubleClick,
-}: CardProps) {
+}: PokemonCardProps) {
   const { locale } = useI18n();
   const spriteUrl = getPokemonSpriteUrl(pokemon.id);
   const [sprite, setSprite] = useState<string | null>(getCachedImage(spriteUrl)?.src ?? null);
@@ -77,7 +79,6 @@ export function PokemonCard({
         disabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer',
       ].join(' ')}
       style={{
-        // direction: 'ltr',
         ...(isSelected && !isFainted ? glowStyle(primaryType.color) : {}),
         ...(isSelected && !isFainted
           ? {
@@ -98,8 +99,13 @@ export function PokemonCard({
 
       {/* ── Top meta row ── */}
       <div className="flex flex-row items-center justify-between mb-[6px] relative z-10">
-        <span className="font-mono text-[9px] text-[#4a4f6e]">#{String(pokemon.id).padStart(3, '0')}</span>
-        <span className="font-mono text-[9px] text-[#7880a8]">Lv. {pokemon.level}</span>
+        <span className="font-mono text-[9px] text-[#fdfdfd]">#{String(pokemon.id).padStart(3, '0')}</span>
+        {isLeader && (
+          <span className="text-[10px] text-[#ffd24a]" style={{ textShadow: '1px 1px 0 #000' }}>
+            ★
+          </span>
+        )}
+        <span className="font-mono text-[9px] text-[#fdfdfd]">Lv. {pokemon.level}</span>
       </div>
 
       {/* ── Main body ── */}
@@ -134,13 +140,13 @@ export function PokemonCard({
           </div>
 
           {/* Types — own line */}
-          <div className="flex flex-row items-center gap-[4px] flex-wrap">
+          <div className="flex flex-row items-center gap-1 flex-wrap">
             {pokemon.types.map((t) => {
               const b = TYPE_BADGE[t];
               return (
                 <span
                   key={t}
-                  className="font-mono text-[9px] px-[6px] py-[2px] rounded-[3px] text-white uppercase tracking-[0.3px]"
+                  className="font-mono text-[11px] px-[6px] py-[2px] rounded-[3px] text-white uppercase tracking-[0.5px] font-bold"
                   style={{ backgroundColor: b.bg, border: `1px solid ${b.border}`, color: b.color }}
                 >
                   {b[locale]}

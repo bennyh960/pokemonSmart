@@ -39,7 +39,7 @@ export function createTestScene(input: InputManager, stateMachine: StateMachine,
       loadGameFromSlot(0);
     },
     exit(): void {},
-    update(dt: number): void {
+    update(_: number): void {
       if (input.isKeyPressed('X') || input.isKeyPressed('x')) {
         stateMachine.change('PARTY');
       }

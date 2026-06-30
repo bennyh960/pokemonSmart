@@ -17,7 +17,7 @@ interface IPartySquadPanel {
 }
 
 const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDoubleClick }: IPartySquadPanel) => {
-  const { t, locale } = useI18n();
+  const { t, locale, isRTL } = useI18n();
   const slots = Array.from({ length: 6 }).map((_, i) => party[i] || null);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [softSelectedUuid, setSoftSelectedUuid] = useState<string | null>(null);
@@ -66,6 +66,7 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
   });
 
   const itemRef = useRef(mode.kind === 'select-target' ? getItem(mode.itemId) : null);
+  const leaderIndex = party.findIndex((p) => p.hp > 0);
 
   return (
     <>
@@ -83,7 +84,7 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center" dir="ltr">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center" dir={isRTL ? 'rtl' : 'ltr'}>
         {slots.map((pokemon, i) => {
           if (!pokemon) {
             return (
@@ -103,6 +104,7 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
               pokemon={pokemon}
               disabled={mode.kind === 'select-target' && !mode.isEligible?.(pokemon)}
               index={i}
+              isLeader={i === leaderIndex}
               isSelected={selectedUuid === pokemon.uuid || softSelectedUuid === pokemon.uuid}
               isDragging={mode.kind === 'battle' ? false : draggingIndex === i}
               dragHandlers={

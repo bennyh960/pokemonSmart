@@ -14,19 +14,21 @@ import { setPartyIndex } from '../../scenes/party/party_scene.ts';
 import { GameNotification, type GameNotificationProps } from '../../ui-react/componenets/GameNotification.tsx';
 import { getGlobalAudio } from '../../audio/audio-manager.ts';
 import MoveLearning from './components/MoveLearning/MoveLearning.tsx';
+import type { StateMachine } from '../../engine/state-machine.ts';
+import { FloatingTextLayer } from '../../ui-react/componenets/FloatingText.tsx';
 
 interface Props {
   onClose: () => void;
   mode: PartyMode;
-  goToBag: () => void;
+  stateMachine: StateMachine;
 }
 
-export function PartyScreen({ onClose, mode, goToBag }: Props) {
+export function PartyScreen({ onClose, mode, stateMachine }: Props) {
   const { t, isRTL } = useI18n();
   const [pd, editPlayerData] = usePlayerData();
   const [notification, setNotification] = useState<GameNotificationProps | null>(null);
   // party is a LIVE read — not state. Re-renders come from the store.
-  const party = pd.party; //.filter((p) => (mode.kind == 'select-target' ? (mode.isEligible?.(p) ?? true) : true));
+  const party = pd.party;
 
   // Selection tracked by identity (uuid), re-resolved against live pd each render
   // so it survives reorders/heals without going stale.
@@ -82,14 +84,9 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
       getGlobalAudio()?.playSFX('alert');
       return;
     }
-    if (mode.kind === 'battle') {
-      setPartyIndex(party.indexOf(pokemon));
-      onClose();
-    } else if (mode.kind === 'select-target') {
-      // pd.party due to in this mode we filter not eligible pokemon, so the index may be wrong if we use party.indexOf
-      const index = pd.party.indexOf(pokemon);
+    const index = party.indexOf(pokemon);
+    if (mode.kind === 'battle' || mode.kind === 'select-target') {
       setPartyIndex(index);
-
       onClose();
     }
   }
@@ -173,14 +170,14 @@ export function PartyScreen({ onClose, mode, goToBag }: Props) {
         <QuickActions
           mode={mode}
           onClose={onClose}
-          pd={pd}
           editPlayerData={editPlayerData}
           selected={selected}
           quickActionItems={getQuickActions(selected, mode, pd.items)}
-          onBagClick={goToBag}
+          stateMachine={stateMachine}
         />
       )}
       {notification && <GameNotification {...notification} onClose={() => setNotification(null)} />}
+      <FloatingTextLayer />
     </div>
   );
 }

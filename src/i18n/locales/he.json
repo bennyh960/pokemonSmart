@@ -160,6 +160,7 @@
   "party.diary.empty": "אין פוקימונים בחוץ",
   "party.diary.stolen": "🔒 נגנב על ידי",
   "party.diary.daycare": "משתלת יום · {route}",
+  "party.quick_actions": "פעולות מהירות",
 
   "party.heldItem.bagEmpty": "!אין לך בתיק פריטים שפוקימון יכול לשאת עליו עדיין",
   "party.heldItem.noneHeld": ".לא מחזיק פריט",
@@ -411,6 +412,7 @@
   "item.effect.battleHelper": "עוזר קרב +{battles} קרבות! ({total} נשארו). הפעל ב-Pokedex [H].",
 
   "bag.title": "תיק",
+  "bag.hint.view_all_items": "הצג את כל הפריטים",
   "bag.noItems": "אין פריטים",
   "bag.cantUseHere": "אי אפשר להשתמש כאן!",
   "bag.selectPokemon": "בחר פוקימון להשתמש עליו ב{itemName}",

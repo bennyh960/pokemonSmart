@@ -29,3 +29,10 @@
 3. more instructions screens
 
 4. Hall of fame screen and data structure
+
+<!-- REACT -->
+
+DIARY
+MOVESET
+
+need to think on pp restore

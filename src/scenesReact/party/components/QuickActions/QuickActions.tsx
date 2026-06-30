@@ -4,15 +4,22 @@ import type { PlayerData, Pokemon } from '../../../../types';
 import type { QuickActionItem } from './helpers';
 import { useKeyPress, type Key } from '../../../../ui-react/hooks/useKeyboard';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
+import { applyItemEffect, consumeItem, isItemConsumable } from '../../../../systems/item-effects';
+import { autoSave } from '../../../../systems/game-state';
+import { getGlobalAudio } from '../../../../audio/audio-manager';
+import { setEvolutionData } from '../../../../scenes/evolution';
+import type { StateMachine } from '../../../../engine/state-machine';
+import type { GameNotificationProps } from '../../../../ui-react/componenets/GameNotification';
+import { spawnFloatingText } from '../../../../ui-react/componenets/FloatingText';
+import React, { useRef } from 'react';
 
 interface IQuickActionsProps {
   mode: PartyMode;
   onClose: () => void;
-  pd: PlayerData;
   editPlayerData: (fn: (pd: PlayerData) => void) => void;
   selected: Pokemon;
   quickActionItems: QuickActionItem[];
-  onBagClick: () => void;
+  stateMachine: StateMachine;
 }
 
 const CATEGORY_STYLES: Record<string, { border: string; text: string; bg: string; kbd: string }> = {
@@ -59,13 +66,20 @@ const SHORTCUT_KEYS: Key[] = ['1', '2', '3', '4'];
 function PartyQuickActions({
   mode,
   onClose,
-  pd,
   editPlayerData,
   selected,
   quickActionItems,
-  onBagClick,
+  stateMachine,
 }: IQuickActionsProps) {
   const { t, isRTL, locale } = useI18n();
+  const itemRefs = useRef<Map<string, HTMLElement>>(new Map());
+
+  function setItemRef(id: string) {
+    return (el: HTMLElement | null) => {
+      if (el) itemRefs.current.set(id, el);
+      else itemRefs.current.delete(id); // cleanup on unmount
+    };
+  }
 
   const applyItem = (itemId: string) => {
     if (mode.kind === 'battle') {
@@ -74,11 +88,56 @@ function PartyQuickActions({
       onClose();
     } else if (mode.kind === 'overworld') {
       console.log(`overworld mode - clicked item: ${itemId}`);
+      editPlayerData((pd) => {
+        const pokemon = pd.party.find((p) => p.uuid === selected.uuid);
+        if (!pokemon) return;
+        const result = applyItemEffect(itemId, pokemon);
+        if (result.success) {
+          if (isItemConsumable(itemId)) {
+            consumeItem(pd.items, itemId);
+          }
+          autoSave();
+          getGlobalAudio()?.playSFX('heal');
+
+          spawnFloatingText({
+            anchor: itemRefs.current.get(itemId) ?? null,
+            text: result.message,
+            direction: 'up',
+            style: {
+              color: '#00FF00',
+              fontSize: 16,
+              fontWeight: 'bold',
+            },
+          });
+          if (result.evolution) {
+            setEvolutionData(pokemon, result.evolution);
+            onClose();
+            stateMachine.push('EVOLUTION');
+            return;
+          }
+        } else {
+          spawnFloatingText({
+            anchor: itemRefs.current.get(itemId) ?? null,
+            text: result.message,
+            direction: 'up',
+            duration: 5000,
+            style: {
+              color: '#FF0000',
+              fontSize: 18,
+              fontWeight: 'bold',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              padding: '4px 8px',
+              borderRadius: '4px',
+            },
+          });
+        }
+      });
     }
   };
 
   const handleOpenBag = () => {
-    onBagClick();
+    onClose();
+    stateMachine.push('BAG');
   };
 
   const filteredItems = quickActionItems
@@ -110,10 +169,14 @@ function PartyQuickActions({
   // Dynamic text alignment configuration variables
   const textAlignment = isRTL ? 'text-right' : 'text-left';
 
+  if (!filteredItems.length) {
+    return null;
+  }
+
   return (
     <div className="p-4 border-t border-slate-800 bg-slate-900/80 select-none" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className={`text-xs text-slate-500 font-bold tracking-wider mb-3 ${textAlignment}`}>
-        {t?.('quick_actions') ?? 'QUICK ACTIONS'}
+        {t?.('party.quick_actions')}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 w-full items-stretch">
@@ -127,9 +190,10 @@ function PartyQuickActions({
 
           return (
             <button
+              ref={setItemRef(itemId)}
               key={itemId}
               onClick={() => applyItem(itemId)}
-              className={`flex items-center gap-2.5 bg-slate-950 border border-slate-800 p-2 rounded-lg group text-left relative overflow-hidden flex-1 hover:flex-[2.5] h-[52px] transition-all duration-300 ease-out min-w-[140px] cursor-pointer active:scale-95 active:bg-slate-900 ${textAlignment} ${style.border}`}
+              className={`flex max-w-100 items-center gap-2.5 bg-slate-950 border border-slate-800 p-2 rounded-lg group text-left relative overflow-hidden flex-1 hover:flex-[2.5] h-[52px] transition-all duration-300 ease-out min-w-[140px] cursor-pointer active:scale-95 active:bg-slate-900 ${textAlignment} ${style.border}`}
             >
               {/* Shortcut Key */}
               <kbd
@@ -186,10 +250,10 @@ function PartyQuickActions({
           </kbd>
           <div className="flex flex-col min-w-0 flex-1">
             <span className="text-slate-200 text-xs font-semibold truncate group-hover:text-blue-300">
-              {t?.('open_bag') ?? 'Open Bag'}
+              {t?.('bag.title')}
             </span>
             <span className="text-[10px] text-slate-500 truncate group-hover:text-slate-400">
-              {t?.('view_all_items') ?? 'View all items'}
+              {t?.('bag.hint.view_all_items')}
             </span>
           </div>
         </button>

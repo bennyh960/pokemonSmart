@@ -89,13 +89,8 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
       <div className="flex items-center justify-between px-4 h-12 gap-4">
         {/* LEFT: back + title + count */}
         <div className="flex items-center gap-3 min-w-0">
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wider shrink-0"
-          >
-            <span className="text-lg leading-none">←</span>
-            <span className="hidden sm:inline">{t('common.back')}</span>
-          </button>
+          {/* Money */}
+          <span className="text-slate-300 text-xs font-mono font-bold">₽{pd.money.toLocaleString()}</span>
           <div className="h-4 w-px bg-slate-800 shrink-0" />
           <h1 className="text-white font-bold text-sm tracking-wide shrink-0">{t('party.title')}</h1>
           <span className="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-2 py-0.5 rounded-md font-medium shrink-0">
@@ -120,8 +115,16 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
             ))}
           </div>
           <div className="h-4 w-px bg-slate-800 hidden sm:block" />
-          {/* Money */}
-          <span className="text-slate-300 text-xs font-mono font-bold">₽{pd.money.toLocaleString()}</span>
+          <button
+            onClick={onClose}
+            className="text-slate-400 cursor-pointer hover:text-white transition-colors flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wider shrink-0"
+          >
+            {/* <kbd className="text-lg leading-none">←</kbd> */}
+            <kbd className="w-6 h-6 flex shrink-0 items-center justify-center bg-slate-900 border border-blue-500/30 text-blue-400 rounded text-xs font-mono group-hover:bg-blue-500/20 transition-colors">
+              ESC
+            </kbd>
+            <span className="hidden sm:inline">{t('party.hint.back')}</span>
+          </button>
         </div>
       </div>
     </header>

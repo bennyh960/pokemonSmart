@@ -116,7 +116,12 @@ export const getQuickActions = (
 
     // Vitamins
     if (itemDef.category === 'vitamin') {
-      return itemsToShow.push(entry);
+      const stat = itemDef.effect.type === 'vitamin' ? itemDef.effect.stat : null;
+      if (!stat) return;
+      const currentValue = pokemon.evs?.[stat] ?? 0;
+      if (currentValue < 31) {
+        return itemsToShow.push(entry);
+      }
     }
   });
 

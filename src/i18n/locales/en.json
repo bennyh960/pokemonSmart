@@ -163,6 +163,7 @@
   "party.diary.empty": "Nothing away",
   "party.diary.stolen": "🔒 Stolen by",
   "party.diary.daycare": "Day Care · {route}",
+  "party.quick_actions": "QUICK ACTIONS",
 
   "party.heldItem.bagEmpty": "No held items in your bag yet!",
   "party.heldItem.noneHeld": "Not holding any item.",
@@ -414,6 +415,7 @@
   "item.elixir.name": "Elixir",
   "item.elixir.desc": "Restores all PP of all moves",
   "bag.title": "BAG",
+  "bag.hint.view_all_items": "View all items",
   "bag.noItems": "No items in this category",
   "bag.cantUseHere": "Can't use this here!",
   "bag.selectPokemon": "Select a Pokemon to use on {itemName}",

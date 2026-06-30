@@ -652,6 +652,8 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       return;
     }
 
+    // TODO: quick items actions can wired here for overworld - its too much couple need thinking
+    // ? option 1: we already given on tm effect so
     // Handle return from party target selection
     if (waitingForPartyTarget && pendingOverworldItemId) {
       waitingForPartyTarget = false;

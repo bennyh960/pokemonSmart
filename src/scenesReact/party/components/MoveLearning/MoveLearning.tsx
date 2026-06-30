@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import { getMove, getMoveDisplayName, getPokemonDisplayName } from '../../../../services/pokemon-data';
 import { MoveCard, MoveMetaPanel } from '../InspectorPanel/tabs/MovesetTab';
