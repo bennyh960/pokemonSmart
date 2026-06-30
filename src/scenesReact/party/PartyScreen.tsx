@@ -11,11 +11,12 @@ import QuickActions from './components/QuickActions/QuickActions.tsx';
 import { canUseItemOnPokemon } from '../../systems/item-effects.ts';
 import PartyHeader from './components/PartyHeader/PartyHeader.tsx';
 import { setPartyIndex } from '../../scenes/party/party_scene.ts';
-import { GameNotification, type GameNotificationProps } from '../../ui-react/componenets/GameNotification.tsx';
 import { getGlobalAudio } from '../../audio/audio-manager.ts';
 import MoveLearning from './components/MoveLearning/MoveLearning.tsx';
 import type { StateMachine } from '../../engine/state-machine.ts';
 import { FloatingTextLayer } from '../../ui-react/componenets/FloatingText.tsx';
+import { useGameNotification } from '../../ui-react/context/GameNotifications-context.tsx';
+import { getPokemonDisplayName } from '../../services/pokemon-data.ts';
 
 interface Props {
   onClose: () => void;
@@ -26,7 +27,8 @@ interface Props {
 export function PartyScreen({ onClose, mode, stateMachine }: Props) {
   const { t, isRTL } = useI18n();
   const [pd, editPlayerData] = usePlayerData();
-  const [notification, setNotification] = useState<GameNotificationProps | null>(null);
+  const { showNotification } = useGameNotification();
+  // const [notification, setNotification] = useState<GameNotificationProps | null>(null);
   // party is a LIVE read — not state. Re-renders come from the store.
   const party = pd.party;
 
@@ -54,8 +56,7 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
       const roster = mode.roster;
       const index = party.indexOf(pokemon);
       if (!roster.has(index) && roster.size >= mode.maxSize) {
-        setNotification({
-          position: 'top-center',
+        showNotification({
           text: t('battle.rosterFull', { max: mode.maxSize, count: mode.maxSize }),
           type: 'warning',
           duration: 4000,
@@ -67,11 +68,11 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
       // we can't filter party due to many dependecies on other components.
       const isEligible = mode.isEligible?.(pokemon) ?? canUseItemOnPokemon(mode.itemId, selected);
       if (!isEligible) {
-        setNotification({
-          position: 'top-center',
-          text: t('bag.cantUseHere'),
+        showNotification({
+          text: t('bag.isNotEligible', { name: getPokemonDisplayName(pokemon.id) }),
           type: 'warning',
-          duration: 4000,
+          duration: 2000,
+          position: 'top-center',
         });
       }
       return isEligible;
@@ -109,12 +110,12 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
   // party squad pannel
   useKeyPress(['ArrowDown', 'ArrowUp', 'Enter'], (e) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (mode.kind === 'move-learning') return;
       const currentIndex = party.findIndex((p) => p.uuid === selected.uuid);
       const nextIndex = (currentIndex + 1) % party.length;
       const prevIndex = (currentIndex - 1 + party.length) % party.length;
       setSelectedUuid(party[e.key === 'ArrowDown' ? nextIndex : prevIndex].uuid);
     } else if (e.key === 'Enter') {
-      console.log('double click', selected);
       onDoubleClick(selected);
     }
   });
@@ -162,7 +163,7 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
             mode={mode}
             editPlayerData={editPlayerData}
             pd={pd}
-            setNotification={setNotification}
+            showNotification={showNotification}
           />
         </div>
       </div>
@@ -176,7 +177,6 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
           stateMachine={stateMachine}
         />
       )}
-      {notification && <GameNotification {...notification} onClose={() => setNotification(null)} />}
       <FloatingTextLayer />
     </div>
   );

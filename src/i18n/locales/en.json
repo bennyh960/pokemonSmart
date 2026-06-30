@@ -418,6 +418,7 @@
   "bag.hint.view_all_items": "View all items",
   "bag.noItems": "No items in this category",
   "bag.cantUseHere": "Can't use this here!",
+  "bag.isNotEligible": "This item can't be used on {name} right now!",
   "bag.selectPokemon": "Select a Pokemon to use on {itemName}",
   "bag.hint": "ESC:Back  ENTER:Use  ◀▶:Navigate",
   "bag.hint.use": "Use",

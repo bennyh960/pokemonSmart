@@ -627,21 +627,20 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       });
       if (moveLearningStep.kind === 'show-message') {
         message = moveLearningStep.message;
-        // todo: when wire mouse click set timer to 0.5
         messageTimer = 1.5;
         return;
       }
       if (moveLearningStep.kind === 'open-session') {
         // !CANVAS DEPERCATED : TODO : DELETE WHEN REACT END
-        setPartyMode('move-learning');
+        // setPartyMode('move-learning');
         // !REACT NEW REFACTOR: DIDNT TESTED YET
         setMoveLearningSession(moveLearningStep.session);
         const partyScene = createPartyReactScene(stateMachine, {
           kind: 'move-learning',
           session: moveLearningStep.session,
         });
-        stateMachine.register('PARTY', partyScene);
-        stateMachine.push('PARTY');
+
+        stateMachine.pushDirect('PARTY', partyScene);
         return;
       }
       if (moveLearningStep.kind === 'finish' && target && moveLearningStep.evolution) {

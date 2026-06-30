@@ -19,7 +19,7 @@ interface IInspectorPanelProps {
   editPlayerData: (callback: (pd: PlayerData) => void) => void;
   isPokedexMode?: boolean;
   defaultTab?: 'stats' | 'moveset' | 'items';
-  setNotification: (notification: GameNotificationProps | null) => void;
+  showNotification: (options: GameNotificationProps) => void;
 }
 
 export function InspectorPanel({
@@ -29,10 +29,22 @@ export function InspectorPanel({
   editPlayerData,
   isPokedexMode = false,
   defaultTab = 'stats',
-  setNotification,
+  showNotification,
 }: IInspectorPanelProps) {
   const { t, locale } = useI18n();
-  const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>(defaultTab);
+  const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>(
+    mode.kind === 'move-learning' ? 'moveset' : defaultTab,
+  );
+
+  const tabs = [
+    { key: 'stats', text: t('party.baseStats'), conditions: mode.kind !== 'move-learning' },
+    { key: 'moveset', text: t('party.moves.title'), conditions: true },
+    {
+      key: 'items',
+      text: t('party.heldItem.bagItems'),
+      conditions: mode.kind !== 'battle' && mode.kind !== 'move-learning',
+    },
+  ];
 
   const primaryType = TYPE_BADGE[pokemon.types[0]];
   const secondaryType = TYPE_BADGE[pokemon.types[1]] ?? primaryType;
@@ -50,11 +62,13 @@ export function InspectorPanel({
   // inspector pannel
   useKeyPress(['ArrowLeft', 'ArrowRight'], (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      const tabs = ['stats', 'moveset', 'items'].filter((tab) => mode.kind !== 'battle' || tab !== 'items');
-      const currentIndex = tabs.indexOf(activeTab);
+      const tabsKeys = tabs.filter((tab) => tab.conditions).map((tab) => tab.key);
+      const currentIndex = tabsKeys.indexOf(activeTab);
       const nextIndex =
-        e.key === 'ArrowRight' ? (currentIndex - 1 + tabs.length) % tabs.length : (currentIndex + 1) % tabs.length;
-      setActiveTab(tabs[nextIndex] as 'stats' | 'moveset' | 'items');
+        e.key === 'ArrowRight'
+          ? (currentIndex - 1 + tabsKeys.length) % tabsKeys.length
+          : (currentIndex + 1) % tabsKeys.length;
+      setActiveTab(tabsKeys[nextIndex] as 'stats' | 'moveset' | 'items');
     }
   });
 
@@ -77,8 +91,7 @@ export function InspectorPanel({
         // unequip: return the item to the bag
         pd.items[itemId] = (pd.items[itemId] ?? 0) + 1;
         mon.heldItemId = null;
-        setNotification({
-          position: 'top-center',
+        showNotification({
           text: t('bag.heldItem.unequipped', {
             item: getItem(itemId)?.name[locale] ?? '???',
             name: getPokemonDisplayName(mon.id),
@@ -90,7 +103,7 @@ export function InspectorPanel({
         if (mon.heldItemId) pd.items[mon.heldItemId] = (pd.items[mon.heldItemId] ?? 0) + 1;
         mon.heldItemId = itemId;
         pd.items[itemId] = (pd.items[itemId] ?? 0) - 1;
-        setNotification({
+        showNotification({
           position: 'top-center',
           text: t('bag.heldItem.equipped', {
             item: getItem(itemId)?.name[locale] ?? '???',
@@ -113,10 +126,20 @@ export function InspectorPanel({
 
       <div className="flex-1 outline-none flex flex-col min-h-0">
         <div className="flex px-4 border-b border-slate-800">
-          <button onClick={() => setActiveTab('stats')} className={getTabClass('stats')} style={getTabStyle('stats')}>
-            {t('party.baseStats')}
-          </button>
-          <button
+          {tabs
+            .filter((tab) => tab.conditions)
+            .map((tab) => {
+              return (
+                <button
+                  onClick={() => setActiveTab(tab.key)}
+                  className={getTabClass(tab.key)}
+                  style={getTabStyle(tab.key)}
+                >
+                  {tab.text}
+                </button>
+              );
+            })}
+          {/* <button
             onClick={() => setActiveTab('moveset')}
             className={getTabClass('moveset')}
             style={getTabStyle('moveset')}
@@ -127,7 +150,7 @@ export function InspectorPanel({
             <button onClick={() => setActiveTab('items')} className={getTabClass('items')} style={getTabStyle('items')}>
               {t('party.heldItem.bagItems')}
             </button>
-          )}
+          )} */}
         </div>
 
         <div className="flex-1 overflow-y-auto game-scrollbar">

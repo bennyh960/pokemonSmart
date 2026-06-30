@@ -415,6 +415,7 @@
   "bag.hint.view_all_items": "הצג את כל הפריטים",
   "bag.noItems": "אין פריטים",
   "bag.cantUseHere": "אי אפשר להשתמש כאן!",
+  "bag.isNotEligible": "אי אפשר להשתמש על {name}!",
   "bag.selectPokemon": "בחר פוקימון להשתמש עליו ב{itemName}",
   "bag.hint": "ESC:חזרה  ENTER:שימוש  ◀▶:ניווט",
   "bag.hint.use": "שימוש",
