@@ -77,12 +77,19 @@ type UseKeyPressOptions = {
   preventDefault?: boolean;
   stopPropagation?: boolean;
   allowRepeat?: boolean;
+  priority?: number; // Higher priority listeners will be called first
 };
 
 export function useKeyPress(
   keys: Key | Key[],
   callback: (event: KeyboardEvent) => void,
-  { enabled = true, preventDefault = false, stopPropagation = false, allowRepeat = false }: UseKeyPressOptions = {},
+  {
+    enabled = true,
+    preventDefault = false,
+    stopPropagation = false,
+    allowRepeat = false,
+    priority = 0,
+  }: UseKeyPressOptions = {},
 ) {
   useEffect(() => {
     if (!enabled) return;
@@ -125,3 +132,44 @@ export function useKeyPress(
 // useKeyPress('ArrowUp', moveUp, {
 //     preventDefault: true,
 //   });
+
+//#region Helpers
+type ListenerRecord = {
+  keys: Set<string>;
+  handler: (event: KeyboardEvent) => void;
+  priority: number;
+  ctrlKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+};
+
+// key press manager
+const globalListeners: ListenerRecord[] = [];
+
+const isMatchingEvent = (listener: ListenerRecord, event: KeyboardEvent): boolean => {
+  const isKeyMatch = listener.keys.has(event.key.toLowerCase()) || listener.keys.has(event.key);
+  if (!isKeyMatch) return false;
+  return event.ctrlKey === listener.ctrlKey && event.shiftKey === listener.shiftKey && event.altKey === listener.altKey;
+};
+
+const handleGlobalKeyDown = (event: KeyboardEvent) => {
+  const matchingListeners = globalListeners.filter((listener) => isMatchingEvent(listener, event));
+
+  if (matchingListeners.length === 0) return;
+
+  matchingListeners.sort((a, b) => {
+    if (b.priority !== a.priority) {
+      return b.priority - a.priority;
+    }
+    return globalListeners.indexOf(b) - globalListeners.indexOf(a);
+  });
+
+  const topListener = matchingListeners[0];
+  topListener.handler(event);
+};
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('keydown', handleGlobalKeyDown);
+}
+
+//#endregion Helpers

@@ -49,6 +49,7 @@ const MoveLearning = ({
 }: IMoveLearningProps) => {
   const { locale } = useI18n(); // שימוש בשפה הנוכחית מהמערכת שלך
   const t = DICT[locale];
+  const [isReplaced, setIsReplaced] = useState(false); // מצב שמציין אם המהלך הוחלף
 
   // ניהול מצבי אישור (Confirmation View)
   const [confirmationType, setConfirmationType] = useState<'none' | 'skip' | 'replace'>('none');
@@ -96,6 +97,7 @@ const MoveLearning = ({
                 onConfirmSkip();
               } else if (selectedMoveToDelete) {
                 onConfirmReplace(selectedMoveToDelete.id, newMoveId);
+                setIsReplaced(true); // עדכון מצב שהמהלך הוחלף
               }
               setConfirmationType('none');
             }}
@@ -116,7 +118,9 @@ const MoveLearning = ({
 
   // 2. מסך ראשי: בחירה והסברים
   return (
-    <div className="flex flex-col gap-4 p-4 bg-slate-900/20 rounded-2xl border border-white/5 h-full justify-between">
+    <div
+      className={`flex flex-col gap-4 p-4 bg-slate-900/20 rounded-2xl border border-white/5 h-full justify-between ${isReplaced ? 'pointer-events-none blur-xs ' : ''}`}
+    >
       <div className="flex flex-col gap-4">
         <h3 className="text-base font-medium text-white/90 leading-tight">
           <span className="font-bold text-amber-400">{getPokemonDisplayName(pokemon.id)}</span> {t.wantsToLearn}{' '}

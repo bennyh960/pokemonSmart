@@ -5,6 +5,7 @@ import { useDragSort } from '../../../../../ui-react/hooks/useDragSort.js';
 import { useI18n } from '../../../../../ui-react/context/i18n-context.js';
 import { getMove, getMoveDisplayName } from '../../../../../services/pokemon-data.js';
 import { DAMAGE_CLASS_ICON } from '../../../../../utils/util.js';
+import type { PartyMode } from '../../../index.js';
 
 // ── Empty slot ───────────────────────────────────────────────────────────────
 function EmptyMoveSlot() {
@@ -48,6 +49,7 @@ export function MoveCard({
   const solidColor = badge.color; // e.g. '#a8a878'
 
   const isDeleteSelected = isMoveToDelete && isSelected;
+  console.log('isDeleteSelected', isDeleteSelected, isMoveToDelete, isSelected);
 
   return (
     <button
@@ -62,13 +64,18 @@ export function MoveCard({
         'border-2 transition-all duration-150',
         isDragging ? 'opacity-40 scale-95' : '',
         isSelected ? 'scale-[1.02]' : 'hover:brightness-110',
-        isDeleteSelected ? 'blur-xs' : '',
+        isDeleteSelected ? 'bg-stripes-red brightness-75 animate-pulse' : '',
       ].join(' ')}
       style={{
-        // Use the solid color at readable opacity — matches image 1 style
-        background: `linear-gradient(135deg, ${solidColor}55 0%, ${solidColor}22 100%)`,
-        borderColor: isSelected ? solidColor : `${solidColor}44`,
-        boxShadow: isSelected ? `0 0 12px ${solidColor}44` : 'none',
+        borderColor: isDeleteSelected ? '#ef4444' : isSelected ? solidColor : `${solidColor}44`,
+        boxShadow: isDeleteSelected
+          ? '0 0 16px rgba(239, 68, 68, 0.6)'
+          : isSelected
+            ? `0 0 12px ${solidColor}44`
+            : 'none',
+        backgroundColor: isDeleteSelected
+          ? 'rgba(239, 68, 68, 0.15)'
+          : `linear-gradient(135deg, ${solidColor}55 0%, ${solidColor}22 100%)`,
       }}
     >
       {/* Top row: name + type badge — matches image 1 layout */}
@@ -204,9 +211,12 @@ export function MoveMetaPanel({ move, deleteMode }: { deleteMode?: boolean; move
 interface Props {
   pokemon: Pokemon;
   onMoveReorder: (moves: Move[]) => void;
+  setSelectedMoveToDelete: (move: Move | null) => void;
+  selectedMoveToDelete: Move | null;
+  mode: PartyMode;
 }
 
-export function MovesetTab({ pokemon, onMoveReorder }: Props) {
+export function MovesetTab({ pokemon, onMoveReorder, setSelectedMoveToDelete, selectedMoveToDelete, mode }: Props) {
   const moves = pokemon.moves;
   const [selectedIdx, setSelectedIdx] = useState<number | null>(0);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
@@ -248,14 +258,22 @@ export function MovesetTab({ pokemon, onMoveReorder }: Props) {
               key={`${move.id}-${i}`}
               move={move}
               index={i}
+              isMoveToDelete={selectedMoveToDelete?.id === move.id}
               isSelected={selectedIdx === i}
-              isDragging={draggingIndex === i}
-              dragHandlers={{
-                onDragStart: wrappedDragStart,
-                onDragOver,
-                onDragEnd: wrappedDragEnd,
+              isDragging={mode.kind !== 'overworld' && draggingIndex === i}
+              dragHandlers={
+                mode.kind !== 'overworld'
+                  ? null
+                  : {
+                      onDragStart: wrappedDragStart,
+                      onDragOver,
+                      onDragEnd: wrappedDragEnd,
+                    }
+              }
+              onClick={() => {
+                setSelectedIdx(selectedIdx === i ? null : i);
+                setSelectedMoveToDelete?.(selectedIdx === i ? null : move);
               }}
-              onClick={() => setSelectedIdx(selectedIdx === i ? null : i)}
             />
           );
         })}

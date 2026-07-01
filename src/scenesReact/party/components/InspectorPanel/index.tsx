@@ -8,9 +8,9 @@ import { TYPE_BADGE } from '../../../../data/type-constants.js';
 import type { PartyMode } from '../../index.js';
 import { useKeyPress } from '../../../../ui-react/hooks/useKeyboard.js';
 import { getPokemonDisplayName } from '../../../../services/pokemon-data.js';
-import type { GameNotificationProps } from '../../../../ui-react/componenets/GameNotification.js';
 import { getItem } from '../../../../data/items.js';
 import { useI18n } from '../../../../ui-react/context/i18n-context.js';
+import type { GameNotificationProps } from '../../../../ui-react/context/GameNotifications-context.js';
 
 interface IInspectorPanelProps {
   mode: PartyMode;
@@ -20,6 +20,8 @@ interface IInspectorPanelProps {
   isPokedexMode?: boolean;
   defaultTab?: 'stats' | 'moveset' | 'items';
   showNotification: (options: GameNotificationProps) => void;
+  setSelectedMoveToDelete: (move: Move | null) => void;
+  selectedMoveToDelete: Move | null;
 }
 
 export function InspectorPanel({
@@ -30,6 +32,8 @@ export function InspectorPanel({
   isPokedexMode = false,
   defaultTab = 'stats',
   showNotification,
+  setSelectedMoveToDelete,
+  selectedMoveToDelete,
 }: IInspectorPanelProps) {
   const { t, locale } = useI18n();
   const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>(
@@ -97,6 +101,8 @@ export function InspectorPanel({
             name: getPokemonDisplayName(mon.id),
           }),
           type: 'danger',
+          position: 'top-center',
+          id: `unequip-${uuid}-${itemId}`,
         });
       } else {
         // return any currently-held item, then equip the new one
@@ -110,6 +116,7 @@ export function InspectorPanel({
             name: getPokemonDisplayName(mon.id),
           }),
           type: 'success',
+          id: `equip-${uuid}-${itemId}`,
         });
       }
       if (pd.items[itemId] !== undefined && pd.items[itemId] <= 0) delete pd.items[itemId];
@@ -131,7 +138,8 @@ export function InspectorPanel({
             .map((tab) => {
               return (
                 <button
-                  onClick={() => setActiveTab(tab.key)}
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key as 'stats' | 'moveset' | 'items')}
                   className={getTabClass(tab.key)}
                   style={getTabStyle(tab.key)}
                 >
@@ -139,23 +147,19 @@ export function InspectorPanel({
                 </button>
               );
             })}
-          {/* <button
-            onClick={() => setActiveTab('moveset')}
-            className={getTabClass('moveset')}
-            style={getTabStyle('moveset')}
-          >
-            {t('party.moves.title')}
-          </button>
-          {mode.kind !== 'battle' && (
-            <button onClick={() => setActiveTab('items')} className={getTabClass('items')} style={getTabStyle('items')}>
-              {t('party.heldItem.bagItems')}
-            </button>
-          )} */}
         </div>
 
         <div className="flex-1 overflow-y-auto game-scrollbar">
           {activeTab === 'stats' && <InspectorStatsTab pokemon={pokemon} party={pd.party} />}
-          {activeTab === 'moveset' && <MovesetTab pokemon={pokemon} onMoveReorder={onMoveReorder} />}
+          {activeTab === 'moveset' && (
+            <MovesetTab
+              mode={mode}
+              setSelectedMoveToDelete={setSelectedMoveToDelete}
+              selectedMoveToDelete={selectedMoveToDelete}
+              pokemon={pokemon}
+              onMoveReorder={onMoveReorder}
+            />
+          )}
           {mode.kind !== 'battle' && activeTab === 'items' && (
             <HeldItemsTab pd={pd} pokemon={pokemon} onEquipItem={onEquipItem} />
           )}

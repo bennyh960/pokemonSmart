@@ -4,6 +4,7 @@ import { countBadges } from '../../../../data/badges';
 import type { PlayerData, Pokemon } from '../../../../types';
 import type { PartyMode } from '../..';
 import { getPokemonSpriteUrl } from '../../../../utils/util';
+import { AwayPokemonModal } from './AwayPokemon';
 
 interface PartyHeaderProps {
   onClose: () => void;
@@ -84,50 +85,69 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
     return null;
   }, [mode, pd]);
 
+  const awayPokemonCount = Object.keys(pd.awayPokemon).length + 3;
+
   return (
-    <header className="shrink-0 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md z-10">
-      <div className="flex items-center justify-between px-4 h-12 gap-4">
-        {/* LEFT: back + title + count */}
-        <div className="flex items-center gap-3 min-w-0">
-          {/* Money */}
-          <span className="text-slate-300 text-xs font-mono font-bold">₽{pd.money.toLocaleString()}</span>
-          <div className="h-4 w-px bg-slate-800 shrink-0" />
-          <h1 className="text-white font-bold text-sm tracking-wide shrink-0">{t('party.title')}</h1>
-          <span className="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-2 py-0.5 rounded-md font-medium shrink-0">
-            {pd.party.length}/6
-          </span>
-        </div>
-
-        {/* CENTRE: active quest/battle roster — only when present */}
-        {renderCenterContent()}
-
-        {/* RIGHT: badges + money */}
-        <div className="flex items-center gap-3 shrink-0">
-          {/* Badge pips */}
-          <div title={t('saveSlots.badges', { count: badgeCount })} className="hidden sm:flex items-center gap-1">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-2 h-2 rounded-full border transition-colors ${
-                  i < badgeCount ? 'bg-yellow-400 border-yellow-500' : 'bg-slate-800 border-slate-700'
-                }`}
-              />
-            ))}
+    <>
+      <header className="shrink-0 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md z-10">
+        <div className="flex items-center justify-between px-4 h-12 gap-4">
+          {/* LEFT: back + title + count */}
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Money */}
+            <span className="text-slate-300 text-xs font-mono font-bold">₽{pd.money.toLocaleString()}</span>
+            <div className="h-4 w-px bg-slate-800 shrink-0" />
+            <h1 className="text-white font-bold text-sm tracking-wide shrink-0">{t('party.title')}</h1>
+            <span className="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-2 py-0.5 rounded-md font-medium shrink-0">
+              {pd.party.length}/6
+            </span>
+            {/* AWAY POKEMON BUTTON */}
+            {awayPokemonCount > 0 && (
+              <button
+                onClick={undefined}
+                className="relative flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 active:scale-95 transition-all text-xs font-medium cursor-pointer"
+              >
+                {/* Soft visual attention anchor */}
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
+                </span>
+                <span>{t('party.away.title', { count: awayPokemonCount })}</span>
+              </button>
+            )}
           </div>
-          <div className="h-4 w-px bg-slate-800 hidden sm:block" />
-          <button
-            onClick={onClose}
-            className="text-slate-400 cursor-pointer hover:text-white transition-colors flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wider shrink-0"
-          >
-            {/* <kbd className="text-lg leading-none">←</kbd> */}
-            <kbd className="w-6 h-6 flex shrink-0 items-center justify-center bg-slate-900 border border-blue-500/30 text-blue-400 rounded text-xs font-mono group-hover:bg-blue-500/20 transition-colors">
-              ESC
-            </kbd>
-            <span className="hidden sm:inline">{t('party.hint.back')}</span>
-          </button>
+
+          {/* CENTRE: active quest/battle roster — only when present */}
+          {renderCenterContent()}
+
+          {/* RIGHT: badges + money */}
+          <div className="flex items-center gap-3 shrink-0">
+            {/* Badge pips */}
+            <div title={t('saveSlots.badges', { count: badgeCount })} className="hidden sm:flex items-center gap-1">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-2 h-2 rounded-full border transition-colors ${
+                    i < badgeCount ? 'bg-yellow-400 border-yellow-500' : 'bg-slate-800 border-slate-700'
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="h-4 w-px bg-slate-800 hidden sm:block" />
+            <button
+              onClick={onClose}
+              className="text-slate-400 cursor-pointer hover:text-white transition-colors flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wider shrink-0"
+            >
+              {/* <kbd className="text-lg leading-none">←</kbd> */}
+              <kbd className="w-6 h-6 flex shrink-0 items-center justify-center bg-slate-900 border border-blue-500/30 text-blue-400 rounded text-xs font-mono group-hover:bg-blue-500/20 transition-colors">
+                ESC
+              </kbd>
+              <span className="hidden sm:inline">{t('party.hint.back')}</span>
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <AwayPokemonModal onClose={() => 1} lang="he" isOpen={true} />
+    </>
   );
 };
 
