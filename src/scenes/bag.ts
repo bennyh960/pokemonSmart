@@ -634,7 +634,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         // !CANVAS DEPERCATED : TODO : DELETE WHEN REACT END
         // setPartyMode('move-learning');
         // !REACT NEW REFACTOR: DIDNT TESTED YET
-        setMoveLearningSession(moveLearningStep.session);
+        // setMoveLearningSession(moveLearningStep.session);
         const partyScene = createPartyReactScene(stateMachine, {
           kind: 'move-learning',
           session: moveLearningStep.session,
