@@ -1,5 +1,5 @@
 import type { Pokemon } from '../../../../types';
-import { getNatureStrings, getPokemonSpriteUrl } from '../../../../utils/util';
+import { getNatureStrings } from '../../../../utils/util';
 import { TYPE_BADGE } from '../../../../data/type-constants';
 import { getPokemonDisplayName } from '../../../../services/pokemon-data';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
