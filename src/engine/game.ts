@@ -9,7 +9,7 @@
  */
 
 import { createStateMachine } from './state-machine.js';
-import { createInputManager } from './input';
+import { createInputManager, createVirtualUI, setupMobileControls } from './input';
 import { createAudioManager, setGlobalAudio } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle';
@@ -53,13 +53,18 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   if (!ctx) throw new Error('Failed to get 2D rendering context.');
 
   ctx.imageSmoothingEnabled = false;
-  // const uiOverlay = createVirtualUI();
-  // container.appendChild(uiOverlay);
+  // render keys for touchpad
+  const uiOverlay = createVirtualUI();
+  container.appendChild(uiOverlay);
+
+  // input is old input system . we keep it for now until we fully migrate to inputManagerV2
   const input = createInputManager(canvas);
   const detachPointer = attachPointerAdapter(inputManager, canvas);
   const detachKeyboard = attachKeyboardAdapter(inputManager);
 
-  // setupMobileControls(input);
+  // the integration of the old input system with the touchpad overlay
+  setupMobileControls(input);
+
   const stateMachine = createStateMachine();
   const audio = createAudioManager();
   setGlobalAudio(audio);
