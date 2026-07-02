@@ -158,7 +158,7 @@ function drawLocationLabel(
 
 // ─── Scene factory ────────────────────────────────────────────────────────────
 
-export function createWorldMapScene(input: InputManager, stateMachine: StateMachine): Scene {
+export function createWorldMapScene(input: InputManager, stateMachine: StateMachine, context?: {}): Scene {
   let visitedCities: string[] = [];
   let selectedIndex = 0;
   let elapsed = 0;

@@ -114,13 +114,16 @@ if (typeof window !== 'undefined') {
 
 //#endregion Helpers
 
-export interface UseKeyPressOptions {
+interface UseKeyPressOptions {
   enabled?: boolean;
   preventDefault?: boolean;
   allowRepeat?: boolean;
   priority?: number; // ככל שהמספר גבוה יותר, הליסנר ירוץ קודם
 }
 
+/**
+ * @deprecated useInputLayer instead for more advanced input handling
+ */
 export function useKeyPress(
   keys: string | string[],
   callback: (event: KeyboardEvent) => void,

@@ -2,16 +2,15 @@ import type { PartyMode } from '../..';
 import { setBagPendingItem } from '../../../../scenes/bag';
 import type { PlayerData, Pokemon } from '../../../../types';
 import type { QuickActionItem } from './helpers';
-import { useKeyPress, type Key } from '../../../../ui-react/hooks/useKeyboard';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import { applyItemEffect, consumeItem, isItemConsumable } from '../../../../systems/item-effects';
 import { autoSave } from '../../../../systems/game-state';
 import { getGlobalAudio } from '../../../../audio/audio-manager';
 import { setEvolutionData } from '../../../../scenes/evolution';
 import type { StateMachine } from '../../../../engine/state-machine';
-import type { GameNotificationProps } from '../../../../ui-react/componenets/GameNotification';
 import { spawnFloatingText } from '../../../../ui-react/componenets/FloatingText';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import { useInputLayer } from '../../../../engine/inputManagerV2';
 
 interface IQuickActionsProps {
   mode: PartyMode;
@@ -61,7 +60,7 @@ const CATEGORY_STYLES: Record<string, { border: string; text: string; bg: string
   },
 };
 
-const SHORTCUT_KEYS: Key[] = ['1', '2', '3', '4'];
+const SHORTCUT_KEYS = ['1', '2', '3', '4'];
 
 function PartyQuickActions({
   mode,
@@ -149,17 +148,28 @@ function PartyQuickActions({
     })
     .slice(0, 4);
 
-  useKeyPress(SHORTCUT_KEYS, (e) => {
-    const index = SHORTCUT_KEYS.indexOf(e.key as any);
-    const entry = filteredItems[index];
-
-    if (entry) {
-      applyItem(entry.itemId);
-    }
-  });
-
-  useKeyPress('b', () => {
-    handleOpenBag();
+  useInputLayer({
+    id: 'party-quick-actions',
+    name: 'Party Quick Actions',
+    blocksLowerLayers: false,
+    keyBindings: [
+      { code: 'Digit1', action: 'use-item-1' },
+      { code: 'Digit2', action: 'use-item-2' },
+      { code: 'Digit3', action: 'use-item-3' },
+      { code: 'Digit4', action: 'use-item-4' },
+      { code: 'KeyB', action: 'open-bag' },
+    ],
+    onAction: (action) => {
+      if (action === 'open-bag') {
+        handleOpenBag();
+        return;
+      }
+      const index = SHORTCUT_KEYS.indexOf(action.replace('use-item-', '') as any);
+      const entry = filteredItems[index];
+      if (entry) {
+        applyItem(entry.itemId);
+      }
+    },
   });
 
   if (mode.kind === 'battle' && mode.inBattleUUID !== selected.uuid) {

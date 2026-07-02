@@ -1,10 +1,13 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { getQuest } from '../../../../data/story/quests';
 import { countBadges } from '../../../../data/badges';
 import type { PlayerData, Pokemon } from '../../../../types';
-import type { PartyMode } from '../..';
+import { createPartyReactScene, type PartyMode } from '../..';
 import { getPokemonSpriteUrl } from '../../../../utils/util';
 import { AwayPokemonModal } from './AwayPokemon';
+import { useInputLayer } from '../../../../engine/inputManagerV2';
+import type { StateMachine } from '../../../../engine/state-machine';
+import { setPokedexMapContext } from '../../../../scenes/world-map';
 
 interface PartyHeaderProps {
   onClose: () => void;
@@ -12,10 +15,13 @@ interface PartyHeaderProps {
   pd: PlayerData;
   mode: PartyMode;
   onDoubleClick: (pokemon: Pokemon) => void;
+  stateMachine: StateMachine;
 }
 
-const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) => {
+const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick, stateMachine }: PartyHeaderProps) => {
   const badgeCount = countBadges(pd.badges);
+  const [isAwayModalOpen, setIsAwayModalOpen] = useState(false);
+  const hasAwayPokemon = Object.keys(pd.awayPokemon).length > 0;
 
   const renderCenterContent = () => {
     if (mode.kind === 'battle' && mode.roster) {
@@ -31,6 +37,37 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
       );
     }
   };
+
+  // Lifetime: "this feature exists on this screen at all." KeyD is always
+  // safe to claim under this condition — nothing else on the screen wants KeyD.
+  useInputLayer({
+    id: 'party-header-toggle',
+    name: 'Party Header — Away Toggle',
+    active: hasAwayPokemon,
+    blocksLowerLayers: false, // doesn't need to block anything, it owns a key nothing else wants
+    keyBindings: [{ code: 'KeyD', action: 'toggle-away-modal' }],
+    onAction: (action) => {
+      if (action === 'toggle-away-modal') setIsAwayModalOpen((open) => !open);
+    },
+  });
+
+  // Lifetime: "the modal is actually on screen right now." Escape is only
+  // EVER bound while this is true — so it's structurally impossible for it
+  // to swallow party-screen's Escape while the modal is closed.
+  useInputLayer({
+    id: 'away-modal',
+    name: 'Away Modal',
+    active: isAwayModalOpen,
+    blocksLowerLayers: true, // correctly opaque, but ONLY while it exists
+    keyBindings: [
+      { code: 'Escape', action: 'close-away-modal' },
+      { code: 'KeyD', action: 'toggle-away-modal' },
+    ],
+    onAction: (action) => {
+      if (action === 'close-away-modal') setIsAwayModalOpen(false);
+      if (action === 'toggle-away-modal') setIsAwayModalOpen((open) => !open);
+    },
+  });
 
   const renderRosterContent = useCallback(() => {
     if (mode.kind === 'battle' && mode.roster) {
@@ -85,8 +122,6 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
     return null;
   }, [mode, pd]);
 
-  const awayPokemonCount = Object.keys(pd.awayPokemon).length + 3;
-
   return (
     <>
       <header className="shrink-0 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md z-10">
@@ -101,9 +136,9 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
               {pd.party.length}/6
             </span>
             {/* AWAY POKEMON BUTTON */}
-            {awayPokemonCount > 0 && (
+            {hasAwayPokemon && (
               <button
-                onClick={undefined}
+                onClick={() => setIsAwayModalOpen(true)}
                 className="relative flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 active:scale-95 transition-all text-xs font-medium cursor-pointer"
               >
                 {/* Soft visual attention anchor */}
@@ -111,7 +146,10 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
                 </span>
-                <span>{t('party.away.title', { count: awayPokemonCount })}</span>
+                <span>{t('party.away.title')}</span>
+                <kbd className="w-6 h-6 flex shrink-0 items-center justify-center bg-slate-900 border border-blue-500/30 text-blue-400 rounded text-xs font-mono group-hover:bg-blue-500/20 transition-colors">
+                  D
+                </kbd>
               </button>
             )}
           </div>
@@ -146,7 +184,19 @@ const PartyHeader = ({ onClose, t, pd, mode, onDoubleClick }: PartyHeaderProps) 
           </div>
         </div>
       </header>
-      <AwayPokemonModal onClose={() => 1} lang="he" isOpen={true} />
+      <AwayPokemonModal
+        onNavigateToMap={(mapId, pokemonId) => {
+          onClose();
+          setPokedexMapContext(pokemonId, () => {
+            const newPartyScene = createPartyReactScene(stateMachine, { kind: 'overworld' });
+            stateMachine.pushDirect('PARTY', newPartyScene);
+          }, [{ mapId, mapLabel: 'not-important', maxLevel: 3, minLevel: 2, methods: [] }]);
+          stateMachine.push('WORLD_MAP');
+        }}
+        pd={pd}
+        onClose={() => setIsAwayModalOpen(false)}
+        isOpen={isAwayModalOpen && hasAwayPokemon}
+      />
     </>
   );
 };

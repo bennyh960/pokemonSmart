@@ -1,72 +1,15 @@
 import React, { useState } from 'react';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
-
-// === Interfaces ===
-export interface Pokemon {
-  id: number;
-  name: { en: string; he: string };
-  sprite: string;
-}
-
-export interface StolenEntry {
-  kind: 'stolen';
-  pokemon: Pokemon;
-  thiefSpriteType: string;
-  thiefName: { en: string; he: string };
-  restoredFlag: string;
-}
-
-export interface DayCareEntry {
-  kind: 'day-care';
-  pokemon: Pokemon;
-  depositedAtSteps: number;
-  npcId: string;
-  route: { en: string; he: string };
-  stepsPerLevel: number;
-}
-
-export type AwayPokemonEntry = StolenEntry | DayCareEntry;
-
-interface PlayerDataMock {
-  steps: number;
-  awayPokemon: AwayPokemonEntry[];
-}
+import type { PlayerData } from '../../../../types';
+import { getPokemonDisplayName } from '../../../../services/pokemon-data';
+import { getPokemonSpriteUrl } from '../../../../utils/util';
 
 interface AwayPokemonModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onNavigateToMap?: (routeName: string) => void;
+  onNavigateToMap: (mapId: string, pokemonId: number) => void;
+  pd: PlayerData;
 }
-
-// === Mock Data (כולל מספר פוקימונים בו זמנית) ===
-const mockPlayerData: PlayerDataMock = {
-  steps: 14200,
-  awayPokemon: [
-    {
-      kind: 'stolen',
-      pokemon: { id: 25, name: { en: 'Pikachu', he: 'פיקאצ׳ו' }, sprite: '⚡' },
-      thiefSpriteType: 'rocket_grunt_m',
-      thiefName: { en: 'Team Rocket', he: 'צוות רוקט' },
-      restoredFlag: 'stolen_pika_quest',
-    },
-    // {
-    //   kind: 'day-care',
-    //   pokemon: { id: 4, name: { en: 'Charmander', he: 'צ׳רמנדר' }, sprite: '🔥' },
-    //   depositedAtSteps: 10000,
-    //   npcId: 'daycare_lady',
-    //   route: { en: 'Route 5', he: 'דרך 5' },
-    //   stepsPerLevel: 500,
-    // },
-    {
-      kind: 'day-care',
-      pokemon: { id: 7, name: { en: 'Squirtle', he: 'סקווירטל' }, sprite: '💧' },
-      depositedAtSteps: 12000,
-      npcId: 'daycare_man',
-      route: { en: 'Route 5', he: 'דרך 5' },
-      stepsPerLevel: 300,
-    },
-  ],
-};
 
 // === מילון תרגומים ===
 const translations = {
@@ -104,21 +47,19 @@ const translations = {
   },
 };
 
-export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onClose, onNavigateToMap }) => {
+export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ pd, isOpen, onClose, onNavigateToMap }) => {
   const { locale, isRTL } = useI18n();
   if (!isOpen) return null;
 
-  const pd = mockPlayerData;
   const t = (key: keyof (typeof translations)['en']) => translations[locale][key];
+  const awayPokemon = Object.keys(pd.awayPokemon);
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4 select-none"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      {/* גוף המודל המודרני */}
       <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl text-slate-100 overflow-hidden flex flex-col max-h-[85vh]">
-        {/* כותרת חלון מודרנית */}
         <div className="flex justify-between items-center px-6 py-4 bg-slate-950/50 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
@@ -134,12 +75,12 @@ export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onCl
           </button>
         </div>
 
-        {/* תוכן - רשימת פוקימונים חסרים בגלילה */}
         <div className="p-6 overflow-y-auto space-y-4 flex-1 game-scrollbar">
-          {pd.awayPokemon.length === 0 ? (
+          {awayPokemon.length === 0 ? (
             <div className="text-center py-12 text-slate-500 text-sm">{t('party.away.empty')}</div>
           ) : (
-            pd.awayPokemon.map((entry, idx) => {
+            awayPokemon.map((key, idx) => {
+              const entry = pd.awayPokemon[key];
               if (entry.kind === 'stolen') {
                 return (
                   <div
@@ -156,7 +97,11 @@ export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onCl
                     <div className="flex items-center gap-4">
                       {/* תמונת פוקימון שנחטף */}
                       <div className="w-14 h-14 bg-gradient-to-b from-red-500/10 to-red-950/40 border border-red-500/30 rounded-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition-transform">
-                        {entry.pokemon.sprite}
+                        <img
+                          src={getPokemonSpriteUrl(entry.pokemon.id)}
+                          alt={entry.pokemon.name}
+                          className="w-10 h-10 object-contain select-none"
+                        />
                       </div>
 
                       <div className="space-y-1 flex-1">
@@ -164,7 +109,7 @@ export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onCl
                           #{entry.pokemon.id.toString().padStart(3, '0')}
                         </div>
                         <div className="text-base font-bold text-slate-200">
-                          {locale === 'he' ? entry.pokemon.name.he : entry.pokemon.name.en}
+                          {getPokemonDisplayName(entry.pokemon.id)}
                         </div>
 
                         {/* פרטי החוטף */}
@@ -188,7 +133,7 @@ export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onCl
               }
 
               if (entry.kind === 'day-care') {
-                const accumulatedSteps = pd.steps - entry.depositedAtSteps;
+                const accumulatedSteps = pd.totalSteps - entry.depositedAtSteps;
                 const levelsGained = Math.floor(accumulatedSteps / entry.stepsPerLevel);
                 const stepsToNextLevel = entry.stepsPerLevel - (accumulatedSteps % entry.stepsPerLevel);
 
@@ -210,9 +155,12 @@ export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onCl
                     </div>
 
                     <div className="flex items-center gap-4">
-                      {/* תמונת פוקימון בפנסיון */}
                       <div className="w-14 h-14 bg-gradient-to-b from-indigo-500/10 to-indigo-950/40 border border-indigo-500/30 rounded-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition-transform">
-                        {entry.pokemon.sprite}
+                        <img
+                          src={getPokemonSpriteUrl(entry.pokemon.id)}
+                          alt={entry.pokemon.name}
+                          className="w-10 h-10 object-contain select-none"
+                        />
                       </div>
 
                       <div className="flex-1 space-y-2">
@@ -221,7 +169,7 @@ export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onCl
                             #{entry.pokemon.id.toString().padStart(3, '0')}
                           </div>
                           <div className="text-base font-bold text-slate-200">
-                            {locale === 'he' ? entry.pokemon.name.he : entry.pokemon.name.en}
+                            {getPokemonDisplayName(entry.pokemon.id)}
                           </div>
                         </div>
 
@@ -256,8 +204,8 @@ export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onCl
                             <span>{locale === 'he' ? entry.route.he : entry.route.en}</span>
                           </div>
                           <button
-                            onClick={() => onNavigateToMap?.(entry.route.en)}
-                            className="text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors bg-indigo-500/10 hover:bg-indigo-500/20 px-2.5 py-1 rounded-md border border-indigo-500/20"
+                            onClick={() => onNavigateToMap(entry.mapId.split('/')[0], entry.pokemon.id)}
+                            className="cursor-pointer text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors bg-indigo-500/10 hover:bg-indigo-500/20 px-2.5 py-1 rounded-md border border-indigo-500/20"
                           >
                             {t('party.away.mapBtn')} {isRTL ? '←' : '→'}
                           </button>
@@ -273,11 +221,10 @@ export const AwayPokemonModal: React.FC<AwayPokemonModalProps> = ({ isOpen, onCl
           )}
         </div>
 
-        {/* פוטר - סך הכל צעדי מאמן */}
         <div className="px-6 py-4 bg-slate-950/50 border-t border-slate-800 flex justify-between items-center text-xs">
           <span className="text-slate-400 font-medium">{t('party.away.trainerSteps')}</span>
           <span className="font-semibold text-indigo-400 bg-indigo-500/5 px-2.5 py-1 rounded-md border border-indigo-500/10 font-mono tracking-wider">
-            {pd.steps.toLocaleString()}
+            {pd.totalSteps.toLocaleString()}
           </span>
         </div>
       </div>

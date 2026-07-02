@@ -156,7 +156,7 @@
   "party.hint.moves": "ENTER:אפשרויות  D:מחק",
   "party.hint.removeItem": "הסרת פריט מוחזק",
   "party.hint.away": "תזכיר",
-  "party.away.title": "יומן מעקב: פוקימונים חסרים",
+  "party.away.title": "יומן מעקב",
   "party.away.empty": "אין פוקימונים בחוץ",
   "party.away.stolen": "🔒 נגנב על ידי",
   "party.away.daycare": "משתלת יום · {route}",

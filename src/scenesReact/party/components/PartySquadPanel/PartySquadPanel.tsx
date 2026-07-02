@@ -4,8 +4,8 @@ import { useDragSort } from '../../../../ui-react/hooks/useDragSort';
 import type { Pokemon } from '../../../../types';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import type { PartyMode } from '../..';
-import { useKeyPress } from '../../../../ui-react/hooks/useKeyboard';
 import { getItem } from '../../../../data/items';
+import { useInputLayer, inputManager } from '../../../../engine/inputManagerV2';
 
 interface IPartySquadPanel {
   party: Pokemon[];
@@ -39,31 +39,57 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
     onDragEnd();
   };
 
-  useKeyPress([' ', 'Enter'], (e) => {
-    if (mode.kind === 'battle') return;
-    if (mode.kind === 'select-target') return;
-    if (e.key === ' ') {
-      e.preventDefault();
-      if (!softSelectedUuid) {
-        setSoftSelectedUuid(selectedUuid);
-      } else {
-        setSoftSelectedUuid(null);
+  useInputLayer({
+    id: 'party-squad-panel',
+    name: 'Party Squad Panel',
+    blocksLowerLayers: false,
+    keyBindings: [
+      { code: 'Space', action: 'swap-request' },
+      { code: 'Enter', action: 'ok' },
+      { code: 'ArrowDown', action: 'down' },
+      { code: 'ArrowUp', action: 'up' },
+    ],
+    onAction: (action) => {
+      if (action === 'down') {
+        handleChangeSelectedCursor('down');
+      } else if (action === 'up') {
+        handleChangeSelectedCursor('up');
       }
-    } else if (e.key === 'Enter' && softSelectedUuid) {
-      // do manual reorder
-      const softSelectedIndex = party.findIndex((p) => p.uuid === softSelectedUuid);
-      const selectedIndex = party.findIndex((p) => p.uuid === selectedUuid);
-      if (softSelectedIndex !== -1 && selectedIndex !== -1 && softSelectedIndex !== selectedIndex) {
-        const next = [...party];
-        // swap the two
-        const temp = next[softSelectedIndex];
-        next[softSelectedIndex] = next[selectedIndex];
-        next[selectedIndex] = temp;
-        onReorder(next);
-        setSoftSelectedUuid(null);
+
+      if (!softSelectedUuid && action === 'ok') {
+        onDoubleClick(party.find((p) => p.uuid === selectedUuid)!);
+        return;
       }
-    }
+      if (mode.kind === 'overworld' && action === 'swap-request') {
+        if (!softSelectedUuid) {
+          setSoftSelectedUuid(selectedUuid);
+        } else {
+          setSoftSelectedUuid(null);
+        }
+      } else if (action === 'ok' && softSelectedUuid) {
+        const softSelectedIndex = party.findIndex((p) => p.uuid === softSelectedUuid);
+        const selectedIndex = party.findIndex((p) => p.uuid === selectedUuid);
+
+        if (softSelectedIndex !== -1 && selectedIndex !== -1 && softSelectedIndex !== selectedIndex) {
+          const next = [...party];
+          // swap the two
+          const temp = next[softSelectedIndex];
+          next[softSelectedIndex] = next[selectedIndex];
+          next[selectedIndex] = temp;
+          onReorder(next);
+          setSoftSelectedUuid(null);
+        }
+      }
+    },
   });
+
+  const handleChangeSelectedCursor = (direction: 'up' | 'down') => {
+    if (mode.kind === 'move-learning') return;
+    const currentIndex = party.findIndex((p) => p.uuid === selectedUuid);
+    const nextIndex = (currentIndex + 1) % party.length;
+    const prevIndex = (currentIndex - 1 + party.length) % party.length;
+    onSelect(party[direction === 'down' ? nextIndex : prevIndex].uuid);
+  };
 
   const itemRef = useRef(mode.kind === 'select-target' ? getItem(mode.itemId) : null);
   const leaderIndex = party.findIndex((p) => p.hp > 0);

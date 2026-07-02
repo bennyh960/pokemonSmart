@@ -6,11 +6,11 @@ import HeldItemsTab from './tabs/HeldItemsTab.js';
 import { MovesetTab } from './tabs/MovesetTab.js';
 import { TYPE_BADGE } from '../../../../data/type-constants.js';
 import type { PartyMode } from '../../index.js';
-import { useKeyPress } from '../../../../ui-react/hooks/useKeyboard.js';
 import { getPokemonDisplayName } from '../../../../services/pokemon-data.js';
 import { getItem } from '../../../../data/items.js';
 import { useI18n } from '../../../../ui-react/context/i18n-context.js';
 import type { GameNotificationProps } from '../../../../ui-react/context/GameNotifications-context.js';
+import { useInputLayer } from '../../../../engine/inputManagerV2/index.js';
 
 interface IInspectorPanelProps {
   mode: PartyMode;
@@ -34,8 +34,8 @@ export function InspectorPanel({
   showNotification,
   setSelectedMoveToDelete,
   selectedMoveToDelete,
-}: IInspectorPanelProps) {
-  const { t, locale } = useI18n();
+}: Readonly<IInspectorPanelProps>) {
+  const { t, locale, isRTL } = useI18n();
   const [activeTab, setActiveTab] = useState<'stats' | 'moveset' | 'items'>(
     mode.kind === 'move-learning' ? 'moveset' : defaultTab,
   );
@@ -63,18 +63,32 @@ export function InspectorPanel({
       ? { color: primaryType.color, borderColor: secondaryType.color, boxShadow: `0 2px 8px ${primaryType.bg}` }
       : {};
 
-  // inspector pannel
-  useKeyPress(['ArrowLeft', 'ArrowRight'], (e) => {
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      const tabsKeys = tabs.filter((tab) => tab.conditions).map((tab) => tab.key);
-      const currentIndex = tabsKeys.indexOf(activeTab);
-      const nextIndex =
-        e.key === 'ArrowRight'
-          ? (currentIndex - 1 + tabsKeys.length) % tabsKeys.length
-          : (currentIndex + 1) % tabsKeys.length;
-      setActiveTab(tabsKeys[nextIndex] as 'stats' | 'moveset' | 'items');
-    }
+  useInputLayer({
+    id: 'inspector-panel',
+    name: 'Inspector Panel',
+    blocksLowerLayers: false,
+    keyBindings: [
+      { code: 'ArrowLeft', action: 'prev-tab' },
+      { code: 'ArrowRight', action: 'next-tab' },
+    ],
+    onAction: (action) => {
+      if (action === 'prev-tab') {
+        handleTabChange(isRTL ? 'next' : 'prev');
+      } else if (action === 'next-tab') {
+        handleTabChange(isRTL ? 'prev' : 'next');
+      }
+    },
   });
+
+  const handleTabChange = (direction: 'prev' | 'next') => {
+    const tabsKeys = tabs.filter((tab) => tab.conditions).map((tab) => tab.key);
+    const currentIndex = tabsKeys.indexOf(activeTab);
+    const nextIndex =
+      direction === 'next'
+        ? (currentIndex + 1) % tabsKeys.length
+        : (currentIndex - 1 + tabsKeys.length) % tabsKeys.length;
+    setActiveTab(tabsKeys[nextIndex] as 'stats' | 'moveset' | 'items');
+  };
 
   // ------------------------ component callbacks ------------------------
 

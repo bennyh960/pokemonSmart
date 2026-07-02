@@ -3,7 +3,6 @@ import type { Move, Pokemon, PokemonType } from '../../types/index.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { InspectorPanel } from './components/InspectorPanel/index';
 import type { PartyMode } from './index.js';
-import { useKeyPress } from '../../ui-react/hooks/useKeyboard.tsx';
 import PartySquadPanel from './components/PartySquadPanel/PartySquadPanel.tsx';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.ts';
 import { getQuickActions } from './components/QuickActions/helpers.ts';
@@ -18,6 +17,7 @@ import { FloatingTextLayer } from '../../ui-react/componenets/FloatingText.tsx';
 import { useGameNotification } from '../../ui-react/context/GameNotifications-context.tsx';
 import { getMove, getMoveDisplayName, getPokemonDisplayName } from '../../services/pokemon-data.ts';
 import { clearMoveLearningSession } from '../../systems/move-learning.ts';
+import { useInputLayer } from '../../engine/inputManagerV2/index.ts';
 
 interface Props {
   onClose: () => void;
@@ -26,7 +26,7 @@ interface Props {
 }
 
 export function PartyScreen({ onClose, mode, stateMachine }: Props) {
-  const { t, isRTL } = useI18n();
+  const { t, isRTL, setLocale, locale } = useI18n();
   const [pd, editPlayerData] = usePlayerData();
   const { showNotification } = useGameNotification();
   // const [notification, setNotification] = useState<GameNotificationProps | null>(null);
@@ -102,35 +102,92 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
   }
 
   // Global ESC
-  useKeyPress(['Escape'], (e) => {
-    if (e.key === 'Escape') {
-      onClose();
-    }
-  });
 
-  // party squad pannel
-  useKeyPress(['ArrowDown', 'ArrowUp', 'Enter'], (e) => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      if (mode.kind === 'move-learning') return;
-      const currentIndex = party.findIndex((p) => p.uuid === selected.uuid);
-      const nextIndex = (currentIndex + 1) % party.length;
-      const prevIndex = (currentIndex - 1 + party.length) % party.length;
-      setSelectedUuid(party[e.key === 'ArrowDown' ? nextIndex : prevIndex].uuid);
-    } else if (e.key === 'Enter') {
-      onDoubleClick(selected);
-    }
+  useInputLayer({
+    id: 'party-screen',
+    name: 'Party Screen Global',
+    blocksLowerLayers: false,
+    keyBindings: [
+      { code: 'Escape', action: 'close' },
+      { code: 'KeyL', action: 'toggle-locale' },
+    ],
+    onAction: (action) => {
+      if (action === 'close') {
+        onClose();
+      } else if (action === 'toggle-locale') {
+        setLocale(locale === 'en' ? 'he' : 'en');
+      }
+    },
   });
 
   useEffect(() => {
     getGlobalAudio()?.playCry(selected?.id ?? 0);
   }, [selected]);
 
+  const handleSelectMoveToDelete = (oldMoveId: number, newMoveId: number) => {
+    let message = { type: '', text: '' };
+    editPlayerData((pd) => {
+      const mon = pd.party.find((p) => p.uuid === selected.uuid);
+      if (!mon) {
+        message = { type: 'error', text: 'Unknown error: Pokemon not found in party.' };
+        return;
+      }
+      const moveIndex = mon.moves.findIndex((m) => m.id === oldMoveId);
+      if (moveIndex === -1) {
+        message = { type: 'error', text: "Unknown error: Move not found in Pokemon's moveset." };
+        return;
+      }
+      const newMove = getMove(newMoveId);
+      if (!newMove) {
+        message = { type: 'error', text: 'Unknown error: New move not found.' };
+        return;
+      }
+      mon.moves[moveIndex] = {
+        accuracy: newMove.accuracy ?? 0,
+        id: newMove.id,
+        name: newMove.name.en,
+        power: newMove.power ?? 0,
+        type: newMove.type as PokemonType,
+        pp: newMove.pp,
+        currentPp: newMove.pp,
+      };
+
+      message = {
+        type: 'success',
+        text: t('party.moveLearning.replaced', {
+          name: getPokemonDisplayName(mon.id),
+          oldMove: getMoveDisplayName(oldMoveId),
+          newMove: getMoveDisplayName(newMoveId),
+        }),
+      };
+    });
+
+    showNotification({
+      type: message.type as any,
+      text: message.text,
+      position: 'top-center',
+    });
+    setSelectedMoveToDelete(null);
+    clearMoveLearningSession();
+    setTimeout(() => {
+      onClose();
+      stateMachine.push('PARTY');
+    }, 3000);
+  };
+
   return (
     <div
       className="w-full h-full flex flex-col bg-slate-950 text-slate-100 font-sans select-none overflow-hidden"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <PartyHeader onClose={onClose} t={t} pd={pd} mode={mode} onDoubleClick={onDoubleClick} />
+      <PartyHeader
+        stateMachine={stateMachine}
+        onClose={onClose}
+        t={t}
+        pd={pd}
+        mode={mode}
+        onDoubleClick={onDoubleClick}
+      />
 
       <div className="flex-1 w-full flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden p-4 md:p-6 gap-6">
         {/* PANEL: PARTY SQUAD */}
@@ -140,56 +197,7 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
               pokemon={selected}
               newMoveId={mode.session.moveId}
               selectedMoveToDelete={selectedMoveToDelete}
-              onConfirmReplace={(woldMoveId, newMoveId) => {
-                let message = { type: '', text: '' };
-                editPlayerData((pd) => {
-                  const mon = pd.party.find((p) => p.uuid === selected.uuid);
-                  if (!mon) {
-                    message = { type: 'error', text: 'Unknown error: Pokemon not found in party.' };
-                    return;
-                  }
-                  const moveIndex = mon.moves.findIndex((m) => m.id === woldMoveId);
-                  if (moveIndex === -1) {
-                    message = { type: 'error', text: "Unknown error: Move not found in Pokemon's moveset." };
-                    return;
-                  }
-                  const newMove = getMove(newMoveId);
-                  if (!newMove) {
-                    message = { type: 'error', text: 'Unknown error: New move not found.' };
-                    return;
-                  }
-                  mon.moves[moveIndex] = {
-                    accuracy: newMove.accuracy ?? 0,
-                    id: newMove.id,
-                    name: newMove.name.en,
-                    power: newMove.power ?? 0,
-                    type: newMove.type as PokemonType,
-                    pp: newMove.pp,
-                    currentPp: newMove.pp,
-                  };
-
-                  message = {
-                    type: 'success',
-                    text: t('party.moveLearning.replaced', {
-                      name: getPokemonDisplayName(mon.id),
-                      oldMove: getMoveDisplayName(woldMoveId),
-                      newMove: getMoveDisplayName(newMoveId),
-                    }),
-                  };
-                });
-
-                showNotification({
-                  type: message.type as any,
-                  text: message.text,
-                  position: 'top-center',
-                });
-                setSelectedMoveToDelete(null);
-                clearMoveLearningSession();
-                setTimeout(() => {
-                  onClose();
-                  stateMachine.push('PARTY');
-                }, 3000);
-              }}
+              onConfirmReplace={handleSelectMoveToDelete}
               onConfirmSkip={() => {
                 clearMoveLearningSession();
                 onClose();

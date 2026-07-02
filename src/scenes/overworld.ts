@@ -699,6 +699,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       });
     } else if (npc.type === 'day-care') {
       const dc = npc as unknown as DayCareData;
+
       const pd = getPlayerData();
       const rtl = isRTL();
       const npcSpeaker = npc.name ? getLocalizedName(npc.name) : undefined;
@@ -720,12 +721,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           showListChoice(options, (idx) => {
             if (idx >= pd.party.length) return; // cancel
             const deposited = pd.party[idx];
+            dc.route = currentMapData?.label ?? { en: 'Unknown', he: 'לא ידוע' };
             const pokeName = getPokemonDisplayName(deposited.id);
             dayCareDeposit(pd, idx, dc);
             // Register phone contact on first deposit
             if (!pd.phoneContacts?.some((c) => c.trainerId === npc.id)) {
               if (!pd.phoneContacts) pd.phoneContacts = [];
-              const route = dc.route ?? { en: '', he: '' };
+              const route = dc.route ?? { en: 'Unknown', he: 'לא ידוע' };
+              // console.log(dc);
               pd.phoneContacts.push({
                 trainerId: npc.id,
                 trainerName: npc.name ?? { en: npc.id, he: npc.id },

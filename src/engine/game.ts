@@ -38,6 +38,7 @@ import { uiRegistry } from './input/uiRegistry.js';
 import { createTestScene } from '../scenes/test.scene.js';
 import { initReactHost } from './react/react-scene-host.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
+import { attachKeyboardAdapter, attachPointerAdapter, inputManager } from './inputManagerV2/index.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
@@ -55,6 +56,8 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   // const uiOverlay = createVirtualUI();
   // container.appendChild(uiOverlay);
   const input = createInputManager(canvas);
+  const detachPointer = attachPointerAdapter(inputManager, canvas);
+  const detachKeyboard = attachKeyboardAdapter(inputManager);
 
   // setupMobileControls(input);
   const stateMachine = createStateMachine();
@@ -155,6 +158,8 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
       window.removeEventListener('resize', handleResize);
       input.destroy();
       container.removeChild(canvas);
+      detachPointer();
+      detachKeyboard();
     },
   };
 }

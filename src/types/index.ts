@@ -208,6 +208,7 @@ export interface DayCareEntry {
   depositedAtSteps: number;
   npcId: string;
   route: { en: string; he: string };
+  mapId: string; // Map ID where the day-care is located (for phone and diary navigation)
   /** Steps needed per level — stored at deposit so phone can compute phase without NPC config. */
   stepsPerLevel: number;
 }
