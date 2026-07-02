@@ -20,8 +20,9 @@ import {
   isItemConsumable,
   itemTargetsPokemon,
   isDirectUseItem,
+  canUseItemOnPokemon,
 } from '../systems/item-effects.js';
-import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from './party';
+import { selectedPartyIndex, clearSelectedPartyIndex } from './party';
 import {
   getPokemonDisplayName,
   getLocalizedName,
@@ -39,10 +40,10 @@ import {
   initializeMoveLearningQueue,
   nextMoveLearningQueueStep,
   resetMoveLearningQueueState,
-  setMoveLearningSession,
 } from '../systems/move-learning.js';
 import { uiRegistry } from '../engine/input/uiRegistry.js';
-import { CANVAS_WIDTH, LOGICAL_WIDTH } from '../engine/config.js';
+import { LOGICAL_WIDTH } from '../engine/config.js';
+import { createPartyReactScene } from '../scenesReact/party/index.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
 
 /* ── Battle integration exports ────────────────────────────────────── */
@@ -51,6 +52,14 @@ type BagMode = 'overworld' | 'battle';
 let bagMode: BagMode = 'overworld';
 
 export let pendingItem: { itemId: string; def: ItemDef } | null = null;
+
+export const setBagPendingItem = (itemId: string) => {
+  const itemDef = getItem(itemId);
+  if (!itemDef) {
+    return null;
+  }
+  return (pendingItem = { itemId, def: itemDef });
+};
 
 export function setBagMode(mode: BagMode): void {
   bagMode = mode;
@@ -617,14 +626,16 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       });
       if (moveLearningStep.kind === 'show-message') {
         message = moveLearningStep.message;
-        // todo: when wire mouse click set timer to 0.5
         messageTimer = 1.5;
         return;
       }
       if (moveLearningStep.kind === 'open-session') {
-        setPartyMode('move-learning');
-        setMoveLearningSession(moveLearningStep.session);
-        stateMachine.push('PARTY');
+        const partyScene = createPartyReactScene(stateMachine, {
+          kind: 'move-learning',
+          session: moveLearningStep.session,
+        });
+
+        stateMachine.pushDirect('PARTY', partyScene);
         return;
       }
       if (moveLearningStep.kind === 'finish' && target && moveLearningStep.evolution) {
@@ -643,7 +654,9 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       if (chosenIndex >= 0) {
         const pd = getPlayerData();
         const target = pd.party[chosenIndex];
-        if (target) {
+        const itemData = getItem(pendingOverworldItemId);
+        const isHeldItem = itemData?.category === 'held';
+        if (target && !isHeldItem) {
           // Check if this is a TM/HM — handle separately
           const tmEffect = getTMEffect(pendingOverworldItemId);
           if (tmEffect) {
@@ -686,6 +699,21 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             message = result.message;
           }
           messageTimer = 2.0;
+        } else if (isHeldItem && target) {
+          // Handle held item logic here
+          if (target.heldItemId) {
+            message = t('bag.heldItem.equippedAlready', { name: getPokemonDisplayName(target.id) });
+            messageTimer = 2.0;
+          } else {
+            target.heldItemId = pendingOverworldItemId;
+            consumeItem(pd.items, pendingOverworldItemId);
+            autoSave();
+            message = t('bag.heldItem.equipped', {
+              name: getPokemonDisplayName(target.id),
+              item: itemData.name[getLocale()],
+            });
+            messageTimer = 2.0;
+          }
         }
       }
       pendingOverworldItemId = null;
@@ -756,12 +784,18 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             }
             pendingOverworldItemId = item.id;
             waitingForPartyTarget = true;
-            setPartyMode('select-target', undefined, {
+            const partyScene = createPartyReactScene(stateMachine, {
+              kind: 'select-target',
               itemId: item.id,
               itemName: getLocalizedName(item.def.name),
               description: getLocalizedName(item.def.description),
+              onSelect: (index) => {
+                console.log('onSelect called with index:', index);
+                return true;
+              },
+              isEligible: (p) => canUseItemOnPokemon(item.id, p),
             });
-            stateMachine.push('PARTY');
+            stateMachine.pushDirect('PARTY', partyScene);
           } else if (isDirectUseItem(item.id)) {
             // Direct-use items (e.g. pokedex-battery, battle-helper) — no Pokemon target needed
             const result = applyDirectItemEffect(item.id);
@@ -781,35 +815,19 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           }
         } else if (item.def.category === 'held') {
           waitingForPartyTarget = true;
-          setPartyMode(
-            'select-target',
-            (index) => {
-              const pd = getPlayerData();
-              const pokemon = pd.party[index];
-              if (!pokemon) return false;
-              if (pokemon.heldItemId) {
-                message = t('bag.heldItem.equippedAlready', { name: getPokemonDisplayName(pokemon.id) });
-                messageTimer = 2.0;
-                return false;
-              }
-
-              pokemon.heldItemId = item.id;
-              consumeItem(pd.items, item.id);
-              autoSave();
-              const pokeName = getPokemonDisplayName(pokemon.id);
-              const itemName = getLocalizedName(item.def.name);
-              message = t('bag.heldItem.equipped', { name: pokeName, item: itemName });
-              messageTimer = 2.0;
+          pendingOverworldItemId = item.id;
+          const partyScene = createPartyReactScene(stateMachine, {
+            kind: 'select-target',
+            itemId: item.id,
+            itemName: getLocalizedName(item.def.name),
+            description: getLocalizedName(item.def.description),
+            onSelect: (index) => {
+              console.log('onSelect called with index:', index);
               return true;
             },
-            {
-              itemId: item.id,
-              itemName: getLocalizedName(item.def.name),
-              description: getLocalizedName(item.def.description),
-              isEligible: (pokemon: any) => !pokemon.heldItemId,
-            },
-          );
-          stateMachine.push('PARTY');
+            isEligible: () => true,
+          });
+          stateMachine.pushDirect('PARTY', partyScene);
           return;
         } else {
           message = t('bag.cantUseHere');

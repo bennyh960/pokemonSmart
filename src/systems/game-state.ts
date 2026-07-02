@@ -157,6 +157,26 @@ export function startNewGame(): PlayerData {
 export function loadGameFromSlot(slot: number): PlayerData | null {
   const data = loadGame(slot);
   if (data) {
+    // // temp
+    // data.awayPokemon = {
+    //   [data.party[0]?.uuid]: {
+    //     kind: 'stolen',
+    //     pokemon: data.party[0],
+    //     thiefSpriteType: 'npc-1778616490150',
+    //     thiefName: { en: 'Thief', he: 'גנב' },
+    //     restoredFlag: 'restore-stolen-pokemon',
+    //   },
+    //   [data.party[1]?.uuid]: {
+    //     kind: 'day-care',
+    //     pokemon: data.party[1],
+    //     npcId: 'npc-1778616490150',
+    //     depositedAtSteps: data.totalSteps - 1000,
+    //     stepsPerLevel: 1000,
+    //     route: { en: 'route-1', he: 'מסלול 5' },
+    //   },
+    // };
+
+    //
     currentPlayerData = data;
     currentSlot = slot;
   }

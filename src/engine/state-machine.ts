@@ -55,11 +55,35 @@ export function createStateMachine() {
       onTransition?.();
     },
 
+    /**
+     * Push a one-off scene onto the stack without registering it under a named ID.
+     *
+     * Use this for scenes created with runtime arguments (e.g. PartyScreen with a
+     * specific PartyMode, or a move-learning session). Registering those under a
+     * fixed ID like 'PARTY' causes the map to hold stale arguments — the next push
+     * of that ID would replay the previous session's context instead of the new one.
+     *
+     * The scene is stored under a private timestamped key and removed from the map
+     * when popped, so it doesn't leak.
+     *
+     * Use register() + push() only for stable, always-identical scenes (OVERWORLD,
+     * BATTLE, TITLE). Use pushDirect() for everything created with arguments.
+     */
+    pushDirect(sceneId: SceneId, scene: Scene): void {
+      const id = `__dynamic_${sceneId}_${Date.now()}__` as SceneId;
+
+      scenes.set(id, scene);
+      stack.push(id);
+      scene.enter();
+      onTransition?.();
+    },
+
     /** Pop the topmost scene, calling its exit(). */
     pop(): void {
       if (stack.length === 0) return;
       const oldId = stack.pop()!;
       scenes.get(oldId)?.exit();
+      if (String(oldId).startsWith('__dynamic_')) scenes.delete(oldId);
       onTransition?.();
     },
 

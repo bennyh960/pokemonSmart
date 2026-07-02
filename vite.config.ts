@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import path from 'path';
 import fs from 'fs';
 import { glob } from 'glob';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 // for use in battle cinematic check if trainer sprite exists
 const virtualModuleId = 'virtual:trainer-sprites';
@@ -16,6 +18,8 @@ export default defineConfig(({ mode }) => ({
     pure: mode === 'production' ? ['console.debug'] : [],
   },
   plugins: [
+    react(),
+    tailwindcss(),
     // Remove backup folders from dist after build
     {
       name: 'remove-backup-folders',

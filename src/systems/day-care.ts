@@ -24,8 +24,12 @@ export function getDayCareEntry(pd: PlayerData, npcId: string): DayCareEntry | n
 /** Return the level cap: one below the next level-up evolution, or 100. */
 function evoCap(pokemonId: number, currentLevel: number): number {
   const evo = getRegularNextEvolution(pokemonId);
-  if (evo?.trigger === 'level-up' && evo.minLevel != null && evo.minLevel > currentLevel) {
-    return evo.minLevel - 1;
+  const evolutionsByLvLUp = evo.filter(
+    (e) => e.trigger === 'level-up' && e.minLevel != null && e.minLevel > currentLevel,
+  );
+  if (evolutionsByLvLUp.length > 0) {
+    const minLevel = Math.min(...evolutionsByLvLUp.map((e) => e.minLevel!));
+    return minLevel - 1;
   }
   return 100;
 }
@@ -33,7 +37,7 @@ function evoCap(pokemonId: number, currentLevel: number): number {
 /** Lazily calculate levels gained and withdrawal cost (does NOT mutate anything). */
 export function calcDayCareResult(pd: PlayerData, entry: DayCareEntry, npc: DayCareData): DayCareResult {
   const steps = Math.max(0, pd.totalSteps - entry.depositedAtSteps);
-  const stepsPerLevel = npc.stepsPerLevel ?? DEFAULT_STEPS_PER_LEVEL;
+  const stepsPerLevel = npc.stepsPerLevel ?? (DEFAULT_STEPS_PER_LEVEL * entry.pokemon.level) / 10;
   const costPerLevel = npc.costPerLevel ?? DEFAULT_COST_PER_LEVEL;
 
   const currentLevel = entry.pokemon.level;
@@ -50,7 +54,7 @@ export type DayCarePhase = 'adapting' | 'doing-well' | 'stop-grow';
 
 /** Compute the display phase without mutating anything. */
 export function getDayCarePhase(pd: PlayerData, entry: DayCareEntry): DayCarePhase {
-  const stepsPerLevel = entry.stepsPerLevel ?? DEFAULT_STEPS_PER_LEVEL;
+  const stepsPerLevel = entry.stepsPerLevel ?? (DEFAULT_STEPS_PER_LEVEL * entry.pokemon.level) / 10;
   const steps = Math.max(0, pd.totalSteps - entry.depositedAtSteps);
   const rawLevels = Math.floor(steps / stepsPerLevel);
   const cap = evoCap(entry.pokemon.id, entry.pokemon.level);
@@ -103,7 +107,8 @@ export function depositPokemon(pd: PlayerData, partyIndex: number, npc: DayCareD
     depositedAtSteps: pd.totalSteps,
     npcId: npc.id,
     route: npc.route ?? { en: '', he: '' },
-    stepsPerLevel: npc.stepsPerLevel ?? DEFAULT_STEPS_PER_LEVEL,
+    mapId: pd.position.mapId,
+    stepsPerLevel: npc.stepsPerLevel ?? (DEFAULT_STEPS_PER_LEVEL * pokemon.level) / 10,
   };
   return pokemon;
 }

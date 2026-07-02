@@ -11,6 +11,11 @@ import './style.css';
 const app = document.getElementById('app');
 if (!app) throw new Error('Could not find #app container element.');
 
+// React overlay
+const reactOverlay = document.createElement('div');
+reactOverlay.id = 'ui-overlay';
+app.appendChild(reactOverlay);
+
 initLocale();
 initLoadingScreen();
 setLoadingProgress(0.1, 'טוען...');
@@ -34,7 +39,7 @@ Promise.all([
     } catch {
       /* network error — start with empty session */
     }
-    const game = createGame(app!);
+    const game = createGame(app!, reactOverlay);
     game.start();
     window.addEventListener('beforeunload', () => {
       syncSlotsToCloud().catch(() => {});

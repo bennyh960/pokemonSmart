@@ -1370,7 +1370,7 @@
     "id": 76,
     "name": {
       "en": "Solar Beam",
-      "he": "קרן שמש"
+      "he": "קרן סולארית"
     },
     "type": "grass",
     "power": 120,
@@ -3685,7 +3685,7 @@
     "damageClass": "physical",
     "description": {
       "en": "Attacks 5 turns with rising power.",
-      "he": "תוקף 5 סיבובים בכוח עולה."
+      "he": "תוקף 5 פעמים ברצף - כח ההתקפה מתחזק בכל סיבוב"
     }
   },
   {

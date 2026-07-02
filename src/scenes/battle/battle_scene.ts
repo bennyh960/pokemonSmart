@@ -111,7 +111,7 @@ import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText } from '../../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenes/bag.js';
 import { setPokedexFocus } from '.././pokedex';
-import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '.././party';
+import { selectedPartyIndex, clearSelectedPartyIndex } from '.././party';
 import { setEvolutionData } from '.././evolution.js';
 import {
   calcHappiness,
@@ -127,7 +127,6 @@ import {
   createMoveLearningSession,
   getMoveLearningAnnouncementLines,
   getMoveLearningResolutionMessage,
-  setMoveLearningSession,
   type LevelUpMoveResult,
   type MoveLearningResolution,
 } from '../../systems/move-learning.js';
@@ -203,6 +202,7 @@ import { renderTrainerCinematic } from './phases/trainer_cinematic';
 import { updateTrainerCinematic } from './phases/trainer_cinematic';
 import { playAttackAnimation, type BattleAnimationContext } from './animations/play-attack-animation.js';
 import { runMoveLifecycle } from './animations/move-lifecycle.js';
+import { createPartyReactScene } from '../../scenesReact/party/index.js';
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -1884,6 +1884,12 @@ export function createBattleScene(
 
     const movePower = move.power ?? 0;
     const battleData = getMoveBattleData(move.id);
+
+    const bayPassImmunity = battleData?.effects.find((e) => e.bayPassImuunity);
+    const effectivenessScore = getCombinedTypeEffectiveness(move.type, player.types);
+    const effectiveness = effectivenessScore === 0 && bayPassImmunity ? 1 : effectivenessScore;
+    if (effectiveness === 0) return -Infinity;
+
     const moveFullData = getMove(move.id);
     const damageClass = moveFullData?.damageClass ?? (movePower > 0 ? 'physical' : 'status');
     const isOhko = battleData?.behaviorTags?.includes('ohko') ?? false;
@@ -1966,11 +1972,6 @@ export function createBattleScene(
     }
 
     let score = 0;
-
-    const bayPassImmunity = battleData?.effects.find((e) => e.bayPassImuunity);
-    const effectivenessScore = getCombinedTypeEffectiveness(move.type, player.types);
-    const effectiveness = effectivenessScore === 0 && bayPassImmunity ? 1 : effectivenessScore;
-    if (effectiveness === 0) return -Infinity;
 
     if (movePower > 0) {
       const stab = enemy.types.includes(move.type) ? 1.5 : 1;
@@ -3270,14 +3271,14 @@ export function createBattleScene(
     activeMoveLearningPrompt = null;
     pendingMoveLearningResolution = null;
     pendingMoveLearningPhase = phaseAfterResolution;
-    setPartyMode('move-learning');
-    setMoveLearningSession(
-      createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
-        pendingMoveLearningResolution = resolution;
-      }),
-    );
+
+    const session = createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
+      pendingMoveLearningResolution = resolution;
+    });
     phase = 'WAITING_MOVE_LEARN';
-    stateMachine.push('PARTY');
+    const partyScene = createPartyReactScene(stateMachine, { kind: 'move-learning', session });
+    stateMachine.pushDirect('PARTY', partyScene);
+
     return true;
   }
 
@@ -5120,12 +5121,17 @@ export function createBattleScene(
           textBox = createTextBox([t('battle.noOtherPokemon')], isRTL());
           phase = 'INTRO';
         } else {
-          setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
           clearSelectedPartyIndex();
           previousLeadId = player.id;
           waitingForParty = true;
           phase = 'WAITING_PARTY';
-          stateMachine.push('PARTY');
+          const partyScene = createPartyReactScene(stateMachine, {
+            kind: 'battle',
+            roster: battleRoster,
+            maxSize: maxRosterSize,
+            inBattleUUID: player.uuid,
+          });
+          stateMachine.pushDirect('PARTY', partyScene);
         }
       } else {
         textBox = createTextBox([t('battle.cantDoThat')], isRTL());
@@ -5741,13 +5747,18 @@ export function createBattleScene(
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
             clearSelectedPartyIndex();
             previousLeadId = player.id;
             waitingForParty = true;
             isForcedFaintSwitch = true; // don't give enemy a free attack after faint switch
             phase = 'WAITING_PARTY';
-            stateMachine.push('PARTY');
+            const partyScene = createPartyReactScene(stateMachine, {
+              kind: 'battle',
+              maxSize: maxRosterSize,
+              roster: battleRoster,
+              inBattleUUID: null,
+            });
+            stateMachine.pushDirect('PARTY', partyScene);
           }
           break;
         }
@@ -5780,7 +5791,16 @@ export function createBattleScene(
           // Battle is in this phase while the PARTY scene is pushed on top.
           if (!waitingForParty) break;
           waitingForParty = false;
-          if (selectedPartyIndex >= 0 && hasActiveGame()) {
+
+          // quick actions buttons - on consume it continues to the next phase (switch or cancel)
+          if (bagPendingItem) {
+            console.info('Bag item selected while in PARTY phase, switching to WAITING_BAG');
+            waitingForBag = true;
+            phase = 'WAITING_BAG';
+            return;
+          }
+
+          if (selectedPartyIndex >= 0 && hasActiveGame() && !bagPendingItem) {
             const pd = getPlayerData();
             const chosenIndex = selectedPartyIndex;
             const chosen = pd.party[chosenIndex];
@@ -5854,16 +5874,22 @@ export function createBattleScene(
             clearSelectedPartyIndex();
             if (player.hp <= 0) {
               // Active Pokemon is fainted — must switch, can't cancel
-              setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
               clearSelectedPartyIndex();
               waitingForParty = true;
               isForcedFaintSwitch = true;
-              stateMachine.push('PARTY');
+              const partyScene = createPartyReactScene(stateMachine, {
+                kind: 'battle',
+                maxSize: maxRosterSize,
+                roster: battleRoster,
+                inBattleUUID: null,
+              });
+              stateMachine.pushDirect('PARTY', partyScene);
             } else {
               // No selection (user pressed Esc in party)
               enterSelectMovePhase();
             }
           }
+
           previousLeadId = null;
           break;
         }

@@ -2,7 +2,7 @@
   "1": {
     "name": {
       "en": "Hardy",
-      "he": "Hardy"
+      "he": "קשוח"
     },
     "increasedStat": null,
     "decreasedStat": null
@@ -10,7 +10,7 @@
   "2": {
     "name": {
       "en": "Bold",
-      "he": "Bold"
+      "he": "נועז"
     },
     "increasedStat": "defense",
     "decreasedStat": "attack"
@@ -18,7 +18,7 @@
   "3": {
     "name": {
       "en": "Modest",
-      "he": "Modest"
+      "he": "צנוע"
     },
     "increasedStat": "specialAttack",
     "decreasedStat": "attack"
@@ -26,7 +26,7 @@
   "4": {
     "name": {
       "en": "Calm",
-      "he": "Calm"
+      "he": "רגוע"
     },
     "increasedStat": "specialDefense",
     "decreasedStat": "attack"
@@ -34,7 +34,7 @@
   "5": {
     "name": {
       "en": "Timid",
-      "he": "Timid"
+      "he": "ביישן"
     },
     "increasedStat": "speed",
     "decreasedStat": "attack"
@@ -42,7 +42,7 @@
   "6": {
     "name": {
       "en": "Lonely",
-      "he": "Lonely"
+      "he": "בודד"
     },
     "increasedStat": "attack",
     "decreasedStat": "defense"
@@ -50,7 +50,7 @@
   "7": {
     "name": {
       "en": "Docile",
-      "he": "Docile"
+      "he": "צייתן"
     },
     "increasedStat": null,
     "decreasedStat": null
@@ -58,7 +58,7 @@
   "8": {
     "name": {
       "en": "Mild",
-      "he": "Mild"
+      "he": "עדין"
     },
     "increasedStat": "specialAttack",
     "decreasedStat": "defense"
@@ -66,7 +66,7 @@
   "9": {
     "name": {
       "en": "Gentle",
-      "he": "Gentle"
+      "he": "חביב"
     },
     "increasedStat": "specialDefense",
     "decreasedStat": "defense"
@@ -74,7 +74,7 @@
   "10": {
     "name": {
       "en": "Hasty",
-      "he": "Hasty"
+      "he": "פזיז"
     },
     "increasedStat": "speed",
     "decreasedStat": "defense"
@@ -82,7 +82,7 @@
   "11": {
     "name": {
       "en": "Adamant",
-      "he": "Adamant"
+      "he": "נחוש"
     },
     "increasedStat": "attack",
     "decreasedStat": "specialAttack"
@@ -90,7 +90,7 @@
   "12": {
     "name": {
       "en": "Impish",
-      "he": "Impish"
+      "he": "שובב"
     },
     "increasedStat": "defense",
     "decreasedStat": "specialAttack"
@@ -98,7 +98,7 @@
   "13": {
     "name": {
       "en": "Bashful",
-      "he": "Bashful"
+      "he": "ביישן"
     },
     "increasedStat": null,
     "decreasedStat": null
@@ -106,7 +106,7 @@
   "14": {
     "name": {
       "en": "Careful",
-      "he": "Careful"
+      "he": "זהיר"
     },
     "increasedStat": "specialDefense",
     "decreasedStat": "specialAttack"
@@ -114,7 +114,7 @@
   "15": {
     "name": {
       "en": "Rash",
-      "he": "Rash"
+      "he": "נמהר"
     },
     "increasedStat": "specialAttack",
     "decreasedStat": "specialDefense"
@@ -122,7 +122,7 @@
   "16": {
     "name": {
       "en": "Jolly",
-      "he": "Jolly"
+      "he": "עליז"
     },
     "increasedStat": "speed",
     "decreasedStat": "specialAttack"
@@ -130,7 +130,7 @@
   "17": {
     "name": {
       "en": "Naughty",
-      "he": "Naughty"
+      "he": "שובב"
     },
     "increasedStat": "attack",
     "decreasedStat": "specialDefense"
@@ -138,7 +138,7 @@
   "18": {
     "name": {
       "en": "Lax",
-      "he": "Lax"
+      "he": "רשלן"
     },
     "increasedStat": "defense",
     "decreasedStat": "specialDefense"
@@ -146,7 +146,7 @@
   "19": {
     "name": {
       "en": "Quirky",
-      "he": "Quirky"
+      "he": "מוזר"
     },
     "increasedStat": null,
     "decreasedStat": null
@@ -154,7 +154,7 @@
   "20": {
     "name": {
       "en": "Naive",
-      "he": "Naive"
+      "he": "תמים"
     },
     "increasedStat": "speed",
     "decreasedStat": "specialDefense"
@@ -162,7 +162,7 @@
   "21": {
     "name": {
       "en": "Brave",
-      "he": "Brave"
+      "he": "אמיץ"
     },
     "increasedStat": "attack",
     "decreasedStat": "speed"
@@ -170,7 +170,7 @@
   "22": {
     "name": {
       "en": "Relaxed",
-      "he": "Relaxed"
+      "he": "נינוח"
     },
     "increasedStat": "defense",
     "decreasedStat": "speed"
@@ -178,7 +178,7 @@
   "23": {
     "name": {
       "en": "Quiet",
-      "he": "Quiet"
+      "he": "שקט"
     },
     "increasedStat": "specialAttack",
     "decreasedStat": "speed"
@@ -186,7 +186,7 @@
   "24": {
     "name": {
       "en": "Sassy",
-      "he": "Sassy"
+      "he": "חצוף"
     },
     "increasedStat": "specialDefense",
     "decreasedStat": "speed"
@@ -194,7 +194,7 @@
   "25": {
     "name": {
       "en": "Serious",
-      "he": "Serious"
+      "he": "רציני"
     },
     "increasedStat": null,
     "decreasedStat": null

@@ -925,31 +925,70 @@ export function applyRestEffect(pokemon: Pokemon, runtimeState: BattlePokemonRun
   return healed;
 }
 
+// export function applyHealPercent(pokemon: Pokemon, percent: number, tags?: MoveBattleBehaviorTag[]): number {
+//   const hours = new Date().getHours();
+//   const isMorning = hours >= 5 && hours < 12;
+//   const isEvening = hours >= 17 && hours < 21;
+//   const isNoon = hours >= 10 && hours < 14;
+
+//   // moonlight
+//   if (tags?.includes('moonlight')) {
+//     if (!isEvening) {
+//       percent *= 0.5;
+//     }
+//   } else if (tags?.includes('synthesis')) {
+//     if (!isMorning && !isNoon) {
+//       percent *= 0.5;
+//     }
+//   } else if (tags?.includes('morning-sun')) {
+//     if (!isMorning) {
+//       percent *= 0.5;
+//     }
+//   }
+
+//   const healAmount = Math.max(1, Math.floor((pokemon.maxHp * percent) / 100));
+//   const healed = Math.min(healAmount, pokemon.maxHp - pokemon.hp);
+//   pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
+//   return healed;
+// }
+
 export function applyHealPercent(pokemon: Pokemon, percent: number, tags?: MoveBattleBehaviorTag[]): number {
   const hours = new Date().getHours();
-  const isMorning = hours >= 5 && hours < 12;
-  const isEvening = hours >= 17 && hours < 21;
-  const isNoon = hours >= 10 && hours < 14;
 
-  // moonlight
-  if (tags?.includes('moonlight')) {
-    if (!isEvening) {
-      percent *= 0.5;
-    }
+  const PEAK_MORNING_SUN = 8; // שיא בבוקר (08:00)
+  const PEAK_SYNTHESIS = 12; // שיא בצהריים (12:00)
+  const PEAK_MOONLIGHT = 21; // שיא בלילה (21:00)
+
+  let multiplier = 1.0;
+
+  if (tags?.includes('morning-sun')) {
+    multiplier = calculateTimeMultiplier(hours, PEAK_MORNING_SUN);
   } else if (tags?.includes('synthesis')) {
-    if (!isMorning && !isNoon) {
-      percent *= 0.5;
-    }
-  } else if (tags?.includes('morning-sun')) {
-    if (!isMorning) {
-      percent *= 0.5;
-    }
+    multiplier = calculateTimeMultiplier(hours, PEAK_SYNTHESIS);
+  } else if (tags?.includes('moonlight')) {
+    multiplier = calculateTimeMultiplier(hours, PEAK_MOONLIGHT);
   }
+
+  percent *= multiplier;
 
   const healAmount = Math.max(1, Math.floor((pokemon.maxHp * percent) / 100));
   const healed = Math.min(healAmount, pokemon.maxHp - pokemon.hp);
   pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + healAmount);
+
+  // console.log({ percent, multiplier, healed, healAmount, hours });
+
   return healed;
+}
+
+function calculateTimeMultiplier(currentHour: number, peakHour: number): number {
+  const delta = Math.min(Math.abs(currentHour - peakHour), 24 - Math.abs(currentHour - peakHour));
+
+  // המרה של הדלתא (0 עד 12) לערך בין 1.0 (בשיא) ל-0.5 (בנקודה הרחוקה ביותר)
+  // משתמשים בפונקציית קוסינוס ליצירת דעיכה חלקה וטבעית
+  const cosValue = Math.cos((delta / 12) * Math.PI); // מחזיר ערך בין 1 ל-(1-)
+
+  // נרמול הטווח מ-[1, 1-] ל-[1.0, 0.5]
+  return 0.75 + 0.25 * cosValue;
 }
 
 export function applyTrapEndOfTurnEffect(target: Pokemon, runtimeState: BattlePokemonRuntimeState): TrapEffectResult {

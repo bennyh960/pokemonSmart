@@ -1,0 +1,186 @@
+import type { Pokemon } from '../../../types/index.js';
+import { useI18n } from '../../../ui-react/context/i18n-context.js';
+import { TYPE_BADGE } from '../../../data/type-constants.js';
+import { STATUS_LABEL, glowStyle, hpColor } from '../../../utils/util';
+import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
+import useGetPokemonSprite from '../../../ui-react/hooks/useGetPokemonSprite.js';
+
+export interface PokemonCardProps {
+  pokemon: Pokemon;
+  index: number;
+  isSelected: boolean;
+  isDragging: boolean;
+  isLeader: boolean;
+  disabled: boolean;
+  dragHandlers:
+    | {
+        onDragStart: (index: number) => void;
+        onDragOver: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
+        onDragEnd: () => void;
+      }
+    | undefined;
+  onClick: () => void;
+  onDoubleClick: () => void;
+}
+
+// ─── Component ───────────────────────────────────────────────────────────────
+export function PokemonCard({
+  pokemon,
+  index,
+  isSelected,
+  isDragging,
+  isLeader,
+  dragHandlers,
+  disabled,
+  onClick,
+  onDoubleClick,
+}: PokemonCardProps) {
+  const { locale } = useI18n();
+
+  const { sprite } = useGetPokemonSprite(pokemon.id, 'front');
+
+  const isFainted = pokemon.hp === 0;
+  const hpPct = Math.max(0, pokemon.hp / pokemon.maxHp);
+  const xpPct = Math.min(1, pokemon.xp / pokemon.xpToNext);
+  const primaryType = TYPE_BADGE[pokemon.types[0]];
+
+  return (
+    <div
+      draggable
+      onDoubleClick={onDoubleClick}
+      onDragStart={() => dragHandlers?.onDragStart(index)}
+      onDragOver={(e) => dragHandlers?.onDragOver(e, index)}
+      onDragEnd={dragHandlers?.onDragEnd}
+      onClick={() => {
+        if (!disabled) onClick();
+      }}
+      className={[
+        'relative flex flex-col rounded-[10px] select-none',
+        'bg-[#12141f] border-2 overflow-hidden',
+        'px-[12px] pt-[10px] pb-[8px] hover:bg-[#1a1d2e] transition-alls',
+        'w-full',
+        isFainted ? 'grayscale opacity-60 border-[#1a31ded8]' : 'border-[#2a2d42]',
+        isDragging ? 'opacity-50 scale-95' : '',
+        isSelected ? 'border-[var(--glow)]' : '',
+        disabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer',
+      ].join(' ')}
+      style={{
+        ...(isSelected && !isFainted ? glowStyle(primaryType.color) : {}),
+        ...(isSelected && !isFainted
+          ? {
+              boxShadow: '0 0 0 1px var(--glow-dim), inset 0 0 28px var(--glow-inner)',
+            }
+          : {}),
+      }}
+    >
+      {/* Radial wash anchored to the left (sprite side) */}
+      {isSelected && !isFainted && (
+        <div
+          className="pointer-events-none absolute inset-0 rounded-[8px]"
+          style={{
+            background: 'radial-gradient(ellipse 60% 80% at 28% 50%, var(--glow-inner) 0%, transparent 70%)',
+          }}
+        />
+      )}
+
+      {/* ── Top meta row ── */}
+      <div className="flex flex-row items-center justify-between mb-[6px] relative z-10">
+        <span className="font-mono text-[9px] text-[#fdfdfd]">#{String(pokemon.id).padStart(3, '0')}</span>
+        {isLeader && (
+          <span className="text-[10px] text-[#ffd24a]" style={{ textShadow: '1px 1px 0 #000' }}>
+            ★
+          </span>
+        )}
+        <span className="font-mono text-[9px] text-[#fdfdfd]">Lv. {pokemon.level}</span>
+      </div>
+
+      {/* ── Main body ── */}
+      <div className="flex flex-row items-center gap-[8px] relative z-10">
+        {/* Sprite — always left */}
+        <div className="w-[90px] h-[90px] shrink-0 flex items-center justify-center relative">
+          {isSelected && !isFainted && (
+            <div
+              className="absolute w-[80px] h-[80px] rounded-full z-0"
+              style={{ background: 'var(--glow-blob)', filter: 'blur(18px)' }}
+            />
+          )}
+          {sprite ? (
+            <img
+              src={sprite}
+              alt={pokemon.name}
+              className="w-[90px] h-[90px] object-contain relative z-10"
+              style={{ imageRendering: 'pixelated' }}
+            />
+          ) : (
+            <div className="w-[64px] h-[64px] bg-[#1a1d2e] animate-pulse" />
+          )}
+        </div>
+
+        {/* Info panel — always right */}
+        <div className="flex-1 flex flex-col gap-[5px] min-w-0">
+          {/* Name + gender */}
+          <div className="flex flex-row items-center gap-[5px]">
+            <h3 className="font-mono text-[13px] text-[#e8eaf6] whitespace-nowrap overflow-hidden text-ellipsis">
+              {getPokemonDisplayName(pokemon.id)}
+            </h3>
+          </div>
+
+          {/* Types — own line */}
+          <div className="flex flex-row items-center gap-1 flex-wrap">
+            {pokemon.types.map((t) => {
+              const b = TYPE_BADGE[t];
+              return (
+                <span
+                  key={t}
+                  className="font-mono text-[11px] px-[6px] py-[2px] rounded-[3px] text-white uppercase tracking-[0.5px] font-bold"
+                  style={{ backgroundColor: b.bg, border: `1px solid ${b.border}`, color: b.color }}
+                >
+                  {b[locale]}
+                </span>
+              );
+            })}
+          </div>
+
+          {/* HP bar */}
+          <div className="flex flex-col gap-[3px]">
+            <div className="flex flex-row items-center gap-[5px]">
+              <span className="font-mono text-[9px] text-[#546478] shrink-0">HP</span>
+              <div className="flex-1 h-[6px] bg-[#0c0e18] rounded-[3px] overflow-hidden border border-[#1e2130]">
+                <div
+                  className="h-full rounded-[3px] transition-all"
+                  style={{
+                    width: `${hpPct * 100}%`,
+                    backgroundColor: hpColor(pokemon.hp, pokemon.maxHp),
+                    marginLeft: 0,
+                  }}
+                />
+              </div>
+            </div>
+            <span className="font-mono text-[10px] text-[#c8d0f0]" style={{ textAlign: 'right' }}>
+              {pokemon.hp} / {pokemon.maxHp}
+            </span>
+          </div>
+
+          {/* Status tags — solid filled, same style as type badges */}
+          {pokemon.status && (
+            <div className="flex flex-row items-center gap-[4px] flex-wrap">
+              <span
+                className="font-mono text-[9px] px-[6px] py-[2px] rounded-[3px] text-white uppercase tracking-[0.5px]"
+                style={{
+                  backgroundColor: STATUS_LABEL[pokemon.status].color,
+                }}
+              >
+                {STATUS_LABEL[pokemon.status][locale]}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── EXP bar — always fills left→right ── */}
+      <div className="w-full h-[3px] bg-[#0c0e18] rounded-[2px] overflow-hidden mt-[8px] relative z-10">
+        <div className="h-full bg-[#3d6bce] rounded-[2px]" style={{ width: `${xpPct * 100}%` }} />
+      </div>
+    </div>
+  );
+}

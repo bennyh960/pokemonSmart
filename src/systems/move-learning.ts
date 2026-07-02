@@ -54,9 +54,9 @@ export function createMoveFromId(moveId: number): Move | null {
   };
 }
 
-export function setMoveLearningSession(session: MoveLearningSession): void {
-  activeMoveLearningSession = session;
-}
+// export function setMoveLearningSession(session: MoveLearningSession): void {
+//   activeMoveLearningSession = session;
+// }
 
 export function getMoveLearningSession(): MoveLearningSession | null {
   return activeMoveLearningSession;

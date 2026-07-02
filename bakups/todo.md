@@ -7,6 +7,10 @@
 [bug] - ariados immune to sleep powder somehow
 [bug] snorlax use curse but nothing happens
 [bug]- disabled move when disabled disapper in logic - is not disaper in the ui
+[bug][move] - perish song not have any effect
+[bug][move] - אגירה? יש מתקפה שלא עושה כלום
+[bug][move] - זכרון? יש מתקפה שלא עושה כלום
+[bug][move] - טבעת מים? יש מתקפה שלא עושה כלום
 
 <!-- fixed - need qa -->
 
@@ -25,3 +29,10 @@
 3. more instructions screens
 
 4. Hall of fame screen and data structure
+
+<!-- REACT -->
+
+DIARY
+MOVESET
+
+need to think on pp restore

@@ -3,7 +3,7 @@ import { uiRegistry } from './uiRegistry';
 
 export function createTouchManager(
   canvas: HTMLCanvasElement,
-  state: InputState,
+  _: InputState,
   onTap: (clientX: number, clientY: number) => void,
 ) {
   let startX = 0;

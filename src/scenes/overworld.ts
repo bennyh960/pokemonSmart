@@ -24,13 +24,11 @@ import {
   clearFlagInGameState,
   consumeRestoreNotifications,
 } from '../systems/game-state.js';
-import { setPartyMode } from './party';
 import {
   createMoveLearningQueueState,
   initializeMoveLearningQueue,
   nextMoveLearningQueueStep,
   resetMoveLearningQueueState,
-  setMoveLearningSession,
 } from '../systems/move-learning.js';
 import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
@@ -121,6 +119,7 @@ import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 import * as MovablePuzzle from '../systems/movable-puzzle.js';
 import { getMapWeather, isDaytime, renderNightOverlay, renderOverworldWeather } from '../systems/weather-system.js';
 import type { WeatherConditionId } from '../types/battle-metadata.js';
+import { createPartyReactScene } from '../scenesReact/party/index.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -699,6 +698,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       });
     } else if (npc.type === 'day-care') {
       const dc = npc as unknown as DayCareData;
+
       const pd = getPlayerData();
       const rtl = isRTL();
       const npcSpeaker = npc.name ? getLocalizedName(npc.name) : undefined;
@@ -720,12 +720,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           showListChoice(options, (idx) => {
             if (idx >= pd.party.length) return; // cancel
             const deposited = pd.party[idx];
+            dc.route = currentMapData?.label ?? { en: 'Unknown', he: 'לא ידוע' };
             const pokeName = getPokemonDisplayName(deposited.id);
             dayCareDeposit(pd, idx, dc);
             // Register phone contact on first deposit
             if (!pd.phoneContacts?.some((c) => c.trainerId === npc.id)) {
               if (!pd.phoneContacts) pd.phoneContacts = [];
-              const route = dc.route ?? { en: '', he: '' };
+              const route = dc.route ?? { en: 'Unknown', he: 'לא ידוע' };
+              // console.log(dc);
               pd.phoneContacts.push({
                 trainerId: npc.id,
                 trainerName: npc.name ?? { en: npc.id, he: npc.id },
@@ -1154,15 +1156,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
       case 'trade-evolution': {
         for (const pokemon of party) {
-          const evo = getRegularNextEvolution(pokemon.id);
-          if (evo && evo.trigger === 'trade') {
-            if (evo.item) {
-              const itemData = getItem(evo.item);
+          const allNNextEvo = getRegularNextEvolution(pokemon.id);
+          const tradeEvoNoItem = allNNextEvo.find((evo) => evo.trigger === 'trade' && !evo.item);
+          const tradeEvoAndItem = allNNextEvo.find((evo) => evo.trigger === 'trade' && evo.item);
 
-              if (!itemData || pokemon.heldItemId !== itemData.id) continue;
-              pokemon.heldItemId = null;
-            }
-            setEvolutionData(pokemon, evo);
+          if (tradeEvoNoItem) {
+            setEvolutionData(pokemon, tradeEvoNoItem);
+            stateMachine.push('EVOLUTION');
+            return true;
+          } else if (tradeEvoAndItem && tradeEvoAndItem.item === pokemon.heldItemId) {
+            setEvolutionData(pokemon, tradeEvoAndItem);
+            pokemon.heldItemId = null;
             stateMachine.push('EVOLUTION');
             return true;
           }
@@ -2355,9 +2359,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           return;
         }
         if (step.kind === 'open-session') {
-          setPartyMode('move-learning');
-          setMoveLearningSession(step.session);
-          stateMachine.push('PARTY');
+          const partyScene = createPartyReactScene(stateMachine, {
+            kind: 'move-learning',
+            session: step.session,
+          });
+
+          stateMachine.pushDirect('PARTY', partyScene);
           return;
         }
         resetMoveLearningQueueState(pendingDayCareMoveLearning);
@@ -3547,9 +3554,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // P key → Party
       if (input.isKeyPressed('p') || input.isKeyPressed('P')) {
-        setPartyMode('overworld');
         stateMachine.push('PARTY');
-        // hideHUD();
+
         return;
       }
 
