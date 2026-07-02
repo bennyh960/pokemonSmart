@@ -14,7 +14,7 @@
     "download-moves-sfx": "tsx scripts/download-move-sfx.ts",
     "deploy:old": "tsx scripts/deploy-gh-pages.ts",
     "cicd:old": "npm run build && npm run deploy:old",
-    "deploy": "gh-pages -d dist -m \"Deploying to GitHub Pages [skip ci]\" -t",
+    "deploy": "gh-pages --clean -d dist -m \"Deploying to GitHub Pages [skip ci]\" -t",
     "cicd": "npm run build && npm run deploy"
   },
   "devDependencies": {
