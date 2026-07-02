@@ -30,7 +30,6 @@ import {
   getMove,
   canLearnViaTM,
   getLearnLevelForMove,
-  getItemDisplayName,
 } from '../services/pokemon-data.js';
 import { getDamageClassLabel } from '../data/type-constants.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
@@ -41,7 +40,6 @@ import {
   initializeMoveLearningQueue,
   nextMoveLearningQueueStep,
   resetMoveLearningQueueState,
-  setMoveLearningSession,
 } from '../systems/move-learning.js';
 import { uiRegistry } from '../engine/input/uiRegistry.js';
 import { LOGICAL_WIDTH } from '../engine/config.js';
@@ -827,7 +825,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
               console.log('onSelect called with index:', index);
               return true;
             },
-            isEligible: (p) => true,
+            isEligible: () => true,
           });
           stateMachine.pushDirect('PARTY', partyScene);
           return;
