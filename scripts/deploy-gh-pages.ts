@@ -58,6 +58,17 @@ async function main(): Promise<void> {
   const userName = (await readGitConfig('user.name', repoRoot)) ?? 'GitHub Pages Deploy';
   const userEmail = (await readGitConfig('user.email', repoRoot)) ?? 'deploy@example.com';
 
+  /**
+   * למה משתמשים בתיקיית מטמון מקומית קבועה (.deploy_cache) ולא בתיקייה זמנית (tmpdir)?
+   *
+   * 1. מניעת שגיאת ENAMETOOLONG ב-Windows: חבילות כמו `gh-pages` משרשרות את שמות אלפי קבצי האודיו
+   *    שלנו לפקודה אחת ארוכה שקורסת ב-Windows. הסקריפט הזה משתמש ב-`git add .` ועוקף את המגבלה.
+   *
+   * 2. שימוש ב-Git Cache לחיסכון בזמן: על ידי שמירת תיקיית ה-`.git` הנסתרת בין ריצות, Git מזהה
+   *    שתיקיית האודיו (77MB) לא השתנתה. הוא מעלה ל-GitHub רק את קבצי ה-React (ה-JS וה-CSS)
+   *    החדשים, מה שמוריד את זמן ה-Deploy מ-3 דקות ל-15 שניות ומונע קריסות (Timeout) בשרת של GitHub.
+   */
+
   // שימוש בתיקיית מטמון קבועה בפרויקט במקום תיקייה זמנית שנמחקת
   const cacheDir = join(repoRoot, '.deploy_cache');
 
