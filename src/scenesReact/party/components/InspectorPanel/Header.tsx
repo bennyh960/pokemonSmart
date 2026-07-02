@@ -6,6 +6,7 @@ import { useI18n } from '../../../../ui-react/context/i18n-context';
 import { getItem } from '../../../../data/items';
 import { useMemo, type CSSProperties } from 'react';
 import type { PartyMode } from '../..';
+import useGetPokemonSprite from '../../../../ui-react/hooks/useGetPokemonSprite';
 
 interface InspectorHeaderProps {
   pokemon: Pokemon;
@@ -17,7 +18,8 @@ interface InspectorHeaderProps {
 export function InspectorHeader({ pokemon, isPokedexMode, mode, onEquipItem }: InspectorHeaderProps) {
   const { locale, t } = useI18n();
 
-  const spriteUrl = getPokemonSpriteUrl(pokemon.id);
+  const { sprite } = useGetPokemonSprite(pokemon.id, 'front');
+
   const displayName = getPokemonDisplayName(pokemon.id);
 
   const types = pokemon.types ?? [];
@@ -116,16 +118,18 @@ export function InspectorHeader({ pokemon, isPokedexMode, mode, onEquipItem }: I
 
         {/* SPRITE */}
         <div className="w-32 h-32 sm:w-40 sm:h-40 relative z-20 flex items-center justify-center">
-          <img
-            src={spriteUrl}
-            alt={displayName}
-            className="
+          {sprite && (
+            <img
+              src={sprite}
+              alt={displayName}
+              className="
               w-full h-full
               object-contain
               pixelated
               drop-shadow-[0_6px_16px_rgba(0,0,0,0.6)]
             "
-          />
+            />
+          )}
         </div>
 
         {/* INFO */}

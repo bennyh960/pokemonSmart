@@ -6,6 +6,7 @@ import { TYPE_BADGE } from '../../../data/type-constants.js';
 import { STATUS_LABEL, glowStyle, hpColor } from '../../../utils/util';
 import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
 import { getPokemonSpriteUrl } from '../../../utils/util.js';
+import useGetPokemonSprite from '../../../ui-react/hooks/useGetPokemonSprite.js';
 
 export interface PokemonCardProps {
   pokemon: Pokemon;
@@ -38,20 +39,8 @@ export function PokemonCard({
   onDoubleClick,
 }: PokemonCardProps) {
   const { locale } = useI18n();
-  const spriteUrl = getPokemonSpriteUrl(pokemon.id);
-  const [sprite, setSprite] = useState<string | null>(getCachedImage(spriteUrl)?.src ?? null);
 
-  useEffect(() => {
-    let dead = false;
-    loadImage(spriteUrl)
-      .then((img) => {
-        if (!dead) setSprite(img.src);
-      })
-      .catch(() => {});
-    return () => {
-      dead = true;
-    };
-  }, [pokemon.id, spriteUrl]);
+  const { sprite } = useGetPokemonSprite(pokemon.id, 'front');
 
   const isFainted = pokemon.hp === 0;
   const hpPct = Math.max(0, pokemon.hp / pokemon.maxHp);
