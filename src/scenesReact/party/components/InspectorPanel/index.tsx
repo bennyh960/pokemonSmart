@@ -10,7 +10,7 @@ import { getPokemonDisplayName } from '../../../../services/pokemon-data.js';
 import { getItem } from '../../../../data/items.js';
 import { useI18n } from '../../../../ui-react/context/i18n-context.js';
 import type { GameNotificationProps } from '../../../../ui-react/context/GameNotifications-context.js';
-import { useInputLayer } from '../../../../engine/inputManagerV2/index.js';
+import { useInputLayer } from '../../../../engine/inputManagerV2';
 
 interface IInspectorPanelProps {
   mode: PartyMode;

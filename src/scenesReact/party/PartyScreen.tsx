@@ -17,7 +17,7 @@ import { FloatingTextLayer } from '../../ui-react/componenets/FloatingText.tsx';
 import { useGameNotification } from '../../ui-react/context/GameNotifications-context.tsx';
 import { getMove, getMoveDisplayName, getPokemonDisplayName } from '../../services/pokemon-data.ts';
 import { clearMoveLearningSession } from '../../systems/move-learning.ts';
-import { useInputLayer } from '../../engine/inputManagerV2/index.ts';
+import { useInputLayer } from '../../engine/inputManagerV2';
 
 interface Props {
   onClose: () => void;
