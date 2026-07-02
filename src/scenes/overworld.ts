@@ -24,13 +24,11 @@ import {
   clearFlagInGameState,
   consumeRestoreNotifications,
 } from '../systems/game-state.js';
-import { setPartyMode } from './party';
 import {
   createMoveLearningQueueState,
   initializeMoveLearningQueue,
   nextMoveLearningQueueStep,
   resetMoveLearningQueueState,
-  setMoveLearningSession,
 } from '../systems/move-learning.js';
 import { setBagMode } from '../scenes/bag.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
@@ -121,6 +119,7 @@ import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 import * as MovablePuzzle from '../systems/movable-puzzle.js';
 import { getMapWeather, isDaytime, renderNightOverlay, renderOverworldWeather } from '../systems/weather-system.js';
 import type { WeatherConditionId } from '../types/battle-metadata.js';
+import { createPartyReactScene } from '../scenesReact/party/index.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -2360,9 +2359,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           return;
         }
         if (step.kind === 'open-session') {
-          setPartyMode('move-learning');
-          setMoveLearningSession(step.session);
-          stateMachine.push('PARTY');
+          const partyScene = createPartyReactScene(stateMachine, {
+            kind: 'move-learning',
+            session: step.session,
+          });
+
+          stateMachine.pushDirect('PARTY', partyScene);
           return;
         }
         resetMoveLearningQueueState(pendingDayCareMoveLearning);
@@ -3552,8 +3554,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // P key → Party
       if (input.isKeyPressed('p') || input.isKeyPressed('P')) {
-        setPartyMode('overworld');
         stateMachine.push('PARTY');
+
         return;
       }
 

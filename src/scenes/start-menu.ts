@@ -10,7 +10,6 @@ import { applyDirectItemEffect, consumeItem } from '../systems/item-effects.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setPokedexBadgesMode } from './pokedex';
 import { setBagMode } from './bag.js';
-import { setPartyMode } from './party';
 import { openSaveSlots } from './save-slots.js';
 import { scheduleFishing, toggleLegend, isLegendVisible, setupWorldMapFly } from './overworld.js';
 
@@ -54,7 +53,6 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
         stateMachine.push('POKEDEX');
         break;
       case 'party':
-        setPartyMode('overworld');
         stateMachine.pop();
         stateMachine.push('PARTY');
         break;

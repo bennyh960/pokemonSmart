@@ -111,7 +111,7 @@ import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText } from '../../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenes/bag.js';
 import { setPokedexFocus } from '.././pokedex';
-import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from '.././party';
+import { selectedPartyIndex, clearSelectedPartyIndex } from '.././party';
 import { setEvolutionData } from '.././evolution.js';
 import {
   calcHappiness,
@@ -3271,14 +3271,6 @@ export function createBattleScene(
     activeMoveLearningPrompt = null;
     pendingMoveLearningResolution = null;
     pendingMoveLearningPhase = phaseAfterResolution;
-    // setPartyMode('move-learning');
-    // setMoveLearningSession(
-    //   createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
-    //     pendingMoveLearningResolution = resolution;
-    //   }),
-    // );
-    // stateMachine.push('PARTY');
-    // !TODO: Implement a React-based party scene for move learning instead of using the old scene system
 
     const session = createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
       pendingMoveLearningResolution = resolution;
@@ -5129,7 +5121,6 @@ export function createBattleScene(
           textBox = createTextBox([t('battle.noOtherPokemon')], isRTL());
           phase = 'INTRO';
         } else {
-          setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
           clearSelectedPartyIndex();
           previousLeadId = player.id;
           waitingForParty = true;
@@ -5756,7 +5747,6 @@ export function createBattleScene(
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
             clearSelectedPartyIndex();
             previousLeadId = player.id;
             waitingForParty = true;
@@ -5884,8 +5874,6 @@ export function createBattleScene(
             clearSelectedPartyIndex();
             if (player.hp <= 0) {
               // Active Pokemon is fainted — must switch, can't cancel
-              // !depercated : delete after finish reacr refactor
-              // setPartyMode('battle', undefined, undefined, { roster: battleRoster, maxSize: maxRosterSize });
               clearSelectedPartyIndex();
               waitingForParty = true;
               isForcedFaintSwitch = true;
@@ -5895,7 +5883,6 @@ export function createBattleScene(
                 roster: battleRoster,
                 inBattleUUID: null,
               });
-              // !refactor react: todo- test it
               stateMachine.pushDirect('PARTY', partyScene);
             } else {
               // No selection (user pressed Esc in party)

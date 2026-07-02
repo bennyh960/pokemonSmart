@@ -22,7 +22,7 @@ import {
   isDirectUseItem,
   canUseItemOnPokemon,
 } from '../systems/item-effects.js';
-import { setPartyMode, selectedPartyIndex, clearSelectedPartyIndex } from './party';
+import { selectedPartyIndex, clearSelectedPartyIndex } from './party';
 import {
   getPokemonDisplayName,
   getLocalizedName,
@@ -30,6 +30,7 @@ import {
   getMove,
   canLearnViaTM,
   getLearnLevelForMove,
+  getItemDisplayName,
 } from '../services/pokemon-data.js';
 import { getDamageClassLabel } from '../data/type-constants.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
@@ -631,10 +632,6 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         return;
       }
       if (moveLearningStep.kind === 'open-session') {
-        // !CANVAS DEPERCATED : TODO : DELETE WHEN REACT END
-        // setPartyMode('move-learning');
-        // !REACT NEW REFACTOR: DIDNT TESTED YET
-        // setMoveLearningSession(moveLearningStep.session);
         const partyScene = createPartyReactScene(stateMachine, {
           kind: 'move-learning',
           session: moveLearningStep.session,
@@ -659,7 +656,9 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       if (chosenIndex >= 0) {
         const pd = getPlayerData();
         const target = pd.party[chosenIndex];
-        if (target) {
+        const itemData = getItem(pendingOverworldItemId);
+        const isHeldItem = itemData?.category === 'held';
+        if (target && !isHeldItem) {
           // Check if this is a TM/HM — handle separately
           const tmEffect = getTMEffect(pendingOverworldItemId);
           if (tmEffect) {
@@ -702,6 +701,21 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             message = result.message;
           }
           messageTimer = 2.0;
+        } else if (isHeldItem && target) {
+          // Handle held item logic here
+          if (target.heldItemId) {
+            message = t('bag.heldItem.equippedAlready', { name: getPokemonDisplayName(target.id) });
+            messageTimer = 2.0;
+          } else {
+            target.heldItemId = pendingOverworldItemId;
+            consumeItem(pd.items, pendingOverworldItemId);
+            autoSave();
+            message = t('bag.heldItem.equipped', {
+              name: getPokemonDisplayName(target.id),
+              item: itemData.name[getLocale()],
+            });
+            messageTimer = 2.0;
+          }
         }
       }
       pendingOverworldItemId = null;
@@ -772,15 +786,6 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             }
             pendingOverworldItemId = item.id;
             waitingForPartyTarget = true;
-            //! canvas version : delete when finish with react
-            // setPartyMode('select-target', undefined, {
-            //   itemId: item.id,
-            //   itemName: getLocalizedName(item.def.name),
-            //   description: getLocalizedName(item.def.description),
-            // });
-            // stateMachine.push('PARTY');
-
-            //! React version : TODO : test it
             const partyScene = createPartyReactScene(stateMachine, {
               kind: 'select-target',
               itemId: item.id,
@@ -810,71 +815,23 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
             message = t('bag.cantUseHere');
             messageTimer = 1.5;
           }
-        }
-        // else if (item.def.category === 'held') {
-        //   waitingForPartyTarget = true;
-        //   //! canvas : old version (delete after react version is tested)
-        //   // setPartyMode(
-        //   //   'select-target',
-        //   //   (index) => {
-        //   //     const pd = getPlayerData();
-        //   //     const pokemon = pd.party[index];
-        //   //     if (!pokemon) return false;
-        //   //     if (pokemon.heldItemId) {
-        //   //       message = t('bag.heldItem.equippedAlready', { name: getPokemonDisplayName(pokemon.id) });
-        //   //       messageTimer = 2.0;
-        //   //       return false;
-        //   //     }
-
-        //   //     pokemon.heldItemId = item.id;
-        //   //     consumeItem(pd.items, item.id);
-        //   //     autoSave();
-        //   //     const pokeName = getPokemonDisplayName(pokemon.id);
-        //   //     const itemName = getLocalizedName(item.def.name);
-        //   //     message = t('bag.heldItem.equipped', { name: pokeName, item: itemName });
-        //   //     messageTimer = 2.0;
-        //   //     return true;
-        //   //   },
-        //   //   {
-        //   //     itemId: item.id,
-        //   //     itemName: getLocalizedName(item.def.name),
-        //   //     description: getLocalizedName(item.def.description),
-        //   //     isEligible: (pokemon: any) => !pokemon.heldItemId,
-        //   //   },
-        //   // );
-        //   // stateMachine.push('PARTY');
-        //   // ! React version : TODO : test it
-        //   const partyScene = createPartyReactScene(stateMachine, {
-        //     kind: 'select-target',
-        //     itemId: item.id,
-        //     itemName: getLocalizedName(item.def.name),
-        //     description: getLocalizedName(item.def.description),
-        //     isEligible: (pokemon) => !pokemon.heldItemId,
-        //     onSelect: (index) => {
-        //       const pd = getPlayerData();
-        //       const pokemon = pd.party[index];
-        //       if (!pokemon) return false;
-        //       if (pokemon.heldItemId) {
-        //         message = t('bag.heldItem.equippedAlready', { name: getPokemonDisplayName(pokemon.id) });
-        //         messageTimer = 2.0;
-        //         return false;
-        //       }
-        //       pokemon.heldItemId = item.id;
-        //       consumeItem(pd.items, item.id);
-        //       autoSave();
-        //       message = t('bag.heldItem.equipped', {
-        //         name: getPokemonDisplayName(pokemon.id),
-        //         item: getLocalizedName(item.def.name),
-        //       });
-        //       messageTimer = 2.0;
-        //       return true;
-        //     },
-        //   });
-        //   stateMachine.register('PARTY', partyScene);
-        //   stateMachine.push('PARTY');
-        //   return;
-        // }
-        else {
+        } else if (item.def.category === 'held') {
+          waitingForPartyTarget = true;
+          pendingOverworldItemId = item.id;
+          const partyScene = createPartyReactScene(stateMachine, {
+            kind: 'select-target',
+            itemId: item.id,
+            itemName: getLocalizedName(item.def.name),
+            description: getLocalizedName(item.def.description),
+            onSelect: (index) => {
+              console.log('onSelect called with index:', index);
+              return true;
+            },
+            isEligible: (p) => true,
+          });
+          stateMachine.pushDirect('PARTY', partyScene);
+          return;
+        } else {
           message = t('bag.cantUseHere');
           messageTimer = 1.5;
         }

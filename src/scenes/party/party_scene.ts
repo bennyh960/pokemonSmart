@@ -35,6 +35,21 @@ import { getItem, type ItemDef } from '../../data/items.js';
 import { uiRegistry } from '../../engine/input/uiRegistry.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
+/**
+ * @deprecated - Party scene is now React-based. This file is kept for reference and will be deleted after the React refactor is complete.
+ */
+
+/** Index of the Pokemon selected in battle/select-target mode (-1 = none). */
+export let selectedPartyIndex: number = -1;
+
+export function setPartyIndex(index: number): void {
+  selectedPartyIndex = index;
+}
+
+export function clearSelectedPartyIndex(): void {
+  selectedPartyIndex = -1;
+}
+
 const MAX_PARTY = 6;
 
 type ViewMode = 'list' | 'detail' | 'swap' | 'diary';
@@ -49,13 +64,6 @@ const MOVE_ACTIONS: MoveAction[] = ['swap', 'delete', 'cancel'];
 let partyMode: PartyMode = 'overworld';
 let onSelectCallback: ((index: number) => void) | null = null;
 
-/** Index of the Pokemon selected in battle/select-target mode (-1 = none). */
-export let selectedPartyIndex: number = -1;
-
-export function setPartyIndex(index: number): void {
-  selectedPartyIndex = index;
-}
-
 /** Context info shown when party is in select-target mode (item use). */
 let selectTargetContext: {
   itemId: string;
@@ -66,23 +74,6 @@ let selectTargetContext: {
 
 /** Battle roster context: tracks which party slots are committed and the max allowed. */
 let battleRosterCtx: { roster: Set<number>; maxSize: number } | null = null;
-
-export function setPartyMode(
-  mode: PartyMode,
-  callback?: (index: number) => void,
-  context?: { itemId: string; itemName: string; description: string; isEligible?: (pokemon: Pokemon) => boolean },
-  rosterCtx?: { roster: Set<number>; maxSize: number },
-): void {
-  partyMode = mode;
-  onSelectCallback = callback ?? null;
-  selectedPartyIndex = -1;
-  selectTargetContext = context ?? null;
-  battleRosterCtx = rosterCtx ?? null;
-}
-
-export function clearSelectedPartyIndex(): void {
-  selectedPartyIndex = -1;
-}
 
 export function createPartyScene(input: InputManager, stateMachine: StateMachine): Scene {
   let cursor = 0;
