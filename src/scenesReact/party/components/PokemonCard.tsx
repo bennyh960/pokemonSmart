@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
 import type { Pokemon } from '../../../types/index.js';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
-import { getCachedImage, loadImage } from '../../../engine/sprite-loader.js';
 import { TYPE_BADGE } from '../../../data/type-constants.js';
 import { STATUS_LABEL, glowStyle, hpColor } from '../../../utils/util';
 import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
-import { getPokemonSpriteUrl } from '../../../utils/util.js';
 import useGetPokemonSprite from '../../../ui-react/hooks/useGetPokemonSprite.js';
 
 export interface PokemonCardProps {
