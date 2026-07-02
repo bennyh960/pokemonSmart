@@ -35,10 +35,6 @@ import { getItem, type ItemDef } from '../../data/items.js';
 import { uiRegistry } from '../../engine/input/uiRegistry.js';
 // Screen is 240×160 — coordinates hardcoded from party_coordinated.md
 
-/**
- * @deprecated - Party scene is now React-based. This file is kept for reference and will be deleted after the React refactor is complete.
- */
-
 /** Index of the Pokemon selected in battle/select-target mode (-1 = none). */
 export let selectedPartyIndex: number = -1;
 
@@ -75,6 +71,9 @@ let selectTargetContext: {
 /** Battle roster context: tracks which party slots are committed and the max allowed. */
 let battleRosterCtx: { roster: Set<number>; maxSize: number } | null = null;
 
+/**
+ * @deprecated - Party scene is now React-based. This file is kept for reference and will be deleted after the React refactor is complete.
+ */
 export function createPartyScene(input: InputManager, stateMachine: StateMachine): Scene {
   let cursor = 0;
   let viewMode: ViewMode = 'list';
