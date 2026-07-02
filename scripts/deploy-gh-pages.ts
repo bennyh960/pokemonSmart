@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, rm, stat, writeFile, readdir } from 'node:fs/promises';
+import { cp, mkdir, rm, stat, writeFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
@@ -58,18 +58,7 @@ async function main(): Promise<void> {
   const userName = (await readGitConfig('user.name', repoRoot)) ?? 'GitHub Pages Deploy';
   const userEmail = (await readGitConfig('user.email', repoRoot)) ?? 'deploy@example.com';
 
-  /**
-   * למה משתמשים בתיקיית מטמון מקומית קבועה (.deploy_cache) ולא בתיקייה זמנית (tmpdir)?
-   *
-   * 1. מניעת שגיאת ENAMETOOLONG ב-Windows: חבילות כמו `gh-pages` משרשרות את שמות אלפי קבצי האודיו
-   *    שלנו לפקודה אחת ארוכה שקורסת ב-Windows. הסקריפט הזה משתמש ב-`git add .` ועוקף את המגבלה.
-   *
-   * 2. שימוש ב-Git Cache לחיסכון בזמן: על ידי שמירת תיקיית ה-`.git` הנסתרת בין ריצות, Git מזהה
-   *    שתיקיית האודיו (77MB) לא השתנתה. הוא מעלה ל-GitHub רק את קבצי ה-React (ה-JS וה-CSS)
-   *    החדשים, מה שמוריד את זמן ה-Deploy מ-3 דקות ל-15 שניות ומונע קריסות (Timeout) בשרת של GitHub.
-   */
-
-  // שימוש בתיקיית מטמון קבועה בפרויקט במקום תיקייה זמנית שנמחקת
+  // שימוש בתיקיית מטמון קבועה בפרויקט כדי לא להעלות מחדש 77MB של אודיו בכל ריצה
   const cacheDir = join(repoRoot, '.deploy_cache');
 
   // 1. אם התיקייה לא קיימת, ניצור אותה ונאתחל בה Git פעם אחת בלבד
@@ -93,14 +82,21 @@ async function main(): Promise<void> {
   await cp(distDir, cacheDir, { recursive: true });
   await writeFile(join(cacheDir, '.nojekyll'), '');
 
-  // 4. נבצע את פקודות ה-Git. מכיוון שהתיקייה שומרת היסטוריה, Git יזהה שהאודיו לא השתנה!
+  // 4. נבצע את פקודות ה-Git
   await run('git', ['add', '.'], cacheDir);
 
   try {
-    await run('git', ['commit', '-m', 'Deploy GitHub Pages [skip ci]'], cacheDir);
+    // שימוש ב-amend דורס את הקומיט הקודם ושומר תמיד על קומיט בודד בהיסטוריה.
+    // זה מונע מ-GitHub Actions להיתקע בחישובי גרסאות כבדים על תיקיית האודיו הגדולה.
+    await run('git', ['commit', '--amend', '--no-edit'], cacheDir);
   } catch {
-    console.log('⚡ No changes detected in build. Skipping push.');
-    return;
+    try {
+      // אם זו הריצה הראשונה ואין עדיין קומיט קודם לעשות לו amend, ניצור את הקומיט הראשון
+      await run('git', ['commit', '-m', 'Deploy GitHub Pages [skip ci]'], cacheDir);
+    } catch {
+      console.log('⚡ No changes detected in build. Skipping push.');
+      return;
+    }
   }
 
   if (dryRun) {
@@ -108,7 +104,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  // 5. העלאה מהירה לגיטהאב
+  // 5. העלאה מהירה לגיטהאב - פקודת ה-force דוחפת קומיט בודד קל והשרת של גיטהאב מעבד אותו מיד
   await run('git', ['push', '--force', repoUrl, `HEAD:${branch}`], cacheDir);
   console.log(`🚀 Deployed dist to ${branch} successfully via cache!`);
 }
