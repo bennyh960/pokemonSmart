@@ -37,5 +37,6 @@ export function createPartyReactScene(stateMachine: StateMachine, mode: PartyMod
     },
     update() {},
     render() {},
+    virtualControls: [],
   };
 }

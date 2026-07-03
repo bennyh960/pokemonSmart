@@ -162,7 +162,8 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
           width: 50,
           height: 20,
           onSelect: () => {
-            input.pressVirtualKey('l');
+            // input.pressVirtualKey('l');
+            input.tapVirtualKey('l');
           },
         })
         .render((config) => {
@@ -183,7 +184,8 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
           width: 50,
           height: 20,
           onSelect: () => {
-            input.pressVirtualKey('q');
+            // input.pressVirtualKey('q');
+            input.tapVirtualKey('q');
           },
         })
         .render((config) => {
@@ -206,7 +208,8 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
             width: txtWidth,
             height: 20,
             onSelect: () => {
-              input.pressVirtualKey('Enter');
+              // input.pressVirtualKey('Enter');
+              input.tapVirtualKey('Enter');
             },
           });
         }
@@ -231,7 +234,8 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
               height: 14,
               onSelect: () => {
                 selectedIndex = i;
-                input.pressVirtualKey('Enter');
+                // input.pressVirtualKey('Enter');
+                input.tapVirtualKey('Enter');
               },
               onHover: (isHovering) => {
                 if (isHovering) selectedIndex = i;

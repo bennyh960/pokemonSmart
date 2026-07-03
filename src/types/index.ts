@@ -1,5 +1,6 @@
 import type { MajorStatusId } from './battle-metadata.ts';
 import type { MapId } from '../data/maps/map-ids.js';
+import type { VirtualControlSpec } from '../engine/input/virtualControls.ts';
 
 /**
  * Shared TypeScript types and interfaces for Pokemon Math Adventure.
@@ -12,6 +13,8 @@ export interface Scene {
   exit(): void;
   update(dt: number): void;
   render(ctx: CanvasRenderingContext2D): void;
+  /** Touch controls this scene wants. Omit → full default overlay. */
+  virtualControls?: VirtualControlSpec[];
 }
 
 /** Scene identifiers used by the state machine. */

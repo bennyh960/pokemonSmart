@@ -12,7 +12,10 @@
 export interface InputState {
   keysDown: Set<string>;
   keysPressed: Set<string>;
-  virtualDown: Set<string>;
+  /** Held virtual keys (touch d-pad). Persist until releaseVirtualKey — NOT cleared per frame. */
+  virtualDownSticky: Set<string>;
+  /** One-shot virtual keys (region onSelect / menu clicks). Cleared every endFrame. */
+  virtualDownMomentary: Set<string>;
   virtualPressed: Set<string>;
   numberBuffer: string;
   textBuffer: string;

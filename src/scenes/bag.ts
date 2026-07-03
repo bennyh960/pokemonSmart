@@ -447,7 +447,8 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         width: 20,
         height: 8,
         onSelect() {
-          input.pressVirtualKey('Escape');
+          // input.pressVirtualKey('Escape');
+          input.tapVirtualKey('Escape');
         },
       })
       .render(({ isHovered, isActive, x, y, width }) => {
@@ -481,7 +482,8 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         width: 26,
         height: 8,
         onSelect() {
-          input.pressVirtualKey('Enter');
+          // input.pressVirtualKey('Enter');
+          input.tapVirtualKey('Enter');
         },
       })
       .render(({ isHovered, isActive, x, y, width }) => {
@@ -513,9 +515,11 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         height: 8,
         onSelect({ gamePos, x, width }) {
           if (gamePos.x < x + width / 2) {
-            input.pressVirtualKey('ArrowLeft');
+            // input.pressVirtualKey('ArrowLeft');
+            input.tapVirtualKey('ArrowLeft');
           } else {
-            input.pressVirtualKey('ArrowRight');
+            // input.pressVirtualKey('ArrowRight');
+            input.tapVirtualKey('ArrowRight');
           }
         },
       })
