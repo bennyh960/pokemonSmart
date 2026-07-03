@@ -1,4 +1,4 @@
-import type { InputManager } from '../inputManager';
+import type { InputManager } from '../InputManager';
 import type { Point } from '../types';
 
 /**

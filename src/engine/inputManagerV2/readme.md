@@ -3,6 +3,26 @@
 One authority for keyboard, mouse, and touch input, shared across React
 components and canvas/game-loop code in the same app.
 
+```
+input-manager/
+├── InputManager.ts
+├── types.ts
+├── index.ts
+├── adapters/
+│   ├── keyboardAdapter.ts
+│   ├── pointerAdapter.ts
+│   └── virtualButtonAdapter.ts
+├── dom/
+│   └── VirtualControlPad.ts
+├── utils/
+│   └── deviceDetection.ts
+└── react/
+    ├── useInputLayer.ts
+    ├── useInputStack.ts
+    ├── useIsTouchPrimary.ts
+    └── VirtualKeyButton.tsx
+```
+
 ## The core idea
 
 Separate **trigger** (a key, a click, a tap) from **action** (a semantic
@@ -158,6 +178,37 @@ reminder of which one you're matching.
   ambiguity structurally (topmost layer wins, deterministically), so
   there's less need for the dev-time duplicate warnings that model
   requires. If you want one anyway, it's a small addition to `push()`.
+
+## Touch support
+
+**Taps** already work with no extra code: `attachPointerAdapter` listens
+for `pointerdown`, which the Pointer Events API fires for mouse clicks,
+touch taps, and pen input alike — one adapter, one code path, regardless
+of device. For real DOM buttons, native `onClick` already fires on tap
+too; nothing manager-specific is needed there either.
+
+**Held/continuous input** (an on-screen d-pad button you hold to keep
+moving) needed two additions, since `heldKeys` was previously only ever
+populated by real `keydown`/`keyup`:
+
+```ts
+inputManager.pressVirtualKey('ArrowLeft'); // on pointerdown
+inputManager.releaseVirtualKey('ArrowLeft'); // on pointerup / pointerleave / pointercancel
+```
+
+`isKeyHeld(code, layerId)` doesn't care whether a code entered `heldKeys`
+via a physical key or a virtual press — so gameplay movement code needs
+**zero changes** to also work from touch. `react/VirtualKeyButton.tsx` is
+a ready-made button wired to both calls, including the touch-specific
+edge case where a finger slides off the button without a clean
+`pointerup` (handled via `onPointerLeave` + `onPointerCancel` — skipping
+either risks a permanently "stuck" held key).
+
+```tsx
+import { VirtualKeyButton } from './input-manager';
+
+<VirtualKeyButton code="ArrowLeft">◀</VirtualKeyButton>;
+```
 
 ## The one rule that makes all of this hold
 

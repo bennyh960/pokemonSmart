@@ -38,7 +38,13 @@ import { uiRegistry } from './input/uiRegistry.js';
 import { createTestScene } from '../scenes/test.scene.js';
 import { initReactHost } from './react/react-scene-host.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
-import { attachKeyboardAdapter, attachPointerAdapter, inputManager } from './inputManagerV2/index.js';
+import {
+  attachKeyboardAdapter,
+  attachPointerAdapter,
+  createVirtualControlPad,
+  inputManager,
+  isTouchPrimaryDevice,
+} from './inputManagerV2/index.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
@@ -53,17 +59,24 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   if (!ctx) throw new Error('Failed to get 2D rendering context.');
 
   ctx.imageSmoothingEnabled = false;
-  // render keys for touchpad
-  const uiOverlay = createVirtualUI();
-  container.appendChild(uiOverlay);
 
-  // input is old input system . we keep it for now until we fully migrate to inputManagerV2
+  //! old overlay render keys for touchpad - stop to let input v2 handle it
+  // const uiOverlay = createVirtualUI();
+  // container.appendChild(uiOverlay);
+
+  // @deprecated: to be repalced with v2
+  //input is old input system . we keep it for now until we fully migrate to inputManagerV2
   const input = createInputManager(canvas);
+
+  // V2 input system: pointer + keyboard adapters, plus the touchpad overlay
   const detachPointer = attachPointerAdapter(inputManager, canvas);
   const detachKeyboard = attachKeyboardAdapter(inputManager);
+  const pad = isTouchPrimaryDevice() || 1 > 0 ? createVirtualControlPad(container) : null;
+  console.log('[DEBUG] pad created:', pad);
+  console.log('[DEBUG] isTouchPrimaryDevice():', isTouchPrimaryDevice());
 
-  // the integration of the old input system with the touchpad overlay
-  setupMobileControls(input);
+  //!old input the integration of the old input system with the touchpad overlay
+  // setupMobileControls(input);
 
   const stateMachine = createStateMachine();
   const audio = createAudioManager();
@@ -73,6 +86,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   // Also auto-show/hide the HUD: visible only when on the OVERWORLD scene.
   stateMachine.setOnTransition(() => {
     input.endFrame();
+    inputManager.clearStack();
     if (stateMachine.currentId() === 'OVERWORLD') {
       showHUD();
     } else {
@@ -80,7 +94,8 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
     }
   });
 
-  stateMachine.register('TEST', createTestScene(input, stateMachine, audio)); // input done
+  // stateMachine.register('TEST', createTestScene(input, stateMachine, audio)); // input done
+  stateMachine.register('TEST', createTestScene(inputManager, stateMachine, audio, pad));
   stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio)); // input done
   stateMachine.register('HERO_SELECT', createHeroSelectScene(input, stateMachine));
   stateMachine.register('HERO_NAME_SELECT', createHeroNameSelectScene(input, stateMachine));
@@ -150,8 +165,8 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
     start(): void {
       if (running) return;
       running = true;
-      stateMachine.change('TITLE');
-      // stateMachine.change('TEST');
+      // stateMachine.change('TITLE');
+      stateMachine.change('TEST');
       lastTime = performance.now();
       requestAnimationFrame(loop);
     },
@@ -162,6 +177,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
       running = false;
       window.removeEventListener('resize', handleResize);
       input.destroy();
+      pad?.destroy();
       container.removeChild(canvas);
       detachPointer();
       detachKeyboard();

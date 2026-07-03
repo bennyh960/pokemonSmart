@@ -39,6 +39,19 @@ export class InputManager {
 
   /** Push a layer onto the top of the stack. Returns a function that pops it. */
   push(layer: InputLayer): () => void {
+    if (import.meta.env?.DEV && this.stack.some((l) => l.id === layer.id)) {
+      // The most common real cause: a previous scene/component with the
+      // same layer id never called its cleanup — a leaked layer from a
+      // scene that thinks it already exited. Left unwarned, this is
+      // exactly the class of bug per-scene manager instances were meant
+      // to prevent, just happening silently instead of loudly.
+      console.warn(
+        `[InputManager] Layer id "${layer.id}" is being pushed while a layer with the ` +
+          `same id is already in the stack. This usually means the previous owner of this ` +
+          `id never called the unsubscribe function returned by push() — check for a missing ` +
+          `pop() / scene exit() / effect cleanup.`,
+      );
+    }
     this.stack.push(layer);
     this.notifyStack();
     return () => this.pop(layer.id);
@@ -48,6 +61,19 @@ export class InputManager {
     const index = this.stack.findIndex((l) => l.id === id);
     if (index === -1) return;
     this.stack.splice(index, 1);
+    this.notifyStack();
+  }
+
+  /**
+   * Empties the entire stack, unconditionally. Call this exactly once, in
+   * the state machine, on every scene transition — this is what
+   * guarantees a leaked layer from a scene that forgot to clean up can
+   * never survive into the next scene. This is the single place that
+   * safety lives, instead of every scene author needing to get push/pop
+   * exactly right.
+   */
+  clearStack(): void {
+    this.stack.length = 0;
     this.notifyStack();
   }
 
@@ -92,6 +118,27 @@ export class InputManager {
    */
   isKeyHeld(code: string, layerId: string): boolean {
     return this.isTopLayer(layerId) && this.heldKeys.has(code);
+  }
+
+  /**
+   * Mark a code as "held" from a non-keyboard source — an on-screen d-pad
+   * button, for instance. isKeyHeld() doesn't care whether a code got into
+   * heldKeys via a real keydown or this call; that's the point. A touch
+   * button and a physical key drive identical movement code with zero
+   * branching anywhere in gameplay logic.
+   */
+  pressVirtualKey(code: string): void {
+    this.heldKeys.add(code);
+  }
+
+  /**
+   * Release a code added via pressVirtualKey. Call this on pointerup AND
+   * pointerleave/pointercancel — a finger sliding off a button without a
+   * clean pointerup is a real failure mode on touch devices, and skipping
+   * either handler risks a permanently "stuck" held key.
+   */
+  releaseVirtualKey(code: string): void {
+    this.heldKeys.delete(code);
   }
 
   // ---------------------------------------------------------------------

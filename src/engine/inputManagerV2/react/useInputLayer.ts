@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { inputManager } from '../inputManager';
+import { inputManager } from '../InputManager';
 import type { InputActionEvent, KeyBinding, PointerHitTest, InputLayer } from '../types';
 
 export interface UseInputLayerOptions {

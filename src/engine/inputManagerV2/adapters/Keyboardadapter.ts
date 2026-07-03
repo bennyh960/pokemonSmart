@@ -1,4 +1,4 @@
-import type { InputManager } from '../inputManager';
+import type { InputManager } from '../InputManager';
 
 /**
  * Attaches the ONE global keyboard listener pair for the entire app and

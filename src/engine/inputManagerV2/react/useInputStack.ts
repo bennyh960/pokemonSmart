@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { inputManager } from '../inputManager';
+import { inputManager } from '../InputManager';
 import type { InputLayer } from '../types';
 
 /**
