@@ -59,6 +59,7 @@ export function createTestScene(
           }
         },
       });
+      console.log('[TestScene] pushed. Stack should have test-scene now.');
     },
     exit(): void {
       unsubscribe?.();

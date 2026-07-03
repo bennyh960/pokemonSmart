@@ -72,8 +72,6 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   const detachPointer = attachPointerAdapter(inputManager, canvas);
   const detachKeyboard = attachKeyboardAdapter(inputManager);
   const pad = isTouchPrimaryDevice() || 1 > 0 ? createVirtualControlPad(container) : null;
-  console.log('[DEBUG] pad created:', pad);
-  console.log('[DEBUG] isTouchPrimaryDevice():', isTouchPrimaryDevice());
 
   //!old input the integration of the old input system with the touchpad overlay
   // setupMobileControls(input);
@@ -86,6 +84,8 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   // Also auto-show/hide the HUD: visible only when on the OVERWORLD scene.
   stateMachine.setOnTransition(() => {
     input.endFrame();
+    console.log('[onTransition] about to clear stack');
+
     inputManager.clearStack();
     if (stateMachine.currentId() === 'OVERWORLD') {
       showHUD();

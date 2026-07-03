@@ -122,13 +122,40 @@ export class InputManager {
 
   /**
    * Mark a code as "held" from a non-keyboard source — an on-screen d-pad
-   * button, for instance. isKeyHeld() doesn't care whether a code got into
-   * heldKeys via a real keydown or this call; that's the point. A touch
-   * button and a physical key drive identical movement code with zero
-   * branching anywhere in gameplay logic.
+   * button, for instance — AND dispatch any discrete keyBinding for that
+   * code, exactly like a real keydown would.
+   *
+   * This was the missing piece: heldKeys alone only serves isKeyHeld()
+   * (continuous/polled input). A virtual button meant to trigger a
+   * discrete action — like this app's "Party" button mapped to KeyX —
+   * needs to go through the SAME dispatch walk a real keydown does, or it
+   * silently does nothing beyond marking a key "held" that nothing polls.
+   *
+   * One real limitation versus a physical keydown: this can't express
+   * modifier combinations (Ctrl+X, etc.) — a virtual button has no
+   * concept of "held while also pressing Ctrl." Only bind virtual buttons
+   * to plain, unmodified keyBindings.
    */
   pressVirtualKey(code: string): void {
     this.heldKeys.add(code);
+    this.dispatchVirtualCode(code);
+  }
+
+  private dispatchVirtualCode(code: string): void {
+    for (let i = this.stack.length - 1; i >= 0; i--) {
+      const layer = this.stack[i];
+      const binding = layer.keyBindings?.find((b) => b.code === code && !b.ctrl && !b.shift && !b.alt && !b.meta);
+      if (binding) {
+        layer.onAction(binding.action, { source: 'pointer' });
+        this.log({ source: 'pointer', trigger: code, layer: layer.name, action: binding.action });
+        return;
+      }
+      if (layer.blocksLowerLayers) {
+        this.log({ source: 'pointer', trigger: code, layer: layer.name, action: null, note: 'blocked' });
+        return;
+      }
+    }
+    this.log({ source: 'pointer', trigger: code, layer: '(none)', action: null, note: 'unhandled' });
   }
 
   /**

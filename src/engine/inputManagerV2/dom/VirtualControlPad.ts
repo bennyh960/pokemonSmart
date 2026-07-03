@@ -1,4 +1,5 @@
 import { attachVirtualButton } from '../adapters/virtualButtonAdapter';
+import './virtualControlPad.css';
 
 export interface ExtraKeyConfig {
   code: string;

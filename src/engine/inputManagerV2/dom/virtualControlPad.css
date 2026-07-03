@@ -1,0 +1,90 @@
+.virtual-control-pad {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* container itself shouldn't block canvas clicks */
+  z-index: 1000;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.virtual-control-pad button {
+  position: absolute;
+  pointer-events: auto; /* re-enable just for the buttons themselves */
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font:
+    600 12px/1 system-ui,
+    sans-serif;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none; /* stop scroll/zoom gestures from hijacking taps */
+  transition:
+    background 0.1s ease,
+    transform 0.1s ease;
+}
+
+.virtual-control-pad button:active {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0.9);
+}
+
+/* D-pad cluster, bottom-left, safe-area aware for notched phones */
+.virtual-control-pad button[data-code='ArrowUp'] {
+  left: 76px;
+  bottom: calc(128px + env(safe-area-inset-bottom));
+}
+.virtual-control-pad button[data-code='ArrowDown'] {
+  left: 76px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+}
+.virtual-control-pad button[data-code='ArrowLeft'] {
+  left: 20px;
+  bottom: calc(74px + env(safe-area-inset-bottom));
+}
+.virtual-control-pad button[data-code='ArrowRight'] {
+  left: 132px;
+  bottom: calc(74px + env(safe-area-inset-bottom));
+}
+
+/* Action buttons, bottom-right */
+.virtual-control-pad button[data-code='Enter'] {
+  right: 20px;
+  bottom: calc(90px + env(safe-area-inset-bottom));
+  width: 60px;
+  height: 60px;
+}
+.virtual-control-pad button[data-code='Space'] {
+  right: 90px;
+  bottom: calc(30px + env(safe-area-inset-bottom));
+  width: 60px;
+  height: 60px;
+}
+
+/* The 5 scene-specific extra slots — top-right row */
+.virtual-extra-slot {
+  top: calc(16px + env(safe-area-inset-top));
+  width: 44px;
+  height: 44px;
+}
+.virtual-extra-slot:nth-of-type(7) {
+  right: 16px;
+}
+.virtual-extra-slot:nth-of-type(8) {
+  right: 68px;
+}
+.virtual-extra-slot:nth-of-type(9) {
+  right: 120px;
+}
+.virtual-extra-slot:nth-of-type(10) {
+  right: 172px;
+}
+.virtual-extra-slot:nth-of-type(11) {
+  right: 224px;
+}
