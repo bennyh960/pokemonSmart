@@ -10,7 +10,7 @@ import { setEvolutionData } from '../../../../scenes/evolution';
 import type { StateMachine } from '../../../../engine/state-machine';
 import { spawnFloatingText } from '../../../../ui-react/componenets/FloatingText';
 import { useRef } from 'react';
-import { useInputLayer } from '../../../../engine/inputManagerV2';
+import { useInputLayer } from '../../../../engine/input';
 
 interface IQuickActionsProps {
   mode: PartyMode;

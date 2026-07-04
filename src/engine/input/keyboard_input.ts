@@ -105,10 +105,11 @@ export function toCode(key: string): string {
 
 const PREVENTED_CODES = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Space']);
 
-export function createKeyboardInput(state: InputState) {
+export function createKeyboardInput(state: InputState, onFreshKeyDown?: (code: string, e: KeyboardEvent) => void) {
   function handleKeyDown(e: KeyboardEvent): void {
     const code = e.code;
-    if (!state.keysDown.has(code)) {
+    const isFresh = !state.keysDown.has(code); // capture BEFORE adding
+    if (isFresh) {
       state.keysPressed.add(code);
     }
     state.keysDown.add(code);
@@ -130,6 +131,8 @@ export function createKeyboardInput(state: InputState) {
     if (PREVENTED_CODES.has(code)) {
       e.preventDefault();
     }
+
+    if (isFresh) onFreshKeyDown?.(code, e);
   }
 
   function handleKeyUp(e: KeyboardEvent): void {

@@ -5,7 +5,8 @@ import type { PlayerData, Pokemon } from '../../../../types';
 import { createPartyReactScene, type PartyMode } from '../..';
 import { getPokemonSpriteUrl } from '../../../../utils/util';
 import { AwayPokemonModal } from './AwayPokemon';
-import { useInputLayer } from '../../../../engine/inputManagerV2';
+// import { useInputLayer } from '../../../../engine/inputManagerV2';
+import { useInputLayer } from '../../../../engine/input';
 import type { StateMachine } from '../../../../engine/state-machine';
 import { setPokedexMapContext } from '../../../../scenes/world-map';
 

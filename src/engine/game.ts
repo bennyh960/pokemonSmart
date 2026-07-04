@@ -9,7 +9,7 @@
  */
 
 import { createStateMachine } from './state-machine.js';
-import { createInputManager, createVirtualUI, setupMobileControls } from './input';
+import { createInputManager, createVirtualUI, setActiveInput, setupMobileControls } from './input';
 import { createAudioManager, setGlobalAudio } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle';
@@ -35,16 +35,8 @@ import '../data/story/content/index.js';
 import '../data/story/global-gate-config.js';
 import { LOGICAL_WIDTH, LOGICAL_HEIGHT, RES_SCALE, CANVAS_WIDTH, CANVAS_HEIGHT } from './config.js';
 import { uiRegistry } from './input/uiRegistry.js';
-import { createTestScene } from '../scenes/test.scene.js';
 import { initReactHost } from './react/react-scene-host.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
-import {
-  attachKeyboardAdapter,
-  attachPointerAdapter,
-  createVirtualControlPad,
-  inputManager,
-  isTouchPrimaryDevice,
-} from './inputManagerV2/index.js';
 import { createVirtualControls } from './input/virtualControls.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
@@ -61,15 +53,10 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
 
   ctx.imageSmoothingEnabled = false;
 
-  // @deprecated: to be repalced with v2
-  //input is old input system . we keep it for now until we fully migrate to inputManagerV2
   const input = createInputManager(canvas);
-  const virtualControls = createVirtualControls(input, container);
+  setActiveInput(input);
 
-  // V2 input system: pointer + keyboard adapters, plus the touchpad overlay
-  const detachPointer = attachPointerAdapter(inputManager, canvas);
-  const detachKeyboard = attachKeyboardAdapter(inputManager);
-  // const pad = isTouchPrimaryDevice() || 1 > 0 ? createVirtualControlPad(container) : null;
+  const virtualControls = createVirtualControls(input, container);
 
   const stateMachine = createStateMachine();
   const audio = createAudioManager();
@@ -81,8 +68,6 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
     input.endFrame();
     virtualControls.applyLayout(stateMachine.current()?.virtualControls);
 
-    // v2
-    inputManager.clearStack();
     if (stateMachine.currentId() === 'OVERWORLD') {
       showHUD();
     } else {
@@ -175,10 +160,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
       input.destroy();
       virtualControls.destroy();
 
-      // pad?.destroy();
       container.removeChild(canvas);
-      detachPointer();
-      detachKeyboard();
     },
   };
 }

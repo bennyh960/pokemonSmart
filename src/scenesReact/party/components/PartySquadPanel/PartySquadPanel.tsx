@@ -5,7 +5,8 @@ import type { Pokemon } from '../../../../types';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import type { PartyMode } from '../..';
 import { getItem } from '../../../../data/items';
-import { useInputLayer } from '../../../../engine/inputManagerV2';
+// import { useInputLayer } from '../../../../engine/inputManagerV2';
+import { useInputLayer } from '../../../../engine/input';
 
 interface IPartySquadPanel {
   party: Pokemon[];
