@@ -3,8 +3,7 @@
  */
 
 import type { AudioManager } from '../audio/audio-manager';
-import type { InputManager, VirtualControlPad } from '../engine/inputManagerV2';
-// import type { InputManager } from '../engine/input';
+import type { InputManager } from '../engine/input';
 import { drawText } from '../engine/renderer';
 import type { StateMachine } from '../engine/state-machine';
 import { loadGameFromSlot } from '../systems/game-state';
@@ -34,19 +33,12 @@ const C = {
   USE_BTN_BRD: '#2a6a40',
 };
 
-export function createTestScene(
-  input: InputManager,
-  stateMachine: StateMachine,
-  _: AudioManager,
-  pad: VirtualControlPad | null,
-): Scene {
+export function createTestScene(input: InputManager, stateMachine: StateMachine, _: AudioManager): Scene {
   let unsubscribe: (() => void) | undefined;
 
   return {
     enter(): void {
       loadGameFromSlot(0);
-      pad?.setVisible([]);
-      pad?.setExtraKeys([{ code: 'KeyX', label: 'Party' }]);
 
       unsubscribe = input.push({
         id: 'test-scene',
@@ -63,7 +55,6 @@ export function createTestScene(
     },
     exit(): void {
       unsubscribe?.();
-      pad?.setExtraKeys([]);
     },
     update(_dt: number): void {
       // nothing to poll — the action above is discrete, driven by the

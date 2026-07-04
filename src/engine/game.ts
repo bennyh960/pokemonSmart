@@ -9,7 +9,7 @@
  */
 
 import { createStateMachine } from './state-machine.js';
-import { createInputManager, createVirtualUI, setActiveInput, setupMobileControls } from './input';
+import { createInputManager, setActiveInput } from './input';
 import { createAudioManager, setGlobalAudio } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle';
@@ -158,6 +158,10 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
       running = false;
       window.removeEventListener('resize', handleResize);
       input.destroy();
+      virtualControls.destroy();
+
+      setActiveInput(null);
+
       virtualControls.destroy();
 
       container.removeChild(canvas);
