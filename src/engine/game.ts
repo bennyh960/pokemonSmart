@@ -37,7 +37,6 @@ import { LOGICAL_WIDTH, LOGICAL_HEIGHT, RES_SCALE, CANVAS_WIDTH, CANVAS_HEIGHT }
 import { uiRegistry } from './input/uiRegistry.js';
 import { initReactHost } from './react/react-scene-host.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
-import { createVirtualControls } from './input/virtualControls.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
