@@ -659,8 +659,8 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
     },
     virtualControls: {
       custom: [
-        { id: 'v-pin', label: 'PIN', key: 'KeyE', className: 'v-pin-button' },
-        { id: 'v-delete', label: 'DEL', key: 'KeyR', className: 'v-delete-button' },
+        { id: 'v-pin', label: t('saveSlots.enterPin'), key: 'KeyE', className: 'v-pin-button' },
+        { id: 'v-delete', label: t('party.moves.delete'), key: 'KeyR', className: 'v-delete-button' },
       ],
     },
   };

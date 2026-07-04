@@ -63,7 +63,6 @@ const DEFAULT_NUMBERS: VirtualButtonSpec[] = [
   { id: 'v-num2', label: '2', key: 'Digit2' },
   { id: 'v-num3', label: '3', key: 'Digit3' },
   { id: 'v-num4', label: '4', key: 'Digit4' },
-  { id: 'v-num5', label: '5', key: 'Digit5' },
 ];
 
 /**

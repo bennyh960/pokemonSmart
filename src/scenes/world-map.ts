@@ -173,6 +173,9 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
   }
 
   return {
+    virtualControls: {
+      custom: [{ id: 'v-toggle-labels', label: t('worldMap.labelsHint'), key: 'KeyX' }],
+    },
     enter(): void {
       elapsed = 0;
       selectedIndex = 0;

@@ -5180,6 +5180,9 @@ export function createBattleScene(
   }
 
   return {
+    virtualControls: {
+      numbers: true,
+    },
     enter(): void {
       init();
       // Mark enemy Pokemon as seen in Pokedex

@@ -152,6 +152,16 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     return '#' + String(id).padStart(3, '0');
   }
 
+  function applyVirtualButtons() {
+    if (detailTab !== 'moves') return input.applyVirtualLayout({});
+    input.applyVirtualLayout({
+      numbers: [
+        { id: 'v-num1', label: '1', key: 'Digit1' },
+        { id: 'v-num2', label: '2', key: 'Digit2' },
+      ],
+    });
+  }
+
   return {
     enter(): void {
       selectedId = pendingPokedexFocus?.id ?? 1;
@@ -187,6 +197,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
     },
 
     update(_dt: number): void {
+      applyVirtualButtons();
       // H/B hotkeys only when not searching
       if (!searchQuery) {
         if (input.isKeyPressed('KeyH') && hasActiveGame()) {
