@@ -8,6 +8,7 @@
   pointer-events: none;
   font-family: sans-serif;
   user-select: none;
+  direction: ltr; /* override page-level RTL for button layout */
 }
 
 .gameTouchOverlay button {
@@ -41,7 +42,8 @@
   grid-area: down;
 }
 
-/* Action Panel Position opposite of the D-Pad */
+/* Custom scene action buttons (e.g. "Bag" / "Party" / "A" / "B") -
+   bottom-right column, same corner the old fixed A/B group used to own. */
 .virtualActions {
   position: absolute;
   bottom: 24px;
@@ -52,12 +54,7 @@
   gap: 12px;
 }
 
-.gbaActionGroup {
-  display: flex;
-  gap: 12px;
-}
-
-/* Dynamic Scene Option Grid (Numbers 1-5) */
+/* Numbers row - top center, unchanged position */
 .virtualMenuHotkeys {
   position: absolute;
   top: 12px;
@@ -67,9 +64,8 @@
   gap: 8px;
 }
 
-/* Universal Button Aesthetic styling */
-.ctrlBtn,
-.numBtn {
+/* Universal round button base (d-pad) */
+.ctrlBtn {
   background: rgba(40, 40, 40, 0.75);
   color: #fff;
   border: 2px solid #fff;
@@ -81,22 +77,80 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.utilityBtn {
-  width: 70px;
-  height: 34px;
-  border-radius: 6px;
-  font-size: 11px;
+.ctrlBtn:active {
+  background: #fff;
+  color: #000;
 }
 
+/* ESC - top-left, same row as the numbers, a bit larger/wider than a plain circle */
+.vEsc {
+  position: absolute;
+  top: 10px;
+  inset-inline-start: 16px;
+  width: 68px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+/* ENTER - big, centered on the right edge, styled to read as a keyboard Enter key */
+.vEnter {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 20px;
+  transform: translateY(-50%);
+  width: 88px;
+  height: 64px;
+  border-radius: 10px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  /* subtle "keycap" look: brighter face + inset highlight, distinct from round buttons */
+  background: rgba(60, 60, 65, 0.85);
+  border: 2px solid #fff;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* SPACE - wide bar at the bottom center, like a real spacebar */
+.vSpace {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(50%, 260px);
+  height: 42px;
+  border-radius: 10px;
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+
+/* Number hotkeys */
 .numBtn {
+  background: rgba(20, 20, 20, 0.85);
+  color: #fff;
+  border: 2px solid #fff;
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background: rgba(20, 20, 20, 0.85);
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.ctrlBtn:active,
 .numBtn:active {
   background: #fff;
   color: #000;
+}
+
+/* Custom scene-labeled action buttons (word labels like "Bag"/"Party", not
+   single letters) - pill/rect shape reads better for words than a circle.
+   Declared AFTER .ctrlBtn so it overrides its circular width/border-radius. */
+.customBtn {
+  border-radius: 8px;
+  width: auto;
+  min-width: 64px;
+  height: 40px;
+  padding: 0 14px;
+  font-size: 12px;
 }

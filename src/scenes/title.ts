@@ -112,12 +112,12 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
         return;
       }
       if (!showMenu) {
-        if (input.isKeyPressed('Enter') || input.isTapped()) showMenu = true;
+        if (input.isKeyPressed('Enter') || input.isKeyPressed('Space') || input.isTapped()) showMenu = true;
         return;
       }
       if (input.isKeyPressed('ArrowUp')) selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
       if (input.isKeyPressed('ArrowDown')) selectedIndex = (selectedIndex + 1) % menuItems.length;
-      if (input.isKeyPressed('Enter') || input.isTapped()) {
+      if (input.isKeyPressed('Enter') || input.isTapped() || input.isKeyPressed('Space')) {
         entered = true;
         const isLoad = getSlotIndex().length > 0 && selectedIndex === 0;
         if (isLoad) {
@@ -253,5 +253,11 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
       }
       drawText(ctx, 'v1.0.0', SCREEN_W - 4, SCREEN_H - 10, { size: 6, color: '#444466', align: 'right' });
     },
+    virtualControls: [
+      'utility',
+      'dpad',
+      { id: 'v-a', label: 'Quit', key: 'KeyQ' },
+      { id: 'v-b', label: 'Language', key: 'KeyL' },
+    ],
   };
 }

@@ -1,47 +1,42 @@
 /**
  * VirtualControls - scene-driven touch button overlay.
  *
- * Replaces the old static createVirtualUI() + setupMobileControls(). Instead of
- * building one fixed overlay at game start, each scene DECLARES which controls
- * it wants (see Scene.virtualControls). On every scene transition the game calls
- * applyLayout() with the active scene's declaration, and the overlay is rebuilt
- * to match. The overlay is therefore a pure function of "what's on top of the
- * scene stack" — it can't drift out of sync.
- *
- * Declaration model — REPLACE + PRESETS:
- *   - A scene declares the full set it wants; the overlay renders exactly that.
- *   - Declaring nothing (undefined) => the full default overlay.
- *   - Omitting a preset IS how you remove it (no explicit "remove").
- *   - Adding an extra is just listing a custom button (no explicit "add").
+ * Declaration model - REPLACE + PRESETS, with a new DEFAULT:
+ *   - Declaring nothing (undefined) => DEFAULT_PRESETS only: dpad + utility.
+ *     (NOT numbers, NOT custom buttons - those must be requested explicitly.)
+ *   - A scene declares the full set it wants beyond default; the overlay
+ *     renders exactly that (still replace, not additive-by-default).
+ *   - 'numbers'  -> all five number buttons.
+ *   - 'v-num1'   -> just that one button (any preset button's id works this
+ *                   way, e.g. 'v-up' alone for a partial d-pad).
+ *   - { id, label, key } -> a custom button (e.g. scene-labeled "Bag"/"A"/"B").
+ *     Custom buttons always render in the bottom-right actions column.
  *
  * Buttons use the STICKY virtual-key path (pressVirtualKey / releaseVirtualKey),
  * so holding a d-pad button produces continuous input until the finger lifts.
- *
- * The overlay lives in the DOM (not the canvas / uiRegistry) on purpose: the DOM
- * is the lowest layer both the canvas game and a future React UI can share, so
- * the same control system can serve both.
  */
 
 import type { InputManager } from '.';
 import styles from './mobileControls.module.css';
 
-/** Named bundles of standard buttons. */
-export type VirtualPreset = 'dpad' | 'ab' | 'utility' | 'numbers';
+/** Named bundles of standard buttons. 'ab' is gone - action buttons are always custom now. */
+export type VirtualPreset = 'dpad' | 'utility' | 'numbers';
 
-/** A one-off button a scene can add on top of (or instead of) presets. */
+/** A one-off button a scene declares (e.g. "Bag", "A", "B") - own label + key. */
 export interface VirtualButtonSpec {
-  /** Unique DOM id. */
   id: string;
-  /** Visible label. */
   label: string;
-  /** Key name passed to pressVirtualKey, e.g. 'ArrowUp', 'KeyZ', 'Digit1'. */
   key: string;
-  /** Optional extra class key from mobileControls.module.css. */
   className?: string;
 }
 
-/** A scene declares an array of these. A string picks a preset; an object adds a custom button. */
-export type VirtualControlSpec = VirtualPreset | VirtualButtonSpec;
+/**
+ * A scene declares an array of these:
+ *   - a VirtualPreset string   -> the whole named group
+ *   - any other string         -> one specific button id from a preset group
+ *   - a VirtualButtonSpec obj  -> a custom action button
+ */
+export type VirtualControlSpec = VirtualPreset | string | VirtualButtonSpec;
 
 const cssKey = (k: string): string => (styles as Record<string, string>)[k] ?? '';
 
@@ -52,14 +47,10 @@ const PRESET_BUTTONS: Record<VirtualPreset, VirtualButtonSpec[]> = {
     { id: 'v-right', label: '▶', key: 'ArrowRight', className: 'vRight' },
     { id: 'v-down', label: '▼', key: 'ArrowDown', className: 'vDown' },
   ],
-  ab: [
-    { id: 'v-b', label: 'B', key: 'KeyX' },
-    { id: 'v-a', label: 'A', key: 'KeyZ' },
-  ],
   utility: [
-    { id: 'v-esc', label: 'ESC', key: 'Escape' },
-    { id: 'v-space', label: 'SPACE', key: 'Space' },
-    { id: 'v-enter', label: 'ENTER', key: 'Enter' },
+    { id: 'v-esc', label: 'ESC', key: 'Escape', className: 'vEsc' },
+    { id: 'v-enter', label: '⏎ ENTER', key: 'Enter', className: 'vEnter' },
+    { id: 'v-space', label: 'SPACE', key: 'Space', className: 'vSpace' },
   ],
   numbers: [
     { id: 'v-num1', label: '1', key: 'Digit1' },
@@ -70,20 +61,65 @@ const PRESET_BUTTONS: Record<VirtualPreset, VirtualButtonSpec[]> = {
   ],
 };
 
-const ALL_PRESETS: VirtualPreset[] = ['dpad', 'ab', 'utility', 'numbers'];
+const PRESET_NAMES: readonly VirtualPreset[] = ['dpad', 'utility', 'numbers'];
+const DEFAULT_PRESETS: VirtualPreset[] = ['dpad', 'utility'];
+
+// Flat id -> {preset, spec} lookup, built once, so any button can also be
+// picked individually by id (e.g. 'v-num1') without naming its whole preset.
+const BY_ID: Record<string, { preset: VirtualPreset; spec: VirtualButtonSpec }> = {};
+for (const preset of PRESET_NAMES) {
+  for (const spec of PRESET_BUTTONS[preset]) {
+    BY_ID[spec.id] = { preset, spec };
+  }
+}
+
+function isPresetName(s: string): s is VirtualPreset {
+  return (PRESET_NAMES as readonly string[]).includes(s);
+}
+
+interface ResolvedSpecs {
+  activePresets: Set<VirtualPreset>;
+  activeIds: Set<string>;
+  custom: VirtualButtonSpec[];
+}
+
+function resolveSpecs(specs?: VirtualControlSpec[]): ResolvedSpecs {
+  const list: VirtualControlSpec[] = specs === undefined ? DEFAULT_PRESETS : specs;
+  const activePresets = new Set<VirtualPreset>();
+  const activeIds = new Set<string>();
+  const custom: VirtualButtonSpec[] = [];
+
+  for (const item of list) {
+    if (typeof item === 'string') {
+      if (isPresetName(item)) {
+        activePresets.add(item);
+      } else if (BY_ID[item]) {
+        activeIds.add(item);
+      } else {
+        console.warn(`virtual_controls: unknown control id "${item}" - ignored.`);
+      }
+    } else {
+      custom.push(item);
+    }
+  }
+  return { activePresets, activeIds, custom };
+}
+
+/** Is this specific preset-group button active, either via its group or its own id? */
+function isActive(spec: VirtualButtonSpec, preset: VirtualPreset, r: ResolvedSpecs): boolean {
+  return r.activePresets.has(preset) || r.activeIds.has(spec.id);
+}
 
 export function createVirtualControls(input: InputManager, container: HTMLElement) {
   const overlay = document.createElement('div');
   overlay.className = cssKey('gameTouchOverlay');
   container.appendChild(overlay);
 
-  /** Attach press(hold)/release listeners for one button. */
   function wire(el: HTMLElement, key: string): void {
     const press = (e: Event) => {
       e.preventDefault();
       input.pressVirtualKey(key); // STICKY: stays down until release
       if (key.startsWith('Digit')) {
-        // Keep the numeric hotkey buffer in sync, as the old code did.
         input.injectNumberBuffer?.(key.replace('Digit', ''));
       }
     };
@@ -94,7 +130,7 @@ export function createVirtualControls(input: InputManager, container: HTMLElemen
 
     el.addEventListener('mousedown', press);
     el.addEventListener('mouseup', release);
-    el.addEventListener('mouseleave', release); // release if pointer slides off while held
+    el.addEventListener('mouseleave', release);
     el.addEventListener('touchstart', press, { passive: false });
     el.addEventListener('touchend', release);
   }
@@ -108,79 +144,56 @@ export function createVirtualControls(input: InputManager, container: HTMLElemen
     return btn;
   }
 
-  /**
-   * Rebuild the overlay to match the given declaration.
-   * Pass undefined for the full default overlay.
-   *
-   * Rebuilding drops the previous button nodes (and their listeners) wholesale,
-   * so there's nothing to manually tear down between layouts.
-   */
   function applyLayout(specs?: VirtualControlSpec[]): void {
     overlay.replaceChildren();
+    const resolved = resolveSpecs(specs);
 
-    const presets = new Set<VirtualPreset>();
-    const custom: VirtualButtonSpec[] = [];
-
-    if (specs === undefined) {
-      ALL_PRESETS.forEach((p) => presets.add(p));
-    } else {
-      for (const s of specs) {
-        if (typeof s === 'string') presets.add(s);
-        else custom.push(s);
-      }
-    }
-
-    // D-pad group
-    if (presets.has('dpad')) {
+    // D-pad: bottom-left grid, same as before, but only render buttons that
+    // are actually active (supports a partial d-pad via individual ids).
+    const dpadButtons = PRESET_BUTTONS.dpad.filter((b) => isActive(b, 'dpad', resolved));
+    if (dpadButtons.length > 0) {
       const dpad = document.createElement('div');
       dpad.className = cssKey('virtualDpad');
       dpad.setAttribute('dir', 'ltr');
-      for (const b of PRESET_BUTTONS.dpad) {
+      for (const b of dpadButtons) {
         dpad.appendChild(button(b, ['ctrlBtn', b.className!]));
       }
       overlay.appendChild(dpad);
     }
 
-    // Actions group: utility buttons + custom extras + A/B group
-    if (presets.has('utility') || presets.has('ab') || custom.length > 0) {
-      const actions = document.createElement('div');
-      actions.className = cssKey('virtualActions');
-      actions.setAttribute('dir', 'ltr');
-
-      if (presets.has('utility')) {
-        for (const b of PRESET_BUTTONS.utility) {
-          actions.appendChild(button(b, ['ctrlBtn', 'utilityBtn']));
-        }
+    // Utility: esc / enter / space each have their own bespoke position and
+    // shape now (not a stacked column), so handle them individually.
+    for (const b of PRESET_BUTTONS.utility) {
+      if (isActive(b, 'utility', resolved)) {
+        overlay.appendChild(button(b, ['ctrlBtn', b.className!]));
       }
-
-      for (const b of custom) {
-        actions.appendChild(button(b, b.className ? ['ctrlBtn', b.className] : ['ctrlBtn']));
-      }
-
-      if (presets.has('ab')) {
-        const group = document.createElement('div');
-        group.className = cssKey('gbaActionGroup');
-        for (const b of PRESET_BUTTONS.ab) {
-          group.appendChild(button(b, ['ctrlBtn']));
-        }
-        actions.appendChild(group);
-      }
-
-      overlay.appendChild(actions);
     }
 
-    // Number hotkeys
-    if (presets.has('numbers')) {
+    // Numbers: top-center row, unchanged position, optionally a subset.
+    const numberButtons = PRESET_BUTTONS.numbers.filter((b) => isActive(b, 'numbers', resolved));
+    if (numberButtons.length > 0) {
       const nums = document.createElement('div');
       nums.className = cssKey('virtualMenuHotkeys');
-      for (const b of PRESET_BUTTONS.numbers) {
+      for (const b of numberButtons) {
         nums.appendChild(button(b, ['numBtn']));
       }
       overlay.appendChild(nums);
     }
+
+    // Custom action buttons (scene-labeled, e.g. "Bag" / "Party" / "A" / "B"):
+    // always grouped in the bottom-right actions column.
+    if (resolved.custom.length > 0) {
+      const actions = document.createElement('div');
+      actions.className = cssKey('virtualActions');
+      actions.setAttribute('dir', 'ltr');
+      for (const b of resolved.custom) {
+        actions.appendChild(button(b, b.className ? ['ctrlBtn', 'customBtn', b.className] : ['ctrlBtn', 'customBtn']));
+      }
+      overlay.appendChild(actions);
+    }
   }
 
-  // Start with the full default overlay until the first scene transition applies its own.
+  // Start with the default overlay (dpad + utility) until the first scene applies its own.
   applyLayout();
 
   return {
@@ -193,11 +206,24 @@ export function createVirtualControls(input: InputManager, container: HTMLElemen
 
 export type VirtualControls = ReturnType<typeof createVirtualControls>;
 
-// Full default overlay — declare nothing:
-// (no virtualControls field on the scene)
-
-// Overworld: movement + confirm, no number row:
-// virtualControls: ['dpad', 'ab'],
-
-// Battle: numbers + confirm + a custom "Run" button:
-// virtualControls: ['numbers', 'ab', { id: 'v-run', label: 'RUN', key: 'KeyR' }],
+// Usage examples:
+//
+// Title screen - arrows + utility only, so declare NOTHING (this is now the default):
+//   // no virtualControls field
+//
+// A scene that wants numbers on top of the default dpad+utility:
+//   virtualControls: ['dpad', 'utility', 'numbers'],
+//
+// A scene that wants ONLY numbers (no dpad/utility at all):
+//   virtualControls: ['numbers'],
+//
+// A scene that wants just two specific number keys:
+//   virtualControls: ['dpad', 'utility', 'v-num1', 'v-num2'],
+//
+// Battle scene with labeled action buttons instead of raw A/B:
+//   virtualControls: [
+//     'dpad',
+//     'utility',
+//     { id: 'v-bag', label: 'Bag', key: 'KeyB' },
+//     { id: 'v-party', label: 'Party', key: 'KeyP' },
+//   ],

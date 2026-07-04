@@ -2,8 +2,19 @@ import { toCode, createKeyboardInput, type InputState } from './keyboard_input';
 import { createClickManager } from './click_manager';
 import { createTouchManager } from './touch_manager';
 import { createScrollManager } from './scroll_manager';
-import { createLayerStack } from './layer_stack.ts';
+import { createLayerStack } from './layer_stack';
+import { isTouchPrimaryDevice } from './device';
+import { createVirtualControls, type VirtualControlSpec } from './virtualControls';
 import type { InputLayer } from './react/types';
+
+export interface CreateInputManagerOptions {
+  /**
+   * If provided, the manager also owns the on-screen touch-button overlay
+   * (virtual_controls.ts) and mounts it into this element. Omit this if a
+   * game has no touch overlay — the manager works fine without it.
+   */
+  touchContainer?: HTMLElement;
+}
 
 /**
  * The one input manager, with two faces sharing v1's single keyboard:
@@ -11,10 +22,15 @@ import type { InputLayer } from './react/types';
  *   - POLL face  (canvas): isKeyDown / endFrame / ... read each frame.
  *   - LAYER face (React):  push(layer) -> unsubscribe, via getInput().
  *
+ * Creating the manager IS setting it up: it registers itself as the active
+ * instance (so React's getInput() can reach it) and, if a touchContainer is
+ * given, owns the virtual touch-button overlay too. destroy() reverses all
+ * of it. This means game.ts has exactly ONE call to make, not four.
+ *
  * The layer logic itself lives in layer_stack.ts (pure). This file just
  * COMPOSES the sub-managers and points the keyboard at the stack.
  */
-export function createInputManager(canvas: HTMLCanvasElement) {
+export function createInputManager(canvas: HTMLCanvasElement, options: CreateInputManagerOptions = {}) {
   const state: InputState = {
     keysDown: new Set(),
     keysPressed: new Set(),
@@ -46,7 +62,7 @@ export function createInputManager(canvas: HTMLCanvasElement) {
   const touch = createTouchManager(canvas, state, click.onInteraction);
   const scroll = createScrollManager(canvas);
 
-  return {
+  const manager = {
     // ================= POLL FACE (canvas) =================
     pressVirtualKey(key: string): void {
       const code = toCode(key);
@@ -126,6 +142,15 @@ export function createInputManager(canvas: HTMLCanvasElement) {
       // down until releaseVirtualKey, mirroring physical keysDown.
     },
 
+    // ================= TOUCH OVERLAY (optional) =================
+    /**
+     * Apply the active scene's virtual-button layout. No-op if this manager
+     * was created without a touchContainer. Call from setOnTransition.
+     */
+    applyVirtualLayout(specs?: VirtualControlSpec[]): void {
+      virtualControls?.applyLayout(specs);
+    },
+
     // ================= LAYER FACE (React) =================
     /** Push a React input layer; returns an unsubscribe. Used by useInputLayer. */
     push(layer: InputLayer): () => void {
@@ -139,6 +164,8 @@ export function createInputManager(canvas: HTMLCanvasElement) {
 
     // ================= lifecycle =================
     destroy(): void {
+      if (active === manager) active = null;
+      virtualControls?.destroy();
       layerStack.clear();
       keyboard.destroy();
       click.destroy();
@@ -146,23 +173,39 @@ export function createInputManager(canvas: HTMLCanvasElement) {
       scroll.destroy();
     },
   };
+
+  // Optional touch overlay, created AFTER `manager` exists so it can call
+  // manager.pressVirtualKey/releaseVirtualKey internally.
+  //
+  // Gated on isTouchPrimaryDevice(), checked ONCE here, not just on whether a
+  // container was passed. A mouse/keyboard machine gets no overlay DOM at all,
+  // regardless of what any scene declares via virtualControls — applyVirtualLayout
+  // becomes a no-op below. This overlay exists purely to mimic keyboard/click
+  // input for devices that lack them, so there's no case where it should show
+  // on a device that already has a precise pointer + keyboard.
+
+  const virtualControls =
+    options.touchContainer && isTouchPrimaryDevice() ? createVirtualControls(manager, options.touchContainer) : null;
+
+  // Register as the one active instance so React's getInput() can reach it.
+  // (See accessor below. Creating the manager IS activating it.)
+  active = manager;
+
+  return manager;
 }
 
 export type InputManager = ReturnType<typeof createInputManager>;
 
 // ---- Module accessor: how React reaches the one active instance ----------
-// createGame creates the instance and calls setActiveInput(input). React
-// components (via useInputLayer) call getInput() at effect time -- always after
-// the game has started -- so the guard below should never fire in practice.
+// Set automatically by createInputManager; cleared automatically by destroy().
+// game.ts never touches this directly. React components (via useInputLayer)
+// call getInput() at effect time -- always after the game has started -- so
+// the guard below should never fire in practice.
 let active: InputManager | null = null;
-
-export function setActiveInput(instance: InputManager | null): void {
-  active = instance;
-}
 
 export function getInput(): InputManager {
   if (!active) {
-    throw new Error('Input manager not initialized -- createGame must run setActiveInput(input) first.');
+    throw new Error('Input manager not initialized -- createInputManager must run before getInput() is called.');
   }
   return active;
 }

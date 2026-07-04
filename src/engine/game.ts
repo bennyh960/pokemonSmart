@@ -9,7 +9,7 @@
  */
 
 import { createStateMachine } from './state-machine.js';
-import { createInputManager, setActiveInput } from './input';
+import { createInputManager } from './input';
 import { createAudioManager, setGlobalAudio } from '../audio/audio-manager.js';
 import { createTitleScene } from '../scenes/title.js';
 import { createBattleScene } from '../scenes/battle';
@@ -53,10 +53,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
 
   ctx.imageSmoothingEnabled = false;
 
-  const input = createInputManager(canvas);
-  setActiveInput(input);
-
-  const virtualControls = createVirtualControls(input, container);
+  const input = createInputManager(canvas, { touchContainer: container });
 
   const stateMachine = createStateMachine();
   const audio = createAudioManager();
@@ -66,7 +63,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   // Also auto-show/hide the HUD: visible only when on the OVERWORLD scene.
   stateMachine.setOnTransition(() => {
     input.endFrame();
-    virtualControls.applyLayout(stateMachine.current()?.virtualControls);
+    input.applyVirtualLayout(stateMachine.current()?.virtualControls);
 
     if (stateMachine.currentId() === 'OVERWORLD') {
       showHUD();
@@ -158,11 +155,6 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
       running = false;
       window.removeEventListener('resize', handleResize);
       input.destroy();
-      virtualControls.destroy();
-
-      setActiveInput(null);
-
-      virtualControls.destroy();
 
       container.removeChild(canvas);
     },
