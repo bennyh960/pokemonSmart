@@ -657,5 +657,11 @@ export function createSaveSlotsScene(input: InputManager, stateMachine: StateMac
         drawText(ctx, pinFlashMessage, W / 2, H / 2 - 6, { size: 9, color: '#44aaff', align: 'center' });
       }
     },
+    virtualControls: {
+      custom: [
+        { id: 'v-pin', label: 'PIN', key: 'KeyE', className: 'v-pin-button' },
+        { id: 'v-delete', label: 'DEL', key: 'KeyR', className: 'v-delete-button' },
+      ],
+    },
   };
 }

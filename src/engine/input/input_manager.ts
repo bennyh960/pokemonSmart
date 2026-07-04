@@ -3,8 +3,8 @@ import { createClickManager } from './click_manager';
 import { createTouchManager } from './touch_manager';
 import { createScrollManager } from './scroll_manager';
 import { createLayerStack } from './layer_stack';
+import { createVirtualControls, type VirtualControlsConfig } from './virtualControls';
 import { isTouchPrimaryDevice } from './device';
-import { createVirtualControls, type VirtualControlSpec } from './virtualControls';
 import type { InputLayer } from './react/types';
 
 export interface CreateInputManagerOptions {
@@ -46,6 +46,14 @@ export function createInputManager(canvas: HTMLCanvasElement, options: CreateInp
   // React-facing layer stack (keyboard trigger -> action). Pure; see layer_stack.ts.
   const layerStack = createLayerStack();
 
+  // Shared by BOTH the real keyboard and virtual touch buttons: a virtual
+  // press is meant to "mimic a keyboard press" everywhere, including for
+  // React layers -- not just for the canvas poll-state. No modifiers, since
+  // a touch button has no ctrl/shift/alt/meta concept.
+  function dispatchToLayers(code: string): boolean {
+    return layerStack.dispatchKey(code, { ctrl: false, shift: false, alt: false, meta: false });
+  }
+
   // v1's single keyboard handler fills poll-state AND, on a fresh press, drives
   // the React layers. If a layer consumed the key, prevent the browser default.
   const keyboard = createKeyboardInput(state, (code, e) => {
@@ -66,10 +74,14 @@ export function createInputManager(canvas: HTMLCanvasElement, options: CreateInp
     // ================= POLL FACE (canvas) =================
     pressVirtualKey(key: string): void {
       const code = toCode(key);
-      if (!state.virtualDownSticky.has(code)) {
+      const isFresh = !state.virtualDownSticky.has(code);
+      if (isFresh) {
         state.virtualPressed.add(code);
       }
       state.virtualDownSticky.add(code);
+      // Dispatch to React layers on the FRESH press only -- holding the
+      // button doesn't re-fire the action every frame, same as a real key.
+      if (isFresh) dispatchToLayers(code);
     },
 
     releaseVirtualKey(key: string): void {
@@ -78,10 +90,13 @@ export function createInputManager(canvas: HTMLCanvasElement, options: CreateInp
 
     tapVirtualKey(key: string): void {
       const code = toCode(key);
-      if (!state.virtualDownMomentary.has(code)) {
+      const isFresh = !state.virtualDownMomentary.has(code);
+      if (isFresh) {
         state.virtualPressed.add(code);
       }
       state.virtualDownMomentary.add(code);
+      // A tap is inherently a single discrete press -- always dispatch.
+      if (isFresh) dispatchToLayers(code);
     },
 
     injectNumberBuffer(numStr: string): void {
@@ -147,8 +162,8 @@ export function createInputManager(canvas: HTMLCanvasElement, options: CreateInp
      * Apply the active scene's virtual-button layout. No-op if this manager
      * was created without a touchContainer. Call from setOnTransition.
      */
-    applyVirtualLayout(specs?: VirtualControlSpec[]): void {
-      virtualControls?.applyLayout(specs);
+    applyVirtualLayout(config?: VirtualControlsConfig): void {
+      virtualControls?.applyLayout(config);
     },
 
     // ================= LAYER FACE (React) =================
@@ -183,7 +198,6 @@ export function createInputManager(canvas: HTMLCanvasElement, options: CreateInp
   // becomes a no-op below. This overlay exists purely to mimic keyboard/click
   // input for devices that lack them, so there's no case where it should show
   // on a device that already has a precise pointer + keyboard.
-
   const virtualControls =
     options.touchContainer && isTouchPrimaryDevice() ? createVirtualControls(manager, options.touchContainer) : null;
 

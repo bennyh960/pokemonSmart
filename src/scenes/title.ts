@@ -253,11 +253,11 @@ export function createTitleScene(input: InputManager, stateMachine: StateMachine
       }
       drawText(ctx, 'v1.0.0', SCREEN_W - 4, SCREEN_H - 10, { size: 6, color: '#444466', align: 'right' });
     },
-    virtualControls: [
-      'utility',
-      'dpad',
-      { id: 'v-a', label: 'Quit', key: 'KeyQ' },
-      { id: 'v-b', label: 'Language', key: 'KeyL' },
-    ],
+    virtualControls: {
+      custom: [
+        { id: 'v-a', label: 'Quit', key: 'KeyQ' },
+        { id: 'v-b', label: 'Language', key: 'KeyL' },
+      ],
+    },
   };
 }

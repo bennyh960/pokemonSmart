@@ -37,6 +37,9 @@ export function createPartyReactScene(stateMachine: StateMachine, mode: PartyMod
     },
     update() {},
     render() {},
-    virtualControls: [],
+    virtualControls: {
+      utility: [{ id: 'v-enter', label: '⏎ ENTER', key: 'Enter', className: 'vEnter' }],
+      custom: [{ id: 'v-space', label: 'SPACE', key: 'Space' }],
+    },
   };
 }
