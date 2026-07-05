@@ -217,6 +217,7 @@ export interface DayCareEntry {
 }
 
 export type AwayPokemonEntry = StolenEntry | DayCareEntry;
+export type CaughtStatus = 'caught' | 'seen' | 'unseen' | 'release';
 
 /** Persistent player data (saved to localStorage). */
 export interface PlayerData {
@@ -229,7 +230,8 @@ export interface PlayerData {
   badges: number;
   serumParts: number;
   money: number;
-  pokedex: Record<number, boolean>;
+  pokedex: Record<number, CaughtStatus>;
+
   items: Record<string, number>; // item id → quantity
   flags: Record<string, boolean>; // e.g. 'trainer-bug1-defeated'
   flagTimestamps: Record<string, number>; // unix ms when each flag was first set

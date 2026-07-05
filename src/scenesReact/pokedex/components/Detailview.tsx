@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import type { PokemonEntry, TabKey } from '../types';
+import React, { useMemo, useState } from 'react';
+import type { PokedexPokemon, PokemonEntry, TabKey } from '../types';
 import { DetailHeader } from './DetailHeader';
 import { InfoTab } from './tabs/InfoTab';
 import { EvolutionTab } from './tabs/EvolutionTab';
@@ -7,28 +7,69 @@ import { BattleTab } from './tabs/BattleTab';
 import { MovesTab } from './tabs/MovesTab';
 import { LocationsTab } from './tabs/LocationsTab';
 import { TabBar } from './Tabbar';
+import {
+  getLearnset,
+  getMove,
+  getPokemonAbilityDetails,
+  getRegularNextEvolution,
+  getSpawnLocations,
+  getTmLearnset,
+  type MoveData,
+} from '../../../services/pokemon-data';
+import { getWildLocations } from '../utils/locationHelper';
+import { useI18n } from '../../../ui-react/context/i18n-context';
 
 interface DetailViewProps {
-  pokemon: PokemonEntry;
+  pokemon: PokedexPokemon;
   onBack: () => void;
-  onToggleCaught: (key: string) => void;
 }
 
-export function DetailView({ pokemon, onBack, onToggleCaught }: DetailViewProps) {
+export function DetailView({ pokemon, onBack }: DetailViewProps) {
+  const { locale } = useI18n();
   const [tab, setTab] = useState<TabKey>('info');
+
+  const abilities = getPokemonAbilityDetails(pokemon.id);
+  const evolutions = getRegularNextEvolution(pokemon.id);
+  const locations = getWildLocations(pokemon.id, locale);
+
+  const movesData = useMemo(() => {
+    const tmLearnset = getTmLearnset(pokemon.id);
+    const learnset = getLearnset(pokemon.id);
+
+    const learnsetMoves = learnset
+      .map((m) => {
+        const move = getMove(m.moveId);
+        return {
+          move: move,
+          level: m.levelLearned,
+        };
+      })
+      .filter((m): m is { move: MoveData; level: number } => m.move !== undefined);
+
+    const tmLearnsetMoves = tmLearnset
+      .map((m) => {
+        const move = getMove(m.moveId);
+        return {
+          move: move,
+        };
+      })
+      .filter((m): m is { move: MoveData } => m.move !== undefined);
+
+    return { learnsetMoves, tmLearnsetMoves };
+  }, [pokemon.id]);
 
   return (
     <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top,_#5b0d0d_0%,_#1a0505_45%,_#000000_85%)]">
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-10 sm:py-12">
-        <DetailHeader pokemon={pokemon} onBack={onBack} onToggleCaught={() => onToggleCaught(pokemon.key)} />
+        <DetailHeader pokemon={pokemon} onBack={onBack} />
 
         <div className="mt-6">
           <TabBar active={tab} onChange={setTab} />
-          {tab === 'info' && <InfoTab pokemon={pokemon} />}
-          {tab === 'evolution' && <EvolutionTab pokemon={pokemon} />}
-          {tab === 'battle' && <BattleTab pokemon={pokemon} />}
-          {tab === 'moves' && <MovesTab pokemon={pokemon} />}
-          {tab === 'locations' && <LocationsTab pokemon={pokemon} />}
+          {tab === 'info' && <InfoTab pokemon={pokemon} abilities={abilities} />}
+          {/* {tab === 'evolution' && <EvolutionTab pokemon={pokemon} />} */}
+          {/* {tab === 'battle' && <BattleTab pokemon={pokemon} />} */}
+          {tab === 'moves' && <MovesTab learnset={movesData.learnsetMoves} tmLearnset={movesData.tmLearnsetMoves} />}
+          {tab === 'locations' && <LocationsTab locations={locations} />}
         </div>
       </div>
     </div>

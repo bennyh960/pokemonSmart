@@ -1,4 +1,6 @@
 {
+  "common.total": "Total",
+
   "title.pokemon": "POKEMON",
   "title.subtitle": "Math Adventure",
   "title.hebrewSubtitle": "הרפתקה בנומריה",
@@ -102,7 +104,12 @@
   "hp.label": "HP",
   "hp.level": "Lv{level}",
   "math.answer": "Answer: {answer}",
-  "pokedex.title": "POKEDEX",
+
+  "pokedex.backToList": "Back to list",
+  "pokedex.title": "Pokédex — Field Unit",
+  "pokedex.locations.viewOnMap": "View on Map",
+  "pokedex.encounter.avgLevel": "Average Level: {level}",
+  "pokedex.info.physicalDetails": "Physical Details",
   "pokedex.unknown": "???",
   "pokedex.noData": "No data",
   "pokedex.tab.info": "INFO",
@@ -128,7 +135,14 @@
   "pokedex.moves.header.type": "TYPE",
   "pokedex.moves.header.acc": "ACC",
   "pokedex.moves.header.pow": "POW",
-  "pokedex.seen": "Seen: {count}",
+
+  "pokedex.seen": "Seen",
+  "pokedex.caught": "Caught",
+  "pokedex.released": "Released",
+  "pokedex.search.placeholder": "Search by name, number, or type...",
+  "pokedex.search.noResults": "No results found",
+  "pokedex.search.clear": "Clear search",
+
   "pokedex.number": "#{number}",
   "party.title": "PARTY",
   "party.inspector": "Live Inspector",

@@ -1,4 +1,6 @@
 {
+  "common.total": "סה\"כ",
+
   "title.pokemon": "פוקימון",
   "title.subtitle": "הרפתקת מתמטיקה",
   "title.hebrewSubtitle": "הרפתקה בנומריה",
@@ -101,6 +103,9 @@
   "math.answer": "תשובה: {answer}",
   "pokedex.title": "פוקדקס",
   "pokedex.unknown": "???",
+  "pokedex.locations.viewOnMap": "צפה במפה",
+  "pokedex.encounter.avgLevel": "רמה ממוצעת: {level}",
+  "pokedex.info.physicalDetails": "פרטים פיזיולוגים",
   "pokedex.noData": "אין מידע",
   "pokedex.tab.info": "מידע",
   "pokedex.tab.evolution": "התפתחות",
@@ -125,7 +130,15 @@
   "pokedex.moves.header.type": "סוג",
   "pokedex.moves.header.acc": "דיוק",
   "pokedex.moves.header.pow": "כוח",
-  "pokedex.seen": "נראו: {count}",
+
+  "pokedex.backToList": "חזרה לרשימה",
+  "pokedex.seen": "נראו",
+  "pokedex.caught": "נתפסו",
+  "pokedex.released": "שוחרר",
+  "pokedex.search.placeholder": "חפש לפי שם, מספר או סוג...",
+  "pokedex.search.noResults": "לא נמצאו תוצאות",
+  "pokedex.search.clear": "נקה",
+
   "pokedex.number": "#{number}",
   "party.title": "קבוצה",
   "party.squad": "הצוות שלי",

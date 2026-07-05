@@ -88,7 +88,7 @@ export function createPokedexScene(input: InputManager, stateMachine: StateMachi
   let cachedWildLocations: WildLocation[] | null = null;
   let cachedWildLocationsFor: number = -1;
 
-  function getPokedex(): Record<number, boolean> {
+  function getPokedex(): Record<number, any> {
     if (hasActiveGame()) return getPlayerData().pokedex;
     return {};
   }

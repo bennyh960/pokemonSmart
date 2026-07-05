@@ -52,7 +52,7 @@ export function createEvolutionScene(input: InputManager, stateMachine: StateMac
     evolvedApplied = true;
     if (applyEvolution(request.pokemon, toId)) {
       if (hasActiveGame()) {
-        getPlayerData().pokedex[toId] = true;
+        getPlayerData().pokedex[toId] = 'caught';
       }
       autoSave();
       request.onComplete?.();

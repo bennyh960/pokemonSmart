@@ -4,21 +4,25 @@ interface PokeballBadgeProps {
   onClick?: (e: React.MouseEvent) => void;
   title?: string;
   size?: number;
+  disabled?: boolean;
 }
 
-/** Small red/white pokeball marker shown on caught cards. Doubles as a toggle button. */
-export function PokeballBadge({ onClick, title = 'Caught', size = 22 }: PokeballBadgeProps) {
+export function PokeballBadge({ onClick, title = 'Caught', size = 22, disabled = false }: PokeballBadgeProps) {
   return (
     <button
       type="button"
       title={title}
-      onClick={onClick}
-      className="flex items-center justify-center rounded-full border-2 border-black shadow-[0_0_10px_rgba(239,68,68,0.6)] transition hover:scale-110"
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      className={`flex items-center justify-center rounded-full border-2 border-black transition ${
+        disabled ? 'cursor-not-allowed opacity-60 shadow-none' : 'shadow-[0_0_10px_rgba(239,68,68,0.6)] hover:scale-110'
+      }`}
       style={{
         width: size,
         height: size,
-        background:
-          'linear-gradient(180deg, #ef4444 0%, #ef4444 49%, #0a0a0a 49%, #0a0a0a 51%, #f4f4f5 51%, #f4f4f5 100%)',
+        background: disabled
+          ? 'linear-gradient(180deg, #52525b 0%, #52525b 49%, #0a0a0a 49%, #0a0a0a 51%, #a1a1aa 51%, #a1a1aa 100%)'
+          : 'linear-gradient(180deg, #ef4444 0%, #ef4444 49%, #0a0a0a 49%, #0a0a0a 51%, #f4f4f5 51%, #f4f4f5 100%)',
       }}
     >
       <span

@@ -86,7 +86,7 @@ export function createStarterSelectScene(input: InputManager, stateMachine: Stat
           const pokemon = createPokemonFromData(data, 5);
           const playerData = getPlayerData();
           playerData.party = [pokemon];
-          playerData.pokedex[starter.id] = true;
+          playerData.pokedex[starter.id] = 'caught';
           playerData.flags['story-received-starter'] = true;
           // Complete the starter quest now — the cutscene step after start-scene never runs
           // because start-scene deactivates the cutscene immediately.

@@ -1,3 +1,6 @@
+import type { PokemonData } from '../../services/pokemon-data';
+import type { CaughtStatus } from '../../types';
+
 export type PokeType =
   | 'normal'
   | 'fire'
@@ -17,8 +20,6 @@ export type PokeType =
   | 'dark'
   | 'steel'
   | 'fairy';
-
-export type CaughtStatus = 'caught' | 'seen' | 'unseen';
 
 export interface Ability {
   name: string;
@@ -79,3 +80,7 @@ export interface PokemonEntry {
 }
 
 export type TabKey = 'info' | 'evolution' | 'battle' | 'moves' | 'locations';
+
+export interface PokedexPokemon extends PokemonData {
+  status: CaughtStatus;
+}

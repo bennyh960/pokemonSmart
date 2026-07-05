@@ -1,7 +1,5 @@
-import React from 'react';
-
 interface ScanRingProps {
-  spriteSrc: string;
+  spriteSrc: string | null;
   alt: string;
 }
 
@@ -22,11 +20,13 @@ export function ScanRing({ spriteSrc, alt }: ScanRingProps) {
         className="absolute inset-6 rounded-full border border-amber-400/30"
         style={{ animation: 'pokedex-spin-reverse 20s linear infinite' }}
       />
-      <img
-        src={spriteSrc}
-        alt={alt}
-        className="absolute inset-0 m-auto h-28 w-28 [image-rendering:pixelated] drop-shadow-[0_10px_16px_rgba(0,0,0,0.6)] sm:h-32 sm:w-32"
-      />
+      {spriteSrc && (
+        <img
+          src={spriteSrc}
+          alt={alt}
+          className="absolute inset-0 m-auto h-28 w-28 [image-rendering:pixelated] drop-shadow-[0_10px_16px_rgba(0,0,0,0.6)] sm:h-32 sm:w-32"
+        />
+      )}
     </div>
   );
 }

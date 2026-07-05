@@ -10,6 +10,8 @@ import type { PlayerData } from '../types/index.js';
 import { getDefaultHeroCharacterId, hasCharacter } from '../engine/character-sprites.js';
 import { ensurePersistentBattleFields } from './battle-state.js';
 import { supabase } from '../auth/supabase-client.js';
+import { getEvolutionChain } from '../services/pokemon-data.js';
+import { isPokemonStillWithPlayer } from '../scenesReact/pokedex/utils/helpers.js';
 
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 const SLOT_INDEX_KEY = 'pokemon-math-adventure-slots-index';
@@ -169,7 +171,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 17;
+export const CURRENT_SAVE_VERSION = 18;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -326,19 +328,23 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     data.saveVersion = 17;
     console.log('Migrated save to version 17: removed move accuracy and mathDifficulty fields.');
   },
-  // 18: (data) => {
-  //   data.party.forEach((pokemon: Record<string, any>) => {
-  //     const pokId = pokemon.id;
-  //     const abilites = getPokemonAbilities(pokId);
-  //     if (pokId === 149) {
-  //       pokemon.abilityId = abilites?.hidden ?? abilites?.abilities[0] ?? null;
-  //     }
-  //     if (pokId === 151) {
-  //       pokemon.abilityId = abilites?.hidden ?? abilites?.abilities[0] ?? null;
-  //     }
-  //     console.log({ pokId, abilites, name: getPokemonDisplayName(pokId) });
-  //   });
-  // },
+  18: (data) => {
+    Object.keys(data.pokedex).forEach((key) => {
+      const isCaught = isPokemonStillWithPlayer(data as PlayerData, parseInt(key));
+      const evo = getEvolutionChain(parseInt(key))?.stages;
+
+      const earlierEvolutions = evo?.filter((e) => e.id < parseInt(key));
+      earlierEvolutions?.forEach((e) => {
+        if (isCaught) {
+          data.pokedex[e.id] = 'caught';
+        }
+      });
+
+      data.pokedex[key] = isCaught ? 'caught' : 'seen';
+    });
+    data.saveVersion = 18;
+    console.log('Migrated save to version 18: updated pokedex values to "seen" or "caught".');
+  },
 };
 
 function migrateSave(data: Record<string, any>): PlayerData {
@@ -349,9 +355,11 @@ function migrateSave(data: Record<string, any>): PlayerData {
     if (migrate) {
       migrate(data);
       console.log(`Save migrated: v${version} → v${nextVersion}`);
+      // data.saveVersion = nextVersion;
     } else {
       console.warn(`No migration for v${version} → v${nextVersion}`);
-      data.saveVersion = nextVersion;
+      // data.saveVersion = version;
+      // return data as PlayerData;
     }
     version = nextVersion;
   }

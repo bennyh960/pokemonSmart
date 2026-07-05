@@ -1226,7 +1226,12 @@ export function createBattleScene(
       ...getDisplayedSideStatuses(enemySideState),
     ]);
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
-    if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
+    if (hasActiveGame()) {
+      const pd = getPlayerData();
+      if (!pd.pokedex[enemy.id]) {
+        pd.pokedex[enemy.id] = 'seen';
+      }
+    }
     pendingEnemySendOutAnimation = true;
     animationDirector.setActorState('enemy', {
       x: 26,
@@ -1821,7 +1826,12 @@ export function createBattleScene(
       ...getDisplayedSideStatuses(enemySideState),
     ]);
     loadImage(`/sprites/pokemon/front/${enemy.id}.png`).catch(() => {});
-    if (hasActiveGame()) getPlayerData().pokedex[enemy.id] = true;
+    if (hasActiveGame()) {
+      const pd = getPlayerData();
+      if (!pd.pokedex[enemy.id]) {
+        pd.pokedex[enemy.id] = 'seen';
+      }
+    }
 
     trainerAIState!.switchesUsed++;
     // Clear item-use tracking for this slot so new Pokemon gets fresh item access
@@ -2485,7 +2495,9 @@ export function createBattleScene(
         void fireStoryTrigger({ type: 'trainer-defeated', trainerId: trainerData.trainerId });
       }
       enemy.caughtBall = outcome.itemId;
-      pd.pokedex[enemy.id] = true;
+      if (!pd.pokedex[enemy.id]) {
+        pd.pokedex[enemy.id] = 'caught';
+      }
       xpGained = getCaptureXpReward();
       player.xp += xpGained;
 
@@ -5188,7 +5200,9 @@ export function createBattleScene(
       // Mark enemy Pokemon as seen in Pokedex
       if (hasActiveGame()) {
         const pd = getPlayerData();
-        pd.pokedex[enemy.id] = true;
+        if (!pd.pokedex[enemy.id]) {
+          pd.pokedex[enemy.id] = 'seen';
+        }
         if (trainerData) {
           const playerMovesNames = player.moves.map((m) => m.name);
           const trainerMovesNames = trainerData.party.map((p) => p.moves.map((m) => m.name)).flat();

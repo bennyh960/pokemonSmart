@@ -50,7 +50,6 @@ export function MoveCard({
   const solidColor = badge.color; // e.g. '#a8a878'
 
   const isDeleteSelected = isMoveToDelete && isSelected;
-  console.log('isDeleteSelected', isDeleteSelected, isMoveToDelete, isSelected);
 
   return (
     <button
@@ -146,12 +145,6 @@ export function MoveMetaPanel({ move, deleteMode }: { deleteMode?: boolean; move
       >
         <div className="flex items-center justify-between gap-2">
           <span className="text-white font-bold text-sm drop-shadow-sm truncate">{getMoveDisplayName(move.id)}</span>
-          {/* <span
-            className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wide shrink-0"
-            style={{ backgroundColor: `${badge.color}44`, border: `1px solid ${badge.color}66`, color: '#fff' }}
-          >
-            {badge[locale]}
-          </span> */}
           <TypeBadge type={move.type} dim={false} locale={locale} color="white" />
         </div>
       </div>
@@ -182,7 +175,7 @@ export function MoveMetaPanel({ move, deleteMode }: { deleteMode?: boolean; move
           <span className="text-[9px] text-slate-500 uppercase tracking-wider">
             {t('party.moves.header.class')} {dmgData.icon}
           </span>
-          <span className="font-bold text-sm mt-0.5">{dmgData.label[locale]}</span>
+          <span className="font-bold text-white text-sm mt-0.5">{dmgData.label[locale]}</span>
         </div>
       </div>
 
@@ -251,7 +244,7 @@ export function MovesetTab({ pokemon, onMoveReorder, setSelectedMoveToDelete, se
               key={`${move.id}-${i}`}
               move={move}
               index={i}
-              isMoveToDelete={selectedMoveToDelete?.id === move.id}
+              isMoveToDelete={selectedMoveToDelete?.id === move.id && mode.kind === 'move-learning'}
               isSelected={selectedIdx === i}
               isDragging={mode.kind !== 'overworld' && draggingIndex === i}
               dragHandlers={

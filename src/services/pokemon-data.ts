@@ -38,7 +38,7 @@ export interface LocalizedName {
 export interface PokemonData {
   id: number;
   name: LocalizedName;
-  types: string[];
+  types: PokemonType[];
   stats: {
     hp: number;
     attack: number;

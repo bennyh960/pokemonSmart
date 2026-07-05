@@ -78,7 +78,7 @@
       "speed": 65
     },
     "baseExperience": 62,
-    "height": 6,
+    "height": 7,
     "weight": 85,
     "category": "Lizard Pokémon",
     "description": "The flame on its tail shows the strength of its life force. If it is weak, the flame also burns weakly."
@@ -99,7 +99,7 @@
       "speed": 80
     },
     "baseExperience": 142,
-    "height": 11,
+    "height": 14,
     "weight": 190,
     "category": "Flame Pokémon",
     "description": "It is very hot­ headed by nature, so it constantly seeks opponents. It calms down only when it wins."
@@ -120,7 +120,7 @@
       "speed": 100
     },
     "baseExperience": 240,
-    "height": 17,
+    "height": 25,
     "weight": 905,
     "category": "Flame Pokémon",
     "description": "If CHARIZARD be­ comes furious, the flame at the tip of its tail flares up in a whitish- blue color."
@@ -2997,8 +2997,8 @@
       "speed": 30
     },
     "baseExperience": 189,
-    "height": 21,
-    "weight": 4600,
+    "height": 2.6,
+    "weight": 5600,
     "category": "Sleeping Pokémon",
     "description": "What sounds like its cry may ac­ tually be its snores or the rumblings of its hungry belly."
   },
@@ -3123,7 +3123,7 @@
       "speed": 85
     },
     "baseExperience": 270,
-    "height": 22,
+    "height": 45,
     "weight": 2100,
     "category": "Dragon Pokémon",
     "description": "It is said that this POKéMON con­ stantly flies over the immense seas and rescues drown­ ing people."

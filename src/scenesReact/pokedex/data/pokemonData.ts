@@ -305,6 +305,3 @@ export const POKEMON_DATA: Record<string, PokemonEntry> = {
     ],
   },
 };
-
-/** Display order for the list view. */
-export const POKEMON_ORDER: string[] = ['bulbasaur', 'eevee', 'scyther', 'tyrogue', 'poliwag', 'slowpoke'];

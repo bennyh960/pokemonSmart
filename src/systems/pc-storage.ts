@@ -52,6 +52,7 @@ export function releaseFromBox(boxIndex: number, slotIndex: number): Pokemon | n
   const pokemon = pd.boxes[boxIndex].pokemon[slotIndex];
   if (!pokemon) return null;
 
+  pd.pokedex[pokemon.id] = 'release'; // mark as seen in case it was caught and released
   pd.boxes[boxIndex].pokemon[slotIndex] = null;
   return pokemon;
 }
