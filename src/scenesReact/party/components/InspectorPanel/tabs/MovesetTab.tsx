@@ -244,7 +244,9 @@ export function MovesetTab({ pokemon, onMoveReorder, setSelectedMoveToDelete, se
               key={`${move.id}-${i}`}
               move={move}
               index={i}
-              isMoveToDelete={selectedMoveToDelete?.id === move.id && mode.kind === 'move-learning'}
+              isMoveToDelete={
+                selectedMoveToDelete?.id === move.id && mode.kind === 'move-learning' && !mode.session.learned
+              }
               isSelected={selectedIdx === i}
               isDragging={mode.kind !== 'overworld' && draggingIndex === i}
               dragHandlers={

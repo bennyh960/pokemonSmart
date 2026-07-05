@@ -8,6 +8,7 @@ import type { Move, Pokemon, PokemonType } from '../../../../types';
 const DICT = {
   en: {
     wantsToLearn: 'wants to learn',
+    learned: 'learned',
     selectToDelete: 'Please select a move from your moveset to forget, or skip learning this move.',
     skipBtn: 'Skip Learning',
     skipHover: 'Skip learning {newMove} and keep your current moveset.',
@@ -20,6 +21,7 @@ const DICT = {
   },
   he: {
     wantsToLearn: 'רוצה ללמוד את',
+    learned: 'למד',
     selectToDelete: 'אנא בחר מהלך מהסט הנוכחי שלך כדי לשכוח אותו, או דלג על למידת המהלך הנוכחי.',
     skipBtn: 'דלג על הלמידה',
     skipHover: 'ותר על למידת {newMove} והישאר עם סט המהלכים הנוכחי שלך.',
@@ -38,6 +40,7 @@ interface IMoveLearningProps {
   selectedMoveToDelete: Move | null; // המהלך שנבחר מהפאנל השמאלי (אם יש)
   onConfirmReplace: (oldMoveId: Move['id'], newMoveId: Move['id']) => void;
   onConfirmSkip: () => void;
+  isReadonly: boolean;
 }
 
 const MoveLearning = ({
@@ -45,6 +48,7 @@ const MoveLearning = ({
   newMoveId,
   selectedMoveToDelete,
   onConfirmReplace,
+  isReadonly = false,
   onConfirmSkip,
 }: IMoveLearningProps) => {
   const { locale } = useI18n(); // שימוש בשפה הנוכחית מהמערכת שלך
@@ -123,8 +127,8 @@ const MoveLearning = ({
     >
       <div className="flex flex-col gap-4">
         <h3 className="text-base font-medium text-white/90 leading-tight">
-          <span className="font-bold text-amber-400">{getPokemonDisplayName(pokemon.id)}</span> {t.wantsToLearn}{' '}
-          <span className="font-bold text-emerald-400">{newMoveName}</span>
+          <span className="font-bold text-amber-400">{getPokemonDisplayName(pokemon.id)}</span>{' '}
+          {isReadonly ? t.learned : t.wantsToLearn} <span className="font-bold text-emerald-400">{newMoveName}</span>
         </h3>
 
         {/* New Move To learn */}
@@ -143,42 +147,44 @@ const MoveLearning = ({
       </div>
 
       {/* אזור פעולות והנחיות תחתון */}
-      <div className="flex flex-col gap-3 pt-4 border-t border-white/5">
-        {/* רמז הדרכה דינמי למשתמש */}
-        <p className="text-xs text-white/60 leading-relaxed bg-black/20 p-3 rounded-xl border border-white/5">
-          {!selectedMoveToDelete
-            ? t.selectToDelete
-            : interpolate(t.replaceHover, { oldMove: oldMoveName, newMove: newMoveName })}
-        </p>
+      {!isReadonly && (
+        <div className="flex flex-col gap-3 pt-4 border-t border-white/5">
+          {/* רמז הדרכה דינמי למשתמש */}
+          <p className="text-xs text-white/60 leading-relaxed bg-black/20 p-3 rounded-xl border border-white/5">
+            {!selectedMoveToDelete
+              ? t.selectToDelete
+              : interpolate(t.replaceHover, { oldMove: oldMoveName, newMove: newMoveName })}
+          </p>
 
-        <div className="flex flex-col gap-2">
-          {/* כפתור החלפה - מופיע רק אם נבחר מהלך מהרשימה השמאלית */}
-          {selectedMoveToDelete ? (
+          <div className="flex flex-col gap-2">
+            {/* כפתור החלפה - מופיע רק אם נבחר מהלך מהרשימה השמאלית */}
+            {selectedMoveToDelete ? (
+              <button
+                onClick={() => setConfirmationType('replace')}
+                className="group relative flex flex-col items-center justify-center w-full py-3 px-4 bg-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-500/10 transition-all duration-200 hover:bg-blue-600 active:scale-98 overflow-hidden"
+              >
+                <span>{t.replaceBtn}</span>
+                {/* רמז מורחב ב-Hover */}
+                <span className="max-h-0 opacity-0 text-[10px] font-normal text-blue-100 transition-all duration-300 group-hover:max-h-12 group-hover:opacity-100 group-hover:mt-1">
+                  {interpolate(t.replaceHover, { oldMove: oldMoveName, newMove: newMoveName })}
+                </span>
+              </button>
+            ) : null}
+
+            {/* כפתור דילוג (Skip) */}
             <button
-              onClick={() => setConfirmationType('replace')}
-              className="group relative flex flex-col items-center justify-center w-full py-3 px-4 bg-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-500/10 transition-all duration-200 hover:bg-blue-600 active:scale-98 overflow-hidden"
+              onClick={() => setConfirmationType('skip')}
+              className="group relative flex flex-col items-center justify-center w-full py-3 px-4 bg-white/5 text-white/80 rounded-xl font-medium border border-white/10 transition-all duration-200 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 active:scale-98 overflow-hidden"
             >
-              <span>{t.replaceBtn}</span>
-              {/* רמז מורחב ב-Hover */}
-              <span className="max-h-0 opacity-0 text-[10px] font-normal text-blue-100 transition-all duration-300 group-hover:max-h-12 group-hover:opacity-100 group-hover:mt-1">
-                {interpolate(t.replaceHover, { oldMove: oldMoveName, newMove: newMoveName })}
+              <span>{t.skipBtn}</span>
+              {/* רמז מורחב ב-Hover שבוחן מה יקרה אם נדלג */}
+              <span className="max-h-0 opacity-0 text-[10px] font-normal text-white/50 transition-all duration-300 group-hover:max-h-12 group-hover:opacity-100 group-hover:mt-1 group-hover:text-red-300/80">
+                {interpolate(t.skipHover, { newMove: newMoveName })}
               </span>
             </button>
-          ) : null}
-
-          {/* כפתור דילוג (Skip) */}
-          <button
-            onClick={() => setConfirmationType('skip')}
-            className="group relative flex flex-col items-center justify-center w-full py-3 px-4 bg-white/5 text-white/80 rounded-xl font-medium border border-white/10 transition-all duration-200 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 active:scale-98 overflow-hidden"
-          >
-            <span>{t.skipBtn}</span>
-            {/* רמז מורחב ב-Hover שבוחן מה יקרה אם נדלג */}
-            <span className="max-h-0 opacity-0 text-[10px] font-normal text-white/50 transition-all duration-300 group-hover:max-h-12 group-hover:opacity-100 group-hover:mt-1 group-hover:text-red-300/80">
-              {interpolate(t.skipHover, { newMove: newMoveName })}
-            </span>
-          </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

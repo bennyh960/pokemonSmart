@@ -22,7 +22,7 @@ export interface MoveLearningSession {
   onComplete?: (resolution: MoveLearningResolution) => void;
 }
 
-export interface MoveLearningQueueState {
+interface MoveLearningQueueState {
   partyIndex: number | null;
   pokemonId: number | null;
   queue: LevelUpMoveResult[];

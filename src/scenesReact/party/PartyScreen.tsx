@@ -196,6 +196,7 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
           {mode.kind === 'move-learning' ? (
             <MoveLearning
               pokemon={selected}
+              isReadonly={mode.session.learned}
               newMoveId={mode.session.moveId}
               selectedMoveToDelete={selectedMoveToDelete}
               onConfirmReplace={handleSelectMoveToDelete}

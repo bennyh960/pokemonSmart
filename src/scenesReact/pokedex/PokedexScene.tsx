@@ -18,6 +18,7 @@ import {
 import type { StateMachine } from '../../engine/state-machine';
 import { setPokedexMapContext } from '../../scenes/world-map';
 import type { WildLocation } from './utils/locationHelper';
+import type { PokedexMode } from '.';
 
 const TOTAL_POKEMON_COUNT = 251;
 
@@ -32,7 +33,15 @@ const TOTAL_POKEMON = Array.from({ length: TOTAL_POKEMON_COUNT }, (_, i) => i + 
  * Top-level Pokédex scene. Owns the Pokémon roster state (caught/seen/unseen)
  * and toggles between the list screen and the detail screen.
  */
-export function PokedexScene({ onClose, stateMachine }: { onClose: () => void; stateMachine: StateMachine }) {
+export function PokedexScene({
+  onClose,
+  stateMachine,
+  mode,
+}: {
+  mode: PokedexMode;
+  onClose: () => void;
+  stateMachine: StateMachine;
+}) {
   const { locale, setLocale } = useI18n();
   const [pd] = usePlayerData();
 
@@ -40,7 +49,9 @@ export function PokedexScene({ onClose, stateMachine }: { onClose: () => void; s
   const CAUGHT_COUNT = getCaughtCount(pd);
 
   const [pokemonMap] = useState<Map<number, PokedexPokemon>>(getPokdexPokemons(pd, EXTRA_POKEMONS_IDS));
-  const [selectedPokemon, setSelectedPokemon] = useState<PokedexPokemon | null>(null);
+  const [selectedPokemon, setSelectedPokemon] = useState<PokedexPokemon | null>(
+    mode.kind === 'battle' ? (pokemonMap.get(mode.pokemonId) ?? null) : null,
+  );
   const [search, setSearch] = useState('');
 
   const pokemons = Array.from(pokemonMap.values()).sort((a, b) => a.id - b.id);
@@ -75,7 +86,12 @@ export function PokedexScene({ onClose, stateMachine }: { onClose: () => void; s
       stateMachine.push('WORLD_MAP');
     };
     return (
-      <DetailView pokemon={selectedPokemon} onBack={() => setSelectedPokemon(null)} onViewOnMap={handleOnViewOnMap} />
+      <DetailView
+        defaultTab={mode.kind === 'battle' ? mode.tab : 'info'}
+        pokemon={selectedPokemon}
+        onBack={() => setSelectedPokemon(null)}
+        onViewOnMap={handleOnViewOnMap}
+      />
     );
   }
 

@@ -19,14 +19,15 @@ import { useI18n } from '../../../ui-react/context/i18n-context';
 import { BattleTab } from './tabs/BattleTab';
 
 interface DetailViewProps {
+  defaultTab?: TabKey;
   pokemon: PokedexPokemon;
   onBack: () => void;
   onViewOnMap: (wildLocations: WildLocation[]) => void;
 }
 
-export function DetailView({ pokemon, onBack, onViewOnMap }: DetailViewProps) {
+export function DetailView({ defaultTab, pokemon, onBack, onViewOnMap }: DetailViewProps) {
   const { locale } = useI18n();
-  const [tab, setTab] = useState<TabKey>('info');
+  const [tab, setTab] = useState<TabKey>(defaultTab ?? 'info');
 
   const abilities = getPokemonAbilityDetails(pokemon.id);
   const evolutions = getRegularNextEvolution(pokemon.id);

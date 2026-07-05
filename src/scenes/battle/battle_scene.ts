@@ -110,7 +110,7 @@ import { applyHeldItemEffectInBattle, getItem } from '../../data/items.js';
 import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText } from '../../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenes/bag.js';
-import { setPokedexFocus } from '.././pokedex';
+import { createPokedexScene, setPokedexFocus } from '.././pokedex';
 import { selectedPartyIndex, clearSelectedPartyIndex } from '.././party';
 import { setEvolutionData } from '.././evolution.js';
 import {
@@ -203,6 +203,7 @@ import { updateTrainerCinematic } from './phases/trainer_cinematic';
 import { playAttackAnimation, type BattleAnimationContext } from './animations/play-attack-animation.js';
 import { runMoveLifecycle } from './animations/move-lifecycle.js';
 import { createPartyReactScene } from '../../scenesReact/party/index.js';
+import { createPokedexReactScene } from '../../scenesReact/pokedex/index.js';
 export type BattleContext = 'grass' | 'water' | 'cave' | 'city' | 'gym' | 'elite' | 'route';
 
 type LossOutcome = 'wild-whiteout' | 'trainer-whiteout' | 'trainer-roster';
@@ -5161,10 +5162,17 @@ export function createBattleScene(
         } else {
           pd.pokedexBatteryCharges--;
           autoSave();
-          setPokedexFocus(enemy.id, true, 'type', 'battle');
+          // setPokedexFocus(enemy.id, true, 'type', 'battle');
+          const pokedexScene = createPokedexReactScene(stateMachine, {
+            kind: 'battle',
+            pokemonId: enemy.id,
+            tab: 'battle',
+          });
           waitingForPokedex = true;
           phase = 'WAITING_POKEDEX';
-          stateMachine.push('POKEDEX');
+          stateMachine.pushDirect('POKEDEX', pokedexScene);
+
+          // stateMachine.push('POKEDEX');
         }
       } else {
         textBox = createTextBox([t('battle.cantDoThat')], isRTL());

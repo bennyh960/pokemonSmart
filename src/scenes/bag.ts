@@ -628,6 +628,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       const moveLearningStep = nextMoveLearningQueueStep(pendingMoveLearning, () => {
         autoSave();
       });
+      console.log('moveLearningStep', moveLearningStep);
       if (moveLearningStep.kind === 'show-message') {
         message = moveLearningStep.message;
         messageTimer = 1.5;
