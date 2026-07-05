@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import type { PokedexPokemon, PokemonEntry, TabKey } from '../types';
+import type { PokedexPokemon, TabKey } from '../types';
 import { DetailHeader } from './DetailHeader';
 import { InfoTab } from './tabs/InfoTab';
 import { EvolutionTab } from './tabs/EvolutionTab';
-import { BattleTab } from './tabs/BattleTab';
 import { MovesTab } from './tabs/MovesTab';
 import { LocationsTab } from './tabs/LocationsTab';
 import { TabBar } from './Tabbar';
@@ -12,19 +11,20 @@ import {
   getMove,
   getPokemonAbilityDetails,
   getRegularNextEvolution,
-  getSpawnLocations,
   getTmLearnset,
   type MoveData,
 } from '../../../services/pokemon-data';
-import { getWildLocations } from '../utils/locationHelper';
+import { getWildLocations, type WildLocation } from '../utils/locationHelper';
 import { useI18n } from '../../../ui-react/context/i18n-context';
+import { BattleTab } from './tabs/BattleTab';
 
 interface DetailViewProps {
   pokemon: PokedexPokemon;
   onBack: () => void;
+  onViewOnMap: (wildLocations: WildLocation[]) => void;
 }
 
-export function DetailView({ pokemon, onBack }: DetailViewProps) {
+export function DetailView({ pokemon, onBack, onViewOnMap }: DetailViewProps) {
   const { locale } = useI18n();
   const [tab, setTab] = useState<TabKey>('info');
 
@@ -67,9 +67,9 @@ export function DetailView({ pokemon, onBack }: DetailViewProps) {
           <TabBar active={tab} onChange={setTab} />
           {tab === 'info' && <InfoTab pokemon={pokemon} abilities={abilities} />}
           {/* {tab === 'evolution' && <EvolutionTab pokemon={pokemon} />} */}
-          {/* {tab === 'battle' && <BattleTab pokemon={pokemon} />} */}
+          {tab === 'battle' && <BattleTab pokemon={pokemon} />}
           {tab === 'moves' && <MovesTab learnset={movesData.learnsetMoves} tmLearnset={movesData.tmLearnsetMoves} />}
-          {tab === 'locations' && <LocationsTab locations={locations} />}
+          {tab === 'locations' && <LocationsTab locations={locations} onViewOnMap={onViewOnMap} />}
         </div>
       </div>
     </div>

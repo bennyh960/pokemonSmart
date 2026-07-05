@@ -15,6 +15,9 @@ import {
   getTmLearnset,
   type PokemonData,
 } from '../../services/pokemon-data';
+import type { StateMachine } from '../../engine/state-machine';
+import { setPokedexMapContext } from '../../scenes/world-map';
+import type { WildLocation } from './utils/locationHelper';
 
 const TOTAL_POKEMON_COUNT = 251;
 
@@ -29,7 +32,7 @@ const TOTAL_POKEMON = Array.from({ length: TOTAL_POKEMON_COUNT }, (_, i) => i + 
  * Top-level Pokédex scene. Owns the Pokémon roster state (caught/seen/unseen)
  * and toggles between the list screen and the detail screen.
  */
-export function PokedexScene({ onClose }: { onClose: () => void }) {
+export function PokedexScene({ onClose, stateMachine }: { onClose: () => void; stateMachine: StateMachine }) {
   const { locale, setLocale } = useI18n();
   const [pd] = usePlayerData();
 
@@ -66,7 +69,14 @@ export function PokedexScene({ onClose }: { onClose: () => void }) {
   });
 
   if (selectedPokemon) {
-    return <DetailView pokemon={selectedPokemon} onBack={() => setSelectedPokemon(null)} />;
+    const handleOnViewOnMap = (wildLocations: WildLocation[]) => {
+      setPokedexMapContext(selectedPokemon.id, () => {}, wildLocations ?? []);
+      onClose();
+      stateMachine.push('WORLD_MAP');
+    };
+    return (
+      <DetailView pokemon={selectedPokemon} onBack={() => setSelectedPokemon(null)} onViewOnMap={handleOnViewOnMap} />
+    );
   }
 
   return (

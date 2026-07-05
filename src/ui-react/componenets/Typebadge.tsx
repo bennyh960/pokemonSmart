@@ -1,5 +1,6 @@
 import { TYPE_BADGE } from '../../data/type-constants';
 import type { PokemonType } from '../../types';
+import { getContrastTextColor } from '../../utils/util';
 
 interface TypeBadgeProps {
   type: PokemonType;
@@ -18,8 +19,8 @@ export function TypeBadge({ type, dim, locale, color }: TypeBadgeProps) {
   }
   return (
     <span
-      className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide ${color === 'white' ? 'text-white/80' : 'text-black/80'}`}
-      style={{ backgroundColor: TYPE_BADGE[type].color }}
+      className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide `}
+      style={{ backgroundColor: TYPE_BADGE[type].color, color: color ?? getContrastTextColor(TYPE_BADGE[type].color) }}
     >
       {locale === 'en' ? TYPE_BADGE[type].en : TYPE_BADGE[type].he}
     </span>

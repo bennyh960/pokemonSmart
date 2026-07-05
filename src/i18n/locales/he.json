@@ -668,6 +668,11 @@
   "menu.map": "מפה",
   "pokedex.tab.location": "מיקומים",
   "pokedex.location.none": "לא נמצאו מיקומים.",
+  "pokedex.location.none.title": "סנכרון נתונים...",
+  "pokedex.location.none.desc": "מידע המיקומים בפוקידע מתעדכן בזמן אמת.",
+  "pokedex.location.none.reason.cache": "הנתונים מסתנכרנים תוך כדי תנועה במפות השונות במהלך המשחק.",
+  "pokedex.location.none.reason.wild": "פוקימונים מסוימים (התחלתיים, אבולוציות או מיוחדים) לא יופיעו בטבע כלל.",
+
   "menu.trainerData": "נתוני מאמן",
   "menu.save": "שמור",
   "menu.actions": "פעולות",
