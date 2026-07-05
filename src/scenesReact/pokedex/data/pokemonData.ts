@@ -1,0 +1,310 @@
+import type { PokemonEntry } from '../types';
+
+export const POKEMON_DATA: Record<string, PokemonEntry> = {
+  bulbasaur: {
+    id: 1,
+    key: 'bulbasaur',
+    name: 'Bulbasaur',
+    types: ['grass', 'poison'],
+    category: 'Seed Pokémon',
+    height: '0.7 m',
+    weight: '6.9 kg',
+    status: 'caught',
+    stats: { hp: 45, atk: 49, def: 49, spa: 65, spd: 65, spe: 45 },
+    abilities: [
+      { name: 'Overgrow', description: 'Powers up Grass-type moves when HP is low.', hidden: false },
+      { name: 'Chlorophyll', description: 'Boosts Speed in harsh sunlight.', hidden: true },
+    ],
+    evolution: {
+      id: 1,
+      name: 'Bulbasaur',
+      children: [
+        {
+          id: 2,
+          name: 'Ivysaur',
+          method: 'Level 16',
+          children: [{ id: 3, name: 'Venusaur', method: 'Level 32' }],
+        },
+      ],
+    },
+    moves: {
+      level: [
+        { level: 1, name: 'Tackle', type: 'normal' },
+        { level: 1, name: 'Growl', type: 'normal' },
+        { level: 3, name: 'Vine Whip', type: 'grass' },
+        { level: 7, name: 'Leech Seed', type: 'grass' },
+        { level: 9, name: 'Razor Leaf', type: 'grass' },
+        { level: 13, name: 'Poison Powder', type: 'poison' },
+        { level: 15, name: 'Sleep Powder', type: 'grass' },
+        { level: 20, name: 'Take Down', type: 'normal' },
+        { level: 32, name: 'Sludge Bomb', type: 'poison' },
+      ],
+      tm: [
+        { name: 'Solar Beam', type: 'grass' },
+        { name: 'Protect', type: 'normal' },
+        { name: 'Substitute', type: 'normal' },
+        { name: 'Giga Drain', type: 'grass' },
+        { name: 'Sludge Bomb', type: 'poison' },
+        { name: 'Facade', type: 'normal' },
+      ],
+    },
+    locations: [
+      { name: 'Pallet Town', note: 'Starter Pokémon — received from Professor Oak.' },
+      { name: 'Route 1 & 2', note: 'Rare encounter in tall grass.' },
+      { name: 'Viridian Forest', note: 'Occasional sighting in dense undergrowth.' },
+    ],
+  },
+
+  eevee: {
+    id: 133,
+    key: 'eevee',
+    name: 'Eevee',
+    types: ['normal'],
+    category: 'Evolution Pokémon',
+    height: '0.3 m',
+    weight: '6.5 kg',
+    status: 'caught',
+    stats: { hp: 55, atk: 55, def: 50, spa: 45, spd: 65, spe: 55 },
+    abilities: [
+      { name: 'Run Away', description: 'Ensures escape from wild encounters always succeeds.', hidden: false },
+      { name: 'Adaptability', description: "Powers up moves that match the user's own type.", hidden: true },
+    ],
+    evolution: {
+      id: 133,
+      name: 'Eevee',
+      children: [
+        { id: 134, name: 'Vaporeon', method: 'Water Stone' },
+        { id: 135, name: 'Jolteon', method: 'Thunder Stone' },
+        { id: 136, name: 'Flareon', method: 'Fire Stone' },
+        { id: 196, name: 'Espeon', method: 'High Friendship (Day)' },
+        { id: 197, name: 'Umbreon', method: 'High Friendship (Night)' },
+        { id: 470, name: 'Leafeon', method: 'Leaf Stone' },
+        { id: 471, name: 'Glaceon', method: 'Ice Stone' },
+        { id: 700, name: 'Sylveon', method: 'High Affection + Fairy Move' },
+      ],
+    },
+    moves: {
+      level: [
+        { level: 1, name: 'Tackle', type: 'normal' },
+        { level: 1, name: 'Tail Whip', type: 'normal' },
+        { level: 5, name: 'Helping Hand', type: 'normal' },
+        { level: 10, name: 'Baby-Doll Eyes', type: 'fairy' },
+        { level: 15, name: 'Swift', type: 'normal' },
+        { level: 20, name: 'Take Down', type: 'normal' },
+        { level: 25, name: 'Baton Pass', type: 'normal' },
+        { level: 36, name: 'Last Resort', type: 'normal' },
+      ],
+      tm: [
+        { name: 'Protect', type: 'normal' },
+        { name: 'Facade', type: 'normal' },
+        { name: 'Shadow Ball', type: 'ghost' },
+        { name: 'Return', type: 'normal' },
+        { name: 'Toxic', type: 'poison' },
+        { name: 'Quick Attack', type: 'normal' },
+      ],
+    },
+    locations: [
+      { name: 'Route 2 (rare)', note: 'Uncommon sighting near patches of grass.' },
+      { name: 'Celadon Condominiums', note: 'Occasionally offered by an NPC breeder.' },
+      { name: 'Poké Mart Promotion', note: 'Limited-time in-game giveaway event.' },
+    ],
+  },
+
+  scyther: {
+    id: 123,
+    key: 'scyther',
+    name: 'Scyther',
+    types: ['bug', 'flying'],
+    category: 'Mantis Pokémon',
+    height: '1.5 m',
+    weight: '56.0 kg',
+    status: 'seen',
+    stats: { hp: 70, atk: 110, def: 80, spa: 55, spd: 80, spe: 105 },
+    abilities: [
+      { name: 'Swarm', description: 'Powers up Bug-type moves when HP is low.', hidden: false },
+      { name: 'Technician', description: 'Strengthens weaker moves.', hidden: true },
+    ],
+    evolution: {
+      id: 123,
+      name: 'Scyther',
+      children: [{ id: 212, name: 'Scizor', method: 'Trade holding Metal Coat', item: '🔩' }],
+    },
+    moves: {
+      level: [
+        { level: 1, name: 'Quick Attack', type: 'normal' },
+        { level: 1, name: 'Leer', type: 'normal' },
+        { level: 6, name: 'Focus Energy', type: 'normal' },
+        { level: 11, name: 'Wing Attack', type: 'flying' },
+        { level: 17, name: 'False Swipe', type: 'normal' },
+        { level: 23, name: 'Slash', type: 'normal' },
+        { level: 29, name: 'Agility', type: 'psychic' },
+        { level: 37, name: 'Swords Dance', type: 'normal' },
+      ],
+      tm: [
+        { name: 'X-Scissor', type: 'bug' },
+        { name: 'Aerial Ace', type: 'flying' },
+        { name: 'Brick Break', type: 'fighting' },
+        { name: 'Protect', type: 'normal' },
+        { name: 'Double Team', type: 'normal' },
+      ],
+    },
+    locations: [
+      { name: 'National Park', note: 'Featured in the annual Bug-Catching Contest.' },
+      { name: 'Safari Zone', note: 'Found roaming the forest areas.' },
+      { name: 'Route 15', note: 'Occasional sighting in tall grass.' },
+    ],
+  },
+
+  tyrogue: {
+    id: 236,
+    key: 'tyrogue',
+    name: 'Tyrogue',
+    types: ['fighting'],
+    category: 'Scuffle Pokémon',
+    height: '0.7 m',
+    weight: '21.0 kg',
+    status: 'unseen',
+    stats: { hp: 35, atk: 35, def: 35, spa: 35, spd: 35, spe: 35 },
+    abilities: [
+      { name: 'Guts', description: 'Boosts Attack if the user has a status condition.', hidden: false },
+      { name: 'Steadfast', description: 'Raises Speed each time the user flinches.', hidden: true },
+    ],
+    evolution: {
+      id: 236,
+      name: 'Tyrogue',
+      children: [
+        { id: 106, name: 'Hitmonlee', method: 'Level 10, Attack > Defense' },
+        { id: 107, name: 'Hitmonchan', method: 'Level 10, Defense > Attack' },
+        { id: 237, name: 'Hitmontop', method: 'Level 10, Attack = Defense' },
+      ],
+    },
+    moves: {
+      level: [
+        { level: 1, name: 'Tackle', type: 'normal' },
+        { level: 1, name: 'Helping Hand', type: 'normal' },
+        { level: 5, name: 'Foresight', type: 'normal' },
+        { level: 9, name: 'Fake Out', type: 'normal' },
+        { level: 13, name: 'Mind Reader', type: 'normal' },
+        { level: 17, name: 'Rolling Kick', type: 'fighting' },
+      ],
+      tm: [
+        { name: 'Brick Break', type: 'fighting' },
+        { name: 'Protect', type: 'normal' },
+        { name: 'Bulk Up', type: 'fighting' },
+        { name: 'Facade', type: 'normal' },
+      ],
+    },
+    locations: [
+      {
+        name: 'Not found in the wild',
+        note: 'Hatched exclusively from an egg produced by Hitmonlee, Hitmonchan, or Hitmontop at the Day-Care.',
+      },
+    ],
+  },
+
+  poliwag: {
+    id: 60,
+    key: 'poliwag',
+    name: 'Poliwag',
+    types: ['water'],
+    category: 'Tadpole Pokémon',
+    height: '0.6 m',
+    weight: '12.4 kg',
+    status: 'caught',
+    stats: { hp: 40, atk: 50, def: 40, spa: 40, spd: 40, spe: 90 },
+    abilities: [
+      { name: 'Water Absorb', description: 'Restores HP when hit by a Water-type move.', hidden: false },
+      { name: 'Damp', description: 'Prevents the use of explosive moves.', hidden: false },
+      { name: 'Swift Swim', description: 'Boosts Speed in rain.', hidden: true },
+    ],
+    evolution: {
+      id: 60,
+      name: 'Poliwag',
+      children: [
+        {
+          id: 61,
+          name: 'Poliwhirl',
+          method: 'Level 25',
+          children: [
+            { id: 62, name: 'Poliwrath', method: 'Water Stone' },
+            { id: 186, name: 'Politoed', method: "Trade holding King's Rock", item: '👑' },
+          ],
+        },
+      ],
+    },
+    moves: {
+      level: [
+        { level: 1, name: 'Bubble', type: 'water' },
+        { level: 1, name: 'Hypnosis', type: 'psychic' },
+        { level: 7, name: 'Water Gun', type: 'water' },
+        { level: 13, name: 'Double Slap', type: 'normal' },
+        { level: 19, name: 'Rain Dance', type: 'water' },
+        { level: 25, name: 'Body Slam', type: 'normal' },
+        { level: 31, name: 'Belly Drum', type: 'normal' },
+      ],
+      tm: [
+        { name: 'Surf', type: 'water' },
+        { name: 'Ice Beam', type: 'ice' },
+        { name: 'Substitute', type: 'normal' },
+        { name: 'Protect', type: 'normal' },
+        { name: 'Hypnosis', type: 'psychic' },
+      ],
+    },
+    locations: [
+      { name: 'Route 22 & 25', note: 'Common near ponds and streams.' },
+      { name: 'Vermilion City', note: 'Found while surfing along the coast.' },
+      { name: 'Seafoam Islands', note: 'Encountered in the surrounding waters.' },
+    ],
+  },
+
+  slowpoke: {
+    id: 79,
+    key: 'slowpoke',
+    name: 'Slowpoke',
+    types: ['water', 'psychic'],
+    category: 'Dopey Pokémon',
+    height: '1.2 m',
+    weight: '36.0 kg',
+    status: 'seen',
+    stats: { hp: 90, atk: 65, def: 65, spa: 40, spd: 40, spe: 15 },
+    abilities: [
+      { name: 'Oblivious', description: 'Prevents infatuation and being taunted.', hidden: false },
+      { name: 'Own Tempo', description: 'Prevents confusion.', hidden: false },
+      { name: 'Regenerator', description: 'Restores a bit of HP when withdrawn from battle.', hidden: true },
+    ],
+    evolution: {
+      id: 79,
+      name: 'Slowpoke',
+      children: [
+        { id: 80, name: 'Slowbro', method: 'Level 37' },
+        { id: 199, name: 'Slowking', method: "Trade holding King's Rock", item: '👑' },
+      ],
+    },
+    moves: {
+      level: [
+        { level: 1, name: 'Curse', type: 'ghost' },
+        { level: 1, name: 'Yawn', type: 'normal' },
+        { level: 5, name: 'Water Gun', type: 'water' },
+        { level: 10, name: 'Confusion', type: 'psychic' },
+        { level: 15, name: 'Headbutt', type: 'normal' },
+        { level: 22, name: 'Amnesia', type: 'psychic' },
+        { level: 30, name: 'Psychic', type: 'psychic' },
+      ],
+      tm: [
+        { name: 'Surf', type: 'water' },
+        { name: 'Psychic', type: 'psychic' },
+        { name: 'Ice Beam', type: 'ice' },
+        { name: 'Rest', type: 'psychic' },
+        { name: 'Protect', type: 'normal' },
+      ],
+    },
+    locations: [
+      { name: 'Route 24 — Nugget Bridge', note: "Commonly seen fishing or sitting along the water's edge." },
+      { name: 'Slowpoke Well (Johto)', note: 'A well-known gathering spot for the species.' },
+      { name: 'Route 12 & 13', note: 'Found near riverbanks and ponds.' },
+    ],
+  },
+};
+
+/** Display order for the list view. */
+export const POKEMON_ORDER: string[] = ['bulbasaur', 'eevee', 'scyther', 'tyrogue', 'poliwag', 'slowpoke'];

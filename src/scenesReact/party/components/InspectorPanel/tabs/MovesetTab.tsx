@@ -6,6 +6,7 @@ import { useI18n } from '../../../../../ui-react/context/i18n-context.js';
 import { getMove, getMoveDisplayName } from '../../../../../services/pokemon-data.js';
 import { DAMAGE_CLASS_ICON } from '../../../../../utils/util.js';
 import type { PartyMode } from '../../../index.js';
+import { TypeBadge } from '../../../../../ui-react/componenets/Typebadge.js';
 
 // ── Empty slot ───────────────────────────────────────────────────────────────
 function EmptyMoveSlot() {
@@ -83,16 +84,7 @@ export function MoveCard({
         <span className="text-white font-bold text-[13px] leading-tight drop-shadow-sm line-clamp-2 flex-1">
           {getMoveDisplayName(move.id)}
         </span>
-        <span
-          className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wide shrink-0 mt-0.5"
-          style={{
-            backgroundColor: `${solidColor}44`,
-            border: `1px solid ${solidColor}66`,
-            color: '#fff',
-          }}
-        >
-          {badge[locale]}
-        </span>
+        <TypeBadge type={move.type} dim={false} locale={locale} color="black" />
       </div>
 
       {/* Bottom row: PP bar + PP text — matches image 1 */}
@@ -154,12 +146,13 @@ export function MoveMetaPanel({ move, deleteMode }: { deleteMode?: boolean; move
       >
         <div className="flex items-center justify-between gap-2">
           <span className="text-white font-bold text-sm drop-shadow-sm truncate">{getMoveDisplayName(move.id)}</span>
-          <span
+          {/* <span
             className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wide shrink-0"
             style={{ backgroundColor: `${badge.color}44`, border: `1px solid ${badge.color}66`, color: '#fff' }}
           >
             {badge[locale]}
-          </span>
+          </span> */}
+          <TypeBadge type={move.type} dim={false} locale={locale} color="white" />
         </div>
       </div>
 

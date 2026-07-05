@@ -7,6 +7,7 @@ import { getItem } from '../../../../data/items';
 import { useMemo, type CSSProperties } from 'react';
 import type { PartyMode } from '../..';
 import useGetPokemonSprite from '../../../../ui-react/hooks/useGetPokemonSprite';
+import { TypeBadge } from '../../../../ui-react/componenets/Typebadge';
 
 interface InspectorHeaderProps {
   pokemon: Pokemon;
@@ -64,26 +65,7 @@ export function InspectorHeader({ pokemon, isPokedexMode, mode, onEquipItem }: I
     [primaryColor, secondaryColor, hpPercentage],
   );
 
-  const renderedTypes = types.map((typeName) => (
-    <span
-      key={typeName}
-      className="
-        px-2 py-0.5
-        text-xs font-bold
-        rounded-sm
-        backdrop-blur-md
-        bg-slate-950/85
-        border
-        shadow-sm
-      "
-      style={{
-        color: TYPE_BADGE[typeName]?.color,
-        borderColor: `${TYPE_BADGE[typeName]?.border}99`,
-      }}
-    >
-      {TYPE_BADGE[typeName]?.[locale]}
-    </span>
-  ));
+  const renderedTypes = types.map((typeName) => <TypeBadge key={typeName} type={typeName} locale={locale} />);
 
   return (
     <div

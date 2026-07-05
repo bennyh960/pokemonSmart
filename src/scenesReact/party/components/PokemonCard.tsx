@@ -4,6 +4,7 @@ import { TYPE_BADGE } from '../../../data/type-constants.js';
 import { STATUS_LABEL, glowStyle, hpColor } from '../../../utils/util';
 import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
 import useGetPokemonSprite from '../../../ui-react/hooks/useGetPokemonSprite.js';
+import { TypeBadge } from '../../../ui-react/componenets/Typebadge.js';
 
 export interface PokemonCardProps {
   pokemon: Pokemon;
@@ -127,18 +128,9 @@ export function PokemonCard({
 
           {/* Types — own line */}
           <div className="flex flex-row items-center gap-1 flex-wrap">
-            {pokemon.types.map((t) => {
-              const b = TYPE_BADGE[t];
-              return (
-                <span
-                  key={t}
-                  className="font-mono text-[11px] px-[6px] py-[2px] rounded-[3px] text-white uppercase tracking-[0.5px] font-bold"
-                  style={{ backgroundColor: b.bg, border: `1px solid ${b.border}`, color: b.color }}
-                >
-                  {b[locale]}
-                </span>
-              );
-            })}
+            {pokemon.types.map((t) => (
+              <TypeBadge key={t} type={t} locale={locale} color="white" />
+            ))}
           </div>
 
           {/* HP bar */}
