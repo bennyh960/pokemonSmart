@@ -15,7 +15,6 @@ import { applyEvolution } from '../systems/encounter.js';
 import { autoSave, getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import { getCachedImage, loadImage } from '../engine/sprite-loader.js';
 import { isRTL, t } from '../i18n/i18n.js';
-import { setPokedexFocus } from './pokedex';
 import { createPokedexReactScene } from '../scenesReact/pokedex/index.js';
 
 interface EvolutionRequest {

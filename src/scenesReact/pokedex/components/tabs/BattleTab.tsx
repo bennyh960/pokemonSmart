@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import type { PokedexPokemon } from '../../types';
 import type { PokemonType } from '../../../../types';
 import { getAllTypes, getTypeEffectiveness } from '../../../../services/pokemon-data';

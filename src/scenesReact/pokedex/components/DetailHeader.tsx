@@ -1,4 +1,4 @@
-import type { PokedexPokemon, PokemonEntry } from '../types';
+import type { PokedexPokemon } from '../types';
 import { ScanRing } from './Scanring';
 import { TypeBadge } from '../../../ui-react/componenets/Typebadge';
 import useGetPokemonSprite from '../../../ui-react/hooks/useGetPokemonSprite';

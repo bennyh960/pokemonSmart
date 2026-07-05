@@ -1,4 +1,3 @@
-import React from 'react';
 import type { WildLocation } from '../../utils/locationHelper';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 

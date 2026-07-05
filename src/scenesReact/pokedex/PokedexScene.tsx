@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import type { PokedexPokemon, PokemonEntry } from './types';
-import { POKEMON_DATA } from './data/pokemonData';
+import { useState } from 'react';
+import type { PokedexPokemon } from './types';
 import { ListView } from './components/ListView';
 import { DetailView } from './components/Detailview';
 import { useInputLayer } from '../../engine/input';
 import { useI18n } from '../../ui-react/context/i18n-context';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData';
 import { getPokdexPokemons, getCaughtCount } from './utils/helpers';
-import {
-  getAbility,
-  getEvolutionChain,
-  getLearnset,
-  getPokemon,
-  getTmLearnset,
-  type PokemonData,
-} from '../../services/pokemon-data';
+
 import type { StateMachine } from '../../engine/state-machine';
 import { setPokedexMapContext } from '../../scenes/world-map';
 import type { WildLocation } from './utils/locationHelper';

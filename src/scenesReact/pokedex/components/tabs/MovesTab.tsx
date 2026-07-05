@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import type { PokedexPokemon } from '../../types';
+import { useState } from 'react';
 import { TYPE_BADGE } from '../../../../data/type-constants';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
-import { getMove, type MoveData } from '../../../../services/pokemon-data';
+import { type MoveData } from '../../../../services/pokemon-data';
 import type { Move, PokemonType } from '../../../../types';
 import { TypeBadge } from '../../../../ui-react/componenets/Typebadge';
 import { MoveMetaPanel } from '../../../party/components/InspectorPanel/tabs/MovesetTab';

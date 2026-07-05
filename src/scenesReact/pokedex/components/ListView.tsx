@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PokedexPokemon } from '../types';
 import { PokemonCard } from './PokemonCard';
 import { SearchHeader } from './SearchHeader';
 import { useI18n } from '../../../ui-react/context/i18n-context';
-import type { PokemonData } from '../../../services/pokemon-data';
 import { getInput, useInputLayer } from '../../../engine/input';
 
 interface ListViewProps {

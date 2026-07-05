@@ -1,4 +1,3 @@
-import React from 'react';
 import { useI18n } from '../../../ui-react/context/i18n-context';
 
 interface SearchHeaderProps {

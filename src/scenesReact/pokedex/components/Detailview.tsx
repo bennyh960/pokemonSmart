@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { PokedexPokemon, TabKey } from '../types';
 import { DetailHeader } from './DetailHeader';
 import { InfoTab } from './tabs/InfoTab';
@@ -10,7 +10,6 @@ import {
   getLearnset,
   getMove,
   getPokemonAbilityDetails,
-  getRegularNextEvolution,
   getTmLearnset,
   type MoveData,
 } from '../../../services/pokemon-data';

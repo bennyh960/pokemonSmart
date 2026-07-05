@@ -1,4 +1,3 @@
-import React from 'react';
 import type { PokedexPokemon } from '../../types';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import { getEvolutionChain, getPokemonDisplayName } from '../../../../services/pokemon-data';

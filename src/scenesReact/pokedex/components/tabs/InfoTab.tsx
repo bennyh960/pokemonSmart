@@ -1,18 +1,8 @@
-import React from 'react';
-import type { PokedexPokemon, PokemonEntry } from '../../types';
+import type { PokedexPokemon } from '../../types';
 import { getStatConfig } from '../../../../utils/util';
 import type { Pokemon } from '../../../../types';
 import { useI18n } from '../../../../ui-react/context/i18n-context';
 import type { PokemonAbilityDetail } from '../../../../services/pokemon-data';
-
-const STAT_LABELS: Record<keyof PokemonEntry['stats'], string> = {
-  hp: 'HP',
-  atk: 'ATK',
-  def: 'DEF',
-  spa: 'SP.A',
-  spd: 'SP.D',
-  spe: 'SPE',
-};
 
 const MAX_STAT = 150;
 
