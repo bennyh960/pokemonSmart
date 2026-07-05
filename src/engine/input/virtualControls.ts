@@ -170,6 +170,44 @@ export function createVirtualControls(input: InputManager, container: HTMLElemen
     }
   }
 
+  function createRotateWarning(container: HTMLElement): void {
+    if (!container) return;
+
+    // this card actualy need portait screen
+    if (document.querySelector('.login-card')) {
+      return;
+    }
+
+    // יצירת האלמנטים
+    const warningDiv = document.createElement('div');
+    const contentDiv = document.createElement('div');
+    const iconDiv = document.createElement('div');
+    const textParagraph = document.createElement('p');
+
+    // הגדרת קלאסים של Tailwind
+    // הסבר על הקלאסים:
+    // hidden = display: none (ברירת מחדל למסכים גדולים)
+    // portrait:max-md:flex = במצב אנכי ורק עד מסכי md (768px) הוא יהפוך ל-flex
+    warningDiv.className =
+      'hidden portrait:max-md:flex fixed inset-0 w-screen h-screen bg-[#111111] text-white z-[9999] justify-center items-center text-center p-5 border-4 border-white box-border';
+
+    contentDiv.className = 'animate-pulse';
+    iconDiv.className = 'text-5xl mb-4';
+    textParagraph.className = 'text-lg font-sans';
+
+    // הוספת התוכן
+    iconDiv.innerText = '🔄';
+    textParagraph.innerText = 'אנא סובב את המכשיר למצב אופקי לצפייה מיטבית';
+
+    // חיבור האלמנטים יחד והזרקה לקונטיינר
+    contentDiv.appendChild(iconDiv);
+    contentDiv.appendChild(textParagraph);
+    warningDiv.appendChild(contentDiv);
+    container.appendChild(warningDiv);
+  }
+
+  createRotateWarning(container);
+
   // Start with the default overlay (dpad + utility) until the first scene applies its own.
   applyLayout();
 

@@ -126,6 +126,14 @@
   letter-spacing: 3px;
 }
 
+@media screen and (max-width: 896px) {
+  .vSpace {
+    bottom: 12px;
+    width: min(70%, 200px);
+    height: 32px;
+  }
+}
+
 /* Number hotkeys */
 .numBtn {
   background: rgba(20, 20, 20, 0.85);

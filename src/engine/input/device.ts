@@ -12,5 +12,6 @@
  * usage: a single decision made when the input manager is created.
  */
 export function isTouchPrimaryDevice(): boolean {
+  return true;
   return window.matchMedia?.('(pointer: coarse)').matches ?? false;
 }

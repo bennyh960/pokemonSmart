@@ -37,6 +37,7 @@ import { LOGICAL_WIDTH, LOGICAL_HEIGHT, RES_SCALE, CANVAS_WIDTH, CANVAS_HEIGHT }
 import { uiRegistry } from './input/uiRegistry.js';
 import { initReactHost } from './react/react-scene-host.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
+import { createTestScene } from '../scenes/test.scene.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
@@ -71,8 +72,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
     }
   });
 
-  // stateMachine.register('TEST', createTestScene(input, stateMachine, audio)); // input done
-  // stateMachine.register('TEST', createTestScene(inputManager, stateMachine, audio, pad));
+  stateMachine.register('TEST', createTestScene(input, stateMachine, audio)); // input done
   stateMachine.register('TITLE', createTitleScene(input, stateMachine, audio)); // input done
   stateMachine.register('HERO_SELECT', createHeroSelectScene(input, stateMachine));
   stateMachine.register('HERO_NAME_SELECT', createHeroNameSelectScene(input, stateMachine));
