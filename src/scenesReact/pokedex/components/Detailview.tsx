@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { PokedexPokemon, TabKey } from '../types';
 import { DetailHeader } from './DetailHeader';
 import { InfoTab } from './tabs/InfoTab';
@@ -17,6 +17,7 @@ import {
 import { getWildLocations, type WildLocation } from '../utils/locationHelper';
 import { useI18n } from '../../../ui-react/context/i18n-context';
 import { BattleTab } from './tabs/BattleTab';
+import { getInput, useInputLayer } from '../../../engine/input';
 
 interface DetailViewProps {
   defaultTab?: TabKey;
@@ -58,6 +59,52 @@ export function DetailView({ defaultTab, pokemon, onBack, onViewOnMap }: DetailV
 
     return { learnsetMoves, tmLearnsetMoves };
   }, [pokemon.id]);
+
+  useInputLayer({
+    id: 'pokedex-detail',
+    name: 'Pokdex Detail',
+    blocksLowerLayers: true,
+    keyBindings: [
+      { code: 'Escape', action: 'back' },
+      { code: 'ArrowLeft', action: 'prevTab' },
+      { code: 'ArrowRight', action: 'nextTab' },
+    ],
+    onAction: (action) => {
+      if (action === 'back') {
+        console.log('back');
+        onBack();
+      } else if (action === 'nextTab') {
+        setTab((prev) => {
+          if (prev === 'info') return 'locations';
+          if (prev === 'evolution') return 'info';
+          if (prev === 'battle') return 'evolution';
+          if (prev === 'moves') return 'battle';
+          if (prev === 'locations') return 'moves';
+          return prev;
+        });
+      } else if (action === 'prevTab') {
+        setTab((prev) => {
+          if (prev === 'info') return 'evolution';
+          if (prev === 'evolution') return 'battle';
+          if (prev === 'battle') return 'moves';
+          if (prev === 'moves') return 'locations';
+          if (prev === 'locations') return 'info';
+          return prev;
+        });
+      }
+    },
+  });
+
+  useEffect(() => {
+    const input = getInput();
+    input.applyVirtualLayout({
+      utility: [{ id: 'v-esc', label: 'ESC', key: 'Escape', className: 'vEsc' }],
+      dpad: [
+        { id: 'v-left', label: '◀', key: 'ArrowLeft', className: 'vLeft' },
+        { id: 'v-right', label: '▶', key: 'ArrowRight', className: 'vRight' },
+      ],
+    });
+  }, []);
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-[radial-gradient(ellipse_at_top,_#5b0d0d_0%,_#1a0505_45%,_#000000_85%)]">

@@ -7,9 +7,10 @@ import { useI18n } from '../../../ui-react/context/i18n-context';
 interface PokemonCardProps {
   pokemon: PokedexPokemon;
   onSelect: (id: number) => void;
+  isSoftSelected?: boolean;
 }
 
-export function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
+export function PokemonCard({ pokemon, onSelect, isSoftSelected }: PokemonCardProps) {
   const { locale } = useI18n();
   const dexId = `#${String(pokemon.id).padStart(3, '0')}`;
   const isUnseen = pokemon.status === 'unseen';
@@ -44,9 +45,11 @@ export function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
       onClick={() => onSelect(pokemon.id)}
       className={`group relative flex w-full items-center gap-4 rounded-xl border px-5 py-4 backdrop-blur-sm transition
         ${
-          isUnseen
-            ? 'cursor-default border-zinc-800 bg-zinc-950/60'
-            : 'cursor-pointer border-red-900/40 bg-zinc-950/70 hover:border-red-500/60 hover:bg-zinc-900/80'
+          isSoftSelected
+            ? 'border-red-500/60 bg-zinc-900/80'
+            : isUnseen
+              ? 'cursor-default border-zinc-800 bg-zinc-950/60'
+              : 'cursor-pointer border-red-900/40 bg-zinc-950/70 hover:border-red-500/60 hover:bg-zinc-900/80'
         }`}
     >
       {/* Sprite */}

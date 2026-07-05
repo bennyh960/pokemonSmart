@@ -16,6 +16,10 @@ export function createPokedexReactScene(stateMachine: StateMachine, mode: Pokede
         onClose: () => {
           unmountReactScene();
           stateMachine.pop();
+          if (mode.kind === 'battle' && mode.tab === 'evolution') {
+            // evolution open new scene so we need to pop twice to go back to the previous scene
+            stateMachine.pop();
+          }
         },
         stateMachine,
       });
@@ -25,5 +29,11 @@ export function createPokedexReactScene(stateMachine: StateMachine, mode: Pokede
     },
     update() {},
     render() {},
+    virtualControls: {
+      utility: [
+        { id: 'v-enter', label: '⏎ ENTER', key: 'Enter', className: 'vEnter' },
+        { id: 'v-esc', label: 'ESC', key: 'Escape', className: 'vEsc' },
+      ],
+    },
   };
 }

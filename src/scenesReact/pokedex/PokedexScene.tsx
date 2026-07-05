@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { PokedexPokemon, PokemonEntry } from './types';
 import { POKEMON_DATA } from './data/pokemonData';
 import { ListView } from './components/ListView';

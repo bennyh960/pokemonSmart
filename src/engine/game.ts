@@ -81,8 +81,8 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine, audio));
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
   // stateMachine.register('PARTY2', createPartyScene(input, stateMachine)); // input done
-  stateMachine.register('PARTY', createPartyReactScene(stateMachine)); // ongoing
   // stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
+  stateMachine.register('PARTY', createPartyReactScene(stateMachine)); // ongoing
   stateMachine.register('POKEDEX', createPokedexReactScene(stateMachine));
   stateMachine.register('EVOLUTION', createEvolutionScene(input, stateMachine, audio));
   stateMachine.register('BAG', createBagScene(input, stateMachine));
