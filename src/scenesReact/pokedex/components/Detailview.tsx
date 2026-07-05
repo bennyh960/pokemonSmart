@@ -30,7 +30,7 @@ export function DetailView({ defaultTab, pokemon, onBack, onViewOnMap }: DetailV
   const [tab, setTab] = useState<TabKey>(defaultTab ?? 'info');
 
   const abilities = getPokemonAbilityDetails(pokemon.id);
-  const evolutions = getRegularNextEvolution(pokemon.id);
+  // const evolutions = getRegularNextEvolution(pokemon.id);
   const locations = getWildLocations(pokemon.id, locale);
 
   const movesData = useMemo(() => {
@@ -60,14 +60,16 @@ export function DetailView({ defaultTab, pokemon, onBack, onViewOnMap }: DetailV
   }, [pokemon.id]);
 
   return (
-    <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top,_#5b0d0d_0%,_#1a0505_45%,_#000000_85%)]">
-      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-10 sm:py-12">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-[radial-gradient(ellipse_at_top,_#5b0d0d_0%,_#1a0505_45%,_#000000_85%)]">
+      <div className="mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col px-4 py-8 sm:px-10 sm:py-12">
         <DetailHeader pokemon={pokemon} onBack={onBack} />
 
         <div className="mt-6">
           <TabBar active={tab} onChange={setTab} />
+        </div>
+        <div className="min-h-0 flex-1 game-scrollbar overflow-y-auto pb-6 pr-1">
           {tab === 'info' && <InfoTab pokemon={pokemon} abilities={abilities} />}
-          {/* {tab === 'evolution' && <EvolutionTab pokemon={pokemon} />} */}
+          {tab === 'evolution' && <EvolutionTab pokemon={pokemon} />}
           {tab === 'battle' && <BattleTab pokemon={pokemon} />}
           {tab === 'moves' && <MovesTab learnset={movesData.learnsetMoves} tmLearnset={movesData.tmLearnsetMoves} />}
           {tab === 'locations' && <LocationsTab locations={locations} onViewOnMap={onViewOnMap} />}

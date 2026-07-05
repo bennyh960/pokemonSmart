@@ -5162,7 +5162,6 @@ export function createBattleScene(
         } else {
           pd.pokedexBatteryCharges--;
           autoSave();
-          // setPokedexFocus(enemy.id, true, 'type', 'battle');
           const pokedexScene = createPokedexReactScene(stateMachine, {
             kind: 'battle',
             pokemonId: enemy.id,
@@ -5171,8 +5170,6 @@ export function createBattleScene(
           waitingForPokedex = true;
           phase = 'WAITING_POKEDEX';
           stateMachine.pushDirect('POKEDEX', pokedexScene);
-
-          // stateMachine.push('POKEDEX');
         }
       } else {
         textBox = createTextBox([t('battle.cantDoThat')], isRTL());
