@@ -15,6 +15,7 @@ export interface BadgeDef {
   city: { en: string; he: string };
   leader: { en: string; he: string };
   type: string; // Pokemon type of the gym
+  icon: string;
   mathTopic: { en: string; he: string };
 }
 
@@ -26,6 +27,7 @@ export const BADGES: BadgeDef[] = [
     leader: { en: 'Adder', he: 'אדר' },
     type: 'normal',
     mathTopic: { en: 'Addition', he: 'חיבור' },
+    icon: '🪨',
   },
   {
     id: 2,
@@ -34,6 +36,7 @@ export const BADGES: BadgeDef[] = [
     leader: { en: 'Minusan', he: 'מינוסאן' },
     type: 'poison',
     mathTopic: { en: 'Subtraction', he: 'חיסור' },
+    icon: '💧',
   },
   {
     id: 3,
@@ -42,6 +45,7 @@ export const BADGES: BadgeDef[] = [
     leader: { en: 'Multina', he: 'מולטינה' },
     type: 'fire',
     mathTopic: { en: 'Multiplication', he: 'כפל' },
+    icon: '🔥',
   },
   {
     id: 4,
@@ -50,6 +54,8 @@ export const BADGES: BadgeDef[] = [
     leader: { en: 'Divider', he: 'מורטי דיבון' },
     type: 'psychic',
     mathTopic: { en: 'Division', he: 'חילוק' },
+    icon: '🥧',
+    // icon: '🧮',
   },
   {
     id: 5,
@@ -58,6 +64,7 @@ export const BADGES: BadgeDef[] = [
     leader: { en: 'Sir Fract', he: 'דון שבריז' },
     type: 'steel',
     mathTopic: { en: 'Fractions', he: 'שברים' },
+    icon: '⚡',
   },
   {
     id: 6,
@@ -66,6 +73,7 @@ export const BADGES: BadgeDef[] = [
     leader: { en: 'Mirror', he: 'מירור' },
     type: 'ghost',
     mathTopic: { en: 'Mixed Operations', he: 'פעולות מעורבות' },
+    icon: '🪞',
   },
   {
     id: 7,
@@ -74,6 +82,7 @@ export const BADGES: BadgeDef[] = [
     leader: { en: 'Formula', he: 'פורמולה' },
     type: 'dragon',
     mathTopic: { en: 'Order of Operations', he: 'סדר פעולות' },
+    icon: '📐',
   },
   {
     id: 8,
@@ -82,6 +91,7 @@ export const BADGES: BadgeDef[] = [
     leader: { en: 'Absolut', he: 'אבסולוט' },
     type: 'dark',
     mathTopic: { en: 'All Operations (Advanced)', he: 'כל הפעולות (מתקדם)' },
+    icon: '🌈',
   },
 ];
 

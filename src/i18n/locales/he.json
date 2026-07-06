@@ -673,6 +673,15 @@
   "pokedex.location.none.reason.cache": "הנתונים מסתנכרנים תוך כדי תנועה במפות השונות במהלך המשחק.",
   "pokedex.location.none.reason.wild": "פוקימונים מסוימים (התחלתיים, אבולוציות או מיוחדים) לא יופיעו בטבע כלל.",
 
+  "trainerData.age": "גיל",
+  "trainerData.pokecoins": "מטבעות פוקיקונים",
+  "trainerData.trainerRank": "דרגת מאמן",
+  "trainerData.totalSteps": "סך כל הצעדים",
+  "trainerData.caught": "פוקימונים שנתפסו",
+  "trainerData.pokedexSeen": "פוקימונים שנצפו",
+  "trainerData.badgeShowcase": "תצוגת תגים",
+  "trainerData.playTime": "זמן משחק",
+
   "menu.trainerData": "נתוני מאמן",
   "menu.save": "שמור",
   "menu.actions": "פעולות",

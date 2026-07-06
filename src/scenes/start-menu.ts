@@ -67,9 +67,8 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
         stateMachine.push('WORLD_MAP');
         break;
       case 'trainerData':
-        setPokedexBadgesMode(true);
         stateMachine.pop();
-        stateMachine.push('POKEDEX');
+        stateMachine.push('TRAINER_DATA');
         break;
       case 'save':
         if (hasActiveGame()) {

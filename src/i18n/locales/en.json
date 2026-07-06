@@ -673,6 +673,15 @@
   "pokedex.location.none.reason.cache": "Location records synchronize as you move through maps during your current session.",
   "pokedex.location.none.reason.wild": "Certain Pokémon (Starters, Evolutions, or Special) may not appear in the wild at all.",
 
+  "trainerData.age": "Age",
+  "trainerData.pokecoins": "Pokécoins",
+  "trainerData.trainerRank": "Trainer Rank",
+  "trainerData.totalSteps": "Total Steps",
+  "trainerData.caught": "Pokemon Caught",
+  "trainerData.pokedexSeen": "Pokedex Seen",
+  "trainerData.badgeShowcase": "Badge Showcase",
+  "trainerData.playTime": "Play Time",
+
   "menu.trainerData": "Trainer Data",
   "menu.save": "Save",
   "menu.actions": "Actions",

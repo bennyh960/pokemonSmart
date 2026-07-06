@@ -1,6 +1,9 @@
+import { BADGES, hasBadge } from '../data/badges';
 import { getLocale } from '../i18n/i18n';
+import { getCaughtCount } from '../scenesReact/pokedex/utils/helpers';
+import { TRAINER_RANKS } from '../scenesReact/trainerData/rank.config';
 import { getNature, getNatureDisplayName } from '../services/pokemon-data';
-import type { Pokemon } from '../types';
+import type { PlayerData, Pokemon } from '../types';
 import type { MajorStatusId } from '../types/battle-metadata';
 
 export const getPokemonSpriteUrl = (pokemonId: number, side: 'front' | 'back' = 'front'): string => {
@@ -95,3 +98,60 @@ export function getContrastTextColor(hex: string): string {
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   return luminance > 0.6 ? '#1c1c1c' : '#ffffff';
 }
+
+export const calcPlayerExperienceRank = (pd: PlayerData) => {
+  const SEEN_COUNT = Object.keys(pd.pokedex).length;
+  const SEEN_POINTS = SEEN_COUNT * 10;
+
+  const CAUGHT_COUNT = getCaughtCount(pd);
+  const CAUGHT_POINTS = CAUGHT_COUNT * 20;
+
+  const BADGES_EARNED = BADGES.filter((badge) => hasBadge(pd.badges, badge.id)).length;
+  const BADGES_POINTS = BADGES_EARNED * 200;
+
+  const TOTAL_STEPS_POINTS = Math.floor(pd.totalSteps / 100);
+  const PLAY_TIME_POINTS = pd.playtime;
+
+  const HELD_ITEMS_PARTY_COUNT = pd.party.filter((p) => p.heldItemId).length;
+  const HELD_ITEMS_BOX_COUNT = Object.values(pd.boxes).reduce((acc, box) => {
+    return acc + box.pokemon.filter((p) => p?.heldItemId).length;
+  }, 0);
+  const HELD_ITEMS_POINTS = (HELD_ITEMS_PARTY_COUNT + HELD_ITEMS_BOX_COUNT) * 250;
+
+  const LEAGUE_WON = 0; // TODO: implement league won count
+  const LEAGUE_WON_POINTS = LEAGUE_WON * 500;
+
+  const value =
+    SEEN_POINTS +
+    CAUGHT_POINTS +
+    BADGES_POINTS +
+    TOTAL_STEPS_POINTS +
+    PLAY_TIME_POINTS +
+    LEAGUE_WON_POINTS +
+    HELD_ITEMS_POINTS;
+
+  // Bundle context variables for predicates
+  const context = {
+    caughtCount: CAUGHT_COUNT,
+    badgesEarned: BADGES_EARNED,
+    leagueWon: LEAGUE_WON,
+    seenCount: SEEN_COUNT,
+  };
+
+  const activeRank = [...TRAINER_RANKS].reverse().find((rank) => {
+    const hasEnoughExp = value >= rank.minExp;
+    const passesRequirements = rank.checkRequirements ? rank.checkRequirements(context) : true;
+    return hasEnoughExp && passesRequirements;
+  });
+
+  const selectedRank = activeRank || TRAINER_RANKS[0];
+
+  return {
+    id: selectedRank.id,
+    value,
+    rank: selectedRank.label,
+    perk: selectedRank.perk,
+    theme: selectedRank.theme,
+    badge: selectedRank.badge,
+  };
+};
