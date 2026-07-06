@@ -105,3 +105,5 @@ export const TRAINER_RANKS: RankConfig[] = [
     perk: { en: 'Mew encounter', he: 'מפגש עם מיו האגדי' },
   },
 ];
+
+// TODO : Make those perks wire into the game
