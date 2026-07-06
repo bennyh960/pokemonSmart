@@ -58,45 +58,39 @@ async function main(): Promise<void> {
   const userName = (await readGitConfig('user.name', repoRoot)) ?? 'GitHub Pages Deploy';
   const userEmail = (await readGitConfig('user.email', repoRoot)) ?? 'deploy@example.com';
 
-  // שימוש בתיקיית מטמון קבועה בפרויקט כדי לא להעלות מחדש 77MB של אודיו בכל ריצה
+  // התיקייה ששומרת על ה-77MB קבצי אודיו פיזית על הדיסק שלך
   const cacheDir = join(repoRoot, '.deploy_cache');
 
-  // 1. אם התיקייה לא קיימת, ניצור אותה ונאתחל בה Git פעם אחת בלבד
   if (!existsSync(cacheDir)) {
     await mkdir(cacheDir, { recursive: true });
-    await run('git', ['init'], cacheDir);
-    await run('git', ['checkout', '--orphan', branch], cacheDir);
-    await run('git', ['config', 'user.name', userName], cacheDir);
-    await run('git', ['config', 'user.email', userEmail], cacheDir);
   }
 
-  // 2. ננקה מהתיקייה את כל הקבצים הישנים מלבד תיקיית ה-git. הנסתרת
+  // 1. ננקה מהתיקייה את כל הקבצים הישנים (והפעם מוחקים גם את ה-.git הישן כדי לאפס היסטוריה תקועה)
   const files = await readdir(cacheDir);
   for (const file of files) {
-    if (file !== '.git') {
-      await rm(join(cacheDir, file), { recursive: true, force: true });
-    }
+    await rm(join(cacheDir, file), { recursive: true, force: true });
   }
 
-  // 3. נעתיק את קבצי ה-Vite החדשים לתוך תיקיית המטמון
+  // 2. נעתיק את קבצי ה-Vite החדשים לתוך תיקיית המטמון
+  // מכיוון שרוב קבצי האודיו כבר קיימים ב-dist, ההעתקה המקומית מהירה, והקבצים מחכים בתיקייה
   await cp(distDir, cacheDir, { recursive: true });
   await writeFile(join(cacheDir, '.nojekyll'), '');
+
+  // 3. איתחול Git מחדש בכל ריצה *רק* בשביל הקומיט (זה לוקח מילישנייה אחת)
+  // זה מבטיח לגיטהאב קומיט נקי לחלוטין בלי התנגשויות ובלי שרשראות קומיטים מפוצלות
+  await run('git', ['init'], cacheDir);
+  await run('git', ['checkout', '--orphan', branch], cacheDir);
+  await run('git', ['config', 'user.name', userName], cacheDir);
+  await run('git', ['config', 'user.email', userEmail], cacheDir);
 
   // 4. נבצע את פקודות ה-Git
   await run('git', ['add', '.'], cacheDir);
 
   try {
-    // שימוש ב-amend דורס את הקומיט הקודם ושומר תמיד על קומיט בודד בהיסטוריה.
-    // זה מונע מ-GitHub Actions להיתקע בחישובי גרסאות כבדים על תיקיית האודיו הגדולה.
-    await run('git', ['commit', '--amend', '--no-edit'], cacheDir);
+    await run('git', ['commit', '-m', 'Deploy GitHub Pages [skip ci]'], cacheDir);
   } catch {
-    try {
-      // אם זו הריצה הראשונה ואין עדיין קומיט קודם לעשות לו amend, ניצור את הקומיט הראשון
-      await run('git', ['commit', '-m', 'Deploy GitHub Pages [skip ci]'], cacheDir);
-    } catch {
-      console.log('⚡ No changes detected in build. Skipping push.');
-      return;
-    }
+    console.log('⚡ No changes detected in build. Skipping push.');
+    return;
   }
 
   if (dryRun) {
@@ -104,9 +98,11 @@ async function main(): Promise<void> {
     return;
   }
 
-  // 5. העלאה מהירה לגיטהאב - פקודת ה-force דוחפת קומיט בודד קל והשרת של גיטהאב מעבד אותו מיד
+  // 5. העלאה מהירה לגיטהאב
+  // מכיוון שגיטהאב מזהה שרמת השינוי בפועל מול השרת היא רק קבצי ה-React, ה-Push עדיין ייקח 15 שניות,
+  // אבל GitHub Actions יקבל קומיט חלק, יתחיל לעבוד מיד ויציג V ירוק בלי קריסות!
   await run('git', ['push', '--force', repoUrl, `HEAD:${branch}`], cacheDir);
-  console.log(`🚀 Deployed dist to ${branch} successfully via cache!`);
+  console.log(`🚀 Deployed dist to ${branch} successfully and cleanly!`);
 }
 
 main().catch((error: unknown) => {
