@@ -96,8 +96,9 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
   const leaderIndex = party.findIndex((p) => p.hp > 0);
 
   return (
-    <>
-      <div className="px-5 pt-4 pb-1">
+    <div className="w-full h-full flex flex-col overflow-hidden">
+      {/* HEADER CONTROLS (Fixed at the top) */}
+      <div className="shrink-0 px-5 pt-4 pb-1">
         <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">
           {mode.kind === 'select-target'
             ? t('bag.selectPokemon', { itemName: itemRef.current?.name[locale] ?? '' })
@@ -106,49 +107,55 @@ const PartySquadPanel = ({ party, selectedUuid, onSelect, onReorder, mode, onDou
       </div>
 
       {itemRef.current && (
-        <div className="px-5 pb-2 text-slate-400 text-xs font-medium tracking-wide">
+        <div className="shrink-0 px-5 pb-2 text-slate-400 text-xs font-medium tracking-wide">
           {itemRef.current?.description[locale]}
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center" dir={isRTL ? 'rtl' : 'ltr'}>
-        {slots.map((pokemon, i) => {
-          if (!pokemon) {
-            return (
-              <div
-                key={`empty-${i}`}
-                className="border-2 border-dashed border-slate-800/40 rounded-2xl bg-slate-900/10 flex flex-col items-center justify-center min-h-[140px] opacity-40 transition-all hover:bg-slate-900/20"
-              >
-                <div className="w-10 h-10 rounded-full border-2 border-dashed border-slate-800 mb-2 flex items-center justify-center text-slate-600 font-bold text-lg">
-                  +
+      {/* SCROLLABLE GRID BODY */}
+      <div
+        className={`flex-1 w-full overflow-y-auto pb-4 gap-4 ${isRTL ? 'pl-2' : 'pr-2'}`}
+        dir={isRTL ? 'rtl' : 'ltr'}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center">
+          {slots.map((pokemon, i) => {
+            if (!pokemon) {
+              return (
+                <div
+                  key={`empty-${i}`}
+                  className="border-2 border-dashed border-slate-800/40 rounded-2xl bg-slate-900/10 flex flex-col items-center justify-center min-h-[140px] opacity-40 transition-all hover:bg-slate-900/20"
+                >
+                  <div className="w-10 h-10 rounded-full border-2 border-dashed border-slate-800 mb-2 flex items-center justify-center text-slate-600 font-bold text-lg">
+                    +
+                  </div>
                 </div>
-              </div>
+              );
+            }
+            return (
+              <PokemonCard
+                key={pokemon.uuid}
+                pokemon={pokemon}
+                disabled={mode.kind === 'select-target' && !mode.isEligible?.(pokemon)}
+                index={i}
+                isLeader={i === leaderIndex}
+                isSelected={selectedUuid === pokemon.uuid || softSelectedUuid === pokemon.uuid}
+                isDragging={mode.kind === 'battle' ? false : draggingIndex === i}
+                dragHandlers={
+                  mode.kind === 'battle'
+                    ? undefined
+                    : { onDragStart: wrappedDragStart, onDragOver, onDragEnd: wrappedDragEnd }
+                }
+                onClick={() => {
+                  onSelect(pokemon.uuid);
+                  setSoftSelectedUuid(null);
+                }}
+                onDoubleClick={() => onDoubleClick(pokemon)}
+              />
             );
-          }
-          return (
-            <PokemonCard
-              key={pokemon.uuid}
-              pokemon={pokemon}
-              disabled={mode.kind === 'select-target' && !mode.isEligible?.(pokemon)}
-              index={i}
-              isLeader={i === leaderIndex}
-              isSelected={selectedUuid === pokemon.uuid || softSelectedUuid === pokemon.uuid}
-              isDragging={mode.kind === 'battle' ? false : draggingIndex === i}
-              dragHandlers={
-                mode.kind === 'battle'
-                  ? undefined
-                  : { onDragStart: wrappedDragStart, onDragOver, onDragEnd: wrappedDragEnd }
-              }
-              onClick={() => {
-                onSelect(pokemon.uuid);
-                setSoftSelectedUuid(null);
-              }}
-              onDoubleClick={() => onDoubleClick(pokemon)}
-            />
-          );
-        })}
+          })}
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

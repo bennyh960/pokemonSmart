@@ -42,7 +42,7 @@ export function PokedexScene({
 
   const [pokemonMap] = useState<Map<number, PokedexPokemon>>(getPokdexPokemons(pd, EXTRA_POKEMONS_IDS));
   const [selectedPokemon, setSelectedPokemon] = useState<PokedexPokemon | null>(
-    mode.kind === 'battle' ? (pokemonMap.get(mode.pokemonId) ?? null) : null,
+    mode.kind === 'battle' || mode.kind === 'party' ? (pokemonMap.get(mode.pokemonId) ?? null) : null,
   );
   const [search, setSearch] = useState('');
 

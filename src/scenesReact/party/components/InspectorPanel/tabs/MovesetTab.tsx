@@ -234,9 +234,9 @@ export function MovesetTab({ pokemon, onMoveReorder, setSelectedMoveToDelete, se
   const selectedMove = selectedIdx !== null ? (moves[selectedIdx] ?? null) : null;
 
   return (
-    <div className="flex gap-4 p-4 h-full overflow-hidden">
-      {/* LEFT: 2×4 move grid */}
-      <div className="flex-[5] grid grid-cols-2 grid-rows-4 gap-2 content-start">
+    <div className="w-full h-full flex flex-col md:flex-row gap-4 p-4 overflow-y-auto md:overflow-hidden">
+      {/* GRID: Moves Display List (Wider on desktop, takes auto sizing on mobile) */}
+      <div className="w-full md:flex-[5] grid grid-cols-2 gap-2 content-start shrink-0 md:shrink">
         {slots.map((move, i) => {
           if (!move) return <EmptyMoveSlot key={`empty-${i}`} />;
           return (
@@ -267,8 +267,8 @@ export function MovesetTab({ pokemon, onMoveReorder, setSelectedMoveToDelete, se
         })}
       </div>
 
-      {/* RIGHT: metadata panel */}
-      <div className="flex-[4] min-h-0">
+      {/* METADATA: Move Details Panel (Stacks underneath on mobile, side panel on desktop) */}
+      <div className="w-full md:flex-[4] min-h-[160px] md:min-h-0 md:overflow-y-auto">
         <MoveMetaPanel move={selectedMove} />
       </div>
     </div>

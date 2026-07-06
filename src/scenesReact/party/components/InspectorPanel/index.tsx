@@ -23,6 +23,7 @@ interface IInspectorPanelProps {
   showNotification: (options: GameNotificationProps) => void;
   setSelectedMoveToDelete: (move: Move | null) => void;
   selectedMoveToDelete: Move | null;
+  onOpenPokedex: (pokemonId: number) => void;
 }
 
 export function InspectorPanel({
@@ -34,6 +35,7 @@ export function InspectorPanel({
   defaultTab = 'stats',
   showNotification,
   setSelectedMoveToDelete,
+  onOpenPokedex,
   selectedMoveToDelete,
 }: Readonly<IInspectorPanelProps>) {
   const { t, locale, isRTL } = useI18n();
@@ -139,15 +141,21 @@ export function InspectorPanel({
   }
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="px-5 pt-4 pb-1">
+    <div className="w-full h-full flex flex-col overflow-hidden">
+      {/* FIXED TITLE (Added shrink-0) */}
+      <div className="shrink-0 px-5 pt-4 pb-1">
         <h3 className="text-slate-400 text-xs font-bold tracking-wider uppercase">{t('party.inspector')}</h3>
       </div>
 
-      <InspectorHeader pokemon={pokemon} isPokedexMode={isPokedexMode} mode={mode} onEquipItem={onEquipItem} />
+      {/* FIXED HEADER DETAILS (Added shrink-0) */}
+      <div className="shrink-0">
+        <InspectorHeader pokemon={pokemon} isPokedexMode={isPokedexMode} mode={mode} onEquipItem={onEquipItem} />
+      </div>
 
-      <div className="flex-1 outline-none flex flex-col min-h-0">
-        <div className="flex px-4 border-b border-slate-800">
+      {/* VIEWPORT CONTROLLER */}
+      <div className="flex-1 outline-none flex flex-col min-h-0 overflow-hidden">
+        {/* FIXED TAB BAR (Added shrink-0) */}
+        <div className="shrink-0 flex px-4 border-b border-slate-800">
           {tabs
             .filter((tab) => tab.conditions)
             .map((tab) => {
@@ -164,8 +172,11 @@ export function InspectorPanel({
             })}
         </div>
 
-        <div className="flex-1 overflow-y-auto game-scrollbar">
-          {activeTab === 'stats' && <InspectorStatsTab pokemon={pokemon} party={pd.party} />}
+        {/* SCROLLABLE TAB PANEL AREA */}
+        <div className="flex-1 overflow-y-auto game-scrollbar p-1">
+          {activeTab === 'stats' && (
+            <InspectorStatsTab mode={mode} pokemon={pokemon} party={pd.party} openPokedex={onOpenPokedex} />
+          )}
           {activeTab === 'moveset' && (
             <MovesetTab
               mode={mode}

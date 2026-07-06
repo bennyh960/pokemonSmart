@@ -8,8 +8,19 @@ import { calcHappiness, getHappinessLabel } from '../../../../../systems/happine
 import type { Pokemon } from '../../../../../types';
 import { useI18n } from '../../../../../ui-react/context/i18n-context';
 import { getStatConfig } from '../../../../../utils/util';
+import type { PartyMode } from '../../..';
 
-export function InspectorStatsTab({ pokemon, party }: { pokemon: Pokemon; party: Pokemon[] }) {
+export function InspectorStatsTab({
+  pokemon,
+  party,
+  openPokedex,
+  mode,
+}: Readonly<{
+  mode: PartyMode;
+  pokemon: Pokemon;
+  party: Pokemon[];
+  openPokedex: (pokemonId: number) => void;
+}>) {
   const { t, locale } = useI18n();
 
   const [happinessLabel, setHappinessLabel] = useState({ label: '', value: 0, color: '' });
@@ -71,10 +82,15 @@ export function InspectorStatsTab({ pokemon, party }: { pokemon: Pokemon; party:
           </div>
         </div>
 
-        <button className="w-full py-2.5 bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center justify-center gap-2">
-          {t('party.info.pokedexHint')}
-          <span className="text-[10px]">↗</span>
-        </button>
+        {mode.kind === 'overworld' && (
+          <button
+            onClick={() => openPokedex(pokemon.id)}
+            className="w-full py-2.5 bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center justify-center gap-2"
+          >
+            {t('party.info.pokedexHint')}
+            <span className="text-[10px]">↗</span>
+          </button>
+        )}
       </div>
     </div>
   );

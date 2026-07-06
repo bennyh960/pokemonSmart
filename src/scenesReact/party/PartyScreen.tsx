@@ -18,6 +18,7 @@ import { useGameNotification } from '../../ui-react/context/GameNotifications-co
 import { getMove, getMoveDisplayName, getPokemonDisplayName } from '../../services/pokemon-data.ts';
 import { clearMoveLearningSession } from '../../systems/move-learning.ts';
 import { useInputLayer } from '../../engine/input';
+import { createPokedexReactScene } from '../pokedex/index.tsx';
 // import { useInputLayer } from '../../engine/inputManagerV2';
 
 interface Props {
@@ -30,7 +31,10 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
   const { t, isRTL, setLocale, locale } = useI18n();
   const [pd, editPlayerData] = usePlayerData();
   const { showNotification } = useGameNotification();
-  // const [notification, setNotification] = useState<GameNotificationProps | null>(null);
+
+  // for small screen only
+  const [activeTab, setActiveTab] = useState<'squad' | 'inspector'>('squad');
+
   // party is a LIVE read — not state. Re-renders come from the store.
   const party = pd.party;
 
@@ -176,11 +180,22 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
     }, 3000);
   };
 
+  const openPokedex = (pokemonId: number) => {
+    const pokedexScene = createPokedexReactScene(stateMachine, {
+      kind: 'party',
+      pokemonId: pokemonId,
+      tab: 'info',
+    });
+    onClose();
+    stateMachine.pushDirect('POKEDEX', pokedexScene);
+  };
+
   return (
     <div
-      className="w-full h-full flex flex-col bg-slate-950 text-slate-100 font-sans select-none overflow-hidden"
+      className="w-full h-screen flex flex-col bg-slate-950 text-slate-100 font-sans select-none overflow-hidden"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
+      {/* FIXED HEADER */}
       <PartyHeader
         stateMachine={stateMachine}
         onClose={onClose}
@@ -190,9 +205,39 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
         onDoubleClick={onDoubleClick}
       />
 
-      <div className="flex-1 w-full flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden p-4 md:p-6 gap-6">
+      {/* MOBILE TAB TOGGLE (Only visible on small screens) */}
+      <div className="flex md:hidden p-4 pb-0 gap-2">
+        <button
+          onClick={() => setActiveTab('squad')}
+          className={`flex-1 py-2 text-center font-medium rounded-xl border transition-all ${
+            activeTab === 'squad'
+              ? 'bg-slate-800 border-slate-700 text-white'
+              : 'bg-slate-900/40 border-transparent text-slate-400'
+          }`}
+        >
+          {t('party.squad')}
+        </button>
+        <button
+          onClick={() => setActiveTab('inspector')}
+          className={`flex-1 py-2 text-center font-medium rounded-xl border transition-all ${
+            activeTab === 'inspector'
+              ? 'bg-slate-800 border-slate-700 text-white'
+              : 'bg-slate-900/40 border-transparent text-slate-400'
+          }`}
+        >
+          {t('party.inspector')}
+        </button>
+      </div>
+
+      {/* MAIN BODY: Scrollable container on mobile, fixed layout on desktop */}
+      <div className="flex-1 w-full flex flex-col lg:flex-row overflow-hidden p-4 md:p-6 gap-6">
         {/* PANEL: PARTY SQUAD */}
-        <div className="flex-[4] flex flex-col px-3 gap-5 bg-slate-900/20 border border-slate-800/60 rounded-3xl overflow-hidden backdrop-blur-xl relative min-h-[520px] lg:min-h-0 lg:h-full shadow-2xl">
+        <div
+          className={`
+          flex-[4] flex flex-col px-3 gap-5 bg-slate-900/20 border border-slate-800/60 rounded-3xl overflow-hidden backdrop-blur-xl relative shadow-2xl h-full
+          ${activeTab === 'squad' ? 'flex' : 'hidden lg:flex'}
+        `}
+        >
           {mode.kind === 'move-learning' ? (
             <MoveLearning
               pokemon={selected}
@@ -207,18 +252,26 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
             />
           ) : (
             <PartySquadPanel
-              party={party} // read-only → display boundary
+              party={party}
               selectedUuid={selected?.uuid ?? ''}
-              onSelect={setSelectedUuid}
-              onReorder={applyPartyOrder}
+              onSelect={(uuid) => {
+                setSelectedUuid(uuid);
+                setActiveTab('inspector'); // Auto-switch to inspector on mobile selection
+              }}
               mode={mode}
               onDoubleClick={onDoubleClick}
+              onReorder={applyPartyOrder}
             />
           )}
         </div>
 
-        {/* PANEL: LIVE INSPECTOR — wider on desktop, taller when stacked */}
-        <div className="flex-[6] flex flex-col bg-slate-900/20 border border-slate-800/60 rounded-3xl overflow-hidden backdrop-blur-xl relative min-h-[600px] lg:min-h-0 lg:h-full shadow-2xl">
+        {/* PANEL: LIVE INSPECTOR */}
+        <div
+          className={`
+          flex-[6] flex flex-col bg-slate-900/20 border border-slate-800/60 rounded-3xl overflow-hidden backdrop-blur-xl relative shadow-2xl h-full
+          ${activeTab === 'inspector' ? 'flex' : 'hidden lg:flex'}
+        `}
+        >
           <InspectorPanel
             pokemon={selected}
             mode={mode}
@@ -227,19 +280,25 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
             showNotification={showNotification}
             setSelectedMoveToDelete={setSelectedMoveToDelete}
             selectedMoveToDelete={selectedMoveToDelete}
+            onOpenPokedex={openPokedex}
           />
         </div>
       </div>
+
+      {/* FIXED FOOTER */}
       {(mode.kind === 'battle' || mode.kind === 'overworld') && (
-        <QuickActions
-          mode={mode}
-          onClose={onClose}
-          editPlayerData={editPlayerData}
-          selected={selected}
-          quickActionItems={getQuickActions(selected, mode, pd.items)}
-          stateMachine={stateMachine}
-        />
+        <div className="w-full shrink-0 border-t border-slate-950/20 bg-slate-950/80 backdrop-blur-md">
+          <QuickActions
+            mode={mode}
+            onClose={onClose}
+            editPlayerData={editPlayerData}
+            selected={selected}
+            quickActionItems={getQuickActions(selected, mode, pd.items)}
+            stateMachine={stateMachine}
+          />
+        </div>
       )}
+
       <FloatingTextLayer />
     </div>
   );

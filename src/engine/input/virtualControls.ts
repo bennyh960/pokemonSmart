@@ -174,11 +174,7 @@ export function createVirtualControls(input: InputManager, container: HTMLElemen
     if (!container) return;
 
     // this card actualy need portait screen
-    if (
-      document.querySelector('.login-card') ||
-      document.querySelector('#pokedex-detail-view') ||
-      document.querySelector('#pokedex-list-view')
-    ) {
+    if (document.querySelector('.login-card') || document.querySelector('#ui-overlay')?.children.length) {
       return;
     }
 
@@ -210,7 +206,8 @@ export function createVirtualControls(input: InputManager, container: HTMLElemen
     container.appendChild(warningDiv);
   }
 
-  createRotateWarning(container);
+  // TODO: handle future - let kids decide thier screen
+  // createRotateWarning(container);
 
   // Start with the default overlay (dpad + utility) until the first scene applies its own.
   applyLayout();

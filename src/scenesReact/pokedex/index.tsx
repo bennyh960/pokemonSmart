@@ -6,6 +6,7 @@ import { PokedexScene } from './PokedexScene.js';
 
 export type PokedexMode =
   | { kind: 'overworld' }
+  | { kind: 'party'; pokemonId: number; tab?: 'battle' | 'evolution' | 'info' }
   | { kind: 'battle'; pokemonId: number; tab: 'battle' | 'evolution' | 'info' };
 
 export function createPokedexReactScene(stateMachine: StateMachine, mode: PokedexMode = { kind: 'overworld' }): Scene {
