@@ -1,0 +1,1 @@
+var e=`minusburg-library`,t=`Minusburg Library`,n=`library1`,r=`interior`,i={en:`Minusburg Library`,he:`ספריית מינוסבורג`},a=`town2`,o=null,s={x:10,y:18},c=[],l={id:e,name:t,template:n,tileset:r,label:i,music:a,encounterTableId:null,spawn:s,npcs:c};export{l as default,o as encounterTableId,e as id,i as label,a as music,t as name,c as npcs,s as spawn,n as template,r as tileset};

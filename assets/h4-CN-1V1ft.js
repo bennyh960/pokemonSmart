@@ -1,0 +1,1 @@
+var e=`house4`,t={en:`Someone's House`,he:`בית של מישהו`},n=`house-small`,r={id:e,label:t,template:n};export{r as default,e as id,t as label,n as template};

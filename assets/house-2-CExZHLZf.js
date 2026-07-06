@@ -1,0 +1,1 @@
+var e=`dividia-house-2`,t={en:`Fraction Family Home`,he:`בית משפחת השברים`},n=`house-small`,r=`Dividia`,i={id:e,label:t,template:n,area:r};export{r as area,i as default,e as id,t as label,n as template};

@@ -1,0 +1,1 @@
+var e=`dividia-house-3`,t={en:`Trainer's Lodge`,he:`לודג' של מאמן`},n=`house-1`,r=`Dividia`,i={id:e,label:t,template:n,area:r};export{r as area,i as default,e as id,t as label,n as template};

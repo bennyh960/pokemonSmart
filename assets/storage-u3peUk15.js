@@ -1,0 +1,1 @@
+var e=`sumville/storage`,t=`storage-template`,n={en:`Sumville Storage`,he:`מחסן סומוויל`},r={id:e,template:t,label:n};export{r as default,e as id,n as label,t as template};

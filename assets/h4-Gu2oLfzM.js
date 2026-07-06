@@ -1,0 +1,1 @@
+var e=`h4`,t=`house-small`,n=`interior`,r=`multiplia`,i={id:`h4`,template:t,tileset:n,area:r};export{r as area,i as default,e as id,t as template,n as tileset};

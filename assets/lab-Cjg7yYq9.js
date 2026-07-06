@@ -1,0 +1,1 @@
+var e=`sumville/lab`,t=`lab-template`,n={en:`Sumville Lab`,he:`מעבדה סומוויל`},r={id:e,template:t,label:n};export{r as default,e as id,n as label,t as template};
