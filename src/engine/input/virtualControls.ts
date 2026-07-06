@@ -174,7 +174,11 @@ export function createVirtualControls(input: InputManager, container: HTMLElemen
     if (!container) return;
 
     // this card actualy need portait screen
-    if (document.querySelector('.login-card')) {
+    if (
+      document.querySelector('.login-card') ||
+      document.querySelector('#pokedex-detail-view') ||
+      document.querySelector('#pokedex-list-view')
+    ) {
       return;
     }
 

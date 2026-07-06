@@ -106,7 +106,10 @@ export function DetailView({ defaultTab, pokemon, onBack, onViewOnMap }: DetailV
   }, []);
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-[radial-gradient(ellipse_at_top,_#5b0d0d_0%,_#1a0505_45%,_#000000_85%)]">
+    <div
+      id="pokedex-detail-view"
+      className="flex h-screen w-full flex-col overflow-hidden bg-[radial-gradient(ellipse_at_top,_#5b0d0d_0%,_#1a0505_45%,_#000000_85%)]"
+    >
       <div className="mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col px-4 py-8 sm:px-10 sm:py-12">
         <DetailHeader pokemon={pokemon} onBack={onBack} />
 

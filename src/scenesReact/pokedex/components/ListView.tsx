@@ -85,7 +85,10 @@ export function ListView({
   }, []);
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-[radial-gradient(ellipse_at_top,_#5b0d0d_0%,_#1a0505_45%,_#000000_85%)]">
+    <div
+      id="pokedex-list-view"
+      className="flex h-screen w-full flex-col overflow-hidden bg-[radial-gradient(ellipse_at_top,_#5b0d0d_0%,_#1a0505_45%,_#000000_85%)]"
+    >
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-8 sm:px-10 sm:py-12 min-h-0">
         <div className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-red-400/80">
           <span className="text-red-500">◈</span>
