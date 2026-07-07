@@ -4,7 +4,7 @@ export interface RankLabel {
 }
 
 export interface RankConfig {
-  id: string;
+  id: 'rookie' | 'amateur' | 'pro' | 'expert' | 'elite' | 'master' | 'legendary';
   minExp: number;
   label: RankLabel;
   perk: RankLabel;
@@ -107,3 +107,10 @@ export const TRAINER_RANKS: RankConfig[] = [
 ];
 
 // TODO : Make those perks wire into the game
+
+export const isActionAllowedByPlayerRank = (playerRankId: RankConfig['id'], requireRankId: RankConfig['id']) => {
+  const rankOrders: RankConfig['id'][] = ['rookie', 'amateur', 'pro', 'expert', 'elite', 'master', 'legendary'];
+  const playerRankIndex = rankOrders.indexOf(playerRankId);
+  const requiredRankIndex = rankOrders.indexOf(requireRankId);
+  return playerRankIndex >= requiredRankIndex;
+};

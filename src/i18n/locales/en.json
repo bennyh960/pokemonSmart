@@ -266,6 +266,9 @@
   "npc.abilitiesSwap.intro2": "Every Pokémon holds more potential than it shows. I've spent years studying how to shift which ability takes dominance. It's precise work — but I can do it.",
   "npc.abilitiesSwap.intro3": "Abilities aren't learned — they're inherited. But inheritance isn't always destiny. With my equipment, I can coax a different trait to the forefront.",
   "npc.abilitiesSwap.intro4": "So — which Pokémon shall we work on today?",
+  "npc.abilitiesSwap.notAllowed1": "However... mutating a Pokémon's inherent traits requires extreme precision. In the hands of an inexperienced Trainer.",
+  "npc.abilitiesSwap.notAllowed2": "I can see potential in you, but your journey is still in its early stages. Come back once you have proven your expertise.",
+
   "npc.abilitiesSwap.noOptions": "This Pokémon has already reached its full potential. There is nothing more I can offer.",
   "npc.abilitiesSwap.currentAbility": "Current ability: {{name}} — {{desc}}",
   "npc.abilitiesSwap.altAbility": "Can be awakened: {{name}} — {{desc}}",
@@ -681,6 +684,8 @@
   "trainerData.pokedexSeen": "Pokedex Seen",
   "trainerData.badgeShowcase": "Badge Showcase",
   "trainerData.playTime": "Play Time",
+  "player.rank.hint": "If you are unsure of your standing, you can always review your milestones and requirements in your **Trainer Card**.",
+  "player.rank.hint2": "The required rank for this action is {rank}. Your current rank is {playerRank}.",
 
   "menu.trainerData": "Trainer Data",
   "menu.save": "Save",

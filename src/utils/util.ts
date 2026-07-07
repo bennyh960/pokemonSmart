@@ -1,7 +1,7 @@
 import { BADGES, hasBadge } from '../data/badges';
 import { getLocale } from '../i18n/i18n';
 import { getCaughtCount } from '../scenesReact/pokedex/utils/helpers';
-import { TRAINER_RANKS } from '../scenesReact/trainerData/rank.config';
+import { TRAINER_RANKS, type RankConfig } from '../scenesReact/trainerData/rank.config';
 import { getNature, getNatureDisplayName } from '../services/pokemon-data';
 import type { PlayerData, Pokemon } from '../types';
 import type { MajorStatusId } from '../types/battle-metadata';
@@ -147,7 +147,7 @@ export const calcPlayerExperienceRank = (pd: PlayerData) => {
   const selectedRank = activeRank || TRAINER_RANKS[0];
 
   return {
-    id: selectedRank.id,
+    id: selectedRank.id as RankConfig['id'],
     value,
     rank: selectedRank.label,
     perk: selectedRank.perk,

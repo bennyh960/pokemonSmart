@@ -120,6 +120,8 @@ import * as MovablePuzzle from '../systems/movable-puzzle.js';
 import { getMapWeather, isDaytime, renderNightOverlay, renderOverworldWeather } from '../systems/weather-system.js';
 import type { WeatherConditionId } from '../types/battle-metadata.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
+import { calcPlayerExperienceRank } from '../utils/util.js';
+import { isActionAllowedByPlayerRank, TRAINER_RANKS } from '../scenesReact/trainerData/rank.config.js';
 const MOVE_DURATION = 0.2;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
@@ -797,6 +799,31 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       const npcSpeaker = npc.name ? getLocalizedName(npc.name) : undefined;
       restoreNPCFacing(npc);
       interactingNPC = null;
+
+      // This NPC has trainer rank limitation : player rank must be expert
+      const playerExperience = calcPlayerExperienceRank(pd);
+      const playerRank = calcPlayerExperienceRank(pd).id;
+      const requiredRank = TRAINER_RANKS.find((r) => r.id === 'expert');
+
+      if (!isActionAllowedByPlayerRank(playerRank, requiredRank?.id ?? 'expert')) {
+        activeTextBox = createTextBox(
+          [
+            t('npc.abilitiesSwap.intro1'),
+            t('npc.abilitiesSwap.intro2'),
+            t('npc.abilitiesSwap.intro3'),
+            t('npc.abilitiesSwap.notAllowed1'),
+            t('npc.abilitiesSwap.notAllowed2'),
+            t('player.rank.hint'),
+            t('player.rank.hint2', {
+              rank: requiredRank?.label[getLocale()] ?? '',
+              playerRank: playerExperience.rank[getLocale()],
+            }),
+          ],
+          rtl,
+          npcSpeaker,
+        );
+        return;
+      }
 
       // ── Step 1: Pick a Pokémon ──
       activeTextBox = createTextBox(

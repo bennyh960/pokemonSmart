@@ -33,7 +33,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
     pokemonCaught: 142,
     badges: pd.badges, // This should be a bitmask or array of badge IDs the player has earned
   };
-
+  console.log(trainer.experienceRank);
   const currentYear = new Date().getFullYear();
   const age = currentYear - trainer.birthYear;
 
