@@ -14,6 +14,7 @@ import { getLocalizedName } from '../services/pokemon-data.js';
 import type { InputManager } from '../engine/input';
 import { LOGICAL_WIDTH as SW, LOGICAL_HEIGHT as SH } from '../engine/config.js';
 import { FONT_HE } from '../engine/fonts.js';
+import { getCachedImage, loadImage } from '../engine/sprite-loader.js';
 
 // ─── Category definitions ───────────────────────────────────────────
 interface CategoryDef {
@@ -529,8 +530,14 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
         ctx.fillRect(4, cardY, 2, ITEM_H);
       }
 
-      // Icon (16×16 box at x=214)
-      drawItemIcon(ctx, iconInfo.type, iconInfo.color, 214, cardY + 2);
+      // loadImage
+      const itemImg = getCachedImage(item.sprite);
+      if (itemImg) {
+        ctx.drawImage(itemImg, 216, cardY + 4, 12, 12);
+      } else {
+        // Icon (16×16 box at x=214)
+        drawItemIcon(ctx, iconInfo.type, iconInfo.color, 214, cardY + 2);
+      }
 
       // Item name (right-aligned, RTL)
       ctx.fillStyle = canAfford ? '#ffffff' : '#667766';

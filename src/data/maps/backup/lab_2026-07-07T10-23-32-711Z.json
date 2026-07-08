@@ -1,0 +1,8 @@
+{
+  "id": "percentile/lab",
+  "template": "lab-template",
+  "label": {
+    "en": "Percentile Lab",
+    "he": "מעבדה פרסנטיל"
+  }
+}

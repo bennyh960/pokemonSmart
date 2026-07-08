@@ -2128,13 +2128,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Sync flagListeners — same pattern as isNPCVisible: reads live flags each frame
       if (hasActiveGame()) tileMap.applyFlagListeners(getPlayerData().flags);
 
-      // console.log(stateMachine.currentId());
-      // if (stateMachine.currentId() === 'OVERWORLD') {
-      //   showHUD();
-      // } else {
-      //   hideHUD();
-      // }
-
       // ── Cutscene runner: takes full control of input ──
       if (isCutsceneActive()) {
         // hideHUD();
@@ -2305,6 +2298,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       // Shop overlay takes priority
+      // load shop images (cant be in init do to shop is dynamic)
+      if (shop.items.length > 0) {
+        const shopImgTest = getCachedImage(shop.items[0].sprite);
+        if (!shopImgTest) {
+          for (const item of shop.items) {
+            loadImage(item.sprite).catch(() => {});
+          }
+        }
+      }
       if (shop.open) {
         updateShop(shop, input, dt);
         if (!shop.open) showHUD(); // shop just closed

@@ -12,13 +12,7 @@
     "x": 12,
     "y": 10
   },
-  "transitions": [
-    {
-      "fromX": 13,
-      "fromY": 26,
-      "toMapId": "percentile/lab"
-    }
-  ],
+  "transitions": [],
   "npcs": [],
   "music": "town",
   "encounterTableId": null,
@@ -54,7 +48,7 @@
     ["wt1","wt1","wt1","wt1","wt1","wt1tr","fh1","fh1","f30","f30","xtest","xtest","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","xtest","xtest","f30","f30","xtest","xtest","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","xtest","f30","f30","f30","s1-5","s1-5","xtest","xtest","xtest"],
     ["wt1","wt1","wt1","wt1","wt1","wt1tr","fh1","fh1","f30","xtest","xtest","xtest","f30","f30","f30","f30","f30","f30","xtest","f30","f30","f30","f30","f30","xtest","xtest","f30","f30","xtest","xtest","f30","f30","f30","f30","f30","xtest","xtest","f30","f30","f30","f30","xtest","f30","f30","f30","s1-5","s1-5","xtest","xtest","xtest"],
     ["wt1","wt1","wt1","wt1","wt1","wt1tr","fh1","fh1","f30","xtest","xtest","xtest","f30","f30","f30","f30","f30","f30","xtest","f30","f30","f30","f30","f30","xtest","xtest","f30","f30","xtest","xtest","f30","f30","f30","f30","f30","xtest","xtest","f30","f30","f30","f30","xtest","f30","f30","f30","s1-5","s1-5","xtest","xtest","xtest"],
-    ["wt1","wt1","wt1","wt1","wt1","wt1tr","fh1","fh1","f30","xtest","xtest","xtest","f30","house-x-1-door","f30","f30","f30","xtest","xtest","f30","f30","xtest","f30","f30","xtest","xtest","f30","f30","xtest","xtest","f30","f30","f30","f30","f30","xtest","xtest","f30","f30","f30","f30","xtest","f30","f30","f30","s1-5","s1-5","xtest","xtest","xtest"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1tr","fh1","fh1","f30","xtest","xtest","xtest","f30","f30","f30","f30","f30","xtest","xtest","f30","f30","xtest","f30","f30","xtest","xtest","f30","f30","xtest","xtest","f30","f30","f30","f30","f30","xtest","xtest","f30","f30","f30","f30","xtest","f30","f30","f30","s1-5","s1-5","xtest","xtest","xtest"],
     ["wt1","wt1","wt1","wt1","wt1","wt1tr","fh1","fh1","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","s1-5","s1-5","xtest","xtest","xtest"],
     ["wt1","wt1","wt1","wt1","wt1","wt1tr","fh1","fh1","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","s1-5","s1-5","xtest","xtest","xtest"],
     ["wt1","wt1","wt1","wt1","wt1","wt1tr","fh1","fh1","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","xtest","f30","f30","f30","s1-5","s1-5","xtest","xtest","xtest"],

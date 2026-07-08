@@ -1,0 +1,36 @@
+{
+  "id": "lab",
+  "name": "lab-template",
+  "template": "lab-template",
+  "tileset": "interior",
+  "label": {
+    "en": "Percentile Lab",
+    "he": "מעבדה פרסנטיל"
+  },
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 7,
+    "y": 13
+  },
+  "npcs": [
+    {
+      "id": "npc-1783419724700-ability-swapper",
+      "x": 10,
+      "y": 6,
+      "facing": "down",
+      "type": "abilities-swap",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום עליכם!"
+        }
+      ],
+      "spriteType": "char_a8fbf3",
+      "name": {
+        "en": "Akiva",
+        "he": "עקיבא"
+      }
+    }
+  ]
+}
