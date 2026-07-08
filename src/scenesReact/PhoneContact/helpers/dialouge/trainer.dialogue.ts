@@ -1,4 +1,4 @@
-import { countBadges, getBadge } from '../../../../data/badges';
+import { countBadges } from '../../../../data/badges';
 import { getPokemonDisplayName } from '../../../../services/pokemon-data';
 import type { TrainerData } from '../../../../systems/npc';
 import type { PlayerData } from '../../../../types';

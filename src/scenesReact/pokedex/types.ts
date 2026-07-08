@@ -6,3 +6,5 @@ export type TabKey = 'info' | 'evolution' | 'battle' | 'moves' | 'locations';
 export interface PokedexPokemon extends PokemonData {
   status: CaughtStatus;
 }
+
+export type { WildLocation } from './utils/locationHelper';

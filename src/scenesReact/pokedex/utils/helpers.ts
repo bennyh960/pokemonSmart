@@ -2,7 +2,6 @@ import { getPokemon } from '../../../services/pokemon-data';
 import type { PokedexPokemon } from '../types';
 import type { PlayerData } from '../../../types';
 
-//TODO: This function is also in old pokdex - delete it from there post migration
 // Also it been used for migration
 export function isPokemonStillWithPlayer(pd: PlayerData, id: number): boolean {
   if (pd.party?.some((p) => p?.id === id)) return true;

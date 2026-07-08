@@ -26,7 +26,7 @@ import {
   type MoveBattleMetadata,
   type MoveBattleTarget,
 } from '../types/battle-metadata.js';
-import type { EvolutionStage } from '../scenes/pokedex/tabs/evolution.ts';
+import type { EvolutionStage } from '../scenesReact/pokedex/components/tabs/EvolutionTab.tsx';
 
 // --- Types matching the JSON shapes ---
 

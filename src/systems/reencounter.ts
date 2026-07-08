@@ -16,7 +16,6 @@ import { getPlayerData, hasActiveGame } from './game-state.js';
 import { getPokemon } from '../services/pokemon-data.js';
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { createPokemonFromData } from './encounter.js';
-import { getCurrentMapId } from './map-manager.js';
 import type { Pokemon } from '../types/index.js';
 
 const MS_PER_HOUR = 3_600_000;

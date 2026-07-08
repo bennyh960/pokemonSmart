@@ -44,7 +44,7 @@ const CloseIcon = ({ className }: { className?: string }) => (
 const checkWeatherActive = () => true;
 
 const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
-  const { isRTL, locale, t } = useI18n();
+  const { isRTL, locale } = useI18n();
   const [selectedContact, setSelectedContact] = useState<ContactItem | null>(null);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');

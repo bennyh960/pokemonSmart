@@ -24,7 +24,7 @@ import { getCachedMap, getMapDisplayName, loadMap } from '../systems/map-manager
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import mapManifest from '../data/maps/map-manifest.js';
 import type { Scene, Pokemon } from '../types/index.js';
-import { type WildLocation } from './pokedex/tabs/location.js';
+import { type WildLocation } from '../scenesReact/pokedex/types.js';
 // ─── Fly destination registry ─────────────────────────────────────────────────
 /** All city mapIds from the manifest are valid Fly destinations. */
 export const FLY_DESTINATIONS: string[] = mapManifest.cities.map((c) => c.id);

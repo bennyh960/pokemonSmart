@@ -14,7 +14,7 @@ import { getLocalizedName } from '../services/pokemon-data.js';
 import type { InputManager } from '../engine/input';
 import { LOGICAL_WIDTH as SW, LOGICAL_HEIGHT as SH } from '../engine/config.js';
 import { FONT_HE } from '../engine/fonts.js';
-import { getCachedImage, loadImage } from '../engine/sprite-loader.js';
+import { getCachedImage } from '../engine/sprite-loader.js';
 
 // ─── Category definitions ───────────────────────────────────────────
 interface CategoryDef {

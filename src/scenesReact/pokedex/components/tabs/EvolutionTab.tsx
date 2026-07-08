@@ -11,7 +11,7 @@ import type { Locale } from '../../../../i18n/i18n';
  * from services/pokemon-data (or anywhere canonical), swap this for a type-only
  * import instead of redeclaring it here.
  */
-interface EvolutionStage {
+export interface EvolutionStage {
   id: number;
   name: { en: string; he: string };
   minLevel: number | null;
