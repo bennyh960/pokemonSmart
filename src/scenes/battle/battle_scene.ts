@@ -108,7 +108,7 @@ import { getBattleBackground } from '.././../engine/asset-generator.js';
 import { t, isRTL, getLocale } from '../../i18n/i18n.js';
 import { applyHeldItemEffectInBattle, getItem } from '../../data/items.js';
 import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
-import { resolveDialogue, type TrainerReward, type BilingualText } from '../../systems/npc.js';
+import { resolveDialogue, type TrainerReward, type BilingualText, type ReencounterConfig } from '../../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenes/bag.js';
 import { selectedPartyIndex, clearSelectedPartyIndex } from '.././party';
 import { setEvolutionData } from '.././evolution.js';
@@ -408,7 +408,7 @@ export interface TrainerBattleData {
   postBattleDialogue?: BilingualText[]; // Dialogue shown after defeat
   postFlagDialogue?: { flag?: string; dialogue: BilingualText[] }; // Shown immediately after first defeat (flag just set)
   reencounterIndex?: number; // 0 = first fight, 1+ = rematch (items skipped on rematch)
-  hasReencounter?: boolean; // true if trainer has re-encounter config (for phone registration)
+  reencounter?: ReencounterConfig; // true if trainer has re-encounter config (for phone registration)
   locationEn?: string; // trainer location for phone display
   locationHe?: string;
   aiLevel?: 1 | 2 | 3 | 4 | 5;
@@ -1280,13 +1280,11 @@ export function createBattleScene(
       // Always record the defeat for re-encounter tracking
       recordTrainerDefeat(td.trainerId);
       // Register phone contact on first defeat if trainer supports re-encounters
-      if (!isRematch && td.hasReencounter) {
-        if (!pd.phoneContacts.some((c) => c.trainerId === td.trainerId)) {
+      if (!isRematch && td.reencounter?.addToPhone) {
+        if (!pd.phoneContacts.some((c) => c.npcId === td.trainerId)) {
           pd.phoneContacts.push({
-            trainerId: td.trainerId,
-            trainerName: td.trainerName,
-            locationEn: td.locationEn ?? '',
-            locationHe: td.locationHe ?? '',
+            npcId: td.trainerId,
+            mapId: getCurrentMapId() || '',
           });
         }
       }

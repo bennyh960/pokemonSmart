@@ -22,7 +22,7 @@ import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine
 import { t, isRTL, getLocale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame } from '../systems/game-state.js';
 import { getReencounterStatus } from '../systems/reencounter.js';
-import { getMapDisplayName, findMapForTrainer } from '../systems/map-manager.js';
+import { getMapDisplayName, findMapForTrainer, loadMap } from '../systems/map-manager.js';
 import { getDayCareEntry, getDayCarePhase } from '../systems/day-care.js';
 import type { PhoneContactInfo } from '../types/index.js';
 
@@ -100,6 +100,23 @@ function getStatusLine(contact: PhoneContactInfo): string {
   return t('phone.status.ready');
 }
 
+// npc to phone need to have : mapid and npcId
+const getContactData = async (mapId: string, npcId: string) => {
+  const map = await loadMap(mapId);
+
+  const npc = map.npcs?.find((n) => n.id === npcId);
+
+  const mapLabel = map.label; // locale he/en
+
+  //todo: interiour path is city/houseId - the label will show house data but we want show also which city is it
+  // the simple way is from mapid which is folder/file -> city/houseId
+  const city = mapId.split('/')[0];
+  const cityLabel = getMapDisplayName(city);
+
+  const lastTimeEncounter = getPlayerData().flagTimestamps[`trainer-${npcId}-defeated`];
+  console.log({ npc, mapLabel, cityLabel, lastTimeEncounter });
+};
+
 export function createPhoneScene(input: InputManager, stateMachine: StateMachine): Scene {
   let selectedIndex = 0;
   let contacts: PhoneContactInfo[] = [];
@@ -107,6 +124,7 @@ export function createPhoneScene(input: InputManager, stateMachine: StateMachine
 
   return {
     enter(): void {
+      getContactData('routes/route-1', 'bug-catcher-1');
       selectedIndex = 0;
       dialogueLine = null;
       if (!hasActiveGame()) {
@@ -117,8 +135,7 @@ export function createPhoneScene(input: InputManager, stateMachine: StateMachine
       // Resolve missing mapId for existing contacts by searching the loaded map cache
       for (const contact of pd.phoneContacts) {
         if (!contact.mapId) {
-          const found = findMapForTrainer(contact.trainerId);
-          // console.debug(`[DEBUG] Resolving mapId for contact ${contact.trainerId} → ${found}`);
+          const { mapId: found } = findMapForTrainer(contact.npcId) ?? { mapId: null };
           if (found) contact.mapId = found; // patch in place — persists on next save
         }
       }

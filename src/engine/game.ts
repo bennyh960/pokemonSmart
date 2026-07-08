@@ -40,6 +40,7 @@ import { createPartyReactScene } from '../scenesReact/party/index.js';
 import { createTestScene } from '../scenes/test.scene.js';
 import { createPokedexReactScene } from '../scenesReact/pokedex/index.js';
 import { createTrainerDataReactScene } from '../scenesReact/trainerData/index.js';
+import { createPhoneContactReactScene } from '../scenesReact/PhoneContact/index.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
@@ -82,6 +83,8 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine, audio));
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
   // stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
+  // stateMachine.register('PHONE', createPhoneScene(input, stateMachine));
+  stateMachine.register('PHONE', createPhoneContactReactScene(stateMachine));
   stateMachine.register('PARTY', createPartyReactScene(stateMachine)); // ongoing
   stateMachine.register('POKEDEX', createPokedexReactScene(stateMachine));
   stateMachine.register('TRAINER_DATA', createTrainerDataReactScene(stateMachine));
@@ -89,7 +92,6 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   stateMachine.register('BAG', createBagScene(input, stateMachine));
   stateMachine.register('PC', createPCScene(input, stateMachine));
   stateMachine.register('WORLD_MAP', createWorldMapScene(input, stateMachine));
-  stateMachine.register('PHONE', createPhoneScene(input, stateMachine));
   stateMachine.register('GATE', createGateScene(input, stateMachine));
   stateMachine.register('SAVE_SLOTS', createSaveSlotsScene(input, stateMachine));
   stateMachine.register('START_MENU', createStartMenuScene(input, stateMachine));

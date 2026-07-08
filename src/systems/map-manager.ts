@@ -45,9 +45,9 @@ export function getMapDisplayName(mapId: string): { en: string; he: string } {
 }
 
 /** Search cached (already-loaded) maps to find which map contains a trainer with the given ID. */
-export function findMapForTrainer(trainerId: string): string | null {
+export function findMapForTrainer(trainerId: string): { mapId: string; mapData: TileMapData } | null {
   for (const [mapId, mapData] of mapCache) {
-    if (mapData.npcs?.some((npc) => npc.id === trainerId)) return mapId;
+    if (mapData.npcs?.some((npc) => npc.id === trainerId)) return { mapId, mapData };
   }
   return null;
 }

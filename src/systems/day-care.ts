@@ -137,7 +137,7 @@ export function withdrawPokemon(
   pd.money -= result.cost;
   // Remove from phone contacts — no longer in care
   if (pd.phoneContacts) {
-    pd.phoneContacts = pd.phoneContacts.filter((c) => c.trainerId !== entry.npcId);
+    pd.phoneContacts = pd.phoneContacts.filter((c) => c.npcId !== entry.npcId);
   }
 
   if (pd.party.length < 6) {

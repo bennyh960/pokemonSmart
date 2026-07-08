@@ -171,28 +171,33 @@ export interface PlayerStoryState {
 }
 
 /** A phone contact entry — saved when trainer is first defeated. */
+// export interface PhoneContactInfo {
+//   trainerId: string;
+//   trainerName: { en: string; he: string };
+//   /** 'day-care' marks a day-care NPC contact (vs a trainer re-encounter contact). */
+//   contactType?: 'day-care';
+//   /** Map the trainer lives on — used to derive the display location at runtime (any locale). */
+//   mapId?: string;
+//   /** Legacy fallback: pre-stored English location (populated for contacts before mapId was introduced). */
+//   locationEn: string;
+//   locationHe: string;
+//   /** Stored at registration time so the phone scene can compute live re-encounter status. */
+//   reencounterConfig?: {
+//     count: number;
+//     lvlStep: number;
+//     infinite?: boolean;
+//     timeInterval?: number;
+//     triggerFlag?: string;
+//     triggerFlagDelayHours?: number;
+//     minPartyLevelBoost?: number;
+//     /** Cached trainer max base party level — required for minPartyLevelBoost check in the phone scene. */
+//     maxBasePartyLevel?: number;
+//   };
+// }
+
 export interface PhoneContactInfo {
-  trainerId: string;
-  trainerName: { en: string; he: string };
-  /** 'day-care' marks a day-care NPC contact (vs a trainer re-encounter contact). */
-  contactType?: 'day-care';
-  /** Map the trainer lives on — used to derive the display location at runtime (any locale). */
-  mapId?: string;
-  /** Legacy fallback: pre-stored English location (populated for contacts before mapId was introduced). */
-  locationEn: string;
-  locationHe: string;
-  /** Stored at registration time so the phone scene can compute live re-encounter status. */
-  reencounterConfig?: {
-    count: number;
-    lvlStep: number;
-    infinite?: boolean;
-    timeInterval?: number;
-    triggerFlag?: string;
-    triggerFlagDelayHours?: number;
-    minPartyLevelBoost?: number;
-    /** Cached trainer max base party level — required for minPartyLevelBoost check in the phone scene. */
-    maxBasePartyLevel?: number;
-  };
+  npcId: string;
+  mapId: string;
 }
 
 /** A Pokemon stolen by a thief NPC — removed from party and locked until thief is defeated. */

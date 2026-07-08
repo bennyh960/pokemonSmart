@@ -58,7 +58,7 @@
   ],
   "npcs": [
     {
-      "id": "npc-1776071087305",
+      "id": "npc-17760710873051",
       "x": 15,
       "y": 12,
       "facing": "down",
@@ -120,10 +120,10 @@
         "he": "ברונו"
       },
       "reencounter": {
-        "count": 1,
+        "count": 3,
         "lvlStep": 10,
         "timeInterval": 10,
-        "addToPhone": false
+        "addToPhone": true
       }
     },
     {

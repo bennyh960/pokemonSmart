@@ -12,6 +12,7 @@ import { ensurePersistentBattleFields } from './battle-state.js';
 import { supabase } from '../auth/supabase-client.js';
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { isPokemonStillWithPlayer } from '../scenesReact/pokedex/utils/helpers.js';
+import { findMapForTrainer } from './map-manager.js';
 
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 const SLOT_INDEX_KEY = 'pokemon-math-adventure-slots-index';
@@ -171,7 +172,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 18;
+export const CURRENT_SAVE_VERSION = 19;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -344,6 +345,12 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     });
     data.saveVersion = 18;
     console.log('Migrated save to version 18: updated pokedex values to "seen" or "caught".');
+  },
+  19: (data) => {
+    // reset contact data
+    data.phoneContacts = [];
+    data.saveVersion = 19;
+    console.log('Migrated save to version 19: updated phone contacts to have npcId and mapId.');
   },
 };
 
