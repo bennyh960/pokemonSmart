@@ -12,6 +12,11 @@ import { generateDaycareDialogue } from './helpers/dialouge/daycare.dialouge';
 import { generateTrainerDialogue } from './helpers/dialouge/trainer.dialogue';
 
 // ✨
+/**
+ * PhoneScene — Trainer and Day-care contact list for re-encounter checking or viewing Pokémon growth.
+ *
+ * Open with `T` key from the overworld (set in overworld.ts input handling).
+ */
 
 export type ContactItem = Awaited<ReturnType<typeof getPlayerPhoneData>>[number];
 
@@ -128,29 +133,38 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
       { code: 'ArrowDown', action: 'cursor-down' },
       { code: 'ArrowUp', action: 'cursor-up' },
       { code: 'Enter', action: 'confirm' },
+      { code: 'Space', action: 'confirm' },
     ],
     onAction: (action) => {
+      const isTalking = callActive || isConnecting;
+
       if (action === 'close') {
+        if (isTalking) return; // bug 3: can't close mid-call, click or escape
         if (selectedContact) {
           setSelectedContact(null);
-          setCallActive(false);
-          setCurrentDialogueIndex(0);
           return;
-        } else {
-          onClose();
         }
+        onClose();
         return;
       }
 
-      // Inside a contact's focus view: Enter advances the dialogue if a call is active
-      if (selectedContact) {
-        if (action === 'confirm' && callActive) {
-          handleNextDialogue(selectedContact.dialogue.length);
+      if (action === 'confirm') {
+        if (callActive) {
+          handleNextDialogue(selectedContact!.dialogue.length); // bug 4: Enter/Space advances
+          return;
         }
+        if (isConnecting) return; // ignore input mid-connect
+        if (selectedContact) {
+          handleCallButtonClick(); // Enter now also starts the call
+          return;
+        }
+        const contact = filteredContacts[cursorIndex];
+        if (contact) handleSelectContact(contact);
         return;
       }
 
-      // List view: arrows move the cursor, Enter selects
+      if (isTalking) return; // ignore list nav while talking
+
       if (action === 'cursor-down') {
         setCursorIndex((prev) => {
           const next = Math.min(prev + 1, filteredContacts.length - 1);
@@ -163,9 +177,6 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
           scrollCursorIntoView(next);
           return next;
         });
-      } else if (action === 'confirm') {
-        const contact = filteredContacts[cursorIndex];
-        if (contact) handleSelectContact(contact);
       }
     },
   });
@@ -194,7 +205,7 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
         </div>
 
         {/* Search bar - list view only */}
-        {!selectedContact && (
+        {!(callActive || isConnecting) && (
           <div className="relative mb-3 shrink-0">
             <UserIcon className="absolute top-1/2 -translate-y-1/2 start-2.5 w-4 h-4 text-slate-500 pointer-events-none" />
             <input
@@ -208,12 +219,39 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
 
         {/* View Grid Layout Section */}
         <div className="flex-1 overflow-y-auto space-y-2 pr-0.5">
-          {!selectedContact ? (
-            // --- VIEW 1: CONTACTS INDEX LIST ---
+          {callActive || isConnecting ? (
+            // --- TALK VIEW: replaces the list while connecting/talking ---
+            <div className="h-full flex flex-col">
+              <div className="mb-2 shrink-0">
+                <h2 className="text-xl font-extrabold tracking-tight text-white">
+                  {selectedContact?.npc.name?.[locale]}
+                </h2>
+                <p className="text-xs text-slate-400">{selectedContact && selectedContact.address(locale)}</p>
+              </div>
+
+              {isConnecting && (
+                <div className="flex-1 flex items-center justify-center">{renderConnectionLoader()}</div>
+              )}
+
+              {callActive && selectedContact && (
+                <div
+                  onClick={() => handleNextDialogue(selectedContact.dialogue.length)}
+                  className="bg-blue-950/40 border border-blue-800 rounded-xl p-3 mt-2 min-h-[90px] text-xs font-mono leading-relaxed text-blue-200 flex flex-col justify-between cursor-pointer hover:bg-blue-950/60"
+                >
+                  <p>{selectedContact.dialogue[currentDialogueIndex]?.[locale] ?? ''}</p>
+                  <span className="text-[9px] text-slate-400 self-end animate-pulse mt-2">
+                    {currentDialogueIndex < selectedContact.dialogue.length - 1 ? '▶ Next' : '■ End'}
+                  </span>
+                </div>
+              )}
+            </div>
+          ) : (
+            // --- LIST VIEW: always the default screen ---
             <div className="space-y-2">
               {filteredContacts.map((contact, index) => {
                 const isTrainer = contact.npc.type === 'trainer';
                 const isCursor = index === cursorIndex;
+                const isSelected = selectedContact?.npc.id === contact.npc.id;
 
                 const hasRematch = contact.reEncounterStatus?.eligible;
                 const address = contact.address(locale);
@@ -227,13 +265,21 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
                     onClick={() => handleSelectContact(contact)}
                     onPointerEnter={() => setCursorIndex(index)}
                     className={`w-full bg-slate-800/60 border rounded-xl p-3 flex items-center justify-between transition group text-start ${
-                      isCursor ? 'bg-slate-800 border-blue-500' : 'border-slate-700/60'
+                      isSelected
+                        ? 'border-emerald-500 bg-slate-800'
+                        : isCursor
+                          ? 'bg-slate-800 border-blue-500'
+                          : 'border-slate-700/60'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-10 h-10 rounded-full bg-slate-900 border flex items-center justify-center transition ${
-                          isCursor ? 'border-blue-500 text-blue-400' : 'border-slate-700 text-slate-500'
+                          isSelected
+                            ? 'border-emerald-500 text-emerald-400'
+                            : isCursor
+                              ? 'border-blue-500 text-blue-400'
+                              : 'border-slate-700 text-slate-500'
                         }`}
                       >
                         <UserIcon className="w-5 h-5" />
@@ -262,44 +308,6 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
                 <p className="text-center text-xs text-slate-500 py-6">{uiTexts.noResults}</p>
               )}
             </div>
-          ) : (
-            // --- VIEW 2: INDIVIDUAL CONTACT FOCUS VIEW ---
-            <div className="h-full flex flex-col">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h2 className="text-xl font-extrabold tracking-tight text-white">
-                    {selectedContact.npc.name?.[locale]}
-                  </h2>
-                  <p className="text-xs text-slate-400">{selectedContact.address(locale)}</p>
-                </div>
-                <button
-                  onClick={() => setSelectedContact(null)}
-                  className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold px-2.5 py-1 rounded-md transition"
-                >
-                  {uiTexts.back}
-                </button>
-              </div>
-
-              {isConnecting && renderConnectionLoader()}
-
-              {/* Live Calling UI Interface Dialogue Window Wrapper */}
-              {callActive && (
-                <div
-                  onClick={() =>
-                    selectedContact.npc.type === 'trainer' && handleNextDialogue(selectedContact.dialogue.length)
-                  }
-                  className={`bg-blue-950/40 border border-blue-800 rounded-xl p-3 mt-2 min-h-[90px] text-xs font-mono leading-relaxed text-blue-200 flex flex-col justify-between ${selectedContact.npc.type === 'trainer' ? 'cursor-pointer hover:bg-blue-950/60' : ''}`}
-                >
-                  <p>{selectedContact.dialogue[currentDialogueIndex]?.[locale] ?? ''}</p>
-
-                  {selectedContact.npc.type === 'trainer' && (
-                    <span className="text-[9px] text-slate-400 self-end animate-pulse mt-2">
-                      {currentDialogueIndex < selectedContact.dialogue.length - 1 ? '▶ Next' : '■ End'}
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
           )}
         </div>
 
@@ -326,15 +334,21 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
       </div>
 
       {/* Close Button — replaces the old "off" text pill */}
-      <div className="w-full flex justify-center mt-2">
-        <button
-          onClick={onClose}
-          aria-label={uiTexts.close}
-          className="w-10 h-10 rounded-full bg-slate-800 hover:bg-rose-600 active:scale-95 flex items-center justify-center transition group"
-        >
-          <CloseIcon className="w-4 h-4 text-slate-400 group-hover:text-white" />
-        </button>
-      </div>
+      <button
+        onClick={() => {
+          if (callActive || isConnecting) return;
+          onClose();
+        }}
+        disabled={callActive || isConnecting}
+        aria-label={uiTexts.close}
+        className={`w-10 h-10 rounded-full flex items-center justify-center transition group ${
+          callActive || isConnecting
+            ? 'bg-slate-900 opacity-40 cursor-not-allowed'
+            : 'bg-slate-800 hover:bg-rose-600 active:scale-95'
+        }`}
+      >
+        <CloseIcon className="w-4 h-4 text-slate-400 group-hover:text-white" />
+      </button>
     </div>
   );
 

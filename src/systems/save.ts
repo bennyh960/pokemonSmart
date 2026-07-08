@@ -12,7 +12,6 @@ import { ensurePersistentBattleFields } from './battle-state.js';
 import { supabase } from '../auth/supabase-client.js';
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { isPokemonStillWithPlayer } from '../scenesReact/pokedex/utils/helpers.js';
-import { findMapForTrainer } from './map-manager.js';
 
 const SAVE_KEY_PREFIX = 'pokemon-math-adventure-save-';
 const SLOT_INDEX_KEY = 'pokemon-math-adventure-slots-index';

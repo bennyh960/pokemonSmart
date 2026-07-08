@@ -204,9 +204,6 @@ export function createEvolutionScene(input: InputManager, stateMachine: StateMac
       }
 
       if (textBox && updateTextBox(textBox, input, dt)) {
-        // setPokedexFocus(toId, true);
-        // stateMachine.pop();
-        // stateMachine.push('POKEDEX');
         const pokedexScene = createPokedexReactScene(stateMachine, {
           kind: 'battle',
           pokemonId: toId,

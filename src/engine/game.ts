@@ -22,7 +22,6 @@ import { createEvolutionScene } from '../scenes/evolution.js';
 import { createBagScene } from '../scenes/bag.js';
 import { createPCScene } from '../scenes/pc.js';
 import { createWorldMapScene } from '../scenes/world-map.js';
-import { createPhoneScene } from '../scenes/phone.js';
 import { createGateScene } from '../scenes/gate-scene.js';
 import { createSaveSlotsScene } from '../scenes/save-slots.js';
 import { createStartMenuScene } from '../scenes/start-menu.js';
@@ -83,7 +82,6 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   stateMachine.register('OVERWORLD', createOverworldScene(input, stateMachine, audio));
   stateMachine.register('STARTER_SELECT', createStarterSelectScene(input, stateMachine));
   // stateMachine.register('POKEDEX', createPokedexScene(input, stateMachine));
-  // stateMachine.register('PHONE', createPhoneScene(input, stateMachine));
   stateMachine.register('PHONE', createPhoneContactReactScene(stateMachine));
   stateMachine.register('PARTY', createPartyReactScene(stateMachine)); // ongoing
   stateMachine.register('POKEDEX', createPokedexReactScene(stateMachine));
