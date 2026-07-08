@@ -145,7 +145,7 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
       // Inside a contact's focus view: Enter advances the dialogue if a call is active
       if (selectedContact) {
         if (action === 'confirm' && callActive) {
-          handleNextDialogue(selectedContact.npc.dialogue.length);
+          handleNextDialogue(selectedContact.dialogue.length);
         }
         return;
       }
@@ -286,7 +286,7 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
               {callActive && (
                 <div
                   onClick={() =>
-                    selectedContact.npc.type === 'trainer' && handleNextDialogue(selectedContact.npc.dialogue.length)
+                    selectedContact.npc.type === 'trainer' && handleNextDialogue(selectedContact.dialogue.length)
                   }
                   className={`bg-blue-950/40 border border-blue-800 rounded-xl p-3 mt-2 min-h-[90px] text-xs font-mono leading-relaxed text-blue-200 flex flex-col justify-between ${selectedContact.npc.type === 'trainer' ? 'cursor-pointer hover:bg-blue-950/60' : ''}`}
                 >
@@ -294,7 +294,7 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
 
                   {selectedContact.npc.type === 'trainer' && (
                     <span className="text-[9px] text-slate-400 self-end animate-pulse mt-2">
-                      {currentDialogueIndex < selectedContact.npc.dialogue.length - 1 ? '▶ Next' : '■ End'}
+                      {currentDialogueIndex < selectedContact.dialogue.length - 1 ? '▶ Next' : '■ End'}
                     </span>
                   )}
                 </div>
@@ -348,7 +348,7 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
 };
 export default PhoneContactScene;
 
-export const getUiTexts = (locale: 'en' | 'he') => {
+const getUiTexts = (locale: 'en' | 'he') => {
   const isHe = locale === 'he';
   return {
     title: isHe ? 'אנשי קשר פוקידע' : 'PokéGear Contacts',
