@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../../ui-react/context/i18n-context';
-import type { NPCData, TrainerData } from '../../systems/npc';
+import type { TrainerData } from '../../systems/npc';
 import { getMapDisplayName, loadMap } from '../../systems/map-manager';
 import type { PlayerData } from '../../types';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData';
 import { getReencounterStatus } from '../../systems/reencounter';
 import { useInputLayer } from '../../engine/input';
 import CHARACTERS_DATA from '../../data/sprites/characters.json';
-import { generateTrainerDialogue } from './helpers/dialouge/trainer.dialouge.pattern';
 import { getDayCareEntry, getDayCarePhase } from '../../systems/day-care';
-import { generateDaycareDialogue } from './helpers/dialouge/daycare.dialogue.pattern';
+import { generateDaycareDialogue } from './helpers/dialouge/daycare.dialouge';
+import { generateTrainerDialogue } from './helpers/dialouge/trainer.dialogue';
 
 // ✨
 
