@@ -20,7 +20,7 @@ const KB_ROWS_Y = [100, 115, 130, 145] as const;
 const KB_ROWS = ['ABCDEFGHIJKLM', 'NOPQRSTUVWXYZ', 'abcdefghijklm', 'nopqrstuvwxyz'] as const;
 
 // Exclude 'glitch' — not a real teachable type
-const SPELL_TYPES = (Object.keys(TYPE_BADGE) as PokemonType[]).filter((t) => t !== 'glitch');
+const SPELL_TYPES = (Object.keys(TYPE_BADGE) as PokemonType[]).filter((t) => t !== 'glitch' && t !== 'struggle');
 
 type View = 'menu' | 'board' | 'spelling';
 type Feedback = 'idle' | 'wrong' | 'complete';
@@ -334,6 +334,7 @@ export function createEnglishLearningScene(
       menuIdx = 0;
       pressedBtn = '';
       pressedTimer = 0;
+      audio.playMusic('');
     },
 
     exit(): void {},
