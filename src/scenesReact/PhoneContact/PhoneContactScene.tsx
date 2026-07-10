@@ -10,6 +10,7 @@ import CHARACTERS_DATA from '../../data/sprites/characters.json';
 import { getDayCareEntry, getDayCarePhase } from '../../systems/day-care';
 import { generateDaycareDialogue } from './helpers/dialouge/daycare.dialouge';
 import { generateTrainerDialogue } from './helpers/dialouge/trainer.dialogue';
+import useIsLandscape from '../../ui-react/hooks/useIsLandscape';
 
 // ✨
 /**
@@ -49,6 +50,7 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [cursorIndex, setCursorIndex] = useState(0);
+  const [isLandscape, rotateLandScape] = useIsLandscape();
 
   const [callActive, setCallActive] = useState<boolean>(false);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState<number>(0);
@@ -91,6 +93,10 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
     getPlayerPhoneData(pd).then((contacts) => {
       setContacts(contacts);
     });
+
+    if (isLandscape) {
+      rotateLandScape();
+    }
   }, []);
 
   const uiTexts = getUiTexts(locale);
@@ -183,7 +189,7 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
 
   const phoneUI = (
     <div
-      className="w-full mt-20 max-w-md mx-auto h-[640px] bg-slate-950 text-slate-100 p-4 font-sans select-none flex flex-col justify-between border-4 border-slate-800 rounded-[2.5rem] shadow-2xl overflow-hidden"
+      className="w-full max-w-md mx-auto h-[min(640px,100dvh-2rem)] bg-slate-950 text-slate-100 p-4 font-sans select-none flex flex-col justify-between border-4 border-slate-800 rounded-[2.5rem] shadow-2xl overflow-hidden"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Phone Hardware Top Notch Graphic */}
@@ -357,7 +363,9 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/70 backdrop-blur-sm">{phoneUI}</div>
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 backdrop-blur-sm sm:py-4">
+      {phoneUI}
+    </div>
   );
 };
 export default PhoneContactScene;
