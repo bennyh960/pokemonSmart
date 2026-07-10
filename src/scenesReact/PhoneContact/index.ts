@@ -26,5 +26,10 @@ export function createPhoneContactReactScene(
     },
     update() {},
     render() {},
+    virtualControls: {
+      utility: [],
+      numbers: [],
+      dpad: [],
+    },
   };
 }
