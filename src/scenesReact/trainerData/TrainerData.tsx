@@ -4,6 +4,7 @@ import { usePlayerData } from '../../ui-react/hooks/usePlayerData';
 import { BADGES, hasBadge } from '../../data/badges';
 import { calcPlayerExperienceRank } from '../../utils/util';
 import { TRAINER_RANKS } from './rank.config';
+import { getCaughtCount } from '../pokedex/utils/helpers';
 
 interface ITrainerDataProps {
   onClose: () => void;
@@ -29,11 +30,10 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
     playTime: pd.playtime,
     totalSteps: pd.totalSteps,
     experienceRank: calcPlayerExperienceRank(pd),
-    pokemonSeen: 151,
-    pokemonCaught: 142,
+    pokemonSeen: Object.keys(pd.pokedex).length,
+    pokemonCaught: getCaughtCount(pd),
     badges: pd.badges, // This should be a bitmask or array of badge IDs the player has earned
   };
-  console.log(trainer.experienceRank);
   const currentYear = new Date().getFullYear();
   const age = currentYear - trainer.birthYear;
 
