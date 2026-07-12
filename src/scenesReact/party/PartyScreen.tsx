@@ -175,9 +175,24 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
     setSelectedMoveToDelete(null);
     clearMoveLearningSession();
     setTimeout(() => {
+      mode.kind === 'move-learning' &&
+        mode.session.onComplete?.({
+          moveId: mode.session.moveId,
+          outcome: 'replaced',
+          replacedMoveId: oldMoveId,
+        });
       onClose();
-      stateMachine.push('PARTY');
-    }, 3000);
+    }, 2000);
+  };
+
+  const handleSelectMoveToSkip = () => {
+    clearMoveLearningSession();
+    onClose();
+    mode.kind === 'move-learning' &&
+      mode.session.onComplete?.({
+        moveId: mode.session.moveId,
+        outcome: 'skipped',
+      });
   };
 
   const openPokedex = (pokemonId: number) => {
@@ -245,10 +260,7 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
               newMoveId={mode.session.moveId}
               selectedMoveToDelete={selectedMoveToDelete}
               onConfirmReplace={handleSelectMoveToDelete}
-              onConfirmSkip={() => {
-                clearMoveLearningSession();
-                onClose();
-              }}
+              onConfirmSkip={handleSelectMoveToSkip}
             />
           ) : (
             <PartySquadPanel

@@ -141,8 +141,8 @@
     {
       "id": "kid-origin",
       "name": {
-        "en": "Little Null",
-        "he": "ליטל נול"
+        "en": "Lital Null",
+        "he": "לירן נול"
       },
       "x": 5,
       "y": 16,
@@ -150,16 +150,20 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "I want to be a Pokemon trainer someday!",
-          "he": "אני רוצה להיות מאמן פוקימון יום אחד!"
+          "en": "Hey there! I'm practicing hard because I'm going to be the best Pokémon Trainer around one day!",
+          "he": "היי! אני מתאמן קשה כי יום אחד אני אהיה מאמן הפוקימונים הכי טוב שיש!"
         },
         {
-          "en": "Did you know Pokeballs are the best way to catch wild Pokemon?",
-          "he": "ידעת שכדורי פוקה הם הדרך הטובה ביותר לתפוס פוקימון בר?"
+          "en": "Are you starting your journey too? Remember, you'll need Poké Balls if you want to catch wild Pokémon!",
+          "he": "גם אתה יוצא למסע? אל תשכח, אתה חייב פוקדורים כדי לתפוס פוקימונים בטבע!"
         },
         {
-          "en": "Weaken the wild Pokemon first — then throw a Pokeball! The lower its HP, the better your chances!",
-          "he": "תחלש תחילה את הפוקימון הפראי — אחר כך זרוק כדור פוקה! ככל שה-HP שלו נמוך יותר, כך הסיכויים שלך גבוהים יותר!"
+          "en": "Pro tip: Don't just throw them right away. Weaken the wild Pokémon in battle first! The lower their HP, the easier they are to catch.",
+          "he": "טיפ של מקצוענים: אל תזרוק אותם סתם ככה. קודם תתיש את הפוקימון בקרב! ככל שמד החיים (HP) שלו נמוך יותר, ככה קל יותר לתפוס אותו."
+        },
+        {
+          "en": "Oh, and if you can make them fall asleep, poison them, or freeze them—your chances skyrocket! Status conditions make catching them a breeze.",
+          "he": "אה, ואם תצליח להרדים, להרעיל, או להקפיא אותם – הסיכויים שלך יקפצו לשמיים! שינוי הסטטוס שלהם הופך את התפיסה לקלה בהרבה."
         }
       ],
       "spriteType": "char_0502ea"
@@ -232,16 +236,24 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "Hey there, new trainer! You look like you're just starting out.",
-          "he": "הי, מאמן חדש! נראה שאתה רק מתחיל."
+          "en": "Hey <p>! You must be the new trainer everyone's talking about. Welcome to Sumville!",
+          "he": "היי <p>! אתה בטח המאמן החדש שכולם מדברים עליו. ברוך הבא לסאמביל!"
         },
         {
-          "en": "Here, take these! Potions heal your Pokemon and Pokeballs let you catch new ones.",
-          "he": "הנה, קח אלה! פוציונים מרפאים את הפוקימון שלך וכדורי פוקה מאפשרים לך לתפוס חדשים."
+          "en": "Starting a journey can be tough, so here’s a little welcoming gift to get you ready!",
+          "he": "לצאת למסע זה לא עסק פשוט, אז הנה מתנת פרידה קטנה שתעזור לך להתחיל ברגל ימין!"
         },
         {
-          "en": "Remember: open your bag during battle to use items. Good luck out there!",
-          "he": "זכור: פתח את התיק שלך במהלך קרב כדי להשתמש בפריטים. בהצלחה בחוץ!"
+          "en": "These Poké Balls will let you catch new team members, and these Potions will restore 20 HP to your Pokémon if they get hurt in battle.",
+          "he": "הפוקדורים האלה יאפשרו לך לתפוס חברים חדשים לצוות, והשיקויים (Potions) ירפאו 20 נקודות חיים (HP) לפוקימונים שלך אם הם ייפגעו בקרב."
+        },
+        {
+          "en": "Pro tip: If you run out, just head over to the Pokémon Mart in town! It's always smart to stock up on them before exploring long grass.",
+          "he": "טיפ קטן: אם ייגמר לך, פשוט תקפוץ לחנות הפוקימונים (Pokémon Mart) בעיר! תמיד כדאי להצטייד בהם לפני שיוצאים לחקור את הדשא הגבוה."
+        },
+        {
+          "en": "Just open your Bag during a fight or while exploring to use them. Good luck out there, <p>!",
+          "he": "פשוט תפתח את התיק שלך במהלך קרב או בזמן הסיור בעולם כדי להשתמש בהם. המון בהצלחה, <p>!"
         }
       ],
       "spriteType": "char_0502ea",

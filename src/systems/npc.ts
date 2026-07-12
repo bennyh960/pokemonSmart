@@ -10,6 +10,7 @@
 
 import type { ItemCategory } from '../data/item-defs.js';
 import { getCharacterList } from '../engine/character-sprites.js';
+import { getPlayerData } from './game-state.js';
 
 /** A single bilingual text line. */
 export interface BilingualText {
@@ -488,8 +489,11 @@ export function normalizeDialogue(raw: (string | BilingualText)[]): BilingualTex
 
 /** Resolve bilingual dialogue to a string array for the given locale. Falls back to en if he is empty. */
 export function resolveDialogue(lines: BilingualText[], locale: 'en' | 'he'): string[] {
+  const pd = getPlayerData();
+  const playerName = pd.name || 'Player';
   return lines.map((line) => {
-    const text = line[locale];
+    const text = line[locale].replaceAll('<p>', playerName);
+
     return text || line.en || '';
   });
 }
