@@ -651,9 +651,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
 
   /** Show a Yes/No choice prompt. */
-  function showChoice(callback: (idx: number) => void): void {
+  function showChoice(callback: (idx: number) => void, options?: string[]): void {
     choiceState = {
-      options: [t('npc.choice.yes'), t('npc.choice.no')],
+      options: options ?? [t('npc.choice.yes'), t('npc.choice.no')],
       selected: 0,
       callback,
     };
@@ -902,23 +902,28 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         });
       };
     } else if (npc.type === 'shopkeeper') {
-      showChoice((idx) => {
-        if (idx === 0) {
-          // Process reward before opening shop (first interaction only)
-          if (npc.reward && hasActiveGame()) {
-            giveNPCReward(npc, npc.reward);
-          }
+      showChoice(
+        (idx) => {
+          if (idx === 0) {
+            // Process reward before opening shop (first interaction only)
+            if (npc.reward && hasActiveGame()) {
+              giveNPCReward(npc, npc.reward);
+            }
 
-          shop.categoriesToExclude = npc.categoriesToExclude ?? [];
-          openShop(shop);
-          hideHUD();
-          restoreNPCFacing(npc);
-          interactingNPC = null;
-        } else {
-          restoreNPCFacing(npc);
-          interactingNPC = null;
-        }
-      });
+            shop.categoriesToExclude = npc.categoriesToExclude ?? [];
+            openShop(shop);
+            hideHUD();
+            restoreNPCFacing(npc);
+            interactingNPC = null;
+          } else {
+            restoreNPCFacing(npc);
+            interactingNPC = null;
+            setBagMode('sell-item');
+            stateMachine.push('BAG');
+          }
+        },
+        [t('npc.shopkeeper.choice.buy'), t('npc.shopkeeper.choice.sell')],
+      );
     } else if (npc.type === 'trainer') {
       const trainer = npc as unknown as TrainerData;
       restoreNPCFacing(npc);
@@ -3578,6 +3583,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // P key → Party
       if (input.isKeyPressed('p') || input.isKeyPressed('P')) {
+        // stateMachine.push('PUZZLE');
         stateMachine.push('PARTY');
 
         return;

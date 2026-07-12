@@ -42,7 +42,19 @@
       "dialogue": [
         {
           "en": "Hello! How can i help you?",
-          "he": "שלום ! מה תרצה לקנות?"
+          "he": "שלום! ברוך הבא לחנות שלי"
+        },
+        {
+          "en": "I have a wide selection of items for sale.",
+          "he": "יש לי מבחר רחב של פריטים למכירה."
+        },
+        {
+          "en": "I can also buy items from you.",
+          "he": "אני גם יכול לקנות פריטים ממך."
+        },
+        {
+          "en": "Are you here for sell or buy?.",
+          "he": "אתה כאן למכירה או לקנייה?"
         }
       ],
       "spriteType": "npc-male",

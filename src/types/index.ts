@@ -41,6 +41,7 @@ export type SceneId =
   | 'CUTSCENE'
   | 'SAVE_SLOTS'
   | 'START_MENU'
+  | 'PUZZLE'
   | 'ENGLISH_LEARNING';
 
 /** Top-level game state snapshot. */

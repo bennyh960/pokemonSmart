@@ -261,6 +261,8 @@
   "npc.nurse.heal": "I'll heal your Pokemon!",
   "npc.nurse.done": "Your Pokemon are fully healed!",
   "npc.shopkeeper.welcome": "Welcome! What can I get you?",
+  "npc.shopkeeper.choice.buy": "Buy",
+  "npc.shopkeeper.choice.sell": "Sell",
 
   "npc.abilitiesSwap.intro1": "Pokémon carry genetic traits that shape how they fight. Most express only one dominant ability — but with the right technology, a hidden one can be brought to the surface.",
   "npc.abilitiesSwap.intro2": "Every Pokémon holds more potential than it shows. I've spent years studying how to shift which ability takes dominance. It's precise work — but I can do it.",
@@ -413,6 +415,8 @@
   "bag.selectPokemon": "Select a Pokemon to use on {itemName}",
   "bag.hint": "ESC:Back  ENTER:Use  ◀▶:Navigate",
   "bag.hint.use": "Use",
+  "bag.hint.sell": "Sell",
+  "bag.sell.confirmed": "You sold {itemName} for ${price}₽!",
   "bag.hint.navigate": "Nav",
   "bag.category.medicine": "Medicine",
   "bag.category.balls": "Balls",

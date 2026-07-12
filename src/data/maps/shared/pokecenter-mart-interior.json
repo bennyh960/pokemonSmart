@@ -62,8 +62,16 @@
           "he": "4 הנבחרים לפניך - כדאי להצטייד לפני."
         },
         {
-          "en": "",
-          "he": "מה תרצה לקנות?"
+          "en": "I sell here battle items , it might help you in battles. those are very useful items for trainers like you.",
+          "he": "אני מוכר כאן פריטי קרב, הם עשויים לעזור לך בקרבות. אלה פריטים שימושיים מאוד למאמנים כמוך."
+        },
+        {
+          "en": "I can also buy items from you.",
+          "he": "אני גם יכול לקנות פריטים ממך."
+        },
+        {
+          "en": "Are you here for sell or buy?.",
+          "he": "אתה כאן למכירה או לקנייה?"
         }
       ],
       "spriteType": "npc-male",

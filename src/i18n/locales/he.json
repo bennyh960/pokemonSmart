@@ -258,6 +258,8 @@
   "npc.nurse.heal": "אני ארפא את הפוקימונים שלך!",
   "npc.nurse.done": "הפוקימונים שלך רופאו במלואם!",
   "npc.shopkeeper.welcome": "ברוכים הבאים! מה אפשר להביא לך?",
+  "npc.shopkeeper.choice.buy": "קנייה",
+  "npc.shopkeeper.choice.sell": "מכירה",
 
   "npc.abilitiesSwap.intro1": "לכל פוקימון יש תכונות גנטיות מולדות , בדרך כלל בזמן לחימה רק יכולת אחת באה לידי ביטוי. יכולת זו נקראית יכולת דומיננטית.",
   "npc.abilitiesSwap.intro2": "היכולת הזו מלווה את הפוקימון לכל אורך חייו. אבל בפוטנציאל לפוקימון יש גנים ליכולות נוספות שלא באות לידי ביטוי — הן נקראות יכולות נסתרות.",
@@ -409,6 +411,9 @@
   "bag.selectPokemon": "בחר פוקימון להשתמש עליו ב{itemName}",
   "bag.hint": "ESC:חזרה  ENTER:שימוש  ◀▶:ניווט",
   "bag.hint.use": "שימוש",
+  "bag.hint.sell": "מכירה",
+  "bag.sell.confirmed": "הרווחת ₽{price} ממכירת {itemName} ×1!",
+
   "bag.hint.navigate": "ניווט",
   "bag.category.medicine": "תרופות",
   "bag.category.balls": "כדורים",

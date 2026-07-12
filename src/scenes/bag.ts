@@ -48,7 +48,7 @@ import { createPartyReactScene } from '../scenesReact/party/index.js';
 
 /* ── Battle integration exports ────────────────────────────────────── */
 
-type BagMode = 'overworld' | 'battle';
+type BagMode = 'overworld' | 'battle' | 'sell-item';
 let bagMode: BagMode = 'overworld';
 
 export let pendingItem: { itemId: string; def: ItemDef } | null = null;
@@ -161,7 +161,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         return a.id.localeCompare(b.id);
       });
     }
-    return result;
+    return result.filter((item) => bagMode !== 'sell-item' || item.def.price > 0); // filter out items with price 0 when selling
   }
 
   // ── TM Teaching helpers ──────────────────────────────────────────────
@@ -243,6 +243,17 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     fillRect(ctx, 198, 4, 4, 4, C.BORDER);
     // Title text (right-aligned)
     drawText(ctx, t('bag.title'), 192, 2, { size: 10, color: C.TEXT_PRI, font: 'monospace', align: 'right' });
+    // Money display (right-aligned)
+    if (bagMode === 'sell-item') {
+      const coins = getPlayerData().money;
+      const formattedPrice = coins.toLocaleString('en-US', { useGrouping: true });
+      const currency = '₽';
+      drawText(ctx, `${formattedPrice} ${currency}`, 8, 2, {
+        size: 8,
+        color: C.SEL_BAR, // צבע בולט לכסף (תוכל לשנות ל-C.TEXT_PRI)
+        font: 'monospace',
+      });
+    }
 
     // ── Category tabs (y=14, h=10) ──
     fillRect(ctx, 4, 14, 232, 10, C.TAB_BG);
@@ -425,9 +436,23 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
 
       // Use button — hidden for key items (they can't be manually used)
       if (selItem.def.category !== 'key') {
-        fillRect(ctx, 8, 122, 34, 12, C.USE_BTN_BG);
-        drawRect(ctx, 8, 122, 34, 12, C.USE_BTN_BRD);
-        drawText(ctx, t('bag.hint.use') || 'Use', 25, 124, {
+        const isSellMode = bagMode === 'sell-item';
+        const btnWidth = isSellMode ? 50 : 34; // רוחב משתנה לפי המצב
+        const btnX = 8;
+        const centerX = btnX + btnWidth / 2; // חישוב דינמי למרכז מדויק של הטקster
+
+        fillRect(ctx, btnX, 122, btnWidth, 12, C.USE_BTN_BG);
+        drawRect(ctx, btnX, 122, btnWidth, 12, C.USE_BTN_BRD);
+
+        const rawPrice = selItem.def.price / 2;
+        const formattedPrice = rawPrice.toLocaleString('en-US', { useGrouping: true });
+        const currencySymbol = '₽';
+
+        const buttonText = isSellMode
+          ? `${t('bag.hint.sell')} (${formattedPrice}${currencySymbol})`
+          : t('bag.hint.use');
+
+        drawText(ctx, buttonText, centerX, 124, {
           size: 7,
           color: C.SEL_BAR,
           font: 'monospace',
@@ -498,7 +523,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           maxWidth: width,
           lineHeight: 5,
         });
-        drawText(ctx, t('bag.hint.use'), x + width + 1, y + 1, {
+        drawText(ctx, bagMode === 'sell-item' ? t('bag.hint.sell') : t('bag.hint.use'), x + width + 1, y + 1, {
           size: 6,
           color: C.TEXT_MUT,
           font: 'monospace',
@@ -766,7 +791,23 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     if (input.isKeyPressed('Enter')) {
       if (items.length > 0 && itemIndex < items.length) {
         const item = items[itemIndex];
-        if (bagMode === 'battle') {
+        if (bagMode === 'sell-item') {
+          // confirm selling the item . if item price is 0 we need filter it.
+          const sellPrice = item.def.price / 2;
+
+          const formattedPrice = sellPrice.toLocaleString('en-US', { useGrouping: true });
+
+          const pd = getPlayerData();
+          consumeItem(pd.items, item.id);
+          pd.money += sellPrice;
+          message = t('bag.sell.confirmed', {
+            itemName: getLocalizedName(item.def.name),
+            price: formattedPrice,
+          });
+          getGlobalAudio()?.playSFX('heal');
+          messageTimer = 1.5;
+          autoSave();
+        } else if (bagMode === 'battle') {
           pendingItem = { itemId: item.id, def: item.def };
           stateMachine.pop();
         } else if (item.def.usableInOverworld) {
