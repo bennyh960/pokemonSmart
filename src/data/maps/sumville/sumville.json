@@ -214,7 +214,7 @@
       "id": "sumville-safari-tip",
       "name": {
         "en": "Adventurer",
-        "he": "Adventurer"
+        "he": "יונתן זקס"
       },
       "x": 31,
       "y": 55,
@@ -222,8 +222,16 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "",
-          "he": "שלום! עיר החיבור היא עיר מרכזית שהרבה ערים מחוברים אליה."
+          "en": "Hello there! Welcome to Sumville! This is a major hub, and so many different routes and cities connect right here.",
+          "he": "שלום וברוכים הבאים! עיר החיבור סאמויל היא מרכז עצום, ויש המון ערים ודרכים שונות שמצטלבות ומחוברות ישירות אליה."
+        },
+        {
+          "en": "Since it’s so big, there’s plenty to check out—like a fully stocked Pokémon Mart to buy supplies and a big Pokémon Center to rest the team.",
+          "he": "מכיוון שמדובר במקום כל כך מרכזי, יש כאן המון מה לראות – כמו חנות פוקימונים מורחבת להצטיידות בחפצים, ומרכז פוקימונים גדול למנוחה של הצוות."
+        },
+        {
+          "en": "But the biggest attraction is definitely the official Pokémon Gym! Winning a badge there is the ultimate dream for every trainer around.",
+          "he": "אבל האטרקציה המרכזית היא ללא ספק מכון הפוקימונים הרשמי של העיר! השגת תג מכון שם היא החלום הגדול ביותר של כל המאמנים באזור."
         }
       ],
       "spriteType": "char_962c1b",
@@ -280,7 +288,7 @@
       "id": "sumville-mountain-hiker",
       "name": {
         "en": "Hiker",
-        "he": "Hiker"
+        "he": "שמעון יפרח"
       },
       "x": 47,
       "y": 17,
@@ -294,10 +302,6 @@
         {
           "en": "They'd be great against Plussa's Normal-type moves!",
           "he": "אדה מנהיגת המכון לימדה את בולבאזור שלי מתקפת חיתוך"
-        },
-        {
-          "en": "Add a Rock type to your team - trust me.",
-          "he": ""
         }
       ],
       "spriteType": "mosh"
@@ -314,12 +318,20 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "I'm not much of a battler, but I heard Plussa added new Pokemon to her team.",
-          "he": "אני מנסה לנצח את אדה מנהיגת המכון - אבל היא פשוט חזקה מידי בשבילי!"
+          "en": "I've been trying so hard to defeat Gym Leader Plussa, but her team is just way too strong for me!",
+          "he": "יש כאן ניסיונות חוזרים ונשנים לנצח את פלוסה, מנהיגת המכון – אבל הצוות שלה פשוט חזק מדי!"
         },
         {
-          "en": "She's been training non-stop since the last challenger beat her.",
-          "he": ""
+          "en": "Every time the battle starts, her Pokémon outspeed and overpower mine before a strategy can even be set up.",
+          "he": "בכל פעם שהקרב מתחיל, הפוקימונים שלה פשוט עוקפים במהירות ומכריעים את המערכה עוד לפני שמספיקים לבנות אסטרטגיה."
+        },
+        {
+          "en": "Someone at the shop suggested using battle items like X-Attack or X-Defense right at the start of the fight.",
+          "he": "מישהו בחנות הציע להשתמש בחפצי קרב מיוחדים, כמו חפצי חיזוק התקפה או חיזוק הגנה, ממש בתחילת הסיבוב."
+        },
+        {
+          "en": "They boost a Pokémon's stats instantly during battle. Maybe that extra power is exactly what's missing to turn the tables!",
+          "he": "החפצים האלה מקפיצים את המדדים של הפוקימון בו במקום תוך כדי הקרב. כנראה שהתוספת הזו היא בדיוק מה שחסר כדי לשנות את התמונה!"
         }
       ],
       "spriteType": "char_4b1e38",
@@ -383,7 +395,7 @@
       "id": "sumville-trainer1",
       "name": {
         "en": "Youngster Addi",
-        "he": "Youngster Addi"
+        "he": "אדיר אלמליח"
       },
       "x": 7,
       "y": 15,
@@ -391,8 +403,16 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "I'm training to challenge Plussa! Add my name to your battle list!",
-          "he": "אני מתאמן לקראת קרב המכון שלי"
+          "en": "There are intensive preparations happening here for the Gym battle against Adda! Every second of training counts.",
+          "he": "יש כאן הכנות אינטנסיביות לקראת קרב המכון מול אדה! כל שנייה של אימון היא קריטית."
+        },
+        {
+          "en": "To win that badge, a team needs to face the toughest opponents possible. Let's add this encounter to the official battle list!",
+          "he": "בשביל לזכות בתג הזה, הצוות חייב להתמודד מול היריבים הכי קשוחים שיש. כדאי להוסיף את המפגש הזה לרשימת הקרבות הרשמית!"
+        },
+        {
+          "en": "Show that strategy! This is the perfect moment to see who is truly ready for the Sumville Gym!",
+          "he": "זה הזמן להראות את האסטרטגיה שלכם! זה המומנטום המושלם לגלות מי באמת נמצא ברמה המתאימה למכון של סאמויל!"
         }
       ],
       "spriteType": "char_2db5a7",
@@ -454,7 +474,7 @@
       "id": "sumville-trainer2",
       "name": {
         "en": "Lass Summa",
-        "he": "Lass Summa"
+        "he": "מורגן פרימן"
       },
       "x": 5,
       "y": 18,
@@ -462,8 +482,8 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "Plussa inspired me! I want to add as many wins as she has!",
-          "he": ""
+          "en": "Adda inspired me! I want to add as many wins as she has!",
+          "he": "מנהיגי מכון פשוט תמיד משרים בה השראה ! אני יודע שהם עברו דרך ארוכה לפני שנהיו ככ חזקים"
         }
       ],
       "spriteType": "char_a5abb0",
@@ -499,7 +519,7 @@
       "id": "sumville-trainer3",
       "name": {
         "en": "Bug Catcher Net",
-        "he": "Bug Catcher Net"
+        "he": "דייג חרקים נט"
       },
       "x": 2,
       "y": 37,
@@ -507,8 +527,8 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "Even bug catchers dream of beating Plussa someday!",
-          "he": ""
+          "en": "Even bug catchers dream of beating Adda someday!",
+          "he": "גם דייגי חרקים חולמים לנצח את אדה יום אחד!"
         }
       ],
       "spriteType": "char_4d53b7",
@@ -545,7 +565,7 @@
       "id": "sumville-trainer4",
       "name": {
         "en": "Ace Trainer Sigma",
-        "he": "Ace Trainer Sigma"
+        "he": "סיגמא אולטרון"
       },
       "x": 4,
       "y": 22,
@@ -553,8 +573,8 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "I beat Plussa on my third try. Want to see if you're ready?",
-          "he": ""
+          "en": "I beat Adda on my third try. Want to see if you're ready?",
+          "he": "אני ניצחתי את אדה בניסיון השלישי שלי. רוצה לבדוק אם אתה מוכן?"
         }
       ],
       "spriteType": "char_485c6e",
@@ -611,7 +631,7 @@
       "id": "sumville-trainer5",
       "name": {
         "en": "Hiker Stone",
-        "he": "Hiker Stone"
+        "he": "ניוטרון אלבז"
       },
       "x": 47,
       "y": 4,
@@ -655,12 +675,16 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "אתה מאמן חזק?"
+          "en": "Hello there! Is there a truly strong team standing before me right now?",
+          "he": "שלום לכם! האם עומד מולי כרגע צוות חזק ומאוחד באמת?"
         },
         {
-          "en": "",
-          "he": "בוא נבדוק אותך"
+          "en": "In psychology and nature, we know that true strength isn't just about one powerful individual. It's about synergy—how well everyone works together!",
+          "he": "בפסיכולוגיה ובטבע, ידוע שעוצמה אמיתית לא נמדדת רק לפי חבר צוות אחד חזק במיוחד. הסוד הוא בסינרגיה – רמת שיתוף הפעולה והחיבור בין כולם!"
+        },
+        {
+          "en": "Even a small Pokémon can defeat a giant if the cooperation is flawless. Let's test that connection in a real battle right now!",
+          "he": "אפילו פוקימון קטן יכול להכריע ענק אם השילוב בינו לבין המאמן והצוות הוא מושלם. זה הזמן לבדוק את החיבור הזה בקרב אמיתי!"
         }
       ],
       "spriteType": "char_459058",
@@ -694,16 +718,7 @@
           }
         ]
       },
-      "postBattleDialogue": [
-        {
-          "en": "",
-          "he": "יש פה הרבה פוקימונים פראיים"
-        },
-        {
-          "en": "",
-          "he": "תשמור על עצמך"
-        }
-      ]
+      "postBattleDialogue": []
     },
     {
       "id": "npc-1774813040498",
@@ -752,25 +767,25 @@
       },
       "postBattleDialogue": [
         {
-          "en": "",
-          "he": "אתה באמת חזק."
+          "en": "Wow, what an incredible display of synergy! That was a truly powerful performance.",
+          "he": "וואו, איזה גילוי מדהים של סינרגיה! זה היה מפגן עוצמה חזק ומקצועי ביותר."
         },
         {
-          "en": "",
-          "he": "למדתי שאם הפוקימון נשרף ונכווה"
+          "en": "During our fight, a vital battle tactic came to mind. Did you know that if a Pokémon suffers from a burn status...",
+          "he": "תוך כדי הקרב, עלה כאן לקח טקטי חשוב מאוד. ידעתם שאם פוקימון נפגע ממצב סטטוס של כווייה..."
         },
         {
-          "en": "",
-          "he": "אז ההתקפה הפיזית שלו נחלשת מאוד"
+          "en": "Its physical attack power is actually cut in half? It barely deals any damage with body-to-body strikes!",
+          "he": "עוצמת ההתקפה הפיזית שלו נחלשת בחצי באופן מיידי? הוא בקושי מסוגל לעשות נזק עם מכות מגוף לגוף!"
         },
         {
-          "en": "",
-          "he": "קח משחה לטיפול בכוויות זה יעזור לך"
+          "en": "To keep the team protected from this strategy, please take this Burn Heal. It will definitely come in handy!",
+          "he": "כדי להגן על הצוות מפני האסטרטגיה הזו, כדאי לקחת את המשחה הזו לטיפול בכוויות. היא לחלוטין תהיה שימושית בהמשך!"
         }
       ],
       "name": {
         "en": "Blue",
-        "he": "בלו"
+        "he": "בלו משה"
       }
     },
     {
@@ -785,7 +800,7 @@
           "he": "שלום!"
         },
         {
-          "en": "",
+          "en": "Do you want a Pokémon battle?",
           "he": "רוצה קרב פוקימונים?"
         }
       ],
