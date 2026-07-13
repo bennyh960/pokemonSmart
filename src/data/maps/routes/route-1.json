@@ -79,7 +79,7 @@
     {
       "id": "bug-catcher-1",
       "name": {
-        "en": "Bug Catcher Gus",
+        "en": "Bug Catcher Bugsy",
         "he": "באגסי איינשטיין"
       },
       "x": 5,
@@ -88,18 +88,19 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "Are you a pokemon trainer? My name is Bug Catcher Gus.",
-          "he": "אתה מאמן פוקימונים? שמי באג קצ'ר גאס."
+          "en": "Oh, hey! Are you a Pokémon Trainer too? My name is Bugsy, the Bug Catcher!",
+          "he": "אוי, היי! גם אתה מאמן פוקימונים? קוראים לי באגסי, תופס החרקים!"
         },
         {
-          "en": "I just started my journey and I like bug type pokemon.",
-          "he": "אני רק התחלתי את המסע שלי ואני אוהב פוקימונים מסוג חרק."
+          "en": "I just started my journey on Route 1. I absolutely love bug-type Pokémon—they grow up super fast!",
+          "he": "בדיוק התחלתי את המסע שלי כאן בדרך 1. אני שרוף על פוקימונים מסוג חרק – הם גדלים ומתפתחים ממש מהר!"
         },
         {
-          "en": "Wanna battle?",
-          "he": "רוצה קרב?"
+          "en": "Since we're both new at this, how about a quick, friendly battle to test our skills? It'll be great practice for both of us!",
+          "he": "מכיוון ששנינו די חדשים בעסק, מה אומר על קרב קצר וידידותי כדי לבחון את הכוחות שלנו? זה יהיה אימון מעולה לשנינו!"
         }
       ],
+
       "spriteType": "char_46f643",
       "party": [
         {
@@ -109,15 +110,15 @@
         }
       ],
       "reward": {
-        "money": 500,
+        "money": 600,
         "items": [
           {
             "itemId": "potion",
-            "quantity": 3
+            "quantity": 1
           },
           {
             "itemId": "pokeball",
-            "quantity": 3
+            "quantity": 2
           }
         ]
       },
@@ -142,8 +143,16 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "My Rattata is in the top percentage!",
-          "he": "הרטטה שלי יעשה ממך קציצות!"
+          "en": "Hey! Have you ever seen a Pokémon as cool as mine? My Rattata is in the top percentage of all Rattatas!",
+          "he": "היי! יצא לך אי פעם לראות פוקימון מגניב כמו שלי? הרטטה שלי הוא המצטיין של המחוז, אין דברים כאלה!"
+        },
+        {
+          "en": "I train with him every single day, and we're totally unbeatable around here. Want to see what he can do?",
+          "he": "אני מתאמן איתו כל יום, ובאזור הזה אף אחד לא מצליח לנצח אותנו. רוצה לראות מה הוא יודע לעשות?"
+        },
+        {
+          "en": "Get ready, because we're going to give this battle everything we've got!",
+          "he": "תתכונן, כי אנחנו הולכים לתת בקרב הזה את כל מה שיש לנו!"
         }
       ],
       "spriteType": "char_7ba749",
@@ -166,8 +175,16 @@
       "autoWalk": null,
       "postBattleDialogue": [
         {
-          "en": "I dont know how to catch pokemon!",
-          "he": "אתה יודע איך לתפוס פוקימונים? צריך להחליש אותם תחילה ואז לזרוק עליהם פוכדור"
+          "en": "Ugh, I can't believe we lost! I guess my Rattata still needs a bit more training...",
+          "he": "אוף, אני לא מאמין שהפסדנו! כנראה שהרטטה שלי צריך עוד קצת אימונים..."
+        },
+        {
+          "en": "You're pretty good! You probably know this, but if you want to expand your team, always weaken wild Pokémon first before throwing a Poké Ball.",
+          "he": "אתה ממש טוב! אתה בטח כבר יודע את זה, אבל אם אתה רוצה להגדיל את הצוות שלך, תמיד תתיש את הפוקימון בטבע לפני שאתה זורק פוקדור."
+        },
+        {
+          "en": "Status conditions make it even easier. Next time we meet, my team will be way bigger and stronger!",
+          "he": "מצבי סטטוס הופכים את זה לאפילו יותר קל. פעם הבאה שנפגש, הצוות שלי יהיה הרבה יותר גדול וחזק!"
         }
       ]
     },
@@ -183,8 +200,16 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "",
-          "he": "הגיע הזמן לבחון את הכישורים שלך"
+          "en": "Hey! You've got that look in your eye—the look of a trainer on a serious mission!",
+          "he": "היי! המבט הזה בעיניים אומר הכל – זה מבט של משימה רצינית ויציאה למסע!"
+        },
+        {
+          "en": "If you want to conquer the roads ahead, you need to be ready for anything. It’s time to test your skills in a real battle!",
+          "he": "בשביל לכבוש את הדרכים הבאות, צריך להיות לקראת הכל. הגיע הזמן לבחון את הכישורים בקרב אמיתי!"
+        },
+        {
+          "en": "Don't hold back, show me what you and your Pokémon can do!",
+          "he": "בלי להסס, זה הרגע להראות מה הצוות והפוקימונים מסוגלים לעשות!"
         }
       ],
       "spriteType": "char_e19d22",
@@ -206,10 +231,14 @@
         }
       ],
       "reward": {
-        "money": 500
+        "money": 700
       },
       "lineOfSight": 11,
       "postBattleDialogue": [
+        {
+          "en": "Wow, what a spectacular battle! Your battle style and synchronization with your team are incredible.",
+          "he": "וואו, איזה קרב מטורף! סגנון הלחימה והסנכרון עם הצוות פשוט מדהימים."
+        },
         {
           "en": "",
           "he": "הרשמת מאוד! סוף השביל מוביל לסאמויל עיר החיבור - יש שם גם מכון פוקימונים"
@@ -228,8 +257,16 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "",
-          "he": "שמעתי שהנהר כאן מוביל לאזור מסתורי עם פוקימונים נדירים!"
+          "en": "Have you looked at the river? Word is, this current leads straight to a mysterious area packed with legendary and rare Pokémon!",
+          "he": "הצצה קטנה בנהר הזה מגלה משהו מעניין... השמועות אומרות שהזרם שלו מוביל ישר לאזור מסתורי מלא בפוקימונים נדירים!"
+        },
+        {
+          "en": "Right now, exploring it is impossible without knowing how to swim or navigate the deep waters.",
+          "he": "כמובן שבשלב הזה של המסע אין שום דרך לחקור אותו, המים עמוקים מדי ועדיין אי אפשר לשחות או לעבור לצד השני."
+        },
+        {
+          "en": "But further along the journey, once the bond and trust with the team grow strong enough, it will be possible to learn how to surf together on a Pokémon's back!",
+          "he": "אבל עם מספיק התקדמות, כשהקשר והאמון עם הצוות יהיו חזקים באמת, תהיה אפשרות ללמוד איך לגלוש יחד על הגב של הפוקימונים ולחקור את כל הנהר הרחב הזה!"
         }
       ],
       "spriteType": "char_0502ea",
@@ -264,8 +301,16 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "So far I've counted... too many to remember!",
-          "he": "שלום! רוצה לערוך קרב אימון?"
+          "en": "Wait, don't interrupt the calculation! So far I've counted... argh, too many variables to remember!",
+          "he": "רגע, נא לא להפריע לחישוב! עד כה נספרו כאן... אוף, יותר מדי משתנים בשביל לזכור!"
+        },
+        {
+          "en": "The flow of electrical energy in this area is off the charts. It's the perfect environment to test power grids!",
+          "he": "זרימת האנרגיה החשמלית באזור הזה פשוט שוברת את המדדים. זה המקום המושלם לבחון מערכות כוח!"
+        },
+        {
+          "en": "How about a quick test of potential difference? Let's have a friendly training battle to measure our core energy!",
+          "he": "מה דעתכם על בדיקה מהירה של הפרש פוטנציאלים? זה הזמן לקרב אימון ידידותי כדי למדוד את עוצמת האנרגיה של הצוות!"
         }
       ],
       "spriteType": "char_8c60a6",
@@ -290,13 +335,26 @@
         "money": 400
       },
       "lineOfSight": 6,
-      "postBattleDialogue": []
+      "postBattleDialogue": [
+        {
+          "en": "Incredible energy! That loss was a shocking surprise, but science is all about testing and learning.",
+          "he": "וואו, איזו אנרגיה מטורפת! ההפסד הזה היה הפתעה מחשמלת, אבל מדע מבוסס כולו על ניסוי ולמידה."
+        },
+        {
+          "en": "Speaking of electricity, did you know that a single bolt of lightning is hotter than the surface of the sun?",
+          "he": "ואם כבר מדברים על חשמל, ידעתם שברק יחיד בשמיים הוא חם יותר מאשר פני השטח של השמש עצמה?"
+        },
+        {
+          "en": "It heats the air around it to 30,000 degrees Celsius in a split second! Keep that powerful spark alive in your journey!",
+          "he": "הוא מחמם את האוויר סביבו ל-30,000 מעלות בשבר שנייה! כדאי לשמור על הניצוץ העוצמתי הזה בהמשך המסע!"
+        }
+      ]
     },
     {
       "id": "r1-extra12",
       "name": {
         "en": "Youngster Amos",
-        "he": "Youngster Amos"
+        "he": "מלאכי עמוס"
       },
       "x": 55,
       "y": 2,
@@ -320,12 +378,33 @@
       },
       "dialogue": [
         {
-          "en": "I always train near the tall grass!",
-          "he": "אני תמיד מתאמן ליד העשב הגבוה!"
+          "en": "Stop right there! Did you know that body language tells everything about a trainer's confidence?",
+          "he": "רגע אחד! ידעתם ששפת הגוף מספרת הכל על רמת הביטחון של המאמנים?"
+        },
+        {
+          "en": "Looking at that posture, there is a strong sense of determination here. But how does that focus hold up under pressure?",
+          "he": "מבט מהיר על היציבה הזו מגלה נחישות חזקה מאוד. אבל איך המיקוד הזה מחזיק מעמד ברגעי לחץ?"
+        },
+        {
+          "en": "Let's have a friendly training battle to observe how decision-making changes when the stakes are high!",
+          "he": "זה הזמן לקרב אימון ידידותי כדי לבחון איך קבלת ההחלטות משתנה ברגעים המותחים של הקרב!"
         }
       ],
       "lineOfSight": 2,
-      "postBattleDialogue": []
+      "postBattleDialogue": [
+        {
+          "en": "What a fascinating display of resilience! That tactical victory was thoroughly deserved.",
+          "he": "איזה גילוי מרתק של חוסן מנטלי! הניצחון הטקטי הזה היה מוצדק לחלוטין."
+        },
+        {
+          "en": "Here is a powerful psychological fact: whenever a mistake is made or a difficult challenge is faced, the brain actually grows!",
+          "he": "הנה עובדה פסיכולוגית מדהימה: בכל פעם שחווים כישלון, טעות או אתגר קשה – המוח למעשה מפתח קשרים חדשים וצומח!"
+        },
+        {
+          "en": "It is called a Growth Mindset. Believing that abilities can improve through practice makes the team truly unstoppable. Never doubt that potential!",
+          "he": "קוראים לזה תודעת צמיחה. האמונה שהיכולות שלנו משתפרות בזכות תרגול והתמדה היא הסוד להצלחה. אל תפקפקו בפוטנציאל שלכם!"
+        }
+      ]
     },
     {
       "id": "r1-extra2",
@@ -355,10 +434,23 @@
       },
       "dialogue": [
         {
-          "en": "Butterflies are my specialty!",
-          "he": "פרפרים הם ההתמחות שלי!"
+          "en": "Look at those wild Butterfree flying together. In nature, staying in a group provides safety and helps everyone survive.",
+          "he": "מבט מהיר על להקת באטרפרי שם למעלה מראה משהו יפה. בטבע, השתייכות לקבוצה מעניקה הגנה ועוזרת לכולם לשרוד."
+        },
+        {
+          "en": "In psychology, we know that human cooperation is just as vital. Being part of a community makes us stronger.",
+          "he": "גם אצלנו בני האדם, שיתוף פעולה ועזרה הדדית הם כלים חיוניים. החיבור החברתי הוא כוח עצום שמקדם את כולנו."
+        },
+        {
+          "en": "But the trick is to balance it! It’s important to cooperate with others without losing your own unique voice and choices.",
+          "he": "אבל החכמה היא למצוא את האיזון: להיות חלק מהכלל ולשתף פעולה, אבל תמיד לשמור על הקול הייחודי ועל הבחירות העצמאיות שלכם."
+        },
+        {
+          "en": "Let’s have a battle to see how your team cooperates, while showing off your own personal strategy!",
+          "he": "זה הזמן לקרב כדי לראות איך הצוות שלכם משתף פעולה, ויחד עם זאת מציג את סגנון המשחק האישי והמיוחד לכם!"
         }
       ],
+
       "lineOfSight": 3,
       "postBattleDialogue": [],
       "autoWalk": null
@@ -371,12 +463,16 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "",
-          "he": "היי מה נשמע? שמעתי שזה אזור רבייה של סקווירטלים. אדמת החוף הסמוכה למים לפעמים מפתיעה בפוקימוני המים שלה."
+          "en": "Hey there! Did you know the sandy shores right next to the water are full of surprises? This is actually a known nesting area for Squirtle!",
+          "he": "היי, מה המצב? אדמת החול הסמוכה למים כאן מלאה בהפתעות! שמועות אומרות שהאזור הזה משמש כנקודת מפגש ורבייה לסקווירטלים."
         },
         {
-          "en": "",
-          "he": "אם אתה רוצה לתפוס סקווירטל - כדאי לך לחפש באזור הזה!"
+          "en": "They are quite rare and love to hide, so it takes a bit of patience and time to spot one in the wild.",
+          "he": "הם נחשבים לפוקימונים די נדירים ואוהבים להתחבא, אז חיפוש פה דורש קצת סבלנות וזמן עד שמצליחים להבחין באחד מהם בטבע."
+        },
+        {
+          "en": "If adding a Squirtle to the team sounds like a plan, searching carefully around this beach is definitely the best bet!",
+          "he": "אם המטרה היא לצרף סקווירטל לצוות, סיור יסודי וממוקד סביב רצועת החוף הזו הוא לחלוטין הדרך הטובה ביותר לעשות את זה!"
         }
       ],
       "spriteType": "char_10af6a",
@@ -404,12 +500,12 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "",
-          "he": "בדרכך לסאמויל עיר החיבור?"
+          "en": "Are you on your way to Sumville, the City of Connection? It’s a famous Gym town, and the challenges there are next-level.",
+          "he": "המסע הנוכחי הוא לכיוון סאמויל, עיר החיבור? כדאי לדעת שמדובר בעיר מכון רשמית, והאתגרים שמחכים שם הם ברמה אחרת לגמרי."
         },
         {
-          "en": "",
-          "he": "נראה לי שהפוקימונים שלך עדיין לא מספיק מאומנים. יש פה מספיק מאמנים להביס קודם"
+          "en": "Before heading into a Gym, a team needs to be completely ready. This route is filled with talented trainers who are perfect for testing your limits.",
+          "he": "לפני שמאתגרים מכון, הצוות חייב להיות בשיא הכושר. הדרך הזו מלאה במאמנים מעולים שמהווים את המבחן המושלם לבחינת היכולות."
         }
       ],
       "spriteType": "char_24117d",
@@ -425,8 +521,16 @@
       "type": "trainer",
       "dialogue": [
         {
-          "en": "",
-          "he": "בדיוק הגעתי מעיר החיבור  סאמויל - אני חושב שאני צריך להאתמן עוד לפני קרב המכון שלי"
+          "en": "Phew, that was a wake-up call! Just got back from Sumville, the City of Connection, and wow... the Gym Leader there completely destroyed my team.",
+          "he": "פיו, זו הייתה קריאת השכמה רצינית! בדיוק הגעתי חזרה מסאמויל עיר החיבור, ווואו... מנהיגת המכון שם פשוט פירקה את הצוות שלי לגזרים."
+        },
+        {
+          "en": "It’s clear that more training is needed before making another attempt at that badge. No more rushing forward!",
+          "he": "זה ברור לחלוטין שיש צורך בעוד המון אימונים לפני שמנסים לאתגר את התג הזה שוב. אין טעם לרוץ קדימה בלי מוכנות."
+        },
+        {
+          "en": "Perfect timing! Let's have a serious battle right here to test these strategies and rebuild this team's confidence!",
+          "he": "זהו תזמון מושלם למפגש! כדאי לערוך כאן קרב רציני כדי לבחון את האסטרטגיות מחדש ולהחזיר לצוות את הביטחון!"
         }
       ],
       "spriteType": "char_1f9b7d",
@@ -459,8 +563,16 @@
       },
       "postBattleDialogue": [
         {
-          "en": "",
-          "he": "תפסתי את הפוקימונים שלי באזור הזה ."
+          "en": "Incredible! With a battle style like that, there is definitely a solid chance against the Sumville Gym.",
+          "he": "מדהים! עם סגנון לחימה כזה, יש כאן בהחלט סיכוי מצוין לעמוד מול המכון של סאמויל."
+        },
+        {
+          "en": "Want to know the secret behind this team? All three of these amazing Pokémon were actually caught right here on Route 1!",
+          "he": "רוצים לשמוע את הסוד מאחורי הצוות הזה? כל שלושת הפוקימונים המיוחדים האלה נתפסו למעשה ממש כאן, ברחבי דרך 1!"
+        },
+        {
+          "en": "Yes, even the rare starter types! They are incredibly hard to find and require a ton of patience, but they are out there in the tall grass. Keep eyes peeled!",
+          "he": "כן, גם הסוגים ההתחלתיים והנדירים! הם קשים מאוד לאיתור וזה דורש המון סבלנות, אבל הם מסתובבים כאן. כדאי לפקוח עיניים היטב!"
         }
       ]
     },
@@ -472,8 +584,16 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "",
-          "he": "היי - בעיר זירוויל אין מרכז פוקימונים אבל פרופסור אלגורתמיה יכול לרפא את הפוקימונים שלך"
+          "en": "Phew, Route 1 is quite long and packed with eager trainers, isn't it? It's so easy for a team to get worn out out here.",
+          "he": "פיו, דרך 1 היא ארוכה למדי ומלאה במאמנים נמרצים, נכון? קל מאוד לצוות להתעייף ולהישחק כאן בדרכים."
+        },
+        {
+          "en": "Just a quick reminder: there is no official Pokémon Center back in Zeroville, but Professor Algorithm can completely heal your Pokémon at the lab!",
+          "he": "רק תזכורת קטנה: בעיר זירוויל אמנם אין מרכז פוקימונים רשמי, אבל פרופסור אלגוריתמה יכולה לרפא את הפוקימונים שלכם במעבדה לחלוטין ובחינם!"
+        },
+        {
+          "en": "If the team's HP is running low, it's always smarter to head back and rest before pushing forward toward Sumville.",
+          "he": "אם מד החיים של הצוות מתחיל להתרוקן, תמיד חכם יותר לחזור קצת אחורה ולנוח, לפני שממשיכים להתקדם לכיוון סאמויל."
         }
       ],
       "spriteType": "char_6f0793",
