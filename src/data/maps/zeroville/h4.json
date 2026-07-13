@@ -43,16 +43,24 @@
           "he": "היי, אני אלן! אני גר ממש ליד המעבדה, אז אני יודע דבר או שניים."
         },
         {
-          "en": "When your Pokemon faints — meaning its HP reaches zero — it can't battle anymore until you heal it.",
-          "he": "כשהפוקימון שלך מתעלף — כלומר ה-HP שלו מגיע לאפס — הוא לא יכול להילחם יותר עד שתרפא אותו."
+          "en": "Want to know how to judge a Pokémon's true strength? It’s all about their stats and level!",
+          "he": "רוצה לדעת איך למדוד את העוצמה האמיתית של פוקימון? הכל תלוי ברמה ובמדדי התכונות שלו!"
         },
         {
-          "en": "Use a Revive to wake it up right away! Or visit the Pokemon Center — it's free!",
-          "he": "השתמש ב-Revive כדי להעירו מיד! או בקר במרכז הפוקימון — זה בחינם!"
+          "en": "Every time your Pokémon wins a battle, it gains experience. Get enough experience, and it will level up and grow stronger!",
+          "he": "בכל פעם שהפוקימון שלך מנצח בקרב, הוא מרוויח נקודות ניסיון. ברגע שהוא יאסוף מספיק ניסיון, הוא יעלה רמה ויתחזק!"
         },
         {
-          "en": "Strange things are indeed stirring outside our town... Prof. Algorithma is worried. Stay alert out there!",
-          "he": "דברים מוזרים אכן מתרחשים מחוץ לעיירה שלנו... פרופ׳ אלגוריתמה מוטרדת. היה ערני שם בחוץ!"
+          "en": "When they level up, stats like Attack, Defense, and Speed naturally increase. But that's not the only way to boost them.",
+          "he": "כשהם עולים רמה, מדדים כמו התקפה, הגנה ומהירות עולים באופן טבעי. אבל זו לא הדרך היחידה לשפר אותם."
+        },
+        {
+          "en": "You can also feed them special vitamins to raise their stats instantly, or train them until they evolve into a brand new, powerful form!",
+          "he": "אתה יכול גם להאכיל אותם בוויטמינים מיוחדים כדי להקפיץ את המדדים שלהם ברגע, או לאמן אותם עד שהם יתפתחו לצורה חדשה וחזקה בהרבה!"
+        },
+        {
+          "en": "If you want to study a Pokémon's potential and see how its stats grow, just check your Pokédex. It's packed with useful data!",
+          "he": "אם אתה רוצה לחקור את הפוטנציאל של הפוקימון שלך ולראות איך המדדים שלו צומחים, פשוט תבדוק בפוקידקס. הוא מלא בנתונים שימושיים!"
         }
       ],
       "spriteType": "char_392694",

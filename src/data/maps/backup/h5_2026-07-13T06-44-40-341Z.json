@@ -1,19 +1,13 @@
 {
   "id": "h5",
-  "name": "house-open",
-  "template": "house-open",
-  "tileset": "interior",
   "label": {
     "en": "Bob Family Home",
     "he": "משפחת בוב"
   },
+  "template": "house-open",
   "area": "Zeroville",
   "music": "town4",
   "encounterTableId": null,
-  "spawn": {
-    "x": 9,
-    "y": 13
-  },
   "npcs": [
     {
       "id": "house3i-pokeball-tutor",
@@ -63,7 +57,7 @@
             "quantity": 1
           },
           {
-            "itemId": "x-speed",
+            "itemId": "x-special",
             "quantity": 1
           }
         ],
@@ -106,7 +100,7 @@
         "items": [
           {
             "itemId": "tm27",
-            "quantity": 2
+            "quantity": 1
           }
         ]
       },

@@ -21,20 +21,28 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "Welcome to my home, dear! I used to travel all of Numeria as a young trainer.",
-          "he": "ברוך הבא לביתי, יקירי! פעם טיילתי בכל נומריה כמאמנת צעירה."
+          "en": "Welcome to my home, dear! I used to travel all over Numeria as a young trainer, just like you.",
+          "he": "ברוך הבא לביתי, יקירי! פעם טיילתי בכל נומריה כמאמנת צעירה, ממש כמוך עכשיו."
         },
         {
-          "en": "A Pokeball — or 'כדור פוקה' in Hebrew — is how you catch wild Pokemon.",
-          "he": "כדור פוקה הוא איך שתופסים פוקימון פראיים."
+          "en": "To win battles, you must understand that there are three types of moves a Pokémon can learn.",
+          "he": "כדי לנצח בקרבות, אתה חייב להבין שיש שלושה סוגים שונים של מתקפות שפוקימון יכול ללמוד."
         },
         {
-          "en": "Throw it during a battle when the wild Pokemon's HP is low. The weaker it is, the easier to catch!",
-          "he": "זרוק אותו במהלך קרב כשה-HP של הפוקימון הפראי נמוך. ככל שהוא חלש יותר, כך קל יותר לתפוס!"
+          "en": "First are physical attacks. These are direct body-to-body strikes, like punches or tackles, which rely on brute strength.",
+          "he": "הראשונות הן המתקפות הפיזיות. מדובר במכות ישירות מגוף לגוף, כמו אגרופים או נגיחות, והן נשענות על כוח פיזי טהור."
         },
         {
-          "en": "Great Balls and Ultra Balls catch even better — buy them at the Mart when you have enough money.",
-          "he": "כדורים גדולים וכדורים אולטרה תופסים אפילו טוב יותר — קנה אותם בחנות כשיש לך מספיק כסף."
+          "en": "Next are special attacks. These are elemental energies projected from a distance, like breathing fire or shooting water.",
+          "he": "הסוג השני הוא מתקפות מיוחדות. אלו הן אנרגיות ויסודות שנשלחים מרחוק, כמו נשיפת אש או ירי של סילוני מים."
+        },
+        {
+          "en": "Finally, there are tactical moves. They don't deal damage directly, but they are highly strategic—they can paralyze, lower stats, or boost your own power.",
+          "he": "והסוג האחרון הוא מתקפות טקטיקה. הן לא עושות נזק ישיר, אבל הן אסטרטגיות לחלוטין – הן יכולות לשתק את היריב, להחליש אותו, או לחזק את הפוקימון שלך."
+        },
+        {
+          "en": "A smart trainer chooses their Pokémon's moves carefully to balance strength and strategy!",
+          "he": "מאמן חכם בוחר בקפידה את המתקפות של הפוקימונים שלו כדי לאזן בצורה מושלמת בין כוח לטקטיקה!"
         }
       ],
       "spriteType": "char_8c60a6",
@@ -42,6 +50,10 @@
         "items": [
           {
             "itemId": "poke-ball",
+            "quantity": 3
+          },
+          {
+            "itemId": "x-accuracy",
             "quantity": 3
           }
         ],
@@ -58,18 +70,27 @@
       "y": 5,
       "facing": "left",
       "type": "dialogue",
+      "items": [{ "itemId": "x-attack", "quantity": 1 }],
       "dialogue": [
         {
-          "en": "Hey! I'm studying hard to become a great trainer.",
-          "he": "היי! אני לומד קשה כדי להיות מאמן מעולה."
+          "en": "Hey! Are you studying up on Pokémon types? It's like the ultimate game of rock-paper-scissors!",
+          "he": "היי! אתה כבר מבין בסוגים של פוקימונים? זה ממש כמו משחק ענק של אבן, נייר ומספריים!"
         },
         {
-          "en": "In a Pokemon battle, you pick one of four moves each turn. Pick the right type and deal extra damage!",
-          "he": "בקרב פוקימון, אתה בוחר אחד מארבעה מהלכים בכל תור. בחר את הסוג הנכון ותגרום נזק נוסף!"
+          "en": "Every Pokémon has its own type, and every move has a type too. If you use the right element, you can deal double damage!",
+          "he": "לכל פוקימון יש סוג משלו, וגם לכל מתקפה יש סוג. אם תשתמש באלמנט הנכון, תוכל לעשות נזק כפול!"
         },
         {
-          "en": "Fire beats Grass. Water beats Fire. Grass beats Water. Simple as that for starters!",
-          "he": "אש מנצחת עשב. מים מנצחים אש. עשב מנצח מים. פשוט ככה בהתחלה!"
+          "en": "For example, Fire melts Ice, Water puts out Fire, and Grass absorbs Water. It's all about finding the weakness!",
+          "he": "למשל, אש ממיסה קרח, מים מכבים אש, ועשב סופג מים. החכמה היא תמיד למצוא את החולשה של היריב!"
+        },
+        {
+          "en": "But watch out—if you attack a Pokémon with a type it's resistant to, your move will barely leave a scratch.",
+          "he": "אבל שים לב – אם תתקוף פוקימון עם סוג שהוא עמיד בפניו, המתקפה שלך בקושי תעשה לו שריטה."
+        },
+        {
+          "en": "Memorize the type matchups! That's how a rookie becomes a champion.",
+          "he": "תלמד טוב את יחסי הכוחות בין הסוגים! ככה הופכים מטירונים לאלופים."
         }
       ],
       "spriteType": "char_0502ea"

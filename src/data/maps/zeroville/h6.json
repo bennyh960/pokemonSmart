@@ -1,8 +1,8 @@
 {
   "id": "h6",
   "label": {
-    "en": "Reminder Home",
-    "he": "בית ריי-מיינדר"
+    "en": "Mishdif Home",
+    "he": "משפחת מישדיף"
   },
   "template": "house-open",
   "area": "Zeroville",
@@ -12,8 +12,8 @@
     {
       "id": "house3i-pokeball-tutor",
       "name": {
-        "en": "Grandma Tova",
-        "he": "סבתא טובה"
+        "en": "Grandma Mindy",
+        "he": "סבתא מינדי"
       },
       "x": 3,
       "y": 4,
@@ -21,58 +21,32 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "Welcome to my home, dear! I used to travel all of Numeria as a young trainer.",
-          "he": "ברוך הבא לביתי, יקירי! פעם טיילתי בכל נומריה כמאמנת צעירה."
+          "en": "Hey there! Numeria is a massive region with so many hidden paths and places to explore.",
+          "he": "היי שם! מחוז נומריה הוא פשוט עצום, ויש בו כל כך הרבה שבילים נסתרים ומקומות לחקור."
         },
         {
-          "en": "A Pokeball — or 'כדור פוקה' in Hebrew — is how you catch wild Pokemon.",
-          "he": "כדור פוקה הוא איך שתופסים פוקימון פראיים."
+          "en": "If you want to find your way around and navigate like a pro, I highly recommend checking your map often.",
+          "he": "אם אתה רוצה להתמצא באזור ולנווט כמו מקצוען, אני ממליצה לך בחום להשתמש במפה לעיתים קרובות."
         },
         {
-          "en": "Throw it during a battle when the wild Pokemon's HP is low. The weaker it is, the easier to catch!",
-          "he": "זרוק אותו במהלך קרב כשה-HP של הפוקימון הפראי נמוך. ככל שהוא חלש יותר, כך קל יותר לתפוס!"
+          "en": "It shows you exactly where the towns, routes, and gyms are, so you'll never get lost on your journey!",
+          "he": "היא מראה לך בדיוק איפה נמצאות הערים, הדרכים והמכונים, ככה שאף פעם לא תלך לאיבוד במהלך המסע שלך!"
         },
         {
-          "en": "Great Balls and Ultra Balls catch even better — buy them at the Mart when you have enough money.",
-          "he": "כדורים גדולים וכדורים אולטרה תופסים אפילו טוב יותר — קנה אותם בחנות כשיש לך מספיק כסף."
+          "en": "You can open it from menu or by pressing the W key on your keyboard.",
+          "he": "אתה יכול לפתוח את המפה מהתפריט או על ידי לחיצה על מקש W במקלדת שלך."
         }
       ],
       "spriteType": "char_8c60a6",
       "reward": {
         "items": [
           {
-            "itemId": "poke-ball",
-            "quantity": 3
+            "itemId": "lemonade",
+            "quantity": 1
           }
         ],
         "flag": "house3i-grandma-rewarded"
       }
-    },
-    {
-      "id": "house3i-battle-tutor",
-      "name": {
-        "en": "Young Trainer Dov",
-        "he": "מאמן צעיר דוב"
-      },
-      "x": 9,
-      "y": 5,
-      "facing": "left",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hey! I'm studying hard to become a great trainer.",
-          "he": "היי! אני לומד קשה כדי להיות מאמן מעולה."
-        },
-        {
-          "en": "In a Pokemon battle, you pick one of four moves each turn. Pick the right type and deal extra damage!",
-          "he": "בקרב פוקימון, אתה בוחר אחד מארבעה מהלכים בכל תור. בחר את הסוג הנכון ותגרום נזק נוסף!"
-        },
-        {
-          "en": "Fire beats Grass. Water beats Fire. Grass beats Water. Simple as that for starters!",
-          "he": "אש מנצחת עשב. מים מנצחים אש. עשב מנצח מים. פשוט ככה בהתחלה!"
-        }
-      ],
-      "spriteType": "char_0502ea"
     }
   ]
 }

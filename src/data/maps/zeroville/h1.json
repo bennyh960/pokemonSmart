@@ -133,22 +133,18 @@
       },
       "questions": {
         "count": 10,
-        "types": [
-          "+",
-          "-",
-          "×"
-        ]
+        "types": ["+", "-", "×"]
       },
       "postFlagDialogue": {
         "flag": "act2-medicine-received",
         "dialogue": [
           {
-            "en": "",
-            "he": "גאה בך מאוד! עברת דרך ארוכה ורואים כמה השתפרת!"
+            "en": "Wow, <p>! I am incredibly proud of you! You’ve come such a long way, and your growth as a trainer is amazing!",
+            "he": "וואו, <p>! אני כל כך גאה בך! עברת דרך ארוכה, ורואים בצורה מטורפת כמה השתפרת כמאמן!"
           },
           {
-            "en": "",
-            "he": "כל הכבוד"
+            "en": "You’ve absolutely earned the right to face whatever comes next. Excellent job, <p>, and good luck out there!",
+            "he": "הרווחת לחלוטין את הזכות להתמודד עם כל מה שמחכה בהמשך. כל הכבוד, <p>, והמון בהצלחה!"
           }
         ]
       }
@@ -159,21 +155,20 @@
   "area": "Zeroville",
   "interactiveItems": {},
   "movablePuzzle": {},
-  "flagListeners": []
-,
+  "flagListeners": [],
   "tiles": [
-    ["wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall","wall"],
-    ["wall","wall","wall","wall","wall","wall","wall","wall","tv1","wall","wall","wall"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","ca1tl","ca1t","ca1t","ca1t","ca1tr","d"],
-    ["d","d","d","d","d","d","ca1l","ca1c","ca1c","ca1c","ca1r","d"],
-    ["d","d","d","d","d","d","ca1l","ca1c","ca1c","ca1c","ca1r","d"],
-    ["d","d","d","d","d","d","ca1bl","ca1b","ca1b","ca1b","ca1br","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","d","d","d","d","d","d","d","d","d"],
-    ["d","d","d","ca1tl","ca1tr","d","d","d","d","d","d","d"]
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "tv1", "wall", "wall", "wall"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "d", "d", "d", "ca1tl", "ca1t", "ca1t", "ca1t", "ca1tr", "d"],
+    ["d", "d", "d", "d", "d", "d", "ca1l", "ca1c", "ca1c", "ca1c", "ca1r", "d"],
+    ["d", "d", "d", "d", "d", "d", "ca1l", "ca1c", "ca1c", "ca1c", "ca1r", "d"],
+    ["d", "d", "d", "d", "d", "d", "ca1bl", "ca1b", "ca1b", "ca1b", "ca1br", "d"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+    ["d", "d", "d", "ca1tl", "ca1tr", "d", "d", "d", "d", "d", "d", "d"]
   ],
   "objects": [
     {

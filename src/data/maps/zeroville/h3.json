@@ -28,14 +28,14 @@
           "he": "הפוקימון שלך צובר EXP אפילו אם הוא עוזר לך לתפוס פוקימון פראי. כל קרב חשוב!"
         },
         {
-          "en": "Take this Pokeball — practice catching is the best way to start!",
-          "he": "קח את כדור הפוקה הזה — תרגול תפיסה הוא הדרך הטובה ביותר להתחיל!"
+          "en": "Thanks for your listening!",
+          "he": "תודה על ההקשבה!"
         }
       ],
       "spriteType": "char_a5abb0",
       "reward": {
         "money": 0,
-        "items": [{ "itemId": "poke-ball", "quantity": 1 }],
+        "items": [{ "itemId": "potion", "quantity": 3 }],
         "flag": "house-br-jasmine-rewarded"
       }
     }
