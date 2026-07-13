@@ -72,8 +72,16 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "אני תמיד דואג למלא את מלאי הפוקדורים שלי"
+          "en": "Hey there! I always make sure to stock up on plenty of Poké Balls before I leave town.",
+          "he": "היי! אני תמיד דואג למלא את המלאי שלי בהרבה פוקדורים לפני שאני יוצא מהעיר."
+        },
+        {
+          "en": "You never know when a rare Pokémon will pop up in the wild, and running out of balls is the worst feeling ever!",
+          "he": "אי אפשר לדעת מתי יקפוץ פוקימון נדיר מהדשא, וסמוך עליי – להיתקע בלי פוקדורים זה ההרגשה הכי מבאסת שיש!"
+        },
+        {
+          "en": "Talk to the shopkeeper right here to buy Poké Balls, Potions, and anything else you need for your journey.",
+          "he": "דבר עם המוכר כאן כדי לקנות פוקדורים, שיקויים וכל מה שאתה צריך למסע שלך."
         }
       ],
       "spriteType": "char_c2b2c1",

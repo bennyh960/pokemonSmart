@@ -351,7 +351,7 @@
         },
         {
           "en": "If your Pokemon's HP drops to zero, it faints. Use a Revive or visit the Pokemon Center to heal it!",
-          "he": "אם ה-HP של הפוקימון שלך יורד לאפס, הוא מתעלף. השתמש ב-Revive או בקר במרכז הפוקימון כדי לרפא אותו!"
+          "he": "אם ה-HP של הפוקימון שלך יורד לאפס, הוא מתעלף. השתמש ב-שיקוי החייאה או בקר במרכז הפוקימון כדי לרפא אותו!"
         }
       ],
       "spriteType": "char_392694"
@@ -368,16 +368,20 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "The Pokemon Center heals all your Pokemon for free!",
-          "he": "מרכז הפוקימון מרפא את כל הפוקימונים שלך בחינם!"
+          "en": "Welcome to the Pokémon Center! This place is a lifesaver—they heal your entire team back to full health for free!",
+          "he": "ברוך הבא למרכז הפוקימונים! המקום הזה הוא פשוט גלגל הצלה – הם ירפאו את כל הצוות שלך למקסימום חיים ובחינם!"
         },
         {
-          "en": "If your whole team faints in battle, you will wake up in the nearest Pokemon Center.",
-          "he": "אם כל הצוות שלך מתעלף בקרב, תתעורר במרכז הפוקימון הקרוב ביותר."
+          "en": "Make it a habit to rest here. If your whole team faints in battle, you'll pass out and wake up right back at the last Center you visited.",
+          "he": "תעשה לך הרגל לנוח כאן. אם כל הצוות שלך יתעלף בקרב, אתה תאבד את ההכרה ותתעורר שוב במרכז האחרון שביקרת בו."
         },
         {
-          "en": "Always heal before heading into tall grass or facing a tough trainer!",
-          "he": "תמיד תרפא לפני שאתה נכנס לדשא גבוה או מתמודד עם מאמן קשה!"
+          "en": "But watch out! Losing a battle costs a fortune. You'll have to pay prize money to the winner AND cover emergency medical fees for your fainted team!",
+          "he": "אבל שים לב! להפסיד בקרב זה עסק יקר. אתה תצטרך גם לשלם כסף למנצח וגם לכסות את עלויות טיפול החירום של הפוקימונים שהתעלפו!"
+        },
+        {
+          "en": "It’ll drain your wallet fast, so always heal up before heading into tall grass or challenging a tough trainer!",
+          "he": "זה ירוקן לך את הכיס בשנייה, אז תהיה חכם: תמיד תרפא את הפוקימונים שלך לפני שאתה מאתגר מאמן חזק!"
         }
       ],
       "spriteType": "char_c3dacc"
@@ -390,16 +394,24 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "שלום ! כמה כייף לראות מאמנים צעירים בתחילת דרכם."
+          "en": "Hey <p>! It's always so exciting to see young trainers just starting out on their journey.",
+          "he": "היי <p>! כמה כיף לראות מאמנים צעירים בתחילת הדרך שלהם."
         },
         {
-          "en": "",
-          "he": "שמעתם על ליגת הפוקימונים? צריך לאסוף 8 תגי מכון כדי להיות מסוגלים להתחרות בליגה."
+          "en": "Have you heard about the Pokémon League? You need to collect 8 gym badges across the region to compete with the best.",
+          "he": "שמעת כבר על ליגת הפוקימונים? צריך לאסוף 8 תגי מכון ברחבי המחוז כדי להתחרות עם הטובים ביותר."
         },
         {
-          "en": "",
-          "he": "כמה תגים כבר יש לך?"
+          "en": "I'm actually just packing up my gear to head out and watch the battles myself.",
+          "he": "אני בדיוק מארגן את הציוד שלי כדי לצאת לדרך ולצפות בקרבות בעצמי."
+        },
+        {
+          "en": "How many badges do you have so far? The trainers on the path ahead are way too experienced for beginners.",
+          "he": "כמה תגים כבר יש לך? המאמנים בהמשך הדרך הזו מנוסים מדי בשביל מי שרק מתחיל."
+        },
+        {
+          "en": "It's much smarter to focus on battles around town for now until you're ready for the bigger challenges!",
+          "he": "הרבה יותר חכם להתמקד כרגע במאמנים ברמה שלך כאן באזור, עד שתהיה מוכן לאתגרים הגדולים יותר!"
         }
       ],
       "spriteType": "char_962c1b",
@@ -413,12 +425,16 @@
         "flag": "story-badge-5",
         "dialogue": [
           {
-            "en": "",
-            "he": "כמה טוב לראותך שוב! אני רואה כמה התחזקת!"
+            "en": "Hey, great to see you again! Wow, I can already tell your Pokémon have grown much stronger!",
+            "he": "היי, כמה טוב לראות אותך שוב! וואו, אני כבר יכול לראות כמה הפוקימונים שלך התחזקו!"
           },
           {
-            "en": "",
-            "he": "אך עדיין לא מספיק מנוסה כדי לעבור בדרך הזו."
+            "en": "You're definitely on the right track, but the path ahead gets brutal. The trainers further up are in a whole different league.",
+            "he": "אתה לגמרי במסלול הנכון, אבל ההמשך פה נהיה ממש קשוח. המאמנים שם קדימה נמצאים בליגה אחרת לגמרי."
+          },
+          {
+            "en": "You've got the talent, so keep training around the area a bit more. You'll be ready to take them on in no time!",
+            "he": "יש לך את הכישרון, אז כדאי להמשיך להתאמן באזור עוד קצת. עוד מעט כבר תהיה מוכן לאתגר אותם!"
           }
         ]
       }
@@ -431,7 +447,7 @@
       "type": "dialogue",
       "dialogue": [
         {
-          "en": "",
+          "en": "The proffessor needs you! He's in the lab.",
           "he": "היי - הפרופסור צריך אותך! הוא במעבדה"
         }
       ],
