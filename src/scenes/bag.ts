@@ -218,6 +218,9 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
       const pokeName = getPokemonDisplayName(pokemon.id);
       message = t('bag.tm.learned', { name: pokeName, move: moveName });
       messageTimer = 1.5;
+      if (!tmEffect.isHM) {
+        consumeItem(pd.items, itemId);
+      }
     } else if (result.message === 'no-space') {
       const pokeName = getPokemonDisplayName(pokemon.id);
       const moveName = getMoveDisplayName(tmEffect.moveId);
