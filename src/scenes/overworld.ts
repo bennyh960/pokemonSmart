@@ -109,6 +109,13 @@ import {
   type CutsceneContext,
 } from '../systems/cutscene-runner.js';
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
+import {
+  createPokemonAnim,
+  updatePokemonAnim,
+  drawOverworldPokemon,
+  loadPokemonSprite,
+  type PokemonAnim,
+} from '../systems/overworld-pokemon-anim.js';
 import { setFlyCallback, FLY_DESTINATIONS, resolveFlySpawn } from './world-map.js';
 import { openSaveSlots } from './save-slots.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
@@ -327,6 +334,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     teleported: boolean;
   }
   let flyAnim: FlyAnimState | null = null;
+  // Cutscene pokemon-anim step (e.g. Pidgeot flying off)
+  let cutscenePokemonAnim: PokemonAnim | null = null;
 
   // Surf state
   let isCurrentlySurfing = false;
@@ -1343,6 +1352,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       isPlayerWalking() {
         return playerCutsceneWalking || player.moving;
       },
+      playPokemonAnim(step) {
+        const npc =
+          step.from && step.from !== 'player'
+            ? npcManager?.getNPCs().find((n) => n.id === (step.from as { npcId: string }).npcId)
+            : undefined;
+        const origin = npc ? { x: npc.x, y: npc.y } : { x: player.gridX, y: player.gridY };
+        cutscenePokemonAnim = createPokemonAnim(step.pokemonId, origin, step.motion, step.path);
+      },
+      isPokemonAnimPlaying() {
+        return cutscenePokemonAnim !== null;
+      },
       snapCamera(x, y) {
         if (camera && tileMap) camera.snapTo(x, y, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
       },
@@ -1680,11 +1700,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   /** Start the Fly animation sequence. */
   function startFlyAnimation(pokemon: import('../types/index.js').Pokemon, destMapId: string): void {
     const destSpawn = resolveFlySpawn(destMapId) ?? getCachedMap(destMapId)?.spawn ?? { x: 5, y: 5 };
-    const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
     flyAnim = {
       phase: 'mount',
       pokemonId: pokemon.id,
-      pokemonSprite: getCachedImage(spritePath),
+      pokemonSprite: null,
       timer: 0,
       spriteScale: 1,
       spriteAlpha: 0,
@@ -1695,13 +1714,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       spriteOffsetY: 0,
       teleported: false,
     };
-    loadImage(spritePath)
-      .then((img) => {
-        if (flyAnim && flyAnim.pokemonId === pokemon.id) flyAnim.pokemonSprite = img;
-      })
-      .catch(() => {
-        /* non-fatal */
-      });
+    flyAnim.pokemonSprite = loadPokemonSprite(pokemon.id, (img) => {
+      if (flyAnim && flyAnim.pokemonId === pokemon.id) flyAnim.pokemonSprite = img;
+    });
   }
 
   // Register module-level fly-setup so setupWorldMapFly() (called from start menu) can use it
@@ -2132,6 +2147,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (isCutsceneActive()) {
         // hideHUD();
         updateCutscene(dt, input, buildCutsceneContext());
+        if (cutscenePokemonAnim && updatePokemonAnim(cutscenePokemonAnim, dt)) cutscenePokemonAnim = null;
 
         if (player.moving) {
           player.moveProgress += dt / MOVE_DURATION;
@@ -4176,14 +4192,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // Fly animation overlay
       if (flyAnim && flyAnim.spriteAlpha > 0 && flyAnim.pokemonSprite) {
-        const flyScreenX = psx; // player screen position
-        const flyScreenY = psy + flyAnim.spriteOffsetY;
-        const flySize = TILE_SIZE * 2 * flyAnim.spriteScale;
-        ctx.save();
-        ctx.globalAlpha = flyAnim.spriteAlpha;
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(flyAnim.pokemonSprite, flyScreenX - flySize / 2, flyScreenY - flySize / 2, flySize, flySize);
-        ctx.restore();
+        // player screen position
+        drawOverworldPokemon(ctx, flyAnim.pokemonSprite, psx, psy + flyAnim.spriteOffsetY, flyAnim.spriteScale, flyAnim.spriteAlpha);
+      }
+
+      // Cutscene pokemon-anim overlay
+      if (cutscenePokemonAnim && cutscenePokemonAnim.alpha > 0 && cutscenePokemonAnim.sprite) {
+        const a = cutscenePokemonAnim;
+        drawOverworldPokemon(ctx, a.sprite!, a.x - camera.x, a.y - camera.y + a.offsetY, a.scale, a.alpha);
       }
 
       // Fly fade overlay (black screen fade in/out)

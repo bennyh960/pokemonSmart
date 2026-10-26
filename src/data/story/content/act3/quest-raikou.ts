@@ -98,6 +98,7 @@ registerStoryEvent({
   actions: [
     { type: 'start-cutscene', cutsceneId: 'act3-raikou-sirFracti-call2' },
     { type: 'complete-quest', questId: 'quest-raikou' },
+    { type: 'set-quest', questId: 'quest-go-percentile' },
   ],
 });
 

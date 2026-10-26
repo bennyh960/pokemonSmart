@@ -6,7 +6,7 @@
  *   main-act3-sym-to-cave        — Head to the cave in route-7
  *   main-act3-sym-find-pokemon   — Find stolen Pokemon & defeat all Team Rocket
  *   main-act3-sym-rejoin-lance   — Rejoin Lance deeper in the cave
- *   main-act3-sym-to-percentile  — Continue to Percentile city via route-11
+ *   quest-go-percentile          — Continue to Percentile city via route-11 (also set after Raikou and Route 9)
  *
  * STORY BEATS (in order):
  *   1. Badge 6 earned → Sima reveals she's Lance's sister; quest: meet Lance at DayCare
@@ -80,11 +80,11 @@ registerQuest({
 });
 
 registerQuest({
-  id: 'main-act3-sym-to-percentile',
-  title: { en: 'Onward to Percentile', he: 'קדימה לפרסנטייל' },
+  id: 'quest-go-percentile',
+  title: { en: 'Road to Percentile', he: 'הדרך לפרסנטייל' },
   objective: {
-    en: 'Head to Percentile city',
-    he: 'המשך המסע - קדימה לעיר פרסנטייל ',
+    en: 'Continue your journey to Percentile City to challenge the next gym there',
+    he: 'המשך את המסע שלך לעיר פרסנטייל כדי לאתגר את המכון הבא שם',
   },
 });
 
@@ -791,7 +791,7 @@ registerCutscene({
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_SYM_ZAPDOS_CAVE_DEFEATED } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_SYM_ARC_COMPLETE } },
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act3-sym-rejoin-lance' } },
-    { type: 'action', action: { type: 'set-quest', questId: 'main-act3-sym-to-percentile' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'quest-go-percentile' } },
   ],
 });
 

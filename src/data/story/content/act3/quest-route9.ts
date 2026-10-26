@@ -164,6 +164,8 @@ registerCutscene({
   id: 'cutscene-r9-reminder-cave',
   steps: [
     { type: 'wait', durationMs: 200 },
+    // Pidgeot breaks free and flies out of the cave
+    { type: 'pokemon-anim', pokemonId: 18, motion: 'fly', path: ['up', 'up', 'up', 'up', 'up', 'up', 'up', 'up'] },
     {
       type: 'move-npc',
       npcId: 'npc-r9-reminder-cave',
@@ -253,13 +255,4 @@ registerCutscene({
     { type: 'action', action: { type: 'set-quest', questId: 'quest-go-percentile' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_R9_ARC_COMPLETE } },
   ],
-});
-
-registerQuest({
-  id: 'quest-go-percentile',
-  title: { en: 'Road to Percentile', he: 'הדרך לפרסנטייל' },
-  objective: {
-    en: 'Continue your journey to Percentile City to challenge the next gym there',
-    he: 'המשך את המסע שלך לעיר פרסנטייל כדי לאתגר את המכון הבא שם',
-  },
 });

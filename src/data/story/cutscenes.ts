@@ -1,5 +1,6 @@
 import type { BilingualText } from '../../systems/npc.js';
 import type { StoryAction } from './events.js';
+import type { PokemonAnimMotion, PathDir } from '../../systems/overworld-pokemon-anim.js';
 
 export type CutsceneStep =
   | { type: 'camera-pan'; x: number; y: number; durationMs: number }
@@ -24,6 +25,20 @@ export type CutsceneStep =
   | { type: 'hide-npc'; npcId: string }
   | { type: 'hide-player' }
   | { type: 'show-player' }
+  /**
+   * pokemon-anim — a Pokémon sprite appears and flies / surfs / walks along a path, then fades out.
+   *   from: 'player' (default) or { npcId } — the starting tile
+   *   fly with no path rises straight up
+   * Example: { type: 'pokemon-anim', pokemonId: 18, motion: 'fly', path: ['up', 'up', 'up'] }
+   */
+  | {
+      type: 'pokemon-anim';
+      pokemonId: number;
+      motion: PokemonAnimMotion;
+      path?: PathDir[];
+      from?: 'player' | { npcId: string };
+      waitForComplete?: boolean;
+    }
   | { type: 'move-player'; path: Array<'up' | 'down' | 'left' | 'right'>; waitForComplete?: boolean }
   | {
       type: 'dialogue';

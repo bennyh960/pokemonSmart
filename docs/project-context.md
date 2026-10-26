@@ -22,4 +22,7 @@ Last active quest: `quest-go-percentile` ("Road to Percentile") — `src/data/st
 - [ ] `src/data/badges.ts` badges 7–8: leader is `???`, type/mathTopic still old placeholders — fill in when the Percentile/Algebria gyms are designed
 - [ ] `src/data/maps/backup/` and `templates/backup/` — old map snapshots, remove if not needed
 - [ ] Stale commented-out reset script at the bottom of `act3/quest-raikou.ts`
+- [ ] `overworld.ts` `buildCutsceneContext().executeStoryAction` re-implements story actions that `systems/story-engine.ts` already handles — route through the engine
+- [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution, english-learning — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
+- [ ] 7 of 13 vitest files fail on main (pre-existing)
 - [ ] Math in battle disabled — needs a less intrusive mechanic

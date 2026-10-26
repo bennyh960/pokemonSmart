@@ -9,7 +9,7 @@
  * Supported steps (Sprint 7A):
  *   dialogue, screen-fade, wait, wait-input, face-npc, show-npc, hide-npc,
  *   hide-player, show-player, action, if-flag, play-music, stop-music, play-sfx,
- *   move-npc (instant teleport), camera-snap, camera-pan (snap for now)
+ *   move-npc (instant teleport), camera-snap, camera-pan (snap for now), pokemon-anim
  *
  * Not yet supported (deferred): start-battle, start-gate
  */
@@ -43,6 +43,10 @@ export interface CutsceneContext {
   movePlayerAlongPath(path: Array<'up' | 'down' | 'left' | 'right'>): void;
   /** Returns true while the player is still walking its cutscene path. */
   isPlayerWalking(): boolean;
+  /** Start a Pokémon sprite animation on the map (fly / surf / walk). */
+  playPokemonAnim(step: Extract<CutsceneStep, { type: 'pokemon-anim' }>): void;
+  /** Returns true while a pokemon-anim is still playing. */
+  isPokemonAnimPlaying(): boolean;
   snapCamera(x: number, y: number): void;
   panCamera(x: number, y: number, durationMs: number): void;
   playMusic(id: string): void;
@@ -117,6 +121,7 @@ let _phoneRing: PhoneRingState | null = null; // phone-ring intro phase
 
 let _npcMoveWaiting: string | null = null; // npcId being waited on for animated walk
 let _playerMoveWaiting = false;
+let _pokemonAnimWaiting = false;
 let _completionResolve: (() => void) | null = null;
 
 const CHARS_PER_SEC = 40; // typewriter speed
@@ -163,6 +168,7 @@ export function activateCutscene(id: string): boolean {
   _waitingInput = false;
   _npcMoveWaiting = null;
   _playerMoveWaiting = false;
+  _pokemonAnimWaiting = false;
   _phoneRing = null;
 
   // If phoneCaller is set, enter the ring phase before executing any steps
@@ -193,6 +199,7 @@ export function deactivateCutscene(): void {
   _waitingInput = false;
   _npcMoveWaiting = null;
   _playerMoveWaiting = false;
+  _pokemonAnimWaiting = false;
   _phoneRing = null;
   _completionResolve?.();
   _completionResolve = null;
@@ -331,6 +338,15 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
   if (_npcMoveWaiting) {
     if (!ctx.isNPCWalking(_npcMoveWaiting)) {
       _npcMoveWaiting = null;
+      _stepIndex++;
+    }
+    return;
+  }
+
+  // ── Pokémon animation wait ──
+  if (_pokemonAnimWaiting) {
+    if (!ctx.isPokemonAnimPlaying()) {
+      _pokemonAnimWaiting = false;
       _stepIndex++;
     }
     return;
@@ -563,6 +579,13 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     case 'show-player': {
       ctx.setPlayerHidden(false);
       _stepIndex++;
+      break;
+    }
+
+    case 'pokemon-anim': {
+      ctx.playPokemonAnim(step);
+      if (step.waitForComplete !== false) _pokemonAnimWaiting = true;
+      else _stepIndex++;
       break;
     }
 

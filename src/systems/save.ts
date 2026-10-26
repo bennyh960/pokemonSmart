@@ -171,7 +171,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 19;
+export const CURRENT_SAVE_VERSION = 20;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -350,6 +350,21 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     data.phoneContacts = [];
     data.saveVersion = 19;
     console.log('Migrated save to version 19: updated phone contacts to have npcId and mapId.');
+  },
+  20: (data) => {
+    // 'main-act3-sym-to-percentile' merged into 'quest-go-percentile'
+    const story = data.story;
+    if (story) {
+      if (story.activeQuestId === 'main-act3-sym-to-percentile') story.activeQuestId = 'quest-go-percentile';
+      story.completedQuestIds = [
+        ...new Set(
+          (story.completedQuestIds ?? []).map((q: string) =>
+            q === 'main-act3-sym-to-percentile' ? 'quest-go-percentile' : q,
+          ),
+        ),
+      ];
+    }
+    data.saveVersion = 20;
   },
 };
 
