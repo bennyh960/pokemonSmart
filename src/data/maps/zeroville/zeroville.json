@@ -14,6 +14,27 @@
   },
   "transitions": [
     {
+      "fromX": 0,
+      "fromY": 6,
+      "toMapId": "forest/zeroville-trail",
+      "toX": 42,
+      "toY": 6
+    },
+    {
+      "fromX": 0,
+      "fromY": 7,
+      "toMapId": "forest/zeroville-trail",
+      "toX": 42,
+      "toY": 7
+    },
+    {
+      "fromX": 0,
+      "fromY": 8,
+      "toMapId": "forest/zeroville-trail",
+      "toX": 42,
+      "toY": 8
+    },
+    {
       "fromX": 24,
       "fromY": 6,
       "toMapId": "routes/route-1",
