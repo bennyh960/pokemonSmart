@@ -1,7 +1,9 @@
 // Registers all quests/gates/cutscenes/events so runtime lookups work
 import '../../data/story/content/index';
 
-import { SAVE_KEY_PREFIX, SLOT_INDEX_KEY } from '../constants';
+import { getSlotIndex, loadGame, saveGame } from '../../systems/save';
+import { initSavesFromCloud } from '../../auth/auth-service';
+import { listSnapshots, addSnapshot, deleteSnapshot, restoreSnapshot, describeProgress } from '../snapshots';
 import type { PlayerData } from '../../types/index';
 import { GATES } from '../../data/story/gates';
 import { getAllCutscenes } from '../../data/story/cutscenes';
@@ -35,12 +37,6 @@ interface NpcEntry {
   spawnAfter?: string;
   despawnAfter?: string;
   facing?: string;
-}
-
-interface SaveMeta {
-  slot: number;
-  playerName: string;
-  savedAt: string;
 }
 
 interface ActInfo {
@@ -257,24 +253,6 @@ function findNpcsAcrossMaps(npcIds: string[], extraMapIds: string[]): Map<string
     }
   }
   return result;
-}
-
-// ── Save helpers ──────────────────────────────────────────────────────────────
-
-function loadAllSlots(): SaveMeta[] {
-  const raw = localStorage.getItem(SLOT_INDEX_KEY);
-  if (!raw) return [];
-  try { return JSON.parse(raw) as SaveMeta[]; } catch { return []; }
-}
-
-function loadPd(slot: number): PlayerData | null {
-  const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${slot}`);
-  if (!raw) return null;
-  try { return JSON.parse(raw) as PlayerData; } catch { return null; }
-}
-
-function savePd(slot: number, pd: PlayerData): void {
-  localStorage.setItem(`${SAVE_KEY_PREFIX}${slot}`, JSON.stringify(pd));
 }
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
@@ -565,9 +543,9 @@ function renderFlagSection(
 export function renderStoryTab(container: HTMLElement): (() => void) | void {
   const acts = buildActInfoList();
   let selectedAct: ActInfo | null = acts[0] ?? null;
-  let slots = loadAllSlots();
+  let slots = getSlotIndex();
   let selectedSlot: number | null = slots[0]?.slot ?? null;
-  let playerData: PlayerData | null = selectedSlot !== null ? loadPd(selectedSlot) : null;
+  let playerData: PlayerData | null = selectedSlot !== null ? loadGame(selectedSlot) : null;
   let extraMapIds: string[] = [];
 
   container.innerHTML = '';
@@ -612,7 +590,7 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
   const reloadBtn = document.createElement('button');
   reloadBtn.className = 'btn btn-sm';
   reloadBtn.textContent = '↺';
-  reloadBtn.title = 'Reload save';
+  reloadBtn.title = 'Reload saves from the cloud';
   topBar.appendChild(reloadBtn);
 
   function rebuildSlotSelect() {
@@ -635,12 +613,13 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
 
   slotSelect.addEventListener('change', () => {
     selectedSlot = Number(slotSelect.value);
-    playerData = loadPd(selectedSlot);
+    playerData = loadGame(selectedSlot);
     render();
   });
-  reloadBtn.addEventListener('click', () => {
-    slots = loadAllSlots();
-    if (selectedSlot !== null) playerData = loadPd(selectedSlot);
+  reloadBtn.addEventListener('click', async () => {
+    await initSavesFromCloud().catch(() => {});
+    slots = getSlotIndex();
+    if (selectedSlot !== null) playerData = loadGame(selectedSlot);
     rebuildSlotSelect();
     render();
   });
@@ -653,6 +632,62 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
   const content = document.createElement('div');
   root.appendChild(content);
 
+  function renderSnapshotSection(slot: number): HTMLElement {
+    const s = section('Snapshots');
+    const hint = document.createElement('p');
+    hint.className = 'text-muted';
+    hint.style.fontSize = '11px';
+    hint.textContent =
+      'Close the game tab before restoring and reopen it after — an open game tab writes its own copy of the save when it closes.';
+    s.body.appendChild(hint);
+
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn btn-sm btn-primary';
+    saveBtn.textContent = 'Snapshot current save';
+    saveBtn.addEventListener('click', () => {
+      if (!playerData) return;
+      const label = prompt('Snapshot name:', describeProgress(playerData));
+      if (!label) return;
+      try {
+        addSnapshot(slot, playerData, label);
+      } catch {
+        alert('Browser storage is full — delete old snapshots first.');
+      }
+      render();
+    });
+    s.body.appendChild(saveBtn);
+
+    const snaps = listSnapshots(slot);
+    if (snaps.length) {
+      const t = makeTable(['Name', 'Saved', 'Map', '']);
+      for (const snap of snaps) {
+        const actions = document.createElement('span');
+        const restoreBtn = document.createElement('button');
+        restoreBtn.className = 'btn btn-sm btn-primary';
+        restoreBtn.textContent = 'Restore';
+        restoreBtn.addEventListener('click', async () => {
+          if (!confirm(`Restore "${snap.label}" into slot ${slot}?\n\nThe current save is kept as a "Before restore" snapshot.`)) return;
+          restoreBtn.disabled = true;
+          await restoreSnapshot(snap);
+          playerData = loadGame(slot);
+          render();
+        });
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn btn-sm';
+        delBtn.textContent = '✕';
+        delBtn.title = 'Delete snapshot';
+        delBtn.addEventListener('click', () => {
+          deleteSnapshot(snap.id);
+          render();
+        });
+        actions.append(restoreBtn, delBtn);
+        addRow(t, [snap.label, new Date(snap.savedAt).toLocaleString(), snap.data.position.mapId, actions]);
+      }
+      s.body.appendChild(t);
+    }
+    return s.el;
+  }
+
   function render() {
     content.innerHTML = '';
     if (!selectedAct) return;
@@ -661,6 +696,9 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     const cutscenes = getAllCutscenes().filter(c => act.cutsceneIds.includes(c.id));
     const evts      = getStoryEvents().filter(e => act.eventIds.includes(e.id));
     const actRelevant = computeActRelevant(act, evts.map(e => e.id));
+
+    // ── 0. Snapshots (whole save, not act-specific) ──
+    if (selectedSlot !== null) content.appendChild(renderSnapshotSection(selectedSlot));
 
     // ── 1. Description ──
     if (act.description) {
@@ -680,7 +718,7 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
       () => selectedSlot,
       (pd) => {
         playerData = pd;
-        if (selectedSlot !== null) savePd(selectedSlot, pd);
+        if (selectedSlot !== null) saveGame(selectedSlot, pd, true);
       },
     );
     content.appendChild(flagSec.el);
@@ -854,7 +892,7 @@ function makeFlagCell(
     if (slot === null || !pd2) return;
     if (isSet) delete (pd2.flags as Record<string, unknown>)[flagVal];
     else (pd2.flags as Record<string, boolean>)[flagVal] = true;
-    localStorage.setItem(`${SAVE_KEY_PREFIX}${slot}`, JSON.stringify(pd2));
+    saveGame(slot, pd2, true);
     onToggle();
   });
   wrap.appendChild(btn);

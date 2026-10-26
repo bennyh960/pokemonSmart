@@ -1,30 +1,35 @@
 import './admin.css';
-import { ADMIN_NAME, SLOT_INDEX_KEY } from './constants';
+import { ADMIN_NAME } from '../engine/config';
+import { getSlotIndex } from '../systems/save';
 import { renderPokemonTab } from './tabs/pokemon';
 import { renderMovesTab } from './tabs/moves';
 import { renderStoryTab } from './tabs/story';
+import { initSavesFromCloud } from '../auth/auth-service';
 
 type TabId = 'pokemon' | 'moves' | 'story';
 
 function hasAdminAccess(): boolean {
-  try {
-    const raw = sessionStorage.getItem(SLOT_INDEX_KEY);
-    if (!raw) return false;
-    const slots = JSON.parse(raw) as { playerName: string }[];
-    return slots.some((s) => s.playerName === ADMIN_NAME);
-  } catch {
-    return false;
-  }
+  return getSlotIndex().some((s) => s.playerName === ADMIN_NAME);
 }
 
-function mount() {
+async function mount() {
   const root = document.getElementById('admin-app')!;
+
+  // sessionStorage is per-tab, so a freshly opened admin tab has no saves — load them from Supabase like the game does
+  if (!hasAdminAccess()) {
+    root.textContent = 'Loading saves…';
+    try {
+      await initSavesFromCloud();
+    } catch {
+      /* network error — falls through to access denied */
+    }
+  }
 
   if (!hasAdminAccess()) {
     root.innerHTML = `
       <div class="access-denied">
         <h1>Access Denied</h1>
-        <p>No admin save found. Start the game and create a save named <code>${ADMIN_NAME}</code>.</p>
+        <p>No admin save found. Log in to the game in this browser and create a save named <code>${ADMIN_NAME}</code>.</p>
       </div>
     `;
     return;
@@ -66,4 +71,4 @@ function mount() {
   switchTab('pokemon');
 }
 
-mount();
+void mount();

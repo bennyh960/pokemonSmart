@@ -1,7 +1,9 @@
 import type { PlayerData, Pokemon, Move } from '../../types/index';
 import { MOVE_BATTLE_OVERRIDES } from '../../data/move-battle-overrides';
 import { ITEM_GAME_DATA, ITEM_ID_TO_SLUG } from '../../data/item-defs';
-import { ADMIN_NAME, SAVE_KEY_PREFIX, SLOT_INDEX_KEY, EFFECT_WORKS_LS_KEY } from '../constants';
+import { ADMIN_NAME } from '../../engine/config';
+import { EFFECT_WORKS_LS_KEY } from '../constants';
+import { getSlotIndex, loadGame, saveGame, type SaveSlotMeta } from '../../systems/save';
 import movesRaw from '../../data/moves.json';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -16,12 +18,6 @@ interface MoveJson {
   effectChance: number | null;
   damageClass: string;
   description: { en: string; he: string };
-}
-
-interface SaveMeta {
-  slot: number;
-  playerName: string;
-  savedAt: string;
 }
 
 // ── Static data ───────────────────────────────────────────────────────────────
@@ -49,29 +45,8 @@ const ALL_TYPES = [...new Set(MOVES.map((m) => m.type))].sort();
 
 // ── Save helpers ──────────────────────────────────────────────────────────────
 
-function loadAdminSlots(): SaveMeta[] {
-  const raw = localStorage.getItem(SLOT_INDEX_KEY);
-  if (!raw) return [];
-  try {
-    const all = JSON.parse(raw) as SaveMeta[];
-    return all.filter((s) => s.playerName === ADMIN_NAME);
-  } catch {
-    return [];
-  }
-}
-
-function loadPD(slot: number): PlayerData | null {
-  const raw = localStorage.getItem(`${SAVE_KEY_PREFIX}${slot}`);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as PlayerData;
-  } catch {
-    return null;
-  }
-}
-
-function savePD(slot: number, pd: PlayerData): void {
-  localStorage.setItem(`${SAVE_KEY_PREFIX}${slot}`, JSON.stringify(pd));
+function loadAdminSlots(): SaveSlotMeta[] {
+  return getSlotIndex().filter((s) => s.playerName === ADMIN_NAME);
 }
 
 function buildMove(m: MoveJson): Move {
@@ -399,7 +374,7 @@ export function renderMovesTab(container: HTMLElement): () => void {
       return;
     }
 
-    const pd = loadPD(selectedSlot);
+    const pd = loadGame(selectedSlot);
     if (!pd) {
       toast('Could not load save.', false);
       return;
@@ -412,7 +387,7 @@ export function renderMovesTab(container: HTMLElement): () => void {
     }
 
     pd.items[slug] = (pd.items[slug] ?? 0) + 1;
-    savePD(selectedSlot, pd);
+    saveGame(selectedSlot, pd, true);
 
     const moveName = MOVE_BY_ID.get(moveId)?.name.en ?? String(moveId);
     toast(`✓ Added ${tmInfo.label} (${moveName}) to bag — Slot ${selectedSlot}`);
@@ -426,7 +401,7 @@ export function renderMovesTab(container: HTMLElement): () => void {
       return;
     }
 
-    const pd = loadPD(selectedSlot);
+    const pd = loadGame(selectedSlot);
     if (!pd) {
       toast('Could not load save.', false);
       return;
@@ -450,7 +425,7 @@ export function renderMovesTab(container: HTMLElement): () => void {
     // Prepend, deduplicate same move ID, cap at 8
     const moves: Move[] = [newMove, ...poke.moves.filter((m) => m.id !== newMove.id)].slice(0, 18);
     write({ ...poke, moves });
-    savePD(selectedSlot, pd);
+    saveGame(selectedSlot, pd, true);
 
     toast(`✓ Taught ${newMove.name} to Mew (slot ${selectedSlot}) — now move #1`);
   }

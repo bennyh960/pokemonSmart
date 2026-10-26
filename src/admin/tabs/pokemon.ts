@@ -1,6 +1,6 @@
 import type { PlayerData, Pokemon, Move } from '../../types/index';
 import type { MajorStatusId } from '../../types/battle-metadata';
-import { ADMIN_NAME } from '../constants';
+import { ADMIN_NAME } from '../../engine/config';
 import { getSlotIndex, loadGame, saveGame, type SaveSlotMeta } from '../../systems/save';
 import movesRaw from '../../data/moves.json';
 import naturesRaw from '../../data/natures.json';
