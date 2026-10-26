@@ -73,6 +73,45 @@
           }
         ]
       }
+    },
+    {
+      "id": "npc-percentile-beldum-trader",
+      "x": 12,
+      "y": 12,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Dr. Gal",
+        "he": "ד\"ר גל"
+      },
+      "questions": {
+        "count": 3,
+        "types": [
+          "×",
+          "÷"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "I study Beldum — a steel Pokémon that floats using magnetism.",
+          "he": "אני חוקרת את בלדום — פוקימון פלדה שמרחף בעזרת מגנטיות."
+        },
+        {
+          "en": "Beldum evolves into Metang at level 20, and into Metagross at level 45!",
+          "he": "בלדום מתפתח למטאנג ברמה 20, ולמטאגרוס ברמה 45!"
+        },
+        {
+          "en": "I need a Magnemite for my magnet research. Want to trade?",
+          "he": "אני צריכה מגנמייט למחקר המגנטים שלי. רוצה להחליף?"
+        }
+      ],
+      "interaction": {
+        "kind": "swap-pokemon",
+        "offersId": 374,
+        "level": 30,
+        "wantsId": 81
+      }
     }
   ]
 }

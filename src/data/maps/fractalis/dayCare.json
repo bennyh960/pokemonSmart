@@ -71,6 +71,46 @@
       ],
       "despawnAfter": "act3-sym-lance-daycare-met",
       "spawnAfter": "story-badge-6"
+    },
+    {
+      "id": "npc-fractalis-riolu-trader",
+      "x": 3,
+      "y": 9,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "char_dbc673",
+      "name": {
+        "en": "Trainer Dana",
+        "he": "המאמנת דנה"
+      },
+      "questions": {
+        "count": 3,
+        "types": [
+          "+",
+          "-",
+          "×"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "This Riolu hatched here at the Day Care. It can feel the aura of others!",
+          "he": "הריולו הזה בקע כאן במעון. הוא מרגיש את ההילה של אחרים!"
+        },
+        {
+          "en": "If Riolu is very happy and you level it up during the day, it becomes Lucario.",
+          "he": "אם ריולו מאוד שמח ועולה רמה במהלך היום, הוא הופך ללוקאריו."
+        },
+        {
+          "en": "I want to train a Machop. Trade me one and Riolu is yours!",
+          "he": "אני רוצה לאמן מאצ'ופ. תן לי אחד וריולו שלך!"
+        }
+      ],
+      "interaction": {
+        "kind": "swap-pokemon",
+        "offersId": 447,
+        "level": 25,
+        "wantsId": 66
+      }
     }
   ]
 }

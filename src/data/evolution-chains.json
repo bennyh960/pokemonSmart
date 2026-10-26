@@ -804,7 +804,6 @@
         "minLevel": null,
         "trigger": "use-item",
         "evolvesFromId": 61,
-
         "item": "water-stone"
       },
       {
@@ -1393,7 +1392,10 @@
         "evolvesFromId": 236,
         "trigger": "level-up",
         "item": null,
-        "special": { "en": "Above level 20 when\n attack > defense", "he": "מעל רמה 20 כאשר\n ההתקפה > ההגנה" }
+        "special": {
+          "en": "Above level 20 when\n attack > defense",
+          "he": "מעל רמה 20 כאשר\n ההתקפה > ההגנה"
+        }
       },
       {
         "id": 107,
@@ -1405,7 +1407,10 @@
         "evolvesFromId": 236,
         "trigger": "level-up",
         "item": null,
-        "special": { "en": "Above level 20 when\n attack < defense", "he": "מעל רמה 20 כאשר\n ההתקפה < ההגנה" }
+        "special": {
+          "en": "Above level 20 when\n attack < defense",
+          "he": "מעל רמה 20 כאשר\n ההתקפה < ההגנה"
+        }
       },
       {
         "id": 237,
@@ -1417,7 +1422,10 @@
         "evolvesFromId": 236,
         "trigger": "level-up",
         "item": null,
-        "special": { "en": "Above level 20 when\n attack = defense", "he": "מעל רמה 20 כאשר\n ההתקפה = ההגנה" }
+        "special": {
+          "en": "Above level 20 when\n attack = defense",
+          "he": "מעל רמה 20 כאשר\n ההתקפה = ההגנה"
+        }
       }
     ]
   },
@@ -1683,6 +1691,16 @@
         "minLevel": 30,
         "trigger": "level-up",
         "item": null
+      },
+      {
+        "id": 466,
+        "name": {
+          "en": "Electivire",
+          "he": "אלקטיבייר"
+        },
+        "minLevel": 45,
+        "trigger": "level-up",
+        "item": null
       }
     ]
   },
@@ -1706,6 +1724,16 @@
           "he": "מגמר"
         },
         "minLevel": 30,
+        "trigger": "level-up",
+        "item": null
+      },
+      {
+        "id": 467,
+        "name": {
+          "en": "Magmortar",
+          "he": "מאגמורטר"
+        },
+        "minLevel": 45,
         "trigger": "level-up",
         "item": null
       }
@@ -2715,6 +2743,16 @@
         "minLevel": null,
         "trigger": null,
         "item": null
+      },
+      {
+        "id": 461,
+        "name": {
+          "en": "Weavile",
+          "he": "וויביל"
+        },
+        "minLevel": 35,
+        "trigger": "level-up",
+        "item": null
       }
     ]
   },
@@ -3300,7 +3338,7 @@
       {
         "id": 634,
         "name": {
-          "en": "Welsh",
+          "en": "Zweilous",
           "he": "זווילאוס"
         },
         "minLevel": 50,
@@ -3314,84 +3352,6 @@
           "he": "היידרייגון"
         },
         "minLevel": 64,
-        "trigger": "level-up",
-        "item": null
-      }
-    ]
-  },
-  {
-    "chainId": 61,
-    "comment": "UPDATED: Electabuzz Line with Electivire",
-    "stages": [
-      {
-        "id": 125,
-        "name": {
-          "en": "Electabuzz",
-          "he": "אלקטבז"
-        },
-        "minLevel": 30,
-        "trigger": "level-up",
-        "item": null
-      },
-      {
-        "id": 466,
-        "name": {
-          "en": "Electivire",
-          "he": "אלקטיבייר"
-        },
-        "minLevel": 45,
-        "trigger": "level-up",
-        "item": null
-      }
-    ]
-  },
-  {
-    "chainId": 62,
-    "comment": "UPDATED: Magmar Line with Magmortar",
-    "stages": [
-      {
-        "id": 126,
-        "name": {
-          "en": "Magmar",
-          "he": "מאגמר"
-        },
-        "minLevel": 30,
-        "trigger": "level-up",
-        "item": null
-      },
-      {
-        "id": 467,
-        "name": {
-          "en": "Magmortar",
-          "he": "מאגמורטר"
-        },
-        "minLevel": 45,
-        "trigger": "level-up",
-        "item": null
-      }
-    ]
-  },
-  {
-    "chainId": 114,
-    "comment": "UPDATED: Sneasel Line with Weavile",
-    "stages": [
-      {
-        "id": 215,
-        "name": {
-          "en": "Sneasel",
-          "he": "סניזל"
-        },
-        "minLevel": null,
-        "trigger": null,
-        "item": null
-      },
-      {
-        "id": 461,
-        "name": {
-          "en": "Weavile",
-          "he": "וויביל"
-        },
-        "minLevel": 35,
         "trigger": "level-up",
         "item": null
       }
