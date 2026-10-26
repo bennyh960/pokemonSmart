@@ -11,7 +11,7 @@
  *   3. 4 Rocket grunts in the north-east corridor (56–62, 8–31). Beating the last one
  *      → Alice (Elite Four) arrives, tells her story, gives TM53 Dragon Rage + supplies, leaves.
  *   4. More Rocket grunts on the way west to Articuno's room (door at 18,22).
- *   5. Articuno battle at (17,16) — flees at 80% HP or after 3 turns (whichever first) → Core X5 auto-collected.
+ *   5. Articuno battle at (17,16) — flees at 80% HP or after 3 turns (whichever first) → Core X3 auto-collected.
  *   6. Alice calls → forest purified, Snorlax appears, blockers removed, Officer Jenny leaves.
  *
  * NPC IDs (routes/small forest):
@@ -77,7 +77,10 @@ registerCutscene({
       speakerName: 'Player/שחקן',
       lines: [
         { en: 'Articuno! It flew deeper into the forest.', he: 'ארטיקונו! הוא עף לעומק היער.' },
-        { en: 'The air here feels... glitchy. I have to follow it.', he: 'האוויר פה מרגיש... משובש. אני חייב לעקוב אחריו.' },
+        {
+          en: 'The air here feels... glitchy. I have to follow it.',
+          he: 'האוויר פה מרגיש... משובש. אני חייב לעקוב אחריו.',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-infection', mapId: FOREST, value: 'low' } },
@@ -112,7 +115,10 @@ registerCutscene({
       type: 'dialogue',
       speakerName: 'Player/שחקן',
       lines: [
-        { en: 'It got away again — it flew to the far north of the forest.', he: 'הוא שוב ברח - הוא עף לצפון הרחוק של היער.' },
+        {
+          en: 'It got away again — it flew to the far north of the forest.',
+          he: 'הוא שוב ברח - הוא עף לצפון הרחוק של היער.',
+        },
         { en: 'I need to find another way around.', he: 'אני צריך למצוא דרך אחרת להגיע לשם.' },
       ],
     },
@@ -142,16 +148,28 @@ registerCutscene({
     {
       type: 'move-npc',
       npcId: 'npc-forest-alice',
-      path: [...Array<'right'>(6).fill('right'), 'down', 'down','down','down'],
+      path: [...Array<'right'>(6).fill('right'), 'down', 'down', 'down', 'down'],
     },
     {
       type: 'dialogue',
       speakerId: 'npc-forest-alice',
       lines: [
-        { en: "So you're the one who beat those Rocket grunts? Impressive.", he: 'אז אתה זה שניצח את חיילי הרוקט האלה? מרשים.' },
-        { en: "I'm Alice, of the Elite Four. I heard voices and came to check.", he: 'אני אליס, מארבעת האליטה. שמעתי קולות ובאתי לבדוק.' },
-        { en: 'This forest is usually so peaceful... but it was full of Team Rocket. I defeated many of them.', he: 'היער הזה בדרך כלל כל כך שליו... אבל הוא היה מלא בצוות רוקט. ניצחתי הרבה מהם.' },
-        { en: "Then Articuno swooped in and attacked me before I was ready. It's not acting like itself.", he: 'ואז ארטיקונו צלל ותקף אותי לפני שהייתי מוכנה. הוא לא מתנהג כמו עצמו.' },
+        {
+          en: "So you're the one who beat those Rocket grunts? Impressive.",
+          he: 'אז אתה זה שניצח את חיילי הרוקט האלה? מרשים.',
+        },
+        {
+          en: "I'm Alice, of the Elite Four. I heard voices and came to check.",
+          he: 'אני אליס, מארבעת האליטה. שמעתי קולות ובאתי לבדוק.',
+        },
+        {
+          en: 'This forest is usually so peaceful... but it was full of Team Rocket. I defeated many of them.',
+          he: 'היער הזה בדרך כלל כל כך שליו... אבל הוא היה מלא בצוות רוקט. ניצחתי הרבה מהם.',
+        },
+        {
+          en: "Then Articuno swooped in and attacked me before I was ready. It's not acting like itself.",
+          he: 'ואז ארטיקונו צלל ותקף אותי לפני שהייתי מוכנה. הוא לא מתנהג כמו עצמו.',
+        },
         { en: "You'll need strength to face it. Take these.", he: 'תצטרך כוח כדי להתמודד מולו. קח את אלה.' },
       ],
     },
@@ -177,7 +195,10 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'npc-forest-alice',
       lines: [
-        { en: "I'm still searching for Articuno. Let's split up — we'll cover more ground.", he: 'אני עדיין מחפשת את ארטיקונו. בוא ניפרד - ככה נכסה יותר שטח.' },
+        {
+          en: "I'm still searching for Articuno. Let's split up — we'll cover more ground.",
+          he: 'אני עדיין מחפשת את ארטיקונו. בוא ניפרד - ככה נכסה יותר שטח.',
+        },
         { en: 'Be careful. More Rocket grunts are hiding to the west.', he: 'תיזהר. עוד חיילי רוקט מסתתרים במערב.' },
       ],
     },
@@ -191,14 +212,14 @@ registerCutscene({
   ],
 });
 
-// ── Beat 5: Articuno flees → Core X5 ────────────────────────────────────────
+// ── Beat 5: Articuno flees → Core X3 ────────────────────────────────────────
 
 // Fleeing a wild NPC fires 'trainer-defeated' (battle_scene sets FLAGS.ACT3_FOREST_ARTICUNO_FLED too)
 registerStoryEvent({
   id: 'evt-forest-articuno-fled',
   trigger: { type: 'trainer-defeated', trainerId: 'wild-forest-articuno' },
   actions: [
-    { type: 'give-item', itemId: 'core-x5', quantity: 1 },
+    { type: 'give-item', itemId: 'core-x3', quantity: 1 },
     { type: 'start-cutscene', cutsceneId: 'cutscene-forest-core-drop' },
   ],
 });
@@ -210,15 +231,20 @@ registerCutscene({
     {
       type: 'dialogue',
       speakerName: '...',
-      lines: [{ en: 'Articuno fled... and dropped NULL-X Core X5! You picked it up.', he: 'ארטיקונו ברח... והפיל את ליבת נאל-איקס X5! אספת אותה.' }],
+      lines: [
+        {
+          en: 'Articuno fled... and dropped NULL-X Core X3! You picked it up.',
+          he: 'ארטיקונו ברח... והפיל את ליבת נאל-איקס X3! אספת אותה.',
+        },
+      ],
     },
   ],
 });
 
-// Core X5 key flag (set by give-item) → Alice calls, like Raikou's Core X4 call
+// Core X3 key flag (set by give-item) → Alice calls, like Raikou's Core X2 call
 registerStoryEvent({
   id: 'evt-forest-alice-call',
-  trigger: { type: 'flag-set', flag: 'key-core-x5-obtained' },
+  trigger: { type: 'flag-set', flag: 'key-core-x3-obtained' },
   conditions: [{ type: 'flag', flag: FLAGS.ACT3_FOREST_ARTICUNO_FLED }],
   triggerDelayPostFlag: 2,
   actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-forest-alice-call' }],
@@ -234,10 +260,23 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'alice',
       lines: [
-        { en: 'I saw Articuno fly out of the forest! Did you fight it?', he: 'ראיתי את ארטיקונו עף מחוץ ליער! נלחמת בו?' },
-        { en: "It's heading toward the distant islands. I'll go after it.", he: 'הוא בדרך לאיים הרחוקים. אני ארדוף אחריו.' },
+        {
+          en: 'I saw Articuno fly out of the forest! Did you fight it?',
+          he: 'ראיתי את ארטיקונו עף מחוץ ליער! נלחמת בו?',
+        },
+        {
+          en: "It's heading toward the distant islands. I'll go after it.",
+          he: 'הוא בדרך לאיים הרחוקים. אני ארדוף אחריו.',
+        },
         { en: 'The glitch is fading — the forest feels calm again.', he: 'הגליץ׳ נעלם - היער מרגיש שוב רגוע.' },
-        { en: 'Take your time here. Rare Pokémon love this forest — keep an eye out!', he: 'אל תמהר. פוקימונים נדירים אוהבים את היער הזה - תפקח עיניים!' },
+        {
+          en: 'Take your time here. Rare Pokémon love this forest — keep an eye out!',
+          he: 'אל תמהר. פוקימונים נדירים אוהבים את היער הזה - תפקח עיניים!',
+        },
+        {
+          en: 'And if you want a shortcut to Percentile city , you can surf in the river to Zerovile I think it closer...',
+          he: 'אגב אם אתה רוצה קיצור דרך לפרסנטייל , תמשיך במעלה הזרם ותגיע לזירוויל , שם תוכל להמשיך דרך שביל 10',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-infection', mapId: FOREST, value: 'cleared' } },

@@ -698,7 +698,7 @@ registerCutscene({
       ],
     },
     { type: 'action', action: { type: 'give-item', itemId: '9004', quantity: 1 } },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_SYM_NULLX_CORE5_COLLECTED } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_SYM_NULLX_CORE1_COLLECTED } },
 
     {
       type: 'dialogue',

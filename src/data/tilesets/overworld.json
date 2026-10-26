@@ -7079,9 +7079,9 @@
       "interactType": {
         "id": "item",
         "args": {
-          "itemId": "core-x4",
+          "itemId": "core-x2",
           "label": {
-            "en": "Null-X core X4",
+            "en": "Null-X core X2",
             "he": "ליבת נאל-איקס"
           }
         }

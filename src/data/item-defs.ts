@@ -993,7 +993,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: false,
     name: { en: 'NULL-X Core X1', he: 'ליבת נאל-איקס - X1' },
     description: {
-      en: "A fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
+      en: "Found after the battle with Zapdos - a fragment of NULL-X's core code.",
       he: 'נמצא אחרי קרב עם זאפדוס האגדי - שבר מקוד הליבה של נאל-איקס.',
     },
     keyFlag: 'key-core-x1-obtained',
@@ -1008,7 +1008,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: false,
     name: { en: 'NULL-X Core X2', he: 'ליבת נאל-איקס - X2' },
     description: {
-      en: "A fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
+      en: "Found on Raikou - a fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
       he: 'נמצא אחרי קרב עם ראיקו האגדי - שבר מקוד הליבה של נאל-איקס. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
     },
     keyFlag: 'key-core-x2-obtained',
@@ -1023,8 +1023,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: false,
     name: { en: 'NULL-X Core X3', he: 'ליבת נאל-איקס - X3' },
     description: {
-      en: "A fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
-      he: 'שבר מקוד הליבה של נאל-איקס. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
+      en: "Dropped by Articuno - a fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
+      he: 'ארטיקונו האגדי הפיל אותה - שבר מקוד הליבה של נאל-איקס. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
     },
     keyFlag: 'key-core-x3-obtained',
     usedFlag: 'key-core-x3-used',
@@ -1038,8 +1038,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: false,
     name: { en: 'NULL-X Core X4', he: 'ליבת נאל-איקס - X4' },
     description: {
-      en: "A fragment of NULL-X's core code. Found on Raikou.",
-      he: 'שבר מקוד הליבה של נאל-איקס. נמצא על ראיקו האגדי',
+      en: "A fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
+      he: 'שבר מקוד הליבה של נאל-איקס. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
     },
     keyFlag: 'key-core-x4-obtained',
     usedFlag: 'key-core-x4-used',

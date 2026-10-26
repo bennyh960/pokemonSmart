@@ -247,9 +247,9 @@ export const FLAGS = {
   ACT3_SYM_POKEMON_RESTORED: 'act3-sym-pokemon-restored', // Stolen Pokemon returned → Lance-return spawns
   ACT3_SYM_LANCE_CAVE_RETURN: 'act3-sym-lance-cave-return', // Investigate cutscene done → Zapdos spawns
   ACT3_SYM_ZAPDOS_CAVE_DEFEATED: 'act3-sym-zapdos-cave-defeated', // Zapdos fled, NULL-X Core X1 collected
-  ACT3_SYM_NULLX_CORE5_COLLECTED: 'hide-null-x-core5', // (internal flag) Core 5 collected → hide it from the cave
+  ACT3_SYM_NULLX_CORE1_COLLECTED: 'hide-null-x-core5', // (internal flag) Core X1 collected → hide it from the cave
   ACT3_SYM_ARC_COMPLETE: 'act3-sym-arc-complete', // Full Symmetrika arc done → head to Percentile
-  ACT3_POWER_RAIKOU_ARC_FLEE: 'trainer-wild-r8-raikou-en1-defeated', // Raikou arc done → key-core-x4-obtained
+  ACT3_POWER_RAIKOU_ARC_FLEE: 'trainer-wild-r8-raikou-en1-defeated', // Raikou arc done → key-core-x2-obtained
 
   // ── Act 3: Route 9 arc ──────────────────────────────────────────────────────
   ACT3_R9_REMINDER_CALLED: 'act3-r9-reminder-called',   // Phone call received — Pidgeot stolen, quest starts
@@ -263,7 +263,7 @@ export const FLAGS = {
   ACT3_FOREST_ARTICUNO_SEEN: 'act3-forest-articuno-seen',             // Entered forest, Articuno flew to (21,53)
   ACT3_FOREST_ARTICUNO_FLEW_NORTH: 'act3-forest-articuno-flew-north', // Reached (20,54), Articuno flew to (17,16)
   ACT3_FOREST_ALICE_MET: 'act3-forest-alice-met',                     // Alice gave TM53 + supplies after the corridor grunts
-  ACT3_FOREST_ARTICUNO_FLED: 'trainer-wild-forest-articuno-defeated', // (battle auto flag) Articuno fled → Core X5
+  ACT3_FOREST_ARTICUNO_FLED: 'trainer-wild-forest-articuno-defeated', // (battle auto flag) Articuno fled → Core X3
 
   // ── Act 3: Fractalis arc ─────────────────────────────────────────────────────
   VISITED_FRACTALIS: 'visited-fractalis',
@@ -401,7 +401,7 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT3_SYM_POKEMON_RESTORED]: 'Stolen Pokemon returned to player — Lance-return spawns in cave1',
   [FLAGS.ACT3_SYM_LANCE_CAVE_RETURN]: 'Investigate cutscene done — Zapdos spawns in cave1',
   [FLAGS.ACT3_SYM_ZAPDOS_CAVE_DEFEATED]: 'Zapdos fled cave, NULL-X Core X1 collected',
-  [FLAGS.ACT3_SYM_NULLX_CORE5_COLLECTED]: 'Core 5 collected — hide it from the cave with this internal flag',
+  [FLAGS.ACT3_SYM_NULLX_CORE1_COLLECTED]: 'Core X1 collected — hide it from the cave with this internal flag',
   [FLAGS.ACT3_SYM_ARC_COMPLETE]: 'Full Symmetrika story arc complete — player heads to Percentile',
   [FLAGS.ACT3_R9_REMINDER_CALLED]: 'Phone call from Reminder received — Pidgeot stolen, player heads to Route 9',
   [FLAGS.ACT3_R9_REMINDER_TALKED]: 'Talked to Reminder on Route 9 — glitched bird lore revealed, player heads to cave',
@@ -412,13 +412,13 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT3_FOREST_ARTICUNO_SEEN]: 'Entered the small forest — Articuno flew to (21,53), low infection',
   [FLAGS.ACT3_FOREST_ARTICUNO_FLEW_NORTH]: 'Reached Articuno at (20,54) — it flew north to (17,16), east blocker removed',
   [FLAGS.ACT3_FOREST_ALICE_MET]: 'Alice met after the 4 corridor grunts — TM53 Dragon Rage + supplies given',
-  [FLAGS.ACT3_FOREST_ARTICUNO_FLED]: 'Articuno fled the forest battle — Core X5 collected, Alice calls',
+  [FLAGS.ACT3_FOREST_ARTICUNO_FLED]: 'Articuno fled the forest battle — Core X3 collected, Alice calls',
   [FLAGS.VISITED_FRACTALIS]: 'First arrival at Fractalis',
   [FLAGS.ACT3_FRACTALIS_WIFE_TALKED]: 'Wife gave item → engineer spawns at beach',
   [FLAGS.ACT3_FRACTALIS_ENGINEER_MET]: 'Beach cutscene done — player heads to route-7 with engineer',
   [FLAGS.ACT3_FRACTALIS_ROUTE7_SCENE_DONE]: 'Jenny/Zapdos route-7 scene done — route-8 blocker removed',
   [FLAGS.ACT3_FRACTALIS_ROUTE8_ENTERED]: 'Engineer arrival cutscene in route-8 done',
-  [FLAGS.ACT3_FRACTALIS_ZAPDOS_DEFEATED]: 'Zapdos defeated in route-8, NULL-X Core 5 collected',
+  [FLAGS.ACT3_FRACTALIS_ZAPDOS_DEFEATED]: 'Zapdos defeated in route-8 (core seen, not collected)',
   [FLAGS.ACT3_FRACTALIS_GYM_INVITE]: 'Engineer invited player to power station gym',
   [FLAGS.GATE_FRACTALIS_GYM_PASS]: 'Passed Electric Gym entry gate',
   [FLAGS.GATE_ROUTE7_PASS]: 'Route 7 → Integrala checkpoint passed',

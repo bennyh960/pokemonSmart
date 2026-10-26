@@ -558,7 +558,7 @@
     },
     {
       "id": "npc-forest-rocket-8",
-      "x": 20,
+      "x": 26,
       "y": 1,
       "facing": "down",
       "type": "trainer",
@@ -602,13 +602,14 @@
       },
       "isGlitched": true,
       "despawnOnDefeat": true,
-      "spawnAfter": "act3-forest-alice-met"
+      "spawnAfter": "act3-forest-alice-met",
+      "interactRange": 2
     },
     {
       "id": "npc-forest-rocket-9",
-      "x": 9,
-      "y": 12,
-      "facing": "up",
+      "x": 25,
+      "y": 20,
+      "facing": "right",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -712,9 +713,9 @@
     },
     {
       "id": "npc-forest-rocket-11",
-      "x": 12,
-      "y": 29,
-      "facing": "right",
+      "x": 26,
+      "y": 10,
+      "facing": "left",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -897,7 +898,7 @@
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g1","g1","g1","g1","g1","cave-eg","cave-eg","cave-eg","g1","g1","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
-    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","g6","g6","g6","g6","g6","g6","g6","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","g6","g6","g6","g6","g6","g6","g6","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","g1","xtest","xtest","xtest","xtest","xtest","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","g6","g6","g6","g6","g6","g6","g6","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","g6","g6","g6","g6","g6","g6","g6","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","g6","g6","g6","g6","g6","g6","g6","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c"],
@@ -10265,11 +10266,6 @@
       "y": 28
     },
     {
-      "key": "str1sb",
-      "x": 12,
-      "y": 4
-    },
-    {
       "key": "st1s",
       "x": 18,
       "y": 22
@@ -13578,6 +13574,21 @@
       "key": "g4",
       "x": 52,
       "y": 66
+    },
+    {
+      "key": "mg1t",
+      "x": 12,
+      "y": 4
+    },
+    {
+      "key": "item-masterBall",
+      "x": 12,
+      "y": 5
+    },
+    {
+      "key": "rock1",
+      "x": 11,
+      "y": 10
     }
   ],
   "objectLayer": [

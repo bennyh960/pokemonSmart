@@ -607,7 +607,7 @@
       ],
       "spriteType": "gym-5-fractalis",
       "spawnAfter": "act3-sym-zapdos-cave-defeated",
-      "despawnAfter": "key-core-x4-obtained"
+      "despawnAfter": "key-core-x2-obtained"
     },
     {
       "id": "npc-1779351438659",
@@ -623,7 +623,7 @@
       ],
       "spriteType": "char_22fdd1",
       "spawnAfter": "act3-sym-zapdos-cave-defeated",
-      "despawnAfter": "key-core-x4-obtained"
+      "despawnAfter": "key-core-x2-obtained"
     },
     {
       "id": "blocker-raikou-1",
@@ -638,7 +638,7 @@
         }
       ],
       "spriteType": "char_22fdd1",
-      "despawnAfter": "key-core-x4-obtained",
+      "despawnAfter": "key-core-x2-obtained",
       "blocker": true,
       "spawnAfter": "act3-sym-zapdos-cave-defeated"
     },
@@ -661,7 +661,7 @@
       },
       "blocker": true,
       "lineOfSight": 13,
-      "despawnAfter": "key-core-x4-obtained",
+      "despawnAfter": "key-core-x2-obtained",
       "spawnAfter": "trainer-wild-r8-raikou-en1-defeated"
     },
     {
@@ -678,7 +678,7 @@
       ],
       "spriteType": "transparent",
       "blocker": true,
-      "despawnAfter": "key-core-x4-obtained",
+      "despawnAfter": "key-core-x2-obtained",
       "spawnAfter": "trainer-wild-r8-raikou-en1-defeated",
       "lineOfSight": 25,
       "name": {

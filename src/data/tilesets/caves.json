@@ -1439,10 +1439,10 @@
         "id": "item",
         "args": {
           "label": {
-            "en": "Null-X Core-5",
-            "he": "ליבת NULL-X #5"
+            "en": "Null-X Core X1",
+            "he": "ליבת NULL-X - X1"
           },
-          "itemId": "core-x5"
+          "itemId": "core-x1"
         }
       }
     },

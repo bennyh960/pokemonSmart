@@ -1,7 +1,7 @@
 // Raikou part 1 start on end with zapdos
 // start Flag  : act3-sym-zapdos-cave-defeated
 // mid flag - ACT3_POWER_RAIKOU_ARC_FLEE - trainer-wild-r8-raikou-en1-defeated
-// end flag - key-core-x4-obtained
+// end flag - key-core-x2-obtained
 // on map 7 exit - sir fracti call to say about raikou
 // npc
 // on cave-7 exsit - don shavriz call to player and invite him to same big mountain - raikou aggresive , he should not be there
@@ -92,7 +92,7 @@ registerStoryEvent({
 
 registerStoryEvent({
   id: 'evt-frac-raikou-core-collect',
-  trigger: { type: 'flag-set', flag: 'key-core-x4-obtained' }, // key item auto flag
+  trigger: { type: 'flag-set', flag: 'key-core-x2-obtained' }, // key item auto flag
   conditions: [{ type: 'flag', flag: FLAGS.ACT3_POWER_RAIKOU_ARC_FLEE }],
   triggerDelayPostFlag: 2,
   actions: [
@@ -165,8 +165,8 @@ registerCutscene({
 //     delete save.flags?.['trainer-wild-r8-raikou-en1-defeated'];
 
 //     // Reset core pickup
-//     delete save.items?.['core-x4'];
-//     delete save.flags?.['key-core-x4-obtained'];
+//     delete save.items?.['core-x2'];
+//     delete save.flags?.['key-core-x2-obtained'];
 //     delete save.flags?.['obj-route-8-null-x-core-i-21-41-collected'];
 
 //     // Reset story event done-flags so they can re-fire
