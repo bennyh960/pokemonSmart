@@ -38,7 +38,7 @@ A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in 
 - **Badges:** 8 gym badges defined in `src/data/badges.ts` with bilingual names, gym leader, city, type. Stored as bitmask in `pd.badges`
 - **Rewards:** `DialogueReward` (any NPC) and `TrainerReward` (post-battle) support items, money, badge, storyEvent. Post-battle dialogue via `postBattleDialogue` on TrainerData
 - **Input:** Uses `e.code` (physical key position) for layout-independent controls. `src/engine/input.ts` normalizes legacy key strings
-- **Admin:** `ADMIN_NAME` in `src/engine/config.ts` — debug shortcuts (H=heal, N=shop) only for admin player
+- **Admin:** `ADMIN_NAME` in `src/engine/config.ts` — debug shortcuts (H=heal, N=shop, dev-only G=teleport) only for admin player. Admin page `admin.html` (dev) reads saves through `src/systems/save.ts` after loading them from Supabase; its Story tab has save Snapshots (`src/admin/snapshots.ts`) to restore any earlier story point
 - **Visual style:** Modern pixel art (not restricted to GBC/retro aesthetics) — full color palettes, clean sprites, performance-first
 - **Math in battle:** Currently disabled — will be rethought for a less intrusive mechanic
 - **Abilities:** 132 abilities in `src/data/abilities.json`, mapping in `pokemon-abilities.json`. Assigned randomly on Pokemon creation. Displayed on party stats screen
@@ -56,6 +56,11 @@ The game teaches English vocabulary progressively to Hebrew-speaking players:
 - **Phase plan:** Types (always English) → Items (~10h) → Abilities (~15h) → Moves (~20h) → Natures (~25h) → Pokemon names (~30h)
 - **Hebrew translations for items/abilities/natures are deferred** until Sprint 11 — currently show English names, which is intentional for the learning flow
 - **When adding new text/data:** always use `{ en, he }` format for any player-visible string. Even if Hebrew is placeholder (= English copy), the structure must be bilingual from day one
+
+## Code Rules
+- **No duplication.** Reuse the existing module (e.g. save access goes through `src/systems/save.ts`, never a copy). If you notice duplication — existing or about to be written — stop and propose the fix in place before continuing.
+- **No hardcoding.** Derive from the data that already exists (story content, map JSON, item defs) instead of hand-maintained lists of flags, IDs, or coordinates.
+- **No bad practices.** Keep features in their own layer (admin tooling stays out of game scenes unless agreed), one source of truth per fact.
 
 ## How to Work
 1. Read `docs/roadmap.md` to see overall progress

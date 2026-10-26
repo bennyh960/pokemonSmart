@@ -21,4 +21,5 @@ Last active quest: `quest-go-percentile` ("Road to Percentile") — `src/data/st
 ## Tech debt
 - [ ] `src/data/badges.ts` badges 7–8: leader is `???`, type/mathTopic still old placeholders — fill in when the Percentile/Algebria gyms are designed
 - [ ] `src/data/maps/backup/` and `templates/backup/` — old map snapshots, remove if not needed
+- [ ] Stale commented-out reset script at the bottom of `act3/quest-raikou.ts`
 - [ ] Math in battle disabled — needs a less intrusive mechanic
