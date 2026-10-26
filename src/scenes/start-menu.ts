@@ -3,6 +3,7 @@ import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawRect, drawText, fillRoundRect, slider } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
+import { uiRegistry } from '../engine/input/uiRegistry.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
@@ -20,8 +21,9 @@ const PANEL_W = 100;
 const DROP_W = 88; // actions dropdown width
 const ITEM_H = 14;
 const PAD_V = 4;
+const FOOTER_H = 8; // "ESC close menu" line under the main panel items
 
-const MAIN_KEYS = ['pokedex', 'party', 'bag', 'map', 'trainerData', 'save', 'actions', 'settings', 'exit'] as const;
+const MAIN_KEYS = ['pokedex', 'party', 'bag', 'map', 'trainerData', 'save', 'actions', 'settings', 'exitGame'] as const;
 const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper', 'learn'] as const;
 const SETTINGS_KEYS = ['language', 'music_volume', 'music_mute', 'sfx_volume', 'sfx_mute', 'legend'] as const;
 
@@ -84,8 +86,10 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
         view = 'settings';
         settingsIdx = 0;
         break;
-      case 'exit':
+      case 'exitGame':
+        // Close the menu first so the overworld's exit() runs on change() and saves the game
         stateMachine.pop();
+        stateMachine.change('TITLE');
         break;
     }
   }
@@ -181,7 +185,7 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
     cursorIdx: number,
     showCursor: boolean,
   ): void {
-    const ph = PAD_V * 2 + MAIN_KEYS.length * ITEM_H;
+    const ph = PAD_V * 2 + MAIN_KEYS.length * ITEM_H + FOOTER_H;
 
     fillRect(ctx, px + 2, py + 2, PANEL_W, ph, '#000000'); // shadow
     fillRect(ctx, px, py, PANEL_W, ph, '#1a1a2e'); // bg
@@ -191,6 +195,21 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       const key = MAIN_KEYS[i];
       const sel = i === cursorIdx;
       const iy = py + PAD_V + i * ITEM_H;
+
+      // Click/tap selects the item — same path as keyboard Enter
+      if (showCursor) {
+        uiRegistry.registerRegion({
+          id: `start-menu-${key}`,
+          x: px,
+          y: iy,
+          width: PANEL_W,
+          height: ITEM_H,
+          onSelect: () => {
+            mainIdx = i;
+            input.tapVirtualKey('Enter');
+          },
+        });
+      }
 
       if (sel) fillRect(ctx, px + 1, iy, PANEL_W - 2, ITEM_H - 1, '#2a2a50');
 
@@ -212,10 +231,11 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       });
     }
 
-    drawText(ctx, 'ESC', rtl ? px + 5 : px + PANEL_W - 5, py + ph - 8, {
+    drawText(ctx, `ESC ${t('menu.closeMenu')}`, rtl ? px + 5 : px + PANEL_W - 5, py + ph - FOOTER_H, {
       size: 5,
-      color: '#3a3a5a',
+      color: '#6a6a9a',
       align: rtl ? 'left' : 'right',
+      direction: rtl ? 'rtl' : 'ltr',
     });
   }
 
@@ -239,6 +259,18 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       const disabled = key === 'fishing' && !hasFishingRod();
       const iy = dropY + PAD_V + i * ITEM_H;
       const hasPill = key === 'battleHelper';
+
+      uiRegistry.registerRegion({
+        id: `start-menu-action-${key}`,
+        x: dropX,
+        y: iy,
+        width: DROP_W,
+        height: ITEM_H,
+        onSelect: () => {
+          actionsIdx = i;
+          input.tapVirtualKey('Enter');
+        },
+      });
 
       if (sel) fillRect(ctx, dropX + 1, iy, DROP_W - 2, ITEM_H - 1, '#2a2a50');
 

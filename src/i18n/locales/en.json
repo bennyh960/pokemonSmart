@@ -669,6 +669,8 @@
   "menu.actions": "Actions",
   "menu.settings": "Settings",
   "menu.exit": "Exit",
+  "menu.exitGame": "Exit game",
+  "menu.closeMenu": "close menu",
   "menu.actions.fishing": "Fishing",
   "menu.actions.telephone": "Telephone",
   "menu.actions.battleHelper": "Battle Helper",

@@ -669,6 +669,8 @@
   "menu.actions": "פעולות",
   "menu.settings": "הגדרות",
   "menu.exit": "יציאה",
+  "menu.exitGame": "יציאה מהמשחק",
+  "menu.closeMenu": "סגירת תפריט",
   "menu.actions.fishing": "דיג",
   "menu.actions.telephone": "טלפון",
   "menu.actions.battleHelper": "עוזר קרב",
