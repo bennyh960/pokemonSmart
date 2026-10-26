@@ -2,101 +2,99 @@
   "id": "gym",
   "tileset": "interior",
   "area": "percentile",
-  "width": 25,
-  "height": 20,
+  "width": 31,
+  "height": 26,
   "tileSize": 16,
   "spawn": {
-    "x": 13,
-    "y": 18
+    "x": 7,
+    "y": 24
   },
   "transitions": [
     {
-      "fromX": 13,
-      "fromY": 19,
+      "fromX": 7,
+      "fromY": 25,
       "returnToPrevious": true
     },
     {
-      "fromX": 13,
-      "fromY": 14,
-      "toMapId": "percentile/gym",
-      "toX": 13,
-      "toY": 1
-    },
-    {
-      "fromX": 18,
-      "fromY": 2,
-      "toMapId": "percentile/gym",
-      "toX": 13,
-      "toY": 17
-    },
-    {
       "fromX": 8,
-      "fromY": 17,
-      "toMapId": "percentile/gym",
-      "toX": 13,
-      "toY": 17
+      "fromY": 25,
+      "returnToPrevious": true
     },
     {
-      "fromX": 8,
-      "fromY": 10,
-      "toMapId": "percentile/gym",
-      "toX": 23,
-      "toY": 18
-    },
-    {
-      "fromX": 13,
+      "fromX": 3,
       "fromY": 13,
       "toMapId": "percentile/gym",
-      "toX": 13,
-      "toY": 17
-    },
-    {
-      "fromX": 17,
-      "fromY": 17,
-      "toMapId": "percentile/gym",
-      "toX": 1,
-      "toY": 18
-    },
-    {
-      "fromX": 19,
-      "fromY": 10,
-      "toMapId": "percentile/gym",
-      "toX": 11,
-      "toY": 1
-    },
-    {
-      "fromX": 23,
-      "fromY": 9,
-      "toMapId": "percentile/gym",
-      "toX": 1,
-      "toY": 1
-    },
-    {
-      "fromX": 2,
-      "fromY": 6,
-      "toMapId": "percentile/gym",
-      "toX": 15,
-      "toY": 1
-    },
-    {
-      "fromX": 22,
-      "fromY": 6,
-      "toMapId": "percentile/gym",
-      "toX": 13,
-      "toY": 11
+      "toX": 7,
+      "toY": 23
     },
     {
       "fromX": 7,
-      "fromY": 2,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 11,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 22,
+      "toY": 23
+    },
+    {
+      "fromX": 18,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 10
+    },
+    {
+      "fromX": 22,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 26,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 3,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 7,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 22,
+      "toY": 10
+    },
+    {
+      "fromX": 11,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 29,
+      "fromY": 11,
       "returnToPrevious": true
     }
   ],
   "npcs": [
     {
-      "id": "npc-pgym-riddle-1",
-      "x": 11,
-      "y": 16,
-      "facing": "right",
+      "id": "npc-pgym-guide",
+      "x": 5,
+      "y": 23,
+      "facing": "down",
       "type": "dialogue",
       "spriteType": "char_6bacac",
       "name": {
@@ -105,122 +103,513 @@
       },
       "dialogue": [
         {
-          "en": "Welcome to the Percentile Gym! I am so happy you came!",
-          "he": "ברוך הבא למכון פרסנטייל! אני כל כך שמחה שבאת!"
+          "en": "Welcome to the Fire Gym of Percentile! I am so happy you came!",
+          "he": "ברוך הבא למכון האש של פרסנטייל! אני כל כך שמחה שבאת!"
         },
         {
-          "en": "Here you find the leader with math. In every room a helper gives you a riddle.",
-          "he": "כאן מוצאים את המנהיג בעזרת חשבון. בכל חדר יש עוזר שנותן לך חידה."
+          "en": "Each room has 3 helpers. Each one teaches you a trick and gives an answer.",
+          "he": "בכל חדר יש 3 עוזרים. כל אחד מלמד אותך טריק ונותן תשובה."
         },
         {
-          "en": "The answer is the number of the pad you should step on. Ready?",
-          "he": "התשובה היא המספר של המשטח שעליו צריך לעלות. מוכן?"
+          "en": "Only ONE helper is right. Step on the arrow next to the helper who is right!",
+          "he": "רק עוזר אחד צודק. עלה על החץ שליד העוזר שצודק!"
         },
         {
-          "en": "Riddle: only 10% of challengers find our leader. Today 20 trainers came.",
-          "he": "חידה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
-        },
-        {
-          "en": "How many of them found the leader?",
-          "he": "כמה מהם מצאו את המנהיג?"
-        },
-        {
-          "en": "The LEFT pad is 10, the UP pad is 20, the RIGHT pad is 2. Good luck!",
-          "he": "המשטח השמאלי הוא 10, המשטח למעלה הוא 20, המשטח הימני הוא 2. בהצלחה!"
-        },
-        {
-          "en": "Tip: 10% means 1 out of every 10.",
-          "he": "טיפ: 10% זה 1 מכל 10."
+          "en": "A wrong arrow brings you back here. No worries — mistakes help us learn!",
+          "he": "חץ לא נכון מחזיר אותך לכאן. אל דאגה — טעויות עוזרות ללמוד!"
         }
       ]
     },
     {
-      "id": "npc-pgym-riddle-2",
+      "id": "npc-pgym-r1-left",
       "x": 4,
-      "y": 16,
-      "facing": "left",
+      "y": 13,
+      "facing": "down",
       "type": "dialogue",
       "spriteType": "char_dc1a34",
       "name": {
-        "en": "Gym Helper Maya",
+        "en": "Helper Maya",
         "he": "העוזרת מאיה"
       },
       "dialogue": [
         {
-          "en": "Wow, you solved it! 10% of 20 is 2. Great thinking!",
-          "he": "וואו, פתרת! 10% מ-20 זה 2. חשיבה מעולה!"
+          "en": "Trick: 50% means HALF. 50% of 10 is 5!",
+          "he": "טריק: 50% זה חצי. 50% מ-10 זה 5!"
         },
         {
-          "en": "Next riddle: our leader trains Fire Pokémon.",
-          "he": "החידה הבאה: המנהיג שלנו מאמן פוקימוני אש."
+          "en": "Question: only 10% of challengers find our leader. Today 20 trainers came.",
+          "he": "שאלה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
         },
         {
-          "en": "How many types are super effective against Fire? You can check your Pokédex!",
-          "he": "כמה סוגים יעילים במיוחד נגד אש? אפשר לבדוק בפוקידקס!"
+          "en": "My answer: 10 of them found the leader!",
+          "he": "התשובה שלי: 10 מהם מצאו את המנהיג!"
         },
         {
-          "en": "Pad at the end of the BOTTOM hall is 2. Pad at the end of the MIDDLE hall is 3. Pad at the TOP is 4.",
-          "he": "המשטח בסוף המסדרון התחתון הוא 2. המשטח בסוף המסדרון האמצעי הוא 3. המשטח למעלה הוא 4."
-        },
-        {
-          "en": "Tip: think about what puts out a fire... and what fire cannot burn.",
-          "he": "טיפ: תחשוב מה מכבה אש... ומה אש לא יכולה לשרוף."
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
         }
       ]
     },
     {
-      "id": "npc-pgym-riddle-3",
-      "x": 20,
-      "y": 16,
-      "facing": "right",
+      "id": "npc-pgym-r1-mid",
+      "x": 8,
+      "y": 13,
+      "facing": "down",
       "type": "dialogue",
       "spriteType": "char_c32979",
       "name": {
-        "en": "Gym Helper Noam",
+        "en": "Helper Noam",
         "he": "העוזר נועם"
       },
       "dialogue": [
         {
-          "en": "Amazing! Water, Ground and Rock — 3 types. You really know your Pokémon!",
-          "he": "מדהים! מים, אדמה וסלע — 3 סוגים. אתה באמת מכיר את הפוקימונים שלך!"
+          "en": "Trick: 100% means ALL of it. 100% of 8 is 8!",
+          "he": "טריק: 100% זה הכל. 100% מ-8 זה 8!"
         },
         {
-          "en": "Last riddle: a Potion heals 20 HP. Your Pokémon has 100 HP.",
-          "he": "חידה אחרונה: שיקוי (Potion) מרפא 20 חיים. לפוקימון שלך יש 100 חיים."
+          "en": "Question: only 10% of challengers find our leader. Today 20 trainers came.",
+          "he": "שאלה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
         },
         {
-          "en": "What percent of its HP does one Potion heal?",
-          "he": "כמה אחוז מהחיים שלו שיקוי אחד מרפא?"
+          "en": "My answer: all 20 found the leader!",
+          "he": "התשובה שלי: כל ה-20 מצאו את המנהיג!"
         },
         {
-          "en": "BOTTOM-LEFT pad is 5. LEFT pad in the middle hall is 80. RIGHT pad in the middle hall is 50. TOP pad is 20.",
-          "he": "המשטח למטה משמאל הוא 5. המשטח השמאלי במסדרון האמצעי הוא 80. המשטח הימני במסדרון האמצעי הוא 50. המשטח למעלה הוא 20."
-        },
-        {
-          "en": "Tip: percent means \"out of 100\".",
-          "he": "טיפ: אחוז זה \"מתוך 100\"."
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
         }
       ]
     },
     {
-      "id": "npc-pgym-oops",
-      "x": 13,
-      "y": 3,
+      "id": "npc-pgym-r1-right",
+      "x": 12,
+      "y": 13,
       "facing": "down",
       "type": "dialogue",
       "spriteType": "char_1b9be7",
       "name": {
-        "en": "Gym Helper Tal",
+        "en": "Helper Tal",
         "he": "העוזר טל"
       },
       "dialogue": [
         {
-          "en": "Oops, wrong pad! That is totally fine — mistakes help us learn.",
-          "he": "אופס, משטח לא נכון! זה בסדר גמור — טעויות עוזרות ללמוד."
+          "en": "Trick: 10% means 1 out of every 10. 10% of 30 is 3!",
+          "he": "טריק: 10% זה 1 מכל 10. 10% מ-30 זה 3!"
         },
         {
-          "en": "The pad on the right takes you back to the start. Try the riddle again — you can do it!",
-          "he": "המשטח מימין מחזיר אותך להתחלה. נסה שוב את החידה — אתה יכול!"
+          "en": "Question: only 10% of challengers find our leader. Today 20 trainers came.",
+          "he": "שאלה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
+        },
+        {
+          "en": "My answer: 2 of them found the leader!",
+          "he": "התשובה שלי: 2 מהם מצאו את המנהיג!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r2-left",
+      "x": 19,
+      "y": 13,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_6f0793",
+      "name": {
+        "en": "Helper Lia",
+        "he": "העוזרת ליה"
+      },
+      "dialogue": [
+        {
+          "en": "Great job getting here! Trick: Water puts out fire, and fire cannot melt Rock or Ground.",
+          "he": "כל הכבוד שהגעת! טריק: מים מכבים אש, ואש לא יכולה להמיס סלע או אדמה."
+        },
+        {
+          "en": "Question: our leader trains Fire Pokémon. How many types are super effective against Fire?",
+          "he": "שאלה: המנהיג שלנו מאמן פוקימוני אש. כמה סוגים יעילים במיוחד נגד אש?"
+        },
+        {
+          "en": "My answer: 3 types — Water, Ground and Rock!",
+          "he": "התשובה שלי: 3 סוגים — מים, אדמה וסלע!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r2-mid",
+      "x": 23,
+      "y": 13,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_cfd98f",
+      "name": {
+        "en": "Helper Tommy",
+        "he": "העוזר טומי"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: Fire burns Grass, melts Ice and Steel, and beats Bug!",
+          "he": "טריק: אש שורפת דשא, ממיסה קרח ופלדה, ומנצחת חרקים!"
+        },
+        {
+          "en": "Question: our leader trains Fire Pokémon. How many types are super effective against Fire?",
+          "he": "שאלה: המנהיג שלנו מאמן פוקימוני אש. כמה סוגים יעילים במיוחד נגד אש?"
+        },
+        {
+          "en": "My answer: 4 types — Grass, Ice, Steel and Bug!",
+          "he": "התשובה שלי: 4 סוגים — דשא, קרח, פלדה וחרק!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r2-right",
+      "x": 27,
+      "y": 13,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_338625",
+      "name": {
+        "en": "Helper Erika",
+        "he": "העוזרת אריקה"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: you can check any type in your Pokédex!",
+          "he": "טריק: אפשר לבדוק כל סוג בפוקידקס שלך!"
+        },
+        {
+          "en": "Question: our leader trains Fire Pokémon. How many types are super effective against Fire?",
+          "he": "שאלה: המנהיג שלנו מאמן פוקימוני אש. כמה סוגים יעילים במיוחד נגד אש?"
+        },
+        {
+          "en": "My answer: only 1 type — Water!",
+          "he": "התשובה שלי: רק סוג אחד — מים!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r3-left",
+      "x": 4,
+      "y": 1,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_46f643",
+      "name": {
+        "en": "Helper Jimmy",
+        "he": "העוזר ג'ימי"
+      },
+      "dialogue": [
+        {
+          "en": "Almost there! Trick: 100 split into groups of 20 makes 5 groups.",
+          "he": "כמעט שם! טריק: אם מחלקים 100 לקבוצות של 20 מקבלים 5 קבוצות."
+        },
+        {
+          "en": "Question: a Potion heals 20 HP. Your Pokémon has 100 HP. What percent does one Potion heal?",
+          "he": "שאלה: שיקוי מרפא 20 חיים. לפוקימון שלך יש 100 חיים. כמה אחוז מרפא שיקוי אחד?"
+        },
+        {
+          "en": "My answer: 5%!",
+          "he": "התשובה שלי: 5%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r3-mid",
+      "x": 8,
+      "y": 1,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Helper Noa",
+        "he": "העוזרת נועה"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: percent means \"out of 100\". If there are 100 HP, every 1 HP is 1%!",
+          "he": "טריק: אחוז זה \"מתוך 100\". אם יש 100 חיים, כל חיים אחד הוא 1%!"
+        },
+        {
+          "en": "Question: a Potion heals 20 HP. Your Pokémon has 100 HP. What percent does one Potion heal?",
+          "he": "שאלה: שיקוי מרפא 20 חיים. לפוקימון שלך יש 100 חיים. כמה אחוז מרפא שיקוי אחד?"
+        },
+        {
+          "en": "My answer: 20%!",
+          "he": "התשובה שלי: 20%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r3-right",
+      "x": 12,
+      "y": 1,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_994b11",
+      "name": {
+        "en": "Helper Max",
+        "he": "העוזר מקס"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 100 minus 20 is 80.",
+          "he": "טריק: 100 פחות 20 זה 80."
+        },
+        {
+          "en": "Question: a Potion heals 20 HP. Your Pokémon has 100 HP. What percent does one Potion heal?",
+          "he": "שאלה: שיקוי מרפא 20 חיים. לפוקימון שלך יש 100 חיים. כמה אחוז מרפא שיקוי אחד?"
+        },
+        {
+          "en": "My answer: 80%!",
+          "he": "התשובה שלי: 80%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-trainer-1",
+      "x": 1,
+      "y": 18,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_a8bd41",
+      "name": {
+        "en": "Kindler Dan",
+        "he": "דן המצית"
+      },
+      "party": [
+        {
+          "pokemonId": 5,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 156,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 77,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 2000
+      },
+      "dialogue": [
+        {
+          "en": "Hi! Fun fact: a candle flame is about 1,000°C hot!",
+          "he": "היי! עובדה מגניבה: להבה של נר חמה בערך 1,000 מעלות!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Wow, you are good! Fire needs oxygen to burn — that is why water and sand put it out.",
+          "he": "וואו, אתה טוב! אש צריכה חמצן כדי לבעור — בגלל זה מים וחול מכבים אותה."
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-trainer-2",
+      "x": 29,
+      "y": 18,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_c3dacc",
+      "name": {
+        "en": "Firebreather Lea",
+        "he": "לאה נושפת האש"
+      },
+      "party": [
+        {
+          "pokemonId": 58,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 126,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 219,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 2000
+      },
+      "dialogue": [
+        {
+          "en": "Hello! The Sun is a giant ball of fire — about 5,500°C on the outside!",
+          "he": "שלום! השמש היא כדור אש ענק — בערך 5,500 מעלות מבחוץ!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Great battle! Magcargo is so hot it is about 10,000°C — hotter than the Sun's surface!",
+          "he": "קרב מעולה! מגקרגו כל כך חם — בערך 10,000 מעלות, יותר מפני השמש!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-trainer-3",
+      "x": 1,
+      "y": 6,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_8c60a6",
+      "name": {
+        "en": "Ace Trainer Ron",
+        "he": "המאמן רון"
+      },
+      "party": [
+        {
+          "pokemonId": 136,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 78,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 2000
+      },
+      "dialogue": [
+        {
+          "en": "You made it far! Did you know Flareon's body can heat up to 900°C?",
+          "he": "הגעת רחוק! ידעת שהגוף של פלריאון יכול להתחמם עד 900 מעלות?"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "You are ready for our leader. Remember: Water, Ground and Rock beat Fire!",
+          "he": "אתה מוכן למנהיג שלנו. תזכור: מים, אדמה וסלע מנצחים אש!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-leader",
+      "x": 22,
+      "y": 3,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "gym-7-integrala",
+      "name": {
+        "en": "Max Formax",
+        "he": "מקס פרבולה"
+      },
+      "party": [
+        {
+          "pokemonId": 126,
+          "level": 49,
+          "moves": []
+        },
+        {
+          "pokemonId": 38,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 78,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 59,
+          "level": 51,
+          "moves": []
+        },
+        {
+          "pokemonId": 157,
+          "level": 53,
+          "moves": []
+        },
+        {
+          "pokemonId": 6,
+          "level": 54,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 1,
+      "excludeFromMapClear": true,
+      "questions": {
+        "count": 3,
+        "types": []
+      },
+      "reward": {
+        "money": 6000,
+        "badge": 7,
+        "items": [
+          {
+            "itemId": "fire-stone",
+            "quantity": 1
+          },
+          {
+            "itemId": "max-revive",
+            "quantity": 2
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Ho ho! You solved all three riddles. Welcome, young mathematician!",
+          "he": "הו הו! פתרת את כל שלוש החידות. ברוך הבא, מתמטיקאי צעיר!"
+        },
+        {
+          "en": "I am Max Formax. For 50 years I have studied fire and numbers.",
+          "he": "אני מקס פורמקס. כבר 50 שנה אני חוקר אש ומספרים."
+        },
+        {
+          "en": "A good trainer, like a good fire, needs 3 things: fuel, air and heat. Show me yours!",
+          "he": "מאמן טוב, כמו אש טובה, צריך 3 דברים: דלק, אוויר וחום. הראה לי את שלך!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Wonderful! You burned brighter than 100% of my expectations!",
+          "he": "נפלא! בערת יותר חזק מ-100% מהציפיות שלי!"
+        },
+        {
+          "en": "Take this badge. You have earned it with your head and your heart.",
+          "he": "קח את התג הזה. הרווחת אותו עם הראש ועם הלב."
         }
       ]
     }
@@ -235,32 +624,63 @@
   "movablePuzzle": {},
   "flagListeners": [],
   "tiles": [
-    ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
-    ["w1-r","t","t","t","t","w4-z3","w4-y2","w4-y2","w4-y2","w4-y2","w4-z4","t","t","t","t","t","w4-z3","w4-y2","w4-y2","w4-z4","t","t","t","t","w1-l"],
-    ["w1-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l"],
-    ["w1-r","t","t","t","t","w4-x1","w4-y2","w4-y2","w4-y2","w4-y2","w4-x1","t","t","t","t","t","w4-x1","w4-y2","w4-y2","w4-x1","t","t","t","t","w1-l"],
-    ["w1-r","t","t","t","t","w4-x","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x","t","t","t","t","t","w4-x","black-non-walk","black-non-walk","w4-x","t","t","t","t","w1-l"],
-    ["w1-r","w4-x1","t","w4-z1","w4-y2","w4-z4","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-z3","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-z4","black-non-walk","black-non-walk","w4-z3","w4-y2","w4-z2","t","w4-x1","w1-l"],
-    ["w1-r","w4-x","t","w4-x","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x","t","w4-x","w1-l"],
-    ["w1-r","w4-x","t","w4-x","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-z1","w6-y2","w6-y2","w6-y2","w6-y2","w6-y2","w6-z2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x","t","w4-x","w1-l"],
-    ["w1-r","w4-x2","t","w4-z3","w4-y2","w4-z2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-x","g1","g1","g1","g1","g1","w6-x","black-non-walk","black-non-walk","w4-z1","w4-y2","w4-z4","t","w4-x2","w1-l"],
-    ["w1-r","t","t","t","t","w4-box","w4-y2","w4-y2","w4-y2","w4-y2","w6-x2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-x2","w4-y2","w4-y2","w4-z4","t","t","t","t","w1-l"],
-    ["w1-r","t","t","t","t","t","t","t","t","t","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","t","t","t","t","t","t","t","w1-l"],
-    ["w1-r","t","t","t","t","w4-box","w4-y2","w4-y2","w4-y2","w4-y2","w6-x1","t","t","t","t","t","w6-x1","w4-y2","w4-y2","w4-x1","t","t","t","t","w1-l"],
-    ["w1-r","w4-z2","t","w4-z1","w4-y2","w4-z4","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w6-z3","w6-y2","w6-y2","t","w6-y2","w6-y2","w6-z4","black-non-walk","black-non-walk","w4-z3","w4-y2","w4-z2","t","w4-x1","w1-l"],
-    ["w1-r","w4-x","t","w4-x","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x","t","w4-x","w1-l"],
-    ["w1-r","w4-x","t","w4-x","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","t","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-x","t","w4-x","w1-l"],
-    ["w1-r","w4-z4","t","w4-z3","w4-y2","w4-z2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","w4-z1","w4-y2","w4-y2","t","w4-y2","w4-y2","w4-z2","black-non-walk","black-non-walk","w4-z1","w4-y2","w4-z4","t","w4-x2","w1-l"],
-    ["w1-r","t","t","t","t","w4-z3","w4-y2","w4-y2","w4-y2","w4-y2","w4-z4","t","t","t","t","t","w4-z3","w4-y2","w4-y2","w4-z4","t","t","t","t","w1-l"],
-    ["w1-r","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","t","w1-l"],
-    ["w1-r","t","t","t","t","w4-y1","w4-y2","w4-y2","w4-y2","w4-y2","w4-x1","w6-box","t","t","t","w6-box","w4-y1","w4-y2","w4-y2","w4-x1","t","t","t","t","w1-l"],
-    ["w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w6-box","t","t","t","w6-box","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-b4"]
+    ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
+    ["w1-r","f4","f4","up","f4","f4","f4","up","f4","f4","f4","up","f4","f4","f4","w4-x1","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","down","w1-l"],
+    ["w1-r","w4-y1","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-box","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y3","w1-l"],
+    ["w1-r","f4","f4","up","f4","f4","f4","up","f4","f4","f4","up","f4","f4","f4","w4-x","f4","f4","up","f4","f4","f4","up","f4","f4","f4","up","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x2","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","f4","f4","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-b4"]
   ],
   "objects": [
     {
       "key": "battle-arena",
-      "x": 11,
-      "y": 8
+      "x": 20,
+      "y": 3
+    },
+    {
+      "key": "firePlaceTop",
+      "x": 16,
+      "y": 1
+    },
+    {
+      "key": "firePlaceTop",
+      "x": 27,
+      "y": 1
+    },
+    {
+      "key": "stvoe2",
+      "x": 13,
+      "y": 23
+    },
+    {
+      "key": "stvoe2",
+      "x": 16,
+      "y": 23
+    },
+    {
+      "key": "stvoe2",
+      "x": 13,
+      "y": 10
     }
   ]
 }

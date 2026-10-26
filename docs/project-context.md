@@ -7,7 +7,7 @@ Playable up to: badge 6 (Symmetrika) → Zapdos cave → Raikou arc → Route 9 
 Last active quest: `main-act4-percentile` ("Percentile City", set on first arrival) — `src/data/story/content/act4/quest-percentiles.ts`. Nothing happens after it yet.
 
 ## TODO — main story
-- [ ] Percentile (gym 7): city + interiors + entry gate done (`act4/quest-percentiles.ts`, quest `main-act4-percentile`). Gym has no leader and no city door yet; west-ocean swimmer blockers wait for flag `percentile-ocean-open` (nothing sets it yet)
+- [ ] Percentile (gym 7): city, interiors, gates and the Fire gym (3 riddle rooms + leader Max Formax, badge 7) done. Missing: city door into the gym (41,1), post-badge story. West-ocean swimmer blockers wait for flag `percentile-ocean-open` (nothing sets it yet)
 - [ ] Algebria (gym 8): `act4/quest-algebria.ts` is old "Absoluta" placeholder (map id `absoluta/absoluta` doesn't exist, `questionSetIds: ['placeholder']`) — rewrite for Algebria
 - [ ] Route 12: empty map (0 NPCs, 0 transitions)
 - [ ] Forest: `caves/deep-forest` and `routes/small forest` partly built — no story yet
@@ -23,7 +23,7 @@ Last active quest: `main-act4-percentile` ("Percentile City", set on first arriv
 - [ ] Trainer "VS" intro scene before battle (old bug #8, `docs/bugs.md`)
 
 ## Tech debt
-- [ ] `src/data/badges.ts` badges 7–8: leader is `???`, type/mathTopic still old placeholders — fill in when the Percentile/Algebria gyms are designed
+- [ ] `src/data/badges.ts` badge 8: leader is `???`, type/mathTopic still old placeholders — fill in when the Algebria gym is designed
 - [ ] `src/data/maps/backup/` and `templates/backup/` — old map snapshots, remove if not needed
 - [ ] Stale commented-out reset script at the bottom of `act3/quest-raikou.ts`
 - [ ] `overworld.ts` `buildCutsceneContext().executeStoryAction` re-implements story actions that `systems/story-engine.ts` already handles — route through the engine

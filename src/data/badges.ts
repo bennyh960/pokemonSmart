@@ -77,12 +77,12 @@ export const BADGES: BadgeDef[] = [
   },
   {
     id: 7,
-    name: { en: 'Formula Badge', he: 'תג הנוסחה' },
+    name: { en: 'Flame Badge', he: 'תג הלהבה' },
     city: { en: 'Percentile', he: 'פרסנטייל' },
-    leader: { en: '???', he: '???' },
-    type: 'dragon',
-    mathTopic: { en: 'Order of Operations', he: 'סדר פעולות' },
-    icon: '📐',
+    leader: { en: 'Max Formax', he: 'מקס פרבולה' },
+    type: 'fire',
+    mathTopic: { en: 'Percentages', he: 'אחוזים' },
+    icon: '🔥',
   },
   {
     id: 8,
