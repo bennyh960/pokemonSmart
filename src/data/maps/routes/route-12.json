@@ -48,7 +48,7 @@
   ],
   "npcs": [],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": "route-12",
   "movablePuzzle": {},
   "flagListeners": [],
   "interactiveItems": {},

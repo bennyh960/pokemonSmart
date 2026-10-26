@@ -213,7 +213,7 @@
     }
   ],
   "music": "route",
-  "encounterTableId": null,
+  "encounterTableId": "algebria",
   "movablePuzzle": {},
   "flagListeners": [],
   "interactiveItems": {},

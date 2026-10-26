@@ -436,7 +436,7 @@
     }
   ],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": "percentile",
   "movablePuzzle": {},
   "flagListeners": [],
   "interactiveItems": {},

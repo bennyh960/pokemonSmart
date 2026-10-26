@@ -385,7 +385,7 @@
     }
   ],
   "music": "town",
-  "encounterTableId": null,
+  "encounterTableId": "fractalis",
   "interactiveItems": {},
   "movablePuzzle": {},
   "flagListeners": [],

@@ -355,7 +355,7 @@
     }
   ],
   "music": "route",
-  "encounterTableId": null,
+  "encounterTableId": "route-10",
   "movablePuzzle": {},
   "flagListeners": [],
   "interactiveItems": {},

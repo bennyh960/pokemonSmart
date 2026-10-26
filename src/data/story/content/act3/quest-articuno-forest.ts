@@ -274,7 +274,31 @@ registerCutscene({
           he: 'אל תמהר. פוקימונים נדירים אוהבים את היער הזה - תפקח עיניים!',
         },
         {
-          en: 'And if you want a shortcut to Percentile city , you can surf in the river to Zerovile I think it closer...',
+          en: 'Rumor says a baby Dratini hides by the water, and a tiny Larvitar was seen near the rocks. Maybe even a Lapras!',
+          he: 'שמעתי שדרטיני קטן מסתתר ליד המים, ולרביטאר זעיר נראה ליד הסלעים. אולי אפילו לאפראס!',
+        },
+        {
+          en: "Oh! And the big news: the glitch kept a Snorlax asleep for days. Now it's AWAKE — and very hungry!",
+          he: 'אה! והחדשה הגדולה: הגליץ׳ הרדים סנורלקס במשך ימים. עכשיו הוא ער - ורעב מאוד!',
+        },
+        {
+          en: "It's stomping around the north side of the forest looking for snacks. Say hi — but watch your lunchbox!",
+          he: 'הוא מסתובב בצפון היער ומחפש חטיפים. תגיד לו שלום - אבל תשמור על הסנדוויץ׳ שלך!',
+        },
+        {
+          en: 'Fun fact: a Snorlax eats about 400 kg of food a day. It gobbles so fast, its tummy never knows when to stop!',
+          he: 'עובדה מעניינת: סנורלקס אוכל בערך 400 ק״ג אוכל ביום. הוא בולע כל כך מהר, שהבטן שלו לא יודעת מתי לעצור!',
+        },
+        {
+          en: 'Same goes for us: your brain needs about 20 minutes to feel full. Eat slowly, and lots of fruit and veggies — not like Snorlax!',
+          he: 'גם אצלנו זה ככה: למוח לוקח בערך 20 דקות להרגיש שובע. תאכל לאט, והרבה פירות וירקות - לא כמו סנורלקס!',
+        },
+        {
+          en: 'If you can catch it, check its paws — it may be holding some Leftovers!',
+          he: 'אם תצליח לתפוס אותו, תבדוק מה יש לו בכפות - אולי הוא מחזיק שאריות (Leftovers)!',
+        },
+        {
+          en: 'And if you want a shortcut to Percentile City, you can surf up the river to Zeroville. I think it is closer...',
           he: 'אגב אם אתה רוצה קיצור דרך לפרסנטייל , תמשיך במעלה הזרם ותגיע לזירוויל , שם תוכל להמשיך דרך שביל 10',
         },
       ],

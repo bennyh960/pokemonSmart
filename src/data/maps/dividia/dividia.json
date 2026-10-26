@@ -222,7 +222,7 @@
     }
   ],
   "music": "town3",
-  "encounterTableId": "grass-gym-20-30",
+  "encounterTableId": "dividia",
   "interactiveItems": {},
   "outside": {
     "rain": 0.15
