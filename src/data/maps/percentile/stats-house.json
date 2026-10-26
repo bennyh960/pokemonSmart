@@ -1,0 +1,61 @@
+{
+  "id": "percentile/stats-house",
+  "name": "house-small",
+  "template": "house-small",
+  "tileset": "interior",
+  "area": "percentile",
+  "label": {
+    "en": "Statistics House",
+    "he": "בית הסטטיסטיקה"
+  },
+  "music": "town3",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "npc-percentile-stat-trainer",
+      "x": 6,
+      "y": 5,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_994b11",
+      "name": {
+        "en": "Max",
+        "he": "מקס"
+      },
+      "questions": {
+        "count": 2,
+        "types": [
+          "+",
+          "×"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Vitamins raise a Pokémon's base stats. I measure everything in percent!",
+          "he": "ויטמינים מעלים את התכונות של הפוקימון. אני מודד הכל באחוזים!"
+        },
+        {
+          "en": "Protein for Attack, Iron for Defense, Carbos for Speed.",
+          "he": "Protein להתקפה, Iron להגנה, Carbos למהירות."
+        }
+      ],
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "protein",
+            "quantity": 1
+          },
+          {
+            "itemId": "iron",
+            "quantity": 1
+          },
+          {
+            "itemId": "carbos",
+            "quantity": 1
+          }
+        ]
+      }
+    }
+  ]
+}

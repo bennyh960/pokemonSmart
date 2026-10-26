@@ -1,0 +1,86 @@
+{
+  "id": "percentile/rare-traders",
+  "name": "house-1",
+  "template": "house-1",
+  "tileset": "interior",
+  "area": "percentile",
+  "label": {
+    "en": "Collectors House",
+    "he": "בית האספנים"
+  },
+  "music": "town2",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "npc-percentile-porygon-trader",
+      "x": 11,
+      "y": 4,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_9db696",
+      "name": {
+        "en": "Collector Jake",
+        "he": "האספן ג'ייק"
+      },
+      "questions": {
+        "count": 3,
+        "types": [
+          "×",
+          "÷"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "I have a very rare Pokémon — Porygon, a Pokémon made of pure data!",
+          "he": "יש לי פוקימון נדיר מאוד — פוריגון, פוקימון שעשוי כולו מנתונים!"
+        },
+        {
+          "en": "It is a friendly program, nothing like NULL-X. I miss the simple Pokémon though...",
+          "he": "זו תוכנה ידידותית, לא כמו NULL-X. אבל אני מתגעגע לפוקימונים הפשוטים..."
+        }
+      ],
+      "interaction": {
+        "kind": "swap-pokemon",
+        "offersId": 137,
+        "level": 30,
+        "wantsId": 16
+      }
+    },
+    {
+      "id": "npc-percentile-chansey-trader",
+      "x": 20,
+      "y": 11,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "char_77d85f",
+      "name": {
+        "en": "Nurse-in-training Clair",
+        "he": "קלייר האחות המתלמדת"
+      },
+      "questions": {
+        "count": 3,
+        "types": [
+          "+",
+          "-",
+          "×"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "My Chansey wants to see the world with a strong trainer.",
+          "he": "הצ'נסי שלי רוצה לראות את העולם עם מאמן חזק."
+        },
+        {
+          "en": "Chansey are rare — only a few percent of trainers ever meet one!",
+          "he": "צ'נסי נדירים — רק אחוזים בודדים מהמאמנים פוגשים אחד!"
+        }
+      ],
+      "interaction": {
+        "kind": "swap-pokemon",
+        "offersId": 113,
+        "level": 30,
+        "wantsId": 19
+      }
+    }
+  ]
+}

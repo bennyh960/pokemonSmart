@@ -1,0 +1,62 @@
+{
+  "id": "percentile/stones-house",
+  "name": "house-small",
+  "template": "house-small",
+  "tileset": "interior",
+  "area": "percentile",
+  "label": {
+    "en": "Stone Collector House",
+    "he": "בית אספן האבנים"
+  },
+  "music": "town2",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "npc-percentile-stone-collector",
+      "x": 6,
+      "y": 5,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_9318f0",
+      "name": {
+        "en": "Stone Collector",
+        "he": "אספן האבנים"
+      },
+      "questions": {
+        "count": 3,
+        "types": [
+          "+",
+          "-",
+          "×"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Some Pokémon evolve with a special stone. Eevee can use three different ones!",
+          "he": "יש פוקימונים שמתפתחים עם אבן מיוחדת. איווי יכול להשתמש בשלוש אבנים שונות!"
+        },
+        {
+          "en": "Solve my questions and choose wisely how to use these.",
+          "he": "פתור את השאלות שלי ותבחר בחוכמה איך להשתמש בהן."
+        }
+      ],
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "fire-stone",
+            "quantity": 1
+          },
+          {
+            "itemId": "water-stone",
+            "quantity": 1
+          },
+          {
+            "itemId": "thunder-stone",
+            "quantity": 1
+          }
+        ]
+      }
+    }
+  ]
+}

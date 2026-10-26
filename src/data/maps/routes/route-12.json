@@ -9,7 +9,43 @@
     "x": 25,
     "y": 35
   },
-  "transitions": [],
+  "transitions": [
+    {
+      "fromX": 10,
+      "fromY": 69,
+      "toMapId": "percentile/percentile",
+      "toX": 9,
+      "toY": 1
+    },
+    {
+      "fromX": 11,
+      "fromY": 69,
+      "toMapId": "percentile/percentile",
+      "toX": 10,
+      "toY": 1
+    },
+    {
+      "fromX": 12,
+      "fromY": 69,
+      "toMapId": "percentile/percentile",
+      "toX": 11,
+      "toY": 1
+    },
+    {
+      "fromX": 30,
+      "fromY": 69,
+      "toMapId": "percentile/percentile",
+      "toX": 30,
+      "toY": 2
+    },
+    {
+      "fromX": 31,
+      "fromY": 69,
+      "toMapId": "percentile/percentile",
+      "toX": 31,
+      "toY": 2
+    }
+  ],
   "npcs": [],
   "music": "town",
   "encounterTableId": null,

@@ -1,0 +1,109 @@
+{
+  "id": "percentile/library",
+  "name": "library1",
+  "template": "library1",
+  "tileset": "interior",
+  "area": "percentile",
+  "label": {
+    "en": "Percentile Library",
+    "he": "ספריית פרסנטייל"
+  },
+  "music": "pokecenter",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "npc-percentile-librarian",
+      "x": 13,
+      "y": 4,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_7ca291",
+      "name": {
+        "en": "Grand Lea",
+        "he": "סבתא לאה"
+      },
+      "questions": {
+        "count": 2,
+        "types": [
+          "+",
+          "-"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Welcome to the Percentile Library. Shhh... quietly, please.",
+          "he": "ברוך הבא לספריית פרסנטייל. שששש... בשקט בבקשה."
+        },
+        {
+          "en": "Scientists here count everything. 251 kinds of Pokémon live in Numeria!",
+          "he": "המדענים כאן סופרים הכל. 251 סוגים של פוקימונים חיים בנומריה!"
+        },
+        {
+          "en": "Lately the numbers are strange. More and more wild Pokémon are glitched.",
+          "he": "לאחרונה המספרים מוזרים. יותר ויותר פוקימונים פראיים נדבקים בגליץ'."
+        },
+        {
+          "en": "Take this, it restores the PP of all moves.",
+          "he": "קח את זה, זה ממלא את ה-PP של כל ההתקפות."
+        }
+      ],
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "max-elixir",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-percentile-library-types",
+      "x": 3,
+      "y": 13,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "char_0b132f",
+      "name": {
+        "en": "Elm",
+        "he": "אלם"
+      },
+      "dialogue": [
+        {
+          "en": "I am reading about types. A super effective move does 200% damage!",
+          "he": "אני קורא על סוגים. התקפה יעילה במיוחד עושה 200% נזק!"
+        },
+        {
+          "en": "Not very effective is only 50%. And some moves do 0% — no effect at all!",
+          "he": "התקפה לא יעילה עושה רק 50%. ויש התקפות שעושות 0% — בלי השפעה בכלל!"
+        },
+        {
+          "en": "Ground moves do nothing to Flying Pokémon. Ghosts ignore Normal moves.",
+          "he": "התקפות Ground לא משפיעות על פוקימוני Flying. רוחות (Ghost) מתעלמות מהתקפות Normal."
+        }
+      ]
+    },
+    {
+      "id": "npc-percentile-library-kid",
+      "x": 17,
+      "y": 9,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "char_dc1a34",
+      "name": {
+        "en": "Maya",
+        "he": "מאיה"
+      },
+      "dialogue": [
+        {
+          "en": "I read that legendary birds live all over Numeria.",
+          "he": "קראתי שציפורים אגדיות חיות בכל רחבי נומריה."
+        },
+        {
+          "en": "Zapdos, Articuno... and a fire bird called Moltres. Nobody has seen it in years!",
+          "he": "זאפדוס, ארטיקונו... וציפור אש בשם מולטרס. אף אחד לא ראה אותה כבר שנים!"
+        }
+      ]
+    }
+  ]
+}

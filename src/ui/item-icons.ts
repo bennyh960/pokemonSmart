@@ -196,6 +196,18 @@ function drawDocument(
 }
 
 /** Draw a hexagonal core chip (used for NULL-X core fragments). */
+/** NULL-X core colors — each matches the legendary that carries it. */
+const CORE_COLORS: Record<string, string> = {
+  'core-x1': '#f8d030', // Zapdos — yellow
+  'core-x2': '#e88030', // Raikou — orange
+  'core-x3': '#88d0f0', // Articuno — light blue
+  'core-x4': '#e83820', // Moltres — red
+  'core-x5': '#3868d8', // Suicune — deep blue
+  'core-x6': '#a03028', // Entei — dark red
+  'core-x7': '#c8ccd8', // Lugia — white-gray
+  'core-x8': '#a050d8', // Mewtwo — purple
+};
+
 function drawCore(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string): void {
   const cx = x + size / 2;
   const cy = y + size / 2;
@@ -293,14 +305,12 @@ const ITEM_ICONS: Record<string, (ctx: CanvasRenderingContext2D, x: number, y: n
 
   // Key story items
   'secret-doc-act1': (ctx, x, y, s) => drawDocument(ctx, x, y, s, '#f0e8c8', '#c0a840'),
-  'core-x1': (ctx, x, y, s) => drawCore(ctx, x, y, s, '#e03030'),
-  'core-x2': (ctx, x, y, s) => drawCore(ctx, x, y, s, '#e07030'),
-  'core-x3': (ctx, x, y, s) => drawCore(ctx, x, y, s, '#e0c030'),
-  'core-x4': (ctx, x, y, s) => drawCore(ctx, x, y, s, '#40b060'),
-  'core-x5': (ctx, x, y, s) => drawCore(ctx, x, y, s, '#30c0a0'),
-  'core-x6': (ctx, x, y, s) => drawCore(ctx, x, y, s, '#3070e0'),
-  'core-x7': (ctx, x, y, s) => drawCore(ctx, x, y, s, '#8030e0'),
-  'core-x8': (ctx, x, y, s) => drawCore(ctx, x, y, s, '#404060'),
+  ...Object.fromEntries(
+    Object.entries(CORE_COLORS).map(([id, color]) => [
+      id,
+      (ctx: CanvasRenderingContext2D, x: number, y: number, s: number) => drawCore(ctx, x, y, s, color),
+    ]),
+  ),
 };
 
 /**
@@ -344,14 +354,9 @@ export const ITEM_ICON_STYLE: Record<string, { bg: string; stroke: string }> = {
   elixir: { bg: 'rgba(64,192,96,0.15)', stroke: '#40c060' },
   // Key story items
   'secret-doc-act1': { bg: 'rgba(192,168,64,0.18)', stroke: '#c0a840' },
-  'core-x1': { bg: 'rgba(224,48,48,0.18)', stroke: '#e03030' },
-  'core-x2': { bg: 'rgba(224,112,48,0.18)', stroke: '#e07030' },
-  'core-x3': { bg: 'rgba(224,192,48,0.18)', stroke: '#e0c030' },
-  'core-x4': { bg: 'rgba(64,176,96,0.18)', stroke: '#40b060' },
-  'core-x5': { bg: 'rgba(48,192,160,0.18)', stroke: '#30c0a0' },
-  'core-x6': { bg: 'rgba(48,112,224,0.18)', stroke: '#3070e0' },
-  'core-x7': { bg: 'rgba(128,48,224,0.18)', stroke: '#8030e0' },
-  'core-x8': { bg: 'rgba(64,64,96,0.25)', stroke: '#606090' },
+  ...Object.fromEntries(
+    Object.entries(CORE_COLORS).map(([id, color]) => [id, { bg: `${color}2e`, stroke: color }]),
+  ),
 };
 
 /** Get icon style for an item. Falls back to gray. */

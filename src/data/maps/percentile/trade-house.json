@@ -1,0 +1,102 @@
+{
+  "id": "percentile/trade-house",
+  "name": "house-open",
+  "template": "house-open",
+  "tileset": "interior",
+  "area": "percentile",
+  "label": {
+    "en": "Trade House",
+    "he": "בית ההחלפות"
+  },
+  "music": "town2",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "npc-percentile-trade-master",
+      "x": 9,
+      "y": 4,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_a8fbf3",
+      "name": {
+        "en": "Trade Master Martin",
+        "he": "מרטין אמן ההחלפות"
+      },
+      "questions": {
+        "count": 2,
+        "types": [
+          "×"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Some Pokémon only evolve when they are traded.",
+          "he": "יש פוקימונים שמתפתחים רק כשמחליפים אותם."
+        },
+        {
+          "en": "Like Kadabra, Machoke, Graveler and Haunter! Some need to hold an item too.",
+          "he": "כמו קדברה, מאצ'וק, גרוולר והאונטר! יש כאלה שגם צריכים להחזיק חפץ."
+        },
+        {
+          "en": "Answer 2 questions and I will trade-evolve one for you. Come back any time!",
+          "he": "ענה על 2 שאלות ואני אפתח לך אחד בהחלפה. אפשר לחזור מתי שרוצים!"
+        }
+      ],
+      "interaction": {
+        "kind": "trade-evolution"
+      },
+      "reward": {
+        "money": 0
+      },
+      "clearFlags": [
+        "npc-npc-percentile-trade-master-rewarded"
+      ]
+    },
+    {
+      "id": "npc-percentile-trade-helper",
+      "x": 16,
+      "y": 11,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "char_22fdd1",
+      "name": {
+        "en": "Assistant Gil",
+        "he": "העוזר גיל"
+      },
+      "questions": {
+        "count": 2,
+        "types": [
+          "+",
+          "-"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Onix evolves when traded holding a Metal Coat. Seadra needs a Dragon Scale.",
+          "he": "אוניקס מתפתח בהחלפה כשהוא מחזיק Metal Coat. סידרה צריך Dragon Scale."
+        },
+        {
+          "en": "Slowpoke and Poliwhirl like a King's Rock. Here — one of each!",
+          "he": "סלופוק ופוליוורל אוהבים King's Rock. הנה — אחד מכל אחד!"
+        }
+      ],
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "metal-coat",
+            "quantity": 1
+          },
+          {
+            "itemId": "dragon-scale",
+            "quantity": 1
+          },
+          {
+            "itemId": "kings-rock",
+            "quantity": 1
+          }
+        ]
+      }
+    }
+  ]
+}

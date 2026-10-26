@@ -1,5 +1,5 @@
 {
-  "id": "lab",
+  "id": "percentile/lab",
   "name": "lab-template",
   "template": "lab-template",
   "tileset": "interior",
@@ -30,6 +30,48 @@
       "name": {
         "en": "Akiva",
         "he": "עקיבא"
+      }
+    },
+    {
+      "id": "npc-percentile-lab-researcher",
+      "x": 9,
+      "y": 9,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Researcher Noa",
+        "he": "החוקרת נועה"
+      },
+      "questions": {
+        "count": 2,
+        "types": [
+          "×",
+          "÷"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "This lab studies the Glitch with numbers.",
+          "he": "המעבדה הזאת חוקרת את הגליץ' בעזרת מספרים."
+        },
+        {
+          "en": "A glitched Pokémon cannot be caught. That is 0% — no matter which ball you use!",
+          "he": "פוקימון נגוע בגליץ' אי אפשר לתפוס. זה 0% — לא משנה באיזה כדור תשתמש!"
+        },
+        {
+          "en": "Battle it to weaken the infection instead. This will help you.",
+          "he": "במקום זה, הילחם בו כדי להחליש את ההדבקה. זה יעזור לך."
+        }
+      ],
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "full-restore",
+            "quantity": 2
+          }
+        ]
       }
     }
   ]

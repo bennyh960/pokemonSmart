@@ -4,10 +4,10 @@ Keep this file short. Delete an item as soon as it's done (git history is the ar
 
 ## Where the story stands
 Playable up to: badge 6 (Symmetrika) → Zapdos cave → Raikou arc → Route 9 (Reminder's Pidgeot).
-Last active quest: `quest-go-percentile` ("Road to Percentile") — `src/data/story/content/act3/quest-route9.ts`. Nothing happens after it yet.
+Last active quest: `main-act4-percentile` ("Percentile City", set on first arrival) — `src/data/story/content/act4/quest-percentiles.ts`. Nothing happens after it yet.
 
 ## TODO — main story
-- [ ] Percentile (gym 7): map has 0 NPCs, gym has no leader, `act4/quest-percentiles.ts` is an empty stub
+- [ ] Percentile (gym 7): city + interiors + entry gate done (`act4/quest-percentiles.ts`, quest `main-act4-percentile`). Gym has no leader and no city door yet; west-ocean swimmer blockers wait for flag `percentile-ocean-open` (nothing sets it yet)
 - [ ] Algebria (gym 8): `act4/quest-algebria.ts` is old "Absoluta" placeholder (map id `absoluta/absoluta` doesn't exist, `questionSetIds: ['placeholder']`) — rewrite for Algebria
 - [ ] Route 12: empty map (0 NPCs, 0 transitions)
 - [ ] Forest: `caves/deep-forest` and `routes/small forest` partly built — no story yet

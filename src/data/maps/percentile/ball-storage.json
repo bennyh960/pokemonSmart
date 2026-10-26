@@ -1,0 +1,56 @@
+{
+  "id": "percentile/ball-storage",
+  "name": "storage-template",
+  "template": "storage-template",
+  "tileset": "interior",
+  "area": "percentile",
+  "label": {
+    "en": "Poké Ball Storage",
+    "he": "מחסן הפוקדורים"
+  },
+  "music": "town3",
+  "encounterTableId": null,
+  "npcs": [
+    {
+      "id": "npc-percentile-ball-keeper",
+      "x": 10,
+      "y": 4,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_24117d",
+      "name": {
+        "en": "Storekeeper Mos",
+        "he": "המחסנאי משה"
+      },
+      "questions": {
+        "count": 2,
+        "types": [
+          "+"
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "This is where Percentile keeps its Poké Balls.",
+          "he": "כאן פרסנטייל שומרת את הפוקדורים שלה."
+        },
+        {
+          "en": "An Ultra Ball catches better than a Great Ball, and a Great Ball better than a Poké Ball.",
+          "he": "אולטרה בול תופס יותר טוב מגרייט בול, וגרייט בול יותר טוב מפוקדור רגיל."
+        },
+        {
+          "en": "We have too many. Help yourself!",
+          "he": "יש לנו יותר מדי. קח לך!"
+        }
+      ],
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "ultra-ball",
+            "quantity": 5
+          }
+        ]
+      }
+    }
+  ]
+}

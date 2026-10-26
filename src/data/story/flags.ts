@@ -275,6 +275,10 @@ export const FLAGS = {
   ACT3_FRACTALIS_GYM_INVITE: 'act3-fractalis-gym-invite', // Engineer invited player to gym
   GATE_FRACTALIS_GYM_PASS: 'gate-fractalis-gym-pass',
 
+  // ── Act 4: Percentile ───────────────────────────────────────────────────────
+  VISITED_PERCENTILE: 'visited-percentile',
+  PERCENTILE_OCEAN_OPEN: 'percentile-ocean-open', // (not set yet) removes the west-ocean blockers in Percentile
+
   // ── Act 4: Integrala ────────────────────────────────────────────────────────
   GATE_ROUTE7_PASS: 'gate-route7-pass',
   VISITED_INTEGRALA: 'visited-integrala',
@@ -421,6 +425,8 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT3_FRACTALIS_ZAPDOS_DEFEATED]: 'Zapdos defeated in route-8 (core seen, not collected)',
   [FLAGS.ACT3_FRACTALIS_GYM_INVITE]: 'Engineer invited player to power station gym',
   [FLAGS.GATE_FRACTALIS_GYM_PASS]: 'Passed Electric Gym entry gate',
+  [FLAGS.VISITED_PERCENTILE]: 'First arrival at Percentile',
+  [FLAGS.PERCENTILE_OCEAN_OPEN]: 'Open ocean west of Percentile unlocked (swimmer blockers leave)',
   [FLAGS.GATE_ROUTE7_PASS]: 'Route 7 → Integrala checkpoint passed',
   [FLAGS.VISITED_INTEGRALA]: 'First arrival at Integrala',
   [FLAGS.GATE_INTEGRALA_GYM_PASS]: 'Passed Formula Gym gate',
