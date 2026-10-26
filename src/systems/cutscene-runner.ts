@@ -9,7 +9,7 @@
  * Supported steps (Sprint 7A):
  *   dialogue, screen-fade, wait, wait-input, face-npc, show-npc, hide-npc,
  *   hide-player, show-player, action, if-flag, play-music, stop-music, play-sfx,
- *   move-npc (instant teleport), camera-snap, camera-pan (snap for now), pokemon-anim
+ *   move-npc (instant teleport), camera-snap, camera-pan (snap for now), pokemon-anim, screen-shake
  *
  * Not yet supported (deferred): start-battle, start-gate
  */
@@ -47,6 +47,8 @@ export interface CutsceneContext {
   playPokemonAnim(step: Extract<CutsceneStep, { type: 'pokemon-anim' }>): void;
   /** Returns true while a pokemon-anim is still playing. */
   isPokemonAnimPlaying(): boolean;
+  /** Shake the map view for a while (e.g. an earthquake). */
+  shakeScreen(durationMs: number, intensity: number): void;
   snapCamera(x: number, y: number): void;
   panCamera(x: number, y: number, durationMs: number): void;
   playMusic(id: string): void;
@@ -578,6 +580,12 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
 
     case 'show-player': {
       ctx.setPlayerHidden(false);
+      _stepIndex++;
+      break;
+    }
+
+    case 'screen-shake': {
+      ctx.shakeScreen(step.durationMs, step.intensity ?? 1.5);
       _stepIndex++;
       break;
     }

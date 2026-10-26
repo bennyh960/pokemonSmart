@@ -166,6 +166,7 @@ export type AbilityBattleEffect =
       kind: 'typeAbsorbHeal';
       moveTypes: PokemonType[];
       healPercent: number;
+      messageKey?: string;
     }
   | {
       kind: 'contactStatusChance';

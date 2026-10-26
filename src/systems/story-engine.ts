@@ -24,7 +24,7 @@ import type { CutsceneStep } from '../data/story/cutscenes.js';
 import { saveEventCheckpoint, loadEventCheckpoint, clearEventCheckpoint, syncToCloud } from './save.js';
 import { getCurrentMapId, getCachedMap } from './map-manager.js';
 import { allTrainersDefeatedFlag } from '../data/story/flags.js';
-import { getItem } from '../data/items.js';
+import { grantItem } from './item-effects.js';
 
 let _stateMachine: StateMachine | null = null;
 
@@ -425,8 +425,8 @@ function executeAction(action: StoryAction, pd: ReturnType<typeof getPlayerData>
       break;
 
     case 'give-item': {
-      const slug = getItem(action.itemId)?.id ?? action.itemId;
-      pd.items[slug] = (pd.items[slug] || 0) + action.quantity;
+      const keyFlag = grantItem(pd, action.itemId, action.quantity);
+      if (keyFlag) void fireStoryTrigger({ type: 'flag-set', flag: keyFlag });
       break;
     }
 

@@ -256,6 +256,14 @@ export const FLAGS = {
   ACT3_R9_REMINDER_TALKED: 'act3-r9-reminder-talked',   // Talked on R9 — bird/device lore revealed, head to cave
   ACT3_R9_GRUNT_DEFEATED: 'act3-r9-grunt-defeated',     // Rocket grunt fled — Reminder spawns in cave
   ACT3_R9_ARC_COMPLETE: 'act3-r9-arc-complete',         // Arc done — Reminder thanked player, left for Percentile
+  ACT3_R9_CAVE_QUAKE: 'act3-r9-cave-quake',             // Officer Jenny met → Articuno shakes the cave, secret-exit rock breaks
+  ACT3_ARTICUNO_ARC_COMPLETE: 'act3-articuno-arc-complete', // Articuno arc done → forest purified, Snorlax appears, Officer Jenny leaves
+
+  // ── Act 3: Small forest — Articuno arc ─────────────────────────────────────
+  ACT3_FOREST_ARTICUNO_SEEN: 'act3-forest-articuno-seen',             // Entered forest, Articuno flew to (21,53)
+  ACT3_FOREST_ARTICUNO_FLEW_NORTH: 'act3-forest-articuno-flew-north', // Reached (20,54), Articuno flew to (17,16)
+  ACT3_FOREST_ALICE_MET: 'act3-forest-alice-met',                     // Alice gave TM53 + supplies after the corridor grunts
+  ACT3_FOREST_ARTICUNO_FLED: 'trainer-wild-forest-articuno-defeated', // (battle auto flag) Articuno fled → Core X5
 
   // ── Act 3: Fractalis arc ─────────────────────────────────────────────────────
   VISITED_FRACTALIS: 'visited-fractalis',
@@ -399,6 +407,12 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT3_R9_REMINDER_TALKED]: 'Talked to Reminder on Route 9 — glitched bird lore revealed, player heads to cave',
   [FLAGS.ACT3_R9_GRUNT_DEFEATED]: 'Rocket grunt in Route-9 cave defeated and fled — Reminder spawns in cave',
   [FLAGS.ACT3_R9_ARC_COMPLETE]: 'Route-9 arc complete — Reminder thanked player and left for Percentile City',
+  [FLAGS.ACT3_R9_CAVE_QUAKE]: 'Officer Jenny blocks the Route-9 cave exit — Articuno shakes the cave and breaks the secret-exit rock',
+  [FLAGS.ACT3_ARTICUNO_ARC_COMPLETE]: 'Articuno arc complete — forest purified, Snorlax appears, Officer Jenny leaves',
+  [FLAGS.ACT3_FOREST_ARTICUNO_SEEN]: 'Entered the small forest — Articuno flew to (21,53), low infection',
+  [FLAGS.ACT3_FOREST_ARTICUNO_FLEW_NORTH]: 'Reached Articuno at (20,54) — it flew north to (17,16), east blocker removed',
+  [FLAGS.ACT3_FOREST_ALICE_MET]: 'Alice met after the 4 corridor grunts — TM53 Dragon Rage + supplies given',
+  [FLAGS.ACT3_FOREST_ARTICUNO_FLED]: 'Articuno fled the forest battle — Core X5 collected, Alice calls',
   [FLAGS.VISITED_FRACTALIS]: 'First arrival at Fractalis',
   [FLAGS.ACT3_FRACTALIS_WIFE_TALKED]: 'Wife gave item → engineer spawns at beach',
   [FLAGS.ACT3_FRACTALIS_ENGINEER_MET]: 'Beach cutscene done — player heads to route-7 with engineer',

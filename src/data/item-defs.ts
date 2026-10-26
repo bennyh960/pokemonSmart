@@ -160,6 +160,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   tm50: 345, //hypnosis
   tm51: 349, // dragon dance
   tm52: 350, // curse
+  tm53: 351, // dragon rage (gift from Alice, small forest)
   // Pokeballs
   'master-ball': 1,
   'ultra-ball': 2,
@@ -1621,6 +1622,16 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: true,
     name: { en: 'TM52', he: 'TM52' },
     description: { en: 'Teaches Curse', he: 'מלמד מתקפת קללה' },
+  },
+  351: {
+    category: 'machine',
+    price: 0,
+    sellPrice: 1500,
+    effect: { type: 'tm', moveId: 82, isHM: false },
+    usableInBattle: false,
+    usableInOverworld: true,
+    name: { en: 'TM53', he: 'TM53' },
+    description: { en: 'Teaches Dragon Rage', he: 'מלמד זעם הדרקון' },
   },
 };
 

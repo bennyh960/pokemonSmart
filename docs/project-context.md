@@ -16,6 +16,7 @@ Last active quest: `quest-go-percentile` ("Road to Percentile") — `src/data/st
 
 ## Bugs
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
+- [ ] `act3/quest-raikou.ts` `evt-auto-repel-for-raikou` waits for a `flag-set` trigger on the Raikou flee flag, but battle flee only fires `trainer-defeated` (battle_scene.ts ~2250) — the auto-repel never runs
 - [ ] Trainer "VS" intro scene before battle (old bug #8, `docs/bugs.md`)
 
 ## Tech debt
@@ -25,4 +26,5 @@ Last active quest: `quest-go-percentile` ("Road to Percentile") — `src/data/st
 - [ ] `overworld.ts` `buildCutsceneContext().executeStoryAction` re-implements story actions that `systems/story-engine.ts` already handles — route through the engine
 - [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution, english-learning — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
 - [ ] 7 of 13 vitest files fail on main (pre-existing)
+- [ ] `public/audio/` is gitignored — the only copy is the `gh-pages` branch. A fresh clone has no sound; restore with `git archive origin/gh-pages audio | tar -x -C public`. Store it somewhere durable (LFS / release asset)
 - [ ] Math in battle disabled — needs a less intrusive mechanic

@@ -38,7 +38,9 @@ export const ABILITY_BATTLE_EFFECTS: Record<string, AbilityBattleEffect[]> = {
   ],
 
   // --- Type immunities (absorb with no heal) ---
-  Levitate: [{ kind: 'typeAbsorbHeal', moveTypes: ['ground'], healPercent: 0 }],
+  Levitate: [
+    { kind: 'typeAbsorbHeal', moveTypes: ['ground'], healPercent: 0, messageKey: 'ability.levitateActivation' },
+  ],
   'Flash Fire': [{ kind: 'typeAbsorbHeal', moveTypes: ['fire'], healPercent: 0 }],
   'Sap Sipper': [{ kind: 'typeAbsorbHeal', moveTypes: ['grass'], healPercent: 0 }],
   'Lightning Rod': [{ kind: 'typeAbsorbHeal', moveTypes: ['electric'], healPercent: 0 }],

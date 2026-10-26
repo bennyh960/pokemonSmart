@@ -5,9 +5,9 @@
  * so that both the Battle scene and the Bag/overworld can share the same code.
  */
 
-import type { Pokemon } from '../types/index.js';
+import type { Pokemon, PlayerData } from '../types/index.js';
 import { getItemGameData, getItemGameDataBySlug, getTMEffect } from '../data/item-defs.js';
-import { getPlayerData } from './game-state.js';
+import { getPlayerData, setFlag } from './game-state.js';
 import { checkAndApplyLevelUp, recalcPokemonStats } from './encounter.js';
 import {
   getPokemonDisplayName,
@@ -399,6 +399,19 @@ export function applyDirectItemEffect(itemId: string): ItemUseResult {
   }
 
   return { success: false, message: t('item.effect.cantUse3') };
+}
+
+/**
+ * Add an item to the bag. Key items also set their `keyFlag`, same as picking one up on the map.
+ * Returns the key flag that was set so the caller can fire the story trigger, or null.
+ */
+export function grantItem(pd: PlayerData, itemId: string, quantity: number): string | null {
+  const slug = getItem(itemId)?.id ?? itemId;
+  pd.items[slug] = (pd.items[slug] || 0) + quantity;
+  const keyFlag = getItem(slug)?.keyFlag;
+  if (!keyFlag) return null;
+  setFlag(pd, keyFlag);
+  return keyFlag;
 }
 
 /**

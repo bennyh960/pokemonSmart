@@ -27,17 +27,788 @@
     {
       "fromX": 2,
       "fromY": 69,
-      "toMapId": "routes/route-9-cave"
+      "toMapId": "routes/route-9-cave",
+      "toX": 4,
+      "toY": 3
     },
     {
       "fromX": 1,
       "fromY": 69,
-      "toMapId": "routes/route-9-cave"
+      "toMapId": "routes/route-9-cave",
+      "toX": 4,
+      "toY": 3
     }
   ],
   "npcs": [
     {
+      "id": "npc-forest-articuno-intro",
+      "x": 3,
+      "y": 66,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "char_00bce9",
+      "name": {
+        "en": "Articuno",
+        "he": "ארטיקונו"
+      },
+      "dialogue": [],
+      "hidden": true,
+      "spawnAfter": "act3-r9-cave-quake",
+      "despawnAfter": "act3-forest-articuno-seen"
+    },
+    {
+      "id": "npc-forest-articuno-perch",
+      "x": 21,
+      "y": 53,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "char_00bce9",
+      "name": {
+        "en": "Articuno",
+        "he": "ארטיקונו"
+      },
+      "dialogue": [
+        {
+          "en": "...Freeeee!",
+          "he": "...פריייי!"
+        }
+      ],
+      "spawnAfter": "act3-forest-articuno-seen",
+      "despawnAfter": "act3-forest-articuno-flew-north",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 0
+          },
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 4,
+            "delay": 1
+          },
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 0.5
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "wild-forest-articuno",
+      "x": 17,
+      "y": 16,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "char_00bce9",
+      "name": {
+        "en": "Articuno",
+        "he": "ארטיקונו"
+      },
+      "dialogue": [
+        {
+          "en": "Freeeee!!",
+          "he": "פרייייי!!"
+        }
+      ],
+      "pokemonId": 144,
+      "level": 50,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "fleeAtHpPct": 0.8,
+      "fleeAfterTurns": 3,
+      "spawnAfter": "act3-forest-articuno-flew-north"
+    },
+    {
+      "id": "npc-forest-alice",
+      "x": 50,
+      "y": 5,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "alice",
+      "name": {
+        "en": "Alice",
+        "he": "אליס"
+      },
+      "dialogue": [],
+      "hidden": true,
+      "spawnAfter": "act3-forest-articuno-flew-north",
+      "despawnAfter": "act3-forest-alice-met"
+    },
+    {
+      "id": "sys-forest-blocker-east",
+      "x": 42,
+      "y": 64,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "transparent",
+      "name": {
+        "en": "Warning",
+        "he": "אזהרה"
+      },
+      "dialogue": [
+        {
+          "en": "Articuno is nearby... I should follow it first.",
+          "he": "ארטיקונו קרוב... כדאי שאעקוב אחריו קודם."
+        }
+      ],
+      "blocker": true,
+      "lineOfSight": 22,
+      "spawnAfter": "act3-forest-articuno-seen",
+      "despawnAfter": "act3-forest-articuno-flew-north"
+    },
+    {
+      "id": "sys-forest-articuno-trigger",
+      "x": 19,
+      "y": 54,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "transparent",
+      "name": {
+        "en": "Articuno",
+        "he": "ארטיקונו"
+      },
+      "dialogue": [
+        {
+          "en": "Articuno!",
+          "he": "ארטיקונו!"
+        }
+      ],
+      "blocker": true,
+      "lineOfSight": 1,
+      "spawnAfter": "act3-forest-articuno-seen",
+      "despawnAfter": "act3-forest-articuno-flew-north"
+    },
+    {
+      "id": "npc-forest-scared-trainer",
+      "x": 26,
+      "y": 32,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "char_22fdd1",
+      "name": {
+        "en": "Scared Trainer",
+        "he": "מאמן מבוהל"
+      },
+      "dialogue": [
+        {
+          "en": "A huge blue bird attacked us! It froze my Pokémon solid...",
+          "he": "ציפור כחולה ענקית תקפה אותנו! היא הקפיאה את הפוקימונים שלי..."
+        },
+        {
+          "en": "I ran all the way here. I'm not moving until it's gone!",
+          "he": "רצתי כל הדרך לפה. אני לא זז מפה עד שהיא תיעלם!"
+        }
+      ],
+      "spawnAfter": "act3-forest-articuno-seen",
+      "despawnAfter": "act3-articuno-arc-complete"
+    },
+    {
+      "id": "npc-forest-rocket-1",
+      "x": 62,
+      "y": 31,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Halt! Team Rocket is hunting the ice bird — no kids allowed!",
+          "he": "עצור! צוות רוקט צד את ציפור הקרח - אסור לילדים!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Ugh... the others will stop you.",
+          "he": "אוף... האחרים יעצרו אותך."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 109,
+          "level": 38,
+          "moves": []
+        },
+        {
+          "pokemonId": 20,
+          "level": 39,
+          "moves": []
+        },
+        {
+          "pokemonId": 42,
+          "level": 40,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 6,
+      "reward": {
+        "money": 1000
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-articuno-flew-north"
+    },
+    {
+      "id": "npc-forest-rocket-2",
+      "x": 56,
+      "y": 24,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "That legendary bird will make the boss rich!",
+          "he": "הציפור האגדית הזאת תעשיר את הבוס!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "You're stronger than you look...",
+          "he": "אתה חזק יותר ממה שאתה נראה..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 24,
+          "level": 40,
+          "moves": []
+        },
+        {
+          "pokemonId": 198,
+          "level": 39,
+          "moves": []
+        },
+        {
+          "pokemonId": 228,
+          "level": 40,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 6,
+      "reward": {
+        "money": 1000
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-articuno-flew-north"
+    },
+    {
+      "id": "npc-forest-rocket-3",
+      "x": 62,
+      "y": 16,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Did that Elite Four lady send you? Doesn't matter!",
+          "he": "הגברת מארבעת האליטה שלחה אותך? לא משנה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "We were beaten twice in one day?!",
+          "he": "הובסנו פעמיים ביום אחד?!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 89,
+          "level": 41,
+          "moves": []
+        },
+        {
+          "pokemonId": 93,
+          "level": 40,
+          "moves": []
+        },
+        {
+          "pokemonId": 42,
+          "level": 41,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 6,
+      "reward": {
+        "money": 1100
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-articuno-flew-north"
+    },
+    {
+      "id": "npc-forest-rocket-4",
+      "x": 56,
+      "y": 9,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "I'm the last line! Nobody gets past me!",
+          "he": "אני הקו האחרון! אף אחד לא עובר אותי!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Retreat! Everyone retreat to the west!",
+          "he": "נסיגה! כולם לסגת מערבה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 110,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 215,
+          "level": 41,
+          "moves": []
+        },
+        {
+          "pokemonId": 97,
+          "level": 42,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 6,
+      "reward": {
+        "money": 1200
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-articuno-flew-north"
+    },
+    {
+      "id": "npc-forest-rocket-5",
+      "x": 48,
+      "y": 4,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "You won't find the bird — we'll get it first!",
+          "he": "לא תמצא את הציפור - אנחנו נשיג אותה קודם!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Fine, go. It's freezing out there anyway.",
+          "he": "טוב, לך. ממילא קפוא שם."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 42,
+          "level": 41,
+          "moves": []
+        },
+        {
+          "pokemonId": 24,
+          "level": 41,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 42,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1100
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-alice-met"
+    },
+    {
+      "id": "npc-forest-rocket-6",
+      "x": 37,
+      "y": 12,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "These woods belong to Team Rocket now!",
+          "he": "היער הזה שייך לצוות רוקט עכשיו!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "The woods... belong to nobody, I guess.",
+          "he": "היער... לא שייך לאף אחד, כנראה."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 198,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 89,
+          "level": 41,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1100
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-alice-met"
+    },
+    {
+      "id": "npc-forest-rocket-7",
+      "x": 30,
+      "y": 15,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Shh! You'll scare the bird away!",
+          "he": "שקט! אתה תבריח את הציפור!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Now the bird definitely heard us.",
+          "he": "עכשיו הציפור בטוח שמעה אותנו."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 93,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 97,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 20,
+          "level": 41,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 1,
+      "reward": {
+        "money": 1100
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-alice-met"
+    },
+    {
+      "id": "npc-forest-rocket-8",
+      "x": 20,
+      "y": 1,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Another kid? This forest is crowded today.",
+          "he": "עוד ילד? היער עמוס היום."
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "I need a vacation.",
+          "he": "אני צריך חופש."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 215,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 43,
+          "moves": []
+        },
+        {
+          "pokemonId": 42,
+          "level": 42,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 2,
+      "reward": {
+        "money": 1150
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-alice-met"
+    },
+    {
+      "id": "npc-forest-rocket-9",
+      "x": 9,
+      "y": 12,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "The bird's nest is just ahead — you're too late!",
+          "he": "הקן של הציפור ממש פה - איחרת!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Go on then... see if you can catch it.",
+          "he": "קדימה... נראה אם תצליח לתפוס אותה."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 24,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 228,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 43,
+          "moves": []
+        },
+        {
+          "pokemonId": 89,
+          "level": 42,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 6,
+      "reward": {
+        "money": 1200
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-alice-met"
+    },
+    {
+      "id": "npc-forest-rocket-10",
+      "x": 16,
+      "y": 23,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Articuno is ours! Turn back!",
+          "he": "ארטיקונו שלנו! תחזור אחורה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "It's all yours... if you can handle it.",
+          "he": "הוא כולו שלך... אם תעמוד בזה."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 42,
+          "level": 43,
+          "moves": []
+        },
+        {
+          "pokemonId": 97,
+          "level": 43,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 43,
+          "moves": []
+        },
+        {
+          "pokemonId": 215,
+          "level": 43,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 1250
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-alice-met"
+    },
+    {
+      "id": "npc-forest-rocket-11",
+      "x": 12,
+      "y": 29,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Lost in the forest? Too bad, you found us!",
+          "he": "הלכת לאיבוד ביער? חבל, מצאת אותנו!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Maybe I'm the one who's lost.",
+          "he": "אולי אני זה שהלך לאיבוד."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 20,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 24,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 198,
+          "level": 43,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 6,
+      "reward": {
+        "money": 1100
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-alice-met"
+    },
+    {
+      "id": "npc-forest-rocket-12",
+      "x": 34,
+      "y": 27,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "The boss said nobody leaves until we catch that bird!",
+          "he": "הבוס אמר שאף אחד לא יוצא עד שנתפוס את הציפור!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "The boss is gonna be so mad...",
+          "he": "הבוס הולך להיות כל כך כועס..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 93,
+          "level": 43,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 43,
+          "moves": []
+        },
+        {
+          "pokemonId": 42,
+          "level": 43,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1200
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act3-forest-alice-met"
+    },
+    {
       "id": "npc-1779snoralx",
+      "spawnAfter": "act3-articuno-arc-complete",
       "x": 37,
       "y": 4,
       "facing": "right",

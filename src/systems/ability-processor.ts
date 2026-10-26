@@ -2,7 +2,11 @@ import type { Pokemon, PokemonType } from '../types/index.js';
 import type { AbilityBattleEffect } from '../types/battle-metadata.js';
 import type { BattlePokemonRuntimeState } from './battle-state.js';
 import { t } from '../i18n/i18n.js';
-import { getPokemonDisplayName } from '../services/pokemon-data.js';
+import {
+  getAbilityBattleEffects,
+  getAbilityDisplayName,
+  getPokemonDisplayName,
+} from '../services/pokemon-data.js';
 
 /**
  * Returns the combined damage-taken multiplier from a defender's ability effects.
@@ -80,6 +84,20 @@ export function getDefenderAbilityActivationMsg(
     return t(messageKey, { name: defName });
   }
   return null;
+}
+
+/**
+ * Returns the message for a move fully absorbed by the defender's ability (Levitate, Volt Absorb, ...).
+ * Uses the effect's messageKey when set, otherwise a generic immune/heal line naming the ability.
+ */
+export function getDefenderAbsorbMsg(def: Pokemon, moveType: PokemonType, defName: string): string | null {
+  if (!def.abilityId) return null;
+  const effect = getAbilityBattleEffects(def.abilityId).find(
+    (e) => e.kind === 'typeAbsorbHeal' && e.moveTypes.includes(moveType),
+  );
+  if (effect?.kind !== 'typeAbsorbHeal') return null;
+  const key = effect.messageKey ?? (effect.healPercent > 0 ? 'ability.absorbHeal' : 'ability.absorbImmune');
+  return t(key, { name: defName, ability: getAbilityDisplayName(def.abilityId) });
 }
 
 // currently there is  no message box to render

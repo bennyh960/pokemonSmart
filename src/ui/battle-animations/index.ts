@@ -85,7 +85,7 @@ export function renderFlash(ctx: CanvasRenderingContext2D, flash: FlashEffect): 
 
 // --- Shake Effect ---
 
-interface ShakeEffect {
+export interface ShakeEffect {
   active: boolean;
   timer: number;
   intensity: number;

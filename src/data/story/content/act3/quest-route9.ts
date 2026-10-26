@@ -65,6 +65,60 @@ registerCutscene({
   ],
 });
 
+// ── Phase 5: Officer Jenny blocks the cave exit → Articuno quake opens the secret exit ──
+registerStoryEvent({
+  id: 'evt-r9-officer-quake',
+  trigger: { type: 'npc-interact', npcId: 'npc-r9-officer-jenny' },
+  conditions: [{ type: 'flag-not', flag: FLAGS.ACT3_R9_CAVE_QUAKE }],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-r9-cave-quake' }],
+});
+
+registerCutscene({
+  id: 'cutscene-r9-cave-quake',
+  steps: [
+    { type: 'screen-shake', durationMs: 900, intensity: 1.2 },
+    { type: 'play-sfx', sfxId: 'thunder' },
+    { type: 'wait', durationMs: 900 },
+    {
+      type: 'dialogue',
+      speakerId: 'npc-r9-officer-jenny',
+      lines: [{ en: 'W-what was that?! The whole cave is shaking!', he: 'מ-מה זה היה?! כל המערה רועדת!' }],
+    },
+    // Articuno bursts out near the ladder and flies to the secret exit (north-west)
+    { type: 'show-npc', npcId: 'npc-r9-articuno' },
+    { type: 'play-sfx', sfxId: 'alert' },
+    {
+      type: 'move-npc',
+      npcId: 'npc-r9-articuno',
+      path: ['left', 'left', 'left', 'left', 'left', 'left', 'left', 'left', 'left', 'left', 'left', 'left', 'left', 'left', 'left'],
+    },
+    { type: 'hide-npc', npcId: 'npc-r9-articuno' },
+    { type: 'screen-shake', durationMs: 1200, intensity: 1.6 },
+    { type: 'play-sfx', sfxId: 'thunder' },
+    { type: 'wait', durationMs: 1200 },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_R9_CAVE_QUAKE } },
+    {
+      type: 'dialogue',
+      speakerId: 'npc-r9-officer-jenny',
+      lines: [
+        { en: 'Was that... Articuno?! It flew toward the secret exit and smashed the rocks!', he: 'זה היה... ארטיקונו?! הוא עף לכיוון היציאה הסודית וניפץ את הסלעים!' },
+        { en: 'If Team Rocket is hiding back there, they can escape now.', he: 'אם צוות רוקט מתחבאים שם, עכשיו הם יכולים לברוח.' },
+        { en: 'I have to guard this exit. Please search the secret exit in the north-west of the cave!', he: 'אני חייבת לשמור על היציאה הזאת. בבקשה תחפש ביציאה הסודית בצפון-מערב המערה!' },
+      ],
+    },
+    { type: 'action', action: { type: 'set-quest', questId: 'quest-r9-search-rocket' } },
+  ],
+});
+
+registerQuest({
+  id: 'quest-r9-search-rocket',
+  title: { en: 'Search for Team Rocket', he: 'חפש את צוות רוקט' },
+  objective: {
+    en: 'Search the secret exit in the north-west of the Route 9 cave',
+    he: 'חפש ביציאה הסודית בצפון-מערב המערה של דרך 9',
+  },
+});
+
 registerQuest({
   id: 'quest-route9',
   title: { en: "Reminder's Pidgeot", he: "הפידג'יאוט של רמיינדר" },

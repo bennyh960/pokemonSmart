@@ -99,6 +99,7 @@ import {
   activateSwitchingOutAbilities,
   calcAbilityDamageTakenMultiplier,
   getDefenderAbilityActivationMsg,
+  getDefenderAbsorbMsg,
 } from '../../systems/ability-processor.js';
 import { sendCaughtToBox } from '../../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../../systems/reencounter.js';
@@ -4630,6 +4631,9 @@ export function createBattleScene(
         ];
         const randomIndex = Math.random() > 0.5 ? 0 : 1;
         msgs.push(t(messages[randomIndex].msg, { name: messages[randomIndex].name }));
+      } else if (absorbed) {
+        const absorbMsg = getDefenderAbsorbMsg(defender, m.type, defenderName);
+        msgs.push(absorbMsg ?? t('battle.noEffect'));
       } else {
         if (criticalHit) {
           msgs.push(t('battle.criticalHit'));

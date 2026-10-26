@@ -116,6 +116,8 @@ import {
   loadPokemonSprite,
   type PokemonAnim,
 } from '../systems/overworld-pokemon-anim.js';
+import { createShake, updateShake, applyShake, resetShake, type ShakeEffect } from '../ui/battle-animations/index.js';
+import { grantItem } from '../systems/item-effects.js';
 import { setFlyCallback, FLY_DESTINATIONS, resolveFlySpawn } from './world-map.js';
 import { openSaveSlots } from './save-slots.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
@@ -336,6 +338,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let flyAnim: FlyAnimState | null = null;
   // Cutscene pokemon-anim step (e.g. Pidgeot flying off)
   let cutscenePokemonAnim: PokemonAnim | null = null;
+  // Cutscene screen-shake step (e.g. earthquake)
+  let screenShake: ShakeEffect | null = null;
 
   // Surf state
   let isCurrentlySurfing = false;
@@ -1363,6 +1367,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       isPokemonAnimPlaying() {
         return cutscenePokemonAnim !== null;
       },
+      shakeScreen(durationMs, intensity) {
+        screenShake = createShake(intensity, durationMs / 1000);
+      },
       snapCamera(x, y) {
         if (camera && tileMap) camera.snapTo(x, y, tileMap.width * TILE_SIZE, tileMap.height * TILE_SIZE);
       },
@@ -1386,8 +1393,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             pd.flags[action.flag] = action.value ?? true;
             break;
           case 'give-item': {
-            const slug = getItem(action.itemId)?.id ?? action.itemId;
-            pd.items[slug] = (pd.items[slug] || 0) + action.quantity;
+            const keyFlag = grantItem(pd, action.itemId, action.quantity);
+            if (keyFlag) void fireStoryTrigger({ type: 'flag-set', flag: keyFlag });
             break;
           }
           case 'give-money':
@@ -2148,6 +2155,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         // hideHUD();
         updateCutscene(dt, input, buildCutsceneContext());
         if (cutscenePokemonAnim && updatePokemonAnim(cutscenePokemonAnim, dt)) cutscenePokemonAnim = null;
+        if (screenShake) {
+          updateShake(screenShake, dt);
+          if (!screenShake.active) screenShake = null;
+        }
 
         if (player.moving) {
           player.moveProgress += dt / MOVE_DURATION;
@@ -3459,13 +3470,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                       if (!pd.flags[flagKey]) {
                         const qty = itemQty || 1;
                         const normId = getItem(itemId)?.id ?? itemId;
-                        pd.items[normId] = (pd.items[normId] || 0) + qty;
                         setFlag(pd, flagKey);
+                        const keyFlag = grantItem(pd, normId, qty);
+                        if (keyFlag) void fireStoryTrigger({ type: 'flag-set', flag: keyFlag });
                         const itemDef = getItem(normId);
-                        if (itemDef?.keyFlag) {
-                          setFlag(pd, itemDef.keyFlag);
-                          void fireStoryTrigger({ type: 'flag-set', flag: itemDef.keyFlag });
-                        }
                         // Remove from map so it disappears immediately
                         if (currentMapData?.objects) {
                           const idx = currentMapData.objects.indexOf(obj);
@@ -3790,6 +3798,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Show black screen while loading
       if (mapLoading || !tileMap) return;
 
+      if (screenShake) applyShake(ctx, screenShake);
       tileMap.render(ctx, camera.x, camera.y);
 
       // Collect renderables for Y-sorting (player + NPCs + placed objects)
@@ -4414,7 +4423,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Heal text overlay
       if (healTextBox) renderTextBox(ctx, healTextBox);
 
-      // Cutscene overlay (dialogue + fade — drawn last so it sits above everything)
+      // Cutscene overlay (dialogue + fade — drawn last so it sits above everything, unshaken)
+      if (screenShake) resetShake(ctx, screenShake);
       renderCutscene(ctx);
     },
   };

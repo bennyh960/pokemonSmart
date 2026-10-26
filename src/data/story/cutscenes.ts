@@ -25,6 +25,8 @@ export type CutsceneStep =
   | { type: 'hide-npc'; npcId: string }
   | { type: 'hide-player' }
   | { type: 'show-player' }
+  /** screen-shake — shake the map (not the dialogue box). Non-blocking: follow with a wait step. */
+  | { type: 'screen-shake'; durationMs: number; intensity?: number }
   /**
    * pokemon-anim — a Pokémon sprite appears and flies / surfs / walks along a path, then fades out.
    *   from: 'player' (default) or { npcId } — the starting tile
