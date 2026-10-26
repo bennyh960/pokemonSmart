@@ -1,0 +1,8378 @@
+{
+  "id": "league-summit",
+  "label": {
+    "en": "League Summit",
+    "he": "פסגת הליגה"
+  },
+  "tileset": "overworld",
+  "width": 40,
+  "height": 40,
+  "tileSize": 16,
+  "spawn": {
+    "x": 20,
+    "y": 37
+  },
+  "transitions": [
+    {
+      "fromX": 19,
+      "fromY": 39,
+      "toMapId": "forest/frost-trail",
+      "toX": 17,
+      "toY": 1
+    },
+    {
+      "fromX": 20,
+      "fromY": 39,
+      "toMapId": "forest/frost-trail",
+      "toX": 18,
+      "toY": 1
+    },
+    {
+      "fromX": 21,
+      "fromY": 39,
+      "toMapId": "forest/frost-trail",
+      "toX": 19,
+      "toY": 1
+    },
+    {
+      "fromX": 20,
+      "fromY": 11,
+      "toMapId": "league/l1"
+    },
+    {
+      "fromX": 10,
+      "fromY": 17,
+      "toMapId": "shared/pokecenter-2"
+    },
+    {
+      "fromX": 29,
+      "fromY": 16,
+      "toMapId": "shared/mart-interior"
+    }
+  ],
+  "npcs": [],
+  "music": "route",
+  "encounterTableId": "league-summit",
+  "outside": {
+    "hail": 0.4
+  }
+,
+  "tiles": [
+    ["snow-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","snow-c","snow-c","snow-c","snow-c","snow-c","mg1c","mg1c","mg1c","mg1c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","snow-c"],
+    ["snow-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","snow-c","snow-c","snow-c","snow-c","snow-c","mg1c","mg1c","mg1c","mg1c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","snow-c"],
+    ["snow-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","f30","f30","f30","f30","f30","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","g1","g1","g1","g1","g1","g1","g1","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","wt1-tl","wt1t","wt1t","wt1t","wt1t","wt1r","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","wt1l","wt1","wt1","wt1","wt1","wt1tr","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","wt1l","wt1","wt1","wt1","wt1","wt1tr","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","wt1bl","wt1b","wt1b","wt1b","wt1b","wt1br","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"],
+    ["snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c","snow-c"]
+  ],
+  "objects": [
+    {
+      "key": "door-gym",
+      "x": 20,
+      "y": 11
+    },
+    {
+      "key": "pokcenter-snow-door",
+      "x": 10,
+      "y": 17
+    },
+    {
+      "key": "market-snow-door",
+      "x": 29,
+      "y": 16
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 0
+    },
+    {
+      "key": "tra",
+      "x": 11,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 16,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 19,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 28,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 29,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 12,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 13,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 14,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 15,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 22,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 25,
+      "y": 2
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 5,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 29,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 32,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 33,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 34,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 35,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 36,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 37,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 38,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 3
+    },
+    {
+      "key": "tra",
+      "x": 14,
+      "y": 4
+    },
+    {
+      "key": "tra",
+      "x": 17,
+      "y": 4
+    },
+    {
+      "key": "tra",
+      "x": 18,
+      "y": 4
+    },
+    {
+      "key": "tra",
+      "x": 19,
+      "y": 4
+    },
+    {
+      "key": "tra",
+      "x": 20,
+      "y": 4
+    },
+    {
+      "key": "tra",
+      "x": 21,
+      "y": 4
+    },
+    {
+      "key": "tra",
+      "x": 22,
+      "y": 4
+    },
+    {
+      "key": "tra",
+      "x": 23,
+      "y": 4
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 15,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 16,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 24,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 25,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 27,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 5
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 6
+    },
+    {
+      "key": "tra",
+      "x": 14,
+      "y": 6
+    },
+    {
+      "key": "tra",
+      "x": 26,
+      "y": 6
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 6
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 7
+    },
+    {
+      "key": "tra",
+      "x": 13,
+      "y": 7
+    },
+    {
+      "key": "tra",
+      "x": 27,
+      "y": 7
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 7
+    },
+    {
+      "key": "tra",
+      "x": 12,
+      "y": 8
+    },
+    {
+      "key": "tra",
+      "x": 28,
+      "y": 8
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 9
+    },
+    {
+      "key": "tra",
+      "x": 29,
+      "y": 9
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 9
+    },
+    {
+      "key": "tra",
+      "x": 2,
+      "y": 10
+    },
+    {
+      "key": "tra",
+      "x": 6,
+      "y": 10
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 10
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 10
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 10
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 10
+    },
+    {
+      "key": "tra",
+      "x": 33,
+      "y": 10
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 11
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 11
+    },
+    {
+      "key": "tra",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "key": "tra",
+      "x": 5,
+      "y": 11
+    },
+    {
+      "key": "tra",
+      "x": 8,
+      "y": 11
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 11
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 11
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 11
+    },
+    {
+      "key": "tra",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 12
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 12
+    },
+    {
+      "key": "tra",
+      "x": 2,
+      "y": 13
+    },
+    {
+      "key": "tra",
+      "x": 5,
+      "y": 13
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 13
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 13
+    },
+    {
+      "key": "tra",
+      "x": 33,
+      "y": 13
+    },
+    {
+      "key": "tra",
+      "x": 38,
+      "y": 13
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 13
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 14
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 14
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 15
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 15
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 15
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 15
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 15
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 16
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 16
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 16
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 17
+    },
+    {
+      "key": "tra",
+      "x": 8,
+      "y": 17
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 17
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 17
+    },
+    {
+      "key": "tra",
+      "x": 34,
+      "y": 17
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 17
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 18
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 18
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 19
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 19
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 19
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 19
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 20
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 20
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 20
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 20
+    },
+    {
+      "key": "tra",
+      "x": 32,
+      "y": 20
+    },
+    {
+      "key": "tra",
+      "x": 2,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 11,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 29,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 35,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 38,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 21
+    },
+    {
+      "key": "tra",
+      "x": 12,
+      "y": 22
+    },
+    {
+      "key": "tra",
+      "x": 28,
+      "y": 22
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 22
+    },
+    {
+      "key": "tra",
+      "x": 36,
+      "y": 22
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 23
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 23
+    },
+    {
+      "key": "tra",
+      "x": 12,
+      "y": 23
+    },
+    {
+      "key": "tra",
+      "x": 13,
+      "y": 23
+    },
+    {
+      "key": "tra",
+      "x": 27,
+      "y": 23
+    },
+    {
+      "key": "tra",
+      "x": 28,
+      "y": 23
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 23
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 24
+    },
+    {
+      "key": "tra",
+      "x": 13,
+      "y": 24
+    },
+    {
+      "key": "tra",
+      "x": 14,
+      "y": 24
+    },
+    {
+      "key": "tra",
+      "x": 26,
+      "y": 24
+    },
+    {
+      "key": "tra",
+      "x": 27,
+      "y": 24
+    },
+    {
+      "key": "tra",
+      "x": 29,
+      "y": 24
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 6,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 15,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 16,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 24,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 25,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 37,
+      "y": 25
+    },
+    {
+      "key": "tra",
+      "x": 12,
+      "y": 26
+    },
+    {
+      "key": "tra",
+      "x": 21,
+      "y": 26
+    },
+    {
+      "key": "tra",
+      "x": 22,
+      "y": 26
+    },
+    {
+      "key": "tra",
+      "x": 23,
+      "y": 26
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 27
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 27
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 27
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 28
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 29
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 29
+    },
+    {
+      "key": "tra",
+      "x": 13,
+      "y": 29
+    },
+    {
+      "key": "tra",
+      "x": 19,
+      "y": 29
+    },
+    {
+      "key": "tra",
+      "x": 20,
+      "y": 29
+    },
+    {
+      "key": "tra",
+      "x": 21,
+      "y": 29
+    },
+    {
+      "key": "tra",
+      "x": 27,
+      "y": 29
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 29
+    },
+    {
+      "key": "tra",
+      "x": 18,
+      "y": 30
+    },
+    {
+      "key": "tra",
+      "x": 23,
+      "y": 30
+    },
+    {
+      "key": "tra",
+      "x": 24,
+      "y": 30
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 31
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 31
+    },
+    {
+      "key": "tra",
+      "x": 38,
+      "y": 31
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 31
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 33
+    },
+    {
+      "key": "tra",
+      "x": 1,
+      "y": 33
+    },
+    {
+      "key": "tra",
+      "x": 12,
+      "y": 33
+    },
+    {
+      "key": "tra",
+      "x": 13,
+      "y": 33
+    },
+    {
+      "key": "tra",
+      "x": 38,
+      "y": 33
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 33
+    },
+    {
+      "key": "tra",
+      "x": 2,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 11,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 14,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 28,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 29,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 32,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 35,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 36,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 37,
+      "y": 34
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 10,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 15,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 22,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 23,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 24,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 25,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 26,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 27,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 30,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 33,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 34,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 35,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 36,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 35
+    },
+    {
+      "key": "tra",
+      "x": 4,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 5,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 6,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 7,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 8,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 9,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 16,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 17,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 18,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 28,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 36
+    },
+    {
+      "key": "tra",
+      "x": 0,
+      "y": 37
+    },
+    {
+      "key": "tra",
+      "x": 22,
+      "y": 37
+    },
+    {
+      "key": "tra",
+      "x": 39,
+      "y": 37
+    },
+    {
+      "key": "tra",
+      "x": 18,
+      "y": 38
+    },
+    {
+      "key": "tra",
+      "x": 28,
+      "y": 38
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 38
+    },
+    {
+      "key": "snow-b",
+      "x": 17,
+      "y": 4
+    },
+    {
+      "key": "snow-b",
+      "x": 18,
+      "y": 4
+    },
+    {
+      "key": "snow-b",
+      "x": 19,
+      "y": 4
+    },
+    {
+      "key": "snow-b",
+      "x": 20,
+      "y": 4
+    },
+    {
+      "key": "snow-b",
+      "x": 21,
+      "y": 4
+    },
+    {
+      "key": "snow-b",
+      "x": 22,
+      "y": 4
+    },
+    {
+      "key": "snow-b",
+      "x": 23,
+      "y": 4
+    },
+    {
+      "key": "snow-b",
+      "x": 15,
+      "y": 5
+    },
+    {
+      "key": "snow-br",
+      "x": 16,
+      "y": 5
+    },
+    {
+      "key": "snow-bl",
+      "x": 24,
+      "y": 5
+    },
+    {
+      "key": "snow-b",
+      "x": 25,
+      "y": 5
+    },
+    {
+      "key": "snow-br",
+      "x": 14,
+      "y": 6
+    },
+    {
+      "key": "snow-bl",
+      "x": 26,
+      "y": 6
+    },
+    {
+      "key": "snow-br",
+      "x": 13,
+      "y": 7
+    },
+    {
+      "key": "snow-bl",
+      "x": 27,
+      "y": 7
+    },
+    {
+      "key": "snow-br",
+      "x": 12,
+      "y": 8
+    },
+    {
+      "key": "snow-bl",
+      "x": 28,
+      "y": 8
+    },
+    {
+      "key": "snow-br",
+      "x": 11,
+      "y": 9
+    },
+    {
+      "key": "snow-bl",
+      "x": 29,
+      "y": 9
+    },
+    {
+      "key": "snow-r",
+      "x": 10,
+      "y": 10
+    },
+    {
+      "key": "snow-l",
+      "x": 30,
+      "y": 10
+    },
+    {
+      "key": "snow-br",
+      "x": 10,
+      "y": 11
+    },
+    {
+      "key": "snow-bl",
+      "x": 30,
+      "y": 11
+    },
+    {
+      "key": "snow-r",
+      "x": 9,
+      "y": 12
+    },
+    {
+      "key": "snow-l",
+      "x": 31,
+      "y": 12
+    },
+    {
+      "key": "snow-r",
+      "x": 9,
+      "y": 13
+    },
+    {
+      "key": "snow-l",
+      "x": 31,
+      "y": 13
+    },
+    {
+      "key": "snow-r",
+      "x": 9,
+      "y": 14
+    },
+    {
+      "key": "snow-l",
+      "x": 31,
+      "y": 14
+    },
+    {
+      "key": "snow-r",
+      "x": 9,
+      "y": 15
+    },
+    {
+      "key": "snow-l",
+      "x": 31,
+      "y": 15
+    },
+    {
+      "key": "snow-r",
+      "x": 9,
+      "y": 16
+    },
+    {
+      "key": "snow-l",
+      "x": 31,
+      "y": 16
+    },
+    {
+      "key": "snow-r",
+      "x": 9,
+      "y": 17
+    },
+    {
+      "key": "snow-l",
+      "x": 31,
+      "y": 17
+    },
+    {
+      "key": "snow-r",
+      "x": 9,
+      "y": 18
+    },
+    {
+      "key": "snow-l",
+      "x": 31,
+      "y": 18
+    },
+    {
+      "key": "snow-tr",
+      "x": 10,
+      "y": 19
+    },
+    {
+      "key": "snow-tl",
+      "x": 30,
+      "y": 19
+    },
+    {
+      "key": "snow-r",
+      "x": 10,
+      "y": 20
+    },
+    {
+      "key": "snow-l",
+      "x": 30,
+      "y": 20
+    },
+    {
+      "key": "snow-tr",
+      "x": 11,
+      "y": 21
+    },
+    {
+      "key": "snow-tl",
+      "x": 29,
+      "y": 21
+    },
+    {
+      "key": "snow-tr",
+      "x": 12,
+      "y": 22
+    },
+    {
+      "key": "snow-tl",
+      "x": 28,
+      "y": 22
+    },
+    {
+      "key": "snow-tr",
+      "x": 13,
+      "y": 23
+    },
+    {
+      "key": "snow-tl",
+      "x": 27,
+      "y": 23
+    },
+    {
+      "key": "snow-tr",
+      "x": 14,
+      "y": 24
+    },
+    {
+      "key": "snow-tl",
+      "x": 26,
+      "y": 24
+    },
+    {
+      "key": "snow-t",
+      "x": 15,
+      "y": 25
+    },
+    {
+      "key": "snow-tr",
+      "x": 16,
+      "y": 25
+    },
+    {
+      "key": "snow-tl",
+      "x": 24,
+      "y": 25
+    },
+    {
+      "key": "snow-t",
+      "x": 25,
+      "y": 25
+    },
+    {
+      "key": "snow-t",
+      "x": 17,
+      "y": 26
+    },
+    {
+      "key": "snow-t",
+      "x": 18,
+      "y": 26
+    },
+    {
+      "key": "snow-t",
+      "x": 19,
+      "y": 26
+    },
+    {
+      "key": "snow-t",
+      "x": 20,
+      "y": 26
+    },
+    {
+      "key": "snow-t",
+      "x": 21,
+      "y": 26
+    },
+    {
+      "key": "snow-t",
+      "x": 22,
+      "y": 26
+    },
+    {
+      "key": "snow-t",
+      "x": 23,
+      "y": 26
+    },
+    {
+      "key": "dome-ice",
+      "x": 17,
+      "y": 7
+    },
+    {
+      "key": "bnr1",
+      "x": 16,
+      "y": 11
+    },
+    {
+      "key": "bnr1",
+      "x": 24,
+      "y": 11
+    },
+    {
+      "key": "bnr1",
+      "x": 17,
+      "y": 15
+    },
+    {
+      "key": "bnr1",
+      "x": 23,
+      "y": 15
+    },
+    {
+      "key": "bnr1",
+      "x": 17,
+      "y": 19
+    },
+    {
+      "key": "bnr1",
+      "x": 23,
+      "y": 19
+    },
+    {
+      "key": "sfl1",
+      "x": 16,
+      "y": 19
+    },
+    {
+      "key": "sfl1",
+      "x": 24,
+      "y": 19
+    },
+    {
+      "key": "pokecenter-snow-top",
+      "x": 8,
+      "y": 12
+    },
+    {
+      "key": "pokecenter-snow-bottom",
+      "x": 8,
+      "y": 17
+    },
+    {
+      "key": "market-snow",
+      "x": 28,
+      "y": 12
+    },
+    {
+      "key": "signx",
+      "x": 12,
+      "y": 19
+    },
+    {
+      "key": "trans-i",
+      "x": 12,
+      "y": 19,
+      "interactArgs": {
+        "label": {
+          "en": "Sign",
+          "he": "שלט"
+        },
+        "dialogue": [
+          {
+            "en": "Pokemon Center - rest before the League.",
+            "he": "מרכז פוקימונים - נוחו לפני הליגה."
+          }
+        ]
+      }
+    },
+    {
+      "key": "signx",
+      "x": 27,
+      "y": 19
+    },
+    {
+      "key": "trans-i",
+      "x": 27,
+      "y": 19,
+      "interactArgs": {
+        "label": {
+          "en": "Sign",
+          "he": "שלט"
+        },
+        "dialogue": [
+          {
+            "en": "Summit Mart.",
+            "he": "מרקט הפסגה."
+          }
+        ]
+      }
+    },
+    {
+      "key": "signx",
+      "x": 21,
+      "y": 25
+    },
+    {
+      "key": "trans-i",
+      "x": 21,
+      "y": 25,
+      "interactArgs": {
+        "label": {
+          "en": "Sign",
+          "he": "שלט"
+        },
+        "dialogue": [
+          {
+            "en": "POKEMON LEAGUE. Only trainers with all 8 badges may enter.",
+            "he": "ליגת הפוקימונים. הכניסה רק למאמנים עם כל 8 התגים."
+          }
+        ]
+      }
+    },
+    {
+      "key": "flowerX",
+      "x": 13,
+      "y": 22
+    },
+    {
+      "key": "flowerX",
+      "x": 27,
+      "y": 22
+    },
+    {
+      "key": "flowerX",
+      "x": 14,
+      "y": 9
+    },
+    {
+      "key": "flowerX",
+      "x": 26,
+      "y": 9
+    },
+    {
+      "key": "flowerX",
+      "x": 11,
+      "y": 21
+    },
+    {
+      "key": "flowerX",
+      "x": 29,
+      "y": 21
+    },
+    {
+      "key": "g5",
+      "x": 13,
+      "y": 24
+    },
+    {
+      "key": "g5",
+      "x": 27,
+      "y": 24
+    },
+    {
+      "key": "benchy",
+      "x": 14,
+      "y": 23
+    },
+    {
+      "key": "benchy",
+      "x": 25,
+      "y": 23
+    },
+    {
+      "key": "r1",
+      "x": 34,
+      "y": 28
+    },
+    {
+      "key": "r3",
+      "x": 30,
+      "y": 33
+    },
+    {
+      "key": "mg1tl",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "key": "mg1tr",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "key": "mg1l",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "key": "mg1r",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "key": "mg1bl",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 2,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 5,
+      "y": 2
+    },
+    {
+      "key": "mg1br",
+      "x": 6,
+      "y": 2
+    },
+    {
+      "key": "mg1tl",
+      "x": 30,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 31,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 32,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 33,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 34,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 35,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 36,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 37,
+      "y": 0
+    },
+    {
+      "key": "mg1tr",
+      "x": 38,
+      "y": 0
+    },
+    {
+      "key": "mg1l",
+      "x": 30,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 31,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 32,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 33,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 34,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 35,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 36,
+      "y": 1
+    },
+    {
+      "key": "tra",
+      "x": 37,
+      "y": 1
+    },
+    {
+      "key": "mg1r",
+      "x": 38,
+      "y": 1
+    },
+    {
+      "key": "mg1bl",
+      "x": 30,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 31,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 32,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 33,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 34,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 35,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 36,
+      "y": 2
+    },
+    {
+      "key": "mg1b",
+      "x": 37,
+      "y": 2
+    },
+    {
+      "key": "mg1br",
+      "x": 38,
+      "y": 2
+    },
+    {
+      "key": "mg1tl",
+      "x": 12,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 13,
+      "y": 0
+    },
+    {
+      "key": "mg1t",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "key": "mg1tr",
+      "x": 15,
+      "y": 0
+    },
+    {
+      "key": "mg1bl",
+      "x": 12,
+      "y": 1
+    },
+    {
+      "key": "mg1b",
+      "x": 13,
+      "y": 1
+    },
+    {
+      "key": "mg1b",
+      "x": 14,
+      "y": 1
+    },
+    {
+      "key": "mg1br",
+      "x": 15,
+      "y": 1
+    },
+    {
+      "key": "item-generic",
+      "x": 3,
+      "y": 7,
+      "interactArgs": {
+        "itemId": "max-revive",
+        "itemQty": 1,
+        "label": {
+          "en": "Max Revive",
+          "he": "מחזיר לחיים מלא"
+        }
+      }
+    },
+    {
+      "key": "signx",
+      "x": 5,
+      "y": 8
+    },
+    {
+      "key": "trans-i",
+      "x": 5,
+      "y": 8,
+      "interactArgs": {
+        "label": {
+          "en": "Sign",
+          "he": "שלט"
+        },
+        "dialogue": [
+          {
+            "en": "Lookout point. On a clear day you can see all of Numeria.",
+            "he": "נקודת תצפית. ביום בהיר רואים מכאן את כל נומריה."
+          }
+        ]
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 36,
+      "y": 33,
+      "interactArgs": {
+        "itemId": "full-restore",
+        "itemQty": 1,
+        "label": {
+          "en": "Full Restore",
+          "he": "שיקוי שחזור מלא"
+        }
+      }
+    },
+    {
+      "key": "g3",
+      "x": 5,
+      "y": 28
+    },
+    {
+      "key": "g3",
+      "x": 6,
+      "y": 28
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 28
+    },
+    {
+      "key": "g3",
+      "x": 4,
+      "y": 29
+    },
+    {
+      "key": "g3",
+      "x": 5,
+      "y": 29
+    },
+    {
+      "key": "g3",
+      "x": 6,
+      "y": 29
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 29
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 29
+    },
+    {
+      "key": "g3",
+      "x": 3,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 4,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 5,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 6,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 9,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 3,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 4,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 5,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 6,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 9,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 3,
+      "y": 32
+    },
+    {
+      "key": "g3",
+      "x": 4,
+      "y": 32
+    },
+    {
+      "key": "g3",
+      "x": 5,
+      "y": 32
+    },
+    {
+      "key": "g3",
+      "x": 6,
+      "y": 32
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 32
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 32
+    },
+    {
+      "key": "g3",
+      "x": 9,
+      "y": 32
+    },
+    {
+      "key": "g3",
+      "x": 4,
+      "y": 33
+    },
+    {
+      "key": "g3",
+      "x": 5,
+      "y": 33
+    },
+    {
+      "key": "g3",
+      "x": 6,
+      "y": 33
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 33
+    },
+    {
+      "key": "g3",
+      "x": 8,
+      "y": 33
+    },
+    {
+      "key": "g3",
+      "x": 34,
+      "y": 33
+    },
+    {
+      "key": "g3",
+      "x": 35,
+      "y": 33
+    },
+    {
+      "key": "g3",
+      "x": 5,
+      "y": 34
+    },
+    {
+      "key": "g3",
+      "x": 6,
+      "y": 34
+    },
+    {
+      "key": "g3",
+      "x": 7,
+      "y": 34
+    },
+    {
+      "key": "g3",
+      "x": 34,
+      "y": 34
+    },
+    {
+      "key": "g3",
+      "x": 35,
+      "y": 34
+    },
+    {
+      "key": "g3",
+      "x": 36,
+      "y": 34
+    },
+    {
+      "key": "g3",
+      "x": 34,
+      "y": 35
+    },
+    {
+      "key": "g3",
+      "x": 35,
+      "y": 35
+    },
+    {
+      "key": "g3",
+      "x": 36,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 16,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 18,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 20,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 22,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 24,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "t30-snow2",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 9,
+      "y": 1
+    },
+    {
+      "key": "t30",
+      "x": 9,
+      "y": 0
+    },
+    {
+      "key": "t30-snow",
+      "x": 9,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 17,
+      "y": 1
+    },
+    {
+      "key": "t30",
+      "x": 17,
+      "y": 0
+    },
+    {
+      "key": "t30-snow2",
+      "x": 17,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 20,
+      "y": 1
+    },
+    {
+      "key": "t30",
+      "x": 20,
+      "y": 0
+    },
+    {
+      "key": "t30-snow2",
+      "x": 20,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 23,
+      "y": 1
+    },
+    {
+      "key": "t30",
+      "x": 23,
+      "y": 0
+    },
+    {
+      "key": "t30-snow2",
+      "x": 23,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 1
+    },
+    {
+      "key": "t30",
+      "x": 26,
+      "y": 0
+    },
+    {
+      "key": "t30-snow2",
+      "x": 26,
+      "y": 0
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 2
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "t30-snow2",
+      "x": 8,
+      "y": 1
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 2
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "t30-snow",
+      "x": 10,
+      "y": 1
+    },
+    {
+      "key": "t30-bottom",
+      "x": 16,
+      "y": 2
+    },
+    {
+      "key": "t30",
+      "x": 16,
+      "y": 1
+    },
+    {
+      "key": "t30-snow2",
+      "x": 16,
+      "y": 1
+    },
+    {
+      "key": "t30-bottom",
+      "x": 18,
+      "y": 2
+    },
+    {
+      "key": "t30",
+      "x": 18,
+      "y": 1
+    },
+    {
+      "key": "t30-snow2",
+      "x": 18,
+      "y": 1
+    },
+    {
+      "key": "t30-bottom",
+      "x": 20,
+      "y": 2
+    },
+    {
+      "key": "t30",
+      "x": 20,
+      "y": 1
+    },
+    {
+      "key": "t30-snow2",
+      "x": 20,
+      "y": 1
+    },
+    {
+      "key": "t30-bottom",
+      "x": 23,
+      "y": 2
+    },
+    {
+      "key": "t30",
+      "x": 23,
+      "y": 1
+    },
+    {
+      "key": "t30-snow",
+      "x": 23,
+      "y": 1
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 2
+    },
+    {
+      "key": "t30",
+      "x": 26,
+      "y": 1
+    },
+    {
+      "key": "t30-snow2",
+      "x": 26,
+      "y": 1
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 2
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 1
+    },
+    {
+      "key": "t30-snow",
+      "x": 28,
+      "y": 1
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 9,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 9,
+      "y": 2
+    },
+    {
+      "key": "t30-snow2",
+      "x": 9,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 2
+    },
+    {
+      "key": "t30-snow2",
+      "x": 11,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 13,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 13,
+      "y": 2
+    },
+    {
+      "key": "t30-snow2",
+      "x": 13,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 15,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 15,
+      "y": 2
+    },
+    {
+      "key": "t30-snow2",
+      "x": 15,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 17,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 17,
+      "y": 2
+    },
+    {
+      "key": "t30-snow",
+      "x": 17,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 19,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 19,
+      "y": 2
+    },
+    {
+      "key": "t30-snow",
+      "x": 19,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 21,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 21,
+      "y": 2
+    },
+    {
+      "key": "t30-snow2",
+      "x": 21,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 23,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 23,
+      "y": 2
+    },
+    {
+      "key": "t30-snow2",
+      "x": 23,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 25,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 25,
+      "y": 2
+    },
+    {
+      "key": "t30-snow2",
+      "x": 25,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 27,
+      "y": 3
+    },
+    {
+      "key": "t30",
+      "x": 27,
+      "y": 2
+    },
+    {
+      "key": "t30-snow2",
+      "x": 27,
+      "y": 2
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "key": "t30-snow2",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 10,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 12,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 12,
+      "y": 3
+    },
+    {
+      "key": "t30-snow2",
+      "x": 12,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 15,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 15,
+      "y": 3
+    },
+    {
+      "key": "t30-snow2",
+      "x": 15,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 17,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 17,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 17,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 20,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 20,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 20,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 22,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 22,
+      "y": 3
+    },
+    {
+      "key": "t30-snow2",
+      "x": 22,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 24,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 24,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 24,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 26,
+      "y": 3
+    },
+    {
+      "key": "t30-snow2",
+      "x": 26,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 28,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 30,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 30,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 30,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 32,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 3
+    },
+    {
+      "key": "t30-snow",
+      "x": 34,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 3
+    },
+    {
+      "key": "t30-snow2",
+      "x": 36,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 4
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 3
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 3
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 5,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 5,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 9,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 9,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 9,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 11,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 13,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 13,
+      "y": 4
+    },
+    {
+      "key": "t30-snow2",
+      "x": 13,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 15,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 15,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 15,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 25,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 25,
+      "y": 4
+    },
+    {
+      "key": "t30-snow2",
+      "x": 25,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 28,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 31,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 4
+    },
+    {
+      "key": "t30-snow2",
+      "x": 33,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 4
+    },
+    {
+      "key": "t30-snow",
+      "x": 35,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 5
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 4
+    },
+    {
+      "key": "t30-snow2",
+      "x": 37,
+      "y": 4
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 5
+    },
+    {
+      "key": "t30-snow",
+      "x": 1,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 5
+    },
+    {
+      "key": "t30-snow2",
+      "x": 7,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 5
+    },
+    {
+      "key": "t30-snow",
+      "x": 10,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 12,
+      "y": 5
+    },
+    {
+      "key": "t30-snow",
+      "x": 12,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 27,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 27,
+      "y": 5
+    },
+    {
+      "key": "t30-snow",
+      "x": 27,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 5
+    },
+    {
+      "key": "t30-snow2",
+      "x": 29,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 5
+    },
+    {
+      "key": "t30-snow",
+      "x": 32,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 5
+    },
+    {
+      "key": "t30-snow2",
+      "x": 34,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 5
+    },
+    {
+      "key": "t30-snow2",
+      "x": 36,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 6
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 5
+    },
+    {
+      "key": "t30-snow",
+      "x": 38,
+      "y": 5
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 7
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 6
+    },
+    {
+      "key": "t30-snow",
+      "x": 8,
+      "y": 6
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 7
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 6
+    },
+    {
+      "key": "t30-snow",
+      "x": 11,
+      "y": 6
+    },
+    {
+      "key": "t30-bottom",
+      "x": 27,
+      "y": 7
+    },
+    {
+      "key": "t30",
+      "x": 27,
+      "y": 6
+    },
+    {
+      "key": "t30-snow",
+      "x": 27,
+      "y": 6
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 7
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 6
+    },
+    {
+      "key": "t30-snow",
+      "x": 29,
+      "y": 6
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 7
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 6
+    },
+    {
+      "key": "t30-snow",
+      "x": 31,
+      "y": 6
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 7
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 6
+    },
+    {
+      "key": "t30-snow2",
+      "x": 33,
+      "y": 6
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 7
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 6
+    },
+    {
+      "key": "t30-snow2",
+      "x": 35,
+      "y": 6
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 7
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 6
+    },
+    {
+      "key": "t30-snow2",
+      "x": 37,
+      "y": 6
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "t30-snow2",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 7
+    },
+    {
+      "key": "t30-snow2",
+      "x": 10,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 7
+    },
+    {
+      "key": "t30-snow2",
+      "x": 28,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 30,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 30,
+      "y": 7
+    },
+    {
+      "key": "t30-snow2",
+      "x": 30,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 7
+    },
+    {
+      "key": "t30-snow",
+      "x": 32,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 7
+    },
+    {
+      "key": "t30-snow2",
+      "x": 34,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 7
+    },
+    {
+      "key": "t30-snow",
+      "x": 36,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 8
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 7
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 7
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 9
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 8
+    },
+    {
+      "key": "t30-snow",
+      "x": 29,
+      "y": 8
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 9
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 8
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 8
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 9
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 8
+    },
+    {
+      "key": "t30-snow2",
+      "x": 33,
+      "y": 8
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 9
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 8
+    },
+    {
+      "key": "t30-snow",
+      "x": 35,
+      "y": 8
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 9
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 8
+    },
+    {
+      "key": "t30-snow2",
+      "x": 37,
+      "y": 8
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 10
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "key": "t30-snow2",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 10
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 9
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 9
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 10
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 9
+    },
+    {
+      "key": "t30-snow2",
+      "x": 34,
+      "y": 9
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 10
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 9
+    },
+    {
+      "key": "t30-snow2",
+      "x": 36,
+      "y": 9
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 10
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 9
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 9
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 11
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 10
+    },
+    {
+      "key": "t30-snow",
+      "x": 1,
+      "y": 10
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 11
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 10
+    },
+    {
+      "key": "t30-snow2",
+      "x": 6,
+      "y": 10
+    },
+    {
+      "key": "t30-bottom",
+      "x": 9,
+      "y": 11
+    },
+    {
+      "key": "t30",
+      "x": 9,
+      "y": 10
+    },
+    {
+      "key": "t30-snow2",
+      "x": 9,
+      "y": 10
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 11
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 10
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 10
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 11
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 10
+    },
+    {
+      "key": "t30-snow",
+      "x": 33,
+      "y": 10
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 11
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 10
+    },
+    {
+      "key": "t30-snow",
+      "x": 35,
+      "y": 10
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 11
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 10
+    },
+    {
+      "key": "t30-snow",
+      "x": 37,
+      "y": 10
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 12
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 11
+    },
+    {
+      "key": "t30-snow2",
+      "x": 0,
+      "y": 11
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 12
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 11
+    },
+    {
+      "key": "t30-snow",
+      "x": 2,
+      "y": 11
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "key": "t30-snow",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 12
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 11
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 11
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 12
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 11
+    },
+    {
+      "key": "t30-snow2",
+      "x": 32,
+      "y": 11
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 12
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 11
+    },
+    {
+      "key": "t30-snow",
+      "x": 34,
+      "y": 11
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 12
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 11
+    },
+    {
+      "key": "t30-snow2",
+      "x": 36,
+      "y": 11
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 12
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 11
+    },
+    {
+      "key": "t30-snow",
+      "x": 38,
+      "y": 11
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 13
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 12
+    },
+    {
+      "key": "t30-snow2",
+      "x": 0,
+      "y": 12
+    },
+    {
+      "key": "t30-bottom",
+      "x": 3,
+      "y": 13
+    },
+    {
+      "key": "t30",
+      "x": 3,
+      "y": 12
+    },
+    {
+      "key": "t30-snow",
+      "x": 3,
+      "y": 12
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 13
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "key": "t30-snow",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 13
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 12
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 12
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 13
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 12
+    },
+    {
+      "key": "t30-snow",
+      "x": 34,
+      "y": 12
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 13
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 12
+    },
+    {
+      "key": "t30-snow2",
+      "x": 36,
+      "y": 12
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 13
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 13
+    },
+    {
+      "key": "t30-snow2",
+      "x": 2,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 13
+    },
+    {
+      "key": "t30-snow",
+      "x": 4,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 13
+    },
+    {
+      "key": "t30-snow2",
+      "x": 6,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 13
+    },
+    {
+      "key": "t30-snow2",
+      "x": 8,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 13
+    },
+    {
+      "key": "t30-snow",
+      "x": 32,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 13
+    },
+    {
+      "key": "t30-snow",
+      "x": 34,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 13
+    },
+    {
+      "key": "t30-snow",
+      "x": 36,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 14
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 13
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 13
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 15
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 14
+    },
+    {
+      "key": "t30-snow",
+      "x": 1,
+      "y": 14
+    },
+    {
+      "key": "t30-bottom",
+      "x": 3,
+      "y": 15
+    },
+    {
+      "key": "t30",
+      "x": 3,
+      "y": 14
+    },
+    {
+      "key": "t30-snow",
+      "x": 3,
+      "y": 14
+    },
+    {
+      "key": "t30-bottom",
+      "x": 5,
+      "y": 15
+    },
+    {
+      "key": "t30",
+      "x": 5,
+      "y": 14
+    },
+    {
+      "key": "t30-snow2",
+      "x": 5,
+      "y": 14
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 15
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 14
+    },
+    {
+      "key": "t30-snow",
+      "x": 8,
+      "y": 14
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 15
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 14
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 14
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 15
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 14
+    },
+    {
+      "key": "t30-snow",
+      "x": 33,
+      "y": 14
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 15
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 14
+    },
+    {
+      "key": "t30-snow2",
+      "x": 35,
+      "y": 14
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 15
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 14
+    },
+    {
+      "key": "t30-snow",
+      "x": 37,
+      "y": 14
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 16
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 15
+    },
+    {
+      "key": "t30-snow2",
+      "x": 1,
+      "y": 15
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 16
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 15
+    },
+    {
+      "key": "t30-snow",
+      "x": 4,
+      "y": 15
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 16
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 15
+    },
+    {
+      "key": "t30-snow2",
+      "x": 6,
+      "y": 15
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 16
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 15
+    },
+    {
+      "key": "t30-snow",
+      "x": 8,
+      "y": 15
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 16
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 15
+    },
+    {
+      "key": "t30-snow2",
+      "x": 32,
+      "y": 15
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 16
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 15
+    },
+    {
+      "key": "t30-snow2",
+      "x": 34,
+      "y": 15
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 16
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 15
+    },
+    {
+      "key": "t30-snow2",
+      "x": 36,
+      "y": 15
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 16
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 15
+    },
+    {
+      "key": "t30-snow",
+      "x": 38,
+      "y": 15
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 17
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 16
+    },
+    {
+      "key": "t30-snow",
+      "x": 1,
+      "y": 16
+    },
+    {
+      "key": "t30-bottom",
+      "x": 3,
+      "y": 17
+    },
+    {
+      "key": "t30",
+      "x": 3,
+      "y": 16
+    },
+    {
+      "key": "t30-snow",
+      "x": 3,
+      "y": 16
+    },
+    {
+      "key": "t30-bottom",
+      "x": 5,
+      "y": 17
+    },
+    {
+      "key": "t30",
+      "x": 5,
+      "y": 16
+    },
+    {
+      "key": "t30-snow",
+      "x": 5,
+      "y": 16
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 17
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 16
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 16
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 17
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 16
+    },
+    {
+      "key": "t30-snow2",
+      "x": 32,
+      "y": 16
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 17
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 16
+    },
+    {
+      "key": "t30-snow2",
+      "x": 35,
+      "y": 16
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 17
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 16
+    },
+    {
+      "key": "t30-snow",
+      "x": 37,
+      "y": 16
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 17
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 17
+    },
+    {
+      "key": "t30-snow2",
+      "x": 2,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 17
+    },
+    {
+      "key": "t30-snow",
+      "x": 4,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 17
+    },
+    {
+      "key": "t30-snow2",
+      "x": 6,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 17
+    },
+    {
+      "key": "t30-snow2",
+      "x": 8,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 17
+    },
+    {
+      "key": "t30-snow",
+      "x": 32,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 17
+    },
+    {
+      "key": "t30-snow",
+      "x": 34,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 17
+    },
+    {
+      "key": "t30-snow",
+      "x": 36,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 18
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 17
+    },
+    {
+      "key": "t30-snow",
+      "x": 38,
+      "y": 17
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 19
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 18
+    },
+    {
+      "key": "t30-snow2",
+      "x": 1,
+      "y": 18
+    },
+    {
+      "key": "t30-bottom",
+      "x": 3,
+      "y": 19
+    },
+    {
+      "key": "t30",
+      "x": 3,
+      "y": 18
+    },
+    {
+      "key": "t30-snow2",
+      "x": 3,
+      "y": 18
+    },
+    {
+      "key": "t30-bottom",
+      "x": 5,
+      "y": 19
+    },
+    {
+      "key": "t30",
+      "x": 5,
+      "y": 18
+    },
+    {
+      "key": "t30-snow2",
+      "x": 5,
+      "y": 18
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 19
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 18
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 18
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 19
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 18
+    },
+    {
+      "key": "t30-snow",
+      "x": 31,
+      "y": 18
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 19
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 18
+    },
+    {
+      "key": "t30-snow",
+      "x": 33,
+      "y": 18
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 19
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 18
+    },
+    {
+      "key": "t30-snow2",
+      "x": 35,
+      "y": 18
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 19
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 18
+    },
+    {
+      "key": "t30-snow",
+      "x": 37,
+      "y": 18
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 20
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 19
+    },
+    {
+      "key": "t30-snow",
+      "x": 1,
+      "y": 19
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 20
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 19
+    },
+    {
+      "key": "t30-snow2",
+      "x": 4,
+      "y": 19
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 20
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 19
+    },
+    {
+      "key": "t30-snow",
+      "x": 6,
+      "y": 19
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 20
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 19
+    },
+    {
+      "key": "t30-snow2",
+      "x": 8,
+      "y": 19
+    },
+    {
+      "key": "t30-bottom",
+      "x": 30,
+      "y": 20
+    },
+    {
+      "key": "t30",
+      "x": 30,
+      "y": 19
+    },
+    {
+      "key": "t30-snow",
+      "x": 30,
+      "y": 19
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 20
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 19
+    },
+    {
+      "key": "t30-snow",
+      "x": 33,
+      "y": 19
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 20
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 19
+    },
+    {
+      "key": "t30-snow2",
+      "x": 36,
+      "y": 19
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 20
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 19
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 19
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 21
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 20
+    },
+    {
+      "key": "t30-snow2",
+      "x": 0,
+      "y": 20
+    },
+    {
+      "key": "t30-bottom",
+      "x": 3,
+      "y": 21
+    },
+    {
+      "key": "t30",
+      "x": 3,
+      "y": 20
+    },
+    {
+      "key": "t30-snow",
+      "x": 3,
+      "y": 20
+    },
+    {
+      "key": "t30-bottom",
+      "x": 5,
+      "y": 21
+    },
+    {
+      "key": "t30",
+      "x": 5,
+      "y": 20
+    },
+    {
+      "key": "t30-snow2",
+      "x": 5,
+      "y": 20
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 21
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 20
+    },
+    {
+      "key": "t30-snow",
+      "x": 8,
+      "y": 20
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 21
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 20
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 20
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 21
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 20
+    },
+    {
+      "key": "t30-snow",
+      "x": 33,
+      "y": 20
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 21
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 20
+    },
+    {
+      "key": "t30-snow",
+      "x": 36,
+      "y": 20
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 21
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 21
+    },
+    {
+      "key": "t30-snow2",
+      "x": 2,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 21
+    },
+    {
+      "key": "t30-snow2",
+      "x": 4,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 21
+    },
+    {
+      "key": "t30-snow2",
+      "x": 6,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 21
+    },
+    {
+      "key": "t30-snow",
+      "x": 8,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 21
+    },
+    {
+      "key": "t30-snow",
+      "x": 10,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 21
+    },
+    {
+      "key": "t30-snow2",
+      "x": 29,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 21
+    },
+    {
+      "key": "t30-snow2",
+      "x": 32,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 21
+    },
+    {
+      "key": "t30-snow",
+      "x": 34,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 22
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 21
+    },
+    {
+      "key": "t30-snow",
+      "x": 37,
+      "y": 21
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 22
+    },
+    {
+      "key": "t30-snow",
+      "x": 1,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 3,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 3,
+      "y": 22
+    },
+    {
+      "key": "t30-snow",
+      "x": 3,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 5,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 5,
+      "y": 22
+    },
+    {
+      "key": "t30-snow2",
+      "x": 5,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 22
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 22
+    },
+    {
+      "key": "t30-snow2",
+      "x": 10,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 22
+    },
+    {
+      "key": "t30-snow2",
+      "x": 29,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 22
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 22
+    },
+    {
+      "key": "t30-snow",
+      "x": 33,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 22
+    },
+    {
+      "key": "t30-snow2",
+      "x": 35,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 23
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 22
+    },
+    {
+      "key": "t30-snow",
+      "x": 37,
+      "y": 22
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 23
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 23
+    },
+    {
+      "key": "t30-snow2",
+      "x": 2,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 23
+    },
+    {
+      "key": "t30-snow2",
+      "x": 4,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 23
+    },
+    {
+      "key": "t30-snow2",
+      "x": 6,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 23
+    },
+    {
+      "key": "t30-snow2",
+      "x": 8,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 23
+    },
+    {
+      "key": "t30-snow",
+      "x": 11,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 27,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 27,
+      "y": 23
+    },
+    {
+      "key": "t30-snow2",
+      "x": 27,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 30,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 30,
+      "y": 23
+    },
+    {
+      "key": "t30-snow2",
+      "x": 30,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 23
+    },
+    {
+      "key": "t30-snow",
+      "x": 32,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 23
+    },
+    {
+      "key": "t30-snow2",
+      "x": 34,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 23
+    },
+    {
+      "key": "t30-snow",
+      "x": 36,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 24
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 23
+    },
+    {
+      "key": "t30-snow",
+      "x": 38,
+      "y": 23
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 24
+    },
+    {
+      "key": "t30-snow",
+      "x": 1,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 24
+    },
+    {
+      "key": "t30-snow2",
+      "x": 4,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 24
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 9,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 9,
+      "y": 24
+    },
+    {
+      "key": "t30-snow2",
+      "x": 9,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 24
+    },
+    {
+      "key": "t30-snow",
+      "x": 11,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 13,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 13,
+      "y": 24
+    },
+    {
+      "key": "t30-snow2",
+      "x": 13,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 26,
+      "y": 24
+    },
+    {
+      "key": "t30-snow2",
+      "x": 26,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 24
+    },
+    {
+      "key": "t30-snow",
+      "x": 28,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 24
+    },
+    {
+      "key": "t30-snow2",
+      "x": 32,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 24
+    },
+    {
+      "key": "t30-snow2",
+      "x": 35,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 25
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 24
+    },
+    {
+      "key": "t30-snow",
+      "x": 38,
+      "y": 24
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 25
+    },
+    {
+      "key": "t30-snow2",
+      "x": 0,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 25
+    },
+    {
+      "key": "t30-snow2",
+      "x": 2,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 25
+    },
+    {
+      "key": "t30-snow",
+      "x": 4,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 25
+    },
+    {
+      "key": "t30-snow",
+      "x": 6,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 25
+    },
+    {
+      "key": "t30-snow",
+      "x": 8,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 25
+    },
+    {
+      "key": "t30-snow2",
+      "x": 10,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 13,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 13,
+      "y": 25
+    },
+    {
+      "key": "t30-snow2",
+      "x": 13,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 24,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 24,
+      "y": 25
+    },
+    {
+      "key": "t30-snow",
+      "x": 24,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 26,
+      "y": 25
+    },
+    {
+      "key": "t30-snow2",
+      "x": 26,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 25
+    },
+    {
+      "key": "t30-snow",
+      "x": 28,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 30,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 30,
+      "y": 25
+    },
+    {
+      "key": "t30-snow",
+      "x": 30,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 25
+    },
+    {
+      "key": "t30-snow2",
+      "x": 32,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 25
+    },
+    {
+      "key": "t30-snow",
+      "x": 36,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 26
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 25
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 25
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 26
+    },
+    {
+      "key": "t30-snow",
+      "x": 2,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 9,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 9,
+      "y": 26
+    },
+    {
+      "key": "t30-snow2",
+      "x": 9,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 26
+    },
+    {
+      "key": "t30-snow",
+      "x": 11,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 13,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 13,
+      "y": 26
+    },
+    {
+      "key": "t30-snow",
+      "x": 13,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 21,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 21,
+      "y": 26
+    },
+    {
+      "key": "t30-snow",
+      "x": 21,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 23,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 23,
+      "y": 26
+    },
+    {
+      "key": "t30-snow2",
+      "x": 23,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 25,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 25,
+      "y": 26
+    },
+    {
+      "key": "t30-snow",
+      "x": 25,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 27,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 27,
+      "y": 26
+    },
+    {
+      "key": "t30-snow",
+      "x": 27,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 26
+    },
+    {
+      "key": "t30-snow",
+      "x": 29,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 27
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 26
+    },
+    {
+      "key": "t30-snow",
+      "x": 37,
+      "y": 26
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 28
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 27
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 27
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 28
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 27
+    },
+    {
+      "key": "t30-snow",
+      "x": 10,
+      "y": 27
+    },
+    {
+      "key": "t30-bottom",
+      "x": 12,
+      "y": 28
+    },
+    {
+      "key": "t30",
+      "x": 12,
+      "y": 27
+    },
+    {
+      "key": "t30-snow",
+      "x": 12,
+      "y": 27
+    },
+    {
+      "key": "t30-bottom",
+      "x": 22,
+      "y": 28
+    },
+    {
+      "key": "t30",
+      "x": 22,
+      "y": 27
+    },
+    {
+      "key": "t30-snow2",
+      "x": 22,
+      "y": 27
+    },
+    {
+      "key": "t30-bottom",
+      "x": 24,
+      "y": 28
+    },
+    {
+      "key": "t30",
+      "x": 24,
+      "y": 27
+    },
+    {
+      "key": "t30-snow",
+      "x": 24,
+      "y": 27
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 28
+    },
+    {
+      "key": "t30",
+      "x": 26,
+      "y": 27
+    },
+    {
+      "key": "t30-snow",
+      "x": 26,
+      "y": 27
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 28
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 27
+    },
+    {
+      "key": "t30-snow",
+      "x": 28,
+      "y": 27
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 28
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 27
+    },
+    {
+      "key": "t30-snow",
+      "x": 38,
+      "y": 27
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 29
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 28
+    },
+    {
+      "key": "t30-snow2",
+      "x": 11,
+      "y": 28
+    },
+    {
+      "key": "t30-bottom",
+      "x": 22,
+      "y": 29
+    },
+    {
+      "key": "t30",
+      "x": 22,
+      "y": 28
+    },
+    {
+      "key": "t30-snow",
+      "x": 22,
+      "y": 28
+    },
+    {
+      "key": "t30-bottom",
+      "x": 25,
+      "y": 29
+    },
+    {
+      "key": "t30",
+      "x": 25,
+      "y": 28
+    },
+    {
+      "key": "t30-snow2",
+      "x": 25,
+      "y": 28
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 29
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 28
+    },
+    {
+      "key": "t30-snow",
+      "x": 28,
+      "y": 28
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 30
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 29
+    },
+    {
+      "key": "t30-snow2",
+      "x": 0,
+      "y": 29
+    },
+    {
+      "key": "t30-bottom",
+      "x": 12,
+      "y": 30
+    },
+    {
+      "key": "t30",
+      "x": 12,
+      "y": 29
+    },
+    {
+      "key": "t30-snow",
+      "x": 12,
+      "y": 29
+    },
+    {
+      "key": "t30-bottom",
+      "x": 19,
+      "y": 30
+    },
+    {
+      "key": "t30",
+      "x": 19,
+      "y": 29
+    },
+    {
+      "key": "t30-snow",
+      "x": 19,
+      "y": 29
+    },
+    {
+      "key": "t30-bottom",
+      "x": 21,
+      "y": 30
+    },
+    {
+      "key": "t30",
+      "x": 21,
+      "y": 29
+    },
+    {
+      "key": "t30-snow2",
+      "x": 21,
+      "y": 29
+    },
+    {
+      "key": "t30-bottom",
+      "x": 25,
+      "y": 30
+    },
+    {
+      "key": "t30",
+      "x": 25,
+      "y": 29
+    },
+    {
+      "key": "t30-snow",
+      "x": 25,
+      "y": 29
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 30
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 29
+    },
+    {
+      "key": "t30-snow2",
+      "x": 28,
+      "y": 29
+    },
+    {
+      "key": "t30-bottom",
+      "x": 19,
+      "y": 31
+    },
+    {
+      "key": "t30",
+      "x": 19,
+      "y": 30
+    },
+    {
+      "key": "t30-snow2",
+      "x": 19,
+      "y": 30
+    },
+    {
+      "key": "t30-bottom",
+      "x": 21,
+      "y": 31
+    },
+    {
+      "key": "t30",
+      "x": 21,
+      "y": 30
+    },
+    {
+      "key": "t30-snow",
+      "x": 21,
+      "y": 30
+    },
+    {
+      "key": "t30-bottom",
+      "x": 23,
+      "y": 31
+    },
+    {
+      "key": "t30",
+      "x": 23,
+      "y": 30
+    },
+    {
+      "key": "t30-snow2",
+      "x": 23,
+      "y": 30
+    },
+    {
+      "key": "t30-bottom",
+      "x": 25,
+      "y": 31
+    },
+    {
+      "key": "t30",
+      "x": 25,
+      "y": 30
+    },
+    {
+      "key": "t30-snow2",
+      "x": 25,
+      "y": 30
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 32
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 31
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 31
+    },
+    {
+      "key": "t30-bottom",
+      "x": 22,
+      "y": 32
+    },
+    {
+      "key": "t30",
+      "x": 22,
+      "y": 31
+    },
+    {
+      "key": "t30-snow2",
+      "x": 22,
+      "y": 31
+    },
+    {
+      "key": "t30-bottom",
+      "x": 24,
+      "y": 32
+    },
+    {
+      "key": "t30",
+      "x": 24,
+      "y": 31
+    },
+    {
+      "key": "t30-snow2",
+      "x": 24,
+      "y": 31
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 32
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 31
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 31
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 34
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 33
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 33
+    },
+    {
+      "key": "t30-bottom",
+      "x": 12,
+      "y": 34
+    },
+    {
+      "key": "t30",
+      "x": 12,
+      "y": 33
+    },
+    {
+      "key": "t30-snow",
+      "x": 12,
+      "y": 33
+    },
+    {
+      "key": "t30-bottom",
+      "x": 30,
+      "y": 34
+    },
+    {
+      "key": "t30",
+      "x": 30,
+      "y": 33
+    },
+    {
+      "key": "t30-snow2",
+      "x": 30,
+      "y": 33
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 34
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 33
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 33
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 35
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 34
+    },
+    {
+      "key": "t30-snow2",
+      "x": 1,
+      "y": 34
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 35
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 34
+    },
+    {
+      "key": "t30-snow",
+      "x": 11,
+      "y": 34
+    },
+    {
+      "key": "t30-bottom",
+      "x": 13,
+      "y": 35
+    },
+    {
+      "key": "t30",
+      "x": 13,
+      "y": 34
+    },
+    {
+      "key": "t30-snow",
+      "x": 13,
+      "y": 34
+    },
+    {
+      "key": "t30-bottom",
+      "x": 28,
+      "y": 35
+    },
+    {
+      "key": "t30",
+      "x": 28,
+      "y": 34
+    },
+    {
+      "key": "t30-snow",
+      "x": 28,
+      "y": 34
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 35
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 34
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 34
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 35
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 34
+    },
+    {
+      "key": "t30-snow",
+      "x": 35,
+      "y": 34
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 35
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 34
+    },
+    {
+      "key": "t30-snow2",
+      "x": 37,
+      "y": 34
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 35
+    },
+    {
+      "key": "t30-snow",
+      "x": 0,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 35
+    },
+    {
+      "key": "t30-snow2",
+      "x": 2,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 35
+    },
+    {
+      "key": "t30-snow",
+      "x": 10,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 12,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 12,
+      "y": 35
+    },
+    {
+      "key": "t30-snow2",
+      "x": 12,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 14,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 14,
+      "y": 35
+    },
+    {
+      "key": "t30-snow2",
+      "x": 14,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 22,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 22,
+      "y": 35
+    },
+    {
+      "key": "t30-snow2",
+      "x": 22,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 24,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 24,
+      "y": 35
+    },
+    {
+      "key": "t30-snow2",
+      "x": 24,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 26,
+      "y": 35
+    },
+    {
+      "key": "t30-snow",
+      "x": 26,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 35
+    },
+    {
+      "key": "t30-snow2",
+      "x": 29,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 35
+    },
+    {
+      "key": "t30-snow",
+      "x": 32,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 35
+    },
+    {
+      "key": "t30-snow2",
+      "x": 34,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 35
+    },
+    {
+      "key": "t30-snow",
+      "x": 36,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 36
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 35
+    },
+    {
+      "key": "t30-snow2",
+      "x": 38,
+      "y": 35
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 1,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 3,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 3,
+      "y": 36
+    },
+    {
+      "key": "t30-snow",
+      "x": 3,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 5,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 5,
+      "y": 36
+    },
+    {
+      "key": "t30-snow",
+      "x": 5,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 7,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 9,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 9,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 9,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 11,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 13,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 13,
+      "y": 36
+    },
+    {
+      "key": "t30-snow",
+      "x": 13,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 15,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 15,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 15,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 17,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 17,
+      "y": 36
+    },
+    {
+      "key": "t30-snow",
+      "x": 17,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 23,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 23,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 23,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 25,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 25,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 25,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 27,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 27,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 27,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 29,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 31,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 31,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 31,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 33,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 33,
+      "y": 36
+    },
+    {
+      "key": "t30-snow",
+      "x": 33,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 36
+    },
+    {
+      "key": "t30-snow",
+      "x": 35,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 37
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 36
+    },
+    {
+      "key": "t30-snow2",
+      "x": 37,
+      "y": 36
+    },
+    {
+      "key": "t30-bottom",
+      "x": 0,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 0,
+      "y": 37
+    },
+    {
+      "key": "t30-snow2",
+      "x": 0,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 2,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 2,
+      "y": 37
+    },
+    {
+      "key": "t30-snow2",
+      "x": 2,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 4,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 4,
+      "y": 37
+    },
+    {
+      "key": "t30-snow2",
+      "x": 4,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 6,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 6,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 6,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 8,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 8,
+      "y": 37
+    },
+    {
+      "key": "t30-snow2",
+      "x": 8,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 10,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 10,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 10,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 12,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 12,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 12,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 14,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 14,
+      "y": 37
+    },
+    {
+      "key": "t30-snow2",
+      "x": 14,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 16,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 16,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 16,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 22,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 22,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 22,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 24,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 24,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 24,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 26,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 26,
+      "y": 37
+    },
+    {
+      "key": "t30-snow2",
+      "x": 26,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 29,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 37
+    },
+    {
+      "key": "t30-snow2",
+      "x": 32,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 34,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 34,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 34,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 36,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 36,
+      "y": 37
+    },
+    {
+      "key": "t30-snow2",
+      "x": 36,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 38,
+      "y": 38
+    },
+    {
+      "key": "t30",
+      "x": 38,
+      "y": 37
+    },
+    {
+      "key": "t30-snow",
+      "x": 38,
+      "y": 37
+    },
+    {
+      "key": "t30-bottom",
+      "x": 1,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 1,
+      "y": 38
+    },
+    {
+      "key": "t30-snow2",
+      "x": 1,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 3,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 3,
+      "y": 38
+    },
+    {
+      "key": "t30-snow2",
+      "x": 3,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 5,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 5,
+      "y": 38
+    },
+    {
+      "key": "t30-snow2",
+      "x": 5,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 7,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 7,
+      "y": 38
+    },
+    {
+      "key": "t30-snow",
+      "x": 7,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 9,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 9,
+      "y": 38
+    },
+    {
+      "key": "t30-snow",
+      "x": 9,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 11,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 11,
+      "y": 38
+    },
+    {
+      "key": "t30-snow2",
+      "x": 11,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 14,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 14,
+      "y": 38
+    },
+    {
+      "key": "t30-snow2",
+      "x": 14,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 17,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 17,
+      "y": 38
+    },
+    {
+      "key": "t30-snow",
+      "x": 17,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 23,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 23,
+      "y": 38
+    },
+    {
+      "key": "t30-snow",
+      "x": 23,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 25,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 25,
+      "y": 38
+    },
+    {
+      "key": "t30-snow2",
+      "x": 25,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 27,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 27,
+      "y": 38
+    },
+    {
+      "key": "t30-snow",
+      "x": 27,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 29,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 29,
+      "y": 38
+    },
+    {
+      "key": "t30-snow",
+      "x": 29,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 32,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 32,
+      "y": 38
+    },
+    {
+      "key": "t30-snow2",
+      "x": 32,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 35,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 35,
+      "y": 38
+    },
+    {
+      "key": "t30-snow2",
+      "x": 35,
+      "y": 38
+    },
+    {
+      "key": "t30-bottom",
+      "x": 37,
+      "y": 39
+    },
+    {
+      "key": "t30",
+      "x": 37,
+      "y": 38
+    },
+    {
+      "key": "t30-snow",
+      "x": 37,
+      "y": 38
+    },
+    {
+      "key": "t32-bottom",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "t32-up",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "key": "t32-bottom",
+      "x": 39,
+      "y": 1
+    },
+    {
+      "key": "t32-up",
+      "x": 39,
+      "y": 0
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 39,
+      "y": 0
+    },
+    {
+      "key": "t32-bottom",
+      "x": 22,
+      "y": 1
+    },
+    {
+      "key": "t32-up",
+      "x": 22,
+      "y": 0
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 22,
+      "y": 0
+    },
+    {
+      "key": "t32-bottom",
+      "x": 25,
+      "y": 1
+    },
+    {
+      "key": "t32-up",
+      "x": 25,
+      "y": 0
+    },
+    {
+      "key": "t32-snow",
+      "x": 25,
+      "y": 0
+    },
+    {
+      "key": "t32-bottom",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "key": "t32-up",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "key": "t32-bottom",
+      "x": 39,
+      "y": 2
+    },
+    {
+      "key": "t32-up",
+      "x": 39,
+      "y": 1
+    },
+    {
+      "key": "t32-snow",
+      "x": 39,
+      "y": 1
+    },
+    {
+      "key": "t32-bottom",
+      "x": 19,
+      "y": 4
+    },
+    {
+      "key": "t32-up",
+      "x": 19,
+      "y": 3
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 19,
+      "y": 3
+    },
+    {
+      "key": "t32-bottom",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "key": "t32-up",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "key": "t32-bottom",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "key": "t32-up",
+      "x": 4,
+      "y": 4
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 4,
+      "y": 4
+    },
+    {
+      "key": "t32-bottom",
+      "x": 24,
+      "y": 5
+    },
+    {
+      "key": "t32-up",
+      "x": 24,
+      "y": 4
+    },
+    {
+      "key": "t32-snow",
+      "x": 24,
+      "y": 4
+    },
+    {
+      "key": "t32-bottom",
+      "x": 6,
+      "y": 6
+    },
+    {
+      "key": "t32-up",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "t32-bottom",
+      "x": 14,
+      "y": 6
+    },
+    {
+      "key": "t32-up",
+      "x": 14,
+      "y": 5
+    },
+    {
+      "key": "t32-snow",
+      "x": 14,
+      "y": 5
+    },
+    {
+      "key": "t32-bottom",
+      "x": 26,
+      "y": 6
+    },
+    {
+      "key": "t32-up",
+      "x": 26,
+      "y": 5
+    },
+    {
+      "key": "t32-snow",
+      "x": 26,
+      "y": 5
+    },
+    {
+      "key": "t32-bottom",
+      "x": 13,
+      "y": 7
+    },
+    {
+      "key": "t32-up",
+      "x": 13,
+      "y": 6
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 13,
+      "y": 6
+    },
+    {
+      "key": "t32-bottom",
+      "x": 9,
+      "y": 8
+    },
+    {
+      "key": "t32-up",
+      "x": 9,
+      "y": 7
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 9,
+      "y": 7
+    },
+    {
+      "key": "t32-bottom",
+      "x": 12,
+      "y": 8
+    },
+    {
+      "key": "t32-up",
+      "x": 12,
+      "y": 7
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 12,
+      "y": 7
+    },
+    {
+      "key": "t32-bottom",
+      "x": 8,
+      "y": 10
+    },
+    {
+      "key": "t32-up",
+      "x": 8,
+      "y": 9
+    },
+    {
+      "key": "t32-snow",
+      "x": 8,
+      "y": 9
+    },
+    {
+      "key": "t32-bottom",
+      "x": 30,
+      "y": 11
+    },
+    {
+      "key": "t32-up",
+      "x": 30,
+      "y": 10
+    },
+    {
+      "key": "t32-snow",
+      "x": 30,
+      "y": 10
+    },
+    {
+      "key": "t32-bottom",
+      "x": 9,
+      "y": 12
+    },
+    {
+      "key": "t32-up",
+      "x": 9,
+      "y": 11
+    },
+    {
+      "key": "t32-snow",
+      "x": 9,
+      "y": 11
+    },
+    {
+      "key": "t32-bottom",
+      "x": 0,
+      "y": 16
+    },
+    {
+      "key": "t32-up",
+      "x": 0,
+      "y": 15
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 0,
+      "y": 15
+    },
+    {
+      "key": "t32-bottom",
+      "x": 31,
+      "y": 17
+    },
+    {
+      "key": "t32-up",
+      "x": 31,
+      "y": 16
+    },
+    {
+      "key": "t32-snow",
+      "x": 31,
+      "y": 16
+    },
+    {
+      "key": "t32-bottom",
+      "x": 0,
+      "y": 19
+    },
+    {
+      "key": "t32-up",
+      "x": 0,
+      "y": 18
+    },
+    {
+      "key": "t32-snow",
+      "x": 0,
+      "y": 18
+    },
+    {
+      "key": "t32-bottom",
+      "x": 10,
+      "y": 20
+    },
+    {
+      "key": "t32-up",
+      "x": 10,
+      "y": 19
+    },
+    {
+      "key": "t32-snow",
+      "x": 10,
+      "y": 19
+    },
+    {
+      "key": "t32-bottom",
+      "x": 35,
+      "y": 20
+    },
+    {
+      "key": "t32-up",
+      "x": 35,
+      "y": 19
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 35,
+      "y": 19
+    },
+    {
+      "key": "t32-bottom",
+      "x": 39,
+      "y": 22
+    },
+    {
+      "key": "t32-up",
+      "x": 39,
+      "y": 21
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 39,
+      "y": 21
+    },
+    {
+      "key": "t32-bottom",
+      "x": 12,
+      "y": 22
+    },
+    {
+      "key": "t32-up",
+      "x": 12,
+      "y": 21
+    },
+    {
+      "key": "t32-snow",
+      "x": 12,
+      "y": 21
+    },
+    {
+      "key": "t32-bottom",
+      "x": 28,
+      "y": 22
+    },
+    {
+      "key": "t32-up",
+      "x": 28,
+      "y": 21
+    },
+    {
+      "key": "t32-snow",
+      "x": 28,
+      "y": 21
+    },
+    {
+      "key": "t32-bottom",
+      "x": 13,
+      "y": 23
+    },
+    {
+      "key": "t32-up",
+      "x": 13,
+      "y": 22
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 13,
+      "y": 22
+    },
+    {
+      "key": "t32-bottom",
+      "x": 15,
+      "y": 26
+    },
+    {
+      "key": "t32-up",
+      "x": 15,
+      "y": 25
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 15,
+      "y": 25
+    },
+    {
+      "key": "t32-bottom",
+      "x": 16,
+      "y": 26
+    },
+    {
+      "key": "t32-up",
+      "x": 16,
+      "y": 25
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 16,
+      "y": 25
+    },
+    {
+      "key": "t32-bottom",
+      "x": 34,
+      "y": 25
+    },
+    {
+      "key": "t32-up",
+      "x": 34,
+      "y": 24
+    },
+    {
+      "key": "t32-snow",
+      "x": 34,
+      "y": 24
+    },
+    {
+      "key": "t32-bottom",
+      "x": 35,
+      "y": 26
+    },
+    {
+      "key": "t32-up",
+      "x": 35,
+      "y": 25
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 35,
+      "y": 25
+    },
+    {
+      "key": "t32-bottom",
+      "x": 31,
+      "y": 27
+    },
+    {
+      "key": "t32-up",
+      "x": 31,
+      "y": 26
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 31,
+      "y": 26
+    },
+    {
+      "key": "t32-bottom",
+      "x": 2,
+      "y": 28
+    },
+    {
+      "key": "t32-up",
+      "x": 2,
+      "y": 27
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 2,
+      "y": 27
+    },
+    {
+      "key": "t32-bottom",
+      "x": 20,
+      "y": 28
+    },
+    {
+      "key": "t32-up",
+      "x": 20,
+      "y": 27
+    },
+    {
+      "key": "t32-snow",
+      "x": 20,
+      "y": 27
+    },
+    {
+      "key": "t32-bottom",
+      "x": 21,
+      "y": 28
+    },
+    {
+      "key": "t32-up",
+      "x": 21,
+      "y": 27
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 21,
+      "y": 27
+    },
+    {
+      "key": "t32-bottom",
+      "x": 30,
+      "y": 29
+    },
+    {
+      "key": "t32-up",
+      "x": 30,
+      "y": 28
+    },
+    {
+      "key": "t32-snow",
+      "x": 30,
+      "y": 28
+    },
+    {
+      "key": "t32-bottom",
+      "x": 24,
+      "y": 29
+    },
+    {
+      "key": "t32-up",
+      "x": 24,
+      "y": 28
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 24,
+      "y": 28
+    },
+    {
+      "key": "t32-bottom",
+      "x": 27,
+      "y": 30
+    },
+    {
+      "key": "t32-up",
+      "x": 27,
+      "y": 29
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 27,
+      "y": 29
+    },
+    {
+      "key": "t32-bottom",
+      "x": 38,
+      "y": 29
+    },
+    {
+      "key": "t32-up",
+      "x": 38,
+      "y": 28
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 38,
+      "y": 28
+    },
+    {
+      "key": "t32-bottom",
+      "x": 39,
+      "y": 30
+    },
+    {
+      "key": "t32-up",
+      "x": 39,
+      "y": 29
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 39,
+      "y": 29
+    },
+    {
+      "key": "t32-bottom",
+      "x": 11,
+      "y": 30
+    },
+    {
+      "key": "t32-up",
+      "x": 11,
+      "y": 29
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 11,
+      "y": 29
+    },
+    {
+      "key": "t32-bottom",
+      "x": 18,
+      "y": 31
+    },
+    {
+      "key": "t32-up",
+      "x": 18,
+      "y": 30
+    },
+    {
+      "key": "t32-snow",
+      "x": 18,
+      "y": 30
+    },
+    {
+      "key": "t32-bottom",
+      "x": 27,
+      "y": 31
+    },
+    {
+      "key": "t32-up",
+      "x": 27,
+      "y": 30
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 27,
+      "y": 30
+    },
+    {
+      "key": "t32-bottom",
+      "x": 11,
+      "y": 33
+    },
+    {
+      "key": "t32-up",
+      "x": 11,
+      "y": 32
+    },
+    {
+      "key": "t32-snow",
+      "x": 11,
+      "y": 32
+    },
+    {
+      "key": "t32-bottom",
+      "x": 37,
+      "y": 33
+    },
+    {
+      "key": "t32-up",
+      "x": 37,
+      "y": 32
+    },
+    {
+      "key": "t32-snow",
+      "x": 37,
+      "y": 32
+    },
+    {
+      "key": "t32-bottom",
+      "x": 10,
+      "y": 34
+    },
+    {
+      "key": "t32-up",
+      "x": 10,
+      "y": 33
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 10,
+      "y": 33
+    },
+    {
+      "key": "t32-bottom",
+      "x": 27,
+      "y": 34
+    },
+    {
+      "key": "t32-up",
+      "x": 27,
+      "y": 33
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 27,
+      "y": 33
+    },
+    {
+      "key": "t32-bottom",
+      "x": 33,
+      "y": 34
+    },
+    {
+      "key": "t32-up",
+      "x": 33,
+      "y": 33
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 33,
+      "y": 33
+    },
+    {
+      "key": "t32-bottom",
+      "x": 9,
+      "y": 35
+    },
+    {
+      "key": "t32-up",
+      "x": 9,
+      "y": 34
+    },
+    {
+      "key": "t32-snow",
+      "x": 9,
+      "y": 34
+    },
+    {
+      "key": "t32-bottom",
+      "x": 16,
+      "y": 35
+    },
+    {
+      "key": "t32-up",
+      "x": 16,
+      "y": 34
+    },
+    {
+      "key": "t32-snow",
+      "x": 16,
+      "y": 34
+    },
+    {
+      "key": "t32-bottom",
+      "x": 31,
+      "y": 39
+    },
+    {
+      "key": "t32-up",
+      "x": 31,
+      "y": 38
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 31,
+      "y": 38
+    },
+    {
+      "key": "t32-bottom",
+      "x": 0,
+      "y": 39
+    },
+    {
+      "key": "t32-up",
+      "x": 0,
+      "y": 38
+    },
+    {
+      "key": "t32-snow",
+      "x": 0,
+      "y": 38
+    },
+    {
+      "key": "t32-bottom",
+      "x": 13,
+      "y": 39
+    },
+    {
+      "key": "t32-up",
+      "x": 13,
+      "y": 38
+    },
+    {
+      "key": "t32-snow",
+      "x": 13,
+      "y": 38
+    },
+    {
+      "key": "t32-bottom",
+      "x": 16,
+      "y": 39
+    },
+    {
+      "key": "t32-up",
+      "x": 16,
+      "y": 38
+    },
+    {
+      "key": "t32-snow",
+      "x": 16,
+      "y": 38
+    },
+    {
+      "key": "t32-bottom",
+      "x": 22,
+      "y": 39
+    },
+    {
+      "key": "t32-up",
+      "x": 22,
+      "y": 38
+    },
+    {
+      "key": "t32-snow",
+      "x": 22,
+      "y": 38
+    },
+    {
+      "key": "t32-bottom",
+      "x": 34,
+      "y": 39
+    },
+    {
+      "key": "t32-up",
+      "x": 34,
+      "y": 38
+    },
+    {
+      "key": "t32-snow",
+      "x": 34,
+      "y": 38
+    },
+    {
+      "key": "t32-bottom",
+      "x": 39,
+      "y": 39
+    },
+    {
+      "key": "t32-up",
+      "x": 39,
+      "y": 38
+    },
+    {
+      "key": "t32-snow-2",
+      "x": 39,
+      "y": 38
+    },
+    {
+      "key": "t30-snow",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "key": "t30-snow",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "key": "t30-snow",
+      "x": 10,
+      "y": 8
+    }
+  ]
+}

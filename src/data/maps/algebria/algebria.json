@@ -12,7 +12,29 @@
     "x": 12,
     "y": 10
   },
-  "transitions": [],
+  "transitions": [
+    {
+      "fromX": 79,
+      "fromY": 29,
+      "toMapId": "forest/algebria-woods",
+      "toX": 1,
+      "toY": 19
+    },
+    {
+      "fromX": 79,
+      "fromY": 30,
+      "toMapId": "forest/algebria-woods",
+      "toX": 1,
+      "toY": 20
+    },
+    {
+      "fromX": 79,
+      "fromY": 31,
+      "toMapId": "forest/algebria-woods",
+      "toX": 1,
+      "toY": 21
+    }
+  ],
   "npcs": [
     {
       "id": "npc-1774904944899",

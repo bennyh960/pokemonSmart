@@ -11,6 +11,9 @@ Last active quest: `main-act4-percentile` ("Percentile City", set on first arriv
 - [ ] Algebria (gym 8): `act4/quest-algebria.ts` is old "Absoluta" placeholder (map id `absoluta/absoluta` doesn't exist, `questionSetIds: ['placeholder']`) — rewrite for Algebria
 - [ ] Route 12: empty map (0 NPCs, 0 transitions)
 - [ ] Forest: `caves/deep-forest` and `routes/small forest` partly built — no story yet
+- [ ] Forest region `forest/*` (Algebria → League, branch to Zeroville) — layout done, no story/NPCs/trainers yet. Algebria east gate → `algebria-woods` → `frost-trail` → `league-summit` (League gate, snow Pokemon Center + Mart); `algebria-woods` → `zeroville-trail` → Zeroville west gate. Hidden: `mossy-grotto` (behind a Cut tree), `frost-cave` (its top "Frozen Sanctum" chamber is empty, reserved for a legendary), interiors `frost-hut` / `ranger-cabin` (empty `house-small` instances)
+- [ ] `league-summit` door → `league/l1` is one-way: `l1` has no exit back to the summit yet
+- [ ] `forest/league-summit` is a world-map route label only — decide if it should be a Fly city (it has a Pokemon Center)
 - [ ] Legendary caves: Zapdos + Raikou done; remaining legendaries not placed
 - [ ] League (`league/*`) + NULL-X Tower: maps exist with 1 NPC each; `act5/quest-nullx-tower.ts` references `nullx-floor-1..5` which don't exist (only `tower`, `floor-6`)
 

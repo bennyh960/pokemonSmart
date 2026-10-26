@@ -68,7 +68,7 @@
       },
       "postBattleDialogue": [],
       "blocker": true,
-      "despawnAfter": "todo"
+      "despawnAfter": "act3-articuno-arc-complete"
     },
     {
       "id": "npc-1780259899152",
@@ -91,6 +91,186 @@
         "en": "8329108",
         "he": "38210989"
       }
+    },
+    {
+      "id": "npc-r11-light-noam",
+      "x": 40,
+      "y": 4,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_c32979",
+      "name": {
+        "en": "Ace Trainer Noam",
+        "he": "המאמן נועם"
+      },
+      "party": [
+        {
+          "pokemonId": 59,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 121,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 135,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "spawnAfter": "act3-articuno-arc-complete",
+      "reward": {
+        "money": 2200,
+        "items": [
+          {
+            "itemId": "full-restore",
+            "quantity": 1
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Hi friend! Did you know light travels 300,000 km every second?",
+          "he": "היי חבר! ידעת שהאור עובר 300,000 ק\"מ בכל שנייה?"
+        },
+        {
+          "en": "That is 7 times around the Earth in one second! Let's battle at light speed!",
+          "he": "זה 7 פעמים מסביב לכדור הארץ בשנייה אחת! בוא נילחם במהירות האור!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "What a battle! Water boils at 100°C and freezes at 0°C.",
+          "he": "איזה קרב! מים רותחים ב-100 מעלות וקופאים ב-0 מעלות."
+        },
+        {
+          "en": "That is why Fire and Ice are such different types!",
+          "he": "בגלל זה Fire ו-Ice הם סוגים כל כך שונים!"
+        }
+      ]
+    },
+    {
+      "id": "npc-r11-birds-maya",
+      "x": 26,
+      "y": 7,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_dc1a34",
+      "name": {
+        "en": "Bird Keeper Maya",
+        "he": "מאיה מגדלת הציפורים"
+      },
+      "party": [
+        {
+          "pokemonId": 18,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 85,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 22,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "spawnAfter": "act3-articuno-arc-complete",
+      "reward": {
+        "money": 2000,
+        "items": [
+          {
+            "itemId": "ultra-ball",
+            "quantity": 3
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Hello! Birds have hollow bones, so they are light enough to fly.",
+          "he": "שלום! לציפורים יש עצמות חלולות, ולכן הן קלות מספיק כדי לעוף."
+        },
+        {
+          "en": "My Flying Pokémon are light and super fast. Ready?",
+          "he": "הפוקימונים המעופפים שלי קלים ומהירים מאוד. מוכן?"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Hooray, you won! Fun fact: Pidgeot can fly at Mach 2.",
+          "he": "הידד, ניצחת! עובדה מגניבה: פידג'וט יכול לעוף במהירות מאך 2."
+        },
+        {
+          "en": "That means twice the speed of sound!",
+          "he": "זה אומר פי 2 ממהירות הקול!"
+        }
+      ]
+    },
+    {
+      "id": "npc-r11-math-ben",
+      "x": 10,
+      "y": 14,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_a8bd41",
+      "name": {
+        "en": "Math Whiz Ben",
+        "he": "בן גאון החשבון"
+      },
+      "party": [
+        {
+          "pokemonId": 65,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 233,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 80,
+          "level": 44,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "spawnAfter": "act3-articuno-arc-complete",
+      "reward": {
+        "money": 2200,
+        "items": [
+          {
+            "itemId": "rare-candy",
+            "quantity": 1
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Hey! Quick trick: 5, 6, 7, 8 → 56 = 7 × 8. Easy to remember!",
+          "he": "היי! טריק מהיר: 5, 6, 7, 8 ← 56 = 7 × 8. קל לזכור!"
+        },
+        {
+          "en": "Now let's see if your Pokémon are as quick as that trick!",
+          "he": "עכשיו נראה אם הפוקימונים שלך מהירים כמו הטריק הזה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Nice one! Another trick: in the 9 times table, the digits add up to 9.",
+          "he": "יפה! עוד טריק: בלוח הכפל של 9, סכום הספרות הוא 9."
+        },
+        {
+          "en": "9 × 7 = 63, and 6 + 3 = 9. Try it with other numbers!",
+          "he": "9 × 7 = 63, ו-6 + 3 = 9. נסה עם מספרים אחרים!"
+        }
+      ]
     }
   ],
   "music": "route",
@@ -98,8 +278,7 @@
   "movablePuzzle": {},
   "flagListeners": [],
   "interactiveItems": {},
-  "outside": true
-,
+  "outside": true,
   "tiles": [
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1br","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1","wt1","wt1","wt1","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1br","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1","wt1b","wt1b","wt1b","wt1","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],

@@ -1,0 +1,18 @@
+{
+  "id": "ranger-cabin",
+  "name": "Ranger Cabin",
+  "area": "forest",
+  "template": "house-small",
+  "tileset": "interior",
+  "label": {
+    "en": "Ranger Cabin",
+    "he": "בקתת הסייר"
+  },
+  "music": "town",
+  "encounterTableId": null,
+  "spawn": {
+    "x": 6,
+    "y": 13
+  },
+  "npcs": []
+}

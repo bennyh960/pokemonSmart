@@ -8074,6 +8074,935 @@
       "above": true,
       "category": "building",
       "interactType": null
+    },
+    {
+      "key": "snow-c",
+      "sx": 16,
+      "sy": 4800,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": false,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow ground center — walkable base tile for snowy areas. Use snow-t/b/l/r/tl/tr/bl/br border objects where snow meets non-snow ground"
+    },
+    {
+      "key": "snow-tl",
+      "sx": 0,
+      "sy": 4784,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow border: top-left outer corner. Place as object on a grass/ground base where the snow patch ends"
+    },
+    {
+      "key": "snow-t",
+      "sx": 16,
+      "sy": 4784,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow border: top edge. Place as object on a grass/ground base where the snow patch ends"
+    },
+    {
+      "key": "snow-tr",
+      "sx": 32,
+      "sy": 4784,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow border: top-right outer corner. Place as object on a grass/ground base where the snow patch ends"
+    },
+    {
+      "key": "snow-l",
+      "sx": 0,
+      "sy": 4800,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow border: left edge. Place as object on a grass/ground base where the snow patch ends"
+    },
+    {
+      "key": "snow-r",
+      "sx": 32,
+      "sy": 4800,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow border: right edge. Place as object on a grass/ground base where the snow patch ends"
+    },
+    {
+      "key": "snow-bl",
+      "sx": 0,
+      "sy": 4816,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow border: bottom-left outer corner. Place as object on a grass/ground base where the snow patch ends"
+    },
+    {
+      "key": "snow-b",
+      "sx": 16,
+      "sy": 4816,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow border: bottom edge. Place as object on a grass/ground base where the snow patch ends"
+    },
+    {
+      "key": "snow-br",
+      "sx": 32,
+      "sy": 4816,
+      "w": 16,
+      "h": 16,
+      "walkable": true,
+      "above": true,
+      "category": "ground",
+      "interactType": null,
+      "description": "snow border: bottom-right outer corner. Place as object on a grass/ground base where the snow patch ends"
+    },
+    {
+      "key": "aut-yellow1-top",
+      "sx": 0,
+      "sy": 3776,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (yellow) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-yellow1-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-yellow1-bottom",
+      "sx": 0,
+      "sy": 3808,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (yellow) trunk — blocking. Place under aut-yellow1-top"
+    },
+    {
+      "key": "aut-yellow2-top",
+      "sx": 32,
+      "sy": 3776,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (yellow) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-yellow2-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-yellow2-bottom",
+      "sx": 32,
+      "sy": 3808,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (yellow) trunk — blocking. Place under aut-yellow2-top"
+    },
+    {
+      "key": "aut-yellow3-top",
+      "sx": 64,
+      "sy": 3776,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (yellow) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-yellow3-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-yellow3-bottom",
+      "sx": 64,
+      "sy": 3808,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (yellow) trunk — blocking. Place under aut-yellow3-top"
+    },
+    {
+      "key": "aut-sage1-top",
+      "sx": 0,
+      "sy": 3824,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (sage) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-sage1-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-sage1-bottom",
+      "sx": 0,
+      "sy": 3856,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (sage) trunk — blocking. Place under aut-sage1-top"
+    },
+    {
+      "key": "aut-sage2-top",
+      "sx": 32,
+      "sy": 3824,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (sage) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-sage2-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-sage2-bottom",
+      "sx": 32,
+      "sy": 3856,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (sage) trunk — blocking. Place under aut-sage2-top"
+    },
+    {
+      "key": "aut-sage3-top",
+      "sx": 64,
+      "sy": 3824,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (sage) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-sage3-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-sage3-bottom",
+      "sx": 64,
+      "sy": 3856,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (sage) trunk — blocking. Place under aut-sage3-top"
+    },
+    {
+      "key": "aut-orange1-top",
+      "sx": 0,
+      "sy": 3872,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (orange) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-orange1-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-orange1-bottom",
+      "sx": 0,
+      "sy": 3904,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (orange) trunk — blocking. Place under aut-orange1-top"
+    },
+    {
+      "key": "aut-orange2-top",
+      "sx": 32,
+      "sy": 3872,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (orange) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-orange2-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-orange2-bottom",
+      "sx": 32,
+      "sy": 3904,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (orange) trunk — blocking. Place under aut-orange2-top"
+    },
+    {
+      "key": "aut-orange3-top",
+      "sx": 64,
+      "sy": 3872,
+      "w": 32,
+      "h": 32,
+      "walkable": true,
+      "above": true,
+      "overlay": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (orange) canopy — walkable overlay drawn above the player. Place at (x,y) with aut-orange3-bottom at (x,y+2)"
+    },
+    {
+      "key": "aut-orange3-bottom",
+      "sx": 64,
+      "sy": 3904,
+      "w": 32,
+      "h": 16,
+      "walkable": false,
+      "above": true,
+      "category": "tree",
+      "interactType": null,
+      "description": "autumn tree (orange) trunk — blocking. Place under aut-orange3-top"
+    },
+    {
+      "key": "dome-purple",
+      "sx": 16,
+      "sy": 5330,
+      "w": 112,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "League-style dome building (purple, 7x5). Door is the bottom-centre cell (dx=3, dy=4): put a walkable door tile there BEFORE this object in the objects list",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 5,
+          "dy": 0
+        },
+        {
+          "dx": 6,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 5,
+          "dy": 1
+        },
+        {
+          "dx": 6,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 2
+        },
+        {
+          "dx": 6,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 5,
+          "dy": 3
+        },
+        {
+          "dx": 6,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 5,
+          "dy": 4
+        },
+        {
+          "dx": 6,
+          "dy": 4
+        }
+      ]
+    },
+    {
+      "key": "dome-red",
+      "sx": 16,
+      "sy": 5410,
+      "w": 112,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "League-style dome building (red, 7x5). Door is the bottom-centre cell (dx=3, dy=4): put a walkable door tile there BEFORE this object in the objects list",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 5,
+          "dy": 0
+        },
+        {
+          "dx": 6,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 5,
+          "dy": 1
+        },
+        {
+          "dx": 6,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 2
+        },
+        {
+          "dx": 6,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 5,
+          "dy": 3
+        },
+        {
+          "dx": 6,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 5,
+          "dy": 4
+        },
+        {
+          "dx": 6,
+          "dy": 4
+        }
+      ]
+    },
+    {
+      "key": "dome-white",
+      "sx": 16,
+      "sy": 5490,
+      "w": 112,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "League-style dome building (white, 7x5). Door is the bottom-centre cell (dx=3, dy=4): put a walkable door tile there BEFORE this object in the objects list",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 5,
+          "dy": 0
+        },
+        {
+          "dx": 6,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 5,
+          "dy": 1
+        },
+        {
+          "dx": 6,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 2
+        },
+        {
+          "dx": 6,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 5,
+          "dy": 3
+        },
+        {
+          "dx": 6,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 5,
+          "dy": 4
+        },
+        {
+          "dx": 6,
+          "dy": 4
+        }
+      ]
+    },
+    {
+      "key": "dome-ice",
+      "sx": 16,
+      "sy": 5570,
+      "w": 112,
+      "h": 80,
+      "walkable": false,
+      "above": true,
+      "category": "building",
+      "interactType": null,
+      "description": "League-style dome building (icy teal, 7x5). Door is the bottom-centre cell (dx=3, dy=4): put a walkable door tile there BEFORE this object in the objects list",
+      "cells": [
+        {
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "dx": 4,
+          "dy": 0
+        },
+        {
+          "dx": 5,
+          "dy": 0
+        },
+        {
+          "dx": 6,
+          "dy": 0
+        },
+        {
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "dx": 1,
+          "dy": 1
+        },
+        {
+          "dx": 2,
+          "dy": 1
+        },
+        {
+          "dx": 3,
+          "dy": 1
+        },
+        {
+          "dx": 4,
+          "dy": 1
+        },
+        {
+          "dx": 5,
+          "dy": 1
+        },
+        {
+          "dx": 6,
+          "dy": 1
+        },
+        {
+          "dx": 0,
+          "dy": 2
+        },
+        {
+          "dx": 1,
+          "dy": 2
+        },
+        {
+          "dx": 2,
+          "dy": 2
+        },
+        {
+          "dx": 3,
+          "dy": 2
+        },
+        {
+          "dx": 4,
+          "dy": 2
+        },
+        {
+          "dx": 5,
+          "dy": 2
+        },
+        {
+          "dx": 6,
+          "dy": 2
+        },
+        {
+          "dx": 0,
+          "dy": 3
+        },
+        {
+          "dx": 1,
+          "dy": 3
+        },
+        {
+          "dx": 2,
+          "dy": 3
+        },
+        {
+          "dx": 3,
+          "dy": 3
+        },
+        {
+          "dx": 4,
+          "dy": 3
+        },
+        {
+          "dx": 5,
+          "dy": 3
+        },
+        {
+          "dx": 6,
+          "dy": 3
+        },
+        {
+          "dx": 0,
+          "dy": 4
+        },
+        {
+          "dx": 1,
+          "dy": 4
+        },
+        {
+          "dx": 2,
+          "dy": 4
+        },
+        {
+          "dx": 3,
+          "dy": 4
+        },
+        {
+          "dx": 4,
+          "dy": 4
+        },
+        {
+          "dx": 5,
+          "dy": 4
+        },
+        {
+          "dx": 6,
+          "dy": 4
+        }
+      ]
     }
   ]
 }

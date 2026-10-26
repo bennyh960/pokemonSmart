@@ -243,6 +243,126 @@
         ]
       },
       "postBattleDialogue": []
+    },
+    {
+      "id": "npc-r9-psychic-tom",
+      "x": 30,
+      "y": 8,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_46f643",
+      "name": {
+        "en": "Psychic Tom",
+        "he": "טום המדיום"
+      },
+      "party": [
+        {
+          "pokemonId": 97,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 122,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 124,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "spawnAfter": "act3-articuno-arc-complete",
+      "reward": {
+        "money": 2000,
+        "items": [
+          {
+            "itemId": "ultra-ball",
+            "quantity": 3
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Hey! A day has 24 hours and a week has 7 days.",
+          "he": "היי! ביום יש 24 שעות ובשבוע יש 7 ימים."
+        },
+        {
+          "en": "So a week has 24 × 7 = 168 hours. My Psychic Pokémon already knew that!",
+          "he": "אז בשבוע יש 24 × 7 = 168 שעות. הפוקימונים העל-חושיים שלי כבר ידעו את זה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "You are great! Psychic types are weak to Bug, Ghost and Dark moves.",
+          "he": "אתה מעולה! פוקימונים מסוג Psychic חלשים מול Bug, Ghost ו-Dark."
+        },
+        {
+          "en": "Remember it for the next gym!",
+          "he": "תזכור את זה למכון הבא!"
+        }
+      ]
+    },
+    {
+      "id": "npc-r9-fisher-eli",
+      "x": 52,
+      "y": 7,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_d152a6",
+      "name": {
+        "en": "Fisherman Eli",
+        "he": "אלי הדייג"
+      },
+      "party": [
+        {
+          "pokemonId": 130,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 131,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 99,
+          "level": 44,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "spawnAfter": "act3-articuno-arc-complete",
+      "reward": {
+        "money": 2400,
+        "items": [
+          {
+            "itemId": "full-restore",
+            "quantity": 1
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Hello! About 71% of the Earth is covered with water.",
+          "he": "שלום! בערך 71% מכדור הארץ מכוסה במים."
+        },
+        {
+          "en": "No wonder there are so many Water Pokémon. Let's battle!",
+          "he": "אין פלא שיש כל כך הרבה פוקימוני מים. בוא נילחם!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Great job! Electric and Grass moves do 200% damage to Water types.",
+          "he": "כל הכבוד! התקפות Electric ו-Grass עושות 200% נזק לפוקימוני מים."
+        },
+        {
+          "en": "But Gyarados is Water and Flying — Electric hits it 400%!",
+          "he": "אבל גיאראדוס הוא מים ומעופף — Electric פוגע בו 400%!"
+        }
+      ]
     }
   ],
   "music": "route",
@@ -260,8 +380,7 @@
     "rain": 0.2,
     "sun": 0.2,
     "sandstorm": 0.1
-  }
-,
+  },
   "tiles": [
     ["mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","g2","g2","g2","g2","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave ladder 2","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","g2","g2","g2","g2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],

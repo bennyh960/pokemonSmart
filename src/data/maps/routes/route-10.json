@@ -232,6 +232,126 @@
         "lvlStep": 3,
         "timeInterval": 1
       }
+    },
+    {
+      "id": "npc-r10-hiker-gil",
+      "x": 10,
+      "y": 26,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_24117d",
+      "name": {
+        "en": "Hiker Gil",
+        "he": "גיל המטייל"
+      },
+      "party": [
+        {
+          "pokemonId": 76,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 208,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 112,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "spawnAfter": "act3-articuno-arc-complete",
+      "reward": {
+        "money": 2200,
+        "items": [
+          {
+            "itemId": "max-revive",
+            "quantity": 1
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Hello there! Mount Everest is 8,849 meters tall — the highest on Earth.",
+          "he": "שלום לך! הר האוורסט גבוה 8,849 מטר — הגבוה ביותר בעולם."
+        },
+        {
+          "en": "My Rock Pokémon are almost as tough. Let's climb this battle together!",
+          "he": "פוקימוני הסלע שלי כמעט קשוחים כמוהו. בוא נטפס על הקרב הזה ביחד!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Ha, you are strong! Onix is about 8.8 meters long.",
+          "he": "הא, אתה חזק! אוניקס ארוך בערך 8.8 מטר."
+        },
+        {
+          "en": "So about 1,000 Onix stacked up would reach the top of Everest!",
+          "he": "אז בערך 1,000 אוניקסים אחד על השני יגיעו לפסגת האוורסט!"
+        }
+      ]
+    },
+    {
+      "id": "npc-r10-picnic-noa",
+      "x": 8,
+      "y": 9,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Picnicker Noa",
+        "he": "נועה בפיקניק"
+      },
+      "party": [
+        {
+          "pokemonId": 45,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 182,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 71,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "spawnAfter": "act3-articuno-arc-complete",
+      "reward": {
+        "money": 2000,
+        "items": [
+          {
+            "itemId": "max-potion",
+            "quantity": 2
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Hi! Plants make food from sunlight. It is called photosynthesis.",
+          "he": "היי! צמחים מכינים אוכל מאור השמש. זה נקרא פוטוסינתזה."
+        },
+        {
+          "en": "That is why Grass Pokémon love sunny days. Let's have a friendly battle!",
+          "he": "בגלל זה פוקימוני דשא אוהבים ימים שמשיים. בוא נעשה קרב ידידותי!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Well played! Sunny Day makes Fire moves stronger and Water moves weaker.",
+          "he": "שיחקת יפה! Sunny Day מחזק התקפות אש ומחליש התקפות מים."
+        },
+        {
+          "en": "Rain Dance does the opposite. Weather is like science in battle!",
+          "he": "Rain Dance עושה את ההפך. מזג האוויר הוא כמו מדע בקרב!"
+        }
+      ]
     }
   ],
   "music": "route",
@@ -241,8 +361,7 @@
   "interactiveItems": {},
   "outside": {
     "rain": 0.4
-  }
-,
+  },
   "tiles": [
     ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
     ["g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2","g2"],
