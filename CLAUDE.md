@@ -4,6 +4,7 @@
 A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in "Numeria" (נומריה), players solve math and logic puzzles to attack, decode ciphers to find antidotes, and stop a rogue AI called NULL-X.
 
 ## Key Files
+- **Open work:** `docs/project-context.md` — story progress, TODOs, bugs, tech debt. Read it at the start of a task. Add new findings there; delete items when done. Keep it small.
 - **Full game spec:** `docs/game-spec.md` — THE reference for everything (story, world, mechanics, Pokemon, gym leaders)
 - **Current sprint:** `docs/sprint-2.md` — Active tasks, who's doing what, QA status
 - **Roadmap:** `docs/roadmap.md` — All sprints planned, what's done vs pending

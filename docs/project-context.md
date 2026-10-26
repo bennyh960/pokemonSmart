@@ -1,0 +1,24 @@
+# Project Context — Open Work
+
+Keep this file short. Delete an item as soon as it's done (git history is the archive).
+
+## Where the story stands
+Playable up to: badge 6 (Symmetrika) → Zapdos cave → Raikou arc → Route 9 (Reminder's Pidgeot).
+Last active quest: `quest-go-percentile` ("Road to Percentile") — `src/data/story/content/act3/quest-route9.ts`. Nothing happens after it yet.
+
+## TODO — main story
+- [ ] Percentile (gym 7): map has 0 NPCs, gym has no leader, `act4/quest-percentiles.ts` is an empty stub
+- [ ] Algebria (gym 8): `act4/quest-algebria.ts` is old "Absoluta" placeholder (map id `absoluta/absoluta` doesn't exist, `questionSetIds: ['placeholder']`) — rewrite for Algebria
+- [ ] Route 12: empty map (0 NPCs, 0 transitions)
+- [ ] Forest: `caves/deep-forest` and `routes/small forest` partly built — no story yet
+- [ ] Legendary caves: Zapdos + Raikou done; remaining legendaries not placed
+- [ ] League (`league/*`) + NULL-X Tower: maps exist with 1 NPC each; `act5/quest-nullx-tower.ts` references `nullx-floor-1..5` which don't exist (only `tower`, `floor-6`)
+
+## Bugs
+- [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
+- [ ] Trainer "VS" intro scene before battle (old bug #8, `docs/bugs.md`)
+
+## Tech debt
+- [ ] `src/data/badges.ts` badges 7–8: leader is `???`, type/mathTopic still old placeholders — fill in when the Percentile/Algebria gyms are designed
+- [ ] `src/data/maps/backup/` and `templates/backup/` — old map snapshots, remove if not needed
+- [ ] Math in battle disabled — needs a less intrusive mechanic
