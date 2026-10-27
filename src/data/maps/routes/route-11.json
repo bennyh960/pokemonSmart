@@ -49,6 +49,29 @@
   ],
   "npcs": [
     {
+      "id": "npc-r11-rocket-lookout",
+      "x": 19,
+      "y": 3,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Lookout",
+        "he": "צופה של רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "This cave is closed. Team Rocket business!",
+          "he": "המערה הזאת סגורה. עניינים של צוות רוקט!"
+        },
+        {
+          "en": "Nothing to see here... no secret base, no steam pipes. Go away!",
+          "he": "אין פה כלום... אין בסיס סודי, אין צינורות קיטור. לך מפה!"
+        }
+      ],
+      "despawnAfter": "act4-pct-lab-done"
+    },
+    {
       "id": "npc-r11-blocker",
       "x": 1,
       "y": 6,

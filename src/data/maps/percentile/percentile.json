@@ -287,9 +287,9 @@
     },
     {
       "id": "npc-percentile-ocean-swimmer",
-      "x": 5,
-      "y": 19,
-      "facing": "down",
+      "x": 0,
+      "y": 41,
+      "facing": "up",
       "type": "dialogue",
       "spriteType": "char_878b8c",
       "name": {
@@ -297,7 +297,7 @@
         "he": "דקלה השחיינית"
       },
       "blocker": true,
-      "lineOfSight": 30,
+      "lineOfSight": 9,
       "despawnAfter": "percentile-ocean-open",
       "dialogue": [
         {
@@ -312,9 +312,9 @@
     },
     {
       "id": "npc-percentile-ocean-swimmer-2",
-      "x": 2,
+      "x": 0,
       "y": 20,
-      "facing": "up",
+      "facing": "down",
       "type": "dialogue",
       "spriteType": "char_2c5fb3",
       "name": {
@@ -322,7 +322,7 @@
         "he": "אלכס השחיין"
       },
       "blocker": true,
-      "lineOfSight": 2,
+      "lineOfSight": 12,
       "despawnAfter": "percentile-ocean-open",
       "dialogue": [
         {
@@ -685,7 +685,8 @@
   "interactiveItems": {},
   "outside": {
     "sun": 1
-  },
+  }
+,
   "tiles": [
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2tl2"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1b","wt1br","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c"],

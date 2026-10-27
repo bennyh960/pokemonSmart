@@ -1,0 +1,520 @@
+{
+  "id": "b2",
+  "name": "Rocket Base B2 — Generator Hall",
+  "label": {
+    "en": "Rocket Base B2 — Generator Hall",
+    "he": "בסיס רוקט קומה 2 — אולם הגנרטורים"
+  },
+  "tileset": "interior",
+  "width": 32,
+  "height": 22,
+  "tileSize": 16,
+  "spawn": {
+    "x": 2,
+    "y": 4
+  },
+  "transitions": [
+    {
+      "fromX": 1,
+      "fromY": 3,
+      "toMapId": "rocket-base/b1",
+      "toX": 32,
+      "toY": 25
+    },
+    {
+      "fromX": 30,
+      "fromY": 20,
+      "toMapId": "rocket-base/b3",
+      "toX": 2,
+      "toY": 4
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-base-b2-gen-1",
+      "x": 9,
+      "y": 7,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "transparent",
+      "name": {
+        "en": "Generator",
+        "he": "גנרטור"
+      },
+      "dialogue": [
+        {
+          "en": "A tired Magmar is chained inside the generator. Its flames feed the machine.",
+          "he": "מגמר עייף כבול בתוך הגנרטור. הלהבות שלו מזינות את המכונה."
+        },
+        {
+          "en": "The screen says: \"Fire energy 100% → steam pipe → Route 12\".",
+          "he": "על המסך כתוב: \"אנרגיית אש 100% ← צינור קיטור ← דרך 12\"."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "id": "npc-base-b2-gen-2",
+      "x": 14,
+      "y": 7,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "transparent",
+      "name": {
+        "en": "Generator",
+        "he": "גנרטור"
+      },
+      "dialogue": [
+        {
+          "en": "A tired Ponyta is chained inside the generator. Its flames feed the machine.",
+          "he": "פוניטה עייף כבול בתוך הגנרטור. הלהבות שלו מזינות את המכונה."
+        },
+        {
+          "en": "The screen says: \"Fire energy 100% → steam pipe → Route 12\".",
+          "he": "על המסך כתוב: \"אנרגיית אש 100% ← צינור קיטור ← דרך 12\"."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "id": "npc-base-b2-gen-3",
+      "x": 19,
+      "y": 7,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "transparent",
+      "name": {
+        "en": "Generator",
+        "he": "גנרטור"
+      },
+      "dialogue": [
+        {
+          "en": "A tired Houndour is chained inside the generator. Its flames feed the machine.",
+          "he": "האונדור עייף כבול בתוך הגנרטור. הלהבות שלו מזינות את המכונה."
+        },
+        {
+          "en": "The screen says: \"Fire energy 100% → steam pipe → Route 12\".",
+          "he": "על המסך כתוב: \"אנרגיית אש 100% ← צינור קיטור ← דרך 12\"."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "id": "npc-base-b2-gen-4",
+      "x": 24,
+      "y": 7,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "transparent",
+      "name": {
+        "en": "Generator",
+        "he": "גנרטור"
+      },
+      "dialogue": [
+        {
+          "en": "A tired Slugma is chained inside the generator. Its flames feed the machine.",
+          "he": "סלאגמה עייף כבול בתוך הגנרטור. הלהבות שלו מזינות את המכונה."
+        },
+        {
+          "en": "The screen says: \"Fire energy 100% → steam pipe → Route 12\".",
+          "he": "על המסך כתוב: \"אנרגיית אש 100% ← צינור קיטור ← דרך 12\"."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "id": "npc-base-b2-grunt-1",
+      "x": 3,
+      "y": 10,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Hey! This floor runs on fire power — get out!",
+          "he": "היי! הקומה הזאת עובדת על כוח אש — החוצה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "The generators will keep burning without me...",
+          "he": "הגנרטורים ימשיכו לבעור גם בלעדיי..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 58,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 109,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 77,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 2
+          },
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-base-b2-grunt-2",
+      "x": 12,
+      "y": 8,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "One Magmar = 1000 units of heat. Four of them = ?",
+          "he": "מגמר אחד = 1000 יחידות חום. ארבעה מהם = ?"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "4000... I knew that!",
+          "he": "4000... ידעתי את זה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 228,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 126,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 5,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 5,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 5,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 5,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-base-b2-grunt-3",
+      "x": 18,
+      "y": 18,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "The steam pipes run down to the core. Nobody goes down there!",
+          "he": "צינורות הקיטור יורדים עד הליבה. אף אחד לא יורד לשם!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Fine, go... the boss on B3 will stop you.",
+          "he": "בסדר, לך... הבוסים בקומה 3 יעצרו אותך."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 218,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 37,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    }
+  ],
+  "music": "team-rocket-grunt",
+  "encounterTableId": null,
+  "movablePuzzle": {},
+  "flagListeners": [],
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "ultra-ball",
+        "x": 29,
+        "y": 5
+      },
+      {
+        "itemId": "max-potion",
+        "x": 2,
+        "y": 20
+      },
+      {
+        "itemId": "fire-stone",
+        "x": 30,
+        "y": 13
+      }
+    ]
+  },
+  "ambientFx": [
+    {
+      "kind": "fire",
+      "x": 9,
+      "y": 5,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 9,
+      "y": 3,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "fire",
+      "x": 14,
+      "y": 5,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 14,
+      "y": 3,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "fire",
+      "x": 19,
+      "y": 5,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 19,
+      "y": 3,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "fire",
+      "x": 24,
+      "y": 5,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 24,
+      "y": 3,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 10,
+      "y": 14,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 22,
+      "y": 14,
+      "despawnAfter": "act4-pct-suicune-done"
+    }
+  ],
+  "objects": [
+    {
+      "key": "labx",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "key": "labx",
+      "x": 13,
+      "y": 3
+    },
+    {
+      "key": "labx",
+      "x": 18,
+      "y": 3
+    },
+    {
+      "key": "labx",
+      "x": 23,
+      "y": 3
+    },
+    {
+      "key": "tool-1",
+      "x": 9,
+      "y": 14
+    },
+    {
+      "key": "tool-1",
+      "x": 15,
+      "y": 17
+    },
+    {
+      "key": "tool-1",
+      "x": 21,
+      "y": 14
+    },
+    {
+      "key": "lab-5",
+      "x": 26,
+      "y": 15
+    },
+    {
+      "key": "box",
+      "x": 3,
+      "y": 17
+    },
+    {
+      "key": "box-2",
+      "x": 28,
+      "y": 3
+    },
+    {
+      "key": "item-generic",
+      "x": 29,
+      "y": 5
+    },
+    {
+      "key": "item-generic",
+      "x": 2,
+      "y": 20
+    },
+    {
+      "key": "item-generic",
+      "x": 30,
+      "y": 13
+    }
+  ],
+  "tiles": [
+    ["w5-b1","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-b2"],
+    ["w5-r","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
+    ["w5-r","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l"],
+    ["w5-r","stairs","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-c1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-c3","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","stairs","w5-l"],
+    ["w5-b3","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-b4"]
+  ]
+}

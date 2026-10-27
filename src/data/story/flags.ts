@@ -287,14 +287,19 @@ export const FLAGS = {
   ACT4_PCT_CLUE_GROWLITHE: 'act4-pct-clue-growlithe', // Erika: Growlithe ran to Route 12
   ACT4_PCT_CLUES_DONE: 'act4-pct-clues-done', // All 3 clues → go to the lab
   ACT4_PCT_LAB_DONE: 'act4-pct-lab-done', // Lab + core lore → Route 12 hills
+  ACT4_PCT_BASE_ENTERED: 'act4-pct-base-entered', // First step into the Rocket Base (B1)
+  ACT4_PCT_BASE_JJ_DONE: 'act4-pct-base-jj-done', // Jessie + James beaten on B3
+  ACT4_PCT_B4_SEEN: 'act4-pct-b4-seen', // Steam Core reveal (Suicune in chains)
+  ACT4_PCT_SUICUNE_DONE: 'act4-pct-suicune-done', // Suicune freed → Core X4, generators stop, hatch opens
+  ACT4_PCT_SUICUNE_ARRIVED: 'act4-pct-suicune-arrived', // Suicune surfs in to help on the Route 12 hilltop
   ACT4_PCT_R12_ENTERED: 'act4-pct-r12-entered', // First Route 12 visit during the arc
   ACT4_PCT_MACHINES_OFF: 'act4-pct-machines-off', // All 3 Heat Collector guards beaten
   ACT4_PCT_ADMIN_DEFEATED: 'act4-pct-admin-defeated', // Admin beaten → Max vs Moltres scene, Entei appears
-  ACT4_PCT_ENTEI_DONE: 'act4-pct-entei-done', // Entei beaten → Core X4, Moltres battle opens
-  ACT4_PCT_LEGENDS_DONE: 'act4-pct-legends-done', // Moltres beaten → Core X5, Rocket gone, infection drops
+  ACT4_PCT_ENTEI_DONE: 'act4-pct-entei-done', // Entei beaten → Core X5, Moltres battle opens
+  ACT4_PCT_LEGENDS_DONE: 'act4-pct-legends-done', // Moltres beaten → Core X6, Rocket gone, infection drops 2 levels
   ACT4_PCT_GROWLITHE_FOUND: 'act4-pct-growlithe-found', // Jimmy's Growlithe found on Route 12
   ACT4_PCT_GROWLITHE_RETURNED: 'act4-pct-growlithe-returned', // Growlithe back home → Charcoal
-  ACT4_PCT_LAB_FINAL: 'act4-pct-lab-final', // Oak scanned 5 cores → Minusburg
+  ACT4_PCT_LAB_FINAL: 'act4-pct-lab-final', // Oak scanned 6 cores → Minusburg
   ACT4_PCT_GYM_OPEN: 'act4-pct-gym-open', // Lance + Jenny scene done → gym door opens
   ACT4_PCT_ARC_COMPLETE: 'act4-pct-arc-complete', // Badge 7 won → arc NPCs leave
   ACT4_MINUSBURG_OPEN: 'act4-minusburg-open', // Officer Jenny's Minusburg blockade lifts
@@ -454,14 +459,19 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT4_PCT_CLUE_GROWLITHE]: "Clue: Jimmy's Growlithe ran toward the heat on Route 12",
   [FLAGS.ACT4_PCT_CLUES_DONE]: 'All 3 Percentile clues found — go to the lab',
   [FLAGS.ACT4_PCT_LAB_DONE]: 'Lab scene done — cores explained, heading to Route 12 hills',
+  [FLAGS.ACT4_PCT_BASE_ENTERED]: 'First step into the Rocket Base under the Route 11 cave',
+  [FLAGS.ACT4_PCT_BASE_JJ_DONE]: 'Jessie and James beaten on Rocket Base B3',
+  [FLAGS.ACT4_PCT_B4_SEEN]: 'Steam Core reveal — Suicune chained to the steam engine',
+  [FLAGS.ACT4_PCT_SUICUNE_DONE]: 'Suicune freed on B4 — Core X4, generators stop, emergency hatch opens',
+  [FLAGS.ACT4_PCT_SUICUNE_ARRIVED]: 'Suicune arrived on the Route 12 hilltop to help against Entei and Moltres',
   [FLAGS.ACT4_PCT_R12_ENTERED]: 'First Route 12 visit during the Burning Chance arc',
   [FLAGS.ACT4_PCT_MACHINES_OFF]: 'All 3 Heat Collectors shut down — admin shield down',
   [FLAGS.ACT4_PCT_ADMIN_DEFEATED]: 'Rocket admin beaten — Max vs Moltres, Entei appears',
-  [FLAGS.ACT4_PCT_ENTEI_DONE]: 'Entei beaten — Core X4 collected',
-  [FLAGS.ACT4_PCT_LEGENDS_DONE]: 'Moltres beaten — Core X5 collected, Rocket gone, infection medium',
+  [FLAGS.ACT4_PCT_ENTEI_DONE]: 'Entei beaten — Core X5 collected',
+  [FLAGS.ACT4_PCT_LEGENDS_DONE]: 'Moltres beaten — Core X6 collected, Rocket gone, area infection down 2 levels',
   [FLAGS.ACT4_PCT_GROWLITHE_FOUND]: "Jimmy's Growlithe found on Route 12",
   [FLAGS.ACT4_PCT_GROWLITHE_RETURNED]: 'Growlithe returned to Jimmy — Charcoal reward',
-  [FLAGS.ACT4_PCT_LAB_FINAL]: 'Oak scanned the 5 cores — next signal under Minusburg',
+  [FLAGS.ACT4_PCT_LAB_FINAL]: 'Oak scanned the 6 cores — next signal under Minusburg',
   [FLAGS.ACT4_PCT_GYM_OPEN]: 'Lance + Jenny scene done — Percentile gym open',
   [FLAGS.ACT4_PCT_ARC_COMPLETE]: 'Badge 7 won — Burning Chance arc complete',
   [FLAGS.ACT4_MINUSBURG_OPEN]: "Officer Jenny's Minusburg blockade lifted (after badge 7)",
