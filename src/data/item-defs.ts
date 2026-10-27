@@ -1038,8 +1038,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: false,
     name: { en: 'NULL-X Core X4', he: 'ליבת נאל-איקס - X4' },
     description: {
-      en: "A fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
-      he: 'שבר מקוד הליבה של נאל-איקס. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
+      en: "Dropped by Entei - NULL-X's Chance module, the code that tried to erase randomness. One of eight pieces needed to shut it down permanently.",
+      he: 'הופל על ידי אנטאיי - מודול הסיכוי של נאל-איקס, הקוד שניסה למחוק את האקראיות. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
     },
     keyFlag: 'key-core-x4-obtained',
     usedFlag: 'key-core-x4-used',
@@ -1053,8 +1053,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: false,
     name: { en: 'NULL-X Core X5', he: 'ליבת נאל-איקס - X5' },
     description: {
-      en: "A fragment of NULL-X's core code. One of eight pieces needed to shut it down permanently.",
-      he: 'שבר מקוד הליבה של נאל-איקס. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
+      en: "Dropped by Moltres - NULL-X's Energy module, the code that fed on heat. One of eight pieces needed to shut it down permanently.",
+      he: 'הופל על ידי מולטרס - מודול האנרגיה של נאל-איקס, הקוד שניזון מחום. אחד משמונה חלקים הנדרשים לכיבויו הקבוע.',
     },
     keyFlag: 'key-core-x5-obtained',
     usedFlag: 'key-core-x5-used',

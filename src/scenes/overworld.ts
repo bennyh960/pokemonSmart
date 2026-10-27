@@ -116,6 +116,7 @@ import {
   loadPokemonSprite,
   type PokemonAnim,
 } from '../systems/overworld-pokemon-anim.js';
+import { createOverworldFx, updateOverworldFx, drawOverworldFx, type OverworldFx } from '../systems/overworld-fx.js';
 import { createShake, updateShake, applyShake, resetShake, type ShakeEffect } from '../ui/battle-animations/index.js';
 import { grantItem } from '../systems/item-effects.js';
 import { setFlyCallback, FLY_DESTINATIONS, resolveFlySpawn } from './world-map.js';
@@ -338,6 +339,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let flyAnim: FlyAnimState | null = null;
   // Cutscene pokemon-anim step (e.g. Pidgeot flying off)
   let cutscenePokemonAnim: PokemonAnim | null = null;
+  // Cutscene fx steps (fire / smoke / burst particles)
+  let cutsceneFx: OverworldFx[] = [];
   // Cutscene screen-shake step (e.g. earthquake)
   let screenShake: ShakeEffect | null = null;
 
@@ -1367,6 +1370,22 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       isPokemonAnimPlaying() {
         return cutscenePokemonAnim !== null;
       },
+      playFx(step) {
+        let tile = { x: player.gridX, y: player.gridY };
+        if (step.at && step.at !== 'player') {
+          if ('npcId' in step.at) {
+            const npcId = step.at.npcId;
+            const npc = npcManager?.getNPCs().find((n) => n.id === npcId);
+            if (npc) tile = { x: npc.x, y: npc.y };
+          } else {
+            tile = { x: step.at.x, y: step.at.y };
+          }
+        }
+        cutsceneFx.push(createOverworldFx(step.kind, tile, step.durationMs, step.radius));
+      },
+      isFxPlaying() {
+        return cutsceneFx.length > 0;
+      },
       shakeScreen(durationMs, intensity) {
         screenShake = createShake(intensity, durationMs / 1000);
       },
@@ -1383,7 +1402,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         audio.stopMusic?.();
       },
       playSFX(id) {
-        audio.playSFX(id);
+        if (id.startsWith('move:')) audio.playMoveSFX(id.slice(5));
+        else if (id.startsWith('cry:')) audio.playCry(Number(id.slice(4)));
+        else audio.playSFX(id);
       },
       executeStoryAction(action) {
         if (!hasActiveGame()) return;
@@ -2155,6 +2176,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         // hideHUD();
         updateCutscene(dt, input, buildCutsceneContext());
         if (cutscenePokemonAnim && updatePokemonAnim(cutscenePokemonAnim, dt)) cutscenePokemonAnim = null;
+        cutsceneFx = cutsceneFx.filter((fx) => !updateOverworldFx(fx, dt));
         if (screenShake) {
           updateShake(screenShake, dt);
           if (!screenShake.active) screenShake = null;
@@ -4204,6 +4226,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         // player screen position
         drawOverworldPokemon(ctx, flyAnim.pokemonSprite, psx, psy + flyAnim.spriteOffsetY, flyAnim.spriteScale, flyAnim.spriteAlpha);
       }
+
+      // Cutscene fx particles (fire / smoke / burst)
+      // (fx only advance while a cutscene runs — drop leftovers once it ends)
+      if (!isCutsceneActive()) cutsceneFx = [];
+      for (const fx of cutsceneFx) drawOverworldFx(ctx, fx, camera.x, camera.y);
 
       // Cutscene pokemon-anim overlay
       if (cutscenePokemonAnim && cutscenePokemonAnim.alpha > 0 && cutscenePokemonAnim.sprite) {

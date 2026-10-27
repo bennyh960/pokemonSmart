@@ -12,6 +12,60 @@
   "encounterTableId": null,
   "npcs": [
     {
+      "id": "npc-pct-coin-kid",
+      "x": 8,
+      "y": 13,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_dc1a34",
+      "name": {
+        "en": "Coin Kid Omer",
+        "he": "עומר ילד המטבע"
+      },
+      "dialogue": [
+        {
+          "en": "Heads or tails? Watch this!",
+          "he": "עץ או פלי? תסתכל!"
+        }
+      ],
+      "postFlagDialogue": {
+        "flag": "act4-pct-legends-done",
+        "dialogue": [
+          {
+            "en": "Tails! Heads! Tails! My coin is random again — 50/50, just like it should be!",
+            "he": "פלי! עץ! פלי! המטבע שלי שוב אקראי — 50/50, בדיוק כמו שצריך!"
+          }
+        ]
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-arc-complete"
+    },
+    {
       "id": "npc-percentile-librarian",
       "x": 13,
       "y": 4,

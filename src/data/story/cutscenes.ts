@@ -1,6 +1,7 @@
 import type { BilingualText } from '../../systems/npc.js';
 import type { StoryAction } from './events.js';
 import type { PokemonAnimMotion, PathDir } from '../../systems/overworld-pokemon-anim.js';
+import type { OverworldFxKind } from '../../systems/overworld-fx.js';
 
 export type CutsceneStep =
   | { type: 'camera-pan'; x: number; y: number; durationMs: number }
@@ -41,6 +42,21 @@ export type CutsceneStep =
       from?: 'player' | { npcId: string };
       waitForComplete?: boolean;
     }
+  /**
+   * fx — particle effect on the map: 'fire', 'smoke' or 'burst' (a hit flash).
+   *   at: 'player' (default), { npcId } or a tile { x, y }
+   *   radius: spread in tiles (default 1)
+   *   Non-blocking by default — set waitForComplete: true to wait until it fades.
+   * Example: { type: 'fx', kind: 'fire', at: { npcId: 'wild-x' }, durationMs: 1200, radius: 2 }
+   */
+  | {
+      type: 'fx';
+      kind: OverworldFxKind;
+      at?: 'player' | { npcId: string } | { x: number; y: number };
+      durationMs: number;
+      radius?: number;
+      waitForComplete?: boolean;
+    }
   | { type: 'move-player'; path: Array<'up' | 'down' | 'left' | 'right'>; waitForComplete?: boolean }
   | {
       type: 'dialogue';
@@ -52,6 +68,7 @@ export type CutsceneStep =
   | { type: 'wait'; durationMs: number }
   | { type: 'wait-input' }
   | { type: 'play-music'; musicId: string }
+  /** sfxId: a named SFX, 'move:<Move Name>' for a move sound, or 'cry:<pokedexId>' for a Pokémon cry. */
   | { type: 'play-sfx'; sfxId: string }
   | { type: 'stop-music' }
   | { type: 'action'; action: StoryAction }

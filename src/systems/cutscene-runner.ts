@@ -9,7 +9,7 @@
  * Supported steps (Sprint 7A):
  *   dialogue, screen-fade, wait, wait-input, face-npc, show-npc, hide-npc,
  *   hide-player, show-player, action, if-flag, play-music, stop-music, play-sfx,
- *   move-npc (instant teleport), camera-snap, camera-pan (snap for now), pokemon-anim, screen-shake
+ *   move-npc (instant teleport), camera-snap, camera-pan (snap for now), pokemon-anim, screen-shake, fx
  *
  * Not yet supported (deferred): start-battle, start-gate
  */
@@ -47,6 +47,10 @@ export interface CutsceneContext {
   playPokemonAnim(step: Extract<CutsceneStep, { type: 'pokemon-anim' }>): void;
   /** Returns true while a pokemon-anim is still playing. */
   isPokemonAnimPlaying(): boolean;
+  /** Start a particle effect (fire / smoke / burst) on the map. */
+  playFx(step: Extract<CutsceneStep, { type: 'fx' }>): void;
+  /** Returns true while any fx is still playing. */
+  isFxPlaying(): boolean;
   /** Shake the map view for a while (e.g. an earthquake). */
   shakeScreen(durationMs: number, intensity: number): void;
   snapCamera(x: number, y: number): void;
@@ -124,6 +128,7 @@ let _phoneRing: PhoneRingState | null = null; // phone-ring intro phase
 let _npcMoveWaiting: string | null = null; // npcId being waited on for animated walk
 let _playerMoveWaiting = false;
 let _pokemonAnimWaiting = false;
+let _fxWaiting = false;
 let _completionResolve: (() => void) | null = null;
 
 const CHARS_PER_SEC = 40; // typewriter speed
@@ -171,6 +176,7 @@ export function activateCutscene(id: string): boolean {
   _npcMoveWaiting = null;
   _playerMoveWaiting = false;
   _pokemonAnimWaiting = false;
+  _fxWaiting = false;
   _phoneRing = null;
 
   // If phoneCaller is set, enter the ring phase before executing any steps
@@ -202,6 +208,7 @@ export function deactivateCutscene(): void {
   _npcMoveWaiting = null;
   _playerMoveWaiting = false;
   _pokemonAnimWaiting = false;
+  _fxWaiting = false;
   _phoneRing = null;
   _completionResolve?.();
   _completionResolve = null;
@@ -349,6 +356,15 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
   if (_pokemonAnimWaiting) {
     if (!ctx.isPokemonAnimPlaying()) {
       _pokemonAnimWaiting = false;
+      _stepIndex++;
+    }
+    return;
+  }
+
+  // ── Particle fx wait ──
+  if (_fxWaiting) {
+    if (!ctx.isFxPlaying()) {
+      _fxWaiting = false;
       _stepIndex++;
     }
     return;
@@ -593,6 +609,13 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     case 'pokemon-anim': {
       ctx.playPokemonAnim(step);
       if (step.waitForComplete !== false) _pokemonAnimWaiting = true;
+      else _stepIndex++;
+      break;
+    }
+
+    case 'fx': {
+      ctx.playFx(step);
+      if (step.waitForComplete) _fxWaiting = true;
       else _stepIndex++;
       break;
     }

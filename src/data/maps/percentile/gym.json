@@ -579,6 +579,10 @@
         "badge": 7,
         "items": [
           {
+            "itemId": "hm02",
+            "quantity": 1
+          },
+          {
             "itemId": "fire-stone",
             "quantity": 1
           },

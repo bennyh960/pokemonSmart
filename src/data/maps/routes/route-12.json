@@ -46,7 +46,666 @@
       "toY": 2
     }
   ],
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "npc-pct-guard-1",
+      "x": 34,
+      "y": 57,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Heat Collector #1 — charge at 64% and rising!",
+          "he": "אוסף חום מספר 1 — טעינה 64% ועולה!"
+        },
+        {
+          "en": "Nobody touches the machine. Not even 1% of a chance, kid!",
+          "he": "אף אחד לא נוגע במכונה. אין לך אפילו 1% סיכוי, ילד!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "The charge is dropping... 40%... 10%... 0%! The machine is dead!",
+          "he": "הטעינה יורדת... 40%... 10%... 0%! המכונה כבתה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 228,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 42,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 2000
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-pct-guard-2",
+      "x": 30,
+      "y": 40,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Heat Collector #2 — 78% charged! The boss will be proud.",
+          "he": "אוסף חום מספר 2 — טעון 78%! הבוס יהיה גאה."
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "No! The collector is cooling down... the chance is coming back!",
+          "he": "לא! האוסף מתקרר... הסיכוי חוזר!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 126,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 20,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 89,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 2000
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-pct-guard-3",
+      "x": 12,
+      "y": 30,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Heat Collector #3 is hidden on the low path. 91%! Almost full!",
+          "he": "אוסף חום מספר 3 מוסתר בשביל התחתון. 91%! כמעט מלא!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "91%... 50%... 0%. That was the last one, wasn't it?",
+          "he": "91%... 50%... 0%. זה היה האחרון, נכון?"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 24,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 48,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 2000
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-pct-grunt-4",
+      "x": 13,
+      "y": 52,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Too hot for you? Good. Go home!",
+          "he": "חם לך מדי? יופי. לך הביתה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Ugh... my uniform is melting.",
+          "he": "אוף... המדים שלי נמסים."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 42,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 219,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1500
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-pct-grunt-5",
+      "x": 30,
+      "y": 19,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "From up here I can see the whole plan burning. Beautiful!",
+          "he": "מכאן אני רואה את כל התוכנית בוערת. יפהפה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "The admin will cool you down...",
+          "he": "האדמין יקרר אותך..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 78,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 24,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1500
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 4,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 4,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 4,
+            "delay": 1.5
+          },
+          {
+            "dir": "right",
+            "steps": 4,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-pct-admin-shield",
+      "x": 42,
+      "y": 38,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Admin Kelvin",
+        "he": "האדמין קלווין"
+      },
+      "dialogue": [
+        {
+          "en": "I'm Admin Kelvin of Team Rocket. My heat shield is at 100%!",
+          "he": "אני האדמין קלווין מצוות רוקט. מגן החום שלי על 100%!"
+        },
+        {
+          "en": "Three Heat Collectors power it. While they run, nobody passes.",
+          "he": "שלושה אוספי חום מפעילים אותו. כל עוד הם פועלים, אף אחד לא עובר."
+        }
+      ],
+      "blocker": true,
+      "lineOfSight": 2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-machines-off"
+    },
+    {
+      "id": "npc-pct-admin",
+      "x": 42,
+      "y": 38,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Admin Kelvin",
+        "he": "האדמין קלווין"
+      },
+      "dialogue": [
+        {
+          "en": "My shield is down?! You shut off all three collectors?",
+          "he": "המגן שלי כבה?! כיבית את כל שלושת האוספים?"
+        },
+        {
+          "en": "Fine. I'll melt you myself!",
+          "he": "בסדר. אמיס אותך בעצמי!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Impossible... NULL-X calculated a 0% chance of losing!",
+          "he": "בלתי אפשרי... נאל-איקס חישב 0% סיכוי להפסיד!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 229,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 126,
+          "level": 51,
+          "moves": []
+        },
+        {
+          "pokemonId": 169,
+          "level": 52,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 5000,
+        "items": [
+          {
+            "itemId": "full-restore",
+            "quantity": 1
+          }
+        ]
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-machines-off",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-pct-reminder-r12",
+      "x": 43,
+      "y": 38,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "rival-reminder",
+      "name": {
+        "en": "Rei Minder",
+        "he": "ריי מיינדר"
+      },
+      "dialogue": [
+        {
+          "en": "That admin has a heat shield — I can't get past him!",
+          "he": "לאדמין הזה יש מגן חום — אני לא מצליח לעבור אותו!"
+        },
+        {
+          "en": "Three Rocket grunts are guarding Heat Collectors on this route. Beat them and the shield goes down!",
+          "he": "שלושה סוכני רוקט שומרים על אוספי חום בדרך הזאת. תנצח אותם והמגן ייפול!"
+        }
+      ],
+      "postFlagDialogue": {
+        "flag": "act4-pct-machines-off",
+        "dialogue": [
+          {
+            "en": "The shield is down! Beat him — I've got your back!",
+            "he": "המגן נפל! תנצח אותו — אני מאחוריך!"
+          }
+        ]
+      },
+      "blocker": true,
+      "lineOfSight": 2,
+      "spawnAfter": "act4-pct-lab-done",
+      "despawnAfter": "act4-pct-admin-defeated"
+    },
+    {
+      "id": "npc-pct-max",
+      "x": 40,
+      "y": 31,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "gym-7-integrala",
+      "name": {
+        "en": "Max Formax",
+        "he": "מקס פורמקס"
+      },
+      "dialogue": [
+        {
+          "en": "I can hold Moltres a little longer — stop Entei first!",
+          "he": "אני יכול להחזיק את מולטרס עוד קצת — קודם תעצור את אנטאיי!"
+        }
+      ],
+      "postFlagDialogue": {
+        "flag": "act4-pct-entei-done",
+        "dialogue": [
+          {
+            "en": "Fuel, air and heat — take away the fuel! Its fuel is the glitch. Go!",
+            "he": "דלק, אוויר וחום — תוריד את הדלק! הדלק שלו הוא הגליץ'. קדימה!"
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-admin-defeated",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "wild-pct-entei",
+      "x": 32,
+      "y": 30,
+      "facing": "right",
+      "type": "wild-pokemon",
+      "spriteType": "entei",
+      "name": {
+        "en": "Entei",
+        "he": "אנטאיי"
+      },
+      "dialogue": [
+        {
+          "en": "Grrrooooar!!",
+          "he": "גררררוווואר!!"
+        }
+      ],
+      "pokemonId": 244,
+      "level": 55,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "fleeAtHpPct": 0.25,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-admin-defeated"
+    },
+    {
+      "id": "npc-pct-moltres-fight",
+      "x": 40,
+      "y": 28,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_ade75b",
+      "name": {
+        "en": "Moltres",
+        "he": "מולטרס"
+      },
+      "dialogue": [
+        {
+          "en": "Moltres is locked in battle with Max Formax! Deal with Entei first.",
+          "he": "מולטרס נעול בקרב עם מקס פורמקס! קודם תטפל באנטאיי."
+        }
+      ],
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1
+          }
+        ],
+        "loop": true,
+        "floating": true
+      },
+      "spawnAfter": "act4-pct-admin-defeated",
+      "despawnAfter": "act4-pct-entei-done"
+    },
+    {
+      "id": "wild-pct-moltres",
+      "x": 40,
+      "y": 28,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "char_ade75b",
+      "name": {
+        "en": "Moltres",
+        "he": "מולטרס"
+      },
+      "dialogue": [
+        {
+          "en": "Kyaaaaah!!",
+          "he": "קיאאאאאה!!"
+        }
+      ],
+      "pokemonId": 146,
+      "level": 57,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "fleeAtHpPct": 0.25,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1
+          }
+        ],
+        "loop": true,
+        "floating": true
+      },
+      "spawnAfter": "act4-pct-entei-done"
+    }
+  ],
   "music": "town",
   "encounterTableId": "route-12",
   "movablePuzzle": {},

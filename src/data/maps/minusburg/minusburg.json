@@ -888,7 +888,7 @@
       "spriteType": "officer-Jenny",
       "spawnAfter": "minusburg-gary-met",
       "blocker": true,
-      "despawnAfter": "TODO_NOT_READY"
+      "despawnAfter": "act4-minusburg-open"
     },
     {
       "id": "npc-1776761882211",

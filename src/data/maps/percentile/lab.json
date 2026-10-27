@@ -15,6 +15,26 @@
   },
   "npcs": [
     {
+      "id": "npc-pct-oak",
+      "x": 5,
+      "y": 8,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "oak",
+      "name": {
+        "en": "Prof. Oak",
+        "he": "פרופסור אוק"
+      },
+      "dialogue": [
+        {
+          "en": "Five cores... three to go. Minusburg is our best lead.",
+          "he": "חמש ליבות... נשארו שלוש. מינוסבורג היא הכיוון הכי טוב שלנו."
+        }
+      ],
+      "spawnAfter": "act4-pct-legends-done",
+      "despawnAfter": "act4-pct-arc-complete"
+    },
+    {
       "id": "npc-1783419724700-ability-swapper",
       "x": 10,
       "y": 6,

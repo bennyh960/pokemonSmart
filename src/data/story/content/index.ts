@@ -37,6 +37,7 @@ import './act3/quest-articuno-forest.js';
 
 // Act 4 — Rocket Escalation: Integrala, Absoluta
 import './act4/quest-percentiles.js';
+import './act4/quest-percentile-burning-chance.js';
 import './act4/quest-algebria.js';
 
 // Act 5 — The Core: NULL-X Tower

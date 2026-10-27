@@ -12,6 +12,75 @@
   "encounterTableId": null,
   "npcs": [
     {
+      "id": "npc-pct-ball-thief",
+      "x": 14,
+      "y": 7,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Hey! These Poké Balls are going up to the hills. Boss's orders!",
+          "he": "היי! הפוקדורים האלה עולים לגבעות. פקודה של הבוס!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Fine, keep your balls! I still have the map... oops, I dropped it.",
+          "he": "בסדר, תשמרו את הכדורים! עוד יש לי את המפה... אופס, הפלתי אותה."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 109,
+          "level": 42,
+          "moves": []
+        },
+        {
+          "pokemonId": 24,
+          "level": 43,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1500
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-arc-complete"
+    },
+    {
       "id": "npc-percentile-ball-keeper",
       "x": 10,
       "y": 4,

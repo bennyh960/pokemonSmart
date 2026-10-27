@@ -277,7 +277,26 @@ export const FLAGS = {
 
   // ── Act 4: Percentile ───────────────────────────────────────────────────────
   VISITED_PERCENTILE: 'visited-percentile',
-  PERCENTILE_OCEAN_OPEN: 'percentile-ocean-open', // (not set yet) removes the west-ocean blockers in Percentile
+  PERCENTILE_OCEAN_OPEN: 'percentile-ocean-open', // removes the west-ocean blockers in Percentile (set when Moltres is beaten)
+
+  // ── Act 4: Percentile — "The Burning Chance" ───────────────────────────────
+  ACT4_PCT_ARC_STARTED: 'act4-pct-arc-started', // Algorithma's call — Percentile + Route 12 go critical
+  ACT4_PCT_CLUE_COIN: 'act4-pct-clue-coin', // Library coin kid: chance is broken
+  ACT4_PCT_CLUE_MAP: 'act4-pct-clue-map', // Ball-storage thief beaten → map of the hills
+  ACT4_PCT_CLUE_GROWLITHE: 'act4-pct-clue-growlithe', // Erika: Growlithe ran to Route 12
+  ACT4_PCT_CLUES_DONE: 'act4-pct-clues-done', // All 3 clues → go to the lab
+  ACT4_PCT_LAB_DONE: 'act4-pct-lab-done', // Lab + core lore → Route 12 hills
+  ACT4_PCT_R12_ENTERED: 'act4-pct-r12-entered', // First Route 12 visit during the arc
+  ACT4_PCT_MACHINES_OFF: 'act4-pct-machines-off', // All 3 Heat Collector guards beaten
+  ACT4_PCT_ADMIN_DEFEATED: 'act4-pct-admin-defeated', // Admin beaten → Max vs Moltres scene, Entei appears
+  ACT4_PCT_ENTEI_DONE: 'act4-pct-entei-done', // Entei beaten → Core X4, Moltres battle opens
+  ACT4_PCT_LEGENDS_DONE: 'act4-pct-legends-done', // Moltres beaten → Core X5, Rocket gone, infection drops
+  ACT4_PCT_GROWLITHE_FOUND: 'act4-pct-growlithe-found', // Jimmy's Growlithe found on Route 12
+  ACT4_PCT_GROWLITHE_RETURNED: 'act4-pct-growlithe-returned', // Growlithe back home → Charcoal
+  ACT4_PCT_LAB_FINAL: 'act4-pct-lab-final', // Oak scanned 5 cores → Minusburg
+  ACT4_PCT_GYM_OPEN: 'act4-pct-gym-open', // Lance + Jenny scene done → gym door opens
+  ACT4_PCT_ARC_COMPLETE: 'act4-pct-arc-complete', // Badge 7 won → arc NPCs leave
+  ACT4_MINUSBURG_OPEN: 'act4-minusburg-open', // Officer Jenny's Minusburg blockade lifts
 
   // ── Act 4: Integrala ────────────────────────────────────────────────────────
   GATE_ROUTE7_PASS: 'gate-route7-pass',
@@ -427,6 +446,23 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.GATE_FRACTALIS_GYM_PASS]: 'Passed Electric Gym entry gate',
   [FLAGS.VISITED_PERCENTILE]: 'First arrival at Percentile',
   [FLAGS.PERCENTILE_OCEAN_OPEN]: 'Open ocean west of Percentile unlocked (swimmer blockers leave)',
+  [FLAGS.ACT4_PCT_ARC_STARTED]: 'Burning Chance arc started — Percentile + Route 12 infection critical',
+  [FLAGS.ACT4_PCT_CLUE_COIN]: 'Clue: library coin lands heads every time (chance is broken)',
+  [FLAGS.ACT4_PCT_CLUE_MAP]: 'Clue: ball-storage Rocket thief dropped a map of the Route 12 hills',
+  [FLAGS.ACT4_PCT_CLUE_GROWLITHE]: "Clue: Jimmy's Growlithe ran toward the heat on Route 12",
+  [FLAGS.ACT4_PCT_CLUES_DONE]: 'All 3 Percentile clues found — go to the lab',
+  [FLAGS.ACT4_PCT_LAB_DONE]: 'Lab scene done — cores explained, heading to Route 12 hills',
+  [FLAGS.ACT4_PCT_R12_ENTERED]: 'First Route 12 visit during the Burning Chance arc',
+  [FLAGS.ACT4_PCT_MACHINES_OFF]: 'All 3 Heat Collectors shut down — admin shield down',
+  [FLAGS.ACT4_PCT_ADMIN_DEFEATED]: 'Rocket admin beaten — Max vs Moltres, Entei appears',
+  [FLAGS.ACT4_PCT_ENTEI_DONE]: 'Entei beaten — Core X4 collected',
+  [FLAGS.ACT4_PCT_LEGENDS_DONE]: 'Moltres beaten — Core X5 collected, Rocket gone, infection medium',
+  [FLAGS.ACT4_PCT_GROWLITHE_FOUND]: "Jimmy's Growlithe found on Route 12",
+  [FLAGS.ACT4_PCT_GROWLITHE_RETURNED]: 'Growlithe returned to Jimmy — Charcoal reward',
+  [FLAGS.ACT4_PCT_LAB_FINAL]: 'Oak scanned the 5 cores — next signal under Minusburg',
+  [FLAGS.ACT4_PCT_GYM_OPEN]: 'Lance + Jenny scene done — Percentile gym open',
+  [FLAGS.ACT4_PCT_ARC_COMPLETE]: 'Badge 7 won — Burning Chance arc complete',
+  [FLAGS.ACT4_MINUSBURG_OPEN]: "Officer Jenny's Minusburg blockade lifted (after badge 7)",
   [FLAGS.GATE_ROUTE7_PASS]: 'Route 7 → Integrala checkpoint passed',
   [FLAGS.VISITED_INTEGRALA]: 'First arrival at Integrala',
   [FLAGS.GATE_INTEGRALA_GYM_PASS]: 'Passed Formula Gym gate',

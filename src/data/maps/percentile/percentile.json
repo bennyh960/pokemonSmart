@@ -14,6 +14,13 @@
   },
   "transitions": [
     {
+      "fromX": 41,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 24
+    },
+    {
       "fromX": 13,
       "fromY": 26,
       "toMapId": "percentile/lab"
@@ -114,6 +121,118 @@
     }
   ],
   "npcs": [
+    {
+      "id": "npc-pct-reminder",
+      "x": 39,
+      "y": 2,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "rival-reminder",
+      "name": {
+        "en": "Rei Minder",
+        "he": "ריי מיינדר"
+      },
+      "dialogue": [
+        {
+          "en": "Hey! The gym is closed and the leader went up to the hills!",
+          "he": "היי! המכון סגור והמנהיג עלה לגבעות!"
+        },
+        {
+          "en": "Before we go — let's see who's ready for the heat!",
+          "he": "לפני שנלך — בוא נראה מי מוכן לחום!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "You're hot today! See you on Route 12!",
+          "he": "אתה לוהט היום! נתראה בדרך 12!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 18,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 248,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 97,
+          "level": 49,
+          "moves": []
+        },
+        {
+          "pokemonId": 59,
+          "level": 51,
+          "moves": []
+        },
+        {
+          "pokemonId": 3,
+          "level": 53,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 6000,
+        "items": [
+          {
+            "itemId": "max-potion",
+            "quantity": 2
+          },
+          {
+            "itemId": "revive",
+            "quantity": 2
+          }
+        ]
+      },
+      "despawnOnDefeat": true,
+      "excludeFromMapClear": true,
+      "spawnAfter": "act4-pct-lab-done",
+      "despawnAfter": "act4-pct-arc-complete"
+    },
+    {
+      "id": "npc-pct-gym-closed",
+      "x": 41,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_0ade0c",
+      "name": {
+        "en": "Gym Helper",
+        "he": "עוזר המכון"
+      },
+      "dialogue": [
+        {
+          "en": "Sorry, the gym is closed. Max Formax went out and hasn't come back.",
+          "he": "סליחה, המכון סגור. מקס פורמקס יצא ועוד לא חזר."
+        }
+      ],
+      "despawnAfter": "act4-pct-gym-open"
+    },
+    {
+      "id": "npc-pct-lance",
+      "x": 16,
+      "y": 28,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "char_919bca",
+      "name": {
+        "en": "Lance",
+        "he": "לאנס"
+      },
+      "dialogue": [
+        {
+          "en": "Meet us in Minusburg when you can Fly.",
+          "he": "נתראה במינוסבורג כשתוכל לעוף."
+        }
+      ],
+      "spawnAfter": "act4-pct-lab-final",
+      "despawnAfter": "act4-pct-gym-open"
+    },
     {
       "id": "npc-percentile-gate",
       "x": 48,
@@ -223,6 +342,15 @@
       "facing": "down",
       "type": "dialogue",
       "spriteType": "char_0ade0c",
+      "postFlagDialogue": {
+        "flag": "act4-pct-gym-open",
+        "dialogue": [
+          {
+            "en": "Max is back and the gym is open! He loves Fire types — Water and Rock will help you.",
+            "he": "מקס חזר והמכון פתוח! הוא אוהב פוקימוני אש — מים וסלע יעזרו לך."
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "The gym? The leader isn't here right now.",
