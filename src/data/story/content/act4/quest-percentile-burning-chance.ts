@@ -82,73 +82,55 @@ const DRAGONITE = 149;
 
 registerQuest({
   id: 'main-act4-pct-clues',
-  title: { en: 'The Burning Chance', he: 'הסיכוי הבוער' },
+  title: { en: 'Strange Days in Percentile', he: 'ימים מוזרים בפרסנטייל' },
   objective: {
-    en: 'Something is wrong in Percentile — check the library, the ball storage and the family house',
-    he: 'משהו לא בסדר בפרסנטייל — בדוק בספרייה, במחסן הכדורים ובבית המשפחה',
-  },
-});
-
-registerQuest({
-  id: 'main-act4-pct-clues-2',
-  title: { en: 'A Clue!', he: 'רמז!' },
-  objective: {
-    en: 'You found a clue! Two more people in Percentile know something strange',
-    he: 'מצאת רמז! עוד שני אנשים בפרסנטייל יודעים משהו מוזר',
-  },
-});
-
-registerQuest({
-  id: 'main-act4-pct-clues-3',
-  title: { en: 'One More Clue', he: 'עוד רמז אחד' },
-  objective: {
-    en: 'Almost there! One last clue is hiding somewhere in the city',
-    he: 'כמעט! רמז אחרון מסתתר איפשהו בעיר',
+    en: 'The city is too hot and luck acts weird. Ask people in town what they saw!',
+    he: 'העיר חמה מדי והמזל מתנהג מוזר. שאל אנשים בעיר מה הם ראו!',
   },
 });
 
 registerQuest({
   id: 'main-act4-pct-lab',
-  title: { en: 'The Burning Chance', he: 'הסיכוי הבוער' },
+  title: { en: 'Back to the Lab', he: 'חזרה למעבדה' },
   objective: {
-    en: 'Tell Researcher Noa at the lab what you found',
-    he: 'ספר לחוקרת נועה במעבדה מה מצאת',
+    en: 'You found 3 clues! Bring them to Researcher Noa at the lab',
+    he: 'מצאת 3 רמזים! הבא אותם לחוקרת נועה במעבדה',
   },
 });
 
 registerQuest({
   id: 'main-act4-pct-base',
-  title: { en: 'The Secret Base', he: 'הבסיס הסודי' },
+  title: { en: 'The Secret Steam Plant', he: 'מפעל הקיטור הסודי' },
   objective: {
-    en: 'Go back to the Route 11 cave and find the steam plant',
-    he: 'חזור למערה בדרך 11 ומצא את מפעל הקיטור',
+    en: 'Go back to the cave on Route 11 — Team Rocket hides something inside!',
+    he: 'חזור למערה בדרך 11 — צוות רוקט מסתיר שם משהו!',
   },
 });
 
 registerQuest({
   id: 'main-act4-pct-base-core',
-  title: { en: 'The Steam Core', he: 'ליבת הקיטור' },
+  title: { en: 'Deeper into the Base', he: 'עמוק יותר בבסיס' },
   objective: {
-    en: 'Jessie and James are gone. Go down to the bottom of the base',
-    he: "ג'סי וג'יימס עפו. רד לתחתית הבסיס",
+    en: 'Jessie and James blasted off! Take the stairs down to the steam core',
+    he: 'ג\'סי וג\'יימס עפו! רד במדרגות אל ליבת הקיטור',
   },
 });
 
 registerQuest({
   id: 'main-act4-pct-hills',
-  title: { en: 'The Burning Hills', he: 'הגבעות הבוערות' },
+  title: { en: 'To the Burning Hills!', he: 'אל הגבעות הבוערות!' },
   objective: {
-    en: 'Shut down the 3 Heat Collectors on Route 12 and reach the hilltop',
-    he: 'כבה את 3 אוספי החום בדרך 12 והגע לראש הגבעה',
+    en: 'The road is open! Go north to Route 12 and shut down the 3 Heat Collectors',
+    he: 'הדרך פתוחה! צא צפונה לדרך 12 וכבה את 3 אוספי החום',
   },
 });
 
 registerQuest({
   id: 'main-act4-pct-admin',
-  title: { en: 'The Shield Is Down', he: 'המגן נפל' },
+  title: { en: 'The Shield Is Down!', he: 'המגן נפל!' },
   objective: {
-    en: 'Beat Admin Kelvin on the Route 12 hill path',
-    he: 'נצח את האדמין קלווין בשביל הגבעות של דרך 12',
+    en: 'Climb the hill path on Route 12 and beat Admin Kelvin',
+    he: 'טפס בשביל הגבעה בדרך 12 ונצח את האדמין קלווין',
   },
 });
 
@@ -156,8 +138,8 @@ registerQuest({
   id: 'main-act4-pct-legends',
   title: { en: 'Fire on the Hilltop', he: 'אש על ראש הגבעה' },
   objective: {
-    en: 'Stop the glitched Entei, then help Max Formax against Moltres',
-    he: 'עצור את אנטאיי הנגוע, ואז עזור למקס פורמקס נגד מולטרס',
+    en: 'Max needs help! Battle Entei on the hilltop',
+    he: 'מקס צריך עזרה! הילחם באנטאיי על ראש הגבעה',
   },
 });
 
@@ -165,17 +147,17 @@ registerQuest({
   id: 'main-act4-pct-moltres',
   title: { en: 'Help Max!', he: 'עזור למקס!' },
   objective: {
-    en: 'Max is worn out — battle Moltres on the hilltop',
-    he: 'מקס מותש — הילחם במולטרס על ראש הגבעה',
+    en: 'Max is worn out — now battle Moltres!',
+    he: 'מקס מותש — עכשיו הילחם במולטרס!',
   },
 });
 
 registerQuest({
   id: 'main-act4-pct-cores-lab',
-  title: { en: 'Five Cores', he: 'חמש ליבות' },
+  title: { en: 'Six Cores!', he: 'שש ליבות!' },
   objective: {
-    en: 'Bring the cores to the Percentile lab',
-    he: 'הבא את הליבות למעבדה של פרסנטייל',
+    en: 'Bring the cores to the lab in Percentile',
+    he: 'הבא את הליבות למעבדה בפרסנטייל',
   },
 });
 
@@ -183,8 +165,8 @@ registerQuest({
   id: 'main-act4-pct-badge',
   title: { en: 'The Fire Gym', he: 'מכון האש' },
   objective: {
-    en: 'Beat Max Formax at the Percentile gym',
-    he: 'נצח את מקס פורמקס במכון של פרסנטייל',
+    en: 'The gym is open! Beat Max Formax and win badge 7',
+    he: 'המכון פתוח! נצח את מקס פורמקס וזכה בתג 7',
   },
 });
 
@@ -352,27 +334,19 @@ registerCutscene({
   ],
 });
 
-// ── Beat 2 → 3: each clue moves the quest on; all three → go to the lab ─────
+// ── Beat 2 → 3: all three clues → go to the lab ─────────────────────────────
+
+// Saves from a build that had "A Clue!" / "One More Clue" quests go back to the clue quest
+for (const oldQuestId of ['main-act4-pct-clues-2', 'main-act4-pct-clues-3']) {
+  registerStoryEvent({
+    id: `evt-pct-old-quest-${oldQuestId}`,
+    trigger: { type: 'map-enter', mapId: '*' },
+    conditions: [{ type: 'quest-active', questId: oldQuestId }],
+    actions: [{ type: 'set-quest', questId: 'main-act4-pct-clues' }],
+  });
+}
 
 for (const clue of CLUE_FLAGS) {
-  registerStoryEvent({
-    id: `evt-pct-first-clue-${clue}`,
-    trigger: { type: 'flag-set', flag: clue },
-    conditions: [{ type: 'flags-count', flags: CLUE_FLAGS, max: 1 }],
-    actions: [
-      { type: 'complete-quest', questId: 'main-act4-pct-clues' },
-      { type: 'set-quest', questId: 'main-act4-pct-clues-2' },
-    ],
-  });
-  registerStoryEvent({
-    id: `evt-pct-second-clue-${clue}`,
-    trigger: { type: 'flag-set', flag: clue },
-    conditions: [{ type: 'flags-count', flags: CLUE_FLAGS, min: 2, max: 2 }],
-    actions: [
-      { type: 'complete-quest', questId: 'main-act4-pct-clues-2' },
-      { type: 'set-quest', questId: 'main-act4-pct-clues-3' },
-    ],
-  });
   registerStoryEvent({
     id: `evt-pct-clues-done-${clue}`,
     trigger: { type: 'flag-set', flag: clue },
@@ -387,7 +361,7 @@ for (const clue of CLUE_FLAGS) {
           { en: 'Broken chance... rising heat... the hills of Route 12. Time to visit the lab!', he: 'סיכוי שבור... חום עולה... הגבעות של דרך 12. הגיע הזמן לבקר במעבדה!' },
         ],
       },
-      { type: 'complete-quest', questId: 'main-act4-pct-clues-3' },
+      { type: 'complete-quest', questId: 'main-act4-pct-clues' },
       { type: 'set-quest', questId: 'main-act4-pct-lab' },
       { type: 'set-flag', flag: FLAGS.ACT4_PCT_CLUES_DONE },
     ],
@@ -577,6 +551,7 @@ registerCutscene({
       lines: [
         { en: 'I see it on my screen — Core X4, the FLOW module! It controls water and steam.', he: 'אני רואה את זה על המסך — ליבה X4, מודול הזרימה! הוא שולט במים ובקיטור.' },
         { en: 'Without the steam, the Heat Collectors on Route 12 are much weaker. Now is our chance!', he: 'בלי הקיטור, אוספי החום בדרך 12 הרבה יותר חלשים. זה הסיכוי שלנו!' },
+        { en: 'The fire is weaker now — the police opened the road from Percentile to Route 12.', he: 'האש נחלשה — המשטרה פתחה את הדרך מפרסנטייל לדרך 12.' },
         { en: 'There is an emergency hatch on this floor — it leads straight outside.', he: 'יש פתח חירום בקומה הזאת — הוא מוביל ישר החוצה.' },
       ],
     },

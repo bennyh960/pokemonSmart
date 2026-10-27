@@ -13,7 +13,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - **Minusburg arc (next):** Officer Jenny `jenny-mb` (minusburg.json, 44,0) now despawns on `act4-minusburg-open` (badge 7). Build the arc under Minusburg with Gary, Jenny, Lance (+ others): cores X6 + X7 and 1 legendary (Suicune suggested). X8 at the NULL-X Tower.
 
 ## TODO — main story
-- [ ] Burning Chance arc: playtest end to end. Check NPC spots in the editor (Route 12 guards/admin/Max/Entei/Moltres, Reminder 39,2 + gym helper 41,2, Lance 16,28, coin kid, ball thief, Oak) and that the new cutscene `fx` step (fire/smoke/burst) looks right
+- [ ] Burning Chance arc: playtest end to end (Rocket Base `rocket-base/b1..b4` included; Route 12 exits are blocked by police until Suicune is freed). Check NPC spots in the editor (Route 12 guards/admin/Max/Entei/Moltres, Reminder 39,2 + gym helper 41,2, Lance 16,28, coin kid, ball thief, Oak) and that the new cutscene `fx` step (fire/smoke/burst) looks right
 - [ ] Algebria (gym 8): `act4/quest-algebria.ts` is old "Absoluta" placeholder (map id `absoluta/absoluta` doesn't exist, `questionSetIds: ['placeholder']`) — rewrite for Algebria
 - [ ] Forest: `caves/deep-forest` and `routes/small forest` partly built — no story yet
 - [ ] Forest region `forest/*` (Algebria → League, branch to Zeroville) — layout done, no story/NPCs/trainers yet. Algebria east gate → `algebria-woods` → `frost-trail` → `league-summit` (League gate, snow Pokemon Center + Mart); `algebria-woods` → `zeroville-trail` → Zeroville west gate. Hidden: `mossy-grotto` (behind a Cut tree), `frost-cave` (its top "Frozen Sanctum" chamber is empty, reserved for a legendary), interiors `frost-hut` / `ranger-cabin` (empty `house-small` instances)
@@ -28,6 +28,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Legendary gates (Elite birds/dogs, Master Mewtwo/Lugia/Ho-Oh, Legendary Mew): place blocker NPCs (`blocker` + `despawnAfter: rank-<id>`) once those maps exist; replace the "TBD" hint in the rank-up call
 
 ## Bugs
+- [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
 - [ ] Trainer "VS" intro scene before battle (old bug #8, `docs/bugs.md`)
 
@@ -35,7 +36,6 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] `src/data/badges.ts` badge 8: leader is `???`, type/mathTopic still old placeholders — fill in when the Algebria gym is designed
 - [ ] `src/data/maps/backup/` and `templates/backup/` — old map snapshots, remove if not needed
 - [ ] Stale commented-out reset script at the bottom of `act3/quest-raikou.ts`
-- [ ] `overworld.ts` `buildCutsceneContext().executeStoryAction` re-implements story actions that `systems/story-engine.ts` already handles — route through the engine
 - [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution, english-learning — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
 - [ ] 7 of 13 vitest files fail on main (pre-existing)
 - [ ] `public/audio/` is gitignored — the only copy is the `gh-pages` branch. A fresh clone has no sound; restore with `git archive origin/gh-pages audio | tar -x -C public`. Store it somewhere durable (LFS / release asset)

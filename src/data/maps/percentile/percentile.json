@@ -122,6 +122,126 @@
   ],
   "npcs": [
     {
+      "id": "npc-pct-r12-police-1",
+      "x": 9,
+      "y": 0,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Police Officer",
+        "he": "שוטר"
+      },
+      "dialogue": [
+        {
+          "en": "Stop! The hills on Route 12 are burning. Nobody goes up there!",
+          "he": "עצור! הגבעות בדרך 12 בוערות. אף אחד לא עולה לשם!"
+        },
+        {
+          "en": "Someone keeps feeding that fire. Until it gets weaker, the road stays closed.",
+          "he": "מישהו ממשיך להזין את האש הזאת. עד שהיא תיחלש, הדרך סגורה."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "id": "npc-pct-r12-police-2",
+      "x": 10,
+      "y": 0,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Police Officer",
+        "he": "שוטר"
+      },
+      "dialogue": [
+        {
+          "en": "Stop! The hills on Route 12 are burning. Nobody goes up there!",
+          "he": "עצור! הגבעות בדרך 12 בוערות. אף אחד לא עולה לשם!"
+        },
+        {
+          "en": "Someone keeps feeding that fire. Until it gets weaker, the road stays closed.",
+          "he": "מישהו ממשיך להזין את האש הזאת. עד שהיא תיחלש, הדרך סגורה."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "id": "npc-pct-r12-police-3",
+      "x": 11,
+      "y": 0,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Police Officer",
+        "he": "שוטר"
+      },
+      "dialogue": [
+        {
+          "en": "Stop! The hills on Route 12 are burning. Nobody goes up there!",
+          "he": "עצור! הגבעות בדרך 12 בוערות. אף אחד לא עולה לשם!"
+        },
+        {
+          "en": "Someone keeps feeding that fire. Until it gets weaker, the road stays closed.",
+          "he": "מישהו ממשיך להזין את האש הזאת. עד שהיא תיחלש, הדרך סגורה."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "id": "npc-pct-r12-police-4",
+      "x": 30,
+      "y": 1,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Police Officer",
+        "he": "שוטר"
+      },
+      "dialogue": [
+        {
+          "en": "Stop! The hills on Route 12 are burning. Nobody goes up there!",
+          "he": "עצור! הגבעות בדרך 12 בוערות. אף אחד לא עולה לשם!"
+        },
+        {
+          "en": "Someone keeps feeding that fire. Until it gets weaker, the road stays closed.",
+          "he": "מישהו ממשיך להזין את האש הזאת. עד שהיא תיחלש, הדרך סגורה."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "id": "npc-pct-r12-police-5",
+      "x": 31,
+      "y": 1,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Police Officer",
+        "he": "שוטר"
+      },
+      "dialogue": [
+        {
+          "en": "Stop! The hills on Route 12 are burning. Nobody goes up there!",
+          "he": "עצור! הגבעות בדרך 12 בוערות. אף אחד לא עולה לשם!"
+        },
+        {
+          "en": "Someone keeps feeding that fire. Until it gets weaker, the road stays closed.",
+          "he": "מישהו ממשיך להזין את האש הזאת. עד שהיא תיחלש, הדרך סגורה."
+        }
+      ],
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
       "id": "npc-pct-reminder",
       "x": 39,
       "y": 2,
