@@ -57,6 +57,7 @@ The game teaches English vocabulary progressively to Hebrew-speaking players:
 - **Phase plan:** Types (always English) → Items (~10h) → Abilities (~15h) → Moves (~20h) → Natures (~25h) → Pokemon names (~30h)
 - **Hebrew translations for items/abilities/natures are deferred** until Sprint 11 — currently show English names, which is intentional for the learning flow
 - **When adding new text/data:** always use `{ en, he }` format for any player-visible string. Even if Hebrew is placeholder (= English copy), the structure must be bilingual from day one
+- **Game text style (dialogue + quest HUD):** write for kids, in-world and short — a quest is a fun title plus one line that says exactly where to go next ("To the Burning Hills!" → "The road is open! Go north to Route 12…"), never meta progress like "1 more clue". Change the quest at every story step, and block areas (NPC/blocker) until the story sends the player there. Hebrew text uses real Hebrew words — no English item/type/ability names inside `he`
 
 ## Code Rules
 - **No duplication.** Reuse the existing module (e.g. save access goes through `src/systems/save.ts`, never a copy). If you notice duplication — existing or about to be written — stop and propose the fix in place before continuing.
