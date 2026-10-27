@@ -71,6 +71,7 @@ import {
   type DialogueReward,
   getNPCInteractionSfx,
   cacheNPCSprites,
+  setNpcEntryOrigin,
 } from '../systems/npc.js';
 import {
   getDayCareEntry,
@@ -130,9 +131,19 @@ import * as MovablePuzzle from '../systems/movable-puzzle.js';
 import { getMapWeather, isDaytime, renderNightOverlay, renderOverworldWeather } from '../systems/weather-system.js';
 import type { WeatherConditionId } from '../types/battle-metadata.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
-import { calcPlayerExperienceRank } from '../utils/util.js';
-import { isActionAllowedByPlayerRank, TRAINER_RANKS } from '../scenesReact/trainerData/rank.config.js';
+import {
+  getFeatureRank,
+  hasRank,
+  hasUnannouncedRanks,
+  rankAdviceLines,
+  rankFromFlag,
+  rankRequiredLines,
+  updateTrainerRank,
+} from '../systems/trainer-rank.js';
+import { startRankUpCall } from '../systems/rank-up-call.js';
 const MOVE_DURATION = 0.2;
+/** Seconds between trainer-rank re-checks (playtime counts as rank XP). */
+const RANK_CHECK_INTERVAL = 3;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
 
@@ -245,6 +256,21 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Tracks where to return when exiting an interior map (e.g. Pokemon Center)
   let previousMapReturn: { mapId: string; x: number; y: number } | null = null;
+  let rankCheckTimer = 0;
+
+  /** NPC dialogue lines, plus generated rank lines (rank gate requirement, or a lab rank advisor). */
+  function npcDialogueLines(npc: NPCData, dialogue = npc.dialogue): string[] {
+    const lines = resolveDialogue(dialogue, getLocale());
+    if (!hasActiveGame()) return lines;
+    const pd = getPlayerData();
+    const gateRank = npc.blocker ? rankFromFlag(npc.despawnAfter) : undefined;
+    if (gateRank) lines.push(...resolveDialogue(rankRequiredLines(pd, gateRank.id), getLocale()));
+    if (npc.type === 'rank-advisor') {
+      updateTrainerRank(pd);
+      lines.push(...resolveDialogue(rankAdviceLines(pd), getLocale()));
+    }
+    return lines;
+  }
 
   // Shop overlay state
   let shop: ShopState = createShopState();
@@ -657,6 +683,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               x: player.gridX - backVec.dx,
               y: player.gridY - backVec.dy,
             };
+            setNpcEntryOrigin(previousMapReturn.mapId);
           }
           transitionTarget = { mapId: tr.toMapId, x: tr.toX, y: tr.toY };
         }
@@ -811,12 +838,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       restoreNPCFacing(npc);
       interactingNPC = null;
 
-      // This NPC has trainer rank limitation : player rank must be expert
-      const playerExperience = calcPlayerExperienceRank(pd);
-      const playerRank = calcPlayerExperienceRank(pd).id;
-      const requiredRank = TRAINER_RANKS.find((r) => r.id === 'expert');
-
-      if (!isActionAllowedByPlayerRank(playerRank, requiredRank?.id ?? 'expert')) {
+      // Ability swapping is a trainer-rank perk
+      const requiredRank = getFeatureRank('ability-swap');
+      updateTrainerRank(pd);
+      if (requiredRank && !hasRank(pd, requiredRank.id)) {
         activeTextBox = createTextBox(
           [
             t('npc.abilitiesSwap.intro1'),
@@ -824,11 +849,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             t('npc.abilitiesSwap.intro3'),
             t('npc.abilitiesSwap.notAllowed1'),
             t('npc.abilitiesSwap.notAllowed2'),
-            t('player.rank.hint'),
-            t('player.rank.hint2', {
-              rank: requiredRank?.label[getLocale()] ?? '',
-              playerRank: playerExperience.rank[getLocale()],
-            }),
+            ...resolveDialogue(rankRequiredLines(pd, requiredRank.id), getLocale()),
           ],
           rtl,
           npcSpeaker,
@@ -2130,6 +2151,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         spawnX = pd.position.x;
         spawnY = pd.position.y;
         previousMapReturn = pd.previousMapReturn ?? null;
+        setNpcEntryOrigin(previousMapReturn?.mapId ?? null);
       }
 
       loadAndSetMap(mapId, spawnX, spawnY)
@@ -2531,6 +2553,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Track playtime
       if (hasActiveGame()) getPlayerData().playtime += dt;
 
+      // Trainer rank: re-check on a timer; the professor calls once the player is idle on the map
+      if (hasActiveGame() && transitionState === 'none' && !player.moving) {
+        rankCheckTimer += dt;
+        if (rankCheckTimer >= RANK_CHECK_INTERVAL) {
+          rankCheckTimer = 0;
+          updateTrainerRank(getPlayerData());
+        }
+        if (hasUnannouncedRanks()) void startRankUpCall(getPlayerData());
+      }
+
       // Handle map transitions
       if (transitionState !== 'none') {
         if (transitionTarget?.mapId !== currentMapData?.id) {
@@ -2642,7 +2674,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
           interactingNPC = pga.npc;
           activeTextBox = createTextBox(
-            resolveDialogue(pga.npc.dialogue, getLocale()),
+            npcDialogueLines(pga.npc),
             isRTL(),
             pga.npc.name ? getLocalizedName(pga.npc.name) : undefined,
           );
@@ -3434,7 +3466,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const dialogueLines =
               pfd && pfd.flag && hasActiveGame() && getPlayerData().flags[pfd.flag] ? pfd.dialogue : npc.dialogue;
             const locale = getLocale();
-            const resolvedLines = resolveDialogue(dialogueLines, locale);
+            const resolvedLines = npcDialogueLines(npc, dialogueLines);
             if (npc.mapClearBlocker && hasActiveGame()) {
               resolvedLines.push(...buildMapClearCountLines(locale));
             }

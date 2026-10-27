@@ -11,6 +11,7 @@ import { t } from '../i18n/i18n.js';
 import { getPlayerData, autoSave } from '../systems/game-state.js';
 import { getItemsByCategory, getItem, type ItemDef, type ItemCategory } from '../data/items.js';
 import { getLocalizedName } from '../services/pokemon-data.js';
+import { isShopItemUnlocked } from '../systems/trainer-rank.js';
 import type { InputManager } from '../engine/input';
 import { LOGICAL_WIDTH as SW, LOGICAL_HEIGHT as SH } from '../engine/config.js';
 import { FONT_HE } from '../engine/fonts.js';
@@ -149,14 +150,10 @@ export function closeShop(shop: ShopState): void {
 }
 
 function getShopItemsForCategory(cat: CategoryDef): ItemDef[] {
-  const mainItems = getItemsByCategory(cat.id).filter((i) => i.price > 0 && i.category !== 'key');
-  if (cat.extraCategories) {
-    const extraItems = cat.extraCategories.flatMap((extraCat) =>
-      getItemsByCategory(extraCat).filter((i) => i.price > 0 && i.category !== 'key'),
-    );
-    return [...mainItems, ...extraItems];
-  }
-  return mainItems;
+  const pd = getPlayerData();
+  // Items need a trainer rank perk before shops sell them
+  const sellable = (i: ItemDef) => i.price > 0 && i.category !== 'key' && isShopItemUnlocked(pd, i.id);
+  return [cat.id, ...(cat.extraCategories ?? [])].flatMap((c) => getItemsByCategory(c).filter(sellable));
 }
 
 // ─── Update ─────────────────────────────────────────────────────────

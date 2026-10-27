@@ -22,6 +22,11 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Legendary caves: Zapdos + Raikou done; remaining legendaries not placed
 - [ ] League (`league/*`) + NULL-X Tower: maps exist with 1 NPC each; `act5/quest-nullx-tower.ts` references `nullx-floor-1..5` which don't exist (only `tower`, `floor-6`)
 
+## Trainer Rank perks (`feature/player-rank`, stories: `docs/stories/player-rank.md`)
+- [ ] Stories 1–8 built + unit-tested, **not playtested** — run the QA checklist in the stories doc
+- [ ] Editor: no UI yet for `enteredFrom` (NPC) and `hallOfFame` (trainer reward) — edit the JSON
+- [ ] Legendary gates (Elite birds/dogs, Master Mewtwo/Lugia/Ho-Oh, Legendary Mew): place blocker NPCs (`blocker` + `despawnAfter: rank-<id>`) once those maps exist; replace the "TBD" hint in the rank-up call
+
 ## Bugs
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
 - [ ] `act3/quest-raikou.ts` `evt-auto-repel-for-raikou` waits for a `flag-set` trigger on the Raikou flee flag, but battle flee only fires `trainer-defeated` (battle_scene.ts ~2250) — the auto-repel never runs

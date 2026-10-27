@@ -131,6 +131,9 @@ import {
   type MoveLearningResolution,
 } from '../../systems/move-learning.js';
 import { calculateCaptureChance } from '../../systems/capture.js';
+import { recordHallOfFame } from '../../systems/hall-of-fame.js';
+import { checkObedience, DISOBEY_LINE_KEYS } from '../../systems/obedience.js';
+import { getPerkValue } from '../../systems/trainer-rank.js';
 import type {
   BattlePokemonRuntimeState,
   BattleSideRuntimeState,
@@ -798,6 +801,7 @@ export function createBattleScene(
   let lastMoveUsedInBattle: number | null = null; // for Copycat
   let trainerPartyIndex = 0;
   let isWildNpcBattle = false;
+  let disobeyHintShown = false; // obedience hint is shown once per battle
   let wildNpcFleeAfterTurns: number | null = null;
   let wildNpcFleeAtHpPct: number | null = null;
   let pendingWildNpcEntrance = false;
@@ -1250,6 +1254,7 @@ export function createBattleScene(
   function awardTrainerReward(): void {
     const td = trainerData!;
     const isRematch = (td.reencounterIndex ?? 0) > 0;
+    let leagueWins = 0;
     if (hasActiveGame()) {
       const pd = getPlayerData();
       const reward = td.reward;
@@ -1280,6 +1285,7 @@ export function createBattleScene(
       }
       // Always record the defeat for re-encounter tracking
       recordTrainerDefeat(td.trainerId);
+      if (reward.hallOfFame) leagueWins = recordHallOfFame(pd);
       // Register phone contact on first defeat if trainer supports re-encounters
       if (!isRematch && td.reencounter?.addToPhone) {
         if (!pd.phoneContacts.some((c) => c.npcId === td.trainerId)) {
@@ -1304,6 +1310,7 @@ export function createBattleScene(
     if (!isRematch && td.reward.badge !== undefined) {
       lines.push(t('battle.trainerRewardBadge', { badge: td.reward.badge }));
     }
+    if (leagueWins > 0) lines.push(t('battle.hallOfFame', { count: leagueWins }));
     // Append post-battle dialogue if present (resolved to current locale)
     if (td.postBattleDialogue && td.postBattleDialogue.length > 0) {
       lines.push(...resolveDialogue(td.postBattleDialogue, getLocale()));
@@ -1321,6 +1328,7 @@ export function createBattleScene(
   function init(): void {
     isTrainerBattle = false;
     isWildNpcBattle = false;
+    disobeyHintShown = false;
     wildNpcFleeAfterTurns = null;
     wildNpcFleeAtHpPct = null;
     pendingWildNpcEntrance = false;
@@ -2439,6 +2447,7 @@ export function createBattleScene(
       turnNumber,
       status: getEnemyCaptureStatus(),
       statStagesReduced,
+      rankBonus: hasActiveGame() ? getPerkValue(getPlayerData(), 'catchBonus') : undefined,
     });
   }
 
@@ -2870,6 +2879,9 @@ export function createBattleScene(
       ),
     );
 
+    // Trainer-rank throw skill: extra full spins, and the ball flies faster
+    const spins = hasActiveGame() ? (getPerkValue(getPlayerData(), 'throwSpins') ?? 0) : 0;
+    const throwTime = 1 / (1 + spins * 0.15);
     const throwAndTrapStep = sequenceStep(
       callStep(() => audio.playSFX('menu-select')),
       tweenActorStep(
@@ -2877,9 +2889,9 @@ export function createBattleScene(
         {
           x: start.x + (target.x - start.x) * 0.55,
           y: target.y - 30,
-          rotation: 0.45,
+          rotation: 0.45 + spins * Math.PI,
         },
-        0.16,
+        0.16 * throwTime,
         'easeOut',
       ),
       tweenActorStep(
@@ -2887,11 +2899,12 @@ export function createBattleScene(
         {
           x: target.x,
           y: target.y,
-          rotation: 0,
+          rotation: spins * 2 * Math.PI,
         },
-        0.14,
+        0.14 * throwTime,
         'easeInOut',
       ),
+      callStep(() => animationDirector.setActorState('ball', { rotation: 0 })),
       callStep(() => audio.playSFX('hit')),
       absorbStep,
       callStep(() => {
@@ -3625,6 +3638,32 @@ export function createBattleScene(
   }
 
   // try to combine do attack and enemy turn
+  /**
+   * A Pokémon that doesn't trust the player may use a random other move instead.
+   * Returns the move index to use and pushes the explanation (+ a one-time hint) into `lines`.
+   */
+  function rollPlayerObedience(chosenIndex: number, lines: string[]): number {
+    if (!hasActiveGame() || playerBattleState.isStruggleMode || playerBattleState.softLockedInMovesId?.length) {
+      return chosenIndex;
+    }
+    const check = checkObedience(getPlayerData(), player);
+    if (Math.random() >= check.disobeyChance) return chosenIndex;
+
+    const options = player.moves
+      .map((mv, i) => ({ mv, i }))
+      .filter(({ mv, i }) => i !== chosenIndex && mv.currentPp > 0 && mv.id !== playerBattleState.disabledMoveId);
+    if (options.length === 0) return chosenIndex;
+
+    const name = getPokemonDisplayName(player.id);
+    lines.push(t(DISOBEY_LINE_KEYS[Math.floor(Math.random() * DISOBEY_LINE_KEYS.length)], { name }));
+    if (!disobeyHintShown) {
+      disobeyHintShown = true;
+      const rank = check.obeyRank ? getLocalizedName(check.obeyRank.label) : '';
+      lines.push(t('battle.disobey.hint', { name, level: check.trustLevel, rank }));
+    }
+    return options[Math.floor(Math.random() * options.length)].i;
+  }
+
   function doAttack({ forcedMoveIndex, actor }: { forcedMoveIndex?: number; actor: 'player' | 'enemy' }): void {
     const attackerBattleState = actor === 'player' ? playerBattleState : enemyBattleState;
     const defenderBattleState = actor === 'player' ? enemyBattleState : playerBattleState;
@@ -3652,8 +3691,10 @@ export function createBattleScene(
     const attackerName = getPokemonDisplayName(attacker.id);
 
     let moveIndex: number;
+    const disobeyLines: string[] = [];
     if (actor === 'player') {
       moveIndex = forcedMoveIndex ?? selMove;
+      if (forcedMoveIndex === undefined) moveIndex = rollPlayerObedience(moveIndex, disobeyLines);
     } else {
       moveIndex = enemySelectedMoveIndex >= 0 ? enemySelectedMoveIndex : getPlannedEnemyMoveIndex();
       enemySelectedMoveIndex = -1;
@@ -3675,9 +3716,12 @@ export function createBattleScene(
 
     const startResult = processBeforeMoveEffects(attacker, attackerBattleState, Math.random, m.id);
 
-    const turnEffectLines = startResult.events
-      .map((event) => getTurnEffectLine(attackerName, event))
-      .filter((line): line is string => line !== null);
+    const turnEffectLines = [
+      ...disobeyLines,
+      ...startResult.events
+        .map((event) => getTurnEffectLine(attackerName, event))
+        .filter((line): line is string => line !== null),
+    ];
 
     // problematic due to paralyze should not render effect unless is fully paralyze. also flinch
     triggerStatusTurnEffects(actor, attacker, attackerBattleState, startResult.skipAnimation);

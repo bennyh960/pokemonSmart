@@ -233,6 +233,19 @@
         "types": []
       },
       "spawnAfter": "act1-collect-docs-from-ben"
+    },
+    {
+      "id": "npc-algo-lab-rank-advisor",
+      "x": 19,
+      "y": 5,
+      "facing": "down",
+      "type": "rank-advisor",
+      "dialogue": [
+        { "en": "Hello! I research how trainers grow stronger.", "he": "שלום! אני חוקר איך מאמנים מתחזקים." },
+        { "en": "Every trainer has a rank, and every rank unlocks new perks.", "he": "לכל מאמן יש דרגה, וכל דרגה פותחת הטבות חדשות." }
+      ],
+      "spriteType": "char_6bacac",
+      "name": { "en": "Rank Researcher", "he": "חוקר הדרגות" }
     }
   ],
   "music": "town4",

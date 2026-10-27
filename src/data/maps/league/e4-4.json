@@ -94,7 +94,8 @@
       ],
       "lineOfSight": 3,
       "reward": {
-        "money": 10000
+        "money": 10000,
+        "hallOfFame": true
       },
       "postBattleDialogue": [],
       "reencounter": {

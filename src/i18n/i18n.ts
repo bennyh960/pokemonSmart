@@ -45,11 +45,30 @@ export function isRTL(): boolean {
  * Usage: t('battle.usedMove', { name: 'Pikachu', move: 'Thunderbolt' })
  */
 export function t(key: string, params?: Record<string, string | number>): string {
-  let text = LOCALES[currentLocale]?.[key] ?? LOCALES['en']?.[key] ?? key;
+  return tFor(currentLocale, key, params);
+}
+
+/** Translate a key into a specific locale (ignores the current one). */
+export function tFor(locale: Locale, key: string, params?: Record<string, string | number>): string {
+  let text = LOCALES[locale]?.[key] ?? LOCALES['en']?.[key] ?? key;
   if (params) {
     for (const [k, v] of Object.entries(params)) {
       text = text.replace(`{${k}}`, String(v));
     }
   }
   return text;
+}
+
+/**
+ * Translate a key into both locales — for bilingual `{ en, he }` data built at runtime
+ * (cutscene lines, NPC dialogue). Params may themselves be bilingual.
+ */
+export function tBoth(
+  key: string,
+  params?: Record<string, string | number | { en: string; he: string }>,
+): { en: string; he: string } {
+  const pick = (locale: Locale) =>
+    params &&
+    Object.fromEntries(Object.entries(params).map(([k, v]) => [k, typeof v === 'object' ? v[locale] : v]));
+  return { en: tFor('en', key, pick('en')), he: tFor('he', key, pick('he')) };
 }

@@ -37,6 +37,26 @@
       ],
       "spriteType": "npc-male",
       "interactRange": 2
+    },
+    {
+      "id": "npc-pc2-ability-tutor",
+      "x": 11,
+      "y": 3,
+      "facing": "down",
+      "type": "abilities-swap",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום!"
+        }
+      ],
+      "spriteType": "char_a8fbf3",
+      "name": {
+        "en": "Ability Tutor",
+        "he": "מורה יכולות"
+      },
+      "spawnAfter": "rank-expert",
+      "enteredFrom": ["percentile/percentile", "forest/league-summit"]
     }
   ],
   "music": "pokecenter",

@@ -171,7 +171,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 20;
+export const CURRENT_SAVE_VERSION = 21;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -365,6 +365,10 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
       ];
     }
     data.saveVersion = 20;
+  },
+  21: (data) => {
+    if (!Array.isArray(data.hallOfFame)) data.hallOfFame = [];
+    data.saveVersion = 21;
   },
 };
 

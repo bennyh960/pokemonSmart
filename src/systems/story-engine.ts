@@ -129,6 +129,13 @@ export function consumePendingGate(): string | null {
   return id;
 }
 
+/** Queue a cutscene for the overworld to start when the map is ready. False if one is already queued. */
+export function queueCutscene(id: string): boolean {
+  if (_pendingCutsceneId) return false;
+  _pendingCutsceneId = id;
+  return true;
+}
+
 export function consumePendingCutscene(): string | null {
   const id = _pendingCutsceneId;
   _pendingCutsceneId = null;

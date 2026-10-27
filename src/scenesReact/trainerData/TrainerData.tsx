@@ -2,9 +2,8 @@ import { useInputLayer } from '../../engine/input';
 import { useI18n } from '../../ui-react/context/i18n-context';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData';
 import { BADGES, hasBadge } from '../../data/badges';
-import { calcPlayerExperienceRank } from '../../utils/util';
-import { TRAINER_RANKS } from './rank.config';
-import { getCaughtCount } from '../pokedex/utils/helpers';
+import { TRAINER_RANKS } from '../../data/trainer-ranks';
+import { describeRankPerks, describeRankRequirements, getTrainerRank } from '../../systems/trainer-rank';
 
 interface ITrainerDataProps {
   onClose: () => void;
@@ -23,15 +22,16 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
     },
   });
 
+  const trainerRank = getTrainerRank(pd);
   const trainer = {
     name: pd.name,
     birthYear: pd.birthYear,
     money: pd.money,
     playTime: pd.playtime,
     totalSteps: pd.totalSteps,
-    experienceRank: calcPlayerExperienceRank(pd),
-    pokemonSeen: Object.keys(pd.pokedex).length,
-    pokemonCaught: getCaughtCount(pd),
+    pokemonSeen: trainerRank.stats.seen,
+    pokemonCaught: trainerRank.stats.caught,
+    leagueWins: trainerRank.stats.leagueWins,
     badges: pd.badges, // This should be a bitmask or array of badge IDs the player has earned
   };
   const currentYear = new Date().getFullYear();
@@ -41,33 +41,13 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
   const playTimeMinutes = trainer.playTime % 60;
   const playTime = Math.round(trainer.playTime / 60 + playTimeMinutes);
 
-  const RANK_THEMES: Record<string, { badge: string; bg: string; text: string }> = {
-    rookie: { badge: '🥈', bg: 'from-slate-800 to-slate-900 border-slate-700', text: 'text-slate-300' },
-    amateur: { badge: '🥉', bg: 'from-orange-900/40 to-slate-900 border-orange-800/40', text: 'text-orange-400' },
-    pro: { badge: '🥈', bg: 'from-cyan-950 to-slate-900 border-cyan-800/50', text: 'text-cyan-400' },
-    expert: { badge: '🥇', bg: 'from-emerald-950 to-slate-900 border-emerald-800/50', text: 'text-emerald-400' },
-    elite: {
-      badge: '💎',
-      bg: 'from-purple-950 to-slate-900 border-purple-800/50 shadow-purple-500/5',
-      text: 'text-purple-400 animate-pulse',
-    },
-    master: {
-      badge: '👑',
-      bg: 'from-amber-950 via-slate-900 to-indigo-950 border-amber-500/40 shadow-amber-500/10',
-      text: 'text-amber-400 font-extrabold tracking-widest',
-    },
-    legendary: {
-      badge: '🌌',
-      bg: 'bg-gradient-to-r from-violet-600/20 via-fuchsia-600/20 to-cyan-600/20 border-fuchsia-500/50 animate-pulse shadow-xl shadow-fuchsia-500/10',
-      text: 'text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-fuchsia-400 to-cyan-400 font-black tracking-wider',
-    },
-  };
-
-  const currentTheme = RANK_THEMES[trainer.experienceRank.id] || RANK_THEMES.rookie;
+  const currentTheme = trainerRank.rank.theme;
+  // Every perk earned so far (each rank adds to the ones below it)
+  const activePerks = TRAINER_RANKS.slice(0, trainerRank.index + 1).flatMap(describeRankPerks);
 
   const RenderRankContainer = () => {
-    // Use properties directly fed from the utility output
-    const { id: activeRankId, theme: currentTheme, badge, rank, perk, value } = trainer.experienceRank;
+    const { id: activeRankId, badge, label: rank } = trainerRank.rank;
+    const value = trainerRank.xp;
 
     return (
       <div
@@ -95,7 +75,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
 `}
             >
               <p className="font-bold text-cyan-400 border-b border-slate-800 pb-1 mb-1 text-center">
-                {isRTL ? '🏆 מפת דרגות ותנאי קבלה' : '🏆 Rank Roadmap & Requirements'}
+                🏆 {t('trainerData.rankRoadmap')}
               </p>
               <div className="space-y-2 font-sans">
                 {TRAINER_RANKS.map((rankItem) => {
@@ -113,12 +93,20 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
                           {rankItem.minExp.toLocaleString()} XP
                         </span>
                       </div>
-                      {/* Render extra requirements if they exist */}
-                      {rankItem.requirementsDesc && (
+                      {rankItem.requires && (
                         <div className="text-[10px] text-amber-500/80 mt-0.5" dir={isRTL ? 'rtl' : 'ltr'}>
-                          📌 {rankItem.requirementsDesc[locale]}
+                          📌 {describeRankRequirements(rankItem)[locale]}
                         </div>
                       )}
+                      {describeRankPerks(rankItem).map((perkLine) => (
+                        <div
+                          key={perkLine.en}
+                          className="text-[10px] text-slate-400 mt-0.5"
+                          dir={isRTL ? 'rtl' : 'ltr'}
+                        >
+                          ✨ {perkLine[locale]}
+                        </div>
+                      ))}
                     </div>
                   );
                 })}
@@ -133,16 +121,20 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
           <span className={`text-base md:text-lg font-bold ${currentTheme.text}`}>{rank[locale]}</span>
         </div>
 
-        {/* Active Perk Box */}
-        {perk && (
+        {/* Active Perks Box */}
+        {activePerks.length > 0 && (
           <div
-            className="w-full bg-black/40 rounded-lg p-2 border border-white/5 text-right mb-2.5"
+            className="w-full bg-black/40 rounded-lg p-2 border border-white/5 text-start mb-2.5 max-h-28 overflow-y-auto"
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             <span className="text-[9px] uppercase font-bold text-amber-500 block mb-0.5 tracking-wide">
-              ✨ {isRTL ? 'הטבת דרגה פעילה:' : 'Active Rank Perk:'}
+              ✨ {t('trainerData.activePerks')}:
             </span>
-            <p className="text-xs text-slate-300 leading-tight">{perk[locale]}</p>
+            {activePerks.map((perkLine) => (
+              <p key={perkLine.en} className="text-xs text-slate-300 leading-tight">
+                • {perkLine[locale]}
+              </p>
+            ))}
           </div>
         )}
 
@@ -222,7 +214,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
         {/* ================= Right/Bottom Side: Metadata & Showcase Case (66% on Desktop) ================= */}
         <div className="w-full md:w-2/3 p-4 sm:p-6 flex flex-col justify-between bg-gradient-to-br from-slate-900 to-slate-950 min-h-[400px] md:min-h-0">
           {/* Top Mini-Stats Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 bg-slate-950/60 p-3 sm:p-4 rounded-xl border border-slate-800/80 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 bg-slate-950/60 p-3 sm:p-4 rounded-xl border border-slate-800/80 mb-6">
             <div className="text-center">
               <span className="text-[10px] uppercase tracking-wider text-slate-500 block">
                 {t('trainerData.playTime')}
@@ -252,6 +244,14 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
                 {t('trainerData.caught')}
               </span>
               <span className="text-sm font-mono font-bold text-emerald-400">{trainer.pokemonCaught}</span>
+            </div>
+            <div
+              className={`text-center border-slate-800 border-t sm:border-t-0 pt-2 sm:pt-0 ${isRTL ? 'sm:border-r' : 'sm:border-l'}`}
+            >
+              <span className="text-[10px] uppercase tracking-wider text-slate-500 block">
+                {t('trainerData.leagueWins')}
+              </span>
+              <span className="text-sm font-mono font-bold text-amber-400">{trainer.leagueWins}</span>
             </div>
           </div>
 

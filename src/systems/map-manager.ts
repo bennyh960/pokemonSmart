@@ -6,7 +6,7 @@
 import { mergeMapWithTemplate } from '../engine/tilemap.js';
 import type { TileMapData } from '../engine/tilemap.js';
 import { loadTileset } from '../engine/tileset.js';
-import { normalizeDialogue } from './npc.js';
+import { normalizeDialogue, type NPCData } from './npc.js';
 
 // ─── Auto-discover all maps (recursive, excludes templates/ and backup/) ─────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,12 +36,37 @@ const mapPathById: Record<string, string> = Object.fromEntries(
  *  Reads `label` from the map's JSON (once cached). Falls back to `name` then raw ID.
  *  To set a display name: add `"label": { "en": "...", "he": "..." }` to the map JSON. */
 export function getMapDisplayName(mapId: string): { en: string; he: string } {
-  const cached = mapCache.get(mapId);
-  if (cached?.label?.en || cached?.label?.he) {
-    return { en: cached.label.en ?? mapId, he: cached.label.he ?? mapId };
+  return mapLabel(mapId, mapCache.get(mapId));
+}
+
+function mapLabel(mapId: string, data: TileMapData | undefined): { en: string; he: string } {
+  if (data?.label?.en || data?.label?.he) {
+    return { en: data.label.en ?? mapId, he: data.label.he ?? mapId };
   }
-  if (cached?.name) return { en: cached.name, he: cached.name }; // TODO: remove once all maps use label
+  if (data?.name) return { en: data.name, he: data.name }; // TODO: remove once all maps use label
   return { en: mapId, he: mapId };
+}
+
+/**
+ * Find NPCs across ALL maps (raw JSON — no tilesets, no cache). Expensive: loads every map
+ * module, so use it for rare events only (e.g. the rank-up call naming where tutors are).
+ * Only maps the world links to (some transition leads there) are searched, so test maps are skipped.
+ * `labelOf` names any map id (not only the ones with hits).
+ */
+export async function findNpcsInAllMaps(match: (npc: NPCData) => boolean): Promise<{
+  hits: { npc: NPCData; mapId: string }[];
+  labelOf: (mapId: string) => { en: string; he: string };
+}> {
+  const ids = getAllMapIds();
+  const maps = await Promise.all(ids.map((id) => mapModules[mapPathById[id]]().then((m) => m.default as TileMapData)));
+  const byId = new Map(ids.map((id, i) => [id, maps[i]]));
+  const linked = new Set(maps.flatMap((m) => (m.transitions ?? []).map((tr) => tr.toMapId)));
+  return {
+    hits: ids
+      .filter((mapId) => linked.has(mapId))
+      .flatMap((mapId) => (byId.get(mapId)!.npcs ?? []).filter(match).map((npc) => ({ npc, mapId }))),
+    labelOf: (mapId) => mapLabel(mapId, byId.get(mapId)),
+  };
 }
 
 /** Search cached (already-loaded) maps to find which map contains a trainer with the given ID. */

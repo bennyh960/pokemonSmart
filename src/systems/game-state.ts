@@ -50,6 +50,7 @@ export function createNewPlayerData(): PlayerData {
     repelStepsRemaining: 0,
     awayPokemon: {},
     totalSteps: 0,
+    hallOfFame: [],
   };
 }
 

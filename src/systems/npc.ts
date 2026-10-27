@@ -130,7 +130,8 @@ export interface NPCData {
     | 'gate-guard'
     | 'wild-pokemon'
     | 'day-care'
-    | 'abilities-swap';
+    | 'abilities-swap'
+    | 'rank-advisor';
   dialogue: BilingualText[];
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
@@ -144,6 +145,11 @@ export interface NPCData {
   hidden?: boolean; // NPC exists but not rendered/interactable until triggered
   spawnAfter?: string; // Flag — NPC appears only after this flag is set
   despawnAfter?: string; // Flag — NPC disappears after this flag is set
+  /**
+   * For NPCs on a shared interior (e.g. `shared/pokecenter-2`): the NPC shows only when the
+   * player entered from one of these maps.
+   */
+  enteredFrom?: string[];
   /** NPC disappears once player has at least `count` Pokémon at or above `minLevel`. */
   despawnWhenParty?: { count: number; minLevel: number };
   /** When true, NPC uses line-of-sight to block the player until despawn conditions are met. */
@@ -196,6 +202,8 @@ export interface TrainerReward {
   items?: RewardItem[];
   badge?: number; // Gym badge number (1-8) to award
   storyEvent?: string; // Story progression flag to set
+  /** Beating this trainer wins the League — every win (rematches too) adds a Hall of Fame entry. */
+  hallOfFame?: boolean;
 }
 
 /** Re-encounter configuration on a trainer NPC. */
@@ -319,6 +327,13 @@ const FACING_VECTORS: Record<string, { dx: number; dy: number }> = {
   ArrowRight: { dx: 1, dy: 0 },
 };
 
+/** Map the player entered the current map from — set by the overworld, read by `enteredFrom`. */
+let _entryOrigin: string | null = null;
+
+export function setNpcEntryOrigin(mapId: string | null): void {
+  _entryOrigin = mapId;
+}
+
 /** Check if an NPC should be visible given the current story flags and player party. */
 export function isNPCVisible(
   npc: NPCData,
@@ -326,6 +341,7 @@ export function isNPCVisible(
   party?: import('../types/index.js').Pokemon[],
 ): boolean {
   if (npc.hidden) return false;
+  if (npc.enteredFrom && !(_entryOrigin && npc.enteredFrom.includes(_entryOrigin))) return false;
   if (npc.spawnAfter && !flags[npc.spawnAfter]) return false;
   if (npc.despawnAfter && flags[npc.despawnAfter]) return false;
 

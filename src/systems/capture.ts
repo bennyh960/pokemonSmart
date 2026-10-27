@@ -14,6 +14,8 @@ export interface CaptureChanceInput {
   /** Total accumulated negative stat stages applied to the wild Pokemon this battle
    *  (sum of absolute stage counts across all stats that were lowered). */
   statStagesReduced?: number;
+  /** Trainer-rank catch skill multiplier (1 = none). */
+  rankBonus?: number;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -119,6 +121,7 @@ export function calculateCaptureChance(input: CaptureChanceInput): number {
   const levelBonus = getLevelDifferenceCatchBonus(input.playerLevel, input.wildLevel);
 
   const rawScore = hpComponent + statusBonus + turnBonus + statReductBonus + levelBonus;
+  const multiplier = speciesFactor * input.ballRate * (input.rankBonus ?? 1);
 
   console.log(`Capture Chance Calculation Debug:
   HP Component: ${hpComponent.toFixed(4)}
@@ -129,8 +132,9 @@ export function calculateCaptureChance(input: CaptureChanceInput): number {
   Raw Score: ${rawScore.toFixed(4)}
   Species Factor: ${speciesFactor.toFixed(4)}
   Ball Rate: ${input.ballRate.toFixed(4)}
-  Final Chance (before clamping): ${(rawScore * speciesFactor * input.ballRate).toFixed(4)}
-  Final Capture Chance: ${clamp(rawScore * speciesFactor * input.ballRate, 0, 1).toFixed(4)}
+  Rank Bonus: ${(input.rankBonus ?? 1).toFixed(4)}
+  Final Chance (before clamping): ${(rawScore * multiplier).toFixed(4)}
+  Final Capture Chance: ${clamp(rawScore * multiplier, 0, 1).toFixed(4)}
   `);
-  return clamp(rawScore * speciesFactor * input.ballRate, 0, 1);
+  return clamp(rawScore * multiplier, 0, 1);
 }

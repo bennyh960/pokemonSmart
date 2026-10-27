@@ -1,6 +1,10 @@
 {
   "id": "pokecenter-mart-interior",
   "name": "Pokemon Center & Mart",
+  "label": {
+    "en": "League Pokémon Center",
+    "he": "מרכז הפוקימונים של הליגה"
+  },
   "width": 23,
   "height": 10,
   "tileSize": 16,
@@ -110,6 +114,25 @@
         }
       ],
       "spriteType": "Prof.Algorithma"
+    },
+    {
+      "id": "npc-league-ability-tutor",
+      "x": 12,
+      "y": 4,
+      "facing": "down",
+      "type": "abilities-swap",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": "שלום!"
+        }
+      ],
+      "spriteType": "char_a8fbf3",
+      "name": {
+        "en": "Ability Tutor",
+        "he": "מורה יכולות"
+      },
+      "spawnAfter": "rank-expert"
     }
   ],
   "music": "pokecenter",

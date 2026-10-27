@@ -257,4 +257,13 @@ export interface PlayerData {
   /** Away Pokemon: key = Pokemon.uuid. Stolen entries lock the Pokemon in party; day-care entries hold the Pokemon object. */
   awayPokemon: Record<string, AwayPokemonEntry>;
   totalSteps: number; // cumulative steps walked — used for day-care EXP calculation
+  /** One entry per League win (newest last, capped at HALL_OF_FAME_MAX). Its length is the League win count. */
+  hallOfFame: HallOfFameEntry[];
+}
+
+/** Party snapshot taken when the player wins the League. */
+export interface HallOfFameEntry {
+  date: number; // unix ms
+  playtime: number; // seconds, at the time of the win
+  party: { id: number; level: number; abilityId: number | null; heldItemId: string | null }[];
 }

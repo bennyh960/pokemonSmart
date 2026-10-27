@@ -231,7 +231,7 @@ export class PropertiesPanel {
     addSelect(
       'Type',
       'type',
-      ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard', 'wild-pokemon', 'day-care', 'abilities-swap'],
+      ['dialogue', 'trainer', 'shopkeeper', 'healer', 'gate-guard', 'wild-pokemon', 'day-care', 'abilities-swap', 'rank-advisor'],
       npc.type,
     );
     addInput(
