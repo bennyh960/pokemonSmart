@@ -22,8 +22,8 @@ import { queueCutscene } from './story-engine.js';
 import {
   describeGrowTips,
   describeRankGoals,
-  describeRankPerks,
   getRankIndex,
+  sayRankPerks,
   takeUnannouncedRanks,
 } from './trainer-rank.js';
 
@@ -56,8 +56,10 @@ export async function startRankUpCall(pd: PlayerData): Promise<void> {
 }
 
 /**
- * Kept short: greeting → (first promotion) how to grow → new perks in game words →
+ * Kept short: greeting → (first promotion) how to grow → the NEW rank's perks, spoken →
  * feature explanation → next goal → goodbye. No numbers or points.
+ * When several ranks were reached at once (e.g. an old save), only the highest one is explained —
+ * the Trainer Card lists everything that is active.
  */
 async function buildCallLines(pd: PlayerData, ranks: RankConfig[]): Promise<BilingualLabel[]> {
   const top = ranks[ranks.length - 1];
@@ -65,10 +67,8 @@ async function buildCallLines(pd: PlayerData, ranks: RankConfig[]): Promise<Bili
 
   if (getRankIndex(ranks[0].id) === 1) lines.push(tBoth('rank.call.howTo', { tips: describeGrowTips() }));
 
-  for (const rank of ranks) {
-    lines.push(...describeRankPerks(rank, { features: false }));
-    for (const feature of rank.perks.features ?? []) lines.push(...(await explainFeature(pd, feature)));
-  }
+  lines.push(...sayRankPerks(top));
+  for (const feature of top.perks.features ?? []) lines.push(...(await explainFeature(pd, feature)));
 
   const next = TRAINER_RANKS[getRankIndex(top.id) + 1];
   const goals = next && describeRankGoals(next);

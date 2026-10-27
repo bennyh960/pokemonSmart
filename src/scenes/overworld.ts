@@ -2543,7 +2543,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           rankCheckTimer = 0;
           updateTrainerRank(getPlayerData());
         }
-        if (hasUnannouncedRanks()) void startRankUpCall(getPlayerData());
+        if (hasUnannouncedRanks()) {
+          autoSave(); // persist the new rank flags so a reload doesn't replay the call
+          void startRankUpCall(getPlayerData());
+        }
       }
 
       // Handle map transitions

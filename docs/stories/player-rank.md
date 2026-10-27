@@ -52,7 +52,9 @@ tells the player when a new rank is reached (a phone call from Prof. Algorithma)
 - On a new rank, Prof. Algorithma calls (existing `phoneCaller` cutscene). One call covers every rank reached since the
   last one.
 - Short (≈5 lines), game text only — no points, percentages or item lists. Built from data: congratulations + rank
-  → each new perk in game words → feature explanation → next goal (counters only, e.g. "21 Pokémon caught") → goodbye.
+  → the new rank's perks as the professor says them (`rank.say.*`; the card uses the short `rank.perk.*`) → feature
+  explanation → next goal (counters only, e.g. "21 Pokémon caught") → goodbye.
+- Several ranks reached at once (old saves): the call explains only the highest one. New rank flags are saved at once.
 - The first call also says how to grow, using the `tip` of the 3 highest-paying `RANK_XP_SOURCES`.
 - Rank points are shown to the player as "Trainer Points" / "נקודות מאמן" (never "XP" — that is Pokémon battle XP).
 - The call waits until the overworld is idle (no dialogue, cutscene, transition).

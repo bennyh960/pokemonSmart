@@ -32,7 +32,7 @@ describe('rank-up call', () => {
     expect(text).toContain('Ash');
     expect(text).toContain('Amateur');
     expect(text).toContain('earning gym badges');
-    expect(text).toContain('Rarer items');
+    expect(text).toContain('rarer items');
     expect(text).toContain('Your next goal is the Pro rank');
     expect(lines.some((l) => /XP|\d+ ?%/.test(l.en + l.he))).toBe(false);
     expect(lines.length).toBeLessThanOrEqual(6);
@@ -48,8 +48,21 @@ describe('rank-up call', () => {
     updateTrainerRank(pd);
     await startRankUpCall(pd);
     const lines = await callLines();
-    const where = lines.find((l) => l.en.startsWith('You can find them here'));
+    const where = lines.find((l) => l.en.startsWith('Ability Tutors are waiting'));
     expect(where?.en).toMatch(/Percentile/);
     expect(where?.he.length).toBeGreaterThan(0);
   }, 60_000); // scans every map (cold transform in vitest is slow)
+
+  it('several ranks at once (old save) explain only the newest one', async () => {
+    const pd = createNewPlayerData();
+    pd.playtime = 9000;
+    pd.badges = 0b1111;
+    pd.pokedex = Object.fromEntries(Array.from({ length: 21 }, (_, i) => [i + 1, 'caught' as const]));
+    updateTrainerRank(pd); // Amateur + Pro in one go
+    await startRankUpCall(pd);
+    const text = (await callLines()).map((l) => l.en).join('\n');
+    expect(text).toContain('you are now a Pro trainer');
+    expect(text).toContain('rarest goods'); // Pro's shop line
+    expect(text).not.toContain('sell you rarer items'); // Amateur's shop line
+  });
 });

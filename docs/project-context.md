@@ -38,6 +38,6 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Stale commented-out reset script at the bottom of `act3/quest-raikou.ts`
 - [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution, english-learning — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
 - [ ] 7 of 13 vitest files fail on main (pre-existing)
-- [ ] `public/audio/` is gitignored — the only copy is the `gh-pages` branch. A fresh clone has no sound; restore with `git archive origin/gh-pages audio | tar -x -C public`. Store it somewhere durable (LFS / release asset)
+- [ ] `public/audio/` is gitignored — the only copy is the `gh-pages` branch. A fresh clone has no sound; restore with `git archive origin/gh-pages audio | tar -x -C public` (the Pages workflow `.github/workflows/deploy.yml` does this before building). Store it somewhere durable (LFS / release asset) — if `gh-pages` is ever recreated without `audio/`, prod loses sound again
 - [ ] `encounter-tables.json`: some old entries have minLevel > maxLevel (sumville Pineco 10/5, route-3 Nidoran-f 24/20, small-forest Murkrow 30/14, cave-20-30 Phanpy 29/25)
 - [ ] Math in battle disabled — needs a less intrusive mechanic

@@ -25,6 +25,15 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
+      # public/audio/ is gitignored (too big for main) — its only copy is the gh-pages branch.
+      # Without this step the deployed game has no sound.
+      - name: Restore Audio From gh-pages
+        run: |
+          git fetch --depth=1 origin gh-pages
+          mkdir -p public
+          git archive FETCH_HEAD audio | tar -x -C public
+          test -n "$(ls -A public/audio)"
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

@@ -12,6 +12,7 @@ import {
   RANK_STAT_LABELS,
   RANK_FEATURES,
   type RankConfig,
+  type RankFeatureId,
   type RankId,
   type RankPerks,
   type RankStats,
@@ -164,9 +165,12 @@ export function isShopItemUnlocked(pd: PlayerData, itemId: string): boolean {
 
 // ─── Generated text ──────────────────────────────────────────────────────────
 
-type PerkLine = { kind: string; text: BilingualLabel };
+/**
+ * One perk a rank adds. `text` id picks the wording ("first" vs "even more"): `rank.perk.<text>` is the short
+ * Trainer Card label, `rank.say.<text>` is how the professor says it on the phone.
+ */
+type PerkLine = { kind: string; text: string };
 
-/** In-game perk lines for one rank — only what this rank adds or changes ("first" vs "even more" wording). */
 function rankPerkLines(rank: RankConfig): PerkLine[] {
   const index = getRankIndex(rank.id);
   const { perks } = rank;
@@ -176,37 +180,41 @@ function rankPerkLines(rank: RankConfig): PerkLine[] {
 
   if (getRankShopItems(perks).length) {
     const first = !before.some((r) => getRankShopItems(r.perks).length);
-    lines.push({ kind: 'shop', text: tBoth(first ? 'rank.perk.shop' : 'rank.perk.shopMore') });
+    lines.push({ kind: 'shop', text: first ? 'shop' : 'shopMore' });
   }
   if (changed('catchBonus') && perks.catchBonus! > 1) {
     const first = (perkValueAt(index - 1, 'catchBonus') ?? 1) <= 1;
-    lines.push({ kind: 'catch', text: tBoth(first ? 'rank.perk.catch' : 'rank.perk.catchMore') });
+    lines.push({ kind: 'catch', text: first ? 'catch' : 'catchMore' });
   }
   if (changed('obeyLevel')) {
-    const key =
-      perks.obeyLevel === Infinity
-        ? 'rank.perk.obeyAll'
-        : perkValueAt(index - 1, 'obeyLevel') === undefined
-          ? 'rank.perk.obey'
-          : 'rank.perk.obeyMore';
-    lines.push({ kind: 'obey', text: tBoth(key) });
+    const text =
+      perks.obeyLevel === Infinity ? 'obeyAll' : perkValueAt(index - 1, 'obeyLevel') === undefined ? 'obey' : 'obeyMore';
+    lines.push({ kind: 'obey', text });
   }
-  for (const f of perks.features ?? []) lines.push({ kind: f, text: RANK_FEATURES[f].label });
+  for (const f of perks.features ?? []) lines.push({ kind: f, text: f });
   return lines;
 }
 
-/** Perk lines of one rank. `features: false` leaves out feature unlocks (the call explains those itself). */
-export function describeRankPerks(rank: RankConfig, { features = true } = {}): BilingualLabel[] {
+const perkLabel = ({ kind, text }: PerkLine): BilingualLabel =>
+  kind in RANK_FEATURES ? RANK_FEATURES[kind as RankFeatureId].label : tBoth(`rank.perk.${text}`);
+
+/** Short perk labels of one rank (Trainer Card, lab advisor). */
+export function describeRankPerks(rank: RankConfig): BilingualLabel[] {
+  return rankPerkLines(rank).map(perkLabel);
+}
+
+/** The professor's spoken lines for a rank's perks. Feature unlocks are left out — the call explains those itself. */
+export function sayRankPerks(rank: RankConfig): BilingualLabel[] {
   return rankPerkLines(rank)
-    .filter((l) => features || !(l.kind in RANK_FEATURES))
-    .map((l) => l.text);
+    .filter((l) => !(l.kind in RANK_FEATURES))
+    .map((l) => tBoth(`rank.say.${l.text}`));
 }
 
 /** Perks active at a rank — one line per perk (the latest wording wins). */
 export function describeActivePerks(index: number): BilingualLabel[] {
   const byKind = new Map<string, BilingualLabel>();
   for (const rank of TRAINER_RANKS.slice(0, index + 1)) {
-    for (const line of rankPerkLines(rank)) byKind.set(line.kind, line.text);
+    for (const line of rankPerkLines(rank)) byKind.set(line.kind, perkLabel(line));
   }
   return [...byKind.values()];
 }
