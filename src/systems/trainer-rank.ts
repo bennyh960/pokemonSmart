@@ -164,32 +164,48 @@ export function isShopItemUnlocked(pd: PlayerData, itemId: string): boolean {
 
 // ─── Generated text ──────────────────────────────────────────────────────────
 
-const joinNames = (labels: BilingualLabel[]): BilingualLabel => ({
-  en: labels.map((l) => l.en).join(', '),
-  he: labels.map((l) => l.he).join(', '),
-});
+type PerkLine = { kind: string; text: BilingualLabel };
 
-/** Short perk lines for one rank — only what this rank adds or changes. */
-export function describeRankPerks(rank: RankConfig): BilingualLabel[] {
+/** In-game perk lines for one rank — only what this rank adds or changes ("first" vs "even more" wording). */
+function rankPerkLines(rank: RankConfig): PerkLine[] {
   const index = getRankIndex(rank.id);
   const { perks } = rank;
-  const lines: BilingualLabel[] = [];
+  const lines: PerkLine[] = [];
+  const before = TRAINER_RANKS.slice(0, index);
   const changed = (key: NumericPerk) => perks[key] !== undefined && perks[key] !== perkValueAt(index - 1, key);
 
-  const shopItems = getRankShopItems(perks);
-  if (shopItems.length) lines.push(tBoth('rank.perk.shop', { items: joinNames(shopItems.map((i) => i.name)) }));
+  if (getRankShopItems(perks).length) {
+    const first = !before.some((r) => getRankShopItems(r.perks).length);
+    lines.push({ kind: 'shop', text: tBoth(first ? 'rank.perk.shop' : 'rank.perk.shopMore') });
+  }
   if (changed('catchBonus') && perks.catchBonus! > 1) {
-    lines.push(tBoth('rank.perk.catch', { pct: Math.round((perks.catchBonus! - 1) * 100) }));
+    const first = (perkValueAt(index - 1, 'catchBonus') ?? 1) <= 1;
+    lines.push({ kind: 'catch', text: tBoth(first ? 'rank.perk.catch' : 'rank.perk.catchMore') });
   }
   if (changed('obeyLevel')) {
-    lines.push(
+    const key =
       perks.obeyLevel === Infinity
-        ? tBoth('rank.perk.obeyAll')
-        : tBoth('rank.perk.obeyLevel', { level: perks.obeyLevel! }),
-    );
+        ? 'rank.perk.obeyAll'
+        : perkValueAt(index - 1, 'obeyLevel') === undefined
+          ? 'rank.perk.obey'
+          : 'rank.perk.obeyMore';
+    lines.push({ kind: 'obey', text: tBoth(key) });
   }
-  for (const f of perks.features ?? []) lines.push(RANK_FEATURES[f].label);
+  for (const f of perks.features ?? []) lines.push({ kind: f, text: RANK_FEATURES[f].label });
   return lines;
+}
+
+export function describeRankPerks(rank: RankConfig): BilingualLabel[] {
+  return rankPerkLines(rank).map((l) => l.text);
+}
+
+/** Perks active at a rank — one line per perk (the latest wording wins). */
+export function describeActivePerks(index: number): BilingualLabel[] {
+  const byKind = new Map<string, BilingualLabel>();
+  for (const rank of TRAINER_RANKS.slice(0, index + 1)) {
+    for (const line of rankPerkLines(rank)) byKind.set(line.kind, line.text);
+  }
+  return [...byKind.values()];
 }
 
 /** "8,000 XP · 31 Pokémon caught · 6 badges" */

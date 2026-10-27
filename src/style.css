@@ -258,3 +258,30 @@ canvas {
 .game-scrollbar::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+/* Thin variant for small boxes (perk lists, tooltips) — amber thumb on a faint track */
+.game-scrollbar-thin {
+  scrollbar-color: rgba(245, 158, 11, 0.55) rgba(255, 255, 255, 0.04);
+}
+
+.game-scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.game-scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.game-scrollbar-thin::-webkit-scrollbar-thumb {
+  border: 1px solid transparent;
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.7), rgba(217, 119, 6, 0.7));
+  background-clip: padding-box;
+}
+
+.game-scrollbar-thin::-webkit-scrollbar-thumb:hover,
+.game-scrollbar-thin::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #fbbf24, #d97706);
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.45);
+}

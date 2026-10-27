@@ -3,7 +3,12 @@ import { useI18n } from '../../ui-react/context/i18n-context';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData';
 import { BADGES, hasBadge } from '../../data/badges';
 import { TRAINER_RANKS } from '../../data/trainer-ranks';
-import { describeRankPerks, describeRankRequirements, getTrainerRank } from '../../systems/trainer-rank';
+import {
+  describeActivePerks,
+  describeRankPerks,
+  describeRankRequirements,
+  getTrainerRank,
+} from '../../systems/trainer-rank';
 
 interface ITrainerDataProps {
   onClose: () => void;
@@ -42,8 +47,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
   const playTime = Math.round(trainer.playTime / 60 + playTimeMinutes);
 
   const currentTheme = trainerRank.rank.theme;
-  // Every perk earned so far (each rank adds to the ones below it)
-  const activePerks = TRAINER_RANKS.slice(0, trainerRank.index + 1).flatMap(describeRankPerks);
+  const activePerks = describeActivePerks(trainerRank.index);
 
   const RenderRankContainer = () => {
     const { id: activeRankId, badge, label: rank } = trainerRank.rank;
@@ -67,14 +71,16 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
               ℹ️
             </button>
 
+            {/* Outer layer bridges the gap to the button (md:pb-2) so the popup stays open while scrolling it */}
             <div
               className={`
-  fixed left-4 right-4 bottom-4 md:absolute md:bottom-6 md:w-72 md:right-auto md:left-auto
-  ${isRTL ? 'md:-left-20' : 'md:-right-20'} 
-  hidden group-hover/tooltip:block bg-slate-950/95 border border-slate-700 p-3 rounded-lg shadow-xl z-50 text-right text-xs space-y-2 pointer-events-none backdrop-blur-sm
+  fixed left-4 right-4 bottom-4 md:absolute md:bottom-full md:pb-2 md:w-72 md:right-auto md:left-auto
+  ${isRTL ? 'md:-left-20' : 'md:-right-20'}
+  hidden group-hover/tooltip:block z-50
 `}
             >
-              <p className="font-bold text-cyan-400 border-b border-slate-800 pb-1 mb-1 text-center">
+              <div className="bg-slate-950/95 border border-slate-700 p-3 rounded-lg shadow-xl text-start text-xs backdrop-blur-sm max-h-[60vh] md:max-h-96 overflow-y-auto overscroll-contain game-scrollbar game-scrollbar-thin">
+              <p className="font-bold text-cyan-400 border-b border-slate-800 pb-1 mb-1 text-center sticky top-0 -mt-3 pt-3 bg-slate-950">
                 🏆 {t('trainerData.rankRoadmap')}
               </p>
               <div className="space-y-2 font-sans">
@@ -111,6 +117,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
                   );
                 })}
               </div>
+              </div>
             </div>
           </div>
         </div>
@@ -124,7 +131,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
         {/* Active Perks Box */}
         {activePerks.length > 0 && (
           <div
-            className="w-full bg-black/40 rounded-lg p-2 border border-white/5 text-start mb-2.5 max-h-28 overflow-y-auto"
+            className="w-full bg-black/40 rounded-lg p-2 border border-white/5 text-start mb-2.5 max-h-28 overflow-y-auto overscroll-contain game-scrollbar game-scrollbar-thin"
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             <span className="text-[9px] uppercase font-bold text-amber-500 block mb-0.5 tracking-wide">
@@ -165,11 +172,11 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
 
       <div
         dir={isRTL ? 'rtl' : 'ltr'}
-        className="relative w-full max-w-4xl h-full max-h-[95vh] md:h-[600px] bg-slate-900 border-2 border-slate-700 rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-y-auto md:overflow-hidden text-slate-100 select-none font-sans"
+        className="relative w-full max-w-4xl h-full max-h-[95vh] md:h-[600px] bg-slate-900 border-2 border-slate-700 rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-y-auto md:overflow-hidden text-slate-100 select-none font-sans game-scrollbar"
       >
         {/* ================= Left/Top Side: Profile Section (33% on Desktop) ================= */}
         <div
-          className={`w-full md:w-1/3 bg-slate-950 p-6 flex flex-col justify-between border-b md:border-b-0 ${isRTL ? 'md:border-l' : 'md:border-r'} border-slate-800`}
+          className={`w-full md:w-1/3 bg-slate-950 p-6 flex flex-col justify-between md:overflow-y-auto game-scrollbar game-scrollbar-thin border-b md:border-b-0 ${isRTL ? 'md:border-l' : 'md:border-r'} border-slate-800`}
         >
           <div className="flex flex-col items-center text-center mt-6 md:mt-4">
             <div className="w-28 h-28 sm:w-32 sm:h-32 bg-gradient-to-b from-indigo-500/20 to-cyan-500/20 border-2 border-cyan-500/50 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/10 mb-4 overflow-hidden relative group">
