@@ -8,6 +8,7 @@ import {
   describeActivePerks,
   describeRankPerks,
   describeRankRequirements,
+  formatTrainerPoints,
   getTrainerRank,
 } from '../../systems/trainer-rank';
 
@@ -103,7 +104,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
         {/* Real-time Score Counter */}
         <div className="bg-black/40 rounded-md px-2.5 py-1 border border-white/5 w-full flex justify-center items-center">
           <span className="text-[10px] font-mono font-bold text-amber-500/90 tracking-wide">
-            XP: {value.toLocaleString()}
+            {formatTrainerPoints(value)[locale]}
           </span>
         </div>
       </div>
@@ -159,7 +160,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
                       <span className={`font-bold ${rankItem.theme.text}`}>
                         {rankItem.badge} {rankItem.label[locale]}
                       </span>
-                      <span className="font-mono font-bold text-slate-400">{rankItem.minExp.toLocaleString()} XP</span>
+                      <span className="font-bold text-slate-400">{formatTrainerPoints(rankItem.minExp)[locale]}</span>
                     </div>
                     {rankItem.requires && (
                       <div className="text-[11px] text-amber-500/80 mt-1">

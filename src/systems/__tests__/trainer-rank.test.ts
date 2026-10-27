@@ -103,8 +103,9 @@ describe('trainer rank', () => {
     expect(text).toContain('Amateur trainer');
     expect(text).toContain(`${getRank('pro').requires!.caught} more Pokémon caught`);
     expect(text).not.toContain('more badges');
-    expect(text).not.toContain('more rank XP');
-    expect(text).toContain('every League win');
+    expect(text).not.toContain('more training');
+    expect(text).toContain('winning the Pokémon League');
+    expect(text).not.toContain('XP');
   });
 
   it('lab advisor at the top rank', () => {

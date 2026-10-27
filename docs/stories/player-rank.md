@@ -51,13 +51,14 @@ tells the player when a new rank is reached (a phone call from Prof. Algorithma)
 **Goal:** the player learns what changed.
 - On a new rank, Prof. Algorithma calls (existing `phoneCaller` cutscene). One call covers every rank reached since the
   last one.
-- Lines are built from data: congratulations + rank name → each perk's explanation → next rank's requirements.
-- The first call also explains how to earn rank XP (from `RANK_XP_SOURCES`).
+- Short (≈5 lines), game text only — no points, percentages or item lists. Built from data: congratulations + rank
+  → each new perk in game words → feature explanation → next goal (counters only, e.g. "21 Pokémon caught") → goodbye.
+- The first call also says how to grow, using the `tip` of the 3 highest-paying `RANK_XP_SOURCES`.
+- Rank points are shown to the player as "Trainer Points" / "נקודות מאמן" (never "XP" — that is Pokémon battle XP).
 - The call waits until the overworld is idle (no dialogue, cutscene, transition).
 
 ## Story 4: Amateur — shop unlocks + catch skill
 - Shops sell status cures (Antidote … Full Heal) and Ultra Balls only from Amateur.
-- Call lists each unlocked item with its description from `items.json`.
 - **Catch skill (every rank):** each rank has a `catchBonus` (×1.00 … ×1.25 on the capture chance) and a `throwSpin`
   (extra ball spins + faster throw). Text: "Wild Pokémon are more willing to join you".
 
@@ -77,7 +78,7 @@ tells the player when a new rank is reached (a phone call from Prof. Algorithma)
 - Ability-swap NPCs spawn only at Expert (`spawnAfter: rank-expert`) in the 3 Pokémon Centers above.
 - New NPC field `enteredFrom?: string[]` — NPC on a shared interior shows only when entered from those maps.
 - The existing Percentile lab NPC keeps its "not allowed yet" message, now built from the rank data.
-- Call explains abilities using the player's first 1–3 party Pokémon (name, ability, description) and lists where the
+- Call explains abilities using the player's first party Pokémon (name, ability, description) and lists where the
   tutors are (found by scanning the maps for `abilities-swap` NPCs).
 
 ## Story 7: Elite / Master / Legendary — legendary gates
@@ -89,8 +90,8 @@ tells the player when a new rank is reached (a phone call from Prof. Algorithma)
 ## Story 8: Lab rank advisor
 **Goal:** the player can ask in person how to rank up.
 - New NPC type `rank-advisor` ("Rank Researcher"). Its own dialogue is an intro; the rest is generated:
-  current rank + XP → what is still missing for the next rank (only unmet XP / counters) → the 3 best XP sources →
-  what the next rank unlocks → Trainer Card hint. At the top rank it says so.
+  current rank → what is still missing for the next rank (unmet counters, or "a little more training") → how to grow
+  (3 tips) → what the next rank unlocks → Trainer Card hint. At the top rank it says so.
 - Placed in `templates/lab-template` (so every lab built from it gets one: Sumville, Percentile) and in
   Prof. Algorithma's lab (Zeroville), which has its own layout.
 

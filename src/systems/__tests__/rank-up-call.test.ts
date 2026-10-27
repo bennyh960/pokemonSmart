@@ -21,18 +21,21 @@ async function callLines(): Promise<BilingualText[]> {
 }
 
 describe('rank-up call', () => {
-  it('first promotion explains rank XP and the new shop items', async () => {
+  it('first promotion is short game text: how to grow, new perks, next goal — no points', async () => {
     const pd = createNewPlayerData();
     pd.name = 'Ash';
     pd.playtime = 1000;
     updateTrainerRank(pd);
     await startRankUpCall(pd);
-    const text = (await callLines()).map((l) => l.en).join('\n');
+    const lines = await callLines();
+    const text = lines.map((l) => l.en).join('\n');
     expect(text).toContain('Ash');
     expect(text).toContain('Amateur');
-    expect(text).toContain('every gym badge');
-    expect(text).toContain('Ultra Ball');
-    expect(text).toContain('To become Pro');
+    expect(text).toContain('earning gym badges');
+    expect(text).toContain('Rarer items');
+    expect(text).toContain('Your next goal is the Pro rank');
+    expect(lines.some((l) => /XP|\d+ ?%/.test(l.en + l.he))).toBe(false);
+    expect(lines.length).toBeLessThanOrEqual(6);
   });
 
   it('Expert call names the Ability Tutor places from the maps', async () => {

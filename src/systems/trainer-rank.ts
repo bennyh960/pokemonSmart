@@ -195,8 +195,11 @@ function rankPerkLines(rank: RankConfig): PerkLine[] {
   return lines;
 }
 
-export function describeRankPerks(rank: RankConfig): BilingualLabel[] {
-  return rankPerkLines(rank).map((l) => l.text);
+/** Perk lines of one rank. `features: false` leaves out feature unlocks (the call explains those itself). */
+export function describeRankPerks(rank: RankConfig, { features = true } = {}): BilingualLabel[] {
+  return rankPerkLines(rank)
+    .filter((l) => features || !(l.kind in RANK_FEATURES))
+    .map((l) => l.text);
 }
 
 /** Perks active at a rank — one line per perk (the latest wording wins). */
@@ -208,13 +211,43 @@ export function describeActivePerks(index: number): BilingualLabel[] {
   return [...byKind.values()];
 }
 
-/** "8,000 XP · 31 Pokémon caught · 6 badges" */
+const joinLabels = (labels: BilingualLabel[], sep: string): BilingualLabel => ({
+  en: labels.map((l) => l.en).join(sep),
+  he: labels.map((l) => l.he).join(sep),
+});
+
+/** Trainer points as shown to the player ("8,000 Trainer Points"). */
+export function formatTrainerPoints(points: number): BilingualLabel {
+  return tBoth('rank.points', { points: points.toLocaleString() });
+}
+
+function rankGoalParts(rank: RankConfig): BilingualLabel[] {
+  return Object.entries(rank.requires ?? {}).map(([stat, min]) =>
+    tBoth('rank.req.stat', { count: min!, stat: RANK_STAT_LABELS[stat as keyof RankStats] }),
+  );
+}
+
+/** Counter goals of a rank, no points: "31 Pokémon caught, 6 badges" — undefined when it has none. */
+export function describeRankGoals(rank: RankConfig): BilingualLabel | undefined {
+  const parts = rankGoalParts(rank);
+  return parts.length ? joinLabels(parts, ', ') : undefined;
+}
+
+/** Full requirement line for the Trainer Card roadmap: "8,000 Trainer Points · 31 Pokémon caught · 6 badges" */
 export function describeRankRequirements(rank: RankConfig): BilingualLabel {
-  const parts = [tBoth('rank.req.xp', { xp: rank.minExp.toLocaleString() })];
-  for (const [stat, min] of Object.entries(rank.requires ?? {})) {
-    parts.push(tBoth('rank.req.stat', { count: min!, stat: RANK_STAT_LABELS[stat as keyof RankStats] }));
-  }
-  return { en: parts.map((p) => p.en).join(' · '), he: parts.map((p) => p.he).join(' · ') };
+  return joinLabels([formatTrainerPoints(rank.minExp), ...rankGoalParts(rank)], ' · ');
+}
+
+/** How many trainer-point sources are suggested to the player (highest points first). */
+const GROW_TIP_COUNT = 3;
+
+/** "winning the Pokémon League, giving your Pokémon items to hold, earning gym badges" */
+export function describeGrowTips(): BilingualLabel {
+  const top = [...RANK_XP_SOURCES].sort((a, b) => b.points - a.points).slice(0, GROW_TIP_COUNT);
+  return joinLabels(
+    top.map((s) => s.tip),
+    ', ',
+  );
 }
 
 /** Rank a flag stands for (`rank-expert` → expert), or undefined for any other flag. */
@@ -222,30 +255,26 @@ export function rankFromFlag(flag: string | undefined): RankConfig | undefined {
   return flag ? TRAINER_RANKS.find((r) => rankFlag(r.id) === flag) : undefined;
 }
 
-/** How many XP sources the lab's rank advisor suggests (highest points first). */
-const ADVICE_TOP_SOURCES = 3;
-const TOP_XP_SOURCES = [...RANK_XP_SOURCES].sort((a, b) => b.points - a.points).slice(0, ADVICE_TOP_SOURCES);
-
 /**
- * Lab rank advisor: the player's rank, what is still missing for the next one,
- * the best XP sources and what the next rank unlocks. Call `updateTrainerRank` first.
+ * Lab rank advisor: the player's rank, what is still missing for the next one (counters only —
+ * missing points are "more training"), how to grow, and what the next rank unlocks.
+ * Call `updateTrainerRank` first.
  */
 export function rankAdviceLines(pd: PlayerData): BilingualLabel[] {
   const { rank, index, xp, stats } = getTrainerRank(pd);
-  const lines = [tBoth('rank.advice.status', { rank: rank.label, xp: xp.toLocaleString() })];
+  const lines = [tBoth('rank.advice.status', { rank: rank.label })];
   const next = TRAINER_RANKS[index + 1];
   if (!next) return [...lines, tBoth('rank.advice.top')];
 
   lines.push(tBoth('rank.advice.missing', { rank: next.label }));
-  if (xp < next.minExp) lines.push(tBoth('rank.advice.missingXp', { xp: (next.minExp - xp).toLocaleString() }));
   for (const [stat, min] of Object.entries(next.requires ?? {})) {
     const have = stats[stat as keyof RankStats];
     if (have < min!) {
       lines.push(tBoth('rank.advice.missingStat', { count: min! - have, stat: RANK_STAT_LABELS[stat as keyof RankStats] }));
     }
   }
-  lines.push(tBoth('rank.advice.sources'));
-  for (const src of TOP_XP_SOURCES) lines.push(tBoth('rank.call.xpSource', { label: src.label, points: src.points }));
+  if (xp < next.minExp) lines.push(tBoth('rank.advice.missingTraining'));
+  lines.push(tBoth('rank.advice.tips', { tips: describeGrowTips() }));
   const perks = describeRankPerks(next);
   if (perks.length) lines.push(tBoth('rank.advice.nextPerks', { rank: next.label }), ...perks);
   lines.push(tBoth('rank.gate.hint'));

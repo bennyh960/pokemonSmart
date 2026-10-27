@@ -129,17 +129,18 @@ export const TRAINER_RANKS: RankConfig[] = [
 ];
 
 /**
- * Where rank XP comes from: `points` for every `per` units of the stat.
- * `label` names the unit — used by the rank-up call to explain how to rank up.
+ * Where trainer points come from: `points` for every `per` units of the stat.
+ * `tip` is the in-game advice for that source (no numbers) — the professor and the lab advisor
+ * name the highest-paying ones.
  */
-export const RANK_XP_SOURCES: { stat: RankStatId; points: number; per?: number; label: BilingualLabel }[] = [
-  { stat: 'seen', points: 10, label: { en: 'every new Pokémon you see', he: 'כל פוקימון חדש שראית' } },
-  { stat: 'caught', points: 20, label: { en: 'every Pokémon you catch', he: 'כל פוקימון שלכדת' } },
-  { stat: 'badges', points: 200, label: { en: 'every gym badge', he: 'כל תג של מכון כושר' } },
-  { stat: 'heldItems', points: 250, label: { en: 'every Pokémon holding an item', he: 'כל פוקימון שמחזיק חפץ' } },
-  { stat: 'leagueWins', points: 500, label: { en: 'every League win', he: 'כל ניצחון בליגה' } },
-  { stat: 'steps', points: 1, per: 100, label: { en: 'every 100 steps', he: 'כל 100 צעדים' } },
-  { stat: 'playtime', points: 1, label: { en: 'every second you play', he: 'כל שנייה של משחק' } },
+export const RANK_XP_SOURCES: { stat: RankStatId; points: number; per?: number; tip: BilingualLabel }[] = [
+  { stat: 'seen', points: 10, tip: { en: 'discovering new Pokémon', he: 'גילוי פוקימונים חדשים' } },
+  { stat: 'caught', points: 20, tip: { en: 'catching Pokémon', he: 'לכידת פוקימונים' } },
+  { stat: 'badges', points: 200, tip: { en: 'earning gym badges', he: 'זכייה בתגים' } },
+  { stat: 'heldItems', points: 250, tip: { en: 'giving your Pokémon items to hold', he: 'לתת לפוקימונים שלך חפצים להחזיק' } },
+  { stat: 'leagueWins', points: 500, tip: { en: 'winning the Pokémon League', he: 'ניצחון בליגת הפוקימונים' } },
+  { stat: 'steps', points: 1, per: 100, tip: { en: 'exploring the world', he: 'לחקור את העולם' } },
+  { stat: 'playtime', points: 1, tip: { en: 'training with your Pokémon', he: 'אימון עם הפוקימונים שלך' } },
 ];
 
 /** Labels for each counter — used in generated requirement text ("21 Pokémon caught"). */

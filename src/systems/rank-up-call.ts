@@ -9,7 +9,6 @@
 import { registerCutscene } from '../data/story/cutscenes.js';
 import {
   RANK_FEATURES,
-  RANK_XP_SOURCES,
   TRAINER_RANKS,
   type BilingualLabel,
   type RankConfig,
@@ -21,16 +20,16 @@ import type { PlayerData } from '../types/index.js';
 import { findNpcsInAllMaps } from './map-manager.js';
 import { queueCutscene } from './story-engine.js';
 import {
+  describeGrowTips,
+  describeRankGoals,
   describeRankPerks,
-  describeRankRequirements,
   getRankIndex,
-  getRankShopItems,
   takeUnannouncedRanks,
 } from './trainer-rank.js';
 
 const RANK_UP_CALL_ID = 'rank-up-call';
-/** How many party Pokémon the professor uses to explain abilities. */
-const ABILITY_EXAMPLES = 3;
+/** How many party Pokémon the professor uses to explain abilities (kept low so the call stays short). */
+const ABILITY_EXAMPLES = 1;
 
 let _lines: BilingualLabel[] = [];
 
@@ -56,30 +55,29 @@ export async function startRankUpCall(pd: PlayerData): Promise<void> {
   }
 }
 
+/**
+ * Kept short: greeting → (first promotion) how to grow → new perks in game words →
+ * feature explanation → next goal → goodbye. No numbers or points.
+ */
 async function buildCallLines(pd: PlayerData, ranks: RankConfig[]): Promise<BilingualLabel[]> {
   const top = ranks[ranks.length - 1];
   const lines: BilingualLabel[] = [tBoth('rank.call.greeting', { player: pd.name, rank: top.label })];
 
-  // First promotion: explain where rank XP comes from
-  if (getRankIndex(ranks[0].id) === 1) {
-    lines.push(tBoth('rank.call.howTo'));
-    for (const src of RANK_XP_SOURCES) lines.push(tBoth('rank.call.xpSource', { label: src.label, points: src.points }));
-  }
+  if (getRankIndex(ranks[0].id) === 1) lines.push(tBoth('rank.call.howTo', { tips: describeGrowTips() }));
 
   for (const rank of ranks) {
-    const perkLines = describeRankPerks(rank);
-    if (perkLines.length === 0) continue;
-    lines.push(tBoth('rank.call.newPerks', { rank: rank.label }), ...perkLines);
-    for (const item of getRankShopItems(rank.perks)) {
-      lines.push(tBoth('rank.call.item', { item: item.name, desc: item.description }));
-    }
-    if (rank.perks.throwSpins) lines.push(tBoth('rank.call.throw'));
+    lines.push(...describeRankPerks(rank, { features: false }));
     for (const feature of rank.perks.features ?? []) lines.push(...(await explainFeature(pd, feature)));
   }
 
   const next = TRAINER_RANKS[getRankIndex(top.id) + 1];
+  const goals = next && describeRankGoals(next);
   lines.push(
-    next ? tBoth('rank.call.next', { rank: next.label, req: describeRankRequirements(next) }) : tBoth('rank.call.top'),
+    !next
+      ? tBoth('rank.call.top')
+      : goals
+        ? tBoth('rank.call.next', { rank: next.label, goals })
+        : tBoth('rank.call.nextTraining', { rank: next.label }),
     tBoth('rank.call.bye', { player: pd.name }),
   );
   return lines;
