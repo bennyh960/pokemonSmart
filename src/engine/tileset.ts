@@ -58,6 +58,10 @@ export interface TileDef {
    *  When absent, the entire sx/sy/w/h rectangle is the tile.
    *  When present, only these cells are rendered/collidable. */
   cells?: Array<{ dx: number; dy: number }>;
+  /** Cells (grid offsets) the object physically occupies — walking, blocking, category, encounters.
+   *  The rest of the image is still drawn, but behaves like the tile underneath
+   *  (e.g. a deck whose bottom row is only a support beam over water). */
+  footprint?: Array<{ dx: number; dy: number }>;
 }
 
 /** A loaded tileset ready for rendering. */
@@ -86,6 +90,7 @@ interface TileEntryRaw {
   interactType?: unknown; // string (legacy) or { id, args } (new) or null
   destroy?: string; // legacy — migrated to interactType on load
   cells?: Array<{ dx: number; dy: number }>;
+  footprint?: Array<{ dx: number; dy: number }>;
 }
 
 /** Normalize interactType from JSON: handles legacy string, new object, and destroy migration. */
@@ -153,6 +158,7 @@ export async function loadTileset(name: string): Promise<Tileset> {
         battleBackground: normalizeBattleBackgroundId(raw.battleBackground) ?? undefined,
         interactType: iRef,
         cells: raw.cells,
+        footprint: raw.footprint,
       });
     }
   }

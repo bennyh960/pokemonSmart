@@ -23,6 +23,8 @@ export interface TileEntry {
    *  When absent, the entire sx/sy/w/h rectangle is the tile.
    *  When present, only these cells are rendered/collidable. */
   cells?: Array<{ dx: number; dy: number }>;
+  /** Cells the object physically occupies (walking/blocking); the rest acts like the tile underneath. */
+  footprint?: Array<{ dx: number; dy: number }>;
 }
 
 /** The final manifest JSON output. */

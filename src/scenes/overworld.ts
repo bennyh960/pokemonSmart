@@ -3793,6 +3793,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               if (tileMap.getTileCategory(nx, ny) === 'water') walkable = true;
             }
 
+            // On foot, water always needs Surf — even water tiles marked walkable (open sea `wt1`)
+            // that border a deck or bridge. Decks/bridges are objects, so their own category wins.
+            if (walkable && !isCurrentlySurfing && tileMap.getTileCategory(nx, ny) === 'water') walkable = false;
+
             if (!walkable && input.isKeyPressed(key)) {
               // Bump into non-walkable tile — play once per keypress, not every frame
               audio.playSFX('bump-wall');
