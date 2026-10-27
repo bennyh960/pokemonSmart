@@ -416,6 +416,12 @@ function checkCondition(cond: StoryCondition, pd: ReturnType<typeof getPlayerDat
   }
 }
 
+/** Run one story action on the active save — used by cutscene `action` steps, so they behave exactly like event actions. */
+export function runStoryAction(action: StoryAction): void {
+  if (!hasActiveGame()) return;
+  executeAction(action, getPlayerData());
+}
+
 function executeAction(action: StoryAction, pd: ReturnType<typeof getPlayerData>): void {
   switch (action.type) {
     case 'set-flag':

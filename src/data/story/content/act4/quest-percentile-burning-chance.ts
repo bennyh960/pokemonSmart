@@ -318,6 +318,18 @@ registerStoryEvent({
   actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-clue-growlithe' }],
 });
 
+// Recovery: Erika already talked to (gift given) but the clue scene never ran
+registerStoryEvent({
+  id: 'evt-pct-clue-growlithe-recover',
+  trigger: { type: 'map-enter', mapId: MapId.PERCENTILE_FAMILY_HOUSE },
+  conditions: [
+    { type: 'flag', flag: FLAGS.ACT4_PCT_ARC_STARTED },
+    { type: 'flag', flag: 'npc-npc-percentile-mom-rewarded' },
+    { type: 'flag-not', flag: FLAGS.ACT4_PCT_CLUE_GROWLITHE },
+  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-clue-growlithe' }],
+});
+
 registerCutscene({
   id: 'cutscene-pct-clue-growlithe',
   steps: [

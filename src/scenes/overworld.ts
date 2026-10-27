@@ -101,6 +101,7 @@ import {
   checkAndRecoverInterruptedEvent,
   checkAndResumeDelayedEvents,
   applyCompletedEventNpcPositions,
+  runStoryAction,
 } from '../systems/story-engine.js';
 import {
   isCutsceneActive,
@@ -1436,46 +1437,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       },
       executeStoryAction(action) {
         if (!hasActiveGame()) return;
-        const pd = getPlayerData();
-        switch (action.type) {
-          case 'set-flag':
-            pd.flags[action.flag] = action.value ?? true;
-            break;
-          case 'give-item': {
-            const keyFlag = grantItem(pd, action.itemId, action.quantity);
-            if (keyFlag) void fireStoryTrigger({ type: 'flag-set', flag: keyFlag });
-            break;
-          }
-          case 'give-money':
-            pd.money += action.amount;
-            break;
-          case 'set-quest':
-            if (pd.story) {
-              const prevQuestId = pd.story.activeQuestId;
-              pd.story.activeQuestId = action.questId;
-              if (action.questId && action.questId !== prevQuestId) {
-                setHUDTab(2);
-                updateHUD(buildHUDData());
-              }
-            }
-            break;
-          case 'complete-quest':
-            if (pd.story) {
-              if (!pd.story.completedQuestIds.includes(action.questId)) {
-                pd.story.completedQuestIds.push(action.questId);
-              }
-              if (pd.story.activeQuestId === action.questId) {
-                pd.story.activeQuestId = null;
-              }
-            }
-            break;
-          case 'start-cutscene':
-            activateCutscene(action.cutsceneId);
-            break;
-          case 'play-music':
-            audio.playMusic(action.musicId);
-            break;
-          // Other actions deferred to story-engine
+        // The overworld runs these itself; everything else goes through the story engine so a
+        // cutscene's set-flag fires flag-set events and infection/quest actions work the same way.
+        if (action.type === 'start-cutscene') return void activateCutscene(action.cutsceneId);
+        if (action.type === 'play-music') return audio.playMusic(action.musicId);
+        const prevQuestId = getPlayerData().story?.activeQuestId;
+        runStoryAction(action);
+        const questId = getPlayerData().story?.activeQuestId;
+        if (questId && questId !== prevQuestId) {
+          setHUDTab(2);
+          updateHUD(buildHUDData());
         }
       },
       getFlag(flag) {

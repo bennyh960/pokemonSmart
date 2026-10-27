@@ -8,10 +8,12 @@ vi.mock('../../auth/supabase-client.js', () => ({ supabase: {} }));
 import { createNewPlayerData } from '../game-state.js';
 import {
   calcRankXp,
+  describeActivePerks,
   describeRankPerks,
   getEarnedRankIndex,
   getPerkValue,
   getRank,
+  getRankIndex,
   getRankStats,
   hasRank,
   isShopItemUnlocked,
@@ -81,8 +83,16 @@ describe('trainer rank', () => {
 
   it('perk text is generated from data in both languages', () => {
     const lines = describeRankPerks(getRank('amateur'));
-    expect(lines[0].en).toContain('Ultra Ball');
+    expect(lines[0].en).toContain('Rarer items');
     expect(lines.every((l) => l.he.length > 0)).toBe(true);
+    expect(describeRankPerks(getRank('pro')).map((l) => l.en)).toContain('Powerful Pokémon will trust you more');
+  });
+
+  it('active perks keep one line per perk (latest wording)', () => {
+    const lines = describeActivePerks(getRankIndex('pro')).map((l) => l.en);
+    expect(lines.filter((l) => l.includes('items')).length).toBe(1);
+    expect(lines).toContain('Even rarer items are now available for you in stores');
+    expect(lines).not.toContain('Your Pokémon will trust you more');
   });
 
   it('lab advisor lists only what is still missing for the next rank', () => {

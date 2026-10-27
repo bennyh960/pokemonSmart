@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useInputLayer } from '../../engine/input';
 import { useI18n } from '../../ui-react/context/i18n-context';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData';
@@ -17,13 +18,17 @@ interface ITrainerDataProps {
 const TrainerData = ({ onClose }: ITrainerDataProps) => {
   const { t, locale, isRTL } = useI18n();
   const [pd] = usePlayerData();
+  const [roadmapOpen, setRoadmapOpen] = useState(false);
 
   useInputLayer({
     id: 'trainerData',
     name: 'Trainer Data',
     keyBindings: [{ action: 'close', code: 'Escape' }],
     onAction: (action) => {
-      if (action === 'close') onClose();
+      if (action !== 'close') return;
+      // Escape closes the rank roadmap first, then the card
+      if (roadmapOpen) setRoadmapOpen(false);
+      else onClose();
     },
   });
 
@@ -50,7 +55,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
   const activePerks = describeActivePerks(trainerRank.index);
 
   const RenderRankContainer = () => {
-    const { id: activeRankId, badge, label: rank } = trainerRank.rank;
+    const { badge, label: rank } = trainerRank.rank;
     const value = trainerRank.xp;
 
     return (
@@ -62,64 +67,14 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
             {t('trainerData.trainerRank')}
           </span>
 
-          {/* Dynamic Unlocks Roadmap Tooltip */}
-          <div className="relative group/tooltip">
-            <button
-              type="button"
-              className="text-[10px] bg-slate-800/80 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 w-4 h-4 rounded-full flex items-center justify-center border border-slate-700 transition-colors"
-            >
-              ℹ️
-            </button>
-
-            {/* Outer layer bridges the gap to the button (md:pb-2) so the popup stays open while scrolling it */}
-            <div
-              className={`
-  fixed left-4 right-4 bottom-4 md:absolute md:bottom-full md:pb-2 md:w-72 md:right-auto md:left-auto
-  ${isRTL ? 'md:-left-20' : 'md:-right-20'}
-  hidden group-hover/tooltip:block z-50
-`}
-            >
-              <div className="bg-slate-950/95 border border-slate-700 p-3 rounded-lg shadow-xl text-start text-xs backdrop-blur-sm max-h-[60vh] md:max-h-96 overflow-y-auto overscroll-contain game-scrollbar game-scrollbar-thin">
-              <p className="font-bold text-cyan-400 border-b border-slate-800 pb-1 mb-1 text-center sticky top-0 -mt-3 pt-3 bg-slate-950">
-                🏆 {t('trainerData.rankRoadmap')}
-              </p>
-              <div className="space-y-2 font-sans">
-                {TRAINER_RANKS.map((rankItem) => {
-                  const isCurrent = rankItem.id === activeRankId;
-                  return (
-                    <div
-                      key={rankItem.id}
-                      className={`p-1 rounded transition-colors ${isCurrent ? 'bg-white/5 border border-white/10' : ''}`}
-                    >
-                      <div className="flex justify-between items-center text-slate-300 text-[11px]">
-                        <span className={rankItem.theme.text}>
-                          {rankItem.badge} {rankItem.label[locale]}
-                        </span>
-                        <span className="font-mono font-bold text-slate-400">
-                          {rankItem.minExp.toLocaleString()} XP
-                        </span>
-                      </div>
-                      {rankItem.requires && (
-                        <div className="text-[10px] text-amber-500/80 mt-0.5" dir={isRTL ? 'rtl' : 'ltr'}>
-                          📌 {describeRankRequirements(rankItem)[locale]}
-                        </div>
-                      )}
-                      {describeRankPerks(rankItem).map((perkLine) => (
-                        <div
-                          key={perkLine.en}
-                          className="text-[10px] text-slate-400 mt-0.5"
-                          dir={isRTL ? 'rtl' : 'ltr'}
-                        >
-                          ✨ {perkLine[locale]}
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })}
-              </div>
-              </div>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={() => setRoadmapOpen(true)}
+            aria-label={t('trainerData.rankRoadmap')}
+            className="text-[10px] bg-slate-800/80 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 w-5 h-5 rounded-full flex items-center justify-center border border-slate-700 transition-colors"
+          >
+            ℹ️
+          </button>
         </div>
 
         {/* Main Rank Display */}
@@ -169,6 +124,60 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
           </kbd>
         </button>
       </div>
+
+      {/* Rank Roadmap modal (opened from the ℹ️ button on the rank box) */}
+      {roadmapOpen && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4 animate-fade-in"
+          onClick={() => setRoadmapOpen(false)}
+        >
+          <div
+            dir={isRTL ? 'rtl' : 'ltr'}
+            className="relative w-full max-w-md max-h-[85vh] flex flex-col bg-slate-950 border-2 border-slate-700 rounded-2xl shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
+              <h3 className="font-bold text-cyan-400 text-sm">🏆 {t('trainerData.rankRoadmap')}</h3>
+              <button
+                type="button"
+                onClick={() => setRoadmapOpen(false)}
+                aria-label="close"
+                className="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 w-7 h-7 rounded-lg border border-slate-700 flex items-center justify-center transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-3 space-y-2 overflow-y-auto overscroll-contain game-scrollbar game-scrollbar-thin">
+              {TRAINER_RANKS.map((rankItem) => {
+                const isCurrent = rankItem.id === trainerRank.rank.id;
+                return (
+                  <div
+                    key={rankItem.id}
+                    className={`p-2 rounded-lg ${isCurrent ? 'bg-white/5 border border-white/15' : 'border border-transparent'}`}
+                  >
+                    <div className="flex justify-between items-center text-xs">
+                      <span className={`font-bold ${rankItem.theme.text}`}>
+                        {rankItem.badge} {rankItem.label[locale]}
+                      </span>
+                      <span className="font-mono font-bold text-slate-400">{rankItem.minExp.toLocaleString()} XP</span>
+                    </div>
+                    {rankItem.requires && (
+                      <div className="text-[11px] text-amber-500/80 mt-1">
+                        📌 {describeRankRequirements(rankItem)[locale]}
+                      </div>
+                    )}
+                    {describeRankPerks(rankItem).map((perkLine) => (
+                      <div key={perkLine.en} className="text-[11px] text-slate-300 mt-0.5">
+                        ✨ {perkLine[locale]}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div
         dir={isRTL ? 'rtl' : 'ltr'}

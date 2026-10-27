@@ -13,6 +13,9 @@ tells the player when a new rank is reached (a phone call from Prof. Algorithma)
   and the editor / admin Story tab already understand them.
 - **Perks are data, not text.** Each rank lists what it unlocks (shop items, catch bonus, obey level, features). The
   perk text on the Trainer Card and in the phone call is generated from that data.
+- **Perk text is in-game, not mechanics** ("Wild Pokémon are more willing to join you", not "+3% catch rate"). A later
+  rank that improves the same perk says "even more" / "powerful Pokémon". The card's Active perks show one line per
+  perk; the call still names each new shop item with its description.
 - **League win = beating a trainer whose reward has `hallOfFame: true`** (set on the last Elite Four trainer, `league/e4-4`).
 - **Shops hide items that need a higher rank** (no locked rows).
 - **The Ability Tutor locations in the call are found by scanning every linked map** (one async load of all map
@@ -56,7 +59,7 @@ tells the player when a new rank is reached (a phone call from Prof. Algorithma)
 - Shops sell status cures (Antidote … Full Heal) and Ultra Balls only from Amateur.
 - Call lists each unlocked item with its description from `items.json`.
 - **Catch skill (every rank):** each rank has a `catchBonus` (×1.00 … ×1.25 on the capture chance) and a `throwSpin`
-  (extra ball spins + faster throw). Call says "your throws are now X% stronger".
+  (extra ball spins + faster throw). Text: "Wild Pokémon are more willing to join you".
 
 ## Story 5: Pro — X-items + obedience
 - Shops sell battle items (X Attack, X Defense, … Guard Spec, Dire Hit) from Pro.
