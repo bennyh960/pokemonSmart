@@ -31,6 +31,8 @@ export type StoryAction =
   | { type: 'set-infection'; mapId: MapId; value: InfectionLevel }
   /** Raise every map to at least `value` (never lowers one); maps in `except` are left alone. */
   | { type: 'spread-infection'; value: InfectionLevel; except?: MapId[] }
+  /** Drop each listed map's infection by `levels` (stops at 'low'; maps with no infection stay clean). */
+  | { type: 'lower-infection'; mapIds: MapId[]; levels: number }
   | { type: 'start-cutscene'; cutsceneId: string }
   | { type: 'start-gate'; gateId: string }
   | { type: 'set-quest'; questId: string | null }

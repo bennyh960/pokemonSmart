@@ -14,6 +14,7 @@ import { LOGICAL_WIDTH, LOGICAL_HEIGHT } from './config.js';
 import type { NPCData } from '../systems/npc.js';
 import type { Tileset } from './tileset.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
+import type { OverworldFxKind } from '../systems/overworld-fx.js';
 
 /** Map transition definition. */
 export interface MapTransition {
@@ -110,6 +111,18 @@ export interface TileMapData {
    *                    Example: { "rain": 0.5, "sandstorm": 0.1 } → 50% rain, 10% sand, 40% clear.
    */
   outside?: true | Record<string, number> | null;
+  /**
+   * Always-on particle effects (fire / smoke / rain) at fixed tiles — e.g. a burning machine.
+   * spawnAfter / despawnAfter work like on NPCs (story flags, checked live).
+   */
+  ambientFx?: Array<{
+    kind: OverworldFxKind;
+    x: number;
+    y: number;
+    radius?: number;
+    spawnAfter?: string;
+    despawnAfter?: string;
+  }>;
 }
 
 /**

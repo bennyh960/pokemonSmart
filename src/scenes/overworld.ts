@@ -341,6 +341,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let cutscenePokemonAnim: PokemonAnim | null = null;
   // Cutscene fx steps (fire / smoke / burst particles)
   let cutsceneFx: OverworldFx[] = [];
+  // Map ambientFx (always-on fire / smoke / rain at fixed tiles, flag-gated)
+  let ambientFx: Array<{ def: NonNullable<TileMapData['ambientFx']>[number]; fx: OverworldFx }> = [];
+  function isAmbientFxActive(def: NonNullable<TileMapData['ambientFx']>[number]): boolean {
+    const flags = hasActiveGame() ? getPlayerData().flags : {};
+    if (def.spawnAfter && !flags[def.spawnAfter]) return false;
+    return !(def.despawnAfter && flags[def.despawnAfter]);
+  }
   // Cutscene screen-shake step (e.g. earthquake)
   let screenShake: ShakeEffect | null = null;
 
@@ -1919,6 +1926,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   async function loadAndSetMap(mapId: string, spawnX?: number, spawnY?: number): Promise<void> {
     const data = await loadMap(mapId);
     currentMapData = data;
+    ambientFx = (data.ambientFx ?? []).map((def) => ({
+      def,
+      fx: createOverworldFx(def.kind, def, Infinity, def.radius),
+    }));
     currentMapWeather =
       typeof data.outside === 'object' && data.outside !== null ? getMapWeather(data.id ?? mapId, data.outside) : null;
     const tileset = data.tileset ? getTileset(data.tileset) : null;
@@ -2170,6 +2181,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
       // Sync flagListeners — same pattern as isNPCVisible: reads live flags each frame
       if (hasActiveGame()) tileMap.applyFlagListeners(getPlayerData().flags);
+      for (const a of ambientFx) if (isAmbientFxActive(a.def)) updateOverworldFx(a.fx, dt);
 
       // ── Cutscene runner: takes full control of input ──
       if (isCutsceneActive()) {
@@ -4231,6 +4243,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // (fx only advance while a cutscene runs — drop leftovers once it ends)
       if (!isCutsceneActive()) cutsceneFx = [];
       for (const fx of cutsceneFx) drawOverworldFx(ctx, fx, camera.x, camera.y);
+      for (const a of ambientFx) if (isAmbientFxActive(a.def)) drawOverworldFx(ctx, a.fx, camera.x, camera.y);
 
       // Cutscene pokemon-anim overlay
       if (cutscenePokemonAnim && cutscenePokemonAnim.alpha > 0 && cutscenePokemonAnim.sprite) {

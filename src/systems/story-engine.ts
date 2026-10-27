@@ -30,6 +30,7 @@ import type { InfectionLevel } from '../types/index.js';
 
 /** Infection strength order — 'cleared' (purified) counts as no infection. */
 const INFECTION_RANK: Record<InfectionLevel, number> = { none: 0, cleared: 0, low: 1, medium: 2, high: 3, critical: 4 };
+const INFECTION_BY_RANK: InfectionLevel[] = ['none', 'low', 'medium', 'high', 'critical'];
 
 let _stateMachine: StateMachine | null = null;
 
@@ -418,6 +419,17 @@ function executeAction(action: StoryAction, pd: ReturnType<typeof getPlayerData>
       ensureStory(pd.story!);
       pd.story!.mapInfection[action.mapId] = action.value;
       break;
+
+    case 'lower-infection': {
+      ensureStory(pd.story!);
+      for (const mapId of action.mapIds) {
+        const current = pd.story!.mapInfection[mapId];
+        if (!current || INFECTION_RANK[current] === 0) continue;
+        const rank = Math.max(1, INFECTION_RANK[current] - action.levels);
+        pd.story!.mapInfection[mapId] = INFECTION_BY_RANK[rank];
+      }
+      break;
+    }
 
     case 'spread-infection': {
       ensureStory(pd.story!);
