@@ -419,6 +419,15 @@
           "+"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-half-kid-rewarded",
+        "dialogue": [
+          {
+            "en": "Half of 10 is 5. Half of 100 is 50. I love percent!",
+            "he": "חצי מ-10 זה 5. חצי מ-100 זה 50. אני אוהב אחוזים!"
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "In Percentile everything is in percent!",
@@ -478,6 +487,15 @@
       "name": {
         "en": "Kalfon",
         "he": "חכם כלפון"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-nature-elder-rewarded",
+        "dialogue": [
+          {
+            "en": "Did you check your Pokémon's natures? Each one is special.",
+            "he": "בדקת את הטבע של הפוקימונים שלך? כל אחד מיוחד."
+          }
+        ]
       },
       "dialogue": [
         {
@@ -587,6 +605,15 @@
           "-"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-catch-coach-rewarded",
+        "dialogue": [
+          {
+            "en": "Lower HP, higher catch chance. Now go catch them!",
+            "he": "פחות חיים, יותר סיכוי לתפוס. עכשיו לך לתפוס!"
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "Want to catch more Pokémon? Think in percent!",
@@ -651,6 +678,15 @@
         "count": 2,
         "types": [
           "×"
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-beach-kid-rewarded",
+        "dialogue": [
+          {
+            "en": "My Snorlax is still munching. 6% every turn adds up!",
+            "he": "הסנורלקס שלי עדיין לועס. 6% בכל תור מצטבר!"
+          }
         ]
       },
       "dialogue": [

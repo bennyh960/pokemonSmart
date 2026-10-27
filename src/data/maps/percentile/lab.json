@@ -70,6 +70,15 @@
           "÷"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-lab-researcher-rewarded",
+        "dialogue": [
+          {
+            "en": "Use those Full Restores wisely. Glitched Pokémon hit hard!",
+            "he": "השתמש בשיקויים בחוכמה. פוקימונים נגועים מכים חזק!"
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "This lab studies the Glitch with numbers.",

@@ -386,6 +386,10 @@ function checkCondition(cond: StoryCondition, pd: ReturnType<typeof getPlayerDat
       return pd.flags[cond.flag] === (cond.value ?? true);
     case 'flag-not':
       return !pd.flags[cond.flag];
+    case 'flags-count': {
+      const n = cond.flags.filter((f) => pd.flags[f]).length;
+      return n >= (cond.min ?? 0) && n <= (cond.max ?? Infinity);
+    }
     case 'badge-count':
       return countBits(pd.badges) >= cond.min;
     case 'badge-count-max':

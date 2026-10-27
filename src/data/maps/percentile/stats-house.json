@@ -29,6 +29,15 @@
           "×"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-stat-trainer-rewarded",
+        "dialogue": [
+          {
+            "en": "Vitamins work best on your favorite Pokémon. Use them well!",
+            "he": "ויטמינים עובדים הכי טוב על הפוקימון האהוב עליך. תשתמש בהם טוב!"
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "Vitamins raise a Pokémon's base stats. I measure everything in percent!",

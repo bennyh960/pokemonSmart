@@ -22,6 +22,15 @@
         "en": "Erika",
         "he": "אריקה"
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-mom-rewarded",
+        "dialogue": [
+          {
+            "en": "I hope the Max Revives help. Come back safe!",
+            "he": "אני מקווה שההחייאות יעזרו. תחזור בשלום!"
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "Your Pokémon look tired. Even 1% HP left is too little!",
@@ -58,6 +67,15 @@
         "types": [
           "+",
           "-"
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-candy-kid-rewarded",
+        "dialogue": [
+          {
+            "en": "I am saving my last Rare Candy for my own Pokémon!",
+            "he": "את הסוכריה הנדירה האחרונה אני שומר לפוקימון שלי!"
+          }
         ]
       },
       "dialogue": [

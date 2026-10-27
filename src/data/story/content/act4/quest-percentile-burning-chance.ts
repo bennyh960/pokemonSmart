@@ -68,7 +68,8 @@ const ALGORITHMA = 'Prof. Algorithma / פרופ׳ אלגוריתמה';
 const MAX = 'Max Formax / מקס פורמקס';
 
 const CLUE_FLAGS = [FLAGS.ACT4_PCT_CLUE_COIN, FLAGS.ACT4_PCT_CLUE_MAP, FLAGS.ACT4_PCT_CLUE_GROWLITHE];
-const GUARD_FLAGS = ['npc-pct-guard-1', 'npc-pct-guard-2', 'npc-pct-guard-3'].map((id) => `trainer-${id}-defeated`);
+const GUARD_IDS = ['npc-pct-guard-1', 'npc-pct-guard-2', 'npc-pct-guard-3'];
+const GUARD_FLAGS = GUARD_IDS.map((id) => `trainer-${id}-defeated`);
 
 const ENTEI = 244;
 const SUICUNE = 245;
@@ -85,6 +86,24 @@ registerQuest({
   objective: {
     en: 'Something is wrong in Percentile — check the library, the ball storage and the family house',
     he: 'משהו לא בסדר בפרסנטייל — בדוק בספרייה, במחסן הכדורים ובבית המשפחה',
+  },
+});
+
+registerQuest({
+  id: 'main-act4-pct-clues-2',
+  title: { en: 'A Clue!', he: 'רמז!' },
+  objective: {
+    en: 'You found a clue! Two more people in Percentile know something strange',
+    he: 'מצאת רמז! עוד שני אנשים בפרסנטייל יודעים משהו מוזר',
+  },
+});
+
+registerQuest({
+  id: 'main-act4-pct-clues-3',
+  title: { en: 'One More Clue', he: 'עוד רמז אחד' },
+  objective: {
+    en: 'Almost there! One last clue is hiding somewhere in the city',
+    he: 'כמעט! רמז אחרון מסתתר איפשהו בעיר',
   },
 });
 
@@ -107,6 +126,15 @@ registerQuest({
 });
 
 registerQuest({
+  id: 'main-act4-pct-base-core',
+  title: { en: 'The Steam Core', he: 'ליבת הקיטור' },
+  objective: {
+    en: 'Jessie and James are gone. Go down to the bottom of the base',
+    he: "ג'סי וג'יימס עפו. רד לתחתית הבסיס",
+  },
+});
+
+registerQuest({
   id: 'main-act4-pct-hills',
   title: { en: 'The Burning Hills', he: 'הגבעות הבוערות' },
   objective: {
@@ -116,11 +144,29 @@ registerQuest({
 });
 
 registerQuest({
+  id: 'main-act4-pct-admin',
+  title: { en: 'The Shield Is Down', he: 'המגן נפל' },
+  objective: {
+    en: 'Beat Admin Kelvin on the Route 12 hill path',
+    he: 'נצח את האדמין קלווין בשביל הגבעות של דרך 12',
+  },
+});
+
+registerQuest({
   id: 'main-act4-pct-legends',
   title: { en: 'Fire on the Hilltop', he: 'אש על ראש הגבעה' },
   objective: {
     en: 'Stop the glitched Entei, then help Max Formax against Moltres',
     he: 'עצור את אנטאיי הנגוע, ואז עזור למקס פורמקס נגד מולטרס',
+  },
+});
+
+registerQuest({
+  id: 'main-act4-pct-moltres',
+  title: { en: 'Help Max!', he: 'עזור למקס!' },
+  objective: {
+    en: 'Max is worn out — battle Moltres on the hilltop',
+    he: 'מקס מותש — הילחם במולטרס על ראש הגבעה',
   },
 });
 
@@ -224,7 +270,19 @@ registerCutscene({
 
 registerStoryEvent({
   id: 'evt-pct-clue-map',
-  trigger: { type: 'flag-set', flag: 'trainer-npc-pct-ball-thief-defeated' },
+  trigger: { type: 'trainer-defeated', trainerId: 'npc-pct-ball-thief' },
+  conditions: [{ type: 'flag-not', flag: FLAGS.ACT4_PCT_CLUE_MAP }],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-clue-map' }],
+});
+
+// Recovery: thief beaten but the clue was missed (older builds waited for a trigger that never fired)
+registerStoryEvent({
+  id: 'evt-pct-clue-map-recover',
+  trigger: { type: 'map-enter', mapId: MapId.PERCENTILE_BALL_STORAGE },
+  conditions: [
+    { type: 'flag', flag: 'trainer-npc-pct-ball-thief-defeated' },
+    { type: 'flag-not', flag: FLAGS.ACT4_PCT_CLUE_MAP },
+  ],
   actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-clue-map' }],
 });
 
@@ -282,14 +340,32 @@ registerCutscene({
   ],
 });
 
-// ── Beat 2 → 3: all clues found → go to the lab ─────────────────────────────
+// ── Beat 2 → 3: each clue moves the quest on; all three → go to the lab ─────
 
 for (const clue of CLUE_FLAGS) {
+  registerStoryEvent({
+    id: `evt-pct-first-clue-${clue}`,
+    trigger: { type: 'flag-set', flag: clue },
+    conditions: [{ type: 'flags-count', flags: CLUE_FLAGS, max: 1 }],
+    actions: [
+      { type: 'complete-quest', questId: 'main-act4-pct-clues' },
+      { type: 'set-quest', questId: 'main-act4-pct-clues-2' },
+    ],
+  });
+  registerStoryEvent({
+    id: `evt-pct-second-clue-${clue}`,
+    trigger: { type: 'flag-set', flag: clue },
+    conditions: [{ type: 'flags-count', flags: CLUE_FLAGS, min: 2, max: 2 }],
+    actions: [
+      { type: 'complete-quest', questId: 'main-act4-pct-clues-2' },
+      { type: 'set-quest', questId: 'main-act4-pct-clues-3' },
+    ],
+  });
   registerStoryEvent({
     id: `evt-pct-clues-done-${clue}`,
     trigger: { type: 'flag-set', flag: clue },
     conditions: [
-      ...CLUE_FLAGS.map((flag) => ({ type: 'flag' as const, flag })),
+      { type: 'flags-count', flags: CLUE_FLAGS, min: 3 },
       { type: 'flag-not', flag: FLAGS.ACT4_PCT_CLUES_DONE },
     ],
     actions: [
@@ -299,7 +375,7 @@ for (const clue of CLUE_FLAGS) {
           { en: 'Broken chance... rising heat... the hills of Route 12. Time to visit the lab!', he: 'סיכוי שבור... חום עולה... הגבעות של דרך 12. הגיע הזמן לבקר במעבדה!' },
         ],
       },
-      { type: 'complete-quest', questId: 'main-act4-pct-clues' },
+      { type: 'complete-quest', questId: 'main-act4-pct-clues-3' },
       { type: 'set-quest', questId: 'main-act4-pct-lab' },
       { type: 'set-flag', flag: FLAGS.ACT4_PCT_CLUES_DONE },
     ],
@@ -392,7 +468,7 @@ registerCutscene({
 for (const trainerId of ['npc-base-jessie', 'npc-base-james']) {
   registerStoryEvent({
     id: `evt-pct-base-jj-${trainerId}`,
-    trigger: { type: 'flag-set', flag: `trainer-${trainerId}-defeated` },
+    trigger: { type: 'trainer-defeated', trainerId },
     conditions: [
       { type: 'flag', flag: 'trainer-npc-base-jessie-defeated' },
       { type: 'flag', flag: 'trainer-npc-base-james-defeated' },
@@ -421,6 +497,8 @@ registerCutscene({
       ],
     },
     { type: 'screen-shake', durationMs: 600, intensity: 1.2 },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-base' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-base-core' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_BASE_JJ_DONE } },
   ],
 });
@@ -490,7 +568,7 @@ registerCutscene({
         { en: 'There is an emergency hatch on this floor — it leads straight outside.', he: 'יש פתח חירום בקומה הזאת — הוא מוביל ישר החוצה.' },
       ],
     },
-    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-base' } },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-base-core' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-hills' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_SUICUNE_DONE } },
   ],
@@ -500,7 +578,7 @@ registerCutscene({
 
 registerStoryEvent({
   id: 'evt-pct-reminder-beaten',
-  trigger: { type: 'flag-set', flag: 'trainer-npc-pct-reminder-defeated' },
+  trigger: { type: 'trainer-defeated', trainerId: 'npc-pct-reminder' },
   actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-reminder-beaten' }],
 });
 
@@ -564,10 +642,10 @@ const MACHINES_OFF_CONDITIONS = [
   { type: 'flag-not' as const, flag: FLAGS.ACT4_PCT_MACHINES_OFF },
 ];
 
-for (const guardFlag of GUARD_FLAGS) {
+for (const guardId of GUARD_IDS) {
   registerStoryEvent({
-    id: `evt-pct-machines-off-${guardFlag}`,
-    trigger: { type: 'flag-set', flag: guardFlag },
+    id: `evt-pct-machines-off-${guardId}`,
+    trigger: { type: 'trainer-defeated', trainerId: guardId },
     conditions: MACHINES_OFF_CONDITIONS,
     actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-machines-off' }],
   });
@@ -579,7 +657,11 @@ registerStoryEvent({
   id: 'evt-pct-machines-off-after-suicune',
   trigger: { type: 'flag-set', flag: FLAGS.ACT4_PCT_SUICUNE_DONE },
   conditions: MACHINES_OFF_CONDITIONS,
-  actions: [{ type: 'set-flag', flag: FLAGS.ACT4_PCT_MACHINES_OFF }],
+  actions: [
+    { type: 'complete-quest', questId: 'main-act4-pct-hills' },
+    { type: 'set-quest', questId: 'main-act4-pct-admin' },
+    { type: 'set-flag', flag: FLAGS.ACT4_PCT_MACHINES_OFF },
+  ],
 });
 
 registerCutscene({
@@ -594,6 +676,8 @@ registerCutscene({
         { en: 'All three Heat Collectors are dark. The admin\'s shield must be down!', he: 'כל שלושת אוספי החום כבו. המגן של האדמין בטח נפל!' },
       ],
     },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-hills' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-admin' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_MACHINES_OFF } },
   ],
 });
@@ -602,7 +686,7 @@ registerCutscene({
 
 registerStoryEvent({
   id: 'evt-pct-admin-defeated',
-  trigger: { type: 'flag-set', flag: 'trainer-npc-pct-admin-defeated' },
+  trigger: { type: 'trainer-defeated', trainerId: 'npc-pct-admin' },
   actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-hilltop' }],
 });
 
@@ -687,7 +771,7 @@ registerCutscene({
         { en: 'Young trainer — you take Entei! Suicune and I will keep Moltres busy!', he: 'מאמן צעיר — אתה תיקח את אנטאיי! סוויקון ואני נעסיק את מולטרס!' },
       ],
     },
-    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-hills' } },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-admin' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-legends' } },
   ],
 });
@@ -729,6 +813,8 @@ registerCutscene({
         { en: 'Your turn, young mathematician!', he: 'תורך, מתמטיקאי צעיר!' },
       ],
     },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-legends' } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-moltres' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_ENTEI_DONE } },
   ],
 });
@@ -798,7 +884,7 @@ registerCutscene({
     { type: 'action', action: { type: 'lower-infection', mapIds: ARC_AREA, levels: 2 } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.PERCENTILE_OCEAN_OPEN } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_GROWLITHE_FOUND } },
-    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-legends' } },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-moltres' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-cores-lab' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_LEGENDS_DONE } },
   ],

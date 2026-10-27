@@ -83,6 +83,15 @@
           "-"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-librarian-rewarded",
+        "dialogue": [
+          {
+            "en": "Shhh... did the Max Elixirs help? Come back to read anytime.",
+            "he": "שששש... השיקויים עזרו? אפשר לחזור לקרוא מתי שתרצה."
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "Welcome to the Percentile Library. Shhh... quietly, please.",

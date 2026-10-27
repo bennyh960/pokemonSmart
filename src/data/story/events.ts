@@ -17,6 +17,8 @@ export type StoryTrigger =
 export type StoryCondition =
   | { type: 'flag'; flag: string; value?: boolean }
   | { type: 'flag-not'; flag: string }
+  /** How many of `flags` are set — between min and max (inclusive, both optional). */
+  | { type: 'flags-count'; flags: string[]; min?: number; max?: number }
   | { type: 'badge-count'; min: number }
   | { type: 'badge-count-max'; max: number }
   | { type: 'quest-active'; questId: string }

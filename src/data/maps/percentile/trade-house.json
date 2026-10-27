@@ -70,6 +70,15 @@
           "-"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-trade-helper-rewarded",
+        "dialogue": [
+          {
+            "en": "Trade a Pokémon holding one of those items and watch it evolve!",
+            "he": "תחליף פוקימון שמחזיק אחד מהפריטים האלה ותראה אותו מתפתח!"
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "Onix evolves when traded holding a Metal Coat. Seadra needs a Dragon Scale.",

@@ -86,7 +86,8 @@ registerQuest({
 // small event to prevent wild encounter when raikou run
 registerStoryEvent({
   id: 'evt-auto-repel-for-raikou',
-  trigger: { type: 'flag-set', flag: FLAGS.ACT3_POWER_RAIKOU_ARC_FLEE },
+  // Raikou fleeing sets trainer-…-defeated directly (no flag-set trigger) — react to the battle itself
+  trigger: { type: 'trainer-defeated', trainerId: 'wild-r8-raikou-en1' },
   actions: [{ type: 'set-repel', steps: 100 }],
 });
 

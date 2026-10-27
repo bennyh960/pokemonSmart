@@ -30,6 +30,15 @@
           "×"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-stone-collector-rewarded",
+        "dialogue": [
+          {
+            "en": "Have you decided which Pokémon gets which stone?",
+            "he": "החלטת איזה פוקימון יקבל איזו אבן?"
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "Some Pokémon evolve with a special stone. Eevee can use three different ones!",
