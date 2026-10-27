@@ -177,7 +177,6 @@ function renderContent(data: HUDData): void {
   } else {
     // ── QUEST ────────────────────────────────────────────────────────────
     const quest = data.questId ? getQuest(data.questId) : null;
-    console.log('Updating HUD quest:', data.questId, quest);
     if (quest) {
       const title = isHe ? quest.title.he : quest.title.en;
       const obj = isHe ? quest.objective.he : quest.objective.en;

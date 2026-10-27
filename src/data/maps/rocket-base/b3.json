@@ -1,0 +1,536 @@
+{
+  "id": "b3",
+  "name": "Rocket Base B3 — Command Floor",
+  "label": {
+    "en": "Rocket Base B3 — Command Floor",
+    "he": "בסיס רוקט קומה 3 — חדר הפיקוד"
+  },
+  "tileset": "interior",
+  "width": 30,
+  "height": 22,
+  "tileSize": 16,
+  "spawn": {
+    "x": 2,
+    "y": 4
+  },
+  "transitions": [
+    {
+      "fromX": 1,
+      "fromY": 3,
+      "toMapId": "rocket-base/b2",
+      "toX": 29,
+      "toY": 20
+    },
+    {
+      "fromX": 28,
+      "fromY": 19,
+      "toMapId": "rocket-base/b4",
+      "toX": 2,
+      "toY": 4
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-base-b3-grunt-1",
+      "x": 14,
+      "y": 5,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "The command room! Intruder alert!",
+          "he": "חדר הפיקוד! אזעקת פולש!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Alert... cancelled...",
+          "he": "האזעקה... בוטלה..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 24,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-base-b3-grunt-2",
+      "x": 3,
+      "y": 10,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "NULL-X says your chance of winning is 0%!",
+          "he": "נאל-איקס אומר שהסיכוי שלך לנצח הוא 0%!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Maybe NULL-X is wrong sometimes...",
+          "he": "אולי נאל-איקס טועה לפעמים..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 78,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 2
+          },
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-base-b3-grunt-3",
+      "x": 16,
+      "y": 13,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Our boss Jessie and James are waiting below. Turn back!",
+          "he": "הבוסים שלנו, ג'סי וג'יימס, מחכים למטה. תחזור!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "They will blast you off... I hope.",
+          "he": "הם יעיפו אותך... אני מקווה."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 219,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 42,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 126,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 5,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 5,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 5,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 5,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-base-b3-grunt-4",
+      "x": 12,
+      "y": 19,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Hot hot hot! Just like our generators!",
+          "he": "חם חם חם! בדיוק כמו הגנרטורים שלנו!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Cooled down...",
+          "he": "התקררתי..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 59,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 109,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-base-jessie",
+      "x": 24,
+      "y": 18,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "rocket-jessi",
+      "name": {
+        "en": "Jessie",
+        "he": "ג'סי"
+      },
+      "dialogue": [
+        {
+          "en": "Not you again! This steam plant is our best idea ever!",
+          "he": "שוב אתה?! מפעל הקיטור הזה הוא הרעיון הכי טוב שלנו!"
+        },
+        {
+          "en": "Suicune makes the steam, the fire Pokémon heat it, and Route 12 burns!",
+          "he": "סוויקון מייצר את הקיטור, פוקימוני האש מחממים אותו, ודרך 12 בוערת!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Grrr! James, do something!",
+          "he": "גררר! ג'יימס, תעשה משהו!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 24,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 78,
+          "level": 49,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 51,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 4000,
+        "items": [
+          {
+            "itemId": "max-revive",
+            "quantity": 1
+          }
+        ]
+      },
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started"
+    },
+    {
+      "id": "npc-base-james",
+      "x": 24,
+      "y": 20,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "rocket-james",
+      "name": {
+        "en": "James",
+        "he": "ג'יימס"
+      },
+      "dialogue": [
+        {
+          "en": "Prepare for trouble... the HOT kind!",
+          "he": "היכונו לצרות... מהסוג הלוהט!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Our beautiful plan... melted!",
+          "he": "התוכנית היפה שלנו... נמסה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 110,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 71,
+          "level": 49,
+          "moves": []
+        },
+        {
+          "pokemonId": 126,
+          "level": 51,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 4000,
+        "items": [
+          {
+            "itemId": "max-elixir",
+            "quantity": 1
+          }
+        ]
+      },
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started"
+    }
+  ],
+  "music": "team-rocket-grunt",
+  "encounterTableId": null,
+  "movablePuzzle": {},
+  "flagListeners": [],
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "rare-candy",
+        "x": 27,
+        "y": 4
+      },
+      {
+        "itemId": "full-restore",
+        "x": 27,
+        "y": 12
+      },
+      {
+        "itemId": "hyper-potion",
+        "x": 8,
+        "y": 20
+      }
+    ]
+  },
+  "ambientFx": [],
+  "objects": [
+    {
+      "key": "tv-screen1",
+      "x": 9,
+      "y": 3
+    },
+    {
+      "key": "screen2",
+      "x": 15,
+      "y": 3
+    },
+    {
+      "key": "labScreen",
+      "x": 21,
+      "y": 3
+    },
+    {
+      "key": "desk1",
+      "x": 10,
+      "y": 6
+    },
+    {
+      "key": "pc-1",
+      "x": 16,
+      "y": 6
+    },
+    {
+      "key": "pc-2",
+      "x": 17,
+      "y": 6
+    },
+    {
+      "key": "board-1",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "key": "map",
+      "x": 12,
+      "y": 3
+    },
+    {
+      "key": "box-2",
+      "x": 24,
+      "y": 19
+    },
+    {
+      "key": "box-2",
+      "x": 6,
+      "y": 20
+    },
+    {
+      "key": "item-generic",
+      "x": 27,
+      "y": 4
+    },
+    {
+      "key": "item-generic",
+      "x": 27,
+      "y": 12
+    },
+    {
+      "key": "item-generic",
+      "x": 8,
+      "y": 20
+    }
+  ],
+  "tiles": [
+    ["w5-b1","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-b2"],
+    ["w5-r","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
+    ["w5-r","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l"],
+    ["w5-r","stairs","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-c1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-c3","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-c1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-c3","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","stairs","w5-l"],
+    ["w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l"],
+    ["w5-b3","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-b4"]
+  ]
+}

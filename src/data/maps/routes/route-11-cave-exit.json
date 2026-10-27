@@ -14,6 +14,13 @@
   },
   "transitions": [
     {
+      "fromX": 9,
+      "fromY": 7,
+      "toMapId": "rocket-base/b1",
+      "toX": 3,
+      "toY": 31
+    },
+    {
       "fromX": 2,
       "fromY": 39,
       "toMapId": "routes/route-11",
@@ -23,7 +30,7 @@
     {
       "fromX": 3,
       "fromY": 39,
-      "toMapId": "route-1",
+      "toMapId": "routes/route-11",
       "toX": 4,
       "toY": 1
     }

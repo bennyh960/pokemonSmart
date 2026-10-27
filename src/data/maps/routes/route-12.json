@@ -48,6 +48,26 @@
   ],
   "npcs": [
     {
+      "id": "npc-pct-suicune-ally",
+      "x": 36,
+      "y": 31,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "suicune",
+      "name": {
+        "en": "Suicune",
+        "he": "סוויקון"
+      },
+      "dialogue": [
+        {
+          "en": "Suicune calls down the rain to cool the burning hills!",
+          "he": "סוויקון מוריד גשם כדי לקרר את הגבעות הבוערות!"
+        }
+      ],
+      "spawnAfter": "act4-pct-suicune-arrived",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
       "id": "npc-pct-guard-1",
       "x": 34,
       "y": 57,

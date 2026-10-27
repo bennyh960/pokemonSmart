@@ -97,6 +97,15 @@
           "+"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-ball-keeper-rewarded",
+        "dialogue": [
+          {
+            "en": "Enjoy the Ultra Balls! Remember: lower HP means a better chance to catch.",
+            "he": "תהנה מכדורי האולטרה! זכור: כמה שפחות חיים, יותר סיכוי לתפוס."
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "This is where Percentile keeps its Poké Balls.",

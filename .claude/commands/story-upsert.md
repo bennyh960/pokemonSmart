@@ -134,7 +134,7 @@ If the map JSON does not exist yet, add a ⚠️ block in the output (see Step 4
 
 - **`map-enter`** — fires on every load of the map. Use `flag-not: VISITED_*` to make it one-shot.
 - **`npc-interact`** — fires when player talks to NPC. Use `flag-not` condition to make it one-shot.
-- **`trainer-defeated`** — valid to use directly for wild-pokemon NPC encounters (legendary battles etc.). For regular trainer NPCs, prefer the auto-set `trainer-<id>-defeated` flag via `flag-set` trigger.
+- **`trainer-defeated`** — use this to react to ANY battle win (trainers and wild-pokemon NPCs, including a flee). The battle sets `trainer-<id>-defeated` directly, which does NOT fire a `flag-set` trigger — so never use `flag-set` on a `trainer-…-defeated` flag. The flag is still fine in `conditions`, `spawnAfter` and `despawnAfter`.
 - **Every referenced flag must be set somewhere** in the flag chain. Verify this before finishing.
 
 ### Flag chain verification (do before finishing)

@@ -12,8 +12,15 @@ import { fillRect } from './renderer.js';
 import { getTileImage } from './asset-generator.js';
 import { LOGICAL_WIDTH, LOGICAL_HEIGHT } from './config.js';
 import type { NPCData } from '../systems/npc.js';
-import type { Tileset } from './tileset.js';
+import type { Tileset, TileDef } from './tileset.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
+import type { OverworldFxKind } from '../systems/overworld-fx.js';
+
+/** Does an object's tile physically occupy grid offset (lx, ly)? Respects `cells` and `footprint`. */
+function occupiesCell(def: TileDef, lx: number, ly: number): boolean {
+  const inList = (list?: Array<{ dx: number; dy: number }>) => !list || list.some((c) => c.dx === lx && c.dy === ly);
+  return inList(def.cells) && inList(def.footprint);
+}
 
 /** Map transition definition. */
 export interface MapTransition {
@@ -110,6 +117,18 @@ export interface TileMapData {
    *                    Example: { "rain": 0.5, "sandstorm": 0.1 } → 50% rain, 10% sand, 40% clear.
    */
   outside?: true | Record<string, number> | null;
+  /**
+   * Always-on particle effects (fire / smoke / rain) at fixed tiles — e.g. a burning machine.
+   * spawnAfter / despawnAfter work like on NPCs (story flags, checked live).
+   */
+  ambientFx?: Array<{
+    kind: OverworldFxKind;
+    x: number;
+    y: number;
+    radius?: number;
+    spawnAfter?: string;
+    despawnAfter?: string;
+  }>;
 }
 
 /**
@@ -338,10 +357,8 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
         const lx = gx - obj.x;
         const ly = gy - obj.y;
         if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-          // For grouped tiles with cells, only block if this cell is included
-          if (def.cells) {
-            if (!def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
-          }
+          // Only block on cells the object actually occupies (grouped `cells` / `footprint`)
+          if (!occupiesCell(def, lx, ly)) continue;
           if (!def.walkable) return true;
         }
       }
@@ -368,7 +385,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-            if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
+            if (!occupiesCell(def, lx, ly)) continue;
             return def.walkable; // object tile is present — its walkable is the answer
           }
         }
@@ -411,7 +428,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-            if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
+            if (!occupiesCell(def, lx, ly)) continue;
             return def.encounterTypes;
           }
         }
@@ -439,7 +456,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-            if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
+            if (!occupiesCell(def, lx, ly)) continue;
             return def.category;
           }
         }
@@ -459,7 +476,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const lx = gx - obj.x;
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-            if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
+            if (!occupiesCell(def, lx, ly)) continue;
             return def.battleBackground;
           }
         }

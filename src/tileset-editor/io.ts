@@ -79,6 +79,7 @@ export function loadManifest(state: TilesetEditorState, json: string): void {
         interactType: normalizeEditorInteractType(t.interactType, (t as any).destroy),
         description: t.description,
         cells: t.cells,
+        footprint: t.footprint,
       });
     }
   }

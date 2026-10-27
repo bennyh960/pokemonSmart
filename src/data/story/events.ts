@@ -3,7 +3,7 @@ import type { InfectionLevel } from '../../types/index.js';
 import type { MapId } from '../maps/map-ids.js';
 
 export type StoryTrigger =
-  | { type: 'map-enter'; mapId: MapId } // fired: overworld on map load
+  | { type: 'map-enter'; mapId: MapId | '*' } // fired: overworld on map load ('*' = any map)
   | { type: 'map-exit'; mapId: MapId } // fired: overworld on transition start
   | { type: 'npc-interact'; npcId: string } // fired: overworld on A/Space press
   | { type: 'trainer-defeated'; trainerId: string } // fired: battle scene on win
@@ -17,6 +17,8 @@ export type StoryTrigger =
 export type StoryCondition =
   | { type: 'flag'; flag: string; value?: boolean }
   | { type: 'flag-not'; flag: string }
+  /** How many of `flags` are set — between min and max (inclusive, both optional). */
+  | { type: 'flags-count'; flags: string[]; min?: number; max?: number }
   | { type: 'badge-count'; min: number }
   | { type: 'badge-count-max'; max: number }
   | { type: 'quest-active'; questId: string }
@@ -29,6 +31,10 @@ export type StoryCondition =
 export type StoryAction =
   | { type: 'set-flag'; flag: string; value?: boolean }
   | { type: 'set-infection'; mapId: MapId; value: InfectionLevel }
+  /** Raise every map to at least `value` (never lowers one); maps in `except` are left alone. */
+  | { type: 'spread-infection'; value: InfectionLevel; except?: MapId[] }
+  /** Drop each listed map's infection by `levels` (stops at 'low'; maps with no infection stay clean). */
+  | { type: 'lower-infection'; mapIds: MapId[]; levels: number }
   | { type: 'start-cutscene'; cutsceneId: string }
   | { type: 'start-gate'; gateId: string }
   | { type: 'set-quest'; questId: string | null }

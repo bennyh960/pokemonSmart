@@ -27,8 +27,8 @@
       },
       "dialogue": [
         {
-          "en": "Five cores... three to go. Minusburg is our best lead.",
-          "he": "חמש ליבות... נשארו שלוש. מינוסבורג היא הכיוון הכי טוב שלנו."
+          "en": "Six cores... two to go. Minusburg is our best lead.",
+          "he": "שש ליבות... נשארו שתיים. מינוסבורג היא הכיוון הכי טוב שלנו."
         }
       ],
       "spawnAfter": "act4-pct-legends-done",
@@ -68,6 +68,15 @@
         "types": [
           "×",
           "÷"
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-lab-researcher-rewarded",
+        "dialogue": [
+          {
+            "en": "Use those Full Restores wisely. Glitched Pokémon hit hard!",
+            "he": "השתמש בשיקויים בחוכמה. פוקימונים נגועים מכים חזק!"
+          }
         ]
       },
       "dialogue": [

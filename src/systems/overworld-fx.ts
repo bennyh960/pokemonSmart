@@ -6,7 +6,7 @@
 
 import { TILE_SIZE } from '../engine/config.js';
 
-export type OverworldFxKind = 'fire' | 'smoke' | 'burst';
+export type OverworldFxKind = 'fire' | 'smoke' | 'burst' | 'rain';
 
 interface Particle {
   x: number;
@@ -32,12 +32,13 @@ export interface OverworldFx {
 }
 
 /** Particles spawned per second, per tile of radius. */
-const SPAWN_RATE: Record<OverworldFxKind, number> = { fire: 70, smoke: 18, burst: 0 };
+const SPAWN_RATE: Record<OverworldFxKind, number> = { fire: 70, smoke: 18, burst: 0, rain: 40 };
 const BURST_COUNT = 28;
 
 const FIRE_COLORS = ['#fff3a0', '#ffd23f', '#ff9f1c', '#f25c05', '#c22a00'];
 const SMOKE_COLORS = ['#8a8a8a', '#6e6e6e', '#555555'];
 const BURST_COLORS = ['#ffffff', '#fff3a0', '#ffb347', '#ff7b00'];
+const RAIN_COLOR = '#9ec9ff';
 
 function rand(min: number, max: number): number {
   return min + Math.random() * (max - min);
@@ -51,6 +52,19 @@ function spawnParticle(fx: OverworldFx): Particle {
   if (fx.kind === 'fire') {
     const maxLife = rand(0.35, 0.75);
     return { x, y, vx: rand(-6, 6), vy: rand(-38, -20), life: maxLife, maxLife, size: rand(2, 4) };
+  }
+  if (fx.kind === 'rain') {
+    // Drops start anywhere in a square above the area and fall diagonally through it
+    const maxLife = rand(0.45, 0.7);
+    return {
+      x: fx.cx + rand(-fx.radius, fx.radius),
+      y: fx.cy + rand(-fx.radius, fx.radius) - fx.radius * 0.6,
+      vx: -40,
+      vy: 190,
+      life: maxLife,
+      maxLife,
+      size: rand(3, 5),
+    };
   }
   // smoke
   const maxLife = rand(0.9, 1.6);
@@ -137,6 +151,14 @@ export function drawOverworldFx(ctx: CanvasRenderingContext2D, fx: OverworldFx, 
       ctx.fillStyle = pickColor(SMOKE_COLORS, t);
       ctx.globalAlpha = 0.55 * (1 - t);
       size = p.size * (1 + t * 1.5);
+    } else if (fx.kind === 'rain') {
+      // A thin slanted streak: one column of pixels, `size` tall
+      ctx.fillStyle = RAIN_COLOR;
+      ctx.globalAlpha = 0.7;
+      const sx = Math.round(p.x - camX);
+      const sy = Math.round(p.y - camY);
+      for (let i = 0; i < p.size; i++) ctx.fillRect(sx + Math.round(i * -0.2), sy + i, 1, 1);
+      continue;
     } else {
       ctx.fillStyle = pickColor(BURST_COLORS, t);
       ctx.globalAlpha = 1 - t;

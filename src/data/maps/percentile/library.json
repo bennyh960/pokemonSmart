@@ -83,6 +83,15 @@
           "-"
         ]
       },
+      "postFlagDialogue": {
+        "flag": "npc-npc-percentile-librarian-rewarded",
+        "dialogue": [
+          {
+            "en": "Shhh... did the Max Elixirs help? Come back to read anytime.",
+            "he": "שששש... השיקויים עזרו? אפשר לחזור לקרוא מתי שתרצה."
+          }
+        ]
+      },
       "dialogue": [
         {
           "en": "Welcome to the Percentile Library. Shhh... quietly, please.",
@@ -98,7 +107,7 @@
         },
         {
           "en": "Take this, it restores the PP of all moves.",
-          "he": "קח את זה, זה ממלא את ה-PP של כל ההתקפות."
+          "he": "קח את זה, זה ממלא מחדש את כל ההתקפות של הפוקימון."
         }
       ],
       "reward": {
@@ -133,7 +142,7 @@
         },
         {
           "en": "Ground moves do nothing to Flying Pokémon. Ghosts ignore Normal moves.",
-          "he": "התקפות Ground לא משפיעות על פוקימוני Flying. רוחות (Ghost) מתעלמות מהתקפות Normal."
+          "he": "התקפות אדמה לא משפיעות על פוקימונים מעופפים. פוקימוני רוח מתעלמים מהתקפות רגילות."
         }
       ]
     },

@@ -25,6 +25,12 @@ import { saveEventCheckpoint, loadEventCheckpoint, clearEventCheckpoint, syncToC
 import { getCurrentMapId, getCachedMap } from './map-manager.js';
 import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 import { grantItem } from './item-effects.js';
+import { MapId } from '../data/maps/map-ids.js';
+import type { InfectionLevel } from '../types/index.js';
+
+/** Infection strength order — 'cleared' (purified) counts as no infection. */
+const INFECTION_RANK: Record<InfectionLevel, number> = { none: 0, cleared: 0, low: 1, medium: 2, high: 3, critical: 4 };
+const INFECTION_BY_RANK: InfectionLevel[] = ['none', 'low', 'medium', 'high', 'critical'];
 
 let _stateMachine: StateMachine | null = null;
 
@@ -75,16 +81,17 @@ const AUTO_GATE_IDS: Record<AutoGateService, string> = {
   gym: 'auto-gym', // we can use auto and also use gate guard as regular
 };
 
-function _checkAutoGate(mapId: string): void {
+/**
+ * resumedInside — the player's saved position was already inside this map when map-enter
+ * fired (they passed the gate in a prior session). Must be read BEFORE map-enter events run:
+ * an on-arrival cutscene autosaves the new position, which would hide a real entry.
+ */
+function _checkAutoGate(mapId: string, resumedInside: boolean): void {
   const entry = _autoGateMapRegistry.get(mapId);
   if (!entry) return;
 
   if (isGateUnlocked(entry.gateId)) return;
-
-  // If the player's saved position is already inside this map, they passed the gate in a
-  // prior session. pd.position.mapId hasn't been updated yet when map-enter fires, so this
-  // correctly distinguishes a resume-inside from a real entry from an adjacent map.
-  if (hasActiveGame() && getPlayerData().position.mapId === mapId) return;
+  if (resumedInside) return;
 
   if (_stateMachine) {
     setActiveGate(entry.gateId);
@@ -161,6 +168,9 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
     };
   }
 
+  // pd.position.mapId hasn't been updated yet when map-enter fires — snapshot it now (see _checkAutoGate)
+  const resumedInside = trigger.type === 'map-enter' && pd.position.mapId === trigger.mapId;
+
   const events = getStoryEvents();
 
   for (const event of events) {
@@ -185,7 +195,7 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
 
   // ── Auto-gate check for service map entry ────────────────────────────────
   if (trigger.type === 'map-enter') {
-    _checkAutoGate((trigger as { mapId: string }).mapId);
+    _checkAutoGate(trigger.mapId, resumedInside);
   }
 
   // ── Auto all-trainers-defeated flag ──────────────────────────────────────
@@ -346,6 +356,7 @@ function triggerMatches(a: StoryTrigger, b: StoryTrigger): boolean {
   if (a.type !== b.type) return false;
   switch (a.type) {
     case 'map-enter':
+      return a.mapId === '*' || a.mapId === (b as { mapId: string }).mapId;
     case 'map-exit':
       return (a as { mapId: string }).mapId === (b as { mapId: string }).mapId;
     case 'npc-interact':
@@ -382,6 +393,10 @@ function checkCondition(cond: StoryCondition, pd: ReturnType<typeof getPlayerDat
       return pd.flags[cond.flag] === (cond.value ?? true);
     case 'flag-not':
       return !pd.flags[cond.flag];
+    case 'flags-count': {
+      const n = cond.flags.filter((f) => pd.flags[f]).length;
+      return n >= (cond.min ?? 0) && n <= (cond.max ?? Infinity);
+    }
     case 'badge-count':
       return countBits(pd.badges) >= cond.min;
     case 'badge-count-max':
@@ -415,6 +430,28 @@ function executeAction(action: StoryAction, pd: ReturnType<typeof getPlayerData>
       ensureStory(pd.story!);
       pd.story!.mapInfection[action.mapId] = action.value;
       break;
+
+    case 'lower-infection': {
+      ensureStory(pd.story!);
+      for (const mapId of action.mapIds) {
+        const current = pd.story!.mapInfection[mapId];
+        if (!current || INFECTION_RANK[current] === 0) continue;
+        const rank = Math.max(1, INFECTION_RANK[current] - action.levels);
+        pd.story!.mapInfection[mapId] = INFECTION_BY_RANK[rank];
+      }
+      break;
+    }
+
+    case 'spread-infection': {
+      ensureStory(pd.story!);
+      const target = INFECTION_RANK[action.value];
+      for (const mapId of Object.values(MapId)) {
+        if (action.except?.includes(mapId)) continue;
+        const current = pd.story!.mapInfection[mapId];
+        if (!current || INFECTION_RANK[current] < target) pd.story!.mapInfection[mapId] = action.value;
+      }
+      break;
+    }
 
     case 'set-quest':
       ensureStory(pd.story!);

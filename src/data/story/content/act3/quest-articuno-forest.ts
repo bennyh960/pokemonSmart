@@ -295,7 +295,7 @@ registerCutscene({
         },
         {
           en: 'If you can catch it, check its paws — it may be holding some Leftovers!',
-          he: 'אם תצליח לתפוס אותו, תבדוק מה יש לו בכפות - אולי הוא מחזיק שאריות (Leftovers)!',
+          he: 'אם תצליח לתפוס אותו, תבדוק מה יש לו בכפות - אולי הוא מחזיק שאריות מזון!',
         },
         {
           en: 'And if you want a shortcut to Percentile City, you can surf up the river to Zeroville. I think it is closer...',
@@ -307,5 +307,21 @@ registerCutscene({
     { type: 'action', action: { type: 'complete-quest', questId: 'quest-forest-articuno' } },
     { type: 'action', action: { type: 'set-quest', questId: 'quest-go-percentile' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT3_ARTICUNO_ARC_COMPLETE } },
+  ],
+});
+
+// ── After the arc: the glitch spreads everywhere else ───────────────────────
+// Runs on the next map load after the arc ends (also catches saves that finished it earlier).
+// Every map goes to at least 'high' — one below critical; the purified forest stays clean.
+registerStoryEvent({
+  id: 'evt-glitch-spread-after-articuno',
+  trigger: { type: 'map-enter', mapId: '*' },
+  conditions: [
+    { type: 'flag', flag: FLAGS.ACT3_ARTICUNO_ARC_COMPLETE },
+    { type: 'flag-not', flag: FLAGS.ACT3_GLITCH_SPREAD },
+  ],
+  actions: [
+    { type: 'spread-infection', value: 'high', except: [FOREST] },
+    { type: 'set-flag', flag: FLAGS.ACT3_GLITCH_SPREAD },
   ],
 });
