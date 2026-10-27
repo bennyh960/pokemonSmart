@@ -257,6 +257,7 @@ export const FLAGS = {
   ACT3_R9_GRUNT_DEFEATED: 'act3-r9-grunt-defeated',     // Rocket grunt fled — Reminder spawns in cave
   ACT3_R9_ARC_COMPLETE: 'act3-r9-arc-complete',         // Arc done — Reminder thanked player, left for Percentile
   ACT3_R9_CAVE_QUAKE: 'act3-r9-cave-quake',             // Officer Jenny met → Articuno shakes the cave, secret-exit rock breaks
+  ACT3_GLITCH_SPREAD: 'act3-glitch-spread', // After the Articuno arc: every map raised to 'high' (small forest stays pure)
   ACT3_ARTICUNO_ARC_COMPLETE: 'act3-articuno-arc-complete', // Articuno arc done → forest purified, Snorlax appears, Officer Jenny leaves
 
   // ── Act 3: Small forest — Articuno arc ─────────────────────────────────────
@@ -431,6 +432,7 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT3_R9_GRUNT_DEFEATED]: 'Rocket grunt in Route-9 cave defeated and fled — Reminder spawns in cave',
   [FLAGS.ACT3_R9_ARC_COMPLETE]: 'Route-9 arc complete — Reminder thanked player and left for Percentile City',
   [FLAGS.ACT3_R9_CAVE_QUAKE]: 'Officer Jenny blocks the Route-9 cave exit — Articuno shakes the cave and breaks the secret-exit rock',
+  [FLAGS.ACT3_GLITCH_SPREAD]: "Glitch spread after Articuno — all maps at least 'high' except the small forest",
   [FLAGS.ACT3_ARTICUNO_ARC_COMPLETE]: 'Articuno arc complete — forest purified, Snorlax appears, Officer Jenny leaves',
   [FLAGS.ACT3_FOREST_ARTICUNO_SEEN]: 'Entered the small forest — Articuno flew to (21,53), low infection',
   [FLAGS.ACT3_FOREST_ARTICUNO_FLEW_NORTH]: 'Reached Articuno at (20,54) — it flew north to (17,16), east blocker removed',

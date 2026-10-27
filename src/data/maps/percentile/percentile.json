@@ -340,6 +340,21 @@
       "x": 43,
       "y": 2,
       "facing": "down",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 2.5
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 2.5
+          }
+        ],
+        "loop": true
+      },
       "type": "dialogue",
       "spriteType": "char_0ade0c",
       "postFlagDialogue": {
@@ -367,6 +382,31 @@
       "x": 30,
       "y": 9,
       "facing": "down",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 1
+          }
+        ],
+        "loop": true
+      },
       "type": "dialogue",
       "spriteType": "char_1b9be7",
       "name": {
@@ -408,6 +448,31 @@
       "x": 20,
       "y": 21,
       "facing": "down",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 3.5
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 3.5
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 3.5
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 3.5
+          }
+        ],
+        "loop": true
+      },
       "type": "dialogue",
       "spriteType": "char_9318f0",
       "name": {
@@ -417,7 +482,7 @@
       "dialogue": [
         {
           "en": "Every Pokémon is born with a Nature.",
-          "he": "כל פוקימון נולד עם טבע (Nature)."
+          "he": "כל פוקימון נולד עם טבע."
         },
         {
           "en": "A Nature makes one stat 10% stronger and another 10% weaker.",
@@ -467,11 +532,11 @@
       "dialogue": [
         {
           "en": "Did you know every Pokémon also has an Ability?",
-          "he": "ידעת שלכל פוקימון יש גם יכולת (Ability)?"
+          "he": "ידעת שלכל פוקימון יש גם יכולת מיוחדת?"
         },
         {
           "en": "Some abilities make a Pokémon immune to a whole type — like Levitate against Ground moves!",
-          "he": "יש יכולות שמגינות מסוג שלם — כמו Levitate שמגן מהתקפות Ground!"
+          "he": "יש יכולות שמגינות מסוג שלם — כמו ריחוף שמגן מהתקפות אדמה!"
         },
         {
           "en": "The scientist Akiva in the lab can even swap abilities.",
@@ -484,6 +549,31 @@
       "x": 36,
       "y": 40,
       "facing": "left",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "up",
+            "steps": 1,
+            "delay": 1.5
+          },
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 1.5
+          },
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      },
       "type": "dialogue",
       "spriteType": "char_24117d",
       "name": {
@@ -526,6 +616,31 @@
       "x": 15,
       "y": 46,
       "facing": "up",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "left",
+            "steps": 4,
+            "delay": 0.5
+          },
+          {
+            "dir": "right",
+            "steps": 4,
+            "delay": 0.5
+          },
+          {
+            "dir": "right",
+            "steps": 4,
+            "delay": 0.5
+          },
+          {
+            "dir": "left",
+            "steps": 4,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      },
       "type": "dialogue",
       "spriteType": "char_46f643",
       "name": {
@@ -541,7 +656,7 @@
       "dialogue": [
         {
           "en": "My Snorlax holds Leftovers. It heals about 6% HP every turn!",
-          "he": "הסנורלקס שלי מחזיק Leftovers. זה מרפא בערך 6% מהחיים בכל תור!"
+          "he": "הסנורלקס שלי מחזיק שאריות מזון. זה מרפא בערך 6% מהחיים בכל תור!"
         },
         {
           "en": "6% does not sound like much... but after 10 turns it is 60%!",
@@ -568,7 +683,9 @@
   "movablePuzzle": {},
   "flagListeners": [],
   "interactiveItems": {},
-  "outside": true,
+  "outside": {
+    "sun": 1
+  },
   "tiles": [
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2tl2"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1b","wt1br","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c"],

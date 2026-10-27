@@ -757,7 +757,7 @@ registerStoryEvent({
     {
       type: 'show-message',
       lines: [
-        { en: 'You got HM02 Fly! Teach it to a flying Pokémon to travel between cities.', he: 'קיבלת HM02 תעופה! למד אותה לפוקימון מעופף כדי לטוס בין ערים.' },
+        { en: 'You got HM02 Fly! Teach it to a flying Pokémon to travel between cities.', he: 'קיבלת את מכונת הלימוד תעופה! למד אותה לפוקימון מעופף כדי לטוס בין ערים.' },
         { en: 'Officer Jenny is waiting in Minusburg.', he: "השוטרת ג'ני מחכה במינוסבורג." },
       ],
     },
