@@ -16,12 +16,20 @@
     {
       "fromX": 25,
       "fromY": 16,
-      "toMapId": "multiplia/pokecenter"
+      "toMapId": "multiplia/pokecenter",
+      "light": {
+        "x": 27,
+        "y": 17
+      }
     },
     {
       "fromX": 53,
       "fromY": 21,
-      "toMapId": "shared/mart-interior"
+      "toMapId": "shared/mart-interior",
+      "light": {
+        "x": 51,
+        "y": 22
+      }
     },
     {
       "fromX": 79,
@@ -139,7 +147,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-route4-multiplia"
+      "gateId": "gate-route4-multiplia",
+      "light": {
+        "x": 75,
+        "y": 31
+      }
     },
     {
       "id": "npc-route5-gate-keeper",
@@ -159,7 +171,11 @@
       ],
       "spriteType": "gate-officer",
       "interactRange": 3,
-      "gateId": "gate-route5-multiplia"
+      "gateId": "gate-route5-multiplia",
+      "light": {
+        "x": 65,
+        "y": 45
+      }
     },
     {
       "id": "npc-route6-gate-keepr",
@@ -179,7 +195,11 @@
       ],
       "spriteType": "gate-officer",
       "interactRange": 2,
-      "gateId": "gate-route6-multiplia"
+      "gateId": "gate-route6-multiplia",
+      "light": {
+        "x": 39,
+        "y": 2
+      }
     },
     {
       "id": "npc-route9-gate",
@@ -198,7 +218,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-route9-multiplia"
+      "gateId": "gate-route9-multiplia",
+      "light": {
+        "x": 3,
+        "y": 17
+      }
     },
     {
       "id": "npc-1777805200870",

@@ -13,5 +13,28 @@
     "x": 10,
     "y": 18
   },
-  "npcs": []
+  "npcs": [
+    {
+      "id": "npc-1793226167390",
+      "x": 14,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "",
+          "he": "הספריה שלנו מקדמת מצוינות! אנו מציעים פרסים נדירים למתקדמים! פתרו את החידות שעל הלוח"
+        }
+      ],
+      "spriteType": "char_77d85f"
+    }
+  ],
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "poke-ball",
+        "itemQty": 3
+      }
+    ]
+  }
 }

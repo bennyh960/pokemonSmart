@@ -60,7 +60,11 @@
       "fromY": 26,
       "toMapId": "shared/pokecenter-2",
       "toX": 4,
-      "toY": 7
+      "toY": 7,
+      "light": {
+        "x": 26,
+        "y": 27
+      }
     },
     {
       "fromX": 24,
@@ -1143,7 +1147,11 @@
           "he": "אפשר לעבור!"
         }
       ],
-      "interactRange": 3
+      "interactRange": 3,
+      "light": {
+        "x": 3,
+        "y": 24
+      }
     },
     {
       "id": "gate-keepr-exit-right",
@@ -1169,7 +1177,11 @@
         }
       ],
       "gateId": "gate-minusburg-exit-right",
-      "interactRange": 2
+      "interactRange": 2,
+      "light": {
+        "x": 45,
+        "y": 24
+      }
     }
   ],
   "music": "town",

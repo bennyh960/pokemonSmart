@@ -94,7 +94,11 @@
       "toMapId": "shared/mart-interior",
       "toX": 13,
       "toY": 5,
-      "returnToPrevious": false
+      "returnToPrevious": false,
+      "light": {
+        "x": 17,
+        "y": 27
+      }
     },
     {
       "fromX": 6,
@@ -922,7 +926,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-sumville-route2"
+      "gateId": "gate-sumville-route2",
+      "light": {
+        "x": 57,
+        "y": 29
+      }
     },
     {
       "id": "npc-1775515686102",
@@ -2286,8 +2294,8 @@
     },
     {
       "key": "sign1left",
-      "x": 57,
-      "y": 29
+      "x": 54,
+      "y": 27
     },
     {
       "key": "signx",

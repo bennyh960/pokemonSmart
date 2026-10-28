@@ -16,7 +16,11 @@
     {
       "fromX": 13,
       "fromY": 15,
-      "toMapId": "shared/pokecenter-2"
+      "toMapId": "shared/pokecenter-2",
+      "light": {
+        "x": 14,
+        "y": 16
+      }
     },
     {
       "fromX": 13,
@@ -202,7 +206,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-dividia-route7"
+      "gateId": "gate-dividia-route7",
+      "light": {
+        "x": 2,
+        "y": 20
+      }
     },
     {
       "id": "npc-1778134767290",
