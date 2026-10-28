@@ -20,11 +20,10 @@
  *       How much did you spend?  How much is left?"
  *      Always generates budgets that divide evenly.
  *
- *   3. FractionCompareTemplate       ("fraction.compare")
+ *   3. FractionHealSumTemplate       ("fraction.heal-sum")
  *      Grade 5-6 · ops: ÷
- *      Two Pokemon each restore a fraction of a Potion's heal.
- *      "Which restores more HP?"  — teaches fraction comparison by finding
- *      the larger value, not just comparing symbols.
+ *      A Pokémon Center report: two Pokemon each got a fraction of the HP healed.
+ *      "How much did they get together?"  — same denominator (3, 5, 10).
  *
  *   4. FractionItemSplitTemplate     ("fraction.item-split")
  *      Grade 4-6 · ops: ÷
@@ -95,12 +94,6 @@ function pokemonAsset(p: QuestionPokemon): QuestionAsset {
 
 function itemAsset(item: StoreItem): QuestionAsset {
   return { kind: 'item', id: item.id, spriteUrl: item.spriteUrl, label: item.name };
-}
-
-function compSymbol(a: number, b: number): string {
-  if (a > b) return '>';
-  if (a < b) return '<';
-  return '=';
 }
 
 // ─── 1. FractionOfHPTemplate ─────────────────────────────────────────────────
@@ -261,38 +254,37 @@ export class FractionOfBudgetTemplate extends QuestionTemplate {
   }
 }
 
-// ─── 3. FractionCompareTemplate ──────────────────────────────────────────────
+// ─── 3. FractionHealSumTemplate ──────────────────────────────────────────────
 
 /**
- * "Potion heals {healAmount} HP.
- *  {pokemon1} is healed {frac1} of that amount.
- *  {pokemon2} is healed {frac2} of that amount.
- *  Which Pokemon is healed more?"
- *
- * The correctAnswer is the LARGER healed value (kids pick the Pokemon).
- * Teaches fraction comparison through concrete numbers rather than abstract symbols.
+ * Kid-friendly denominators for the heal report. The two parts always add up to
+ * less than the whole (a + c < den) so the answer is never the total itself —
+ * which is why 2 isn't here (1/2 + 1/2 is the whole).
  */
-export class FractionCompareTemplate extends QuestionTemplate {
-  readonly id = 'fraction.compare';
-  readonly name: BilingualText = { en: 'Compare Fractions (Heal)', he: 'השוואת שברים (ריפוי)' };
+const HEAL_SUM_DENS = [3, 5, 10];
+
+/**
+ * "The Pokémon Center report: {heal} HP were healed today.
+ *  {pokemon1} got {a}/{den} of it, {pokemon2} got {c}/{den} of it.
+ *  How much HP did they get together?"
+ *
+ * Both fractions share one denominator and add up to less than the whole,
+ * so the answer is unambiguous: heal × a/den + heal × c/den.
+ */
+export class FractionHealSumTemplate extends QuestionTemplate {
+  readonly id = 'fraction.heal-sum';
+  readonly name: BilingualText = { en: 'Add Fractions (Heal Report)', he: 'חיבור שברים (דוח ריפוי)' };
   readonly category = 'exploration' as const;
   readonly requiredOperations = ['÷'] as const;
   readonly minDifficulty = 4 as const;
   readonly maxDifficulty = 6 as const;
 
   protected generateParams(snapshot: PokemonWorldSnapshot, config: ClassConfig): TemplateParams {
-    // Pick two different fractions with the same denominator for simpler comparison
-    const grouped: Record<number, Fraction[]> = {};
-    for (const f of FRACTIONS) {
-      const bucket = grouped[f.den];
-      if (bucket) { bucket.push(f); } else { grouped[f.den] = [f]; }
-    }
-    // Pick a denominator that has ≥ 2 fractions
-    const validDens = Object.keys(grouped).map(Number).filter(d => grouped[d].length >= 2);
-    const den = this.pickRandom(validDens);
-    const denFractions = grouped[den].slice().sort(() => Math.random() - 0.5);
-    const frac1 = denFractions[0];
-    const frac2 = denFractions[1];
+    const den = this.pickRandom(HEAL_SUM_DENS);
+    const num1 = this.randInt(1, den - 2);
+    const num2 = this.randInt(1, den - 1 - num1);
+    const frac1: Fraction = { num: num1, den };
+    const frac2: Fraction = { num: num2, den };
 
     // Total heal must be divisible by den
     const heal = multipleOf(den, Math.max(den * 10, config.numberRange.min), config.numberRange.max, this.randInt.bind(this));
@@ -300,10 +292,7 @@ export class FractionCompareTemplate extends QuestionTemplate {
     const p1 = this.pickRandom(snapshot.pokemon);
     const p2 = this.pickRandom(snapshot.pokemon.filter(p => p.id !== p1.id));
 
-    // Find a potion-like item for context
-    const potion = snapshot.items.find(i => i.category === 'healing') ?? snapshot.items[0];
-
-    return { p1, p2, frac1, frac2, heal, potion };
+    return { p1, p2, frac1, frac2, heal };
   }
 
   protected solve(params: TemplateParams, _config: ClassConfig): SolveResult {
@@ -312,35 +301,38 @@ export class FractionCompareTemplate extends QuestionTemplate {
     const frac1 = params.frac1 as Fraction;
     const frac2 = params.frac2 as Fraction;
     const heal  = params.heal  as number;
-    const potion = params.potion as StoreItem;
 
     const heal1  = applyFrac(heal, frac1);
     const heal2  = applyFrac(heal, frac2);
-    const answer = Math.max(heal1, heal2);
-    const winner = heal1 >= heal2 ? p1 : p2;
+    const answer = heal1 + heal2;
+    const unit   = heal / frac1.den;
 
     return {
       answer,
       steps: [
         {
-          en: `${p1.name.en}: ${fmtFrac(frac1)} × ${heal} = ${heal1} HP healed`,
-          he: `${p1.name.he}: ${fmtFracHe(frac1)} × ${heal} = ${heal1} HP נרפא`,
+          en: `1/${frac1.den} of ${heal} = ${heal} ÷ ${frac1.den} = ${unit} HP`,
+          he: `1/${frac1.den} מתוך ${heal} = ${heal} ÷ ${frac1.den} = ${unit} נקודות חיים`,
         },
         {
-          en: `${p2.name.en}: ${fmtFrac(frac2)} × ${heal} = ${heal2} HP healed`,
-          he: `${p2.name.he}: ${fmtFracHe(frac2)} × ${heal} = ${heal2} HP נרפא`,
+          en: `${p1.name.en}: ${fmtFrac(frac1)} = ${frac1.num} × ${unit} = ${heal1} HP`,
+          he: `${p1.name.he}: ${fmtFracHe(frac1)} = ${frac1.num} × ${unit} = ${heal1} נקודות חיים`,
         },
         {
-          en: `${compSymbol(heal1, heal2)} → ${winner.name.en} is healed more!`,
-          he: `${compSymbol(heal1, heal2)} → ${winner.name.he} נרפא יותר!`,
+          en: `${p2.name.en}: ${fmtFrac(frac2)} = ${frac2.num} × ${unit} = ${heal2} HP`,
+          he: `${p2.name.he}: ${fmtFracHe(frac2)} = ${frac2.num} × ${unit} = ${heal2} נקודות חיים`,
+        },
+        {
+          en: `Together: ${heal1} + ${heal2} = ${answer} HP`,
+          he: `ביחד: ${heal1} + ${heal2} = ${answer} נקודות חיים`,
         },
       ],
       hint: {
-        en: `Calculate the actual HP healed for each Pokemon, then compare.`,
-        he: `חשב את ה-HP שנרפא לכל פוקמון, ואז השווה.`,
+        en: `Divide ${heal} by ${frac1.den} to find one part, then count the parts of both Pokémon.`,
+        he: `חלקו את ${heal} ב-${frac1.den} כדי למצוא חלק אחד, ואז ספרו את החלקים של שני הפוקימונים.`,
       },
-      assets: [pokemonAsset(p1), pokemonAsset(p2), itemAsset(potion)],
-      distractors: [Math.min(heal1, heal2), heal1 + heal2, Math.abs(heal1 - heal2)],
+      assets: [pokemonAsset(p1), pokemonAsset(p2)],
+      distractors: [Math.max(heal1, heal2), Math.abs(heal1 - heal2), heal - answer].filter(d => d > 0),
     };
   }
 
@@ -351,14 +343,20 @@ export class FractionCompareTemplate extends QuestionTemplate {
     const frac2 = params.frac2 as Fraction;
     const heal  = params.heal  as number;
     return {
-      en: `A Potion heals ${heal} HP.\n` +
-          `${p1.name.en} receives ${fmtFrac(frac1)} of that healing.\n` +
-          `${p2.name.en} receives ${fmtFrac(frac2)} of that healing.\n` +
-          `What is the LARGER amount of HP healed?`,
-      he: `תרופה מרפאת ${heal} נקודות HP.\n` +
-          `${p1.name.he} מקבל ${fmtFracHe(frac1)} מהריפוי.\n` +
-          `${p2.name.he} מקבל ${fmtFracHe(frac2)} מהריפוי.\n` +
-          `מהי הכמות הגדולה יותר של HP שנרפא?`,
+      en: `Pokémon Center report: ${heal} HP were healed today.
+` +
+          `${p1.name.en} got ${fmtFrac(frac1)} of it.
+` +
+          `${p2.name.en} got ${fmtFrac(frac2)} of it.
+` +
+          `How much HP did ${p1.name.en} and ${p2.name.en} get TOGETHER?`,
+      he: `דוח ממרכז הפוקימונים: היום רופאו ${heal} נקודות חיים.
+` +
+          `${p1.name.he} קיבל ${fmtFracHe(frac1)} מהן.
+` +
+          `${p2.name.he} קיבל ${fmtFracHe(frac2)} מהן.
+` +
+          `כמה נקודות חיים קיבלו ${p1.name.he} ו${p2.name.he} ביחד?`,
     };
   }
 }
