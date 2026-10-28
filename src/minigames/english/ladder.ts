@@ -43,6 +43,9 @@ export interface EpicPrize {
 /** Chance per 3★ round of the epic prizes. */
 const EPIC_CHANCE = 0.05;
 const MASTER_BALL_CHANCE = 0.02;
+
+/** Top-step epic of the libraries whose board gives the Master Ball (board-cities.ts). */
+export const MASTER_BALL_EPIC: EpicPrize = { prize: prize('epic', item('master-ball')), chance: MASTER_BALL_CHANCE };
 const RARE_POKEMON_CHANCE = 0.05;
 
 function epic(prize: MiniGamePrizeDef, chance = EPIC_CHANCE): EpicPrize {
@@ -201,7 +204,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       tmPrize('rare'),
       vitaminPrize('rare', 3),
     ],
-    epic: [epic(prize('epic', item('master-ball')), MASTER_BALL_CHANCE)],
+    epic: [epic(prize('epic', item('rare-candy', 8)))],
     rarePokemon: { ids: 'all', chance: RARE_POKEMON_CHANCE },
   },
 ];

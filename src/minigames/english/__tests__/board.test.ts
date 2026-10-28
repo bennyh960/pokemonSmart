@@ -9,10 +9,12 @@ vi.mock('../../../services/pokemon-data.js', async (orig) => (await import('./mo
 import { getItem } from '../../../data/items.js';
 import { getPokemon } from '../../../services/pokemon-data.js';
 import type { DialogueReward } from '../../types.js';
+import { BOARD_CITIES } from '../board-cities.js';
 import {
   BOARD_POKEMON,
   boardPool,
   boardPrizes,
+  boardStep,
   DRAWN_RARITIES,
   epicOdds,
   RARITY_ODDS_BY_STARS,
@@ -41,10 +43,30 @@ describe('Word Board prizes', () => {
     expect(ENGLISH_LADDER[ENGLISH_LADDER.length - 1].rarePokemon?.ids).toBe('all');
   });
 
-  it('the Master Ball is only on the top level', () => {
+  it('the Master Ball is only on the top level, and only in Percentile and Algebria', () => {
     const hasMasterBall = (step: (typeof ENGLISH_LADDER)[number]) =>
       rewardsOf(step).some((r) => r.items?.some((i) => i.itemId === 'master-ball'));
-    ENGLISH_LADDER.forEach((step, i) => expect(hasMasterBall(step), step.name.en).toBe(i === ENGLISH_LADDER.length - 1));
+    const top = ENGLISH_LADDER.length - 1;
+    for (const city of [undefined, ...Object.keys(BOARD_CITIES)]) {
+      const withBall = city === 'percentile' || city === 'algebria';
+      ENGLISH_LADDER.forEach((step, i) =>
+        expect(hasMasterBall(boardStep(i, city)), `${city} ${step.name.en}`).toBe(withBall && i === top),
+      );
+    }
+  });
+
+  it('every library adds its specialty and offers its own rare Pokémon (all board Pokémon)', () => {
+    for (const [city, flavor] of Object.entries(BOARD_CITIES)) {
+      ENGLISH_LADDER.forEach((step, i) => {
+        const cityStep = boardStep(i, city);
+        expect(cityStep.prizes, city).toContain(flavor.specialty);
+        if (step.rarePokemon) expect(cityStep.rarePokemon?.ids, city).toBe(flavor.rarePokemon);
+        else expect(cityStep.rarePokemon, city).toBeUndefined();
+      });
+      if (flavor.rarePokemon !== 'all') {
+        for (const id of flavor.rarePokemon) expect(BOARD_POKEMON, `${city} #${id}`).toContain(id);
+      }
+    }
   });
 
   it('odds sum to 1 and more stars never lower the chance of a rare prize', () => {
@@ -67,8 +89,8 @@ describe('Word Board prizes', () => {
     let pokemon = 0;
     for (let n = 0; n < ROUNDS; n++) {
       for (const stars of [1, 2] as const)
-        expect(boardPrizes(top, stars, none, rng).some((p) => p.rarity === 'epic')).toBe(false);
-      const prizes = boardPrizes(top, 3, none, rng);
+        expect(boardPrizes(top, stars, none, rng, 'percentile').some((p) => p.rarity === 'epic')).toBe(false);
+      const prizes = boardPrizes(top, 3, none, rng, 'percentile');
       expect(prizes.filter((p) => p.rarity === 'epic').length).toBeLessThanOrEqual(1);
       if (prizes.some((p) => p.reward.items?.some((i) => i.itemId === 'master-ball'))) masterBalls++;
       if (prizes.some((p) => p.reward.pokemon)) pokemon++;

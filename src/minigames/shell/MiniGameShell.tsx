@@ -50,7 +50,7 @@ interface Props {
   /** Building gate round (see launch.ts). */
   gate?: StartMiniGameOptions['gate'];
   /** Word Board round on this ladder step: board prizes instead of level prizes (english/board.ts). */
-  board?: { stepIndex: number; intro: string; onPlayAgain: () => void };
+  board?: { stepIndex: number; city?: string; intro: string; onPlayAgain: () => void };
 }
 
 export function MiniGameShell({
@@ -159,7 +159,7 @@ export function MiniGameShell({
       draft.miniGames ??= {};
       rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care && !board });
       if (care && careMon) rec.prizes = carePrizes(care, careMon, rec.stars);
-      if (board) rec.prizes = boardPrizes(board.stepIndex, rec.stars, ownedSpecies(draft));
+      if (board) rec.prizes = boardPrizes(board.stepIndex, rec.stars, ownedSpecies(draft), Math.random, board.city);
       // A board round is an English ladder round: its stars earn ladder points
       if (board) {
         const { gained, leveledUp } = addLadderPoints(draft.miniGames, rec.stars);

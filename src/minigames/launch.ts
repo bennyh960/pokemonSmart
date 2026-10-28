@@ -36,6 +36,8 @@ export interface MiniGameLaunch extends StartMiniGameOptions {
   pickerIds?: MiniGameId[];
   /** Open the English Word Board instead of the picker (english/EnglishBoard.tsx). */
   board?: boolean;
+  /** Word Board only: the library's city, for its own prizes (english/board-cities.ts). */
+  boardCity?: string;
 }
 
 let stateMachine: StateMachine | null = null;
@@ -59,8 +61,9 @@ export function openMiniGamePicker(
 }
 
 /** Opens the English Word Board (the library board tile): ladder rounds, as many as the child likes. */
-export function openEnglishBoard(options: Pick<StartMiniGameOptions, 'onFinish'> = {}): void {
-  launch({ gameId: null, board: true, ...options });
+export function openEnglishBoard(options: Pick<StartMiniGameOptions, 'onFinish'> & { city?: string } = {}): void {
+  const { city, ...rest } = options;
+  launch({ gameId: null, board: true, boardCity: city, ...rest });
 }
 
 /** The scene reads (and clears) the launch request on enter. */

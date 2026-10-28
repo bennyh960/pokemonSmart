@@ -69,6 +69,7 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
             onOutcome={onOutcome}
             board={{
               stepIndex: boardRound.stepIndex,
+              city: launch.boardCity,
               intro: BOARD_INTRO[locale]
                 .replace('{n}', String(boardRound.stepIndex + 1))
                 .replace('{name}', ENGLISH_LADDER[boardRound.stepIndex].name[locale]),
@@ -76,7 +77,12 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
             }}
           />
         ) : (
-          <EnglishBoard onPlay={playBoardRound} onWordDex={() => setDexOpen(true)} onClose={onClose} />
+          <EnglishBoard
+            city={launch.boardCity}
+            onPlay={playBoardRound}
+            onWordDex={() => setDexOpen(true)}
+            onClose={onClose}
+          />
         )}
       </Root>
     );

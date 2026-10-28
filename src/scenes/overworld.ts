@@ -18,6 +18,7 @@ import { openEnglishBoard, openMiniGamePicker, resolveMiniGames, startMiniGame }
 import { pathToFace } from '../systems/grid-path.js';
 import { FLAGS } from '../data/story/flags.js';
 import { ENGLISH_BOARD_INTRO_CUTSCENE } from '../data/story/content/english-board.js';
+import { boardCityOf } from '../minigames/english/board-cities.js';
 import type { Locale } from '../i18n/i18n.js';
 import {
   getPlayerData,
@@ -3689,7 +3690,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                     };
                     return;
                   } else if (resolved.id === 'english-board') {
-                    if (hasActiveGame()) openEnglishBoard();
+                    if (hasActiveGame()) openEnglishBoard({ city: boardCityOf(currentMapData?.id) });
                     return;
                   } else if (resolved.id === 'gate') {
                     const effectiveGateId = inst?.gateId !== undefined ? inst.gateId : resolved.gateId;

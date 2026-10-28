@@ -26,7 +26,38 @@
       "returnToPrevious": true
     }
   ],
-  "npcs": [],
+  "npcs": [
+    {
+      "id": "library-board-helper",
+      "name": {
+        "en": "Board Helper Tali",
+        "he": "טלי, עוזרת הלוח"
+      },
+      "x": 12,
+      "y": 3,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_962c1b",
+      "dialogue": [
+        {
+          "en": "Psst! Have you tried the Word Board right next to me?",
+          "he": "פססט! ניסית כבר את לוח המילים שלידי?"
+        },
+        {
+          "en": "Every game there teaches you new English words — and wins you prizes!",
+          "he": "כל משחק שם מלמד מילים חדשות באנגלית — וגם זוכים בפרסים!"
+        },
+        {
+          "en": "More stars, better prizes. And every library's board has its own special prizes!",
+          "he": "יותר כוכבים — פרסים יותר שווים. ולכל ספרייה יש בלוח פרסים מיוחדים משלה!"
+        },
+        {
+          "en": "Play as much as you like — I'll cheer for you!",
+          "he": "אפשר לשחק כמה שרוצים — אני אעודד אותך!"
+        }
+      ]
+    }
+  ],
   "music": "pokecenter",
   "encounterTableId": null,
   "interactiveItems": {

@@ -13,6 +13,7 @@ import { MgButton, RARITY_STYLE, themeBackground } from '../shell/ui.js';
 import type { Bilingual, MiniGameTheme, Stars } from '../types.js';
 import {
   boardPool,
+  boardStep,
   DRAWN_RARITIES,
   EPIC_STARS,
   epicOdds,
@@ -42,17 +43,23 @@ const TEXT = {
   here: { en: 'You are here!', he: 'אתם כאן!' },
   rareMon: { en: 'Pokémon you can win:', he: 'פוקימונים שאפשר לזכות בהם:' },
   epicOnly: { en: 'only, one per game:', he: 'בלבד, אחד במשחק:' },
+  cityPrizes: {
+    en: "This library's board has its own special prizes — every city is different!",
+    he: 'ללוח של הספרייה הזאת יש פרסים מיוחדים משלו — בכל עיר זה אחרת!',
+  },
 } satisfies Record<string, Bilingual>;
 
 const STAR_COUNTS: Exclude<Stars, 0>[] = [1, 2, 3];
 
 interface Props {
+  /** The library's city: its own prizes (board-cities.ts). */
+  city?: string;
   onPlay: () => void;
   onWordDex: () => void;
   onClose: () => void;
 }
 
-export function EnglishBoard({ onPlay, onWordDex, onClose }: Props) {
+export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
   const { t, locale, isRTL } = useI18n();
   const [pd] = usePlayerData();
   const save = pd.miniGames ?? {};
@@ -99,6 +106,7 @@ export function EnglishBoard({ onPlay, onWordDex, onClose }: Props) {
               ▶ {TEXT.play[locale]}
             </MgButton>
             <p className="text-center font-bold text-white/90">{TEXT.playMore[locale]}</p>
+            {city && <p className="text-center font-bold text-yellow-200">🎁 {TEXT.cityPrizes[locale]}</p>}
           </div>
 
           {/* Stars → prizes */}
@@ -133,7 +141,8 @@ export function EnglishBoard({ onPlay, onWordDex, onClose }: Props) {
 
           {/* Every level's prizes */}
           <h2 className="text-2xl font-black">🏆 {TEXT.levels[locale]}</h2>
-          {ENGLISH_LADDER.map((step, i) => {
+          {ENGLISH_LADDER.map((_, i) => {
+            const step = boardStep(i, city);
             const mon = rarePokemonPrize(step, owned);
             const pool = boardPool(step, owned);
             const chanceOf = new Map(epicOdds(step, owned).map((e) => [e.prize, e.chance]));

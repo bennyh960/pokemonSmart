@@ -8,6 +8,7 @@
  *   epic:   only a 3★ round, and at most one per round: each epic prize of the step (`LadderStep.epic`, and the
  *           rare Pokémon the player doesn't own yet, `LadderStep.rarePokemon`) has its own chance, rolled once.
  *           An epic replaces one of the three prizes.
+ *   city:   each library adds its own flavor to the step (`boardStep()`, board-cities.ts).
  *
  * Pure logic (no React, no audio, no saving).
  */
@@ -17,7 +18,8 @@ import type { PlayerData } from '../../types/index.js';
 import { giftPokemon } from '../define.js';
 import { resolvePrize, type AwardedPrize } from '../progress.js';
 import type { Bilingual, MiniGamePrizeChoice, MiniGamePrizeDef, PrizeRarity, Stars } from '../types.js';
-import { ENGLISH_LADDER, type EpicPrize, type LadderStep } from './ladder.js';
+import { BOARD_CITIES } from './board-cities.js';
+import { ENGLISH_LADDER, MASTER_BALL_EPIC, type EpicPrize, type LadderStep } from './ladder.js';
 
 export const RARITIES: readonly PrizeRarity[] = ['common', 'good', 'rare', 'epic'];
 
@@ -44,6 +46,23 @@ export const RARE_POKEMON_LABEL: Bilingual = { en: 'Rare Pokémon', he: 'פוק�
 export const BOARD_POKEMON: readonly number[] = getAllPokemon()
   .filter((p) => p.id > 251 && (getEvolutionChain(p.id)?.stages[0]?.id ?? p.id) === p.id)
   .map((p) => p.id);
+
+/**
+ * A ladder step as the board of `city`'s library gives it: + its specialty prize, its own rare Pokémon,
+ * and the Master Ball on the top step only where the city has it. No city → the plain step.
+ */
+export function boardStep(stepIndex: number, city?: string): LadderStep {
+  const step = ENGLISH_LADDER[stepIndex];
+  const flavor = city ? BOARD_CITIES[city] : undefined;
+  if (!flavor) return step;
+  const top = stepIndex === ENGLISH_LADDER.length - 1;
+  return {
+    ...step,
+    prizes: [...step.prizes, flavor.specialty],
+    epic: top && flavor.masterBall ? [...(step.epic ?? []), MASTER_BALL_EPIC] : step.epic,
+    rarePokemon: step.rarePokemon && { ...step.rarePokemon, ids: flavor.rarePokemon },
+  };
+}
 
 /** Every species the player has in the party or the PC. */
 export function ownedSpecies(pd: Pick<PlayerData, 'party' | 'boxes'>): Set<number> {
@@ -98,15 +117,16 @@ export function rollEpic(epics: readonly EpicPrize[], rng: () => number): MiniGa
   return null;
 }
 
-/** Prizes of a finished board round on `stepIndex`: one per star. Nothing when not cleared. */
+/** Prizes of a finished board round on `stepIndex` in `city`'s library: one per star. Nothing when not cleared. */
 export function boardPrizes(
   stepIndex: number,
   stars: Stars,
   owned: ReadonlySet<number>,
   rng: () => number = Math.random,
+  city?: string,
 ): AwardedPrize[] {
   if (stars < 1) return [];
-  const step = ENGLISH_LADDER[stepIndex];
+  const step = boardStep(stepIndex, city);
   const prizes: AwardedPrize[] = [];
   const won = stars >= EPIC_STARS ? rollEpic(epicOdds(step, owned), rng) : null;
   if (won) prizes.push({ kind: 'board', ...resolvePrize(won, rng) });

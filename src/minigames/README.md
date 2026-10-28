@@ -90,6 +90,8 @@ Shared layer in `src/minigames/english/` — use it, don't copy it:
   ladder step as often as the child likes. One prize per star; the rarity is drawn from `RARITY_ODDS_BY_STARS`, the
   prize from the step's `prizes` in `ladder.ts`. A step's `rarePokemon` adds a rare Pokémon the player doesn't own
   (from `BOARD_POKEMON`: first stages after Gen 2). The first library with a board plays the librarian intro (`story/content/english-board.ts`).
+  Each library adds its city's flavor (`board-cities.ts`, applied by `boardStep()`): a specialty prize, its own rare
+  Pokémon, and the Master Ball (top step) only in Percentile and Algebria. Every library has Tali, the board helper (`library1` template).
 
 ## Where games are played
 
