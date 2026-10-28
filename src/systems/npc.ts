@@ -9,6 +9,7 @@
  */
 
 import type { ItemCategory } from '../data/item-defs.js';
+import type { MajorStatusId } from '../types/battle-metadata.js';
 import { getCharacterList } from '../engine/character-sprites.js';
 import { getPlayerData } from './game-state.js';
 
@@ -93,6 +94,9 @@ export interface DialogueReward {
   badge?: number; // Gym badge number (1-8) to award
   storyEvent?: string; // Story progression flag to set (e.g. 'story-received-pokedex')
   flag?: string; // Flag to set after giving reward (prevents re-giving)
+  pokemon?: { id: number; level: number }; // Gift Pokémon (party, or PC box when the party is full)
+  /** Restore one party Pokémon (by uuid) to full HP and set its status (null = cured, 'sleep' = Snorlax's nap). */
+  restorePokemon?: { uuid: string; status: MajorStatusId | null };
 }
 
 /**

@@ -271,32 +271,25 @@ function parseEncounterFilter(tileTypes: string[]): {
   return { mode: 'include', include: tileTypes, exclude: [], excludeMode: 'every' };
 }
 
+/** True when a tile's encounter filter (see parseEncounterFilter) lets a Pokemon of these types appear. */
+export function tileAllowsTypes(tileTypes: string[], types: readonly string[]): boolean {
+  const filter = parseEncounterFilter(tileTypes);
+  if (filter.mode === 'include') return types.some((t) => filter.include.includes(t));
+  if (filter.exclude.length === 0) return true;
+  // Strict: excluded if ANY type is in the list · loose (default): only if ALL types are
+  if (filter.excludeMode === 'some') return !types.some((t) => filter.exclude.includes(t));
+  return !types.every((t) => filter.exclude.includes(t));
+}
+
 /** Roll a Pokemon from the encounter table using weighted random, filtered by tile types. */
 function rollEncounter(table: EncounterTable, tileTypes?: string[] | null): Pokemon | null {
   // Filter entries by tile encounter types
   let entries = table.entries;
   if (tileTypes) {
-    const filter = parseEncounterFilter(tileTypes);
-    if (filter.mode === 'all' && filter.exclude.length > 0) {
-      entries = entries.filter((e) => {
-        const data = getPokemon(e.pokemonId);
-        if (!data) return false;
-        if (filter.excludeMode === 'some') {
-          // Strict: exclude if ANY type is in the exclude list
-          return !data.types.some((t) => filter.exclude.includes(t));
-        }
-        // Loose (default): exclude only if ALL types are in the exclude list
-        return !data.types.every((t) => filter.exclude.includes(t));
-      });
-    } else if (filter.mode === 'include') {
-      // Only specific types
-      entries = entries.filter((e) => {
-        const data = getPokemon(e.pokemonId);
-        if (!data) return false;
-        return data.types.some((t) => filter.include.includes(t));
-      });
-    }
-    // mode === 'all' with no exclusions → no filtering needed
+    entries = entries.filter((e) => {
+      const data = getPokemon(e.pokemonId);
+      return !!data && tileAllowsTypes(tileTypes, data.types);
+    });
   }
 
   if (entries.length === 0) return null;

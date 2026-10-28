@@ -27,6 +27,13 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Editor: no UI yet for `enteredFrom` (NPC) and `hallOfFame` (trainer reward) — edit the JSON
 - [ ] Legendary gates (Elite birds/dogs, Master Mewtwo/Lugia/Ho-Oh, Legendary Mew): place blocker NPCs (`blocker` + `despawnAfter: rank-<id>`) once those maps exist; replace the "TBD" hint in the rank-up call
 
+## Mini-games (`feature/mini-games`, design: `docs/stories/mini-games.md`)
+- [ ] 3 games built and playable from start menu → Actions → Mini Games; not playtested level by level
+- [ ] Section A built, **not playtested**: Snack Attack family (Snorlax, Bulbasaur, Charmander, Squirtle, Pikachu lines) + overworld care trigger (`games/snack-attack/`, `minigames/care.ts`, design §3b). Check each skin's look, the trigger rate (5%/step, 100-step cooldown) and that Squirtle's levels 4–5 stay fair with more rocks (`SNACK_TUNE=1` tune test)
+- [ ] Next: library + lab entrance gates — stories in `docs/stories/building-gates.md`
+- [ ] Then: English game rework (word bank, modes, Word Dex) — stories in `docs/stories/library-english.md`
+- [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.4 MB, mostly JSON data)
+
 ## Bugs
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"

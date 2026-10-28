@@ -1,0 +1,294 @@
+/* Unown Word Quest — game-only styles (prefixed mg-unown-words-, scoped under the shell's .mg-root).
+   Reduced motion is handled by the shell's global rule in shell/minigames.css. */
+
+/* ── Unown glyph tile ───────────────────────────────────────────────────── */
+/* Outer wrapper owns the entrance; the inner face owns shake / glow so they never restart the pop-in. */
+.mg-root .mg-unown-words-pop {
+  display: inline-block;
+  animation: mg-unown-words-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--uw-delay, 0ms);
+}
+
+.mg-root .mg-unown-words-tile {
+  --uw-size: 4.5rem;
+  --uw-hue: 260;
+  --uw-ink: #1e1b4b;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--uw-size);
+  height: var(--uw-size);
+  border-radius: 50%;
+  border: calc(var(--uw-size) * 0.06) solid var(--uw-ink);
+  background: radial-gradient(
+    circle at 32% 26%,
+    hsl(var(--uw-hue) 100% 88%) 0%,
+    hsl(var(--uw-hue) 85% 64%) 48%,
+    hsl(var(--uw-hue) 75% 42%) 100%
+  );
+  box-shadow:
+    0 calc(var(--uw-size) * 0.07) 0 rgba(30, 27, 75, 0.55),
+    0 calc(var(--uw-size) * 0.14) calc(var(--uw-size) * 0.3) rgba(0, 0, 0, 0.25),
+    inset 0 calc(var(--uw-size) * -0.08) 0 rgba(0, 0, 0, 0.14);
+  color: var(--uw-ink);
+  font-weight: 900;
+  font-size: calc(var(--uw-size) * 0.56);
+  line-height: 1;
+  font-family: 'Nunito', ui-rounded, 'Segoe UI', system-ui, sans-serif;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6);
+  transition:
+    transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.2s,
+    filter 0.2s;
+  cursor: default;
+  touch-action: manipulation;
+}
+.mg-root button.mg-unown-words-tile {
+  cursor: pointer;
+}
+.mg-root button.mg-unown-words-tile:hover {
+  transform: translateY(-3px) scale(1.06) rotate(-3deg);
+}
+.mg-root button.mg-unown-words-tile:active {
+  transform: translateY(2px) scale(0.94);
+}
+
+/* The Unown eye — a white eyeball peeking over the top-right of the badge */
+.mg-root .mg-unown-words-eye {
+  position: absolute;
+  top: -12%;
+  right: -8%;
+  width: 36%;
+  height: 36%;
+  border-radius: 50%;
+  background: #fff;
+  border: calc(var(--uw-size) * 0.05) solid var(--uw-ink);
+  box-shadow: 0 2px 0 rgba(30, 27, 75, 0.4);
+  animation: mg-unown-words-blink 4.5s ease-in-out infinite;
+  animation-delay: var(--uw-blink, 0s);
+}
+.mg-root .mg-unown-words-eye::after {
+  content: '';
+  position: absolute;
+  inset: 26%;
+  border-radius: 50%;
+  background: var(--uw-ink);
+  box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.55);
+}
+/* Little tail flourish, bottom-left */
+.mg-root .mg-unown-words-tile::after {
+  content: '';
+  position: absolute;
+  left: -10%;
+  bottom: 6%;
+  width: 26%;
+  height: 11%;
+  border-radius: 999px;
+  background: var(--uw-ink);
+  transform: rotate(-35deg);
+}
+/* Sparkle dot, top-left */
+.mg-root .mg-unown-words-tile::before {
+  content: '';
+  position: absolute;
+  top: 14%;
+  left: 18%;
+  width: 14%;
+  height: 14%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.mg-root .mg-unown-words-tile.is-wrong {
+  animation: mg-unown-words-shake 0.45s ease-in-out both;
+  filter: saturate(0.4) brightness(0.95);
+}
+.mg-root .mg-unown-words-tile.is-correct {
+  animation: mg-unown-words-glow 0.9s ease-out infinite;
+  transform: scale(1.08);
+}
+.mg-root .mg-unown-words-tile.is-dim {
+  opacity: 0.35;
+  transform: scale(0.88);
+  filter: grayscale(0.6);
+}
+.mg-root .mg-unown-words-tile.is-used {
+  opacity: 0.12;
+  transform: scale(0.7);
+  pointer-events: none;
+}
+.mg-root .mg-unown-words-tile.is-hint {
+  outline: 4px dashed #facc15;
+  outline-offset: 4px;
+}
+
+/* ── Answer slots (spelling) ────────────────────────────────────────────── */
+.mg-root .mg-unown-words-slot {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  border: 3px dashed rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.1);
+}
+.mg-root .mg-unown-words-slot.is-current {
+  border-color: #facc15;
+  border-style: solid;
+  animation: mg-unown-words-breathe 1.2s ease-in-out infinite;
+}
+
+/* ── Picture / word cards ───────────────────────────────────────────────── */
+.mg-root .mg-unown-words-card {
+  position: relative;
+  border-radius: 1.4rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1e1b4b;
+  box-shadow:
+    0 5px 0 rgba(30, 27, 75, 0.35),
+    0 12px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1);
+  touch-action: manipulation;
+}
+.mg-root button.mg-unown-words-card:hover {
+  transform: translateY(-3px) scale(1.04);
+}
+.mg-root button.mg-unown-words-card:active {
+  transform: translateY(2px) scale(0.96);
+}
+.mg-root .mg-unown-words-card.is-wrong {
+  animation: mg-unown-words-shake 0.45s ease-in-out both;
+  background: #fecaca;
+}
+.mg-root .mg-unown-words-card.is-correct {
+  animation: mg-unown-words-glow 0.9s ease-out infinite;
+  background: #fef9c3;
+}
+.mg-root .mg-unown-words-card.is-dim {
+  opacity: 0.4;
+  transform: scale(0.92);
+}
+.mg-root .mg-unown-words-card.is-used {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.mg-root .mg-unown-words-keyhint {
+  position: absolute;
+  top: 0.35rem;
+  inset-inline-start: 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: rgba(30, 27, 75, 0.45);
+}
+
+/* Speaker button */
+.mg-root .mg-unown-words-speaker {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  flex: none;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  background: #facc15;
+  color: #1e1b4b;
+  box-shadow:
+    0 4px 0 rgba(30, 27, 75, 0.45),
+    0 8px 18px rgba(0, 0, 0, 0.2);
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.mg-root .mg-unown-words-speaker:hover {
+  transform: scale(1.08) rotate(-6deg);
+}
+.mg-root .mg-unown-words-speaker:active {
+  transform: scale(0.92);
+}
+.mg-root .mg-unown-words-speaker.is-playing {
+  animation: mg-unown-words-wobble 0.5s ease-in-out;
+}
+
+/* ── Keyframes ──────────────────────────────────────────────────────────── */
+@keyframes mg-unown-words-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-25deg) translateY(20px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12) rotate(6deg) translateY(-4px);
+  }
+  80% {
+    transform: scale(0.96) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+@keyframes mg-unown-words-shake {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  20% {
+    translate: -9px 0;
+    rotate: -8deg;
+  }
+  40% {
+    translate: 8px 0;
+    rotate: 7deg;
+  }
+  60% {
+    translate: -6px 0;
+    rotate: -4deg;
+  }
+  80% {
+    translate: 4px 0;
+    rotate: 2deg;
+  }
+}
+@keyframes mg-unown-words-glow {
+  0% {
+    box-shadow:
+      0 4px 0 rgba(30, 27, 75, 0.45),
+      0 0 0 0 rgba(250, 204, 21, 0.95);
+  }
+  100% {
+    box-shadow:
+      0 4px 0 rgba(30, 27, 75, 0.45),
+      0 0 0 18px rgba(250, 204, 21, 0);
+  }
+}
+@keyframes mg-unown-words-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes mg-unown-words-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+@keyframes mg-unown-words-wobble {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  25% {
+    rotate: -14deg;
+  }
+  75% {
+    rotate: 12deg;
+  }
+}

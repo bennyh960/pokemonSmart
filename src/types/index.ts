@@ -1,6 +1,7 @@
 import type { MajorStatusId } from './battle-metadata.ts';
 import type { MapId } from '../data/maps/map-ids.js';
 import type { VirtualControlsConfig } from '../engine/input/virtualControls.ts';
+import type { MiniGamesSave } from '../minigames/types.js';
 
 /**
  * Shared TypeScript types and interfaces for Pokemon Math Adventure.
@@ -42,7 +43,8 @@ export type SceneId =
   | 'SAVE_SLOTS'
   | 'START_MENU'
   | 'PUZZLE'
-  | 'ENGLISH_LEARNING';
+  | 'ENGLISH_LEARNING'
+  | 'MINI_GAME';
 
 /** Top-level game state snapshot. */
 export interface GameState {
@@ -259,6 +261,8 @@ export interface PlayerData {
   totalSteps: number; // cumulative steps walked — used for day-care EXP calculation
   /** One entry per League win (newest last, capped at HALL_OF_FAME_MAX). Its length is the League win count. */
   hallOfFame: HallOfFameEntry[];
+  /** Mini-game progress per game id (stars, best score, clears, daily replay cap). */
+  miniGames: MiniGamesSave;
 }
 
 /** Party snapshot taken when the player wins the League. */

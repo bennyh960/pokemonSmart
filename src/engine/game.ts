@@ -40,6 +40,7 @@ import { createTestScene } from '../scenes/test.scene.js';
 import { createPokedexReactScene } from '../scenesReact/pokedex/index.js';
 import { createTrainerDataReactScene } from '../scenesReact/trainerData/index.js';
 import { createPhoneContactReactScene } from '../scenesReact/PhoneContact/index.js';
+import { createMiniGameReactScene } from '../minigames/scene.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
@@ -94,6 +95,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   stateMachine.register('SAVE_SLOTS', createSaveSlotsScene(input, stateMachine));
   stateMachine.register('START_MENU', createStartMenuScene(input, stateMachine));
   stateMachine.register('ENGLISH_LEARNING', createEnglishLearningScene(input, stateMachine, canvas, audio));
+  stateMachine.register('MINI_GAME', createMiniGameReactScene(stateMachine));
 
   // Initialise story engine with the state machine so it can push scenes
   initStoryEngine(stateMachine);

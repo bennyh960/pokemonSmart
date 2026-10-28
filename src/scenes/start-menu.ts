@@ -10,6 +10,7 @@ import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js
 import { applyDirectItemEffect, consumeItem } from '../systems/item-effects.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setBagMode } from './bag.js';
+import { openMiniGamePicker } from '../minigames/launch.js';
 import { openSaveSlots } from './save-slots.js';
 import { scheduleFishing, toggleLegend, isLegendVisible, setupWorldMapFly } from './overworld.js';
 
@@ -24,7 +25,7 @@ const PAD_V = 4;
 const FOOTER_H = 8; // "ESC close menu" line under the main panel items
 
 const MAIN_KEYS = ['pokedex', 'party', 'bag', 'map', 'trainerData', 'save', 'actions', 'settings', 'exitGame'] as const;
-const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper', 'learn'] as const;
+const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper', 'miniGames'] as const;
 const SETTINGS_KEYS = ['language', 'music_volume', 'music_mute', 'sfx_volume', 'sfx_mute', 'legend'] as const;
 
 const ACTIONS_IDX = 6; // index of 'actions' in MAIN_KEYS
@@ -106,9 +107,9 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
         stateMachine.pop();
         stateMachine.push('PHONE');
         break;
-      case 'learn':
+      case 'miniGames':
         stateMachine.pop();
-        stateMachine.push('ENGLISH_LEARNING');
+        openMiniGamePicker();
         break;
       case 'battleHelper':
         if (!hasActiveGame()) break;

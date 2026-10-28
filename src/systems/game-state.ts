@@ -51,6 +51,7 @@ export function createNewPlayerData(): PlayerData {
     awayPokemon: {},
     totalSteps: 0,
     hallOfFame: [],
+    miniGames: {},
   };
 }
 

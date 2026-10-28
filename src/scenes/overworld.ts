@@ -13,6 +13,8 @@ import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { initHUD, updateHUD, setHUDTab, showHUD, hideHUD } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
+import { forceCareGame, rollCareTrigger, type CareMatch } from '../minigames/care.js';
+import { startMiniGame } from '../minigames/index.js';
 import type { Locale } from '../i18n/i18n.js';
 import {
   getPlayerData,
@@ -121,6 +123,7 @@ import {
 import { createOverworldFx, updateOverworldFx, drawOverworldFx, type OverworldFx } from '../systems/overworld-fx.js';
 import { createShake, updateShake, applyShake, resetShake, type ShakeEffect } from '../ui/battle-animations/index.js';
 import { grantItem } from '../systems/item-effects.js';
+import { grantReward } from '../systems/rewards.js';
 import { setFlyCallback, FLY_DESTINATIONS, resolveFlySpawn } from './world-map.js';
 import { openSaveSlots } from './save-slots.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
@@ -701,6 +704,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     return false;
   }
 
+  /** A hurt party Pokémon asks to play its care mini-game; "Yes" starts it (see src/minigames/care.ts). */
+  function offerCareGame({ def, pokemon }: CareMatch): void {
+    const name = getPokemonDisplayName(pokemon.id);
+    activeTextBox = createTextBox([def.care.prompt[getLocale()].replace('{name}', name)], isRTL());
+    pendingDialogueCallback = () => {
+      showChoice((idx) => {
+        if (idx === 0) startMiniGame(def.id, { carePokemonUuid: pokemon.uuid });
+      });
+    };
+  }
+
   /** Show a Yes/No choice prompt. */
   function showChoice(callback: (idx: number) => void, options?: string[]): void {
     choiceState = {
@@ -1254,49 +1268,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   /** Deliver an NPC reward (items + money) if not already given. */
   function giveNPCReward(npc: NPCData, reward: DialogueReward): void {
     const pd = getPlayerData();
-    const flagKey = reward.flag || `npc-${npc.id}-rewarded`;
-
-    // Already given — skip
-    if (pd.flags[flagKey]) return;
-
-    // Build reward message lines
-    const lines: string[] = [];
-
-    // Give items
-    if (reward.items) {
-      audio.playItemFound();
-      for (const ri of reward.items) {
-        pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
-        const itemDef = getItem(ri.itemId);
-        const displayName = itemDef ? getLocalizedName(itemDef.name) : ri.itemId;
-        lines.push(t('npc.reward.item', { item: displayName, qty: ri.quantity }));
-        // Key items auto-set their flag when received
-        if (itemDef?.keyFlag) {
-          setFlag(pd, itemDef.keyFlag);
-        }
-      }
-    }
-
-    // Give money
-    if (reward.money && reward.money > 0) {
-      pd.money += reward.money;
-      lines.push(t('npc.reward.money', { money: reward.money }));
-    }
-
-    // Award badge
-    if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
-      pd.badges |= 1 << (reward.badge - 1);
-      lines.push(t('npc.reward.badge', { badge: reward.badge }));
-    }
-
-    // Set story event flag
-    if (reward.storyEvent) {
-      setFlag(pd, reward.storyEvent);
-    }
-
-    // Mark as given
-    setFlag(pd, flagKey);
-    void fireStoryTrigger({ type: 'flag-set', flag: flagKey });
+    // One-time per NPC; grantReward skips (null) when the flag is already set
+    const lines = grantReward(reward, { onceFlag: reward.flag || `npc-${npc.id}-rewarded` });
+    if (!lines) return;
 
     if (npc.clearFlags?.length) {
       for (const clearFlag of npc.clearFlags) {
@@ -2933,6 +2907,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
 
           const tileEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
+          // A hurt party Pokémon may ask to play its care mini-game here (before the wild encounter roll)
+          if (tileEncTypes && hasActiveGame()) {
+            const care = rollCareTrigger(getPlayerData(), {
+              category: tileMap.getTileCategory(player.gridX, player.gridY),
+              encounterTypes: isCurrentlySurfing ? ['water'] : tileEncTypes,
+            });
+            if (care) {
+              offerCareGame(care);
+              return;
+            }
+          }
           if (tileEncTypes) {
             const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || DEFAULT_MAP;
             const repelActive = hasActiveGame() && getPlayerData().repelStepsRemaining > 0;
@@ -3718,6 +3703,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         }
       }
 
+      // C key → Force the care mini-game prompt for the first party Pokémon that has one (admin-only debug shortcut)
+      if (input.isKeyPressed('c') || input.isKeyPressed('C')) {
+        if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
+          const care = forceCareGame(getPlayerData().party);
+          if (care) offerCareGame(care);
+          else activeTextBox = createTextBox([t('admin.care.none')], isRTL());
+          return;
+        }
+      }
+
       // G key → Admin Map Teleport (dev-only, admin-only)
       if (import.meta.env.DEV && (input.isKeyPressed('g') || input.isKeyPressed('G'))) {
         if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
@@ -4354,7 +4349,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ];
         if (_hasFish) _lparts.push(`F:${t('legend.fish')}`);
         _lparts.push(`M:${t('legend.mute')}`, `K:${t('legend.keys')}`, `ENTER:${t('legend.menu')}`);
-        if (_isAdmin) _lparts.push(`N:${t('legend.shop')}`, `H:${t('legend.heal')}`, 'G:Teleport');
+        if (_isAdmin) _lparts.push(`N:${t('legend.shop')}`, `H:${t('legend.heal')}`, 'C:Care', 'G:Teleport');
         drawText(ctx, _lparts.join(' '), SCREEN_W / 2, barY + 2, {
           size: 6,
           color: '#aaaaaa',
