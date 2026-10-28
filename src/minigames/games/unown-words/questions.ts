@@ -251,7 +251,12 @@ function wordMatch(rng: Rng, content: UnownContent, count: number, choices: numb
     // distractors share no word with the answer ("Potion" vs "Max Potion" look the same)
     const others = sample(
       rng,
-      content.items.filter((it) => !lower(it.en).split(' ').some((w) => answerWords.includes(w))),
+      content.items.filter(
+        (it) =>
+          !lower(it.en)
+            .split(' ')
+            .some((w) => answerWords.includes(w)),
+      ),
       choices - 1,
     );
     const placed = placeAnswer(rng, answer, others);
@@ -278,11 +283,25 @@ function scrambleQuestions(rng: Rng, content: UnownContent, count: number): Spel
   const short = Math.round((count * 3) / 8);
   const mid = Math.round((count * 3) / 8);
   const picked: WordPokemon[] = [
-    ...sample(rng, pool.filter((p) => p.en.length <= 4), short),
-    ...sample(rng, pool.filter((p) => p.en.length === 5), mid),
+    ...sample(
+      rng,
+      pool.filter((p) => p.en.length <= 4),
+      short,
+    ),
+    ...sample(
+      rng,
+      pool.filter((p) => p.en.length === 5),
+      mid,
+    ),
   ];
   const rest = pool.filter((p) => !picked.includes(p));
-  const longFirst = [...shuffle(rng, rest.filter((p) => p.en.length === 6)), ...shuffle(rng, rest)];
+  const longFirst = [
+    ...shuffle(
+      rng,
+      rest.filter((p) => p.en.length === 6),
+    ),
+    ...shuffle(rng, rest),
+  ];
   for (const p of longFirst) {
     if (picked.length >= count) break;
     if (!picked.includes(p)) picked.push(p);

@@ -14,7 +14,14 @@ import { PokemonSprite } from '../../shell/ui.js';
 import type { Bilingual, FloatTextOptions, MiniGameProps } from '../../types.js';
 import type { UnownWordsConfig } from './config.js';
 import { getContent } from './content.js';
-import { generateQuestions, type ChoiceQuestion, type OrderQuestion, type Question, type Speech, type SpellQuestion } from './questions.js';
+import {
+  generateQuestions,
+  type ChoiceQuestion,
+  type OrderQuestion,
+  type Question,
+  type Speech,
+  type SpellQuestion,
+} from './questions.js';
 import { createRng, pick } from './random.js';
 import { newTally, starsForMistakes, tallyQuestionDone, tallyWrong, type Tally } from './scoring.js';
 import { mergeSeen, readSeen } from './seen.js';
@@ -50,10 +57,7 @@ export function UnownWordsGame({ level, runId, paused, hud, sfx, onFinish }: Min
   const [, mutate] = usePlayerData();
   const reducedMotion = useReducedMotion();
   const [seed] = useState(() => (Date.now() ^ Math.imul(runId + 1, 2654435761)) >>> 0);
-  const questions = useMemo(
-    () => generateQuestions(level.config, createRng(seed), getContent()),
-    [level.config, seed],
-  );
+  const questions = useMemo(() => generateQuestions(level.config, createRng(seed), getContent()), [level.config, seed]);
 
   const [qi, setQi] = useState(0);
   const [tally, setTally] = useState<Tally>(newTally);
@@ -283,7 +287,14 @@ export function UnownWordsGame({ level, runId, paused, hud, sfx, onFinish }: Min
 
       <div key={qi} className="flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-4 sm:gap-6">
         {q.kind === 'choice' && (
-          <ChoiceView q={q} solved={solved} showHebrew={showHebrew} tileState={tileState} wrong={wrong} onChoose={choose} />
+          <ChoiceView
+            q={q}
+            solved={solved}
+            showHebrew={showHebrew}
+            tileState={tileState}
+            wrong={wrong}
+            onChoose={choose}
+          />
         )}
         {q.kind === 'spell' && (
           <SpellView
@@ -297,7 +308,9 @@ export function UnownWordsGame({ level, runId, paused, hud, sfx, onFinish }: Min
             onLetter={spellLetter}
           />
         )}
-        {q.kind === 'order' && <OrderView q={q} step={step} used={used} solved={solved} wrong={wrong} onPlace={placeWord} />}
+        {q.kind === 'order' && (
+          <OrderView q={q} step={step} used={used} solved={solved} wrong={wrong} onPlace={placeWord} />
+        )}
       </div>
     </div>
   );
@@ -361,7 +374,10 @@ function ChoiceView({ q, solved, showHebrew, wrong, tileState, onChoose }: Choic
     );
   }
   return (
-    <div dir="ltr" className={`grid w-full gap-3 sm:gap-4 ${q.options.length === 3 ? 'grid-cols-3' : 'grid-cols-2 sm:grid-cols-4'}`}>
+    <div
+      dir="ltr"
+      className={`grid w-full gap-3 sm:gap-4 ${q.options.length === 3 ? 'grid-cols-3' : 'grid-cols-2 sm:grid-cols-4'}`}
+    >
       {q.options.map((o, i) => {
         const state = tileState(o.key, i === q.answer);
         return (
@@ -437,7 +453,10 @@ function SpellView({ q, step, used, solved, showHelp, showHebrew, wrong, onLette
       <div className="flex items-end justify-center gap-3 sm:gap-5">
         {q.hints.map((h, i) => (
           <div key={h.id} className="mg-pop-in flex flex-col items-center" style={{ animationDelay: `${i * 90}ms` }}>
-            <PokemonSprite id={h.id} className={`${q.hints.length === 1 ? 'h-28 w-28 sm:h-36 sm:w-36' : 'h-20 w-20 sm:h-28 sm:w-28'} mg-bob object-contain drop-shadow-lg`} />
+            <PokemonSprite
+              id={h.id}
+              className={`${q.hints.length === 1 ? 'h-28 w-28 sm:h-36 sm:w-36' : 'h-20 w-20 sm:h-28 sm:w-28'} mg-bob object-contain drop-shadow-lg`}
+            />
             {showHebrew && <span className="text-sm font-bold text-white/90">{h.he}</span>}
           </div>
         ))}
@@ -451,7 +470,10 @@ function SpellView({ q, step, used, solved, showHelp, showHebrew, wrong, onLette
         ))}
       </div>
 
-      <div dir="ltr" className={`flex flex-wrap justify-center ${q.tiles ? 'gap-3 sm:gap-4' : 'max-w-xl gap-1.5 sm:gap-2'}`}>
+      <div
+        dir="ltr"
+        className={`flex flex-wrap justify-center ${q.tiles ? 'gap-3 sm:gap-4' : 'max-w-xl gap-1.5 sm:gap-2'}`}
+      >
         {q.tiles
           ? q.tiles.map((letter, i) => (
               <UnownTile
@@ -470,9 +492,7 @@ function SpellView({ q, step, used, solved, showHelp, showHebrew, wrong, onLette
                 glyph={letter}
                 size="sm"
                 delay={i * 15}
-                state={
-                  wrong?.key === letter ? 'wrong' : showHelp && !solved && letter === target ? 'hint' : 'idle'
-                }
+                state={wrong?.key === letter ? 'wrong' : showHelp && !solved && letter === target ? 'hint' : 'idle'}
                 shakeKey={wrong?.n}
                 onClick={(e) => onLetter(letter, undefined, e)}
               />
@@ -516,7 +536,10 @@ function OrderView({ q, step, used, solved, wrong, onPlace }: OrderViewProps) {
       >
         {q.words.map((w, i) =>
           i < step ? (
-            <span key={i} className="mg-pop-in rounded-2xl bg-white px-3 py-2 text-xl font-black text-indigo-950 shadow sm:text-2xl">
+            <span
+              key={i}
+              className="mg-pop-in rounded-2xl bg-white px-3 py-2 text-xl font-black text-indigo-950 shadow sm:text-2xl"
+            >
               {w}
             </span>
           ) : (

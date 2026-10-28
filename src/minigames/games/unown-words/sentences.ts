@@ -47,8 +47,14 @@ function withPokemon(
 export const SENTENCE_TEMPLATES: readonly Template[] = [
   withPokemon((p) => ['I', 'love', p.en]),
   withPokemon((p) => [p.en, 'is', 'strong']),
-  withPokemon((p) => [p.en, 'can', 'fly'], (p) => p.types.includes('flying')),
-  withPokemon((p) => [p.en, 'can', 'swim'], (p) => p.types.includes('water')),
+  withPokemon(
+    (p) => [p.en, 'can', 'fly'],
+    (p) => p.types.includes('flying'),
+  ),
+  withPokemon(
+    (p) => [p.en, 'can', 'swim'],
+    (p) => p.types.includes('water'),
+  ),
   withPokemon(
     (p, rng) => {
       const likes = p.types.filter((t) => LIKEABLE_TYPES.includes(t));

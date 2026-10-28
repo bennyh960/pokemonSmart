@@ -8,6 +8,7 @@ vi.mock('../../auth/supabase-client.js', () => ({ supabase: {} }));
 
 import {
   CARE_COOLDOWN_STEPS,
+  careChance,
   carePrizes,
   evolutionLine,
   careLevelForRank,
@@ -61,9 +62,10 @@ describe('care games', () => {
     expect(evolutionLine(143)).toEqual([143]);
   });
 
-  it('Snorlax under half HP on grass gets the snack game; healthy or fainted does not', () => {
+  it('Snorlax at half HP or less on grass gets the snack game; healthy or fainted does not', () => {
     expect(findCareGame([mon(143, 40)], GRASS)?.def.id).toBe('snorlax-snack');
-    expect(findCareGame([mon(143, 50)], GRASS)).toBeNull();
+    expect(findCareGame([mon(143, 50)], GRASS)?.def.id).toBe('snorlax-snack');
+    expect(findCareGame([mon(143, 51)], GRASS)).toBeNull();
     expect(findCareGame([mon(143, 0)], GRASS)).toBeNull();
     expect(findCareGame([mon(143, 40)], WATER)).toBeNull();
   });
@@ -80,6 +82,27 @@ describe('care games', () => {
   it("respects the tile's encounter filter (no fire on a tile that excludes fire)", () => {
     expect(findCareGame([mon(5, 10)], { category: 'ground', encounterTypes: ['*/fire,ice'] })).toBeNull();
     expect(findCareGame([mon(5, 10)], { category: 'ground', encounterTypes: null })).toBeNull();
+  });
+
+  it('the lower the HP, the higher the chance: 10% / 20% / 50%', () => {
+    expect(careChance(mon(143, 51))).toBe(0);
+    expect(careChance(mon(143, 50))).toBe(0.1);
+    expect(careChance(mon(143, 41))).toBe(0.1);
+    expect(careChance(mon(143, 40))).toBe(0.2);
+    expect(careChance(mon(143, 31))).toBe(0.2);
+    expect(careChance(mon(143, 30))).toBe(0.5);
+    expect(careChance(mon(143, 1))).toBe(0.5);
+    expect(careChance(mon(143, 0))).toBe(0);
+  });
+
+  it('picks the most hurt Pokémon when several can ask', () => {
+    expect(findCareGame([mon(143, 45), mon(1, 20)], GRASS)?.pokemon.id).toBe(1);
+  });
+
+  it('rolls 10% at 45% HP', () => {
+    const pd = { party: [mon(143, 45)], totalSteps: 0 } as unknown as PlayerData;
+    expect(rollCareTrigger(pd, GRASS, () => 0.11)).toBeNull();
+    expect(rollCareTrigger(pd, GRASS, () => 0.09)).not.toBeNull();
   });
 
   it('rolls with a chance and a step cooldown', () => {

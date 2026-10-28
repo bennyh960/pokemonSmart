@@ -147,7 +147,13 @@ describe('unown-words questions', () => {
         q.options
           .filter((_, i) => i !== q.answer)
           .forEach((o) => {
-            if (q.optionKind === 'item') expect(o.en.toLowerCase().split(' ').some((w) => words.includes(w))).toBe(false);
+            if (q.optionKind === 'item')
+              expect(
+                o.en
+                  .toLowerCase()
+                  .split(' ')
+                  .some((w) => words.includes(w)),
+              ).toBe(false);
           });
         expect(q.speech).toEqual({ kind: 'word', text: q.options[q.answer].en });
       }

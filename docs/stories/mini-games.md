@@ -162,11 +162,11 @@ with the same 5-level math table (`SNACK_LEVEL_CONFIGS`) and their own world, le
 | `pikachu-charge` | Pichu → Raichu | bolts / purple bolts / mud ball / thunder star | grass, ground | cured | X item, 7%/★ |
 
 **Care round** (`src/minigames/care.ts`, wired in `overworld.ts` before the wild-encounter roll): a party Pokémon of a
-line above, alive and under 50% HP, on an encounter tile of the game's habitat whose encounter filter allows its types →
-5% per step (cooldown 100 steps) it asks "Snorlax looks very hungry… Feed it?" → Yes starts the game with
+line above, alive and at 50% HP or less, on an encounter tile of the game's habitat whose encounter filter allows its types →
+a chance per step that grows as HP drops — 40–50% HP: 10% · 30–40%: 20% · 30% or less: 50% (`CARE_CHANCE_BY_HP`; the most hurt Pokémon asks; cooldown 100 steps) it asks "Snorlax looks very hungry… Feed it?" → Yes starts the game with
 `startMiniGame(id, { carePokemonUuid })`. In a care round the Pokémon itself plays, the level comes from the **trainer rank** shown on the
 trainer details screen (`getTrainerRank(pd).index` → `careLevelForRank()`: Rookie L1 · Amateur/Pro L2 · Expert L3 ·
-Elite/Master L4 · Legendary L5, ignoring level unlocks), the intro has no level picker, and a clear gives **no level
+Elite/Master L4 · Legendary L5, ignoring level unlocks — the level is never shown locked), the intro has no level picker, and a clear gives **no level
 prizes** — only the heal (`DialogueReward.restorePokemon`: full HP + status) plus the rare bonus. Stars/best still save.
 After a clear there is no "Play again"; a failed round can be retried.
 Admin: **C** in the overworld offers the care game of the first party Pokémon that has one (ignores HP, tile, chance, cooldown).

@@ -1,9 +1,9 @@
 /**
  * Care rounds — a hurt party Pokémon asks to play its game while the player walks in the wild.
  *
- *   trigger: a party Pokémon under CARE_HP_RATIO of its HP (not fainted), whose evolution line has a game with
- *            `care`, standing on a tile of that game's habitat whose encounter filter allows the Pokémon's
- *            types. CARE_STEP_CHANCE per step, at most once every CARE_COOLDOWN_STEPS steps.
+ *   trigger: a party Pokémon at half HP or less (not fainted), whose evolution line has a game with `care`,
+ *            standing on a tile of that game's habitat whose encounter filter allows the Pokémon's types.
+ *            Chance per step grows as HP drops (CARE_CHANCE_BY_HP), at most once every CARE_COOLDOWN_STEPS steps.
  *   level:   set by the trainer rank (the one on the trainer details screen): Rookie → level 1 … Legendary → last level.
  *   prizes:  clearing the round restores the Pokémon (+ a rare bonus). No level prizes.
  *
@@ -18,8 +18,12 @@ import { resolvePrize, type AwardedPrize } from './progress.js';
 import { MINI_GAME_LIST } from './registry.js';
 import type { AnyMiniGameDef, MiniGameCare, Stars } from './types.js';
 
-export const CARE_HP_RATIO = 0.5;
-export const CARE_STEP_CHANCE = 0.05;
+/** Chance per step by HP left (share of max HP, first row that fits). Above the last row → no trigger. */
+export const CARE_CHANCE_BY_HP: readonly { maxHpRatio: number; chance: number }[] = [
+  { maxHpRatio: 0.3, chance: 0.5 },
+  { maxHpRatio: 0.4, chance: 0.2 },
+  { maxHpRatio: 0.5, chance: 0.1 },
+];
 export const CARE_COOLDOWN_STEPS = 100;
 
 /** The tile the player just stepped on. */
@@ -39,8 +43,10 @@ export function evolutionLine(pokemonId: number): number[] {
   return getEvolutionChain(pokemonId)?.stages.map((s) => s.id) ?? [pokemonId];
 }
 
-export function needsCare(p: Pokemon): boolean {
-  return p.hp > 0 && p.hp < p.maxHp * CARE_HP_RATIO;
+/** Chance per step that this Pokémon asks for its care game (0 = healthy enough, or fainted). */
+export function careChance(p: Pokemon): number {
+  if (p.hp <= 0) return 0;
+  return CARE_CHANCE_BY_HP.find((row) => p.hp <= p.maxHp * row.maxHpRatio)?.chance ?? 0;
 }
 
 function hasCare(def: AnyMiniGameDef): def is CareMatch['def'] {
@@ -51,7 +57,7 @@ function careGameOf(pokemon: Pokemon, games: readonly CareMatch['def'][]): CareM
   return games.find((d) => evolutionLine(d.care.lineOf).includes(pokemon.id));
 }
 
-/** The first hurt party Pokémon whose care game can start on this tile. */
+/** The most hurt party Pokémon (highest care chance) whose care game can start on this tile. */
 export function findCareGame(
   party: readonly Pokemon[],
   tile: CareTile,
@@ -59,12 +65,15 @@ export function findCareGame(
 ): CareMatch | null {
   if (!tile.encounterTypes || !tile.category) return null;
   const careGames = games.filter(hasCare).filter((d) => d.care.habitat.includes(tile.category!));
+  let best: CareMatch | null = null;
   for (const pokemon of party) {
-    if (!needsCare(pokemon) || !tileAllowsTypes(tile.encounterTypes, pokemon.types)) continue;
+    const chance = careChance(pokemon);
+    if (chance === 0 || !tileAllowsTypes(tile.encounterTypes, pokemon.types)) continue;
+    if (best && chance <= careChance(best.pokemon)) continue;
     const def = careGameOf(pokemon, careGames);
-    if (def) return { def, pokemon };
+    if (def) best = { def, pokemon };
   }
-  return null;
+  return best;
 }
 
 /** Admin: the first party Pokémon that has a care game, ignoring HP, tile, chance and cooldown. */
@@ -91,7 +100,7 @@ export function resetCareCooldown(): void {
 export function rollCareTrigger(pd: PlayerData, tile: CareTile, rng: () => number = Math.random): CareMatch | null {
   if (pd.totalSteps - lastCareStep < CARE_COOLDOWN_STEPS) return null;
   const match = findCareGame(pd.party, tile);
-  if (!match || rng() >= CARE_STEP_CHANCE) return null;
+  if (!match || rng() >= careChance(match.pokemon)) return null;
   lastCareStep = pd.totalSteps;
   return match;
 }

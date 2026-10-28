@@ -42,7 +42,9 @@ export function describeReward(reward: DialogueReward, locale: Locale): PrizeLin
     lines.push({
       icon: mon ? pokemonFrontSpriteUrl(mon.id) : null,
       emoji: mon ? undefined : '💖',
-      label: `${mon ? `${getPokemon(mon.id)?.name[locale] ?? mon.name} · ` : ''}${t(status === 'sleep' ? 'minigames.prize.fullHpAsleep' : 'minigames.prize.fullHp')}`,
+      label: t(status === 'sleep' ? 'minigames.prize.fullHpAsleep' : 'minigames.prize.fullHp', {
+        name: mon ? (getPokemon(mon.id)?.name[locale] ?? mon.name) : '',
+      }),
       qty: status === 'sleep' ? '💤' : '💖',
     });
   }

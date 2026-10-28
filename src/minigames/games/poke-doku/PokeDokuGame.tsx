@@ -424,11 +424,7 @@ export function PokeDokuGame({ level, runId, paused, hud, sfx, theme, onFinish }
     Math.max(52, Math.min(92, landscape ? (area.h - 260) / trayRows - 12 : (area.w - 32) / size - 8)),
   );
   const tray = (
-    <div
-      dir="ltr"
-      className="flex flex-wrap justify-center gap-2"
-      style={{ maxWidth: (trayPx + 10) * trayCols }}
-    >
+    <div dir="ltr" className="flex flex-wrap justify-center gap-2" style={{ maxWidth: (trayPx + 10) * trayCols }}>
       {symbols.map((s) => {
         const full = counts[s.index] >= size;
         return (
@@ -467,7 +463,13 @@ export function PokeDokuGame({ level, runId, paused, hud, sfx, theme, onFinish }
   const hintsLeft = MAX_HINTS - hintsUsed;
   const buttons = (
     <div className="flex flex-wrap justify-center gap-2">
-      <MgButton theme={theme} variant="dark" onClick={() => place(EMPTY)} disabled={solved} ariaLabel={say(STRINGS.erase, locale)}>
+      <MgButton
+        theme={theme}
+        variant="dark"
+        onClick={() => place(EMPTY)}
+        disabled={solved}
+        ariaLabel={say(STRINGS.erase, locale)}
+      >
         ⌫ {say(STRINGS.erase, locale)}
       </MgButton>
       <MgButton theme={theme} variant="primary" onClick={check} disabled={solved}>
@@ -487,7 +489,13 @@ export function PokeDokuGame({ level, runId, paused, hud, sfx, theme, onFinish }
   );
 
   const bubbleColor =
-    message.tone === 'hint' ? '#ffedd5' : message.tone === 'bad' ? '#fee2e2' : message.tone === 'good' ? '#dcfce7' : '#ffffff';
+    message.tone === 'hint'
+      ? '#ffedd5'
+      : message.tone === 'bad'
+        ? '#fee2e2'
+        : message.tone === 'good'
+          ? '#dcfce7'
+          : '#ffffff';
   const psyduck = (
     <div className="flex w-full max-w-md items-center gap-2">
       <div className="relative shrink-0">
@@ -537,7 +545,8 @@ export function PokeDokuGame({ level, runId, paused, hud, sfx, theme, onFinish }
 
 /** One symbol: a Pokémon sprite, or (Type-Doku) a round type icon in the type's colour. */
 function SymbolView({ symbol, px }: { symbol: DokuSymbol; px: number }) {
-  if (!symbol.type) return <PokemonSprite id={symbol.pokemonId} className="mg-poke-doku-sprite h-full w-full object-contain" />;
+  if (!symbol.type)
+    return <PokemonSprite id={symbol.pokemonId} className="mg-poke-doku-sprite h-full w-full object-contain" />;
   const color = TYPE_BADGE[symbol.type].color;
   return (
     <span

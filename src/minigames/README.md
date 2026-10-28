@@ -25,16 +25,16 @@ export default defineMiniGame<MyConfig>({
 
 ## Props (`MiniGameProps<C>` in `types.ts`)
 
-| prop | |
-|------|---|
-| `level` | the `MiniGameLevel<C>` being played (`level.config` is yours) |
-| `runId` | changes on every new round (the component is also remounted) — use as seed |
-| `paused` | pause menu open: stop timers / rAF / input (use `active: !paused` on `useInputLayer`) |
-| `hud` | HUD helpers (below), stable object |
-| `sfx` | sounds (below) |
-| `theme` | the game's colours |
-| `onFinish({ stars: 0-3, score, extra? })` | call **once** when the round ends; 0★ = not cleared (no prizes) |
-| `onQuit()` | leave without a result (back to the intro card) |
+| prop                                      |                                                                                       |
+| ----------------------------------------- | ------------------------------------------------------------------------------------- |
+| `level`                                   | the `MiniGameLevel<C>` being played (`level.config` is yours)                         |
+| `runId`                                   | changes on every new round (the component is also remounted) — use as seed            |
+| `paused`                                  | pause menu open: stop timers / rAF / input (use `active: !paused` on `useInputLayer`) |
+| `hud`                                     | HUD helpers (below), stable object                                                    |
+| `sfx`                                     | sounds (below)                                                                        |
+| `theme`                                   | the game's colours                                                                    |
+| `onFinish({ stars: 0-3, score, extra? })` | call **once** when the round ends; 0★ = not cleared (no prizes)                       |
+| `onQuit()`                                | leave without a result (back to the intro card)                                       |
 
 ## HUD (`hud`)
 

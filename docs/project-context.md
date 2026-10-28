@@ -29,7 +29,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 
 ## Mini-games (`feature/mini-games`, design: `docs/stories/mini-games.md`)
 - [ ] 3 games built and playable from start menu → Actions → Mini Games; not playtested level by level
-- [ ] Section A built, **not playtested**: Snack Attack family (Snorlax, Bulbasaur, Charmander, Squirtle, Pikachu lines) + overworld care trigger (`games/snack-attack/`, `minigames/care.ts`, design §3b). Check each skin's look, the trigger rate (5%/step, 100-step cooldown) and that Squirtle's levels 4–5 stay fair with more rocks (`SNACK_TUNE=1` tune test)
+- [ ] Section A built, **not playtested**: Snack Attack family (Snorlax, Bulbasaur, Charmander, Squirtle, Pikachu lines) + overworld care trigger (`games/snack-attack/`, `minigames/care.ts`, design §3b). Check each skin's look, the trigger rate (10/20/50% per step by HP, 100-step cooldown) and that Squirtle's levels 4–5 stay fair with more rocks (`SNACK_TUNE=1` tune test)
 - [ ] Next: library + lab entrance gates — stories in `docs/stories/building-gates.md`
 - [ ] Then: English game rework (word bank, modes, Word Dex) — stories in `docs/stories/library-english.md`
 - [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.4 MB, mostly JSON data)

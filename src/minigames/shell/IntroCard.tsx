@@ -40,7 +40,8 @@ export function IntroCard({
   );
   const level = def.levels[levelIndex];
   const progress = getLevelProgress(save, def.id, level.number);
-  const unlocked = isLevelUnlocked(save, def.id, level.number);
+  // A care round's level comes from the trainer rank — never locked
+  const unlocked = !!careLine || isLevelUnlocked(save, def.id, level.number);
   const chipsRef = useRef<HTMLDivElement>(null);
 
   useMenuNav({

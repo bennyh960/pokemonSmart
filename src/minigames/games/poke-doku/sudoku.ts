@@ -97,7 +97,8 @@ export function unitsOf(spec: GridSpec, cell: number): Unit[] {
   const c = cell % spec.size;
   const b = boxOf(spec, cell);
   return allUnits(spec).filter(
-    (u) => (u.kind === 'row' && u.index === r) || (u.kind === 'col' && u.index === c) || (u.kind === 'box' && u.index === b),
+    (u) =>
+      (u.kind === 'row' && u.index === r) || (u.kind === 'col' && u.index === c) || (u.kind === 'box' && u.index === b),
   );
 }
 
@@ -187,7 +188,11 @@ export function generateSolution(spec: GridSpec, rng: () => number): Grid {
 export function solvableBySingles(spec: GridSpec, grid: Grid): boolean {
   const g = [...grid];
   for (;;) {
-    const hint = nextSingle(spec, g, g.map((v, k) => (v === EMPTY ? k : -1)).filter((k) => k >= 0));
+    const hint = nextSingle(
+      spec,
+      g,
+      g.map((v, k) => (v === EMPTY ? k : -1)).filter((k) => k >= 0),
+    );
     if (!hint) return g.every((v) => v !== EMPTY);
     g[hint.cell] = hint.value;
   }
@@ -208,7 +213,10 @@ export function generatePuzzle(spec: GridSpec, givens: number, seed: number): Pu
     const solution = generateSolution(spec, rng);
     const puzzle = [...solution];
     let left = total;
-    for (const cell of shuffle(Array.from({ length: total }, (_, i) => i), rng)) {
+    for (const cell of shuffle(
+      Array.from({ length: total }, (_, i) => i),
+      rng,
+    )) {
       if (left <= givens) break;
       const keep = puzzle[cell];
       puzzle[cell] = EMPTY;
