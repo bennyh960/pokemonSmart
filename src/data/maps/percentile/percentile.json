@@ -23,20 +23,12 @@
     {
       "fromX": 13,
       "fromY": 26,
-      "toMapId": "percentile/lab",
-      "light": {
-        "x": 12,
-        "y": 26
-      }
+      "toMapId": "percentile/lab"
     },
     {
       "fromX": 21,
       "fromY": 26,
-      "toMapId": "percentile/library",
-      "light": {
-        "x": 22,
-        "y": 27
-      }
+      "toMapId": "percentile/library"
     },
     {
       "fromX": 31,
