@@ -23,12 +23,20 @@
     {
       "fromX": 13,
       "fromY": 26,
-      "toMapId": "percentile/lab"
+      "toMapId": "percentile/lab",
+      "light": {
+        "x": 12,
+        "y": 26
+      }
     },
     {
       "fromX": 21,
       "fromY": 26,
-      "toMapId": "percentile/library"
+      "toMapId": "percentile/library",
+      "light": {
+        "x": 22,
+        "y": 27
+      }
     },
     {
       "fromX": 31,
@@ -63,12 +71,20 @@
     {
       "fromX": 24,
       "fromY": 6,
-      "toMapId": "shared/mart-interior"
+      "toMapId": "shared/mart-interior",
+      "light": {
+        "x": 23,
+        "y": 7
+      }
     },
     {
       "fromX": 39,
       "fromY": 6,
-      "toMapId": "shared/pokecenter-2"
+      "toMapId": "shared/pokecenter-2",
+      "light": {
+        "x": 38,
+        "y": 7
+      }
     },
     {
       "fromX": 49,
@@ -377,7 +393,11 @@
           "en": "Enjoy Percentile! 100% of visitors love it here.",
           "he": "תהנה בפרסנטייל! 100% מהמבקרים אוהבים את העיר."
         }
-      ]
+      ],
+      "light": {
+        "x": 48,
+        "y": 18
+      }
     },
     {
       "id": "npc-percentile-gate-north",
@@ -403,7 +423,11 @@
           "en": "Stay safe out there!",
           "he": "שמור על עצמך בדרך!"
         }
-      ]
+      ],
+      "light": {
+        "x": 13,
+        "y": 0
+      }
     },
     {
       "id": "npc-percentile-ocean-swimmer",

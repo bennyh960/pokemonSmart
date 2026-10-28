@@ -42,12 +42,20 @@
     {
       "fromX": 10,
       "fromY": 17,
-      "toMapId": "shared/pokecenter-2"
+      "toMapId": "shared/pokecenter-2",
+      "light": {
+        "x": 12,
+        "y": 17
+      }
     },
     {
       "fromX": 29,
       "fromY": 16,
-      "toMapId": "shared/mart-interior"
+      "toMapId": "shared/mart-interior",
+      "light": {
+        "x": 30,
+        "y": 17
+      }
     }
   ],
   "npcs": [],

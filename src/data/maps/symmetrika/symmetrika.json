@@ -16,12 +16,20 @@
     {
       "fromX": 26,
       "fromY": 31,
-      "toMapId": "shared/pokecenter-2"
+      "toMapId": "shared/pokecenter-2",
+      "light": {
+        "x": 25,
+        "y": 32
+      }
     },
     {
       "fromX": 14,
       "fromY": 31,
-      "toMapId": "shared/mart-interior"
+      "toMapId": "shared/mart-interior",
+      "light": {
+        "x": 13,
+        "y": 32
+      }
     },
     {
       "fromX": 8,
@@ -140,7 +148,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-symetria-r8-1"
+      "gateId": "gate-symetria-r8-1",
+      "light": {
+        "x": 17,
+        "y": 35
+      }
     },
     {
       "id": "npc-gate-symetria-r8-2",
@@ -177,7 +189,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-symetrica-route9"
+      "gateId": "gate-symetrica-route9",
+      "light": {
+        "x": 37,
+        "y": 19
+      }
     },
     {
       "id": "npc-gate-symetrica-route11",
@@ -196,7 +212,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-symetrica-route11"
+      "gateId": "gate-symetrica-route11",
+      "light": {
+        "x": 3,
+        "y": 19
+      }
     },
     {
       "id": "gate-symetrica-route10-1",
@@ -215,7 +235,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-symetrica-route10"
+      "gateId": "gate-symetrica-route10",
+      "light": {
+        "x": 19,
+        "y": 6
+      }
     },
     {
       "id": "gate-symetrica-route10-2",

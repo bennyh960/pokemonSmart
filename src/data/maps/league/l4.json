@@ -17,7 +17,11 @@
     {
       "fromX": 10,
       "fromY": 4,
-      "toMapId": "shared/pokecenter-mart-interior"
+      "toMapId": "shared/pokecenter-mart-interior",
+      "light": {
+        "x": 9,
+        "y": 5
+      }
     },
     {
       "fromX": 11,

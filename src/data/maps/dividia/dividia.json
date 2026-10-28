@@ -25,7 +25,11 @@
     {
       "fromX": 13,
       "fromY": 4,
-      "toMapId": "shared/mart-interior"
+      "toMapId": "shared/mart-interior",
+      "light": {
+        "x": 14,
+        "y": 5
+      }
     },
     {
       "fromX": 5,
@@ -168,7 +172,11 @@
       ],
       "spriteType": "gate-officer",
       "lineOfSight": 5,
-      "gateId": "gate-dividia-ocean1"
+      "gateId": "gate-dividia-ocean1",
+      "light": {
+        "x": 37,
+        "y": 27
+      }
     },
     {
       "id": "npc-1778099943811",
@@ -187,7 +195,11 @@
         }
       ],
       "spriteType": "gate-officer",
-      "gateId": "gate-route5-dividia"
+      "gateId": "gate-route5-dividia",
+      "light": {
+        "x": 25,
+        "y": 4
+      }
     },
     {
       "id": "npc-1778134649871",

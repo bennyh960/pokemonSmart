@@ -63,12 +63,20 @@
     {
       "fromX": 21,
       "fromY": 2,
-      "toMapId": "shared/mart-interior"
+      "toMapId": "shared/mart-interior",
+      "light": {
+        "x": 20,
+        "y": 3
+      }
     },
     {
       "fromX": 15,
       "fromY": 15,
-      "toMapId": "shared/pokecenter-2"
+      "toMapId": "shared/pokecenter-2",
+      "light": {
+        "x": 16,
+        "y": 16
+      }
     },
     {
       "fromX": 79,
@@ -257,7 +265,11 @@
       ],
       "spriteType": "gate-officer",
       "gateId": "gate-fractalis-route8",
-      "lineOfSight": 4
+      "lineOfSight": 4,
+      "light": {
+        "x": 6,
+        "y": 0
+      }
     },
     {
       "id": "npc-1778613847701",
@@ -277,7 +289,11 @@
       ],
       "spriteType": "gate-officer",
       "gateId": "gate-fractalis-route7",
-      "lineOfSight": 4
+      "lineOfSight": 4,
+      "light": {
+        "x": 72,
+        "y": 13
+      }
     },
     {
       "id": "npc-1778619906941-gate-ocean",
@@ -301,7 +317,11 @@
         "he": "פקח מעבר ימי"
       },
       "gateId": "gate-fractalis-ocean",
-      "lineOfSight": 8
+      "lineOfSight": 8,
+      "light": {
+        "x": 18,
+        "y": 39
+      }
     },
     {
       "id": "npc-1780063311491",
