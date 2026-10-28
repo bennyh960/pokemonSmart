@@ -24,6 +24,8 @@ export const CARE_CHANCE_BY_HP: readonly { maxHpRatio: number; chance: number }[
   { maxHpRatio: 0.5, chance: 0.1 },
 ];
 export const CARE_COOLDOWN_STEPS = 100;
+/** Share of the bonus chance (`care.bonus.chanceAt3Stars`) by stars earned: more stars, much better odds. */
+export const BONUS_SHARE_BY_STARS: Readonly<Record<Stars, number>> = { 0: 0, 1: 0.25, 2: 0.5, 3: 1 };
 
 /** The tile the player just stepped on. */
 export interface CareTile {
@@ -119,6 +121,6 @@ export function carePrizes(
       reward: { restorePokemon: { uuid: pokemon.uuid, status: care.statusAfter } },
     },
   ];
-  if (rng() < care.bonus.chancePerStar * stars) prizes.push({ kind: 'bonus', ...resolvePrize(care.bonus.prize, rng) });
+  if (rng() < care.bonus.chanceAt3Stars * BONUS_SHARE_BY_STARS[stars]) prizes.push({ kind: 'bonus', ...resolvePrize(care.bonus.prize, rng) });
   return prizes;
 }

@@ -230,7 +230,7 @@ export const snorlaxSnack = snackGame({
       en: '{name} is SO hungry! Fill its belly with berries — then it will feel great… and take a big nap!',
       he: '{name} רעב נורא! ממלאים לו את הבטן בפירות — והוא ירגיש מצוין… וילך לישון שנ"צ גדול!',
     },
-    bonus: { chancePerStar: 0.03, prize: vitaminPrize('epic', 3) },
+    bonus: { chanceAt3Stars: 0.2, prize: vitaminPrize('epic', 3) },
   },
 });
 
@@ -258,7 +258,7 @@ export const bulbasaurSun = snackGame({
       en: '{name} is tired and droopy. Catch sunshine for its bulb and it will bloom with energy!',
       he: '{name} עייף ונבול. תופסים שמש בשביל הפקעת שלו — והוא יפרח מאנרגיה!',
     },
-    bonus: { chancePerStar: 0.07, prize: xItemPrize('rare') },
+    bonus: { chanceAt3Stars: 0.35, prize: xItemPrize('rare') },
   },
 });
 
@@ -289,7 +289,7 @@ export const charmanderFlame = snackGame({
       en: "{name}'s flame is tiny! Catch embers to make it burn bright again!",
       he: 'הלהבה של {name} קטנטנה! תופסים גחלים כדי שתבער חזק שוב!',
     },
-    bonus: { chancePerStar: 0.07, prize: xItemPrize('rare') },
+    bonus: { chanceAt3Stars: 0.35, prize: xItemPrize('rare') },
   },
 });
 
@@ -319,7 +319,7 @@ export const squirtleSwim = snackGame({
       en: '{name} needs a swim! Grab the bubbles, watch out for rocks — and it will feel great again!',
       he: '{name} צריך לשחות! תופסים בועות, נזהרים מסלעים — והוא ירגיש מצוין שוב!',
     },
-    bonus: { chancePerStar: 0.07, prize: xItemPrize('rare') },
+    bonus: { chanceAt3Stars: 0.35, prize: xItemPrize('rare') },
   },
 });
 
@@ -350,6 +350,6 @@ export const pikachuCharge = snackGame({
       en: '{name} is out of power! Catch lightning to charge it back up!',
       he: 'ל{name} נגמר הכוח! תופסים ברקים כדי להטעין אותו מחדש!',
     },
-    bonus: { chancePerStar: 0.07, prize: xItemPrize('rare') },
+    bonus: { chanceAt3Stars: 0.35, prize: xItemPrize('rare') },
   },
 });

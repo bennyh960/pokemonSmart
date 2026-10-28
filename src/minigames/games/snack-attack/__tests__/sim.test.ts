@@ -191,6 +191,18 @@ describe('eating', () => {
     expect(stepSim(s, 0.016, NO_INPUT)).toEqual([]);
   });
 
+  it('a Pokémon of the hazard type eats it for points: no heart lost, combo and belly stay', () => {
+    const s = withTarget(createSim(cfg(1), 1, { hazardFriendly: true }), 0, 7);
+    eatBerry(s, berry(3));
+    s.combo = 2;
+    const events = eatBerry(s, berry(0, 'rotten'));
+    expect(events.map((e) => e.type)).toEqual(['hazard-snack']);
+    expect(s.hearts).toBe(3);
+    expect(s.score).toBeGreaterThan(0);
+    expect(s.combo).toBe(2);
+    expect(s.belly).toBe(3);
+  });
+
   it('golden berry starts 5 s of Fever: points ×2, then it ends', () => {
     const s = withTarget(createSim(cfg(1), 1), 0, 5);
     eatBerry(s, berry(0, 'golden'));

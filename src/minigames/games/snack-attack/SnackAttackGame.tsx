@@ -4,8 +4,9 @@
  * The skin (skins.ts) decides what falls, the scenery and the texts; `pokemonId` is the Pokémon playing.
  */
 
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
-import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
+import { getCharacterFrame, getWildPokemonCharacterId, type SpriteFrame } from '../../../engine/character-sprites.js';
+import { getPokemon, getPokemonDisplayName } from '../../../services/pokemon-data.js';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
 import { anyKeyDown, useReducedMotion } from '../../shell/hooks.js';
 import { PokemonSprite } from '../../shell/ui.js';
@@ -54,8 +55,10 @@ export function SnackAttackGame({
   const reduced = useReducedMotion();
   const config = level.config;
 
+  const friend = skin.hazardFriend;
+  const hazardFriendly = !!friend && !!getPokemon(pokemonId)?.types.includes(friend.type);
   const simRef = useRef<SimState | null>(null);
-  if (!simRef.current) simRef.current = createSim(config, (Date.now() ^ (runId * 7919)) >>> 0);
+  if (!simRef.current) simRef.current = createSim(config, (Date.now() ^ (runId * 7919)) >>> 0, { hazardFriendly });
   const sim = simRef.current;
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -176,6 +179,15 @@ export function SnackAttackGame({
           h.shake();
           fx.wrong();
           break;
+        case 'hazard-snack':
+          setJuice((j) => ({ ...j, eat: j.eat + 1 }));
+          h.addScore(ev.points, screenPos(s.playerX, PLAYER_Y - 0.24));
+          if (sk.hazardFriend) {
+            const text = sk.hazardFriend.text[loc].replace('{name}', getPokemonDisplayName(mon));
+            h.floatText(text, { ...mouth(), color: '#e9d5ff' });
+          }
+          fx.tap();
+          break;
         case 'golden':
           h.floatText(sk.text.feverStart[loc], { ...screenPos(0.5, 0.35), color: '#fde047' });
           fx.cry(mon);
@@ -216,6 +228,8 @@ export function SnackAttackGame({
   const hintLine =
     config.math === 'times' ? skin.text.hintTimes : config.math === 'add-sub' ? skin.text.hintSub : skin.text.hintAdd;
   const takeAway = sim.start > sim.target;
+  const lookOf = (b: Berry): ItemLook =>
+    b.kind === 'rotten' && hazardFriendly && friend ? { ...skin.items.rotten, decor: friend.decor } : skin.items[b.kind];
 
   return (
     <div
@@ -231,7 +245,7 @@ export function SnackAttackGame({
       {size.w > 0 && (
         <div className="absolute inset-y-0" style={{ left: fieldLeft, width: fieldW }} dir="ltr">
           {sim.berries.map((b) => (
-            <BerryView key={b.id} berry={b} look={skin.items[b.kind]} fieldW={fieldW} h={size.h} />
+            <BerryView key={b.id} berry={b} look={lookOf(b)} fieldW={fieldW} h={size.h} />
           ))}
 
           <PlayerView
@@ -360,6 +374,55 @@ interface PlayerViewProps {
   takeAwayLabel: string | null;
 }
 
+const WALK_CYCLE = ['walk-1', 'stand', 'walk-2', 'stand'] as const;
+const WALK_FPS = 8;
+
+/**
+ * The Pokémon playing: its overworld walk animation when it has one (a 'wild-pokemon' character sprite, e.g.
+ * Snorlax), else its battle sprite turned to the move direction.
+ */
+function PlayerSprite({ sim, pokemonId, width }: { sim: SimState; pokemonId: number; width: number }) {
+  const characterId = useMemo(() => {
+    const name = getPokemon(pokemonId)?.name.en;
+    return name ? getWildPokemonCharacterId(name) : undefined;
+  }, [pokemonId]);
+  const frame = characterId
+    ? sim.moving
+      ? getCharacterFrame(
+          characterId,
+          sim.facing === 1 ? 'right' : 'left',
+          WALK_CYCLE[Math.floor(sim.time * WALK_FPS) % WALK_CYCLE.length],
+        )
+      : getCharacterFrame(characterId, 'down', 'stand')
+    : null;
+  if (frame) return <OverworldFrame frame={frame} width={width} />;
+  return (
+    <div style={{ transform: `scaleX(${sim.facing === 1 ? -1 : 1})` }}>
+      <PokemonSprite id={pokemonId} className="block w-full" />
+    </div>
+  );
+}
+
+/** One spritesheet frame drawn at `width` px wide (pixel-crisp). */
+function OverworldFrame({ frame, width }: { frame: SpriteFrame; width: number }) {
+  const scale = width / frame.w;
+  return (
+    <div style={{ width, height: frame.h * scale, transform: frame.flipX ? 'scaleX(-1)' : undefined }}>
+      <div
+        style={{
+          width: frame.w,
+          height: frame.h,
+          backgroundImage: `url(${frame.image.src})`,
+          backgroundPosition: `-${frame.sx}px -${frame.sy}px`,
+          transform: `scale(${scale})`,
+          transformOrigin: '0 0',
+          imageRendering: 'pixelated',
+        }}
+      />
+    </div>
+  );
+}
+
 function PlayerView({ sim, pokemonId, fieldW, h, fill, fever, juice, reduced, takeAwayLabel }: PlayerViewProps) {
   const w = PLAYER_HALF_W * 2 * fieldW * 1.6; // the sprite has transparent margins
   const belly = sim.config.math === 'times' ? timesBubble(sim) : `${sim.belly}`;
@@ -401,9 +464,7 @@ function PlayerView({ sim, pokemonId, fieldW, h, fill, fever, juice, reduced, ta
                   : 'drop-shadow(0 6px 6px rgba(0,0,0,0.25))',
               }}
             >
-              <div style={{ transform: `scaleX(${sim.facing === 1 ? -1 : 1})` }}>
-                <PokemonSprite id={pokemonId} className="block w-full" />
-              </div>
+              <PlayerSprite sim={sim} pokemonId={pokemonId} width={w} />
               {/* target with a fill ring */}
               <div
                 key={`t${juice.target}`}

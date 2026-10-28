@@ -155,11 +155,15 @@ with the same 5-level math table (`SNACK_LEVEL_CONFIGS`) and their own world, le
 
 | Game id | Pokémon line | Falls / take-away / hazard / golden | Care habitat | After the heal | Rare bonus |
 |---|---|---|---|---|---|
-| `snorlax-snack` | Snorlax | berries / blue berries / rotten / golden berry | grass | **asleep** | 1–3 vitamins, 3%/★ |
-| `bulbasaur-sun` | Bulbasaur → Venusaur | sun drops / clouds / poison spore / rainbow | grass | cured | X item, 7%/★ |
-| `charmander-flame` | Charmander → Charizard | embers / smoke / water drop / gold flame | ground, mountain | cured | X item, 7%/★ |
-| `squirtle-swim` | Squirtle → Blastoise | bubbles / whirlpools / **rocks** (bigger, 1.5× more, river 1.12× faster) / shell | water (surfing) | cured | X item, 7%/★ |
-| `pikachu-charge` | Pichu → Raichu | bolts / purple bolts / mud ball / thunder star | grass, ground | cured | X item, 7%/★ |
+| `snorlax-snack` | Snorlax | berries / blue berries / rotten / golden berry | grass | **asleep** | 1–3 vitamins, 5/10/20% at 1/2/3★ |
+| `bulbasaur-sun` | Bulbasaur → Venusaur | sun drops / clouds / poison spore (**a treat** — the line is Poison: points, no heart lost) / rainbow | grass | cured | X item, 9/17.5/35% at 1/2/3★ |
+| `charmander-flame` | Charmander → Charizard | embers / smoke / water drop / gold flame | ground, mountain | cured | X item, 9/17.5/35% at 1/2/3★ |
+| `squirtle-swim` | Squirtle → Blastoise | bubbles / whirlpools / **rocks** (bigger, 1.5× more, river 1.12× faster) / shell | water (surfing) | cured | X item, 9/17.5/35% at 1/2/3★ |
+| `pikachu-charge` | Pichu → Raichu | bolts / purple bolts / mud ball / thunder star | grass, ground | cured | X item, 9/17.5/35% at 1/2/3★ |
+
+A skin's `hazardFriend` (type) turns its hazard into points for a Pokémon of that type. The player is drawn with its
+overworld walk animation when a `wild-pokemon` character sprite has its English name (Snorlax today), else its battle sprite.
+Bonus odds: `bonus.chanceAt3Stars` × `BONUS_SHARE_BY_STARS` (1★ ¼, 2★ ½, 3★ full).
 
 **Care round** (`src/minigames/care.ts`, wired in `overworld.ts` before the wild-encounter roll): a party Pokémon of a
 line above, alive and at 50% HP or less, on an encounter tile of the game's habitat whose encounter filter allows its types →

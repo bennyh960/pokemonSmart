@@ -95,8 +95,8 @@ export interface MiniGameCare {
   prompt: Bilingual;
   /** Intro card line in care mode, `{name}` = the Pokémon. */
   intro: Bilingual;
-  /** Rare extra prize: chance per star earned (0.03 → 9% at 3★). */
-  bonus: { chancePerStar: number; prize: MiniGamePrizeDef };
+  /** Rare extra prize: its chance at 3★; fewer stars get a share of it (`BONUS_SHARE_BY_STARS` in care.ts). */
+  bonus: { chanceAt3Stars: number; prize: MiniGamePrizeDef };
 }
 
 // ── Definitions ─────────────────────────────────────────────────────────────

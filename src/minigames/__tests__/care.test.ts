@@ -140,7 +140,10 @@ describe('care games', () => {
     expect(lucky).toHaveLength(2);
     expect(getItem(lucky[1].reward.items![0].itemId)?.effect.type).toBe('vitamin');
     expect(lucky[1].reward.items![0].quantity).toBeLessThanOrEqual(3);
-    // 3% per star: a 0.05 roll misses at 1★
+    // 20% at 3★, 10% at 2★, 5% at 1★
+    expect(carePrizes(snorlax, { uuid: 'x' }, 3, () => 0.19)).toHaveLength(2);
+    expect(carePrizes(snorlax, { uuid: 'x' }, 2, () => 0.09)).toHaveLength(2);
+    expect(carePrizes(snorlax, { uuid: 'x' }, 2, () => 0.11)).toHaveLength(1);
     expect(carePrizes(snorlax, { uuid: 'x' }, 1, () => 0.05)).toHaveLength(1);
 
     const squirtle = getMiniGame('squirtle-swim').care!;

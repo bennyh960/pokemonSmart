@@ -4,6 +4,7 @@
  * Player-visible text is bilingual (resolved with useI18n().locale); `{name}` = the Pokémon playing.
  */
 
+import type { PokemonType } from '../../../types/index.js';
 import type { Bilingual } from '../../types.js';
 import type { BerryKind } from './sim.js';
 
@@ -39,10 +40,20 @@ export interface SnackText {
   hintTimes: Bilingual;
 }
 
+/** The hazard is of this type: a Pokémon that has it eats the hazard for points instead (see sim `hazardFriendly`). */
+export interface HazardFriend {
+  type: PokemonType;
+  /** Floating text when it eats one, `{name}` = the Pokémon. */
+  text: Bilingual;
+  /** Corner emoji instead of the hazard's own (so it looks like a treat). */
+  decor: string;
+}
+
 export interface SnackSkin {
   scenery: SceneryId;
   items: Record<BerryKind, ItemLook>;
   text: SnackText;
+  hazardFriend?: HazardFriend;
 }
 
 const ROUND_SHADOW_TEXT = '#fff';
@@ -121,6 +132,12 @@ export const BULBASAUR_SKIN: SnackSkin = {
     hintAdd: { en: 'Catch sun drops that add up to the number!', he: 'תופסים טיפות שמש שמסתכמות במספר!' },
     hintSub: { en: 'Grey clouds take away!', he: 'עננים אפורים מורידים!' },
     hintTimes: { en: 'Catch 2 sun drops that multiply to the number!', he: 'תופסים 2 טיפות שמש שמכפלתן היא המספר!' },
+  },
+  // The whole Bulbasaur line is Poison: spores are a treat
+  hazardFriend: {
+    type: 'poison',
+    text: { en: 'Yum! {name} loves poison spores!', he: 'יאמי! {name} אוהב נבגים רעילים!' },
+    decor: '💜',
   },
 };
 

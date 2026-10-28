@@ -13,6 +13,8 @@
  * - times: the target is a product; eat 2 berries whose product is the target. A first berry that can't be one
  *   of the 2 factors, or a wrong second berry, is a tummy ache.
  * - Rotten berries cost a heart, Golden berries start Fever (score ×2, faster spawns).
+ *   With `hazardFriendly` (the player shares the hazard's type, e.g. a Poison Bulbasaur and poison spores)
+ *   a rotten berry is a snack instead: points, no heart lost, the combo stays.
  *
  * Solvability: the spawner keeps at least one "useful" berry (a value that moves the belly toward the target
  * without passing it, or the missing factor) in the reachable upper part of the screen at all times.
@@ -75,13 +77,20 @@ export type SimEvent =
   | { type: 'burp'; berry: Berry; points: number; combo: number; fever: boolean; target: number }
   | { type: 'ache'; berry: Berry }
   | { type: 'rotten'; berry: Berry; hearts: number }
+  | { type: 'hazard-snack'; berry: Berry; points: number }
   | { type: 'golden'; berry: Berry }
   | { type: 'fever-end' }
   | { type: 'new-target'; target: number; start: number }
   | { type: 'game-over' };
 
+export interface SimOptions {
+  /** Rotten berries give points instead of costing a heart. */
+  hazardFriendly?: boolean;
+}
+
 export interface SimState {
   config: SnackConfig;
+  hazardFriendly: boolean;
   rng: () => number;
   time: number;
   berries: Berry[];
@@ -89,6 +98,8 @@ export interface SimState {
   playerX: number;
   /** -1 / 1 last move direction (sprite facing). */
   facing: -1 | 1;
+  /** The player moved during the last step (walk animation). */
+  moving: boolean;
   /** Belly value (add modes) — for times this is the product of the eaten factors (1 before any). */
   belly: number;
   start: number;
@@ -217,17 +228,19 @@ export function bellyFill(s: Pick<SimState, 'config' | 'belly' | 'start' | 'targ
 
 // ── Creation ────────────────────────────────────────────────────────────────
 
-export function createSim(config: SnackConfig, seed: number): SimState {
+export function createSim(config: SnackConfig, seed: number, options: SimOptions = {}): SimState {
   const rng = mulberry32(seed);
   const { start, target } = pickTarget(config, rng);
   return {
     config,
+    hazardFriendly: options.hazardFriendly ?? false,
     rng,
     time: 0,
     berries: [],
     nextId: 1,
     playerX: 0.5,
     facing: 1,
+    moving: false,
     belly: start,
     start,
     target,
@@ -360,6 +373,12 @@ function ache(s: SimState, berry: Berry, events: SimEvent[]): void {
 
 /** Applies one eaten berry to the belly. Exported for tests. */
 export function eatBerry(s: SimState, berry: Berry, events: SimEvent[] = []): SimEvent[] {
+  if (berry.kind === 'rotten' && s.hazardFriendly) {
+    const points = BASE_POINTS * (s.fever > 0 ? 2 : 1);
+    s.score += points;
+    events.push({ type: 'hazard-snack', berry, points });
+    return events;
+  }
   if (berry.kind === 'rotten') {
     s.hearts = Math.max(0, s.hearts - 1);
     events.push({ type: 'rotten', berry, hearts: s.hearts });
@@ -415,6 +434,7 @@ export function stepSim(s: SimState, dt: number, input: SimInput): SimEvent[] {
   s.time += dt;
 
   // Move the player
+  const fromX = s.playerX;
   if (input.dir !== 0) {
     s.playerX += input.dir * MOVE_SPEED * dt;
     s.facing = input.dir;
@@ -425,6 +445,7 @@ export function stepSim(s: SimState, dt: number, input: SimInput): SimEvent[] {
     s.playerX += Math.abs(d) <= stepMax ? d : Math.sign(d) * stepMax;
   }
   s.playerX = Math.max(PLAYER_MIN_X, Math.min(PLAYER_MAX_X, s.playerX));
+  s.moving = s.playerX !== fromX;
 
   // Fever
   if (s.fever > 0) {
