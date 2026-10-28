@@ -1,6 +1,6 @@
 # Feature: Unown Library — English that kids want to play
 
-Branch: `feature/mini-games` (after `building-gates.md` Story 1 — the library gate plays this game)
+Branch: `feature/mini-games` — **built (Stories 1–5), not playtested.** Run the QA list in Story 5.
 
 Today Unown Word Quest is 7 straight levels of "tap the letter / spell the word", with words taken from game data
 (Pokémon names, "Max Elixir"…). Goal: **real, useful English for 8–10 year olds, close to the Pokémon world**, in
@@ -20,8 +20,9 @@ several short modes that feel like games — so kids *want* to visit libraries.
 
 ## Story 1: Word bank (~250 words)
 **Goal:** one data file of kid-level words, grouped by theme and difficulty.
-- `src/data/english-words.json` (shared: Sprint 11 progressive English will read it):
-  `{ id, en, he, theme, tier: 1|2|3, picture?: { kind: 'pokemon'|'type'|'item'|'emoji', ref } , typeId?, moveId? }`.
+- Built: `src/data/english-words.json` — 247 words, `{ id, theme, tier, en?, he?, emoji? | item?, typeId? | move? }`
+  (type / move words take English + Hebrew from game data). Words whose pictures a child could confuse (sad / cry,
+  sun / day…) were left out; a test keeps ids, English and pictures unique. Loader: `src/minigames/english/words.ts`.
 - Themes (rough counts):
   | Theme | ~# | Examples |
   |-------|----|----------|
@@ -39,11 +40,11 @@ several short modes that feel like games — so kids *want* to visit libraries.
 
 ## Story 2: Learning progress
 **Goal:** kids see words again until they know them.
-- Per word in `pd.miniGames['unown-words'].data.words[id] = { box: 0-4, seen, correct, lastDay }` (Leitner boxes:
-  right → next box, wrong → box 0). Replaces today's `seen` (migration inside the game data — no save version bump
-  needed unless the shape check says otherwise).
-- `pickWords(pd, n, filter)`: ~70% new/learning words of the player's tier, ~30% due reviews. Tier rises with words known.
-- "Known" = box 4. Exposed via a helper for Sprint 11.
+- Built: `pd.miniGames['unown-words'].data.words[id] = { box 0–3, seen, right, day, upDay, rightDay, known }`.
+  Right on the first try → up one box, at most once per day; wrong → box 0. **Known = box 3** (3 different days), and
+  stays known. No save migration (game-owned data). Unown Letters keeps its `seen` letters as before.
+- `pickWords()` weights: missed words most, then new, then learning; known words now and then. The mode's level sets the tier.
+- `knownCount()` / `wordStatsOf()` for Sprint 11.
 
 ## Story 3: Modes
 The game becomes a mode picker (each mode keeps its own levels + stars + prizes in the shell). Levels inside a mode
@@ -58,16 +59,21 @@ raise speed / choices / tier, not the word list.
 | **Memory Match** | calm | Flip cards, match English ↔ picture (level 2+: English ↔ Hebrew) |
 | **Unown Battle** | spelling | A wild Unown appears; spell the word for the picture — each right letter is a hit, a full word is a critical. Replaces Type Speller / Scramble |
 
-- Build order: Pokémon Says → Find the Pokémon → Unown Battle → Memory Match → Word Catcher.
+- Built, each its own game (`games/<id>/`, `category: 'english'`): `pokemon-says`, `find-pokemon`, `unown-battle`,
+  `memory-match`, `word-catcher`; `unown-words` became **Unown Letters** (its 3 letter levels).
+- Find the Pokémon's clues are data, no colours needed: size (height), weight, speed and type.
 - Hebrew help shrinks with the mode's level (today's rule) — never shrinks for brand-new words.
 - Every answer is spoken (`playWord`) — music is already capped under speech in mini-games.
 
 ## Story 4: Library visit
-- **Gate round** (from `building-gates.md`): a short mixed round (~2 min) of one mode, picked by what's due for review.
+- **Gate round:** one random English mode at the trainer-rank level (built; "picked by what's due" was not needed —
+  every mode already picks the due words).
 - **Librarian free play:** all unlocked modes, normal prizes (daily cap).
 - **Word Dex** (reason to come back): every known word becomes a card in a collection book (picture + EN + HE, 🔊).
   Milestones (25 / 50 / 100 / 200 words) give a prize — the big ones (e.g. Unown gift Pokémon, today's L7 prize) move here.
-- **Word of the day:** the librarian says one word; using it today in any mode gives a small bonus.
+- **Word of the day:** shown at the top of the Word Dex (🔊); answering it right today in any mode → 200₽ once a day.
+- Built: the Word Dex opens from the 📖 button of any picker that lists English games. Milestones (known words):
+  10 → Rare Candy · 25 → Rare Candy ×3 · 50 → Unown (gift) · 100 → Master Ball · 200 → 5000₽.
 
 ## Story 5: Cleanup + QA
 - Delete `src/scenes/english-learning.ts`, the `ENGLISH_LEARNING` scene and `menu.actions.learn` keys.

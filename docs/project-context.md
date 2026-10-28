@@ -28,11 +28,12 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Legendary gates (Elite birds/dogs, Master Mewtwo/Lugia/Ho-Oh, Legendary Mew): place blocker NPCs (`blocker` + `despawnAfter: rank-<id>`) once those maps exist; replace the "TBD" hint in the rank-up call
 
 ## Mini-games (`feature/mini-games`, design: `docs/stories/mini-games.md`)
-- [ ] 3 games built and playable from start menu → Actions → Mini Games; not playtested level by level
+- [ ] Games are reached in the world: libraries (English), labs (logic), wild care rounds. Admin only: start menu → Actions → Mini Games
 - [ ] Section A built, **not playtested**: Snack Attack family (Snorlax, Bulbasaur, Charmander, Squirtle, Pikachu lines) + overworld care trigger (`games/snack-attack/`, `minigames/care.ts`, design §3b). Check each skin's look, the trigger rate (10/20/50% per step by HP, 100-step cooldown) and that Squirtle's levels 4–5 stay fair with more rocks (`SNACK_TUNE=1` tune test)
-- [ ] Next: library + lab entrance gates — stories in `docs/stories/building-gates.md`
-- [ ] Then: English game rework (word bank, modes, Word Dex) — stories in `docs/stories/library-english.md`
-- [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.4 MB, mostly JSON data)
+- [ ] Library + lab gates built, **not playtested** (`docs/stories/building-gates.md` → QA). Replay the lab/library story scenes (Multiplia library, Percentile lab, Algorithma lab intro) from admin snapshots — the gate must not interrupt them
+- [ ] English rework built, **not playtested** (`docs/stories/library-english.md` → QA): 6 English modes, Word Dex. A person should review the Hebrew in `src/data/english-words.json`
+- [ ] Free-play hosts only in 3 libraries (Sumville, Multiplia, Percentile). Minusburg library, Sumville lab, Percentile lab, Algorithma lab have none — add an NPC with `"miniGame": { "category": "english" | "logic" }` in the editor (the editor has no field for it yet — edit the JSON)
+- [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.5 MB, mostly JSON data)
 
 ## Bugs
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
@@ -43,7 +44,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] `src/data/badges.ts` badge 8: leader is `???`, type/mathTopic still old placeholders — fill in when the Algebria gym is designed
 - [ ] `src/data/maps/backup/` and `templates/backup/` — old map snapshots, remove if not needed
 - [ ] Stale commented-out reset script at the bottom of `act3/quest-raikou.ts`
-- [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution, english-learning — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
+- [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
 - [ ] 7 of 13 vitest files fail on main (pre-existing)
 - [ ] `public/audio/` is gitignored — the only copy is the `gh-pages` branch. A fresh clone has no sound; restore with `git archive origin/gh-pages audio | tar -x -C public` (the Pages workflow `.github/workflows/deploy.yml` does this before building). Store it somewhere durable (LFS / release asset) — if `gh-pages` is ever recreated without `audio/`, prod loses sound again
 - [ ] `encounter-tables.json`: some old entries have minLevel > maxLevel (sumville Pineco 10/5, route-3 Nidoran-f 24/20, small-forest Murkrow 30/14, cave-20-30 Phanpy 29/25)

@@ -67,10 +67,12 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
     gate && initialLevel && def.levels.some((l) => l.number === initialLevel)
       ? initialLevel
       : fixed
-      ? levelForRank(getTrainerRank(pd).index, def)
-      : initialLevel && isLevelUnlocked(save, def.id, initialLevel) && def.levels.some((l) => l.number === initialLevel)
-        ? initialLevel
-        : highestUnlockedLevel(save, def),
+        ? levelForRank(getTrainerRank(pd).index, def)
+        : initialLevel &&
+            isLevelUnlocked(save, def.id, initialLevel) &&
+            def.levels.some((l) => l.number === initialLevel)
+          ? initialLevel
+          : highestUnlockedLevel(save, def),
   );
   const level = def.levels.find((l) => l.number === levelNumber) ?? def.levels[0];
   const [phase, setPhase] = useState<Phase>('intro');

@@ -72,6 +72,22 @@ Stars / best / clears / prizes are saved by the shell (`pd.miniGames[id]`, `prog
 (e.g. unown-words `seen` letters) use `pd.miniGames[id].data` via `usePlayerData()`'s `mutate`:
 `mutate((pd) => { (ensureGameProgress(pd.miniGames, 'unown-words').data ??= {}).seen = [...] })`.
 
+## English modes (`category: 'english'`)
+
+Shared layer in `src/minigames/english/` — use it, don't copy it:
+- `words.ts` — the word bank (`src/data/english-words.json`; type / move words resolve from game data). `wordsFor(themes, tier)`.
+- `learning.ts` + `useWords.ts` — one learning record per word for all modes (`pickWords()` favours new + missed words;
+  known = right on 3 different days). Saved in `pd.miniGames['unown-words'].data.words`.
+- `useWordRound.ts` — the question loop (score, combo, reveal, save words, stars). `ui.tsx` — `WordPic`, `PromptBar`,
+  `ProgressDots`. `help.ts` — Hebrew help per level. `UnownTile.tsx` + `english.css` — shared look.
+- `WordDex.tsx` / `dex.ts` — the collection book (milestone prizes, word of the day), opened from the picker.
+
+## Where games are played
+
+- `category` on the def decides it: libraries play an `english` game, labs a `logic` game (`global-gate-config.ts`);
+  NPC hosts use `"miniGame": { "category": … }` or `{ "gameIds": [...] }`. A new game of a category joins automatically.
+- Gate and care rounds play a fixed level from the trainer rank (`levelForRank()` in progress.ts).
+
 ## Care rounds
 
 A def may set `care` (`MiniGameCare` in `types.ts`): a hurt party Pokémon of that evolution line, walking on a tile of

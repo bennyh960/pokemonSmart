@@ -5,6 +5,7 @@ import { useI18n } from '../../ui-react/context/i18n-context.js';
 import type { MiniGameLaunch, MiniGameOutcome } from '../launch.js';
 import { getMiniGame, MINI_GAME_LIST } from '../registry.js';
 import type { MiniGameId } from '../types.js';
+import { WordDex } from '../english/WordDex.js';
 import { GamePicker } from './GamePicker.js';
 import { MiniGameShell } from './MiniGameShell.js';
 import './minigames.css';
@@ -21,12 +22,17 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
   const fromPicker = launch.gameId === null;
   const [gameId, setGameId] = useState<MiniGameId | null>(launch.gameId);
   const lastPicked = useRef<MiniGameId | undefined>(undefined);
+  const [dexOpen, setDexOpen] = useState(false);
+  const games = launch.pickerIds ? MINI_GAME_LIST.filter((g) => launch.pickerIds!.includes(g.id)) : MINI_GAME_LIST;
 
   return (
     <div className="mg-root fixed inset-0 z-[60] overflow-hidden text-white" dir={isRTL ? 'rtl' : 'ltr'}>
-      {gameId === null ? (
+      {dexOpen ? (
+        <WordDex onBack={() => setDexOpen(false)} />
+      ) : gameId === null ? (
         <GamePicker
-          games={launch.pickerIds ? MINI_GAME_LIST.filter((g) => launch.pickerIds!.includes(g.id)) : MINI_GAME_LIST}
+          games={games}
+          onWordDex={games.some((g) => g.category === 'english') ? () => setDexOpen(true) : undefined}
           initialId={lastPicked.current}
           onPick={(id) => {
             lastPicked.current = id;

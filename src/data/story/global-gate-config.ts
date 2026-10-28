@@ -154,12 +154,24 @@ export const VERIFICATION_DIALOGUES = {
 /** Libraries and labs play a mini-game instead — one line is shown on its intro card. */
 export const MINI_GAME_GATE_LINES = {
   library: [
-    { en: "NULL-X glitches can't read! Show the Unown you can.", he: 'תקלות של NULL-X לא יודעות לקרוא! הראה לאנאון שאתה כן.' },
-    { en: 'The books are locked against NULL-X. Read your way in!', he: 'הספרים נעולים בפני NULL-X. קרא את הדרך פנימה!' },
+    {
+      en: "NULL-X glitches can't read! Show the Unown you can.",
+      he: 'תקלות של NULL-X לא יודעות לקרוא! הראה לאנאון שאתה כן.',
+    },
+    {
+      en: 'The books are locked against NULL-X. Read your way in!',
+      he: 'הספרים נעולים בפני NULL-X. קרא את הדרך פנימה!',
+    },
   ],
   lab: [
-    { en: 'Only a real trainer can think it through. Solve the puzzle to come in!', he: 'רק מאמן אמיתי יודע לחשוב עד הסוף. פתור את החידה כדי להיכנס!' },
-    { en: "NULL-X can't solve puzzles. Can you? The lab door is waiting.", he: 'NULL-X לא מסוגל לפתור חידות. ואתה? דלת המעבדה מחכה.' },
+    {
+      en: 'Only a real trainer can think it through. Solve the puzzle to come in!',
+      he: 'רק מאמן אמיתי יודע לחשוב עד הסוף. פתור את החידה כדי להיכנס!',
+    },
+    {
+      en: "NULL-X can't solve puzzles. Can you? The lab door is waiting.",
+      he: 'NULL-X לא מסוגל לפתור חידות. ואתה? דלת המעבדה מחכה.',
+    },
   ],
 };
 

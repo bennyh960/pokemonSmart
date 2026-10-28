@@ -177,7 +177,7 @@ export function WordCatcherGame({ level, runId, paused, hud, sfx, pokemonId, onF
         ref={fieldRef}
         className="mg-word-catcher-sky relative min-h-0 flex-1 touch-none overflow-hidden"
         onPointerDown={pointerGoal}
-        onPointerMove={(e) => e.buttons > 0 || e.pointerType === 'mouse' ? pointerGoal(e) : undefined}
+        onPointerMove={(e) => (e.buttons > 0 || e.pointerType === 'mouse' ? pointerGoal(e) : undefined)}
       >
         {sim.bubbles.map((b) => (
           <span

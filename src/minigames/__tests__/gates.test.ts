@@ -12,7 +12,12 @@ import { MapId } from '../../data/maps/map-ids.js';
 import { getMiniGame, resolveMiniGames } from '../registry.js';
 
 describe('library + lab gates', () => {
-  const libraries = [MapId.SUMVILLE_LIBRARY, MapId.MINUSBURG_LIBRARY, MapId.MULTIPLIA_LIBRARY, MapId.PERCENTILE_LIBRARY];
+  const libraries = [
+    MapId.SUMVILLE_LIBRARY,
+    MapId.MINUSBURG_LIBRARY,
+    MapId.MULTIPLIA_LIBRARY,
+    MapId.PERCENTILE_LIBRARY,
+  ];
   const labs = [MapId.SUMVILLE_LAB, MapId.PERCENTILE_LAB, MapId.ZEROVILLE_ALGORITHMA_LAB];
 
   it('each building has its own gate that plays a registered mini-game', () => {

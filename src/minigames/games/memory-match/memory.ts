@@ -46,8 +46,13 @@ export const NEW_MEMORY: MemoryState = { open: [], matched: [], mistakes: 0, mis
 export type FlipResult = 'ignored' | 'opened' | 'match' | 'mismatch';
 
 /** Flip card `i`. With two open cards, the caller closes them (`closeOpen`) after showing them. */
-export function flip(cards: readonly MemoryCard[], s: MemoryState, i: number): { state: MemoryState; result: FlipResult } {
-  if (s.open.length >= 2 || s.open.includes(i) || s.matched.includes(i) || !cards[i]) return { state: s, result: 'ignored' };
+export function flip(
+  cards: readonly MemoryCard[],
+  s: MemoryState,
+  i: number,
+): { state: MemoryState; result: FlipResult } {
+  if (s.open.length >= 2 || s.open.includes(i) || s.matched.includes(i) || !cards[i])
+    return { state: s, result: 'ignored' };
   const open = [...s.open, i];
   if (open.length < 2) return { state: { ...s, open }, result: 'opened' };
   const [a, b] = open;

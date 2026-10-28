@@ -25,6 +25,8 @@ export interface WordStat {
   upDay?: string;
   /** Day it was last answered. */
   day?: string;
+  /** Day it was last answered right on the first try. */
+  rightDay?: string;
   known?: boolean;
 }
 
@@ -53,6 +55,7 @@ export function readWordStats(raw: unknown): WordStats {
       right: typeof s.right === 'number' ? s.right : 0,
       upDay: typeof s.upDay === 'string' ? s.upDay : undefined,
       day: typeof s.day === 'string' ? s.day : undefined,
+      rightDay: typeof s.rightDay === 'string' ? s.rightDay : undefined,
       known: s.known === true || undefined,
     };
   }
@@ -70,6 +73,7 @@ export function recordAnswers(stats: WordStats, answers: readonly WordAnswer[], 
     const next: WordStat = { ...prev, seen: prev.seen + 1, day: today };
     if (right) {
       next.right = prev.right + 1;
+      next.rightDay = today;
       if (prev.upDay !== today && prev.box < KNOWN_BOX) {
         next.box = prev.box + 1;
         next.upDay = today;

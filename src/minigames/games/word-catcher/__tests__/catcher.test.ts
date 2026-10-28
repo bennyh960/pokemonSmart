@@ -10,7 +10,15 @@ vi.mock('../../../../services/pokemon-data.js', async (orig) =>
 
 import { createRng } from '../../../english/random.js';
 import def from '../index.js';
-import { catcherStars, currentTarget, newCatcher, stepCatcher, type CatcherConfig } from '../catcher.js';
+import {
+  CATCHER_HALF_WIDTH,
+  CATCHER_Y,
+  catcherStars,
+  currentTarget,
+  newCatcher,
+  stepCatcher,
+  type CatcherConfig,
+} from '../catcher.js';
 
 const DT = 1 / 60;
 
@@ -26,9 +34,20 @@ function play(cfg: CatcherConfig, seed: number, reaction: number, grabWrong = fa
       seenFor = 0;
     }
     seenFor += DT;
-    const target = s.bubbles.find((b) => b.word.id === currentTarget(s).id);
-    const wrong = s.bubbles.find((b) => b.word.id !== currentTarget(s).id);
-    const goal = grabWrong && wrong ? wrong.x : seenFor >= reaction && target ? target.x : null;
+    const targetId = currentTarget(s).id;
+    const target = s.bubbles.find((b) => b.word.id === targetId);
+    const wrong = s.bubbles.find((b) => b.word.id !== targetId);
+    // Like a child watching the sky: step aside from a wrong word about to land on you
+    const danger = s.bubbles.find(
+      (b) =>
+        b.word.id !== targetId &&
+        b.y > CATCHER_Y - 0.15 &&
+        b.y < CATCHER_Y &&
+        Math.abs(b.x - s.catcherX) < CATCHER_HALF_WIDTH + 0.06,
+    );
+    let goal = seenFor >= reaction && target ? target.x : null;
+    if (danger) goal = danger.x > s.catcherX ? danger.x - 0.35 : danger.x + 0.35;
+    if (grabWrong && wrong) goal = wrong.x;
     stepCatcher(s, cfg, rng, DT, { dir: 0, goalX: goal });
   }
   return s;
@@ -47,9 +66,15 @@ describe('Word Catcher', () => {
     for (const lvl of def.levels) {
       for (let seed = 1; seed <= 5; seed++) {
         const quick = play(lvl.config, seed, 0.3);
-        expect(catcherStars(quick.catches, lvl.config), `L${lvl.number} quick seed ${seed}`).toBe(3);
+        expect(
+          catcherStars(quick.catches, lvl.config),
+          `L${lvl.number} quick seed ${seed}: ${quick.catches} catches, ${quick.hearts} hearts`,
+        ).toBe(3);
         const slow = play(lvl.config, seed, 2.5);
-        expect(catcherStars(slow.catches, lvl.config), `L${lvl.number} slow seed ${seed}`).toBeGreaterThanOrEqual(1);
+        expect(
+          catcherStars(slow.catches, lvl.config),
+          `L${lvl.number} slow seed ${seed}: ${slow.catches} catches`,
+        ).toBeGreaterThanOrEqual(1);
       }
     }
   });

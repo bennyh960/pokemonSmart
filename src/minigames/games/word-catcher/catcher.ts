@@ -117,7 +117,12 @@ export function stepCatcher(
   const target = currentTarget(s);
   const hasTarget = s.bubbles.some((b) => b.word.id === target.id);
   if (s.spawnIn <= 0 && (s.bubbles.length < cfg.bubbles || !hasTarget)) {
-    const word = hasTarget ? pick(rng, s.pool.filter((w) => w.id !== target.id)) : target;
+    const word = hasTarget
+      ? pick(
+          rng,
+          s.pool.filter((w) => w.id !== target.id),
+        )
+      : target;
     s.bubbles.push({ id: s.nextId++, word, x: spawnX(rng, s), y: -0.08 });
     s.spawnIn = SPAWN_GAP;
   }

@@ -112,7 +112,10 @@ export function FindPokemonGame({ level, runId, paused, hud, sfx, onFinish }: Mi
       />
 
       {/* Clue pictures — the words, made visible */}
-      <div key={`c${round.index}`} className={`flex min-h-[3rem] flex-wrap justify-center gap-2 ${showPics ? '' : 'invisible'}`}>
+      <div
+        key={`c${round.index}`}
+        className={`flex min-h-[3rem] flex-wrap justify-center gap-2 ${showPics ? '' : 'invisible'}`}
+      >
         {q.clues.map((c, i) => (
           <span
             key={c.word.id}

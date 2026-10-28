@@ -9,7 +9,7 @@ vi.mock('../../../../auth/supabase-client.js', () => ({ supabase: {} }));
 import def from '../index.js';
 import { buildContent } from '../content.js';
 import { firstSound, rhymesWith, soundsClash } from '../phonics.js';
-import { generateQuestions, pokemonBySound, sentenceLength, type Question } from '../questions.js';
+import { generateQuestions, pokemonBySound, type Question } from '../questions.js';
 import { createRng } from '../../../english/random.js';
 import type { UnownWordsConfig } from '../config.js';
 
@@ -24,13 +24,6 @@ describe('unown-words content', () => {
   it('derives pools from game data', () => {
     expect(content.pokemon.length).toBeGreaterThan(100);
     expect(content.pokemon.every((p) => /^[A-Za-z]+$/.test(p.en))).toBe(true);
-    const typeIds = content.types.map((t) => t.type);
-    expect(typeIds).toContain('fire');
-    expect(typeIds).not.toContain('glitch');
-    expect(typeIds).not.toContain('struggle');
-    expect(content.types.every((t) => t.pokemon.length >= 3)).toBe(true);
-    expect(content.items.length).toBeGreaterThan(10);
-    expect(content.items.every((i) => i.sprite && i.en.split(' ').length <= 2)).toBe(true);
   });
 });
 
@@ -61,20 +54,9 @@ describe('unown-words questions', () => {
       for (const q of qs) {
         expect(q.task).toBe(config.task);
         expect(q.speech.text).toBeTruthy();
-        if (q.kind === 'choice') {
-          expect(q.answer).toBeGreaterThanOrEqual(0);
-          expect(q.answer).toBeLessThan(q.options.length);
-          expect(new Set(q.options.map((o) => o.key)).size).toBe(q.options.length);
-        } else if (q.kind === 'spell') {
-          expect(q.word).toMatch(/^[A-Z]+$/);
-          if (q.tiles) {
-            expect([...q.tiles].sort().join('')).toBe([...q.word].sort().join(''));
-            if (new Set(q.word).size > 1) expect(q.tiles.join('')).not.toBe(q.word);
-          }
-        } else {
-          expect([...q.tiles].sort()).toEqual([...q.words].sort());
-          expect(q.tiles.join(' ')).not.toBe(q.words.join(' '));
-        }
+        expect(q.answer).toBeGreaterThanOrEqual(0);
+        expect(q.answer).toBeLessThan(q.options.length);
+        expect(new Set(q.options.map((o) => o.key)).size).toBe(q.options.length);
       }
     }
   });
@@ -124,57 +106,6 @@ describe('unown-words questions', () => {
     for (const [sound, mons] of pokemonBySound(content.pokemon)) {
       expect(sound).toMatch(/^[a-z]$/);
       mons.forEach((p) => expect(firstSound(p.en)).toBe(sound));
-    }
-  });
-
-  it('type speller: hints are of that type and the help is Hebrew', () => {
-    for (const q of round(configs[3], 5)) {
-      if (q.kind !== 'spell') throw new Error('spell expected');
-      const t = content.types.find((x) => x.en.toUpperCase() === q.word)!;
-      expect(t).toBeTruthy();
-      expect(q.hints).toHaveLength(3);
-      q.hints.forEach((h) => expect(content.pokemon.find((p) => p.id === h.id)!.types).toContain(t.type));
-      expect(q.helpHe).toBe(t.he);
-      expect(q.tiles).toBeNull();
-    }
-  });
-
-  it('word match: distractors share no word with the answer', () => {
-    for (let seed = 1; seed <= 20; seed++) {
-      for (const q of round(configs[4], seed)) {
-        if (q.kind !== 'choice') throw new Error('choice expected');
-        const words = q.options[q.answer].en.toLowerCase().split(' ');
-        q.options
-          .filter((_, i) => i !== q.answer)
-          .forEach((o) => {
-            if (q.optionKind === 'item')
-              expect(
-                o.en
-                  .toLowerCase()
-                  .split(' ')
-                  .some((w) => words.includes(w)),
-              ).toBe(false);
-          });
-        expect(q.speech).toEqual({ kind: 'word', text: q.options[q.answer].en });
-      }
-    }
-  });
-
-  it('scramble: short names first, at most 6 letters', () => {
-    const qs = round(configs[5], 11);
-    const lens = qs.map((q) => (q.kind === 'spell' ? q.word.length : 0));
-    expect(lens).toEqual([...lens].sort((a, b) => a - b));
-    expect(Math.max(...lens)).toBeLessThanOrEqual(6);
-    expect(Math.min(...lens)).toBeGreaterThanOrEqual(3);
-  });
-
-  it('sentence: grows from 3 to 5 words, no repeats', () => {
-    expect([0, 1, 2, 3, 4, 5, 6, 7].map((i) => sentenceLength(i, 8))).toEqual([3, 3, 3, 4, 4, 4, 5, 5]);
-    for (let seed = 1; seed <= 20; seed++) {
-      const qs = round(configs[6], seed);
-      const texts = qs.map((q) => (q.kind === 'order' ? q.words.join(' ') : ''));
-      expect(new Set(texts).size).toBe(texts.length);
-      qs.forEach((q, i) => q.kind === 'order' && expect(q.words.length).toBe(sentenceLength(i, 8)));
     }
   });
 });

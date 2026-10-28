@@ -43,7 +43,6 @@ export type SceneId =
   | 'SAVE_SLOTS'
   | 'START_MENU'
   | 'PUZZLE'
-  | 'ENGLISH_LEARNING'
   | 'MINI_GAME';
 
 /** Top-level game state snapshot. */

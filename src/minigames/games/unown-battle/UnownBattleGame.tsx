@@ -130,7 +130,10 @@ export function UnownBattleGame({ level, runId, paused, hud, sfx, onFinish }: Mi
             <div className="h-3 w-32 overflow-hidden rounded-full bg-black/30">
               <div
                 className="h-full rounded-full transition-[width] duration-300"
-                style={{ width: `${hpLeft * 100}%`, background: hpLeft > 0.5 ? '#4ade80' : hpLeft > 0.2 ? '#facc15' : '#f87171' }}
+                style={{
+                  width: `${hpLeft * 100}%`,
+                  background: hpLeft > 0.5 ? '#4ade80' : hpLeft > 0.2 ? '#facc15' : '#f87171',
+                }}
               />
             </div>
             <PokemonSprite
@@ -156,7 +159,10 @@ export function UnownBattleGame({ level, runId, paused, hud, sfx, onFinish }: Mi
         </div>
 
         {/* Letters to tap */}
-        <div dir="ltr" className={`flex flex-wrap justify-center ${b.tiles ? 'gap-3 sm:gap-4' : 'max-w-xl gap-1.5 sm:gap-2'}`}>
+        <div
+          dir="ltr"
+          className={`flex flex-wrap justify-center ${b.tiles ? 'gap-3 sm:gap-4' : 'max-w-xl gap-1.5 sm:gap-2'}`}
+        >
           {b.tiles
             ? b.tiles.map((letter, i) => (
                 <UnownTile

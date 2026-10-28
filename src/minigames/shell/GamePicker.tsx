@@ -15,9 +15,11 @@ interface Props {
   initialId?: MiniGameId;
   onPick: (id: MiniGameId) => void;
   onClose: () => void;
+  /** Shown when the picker offers English games: opens the Word Dex. */
+  onWordDex?: () => void;
 }
 
-export function GamePicker({ games, initialId, onPick, onClose }: Props) {
+export function GamePicker({ games, initialId, onPick, onClose, onWordDex }: Props) {
   const { t, locale } = useI18n();
   const [pd] = usePlayerData();
   const save = pd.miniGames ?? {};
@@ -49,16 +51,23 @@ export function GamePicker({ games, initialId, onPick, onClose }: Props) {
             </h1>
             <p className="mt-1 font-bold text-white/85">{t('minigames.pickerSubtitle')}</p>
           </div>
-          <MgButton
-            theme={PICKER_THEME}
-            variant="dark"
-            onClick={onClose}
-            selected={sel === games.length}
-            onHover={() => setSel(games.length)}
-            ariaLabel={t('minigames.close')}
-          >
-            ✕
-          </MgButton>
+          <div className="flex items-center gap-2">
+            {onWordDex && (
+              <MgButton theme={PICKER_THEME} variant="primary" onClick={onWordDex}>
+                📖 {t('minigames.wordDex')}
+              </MgButton>
+            )}
+            <MgButton
+              theme={PICKER_THEME}
+              variant="dark"
+              onClick={onClose}
+              selected={sel === games.length}
+              onHover={() => setSel(games.length)}
+              ariaLabel={t('minigames.close')}
+            >
+              ✕
+            </MgButton>
+          </div>
         </div>
       </div>
 
