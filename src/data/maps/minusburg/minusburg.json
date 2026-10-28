@@ -1182,6 +1182,100 @@
         "x": 45,
         "y": 24
       }
+    },
+    {
+      "id": "friendly-fan-minusburg",
+      "name": {
+        "en": "Pokémon Fan Dana",
+        "he": "דנה חובבת הפוקימונים"
+      },
+      "x": 23,
+      "y": 27,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_962c1b",
+      "dialogue": [
+        {
+          "en": "Hi there! I love water Pokémon!",
+          "he": "היי! אני אוהבת פוקימוני מים!"
+        },
+        {
+          "en": "Wooper lives on Route 2. Its skin is covered in slime that keeps it cool!",
+          "he": "ווופר גר בדרך 2. העור שלו מכוסה ריר שעוזר לו להישאר קריר!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "great-ball",
+            "quantity": 3
+          }
+        ],
+        "flag": "npc-friendly-fan-minusburg-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-fan-minusburg-rewarded",
+        "dialogue": [
+          {
+            "en": "Marill’s tail is like a balloon — it helps it float in the water!",
+            "he": "הזנב של מריל הוא כמו בלון — הוא עוזר לו לצוף במים!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "friendly-kid-minusburg",
+      "name": {
+        "en": "Smart Kid Itai",
+        "he": "איתי החכם"
+      },
+      "x": 33,
+      "y": 27,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_c3dacc",
+      "dialogue": [
+        {
+          "en": "Hey friend! Guess what?",
+          "he": "היי חבר! נחש מה?"
+        },
+        {
+          "en": "If you take away a number from itself, you always get zero. 7 minus 7 is 0!",
+          "he": "אם מורידים מספר מעצמו, תמיד יוצא אפס. 7 פחות 7 זה 0!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "super-potion",
+            "quantity": 3
+          }
+        ],
+        "flag": "npc-friendly-kid-minusburg-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-kid-minusburg-rewarded",
+        "dialogue": [
+          {
+            "en": "Did you know honey never goes bad? People found honey that is thousands of years old!",
+            "he": "ידעת שדבש אף פעם לא מתקלקל? מצאו דבש שהוא בן אלפי שנים!"
+          }
+        ]
+      }
     }
   ],
   "music": "town",

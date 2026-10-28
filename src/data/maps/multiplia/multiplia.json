@@ -702,6 +702,100 @@
       "spriteType": "char_24117d",
       "despawnAfter": "story-badge-6",
       "blocker": true
+    },
+    {
+      "id": "friendly-fan-multiplia",
+      "name": {
+        "en": "Pokémon Fan Yoni",
+        "he": "יוני חובב הפוקימונים"
+      },
+      "x": 23,
+      "y": 17,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_10af6a",
+      "dialogue": [
+        {
+          "en": "Welcome to Multiplia, trainer!",
+          "he": "ברוך הבא למולטיפליה, מאמן!"
+        },
+        {
+          "en": "On Route 9 you can meet Scyther — it’s so fast it looks like it’s flying!",
+          "he": "בדרך 9 אפשר לפגוש את סייט׳ר — הוא כל כך מהיר שנראה כאילו הוא עף!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "great-ball",
+            "quantity": 5
+          }
+        ],
+        "flag": "npc-friendly-fan-multiplia-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-fan-multiplia-rewarded",
+        "dialogue": [
+          {
+            "en": "Kangaskhan carries its baby in a pouch, just like a kangaroo!",
+            "he": "קנגסקאן נושא את התינוק שלו בכיס, בדיוק כמו קנגורו!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "friendly-kid-multiplia",
+      "name": {
+        "en": "Fact Kid Tamar",
+        "he": "תמר של העובדות"
+      },
+      "x": 23,
+      "y": 39,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_0502ea",
+      "dialogue": [
+        {
+          "en": "Hi! I collect cool facts!",
+          "he": "היי! אני אוספת עובדות מגניבות!"
+        },
+        {
+          "en": "A spider has 8 legs. So 2 spiders have 2 × 8 = 16 legs!",
+          "he": "לעכביש יש 8 רגליים. אז ל-2 עכבישים יש 2 × 8 = 16 רגליים!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "ether",
+            "quantity": 2
+          }
+        ],
+        "flag": "npc-friendly-kid-multiplia-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-kid-multiplia-rewarded",
+        "dialogue": [
+          {
+            "en": "Flamingos are pink because of the food they eat! Cool, right?",
+            "he": "ידעת שפלמינגו נהיה ורוד בגלל האוכל שהוא אוכל? מגניב, נכון?"
+          }
+        ]
+      }
     }
   ],
   "music": "town",

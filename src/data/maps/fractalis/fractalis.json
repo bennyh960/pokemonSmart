@@ -414,6 +414,100 @@
           "÷"
         ]
       }
+    },
+    {
+      "id": "friendly-fan-fractalis",
+      "name": {
+        "en": "Pokémon Fan Ido",
+        "he": "עידו חובב הפוקימונים"
+      },
+      "x": 13,
+      "y": 16,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_e19d22",
+      "dialogue": [
+        {
+          "en": "Bzzt! Welcome to Fractalis, the electric city!",
+          "he": "בזזט! ברוך הבא לפרקטליס, העיר החשמלית!"
+        },
+        {
+          "en": "Route 8 is full of electric Pokémon, like Pikachu and Magnemite!",
+          "he": "דרך 8 מלאה בפוקימוני חשמל, כמו פיקאצ׳ו ומגנמייט!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "ultra-ball",
+            "quantity": 5
+          }
+        ],
+        "flag": "npc-friendly-fan-fractalis-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-fan-fractalis-rewarded",
+        "dialogue": [
+          {
+            "en": "Chinchou has lights on its head to see in the dark ocean!",
+            "he": "לצ׳ינצ׳או יש אורות על הראש כדי לראות במעמקי הים החשוכים!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "friendly-kid-fractalis",
+      "name": {
+        "en": "Puzzle Kid Neta",
+        "he": "נטע אוהבת החידות"
+      },
+      "x": 16,
+      "y": 11,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_ca2fd2",
+      "dialogue": [
+        {
+          "en": "Hi! Fractalis loves fractions!",
+          "he": "היי! פרקטליס אוהבת שברים!"
+        },
+        {
+          "en": "Half of a pizza is the same as 2 quarters of a pizza. Yum!",
+          "he": "חצי פיצה זה בדיוק כמו 2 רבעים של פיצה. יאמי!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "elixir",
+            "quantity": 2
+          }
+        ],
+        "flag": "npc-friendly-kid-fractalis-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-kid-fractalis-rewarded",
+        "dialogue": [
+          {
+            "en": "Lightning is hotter than the outside of the Sun! Wow!",
+            "he": "ברק חם יותר מפני השטח של השמש! וואו!"
+          }
+        ]
+      }
     }
   ],
   "music": "town",

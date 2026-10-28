@@ -432,6 +432,100 @@
         "en": "Naama",
         "he": "נעמה"
       }
+    },
+    {
+      "id": "friendly-fan-symmetrika",
+      "name": {
+        "en": "Pokémon Fan Ron",
+        "he": "רון חובב הפוקימונים"
+      },
+      "x": 24,
+      "y": 32,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_95ee55",
+      "dialogue": [
+        {
+          "en": "Welcome to Symmetrika, the mirror city!",
+          "he": "ברוך הבא לסימטריקה, עיר המראה!"
+        },
+        {
+          "en": "Out on the sea of Route 10 you can find Seel. It loves icy water!",
+          "he": "בים של דרך 10 אפשר למצוא את סיל. הוא אוהב מים קפואים!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "max-potion",
+            "quantity": 2
+          }
+        ],
+        "flag": "npc-friendly-fan-symmetrika-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-fan-symmetrika-rewarded",
+        "dialogue": [
+          {
+            "en": "Swinub sniffs the ground to find food under the snow!",
+            "he": "סווינאב מרחרח את האדמה כדי למצוא אוכל מתחת לשלג!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "friendly-kid-symmetrika",
+      "name": {
+        "en": "Mirror Kid Eden",
+        "he": "עדן של המראות"
+      },
+      "x": 6,
+      "y": 24,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_9ceeb2",
+      "dialogue": [
+        {
+          "en": "Hi! Look, this city is the same on both sides!",
+          "he": "היי! תראה, העיר הזאת זהה משני הצדדים!"
+        },
+        {
+          "en": "A butterfly is symmetric too — both wings are the same!",
+          "he": "גם פרפר הוא סימטרי — שתי הכנפיים שלו זהות!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "max-elixir",
+            "quantity": 1
+          }
+        ],
+        "flag": "npc-friendly-kid-symmetrika-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-kid-symmetrika-rewarded",
+        "dialogue": [
+          {
+            "en": "Snowflakes always have 6 sides, and no two are exactly the same!",
+            "he": "לפתיתי שלג יש תמיד 6 צדדים, ואין שניים שזהים לגמרי!"
+          }
+        ]
+      }
     }
   ],
   "area": "Symmetrika",

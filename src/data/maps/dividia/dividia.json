@@ -251,6 +251,100 @@
       },
       "blocker": true,
       "despawnAfter": "story-badge-4"
+    },
+    {
+      "id": "friendly-fan-dividia",
+      "name": {
+        "en": "Pokémon Fan Gal",
+        "he": "גל חובב הפוקימונים"
+      },
+      "x": 11,
+      "y": 16,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_2db5a7",
+      "dialogue": [
+        {
+          "en": "Ahoy, trainer! Dividia is a city by the sea!",
+          "he": "אהוי, מאמן! דיבידיה היא עיר ליד הים!"
+        },
+        {
+          "en": "On Route 7 you can find Mareep. Its wool makes electricity!",
+          "he": "בדרך 7 אפשר למצוא את מריפ. הצמר שלו מייצר חשמל!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "ultra-ball",
+            "quantity": 3
+          }
+        ],
+        "flag": "npc-friendly-fan-dividia-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-fan-dividia-rewarded",
+        "dialogue": [
+          {
+            "en": "Growlithe is very loyal — it protects its trainer no matter what!",
+            "he": "גראוליט׳ מאוד נאמן — הוא שומר על המאמן שלו תמיד!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "friendly-kid-dividia",
+      "name": {
+        "en": "Sea Kid Maya",
+        "he": "מאיה ילדת הים"
+      },
+      "x": 2,
+      "y": 16,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_1b9be7",
+      "dialogue": [
+        {
+          "en": "Hi! I love the sea!",
+          "he": "היי! אני אוהבת את הים!"
+        },
+        {
+          "en": "If you share 12 shells between 3 friends, each friend gets 4!",
+          "he": "אם מחלקים 12 צדפים בין 3 חברים, כל חבר מקבל 4!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "hyper-potion",
+            "quantity": 2
+          }
+        ],
+        "flag": "npc-friendly-kid-dividia-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-kid-dividia-rewarded",
+        "dialogue": [
+          {
+            "en": "A starfish has no brain, but it can grow back a lost arm!",
+            "he": "לכוכב ים אין מוח, אבל הוא יכול לגדל מחדש זרוע שנפלה!"
+          }
+        ]
+      }
     }
   ],
   "music": "town3",

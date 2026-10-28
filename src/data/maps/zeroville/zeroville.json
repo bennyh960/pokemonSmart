@@ -480,6 +480,104 @@
       "spawnAfter": "act2-lab-call-received",
       "despawnAfter": "act2-lab-cutscene-done",
       "blocker": true
+    },
+    {
+      "id": "friendly-fan-zeroville",
+      "name": {
+        "en": "Pokémon Fan Noam",
+        "he": "נועם חובב הפוקימונים"
+      },
+      "x": 18,
+      "y": 21,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_45ba6c",
+      "dialogue": [
+        {
+          "en": "Hi, new trainer! Welcome to Zeroville!",
+          "he": "היי, מאמן חדש! ברוך הבא לזירוביל!"
+        },
+        {
+          "en": "Did you know Hoothoot always stands on one foot? It switches feet super fast!",
+          "he": "ידעת שהותהוט תמיד עומד על רגל אחת? הוא מחליף רגליים ממש מהר!"
+        },
+        {
+          "en": "You can find Hoothoot on Route 1, right outside town.",
+          "he": "אפשר למצוא את הותהוט בדרך 1, ממש מחוץ לעיר."
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "poke-ball",
+            "quantity": 5
+          }
+        ],
+        "flag": "npc-friendly-fan-zeroville-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-fan-zeroville-rewarded",
+        "dialogue": [
+          {
+            "en": "Route 1 also has Chikorita and Totodile — keep your eyes open!",
+            "he": "בדרך 1 יש גם צ׳יקוריטה וטוטודייל — תפקח עיניים!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "friendly-kid-zeroville",
+      "name": {
+        "en": "Curious Kid Shira",
+        "he": "שירה הסקרנית"
+      },
+      "x": 6,
+      "y": 21,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_bfef07",
+      "dialogue": [
+        {
+          "en": "Hello hello! Want to hear something cool?",
+          "he": "שלום שלום! רוצה לשמוע משהו מגניב?"
+        },
+        {
+          "en": "Zero is a special number: anything times zero is zero!",
+          "he": "אפס הוא מספר מיוחד: כל מספר כפול אפס שווה אפס!"
+        },
+        {
+          "en": "Let's play a quick math game! Answer my 2 questions and I'll give you a gift!",
+          "he": "בוא נשחק משחק חשבון קצר! ענה על 2 השאלות שלי ואתן לך מתנה!"
+        }
+      ],
+      "questions": {
+        "count": 2
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "super-potion",
+            "quantity": 2
+          }
+        ],
+        "flag": "npc-friendly-kid-zeroville-rewarded"
+      },
+      "postFlagDialogue": {
+        "flag": "npc-friendly-kid-zeroville-rewarded",
+        "dialogue": [
+          {
+            "en": "Fun fact: an octopus has three hearts! Isn’t that amazing?",
+            "he": "עובדה מגניבה: לתמנון יש שלושה לבבות! מדהים, נכון?"
+          }
+        ]
+      }
     }
   ],
   "music": "town",

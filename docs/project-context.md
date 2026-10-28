@@ -41,6 +41,12 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Gate lights (`systems/gate-lights.ts`): only Sumville has lights (Route 1 guard, Pokémon Center door). Place the rest with the editor's "Light X/Y" on each gate-guard / gated door
 - [ ] On hold: city guards stay open until you leave the map (in vs out)
 
+## Libraries, labs & friendly NPCs (2026-10-29, not playtested)
+- [ ] Every built city has a library + lab now. New interiors replaced plain houses (doors re-pointed); the old house maps are no longer reachable — delete if not needed: `dividia/house-3`, `dividia/house-4`, `fractalis/template-house-open`, `fractalis/house-1`, `symmetrika/h1`, `minusburg/template-house-open`, `multiplia/h4`, `zeroville/h6`
+- [ ] Algebria has no houses yet — give it a library + lab when the city is built (its Word Board already has Master Ball prizes in `english/board-cities.ts`)
+- [ ] Friendly quiz NPCs (2 per city: `friendly-fan-*`, `friendly-kid-*`) in Zeroville, Minusburg, Multiplia, Dividia, Fractalis, Symmetrika — check spots + sprites in the editor
+- [ ] Only 10 later-gen Pokémon exist in `pokemon.json` for board prizes; fetch more to widen each city's rare list
+
 ## Bugs
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
