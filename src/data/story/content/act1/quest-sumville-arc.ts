@@ -246,6 +246,24 @@ registerCutscene({
         },
       ],
     },
+    {
+      type: 'dialogue',
+      speakerName: 'Officer Jenny / שוטרת ג׳ני',
+      lines: [
+        {
+          en: 'Got it! And next to each guard and gated door, we will put a little light.',
+          he: 'קיבלתי! וליד כל שומר וכל דלת מוגנת נשים רמזור קטן.',
+        },
+        {
+          en: 'Red light? Answer the questions first. Green light? You have a free pass — walk right in!',
+          he: 'אור אדום? קודם עונים על השאלות. אור ירוק? יש לך מעבר חופשי — אפשר להיכנס!',
+        },
+        {
+          en: 'Talk to a green light and it will show you how long your free pass lasts.',
+          he: 'דבר עם אור ירוק והוא יראה לך כמה זמן נשאר למעבר החופשי שלך.',
+        },
+      ],
+    },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT1_OAK_WARNING_HEARD } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act1-gym1' } },
   ],
