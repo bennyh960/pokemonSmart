@@ -14,6 +14,7 @@ import type { TileMapData } from '../engine/tilemap.js';
 import type { GateGuardData, NPCData } from './npc.js';
 import { getGate } from '../data/story/gates.js';
 import { getAutoGateIdForMap, getGatePassExpiry, unlockGateTimed } from './story-engine.js';
+import { drawGateLightSprite } from '../ui/gate-light-sprite.js';
 
 export interface GateLight {
   x: number;
@@ -66,38 +67,7 @@ const BLINK_UNDER_MS = 60_000;
 
 /** Draw a light post on the tile whose top-left screen corner is (sx, sy). */
 export function drawGateLight(ctx: CanvasRenderingContext2D, sx: number, sy: number, pass: GatePass): void {
-  const green = pass.kind !== 'locked';
   // Last minute: the green lamp blinks so kids see the pass is about to end
   const blinkOff = pass.kind === 'timed' && pass.remainingMs < BLINK_UNDER_MS && Math.floor(Date.now() / 400) % 2 === 0;
-
-  ctx.save();
-  // Base + pole
-  ctx.fillStyle = '#2a2a33';
-  ctx.fillRect(sx + 5, sy + 14, 6, 2);
-  ctx.fillStyle = '#4a4a55';
-  ctx.fillRect(sx + 7, sy + 8, 2, 6);
-  // Housing (pokes above the tile like a tall sprite)
-  ctx.fillStyle = '#1c1c24';
-  ctx.fillRect(sx + 3, sy - 5, 10, 14);
-  ctx.fillStyle = '#33333f';
-  ctx.fillRect(sx + 4, sy - 4, 8, 12);
-
-  lamp(ctx, sx + 8, sy - 1, !green, '#ff3b3b', '#5a1515');
-  lamp(ctx, sx + 8, sy + 5, green && !blinkOff, '#3bff6a', '#15501f');
-  ctx.restore();
-}
-
-function lamp(ctx: CanvasRenderingContext2D, cx: number, cy: number, lit: boolean, on: string, off: string): void {
-  if (lit) {
-    ctx.globalAlpha = 0.35;
-    ctx.fillStyle = on;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  }
-  ctx.fillStyle = lit ? on : off;
-  ctx.beginPath();
-  ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
-  ctx.fill();
+  drawGateLightSprite(ctx, sx, sy, pass.kind === 'locked' ? 'red' : blinkOff ? 'none' : 'green');
 }

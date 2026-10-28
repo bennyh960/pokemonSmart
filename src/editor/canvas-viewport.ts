@@ -1,6 +1,15 @@
 import type { EditorState } from './editor-state.js';
 import type { TileDef } from './types.js';
 import type { ToolSystem } from './tool-system.js';
+import { drawGateLightSprite } from '../ui/gate-light-sprite.js';
+
+/** A gate light placed on a gate-guard NPC or a door transition, with the tile of its owner. */
+interface EditorGateLight {
+  x: number;
+  y: number;
+  ownerX: number;
+  ownerY: number;
+}
 
 /**
  * CanvasViewport — renders the map on a <canvas> and handles mouse interaction.
@@ -423,6 +432,9 @@ export class CanvasViewport {
         }
       }
 
+      // Gate lights are solid in the game
+      for (const light of this.gateLights()) aboveBlocked.add(`${light.x},${light.y}`);
+
       for (let row = startRow; row <= endRow; row++) {
         for (let col = startCol; col <= endCol; col++) {
           const tile = this.state.getGroundTile(col, row);
@@ -518,6 +530,30 @@ export class CanvasViewport {
       }
     }
 
+    // ── Gate lights (red/green post) + dashed link to the guard / door that owns it ──
+    {
+      const half = tilePixels / 2;
+      for (const light of this.gateLights()) {
+        const lx = Math.floor(light.x * tilePixels - scrollX);
+        const ly = Math.floor(light.y * tilePixels - scrollY);
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255, 220, 80, 0.9)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(lx + half, ly + half);
+        ctx.lineTo(light.ownerX * tilePixels - scrollX + half, light.ownerY * tilePixels - scrollY + half);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(lx, ly);
+        ctx.scale(tilePixels / 16, tilePixels / 16);
+        drawGateLightSprite(ctx, 0, 0, 'both');
+        ctx.restore();
+      }
+    }
+
     // ── Spawn marker ──
     const sx = this.state.mapData.spawn;
     {
@@ -564,6 +600,18 @@ export class CanvasViewport {
       ctx.lineWidth = 2;
       ctx.strokeRect(drawX, drawY, tilePixels, tilePixels);
     }
+  }
+
+  private gateLights(): EditorGateLight[] {
+    const lights: EditorGateLight[] = [];
+    for (const npc of this.state.mapData.npcs ?? []) {
+      const light = (npc as { light?: { x: number; y: number } }).light;
+      if (npc.type === 'gate-guard' && light) lights.push({ ...light, ownerX: npc.x, ownerY: npc.y });
+    }
+    for (const t of this.state.mapData.transitions ?? []) {
+      if (t.light) lights.push({ ...t.light, ownerX: t.fromX, ownerY: t.fromY });
+    }
+    return lights;
   }
 
   destroy(): void {
