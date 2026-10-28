@@ -755,5 +755,6 @@
   "gateLight.clock.right": "נכון! המעבר שלך מלא שוב: {minutes} דקות!",
   "gateLight.clock.wrong": "כמעט! האור יהפוך לאדום ב-{time}. המעבר שלך עדיין עובד.",
   "gateLight.clock.leave": "יציאה",
-  "gateLight.clock.ok": "אישור"
+  "gateLight.clock.ok": "אישור",
+  "gate.oops": "אופס! טעיתי בדרך… אחזור לכאן אחר כך!"
 }

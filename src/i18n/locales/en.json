@@ -756,5 +756,6 @@
   "gateLight.clock.right": "Correct! Your pass is full again: {minutes} minutes!",
   "gateLight.clock.wrong": "Not quite! It turns red at {time}. Your pass still works.",
   "gateLight.clock.leave": "Leave",
-  "gateLight.clock.ok": "OK"
+  "gateLight.clock.ok": "OK",
+  "gate.oops": "Oops! Wrong way… I'll come back later!"
 }

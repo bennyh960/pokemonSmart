@@ -25,6 +25,7 @@ import {
   isGateUnlocked,
   getActiveGateId,
   clearActiveGate,
+  markGateExited,
 } from '../systems/story-engine.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { mountGateOverlay } from '../systems/gate-overlay.js';
@@ -83,6 +84,11 @@ export function createGateScene(
     update(_dt: number): void {
       if (!overlayRunning && pendingResult && !resolved) {
         resolved = true;
+        if (pendingResult.exited) {
+          if (gateId) markGateExited(gateId);
+          stateMachine.pop();
+          return;
+        }
         const passed = pendingResult.passed;
         _applyResult(pendingResult);
         // Play success jingle before popping (audio is restored in exit())

@@ -577,6 +577,17 @@ export function getActiveCutsceneId(): string | null {
 export function clearActiveGate(): void {
   _activeGateId = null;
 }
+
+/** Gate the player just walked away from (left the question screen) — the overworld steps them back. */
+let _exitedGateId: string | null = null;
+export function markGateExited(id: string): void {
+  _exitedGateId = id;
+}
+export function consumeExitedGate(): string | null {
+  const v = _exitedGateId;
+  _exitedGateId = null;
+  return v;
+}
 export function clearActiveCutscene(): void {
   _activeCutsceneId = null;
 }

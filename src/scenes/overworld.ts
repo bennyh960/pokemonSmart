@@ -102,6 +102,8 @@ import {
   checkAndResumeDelayedEvents,
   applyCompletedEventNpcPositions,
   runStoryAction,
+  consumeExitedGate,
+  getAutoGateIdForMap,
 } from '../systems/story-engine.js';
 import { collectGateLights, gateLightAt, getGatePass, drawGateLight, type GateLight } from '../systems/gate-lights.js';
 import {
@@ -442,6 +444,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Pending push-back after gate scene dismissal without passing
   let pendingGateBack: { pushDx: number; pushDy: number; gateId: string } | null = null;
+  /** "Oops, wrong way" line — shown once the player has stepped back / walked out after leaving a gate. */
+  let pendingOopsLine: string | null = null;
 
   // Blocks all input while an NPC math-question overlay is running
   let npcOverlayActive = false;
@@ -2608,6 +2612,24 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // Player left a gate's question screen: walk back out of a gated building,
+      // or take one step back from a guard / gate tile
+      const exitedGateId = consumeExitedGate();
+      if (exitedGateId) {
+        pendingOopsLine = t('gate.oops');
+        const isBuildingGate = !!currentMapData?.id && getAutoGateIdForMap(currentMapData.id) === exitedGateId;
+        if (isBuildingGate && previousMapReturn) {
+          transitionState = 'fade-out';
+          transitionTimer = 0;
+          transitionTarget = { ...previousMapReturn };
+          return;
+        }
+        const facingVec = DIR_VECTORS[player.facing];
+        if (!pendingGateBack && facingVec) {
+          pendingGateBack = { gateId: exitedGateId, pushDx: -facingVec.dx, pushDy: -facingVec.dy };
+        }
+      }
+
       // Push player back after gate dismissal without passing
       if (pendingGateBack) {
         const pb = pendingGateBack;
@@ -2631,6 +2653,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             player.walkFrame = 1;
           }
         }
+      }
+
+      if (pendingOopsLine && !player.moving && !activeTextBox) {
+        activeTextBox = createTextBox([pendingOopsLine], isRTL());
+        pendingOopsLine = null;
+        return;
       }
 
       // Push player back after party-guard blocks them

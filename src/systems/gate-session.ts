@@ -54,6 +54,8 @@ export interface SessionResult {
   penaltyApplied: number;
   /** Rewards the player earned (after bonus multiplier applied to money). */
   rewardsEarned: GateReward[];
+  /** The player left before finishing ("oops, wrong way") — nothing is applied. */
+  exited?: boolean;
 }
 
 // ─── GateSession ────────────────────────────────────────────────────────────────────

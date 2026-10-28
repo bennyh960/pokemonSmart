@@ -101,12 +101,14 @@ class GateOverlayController {
         <h2 class="go-title">${titleLabel}</h2>
         <p class="go-intro-text">${text}</p>
         <button class="go-btn go-btn-primary go-continue-btn">${continueLabel}</button>
+        ${this._leaveButtonHtml()}
       </div>
     `;
 
     this.el.querySelector('.go-continue-btn')!.addEventListener('click', () => {
       this._startMainPhase();
     });
+    this._wireLeaveButton();
   }
 
   // ── Phase: questions ───────────────────────────────────────────────────────
@@ -180,8 +182,10 @@ class GateOverlayController {
         </div>
 
         <div id="go-feedback-area" class="go-feedback-area"></div>
+        ${this._leaveButtonHtml()}
       </div>
     `;
+    this._wireLeaveButton();
 
     const inputEl = this.el.querySelector<HTMLInputElement>('#go-iq-input')!;
     setTimeout(() => inputEl?.focus(), 50);
@@ -259,9 +263,10 @@ class GateOverlayController {
         ${choicesHtml}
 
         <div id="go-feedback-area" class="go-feedback-area"></div>
-
+        ${this._leaveButtonHtml()}
       </div>
     `;
+    this._wireLeaveButton();
 
     this.el.querySelectorAll('.go-choice').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -464,6 +469,31 @@ class GateOverlayController {
 
     this.el.querySelector('.go-done-btn')!.addEventListener('click', () => {
       this._unmount(result);
+    });
+  }
+
+  // ── Leave ("oops, wrong way") ──────────────────────────────────────────────
+
+  private _leaveButtonHtml(): string {
+    const label = this.locale === 'he' ? '🚪 אופס, טעיתי בדרך' : '🚪 Oops, wrong way';
+    return `<button class="go-btn go-btn-ghost go-leave-btn">${label}</button>`;
+  }
+
+  private _wireLeaveButton(): void {
+    this.el.querySelector('.go-leave-btn')?.addEventListener('click', () => this._leave());
+  }
+
+  /** Walk away without finishing: no rewards, no penalty, the gate stays locked. */
+  private _leave(): void {
+    this._unmount({
+      passed: false,
+      exited: true,
+      correctCount: 0,
+      totalAttempts: 0,
+      successRate: 0,
+      bonusPassed: null,
+      penaltyApplied: 0,
+      rewardsEarned: [],
     });
   }
 
@@ -826,6 +856,12 @@ class GateOverlayController {
         color: #aaaacc;
       }
       .go-btn-ghost:hover { border-color: #8888aa; }
+      .go-leave-btn {
+        display: block;
+        margin: 12px auto 0;
+        padding: 8px 16px;
+        font-size: 12px;
+      }
     `;
     document.head.appendChild(style);
   }
