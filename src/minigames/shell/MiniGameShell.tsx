@@ -11,10 +11,10 @@ import { grantReward } from '../../systems/rewards.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.js';
 import { getTrainerRank } from '../../systems/trainer-rank.js';
-import { carePrizes, careLevelForRank } from '../care.js';
-import { highestUnlockedLevel, isLevelUnlocked, recordResult, type RecordOutcome } from '../progress.js';
+import { carePrizes } from '../care.js';
+import { highestUnlockedLevel, isLevelUnlocked, levelForRank, recordResult, type RecordOutcome } from '../progress.js';
 import type { AnyMiniGameDef, MiniGameResult } from '../types.js';
-import type { MiniGameOutcome } from '../launch.js';
+import type { MiniGameOutcome, StartMiniGameOptions } from '../launch.js';
 import { Countdown } from './Countdown.js';
 import { HudBar } from './HudBar.js';
 import { useReducedMotion } from './hooks.js';
@@ -45,9 +45,11 @@ interface Props {
   onOutcome: (outcome: MiniGameOutcome) => void;
   /** Care round for this party Pokémon (see care.ts). */
   carePokemonUuid?: string;
+  /** Building gate round (see launch.ts). */
+  gate?: StartMiniGameOptions['gate'];
 }
 
-export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome, carePokemonUuid }: Props) {
+export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome, carePokemonUuid, gate }: Props) {
   const { t, locale } = useI18n();
   const [pd, mutate] = usePlayerData();
   const save = pd.miniGames ?? {};
@@ -56,12 +58,16 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
   // Care round: the hurt Pokémon plays, the trainer rank sets the level, clearing it heals the Pokémon once
   const careMon = def.care && carePokemonUuid ? pd.party.find((p) => p.uuid === carePokemonUuid) : undefined;
   const care = careMon ? def.care : undefined;
-  const [careDone, setCareDone] = useState(false);
+  // Fixed round (care or gate): no level picker, and once cleared it can't be replayed from here
+  const fixed = !!care || !!gate;
+  const [fixedDone, setFixedDone] = useState(false);
   const pokemonId = careMon?.id ?? def.mascotPokemonId;
 
   const [levelNumber, setLevelNumber] = useState(() =>
-    care
-      ? careLevelForRank(getTrainerRank(pd).index, def)
+    gate && initialLevel && def.levels.some((l) => l.number === initialLevel)
+      ? initialLevel
+      : fixed
+      ? levelForRank(getTrainerRank(pd).index, def)
       : initialLevel && isLevelUnlocked(save, def.id, initialLevel) && def.levels.some((l) => l.number === initialLevel)
         ? initialLevel
         : highestUnlockedLevel(save, def),
@@ -142,7 +148,7 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
     });
     const done = rec as RecordOutcome | null;
     if (!done) return;
-    if (care && done.cleared) setCareDone(true);
+    if (fixed && done.cleared) setFixedDone(true);
     setResult(res);
     setOutcome(done);
     setPhase('results');
@@ -150,8 +156,8 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
   }
 
   const nextLevel = def.levels.find((l) => l.number === level.number + 1);
-  const canNext = !care && !!nextLevel && isLevelUnlocked(save, def.id, nextLevel.number);
-  const playAgain = careDone ? undefined : () => startRound();
+  const canNext = !fixed && !!nextLevel && isLevelUnlocked(save, def.id, nextLevel.number);
+  const playAgain = fixedDone ? undefined : () => startRound();
   const Game = def.Component;
 
   return (
@@ -169,9 +175,12 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
           onBack={onBack}
           backLabel={backLabel}
           pokemonId={pokemonId}
-          careLine={
-            care && careMon ? care.intro[locale].replace('{name}', getPokemonDisplayName(careMon.id)) : undefined
+          fixedLine={
+            care && careMon
+              ? care.intro[locale].replace('{name}', getPokemonDisplayName(careMon.id))
+              : gate?.intro[locale]
           }
+          levelPrizes={!care}
         />
       ) : (
         <>

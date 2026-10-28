@@ -17,6 +17,11 @@ export type { DialogueReward } from '../systems/npc.js';
 /** Registered mini-game ids — one folder per id under `src/minigames/games/`. */
 export const MINI_GAME_IDS = [
   'unown-words',
+  'pokemon-says',
+  'find-pokemon',
+  'unown-battle',
+  'memory-match',
+  'word-catcher',
   'poke-doku',
   'snorlax-snack',
   'bulbasaur-sun',
@@ -25,6 +30,15 @@ export const MINI_GAME_IDS = [
   'pikachu-charge',
 ] as const;
 export type MiniGameId = (typeof MINI_GAME_IDS)[number];
+
+/** What a game trains — buildings and hosts offer games by category (library → english, lab → logic). */
+export type MiniGameCategory = 'english' | 'logic' | 'arcade';
+
+/** A set of games, by id and/or category (`resolveMiniGames()` in registry.ts). */
+export interface MiniGameChoice {
+  gameIds?: MiniGameId[];
+  category?: MiniGameCategory;
+}
 
 export interface Bilingual {
   en: string;
@@ -117,6 +131,7 @@ export interface MiniGameDef<C = unknown> {
   id: MiniGameId;
   name: Bilingual;
   tagline: Bilingual;
+  category: MiniGameCategory;
   theme: MiniGameTheme;
   /** National dex id of the mascot shown on the intro card / picker. */
   mascotPokemonId: number;

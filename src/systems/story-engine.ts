@@ -16,7 +16,7 @@ import type { PlayerStoryState } from '../types/index.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag, getCurrentSlot } from './game-state.js';
 import { getStoryEvents } from '../data/story/events.js';
 import type { StoryTrigger, StoryCondition, StoryAction } from '../data/story/events.js';
-import type { GateSessionConfig } from '../data/story/gates.js';
+import type { GateMiniGame, GateSessionConfig } from '../data/story/gates.js';
 import { GATES, registerGate } from '../data/story/gates.js';
 import { awaitCutsceneCompletion } from './cutscene-runner.js';
 import { getCutscene } from '../data/story/cutscenes.js';
@@ -43,21 +43,25 @@ export function initStoryEngine(sm: StateMachine): void {
 // Auto-gate service map registry
 // ---------------------------------------------------------------------------
 
-type AutoGateService = 'pokecenter' | 'pokemarket' | 'gym';
+type AutoGateService = 'pokecenter' | 'pokemarket' | 'gym' | 'library' | 'lab';
+/** Services with one gate per building (own pass + overrides); the others share one gate (one pass for all). */
+const PER_MAP_GATE_SERVICES: readonly AutoGateService[] = ['gym', 'library', 'lab'];
 const _autoGateMapRegistry = new Map<string, { service: AutoGateService; gateId: string }>();
 
 export interface AutoGateMapOverride {
   questionSetIds?: string[];
   reopenCooldownMs?: number;
   sessionConfig?: Partial<GateSessionConfig>;
+  miniGame?: Partial<GateMiniGame>;
 }
 
 /** Register a map ID → service type mapping so entering it triggers the auto-gate. */
 export function registerAutoGateMap(mapId: string, service: AutoGateService, overrides?: AutoGateMapOverride): void {
-  const gateId = service === 'gym' ? `auto-gym-${mapId}` : AUTO_GATE_IDS[service];
+  const perMap = PER_MAP_GATE_SERVICES.includes(service);
+  const gateId = perMap ? `${AUTO_GATE_IDS[service]}-${mapId}` : AUTO_GATE_IDS[service];
 
-  if (service === 'gym') {
-    const baseGate = GATES[AUTO_GATE_IDS.gym];
+  if (perMap) {
+    const baseGate = GATES[AUTO_GATE_IDS[service]];
     if (baseGate) {
       registerGate({
         ...baseGate,
@@ -68,6 +72,7 @@ export function registerAutoGateMap(mapId: string, service: AutoGateService, ove
           ...baseGate.sessionConfig,
           ...(overrides?.sessionConfig ?? {}),
         },
+        miniGame: baseGate.miniGame && { ...baseGate.miniGame, ...(overrides?.miniGame ?? {}) },
       });
     }
   }
@@ -79,6 +84,8 @@ const AUTO_GATE_IDS: Record<AutoGateService, string> = {
   pokecenter: 'auto-pokecenter',
   pokemarket: 'auto-pokemarket',
   gym: 'auto-gym', // we can use auto and also use gate guard as regular
+  library: 'auto-library',
+  lab: 'auto-lab',
 };
 
 /**
@@ -92,6 +99,8 @@ function _checkAutoGate(mapId: string, resumedInside: boolean): void {
 
   if (isGateUnlocked(entry.gateId)) return;
   if (resumedInside) return;
+  // A story scene starts on this entry — never put a check in front of it (asks again next entry)
+  if (_pendingCutsceneId) return;
 
   if (_stateMachine) {
     setActiveGate(entry.gateId);

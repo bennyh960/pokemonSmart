@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import type { MiniGameLaunch, MiniGameOutcome } from '../launch.js';
-import { getMiniGame } from '../registry.js';
+import { getMiniGame, MINI_GAME_LIST } from '../registry.js';
 import type { MiniGameId } from '../types.js';
 import { GamePicker } from './GamePicker.js';
 import { MiniGameShell } from './MiniGameShell.js';
@@ -26,6 +26,7 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
     <div className="mg-root fixed inset-0 z-[60] overflow-hidden text-white" dir={isRTL ? 'rtl' : 'ltr'}>
       {gameId === null ? (
         <GamePicker
+          games={launch.pickerIds ? MINI_GAME_LIST.filter((g) => launch.pickerIds!.includes(g.id)) : MINI_GAME_LIST}
           initialId={lastPicked.current}
           onPick={(id) => {
             lastPicked.current = id;
@@ -42,6 +43,7 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
           onBack={fromPicker ? () => setGameId(null) : onClose}
           onOutcome={onOutcome}
           carePokemonUuid={fromPicker ? undefined : launch.carePokemonUuid}
+          gate={fromPicker ? undefined : launch.gate}
         />
       )}
     </div>

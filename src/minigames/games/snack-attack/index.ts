@@ -181,6 +181,7 @@ function snackGame(data: SnackGameData): MiniGameDef<SnackConfig> {
     id: data.id,
     name: data.name,
     tagline: data.tagline,
+    category: 'arcade',
     theme: data.theme,
     mascotPokemonId: data.mascotPokemonId,
     care: data.care,

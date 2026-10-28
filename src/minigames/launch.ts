@@ -4,7 +4,7 @@
  */
 
 import type { StateMachine } from '../engine/state-machine.js';
-import type { MiniGameId, Stars } from './types.js';
+import type { Bilingual, MiniGameId, Stars } from './types.js';
 
 /** What the caller's onFinish receives: the last finished round, or null if the player left without finishing. */
 export interface MiniGameOutcome {
@@ -22,11 +22,18 @@ export interface StartMiniGameOptions {
   onFinish?: (outcome: MiniGameOutcome | null) => void;
   /** Care round for this party Pokémon (uuid): fixed level, no level picker, clearing it heals the Pokémon. */
   carePokemonUuid?: string;
+  /**
+   * Building gate round (library / lab): plays `level` even if locked, no level picker, normal prizes.
+   * `intro` replaces the level picker on the intro card; once cleared there is no "Play again".
+   */
+  gate?: { intro: Bilingual };
 }
 
 export interface MiniGameLaunch extends StartMiniGameOptions {
   /** null = open the game picker. */
   gameId: MiniGameId | null;
+  /** Picker only: offer just these games (default: all). */
+  pickerIds?: MiniGameId[];
 }
 
 let stateMachine: StateMachine | null = null;
@@ -41,9 +48,12 @@ export function startMiniGame(gameId: MiniGameId, options: StartMiniGameOptions 
   launch({ gameId, ...options });
 }
 
-/** Opens the "Mini Games" picker (dev access from the start menu). */
-export function openMiniGamePicker(options: Pick<StartMiniGameOptions, 'onFinish'> = {}): void {
-  launch({ gameId: null, ...options });
+/** Opens the "Mini Games" picker — all games (admin start menu) or just `gameIds` (e.g. a librarian). */
+export function openMiniGamePicker(
+  options: Pick<StartMiniGameOptions, 'onFinish'> & { gameIds?: MiniGameId[] } = {},
+): void {
+  const { gameIds, ...rest } = options;
+  launch({ gameId: null, pickerIds: gameIds, ...rest });
 }
 
 /** The scene reads (and clears) the launch request on enter. */

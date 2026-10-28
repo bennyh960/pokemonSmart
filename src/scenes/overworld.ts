@@ -14,7 +14,7 @@ import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { initHUD, updateHUD, setHUDTab, showHUD, hideHUD } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import { forceCareGame, rollCareTrigger, type CareMatch } from '../minigames/care.js';
-import { startMiniGame } from '../minigames/index.js';
+import { openMiniGamePicker, resolveMiniGames, startMiniGame } from '../minigames/index.js';
 import type { Locale } from '../i18n/i18n.js';
 import {
   getPlayerData,
@@ -217,6 +217,12 @@ let _pendingFishing = false;
 let _legendVisible = false;
 let _playerRef: PlayerState | null = null;
 let _flySetup: (() => void) | null = null;
+let _leaveBuilding: (() => void) | null = null;
+
+/** Walk the player back out the door they came in (e.g. after failing a building's gate). */
+export function leaveBuilding(): void {
+  _leaveBuilding?.();
+}
 
 export function scheduleFishing(): void {
   _pendingFishing = true;
@@ -1055,6 +1061,26 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       interactingNPC = null;
       if (!hasActiveGame()) return;
 
+      // Mini-game host — once its gift (if any) was given, every talk ends with "Want to play?"
+      const hostGiftDone = !npc.reward || !!getPlayerData().flags[npc.reward.flag ?? `npc-${npc.id}-rewarded`];
+      if (npc.miniGame && hostGiftDone) {
+        const ids = resolveMiniGames(npc.miniGame);
+        fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+        activeTextBox = createTextBox(
+          [t('minigames.npcAsk')],
+          isRTL(),
+          npc.name ? getLocalizedName(npc.name) : undefined,
+        );
+        pendingDialogueCallback = () => {
+          showChoice((idx) => {
+            if (idx !== 0) return;
+            if (ids.length === 1) startMiniGame(ids[0]);
+            else openMiniGamePicker({ gameIds: ids });
+          });
+        };
+        return;
+      }
+
       const npcQ = (npc as unknown as Record<string, unknown>).questions as
         | { count: number; types?: string[]; repeated?: boolean }
         | undefined;
@@ -1719,6 +1745,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (flyAnim && flyAnim.pokemonId === pokemon.id) flyAnim.pokemonSprite = img;
     });
   }
+
+  _leaveBuilding = function (): void {
+    if (!previousMapReturn || transitionState === 'fade-out' || transitionState === 'loading') return;
+    transitionState = 'fade-out';
+    transitionTimer = 0;
+    transitionTarget = { ...previousMapReturn };
+  };
 
   // Register module-level fly-setup so setupWorldMapFly() (called from start menu) can use it
   _flySetup = function activateFly(): void {

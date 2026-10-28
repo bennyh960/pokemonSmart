@@ -2,7 +2,7 @@ import type { Scene } from '../types/index.js';
 import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import { clearScreen, fillRect, drawRect, drawText, fillRoundRect, slider } from '../engine/renderer.js';
-import { LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
+import { ADMIN_NAME, LOGICAL_WIDTH as SCREEN_W } from '../engine/config.js';
 import { uiRegistry } from '../engine/input/uiRegistry.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import type { Locale } from '../i18n/i18n.js';
@@ -26,6 +26,11 @@ const FOOTER_H = 8; // "ESC close menu" line under the main panel items
 
 const MAIN_KEYS = ['pokedex', 'party', 'bag', 'map', 'trainerData', 'save', 'actions', 'settings', 'exitGame'] as const;
 const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper', 'miniGames'] as const;
+/** Mini Games is admin-only: players reach the games in libraries, labs and the wild. */
+function actionKeys(): readonly (typeof ACTIONS_KEYS)[number][] {
+  const admin = hasActiveGame() && getPlayerData().name === ADMIN_NAME;
+  return admin ? ACTIONS_KEYS : ACTIONS_KEYS.filter((k) => k !== 'miniGames');
+}
 const SETTINGS_KEYS = ['language', 'music_volume', 'music_mute', 'sfx_volume', 'sfx_mute', 'legend'] as const;
 
 const ACTIONS_IDX = 6; // index of 'actions' in MAIN_KEYS
@@ -96,7 +101,7 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
   }
 
   function confirmAction(): void {
-    switch (ACTIONS_KEYS[actionsIdx]) {
+    switch (actionKeys()[actionsIdx]) {
       case 'fishing':
         if (hasFishingRod()) {
           scheduleFishing();
@@ -243,7 +248,7 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
   function renderDropdown(ctx: CanvasRenderingContext2D, rtl: boolean, mainPx: number, mainPy: number): void {
     const dropX = rtl ? mainPx + PANEL_W + 3 : mainPx - DROP_W - 3;
     const dropY = mainPy + PAD_V + ACTIONS_IDX * ITEM_H;
-    const dropH = PAD_V * 2 + ACTIONS_KEYS.length * ITEM_H;
+    const dropH = PAD_V * 2 + actionKeys().length * ITEM_H;
 
     // 3-px bridge connecting to main panel
     const bridgeX = rtl ? mainPx + PANEL_W : dropX + DROP_W;
@@ -254,8 +259,8 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
     fillRect(ctx, dropX, dropY, DROP_W, dropH, '#161628'); // bg
     drawRect(ctx, dropX, dropY, DROP_W, dropH, '#5050a0', 1); // border
 
-    for (let i = 0; i < ACTIONS_KEYS.length; i++) {
-      const key = ACTIONS_KEYS[i];
+    for (let i = 0; i < actionKeys().length; i++) {
+      const key = actionKeys()[i];
       const sel = i === actionsIdx;
       const disabled = key === 'fishing' && !hasFishingRod();
       const iy = dropY + PAD_V + i * ITEM_H;
@@ -491,11 +496,11 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
           return;
         }
         if (up) {
-          actionsIdx = wrap(actionsIdx - 1, ACTIONS_KEYS.length);
+          actionsIdx = wrap(actionsIdx - 1, actionKeys().length);
           return;
         }
         if (down) {
-          actionsIdx = wrap(actionsIdx + 1, ACTIONS_KEYS.length);
+          actionsIdx = wrap(actionsIdx + 1, actionKeys().length);
           return;
         }
         if (ok) confirmAction();

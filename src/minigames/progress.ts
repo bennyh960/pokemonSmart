@@ -8,6 +8,7 @@
  *       replay     — a clear that earned neither, capped REPLAY_DAILY_CAP per game per day
  */
 
+import { TRAINER_RANKS } from '../data/trainer-ranks.js';
 import type {
   AnyMiniGameDef,
   DialogueReward,
@@ -26,6 +27,16 @@ export const UNLOCK_STARS = 2;
 export const REPLAY_DAILY_CAP = 5;
 
 const EMPTY_LEVEL: Readonly<MiniGameLevelProgress> = Object.freeze({ stars: 0, best: 0, clears: 0 });
+
+/**
+ * Level of a fixed round (care round, building gate) from the trainer rank index (`getTrainerRank(pd).index`),
+ * spread evenly over the game's levels: lowest rank → first level, highest rank → last level. Ignores unlocks.
+ */
+export function levelForRank(rankIndex: number, def: AnyMiniGameDef): number {
+  const steps = Math.max(1, TRAINER_RANKS.length - 1);
+  const i = Math.round((Math.max(0, Math.min(steps, rankIndex)) * (def.levels.length - 1)) / steps);
+  return def.levels[i]?.number ?? 1;
+}
 
 /** Local calendar date as YYYY-MM-DD (the replay cap resets at local midnight). */
 export function localDateKey(date: Date): string {

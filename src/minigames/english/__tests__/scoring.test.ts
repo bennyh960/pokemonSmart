@@ -8,9 +8,8 @@ import {
   tallyQuestionDone,
   tallyWrong,
 } from '../scoring.js';
-import { mergeSeen, readSeen } from '../seen.js';
 
-describe('unown-words scoring', () => {
+describe('English round scoring', () => {
   it('stars by mistakes', () => {
     expect([0, 1, 2, 3, 4, 9].map(starsForMistakes)).toEqual([3, 3, 2, 2, 1, 1]);
   });
@@ -36,14 +35,5 @@ describe('unown-words scoring', () => {
     t = tallyQuestionDone(t).tally;
     t = tallyWrong(t);
     expect(t.mistakes).toBe(MISTAKE_CAP_PER_QUESTION + 1);
-  });
-});
-
-describe('unown-words seen data', () => {
-  it('reads safely and merges without duplicates', () => {
-    expect(readSeen(undefined)).toEqual({ letters: [], words: [] });
-    expect(readSeen({ seen: { letters: ['a', 3], words: 'x' } })).toEqual({ letters: ['a'], words: [] });
-    const merged = mergeSeen({ letters: ['b'], words: ['fire'] }, [{ letters: ['A', 'b'], words: ['Fire', 'water'] }]);
-    expect(merged).toEqual({ letters: ['a', 'b'], words: ['fire', 'water'] });
   });
 });

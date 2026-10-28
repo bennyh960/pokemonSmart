@@ -1,6 +1,7 @@
 import type { BilingualText } from '../../systems/npc.js';
 import type { StoryAction, StoryCondition } from './events.js';
 import type { SimpleOpType } from '../../math/simple-input-question.js';
+import type { MiniGameChoice } from '../../minigames/types.js';
 
 export type GateTriggerType =
   | 'route-checkpoint'
@@ -15,7 +16,9 @@ export type GateTriggerType =
   // ── Auto-gate types (no gatekeeper NPC — fires on location entry) ──
   | 'auto-pokecenter'
   | 'auto-pokemarket'
-  | 'auto-gym-entrance';
+  | 'auto-gym-entrance'
+  | 'auto-library'
+  | 'auto-lab';
 
 /** A single reward granted on successful pass of a session. */
 export interface GateReward {
@@ -101,6 +104,18 @@ export interface QuestionGateDef {
   conditions?: StoryCondition[];
 
   sessionConfig: GateSessionConfig;
+
+  /**
+   * Play a mini-game instead of answering questions (libraries, labs). Pass = finish with ≥1★.
+   * `questionSetIds` and `sessionConfig` are ignored; prizes are the mini-game's own.
+   */
+  miniGame?: GateMiniGame;
+}
+
+/** The games to pick from (one at random each time, by id and/or category). */
+export interface GateMiniGame extends MiniGameChoice {
+  /** Fixed level. Omitted → set by the trainer rank (`levelForRank`). */
+  level?: number;
 }
 
 /** Registered gate definitions keyed by ID. Populated by registerGate(). */
@@ -113,9 +128,8 @@ export function getGate(id: string): QuestionGateDef | undefined {
   }
 
   if (GATES[id]) return GATES[id];
-  // Per-map gym IDs like 'auto-gym-minusburg-gym' fall back to 'auto-gym' config
-  // currently there is no gate for each gym with diferent config - all same config
-  const baseMatch = id.match(/^(auto-gym)-/);
+  // Per-map IDs like 'auto-gym-minusburg/gym' or 'auto-library-sumville/library' fall back to the base config
+  const baseMatch = id.match(/^(auto-(?:gym|library|lab))-/);
   // console.warn(`Gate with ID '${id}' - baseMatch =`, baseMatch);
   if (baseMatch) return GATES[baseMatch[1]];
   return undefined;

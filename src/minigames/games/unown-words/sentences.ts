@@ -6,7 +6,7 @@
 
 import type { PokemonType } from '../../../types/index.js';
 import type { PictureItem, UnownContent, WordPokemon } from './content.js';
-import { pick, type Rng } from './random.js';
+import { pick, type Rng } from '../../english/random.js';
 
 export interface Sentence {
   words: string[];

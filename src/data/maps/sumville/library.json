@@ -49,7 +49,9 @@
       },
       "questions": {
         "count": 5,
-        "types": ["+"]
+        "types": [
+          "+"
+        ]
       },
       "reward": {
         "money": 0,
@@ -75,6 +77,9 @@
             "quantity": 5
           }
         ]
+      },
+      "miniGame": {
+        "category": "english"
       }
     },
     {
@@ -113,7 +118,9 @@
       },
       "questions": {
         "count": 3,
-        "types": ["+"]
+        "types": [
+          "+"
+        ]
       }
     },
     {

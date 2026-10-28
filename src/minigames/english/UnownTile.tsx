@@ -31,15 +31,15 @@ export function UnownTile({ glyph, size = 'lg', state = 'idle', delay = 0, shake
     '--uw-hue': letterHue(glyph),
     '--uw-blink': `${(letterHue(glyph) % 7) * 0.6}s`,
   } as CSSProperties;
-  const className = `mg-unown-words-tile ${state === 'idle' ? '' : `is-${state}`}`;
+  const className = `mg-en-tile ${state === 'idle' ? '' : `is-${state}`}`;
   const face = (
     <>
       <span aria-hidden>{glyph}</span>
-      <span className="mg-unown-words-eye" aria-hidden />
+      <span className="mg-en-eye" aria-hidden />
     </>
   );
   return (
-    <span className="mg-unown-words-pop" style={{ '--uw-delay': `${delay}ms` } as CSSProperties}>
+    <span className="mg-en-pop" style={{ '--uw-delay': `${delay}ms` } as CSSProperties}>
       {onClick ? (
         <button
           key={state === 'wrong' ? `w${shakeKey}` : 'i'}

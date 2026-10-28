@@ -5,10 +5,9 @@
  */
 
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
-import { getInput } from '../../../engine/input/index.js';
 import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
-import { useReducedMotion } from '../../shell/hooks.js';
+import { anyKeyDown, useReducedMotion } from '../../shell/hooks.js';
 import { PokemonSprite } from '../../shell/ui.js';
 import type { MiniGameProps } from '../../types.js';
 import type { SnackConfig } from './config.js';
@@ -39,15 +38,6 @@ interface Juice {
   burp: number;
   ache: number;
   target: number;
-}
-
-function keyDown(codes: string[]): boolean {
-  try {
-    const input = getInput();
-    return codes.some((c) => input.isKeyDown(c));
-  } catch {
-    return false;
-  }
 }
 
 export function SnackAttackGame({
@@ -127,8 +117,8 @@ export function SnackAttackGame({
       last = now;
       const s = simRef.current!;
       if (!s.over) {
-        const left = keyDown(LEFT_KEYS);
-        const right = keyDown(RIGHT_KEYS);
+        const left = anyKeyDown(LEFT_KEYS);
+        const right = anyKeyDown(RIGHT_KEYS);
         const dir = left === right ? 0 : left ? -1 : 1;
         if (dir !== 0) goalRef.current = null;
         const events = stepSim(s, dt, { dir, goalX: goalRef.current });

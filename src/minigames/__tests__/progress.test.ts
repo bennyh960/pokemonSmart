@@ -27,6 +27,7 @@ const def: AnyMiniGameDef = {
   id: 'poke-doku',
   name: { en: 'Test', he: 'Test' },
   tagline: { en: '', he: '' },
+  category: 'logic',
   theme: { from: '#000', to: '#fff', accent: '#f00', accentText: '#fff' },
   mascotPokemonId: 54,
   levels: [level(1), level(2), level(3)],

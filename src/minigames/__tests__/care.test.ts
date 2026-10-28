@@ -11,13 +11,13 @@ import {
   careChance,
   carePrizes,
   evolutionLine,
-  careLevelForRank,
   findCareGame,
   forceCareGame,
   resetCareCooldown,
   rollCareTrigger,
   type CareTile,
 } from '../care.js';
+import { levelForRank } from '../progress.js';
 import { MINI_GAME_LIST, getMiniGame } from '../registry.js';
 import { getItem } from '../../data/items.js';
 import { getPokemon } from '../../services/pokemon-data.js';
@@ -118,9 +118,9 @@ describe('care games', () => {
   it('the trainer rank sets the level: lowest rank → level 1, highest → level 5', () => {
     const def = getMiniGame('snorlax-snack');
     const top = TRAINER_RANKS.length - 1;
-    expect(careLevelForRank(0, def)).toBe(1);
-    expect(careLevelForRank(top, def)).toBe(5);
-    const levels = TRAINER_RANKS.map((_, i) => careLevelForRank(i, def));
+    expect(levelForRank(0, def)).toBe(1);
+    expect(levelForRank(top, def)).toBe(5);
+    const levels = TRAINER_RANKS.map((_, i) => levelForRank(i, def));
     for (let i = 1; i < levels.length; i++) expect(levels[i]).toBeGreaterThanOrEqual(levels[i - 1]);
     expect(new Set(levels).size).toBe(5);
   });

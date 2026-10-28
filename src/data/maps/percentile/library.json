@@ -166,7 +166,10 @@
           "en": "Zapdos, Articuno... and a fire bird called Moltres. Nobody has seen it in years!",
           "he": "זאפדוס, ארטיקונו... וציפור אש בשם מולטרס. אף אחד לא ראה אותה כבר שנים!"
         }
-      ]
+      ],
+      "miniGame": {
+        "category": "english"
+      }
     }
   ]
 }

@@ -10,6 +10,10 @@
  *   3. While overlay is running, canvas shows a "verification in progress" screen.
  *   4. When overlay promise resolves, apply session rewards/penalties to PlayerData,
  *      unlock the gate, fire story triggers, and pop back to overworld.
+ *
+ * Mini-game gates (libraries, labs — `gate.miniGame`): step 2 starts the mini-game instead of the
+ * overlay. Pass (≥1★) unlocks like above (prizes are the mini-game's own); otherwise the player
+ * is walked back out of the building.
  */
 
 import type { Scene } from '../types/index.js';
@@ -30,7 +34,12 @@ import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js
 import { mountGateOverlay } from '../systems/gate-overlay.js';
 import type { SessionResult } from '../systems/gate-overlay.js';
 import type { StoryAction } from '../data/story/events.js';
-import { VERIFICATION_DIALOGUES } from '../data/story/global-gate-config.js';
+import { MINI_GAME_GATE_LINES, VERIFICATION_DIALOGUES } from '../data/story/global-gate-config.js';
+import type { QuestionGateDef } from '../data/story/gates.js';
+import { startMiniGame, getMiniGame, resolveMiniGames } from '../minigames/index.js';
+import { levelForRank } from '../minigames/progress.js';
+import { getTrainerRank } from '../systems/trainer-rank.js';
+import { leaveBuilding } from './overworld.js';
 import { getItem } from '../data/items.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 
@@ -45,6 +54,8 @@ export function createGateScene(
   let pendingResult: SessionResult | null = null;
   let resolved = false;
   let wasMutedBeforeGate = false;
+  /** Mini-game gate: null while playing, then whether the round was cleared. */
+  let miniGamePassed: boolean | null = null;
 
   return {
     enter(): void {
@@ -52,6 +63,7 @@ export function createGateScene(
       overlayRunning = false;
       pendingResult = null;
       resolved = false;
+      miniGamePassed = null;
 
       if (!gateId) {
         stateMachine.pop();
@@ -61,6 +73,13 @@ export function createGateScene(
       // Gate already unlocked — let player through immediately
       if (isGateUnlocked(gateId)) {
         stateMachine.pop();
+        return;
+      }
+
+      const miniGameGate = getGate(gateId);
+      if (miniGameGate?.miniGame) {
+        overlayRunning = true;
+        setTimeout(() => _launchMiniGame(miniGameGate), 0);
         return;
       }
 
@@ -74,13 +93,26 @@ export function createGateScene(
     },
 
     exit(): void {
+      const wasMiniGame = !!(gateId && getGate(gateId)?.miniGame);
       clearActiveGate();
       overlayRunning = false;
-      // Restore audio to pre-gate state
-      if (!wasMutedBeforeGate) getGlobalAudio()?.setMuted(false);
+      // Restore audio to pre-gate state (mini-game gates never muted it)
+      if (!wasMiniGame && !wasMutedBeforeGate) getGlobalAudio()?.setMuted(false);
     },
 
     update(_dt: number): void {
+      if (!overlayRunning && miniGamePassed !== null && !resolved) {
+        resolved = true;
+        const passed = miniGamePassed;
+        if (passed) {
+          _unlockAndFire();
+          getGlobalAudio()?.playGateSuccess();
+        }
+        stateMachine.pop();
+        if (!passed) leaveBuilding();
+        return;
+      }
+
       if (!overlayRunning && pendingResult && !resolved) {
         resolved = true;
         const passed = pendingResult.passed;
@@ -125,6 +157,23 @@ export function createGateScene(
     pendingResult = result;
   }
 
+  // ── Mini-game gate ──────────────────────────────────────────────────────────
+
+  function _launchMiniGame(gate: QuestionGateDef): void {
+    const cfg = gate.miniGame!;
+    const ids = resolveMiniGames(cfg);
+    const gameId = ids[Math.floor(Math.random() * ids.length)];
+    const lines = gate.triggerType === 'auto-lab' ? MINI_GAME_GATE_LINES.lab : MINI_GAME_GATE_LINES.library;
+    startMiniGame(gameId, {
+      level: cfg.level ?? levelForRank(getTrainerRank(getPlayerData()).index, getMiniGame(gameId)),
+      gate: { intro: lines[Math.floor(Math.random() * lines.length)] },
+      onFinish: (outcome) => {
+        overlayRunning = false;
+        miniGamePassed = !!outcome?.cleared;
+      },
+    });
+  }
+
   // ── Post-session result processing ─────────────────────────────────────────
 
   function _applyResult(result: SessionResult): void {
@@ -149,6 +198,16 @@ export function createGateScene(
     if (result.penaltyApplied > 0) {
       pd.money = Math.max(0, pd.money - result.penaltyApplied);
     }
+
+    _unlockAndFire();
+  }
+
+  /** A passed gate: open it for its cooldown, run its success actions, tell the story. */
+  function _unlockAndFire(): void {
+    if (!gateId) return;
+    const gate = getGate(gateId);
+    if (!gate || !hasActiveGame()) return;
+    const pd = getPlayerData();
 
     const cooldown = gate.reopenCooldownMs;
     if (cooldown === 0) {

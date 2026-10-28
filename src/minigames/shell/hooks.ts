@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useInputLayer } from '../../engine/input/index.js';
+import { getInput, useInputLayer } from '../../engine/input/index.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 
 /** True when the OS asks for reduced motion (skips confetti / shakes; CSS freezes the rest). */
@@ -110,4 +110,14 @@ export function useTimeout(fn: () => void, ms: number | null, deps: unknown[] = 
     return () => window.clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ms, ...deps]);
+}
+
+/** Held keys (e.g. moving a catcher in a rAF loop) — fresh presses go through useInputLayer instead. */
+export function anyKeyDown(codes: readonly string[]): boolean {
+  try {
+    const input = getInput();
+    return codes.some((c) => input.isKeyDown(c));
+  } catch {
+    return false;
+  }
 }

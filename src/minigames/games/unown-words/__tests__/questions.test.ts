@@ -10,7 +10,7 @@ import def from '../index.js';
 import { buildContent } from '../content.js';
 import { firstSound, rhymesWith, soundsClash } from '../phonics.js';
 import { generateQuestions, pokemonBySound, sentenceLength, type Question } from '../questions.js';
-import { createRng } from '../random.js';
+import { createRng } from '../../../english/random.js';
 import type { UnownWordsConfig } from '../config.js';
 
 const content = buildContent();

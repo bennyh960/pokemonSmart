@@ -8,6 +8,7 @@
  * Legacy maps with plain string[] are auto-normalized at load time.
  */
 
+import type { MiniGameChoice } from '../minigames/types.js';
 import type { ItemCategory } from '../data/item-defs.js';
 import type { MajorStatusId } from '../types/battle-metadata.js';
 import { getCharacterList } from '../engine/character-sprites.js';
@@ -140,6 +141,8 @@ export interface NPCData {
   spriteType: string;
   autoWalk?: AutoWalkConfig | null;
   reward?: DialogueReward; // Optional reward on first interaction (any NPC type)
+  /** Mini-game host: once its gift (if any) was given, talking ends with "Want to play?" — a picker if several. */
+  miniGame?: MiniGameChoice;
   interactRange?: number; // Max interaction distance in tiles (default 1 = adjacent)
   lineOfSight?: number; // Used by gate-guards and blocker NPCs (default 3)
 

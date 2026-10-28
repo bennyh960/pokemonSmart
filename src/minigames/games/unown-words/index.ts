@@ -15,6 +15,7 @@ export default defineMiniGame<UnownWordsConfig>({
   id: 'unown-words',
   name: { en: 'Unown Word Quest', he: 'מסע המילים של אנאון' },
   tagline: { en: 'Put the living letters back together!', he: 'החזירו את האותיות החיות למקום!' },
+  category: 'english',
   theme: { from: '#7c3aed', to: '#2563eb', accent: '#facc15', accentText: '#1e1b4b' },
   mascotPokemonId: UNOWN_ID,
   levels: [

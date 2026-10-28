@@ -2,9 +2,8 @@
 
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.js';
-import { MINI_GAME_LIST } from '../registry.js';
 import { totalStars } from '../progress.js';
-import type { MiniGameId, MiniGameTheme } from '../types.js';
+import type { AnyMiniGameDef, MiniGameId, MiniGameTheme } from '../types.js';
 import { useMenuNav } from './hooks.js';
 import { MgButton, PokemonSprite, themeBackground } from './ui.js';
 import { miniGameSfx } from './sfx.js';
@@ -12,12 +11,13 @@ import { miniGameSfx } from './sfx.js';
 const PICKER_THEME: MiniGameTheme = { from: '#4f46e5', to: '#db2777', accent: '#fde047', accentText: '#1e1b4b' };
 
 interface Props {
+  games: readonly AnyMiniGameDef[];
   initialId?: MiniGameId;
   onPick: (id: MiniGameId) => void;
   onClose: () => void;
 }
 
-export function GamePicker({ initialId, onPick, onClose }: Props) {
+export function GamePicker({ games, initialId, onPick, onClose }: Props) {
   const { t, locale } = useI18n();
   const [pd] = usePlayerData();
   const save = pd.miniGames ?? {};
@@ -27,15 +27,15 @@ export function GamePicker({ initialId, onPick, onClose }: Props) {
   };
   const initial = Math.max(
     0,
-    MINI_GAME_LIST.findIndex((g) => g.id === initialId),
+    games.findIndex((g) => g.id === initialId),
   );
   // index 0..N-1 = games, N = close button
   const [sel, setSel] = useMenuNav({
     id: 'mg-picker',
-    count: MINI_GAME_LIST.length + 1,
+    count: games.length + 1,
     initial,
     axis: 'both',
-    onSelect: (i) => (i < MINI_GAME_LIST.length ? pick(MINI_GAME_LIST[i].id) : onClose()),
+    onSelect: (i) => (i < games.length ? pick(games[i].id) : onClose()),
     onBack: onClose,
   });
 
@@ -53,8 +53,8 @@ export function GamePicker({ initialId, onPick, onClose }: Props) {
             theme={PICKER_THEME}
             variant="dark"
             onClick={onClose}
-            selected={sel === MINI_GAME_LIST.length}
-            onHover={() => setSel(MINI_GAME_LIST.length)}
+            selected={sel === games.length}
+            onHover={() => setSel(games.length)}
             ariaLabel={t('minigames.close')}
           >
             ✕
@@ -64,7 +64,7 @@ export function GamePicker({ initialId, onPick, onClose }: Props) {
 
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
         <div className="mx-auto grid max-w-5xl gap-4 pt-3 sm:grid-cols-2 lg:grid-cols-3">
-          {MINI_GAME_LIST.map((game, i) => {
+          {games.map((game, i) => {
             const { stars, max } = totalStars(save, game);
             const selected = sel === i;
             return (

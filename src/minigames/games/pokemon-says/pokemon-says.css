@@ -1,0 +1,40 @@
+/* Pokémon Says — game-only styles (prefixed mg-pokemon-says-). */
+
+.mg-root .mg-pokemon-says-bubble {
+  position: absolute;
+  top: -0.6rem;
+  inset-inline-start: 82%;
+  white-space: nowrap;
+  border-radius: 1rem;
+  background: #fff;
+  color: #1e1b4b;
+  padding: 0.25rem 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  box-shadow: 0 4px 0 rgba(30, 27, 75, 0.35);
+  animation: mg-pokemon-says-shout 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.mg-root .mg-pokemon-says-hop {
+  animation: mg-pokemon-says-hop 0.5s ease-in-out 2;
+}
+
+@keyframes mg-pokemon-says-shout {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-12deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+@keyframes mg-pokemon-says-hop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-22px);
+  }
+}

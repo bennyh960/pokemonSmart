@@ -5,7 +5,7 @@
  *   points: 100 for a first-try answer, 50 after a mistake, +10 per combo step (capped)
  */
 
-import type { Stars } from '../../types.js';
+import type { Stars } from '../types.js';
 
 export const MISTAKE_CAP_PER_QUESTION = 2;
 export const POINTS_FIRST_TRY = 100;

@@ -19,6 +19,7 @@ export default defineMiniGame<PokeDokuConfig>({
   id: 'poke-doku',
   name: { en: 'Poké-Doku', he: 'פוקי-דוקו' },
   tagline: { en: 'Every row, column and box — each Pokémon once!', he: 'בכל שורה, טור וריבוע — כל פוקימון פעם אחת!' },
+  category: 'logic',
   theme: { from: '#0891b2', to: '#10b981', accent: '#fb923c', accentText: '#431407' },
   mascotPokemonId: PSYDUCK_ID,
   levels: [

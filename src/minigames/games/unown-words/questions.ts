@@ -9,7 +9,7 @@
 import type { UnownTask, UnownWordsConfig } from './config.js';
 import { ALPHABET, type PictureItem, type UnownContent, type WordPokemon } from './content.js';
 import { firstSound, lookalikes, rhymesWith, soundsClash } from './phonics.js';
-import { pick, sample, shuffle, type Rng } from './random.js';
+import { pick, sample, shuffle, type Rng } from '../../english/random.js';
 import { buildSentence } from './sentences.js';
 
 export interface Speech {

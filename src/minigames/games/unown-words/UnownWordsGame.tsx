@@ -22,12 +22,12 @@ import {
   type Speech,
   type SpellQuestion,
 } from './questions.js';
-import { createRng, pick } from './random.js';
-import { newTally, starsForMistakes, tallyQuestionDone, tallyWrong, type Tally } from './scoring.js';
+import { createRng, pick } from '../../english/random.js';
+import { newTally, starsForMistakes, tallyQuestionDone, tallyWrong, type Tally } from '../../english/scoring.js';
 import { mergeSeen, readSeen } from './seen.js';
 import { BIG_SMALL_PROMPTS, PRAISE, PROMPTS, TEXT } from './text.js';
-import { UnownTile, type TileState } from './UnownTile.js';
-import './unown-words.css';
+import { UnownTile, type TileState } from '../../english/UnownTile.js';
+import '../../english/english.css';
 
 const GAME_ID = 'unown-words';
 /** Pause after a solved question before the next one (lets the word + cry play). */
@@ -264,7 +264,7 @@ export function UnownWordsGame({ level, runId, paused, hud, sfx, onFinish }: Min
           onMouseDown={(e) => e.preventDefault()}
           onClick={replay}
           key={speakerBump}
-          className={`mg-unown-words-speaker ${speakerBump ? 'is-playing' : ''}`}
+          className={`mg-en-speaker ${speakerBump ? 'is-playing' : ''}`}
         >
           🔊
         </button>
@@ -381,16 +381,16 @@ function ChoiceView({ q, solved, showHebrew, wrong, tileState, onChoose }: Choic
       {q.options.map((o, i) => {
         const state = tileState(o.key, i === q.answer);
         return (
-          <span key={o.key} className="mg-unown-words-pop" style={{ '--uw-delay': `${i * 80}ms` } as CSSProperties}>
+          <span key={o.key} className="mg-en-pop" style={{ '--uw-delay': `${i * 80}ms` } as CSSProperties}>
             <button
               key={state === 'wrong' ? `w${wrong?.n}` : 'i'}
               type="button"
               tabIndex={-1}
               onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => onChoose(i, e)}
-              className={`mg-unown-words-card flex w-full flex-col items-center gap-1 px-2 pb-3 pt-4 ${state === 'idle' ? '' : `is-${state}`}`}
+              className={`mg-en-card flex w-full flex-col items-center gap-1 px-2 pb-3 pt-4 ${state === 'idle' ? '' : `is-${state}`}`}
             >
-              <span className="mg-unown-words-keyhint">{i + 1}</span>
+              <span className="mg-en-keyhint">{i + 1}</span>
               {o.pokemonId ? (
                 <PokemonSprite id={o.pokemonId} className="h-20 w-20 object-contain sm:h-28 sm:w-28" />
               ) : (
@@ -464,7 +464,7 @@ function SpellView({ q, step, used, solved, showHelp, showHebrew, wrong, onLette
 
       <div dir="ltr" className="flex flex-wrap justify-center gap-2">
         {q.word.split('').map((letter, i) => (
-          <span key={i} className={`mg-unown-words-slot ${i === step && !solved ? 'is-current' : ''}`}>
+          <span key={i} className={`mg-en-slot ${i === step && !solved ? 'is-current' : ''}`}>
             {i < step && <UnownTile glyph={letter} size="sm" state={solved ? 'correct' : 'idle'} />}
           </span>
         ))}
@@ -553,16 +553,16 @@ function OrderView({ q, step, used, solved, wrong, onPlace }: OrderViewProps) {
         {q.tiles.map((w, i) => {
           const state = used.includes(i) ? 'is-used' : wrong?.key === `t${i}` ? 'is-wrong' : '';
           return (
-            <span key={i} className="mg-unown-words-pop" style={{ '--uw-delay': `${i * 80}ms` } as CSSProperties}>
+            <span key={i} className="mg-en-pop" style={{ '--uw-delay': `${i * 80}ms` } as CSSProperties}>
               <button
                 key={state === 'is-wrong' ? `w${wrong?.n}` : 'i'}
                 type="button"
                 tabIndex={-1}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => onPlace(i, e)}
-                className={`mg-unown-words-card min-h-[3.5rem] px-5 py-3 text-xl font-black sm:text-2xl ${state}`}
+                className={`mg-en-card min-h-[3.5rem] px-5 py-3 text-xl font-black sm:text-2xl ${state}`}
               >
-                <span className="mg-unown-words-keyhint">{i + 1}</span>
+                <span className="mg-en-keyhint">{i + 1}</span>
                 {w}
               </button>
             </span>

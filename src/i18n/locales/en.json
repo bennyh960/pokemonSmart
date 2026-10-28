@@ -751,6 +751,7 @@
   "npc.reward.restoredAsleep": "{name} is full… and fast asleep! Zzz",
   "minigames.title": "Mini Games",
   "minigames.pickerSubtitle": "Pick a game and win prizes!",
+  "minigames.npcAsk": "Want to play a game? You can win prizes!",
   "minigames.close": "Close",
   "minigames.back": "Back",
   "minigames.exit": "Exit",

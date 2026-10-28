@@ -4,13 +4,12 @@
  *   trigger: a party Pokémon at half HP or less (not fainted), whose evolution line has a game with `care`,
  *            standing on a tile of that game's habitat whose encounter filter allows the Pokémon's types.
  *            Chance per step grows as HP drops (CARE_CHANCE_BY_HP), at most once every CARE_COOLDOWN_STEPS steps.
- *   level:   set by the trainer rank (the one on the trainer details screen): Rookie → level 1 … Legendary → last level.
+ *   level:   set by the trainer rank — `levelForRank()` in progress.ts.
  *   prizes:  clearing the round restores the Pokémon (+ a rare bonus). No level prizes.
  *
  * Pure logic (no React, no audio, no saving) except the cooldown, which lives in memory only.
  */
 
-import { TRAINER_RANKS } from '../data/trainer-ranks.js';
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { tileAllowsTypes } from '../systems/encounter.js';
 import type { PlayerData, Pokemon } from '../types/index.js';
@@ -103,16 +102,6 @@ export function rollCareTrigger(pd: PlayerData, tile: CareTile, rng: () => numbe
   if (!match || rng() >= careChance(match.pokemon)) return null;
   lastCareStep = pd.totalSteps;
   return match;
-}
-
-/**
- * Level of a care round from the trainer rank index (`getTrainerRank(pd).index`), spread evenly over the
- * game's levels: lowest rank → first level, highest rank → last level. Ignores level unlocks.
- */
-export function careLevelForRank(rankIndex: number, def: AnyMiniGameDef): number {
-  const steps = Math.max(1, TRAINER_RANKS.length - 1);
-  const i = Math.round((Math.max(0, Math.min(steps, rankIndex)) * (def.levels.length - 1)) / steps);
-  return def.levels[i]?.number ?? 1;
 }
 
 /** Prizes of a finished care round: the heal, and sometimes the bonus. Nothing when not cleared. */

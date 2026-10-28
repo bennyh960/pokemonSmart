@@ -18,8 +18,10 @@ interface Props {
   backLabel: string;
   /** The Pokémon shown as the mascot (the care Pokémon in a care round). */
   pokemonId: number;
-  /** Care round: this line replaces the level picker and prizes (the level is fixed). */
-  careLine?: string;
+  /** Fixed round (care / building gate): this line replaces the level picker (the level is fixed). */
+  fixedLine?: string;
+  /** False in a care round (it heals instead of giving level prizes). */
+  levelPrizes?: boolean;
 }
 
 export function IntroCard({
@@ -31,7 +33,8 @@ export function IntroCard({
   onBack,
   backLabel,
   pokemonId,
-  careLine,
+  fixedLine,
+  levelPrizes = true,
 }: Props) {
   const { t, locale } = useI18n();
   const levelIndex = Math.max(
@@ -40,15 +43,15 @@ export function IntroCard({
   );
   const level = def.levels[levelIndex];
   const progress = getLevelProgress(save, def.id, level.number);
-  // A care round's level comes from the trainer rank — never locked
-  const unlocked = !!careLine || isLevelUnlocked(save, def.id, level.number);
+  // A fixed round's level is set by the caller — never locked
+  const unlocked = !!fixedLine || isLevelUnlocked(save, def.id, level.number);
   const chipsRef = useRef<HTMLDivElement>(null);
 
   useMenuNav({
     id: `mg-intro-${def.id}`,
-    count: careLine ? 1 : def.levels.length,
-    index: careLine ? 0 : levelIndex,
-    onIndexChange: (i) => !careLine && onLevelChange(def.levels[i].number),
+    count: fixedLine ? 1 : def.levels.length,
+    index: fixedLine ? 0 : levelIndex,
+    onIndexChange: (i) => !fixedLine && onLevelChange(def.levels[i].number),
     axis: 'both',
     onSelect: () => unlocked && onPlay(),
     onBack,
@@ -94,14 +97,14 @@ export function IntroCard({
           </div>
         </div>
 
-        {careLine && (
+        {fixedLine && (
           <p className="mg-pop-in mg-glass rounded-3xl px-5 py-4 text-center text-xl font-black text-white shadow-xl">
-            {careLine}
+            {fixedLine}
           </p>
         )}
 
         {/* Level chips */}
-        <div ref={chipsRef} className={`-mx-4 flex gap-3 overflow-x-auto px-4 pt-1 pb-3 ${careLine ? 'hidden' : ''}`}>
+        <div ref={chipsRef} className={`-mx-4 flex gap-3 overflow-x-auto px-4 pt-1 pb-3 ${fixedLine ? 'hidden' : ''}`}>
           {def.levels.map((l, i) => {
             const lp = getLevelProgress(save, def.id, l.number);
             const open = isLevelUnlocked(save, def.id, l.number);
@@ -145,7 +148,7 @@ export function IntroCard({
             <p className="mt-3 rounded-2xl bg-black/25 px-4 py-3 text-center text-lg font-black">
               🔒 {t('minigames.locked', { stars: UNLOCK_STARS, n: level.number - 1 })}
             </p>
-          ) : careLine ? null : (
+          ) : !levelPrizes ? null : (
             <div className="mt-3 flex flex-wrap gap-2">
               {toWin.map(({ kind, prize }) => (
                 <PrizeChip key={kind} label={t(`minigames.prize.${kind}`)} prize={prize} />
