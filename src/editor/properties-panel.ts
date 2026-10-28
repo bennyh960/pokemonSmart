@@ -4198,32 +4198,38 @@ export class PropertiesPanel {
     return row;
   }
 
-  /** Create a small info icon/tooltip element. */
   /** "Light X/Y" inputs for a gate light (systems/gate-lights.ts). Both empty = no light. */
   private makeGateLightRow(target: { light?: { x: number; y: number } }, onChange: () => void, info: string): HTMLElement {
     const row = document.createElement('div');
     row.className = 'prop-row';
     row.innerHTML = '<label>Light X/Y:</label>';
-    const mk = (val: number | undefined) => {
+    const mk = (val: number | undefined, placeholder: string) => {
       const input = document.createElement('input');
       input.type = 'number';
       input.style.width = '50px';
+      input.placeholder = placeholder;
       input.value = val !== undefined ? String(val) : '';
       input.addEventListener('change', sync);
       row.appendChild(input);
       return input;
     };
-    const xIn = mk(target.light?.x);
-    const yIn = mk(target.light?.y);
+    const xIn = mk(target.light?.x, 'x');
+    const yIn = mk(target.light?.y, 'y');
+    // Save only when both are filled (or both cleared): saving re-renders the panel,
+    // which would wipe a half-typed pair
     function sync(): void {
-      if (xIn.value === '' || yIn.value === '') delete target.light;
-      else target.light = { x: Number(xIn.value), y: Number(yIn.value) };
+      const hasX = xIn.value !== '';
+      const hasY = yIn.value !== '';
+      if (hasX !== hasY) return;
+      if (hasX) target.light = { x: Number(xIn.value), y: Number(yIn.value) };
+      else delete target.light;
       onChange();
     }
     row.appendChild(this.makeInfo(info));
     return row;
   }
 
+  /** Create a small info icon/tooltip element. */
   private makeInfo(text: string): HTMLElement {
     const span = document.createElement('span');
     span.textContent = 'ℹ';
