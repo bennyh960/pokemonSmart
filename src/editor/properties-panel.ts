@@ -693,6 +693,13 @@ export class PropertiesPanel {
       this.makeInfo('Select an existing gate or type a new ID. Gates are defined in src/data/story/gates.ts.'),
     );
     section.appendChild(gateRow);
+    section.appendChild(
+      this.makeGateLightRow(
+        npcAny as { light?: { x: number; y: number } },
+        emit,
+        'Tile for the red/green gate light (solid, talkable). Leave empty for no light.',
+      ),
+    );
 
     // Passed Dialogue EN
     const passedDef = (npcAny['passedDialogue'] as Array<{ en: string; he: string }>) || [];
@@ -3259,6 +3266,13 @@ export class PropertiesPanel {
     });
 
     body.appendChild(destContainer);
+    body.appendChild(
+      this.makeGateLightRow(
+        tr,
+        () => this.state.emit('map-modified'),
+        'Door into a gated building (Pokémon Center, Mart, gym…): tile for its red/green light. Leave empty for no light.',
+      ),
+    );
 
     // Warn if multiple transitions use returnToPrevious (only one entry point is saved at a time)
     const warnEl = document.createElement('div');
@@ -4185,6 +4199,31 @@ export class PropertiesPanel {
   }
 
   /** Create a small info icon/tooltip element. */
+  /** "Light X/Y" inputs for a gate light (systems/gate-lights.ts). Both empty = no light. */
+  private makeGateLightRow(target: { light?: { x: number; y: number } }, onChange: () => void, info: string): HTMLElement {
+    const row = document.createElement('div');
+    row.className = 'prop-row';
+    row.innerHTML = '<label>Light X/Y:</label>';
+    const mk = (val: number | undefined) => {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.style.width = '50px';
+      input.value = val !== undefined ? String(val) : '';
+      input.addEventListener('change', sync);
+      row.appendChild(input);
+      return input;
+    };
+    const xIn = mk(target.light?.x);
+    const yIn = mk(target.light?.y);
+    function sync(): void {
+      if (xIn.value === '' || yIn.value === '') delete target.light;
+      else target.light = { x: Number(xIn.value), y: Number(yIn.value) };
+      onChange();
+    }
+    row.appendChild(this.makeInfo(info));
+    return row;
+  }
+
   private makeInfo(text: string): HTMLElement {
     const span = document.createElement('span');
     span.textContent = 'ℹ';

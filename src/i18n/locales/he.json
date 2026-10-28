@@ -742,5 +742,18 @@
   "battle.disobey.confident": "{name} בטוח מדי בעצמו בשביל להקשיב!",
   "battle.disobey.ignore": "{name} התעלם מהפקודה שלך!",
   "battle.disobey.hint": "{name} רוצה לראות כמה אתה חזק. אמן עוד פוקימון לרמה {level}, או הפוך למאמן בדרגת {rank}.",
-  "battle.hallOfFame": "הצוות שלך נכנס להיכל התהילה! ניצחונות בליגה: {count}"
+  "battle.hallOfFame": "הצוות שלך נכנס להיכל התהילה! ניצחונות בליגה: {count}",
+
+  "gateLight.red": "אור אדום! השומר צריך לבדוק אותך קודם. תענה על השאלות והאור יהפוך לירוק!",
+  "gateLight.redDoor": "אור אדום! תענה על כמה שאלות בדלת והאור יהפוך לירוק!",
+  "gateLight.forever": "אור ירוק לתמיד! מכאן אפשר לעבור תמיד.",
+  "gateLight.clock.title": "אור ירוק!",
+  "gateLight.clock.left": "המעבר החופשי שלך נמשך עוד {minutes} דקות.",
+  "gateLight.clock.ask": "באיזו שעה האור יהפוך לאדום?",
+  "gateLight.clock.check": "בדיקה",
+  "gateLight.clock.badFormat": "כתוב את השעה כך: 20:25",
+  "gateLight.clock.right": "נכון! המעבר שלך מלא שוב: {minutes} דקות!",
+  "gateLight.clock.wrong": "כמעט! האור יהפוך לאדום ב-{time}. המעבר שלך עדיין עובד.",
+  "gateLight.clock.leave": "יציאה",
+  "gateLight.clock.ok": "אישור"
 }

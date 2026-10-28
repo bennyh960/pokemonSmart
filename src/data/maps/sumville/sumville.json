@@ -70,7 +70,11 @@
       "fromY": 37,
       "toMapId": "shared/pokecenter-2",
       "toX": 4,
-      "toY": 7
+      "toY": 7,
+      "light": {
+        "x": 40,
+        "y": 38
+      }
     },
     {
       "fromX": 14,
@@ -1099,7 +1103,11 @@
       "gateId": "gate-route1-sumville",
       "spawnAfter": "act1-oak-warning-heard",
       "autoWalk": null,
-      "interactRange": 2
+      "interactRange": 2,
+      "light": {
+        "x": 5,
+        "y": 32
+      }
     },
     {
       "id": "sumville-gym-blocker",

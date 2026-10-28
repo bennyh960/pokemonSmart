@@ -75,6 +75,11 @@ export function registerAutoGateMap(mapId: string, service: AutoGateService, ove
   _autoGateMapRegistry.set(mapId, { service, gateId });
 }
 
+/** The gate that checks players entering this map (service interiors), if any. */
+export function getAutoGateIdForMap(mapId: string): string | undefined {
+  return _autoGateMapRegistry.get(mapId)?.gateId;
+}
+
 const AUTO_GATE_IDS: Record<AutoGateService, string> = {
   pokecenter: 'auto-pokecenter',
   pokemarket: 'auto-pokemarket',
@@ -209,13 +214,15 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
   autoSave();
 }
 
+/** The player's pass for a gate: undefined = none, 0 = permanent, otherwise expiry (epoch ms). */
+export function getGatePassExpiry(gateId: string): number | undefined {
+  if (!hasActiveGame()) return undefined;
+  return getPlayerData().story?.gateUnlocks[gateId];
+}
+
 /** Check if a gate is currently unlocked (timed pass still active). */
 export function isGateUnlocked(gateId: string): boolean {
-  if (!hasActiveGame()) return false;
-  const pd = getPlayerData();
-  const story = pd.story;
-  if (!story) return false;
-  const expiry = story.gateUnlocks[gateId];
+  const expiry = getGatePassExpiry(gateId);
   if (expiry === undefined) return false;
   if (expiry === 0) return true; // permanent
   return Date.now() < expiry;

@@ -30,6 +30,8 @@ export interface MapTransition {
   toX?: number;
   toY?: number;
   returnToPrevious?: boolean;
+  /** Where to draw the red/green gate light for a door into a gated building (see systems/gate-lights.ts). */
+  light?: { x: number; y: number };
 }
 
 import type { InteractArgs } from '../data/interact-types.js';
@@ -281,9 +283,12 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
   const { width, height, tileSize, tiles, spawn, name } = data;
   const objectLayer = data.objectLayer ?? null;
   const placedObjects = data.objects ?? [];
+  const transitions = data.transitions ?? [];
   const interactOverrides = buildInteractOverrides(data.interactiveItems ?? {}, placedObjects);
   const BASE = 16; // base grid unit
   const flagListenerDefs = data.flagListeners ?? [];
+  /** Extra runtime blocker set by the scene (e.g. gate lights) — checked before tiles. */
+  let extraBlocker: ((gx: number, gy: number) => boolean) | null = null;
 
   return {
     name,
@@ -371,12 +376,23 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
       return false;
     },
 
+    /** Mark extra cells as solid at runtime (things drawn by the scene, not by the tileset). */
+    setExtraBlocker(fn: ((gx: number, gy: number) => boolean) | null): void {
+      extraBlocker = fn;
+    },
+
     isWalkable(gx: number, gy: number): boolean {
+      if (extraBlocker?.(gx, gy)) return false;
       // Object tiles override base tile walkability.
       // `above` is purely a render hint — it has no effect on walkability.
       // Example: bridge (above:true, walkable:true) over water (walkable:false) → CAN walk.
       // Example: tree trunk (above:false, walkable:false) over grass (walkable:true) → CANNOT walk.
+      // Stacked objects: any solid one blocks (a fence placed on a path tile), whatever the
+      // placement order — except on a door, where a walkable door tile opens the cell.
       if (tileset) {
+        let hasObject = false;
+        let hasSolid = false;
+        let hasWalkable = false;
         for (const obj of placedObjects) {
           const def = tileset.getTile(obj.key);
           if (!def) continue;
@@ -386,8 +402,14 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           const ly = gy - obj.y;
           if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
             if (!occupiesCell(def, lx, ly)) continue;
-            return def.walkable; // object tile is present — its walkable is the answer
+            hasObject = true;
+            if (def.walkable) hasWalkable = true;
+            else hasSolid = true;
           }
+        }
+        if (hasObject) {
+          if (!hasSolid) return true;
+          return hasWalkable && transitions.some((tr) => tr.fromX === gx && tr.fromY === gy);
         }
         // Also check deprecated objectLayer
         const olTile = objectLayer?.[gy]?.[gx];

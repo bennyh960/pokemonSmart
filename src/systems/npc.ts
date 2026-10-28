@@ -263,6 +263,8 @@ export interface GateGuardData extends NPCData {
   lineOfSight?: number;
   /** Dialogue shown after the gate has been passed. Defaults to a generic "you may pass" line. */
   passedDialogue?: BilingualText[];
+  /** Where to draw this gate's red/green light (see systems/gate-lights.ts). Absent = no light. */
+  light?: { x: number; y: number };
 }
 
 /** Trainer NPC with party and battle data. */
