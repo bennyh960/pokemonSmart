@@ -25,7 +25,7 @@ import { LOGICAL_WIDTH as W, LOGICAL_HEIGHT as H, TILE_SIZE } from '../engine/co
 import { getLocale, isRTL } from '../i18n/i18n.js';
 import { getItem } from '../data/items.js';
 import { getCutscene } from '../data/story/cutscenes.js';
-import CHARACTERS_DATA from '../data/sprites/characters.json';
+import { getCharacterFrame, getCharacterInfo } from '../engine/character-sprites.js';
 
 // ---------------------------------------------------------------------------
 // Context — callbacks the overworld provides so the runner can poke state
@@ -80,13 +80,6 @@ interface DialogueState {
   waitingDismiss: boolean; // true once all chars revealed, waiting for Enter
 }
 
-type CharEntry = {
-  name?: { en: string; he: string };
-  frames: Array<{ sx: number; sy: number } | null>;
-  frameWidth: number;
-  frameHeight: number;
-};
-
 interface FadeState {
   direction: 'in' | 'out';
   alpha: number; // current alpha (0=transparent,1=opaque)
@@ -134,23 +127,6 @@ let _fxWaiting = false;
 let _completionResolve: (() => void) | null = null;
 
 const CHARS_PER_SEC = 40; // typewriter speed
-
-// Lazily loaded character spritesheet for dialogue portrait icons
-let _charSheetImg: HTMLImageElement | null = null;
-let _charSheetLoading = false;
-
-function getCharSheet(): HTMLImageElement | null {
-  if (_charSheetImg) return _charSheetImg;
-  if (!_charSheetLoading) {
-    _charSheetLoading = true;
-    const img = new Image();
-    img.src = CHARACTERS_DATA.image;
-    img.onload = () => {
-      _charSheetImg = img;
-    };
-  }
-  return null;
-}
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -503,7 +479,6 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       const resolvedLines = typeof step.lines === 'function' ? step.lines() : step.lines;
       const lines = resolvedLines.map((l) => (locale === 'he' ? l.he : l.en) || l.en || '');
 
-      const chars = CHARACTERS_DATA.characters as unknown as Record<string, CharEntry>;
       let speakerDisplayName: string | undefined;
       let speakerCharId: string | undefined;
 
@@ -514,12 +489,13 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
         );
 
         for (const candidateId of candidateIds) {
-          const charEntry = chars[candidateId];
-          if (!charEntry) continue;
+          const charInfo = getCharacterInfo(candidateId);
+          if (!charInfo) continue;
 
           speakerCharId = candidateId;
-          if (charEntry.name) {
-            speakerDisplayName = locale === 'he' ? charEntry.name.he : charEntry.name.en;
+          const name = locale === 'he' ? charInfo.name.he : charInfo.name.en;
+          if (name) {
+            speakerDisplayName = name;
             break;
           }
         }
@@ -888,25 +864,10 @@ function renderDialogue(ctx: CanvasRenderingContext2D, d: DialogueState): void {
     let nameX: number;
 
     if (d.speakerCharId) {
-      const img = getCharSheet();
-      if (img) {
-        const charEntry = (CHARACTERS_DATA.characters as unknown as Record<string, CharEntry>)[d.speakerCharId];
-        const downStandIdx = (CHARACTERS_DATA.dict as Record<string, number>)['down-stand'] ?? 3;
-        const frame = charEntry?.frames[downStandIdx];
-        if (frame && charEntry) {
-          const iconX = rtl ? BOX_X + BOX_W - PADDING - ICON_SIZE : BOX_X + PADDING;
-          ctx.drawImage(
-            img,
-            frame.sx,
-            frame.sy,
-            charEntry.frameWidth,
-            charEntry.frameHeight,
-            iconX,
-            BOX_Y + 2,
-            ICON_SIZE,
-            ICON_SIZE,
-          );
-        }
+      const frame = getCharacterFrame(d.speakerCharId, 'down', 'stand');
+      if (frame) {
+        const iconX = rtl ? BOX_X + BOX_W - PADDING - ICON_SIZE : BOX_X + PADDING;
+        ctx.drawImage(frame.image, frame.sx, frame.sy, frame.w, frame.h, iconX, BOX_Y + 2, ICON_SIZE, ICON_SIZE);
       }
       nameX = rtl ? BOX_X + BOX_W - PADDING - ICON_SIZE - 3 : BOX_X + PADDING + ICON_SIZE + 3;
     } else {

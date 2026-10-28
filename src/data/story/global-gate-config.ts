@@ -109,44 +109,59 @@ export const AUTO_GATE_REWARDS: Record<string, GateReward[]> = {
 export const VERIFICATION_DIALOGUES = {
   pokecenter: [
     {
-      en: "HALT! Nurse Joy's sensors detected a possible NULL-X signature. Please verify your identity to enter.",
-      he: "עצור! חיישני האחות ג'וי זיהו חתימה אפשרית של NULL-X. אנא אמת את זהותך כדי להיכנס.",
+      en: "Nurse Joy: Welcome! A quick check before we heal your Pokémon — answer a few questions!",
+      he: "האחות ג'וי: ברוך הבא! בדיקה קטנה לפני שנרפא את הפוקימונים שלך — ענה על כמה שאלות!",
     },
     {
-      en: 'This pokecenter is protected. Only verified trainers may enter. Prove you are not a glitch.',
-      he: 'מרכז הפוקימון מוגן. רק מאמנים מאומתים יכולים להיכנס. הוכח שאינך תקלה.',
+      en: "Beep beep! The door scanner wants to make sure you're a real trainer, not NULL-X!",
+      he: 'ביפ ביפ! סורק הדלת רוצה לוודא שאתה מאמן אמיתי ולא NULL-X!',
     },
     {
-      en: "Welcome, trainer! Before we heal your pokemon, we must confirm you're not a NULL-X infiltrator.",
-      he: 'ברוך הבא, מאמן! לפני שנרפא את הפוקמונים שלך, עלינו לוודא שאינך מסתנן של NULL-X.',
+      en: 'Your Pokémon need a rest! Solve these and come right in.',
+      he: 'הפוקימונים שלך צריכים מנוחה! פתור את אלה ותיכנס מיד.',
     },
   ],
   pokemarket: [
     {
-      en: 'Shop clerk: The market security system flagged your approach. Answer these questions to shop freely.',
-      he: 'פקיד החנות: מערכת האבטחה של השוק סימנה את ההתקרבות שלך. ענה על שאלות אלה כדי לקנות בחופשיות.',
+      en: 'Clerk: Hi there! NULL-X tried to sneak into our shop. Answer a few questions and shop all you want!',
+      he: 'המוכר: היי! NULL-X ניסה להתגנב לחנות שלנו. ענה על כמה שאלות ותקנה כמה שתרצה!',
     },
     {
-      en: 'Security alert: NULL-X has been known to drain market funds. Identity check required.',
-      he: 'התראת אבטחה: ידוע כי NULL-X מרוקן כספי שוק. נדרש בדיקת זהות.',
+      en: 'Beep! The shop alarm is on. Smart trainers turn it off by solving questions!',
+      he: 'ביפ! האזעקה של החנות דולקת. מאמנים חכמים מכבים אותה כשהם פותרים שאלות!',
     },
     {
-      en: 'The pokemart requires verification before large purchases. Please solve these to continue.',
-      he: 'הפוקמרט דורש אימות לפני רכישות גדולות. אנא פתור את אלה כדי להמשיך.',
+      en: "Shopping time! But first, show the shop you're a real trainer.",
+      he: 'זמן קניות! אבל קודם, תראה לחנות שאתה מאמן אמיתי.',
     },
   ],
   gym: [
     {
-      en: 'GYM GUARD: This gym has been targeted by NULL-X. Prove your intelligence before you may challenge the leader!',
-      he: 'שומר הGYM: ה-GYM הזה ממוקד על ידי NULL-X. הוכח את האינטליגנציה שלך לפני שתוכל לאתגר את המנהיג!',
+      en: 'Gym Guide: Want to battle the Gym Leader? First we train the brain!',
+      he: 'מדריך המכון: רוצה להילחם במנהיג המכון? קודם מאמנים את המוח!',
     },
     {
-      en: 'Only real trainers may challenge this gym. NULL-X cannot solve these math puzzles. Can you?',
-      he: 'רק מאמנים אמיתיים יכולים לאתגר את ה-GYM הזה. NULL-X לא יכול לפתור את חידות המתמטיקה האלה. אתה יכול?',
+      en: "Only smart trainers get in! NULL-X can't solve these — can you?",
+      he: 'רק מאמנים חכמים נכנסים! NULL-X לא מצליח לפתור את אלה — ואתה?',
     },
     {
-      en: 'The gym leader will only battle those who have proven their mind is their own. Take the verification test.',
-      he: 'מנהיג ה-GYM יתמודד רק עם אלה שהוכיחו שדעתם שייכת להם. קח את מבחן האימות.',
+      en: "The Gym Leader is watching! Show what you've got.",
+      he: 'מנהיג המכון צופה בך! תראה מה אתה יודע.',
+    },
+  ],
+  /** Gate guards and gate tiles on roads. */
+  guard: [
+    {
+      en: 'Halt, trainer! Answer my questions and the road is yours!',
+      he: 'עצור, מאמן! ענה על השאלות שלי והדרך שלך!',
+    },
+    {
+      en: "NULL-X glitches can't do math. Show me you can!",
+      he: "הגליצ'ים של NULL-X לא יודעים חשבון. תראה לי שאתה כן!",
+    },
+    {
+      en: 'Checkpoint! A few quick questions and you can go on.',
+      he: 'מחסום! כמה שאלות קצרות ותוכל להמשיך.',
     },
   ],
 };
@@ -179,7 +194,7 @@ export const MINI_GAME_GATE_LINES = {
 
 registerGate({
   id: 'auto-pokecenter',
-  title: { en: 'Pokecenter Identity Check', he: 'בדיקת זהות מרכז פוקימון' },
+  title: { en: 'Pokémon Center Check', he: 'בדיקה במרכז הפוקימונים' },
   description: {
     en: 'Prove you are not NULL-X to access healing services.',
     he: 'הוכח שאינך NULL-X כדי לגשת לשירותי ריפוי.',
@@ -197,7 +212,7 @@ registerGate({
 
 registerGate({
   id: 'auto-pokemarket',
-  title: { en: 'Pokemart Security Check', he: 'בדיקת אבטחה פוקמרט' },
+  title: { en: 'Poké Mart Check', he: 'בדיקה בחנות' },
   description: { en: 'Market security requires identity verification.', he: 'אבטחת השוק דורשת אימות זהות.' },
   triggerType: 'auto-pokemarket',
   questionSetIds: ['*'],
@@ -212,7 +227,7 @@ registerGate({
 
 registerGate({
   id: 'auto-gym',
-  title: { en: 'Gym Entrance Verification', he: 'אימות כניסה למכון' },
+  title: { en: 'Gym Entrance Check', he: 'בדיקה בכניסה למכון' },
   description: {
     en: 'The gym only admits verified, non-glitched trainers.',
     he: 'המכון מקבל רק מאמנים מאומתים - אמצעי זהירות כנגד צוות רוקט.',

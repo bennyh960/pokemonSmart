@@ -20,7 +20,7 @@ import type { Scene } from '../types/index.js';
 import type { StateMachine } from '../engine/state-machine.js';
 import { drawText, fillRect } from '../engine/renderer.js';
 import { LOGICAL_WIDTH as SCREEN_W, LOGICAL_HEIGHT as SCREEN_H } from '../engine/config.js';
-import { isRTL, getLocale } from '../i18n/i18n.js';
+import { isRTL, getLocale, t } from '../i18n/i18n.js';
 import { getGate } from '../data/story/gates.js';
 import {
   fireStoryTrigger,
@@ -29,6 +29,7 @@ import {
   isGateUnlocked,
   getActiveGateId,
   clearActiveGate,
+  markGateExited,
 } from '../systems/story-engine.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { mountGateOverlay } from '../systems/gate-overlay.js';
@@ -117,6 +118,11 @@ export function createGateScene(
 
       if (!overlayRunning && pendingResult && !resolved) {
         resolved = true;
+        if (pendingResult.exited) {
+          if (gateId) markGateExited(gateId);
+          stateMachine.pop();
+          return;
+        }
         const passed = pendingResult.passed;
         _applyResult(pendingResult);
         // Play success jingle before popping (audio is restored in exit())
@@ -278,7 +284,7 @@ export function createGateScene(
 
     const titleText = gate
       ? (locale === 'he' ? gate.title.he : gate.title.en)
-      : (locale === 'he' ? 'מחסום' : 'Checkpoint');
+      : t('gate.ui.checkpoint');
 
     drawText(ctx, titleText, SCREEN_W / 2, 20, {
       size: 8,
@@ -287,7 +293,7 @@ export function createGateScene(
       direction: rtl ? 'rtl' : 'ltr',
     });
 
-    const waitText = locale === 'he' ? 'בדיקת זהות מתבצעת…' : 'Identity verification…';
+    const waitText = t('gate.ui.waiting');
     if (Math.floor(Date.now() / 700) % 2 === 0) {
       drawText(ctx, waitText, SCREEN_W / 2, SCREEN_H / 2, {
         size: 6,
@@ -305,10 +311,5 @@ function _dialoguesFor(triggerType: string): Array<{ en: string; he: string }> {
   if (triggerType === 'auto-pokecenter') return VERIFICATION_DIALOGUES.pokecenter;
   if (triggerType === 'auto-pokemarket') return VERIFICATION_DIALOGUES.pokemarket;
   if (triggerType === 'auto-gym-entrance') return VERIFICATION_DIALOGUES.gym;
-
-  return [
-    { en: 'Verify your identity to proceed. NULL-X glitches cannot pass.', he: 'אמת את זהותך כדי להמשיך. תקלות NULL-X לא יכולות לעבור.' },
-    { en: 'HALT! The gate security requires proof you are a real trainer.', he: 'עצור! אבטחת השער דורשת הוכחה שאתה מאמן אמיתי.' },
-    { en: 'This checkpoint is protected by the Anti-NULL-X Verification Protocol.', he: 'מחסום זה מוגן על ידי פרוטוקול אימות הנגד-NULL-X.' },
-  ];
+  return VERIFICATION_DIALOGUES.guard;
 }

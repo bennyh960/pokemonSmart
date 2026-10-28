@@ -38,6 +38,10 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] More games later: labs have only Poké-Doku (logic) — add logic games, maybe with their own ladder/board like English
 - [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.5 MB, mostly JSON data)
 
+## Gates (kids-friendly pass)
+- [ ] Gate lights (`systems/gate-lights.ts`): only Sumville has lights (Route 1 guard, Pokémon Center door). Place the rest with the editor's "Light X/Y" on each gate-guard / gated door
+- [ ] On hold: city guards stay open until you leave the map (in vs out)
+
 ## Bugs
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"

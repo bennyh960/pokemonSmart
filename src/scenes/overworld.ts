@@ -108,7 +108,10 @@ import {
   checkAndResumeDelayedEvents,
   applyCompletedEventNpcPositions,
   runStoryAction,
+  consumeExitedGate,
+  getAutoGateIdForMap,
 } from '../systems/story-engine.js';
+import { collectGateLights, gateLightAt, getGatePass, drawGateLight, type GateLight } from '../systems/gate-lights.js';
 import {
   isCutsceneActive,
   activateCutscene,
@@ -294,6 +297,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // NPC state
   let npcManager: NPCManager | null = null;
+  /** Red/green gate lights on this map (systems/gate-lights.ts). */
+  let gateLights: GateLight[] = [];
+  /** A light hides with its guard (e.g. a guard that despawns after the story moves on). */
+  function visibleGateLightAt(x: number, y: number): GateLight | undefined {
+    const light = gateLightAt(gateLights, x, y);
+    if (!light?.guard) return light;
+    const pd = hasActiveGame() ? getPlayerData() : null;
+    return isNPCVisible(light.guard, pd?.flags ?? {}, pd?.party) ? light : undefined;
+  }
 
   // Dialogue state
   let activeTextBox: ReturnType<typeof createTextBox> | null = null;
@@ -449,6 +461,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Pending push-back after gate scene dismissal without passing
   let pendingGateBack: { pushDx: number; pushDy: number; gateId: string } | null = null;
+  /** "Oops, wrong way" line — shown once the player has stepped back / walked out after leaving a gate. */
+  let pendingOopsLine: string | null = null;
 
   // Blocks all input while an NPC math-question overlay is running
   let npcOverlayActive = false;
@@ -2014,6 +2028,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     npcStates.clear(); // reset runtime states for new map
     npcSavedFacing.clear();
 
+    gateLights = collectGateLights(data as TileMapData);
+    tileMap.setExtraBlocker((x, y) => !!visibleGateLightAt(x, y));
+
     // Replay completed cutscene steps (move-npc, hide-npc) on every map load so
     // NPCs stay at their post-cutscene positions/visibility after transitions.
     if (hasActiveGame()) {
@@ -2655,6 +2672,24 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
+      // Player left a gate's question screen: walk back out of a gated building,
+      // or take one step back from a guard / gate tile
+      const exitedGateId = consumeExitedGate();
+      if (exitedGateId) {
+        pendingOopsLine = t('gate.oops');
+        const isBuildingGate = !!currentMapData?.id && getAutoGateIdForMap(currentMapData.id) === exitedGateId;
+        if (isBuildingGate && previousMapReturn) {
+          transitionState = 'fade-out';
+          transitionTimer = 0;
+          transitionTarget = { ...previousMapReturn };
+          return;
+        }
+        const facingVec = DIR_VECTORS[player.facing];
+        if (!pendingGateBack && facingVec) {
+          pendingGateBack = { gateId: exitedGateId, pushDx: -facingVec.dx, pushDy: -facingVec.dy };
+        }
+      }
+
       // Push player back after gate dismissal without passing
       if (pendingGateBack) {
         const pb = pendingGateBack;
@@ -2678,6 +2713,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             player.walkFrame = 1;
           }
         }
+      }
+
+      if (pendingOopsLine && !player.moving && !activeTextBox) {
+        activeTextBox = createTextBox([pendingOopsLine], isRTL());
+        pendingOopsLine = null;
+        return;
       }
 
       // Push player back after party-guard blocks them
@@ -3503,7 +3544,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 const passed =
                   guard.passedDialogue && guard.passedDialogue.length > 0
                     ? resolveDialogue(guard.passedDialogue, getLocale())
-                    : [getLocale() === 'he' ? 'תעבור, בבקשה!' : 'You may pass!'];
+                    : [t('gate.youMayPass')];
                 activeTextBox = createTextBox(passed, isRTL(), npcName);
               } else {
                 // Gate locked — show blocking dialogue, then launch gate scene on dismiss
@@ -3532,6 +3573,23 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             activeTextBox = createTextBox(resolvedLines, isRTL(), npc.name ? getLocalizedName(npc.name) : undefined);
             interactingNPC = npc;
             turnNPCToPlayer(npc);
+            return;
+          }
+        }
+
+        // Gate light: red = questions first, green = clock challenge to refill the pass
+        {
+          const vec = DIR_VECTORS[player.facing];
+          const light = vec && hasActiveGame() ? visibleGateLightAt(player.gridX + vec.dx, player.gridY + vec.dy) : undefined;
+          if (light) {
+            const pass = getGatePass(light.gateId);
+            if (pass.kind === 'timed') {
+              setActiveGate(light.gateId);
+              stateMachine.push('GATE_CLOCK');
+            } else {
+              const key = pass.kind === 'forever' ? 'gateLight.forever' : light.guard ? 'gateLight.red' : 'gateLight.redDoor';
+              activeTextBox = createTextBox([t(key)], isRTL());
+            }
             return;
           }
         }
@@ -3646,8 +3704,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                     // Check if gate is already unlocked (timed pass still active)
                     if (isGateUnlocked(effectiveGateId)) {
                       // Already passed — show brief confirmation and allow through
-                      const locale = getLocale();
-                      const msg = locale === 'he' ? 'המסלול פתוח.' : 'The path is open.';
+                      const msg = t('gate.pathOpen');
                       activeTextBox = createTextBox([msg], isRTL());
                       return;
                     }
@@ -4194,6 +4251,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       // Sort by Y and render
+      // Gate lights Y-sort like NPCs
+      for (const light of gateLights) {
+        if (!visibleGateLightAt(light.x, light.y)) continue;
+        const lx = light.x * TILE_SIZE - camera.x;
+        const ly = light.y * TILE_SIZE - camera.y;
+        renderables.push({ y: light.y * TILE_SIZE, render: () => drawGateLight(ctx, lx, ly, getGatePass(light.gateId)) });
+      }
+
       renderables.sort(compareRenderables);
       for (const r of renderables) r.render();
 

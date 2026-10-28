@@ -909,16 +909,16 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "הדרך חסומה לצרכי בטיחות"
+          "en": "The road is closed to keep everyone safe.",
+          "he": "הדרך סגורה כדי לשמור על כולם."
         },
         {
-          "en": "",
-          "he": "מסתבר שיש מגיפה טכנולוגית שמתפשטת"
+          "en": "A strange computer-bug sickness is spreading!",
+          "he": "מחלת מחשבים מוזרה מתפשטת באזור!"
         },
         {
-          "en": "",
-          "he": "לא נפתח את המעבר עד שלא נסיים את החקירה"
+          "en": "Only smart trainers who answer my questions may pass.",
+          "he": "רק מאמנים חכמים שעונים על השאלות שלי יכולים לעבור."
         }
       ],
       "spriteType": "gate-officer",
@@ -1093,12 +1093,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "עליי לאמת שאתה אדם אמיתי !"
+          "en": "Hold on! I need to check that you're a real person!",
+          "he": "רגע! אני צריך לבדוק שאתה אדם אמיתי!"
         },
         {
-          "en": "",
-          "he": "תענה נכון על השאלות ותוכל להתקדם"
+          "en": "Answer correctly and you can go on.",
+          "he": "ענה נכון ותוכל להמשיך."
         }
       ],
       "spriteType": "gate-officer",
@@ -1107,8 +1107,8 @@
       "autoWalk": null,
       "interactRange": 2,
       "light": {
-        "x": 4,
-        "y": 28
+        "x": 5,
+        "y": 32
       }
     },
     {
@@ -1404,27 +1404,31 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": ""
+          "en": "Welcome to the Safari Zone gate!",
+          "he": "ברוך הבא לשער אזור הספארי!"
+        },
+        {
+          "en": "Answer my questions to go in.",
+          "he": "ענה על השאלות שלי כדי להיכנס."
         }
       ],
       "spriteType": "gate-officer",
       "gateId": "gate-sumville-safari",
       "passedDialogue": [
         {
-          "en": "",
-          "he": "שמח שענית על השאלות! "
+          "en": "Great job answering!",
+          "he": "כל הכבוד על התשובות!"
         },
         {
-          "en": "",
-          "he": "אתה יכול לעבור לספארי!"
+          "en": "You can go into the Safari!",
+          "he": "אתה יכול להיכנס לספארי!"
         },
         {
-          "en": "",
-          "he": "תוכל למצוא פוקימונים שווים שם! "
+          "en": "Lots of cool Pokémon are waiting in there!",
+          "he": "הרבה פוקימונים מגניבים מחכים שם!"
         },
         {
-          "en": "",
+          "en": "We need smart trainers like you!",
           "he": "אנחנו צריכים מאמנים חכמים כמוך!"
         }
       ]

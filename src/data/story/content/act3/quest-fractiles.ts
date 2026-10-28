@@ -94,7 +94,7 @@ registerQuest({
 //# ── Gate ──────────────────────────────────────────────────────────────────────
 registerGate({
   id: 'gate-fractalis-route7',
-  title: { en: 'Fractalis-Route 7 Blockade', he: 'מחסום  עיר השברים-דרך 7' },
+  title: { en: 'Fractalis-Route 7 Blockade', he: 'מחסום עיר השברים-דרך 7' },
   questionSetIds: ['*'],
   triggerType: 'route-checkpoint',
   sessionConfig: {
@@ -105,7 +105,7 @@ registerGate({
 });
 registerGate({
   id: 'gate-fractalis-route8',
-  title: { en: 'Fractalis-Route 8 Blockade', he: 'מחסום  עיר השברים-דרך 8' },
+  title: { en: 'Fractalis-Route 8 Blockade', he: 'מחסום עיר השברים-דרך 8' },
   questionSetIds: ['*'],
   triggerType: 'route-checkpoint',
   sessionConfig: {
@@ -128,7 +128,7 @@ registerGate({
 });
 registerGate({
   id: 'gate-fractalis-ocean',
-  title: { en: 'Fractalis-Ocean Blockade', he: 'מחסום  עיר השברים-ים' },
+  title: { en: 'Fractalis-Ocean Blockade', he: 'מחסום עיר השברים-ים' },
   questionSetIds: ['*'],
   triggerType: 'route-checkpoint',
   sessionConfig: {

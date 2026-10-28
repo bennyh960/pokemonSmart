@@ -58,7 +58,7 @@ export { BasicDamageTemplate, AttackFormulaDamageTemplate, STABBonusTemplate, Mo
 // Catch templates
 export { PokeBallsNeededTemplate, HPReductionTemplate, CatchCostTemplate } from './templates/CatchTemplates.js';
 // Fraction templates
-export { FractionOfHPTemplate, FractionOfBudgetTemplate, FractionCompareTemplate, FractionItemSplitTemplate } from './templates/FractionTemplates.js';
+export { FractionOfHPTemplate, FractionOfBudgetTemplate, FractionHealSumTemplate, FractionItemSplitTemplate } from './templates/FractionTemplates.js';
 // Healing templates
 export { PotionsNeededTemplate } from './templates/HealingTemplates.js';
 
@@ -69,7 +69,7 @@ import { registry as _registry } from './TemplateRegistry.js';
 import { SingleItemCostTemplate, MaxItemsBudgetTemplate, TwoItemsTotalTemplate, BudgetRemainingTemplate } from './templates/StoreTemplates.js';
 import { BasicDamageTemplate, AttackFormulaDamageTemplate, STABBonusTemplate, MoveEffectivenessTemplate, HPRemainingTemplate, EffectivenessHPRemainingTemplate, PoisonSleepTemplate } from './templates/BattleTemplates.js';
 import { PokeBallsNeededTemplate, HPReductionTemplate, CatchCostTemplate } from './templates/CatchTemplates.js';
-import { FractionOfHPTemplate, FractionOfBudgetTemplate, FractionCompareTemplate, FractionItemSplitTemplate } from './templates/FractionTemplates.js';
+import { FractionOfHPTemplate, FractionOfBudgetTemplate, FractionHealSumTemplate, FractionItemSplitTemplate } from './templates/FractionTemplates.js';
 import { PotionsNeededTemplate } from './templates/HealingTemplates.js';
 
 _registry.registerAll([
@@ -93,7 +93,7 @@ _registry.registerAll([
   // Fractions
   new FractionOfHPTemplate(),
   new FractionOfBudgetTemplate(),
-  new FractionCompareTemplate(),
+  new FractionHealSumTemplate(),
   new FractionItemSplitTemplate(),
   // Healing
   new PotionsNeededTemplate(),
