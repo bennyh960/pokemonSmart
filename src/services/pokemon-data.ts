@@ -52,7 +52,10 @@ export interface PokemonData {
   weight?: number; // in hectograms (from PokeAPI) — TODO: populate via scripts/enrich-pokemon-metadata.ts
   category?: string; // e.g. "Seed Pokémon" — English only, TODO: fetch from PokeAPI species
   description?: string; // Pokedex flavor text — English only, TODO: fetch from PokeAPI species
+  color?: PokemonColor; // main colour (PokeAPI species) — asked in the English games
 }
+
+export type PokemonColor = 'black' | 'blue' | 'brown' | 'gray' | 'green' | 'pink' | 'purple' | 'red' | 'white' | 'yellow';
 
 interface RawMoveData {
   id: number;

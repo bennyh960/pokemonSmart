@@ -53,6 +53,169 @@ const SFX_TRACKS: Record<string, string> = {
 /** Default crossfade duration in ms. */
 const DEFAULT_CROSSFADE_MS = 500;
 
+// ── Synth building blocks ──────────────────────────────────────────────────
+
+interface ToneSequenceOptions {
+  notes: number[];
+  durations: number[];
+  type: OscillatorType;
+  gain: number;
+  spacing?: number;
+  sweepTo?: number | null;
+  /** Seconds to wait before the first note. */
+  delay?: number;
+}
+
+interface NoiseBurstOptions {
+  filter: BiquadFilterType;
+  freq: number;
+  sweepTo?: number;
+  q?: number;
+  duration: number;
+  gain: number;
+  delay?: number;
+}
+
+type CueLayer = ToneSequenceOptions | NoiseBurstOptions;
+
+// ── Mini-game cues ─────────────────────────────────────────────────────────
+// Bright, bouncy, never harsh. Each cue is a list of layers (tones + noise) built from options.
+
+export interface MiniGameCueOptions {
+  /** mg-correct: combo step (0 = first). mg-star: star index 0–2. mg-count: 3/2/1. mg-prize: tier 0–3 (3 = epic). */
+  step?: number;
+  /** mg-tick: true in the last 2 seconds (higher, sharper). */
+  urgent?: boolean;
+}
+
+const C5 = 523.25;
+/** C-major pentatonic, so any run of steps sounds happy. */
+const PENTATONIC = [0, 2, 4, 7, 9];
+const MAX_CORRECT_STEP = 11; // D7 — anything higher gets shrill
+
+function pentatonicFreq(step: number): number {
+  const s = Math.max(0, Math.min(MAX_CORRECT_STEP, Math.floor(step)));
+  const semis = Math.floor(s / PENTATONIC.length) * 12 + PENTATONIC[s % PENTATONIC.length];
+  return C5 * 2 ** (semis / 12);
+}
+
+/** A glassy bell: sine fundamental + soft overtones + a tiny strike click. */
+function bell(freq: number, delay = 0, len = 0.45, gain = 0.3): CueLayer[] {
+  return [
+    { notes: [freq], durations: [len], type: 'sine', gain, delay },
+    { notes: [freq * 2], durations: [len * 0.4], type: 'triangle', gain: gain * 0.3, delay },
+    { notes: [freq * 3], durations: [len * 0.18], type: 'sine', gain: gain * 0.15, delay },
+    { notes: [freq * 4], durations: [0.02], type: 'square', gain: gain * 0.08, delay },
+  ];
+}
+
+/** Quick rising sparkle of high sine notes. */
+function sparkle(notes: number[], delay = 0, gain = 0.12): CueLayer[] {
+  return [
+    { notes, durations: [0.06], type: 'sine', gain, spacing: 0.012, delay },
+    { filter: 'highpass', freq: 6000, duration: 0.05 + notes.length * 0.07, gain: 0.04, delay },
+  ];
+}
+
+function chord(freqs: number[], delay: number, len: number, gain: number, type: OscillatorType = 'triangle'): CueLayer[] {
+  return freqs.map((f) => ({ notes: [f], durations: [len], type, gain, delay }));
+}
+
+const MINI_GAME_CUES = {
+  'mg-tap': (): CueLayer[] => [
+    { notes: [1250], durations: [0.04], type: 'triangle', gain: 0.22, sweepTo: 650 },
+    { notes: [2600], durations: [0.015], type: 'sine', gain: 0.07 },
+  ],
+  'mg-correct': ({ step = 0 }: MiniGameCueOptions): CueLayer[] => {
+    const f = pentatonicFreq(step);
+    return [
+      { notes: [f * 0.75], durations: [0.035], type: 'sine', gain: 0.12 }, // grace note → "b-ling"
+      ...bell(f, 0.035, 0.42, 0.3),
+      ...(step >= MAX_CORRECT_STEP ? sparkle([f * 1.5, f * 2], 0.1, 0.08) : []),
+    ];
+  },
+  'mg-combo-5': (): CueLayer[] => [
+    { filter: 'bandpass', freq: 400, sweepTo: 5000, q: 0.8, duration: 0.35, gain: 0.14 },
+    { notes: [1046.5, 1318.5, 1568, 2093, 2637], durations: [0.07], type: 'sine', gain: 0.2, spacing: 0.01, delay: 0.05 },
+    { notes: [523.25, 659.25, 784, 1046.5, 1318.5], durations: [0.07], type: 'triangle', gain: 0.1, spacing: 0.01, delay: 0.05 },
+    ...bell(2093, 0.45, 0.5, 0.16),
+  ],
+  'mg-wrong': (): CueLayer[] => [
+    { notes: [330], durations: [0.1], type: 'triangle', gain: 0.24, sweepTo: 294 },
+    { notes: [247], durations: [0.2], type: 'triangle', gain: 0.24, sweepTo: 196, delay: 0.12 },
+    { notes: [165], durations: [0.24], type: 'sine', gain: 0.12, delay: 0.1 },
+  ],
+  'mg-count': (): CueLayer[] => [
+    { notes: [587.33], durations: [0.18], type: 'triangle', gain: 0.26 },
+    { notes: [1174.66], durations: [0.1], type: 'sine', gain: 0.1 },
+    { notes: [587.33], durations: [0.08], type: 'square', gain: 0.04 },
+  ],
+  'mg-go': (): CueLayer[] => [
+    { filter: 'bandpass', freq: 600, sweepTo: 6000, q: 0.7, duration: 0.3, gain: 0.1 },
+    ...chord([523.25, 659.25, 784, 1046.5], 0, 0.6, 0.13),
+    { notes: [1046.5], durations: [0.35], type: 'square', gain: 0.05 },
+    { notes: [261.63], durations: [0.5], type: 'sine', gain: 0.2 },
+    ...sparkle([2093, 2637, 3136], 0.12, 0.09),
+  ],
+  'mg-star': ({ step = 0 }: MiniGameCueOptions): CueLayer[] => {
+    const f = [1046.5, 1318.5, 1568][Math.max(0, Math.min(2, step))]; // C6 → E6 → G6, a third each
+    return [...bell(f, 0, 0.6, 0.28), ...bell(f * 2, 0.02, 0.25, 0.08), ...sparkle([f * 2, f * 2.5], 0.08, 0.06)];
+  },
+  'mg-clear': (): CueLayer[] => [
+    { notes: [392, 523.25, 659.25, 784], durations: [0.09], type: 'triangle', gain: 0.24, spacing: 0.015 },
+    { notes: [392, 523.25, 659.25, 784], durations: [0.09], type: 'square', gain: 0.05, spacing: 0.015 },
+    { notes: [659.25, 784], durations: [0.08], type: 'triangle', gain: 0.22, spacing: 0.04, delay: 0.44 },
+    ...chord([523.25, 659.25, 784, 1046.5], 0.66, 0.65, 0.13),
+    { notes: [1046.5], durations: [0.5], type: 'square', gain: 0.05, delay: 0.66 },
+    { notes: [130.81], durations: [0.6], type: 'sine', gain: 0.22, delay: 0.66 },
+    ...sparkle([2093, 2637, 3136, 4186], 0.72, 0.1),
+  ],
+  'mg-record': (): CueLayer[] => [
+    { notes: [392], durations: [0.35], type: 'sine', gain: 0.22, sweepTo: 1568 },
+    { notes: [784], durations: [0.35], type: 'triangle', gain: 0.07, sweepTo: 3136 },
+    ...bell(2093, 0.36, 0.4, 0.2),
+    ...bell(2637, 0.46, 0.45, 0.18),
+  ],
+  'mg-ball-shake': (): CueLayer[] => [
+    { filter: 'bandpass', freq: 2400, q: 2, duration: 0.05, gain: 0.2 },
+    { notes: [560], durations: [0.045], type: 'square', gain: 0.09, sweepTo: 470 },
+    { filter: 'bandpass', freq: 2000, q: 2, duration: 0.05, gain: 0.16, delay: 0.09 },
+    { notes: [500], durations: [0.045], type: 'square', gain: 0.08, sweepTo: 420, delay: 0.09 },
+  ],
+  'mg-prize': ({ step = 0 }: MiniGameCueOptions): CueLayer[] => {
+    const tier = Math.max(0, Math.min(3, step));
+    const layers: CueLayer[] = [
+      { notes: [784], durations: [0.09], type: 'triangle', gain: 0.24 }, // "ta-"
+      ...chord(tier >= 2 ? [1046.5, 1318.5, 1568, 2093] : [1046.5, 1318.5, 1568], 0.11, 0.75, 0.12), // "-da!"
+      { notes: [1046.5], durations: [0.4], type: 'square', gain: 0.05, delay: 0.11 },
+      { notes: [261.63], durations: [0.6], type: 'sine', gain: 0.2, delay: 0.11 },
+    ];
+    if (tier >= 1) layers.push(...sparkle([2093, 2637, 3136], 0.2, 0.08));
+    if (tier >= 3) {
+      // epic: long shimmering tail
+      layers.push(
+        {
+          notes: [2637, 3136, 2349, 2793, 2637, 3136, 3520, 4186],
+          durations: [0.05],
+          type: 'sine',
+          gain: 0.1,
+          spacing: 0.02,
+          delay: 0.45,
+        },
+        { filter: 'highpass', freq: 5000, sweepTo: 9000, duration: 0.9, gain: 0.05, delay: 0.4 },
+        ...bell(4186, 1.05, 0.6, 0.1),
+      );
+    }
+    return layers;
+  },
+  'mg-tick': ({ urgent = false }: MiniGameCueOptions): CueLayer[] => [
+    { notes: [urgent ? 2100 : 1600], durations: [0.025], type: 'triangle', gain: urgent ? 0.18 : 0.13 },
+    { notes: [urgent ? 4200 : 3200], durations: [0.01], type: 'sine', gain: 0.05 },
+  ],
+} satisfies Record<string, (opts: MiniGameCueOptions) => CueLayer[]>;
+
+export type MiniGameCue = keyof typeof MINI_GAME_CUES;
+
 function createWebAudioContext(): AudioContext | null {
   const ctor = window.AudioContext ?? (window as AudioWindow).webkitAudioContext;
   return ctor ? new ctor() : null;
@@ -78,6 +241,15 @@ export function createAudioManager() {
   let masterMuted = localStorage.getItem('masterMuted') === 'true';
   let musicMuted = localStorage.getItem('musicMuted') === 'true';
   let sfxMuted = localStorage.getItem('sfxMuted') === 'true';
+  /** Spoken letters/words are the lesson, not an effect — always full volume (mute still silences them). */
+  const SPEECH_VOLUME = 1;
+  /** Temporary ceiling on music volume (not saved) — e.g. mini-games keep music quiet under speech. */
+  let musicCap = 1;
+
+  /** The volume music actually plays at: mute, the player's setting, and the temporary cap. */
+  function musicLevel(): number {
+    return masterMuted || musicMuted ? 0 : Math.min(musicVolume, musicCap);
+  }
 
   function speakText(text: string, rate: number): void {
     if (!('speechSynthesis' in window)) return;
@@ -85,7 +257,7 @@ export function createAudioManager() {
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = 'en-US';
     utt.rate = rate;
-    utt.volume = sfxVolume;
+    utt.volume = SPEECH_VOLUME;
     window.speechSynthesis.speak(utt);
   }
 
@@ -115,7 +287,7 @@ export function createAudioManager() {
     return new Howl({
       src: [src],
       loop: true,
-      volume: masterMuted || musicMuted ? 0 : musicVolume,
+      volume: musicLevel(),
     });
   }
 
@@ -216,20 +388,13 @@ export function createAudioManager() {
     });
   }
 
-  function playToneSequence(options: {
-    notes: number[];
-    durations: number[];
-    type: OscillatorType;
-    gain: number;
-    spacing?: number;
-    sweepTo?: number | null;
-  }): void {
+  function playToneSequence(options: ToneSequenceOptions): void {
     withSynthContext((actx) => {
       const vol = actx.createGain();
       vol.gain.value = sfxVolume * options.gain;
       vol.connect(actx.destination);
 
-      let cursor = actx.currentTime;
+      let cursor = actx.currentTime + (options.delay ?? 0);
       const spacing = options.spacing ?? 0.01;
       options.notes.forEach((freq, i) => {
         const duration = options.durations[Math.min(i, options.durations.length - 1)];
@@ -250,6 +415,48 @@ export function createAudioManager() {
         cursor += duration + spacing;
       });
     });
+  }
+
+  /** One white-noise buffer per context, reused by every noise burst. */
+  let noiseBuffer: AudioBuffer | null = null;
+
+  /** Filtered white-noise burst (whoosh, rattle, sparkle). */
+  function playNoiseBurst(options: NoiseBurstOptions): void {
+    withSynthContext((actx) => {
+      if (!noiseBuffer || noiseBuffer.sampleRate !== actx.sampleRate) {
+        noiseBuffer = actx.createBuffer(1, actx.sampleRate, actx.sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      }
+      const start = actx.currentTime + (options.delay ?? 0);
+      const src = actx.createBufferSource();
+      src.buffer = noiseBuffer;
+      const filter = actx.createBiquadFilter();
+      filter.type = options.filter;
+      filter.Q.value = options.q ?? 1;
+      filter.frequency.setValueAtTime(options.freq, start);
+      if (options.sweepTo != null) {
+        filter.frequency.exponentialRampToValueAtTime(Math.max(20, options.sweepTo), start + options.duration);
+      }
+      const env = actx.createGain();
+      env.gain.setValueAtTime(0.001, start);
+      env.gain.exponentialRampToValueAtTime(sfxVolume * options.gain, start + Math.min(0.02, options.duration / 3));
+      env.gain.exponentialRampToValueAtTime(0.001, start + options.duration);
+      src.connect(filter);
+      filter.connect(env);
+      env.connect(actx.destination);
+      src.start(start);
+      src.stop(start + options.duration);
+    });
+  }
+
+  /** Play a named mini-game cue from MINI_GAME_CUES (layers of tones + noise). */
+  function playMiniGameCue(name: MiniGameCue, opts: MiniGameCueOptions = {}): void {
+    const build: (o: MiniGameCueOptions) => CueLayer[] = MINI_GAME_CUES[name];
+    for (const layer of build(opts)) {
+      if ('filter' in layer) playNoiseBurst(layer);
+      else playToneSequence(layer);
+    }
   }
 
   function playEvolutionStart(): void {
@@ -725,7 +932,7 @@ export function createAudioManager() {
       if (howl) {
         howl.volume(0);
         howl.play();
-        howl.fade(0, masterMuted || musicMuted ? 0 : musicVolume, durationMs);
+        howl.fade(0, musicLevel(), durationMs);
         currentHowl = howl;
       } else {
         currentHowl = null;
@@ -739,9 +946,14 @@ export function createAudioManager() {
       localStorage.setItem('musicVolume', musicVolume.toString());
 
       if (currentHowl) {
-        const isMuted = masterMuted || musicMuted;
-        currentHowl.volume(isMuted ? 0 : musicVolume);
+        currentHowl.volume(musicLevel());
       }
+    },
+
+    /** Cap music at `cap` (0–1) without changing the saved setting; null removes the cap. */
+    setMusicCap(cap: number | null): void {
+      musicCap = cap === null ? 1 : Math.max(0, Math.min(1, cap));
+      if (currentHowl) currentHowl.volume(musicLevel());
     },
 
     setSFXVolume(volume: number): void {
@@ -764,8 +976,7 @@ export function createAudioManager() {
       localStorage.setItem('musicMuted', String(value));
 
       if (currentHowl) {
-        const shouldMute = masterMuted || musicMuted;
-        currentHowl.volume(shouldMute ? 0 : musicVolume);
+        currentHowl.volume(musicLevel());
       }
     },
 
@@ -786,7 +997,7 @@ export function createAudioManager() {
 
       // עדכון מוזיקה
       if (currentHowl) {
-        currentHowl.volume(masterMuted || musicMuted ? 0 : musicVolume);
+        currentHowl.volume(musicLevel());
       }
       // עדכון אפקטים
       const shouldMuteSFX = masterMuted || sfxMuted;
@@ -797,7 +1008,7 @@ export function createAudioManager() {
 
     toggleMute(): boolean {
       masterMuted = !masterMuted;
-      if (currentHowl) currentHowl.volume(masterMuted || musicMuted ? 0 : musicVolume);
+      if (currentHowl) currentHowl.volume(musicLevel());
       for (const howl of sfxCache.values()) {
         howl.volume(masterMuted || sfxMuted ? 0 : sfxVolume);
       }
@@ -905,6 +1116,11 @@ export function createAudioManager() {
       });
     },
 
+    /** Mini-game sound cue — see MINI_GAME_CUES. */
+    playMiniGameCue(name: MiniGameCue, opts?: MiniGameCueOptions): void {
+      playMiniGameCue(name, opts);
+    },
+
     playLetter(letter: string): void {
       if (masterMuted || sfxMuted) return;
       const key = letter.toLowerCase();
@@ -914,7 +1130,7 @@ export function createAudioManager() {
           src: [src],
           preload: false,
           format: ['mp3'],
-          volume: sfxVolume,
+          volume: SPEECH_VOLUME,
           onloaderror: () => {
             letterCache.set(key, null);
             speakText(key, 0.75);
@@ -941,7 +1157,7 @@ export function createAudioManager() {
             src: [src],
             preload: false,
             format: ['mp3'],
-            volume: sfxVolume,
+            volume: SPEECH_VOLUME,
             onloaderror: () => {
               letterCache.set(key, null);
             },
@@ -961,7 +1177,7 @@ export function createAudioManager() {
           src: [src],
           preload: false,
           format: ['mp3'],
-          volume: sfxVolume,
+          volume: SPEECH_VOLUME,
           onloaderror: () => {
             wordCache.set(key, null);
             speakText(word, 0.85);
@@ -982,7 +1198,7 @@ export function createAudioManager() {
     setMuted(value: boolean): void {
       if (masterMuted === value) return;
       masterMuted = value;
-      if (currentHowl) currentHowl.volume(masterMuted || musicMuted ? 0 : musicVolume);
+      if (currentHowl) currentHowl.volume(musicLevel());
       for (const howl of sfxCache.values()) {
         howl.volume(masterMuted || sfxMuted ? 0 : sfxVolume);
       }

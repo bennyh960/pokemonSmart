@@ -1,7 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { loadHeavyData } from '../../services/__tests__/heavy-data.js';
 import { getPokemon, getLearnset } from '../../services/pokemon-data.js';
 import { checkAndApplyLevelUp, createPokemonFromData } from '../encounter.js';
 import { createMoveFromId, MAX_POKEMON_MOVES } from '../move-learning.js';
+
+beforeAll(loadHeavyData);
 
 describe('checkAndApplyLevelUp move learning', () => {
   it('marks new level-up moves as learned when there is room', () => {

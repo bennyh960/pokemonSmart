@@ -17,7 +17,7 @@ const PARTY_BONUS = [24, 20, 16, 12, 8, 0] as const;
  */
 export function calcHappiness(pokemon: Pokemon, party: Pokemon[]): number {
   const partyIndex = party.indexOf(pokemon);
-  const partyBonus = partyIndex >= 0 ? (PARTY_BONUS[partyIndex] ?? 0) : 0;
+  const partyBonus = partyIndex >= 0 ? PARTY_BONUS[partyIndex] ?? 0 : 0;
 
   const evs = pokemon.evs ?? { hp: 0, atk: 0, def: 0, spe: 0, spa: 0, spd: 0 };
   const evsSum = 2 * (evs.hp + evs.atk + evs.def + evs.spe + evs.spa + evs.spd);

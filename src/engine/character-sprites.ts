@@ -242,6 +242,12 @@ export function getCharactersByRole(role: CharacterRole): CharacterInfo[] {
   return getCharacterList().filter((character) => character.roles.includes(role));
 }
 
+/** The overworld sprite of a Pokémon species: the 'wild-pokemon' character with that English name, if any. */
+export function getWildPokemonCharacterId(speciesNameEn: string): string | undefined {
+  const name = speciesNameEn.toLowerCase();
+  return getCharactersByRole('wild-pokemon').find((c) => c.name.en.toLowerCase() === name)?.id;
+}
+
 /** Default hero sprite id used for new games and migrated saves. */
 export function getDefaultHeroCharacterId(): string {
   const heroes = getCharactersByRole('hero');

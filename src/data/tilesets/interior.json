@@ -4474,8 +4474,10 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "other",
-      "interactType": null
+      "category": "interactive",
+      "interactType": {
+        "id": "english-board"
+      }
     },
     {
       "key": "board-2",
@@ -4485,8 +4487,10 @@
       "h": 32,
       "walkable": false,
       "above": true,
-      "category": "other",
-      "interactType": null
+      "category": "interactive",
+      "interactType": {
+        "id": "english-board"
+      }
     },
     {
       "key": "pic-12",
@@ -6193,7 +6197,8 @@
       "w": 80,
       "h": 16,
       "walkable": true,
-      "above": true
+      "above": true,
+      "interactType": null
     },
     {
       "key": "league1-6",
@@ -6202,7 +6207,8 @@
       "w": 128,
       "h": 16,
       "walkable": true,
-      "above": true
+      "above": true,
+      "interactType": null
     }
   ]
 }

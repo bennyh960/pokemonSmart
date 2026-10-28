@@ -43,6 +43,8 @@ export interface CutsceneContext {
   movePlayerAlongPath(path: Array<'up' | 'down' | 'left' | 'right'>): void;
   /** Returns true while the player is still walking its cutscene path. */
   isPlayerWalking(): boolean;
+  /** Walk the player to face the nearest object of an interact type. False = nothing to walk (already there / none). */
+  walkPlayerToInteract(interactTypeId: string): boolean;
   /** Start a Pokémon sprite animation on the map (fly / surf / walk). */
   playPokemonAnim(step: Extract<CutsceneStep, { type: 'pokemon-anim' }>): void;
   /** Returns true while a pokemon-anim is still playing. */
@@ -500,7 +502,8 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       }
 
       if (!speakerDisplayName && step.speakerName) {
-        speakerDisplayName = step.speakerName;
+        speakerDisplayName =
+          typeof step.speakerName === 'string' ? step.speakerName : step.speakerName[locale === 'he' ? 'he' : 'en'];
       }
 
       if (!speakerDisplayName) {
@@ -712,6 +715,12 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       } else {
         _stepIndex++;
       }
+      break;
+    }
+
+    case 'walk-to-interact': {
+      if (ctx.walkPlayerToInteract(step.interact)) _playerMoveWaiting = true;
+      else _stepIndex++;
       break;
     }
 

@@ -2,6 +2,7 @@ import type { BilingualText } from '../../systems/npc.js';
 import type { StoryAction } from './events.js';
 import type { PokemonAnimMotion, PathDir } from '../../systems/overworld-pokemon-anim.js';
 import type { OverworldFxKind } from '../../systems/overworld-fx.js';
+import type { InteractTypeId } from '../interact-types.js';
 
 export type CutsceneStep =
   | { type: 'camera-pan'; x: number; y: number; durationMs: number }
@@ -58,10 +59,17 @@ export type CutsceneStep =
       waitForComplete?: boolean;
     }
   | { type: 'move-player'; path: Array<'up' | 'down' | 'left' | 'right'>; waitForComplete?: boolean }
+  /**
+   * walk-to-interact — the player walks (shortest path) to the nearest object of this interact type on the
+   * current map and faces it. Skipped when the map has none or it can't be reached.
+   * Example: { type: 'walk-to-interact', interact: 'english-board' }
+   */
+  | { type: 'walk-to-interact'; interact: InteractTypeId }
   | {
       type: 'dialogue';
       speakerId?: string;
-      speakerName?: string;
+      /** Shown when `speakerId` has no character name (a plain string, or per locale). */
+      speakerName?: string | BilingualText;
       lines: BilingualText[] | (() => BilingualText[]);
       portrait?: string;
     }

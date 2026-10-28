@@ -25,8 +25,13 @@ describe('battle state helpers', () => {
       flinched: false,
       mustRecharge: false,
       protected: false,
+      endured: false,
       charging: false,
       skipTurn: false,
+      tookDamageThisTurn: false,
+      physicalDamageTakenThisTurn: 0,
+      specialDamageTakenThisTurn: 0,
+      magicCoatActive: false,
     });
   });
 
@@ -53,6 +58,11 @@ describe('battle state helpers', () => {
       lightScreenTurnsRemaining: 0,
       mistTurnsRemaining: 0,
       safeguardTurnsRemaining: 0,
+      stealthRockActive: false,
+      spikesLayers: 0,
+      toxicSpikesLayers: 0,
+      futureSightTurnsRemaining: 0,
+      futureSightDamage: 0,
     });
   });
 });

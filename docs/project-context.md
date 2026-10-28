@@ -27,6 +27,17 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Editor: no UI yet for `enteredFrom` (NPC) and `hallOfFame` (trainer reward) — edit the JSON
 - [ ] Legendary gates (Elite birds/dogs, Master Mewtwo/Lugia/Ho-Oh, Legendary Mew): place blocker NPCs (`blocker` + `despawnAfter: rank-<id>`) once those maps exist; replace the "TBD" hint in the rank-up call
 
+## Mini-games (`feature/mini-games`, design: `docs/stories/mini-games.md`)
+- [ ] Games are reached in the world: libraries (English), labs (logic), wild care rounds. Admin only: start menu → Actions → Mini Games
+- [ ] Section A built, **not playtested**: Snack Attack family (Snorlax, Bulbasaur, Charmander, Squirtle, Pikachu lines) + overworld care trigger (`games/snack-attack/`, `minigames/care.ts`, design §3b). Check each skin's look, the trigger rate (10/20/50% per step by HP, 100-step cooldown) and that Squirtle's levels 4–5 stay fair with more rocks (`SNACK_TUNE=1` tune test)
+- [ ] Library + lab gates built, **not playtested** (`docs/stories/building-gates.md` → QA). Replay the lab/library story scenes (Multiplia library, Percentile lab, Algorithma lab intro) from admin snapshots — the gate must not interrupt them
+- [ ] English rework built, **not playtested** (`docs/stories/library-english.md` → QA, Round 2 too): 7 English games, English ladder, learn-first cards, Word Dex. A Hebrew speaker should review `src/data/english-words.json` — the `he` words and the `say` pronunciations (niqqud) were written by Claude
+- [ ] Word Board built, **not playtested** (`docs/stories/english-board.md`). **Place the board:** in the tileset editor give a library board tile interact type `english-board` (every placed copy of that tile becomes a board). Then check the librarian intro walk, prize odds/balance, and the rare-Pokémon prize at the top level
+- [ ] Free-play hosts only in 3 libraries (Sumville, Multiplia, Percentile). Minusburg library, Sumville lab, Percentile lab, Algorithma lab have none — add an NPC with `"miniGame": { "category": "english" | "logic" }` in the editor (the editor has no field for it yet — edit the JSON)
+- [ ] Library entry gate (`auto-library` in `global-gate-config.ts`) is now redundant — English is played at the Word Board. Decide: remove it, or replace it with a different (logic) check that isn't the lab's
+- [ ] More games later: labs have only Poké-Doku (logic) — add logic games, maybe with their own ladder/board like English
+- [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.5 MB, mostly JSON data)
+
 ## Gates (kids-friendly pass)
 - [ ] Gate lights (`systems/gate-lights.ts`): only Sumville has lights (Route 1 guard, Pokémon Center door). Place the rest with the editor's "Light X/Y" on each gate-guard / gated door
 - [ ] On hold: city guards stay open until you leave the map (in vs out)
@@ -40,8 +51,10 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] `src/data/badges.ts` badge 8: leader is `???`, type/mathTopic still old placeholders — fill in when the Algebria gym is designed
 - [ ] `src/data/maps/backup/` and `templates/backup/` — old map snapshots, remove if not needed
 - [ ] Stale commented-out reset script at the bottom of `act3/quest-raikou.ts`
-- [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution, english-learning — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
+- [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
 - [ ] 7 of 13 vitest files fail on main (pre-existing)
 - [ ] `public/audio/` is gitignored — the only copy is the `gh-pages` branch. A fresh clone has no sound; restore with `git archive origin/gh-pages audio | tar -x -C public` (the Pages workflow `.github/workflows/deploy.yml` does this before building). Store it somewhere durable (LFS / release asset) — if `gh-pages` is ever recreated without `audio/`, prod loses sound again
+- [ ] English speech uses the browser voice (no recorded files in `public/audio/words`, `public/audio/phonics`) — quality depends on the device. Check with a child; if poor, record mp3s named `<word>.mp3` / `<letter>.mp3` there (the audio manager plays them before falling back to the voice)
+- [ ] `scripts/enrich-pokemon-metadata.ts` overwrites height / weight / category / description from PokeAPI on every run — it would undo hand edits in `pokemon.json` (e.g. Charmander height 7 vs API 6). Make it fill missing fields only before running it again
 - [ ] `encounter-tables.json`: some old entries have minLevel > maxLevel (sumville Pineco 10/5, route-3 Nidoran-f 24/20, small-forest Murkrow 30/14, cave-20-30 Phanpy 29/25)
 - [ ] Math in battle disabled — needs a less intrusive mechanic

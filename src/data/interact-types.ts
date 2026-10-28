@@ -38,7 +38,7 @@ export interface InteractTypeRef {
 }
 
 /** All available interact type IDs. */
-export const INTERACT_TYPE_IDS = ['pc', 'sign', 'item', 'cut', 'strength', 'gate'] as const;
+export const INTERACT_TYPE_IDS = ['pc', 'sign', 'item', 'cut', 'strength', 'gate', 'english-board'] as const;
 export type InteractTypeId = typeof INTERACT_TYPE_IDS[number];
 
 /** Default definitions for each interact type. */
@@ -77,6 +77,13 @@ const INTERACT_TYPES: Record<InteractTypeId, InteractTypeDef> = {
     id: 'gate',
     label: { en: 'Checkpoint', he: 'מחסום' },
     dialogue: [{ en: 'This path requires verification.', he: 'המסלול הזה דורש אימות.' }],
+    itemId: null, itemQty: null, flag: null, gateId: null,
+  },
+  /** Opens the English Word Board (src/minigames/english/EnglishBoard.tsx). */
+  'english-board': {
+    id: 'english-board',
+    label: { en: 'Word Board', he: 'לוח המילים' },
+    dialogue: [],
     itemId: null, itemQty: null, flag: null, gateId: null,
   },
 };

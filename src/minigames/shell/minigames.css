@@ -1,0 +1,466 @@
+/* Mini-game shell — keyframes + a few component classes Tailwind core can't express.
+   Everything is scoped under .mg-root so nothing leaks into the canvas game or other React scenes. */
+
+.mg-root {
+  font-family: 'Nunito', 'Rubik', ui-rounded, 'Segoe UI', system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.mg-root .mg-btn {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 0.65rem 1.4rem;
+  border-radius: 1.1rem;
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.12s,
+    filter 0.12s;
+  cursor: pointer;
+}
+.mg-root .mg-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px) scale(1.03);
+}
+.mg-root .mg-btn:active {
+  transform: translateY(3px) scale(0.98);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.mg-root .mg-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.4);
+}
+/* Keyboard selection ring (arrow-key navigation) */
+.mg-root .mg-selected {
+  outline: 4px solid rgba(255, 255, 255, 0.95);
+  outline-offset: 3px;
+}
+
+.mg-root .mg-glass {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── Entrances ──────────────────────────────────────────────────────────── */
+@keyframes mg-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.mg-root .mg-pop-in {
+  animation: mg-pop-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes mg-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mg-root .mg-slide-up {
+  animation: mg-slide-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Idle motion ────────────────────────────────────────────────────────── */
+@keyframes mg-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+.mg-root .mg-bob {
+  animation: mg-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes mg-glow-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 4px 0 rgba(0, 0, 0, 0.25),
+      0 0 0 0 var(--mg-glow, rgba(255, 255, 255, 0.7));
+  }
+  50% {
+    box-shadow:
+      0 4px 0 rgba(0, 0, 0, 0.25),
+      0 0 0 12px rgba(255, 255, 255, 0);
+  }
+}
+.mg-root .mg-glow {
+  animation: mg-glow-pulse 1.4s ease-out infinite;
+}
+
+@keyframes mg-flame {
+  0%,
+  100% {
+    transform: scale(1) rotate(-4deg);
+  }
+  50% {
+    transform: scale(1.18) rotate(4deg);
+  }
+}
+.mg-root .mg-flame {
+  display: inline-block;
+  animation: mg-flame 0.45s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+
+@keyframes mg-bump {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.mg-root .mg-bump {
+  animation: mg-bump 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes mg-urgent {
+  0%,
+  100% {
+    transform: scale(1);
+    color: #fff;
+  }
+  50% {
+    transform: scale(1.15);
+    color: #fecaca;
+  }
+}
+.mg-root .mg-urgent {
+  animation: mg-urgent 0.5s ease-in-out infinite;
+}
+
+/* ── Floating score text ────────────────────────────────────────────────── */
+@keyframes mg-float-up {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -70%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -190%) scale(1);
+  }
+}
+.mg-root .mg-float {
+  position: fixed;
+  pointer-events: none;
+  font-weight: 900;
+  font-size: 1.6rem;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.35),
+    0 0 12px rgba(255, 255, 255, 0.5);
+  animation: mg-float-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  z-index: 40;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Countdown ──────────────────────────────────────────────────────────── */
+@keyframes mg-count-pop {
+  0% {
+    opacity: 0;
+    transform: scale(2.6) rotate(-8deg);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(0.92) rotate(2deg);
+  }
+  55% {
+    transform: scale(1.06) rotate(0deg);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+.mg-root .mg-count {
+  animation: mg-count-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Results ────────────────────────────────────────────────────────────── */
+@keyframes mg-star-fly {
+  0% {
+    opacity: 0;
+    transform: translateY(-120px) scale(2.4) rotate(-160deg);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(0) scale(0.9) rotate(10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+.mg-root .mg-star-fly {
+  animation: mg-star-fly 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes mg-banner {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-12deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12) rotate(3deg);
+  }
+  80% {
+    transform: scale(0.96) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-3deg);
+  }
+}
+.mg-root .mg-banner {
+  animation: mg-banner 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── Confetti ───────────────────────────────────────────────────────────── */
+@keyframes mg-confetti {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translate(var(--mg-dx), 105vh) rotate(var(--mg-rot));
+  }
+}
+.mg-root .mg-confetti-piece {
+  position: absolute;
+  top: -16px;
+  width: 10px;
+  height: 16px;
+  border-radius: 3px;
+  animation: mg-confetti var(--mg-dur) cubic-bezier(0.25, 0.6, 0.45, 1) var(--mg-delay) both;
+}
+
+/* ── Poké Ball prize ────────────────────────────────────────────────────── */
+.mg-root .mg-ball {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+.mg-root .mg-ball-half {
+  position: absolute;
+  left: 0;
+  width: 140px;
+  height: 70px;
+  border: 6px solid #1f2937;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.mg-root .mg-ball-top {
+  top: 0;
+  border-radius: 70px 70px 0 0;
+  border-bottom-width: 3px;
+  background: radial-gradient(circle at 35% 35%, #fca5a5 0%, #ef4444 35%, #b91c1c 100%);
+}
+.mg-root .mg-ball-bottom {
+  bottom: 0;
+  border-radius: 0 0 70px 70px;
+  border-top-width: 3px;
+  background: radial-gradient(circle at 40% 20%, #ffffff 0%, #e5e7eb 70%, #9ca3af 100%);
+}
+.mg-root .mg-ball-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 6px solid #1f2937;
+  box-shadow: inset 0 0 0 4px #e5e7eb;
+  z-index: 2;
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
+}
+.mg-root .mg-ball.is-open .mg-ball-top {
+  transform: translateY(-70px) rotate(-25deg);
+}
+.mg-root .mg-ball.is-open .mg-ball-bottom {
+  transform: translateY(50px) rotate(12deg);
+  opacity: 0;
+  transition:
+    transform 0.45s,
+    opacity 0.5s 0.15s;
+}
+.mg-root .mg-ball.is-open .mg-ball-button {
+  transform: scale(0);
+  opacity: 0;
+}
+
+@keyframes mg-ball-shake {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(-22deg) translateX(-6px);
+  }
+  45% {
+    transform: rotate(18deg) translateX(6px);
+  }
+  70% {
+    transform: rotate(-8deg);
+  }
+}
+.mg-root .mg-ball-shaking {
+  animation: mg-ball-shake 0.5s ease-in-out 3 both;
+  animation-delay: 0.25s;
+  transform-origin: 50% 85%;
+}
+@keyframes mg-button-blink {
+  0%,
+  100% {
+    box-shadow: inset 0 0 0 4px #e5e7eb;
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 4px #fde047,
+      0 0 18px #fde047;
+  }
+}
+.mg-root .mg-ball-shaking .mg-ball-button {
+  animation: mg-button-blink 0.5s ease-in-out infinite;
+}
+
+@keyframes mg-flash {
+  0% {
+    opacity: 0.95;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+.mg-root .mg-flash {
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, rgba(255, 255, 255, 0.6) 35%, transparent 70%);
+  animation: mg-flash 0.6s ease-out both;
+  pointer-events: none;
+}
+
+/* Prize card shine sweep */
+@keyframes mg-shine {
+  0% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  60%,
+  100% {
+    transform: translateX(220%) skewX(-20deg);
+  }
+}
+.mg-root .mg-shine {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.mg-root .mg-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  animation: mg-shine 2.2s ease-in-out 0.4s infinite;
+}
+
+@keyframes mg-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.3) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(90deg);
+  }
+}
+.mg-root .mg-twinkle {
+  position: absolute;
+  color: #fef08a;
+  text-shadow: 0 0 10px #facc15;
+  animation: mg-twinkle 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes mg-spin-rays {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.mg-root .mg-rays {
+  position: absolute;
+  inset: -60%;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.22) 0deg 10deg, transparent 10deg 30deg);
+  animation: mg-spin-rays 12s linear infinite;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ── Accessibility: reduced motion → no movement, end states only ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .mg-root,
+  .mg-root *,
+  .mg-root *::before,
+  .mg-root *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  /* these end invisible — show them still instead */
+  .mg-root .mg-float,
+  .mg-root .mg-count {
+    animation: none !important;
+  }
+}

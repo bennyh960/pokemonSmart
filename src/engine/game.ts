@@ -25,7 +25,6 @@ import { createWorldMapScene } from '../scenes/world-map.js';
 import { createGateScene } from '../scenes/gate-scene.js';
 import { createSaveSlotsScene } from '../scenes/save-slots.js';
 import { createStartMenuScene } from '../scenes/start-menu.js';
-import { createEnglishLearningScene } from '../scenes/english-learning.js';
 import { initStoryEngine } from '../systems/story-engine.js';
 import { showHUD, hideHUD } from '../ui/hud-overlay.js';
 // Story content — single entry point; see content/index.ts for all quest files
@@ -40,6 +39,7 @@ import { createTestScene } from '../scenes/test.scene.js';
 import { createPokedexReactScene } from '../scenesReact/pokedex/index.js';
 import { createTrainerDataReactScene } from '../scenesReact/trainerData/index.js';
 import { createPhoneContactReactScene } from '../scenesReact/PhoneContact/index.js';
+import { createMiniGameReactScene } from '../minigames/scene.js';
 import { createGateClockReactScene } from '../scenesReact/gateClock/index.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
@@ -95,7 +95,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   stateMachine.register('GATE_CLOCK', createGateClockReactScene(stateMachine));
   stateMachine.register('SAVE_SLOTS', createSaveSlotsScene(input, stateMachine));
   stateMachine.register('START_MENU', createStartMenuScene(input, stateMachine));
-  stateMachine.register('ENGLISH_LEARNING', createEnglishLearningScene(input, stateMachine, canvas, audio));
+  stateMachine.register('MINI_GAME', createMiniGameReactScene(stateMachine));
 
   // Initialise story engine with the state machine so it can push scenes
   initStoryEngine(stateMachine);

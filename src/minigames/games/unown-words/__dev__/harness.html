@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UW harness</title>
+  </head>
+  <body style="margin: 0; background: #000">
+    <div id="ov" style="position: fixed; inset: 0"></div>
+    <script type="module">
+      import '/src/style.css';
+      import { startNewGame } from '/src/systems/game-state.ts';
+      import { createAudioManager, setGlobalAudio, getGlobalAudio } from '/src/audio/audio-manager.ts';
+      import { initReactHost, mountReactScene, unmountReactScene } from '/src/engine/react/react-scene-host.ts';
+      import { createInputManager } from '/src/engine/input/index.ts';
+      import { MiniGameApp } from '/src/minigames/shell/MiniGameApp.tsx';
+      startNewGame();
+      const cv = document.createElement('canvas');
+      cv.style.display = 'none';
+      document.body.appendChild(cv);
+      createInputManager(cv, { touchContainer: document.body });
+      setGlobalAudio(createAudioManager());
+      const ga = getGlobalAudio();
+      window.__spoken = [];
+      for (const k of ['playLetter', 'playWord', 'playCry']) {
+        const o = ga[k].bind(ga);
+        ga[k] = (...a) => {
+          window.__spoken.push(k + ':' + a[0]);
+          try {
+            o(...a);
+          } catch {}
+        };
+      }
+      initReactHost(document.getElementById('ov'));
+      window.__uw = (level) => {
+        unmountReactScene();
+        mountReactScene(MiniGameApp, {
+          launch: { gameId: 'unown-words', level },
+          onClose: () => unmountReactScene(),
+          onOutcome: (o) => (window.__uwOut = o),
+        });
+      };
+      window.__uw(Number(new URLSearchParams(location.search).get('l') || 1));
+    </script>
+  </body>
+</html>

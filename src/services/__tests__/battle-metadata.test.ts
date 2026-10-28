@@ -1,5 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { loadHeavyData } from './heavy-data.js';
 import { getAbility, getAbilityBattleEffects, getMoveBattleData, getMoveByName } from '../pokemon-data.js';
+
+beforeAll(loadHeavyData);
 
 describe('battle metadata', () => {
   it('adds move priority and behavior tags for battle ordering', () => {
@@ -59,7 +62,7 @@ describe('battle metadata', () => {
     const explosion = getMoveByName('explosion');
 
     expect(confuseRay?.battle.effects).toEqual([
-      { id: 'confusion', target: 'target', chance: 100, minTurns: 2, maxTurns: 5 },
+      { id: 'confusion', target: 'target', chance: 100, minTurns: 2, maxTurns: 5, bayPassImuunity: true },
     ]);
     expect(leechSeed?.battle.effects).toEqual([
       { id: 'leech-seed', target: 'target', chance: 100 },
@@ -92,7 +95,13 @@ describe('battle metadata', () => {
     const limberEffects = getAbilityBattleEffects(7);
 
     expect(thickFat?.battleEffects).toEqual([
-      { kind: 'damageTakenMultiplier', moveTypes: ['fire', 'ice'], multiplier: 0.5 },
+      {
+        kind: 'damageTakenMultiplier',
+        moveTypes: ['fire', 'ice'],
+        multiplier: 0.5,
+        messageKey: 'ability.thickFatActivation',
+        messageCooldown: 3,
+      },
     ]);
     expect(limberEffects).toEqual([
       { kind: 'statusImmunity', statuses: ['paralyze'] },

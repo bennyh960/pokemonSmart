@@ -13,6 +13,11 @@ import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { initHUD, updateHUD, setHUDTab, showHUD, hideHUD } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
+import { forceCareGame, rollCareTrigger, type CareMatch } from '../minigames/care.js';
+import { openEnglishBoard, openMiniGamePicker, resolveMiniGames, startMiniGame } from '../minigames/index.js';
+import { pathToFace } from '../systems/grid-path.js';
+import { FLAGS } from '../data/story/flags.js';
+import { ENGLISH_BOARD_INTRO_CUTSCENE } from '../data/story/content/english-board.js';
 import type { Locale } from '../i18n/i18n.js';
 import {
   getPlayerData,
@@ -97,6 +102,7 @@ import {
   setActiveGate,
   fireStoryTrigger,
   consumePendingCutscene,
+  queueCutscene,
   consumePendingMessage,
   checkAndRecoverInterruptedEvent,
   checkAndResumeDelayedEvents,
@@ -124,6 +130,7 @@ import {
 import { createOverworldFx, updateOverworldFx, drawOverworldFx, type OverworldFx } from '../systems/overworld-fx.js';
 import { createShake, updateShake, applyShake, resetShake, type ShakeEffect } from '../ui/battle-animations/index.js';
 import { grantItem } from '../systems/item-effects.js';
+import { grantReward } from '../systems/rewards.js';
 import { setFlyCallback, FLY_DESTINATIONS, resolveFlySpawn } from './world-map.js';
 import { openSaveSlots } from './save-slots.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
@@ -217,6 +224,12 @@ let _pendingFishing = false;
 let _legendVisible = false;
 let _playerRef: PlayerState | null = null;
 let _flySetup: (() => void) | null = null;
+let _leaveBuilding: (() => void) | null = null;
+
+/** Walk the player back out the door they came in (e.g. after failing a building's gate). */
+export function leaveBuilding(): void {
+  _leaveBuilding?.();
+}
 
 export function scheduleFishing(): void {
   _pendingFishing = true;
@@ -441,6 +454,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let playerHidden = false;
   let playerCutscenePathQueue: CutscenePathDir[] = [];
   let playerCutsceneWalking = false;
+  /** Where the player turns once the cutscene path ends (walk-to-interact). */
+  let playerCutsceneFinalFacing: CutscenePathDir | null = null;
+  /** The camera follows the player for the rest of the cutscene (a walk-to-interact walk can leave the screen). */
+  let cutsceneCameraFollowsPlayer = false;
 
   // Pending push-back after gate scene dismissal without passing
   let pendingGateBack: { pushDx: number; pushDy: number; gateId: string } | null = null;
@@ -713,6 +730,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
     }
     return false;
+  }
+
+  /** A hurt party Pokémon asks to play its care mini-game; "Yes" starts it (see src/minigames/care.ts). */
+  function offerCareGame({ def, pokemon }: CareMatch): void {
+    const name = getPokemonDisplayName(pokemon.id);
+    activeTextBox = createTextBox([def.care.prompt[getLocale()].replace('{name}', name)], isRTL());
+    pendingDialogueCallback = () => {
+      showChoice((idx) => {
+        if (idx === 0) startMiniGame(def.id, { carePokemonUuid: pokemon.uuid });
+      });
+    };
   }
 
   /** Show a Yes/No choice prompt. */
@@ -1055,6 +1083,26 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       interactingNPC = null;
       if (!hasActiveGame()) return;
 
+      // Mini-game host — once its gift (if any) was given, every talk ends with "Want to play?"
+      const hostGiftDone = !npc.reward || !!getPlayerData().flags[npc.reward.flag ?? `npc-${npc.id}-rewarded`];
+      if (npc.miniGame && hostGiftDone) {
+        const ids = resolveMiniGames(npc.miniGame);
+        fireStoryTrigger({ type: 'npc-interact', npcId: npc.id });
+        activeTextBox = createTextBox(
+          [t('minigames.npcAsk')],
+          isRTL(),
+          npc.name ? getLocalizedName(npc.name) : undefined,
+        );
+        pendingDialogueCallback = () => {
+          showChoice((idx) => {
+            if (idx !== 0) return;
+            if (ids.length === 1) startMiniGame(ids[0]);
+            else openMiniGamePicker({ gameIds: ids });
+          });
+        };
+        return;
+      }
+
       const npcQ = (npc as unknown as Record<string, unknown>).questions as
         | { count: number; types?: string[]; repeated?: boolean }
         | undefined;
@@ -1268,49 +1316,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   /** Deliver an NPC reward (items + money) if not already given. */
   function giveNPCReward(npc: NPCData, reward: DialogueReward): void {
     const pd = getPlayerData();
-    const flagKey = reward.flag || `npc-${npc.id}-rewarded`;
-
-    // Already given — skip
-    if (pd.flags[flagKey]) return;
-
-    // Build reward message lines
-    const lines: string[] = [];
-
-    // Give items
-    if (reward.items) {
-      audio.playItemFound();
-      for (const ri of reward.items) {
-        pd.items[ri.itemId] = (pd.items[ri.itemId] || 0) + ri.quantity;
-        const itemDef = getItem(ri.itemId);
-        const displayName = itemDef ? getLocalizedName(itemDef.name) : ri.itemId;
-        lines.push(t('npc.reward.item', { item: displayName, qty: ri.quantity }));
-        // Key items auto-set their flag when received
-        if (itemDef?.keyFlag) {
-          setFlag(pd, itemDef.keyFlag);
-        }
-      }
-    }
-
-    // Give money
-    if (reward.money && reward.money > 0) {
-      pd.money += reward.money;
-      lines.push(t('npc.reward.money', { money: reward.money }));
-    }
-
-    // Award badge
-    if (reward.badge !== undefined && reward.badge >= 1 && reward.badge <= 8) {
-      pd.badges |= 1 << (reward.badge - 1);
-      lines.push(t('npc.reward.badge', { badge: reward.badge }));
-    }
-
-    // Set story event flag
-    if (reward.storyEvent) {
-      setFlag(pd, reward.storyEvent);
-    }
-
-    // Mark as given
-    setFlag(pd, flagKey);
-    void fireStoryTrigger({ type: 'flag-set', flag: flagKey });
+    // One-time per NPC; grantReward skips (null) when the flag is already set
+    const lines = grantReward(reward, { onceFlag: reward.flag || `npc-${npc.id}-rewarded` });
+    if (!lines) return;
 
     if (npc.clearFlags?.length) {
       for (const clearFlag of npc.clearFlags) {
@@ -1401,6 +1409,31 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       },
       isPlayerWalking() {
         return playerCutsceneWalking || player.moving;
+      },
+      walkPlayerToInteract(interactTypeId) {
+        if (!tileMap) return false;
+        const pd = hasActiveGame() ? getPlayerData() : null;
+        const warps = new Set((currentMapData?.transitions ?? []).map((tr) => `${tr.fromX},${tr.fromY}`));
+        const map = tileMap;
+        const walk = pathToFace(
+          { x: player.gridX, y: player.gridY },
+          map.getInteractCells(interactTypeId),
+          (x, y) =>
+            map.isWalkable(x, y) &&
+            map.getTileCategory(x, y) !== 'water' &&
+            !warps.has(`${x},${y}`) &&
+            !npcManager?.isVisibleNPCAt(x, y, pd?.flags ?? {}, pd?.party),
+        );
+        if (!walk) return false;
+        if (walk.path.length === 0) {
+          player.facing = CUTSCENE_DIR_TO_FACING[walk.face];
+          return false;
+        }
+        playerCutscenePathQueue = [...walk.path];
+        playerCutsceneWalking = true;
+        playerCutsceneFinalFacing = walk.face;
+        cutsceneCameraFollowsPlayer = true;
+        return true;
       },
       playPokemonAnim(step) {
         const npc =
@@ -1760,6 +1793,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     });
   }
 
+  _leaveBuilding = function (): void {
+    if (!previousMapReturn || transitionState === 'fade-out' || transitionState === 'loading') return;
+    transitionState = 'fade-out';
+    transitionTimer = 0;
+    transitionTarget = { ...previousMapReturn };
+  };
+
   // Register module-level fly-setup so setupWorldMapFly() (called from start menu) can use it
   _flySetup = function activateFly(): void {
     if (!hasActiveGame()) {
@@ -2031,6 +2071,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Play map music
     audio.playMusic(currentMapData.music || 'town3');
 
+    // First library with a Word Board: the librarian shows it (before map-enter, so the entry gate waits;
+    // a story scene on this entry replaces it and the intro comes next time)
+    if (
+      hasActiveGame() &&
+      !getPlayerData().flags[FLAGS.ENGLISH_BOARD_INTRO_DONE] &&
+      tileMap.getInteractCells('english-board').length > 0
+    ) {
+      queueCutscene(ENGLISH_BOARD_INTRO_CUTSCENE);
+    }
+
     // Fire map-enter story trigger
     if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id as MapId });
 
@@ -2194,6 +2244,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       for (const a of ambientFx) if (isAmbientFxActive(a.def)) updateOverworldFx(a.fx, dt);
 
       // ── Cutscene runner: takes full control of input ──
+      if (!isCutsceneActive()) cutsceneCameraFollowsPlayer = false;
       if (isCutsceneActive()) {
         // hideHUD();
         updateCutscene(dt, input, buildCutsceneContext());
@@ -2253,6 +2304,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
         if (playerCutsceneWalking && !player.moving && playerCutscenePathQueue.length === 0) {
           playerCutsceneWalking = false;
+        }
+        if (!playerCutsceneWalking && !player.moving && playerCutsceneFinalFacing) {
+          player.facing = CUTSCENE_DIR_TO_FACING[playerCutsceneFinalFacing];
+          playerCutsceneFinalFacing = null;
+        }
+        if (cutsceneCameraFollowsPlayer && tileMap) {
+          const mapW = tileMap.width * TILE_SIZE;
+          const mapH = tileMap.height * TILE_SIZE;
+          camera.follow(player.pixelX + TILE_SIZE / 2, player.pixelY + TILE_SIZE / 2, mapW, mapH, dt);
         }
 
         // Advance NPC cutscene walk animations so move-npc steps can complete.
@@ -2974,6 +3034,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
 
           const tileEncTypes = tileMap.getEncounterTypes(player.gridX, player.gridY);
+          // A hurt party Pokémon may ask to play its care mini-game here (before the wild encounter roll)
+          if (tileEncTypes && hasActiveGame()) {
+            const care = rollCareTrigger(getPlayerData(), {
+              category: tileMap.getTileCategory(player.gridX, player.gridY),
+              encounterTypes: isCurrentlySurfing ? ['water'] : tileEncTypes,
+            });
+            if (care) {
+              offerCareGame(care);
+              return;
+            }
+          }
           if (tileEncTypes) {
             const encounterId = (currentMapData?.encounterTableId ?? currentMapData?.id) || DEFAULT_MAP;
             const repelActive = hasActiveGame() && getPlayerData().repelStepsRemaining > 0;
@@ -3617,6 +3688,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                       startHMAnimation(capturedHmName, capturedHmUser, capturedTargetX, capturedTargetY);
                     };
                     return;
+                  } else if (resolved.id === 'english-board') {
+                    if (hasActiveGame()) openEnglishBoard();
+                    return;
                   } else if (resolved.id === 'gate') {
                     const effectiveGateId = inst?.gateId !== undefined ? inst.gateId : resolved.gateId;
                     if (!effectiveGateId) {
@@ -3771,6 +3845,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           healParty();
           autoSave();
           healTextBox = createTextBox([t('heal.done')], isRTL());
+          return;
+        }
+      }
+
+      // C key → Force the care mini-game prompt for the first party Pokémon that has one (admin-only debug shortcut)
+      if (input.isKeyPressed('c') || input.isKeyPressed('C')) {
+        if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
+          const care = forceCareGame(getPlayerData().party);
+          if (care) offerCareGame(care);
+          else activeTextBox = createTextBox([t('admin.care.none')], isRTL());
           return;
         }
       }
@@ -4419,7 +4503,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ];
         if (_hasFish) _lparts.push(`F:${t('legend.fish')}`);
         _lparts.push(`M:${t('legend.mute')}`, `K:${t('legend.keys')}`, `ENTER:${t('legend.menu')}`);
-        if (_isAdmin) _lparts.push(`N:${t('legend.shop')}`, `H:${t('legend.heal')}`, 'G:Teleport');
+        if (_isAdmin) _lparts.push(`N:${t('legend.shop')}`, `H:${t('legend.heal')}`, 'C:Care', 'G:Teleport');
         drawText(ctx, _lparts.join(' '), SCREEN_W / 2, barY + 2, {
           size: 6,
           color: '#aaaaaa',

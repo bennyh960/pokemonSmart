@@ -1,0 +1,36 @@
+/* Unown Battle — game-only styles (prefixed mg-unown-battle-). */
+
+.mg-root .mg-unown-battle-hit {
+  animation: mg-unown-battle-hit 0.35s ease-out;
+}
+.mg-root .mg-unown-battle-faint {
+  animation: mg-unown-battle-faint 0.9s ease-in 0.2s both;
+}
+
+@keyframes mg-unown-battle-hit {
+  0% {
+    transform: translateX(0);
+    filter: brightness(1);
+  }
+  25% {
+    transform: translateX(10px);
+    filter: brightness(2.2);
+  }
+  50% {
+    transform: translateX(-8px);
+  }
+  100% {
+    transform: translateX(0);
+    filter: brightness(1);
+  }
+}
+@keyframes mg-unown-battle-faint {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(40px) rotate(-20deg) scale(0.6);
+  }
+}

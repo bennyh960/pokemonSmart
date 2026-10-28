@@ -1,5 +1,5 @@
 /**
- * Enriches existing pokemon.json with height, weight, category, and description fields.
+ * Enriches existing pokemon.json with height, weight, category, description and color (main colour) fields.
  * Fetches from PokeAPI for each of the 251 Pokemon.
  * Preserves all existing fields.
  *
@@ -49,6 +49,8 @@ interface PokemonEntry {
   weight?: number;
   category?: string;
   description?: string;
+  /** PokeAPI species colour (red, blue, yellow…) — the English game asks for it. */
+  color?: string;
 }
 
 async function main() {
@@ -99,6 +101,7 @@ async function main() {
         const gsEntry = englishEntries.find((e: any) => e.version.name === 'gold' || e.version.name === 'silver');
         const flavorText = (gsEntry ?? englishEntries[0])?.flavor_text?.replace(/[\n\f\r]/g, ' ') ?? '';
         entry.description = flavorText;
+        entry.color = speciesData.color?.name ?? entry.color;
       }
     } catch (err) {
       console.warn(`  Error fetching pokemon ${entry.id} (${entry.name.en}):`, err);
