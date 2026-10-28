@@ -154,8 +154,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "",
-          "he": "זוהי נקודת בקורת! הזדהו בבקשה"
+          "en": "Sea checkpoint! Every boat stops here.",
+          "he": "נקודת ביקורת ימית! כל סירה עוצרת כאן."
+        },
+        {
+          "en": "Answer my questions and sail on!",
+          "he": "ענה על השאלות שלי ותמשיך לשוט!"
         }
       ],
       "spriteType": "gate-officer",
@@ -170,8 +174,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "",
-          "he": "הזדהו בבקשה!"
+          "en": "Stop right there, trainer!",
+          "he": "עצור שם, מאמן!"
+        },
+        {
+          "en": "Show me you're not a glitch — answer a few questions!",
+          "he": "תראה לי שאתה לא גליץ' — ענה על כמה שאלות!"
         }
       ],
       "spriteType": "gate-officer",
@@ -185,8 +193,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": ""
+          "en": "Route 7 is just ahead!",
+          "he": "דרך 7 ממש לפניך!"
+        },
+        {
+          "en": "Solve my questions and the road is yours.",
+          "he": "פתור את השאלות שלי והדרך שלך."
         }
       ],
       "spriteType": "gate-officer",

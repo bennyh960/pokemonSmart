@@ -29,9 +29,6 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 
 ## Gates (kids-friendly pass)
 - [ ] Gate lights (`systems/gate-lights.ts`): only Sumville has lights (Route 1 guard, Pokémon Center door). Place the rest with the editor's "Light X/Y" on each gate-guard / gated door
-- [ ] Question screen: allow exit (step back + "oops, wrong way" line)
-- [ ] Rewrite gate texts as in-game speech for kids (`global-gate-config.ts`, gate defs)
-- [ ] Question screen: full keyboard control (choices are mouse-only)
 - [ ] On hold: city guards stay open until you leave the map (in vs out)
 
 ## Bugs

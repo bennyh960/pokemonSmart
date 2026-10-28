@@ -131,8 +131,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "",
-          "he": "כבר עצרתי עשרות גלי'צים מלהכנס לשטחנו."
+          "en": "I've already stopped dozens of glitches from getting in!",
+          "he": "כבר עצרתי עשרות גליצ'ים מלהיכנס!"
+        },
+        {
+          "en": "You're next — show me you're a real trainer.",
+          "he": "אתה הבא — תראה לי שאתה מאמן אמיתי."
         }
       ],
       "spriteType": "gate-officer",
@@ -164,8 +168,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "מחסום דרך לפניך! שתפו פעולה בבקשה"
+          "en": "Road checkpoint ahead!",
+          "he": "מחסום דרך לפניך!"
+        },
+        {
+          "en": "Help me out and answer a few questions.",
+          "he": "עזור לי וענה על כמה שאלות."
         }
       ],
       "spriteType": "gate-officer",
@@ -179,8 +187,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "",
-          "he": "שתפו פעולה בבקשה"
+          "en": "Hi! Please help me keep the city safe.",
+          "he": "היי! עזור לי לשמור על העיר."
+        },
+        {
+          "en": "Answer my questions to pass.",
+          "he": "ענה על השאלות שלי כדי לעבור."
         }
       ],
       "spriteType": "gate-officer",
@@ -194,8 +206,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "",
-          "he": "גם דרך הים - צריך לשמור על העיר"
+          "en": "Even the sea road needs a guard!",
+          "he": "גם דרך הים צריכה שומר!"
+        },
+        {
+          "en": "Answer my questions and sail on.",
+          "he": "ענה על השאלות שלי ותמשיך לשוט."
         }
       ],
       "spriteType": "gate-officer",

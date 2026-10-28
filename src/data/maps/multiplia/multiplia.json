@@ -130,8 +130,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "הפ הפ הפ - לא כ''כ מהר - בדיקת זיהוי בבקשה!"
+          "en": "Whoa, whoa — not so fast!",
+          "he": "הופ הופ — לא כל כך מהר!"
+        },
+        {
+          "en": "A quick check before you go on!",
+          "he": "בדיקה קטנה לפני שממשיכים!"
         }
       ],
       "spriteType": "gate-officer",
@@ -145,8 +149,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "שום גליץ לא יעבור אותי! להזדהות בבקשה!"
+          "en": "No glitch gets past me!",
+          "he": "שום גליץ' לא עובר אותי!"
+        },
+        {
+          "en": "Answer my questions to pass.",
+          "he": "ענה על השאלות שלי כדי לעבור."
         }
       ],
       "spriteType": "gate-officer",
@@ -161,8 +169,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": ""
+          "en": "Route 6 checkpoint!",
+          "he": "מחסום דרך 6!"
+        },
+        {
+          "en": "Answer a few questions and the road is yours.",
+          "he": "ענה על כמה שאלות והדרך שלך."
         }
       ],
       "spriteType": "gate-officer",
@@ -177,8 +189,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "הזדהו בבקשה"
+          "en": "Checkpoint ahead!",
+          "he": "מחסום לפניך!"
+        },
+        {
+          "en": "Show me you're a real trainer, please.",
+          "he": "תראה לי שאתה מאמן אמיתי, בבקשה."
         }
       ],
       "spriteType": "gate-officer",

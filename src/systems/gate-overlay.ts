@@ -17,7 +17,7 @@
  */
 
 import { GateSession } from './gate-session.js';
-import { getLocale, isRTL } from '../i18n/i18n.js';
+import { getLocale, isRTL, tFor } from '../i18n/i18n.js';
 import type { GateSessionConfig } from '../data/story/gates.js';
 import type { SessionResult, AnswerFeedback, AnyQuestion } from './gate-session.js';
 import type { RichQuestion, QuestionAsset } from '../math/question-builder/index.js';
@@ -68,6 +68,9 @@ class GateOverlayController {
   private timerHandle: ReturnType<typeof setInterval> | null = null;
   private timerRemaining = 0;
   private inputLocked = false;
+  /** Button highlighted for keyboard play (re-picked whenever a screen re-renders). */
+  private kbSelected: HTMLButtonElement | null = null;
+  private readonly onKeyDown = (e: KeyboardEvent): void => this._handleKey(e);
 
   constructor(opts: GateOverlayOptions, resolve: (r: SessionResult) => void) {
     this.opts = opts;
@@ -82,7 +85,99 @@ class GateOverlayController {
     opts.container.appendChild(this.el);
 
     this._injectStyles();
+    window.addEventListener('keydown', this.onKeyDown, true);
     this._showIntro();
+  }
+
+  private _t(key: string, params?: Record<string, string | number>): string {
+    return tFor(this.locale, key, params);
+  }
+
+  // ── Keyboard ───────────────────────────────────────────────────────────────
+  // Arrows move between answers/buttons, 1–9 pick an answer, Enter/Space press,
+  // Esc = "oops, wrong way". The typed-answer box handles its own Enter.
+
+  /** Pressable buttons on the current screen, in reading order. */
+  private _kbButtons(): HTMLButtonElement[] {
+    return [...this.el.querySelectorAll<HTMLButtonElement>('.go-choice, .go-btn')].filter((b) => !b.disabled);
+  }
+
+  private _kbSelect(btn: HTMLButtonElement | null): void {
+    this.kbSelected?.classList.remove('go-kb-selected');
+    this.kbSelected = btn;
+    btn?.classList.add('go-kb-selected');
+  }
+
+  /** Arrow navigation: answers are a 2-column grid, the other buttons a vertical list. */
+  private _kbMove(dx: number, dy: number): void {
+    const buttons = this._kbButtons();
+    if (buttons.length === 0) return;
+    const current = this.kbSelected && buttons.includes(this.kbSelected) ? this.kbSelected : null;
+    if (!current) {
+      this._kbSelect(buttons[0]);
+      return;
+    }
+    const choices = buttons.filter((b) => b.classList.contains('go-choice'));
+    const ci = choices.indexOf(current);
+    let next: HTMLButtonElement | undefined;
+    if (ci >= 0 && dx !== 0) {
+      // Left/right stay in the same row; flip for right-to-left layout
+      const step = isRTL() ? -dx : dx;
+      const j = ci + step;
+      if (j >= 0 && j < choices.length && Math.floor(j / 2) === Math.floor(ci / 2)) next = choices[j];
+    } else if (ci >= 0) {
+      next = choices[ci + dy * 2] ?? (dy > 0 ? buttons[buttons.indexOf(choices[choices.length - 1]) + 1] : undefined);
+    } else {
+      const i = buttons.indexOf(current);
+      next = buttons[i + (dy || dx)];
+    }
+    if (next) this._kbSelect(next);
+  }
+
+  private _handleKey(e: KeyboardEvent): void {
+    if (!this.el.isConnected) return;
+    const typing = (e.target as HTMLElement | null)?.tagName === 'INPUT';
+    const leave = this.el.querySelector<HTMLButtonElement>('.go-leave-btn');
+
+    if (e.code === 'Escape') {
+      if (leave && !this.inputLocked) leave.click();
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    if (typing || this.inputLocked || e.repeat) return;
+
+    // Typed-answer screen: a digit puts the cursor back in the answer box
+    const answerBox = this.el.querySelector<HTMLInputElement>('#go-iq-input');
+    if (answerBox && !answerBox.disabled && /^(Digit|Numpad)\d$|^Minus$/.test(e.code)) {
+      answerBox.focus();
+      return;
+    }
+
+    const arrows: Record<string, [number, number]> = {
+      ArrowLeft: [-1, 0],
+      ArrowRight: [1, 0],
+      ArrowUp: [0, -1],
+      ArrowDown: [0, 1],
+    };
+    const arrow = arrows[e.code];
+    if (arrow) {
+      this._kbMove(arrow[0], arrow[1]);
+    } else if (e.code === 'Enter' || e.code === 'NumpadEnter' || e.code === 'Space') {
+      // Nothing picked yet: press the main button, or just highlight the first answer
+      const buttons = this._kbButtons();
+      const selected = this.kbSelected && buttons.includes(this.kbSelected) ? this.kbSelected : null;
+      const target = selected ?? buttons.find((b) => b.classList.contains('go-btn-primary'));
+      if (target) target.click();
+      else this._kbMove(0, 0);
+    } else if (/^(Digit|Numpad)[1-9]$/.test(e.code)) {
+      const choices = this._kbButtons().filter((b) => b.classList.contains('go-choice'));
+      choices[Number(e.code.slice(-1)) - 1]?.click();
+    } else {
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   // ── Phase: intro dialogue ──────────────────────────────────────────────────
@@ -91,13 +186,13 @@ class GateOverlayController {
     const dialogues = this.opts.introDialogues;
     const idx = Math.floor(Math.random() * dialogues.length);
     const text = dialogues[idx][this.locale];
-    const continueLabel = this.locale === 'he' ? 'לחץ להמשיך' : 'Tap to continue';
-    const titleLabel  = this.locale === 'he' ? '🔒 בדיקת זהות NULL-X' : '🔒 NULL-X Identity Check';
+    const continueLabel = this._t('gate.ui.start');
+    const titleLabel = this._t('gate.ui.introTitle');
 
     this.el.innerHTML = /* html */`
       <div class="go-backdrop"></div>
       <div class="go-panel go-intro-panel">
-        <div class="go-null-icon">⚠️</div>
+        <div class="go-null-icon">🛡️</div>
         <h2 class="go-title">${titleLabel}</h2>
         <p class="go-intro-text">${text}</p>
         <button class="go-btn go-btn-primary go-continue-btn">${continueLabel}</button>
@@ -134,24 +229,19 @@ class GateOverlayController {
 
   /** Render a simple arithmetic input question (player types the answer). */
   private _showInputQuestion(q: SimpleInputQuestion, isRetry: boolean): void {
-    const loc = this.locale;
     const correct = this.session.currentCorrect;
     const required = this.session.currentRequired;
 
-    const progressLabel = loc === 'he'
-      ? `${correct} / ${required} נכון`
-      : `${correct} / ${required} correct`;
+    const progressLabel = this._t('gate.ui.progress', { correct, required });
 
-    const retryBadge = isRetry
-      ? `<span class="go-retry-badge">${loc === 'he' ? '🔁 נסה שוב' : '🔁 Try Again'}</span>`
-      : '';
+    const retryBadge = isRetry ? `<span class="go-retry-badge">${this._t('gate.ui.retry')}</span>` : '';
 
     const timerLimit = this.opts.sessionConfig.timeLimitPerQuestion;
     const showTimer = timerLimit > 0;
     this.timerRemaining = timerLimit;
 
-    const submitLabel = loc === 'he' ? 'אשר ✓' : 'Submit ✓';
-    const placeholder = loc === 'he' ? 'הכנס תשובה...' : 'Enter answer...';
+    const submitLabel = this._t('gate.ui.check');
+    const placeholder = this._t('gate.ui.answerPlaceholder');
 
     this.el.innerHTML = /* html */`
       <div class="go-backdrop"></div>
@@ -214,13 +304,9 @@ class GateOverlayController {
     const correct = this.session.currentCorrect;
     const required = this.session.currentRequired;
 
-    const progressLabel = loc === 'he'
-      ? `${correct} / ${required} נכון`
-      : `${correct} / ${required} correct`;
+    const progressLabel = this._t('gate.ui.progress', { correct, required });
 
-    const retryBadge = isRetry
-      ? `<span class="go-retry-badge">${loc === 'he' ? '🔁 נסה שוב' : '🔁 Try Again'}</span>`
-      : '';
+    const retryBadge = isRetry ? `<span class="go-retry-badge">${this._t('gate.ui.retry')}</span>` : '';
 
     const timerLimit = this.opts.sessionConfig.timeLimitPerQuestion;
     const showTimer = timerLimit > 0;
@@ -323,9 +409,8 @@ class GateOverlayController {
   }
 
   private _showFeedbackCorrect(feedback: AnswerFeedback): void {
-    const loc = this.locale;
     const area = this.el.querySelector('#go-feedback-area')!;
-    area.innerHTML = `<div class="go-feedback go-feedback-ok">✅ ${loc === 'he' ? 'נכון!' : 'Correct!'}</div>`;
+    area.innerHTML = `<div class="go-feedback go-feedback-ok">${this._t('gate.ui.correct')}</div>`;
 
     setTimeout(() => {
       if (feedback.mainPhaseComplete && this.session.isBonusPhase) {
@@ -343,13 +428,10 @@ class GateOverlayController {
     feedback: AnswerFeedback,
     hint?: string,
   ): void {
-    const loc = this.locale;
     const area = this.el.querySelector('#go-feedback-area')!;
 
-    const wrongMsg = loc === 'he' ? '❌ לא נכון! נסה שנית עם מספרים חדשים.' : '❌ Wrong! Try again with new numbers.';
-    const addedMsg = loc === 'he'
-      ? `+1 שאלה נוספת נדרשת (${feedback.required} סה"כ)`
-      : `+1 extra question required (${feedback.required} total)`;
+    const wrongMsg = this._t('gate.ui.wrong');
+    const addedMsg = this._t('gate.ui.addedQuestion', { required: feedback.required });
     const hintHtml = hint
       ? `<div class="go-hint">💡 ${hint}</div>`
       : '';
@@ -377,13 +459,10 @@ class GateOverlayController {
   // ── Phase: bonus question ──────────────────────────────────────────────────
 
   private _showBonusIntro(): void {
-    const loc = this.locale;
-    const titleText = loc === 'he' ? '⭐ שאלת בונוס!' : '⭐ Bonus Question!';
-    const bodyText = loc === 'he'
-      ? 'ענה נכון — תכפיל את הפרסים שלך!\nענה לא נכון — תנקה כל עונש.'
-      : 'Answer correctly — multiply your rewards!\nAnswer incorrectly — clear any penalty.';
-    const yesLabel = loc === 'he' ? '✅ קבל אתגר!' : '✅ Accept Challenge!';
-    const skipLabel = loc === 'he' ? 'דלג על בונוס' : 'Skip Bonus';
+    const titleText = this._t('gate.ui.bonusTitle');
+    const bodyText = this._t('gate.ui.bonusBody', { multiplier: this.opts.sessionConfig.bonusMultiplier });
+    const yesLabel = this._t('gate.ui.bonusYes');
+    const skipLabel = this._t('gate.ui.bonusSkip');
 
     this.el.innerHTML = /* html */`
       <div class="go-backdrop"></div>
@@ -417,22 +496,22 @@ class GateOverlayController {
     const pct = Math.round(result.successRate * 100);
     const pctColor = pct >= 80 ? '#00ff88' : pct >= 50 ? '#ffcc44' : '#ff4466';
 
-    const successLabel = loc === 'he' ? 'קצב הצלחה' : 'Success Rate';
-    const rewardLabel  = loc === 'he' ? '🎁 פרסים שהרווחת' : '🎁 Rewards Earned';
-    const penaltyLabel = loc === 'he' ? '⚠️ עונש' : '⚠️ Penalty';
-    const continueLabel = loc === 'he' ? 'המשך ⟩' : 'Continue ⟩';
+    const successLabel = this._t('gate.ui.score');
+    const rewardLabel = this._t('gate.ui.prizes');
+    const continueLabel = this._t('gate.ui.continue');
+    const multiplier = this.opts.sessionConfig.bonusMultiplier;
 
     const bonusBadge = result.bonusPassed === true
-      ? `<div class="go-bonus-win">${loc === 'he' ? '⭐ בונוס! ×${this.opts.sessionConfig.bonusMultiplier}' : `⭐ Bonus! ×${this.opts.sessionConfig.bonusMultiplier}`}</div>`
+      ? `<div class="go-bonus-win">${this._t('gate.ui.bonusWin', { multiplier })}</div>`
       : result.bonusPassed === false
-      ? `<div class="go-bonus-save">${loc === 'he' ? '⭐ בונוס נכשל — עונש נוקה' : '⭐ Bonus failed — penalty cleared'}</div>`
+      ? `<div class="go-bonus-save">${this._t('gate.ui.bonusMiss')}</div>`
       : '';
 
     const rewardsHtml = result.rewardsEarned.length > 0
       ? `<div class="go-rewards-section">
           <div class="go-rewards-title">${rewardLabel}</div>
           ${result.rewardsEarned.map(r => {
-            if (r.type === 'money') return `<div class="go-reward-row">💰 +${r.amount} PokeCoins</div>`;
+            if (r.type === 'money') return `<div class="go-reward-row">${this._t('gate.ui.money', { amount: r.amount ?? 0 })}</div>`;
             // Resolve item name (supports numeric id or slug)
             const def = r.itemId ? getItem(r.itemId) : undefined;
             const name = def ? def.name[loc] ?? def.name.en : r.itemId ?? '?';
@@ -442,20 +521,20 @@ class GateOverlayController {
       : '';
 
     const penaltyHtml = result.penaltyApplied > 0
-      ? `<div class="go-penalty">${penaltyLabel}: −${result.penaltyApplied} PokeCoins</div>`
+      ? `<div class="go-penalty">${this._t('gate.ui.fine', { amount: result.penaltyApplied })}</div>`
       : '';
 
     this.el.innerHTML = /* html */`
       <div class="go-backdrop"></div>
       <div class="go-panel go-result-panel">
-        <h2 class="go-title go-title-pass">✅ ${loc === 'he' ? 'עברת!' : 'Passed!'}</h2>
+        <h2 class="go-title go-title-pass">${this._t('gate.ui.passed')}</h2>
 
         <div class="go-stat-row">
           <span>${successLabel}</span>
           <span style="color:${pctColor};font-weight:700">${pct}%</span>
         </div>
         <div class="go-stat-row">
-          <span>${loc === 'he' ? 'תשובות נכונות' : 'Correct answers'}</span>
+          <span>${this._t('gate.ui.rightAnswers')}</span>
           <span>${result.correctCount} / ${result.totalAttempts}</span>
         </div>
 
@@ -475,8 +554,7 @@ class GateOverlayController {
   // ── Leave ("oops, wrong way") ──────────────────────────────────────────────
 
   private _leaveButtonHtml(): string {
-    const label = this.locale === 'he' ? '🚪 אופס, טעיתי בדרך' : '🚪 Oops, wrong way';
-    return `<button class="go-btn go-btn-ghost go-leave-btn">${label}</button>`;
+    return `<button class="go-btn go-btn-ghost go-leave-btn">${this._t('gate.ui.leave')}</button>`;
   }
 
   private _wireLeaveButton(): void {
@@ -531,6 +609,7 @@ class GateOverlayController {
 
   private _unmount(result: SessionResult): void {
     this._stopTimer();
+    window.removeEventListener('keydown', this.onKeyDown, true);
     this.el.remove();
     this.resolve(result);
   }
@@ -856,6 +935,11 @@ class GateOverlayController {
         color: #aaaacc;
       }
       .go-btn-ghost:hover { border-color: #8888aa; }
+      .go-choice.go-kb-selected,
+      .go-btn.go-kb-selected {
+        outline: 3px solid #ffcc44;
+        outline-offset: 2px;
+      }
       .go-leave-btn {
         display: block;
         margin: 12px auto 0;

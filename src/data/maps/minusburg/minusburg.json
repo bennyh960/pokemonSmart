@@ -1122,8 +1122,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "",
-          "he": "לא לוקחים אף סיכון"
+          "en": "We don't take any chances here!",
+          "he": "אנחנו לא לוקחים פה שום סיכון!"
+        },
+        {
+          "en": "Answer my questions to pass.",
+          "he": "ענה על השאלות שלי כדי לעבור."
         }
       ],
       "spriteType": "gate-officer",
@@ -1131,12 +1135,12 @@
       "gateId": "gate-route2-minusburg",
       "passedDialogue": [
         {
-          "en": "",
-          "he": "כרטיס המעבר שלך בתוקף ."
+          "en": "Your pass is still good.",
+          "he": "כרטיס המעבר שלך עדיין בתוקף."
         },
         {
-          "en": "",
-          "he": "אפשר לעבור בבקשה."
+          "en": "Go ahead!",
+          "he": "אפשר לעבור!"
         }
       ],
       "interactRange": 3
@@ -1149,15 +1153,19 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "התפקיד שלי חשוב מאוד"
+          "en": "Guarding this gate is a very important job!",
+          "he": "לשמור על השער הזה זה תפקיד חשוב מאוד!"
+        },
+        {
+          "en": "Show me you're a real trainer.",
+          "he": "תראה לי שאתה מאמן אמיתי."
         }
       ],
       "spriteType": "gate-officer",
       "passedDialogue": [
         {
-          "en": "",
-          "he": "אפשר לעבור בבקשה. בהצלחה במסע"
+          "en": "You may pass. Good luck on your journey!",
+          "he": "אפשר לעבור. בהצלחה במסע!"
         }
       ],
       "gateId": "gate-minusburg-exit-right",

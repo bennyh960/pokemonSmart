@@ -247,8 +247,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "Hello!",
-          "he": "שלום ! שום גליץ' לא יכנס לפרקטליס במשמרת שלי"
+          "en": "No glitch gets into Fractalis on my watch!",
+          "he": "שום גליץ' לא נכנס לפרקטליס במשמרת שלי!"
+        },
+        {
+          "en": "Prove it's really you — answer these!",
+          "he": "תוכיח שזה באמת אתה — ענה על אלה!"
         }
       ],
       "spriteType": "gate-officer",
@@ -263,8 +267,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "",
-          "he": "שלום"
+          "en": "Hi there, trainer!",
+          "he": "שלום, מאמן!"
+        },
+        {
+          "en": "This is the Route 7 gate. A few questions and you're through!",
+          "he": "זה השער לדרך 7. כמה שאלות ואתה עובר!"
         }
       ],
       "spriteType": "gate-officer",
@@ -279,8 +287,12 @@
       "type": "gate-guard",
       "dialogue": [
         {
-          "en": "",
-          "he": "שלום - מי שרוצה לעבור חייב להזדהות גם בים."
+          "en": "Even at sea, everyone stops at my checkpoint!",
+          "he": "גם בים — כולם עוצרים במחסום שלי!"
+        },
+        {
+          "en": "Answer my questions and you can sail.",
+          "he": "ענה על השאלות שלי ותוכל להפליג."
         }
       ],
       "spriteType": "char_330791",

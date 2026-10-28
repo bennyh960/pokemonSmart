@@ -73,7 +73,7 @@ registerGate({
 
 registerGate({
   id: 'gate-absoluta-gym',
-  title: { en: 'Absolute Gym', he: 'חדר הכושר של הערך המוחלט' },
+  title: { en: 'Absolute Gym', he: 'מכון הערך המוחלט' },
   description: { en: 'Answer 6 questions to challenge Absa.', he: 'ענה על 6 שאלות כדי לאתגר את אבסה.' },
   triggerType: 'gym-entry',
   questionSetIds: ['placeholder'],

@@ -3473,7 +3473,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 const passed =
                   guard.passedDialogue && guard.passedDialogue.length > 0
                     ? resolveDialogue(guard.passedDialogue, getLocale())
-                    : [getLocale() === 'he' ? 'תעבור, בבקשה!' : 'You may pass!'];
+                    : [t('gate.youMayPass')];
                 activeTextBox = createTextBox(passed, isRTL(), npcName);
               } else {
                 // Gate locked — show blocking dialogue, then launch gate scene on dismiss
@@ -3630,8 +3630,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                     // Check if gate is already unlocked (timed pass still active)
                     if (isGateUnlocked(effectiveGateId)) {
                       // Already passed — show brief confirmation and allow through
-                      const locale = getLocale();
-                      const msg = locale === 'he' ? 'המסלול פתוח.' : 'The path is open.';
+                      const msg = t('gate.pathOpen');
                       activeTextBox = createTextBox([msg], isRTL());
                       return;
                     }
