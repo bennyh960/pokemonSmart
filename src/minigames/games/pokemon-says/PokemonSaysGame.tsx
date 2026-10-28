@@ -1,6 +1,6 @@
 /** Pokémon Says — play area: the Pokémon calls an action, the player taps its picture before time runs out. */
 
-import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent } from 'react';
+import { useEffect, useState, type CSSProperties, type MouseEvent } from 'react';
 import { useInputLayer } from '../../../engine/input/index.js';
 import type { KeyBinding } from '../../../engine/input/react/types.js';
 import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
@@ -9,12 +9,13 @@ import { usePlayerData } from '../../../ui-react/hooks/usePlayerData.js';
 import { showHebrewHelp } from '../../english/help.js';
 import { todayKey } from '../../english/learning.js';
 import { createRng } from '../../english/random.js';
+import { LearnFirst } from '../../english/LearnFirst.js';
 import { EN_TEXT, ProgressDots, PromptBar, WordPic } from '../../english/ui.js';
 import { useWordRound } from '../../english/useWordRound.js';
 import { useWordStats } from '../../english/useWords.js';
 import { PokemonSprite } from '../../shell/ui.js';
 import type { MiniGameProps } from '../../types.js';
-import { generateSays, type SaysConfig } from './says.js';
+import { generateSays, type SaysConfig, type SaysQuestion } from './says.js';
 import './pokemon-says.css';
 
 const KEYS: KeyBinding[] = [
@@ -25,17 +26,31 @@ const KEYS: KeyBinding[] = [
   { code: 'Space', action: 'replay' },
 ];
 
-export function PokemonSaysGame({ level, runId, paused, hud, sfx, pokemonId, onFinish }: MiniGameProps<SaysConfig>) {
-  const { locale } = useI18n();
+export function PokemonSaysGame(props: MiniGameProps<SaysConfig>) {
   const [pd] = usePlayerData();
   const [stats] = useWordStats();
+  const [questions] = useState(() => {
+    const seed = (Date.now() ^ Math.imul(props.runId + 1, 2654435761)) >>> 0;
+    const speakers = pd.party.length > 0 ? pd.party.map((p) => p.id) : [props.pokemonId];
+    return generateSays(props.level.config, createRng(seed), stats, todayKey(), speakers);
+  });
+  return (
+    <LearnFirst words={questions.map((q) => q.word)} theme={props.theme}>
+      <SaysPlay {...props} questions={questions} />
+    </LearnFirst>
+  );
+}
+
+function SaysPlay({
+  questions,
+  level,
+  paused,
+  hud,
+  sfx,
+  onFinish,
+}: MiniGameProps<SaysConfig> & { questions: SaysQuestion[] }) {
+  const { locale } = useI18n();
   const cfg = level.config;
-  const [seed] = useState(() => (Date.now() ^ Math.imul(runId + 1, 2654435761)) >>> 0);
-  const questions = useMemo(() => {
-    const speakers = pd.party.length > 0 ? pd.party.map((p) => p.id) : [pokemonId];
-    return generateSays(cfg, createRng(seed), stats, todayKey(), speakers);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seed]);
 
   const round = useWordRound({
     total: questions.length,

@@ -96,15 +96,37 @@ export function wordWeight(stat: WordStat | undefined, today: string): number {
   return fresh ? 1.5 : 4 - stat.box;
 }
 
-/** `count` distinct words, weighted by `wordWeight` (fewer if the pool is smaller). */
-export function pickWords(rng: Rng, pool: readonly Word[], stats: WordStats, count: number, today: string): Word[] {
+/** New words a round may bring (each gets a learning card first). */
+export const MAX_NEW_PER_ROUND = 4;
+
+/**
+ * `count` distinct words, weighted by `wordWeight`, with at most `maxNew` never-met words — when the
+ * pool runs out of met words, more new ones are allowed so the round is still full.
+ */
+export function pickWords(
+  rng: Rng,
+  pool: readonly Word[],
+  stats: WordStats,
+  count: number,
+  today: string,
+  maxNew = MAX_NEW_PER_ROUND,
+): Word[] {
+  const isNew = (w: Word) => !stats[w.id];
+  const met = pool.filter((w) => !isNew(w)).length;
+  const allowNew = Math.max(maxNew, count - met);
+  let newCount = 0;
   const left = pool.map((w) => ({ w, weight: wordWeight(stats[w.id], today) }));
   const out: Word[] = [];
   while (out.length < count && left.length > 0) {
+    if (newCount >= allowNew) {
+      for (let k = left.length - 1; k >= 0; k--) if (isNew(left[k].w)) left.splice(k, 1);
+      if (left.length === 0) break;
+    }
     const total = left.reduce((n, x) => n + x.weight, 0);
     let r = rng() * total;
     let i = 0;
     while (i < left.length - 1 && r >= left[i].weight) r -= left[i++].weight;
+    if (isNew(left[i].w)) newCount++;
     out.push(left[i].w);
     left.splice(i, 1);
   }
@@ -113,6 +135,21 @@ export function pickWords(rng: Rng, pool: readonly Word[], stats: WordStats, cou
 
 export function knownCount(stats: WordStats): number {
   return Object.values(stats).filter((s) => s.known).length;
+}
+
+/** Words answered right (first try) at least STRONG_RIGHTS times — what moves a child up the English ladder. */
+export const STRONG_RIGHTS = 2;
+
+export function strongCount(stats: WordStats, ids?: readonly string[]): number {
+  const list = ids ? ids.map((id) => stats[id]) : Object.values(stats);
+  return list.filter((s) => s && s.right >= STRONG_RIGHTS).length;
+}
+
+/** Words shown on a learning card: they now have a record (box 0), so they count as met and come back soon. */
+export function markShown(stats: WordStats, wordIds: readonly string[], today: string): WordStats {
+  const out: WordStats = { ...stats };
+  for (const id of wordIds) out[id] ??= { box: 0, seen: 0, right: 0, day: today };
+  return out;
 }
 
 /** The same word all day for everyone (tier 1–2), from the date. */

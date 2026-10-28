@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   KNOWN_BOX,
   knownCount,
+  markShown,
+  MAX_NEW_PER_ROUND,
+  strongCount,
   pickWords,
   readWordStats,
   recordAnswers,
@@ -15,6 +18,7 @@ const word = (id: string, tier: 1 | 2 | 3 = 1): Word => ({
   id,
   en: id,
   he: 'מילה',
+  say: 'וֶרְד',
   theme: 'actions',
   tier,
   picture: { kind: 'emoji', emoji: id },
@@ -67,6 +71,28 @@ describe('word learning', () => {
     expect(pickWords(createRng(7), pool, {}, 9, 'd1')).toHaveLength(5);
     expect(readWordStats({ x: 'oops', y: { box: 99 } })).toEqual({ y: { box: KNOWN_BOX, seen: 0, right: 0 } });
     expect(readWordStats(null)).toEqual({});
+  });
+
+  it('a round brings at most MAX_NEW_PER_ROUND new words, unless it needs more to be full', () => {
+    const pool = 'abcdefghij'.split('').map((x) => word(x));
+    const met = {
+      a: { box: 1, seen: 1, right: 1 },
+      b: { box: 1, seen: 1, right: 1 },
+      c: { box: 0, seen: 1, right: 0 },
+    };
+    const picked = pickWords(createRng(3), pool, met, 6, 'd1');
+    expect(picked).toHaveLength(6);
+    expect(picked.filter((w) => !(w.id in met)).length).toBeLessThanOrEqual(Math.max(MAX_NEW_PER_ROUND, 6 - 3));
+    expect(pickWords(createRng(3), pool, met, 5, 'd1', 2).filter((w) => !(w.id in met))).toHaveLength(2);
+    expect(pickWords(createRng(3), pool, {}, 8, 'd1')).toHaveLength(8); // all new: still a full round
+  });
+
+  it('shown words get a record; strong words have 2+ first-try rights', () => {
+    const s = markShown({ a: { box: 2, seen: 4, right: 3 } }, ['a', 'b'], 'd1');
+    expect(s.a.box).toBe(2);
+    expect(s.b).toMatchObject({ box: 0, seen: 0, right: 0 });
+    expect(strongCount(s)).toBe(1);
+    expect(strongCount(s, ['b'])).toBe(0);
   });
 
   it('word of the day is stable for a date and only tier 1–2', () => {

@@ -16,10 +16,27 @@ import type { Tileset, TileDef } from './tileset.js';
 import type { BattleBackgroundId } from '../data/battle-backgrounds.js';
 import type { OverworldFxKind } from '../systems/overworld-fx.js';
 
+/** Base grid unit in px (object sizes are multiples of it). */
+const BASE = 16;
+
 /** Does an object's tile physically occupy grid offset (lx, ly)? Respects `cells` and `footprint`. */
 function occupiesCell(def: TileDef, lx: number, ly: number): boolean {
   const inList = (list?: Array<{ dx: number; dy: number }>) => !list || list.some((c) => c.dx === lx && c.dy === ly);
   return inList(def.cells) && inList(def.footprint);
+}
+
+/** Grid cells where the player can interact with a placed object (its w×h box, limited to `cells`). */
+function interactCellsOf(obj: { x: number; y: number }, def: TileDef): { x: number; y: number }[] {
+  const out: { x: number; y: number }[] = [];
+  const gridW = Math.max(1, Math.round(def.w / BASE));
+  const gridH = Math.max(1, Math.round(def.h / BASE));
+  for (let ly = 0; ly < gridH; ly++) {
+    for (let lx = 0; lx < gridW; lx++) {
+      if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
+      out.push({ x: obj.x + lx, y: obj.y + ly });
+    }
+  }
+  return out;
 }
 
 /** Map transition definition. */
@@ -282,7 +299,6 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
   const objectLayer = data.objectLayer ?? null;
   const placedObjects = data.objects ?? [];
   const interactOverrides = buildInteractOverrides(data.interactiveItems ?? {}, placedObjects);
-  const BASE = 16; // base grid unit
   const flagListenerDefs = data.flagListeners ?? [];
 
   return {
@@ -329,16 +345,18 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
       for (const obj of placedObjects) {
         const def = tileset.getTile(obj.key);
         if (!def || !def.interactType) continue;
-        const gridW = Math.max(1, Math.round(def.w / BASE));
-        const gridH = Math.max(1, Math.round(def.h / BASE));
-        const lx = gx - obj.x;
-        const ly = gy - obj.y;
-        if (lx >= 0 && lx < gridW && ly >= 0 && ly < gridH) {
-          if (def.cells && !def.cells.some((c) => c.dx === lx && c.dy === ly)) continue;
-          return obj;
-        }
+        if (interactCellsOf(obj, def).some((c) => c.x === gx && c.y === gy)) return obj;
       }
       return null;
+    },
+
+    /** Every grid cell the player can interact with on objects of this interact type (e.g. 'english-board'). */
+    getInteractCells(typeId: string): { x: number; y: number }[] {
+      if (!tileset) return [];
+      return placedObjects.flatMap((obj) => {
+        const def = tileset.getTile(obj.key);
+        return def?.interactType?.id === typeId ? interactCellsOf(obj, def) : [];
+      });
     },
 
     /** Get the TileDef for a placed object's tile key. */

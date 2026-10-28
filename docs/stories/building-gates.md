@@ -29,8 +29,9 @@ read words and can't reason. Pass → free entry for a while. Prizes come from t
   (see Story 4).
 - **Prizes = the mini-game's own prizes only** (first clear, 3★, daily-capped replay). The gate adds no second reward,
   so the gate can't be farmed more than the game itself.
-- **Level comes from the trainer rank, not a per-city list** — the same `levelForRank()` care rounds use (Story 2).
-  A map can still override it (`miniGame: { level }`, like gym overrides).
+- **Labs: level from the trainer rank** — the same `levelForRank()` care rounds use (Story 2). A map can override it
+  (`miniGame: { level }`). **Libraries: game + level from the English ladder** (`miniGame.ladder: 'english'`,
+  library-english.md Story 7) — English follows what the child knows, never the trainer rank.
 - **Games by category:** libraries play any `english` game, labs any `logic` game (`MiniGameDef.category`) — a new game
   joins its buildings without touching the gate config.
 - **Gate rounds still count** toward stars / level unlocks / records (they are normal rounds).

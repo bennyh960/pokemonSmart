@@ -16,6 +16,7 @@ const word: Word = {
   id: 'jump',
   en: 'jump',
   he: 'לקפוץ',
+  say: 'ג׳ַמְפּ',
   theme: 'actions',
   tier: 1,
   picture: { kind: 'emoji', emoji: '🤸' },

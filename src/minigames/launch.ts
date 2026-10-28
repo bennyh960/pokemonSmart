@@ -27,13 +27,17 @@ export interface StartMiniGameOptions {
    * `intro` replaces the level picker on the intro card; once cleared there is no "Play again".
    */
   gate?: { intro: Bilingual };
+  /** An English ladder round (library gate): its stars earn ladder points (english/ladder.ts). */
+  ladder?: boolean;
 }
 
 export interface MiniGameLaunch extends StartMiniGameOptions {
-  /** null = open the game picker. */
+  /** null = open the game picker (or the Word Board). */
   gameId: MiniGameId | null;
   /** Picker only: offer just these games (default: all). */
   pickerIds?: MiniGameId[];
+  /** Open the English Word Board instead of the picker (english/EnglishBoard.tsx). */
+  board?: boolean;
 }
 
 let stateMachine: StateMachine | null = null;
@@ -54,6 +58,11 @@ export function openMiniGamePicker(
 ): void {
   const { gameIds, ...rest } = options;
   launch({ gameId: null, pickerIds: gameIds, ...rest });
+}
+
+/** Opens the English Word Board (the library board tile): ladder rounds, as many as the child likes. */
+export function openEnglishBoard(options: Pick<StartMiniGameOptions, 'onFinish'> = {}): void {
+  launch({ gameId: null, board: true, ...options });
 }
 
 /** The scene reads (and clears) the launch request on enter. */

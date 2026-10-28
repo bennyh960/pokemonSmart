@@ -7,9 +7,18 @@ import './english.css';
 
 const PIC_SIZE = { sm: 'h-10 w-10 text-3xl', md: 'h-16 w-16 text-5xl', lg: 'h-24 w-24 text-7xl' } as const;
 
-/** A word's picture: item sprite or emoji. */
+/** A word's picture: item sprite, emoji, or a colour swatch. */
 export function WordPic({ word, size = 'md' }: { word: Word; size?: keyof typeof PIC_SIZE }) {
   const box = `${PIC_SIZE[size]} inline-flex shrink-0 items-center justify-center leading-none`;
+  if (word.picture.kind === 'swatch') {
+    return (
+      <span
+        className={`${box} rounded-full border-4 border-white/80 shadow-lg`}
+        style={{ background: word.picture.color }}
+        aria-hidden
+      />
+    );
+  }
   if (word.picture.kind === 'item') {
     return (
       <img

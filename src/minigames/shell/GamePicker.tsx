@@ -17,13 +17,20 @@ interface Props {
   onClose: () => void;
   /** Shown when the picker offers English games: opens the Word Dex. */
   onWordDex?: () => void;
+  /** Why a game can't be played yet (shown on its card), or null when it's open. */
+  lockOf?: (game: AnyMiniGameDef) => string | null;
 }
 
-export function GamePicker({ games, initialId, onPick, onClose, onWordDex }: Props) {
+export function GamePicker({ games, initialId, onPick, onClose, onWordDex, lockOf }: Props) {
   const { t, locale } = useI18n();
   const [pd] = usePlayerData();
   const save = pd.miniGames ?? {};
   const pick = (id: MiniGameId) => {
+    const game = games.find((g) => g.id === id);
+    if (game && lockOf?.(game)) {
+      miniGameSfx.wrong();
+      return;
+    }
     miniGameSfx.tap();
     onPick(id);
   };
@@ -76,6 +83,7 @@ export function GamePicker({ games, initialId, onPick, onClose, onWordDex }: Pro
           {games.map((game, i) => {
             const { stars, max } = totalStars(save, game);
             const selected = sel === i;
+            const lock = lockOf?.(game) ?? null;
             return (
               <button
                 key={game.id}
@@ -84,7 +92,7 @@ export function GamePicker({ games, initialId, onPick, onClose, onWordDex }: Pro
                 onMouseDown={(e) => e.preventDefault()}
                 onMouseEnter={() => setSel(i)}
                 onClick={() => pick(game.id)}
-                className={`mg-pop-in group relative flex min-h-[220px] flex-col overflow-hidden rounded-[1.75rem] p-5 text-start shadow-2xl transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.02] ${selected ? 'mg-selected scale-[1.02]' : ''}`}
+                className={`mg-pop-in group relative flex min-h-[220px] flex-col overflow-hidden rounded-[1.75rem] p-5 text-start shadow-2xl transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.02] ${selected ? 'mg-selected scale-[1.02]' : ''} ${lock ? 'grayscale-[0.7]' : ''}`}
                 style={{ ...themeBackground(game.theme), animationDelay: `${i * 90}ms` }}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -99,8 +107,9 @@ export function GamePicker({ games, initialId, onPick, onClose, onWordDex }: Pro
                     style={{ background: game.theme.accent, color: game.theme.accentText }}
                     dir="ltr"
                   >
-                    ★ {stars}/{max}
+                    {lock ? '🔒' : `★ ${stars}/${max}`}
                   </span>
+                  {lock && <span className="flex-1 text-sm font-black text-white drop-shadow">{lock}</span>}
                   <PokemonSprite
                     id={game.mascotPokemonId}
                     className={`h-28 w-28 object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.3)] ${selected ? 'mg-bob' : ''}`}

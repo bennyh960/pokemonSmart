@@ -13,19 +13,20 @@ import def from '../index.js';
 import { closeOpen, flip, generateMemory, isDone, memoryAnswers, memoryStars, NEW_MEMORY } from '../memory.js';
 
 describe('Memory Match', () => {
-  it('every level deals an English card + a partner card per word', () => {
+  it('every level deals an English card + a Hebrew card per word, all of the level theme', () => {
     for (const lvl of def.levels) {
       const cards = generateMemory(lvl.config, createRng(5), {}, 'd1');
       expect(cards).toHaveLength(lvl.config.pairs * 2);
+      for (const c of cards) expect(c.word.theme).toBe(lvl.config.theme);
       for (const id of new Set(cards.map((c) => c.word.id))) {
         const faces = cards.filter((c) => c.word.id === id).map((c) => c.face);
-        expect(faces.sort()).toEqual(['en', lvl.config.partner].sort());
+        expect(faces.sort()).toEqual(['en', 'he']);
       }
     }
   });
 
   it('matches stay up, wrong pairs count a mistake and turn back, words remember misses', () => {
-    const cards = generateMemory({ pairs: 3, maxTier: 1, partner: 'picture' }, createRng(9), {}, 'd1');
+    const cards = generateMemory({ theme: 'animals', pairs: 3, maxTier: 1 }, createRng(9), {}, 'd1');
     const pairOf = (i: number) => cards.findIndex((c, j) => j !== i && c.word.id === cards[i].word.id);
     const otherThan = (i: number) => cards.findIndex((c) => c.word.id !== cards[i].word.id);
 

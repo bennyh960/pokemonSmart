@@ -28,8 +28,8 @@ export const CATCHER_SPEED = 1.1;
 export const HEARTS = 3;
 /** Seconds between bubbles appearing. */
 const SPAWN_GAP = 0.9;
-/** How many targets a round prepares (more than anyone catches in time). */
-const TARGETS = 30;
+/** Targets a round prepares (they repeat if a fast player catches them all) — new ones get a learning card. */
+const TARGETS = 14;
 
 export interface Bubble {
   id: number;

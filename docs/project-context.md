@@ -31,7 +31,8 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Games are reached in the world: libraries (English), labs (logic), wild care rounds. Admin only: start menu → Actions → Mini Games
 - [ ] Section A built, **not playtested**: Snack Attack family (Snorlax, Bulbasaur, Charmander, Squirtle, Pikachu lines) + overworld care trigger (`games/snack-attack/`, `minigames/care.ts`, design §3b). Check each skin's look, the trigger rate (10/20/50% per step by HP, 100-step cooldown) and that Squirtle's levels 4–5 stay fair with more rocks (`SNACK_TUNE=1` tune test)
 - [ ] Library + lab gates built, **not playtested** (`docs/stories/building-gates.md` → QA). Replay the lab/library story scenes (Multiplia library, Percentile lab, Algorithma lab intro) from admin snapshots — the gate must not interrupt them
-- [ ] English rework built, **not playtested** (`docs/stories/library-english.md` → QA): 6 English modes, Word Dex. A person should review the Hebrew in `src/data/english-words.json`
+- [ ] English rework built, **not playtested** (`docs/stories/library-english.md` → QA, Round 2 too): 7 English games, English ladder, learn-first cards, Word Dex. A Hebrew speaker should review `src/data/english-words.json` — the `he` words and the `say` pronunciations (niqqud) were written by Claude
+- [ ] Word Board built, **not playtested** (`docs/stories/english-board.md`). **Place the board:** in the tileset editor give a library board tile interact type `english-board` (every placed copy of that tile becomes a board). Then check the librarian intro walk, prize odds/balance, and the rare-Pokémon prize at the top level
 - [ ] Free-play hosts only in 3 libraries (Sumville, Multiplia, Percentile). Minusburg library, Sumville lab, Percentile lab, Algorithma lab have none — add an NPC with `"miniGame": { "category": "english" | "logic" }` in the editor (the editor has no field for it yet — edit the JSON)
 - [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.5 MB, mostly JSON data)
 
@@ -47,5 +48,6 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] `/sprites/pokemon/front/${id}.png` is built by hand in battle, evolution — use `pokemonFrontSpriteUrl()` from `systems/overworld-pokemon-anim.ts` (or move it to a shared sprite module)
 - [ ] 7 of 13 vitest files fail on main (pre-existing)
 - [ ] `public/audio/` is gitignored — the only copy is the `gh-pages` branch. A fresh clone has no sound; restore with `git archive origin/gh-pages audio | tar -x -C public` (the Pages workflow `.github/workflows/deploy.yml` does this before building). Store it somewhere durable (LFS / release asset) — if `gh-pages` is ever recreated without `audio/`, prod loses sound again
+- [ ] `scripts/enrich-pokemon-metadata.ts` overwrites height / weight / category / description from PokeAPI on every run — it would undo hand edits in `pokemon.json` (e.g. Charmander height 7 vs API 6). Make it fill missing fields only before running it again
 - [ ] `encounter-tables.json`: some old entries have minLevel > maxLevel (sumville Pineco 10/5, route-3 Nidoran-f 24/20, small-forest Murkrow 30/14, cave-20-30 Phanpy 29/25)
 - [ ] Math in battle disabled — needs a less intrusive mechanic

@@ -1,11 +1,12 @@
 /** Word Catcher — play area: catch the falling English word that matches the picture. */
 
-import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
+import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import { useInputLayer } from '../../../engine/input/index.js';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
 import { showHebrewHelp } from '../../english/help.js';
 import { todayKey } from '../../english/learning.js';
-import { createRng } from '../../english/random.js';
+import { createRng, type Rng } from '../../english/random.js';
+import { LearnFirst } from '../../english/LearnFirst.js';
 import { EN_TEXT, WordPic } from '../../english/ui.js';
 import { useWordStats } from '../../english/useWords.js';
 import { anyKeyDown } from '../../shell/hooks.js';
@@ -21,6 +22,7 @@ import {
   stepCatcher,
   type CatcherConfig,
   type CatcherEvent,
+  type CatcherState,
 } from './catcher.js';
 import './word-catcher.css';
 
@@ -29,14 +31,32 @@ const RIGHT_KEYS = ['ArrowRight', 'KeyD'];
 const CATCH_POINTS = 100;
 const COMBO_POINTS = 20;
 
-export function WordCatcherGame({ level, runId, paused, hud, sfx, pokemonId, onFinish }: MiniGameProps<CatcherConfig>) {
+export function WordCatcherGame(props: MiniGameProps<CatcherConfig>) {
+  const [stats] = useWordStats();
+  const [setup] = useState(() => {
+    const rng = createRng((Date.now() ^ Math.imul(props.runId + 1, 2654435761)) >>> 0);
+    return { rng, sim: newCatcher(props.level.config, rng, stats, todayKey()) };
+  });
+  return (
+    <LearnFirst words={setup.sim.targets} theme={props.theme}>
+      <CatcherPlay {...props} rng={setup.rng} sim={setup.sim} />
+    </LearnFirst>
+  );
+}
+
+function CatcherPlay({
+  rng,
+  sim,
+  level,
+  paused,
+  hud,
+  sfx,
+  pokemonId,
+  onFinish,
+}: MiniGameProps<CatcherConfig> & { rng: Rng; sim: CatcherState }) {
   const { locale } = useI18n();
-  const [stats, recordWords] = useWordStats();
+  const [, recordWords] = useWordStats();
   const cfg = level.config;
-  const [seed] = useState(() => (Date.now() ^ Math.imul(runId + 1, 2654435761)) >>> 0);
-  const rng = useMemo(() => createRng(seed), [seed]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const sim = useMemo(() => newCatcher(cfg, rng, stats, todayKey()), [seed]);
   const fieldRef = useRef<HTMLDivElement>(null);
   const goalRef = useRef<number | null>(null);
   const comboRef = useRef(0);

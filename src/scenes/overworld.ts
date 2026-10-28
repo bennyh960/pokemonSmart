@@ -14,7 +14,10 @@ import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { initHUD, updateHUD, setHUDTab, showHUD, hideHUD } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
 import { forceCareGame, rollCareTrigger, type CareMatch } from '../minigames/care.js';
-import { openMiniGamePicker, resolveMiniGames, startMiniGame } from '../minigames/index.js';
+import { openEnglishBoard, openMiniGamePicker, resolveMiniGames, startMiniGame } from '../minigames/index.js';
+import { pathToFace } from '../systems/grid-path.js';
+import { FLAGS } from '../data/story/flags.js';
+import { ENGLISH_BOARD_INTRO_CUTSCENE } from '../data/story/content/english-board.js';
 import type { Locale } from '../i18n/i18n.js';
 import {
   getPlayerData,
@@ -99,6 +102,7 @@ import {
   setActiveGate,
   fireStoryTrigger,
   consumePendingCutscene,
+  queueCutscene,
   consumePendingMessage,
   checkAndRecoverInterruptedEvent,
   checkAndResumeDelayedEvents,
@@ -438,6 +442,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   let playerHidden = false;
   let playerCutscenePathQueue: CutscenePathDir[] = [];
   let playerCutsceneWalking = false;
+  /** Where the player turns once the cutscene path ends (walk-to-interact). */
+  let playerCutsceneFinalFacing: CutscenePathDir | null = null;
+  /** The camera follows the player for the rest of the cutscene (a walk-to-interact walk can leave the screen). */
+  let cutsceneCameraFollowsPlayer = false;
 
   // Pending push-back after gate scene dismissal without passing
   let pendingGateBack: { pushDx: number; pushDy: number; gateId: string } | null = null;
@@ -1388,6 +1396,31 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       isPlayerWalking() {
         return playerCutsceneWalking || player.moving;
       },
+      walkPlayerToInteract(interactTypeId) {
+        if (!tileMap) return false;
+        const pd = hasActiveGame() ? getPlayerData() : null;
+        const warps = new Set((currentMapData?.transitions ?? []).map((tr) => `${tr.fromX},${tr.fromY}`));
+        const map = tileMap;
+        const walk = pathToFace(
+          { x: player.gridX, y: player.gridY },
+          map.getInteractCells(interactTypeId),
+          (x, y) =>
+            map.isWalkable(x, y) &&
+            map.getTileCategory(x, y) !== 'water' &&
+            !warps.has(`${x},${y}`) &&
+            !npcManager?.isVisibleNPCAt(x, y, pd?.flags ?? {}, pd?.party),
+        );
+        if (!walk) return false;
+        if (walk.path.length === 0) {
+          player.facing = CUTSCENE_DIR_TO_FACING[walk.face];
+          return false;
+        }
+        playerCutscenePathQueue = [...walk.path];
+        playerCutsceneWalking = true;
+        playerCutsceneFinalFacing = walk.face;
+        cutsceneCameraFollowsPlayer = true;
+        return true;
+      },
       playPokemonAnim(step) {
         const npc =
           step.from && step.from !== 'player'
@@ -2021,6 +2054,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Play map music
     audio.playMusic(currentMapData.music || 'town3');
 
+    // First library with a Word Board: the librarian shows it (before map-enter, so the entry gate waits;
+    // a story scene on this entry replaces it and the intro comes next time)
+    if (
+      hasActiveGame() &&
+      !getPlayerData().flags[FLAGS.ENGLISH_BOARD_INTRO_DONE] &&
+      tileMap.getInteractCells('english-board').length > 0
+    ) {
+      queueCutscene(ENGLISH_BOARD_INTRO_CUTSCENE);
+    }
+
     // Fire map-enter story trigger
     if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id as MapId });
 
@@ -2184,6 +2227,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       for (const a of ambientFx) if (isAmbientFxActive(a.def)) updateOverworldFx(a.fx, dt);
 
       // ── Cutscene runner: takes full control of input ──
+      if (!isCutsceneActive()) cutsceneCameraFollowsPlayer = false;
       if (isCutsceneActive()) {
         // hideHUD();
         updateCutscene(dt, input, buildCutsceneContext());
@@ -2243,6 +2287,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
         if (playerCutsceneWalking && !player.moving && playerCutscenePathQueue.length === 0) {
           playerCutsceneWalking = false;
+        }
+        if (!playerCutsceneWalking && !player.moving && playerCutsceneFinalFacing) {
+          player.facing = CUTSCENE_DIR_TO_FACING[playerCutsceneFinalFacing];
+          playerCutsceneFinalFacing = null;
+        }
+        if (cutsceneCameraFollowsPlayer && tileMap) {
+          const mapW = tileMap.width * TILE_SIZE;
+          const mapH = tileMap.height * TILE_SIZE;
+          camera.follow(player.pixelX + TILE_SIZE / 2, player.pixelY + TILE_SIZE / 2, mapW, mapH, dt);
         }
 
         // Advance NPC cutscene walk animations so move-npc steps can complete.
@@ -3576,6 +3629,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                     pendingHMAction = () => {
                       startHMAnimation(capturedHmName, capturedHmUser, capturedTargetX, capturedTargetY);
                     };
+                    return;
+                  } else if (resolved.id === 'english-board') {
+                    if (hasActiveGame()) openEnglishBoard();
                     return;
                   } else if (resolved.id === 'gate') {
                     const effectiveGateId = inst?.gateId !== undefined ? inst.gateId : resolved.gateId;

@@ -10,7 +10,7 @@ import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js
 import { applyDirectItemEffect, consumeItem } from '../systems/item-effects.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
 import { setBagMode } from './bag.js';
-import { openMiniGamePicker } from '../minigames/launch.js';
+import { openEnglishBoard, openMiniGamePicker } from '../minigames/launch.js';
 import { openSaveSlots } from './save-slots.js';
 import { scheduleFishing, toggleLegend, isLegendVisible, setupWorldMapFly } from './overworld.js';
 
@@ -25,11 +25,13 @@ const PAD_V = 4;
 const FOOTER_H = 8; // "ESC close menu" line under the main panel items
 
 const MAIN_KEYS = ['pokedex', 'party', 'bag', 'map', 'trainerData', 'save', 'actions', 'settings', 'exitGame'] as const;
-const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper', 'miniGames'] as const;
+const ACTIONS_KEYS = ['fishing', 'telephone', 'battleHelper', 'miniGames', 'wordBoard'] as const;
+/** Admin-only actions (test shortcuts; players reach these in the world). */
+const ADMIN_ACTIONS: readonly (typeof ACTIONS_KEYS)[number][] = ['miniGames', 'wordBoard'];
 /** Mini Games is admin-only: players reach the games in libraries, labs and the wild. */
 function actionKeys(): readonly (typeof ACTIONS_KEYS)[number][] {
   const admin = hasActiveGame() && getPlayerData().name === ADMIN_NAME;
-  return admin ? ACTIONS_KEYS : ACTIONS_KEYS.filter((k) => k !== 'miniGames');
+  return admin ? ACTIONS_KEYS : ACTIONS_KEYS.filter((k) => !ADMIN_ACTIONS.includes(k));
 }
 const SETTINGS_KEYS = ['language', 'music_volume', 'music_mute', 'sfx_volume', 'sfx_mute', 'legend'] as const;
 
@@ -115,6 +117,10 @@ export function createStartMenuScene(input: InputManager, stateMachine: StateMac
       case 'miniGames':
         stateMachine.pop();
         openMiniGamePicker();
+        break;
+      case 'wordBoard':
+        stateMachine.pop();
+        openEnglishBoard();
         break;
       case 'battleHelper':
         if (!hasActiveGame()) break;

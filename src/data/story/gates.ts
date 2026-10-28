@@ -116,6 +116,8 @@ export interface QuestionGateDef {
 export interface GateMiniGame extends MiniGameChoice {
   /** Fixed level. Omitted → set by the trainer rank (`levelForRank`). */
   level?: number;
+  /** Pick game + level from a learning ladder instead (libraries: what the child knows in English). */
+  ladder?: 'english';
 }
 
 /** Registered gate definitions keyed by ID. Populated by registerGate(). */

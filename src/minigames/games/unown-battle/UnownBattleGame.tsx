@@ -1,6 +1,6 @@
 /** Unown Battle — play area: a wild Unown shows a word's picture; every right letter is a hit. */
 
-import { useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { useEffect, useState, type MouseEvent } from 'react';
 import { useInputLayer } from '../../../engine/input/index.js';
 import type { KeyBinding } from '../../../engine/input/react/types.js';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
@@ -8,12 +8,13 @@ import { showHebrewHelp } from '../../english/help.js';
 import { todayKey } from '../../english/learning.js';
 import { createRng } from '../../english/random.js';
 import { UnownTile } from '../../english/UnownTile.js';
+import { LearnFirst } from '../../english/LearnFirst.js';
 import { EN_TEXT, ProgressDots, PromptBar, WordPic } from '../../english/ui.js';
 import { useWordRound } from '../../english/useWordRound.js';
 import { useWordStats } from '../../english/useWords.js';
 import { PokemonSprite } from '../../shell/ui.js';
 import type { Bilingual, MiniGameProps } from '../../types.js';
-import { generateBattle, type BattleConfig } from './battle.js';
+import { generateBattle, type BattleConfig, type BattleWord } from './battle.js';
 import './unown-battle.css';
 
 const UNOWN = 201;
@@ -33,13 +34,29 @@ const TEXT = {
   critical: { en: 'Critical hit!', he: 'מכה קריטית!' },
 } satisfies Record<string, Bilingual>;
 
-export function UnownBattleGame({ level, runId, paused, hud, sfx, onFinish }: MiniGameProps<BattleConfig>) {
-  const { locale } = useI18n();
+export function UnownBattleGame(props: MiniGameProps<BattleConfig>) {
   const [stats] = useWordStats();
+  const [battle] = useState(() => {
+    const seed = (Date.now() ^ Math.imul(props.runId + 1, 2654435761)) >>> 0;
+    return generateBattle(props.level.config, createRng(seed), stats, todayKey());
+  });
+  return (
+    <LearnFirst words={battle.map((b) => b.word)} theme={props.theme}>
+      <BattlePlay {...props} battle={battle} />
+    </LearnFirst>
+  );
+}
+
+function BattlePlay({
+  battle,
+  level,
+  paused,
+  hud,
+  sfx,
+  onFinish,
+}: MiniGameProps<BattleConfig> & { battle: BattleWord[] }) {
+  const { locale } = useI18n();
   const cfg = level.config;
-  const [seed] = useState(() => (Date.now() ^ Math.imul(runId + 1, 2654435761)) >>> 0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const battle = useMemo(() => generateBattle(cfg, createRng(seed), stats, todayKey()), [seed]);
 
   const round = useWordRound({
     total: battle.length,

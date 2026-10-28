@@ -9,6 +9,7 @@ import findPokemon from './games/find-pokemon/index.js';
 import unownBattle from './games/unown-battle/index.js';
 import memoryMatch from './games/memory-match/index.js';
 import wordCatcher from './games/word-catcher/index.js';
+import pokemonColors from './games/pokemon-colors/index.js';
 import pokeDoku from './games/poke-doku/index.js';
 import {
   bulbasaurSun,
@@ -26,6 +27,7 @@ const MINI_GAMES: Record<MiniGameId, AnyMiniGameDef> = {
   'unown-battle': unownBattle,
   'memory-match': memoryMatch,
   'word-catcher': wordCatcher,
+  'pokemon-colors': pokemonColors,
   'poke-doku': pokeDoku,
   'snorlax-snack': snorlaxSnack,
   'bulbasaur-sun': bulbasaurSun,

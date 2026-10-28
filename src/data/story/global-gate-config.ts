@@ -304,7 +304,7 @@ registerGate({
   questionSetIds: [],
   reopenCooldownMs: AUTO_GATE_COOLDOWNS.library,
   sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 0 },
-  miniGame: { category: 'english' },
+  miniGame: { category: 'english', ladder: 'english' },
 });
 
 registerGate({

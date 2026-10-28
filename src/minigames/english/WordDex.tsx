@@ -19,10 +19,11 @@ import {
   wordOfDayClaimable,
   type DexData,
 } from './dex.js';
+import { LadderCard } from './LadderCard.js';
 import { knownCount, todayKey, wordOfTheDay } from './learning.js';
 import { WordPic } from './ui.js';
 import { wordStatsOf, WORDS_HOME } from './useWords.js';
-import { getWords, type Word, type WordTheme } from './words.js';
+import { getWords, THEME_NAMES, type Word, type WordTheme } from './words.js';
 
 const DEX_THEME: MiniGameTheme = { from: '#0f766e', to: '#4338ca', accent: '#fde047', accentText: '#1e1b4b' };
 
@@ -41,21 +42,6 @@ const TEXT = {
     he: 'ענו נכון על מילה ב-3 ימים שונים כדי לאסוף את הקלף שלה!',
   },
 } satisfies Record<string, Bilingual>;
-
-const THEME_NAMES: Record<WordTheme, Bilingual> = {
-  types: { en: 'Types', he: 'סוגים' },
-  moves: { en: 'Moves', he: 'מהלכים' },
-  world: { en: 'Pokémon world', he: 'עולם הפוקימון' },
-  actions: { en: 'Actions', he: 'פעולות' },
-  describe: { en: 'Describing words', he: 'מילים מתארות' },
-  colors: { en: 'Colors & shapes', he: 'צבעים וצורות' },
-  nature: { en: 'Nature', he: 'טבע' },
-  animals: { en: 'Animals', he: 'חיות' },
-  body: { en: 'Body', he: 'גוף' },
-  food: { en: 'Food', he: 'אוכל' },
-  people: { en: 'People', he: 'אנשים' },
-  numbers: { en: 'Numbers', he: 'מספרים' },
-};
 
 export function WordDex({ onBack }: { onBack: () => void }) {
   const { locale, isRTL } = useI18n();
@@ -108,6 +94,8 @@ export function WordDex({ onBack }: { onBack: () => void }) {
 
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-4 pt-2">
+          <LadderCard save={pd.miniGames ?? {}} />
+
           {/* Word of the day */}
           <div className="mg-pop-in mg-glass flex flex-wrap items-center gap-4 rounded-3xl p-4">
             <WordPic word={wotd} size="lg" />

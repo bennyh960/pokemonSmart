@@ -120,6 +120,19 @@ export function Results({
             </p>
           )}
 
+          {outcome.ladder && (
+            <p
+              className="mg-slide-up mt-4 rounded-2xl bg-black/20 px-4 py-2 font-black"
+              style={{ animationDelay: '1.6s' }}
+            >
+              {outcome.ladder.newLevel !== undefined
+                ? `🎉 ${t('minigames.results.ladderUp', { n: outcome.ladder.newLevel })}`
+                : outcome.ladder.gained > 0
+                  ? `🪜 ${t('minigames.results.ladderPoints', { n: outcome.ladder.gained })}`
+                  : `🪜 ${t('minigames.results.ladderNoPoints')}`}
+            </p>
+          )}
+
           <div className="mg-slide-up mt-6" style={{ animationDelay: '0.8s' }}>
             {outcome.prizes.length > 0 ? (
               <OpenPrizeButton theme={theme} onOpen={onOpenPrizes} />

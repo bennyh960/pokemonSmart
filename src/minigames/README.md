@@ -75,18 +75,28 @@ Stars / best / clears / prizes are saved by the shell (`pd.miniGames[id]`, `prog
 ## English modes (`category: 'english'`)
 
 Shared layer in `src/minigames/english/` — use it, don't copy it:
-- `words.ts` — the word bank (`src/data/english-words.json`; type / move words resolve from game data). `wordsFor(themes, tier)`.
+- `words.ts` — the word bank (`src/data/english-words.json`; type / move words resolve from game data). Every word has
+  `say` (how it sounds, Hebrew letters + niqqud). `wordsFor(themes, tier)`, `THEME_NAMES` (Hebrew category hints).
+- `LearnFirst.tsx` — wrap a mode's play area: the round's never-met words are shown as cards first. Every English mode uses it.
+- `ladder.ts` — the English ladder (steps of games; ladder rounds earn points by stars, `STAR_POINTS`, and a full
+  bar climbs a step — saved in `unown-words` data `ladder`). Library gates and the Word Board play `ladderRound()`;
+  NPC pickers lock English games above the child's step. A new English game must be added to a ladder step (a test checks).
 - `learning.ts` + `useWords.ts` — one learning record per word for all modes (`pickWords()` favours new + missed words;
   known = right on 3 different days). Saved in `pd.miniGames['unown-words'].data.words`.
 - `useWordRound.ts` — the question loop (score, combo, reveal, save words, stars). `ui.tsx` — `WordPic`, `PromptBar`,
   `ProgressDots`. `help.ts` — Hebrew help per level. `UnownTile.tsx` + `english.css` — shared look.
 - `WordDex.tsx` / `dex.ts` — the collection book (milestone prizes, word of the day), opened from the picker.
+- `board.ts` + `EnglishBoard.tsx` — the Word Board (a library tile with interact type `english-board`): plays the
+  ladder step as often as the child likes. One prize per star; the rarity is drawn from `RARITY_ODDS_BY_STARS`, the
+  prize from the step's `prizes` in `ladder.ts`. A step's `rarePokemon` adds a rare Pokémon the player doesn't own
+  (from `BOARD_POKEMON`: first stages after Gen 2). The first library with a board plays the librarian intro (`story/content/english-board.ts`).
 
 ## Where games are played
 
 - `category` on the def decides it: libraries play an `english` game, labs a `logic` game (`global-gate-config.ts`);
   NPC hosts use `"miniGame": { "category": … }` or `{ "gameIds": [...] }`. A new game of a category joins automatically.
-- Gate and care rounds play a fixed level from the trainer rank (`levelForRank()` in progress.ts).
+- Care rounds and lab gates play a fixed level from the trainer rank (`levelForRank()` in progress.ts); library gates
+  and the Word Board play the English ladder step instead.
 
 ## Care rounds
 
@@ -97,5 +107,5 @@ Games always get `pokemonId` — draw that sprite, not a fixed one.
 
 ## Launching
 
-`startMiniGame(id, { level?, onFinish?, carePokemonUuid? })` / `openMiniGamePicker()` from `src/minigames/index.ts`.
-Dev: start menu → Actions → Mini Games.
+`startMiniGame(id, { level?, onFinish?, carePokemonUuid? })` / `openMiniGamePicker()` / `openEnglishBoard()` from
+`src/minigames/index.ts`. Admin: start menu → Actions → Mini Games / Word Board.

@@ -1,32 +1,31 @@
 /**
- * Memory Match — pure logic. Each word has two cards: its English and its partner face (picture, or the
- * Hebrew translation on higher levels). Flip two; same word = a match, else they turn back over.
+ * Word Pairs (memory) — pure logic. Each word has two cards: the English card (word + how it sounds + 🔊) and
+ * the Hebrew card (translation + picture). One theme per level. Flip two; same word = a match, else they turn back.
  */
 
 import { pickWords, type WordAnswer, type WordStats } from '../../english/learning.js';
 import { shuffle, type Rng } from '../../english/random.js';
-import { wordsFor, type Word, type WordTier } from '../../english/words.js';
+import { wordsFor, type Word, type WordTheme, type WordTier } from '../../english/words.js';
 import type { Stars } from '../../types.js';
 
 export interface MemoryConfig {
+  theme: WordTheme;
   pairs: number;
   maxTier: WordTier;
-  /** What the English card is matched with. */
-  partner: 'picture' | 'hebrew';
 }
 
 export interface MemoryCard {
   word: Word;
-  face: 'en' | 'picture' | 'hebrew';
+  face: 'en' | 'he';
 }
 
 export function generateMemory(cfg: MemoryConfig, rng: Rng, stats: WordStats, today: string): MemoryCard[] {
-  const words = pickWords(rng, wordsFor('all', cfg.maxTier), stats, cfg.pairs, today);
+  const words = pickWords(rng, wordsFor([cfg.theme], cfg.maxTier), stats, cfg.pairs, today, cfg.pairs);
   return shuffle(
     rng,
-    words.flatMap((word) => [
-      { word, face: 'en' as const },
-      { word, face: cfg.partner },
+    words.flatMap((word): MemoryCard[] => [
+      { word, face: 'en' },
+      { word, face: 'he' },
     ]),
   );
 }

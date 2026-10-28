@@ -123,6 +123,8 @@ export interface RecordOutcome {
   unlockedLevel?: number;
   /** Prizes to grant, in reveal order. */
   prizes: AwardedPrize[];
+  /** English ladder round only (set by the shell): points earned, and the new level number if the bar filled. */
+  ladder?: { gained: number; newLevel?: number };
 }
 
 export interface RecordOptions {

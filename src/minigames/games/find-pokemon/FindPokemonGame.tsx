@@ -1,6 +1,6 @@
 /** Find the Pokémon — play area: read (and hear) the clues, tap the one Pokémon that fits them all. */
 
-import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent } from 'react';
+import { useEffect, useState, type CSSProperties, type MouseEvent } from 'react';
 import { useInputLayer } from '../../../engine/input/index.js';
 import type { KeyBinding } from '../../../engine/input/react/types.js';
 import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
@@ -8,6 +8,7 @@ import { useI18n } from '../../../ui-react/context/i18n-context.js';
 import { showHebrewHelp } from '../../english/help.js';
 import { todayKey } from '../../english/learning.js';
 import { createRng } from '../../english/random.js';
+import { LearnFirst } from '../../english/LearnFirst.js';
 import { EN_TEXT, ProgressDots, PromptBar, WordPic } from '../../english/ui.js';
 import { useWordRound } from '../../english/useWordRound.js';
 import { useWordStats } from '../../english/useWords.js';
@@ -34,13 +35,29 @@ function phrase(q: FindQuestion): string {
   return q.clues.map((c) => c.word.en).join(' ');
 }
 
-export function FindPokemonGame({ level, runId, paused, hud, sfx, onFinish }: MiniGameProps<FindConfig>) {
-  const { locale } = useI18n();
+export function FindPokemonGame(props: MiniGameProps<FindConfig>) {
   const [stats] = useWordStats();
+  const [questions] = useState(() => {
+    const seed = (Date.now() ^ Math.imul(props.runId + 1, 2654435761)) >>> 0;
+    return generateFind(props.level.config, createRng(seed), POKEMON, stats, todayKey());
+  });
+  return (
+    <LearnFirst words={[...new Set(questions.flatMap((q) => q.clues.map((c) => c.word)))]} theme={props.theme}>
+      <FindPlay {...props} questions={questions} />
+    </LearnFirst>
+  );
+}
+
+function FindPlay({
+  questions,
+  level,
+  paused,
+  hud,
+  sfx,
+  onFinish,
+}: MiniGameProps<FindConfig> & { questions: FindQuestion[] }) {
+  const { locale } = useI18n();
   const cfg = level.config;
-  const [seed] = useState(() => (Date.now() ^ Math.imul(runId + 1, 2654435761)) >>> 0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const questions = useMemo(() => generateFind(cfg, createRng(seed), POKEMON, stats, todayKey()), [seed]);
 
   const round = useWordRound({
     total: questions.length,

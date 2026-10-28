@@ -28,6 +28,8 @@ describe('library + lab gates', () => {
       for (const mapId of maps) {
         const gate = getGate(`auto-${service}-${mapId}`);
         expect(gate?.id, mapId).toBe(`auto-${service}-${mapId}`);
+        // English follows the child's learning ladder, logic follows the trainer rank
+        expect(gate!.miniGame!.ladder, mapId).toBe(service === 'library' ? 'english' : undefined);
         const ids = resolveMiniGames(gate!.miniGame!);
         expect(ids.length, mapId).toBeGreaterThan(0);
         for (const id of ids) expect(getMiniGame(id).category, id).toBe(service === 'library' ? 'english' : 'logic');

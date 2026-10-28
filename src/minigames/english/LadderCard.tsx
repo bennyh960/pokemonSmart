@@ -1,0 +1,52 @@
+/** The child's place on the English ladder: level name + the points bar to the next level. Word Dex and Word Board. */
+
+import { useI18n } from '../../ui-react/context/i18n-context.js';
+import type { Bilingual, MiniGamesSave, Stars } from '../types.js';
+import { ENGLISH_LADDER, ladderProgress, ladderStep, STAR_POINTS } from './ladder.js';
+
+const TEXT = {
+  step: { en: 'Level', he: 'רמה' },
+  of: { en: 'of', he: 'מתוך' },
+  nextStep: { en: 'To the next level:', he: 'לרמה הבאה:' },
+  points: { en: 'points', he: 'נקודות' },
+  topStep: { en: 'You reached the top level!', he: 'הגעתם לרמה הכי גבוהה!' },
+} satisfies Record<string, Bilingual>;
+
+/** Star counts that earn points, for the "★★ = +1" hint. */
+const SCORING: Stars[] = ([1, 2, 3] as const).filter((n) => STAR_POINTS[n] > 0);
+
+export function LadderCard({ save }: { save: MiniGamesSave }) {
+  const { locale } = useI18n();
+  const stepIndex = ladderStep(save);
+  const step = ENGLISH_LADDER[stepIndex];
+  const bar = ladderProgress(save);
+  return (
+    <div className="mg-pop-in mg-glass rounded-3xl p-4">
+      <p className="text-xl font-black">
+        🪜 {TEXT.step[locale]} {stepIndex + 1} {TEXT.of[locale]} {ENGLISH_LADDER.length} — {step.name[locale]}
+      </p>
+      {bar ? (
+        <>
+          <p className="mt-1 flex flex-wrap items-center gap-x-3 text-sm font-bold text-white/85">
+            <span>
+              {TEXT.nextStep[locale]} {bar.have}/{bar.need} {TEXT.points[locale]}
+            </span>
+            {SCORING.map((n) => (
+              <span key={n} dir="ltr" className="text-yellow-200">
+                {'★'.repeat(n)} = +{STAR_POINTS[n]}
+              </span>
+            ))}
+          </p>
+          <div className="mt-2 h-3 overflow-hidden rounded-full bg-black/25">
+            <div
+              className="h-full rounded-full bg-yellow-300 transition-[width] duration-500"
+              style={{ width: `${(bar.have / bar.need) * 100}%` }}
+            />
+          </div>
+        </>
+      ) : (
+        <p className="mt-1 font-bold text-green-200">{TEXT.topStep[locale]}</p>
+      )}
+    </div>
+  );
+}

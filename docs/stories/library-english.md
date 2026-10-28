@@ -85,3 +85,70 @@ raise speed / choices / tier, not the word list.
 - Should Find the Pokémon use Pokémon colours from PokeAPI (`species.color`) — needs a small fetch-data addition?
 - Do we want a **Professor's Quiz** (Pokémon-world trivia: silhouettes, types, evolutions) as a second lab game or a
   Pokémon Center game? Not planned here.
+
+---
+
+# Round 2 — for kids who can't read English yet (6–9)
+
+**Built (Stories 6–10), not playtested.** Changes while building: Memory Match became Word Pairs (id `memory-match`
+kept so stars survive); the ladder counts a word once it was answered right on the first try twice (`strongCount`) —
+"known" (3 different days) is too slow for moving up; locks apply in the world (NPC pickers), the admin picker opens all.
+
+Playtest feedback: too hard. Kids 6–9 don't read English yet, and the level came from the trainer rank (game
+progress), not from what the child knows. Round 2 makes the English games **teach first, then ask**, and moves the
+child along an **English learning curve** that only English progress drives.
+
+## Decisions (change before building)
+- **English level = English progress, never trainer rank.** The library gate and the librarians follow one ladder
+  (Story 7). Trainer rank keeps setting the level of care rounds and lab gates only.
+- **Every word has a Hebrew "how it sounds" with niqqud** (`say`: red → רֶד, fire → פַיְיר). Shown on the English side
+  of a card, under the English, with a 🔊 button — the child reads Hebrew and hears English.
+- **Show before ask:** a word is never quizzed before it was shown on a learning card (Story 8).
+- **Category hint in Hebrew** next to the board ("צבעים", "סוגי פוקימון") — never on the card itself.
+- **Reading-heavy modes come last** on the ladder (Find the Pokémon, Word Catcher, Unown Battle spelling); listening and
+  picture modes come first.
+
+## Story 6: Word bank — pronunciation + Pokémon colours
+- `say` (Hebrew pronunciation with niqqud) on every word in `english-words.json`, type / move words included.
+  A person reviews them before merge.
+- Add `gray` (אָפוֹר) so every Pokémon colour is a word.
+- `pokemon.json` gains `color` (PokeAPI species `color.name`) — added to `scripts/enrich-pokemon-metadata.ts`, re-run once.
+- Test: every word has `say` with niqqud; every Pokémon colour is a word in the bank.
+
+## Story 7: The English ladder
+A data table of steps; the child stands on the first step whose goal isn't met yet. Goals come from the learning data
+(letters seen in Unown Letters, words known per theme), so the ladder moves only by learning.
+
+| Step | Plays | Goal to move on |
+|------|-------|-----------------|
+| 1 | Unown Letters L1 (hear a letter) | 15 letters seen |
+| 2 | Unown Letters L2 (big & small) | 26 letters seen |
+| 3 | Word Pairs — colours (Story 9) | 6 colour words known |
+| 4 | Pokémon Colours (Story 10) | 10 colour words known |
+| 5 | Word Pairs — types | 8 type words known |
+| 6 | Pokémon Says L1 + Word Pairs — actions / animals | 20 words known |
+| 7 | Unown Letters L3 (first sound) + Word Pairs — world / food | 40 words known |
+| 8+ | Find the Pokémon, Word Catcher, Unown Battle, Pokémon Says L2+ (current levels) | — |
+
+- Library gate: plays the child's current step (a random game of that step).
+- Librarian picker: games of reached steps are open; later ones show "🔒 learn more words first" (replaces the 2★ lock
+  for English games).
+- Word Dex shows the ladder ("you are on step 4 — colours!").
+
+## Story 8: Learn first
+- Shared `LearnCards` (english/): before a round, every word in it the child hasn't seen yet is shown as a big card —
+  picture, English, `say`, Hebrew, 🔊 (auto-plays) — tap "Got it!" for the next. Then the round starts.
+- All quiz modes use it (Pokémon Says, Find the Pokémon, Unown Battle, Word Catcher). Max 4 new words per round.
+- A word counts as "seen" once its card was shown.
+
+## Story 9: Word Pairs (Memory Match, rebuilt for non-readers)
+- Card A: English word, `say` under it, 🔊 button. Card B: the Hebrew word + picture (a colour card is painted in its
+  colour). Flipping a card A says the word.
+- Category hint in Hebrew above the board ("צבעים", "סוגי פוקימון").
+- Levels pick one theme each (colours, types, actions, animals, world, food); 3 → 4 → 6 pairs.
+- Before the first round of a theme, its words are shown with Learn first (Story 8).
+
+## Story 10: Pokémon Colours
+- A Pokémon sprite (from `pokemon.json` `color`) → "What colour is Charmander?" → tap the colour (swatch + English +
+  `say`, 🔊 on each). The answer is spoken after.
+- Levels: 3 colours (red / blue / yellow) → 6 → all 10.

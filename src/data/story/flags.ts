@@ -337,6 +337,9 @@ export const FLAGS = {
   STORY_BADGE_6: 'story-badge-6',
   STORY_BADGE_7: 'story-badge-7',
   STORY_BADGE_8: 'story-badge-8',
+
+  // ── Libraries ───────────────────────────────────────────────────────────────
+  ENGLISH_BOARD_INTRO_DONE: 'english-board-intro-done', // Librarian showed the Word Board (first library with one)
 } as const;
 
 /** Union type of all valid flag string values. Useful for typed flag parameters. */
@@ -501,4 +504,5 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.STORY_BADGE_6]: 'Badge 6 earned (Symmetrika)',
   [FLAGS.STORY_BADGE_7]: 'Badge 7 earned (Integrala)',
   [FLAGS.STORY_BADGE_8]: 'Badge 8 earned (Absoluta)',
+  [FLAGS.ENGLISH_BOARD_INTRO_DONE]: 'Librarian walked the player to the Word Board',
 };

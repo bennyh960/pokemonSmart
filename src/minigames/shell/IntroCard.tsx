@@ -5,8 +5,8 @@ import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { getLevelProgress, isLevelUnlocked, replayPrizesLeft, UNLOCK_STARS } from '../progress.js';
 import type { AnyMiniGameDef, MiniGamePrizeDef, MiniGamesSave } from '../types.js';
 import { useMenuNav } from './hooks.js';
-import { describeReward } from './prize-display.js';
-import { MgButton, PokemonSprite, RARITY_STYLE, StarRow } from './ui.js';
+import { PrizeChip } from './PrizeChip.js';
+import { MgButton, PokemonSprite, StarRow } from './ui.js';
 
 interface Props {
   def: AnyMiniGameDef;
@@ -176,25 +176,5 @@ export function IntroCard({
         </div>
       </div>
     </div>
-  );
-}
-
-function PrizeChip({ label, prize }: { label: string; prize: MiniGamePrizeDef }) {
-  const { t, locale } = useI18n();
-  const style = RARITY_STYLE[prize.rarity];
-  const line = 'reward' in prize ? describeReward(prize.reward, locale)[0] : null;
-  return (
-    <span
-      className="inline-flex items-center gap-2 rounded-full py-1 ps-1 pe-3 text-sm font-black shadow"
-      style={{ background: style.bg, color: style.text, border: `2px solid ${style.border}` }}
-    >
-      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/70">
-        {line?.icon ? <img src={line.icon} alt="" className="h-7 w-7 object-contain" /> : (line?.emoji ?? '❓')}
-      </span>
-      <span>
-        {label}: {line ? line.label : t('minigames.prize.mystery')}
-        {line?.qty && <span dir="ltr"> {line.qty}</span>}
-      </span>
-    </span>
   );
 }

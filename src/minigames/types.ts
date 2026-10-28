@@ -22,6 +22,7 @@ export const MINI_GAME_IDS = [
   'unown-battle',
   'memory-match',
   'word-catcher',
+  'pokemon-colors',
   'poke-doku',
   'snorlax-snack',
   'bulbasaur-sun',
@@ -62,6 +63,8 @@ export interface MiniGamePrize {
 export interface MiniGamePrizeChoice {
   rarity: PrizeRarity;
   oneOf: DialogueReward[];
+  /** What the choice is, for prize lists ("Evolution stone"). Omitted → shown as a mystery prize. */
+  label?: Bilingual;
 }
 
 export type MiniGamePrizeDef = MiniGamePrize | MiniGamePrizeChoice;
@@ -75,8 +78,8 @@ export interface MiniGameLevelRewards {
   replay: MiniGamePrizeDef;
 }
 
-/** Level prizes, plus the care prizes of a care round (see `MiniGameCare`). */
-export type PrizeKind = keyof MiniGameLevelRewards | 'care' | 'bonus';
+/** Level prizes, the care prizes of a care round (see `MiniGameCare`), and Word Board prizes (english/board.ts). */
+export type PrizeKind = keyof MiniGameLevelRewards | 'care' | 'bonus' | 'board';
 
 // ── Care rounds (overworld trigger) ─────────────────────────────────────────
 

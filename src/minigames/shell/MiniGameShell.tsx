@@ -12,6 +12,8 @@ import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.js';
 import { getTrainerRank } from '../../systems/trainer-rank.js';
 import { carePrizes } from '../care.js';
+import { boardPrizes, ownedSpecies } from '../english/board.js';
+import { addLadderPoints, ladderStep } from '../english/ladder.js';
 import { highestUnlockedLevel, isLevelUnlocked, levelForRank, recordResult, type RecordOutcome } from '../progress.js';
 import type { AnyMiniGameDef, MiniGameResult } from '../types.js';
 import type { MiniGameOutcome, StartMiniGameOptions } from '../launch.js';
@@ -47,9 +49,23 @@ interface Props {
   carePokemonUuid?: string;
   /** Building gate round (see launch.ts). */
   gate?: StartMiniGameOptions['gate'];
+  /** Word Board round on this ladder step: board prizes instead of level prizes (english/board.ts). */
+  board?: { stepIndex: number; intro: string; onPlayAgain: () => void };
+  /** English ladder round (library gate; a board round always is one): stars earn ladder points. */
+  ladder?: boolean;
 }
 
-export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome, carePokemonUuid, gate }: Props) {
+export function MiniGameShell({
+  def,
+  initialLevel,
+  backLabel,
+  onBack,
+  onOutcome,
+  carePokemonUuid,
+  gate,
+  board,
+  ladder,
+}: Props) {
   const { t, locale } = useI18n();
   const [pd, mutate] = usePlayerData();
   const save = pd.miniGames ?? {};
@@ -58,13 +74,13 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
   // Care round: the hurt Pokémon plays, the trainer rank sets the level, clearing it heals the Pokémon once
   const careMon = def.care && carePokemonUuid ? pd.party.find((p) => p.uuid === carePokemonUuid) : undefined;
   const care = careMon ? def.care : undefined;
-  // Fixed round (care or gate): no level picker, and once cleared it can't be replayed from here
-  const fixed = !!care || !!gate;
+  // Fixed round (care, gate or board): no level picker, and once cleared it can't be replayed from here
+  const fixed = !!care || !!gate || !!board;
   const [fixedDone, setFixedDone] = useState(false);
   const pokemonId = careMon?.id ?? def.mascotPokemonId;
 
   const [levelNumber, setLevelNumber] = useState(() =>
-    gate && initialLevel && def.levels.some((l) => l.number === initialLevel)
+    (gate || board) && initialLevel && def.levels.some((l) => l.number === initialLevel)
       ? initialLevel
       : fixed
         ? levelForRank(getTrainerRank(pd).index, def)
@@ -144,8 +160,13 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
     let rec: RecordOutcome | null = null;
     mutate((draft) => {
       draft.miniGames ??= {};
-      rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care });
+      rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care && !board });
       if (care && careMon) rec.prizes = carePrizes(care, careMon, rec.stars);
+      if (board) rec.prizes = boardPrizes(board.stepIndex, rec.stars, ownedSpecies(draft));
+      if (ladder || board) {
+        const { gained, leveledUp } = addLadderPoints(draft.miniGames, rec.stars);
+        rec.ladder = { gained, newLevel: leveledUp ? ladderStep(draft.miniGames) + 1 : undefined };
+      }
       for (const prize of rec.prizes) grantReward(prize.reward, { silent: true });
     });
     const done = rec as RecordOutcome | null;
@@ -159,7 +180,8 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
 
   const nextLevel = def.levels.find((l) => l.number === level.number + 1);
   const canNext = !fixed && !!nextLevel && isLevelUnlocked(save, def.id, nextLevel.number);
-  const playAgain = fixedDone ? undefined : () => startRound();
+  // A board round always plays again from the board (the next round follows the ladder)
+  const playAgain = board ? board.onPlayAgain : fixedDone ? undefined : () => startRound();
   const Game = def.Component;
 
   return (
@@ -180,9 +202,9 @@ export function MiniGameShell({ def, initialLevel, backLabel, onBack, onOutcome,
           fixedLine={
             care && careMon
               ? care.intro[locale].replace('{name}', getPokemonDisplayName(careMon.id))
-              : gate?.intro[locale]
+              : (gate?.intro[locale] ?? board?.intro)
           }
-          levelPrizes={!care}
+          levelPrizes={!care && !board}
         />
       ) : (
         <>

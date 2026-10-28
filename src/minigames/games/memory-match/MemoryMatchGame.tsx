@@ -1,11 +1,16 @@
-/** Memory Match — play area: a grid of cards; match each English word with its picture / Hebrew. */
+/**
+ * Word Pairs — play area: a grid of cards; match each English card (word + how it sounds + 🔊) with its Hebrew card
+ * (translation + picture; colour cards are painted in their colour). The theme's Hebrew name is shown above the board.
+ */
 
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
 import { todayKey } from '../../english/learning.js';
+import { LearnFirst } from '../../english/LearnFirst.js';
 import { createRng } from '../../english/random.js';
 import { WordPic } from '../../english/ui.js';
 import { useWordStats } from '../../english/useWords.js';
+import { THEME_NAMES } from '../../english/words.js';
 import { useReducedMotion } from '../../shell/hooks.js';
 import type { Bilingual, MiniGameProps } from '../../types.js';
 import {
@@ -25,21 +30,38 @@ import {
 import './memory-match.css';
 
 /** How long a wrong pair stays face up. */
-const SHOW_WRONG_MS = 1000;
+const SHOW_WRONG_MS = 1200;
 const FINISH_DELAY_MS = 1200;
 
 const TEXT = {
   hint: { en: 'Find the pairs!', he: 'מצאו את הזוגות!' },
 } satisfies Record<string, Bilingual>;
 
-export function MemoryMatchGame({ level, runId, paused, hud, sfx, onFinish }: MiniGameProps<MemoryConfig>) {
+export function MemoryMatchGame(props: MiniGameProps<MemoryConfig>) {
+  const [stats] = useWordStats();
+  const [cards] = useState(() => {
+    const seed = (Date.now() ^ Math.imul(props.runId + 1, 2654435761)) >>> 0;
+    return generateMemory(props.level.config, createRng(seed), stats, todayKey());
+  });
+  return (
+    <LearnFirst words={cards.filter((c) => c.face === 'en').map((c) => c.word)} theme={props.theme}>
+      <PairsPlay {...props} cards={cards} />
+    </LearnFirst>
+  );
+}
+
+function PairsPlay({
+  cards,
+  level,
+  paused,
+  hud,
+  sfx,
+  onFinish,
+}: MiniGameProps<MemoryConfig> & { cards: MemoryCard[] }) {
   const { locale } = useI18n();
   const reduced = useReducedMotion();
-  const [stats, recordWords] = useWordStats();
+  const [, recordWords] = useWordStats();
   const cfg = level.config;
-  const [seed] = useState(() => (Date.now() ^ Math.imul(runId + 1, 2654435761)) >>> 0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const cards = useMemo(() => generateMemory(cfg, createRng(seed), stats, todayKey()), [seed]);
   const [state, setState] = useState<MemoryState>(NEW_MEMORY);
   const [score, setScore] = useState(0);
   const finished = useRef(false);
@@ -67,10 +89,15 @@ export function MemoryMatchGame({ level, runId, paused, hud, sfx, onFinish }: Mi
 
   function tap(i: number, e: MouseEvent) {
     if (paused) return;
-    const { state: next, result } = flip(cards, state, i);
-    if (result === 'ignored') return;
-    setState(next);
     const card = cards[i];
+    const { state: next, result } = flip(cards, state, i);
+    if (result === 'ignored') {
+      // A face-up English card is its own 🔊 button
+      const up = state.open.includes(i) || state.matched.includes(i);
+      if (up && card.face === 'en') sfx.word(card.word.en);
+      return;
+    }
+    setState(next);
     if (result === 'opened') {
       sfx.tap();
       if (card.face === 'en') sfx.word(card.word.en);
@@ -89,15 +116,21 @@ export function MemoryMatchGame({ level, runId, paused, hud, sfx, onFinish }: Mi
     }
   }
 
-  const cols = cards.length <= 8 ? 'grid-cols-4' : cards.length <= 10 ? 'grid-cols-5' : 'grid-cols-4 sm:grid-cols-6';
+  const cols = cards.length <= 6 ? 'grid-cols-3' : cards.length <= 8 ? 'grid-cols-4' : 'grid-cols-4 sm:grid-cols-5';
 
   return (
     <div className="flex h-full flex-col items-center gap-3 overflow-y-auto px-3 pb-6 pt-3 sm:pt-5">
-      <p className="mg-glass rounded-full px-5 py-2 text-lg font-black">{TEXT.hint[locale]}</p>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <span className="rounded-full bg-white px-4 py-1 text-lg font-black text-fuchsia-700 shadow" dir="rtl">
+          {THEME_NAMES[cfg.theme].he}
+        </span>
+        <p className="mg-glass rounded-full px-5 py-1 text-lg font-black">{TEXT.hint[locale]}</p>
+      </div>
       <div dir="ltr" className={`grid w-full max-w-3xl flex-1 content-center gap-2 sm:gap-3 ${cols}`}>
         {cards.map((card, i) => {
           const up = state.open.includes(i) || state.matched.includes(i);
           const wrong = state.open.length === 2 && state.open.includes(i);
+          const swatch = card.face === 'he' && card.word.picture.kind === 'swatch' ? card.word.picture.color : null;
           return (
             <button
               key={i}
@@ -110,7 +143,10 @@ export function MemoryMatchGame({ level, runId, paused, hud, sfx, onFinish }: Mi
             >
               <span className="mg-memory-match-inner">
                 <span className="mg-memory-match-back">?</span>
-                <span className="mg-memory-match-front">
+                <span
+                  className="mg-memory-match-front"
+                  style={swatch ? ({ background: swatch, color: textOn(swatch) } as CSSProperties) : undefined}
+                >
                   <CardFace card={card} />
                 </span>
               </span>
@@ -123,16 +159,34 @@ export function MemoryMatchGame({ level, runId, paused, hud, sfx, onFinish }: Mi
 }
 
 function CardFace({ card }: { card: MemoryCard }) {
-  if (card.face === 'picture') return <WordPic word={card.word} size="md" />;
-  if (card.face === 'hebrew')
+  if (card.face === 'he') {
     return (
-      <span dir="rtl" className="text-lg font-black leading-tight sm:text-2xl">
-        {card.word.he}
+      <span className="flex flex-col items-center gap-1">
+        {card.word.picture.kind !== 'swatch' && <WordPic word={card.word} size="sm" />}
+        <span dir="rtl" className="text-xl font-black leading-tight sm:text-3xl">
+          {card.word.he}
+        </span>
       </span>
     );
+  }
   return (
-    <span dir="ltr" className="text-lg font-black leading-tight sm:text-2xl">
-      {card.word.en}
+    <span className="flex flex-col items-center gap-0.5">
+      <span dir="ltr" className="text-xl font-black leading-tight sm:text-3xl">
+        {card.word.en}
+      </span>
+      <span dir="rtl" className="text-base font-black text-fuchsia-600 sm:text-xl">
+        {card.word.say}
+      </span>
+      <span className="text-base" aria-hidden>
+        🔊
+      </span>
     </span>
   );
+}
+
+/** Dark text on light colours (white, yellow…), white text on dark ones. */
+function textOn(hex: string): string {
+  const n = parseInt(hex.slice(1), 16);
+  const lum = 0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255);
+  return lum > 160 ? '#1e1b4b' : '#ffffff';
 }

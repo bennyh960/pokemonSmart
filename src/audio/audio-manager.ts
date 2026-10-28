@@ -241,6 +241,8 @@ export function createAudioManager() {
   let masterMuted = localStorage.getItem('masterMuted') === 'true';
   let musicMuted = localStorage.getItem('musicMuted') === 'true';
   let sfxMuted = localStorage.getItem('sfxMuted') === 'true';
+  /** Spoken letters/words are the lesson, not an effect — always full volume (mute still silences them). */
+  const SPEECH_VOLUME = 1;
   /** Temporary ceiling on music volume (not saved) — e.g. mini-games keep music quiet under speech. */
   let musicCap = 1;
 
@@ -255,7 +257,7 @@ export function createAudioManager() {
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = 'en-US';
     utt.rate = rate;
-    utt.volume = sfxVolume;
+    utt.volume = SPEECH_VOLUME;
     window.speechSynthesis.speak(utt);
   }
 
@@ -1128,7 +1130,7 @@ export function createAudioManager() {
           src: [src],
           preload: false,
           format: ['mp3'],
-          volume: sfxVolume,
+          volume: SPEECH_VOLUME,
           onloaderror: () => {
             letterCache.set(key, null);
             speakText(key, 0.75);
@@ -1155,7 +1157,7 @@ export function createAudioManager() {
             src: [src],
             preload: false,
             format: ['mp3'],
-            volume: sfxVolume,
+            volume: SPEECH_VOLUME,
             onloaderror: () => {
               letterCache.set(key, null);
             },
@@ -1175,7 +1177,7 @@ export function createAudioManager() {
           src: [src],
           preload: false,
           format: ['mp3'],
-          volume: sfxVolume,
+          volume: SPEECH_VOLUME,
           onloaderror: () => {
             wordCache.set(key, null);
             speakText(word, 0.85);

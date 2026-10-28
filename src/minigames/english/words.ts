@@ -9,6 +9,7 @@ import { getItem } from '../../data/items.js';
 import { TYPE_BADGE } from '../../data/type-constants.js';
 import { getAllMoves } from '../../services/pokemon-data.js';
 import type { PokemonType } from '../../types/index.js';
+import type { Bilingual } from '../types.js';
 
 export type WordTheme =
   | 'types'
@@ -24,17 +25,36 @@ export type WordTheme =
   | 'people'
   | 'numbers';
 
+/** Theme names — the Hebrew is the category hint next to a board ("צבעים"). */
+export const THEME_NAMES: Record<WordTheme, Bilingual> = {
+  types: { en: 'Types', he: 'סוגים' },
+  moves: { en: 'Moves', he: 'מהלכים' },
+  world: { en: 'Pokémon world', he: 'עולם הפוקימון' },
+  actions: { en: 'Actions', he: 'פעולות' },
+  describe: { en: 'Describing words', he: 'מילים מתארות' },
+  colors: { en: 'Colors & shapes', he: 'צבעים וצורות' },
+  nature: { en: 'Nature', he: 'טבע' },
+  animals: { en: 'Animals', he: 'חיות' },
+  body: { en: 'Body', he: 'גוף' },
+  food: { en: 'Food', he: 'אוכל' },
+  people: { en: 'People', he: 'אנשים' },
+  numbers: { en: 'Numbers', he: 'מספרים' },
+};
+
 /** 1 = first words, 3 = still easy but longer / less common. */
 export type WordTier = 1 | 2 | 3;
 
-/** What to show for a word: an item sprite or an emoji. */
-export type WordPicture = { kind: 'item'; src: string } | { kind: 'emoji'; emoji: string };
+/** What to show for a word: an item sprite, an emoji, or a colour swatch (colour words). */
+export type WordPicture =
+  { kind: 'item'; src: string } | { kind: 'emoji'; emoji: string } | { kind: 'swatch'; color: string };
 
 export interface Word {
   id: string;
   /** Lower-case English (what is spoken and spelled). */
   en: string;
   he: string;
+  /** How the English sounds, in Hebrew letters with niqqud (red → רֶד) — for kids who don't read English yet. */
+  say: string;
   theme: WordTheme;
   tier: WordTier;
   picture: WordPicture;
@@ -48,7 +68,9 @@ interface RawWord {
   tier: number;
   en?: string;
   he?: string;
+  say?: string;
   emoji?: string;
+  swatch?: string;
   item?: string;
   typeId?: string;
   move?: string;
@@ -77,14 +99,17 @@ function resolve(raw: RawWord): Word {
     const item = getItem(raw.item);
     if (!item?.sprite) throw new Error(`english-words: item "${raw.item}" has no sprite`);
     picture = { kind: 'item', src: item.sprite };
+  } else if (raw.swatch) {
+    picture = { kind: 'swatch', color: raw.swatch };
   } else if (raw.emoji) {
     picture = { kind: 'emoji', emoji: raw.emoji };
   }
-  if (!en || !he || !picture) throw new Error(`english-words: "${raw.id}" needs en, he and a picture`);
+  if (!en || !he || !raw.say || !picture) throw new Error(`english-words: "${raw.id}" needs en, he, say and a picture`);
   return {
     id: raw.id,
     en: en.toLowerCase(),
     he,
+    say: raw.say,
     theme: raw.theme as WordTheme,
     tier: raw.tier as WordTier,
     picture,
