@@ -11,6 +11,7 @@ const DICT = {
     learned: 'learned',
     selectToDelete: 'Please select a move from your moveset to forget, or skip learning this move.',
     skipBtn: 'Skip Learning',
+    continueBtn: 'Continue',
     skipHover: 'Skip learning {newMove} and keep your current moveset.',
     replaceBtn: 'Replace Move',
     replaceHover: 'Learn {newMove} and forget {oldMove}.',
@@ -24,6 +25,7 @@ const DICT = {
     learned: 'למד',
     selectToDelete: 'אנא בחר מהלך מהסט הנוכחי שלך כדי לשכוח אותו, או דלג על למידת המהלך הנוכחי.',
     skipBtn: 'דלג על הלמידה',
+    continueBtn: 'המשך',
     skipHover: 'ותר על למידת {newMove} והישאר עם סט המהלכים הנוכחי שלך.',
     replaceBtn: 'החלף מהלך',
     replaceHover: 'למד את {newMove} ושכח את {oldMove}.',
@@ -40,6 +42,7 @@ interface IMoveLearningProps {
   selectedMoveToDelete: Move | null; // המהלך שנבחר מהפאנל השמאלי (אם יש)
   onConfirmReplace: (oldMoveId: Move['id'], newMoveId: Move['id']) => void;
   onConfirmSkip: () => void;
+  onContinue: () => void;
   isReadonly: boolean;
 }
 
@@ -50,6 +53,7 @@ const MoveLearning = ({
   onConfirmReplace,
   isReadonly = false,
   onConfirmSkip,
+  onContinue,
 }: IMoveLearningProps) => {
   const { locale } = useI18n(); // שימוש בשפה הנוכחית מהמערכת שלך
   const t = DICT[locale];
@@ -145,6 +149,15 @@ const MoveLearning = ({
         {/* פאנל המידע הטכני של המהלך */}
         <MoveMetaPanel move={newMove} />
       </div>
+
+      {isReadonly && (
+        <button
+          onClick={onContinue}
+          className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all transform active:scale-95"
+        >
+          {t.continueBtn}
+        </button>
+      )}
 
       {/* אזור פעולות והנחיות תחתון */}
       {!isReadonly && (

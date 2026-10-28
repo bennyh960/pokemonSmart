@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Move, Pokemon, PokemonType } from '../../types/index.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { InspectorPanel } from './components/InspectorPanel/index';
@@ -16,7 +16,7 @@ import type { StateMachine } from '../../engine/state-machine.ts';
 import { FloatingTextLayer } from '../../ui-react/componenets/FloatingText.tsx';
 import { useGameNotification } from '../../ui-react/context/GameNotifications-context.tsx';
 import { getMove, getMoveDisplayName, getPokemonDisplayName } from '../../services/pokemon-data.ts';
-import { clearMoveLearningSession } from '../../systems/move-learning.ts';
+import { clearMoveLearningSession, type MoveLearningResolution } from '../../systems/move-learning.ts';
 import { useInputLayer } from '../../engine/input';
 import { createPokedexReactScene } from '../pokedex/index.tsx';
 // import { useInputLayer } from '../../engine/inputManagerV2';
@@ -27,8 +27,31 @@ interface Props {
   stateMachine: StateMachine;
 }
 
-export function PartyScreen({ onClose, mode, stateMachine }: Props) {
+export function PartyScreen({ onClose: closeScreen, mode, stateMachine }: Props) {
   const { t, isRTL, setLocale, locale } = useI18n();
+
+  // A move-learning session must report its outcome exactly once, however the
+  // screen is left (ESC, header button, skip/replace) — the caller (e.g. battle)
+  // waits on it. Default: an auto-learned move is 'learned', otherwise 'skipped'.
+  const moveLearningResolution = useRef<MoveLearningResolution | null>(null);
+  const closed = useRef(false);
+  function onClose() {
+    if (closed.current) return;
+    closed.current = true;
+    if (mode.kind === 'move-learning') {
+      const { session } = mode;
+      clearMoveLearningSession();
+      closeScreen();
+      session.onComplete?.(
+        moveLearningResolution.current ?? {
+          moveId: session.moveId,
+          outcome: session.learned ? 'learned' : 'skipped',
+        },
+      );
+      return;
+    }
+    closeScreen();
+  }
   const [pd, editPlayerData] = usePlayerData();
   const { showNotification } = useGameNotification();
 
@@ -173,26 +196,8 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
       position: 'top-center',
     });
     setSelectedMoveToDelete(null);
-    clearMoveLearningSession();
-    setTimeout(() => {
-      mode.kind === 'move-learning' &&
-        mode.session.onComplete?.({
-          moveId: mode.session.moveId,
-          outcome: 'replaced',
-          replacedMoveId: oldMoveId,
-        });
-      onClose();
-    }, 2000);
-  };
-
-  const handleSelectMoveToSkip = () => {
-    clearMoveLearningSession();
-    onClose();
-    mode.kind === 'move-learning' &&
-      mode.session.onComplete?.({
-        moveId: mode.session.moveId,
-        outcome: 'skipped',
-      });
+    moveLearningResolution.current = { moveId: newMoveId, outcome: 'replaced', replacedMoveId: oldMoveId };
+    setTimeout(onClose, 2000);
   };
 
   const openPokedex = (pokemonId: number) => {
@@ -260,7 +265,8 @@ export function PartyScreen({ onClose, mode, stateMachine }: Props) {
               newMoveId={mode.session.moveId}
               selectedMoveToDelete={selectedMoveToDelete}
               onConfirmReplace={handleSelectMoveToDelete}
-              onConfirmSkip={handleSelectMoveToSkip}
+              onConfirmSkip={onClose}
+              onContinue={onClose}
             />
           ) : (
             <PartySquadPanel
