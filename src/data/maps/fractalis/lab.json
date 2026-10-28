@@ -1,0 +1,10 @@
+{
+  "id": "fractalis/lab",
+  "template": "lab-template",
+  "tileset": "interior",
+  "label": {
+    "en": "Fractalis Lab",
+    "he": "מעבדת פרקטליס"
+  },
+  "area": "Fractalis"
+}

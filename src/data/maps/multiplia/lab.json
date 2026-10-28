@@ -1,0 +1,10 @@
+{
+  "id": "multiplia/lab",
+  "template": "lab-template",
+  "tileset": "interior",
+  "label": {
+    "en": "Multiplia Lab",
+    "he": "מעבדת מולטיפליה"
+  },
+  "area": "Multiplia"
+}

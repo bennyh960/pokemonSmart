@@ -1,0 +1,10 @@
+{
+  "id": "dividia/lab",
+  "template": "lab-template",
+  "tileset": "interior",
+  "label": {
+    "en": "Dividia Lab",
+    "he": "מעבדת דיבידיה"
+  },
+  "area": "Dividia"
+}

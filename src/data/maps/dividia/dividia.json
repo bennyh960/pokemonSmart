@@ -44,12 +44,12 @@
     {
       "fromX": 4,
       "fromY": 15,
-      "toMapId": "dividia/house-3"
+      "toMapId": "dividia/library"
     },
     {
       "fromX": 21,
       "fromY": 15,
-      "toMapId": "dividia/house-4"
+      "toMapId": "dividia/lab"
     },
     {
       "fromX": 6,

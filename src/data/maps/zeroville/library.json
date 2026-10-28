@@ -1,0 +1,10 @@
+{
+  "id": "zeroville/library",
+  "template": "library1",
+  "tileset": "interior",
+  "label": {
+    "en": "Zeroville Library",
+    "he": "ספריית זירוביל"
+  },
+  "area": "Zeroville"
+}

@@ -53,12 +53,12 @@
     {
       "fromX": 15,
       "fromY": 9,
-      "toMapId": "fractalis/template-house-open"
+      "toMapId": "fractalis/library"
     },
     {
       "fromX": 6,
       "fromY": 15,
-      "toMapId": "fractalis/house-1"
+      "toMapId": "fractalis/lab"
     },
     {
       "fromX": 21,

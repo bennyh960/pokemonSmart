@@ -1,0 +1,10 @@
+{
+  "id": "minusburg/lab",
+  "template": "lab-template",
+  "tileset": "interior",
+  "label": {
+    "en": "Minusburg Lab",
+    "he": "מעבדת מינוסבורג"
+  },
+  "area": "Minusburg"
+}

@@ -315,3 +315,8 @@ registerGate({
 registerAutoGateMap(MapId.SUMVILLE_LAB, 'lab');
 registerAutoGateMap(MapId.PERCENTILE_LAB, 'lab');
 registerAutoGateMap(MapId.ZEROVILLE_ALGORITHMA_LAB, 'lab');
+registerAutoGateMap(MapId.MINUSBURG_LAB, 'lab');
+registerAutoGateMap(MapId.MULTIPLIA_LAB, 'lab');
+registerAutoGateMap(MapId.DIVIDIA_LAB, 'lab');
+registerAutoGateMap(MapId.FRACTALIS_LAB, 'lab');
+registerAutoGateMap(MapId.SYMMETRIKA_LAB, 'lab');

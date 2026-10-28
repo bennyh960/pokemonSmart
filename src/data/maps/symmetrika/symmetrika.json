@@ -84,12 +84,12 @@
     {
       "fromX": 32,
       "fromY": 23,
-      "toMapId": "symmetrika/h1"
+      "toMapId": "symmetrika/lab"
     },
     {
       "fromX": 8,
       "fromY": 23,
-      "toMapId": "symmetrika/h1"
+      "toMapId": "symmetrika/library"
     },
     {
       "fromX": 19,

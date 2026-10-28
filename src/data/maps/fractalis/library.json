@@ -1,0 +1,10 @@
+{
+  "id": "fractalis/library",
+  "template": "library1",
+  "tileset": "interior",
+  "label": {
+    "en": "Fractalis Library",
+    "he": "ספריית פרקטליס"
+  },
+  "area": "Fractalis"
+}

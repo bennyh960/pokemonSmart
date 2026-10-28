@@ -1,0 +1,10 @@
+{
+  "id": "symmetrika/lab",
+  "template": "lab-template",
+  "tileset": "interior",
+  "label": {
+    "en": "Symmetrika Lab",
+    "he": "מעבדת סימטריקה"
+  },
+  "area": "Symmetrika"
+}

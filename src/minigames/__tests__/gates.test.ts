@@ -13,7 +13,16 @@ import { getAutoGateIdForMap } from '../../systems/story-engine.js';
 import { getMiniGame, resolveMiniGames } from '../registry.js';
 
 describe('lab gates', () => {
-  const labs = [MapId.SUMVILLE_LAB, MapId.PERCENTILE_LAB, MapId.ZEROVILLE_ALGORITHMA_LAB];
+  const labs = [
+    MapId.SUMVILLE_LAB,
+    MapId.PERCENTILE_LAB,
+    MapId.ZEROVILLE_ALGORITHMA_LAB,
+    MapId.MINUSBURG_LAB,
+    MapId.MULTIPLIA_LAB,
+    MapId.DIVIDIA_LAB,
+    MapId.FRACTALIS_LAB,
+    MapId.SYMMETRIKA_LAB,
+  ];
 
   it('each lab has its own gate that plays a registered logic mini-game', () => {
     for (const mapId of labs) {
@@ -26,7 +35,9 @@ describe('lab gates', () => {
   });
 
   it('libraries have no entry gate — English is played at the Word Board by choice', () => {
-    for (const mapId of [MapId.SUMVILLE_LIBRARY, MapId.MINUSBURG_LIBRARY, MapId.MULTIPLIA_LIBRARY, MapId.PERCENTILE_LIBRARY]) {
+    const libraries = (Object.values(MapId) as string[]).filter((id) => id.endsWith('/library'));
+    expect(libraries.length).toBeGreaterThan(0);
+    for (const mapId of libraries) {
       expect(getAutoGateIdForMap(mapId), mapId).toBeUndefined();
     }
   });

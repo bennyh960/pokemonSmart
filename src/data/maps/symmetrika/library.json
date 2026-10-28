@@ -1,0 +1,10 @@
+{
+  "id": "symmetrika/library",
+  "template": "library1",
+  "tileset": "interior",
+  "label": {
+    "en": "Symmetrika Library",
+    "he": "ספריית סימטריקה"
+  },
+  "area": "Symmetrika"
+}

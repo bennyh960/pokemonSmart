@@ -1,0 +1,10 @@
+{
+  "id": "dividia/library",
+  "template": "library1",
+  "tileset": "interior",
+  "label": {
+    "en": "Dividia Library",
+    "he": "ספריית דיבידיה"
+  },
+  "area": "Dividia"
+}
