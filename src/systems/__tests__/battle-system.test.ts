@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { loadHeavyData } from '../../services/__tests__/heavy-data.js';
 import type { Pokemon } from '../../types/index.js';
 import type { MoveStatusEffect } from '../../types/battle-metadata.js';
 import { getMoveByName } from '../../services/pokemon-data.js';
@@ -68,6 +69,8 @@ function createTestPokemon(overrides: Partial<Pokemon> = {}): Pokemon {
   };
 }
 
+beforeAll(loadHeavyData);
+
 describe('battle system helpers', () => {
   it('uses move priority before speed when deciding turn order', () => {
     const player = createTestPokemon({ speed: 100 });
@@ -103,7 +106,7 @@ describe('battle system helpers', () => {
     expect(blocked).toEqual({ canAct: false, event: 'fully-paralyzed' });
 
     const allowed = processStartOfTurnStatus(player, runtime, () => 0.9);
-    expect(allowed).toEqual({ canAct: true, event: null });
+    expect(allowed).toEqual({ canAct: true, event: null, skipAnimation: true });
   });
 
   it('blocks sleep turns and then wakes the pokemon up', () => {
@@ -139,7 +142,7 @@ describe('battle system helpers', () => {
     );
     expect(immuneResult.reason).toBe('immune');
 
-    const normalTarget = createTestPokemon({ id: 133, name: 'Eevee' });
+    const normalTarget = createTestPokemon({ id: 133, name: 'Eevee', types: ['normal'] });
     const chanceFailResult = applyMajorStatus(
       normalTarget,
       createBattleRuntimeStateForPokemon(normalTarget),

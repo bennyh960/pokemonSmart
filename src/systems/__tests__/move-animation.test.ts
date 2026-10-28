@@ -13,7 +13,7 @@ describe('getAttackAnimationProfile', () => {
     expect(profile.family).toBe('lunge');
   });
 
-  it('maps iconic ranged special moves to beam', () => {
+  it('maps thunder moves to lightning', () => {
     const profile = getAttackAnimationProfile({
       name: { en: 'Thunderbolt', he: 'מכת ברק' },
       type: 'electric',
@@ -21,7 +21,7 @@ describe('getAttackAnimationProfile', () => {
       damageClass: 'special',
     });
 
-    expect(profile.family).toBe('beam');
+    expect(profile.family).toBe('lightning');
   });
 
   it('maps ember-like moves to projectile', () => {
@@ -35,7 +35,7 @@ describe('getAttackAnimationProfile', () => {
     expect(profile.family).toBe('projectile');
   });
 
-  it('maps self-buff status moves to self pulse', () => {
+  it('maps cool self-buff moves to self-boost-cooler', () => {
     const profile = getAttackAnimationProfile({
       name: { en: 'Swords Dance', he: 'ריקוד חרבות' },
       type: 'normal',
@@ -43,11 +43,11 @@ describe('getAttackAnimationProfile', () => {
       damageClass: 'status',
     });
 
-    expect(profile.family).toBe('pulse');
+    expect(profile.family).toBe('self-boost-cooler');
     expect(profile.selfTarget).toBe(true);
   });
 
-  it('maps heavy ground moves to burst', () => {
+  it('maps quake moves to earthquake', () => {
     const profile = getAttackAnimationProfile({
       name: { en: 'Earthquake', he: 'רעידת אדמה' },
       type: 'ground',
@@ -55,6 +55,6 @@ describe('getAttackAnimationProfile', () => {
       damageClass: 'physical',
     });
 
-    expect(profile.family).toBe('burst');
+    expect(profile.family).toBe('earthquake');
   });
 });

@@ -65,7 +65,7 @@ export function getPlayerData(): PlayerData {
   }
   return currentPlayerData;
 }
-if (import.meta.env.DEV) {
+if (import.meta.env.DEV && typeof window !== 'undefined') {
   // @ts-ignore
   window.getPlayerData = getPlayerData; // for debugging
   console.log('You are in development mode 🛠️');

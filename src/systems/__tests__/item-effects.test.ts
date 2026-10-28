@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { t } from '../../i18n/i18n.js';
 import { getPokemon } from '../../services/pokemon-data.js';
 import { createPokemonFromData } from '../encounter.js';
 import { applyItemEffect, canUseItemOnPokemon } from '../item-effects.js';
@@ -14,7 +15,7 @@ describe('item effects status cure', () => {
     expect(canUseItemOnPokemon('18', pokemon)).toBe(true);
     expect(applyItemEffect('18', pokemon)).toEqual({
       success: true,
-      message: 'Cured!',
+      message: t('item.effect.cured'),
     });
     expect(pokemon.status).toBeNull();
   });
@@ -29,7 +30,7 @@ describe('item effects status cure', () => {
     expect(canUseItemOnPokemon('18', pokemon)).toBe(false);
     expect(applyItemEffect('18', pokemon)).toEqual({
       success: false,
-      message: 'No matching status to cure!',
+      message: t('item.effect.cantUseStatus', { status: 'poison' }),
     });
     expect(pokemon.status).toBe('burn');
   });
