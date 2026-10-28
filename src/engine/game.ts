@@ -40,6 +40,7 @@ import { createTestScene } from '../scenes/test.scene.js';
 import { createPokedexReactScene } from '../scenesReact/pokedex/index.js';
 import { createTrainerDataReactScene } from '../scenesReact/trainerData/index.js';
 import { createPhoneContactReactScene } from '../scenesReact/PhoneContact/index.js';
+import { createGateClockReactScene } from '../scenesReact/gateClock/index.js';
 
 /** Create and start the game, mounting the canvas to the given container. */
 export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
@@ -91,6 +92,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   stateMachine.register('PC', createPCScene(input, stateMachine));
   stateMachine.register('WORLD_MAP', createWorldMapScene(input, stateMachine));
   stateMachine.register('GATE', createGateScene(input, stateMachine));
+  stateMachine.register('GATE_CLOCK', createGateClockReactScene(stateMachine));
   stateMachine.register('SAVE_SLOTS', createSaveSlotsScene(input, stateMachine));
   stateMachine.register('START_MENU', createStartMenuScene(input, stateMachine));
   stateMachine.register('ENGLISH_LEARNING', createEnglishLearningScene(input, stateMachine, canvas, audio));

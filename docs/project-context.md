@@ -27,6 +27,13 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Editor: no UI yet for `enteredFrom` (NPC) and `hallOfFame` (trainer reward) — edit the JSON
 - [ ] Legendary gates (Elite birds/dogs, Master Mewtwo/Lugia/Ho-Oh, Legendary Mew): place blocker NPCs (`blocker` + `despawnAfter: rank-<id>`) once those maps exist; replace the "TBD" hint in the rank-up call
 
+## Gates (kids-friendly pass)
+- [ ] Gate lights (`systems/gate-lights.ts`): only Sumville has lights (Route 1 guard, Pokémon Center door). Place the rest with the editor's "Light X/Y" on each gate-guard / gated door
+- [ ] Question screen: allow exit (step back + "oops, wrong way" line)
+- [ ] Rewrite gate texts as in-game speech for kids (`global-gate-config.ts`, gate defs)
+- [ ] Question screen: full keyboard control (choices are mouse-only)
+- [ ] On hold: city guards stay open until you leave the map (in vs out)
+
 ## Bugs
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"

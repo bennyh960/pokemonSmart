@@ -103,6 +103,7 @@ import {
   applyCompletedEventNpcPositions,
   runStoryAction,
 } from '../systems/story-engine.js';
+import { collectGateLights, gateLightAt, getGatePass, drawGateLight, type GateLight } from '../systems/gate-lights.js';
 import {
   isCutsceneActive,
   activateCutscene,
@@ -281,6 +282,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // NPC state
   let npcManager: NPCManager | null = null;
+  /** Red/green gate lights on this map (systems/gate-lights.ts). */
+  let gateLights: GateLight[] = [];
+  /** A light hides with its guard (e.g. a guard that despawns after the story moves on). */
+  function visibleGateLightAt(x: number, y: number): GateLight | undefined {
+    const light = gateLightAt(gateLights, x, y);
+    if (!light?.guard) return light;
+    const pd = hasActiveGame() ? getPlayerData() : null;
+    return isNPCVisible(light.guard, pd?.flags ?? {}, pd?.party) ? light : undefined;
+  }
 
   // Dialogue state
   let activeTextBox: ReturnType<typeof createTextBox> | null = null;
@@ -1974,6 +1984,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     npcStates.clear(); // reset runtime states for new map
     npcSavedFacing.clear();
 
+    gateLights = collectGateLights(data as TileMapData);
+    tileMap.setExtraBlocker((x, y) => !!visibleGateLightAt(x, y));
+
     // Replay completed cutscene steps (move-npc, hide-npc) on every map load so
     // NPCs stay at their post-cutscene positions/visibility after transitions.
     if (hasActiveGame()) {
@@ -3465,6 +3478,23 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
         }
 
+        // Gate light: red = questions first, green = clock challenge to refill the pass
+        {
+          const vec = DIR_VECTORS[player.facing];
+          const light = vec && hasActiveGame() ? visibleGateLightAt(player.gridX + vec.dx, player.gridY + vec.dy) : undefined;
+          if (light) {
+            const pass = getGatePass(light.gateId);
+            if (pass.kind === 'timed') {
+              setActiveGate(light.gateId);
+              stateMachine.push('GATE_CLOCK');
+            } else {
+              const key = pass.kind === 'forever' ? 'gateLight.forever' : light.guard ? 'gateLight.red' : 'gateLight.redDoor';
+              activeTextBox = createTextBox([t(key)], isRTL());
+            }
+            return;
+          }
+        }
+
         // Object interaction: check facing tile for interactive placed objects
         if (tileMap) {
           const vec = DIR_VECTORS[player.facing];
@@ -4110,6 +4140,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       // Sort by Y and render
+      // Gate lights Y-sort like NPCs
+      for (const light of gateLights) {
+        if (!visibleGateLightAt(light.x, light.y)) continue;
+        const lx = light.x * TILE_SIZE - camera.x;
+        const ly = light.y * TILE_SIZE - camera.y;
+        renderables.push({ y: light.y * TILE_SIZE, render: () => drawGateLight(ctx, lx, ly, getGatePass(light.gateId)) });
+      }
+
       renderables.sort(compareRenderables);
       for (const r of renderables) r.render();
 

@@ -743,5 +743,18 @@
   "battle.disobey.confident": "{name} is too confident to listen!",
   "battle.disobey.ignore": "{name} ignored your order!",
   "battle.disobey.hint": "{name} wants to see how strong you are. Train another Pokémon to Lv.{level}, or reach the {rank} rank.",
-  "battle.hallOfFame": "Your team enters the Hall of Fame! League wins: {count}"
+  "battle.hallOfFame": "Your team enters the Hall of Fame! League wins: {count}",
+
+  "gateLight.red": "Red light! The guard needs to check you first. Answer the questions and the light turns green!",
+  "gateLight.redDoor": "Red light! Answer a few questions at the door and the light turns green!",
+  "gateLight.forever": "Green light forever! You can always pass here.",
+  "gateLight.clock.title": "Green light!",
+  "gateLight.clock.left": "Your free pass lasts {minutes} more minutes.",
+  "gateLight.clock.ask": "What time will the light turn red?",
+  "gateLight.clock.check": "Check",
+  "gateLight.clock.badFormat": "Write the time like this: 20:25",
+  "gateLight.clock.right": "Correct! Your pass is full again: {minutes} minutes!",
+  "gateLight.clock.wrong": "Not quite! It turns red at {time}. Your pass still works.",
+  "gateLight.clock.leave": "Leave",
+  "gateLight.clock.ok": "OK"
 }

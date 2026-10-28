@@ -38,6 +38,7 @@ export type SceneId =
   | 'EVOLUTION'
   | 'PHONE'
   | 'GATE'
+  | 'GATE_CLOCK'
   | 'CUTSCENE'
   | 'SAVE_SLOTS'
   | 'START_MENU'
